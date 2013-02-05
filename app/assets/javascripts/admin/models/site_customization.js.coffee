@@ -7,20 +7,20 @@ window.Discourse.SiteCustomization = Discourse.Model.extend
   trackedProperties: ['enabled','name', 'stylesheet', 'header', 'override_default_style']
 
   description: (->
-    "#{@.name}#{if @.enabled then ' (*)' else ''}"
+    "#{@name}#{if @enabled then ' (*)' else ''}"
   ).property('selected', 'name')
 
   changed: (->
-    return false unless @.originals
+    return false unless @originals
     @trackedProperties.any (p)=>
-      @.originals[p] != @get(p)
+      @originals[p] != @get(p)
   ).property('override_default_style','enabled','name', 'stylesheet', 'header', 'originals') # TODO figure out how to call with apply
 
   startTrackingChanges: ->
     @set('originals',{})
 
     @trackedProperties.each (p)=>
-      @.originals[p] = @get(p)
+      @originals[p] = @get(p)
       true
 
   previewUrl: (->
