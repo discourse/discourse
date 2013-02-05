@@ -8,7 +8,7 @@ If you'd like to set up a development environment for Discourse, the easiest way
 2. Install VirtualBox: https://www.virtualbox.org/wiki/Downloads
 3. Install Ruby 1.9.3. We recommend RVM: https://rvm.io/
 4. Open a terminal
-5. Clone the project: `git@github.com:discourse/core.git`
+5. Clone the project: git clone `https://github.com/discourse/core.git`
 6. Enter the project directory: `cd core`
 7. Install vagrant: `gem install vagrant`
 
