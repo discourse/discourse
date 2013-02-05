@@ -2,6 +2,9 @@
 
 If you'd like to set up a development environment for Discourse, the easiest way is by using a virtual machine.
 
+The following instructions will automatically download and provision a virtual machine for you to begin hacking
+on Discourse with:
+
 ### Getting Started
 
 1. Install the Xcode tools: https://developer.apple.com/xcode/
