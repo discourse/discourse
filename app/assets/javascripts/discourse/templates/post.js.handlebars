@@ -1,0 +1,67 @@
+<div class='row'>
+  <section class='embedded-posts top parent-post span14 offset2' style='display:none'>
+    {{#if view.parentPost}}
+      {{view Discourse.ParentView contentBinding="view.parentPost" postViewBinding="view"}}
+    {{/if}}
+  </section>
+</div>
+
+<article class='boxed' {{bindAttr id="postElementId"}} {{bindAttr data-post-id="id"}} data-user-id="{{unbound user_id}}">
+  <div class='row'>
+    {{#if controller.multiSelect}}
+      <button class='post-select' {{action selectPost this}}>{{view.selectText}}</button>
+    {{else}}
+      <div {{bindAttr class="bookmarkClass"}} {{bindAttr title="bookmarkTooltip"}} {{action toggleBookmark this}}></div>
+    {{/if}}
+
+    {{#if showUserReplyTab}}
+      <a href='#' {{action toggleParent target="view"}} class='reply-to-tab'>
+        {{#if loadingParent}}
+          {{i18n loading}}
+        {{else}}
+          {{i18n post.in_reply_to}}
+          {{avatar reply_to_user imageSize="tiny"}}
+          {{reply_to_user.username}}
+        {{/if}}
+      </a>
+    {{/if}}
+
+    <div class='topic-meta-data span2'>
+      <div class='contents'>
+        <a href='/users/{{unbound username}}' class='excerptable' data-excerpt-position="right" data-excerpt-size="small">{{avatar this imageSize="large"}}</a>
+        <h3><a href='/users/{{unbound username}}'>{{breakUp username}}</a></h3>
+        
+        <div class='post-info'>
+          <a href='#' class='post-date' {{bindAttr data-share-url="url"}}>{{date created_at}}</a>
+        </div>
+        {{#if hasHistory}}
+          <div class='post-info'>
+            <a href='#' class="{{unbound historyHeat}}" {{action showHistory this}} title="{{editDate updated_at}}">
+              <i class='icon-pencil'></i>
+              {{editCount}} 
+            </a>
+          </div>
+        {{/if}}        
+      </div>
+    </div>    
+
+    <div class='topic-body span14'>           
+      <div {{bindAttr class="showUserReplyTab:avoid-tab view.repliesHidden:bottom-round :contents :regular view.extraClass"}}>
+        {{view Discourse.PrependPostView postBinding="this"}}
+        <div class='cooked'>{{{cooked}}}</div>
+        {{view Discourse.PostMenuView postBinding="this" postViewBinding="view"}}
+      </div>
+      {{view Discourse.RepliesView contentBinding="replies" postViewBinding="view"}}
+      {{view Discourse.ActionsHistoryView contentBinding="actionsHistory"}}
+      {{view Discourse.TopicSummaryView postBinding="this"}}
+    </div>
+
+    <div class='span5 gutter'>
+      {{collection contentBinding="internalLinks" itemViewClass="Discourse.PostLinkView" tagName="ul" classNames="post-links"}}
+      {{#if controller.content.can_reply_as_new_topic}}
+        <a href='#' class='reply-new' {{action replyAsNewTopic this}}><i class='icon icon-plus'></i>{{i18n post.reply_as_new_topic}}</a>
+      {{/if}}
+    </div>
+  </div>
+
+</article>

@@ -1,0 +1,81 @@
+require 'spec_helper'
+
+describe Draft do
+  before do 
+    @user = Fabricate(:user)
+  end
+  it "can get a draft by user" do 
+    Draft.set(@user, "test", 0, "data")
+    Draft.get(@user, "test", 0).should == "data"
+  end
+
+  it "uses the user id and key correctly" do
+    Draft.set(@user, "test", 0,"data")
+    Draft.get(Fabricate(:coding_horror), "test", 0).should be_nil
+  end
+
+  it "should overwrite draft data correctly" do 
+    Draft.set(@user, "test", 0, "data")
+    Draft.set(@user, "test", 0, "new data")
+    Draft.get(@user, "test", 0).should == "new data"
+  end
+
+  it "should clear drafts on request" do 
+    Draft.set(@user, "test", 0, "data")
+    Draft.clear(@user, "test", 0)
+    Draft.get(@user, "test", 0).should be_nil
+  end
+
+  it "should disregard old draft if sequence decreases" do 
+    Draft.set(@user, "test", 0, "data")
+    Draft.set(@user, "test", 1, "hello")
+    Draft.set(@user, "test", 0, "foo")
+    Draft.get(@user, "test", 0).should be_nil
+    Draft.get(@user, "test", 1).should == "hello"
+  end
+
+
+  context 'key expiry' do 
+    it 'nukes new topic draft after a topic is created' do 
+      u = Fabricate(:user)
+      Draft.set(u, Draft::NEW_TOPIC, 0, 'my draft')  
+      t = Fabricate(:topic, user: u)
+      s = DraftSequence.current(u, Draft::NEW_TOPIC)
+      Draft.get(u, Draft::NEW_TOPIC, s).should be_nil
+    end
+
+    it 'nukes new pm draft after a pm is created' do 
+      u = Fabricate(:user)
+      Draft.set(u, Draft::NEW_PRIVATE_MESSAGE, 0, 'my draft')  
+      t = Fabricate(:topic, user: u, archetype: Archetype.private_message)
+      s = DraftSequence.current(t.user, Draft::NEW_PRIVATE_MESSAGE)
+      Draft.get(u, Draft::NEW_PRIVATE_MESSAGE, s).should be_nil
+    end
+
+    it 'does not nuke new topic draft after a pm is created' do 
+      u = Fabricate(:user)
+      Draft.set(u, Draft::NEW_TOPIC, 0, 'my draft')  
+      t = Fabricate(:topic, user: u, archetype: Archetype.private_message)
+      s = DraftSequence.current(t.user, Draft::NEW_TOPIC)
+      Draft.get(u, Draft::NEW_TOPIC, s).should == 'my draft'
+    end
+
+    it 'nukes the post draft when a post is created' do
+      p = Fabricate(:post)
+      Draft.set(p.user, p.topic.draft_key, 0,'hello')
+      Fabricate(:post, topic: p.topic, user: p.user)
+      Draft.get(p.user, p.topic.draft_key, DraftSequence.current(p.user, p.topic.draft_key)).should be_nil
+    end
+
+    it 'nukes the post draft when a post is revised' do
+      p = Fabricate(:post)
+      Draft.set(p.user, p.topic.draft_key, 0,'hello')
+      p.revise(p.user, 'another test')
+      s = DraftSequence.current(p.user, p.topic.draft_key)
+      Draft.get(p.user, p.topic.draft_key, s).should be_nil
+    end
+
+    it 'increases the sequence number when a post is revised' do
+    end
+  end
+end

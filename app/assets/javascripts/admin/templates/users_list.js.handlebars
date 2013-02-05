@@ -1,0 +1,82 @@
+<div class='admin-controls'>
+  <div class='span15'>
+    <ul class="nav nav-pills">
+      <li>{{#linkTo adminUsersList.active}}{{i18n admin.users.active}}{{/linkTo}}</li>
+      <li>{{#linkTo adminUsersList.new}}{{i18n admin.users.new}}{{/linkTo}}</li>
+      {{#if Discourse.SiteSettings.must_approve_users}}
+        <li>{{#linkTo adminUsersList.pending}}{{i18n admin.users.pending}}{{/linkTo}}</li>
+      {{/if}}
+    </ul>
+  </div>  
+  <div class='span5 username controls'>
+    {{view Discourse.TextField valueBinding="controller.username" placeholderKey="username"}}
+  </div>
+</div>
+
+{{#if hasSelection}}
+  <div id='selected-controls'>
+    <button {{action approveUsers target="controller"}} class='btn'>{{countI18n admin.users.approved_selected countBinding="selectedCount"}}</button>
+  </div>
+{{/if}}
+
+{{#if content.length}}
+  <table class='table'> 
+    <tr>
+      {{#if showApproval}}
+        <th>{{view Ember.Checkbox checkedBinding="selectAll"}}</th>
+      {{/if}}
+      <th>&nbsp;</th>
+      <th>{{i18n username}}</th>
+      <th>{{i18n email}}</th>
+      <th>{{i18n admin.users.last_emailed}}</th>
+      <th>{{i18n last_seen}}</th>
+      <th>{{i18n admin.user.topics_entered}}</th>
+      <th>{{i18n admin.user.posts_read_count}}</th>
+      <th>{{i18n admin.user.time_read}}</th>
+      <th>{{i18n created}}</th>  
+      {{#if showApproval}}
+        <th>{{i18n admin.users.approved}}</th>
+      {{/if}}
+      <th>&nbsp;</th>
+
+    </tr>
+
+    {{#each content}}
+      <tr {{bindAttr class="selected"}}>
+        {{#if controller.showApproval}}
+          <td>
+            {{#if can_approve}}
+              {{view Ember.Checkbox checkedBinding="selected"}}
+            {{/if}}
+          </td>
+        {{/if}}
+        <td>
+          <a href="/admin/users/{{unbound username_lower}}">{{avatar this imageSize="small"}}</a>
+        </td>
+        <td><a href="/admin/users/{{unbound username_lower}}">{{unbound username}}</a></td>
+        <td>{{unbound email}}</td>
+        <td>{{{unbound last_emailed_age}}}</td>
+        <td>{{{unbound last_seen_age}}}</td>
+        <td>{{{unbound topics_entered}}}</td>
+        <td>{{{unbound posts_read_count}}}</td>
+        <td>{{{unbound time_read}}}</td>
+        
+        <td>{{{unbound created_at_age}}}</td>
+        
+        {{#if controller.showApproval}}
+        <td>
+          {{#if approved}}
+            {{i18n yes_value}}
+          {{else}}
+            {{i18n no_value}}
+          {{/if}}
+        </td>
+        {{/if}}
+        <td>{{#if admin}}<i class="icon-trophy"></i>{{/if}}<td>
+      </tr>
+    {{/each}}
+
+  </table>
+{{else}}
+  <div class='admin-loading'>{{i18n loading}}</div>
+{{/if}}

@@ -1,0 +1,43 @@
+{{#with view.content}}
+  {{#group}}
+  <td class='main-link'>
+    <a class='title excerptable' href="{{unbound lastReadUrl}}">{{unbound title}}</a>
+    {{#if unread}}
+      <a href="{{unbound lastReadUrl}}" class='badge unread badge-notification' title='{{i18n topic.unread_posts unread="unread"}}'>{{unbound unread}}</a>
+    {{/if}}
+    {{#if new_posts}}
+      <a href="{{unbound lastReadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new_posts new_posts="new_posts"}}'>{{unbound new_posts}}</a>
+    {{/if}}           
+    {{#if unseen}}
+      <a href="{{lastReadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new}}'><i class='icon icon-asterisk'></i></a>
+    {{/if}}    
+  </td>
+  <td class='category'>
+    {{categoryLink category}}
+  </td>
+  <td class='num'><a href="{{lastReadUrl}}" class='badge-posts'>{{number posts_count numberKey="posts_long"}}</a></td>
+
+  <td class='num'>
+    {{#if like_count}}
+      <a href='{{url}}{{#if has_best_of}}/best_of{{/if}}'>{{like_count}} <i class='icon-heart'></i></a>
+    {{/if}}
+  </td>
+  
+  <td class='num'>{{number views numberKey="views_long"}}</td>  
+  
+  {{#if singlePost}}          
+    <td class='num activity'>
+      <a href="{{url}}" class='age' title='{{i18n first_post}}: {{{unboundDate created_at}}}'>{{{age}}}</a>
+    </td>
+    <td></td>
+  {{else}}
+    <td class='num activity'>
+      <a href="{{url}}" {{{bindAttr class=":age ageCold"}}} title='{{i18n first_post}}: {{{unboundDate created_at}}}' >{{{age}}}</a>
+    </td>
+    <td class='num activity last'>
+      <a href="{{lastPostUrl}}" class='age' title='{{i18n last_post}}: {{{unboundDate last_posted_at}}}'>{{{last_post_age}}}</a>
+    </td>                
+  {{/if}}
+
+  {{/group}}
+{{/with}}

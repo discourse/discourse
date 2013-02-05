@@ -1,0 +1,182 @@
+// --------------------------------------------------
+// Mixins used throughout the theme
+// --------------------------------------------------
+
+// Media queries
+// --------------------------------------------------
+
+@mixin small-height {
+  @media screen and (max-height: 444px) {
+    @content;
+  }
+}
+
+@mixin regular-height {
+  @media screen and (min-height: 445px) {
+    @content;
+  }
+}
+
+@mixin not-small-width {
+  @media screen and (min-width: 967px) {
+    @content;
+  }
+}
+
+@mixin small-width {
+  @media screen and (max-width: 966px) {
+    @content;
+  }
+}
+
+@mixin medium-width {
+  @media screen and (min-width: 967px) and (max-width: 1139px) {
+    @content;
+  }
+}
+
+@mixin large-width {
+  @media screen and (min-width: 1140px) {
+    @content;
+  }
+}
+
+// CSS3 properties
+// --------------------------------------------------
+
+// Box sizing
+
+@mixin box-sizing($sizing) {
+  -webkit-box-sizing: $sizing;
+     -moz-box-sizing: $sizing;
+          box-sizing: $sizing;
+}
+
+// Border radius
+
+@mixin border-radius-all($radius) {
+  -webkit-border-radius: $radius;
+          border-radius: $radius;
+}
+
+@mixin border-radius-top($radius) {
+  -webkit-border-top-right-radius: $radius;
+          border-top-right-radius: $radius;
+  -webkit-border-top-left-radius: $radius;
+          border-top-left-radius: $radius;
+}
+
+@mixin border-radius-bottom($radius) {
+  -webkit-border-bottom-right-radius: $radius;
+          border-bottom-right-radius: $radius;
+  -webkit-border-bottom-left-radius: $radius;
+          border-bottom-left-radius: $radius;
+}
+
+// Box shadow
+
+@mixin box-shadow($shadow) {
+  -webkit-box-shadow: $shadow;
+          box-shadow: $shadow;
+}
+
+// Linear gradient
+
+@mixin linear-gradient($start-color, $end-color) {
+  background-color: $start-color;
+  background-image: -webkit-gradient(linear, left top, left bottom, from($start-color), to($end-color));
+  background-image: -webkit-linear-gradient(top, $start-color, $end-color);
+  background-image: -moz-linear-gradient(top, $start-color, $end-color);
+  background-image: -o-linear-gradient(top, $start-color, $end-color);
+  background-image: linear-gradient(to bottom, $start-color, $end-color);
+}
+
+// Background size
+
+@mixin background-size($size) {
+  -webkit-background-size: $size;
+          background-size: $size;
+}
+
+// Background clip
+
+@mixin background-clip($clip) {
+  -webkit-background-clip: $clip;
+          background-clip: $clip;
+}
+
+// Rotate
+
+@mixin rotate($degrees) {
+  -webkit-transform: rotate($degrees);
+     -moz-transform: rotate($degrees);
+      -ms-transform: rotate($degrees);
+       -o-transform: rotate($degrees);
+          transform: rotate($degrees);
+}
+
+// Scale
+
+@mixin scale($ratio) {
+  -webkit-transform: scale($ratio);
+     -moz-transform: scale($ratio);
+      -ms-transform: scale($ratio);
+       -o-transform: scale($ratio);
+          transform: scale($ratio);
+}
+
+// Transition
+
+@mixin transition($transition) {
+  .discourse-no-touch & {
+    -webkit-transition: #{$transition};
+       -moz-transition: #{$transition};
+        -ms-transition: #{$transition};
+         -o-transition: #{$transition};
+            transition: #{$transition};
+  }
+}
+
+// Visibility
+// --------------------------------------------------
+
+@mixin hover {
+  .discourse-no-touch & {
+    &:hover {
+      @content;
+    }
+  }
+}
+
+@mixin fades-in($time: 0.5s) {
+  opacity: 0;
+  visibility: hidden;
+  .discourse-no-touch & {
+    -webkit-transition: visibility 0s linear $time, opacity $time linear;
+       -moz-transition: visibility 0s linear $time, opacity $time linear;
+        -ms-transition: visibility 0s linear $time, opacity $time linear;
+         -o-transition: visibility 0s linear $time, opacity $time linear;
+            transition: visibility 0s linear $time, opacity $time linear;
+  }
+}
+
+@mixin visible {
+  opacity: 1;
+  visibility: visible;
+  -webkit-transition-delay: 0s;
+     -moz-transition-delay: 0s;
+      -ms-transition-delay: 0s;
+       -o-transition-delay: 0s;
+          transition-delay: 0s;
+}
+
+// Decorations
+// --------------------------------------------------
+
+// Glow
+
+@mixin glow($color) {
+  border: 1px solid $color;
+  -webkit-box-shadow: 0 0 5px $color;
+          box-shadow: 0 0 5px $color;
+}

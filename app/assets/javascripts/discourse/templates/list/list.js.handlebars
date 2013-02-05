@@ -1,0 +1,44 @@
+<div id='list-controls'>
+  <div class="container">
+    <ul class="nav nav-pills" id='category-filter'>
+      {{#each controller.availableNavItems}}
+        {{view Discourse.NavItemView contentBinding="this"}}
+      {{/each}}
+    </ul>
+
+    {{#if controller.canCreateTopic}}
+      <button class='btn btn-default' {{action createTopic target="controller"}}><i class='icon icon-plus'></i>{{view.createTopicText}}</button>
+    {{/if}}
+
+    {{#if controller.canCreateCategory}}
+      <button class='btn btn-default' {{action createCategory target="controller"}}><i class='icon icon-plus'></i>{{i18n category.create}}</button>
+    {{/if}}
+
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+ 
+    <div class="full-width">
+      <div id='list-area'>
+        {{#if controller.loading}}
+          <div class='contents loading'>    
+            <table id='topic-list'>
+              <tr>
+                <td colspan='8'>
+                  <div class='spinner'>{{i18n loading}}</div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        {{/if}}
+
+        {{outlet listView}}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+

@@ -1,0 +1,45 @@
+<table id='topic-list'>
+  <tr>
+    <th>
+      {{categoryLink this}}
+
+      <div class='posters'>
+      {{#each featured_users}}
+        <a href="/users/{{unbound username_lower}}">{{avatar this imageSize="small"}}</a>
+      {{/each}}
+      </div>      
+    </th>
+    <th class='num'>{{i18n posts}}</th>
+    <th class='num'>{{i18n age}}</th>
+  </tr>      
+
+  {{#each topics itemTagName="tr"}}
+    <td class='main-link'>
+      <div class='topic-inset'>
+        <a class='title excerptable' href="{{unbound lastReadUrl}}">{{unbound title}}</a>
+      {{#if unread}}
+        <a href="{{unbound lastReadUrl}}" class='badge unread badge-notification' title='{{i18n topic.unread_posts unread="unread"}}'>{{unbound unread}}</a>
+      {{/if}}
+      {{#if new_posts}}
+        <a href="{{unbound lastReadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new_posts new_posts="new_posts"}}'>{{unbound new_posts}}</a>
+      {{/if}}           
+      </div>
+    </td>
+    <td class='num'><span class='badge-posts'>{{number posts_count}}</span></td>
+    <td class='num'><span {{bindAttr class=":age ageCold"}} title='{{unboundDate created_at}}'>{{{unbound age}}}</a></td>      
+  {{/each}}
+
+</table>
+<footer class="clearfix">
+  <figure title="{{i18n year_desc}}">{{number topics_year}} <figcaption>{{i18n year}}</figcaption></figure>
+  <figure title="{{i18n month_desc}}">{{number topics_month}} <figcaption>{{i18n month}}</figcaption></figure>
+  <figure title="{{i18n week_desc}}">{{number topics_week}} <figcaption>{{i18n week}}</figcaption></figure>
+
+  {{#if controller.canEdit}}
+    <a href='#' {{action editCategory this}} class='btn btn-small'>{{i18n category.edit}}</a>
+  {{/if}}
+
+  {{#if moreTopics}}
+    <a href='/category/{{unbound slug}}' class='btn btn-small'>{{i18n category.more_posts posts="topic_count"}}</a>
+  {{/if}}
+</footer>

@@ -1,0 +1,143 @@
+require 'spec_helper'
+require 'pretty_text'
+
+describe PrettyText do
+
+  describe "Cooking" do 
+    it "should support github style code blocks" do
+      PrettyText.cook("```
+test
+```").should == "<pre><code class=\"lang-auto\">test  \n</code></pre>"
+    end
+
+    it "should support quoting [] " do     
+      PrettyText.cook("[quote=\"EvilTrout, post:123, topic:456, full:true\"][sam][/quote]").should =~ /\[sam\]/
+    end
+
+    it "produces a quote even with new lines in it" do     
+      PrettyText.cook("[quote=\"EvilTrout, post:123, topic:456, full:true\"]ddd\n[/quote]").should == "<p></p><aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">\n    <div class=\"quote-controls\"></div>\n  <img width=\"20\" height=\"20\" src=\"/users/eviltrout/avatar/40?__ws=http%3A%2F%2Ftest.localhost\" class=\"avatar \" title=\"\">\n  EvilTrout\n  said:\n  </div>\n  <blockquote>ddd</blockquote>\n</aside><p></p>"    
+    end
+
+    it "should produce a quote" do     
+      PrettyText.cook("[quote=\"EvilTrout, post:123, topic:456, full:true\"]ddd[/quote]").should == "<p></p><aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">\n    <div class=\"quote-controls\"></div>\n  <img width=\"20\" height=\"20\" src=\"/users/eviltrout/avatar/40?__ws=http%3A%2F%2Ftest.localhost\" class=\"avatar \" title=\"\">\n  EvilTrout\n  said:\n  </div>\n  <blockquote>ddd</blockquote>\n</aside><p></p>"    
+    end
+
+    it "trims spaces on quote params" do
+      PrettyText.cook("[quote=\"EvilTrout, post:555, topic: 666\"]ddd[/quote]").should == "<p></p><aside class=\"quote\" data-post=\"555\" data-topic=\"666\"><div class=\"title\">\n    <div class=\"quote-controls\"></div>\n  <img width=\"20\" height=\"20\" src=\"/users/eviltrout/avatar/40?__ws=http%3A%2F%2Ftest.localhost\" class=\"avatar \" title=\"\">\n  EvilTrout\n  said:\n  </div>\n  <blockquote>ddd</blockquote>\n</aside><p></p>"    
+    end
+
+
+    it "should handle 3 mentions in a row" do 
+      PrettyText.cook('@hello @hello @hello').should == "<p><span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span></p>"
+    end
+
+    it "should not do weird @ mention stuff inside a pre block" do 
+    
+      PrettyText.cook("```
+a @test
+```").should == "<pre><code class=\"lang-auto\">a @test  \n</code></pre>"
+    
+    end
+
+    it "should sanitize the html" do
+      PrettyText.cook("<script>alert(42)</script>").should == "alert(42)"
+    end
+
+    it "should escape html within the code block" do 
+      
+      PrettyText.cook("```text
+<header>hello</header>
+```").should == "<pre><code class=\"text\">&lt;header&gt;hello&lt;/header&gt;  \n</code></pre>"
+    end
+
+    it "should support language choices" do 
+      
+      PrettyText.cook("```ruby
+test
+```").should == "<pre><code class=\"ruby\">test  \n</code></pre>"
+    end
+
+    it 'should decorate @mentions' do
+      PrettyText.cook("Hello @eviltrout").should == "<p>Hello <span class=\"mention\">@eviltrout</span></p>"
+    end
+
+    it 'should allow for @mentions to have punctuation' do
+      PrettyText.cook("hello @bob's @bob,@bob; @bob\"").should ==
+        "<p>hello <span class=\"mention\">@bob</span>'s <span class=\"mention\">@bob</span>,<span class=\"mention\">@bob</span>; <span class=\"mention\">@bob</span>\"</p>"
+    end
+
+    it 'should add spoiler tags' do
+      PrettyText.cook("[spoiler]hello[/spoiler]").should == "<p><span class=\"spoiler\">hello</span></p>"
+    end
+
+    it "should only detect ``` at the begining of lines" do     
+      PrettyText.cook("    ```\n    hello\n    ```")
+        .should == "<pre><code>```\nhello\n```\n</code></pre>"
+    end
+  end
+
+  describe "Excerpt" do 
+    it "should preserve links" do 
+      PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>",100).should == "<a href='http://cnn.com'>cnn</a>"
+    end
+
+    it "should dump images" do 
+      PrettyText.excerpt("<img src='http://cnn.com/a.gif'>",100).should == "[image]"
+    end
+    
+    it "should keep alt tags" do 
+      PrettyText.excerpt("<img src='http://cnn.com/a.gif' alt='car' title='my big car'>",100).should == "[car]"
+    end
+    
+    it "should keep title tags" do 
+      PrettyText.excerpt("<img src='http://cnn.com/a.gif' title='car'>",100).should == "[car]"
+    end
+
+    it "should deal with special keys properly" do 
+      PrettyText.excerpt("<pre><b></pre>",100).should == ""
+    end
+
+    it "should truncate stuff properly" do 
+      PrettyText.excerpt("hello world",5).should == "hello&hellip;"
+    end
+
+    it "should insert a space between to Ps" do 
+      PrettyText.excerpt("<p>a</p><p>b</p>",5).should == "a b "
+    end
+
+    it "should strip quotes" do 
+      PrettyText.excerpt("<aside class='quote'><p>a</p><p>b</p></aside>boom",5).should == "boom"
+    end
+
+    it "should not count the surrounds of a link" do 
+      PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>",3).should == "<a href='http://cnn.com'>cnn</a>"
+    end
+
+    it "should truncate links" do 
+      PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>",2).should == "<a href='http://cnn.com'>cn&hellip;</a>"
+    end
+
+    it "should be able to extract links" do 
+      PrettyText.extract_links("<a href='http://cnn.com'>http://bla.com</a>").to_a.should == ["http://cnn.com"]
+    end
+
+    it "should not preserve tags in code blocks" do 
+      PrettyText.excerpt("<pre><code class='handlebars'>&lt;h3&gt;Hours&lt;/h3&gt;</code></pre>",100).should == "&lt;h3&gt;Hours&lt;/h3&gt;"
+    end
+
+    it "should handle nil" do
+      PrettyText.excerpt(nil,100).should == ''
+    end
+  end
+
+  describe "apply cdn" do 
+    it "should detect bare links to images and apply a CDN" do
+      PrettyText.apply_cdn("<a href='/hello.png'>hello</a><img src='/a.jpeg'>","http://a.com").should ==
+        "<a href=\"http://a.com/hello.png\">hello</a><img src=\"http://a.com/a.jpeg\">"
+    end
+    it "should not touch non images" do 
+      PrettyText.apply_cdn("<a href='/hello'>hello</a>","http://a.com").should ==
+        "<a href=\"/hello\">hello</a>"
+    end
+  end
+end

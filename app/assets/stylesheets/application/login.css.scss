@@ -1,0 +1,25 @@
+// style that apply to the login popup
+
+@import "foundation/variables";
+@import "foundation/mixins";
+
+#login-buttons {
+  button {
+    margin: 0 5px 5px 0;
+  }
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+#login-form {
+  a {
+    color: $dark_gray;
+    cursor: pointer;
+  }
+}
+
+// Create account
+
+#new-account-link {
+	cursor: pointer;
+}

@@ -1,0 +1,19 @@
+<h3><i class='icon icon-lock'></i> {{i18n private_message_info.title}}</h3>
+<p>{{{i18n private_message_info.description}}}</p>
+<div class='participants clearfix'>
+  {{#each content.allowed_users}}
+  <div class='user'>
+    <a href='/users/{{lower username}}'>
+      {{avatar this avatarTemplatePath="avatar_template" imageSize="small"}}
+    </a>
+    <a href='/users/{{lower username}}'>
+      {{unbound username}}
+    </a>
+  </div>
+  {{/each}}
+</div>
+{{#if controller.content.can_invite_to}}
+  <div class='controls'>
+    <button class='btn' {{action showPrivateInviteModal target="controller"}}>{{i18n private_message_info.invite}}</button>
+  </div>
+{{/if}}

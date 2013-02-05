@@ -1,0 +1,23 @@
+{
+  "folders":
+    [
+      {
+        "path": "app",
+        "folder_exclude_patterns": ["external", "external_production", "images", "imported", "fonts"]
+      },
+      {"path": "config"},
+      {
+        "path": "db",
+        "file_exclude_patterns": ["*.sqlite3"]
+      },
+      {"path": "lib"},
+      {"path": "script"},
+      {"path": "cookbooks"},
+      {"path": "spec"}
+    ],
+  "settings":
+    {
+        "tab_size": 2,
+        "translate_tabs_to_spaces": true
+    }
+}

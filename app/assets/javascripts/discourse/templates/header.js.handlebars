@@ -1,0 +1,114 @@
+<div class='container'>
+  <div class='contents clearfix'>
+    <div class='title'>
+      {{#if controller.showExtraInfo}}
+        {{#linkTo list.popular}}{{{Discourse.logoSmall}}}{{/linkTo}}
+      {{else}}
+        {{#linkTo list.popular}}<img src="{{unbound Discourse.SiteSettings.logo_url}}" alt="{{unbound Discourse.SiteSettings.title}}" id='site-logo'>{{/linkTo}}
+      {{/if}}
+    </div>      
+
+    {{view Discourse.TopicExtraInfoView}}
+
+    <div class='panel clearfix'>
+      {{#unless controller.showExtraInfo}}
+        <div class='current-username'>
+          {{#if view.currentUser}}
+          <span class='username'><a {{bindAttr href="view.currentUser.path"}}>{{unbound view.currentUser.name}}</a></span>
+          {{else}}
+            <button {{action showLogin}} class='btn btn-primary btn-small'>{{i18n log_in}}</button>
+          {{/if}}
+        </div>
+      {{/unless}}
+      <ul class='icons clearfix'> 
+        <li class='notifications'>
+          {{#if view.currentUser}}
+            <a class='icon' href="#" {{action showNotifications target="view"}} data-notifications="notifications-dropdown" id='user-notifications' title='{{i18n notifications.title}}'><i class='icon-comment'></i></a>
+            {{#if view.currentUser.unread_notifications}}
+              <a href='#' class='badge-notification unread-notifications'>{{view.currentUser.unread_notifications}}</a>
+            {{/if}}
+            {{#if view.currentUser.unread_private_messages}}
+              <a href='#' class='badge-notification unread-private-messages'>{{view.currentUser.unread_private_messages}}</a>
+            {{/if}}
+          {{else}}
+            <a class='icon' href="#" {{action showLogin}} title='{{i18n notifications.title}}'><i class='icon-comment'></i></a>
+          {{/if}}
+        </li>
+        <li> 
+          <a class='icon expand' href='#' data-dropdown="search-dropdown" title='{{i18n search.title}}'><i class='icon-search'></i></a>
+        </li>
+        <li class='categories dropdown'>
+          <a class='icon' data-dropdown="site-map-dropdown" href="#" title='{{i18n site_map}}'><i class='icon-reorder'></i></a>
+          {{#if view.currentUser.site_flagged_posts_count}}
+            <a href='/admin/flags/active' title='total flagged posts' class='badge-notification flagged-posts'>{{view.currentUser.site_flagged_posts_count}}</a>
+          {{/if}}
+        </li>  
+        <li class='current-user'>
+          {{#if view.currentUser}}
+            {{#titledLinkTo user.activity view.currentUser titleKey="current_user" class="icon"}}{{avatar Discourse.currentUser imageSize="medium" }}{{/titledLinkTo}}
+          {{else}}
+            <div class="icon not-logged-in-avatar" {{action showLogin}}><i class='icon-user'></i></div>
+          {{/if}}
+        </li>
+      </ul>
+
+      {{view Discourse.SearchView currentUserBinding="view.currentUser"}}
+
+      <section class='d-dropdown' id='notifications-dropdown'>            
+        {{#if view.notifications}}
+          <ul>
+            {{#each view.notifications}}
+            <li class="{{unbound readClass}}">{{{unbound rendered}}}</li>
+            {{/each}}
+            <li class='read last'>
+              <a {{bindAttr href="view.currentUser.path"}}>{{i18n notifications.more}} &hellip;</a>
+            </li>
+          </ul>
+        {{else}}
+          <div class='none'>{{i18n notifications.none}}</div>
+        {{/if}}
+      </section>
+
+      <section class='d-dropdown' id='site-map-dropdown'> 
+      <ul>
+        {{#if Discourse.currentUser.admin}}
+          <li><a href="/admin"><i class='icon-cog'></i>{{i18n admin_title}}</a></li>
+          <li><a href="/admin/flags/active"><i class='icon-flag'></i>{{i18n flags_title}}</a></li>
+        {{/if}}
+        <li>
+          {{#titledLinkTo "list.popular" titleKey="filters.popular.help"}}{{i18n filters.popular.title}}{{/titledLinkTo}}
+        </li>
+        <li>{{#linkTo 'faq'}}{{i18n faq}}{{/linkTo}}</a></li>
+        {{#if Discourse.currentUser.admin}}
+          <li title="{{i18n filters.favorited.help}}">
+            {{#linkTo "list.favorited"}}
+              <i class='icon-star'></i>{{i18n filters.favorited.title}}
+            {{/linkTo}}
+          </li>
+          <li title="{{i18n filters.read.help}}">
+            {{#linkTo "list.read"}}
+              <i class='icon-bookmark'></i>{{i18n filters.read.title}}
+            {{/linkTo}}
+          </li>
+        {{/if}}
+        {{#if view.categories}}
+          <li class='heading' title="{{i18n filters.categories.help}}">
+            {{#linkTo "list.categories"}}{{i18n filters.categories.title}}{{/linkTo}}
+          </li>
+        
+          {{#each view.categories}}
+            <li class='category'>
+              {{categoryLink this}}
+              <b>{{unbound topic_count}}</b></a>
+            </li>
+          {{/each}}
+        {{/if}}
+
+      </ul>
+    </section>
+
+    </div>
+  </div>
+</div>
+
+

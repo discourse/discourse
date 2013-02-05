@@ -1,0 +1,7 @@
+//= depend_on 'en.yml'
+
+<% SimplesIdeias::I18n.assert_usable_configuration! %>
+<% admin = SimplesIdeias::I18n.translation_segments['app/assets/javascripts/i18n/admin.en.js'] 
+   admin[:en][:js] = admin[:en].delete(:admin_js)
+%>
+$.extend(true, I18n.translations, <%= admin.to_json %>);

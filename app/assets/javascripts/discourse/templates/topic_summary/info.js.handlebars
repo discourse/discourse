@@ -1,0 +1,104 @@
+<nav class='buttons'>
+  {{#if view.summaryView.collapsed}}
+  <button class='btn collapsed' {{action toggleMore target="view.summaryView"}} title="{{i18n topic.toggle_information}}">
+    <i class='icon icon-chevron-down'></i>
+  </button>
+  {{else}}
+  <button class='btn' {{action toggleMore target="view.summaryView"}} title="{{i18n topic.toggle_information}}">
+    <i class='icon icon-chevron-up'></i>
+  </button>
+  {{/if}}    
+</nav>
+
+
+{{#if view.summaryView.collapsed}}
+  <section class='summary collapsed'>
+    <ul class="clearfix">
+      <li>
+        <a {{bindAttr href="url"}}>
+        <h4>{{i18n created}}</h4>
+        {{avatar view.topic.created_by imageSize="tiny"}}
+        {{date view.topic.created_at}}
+        </a>
+      </li>
+      <li>
+        <a {{bindAttr href="lastPostUrl"}}>
+        <h4>{{i18n last_post}}</h4>
+        {{avatar view.topic.last_poster imageSize="tiny"}}
+        {{date view.topic.last_posted_at}}
+        </a>
+      </li>
+      <li>
+        <h4>{{i18n posts}}</h4>
+        {{number view.topic.posts_count}}
+      </li>
+      <li>
+        <h4>{{i18n views}}</h4>
+        {{number view.topic.views}}
+      </li>
+      <li>
+        <h4>{{i18n links}}</h4>
+        {{number view.topic.links.length}}
+      </li>   
+      {{#if view.topic.fewParticipants}}
+      <li class='avatars'>
+        {{#each view.topic.fewParticipants}}{{view Discourse.ParticipantView participantBinding="this"}}{{/each}}  
+      </li>
+      {{/if}}
+    </ul>   
+  </section>
+{{else}}
+
+  <section class='summary'>
+    <ul class="clearfix">
+      <li>
+        <h4>{{i18n created}}</h4>
+        {{avatar view.topic.created_by imageSize="tiny"}}
+        <a {{bindAttr href="view.topic.url"}}>{{date view.topic.created_at}}</a>
+      </li>
+      <li>
+        <h4>{{i18n last_post}}</h4>
+        {{avatar view.topic.last_poster imageSize="tiny"}}
+        <a {{bindAttr href="view.topic.lastPostUrl"}}>{{date view.topic.last_posted_at}}</a>
+      </li>
+      <li>
+        <h4>{{i18n posts}}</h4>
+        {{number view.topic.posts_count}}
+      </li>
+      <li>
+        <h4>{{i18n views}}</h4>
+        {{number view.topic.views}}
+      </li>
+    </ul>
+  </section>
+
+  {{#if view.topic.participants}}
+    <section class='avatars clearfix'>
+      {{#each view.topic.participants}}{{view Discourse.ParticipantView participantBinding="this"}}{{/each}}  
+    </section>
+  {{/if}}
+
+  {{#if view.parentView.infoLinks}}
+    <section class='links'>
+        <ul class='topic-links'>
+          {{#collection contentBinding="view.parentView.infoLinks" itemTagName="li"}}
+            <span class='badge badge-notification clicks' title='clicks'>{{view.content.clicks}}</span>          
+            <a href="{{unbound view.content.url}}" target="_blank" class='topic-link track-link' data-user-id="{{unbound view.content.user_id}}" data-ignore-post-id="true" title="{{unbound view.content.url}}">            
+              {{#if view.content.title}}{{shorten view.content.title}}{{else}}{{shortenUrl view.content.url}}{{/if}}
+              {{#if view.content.internal}}<i class='icon-arrow-right' title='topic link'></i>{{/if}}
+            </a>
+          {{/collection}}  
+        </ul>
+
+        {{#if view.parentView.showAllLinksControls}}
+          <div class='link-summary'>
+            <a href='#' {{action showAllLinks target="view.parentView"}}>{{i18n topic_summary.links_shown totalLinks="view.topic.links.length"}}</a>
+          </div>
+        {{/if}}
+
+    </section>
+  {{/if}}
+
+
+
+{{/if}}

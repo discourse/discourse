@@ -1,0 +1,635 @@
+require 'spec_helper'
+
+describe UsersController do 
+
+  describe '.show' do    
+    let!(:user) { log_in }
+
+    it 'returns success' do
+      xhr :get, :show, username: user.username
+      response.should be_success
+    end
+
+    it "returns not found when the username doesn't exist" do
+      xhr :get, :show, username: 'madeuppity'
+      response.should_not be_success
+    end
+
+    it "raises an error on invalid access" do
+      Guardian.any_instance.expects(:can_see?).with(user).returns(false)
+      xhr :get, :show, username: user.username
+      response.should be_forbidden
+    end
+  end
+
+  describe '.user_preferences_redirect' do
+    it 'requires the user to be logged in' do
+      lambda { get :user_preferences_redirect }.should raise_error(Discourse::NotLoggedIn)
+    end
+
+    it "redirects to their profile when logged in" do
+      user = log_in
+      get :user_preferences_redirect
+      response.should redirect_to("/users/#{user.username_lower}/preferences")
+    end
+  end
+
+  describe '.authorize_email' do
+    context 'invalid token' do
+      before do
+        EmailToken.expects(:confirm).with('asdfasdf').returns(nil)
+        get :authorize_email, token: 'asdfasdf'
+      end
+
+      it 'return success' do
+        response.should be_success
+      end
+
+      it 'sets a flash error' do
+        flash[:error].should be_present
+      end      
+    end
+
+    context 'valid token' do
+      let(:user) { Fabricate(:user) }
+
+      before do
+        EmailToken.expects(:confirm).with('asdfasdf').returns(user)
+        get :authorize_email, token: 'asdfasdf'
+      end
+
+      it 'returns success' do
+        response.should be_success
+      end
+
+      it "doesn't set an error" do
+        flash[:error].should be_blank
+      end
+
+      it 'logs in as the user' do
+        session[:current_user_id].should be_present
+      end
+    end    
+  end
+
+  describe '.activate_account' do
+    context 'invalid token' do
+      before do
+        EmailToken.expects(:confirm).with('asdfasdf').returns(nil)
+        get :activate_account, token: 'asdfasdf'
+      end
+
+      it 'return success' do
+        response.should be_success
+      end
+
+      it 'sets a flash error' do
+        flash[:error].should be_present
+      end      
+    end
+
+    context 'valid token' do
+      let(:user) { Fabricate(:user) }
+
+      context 'welcome message' do
+        before do
+          EmailToken.expects(:confirm).with('asdfasdf').returns(user)
+        end
+
+        it 'enqueues a welcome message if the user object indicates so' do
+          user.send_welcome_message = true          
+          user.expects(:enqueue_welcome_message).with('welcome_user')
+          get :activate_account, token: 'asdfasdf'
+        end
+
+        it "doesn't enqueue the welcome message if the object returns false" do
+          user.send_welcome_message = false          
+          user.expects(:enqueue_welcome_message).with('welcome_user').never
+          get :activate_account, token: 'asdfasdf'
+        end
+
+      end
+
+      context 'reponse' do
+        before do
+          EmailToken.expects(:confirm).with('asdfasdf').returns(user)
+          get :activate_account, token: 'asdfasdf'
+        end
+
+        it 'returns success' do
+          response.should be_success
+        end
+
+        it "doesn't set an error" do
+          flash[:error].should be_blank
+        end
+
+        it 'logs in as the user' do
+          session[:current_user_id].should be_present
+        end       
+
+        it "doesn't set @needs_approval" do
+          assigns[:needs_approval].should be_blank
+        end 
+        
+      end
+
+      context 'must_approve_users' do
+        before do
+          SiteSetting.expects(:must_approve_users?).returns(true)
+          EmailToken.expects(:confirm).with('asdfasdf').returns(user)
+          get :activate_account, token: 'asdfasdf'
+        end
+
+        it 'returns success' do
+          response.should be_success
+        end
+
+        it 'sets @needs_approval' do
+          assigns[:needs_approval].should be_present
+        end
+
+        it "doesn't set an error" do
+          flash[:error].should be_blank
+        end
+
+        it "doesn't log the user in" do
+          session[:current_user_id].should be_blank
+        end
+      end
+
+    end
+  end
+
+  describe '.change_email' do    
+    let(:new_email) { 'bubblegum@adventuretime.ooo' }
+
+    it "requires you to be logged in" do
+      lambda { xhr :put, :change_email, username: 'asdf', email: new_email }.should raise_error(Discourse::NotLoggedIn)
+    end
+
+    context 'when logged in' do
+      let!(:user) { log_in }
+
+      it 'raises an error without an email parameter' do
+        lambda { xhr :put, :change_email, username: user.username }.should raise_error(Discourse::InvalidParameters)
+      end
+
+      it "raises an error if you can't edit the user" do
+        Guardian.any_instance.expects(:can_edit?).with(user).returns(false)
+        xhr :put, :change_email, username: user.username, email: new_email
+        response.should be_forbidden
+      end
+
+      context 'when the new email address is taken' do
+        let!(:other_user) { Fabricate(:coding_horror) }
+        it 'raises an error' do
+          lambda { xhr :put, :change_email, username: user.username, email: other_user.email }.should raise_error(Discourse::InvalidParameters)
+        end
+      end
+
+      context 'success' do
+
+        it 'has an email token' do
+          lambda { xhr :put, :change_email, username: user.username, email: new_email }.should change(EmailToken, :count)
+        end
+
+        it 'enqueues an email authorization' do
+          Jobs.expects(:enqueue).with(:user_email, has_entries(type: :authorize_email, user_id: user.id, to_address: new_email))
+          xhr :put, :change_email, username: user.username, email: new_email
+        end
+      end
+    end
+
+  end
+
+  describe '.password_reset' do
+    let(:user) { Fabricate(:user) }
+
+    context 'invalid token' do
+      before do
+        EmailToken.expects(:confirm).with('asdfasdf').returns(nil)
+        get :password_reset, token: 'asdfasdf'
+      end
+
+      it 'return success' do
+        response.should be_success
+      end
+
+      it 'sets a flash error' do
+        flash[:error].should be_present
+      end      
+
+      it "doesn't log in the user" do
+        session[:current_user_id].should be_blank
+      end      
+    end
+
+    context 'valid token' do
+      before do
+        EmailToken.expects(:confirm).with('asdfasdf').returns(user)
+        get :password_reset, token: 'asdfasdf'
+      end
+
+      it 'returns success' do
+        response.should be_success
+      end
+
+      it "doesn't set an error" do
+        flash[:error].should be_blank
+      end
+    end
+
+    context 'submit change' do
+      before do
+        EmailToken.expects(:confirm).with('asdfasdf').returns(user)
+      end
+
+      it "logs in the user" do
+        put :password_reset, token: 'asdfasdf', password: 'newpassword'
+        session[:current_user_id].should be_present
+      end
+
+      it "doesn't log in the user when not approved" do
+        SiteSetting.expects(:must_approve_users?).returns(true)
+        put :password_reset, token: 'asdfasdf', password: 'newpassword'
+        session[:current_user_id].should be_blank
+      end       
+    end
+
+
+  end
+
+
+  describe '.create' do 
+    before do 
+      @user = Fabricate.build(:user)
+      @user.password = "strongpassword"      
+      Mothership.stubs(:register_nickname).returns([true, nil])
+    end
+
+    context 'when creating a non active user (unconfirmed email)' do
+      it 'should enqueue a signup email' do
+        Jobs.expects(:enqueue).with(:user_email, has_entries(type: :signup))
+        xhr :post, :create, :name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email
+      end
+
+      it "doesn't send a welcome email" do
+        User.any_instance.expects(:enqueue_welcome_message).with('welcome_user').never
+        xhr :post, :create, :name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email
+      end    
+    end
+
+    context 'when creating an active user (confirmed email)' do
+
+      before do
+        User.any_instance.stubs(:active?).returns(true)
+      end
+
+      it 'should enqueue a signup email' do
+        User.any_instance.expects(:enqueue_welcome_message).with('welcome_user')
+        xhr :post, :create, :name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email
+      end      
+
+      it "should be logged in" do
+        User.any_instance.expects(:enqueue_welcome_message)
+        xhr :post, :create, :name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email
+        session[:current_user_id].should be_present
+      end
+
+      it "returns true in the active part of the JSON" do
+        User.any_instance.expects(:enqueue_welcome_message)
+        xhr :post, :create, :name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email
+        ::JSON.parse(response.body)['active'].should == true
+      end
+
+      context 'when approving of users is required' do
+        before do
+          SiteSetting.expects(:must_approve_users).returns(true)
+          xhr :post, :create, :name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email
+        end
+
+        it "doesn't log in the user" do
+          session[:current_user_id].should be_blank
+        end
+
+        it "doesn't return active in the JSON" do
+          ::JSON.parse(response.body)['active'].should == false
+        end
+
+      end
+
+    end
+
+    context 'after success' do
+      before do
+        xhr :post, :create, :name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email
+      end
+
+      it 'should succeed' do 
+        should respond_with(:success)
+      end
+
+      it 'has the proper JSON' do
+        json = JSON::parse(response.body)
+        json["success"].should be_true 
+      end
+
+      it 'should not result in an active account' do 
+        User.where(username: @user.username).first.active.should be_false
+      end
+    end
+  
+  end
+
+  context '.username' do
+    it 'raises an error when not logged in' do
+      lambda { xhr :put, :username, username: 'somename' }.should raise_error(Discourse::NotLoggedIn)
+    end
+
+    context 'while logged in' do
+      let!(:user) { log_in }
+      let(:new_username) { "#{user.username}1234" }
+
+      it 'raises an error without a new_username param' do
+        lambda { xhr :put, :username, username: user.username }.should raise_error(Discourse::InvalidParameters) 
+      end
+
+      it 'raises an error when you don\'t have permission to change the user' do
+        Guardian.any_instance.expects(:can_edit?).with(user).returns(false)
+        xhr :put, :username, username: user.username, new_username: new_username
+        response.should be_forbidden
+      end
+
+      it 'raises an error when change_username fails' do
+        User.any_instance.expects(:change_username).with(new_username).returns(false)
+        lambda { xhr :put, :username, username: user.username, new_username: new_username }.should raise_error(Discourse::InvalidParameters)        
+      end
+
+      it 'should succeed when the change_username returns true' do
+        User.any_instance.expects(:change_username).with(new_username).returns(true)
+        xhr :put, :username, username: user.username, new_username: new_username
+        response.should be_success
+      end
+
+    end
+  end
+
+  context '.check_username' do
+    before do
+      Mothership.stubs(:nickname_available?).returns([true, nil])
+    end
+
+    it 'raises an error without a username parameter' do
+      lambda { xhr :get, :check_username }.should raise_error(Discourse::InvalidParameters)
+    end
+
+    shared_examples_for 'when username is unavailable locally' do
+      it 'should return success' do
+        response.should be_success
+      end
+
+      it 'should return available as false in the JSON' do
+        ::JSON.parse(response.body)['available'].should be_false
+      end
+
+      it 'should return a suggested username' do
+        ::JSON.parse(response.body)['suggestion'].should be_present
+      end
+    end
+
+    shared_examples_for 'when username is available everywhere' do
+      it 'should return success' do
+        response.should be_success
+      end
+
+      it 'should return available in the JSON' do
+        ::JSON.parse(response.body)['available'].should be_true
+      end
+    end
+
+    context 'when call_mothership is disabled' do
+      before do
+        SiteSetting.stubs(:call_mothership?).returns(false)
+        Mothership.expects(:nickname_available?).never
+        Mothership.expects(:nickname_match?).never
+      end
+
+      context 'available everywhere' do
+        before do
+          xhr :get, :check_username, username: 'BruceWayne'
+        end
+        it_should_behave_like 'when username is available everywhere'
+      end
+
+      context 'available locally but not globally' do
+        before do
+          xhr :get, :check_username, username: 'BruceWayne'
+        end
+        it_should_behave_like 'when username is available everywhere'
+      end
+
+      context 'unavailable locally but available globally' do
+        let!(:user) { Fabricate(:user) }
+        before do
+          xhr :get, :check_username, username: user.username
+        end
+        it_should_behave_like 'when username is unavailable locally'
+      end
+
+      context 'unavailable everywhere' do
+        let!(:user) { Fabricate(:user) }
+        before do
+          xhr :get, :check_username, username: user.username
+        end
+        it_should_behave_like 'when username is unavailable locally'
+      end
+    end
+
+    context 'when call_mothership is enabled' do
+      before do
+        SiteSetting.stubs(:call_mothership?).returns(true)
+      end
+
+      context 'available locally and globally' do
+        before do
+          Mothership.stubs(:nickname_available?).returns([true, nil])
+          Mothership.stubs(:nickname_match?).returns([false, true, nil])  # match = false, available = true, suggestion = nil
+        end
+
+        shared_examples_for 'check_username when nickname is available everywhere' do
+          it 'should return success' do
+            response.should be_success
+          end
+
+          it 'should return available in the JSON' do
+            ::JSON.parse(response.body)['available'].should be_true
+          end
+
+          it 'should return global_match false in the JSON' do
+            ::JSON.parse(response.body)['global_match'].should be_false
+          end
+        end
+
+        context 'and email is not given' do
+          before do
+            xhr :get, :check_username, username: 'BruceWayne'
+          end
+          it_should_behave_like 'check_username when nickname is available everywhere'
+        end
+
+        context 'and email is given' do
+          before do
+            xhr :get, :check_username, username: 'BruceWayne', email: 'brucie@gmail.com'
+          end
+          it_should_behave_like 'check_username when nickname is available everywhere'
+        end
+      end
+
+      shared_examples_for 'when email is needed to check nickname match' do
+        it 'should return success' do
+          response.should be_success
+        end
+
+        it 'should return available as false in the JSON' do
+          ::JSON.parse(response.body)['available'].should be_false
+        end
+
+        it 'should not return a suggested username' do
+          ::JSON.parse(response.body)['suggestion'].should_not be_present
+        end
+      end
+
+      context 'available locally but not globally' do
+        before do
+          Mothership.stubs(:nickname_available?).returns([false, 'suggestion'])
+        end
+
+        context 'email param is not given' do
+          before do
+            xhr :get, :check_username, username: 'BruceWayne'
+          end
+          it_should_behave_like 'when email is needed to check nickname match'
+        end
+
+        context 'email param is an empty string' do
+          before do
+            xhr :get, :check_username, username: 'BruceWayne', email: ''
+          end
+          it_should_behave_like 'when email is needed to check nickname match'
+        end
+
+        context 'email matches global nickname' do
+          before do
+            Mothership.stubs(:nickname_match?).returns([true, false, nil])
+            xhr :get, :check_username, username: 'BruceWayne', email: 'brucie@example.com'
+          end
+          it_should_behave_like 'when username is available everywhere'
+
+          it 'should indicate a global match' do
+            ::JSON.parse(response.body)['global_match'].should be_true
+          end
+        end
+
+        context 'email does not match global nickname' do
+          before do
+            Mothership.stubs(:nickname_match?).returns([false, false, 'suggestion'])
+            xhr :get, :check_username, username: 'BruceWayne', email: 'brucie@example.com'
+          end
+          it_should_behave_like 'when username is unavailable locally'
+
+          it 'should not indicate a global match' do
+            ::JSON.parse(response.body)['global_match'].should be_false
+          end
+        end
+      end
+
+      context 'unavailable locally and globally' do
+        let!(:user) { Fabricate(:user) }
+
+        before do
+          Mothership.stubs(:nickname_available?).returns([false, 'suggestion'])
+          xhr :get, :check_username, username: user.username
+        end
+
+        it_should_behave_like 'when username is unavailable locally'
+      end
+
+      context 'unavailable locally and available globally' do
+        let!(:user) { Fabricate(:user) }
+
+        before do
+          Mothership.stubs(:nickname_available?).returns([true, nil])
+          xhr :get, :check_username, username: user.username
+        end
+
+        it_should_behave_like 'when username is unavailable locally'
+      end
+    end
+
+    context 'when discourse_org_access_key is wrong' do
+      before do
+        SiteSetting.stubs(:call_mothership?).returns(true)
+        Mothership.stubs(:nickname_available?).raises(RestClient::Forbidden)
+        Mothership.stubs(:nickname_match?).raises(RestClient::Forbidden)
+      end
+
+      it 'should return an error message' do
+        xhr :get, :check_username, username: 'horsie'
+        json = JSON.parse(response.body)
+        json['errors'].should_not be_nil
+        json['errors'][0].should_not be_nil
+      end
+    end
+  end
+
+  describe '.invited' do
+
+    let(:user) { Fabricate(:user) }
+
+    it 'returns success' do
+      xhr :get, :invited, username: user.username
+      response.should be_success
+    end
+
+  end
+
+  describe '.update' do
+
+    context 'not logged in' do
+      it 'raises an error when not logged in' do
+        lambda { xhr :put, :update, username: 'somename' }.should raise_error(Discourse::NotLoggedIn)
+      end
+    end
+
+    context 'logged in' do
+      let!(:user) { log_in }
+
+      context 'without a token' do
+        it 'should ensure you can update the user' do
+          Guardian.any_instance.expects(:can_edit?).with(user).returns(false)
+          put :update, username: user.username
+          response.should be_forbidden
+        end
+
+        context 'as a user who can edit the user' do
+
+          before do
+            put :update, username: user.username, bio_raw: 'brand new bio'
+            user.reload
+          end
+
+          it 'updates the user' do
+            user.bio_raw.should == 'brand new bio'
+          end
+
+          it 'returns json success' do
+            response.should be_success
+          end
+        end
+      end
+    end
+
+  end
+
+end

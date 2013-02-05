@@ -1,0 +1,5 @@
+//= depend_on 'en.yml'
+
+<% SimplesIdeias::I18n.assert_usable_configuration! %>
+var I18n = I18n || {}; 
+I18n.translations = <%= SimplesIdeias::I18n.translation_segments['app/assets/javascripts/i18n/en.js'].to_json %>;

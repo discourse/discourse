@@ -1,0 +1,36 @@
+<form class="form-horizontal">
+
+  <div class="control-group">
+    <div class="controls">
+      <h3>{{i18n user.change_username.title}}</h3>
+    </div>
+  </div>
+
+  {{#if error}}
+    <div class="control-group">
+      <div class="instructions">
+        <div class='alert error'>{{i18n user.change_username.error}}</div>
+      </div>
+    </div>
+  {{/if}}
+
+  <div class="control-group">
+    <label class="control-label">{{i18n user.username.title}}</label>
+    <div class="controls">
+      {{view Ember.TextField valueBinding="controller.newUsername" elementId="change_username" classNames="input-xxlarge"}}
+    </div>
+    <div class='instructions'>
+      {{#if controller.taken}}
+        {{i18n user.change_username.taken}}
+      {{/if}}
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="controls">
+        <button {{action changeUsername target="controller"}} {{bindAttr disabled="controller.saveDisabled"}} class="btn btn-primary">{{controller.saveButtonText}}</button>
+        {{#if saved}}{{i18n saved}}{{/if}}
+    </div>
+  </div>
+
+</form>

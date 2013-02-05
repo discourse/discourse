@@ -1,0 +1,60 @@
+{{#unless view.complete}}
+  <div class="modal-body">
+    <div>
+      <form>
+      <table>
+      <tr>
+          <td style="width:80px"><label for='new-account-name'>{{i18n user.name.title}}</label></td>
+          <td style="width:496px">
+          {{view Ember.TextField valueBinding="view.accountName" elementId="new-account-name"}}
+          &nbsp;{{view Discourse.InputTipView validationBinding="view.nameValidation"}}
+          </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><label>{{i18n user.name.instructions}}</label></td>
+      </tr>
+
+      <tr>
+            <td><label for='new-account-email'>{{i18n user.email.title}}</label></td>
+            <td>
+            {{view Ember.TextField valueBinding="view.accountEmail" id="new-account-email"}}
+            &nbsp;{{view Discourse.InputTipView validationBinding="view.emailValidation"}}
+            </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><label>{{i18n user.email.instructions}}</label></td>
+      </tr>
+
+      <tr>
+            <td><label for='new-account-username'>{{i18n user.username.title}}</label></td>
+            <td>
+            {{view Ember.TextField valueBinding="view.accountUsername" id="new-account-username"}}
+            &nbsp;{{view Discourse.InputTipView validationBinding="view.usernameValidation"}}
+            </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><label>Must be unique, no spaces. People can mention you as @username.</label></td>
+      </tr>
+
+      {{#if view.passwordRequired}}
+      <tr>
+          <td><label for='new-account-password'>{{i18n user.password.title}}</label></td>
+          <td>
+          {{view Ember.TextField valueBinding="view.accountPassword" type="password" id="new-account-password"}}
+          &nbsp;{{view Discourse.InputTipView validationBinding="view.passwordValidation"}}
+          </td>
+      </tr>
+      {{/if}}
+
+      </table>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button class='btn btn-large btn-primary' {{bindAttr disabled="view.submitDisabled"}} {{action createAccount target="view"}}>{{i18n create_account.title}}</button>
+  </div>
+{{/unless}}

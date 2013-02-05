@@ -1,0 +1,10 @@
+<table class="topic-list">
+<% @list.topics.each do |t| %>
+  <tr>
+    <td><a href="<%= t.relative_url %>"><%= t.title %></a> <span title='total posts'>[<%= t.posts_count %>]</span></td>
+  </tr>
+<% end %>
+</table>
+<% if @list.topics.length > 0 %>
+<a href="<%= @list.more_topics_url.sub('.json?','?') %>">next page</a>
+<% end %>

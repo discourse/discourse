@@ -1,0 +1,29 @@
+{{view Ember.TextField valueBinding="view.term" placeholderBinding="view.searchPlaceholder"}}
+{{#with view}}
+  {{#unless loading}}
+    {{#unless noResults}}
+      {{#each content}}
+        <ul>
+          <li class='heading'>
+            {{name}}
+            {{#if more}}
+              <a href='#' class='filter' {{action moreOfType type target="view"}}>{{i18n show_more}}</a>
+            {{else}}
+              {{#if view.showCancelFilter}}
+                <a href='#' class='filter' {{action cancelType target="view"}}><i class='icon icon-remove-sign'></i></a>
+              {{/if}}
+            {{/if}}
+          </li>
+          {{view Discourse.SearchResultsTypeView typeBinding="type" contentBinding="results"}}
+        </ul>    
+      {{/each}}
+    {{else}}
+      <div class='no-results'>
+        {{i18n search.no_results}}
+      </div>  
+    {{/unless}}
+  {{else}}
+  <div class='searching'><i class='icon-spinner icon-spin'></i><div>  
+  {{/unless}}
+{{/with}}
+

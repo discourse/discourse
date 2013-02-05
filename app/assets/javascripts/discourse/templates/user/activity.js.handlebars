@@ -1,0 +1,54 @@
+
+<div id='user-info'> 
+  <nav class='buttons'>
+    {{#if content.can_edit}}
+      {{#linkTo "preferences" class="btn"}}{{i18n user.edit}}{{/linkTo}}
+    {{/if}}
+    <br/>
+    {{#if content.can_send_private_message_to_user}}
+      <button class='btn create' {{action composePrivateMessage}}>
+        <i class='icon icon-arrow-right'></i>
+        {{i18n user.private_message}}
+      </button>
+    {{/if}}
+  </nav>
+  <div class='clearfix'></div>
+  
+  <ul class='action-list nav-stacked side-nav'>
+    {{view Discourse.ActivityFilterView countBinding="statsCountNonPM"}}
+    {{#each statsExcludingPms}}
+      {{view Discourse.ActivityFilterView contentBinding="this"}}
+    {{/each}}
+  </ul>
+  <div class='show'>
+    <dl>
+    {{#if content.website}}
+      <dt>{{i18n user.website}}:</dt><dd><a {{bindAttr href="content.website"}} target="_blank">{{content.websiteName}}</a></dd>
+    {{/if}}
+    <dt>{{i18n user.created}}:</dt><dd>{{date content.created_at}}</dd>
+    {{#if content.last_posted_at}}
+      <dt>{{i18n user.last_posted}}:</dt><dd>{{date content.last_posted_at}}</dd>
+    {{/if}}
+    {{#if content.last_seen_at}}
+      <dt>{{i18n user.last_seen}}:</dt><dd>{{date content.last_seen_at}}</dd>
+    {{/if}}
+    {{#if content.invited_by}}
+      <dt>{{i18n user.invited_by}}:</dt><dd>{{#linkTo user.activity content.invited_by}}{{content.invited_by.username}}{{/linkTo}}</dd>
+    {{/if}}
+    {{#if content.email}}
+      <dt>{{i18n user.email.title}}:</dt><dd {{bindAttr title="content.email"}}>{{content.email}}</dd>
+    {{/if}}
+    <dt>{{i18n user.trust_level}}:</dt><dd>{{content.trustLevel.name}}</dd>
+    </dl>
+  </div>
+
+  {{#if content.can_edit}}
+    <div style='margin-top: 10px'>
+      <button class='btn' data-not-implemented='true' disabled title="{{i18n not_implemented}}">{{i18n user.download_archive}}</button>
+    </div>
+  {{/if}}
+  
+
+</div>
+
+{{view Discourse.UserStreamView streamBinding="stream"}}

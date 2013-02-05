@@ -1,0 +1,52 @@
+require 'open-uri'
+require_dependency 'oneboxer/handlebars_onebox'
+
+module Oneboxer
+
+  class OembedOnebox < HandlebarsOnebox
+
+    MAX_TEXT = 500
+
+    def oembed_endpoint
+      @url
+    end
+    
+    def template
+      template_path('oembed_onebox')
+    end
+
+    def onebox
+
+      parsed = JSON.parse(open(oembed_endpoint).read)
+
+      # If it's a video, just embed the iframe
+      if %w(video rich).include?(parsed['type'])
+
+        # Return a preview of the thumbnail url, since iframes don't do well on previews
+        preview = nil
+        preview = "<img src='#{parsed['thumbnail_url']}'>" if parsed['thumbnail_url'].present?
+        return [parsed['html'], preview]
+      end
+
+      if %w(image photo).include?(parsed['type'])
+        return BaseOnebox.image_html(parsed['url'] || parsed['thumbnail_url'], parsed['title'], parsed['web_page'] || @url)
+      end
+
+      parsed['html'] ||= parsed['abstract']
+
+      begin
+        parsed_uri = URI.parse(@url)
+        parsed['host'] = parsed_uri.host.split('.').last(2).join('.')
+      rescue URI::InvalidURIError
+        # In case there is a problem with the URL, we just won't set the host
+      end
+
+
+      Mustache.render(File.read(template), parsed)
+    rescue OpenURI::HTTPError
+      nil
+    end
+
+  end
+
+end

@@ -1,0 +1,33 @@
+  <div class="modal-body">    
+    {{#if view.post.flagsAvailable}}
+      <form>
+        {{#each view.post.flagsAvailable}}
+          <div class='controls'>
+            <label class='radio'>
+              <input type='radio' id="radio_{{unbound name_key}}" {{action changePostActionType this target="view"}} name='post_action_type_index'> <strong>{{name}}</strong>
+              {{#if is_custom_flag}}
+                {{#if view.isCustomFlag}}
+                  {{view Ember.TextArea name="message" class="flag-message" placeholderBinding="view.customPlaceholder" valueBinding="view.customFlagMessage"}}
+                  <div {{bindAttr class="view.customMessageLengthClasses"}}>{{view.customMessageLength}}</div>
+                {{else}}
+                <div class='description'>{{{description}}}</div>
+                {{/if}}    
+              {{else}}
+                {{#if description}}
+                  <div class='description'>{{{description}}}</div>
+                {{/if}}
+              {{/if}}
+            </label>
+          </div>
+        {{/each}}
+      </form>
+    {{else}}
+      {{i18n flagging.cant}}
+    {{/if}}
+  </div>
+
+  {{#if view.showSubmit}}
+    <div class="modal-footer">
+      <button class='btn btn-primary' {{action createFlag target="view"}}>{{i18n flagging.action}}</button>
+    </div>
+  {{/if}}

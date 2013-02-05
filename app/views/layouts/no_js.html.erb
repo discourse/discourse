@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title><%=t :title%></title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="description">
+    <meta content="" name="author">
+    <link rel="icon" type="image/png" href=<%=SiteSetting.favicon_url%>>
+
+    <%- if mini_profiler_enabled? %>
+      <%- Rack::MiniProfiler.step "stylsheet" do%> 
+        <%=stylesheet_link_tag "application"%>
+      <%- end %>
+      <%- if current_user.try(:admin) %>
+        <%- Rack::MiniProfiler.step "stylsheet" do%>
+          <%= stylesheet_link_tag "admin"%>     
+        <%-end%>
+      <%- end %>
+
+    <%- else %>
+      <%=stylesheet_link_tag "application"%>
+      <%- if current_user.try(:admin) %>
+        <%= stylesheet_link_tag "admin"%>  
+      <%- end %>
+    <%- end %>
+
+    <%=csrf_meta_tags%>
+  </head>
+
+  <body>
+
+    <section id='main'>
+    <header class="d-header">
+      <div class="container">
+        <div class="contents">
+          <div class="row">
+            <div class="title span13">
+              <a href="/"><img src="<%=SiteSetting.logo_url%>" alt="<%=SiteSetting.title%>" id="site-logo"></a>
+            </div>      
+          </div>
+        </div>
+      </div>
+    </header>
+    <div id="main-outlet" class="container">
+      <%= yield %>
+    </div>
+    </section>
+
+    <footer id='bottom'>
+    </footer>
+  </body>
+</html>

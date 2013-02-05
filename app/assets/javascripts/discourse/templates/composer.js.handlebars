@@ -1,0 +1,77 @@
+<div class='spinner'>{{i18n composer.uploading}}</div>
+
+<div class='contents'>
+
+  <div class='control'>
+    <a href='#' class='toggler' {{action toggle bubbles=false}} title='toggle'></a>      
+
+    {{#if content.viewOpen}}
+      <div class='control-row reply-area'>
+          <div class='reply-to'>{{{content.actionTitle}}}:</div>
+          
+          {{#if content.editTitle}}
+            <div class='form-element clearfix'>
+
+                {{#if content.creatingPrivateMessage}}
+                  {{view Discourse.TextField id="private-message-users" class="span8" placeholderKey="composer.users_placeholder"}}
+                {{/if}}
+                {{view Discourse.TextField valueBinding="content.title" tabindex="1" id="reply-title" maxlength="255" class="span8" placeholderKey="composer.title_placeholder"}}
+                {{#unless content.creatingPrivateMessage}}
+                  {{view Discourse.ComboboxViewCategory valueAttribute="name" contentBinding="Discourse.site.categories" valueBinding="content.categoryName"}}
+                  {{#if content.archetype.hasOptions}}
+                    <button class='btn' {{action showOptions target="controller"}}>{{i18n topic.options}}</button>
+                  {{/if}}
+                {{/unless}}
+            </div>  
+          {{/if}}
+
+
+          <div class='wmd-controls'>
+            <div class='textarea-wrapper'>
+              <div class='wmd-button-bar' id='wmd-button-bar'></div>
+              {{view Discourse.NotifyingTextArea parentBinding="view" tabindex="2" valueBinding="content.reply" id="wmd-input" placeholderKey="composer.reply_placeholder"}}
+            </div>
+            <div class='preview-wrapper'>
+              <div id='wmd-preview' {{bindAttr class="controller.hidePreview:hidden"}}></div>
+            </div>
+            {{#if Discourse.currentUser}}
+               <a href="#" {{action togglePreview target="controller"}} class='toggle-preview'>{{{content.toggleText}}}</a>          
+               <div class='saving-draft'></div>
+
+            {{/if}}
+          </div>
+
+          {{#if Discourse.currentUser}}
+            <div class='submit-panel'>
+              <button {{action save target="controller"}} tabindex="3" {{bindAttr disabled="content.cantSubmitPost"}} class='btn btn-primary create'>{{view.content.saveText}}</button>
+              <a href='#' {{action cancel target="controller"}} class='cancel' tabindex="4">{{i18n cancel}}</a>
+
+              {{#if view.loadingImage}}
+                <div id="image-uploading">
+                  Uploading image {{view.uploadProgress}}% <a {{action cancelUpload target="view"}}>cancel</a>
+                </div>
+              {{/if}}
+            </div>
+          {{/if}}
+
+      </div>
+    {{else}}
+      <div class='row'>
+        <div class='span24'>
+          <div class='saving-text'>
+            {{#if content.createdPost}}
+              {{i18n composer.saved}} <a class='permalink' href="{{unbound createdPost.url}}" {{action viewNewReply target="controller"}}>{{i18n composer.view_new_post}}</a>
+            {{else}}
+              {{i18n composer.saving}}
+            {{/if}}          
+          </div>
+          <div class='draft-text'>
+            {{i18n composer.saved_draft}}
+          </div>
+        </div>
+
+      </div>
+    {{/if}}
+
+  </div>
+</div>

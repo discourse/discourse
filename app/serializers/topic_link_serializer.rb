@@ -1,0 +1,32 @@
+class TopicLinkSerializer < ApplicationSerializer
+
+  attributes :url, :title, :internal, :reflection, :clicks, :user_id
+
+  def url
+    object['url']
+  end
+
+  def title
+    object['title']
+  end
+
+  def internal
+    object['internal'] == 't'
+  end
+
+  def reflection
+    object['reflection'] == 't'
+  end
+
+  def clicks
+    object['clicks'] || 0
+  end
+
+  def user_id
+    object['user_id'].to_i
+  end
+  def include_user_id?
+    object['user_id'].present?
+  end
+
+end

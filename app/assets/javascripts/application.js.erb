@@ -1,0 +1,51 @@
+// This is a manifest file that'll be compiled into including all the files listed below.
+// Add new JavaScript/Coffee code in separate files in this directory and they'll automatically
+// be included in the compiled file accessible from http://example.com/assets/application.js
+// It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
+// the compiled file.
+//
+//= require ./env
+
+// probe framework first
+//= require ./discourse/components/probes.js
+
+// Externals we need to load first
+//= require ./external/jquery-1.8.2.js
+//= require ./external/jquery.ui.widget.js
+//= require ./external/handlebars-1.0.rc.2.js
+//= require ./external/ember.js
+
+// Pagedown customizations
+//= require ./pagedown_custom.js
+
+// The rest of the externals
+//= require_tree ./external
+//= require i18n
+//= require discourse/translations
+
+//= require ./discourse/helpers/i18n_helpers
+//= require ./discourse
+
+// Stuff we need to load first
+//= require_tree ./discourse/mixins
+//= require ./discourse/components/debounce
+//= require ./discourse/views/view
+//= require ./discourse/controllers/controller
+//= require ./discourse/views/modal/modal_body_view
+//= require ./discourse/models/model
+//= require ./discourse/routes/discourse_route
+
+//= require_tree ./discourse/controllers
+//= require_tree ./discourse/components
+//= require_tree ./discourse/models
+//= require_tree ./discourse/views
+//= require_tree ./discourse/helpers
+//= require_tree ./discourse/templates
+//= require_tree ./discourse/routes
+
+<%
+  # Include javascripts
+  DiscoursePluginRegistry.javascripts.each do |js|
+    require_asset(js)
+  end 
+%>

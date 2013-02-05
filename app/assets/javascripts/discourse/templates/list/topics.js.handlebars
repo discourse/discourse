@@ -1,0 +1,59 @@
+{{#unless controller.loading}}
+  {{#if content.loaded}}
+    <div class='contents'>    
+      {{#unless content.emptyListTip}}
+      <table id='topic-list' {{bindAttr class="controller.category:filter-category"}}>
+        <thead>
+        <tr>
+          {{#if Discourse.currentUser}}
+            <th>&nbsp;</th>
+          {{/if}}            
+          <th>
+            {{i18n topic.title}}
+          </th>
+          <th>{{i18n category_title}}</th>
+          <th>{{i18n top_contributors}}</th>
+          <th class='num'>{{i18n posts}}</th>
+          <th class='num'>{{i18n likes}}</th>
+          <th class='num'>{{i18n views}}</th>
+          <th class='num activity' colspan='2'>{{i18n activity}}</th>
+        </tr>      
+        </thead>
+
+        {{#if view.rollUp}}
+          <tbody>
+            <tr>
+              <td colspan="9">
+                <div class='alert alert-info'>
+                  {{countI18n new_topics_inserted countBinding="view.insertedCount"}}
+                  <a href='#' {{action showInserted target="controller"}}>{{i18n show_new_topics}}</a>
+                </div>
+              </td>
+            </tr>
+          </tbody>        
+        {{else}}
+          {{#group}}
+            {{collection contentBinding="content.inserted" tagName="tbody" itemViewClass="Discourse.TopicListItemView"}}  
+          {{/group}}
+        {{/if}}
+
+        {{#group}}
+          {{collection contentBinding="content.topics" tagName="tbody" itemViewClass="Discourse.TopicListItemView"}}
+        {{/group}}
+
+      </table>
+      {{else}} 
+        <p class='empty-topic-list'>
+          {{content.emptyListTip}}
+        </p>
+      {{/unless}}
+    </div>
+
+    <footer id='topic-list-bottom'>
+      {{#if view.loading}}
+        <div class='topics-loading'>{{i18n topic.loading_more}}</div>
+      {{/if}}
+    </footer>
+
+  {{/if}}
+{{/unless}}

@@ -1,0 +1,18 @@
+<div class='onebox-result'>
+  {{#host}}
+    <div class='source'>
+      <div class='info'>
+        <a href='{{original_url}}' target="_blank">
+          {{#favicon}}<img class='favicon' src="{{favicon}}"> {{/favicon}}{{host}}
+        </a>
+      </div>
+    </div>
+  {{/host}}
+  <div class='onebox-result-body'>
+    {{#image}}<img src="{{image}}" class="thumbnail">{{/image}}
+    <h3><a href="{{original_url}}" target="_blank">{{title}}</a></h3>
+    {{#by_info}}<h4>{{by_info}}</h4>{{/by_info}}
+    {{{text}}}
+  </div>
+  <div class='clearfix'></div>
+</div>

@@ -1,0 +1,22 @@
+<div class="modal-body">    
+  <form>
+    <label>{{i18n category.name}}</label>
+    {{view Discourse.TextField valueBinding="view.category.name" placeholderKey="category.name_placeholder"}}
+
+    {{#if view.category.excerpt}}
+      <label>{{i18n category.description}}</label>
+      <p>{{view.category.excerpt}} <a href="{{unbound view.category.topic_url}}">{{i18n category.topic}}</a></p>
+    {{/if}}
+
+    <label>{{i18n category.color}}</label>
+
+    <div class='input-prepend input-append'>
+      <span class='add-on'>#</span>{{view Discourse.TextField valueBinding="view.category.color" placeholderKey="category.color_placeholder" maxlength="6"}}
+      <span class='badge-category' {{bindAttr style="view.colorStyle"}}>{{i18n preview}}</span>
+    </div>
+
+  </form>
+</div>
+<div class="modal-footer">
+  <button class='btn btn-primary' {{bindAttr disabled="view.disabled"}} {{action saveCategory target="view"}}>{{view.buttonTitle}}</button>
+</div>  

@@ -1,0 +1,17 @@
+{{#with view.content}}
+  <div class='row'>
+    <div class='topic-meta-data span2'>
+      <div class='contents'>
+        <div>
+          <a href='/users/{{unbound username}}' class='excerptable' data-excerpt-position="right" data-excerpt-size="small">{{avatar this imageSize="small"}}</a>
+        </div>
+        <h5><a href='/users/{{unbound username}}'>{{username}}</a></h5>
+        <span class='post-date'>{{date created_at}}</span>
+      </div>
+
+    </div>
+    <div class='span11 topic-body'>
+      {{{unbound cooked}}}
+    </div>
+  </div>
+{{/with}}

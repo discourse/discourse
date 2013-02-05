@@ -1,0 +1,19 @@
+<h2>
+  <a href="<%= @topic_view.topic.relative_url %>"><%= @topic_view.topic.title %></a>
+</h2>
+<% (@post ? [@post] : @topic_view.posts).each do |post| %>
+  <div class='creator'>
+    #<%=post.post_number%> By: <b><%= post.user.name %></b>, <%= post.created_at.to_formatted_s(:long_ordinal) %>
+  </div>
+  <div class='post'>
+    <%= post.cooked.html_safe %>
+  </div>
+<% end %>
+
+<% if @next_page%>
+  <p>
+  <b><a href="<%= @topic_view.topic.relative_url %>?page=<%= @next_page%>">next page</a></b>
+  </p>
+<% end %>
+
+<%- content_for :canonical do %><%= @canonical %><%- end %>

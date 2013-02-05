@@ -1,0 +1,108 @@
+<form class="form-horizontal">
+
+  <div class="control-group">
+    <div class="controls">
+      <h3>{{i18n user.information}}</h3>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">{{i18n user.username.title}}</label>
+    <div class="controls">
+      <span class='static'>{{content.username}}</span>
+      {{#linkTo "preferences.username" class="btn pad-left"}}{{i18n user.change_username.action}}{{/linkTo}}
+    </div>
+    <div class='instructions'>
+      {{{i18n user.username.instructions username="content.username"}}}
+    </div>  
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">{{i18n user.name.title}}</label>
+    <div class="controls">
+      {{view Ember.TextField valueBinding="content.name" classNames="input-xxlarge"}}
+    </div>
+    <div class='instructions'>
+      {{i18n user.name.instructions}}
+    </div>    
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">{{i18n user.email.title}}</label>
+    <div class="controls">
+      <span class='static'>{{content.email}}</span>
+      {{#linkTo "preferences.email" class="btn pad-left"}}{{i18n user.change_email.action}}{{/linkTo}}
+    </div>
+    <div class='instructions'>
+      {{i18n user.email.instructions}}
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">{{i18n user.password.title}}</label>   
+    <div class="controls">
+      <a href="#" {{action changePassword target="controller"}} class='btn'>{{i18n user.change_password}}</a> {{controller.passwordProgress}}
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">{{i18n user.avatar.title}}</label>
+    <div class="controls">
+      {{avatar content imageSize="large"}}
+    </div>
+    <div class='instructions'>
+      {{{i18n user.avatar.instructions}}} {{content.email}}
+    </div>    
+  </div>
+
+  <div class="control-group">  
+    <label class="control-label">{{i18n user.bio}}</label>
+    <div class="controls">      
+      {{view Discourse.PagedownEditor valueBinding="content.bio_raw"}}      
+    </div>
+  </div>
+
+  <div class="control-group">  
+    <label class="control-label">{{i18n user.website}}</label>
+    <div class="controls">
+      {{view Ember.TextField valueBinding="content.website" classNames="input-xxlarge"}}
+    </div>
+  </div>
+
+  <div class="control-group">  
+    <label class="control-label">{{i18n user.email_settings}}</label>      
+    <div class="controls">
+      <label>{{view Ember.Checkbox checkedBinding="content.email_digests"}}
+      {{i18n user.email_digests.title}}</label>
+
+      {{#if content.email_digests}}
+        <div class='control-indent'>
+          {{view Discourse.ComboboxView valueAttribute="value" contentBinding="controller.digestFrequencies" valueBinding="content.digest_after_days"}}          
+        </div>
+      {{/if}}
+      <label>{{view Ember.Checkbox checkedBinding="content.email_private_messages"}}
+      {{i18n user.email_private_messages}}</label>
+      <label>{{view Ember.Checkbox checkedBinding="content.email_direct"}}
+      {{i18n user.email_direct}}</label>
+    </div>
+    <div class='instructions'>
+      {{i18n user.email.frequency}}
+    </div>     
+  </div>
+  
+  <div class="control-group">  
+    <label class="control-label">{{i18n user.other_settings}}</label>    
+    <div class="controls">
+      <label>{{i18n user.auto_track_topics}}</label>
+      {{view Discourse.ComboboxView valueAttribute="value" contentBinding="controller.autoTrackDurations" valueBinding="content.auto_track_topics_after_msecs"}}          
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="controls">
+        <button {{action save target="controller"}} {{bindAttr disabled="controller.saveDisabled"}} class="btn btn-primary">{{controller.saveButtonText}}</button>
+        {{#if saved}}{{i18n saved}}{{/if}}
+    </div>
+  </div>
+
+</form>

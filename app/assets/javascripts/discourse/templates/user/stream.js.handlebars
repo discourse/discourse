@@ -1,0 +1,17 @@
+<div id='user-stream'>
+  {{#collection contentBinding="stream" itemClass="item"}}
+    {{#with view.content}}
+      <div class='clearfix info'>
+        <a href="/users/{{unbound username}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar this imageSize="large" extraClasses="actor" avatarTemplatePath="avatar_template"}}</div></a>
+        <span class='time'>{{date path="created_at" leaveAgo="true"}}</span>
+        <a class='name' href="{{unbound postUrl}}">{{unbound name}}</a><br>
+        <span class='type'>{{unbound description}}</span>
+        <span class='title'><span class="post-number">#{{unbound post_number}}</span> <a href="{{unbound postUrl}}">{{unbound title}}</a></span>
+      </div>
+      <p class='excerpt'>
+      {{{unbound excerpt}}}
+      </p>
+    {{/with}}
+  {{/collection}}
+</div>
+<div id="user-stream-bottom"></div>

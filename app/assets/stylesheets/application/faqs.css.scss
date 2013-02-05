@@ -1,0 +1,208 @@
+@import "foundation/variables";
+@import "foundation/mixins";
+@import "foundation/helpers";
+
+// --------------------------------------------------
+// FAQs
+// --------------------------------------------------
+
+// Base
+// --------------------------------------------------
+
+.body-page {
+
+  color: #1d1f20;
+  font: 14px/20px $base-font-family;
+  background: $base-background-color;
+
+  // Consistent vertical spacing
+
+  address,
+  blockquote,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  hgroup,
+  hr,
+  p,
+  pre,
+  ul,
+  ol,
+  dl,
+  figure,
+  fieldset,
+  table {
+    margin: 0 0 20px;
+  }
+
+  // Links
+
+  a {
+    color: $link-color;
+    text-decoration: none;
+    cursor: pointer;
+    &:visited {
+      color: $link-color-visited;
+    }
+    &:hover {
+      color: $link-color-hover;
+    }
+    &:focus {
+      outline: 0;
+    }
+    &:active {
+      color: $link-color-active;
+    }
+  }
+
+  // Typography
+
+  h1 {
+    font-size: 14px;
+  }
+
+  // Lists
+
+  ul,
+  ol,
+  dd {
+    margin-left: 40px;
+    padding: 0;
+  }
+
+  li {
+    > ul,
+    > ol {
+      margin-bottom: 0;
+    }
+  }
+
+  // Embedded content
+
+  img {
+    vertical-align: middle;
+  }
+
+}
+
+// Content wrapper
+// --------------------------------------------------
+
+.body-page {
+
+  .container {
+    @extend .clearfix;
+    width: 960px;
+    margin: 0 auto;
+    padding: 20px 10px;
+  }
+
+}
+
+// Navigation
+// --------------------------------------------------
+
+.body-page {
+
+  nav {
+    width: 280px;
+    overflow: hidden;
+    position: fixed;
+    float: left;
+    border: 1px solid #b9b9b9;
+    background-color: #fafafa;
+    @include border-radius-all(4px);
+    @include box-shadow(0 1px 0 #fff);
+    > a {
+      display: block;
+      border-top: 1px solid #e6e6e6;
+      padding: 13px;
+      font-weight: bold;
+      font-size: 16px;
+      line-height: 20px;
+      text-shadow: 0 1px 0 rgba($white, 0.5);
+      &:first-child {
+        border-top: 0;
+      }
+      &:hover {
+        background-color: #eee;
+      }
+      &.active {
+        color: #f15b22;
+        background-color: #f9e7e0;
+        cursor: default;
+      }
+    }
+  }
+
+}
+
+// Excerpts & Questions
+// --------------------------------------------------
+
+.body-page {
+
+  #excerpt,
+  #questions {
+    float: right;
+    width: 658px;
+  }
+
+  // Excerpts
+
+  #excerpt {
+    @extend .clearfix;
+    display: none;
+  }
+
+  // Questions
+
+  #questions {
+    > article {
+      @extend .clearfix;
+    }
+    h1 {
+      margin-top: 20px;
+    }
+    > article:first-child h1 {
+      margin-top: 0;
+    }
+  }
+
+}
+
+// Buttons
+// --------------------------------------------------
+
+.body-page {
+  
+  .btn {
+    float: right;
+    margin-left: 10px;
+    &:last-child {
+      margin-left: 0;
+    }
+  }
+
+  .collapse {
+    height: auto;
+  }
+
+  .read-more {
+    float: right;
+  }
+
+  input
+ {
+    height: 28px;
+    border-radius: 4px;
+    border: 1px solid #DDD;
+    padding-left: 10px;
+    box-shadow: 0px 0px 2px 1px gold;
+    float: right;
+    margin-left: 10px;
+ }
+}

@@ -1,0 +1,44 @@
+<div class="modal-body">
+  <div id="login-buttons">
+    <button class="btn btn-social google" title="{{i18n login.google.title}}" {{action openidLogin "google" target="view"}}>{{i18n login.google.title}}</button>
+    <button class="btn btn-social facebook" title="{{i18n login.facebook.title}}" {{action "facebookLogin" target="view"}}>{{i18n login.facebook.title}}</button>
+    <br>
+    <button class="btn btn-social twitter" title="{{i18n login.twitter.title}}" {{action "twitterLogin" target="view"}}>{{i18n login.twitter.title}}</button>
+    <button class="btn btn-social yahoo" title="{{i18n login.yahoo.title}}" {{action openidLogin "yahoo" target="view"}}>{{i18n login.yahoo.title}}</button>
+  </div>
+  <h3 style="text-align:center; margin-bottom:10px;">
+    {{i18n login.or}}
+  </h3>
+  <form id='login-form'>
+  <div>
+      <table>
+      <tr>
+      <td>
+        <label for='login-account-name'>{{i18n login.username}}&nbsp;</label>
+      </td>
+      <td>
+        {{view Discourse.TextField valueBinding="view.loginName" placeholderKey="login.email_placeholder" elementId="login-account-name" autocorrect="off" autocapitalize="off"}}
+      </td>
+      <tr>
+      <td>
+          <label for='login-account-password'>{{i18n login.password}}&nbsp;</label>
+      </td>
+      <td>
+          {{view Ember.TextField valueBinding="view.loginPassword" type="password" id="login-account-password"}} &nbsp;
+          <a id="forgot-password-link" {{action forgotPassword target="view"}}>{{i18n forgot_password.action}}</a>
+      </td>
+      </tr>
+      </table>
+    </div>
+  </form>
+  {{view.authMessage}}
+  <div id='login-alert' {{bindAttr class="view.alertClass"}}>{{view.alert}}</div>
+</div>
+<div class="modal-footer">
+  {{#if view.authenticate}}
+    {{i18n login.authenticating}}
+  {{/if}}
+  <button class='btn btn-large btn-primary' {{bindAttr disabled="view.loginDisabled"}} {{action login target="view"}}><i class="icon-unlock"></i>&nbsp;{{view.loginButtonText}}</button>
+  &nbsp;
+  {{i18n create_account.invite}} <a id="new-account-link" {{action newAccount target="view"}}>{{i18n create_account.action}}</a>
+</div>

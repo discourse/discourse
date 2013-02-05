@@ -1,0 +1,11 @@
+<p>{{countI18n topic.multi_select.description countBinding="controller.selectedCount"}}</p>
+
+{{#if canDeleteSelected}}
+  <button class='btn' {{action deleteSelected}}><i class='icon icon-trash'></i> {{i18n topic.multi_select.delete}}</button>
+{{/if}}
+
+{{#if canMoveSelected}}
+  <button class='btn' {{action moveSelected}}><i class='icon icon-move'></i> {{i18n topic.multi_select.move}}</button>
+{{/if}}  
+
+<p class='cancel'><a href='#' {{action toggleMultiSelect}}>{{i18n topic.multi_select.cancel}}</a></p>

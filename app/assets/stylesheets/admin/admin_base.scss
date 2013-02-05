@@ -1,0 +1,247 @@
+// these are the styles associated with the Discourse admin section
+@import "foundation/variables";
+@import "foundation/mixins";
+
+.admin-content {
+  margin-bottom: 50px;
+  .admin-contents {
+    padding: 8px;
+  }
+}
+
+.admin-loading {
+  width: 100px;
+  margin: 0 auto 30px auto;
+  background-color: $black;
+  @include border-radius-all(10px);
+  padding: 10px 10px 10px 30px;
+  font-size: 15px;
+  line-height: 23px;
+  text-align: center;
+  color: $white;
+  background: {
+    image: image-url("spinner_96_w.gif");
+    repeat: no-repeat;
+    position: 10px 8px;
+    size: 25px;
+  };
+}
+
+.admin-controls {
+  @include border-radius-all(5px);
+  background-color: darken($white, 5%);
+  border: 1px solid darken($white, 10%);
+  padding: 5px 10px 3px 0px;
+  margin-bottom: 20px;
+  height: 35px;
+  .nav.nav-pills {
+    li.active {
+      a {
+        background-color: $dark_gray;
+        &:hover {
+          background-color: $dark_gray;
+        }
+      }
+    }
+  }
+  h1 {
+    font-size: 20px;
+    line-height: 25px;
+    color: $darkish_gray;
+  }
+  .controls {
+    padding-top: 3px;
+  }
+  button {
+    float: left;
+    margin-right: 5px;
+  }
+  .result-message {
+    display: inline-block;
+    padding-left: 10px;
+    padding-top: 5px;
+  }
+  .username {
+    input[type=text] {
+      width: 240px;
+    }
+  }
+  .search {
+    label {
+      margin-top: 5px;
+      float: right;
+    }
+    input[type=text] {
+      float: right;
+    }
+  }
+}
+
+.settings {
+  .setting {
+    padding-bottom: 20px;
+    .overridden {
+      input[type=text] {
+        background-color: lighten($yellow, 40%);
+      }
+    }
+    .desc {
+      padding-top: 3px;
+      color: darken($white, 40%);
+    }
+  }
+}
+
+section.details {
+  h1 {
+    font-size: 15px;
+    background-color: $gray;
+    box-shadow: 1px 1px 3px $darkish_gray;
+    color: $darkish_gray;
+    padding: 0 10px;
+    line-height: 25px;
+    margin: 0px 0 5px 0;
+  }
+}
+
+#selected-controls {
+  background-color: lighten($blue, 50%);
+  padding: 8px;
+  min-height: 27px;
+  position: fixed;
+  bottom: 0;
+  width: 1075px;
+  border: 1px solid lighten($blue, 45%);
+}
+
+table {
+  tr.selected {
+    background-color: lighten($blue, 58%);
+  }
+}
+
+.display-row {
+  padding: 5px;
+  &:nth-of-type(1) {
+    border-top: 0;
+  }
+  border-top: 1px solid #dddddd;
+  &:before, &:after {
+    display: table;
+    content: "";
+  }
+  &:after {
+    clear: both;
+  }
+  .field {
+    height: 30px;
+    line-height: 30px;
+    font-weight: bold;
+    width: 196px;
+    float: left;
+    margin-left: 12px;
+  }
+  .value {
+    width: 250px;
+    height: 30px;
+    line-height: 30px;
+    float: left;
+    margin-left: 12px;
+  }
+  .controls {
+    .btn {
+      margin-right: 5px;
+    }
+  }
+}
+
+// Customise area
+.customize {
+  .nav.nav-pills {
+    margin-left: 10px;
+  }
+  .well {
+    min-height: 20px;
+    padding: 4px;
+    margin-bottom: 20px;
+    background-color: whitesmoke;
+    border: 1px solid #e3e3e3;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    height: 638px;
+    margin-bottom: 10px;
+  }
+  a {
+    cursor: pointer;
+  }
+  .list, .current-style {
+    float: left;
+  }
+  .list {
+    width: 20%;
+    margin-right: 20px;
+    margin-top: 65px;
+  }
+  .current-style {
+    .delete-link {
+      margin-left: 15px;
+      margin-top: 5px;
+    }
+    .preview-link {
+      margin-left: 30px;
+    }
+    width: 75%;
+    .style-name {
+      width: 600px;
+      height: 25px;
+      font-size: 20px;
+    }
+    .ace-wrapper {
+      position: relative;
+      height: 600px;
+      width: 100%;
+    }
+    .ace_editor {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+    .status-actions {
+      float: right;
+      span {
+        margin-right: 20px;
+      }
+    }
+    .buttons {
+      float: left;
+      button, a {
+        float: left;
+      }
+    }
+  }
+}
+
+
+.admin-flags {
+  tr.hidden-post td.excerpt { opacity: 0.4;  }
+  td.message {
+    padding: 4px 0;
+    background-color: #f8f8e0;
+  }
+  td { vertical-align: middle; }
+  th { text-align: left; }
+  .user { width: 40px; }
+  .excerpt {
+    width: 600px; padding: 0 10px 10px 0;
+    .icon,h3 { display: inline-block; }
+    
+  }
+  .flaggers { padding: 0 10px; }
+  .last-flagged { padding: 0 10px; }
+}
