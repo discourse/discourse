@@ -68,7 +68,7 @@ Discourse implements a variety of open source tech. You may wish to familiarize 
 ### Languages/Frameworks
 
 1. [Ruby on Rails](https://github.com/rails/rails) - Our back end API is a Rails app. It responds to requests RESTfully and responds in JSON.
-2. [Ember.js](https://github.com/emberjs/ember.js) - Our front end interface is an Ember.js app that communicates the Rails API.
+2. [Ember.js](https://github.com/emberjs/ember.js) - Our front end interface is an Ember.js app that communicates with the Rails API.
 
 ### Databases
 
