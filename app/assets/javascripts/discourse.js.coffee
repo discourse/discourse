@@ -256,9 +256,9 @@ window.Discourse = Ember.Application.createWithMixins
                   @rerender()
         else
           $('link').each ->
-            if @.href.match(me.name) and me.hash
-              $(@).data('orig', @.href) unless $(@).data('orig')
-              @.href = $(@).data('orig') + "&hash=" + me.hash
+            if @href.match(me.name) and me.hash
+              $(@).data('orig', @href) unless $(@).data('orig')
+              @href = $(@).data('orig') + "&hash=" + me.hash
 
 window.Discourse.Router = Discourse.Router.reopen(location: 'discourse_location')
 
