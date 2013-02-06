@@ -1,4 +1,4 @@
-<a href="http://www.discourse.org/">![Logo](https://raw.github.com/discourse/core/master/images/discourse.png)</a>
+<a href="http://www.discourse.org/">![Logo](https://raw.github.com/discourse/discourse/master/images/discourse.png)</a>
 
 Discourse is the 100% open source, next-generation discussion platform built for the next 10 years of the Internet.
 
@@ -53,7 +53,7 @@ accepts contributions from the public, and we'd like you to be a part of that co
 In order to be prepared for contributing to Discourse, please:
 
 1. Review the **VISION** section above, which will help you understand the needs of the team, and the focus of the project,
-2. Read & sign the **[Discourse Forums Contribution License Agreement](https://github.com/discourse/core-cla)**, to confirm you've read and acknowledged the legal aspects of your contributions, and
+2. Read & sign the **[Electronic Discourse Forums Contribution License Agreement](https://docs.google.com/a/discourse.org/spreadsheet/viewform?formkey=dGUwejFfbDhDYXR4bVFMRG1TUENqLWc6MQ)**, to confirm you've read and acknowledged the legal aspects of your contributions, and
 3. Dig into **[CONTRIBUTING.MD](https://github.com/discourse/core/blob/master/CONTRIBUTING.md)**, which houses all of the necessary info to:
    * submit bugs,
    * request new features, and

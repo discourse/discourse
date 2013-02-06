@@ -2,7 +2,7 @@
 
 ## Before You Start
 
-Anyone wishing to contribute to the **[Discourse/Core](https://github.com/discourse/core)** project **MUST read & sign the [Discourse Forums Contribution License Agreement](https://github.com/discourse/core-cla)**. The Discourse team is legally prevented from accepting any pull requests from users who have not signed the CLA first.
+Anyone wishing to contribute to the **[Discourse/Discourse](https://github.com/discourse/discourse)** project **MUST read & sign the [Electronic Discourse Forums Contribution License Agreement](https://docs.google.com/a/discourse.org/spreadsheet/viewform?formkey=dGUwejFfbDhDYXR4bVFMRG1TUENqLWc6MQ)**. The Discourse team is legally prevented from accepting any pull requests from users who have not signed the CLA first.
 
 ## Reporting Bugs
 
@@ -31,13 +31,13 @@ Anyone wishing to contribute to the **[Discourse/Core](https://github.com/discou
 1. Clone the Repo:
 
   ```
-  git clone git://github.com/discourse/core.git
+  git clone git://github.com/discourse/discourse.git
   ```
 
 2. Create a new Branch:
 
   ```
-  cd core
+  cd discourse
   git checkout -b new_discourse_branch
   ```
 
@@ -49,7 +49,7 @@ Anyone wishing to contribute to the **[Discourse/Core](https://github.com/discou
   * Include tests, and ensure they pass.
   * Remember to check to see if your new functionality has an impact on our Documentation, and include updates as appropriate.
   
-  Completing these steps will increase the chances of your code making it into **[Discourse/Core](https://github.com/discourse/core)**.
+  Completing these steps will increase the chances of your code making it into **[Discourse/Discourse](https://github.com/discourse/discourse)**.
 
 4. Commit
 
@@ -64,7 +64,7 @@ Anyone wishing to contribute to the **[Discourse/Core](https://github.com/discou
   Ensure that if you supply a multitude of commits, they are **squashed into a single commit**:
 
   ```
-  git remote add upstream https://github.com/discourse/core.git
+  git remote add upstream https://github.com/discourse/discourse.git
   git fetch upstream
   git checkout new_discourse_branch
   git rebase upstream/master
@@ -86,7 +86,7 @@ Anyone wishing to contribute to the **[Discourse/Core](https://github.com/discou
 6. Fork
 
   ```
-  git remote add mine git@github.com:<your user name>/core.git
+  git remote add mine git@github.com:<your user name>/discourse.git
   ```
 
 7. Push to your remote
