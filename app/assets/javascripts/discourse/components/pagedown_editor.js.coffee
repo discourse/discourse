@@ -20,5 +20,5 @@ window.Discourse.PagedownEditor = Ember.ContainerView.extend
   didInsertElement: ->
     $wmdInput = $('#wmd-input')
     $wmdInput.data('init', true)
-    @editor = new Markdown.Editor(Discourse.Utilities.markdownConverter())
+    @editor = new Markdown.Editor(Discourse.Utilities.markdownConverter(sanitize: true))
     @editor.run()
