@@ -14,6 +14,6 @@
 
 * Nick Sahler - UI Implementation, supplemental
 
-* Don Petersen - Ruby developmer, installation scripts
+* Don Petersen - Ruby developer, installation scripts
 
 *For a more detailed list of the many individuals that contributed to the design and development of Discourse outside of GitHub, please refer to the official Discourse website.*
