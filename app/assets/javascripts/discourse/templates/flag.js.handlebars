@@ -6,18 +6,21 @@
             <label class='radio'>
               <input type='radio' id="radio_{{unbound name_key}}" {{action changePostActionType this target="view"}} name='post_action_type_index'> <strong>{{name}}</strong>
               {{#if is_custom_flag}}
-                {{#if view.isCustomFlag}}
-                  {{view Ember.TextArea name="message" class="flag-message" placeholderBinding="view.customPlaceholder" valueBinding="view.customFlagMessage"}}
-                  <div {{bindAttr class="view.customMessageLengthClasses"}}>{{view.customMessageLength}}</div>
-                {{else}}
+                {{#unless view.isCustomFlag}}
                 <div class='description'>{{{description}}}</div>
-                {{/if}}    
+                {{/unless}}    
               {{else}}
                 {{#if description}}
                   <div class='description'>{{{description}}}</div>
                 {{/if}}
               {{/if}}
             </label>
+            {{#if is_custom_flag}}
+                {{#if view.isCustomFlag}} 
+                  {{view Ember.TextArea name="message" class="flag-message" placeholderBinding="view.customPlaceholder" valueBinding="view.customFlagMessage"}}
+                  <div {{bindAttr class="view.customMessageLengthClasses"}}>{{view.customMessageLength}}</div>
+                {{/if}}
+            {{/if}}
           </div>
         {{/each}}
       </form>

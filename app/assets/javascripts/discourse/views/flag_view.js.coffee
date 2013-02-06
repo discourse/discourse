@@ -3,6 +3,8 @@ window.Discourse.FlagView = Ember.View.extend
   title: Em.String.i18n('flagging.title')
 
   changePostActionType: (action) ->
+    if @get('postActionTypeId') == action.id
+      return false
     @set('postActionTypeId', action.id)
     @set('isCustomFlag', action.is_custom_flag)
     Em.run.next -> $("#radio_#{action.name_key}").prop('checked', 'true')
@@ -40,7 +42,7 @@ window.Discourse.FlagView = Ember.View.extend
       message = Em.String.i18n("flagging.custom_message.left", n: 500 - len)
       @set("customMessageLengthClasses", "ok custom-message-length")
     @set("customMessageLength",message)
-
+    return
   ).observes("customFlagMessage")
 
   didInsertElement: ->
@@ -51,3 +53,4 @@ window.Discourse.FlagView = Ember.View.extend
     # Would be nice if there were an EmberJs radio button to do this for us. Oh well, one should be coming
     # in an upcoming release.
     $("input[type='radio']", $flagModal).prop('checked', false)
+    return
