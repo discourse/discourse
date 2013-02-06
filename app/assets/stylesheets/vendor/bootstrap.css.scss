@@ -1418,7 +1418,13 @@ body {
     -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.025);
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.025);
   }
-  :-moz-placeholder, :-ms-input-placeholder, ::-webkit-input-placeholder {
+  :-moz-placeholder {
+    color: #999999;
+  }
+  ::-webkit-input-placeholder {
+    color: #999999;
+  }
+  :-ms-input-placeholder {
     color: #999999;
   }
   .help-block, .help-inline {
