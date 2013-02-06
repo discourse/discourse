@@ -161,7 +161,7 @@ class ApplicationController < ActionController::Base
       yield if stale?(*args)
 
       # Add a one minute expiry
-      expires_in time_length, public: true
+      expires_in 1.minute, public: true
     else
       yield
     end
