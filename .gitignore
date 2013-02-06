@@ -24,6 +24,10 @@ dump.rdb
 /dbs/*.sql
 /dbs/*.sql.gz
 
+# Ignore the gem lock file, since that will vary on 
+#  deployments and can aid security probing.
+Gemfile.lock
+
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
