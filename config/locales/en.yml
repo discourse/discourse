@@ -8,6 +8,7 @@ en:
   too_many_links: "has too many links"
   just_posted_that: "is too similar to what you recently posted"
   has_already_been_used: "has already been used"
+  invalid_characters: "contains invalid characters"
 
   activerecord:
     attributes:

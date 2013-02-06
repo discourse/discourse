@@ -24,6 +24,7 @@ class Topic < ActiveRecord::Base
   serialize :meta_data, ActiveRecord::Coders::Hstore
 
   validate :unique_title
+  validate :nuclear_option
 
   belongs_to :category
   has_many :posts
@@ -110,6 +111,21 @@ class Topic < ActiveRecord::Base
     finder = finder.where("id != ?", self.id) if self.id.present?
 
     errors.add(:title, I18n.t(:has_already_been_used)) if finder.exists?
+  end
+
+  # This is bad, but people are screwing us on try.discourse.org - soon we'll replace with
+  # a much more sane validation of odd characters to allow for other languages and such.
+  def nuclear_option
+    
+    # Let presence validation catch it if it's blank
+    return if title.blank?
+
+    title.each_char do |c|
+      unless (20..126).include?(c.ord)
+        errors.add(:title, I18n.t(:invalid_characters))
+        return
+      end
+    end
   end
 
   

@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 require 'spec_helper'
 
 describe Topic do
@@ -23,6 +25,18 @@ describe Topic do
   it { should have_many :invites }
 
   it { should rate_limit }
+
+  context 'topic title content' do
+
+    it "allows a regular title with a few ascii characters" do
+      Fabricate.build(:topic, title: "hello this is my cool topic! welcome: all;").should be_valid
+    end
+
+    it "doesn't allow non standard ascii" do
+      Fabricate.build(:topic, title: "Iñtërnâtiônàlizætiøn").should_not be_valid
+    end
+
+  end
 
 
   context 'topic title uniqueness' do
