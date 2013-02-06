@@ -26,6 +26,8 @@ class Post < ActiveRecord::Base
   rate_limit 
 
   acts_as_paranoid
+  after_recover :update_flagged_posts_count
+  after_destroy :update_flagged_posts_count 
 
   belongs_to :user
   belongs_to :topic, counter_cache: :posts_count
@@ -161,6 +163,10 @@ class Post < ActiveRecord::Base
 
   def self.best_of
     where("(post_number = 1) or (score >= ?)", SiteSetting.best_of_score_threshold) 
+  end
+
+  def update_flagged_posts_count
+    PostAction.update_flagged_posts_count
   end
 
   def filter_quotes(parent_post=nil)

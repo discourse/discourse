@@ -13,7 +13,10 @@ class PostAction < ActiveRecord::Base
   rate_limit :post_action_rate_limiter
 
   def self.update_flagged_posts_count
-    val = exec_sql('select count(*) from posts where deleted_at is null and id in (select post_id from post_actions where post_action_type_id in (?) and deleted_at is null)', PostActionType.FlagTypes).values[0][0].to_i
+    val = exec_sql('select count(*) from posts p
+                    join topics t on t.id = p.topic_id 
+                    where p.deleted_at is null and t.deleted_at is null and p.id in 
+                      (select post_id from post_actions where post_action_type_id in (?) and deleted_at is null)', PostActionType.FlagTypes).values[0][0].to_i
     $redis.set('posts_flagged_count', val)
     
     admins = User.exec_sql("select id from users where admin = 't'").map{|r| r["id"].to_i}

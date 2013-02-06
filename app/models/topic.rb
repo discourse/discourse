@@ -11,7 +11,9 @@ class Topic < ActiveRecord::Base
 
   versioned :if => :new_version_required?
   acts_as_paranoid
-  
+  after_recover :update_flagged_posts_count
+  after_destroy :update_flagged_posts_count 
+
   rate_limit :default_rate_limiter
   rate_limit :limit_topics_per_day
   rate_limit :limit_private_messages_per_day
@@ -385,6 +387,10 @@ class Topic < ActiveRecord::Base
     end
 
     topic
+  end
+
+  def update_flagged_posts_count
+    PostAction.update_flagged_posts_count
   end
 
 

@@ -24,11 +24,14 @@ limit 100
 
     sql.where2 "post_action_type_id in (:flag_types)", flag_types: PostActionType.FlagTypes
 
+
+    # it may make sense to add a view that shows flags on deleted posts, 
+    # we don't clear the flags on post deletion, just supress counts
+    #   they may have deleted_at on the action not set
     if params[:filter] == 'old'
-      sql.where "p.deleted_at is null"
       sql.where2 "deleted_at is not null"
     else
-      sql.where "p.deleted_at is null"
+      sql.where "p.deleted_at is null and t.deleted_at is null"
       sql.where2 "deleted_at is null"
     end
 
