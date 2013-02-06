@@ -28,6 +28,13 @@ PostActionType.seed do |s|
 end
 
 PostActionType.seed do |s|
+  s.id = PostActionType.Types[:vote]
+  s.name_key = 'vote'
+  s.is_flag = false
+  s.position = 5
+end
+
+PostActionType.seed do |s|
   s.id = PostActionType.Types[:spam]
   s.name_key = 'spam'
   s.is_flag = true
