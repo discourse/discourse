@@ -11,8 +11,8 @@ on Discourse with:
 2. Install VirtualBox: https://www.virtualbox.org/wiki/Downloads
 3. Install Ruby 1.9.3. We recommend RVM: https://rvm.io/
 4. Open a terminal
-5. Clone the project: `git@github.com:discourse/core.git`
-6. Enter the project directory: `cd core`
+5. Clone the project: `git@github.com:discourse/discourse.git`
+6. Enter the project directory: `cd discourse`
 7. Install vagrant: `gem install vagrant`
 
 ### Using Vagrant
