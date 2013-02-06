@@ -3,8 +3,8 @@ class UserActionObserver < ActiveRecord::Observer
 
 
   def after_save(model)
-    case 
-    when (model.is_a?(PostAction) and (model.is_bookmark? or model.is_like?)) 
+    case
+    when (model.is_a?(PostAction) and (model.is_bookmark? or model.is_like?))
       log_post_action(model)
     when (model.is_a?(Topic))
       log_topic(model)
@@ -17,29 +17,29 @@ class UserActionObserver < ActiveRecord::Observer
     end
   end
 
-  protected 
+  protected
 
   def log_topic_user(model)
     action = UserAction::STAR
 
-    row = { 
-        action_type: action, 
-        user_id: model.user_id, 
-        acting_user_id: model.user_id, 
-        target_topic_id: model.topic_id, 
+    row = {
+        action_type: action,
+        user_id: model.user_id,
+        acting_user_id: model.user_id,
+        target_topic_id: model.topic_id,
         target_post_id: -1,
         created_at: model.starred_at
     }
 
-    if model.starred 
+    if model.starred
       UserAction.log_action!(row)
-    else 
-      UserAction.remove_action!(row)    
+    else
+      UserAction.remove_action!(row)
     end
   end
-  
+
   def log_notification(model)
-    
+
     action =
       case model.notification_type
         when Notification.Types[:quoted]
@@ -60,80 +60,80 @@ class UserActionObserver < ActiveRecord::Observer
     # stray data
     return unless post
 
-    row = { 
-        action_type: action, 
-        user_id: model.user_id, 
-        acting_user_id: (action == UserAction::EDIT) ? post.last_editor_id : post.user_id, 
-        target_topic_id: model.topic_id, 
+    row = {
+        action_type: action,
+        user_id: model.user_id,
+        acting_user_id: (action == UserAction::EDIT) ? post.last_editor_id : post.user_id,
+        target_topic_id: model.topic_id,
         target_post_id: post.id,
         created_at: model.created_at
     }
 
-    if post.deleted_at.nil? 
+    if post.deleted_at.nil?
       UserAction.log_action!(row)
-    else 
-      UserAction.remove_action!(row)    
+    else
+      UserAction.remove_action!(row)
     end
   end
 
   def log_post(model)
-    
+
     # first post gets nada
     return if model.post_number == 1
 
 
-    row = { 
-        action_type: UserAction::POST, 
-        user_id: model.user_id, 
-        acting_user_id: model.user_id, 
+    row = {
+        action_type: UserAction::POST,
+        user_id: model.user_id,
+        acting_user_id: model.user_id,
         target_post_id: model.id,
         target_topic_id: model.topic_id,
         created_at: model.created_at
     }
-   
+
     rows = [row]
 
-    if model.topic.private_message? 
+    if model.topic.private_message?
       rows = []
       model.topic.topic_allowed_users.each do |ta|
         row = row.dup
-        row[:user_id] = ta.user_id 
+        row[:user_id] = ta.user_id
         row[:action_type] = ta.user_id == model.user_id ? UserAction::NEW_PRIVATE_MESSAGE : UserAction::GOT_PRIVATE_MESSAGE
         rows << row
       end
     end
 
     rows.each do |row|
-      if model.deleted_at.nil? 
+      if model.deleted_at.nil?
         UserAction.log_action!(row)
-      else 
-        UserAction.remove_action!(row)    
+      else
+        UserAction.remove_action!(row)
       end
     end
 
     return if model.topic.private_message?
 
     # a bit odd but we may have stray records
-    if model.topic and model.topic.user_id != model.user_id 
-      row[:action_type] = UserAction::TOPIC_RESPONSE 
-      row[:user_id] = model.topic.user_id 
+    if model.topic and model.topic.user_id != model.user_id
+      row[:action_type] = UserAction::TOPIC_RESPONSE
+      row[:user_id] = model.topic.user_id
 
-      if model.deleted_at.nil? 
+      if model.deleted_at.nil?
         UserAction.log_action!(row)
-      else 
-        UserAction.remove_action!(row)    
+      else
+        UserAction.remove_action!(row)
       end
     end
 
   end
 
   def log_topic(model)
-    row = { 
-        action_type: model.archetype == Archetype.private_message ? UserAction::NEW_PRIVATE_MESSAGE : UserAction::NEW_TOPIC, 
-        user_id: model.user_id, 
-        acting_user_id: model.user_id, 
+    row = {
+        action_type: model.archetype == Archetype.private_message ? UserAction::NEW_PRIVATE_MESSAGE : UserAction::NEW_TOPIC,
+        user_id: model.user_id,
+        acting_user_id: model.user_id,
         target_topic_id: model.id,
-        target_post_id: -1, 
+        target_post_id: -1,
         created_at: model.created_at
     }
 
@@ -142,17 +142,17 @@ class UserActionObserver < ActiveRecord::Observer
     if model.private_message?
       model.topic_allowed_users.reject{|a| a.user_id == model.user_id}.each do |ta|
         row = row.dup
-        row[:user_id] = ta.user_id 
+        row[:user_id] = ta.user_id
         row[:action_type] = UserAction::GOT_PRIVATE_MESSAGE
         rows << row
       end
     end
 
     rows.each do |row|
-      if model.deleted_at.nil? 
+      if model.deleted_at.nil?
         UserAction.log_action!(row)
-      else 
-        UserAction.remove_action!(row)    
+      else
+        UserAction.remove_action!(row)
       end
     end
   end
@@ -162,9 +162,9 @@ class UserActionObserver < ActiveRecord::Observer
     action = UserAction::LIKE if model.is_like?
 
     row = {
-      action_type: action, 
-      user_id: model.user_id, 
-      acting_user_id: model.user_id, 
+      action_type: action,
+      user_id: model.user_id,
+      acting_user_id: model.user_id,
       target_post_id: model.post_id,
       target_topic_id: model.post.topic_id,
       created_at: model.created_at
@@ -176,7 +176,7 @@ class UserActionObserver < ActiveRecord::Observer
       UserAction.remove_action!(row)
     end
 
-    if model.is_like? 
+    if model.is_like?
       row[:action_type] = UserAction::WAS_LIKED
       row[:user_id] = model.post.user_id
       if model.deleted_at.nil?

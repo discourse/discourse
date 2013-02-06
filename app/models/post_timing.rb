@@ -21,7 +21,7 @@ class PostTiming < ActiveRecord::Base
       Post.update_all 'reads = reads + 1', ['topic_id = :topic_id and post_number = :post_number', args]
       exec_sql("INSERT INTO post_timings (topic_id, user_id, post_number, msecs)
                   SELECT :topic_id, :user_id, :post_number, :msecs
-                  WHERE NOT EXISTS(SELECT 1 FROM post_timings 
+                  WHERE NOT EXISTS(SELECT 1 FROM post_timings
                                    WHERE topic_id = :topic_id
                                     AND user_id = :user_id
                                     AND post_number = :post_number)",
@@ -29,14 +29,14 @@ class PostTiming < ActiveRecord::Base
 
     end
 
-  end  
+  end
 
 
   def self.destroy_for(user_id, topic_id)
     PostTiming.transaction do
       PostTiming.delete_all(['user_id = ? and topic_id = ?', user_id, topic_id])
       TopicUser.delete_all(['user_id = ? and topic_id = ?', user_id, topic_id])
-    end    
+    end
   end
 
 end

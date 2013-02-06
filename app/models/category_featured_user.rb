@@ -3,7 +3,7 @@ class CategoryFeaturedUser < ActiveRecord::Base
   belongs_to :user
 
   def self.max_featured_users
-    5  
+    5
   end
 
   def self.feature_users_in(category)

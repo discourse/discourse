@@ -13,36 +13,36 @@ class UserEmailObserver < ActiveRecord::Observer
 
   def email_user_mentioned(notification)
     return unless notification.user.email_direct?
-    Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes, 
-                   :user_email, 
-                   type: :user_mentioned, 
+    Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes,
+                   :user_email,
+                   type: :user_mentioned,
                    user_id: notification.user_id,
                    notification_id: notification.id)
   end
 
   def email_user_quoted(notification)
     return unless notification.user.email_direct?
-    Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes, 
-                   :user_email, 
-                   type: :user_quoted, 
+    Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes,
+                   :user_email,
+                   type: :user_quoted,
                    user_id: notification.user_id,
                    notification_id: notification.id)
   end
 
   def email_user_replied(notification)
     return unless notification.user.email_direct?
-    Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes, 
-                    :user_email, 
-                    type: :user_replied, 
+    Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes,
+                    :user_email,
+                    type: :user_replied,
                     user_id: notification.user_id,
                     notification_id: notification.id)
   end
 
   def email_user_invited_to_private_message(notification)
     return unless notification.user.email_direct?
-    Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes, 
-                   :user_email, 
-                   type: :user_invited_to_private_message, 
+    Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes,
+                   :user_email,
+                   type: :user_invited_to_private_message,
                    user_id: notification.user_id,
                    notification_id: notification.id)
   end

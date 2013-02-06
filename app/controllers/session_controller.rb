@@ -12,7 +12,7 @@ class SessionController < ApplicationController
       @user = User.where(username_lower: login).first
     end
 
-    if @user.present? 
+    if @user.present?
 
       # If the site requires user approval and the user is not approved yet
       if SiteSetting.must_approve_users? and !@user.approved?

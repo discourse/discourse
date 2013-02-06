@@ -1,10 +1,10 @@
-# TODO: 
+# TODO:
 # a mechanism to iterate through errors in reverse
 # async logging should queue, if dupe stack traces are found in batch error should be merged into prev one
- 
+
 
 class ErrorLog
-  
+
   @lock = Mutex.new
 
   def self.filename
@@ -14,23 +14,23 @@ class ErrorLog
   def self.clear!(guid)
     raise "not implemented"
   end
-  
+
   def self.clear_all!()
     File.delete(ErrorLog.filename) if File.exists?(ErrorLog.filename)
   end
-  
-  def self.report_async!(exception, controller, request, user) 
+
+  def self.report_async!(exception, controller, request, user)
     Thread.new do
-      self.report!(exception, controller, request, user) 
+      self.report!(exception, controller, request, user)
     end
   end
 
-  def self.report!(exception, controller, request, user) 
+  def self.report!(exception, controller, request, user)
     add_row!(
       :date => DateTime.now,
       :guid => SecureRandom.uuid,
-      :user_id => user && user.id, 
-      :request => filter_sensitive_post_data_parameters(controller, request.parameters).inspect,  
+      :user_id => user && user.id,
+      :request => filter_sensitive_post_data_parameters(controller, request.parameters).inspect,
       :action => controller.action_name,
       :controller => controller.controller_name,
       :backtrace => sanitize_backtrace(exception.backtrace).join("\n"),
@@ -39,11 +39,11 @@ class ErrorLog
       :exception_class => exception.class.to_s
     )
   end
-  
+
   def self.add_row!(hash)
     data = hash.to_xml(skip_instruct: true)
     # use background thread to write the log cause it may block if it gets backed up
-    @lock.synchronize do 
+    @lock.synchronize do
       File.open(self.filename, "a") do |f|
         f.flock(File::LOCK_EX)
         f.write(data)
@@ -62,7 +62,7 @@ class ErrorLog
     pos = 0
     return [] unless File.exists?(self.filename)
 
-    loop do 
+    loop do
       lines = ""
       File.open(self.filename, "r") do |f|
         f.flock(File::LOCK_SH)
@@ -70,13 +70,13 @@ class ErrorLog
         while !f.eof?
           line = f.readline
           lines << line
-          break if line.starts_with? "</hash>" 
+          break if line.starts_with? "</hash>"
         end
         pos = f.pos
       end
       if lines != "" && skip == 0
         h = {}
-        e = Nokogiri.parse(lines).children[0] 
+        e = Nokogiri.parse(lines).children[0]
         e.children.each do |inner|
           h[inner.name] = inner.text
         end
@@ -84,7 +84,7 @@ class ErrorLog
       end
       skip-=1 if skip > 0
       break if lines == ""
-    end   
+    end
   end
 
   private
@@ -97,11 +97,11 @@ class ErrorLog
   def self.exclude_raw_post_parameters?(controller)
     controller && controller.respond_to?(:filter_parameters)
   end
-  
+
   def self.filter_sensitive_post_data_parameters(controller, parameters)
     exclude_raw_post_parameters?(controller) ? controller.__send__(:filter_parameters, parameters) : parameters
   end
-  
+
   def self.filter_sensitive_post_data_from_env(env_key, env_value, controller)
     return env_value unless exclude_raw_post_parameters?
     return PARAM_FILTER_REPLACEMENT if (env_key =~ /RAW_POST_DATA/i)

@@ -1,17 +1,17 @@
 require_dependency 'message_bus'
 require_dependency 'discourse_observer'
 
-# This class is responsible for notifying the message bus of various 
+# This class is responsible for notifying the message bus of various
 # events.
 class MessageBusObserver < DiscourseObserver
   observe :post, :notification, :user_action, :topic
 
   def after_create_post(post)
     MessageBus.publish("/topic/#{post.topic_id}",
-                        id: post.id, 
-                        created_at: post.created_at, 
+                        id: post.id,
+                        created_at: post.created_at,
                         user: BasicUserSerializer.new(post.user).as_json(root: false),
-                        post_number: post.post_number)    
+                        post_number: post.post_number)
   end
 
   def after_create_notification(notification)
@@ -20,7 +20,7 @@ class MessageBusObserver < DiscourseObserver
 
   def after_destroy_notification(notification)
     refresh_notification_count(notification)
-  end  
+  end
 
   def after_create_user_action(user_action)
     MessageBus.publish("/users/#{user_action.user.username.downcase}", user_action.id)
@@ -32,7 +32,7 @@ class MessageBusObserver < DiscourseObserver
     return unless topic.visible?
 
     return if topic.private_message?
-    
+
     topic.posters = topic.posters_summary
     topic.posts_count = 1
     topic_json = TopicListItemSerializer.new(topic).as_json
@@ -40,10 +40,10 @@ class MessageBusObserver < DiscourseObserver
 
     # If it has a category, add it to the category views too
     if topic.category.present?
-      MessageBus.publish("/category/#{topic.category.slug}", topic_json)      
+      MessageBus.publish("/category/#{topic.category.slug}", topic_json)
     end
 
-  end  
+  end
 
   protected
 
@@ -53,6 +53,6 @@ class MessageBusObserver < DiscourseObserver
         {unread_notifications: notification.user.unread_notifications,
          unread_private_messages: notification.user.unread_private_messages},
         user_ids: [notification.user.id] # only publish the notification to this user
-      )         
+      )
     end
 end

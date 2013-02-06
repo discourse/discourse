@@ -13,7 +13,7 @@ class RequestAccessController < ApplicationController
     if params[:password] == SiteSetting.access_password
       cookies.permanent['_access'] = SiteSetting.access_password
       redirect_to @return_path
-    else 
+    else
       flash[:error] = I18n.t(:'request_access.incorrect')
       render :new, layout: 'no_js'
     end

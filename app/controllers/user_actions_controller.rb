@@ -3,9 +3,9 @@ class UserActionsController < ApplicationController
     requires_parameters(:user_id)
     per_chunk = 60
     render :json => UserAction.stream(
-      user_id: params[:user_id].to_i, 
-      offset: params[:offset], 
-      limit: per_chunk, 
+      user_id: params[:user_id].to_i,
+      offset: params[:offset],
+      limit: per_chunk,
       action_types: (params[:filter] || "").split(","),
       guardian: guardian,
       ignore_private_messages: params[:filter] ? false : true
