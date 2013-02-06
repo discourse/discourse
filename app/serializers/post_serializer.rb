@@ -37,6 +37,7 @@ class PostSerializer < ApplicationSerializer
              :bookmarked,
              :raw,
              :actions_summary,
+             :moderator?,
              :avatar_template,
              :user_id, 
              :draft_sequence,
@@ -44,6 +45,10 @@ class PostSerializer < ApplicationSerializer
              :hidden_reason_id, 
              :deleted_at
 
+
+  def moderator?
+    object.user.has_trust_level?(:moderator)
+  end
 
   def avatar_template
     object.user.avatar_template
