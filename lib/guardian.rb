@@ -1,4 +1,4 @@
-# The guardian is responsible for confirming access to various site resources and opreations
+# The guardian is responsible for confirming access to various site resources and operations
 class Guardian
 
   attr_reader :user
