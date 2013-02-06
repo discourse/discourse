@@ -192,7 +192,7 @@ window.Discourse.ComposerView = window.Discourse.View.extend
       done: (e, data) =>
         @set('loadingImage', false)
         upload = data.result
-        html = "<img src='#{upload.url}' width='#{upload.width}' height='#{upload.height}'>"
+        html = "<img src=\"#{upload.url}\" width=\"#{upload.width}\" height=\"#{upload.height}\">"
         @addMarkdown(html)
 
       fail: (e, data) =>
