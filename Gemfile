@@ -32,20 +32,20 @@ gem 'rack-mini-profiler', :git => 'git://github.com/SamSaffron/MiniProfiler'
 gem 'oauth', :require => false
 gem 'fast_xs'
 gem 'pbkdf2'
-gem 'simple_handlebars_rails', path: 'vendor/gems/simple_handlebars_rails'
+gem 'simple_handlebars_rails', :path => 'vendor/gems/simple_handlebars_rails'
 
 # Gem that enables support for plugins. It is required
-gem 'discourse_plugin', path: 'vendor/gems/discourse_plugin'
+gem 'discourse_plugin', :path => 'vendor/gems/discourse_plugin'
 
 # Discourse Plugins (optional)
 # Polls and Tasks have been disabled for launch, we need think all sorts of stuff through before adding them back in
 #   biggest concern is core support for custom sort orders, but there is also styling that just gets mishmashed into our core theme. 
-# gem 'discourse_poll', path: 'vendor/gems/discourse_poll'
-gem 'discourse_emoji', path: 'vendor/gems/discourse_emoji'
-# gem 'discourse_task', path: 'vendor/gems/discourse_task'
+# gem 'discourse_poll', :path => 'vendor/gems/discourse_poll'
+gem 'discourse_emoji', :path => 'vendor/gems/discourse_emoji'
+# gem 'discourse_task', :path => 'vendor/gems/discourse_task'
 
-gem 'rails_multisite', path: 'vendor/gems/rails_multisite'
-gem 'message_bus', path: 'vendor/gems/message_bus'
+gem 'rails_multisite', :path => 'vendor/gems/rails_multisite'
+gem 'message_bus', :path => 'vendor/gems/message_bus'
 
 gem 'koala', :require => false
 gem 'multi_json'
