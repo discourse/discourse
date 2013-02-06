@@ -53,6 +53,7 @@ config/multisite.yml
 config/multisite1.yml
 config/fog_credentials.yml
 config/database.yml
+config/redis.yml
 
 /public/uploads
 /public/stylesheet-cache/*
