@@ -13,9 +13,9 @@ Whenever you need ...
 
 ## Getting Started
 
-If you're interested in helping us develop Discourse, please start with our **[Discourse Developer Install Guide](https://github.com/discourse/core/blob/master/DEVELOPMENT.md)**, which includes instructions to get up and running in a development environment.
+If you're interested in helping us develop Discourse, please start with our **[Discourse Developer Install Guide](https://github.com/discourse/discourse/blob/master/DEVELOPMENT.md)**, which includes instructions to get up and running in a development environment.
 
-We also have a **[Discourse "Quick-and-Dirty" Install Guide](https://github.com/discourse/core/blob/master/INSTALL.md)**.
+We also have a **[Discourse "Quick-and-Dirty" Install Guide](https://github.com/discourse/discourse/blob/master/INSTALL.md)**.
 
 ## Vision
 
@@ -54,7 +54,7 @@ In order to be prepared for contributing to Discourse, please:
 
 1. Review the **VISION** section above, which will help you understand the needs of the team, and the focus of the project,
 2. Read & sign the **[Electronic Discourse Forums Contribution License Agreement](https://docs.google.com/a/discourse.org/spreadsheet/viewform?formkey=dGUwejFfbDhDYXR4bVFMRG1TUENqLWc6MQ)**, to confirm you've read and acknowledged the legal aspects of your contributions, and
-3. Dig into **[CONTRIBUTING.MD](https://github.com/discourse/core/blob/master/CONTRIBUTING.md)**, which houses all of the necessary info to:
+3. Dig into **[CONTRIBUTING.MD](https://github.com/discourse/discourse/blob/master/CONTRIBUTING.md)**, which houses all of the necessary info to:
    * submit bugs,
    * request new features, and
    * step you through the entire process of preparing your code for a Pull Request.
@@ -77,7 +77,7 @@ Discourse implements a variety of open source tech. You may wish to familiarize 
 
 ### Ruby Gems
 
-The complete list of Ruby Gems used by Discourse can be found in [SOFTWARE.md](https://github.com/discourse/core/blob/master/SOFTWARE.md).
+The complete list of Ruby Gems used by Discourse can be found in [SOFTWARE.md](https://github.com/discourse/discourse/blob/master/SOFTWARE.md).
 
 ## Versioning
 
@@ -97,7 +97,7 @@ For more information on SemVer, please visit http://semver.org/.
 
 ## The Discourse Team
 
-The Discourse code contributors can be found in [AUTHORS.MD](https://github.com/discourse/core/blob/master/AUTHORS.md). For a complete list of the many individuals that contributed to the design and implementation of Discourse, please refer to the official website.
+The Discourse code contributors can be found in [AUTHORS.MD](https://github.com/discourse/discourse/blob/master/AUTHORS.md). For a complete list of the many individuals that contributed to the design and implementation of Discourse, please refer to the official website.
 
 ## Copyright / License
 
