@@ -58,8 +58,7 @@ class ListController < ApplicationController
     draft = Draft.get(current_user, list.draft_key, list.draft_sequence) if current_user
     list.draft = draft
 
-    # Add expiry of 1 minute for anonymous
-    expires_in 1.minute, :public => true if current_user.blank?
+    discourse_expires_in 1.minute
 
     respond_to do |format|
       format.html do
