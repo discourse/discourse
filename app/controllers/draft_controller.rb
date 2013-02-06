@@ -8,7 +8,7 @@ class DraftController < ApplicationController
   end
 
   def update
-    Draft.set(current_user, params[:draft_key], params[:sequence].to_i, params[:data]) 
+    Draft.set(current_user, params[:draft_key], params[:sequence].to_i, params[:data])
     render :text => 'ok'
   end
 

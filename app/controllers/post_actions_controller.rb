@@ -16,8 +16,8 @@ class PostActionsController < ApplicationController
 
       post_serializer = PostSerializer.new(@post, scope: guardian, root: false)
       render_json_dump(post_serializer)
-    else 
-      raise Discourse::InvalidParameters.new(:post_action_type_id) 
+    else
+      raise Discourse::InvalidParameters.new(:post_action_type_id)
     end
   end
 
@@ -47,9 +47,9 @@ class PostActionsController < ApplicationController
 
   private
 
-    def fetch_post_from_params      
+    def fetch_post_from_params
       requires_parameter(:id)
-      @post = Post.where(id: params[:id]).first 
+      @post = Post.where(id: params[:id]).first
       guardian.ensure_can_see!(@post)
     end
 end

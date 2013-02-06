@@ -1,25 +1,25 @@
 class SiteCustomization < ActiveRecord::Base
-  
-  CACHE_PATH = 'stylesheet-cache'
-  @lock = Mutex.new 
 
-  before_create do 
+  CACHE_PATH = 'stylesheet-cache'
+  @lock = Mutex.new
+
+  before_create do
     self.position ||= (SiteCustomization.maximum(:position) || 0) + 1
     self.enabled ||= false
     self.key ||= SecureRandom.uuid
     true
   end
 
-  before_save do 
+  before_save do
     if self.stylesheet_changed?
-      begin 
+      begin
         self.stylesheet_baked = Sass.compile self.stylesheet
       rescue Sass::SyntaxError => e
         error = e.sass_backtrace_str("custom stylesheet")
         error.gsub!("\n", '\A ')
         error.gsub!("'", '\27 ')
-        
-        self.stylesheet_baked = 
+
+        self.stylesheet_baked =
 "#main {display: none;}
 footer {white-space: pre; margin-left: 100px;}
 footer:after{ content: '#{error}' }"
@@ -29,8 +29,8 @@ footer:after{ content: '#{error}' }"
 
   after_save do
     if self.stylesheet_changed?
-      if File.exists?(self.stylesheet_fullpath)  
-        File.delete self.stylesheet_fullpath 
+      if File.exists?(self.stylesheet_fullpath)
+        File.delete self.stylesheet_fullpath
       end
     end
     self.remove_from_cache!
@@ -42,9 +42,9 @@ footer:after{ content: '#{error}' }"
 
   end
 
-  after_destroy do 
-    if File.exists?(self.stylesheet_fullpath)  
-      File.delete self.stylesheet_fullpath 
+  after_destroy do
+    if File.exists?(self.stylesheet_fullpath)
+      File.delete self.stylesheet_fullpath
     end
     self.remove_from_cache!
   end
@@ -68,14 +68,14 @@ footer:after{ content: '#{error}' }"
   def self.lookup_style(key)
 
     return if key.blank?
-    
-    # cache is cross site resiliant cause key is secure random 
+
+    # cache is cross site resiliant cause key is secure random
     @cache ||= {}
     ensure_cache_listener
     style = @cache[key]
     return style if style
-    
-    @lock.synchronize do 
+
+    @lock.synchronize do
       style = self.where(key: key).first
       @cache[key] = style
     end
@@ -86,7 +86,7 @@ footer:after{ content: '#{error}' }"
       klass = self
       MessageBus.subscribe("/site_customization") do |msg|
         message = msg.data
-        klass.remove_from_cache!(message["key"], false) 
+        klass.remove_from_cache!(message["key"], false)
       end
 
       @subscribed = true
@@ -96,7 +96,7 @@ footer:after{ content: '#{error}' }"
   def self.remove_from_cache!(key, broadcast=true)
     MessageBus.publish('/site_customization', {key: key}) if broadcast
     if @cache
-      @lock.synchronize do 
+      @lock.synchronize do
         @cache[key] = nil
       end
     end

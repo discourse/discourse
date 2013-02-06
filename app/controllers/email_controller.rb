@@ -9,7 +9,7 @@ class EmailController < ApplicationController
   end
 
   def unsubscribe
-    @user = User.find_by_temporary_key(params[:key])  
+    @user = User.find_by_temporary_key(params[:key])
 
     # Don't allow the use of a key while logged in as a different user
     @user = nil if current_user.present? and (@user != current_user)

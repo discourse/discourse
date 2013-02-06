@@ -41,19 +41,19 @@ class SiteSetting < ActiveRecord::Base
   # used mainly for dev, force hostname for Discourse.base_url
   # You would usually use multisite for this
   setting(:force_hostname, '')
-  setting(:port, Rails.env.development? ? 3000 : '')  
+  setting(:port, Rails.env.development? ? 3000 : '')
   setting(:enable_private_messages, true)
   setting(:use_ssl, false)
   setting(:secret_token)
   setting(:restrict_access, false)
   setting(:access_password)
   setting(:queue_jobs, !Rails.env.test?)
-  setting(:crawl_images, !Rails.env.test?)    
+  setting(:crawl_images, !Rails.env.test?)
   setting(:enable_imgur, false)
   setting(:imgur_api_key, '')
   setting(:imgur_endpoint, "http://api.imgur.com/2/upload.json")
   setting(:max_image_width, 690)
-  setting(:category_featured_topics, 6)  
+  setting(:category_featured_topics, 6)
   setting(:topics_per_page, 30)
   setting(:posts_per_page, 20)
   setting(:invite_expiry_days, 14)
@@ -83,14 +83,14 @@ class SiteSetting < ActiveRecord::Base
 
 
   setting(:email_time_window_mins, 5)
-  
+
   # How many characters we can import into a onebox
   setting(:onebox_max_chars, 5000)
 
   setting(:suggested_topics, 5)
 
   setting(:allow_duplicate_topic_titles, false)
-  
+
   setting(:post_excerpt_maxlength, 300)
   setting(:post_onebox_maxlength, 500)
   setting(:best_of_score_threshold, 15)
@@ -99,14 +99,14 @@ class SiteSetting < ActiveRecord::Base
   setting(:category_post_template,
           "[Replace this first paragraph with a short description of your new category. Try to keep it below 200 characters.]\n\nUse this space below for a longer description, as well as to establish any rules or discussion!")
 
-  # we need to think of a way to force users to enter certain settings, this is a minimal config thing 
+  # we need to think of a way to force users to enter certain settings, this is a minimal config thing
   setting(:notification_email, 'info@discourse.org')
 
   setting(:send_welcome_message, true)
 
   setting(:twitter_consumer_key, '')
   setting(:twitter_consumer_secret, '')
-  
+
   setting(:facebook_app_id, '')
   setting(:facebook_app_secret, '')
 

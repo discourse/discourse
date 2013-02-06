@@ -11,7 +11,7 @@ class PostAlertObserver < ActiveRecord::Observer
   def after_create(model)
     method_name = callback_for('after_create', model)
     send(method_name, model) if respond_to?(method_name)
-  end  
+  end
 
   # We need to consider new people to mention / quote when a post is edited
   def after_save_post(post)
@@ -30,19 +30,19 @@ class PostAlertObserver < ActiveRecord::Observer
   end
 
   def after_create_post_action(post_action)
-    
+
     # We only notify on likes for now
     return unless post_action.is_like?
 
     post = post_action.post
-    return if post_action.user.blank? 
+    return if post_action.user.blank?
     return if post.topic.private_message?
 
-    create_notification(post.user, 
-                        Notification.Types[:liked], 
-                        post, 
+    create_notification(post.user,
+                        Notification.Types[:liked],
+                        post,
                         display_username: post_action.user.username,
-                        post_action_id: post_action.id) 
+                        post_action_id: post_action.id)
   end
 
   def after_create_version(version)
@@ -53,9 +53,9 @@ class PostAlertObserver < ActiveRecord::Observer
     return if version.user_id == post.user_id
     return if post.topic.private_message?
 
-    create_notification(post.user, Notification.Types[:edited], post, display_username: version.user.username) 
+    create_notification(post.user, Notification.Types[:edited], post, display_username: version.user.username)
   end
-  
+
   def after_create_post(post)
     if post.topic.private_message?
       # If it's a private message, notify the topic_allowed_users
@@ -65,7 +65,7 @@ class PostAlertObserver < ActiveRecord::Observer
     else
       # If it's not a private message, notify the users
       notify_post_users(post)
-    end    
+    end
   end
 
   protected
@@ -83,12 +83,12 @@ class PostAlertObserver < ActiveRecord::Observer
       # Don't notify the same user about the same notification on the same post
       return if user.notifications.exists?(notification_type: type, topic_id: post.topic_id, post_number: post.post_number)
 
-      user.notifications.create(notification_type: type, 
+      user.notifications.create(notification_type: type,
                                 topic_id: post.topic_id,
                                 post_number: post.post_number,
                                 post_action_id: opts[:post_action_id],
                                 data: {topic_title: post.topic.title,
-                                       display_username: opts[:display_username] || post.user.username}.to_json)    
+                                       display_username: opts[:display_username] || post.user.username}.to_json)
     end
 
     # Returns a list users who have been mentioned
@@ -103,7 +103,7 @@ class PostAlertObserver < ActiveRecord::Observer
         username = m.first.strip.downcase
         user = User.where("(LOWER(username_lower) = :username or LOWER(name) = :username) and id != :id", username: username, id: post.user_id).first
         result << user if user.present?
-      end      
+      end
       result
     end
 
@@ -112,7 +112,7 @@ class PostAlertObserver < ActiveRecord::Observer
       users = [users] unless users.is_a?(Array)
       users.each do |u|
         create_notification(u, Notification.Types[type], post)
-      end      
+      end
     end
 
     # TODO: This should use javascript for parsing rather than re-doing it this way.

@@ -22,12 +22,12 @@ class Upload < ActiveRecord::Base
   def self.create_on_imgur(user, file, topic_id)
 
     @imgur_loaded = require 'imgur' unless @imgur_loaded
-    
+
 
     info = Imgur.upload_file(file)
     Upload.create!({user_id: user.id,
                     topic_id: topic_id,
-                    original_filename: file.original_filename}.merge!(info))  
+                    original_filename: file.original_filename}.merge!(info))
   end
 
   def self.create_locally(user, file, topic_id)
@@ -35,28 +35,28 @@ class Upload < ActiveRecord::Base
                             topic_id: topic_id,
                             url: "",
                             filesize: File.size(file.tempfile),
-                            original_filename: file.original_filename)    
+                            original_filename: file.original_filename)
 
-    # populate the rest of the info 
+    # populate the rest of the info
     clean_name = file.original_filename.gsub(" ", "_").downcase.gsub(/[^a-z0-9\._]/, "")
     split = clean_name.split(".")
-    if split.length > 1 
+    if split.length > 1
       clean_name = split[0..-2].join("_")
     end
     image_info = FastImage.new(file.tempfile)
     clean_name += ".#{image_info.type}"
-    url_root = "/uploads/#{RailsMultisite::ConnectionManagement.current_db}/#{upload.id}"  
+    url_root = "/uploads/#{RailsMultisite::ConnectionManagement.current_db}/#{upload.id}"
     path = "#{Rails.root}/public#{url_root}"
     upload.width, upload.height = ImageSizer.resize(*image_info.size)
     FileUtils.mkdir_p path
     # not using cause mv, cause permissions are no good on move
     File.open("#{path}/#{clean_name}", "wb") do |f|
-      f.write File.read(file.tempfile) 
+      f.write File.read(file.tempfile)
     end
     upload.url = "#{url_root}/#{clean_name}"
     upload.save
 
-    upload    
+    upload
   end
 
   def self.create_on_s3(user, file, topic_id)
@@ -68,12 +68,12 @@ class Upload < ActiveRecord::Base
     upload = Upload.new(user_id: user.id,
                         topic_id: topic_id,
                         filesize: File.size(tempfile),
-                        original_filename: file.original_filename)    
+                        original_filename: file.original_filename)
 
     image_info = FastImage.new(tempfile)
     blob = file.read
     sha1 = Digest::SHA1.hexdigest(blob)
-    
+
 
     Fog.credentials_path = "#{Rails.root}/config/fog_credentials.yml"
     fog = Fog::Storage.new(provider: 'AWS')
@@ -82,10 +82,10 @@ class Upload < ActiveRecord::Base
     path = "/uploads/#{sha1[0]}/#{sha1[1]}"
     location = "#{SiteSetting.s3_upload_bucket}#{path}"
     directory = fog.directories.create(key: location)
-    
+
     Rails.logger.info "#{blob.size.inspect}"
-    file = directory.files.create(key: remote_filename, 
-                                  body: tempfile, 
+    file = directory.files.create(key: remote_filename,
+                                  body: tempfile,
                                   public: true,
                                   content_type: file.content_type)
     upload.width, upload.height = ImageSizer.resize(*image_info.size)
