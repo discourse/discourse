@@ -1,6 +1,40 @@
 require 'spec_helper'
 require 'oneboxer'
 
+describe "Dynamic Oneboxer" do 
+  class DummyDynamicOnebox < Oneboxer::BaseOnebox
+    matcher do 
+      /^https?:\/\/dummy2.localhost/
+    end
+    
+    def onebox
+      "dummy2!"
+    end
+  end
+
+  before do
+    Oneboxer.add_onebox DummyDynamicOnebox
+    @dummy_onebox_url = "http://dummy2.localhost/dummy-object"
+  end
+
+   context 'find onebox for url' do
+
+     it 'returns blank with an unknown url' do
+       Oneboxer.onebox_for_url('http://asdfasdfasdfasdf.asdf').should be_blank
+     end
+
+     it 'returns something when matched' do
+       Oneboxer.onebox_for_url(@dummy_onebox_url).should be_present
+     end
+
+     it 'returns an instance of our class when matched' do
+       Oneboxer.onebox_for_url(@dummy_onebox_url).kind_of?(DummyDynamicOnebox).should be_true
+     end
+
+   end
+
+end
+
 describe Oneboxer do
 
   # A class to help us test
@@ -12,6 +46,7 @@ describe Oneboxer do
     end
   end
 
+  
   before do
     Oneboxer.add_onebox DummyOnebox
     @dummy_onebox_url = "http://dummy.localhost/dummy-object"

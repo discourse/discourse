@@ -8,8 +8,8 @@ module Oneboxer
       attr_accessor :regexp
       attr_accessor :favicon_file
 
-      def matcher(regexp)
-        self.regexp = regexp
+      def matcher(regexp=nil,&blk)
+        self.regexp = regexp || blk
       end
 
       def favicon(favicon_file)

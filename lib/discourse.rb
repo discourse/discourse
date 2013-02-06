@@ -21,8 +21,12 @@ module Discourse
   def self.base_url
     protocol = "http"
     protocol = "https" if SiteSetting.use_ssl?
-    result = "#{protocol}://#{current_hostname}"    
-    result << ":#{SiteSetting.port}" if SiteSetting.port.present?
+    if SiteSetting.force_hostname.present?
+      result = "#{protocol}://#{SiteSetting.force_hostname}"    
+    else
+      result = "#{protocol}://#{current_hostname}"    
+    end
+    result << ":#{SiteSetting.port}" if SiteSetting.port.present? && SiteSetting.port.to_i > 0
     result
   end  
 

@@ -256,6 +256,7 @@ en:
     system_username: "Username that sends system messages"
     send_welcome_message: "Do new users get a welcome private message?"
     port: "If you'd like to specify a port in the URL. Useful in development mode. Leave blank for none."
+    force_hostname: "If you'd like to specify a hostname in the URL. Useful in development mode. Leave blank for none."
 
     invite_expiry_days: "How long (in days) that invite keys are valid."
 

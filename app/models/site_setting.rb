@@ -31,11 +31,16 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:flush_timings_secs, 5)
 
 
+
   # settings only available server side
   setting(:auto_track_topics_after, 60000)
   setting(:long_polling_interval, 15000)
   setting(:flags_required_to_hide_post, 3)
   setting(:cooldown_minutes_after_hiding_posts, 10)
+
+  # used mainly for dev, force hostname for Discourse.base_url
+  # You would usually use multisite for this
+  setting(:force_hostname, '')
   setting(:port, Rails.env.development? ? 3000 : '')  
   setting(:enable_private_messages, true)
   setting(:use_ssl, false)

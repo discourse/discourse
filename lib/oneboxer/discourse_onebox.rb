@@ -5,8 +5,9 @@ module Oneboxer
   class DiscourseOnebox < BaseOnebox
     include ActionView::Helpers::DateHelper
 
-    # TODO: we need to remove these hardcoded urls ASAP 
-    matcher /^https?\:\/\/(dev.discourse.org|localhost\:3000|l.discourse|discuss.emberjs.com)\/.*$/
+    matcher do
+      Regexp.new "^#{Discourse.base_url.gsub(".","\\.")}.*$", true
+    end
 
     def onebox
       uri = URI::parse(@url)

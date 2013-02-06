@@ -19,7 +19,6 @@ module Oneboxer
         result['description'] = node['content'] if node
       end
 
-
       result
     end
   end

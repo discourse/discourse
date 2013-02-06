@@ -20,6 +20,7 @@ module Oneboxer
   # Return a oneboxer for a given URL
   def self.onebox_for_url(url)
     matchers.each do |regexp, oneboxer|
+      regexp = regexp.call if regexp.class == Proc
       return oneboxer.new(url) if url =~ regexp
     end
     nil
