@@ -36,7 +36,7 @@ describe User do
         it "adds one to the topics entered" do
           User.update_view_counts
           user.reload
-          user.topics_entered.should == 1        
+          user.topics_entered.should == 1
         end
 
         it "won't record a second view as a different topic" do
@@ -44,9 +44,9 @@ describe User do
           User.update_view_counts
           user.reload
           user.topics_entered.should == 1
-        end      
+        end
 
-      end      
+      end
     end
 
     context 'posts_read_count' do
@@ -58,7 +58,7 @@ describe User do
 
       context 'with a post timing' do
         let!(:post) { Fabricate(:post) }
-        let!(:post_timings) do 
+        let!(:post_timings) do
           PostTiming.record_timing(msecs: 1234, topic_id: post.topic_id, user_id: user.id, post_number: post.post_number)
         end
 
@@ -116,7 +116,7 @@ describe User do
       it 'has a value for approved_at' do
         user.approved_at.should be_present
       end
-    end  
+    end
   end
 
 
@@ -126,7 +126,7 @@ describe User do
     end
 
     it "creates a bookmark with the true parameter" do
-      lambda { 
+      lambda {
         PostAction.act(@post.user, @post, PostActionType.Types[:bookmark])
       }.should change(PostAction, :count).by(1)
     end
@@ -138,7 +138,7 @@ describe User do
 
       it 'reduces the bookmark count of the post' do
         active = PostAction.where(deleted_at: nil)
-        lambda { 
+        lambda {
           PostAction.remove_act(@post.user, @post, PostActionType.Types[:bookmark])
         }.should change(active, :count).by(-1)
       end
@@ -195,10 +195,10 @@ describe User do
 
     context 'after_save' do
       before do
-        subject.save        
+        subject.save
       end
 
-      its(:email_tokens) { should be_present }      
+      its(:email_tokens) { should be_present }
       its(:bio_cooked) { should be_present }
       its(:topics_entered) { should == 0 }
       its(:posts_read_count) { should == 0 }
@@ -248,12 +248,12 @@ describe User do
       it "is a moderator if the user level is moderator" do
         user.trust_level = TrustLevel.Levels[:moderator]
         user.has_trust_level?(:moderator).should be_true
-      end      
+      end
 
       it "is a moderator if the user is an admin" do
         user.admin = true
         user.has_trust_level?(:moderator).should be_true
-      end      
+      end
 
     end
 
@@ -283,40 +283,56 @@ describe User do
 
   end
 
-  describe 'email_hash' do 
-    before do 
+  describe 'email_hash' do
+    before do
       @user = Fabricate(:user)
     end
 
-    it 'should have a sane email hash' do 
+    it 'should have a sane email hash' do
       @user.email_hash.should =~ /^[0-9a-f]{32}$/
-    end 
+    end
+
+    it 'should use downcase email' do
+      @user.email = "example@example.com"
+      @user2 = Fabricate(:user)
+      @user2.email = "ExAmPlE@eXaMpLe.com"
+
+      @user.email_hash.should == @user2.email_hash
+    end
+
+    it 'should trim whitespace before hashing' do
+      @user.email = "example@example.com"
+      @user2 = Fabricate(:user)
+      @user2.email = " example@example.com "
+
+      @user.email_hash.should == @user2.email_hash
+    end
   end
 
-  describe 'name heuristics' do 
-    it 'is able to guess a decent username from an email' do 
+  describe 'name heuristics' do
+    it 'is able to guess a decent username from an email' do
       User.suggest_username('bob@bob.com').should == 'bob'
     end
 
-    it 'is able to guess a decent name from an email' do 
+    it 'is able to guess a decent name from an email' do
       User.suggest_name('sam.saffron@gmail.com').should == 'Sam Saffron'
     end
   end
 
-  describe 'username format' do 
-    it "should always be 3 chars or longer" do 
+  describe 'username format' do
+    it "should always be 3 chars or longer" do
       @user = Fabricate.build(:user)
       @user.username = 'ss'
       @user.save.should == false
     end
 
-    it "should never end with a ." do 
+    it "should never end with a ." do
       @user = Fabricate.build(:user)
       @user.username = 'sam.'
       @user.save.should == false
     end
 
-    it "should never contain spaces" do 
+    it "should never contain spaces" do
       @user = Fabricate.build(:user)
       @user.username = 'sam s'
       @user.save.should == false
@@ -337,13 +353,13 @@ describe User do
       @user.save!
       @codinghorror = Fabricate.build(:coding_horror)
     end
-  
+
     it "should not allow saving if username is reused" do
        @codinghorror.username = @user.username
        @codinghorror.save.should be_false
     end
 
-    it "should not allow saving if username is reused in different casing" do 
+    it "should not allow saving if username is reused in different casing" do
        @codinghorror.username = @user.username.upcase
        @codinghorror.save.should be_false
     end
@@ -359,7 +375,7 @@ describe User do
     end
   end
 
-  describe '.suggest_username' do 
+  describe '.suggest_username' do
     it 'corrects weird characters' do
       User.suggest_username("Darth%^Vadar").should == "Darth_Vadar"
     end
@@ -384,7 +400,7 @@ describe User do
     it "makes room for the digit added if the username is too long" do
       User.create(username: 'myreallylongnam', email: 'fake@discourse.org')
       User.suggest_username("myreallylongnam").should == 'myreallylongna1'
-    end 
+    end
 
     it "removes leading character if it is not alphanumeric" do
       User.suggest_username("_myname").should == 'myname'
@@ -411,18 +427,18 @@ describe User do
     end
   end
 
-  describe 'passwords' do 
-    before do 
+  describe 'passwords' do
+    before do
       @user = Fabricate.build(:user)
-      @user.password = "ilovepasta" 
+      @user.password = "ilovepasta"
       @user.save!
     end
 
-    it "should have a valid password after the initial save" do 
+    it "should have a valid password after the initial save" do
       @user.confirm_password?("ilovepasta").should be_true
     end
 
-    it "should not have an active account after initial save" do 
+    it "should not have an active account after initial save" do
       @user.active.should be_false
     end
   end
@@ -509,10 +525,10 @@ describe User do
 
   end
 
-  describe "last_seen_at" do 
+  describe "last_seen_at" do
     let(:user) { Fabricate(:user) }
-    
-    it "should have a blank last seen on creation" do 
+
+    it "should have a blank last seen on creation" do
       user.last_seen_at.should be_nil
     end
 
@@ -535,11 +551,11 @@ describe User do
       it "should have 0 for days_visited" do
         user.reload
         user.days_visited.should == 1
-      end      
+      end
 
       it "should log a user_visit with the date" do
         user.user_visits.first.visited_at.should == date.to_date
-      end  
+      end
 
       context "called twice" do
 
@@ -571,7 +587,7 @@ describe User do
 
     end
 
-    
+
 
   end
 
