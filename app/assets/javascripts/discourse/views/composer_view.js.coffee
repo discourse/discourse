@@ -141,6 +141,7 @@ window.Discourse.ComposerView = window.Discourse.View.extend
     @editor = editor = new Markdown.Editor(Discourse.Utilities.markdownConverter(
       lookupAvatar: (username) ->
         Discourse.Utilities.avatarImg(username: username, size: 'tiny')
+      sanitize: true
     ))
 
     $uploadTarget = $('#reply-control')

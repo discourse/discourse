@@ -91,7 +91,10 @@ Discourse.Utilities =
       range.select()
 
   markdownConverter: (opts)->
-    converter = new Markdown.Converter()
+    if opts.sanitize
+      converter = new Markdown.getSanitizingConverter()
+    else
+      converter = new Markdown.Converter()
 
     mentionLookup = opts.mentionLookup if opts
     mentionLookup = mentionLookup || Discourse.Mention.lookupCache
