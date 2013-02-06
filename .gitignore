@@ -52,6 +52,7 @@ config/multisite.yml
 # don't check in my renamed multisite config as well :)
 config/multisite1.yml
 config/fog_credentials.yml
+config/database.yml
 
 /public/uploads
 /public/stylesheet-cache/*
