@@ -15,7 +15,17 @@ Whenever you need ...
 
 If you're interested in helping us develop Discourse, please start with our **[Discourse Developer Install Guide](https://github.com/discourse/discourse/blob/master/DEVELOPMENT.md)**, which includes instructions to get up and running in a development environment.
 
-We also have a **[Discourse "Quick-and-Dirty" Install Guide](https://github.com/discourse/discourse/blob/master/INSTALL.md)**.
+### The quick and easy setup
+
+```
+git clone git@github.com:discourse/discourse.git
+cd discourse
+rake db:create
+rake db:migrate
+rake db:seed_fu
+redis-cli flushall
+thin start
+```
 
 ## Vision
 
