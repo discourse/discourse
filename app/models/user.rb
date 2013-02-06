@@ -37,7 +37,7 @@ class User < ActiveRecord::Base
 
   after_save :update_tracked_topics
 
-  after_create :create_email_token 
+  after_create :create_email_token
 
   # Whether we need to be sending a system message after creation
   attr_accessor :send_welcome_message
@@ -46,7 +46,7 @@ class User < ActiveRecord::Base
   attr_accessor :notification_channel_position
 
   def self.username_length
-    3..15  
+    3..15
   end
 
   def self.suggest_username(name)
@@ -141,7 +141,7 @@ class User < ActiveRecord::Base
   end
 
   # Use a temporary key to find this user, store it in redis with an expiry
-  def temporary_key    
+  def temporary_key
     key = SecureRandom.hex(32)
     $redis.setex "temporary_key:#{key}", 1.week, id.to_s
     key
@@ -164,7 +164,7 @@ class User < ActiveRecord::Base
   def invited_by
     used_invite = invites.where("redeemed_at is not null").includes(:invited_by).first
     return nil unless used_invite.present?
-    used_invite.invited_by    
+    used_invite.invited_by
   end
 
   # Approve this user
@@ -176,11 +176,11 @@ class User < ActiveRecord::Base
   end
 
   def self.email_hash(email)
-    Digest::MD5.hexdigest(email) 
+    Digest::MD5.hexdigest(email.strip.downcase)
   end
 
   def email_hash
-    User.email_hash(self.email) 
+    User.email_hash(self.email)
   end
 
   def unread_notifications_by_type
@@ -200,12 +200,12 @@ class User < ActiveRecord::Base
 
   def unread_notifications
     result = 0
-    unread_notifications_by_type.each do |k,v| 
+    unread_notifications_by_type.each do |k,v|
       result += v unless k == Notification.Types[:private_message]
     end
     result
   end
-  
+
   def saw_notification_id(notification_id)
     User.update_all ["seen_notification_id = ?", notification_id], ["seen_notification_id < ?", notification_id]
   end
@@ -220,15 +220,15 @@ class User < ActiveRecord::Base
 
   # A selection of people to autocomplete on @mention
   def self.mentionable_usernames
-    User.select(:username).order('last_posted_at desc').limit(20)    
-  end  
+    User.select(:username).order('last_posted_at desc').limit(20)
+  end
 
   def regular?
     (not admin?) and (not has_trust_level?(:moderator))
   end
-  
+
   def password=(password)
-    # special case for passwordless accounts 
+    # special case for passwordless accounts
     unless password.blank?
       @raw_password = password
     end
@@ -250,9 +250,9 @@ class User < ActiveRecord::Base
 
       if self.last_seen_at.nil? || self.last_seen_at.to_date < now_date
         # count it
-        row_count = User.exec_sql('insert into user_visits(user_id,visited_at) select  :user_id, :visited_at 
+        row_count = User.exec_sql('insert into user_visits(user_id,visited_at) select  :user_id, :visited_at
                       where not exists(select 1 from user_visits where user_id = :user_id and visited_at = :visited_at)', user_id: self.id, visited_at: now.to_date)
-        if row_count.cmd_tuples == 1          
+        if row_count.cmd_tuples == 1
           User.update_all "days_visited = days_visited + 1", ["id = ? and days_visited = ?", self.id, self.days_visited]
         end
       end
@@ -291,7 +291,7 @@ class User < ActiveRecord::Base
     # Update denormalized topics_entered
     exec_sql "UPDATE users SET topics_entered = x.c
              FROM
-            (SELECT v.user_id, 
+            (SELECT v.user_id,
                     COUNT(DISTINCT parent_id) AS c
              FROM views AS v
              WHERE parent_type = 'Topic'
@@ -306,7 +306,7 @@ class User < ActiveRecord::Base
                FROM post_timings AS pt
                GROUP BY pt.user_id) AS X
                WHERE x.user_id = users.id"
-              
+
   end
 
   # The following count methods are somewhat slow - definitely don't use them in a loop.
@@ -341,7 +341,7 @@ class User < ActiveRecord::Base
 
   # Use this helper to determine if the user has a particular trust level.
   # Takes into account admin, etc.
-  def has_trust_level?(level)    
+  def has_trust_level?(level)
     raise "Invalid trust level #{level}" unless TrustLevel.Levels.has_key?(level)
 
     # Admins can do everything
@@ -370,19 +370,19 @@ class User < ActiveRecord::Base
 
         if auto_track_topics_after_msecs < 0
 
-          User.exec_sql('update topic_users set notification_level = ? 
-                         where notifications_reason_id is null and 
+          User.exec_sql('update topic_users set notification_level = ?
+                         where notifications_reason_id is null and
                            user_id = ?' , TopicUser::NotificationLevel::REGULAR , self.id)
         else
 
-          User.exec_sql('update topic_users set notification_level = ? 
-                         where notifications_reason_id is null and 
-                           user_id = ? and 
+          User.exec_sql('update topic_users set notification_level = ?
+                         where notifications_reason_id is null and
+                           user_id = ? and
                            total_msecs_viewed < ?' , TopicUser::NotificationLevel::REGULAR , self.id, auto_track_topics_after_msecs)
 
-          User.exec_sql('update topic_users set notification_level = ? 
-                         where notifications_reason_id is null and 
-                           user_id = ? and 
+          User.exec_sql('update topic_users set notification_level = ?
+                         where notifications_reason_id is null and
+                           user_id = ? and
                            total_msecs_viewed >= ?' , TopicUser::NotificationLevel::TRACKING , self.id, auto_track_topics_after_msecs)
         end
       end
@@ -396,7 +396,7 @@ class User < ActiveRecord::Base
     def ensure_password_is_hashed
       if @raw_password
         self.salt = SecureRandom.hex(16)
-        self.password_hash = hash_password(@raw_password, salt) 
+        self.password_hash = hash_password(@raw_password, salt)
       end
     end
 
@@ -404,27 +404,27 @@ class User < ActiveRecord::Base
       PBKDF2.new(:password => password, :salt => salt, :iterations => Rails.configuration.pbkdf2_iterations).hex_string
     end
 
-    def add_trust_level      
+    def add_trust_level
       self.trust_level ||= SiteSetting.default_trust_level
     rescue ActiveModel::MissingAttributeError
-      # Ignore it, safely - see http://www.tatvartha.com/2011/03/activerecordmissingattributeerror-missing-attribute-a-bug-or-a-features/  
+      # Ignore it, safely - see http://www.tatvartha.com/2011/03/activerecordmissingattributeerror-missing-attribute-a-bug-or-a-features/
     end
 
     def update_username_lower
       self.username_lower = username.downcase
     end
-   
-    def password_validator 
+
+    def password_validator
       if @raw_password
         return errors.add(:password, "must be 6 letters or longer") if @raw_password.length < 6
       end
     end
 
     def username_validator
-      unless username 
+      unless username
         return errors.add(:username, I18n.t(:'user.username.blank'))
       end
-      
+
       if username.length < User.username_length.begin
         return errors.add(:username, I18n.t(:'user.username.short', min: User.username_length.begin))
       end
