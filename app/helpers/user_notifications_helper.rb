@@ -1,3 +1,0 @@
-module UserNotificationsHelper
-
-end

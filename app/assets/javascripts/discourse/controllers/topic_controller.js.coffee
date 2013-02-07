@@ -259,6 +259,9 @@ Discourse.TopicController = Ember.ObjectController.extend Discourse.Presence,
     post.toggleProperty('bookmarked')
     false
 
+  clearFlags: (actionType) ->
+    actionType.clearFlags()
+
   # Who acted on a particular post / action type
   whoActed: (actionType) ->
     actionType.loadUsers()

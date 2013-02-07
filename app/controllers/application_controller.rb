@@ -135,14 +135,33 @@ class ApplicationController < ActionController::Base
     render json: MultiJson.dump(obj)
   end
 
+  def can_cache_content?
+    # Don't cache unless we're in production mode
+    return false unless Rails.env.production?
+
+    # Don't cache logged in users
+    return false if current_user.present?
+
+    # Don't cache if there's restricted access
+    return false if SiteSetting.restrict_access?    
+
+    true
+  end
+
+  # Our custom cache method
+  def discourse_expires_in(time_length)
+    return unless can_cache_content?
+    expires_in time_length, public: true
+  end
+
   # Helper method - if no logged in user (anonymous), use Rails' conditional GET
   # support. Should be very fast behind a cache.
   def anonymous_etag(*args)
-    if current_user.blank? and Rails.env.production?
+    if can_cache_content?
       yield if stale?(*args)
 
       # Add a one minute expiry
-      expires_in 1.minute, :public => true
+      expires_in 1.minute, public: true
     else
       yield
     end

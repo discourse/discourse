@@ -190,9 +190,9 @@ window.Discourse.User.reopenClass
       error: (xhr) -> promise.reject(xhr)
     promise
 
-  createAccount: (name, email, password, username) ->
+  createAccount: (name, email, password, username, passwordConfirm, challenge) ->
     $.ajax
       url: '/users'
       dataType: 'json'
-      data: {name: name, email: email, password: password, username: username}
+      data: {name: name, email: email, password: password, username: username, password_confirmation: passwordConfirm, challenge: challenge}
       type: 'POST'

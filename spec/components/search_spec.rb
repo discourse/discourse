@@ -14,7 +14,7 @@ describe Search do
   context 'post indexing observer' do 
     before do 
       @category = Fabricate(:category, name: 'america')
-      @topic = Fabricate(:topic, title: 'sam test', category: @category)
+      @topic = Fabricate(:topic, title: 'sam test topic', category: @category)
       @post = Fabricate(:post, topic: @topic, raw: 'this <b>fun test</b> <img src="bla" title="my image">')
       @indexed = Topic.exec_sql("select search_data from posts_search where id = #{@post.id}").first["search_data"]
     end
@@ -29,7 +29,7 @@ describe Search do
     end
 
     it "should pick up on title updates" do 
-      @topic.title = "harpi"
+      @topic.title = "harpi is the new title"
       @topic.save!
       @indexed = Topic.exec_sql("select search_data from posts_search where id = #{@post.id}").first["search_data"]
 

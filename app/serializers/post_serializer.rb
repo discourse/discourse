@@ -37,6 +37,7 @@ class PostSerializer < ApplicationSerializer
              :bookmarked,
              :raw,
              :actions_summary,
+             :moderator?,
              :avatar_template,
              :user_id, 
              :draft_sequence,
@@ -44,6 +45,10 @@ class PostSerializer < ApplicationSerializer
              :hidden_reason_id, 
              :deleted_at
 
+
+  def moderator?
+    object.user.has_trust_level?(:moderator)
+  end
 
   def avatar_template
     object.user.avatar_template
@@ -139,6 +144,8 @@ class PostSerializer < ApplicationSerializer
                         can_act: scope.post_can_act?(object, sym, taken_actions: post_actions)}
 
       next if !action_summary[:can_act] && !scope.current_user
+
+      action_summary[:can_clear_flags] = scope.is_admin? && PostActionType.FlagTypes.include?(id)
 
       if post_actions.present? and post_actions.has_key?(id)
         action_summary[:acted] = true 

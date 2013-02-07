@@ -54,12 +54,24 @@ describe Post do
         topic.user.trust_level = TrustLevel.Levels[:moderator]
         Fabricate.build(:post, post_args).should be_valid
       end
-
-
     end
 
   end
 
+  describe 'flagging helpers' do 
+    it 'isFlagged is accurate' do 
+      post = Fabricate(:post)
+      user = Fabricate(:coding_horror)
+      PostAction.act(user, post, PostActionType.Types[:off_topic])
+
+      post.reload 
+      post.is_flagged?.should == true
+      
+      PostAction.remove_act(user, post, PostActionType.Types[:off_topic])
+      post.reload 
+      post.is_flagged?.should == false
+    end
+  end
 
   describe 'message bus' do
     it 'enqueues the post on the message bus' do

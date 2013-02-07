@@ -18,7 +18,7 @@ window.Discourse.ActionSummary = Em.Object.extend Discourse.Presence,
     @set('acted', false)
     @set('count', @get('count') - 1)
     @set('can_act', true)
-    @set('can_undo', false)  
+    @set('can_undo', false)
 
   # Perform this action
   act: (opts) ->
@@ -52,16 +52,28 @@ window.Discourse.ActionSummary = Em.Object.extend Discourse.Presence,
     @removeAction()
 
     # Remove our post action
-    jQuery.ajax 
+    jQuery.ajax
       url: "/post_actions/#{@get('post.id')}"
       type: 'DELETE'
       data:
-        post_action_type_id: @get('id')    
+        post_action_type_id: @get('id')
+  
+  clearFlags: ->
+    $.ajax
+      url: "/post_actions/clear_flags"
+      type: "POST"
+      data:
+        post_action_type_id: @get('id')
+        id: @get('post.id')
+      success: (result) =>
+        @set('post.hidden', result.hidden)
+        @set('count', 0)
+
 
   loadUsers: ->
     $.getJSON "/post_actions/users",
       id: @get('post.id'),
       post_action_type_id: @get('id')
-      (result) => 
+      (result) =>
         @set('users', Em.A())
         result.each (u) => @get('users').pushObject(Discourse.User.create(u))

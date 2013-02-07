@@ -45,6 +45,21 @@ class PostActionsController < ApplicationController
     render nothing: true
   end
 
+  def clear_flags
+    requires_parameter(:post_action_type_id)
+    raise Discourse::InvalidAccess unless guardian.is_admin?
+
+    PostAction.clear_flags!(@post, current_user.id, params[:post_action_type_id].to_i)
+    @post.reload
+
+    if @post.is_flagged? 
+      render json: {success: true, hidden: true}
+    else
+      @post.unhide!
+      render json: {success: true, hidden: false}
+    end
+  end
+
   private
 
     def fetch_post_from_params      

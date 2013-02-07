@@ -35,11 +35,19 @@ window.Discourse.ActionsHistoryView = Em.View.extend Discourse.Presence,
 
       if c.get('can_undo')
         alsoName = Em.String.i18n("post.actions.undo", alsoName: c.get('actionType.alsoNameLower'))
-        buffer.push(" <a href='#' data-undo='#{c.get('id')}'>#{alsoName}</a>.")        
+        buffer.push(" <a href='#' data-undo='#{c.get('id')}'>#{alsoName}</a>.")
+
+      if c.get('can_clear_flags')
+        buffer.push(" <a href='#' data-clear-flags='#{c.get('id')}'>#{Em.String.i18n("post.actions.clear_flags",count: c.count)}</a>.")
+
       buffer.push("</div>")
 
   click: (e) ->
     $target = $(e.target)
+
+    if actionTypeId = $target.data('clear-flags')
+      @get('controller').clearFlags(@content.findProperty('id', actionTypeId))
+      return false
 
     # User wants to know who actioned it
     if actionTypeId = $target.data('who-acted')

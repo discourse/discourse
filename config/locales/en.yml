@@ -8,6 +8,8 @@ en:
   too_many_links: "has too many links"
   just_posted_that: "is too similar to what you recently posted"
   has_already_been_used: "has already been used"
+  invalid_characters: "contains invalid characters"
+  is_invalid: "is invalid; try to be a little more descriptive"
 
   activerecord:
     attributes:
@@ -301,6 +303,10 @@ en:
     email_time_window_mins: "How many minutes we wait before sending a user mail, to give them a chance to see it first."
     flush_timings_secs: "How frequently we flush timing data to the server, in seconds."
 
+    max_word_length: "The maximum word length in a topic title"
+    title_min_entropy: "The minimum entropy for a topic title"
+    body_min_entropy: "The minimum entropy for post body"
+
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "Type to Filter..."
@@ -313,6 +319,10 @@ en:
         title: "Flags"
         old: "Old"
         active: "Active"
+        clear: "Clear Flags"
+        clear_title: "dismiss all flags on this post (will unhide hidden posts)"
+        delete: "Delete Post"
+        delete_title: "delete post (if its the first post delete topic)"
 
       customize: 
         title: "Customize"
@@ -688,7 +698,7 @@ en:
       no_posted: "You haven't posted in any topics yet."
       no_popular: "There are no popular topics. That's sad."
 
-    topic:
+    topic:      
       create_in: 'Create {{categoryName}} Topic'
       create: 'Create Topic'
       create_long: 'Create a new Topic'
@@ -852,6 +862,9 @@ en:
 
       actions:
         flag: 'Flag'
+        clear_flags:
+          one: "Clear flag"
+          other: "Clear flags"
         it_too: "{{alsoName}} it too"
         undo: "Undo {{alsoName}}"
         by_you_and_others:

@@ -11,11 +11,11 @@ describe TopicQuery do
   let(:admin) { Fabricate(:moderator) }
 
   context 'a bunch of topics' do
-    let!(:regular_topic) { Fabricate(:topic, title: 'regular', user: creator, bumped_at: 15.minutes.ago) }
-    let!(:pinned_topic) { Fabricate(:topic, title: 'pinned', user: creator, pinned: true, bumped_at: 10.minutes.ago) }
-    let!(:archived_topic) { Fabricate(:topic, title: 'archived', user: creator, archived: true, bumped_at: 6.minutes.ago) }
-    let!(:invisible_topic) { Fabricate(:topic, title: 'invisible', user: creator, visible: false, bumped_at: 5.minutes.ago) }
-    let!(:closed_topic) { Fabricate(:topic, title: 'closed', user: creator, closed: true, bumped_at: 1.minute.ago) }
+    let!(:regular_topic) { Fabricate(:topic, title: 'this is a regular topic', user: creator, bumped_at: 15.minutes.ago) }
+    let!(:pinned_topic) { Fabricate(:topic, title: 'this is a pinned topic', user: creator, pinned: true, bumped_at: 10.minutes.ago) }
+    let!(:archived_topic) { Fabricate(:topic, title: 'this is an archived topic', user: creator, archived: true, bumped_at: 6.minutes.ago) }
+    let!(:invisible_topic) { Fabricate(:topic, title: 'this is an invisible topic', user: creator, visible: false, bumped_at: 5.minutes.ago) }
+    let!(:closed_topic) { Fabricate(:topic, title: 'this is a closed topic', user: creator, closed: true, bumped_at: 1.minute.ago) }
 
     context 'list_popular' do
       let(:topics) { topic_query.list_popular.topics }

@@ -21,14 +21,15 @@
   <tbody>
     {{#each content}}
     <tr {{bindAttr class="hiddenClass"}}>
-      <td class='user'>{{avatar user imageSize="small"}}</td>
+      <td class='user'><a href="/admin{{unbound user.path}}">{{avatar user imageSize="small"}}</a></td>
       <td class='excerpt'>{{#if topicHidden}}<i title='this topic is invisible' class='icon icon-eye-close'></i> {{/if}}<h3><a href='{{unbound url}}'>{{title}}</a></h3><br>{{{excerpt}}}
       </td>
-      <td class='flaggers'>{{#each flaggers}}{{avatar this imageSize="small"}}{{/each}}</td>
+      <td class='flaggers'>{{#each flaggers}}<a href="/admin{{unbound path}}">{{avatar this imageSize="small"}}</a>{{/each}}</td>
       <td class='last-flagged'>{{date lastFlagged}}</td>
       <td class='action'> 
         {{#if controller.adminActiveFlagsView}}
-        <button title='dismiss all flags on this post (will unhide hidden posts)' class='btn' {{action clearFlags this}}>Clear Flags</button>
+        <button title='{{i18n admin.flags.clear_title}}' class='btn' {{action clearFlags this}}>{{i18n admin.flags.clear}}</button>
+        <button title='{{i18n admin.flags.delete_title}}' class='btn' {{action deletePost this}}>{{i18n admin.flags.delete}}</button>
         {{/if}}
       </td>
     </tr>

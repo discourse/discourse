@@ -11,7 +11,7 @@ describe PostCreator do
 
   context 'new topic' do
     let(:category) { Fabricate(:category, user: user) }
-    let(:basic_topic_params) { {title: 'hello world', raw: 'my name is fred', archetype_id: 1} }
+    let(:basic_topic_params) { {title: 'hello world topic', raw: 'my name is fred', archetype_id: 1} }
     let(:image_sizes) { {'http://an.image.host/image.jpg' => {'width' => 111, 'height' => 222}} }
 
     let(:creator) { PostCreator.new(user, basic_topic_params) }
@@ -83,7 +83,7 @@ describe PostCreator do
     let(:target_user1) { Fabricate(:coding_horror) }
     let(:target_user2) { Fabricate(:moderator) }
     let(:post) do
-      PostCreator.create(user, title: 'hi there',
+      PostCreator.create(user, title: 'hi there welcome to my topic',
                                raw: 'this is my awesome message',
                                archetype: Archetype.private_message,
                                target_usernames: [target_user1.username, target_user2.username].join(','))

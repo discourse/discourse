@@ -2,6 +2,8 @@ require_dependency 'rate_limiter'
 require_dependency 'system_message'
 
 class PostAction < ActiveRecord::Base
+  class AlreadyFlagged < StandardError; end
+  
   include RateLimiter::OnCreateRecord
 
   attr_accessible :deleted_at, :post_action_type_id, :post_id, :user_id, :post, :user, :post_action_type, :message
@@ -45,10 +47,14 @@ class PostAction < ActiveRecord::Base
     user_actions
   end  
 
-  def self.clear_flags!(post, moderator_id)
+  def self.clear_flags!(post, moderator_id, action_type_id = nil)
     
     # -1 is the automatic system cleary
-    actions = moderator_id == -1 ? PostActionType.AutoActionFlagTypes : PostActionType.FlagTypes
+    actions = if action_type_id
+      [action_type_id] 
+    else
+      moderator_id == -1 ? PostActionType.AutoActionFlagTypes : PostActionType.FlagTypes
+    end
 
     PostAction.exec_sql('update post_actions set deleted_at = ?, deleted_by = ? 
                            where post_id = ? and deleted_at is null and post_action_type_id in (?)',
@@ -111,6 +117,15 @@ class PostAction < ActiveRecord::Base
       if send("is_#{type}?")
         @rate_limiter = RateLimiter.new(user, "create_#{type}:#{Date.today.to_s}", SiteSetting.send("max_#{type}s_per_day"), 1.day.to_i)  
         return @rate_limiter
+      end
+    end
+  end
+
+  before_create do 
+    if is_flag? 
+      if PostAction.where('user_id = ? and post_id = ? and post_action_type_id in (?) and deleted_at is null', 
+                          self.user_id, self.post_id, PostActionType.FlagTypes).exists? 
+        raise AlreadyFlagged
       end
     end
   end

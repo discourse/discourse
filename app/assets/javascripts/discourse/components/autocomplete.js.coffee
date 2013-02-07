@@ -3,14 +3,14 @@
   template = null
 
   $.fn.autocomplete = (options)->
-    
-    return if @.length == 0
-    
-    if options && options.cancel && @.data("closeAutocomplete")
-      @.data("closeAutocomplete")()
+
+    return if @length == 0
+
+    if options && options.cancel && @data("closeAutocomplete")
+      @data("closeAutocomplete")()
       return this
 
-    alert "only supporting one matcher at the moment" unless @.length == 1
+    alert "only supporting one matcher at the moment" unless @length == 1
 
     autocompleteOptions = null
     selectedOption = null
@@ -47,27 +47,27 @@
 
     if isInput
 
-      width = @.width()
-      height = @.height()
+      width = @width()
+      height = @height()
 
-      wrap = @.wrap("<div class='ac-wrap clearfix'/>").parent()
-      
+      wrap = @wrap("<div class='ac-wrap clearfix'/>").parent()
+
       wrap.width(width)
 
-      @.width(80)
-      @.attr('name', @.attr('name') + "-renamed")
+      @width(80)
+      @attr('name', @attr('name') + "-renamed")
 
-      vals = @.val().split(",")
-      
+      vals = @val().split(",")
+
       vals.each (x)->
         unless x == ""
           x = options.reverseTransform(x) if options.reverseTransform
           addInputSelectedItem(x)
 
-      @.val("")
+      @val("")
       completeStart = 0
       wrap.click =>
-        @.focus()
+        @focus()
         true
 
 

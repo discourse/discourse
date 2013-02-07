@@ -2,6 +2,7 @@ require_dependency 'slug'
 require_dependency 'avatar_lookup'
 require_dependency 'topic_view'
 require_dependency 'rate_limiter'
+require_dependency 'text_sentinel'
 
 class Topic < ActiveRecord::Base
   include RateLimiter::OnCreateRecord
@@ -18,12 +19,14 @@ class Topic < ActiveRecord::Base
   rate_limit :limit_topics_per_day
   rate_limit :limit_private_messages_per_day
 
+  validate :title_quality  
   validates_presence_of :title
   validates :title, length: {in: SiteSetting.min_topic_title_length..SiteSetting.max_topic_title_length}
 
   serialize :meta_data, ActiveRecord::Coders::Hstore
 
   validate :unique_title
+  
 
   belongs_to :category
   has_many :posts
@@ -110,6 +113,23 @@ class Topic < ActiveRecord::Base
     finder = finder.where("id != ?", self.id) if self.id.present?
 
     errors.add(:title, I18n.t(:has_already_been_used)) if finder.exists?
+  end
+
+
+  def title_quality
+    # We don't care about quality on private messages
+    return if private_message?
+
+    sentinel = TextSentinel.new(title, 
+                                min_entropy: SiteSetting.title_min_entropy, 
+                                max_word_length: SiteSetting.max_word_length,
+                                remove_interior_spaces: true)
+    if sentinel.valid?
+      # It's possible the sentinel has cleaned up the title a bit
+      self.title = sentinel.text 
+    else
+      errors.add(:title, I18n.t(:is_invalid)) unless sentinel.valid?
+    end
   end
 
   
