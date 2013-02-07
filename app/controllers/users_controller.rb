@@ -288,7 +288,7 @@ class UsersController < ApplicationController
   end
 
   def search_users
-    term = (params[:term] || "").strip.downcase
+    term = params[:term].to_s.strip
     topic_id = params[:topic_id]
     topic_id = topic_id.to_i if topic_id
 

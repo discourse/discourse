@@ -14,7 +14,7 @@ class UserSearch
     end
 
     if term.length > 0
-      sql << "where username_lower like :term_like or
+      sql << "where username ilike :term_like or
               to_tsvector('simple', name) @@
               to_tsquery('simple',
                 regexp_replace(

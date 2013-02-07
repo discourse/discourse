@@ -59,6 +59,16 @@ describe UsersController, :search_users do
       json = JSON.parse(response.body)
       json["users"].size.should == 3
     end
+
+    it "searches the user's username substring upper case" do
+      xhr :post, :search_users, term: "MR"
+      json = JSON.parse(response.body)
+      json["users"].size.should == 6
+
+      xhr :post, :search_users, term: "MRB"
+      json = JSON.parse(response.body)
+      json["users"].size.should == 3
+    end
   end
 
   context "sort order respects users with posts on the topic" do
