@@ -50,30 +50,36 @@ footer:after{ content: '#{error}' }"
     self.remove_from_cache!
   end
 
-  def self.enabled_style
+  def self.enabled_key
+    ENABLED_KEY.dup << RailsMultisite::ConnectionManagement.current_db
+  end
+
+  def self.enabled_style_key
     @cache ||= {}
-    preview_style = @cache[ENABLED_KEY]
+    preview_style = @cache[self.enabled_key]
     return nil if preview_style == :none
     return preview_style if preview_style
 
     @lock.synchronize do 
       style = self.where(enabled: true).first
       if style
-        @cache[ENABLED_KEY] = style.key
+        @cache[self.enabled_key] = style.key
+        return style.key
       else
-        @cache[ENABLED_KEY] = :none
+        @cache[self.enabled_key] = :none
+        return nil
       end
     end
   end
 
   def self.custom_stylesheet(preview_style)
-    preview_style ||= enabled_style
+    preview_style ||= enabled_style_key
     style = lookup_style(preview_style)
     style.stylesheet_link_tag.html_safe if style
   end
 
   def self.custom_header(preview_style)
-    preview_style ||= enabled_style
+    preview_style ||= enabled_style_key
     style = lookup_style(preview_style)
     if style && style.header
       style.header.html_safe
@@ -83,7 +89,7 @@ footer:after{ content: '#{error}' }"
   end
 
   def self.override_default_style(preview_style)
-    preview_style ||= enabled_style
+    preview_style ||= enabled_style_key
     style = lookup_style(preview_style)
     style.override_default_style if style
   end
@@ -126,7 +132,7 @@ footer:after{ content: '#{error}' }"
   end
 
   def remove_from_cache!
-    self.class.remove_from_cache!(ENABLED_KEY)
+    self.class.remove_from_cache!(self.class.enabled_key)
     self.class.remove_from_cache!(self.key)
   end
 
