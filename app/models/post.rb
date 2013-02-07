@@ -250,6 +250,17 @@ class Post < ActiveRecord::Base
     result
   end
 
+  def is_flagged? 
+    post_actions.where('post_action_type_id in (?) and deleted_at is null', PostActionType.FlagTypes).count != 0
+  end
+
+  def unhide!
+    self.hidden = false
+    self.hidden_reason_id = nil
+    self.topic.update_attributes(visible: true)
+    self.save
+  end
+
   # Update the body of a post. Will create a new version when appropriate  
   def revise(updated_by, new_raw, opts={})
 

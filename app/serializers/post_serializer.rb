@@ -140,6 +140,8 @@ class PostSerializer < ApplicationSerializer
 
       next if !action_summary[:can_act] && !scope.current_user
 
+      action_summary[:can_clear_flags] = scope.is_admin? && PostActionType.FlagTypes.include?(id)
+
       if post_actions.present? and post_actions.has_key?(id)
         action_summary[:acted] = true 
         action_summary[:can_undo] = scope.can_delete?(post_actions[id])

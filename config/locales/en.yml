@@ -853,6 +853,9 @@ en:
 
       actions:
         flag: 'Flag'
+        clear_flags:
+          one: "Clear flag"
+          other: "Clear flags"
         it_too: "{{alsoName}} it too"
         undo: "Undo {{alsoName}}"
         by_you_and_others:

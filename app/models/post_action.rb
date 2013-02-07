@@ -47,10 +47,14 @@ class PostAction < ActiveRecord::Base
     user_actions
   end  
 
-  def self.clear_flags!(post, moderator_id)
+  def self.clear_flags!(post, moderator_id, action_type_id = nil)
     
     # -1 is the automatic system cleary
-    actions = moderator_id == -1 ? PostActionType.AutoActionFlagTypes : PostActionType.FlagTypes
+    actions = if action_type_id
+      [action_type_id] 
+    else
+      moderator_id == -1 ? PostActionType.AutoActionFlagTypes : PostActionType.FlagTypes
+    end
 
     PostAction.exec_sql('update post_actions set deleted_at = ?, deleted_by = ? 
                            where post_id = ? and deleted_at is null and post_action_type_id in (?)',
