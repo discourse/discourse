@@ -1,6 +1,16 @@
 class UserSearch
 
   def self.search term, topic_id
+    sql = sql term, topic_id
+    results = User.exec_sql(sql, topic_id: topic_id, term_like: "#{term}%", term: term)
+    results = results.map do |r|
+      r["avatar_template"] = User.avatar_template(r["email"])
+      r.delete("email")
+      r
+    end
+  end
+
+  def self.sql term, topic_id
     sql = "select username, name, email from users u "
     if topic_id
       sql << "left join (select distinct p.user_id from posts p where topic_id = :topic_id) s on
@@ -26,13 +36,7 @@ class UserSearch
     end
 
     sql << " case when last_seen_at is null then 0 else 1 end desc, last_seen_at desc, username asc limit(20)"
-
-    results = User.exec_sql(sql, topic_id: topic_id, term_like: "#{term}%", term: term)
-    results = results.map do |r|
-      r["avatar_template"] = User.avatar_template(r["email"])
-      r.delete("email")
-      r
-    end
+    sql
   end
 
 end
