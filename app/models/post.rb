@@ -38,6 +38,7 @@ class Post < ActiveRecord::Base
 
   validates_presence_of :raw, :user_id, :topic_id
   validates :raw, length: {in: SiteSetting.min_post_length..SiteSetting.max_post_length}
+  validate :raw_quality
   validate :max_mention_validator
   validate :max_images_validator
   validate :max_links_validator
@@ -67,6 +68,18 @@ class Post < ActiveRecord::Base
   before_validation do
     self.raw.strip! if self.raw.present?
   end
+
+  def raw_quality
+
+    sentinel = TextSentinel.new(self.raw, min_entropy: SiteSetting.body_min_entropy)    
+    if sentinel.valid?
+      # It's possible the sentinel has cleaned up the title a bit
+      self.raw = sentinel.text 
+    else
+      errors.add(:raw, I18n.t(:is_invalid)) unless sentinel.valid?
+    end
+  end
+
 
   # Stop us from posting the same thing too quickly
   def unique_post_validator

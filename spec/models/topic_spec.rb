@@ -5,9 +5,6 @@ require 'spec_helper'
 describe Topic do
 
   it { should validate_presence_of :title }
-  it { should_not allow_value("x" * (SiteSetting.max_topic_title_length + 1)).for(:title) }
-  it { should_not allow_value("x").for(:title) }
-  it { should_not allow_value((" " * SiteSetting.min_topic_title_length) + "x").for(:title) }
 
   it { should belong_to :category }
   it { should belong_to :user }  
@@ -26,14 +23,26 @@ describe Topic do
 
   it { should rate_limit }
 
-  context 'topic title content' do
+  context '.title_quality' do
+
+    it "strips a title when identifying length" do
+      Fabricate.build(:topic, title: (" " * SiteSetting.min_topic_title_length) + "x").should_not be_valid
+    end
+
+    it "doesn't allow a long title" do
+      Fabricate.build(:topic, title: "x" * (SiteSetting.max_topic_title_length + 1)).should_not be_valid
+    end
+
+    it "doesn't allow a short title" do
+      Fabricate.build(:topic, title: "x" * (SiteSetting.min_topic_title_length + 1)).should_not be_valid
+    end
 
     it "allows a regular title with a few ascii characters" do
       Fabricate.build(:topic, title: "hello this is my cool topic! welcome: all;").should be_valid
     end
 
-    it "doesn't allow non standard ascii" do
-      Fabricate.build(:topic, title: "Iñtërnâtiônàlizætiøn").should_not be_valid
+    it "allows non ascii" do
+      Fabricate.build(:topic, title: "Iñtërnâtiônàlizætiøn").should be_valid
     end
 
   end
@@ -830,7 +839,7 @@ describe Topic do
 
     context 'changing title' do
       before do
-        topic.title = "new title"
+        topic.title = "new title for the topic"
         topic.save
       end
 
