@@ -1,6 +1,6 @@
 window.Discourse.CreateAccountView = window.Discourse.ModalBodyView.extend Discourse.Presence,
   templateName: 'modal/create_account'
-  title: Em.String.i18n('create_account.title')  
+  title: Em.String.i18n('create_account.title')
   uniqueUsernameValidation: null
   complete: false
   accountPasswordConfirm: 0
@@ -22,7 +22,7 @@ window.Discourse.CreateAccountView = window.Discourse.ModalBodyView.extend Disco
   # Validate the name
   nameValidation: (->
     # If blank, fail without a reason
-    return Discourse.InputValidation.create(failed: true) if @blank('accountName') 
+    return Discourse.InputValidation.create(failed: true) if @blank('accountName')
 
     @fetchConfirmationValue() if @get('accountPasswordConfirm') == 0
 
@@ -30,21 +30,21 @@ window.Discourse.CreateAccountView = window.Discourse.ModalBodyView.extend Disco
     return Discourse.InputValidation.create(failed: true, reason: Em.String.i18n('user.name.too_short')) if @get('accountName').length < 3
 
     # Looks good!
-    Discourse.InputValidation.create(ok: true, reason: Em.String.i18n('user.name.ok')) 
+    Discourse.InputValidation.create(ok: true, reason: Em.String.i18n('user.name.ok'))
   ).property('accountName')
 
 
   # Check the email address
   emailValidation: (->
     # If blank, fail without a reason
-    return Discourse.InputValidation.create(failed: true) if @blank('accountEmail') 
+    return Discourse.InputValidation.create(failed: true) if @blank('accountEmail')
 
     email = @get("accountEmail")
     if (@get('authOptions.email') is email) and @get('authOptions.email_valid')
-      return Discourse.InputValidation.create(ok: true, reason: Em.String.i18n('user.email.authenticated', provider: @get('authOptions.auth_provider'))) 
+      return Discourse.InputValidation.create(ok: true, reason: Em.String.i18n('user.email.authenticated', provider: @get('authOptions.auth_provider')))
 
     if Discourse.Utilities.emailValid(email)
-      return Discourse.InputValidation.create(ok: true, reason: Em.String.i18n('user.email.ok')) 
+      return Discourse.InputValidation.create(ok: true, reason: Em.String.i18n('user.email.ok'))
 
     return Discourse.InputValidation.create(failed: true, reason: Em.String.i18n('user.email.invalid'))
   ).property('accountEmail')
@@ -60,11 +60,11 @@ window.Discourse.CreateAccountView = window.Discourse.ModalBodyView.extend Disco
       @checkUsernameAvailability()
   ).observes('accountEmail')
 
-  basicUsernameValidation: (->  
-    @set('uniqueUsernameValidation', null)  
+  basicUsernameValidation: (->
+    @set('uniqueUsernameValidation', null)
 
     # If blank, fail without a reason
-    return Discourse.InputValidation.create(failed: true) if @blank('accountUsername')     # 
+    return Discourse.InputValidation.create(failed: true) if @blank('accountUsername')     #
 
     # If too short
     return Discourse.InputValidation.create(failed: true, reason: Em.String.i18n('user.username.too_short')) if @get('accountUsername').length < 3
@@ -72,7 +72,7 @@ window.Discourse.CreateAccountView = window.Discourse.ModalBodyView.extend Disco
     @checkUsernameAvailability()
 
     # Let's check it out asynchronously
-    Discourse.InputValidation.create(failed: true, reason: Em.String.i18n('user.username.checking')) 
+    Discourse.InputValidation.create(failed: true, reason: Em.String.i18n('user.username.checking'))
 
   ).property('accountUsername')
 
@@ -104,23 +104,23 @@ window.Discourse.CreateAccountView = window.Discourse.ModalBodyView.extend Disco
     basicValidation = @get('basicUsernameValidation')
     uniqueUsername = @get('uniqueUsernameValidation')
     return uniqueUsername if uniqueUsername
-    basicValidation    
+    basicValidation
   ).property('uniqueUsernameValidation', 'basicUsernameValidation')
 
   # Validate the password
   passwordValidation: (->
 
-    return Discourse.InputValidation.create(ok: true) unless @get('passwordRequired') 
+    return Discourse.InputValidation.create(ok: true) unless @get('passwordRequired')
 
     # If blank, fail without a reason
-    password = @get("accountPassword")  
-    return Discourse.InputValidation.create(failed: true) if @blank('accountPassword') 
+    password = @get("accountPassword")
+    return Discourse.InputValidation.create(failed: true) if @blank('accountPassword')
 
     # If too short
     return Discourse.InputValidation.create(failed: true, reason: Em.String.i18n('user.password.too_short')) if password.length < 6
 
     # Looks good!
-    Discourse.InputValidation.create(ok: true, reason: Em.String.i18n('user.password.ok')) 
+    Discourse.InputValidation.create(ok: true, reason: Em.String.i18n('user.password.ok'))
   ).property('accountPassword')
 
 
@@ -140,14 +140,14 @@ window.Discourse.CreateAccountView = window.Discourse.ModalBodyView.extend Disco
     challenge = @get('accountChallenge')
 
     Discourse.User.createAccount(name, email, password, username, passwordConfirm, challenge).then (result) =>
-      
+
       if result.success
         @flash(result.message)
-        @set('complete', true) 
+        @set('complete', true)
       else
         @flash(result.message, 'error')
 
       if result.active
         window.location.reload()
-    , => 
-      @flash(Em.String.i18n('create_account.failed'), 'error')  
+    , =>
+      @flash(Em.String.i18n('create_account.failed'), 'error')

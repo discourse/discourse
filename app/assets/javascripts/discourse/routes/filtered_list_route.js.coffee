@@ -19,5 +19,5 @@ window.Discourse.FilteredListRoute = Discourse.Route.extend
 
 Discourse.ListController.filters.each (filter) ->
   window.Discourse["List#{filter.capitalize()}Route"] = Discourse.FilteredListRoute.extend(filter: filter)
-    
-      
+
+

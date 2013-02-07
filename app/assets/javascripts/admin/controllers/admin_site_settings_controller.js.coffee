@@ -20,7 +20,7 @@ window.Discourse.AdminSiteSettingsController = Ember.ArrayController.extend Disc
         true
   ).property('filter', 'content.@each', 'onlyOverridden')
 
-  
+
   resetDefault: (setting) ->
     setting.set('value', setting.get('default'))
     setting.save()

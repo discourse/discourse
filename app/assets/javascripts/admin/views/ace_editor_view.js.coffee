@@ -6,7 +6,7 @@ Discourse.AceEditorView = window.Discourse.View.extend
     if @editor && !@skipContentChangeEvent
       @editor.getSession().setValue(@get('content'))
   ).observes('content')
-  
+
   render: (buffer) ->
     buffer.push("<div class='ace'>")
     buffer.push(Handlebars.Utils.escapeExpression(@get('content'))) if @get('content')

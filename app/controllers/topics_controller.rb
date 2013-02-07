@@ -4,15 +4,15 @@ require_dependency 'promotion'
 class TopicsController < ApplicationController
 
   # Avatar is an image request, not XHR
-  before_filter :ensure_logged_in, only: [:timings, 
-                                          :destroy_timings, 
-                                          :update, 
-                                          :star, 
-                                          :destroy, 
-                                          :status, 
-                                          :invite, 
-                                          :mute, 
-                                          :unmute, 
+  before_filter :ensure_logged_in, only: [:timings,
+                                          :destroy_timings,
+                                          :update,
+                                          :star,
+                                          :destroy,
+                                          :status,
+                                          :invite,
+                                          :mute,
+                                          :unmute,
                                           :set_notifications,
                                           :move_posts]
 
@@ -26,8 +26,8 @@ class TopicsController < ApplicationController
       Promotion.new(current_user).review if current_user.trust_level == TrustLevel.Levels[:new]
     end
 
-    @topic_view = TopicView.new(params[:id] || params[:topic_id], 
-                                current_user, 
+    @topic_view = TopicView.new(params[:id] || params[:topic_id],
+                                current_user,
                                 username_filters: params[:username_filters],
                                 best_of: params[:best_of],
                                 page: params[:page])
@@ -40,7 +40,7 @@ class TopicsController < ApplicationController
         split = fullpath.split('/')
         split[2] = @topic_view.topic.slug
 
-        redirect_to split.join('/'), status: 301 
+        redirect_to split.join('/'), status: 301
         return
       end
 
@@ -56,8 +56,8 @@ class TopicsController < ApplicationController
         # No filter? Consider it a paged view, default to page 0 which is the first segment
         @topic_view.filter_posts_paged(params[:page].to_i)
       end
-      View.create_for(@topic_view.topic, request.remote_ip, current_user)   
-      
+      View.create_for(@topic_view.topic, request.remote_ip, current_user)
+
       @topic_view.draft_key = @topic_view.topic.draft_key
       @topic_view.draft_sequence = DraftSequence.current(current_user, @topic_view.draft_key)
 
@@ -74,9 +74,9 @@ class TopicsController < ApplicationController
 
           if params[:post_number]
             @post = @topic_view.posts.select{|p| p.post_number == params[:post_number].to_i}.first
-            page = ((params[:post_number].to_i - 1) / SiteSetting.posts_per_page) + 1          
-            @canonical << "?page=#{page}" if page > 1 
-          else 
+            page = ((params[:post_number].to_i - 1) / SiteSetting.posts_per_page) + 1
+            @canonical << "?page=#{page}" if page > 1
+          else
             @canonical << "?page=#{params[:page]}" if params[:page] && params[:page].to_i > 1
           end
 
@@ -91,7 +91,7 @@ class TopicsController < ApplicationController
         format.json do
           render_json_dump(topic_view_serializer)
         end
-        
+
       end
     end
 
@@ -104,11 +104,11 @@ class TopicsController < ApplicationController
 
   def update
     topic = Topic.where(id: params[:topic_id]).first
-    guardian.ensure_can_edit!(topic)      
+    guardian.ensure_can_edit!(topic)
     topic.title = params[:title] if params[:title].present?
 
     # TODO: we may need smarter rules about converting archetypes
-    if current_user.admin? 
+    if current_user.admin?
       topic.archetype = "regular" if params[:archetype] == 'regular'
     end
 
@@ -138,7 +138,7 @@ class TopicsController < ApplicationController
     render nothing: true
   end
 
-  def mute  
+  def mute
     toggle_mute(true)
   end
 
@@ -153,9 +153,9 @@ class TopicsController < ApplicationController
     topic.destroy
     render nothing: true
   end
-  
+
   def excerpt
-    render nothing: true  
+    render nothing: true
   end
 
   def invite
@@ -163,7 +163,7 @@ class TopicsController < ApplicationController
     topic = Topic.where(id: params[:topic_id]).first
     guardian.ensure_can_invite_to!(topic)
 
-    if topic.invite(current_user, params[:user]) 
+    if topic.invite(current_user, params[:user])
       render json: success_json
     else
       render json: failed_json, status: 422
@@ -195,14 +195,14 @@ class TopicsController < ApplicationController
     # TODO: all this should be optimised, tested better
 
     last_seen_key = "user-last-seen:#{current_user.id}"
-    last_seen = $redis.get(last_seen_key) 
+    last_seen = $redis.get(last_seen_key)
     if last_seen.present?
       diff = (Time.now.to_f - last_seen.to_f).round
       if diff > 0
-        User.update_all ["time_read = time_read + ?", diff], ["id = ? and time_read = ?", current_user.id, current_user.time_read]       
+        User.update_all ["time_read = time_read + ?", diff], ["id = ? and time_read = ?", current_user.id, current_user.time_read]
       end
-    end    
-    $redis.set(last_seen_key, Time.now.to_f)    
+    end
+    $redis.set(last_seen_key, Time.now.to_f)
 
     original_unread = current_user.unread_notifications_by_type
 
@@ -211,27 +211,27 @@ class TopicsController < ApplicationController
     added_time = 0
 
 
-    if params[:timings].present?      
+    if params[:timings].present?
       params[:timings].each do |post_number_str, t|
         post_number = post_number_str.to_i
-        
-        if post_number >= 0 
+
+        if post_number >= 0
           if (highest_seen || 0) >= post_number
             Notification.mark_post_read(current_user, topic_id, post_number)
           end
 
           PostTiming.record_timing(topic_id: topic_id,
-                                   post_number: post_number, 
-                                   user_id: current_user.id, 
+                                   post_number: post_number,
+                                   user_id: current_user.id,
                                    msecs: t.to_i)
         end
-      end 
+      end
     end
 
     TopicUser.update_last_read(current_user, topic_id, highest_seen, params[:topic_time].to_i)
 
     current_user.reload
-   
+
     if current_user.unread_notifications_by_type != original_unread
       current_user.publish_notifications_state
     end

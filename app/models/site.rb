@@ -20,10 +20,10 @@ class Site
   def trust_levels
     TrustLevel.all
   end
-  
+
   def categories
     Category.popular
-  end  
+  end
 
   def archetypes
     Archetype.list.reject{|t| t.id==Archetype.private_message}
@@ -35,8 +35,8 @@ class Site
 
   def self.cached_json
     # Sam: bumping this way down, SiteSerializer will serialize post actions as well,
-    #   On my local this was not being flushed as post actions types changed, it turn this 
-    #   broke local. 
+    #   On my local this was not being flushed as post actions types changed, it turn this
+    #   broke local.
     Rails.cache.fetch(Site.cache_key, expires_in: 1.minute) do
       MultiJson.dump(SiteSerializer.new(Site.new, root: false))
     end

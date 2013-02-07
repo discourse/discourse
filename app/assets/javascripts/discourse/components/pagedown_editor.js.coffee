@@ -9,7 +9,7 @@ window.Discourse.PagedownEditor = Ember.ContainerView.extend
     @pushObject Em.View.create(elementId: 'wmd-button-bar')
     @pushObject Em.TextArea.create(valueBinding: 'parentView.value', elementId: 'wmd-input')
     @pushObject Em.View.createWithMixins Discourse.Presence,
-      elementId: 'wmd-preview', 
+      elementId: 'wmd-preview',
       classNameBindings: [':preview', 'hidden']
 
       hidden: (->

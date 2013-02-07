@@ -8,7 +8,7 @@ class CategoriesController < ApplicationController
     list = CategoryList.new(current_user)
     render_serialized(list, CategoryListSerializer)
   end
-  
+
   def show
     @category = Category.where(slug: params[:id]).first
     render_serialized(@category, CategorySerializer)
@@ -20,7 +20,7 @@ class CategoriesController < ApplicationController
 
     @category = Category.create(category_params.merge(user: current_user))
     return render_json_error(@category) unless @category.save
-    
+
     render_serialized(@category, CategorySerializer)
   end
 
@@ -30,7 +30,7 @@ class CategoriesController < ApplicationController
     @category = Category.where(id: params[:id]).first
     guardian.ensure_can_edit!(@category)
 
-    json_result(@category, :serializer => CategorySerializer) {|cat| cat.update_attributes(category_params) } 
+    json_result(@category, :serializer => CategorySerializer) {|cat| cat.update_attributes(category_params) }
   end
 
   def destroy

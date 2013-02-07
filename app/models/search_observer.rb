@@ -17,18 +17,18 @@ class SearchObserver < ActiveRecord::Observer
 
   def self.update_posts_index(post_id, cooked, title, category)
     idx = scrub_html_for_search(cooked)
-    idx << " " << title 
+    idx << " " << title
     idx << " " << category if category
     update_index('posts_search', post_id, idx)
   end
 
   def self.update_users_index(user_id, username, name)
-    idx = username.dup 
+    idx = username.dup
     idx << " " << (name || "")
-    
+
     update_index('users_search', user_id, idx)
   end
-  
+
   def self.update_categories_index(category_id, name)
     update_index('categories_search', category_id, name)
   end
@@ -44,7 +44,7 @@ class SearchObserver < ActiveRecord::Observer
 
     if obj.class == Topic && obj.title_changed?
       if obj.posts
-        post = obj.posts.where(post_number: 1).first  
+        post = obj.posts.where(post_number: 1).first
         if post
           category_name = obj.category.name if obj.category
           SearchObserver.update_posts_index(post.id, post.cooked, obj.title, category_name)
@@ -52,7 +52,7 @@ class SearchObserver < ActiveRecord::Observer
       end
     end
 
-    if obj.class == Category && obj.name_changed? 
+    if obj.class == Category && obj.name_changed?
       SearchObserver.update_categories_index(obj.id, obj.name)
     end
   end
@@ -69,8 +69,8 @@ class SearchObserver < ActiveRecord::Observer
     def self.scrub(html)
       me = self.new
       parser = Nokogiri::HTML::SAX::Parser.new(me)
-      begin 
-        copy = "<div>" 
+      begin
+        copy = "<div>"
         copy << html unless html.nil?
         copy << "</div>"
         parser.parse(html) unless html.nil?
@@ -87,7 +87,7 @@ class SearchObserver < ActiveRecord::Observer
       end
       if attributes["title"]
         scrubbed << " "
-        scrubbed << attributes["title"] 
+        scrubbed << attributes["title"]
         scrubbed << " "
       end
     end

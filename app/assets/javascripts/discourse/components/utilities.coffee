@@ -25,9 +25,9 @@ Discourse.Utilities =
     return "" unless username
     size = Discourse.Utilities.translateSize(size)
     rawSize = (size * (window.devicePixelRatio || 1)).toFixed()
-    
+
     return template.replace(/\{size\}/g, rawSize) if template
-    
+
     "/users/#{username.toLowerCase()}/avatar/#{rawSize}?__ws=#{encodeURIComponent(Discourse.BaseUrl || "")}"
 
   avatarImg: (options)->
@@ -63,7 +63,7 @@ Discourse.Utilities =
   caretPosition: (el) ->
 
     return el.selectionStart if el.selectionStart
- 
+
     if document.selection
       el.focus()
       r = document.selection.createRange()
@@ -121,7 +121,7 @@ Discourse.Utilities =
       result = text.replace /^`{3}(?:(.*$)\n)?([\s\S]*?)^`{3}/gm, (wholeMatch,m1,m2) ->
         escaped = Handlebars.Utils.escapeExpression(m2)
         "<pre><code class='#{m1 || 'lang-auto'}'>#{escaped}</code></pre>"
-    
+
     converter.hooks.chain "postConversion", (text) ->
       return "" unless text
       # don't to mention voodoo in pres

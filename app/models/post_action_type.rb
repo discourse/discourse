@@ -11,10 +11,10 @@ class PostActionType < ActiveRecord::Base
      :like => 2,
      :off_topic => 3,
      :inappropriate => 4,
-     :vote => 5, 
+     :vote => 5,
      :custom_flag => 6,
      :spam => 8
-    }    
+    }
   end
 
   def self.is_flag?(sym)

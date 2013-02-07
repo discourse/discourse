@@ -6,7 +6,7 @@ Discourse.buildRoutes ->
     @route 'bestOf', path: '/best_of'
 
   # Generate static page routes
-  router = @  
+  router = @
   Discourse.StaticController.pages.forEach (p) -> router.route(p, path: "/#{p}")
 
   @route 'faq', path: '/faq'
@@ -24,10 +24,10 @@ Discourse.buildRoutes ->
     router.route 'categories', path: '/categories'
     router.route 'category', path: '/category/:slug/more'
     router.route 'category', path: '/category/:slug'
-    
+
   @resource 'user', path: '/users/:username', ->
     @route 'activity', path: '/'
-    
+
     @resource 'preferences', path: '/preferences', ->
       @route 'username', path: '/username'
       @route 'email', path: '/email'

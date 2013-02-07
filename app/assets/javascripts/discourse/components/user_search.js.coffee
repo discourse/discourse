@@ -24,8 +24,8 @@ window.Discourse.UserSearch =
     limit = options.limit || 5
 
     throw "missing callback" unless callback
-    
-    #TODO site setting for allowed regex in username ? 
+
+    #TODO site setting for allowed regex in username ?
     if term.match(/[^a-zA-Z0-9\_\.]/)
       callback([])
       return true

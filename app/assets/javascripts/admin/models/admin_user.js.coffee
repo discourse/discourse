@@ -40,13 +40,13 @@ window.Discourse.AdminUser = Discourse.Model.extend
   canBan: ( ->
     !@admin && !@moderator
   ).property('admin','moderator')
- 
+
   banDuration: (->
     banned_at = Date.create(@banned_at)
     banned_till = Date.create(@banned_till)
 
     "#{banned_at.short()} - #{banned_till.short()}"
-    
+
   ).property('banned_till', 'banned_at')
 
   ban: ->
@@ -64,7 +64,7 @@ window.Discourse.AdminUser = Discourse.Model.extend
             error = Em.String.i18n('admin.user.ban_failed', error: "http: #{e.status} - #{e.body}")
             bootbox.alert error
             return
- 
+
   unban: ->
     $.ajax "/admin/users/#{@id}/unban",
       type: 'PUT'
@@ -75,7 +75,7 @@ window.Discourse.AdminUser = Discourse.Model.extend
         error = Em.String.i18n('admin.user.unban_failed', error: "http: #{e.status} - #{e.body}")
         bootbox.alert error
         return
-    
+
   impersonate: ->
     $.ajax "/admin/impersonate"
       type: 'POST'

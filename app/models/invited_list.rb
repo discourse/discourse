@@ -19,7 +19,7 @@ class InvitedList
       else
         @pending << i unless i.expired?
       end
-    end    
+    end
   end
 
 end

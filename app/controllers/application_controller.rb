@@ -18,19 +18,19 @@ class ApplicationController < ActionController::Base
   before_filter :store_incoming_links
   before_filter :preload_json
   before_filter :check_xhr
-  
+
   rescue_from Exception do |exception|
-    unless [ ActiveRecord::RecordNotFound, ActionController::RoutingError, 
+    unless [ ActiveRecord::RecordNotFound, ActionController::RoutingError,
              ActionController::UnknownController, AbstractController::ActionNotFound].include? exception.class
-      begin 
+      begin
         ErrorLog.report_async!(exception, self, request, current_user)
-      rescue 
+      rescue
         # dont care give up
       end
     end
     raise
   end
-  
+
 
   # Some exceptions
   class RenderEmpty < Exception; end
@@ -48,9 +48,9 @@ class ApplicationController < ActionController::Base
     if e.available_in < 1.minute.to_i
       time_left = I18n.t("rate_limiter.seconds", count: e.available_in)
     elsif e.available_in < 1.hour.to_i
-      time_left = I18n.t("rate_limiter.minutes", count: (e.available_in / 1.minute.to_i)) 
+      time_left = I18n.t("rate_limiter.minutes", count: (e.available_in / 1.minute.to_i))
     else
-      time_left = I18n.t("rate_limiter.hours", count: (e.available_in / 1.hour.to_i)) 
+      time_left = I18n.t("rate_limiter.hours", count: (e.available_in / 1.hour.to_i))
     end
 
     render json: {errors: [I18n.t("rate_limiter.too_many_requests", time_left: time_left)]}, status: 429
@@ -98,7 +98,7 @@ class ApplicationController < ActionController::Base
 
   def inject_preview_style
     style = request['preview-style']
-    session[:preview_style] = style if style 
+    session[:preview_style] = style if style
   end
 
   def guardian
@@ -106,7 +106,7 @@ class ApplicationController < ActionController::Base
   end
 
   def log_on_user(user)
-    session[:current_user_id] = user.id      
+    session[:current_user_id] = user.id
     unless user.auth_token
       user.auth_token = SecureRandom.hex(16)
       user.save!
@@ -116,7 +116,7 @@ class ApplicationController < ActionController::Base
 
   # This is odd, but it seems that in Rails `render json: obj` is about
   # 20% slower than calling MultiJSON.dump ourselves. I'm not sure why
-  # Rails doesn't call MultiJson.dump when you pass it json: obj but 
+  # Rails doesn't call MultiJson.dump when you pass it json: obj but
   # it seems we don't need whatever Rails is doing.
   def render_serialized(obj, serializer, opts={})
 
@@ -125,7 +125,7 @@ class ApplicationController < ActionController::Base
     if obj.is_a?(Array)
       serializer_opts[:each_serializer] = serializer
       render_json_dump(ActiveModel::ArraySerializer.new(obj, serializer_opts).as_json)
-    else      
+    else
       render_json_dump(serializer.new(obj, serializer_opts).as_json)
     end
 
@@ -143,7 +143,7 @@ class ApplicationController < ActionController::Base
     return false if current_user.present?
 
     # Don't cache if there's restricted access
-    return false if SiteSetting.restrict_access?    
+    return false if SiteSetting.restrict_access?
 
     true
   end
@@ -199,7 +199,7 @@ class ApplicationController < ActionController::Base
       else
         render_json_error(obj)
       end
-    end    
+    end
 
     def block_if_maintenance_mode
       if Discourse.maintenance_mode?
@@ -212,11 +212,11 @@ class ApplicationController < ActionController::Base
     end
 
     def check_restricted_access
-      # note current_user is defined in the CurrentUser mixin 
+      # note current_user is defined in the CurrentUser mixin
       if SiteSetting.restrict_access? && cookies[:_access] != SiteSetting.access_password
         redirect_to request_access_path(:return_path => request.fullpath)
-        return false  
-      end      
+        return false
+      end
     end
 
     def mini_profiler_enabled?
@@ -229,7 +229,7 @@ class ApplicationController < ActionController::Base
     end
 
     def requires_parameters(*required)
-      required.each do |p| 
+      required.each do |p|
         raise Discourse::InvalidParameters.new(p) unless params.has_key?(p)
       end
     end
@@ -239,13 +239,13 @@ class ApplicationController < ActionController::Base
     def store_incoming_links
       if request.referer.present?
        parsed = URI.parse(request.referer)
-        if parsed.host != request.host          
+        if parsed.host != request.host
           IncomingLink.create(url: request.url, referer: request.referer[0..999])
         end
       end
     end
 
-    def check_xhr 
+    def check_xhr
       unless (controller_name == 'forums' || controller_name == 'user_open_ids')
         # render 'default/empty' unless ((request.format && request.format.json?) or request.xhr?)
         raise RenderEmpty.new unless ((request.format && request.format.json?) or request.xhr?)
@@ -255,5 +255,5 @@ class ApplicationController < ActionController::Base
     def ensure_logged_in
       raise Discourse::NotLoggedIn.new unless current_user.present?
     end
-    
+
 end

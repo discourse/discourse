@@ -45,7 +45,7 @@ window.Discourse.SiteCustomization = Discourse.Model.extend
       data:
         site_customization: data
       type: if @id then 'PUT' else 'POST'
-      
+
   delete: ->
     return unless @id
     $.ajax

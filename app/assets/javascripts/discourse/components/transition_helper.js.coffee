@@ -1,4 +1,4 @@
-# CSS transitions are a PITA, often we need to queue some js after a transition, this helper ensures 
+# CSS transitions are a PITA, often we need to queue some js after a transition, this helper ensures
 #  it happens after the transition
 #
 

@@ -8,7 +8,7 @@ window.Discourse.TopicView = Ember.View.extend Discourse.Scrolling,
   progressPosition: 1
 
   menuVisible: true
-  
+
 
   SHORT_POST: 1200
 
@@ -17,7 +17,7 @@ window.Discourse.TopicView = Ember.View.extend Discourse.Scrolling,
     return unless @get('topic.loaded')
     $topicProgress = $('#topic-progress')
     return unless $topicProgress.length
-    
+
     # Don't show progress when there is only one post
     if @get('topic.highest_post_number') is 1
       $topicProgress.hide()
@@ -40,7 +40,7 @@ window.Discourse.TopicView = Ember.View.extend Discourse.Scrolling,
       bg.css("border-right-width", "0px")
     else
       bg.css("border-right-width", "1px")
-      
+
     if currentWidth == 0
       bg.width(progressWidth)
     else
@@ -74,7 +74,7 @@ window.Discourse.TopicView = Ember.View.extend Discourse.Scrolling,
       postUrl += "/best_of" if @get('controller.bestOf')
 
     Discourse.replaceState(postUrl)
-      
+
     # Show appropriate jump tools
     if current is 1 then $('#jump-top').attr('disabled', true) else $('#jump-top').attr('disabled', false)
     if current is @get('topic.highest_post_number') then $('#jump-bottom').attr('disabled', true) else $('#jump-bottom').attr('disabled', false)
@@ -158,7 +158,7 @@ window.Discourse.TopicView = Ember.View.extend Discourse.Scrolling,
       unless post.get('read')
         post.set('read', true)
         @get('screenTrack')?.guessedSeen(post.get('post_number'))
-      
+
   observeFirstPostLoaded: (->
     posts = @get('topic.posts')
 
@@ -187,7 +187,7 @@ window.Discourse.TopicView = Ember.View.extend Discourse.Scrolling,
     # double check
     if @topic && @topic.posts && @topic.posts.length > 0 && @topic.posts.first().post_number != post.post_number
       return
-  
+
     # half mutex
     return if @loading
 
@@ -216,7 +216,7 @@ window.Discourse.TopicView = Ember.View.extend Discourse.Scrolling,
 
   # Load new posts if there are some
   nextPage: ($post) ->
-    
+
     return if @loading || @seenBottom
     postView = Ember.View.views[$post.prop('id')]
     return unless postView
@@ -249,10 +249,10 @@ window.Discourse.TopicView = Ember.View.extend Discourse.Scrolling,
     Discourse.Topic.find(@get('topic.id'), opts).then (result) =>
       if result.at_bottom || result.posts.length == 0
         @set('seenBottom', 'true')
-     
+
       @get('topic').pushPosts result.posts.map (p) =>
         Discourse.Post.create(p, @get('topic'))
-      
+
       if result.suggested_topics
         suggested = Em.A()
         result.suggested_topics.each (st) ->
@@ -263,7 +263,7 @@ window.Discourse.TopicView = Ember.View.extend Discourse.Scrolling,
       @set('loading', false)
 
   # Examine which posts are on the screen and mark them as read. Also figure out if we
-  # need to load more posts.  
+  # need to load more posts.
   examineRead: ->
     # Track posts time on screen
     @get('screenTrack')?.scrolled()
@@ -339,9 +339,9 @@ window.Discourse.TopicView = Ember.View.extend Discourse.Scrolling,
     post = postView.get('post')
     return unless post
     @set('progressPosition', post.get('post_number'))
-  
+
     return
-  
+
   ensureDockIsTestedOnChange: (->
     # this is subtle, firstPostLoaded will trigger ember to render the view containing #topic-title
     #  onScroll needs do know about it to be able to make a decision about the dock
@@ -395,7 +395,7 @@ window.Discourse.TopicView = Ember.View.extend Discourse.Scrolling,
 
   # The window has been scrolled
   scrolled: (e) -> @examineRead()
-    
+
 window.Discourse.TopicView.reopenClass
 
   # Scroll to a given post, if in the DOM. Returns whether it was in the DOM or not.

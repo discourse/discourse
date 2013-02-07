@@ -7,7 +7,7 @@ window.Discourse.HeaderView = Ember.View.extend
   currentUserBinding: 'Discourse.currentUser'
   categoriesBinding: 'site.categories'
   topicBinding: 'Discourse.router.topicController.content'
- 
+
   showDropdown: ($target) ->
     elementId = $target.data('dropdown') || $target.data('notifications')
     $dropdown = $("##{elementId}")
@@ -31,7 +31,7 @@ window.Discourse.HeaderView = Ember.View.extend
     $html.on 'click.d-dropdown touchstart.d-dropdown', (e) =>
       return true if $(e.target).closest('.d-dropdown').length > 0
       hideDropdown()
-    
+
     $html.data('hide-dropdown', hideDropdown)
 
     false
@@ -65,7 +65,7 @@ window.Discourse.HeaderView = Ember.View.extend
       if @dockedHeader
         $('body').removeClass('docked')
         @dockedHeader = false
-    
+
 
   willDestroyElement: ->
     $(window).unbind 'scroll.discourse-dock'
@@ -75,7 +75,7 @@ window.Discourse.HeaderView = Ember.View.extend
   didInsertElement: ->
     @.$('a[data-dropdown]').on 'click touchstart', (e) => @showDropdown($(e.currentTarget))
     @.$('a.unread-private-messages, a.unread-notifications, a[data-notifications]').on 'click touchstart', (e) => @showNotifications(e)
-    
+
     $(window).bind 'scroll.discourse-dock', => @examineDockHeader()
     $(document).bind 'touchmove.discourse-dock', => @examineDockHeader()
     @examineDockHeader()
@@ -86,7 +86,7 @@ window.Discourse.HeaderView = Ember.View.extend
       # Hide dropdowns
       if e.which == 27
         @.$('li').removeClass('active')
-        @.$('.d-dropdown').fadeOut('fast') 
+        @.$('.d-dropdown').fadeOut('fast')
 
       if @get('editingTopic')
         @finishedEdit() if e.which == 13
