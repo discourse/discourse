@@ -65,7 +65,7 @@ Handlebars.registerHelper 'avatar', (user, options) ->
     size: options.hash.imageSize
     extraClasses: Em.get(user, 'extras') || options.hash.extraClasses
     username: username
-    title: Em.get(user, 'title') || Em.get(user, 'description')
+    title: Em.get(user, 'title') || Em.get(user, 'description') || username
     avatarTemplate: Ember.get(user, 'avatar_template') || options.hash.avatarTemplate
   )
 
