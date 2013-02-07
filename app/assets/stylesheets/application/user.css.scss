@@ -237,6 +237,7 @@
   .excerpt {
     margin: 5px 0px;
     font-size: 13px;
+    word-wrap: break-word;
     color: lighten($black, 30%);
   }
   .item {
