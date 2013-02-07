@@ -112,6 +112,12 @@ class User < ActiveRecord::Base
     !User.where(username_lower: lower).exists?
   end
 
+  def self.username_valid?(username)
+    u = User.new(username: username)
+    u.username_format_validator
+    !u.errors[:username].present?
+  end
+
   def enqueue_welcome_message(message_type)
     return unless SiteSetting.send_welcome_message?
     Jobs.enqueue(:send_system_message, user_id: self.id, message_type: message_type)
@@ -367,6 +373,30 @@ class User < ActiveRecord::Base
     Guardian.new(self)
   end
 
+  def username_format_validator
+    unless username
+      return errors.add(:username, I18n.t(:'user.username.blank'))
+    end
+
+    if username.length < User.username_length.begin
+      return errors.add(:username, I18n.t(:'user.username.short', min: User.username_length.begin))
+    end
+
+    if username.length > User.username_length.end
+      return errors.add(:username, I18n.t(:'user.username.long', max: User.username_length.end))
+    end
+
+    if username =~ /[^A-Za-z0-9_]/
+      return errors.add(:username, I18n.t(:'user.username.characters'))
+    end
+
+    if username[0,1] =~ /[^A-Za-z0-9]/
+      return errors.add(:username, I18n.t(:'user.username.must_begin_with_alphanumeric'))
+    end
+    nil
+  end
+
+
   protected
 
     def cook
@@ -426,38 +456,19 @@ class User < ActiveRecord::Base
       self.username_lower = username.downcase
     end
 
+    def username_validator
+      username_format_validator || begin
+        lower = username.downcase
+        if username_changed? && User.where(username_lower: lower).exists?
+          return errors.add(:username, I18n.t(:'user.username.unique'))
+        end
+      end
+    end
+
     def password_validator
       if @raw_password
         return errors.add(:password, "must be 6 letters or longer") if @raw_password.length < 6
       end
-    end
-
-    def username_validator
-      unless username
-        return errors.add(:username, I18n.t(:'user.username.blank'))
-      end
-
-      if username.length < User.username_length.begin
-        return errors.add(:username, I18n.t(:'user.username.short', min: User.username_length.begin))
-      end
-
-      if username.length > User.username_length.end
-        return errors.add(:username, I18n.t(:'user.username.long', max: User.username_length.end))
-      end
-
-      if username =~ /[^A-Za-z0-9_]/
-        return errors.add(:username, I18n.t(:'user.username.characters'))
-      end
-
-      if username[0,1] =~ /[^A-Za-z0-9]/
-        return errors.add(:username, I18n.t(:'user.username.must_begin_with_alphanumeric'))
-      end
-
-      lower = username.downcase
-      if username_changed? && User.where(username_lower: lower).exists?
-        return errors.add(:username, I18n.t(:'user.username.unique'))
-      end
-
     end
 
 end

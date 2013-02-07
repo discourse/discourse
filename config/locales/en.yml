@@ -474,6 +474,7 @@ en:
         confirm: "There could be consequences to changing your username. Are you absolutely sure you want to?"
         taken: "Sorry that username is taken."
         error: "There was an error changing your username."
+        invalid: "That username is invalid. It must only include numbers and letters"
       change_email:
         action: 'change email'
         title: "Change Email"

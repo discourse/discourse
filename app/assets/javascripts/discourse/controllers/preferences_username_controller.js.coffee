@@ -1,6 +1,7 @@
 Discourse.PreferencesUsernameController = Ember.ObjectController.extend Discourse.Presence,
 
   taken: false
+  invalid: false
   saving: false
   error: false
 
@@ -8,8 +9,10 @@ Discourse.PreferencesUsernameController = Ember.ObjectController.extend Discours
     return true if @get('saving')
     return true if @blank('newUsername')
     return true if @get('taken')
+    return true if @get('invalid')
     return true if @get('unchanged')
-  ).property('newUsername', 'taken', 'unchanged', 'saving')
+    false
+  ).property('newUsername', 'taken', 'invalid', 'unchanged', 'saving')
 
   unchanged: (->
     @get('newUsername') == @get('content.username')
@@ -17,10 +20,14 @@ Discourse.PreferencesUsernameController = Ember.ObjectController.extend Discours
 
   checkTaken: (->
     @set('taken', false)
+    @set('invalid', false)
     return if @blank('newUsername')
     return if @get('unchanged')
     Discourse.User.checkUsername(@get('newUsername')).then (result) =>
-      @set('taken', true) unless result.available
+      if result.errors
+        @set('invalid', true)
+      else if result.available == false
+        @set('taken', true)
   ).observes('newUsername')
 
   saveButtonText: (->

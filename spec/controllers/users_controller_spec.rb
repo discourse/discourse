@@ -483,6 +483,24 @@ describe UsersController do
         end
         it_should_behave_like 'when username is unavailable locally'
       end
+
+      context 'has invalid characters' do
+        before do
+          xhr :get, :check_username, username: 'bad username'
+        end
+
+        it 'should return success' do
+          response.should be_success
+        end
+
+        it 'should not return an available key' do
+          ::JSON.parse(response.body)['available'].should be_nil
+        end
+
+        it 'should return an error message' do
+          ::JSON.parse(response.body)['errors'].should_not be_empty
+        end
+      end
     end
 
     context 'when call_mothership is enabled' do

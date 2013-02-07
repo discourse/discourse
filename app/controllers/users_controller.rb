@@ -76,7 +76,9 @@ class UsersController < ApplicationController
   def check_username
     requires_parameter(:username)
 
-    if !SiteSetting.call_mothership?
+    if !User.username_valid?(params[:username])
+      render json: {errors: [I18n.t("user.username.characters")]}
+    elsif !SiteSetting.call_mothership?
       if User.username_available?(params[:username])
         render json: {available: true}
       else

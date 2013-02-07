@@ -394,6 +394,20 @@ describe User do
     end
   end
 
+  context '.username_valid?' do
+    it 'returns true when username is both valid and available' do
+      User.username_valid?('Available').should be_true
+    end
+
+    it 'returns true when the username is valid but not available' do
+      User.username_valid?(Fabricate(:user).username).should be_true
+    end
+
+    it 'returns false when the username is not valid' do
+      User.username_valid?('not valid.name').should be_false
+    end
+  end
+
   describe '.suggest_username' do
     it 'corrects weird characters' do
       User.suggest_username("Darth%^Vadar").should == "Darth_Vadar"
