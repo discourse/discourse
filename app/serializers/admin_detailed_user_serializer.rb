@@ -1,8 +1,8 @@
 class AdminDetailedUserSerializer < AdminUserSerializer
 
   attributes :moderator,
-             :can_grant_admin, 
-             :can_impersonate, 
+             :can_grant_admin,
+             :can_impersonate,
              :can_revoke_admin,
              :like_count,
              :post_count,
@@ -20,7 +20,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
   def can_grant_admin
     scope.can_grant_admin?(object)
   end
-  
+
   def can_delete_all_posts
     scope.can_delete_all_posts?(object)
   end

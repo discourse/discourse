@@ -23,7 +23,7 @@ window.Discourse = Ember.Application.createWithMixins
     title += "#{@get('title')} - " if @get('title')
     title += Discourse.SiteSettings.title
     $('title').text(title)
-    
+
     title = ("(*) " + title) if !@get('hasFocus') && @get('notify')
 
     # chrome bug workaround see: http://stackoverflow.com/questions/2952384/changing-the-window-title-when-focussing-the-window-doesnt-work-in-chrome
@@ -43,12 +43,12 @@ window.Discourse = Ember.Application.createWithMixins
 
     bus.callbackInterval =  Discourse.SiteSettings.anon_polling_interval
     bus.enableLongPolling = false
-    
+
     user = @get('currentUser')
     if user
       bus.callbackInterval = Discourse.SiteSettings.polling_interval
       bus.enableLongPolling = true
-      
+
       if user.admin
         bus.subscribe "/flagged_counts", (data) ->
           user.set('site_flagged_posts_count', data.total)
@@ -90,13 +90,13 @@ window.Discourse = Ember.Application.createWithMixins
 
 
     # Be wary of looking up the router. In this case, we have links in our
-    # HTML, say form compiled markdown posts, that need to be routed.    
-    router = Discourse.__container__.lookup('router:main')   
-    router.router.updateURL(path)    
+    # HTML, say form compiled markdown posts, that need to be routed.
+    router = Discourse.__container__.lookup('router:main')
+    router.router.updateURL(path)
     router.handleURL(path)
-    
+
     # Scroll to the top if we're not replacing state
-    
+
 
   # The classes of buttons to show on a post
   postButtons: (->
@@ -171,7 +171,7 @@ window.Discourse = Ember.Application.createWithMixins
         before: (data,owner, args) ->
           if owner
             window.probes.clear()
-          
+
         after: (data, owner, args) ->
           if owner && data.time > 10
             f = (name,data) ->
@@ -187,7 +187,7 @@ window.Discourse = Ember.Application.createWithMixins
             for n,v of window.probes
               continue if n == name || v.time < 1
               ary.push(k: n, v: v)
-            
+
             ary.sortBy((item) -> if item.v && item.v.time then -item.v.time else 0).each (item)->
               console.log output if output = f("#{item.k}", item.v)
             console?.groupEnd?()
@@ -219,9 +219,9 @@ window.Discourse = Ember.Application.createWithMixins
     Discourse.MessageBus.start()
     Discourse.KeyValueStore.init("discourse_", Discourse.MessageBus)
     Discourse.insertProbes()
-    
 
-    # subscribe to any site customizations that are loaded 
+
+    # subscribe to any site customizations that are loaded
     $('link.custom-css').each ->
       split = @href.split("/")
       id = split[split.length-1].split(".css")[0]

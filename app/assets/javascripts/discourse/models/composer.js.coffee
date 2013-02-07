@@ -18,14 +18,14 @@ window.Discourse.Composer = Discourse.Model.extend
     val = (Discourse.KeyValueStore.get('composer.showPreview') or 'true')
     @set('showPreview', val is 'true')
     @set 'archetypeId', Discourse.get('site.default_archetype')
-  
+
   archetypesBinding: 'Discourse.site.archetypes'
-  
+
   creatingTopic: (-> @get('action') == CREATE_TOPIC ).property('action')
   creatingPrivateMessage: (-> @get('action') == PRIVATE_MESSAGE ).property('action')
   editingPost: (-> @get('action') == EDIT).property('action')
   viewOpen: (-> @get('composeState') == OPEN ).property('composeState')
-  
+
   archetype: (->
     @get('archetypes').findProperty('id', @get('archetypeId'))
   ).property('archetypeId')
@@ -44,7 +44,7 @@ window.Discourse.Composer = Discourse.Model.extend
   togglePreview: ->
     @toggleProperty('showPreview')
     Discourse.KeyValueStore.set(key: 'showPreview', value: @get('showPreview'))
-  
+
   # Import a quote from the post
   importQuote: ->
     post = @get('post')
@@ -95,7 +95,7 @@ window.Discourse.Composer = Discourse.Model.extend
   ).property('showPreview')
 
   hidePreview: (-> not @get('showPreview') ).property('showPreview')
-  
+
   # Whether to disable the post button
   cantSubmitPost: (->
 
@@ -113,7 +113,7 @@ window.Discourse.Composer = Discourse.Model.extend
 
     false
   ).property('reply', 'title', 'creatingTopic', 'loading')
-  
+
   # The text for the save button
   saveText: (->
     switch @get('action')
@@ -129,20 +129,20 @@ window.Discourse.Composer = Discourse.Model.extend
     return Em.empty(Em.keys(@get('metaData')))
   ).property('metaData')
 
- 
+
   wouldLoseChanges: ()->
     @get('reply') != @get('originalText') # TODO title check as well
 
   # Open a composer
-  # 
+  #
   #  opts:
-  #    action   - The action we're performing: edit, reply or createTopic  
+  #    action   - The action we're performing: edit, reply or createTopic
   #    post     - The post we're replying to, if present
   #    topic   - The topic we're replying to, if present
-  #    quote    - If we're opening a reply from a quote, the quote we're making  
+  #    quote    - If we're opening a reply from a quote, the quote we're making
   #
   open: (opts={}) ->
-    
+
     @set('loading', false)
 
     topicId = opts.topic.get('id') if opts.topic
@@ -151,7 +151,7 @@ window.Discourse.Composer = Discourse.Model.extend
       opts.tested = true
       @cancel(=> @open(opts))
       return
-    
+
     @set 'draftKey', opts.draftKey
     @set 'draftSequence', opts.draftSequence
     throw 'draft key is required' unless opts.draftKey
@@ -177,7 +177,7 @@ window.Discourse.Composer = Discourse.Model.extend
       Discourse.Post.load opts.postId, (result) =>
         @set('post', result)
         @set('loading', false)
-  
+
     # If we are editing a post, load it.
     if opts.action == EDIT and opts.post
       @set 'title', @get('topic.title')
@@ -186,7 +186,7 @@ window.Discourse.Composer = Discourse.Model.extend
         @set 'reply', result.get('raw')
         @set('originalText', @get('reply'))
         @set('loading', false)
-    
+
     if opts.title
       @set('title', opts.title)
     if opts.draft
@@ -196,7 +196,7 @@ window.Discourse.Composer = Discourse.Model.extend
 
     false
 
-  
+
   save: (opts)->
     if @get('editingPost')
       @editPost(opts)
@@ -230,7 +230,7 @@ window.Discourse.Composer = Discourse.Model.extend
       postNumber = post.get('post_number')
       posts.each (p,i)->
         idx = i if p.get('post_number') == postNumber
-    
+
       if idx > -1
         savedPost.set('topic', @get('topic'))
         posts.replace(idx, 1, [savedPost])
@@ -244,7 +244,7 @@ window.Discourse.Composer = Discourse.Model.extend
       @set('composeState', OPEN)
 
     promise
-      
+
 
   # Create a new Post
   createPost: (opts)->
@@ -274,9 +274,9 @@ window.Discourse.Composer = Discourse.Model.extend
 
     addedToStream = false
 
-    # If we're in a topic, we can append the post instantly.    
+    # If we're in a topic, we can append the post instantly.
     if topic
-      # Increase the reply count        
+      # Increase the reply count
       if post
         post.set('reply_count', (post.get('reply_count') || 0) + 1)
 
@@ -299,17 +299,17 @@ window.Discourse.Composer = Discourse.Model.extend
 
       # If we're near the end of the topic, load new posts
       lastPost = topic.posts.last()
-      
+
       if lastPost
         diff = topic.get('highest_post_number') - lastPost.get('post_number')
 
-        # If the new post is within a threshold of the end of the topic, 
+        # If the new post is within a threshold of the end of the topic,
         # add it and scroll there instead of adding the link.
         if diff < 5
           createdPost.set('scrollToAfterInsert', createdPost.get('post_number'))
           topic.pushPosts([createdPost])
           addedToStream = true
- 
+
     # Save callback
     createdPost.save (result) =>
       addedPost = false
@@ -323,7 +323,7 @@ window.Discourse.Composer = Discourse.Model.extend
         # We created a new topic, let's show it.
         @set('composeState', CLOSED)
         saving = false
-        
+
       @set('reply', '')
       @set('createdPost', createdPost)
 
@@ -354,7 +354,7 @@ window.Discourse.Composer = Discourse.Model.extend
       archetypeId: @get('archetypeId')
       metaData: @get('metaData')
       usernames: @get('targetUsernames')
-      
+
     @set('draftStatus', Em.String.i18n('composer.saving_draft_tip'))
     Discourse.Draft.save(@get('draftKey'), @get('draftSequence'), data)
       .then(
@@ -417,6 +417,6 @@ Discourse.Composer.reopenClass
   EDIT: EDIT
 
   # Draft key
-  REPLY_AS_NEW_TOPIC_KEY: REPLY_AS_NEW_TOPIC_KEY  
+  REPLY_AS_NEW_TOPIC_KEY: REPLY_AS_NEW_TOPIC_KEY
 
 

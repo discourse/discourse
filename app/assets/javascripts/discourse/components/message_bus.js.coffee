@@ -45,11 +45,11 @@ window.Discourse.MessageBus = ( ->
       if callbacks.length == 0
         setTimeout poll, 500
         return
-      
+
       data = {}
       callbacks.each (c)->
         data[c.channel] = if c.last_id == undefined then -1 else c.last_id
-      
+
       gotData = false
 
       @longPoll = $.ajax "/message-bus/#{clientId}/poll?#{if isHidden() || !@enableLongPolling then "dlp=t" else ""}",
@@ -98,7 +98,7 @@ window.Discourse.MessageBus = ( ->
   subscribe: (channel,func,lastId)->
     callbacks.push {channel:channel, func:func, last_id: lastId}
     @longPoll.abort() if @longPoll
-  
+
   # Unsubscribe from a channel
   unsubscribe: (channel) ->
     # TODO proper globbing

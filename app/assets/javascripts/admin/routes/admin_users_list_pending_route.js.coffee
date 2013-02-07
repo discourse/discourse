@@ -1,2 +1,2 @@
 Discourse.AdminUsersListNewRoute = Discourse.Route.extend
-  setupController: (c) -> @controllerFor('adminUsersList').show('pending')   
+  setupController: (c) -> @controllerFor('adminUsersList').show('pending')

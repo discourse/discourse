@@ -6,7 +6,7 @@ window.Discourse.AdminEmailLogsController = Ember.ArrayController.extend Discour
 
   sendTestEmail: ->
     @set('sentTestEmail', false)
-    $.ajax 
+    $.ajax
       url: '/admin/email_logs/test',
       type: 'POST'
       data:
@@ -14,4 +14,4 @@ window.Discourse.AdminEmailLogsController = Ember.ArrayController.extend Discour
       success: =>
         @set('sentTestEmail', true)
     false
-  
+

@@ -34,7 +34,7 @@ Discourse.PreferencesUsernameController = Ember.ObjectController.extend Discours
         @set('saving', true)
         @get('content').changeUsername(@get('newUsername')).then =>
           window.location = "/users/#{@get('newUsername').toLowerCase()}/preferences"
-        , => 
+        , =>
           # Error
           @set('error', true)
           @set('saving', false)

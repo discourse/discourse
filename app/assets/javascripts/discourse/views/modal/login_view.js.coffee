@@ -5,7 +5,7 @@ window.Discourse.LoginView = window.Discourse.ModalBodyView.extend Discourse.Pre
   authenticate: null
   loggingIn: false
 
-  showView: (view) -> @get('controller').show(view)  
+  showView: (view) -> @get('controller').show(view)
 
   newAccount: ->
     @showView(Discourse.CreateAccountView.create())
@@ -48,7 +48,7 @@ window.Discourse.LoginView = window.Discourse.ModalBodyView.extend Discourse.Pre
     left = @get('lastX') - 400
     top = @get('lastY') - 200
     window.open("/twitter/frame", "_blank", "menubar=no,status=no,height=400,width=800,left=" + left + ",top=" + top)
-    
+
   facebookLogin: ()->
     @set('authenticate', 'facebook')
     left = @get('lastX') - 400

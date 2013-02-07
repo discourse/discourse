@@ -23,4 +23,4 @@ window.Discourse.TopicListItemView = Ember.View.extend
       return
 
     @highlight() if @get('content.highlightAfterInsert')
-      
+

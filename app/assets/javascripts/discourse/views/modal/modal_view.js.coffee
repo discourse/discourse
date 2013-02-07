@@ -13,10 +13,10 @@ window.Discourse.ModalView = Ember.ContainerView.extend
 
   viewChanged: (->
 
-    @set('modalErrorsView.errors', null)   
+    @set('modalErrorsView.errors', null)
     if view = @get('controller.currentView')
       $('#modal-alert').hide()
       Em.run.next => @.$().modal('show')
-  
+
   ).observes('controller.currentView')
 

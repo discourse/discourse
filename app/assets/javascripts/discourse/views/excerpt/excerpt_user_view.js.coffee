@@ -6,7 +6,7 @@ window.Discourse.ExcerptUserView = Ember.View.extend
     url = post.get("url")
     username = post.get("username")
     Discourse.router.route('/users/' + Discourse.currentUser.username.toLowerCase() + "/private-messages")
-    
+
     # TODO figure out a way for it to open the composer cleanly AFTER the navigation happens.
     composerController = Discourse.get('router.composerController')
     composerController.open

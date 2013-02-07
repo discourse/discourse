@@ -18,8 +18,8 @@ window.Discourse.Route = Em.Route.extend
       # Hide any searches
       if search = router.get('searchController')
         search.close()
-        
-      # get rid of "save as draft stuff" 
+
+      # get rid of "save as draft stuff"
       composerController = Discourse.get('router.composerController')
       composerController.closeIfCollapsed() if composerController
 

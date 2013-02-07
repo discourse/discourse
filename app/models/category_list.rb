@@ -9,7 +9,7 @@ class CategoryList
                     .includes(:featured_users)
                     .order('topics_week desc, topics_month desc, topics_year desc')
                     .to_a
-  
+
     # Support for uncategorized topics
     uncategorized_topics = Topic
                       .listable_topics
@@ -22,15 +22,15 @@ class CategoryList
                                       SUM(CASE WHEN created_at >= (CURRENT_TIMESTAMP - INTERVAL '1 MONTH') THEN 1 ELSE 0 END) as topics_month,
                                       SUM(CASE WHEN created_at >= (CURRENT_TIMESTAMP - INTERVAL '1 YEAR') THEN 1 ELSE 0 END) as topics_year,
                                       COUNT(*) AS topic_count
-                               FROM topics 
-                               WHERE topics.visible 
+                               FROM topics
+                               WHERE topics.visible
                                 AND topics.deleted_at IS NULL
                                 AND topics.category_id IS NULL
                                 AND topics.archetype <> '#{Archetype.private_message}'").first
 
 
-      uncategorized = Category.new({name: SiteSetting.uncategorized_name, 
-                                   slug: SiteSetting.uncategorized_name, 
+      uncategorized = Category.new({name: SiteSetting.uncategorized_name,
+                                   slug: SiteSetting.uncategorized_name,
                                    featured_topics: uncategorized_topics}.merge(totals))
 
       # Find the appropriate place to insert it:
@@ -39,7 +39,7 @@ class CategoryList
         if totals['topics_week'].to_i > (c.topics_week || 0)
           insert_at = idx
           break
-        end        
+        end
       end
 
       @categories.insert(insert_at || @categories.size, uncategorized)

@@ -44,10 +44,10 @@ class Discourse.Eyeline
 
       return true unless markSeen
 
-      # If you hit the bottom we mark all the elements as seen. Otherwise, just the first one 
+      # If you hit the bottom we mark all the elements as seen. Otherwise, just the first one
       unless atBottom
-        @trigger('saw', detail: $elem)  
-        @trigger('sawTop', detail: $elem) if i == 0       
+        @trigger('saw', detail: $elem)
+        @trigger('sawTop', detail: $elem) if i == 0
         return false
 
       @trigger('sawTop', detail: $elem) if i == 0
@@ -56,9 +56,9 @@ class Discourse.Eyeline
   # Call this when we know aren't loading any more elements. Mark the rest
   # as seen
   flushRest: ->
-    $(@selector).each (i, elem) =>      
+    $(@selector).each (i, elem) =>
       $elem = $(elem)
-      @trigger('saw', detail: $elem) 
+      @trigger('saw', detail: $elem)
 
 
 RSVP.EventTarget.mixin(Discourse.Eyeline.prototype)

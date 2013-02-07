@@ -1,14 +1,14 @@
 class NotificationSerializer < ApplicationSerializer
 
-  attributes :notification_type, 
-             :read, 
-             :created_at, 
+  attributes :notification_type,
+             :read,
+             :created_at,
              :post_number,
              :topic_id,
              :slug,
              :data
 
-  def slug    
+  def slug
     Slug.for(object.topic.title) if object.topic.present?
   end
 

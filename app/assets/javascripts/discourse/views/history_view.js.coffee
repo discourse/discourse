@@ -25,9 +25,9 @@ window.Discourse.HistoryView = Ember.View.extend
 
     @get('originalPost').loadVersions (result) =>
       @set('loading', false)
- 
+
       @set('versionLeft', result.first())
       @set('versionRight', result.last())
       @set('versions', result)
 
-    
+

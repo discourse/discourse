@@ -29,7 +29,7 @@ window.Discourse.InviteModalView = window.Discourse.ModalBodyView.extend Discour
   createInvite: ->
     @set('saving', true)
     @set('error', false)
-    
+
     @get('topic').inviteUser(@get('email')).then =>
       # Success
       @set('saving', false)

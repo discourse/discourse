@@ -34,14 +34,14 @@ class IncomingLink < ActiveRecord::Base
   after_create do
     if topic_id.present?
       exec_sql("UPDATE topics
-                SET incoming_link_count = incoming_link_count + 1 
-                WHERE id = ?", topic_id)  
+                SET incoming_link_count = incoming_link_count + 1
+                WHERE id = ?", topic_id)
       if post_number.present?
-        exec_sql("UPDATE posts 
-                  SET incoming_link_count = incoming_link_count + 1 
-                  WHERE topic_id = ? and post_number = ?", topic_id, post_number)  
+        exec_sql("UPDATE posts
+                  SET incoming_link_count = incoming_link_count + 1
+                  WHERE topic_id = ? and post_number = ?", topic_id, post_number)
       end
-    end    
+    end
   end
 
 end

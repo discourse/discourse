@@ -5,7 +5,7 @@ class ListController < ApplicationController
 
   # Create our filters
   [:popular, :favorited, :read, :posted, :unread, :new].each do |filter|
-    define_method(filter) do 
+    define_method(filter) do
 
       list_opts = {page: params[:page]}
 
@@ -23,14 +23,14 @@ class ListController < ApplicationController
 
       list = TopicQuery.new(current_user, list_opts).send("list_#{filter}")
       list.more_topics_url = url_for(self.send "#{filter}_path".to_sym, list_opts.merge(format: 'json', page: next_page))
-      
+
       respond(list)
-    end    
+    end
   end
   alias_method :index, :popular
 
   def category
-    
+
     query = TopicQuery.new(current_user, page: params[:page])
     list = nil
 
@@ -54,7 +54,7 @@ class ListController < ApplicationController
 
     list.draft_key = Draft::NEW_TOPIC
     list.draft_sequence = DraftSequence.current(current_user, Draft::NEW_TOPIC)
-    
+
     draft = Draft.get(current_user, list.draft_key, list.draft_sequence) if current_user
     list.draft = draft
 
@@ -62,7 +62,7 @@ class ListController < ApplicationController
 
     respond_to do |format|
       format.html do
-        @list = list 
+        @list = list
         store_preloaded('topic_list', MultiJson.dump(TopicListSerializer.new(list, scope: guardian)))
         render 'list'
       end
@@ -71,7 +71,7 @@ class ListController < ApplicationController
       end
     end
   end
-  
+
   def next_page
     params[:page].to_i + 1
   end

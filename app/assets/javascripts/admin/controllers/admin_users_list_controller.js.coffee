@@ -12,8 +12,8 @@ window.Discourse.AdminUsersListController = Ember.ArrayController.extend Discour
   filterUsers: Discourse.debounce(->
     @refreshUsers()
   ,250).observes('username')
-    
-  orderChanged: (->    
+
+  orderChanged: (->
     @refreshUsers()
   ).observes('query')
 

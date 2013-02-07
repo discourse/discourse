@@ -40,7 +40,7 @@ class UserNotifications < ActionMailer::Base
     @site_name = SiteSetting.title
 
     @last_seen_at = (@user.last_seen_at || @user.created_at).strftime("%m-%d-%Y")
-    
+
     # A list of new topics to show the user
     @new_topics = Topic.new_topics(min_date)
     @notifications = @user.notifications.interesting_after(min_date)
@@ -49,13 +49,13 @@ class UserNotifications < ActionMailer::Base
 
     # Don't send email unless there is content in it
     if @new_topics.present? or @notifications.present?
-      mail to: user.email, 
+      mail to: user.email,
            subject: I18n.t('user_notifications.digest.subject_template',
                             :site_name => @site_name,
                             :date => Time.now.strftime("%m-%d-%Y"))
     end
   end
- 
+
   def notification_template(user, opts)
     @notification = opts[:notification]
     return unless @notification.present?
@@ -71,7 +71,7 @@ class UserNotifications < ActionMailer::Base
                 url: @post.url,
                 username: @notification.data_hash[:display_username],
                 add_unsubscribe_link: true
-  end  
+  end
   alias :user_invited_to_private_message :notification_template
   alias :user_replied :notification_template
   alias :user_quoted :notification_template

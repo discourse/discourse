@@ -2,13 +2,13 @@ class TwitterController < ApplicationController
   skip_before_filter :check_xhr, only: [:frame, :complete]
   layout false
 
-  def frame 
+  def frame
 
     # defer the require as late as possible
     require 'oauth'
 
     consumer = oauth_consumer
-    host = request.host 
+    host = request.host
     host = "#{host}:#{request.port}" if request.port != 80
     request_token = consumer.get_request_token(:oauth_callback => "http://#{host}/twitter/complete")
 
@@ -21,10 +21,10 @@ class TwitterController < ApplicationController
   def complete
 
     require 'oauth'
-    
+
     consumer = oauth_consumer
-    
-    unless session[:request_token] && session[:request_token_secret] 
+
+    unless session[:request_token] && session[:request_token_secret]
       render :text => ('No authentication information was found in the session. Please try again.') and return
     end
 
@@ -40,26 +40,26 @@ class TwitterController < ApplicationController
 
     screen_name = access_token.params["screen_name"]
     twitter_user_id = access_token.params["user_id"]
-    
+
     session[:authentication] = {
       twitter_user_id: twitter_user_id,
       twitter_screen_name: screen_name
     }
-  
+
     user_info = TwitterUserInfo.where(:twitter_user_id => twitter_user_id).first
 
     @data = {
       username: screen_name,
       auth_provider: "Twitter"
     }
-    
+
     if user_info
       if user_info.user.active
         log_on_user(user_info.user)
         @data[:authenticated] = true
       else
         @data[:awaiting_activation] = true
-        # send another email ? 
+        # send another email ?
       end
     else
       #TODO typheous or some other webscale http request lib that does not block thins
@@ -71,11 +71,11 @@ class TwitterController < ApplicationController
   end
 
 
-  protected 
+  protected
 
   def oauth_consumer
     OAuth::Consumer.new(
-      SiteSetting.twitter_consumer_key, 
+      SiteSetting.twitter_consumer_key,
       SiteSetting.twitter_consumer_secret,
       :site => "https://api.twitter.com",
       :authorize_path => '/oauth/authenticate'

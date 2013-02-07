@@ -24,7 +24,7 @@ window.Discourse.EditCategoryView = window.Discourse.ModalBodyView.extend
   didInsertElement: ->
 
     @._super()
-    
+
     if @get('category')
       @set('id', @get('category.slug'))
     else
