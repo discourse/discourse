@@ -30,6 +30,7 @@ Discourse::Application.routes.draw do
         put 'approve-bulk' => 'users#approve_bulk'
       end
       put 'ban' => 'users#ban'
+      put 'delete_all_posts' => 'users#delete_all_posts'
       put 'unban' => 'users#unban'
       put 'revoke_admin' => 'users#revoke_admin'
       put 'grant_admin' => 'users#grant_admin'

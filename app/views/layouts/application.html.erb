@@ -50,11 +50,7 @@
     </style>
 
     <%- unless SiteCustomization.override_default_style(session[:preview_style]) %> 
-      <%- if params[:shiny] %>
-        <%=stylesheet_link_tag "shiny/shiny"%>
-      <%- else %>
-        <%=stylesheet_link_tag "application"%>
-      <%- end %>      
+      <%=stylesheet_link_tag "application"%>
     <%- end %>
 
     <%- if mini_profiler_enabled? %>

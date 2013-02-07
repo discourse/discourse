@@ -20,6 +20,7 @@ If you're interested in helping us develop Discourse, please start with our **[D
 ```
 git clone git@github.com:discourse/discourse.git
 cd discourse
+bundle install
 rake db:create
 rake db:migrate
 rake db:seed_fu

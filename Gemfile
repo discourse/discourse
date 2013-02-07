@@ -6,7 +6,6 @@ gem 'hiredis'
 gem 'em-redis'
 gem 'rails'
 gem 'pg'
-gem 'haml'
 gem 'sass'
 gem 'rake'
 # errbit is broken with 3.1.3 for now
@@ -20,8 +19,6 @@ gem 'nokogiri'
 gem 'seed-fu'
 gem 'sanitize'
 
-
-gem 'slim', '<= 1.3.0'
 gem 'sinatra', :require => nil
 gem 'clockwork', :require => false
 
@@ -70,10 +67,9 @@ group :assets do
   gem 'uglifier'
   # gem "asset_sync"
   gem 'turbo-sprockets-rails3'
+  # need this to compile coffee on the fly 
+  gem 'coffee-script'
 end
-
-# need this to compile coffee on the fly 
-gem 'coffee-script'
 
 gem 'hpricot'
 gem 'jquery-rails'
@@ -97,12 +93,11 @@ group :test, :development do
   gem 'guard-rspec' 
   gem 'guard-spork'
   gem 'mocha', :require => false
-  gem 'test-unit', :require => "test/unit"
   gem 'simplecov', :require => false
   gem 'image_optim'
   gem 'certified'
   gem 'rb-fsevent'
-  gem 'rb-inotify', :require => RUBY_PLATFORM.include?('linux') && 'rb-inotify'
+  gem 'rb-inotify', '~> 0.8.8', :require => RUBY_PLATFORM.include?('linux') && 'rb-inotify'
   gem 'terminal-notifier-guard', :require => RUBY_PLATFORM.include?('darwin') && 'terminal-notifier-guard'
 end
 
