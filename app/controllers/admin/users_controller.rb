@@ -19,6 +19,11 @@ class Admin::UsersController < Admin::AdminController
     render_serialized(@user, AdminDetailedUserSerializer, root: false)
   end
 
+  def delete_all_posts
+    @user = User.where(id: params[:user_id]).first
+    @user.delete_all_posts!(guardian)
+    render nothing: true
+  end
   def ban
     @user = User.where(id: params[:user_id]).first
     guardian.ensure_can_ban!(@user)

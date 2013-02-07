@@ -335,6 +335,18 @@ class User < ActiveRecord::Base
     PrettyText.excerpt(bio_cooked, 350)
   end
 
+  def delete_all_posts!(guardian)
+    raise Discourse::InvalidAccess unless guardian.can_delete_all_posts? self
+    
+    posts.order("post_number desc").each do |p|
+      if p.post_number == 1
+        p.topic.destroy
+      else
+        p.destroy
+      end
+    end
+  end
+
   def is_banned?
     !banned_till.nil? && banned_till > DateTime.now
   end

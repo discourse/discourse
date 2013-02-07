@@ -1,10 +1,14 @@
 window.Discourse.AdminUser = Discourse.Model.extend
 
+  deleteAllPosts: ->
+    @set('can_delete_all_posts', false)
+    $.ajax "/admin/users/#{@get('id')}/delete_all_posts", type: 'PUT'
+
   # Revoke the user's admin access
   revokeAdmin: ->
     @set('admin',false)
     @set('can_grant_admin',true)
-    @set('can_revoke_admin',false)    
+    @set('can_revoke_admin',false)
     $.ajax "/admin/users/#{@get('id')}/revoke_admin", type: 'PUT'
 
   grantAdmin: ->
@@ -18,13 +22,11 @@ window.Discourse.AdminUser = Discourse.Model.extend
       type: 'POST'
     bootbox.alert("Message sent to all clients!")
 
-    
-
   approve: ->
     @set('can_approve', false)
     @set('approved', true)
     @set('approved_by', Discourse.get('currentUser'))
-    $.ajax "/admin/users/#{@get('id')}/approve", type: 'PUT'    
+    $.ajax "/admin/users/#{@get('id')}/approve", type: 'PUT'
 
   username_lower:(->
     @get('username').toLowerCase()

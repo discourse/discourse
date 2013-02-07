@@ -319,11 +319,11 @@ class Post < ActiveRecord::Base
       Post.transaction do
         self.last_version_at = revised_at
         updater.call(true)
-        EditRateLimiter.new(updated_by).performed!
+        EditRateLimiter.new(updated_by).performed! unless opts[:bypass_rate_limiter]
 
         # If a new version is created of the last post, bump it.
         unless Post.where('post_number > ? and topic_id = ?', self.post_number, self.topic_id).exists?
-          topic.update_column(:bumped_at, Time.now)
+          topic.update_column(:bumped_at, Time.now) unless opts[:bypass_bump]
         end
       end
 

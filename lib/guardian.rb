@@ -167,6 +167,13 @@ class Guardian
     @user.id == user_id
   end
 
+  def can_delete_all_posts?(user)
+    return false unless is_admin?
+    return false if user.created_at < 7.days.ago
+
+    true 
+  end
+
   # Support for ensure_{blah}! methods.
   def method_missing(method, *args, &block)
     if method.to_s =~ /^ensure_(.*)\!$/
