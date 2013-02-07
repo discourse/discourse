@@ -2,7 +2,7 @@
   <head></head>
   <body>
     <script type="text/javascript">
-      window.opener.Discourse.authenticationComplete(#{@data.to_json});
+      window.opener.Discourse.authenticationComplete(<%=@data.to_json.to_json%>);
       window.close();
     </script>
   </body>
