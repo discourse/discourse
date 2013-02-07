@@ -1,19 +1,19 @@
 class UserSearch
 
-  def self.search term, topic_id
+  def self.search term, topic_id = nil
     User.find_by_sql sql(term, topic_id)
   end
 
   private
 
   def self.sql term, topic_id
-    sql = "select username, name, email from users u "
+    sql = "select id, username, name, email from users u "
     if topic_id
       sql << "left join (select distinct p.user_id from posts p where topic_id = :topic_id) s on
         s.user_id = u.id "
     end
 
-    if term.length > 0
+    if term.present?
       sql << "where username ilike :term_like or
               to_tsvector('simple', name) @@
               to_tsquery('simple',
