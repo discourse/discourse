@@ -49,6 +49,14 @@
       </tr>
       {{/if}}
 
+      <tr class="password-confirmation">
+          <td><label for='new-account-password-confirmation'>Password Again</label></td>
+          <td>
+          {{view Ember.TextField valueBinding="view.accountPasswordConfirm" type="password" id="new-account-password-confirmation"}}
+          {{view Ember.TextField valueBinding="view.accountChallenge" id="new-account-challenge"}}
+          </td>
+      </tr>
+
       </table>
       </form>
     </div>

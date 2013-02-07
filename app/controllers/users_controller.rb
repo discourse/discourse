@@ -123,6 +123,12 @@ class UsersController < ApplicationController
   end
 
   def create
+
+    if params[:password_confirmation] != honeypot_value or params[:challenge] != challenge_value.try(:reverse)
+      # Don't give any indication that we caught you in the honeypot
+      return render(:json => {success: true, active: false, message: I18n.t("login.activate_email", email: params[:email]) })
+    end
+
     user = User.new
     user.name = params[:name]
     user.email = params[:email]
@@ -181,6 +187,10 @@ class UsersController < ApplicationController
     render :json => {success: false, message: I18n.t("login.errors", errors:I18n.t("login.not_available", suggestion: User.suggest_username(params[:username])) )}
   rescue RestClient::Forbidden
     render json: {errors: [I18n.t("mothership.access_token_problem")]}
+  end
+
+  def get_honeypot_value
+    render json: {value: honeypot_value, challenge: challenge_value}
   end
 
 
@@ -319,6 +329,14 @@ class UsersController < ApplicationController
   end
 
   private
+
+    def honeypot_value
+      Digest::SHA1::hexdigest("#{Discourse.current_hostname}:#{Discourse::Application.config.secret_token}")[0,15]
+    end
+
+    def challenge_value
+      '3019774c067cc2b'
+    end
 
     def fetch_user_from_params
       username_lower = params[:username].downcase
