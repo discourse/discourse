@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'slim'  # required for sidekiq-web
 gem 'redis'
 gem 'redis-rails'
 gem 'hiredis'
