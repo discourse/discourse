@@ -517,7 +517,7 @@ en:
         title: "Receive an email digest of what's new"
         daily: "daily"
         weekly: "weekly"
-        bi_weekly: "bi-weekly"
+        bi_weekly: "every two weeks"
 
       email_direct: "Receive an email when someone talks directly to you"
       email_private_messages: "Receive an email when someone sends you a private message"
@@ -831,7 +831,7 @@ en:
       reply_as_new_topic: "Reply as new Topic"
       continue_discussion: "Continuing the discussion from {{postLink}}:"
       follow_quote: "go to the quoted post"
-      deleted_by_author: "Post deleted by author."
+      deleted_by_author: "(post removed by author)"
 
       has_replies_below:
         one: "Reply Below"
