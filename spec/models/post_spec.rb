@@ -63,12 +63,7 @@ describe Post do
       post = Fabricate(:post)
       user = Fabricate(:coding_horror)
       PostAction.act(user, post, PostActionType.Types[:off_topic])
-      PostAction.act(post.user, post, PostActionType.Types[:spam])
 
-      post.reload 
-      post.is_flagged?.should == true
-      
-      PostAction.remove_act(post.user, post, PostActionType.Types[:spam])
       post.reload 
       post.is_flagged?.should == true
       

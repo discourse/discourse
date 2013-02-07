@@ -7,6 +7,13 @@ window.Discourse.AdminFlagsController = Ember.Controller.extend
         bootbox.alert("something went wrong")
       )
 
+  deletePost: (item) ->
+    item.deletePost().then (=>
+      @content.removeObject(item)
+      ), (->
+        bootbox.alert("something went wrong")
+      )
+
   adminOldFlagsView: (->
     @query == 'old'
   ).property('query')

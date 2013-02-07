@@ -28,6 +28,25 @@ window.Discourse.FlaggedPost = Discourse.Post.extend
     @get('topic_visible') == 'f'
   ).property('topic_hidden')
 
+  deletePost: ->
+    promise = new RSVP.Promise()
+    if @get('post_number') == "1"
+      $.ajax "/t/#{@topic_id}",
+        type: 'DELETE'
+        cache: false
+        success: ->
+          promise.resolve()
+        error: (e)->
+          promise.reject()
+    else
+      $.ajax "/posts/#{@id}",
+        type: 'DELETE'
+        cache: false
+        success: ->
+          promise.resolve()
+        error: (e)->
+          promise.reject()
+
   clearFlags: ->
     promise = new RSVP.Promise()
     $.ajax "/admin/flags/clear/#{@id}",
