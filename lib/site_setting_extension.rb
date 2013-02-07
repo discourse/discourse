@@ -105,7 +105,7 @@ module SiteSettingExtension
         end
       end
 
-      $redis.del(SiteSettingExtension.client_settings_cache_key)
+      Rails.cache.delete(SiteSettingExtension.client_settings_cache_key)
     end
   end
 
