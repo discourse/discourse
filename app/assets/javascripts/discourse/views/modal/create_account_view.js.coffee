@@ -3,6 +3,8 @@ window.Discourse.CreateAccountView = window.Discourse.ModalBodyView.extend Disco
   title: Em.String.i18n('create_account.title')  
   uniqueUsernameValidation: null
   complete: false
+  accountPasswordConfirm: 0
+  accountChallenge: 0
 
 
   submitDisabled: (->
@@ -21,6 +23,8 @@ window.Discourse.CreateAccountView = window.Discourse.ModalBodyView.extend Disco
   nameValidation: (->
     # If blank, fail without a reason
     return Discourse.InputValidation.create(failed: true) if @blank('accountName') 
+
+    @fetchConfirmationValue() if @get('accountPasswordConfirm') == 0
 
     # If too short
     return Discourse.InputValidation.create(failed: true, reason: Em.String.i18n('user.name.too_short')) if @get('accountName').length < 3
@@ -120,13 +124,22 @@ window.Discourse.CreateAccountView = window.Discourse.ModalBodyView.extend Disco
   ).property('accountPassword')
 
 
+  fetchConfirmationValue: ->
+    $.ajax
+      url: '/users/hp.json',
+      success: (json) =>
+        @set('accountPasswordConfirm', json.value)
+        @set('accountChallenge', json.challenge.split("").reverse().join(""))
+
   createAccount: ->
     name = @get('accountName')
     email = @get('accountEmail')
     password = @get('accountPassword')
     username = @get('accountUsername')
+    passwordConfirm = @get('accountPasswordConfirm')
+    challenge = @get('accountChallenge')
 
-    Discourse.User.createAccount(name, email, password, username).then (result) =>
+    Discourse.User.createAccount(name, email, password, username, passwordConfirm, challenge).then (result) =>
       
       if result.success
         @flash(result.message)
