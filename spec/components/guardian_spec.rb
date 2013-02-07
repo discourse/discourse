@@ -361,6 +361,26 @@ describe Guardian do
     end
   end
 
+  describe "can_recover_post?" do
+
+    it "returns false for a nil user" do
+      Guardian.new(nil).can_recover_post?(post).should be_false
+    end
+
+    it "returns false for a nil object" do
+      Guardian.new(user).can_recover_post?(nil).should be_false
+    end
+
+    it "returns false for a regular user" do
+      Guardian.new(user).can_recover_post?(post).should be_false
+    end
+
+    it "returns true for a moderator" do
+      Guardian.new(moderator).can_recover_post?(post).should be_true
+    end
+
+  end
+
   describe 'can_edit?' do
 
     it 'returns false with a nil object' do
@@ -576,8 +596,18 @@ describe Guardian do
         Guardian.new.can_delete?(post).should be_false
       end
 
-      it 'returns false when not a moderator' do
+      it "returns false when trying to delete your own post that has already been deleted" do
+        post.delete_by(user)
+        post.reload
         Guardian.new(user).can_delete?(post).should be_false
+      end
+
+      it 'returns true when trying to delete your own post' do
+        Guardian.new(user).can_delete?(post).should be_true
+      end
+
+      it "returns false when trying to delete another user's own post" do
+        Guardian.new(Fabricate(:user)).can_delete?(post).should be_false
       end
 
       it "returns false when it's the OP, even as a moderator" do

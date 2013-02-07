@@ -299,14 +299,15 @@ Discourse.TopicController = Ember.ObjectController.extend Discourse.Presence,
     @get('controllers.modal')?.show(view)
     false
 
+  recoverPost: (post) ->
+    post.set('deleted_at', null)
+    post.recover()
+
   deletePost: (post) ->
-
-    deleted = !!post.get('deleted_at')
-
-    if deleted
-      post.set('deleted_at', null)
+    if post.get('user_id') is Discourse.get('currentUser.id')
+      post.set('cooked', Discourse.Utilities.cook(Em.String.i18n("post.deleted_by_author")))
+      post.set('can_delete', false)
     else
       post.set('deleted_at', new Date())
 
-    post.delete =>
-      # nada
+    post.delete()

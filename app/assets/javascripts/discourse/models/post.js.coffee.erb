@@ -153,8 +153,11 @@ window.Discourse.Post = Ember.Object.extend Discourse.Presence,
         error: (result) -> error?(result)
 
 
+  recover: ->
+    $.ajax "/posts/#{@get('id')}/recover", type: 'PUT', cache: false
+
   delete: (complete) ->
-    $.ajax "/posts/#{@get('id')}", type: 'DELETE', success: (result) -> complete()
+    $.ajax "/posts/#{@get('id')}", type: 'DELETE', success: (result) -> complete?()
 
   # Update the properties of this post from an obj, ignoring cooked as we should already
   # have that rendered.

@@ -28,6 +28,7 @@ class PostSerializer < ApplicationSerializer
              :version,
              :can_edit,
              :can_delete,
+             :can_recover,
              :link_counts,
              :cooked,
              :read,
@@ -64,6 +65,10 @@ class PostSerializer < ApplicationSerializer
 
   def can_delete
     scope.can_delete?(object)
+  end
+
+  def can_recover
+    scope.can_recover_post?(object)
   end
 
   def link_counts

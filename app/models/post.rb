@@ -159,7 +159,23 @@ class Post < ActiveRecord::Base
     else
       @raw_mentions = []
     end
+  end
 
+  # The rules for deletion change depending on who is doing it.
+  def delete_by(deleted_by)
+    if deleted_by.has_trust_level?(:moderator)
+      # As a moderator, delete the post.
+      Post.transaction do
+        self.destroy
+        Topic.reset_highest(self.topic_id)    
+      end
+    elsif deleted_by.id == self.user_id
+      # As the poster, make a revision that says deleted.
+      Post.transaction do
+        revise(deleted_by, I18n.t('js.post.deleted_by_author'), force_new_version: true)
+        update_column(:user_deleted, true)
+      end
+    end
   end
 
   def archetype
@@ -310,6 +326,8 @@ class Post < ActiveRecord::Base
 
     # We always create a new version if it's been greater than the ninja edit window
     new_version = true if (revised_at - last_version_at) > SiteSetting.ninja_edit_window.to_i
+
+    new_version = true if opts[:force_new_version]
 
     # Create the new version (or don't)
     if new_version

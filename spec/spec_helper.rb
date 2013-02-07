@@ -88,6 +88,7 @@ end
 Spork.each_run do
   # This code will be run each time you run your specs.
   $redis.client.reconnect  
+  MessageBus.reliable_pub_sub.pub_redis.client.reconnect
 end
 
 # --- Instructions ---

@@ -1798,7 +1798,8 @@ CREATE TABLE posts (
     spam_count integer DEFAULT 0 NOT NULL,
     illegal_count integer DEFAULT 0 NOT NULL,
     inappropriate_count integer DEFAULT 0 NOT NULL,
-    last_version_at timestamp without time zone NOT NULL
+    last_version_at timestamp without time zone NOT NULL,
+    user_deleted boolean DEFAULT false NOT NULL
 );
 
 
@@ -4570,3 +4571,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130203204338');
 INSERT INTO schema_migrations (version) VALUES ('20130204000159');
 
 INSERT INTO schema_migrations (version) VALUES ('20130205021905');
+
+INSERT INTO schema_migrations (version) VALUES ('20130207200019');

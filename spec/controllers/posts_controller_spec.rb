@@ -51,7 +51,8 @@ describe PostsController do
 
     describe 'when logged in' do
 
-      let(:post) { Fabricate(:post, user: log_in(:moderator), post_number: 2) }
+      let(:user) { log_in(:moderator) }
+      let(:post) { Fabricate(:post, user: user, post_number: 2) }
 
       it "raises an error when the user doesn't have permission to see the post" do
         Guardian.any_instance.expects(:can_delete?).with(post).returns(false)
@@ -59,18 +60,38 @@ describe PostsController do
         response.should be_forbidden
       end
 
-      it "deletes the post" do
-        Post.any_instance.expects(:destroy)
-        xhr :delete, :destroy, id: post.id
-      end
-
-      it "updates the highest read data for the forum" do
-        Topic.expects(:reset_highest).with(post.topic_id)
+      it "calls delete_by" do
+        Post.any_instance.expects(:delete_by).with(user)
         xhr :delete, :destroy, id: post.id
       end
 
     end
   end
+
+  describe 'recover a post' do
+    it 'raises an exception when not logged in' do
+      lambda { xhr :put, :recover, post_id: 123 }.should raise_error(Discourse::NotLoggedIn)
+    end
+
+    describe 'when logged in' do
+
+      let(:user) { log_in(:moderator) }
+      let(:post) { Fabricate(:post, user: user, post_number: 2) }
+
+      it "raises an error when the user doesn't have permission to see the post" do
+        Guardian.any_instance.expects(:can_recover_post?).with(post).returns(false)
+        xhr :put, :recover, post_id: post.id
+        response.should be_forbidden
+      end
+
+      it "calls recover" do
+        Post.any_instance.expects(:recover)
+        xhr :put, :recover, post_id: post.id
+      end
+
+    end
+  end
+
 
   describe 'destroy_many' do
     it 'raises an exception when not logged in' do

@@ -103,6 +103,7 @@ Discourse::Application.routes.draw do
     get 'versions'
     put 'bookmark'
     get 'replies'
+    put 'recover'
     collection do
       delete 'destroy_many'
     end

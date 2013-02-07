@@ -74,16 +74,16 @@ class PostsController < ApplicationController
   end
 
   def destroy
-    Post.transaction do
-      post = Post.with_deleted.where(id: params[:id]).first
-      guardian.ensure_can_delete!(post)
-      if post.deleted_at.nil?
-        post.destroy
-      else
-        post.recover
-      end
-      Topic.reset_highest(post.topic_id)
-    end
+    post = Post.where(id: params[:id]).first
+    guardian.ensure_can_delete!(post)
+    post.delete_by(current_user)
+    render nothing: true
+  end
+
+  def recover
+    post = Post.with_deleted.where(id: params[:post_id]).first
+    guardian.ensure_can_recover_post!(post)
+    post.recover
     render nothing: true
   end
 

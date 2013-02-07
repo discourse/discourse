@@ -155,7 +155,9 @@ Discourse.Utilities =
 
 
   # Takes raw input and cooks it to display nicely (mostly markdown)
-  cook: (raw, opts) ->
+  cook: (raw, opts=null) ->
+
+    opts ||= {}
 
     # Make sure we've got a string
     return "" unless raw

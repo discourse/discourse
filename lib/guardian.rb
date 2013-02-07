@@ -232,6 +232,15 @@ class Guardian
     # Can't delete the first post
     return false if post.post_number == 1
     
+    # You can delete your own posts
+    return !post.user_deleted? if post.user == @user
+
+    @user.has_trust_level?(:moderator)
+  end
+
+  # Recovery Method
+  def can_recover_post?(post)
+    return false if @user.blank?    
     @user.has_trust_level?(:moderator)
   end
 

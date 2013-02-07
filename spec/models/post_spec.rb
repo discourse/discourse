@@ -505,6 +505,48 @@ describe Post do
 
   end
 
+  describe 'delete_by' do
+
+    let(:moderator) { Fabricate(:moderator) }
+    let(:post) { Fabricate(:post) }
+
+    context "as the creator of the post" do
+
+      before do
+        post.delete_by(post.user)
+        post.reload
+      end
+
+      it "doesn't delete the post" do
+        post.deleted_at.should be_blank
+      end
+
+      it "updates the text of the post" do
+        post.raw.should == I18n.t('js.post.deleted_by_author')
+      end
+
+
+      it "creates a new version" do
+        post.version.should == 2
+      end      
+
+    end
+
+    context "as a moderator" do
+
+      before do
+        post.delete_by(post.user)
+        post.reload       
+      end
+
+      it "deletes the post" do
+        post.deleted_at.should be_blank
+      end
+
+    end
+
+  end
+
   describe 'after delete' do
 
     let!(:coding_horror) { Fabricate(:coding_horror) }
@@ -549,6 +591,10 @@ describe Post do
   describe 'after save' do
 
     let(:post) { Fabricate(:post, post_args) }
+
+    it "defaults to not user_deleted" do
+      post.user_deleted?.should be_false
+    end
 
     it 'has a post nubmer' do
       post.post_number.should be_present

@@ -831,6 +831,7 @@ en:
       reply_as_new_topic: "Reply as new Topic"
       continue_discussion: "Continuing the discussion from {{postLink}}:"
       follow_quote: "go to the quoted post"
+      deleted_by_author: "Post deleted by author."
 
       has_replies_below:
         one: "Reply Below"
