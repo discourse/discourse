@@ -102,7 +102,7 @@ group :test, :development do
   gem 'image_optim'
   gem 'certified'
   gem 'rb-fsevent'
-  gem 'rb-inotify', :require => RUBY_PLATFORM.include?('linux') && 'rb-inotify'
+  gem 'rb-inotify', '~> 0.8.8', :require => RUBY_PLATFORM.include?('linux') && 'rb-inotify'
   gem 'terminal-notifier-guard', :require => RUBY_PLATFORM.include?('darwin') && 'terminal-notifier-guard'
 end
 
