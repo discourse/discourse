@@ -8,7 +8,7 @@ module Slug
   def self.for(string)
 
     str = string.dup
-    str.gsub!(/^\s+|\s+$/, '')
+    str.strip!
     str.downcase!
 
     from = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;."
