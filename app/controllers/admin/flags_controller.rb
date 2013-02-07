@@ -3,7 +3,6 @@ require_dependency 'sql_builder'
 class Admin::FlagsController < Admin::AdminController
   def index 
 
-
     sql = SqlBuilder.new "select p.id, t.title, p.cooked, p.user_id, p.topic_id, p.post_number, p.hidden, t.visible topic_visible
 from posts p 
 join topics t on t.id = topic_id
@@ -72,7 +71,7 @@ from post_actions a
       sql.where('deleted_at is null')
     end
 
-    actions = sql.exec.each do |action|
+    sql.exec.each do |action|
       p = map[action["post_id"]] 
       p[:post_actions] ||= []
       p[:post_actions] << action
@@ -92,7 +91,6 @@ where id in (?)"
     }
 
     render json: MultiJson.dump({users: users, posts: posts}) 
-    
   end
 
   def clear
