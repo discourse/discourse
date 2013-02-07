@@ -1,15 +1,15 @@
 class TopicViewSerializer < ApplicationSerializer
 
   # These attributes will be delegated to the topic
-  def self.topic_attributes 
+  def self.topic_attributes
     [:id,
-     :title, 
-     :posts_count, 
-     :highest_post_number, 
-     :created_at, 
-     :views, 
-     :reply_count, 
-     :last_posted_at, 
+     :title,
+     :posts_count,
+     :highest_post_number,
+     :created_at,
+     :views,
+     :reply_count,
+     :last_posted_at,
      :visible,
      :closed,
      :pinned,
@@ -24,11 +24,11 @@ class TopicViewSerializer < ApplicationSerializer
     [:can_moderate, :can_edit, :can_delete, :can_invite_to, :can_move_posts]
   end
 
-  attributes *topic_attributes 
+  attributes *topic_attributes
   attributes *guardian_attributes
 
-  attributes :draft, 
-             :draft_key, 
+  attributes :draft,
+             :draft_key,
              :draft_sequence,
              :post_action_visibility,
              :voted_in_topic,
@@ -42,7 +42,7 @@ class TopicViewSerializer < ApplicationSerializer
              :notifications_reason_id,
              :posts,
              :at_bottom
-  
+
   has_one :created_by, serializer: BasicUserSerializer, embed: :objects
   has_one :last_poster, serializer: BasicUserSerializer, embed: :objects
   has_many :allowed_users, serializer: BasicUserSerializer, embed: :objects
@@ -84,11 +84,11 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def draft_sequence
-    object.draft_sequence    
+    object.draft_sequence
   end
 
   def post_action_visibility
-    object.post_action_visibility    
+    object.post_action_visibility
   end
 
   def include_post_action_visibility?
@@ -105,10 +105,10 @@ class TopicViewSerializer < ApplicationSerializer
 
   def include_can_reply_as_new_topic?
     scope.can_create?(Post, object.topic)
-  end  
+  end
 
   def can_create_post
-    true    
+    true
   end
 
   def include_can_create_post?
@@ -117,7 +117,7 @@ class TopicViewSerializer < ApplicationSerializer
 
   def categoryName
     object.topic.category.name
-  end  
+  end
   def include_categoryName?
     object.topic.category.present?
   end
@@ -148,7 +148,7 @@ class TopicViewSerializer < ApplicationSerializer
   alias_method :include_notification_level?, :has_topic_user?
 
   def notifications_reason_id
-    object.topic_user.notifications_reason_id    
+    object.topic_user.notifications_reason_id
   end
   alias_method :include_notifications_reason_id?, :has_topic_user?
 
@@ -168,7 +168,7 @@ class TopicViewSerializer < ApplicationSerializer
     object.links.present?
   end
 
-  def participants    
+  def participants
     object.posts_count.collect {|tuple| {user: object.participants[tuple.first], post_count: tuple[1]}}
   end
 
@@ -184,7 +184,7 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   # Whether we're at the bottom of a topic (last page)
-  def at_bottom 
+  def at_bottom
     posts.present? and (@highest_number_in_posts == object.topic.highest_post_number)
   end
 

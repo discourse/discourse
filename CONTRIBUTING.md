@@ -2,7 +2,7 @@
 
 ## Before You Start
 
-Anyone wishing to contribute to the **[Discourse/Discourse](https://github.com/discourse/discourse)** project **MUST read & sign the [Electronic Discourse Forums Contribution License Agreement](https://docs.google.com/a/discourse.org/spreadsheet/viewform?formkey=dGUwejFfbDhDYXR4bVFMRG1TUENqLWc6MQ)**. The Discourse team is legally prevented from accepting any pull requests from users who have not signed the CLA first.
+Anyone wishing to contribute to the **[Discourse/Discourse](https://github.com/discourse/discourse)** project **MUST read & sign the [Electronic Discourse Forums Contribution License Agreement](http://www.discourse.org/cla)**. The Discourse team is legally prevented from accepting any pull requests from users who have not signed the CLA first.
 
 ## Reporting Bugs
 
@@ -20,7 +20,7 @@ Anyone wishing to contribute to the **[Discourse/Discourse](https://github.com/d
 
 ## Requesting New Features
 
-1. Do not submit a feature request on GitHub; all feature requests on GitHub will be closed. Instead, visit the Discourse development forums, and search for the "Feature Request" category, which will filter a list of outstanding requests. Review this list for similar feature requests. It's possible somebody has already asked for this feature or provided a pull request that we're still discussing.
+1. Do not submit a feature request on GitHub; all feature requests on GitHub will be closed. Instead, visit the **[Discourse development forums](http://meta.discourse.org/category/feature)**, and search for the "Feature" category, which will filter a list of outstanding requests. Review this list for similar feature requests. It's possible somebody has already asked for this feature or provided a pull request that we're still discussing.
 
 2. Provide a clear and detailed explanation of the feature you want and why it's important to add. The feature must apply to a wide array of users of Discourse; for smaller, more targeted "one-off" features, you might consider writing a plugin for Discourse. You may also want to provide us with some advance documentation on the feature, which will help the community to better understand where it will fit.
 

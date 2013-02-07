@@ -19,7 +19,7 @@
     me = @
     div = null
 
-    # input is handled differently 
+    # input is handled differently
     isInput = @[0].tagName == "INPUT"
 
     inputSelectedItems = []
@@ -98,7 +98,7 @@
 
       div.css(left: "-1000px")
       me.parent().append(div)
-      
+
       mePos = me.position()
 
       borderTop = parseInt(me.css('border-top-width')) || 0
@@ -143,11 +143,11 @@
 
     $(@).keypress (e) ->
 
-      
+
       if !options.key
         return
-     
-      # keep hunting backwards till you hit a 
+
+      # keep hunting backwards till you hit a
 
       if e.which == options.key.charCodeAt(0)
         caretPosition = Discourse.Utilities.caretPosition(me[0])
@@ -165,11 +165,11 @@
       return if e.which == 16
 
       if completeStart == null && e.which == 8 && options.key #backspace
-        
+
         c = Discourse.Utilities.caretPosition(me[0])
         next = me[0].value[c]
         nextIsGood = next == undefined || /\s/.test(next)
-        
+
         c-=1
         initial = c
 
@@ -186,7 +186,7 @@
               term = me[0].value.substring(c+1, initial)
               options.dataSource term, updateAutoComplete
               return true
-              
+
           prevIsGood = /[a-zA-Z\.]/.test(prev)
 
 
@@ -250,6 +250,6 @@
               term += "," unless e.which == 8 # backspace
             options.dataSource term, updateAutoComplete
             return true
-      
-  
+
+
 )(jQuery)

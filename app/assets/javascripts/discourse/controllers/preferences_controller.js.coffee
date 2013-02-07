@@ -36,7 +36,7 @@ Discourse.PreferencesController = Ember.ObjectController.extend Discourse.Presen
     @get('content').save (result) =>
       @set('saving', false)
       if result
-        @set('content.bio_cooked', Discourse.Utilities.cook(@get('content.bio_raw')))      
+        @set('content.bio_cooked', Discourse.Utilities.cook(@get('content.bio_raw')))
         @set('saved', true)
       else
         alert 'failed'
@@ -51,4 +51,4 @@ Discourse.PreferencesController = Ember.ObjectController.extend Discourse.Presen
       @set('passwordProgress','(generating email)')
       @get('content').changePassword (message)=>
         @set('changePasswordProgress', false)
-        @set('passwordProgress', "(#{message})")    
+        @set('passwordProgress', "(#{message})")

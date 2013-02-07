@@ -19,7 +19,7 @@ window.Discourse.UserStreamView = Ember.View.extend Discourse.Scrolling,
         @set('loading', false)
         Em.run.next =>
           $userStreamBottom.data('loading', null)
-          
+
 
   willDestroyElement: ->
     Discourse.MessageBus.unsubscribe "/users/#{@get('user.username').toLowerCase()}"

@@ -1,7 +1,7 @@
 Discourse.AutoSizedTextView = Ember.View.extend
   render: (buffer)->
     null
- 
+
   didInsertElement: (e) ->
     me = @$()
     me.text(@get('content'))
@@ -13,6 +13,6 @@ Discourse.AutoSizedTextView = Ember.View.extend
       lh -=1
       me.css("font-size", "#{fontSize}px")
       me.css("line-height", "#{lh}px")
-    
+
 
 

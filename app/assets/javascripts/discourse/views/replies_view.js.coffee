@@ -1,7 +1,7 @@
 window.Discourse.RepliesView = Ember.CollectionView.extend
   templateName: 'replies'
   tagName: 'section'
-  classNames: ['replies-list', 'embedded-posts', 'bottom'] 
+  classNames: ['replies-list', 'embedded-posts', 'bottom']
   itemViewClass: Discourse.EmbeddedPostView
 
   repliesShown: (->

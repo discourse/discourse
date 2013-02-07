@@ -2,7 +2,7 @@ window.Discourse.ModalBodyView = window.Discourse.View.extend
 
   # Focus on first element
   didInsertElement: ->
-    Em.run.next => 
+    Em.run.next =>
       @.$('form input:first').focus()
 
   # Pass the errors to our errors view

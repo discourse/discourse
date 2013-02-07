@@ -2,7 +2,7 @@ window.Discourse.TopicList = Discourse.Model.extend
 
   emptyListTip: (->
     return null unless @get('loaded')
-    
+
     t = @get('topics')
     return null if t && t.length > 0
 
@@ -32,7 +32,7 @@ window.Discourse.TopicList = Discourse.Model.extend
 
   insert: (json) ->
     newTopic = Discourse.TopicList.decodeTopic(json)
-    
+
     # New Topics are always unseen
     newTopic.set('unseen', true)
 
@@ -75,7 +75,7 @@ window.Discourse.TopicList.reopenClass
     url = "/#{filter}.json"
     if menuItem.filters && menuItem.filters.length > 0
       url += "?exclude_category=" + menuItem.filters[0].substring(1)
-    
+
     if list = Discourse.get('transient.topicsList')
       if (list.get('filter') is filter) and window.location.pathname.indexOf('more') > 0
         promise = new RSVP.Promise()

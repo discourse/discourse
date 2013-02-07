@@ -34,7 +34,7 @@ class PostsController < ApplicationController
 
   def update
     requires_parameter(:post)
-        
+
     @post = Post.where(id: params[:id]).first
     @post.image_sizes = params[:image_sizes] if params[:image_sizes].present?
     guardian.ensure_can_edit!(@post)
@@ -56,7 +56,7 @@ class PostsController < ApplicationController
 
   def by_number
     @post = Post.where(topic_id: params[:topic_id], post_number: params[:post_number]).first
-    guardian.ensure_can_see!(@post)   
+    guardian.ensure_can_see!(@post)
     @post.revert_to(params[:version].to_i) if params[:version].present?
     post_serializer = PostSerializer.new(@post, scope: guardian, root: false)
     post_serializer.add_raw = true
@@ -66,7 +66,7 @@ class PostsController < ApplicationController
   def show
     @post = Post.where(id: params[:id]).first
     guardian.ensure_can_see!(@post)
-   
+
     @post.revert_to(params[:version].to_i) if params[:version].present?
     post_serializer = PostSerializer.new(@post, scope: guardian, root: false)
     post_serializer.add_raw = true
@@ -82,7 +82,7 @@ class PostsController < ApplicationController
       else
         post.recover
       end
-      Topic.reset_highest(post.topic_id)      
+      Topic.reset_highest(post.topic_id)
     end
     render nothing: true
   end
@@ -125,7 +125,7 @@ class PostsController < ApplicationController
   def bookmark
     post = Post.where(id: params[:post_id]).first
     guardian.ensure_can_see!(post)
-    if current_user 
+    if current_user
       if params[:bookmarked] == "true"
         PostAction.act(current_user, post, PostActionType.Types[:bookmark])
       else

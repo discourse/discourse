@@ -5,7 +5,7 @@ window.Discourse.UserPrivateMessagesRoute = Discourse.Route.extend
     user = @controllerFor('user').get('content')
     controller.set('content', user)
     user.filterStream(13)
-    
+
     Discourse.Draft.get('new_private_message').then (data)=>
       if data.draft
         @controllerFor('composer').open

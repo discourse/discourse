@@ -1,8 +1,8 @@
 window.Discourse.TopicFooterButtonsView = Ember.ContainerView.extend
   elementId: 'topic-footer-buttons'
   topicBinding: 'controller.content'
-  
-  init: -> 
+
+  init: ->
     @_super()
     @createButtons()
 
@@ -41,7 +41,7 @@ window.Discourse.TopicFooterButtonsView = Ember.ContainerView.extend
         text: (->
           archetype = @get('controller.content.archetype')
           return customTitle if customTitle = @get("parentView.replyButtonText#{archetype.capitalize()}")
-          Em.String.i18n("topic.reply.title") 
+          Em.String.i18n("topic.reply.title")
         ).property()
         renderIcon: (buffer) -> buffer.push("<i class='icon icon-plus'></i>")
         click: -> @get('controller').reply()

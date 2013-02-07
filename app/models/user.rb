@@ -337,7 +337,7 @@ class User < ActiveRecord::Base
 
   def delete_all_posts!(guardian)
     raise Discourse::InvalidAccess unless guardian.can_delete_all_posts? self
-    
+
     posts.order("post_number desc").each do |p|
       if p.post_number == 1
         p.topic.destroy

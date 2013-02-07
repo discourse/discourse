@@ -344,7 +344,6 @@ GEM
     temple (0.4.1)
     terminal-notifier-guard (1.5.3)
     terminal-table (1.4.5)
-    test-unit (2.5.4)
     therubyracer (0.11.3)
       libv8 (~> 3.11.8.12)
       ref
@@ -391,7 +390,6 @@ DEPENDENCIES
   guard-jasmine
   guard-rspec
   guard-spork
-  haml
   has_ip_address
   hiredis
   hpricot
@@ -432,9 +430,8 @@ DEPENDENCIES
   simple_handlebars_rails!
   simplecov
   sinatra
-  slim (<= 1.3.0)
+  slim
   terminal-notifier-guard
-  test-unit
   therubyracer
   thin
   turbo-sprockets-rails3

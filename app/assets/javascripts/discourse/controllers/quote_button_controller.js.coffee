@@ -20,7 +20,7 @@ Discourse.QuoteButtonController = Discourse.Controller.extend
   selectText: (e) ->
     return unless Discourse.get('currentUser')
     return unless @get('controllers.topic.content.can_create_post')
-  
+
     selectedText = Discourse.Utilities.selectedText()
     return if @get('buffer') == selectedText
     return if @get('lastSelected') == selectedText
@@ -51,20 +51,20 @@ Discourse.QuoteButtonController = Discourse.Controller.extend
       post: post
       action: Discourse.Composer.REPLY
       draftKey: @get('post.topic.draft_key')
-    
+
     # If the composer is associated with a different post, we don't change it.
     if composerPost = composerController.get('content.post')
       composerOpts.post = composerPost if (composerPost.get('id') != @get('post.id'))
 
     buffer = @get('buffer')
     quotedText = Discourse.BBCode.buildQuoteBBCode(post, buffer)
-    
+
     if composerController.wouldLoseChanges()
       composerController.appendText(quotedText)
     else
       composerController.open(composerOpts).then =>
         composerController.appendText(quotedText)
-    
+
     @set('buffer', '')
 
     false

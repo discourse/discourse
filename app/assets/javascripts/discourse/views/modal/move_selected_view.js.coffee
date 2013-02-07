@@ -23,7 +23,7 @@ window.Discourse.MoveSelectedView = window.Discourse.ModalBodyView.extend Discou
     @set('saving', true)
 
     postIds = @get('selectedPosts').map (p) -> p.get('id')
-    
+
     Discourse.Topic.movePosts(@get('topic.id'), @get('topicName'), postIds).then (result) =>
       if result.success
         $('#discourse-modal').modal('hide')

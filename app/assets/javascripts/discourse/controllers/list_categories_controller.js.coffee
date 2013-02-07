@@ -14,7 +14,7 @@ Discourse.ListCategoriesController = Ember.ObjectController.extend Discourse.Pre
   editCategory: (category) ->
     @get('controllers.modal').show(Discourse.EditCategoryView.create(category: category))
     false
-  
+
   canEdit: (->
     u = Discourse.get('currentUser')
     u && u.admin

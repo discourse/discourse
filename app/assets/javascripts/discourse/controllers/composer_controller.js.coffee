@@ -24,18 +24,18 @@ window.Discourse.ComposerController = Ember.Controller.extend Discourse.Presence
       , (error) =>
         composer.set('disableDrafts', false)
         bootbox.alert error
-      
+
   saveDraft: ->
     model = @get('content')
     model.saveDraft() if model
 
   # Open the reply view
-  # 
+  #
   #  opts:
-  #    action   - The action we're performing: edit, reply or createTopic  
+  #    action   - The action we're performing: edit, reply or createTopic
   #    post     - The post we're replying to, if present
   #    topic   - The topic we're replying to, if present
-  #    quote    - If we're opening a reply from a quote, the quote we're making  
+  #    quote    - If we're opening a reply from a quote, the quote we're making
   #
   open: (opts={}) ->
     opts.promise = promise = opts.promise || new RSVP.Promise
@@ -51,7 +51,7 @@ window.Discourse.ComposerController = Ember.Controller.extend Discourse.Presence
         controller: @
       view.appendTo($('#main'))
       @set('view', view)
-      # the next runloop is too soon, need to get the control rendered and then 
+      # the next runloop is too soon, need to get the control rendered and then
       #  we need to change stuff, otherwise css animations don't kick in
       Em.run.next =>
         Em.run.next =>
@@ -87,7 +87,7 @@ window.Discourse.ComposerController = Ember.Controller.extend Discourse.Presence
     if opts.draft
       composer = Discourse.Composer.loadDraft(opts.draftKey, opts.draftSequence, opts.draft)
       composer?.set('topic', opts.topic)
-      
+
     composer = composer || Discourse.Composer.open(opts)
 
     @set('content', composer)
@@ -119,7 +119,7 @@ window.Discourse.ComposerController = Ember.Controller.extend Discourse.Presence
         else
           fail() if typeof fail == "function"
     else
-      # it is possible there is some sort of crazy draft with no body ... just give up on it 
+      # it is possible there is some sort of crazy draft with no body ... just give up on it
       @destroyDraft()
       @close()
       success() if typeof success == "function"
@@ -133,7 +133,7 @@ window.Discourse.ComposerController = Ember.Controller.extend Discourse.Presence
 
   shrink: ->
     if @get('content.reply') == @get('content.originalText') then @close() else @collapse()
-  
+
   collapse: ->
     @saveDraft()
     @set('content.composeState', Discourse.Composer.DRAFT)
@@ -166,7 +166,7 @@ window.Discourse.ComposerController = Ember.Controller.extend Discourse.Presence
   # ESC key hit
   hitEsc: ->
     @shrink() if @get('content.composeState') == @OPEN
-  
+
 
   showOptions: ->
     @get('controllers.modal')?.show(Discourse.ArchetypeOptionsModalView.create(archetype: @get('content.archetype'), metaData: @get('content.metaData')))

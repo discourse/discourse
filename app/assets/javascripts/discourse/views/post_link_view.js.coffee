@@ -2,7 +2,7 @@ window.Discourse.PostLinkView = Ember.View.extend
   tagName: 'li'
   classNameBindings: ['direction']
 
-  direction: (->    
+  direction: (->
     return 'incoming' if @get('content.reflection')
     null
   ).property('content.reflection')

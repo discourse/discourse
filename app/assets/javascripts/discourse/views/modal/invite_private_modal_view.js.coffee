@@ -24,7 +24,7 @@ window.Discourse.InvitePrivateModalView = window.Discourse.ModalBodyView.extend 
     @set('saving', true)
     @set('error', false)
 
-    # Invite the user to the private conversation    
+    # Invite the user to the private conversation
     @get('topic').inviteUser(@get('emailOrUsername')).then =>
       # Success
       @set('saving', false)

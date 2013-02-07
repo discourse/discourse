@@ -15,7 +15,7 @@ window.Discourse.FlaggedPost = Discourse.Post.extend
           message: a.message
     r
   ).property()
-    
+
   lastFlagged: (->
     @post_actions[0].created_at
   ).property()

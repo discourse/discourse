@@ -7,12 +7,12 @@ require_dependency 'email'
 
 
 class UserOpenIdsController < ApplicationController
-  layout false 
+  layout false
 
   # need to be able to call this
-  skip_before_filter :check_xhr 
-  
-  # must be done, cause we may trigger a POST 
+  skip_before_filter :check_xhr
+
+  # must be done, cause we may trigger a POST
   skip_before_filter :verify_authenticity_token, :only => :complete
 
   def frame
@@ -26,9 +26,9 @@ class UserOpenIdsController < ApplicationController
   end
 
   def destroy
-    @open_id = UserOpenId.find(params[:id]) 
+    @open_id = UserOpenId.find(params[:id])
     if @open_id.user.id == current_user.id
-      @open_id.destroy 
+      @open_id.destroy
     end
     redirect_to current_user
   end
@@ -40,25 +40,25 @@ class UserOpenIdsController < ApplicationController
   def create
     url = params[:user_open_id]
 
-    begin 
-      # validations 
-      @open_id = UserOpenId.new(url) 
+    begin
+      # validations
+      @open_id = UserOpenId.new(url)
       open_id_request = openid_consumer.begin @open_id.url
-      return_to, realm = ['complete','index'].map {|a| url_for :action => a, :only_path => false} 
+      return_to, realm = ['complete','index'].map {|a| url_for :action => a, :only_path => false}
 
-      add_ax_request(open_id_request) 
-      add_sreg_request(open_id_request) 
-     
-      # immediate mode is not required 
+      add_ax_request(open_id_request)
+      add_sreg_request(open_id_request)
+
+      # immediate mode is not required
       if open_id_request.send_redirect?(realm, return_to, false)
         redirect_to open_id_request.redirect_url(realm, return_to, false)
-      else 
+      else
         logger.warn("send_redirect? returned false")
         render :text, open_id_request.html_markup(realm, return_to, false, {'id' => 'openid_form'})
       end
     rescue => e
-      flash[:error] = "There seems to be something wrong with your open id url" 
-      logger.warn("failed to load contact open id: " + e.to_s) 
+      flash[:error] = "There seems to be something wrong with your open id url"
+      logger.warn("failed to load contact open id: " + e.to_s)
       render :text => 'Something went wrong, we have been notified, try again soon'
     end
   end
@@ -67,12 +67,12 @@ class UserOpenIdsController < ApplicationController
     current_url = url_for(:action => 'complete', :only_path => false)
     parameters = params.reject{|k,v|request.path_parameters[k]}.reject{|k,v| k == 'action' || k == 'controller'}
     open_id_response = openid_consumer.complete(parameters, current_url)
-   
+
     case open_id_response.status
     when OpenID::Consumer::SUCCESS
-      data = {} 
+      data = {}
       if params[:did_sreg]
-        data = get_sreg_response(open_id_response) 
+        data = get_sreg_response(open_id_response)
       end
 
       if params[:did_ax]
@@ -81,20 +81,20 @@ class UserOpenIdsController < ApplicationController
       end
 
       trusted = open_id_response.endpoint.server_url =~ /^https:\/\/www.google.com\// ||
-        open_id_response.endpoint.server_url =~ /^https:\/\/me.yahoo.com\// 
+        open_id_response.endpoint.server_url =~ /^https:\/\/me.yahoo.com\//
 
       email = data[:email]
-      user_open_id = UserOpenId.where(url: open_id_response.display_identifier).first 
+      user_open_id = UserOpenId.where(url: open_id_response.display_identifier).first
 
       if trusted && user_open_id.nil? && user = User.where(email: email).first
         # we trust so do an email lookup
         user_open_id = UserOpenId.create(url: open_id_response.display_identifier, user_id: user.id, email: email, active: true)
       end
-      
+
       authenticated = !user_open_id.nil?
 
       if authenticated
-        user = user_open_id.user 
+        user = user_open_id.user
 
         # If we have to approve users
         if SiteSetting.must_approve_users? and !user.approved?
@@ -104,10 +104,10 @@ class UserOpenIdsController < ApplicationController
           @data = {authenticated: true}
         end
 
-      else 
+      else
         @data = {
           email: email,
-          name: User.suggest_name(email), 
+          name: User.suggest_name(email),
           username: User.suggest_username(email),
           email_valid: trusted,
           auth_provider: "Google"
@@ -116,24 +116,24 @@ class UserOpenIdsController < ApplicationController
           email: @data[:email],
           email_valid: @data[:email_valid],
           openid_url: open_id_response.display_identifier
-        } 
+        }
       end
 
-    else 
-      # note there are lots of failure reasons, we treat them all as failures  
+    else
+      # note there are lots of failure reasons, we treat them all as failures
       logger.warn("Verification #{open_id_response.display_identifier || "" }"\
                   " failed: #{open_id_response.status.to_s}" )
       logger.warn(open_id_response.message)
-      flash[:error] = "Sorry, I seem to be having trouble confirming your open id account, please try again!" 
-      render :text => "Apologies, something went wrong ... try again soon" 
-    end 
+      flash[:error] = "Sorry, I seem to be having trouble confirming your open id account, please try again!"
+      render :text => "Apologies, something went wrong ... try again soon"
+    end
   end
 
 
-  protected 
+  protected
 
 
-  def persist_session 
+  def persist_session
     if s = UserSession.find
       s.remember_me = true
       s.save
@@ -141,16 +141,16 @@ class UserOpenIdsController < ApplicationController
   end
 
   def openid_consumer
-    @openid_consumer ||= OpenID::Consumer.new(session, 
+    @openid_consumer ||= OpenID::Consumer.new(session,
       OpenID::Store::Filesystem.new("#{Rails.root}/tmp/openid"))
   end
 
   def get_sreg_response(open_id_response)
-    data = {} 
+    data = {}
     sreg_resp = OpenID::SReg::Response.from_success_response(open_id_response)
     unless sreg_resp.empty?
       data[:email] = sreg_resp.data['email']
-      data[:nickname] = sreg_resp.data['nickname'] 
+      data[:nickname] = sreg_resp.data['nickname']
     end
     data
   end
@@ -159,15 +159,15 @@ class UserOpenIdsController < ApplicationController
     data = {}
     ax_resp = OpenID::AX::FetchResponse.from_success_response(open_id_response)
     if ax_resp && !ax_resp.data.empty?
-      data[:email] = ax_resp.data['http://schema.openid.net/contact/email'][0] 
+      data[:email] = ax_resp.data['http://schema.openid.net/contact/email'][0]
     end
-    data 
+    data
   end
 
-  def add_sreg_request(open_id_request) 
+  def add_sreg_request(open_id_request)
     sreg_request = OpenID::SReg::Request.new
     sreg_request.request_fields(['email'], true)
-    # optional 
+    # optional
     sreg_request.request_fields(['dob', 'fullname', 'nickname'], false)
     open_id_request.add_extension(sreg_request)
     open_id_request.return_to_args['did_sreg'] = 'y'
@@ -175,14 +175,14 @@ class UserOpenIdsController < ApplicationController
   end
 
   def add_ax_request(open_id_request)
-    ax_request = OpenID::AX::FetchRequest.new 
-    requested_attrs = [ 
+    ax_request = OpenID::AX::FetchRequest.new
+    requested_attrs = [
                   ['namePerson', 'fullname'],
                   ['namePerson/friendly', 'nickname'],
                   ['contact/email', 'email', true],
                   ['contact/web/default', 'web_default'],
                   ['birthDate', 'dob'],
-                  ['contact/country/home', 'country'] 
+                  ['contact/country/home', 'country']
     ]
 
     requested_attrs.each {|a| ax_request.add(OpenID::AX::AttrInfo.new("http://schema.openid.net/#{a[0]}", a[1], a[2] || false))}

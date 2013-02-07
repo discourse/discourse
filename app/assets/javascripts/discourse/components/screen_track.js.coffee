@@ -76,7 +76,7 @@ window.Discourse.ScreenTrack = Ember.Object.extend
     if (highestSeenByTopic[topicId] || 0) < @highestSeen
       highestSeenByTopic[topicId] = @highestSeen
 
-    
+
     unless Object.isEmpty(newTimings)
       $.ajax '/topics/timings'
         data:
@@ -93,7 +93,7 @@ window.Discourse.ScreenTrack = Ember.Object.extend
     @lastFlush = 0
 
   tick: ->
-   
+
     # If the user hasn't scrolled the browser in a long time, stop tracking time read
     sinceScrolled = new Date().getTime() - @lastScrolled
     if sinceScrolled > @PAUSE_UNLESS_SCROLLED
@@ -116,7 +116,7 @@ window.Discourse.ScreenTrack = Ember.Object.extend
 
     Object.keys @timings, (id) =>
       $element = $(id)
-      
+
       if ($element.length == 1)
         elemTop = $element.offset().top
         elemBottom = elemTop + $element.height()

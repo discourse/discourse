@@ -21,13 +21,13 @@ class Post < ActiveRecord::Base
     end
   end
 
-  versioned 
+  versioned
 
-  rate_limit 
+  rate_limit
 
   acts_as_paranoid
   after_recover :update_flagged_posts_count
-  after_destroy :update_flagged_posts_count 
+  after_destroy :update_flagged_posts_count
 
   belongs_to :user
   belongs_to :topic, counter_cache: :posts_count
@@ -61,7 +61,7 @@ class Post < ActiveRecord::Base
   # Related to unique post tracking
   after_commit :store_unique_post_key, on: :create
 
-  after_create do 
+  after_create do
     TopicUser.auto_track(self.user_id, self.topic_id, TopicUser::NotificationReasons::CREATED_POST)
   end
 
@@ -71,10 +71,10 @@ class Post < ActiveRecord::Base
 
   def raw_quality
 
-    sentinel = TextSentinel.new(self.raw, min_entropy: SiteSetting.body_min_entropy)    
+    sentinel = TextSentinel.new(self.raw, min_entropy: SiteSetting.body_min_entropy)
     if sentinel.valid?
       # It's possible the sentinel has cleaned up the title a bit
-      self.raw = sentinel.text 
+      self.raw = sentinel.text
     else
       errors.add(:raw, I18n.t(:is_invalid)) unless sentinel.valid?
     end
@@ -115,7 +115,7 @@ class Post < ActiveRecord::Base
     @cooked_document ||= Nokogiri::HTML.fragment(self.cooked)
   end
 
-  def image_count 
+  def image_count
     return 0 unless self.raw.present?
     cooked_document.search("img.emoji").remove
     cooked_document.search("img").count
@@ -138,21 +138,21 @@ class Post < ActiveRecord::Base
   def max_links_validator
     return if user.present? and user.has_trust_level?(:basic)
     errors.add(:raw, I18n.t(:too_many_links)) if link_count > 1
-  end  
+  end
 
 
   def raw_mentions
-    return [] if raw.blank?    
+    return [] if raw.blank?
 
-    # We don't count mentions in quotes    
-    return @raw_mentions if @raw_mentions.present?    
+    # We don't count mentions in quotes
+    return @raw_mentions if @raw_mentions.present?
     raw_stripped = raw.gsub(/\[quote=(.*)\]([^\[]*?)\[\/quote\]/im, '')
 
     # Strip pre and code tags
     doc = Nokogiri::HTML.fragment(raw_stripped)
     doc.search("pre").remove
     doc.search("code").remove
-  
+
     results = doc.to_html.scan(PrettyText.mention_matcher)
     if results.present?
       @raw_mentions = results.uniq.map {|un| un.first.downcase.gsub!(/^@/, '')}
@@ -165,17 +165,17 @@ class Post < ActiveRecord::Base
   def archetype
     topic.archetype
   end
-  
+
   def self.regular_order
-    order(:sort_order, :post_number)      
+    order(:sort_order, :post_number)
   end
 
   def self.reverse_order
-    order('sort_order desc, post_number desc')      
+    order('sort_order desc, post_number desc')
   end
 
   def self.best_of
-    where("(post_number = 1) or (score >= ?)", SiteSetting.best_of_score_threshold) 
+    where("(post_number = 1) or (score >= ?)", SiteSetting.best_of_score_threshold)
   end
 
   def update_flagged_posts_count
@@ -202,7 +202,7 @@ class Post < ActiveRecord::Base
   end
 
   def external_id
-    "#{topic_id}/#{post_number}"  
+    "#{topic_id}/#{post_number}"
   end
 
   def quoteless?
@@ -217,8 +217,8 @@ class Post < ActiveRecord::Base
 
   def reply_notification_target
     return nil unless reply_to_post_number.present?
-    reply_post = Post.where("topic_id = :topic_id AND post_number = :post_number AND user_id <> :user_id", 
-                            topic_id: topic_id, 
+    reply_post = Post.where("topic_id = :topic_id AND post_number = :post_number AND user_id <> :user_id",
+                            topic_id: topic_id,
                             post_number: reply_to_post_number,
                             user_id: user_id).first
     return reply_post.try(:user)
@@ -236,15 +236,15 @@ class Post < ActiveRecord::Base
 
   # What we use to cook posts
   def cook(*args)
-    cooked = PrettyText.cook(*args)  
+    cooked = PrettyText.cook(*args)
 
-    # If we have any of the oneboxes in the cache, throw them in right away, don't 
+    # If we have any of the oneboxes in the cache, throw them in right away, don't
     # wait for the post processor.
     dirty = false
     doc = Oneboxer.each_onebox_link(cooked) do |url, elem|
       cached = Oneboxer.render_from_cache(url)
       if cached.present?
-        elem.swap(cached.cooked) 
+        elem.swap(cached.cooked)
         dirty = true
       end
     end
@@ -263,7 +263,7 @@ class Post < ActiveRecord::Base
     result
   end
 
-  def is_flagged? 
+  def is_flagged?
     post_actions.where('post_action_type_id in (?) and deleted_at is null', PostActionType.FlagTypes).count != 0
   end
 
@@ -274,7 +274,7 @@ class Post < ActiveRecord::Base
     self.save
   end
 
-  # Update the body of a post. Will create a new version when appropriate  
+  # Update the body of a post. Will create a new version when appropriate
   def revise(updated_by, new_raw, opts={})
 
     # Only update if it changes
@@ -332,7 +332,7 @@ class Post < ActiveRecord::Base
     end
 
     # Invalidate any oneboxes
-    self.invalidate_oneboxes = true    
+    self.invalidate_oneboxes = true
     trigger_post_process
 
     true
@@ -348,7 +348,7 @@ class Post < ActiveRecord::Base
     self.post_number ||= Topic.next_post_number(topic_id, reply_to_post_number.present?)
     self.cooked ||= cook(raw, topic_id: topic_id)
     self.sort_order = post_number
-    DiscourseEvent.trigger(:before_create_post, self)   
+    DiscourseEvent.trigger(:before_create_post, self)
     self.last_version_at ||= Time.now
   end
 
@@ -363,21 +363,21 @@ class Post < ActiveRecord::Base
     # Update the user's last posted at date
     user.update_column(:last_posted_at, self.created_at)
 
-    # Update topic user data 
-    TopicUser.change(user, 
-                           topic.id, 
-                           posted: true, 
+    # Update topic user data
+    TopicUser.change(user,
+                           topic.id,
+                           posted: true,
                            last_read_post_number: self.post_number,
                            seen_post_count: self.post_number)
   end
 
   def email_private_message
     # send a mail to notify users in case of a private message
-    if topic.private_message? 
+    if topic.private_message?
       topic.allowed_users.where(["users.email_private_messages = true and users.id != ?", self.user_id]).each do |u|
         Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes, :user_email, type: :private_message, user_id: u.id, post_id: self.id)
       end
-    end    
+    end
   end
 
   def feature_topic_users
@@ -385,24 +385,24 @@ class Post < ActiveRecord::Base
   end
 
   # This calculates the geometric mean of the post timings and stores it along with
-  # each post.  
+  # each post.
   def self.calculate_avg_time
     exec_sql("UPDATE posts
               SET avg_time = (x.gmean / 1000)
-              FROM (SELECT post_timings.topic_id, 
-                           post_timings.post_number, 
+              FROM (SELECT post_timings.topic_id,
+                           post_timings.post_number,
                            round(exp(avg(ln(msecs)))) AS gmean
                     FROM post_timings
-                    INNER JOIN posts AS p2 
-                      ON p2.post_number = post_timings.post_number 
+                    INNER JOIN posts AS p2
+                      ON p2.post_number = post_timings.post_number
                         AND p2.topic_id = post_timings.topic_id
-                        AND p2.user_id <> post_timings.user_id 
+                        AND p2.user_id <> post_timings.user_id
                     GROUP BY post_timings.topic_id, post_timings.post_number) AS x
               WHERE x.topic_id = posts.topic_id
-                AND x.post_number = posts.post_number")    
+                AND x.post_number = posts.post_number")
   end
 
-  before_save do    
+  before_save do
     self.last_editor_id ||= self.user_id
     self.cooked = cook(raw, topic_id: topic_id) unless new_record?
   end
@@ -412,7 +412,7 @@ class Post < ActiveRecord::Base
     # Update the last post id to the previous post if it exists
     last_post = Post.where("topic_id = ? and id <> ?", self.topic_id, self.id).order('created_at desc').limit(1).first
     if last_post.present?
-      topic.update_attributes(last_posted_at: last_post.created_at, 
+      topic.update_attributes(last_posted_at: last_post.created_at,
                               last_post_user_id: last_post.user_id,
                               highest_post_number: last_post.post_number)
 
@@ -423,12 +423,12 @@ class Post < ActiveRecord::Base
     end
 
     # Feature users in the topic
-    Jobs.enqueue(:feature_topic_users, topic_id: topic_id, except_post_id: self.id) 
+    Jobs.enqueue(:feature_topic_users, topic_id: topic_id, except_post_id: self.id)
 
   end
 
   after_destroy do
-    
+
     # Remove any reply records that point to deleted posts
     post_ids = PostReply.select(:post_id).where(reply_id: self.id).map(&:post_id)
     PostReply.delete_all ["reply_id = ?", self.id]
@@ -443,8 +443,8 @@ class Post < ActiveRecord::Base
 
   after_save do
 
-    DraftSequence.next! self.last_editor_id, self.topic.draft_key if self.topic # could be deleted  
-    
+    DraftSequence.next! self.last_editor_id, self.topic.draft_key if self.topic # could be deleted
+
     quoted_post_numbers << reply_to_post_number if reply_to_post_number.present?
 
     # Create a reply relationship between quoted posts and this new post
@@ -458,8 +458,8 @@ class Post < ActiveRecord::Base
             Post.update_all ['reply_count = reply_count + 1, reply_below_post_number = COALESCE(reply_below_post_number, ?)', self.post_number],
                             ["id = ?", post.id]
           end
-        end                  
-      end      
+        end
+      end
     end
   end
 
@@ -483,9 +483,9 @@ class Post < ActiveRecord::Base
 
       end
     end
-    
+
     self.quoted_post_numbers.uniq!
-    self.quote_count = self.quoted_post_numbers.size    
+    self.quote_count = self.quoted_post_numbers.size
   end
 
   # Process this post after comitting it
@@ -493,7 +493,7 @@ class Post < ActiveRecord::Base
     args = {post_id: self.id}
     args[:image_sizes] = self.image_sizes if self.image_sizes.present?
     args[:invalidate_oneboxes] = true if self.invalidate_oneboxes.present?
-    Jobs.enqueue(:process_post, args)    
+    Jobs.enqueue(:process_post, args)
   end
 
 end

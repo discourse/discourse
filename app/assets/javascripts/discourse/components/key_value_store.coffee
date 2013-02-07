@@ -4,7 +4,7 @@
 window.Discourse.KeyValueStore = (->
   initialized = false
   context = ""
-  
+
   init: (ctx,messageBus) ->
     initialized = true
     context = ctx
@@ -17,7 +17,7 @@ window.Discourse.KeyValueStore = (->
       localStorage.removeItem(k) if k.substring(0, context.length) == context
       i--
     return true
-  
+
   remove: (key)->
     localStorage.removeItem(context + key)
 

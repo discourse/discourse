@@ -42,12 +42,12 @@
   mousePosition = (e) ->
     x: e.clientX + document.documentElement.scrollLeft
     y: e.clientY + document.documentElement.scrollTop
-  
+
   $.fn.DivResizer = (opts) ->
     @each ->
       div = $(this)
       return if (div.hasClass("processed"))
-      
+
       div.addClass("processed")
       staticOffset = null
 

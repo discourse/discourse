@@ -7,5 +7,5 @@ class SuggestedTopicSerializer < BasicTopicSerializer
     return nil if object.last_posted_at.blank?
     AgeWords.age_words(Time.now - object.last_posted_at)
   end
-  
+
 end

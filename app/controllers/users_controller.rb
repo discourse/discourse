@@ -7,8 +7,8 @@ class UsersController < ApplicationController
   skip_before_filter :check_restricted_access, only: [:avatar]
 
   before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect]
-  
-  def show    
+
+  def show
     @user = fetch_user_from_params
     anonymous_etag(@user) do
       render_serialized(@user, UserSerializer)
@@ -25,7 +25,7 @@ class UsersController < ApplicationController
     json_result(user) do |u|
 
       website = params[:website]
-      if website 
+      if website
         website = "http://" + website unless website =~ /^http/
       end
 
@@ -42,19 +42,19 @@ class UsersController < ApplicationController
       end
 
       u.save
-    end 
+    end
   end
 
   def username
     requires_parameter(:new_username)
 
     user = fetch_user_from_params
-    guardian.ensure_can_edit!(user)    
-    
+    guardian.ensure_can_edit!(user)
+
     result = user.change_username(params[:new_username])
     raise Discourse::InvalidParameters.new(:new_username) unless result
 
-    render nothing: true  
+    render nothing: true
   end
 
   def preferences
@@ -144,7 +144,7 @@ class UsersController < ApplicationController
 
     if user.save
 
-      msg = nil      
+      msg = nil
       active_result = user.active?
       if active_result
 
@@ -158,7 +158,7 @@ class UsersController < ApplicationController
           msg = I18n.t("login.active")
         end
 
-      else 
+      else
         msg = I18n.t("login.activate_email", email: user.email)
         Jobs.enqueue(:user_email, type: :signup, user_id: user.id, email_token: user.email_tokens.first.token)
       end
@@ -174,8 +174,8 @@ class UsersController < ApplicationController
         end
       end
 
-      
-      # Clear authentication session.  
+
+      # Clear authentication session.
       session[:authentication] = nil
 
       # JSON result
@@ -196,22 +196,22 @@ class UsersController < ApplicationController
 
   # all avatars are funneled through here
   def avatar
-    
+
     # TEMP to catch all missing spots
     # raise ActiveRecord::RecordNotFound
-    
+
     user = User.select(:email).where(:username_lower => params[:username].downcase).first
     if user
       # for now we only support gravatar in square (redirect cached for a day), later we can use x-sendfile and/or a cdn to serve local
       size = params[:size].to_i
       size = 64 if size == 0
       size = 10 if size < 10
-      size = 128 if size > 128 
-      
+      size = 128 if size > 128
+
       url = user.avatar_template.gsub("{size}", size.to_s)
       expires_in 1.day
-      redirect_to url 
-    else 
+      redirect_to url
+    else
       raise ActiveRecord::RecordNotFound
     end
   end
@@ -235,12 +235,12 @@ class UsersController < ApplicationController
             log_on_user(@user)
             flash[:success] = I18n.t('password_reset.success')
           end
-        end        
-      end     
+        end
+      end
     end
     render :layout => 'no_js'
   end
-  
+
   def change_email
     requires_parameter(:email)
     user = fetch_user_from_params
@@ -250,13 +250,13 @@ class UsersController < ApplicationController
     raise Discourse::InvalidParameters.new(:email) if User.where("lower(email) = ?", params[:email].downcase).exists?
 
     email_token = user.email_tokens.create(email: params[:email])
-    Jobs.enqueue(:user_email, 
-                 to_address: params[:email], 
-                 type: :authorize_email, 
-                 user_id: user.id, 
+    Jobs.enqueue(:user_email,
+                 to_address: params[:email],
+                 type: :authorize_email,
+                 user_id: user.id,
                  email_token: email_token.token)
 
-    render nothing: true  
+    render nothing: true
   end
 
   def authorize_email
@@ -274,7 +274,7 @@ class UsersController < ApplicationController
     if @user = EmailToken.confirm(params[:token])
 
       # Log in the user unless they need to be approved
-      if SiteSetting.must_approve_users?        
+      if SiteSetting.must_approve_users?
         @needs_approval = true
       else
         @user.enqueue_welcome_message('welcome_user') if @user.send_welcome_message
@@ -295,25 +295,25 @@ class UsersController < ApplicationController
 
     sql = "select username, name, email from users u "
     if topic_id
-      sql << "left join (select distinct p.user_id from posts p where topic_id = :topic_id) s on 
+      sql << "left join (select distinct p.user_id from posts p where topic_id = :topic_id) s on
         s.user_id = u.id "
     end
 
     if term.length > 0
-      sql << "where username_lower like :term_like or 
-              to_tsvector('simple', name) @@ 
+      sql << "where username_lower like :term_like or
+              to_tsvector('simple', name) @@
               to_tsquery('simple',
                 regexp_replace(
-	                regexp_replace( 
-	                  cast(plainto_tsquery(:term) as text) 
+	                regexp_replace(
+	                  cast(plainto_tsquery(:term) as text)
 		                ,'\''(?: |$)', ':*''', 'g'),
                 '''', '', 'g')
               ) "
-      
+
     end
 
     sql << "order by case when username_lower = :term then 0 else 1 end asc, "
-    if topic_id 
+    if topic_id
       sql << " case when s.user_id is null then 0 else 1 end desc, "
     end
 
@@ -325,7 +325,7 @@ class UsersController < ApplicationController
       r.delete("email")
       r
     end
-    render :json => results 
+    render :json => results
   end
 
   private
@@ -341,11 +341,11 @@ class UsersController < ApplicationController
     def fetch_user_from_params
       username_lower = params[:username].downcase
       username_lower.gsub!(/\.json$/, '')
-      
+
       user = User.where(username_lower: username_lower).first
       raise Discourse::NotFound.new if user.blank?
 
       guardian.ensure_can_see!(user)
       user
-    end      
+    end
 end
