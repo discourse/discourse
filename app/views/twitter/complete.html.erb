@@ -1,0 +1,9 @@
+<html>
+  <head></head>
+  <body>
+    <script type="text/javascript">
+      window.opener.Discourse.authenticationComplete(#{@data.to_json});
+      window.close();
+    </script>
+  </body>
+</html>
