@@ -2,6 +2,11 @@ require 'spec_helper'
 
 describe UsersController do 
 
+  before do
+    UsersController.any_instance.stubs(:honeypot_value).returns(nil)
+    UsersController.any_instance.stubs(:challenge_value).returns(nil)
+  end
+
   describe '.show' do    
     let!(:user) { log_in }
 
@@ -339,7 +344,41 @@ describe UsersController do
         User.where(username: @user.username).first.active.should be_false
       end
     end
-  
+
+    shared_examples_for 'honeypot fails' do
+      it 'should not create a new user' do
+        expect {
+          xhr :post, :create, create_params
+        }.to_not change { User.count }
+      end
+
+      it 'should not send an email' do
+        User.any_instance.expects(:enqueue_welcome_message).never
+        xhr :post, :create, create_params
+      end
+
+      it 'should say it was successful' do
+        xhr :post, :create, create_params
+        json = JSON::parse(response.body)
+        json["success"].should be_true
+      end
+    end
+
+    context 'when honeypot value is wrong' do
+      before do
+        UsersController.any_instance.stubs(:honeypot_value).returns('abc')
+      end
+      let(:create_params) { {:name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email, :password_confirmation => 'wrong'} }
+      it_should_behave_like 'honeypot fails'
+    end
+
+    context 'when challenge answer is wrong' do
+      before do
+        UsersController.any_instance.stubs(:challenge_value).returns('abc')
+      end
+      let(:create_params) { {:name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email, :challenge => 'abc'} }
+      it_should_behave_like 'honeypot fails'
+    end
   end
 
   context '.username' do

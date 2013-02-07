@@ -111,6 +111,13 @@ describe PostAction do
 
   describe 'flagging' do
 
+    it 'does not allow you to flag stuff with 2 reasons' do
+      post = Fabricate(:post)
+      u1 = Fabricate(:evil_trout)
+      PostAction.act(u1, post, PostActionType.Types[:spam])
+      lambda { PostAction.act(u1, post, PostActionType.Types[:off_topic]) }.should raise_error(PostAction::AlreadyFlagged)
+    end
+
     it 'should update counts when you clear flags' do 
       post = Fabricate(:post)
       u1 = Fabricate(:evil_trout)

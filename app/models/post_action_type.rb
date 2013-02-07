@@ -1,4 +1,5 @@
 class PostActionType < ActiveRecord::Base
+
   attr_accessible :id, :is_flag, :name_key, :icon
 
   def self.ordered
