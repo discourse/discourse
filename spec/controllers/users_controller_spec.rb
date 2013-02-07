@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe UsersController do 
+describe UsersController do
 
   before do
     UsersController.any_instance.stubs(:honeypot_value).returns(nil)
     UsersController.any_instance.stubs(:challenge_value).returns(nil)
   end
 
-  describe '.show' do    
+  describe '.show' do
     let!(:user) { log_in }
 
     it 'returns success' do
@@ -52,7 +52,7 @@ describe UsersController do
 
       it 'sets a flash error' do
         flash[:error].should be_present
-      end      
+      end
     end
 
     context 'valid token' do
@@ -74,7 +74,7 @@ describe UsersController do
       it 'logs in as the user' do
         session[:current_user_id].should be_present
       end
-    end    
+    end
   end
 
   describe '.activate_account' do
@@ -90,7 +90,7 @@ describe UsersController do
 
       it 'sets a flash error' do
         flash[:error].should be_present
-      end      
+      end
     end
 
     context 'valid token' do
@@ -102,13 +102,13 @@ describe UsersController do
         end
 
         it 'enqueues a welcome message if the user object indicates so' do
-          user.send_welcome_message = true          
+          user.send_welcome_message = true
           user.expects(:enqueue_welcome_message).with('welcome_user')
           get :activate_account, token: 'asdfasdf'
         end
 
         it "doesn't enqueue the welcome message if the object returns false" do
-          user.send_welcome_message = false          
+          user.send_welcome_message = false
           user.expects(:enqueue_welcome_message).with('welcome_user').never
           get :activate_account, token: 'asdfasdf'
         end
@@ -131,12 +131,12 @@ describe UsersController do
 
         it 'logs in as the user' do
           session[:current_user_id].should be_present
-        end       
+        end
 
         it "doesn't set @needs_approval" do
           assigns[:needs_approval].should be_blank
-        end 
-        
+        end
+
       end
 
       context 'must_approve_users' do
@@ -166,7 +166,7 @@ describe UsersController do
     end
   end
 
-  describe '.change_email' do    
+  describe '.change_email' do
     let(:new_email) { 'bubblegum@adventuretime.ooo' }
 
     it "requires you to be logged in" do
@@ -223,11 +223,11 @@ describe UsersController do
 
       it 'sets a flash error' do
         flash[:error].should be_present
-      end      
+      end
 
       it "doesn't log in the user" do
         session[:current_user_id].should be_blank
-      end      
+      end
     end
 
     context 'valid token' do
@@ -259,17 +259,17 @@ describe UsersController do
         SiteSetting.expects(:must_approve_users?).returns(true)
         put :password_reset, token: 'asdfasdf', password: 'newpassword'
         session[:current_user_id].should be_blank
-      end       
+      end
     end
 
 
   end
 
 
-  describe '.create' do 
-    before do 
+  describe '.create' do
+    before do
       @user = Fabricate.build(:user)
-      @user.password = "strongpassword"      
+      @user.password = "strongpassword"
       Mothership.stubs(:register_nickname).returns([true, nil])
     end
 
@@ -282,7 +282,7 @@ describe UsersController do
       it "doesn't send a welcome email" do
         User.any_instance.expects(:enqueue_welcome_message).with('welcome_user').never
         xhr :post, :create, :name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email
-      end    
+      end
     end
 
     context 'when creating an active user (confirmed email)' do
@@ -294,7 +294,7 @@ describe UsersController do
       it 'should enqueue a signup email' do
         User.any_instance.expects(:enqueue_welcome_message).with('welcome_user')
         xhr :post, :create, :name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email
-      end      
+      end
 
       it "should be logged in" do
         User.any_instance.expects(:enqueue_welcome_message)
@@ -331,16 +331,16 @@ describe UsersController do
         xhr :post, :create, :name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email
       end
 
-      it 'should succeed' do 
+      it 'should succeed' do
         should respond_with(:success)
       end
 
       it 'has the proper JSON' do
         json = JSON::parse(response.body)
-        json["success"].should be_true 
+        json["success"].should be_true
       end
 
-      it 'should not result in an active account' do 
+      it 'should not result in an active account' do
         User.where(username: @user.username).first.active.should be_false
       end
     end
@@ -391,7 +391,7 @@ describe UsersController do
       let(:new_username) { "#{user.username}1234" }
 
       it 'raises an error without a new_username param' do
-        lambda { xhr :put, :username, username: user.username }.should raise_error(Discourse::InvalidParameters) 
+        lambda { xhr :put, :username, username: user.username }.should raise_error(Discourse::InvalidParameters)
       end
 
       it 'raises an error when you don\'t have permission to change the user' do
@@ -402,7 +402,7 @@ describe UsersController do
 
       it 'raises an error when change_username fails' do
         User.any_instance.expects(:change_username).with(new_username).returns(false)
-        lambda { xhr :put, :username, username: user.username, new_username: new_username }.should raise_error(Discourse::InvalidParameters)        
+        lambda { xhr :put, :username, username: user.username, new_username: new_username }.should raise_error(Discourse::InvalidParameters)
       end
 
       it 'should succeed when the change_username returns true' do
@@ -667,6 +667,38 @@ describe UsersController do
           end
         end
       end
+    end
+
+  end
+
+  describe "search_users" do
+
+    let(:topic) { Fabricate :topic }
+    let(:user)  { Fabricate :user, username: "joecabot", name: "Lawrence Tierney" }
+
+    before do
+      Fabricate :post, user: user, topic: topic
+    end
+
+    it "searches when provided the term only" do
+      xhr :post, :search_users, term: user.name.split(" ").last
+      response.should be_success
+      json = JSON.parse(response.body)
+      json["users"].map { |u| u["username"] }.should include(user.username)
+    end
+
+    it "searches when provided the topic only" do
+      xhr :post, :search_users, topic_id: topic.id
+      response.should be_success
+      json = JSON.parse(response.body)
+      json["users"].map { |u| u["username"] }.should include(user.username)
+    end
+
+    it "searches when provided the term and topic" do
+      xhr :post, :search_users, term: user.name.split(" ").last, topic_id: topic.id
+      response.should be_success
+      json = JSON.parse(response.body)
+      json["users"].map { |u| u["username"] }.should include(user.username)
     end
 
   end
