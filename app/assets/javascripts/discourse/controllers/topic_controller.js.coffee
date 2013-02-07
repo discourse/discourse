@@ -304,10 +304,12 @@ Discourse.TopicController = Ember.ObjectController.extend Discourse.Presence,
     post.recover()
 
   deletePost: (post) ->
-    if post.get('user_id') is Discourse.get('currentUser.id')
+    # Moderators can delete posts. Regular users can only create a deleted at message.
+    if Discourse.get('currentUser.moderator')
+      post.set('deleted_at', new Date())
+    else
       post.set('cooked', Discourse.Utilities.cook(Em.String.i18n("post.deleted_by_author")))
       post.set('can_delete', false)
-    else
-      post.set('deleted_at', new Date())
+      post.set('version', post.get('version') + 1)
 
     post.delete()
