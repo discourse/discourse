@@ -12,7 +12,7 @@ gem 'rake'
 # errbit is broken with 3.1.3 for now
 gem 'airbrake', "3.1.2"
 gem 'rest-client'
-gem 'rails3_acts_as_paranoid', "~>0.2.0"
+gem 'acts_as_paranoid'
 gem 'activerecord-postgres-hstore'
 gem 'sidekiq'
 gem 'fastimage'

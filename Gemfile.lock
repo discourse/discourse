@@ -93,6 +93,8 @@ GEM
     activesupport (3.2.11)
       i18n (~> 0.6)
       multi_json (~> 1.0)
+    acts_as_paranoid (0.4.1)
+      activerecord (~> 3.2)
     addressable (2.3.2)
     airbrake (3.1.2)
       activesupport
@@ -245,8 +247,6 @@ GEM
       activesupport (= 3.2.11)
       bundler (~> 1.0)
       railties (= 3.2.11)
-    rails3_acts_as_paranoid (0.2.5)
-      activerecord (~> 3.2)
     railties (3.2.11)
       actionpack (= 3.2.11)
       activesupport (= 3.2.11)
@@ -371,6 +371,7 @@ PLATFORMS
 DEPENDENCIES
   active_model_serializers!
   activerecord-postgres-hstore
+  acts_as_paranoid
   airbrake (= 3.1.2)
   better_errors
   binding_of_caller
@@ -410,7 +411,6 @@ DEPENDENCIES
   pry-rails
   rack-mini-profiler!
   rails
-  rails3_acts_as_paranoid (~> 0.2.0)
   rails_multisite!
   rake
   rb-fsevent
