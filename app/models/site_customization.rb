@@ -75,7 +75,11 @@ footer:after{ content: '#{error}' }"
   def self.custom_header(preview_style)
     preview_style ||= enabled_style
     style = lookup_style(preview_style)
-    style.header.html_safe if style
+    if style && style.header
+      style.header.html_safe
+    else
+      ""
+    end
   end
 
   def self.override_default_style(preview_style)
