@@ -2,7 +2,7 @@ class FacebookController < ApplicationController
   skip_before_filter :check_xhr, only: [:frame, :complete]
   layout false
 
-  def frame 
+  def frame
     redirect_to oauth_consumer.url_for_oauth_code(:permissions => "email")
   end
 
@@ -23,7 +23,7 @@ class FacebookController < ApplicationController
 
     # non verified accounts are just trouble
     unless verified
-      render text: "Your account must be verified with facebook, before authenticating with facebook"  
+      render text: "Your account must be verified with facebook, before authenticating with facebook"
       return
     end
 
@@ -41,7 +41,7 @@ class FacebookController < ApplicationController
       email: me["email"],
       email_valid: true
     }
-  
+
     user_info = FacebookUserInfo.where(:facebook_user_id => me["id"]).first
 
     @data = {
@@ -51,23 +51,23 @@ class FacebookController < ApplicationController
       auth_provider: "Facebook",
       email_valid: true
     }
-    
+
     if user_info
       user = user_info.user
       if user
         unless user.active
-          user.active = true 
+          user.active = true
           user.save
         end
         log_on_user(user)
         @data[:authenticated] = true
       end
-    else 
+    else
       user = User.where(email: me["email"]).first
       if user
         FacebookUserInfo.create!(session[:authentication][:facebook].merge(user_id: user.id))
         unless user.active
-          user.active = true 
+          user.active = true
           user.save
         end
         log_on_user(user)
@@ -78,15 +78,15 @@ class FacebookController < ApplicationController
   end
 
 
-  protected 
+  protected
 
   def oauth_consumer
     require 'koala'
 
-    host = request.host 
+    host = request.host
     host = "#{host}:#{request.port}" if request.port != 80
     callback_url = "http://#{host}/facebook/complete"
-    
+
     oauth = Koala::Facebook::OAuth.new(SiteSetting.facebook_app_id, SiteSetting.facebook_app_secret, callback_url)
   end
 

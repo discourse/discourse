@@ -1,9 +1,9 @@
 class InvitedUserSerializer < BasicUserSerializer
 
-  attributes :topics_entered, 
-             :posts_read_count, 
-             :last_seen_at, 
-             :time_read, 
+  attributes :topics_entered,
+             :posts_read_count,
+             :last_seen_at,
+             :time_read,
              :days_visited,
              :days_since_created
 

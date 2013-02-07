@@ -18,7 +18,7 @@ window.Discourse.ListTopicsView = Ember.View.extend Discourse.Scrolling, Discour
 
   willDestroyElement: -> @unbindScrolling()
 
-  didInsertElement: -> 
+  didInsertElement: ->
     @bindScrolling()
     eyeline = new Discourse.Eyeline('.topic-list-item')
     eyeline.on 'sawBottom', => @loadMore()
@@ -34,17 +34,17 @@ window.Discourse.ListTopicsView = Ember.View.extend Discourse.Scrolling, Discour
   loadMore: ->
     return if @get('loading')
     @set('loading', true)
-    @get('controller.content').loadMoreTopics().then (hasMoreResults) =>           
+    @get('controller.content').loadMoreTopics().then (hasMoreResults) =>
       @set('loadedMore', true)
       @set('loading', false)
       Em.run.next => @saveScrollPos()
       @get('eyeline').flushRest() unless hasMoreResults
-  
-  # Remember where we were scrolled to    
+
+  # Remember where we were scrolled to
   saveScrollPos: ->
-    Discourse.set('transient.topicListScrollPos', $(window).scrollTop())   
+    Discourse.set('transient.topicListScrollPos', $(window).scrollTop())
 
   # When the topic list is scrolled
-  scrolled: (e) -> 
+  scrolled: (e) ->
     @saveScrollPos()
     @get('eyeline')?.update()

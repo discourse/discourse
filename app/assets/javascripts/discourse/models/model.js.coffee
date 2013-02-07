@@ -20,9 +20,9 @@ window.Discourse.Model = Ember.Object.extend
         col = @get(k)
         v.each (obj) -> col.pushObject(builder.create(obj))
       else
-        @set(k, v) 
+        @set(k, v)
 
-        
+
 window.Discourse.Model.reopenClass
 
   # Given an array of values, return them in a hash

@@ -29,7 +29,7 @@ Discourse.PreferencesEmailController = Ember.ObjectController.extend Discourse.P
     @set('saving', true)
     @get('content').changeEmail(@get('newEmail')).then =>
       @set('success', true)
-    , => 
+    , =>
       # Error
       @set('error', true)
       @set('saving', false)

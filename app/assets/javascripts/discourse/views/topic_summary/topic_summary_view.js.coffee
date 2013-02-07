@@ -55,7 +55,7 @@ window.Discourse.TopicSummaryView = Ember.ContainerView.extend Discourse.Presenc
 
     # If we have a private message
     if @get('topic.isPrivateMessage')
-      container.pushObject Discourse.View.create 
+      container.pushObject Discourse.View.create
         templateName: 'topic_summary/private_message'
         tagName: 'section'
         classNames: ['information']

@@ -7,7 +7,7 @@ window.Discourse.ExcerptCategoryView = Ember.View.extend
     cat = @get('category')
 
     cat.set('id', cat.get('slug'))
-    @get('controller.controllers.modal')?.showView(Discourse.EditCategoryView.create(category: cat))    
+    @get('controller.controllers.modal')?.showView(Discourse.EditCategoryView.create(category: cat))
     false
 
   deleteCategory: ->
@@ -16,8 +16,8 @@ window.Discourse.ExcerptCategoryView = Ember.View.extend
     bootbox.confirm Em.String.i18n("category.delete_confirm"), (result) =>
       if result
         @get('category').delete ->
-          Discourse.get('appController').reloadSession -> Discourse.get('router').route("/categories") 
-        
+          Discourse.get('appController').reloadSession -> Discourse.get('router').route("/categories")
+
     false
 
   didInsertElement: ->

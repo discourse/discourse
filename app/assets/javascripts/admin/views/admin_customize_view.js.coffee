@@ -10,7 +10,7 @@ Discourse.AdminCustomizeView = window.Discourse.View.extend
   headerActive: (->
     @get('selected') == 'header'
   ).property('selected')
-  
+
   stylesheetActive: (->
     @get('selected') == 'stylesheet'
   ).property('selected')
@@ -26,7 +26,7 @@ Discourse.AdminCustomizeView = window.Discourse.View.extend
     Mousetrap.bindGlobal ['meta+s', 'ctrl+s'], =>
       @get('controller').save()
       return false
-    
+
   willDestroyElement: ->
     Mousetrap.unbindGlobal('meta+s','ctrl+s')
 

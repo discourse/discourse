@@ -1,6 +1,6 @@
 # caret position in textarea ... very hacky ... sorry
 (($) ->
-  
+
   # http://stackoverflow.com/questions/263743/how-to-get-caret-position-in-textarea
   getCaret = (el) ->
     if el.selectionStart
@@ -15,7 +15,7 @@
       rc.setEndPoint "EndToStart", re
       return rc.text.length
     0
-  
+
   clone = null
   $.fn.caretPosition = (options) ->
 
@@ -66,15 +66,15 @@
     before = pos - 1
     after = pos
     insertSpaceAfterBefore = false
-    
-    # if before and after are \n insert a space 
+
+    # if before and after are \n insert a space
     insertSpaceAfterBefore = true  if val[before] is "\n" and val[after] is "\n"
     guard = (v) ->
       buf = v.replace(/</g,"&lt;")
       buf = buf.replace(/>/g,"&gt;")
       buf = buf.replace(/[ ]/g, "&#x200b;&nbsp;&#x200b;")
       buf.replace(/\n/g,"<br />")
-      
+
 
     makeCursor = (pos, klass, color) ->
       l = val.substring(pos, pos + 1)
@@ -95,7 +95,7 @@
     pos.left = pos.left + letter.width()  if letter.hasClass("before")
     pPos = p.offset()
     #clone.hide().remove()
-    
+
     left: pos.left - pPos.left
     top: (pos.top - pPos.top) - clone.scrollTop()
 ) jQuery

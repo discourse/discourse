@@ -29,7 +29,7 @@ window.Discourse.ActionSummary = Em.Object.extend Discourse.Presence,
     @set('can_undo', true)
 
     #TODO: mark all other flag types as acted
-    
+
     # Add ourselves to the users who liked it if present
     @users.pushObject(Discourse.get('currentUser')) if @present('users')
 
@@ -45,7 +45,7 @@ window.Discourse.ActionSummary = Em.Object.extend Discourse.Presence,
         @removeAction()
         errors = jQuery.parseJSON(error.responseText).errors
         bootbox.alert(errors[0])
-        
+
 
   # Undo this action
   undo: ->
@@ -57,7 +57,7 @@ window.Discourse.ActionSummary = Em.Object.extend Discourse.Presence,
       type: 'DELETE'
       data:
         post_action_type_id: @get('id')
-  
+
   clearFlags: ->
     $.ajax
       url: "/post_actions/clear_flags"

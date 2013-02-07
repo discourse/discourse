@@ -6,7 +6,7 @@ class ExceptionsController < ApplicationController
   def not_found
     f = Topic.where(deleted_at: nil, archetype: "regular")
 
-    @popular = f.order('views desc').take(10)     
+    @popular = f.order('views desc').take(10)
     @recent = f.order('created_at desc').take(10)
     @slug =  params[:slug].class == String ? params[:slug] : ''
     @slug.gsub!('-',' ')

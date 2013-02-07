@@ -52,14 +52,14 @@ Discourse.Topic = Discourse.Model.extend Discourse.Presence,
   ).observes('posts.@each','posts')
 
   # The amount of new posts to display. It might be different than what the server
-  # tells us if we are still asynchronously flushing our "recently read" data. 
+  # tells us if we are still asynchronously flushing our "recently read" data.
   # So take what the browser has seen into consideration.
   displayNewPosts: (->
 
     if highestSeen = Discourse.get('highestSeenByTopic')[@get('id')]
       delta = highestSeen - @get('last_read_post_number')
       if delta > 0
-        result = (@get('new_posts') - delta) 
+        result = (@get('new_posts') - delta)
         result = 0 if result < 0
         return result
 
@@ -78,9 +78,9 @@ Discourse.Topic = Discourse.Model.extend Discourse.Presence,
   ageCold: (->
     return unless lastPost = @get('last_posted_at')
     return unless createdAt = @get('created_at')
-    
+
     daysSinceEpoch = (dt) ->
-      # 1000 * 60 * 60 * 24 = days since epoch 
+      # 1000 * 60 * 60 * 24 = days since epoch
       dt.getTime() / 86400000
 
     # Show heat on age
@@ -169,12 +169,12 @@ Discourse.Topic = Discourse.Model.extend Discourse.Presence,
       bestOf: opts.bestOf
       trackVisit: opts.trackVisit
     .then (result) =>
-      
+
       # If loading the topic succeeded...
       # Update the slug if different
       @set('slug', result.slug) if result.slug
 
-      # If we want to scroll to a post that doesn't exist, just pop them to the closest 
+      # If we want to scroll to a post that doesn't exist, just pop them to the closest
       # one instead. This is likely happening due to a deleted post.
       opts.nearPost = parseInt(opts.nearPost)
       closestPostNumber = 0
@@ -189,7 +189,7 @@ Discourse.Topic = Discourse.Model.extend Discourse.Presence,
 
 
       @get('participants').clear() if @get('participants')
-      
+
       @set('suggested_topics', Em.A()) if result.suggested_topics
       @mergeAttributes result, suggested_topics: Discourse.Topic
       @set('posts', Em.A())
@@ -237,7 +237,7 @@ Discourse.Topic = Discourse.Model.extend Discourse.Presence,
       url: "/t/#{@get('id')}/notifications"
       type: 'POST'
       data: {notification_level: v}
- 
+
   # use to add post to topics protecting from dupes
   pushPosts: (newPosts)->
     map = {}
@@ -257,13 +257,13 @@ window.Discourse.Topic.reopenClass
     MUTE: 0
 
   # Load a topic, but accepts a set of filters
-  # 
+  #
   #  options:
   #    onLoad - the callback after the topic is loaded
   find: (topicId, opts) ->
     url = "/t/#{topicId}"
     url += "/#{opts.nearPost}" if opts.nearPost
-    
+
     data = {}
     data.posts_after = opts.postsAfter if opts.postsAfter
     data.posts_before = opts.postsBefore if opts.postsBefore
@@ -276,7 +276,7 @@ window.Discourse.Topic.reopenClass
 
     # Add the best of filter if we have it
     data.best_of = true if opts.bestOf == true
-    
+
     # Check the preload store. If not, load it via JSON
     promise = new RSVP.Promise()
     PreloadStore.get("topic_#{topicId}", -> jQuery.getJSON url + ".json", data).then (result) ->
@@ -286,7 +286,7 @@ window.Discourse.Topic.reopenClass
     , (result) -> promise.reject(result)
 
     promise
-      
+
   # Create a topic from posts
   movePosts: (topicId, title, postIds) ->
     $.ajax "/t/#{topicId}/move-posts",

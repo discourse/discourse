@@ -1,5 +1,5 @@
 class Notification < ActiveRecord::Base
-  
+
   belongs_to :user
   belongs_to :topic
 
@@ -11,12 +11,12 @@ class Notification < ActiveRecord::Base
      :replied => 2,
      :quoted => 3,
      :edited => 4,
-     :liked => 5, 
+     :liked => 5,
      :private_message => 6,
      :invited_to_private_message => 7,
-     :invitee_accepted => 8, 
+     :invitee_accepted => 8,
      :posted => 9,
-     :moved_post => 10}     
+     :moved_post => 10}
   end
 
   def self.InvertedTypes
@@ -24,8 +24,8 @@ class Notification < ActiveRecord::Base
   end
 
   def self.unread
-    where(read: false)    
-  end  
+    where(read: false)
+  end
 
   def self.mark_post_read(user, topic_id, post_number)
     Notification.update_all "read = true", ["user_id = ? and topic_id = ? and post_number = ?", user.id, topic_id, post_number]
@@ -47,18 +47,18 @@ class Notification < ActiveRecord::Base
 
     # Remove any duplicates by type and topic
     if result.present?
-      seen = {}          
+      seen = {}
       to_remove = Set.new
 
       result.each do |r|
         seen[r.notification_type] ||= Set.new
         if seen[r.notification_type].include?(r.topic_id)
-          to_remove << r.id 
+          to_remove << r.id
         else
           seen[r.notification_type] << r.topic_id
         end
       end
-      result.reject! {|r| to_remove.include?(r.id) }    
+      result.reject! {|r| to_remove.include?(r.id) }
     end
 
     result

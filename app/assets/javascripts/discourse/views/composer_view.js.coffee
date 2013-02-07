@@ -54,7 +54,7 @@ window.Discourse.ComposerView = window.Discourse.View.extend
 
   willDestroyElement: ->
     $('body').off 'keydown.composer'
-  
+
   resize: (->
     # this still needs to wait on animations, need a clean way to do that
     Em.run.next null, =>
@@ -91,13 +91,13 @@ window.Discourse.ComposerView = window.Discourse.View.extend
 
   initEditor: ->
 
-    # not quite right, need a callback to pass in, meaning this gets called once, 
+    # not quite right, need a callback to pass in, meaning this gets called once,
     #    but if you start replying to another topic it will get the avatars wrong
     @wmdInput = $wmdInput = $('#wmd-input')
     return if $wmdInput.length == 0 || $wmdInput.data('init') == true
-    
+
     Discourse.ComposerView.trigger("initWmdEditor")
-    
+
     template = Handlebars.compile("<div class='autocomplete'>
    <ul>
       {{#each options}}
@@ -152,7 +152,7 @@ window.Discourse.ComposerView = window.Discourse.View.extend
     @editor.hooks.onPreviewRefresh = => @afterRender()
     @editor.run()
     @set('editor', @editor)
-  
+
     @loadingChanged()
 
     saveDraft = Discourse.debounce((=> @get('controller').saveDraft()),2000)
@@ -165,7 +165,7 @@ window.Discourse.ComposerView = window.Discourse.View.extend
       saveDraft()
       return true
 
-    # In case it's still bound somehow    
+    # In case it's still bound somehow
     $uploadTarget.fileupload('destroy')
 
     # Add the upload action
@@ -200,13 +200,13 @@ window.Discourse.ComposerView = window.Discourse.View.extend
         @set('loadingImage', false)
 
 
-    # I hate to use Em.run.later, but I don't think there's a way of waiting for a CSS transition 
+    # I hate to use Em.run.later, but I don't think there's a way of waiting for a CSS transition
     # to finish.
     Em.run.later($, (=>
       replyTitle = $('#reply-title')
 
       @resize()
-      
+
       if replyTitle.length
         replyTitle.putCursorAtEnd()
       else
@@ -242,7 +242,7 @@ Discourse.NotifyingTextArea = Ember.TextArea.extend
   placeholder: (->
     Em.String.i18n(@get('placeholderKey'))
   ).property('placeholderKey')
-  
+
   didInsertElement: ->
     @get('parent').childDidInsertElement(@)
 

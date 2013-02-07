@@ -17,7 +17,7 @@ Discourse.BBCode =
       withArgs:
         "url": (_, href, title) -> "<a href=\"#{href}\">#{title}</a>"
         "email": (_, address, title) -> "<a href=\"mailto:#{address}\">#{title}</a>"
-        "color": (_, color, content) -> 
+        "color": (_, color, content) ->
           return content unless /^(\#[0-9a-fA-F]{3}([0-9a-fA-F]{3})?)|(aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|purple|red|silver|teal|white|yellow)$/.test(color)
           "<span style=\"color: #{color}\">#{content}</span>"
 
@@ -28,10 +28,10 @@ Discourse.BBCode =
         "i": (_, content) -> "<i>#{content}</i>"
         "u": (_, content) -> "<u>#{content}</u>"
         "s": (_, content) -> "<s>#{content}</s>"
-        "spoiler": (_, content) -> "<span style='background-color: #000'>#{content}</span>"        
+        "spoiler": (_, content) -> "<span style='background-color: #000'>#{content}</span>"
 
       withArgs:
-        "size": (_, size, content) -> "<span style=\"font-size: #{size}px\">#{content}</span>"      
+        "size": (_, size, content) -> "<span style=\"font-size: #{size}px\">#{content}</span>"
 
     # For sane environments that support CSS
     default:
@@ -58,10 +58,10 @@ Discourse.BBCode =
     Object.keys Discourse.BBCode.replacers, (name, rules) ->
       parsed = result[name] = []
 
-      Object.keys Object.merge(Discourse.BBCode.replacers.base.withoutArgs, rules.withoutArgs), (tag, val) -> 
+      Object.keys Object.merge(Discourse.BBCode.replacers.base.withoutArgs, rules.withoutArgs), (tag, val) ->
         parsed.push(regexp: RegExp("\\[#{tag}\\]([\\s\\S]*?)\\[\\/#{tag}\\]", "igm"), fn: val)
 
-      Object.keys Object.merge(Discourse.BBCode.replacers.base.withArgs, rules.withArgs), (tag, val) -> 
+      Object.keys Object.merge(Discourse.BBCode.replacers.base.withArgs, rules.withArgs), (tag, val) ->
         parsed.push(regexp: RegExp("\\[#{tag}=?(.+?)\\\]([\\s\\S]*?)\\[\\/#{tag}\\]", "igm"), fn: val)
 
     @parsed = result

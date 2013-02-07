@@ -27,11 +27,11 @@ Discourse.NavItem.reopenClass
     countSummary = opts["countSummary"]
     loggedOn = opts["loggedOn"]
     hasCategories = opts["hasCategories"]
-    
+
     split = text.split(",")
     name = split[0]
 
-    testName = name.split("/")[0] # to handle category ... 
+    testName = name.split("/")[0] # to handle category ...
 
     return null if !loggedOn && !validAnon.contains(testName)
     return null if !hasCategories && testName == "categories"

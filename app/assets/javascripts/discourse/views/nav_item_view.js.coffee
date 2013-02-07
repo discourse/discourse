@@ -30,7 +30,7 @@ window.Discourse.NavItemView = Ember.View.extend
 
   render: (buffer) ->
     content = @get('content')
-    buffer.push("<a href='#{content.get('href')}'>")    
+    buffer.push("<a href='#{content.get('href')}'>")
     buffer.push("<span class='#{content.get('name')}'></span>") if content.get('hasIcon')
     buffer.push(@get('name'))
     buffer.push("</a>")

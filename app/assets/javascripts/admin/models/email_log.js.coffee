@@ -11,7 +11,7 @@ window.Discourse.EmailLog.reopenClass
     $.ajax
       url: "/admin/email_logs.json"
       data: {filter: filter}
-      success: (logs) ->      
+      success: (logs) ->
         logs.each (log) -> result.pushObject(Discourse.EmailLog.create(log))
     result
 

@@ -91,7 +91,7 @@ window.Discourse.ExcerptView = Ember.ContainerView.extend
 
   didInsertElement: ->
 
-    # lets disable this puppy for now, it looks unprofessional 
+    # lets disable this puppy for now, it looks unprofessional
     return
 
     # We don't do hovering on touch devices
@@ -120,7 +120,7 @@ window.Discourse.ExcerptView = Ember.ContainerView.extend
         topPosY = (pos.top - height) - margin
         bottomPosY = (pos.top + margin)
 
-        
+
         # Switch to right if there's no room on top
         if positionText == 'top'
           positionText = 'bottom' if topPosY < 10
@@ -140,7 +140,7 @@ window.Discourse.ExcerptView = Ember.ContainerView.extend
         if (pos.left || 0) <= 0 && (pos.top || 0) <= 0
           # somehow, sometimes, we are trying to position stuff in weird spots, just skip it
           return
-        
+
         @set('position', positionText)
         @set('desiredLocation', pos)
         @set('size', $target.data('excerpt-size'))
@@ -150,5 +150,5 @@ window.Discourse.ExcerptView = Ember.ContainerView.extend
     $('#main').on 'mouseleave', '.excerptable', (e) =>
       Em.run.cancel(@openTimer)
       @closeSoon()
-      
+
 

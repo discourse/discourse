@@ -22,11 +22,11 @@ window.Discourse.ShareView = Discourse.View.extend
 
   didInsertElement: ->
 
-    $('html').on 'click.outside-share-link', (e) => 
+    $('html').on 'click.outside-share-link', (e) =>
       return if @.$().has(e.target).length isnt 0
       @get('controller').close()
       return true
-    $('html').on 'touchstart.outside-share-link', (e) => 
+    $('html').on 'touchstart.outside-share-link', (e) =>
       return if @.$().has(e.target).length isnt 0
       @get('controller').close()
       return true

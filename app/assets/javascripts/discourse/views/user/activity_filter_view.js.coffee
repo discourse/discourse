@@ -9,7 +9,7 @@ window.Discourse.ActivityFilterView = Em.View.extend Discourse.Presence,
       return @blank('controller.content.streamFilter')
   ).property('controller.content.streamFilter', 'content.action_type')
 
-  render: (buffer) -> 
+  render: (buffer) ->
     if content = @get('content')
       count = Em.get(content, 'count')
       description = Em.get(content, 'description')

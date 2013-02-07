@@ -2,13 +2,13 @@ require 'ipaddr'
 
 class View < ActiveRecord::Base
 
-  belongs_to :parent, polymorphic: true  
+  belongs_to :parent, polymorphic: true
   belongs_to :user
   validates_presence_of :parent_type, :parent_id, :ip, :viewed_at
 
   # TODO: This could happen asyncronously
   def self.create_for(parent, ip, user=nil)
-    
+
     # Only store a view once per day per thing per user per ip
     redis_key = "view:#{parent.class.name}:#{parent.id}:#{Date.today.to_s}"
     if user.present?

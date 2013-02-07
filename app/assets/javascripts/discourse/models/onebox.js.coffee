@@ -1,5 +1,5 @@
 Discourse.Onebox = (->
-  # for now it only stores in a var, in future we can change it so it uses localStorage, 
+  # for now it only stores in a var, in future we can change it so it uses localStorage,
   #  trouble with localStorage is that expire semantics need some thinking
 
   #cacheKey = "__onebox__"
@@ -9,9 +9,9 @@ Discourse.Onebox = (->
     localCache[url] = contents
 
     #if localStorage && localStorage.setItem
-    #  localStorage.setItme   
+    #  localStorage.setItme
     null
-  
+
   lookupCache = (url) ->
     localCache[url]
 
@@ -25,7 +25,7 @@ Discourse.Onebox = (->
         cache(url,html)
         callback(html)
       return true
-  
+
   load = (e, refresh=false) ->
 
     url = e.href
@@ -45,4 +45,4 @@ Discourse.Onebox = (->
   lookup: lookup
   lookupCache: lookupCache
 )()
-    
+

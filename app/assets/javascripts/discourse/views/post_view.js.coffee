@@ -11,7 +11,7 @@ window.Discourse.PostView = Ember.View.extend
     !!@get('post.deleted_at')
   ).property('post.deleted_at')
 
-  #TODO really we should do something cleaner here... this makes it work in debug but feels really messy 
+  #TODO really we should do something cleaner here... this makes it work in debug but feels really messy
   screenTrack: (->
     parentView = @get('parentView')
     screenTrack = null
@@ -128,12 +128,12 @@ window.Discourse.PostView = Ember.View.extend
           navLink = "<a href='/t/via-quote/#{topicId}/#{postNumber}' title='#{quoteTitle}' class='quote-other-topic'></a>"
       else if topic = @get('controller.content')
         # assume the same topic
-        navLink = "<a href='#{topic.urlForPostNumber(postNumber)}' title='#{quoteTitle}' class='back'></a>"          
+        navLink = "<a href='#{topic.urlForPostNumber(postNumber)}' title='#{quoteTitle}' class='back'></a>"
 
     # Only add the expand/contract control if it's not a full post
     expandContract = ""
     unless $aside.data('full')
-      expandContract = "<i class='icon-#{desc}' title='expand/collapse'></i>" 
+      expandContract = "<i class='icon-#{desc}' title='expand/collapse'></i>"
       $aside.css('cursor', 'pointer')
 
     $('.quote-controls', $aside).html("#{expandContract}#{navLink}")
@@ -157,7 +157,7 @@ window.Discourse.PostView = Ember.View.extend
       topic_id = post.get('topic_id')
       topic_id = $aside.data('topic') if $aside.data('topic')
 
-      jQuery.getJSON "/posts/by_number/#{topic_id}/#{$aside.data('post')}", (result) => 
+      jQuery.getJSON "/posts/by_number/#{topic_id}/#{$aside.data('post')}", (result) =>
         parsed = $(result.cooked)
         parsed.replaceText(originalText, "<span class='highlighted'>#{originalText}</span>")
 
@@ -166,7 +166,7 @@ window.Discourse.PostView = Ember.View.extend
       # Hide expanded quote
       @updateQuoteElements($aside, 'chevron-down')
       $('blockquote', $aside).showHtml(@originalContents)
-    
+
     false
 
   # Show how many times links have been clicked on
@@ -179,7 +179,7 @@ window.Discourse.PostView = Ember.View.extend
             if link.attr('href') == lc.url
               link.append("<span class='badge badge-notification clicks' title='clicks'>#{lc.clicks}</span>")
 
-  # Add the quote controls to a post            
+  # Add the quote controls to a post
   insertQuoteControls: ->
 
     @.$('aside.quote').each (i, e) =>
@@ -204,7 +204,7 @@ window.Discourse.PostView = Ember.View.extend
     if postNumber = post.get('scrollToAfterInsert')
       Discourse.TopicView.scrollTo @get('post.topic_id'), postNumber
 
-      if postNumber == post.get('post_number') 
+      if postNumber == post.get('post_number')
         $contents = $('.topic-body .contents', $post)
         originalCol = $contents.css('backgroundColor')
         $contents.css(backgroundColor: "#ffffcc").animate(backgroundColor: originalCol, 2500)

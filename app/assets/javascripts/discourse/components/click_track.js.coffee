@@ -1,4 +1,4 @@
-# We use this object to keep track of click counts. 
+# We use this object to keep track of click counts.
 window.Discourse.ClickTrack =
 
   # Pass the event of the click here and we'll do the magic!
@@ -28,7 +28,7 @@ window.Discourse.ClickTrack =
     userId = $article.data('user-id') unless userId
 
     ownLink = userId and (userId is Discourse.get('currentUser.id'))
-    
+
     # Build a Redirect URL
     trackingUrl = "/clicks/track?url=" + encodeURIComponent(href)
     trackingUrl += "&post_id=" + encodeURI(postId) if postId and (not $a.data('ignore-post-id'))
@@ -44,9 +44,9 @@ window.Discourse.ClickTrack =
     # If they right clicked, change the destination href
     if e.which is 3
       destination = if Discourse.SiteSettings.track_external_right_clicks then trackingUrl else href
-      $a.attr('href', destination) 
+      $a.attr('href', destination)
       return true
-   
+
     # if they want to open in a new tab, do an AJAX request
     if (e.metaKey || e.ctrlKey || e.which is 2)
       $.get "/clicks/track", url: href, post_id: postId, topic_id: topicId, redirect: false
