@@ -126,6 +126,11 @@ class SiteSetting < ActiveRecord::Base
   setting(:basic_requires_read_posts, 100)
   setting(:basic_requires_time_spent_mins, 30)
 
+  # Entropy checks
+  setting(:title_min_entropy, 10)
+  setting(:body_min_entropy, 7)
+  setting(:max_word_length, 30)
+
 
   def self.call_mothership?
     self.enforce_global_nicknames? and self.discourse_org_access_key.present?
