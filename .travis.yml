@@ -4,5 +4,6 @@ rvm:
 before_script:
   - psql -c 'create database discourse_test;' -U postgres
   - rake db:migrate
+script: 'rake spec && bundle exec guard-jasmine --server-timeout=60'
 services:
   - redis-server
