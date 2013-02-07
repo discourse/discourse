@@ -27,7 +27,7 @@ guard 'jasmine', jasmine_options do watch(%r{spec/javascripts/spec\.(js\.coffee|
   watch(%r{app/assets/javascripts/(.+?)\.(js\.coffee|js|coffee)$})  { "spec/javascripts" }
 end
 
-guard 'rspec', :focus_on_failed => true, :version => 2, :cli => "--drb" do
+guard 'rspec', :focus_on_failed => true, :cli => "--drb" do
   watch(%r{^spec/.+_spec\.rb$})
   #watch(%r{^lib/jobs/(.+)\.rb$})     { |m| "spec/components/jobs/#{m[1]}_spec.rb" }  
   watch(%r{^lib/(.+)\.rb$})     { |m| "spec/components/#{m[1]}_spec.rb" }  
