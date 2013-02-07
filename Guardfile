@@ -1,4 +1,4 @@
-guard 'spork' do
+guard :spork, wait: 120 do
   watch('config/application.rb')
   watch('config/environment.rb')
   watch(%r{^config/environments/.*\.rb$})
