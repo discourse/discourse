@@ -12,13 +12,9 @@ module Slug
     str.downcase!
 
     from = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;."
-    to   = "aaaaeeeeiiiioooouuuunc-------"
+    to   = "aaaaeeeeiiiioooouuuunc\-"
 
-    idx = 0
-    from.each_char do |c|
-      str.gsub!(c, to[idx])
-      idx += 1
-    end
+    str.tr!(from, to)
 
     str.gsub!(/[^a-z0-9 -]/, '')
     str.gsub!(/\s+/, '-')
