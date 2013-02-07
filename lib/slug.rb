@@ -23,6 +23,7 @@ module Slug
     str.gsub!(/[^a-z0-9 -]/, '')
     str.gsub!(/\s+/, '-')
     str.gsub!(/\-+/, '-')
+    str.gsub!(/^-|-$/, '')
 
     str
   end

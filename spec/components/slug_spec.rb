@@ -27,6 +27,13 @@ describe Slug do
     Slug.for("a....b.....c").should == "a-b-c"
   end
 
+  it 'strips trailing punctuation' do
+    Slug.for("hello...").should == "hello"
+  end
+
+  it 'strips leading punctuation' do
+    Slug.for("...hello").should == "hello"
+  end
 
 end
 
