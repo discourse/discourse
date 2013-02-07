@@ -1,0 +1,7 @@
+language: ruby
+rvm:
+  - 1.9.3
+before_script:
+  - psql -c 'create database discourse_test;' -U postgres
+services:
+  - redis-server
