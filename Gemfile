@@ -106,6 +106,7 @@ group :development do
   gem 'pry-rails'
   gem 'better_errors'
   gem 'binding_of_caller' # I tried adding this and got an occational crash
+  gem 'librarian', '>= 0.0.25', :require => false
 end
 
 # gem 'stacktrace', :require => false

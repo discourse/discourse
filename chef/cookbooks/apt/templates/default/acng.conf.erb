@@ -1,0 +1,276 @@
+
+# Letter case in directive names does not matter. Must be separated with colons.
+# Valid boolean values are a zero number for false, non-zero numbers for true.
+
+CacheDir: /var/cache/apt-cacher-ng
+
+# set empty to disable logging
+LogDir: /var/log/apt-cacher-ng
+
+# place to look for additional configuration and resource files if they are not
+# found in the configuration directory
+# SupportDir: /usr/lib/apt-cacher-ng
+
+# TCP (http) port
+# Set to 9999 to emulate apt-proxy
+Port:<%= node['apt']['cacher_port'] %>
+
+# Addresses or hostnames to listen on. Multiple addresses must be separated by
+# spaces. Each entry must be an exact local address which is associated with a
+# local interface. DNS resolution is performed using getaddrinfo(3) for all
+# available protocols (IPv4, IPv6, ...). Using a protocol specific format will
+# create binding(s) only on protocol specific socket(s) (e.g. 0.0.0.0 will listen
+# only to IPv4).
+#
+# Default: not set, will listen on all interfaces and protocols
+#
+# BindAddress: localhost 192.168.7.254 publicNameOnMainInterface
+
+# The specification of another proxy which shall be used for downloads.
+# Username and password are, and see manual for limitations.
+#
+#Proxy: http://www-proxy.example.net:80
+#proxy: username:proxypassword@proxy.example.net:3128
+
+# Repository remapping. See manual for details.
+# In this example, some backends files might be generated during package
+# installation using information collected on the system.
+Remap-debrep: file:deb_mirror*.gz /debian ; file:backends_debian # Debian Archives
+Remap-uburep: file:ubuntu_mirrors /ubuntu ; file:backends_ubuntu # Ubuntu Archives
+Remap-debvol: file:debvol_mirror*.gz /debian-volatile ; file:backends_debvol # Debian Volatile Archives
+Remap-cygwin: file:cygwin_mirrors /cygwin # ; file:backends_cygwin # incomplete, please create this file or specify preferred mirrors here
+Remap-sfnet:  file:sfnet_mirrors # ; file:backends_sfnet # incomplete, please create this file or specify preferred mirrors here
+Remap-alxrep: file:archlx_mirrors /archlinux # ; file:backend_archlx # Arch Linux
+Remap-fedora:  file:fedora_mirrors # Fedora Linux
+Remap-epel:   file:epel_mirrors # Fedora EPEL
+Remap-slrep:  file:sl_mirrors # Scientific Linux
+
+# This is usually not needed for security.debian.org because it's always the
+# same DNS hostname. However, it might be enabled in order to use hooks,
+# ForceManaged mode or special flags in this context.
+# Remap-secdeb: security.debian.org
+
+# Virtual page accessible in a web browser to see statistics and status
+# information, i.e. under http://localhost:3142/acng-report.html
+ReportPage: acng-report.html
+
+# Socket file for accessing through local UNIX socket instead of TCP/IP. Can be
+# used with inetd bridge or cron client.
+# SocketPath:/var/run/apt-cacher-ng/socket
+
+# Forces log file to be written to disk after every line when set to 1. Default
+# is 0, buffers are flushed when the client disconnects.
+#
+# (technically, alias to the Debug option, see its documentation for details)
+#
+# UnbufferLogs: 0
+
+# Set to 0 to store only type, time and transfer sizes.
+# 1 -> client IP and relative local path are logged too
+# VerboseLog: 1
+
+# Don't detach from the console
+# ForeGround: 0
+
+# Store the pid of the daemon process therein
+# PidFile: /var/run/apt-cacher-ng/pid
+
+# Forbid outgoing connections, work around them or respond with 503 error
+# offlinemode:0
+
+# Forbid all downloads that don't run through preconfigured backends (.where)
+#ForceManaged: 0
+
+# Days before considering an unreferenced file expired (to be deleted).
+# Warning: if the value is set too low and particular index files are not
+# available for some days (mirror downtime) there is a risk of deletion of
+# still useful package files.
+ExTreshold: 4
+
+# Stop expiration when a critical problem appeared. Currently only failed
+# refresh of an index file is considered as critical.
+#
+# WARNING: don't touch this option or set to zero.
+# Anything else is DANGEROUS and may cause data loss.
+#
+# ExAbortOnProblems: 1
+
+# Replace some Windows/DOS-FS incompatible chars when storing
+# StupidFs: 0
+
+# Experimental feature for apt-listbugs: pass-through SOAP requests and
+# responses to/from bugs.debian.org. If not set, default is true if
+# ForceManaged is enabled and false otherwise.
+# ForwardBtsSoap: 1 
+
+# The daemon has a small cache for DNS data, to speed up resolution. The
+# expiration time of the DNS entries can be configured in seconds.
+# DnsCacheSeconds: 3600
+
+# Don't touch the following values without good consideration! 
+#
+# Max. count of connection threads kept ready (for faster response in the
+# future). Should be a sane value between 0 and average number of connections,
+# and depend on the amount of spare RAM.
+# MaxStandbyConThreads: 8
+#
+# Hard limit of active thread count for incoming connections, i.e. operation
+# is refused when this value is reached (below zero = unlimited).
+# MaxConThreads: -1
+#
+# Pigeonholing files with regular expressions (static/volatile). Can be
+# overriden here but not should not be done permanently because future update
+# of default settings would not be applied later.
+# VfilePattern = (^|.*?/)(Index|Packages(\.gz|\.bz2|\.lzma|\.xz)?|InRelease|Release|Release\.gpg|Sources(\.gz|\.bz2|\.lzma|\.xz)?|release|index\.db-.*\.gz|Contents-[^/]*(\.gz|\.bz2|\.lzma|\.xz)?|pkglist[^/]*\.bz2|rclist[^/]*\.bz2|/meta-release[^/]*|Translation[^/]*(\.gz|\.bz2|\.lzma|\.xz)?|MD5SUMS|SHA1SUMS|((setup|setup-legacy)(\.ini|\.bz2|\.hint)(\.sig)?)|mirrors\.lst|repo(index|md)\.xml(\.asc|\.key)?|directory\.yast|products|content(\.asc|\.key)?|media|filelists\.xml\.gz|filelists\.sqlite\.bz2|repomd\.xml|packages\.[a-zA-Z][a-zA-Z]\.gz|info\.txt|license\.tar\.gz|license\.zip|.*\.db(\.tar\.gz)?|.*\.files\.tar\.gz|.*\.abs\.tar\.gz|metalink\?repo|.*prestodelta\.xml\.gz)$|/dists/.*/installer-[^/]+/[^0-9][^/]+/images/.*
+# PfilePattern = .*(\.d?deb|\.rpm|\.dsc|\.tar(\.gz|\.bz2|\.lzma|\.xz)(\.gpg)?|\.diff(\.gz|\.bz2|\.lzma|\.xz)|\.jigdo|\.template|changelog|copyright|\.udeb|\.debdelta|\.diff/.*\.gz|(Devel)?ReleaseAnnouncement(\?.*)?|[a-f0-9]+-(susedata|updateinfo|primary|deltainfo).xml.gz|fonts/(final/)?[a-z]+32.exe(\?download.*)?|/dists/.*/installer-[^/]+/[0-9][^/]+/images/.*)$
+# Whitelist for expiration, file types not to be removed even when being
+# unreferenced. Default: many parts from VfilePattern where no parent index
+# exists or might be unknown.
+# WfilePattern = (^|.*?/)(Release|InRelease|Release\.gpg|(Packages|Sources)(\.gz|\.bz2|\.lzma|\.xz)?|Translation[^/]*(\.gz|\.bz2|\.lzma|\.xz)?|MD5SUMS|SHA1SUMS|.*\.xml|.*\.db\.tar\.gz|.*\.files\.tar\.gz|.*\.abs\.tar\.gz|[a-z]+32.exe)$|/dists/.*/installer-.*/images/.*
+
+# Higher modes only working with the debug version
+# Warning, writes a lot into apt-cacher.err logfile
+# Value overwrites UnbufferLogs setting (aliased)
+# Debug:3
+
+# Usually, general purpose proxies like Squid expose the IP address of the
+# client user to the remote server using the X-Forwarded-For HTTP header. This
+# behaviour can be optionally turned on with the Expose-Origin option.
+# ExposeOrigin: 0
+
+# When logging the originating IP address, trust the information supplied by
+# the client in the X-Forwarded-For header.
+# LogSubmittedOrigin: 0
+
+# The version string reported to the peer, to be displayed as HTTP client (and
+# version) in the logs of the mirror.
+# WARNING: some archives use this header to detect/guess capabilities of the
+# client (i.e. redirection support) and change the behaviour accordingly, while
+# ACNG might not support the expected features. Expect side effects.
+#
+# UserAgent: Yet Another HTTP Client/1.2.3p4
+
+# In some cases the Import and Expiration tasks might create fresh volatile
+# data for internal use by reconstructing them using patch files. This
+# by-product might be recompressed with bzip2 and with some luck the resulting
+# file becomes identical to the *.bz2 file on the server, usable for APT
+# clients trying to fetch the full .bz2 compressed version. Injection of the
+# generated files into the cache has however a disadvantage on underpowered
+# servers: bzip2 compression can create high load on the server system and the
+# visible download of the busy .bz2 files also becomes slower.
+#
+# RecompBz2: 0
+
+# Network timeout for outgoing connections.
+# NetworkTimeout: 60
+
+# Sometimes it makes sense to not store the data in cache and just return the
+# package data to client as it comes in. DontCache parameters can enable this
+# behaviour for certain URL types. The tokens are extended regular expressions
+# that URLs are matched against.
+#
+# DontCacheRequested is applied to the URL as it comes in from the client.
+# Example: exclude packages built with kernel-package for x86
+# DontCacheRequested: linux-.*_10\...\.Custo._i386
+# Example usecase: exclude popular private IP ranges from caching
+# DontCacheRequested: 192.168.0 ^10\..* 172.30
+#
+# DontCacheResolved is applied to URLs after mapping to the target server. If
+# multiple backend servers are specified then it's only matched against the
+# download link for the FIRST possible source (due to implementation limits).
+# Example usecase: all Ubuntu stuff comes from a local mirror (specified as
+# backend), don't cache it again:
+# DontCacheResolved: ubuntumirror.local.net
+#
+# DontCache directive sets (overrides) both, DontCacheResolved and
+# DontCacheRequested.  Provided for convenience, see those directives for
+# details.
+#
+# Default permission set of freshly created files and directories, as octal
+# numbers (see chmod(1) for details).
+# Can by limited by the umask value (see umask(2) for details) if it's set in
+# the environment of the starting shell, e.g. in apt-cacher-ng init script or
+# in its configuration file.
+# DirPerms: 00755
+# FilePerms: 00664
+#
+#
+# It's possible to use use apt-cacher-ng as a regular web server with limited
+# feature set, i.e. 
+# including directory browsing and download of any file;
+# excluding sorting, mime types/encodings, CGI execution, index page
+# redirection and other funny things.
+# To get this behavior, mappings between virtual directories and real
+# directories on the server must be defined with the LocalDirs directive.
+# Virtual and real dirs are separated by spaces, multiple pairs are separated
+# by semi-colons. Real directories must be absolute paths.
+# NOTE: Since the names of that key directories share the same namespace as
+# repository names (see Remap-...) it's administrators job to avoid such
+# collisions on them (unless created deliberately).
+#
+# LocalDirs: woo /data/debarchive/woody ; hamm /data/debarchive/hamm
+
+# Precache a set of files referenced by specified index files. This can be used
+# to create a partial mirror usable for offline work. There are certain limits
+# and restrictions on the path specification, see manual for details. A list of
+# (maybe) relevant index files could be retrieved via 
+# "apt-get --print-uris update" on a client machine.
+#
+# PrecacheFor: debrep/dists/unstable/*/source/Sources* debrep/dists/unstable/*/binary-amd64/Packages*
+
+# Arbitrary set of data to append to request headers sent over the wire. Should
+# be a well formated HTTP headers part including newlines (DOS style) which 
+# can be entered as escape sequences (\r\n).
+# RequestAppendix: X-Tracking-Choice: do-not-track\r\n
+
+# Specifies the IP protocol families to use for remote connections. Order does
+# matter, first specified are considered first. Possible combinations:
+# v6 v4
+# v4 v6
+# v6
+# v4
+# (empty or not set: use system default)
+#
+# ConnectProto: v6 v4
+
+# Regular expiration algorithm finds package files which are no longer listed
+# in any index file and removes them of them after a safety period.
+# This option allows to keep more versions of a package in the cache after
+# safety period is over.
+# KeepExtraVersions: 1
+
+# Optionally uses TCP access control provided by libwrap, see hosts_access(5)
+# for details. Daemon name is apt-cacher-ng. Default if not set: decided on
+# startup by looking for explicit mentioning of apt-cacher-ng in
+# /etc/hosts.allow or /etc/hosts.deny files.
+# UseWrap: 0
+
+# If many machines from the same local network attempt to update index files
+# (apt-get update) at nearly the same time, the known state of these index file
+# is temporarily frozen and multiple requests receive the cached response
+# without contacting the server. This parameter (in seconds) specifies the
+# length of this period before the files are considered outdated.
+# Setting it too low transfers more data and increases remote server load,
+# setting it too high (more than a couple of minutes) increases the risk of
+# delivering inconsistent responses to the clients.
+# FreshIndexMaxAge: 27
+
+# Usually the users are not allowed to specify custom TCP ports of remote
+# mirrors in the requests, only the default HTTP port can be used (instead,
+# proxy administrator can create Remap- rules with custom ports). This
+# restriction can be disabled by specifying a list of allowed ports or 0 for
+# any port.
+#
+# AllowUserPorts: 80
+
+# Normally the HTTP redirection responses are forwarded to the original caller
+# (i.e. APT) which starts a new download attempt from the new URL. This
+# solution is ok for client configurations with proxy mode but doesn't work
+# well with configurations using URL prefixes. To work around this the server
+# can restart its own download with another URL. However, this might be used to
+# circumvent download source policies by malicious users.
+# The RedirMax option specifies how many such redirects the server should
+# follow per request, 0 disables the internal redirection. If not set,
+# default value is 0 if ForceManaged is used and 5 otherwise.
+#
+# RedirMax: 5
