@@ -230,7 +230,7 @@ GEM
       slop (~> 3.4)
     pry-rails (0.2.2)
       pry (>= 0.9.10)
-    rack (1.4.4)
+    rack (1.4.5)
     rack-cache (1.2)
       rack (>= 0.4)
     rack-protection (1.3.2)
