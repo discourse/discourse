@@ -307,6 +307,8 @@ en:
     title_min_entropy: "The minimum entropy for a topic title"
     body_min_entropy: "The minimum entropy for post body"
 
+    email_blacklist_regexp: "A regexp that finds email addresses to block"
+
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "Type to Filter..."

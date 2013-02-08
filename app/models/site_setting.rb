@@ -131,6 +131,8 @@ class SiteSetting < ActiveRecord::Base
   setting(:body_min_entropy, 7)
   setting(:max_word_length, 30)
 
+  # Ways to catch griefers and other nasties
+  setting(:email_blacklist_regexp, '')
 
   def self.call_mothership?
     self.enforce_global_nicknames? and self.discourse_org_access_key.present?
