@@ -520,7 +520,7 @@ en:
         weekly: "weekly"
         bi_weekly: "every two weeks"
 
-      email_direct: "Receive an email when someone talks directly to you"
+      email_direct: "Receive an email when someone quotes you, replies to your post, or mentions your @username"
       email_private_messages: "Receive an email when someone sends you a private message"
 
       other_settings: "Other"
