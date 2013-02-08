@@ -23,9 +23,7 @@
       {{#if controller.taken}}
         {{i18n user.change_username.taken}}
       {{/if}}
-      {{#if controller.invalid}}
-        {{i18n user.change_username.invalid}}
-      {{/if}}
+      <span>{{ errorMessage }}</span>
     </div>
   </div>
 
