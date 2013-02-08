@@ -277,15 +277,7 @@ window.Discourse.Composer = Discourse.Model.extend
     # If we're in a topic, we can append the post instantly.
     if topic
       # Increase the reply count
-      if post
-        post.set('reply_count', (post.get('reply_count') || 0) + 1)
-
-        # Supress replies
-        if (post.get('reply_count') == 1 && createdPost.get('cooked').length < Discourse.SiteSettings.max_length_show_reply)
-          post.set('replyFollowing', true)
-
-        post.set('reply_below_post_number', createdPost.get('post_number'))
-
+      post?.set('reply_count', (post.get('reply_count') || 0) + 1)
       topic.set('posts_count', topic.get('posts_count') + 1)
 
       # Update last post

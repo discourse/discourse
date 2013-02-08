@@ -15,7 +15,6 @@ class PostSerializer < ApplicationSerializer
              :updated_at,
              :reply_count,
              :reply_to_post_number,
-             :reply_below_post_number,
              :quote_count,
              :avg_time,
              :incoming_link_count,

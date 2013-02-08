@@ -21,27 +21,6 @@ window.Discourse.Post = Ember.Object.extend Discourse.Presence,
   hasHistory: (-> @get('version') > 1 ).property('version')
   postElementId: (-> "post_#{@get('post_number')}").property()
 
-  # We only want to link to replies below if there's exactly one reply and it's below
-  replyBelowUrlComputed: (->
-
-    return null unless @get('reply_below_post_number')
-    return null if @get('reply_count') > 1
-
-    topic = @get('topic')
-    return unless topic
-    
-    p = @get('reply_below_post_number')
-    diff = @get('reply_below_post_number') - @get('post_number')
-    return topic.urlForPostNumber(p) if (diff < 3) 
-    null
-  ).property('topic', 'reply_below_post_number')
-
-  # We do this because right now you can't subclass a computed property and we want to add
-  # plugin support. Later we should consider just subclassing it properly.
-  replyBelowUrl: (->
-    @get('replyBelowUrlComputed')
-  ).property('replyBelowUrlComputed')
-
   # The class for the read icon of the post. It starts with read-icon then adds 'seen' or 
   # 'last-read' if the post has been seen or is the highest post number seen so far respectively.
   bookmarkClass: (->

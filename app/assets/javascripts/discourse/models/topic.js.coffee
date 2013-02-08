@@ -206,11 +206,6 @@ Discourse.Topic = Discourse.Model.extend Discourse.Presence,
       # when there
       lastPost = null
       result.posts.each (p) =>
-
-        # Determine whether there is a short reply below
-        if (lastPost && lastPost.get('reply_count') == 1) && (p.reply_to_post_number == lastPost.get('post_number')) && (p.cooked.length < Discourse.SiteSettings.max_length_show_reply)
-          lastPost.set('replyFollowing', true)
-
         p.scrollToAfterInsert = opts.nearPost
         post = Discourse.Post.create(p)
         post.set('topic', @)

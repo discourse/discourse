@@ -473,8 +473,7 @@ class Post < ActiveRecord::Base
         if post.present?
           post_reply = post.post_replies.new(reply_id: self.id)
           if post_reply.save
-            Post.update_all ['reply_count = reply_count + 1, reply_below_post_number = COALESCE(reply_below_post_number, ?)', self.post_number],
-                            ["id = ?", post.id]
+            Post.update_all ['reply_count = reply_count + 1'], id: post.id
           end
         end
       end

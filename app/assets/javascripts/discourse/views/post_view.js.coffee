@@ -73,12 +73,6 @@ window.Discourse.PostView = Ember.View.extend
 
   # Click on the replies button
   showReplies: ->
-
-    # If the reply is below, we route to it
-    if replyBelowUrl = @get('post.replyBelowUrl')
-      Discourse.routeTo(replyBelowUrl)
-      return false
-
     if @get('repliesShown')
       @set('repliesShown', false)
     else

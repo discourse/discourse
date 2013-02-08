@@ -778,7 +778,6 @@ en:
       reply: 
         title: 'Reply'
         help: 'begin composing a reply to this topic'
-        below: 'reply below'
 
       share: 
         title: 'Share'
@@ -836,10 +835,6 @@ en:
       continue_discussion: "Continuing the discussion from {{postLink}}:"
       follow_quote: "go to the quoted post"
       deleted_by_author: "(post removed by author)"
-
-      has_replies_below:
-        one: "Reply Below"
-        other: "Replies Below"
 
       has_replies:
         one: "Reply"

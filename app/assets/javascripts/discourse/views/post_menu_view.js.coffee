@@ -26,7 +26,7 @@ window.Discourse.PostMenuView = Ember.View.extend Discourse.Presence,
   # Trigger re rendering
   needsToRender: (->
     @rerender()
-  ).observes('post.deleted_at', 'post.flagsAvailable.@each', 'post.url', 'post.bookmarked', 'post.reply_count', 'post.replyBelowUrl', 'post.can_delete')
+  ).observes('post.deleted_at', 'post.flagsAvailable.@each', 'post.url', 'post.bookmarked', 'post.reply_count', 'post.can_delete')
 
   # Replies Button
   renderReplies: (post, buffer) ->
@@ -39,8 +39,7 @@ window.Discourse.PostMenuView = Ember.View.extend Discourse.Presence,
     buffer.push("<button class='show-replies' data-action='replies'>")
     buffer.push("<span class='badge-posts'>#{reply_count}</span>")
 
-    textKey = if post.get('replyBelowUrl') then "post.has_replies" else "post.has_replies_below"
-    buffer.push(Em.String.i18n(textKey, count: reply_count))
+    buffer.push(Em.String.i18n("post.has_replies", count: reply_count))
 
     icon = if @get('postView.repliesShown') then 'icon-chevron-up' else 'icon-chevron-down'
     buffer.push("<i class='icon #{icon}'></i></button>")
