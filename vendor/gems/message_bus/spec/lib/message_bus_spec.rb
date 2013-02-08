@@ -70,8 +70,6 @@ describe MessageBus do
 
     r = MessageBus.backlog("/chuck", id)
 
-    wait_for(1000) { r.length == 2 }
-
     r.map{|i| i.data}.to_a.should == ['foo', 'bar']
   end
 
