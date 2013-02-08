@@ -21,6 +21,7 @@ describe Post do
     {user: topic.user, topic: topic} 
   end
 
+  it_behaves_like "a versioned model"
 
   describe 'post uniqueness' do
 
@@ -263,10 +264,6 @@ describe Post do
 
     let(:post) { Fabricate(:post, post_args) }
     let(:first_version_at) { post.last_version_at }
-
-    it 'has an initial version of 1' do
-      post.cached_version.should == 1
-    end
 
     it 'has one version in all_versions' do
       post.all_versions.size.should == 1
