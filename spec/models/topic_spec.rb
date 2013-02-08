@@ -23,6 +23,8 @@ describe Topic do
 
   it { should rate_limit }
 
+  it_behaves_like "a versioned model"
+
   context '.title_quality' do
 
     it "strips a title when identifying length" do
