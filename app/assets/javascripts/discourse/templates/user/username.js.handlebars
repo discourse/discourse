@@ -17,7 +17,7 @@
   <div class="control-group">
     <label class="control-label">{{i18n user.username.title}}</label>
     <div class="controls">
-      {{view Ember.TextField valueBinding="controller.newUsername" elementId="change_username" classNames="input-xxlarge"}}
+      {{view Ember.TextField valueBinding="controller.newUsername" elementId="change_username" classNames="input-xxlarge" maxlength="15"}}
     </div>
     <div class='instructions'>
       {{#if controller.taken}}

@@ -30,7 +30,7 @@
       <tr>
             <td><label for='new-account-username'>{{i18n user.username.title}}</label></td>
             <td>
-            {{view Ember.TextField valueBinding="view.accountUsername" id="new-account-username"}}
+            {{view Ember.TextField valueBinding="view.accountUsername" id="new-account-username" maxlength="15"}}
             &nbsp;{{view Discourse.InputTipView validationBinding="view.usernameValidation"}}
             </td>
       </tr>

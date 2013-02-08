@@ -69,6 +69,9 @@ window.Discourse.CreateAccountView = window.Discourse.ModalBodyView.extend Disco
     # If too short
     return Discourse.InputValidation.create(failed: true, reason: Em.String.i18n('user.username.too_short')) if @get('accountUsername').length < 3
 
+    # If too long
+    return Discourse.InputValidation.create(failed: true, reason: Em.String.i18n('user.username.too_long')) if @get('accountUsername').length > 15
+
     @checkUsernameAvailability()
 
     # Let's check it out asynchronously
