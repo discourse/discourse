@@ -15,6 +15,11 @@ Whenever you need ...
 
 If you're interested in helping us develop Discourse, please start with our **[Discourse Developer Install Guide](https://github.com/discourse/discourse/blob/master/DEVELOPMENT.md)**, which includes instructions to get up and running in a development environment.
 
+### Requirements
+
+* PostgreSQL 9.1+
+* Redis 2+
+
 ### The quick and easy setup
 
 ```
