@@ -68,19 +68,19 @@ class MessageBus::ReliablePubSub
   end
 
   def backlog_key(channel)
-    "__mb_backlog_#{channel}"
+    "__mb_backlog_n_#{channel}"
   end
 
   def backlog_id_key(channel)
-    "__mb_backlog_id_#{channel}"
+    "__mb_backlog_id_n_#{channel}"
   end
 
   def global_id_key
-    "__mb_global_id"
+    "__mb_global_id_n"
   end
 
   def global_backlog_key
-    "__mb_global_backlog"
+    "__mb_global_backlog_n"
   end
 
   # use with extreme care, will nuke all of the data
