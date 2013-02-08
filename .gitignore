@@ -59,3 +59,8 @@ config/fog_credentials.yml
 # Scripts used for downloading/refshing db
 script/download_db
 script/refresh_db
+
+.rvmrc
+
+config/database.yml
+config/redis.yml
