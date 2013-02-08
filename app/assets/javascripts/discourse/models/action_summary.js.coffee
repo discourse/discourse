@@ -28,12 +28,11 @@ window.Discourse.ActionSummary = Em.Object.extend Discourse.Presence,
     @set('can_act', false)
     @set('can_undo', true)
 
-    #TODO: mark all other flag types as acted
-
     # Add ourselves to the users who liked it if present
     @users.pushObject(Discourse.get('currentUser')) if @present('users')
 
     # Create our post action
+    promise = new RSVP.Promise()
     jQuery.ajax
       url: "/post_actions",
       type: 'POST'
@@ -44,8 +43,9 @@ window.Discourse.ActionSummary = Em.Object.extend Discourse.Presence,
       error: (error) =>
         @removeAction()
         errors = jQuery.parseJSON(error.responseText).errors
-        bootbox.alert(errors[0])
-
+        promise.reject(errors)
+      success: -> promise.resolve()
+    promise
 
   # Undo this action
   undo: ->

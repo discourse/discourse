@@ -25,6 +25,13 @@ class TextSentinel
     end
   end
 
+  def self.title_sentinel(text)
+    TextSentinel.new(text, 
+                     min_entropy: SiteSetting.title_min_entropy,
+                     max_word_length: SiteSetting.max_word_length,
+                     remove_interior_spaces: true)    
+  end
+
   # Entropy is a number of how many unique characters the string needs. 
   def entropy
     return 0 if @text.blank?

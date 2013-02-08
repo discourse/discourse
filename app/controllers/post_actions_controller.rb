@@ -9,13 +9,18 @@ class PostActionsController < ApplicationController
     id = params[:post_action_type_id].to_i
     if action = PostActionType.where(id: id).first
       guardian.ensure_post_can_act!(@post, PostActionType.Types.invert[id])
-      PostAction.act(current_user, @post, action.id, params[:message])
 
-      # We need to reload or otherwise we are showing the old values on the front end
-      @post.reload
+      post_action = PostAction.act(current_user, @post, action.id, params[:message])
 
-      post_serializer = PostSerializer.new(@post, scope: guardian, root: false)
-      render_json_dump(post_serializer)
+      if post_action.blank? or post_action.errors.present?
+        render_json_error(post_action)
+      else
+        # We need to reload or otherwise we are showing the old values on the front end
+        @post.reload
+        post_serializer = PostSerializer.new(@post, scope: guardian, root: false)
+        render_json_dump(post_serializer)
+      end
+
     else
       raise Discourse::InvalidParameters.new(:post_action_type_id)
     end

@@ -55,11 +55,11 @@ window.Discourse.ActionsHistoryView = Em.View.extend Discourse.Presence,
       return false
 
     if actionTypeId = $target.data('act')
-      @get('controller').act(@content.findProperty('id', actionTypeId))
+      @content.findProperty('id', actionTypeId).act()
       return false
 
     if actionTypeId = $target.data('undo')
-      @get('controller').undoAction(@content.findProperty('id', actionTypeId))
+      @content.findProperty('id', actionTypeId).undo()
       return false
 
     false

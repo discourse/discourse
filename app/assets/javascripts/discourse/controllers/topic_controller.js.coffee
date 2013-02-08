@@ -267,19 +267,6 @@ Discourse.TopicController = Ember.ObjectController.extend Discourse.Presence,
     actionType.loadUsers()
     false
 
-  like:(e) ->
-    like_action = Discourse.get('site.post_action_types').findProperty('name_key', 'like')
-    e.context.act(like_action.get('id'))
-
-  # log a post action towards this post
-  act: (action) ->
-    action.act()
-    false
-
-  undoAction: (action) ->
-    action.undo()
-    false
-
   showPrivateInviteModal: ->
     modal = Discourse.InvitePrivateModalView.create(topic: @get('content'))
     @get('controllers.modal')?.show(modal)

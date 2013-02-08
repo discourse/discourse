@@ -120,10 +120,7 @@ class Topic < ActiveRecord::Base
     # We don't care about quality on private messages
     return if private_message?
 
-    sentinel = TextSentinel.new(title,
-                                min_entropy: SiteSetting.title_min_entropy,
-                                max_word_length: SiteSetting.max_word_length,
-                                remove_interior_spaces: true)
+    sentinel = TextSentinel.title_sentinel(title)    
     if sentinel.valid?
       # It's possible the sentinel has cleaned up the title a bit
       self.title = sentinel.text

@@ -16,6 +16,8 @@ class PostAction < ActiveRecord::Base
 
   rate_limit :post_action_rate_limiter
 
+  validate :message_quality
+
   def self.update_flagged_posts_count
 
     posts_flagged_count = PostAction.joins(post: :topic)
@@ -110,6 +112,17 @@ class PostAction < ActiveRecord::Base
         @rate_limiter = RateLimiter.new(user, "create_#{type}:#{Date.today.to_s}", SiteSetting.send("max_#{type}s_per_day"), 1.day.to_i)
         return @rate_limiter
       end
+    end
+  end
+
+  def message_quality
+    return if message.blank?
+    sentinel = TextSentinel.title_sentinel(message)
+    if sentinel.valid?
+      # It's possible the sentinel has cleaned up the title a bit
+      self.message = sentinel.text
+    else
+      errors.add(:message, I18n.t(:is_invalid)) unless sentinel.valid?
     end
   end
 

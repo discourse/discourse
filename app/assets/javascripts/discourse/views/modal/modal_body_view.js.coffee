@@ -7,7 +7,7 @@ window.Discourse.ModalBodyView = window.Discourse.View.extend
 
   # Pass the errors to our errors view
   displayErrors: (errors, callback) ->
-    @set('parentView.modalErrorsView.errors', errors)
+    @set('parentView.parentView.modalErrorsView.errors', errors)
     callback?()
 
   # Just use jQuery to show an alert. We don't need anythign fancier for now
