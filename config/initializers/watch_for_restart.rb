@@ -56,6 +56,6 @@ Thread.new do
     MessageBus.publish "/processes", {pid: $$, filetime: time}
     did_exist = exists
     old_time = time
-    sleep 1
+    sleep 10
   end
 end
