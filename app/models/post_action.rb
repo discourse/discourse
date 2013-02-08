@@ -15,14 +15,16 @@ class PostAction < ActiveRecord::Base
   rate_limit :post_action_rate_limiter
 
   def self.update_flagged_posts_count
-    val = exec_sql('select count(*) from posts p
-                    join topics t on t.id = p.topic_id
-                    where p.deleted_at is null and t.deleted_at is null and p.id in
-                      (select post_id from post_actions where post_action_type_id in (?) and deleted_at is null)', PostActionType.FlagTypes).values[0][0].to_i
-    $redis.set('posts_flagged_count', val)
 
-    admins = User.exec_sql("select id from users where admin = 't'").map{|r| r["id"].to_i}
-    MessageBus.publish('/flagged_counts', {total: val}, {user_ids: admins})
+    posts_flagged_count = PostAction.joins(post: :topic)
+                                    .where('post_actions.post_action_type_id' => PostActionType.FlagTypes, 
+                                           'post_actions.deleted_at' => nil,
+                                           'posts.deleted_at' => nil,
+                                           'topics.deleted_at' => nil).count('DISTINCT posts.id')
+
+    $redis.set('posts_flagged_count', posts_flagged_count)
+    admins = User.where(admin: true).select(:id).map {|u| u.id}
+    MessageBus.publish('/flagged_counts', {total: posts_flagged_count}, {user_ids: admins})
   end
 
   def self.flagged_posts_count
@@ -56,10 +58,7 @@ class PostAction < ActiveRecord::Base
       moderator_id == -1 ? PostActionType.AutoActionFlagTypes : PostActionType.FlagTypes
     end
 
-    PostAction.exec_sql('update post_actions set deleted_at = ?, deleted_by = ?
-                           where post_id = ? and deleted_at is null and post_action_type_id in (?)',
-                         DateTime.now, moderator_id, post.id, actions
-                   )
+    PostAction.update_all({deleted_at: Time.now, deleted_by: moderator_id}, {post_id: post.id, deleted_at: nil, post_action_type_id: actions})
 
     r = PostActionType.Types.invert
     f = actions.map{|t| ["#{r[t]}_count", 0]}
@@ -122,12 +121,10 @@ class PostAction < ActiveRecord::Base
   end
 
   before_create do
-    if is_flag?
-      if PostAction.where('user_id = ? and post_id = ? and post_action_type_id in (?) and deleted_at is null',
-                          self.user_id, self.post_id, PostActionType.FlagTypes).exists?
-        raise AlreadyFlagged
-      end
-    end
+    raise AlreadyFlagged if is_flag? and PostAction.where(user_id: user_id, 
+                                                          post_id: post_id, 
+                                                          post_action_type_id: PostActionType.FlagTypes, 
+                                                          deleted_at: nil).exists?    
   end
 
   after_save do
@@ -141,42 +138,34 @@ class PostAction < ActiveRecord::Base
     if post_action_type == :vote
       Post.update_all ["vote_count = vote_count + :delta, sort_order = :max - (vote_count + :delta)", delta: delta, max: Topic::MAX_SORT_ORDER], ["id = ?", post_id]
     else
-      Post.update_all ["#{column} = #{column} + ?", delta], ["id = ?", post_id]
+      Post.update_all ["#{column} = #{column} + ?", delta], id: post_id
     end
+    Topic.update_all ["#{column} = #{column} + ?", delta], id: post.topic_id
 
-    exec_sql "UPDATE topics SET #{column} = #{column} + ? WHERE id = (select p.topic_id from posts p where p.id = ?)", delta, post_id
 
     if PostActionType.FlagTypes.include?(post_action_type_id)
       PostAction.update_flagged_posts_count
     end
 
     if SiteSetting.flags_required_to_hide_post > 0
-    # automatic hiding of posts
-      info = exec_sql("select case when deleted_at is null then 'new' else 'old' end, count(*) from post_actions
-                        where post_id = ? and
-                        post_action_type_id in (?)
-                        group by case when deleted_at is null then 'new' else 'old' end
-                      ", self.post_id, PostActionType.AutoActionFlagTypes).values
-
-      old_flags = new_flags = 0
-      info.each do |r,v|
-        old_flags = v.to_i if r == 'old'
-        new_flags = v.to_i if r == 'new'
-      end
-
+      # automatic hiding of posts
+      flag_counts = exec_sql("SELECT SUM(CASE WHEN deleted_at IS NULL THEN 1 ELSE 0 END) AS new_flags,
+                                     SUM(CASE WHEN deleted_at IS NOT NULL THEN 1 ELSE 0 END) AS old_flags
+                              FROM post_actions
+                              WHERE post_id = ? AND post_action_type_id IN (?)", post.id, PostActionType.AutoActionFlagTypes).first
+      old_flags, new_flags = flag_counts['old_flags'].to_i, flag_counts['new_flags'].to_i
 
       if new_flags >= SiteSetting.flags_required_to_hide_post
-        exec_sql("update posts set hidden = ?, hidden_reason_id = coalesce(hidden_reason_id, ?) where id = ?",
-                  true, old_flags > 0 ? Post::HiddenReason::FLAG_THRESHOLD_REACHED_AGAIN : Post::HiddenReason::FLAG_THRESHOLD_REACHED, self.post_id)
-
-        exec_sql("update topics set visible = 'f'
-                 where id = ? and not exists (select 1 from posts where hidden = 'f' and topic_id = ?)", self.post.topic_id, self.post.topic_id)
+        reason = old_flags > 0 ? Post::HiddenReason::FLAG_THRESHOLD_REACHED_AGAIN : Post::HiddenReason::FLAG_THRESHOLD_REACHED
+        Post.update_all(["hidden = true, hidden_reason_id = COALESCE(hidden_reason_id, ?)", reason], id: post_id)
+        Topic.update_all({visible: false},
+                         ["id = :topic_id AND NOT EXISTS(SELECT 1 FROM POSTS WHERE topic_id = :topic_id AND NOT hidden)", topic_id: post.topic_id])
 
         # inform user
         if self.post.user
-          SystemMessage.create(self.post.user, :post_hidden,
-                                url: self.post.url,
-                                edit_delay: SiteSetting.cooldown_minutes_after_hiding_posts)
+          SystemMessage.create(self.post.user, :post_hidden, 
+                               url: self.post.url, 
+                               edit_delay: SiteSetting.cooldown_minutes_after_hiding_posts)
         end
       end
 
