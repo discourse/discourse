@@ -20,7 +20,8 @@ module Discourse
     # -- all .rb files in that directory are automatically loaded.
 
     require 'discourse'
-    require 'message_bus_diags'
+    # initializes message bus too early, not picking on redis settings, needs to be fixed
+    # require 'message_bus_diags'
 
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths += %W(#{config.root}/app/serializers)
