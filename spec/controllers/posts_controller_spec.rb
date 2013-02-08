@@ -18,6 +18,31 @@ describe PostsController do
       response.should be_success
     end
 
+    context "deleted post" do
+
+      before do
+        post.destroy
+      end
+
+      it "can't find deleted posts as an anonymous user" do        
+        xhr :get, :show, id: post.id
+        response.should be_forbidden
+      end
+
+      it "can't find deleted posts as a regular user" do        
+        log_in(:user)
+        xhr :get, :show, id: post.id
+        response.should be_forbidden
+      end
+
+      it "can find posts as a moderator" do        
+        log_in(:moderator)
+        xhr :get, :show, id: post.id
+        response.should be_success
+      end
+
+    end
+
   end
 
   describe 'versions' do
