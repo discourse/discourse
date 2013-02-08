@@ -15,8 +15,8 @@ Vagrant::Config.run do |config|
   # them into the VM.
   config.ssh.forward_agent = true
 
-  # This setting gives the VM 512MB of MEMORIES instead of the default 384.
-  config.vm.customize ["modifyvm", :id, "--memory", 512]
+  # This setting gives the VM 1024MB of MEMORIES instead of the default 384.
+  config.vm.customize ["modifyvm", :id, "--memory", 1024]
 
   # This setting makes it so that network access from inside the vagrant guest
   # is able to resolve DNS using the hosts VPN connection.
@@ -25,5 +25,6 @@ Vagrant::Config.run do |config|
   config.vm.forward_port 3000, 4000
   config.vm.forward_port 1080, 4080 # Mailcatcher
 
-  config.vm.share_folder("v-root", "/vagrant", ".")
+  nfs_setting = RUBY_PLATFORM =~ /darwin/ ? true : false
+  config.vm.share_folder("v-root", "/vagrant", ".", :nfs => nfs_setting)
 end
