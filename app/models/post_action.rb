@@ -6,11 +6,13 @@ class PostAction < ActiveRecord::Base
 
   include RateLimiter::OnCreateRecord
 
-  attr_accessible :deleted_at, :post_action_type_id, :post_id, :user_id, :post, :user, :post_action_type, :message
+  attr_accessible :post_action_type_id, :post_id, :user_id, :post, :user, :post_action_type, :message
 
   belongs_to :post
   belongs_to :user
   belongs_to :post_action_type
+
+  acts_as_paranoid
 
   rate_limit :post_action_rate_limiter
 
@@ -18,7 +20,6 @@ class PostAction < ActiveRecord::Base
 
     posts_flagged_count = PostAction.joins(post: :topic)
                                     .where('post_actions.post_action_type_id' => PostActionType.FlagTypes, 
-                                           'post_actions.deleted_at' => nil,
                                            'posts.deleted_at' => nil,
                                            'topics.deleted_at' => nil).count('DISTINCT posts.id')
 
@@ -39,7 +40,7 @@ class PostAction < ActiveRecord::Base
 
     user_id = user.present? ? user.id : 0
 
-    result = PostAction.where(post_id: collection_ids, user_id: user_id, deleted_at: nil)
+    result = PostAction.where(post_id: collection_ids, user_id: user_id)
     user_actions = {}
     result.each do |r|
       user_actions[r.post_id] ||= {}
@@ -58,7 +59,7 @@ class PostAction < ActiveRecord::Base
       moderator_id == -1 ? PostActionType.AutoActionFlagTypes : PostActionType.FlagTypes
     end
 
-    PostAction.update_all({deleted_at: Time.now, deleted_by: moderator_id}, {post_id: post.id, deleted_at: nil, post_action_type_id: actions})
+    PostAction.update_all({deleted_at: Time.now, deleted_by: moderator_id}, {post_id: post.id, post_action_type_id: actions})
 
     r = PostActionType.Types.invert
     f = actions.map{|t| ["#{r[t]}_count", 0]}
@@ -79,18 +80,10 @@ class PostAction < ActiveRecord::Base
   end
 
   def self.remove_act(user, post, post_action_type_id)
-    if action = self.where(post_id: post.id, user_id: user.id, post_action_type_id: post_action_type_id, deleted_at: nil).first
-
-      transaction do
-        d = DateTime.now
-        count = PostAction.update_all({deleted_at: d},{id: action.id, deleted_at: nil})
-
-        if(count == 1)
-          action.deleted_at = DateTime.now
-          action.run_callbacks(:save)
-          action.run_callbacks(:destroy)
-        end
-      end
+    if action = self.where(post_id: post.id, user_id: user.id, post_action_type_id: post_action_type_id).first
+      action.destroy
+      action.deleted_at = Time.now
+      action.run_callbacks(:save)      
     end
   end
 
@@ -123,12 +116,10 @@ class PostAction < ActiveRecord::Base
   before_create do
     raise AlreadyFlagged if is_flag? and PostAction.where(user_id: user_id, 
                                                           post_id: post_id, 
-                                                          post_action_type_id: PostActionType.FlagTypes, 
-                                                          deleted_at: nil).exists?    
+                                                          post_action_type_id: PostActionType.FlagTypes).exists?    
   end
 
   after_save do
-
     # Update denormalized counts
     post_action_type = PostActionType.Types.invert[post_action_type_id]
     column = "#{post_action_type.to_s}_count"
