@@ -376,7 +376,7 @@ class User < ActiveRecord::Base
   def username_format_validator
     validator = UsernameValidator.new(username)
     unless validator.valid_format?
-      errors.add(:username, validator.error)
+      validator.errors.each { |e| errors.add(:username, e) }
     end
   end
 

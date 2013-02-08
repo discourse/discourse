@@ -2,9 +2,9 @@ class UsernameValidator
 
   def initialize(username)
     @username = username
-    @error = []
+    @errors = []
   end
-  attr_accessor :error
+  attr_accessor :errors
   attr_reader :username
 
   def user
@@ -17,43 +17,43 @@ class UsernameValidator
     username_length_max?
     username_char_valid?
     username_first_char_valid?
-    error.blank?
+    errors.empty?
   end
 
   private
 
   def username_exist?
-    return unless error.empty?
+    return unless errors.empty?
     unless username
-      self.error = I18n.t(:'user.username.blank')
+      self.errors << I18n.t(:'user.username.blank')
     end
   end
 
   def username_length_min?
-    return unless error.empty?
+    return unless errors.empty?
     if username.length < User.username_length.begin
-      self.error = I18n.t(:'user.username.short', min: User.username_length.begin)
+      self.errors << I18n.t(:'user.username.short', min: User.username_length.begin)
     end
   end
 
   def username_length_max?
-    return unless error.empty?
+    return unless errors.empty?
     if username.length > User.username_length.end
-      self.error = I18n.t(:'user.username.long', max: User.username_length.end)
+      self.errors << I18n.t(:'user.username.long', max: User.username_length.end)
     end
   end
 
   def username_char_valid?
-    return unless error.empty?
+    return unless errors.empty?
     if username =~ /[^A-Za-z0-9_]/
-      self.error = I18n.t(:'user.username.characters')
+      self.errors << I18n.t(:'user.username.characters')
     end
   end
 
   def username_first_char_valid?
-    return unless error.empty?
+    return unless errors.empty?
     if username[0,1] =~ /[^A-Za-z0-9]/
-      self.error = I18n.t(:'user.username.must_begin_with_alphanumeric')
+      self.errors << I18n.t(:'user.username.must_begin_with_alphanumeric')
     end
   end
 

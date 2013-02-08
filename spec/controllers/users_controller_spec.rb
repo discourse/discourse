@@ -484,11 +484,7 @@ describe UsersController do
         it_should_behave_like 'when username is unavailable locally'
       end
 
-      context 'has invalid characters' do
-        before do
-          xhr :get, :check_username, username: 'bad username'
-        end
-
+      shared_examples_for 'checking an invalid username' do
         it 'should return success' do
           response.should be_success
         end
@@ -499,6 +495,28 @@ describe UsersController do
 
         it 'should return an error message' do
           ::JSON.parse(response.body)['errors'].should_not be_empty
+        end
+      end
+
+      context 'has invalid characters' do
+        before do
+          xhr :get, :check_username, username: 'bad username'
+        end
+        it_should_behave_like 'checking an invalid username'
+
+        it 'should return the invalid characters message' do
+          ::JSON.parse(response.body)['errors'].should include(I18n.t(:'user.username.characters'))
+        end
+      end
+
+      context 'is too long' do
+        before do
+          xhr :get, :check_username, username: 'abcdefghijklmnop'
+        end
+        it_should_behave_like 'checking an invalid username'
+
+        it 'should return the "too short" message' do
+          ::JSON.parse(response.body)['errors'].should include(I18n.t(:'user.username.long', max: User.username_length.end))
         end
       end
     end
