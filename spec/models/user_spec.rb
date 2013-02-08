@@ -193,7 +193,6 @@ describe User do
     end
   end
 
-
   describe 'new' do
 
     subject { Fabricate.build(:user) }
@@ -391,20 +390,6 @@ describe User do
 
     it 'returns false when a username is taken' do
       User.username_available?(Fabricate(:user).username).should be_false
-    end
-  end
-
-  context '.username_valid?' do
-    it 'returns true when username is both valid and available' do
-      User.username_valid?('Available').should be_true
-    end
-
-    it 'returns true when the username is valid but not available' do
-      User.username_valid?(Fabricate(:user).username).should be_true
-    end
-
-    it 'returns false when the username is not valid' do
-      User.username_valid?('not valid.name').should be_false
     end
   end
 

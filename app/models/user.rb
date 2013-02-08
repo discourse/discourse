@@ -374,26 +374,10 @@ class User < ActiveRecord::Base
   end
 
   def username_format_validator
-    unless username
-      return errors.add(:username, I18n.t(:'user.username.blank'))
+    validator = UsernameValidator.new(username)
+    unless validator.valid_format?
+      errors.add(:username, validator.error)
     end
-
-    if username.length < User.username_length.begin
-      return errors.add(:username, I18n.t(:'user.username.short', min: User.username_length.begin))
-    end
-
-    if username.length > User.username_length.end
-      return errors.add(:username, I18n.t(:'user.username.long', max: User.username_length.end))
-    end
-
-    if username =~ /[^A-Za-z0-9_]/
-      return errors.add(:username, I18n.t(:'user.username.characters'))
-    end
-
-    if username[0,1] =~ /[^A-Za-z0-9]/
-      return errors.add(:username, I18n.t(:'user.username.must_begin_with_alphanumeric'))
-    end
-    nil
   end
 
 
