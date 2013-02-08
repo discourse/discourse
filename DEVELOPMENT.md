@@ -20,7 +20,7 @@ When you're ready to start working, boot the VM:
 vagrant up
 ```
 
-On Windows, it will prompt you for your admin password. This is so it can mount your local files inside the VM for an easy workflow.
+Vagrant will prompt you for your admin password. This is so it can mount your local files inside the VM for an easy workflow.
 
 (The first time you do this, it will take a while as it downloads the VM image and installs it. Go grab a coffee.)
 
