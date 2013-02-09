@@ -62,6 +62,7 @@ To use it, follow all the above steps. Once rails is running, open a new termina
 
 ```
 vagrant ssh
+bundle exec rake db:test:prepare
 bundle exec guard -p
 ```
 
