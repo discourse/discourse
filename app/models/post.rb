@@ -1,6 +1,7 @@
 require_dependency 'jobs'
 require_dependency 'pretty_text'
 require_dependency 'rate_limiter'
+require_dependency 'post_revisor'
 
 require 'archetype'
 require 'hpricot'
@@ -14,12 +15,6 @@ class Post < ActiveRecord::Base
     FLAG_THRESHOLD_REACHED_AGAIN = 2
   end
 
-  # A custom rate limiter for edits
-  class EditRateLimiter < RateLimiter
-    def initialize(user)
-      super(user, "edit-post:#{Date.today.to_s}", SiteSetting.max_edits_per_day, 1.day.to_i)
-    end
-  end
 
   versioned
 
@@ -113,6 +108,11 @@ class Post < ActiveRecord::Base
   def cooked_document
     self.cooked ||= cook(self.raw, topic_id: topic_id)
     @cooked_document ||= Nokogiri::HTML.fragment(self.cooked)
+  end
+
+  def reset_cooked
+    @cooked_document = nil
+    self.cooked = nil
   end
 
   def image_count
@@ -290,75 +290,12 @@ class Post < ActiveRecord::Base
     self.save
   end
 
-  # Update the body of a post. Will create a new version when appropriate
-  def revise(updated_by, new_raw, opts={})
-
-    # Only update if it changes
-    return false if self.raw == new_raw
-
-    updater = lambda do |new_version=false|
-
-      # Raw is about to change, enable validations
-      @cooked_document = nil
-      self.cooked = nil
-
-      self.raw = new_raw
-      self.updated_by = updated_by
-      self.last_editor_id = updated_by.id
-
-      if self.hidden && self.hidden_reason_id == HiddenReason::FLAG_THRESHOLD_REACHED
-        self.hidden = false
-        self.hidden_reason_id = nil
-        self.topic.update_attributes(visible: true)
-
-        PostAction.clear_flags!(self, -1)
-      end
-
-      self.save
-    end
-
-    # We can optionally specify when this version was revised. Defaults to now.
-    revised_at = opts[:revised_at] || Time.now
-    new_version = false
-
-    # We always create a new version if the poster has changed
-    new_version = true if (self.last_editor_id != updated_by.id)
-
-    # We always create a new version if it's been greater than the ninja edit window
-    new_version = true if (revised_at - last_version_at) > SiteSetting.ninja_edit_window.to_i
-
-    new_version = true if opts[:force_new_version]
-
-    # Create the new version (or don't)
-    if new_version
-
-      self.cached_version = version + 1
-
-      Post.transaction do
-        self.last_version_at = revised_at
-        updater.call(true)
-        EditRateLimiter.new(updated_by).performed! unless opts[:bypass_rate_limiter]
-
-        # If a new version is created of the last post, bump it.
-        unless Post.where('post_number > ? and topic_id = ?', self.post_number, self.topic_id).exists?
-          topic.update_column(:bumped_at, Time.now) unless opts[:bypass_bump]
-        end
-      end
-
-    else
-      skip_version(&updater)
-    end
-
-    # Invalidate any oneboxes
-    self.invalidate_oneboxes = true
-    trigger_post_process
-
-    true
-  end
-
-
   def url
     "/t/#{Slug.for(topic.title)}/#{topic.id}/#{post_number}"
+  end
+
+  def revise(updated_by, new_raw, opts={})
+    PostRevisor.new(self).revise!(updated_by, new_raw, opts)
   end
 
   # Various callbacks
