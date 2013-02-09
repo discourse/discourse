@@ -71,7 +71,7 @@ Wait a minute while it runs all our unit tests. Once it has completed, live relo
 
 ### Sending Email
 
-Mailcatcher is used to avoid the whole issue of actually sending emails: https://github.com/sj26/mailcatcher5
+Mailcatcher is used to avoid the whole issue of actually sending emails: https://github.com/sj26/mailcatcher
 
 To start mailcatcher, run the following command in the vagrant image:
 
