@@ -82,7 +82,7 @@ class TopicsController < ApplicationController
 
           last_post = @topic_view.posts[-1]
           if last_post.present? and (@topic_view.topic.highest_post_number > last_post.post_number)
-            @next_page = (@topic_view.posts[0].post_number / SiteSetting.posts_per_page) + 2
+            @next_page = (@topic_view.posts[0].post_number / SiteSetting.posts_per_page) + 1
           end
 
           store_preloaded("topic_#{@topic_view.topic.id}", MultiJson.dump(topic_view_serializer))
