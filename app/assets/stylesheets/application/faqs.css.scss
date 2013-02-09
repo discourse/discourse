@@ -25,6 +25,7 @@
   pre,
   ul,
   ol,
+  li,
   table {
     margin: 0 0 20px;
     font-size: 16px;
@@ -35,16 +36,6 @@
   ul,
   ol {
     margin-left: 40px;
-    padding: 0;
-    font-size: 16px;
-    line-height: 22px;
-  }
-
-  li {
-    > ul,
-    > ol {
-      margin-bottom: 0;
-    }
   }
 
 }
