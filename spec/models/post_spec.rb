@@ -370,7 +370,7 @@ describe Post do
       let(:changed_by) { Fabricate(:coding_horror) }
       
       it "triggers a rate limiter" do
-        Post::EditRateLimiter.any_instance.expects(:performed!)
+        EditRateLimiter.any_instance.expects(:performed!)
         post.revise(changed_by, 'updated body')
       end
     end
