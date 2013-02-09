@@ -52,7 +52,7 @@ class PostActionsController < ApplicationController
 
   def clear_flags
     requires_parameter(:post_action_type_id)
-    raise Discourse::InvalidAccess unless guardian.is_admin?
+    guardian.ensure_can_clear_flags!(@post)
 
     PostAction.clear_flags!(@post, current_user.id, params[:post_action_type_id].to_i)
     @post.reload
@@ -69,7 +69,12 @@ class PostActionsController < ApplicationController
 
     def fetch_post_from_params
       requires_parameter(:id)
-      @post = Post.where(id: params[:id]).first
+      finder = Post.where(id: params[:id])
+
+      # Include deleted posts if the user is a moderator
+      finder = finder.with_deleted if current_user.try(:has_trust_level?, :moderator)      
+
+      @post = finder.first
       guardian.ensure_can_see!(@post)
     end
 end

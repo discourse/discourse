@@ -85,6 +85,55 @@ describe PostActionsController do
 
   end
 
+  context 'clear_flags' do
+
+    let(:flagged_post) { Fabricate(:post, user: Fabricate(:coding_horror)) }
+
+    context "not logged in" do
+      it "should not allow them to clear flags" do
+        lambda { xhr :post, :clear_flags }.should raise_error(Discourse::NotLoggedIn)
+      end      
+    end
+
+    context 'logged in' do
+      let!(:user) { log_in(:moderator) }
+
+      it "raises an error without a post_action_type_id" do
+        -> { xhr :post, :clear_flags, id: flagged_post.id }.should raise_error(Discourse::InvalidParameters)
+      end
+
+      it "raises an error when the user doesn't have access" do
+        Guardian.any_instance.expects(:can_clear_flags?).returns(false) 
+        xhr :post, :clear_flags, id: flagged_post.id, post_action_type_id: PostActionType.Types[:spam]
+        response.should be_forbidden
+      end
+
+      context "success" do
+        before do
+          Guardian.any_instance.expects(:can_clear_flags?).returns(true) 
+          PostAction.expects(:clear_flags!).with(flagged_post, user.id, PostActionType.Types[:spam])
+        end
+
+        it "delegates to clear_flags" do        
+          xhr :post, :clear_flags, id: flagged_post.id, post_action_type_id: PostActionType.Types[:spam]
+          response.should be_success
+        end    
+
+        it "works with a deleted post" do
+          flagged_post.destroy
+          xhr :post, :clear_flags, id: flagged_post.id, post_action_type_id: PostActionType.Types[:spam]
+          response.should be_success
+        end
+
+
+      end
+
+    end
+
+
+
+  end
+
 
 
   describe 'users' do

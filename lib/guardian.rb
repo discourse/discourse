@@ -109,6 +109,12 @@ class Guardian
     true
   end
 
+  def can_clear_flags?(post)
+    return false if @user.blank?
+    return false if post.blank?
+    @user.has_trust_level?(:moderator)
+  end
+
   def can_revoke_admin?(admin)
     return false unless @user.try(:admin?)
     return false if admin.blank?

@@ -65,8 +65,6 @@ class PostsController < ApplicationController
 
   def show
     @post = find_post_from_params
-    guardian.ensure_can_see!(@post)
-
     @post.revert_to(params[:version].to_i) if params[:version].present?
     post_serializer = PostSerializer.new(@post, scope: guardian, root: false)
     post_serializer.add_raw = true
@@ -109,22 +107,18 @@ class PostsController < ApplicationController
   # Retrieves a list of versions and who made them for a post
   def versions
     post = find_post_from_params
-    guardian.ensure_can_see!(post)
-
     render_serialized(post.all_versions, VersionSerializer)
   end
 
   # Direct replies to this post
   def replies
     post = find_post_from_params
-    guardian.ensure_can_see!(post)
     render_serialized(post.replies, PostSerializer)
   end
 
 
   def bookmark
     post = find_post_from_params
-    guardian.ensure_can_see!(post)
     if current_user
       if params[:bookmarked] == "true"
         PostAction.act(current_user, post, PostActionType.Types[:bookmark])
@@ -143,7 +137,9 @@ class PostsController < ApplicationController
 
       # Include deleted posts if the user is a moderator
       finder = finder.with_deleted if current_user.try(:has_trust_level?, :moderator)      
-      
-      finder.first
+
+      post = finder.first
+      guardian.ensure_can_see!(post)
+      post
     end    
 end

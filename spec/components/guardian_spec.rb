@@ -68,6 +68,29 @@ describe Guardian do
   end
 
 
+  describe "can_clear_flags" do    
+    let(:post) { Fabricate(:post) }
+    let(:user) { post.user }
+    let(:moderator) { Fabricate(:moderator) }
+
+    it "returns false when the user is nil" do
+      Guardian.new(nil).can_clear_flags?(post).should be_false
+    end
+
+    it "returns false when the post is nil" do
+      Guardian.new(moderator).can_clear_flags?(nil).should be_false
+    end
+
+    it "returns false when the user is not a moderator" do
+      Guardian.new(user).can_clear_flags?(post).should be_false
+    end
+
+    it "returns true when the user is a moderator" do
+      Guardian.new(moderator).can_clear_flags?(post).should be_true
+    end
+
+  end
+
   describe 'can_send_private_message' do
     let(:user) { Fabricate(:user) }
     let(:another_user) { Fabricate(:user) }

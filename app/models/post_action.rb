@@ -66,7 +66,7 @@ class PostAction < ActiveRecord::Base
     r = PostActionType.Types.invert
     f = actions.map{|t| ["#{r[t]}_count", 0]}
 
-    Post.update_all(Hash[*f.flatten], id: post.id)
+    Post.with_deleted.update_all(Hash[*f.flatten], id: post.id)
 
     update_flagged_posts_count
   end
