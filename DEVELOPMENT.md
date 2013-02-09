@@ -68,6 +68,20 @@ bundle exec guard -p
 Wait a minute while it runs all our unit tests. Once it has completed, live reloading should start working. Simply save a file locally, wait a couple of seconds and you'll see it change in your browser. No reloading of pages should be necessary for the most part, although if something doesn't update you should refresh to confirm.
 
 
+### Sending Email
+
+Mailcatcher is used to avoid the whole issue of actually sending emails: https://github.com/sj26/mailcatcher5
+
+To start mailcatcher, run the following command in the vagrant image:
+
+```
+mailcatcher --http-ip 0.0.0.0
+```
+
+Then in a browser, go to http://localhost:4080
+
+Sent emails will be received by mailcatcher and shown in its web ui.
+
 ### Shutting down the VM
 
 When you're done working on Discourse, you can shut down Vagrant like so:
