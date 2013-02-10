@@ -241,10 +241,6 @@
     color: lighten($black, 30%);
   }
   .item {
-    .post-number {
-      color: lighten($black, 40%);
-      margin-right: 4px;
-    }
     padding: 10px 8px;
     background-color: white;
     border: 1px solid #b9b9b9;
@@ -266,7 +262,7 @@
     float: left;
     margin-right: 10px;
   }
-  .name {
+  .title {
     display: inline-block;
     margin-bottom: 4px;
     font-size: 14px;
