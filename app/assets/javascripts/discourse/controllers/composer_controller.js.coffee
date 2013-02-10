@@ -129,7 +129,6 @@ window.Discourse.ComposerController = Ember.Controller.extend Discourse.Presence
   click: ->
     if @get('content.composeState') == Discourse.Composer.DRAFT
       @set('content.composeState', Discourse.Composer.OPEN)
-    false
 
   shrink: ->
     if @get('content.reply') == @get('content.originalText') then @close() else @collapse()
