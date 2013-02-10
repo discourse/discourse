@@ -13,7 +13,7 @@ class UserSearch
     end
     
     if term.present? 
-      sql.where("username ilike :term_like or
+      sql.where("username_lower like :term_like or
               to_tsvector('simple', name) @@
               to_tsquery('simple',
                 regexp_replace(
@@ -21,7 +21,7 @@ class UserSearch
                     cast(plainto_tsquery(:term) as text)
                     ,'\''(?: |$)', ':*''', 'g'),
                 '''', '', 'g')
-              )", term: term, term_like: "#{term}%")
+              )", term: term, term_like: "#{term.downcase}%")
 
       sql.order_by "case when username_lower = :term then 0 else 1 end asc"
     end
