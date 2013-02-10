@@ -125,4 +125,9 @@ Handlebars.registerHelper 'date', (property, options) ->
 
   new Handlebars.SafeString("<span class='date' title='#{fullReadable}'>#{displayDate}</span>")
 
-
+Handlebars.registerHelper 'personalizedName', (property, options) ->
+  name = Ember.Handlebars.get(this, property, options);
+  username = Ember.Handlebars.get(this, options.hash.usernamePath, options) if options.hash.usernamePath
+  
+  return name unless username == Discourse.get('currentUser.username')
+  return Em.String.i18n('you')

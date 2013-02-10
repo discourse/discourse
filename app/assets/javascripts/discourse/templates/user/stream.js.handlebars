@@ -5,7 +5,7 @@
         <a href="/users/{{unbound username}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar this imageSize="large" extraClasses="actor" avatarTemplatePath="avatar_template"}}</div></a>
         <span class='time'>{{date path="created_at" leaveAgo="true"}}</span>
         <a class="title" href="{{unbound postUrl}}">{{unbound title}}</a><br>
-        <a class='name' href="/users/{{unbound username}}">{{unbound name}}</a>
+        <a class='name' href="/users/{{unbound username}}">{{personalizedName name usernamePath="username"}}</a>
         <span class='type'>{{unbound description}}</span>
         <a class="post-number" href="{{unbound postUrl}}">#{{unbound post_number}}</a>
       </div>
