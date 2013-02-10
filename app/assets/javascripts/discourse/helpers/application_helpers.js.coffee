@@ -60,12 +60,13 @@ Handlebars.registerHelper 'avatar', (user, options) ->
   user = Ember.Handlebars.get(this, user, options) if typeof user is 'string'
   username = Em.get(user, 'username')
   username ||= Em.get(user, options.hash.usernamePath)
+  title = Em.get(user, 'title') || Em.get(user, 'description') unless options.hash.ignoreTitle
 
   new Handlebars.SafeString Discourse.Utilities.avatarImg(
     size: options.hash.imageSize
     extraClasses: Em.get(user, 'extras') || options.hash.extraClasses
     username: username
-    title: Em.get(user, 'title') || Em.get(user, 'description') || username
+    title: title || username
     avatarTemplate: Ember.get(user, 'avatar_template') || options.hash.avatarTemplate
   )
 
@@ -125,4 +126,9 @@ Handlebars.registerHelper 'date', (property, options) ->
 
   new Handlebars.SafeString("<span class='date' title='#{fullReadable}'>#{displayDate}</span>")
 
-
+Handlebars.registerHelper 'personalizedName', (property, options) ->
+  name = Ember.Handlebars.get(this, property, options);
+  username = Ember.Handlebars.get(this, options.hash.usernamePath, options) if options.hash.usernamePath
+  
+  return name unless username == Discourse.get('currentUser.username')
+  return Em.String.i18n('you')
