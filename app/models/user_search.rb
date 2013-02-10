@@ -1,20 +1,19 @@
 class UserSearch
 
   def self.search term, topic_id = nil
-    User.find_by_sql sql(term, topic_id)
-  end
+    sql = User.sql_builder(
+"select id, username, name, email from users u 
+/*left_join*/
+/*where*/
+/*order_by*/")
 
-  private
-
-  def self.sql term, topic_id
-    sql = "select id, username, name, email from users u "
+    
     if topic_id
-      sql << "left join (select distinct p.user_id from posts p where topic_id = :topic_id) s on
-        s.user_id = u.id "
+      sql.left_join "(select distinct p.user_id from posts p where topic_id = :topic_id) s on s.user_id = u.id", topic_id: topic_id
     end
-
-    if term.present?
-      sql << "where username ilike :term_like or
+    
+    if term.present? 
+      sql.where("username ilike :term_like or
               to_tsvector('simple', name) @@
               to_tsquery('simple',
                 regexp_replace(
@@ -22,22 +21,18 @@ class UserSearch
                     cast(plainto_tsquery(:term) as text)
                     ,'\''(?: |$)', ':*''', 'g'),
                 '''', '', 'g')
-              ) "
+              )", term: term, term_like: "#{term}%")
 
+      sql.order_by "case when username_lower = :term then 0 else 1 end asc"
     end
-
-    sql << "order by case when username_lower = :term then 0 else 1 end asc, "
+      
     if topic_id
-      sql << " case when s.user_id is null then 0 else 1 end desc, "
+      sql.order_by "case when s.user_id is null then 0 else 1 end desc"
     end
 
-    sql << " case when last_seen_at is null then 0 else 1 end desc, last_seen_at desc, username asc limit(20)"
+    sql.order_by "case when last_seen_at is null then 0 else 1 end desc, last_seen_at desc, username asc limit(20)"
 
-    sanitize_sql_array(sql, topic_id: topic_id, term_like: "#{term}%", term: term)
-  end
-
-  def self.sanitize_sql_array *args
-    ActiveRecord::Base.send(:sanitize_sql_array, args)
+    sql.exec
   end
 
 end
