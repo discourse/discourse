@@ -3,7 +3,7 @@ class Admin::UsersController < Admin::AdminController
   def index
     # Sort order
     if params[:query] == "active"
-      @users = User.order("COALESCE(last_seen_at, '1970-01-01') DESC, username")
+      @users = User.order("COALESCE(last_seen_at, to_date('1970-01-01', 'YYYY-MM-DD')) DESC, username")
     else
       @users = User.order("created_at DESC, username")
     end
