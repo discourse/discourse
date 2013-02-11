@@ -44,125 +44,128 @@ describe TopicLink do
 
   end
 
-  describe 'domain-less link' do 
-    let(:post) { @topic.posts.create(user: @user, raw: "<a href='/users'>hello</a>") }
-    let!(:link) do 
-      TopicLink.extract_from(post)
-      @topic.topic_links.first
-    end
-
-    it 'is extracted' do 
-      link.should be_present 
-    end
-
-    it 'has the correct domain' do 
-      link.domain.should == test_uri.host
-    end
-
-    it "is not destroyed when we call extract from again" do
-      TopicLink.extract_from(post)
-      link.reload
-      link.should be_present
-    end
-
-  end
-
   describe 'internal links' do
 
-    before do
-      @other_topic = Fabricate(:topic, user: @user)
-      @other_post = @other_topic.posts.create(user: @user, raw: "some content")
-
-      @url = "http://#{test_uri.host}/t/topic-slug/#{@other_topic.id}"
-
-      @topic.posts.create(user: @user, raw: 'initial post')
-      @post = @topic.posts.create(user: @user, raw: "Link to another topic: #{@url}")
-
-      TopicLink.extract_from(@post)
-
-      @link = @topic.topic_links.first
-    end
-
-    it 'extracted the link' do
-      @link.should be_present
-    end
-
-    it 'is set to internal' do
-      @link.should be_internal
-    end
-
-    it 'has the correct url' do
-      @link.url.should == @url
-    end
-
-    it 'has the extracted domain' do
-      @link.domain.should == test_uri.host
-    end
-
-    it 'should have the id of the linked forum' do
-      @link.link_topic_id == @other_topic.id
-    end
-
-    it 'should not be the reflection' do
-      @link.should_not be_reflection
-    end
-
-    describe 'reflection in the other topic' do
-
+    context 'topic link' do
       before do
-        @reflection = @other_topic.topic_links.first
+        @other_topic = Fabricate(:topic, user: @user)
+        @other_post = @other_topic.posts.create(user: @user, raw: "some content")
+
+        @url = "http://#{test_uri.host}/t/topic-slug/#{@other_topic.id}"
+
+        @topic.posts.create(user: @user, raw: 'initial post')
+        @post = @topic.posts.create(user: @user, raw: "Link to another topic: #{@url}")
+
+        TopicLink.extract_from(@post)
+
+        @link = @topic.topic_links.first
       end
 
-      it 'exists' do
-        @reflection.should be_present
+      it 'extracted the link' do
+        @link.should be_present
       end
 
-      it 'is a reflection' do
-        @reflection.should be_reflection
-      end
-
-      it 'has a post_id' do
-        @reflection.post_id.should be_present
-      end
-
-      it 'has the correct host' do
-        @reflection.domain.should == test_uri.host
+      it 'is set to internal' do
+        @link.should be_internal
       end
 
       it 'has the correct url' do
-        @reflection.url.should == "http://#{test_uri.host}/t/unique-topic-name/#{@topic.id}/#{@post.post_number}"
+        @link.url.should == @url
       end
 
-      it 'links to the original forum topic' do
-        @reflection.link_topic_id.should == @topic.id
+      it 'has the extracted domain' do
+        @link.domain.should == test_uri.host
       end
 
-      it 'links to the original post' do
-        @reflection.link_post_id.should == @post.id
+      it 'should have the id of the linked forum' do
+        @link.link_topic_id == @other_topic.id
       end
 
-      it 'has the user id of the original link' do
-        @reflection.user_id.should == @link.user_id
+      it 'should not be the reflection' do
+        @link.should_not be_reflection
+      end
+
+      describe 'reflection in the other topic' do
+
+        before do
+          @reflection = @other_topic.topic_links.first
+        end
+
+        it 'exists' do
+          @reflection.should be_present
+        end
+
+        it 'is a reflection' do
+          @reflection.should be_reflection
+        end
+
+        it 'has a post_id' do
+          @reflection.post_id.should be_present
+        end
+
+        it 'has the correct host' do
+          @reflection.domain.should == test_uri.host
+        end
+
+        it 'has the correct url' do
+          @reflection.url.should == "http://#{test_uri.host}/t/unique-topic-name/#{@topic.id}/#{@post.post_number}"
+        end
+
+        it 'links to the original forum topic' do
+          @reflection.link_topic_id.should == @topic.id
+        end
+
+        it 'links to the original post' do
+          @reflection.link_post_id.should == @post.id
+        end
+
+        it 'has the user id of the original link' do
+          @reflection.user_id.should == @link.user_id
+        end
+      end
+
+      context 'removing a link' do
+
+        before do
+          @post.revise(@post.user, "no more linkies")
+          TopicLink.extract_from(@post)
+        end
+
+        it 'should remove the link' do
+          @topic.topic_links.where(post_id: @post.id).should be_blank
+        end
+
+        it 'should remove the reflected link' do
+          @reflection = @other_topic.topic_links.should be_blank
+        end
+
+      end 
+
+    end
+
+    context "link to a non-topic on discourse" do
+      let(:post) { @topic.posts.create(user: @user, raw: "<a href='/users/#{@user.username_lower}'>user</a>") }
+      before do
+        TopicLink.extract_from(post)
+      end
+
+      it 'does not extract a link' do 
+        @topic.topic_links.should be_blank
       end
     end
 
-    context 'removing a link' do
+    context "@mention links" do
+      let(:post) { @topic.posts.create(user: @user, raw: "Hey @#{@user.username_lower}") }
 
       before do
-        @post.revise(@post.user, "no more linkies")
-        TopicLink.extract_from(@post)
+        TopicLink.extract_from(post)
       end
 
-      it 'should remove the link' do
-        @topic.topic_links.where(post_id: @post.id).should be_blank
+      it 'does not extract a link' do 
+        @topic.topic_links.should be_blank
       end
-
-      it 'should remove the reflected link' do
-        @reflection = @other_topic.topic_links.should be_blank
-      end
-
-    end 
-
+    end    
+   
   end
 
   describe 'internal link from pm' do 

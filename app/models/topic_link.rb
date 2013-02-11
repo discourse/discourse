@@ -49,6 +49,9 @@ class TopicLink < ActiveRecord::Base
             route = Rails.application.routes.recognize_path(parsed.path)
             topic_id = route[:topic_id]
             post_number = route[:post_number] || 1
+
+            # We aren't interested in tracking internal links to non-topics
+            next unless topic_id
           end
 
           # Skip linking to ourselves
