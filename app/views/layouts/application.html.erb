@@ -97,33 +97,8 @@
     <%= yield :data %>
     
     <footer id='bottom'></footer>
-
-    <%- if mini_profiler_enabled? %>
-      <%- Rack::MiniProfiler.step "application" do %>
-        <%= javascript_include_tag "application" %>
-      <%-end%>
     
-      <%- Rack::MiniProfiler.step "admin" do %> 
-        <%= javascript_include_tag "admin"%>
-      <%-end%>
-    <%- else %>
-      <%= javascript_include_tag "application" %>
-      <%- if admin? %>
-        <%= javascript_include_tag "admin"%>
-      <%- end %>
-    <%- end%>
-
-    <script>
-      Discourse.CDN = '<%= Rails.configuration.action_controller.asset_host  %>';
-      Discourse.BaseUrl = '<%= RailsMultisite::ConnectionManagement.current_hostname  %>';
-      Discourse.Environment = '<%= Rails.env %>';
-      window.Discourse.Router.map(function() {
-        return Discourse.routeBuilder.call(this);
-      });
-      Discourse.start()
-      Discourse.initialize()
-    </script>
-
+    <%= render :partial => "common/discourse_javascript" %>
     <%= render_google_analytics_code %>
 
   </body>
