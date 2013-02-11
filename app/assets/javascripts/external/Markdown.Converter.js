@@ -1,5 +1,3 @@
-/* LICENSE: http://code.google.com/p/pagedown/source/browse/LICENSE.txt */
-
 var Markdown;
 
 if (typeof exports === "object" && typeof require === "function") // we're in a CommonJS (e.g. Node.js) module
@@ -69,11 +67,7 @@ else
             if (original === identity)
                 this[hookname] = func;
             else
-                this[hookname] = function (text) {
-                    var args = Array.prototype.slice.call(arguments, 0);
-                    args[0] = original.apply(null, args);
-                    return func.apply(null, args);
-                };
+                this[hookname] = function (x) { return func(original(x)); }
         },
         set: function (hookname, func) {
             if (!this[hookname])
@@ -109,28 +103,9 @@ else
 
     Markdown.Converter = function () {
         var pluginHooks = this.hooks = new HookCollection();
-        
-        // given a URL that was encountered by itself (without markup), should return the link text that's to be given to this link
-        pluginHooks.addNoop("plainLinkText");
-        
-        // called with the orignal text as given to makeHtml. The result of this plugin hook is the actual markdown source that will be cooked
-        pluginHooks.addNoop("preConversion");
-        
-        // called with the text once all normalizations have been completed (tabs to spaces, line endings, etc.), but before any conversions have
-        pluginHooks.addNoop("postNormalization");
-        
-        // Called with the text before / after creating block elements like code blocks and lists. Note that this is called recursively
-        // with inner content, e.g. it's called with the full text, and then only with the content of a blockquote. The inner
-        // call will receive outdented text.
-        pluginHooks.addNoop("preBlockGamut");
-        pluginHooks.addNoop("postBlockGamut");
-        
-        // called with the text of a single block element before / after the span-level conversions (bold, code spans, etc.) have been made
-        pluginHooks.addNoop("preSpanGamut");
-        pluginHooks.addNoop("postSpanGamut");
-        
-        // called with the final cooked HTML code. The result of this plugin hook is the actual output of makeHtml
-        pluginHooks.addNoop("postConversion");
+        pluginHooks.addNoop("plainLinkText");  // given a URL that was encountered by itself (without markup), should return the link text that's to be given to this link
+        pluginHooks.addNoop("preConversion");  // called with the orignal text as given to makeHtml. The result of this plugin hook is the actual markdown source that will be cooked
+        pluginHooks.addNoop("postConversion"); // called with the final cooked HTML code. The result of this plugin hook is the actual output of makeHtml
 
         //
         // Private state of the converter instance:
@@ -193,8 +168,6 @@ else
             // match consecutive blank lines with /\n+/ instead of something
             // contorted like /[ \t]*\n+/ .
             text = text.replace(/^[ \t]+$/mg, "");
-            
-            text = pluginHooks.postNormalization(text);
 
             // Turn block-level HTML blocks into hash entries
             text = _HashHTMLBlocks(text);
@@ -405,17 +378,12 @@ else
 
             return blockText;
         }
-        
-        var blockGamutHookCallback = function (t) { return _RunBlockGamut(t); }
 
         function _RunBlockGamut(text, doNotUnhash) {
             //
             // These are all the transformations that form block-level
             // tags like paragraphs, headers, and list items.
             //
-            
-            text = pluginHooks.preBlockGamut(text, blockGamutHookCallback);
-            
             text = _DoHeaders(text);
 
             // Do Horizontal Rules:
@@ -427,8 +395,6 @@ else
             text = _DoLists(text);
             text = _DoCodeBlocks(text);
             text = _DoBlockQuotes(text);
-            
-            text = pluginHooks.postBlockGamut(text, blockGamutHookCallback);
 
             // We already ran _HashHTMLBlocks() before, in Markdown(), but that
             // was to escape raw HTML in the original Markdown source. This time,
@@ -446,8 +412,6 @@ else
             // tags like paragraphs, headers, and list items.
             //
 
-            text = pluginHooks.preSpanGamut(text);
-            
             text = _DoCodeSpans(text);
             text = _EscapeSpecialCharsWithinTagAttributes(text);
             text = _EncodeBackslashEscapes(text);
@@ -469,8 +433,6 @@ else
 
             // Do hard breaks:
             text = text.replace(/  +\n/g, " <br>\n");
-            
-            text = pluginHooks.postSpanGamut(text);
 
             return text;
         }
@@ -1207,7 +1169,7 @@ else
             text = text.replace(/&(?!#?[xX]?(?:[0-9a-fA-F]+|\w+);)/g, "&amp;");
 
             // Encode naked <'s
-            text = text.replace(/<(?![a-z\/?!]|~D)/gi, "&lt;");
+            text = text.replace(/<(?![a-z\/?\$!])/gi, "&lt;");
 
             return text;
         }
@@ -1232,36 +1194,6 @@ else
             text = text.replace(/\\([`*_{}\[\]()>#+-.!])/g, escapeCharacters_callback);
             return text;
         }
-        
-        function handleTrailingParens(wholeMatch, lookbehind, protocol, link) {
-            if (lookbehind)
-                return wholeMatch;
-            if (link.charAt(link.length - 1) !== ")")
-                return "<" + protocol + link + ">";
-            var parens = link.match(/[()]/g);
-            var level = 0;
-            for (var i = 0; i < parens.length; i++) {
-                if (parens[i] === "(") {
-                    if (level <= 0)
-                        level = 1;
-                    else
-                        level++;
-                }
-                else {
-                    level--;
-                }
-            }
-            var tail = "";
-            if (level < 0) {
-                var re = new RegExp("\\){1," + (-level) + "}$");
-                link = link.replace(re, function (trailingParens) {
-                    tail = trailingParens;
-                    return "";
-                });
-            }
-            
-            return "<" + protocol + link + ">" + tail;
-        }
 
         function _DoAutoLinks(text) {
 
@@ -1269,41 +1201,17 @@ else
             // *except* for the <http://www.foo.com> case
 
             // automatically add < and > around unadorned raw hyperlinks
-            // must be preceded by a non-word character (and not by =" or <) and followed by non-word/EOF character
-            // simulating the lookbehind in a consuming way is okay here, since a URL can neither and with a " nor
-            // with a <, so there is no risk of overlapping matches.
-            text = text.replace(/(="|<)?\b(https?|ftp)(:\/\/[-A-Z0-9+&@#\/%?=~_|\[\]\(\)!:,\.;]*[-A-Z0-9+&@#\/%=~_|\[\])])(?=$|\W)/gi, handleTrailingParens);
+            // must be preceded by space/BOF and followed by non-word/EOF character    
+            text = text.replace(/(^|\s)(https?|ftp)(:\/\/[-A-Z0-9+&@#\/%?=~_|\[\]\(\)!:,\.;]*[-A-Z0-9+&@#\/%=~_|\[\]\)])($|\W)/gi, "$1<$2$3>$4");
 
             //  autolink anything like <http://example.com>
             
             var replacer = function (wholematch, m1) { 
-              m1encoded = m1.replace(/\_\_/, '%5F%5F');
-              return "<a href=\"" + m1encoded + "\">" + pluginHooks.plainLinkText(m1) + "</a>"; 
+                m1encoded = m1.replace(/\_\_/, '%5F%5F');
+                return "<a href=\"" + m1encoded + "\">" + pluginHooks.plainLinkText(m1) + "</a>"; 
             }
-
             text = text.replace(/<((https?|ftp):[^'">\s]+)>/gi, replacer);
 
-            // Email addresses: <address@domain.foo>
-            /*
-            text = text.replace(/
-                <
-                (?:mailto:)?
-                (
-                    [-.\w]+
-                    \@
-                    [-a-z0-9]+(\.[-a-z0-9]+)*\.[a-z]+
-                )
-                >
-            /gi, _DoAutoLinks_callback());
-            */
-
-            /* disabling email autolinking, since we don't do that on the server, either
-            text = text.replace(/<(?:mailto:)?([-.\w]+\@[-a-z0-9]+(\.[-a-z0-9]+)*\.[a-z]+)>/gi,
-                function(wholeMatch,m1) {
-                    return _EncodeEmailAddress( _UnescapeSpecialChars(m1) );
-                }
-            );
-            */
             return text;
         }
 
