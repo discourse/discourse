@@ -181,10 +181,12 @@ module PrettyText
   
   def self.add_rel_nofollow_to_user_content(html)
     whitelist = []
+
     l = SiteSetting.exclude_rel_nofollow_domains
     if l.present?
       whitelist = l.split(",") 
     end
+
     site_uri = nil
     doc = Nokogiri::HTML.fragment(html)
     doc.css("a").each do |l|
@@ -193,7 +195,9 @@ module PrettyText
         uri = URI(href)
         site_uri ||= URI(Discourse.base_url)
         
-        if !uri.host.present? || uri.host.ends_with?(site_uri.host) || whitelist.any?{|u| uri.host.ends_with?(u)}
+        if  !uri.host.present? || 
+            uri.host.ends_with?(site_uri.host) || 
+            whitelist.any?{|u| uri.host.ends_with?(u)}
           # we are good no need for nofollow
         else
           l["rel"] = "nofollow"
