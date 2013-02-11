@@ -51,7 +51,7 @@ bundle exec rails server
 
 In a few seconds, rails will start server pages. To access them, open a web browser to http://localhost:4000 - if it all worked you should see discourse! Congratulations, you are ready to start working!
 
-You can now edit files on your local file system, using your favorite text editor or IDE. When you reload your web browser, it should have the latest changed.
+You can now edit files on your local file system, using your favorite text editor or IDE. When you reload your web browser, it should have the latest changes.
 
 ### Guard + Rspec
 
