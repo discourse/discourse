@@ -17,15 +17,13 @@ class Category < ActiveRecord::Base
   after_save :invalidate_site_cache
   after_destroy :invalidate_site_cache
 
-
+  scope :popular, order('topic_count desc')
+  
   def uncategorized_validator
     return errors.add(:name, I18n.t(:is_reserved)) if name == SiteSetting.uncategorized_name
     return errors.add(:slug, I18n.t(:is_reserved)) if slug == SiteSetting.uncategorized_name
   end
 
-  def self.popular
-    order('topic_count desc')
-  end
 
   def self.update_stats
     exec_sql "UPDATE categories
