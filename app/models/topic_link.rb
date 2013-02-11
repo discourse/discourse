@@ -47,11 +47,12 @@ class TopicLink < ActiveRecord::Base
             internal = true
 
             route = Rails.application.routes.recognize_path(parsed.path)
+
+            # We aren't interested in tracking internal links to users
+            next if route[:controller] == 'users'
+
             topic_id = route[:topic_id]
             post_number = route[:post_number] || 1
-
-            # We aren't interested in tracking internal links to non-topics
-            next unless topic_id
           end
 
           # Skip linking to ourselves

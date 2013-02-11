@@ -143,7 +143,7 @@ describe TopicLink do
 
     end
 
-    context "link to a non-topic on discourse" do
+    context "link to a user on discourse" do
       let(:post) { @topic.posts.create(user: @user, raw: "<a href='/users/#{@user.username_lower}'>user</a>") }
       before do
         TopicLink.extract_from(post)
@@ -151,6 +151,17 @@ describe TopicLink do
 
       it 'does not extract a link' do 
         @topic.topic_links.should be_blank
+      end
+    end
+
+    context "link to a discourse resource like a FAQ" do
+      let(:post) { @topic.posts.create(user: @user, raw: "<a href='/faq'>faq link here</a>") }
+      before do
+        TopicLink.extract_from(post)
+      end
+
+      it 'does not extract a link' do 
+        @topic.topic_links.should be_present
       end
     end
 
