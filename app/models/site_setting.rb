@@ -30,8 +30,6 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:max_topic_title_length, 255)
   client_setting(:flush_timings_secs, 5)
 
-
-
   # settings only available server side
   setting(:auto_track_topics_after, 60000)
   setting(:long_polling_interval, 15000)
@@ -92,6 +90,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:allow_duplicate_topic_titles, false)
 
   setting(:add_rel_nofollow_to_user_content, true)
+  setting(:exclude_rel_nofollow_domains, '')
   setting(:post_excerpt_maxlength, 300)
   setting(:post_onebox_maxlength, 500)
   setting(:best_of_score_threshold, 15)

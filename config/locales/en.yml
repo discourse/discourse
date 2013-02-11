@@ -220,6 +220,7 @@ en:
     category_featured_topics: "number of topics displayed in the category list"
     popup_delay: "Length of time in ms before popups appear on the screen"
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains) changing this requires you update all your baked markdown"
+    exclude_rel_nofollow_domains: "A comma delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
     post_excerpt_maxlength: "Maximum length in chars of a post's excerpt."
     post_onebox_maxlength: "Maximum length of a oneboxed discourse post."
     category_post_template: "The post template that appears once you create a category"

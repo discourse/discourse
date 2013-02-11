@@ -79,6 +79,7 @@ test
   describe "rel nofollow" do
     before do 
       SiteSetting.stubs(:add_rel_nofollow_to_user_content).returns(true)
+      SiteSetting.stubs(:exclude_rel_nofollow_domains).returns("foo.com,bar.com")
     end
 
     it "should inject nofollow in all user provided links" do 
@@ -91,6 +92,14 @@ test
     
     it "should not inject nofollow in all subdomain links" do 
       (PrettyText.cook("<a href='#{Discourse.base_url.sub('http://', 'http://bla.')}/test.html'>cnn</a>") !~ /nofollow/).should be_true  
+    end
+
+    it "should not inject nofollow for foo.com" do
+      (PrettyText.cook("<a href='http://foo.com/test.html'>cnn</a>") !~ /nofollow/).should be_true  
+    end
+    
+    it "should not inject nofollow for bar.foo.com" do
+      (PrettyText.cook("<a href='http://bar.foo.com/test.html'>cnn</a>") !~ /nofollow/).should be_true  
     end
   end
 
