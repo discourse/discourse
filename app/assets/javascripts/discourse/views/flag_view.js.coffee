@@ -1,4 +1,4 @@
-window.Discourse.FlagView = Ember.View.extend
+window.Discourse.FlagView = Discourse.ModalBodyView.extend
   templateName: 'flag'
   title: Em.String.i18n('flagging.title')
 
@@ -9,13 +9,14 @@ window.Discourse.FlagView = Ember.View.extend
     @set('isCustomFlag', action.is_custom_flag)
     Em.run.next -> $("#radio_#{action.name_key}").prop('checked', 'true')
     false
-    
+
   createFlag: ->
     actionType = Discourse.get("site").postActionTypeById(@get('postActionTypeId'))
-    @get("post.actionByName.#{actionType.get('name_key')}")?.act(message: @get('customFlagMessage'))
-    $('#discourse-modal').modal('hide')
+    @get("post.actionByName.#{actionType.get('name_key')}")?.act(message: @get('customFlagMessage')).then ->
+      $('#discourse-modal').modal('hide')
+    , (errors) => @displayErrors(errors)
     false
-  
+
   customPlaceholder: (->
     Em.String.i18n("flagging.custom_placeholder")
   ).property()

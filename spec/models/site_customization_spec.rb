@@ -16,6 +16,46 @@ describe SiteCustomization do
   end
 
   context 'caching' do
+    
+    context 'enabled style' do 
+      before do
+        @customization = customization
+      end
+
+      it 'finds no style when none enabled' do 
+        SiteCustomization.enabled_style_key.should be_nil
+      end
+
+
+      it 'finds the enabled style' do 
+        @customization.enabled = true 
+        @customization.save
+        SiteCustomization.enabled_style_key.should == @customization.key
+      end
+
+      it 'finds no enabled style on other sites' do 
+        @customization.enabled = true 
+        @customization.save
+        
+        RailsMultisite::ConnectionManagement.expects(:current_db).returns("foo").twice
+        # the mocking is tricky, lets remove the record so we can properly pretend we are on another db
+        #  this bypasses the before / after stuff
+        SiteCustomization.exec_sql('delete from site_customizations')
+
+        SiteCustomization.enabled_style_key.should be_nil
+      end
+    end
+
+    it 'ensure stylesheet is on disk on first fetch' do 
+      c = customization
+      c.remove_from_cache!
+      File.delete(c.stylesheet_fullpath)
+
+      SiteCustomization.custom_stylesheet(c.key)
+      File.exists?(c.stylesheet_fullpath).should == true
+
+    end
+
     it 'should allow me to lookup a filename containing my preview stylesheet' do
       SiteCustomization.custom_stylesheet(customization.key).should == 
         "<link class=\"custom-css\" rel=\"stylesheet\" href=\"/stylesheet-cache/#{customization.key}.css?#{customization.stylesheet_hash}\" type=\"text/css\" media=\"screen\">"  

@@ -18,9 +18,9 @@ class Draft < ActiveRecord::Base
 
   def self.get(user, key, sequence)
     d = find_draft(user,key)
-    if d && d.sequence == sequence 
+    if d && d.sequence == sequence
       d.data
-    else 
+    else
       nil
     end
   end
@@ -29,7 +29,7 @@ class Draft < ActiveRecord::Base
     d = find_draft(user,key)
     if d && d.sequence <= sequence
       d.destroy
-    else 
+    else
       nil
     end
   end
@@ -41,5 +41,5 @@ class Draft < ActiveRecord::Base
     user_id = user.id if User === user
     Draft.where(user_id: user_id, draft_key: key).first
   end
-  
+
 end

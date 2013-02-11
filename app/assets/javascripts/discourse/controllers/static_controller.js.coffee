@@ -9,9 +9,9 @@ Discourse.StaticController = Ember.Controller.extend
     $preloaded = $("noscript[data-path=\"#{path}\"]")
     if $preloaded.length
       text = $preloaded.text()# + ""
-      text = text.replace(/\<header[\s\S]*\<\/header\>/, '')   
+      text = text.replace(/\<header[\s\S]*\<\/header\>/, '')
       @set('content', text)
-    else     
+    else
       jQuery.ajax
         url: "#{path}.json"
         success: (result) =>

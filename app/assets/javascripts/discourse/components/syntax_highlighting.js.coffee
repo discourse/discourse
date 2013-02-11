@@ -1,4 +1,4 @@
-# Helper object for syntax highlighting. Uses highlight.js which is loaded 
+# Helper object for syntax highlighting. Uses highlight.js which is loaded
 # on demand.
 window.Discourse.SyntaxHighlighting =
 

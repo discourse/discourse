@@ -20,7 +20,7 @@ window.Discourse.Notification = Discourse.Model.extend Discourse.Presence,
 
 
 window.Discourse.Notification.reopenClass
-  
+
   create: (obj) ->
     result = @_super(obj)
     result.set('data', Em.Object.create(obj.data)) if obj.data

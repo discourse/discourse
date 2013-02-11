@@ -34,7 +34,7 @@ class PostsController < ApplicationController
 
   def update
     requires_parameter(:post)
-        
+
     @post = Post.where(id: params[:id]).first
     @post.image_sizes = params[:image_sizes] if params[:image_sizes].present?
     guardian.ensure_can_edit!(@post)
@@ -56,7 +56,7 @@ class PostsController < ApplicationController
 
   def by_number
     @post = Post.where(topic_id: params[:topic_id], post_number: params[:post_number]).first
-    guardian.ensure_can_see!(@post)   
+    guardian.ensure_can_see!(@post)
     @post.revert_to(params[:version].to_i) if params[:version].present?
     post_serializer = PostSerializer.new(@post, scope: guardian, root: false)
     post_serializer.add_raw = true
@@ -64,9 +64,7 @@ class PostsController < ApplicationController
   end
 
   def show
-    @post = Post.where(id: params[:id]).first
-    guardian.ensure_can_see!(@post)
-   
+    @post = find_post_from_params
     @post.revert_to(params[:version].to_i) if params[:version].present?
     post_serializer = PostSerializer.new(@post, scope: guardian, root: false)
     post_serializer.add_raw = true
@@ -74,16 +72,16 @@ class PostsController < ApplicationController
   end
 
   def destroy
-    Post.transaction do
-      post = Post.with_deleted.where(id: params[:id]).first
-      guardian.ensure_can_delete!(post)
-      if post.deleted_at.nil?
-        post.destroy
-      else
-        post.recover
-      end
-      Topic.reset_highest(post.topic_id)      
-    end
+    post = find_post_from_params
+    guardian.ensure_can_delete!(post)
+    post.delete_by(current_user)
+    render nothing: true
+  end
+
+  def recover
+    post = find_post_from_params
+    guardian.ensure_can_recover_post!(post)
+    post.recover
     render nothing: true
   end
 
@@ -108,24 +106,20 @@ class PostsController < ApplicationController
 
   # Retrieves a list of versions and who made them for a post
   def versions
-    post = Post.where(id: params[:post_id]).first
-    guardian.ensure_can_see!(post)
-
+    post = find_post_from_params
     render_serialized(post.all_versions, VersionSerializer)
   end
 
   # Direct replies to this post
   def replies
-    post = Post.where(id: params[:post_id]).first
-    guardian.ensure_can_see!(post)
+    post = find_post_from_params
     render_serialized(post.replies, PostSerializer)
   end
 
 
   def bookmark
-    post = Post.where(id: params[:post_id]).first
-    guardian.ensure_can_see!(post)
-    if current_user 
+    post = find_post_from_params
+    if current_user
       if params[:bookmarked] == "true"
         PostAction.act(current_user, post, PostActionType.Types[:bookmark])
       else
@@ -135,4 +129,17 @@ class PostsController < ApplicationController
     render :nothing => true
   end
 
+
+  protected
+
+    def find_post_from_params
+      finder = Post.where(id: params[:id] || params[:post_id])
+
+      # Include deleted posts if the user is a moderator
+      finder = finder.with_deleted if current_user.try(:has_trust_level?, :moderator)      
+
+      post = finder.first
+      guardian.ensure_can_see!(post)
+      post
+    end    
 end

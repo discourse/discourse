@@ -8,9 +8,9 @@ window.Discourse.ArchetypeOptionsView = Em.ContainerView.extend
     @get('archetype.options').forEach (a) =>
       switch a.option_type
         when 1
-          checked = 
+          checked =
           @pushObject Discourse.OptionBooleanView.create
             content: a
             checked: (metaData.get(a.key) == 'true')
 
-      
+

@@ -24,7 +24,7 @@ module Mothership
   end
 
   def self.current_discourse_version
-    get('current_version')['version']
+    get('/current_version')['version']
   end
 
 

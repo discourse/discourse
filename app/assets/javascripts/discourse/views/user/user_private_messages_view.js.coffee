@@ -10,7 +10,7 @@ window.Discourse.UserPrivateMessagesView = Ember.View.extend
   inbox: (evt)->
     @selectCurrent(evt)
     @set('controller.filter', 13)
-  
+
   sentMessages: (evt) ->
     @selectCurrent(evt)
     @set('controller.filter', 12)

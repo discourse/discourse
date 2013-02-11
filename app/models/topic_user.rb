@@ -1,8 +1,8 @@
 class TopicUser < ActiveRecord::Base
-  
+
   belongs_to :user
   belongs_to :topic
-  
+
   module NotificationLevel
     WATCHING = 3
     TRACKING = 2
@@ -16,11 +16,11 @@ class TopicUser < ActiveRecord::Base
     USER_INTERACTED = 3
     CREATED_POST = 4
   end
-  
+
   def self.auto_track(user_id, topic_id, reason)
     if exec_sql("select 1 from topic_users where user_id = ? and topic_id = ? and notifications_reason_id is null", user_id, topic_id).count == 1
-      self.change(user_id, topic_id, 
-          notification_level: NotificationLevel::TRACKING, 
+      self.change(user_id, topic_id,
+          notification_level: NotificationLevel::TRACKING,
           notifications_reason_id: reason
       )
 
@@ -74,13 +74,13 @@ class TopicUser < ActiveRecord::Base
     # Sometimes people pass objs instead of the ids. We can handle that.
     topic_id = topic_id.id if topic_id.is_a?(Topic)
     user_id = user_id.id if user_id.is_a?(User)
-    
+
     TopicUser.transaction do
       attrs = attrs.dup
       attrs[:starred_at] = DateTime.now if attrs[:starred_at].nil? && attrs[:starred]
 
       if attrs[:notification_level]
-        attrs[:notifications_changed_at] ||= DateTime.now 
+        attrs[:notifications_changed_at] ||= DateTime.now
         attrs[:notifications_reason_id] ||= TopicUser::NotificationReasons::USER_CHANGED
       end
       attrs_array = attrs.to_a
@@ -88,7 +88,7 @@ class TopicUser < ActiveRecord::Base
       attrs_sql = attrs_array.map {|t| "#{t[0]} = ?"}.join(", ")
       vals = attrs_array.map {|t| t[1]}
       rows = TopicUser.update_all([attrs_sql, *vals], ["topic_id = ? and user_id = ?", topic_id.to_i, user_id])
-      
+
       if rows == 0
         now = DateTime.now
         auto_track_after = self.exec_sql("select auto_track_topics_after_msecs from users where id = ?", user_id).values[0][0]
@@ -110,11 +110,11 @@ class TopicUser < ActiveRecord::Base
   def self.track_visit!(topic,user)
     now = DateTime.now
     rows = exec_sql_row_count(
-      "update topic_users set last_visited_at=? where topic_id=? and user_id=?", 
+      "update topic_users set last_visited_at=? where topic_id=? and user_id=?",
       now, topic.id, user.id
     )
 
-    if rows == 0 
+    if rows == 0
       exec_sql('insert into topic_users(topic_id, user_id, last_visited_at, first_visited_at)
                values(?,?,?,?)',
                topic.id, user.id, now, now)
@@ -133,22 +133,22 @@ class TopicUser < ActiveRecord::Base
       topic_id: topic_id,
       post_number: post_number,
       now: DateTime.now,
-      msecs: msecs, 
-      tracking: TopicUser::NotificationLevel::TRACKING, 
+      msecs: msecs,
+      tracking: TopicUser::NotificationLevel::TRACKING,
       threshold: SiteSetting.auto_track_topics_after
     }
 
     rows = exec_sql("UPDATE topic_users
-                                  SET 
-                                    last_read_post_number = greatest(:post_number, tu.last_read_post_number), 
-                                    seen_post_count = t.highest_post_number, 
+                                  SET
+                                    last_read_post_number = greatest(:post_number, tu.last_read_post_number),
+                                    seen_post_count = t.highest_post_number,
                                     total_msecs_viewed = tu.total_msecs_viewed + :msecs,
-                                    notification_level = 
-                                       case when tu.notifications_reason_id is null and (tu.total_msecs_viewed + :msecs) > 
-                                          coalesce(u.auto_track_topics_after_msecs,:threshold) and 
-                                          coalesce(u.auto_track_topics_after_msecs, :threshold) >= 0 then 
-                                            :tracking 
-                                       else 
+                                    notification_level =
+                                       case when tu.notifications_reason_id is null and (tu.total_msecs_viewed + :msecs) >
+                                          coalesce(u.auto_track_topics_after_msecs,:threshold) and
+                                          coalesce(u.auto_track_topics_after_msecs, :threshold) >= 0 then
+                                            :tracking
+                                       else
                                           tu.notification_level
                                        end
                                 FROM topic_users tu
@@ -157,38 +157,38 @@ class TopicUser < ActiveRecord::Base
                                 WHERE
                                      tu.topic_id = topic_users.topic_id AND
                                      tu.user_id = topic_users.user_id AND
-                                     tu.topic_id = :topic_id AND 
+                                     tu.topic_id = :topic_id AND
                                      tu.user_id = :user_id
                                 RETURNING
                                   topic_users.notification_level, tu.notification_level old_level
                               ",
                               args).values
-    
-    if rows.length == 1 
+
+    if rows.length == 1
       before = rows[0][1].to_i
       after = rows[0][0].to_i
 
-      if before != after 
+      if before != after
         MessageBus.publish("/topic/#{topic_id}", {notification_level_change: after}, user_ids: [user.id])
       end
     end
 
     if rows.length == 0
-      
+
       self
 
       args[:tracking] = TopicUser::NotificationLevel::TRACKING
       args[:regular] = TopicUser::NotificationLevel::REGULAR
       args[:site_setting] = SiteSetting.auto_track_topics_after
       exec_sql("INSERT INTO topic_users (user_id, topic_id, last_read_post_number, seen_post_count, last_visited_at, first_visited_at, notification_level)
-                SELECT :user_id, :topic_id, :post_number, ft.highest_post_number, :now, :now, 
+                SELECT :user_id, :topic_id, :post_number, ft.highest_post_number, :now, :now,
                   case when coalesce(u.auto_track_topics_after_msecs, :site_setting) = 0 then :tracking else :regular end
                 FROM topics AS ft
                 JOIN users u on u.id = :user_id
                 WHERE ft.id = :topic_id
-                  AND NOT EXISTS(SELECT 1 
-                                 FROM topic_users AS ftu 
-                                 WHERE ftu.user_id = :user_id and ftu.topic_id = :topic_id)", 
+                  AND NOT EXISTS(SELECT 1
+                                 FROM topic_users AS ftu
+                                 WHERE ftu.user_id = :user_id and ftu.topic_id = :topic_id)",
                 args)
     end
   end

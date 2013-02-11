@@ -15,7 +15,23 @@ Whenever you need ...
 
 If you're interested in helping us develop Discourse, please start with our **[Discourse Developer Install Guide](https://github.com/discourse/discourse/blob/master/DEVELOPMENT.md)**, which includes instructions to get up and running in a development environment.
 
-We also have a **[Discourse "Quick-and-Dirty" Install Guide](https://github.com/discourse/discourse/blob/master/INSTALL.md)**.
+### Requirements
+
+* PostgreSQL 9.1+
+* Redis 2+
+
+### The quick and easy setup
+
+```
+git clone git@github.com:discourse/discourse.git
+cd discourse
+bundle install
+rake db:create
+rake db:migrate
+rake db:seed_fu
+redis-cli flushall
+thin start
+```
 
 ## Vision
 
@@ -46,6 +62,8 @@ This vision translates to the following functional commitments:
   * Android 4.0+
 
 ## Contributing
+
+[![Build Status](https://travis-ci.org/discourse/discourse.png)](https://travis-ci.org/discourse/discourse)
 
 Discourse is **100% free** and **open-source**. We encourage and support an active, healthy community that
 accepts contributions from the public, and we'd like you to be a part of that community.

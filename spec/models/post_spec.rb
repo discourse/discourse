@@ -21,6 +21,7 @@ describe Post do
     {user: topic.user, topic: topic} 
   end
 
+  it_behaves_like "a versioned model"
 
   describe 'post uniqueness' do
 
@@ -54,12 +55,24 @@ describe Post do
         topic.user.trust_level = TrustLevel.Levels[:moderator]
         Fabricate.build(:post, post_args).should be_valid
       end
-
-
     end
 
   end
 
+  describe 'flagging helpers' do 
+    it 'isFlagged is accurate' do 
+      post = Fabricate(:post)
+      user = Fabricate(:coding_horror)
+      PostAction.act(user, post, PostActionType.Types[:off_topic])
+
+      post.reload 
+      post.is_flagged?.should == true
+      
+      PostAction.remove_act(user, post, PostActionType.Types[:off_topic])
+      post.reload 
+      post.is_flagged?.should == false
+    end
+  end
 
   describe 'message bus' do
     it 'enqueues the post on the message bus' do
@@ -252,10 +265,6 @@ describe Post do
     let(:post) { Fabricate(:post, post_args) }
     let(:first_version_at) { post.last_version_at }
 
-    it 'has an initial version of 1' do
-      post.cached_version.should == 1
-    end
-
     it 'has one version in all_versions' do
       post.all_versions.size.should == 1
     end
@@ -361,7 +370,7 @@ describe Post do
       let(:changed_by) { Fabricate(:coding_horror) }
       
       it "triggers a rate limiter" do
-        Post::EditRateLimiter.any_instance.expects(:performed!)
+        EditRateLimiter.any_instance.expects(:performed!)
         post.revise(changed_by, 'updated body')
       end
     end
@@ -493,6 +502,48 @@ describe Post do
 
   end
 
+  describe 'delete_by' do
+
+    let(:moderator) { Fabricate(:moderator) }
+    let(:post) { Fabricate(:post) }
+
+    context "as the creator of the post" do
+
+      before do
+        post.delete_by(post.user)
+        post.reload
+      end
+
+      it "doesn't delete the post" do
+        post.deleted_at.should be_blank
+      end
+
+      it "updates the text of the post" do
+        post.raw.should == I18n.t('js.post.deleted_by_author')
+      end
+
+
+      it "creates a new version" do
+        post.version.should == 2
+      end      
+
+    end
+
+    context "as a moderator" do
+
+      before do
+        post.delete_by(post.user)
+        post.reload       
+      end
+
+      it "deletes the post" do
+        post.deleted_at.should be_blank
+      end
+
+    end
+
+  end
+
   describe 'after delete' do
 
     let!(:coding_horror) { Fabricate(:coding_horror) }
@@ -537,6 +588,10 @@ describe Post do
   describe 'after save' do
 
     let(:post) { Fabricate(:post, post_args) }
+
+    it "defaults to not user_deleted" do
+      post.user_deleted?.should be_false
+    end
 
     it 'has a post nubmer' do
       post.post_number.should be_present

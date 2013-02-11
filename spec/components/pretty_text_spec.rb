@@ -75,6 +75,33 @@ test
         .should == "<pre><code>```\nhello\n```\n</code></pre>"
     end
   end
+  
+  describe "rel nofollow" do
+    before do 
+      SiteSetting.stubs(:add_rel_nofollow_to_user_content).returns(true)
+      SiteSetting.stubs(:exclude_rel_nofollow_domains).returns("foo.com,bar.com")
+    end
+
+    it "should inject nofollow in all user provided links" do 
+      PrettyText.cook('<a href="http://cnn.com">cnn</a>').should =~ /nofollow/
+    end
+    
+    it "should not inject nofollow in all local links" do 
+      (PrettyText.cook("<a href='#{Discourse.base_url}/test.html'>cnn</a>") !~ /nofollow/).should be_true  
+    end
+    
+    it "should not inject nofollow in all subdomain links" do 
+      (PrettyText.cook("<a href='#{Discourse.base_url.sub('http://', 'http://bla.')}/test.html'>cnn</a>") !~ /nofollow/).should be_true  
+    end
+
+    it "should not inject nofollow for foo.com" do
+      (PrettyText.cook("<a href='http://foo.com/test.html'>cnn</a>") !~ /nofollow/).should be_true  
+    end
+    
+    it "should not inject nofollow for bar.foo.com" do
+      (PrettyText.cook("<a href='http://bar.foo.com/test.html'>cnn</a>") !~ /nofollow/).should be_true  
+    end
+  end
 
   describe "Excerpt" do 
     it "should preserve links" do 
@@ -129,6 +156,7 @@ test
       PrettyText.excerpt(nil,100).should == ''
     end
   end
+
 
   describe "apply cdn" do 
     it "should detect bare links to images and apply a CDN" do

@@ -109,6 +109,12 @@ class Guardian
     true
   end
 
+  def can_clear_flags?(post)
+    return false if @user.blank?
+    return false if post.blank?
+    @user.has_trust_level?(:moderator)
+  end
+
   def can_revoke_admin?(admin)
     return false unless @user.try(:admin?)
     return false if admin.blank?
@@ -165,6 +171,13 @@ class Guardian
     return true if is_admin?
     return false if @user.blank?
     @user.id == user_id
+  end
+
+  def can_delete_all_posts?(user)
+    return false unless is_admin?
+    return false if user.created_at < 7.days.ago
+
+    true 
   end
 
   # Support for ensure_{blah}! methods.
@@ -225,6 +238,15 @@ class Guardian
     # Can't delete the first post
     return false if post.post_number == 1
     
+    # You can delete your own posts
+    return !post.user_deleted? if post.user == @user
+
+    @user.has_trust_level?(:moderator)
+  end
+
+  # Recovery Method
+  def can_recover_post?(post)
+    return false if @user.blank?    
     @user.has_trust_level?(:moderator)
   end
 

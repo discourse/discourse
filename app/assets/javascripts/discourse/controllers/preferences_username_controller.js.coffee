@@ -3,13 +3,16 @@ Discourse.PreferencesUsernameController = Ember.ObjectController.extend Discours
   taken: false
   saving: false
   error: false
+  errorMessage: null
 
   saveDisabled: (->
     return true if @get('saving')
     return true if @blank('newUsername')
     return true if @get('taken')
     return true if @get('unchanged')
-  ).property('newUsername', 'taken', 'unchanged', 'saving')
+    return true if @get('errorMessage')
+    false
+  ).property('newUsername', 'taken', 'errorMessage', 'unchanged', 'saving')
 
   unchanged: (->
     @get('newUsername') == @get('content.username')
@@ -17,10 +20,14 @@ Discourse.PreferencesUsernameController = Ember.ObjectController.extend Discours
 
   checkTaken: (->
     @set('taken', false)
+    @set('errorMessage', null)
     return if @blank('newUsername')
     return if @get('unchanged')
     Discourse.User.checkUsername(@get('newUsername')).then (result) =>
-      @set('taken', true) unless result.available
+      if result.errors
+        @set('errorMessage', result.errors.join(' '))
+      else if result.available == false
+        @set('taken', true)
   ).observes('newUsername')
 
   saveButtonText: (->
@@ -34,7 +41,7 @@ Discourse.PreferencesUsernameController = Ember.ObjectController.extend Discours
         @set('saving', true)
         @get('content').changeUsername(@get('newUsername')).then =>
           window.location = "/users/#{@get('newUsername').toLowerCase()}/preferences"
-        , => 
+        , =>
           # Error
           @set('error', true)
           @set('saving', false)

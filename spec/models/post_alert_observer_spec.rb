@@ -30,7 +30,7 @@ describe PostAlertObserver do
   context 'when editing a post' do      
     it 'notifies a user of the revision' do
       lambda {
-        post.revise(evil_trout, "world")
+        post.revise(evil_trout, "world is the new body of the message")
       }.should change(post.user.notifications, :count).by(1)
     end
   end

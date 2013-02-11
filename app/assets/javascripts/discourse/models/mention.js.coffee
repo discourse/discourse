@@ -5,7 +5,7 @@ Discourse.Mention = (->
   cache = (name, valid) ->
     localCache[name] = valid
     return
-  
+
   lookupCache = (name) ->
     localCache[name]
 
@@ -19,7 +19,7 @@ Discourse.Mention = (->
         cache(name,r.valid)
         callback(r.valid)
       return true
-  
+
   load = (e) ->
     $elem = $(e)
     return if $elem.data('mention-tested')
@@ -38,4 +38,4 @@ Discourse.Mention = (->
   lookup: lookup
   lookupCache: lookupCache
 )()
-    
+

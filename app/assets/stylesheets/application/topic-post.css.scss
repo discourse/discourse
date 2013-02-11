@@ -320,6 +320,12 @@
         font-size: 14px;
         line-height: 18px;
       }
+
+      h3.moderator a {
+        background-color: #ffe;
+        border: 1px solid #ffd;
+      }
+
       div {
         display: block;
       }
@@ -341,7 +347,7 @@
     }
   }
   .reply-to-tab {
-    z-index: 999;
+    z-index: 980;
     font-size: 12px;
     color: $darkish_gray;
     display: block;
@@ -529,7 +535,7 @@
         padding-top: 30px;
       }
       .post-actions {
-        padding: 10px 0 0px 15px;
+        padding: 5px 0 0px 15px;
         font-size: 12px;
         img {
           margin-right: 2px;

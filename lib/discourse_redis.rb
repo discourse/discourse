@@ -25,12 +25,10 @@ class DiscourseRedis
        pttl rename renamenx rpop rpoplpush rpush rpushx sadd scard sdiff set setbit setex setnx setrange sinter
        sismember smembers sort spop srandmember srem strlen sunion ttl type watch zadd zcard zcount zincrby
        zrange zrangebyscore zrank zrem zremrangebyrank zremrangebyscore zrevrange zrevrangebyscore zrevrank zrangebyscore).each do |m|
-    class_eval %{
-      def #{m}(*args)
-        args[0] = "\#\{DiscourseRedis.namespace\}:\#\{args[0]\}"
-        @redis.#{m}(*args)
-      end
-    }
+    define_method m do |*args|
+      args[0] = "#{DiscourseRedis.namespace}:#{args[0]}"
+      @redis.send(__method__, *args)
+    end
   end
 
   def self.namespace

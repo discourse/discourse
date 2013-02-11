@@ -8,7 +8,7 @@ class InvitesController < ApplicationController
 
     if invite.present?
       user = invite.redeem
-      if user.present?        
+      if user.present?
         log_on_user(user)
 
         # Send a welcome message if required
@@ -31,7 +31,7 @@ class InvitesController < ApplicationController
   def destroy
     requires_parameter(:email)
 
-    invite = Invite.where(invited_by_id: current_user.id, email: params[:email]).first   
+    invite = Invite.where(invited_by_id: current_user.id, email: params[:email]).first
     raise Discourse::InvalidParameters.new(:email) if invite.blank?
     invite.destroy
 

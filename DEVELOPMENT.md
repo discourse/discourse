@@ -7,13 +7,11 @@ on Discourse with:
 
 ### Getting Started
 
-1. Install the Xcode tools: https://developer.apple.com/xcode/
-2. Install VirtualBox: https://www.virtualbox.org/wiki/Downloads
-3. Install Ruby 1.9.3. We recommend RVM: https://rvm.io/
-4. Open a terminal
-5. Clone the project: `git@github.com:discourse/discourse.git`
-6. Enter the project directory: `cd discourse`
-7. Install vagrant: `gem install vagrant`
+1. Install VirtualBox: https://www.virtualbox.org/wiki/Downloads
+2. Install Vagrant: https://www.vagrantup.com/
+3. Open a terminal
+4. Clone the project: `git@github.com:discourse/discourse.git`
+5. Enter the project directory: `cd discourse`
 
 ### Using Vagrant
 
@@ -22,7 +20,7 @@ When you're ready to start working, boot the VM:
 vagrant up
 ```
 
-It should prompt you for your admin password. This is so it can mount your local files inside the VM for an easy workflow.
+Vagrant will prompt you for your admin password. This is so it can mount your local files inside the VM for an easy workflow.
 
 (The first time you do this, it will take a while as it downloads the VM image and installs it. Go grab a coffee.)
 
@@ -64,11 +62,32 @@ To use it, follow all the above steps. Once rails is running, open a new termina
 
 ```
 vagrant ssh
+bundle exec rake db:test:prepare
 bundle exec guard -p
 ```
 
 Wait a minute while it runs all our unit tests. Once it has completed, live reloading should start working. Simply save a file locally, wait a couple of seconds and you'll see it change in your browser. No reloading of pages should be necessary for the most part, although if something doesn't update you should refresh to confirm.
 
+
+### Sending Email
+
+Mail is sent asynchronously by Sidekiq, so you'll need to have sidekiq running to process jobs. Run it with this command:
+
+```
+bundle exec sidekiq
+```
+
+Mailcatcher is used to avoid the whole issue of actually sending emails: https://github.com/sj26/mailcatcher
+
+To start mailcatcher, run the following command in the vagrant image:
+
+```
+mailcatcher --http-ip 0.0.0.0
+```
+
+Then in a browser, go to http://localhost:4080
+
+Sent emails will be received by mailcatcher and shown in its web ui.
 
 ### Shutting down the VM
 

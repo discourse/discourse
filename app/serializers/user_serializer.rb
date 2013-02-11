@@ -1,16 +1,16 @@
 class UserSerializer < BasicUserSerializer
-  
-  attributes :name, 
-             :email, 
-             :last_posted_at, 
-             :last_seen_at, 
+
+  attributes :name,
+             :email,
+             :last_posted_at,
+             :last_seen_at,
              :bio_raw,
-             :bio_cooked, 
-             :created_at, 
-             :website, 
-             :can_edit, 
-             :stream, 
-             :stats, 
+             :bio_cooked,
+             :created_at,
+             :website,
+             :can_edit,
+             :stream,
+             :stats,
              :can_send_private_message_to_user,
              :bio_excerpt,
              :invited_by,
@@ -20,7 +20,7 @@ class UserSerializer < BasicUserSerializer
   def self.private_attributes(*attrs)
     attributes *attrs
     attrs.each do |attr|
-      define_method "include_#{attr}?" do 
+      define_method "include_#{attr}?" do
         can_edit
       end
     end
@@ -28,7 +28,7 @@ class UserSerializer < BasicUserSerializer
 
   def bio_excerpt
     e = object.bio_excerpt
-    unless e && e.length > 0 
+    unless e && e.length > 0
       e = if scope.user && scope.user.id == object.id
         I18n.t('user_profile.no_info_me', username_lower: object.username_lower)
       else
@@ -38,9 +38,9 @@ class UserSerializer < BasicUserSerializer
     e
   end
 
-  private_attributes :email, 
-             :email_digests, 
-             :email_private_messages, 
+  private_attributes :email,
+             :email_digests,
+             :email_private_messages,
              :email_direct,
              :digest_after_days,
              :auto_track_topics_after_msecs

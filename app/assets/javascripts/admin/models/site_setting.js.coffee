@@ -23,19 +23,19 @@ window.Discourse.SiteSetting = Discourse.Model.extend Discourse.Presence,
 
   save: ->
 
-    # Update the setting    
+    # Update the setting
     $.ajax "/admin/site_settings/#{@get('setting')}",
       data:
         value: @get('value')
       type: 'PUT'
       success: => @set('originalValue', @get('value'))
-    
+
 
 window.Discourse.SiteSetting.reopenClass
-  findAll: ->    
-    result = Em.A()    
+  findAll: ->
+    result = Em.A()
     $.get "/admin/site_settings", (settings) ->
-      settings.each (s) -> 
+      settings.each (s) ->
         s.originalValue = s.value
         result.pushObject(Discourse.SiteSetting.create(s))
     result

@@ -21,7 +21,7 @@ module Search
                   NULL AS color
           FROM users AS u
           JOIN users_search s on s.id = u.id
-          WHERE s.search_data @@ TO_TSQUERY(:query)
+          WHERE s.search_data @@ TO_TSQUERY('english', :query)
           ORDER BY last_posted_at desc
     "
   end
@@ -36,13 +36,13 @@ module Search
     FROM topics AS ft
       JOIN posts AS p ON p.topic_id = ft.id AND p.post_number = 1
       JOIN posts_search s on s.id = p.id
-    WHERE s.search_data @@ TO_TSQUERY(:query)
+    WHERE s.search_data @@ TO_TSQUERY('english', :query)
       AND ft.deleted_at IS NULL
       AND ft.visible
       AND ft.archetype <> '#{Archetype.private_message}'
     ORDER BY 
-            TS_RANK_CD(TO_TSVECTOR('english', ft.title), TO_TSQUERY(:query)) desc,
-            TS_RANK_CD(search_data, TO_TSQUERY(:query)) desc,
+            TS_RANK_CD(TO_TSVECTOR('english', ft.title), TO_TSQUERY('english', :query)) desc,
+            TS_RANK_CD(search_data, TO_TSQUERY('english', :query)) desc,
             bumped_at desc"
   end  
 
@@ -57,13 +57,13 @@ module Search
     FROM topics AS ft
       JOIN posts AS p ON p.topic_id = ft.id AND p.post_number <> 1
       JOIN posts_search s on s.id = p.id
-    WHERE s.search_data @@ TO_TSQUERY(:query)
+    WHERE s.search_data @@ TO_TSQUERY('english', :query)
       AND ft.deleted_at IS NULL and p.deleted_at IS NULL
       AND ft.visible
       AND ft.archetype <> '#{Archetype.private_message}'
     ORDER BY 
-            TS_RANK_CD(TO_TSVECTOR('english', ft.title), TO_TSQUERY(:query)) desc,
-            TS_RANK_CD(search_data, TO_TSQUERY(:query)) desc,
+            TS_RANK_CD(TO_TSVECTOR('english', ft.title), TO_TSQUERY('english', :query)) desc,
+            TS_RANK_CD(search_data, TO_TSQUERY('english', :query)) desc,
             bumped_at desc" 
   end  
 
@@ -76,7 +76,7 @@ module Search
             c.color
     FROM categories AS c
     JOIN categories_search s on s.id = c.id
-    WHERE s.search_data @@ TO_TSQUERY(:query)
+    WHERE s.search_data @@ TO_TSQUERY('english', :query)
     ORDER BY topics_month desc
     "
   end

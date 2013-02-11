@@ -30,8 +30,6 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:max_topic_title_length, 255)
   client_setting(:flush_timings_secs, 5)
 
-
-
   # settings only available server side
   setting(:auto_track_topics_after, 60000)
   setting(:long_polling_interval, 15000)
@@ -41,19 +39,19 @@ class SiteSetting < ActiveRecord::Base
   # used mainly for dev, force hostname for Discourse.base_url
   # You would usually use multisite for this
   setting(:force_hostname, '')
-  setting(:port, Rails.env.development? ? 3000 : '')  
+  setting(:port, Rails.env.development? ? 3000 : '')
   setting(:enable_private_messages, true)
   setting(:use_ssl, false)
   setting(:secret_token)
   setting(:restrict_access, false)
   setting(:access_password)
   setting(:queue_jobs, !Rails.env.test?)
-  setting(:crawl_images, !Rails.env.test?)    
+  setting(:crawl_images, !Rails.env.test?)
   setting(:enable_imgur, false)
   setting(:imgur_api_key, '')
   setting(:imgur_endpoint, "http://api.imgur.com/2/upload.json")
   setting(:max_image_width, 690)
-  setting(:category_featured_topics, 6)  
+  setting(:category_featured_topics, 6)
   setting(:topics_per_page, 30)
   setting(:posts_per_page, 20)
   setting(:invite_expiry_days, 14)
@@ -83,14 +81,16 @@ class SiteSetting < ActiveRecord::Base
 
 
   setting(:email_time_window_mins, 5)
-  
+
   # How many characters we can import into a onebox
   setting(:onebox_max_chars, 5000)
 
   setting(:suggested_topics, 5)
 
   setting(:allow_duplicate_topic_titles, false)
-  
+
+  setting(:add_rel_nofollow_to_user_content, true)
+  setting(:exclude_rel_nofollow_domains, '')
   setting(:post_excerpt_maxlength, 300)
   setting(:post_onebox_maxlength, 500)
   setting(:best_of_score_threshold, 15)
@@ -99,14 +99,16 @@ class SiteSetting < ActiveRecord::Base
   setting(:category_post_template,
           "[Replace this first paragraph with a short description of your new category. Try to keep it below 200 characters.]\n\nUse this space below for a longer description, as well as to establish any rules or discussion!")
 
-  # we need to think of a way to force users to enter certain settings, this is a minimal config thing 
+  # we need to think of a way to force users to enter certain settings, this is a minimal config thing
   setting(:notification_email, 'info@discourse.org')
+
+  setting(:allow_index_in_robots_txt, true)
 
   setting(:send_welcome_message, true)
 
   setting(:twitter_consumer_key, '')
   setting(:twitter_consumer_secret, '')
-  
+
   setting(:facebook_app_id, '')
   setting(:facebook_app_secret, '')
 
@@ -126,6 +128,13 @@ class SiteSetting < ActiveRecord::Base
   setting(:basic_requires_read_posts, 100)
   setting(:basic_requires_time_spent_mins, 30)
 
+  # Entropy checks
+  setting(:title_min_entropy, 10)
+  setting(:body_min_entropy, 7)
+  setting(:max_word_length, 30)
+
+  # Ways to catch griefers and other nasties
+  setting(:email_blacklist_regexp, '')
 
   def self.call_mothership?
     self.enforce_global_nicknames? and self.discourse_org_access_key.present?

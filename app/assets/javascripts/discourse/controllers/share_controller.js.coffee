@@ -8,7 +8,7 @@ Discourse.ShareController = Ember.Controller.extend
     @set('link', url)
     false
 
-  # Close the share controller 
+  # Close the share controller
   close: ->
     @set('link', '')
     false

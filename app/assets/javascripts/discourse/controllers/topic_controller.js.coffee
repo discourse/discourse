@@ -49,7 +49,7 @@ Discourse.TopicController = Ember.ObjectController.extend Discourse.Presence,
       unless p.get('can_delete')
         canDelete = false
         return false
-    
+
     canDelete
   ).property('selectedPosts')
 
@@ -58,7 +58,7 @@ Discourse.TopicController = Ember.ObjectController.extend Discourse.Presence,
     unless @get('multiSelect')
       if posts = @get('content.posts')
         posts.forEach (p) -> p.set('selected', false)
-        
+
   ).observes('multiSelect')
 
   hideProgress: (->
@@ -95,7 +95,7 @@ Discourse.TopicController = Ember.ObjectController.extend Discourse.Presence,
 
   replyAsNewTopic: (post) ->
     composerController = @get('controllers.composer')
-    #TODO shut down topic draft cleanly if it exists ... 
+    #TODO shut down topic draft cleanly if it exists ...
     promise = composerController.open
       action: Discourse.Composer.CREATE_TOPIC
       draftKey: Discourse.Composer.REPLY_AS_NEW_TOPIC_KEY
@@ -103,7 +103,7 @@ Discourse.TopicController = Ember.ObjectController.extend Discourse.Presence,
     postUrl = "#{location.protocol}//#{location.host}#{post.get('url')}"
     postLink = "[#{@get('title')}](#{postUrl})"
     promise.then ->
-      Discourse.Post.loadQuote(post.get('id')).then (q) ->   
+      Discourse.Post.loadQuote(post.get('id')).then (q) ->
         composerController.appendText("#{Em.String.i18n("post.continue_discussion", postLink: postLink)}\n\n#{q}")
 
   # Topic related
@@ -145,14 +145,14 @@ Discourse.TopicController = Ember.ObjectController.extend Discourse.Presence,
     return unless topic
     posts = topic.get('posts')
     return unless posts
-    posts.clear()  
-      
+    posts.clear()
+
     @set('content.loaded', false)
     Discourse.Topic.find(@get('content.id'), @get('postFilters')).then (result) =>
       first = result.posts.first()
       @set('currentPost', first.post_number) if first
       $('#topic-progress .solid').data('progress', false)
-      result.posts.each (p) => 
+      result.posts.each (p) =>
         posts.pushObject(Discourse.Post.create(p, topic))
       @set('content.loaded', true)
 
@@ -163,7 +163,7 @@ Discourse.TopicController = Ember.ObjectController.extend Discourse.Presence,
 
     @get('content').delete =>
       @set('message', "The topic has been deleted")
-      @set('loaded', false) 
+      @set('loaded', false)
 
   toggleVisibility: ->
     @get('content').toggleStatus('visible')
@@ -226,7 +226,7 @@ Discourse.TopicController = Ember.ObjectController.extend Discourse.Presence,
     quoteController = @get('controllers.quoteButton')
     quotedText = Discourse.BBCode.buildQuoteBBCode(quoteController.get('post'), quoteController.get('buffer'))
     quoteController.set('buffer', '')
-   
+
     if (composerController.get('content.topic.id') == post.get('topic.id') and composerController.get('content.action') == Discourse.Composer.REPLY)
       composerController.set('content.post', post)
       composerController.set('content.composeState', Discourse.Composer.OPEN)
@@ -259,22 +259,12 @@ Discourse.TopicController = Ember.ObjectController.extend Discourse.Presence,
     post.toggleProperty('bookmarked')
     false
 
+  clearFlags: (actionType) ->
+    actionType.clearFlags()
+
   # Who acted on a particular post / action type
   whoActed: (actionType) ->
     actionType.loadUsers()
-    false
-
-  like:(e) ->
-    like_action = Discourse.get('site.post_action_types').findProperty('name_key', 'like')
-    e.context.act(like_action.get('id'))
-
-  # log a post action towards this post
-  act: (action) ->
-    action.act()
-    false
-
-  undoAction: (action) ->
-    action.undo()
     false
 
   showPrivateInviteModal: ->
@@ -296,14 +286,17 @@ Discourse.TopicController = Ember.ObjectController.extend Discourse.Presence,
     @get('controllers.modal')?.show(view)
     false
 
+  recoverPost: (post) ->
+    post.set('deleted_at', null)
+    post.recover()
+
   deletePost: (post) ->
-
-    deleted = !!post.get('deleted_at')
-
-    if deleted
-      post.set('deleted_at', null)
-    else
+    # Moderators can delete posts. Regular users can only create a deleted at message.
+    if Discourse.get('currentUser.moderator')
       post.set('deleted_at', new Date())
+    else
+      post.set('cooked', Discourse.Utilities.cook(Em.String.i18n("post.deleted_by_author")))
+      post.set('can_delete', false)
+      post.set('version', post.get('version') + 1)
 
-    post.delete =>
-      # nada
+    post.delete()

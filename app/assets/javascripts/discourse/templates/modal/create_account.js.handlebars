@@ -30,7 +30,7 @@
       <tr>
             <td><label for='new-account-username'>{{i18n user.username.title}}</label></td>
             <td>
-            {{view Ember.TextField valueBinding="view.accountUsername" id="new-account-username"}}
+            {{view Ember.TextField valueBinding="view.accountUsername" id="new-account-username" maxlength="15"}}
             &nbsp;{{view Discourse.InputTipView validationBinding="view.usernameValidation"}}
             </td>
       </tr>
@@ -48,6 +48,14 @@
           </td>
       </tr>
       {{/if}}
+
+      <tr class="password-confirmation">
+          <td><label for='new-account-password-confirmation'>Password Again</label></td>
+          <td>
+          {{view Ember.TextField valueBinding="view.accountPasswordConfirm" type="password" id="new-account-password-confirmation"}}
+          {{view Ember.TextField valueBinding="view.accountChallenge" id="new-account-challenge"}}
+          </td>
+      </tr>
 
       </table>
       </form>

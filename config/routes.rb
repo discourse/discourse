@@ -30,6 +30,7 @@ Discourse::Application.routes.draw do
         put 'approve-bulk' => 'users#approve_bulk'
       end
       put 'ban' => 'users#ban'
+      put 'delete_all_posts' => 'users#delete_all_posts'
       put 'unban' => 'users#unban'
       put 'revoke_admin' => 'users#revoke_admin'
       put 'grant_admin' => 'users#grant_admin'
@@ -80,6 +81,7 @@ Discourse::Application.routes.draw do
   put 'users/password-reset/:token' => 'users#password_reset'
   get 'users/activate-account/:token' => 'users#activate_account'
   get 'users/authorize-email/:token' => 'users#authorize_email'
+  get 'users/hp' => 'users#get_honeypot_value'
 
   get 'user_preferences' => 'users#user_preferences_redirect'
   get 'users/:username/private-messages' => 'user_actions#private_messages', :format => false, :constraints => {:username => USERNAME_ROUTE_FORMAT}
@@ -101,6 +103,7 @@ Discourse::Application.routes.draw do
     get 'versions'
     put 'bookmark'
     get 'replies'
+    put 'recover'
     collection do
       delete 'destroy_many'
     end
@@ -132,6 +135,7 @@ Discourse::Application.routes.draw do
   resources :post_actions do
     collection do
       get 'users' => 'post_actions#users'
+      post 'clear_flags' => 'post_actions#clear_flags'
     end
   end
   resources :user_actions
@@ -202,6 +206,9 @@ Discourse::Application.routes.draw do
   get 'draft' => 'draft#show'
   post 'draft' => 'draft#update'
   delete 'draft' => 'draft#destroy'
+
+
+  get 'robots.txt' => 'robots_txt#index'
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.

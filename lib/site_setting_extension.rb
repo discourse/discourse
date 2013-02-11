@@ -31,8 +31,8 @@ module SiteSettingExtension
   end
 
   # just like a setting, except that it is available in javascript via DiscourseSession 
-  def client_setting(name, defualt = nil, type = nil)
-    setting(name,defualt,type)
+  def client_setting(name, default = nil, type = nil)
+    setting(name,default,type)
     @@client_settings ||= []
     @@client_settings << name
   end
@@ -105,7 +105,7 @@ module SiteSettingExtension
         end
       end
 
-      $redis.del(SiteSettingExtension.client_settings_cache_key)
+      Rails.cache.delete(SiteSettingExtension.client_settings_cache_key)
     end
   end
 

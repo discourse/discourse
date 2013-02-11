@@ -9,7 +9,7 @@ window.Discourse.SearchResultsTypeView = Ember.CollectionView.extend
     ).property('parentView.type')
     classNameBindings: ['selectedClass', 'parentView.type']
     selectedIndexBinding: 'parentView.parentView.selectedIndex'
-  
+
     # Is this row currently selected by the keyboard?
     selectedClass: (->
       return 'selected' if @get('content.index') == @get('selectedIndex')

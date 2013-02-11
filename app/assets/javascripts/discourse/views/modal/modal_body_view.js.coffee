@@ -2,12 +2,12 @@ window.Discourse.ModalBodyView = window.Discourse.View.extend
 
   # Focus on first element
   didInsertElement: ->
-    Em.run.next => 
+    Em.run.next =>
       @.$('form input:first').focus()
 
   # Pass the errors to our errors view
   displayErrors: (errors, callback) ->
-    @set('parentView.modalErrorsView.errors', errors)
+    @set('parentView.parentView.modalErrorsView.errors', errors)
     callback?()
 
   # Just use jQuery to show an alert. We don't need anythign fancier for now

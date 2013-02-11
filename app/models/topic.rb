@@ -2,6 +2,7 @@ require_dependency 'slug'
 require_dependency 'avatar_lookup'
 require_dependency 'topic_view'
 require_dependency 'rate_limiter'
+require_dependency 'text_sentinel'
 
 class Topic < ActiveRecord::Base
   include RateLimiter::OnCreateRecord
@@ -12,19 +13,20 @@ class Topic < ActiveRecord::Base
   versioned :if => :new_version_required?
   acts_as_paranoid
   after_recover :update_flagged_posts_count
-  after_destroy :update_flagged_posts_count 
+  after_destroy :update_flagged_posts_count
 
   rate_limit :default_rate_limiter
   rate_limit :limit_topics_per_day
   rate_limit :limit_private_messages_per_day
 
+  validate :title_quality
   validates_presence_of :title
   validates :title, length: {in: SiteSetting.min_topic_title_length..SiteSetting.max_topic_title_length}
 
   serialize :meta_data, ActiveRecord::Coders::Hstore
 
   validate :unique_title
-  validate :nuclear_option
+
 
   belongs_to :category
   has_many :posts
@@ -60,7 +62,7 @@ class Topic < ActiveRecord::Base
   # Helps us limit how many favorites can be made in a day
   class FavoriteLimiter < RateLimiter
     def initialize(user)
-      super(user, "favorited:#{Date.today.to_s}", SiteSetting.max_favorites_per_day, 1.day.to_i)  
+      super(user, "favorited:#{Date.today.to_s}", SiteSetting.max_favorites_per_day, 1.day.to_i)
     end
   end
 
@@ -76,11 +78,11 @@ class Topic < ActiveRecord::Base
   after_create do
     changed_to_category(category)
     TopicUser.change(
-                     self.user_id, self.id, 
+                     self.user_id, self.id,
                      notification_level: TopicUser::NotificationLevel::WATCHING,
                      notifications_reason_id: TopicUser::NotificationReasons::CREATED_TOPIC
                     )
-    if self.archetype == Archetype.private_message 
+    if self.archetype == Archetype.private_message
       DraftSequence.next!(self.user, Draft::NEW_PRIVATE_MESSAGE)
     else
       DraftSequence.next!(self.user, Draft::NEW_TOPIC)
@@ -89,12 +91,12 @@ class Topic < ActiveRecord::Base
 
   # Additional rate limits on topics: per day and private messages per day
   def limit_topics_per_day
-    RateLimiter.new(user, "topics-per-day:#{Date.today.to_s}", SiteSetting.max_topics_per_day, 1.day.to_i)  
+    RateLimiter.new(user, "topics-per-day:#{Date.today.to_s}", SiteSetting.max_topics_per_day, 1.day.to_i)
   end
 
   def limit_private_messages_per_day
     return unless private_message?
-    RateLimiter.new(user, "pms-per-day:#{Date.today.to_s}", SiteSetting.max_private_messages_per_day, 1.day.to_i)  
+    RateLimiter.new(user, "pms-per-day:#{Date.today.to_s}", SiteSetting.max_private_messages_per_day, 1.day.to_i)
   end
 
   # Validate unique titles if a site setting is set
@@ -113,22 +115,21 @@ class Topic < ActiveRecord::Base
     errors.add(:title, I18n.t(:has_already_been_used)) if finder.exists?
   end
 
-  # This is bad, but people are screwing us on try.discourse.org - soon we'll replace with
-  # a much more sane validation of odd characters to allow for other languages and such.
-  def nuclear_option
-    
-    # Let presence validation catch it if it's blank
-    return if title.blank?
 
-    title.each_char do |c|
-      unless (20..126).include?(c.ord)
-        errors.add(:title, I18n.t(:invalid_characters))
-        return
-      end
+  def title_quality
+    # We don't care about quality on private messages
+    return if private_message?
+
+    sentinel = TextSentinel.title_sentinel(title)    
+    if sentinel.valid?
+      # It's possible the sentinel has cleaned up the title a bit
+      self.title = sentinel.text
+    else
+      errors.add(:title, I18n.t(:is_invalid)) unless sentinel.valid?
     end
   end
 
-  
+
   def new_version_required?
     return true if title_changed?
     return true if category_id_changed?
@@ -143,9 +144,9 @@ class Topic < ActiveRecord::Base
       .listable_topics
       .topic_list_order
       .includes(:user)
-      .limit(5)    
+      .limit(5)
   end
- 
+
   def update_meta_data(data)
     self.meta_data = (self.meta_data || {}).merge(data.stringify_keys)
     save
@@ -155,27 +156,27 @@ class Topic < ActiveRecord::Base
     @post_numbers ||= posts.order(:post_number).pluck(:post_number)
   end
 
-  def has_meta_data_boolean?(key) 
+  def has_meta_data_boolean?(key)
     meta_data_string(key) == 'true'
   end
 
   def meta_data_string(key)
-    return nil unless meta_data.present? 
-    meta_data[key.to_s] 
+    return nil unless meta_data.present?
+    meta_data[key.to_s]
   end
 
   def self.visible
     where(visible: true)
   end
 
-  def private_message? 
+  def private_message?
     self.archetype == Archetype.private_message
   end
 
   def links_grouped
-    exec_sql("SELECT ftl.url, 
+    exec_sql("SELECT ftl.url,
                      ft.title,
-                     ftl.link_topic_id, 
+                     ftl.link_topic_id,
                      ftl.reflection,
                      ftl.internal,
                      MIN(ftl.user_id) AS user_id,
@@ -184,8 +185,8 @@ class Topic < ActiveRecord::Base
                 LEFT OUTER JOIN topics AS ft ON ftl.link_topic_id = ft.id
               WHERE ftl.topic_id = ?
               GROUP BY ftl.url, ft.title, ftl.link_topic_id, ftl.reflection, ftl.internal
-              ORDER BY clicks DESC", 
-              self.id).to_a       
+              ORDER BY clicks DESC",
+              self.id).to_a
   end
 
   def update_status(property, status, user)
@@ -208,18 +209,18 @@ class Topic < ActiveRecord::Base
     highest = exec_sql("select coalesce(max(post_number),0) as max from posts where topic_id = ?", topic_id).first['max'].to_i
 
     reply_sql = reply ? ", reply_count = reply_count + 1" : ""
-    result = exec_sql("UPDATE topics SET highest_post_number = ? + 1#{reply_sql} 
+    result = exec_sql("UPDATE topics SET highest_post_number = ? + 1#{reply_sql}
                        WHERE id = ? RETURNING highest_post_number", highest, topic_id)
     result.first['highest_post_number'].to_i
   end
 
   # If a post is deleted we have to update our highest post counters
   def self.reset_highest(topic_id)
-    result = exec_sql "UPDATE topics 
+    result = exec_sql "UPDATE topics
                         SET highest_post_number = (SELECT COALESCE(MAX(post_number), 0) FROM posts WHERE topic_id = :topic_id AND deleted_at IS NULL),
                             posts_count = (SELECT count(*) FROM posts WHERE deleted_at IS NULL AND topic_id = :topic_id)
                         WHERE id = :topic_id
-                        RETURNING highest_post_number", topic_id: topic_id                        
+                        RETURNING highest_post_number", topic_id: topic_id
     highest_post_number = result.first['highest_post_number'].to_i
 
     # Update the forum topic user records
@@ -241,11 +242,11 @@ class Topic < ActiveRecord::Base
   def self.calculate_avg_time
     exec_sql("UPDATE topics
               SET avg_time = x.gmean
-              FROM (SELECT topic_id, 
+              FROM (SELECT topic_id,
                            round(exp(avg(ln(avg_time)))) AS gmean
                     FROM posts
                     GROUP BY topic_id) AS x
-              WHERE x.topic_id = topics.id")    
+              WHERE x.topic_id = topics.id")
   end
 
   def changed_to_category(cat)
@@ -263,21 +264,21 @@ class Topic < ActiveRecord::Base
       self.category_id = cat.id
       self.save
 
-      CategoryFeaturedTopic.feature_topics_for(old_category)      
+      CategoryFeaturedTopic.feature_topics_for(old_category)
       Category.update_all 'topic_count = topic_count + 1', ['id = ?', cat.id]
       CategoryFeaturedTopic.feature_topics_for(cat) unless old_category.try(:id) == cat.try(:id)
-    end    
+    end
   end
 
   def add_moderator_post(user, text, opts={})
     new_post = nil
     Topic.transaction do
       new_post = posts.create(user: user, raw: text, post_type: Post::MODERATOR_ACTION, no_bump: opts[:bump].blank?)
-      increment!(:moderator_posts_count) 
+      increment!(:moderator_posts_count)
       new_post
     end
 
-    
+
     if new_post.present?
       # If we are moving posts, we want to insert the moderator post where the previous posts were
       # in the stream, not at the end.
@@ -286,7 +287,7 @@ class Topic < ActiveRecord::Base
       # Grab any links that are present
       TopicLink.extract_from(new_post)
     end
-   
+
     new_post
   end
 
@@ -296,7 +297,7 @@ class Topic < ActiveRecord::Base
     if name.blank?
       if category_id.present?
         CategoryFeaturedTopic.feature_topics_for(category)
-        Category.update_all 'topic_count = topic_count - 1', ['id = ?', category_id]        
+        Category.update_all 'topic_count = topic_count - 1', ['id = ?', category_id]
       end
       self.category_id = nil
       self.save
@@ -320,12 +321,12 @@ class Topic < ActiveRecord::Base
       if user.present?
         if topic_allowed_users.create!(user_id: user.id)
           # Notify the user they've been invited
-          user.notifications.create(notification_type: Notification.Types[:invited_to_private_message], 
+          user.notifications.create(notification_type: Notification.Types[:invited_to_private_message],
                                     topic_id: self.id,
                                     post_number: 1,
                                     data: {topic_title: self.title,
                                            display_username: invited_by.username}.to_json)
-          return true                                  
+          return true
         end
       elsif username_or_email =~ /^.+@.+$/
         # If the user doesn't exist, but it looks like an email, invite the user by email.
@@ -335,21 +336,21 @@ class Topic < ActiveRecord::Base
       # Success is whether the invite was created
       return invite_by_email(invited_by, username_or_email).present?
     end
-  
+
     false
   end
 
   # Invite a user by email and return the invite. Return the previously existing invite
-  # if already exists. Returns nil if the invite can't be created.  
+  # if already exists. Returns nil if the invite can't be created.
   def invite_by_email(invited_by, email)
     lower_email = email.downcase
 
-    # 
+    #
     invite = Invite.with_deleted.where('invited_by_id = ? and email = ?', invited_by.id, lower_email).first
-    
+
 
     if invite.blank?
-      invite = Invite.create(invited_by: invited_by, email: lower_email) 
+      invite = Invite.create(invited_by: invited_by, email: lower_email)
       unless invite.valid?
 
         # If the email already exists, grant permission to that user
@@ -358,7 +359,7 @@ class Topic < ActiveRecord::Base
           topic_allowed_users.create!(user_id: user.id)
         end
 
-        return nil 
+        return nil
       end
     end
 
@@ -367,7 +368,7 @@ class Topic < ActiveRecord::Base
 
     topic_invites.create(invite_id: invite.id)
     Jobs.enqueue(:invite_email, invite_id: invite.id)
-    invite  
+    invite
   end
 
   def move_posts(moved_by, new_title, post_ids)
@@ -381,10 +382,10 @@ class Topic < ActiveRecord::Base
 
       to_move.each_with_index do |post, i|
         first_post_number ||= post.post_number
-        row_count = Post.update_all ["post_number = :post_number, topic_id = :topic_id, sort_order = :post_number", post_number: i+1, topic_id: topic.id], 
+        row_count = Post.update_all ["post_number = :post_number, topic_id = :topic_id, sort_order = :post_number", post_number: i+1, topic_id: topic.id],
                                     ['id = ? AND topic_id = ?', post.id, self.id]
 
-        # We raise an error if any of the posts can't be moved                            
+        # We raise an error if any of the posts can't be moved
         raise Discourse::InvalidParameters.new(:post_ids) if row_count == 0
       end
 
@@ -440,28 +441,28 @@ class Topic < ActiveRecord::Base
     add_description.call(al[featured_user2_id], :frequent_poster)
     add_description.call(al[featured_user3_id], :frequent_poster)
     add_description.call(al[featured_user4_id], :frequent_poster)
-    add_description.call(al[last_post_user_id], :most_recent_poster)      
+    add_description.call(al[last_post_user_id], :most_recent_poster)
 
 
-    @posters_summary = [al[user_id], 
-                        posted, 
-                        al[last_post_user_id], 
-                        al[featured_user1_id], 
-                        al[featured_user2_id], 
+    @posters_summary = [al[user_id],
+                        posted,
+                        al[last_post_user_id],
+                        al[featured_user1_id],
+                        al[featured_user2_id],
                         al[featured_user3_id],
                         al[featured_user4_id]
                         ].compact.uniq[0..4]
 
     unless @posters_summary[0] == al[last_post_user_id]
-      # shuffle last_poster to back 
+      # shuffle last_poster to back
       @posters_summary.reject!{|u| u == al[last_post_user_id]}
       @posters_summary << al[last_post_user_id]
     end
-    @posters_summary.map! do |p| 
+    @posters_summary.map! do |p|
       result = TopicPoster.new
       result.user = p
       result.description = descriptions[p.id].join(', ')
-      result.extras = "latest" if al[last_post_user_id] == p 
+      result.extras = "latest" if al[last_post_user_id] == p
       result
     end
 
@@ -475,9 +476,9 @@ class Topic < ActiveRecord::Base
       TopicUser.change(user, self.id, starred: starred, starred_at: starred ? DateTime.now : nil)
 
       # Update the star count
-      exec_sql "UPDATE topics 
-                SET star_count = (SELECT COUNT(*) 
-                                  FROM topic_users AS ftu 
+      exec_sql "UPDATE topics
+                SET star_count = (SELECT COUNT(*)
+                                  FROM topic_users AS ftu
                                   WHERE ftu.topic_id = topics.id
                                     AND ftu.starred = true)
                 WHERE id = ?", self.id
@@ -489,7 +490,7 @@ class Topic < ActiveRecord::Base
       end
     end
   end
-  
+
   # Enable/disable the mute on the topic
   def toggle_mute(user, muted)
     TopicUser.change(user, self.id, notification_level: muted?(user) ? TopicUser::NotificationLevel::REGULAR : TopicUser::NotificationLevel::MUTED )
@@ -523,7 +524,7 @@ class Topic < ActiveRecord::Base
   def notify_watch!(user)
     TopicUser.change(user, self.id, notification_level: TopicUser::NotificationLevel::WATCHING)
   end
-  
+
   def notify_tracking!(user)
     TopicUser.change(user, self.id, notification_level: TopicUser::NotificationLevel::TRACKING)
   end
@@ -531,7 +532,7 @@ class Topic < ActiveRecord::Base
   def notify_regular!(user)
     TopicUser.change(user, self.id, notification_level: TopicUser::NotificationLevel::REGULAR)
   end
-  
+
   def notify_muted!(user)
     TopicUser.change(user, self.id, notification_level: TopicUser::NotificationLevel::MUTED)
   end

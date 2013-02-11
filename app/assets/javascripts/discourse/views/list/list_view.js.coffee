@@ -2,11 +2,11 @@ window.Discourse.ListView = Ember.View.extend
   templateName: 'list/list'
   composeViewBinding: Ember.Binding.oneWay('Discourse.composeView')
   categoriesBinding: 'Discourse.site.categories'
-  
+
   # The window has been scrolled
-  scrolled: (e) -> 
+  scrolled: (e) ->
     currentView = @get('container.currentView')
-    currentView?.scrolled?(e)    
+    currentView?.scrolled?(e)
 
   createTopicText: (->
     if @get('controller.category.name')

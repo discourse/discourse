@@ -334,9 +334,9 @@ describe TopicsController do
         end
 
         it 'allows a change of title' do
-          xhr :put, :update, topic_id: @topic.id, slug: @topic.title, title: 'new title'
+          xhr :put, :update, topic_id: @topic.id, slug: @topic.title, title: 'this is a new title for the topic'
           @topic.reload
-          @topic.title.should == 'new title'
+          @topic.title.should == 'this is a new title for the topic'
         end
 
         it 'triggers a change of category' do

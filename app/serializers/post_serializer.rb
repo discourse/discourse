@@ -9,25 +9,25 @@ class PostSerializer < ApplicationSerializer
   attr_accessor :draft_sequence
 
   attributes :id,
-             :post_number, 
+             :post_number,
              :post_type,
-             :created_at, 
+             :created_at,
              :updated_at,
-             :reply_count, 
-             :reply_to_post_number, 
-             :reply_below_post_number, 
+             :reply_count,
+             :reply_to_post_number,
              :quote_count,
              :avg_time,
              :incoming_link_count,
              :reads,
              :score,
              :yours,
-             :topic_slug,             
+             :topic_slug,
              :topic_id,
              :display_username,
              :version,
              :can_edit,
              :can_delete,
+             :can_recover,
              :link_counts,
              :cooked,
              :read,
@@ -37,13 +37,18 @@ class PostSerializer < ApplicationSerializer
              :bookmarked,
              :raw,
              :actions_summary,
+             :moderator?,
              :avatar_template,
-             :user_id, 
+             :user_id,
              :draft_sequence,
              :hidden,
-             :hidden_reason_id, 
+             :hidden_reason_id,
              :deleted_at
 
+
+  def moderator?
+    object.user.has_trust_level?(:moderator)
+  end
 
   def avatar_template
     object.user.avatar_template
@@ -59,6 +64,10 @@ class PostSerializer < ApplicationSerializer
 
   def can_delete
     scope.can_delete?(object)
+  end
+
+  def can_recover
+    scope.can_recover_post?(object)
   end
 
   def link_counts
@@ -84,7 +93,7 @@ class PostSerializer < ApplicationSerializer
       else
         I18n.t('flagging.user_must_edit')
       end
-    else 
+    else
       object.filter_quotes(@parent_post)
     end
   end
@@ -133,15 +142,17 @@ class PostSerializer < ApplicationSerializer
 
       count = object.send(count_col) if object.respond_to?(count_col)
       count ||= 0
-      action_summary = {id: id, 
-                        count: count, 
+      action_summary = {id: id,
+                        count: count,
                         hidden: (sym == :vote),
                         can_act: scope.post_can_act?(object, sym, taken_actions: post_actions)}
 
       next if !action_summary[:can_act] && !scope.current_user
 
+      action_summary[:can_clear_flags] = scope.is_admin? && PostActionType.FlagTypes.include?(id)
+
       if post_actions.present? and post_actions.has_key?(id)
-        action_summary[:acted] = true 
+        action_summary[:acted] = true
         action_summary[:can_undo] = scope.can_delete?(post_actions[id])
       end
 
@@ -156,8 +167,8 @@ class PostSerializer < ApplicationSerializer
     result
   end
 
-  def include_draft_sequence? 
-    @draft_sequence.present? 
+  def include_draft_sequence?
+    @draft_sequence.present?
   end
 
   def include_slug_title?
@@ -165,13 +176,13 @@ class PostSerializer < ApplicationSerializer
   end
 
   def include_raw?
-    @add_raw.present?    
+    @add_raw.present?
   end
 
   def include_link_counts?
     return true if @single_post_link_counts.present?
 
-    @topic_view.present? and @topic_view.link_counts.present? and @topic_view.link_counts[object.id].present?  
+    @topic_view.present? and @topic_view.link_counts.present? and @topic_view.link_counts[object.id].present?
   end
 
   def include_read?
@@ -179,7 +190,7 @@ class PostSerializer < ApplicationSerializer
   end
 
   def include_reply_to_user?
-    object.quoteless? and object.reply_to_user  
+    object.quoteless? and object.reply_to_user
   end
 
   def include_bookmarked?
@@ -189,6 +200,6 @@ class PostSerializer < ApplicationSerializer
   private
 
   def post_actions
-    @post_actions ||= (@topic_view.present? && @topic_view.all_post_actions.present?) ? @topic_view.all_post_actions[object.id] : nil  
+    @post_actions ||= (@topic_view.present? && @topic_view.all_post_actions.present?) ? @topic_view.all_post_actions[object.id] : nil
   end
 end

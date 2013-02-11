@@ -9,6 +9,7 @@ en:
   just_posted_that: "is too similar to what you recently posted"
   has_already_been_used: "has already been used"
   invalid_characters: "contains invalid characters"
+  is_invalid: "is invalid; try to be a little more descriptive"
 
   activerecord:
     attributes:
@@ -218,6 +219,8 @@ en:
     max_image_width: "maximum width for an image in a post"
     category_featured_topics: "number of topics displayed in the category list"
     popup_delay: "Length of time in ms before popups appear on the screen"
+    add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains) changing this requires you update all your baked markdown"
+    exclude_rel_nofollow_domains: "A comma delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
     post_excerpt_maxlength: "Maximum length in chars of a post's excerpt."
     post_onebox_maxlength: "Maximum length of a oneboxed discourse post."
     category_post_template: "The post template that appears once you create a category"
@@ -256,6 +259,9 @@ en:
     posts_per_page: "How many posts are returned on a topic page"
     system_username: "Username that sends system messages"
     send_welcome_message: "Do new users get a welcome private message?"
+    
+    allow_index_in_robots_txt: "Site should be indexed by search engines (update robots.txt)"
+
     port: "If you'd like to specify a port in the URL. Useful in development mode. Leave blank for none."
     force_hostname: "If you'd like to specify a hostname in the URL. Useful in development mode. Leave blank for none."
 
@@ -302,6 +308,12 @@ en:
     email_time_window_mins: "How many minutes we wait before sending a user mail, to give them a chance to see it first."
     flush_timings_secs: "How frequently we flush timing data to the server, in seconds."
 
+    max_word_length: "The maximum word length in a topic title"
+    title_min_entropy: "The minimum entropy for a topic title"
+    body_min_entropy: "The minimum entropy for post body"
+
+    email_blacklist_regexp: "A regexp that finds email addresses to block"
+
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "Type to Filter..."
@@ -314,6 +326,10 @@ en:
         title: "Flags"
         old: "Old"
         active: "Active"
+        clear: "Clear Flags"
+        clear_title: "dismiss all flags on this post (will unhide hidden posts)"
+        delete: "Delete Post"
+        delete_title: "delete post (if its the first post delete topic)"
 
       customize: 
         title: "Customize"
@@ -360,6 +376,7 @@ en:
         ban_failed: "Something went wrong banning this user {{error}}"
         unban_failed: "Something went wrong unbanning this user {{error}}"
         ban_duration: "How long would you like to ban the user for? (days)"
+        delete_all_posts: "Delete all posts"
         ban: "Ban"
         unban: "Unban"
         banned: "Banned?"
@@ -423,6 +440,7 @@ en:
     show_more: "show more"
     links: Links
     faq: "FAQ"
+    you: "You"
 
     suggested_topics:
       title: "Suggested Topics"
@@ -464,6 +482,7 @@ en:
         confirm: "There could be consequences to changing your username. Are you absolutely sure you want to?"
         taken: "Sorry that username is taken."
         error: "There was an error changing your username."
+        invalid: "That username is invalid. It must only include numbers and letters"
       change_email:
         action: 'change email'
         title: "Change Email"
@@ -493,6 +512,7 @@ en:
         global_mismatch: "Already registered. Try {{suggestion}}?"
         not_available: "Not available. Try {{suggestion}}?"
         too_short: "Your username is too short."
+        too_long: "Your username is too long."
         checking: "Checking username availability..."
         enter_email: 'Username found. Enter matching email.'
 
@@ -507,9 +527,9 @@ en:
         title: "Receive an email digest of what's new"
         daily: "daily"
         weekly: "weekly"
-        bi_weekly: "bi-weekly"
+        bi_weekly: "every two weeks"
 
-      email_direct: "Receive an email when someone talks directly to you"
+      email_direct: "Receive an email when someone quotes you, replies to your post, or mentions your @username"
       email_private_messages: "Receive an email when someone sends you a private message"
 
       other_settings: "Other"
@@ -577,7 +597,7 @@ en:
     private_message_info:
       title: "Private Conversation"
       description: "Participants in this private conversation"
-      invite: "invite a participant"
+      invite: "Invite Others..."
 
     email: 'Email'
     username: 'Username'
@@ -689,7 +709,7 @@ en:
       no_posted: "You haven't posted in any topics yet."
       no_popular: "There are no popular topics. That's sad."
 
-    topic:
+    topic:      
       create_in: 'Create {{categoryName}} Topic'
       create: 'Create Topic'
       create_long: 'Create a new Topic'
@@ -764,7 +784,6 @@ en:
       reply: 
         title: 'Reply'
         help: 'begin composing a reply to this topic'
-        below: 'reply below'
 
       share: 
         title: 'Share'
@@ -821,10 +840,7 @@ en:
       reply_as_new_topic: "Reply as new Topic"
       continue_discussion: "Continuing the discussion from {{postLink}}:"
       follow_quote: "go to the quoted post"
-
-      has_replies_below:
-        one: "Reply Below"
-        other: "Replies Below"
+      deleted_by_author: "(post removed by author)"
 
       has_replies:
         one: "Reply"
@@ -853,6 +869,9 @@ en:
 
       actions:
         flag: 'Flag'
+        clear_flags:
+          one: "Clear flag"
+          other: "Clear flags"
         it_too: "{{alsoName}} it too"
         undo: "Undo {{alsoName}}"
         by_you_and_others:
@@ -1020,6 +1039,7 @@ en:
     wait_approval: "Thanks for signing up. We will notify you when your account has been approved."
     active: "Your account is active and ready."
     activate_email: "You're almost done! We sent an activation email to <b>%{email}</b>. Please follow the instructions in the email to activate your account."
+    not_activated: "You can't log in yet. We sent an activation email to you. Please follow the instructions in the email to activate your account."
     errors: "Failed to create account: %{errors}"
     not_available: "Not available. Try %{suggestion}?"
 

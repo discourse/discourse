@@ -26,11 +26,11 @@ window.Discourse.User = Discourse.Model.extend Discourse.Presence,
   username_lower:(->
     @get('username').toLowerCase()
   ).property('username')
-  
+
   trustLevel: (->
     Discourse.get('site.trust_levels').findProperty('id', @get('trust_level'))
   ).property('trust_level')
-    
+
   changeUsername: (newUsername) ->
     $.ajax
       url: "/users/#{@get('username_lower')}/preferences/username"
@@ -41,7 +41,7 @@ window.Discourse.User = Discourse.Model.extend Discourse.Presence,
     $.ajax
       url: "/users/#{@get('username_lower')}/preferences/email"
       type: 'PUT'
-      data: {email: email}      
+      data: {email: email}
 
   copy: (deep) ->
     Discourse.User.create(@getProperties(Ember.keys(@)))
@@ -164,7 +164,7 @@ window.Discourse.User.reopenClass
           if s.action_type == k
             g[k] = s
             s.count = c
-      
+
       g[s.action_type] = s unless found
 
     stats.map((s)->
@@ -190,9 +190,9 @@ window.Discourse.User.reopenClass
       error: (xhr) -> promise.reject(xhr)
     promise
 
-  createAccount: (name, email, password, username) ->
+  createAccount: (name, email, password, username, passwordConfirm, challenge) ->
     $.ajax
       url: '/users'
       dataType: 'json'
-      data: {name: name, email: email, password: password, username: username}
+      data: {name: name, email: email, password: password, username: username, password_confirmation: passwordConfirm, challenge: challenge}
       type: 'POST'

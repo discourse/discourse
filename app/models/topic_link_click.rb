@@ -2,18 +2,18 @@ require_dependency 'discourse'
 require 'ipaddr'
 
 class TopicLinkClick < ActiveRecord::Base
-  
+
   belongs_to :topic_link, counter_cache: :clicks
   belongs_to :user
 
   has_ip_address :ip
-  
+
   validates_presence_of :topic_link_id
   validates_presence_of :ip
 
   # Create a click from a URL and post_id
   def self.create_from(args={})
-    
+
     # Find the forum topic link
     link = TopicLink.select(:id).where(url: args[:url])
     link = link.where("user_id <> ?", args[:user_id]) if args[:user_id].present?
@@ -41,17 +41,17 @@ class TopicLinkClick < ActiveRecord::Base
               .includes(:link_topic)
               .where(topic_id: topic.id, post_id: posts.map(&:id))
               .order('reflection asc, clicks desc')
-    
+
     result = {}
     links.each do |l|
       result[l.post_id] ||= []
-      result[l.post_id] << {url: l.url, 
-                            clicks: l.clicks, 
-                            title: l.link_topic.try(:title), 
+      result[l.post_id] << {url: l.url,
+                            clicks: l.clicks,
+                            title: l.link_topic.try(:title),
                             internal: l.internal,
                             reflection: l.reflection}
     end
-    
+
     result
   end
 

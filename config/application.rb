@@ -93,10 +93,6 @@ module Discourse
     # So open id logs somewhere sane
     config.after_initialize do 
       OpenID::Util.logger = Rails.logger
-      
-      # latest possible so earliest in the stack
-      # require 'rack/message_bus'
-      # config.middleware.insert(0, Rack::MessageBus)
     end
   end
 end

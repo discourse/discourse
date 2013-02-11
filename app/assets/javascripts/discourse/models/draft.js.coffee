@@ -18,11 +18,11 @@ Discourse.Draft.reopenClass
       success: (data) =>
         promise.resolve(data)
     promise
-      
+
   getLocal: (key, current) ->
     return current
-  
-    # disabling for now to see if it helps with siracusa issue.  
+
+    # disabling for now to see if it helps with siracusa issue.
 
     local = Discourse.KeyValueStore.get("draft_#{key}")
     if !current || (local && local.length > current.length)
@@ -46,6 +46,6 @@ Discourse.Draft.reopenClass
         # Discourse.KeyValueStore.set(key: "draft_#{key}", value: data)
         promise.reject()
     promise
-        
-      
+
+
 

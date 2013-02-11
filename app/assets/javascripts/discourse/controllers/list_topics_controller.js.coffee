@@ -9,7 +9,7 @@ Discourse.ListTopicsController = Ember.ObjectController.extend
     if previousChannel = @get('previousChannel')
       Discourse.MessageBus.unsubscribe "/#{previousChannel}"
       @set('previousChannel', null)
-    
+
     filterMode = @get('controllers.list.filterMode')
     return unless filterMode
 
@@ -19,7 +19,7 @@ Discourse.ListTopicsController = Ember.ObjectController.extend
     @set('previousChannel', channel)
 
   ).observes('controllers.list.filterMode')
-  
+
   draftLoaded: (->
     draft = @get('content.draft')
     if(draft)

@@ -101,8 +101,8 @@ describe MessageBus::ReliablePubSub do
     end
 
     t.kill
+  
     got.length.should == 3
-
     got.map{|m| m.data}.should == ["1","2","3"]
   end
 

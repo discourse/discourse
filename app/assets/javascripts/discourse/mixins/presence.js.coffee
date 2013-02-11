@@ -9,7 +9,7 @@ window.Discourse.Presence = Em.Mixin.create
       when "string"
         return prop.trim().isBlank()
       when "object"
-        return Object.isEmpty(prop)      
+        return Object.isEmpty(prop)
     false
-  
+
   present: (name) -> not @blank(name)

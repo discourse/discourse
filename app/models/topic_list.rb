@@ -21,13 +21,13 @@ class TopicList
 
     # Create a lookup for all the user ids we need
     user_ids = []
-    @topics.each do |ft| 
+    @topics.each do |ft|
       user_ids << ft.user_id << ft.last_post_user_id << ft.featured_user_ids
     end
 
     avatar_lookup = AvatarLookup.new(user_ids)
 
-    @topics.each do |ft| 
+    @topics.each do |ft|
       ft.user_data = @topic_lookup[ft.id] if @topic_lookup.present?
       ft.posters = ft.posters_summary(ft.user_data, @current_user, avatar_lookup: avatar_lookup)
     end
@@ -36,14 +36,14 @@ class TopicList
   end
 
   def filter_summary
-    @filter_summary ||= get_summary 
+    @filter_summary ||= get_summary
   end
 
   def attributes
     {'more_topics_url' => page}
   end
 
-  protected 
+  protected
 
   def get_summary
     s = {}
@@ -52,7 +52,7 @@ class TopicList
 
     split.each do |i|
       name, filter = i.split(",")
-      
+
       exclude = nil
       if filter && filter[0] == "-"
         exclude = filter[1..-1]
@@ -61,9 +61,9 @@ class TopicList
       query = TopicQuery.new(@current_user, exclude_category: exclude)
       s["unread"] = query.unread_count if name == 'unread'
       s["new"] = query.new_count if name == 'new'
-  
+
       catSplit = name.split("/")
-      if catSplit[0] == "category" && catSplit.length == 2 && @current_user 
+      if catSplit[0] == "category" && catSplit.length == 2 && @current_user
         query = TopicQuery.new(@current_user, only_category: catSplit[1], limit: false)
         s[name] = query.unread_count + query.new_count
       end

@@ -67,12 +67,8 @@ describe User do
           user.reload
           user.posts_read_count.should == 1
         end
-
       end
-
     end
-
-
   end
 
   context '.enqueue_welcome_message' do
@@ -174,6 +170,28 @@ describe User do
 
   end
 
+  describe 'delete posts' do 
+    before do 
+      @post1 = Fabricate(:post)
+      @user = @post1.user
+      @post2 = Fabricate(:post, topic: @post1.topic, user: @user)
+      @post3 = Fabricate(:post, user: @user)
+      @posts = [@post1, @post2, @post3]
+      @guardian = Guardian.new(Fabricate(:admin))
+    end
+
+    it 'allows moderator to delete all posts' do 
+      @user.delete_all_posts!(@guardian)
+      @posts.each do |p|
+        p.reload
+        if p
+          p.topic.should be_nil
+        else
+          p.should be_nil
+        end
+      end
+    end
+  end
 
   describe 'new' do
 
@@ -597,6 +615,32 @@ describe User do
     its(:username) { should == 'test' }
     its(:name) { should == 'test'}
     it { should_not be_active }
+  end
+
+  describe 'email_confirmed?' do
+    let(:user) { Fabricate(:user) }
+
+    context 'when email has not been confirmed yet' do
+      it 'should return false' do
+        user.email_confirmed?.should be_false
+      end
+    end
+
+    context 'when email has been confirmed' do
+      it 'should return true' do
+        token = user.email_tokens.where(email: user.email).first
+        EmailToken.confirm(token.token)
+        user.email_confirmed?.should be_true
+      end
+    end
+
+    context 'when user has no email tokens for some reason' do
+      it 'should return false' do
+        user.email_tokens.each {|t| t.destroy}
+        user.reload
+        user.email_confirmed?.should be_false
+      end
+    end
   end
 
 end

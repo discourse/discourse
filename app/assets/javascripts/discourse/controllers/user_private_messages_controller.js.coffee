@@ -2,7 +2,7 @@ Discourse.UserPrivateMessagesController = Ember.ObjectController.extend
 
   editPreferences: ->
     Discourse.routeTo("/users/#{@get('content.username_lower')}/preferences")
-    
+
   composePrivateMessage: ->
     composerController = Discourse.get('router.composerController')
     composerController.open

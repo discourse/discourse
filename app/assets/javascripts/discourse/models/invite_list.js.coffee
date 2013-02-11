@@ -1,10 +1,10 @@
 window.Discourse.InviteList = Discourse.Model.extend Discourse.Presence,
-  
-  empty: (-> 
+
+  empty: (->
     return @blank('pending') and @blank('redeemed')
   ).property('pending.@each', 'redeemed.@each')
 
-window.Discourse.InviteList.reopenClass 
+window.Discourse.InviteList.reopenClass
 
   findInvitedBy: (user) ->
     promise = new RSVP.Promise()

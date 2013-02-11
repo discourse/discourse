@@ -12,7 +12,7 @@ window.Discourse.PostMenuView = Ember.View.extend Discourse.Presence,
     post = @get('post')
 
     @renderReplies(post, buffer)
-    buffer.push("<nav class='post-controls'>")   
+    buffer.push("<nav class='post-controls'>")
     Discourse.get('postButtons').forEach (button) => @["render#{button}"]?(post, buffer)
     buffer.push("</nav>")
 
@@ -26,21 +26,20 @@ window.Discourse.PostMenuView = Ember.View.extend Discourse.Presence,
   # Trigger re rendering
   needsToRender: (->
     @rerender()
-  ).observes('post.deleted_at', 'post.flagsAvailable.@each', 'post.url', 'post.bookmarked', 'post.reply_count', 'post.replyBelowUrl')
+  ).observes('post.deleted_at', 'post.flagsAvailable.@each', 'post.url', 'post.bookmarked', 'post.reply_count', 'post.can_delete')
 
   # Replies Button
   renderReplies: (post, buffer) ->
 
     return if @get('post.replyFollowing')
 
-    reply_count = post.get('reply_count')   
+    reply_count = post.get('reply_count')
     return if reply_count == 0
-    
+
     buffer.push("<button class='show-replies' data-action='replies'>")
     buffer.push("<span class='badge-posts'>#{reply_count}</span>")
-    
-    textKey = if post.get('replyBelowUrl') then "post.has_replies" else "post.has_replies_below"
-    buffer.push(Em.String.i18n(textKey, count: reply_count))
+
+    buffer.push(Em.String.i18n("post.has_replies", count: reply_count))
 
     icon = if @get('postView.repliesShown') then 'icon-chevron-up' else 'icon-chevron-down'
     buffer.push("<i class='icon #{icon}'></i></button>")
@@ -49,11 +48,20 @@ window.Discourse.PostMenuView = Ember.View.extend Discourse.Presence,
 
   # Delete button
   renderDelete: (post, buffer) ->
-    return unless post.get('can_delete')
-   
-    title = if post.get('deleted_at') then Em.String.i18n("post.controls.undelete") else Em.String.i18n("post.controls.delete")
-    buffer.push("<button title=\"#{title}\" data-action=\"delete\"><i class=\"icon-trash\"></i></button>")
 
+    if post.get('post_number') == 1 and @get('controller.content.can_delete')
+      buffer.push("<button title=\"#{Em.String.i18n("topic.actions.delete")}\" data-action=\"deleteTopic\"><i class=\"icon-trash\"></i></button>")
+      return
+
+    # Show the correct button
+    if post.get('deleted_at')
+      if post.get('can_recover')
+        buffer.push("<button title=\"#{Em.String.i18n("post.controls.undelete")}\" data-action=\"recover\"><i class=\"icon-undo\"></i></button>")
+    else if post.get('can_delete')
+      buffer.push("<button title=\"#{Em.String.i18n("post.controls.delete")}\" data-action=\"delete\"><i class=\"icon-trash\"></i></button>")
+
+  clickDeleteTopic: -> @get('controller').deleteTopic()
+  clickRecover: -> @get('controller').recoverPost(@get('post'))        
   clickDelete: -> @get('controller').deletePost(@get('post'))
 
   # Like button
@@ -64,7 +72,7 @@ window.Discourse.PostMenuView = Ember.View.extend Discourse.Presence,
   clickLike: -> @get('post.actionByName.like')?.act()
 
   # Flag button
-  renderFlag: (post, buffer) -> 
+  renderFlag: (post, buffer) ->
     return unless @present('post.flagsAvailable')
     buffer.push("<button title=\"#{Em.String.i18n("post.controls.flag")}\" data-action=\"flag\"><i class=\"icon-flag\"></i></button>")
 
