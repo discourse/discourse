@@ -102,6 +102,8 @@ class SiteSetting < ActiveRecord::Base
   # we need to think of a way to force users to enter certain settings, this is a minimal config thing
   setting(:notification_email, 'info@discourse.org')
 
+  setting(:allow_index_in_robots_txt, true)
+
   setting(:send_welcome_message, true)
 
   setting(:twitter_consumer_key, '')
