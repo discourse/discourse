@@ -172,7 +172,42 @@ module PrettyText
     cloned = opts.dup
     # we have a minor inconsistency
     cloned[:topicId] = opts[:topic_id]
-    Sanitize.clean(markdown(text.dup, cloned), PrettyText.whitelist)    
+    sanitized = Sanitize.clean(markdown(text.dup, cloned), PrettyText.whitelist)    
+    if SiteSetting.add_rel_nofollow_to_user_content
+      sanitized = add_rel_nofollow_to_user_content(sanitized) 
+    end
+    sanitized
+  end
+  
+  def self.add_rel_nofollow_to_user_content(html)
+    whitelist = []
+
+    l = SiteSetting.exclude_rel_nofollow_domains
+    if l.present?
+      whitelist = l.split(",") 
+    end
+
+    site_uri = nil
+    doc = Nokogiri::HTML.fragment(html)
+    doc.css("a").each do |l|
+      href = l["href"].to_s
+      begin 
+        uri = URI(href)
+        site_uri ||= URI(Discourse.base_url)
+        
+        if  !uri.host.present? || 
+            uri.host.ends_with?(site_uri.host) || 
+            whitelist.any?{|u| uri.host.ends_with?(u)}
+          # we are good no need for nofollow
+        else
+          l["rel"] = "nofollow"
+        end
+      rescue URI::InvalidURIError
+        # add a nofollow anyway 
+        l["rel"] = "nofollow"
+      end
+    end
+    doc.to_html
   end
 
   def self.extract_links(html)

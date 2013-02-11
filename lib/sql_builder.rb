@@ -1,9 +1,10 @@
 class SqlBuilder
 
-  def initialize(template)
+  def initialize(template,klass=nil)
     @args = {}
     @sql = template
     @sections = {}
+    @klass = klass
   end
 
   [:set, :where2,:where,:order_by,:limit,:left_join,:join,:offset].each do |k|
@@ -40,9 +41,17 @@ class SqlBuilder
 
       sql.sub!("/*#{k}*/", joined)
     end
-
-    ActiveRecord::Base.exec_sql(sql,@args)
+    
+    if @klass
+      @klass.find_by_sql(ActiveRecord::Base.send(:sanitize_sql_array, [sql, @args]))
+    else
+      ActiveRecord::Base.exec_sql(sql,@args)
+    end
   end
+end
 
-
+class ActiveRecord::Base 
+  def self.sql_builder(template)
+    SqlBuilder.new(template, self)
+  end
 end

@@ -207,6 +207,9 @@ Discourse::Application.routes.draw do
   post 'draft' => 'draft#update'
   delete 'draft' => 'draft#destroy'
 
+
+  get 'robots.txt' => 'robots_txt#index'
+
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
   root :to => 'list#index'

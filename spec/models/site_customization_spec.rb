@@ -26,6 +26,7 @@ describe SiteCustomization do
         SiteCustomization.enabled_style_key.should be_nil
       end
 
+
       it 'finds the enabled style' do 
         @customization.enabled = true 
         @customization.save
@@ -43,6 +44,16 @@ describe SiteCustomization do
 
         SiteCustomization.enabled_style_key.should be_nil
       end
+    end
+
+    it 'ensure stylesheet is on disk on first fetch' do 
+      c = customization
+      c.remove_from_cache!
+      File.delete(c.stylesheet_fullpath)
+
+      SiteCustomization.custom_stylesheet(c.key)
+      File.exists?(c.stylesheet_fullpath).should == true
+
     end
 
     it 'should allow me to lookup a filename containing my preview stylesheet' do

@@ -106,6 +106,7 @@ footer:after{ content: '#{error}' }"
 
     @lock.synchronize do
       style = self.where(key: key).first
+      style.ensure_stylesheet_on_disk!
       @cache[key] = style
     end
   end
@@ -140,9 +141,13 @@ footer:after{ content: '#{error}' }"
     Digest::MD5.hexdigest(self.stylesheet)
   end
 
+  def cache_fullpath
+    "#{Rails.root}/public/#{CACHE_PATH}"
+  end
+
   def ensure_stylesheet_on_disk!
     path = stylesheet_fullpath
-    dir = "#{Rails.root}/public/#{CACHE_PATH}"
+    dir = cache_fullpath
     FileUtils.mkdir_p(dir)
     unless File.exists?(path)
       File.open(path, "w") do |f|
@@ -152,23 +157,18 @@ footer:after{ content: '#{error}' }"
   end
 
   def stylesheet_filename
-    file = ""
-    dir = "#{Rails.root}/public/#{CACHE_PATH}"
-    path = dir + file
-
-    "/#{CACHE_PATH}/#{self.key}.css"
+    "/#{self.key}.css"
   end
 
   def stylesheet_fullpath
-    "#{Rails.root}/public#{self.stylesheet_filename}"
+    "#{self.cache_fullpath}#{self.stylesheet_filename}"
   end
 
   def stylesheet_link_tag
     return "" unless self.stylesheet.present?
     return @stylesheet_link_tag if @stylesheet_link_tag
     ensure_stylesheet_on_disk!
-    @stylesheet_link_tag = "<link class=\"custom-css\" rel=\"stylesheet\" href=\"#{self.stylesheet_filename}?#{self.stylesheet_hash}\" type=\"text/css\" media=\"screen\">"
+    @stylesheet_link_tag = "<link class=\"custom-css\" rel=\"stylesheet\" href=\"/#{CACHE_PATH}#{self.stylesheet_filename}?#{self.stylesheet_hash}\" type=\"text/css\" media=\"screen\">"
   end
-
 
 end
