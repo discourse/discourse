@@ -1,5 +1,5 @@
 <h2>
-  <a href="<%= @topic_view.topic.relative_url %>"><%= @topic_view.topic.title %></a>
+  <%= link_to(@topic_view.topic.title, @topic_view.topic.relative_url) %>
 </h2>
 <% (@post ? [@post] : @topic_view.posts).each do |post| %>
   <div class='creator'>
@@ -12,7 +12,7 @@
 
 <% if @next_page%>
   <p>
-  <b><a href="<%= @topic_view.topic.relative_url %>?page=<%= @next_page%>">next page</a></b>
+  <b><%= link_to("next page", @topic_view.topic.relative_url + "?page=" + @next_page ) %></b>
   </p>
 <% end %>
 
