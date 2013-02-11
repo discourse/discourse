@@ -38,6 +38,7 @@ window.Discourse.TopicFooterButtonsView = Ember.ContainerView.extend
 
       @addObject Discourse.ButtonView.createWithMixins
         classNames: ['btn', 'btn-primary', 'create']
+        attributeBindings: ['disabled']
         text: (->
           archetype = @get('controller.content.archetype')
           return customTitle if customTitle = @get("parentView.replyButtonText#{archetype.capitalize()}")
@@ -46,6 +47,7 @@ window.Discourse.TopicFooterButtonsView = Ember.ContainerView.extend
         renderIcon: (buffer) -> buffer.push("<i class='icon icon-plus'></i>")
         click: -> @get('controller').reply()
         helpKey: 'topic.reply.help'
+        disabled: !@get('controller.content.can_create_post')
 
       unless topic.get('isPrivateMessage')
         @addObject Discourse.DropdownButtonView.createWithMixins
