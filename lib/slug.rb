@@ -11,8 +11,8 @@ module Slug
     str.gsub!(/^\s+|\s+$/, '')
     str.downcase!
 
-    from = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;."
-    to   = "aaaaeeeeiiiioooouuuunc-------"
+    from = "àáäâčďèéëěêìíïîľĺňòóöôŕřšťůùúüûýžñç·/_,:;."
+    to   = "aaaacdeeeeeiiiillnoooorrstuuuuuyznc-------"
 
     idx = 0
     from.each_char do |c|
