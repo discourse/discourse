@@ -5,6 +5,6 @@ module TopicsHelper
   end
 
   def render_topic_next_page_link(topic, next_page)
-    link_to("next page", topic.relative_url + "?page=" + next_page )
+    link_to("next page", "#{topic.relative_url}?page=#{next_page}")
   end
 end
