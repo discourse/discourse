@@ -4,6 +4,27 @@ require 'discourse_plugin_registry'
 describe DiscoursePluginRegistry do
 
   let(:registry) { DiscoursePluginRegistry.new }
+  
+  context '#stylesheets' do
+    it 'defaults to an empty Set' do
+      DiscoursePluginRegistry.stylesheets = nil
+      DiscoursePluginRegistry.stylesheets.should == Set.new
+    end
+  end
+
+  context '#javascripts' do
+    it 'defaults to an empty Set' do
+      DiscoursePluginRegistry.javascripts = nil
+      DiscoursePluginRegistry.javascripts.should == Set.new
+    end
+  end
+
+  context '#server_side_javascripts' do
+    it 'defaults to an empty Set' do
+      DiscoursePluginRegistry.server_side_javascripts = nil
+      DiscoursePluginRegistry.server_side_javascripts.should == Set.new
+    end
+  end
 
   context '.register_css' do
     before do
