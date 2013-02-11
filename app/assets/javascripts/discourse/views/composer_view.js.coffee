@@ -129,7 +129,7 @@ window.Discourse.ComposerView = window.Discourse.View.extend
         Discourse.UserSearch.search
           term: term,
           callback: callback,
-          exclude: selected
+          exclude: selected.concat [Discourse.get('currentUser.username')]
       onChangeItems: (items) =>
         items = $.map items, (i) -> if i.username then i.username else i
         @set('content.targetUsernames', items.join(","))
