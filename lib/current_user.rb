@@ -23,7 +23,7 @@ module CurrentUser
       @current_user.update_last_seen! 
       if @current_user.ip_address != request.remote_ip
         @current_user.ip_address = request.remote_ip
-        User.exec_sql('update users set ip_address = ? where id = ?', request.remote_ip, @current_user.id)
+        @current_user.update_column(:ip_address, request.remote_ip)
       end
     end
     @current_user

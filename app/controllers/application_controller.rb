@@ -66,12 +66,12 @@ class ApplicationController < ActionController::Base
       # for now do a simple remap, we may look at cleaner ways of doing the render
       raise ActiveRecord::RecordNotFound
     else
-      render file: 'public/404.html', layout: false, status: 404
+      render file: 'public/404', formats: [:html], layout: false, status: 404
     end
   end
 
   rescue_from Discourse::InvalidAccess do
-    render file: 'public/403.html', layout: false, status: 403
+    render file: 'public/403', formats: [:html], layout: false, status: 403
   end
 
   def store_preloaded(key, json)
