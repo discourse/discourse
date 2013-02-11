@@ -1,5 +1,6 @@
 <h2>
-  <%= link_to(@topic_view.topic.title, @topic_view.topic.relative_url) %>
+  <%= render_topic_title(@topic_view.topic) %>
+  link_to(@topic_view.topic.title, @topic_view.topic.relative_url)
 </h2>
 <% (@post ? [@post] : @topic_view.posts).each do |post| %>
   <div class='creator'>
