@@ -19,48 +19,11 @@
     <%= javascript_include_tag "preload_store" %>
 
 
-    <%# 
-        The fonts are loaded outside of the stylesheet so that we can dynamically change
-        the path. This is to get around CDN caching on the Origin:
 
-        https://forums.aws.amazon.com/thread.jspa?threadID=114646
-    %>
+    <%= render :partial => "common/special_font_face" %>
+    <%= render :partial => "common/discourse_stylesheet" %>
 
-    <%- font_domain = "#{request.protocol}#{request.host_with_port}" %>    
-    <style>
-      @font-face {
-        font-family: 'FontAwesome';
-        src: url('<%=asset_path "fontawesome-webfont.eot" %>?<%= font_domain %>');
-        src: url('<%=asset_path "fontawesome-webfont.eot" %>?<%= font_domain %>#iefix') format('embedded-opentype'),
-          url('<%=asset_path "fontawesome-webfont.woff" %>?<%= font_domain %>') format('woff'),
-          url('<%=asset_path "fontawesome-webfont.ttf" %>?<%= font_domain %>') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-      }
 
-      @font-face {
-            font-family: 'zocial';
-            src: url('/assets/zocial-regular-webfont.woff?<%= font_domain %>') format('woff'),
-                url('/assets/zocial-regular-webfont.ttf?<%= font_domain %>') format('truetype'),
-                url('/assets/zocial-regular-webfont.svg?<%= font_domain %>#zocialregular') format('svg');
-            font-weight: normal;
-            font-style: normal;
-
-      }    
-    </style>
-
-    <%- unless SiteCustomization.override_default_style(session[:preview_style]) %> 
-      <%=stylesheet_link_tag "application"%>
-    <%- end %>
-
-    <%- if mini_profiler_enabled? %>
-      <%- Rack::MiniProfiler.step "stylsheet" do%>
-        <%= stylesheet_link_tag "admin"%>     
-      <%-end%>
-    <%- elsif admin? %>
-      <%= stylesheet_link_tag "admin"%>
-    <%-end%>
-    <%=SiteCustomization.custom_stylesheet(session[:preview_style])%>
     <%=csrf_meta_tags%>
   </head>
 
@@ -98,48 +61,8 @@
     
     <footer id='bottom'></footer>
 
-    <%- if mini_profiler_enabled? %>
-      <%- Rack::MiniProfiler.step "application" do %>
-        <%= javascript_include_tag "application" %>
-      <%-end%>
-    
-      <%- Rack::MiniProfiler.step "admin" do %> 
-        <%= javascript_include_tag "admin"%>
-      <%-end%>
-    <%- else %>
-      <%= javascript_include_tag "application" %>
-      <%- if admin? %>
-        <%= javascript_include_tag "admin"%>
-      <%- end %>
-    <%- end%>
-
-    <script>
-      Discourse.CDN = '<%= Rails.configuration.action_controller.asset_host  %>';
-      Discourse.BaseUrl = '<%= RailsMultisite::ConnectionManagement.current_hostname  %>';
-      Discourse.Environment = '<%= Rails.env %>';
-      window.Discourse.Router.map(function() {
-        return Discourse.routeBuilder.call(this);
-      });
-      Discourse.start()
-      Discourse.initialize()
-    </script>
-
-    <%- if Rails.env == "production" and SiteSetting.ga_tracking_code.present? %>
-      <script type="text/javascript">
-
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', '<%= SiteSetting.ga_tracking_code %>']);
-        _gaq.push(['_setCustomVar', 1, 'Anonymous', <%= !current_user %>, 2]);
-        _gaq.push(['_trackPageview']);
-
-        (function() {
-          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        })();
-
-      </script>
-    <%-end%>
+    <%= render :partial => "common/discourse_javascript" %>
+    <%= render_google_analytics_code %>
 
   </body>
 </html>
