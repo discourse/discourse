@@ -6,77 +6,93 @@ describe SessionController do
 
     let(:user) { Fabricate(:user) }
 
-    it "raises an error when the login isn't present" do
-      lambda { xhr :post, :create }.should raise_error(Discourse::InvalidParameters)
-    end
-
-    describe 'invalid password' do
-
-      it "should return an error with an invalid password" do
-        xhr :post, :create, login: user.username, password: 'sssss'
-        ::JSON.parse(response.body)['error'].should be_present
-      end
-
-    end
-
-    describe 'success by username' do 
+    context 'when email is confirmed' do
       before do
-        xhr :post, :create, login: user.username, password: 'myawesomepassword'
-        user.reload
+        token = user.email_tokens.where(email: user.email).first
+        EmailToken.confirm(token.token)
       end
 
-      it 'sets a session id' do
-        session[:current_user_id].should == user.id
+      it "raises an error when the login isn't present" do
+        lambda { xhr :post, :create }.should raise_error(Discourse::InvalidParameters)
       end
 
-      it 'gives the user an auth token' do
-        user.auth_token.should be_present
+      describe 'invalid password' do
+        it "should return an error with an invalid password" do
+          xhr :post, :create, login: user.username, password: 'sssss'
+          ::JSON.parse(response.body)['error'].should be_present
+        end
       end
 
-      it 'sets a cookie with the auth token' do
-        cookies[:_t].should == user.auth_token
-      end
-    end
+      describe 'success by username' do
+        before do
+          xhr :post, :create, login: user.username, password: 'myawesomepassword'
+          user.reload
+        end
 
-    describe 'strips leading @ symbol' do 
-      before do
-        xhr :post, :create, login: "@" + user.username, password: 'myawesomepassword'
-        user.reload
-      end
+        it 'sets a session id' do
+          session[:current_user_id].should == user.id
+        end
 
-      it 'sets a session id' do
-        session[:current_user_id].should == user.id
-      end
-    end
+        it 'gives the user an auth token' do
+          user.auth_token.should be_present
+        end
 
-    describe 'also allow login by email' do 
-      before do
-        xhr :post, :create, login: user.email, password: 'myawesomepassword'
+        it 'sets a cookie with the auth token' do
+          cookies[:_t].should == user.auth_token
+        end
       end
 
-      it 'sets a session id' do
-        session[:current_user_id].should == user.id
-      end
-    end
+      describe 'strips leading @ symbol' do
+        before do
+          xhr :post, :create, login: "@" + user.username, password: 'myawesomepassword'
+          user.reload
+        end
 
-    describe "when the site requires approval of users" do
-      before do
-        SiteSetting.expects(:must_approve_users?).returns(true)      
+        it 'sets a session id' do
+          session[:current_user_id].should == user.id
+        end
       end
 
-      context 'with an unapproved user' do
+      describe 'also allow login by email' do
         before do
           xhr :post, :create, login: user.email, password: 'myawesomepassword'
         end
 
-        it "doesn't log in the user" do
-          session[:current_user_id].should be_blank
+        it 'sets a session id' do
+          session[:current_user_id].should == user.id
         end
-
       end
 
+      describe "when the site requires approval of users" do
+        before do
+          SiteSetting.expects(:must_approve_users?).returns(true)
+        end
+
+        context 'with an unapproved user' do
+          before do
+            xhr :post, :create, login: user.email, password: 'myawesomepassword'
+          end
+
+          it "doesn't log in the user" do
+            session[:current_user_id].should be_blank
+          end
+        end
+      end
     end
 
+    context 'when email has not been confirmed' do
+      before do
+        xhr :post, :create, login: user.email, password: 'myawesomepassword'
+      end
+
+      it "doesn't log in the user" do
+        session[:current_user_id].should be_blank
+      end
+
+      it 'returns an error message' do
+        ::JSON.parse(response.body)['error'].should be_present
+      end
+    end
   end
 
   describe '.destroy' do

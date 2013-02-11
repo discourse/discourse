@@ -1039,6 +1039,7 @@ en:
     wait_approval: "Thanks for signing up. We will notify you when your account has been approved."
     active: "Your account is active and ready."
     activate_email: "You're almost done! We sent an activation email to <b>%{email}</b>. Please follow the instructions in the email to activate your account."
+    not_activated: "You can't log in yet. We sent an activation email to you. Please follow the instructions in the email to activate your account."
     errors: "Failed to create account: %{errors}"
     not_available: "Not available. Try %{suggestion}?"
 
