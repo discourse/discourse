@@ -91,6 +91,7 @@ class SiteSetting < ActiveRecord::Base
 
   setting(:allow_duplicate_topic_titles, false)
 
+  setting(:add_rel_nofollow_to_user_content, true)
   setting(:post_excerpt_maxlength, 300)
   setting(:post_onebox_maxlength, 500)
   setting(:best_of_score_threshold, 15)
