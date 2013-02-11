@@ -84,9 +84,11 @@
       ul = div.find('ul')
       selectedOption = 0
       markSelected()
+      
       ul.find('li').click ->
         selectedOption = ul.find('li').index(this)
         completeTerm(autocompleteOptions[selectedOption])
+        false
 
       pos = null
       if isInput
