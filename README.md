@@ -64,6 +64,7 @@ This vision translates to the following functional commitments:
 ## Contributing
 
 [![Build Status](https://travis-ci.org/discourse/discourse.png)](https://travis-ci.org/discourse/discourse)
+[![Code Climate](https://codeclimate.com/github/discourse/discourse.png)](https://codeclimate.com/github/discourse/discourse)
 
 Discourse is **100% free** and **open-source**. We encourage and support an active, healthy community that
 accepts contributions from the public, and we'd like you to be a part of that community.
