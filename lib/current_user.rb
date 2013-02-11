@@ -21,7 +21,7 @@ module CurrentUser
     @not_logged_in = session[:current_user_id].blank?
     if @current_user
       @current_user.update_last_seen! 
-      if @current_user.ip_address != request.remote_ip
+      if (@current_user.ip_address != request.remote_ip) and request.remote_ip.present?
         @current_user.ip_address = request.remote_ip
         @current_user.update_column(:ip_address, request.remote_ip)
       end
