@@ -64,6 +64,13 @@ class Post < ActiveRecord::Base
     self.raw.strip! if self.raw.present?
   end
 
+  
+  scope :regular_order,order(:sort_order, :post_number)
+  scope :reverse_order, order('sort_order desc, post_number desc')
+  scope :best_of, where("(post_number = 1) or (score >= ?)", SiteSetting.best_of_score_threshold)
+
+
+
   def raw_quality
 
     sentinel = TextSentinel.new(self.raw, min_entropy: SiteSetting.body_min_entropy)
@@ -193,17 +200,6 @@ class Post < ActiveRecord::Base
     topic.archetype
   end
 
-  def self.regular_order
-    order(:sort_order, :post_number)
-  end
-
-  def self.reverse_order
-    order('sort_order desc, post_number desc')
-  end
-
-  def self.best_of
-    where("(post_number = 1) or (score >= ?)", SiteSetting.best_of_score_threshold)
-  end
 
   def update_flagged_posts_count
     PostAction.update_flagged_posts_count
