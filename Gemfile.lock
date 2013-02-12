@@ -464,7 +464,6 @@ DEPENDENCIES
   guard-spork
   has_ip_address
   hiredis
-  hpricot
   i18n-js
   image_optim
   jasminerice

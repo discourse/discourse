@@ -12,20 +12,20 @@ module Oneboxer
     
     def parse(data)
 
-      hp = Hpricot(data)
+      html_doc = Nokogiri::HTML(data)
 
       result = {}
 
-      m = hp.at("h1.doc-banner-title")
+      m = html_doc.at("h1.doc-banner-title")
       result[:title] = m.inner_text if m
 
-      m = hp.at("div#doc-original-text")
+      m = html_doc.at("div#doc-original-text")
       if m
         result[:text] = BaseOnebox.replace_tags_with_spaces(m.inner_html)
         result[:text] = result[:text][0..MAX_TEXT]
       end
 
-      m = hp.at("div.doc-banner-icon img")
+      m = html_doc.at("div.doc-banner-icon img")
       result[:image] = m['src'] if m
 
       result

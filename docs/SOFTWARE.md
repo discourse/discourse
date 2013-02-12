@@ -31,7 +31,7 @@ The following Ruby Gems are used in Discourse:
 * [vestal_versions](https://rubygems.org/gems/vestal_versions)
 * [coffee-rails](https://rubygems.org/gems/coffee-rails)
 * [uglifier](https://rubygems.org/gems/uglifier)
-* [hpricot](https://rubygems.org/gems/hpricot)
+* [nokogiri](https://rubygems.org/gems/nokogiri)
 * [uuidtools](https://rubygems.org/gems/uuidtools)
 * [rinku](https://rubygems.org/gems/rinku)
 * [ruby-openid](https://rubygems.org/gems/ruby-openid)

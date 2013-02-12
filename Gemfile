@@ -20,7 +20,6 @@ gem 'fastimage'
 gem 'fog', require: false
 gem 'has_ip_address'
 gem 'hiredis'
-gem 'hpricot'
 gem 'i18n-js'
 gem 'jquery-rails'
 gem 'multi_json'
