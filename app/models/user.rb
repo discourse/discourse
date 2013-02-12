@@ -251,34 +251,56 @@ class User < ActiveRecord::Base
     self.password_hash == hash_password(password,self.salt)
   end
 
+  def seen?(date)
+    if last_seen_at.present?
+      !(last_seen_at.to_date < date)
+    end
+  end
+
+  def seen_before?
+    last_seen_at.present?
+  end
+
+  def has_visit_record?(date)
+    user_visits.where(["visited_at =? ", date ]).first
+  end
+
+  def adding_visit_record(date)
+    user_visits.create!(visited_at: date )
+  end
+
+  def update_visit_record!(date)
+    if !seen_before?
+      adding_visit_record(date)
+      update_column(:days_visited, 1)
+    end
+
+    if !seen?(date)
+      if !has_visit_record?(date)
+        adding_visit_record(date)
+        User.increment_counter(:days_visited, 1)
+      end
+    end
+  end
+
   def update_last_seen!
     now = DateTime.now
     now_date = now.to_date
-
     # Only update last seen once every minute
     redis_key = "user:#{self.id}:#{now_date.to_s}"
     if $redis.setnx(redis_key, "1")
       $redis.expire(redis_key, SiteSetting.active_user_rate_limit_secs)
 
-      if self.last_seen_at.nil? || self.last_seen_at.to_date < now_date
-        # count it
-        row_count = User.exec_sql('insert into user_visits(user_id,visited_at) select  :user_id, :visited_at
-                      where not exists(select 1 from user_visits where user_id = :user_id and visited_at = :visited_at)', user_id: self.id, visited_at: now.to_date)
-        if row_count.cmd_tuples == 1
-          User.update_all "days_visited = days_visited + 1", ["id = ? and days_visited = ?", self.id, self.days_visited]
-        end
-      end
+      update_visit_record!(now_date)
 
-      # using a builder to avoid the AR transaction
-      sql = SqlBuilder.new "update users /*set*/ where id = :id"
+      # using update_column to avoid the AR transaction
       # Keep track of our last visit
-      if self.last_seen_at.present? and (self.last_seen_at < (now - SiteSetting.previous_visit_timeout_hours.hours))
-        self.previous_visit_at = self.last_seen_at
-        sql.set('previous_visit_at = :prev', prev: self.previous_visit_at)
+      if seen_before? && (self.last_seen_at < (now - SiteSetting.previous_visit_timeout_hours.hours))
+        previous_visit_at = last_seen_at
+        update_column(:previous_visit_at, previous_visit_at )
       end
-      self.last_seen_at = now
-      sql.set('last_seen_at = :last', last: self.last_seen_at)
-      sql.exec(id: self.id)
+      update_column(:last_seen_at,  now )
+
     end
 
   end
