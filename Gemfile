@@ -27,6 +27,8 @@ gem 'koala', require: false
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
+gem "omniauth"
+gem "omniauth-openid"
 gem 'oauth', require: false
 gem 'oj'
 gem 'pbkdf2'
@@ -37,7 +39,6 @@ gem 'redis'
 gem 'redis-rails'
 gem 'rest-client'
 gem 'rinku'
-gem 'ruby-openid', require: 'openid'
 gem 'sanitize'
 gem 'sass'
 gem 'seed-fu'
