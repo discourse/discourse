@@ -1,11 +1,9 @@
 # encoding: utf-8
 
 require 'spec_helper'
-
 require 'slug'
 
 describe Slug do
-
 
   it 'replaces spaces with hyphens' do
     Slug.for("hello world").should == 'hello-world'
