@@ -47,13 +47,13 @@ window.Discourse.LoginView = window.Discourse.ModalBodyView.extend Discourse.Pre
     @set('authenticate', 'twitter')
     left = @get('lastX') - 400
     top = @get('lastY') - 200
-    window.open("/twitter/frame", "_blank", "menubar=no,status=no,height=400,width=800,left=" + left + ",top=" + top)
+    window.open("/auth/twitter", "_blank", "menubar=no,status=no,height=400,width=800,left=" + left + ",top=" + top)
 
   facebookLogin: ()->
     @set('authenticate', 'facebook')
     left = @get('lastX') - 400
     top = @get('lastY') - 200
-    window.open("/facebook/frame", "_blank", "menubar=no,status=no,height=400,width=800,left=" + left + ",top=" + top)
+    window.open("/auth/facebook", "_blank", "menubar=no,status=no,height=400,width=800,left=" + left + ",top=" + top)
 
   openidLogin: (provider)->
     left = @get('lastX') - 400

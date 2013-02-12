@@ -23,13 +23,13 @@ gem 'hiredis'
 gem 'hpricot'
 gem 'i18n-js'
 gem 'jquery-rails'
-gem 'koala', require: false
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
 gem "omniauth"
 gem "omniauth-openid"
-gem 'oauth', require: false
+gem "omniauth-facebook"
+gem "omniauth-twitter"
 gem 'oj'
 gem 'pbkdf2'
 gem 'pg'
