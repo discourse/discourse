@@ -245,6 +245,14 @@ class User < ActiveRecord::Base
     self.password_hash == hash_password(password,self.salt)
   end
 
+  def seen_today?
+    !(last_seen_at.to_date < Date.today)
+  end
+
+  def seen_before?
+    last_seen_at.present?
+  end
+
   def update_last_seen!
     now = DateTime.now
     now_date = now.to_date
@@ -254,7 +262,7 @@ class User < ActiveRecord::Base
     if $redis.setnx(redis_key, "1")
       $redis.expire(redis_key, SiteSetting.active_user_rate_limit_secs)
 
-      if self.last_seen_at.nil? || self.last_seen_at.to_date < now_date
+      if !seen_before? || !seen_today?
         # count it
         row_count = User.exec_sql('insert into user_visits(user_id,visited_at) select  :user_id, :visited_at
                       where not exists(select 1 from user_visits where user_id = :user_id and visited_at = :visited_at)', user_id: self.id, visited_at: now.to_date)
@@ -265,7 +273,7 @@ class User < ActiveRecord::Base
 
       # using update_column to avoid the AR transaction
       # Keep track of our last visit
-      if self.last_seen_at.present? && (self.last_seen_at < (now - SiteSetting.previous_visit_timeout_hours.hours))
+      if seen_before? && (self.last_seen_at < (now - SiteSetting.previous_visit_timeout_hours.hours))
         previous_visit_at = last_seen_at
         update_column(:previous_visit_at, previous_visit_at )
       end
