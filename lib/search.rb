@@ -100,7 +100,7 @@ module Search
 
       db_result = []
       [user_query_sql, category_query_sql, topic_query_sql].each do |sql|
-        sql << " limit " << Search.per_facet.to_s
+        sql << " LIMIT " << Search.per_facet.to_s
         db_result += ActiveRecord::Base.exec_sql(sql , query: terms.join(" & ")).to_a
       end
     end
@@ -109,12 +109,14 @@ module Search
     
     expected_topics = 0
     expected_topics = Search.facets.size unless type_filter.present?
-    expected_topics = Search.per_facet * Search.facets.size if type_filter == 'topic' 
+    expected_topics = Search.per_facet * Search.facets.size if type_filter == 'topic'
+    
     if expected_topics > 0 
       db_result.each do |row|
         expected_topics -= 1 if row['type'] == 'topic'
       end
     end
+    
     if expected_topics > 0 
       tmp = ActiveRecord::Base.exec_sql "#{post_query_sql} limit :per_facet", 
         query: terms.join(" & "), per_facet: expected_topics * 3
@@ -134,11 +136,9 @@ module Search
       db_result += tmp[0..expected_topics-1]
     end
 
-
     # Group the results by type
     grouped = {}
     db_result.each do |row|
-
       type = row.delete('type')
 
       # Add the slug for topics
