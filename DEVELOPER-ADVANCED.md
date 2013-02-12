@@ -10,7 +10,7 @@ to rails, you are likely much better off with our **[Discourse Vagrant Developer
 3. Install Rails 1.9.3 and Bundler.
 3. Clone the project.
 4. Create development and test databases in postgres.
-5. Copy `config/database.yml.sample' and `config/redis.yml.sample` to `config/database.yml` and `config/redis.yml.sample` and input the correct values to point to your postgres and redis instances.
+5. Copy `config/database.yml.sample` and `config/redis.yml.sample` to `config/database.yml` and `config/redis.yml` and input the correct values to point to your postgres and redis instances.
 6. We recommend starting with seed data to play around in your development environment. [Download Seed SQL Data](http://discourse.org/vms/dev-discourse-seed.sql). Install it into postgres using a command like this: `psql -d discourse_development < dev-discourse-seed.sql`.
 
 
