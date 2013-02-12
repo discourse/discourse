@@ -245,9 +245,9 @@ class User < ActiveRecord::Base
     self.password_hash == hash_password(password,self.salt)
   end
 
-  def seen_today?
+  def seen?(date)
     if last_seen_at.present?
-      !(last_seen_at.to_date < Date.today)
+      !(last_seen_at.to_date < date)
     end
   end
 
@@ -255,23 +255,23 @@ class User < ActiveRecord::Base
     last_seen_at.present?
   end
 
-  def has_today_visit_record?
-    user_visits.where(["visited_at =? ", Date.today]).first
+  def has_visit_record?(date)
+    user_visits.where(["visited_at =? ", date ]).first
   end
 
-  def adding_today_visit_record
-    user_visits.create!(visited_at: Date.today )
+  def adding_visit_record(date)
+    user_visits.create!(visited_at: date )
   end
 
-  def update_visit_record!
+  def update_visit_record!(date)
     if !seen_before?
-      adding_today_visit_record
+      adding_visit_record(date)
       update_column(:days_visited, 1)
     end
 
-    if !seen_today?
-      if !has_today_visit_record?
-        adding_today_visit_record
+    if !seen?(date)
+      if !has_visit_record?(date)
+        adding_visit_record(date)
         User.increment_counter(:days_visited, 1)
       end
     end
@@ -279,13 +279,13 @@ class User < ActiveRecord::Base
 
   def update_last_seen!
     now = DateTime.now
-    now_date = Date.today
+    now_date = now.to_date
     # Only update last seen once every minute
     redis_key = "user:#{self.id}:#{now_date.to_s}"
     if $redis.setnx(redis_key, "1")
       $redis.expire(redis_key, SiteSetting.active_user_rate_limit_secs)
 
-      update_visit_record!
+      update_visit_record!(now_date)
 
       # using update_column to avoid the AR transaction
       # Keep track of our last visit
@@ -293,7 +293,7 @@ class User < ActiveRecord::Base
         previous_visit_at = last_seen_at
         update_column(:previous_visit_at, previous_visit_at )
       end
-      update_column(:last_seen_at,  DateTime.now)
+      update_column(:last_seen_at,  now )
 
     end
 
