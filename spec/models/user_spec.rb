@@ -617,4 +617,30 @@ describe User do
     it { should_not be_active }
   end
 
+  describe 'email_confirmed?' do
+    let(:user) { Fabricate(:user) }
+
+    context 'when email has not been confirmed yet' do
+      it 'should return false' do
+        user.email_confirmed?.should be_false
+      end
+    end
+
+    context 'when email has been confirmed' do
+      it 'should return true' do
+        token = user.email_tokens.where(email: user.email).first
+        EmailToken.confirm(token.token)
+        user.email_confirmed?.should be_true
+      end
+    end
+
+    context 'when user has no email tokens for some reason' do
+      it 'should return false' do
+        user.email_tokens.each {|t| t.destroy}
+        user.reload
+        user.email_confirmed?.should be_false
+      end
+    end
+  end
+
 end

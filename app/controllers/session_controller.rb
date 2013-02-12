@@ -22,9 +22,14 @@ class SessionController < ApplicationController
 
       # If their password is correct
       if @user.confirm_password?(params[:password])
-        log_on_user(@user)
-        render_serialized(@user, UserSerializer)
-        return
+        if @user.email_confirmed?
+          log_on_user(@user)
+          render_serialized(@user, UserSerializer)
+          return
+        else
+          render :json => {error: I18n.t("login.not_activated")}
+          return
+        end
       end
     end
 

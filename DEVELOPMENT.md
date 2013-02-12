@@ -10,7 +10,7 @@ on Discourse with:
 1. Install VirtualBox: https://www.virtualbox.org/wiki/Downloads
 2. Install Vagrant: https://www.vagrantup.com/
 3. Open a terminal
-4. Clone the project: `git@github.com:discourse/discourse.git`
+4. Clone the project: `git clone git@github.com:discourse/discourse.git`
 5. Enter the project directory: `cd discourse`
 
 ### Using Vagrant
@@ -51,7 +51,7 @@ bundle exec rails server
 
 In a few seconds, rails will start server pages. To access them, open a web browser to http://localhost:4000 - if it all worked you should see discourse! Congratulations, you are ready to start working!
 
-You can now edit files on your local file system, using your favorite text editor or IDE. When you reload your web browser, it should have the latest changed.
+You can now edit files on your local file system, using your favorite text editor or IDE. When you reload your web browser, it should have the latest changes.
 
 ### Guard + Rspec
 
@@ -70,6 +70,12 @@ Wait a minute while it runs all our unit tests. Once it has completed, live relo
 
 
 ### Sending Email
+
+Mail is sent asynchronously by Sidekiq, so you'll need to have sidekiq running to process jobs. Run it with this command:
+
+```
+bundle exec sidekiq
+```
 
 Mailcatcher is used to avoid the whole issue of actually sending emails: https://github.com/sj26/mailcatcher
 

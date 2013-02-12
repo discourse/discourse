@@ -380,6 +380,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def email_confirmed?
+    email_tokens.where(email: self.email, confirmed: true).present?
+  end
+
 
   protected
 

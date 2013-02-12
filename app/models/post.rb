@@ -342,19 +342,21 @@ class Post < ActiveRecord::Base
   # This calculates the geometric mean of the post timings and stores it along with
   # each post.
   def self.calculate_avg_time
-    exec_sql("UPDATE posts
-              SET avg_time = (x.gmean / 1000)
-              FROM (SELECT post_timings.topic_id,
-                           post_timings.post_number,
-                           round(exp(avg(ln(msecs)))) AS gmean
-                    FROM post_timings
-                    INNER JOIN posts AS p2
-                      ON p2.post_number = post_timings.post_number
-                        AND p2.topic_id = post_timings.topic_id
-                        AND p2.user_id <> post_timings.user_id
-                    GROUP BY post_timings.topic_id, post_timings.post_number) AS x
-              WHERE x.topic_id = posts.topic_id
-                AND x.post_number = posts.post_number")
+    retry_lock_error do
+      exec_sql("UPDATE posts
+                SET avg_time = (x.gmean / 1000)
+                FROM (SELECT post_timings.topic_id,
+                             post_timings.post_number,
+                             round(exp(avg(ln(msecs)))) AS gmean
+                      FROM post_timings
+                      INNER JOIN posts AS p2
+                        ON p2.post_number = post_timings.post_number
+                          AND p2.topic_id = post_timings.topic_id
+                          AND p2.user_id <> post_timings.user_id
+                      GROUP BY post_timings.topic_id, post_timings.post_number) AS x
+                WHERE x.topic_id = posts.topic_id
+                  AND x.post_number = posts.post_number")
+    end
   end
 
   before_save do
