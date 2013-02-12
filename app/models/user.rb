@@ -263,16 +263,14 @@ class User < ActiveRecord::Base
         end
       end
 
-      # using a builder to avoid the AR transaction
-      sql = SqlBuilder.new "update users /*set*/ where id = :id"
+      # using update_column to avoid the AR transaction
       # Keep track of our last visit
-      if self.last_seen_at.present? and (self.last_seen_at < (now - SiteSetting.previous_visit_timeout_hours.hours))
-        self.previous_visit_at = self.last_seen_at
-        sql.set('previous_visit_at = :prev', prev: self.previous_visit_at)
+      if self.last_seen_at.present? && (self.last_seen_at < (now - SiteSetting.previous_visit_timeout_hours.hours))
+        previous_visit_at = last_seen_at
+        update_column(:previous_visit_at, previous_visit_at )
       end
-      self.last_seen_at = now
-      sql.set('last_seen_at = :last', last: self.last_seen_at)
-      sql.exec(id: self.id)
+      update_column(:last_seen_at,  DateTime.now)
+
     end
 
   end
