@@ -379,6 +379,28 @@ describe UsersController do
       let(:create_params) { {:name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email, :challenge => 'abc'} }
       it_should_behave_like 'honeypot fails'
     end
+
+    shared_examples_for 'failed signup due to password problem' do
+      it 'should not create a new User' do
+        expect { xhr :post, :create, create_params }.to_not change { User.count }
+      end
+
+      it 'should report failed' do
+        xhr :post, :create, create_params
+        json = JSON::parse(response.body)
+        json["success"].should_not be_true
+      end
+    end
+
+    context 'when password is blank' do
+      let(:create_params) { {:name => @user.name, :username => @user.username, :password => "", :email => @user.email} }
+      it_should_behave_like 'failed signup due to password problem'
+    end
+
+    context 'when password param is missing' do
+      let(:create_params) { {:name => @user.name, :username => @user.username, :email => @user.email} }
+      it_should_behave_like 'failed signup due to password problem'
+    end
   end
 
   context '.username' do

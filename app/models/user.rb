@@ -241,6 +241,11 @@ class User < ActiveRecord::Base
     end
   end
 
+  # Indicate that this is NOT a passwordless account for the purposes of validation
+  def password_required
+    @password_required = true
+  end
+
   def confirm_password?(password)
     return false unless self.password_hash && self.salt
     self.password_hash == hash_password(password,self.salt)
@@ -455,8 +460,8 @@ class User < ActiveRecord::Base
     end
 
     def password_validator
-      if @raw_password
-        return errors.add(:password, "must be 6 letters or longer") if @raw_password.length < 6
+      if (@raw_password and @raw_password.length < 6) or (@password_required and !@raw_password)
+        return errors.add(:password, "must be 6 letters or longer")
       end
     end
 

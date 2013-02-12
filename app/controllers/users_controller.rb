@@ -141,6 +141,8 @@ class UsersController < ApplicationController
     auth = session[:authentication]
     if auth && auth[:email] == params[:email] && auth[:email_valid]
       user.active = true
+    else
+      user.password_required
     end
 
     Mothership.register_nickname( user.username, user.email ) if user.valid? and SiteSetting.call_mothership?
