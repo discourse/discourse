@@ -19,6 +19,9 @@ dump.rdb
 /cache
 /coverage/*
 
+/config/database.yml
+/config/redis.yml
+
 # Ignore the default SQLite database and db dumps
 /db/*.sqlite3
 /dbs/*.sql
@@ -59,3 +62,6 @@ config/fog_credentials.yml
 # Scripts used for downloading/refshing db
 script/download_db
 script/refresh_db
+
+# temp directory for chef (used to configure vagrant VM)
+chef/tmp/*
