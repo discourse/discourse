@@ -80,8 +80,8 @@ class UserOpenIdsController < ApplicationController
         data.merge!(info)
       end
 
-      trusted = open_id_response.endpoint.server_url =~ /^https:\/\/www.google.com\// ||
-        open_id_response.endpoint.server_url =~ /^https:\/\/me.yahoo.com\//
+      trusted = open_id_response.endpoint.server_url =~ /\Ahttps:\/\/www\.google\.com\// ||
+        open_id_response.endpoint.server_url =~ /\Ahttps:\/\/me\.yahoo\.com\//
 
       email = data[:email]
       user_open_id = UserOpenId.where(url: open_id_response.display_identifier).first
