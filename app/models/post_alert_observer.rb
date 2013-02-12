@@ -101,7 +101,7 @@ class PostAlertObserver < ActiveRecord::Observer
       result = []
       post.raw.scan(/\[quote=\"([^,]+),.+\"\]/).uniq.each do |m|
         username = m.first.strip.downcase
-        user = User.where("(LOWER(username_lower) = :username or LOWER(name) = :username) and id != :id", username: username, id: post.user_id).first
+        user = User.where("username_lower = :username and id != :id", username: username, id: post.user_id).first
         result << user if user.present?
       end
       result
