@@ -26,6 +26,62 @@ describe TopicView do
     lambda { TopicView.new(topic.id, nil) }.should raise_error(Discourse::NotLoggedIn)
   end
 
+  describe "#get_canonical_path" do
+    let(:user) { Fabricate(:user) }
+    let(:topic) { Fabricate(:topic) }
+    let(:path) { "/1234" }
+
+    before do
+      topic.expects(:relative_url).returns(path)
+      described_class.any_instance.expects(:find_topic).with(1234).returns(topic)
+    end
+
+    context "without a post number" do
+      context "without a page" do
+        it "generates a canonical path for a topic" do
+          described_class.new(1234, user).canonical_path.should eql(path)
+        end
+      end
+
+      context "with a page" do
+        let(:path_with_page) { "/1234?page=5" }
+
+        it "generates a canonical path for a topic" do
+          described_class.new(1234, user, page: 5).canonical_path.should eql(path_with_page)
+        end
+      end
+    end
+    context "with a post number" do
+      let(:path_with_page) { "/1234?page=10" }
+      before { SiteSetting.stubs(:posts_per_page).returns(5) }
+
+      it "generates a canonical path for a topic" do
+        described_class.new(1234, user, post_number: 50).canonical_path.should eql(path_with_page)
+      end
+    end
+  end
+
+  describe "#next_page" do
+    let(:posts) { [stub(post_number: 1), stub(post_number: 2)] }
+    let(:topic) do
+      topic = Fabricate(:topic)
+      topic.stubs(:posts).returns(posts)
+      topic.stubs(:highest_post_number).returns(5)
+      topic
+    end
+    let(:user) { Fabricate(:user) }
+
+    before do
+      described_class.any_instance.expects(:find_topic).with(1234).returns(topic)
+      described_class.any_instance.stubs(:filter_posts)
+      SiteSetting.stubs(:posts_per_page).returns(2)
+    end
+
+    it "should return the next page" do
+      described_class.new(1234, user).next_page.should eql(1)
+    end
+  end
+
   context '.posts_count' do
     it 'returns the two posters with their counts' do
       topic_view.posts_count.to_a.should =~ [[first_poster.id, 2], [coding_horror.id, 1]]
