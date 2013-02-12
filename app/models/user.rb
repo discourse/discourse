@@ -272,6 +272,7 @@ class User < ActiveRecord::Base
 
   def update_last_seen!
 
+    now_date = Date.today
     # Only update last seen once every minute
     redis_key = "user:#{self.id}:#{now_date.to_s}"
     if $redis.setnx(redis_key, "1")
