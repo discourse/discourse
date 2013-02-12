@@ -58,7 +58,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:invite_expiry_days, 14)
   setting(:active_user_rate_limit_secs, 60)
   setting(:previous_visit_timeout_hours, 1)
-  setting(:favicon_url, '/assets/favicon.ico')
+  setting(:favicon_url, '/assets/default-favicon.png')
 
   setting(:ninja_edit_window, 5.minutes.to_i)
   setting(:post_undo_action_window_mins, 10)
