@@ -246,7 +246,9 @@ class User < ActiveRecord::Base
   end
 
   def seen_today?
-    !(last_seen_at.to_date < Date.today)
+    if last_seen_at.present?
+      !(last_seen_at.to_date < Date.today)
+    end
   end
 
   def seen_before?
@@ -262,7 +264,12 @@ class User < ActiveRecord::Base
   end
 
   def update_visit_record!
-    if !seen_before? || !seen_today?
+    if !seen_before?
+      adding_today_visit_record
+      update_column(:days_visited, 1)
+    end
+
+    if !seen_today?
       if !has_today_visit_record?
         adding_today_visit_record
         User.increment_counter(:days_visited, 1)
@@ -271,7 +278,7 @@ class User < ActiveRecord::Base
   end
 
   def update_last_seen!
-
+    now = DateTime.now
     now_date = Date.today
     # Only update last seen once every minute
     redis_key = "user:#{self.id}:#{now_date.to_s}"
