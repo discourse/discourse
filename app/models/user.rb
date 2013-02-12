@@ -131,11 +131,12 @@ class User < ActiveRecord::Base
   end
 
   def change_username(new_username)
+    current_username = self.username
     self.username = new_username
 
     if SiteSetting.call_mothership? and self.valid?
       begin
-        Mothership.register_nickname( self.username, self.email )
+        Mothership.change_nickname( current_username, new_username )
       rescue Mothership::NicknameUnavailable
         return false
       rescue => e

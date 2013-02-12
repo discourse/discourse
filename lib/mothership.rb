@@ -19,9 +19,19 @@ module Mothership
     if json.has_key?('success')
       true
     else
-      raise NicknameUnavailable  # json['failed'] == -200
+      raise NicknameUnavailable  # TODO: report ALL the errors
     end
   end
+
+  def self.change_nickname(current_nickname, new_nickname)
+    json = put("/users/#{current_nickname}/nickname", {nickname: new_nickname})
+    if json.has_key?('success')
+      true
+    else
+      raise NicknameUnavailable  # TODO: report ALL the errors
+    end
+  end
+
 
   def self.current_discourse_version
     get('/current_version')['version']
@@ -37,6 +47,11 @@ module Mothership
 
   def self.post(rel_url, params={})
     response = RestClient.post( "#{mothership_base_url}#{rel_url}", {access_token: access_token}.merge(params), content_type: :json, accept: accepts )
+    JSON.parse(response)
+  end
+
+  def self.put(rel_url, params={})
+    response = RestClient.put( "#{mothership_base_url}#{rel_url}", {access_token: access_token}.merge(params), content_type: :json, accept: accepts )
     JSON.parse(response)
   end
 
