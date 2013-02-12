@@ -9,10 +9,21 @@ class DiscoursePluginRegistry
     attr_accessor :stylesheets
   end
 
-  def register_js(filename, options={})
-    self.class.javascripts ||= Set.new
-    self.class.server_side_javascripts ||= Set.new
+  # Default accessor values
+  #
+  def self.stylesheets
+    @stylesheets ||= Set.new
+  end
+  
+  def self.javascripts
+    @javascripts ||= Set.new
+  end
+  
+  def self.server_side_javascripts
+    @server_side_javascripts ||= Set.new
+  end
 
+  def register_js(filename, options={})
     # If we have a server side option, add that too.
     self.class.server_side_javascripts << options[:server_side] if options[:server_side].present?
 
@@ -20,12 +31,11 @@ class DiscoursePluginRegistry
   end
 
   def register_css(filename)
-    self.class.stylesheets ||= Set.new
     self.class.stylesheets << filename
   end
 
   def stylesheets
-    self.class.stylesheets || Set.new
+    self.class.stylesheets
   end
 
   def register_archetype(name, options={})
@@ -33,17 +43,17 @@ class DiscoursePluginRegistry
   end
 
   def server_side_javascripts
-    self.class.javascripts || Set.new
+    self.class.javascripts
   end
 
   def javascripts
-    self.class.javascripts || Set.new
+    self.class.javascripts
   end
 
   def self.clear
-    self.stylesheets = Set.new
-    self.server_side_javascripts = Set.new
-    self.javascripts = Set.new
+    self.stylesheets = nil
+    self.server_side_javascripts = nil
+    self.javascripts = nil
   end
 
   def self.setup(plugin_class)    
@@ -51,7 +61,5 @@ class DiscoursePluginRegistry
     plugin = plugin_class.new(registry)
     plugin.setup
   end
-
-
 
 end

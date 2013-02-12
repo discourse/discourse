@@ -10,8 +10,8 @@ class SiteSetting < ActiveRecord::Base
 
   # settings available in javascript under Discourse.SiteSettings
   client_setting(:title, "Discourse")
-  client_setting(:logo_url, '/assets/logo.png')
-  client_setting(:logo_small_url, '')
+  client_setting(:logo_url, '/assets/d-logo-sketch.png')
+  client_setting(:logo_small_url, '/assets/d-logo-sketch-small.png')
   client_setting(:traditional_markdown_linebreaks, false)
   client_setting(:popup_delay, 1500)
   client_setting(:top_menu, 'popular|new|unread|favorited|categories')

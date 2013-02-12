@@ -37,11 +37,6 @@ describe PostAlertObserver do
 
 
   context 'quotes' do
-    it 'notifies a user by display username' do
-      lambda {
-        Fabricate(:post, raw: '[quote="Evil Trout, post:1"]whatup[/quote]')
-      }.should change(evil_trout.notifications, :count).by(1)
-    end      
 
     it 'notifies a user by username' do
       lambda {

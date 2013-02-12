@@ -107,11 +107,22 @@ describe MessageBus::Rack::Middleware do
       ensure
         MessageBus.long_polling_interval = 5000
       end
-
-
     end
   end
 
+  describe "diagnostics" do 
+
+    it "should return a 403 if a user attempts to get at the _diagnostics path" do 
+      get "/message-bus/_diagnostics"
+      last_response.status.should == 403
+    end
+
+    it "should get a 200 with html for an authorized user" do
+      MessageBus.stub(:is_admin_lookup).and_return(lambda{ true })
+      get "/message-bus/_diagnostics"
+      last_response.status.should == 200
+    end
+  end
   
   describe "polling" do
     before do 
