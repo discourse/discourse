@@ -596,7 +596,6 @@ en:
 
     private_message_info:
       title: "Private Conversation"
-      description: "Participants in this private conversation"
       invite: "Invite Others..."
 
     email: 'Email'
