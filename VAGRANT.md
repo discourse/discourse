@@ -1,6 +1,8 @@
 # Discourse Developer Install Guide (Vagrant)
 
 If you'd like to set up a development environment for Discourse, the easiest way is by using a virtual machine.
+If you have experience setting up Rails projects, you might want to take a look at our **[Discourse Advanced Developer Guide](https://github.com/discourse/discourse/blob/master/DEVELOPER-ADVANCED.md)**.
+It also contains instructions on building your own Vagrant VM.
 
 The following instructions will automatically download and provision a virtual machine for you to begin hacking
 on Discourse with:
