@@ -253,20 +253,24 @@ class User < ActiveRecord::Base
     last_seen_at.present?
   end
 
+  def has_today_visit_record?
+    user_visits.where(["visited_at =? ", Date.today]).first
+  end
+
+  def adding_today_visit_record
+    user_visits.create!(visited_at: Date.today )
+  end
+
   def update_visit_record!
     if !seen_before? || !seen_today?
-      # count it
-      row_count = User.exec_sql('insert into user_visits(user_id,visited_at) select  :user_id, :visited_at
-                      where not exists(select 1 from user_visits where user_id = :user_id and visited_at = :visited_at)', user_id: self.id, visited_at: now.to_date)
-      if row_count.cmd_tuples == 1
-          User.update_all "days_visited = days_visited + 1", ["id = ? and days_visited = ?", self.id, self.days_visited]
+      if !has_today_visit_record?
+        adding_today_visit_record
+        User.increment_counter(:days_visited, 1)
       end
     end
   end
 
   def update_last_seen!
-    now = DateTime.now
-    now_date = now.to_date
 
     # Only update last seen once every minute
     redis_key = "user:#{self.id}:#{now_date.to_s}"
