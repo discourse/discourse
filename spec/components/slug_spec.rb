@@ -35,5 +35,11 @@ describe Slug do
     Slug.for("...hello").should == "hello"
   end
 
+  it 'handles our initial transliteration' do
+    from = "àáäâčďèéëěêìíïîľĺňòóöôŕřšťůùúüûýžñç"
+    to   = "aaaacdeeeeeiiiillnoooorrstuuuuuyznc"
+    Slug.for(from).should == to
+  end
+
 end
 

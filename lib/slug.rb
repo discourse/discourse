@@ -11,14 +11,11 @@ module Slug
     str.gsub!(/^\s+|\s+$/, '')
     str.downcase!
 
-    from = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;."
-    to   = "aaaaeeeeiiiioooouuuunc-------"
+    # The characters we want to replace with a hyphen
+    str.tr!("·/_,:;.", "\-")
 
-    idx = 0
-    from.each_char do |c|
-      str.gsub!(c, to[idx])
-      idx += 1
-    end
+    # Convert to ASCII or remove if transliteration is unknown.
+    str = ActiveSupport::Inflector.transliterate(str, '')
 
     str.gsub!(/[^a-z0-9 -]/, '')
     str.gsub!(/\s+/, '-')
