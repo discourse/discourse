@@ -381,7 +381,7 @@ class User < ActiveRecord::Base
   end
 
   def email_confirmed?
-    email_tokens.where(email: self.email, confirmed: true).present?
+    email_tokens.where(email: self.email, confirmed: true).present? or email_tokens.count == 0
   end
 
 
