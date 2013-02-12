@@ -131,6 +131,23 @@ class Guardian
     true
   end
 
+  def can_revoke_moderation?(moderator)
+    return false unless @user.try(:admin?)
+    return false if moderator.blank?
+    return false if @user.id == moderator.id
+    return false unless moderator.trust_level == TrustLevel.Levels[:moderator]
+    true
+  end
+
+  def can_grant_moderation?(user)
+    return false unless @user.try(:admin?)
+    return false if user.blank?
+    return false if @user.id == user.id
+    return false if user.admin?
+    return false if user.has_trust_level?(:moderator)
+    true
+  end
+
   # Can we see who acted on a post in a particular way?
   def can_see_post_actors?(topic, post_action_type_id)
     return false unless topic.present?
