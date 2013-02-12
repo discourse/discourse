@@ -1,8 +1,8 @@
 <h2>
-  <%= render_topic_title(@topic_view.topic) %>
+  <a href="<%= @topic_view.relative_url %>"><%= @topic_view.title %></a>
 
 </h2>
-<% (@post ? [@post] : @topic_view.posts).each do |post| %>
+<% @topic_view.posts.each do |post| %>
   <div class='creator'>
     #<%=post.post_number%> By: <b><%= post.user.name %></b>, <%= post.created_at.to_formatted_s(:long_ordinal) %>
   </div>
@@ -11,10 +11,12 @@
   </div>
 <% end %>
 
-<% if @next_page%>
+<% if @topic_view.next_page %>
   <p>
-  <b><%= render_topic_next_page_link(@topic_view.topic, @next_page) %></b>
+  <b><a href="<%= @topic_view.next_page_path %>">next page</a></b>
   </p>
 <% end %>
 
-<%- content_for :canonical do %><%= @canonical %><%- end %>
+<%- content_for :canonical do %>
+  <%= "#{request.protocol}#{request.host_with_port}#{@topic_view.canonical_path}" %>
+<%- end %>
