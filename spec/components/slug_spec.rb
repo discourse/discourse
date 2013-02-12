@@ -1,11 +1,9 @@
 # encoding: utf-8
 
 require 'spec_helper'
-
 require 'slug'
 
 describe Slug do
-
 
   it 'replaces spaces with hyphens' do
     Slug.for("hello world").should == 'hello-world'
@@ -33,6 +31,12 @@ describe Slug do
 
   it 'strips leading punctuation' do
     Slug.for("...hello").should == "hello"
+  end
+
+  it 'handles our initial transliteration' do
+    from = "àáäâčďèéëěêìíïîľĺňòóöôŕřšťůùúüûýžñç"
+    to   = "aaaacdeeeeeiiiillnoooorrstuuuuuyznc"
+    Slug.for(from).should == to
   end
 
 end
