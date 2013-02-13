@@ -28,6 +28,7 @@ class User < ActiveRecord::Base
   validates_presence_of :email
   validates_uniqueness_of :email
   validate :username_validator
+  validate :email_validator
   validate :password_validator
 
   before_save :cook
@@ -477,6 +478,15 @@ class User < ActiveRecord::Base
         lower = username.downcase
         if username_changed? && User.where(username_lower: lower).exists?
           return errors.add(:username, I18n.t(:'user.username.unique'))
+        end
+      end
+    end
+
+    def email_validator
+      if (setting = SiteSetting.email_blacklist_regexp.try(:strip)).present?
+        regexp = Regexp.new(setting, true)
+        if self.email =~ regexp
+          return errors.add(:email, I18n.t(:'user.email.not_allowed'))
         end
       end
     end

@@ -445,6 +445,31 @@ describe User do
     end
   end
 
+  describe 'email_validator' do
+    it 'should allow good emails' do
+      user = Fabricate.build(:user, email: 'good@gmail.com')
+      user.should be_valid
+    end
+
+    it 'should reject some emails based on the email_blacklist_regexp site setting' do
+      SiteSetting.stubs(:email_blacklist_regexp).returns('@mailinator')
+      Fabricate.build(:user, email: 'notgood@mailinator.com').should_not be_valid
+      Fabricate.build(:user, email: 'mailinator@gmail.com').should be_valid
+    end
+
+    it 'should reject some emails based on the email_blacklist_regexp site setting' do
+      SiteSetting.stubs(:email_blacklist_regexp).returns('@(mailinator|aol)\.com')
+      Fabricate.build(:user, email: 'notgood@mailinator.com').should_not be_valid
+      Fabricate.build(:user, email: 'notgood@aol.com').should_not be_valid
+      Fabricate.build(:user, email: 'aol+mailinator@gmail.com').should be_valid
+    end
+
+    it 'should reject some emails based on the email_blacklist_regexp site setting ignoring case' do
+      SiteSetting.stubs(:email_blacklist_regexp).returns('@mailinator')
+      Fabricate.build(:user, email: 'notgood@MAILINATOR.COM').should_not be_valid
+    end
+  end
+
   describe 'passwords' do
     before do
       @user = Fabricate.build(:user)
