@@ -1,7 +1,8 @@
 <h2>
   <a href="<%= @topic_view.relative_url %>"><%= @topic_view.title %></a>
-
 </h2>
+<hr/>
+
 <% @topic_view.posts.each do |post| %>
   <div class='creator'>
     #<%=post.post_number%> By: <b><%= post.user.name %></b>, <%= post.created_at.to_formatted_s(:long_ordinal) %>
@@ -9,14 +10,17 @@
   <div class='post'>
     <%= post.cooked.html_safe %>
   </div>
+  <hr/>
 <% end %>
 
 <% if @topic_view.next_page %>
   <p>
-  <b><a href="<%= @topic_view.next_page_path %>">next page</a></b>
+    <a href="<%= @topic_view.next_page_path %>">next page &rarr;</a>
   </p>
 <% end %>
 
 <%- content_for :canonical do %>
   <%= "#{request.protocol}#{request.host_with_port}#{@topic_view.canonical_path}" %>
 <%- end %>
+
+<p>Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled</p>
