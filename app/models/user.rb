@@ -131,11 +131,12 @@ class User < ActiveRecord::Base
   end
 
   def change_username(new_username)
+    current_username = self.username
     self.username = new_username
 
     if SiteSetting.call_mothership? and self.valid?
       begin
-        Mothership.register_nickname( self.username, self.email )
+        Mothership.change_nickname( current_username, new_username )
       rescue Mothership::NicknameUnavailable
         return false
       rescue => e
@@ -238,6 +239,11 @@ class User < ActiveRecord::Base
     unless password.blank?
       @raw_password = password
     end
+  end
+
+  # Indicate that this is NOT a passwordless account for the purposes of validation
+  def password_required
+    @password_required = true
   end
 
   def confirm_password?(password)
@@ -381,7 +387,7 @@ class User < ActiveRecord::Base
   end
 
   def email_confirmed?
-    email_tokens.where(email: self.email, confirmed: true).present?
+    email_tokens.where(email: self.email, confirmed: true).present? or email_tokens.count == 0
   end
 
 
@@ -454,8 +460,8 @@ class User < ActiveRecord::Base
     end
 
     def password_validator
-      if @raw_password
-        return errors.add(:password, "must be 6 letters or longer") if @raw_password.length < 6
+      if (@raw_password and @raw_password.length < 6) or (@password_required and !@raw_password)
+        return errors.add(:password, "must be 6 letters or longer")
       end
     end
 

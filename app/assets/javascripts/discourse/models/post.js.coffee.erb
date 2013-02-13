@@ -173,6 +173,27 @@ window.Discourse.Post = Ember.Object.extend Discourse.Presence,
   loadVersions: (callback) ->
     $.get "/posts/#{@get('id')}/versions.json", (result) -> callback(result)  
 
+
+  # Whether to show replies directly below 
+  showRepliesBelow: (->
+    reply_count = @get('reply_count')
+
+    # We don't show replies if there aren't any
+    return false if reply_count is 0
+
+    # Always show replies if the setting `supress_reply_directly_below` is false.
+    return true unless Discourse.SiteSettings.supress_reply_directly_below
+
+    # Always show replies if there's more than one
+    return true if reply_count > 1
+    
+    # If we have *exactly* one reply, we have to consider if it's directly below us
+    return false if @get('topic')?.isReplyDirectlyBelow(@)
+
+    true
+
+  ).property('reply_count')
+
 window.Discourse.Post.reopenClass
 
   REGULAR_TYPE: <%= Post::REGULAR %>

@@ -2,6 +2,8 @@ language: ruby
 rvm:
   - 1.9.3
 before_script:
+  - cp config/database.yml.sample config/database.yml
+  - cp config/redis.yml.sample config/redis.yml
   - psql -c 'create database discourse_test;' -U postgres
   - rake db:migrate
 script: 'rake spec && bundle exec guard-jasmine --server-timeout=60'

@@ -86,7 +86,8 @@ describe Post do
     let(:post_no_images) { Fabricate.build(:post, post_args) }
     let(:post_one_image) { Fabricate.build(:post, post_args.merge(raw: "![sherlock](http://bbc.co.uk/sherlock.jpg)")) }
     let(:post_two_images) { Fabricate.build(:post, post_args.merge(raw: "<img src='http://discourse.org/logo.png'> <img src='http://bbc.co.uk/sherlock.jpg'>")) }
-    let(:post_with_emoticons) { Fabricate.build(:post, post_args.merge(raw: '<img alt="smiley" title=":smiley:" src="/assets/emoji/smiley.png" class="emoji"> <img alt="wink" title=":wink:" src="/assets/emoji/wink.png" class="emoji">')) }
+    let(:post_with_avatars) { Fabricate.build(:post, post_args.merge(raw: '<img alt="smiley" title=":smiley:" src="/assets/emoji/smiley.png" class="avatar"> <img alt="wink" title=":wink:" src="/assets/emoji/wink.png" class="avatar">')) }
+    let(:post_with_two_classy_images) { Fabricate.build(:post, post_args.merge(raw: "<img src='http://discourse.org/logo.png' class='classy'> <img src='http://bbc.co.uk/sherlock.jpg' class='classy'>")) }
 
     it "returns 0 images for an empty post" do
       Fabricate.build(:post).image_count.should == 0
@@ -100,10 +101,14 @@ describe Post do
       post_two_images.image_count.should == 2
     end
 
-    it "doesn't count emoticons as images" do
-      post_with_emoticons.image_count.should == 0
+    it "doesn't count avatars as images" do
+      post_with_avatars.image_count.should == 0
     end
 
+    it "doesn't count whitelisted images" do
+      Post.stubs(:white_listed_image_classes).returns(["classy"]) 
+      post_with_two_classy_images.image_count.should == 0
+    end
 
     context "validation" do
       it "allows a new user to make a post with one image" do

@@ -46,6 +46,11 @@ class MessageBus::Rack::Middleware
         return [200,{"Content-Type" => "text/html"},["sent"]]
     end
 
+    if env['PATH_INFO'].start_with? '/message-bus/_diagnostics' 
+      diags = MessageBus::Rack::Diagnostics.new(@app)
+      return diags.call(env)
+    end
+
     client_id = env['PATH_INFO'].split("/")[2]
     return [404, {}, ["not found"]] unless client_id
 

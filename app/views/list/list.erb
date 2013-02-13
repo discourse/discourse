@@ -1,10 +1,11 @@
-<table class="topic-list">
+<div class="topic-list">
 <% @list.topics.each do |t| %>
-  <tr>
-    <td><a href="<%= t.relative_url %>"><%= t.title %></a> <span title='total posts'>[<%= t.posts_count %>]</span></td>
-  </tr>
+<a href="<%= t.relative_url %>"><%= t.title %></a> <span title='posts'>(<%= t.posts_count %>)</span><br/>
 <% end %>
-</table>
+</div>
+
 <% if @list.topics.length > 0 %>
-<a href="<%= @list.more_topics_url.sub('.json?','?') %>">next page</a>
+<p><a href="<%= @list.more_topics_url.sub('.json?','?') %>">next page &rarr;</a></p>
 <% end %>
+
+<p>Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled</p>

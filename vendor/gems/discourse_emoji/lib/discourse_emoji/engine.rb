@@ -9,6 +9,7 @@ module DiscourseEmoji
 
       app.config.after_initialize do 
         DiscoursePluginRegistry.setup(DiscourseEmoji::Plugin)
+        Post.white_listed_image_classes << "emoji"
       end
     end
 

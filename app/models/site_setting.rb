@@ -10,8 +10,8 @@ class SiteSetting < ActiveRecord::Base
 
   # settings available in javascript under Discourse.SiteSettings
   client_setting(:title, "Discourse")
-  client_setting(:logo_url, '/assets/logo.png')
-  client_setting(:logo_small_url, '')
+  client_setting(:logo_url, '/assets/d-logo-sketch.png')
+  client_setting(:logo_small_url, '/assets/d-logo-sketch-small.png')
   client_setting(:traditional_markdown_linebreaks, false)
   client_setting(:popup_delay, 1500)
   client_setting(:top_menu, 'popular|new|unread|favorited|categories')
@@ -29,6 +29,7 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:min_topic_title_length, 5)
   client_setting(:max_topic_title_length, 255)
   client_setting(:flush_timings_secs, 5)
+  client_setting(:supress_reply_directly_below, true)
 
   # settings only available server side
   setting(:auto_track_topics_after, 60000)
@@ -57,7 +58,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:invite_expiry_days, 14)
   setting(:active_user_rate_limit_secs, 60)
   setting(:previous_visit_timeout_hours, 1)
-  setting(:favicon_url, '/assets/favicon.ico')
+  setting(:favicon_url, '/assets/default-favicon.png')
 
   setting(:ninja_edit_window, 5.minutes.to_i)
   setting(:post_undo_action_window_mins, 10)
@@ -135,6 +136,8 @@ class SiteSetting < ActiveRecord::Base
 
   # Ways to catch griefers and other nasties
   setting(:email_blacklist_regexp, '')
+
+
 
   def self.call_mothership?
     self.enforce_global_nicknames? and self.discourse_org_access_key.present?

@@ -15,86 +15,21 @@ class TopicsController < ApplicationController
                                           :unmute,
                                           :set_notifications,
                                           :move_posts]
+  before_filter :consider_user_for_promotion, only: :show
 
   skip_before_filter :check_xhr, only: [:avatar, :show]
   caches_action :avatar, :cache_path => Proc.new {|c| "#{c.params[:post_number]}-#{c.params[:topic_id]}" }
 
+
   def show
-
-    # Consider the user for a promotion if they're new
-    if current_user.present?
-      Promotion.new(current_user).review if current_user.trust_level == TrustLevel.Levels[:new]
-    end
-
-    @topic_view = TopicView.new(params[:id] || params[:topic_id],
-                                current_user,
-                                username_filters: params[:username_filters],
-                                best_of: params[:best_of],
-                                page: params[:page])
+    create_topic_view
 
     anonymous_etag(@topic_view.topic) do
-      # force the correct slug
-      if params[:slug] && @topic_view.topic.slug != params[:slug]
-        fullpath = request.fullpath
-
-        split = fullpath.split('/')
-        split[2] = @topic_view.topic.slug
-
-        redirect_to split.join('/'), status: 301
-        return
-      end
-
-      # Figure out what we're filter on
-      if params[:post_number].present?
-        # Get posts near a post
-        @topic_view.filter_posts_near(params[:post_number].to_i)
-      elsif params[:posts_before].present?
-        @topic_view.filter_posts_before(params[:posts_before].to_i)
-      elsif params[:posts_after].present?
-        @topic_view.filter_posts_after(params[:posts_after].to_i)
-      else
-        # No filter? Consider it a paged view, default to page 0 which is the first segment
-        @topic_view.filter_posts_paged(params[:page].to_i)
-      end
+      redirect_to_correct_topic and return if slugs_do_not_match
       View.create_for(@topic_view.topic, request.remote_ip, current_user)
-
-      @topic_view.draft_key = @topic_view.topic.draft_key
-      @topic_view.draft_sequence = DraftSequence.current(current_user, @topic_view.draft_key)
-
-      if (!request.xhr? || params[:track_visit]) && current_user
-        TopicUser.track_visit! @topic_view.topic, current_user
-        @topic_view.draft = Draft.get(current_user, @topic_view.draft_key, @topic_view.draft_sequence)
-      end
-
-      topic_view_serializer = TopicViewSerializer.new(@topic_view, scope: guardian, root: false)
-
-      respond_to do |format|
-        format.html do
-          @canonical = "#{request.protocol}#{request.host_with_port}" + @topic_view.topic.relative_url
-
-          if params[:post_number]
-            @post = @topic_view.posts.select{|p| p.post_number == params[:post_number].to_i}.first
-            page = ((params[:post_number].to_i - 1) / SiteSetting.posts_per_page) + 1
-            @canonical << "?page=#{page}" if page > 1
-          else
-            @canonical << "?page=#{params[:page]}" if params[:page] && params[:page].to_i > 1
-          end
-
-          last_post = @topic_view.posts[-1]
-          if last_post.present? and (@topic_view.topic.highest_post_number > last_post.post_number)
-            @next_page = (@topic_view.posts[0].post_number / SiteSetting.posts_per_page) + 1
-          end
-
-          store_preloaded("topic_#{@topic_view.topic.id}", MultiJson.dump(topic_view_serializer))
-        end
-
-        format.json do
-          render_json_dump(topic_view_serializer)
-        end
-
-      end
+      track_visit_to_topic
+      perform_show_response
     end
-
   end
 
   def destroy_timings
@@ -241,12 +176,56 @@ class TopicsController < ApplicationController
 
   private
 
-    def toggle_mute(v)
-      @topic = Topic.where(id: params[:topic_id].to_i).first
-      guardian.ensure_can_see!(@topic)
+  def create_topic_view
+    opts = params.slice(:username_filters, :best_of, :page, :post_number, :posts_before, :posts_after)
+    @topic_view = TopicView.new(params[:id] || params[:topic_id], current_user, opts)
+  end
 
-      @topic.toggle_mute(current_user, v)
-      render nothing: true
+  def toggle_mute(v)
+    @topic = Topic.where(id: params[:topic_id].to_i).first
+    guardian.ensure_can_see!(@topic)
+
+    @topic.toggle_mute(current_user, v)
+    render nothing: true
+  end
+
+  def consider_user_for_promotion
+    Promotion.new(current_user).review if current_user.present?
+  end
+
+  def slugs_do_not_match
+    params[:slug] && @topic_view.topic.slug != params[:slug]
+  end
+
+  def redirect_to_correct_topic
+    fullpath = request.fullpath
+
+    split = fullpath.split('/')
+    split[2] = @topic_view.topic.slug
+
+    redirect_to split.join('/'), status: 301
+  end
+
+  def track_visit_to_topic
+    return unless should_track_visit_to_topic?
+    TopicUser.track_visit! @topic_view.topic, current_user
+    @topic_view.draft = Draft.get(current_user, @topic_view.draft_key, @topic_view.draft_sequence)
+  end
+
+  def should_track_visit_to_topic?
+    (!request.xhr? || params[:track_visit]) && current_user
+  end
+
+  def perform_show_response
+    topic_view_serializer = TopicViewSerializer.new(@topic_view, scope: guardian, root: false)
+    respond_to do |format|
+      format.html do
+        store_preloaded("topic_#{@topic_view.topic.id}", MultiJson.dump(topic_view_serializer))
+      end
+
+      format.json do
+        render_json_dump(topic_view_serializer)
+      end
     end
-
+  end
 end

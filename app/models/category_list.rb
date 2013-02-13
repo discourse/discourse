@@ -30,7 +30,7 @@ class CategoryList
 
 
       uncategorized = Category.new({name: SiteSetting.uncategorized_name,
-                                   slug: SiteSetting.uncategorized_name,
+                                   slug: Slug.for(SiteSetting.uncategorized_name),
                                    featured_topics: uncategorized_topics}.merge(totals))
 
       # Find the appropriate place to insert it:

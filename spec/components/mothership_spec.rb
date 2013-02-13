@@ -61,4 +61,34 @@ describe Mothership do
       Mothership.current_discourse_version().should == 1.0
     end
   end
+
+  describe '#change_nickname' do
+    it 'should return true when nickname is changed successfully' do
+      RestClient.stubs(:put).returns( {success: 'OK'}.to_json )
+      Mothership.change_nickname('MacGyver', 'MacG').should be_true
+    end
+
+    it 'should return raise NicknameUnavailable when nickname is not available' do
+      RestClient.stubs(:put).returns( {failed: -200}.to_json )
+      expect {
+        Mothership.change_nickname('MacGyver', 'MacG')
+      }.to raise_error(Mothership::NicknameUnavailable)
+    end
+
+    # TODO: General error handling in mothership.rb
+
+    # it 'should return raise NicknameUnavailable when nickname does not belong to this forum' do
+    #   RestClient.stubs(:put).returns( {failed: -13}.to_json )
+    #   expect {
+    #     Mothership.change_nickname('MacGyver', 'MacG')
+    #   }.to raise_error(Mothership::ActionForbidden)
+    # end
+
+    # it 'should return raise NicknameUnavailable when nickname does not belong to this forum' do
+    #   RestClient.stubs(:put).returns( {failed: -13}.to_json )
+    #   expect {
+    #     Mothership.change_nickname('MacGyver', 'MacG')
+    #   }.to raise_error(Mothership::ActionForbidden)
+    # end
+  end
 end

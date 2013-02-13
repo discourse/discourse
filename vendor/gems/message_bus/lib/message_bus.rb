@@ -10,6 +10,7 @@ require "message_bus/client"
 require "message_bus/connection_manager"
 require "message_bus/message_handler"
 require "message_bus/rack/middleware"
+require "message_bus/rack/diagnostics"
 
 # we still need to take care of the logger
 if defined?(::Rails)
@@ -71,19 +72,28 @@ module MessageBus::Implementation
   end
 
   def site_id_lookup(&blk)
-    @site_id_lookup ||= blk
+    @site_id_lookup = blk if blk
+    @site_id_lookup
   end
 
   def user_id_lookup(&blk)
-    @user_id_lookup ||= blk
+    @user_id_lookup = blk if blk
+    @user_id_lookup
+  end
+
+  def is_admin_lookup(&blk)
+    @is_admin_lookup = blk if blk
+    @is_admin_lookup
   end
 
   def on_connect(&blk)
-    @on_connect ||= blk
+    @on_connect = blk if blk
+    @on_connect
   end
 
   def on_disconnect(&blk)
-    @on_disconnect ||= blk
+    @on_disconnect = blk if blk
+    @on_disconnect
   end
 
   def allow_broadcast=(val)
