@@ -2,27 +2,23 @@
 # So we can execute code when things happen.
 module DiscourseEvent
 
-  class << self
+  # Defaults to a hash where default values are empty sets.
+  def self.events
+    @events ||= Hash.new { |hash, key| hash[key] = Set.new }
+  end
 
-    def trigger(event_name, *params)
-
-      return unless @events      
-      return unless event_list = @events[event_name]
-
-      event_list.each do |ev|
-        ev.call(*params)
-      end
+  def self.trigger(event_name, *params)
+    events[event_name].each do |event|
+      event.call(*params)
     end
+  end
 
-    def on(event_name, &block)
-      @events ||= {}
-      @events[event_name] ||= Set.new
-      @events[event_name] << block
-    end
+  def self.on(event_name, &block)
+    events[event_name] << block
+  end
 
-    def clear
-      @events = {}
-    end
+  def self.clear
+    @events = nil
   end
 
 end
