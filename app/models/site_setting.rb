@@ -137,6 +137,8 @@ class SiteSetting < ActiveRecord::Base
   # Ways to catch griefers and other nasties
   setting(:email_blacklist_regexp, '')
 
+  setting(:new_user_period_days, 10)
+
 
 
   def self.call_mothership?
