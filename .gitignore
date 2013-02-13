@@ -65,3 +65,6 @@ script/refresh_db
 
 # temp directory for chef (used to configure vagrant VM)
 chef/tmp/*
+
+# .procfile
+.profile
