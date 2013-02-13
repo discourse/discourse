@@ -3,7 +3,7 @@ require_dependency 'topic_query'
 
 class TopicView
 
-  attr_accessor :topic, :min, :max, :draft, :draft_key, :draft_sequence
+  attr_accessor :topic, :min, :max, :draft, :draft_key, :draft_sequence, :posts
 
   def initialize(topic_id, user=nil, options={})
     @topic = find_topic(topic_id)
@@ -126,15 +126,6 @@ class TopicView
     @posts = @posts.includes(:topic).joins(:user).limit(SiteSetting.posts_per_page)
     @max = @min + @posts.size
   end
-
-  def posts
-    @post_number.present? ? find_post_by_post_number : @posts
-  end
-
-  def find_post_by_post_number
-    @posts.select {|post| post.post_number == @post_number.to_i }
-  end
-
 
   def read?(post_number)
     read_posts_set.include?(post_number)

@@ -167,28 +167,23 @@ describe TopicView do
   context '.posts' do
     context 'near a post_number' do
 
-      context 'with a valid post_number' do
-        before do
-          topic.reload
-          topic_view.filter_posts_near(p2.post_number)
-        end
+      let (:near_topic_view) { TopicView.new(topic.id, coding_horror, post_number: p2.post_number) }
 
-        it 'returns posts around a post number' do
-          topic_view.posts.should == [p1, p2, p3]
-        end
-
-        it 'has a min of the 1st post number' do
-          topic_view.min.should == p1.post_number
-        end
-
-        it 'has a max of the 3rd post number' do
-          topic_view.max.should == p3.post_number
-        end
-
-        it 'is the inital load' do
-          topic_view.should be_initial_load
-        end       
+      it 'returns posts around a post number' do
+        near_topic_view.posts.should == [p1, p2, p3]
       end
+
+      it 'has a min of the 1st post number' do
+        near_topic_view.min.should == p1.post_number
+      end
+
+      it 'has a max of the 3rd post number' do
+        near_topic_view.max.should == p3.post_number
+      end
+
+      it 'is the inital load' do
+        near_topic_view.should be_initial_load
+      end       
 
     end
 
