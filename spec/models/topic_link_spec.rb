@@ -46,12 +46,40 @@ describe TopicLink do
 
   describe 'internal links' do
 
+    context "rendered onebox" do
+
+      before do
+        @other_topic = Fabricate(:topic, user: @user)
+        @other_topic.posts.create(user: @user, raw: "some content for the first post")
+        @other_post = @other_topic.posts.create(user: @user, raw: "some content for the second post")
+
+        @url = "http://#{test_uri.host}/t/#{@other_topic.slug}/#{@other_topic.id}/#{@other_post.post_number}"
+
+        @topic.posts.create(user: @user, raw: 'initial post')
+        @post = @topic.posts.create(user: @user, raw: "Link to another topic:\n\n#{@url}\n\n")
+        @post.reload
+        TopicLink.extract_from(@post)
+
+        @link = @topic.topic_links.first
+      end
+
+      it "should have a link" do
+        @link.should be_present
+      end
+
+      it "should be the canonical URL" do
+        @link.url.should == @url
+      end      
+
+
+    end
+
     context 'topic link' do
       before do
         @other_topic = Fabricate(:topic, user: @user)
         @other_post = @other_topic.posts.create(user: @user, raw: "some content")
 
-        @url = "http://#{test_uri.host}/t/topic-slug/#{@other_topic.id}"
+        @url = "http://#{test_uri.host}/t/#{@other_topic.slug}/#{@other_topic.id}"
 
         @topic.posts.create(user: @user, raw: 'initial post')
         @post = @topic.posts.create(user: @user, raw: "Link to another topic: #{@url}")
