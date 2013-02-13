@@ -5,9 +5,13 @@ require 'oneboxer'
 require 'oneboxer/android_app_store_onebox'
 
 describe Oneboxer::AndroidAppStoreOnebox do 
+  before(:each) do
+    @o = Oneboxer::AndroidAppStoreOnebox.new("https://play.google.com/store/apps/details?id=com.moosoft.parrot")
+    FakeWeb.register_uri(:get, @o.translate_url, :response => fixture_file('oneboxer/android.response'))
+  end
+  
   it "generates the expected onebox for Android App Store" do
-    o = Oneboxer::AndroidAppStoreOnebox.new("https://play.google.com/store/apps/details?id=com.moosoft.parrot")
-    o.onebox.should == expected_android_app_store_result
+    @o.onebox.should == expected_android_app_store_result
   end
   
 private

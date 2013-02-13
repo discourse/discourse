@@ -48,3 +48,4 @@ The following Ruby Gems are used in Discourse:
 * [rb-inotify](https://rubygems.org/gems/rb-inotify)
 * [terminal-notifier-guard](https://rubygems.org/gems/terminal-notifier-guard)
 * [pry-rails](https://rubygems.org/gems/pry-rails)
+* [fakeweb](https://rubygems.org/gems/fakeweb)

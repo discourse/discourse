@@ -5,9 +5,13 @@ require 'oneboxer'
 require 'oneboxer/flickr_onebox'
 
 describe Oneboxer::FlickrOnebox do 
+  before(:each) do
+    @o = Oneboxer::FlickrOnebox.new("http://www.flickr.com/photos/jaimeiniesta/3303881265")
+    FakeWeb.register_uri(:get, @o.translate_url, :response => fixture_file('oneboxer/flickr.response'))
+  end
+  
   it "generates the expected onebox for Flickr" do
-    o = Oneboxer::FlickrOnebox.new("http://www.flickr.com/photos/jaimeiniesta/3303881265")
-    o.onebox.should == expected_flickr_result
+    @o.onebox.should == expected_flickr_result
   end
   
 private

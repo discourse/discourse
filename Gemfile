@@ -70,6 +70,10 @@ group :assets do
   gem 'uglifier'
 end
 
+group :test do
+  gem "fakeweb", "~> 1.3.0"
+end
+
 group :test, :development do
   gem 'certified'
   gem 'fabrication'

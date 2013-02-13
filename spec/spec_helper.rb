@@ -8,6 +8,9 @@ require 'spork'
 #uncomment the following line to use spork with the debugger
 #require 'spork/ext/ruby-debug'
 
+require 'fakeweb'
+FakeWeb.allow_net_connect = false
+
 module Helpers
   def log_in(fabricator=nil)
     user = Fabricate(fabricator || :user)
@@ -18,7 +21,12 @@ module Helpers
   def log_in_user(user)
     session[:current_user_id] = user.id
   end
-
+  
+  def fixture_file(filename)
+    return '' if filename == ''
+    file_path = File.expand_path(File.dirname(__FILE__) + '/fixtures/' + filename)
+    File.read(file_path)
+  end
 end
 
 Spork.prefork do
