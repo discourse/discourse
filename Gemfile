@@ -28,6 +28,7 @@ gem 'mustache'
 gem 'nokogiri'
 gem "omniauth"
 gem "omniauth-openid"
+gem "openid-redis-store"
 gem "omniauth-facebook"
 gem "omniauth-twitter"
 gem 'oj'

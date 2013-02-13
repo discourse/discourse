@@ -283,6 +283,9 @@ GEM
     omniauth-twitter (0.0.14)
       multi_json (~> 1.3)
       omniauth-oauth (~> 1.0)
+    openid-redis-store (0.0.2)
+      redis
+      ruby-openid
     pbkdf2 (0.1.0)
     pg (0.14.1)
     polyglot (0.3.3)
@@ -477,6 +480,7 @@ DEPENDENCIES
   omniauth-facebook
   omniauth-openid
   omniauth-twitter
+  openid-redis-store
   pbkdf2
   pg
   pry-rails
