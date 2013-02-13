@@ -149,8 +149,11 @@
       > li {
         margin-bottom: 10px;
       }
-      .incoming .icon-arrow-right:before {
+      .icon-arrow-right:before {
         content: "\f060";
+      }
+      .incoming .icon-arrow-right:before {
+        content: "\f061";
       }
     }
   }
