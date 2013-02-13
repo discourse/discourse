@@ -1,8 +1,10 @@
+<% local_domain = "#{request.protocol}#{request.host_with_port}" %>
+
 <p>The page you requested doesn't exist on this discussion forum. Perhaps we can help find it, or another topic like it:</p>
 <table>
     <tr>
       <td style="vertical-align:top; padding:0 20px 20px 0;">
-        <h2>Most popular topics</h2>
+        <h2>Popular topics</h2>
         <% @popular.each do |t| %>
           <a href='<%= t.relative_url %>'><%= t.title %></a><br/>
         <% end %>
@@ -22,7 +24,7 @@
 <h2>Search for this topic</h2>
 <p>
     <form action='http://google.com'>
-    <input type="text" name='q' value="<%= @slug %>">
+    <input type="text" name='q' value="site:<%= local_domain %> <%= @slug %>">
     <!--<input type="button" class="btn" value="Search Here" onclick="alert('single page search results not implemented yet');" />-->
     <input type="submit" class="btn btn-primary" value="Search Google" />
     </form>
