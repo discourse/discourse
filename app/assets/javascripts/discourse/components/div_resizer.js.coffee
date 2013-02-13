@@ -29,6 +29,7 @@
     thisMousePos = mousePosition(e).y
     size = originalDivHeight + (originalPos - thisMousePos)
     lastMousePos = thisMousePos
+    size = Math.min(size, $(window).height())
     size = Math.max(min, size)
     div.height size + "px"
     endDrag e,opts if size < min

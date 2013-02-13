@@ -22,11 +22,14 @@ gem 'has_ip_address'
 gem 'hiredis'
 gem 'i18n-js'
 gem 'jquery-rails'
-gem 'koala', require: false
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
-gem 'oauth', require: false
+gem "omniauth"
+gem "omniauth-openid"
+gem "openid-redis-store"
+gem "omniauth-facebook"
+gem "omniauth-twitter"
 gem 'oj'
 gem 'pbkdf2'
 gem 'pg'
@@ -36,7 +39,6 @@ gem 'redis'
 gem 'redis-rails'
 gem 'rest-client'
 gem 'rinku'
-gem 'ruby-openid', require: 'openid'
 gem 'sanitize'
 gem 'sass'
 gem 'seed-fu'
@@ -92,5 +94,7 @@ end
 group :development do 
   gem 'better_errors'
   gem 'binding_of_caller' # I tried adding this and got an occational crash
-  gem 'pry-rails'
+  gem 'librarian', '>= 0.0.25', require: false
+  gem 'pry-rails'  
 end
+

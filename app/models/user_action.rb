@@ -3,6 +3,7 @@ require_dependency 'sql_builder'
 
 class UserAction < ActiveRecord::Base
   belongs_to :user
+  belongs_to :target_post, :class_name => "Post"
   attr_accessible :acting_user_id, :action_type, :target_topic_id, :target_post_id, :target_user_id, :user_id
 
   validates_presence_of :action_type
@@ -15,7 +16,6 @@ class UserAction < ActiveRecord::Base
   POST = 5
   RESPONSE= 6
   MENTION = 7
-  TOPIC_RESPONSE = 8
   QUOTE = 9
   STAR = 10
   EDIT = 11
@@ -29,7 +29,6 @@ class UserAction < ActiveRecord::Base
     NEW_TOPIC,
     POST,
     RESPONSE,
-    TOPIC_RESPONSE,
     LIKE,
     WAS_LIKED,
     MENTION,
@@ -39,23 +38,19 @@ class UserAction < ActiveRecord::Base
   ].each_with_index.to_a.flatten]
 
   def self.stats(user_id, guardian)
-    sql = <<SQL
-select action_type, count(*) count
-from user_actions
-where user_id = ?
-group by action_type
-SQL
-
-    results = self.exec_sql(sql, user_id).to_a
+    results = UserAction.select("action_type, COUNT(*) count, '' description")
+      .where(user_id: user_id)
+      .group('action_type')
+      .to_a
 
     # should push this into the sql at some point, but its simple enough for now
     unless guardian.can_see_private_messages?(user_id)
-      results.reject!{|a| [GOT_PRIVATE_MESSAGE, NEW_PRIVATE_MESSAGE].include?(a["action_type"].to_i)}
+      results.reject!{|a| [GOT_PRIVATE_MESSAGE, NEW_PRIVATE_MESSAGE].include?(a.action_type)}
     end
 
-    results.sort!{|a,b| ORDER[a["action_type"].to_i] <=> ORDER[b["action_type"].to_i]}
+    results.sort!{|a,b| ORDER[a.action_type] <=> ORDER[b.action_type]}
     results.each do |row|
-      row["description"] = self.description(row["action_type"], detailed: true)
+      row.description = self.description(row.action_type, detailed: true)
     end
 
     results
@@ -74,14 +69,22 @@ SQL
     guardian = opts[:guardian]
     ignore_private_messages = opts[:ignore_private_messages]
 
+    # The weird thing is that target_post_id can be null, so it makes everything 
+    #  ever so more complex. Should we allow this, not sure. 
+
     builder = SqlBuilder.new("
-select t.title, a.action_type, a.created_at,
-  t.id topic_id, coalesce(p.post_number, 1) post_number, u.email ,u.username, u.name, u.id user_id, coalesce(p.cooked, p2.cooked) cooked
-from user_actions as a
-join topics t on t.id = a.target_topic_id
-left join posts p on p.id = a.target_post_id
-left join users u on u.id = a.acting_user_id
-left join posts p2 on p2.topic_id = a.target_topic_id and p2.post_number = 1
+SELECT 
+  t.title, a.action_type, a.created_at, t.id topic_id, 
+  coalesce(p.post_number, 1) post_number, 
+  pu.email ,pu.username, pu.name, pu.id user_id, 
+  u.email acting_email, u.username acting_username, u.name acting_name, u.id acting_user_id, 
+  coalesce(p.cooked, p2.cooked) cooked
+FROM user_actions as a
+JOIN topics t on t.id = a.target_topic_id
+LEFT JOIN posts p on p.id = a.target_post_id
+JOIN posts p2 on p2.topic_id = a.target_topic_id and p2.post_number = 1
+JOIN users u on u.id = a.acting_user_id
+JOIN users pu on pu.id = COALESCE(p.user_id, t.user_id)
 /*where*/
 /*order_by*/
 /*offset*/
@@ -109,13 +112,16 @@ left join posts p2 on p2.topic_id = a.target_topic_id and p2.post_number = 1
     end
 
     data.each do |row|
+      row["action_type"] = row["action_type"].to_i
       row["description"] = self.description(row["action_type"])
       row["created_at"] = DateTime.parse(row["created_at"])
       # we should probably cache the excerpts in the db at some point
       row["excerpt"] = PrettyText.excerpt(row["cooked"],300) if row["cooked"]
       row["cooked"] = nil
       row["avatar_template"] = User.avatar_template(row["email"])
+      row["acting_avatar_template"] = User.avatar_template(row["acting_email"])
       row.delete("email")
+      row.delete("acting_email")
       row["slug"] = Slug.for(row["title"])
     end
 
@@ -137,8 +143,6 @@ left join posts p2 on p2.topic_id = a.target_topic_id and p2.post_number = 1
         t[:likes_given]
       when RESPONSE
         t[:responses]
-      when TOPIC_RESPONSE
-        t[:topic_responses]
       when POST
         t[:posts]
       when MENTION
@@ -161,7 +165,7 @@ left join posts p2 on p2.topic_id = a.target_topic_id and p2.post_number = 1
         then t[:posted]
       when LIKE,WAS_LIKED
         then t[:liked]
-      when RESPONSE, TOPIC_RESPONSE,POST
+      when RESPONSE,POST
         then t[:responded_to]
       when BOOKMARK
         then t[:bookmarked]

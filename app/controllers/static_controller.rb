@@ -9,6 +9,11 @@ class StaticController < ApplicationController
     # Don't allow paths like ".." or "/" or anything hacky like that
     page.gsub!(/[^a-z0-9\_\-]/, '')
 
+    # Some variables to substitute
+    @company_shortname = 'CDCK'
+    @company_fullname = 'Civilized Discourse Construction Kit, Inc.'
+    @company_domain = 'discourse.org'
+
     file = "static/#{page}.html"
     templates = lookup_context.find_all(file)
     if templates.any?

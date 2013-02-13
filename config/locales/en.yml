@@ -212,7 +212,7 @@ en:
     access_password: "restrict_access is enabled ensure that this password is entered"
     queue_jobs: "queue various jobs in sidekiq, if false queues are inline"
     crawl_images: "enable retrieving of images from third party sources"
-    ninja_edit_window: "how quickly you can make an edit without it saving a new version"
+    ninja_edit_window: "how quickly you can make an edit without it saving a new version, in seconds."
     enable_imgur: "enable imgur api for uploading, don't host files locally"
     imgur_api_key: "imgur.com api key - required for image upload"
     imgur_endpoint: "end point for uploading imgur.com images"
@@ -225,7 +225,7 @@ en:
     post_onebox_maxlength: "Maximum length of a oneboxed discourse post."
     category_post_template: "The post template that appears once you create a category"
     new_topics_rollup: "How many topics can be inserted on the topic list before rolling up."
-    onebox_max_chars: "The maximum amount of characteres a onebox will import in a text blob."
+    onebox_max_chars: "The maximum amount of characters a onebox will import in a text blob."
     logo_url: "The logo for your site eg: http://xyz.com/x.png"
     logo_small_url: "The small logo for your site (shows up on topic pages) eg: http://xyz.com/x.png"
     favicon_url: "A favicon for your site"
@@ -244,8 +244,8 @@ en:
 
     auto_track_topics_after: "How many milliseconds before a topic is automatically tracked (0 for always, -1 for never)"
 
-    flags_required_to_hide_post: "Posts will be automaically hidden once the flag count reaches this threshold (0 for never)"
-    cooldown_minutes_after_hiding_posts: "How many minutes must a user wait till they can edit thier post after it is hidden due to flagging"
+    flags_required_to_hide_post: "Posts will be automatically hidden once the flag count reaches this threshold (0 for never)"
+    cooldown_minutes_after_hiding_posts: "How many minutes must a user wait till they can edit their post after it is hidden due to flagging"
 
     traditional_markdown_linebreaks: "Use traditional linebreaks in markdown, wrapping is implicit unless postfixed with 2 spaces"
     post_undo_action_window_mins: "The window in which someone can reverse an action on a post (such as liking)"
@@ -259,7 +259,7 @@ en:
     posts_per_page: "How many posts are returned on a topic page"
     system_username: "Username that sends system messages"
     send_welcome_message: "Do new users get a welcome private message?"
-    
+    supress_reply_directly_below: "Don't show replies button below a post when the reply is directly below"
     allow_index_in_robots_txt: "Site should be indexed by search engines (update robots.txt)"
 
     port: "If you'd like to specify a port in the URL. Useful in development mode. Leave blank for none."
@@ -316,7 +316,7 @@ en:
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
-    type_to_filter: "Type to Filter..."
+    type_to_filter: "type to filter..."
 
     admin:      
       title: 'Discourse Admin'
@@ -341,7 +341,7 @@ en:
         undo_preview: "undo preview"
         save: "Save"
         delete: "Delete"
-        delete_confirm: "Delte this customization?"
+        delete_confirm: "Delete this customization?"
 
       email_logs:
         title: "Email Logs"
@@ -460,6 +460,8 @@ en:
     saving: "Saving..."
     saved: "Saved!"
 
+    user_action_descriptions:
+      "6": "Responses"
     user:
       information: "User Information"
       profile: Profile
@@ -472,19 +474,19 @@ en:
       activity_stream: "Activity"
       preferences: "Preferences"
       bio: "About me"
-      change_password: "change password"
+      change_password: "change"
       invited_by: "Invited By"
       trust_level: "Trust Level"
 
       change_username: 
-        action: "change username"
+        action: "change"
         title: "Change Username"
         confirm: "There could be consequences to changing your username. Are you absolutely sure you want to?"
         taken: "Sorry that username is taken."
         error: "There was an error changing your username."
         invalid: "That username is invalid. It must only include numbers and letters"
       change_email:
-        action: 'change email'
+        action: 'change'
         title: "Change Email"
         taken: "Sorry that email is not available."
         error: "There was an error changing your email. Perhaps that address is already in use?"
@@ -524,7 +526,7 @@ en:
       website: "Web Site"
       email_settings: "Email"
       email_digests: 
-        title: "Receive an email digest of what's new"
+        title: "When I don't visit the site, send me an email digest of what's new"
         daily: "daily"
         weekly: "weekly"
         bi_weekly: "every two weeks"
@@ -1126,7 +1128,7 @@ en:
 
         However, if the post is hidden by the community a second time, the moderators will be notified -- and there may be further action, including the possible suspension of your account.
 
-        For additional guidance, please refer to our [FAQ](/faq).
+        For additional guidance, please refer to our [FAQ](%{base_url}/faq).
 
     usage_tips:
       text_body_template: |
@@ -1176,7 +1178,7 @@ en:
 
         %{new_user_tips}
 
-        We believe in [civilized community behavior](/faq) at all times.
+        We believe in [civilized community behavior](%{base_url}/faq) at all times.
 
         Enjoy your stay!
 
@@ -1189,7 +1191,7 @@ en:
 
         %{new_user_tips}
 
-        We believe in [civilized community behavior](/faq) at all times.
+        We believe in [civilized community behavior](%{base_url}/faq) at all times.
 
         Enjoy your stay!
 
@@ -1210,33 +1212,11 @@ en:
 
         %{new_user_tips}
 
-        We believe in [civilized community behavior](/faq) at all times.
+        We believe in [civilized community behavior](%{base_url}/faq) at all times.
 
         Enjoy your stay!
 
         [prefs]: %{user_preferences_url}
-
-    flag_threshold_reached:
-       subject_template: "Posting Hidden due to Community Flagging"
-       text_body_template: |
-         Hello,
-
-         This is an automated message from (Community Name) to inform you that the following post was hidden as a result of community flagging:
-
-         (onebox of actual flagged post goes here)
-
-         Your post was hidden for this flag reason:
-
-         > (Largest Flag vote category name goes here, and brief description from the flag dialog, and link. Vote counts are not displayed.)
-
-         Keep in mind that it took multiple community members to flag this item before it was hidden. Consider how you might change your post to reflect their feedback.
-
-         You can edit the post after (x) minutes, and it will be automatically unhidden. This will increase your forum trust level.
-
-         However, if the post is hidden by the community a second time, the moderators will be notified and there may be further action, including the possible suspension of your account.
-
-         For additional guidance, [refer to our FAQ](/faq).
-
 
     export_succeeded:
       subject_template: "Export completed successfully"

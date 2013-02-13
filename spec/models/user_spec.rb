@@ -638,7 +638,7 @@ describe User do
       it 'should return false' do
         user.email_tokens.each {|t| t.destroy}
         user.reload
-        user.email_confirmed?.should be_false
+        user.email_confirmed?.should be_true
       end
     end
   end
