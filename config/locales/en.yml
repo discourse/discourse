@@ -225,7 +225,7 @@ en:
     post_onebox_maxlength: "Maximum length of a oneboxed discourse post."
     category_post_template: "The post template that appears once you create a category"
     new_topics_rollup: "How many topics can be inserted on the topic list before rolling up."
-    onebox_max_chars: "The maximum amount of characteres a onebox will import in a text blob."
+    onebox_max_chars: "The maximum amount of characters a onebox will import in a text blob."
     logo_url: "The logo for your site eg: http://xyz.com/x.png"
     logo_small_url: "The small logo for your site (shows up on topic pages) eg: http://xyz.com/x.png"
     favicon_url: "A favicon for your site"
@@ -244,8 +244,8 @@ en:
 
     auto_track_topics_after: "How many milliseconds before a topic is automatically tracked (0 for always, -1 for never)"
 
-    flags_required_to_hide_post: "Posts will be automaically hidden once the flag count reaches this threshold (0 for never)"
-    cooldown_minutes_after_hiding_posts: "How many minutes must a user wait till they can edit thier post after it is hidden due to flagging"
+    flags_required_to_hide_post: "Posts will be automatically hidden once the flag count reaches this threshold (0 for never)"
+    cooldown_minutes_after_hiding_posts: "How many minutes must a user wait till they can edit their post after it is hidden due to flagging"
 
     traditional_markdown_linebreaks: "Use traditional linebreaks in markdown, wrapping is implicit unless postfixed with 2 spaces"
     post_undo_action_window_mins: "The window in which someone can reverse an action on a post (such as liking)"
@@ -341,7 +341,7 @@ en:
         undo_preview: "undo preview"
         save: "Save"
         delete: "Delete"
-        delete_confirm: "Delte this customization?"
+        delete_confirm: "Delete this customization?"
 
       email_logs:
         title: "Email Logs"
