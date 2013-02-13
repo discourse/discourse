@@ -1,10 +1,3 @@
-RESPONSE = "6"
-MENTION = "7"
-TOPIC_RESPONSE = "8"
-QUOTE = "9"
-NEW_PRIVATE_MESSAGE = "12"
-GOT_PRIVATE_MESSAGE = "13"
-
 window.Discourse.User = Discourse.Model.extend Discourse.Presence,
 
   avatarLarge: (->
@@ -68,7 +61,7 @@ window.Discourse.User = Discourse.Model.extend Discourse.Presence,
         callback(message)
 
   filterStream: (filter)->
-    filter = Discourse.User.statGroups[filter].join(",") if Discourse.User.statGroups[filter]
+    filter = Discourse.UserAction.statGroups[filter].join(",") if Discourse.UserAction.statGroups[filter]
     @set('streamFilter', filter)
     @set('stream', Em.A())
     @loadMoreUserActions()
@@ -97,6 +90,7 @@ window.Discourse.User = Discourse.Model.extend Discourse.Presence,
         if result and result.user_actions and result.user_actions.each
           result.user_actions.each (i)=>
             stream.pushObject(Discourse.UserAction.create(i))
+          stream = Discourse.UserAction.collapseStream(stream)
           @set('stream', stream)
         callback() if callback
 
@@ -104,7 +98,7 @@ window.Discourse.User = Discourse.Model.extend Discourse.Presence,
     total=0
     return 0 unless stats = @get('stats')
     @get('stats').each (s)->
-      total+= parseInt(s.count) unless s.action_type is NEW_PRIVATE_MESSAGE || s.action_type is GOT_PRIVATE_MESSAGE
+      total+= parseInt(s.count) unless s.get("isPM")
     total
   ).property('stats.@each')
 
@@ -112,7 +106,7 @@ window.Discourse.User = Discourse.Model.extend Discourse.Presence,
     r = []
     return r if @blank('stats')
     @get('stats').each (s)->
-      r.push s unless (s.action_type == NEW_PRIVATE_MESSAGE || s.action_type == GOT_PRIVATE_MESSAGE)
+      r.push s unless s.get('isPM')
     r
   ).property('stats.@each')
 
@@ -120,14 +114,14 @@ window.Discourse.User = Discourse.Model.extend Discourse.Presence,
     r = []
     return r if @blank('stats')
     @get('stats').each (s)->
-      r.push s if (s.action_type is NEW_PRIVATE_MESSAGE or s.action_type is GOT_PRIVATE_MESSAGE)
+      r.push s if s.get('isPM')
     r
   ).property('stats.@each')
 
   inboxCount: (->
     r = 0
     @get('stats').each (s)->
-      if s.action_type is GOT_PRIVATE_MESSAGE
+      if s.action_type == Discourse.UserAction.GOT_PRIVATE_MESSAGE
         r = s.count
         return false
     return r
@@ -136,7 +130,7 @@ window.Discourse.User = Discourse.Model.extend Discourse.Presence,
   sentItemsCount: (->
     r = 0
     @get('stats').each (s)->
-      if s.action_type is NEW_PRIVATE_MESSAGE
+      if s.action_type == Discourse.UserAction.NEW_PRIVATE_MESSAGE
         r = s.count
         return false
     return r
@@ -155,10 +149,13 @@ window.Discourse.User.reopenClass
     g = {}
     stats.each (s) =>
       found = false
-      for k,v of @statGroups
+      for k,v of Discourse.UserAction.statGroups
         if v.contains(s.action_type)
           found = true
-          g[k] = {count: 0} unless g[k]
+          g[k] = Em.Object.create(
+            description: Em.String.i18n("user_action_descriptions.#{k}")
+            count: 0
+            action_type: parseInt(k,10)) unless g[k]
           g[k].count += parseInt(s.count)
           c = g[k].count
           if s.action_type == k
@@ -172,23 +169,25 @@ window.Discourse.User.reopenClass
     ).exclude (s)->
       !s
 
-  statGroups: (->
-    g = {}
-    g[RESPONSE] = [RESPONSE,MENTION,TOPIC_RESPONSE,QUOTE]
-    g
-  )()
-
   find: (username) ->
     promise = new RSVP.Promise()
     $.ajax
       url: "/users/" + username + '.json',
       success: (json) =>
-        json.user.stats = @groupStats(json.user.stats)
-        json.user.stream = json.user.stream.map (ua) -> Discourse.UserAction.create(ua) if json.user.stream
+        # todo: decompose to object
+        json.user.stats = @groupStats(json.user.stats.map (s)->
+          obj = Em.Object.create(s)
+          obj.isPM = obj.action_type == Discourse.UserAction.NEW_PRIVATE_MESSAGE ||
+            obj.action_type == Discourse.UserAction.GOT_PRIVATE_MESSAGE
+          obj
+        )
+        json.user.stream = Discourse.UserAction.collapseStream(json.user.stream.map (ua) ->
+          Discourse.UserAction.create(ua)) if json.user.stream
         user = Discourse.User.create(json.user)
         promise.resolve(user)
       error: (xhr) -> promise.reject(xhr)
     promise
+
 
   createAccount: (name, email, password, username, passwordConfirm, challenge) ->
     $.ajax

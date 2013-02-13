@@ -268,6 +268,27 @@
     font-size: 14px;
   }
 }
+
+// styling of bottom section 
+#user-stream .child-actions {
+  margin-top: 8px;
+  .avatar-link {
+    float: none;
+  } 
+  .icon {
+    width: 15px;
+    display: inline-block;
+    color: #777;
+  }
+  .avatar-wrapper {
+    border: none;
+  }
+  .avatar-link {
+    margin-right: 3px;
+
+  }
+}
+
 @include medium-width {
   #user-stream {
     width: 725px;

@@ -1,6 +1,6 @@
 describe "Discourse.MessageBus", ->
 
-  describe "Web Sockets", ->
+  describe "Long polling", ->
 
     bus = Discourse.MessageBus
     bus.start()

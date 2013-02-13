@@ -220,7 +220,6 @@ window.Discourse = Ember.Application.createWithMixins
     Discourse.KeyValueStore.init("discourse_", Discourse.MessageBus)
     Discourse.insertProbes()
 
-
     # subscribe to any site customizations that are loaded
     $('link.custom-css').each ->
       split = @href.split("/")

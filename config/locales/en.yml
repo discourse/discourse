@@ -460,6 +460,8 @@ en:
     saving: "Saving..."
     saved: "Saved!"
 
+    user_action_descriptions:
+      "6": "Responses"
     user:
       information: "User Information"
       profile: Profile
