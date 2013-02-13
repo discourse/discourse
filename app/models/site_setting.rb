@@ -126,7 +126,7 @@ class SiteSetting < ActiveRecord::Base
 
   # Trust related
   setting(:basic_requires_topics_entered, 5)
-  setting(:basic_requires_read_posts, 100)
+  setting(:basic_requires_read_posts, 50)
   setting(:basic_requires_time_spent_mins, 30)
 
   # Entropy checks
