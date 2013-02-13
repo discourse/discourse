@@ -1,5 +1,5 @@
 <h2>
-  <a href="<%= @topic_view.relative_url %>"><%= @topic_view.title %></a>
+   <%= render_topic_title(@topic_view.topic) %>
 </h2>
 <hr/>
 
@@ -15,7 +15,7 @@
 
 <% if @topic_view.next_page %>
   <p>
-    <a href="<%= @topic_view.next_page_path %>">next page &rarr;</a>
+    <b><%= link_to("next page &rarr;", @topic_view.next_page_path ) %></b>
   </p>
 <% end %>
 
