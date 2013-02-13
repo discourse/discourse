@@ -212,7 +212,7 @@ en:
     access_password: "restrict_access is enabled ensure that this password is entered"
     queue_jobs: "queue various jobs in sidekiq, if false queues are inline"
     crawl_images: "enable retrieving of images from third party sources"
-    ninja_edit_window: "how quickly you can make an edit without it saving a new version"
+    ninja_edit_window: "how quickly you can make an edit without it saving a new version, in seconds."
     enable_imgur: "enable imgur api for uploading, don't host files locally"
     imgur_api_key: "imgur.com api key - required for image upload"
     imgur_endpoint: "end point for uploading imgur.com images"
