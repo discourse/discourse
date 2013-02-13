@@ -1,19 +1,21 @@
 <p>The page you requested doesn't exist on this discussion forum. Perhaps we can help find it, or another topic like it:</p>
 <table>
     <tr>
-    <td style='padding: 5px 10px 20px 0'>
+      <td style="vertical-align:top; padding:0 20px 20px 0;">
         <h2>Most popular topics</h2>
         <% @popular.each do |t| %>
           <a href='<%= t.relative_url %>'><%= t.title %></a><br/>
         <% end %>
-        <a href="/popular">See More...</a>
+        <br/>
+        <a href="/popular" class="btn">See More&hellip;</a>
     </td>
-    <td style='padding: 5px 0 20px'>
+      <td style="vertical-align:top; padding:0 0 20px 0;">
         <h2>Recent topics</h2>
         <% @recent.each do |t| %>
           <a href='<%= t.relative_url %>'><%= t.title %></a><br/>
         <% end %>
-        <a href="/popular">See More...</a>
+        <br/>
+        <a href="/popular" class="btn">See More&hellip;</a>
     </td>
     </tr>
 </table>
@@ -21,7 +23,7 @@
 <p>
     <form action='http://google.com'>
     <input type="text" name='q' value="<%= @slug %>">
-    <input type="button" value="Search Here" onclick="alert('single page search results not implemented yet');" />
-    <input type="submit" value="Search Google" />
+    <!--<input type="button" class="btn" value="Search Here" onclick="alert('single page search results not implemented yet');" />-->
+    <input type="submit" class="btn btn-primary" value="Search Google" />
     </form>
 </p>
