@@ -111,12 +111,8 @@ Discourse::Application.routes.draw do
 
   resources :notifications
   resources :categories
-  resources :user_open_ids do 
-    collection do
-      get 'frame'
-      get 'complete'
-    end
-  end
+
+  match "/auth/:provider/callback", to: "users/omniauth_callbacks#complete"
 
   get 'twitter/frame' => 'twitter#frame'
   get 'twitter/complete' => 'twitter#complete'

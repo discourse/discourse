@@ -47,22 +47,22 @@ window.Discourse.LoginView = window.Discourse.ModalBodyView.extend Discourse.Pre
     @set('authenticate', 'twitter')
     left = @get('lastX') - 400
     top = @get('lastY') - 200
-    window.open("/twitter/frame", "_blank", "menubar=no,status=no,height=400,width=800,left=" + left + ",top=" + top)
+    window.open("/auth/twitter", "_blank", "menubar=no,status=no,height=400,width=800,left=" + left + ",top=" + top)
 
   facebookLogin: ()->
     @set('authenticate', 'facebook')
     left = @get('lastX') - 400
     top = @get('lastY') - 200
-    window.open("/facebook/frame", "_blank", "menubar=no,status=no,height=400,width=800,left=" + left + ",top=" + top)
+    window.open("/auth/facebook", "_blank", "menubar=no,status=no,height=400,width=800,left=" + left + ",top=" + top)
 
   openidLogin: (provider)->
     left = @get('lastX') - 400
     top = @get('lastY') - 200
     if(provider == "yahoo")
       @set("authenticate", 'yahoo')
-      window.open("/user_open_ids/frame?provider=yahoo", "_blank", "menubar=no,status=no,height=400,width=800,left=" + left + ",top=" + top)
+      window.open("/auth/yahoo", "_blank", "menubar=no,status=no,height=400,width=800,left=" + left + ",top=" + top)
     else
-      window.open("/user_open_ids/frame?provider=google", "_blank", "menubar=no,status=no,height=500,width=850,left=" + left + ",top=" + top)
+      window.open("/auth/google", "_blank", "menubar=no,status=no,height=500,width=850,left=" + left + ",top=" + top)
       @set("authenticate", 'google')
 
   authenticationComplete: (options)->
