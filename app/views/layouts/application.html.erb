@@ -6,14 +6,8 @@
     <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
     <meta content="" name="description">
     <meta content="" name="author">
-    <%- 
-      canonical = capture{yield :canonical} 
-      if canonical
-    %>
-    <meta rel="canonical" href="<%= canonical %>">
-    <%-
-      end
-    %>
+
+    <%= canonical_link_tag %>
 
     <link rel="icon" type="image/png" href=<%=SiteSetting.favicon_url%>>
     <%= javascript_include_tag "preload_store" %>

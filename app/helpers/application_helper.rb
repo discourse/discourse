@@ -1,10 +1,12 @@
 require 'current_user'
+require 'canonical_url'
 require_dependency 'guardian'
 require_dependency 'unread'
 require_dependency 'age_words'
 
 module ApplicationHelper
   include CurrentUser
+  include CanonicalURL::Helpers
 
   def with_format(format, &block)
     old_formats = formats
