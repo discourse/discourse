@@ -51,6 +51,9 @@ class User < ActiveRecord::Base
   end
 
   def self.suggest_username(name)
+
+    return nil unless name.present?
+    
     # If it's an email
     if name =~ /([^@]+)@([^\.]+)/
       name = Regexp.last_match[1]

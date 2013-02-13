@@ -124,6 +124,10 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     email = data[:email]
 
+    # If the auth supplies a name / username, use those. Otherwise start with email.
+    name = data[:name] || data[:email]
+    username = data[:nickname] || data[:email]
+
     user_open_id = UserOpenId.find_by_url(identity_url)
 
     if user_open_id.blank? && user = User.find_by_email(email)
@@ -147,8 +151,8 @@ class Users::OmniauthCallbacksController < ApplicationController
     else
       @data = {
         email: email,
-        name: User.suggest_name(email),
-        username: User.suggest_username(email),
+        name: User.suggest_name(name),
+        username: User.suggest_username(username),
         email_valid: true ,
         auth_provider: data[:provider]
       }

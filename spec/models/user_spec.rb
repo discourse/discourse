@@ -394,6 +394,11 @@ describe User do
   end
 
   describe '.suggest_username' do
+
+    it "doesn't raise an error on nil username" do
+      User.suggest_username(nil).should be_nil
+    end
+
     it 'corrects weird characters' do
       User.suggest_username("Darth%^Vadar").should == "Darth_Vadar"
     end
