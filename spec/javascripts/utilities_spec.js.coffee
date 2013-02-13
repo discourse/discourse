@@ -80,3 +80,11 @@ describe "Discourse.Utilities", ->
 
       it "works with links that have underscores in them", ->
         expect(cook("http://en.wikipedia.org/wiki/Homicide:_Life_on_the_Street")).toBe("<p><a href=\"http://en.wikipedia.org/wiki/Homicide:_Life_on_the_Street\" class=\"onebox\" target=\"_blank\">http://en.wikipedia.org/wiki/Homicide:_Life_on_the_Street</a></p>")
+
+  describe "emailValid", ->
+
+    it "allows upper case in first part of emails", ->
+      expect(Discourse.Utilities.emailValid('Bob@example.com')).toBe(true)
+
+    it "allows upper case in domain of emails", ->
+      expect(Discourse.Utilities.emailValid('bob@EXAMPLE.com')).toBe(true)
