@@ -1126,7 +1126,7 @@ en:
 
         However, if the post is hidden by the community a second time, the moderators will be notified -- and there may be further action, including the possible suspension of your account.
 
-        For additional guidance, please refer to our [FAQ](/faq).
+        For additional guidance, please refer to our [FAQ](%{base_url}/faq).
 
     usage_tips:
       text_body_template: |
@@ -1176,7 +1176,7 @@ en:
 
         %{new_user_tips}
 
-        We believe in [civilized community behavior](/faq) at all times.
+        We believe in [civilized community behavior](%{base_url}/faq) at all times.
 
         Enjoy your stay!
 
@@ -1189,7 +1189,7 @@ en:
 
         %{new_user_tips}
 
-        We believe in [civilized community behavior](/faq) at all times.
+        We believe in [civilized community behavior](%{base_url}/faq) at all times.
 
         Enjoy your stay!
 
@@ -1210,33 +1210,11 @@ en:
 
         %{new_user_tips}
 
-        We believe in [civilized community behavior](/faq) at all times.
+        We believe in [civilized community behavior](%{base_url}/faq) at all times.
 
         Enjoy your stay!
 
         [prefs]: %{user_preferences_url}
-
-    flag_threshold_reached:
-       subject_template: "Posting Hidden due to Community Flagging"
-       text_body_template: |
-         Hello,
-
-         This is an automated message from (Community Name) to inform you that the following post was hidden as a result of community flagging:
-
-         (onebox of actual flagged post goes here)
-
-         Your post was hidden for this flag reason:
-
-         > (Largest Flag vote category name goes here, and brief description from the flag dialog, and link. Vote counts are not displayed.)
-
-         Keep in mind that it took multiple community members to flag this item before it was hidden. Consider how you might change your post to reflect their feedback.
-
-         You can edit the post after (x) minutes, and it will be automatically unhidden. This will increase your forum trust level.
-
-         However, if the post is hidden by the community a second time, the moderators will be notified and there may be further action, including the possible suspension of your account.
-
-         For additional guidance, [refer to our FAQ](/faq).
-
 
     export_succeeded:
       subject_template: "Export completed successfully"
