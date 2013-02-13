@@ -88,9 +88,11 @@ window.Discourse.User = Discourse.Model.extend Discourse.Presence,
       cache: 'false'
       success: (result)=>
         if result and result.user_actions and result.user_actions.each
+          copy = Em.A()
           result.user_actions.each (i)=>
-            stream.pushObject(Discourse.UserAction.create(i))
-          stream = Discourse.UserAction.collapseStream(stream)
+            copy.pushObject(Discourse.UserAction.create(i))
+          copy = Discourse.UserAction.collapseStream(copy)
+          stream.pushObjects(copy)
           @set('stream', stream)
         callback() if callback
 
