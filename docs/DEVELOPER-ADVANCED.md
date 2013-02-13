@@ -1,7 +1,7 @@
 # Discourse Advanced Developer Install Guide
 
 This guide is aimed at advanced Rails developers who have installed their own Rails apps before. If you are new
-to rails, you are likely much better off with our **[Discourse Vagrant Developer Guide](https://github.com/discourse/discourse/blob/master/VAGRANT.md)**.
+to rails, you are likely much better off with our **[Discourse Vagrant Developer Guide](https://github.com/discourse/discourse/blob/master/docs/VAGRANT.md)**.
 
 ## First Steps
 
@@ -27,7 +27,7 @@ You should now be able to connect to rails on http://localhost:3000 - try it out
 
 # Building your own Vagrant VM
 
-Here are the steps we used to create the **[Vagrant Virtual Machine](https://github.com/discourse/discourse/blob/master/VAGRANT.md)**. They might be useful if you plan on setting up an environment from scratch on Linux:
+Here are the steps we used to create the **[Vagrant Virtual Machine](https://github.com/discourse/discourse/blob/master/docs/VAGRANT.md)**. They might be useful if you plan on setting up an environment from scratch on Linux:
 
 
 ## Base box
