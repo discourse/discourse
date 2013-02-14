@@ -7,7 +7,7 @@ to rails, you are likely much better off with our **[Discourse Vagrant Developer
 
 1. Install and configure PostgreSQL 9.1+
 2. Install and configure Redis 2+
-3. Install Rails 1.9.3 and Bundler.
+3. Install Ruby 1.9.3 and Bundler.
 3. Clone the project.
 4. Create development and test databases in postgres.
 5. Copy `config/database.yml.sample` and `config/redis.yml.sample` to `config/database.yml` and `config/redis.yml` and input the correct values to point to your postgres and redis instances.
