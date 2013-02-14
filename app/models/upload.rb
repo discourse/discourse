@@ -38,11 +38,7 @@ class Upload < ActiveRecord::Base
                             original_filename: file.original_filename)
 
     # populate the rest of the info
-    clean_name = file.original_filename.gsub(" ", "_").downcase.gsub(/[^a-z0-9\._]/, "")
-    split = clean_name.split(".")
-    if split.length > 1
-      clean_name = split[0..-2].join("_")
-    end
+    clean_name = Digest::SHA1.hexdigest("#{Time.now.to_s}#{file.original_filename}")[0,16]
     image_info = FastImage.new(file.tempfile)
     clean_name += ".#{image_info.type}"
     url_root = "/uploads/#{RailsMultisite::ConnectionManagement.current_db}/#{upload.id}"
