@@ -94,6 +94,10 @@ JOIN users pu on pu.id = COALESCE(p.user_id, t.user_id)
     unless guardian.can_see_deleted_posts?
       builder.where("p.deleted_at is null and p2.deleted_at is null")
     end
+    
+    unless guardian.user && guardian.user.id == user_id
+      builder.where("a.action_type not in (#{BOOKMARK})")
+    end
 
     if !guardian.can_see_private_messages?(user_id) || ignore_private_messages
       builder.where("a.action_type not in (#{NEW_PRIVATE_MESSAGE},#{GOT_PRIVATE_MESSAGE})")

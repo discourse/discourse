@@ -28,6 +28,8 @@ describe UserAction do
       row[:action_type] = UserAction::NEW_TOPIC
       UserAction.log_action!(row)
         
+      row[:action_type] = UserAction::BOOKMARK
+      UserAction.log_action!(row)
     end
 
     describe 'stats' do
@@ -63,8 +65,8 @@ describe UserAction do
         UserAction.stream(user_id: @user.id, guardian: Guardian.new).count.should == 1
       end
       
-      it 'should have 3 items for non owners' do
-        UserAction.stream(user_id: @user.id, guardian: @user.guardian).count.should == 3
+      it 'should have bookmarks and pms for owners' do
+        UserAction.stream(user_id: @user.id, guardian: @user.guardian).count.should == 4
       end
 
     end
