@@ -17,26 +17,26 @@ en:
       other: "%{count} posts"
 
     'new-topic': |
-      Welcome to %{site_name} and thanks for contributing to the conversation!
+      Welcome to %{site_name} &mdash; **thanks for starting a new conversation!**
 
-      Here are a few things to keep in mind as you compose your topic:
+      Keep in mind as you compose your topic:
 
       - Does the title adequately describe what someone could reasonably expect to find if they opened your topic?
 
-      - The first post defines your topic: What is this about? Who would be interested in it? Why does it matter? What kind of responses are you hoping for?
+      - The first post defines your topic: What is this about? Who would be interested in it? Why does it matter? What kind of responses are you hoping for from the community?
 
-      - Try to use the right words so people can *find* your topic. If it needs to be in a category, pick an appropriate category.
+      - Try to choose the right words so others can *find* your topic. If it needs to be in a category, pick an appropriate category.
 
       For more guidance, [see our FAQ](/faq). This panel will only appear for your first %{education_posts_text}.
 
     'new-reply': |
-      Welcome to %{site_name} and thanks for contributing to the conversation!
+      Welcome to %{site_name} and **thanks for contributing to the conversation!**
 
-      Here are a few things to keep in mind as you compose your reply:
+      Keep in mind as you compose your reply:
 
       - Does your reply improve the conversation in some way, however small?
 
-      - Treat your fellow posters with the same respect you'd wish to be treated.
+      - Treat your fellow community members with the same respect you'd wish to be treated.
 
       - It's fine to be critical, but remember to criticize *ideas*, not people.
 
