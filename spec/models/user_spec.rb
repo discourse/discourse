@@ -456,22 +456,27 @@ describe User do
       user.should be_valid
     end
 
-    it 'should reject some emails based on the email_blacklist_regexp site setting' do
-      SiteSetting.stubs(:email_blacklist_regexp).returns('@mailinator')
+    it 'should reject some emails based on the email_domains_blacklist site setting' do
+      SiteSetting.stubs(:email_domains_blacklist).returns('mailinator.com')
       Fabricate.build(:user, email: 'notgood@mailinator.com').should_not be_valid
       Fabricate.build(:user, email: 'mailinator@gmail.com').should be_valid
     end
 
-    it 'should reject some emails based on the email_blacklist_regexp site setting' do
-      SiteSetting.stubs(:email_blacklist_regexp).returns('@(mailinator|aol)\.com')
+    it 'should reject some emails based on the email_domains_blacklist site setting' do
+      SiteSetting.stubs(:email_domains_blacklist).returns('mailinator.com|trashmail.net')
       Fabricate.build(:user, email: 'notgood@mailinator.com').should_not be_valid
-      Fabricate.build(:user, email: 'notgood@aol.com').should_not be_valid
-      Fabricate.build(:user, email: 'aol+mailinator@gmail.com').should be_valid
+      Fabricate.build(:user, email: 'notgood@trashmail.net').should_not be_valid
+      Fabricate.build(:user, email: 'mailinator.com@gmail.com').should be_valid
     end
 
-    it 'should reject some emails based on the email_blacklist_regexp site setting ignoring case' do
-      SiteSetting.stubs(:email_blacklist_regexp).returns('@mailinator')
-      Fabricate.build(:user, email: 'notgood@MAILINATOR.COM').should_not be_valid
+    it 'should reject some emails based on the email_domains_blacklist site setting ignoring case' do
+      SiteSetting.stubs(:email_domains_blacklist).returns('trashmail.net')
+      Fabricate.build(:user, email: 'notgood@TRASHMAIL.NET').should_not be_valid
+    end
+
+    it 'should not interpret a period as a wildcard' do
+      SiteSetting.stubs(:email_domains_blacklist).returns('trashmail.net')
+      Fabricate.build(:user, email: 'good@trashmailinet.com').should be_valid
     end
   end
 

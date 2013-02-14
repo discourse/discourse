@@ -486,8 +486,9 @@ class User < ActiveRecord::Base
     end
 
     def email_validator
-      if (setting = SiteSetting.email_blacklist_regexp.try(:strip)).present?
-        regexp = Regexp.new(setting, true)
+      if (setting = SiteSetting.email_domains_blacklist).present?
+        domains = setting.gsub('.', '\.')
+        regexp = Regexp.new("@(#{domains})", true)
         if self.email =~ regexp
           return errors.add(:email, I18n.t(:'user.email.not_allowed'))
         end

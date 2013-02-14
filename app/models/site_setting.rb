@@ -30,6 +30,7 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:max_topic_title_length, 255)
   client_setting(:flush_timings_secs, 5)
   client_setting(:supress_reply_directly_below, true)
+  client_setting(:email_domains_blacklist, 'mailinator.com')
 
   # settings only available server side
   setting(:auto_track_topics_after, 60000)
@@ -134,12 +135,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:body_min_entropy, 7)
   setting(:max_word_length, 30)
 
-  # Ways to catch griefers and other nasties
-  setting(:email_blacklist_regexp, '')
-
   setting(:new_user_period_days, 10)
-
-
 
   def self.call_mothership?
     self.enforce_global_nicknames? and self.discourse_org_access_key.present?

@@ -261,6 +261,7 @@ en:
     send_welcome_message: "Do new users get a welcome private message?"
     supress_reply_directly_below: "Don't show replies button below a post when the reply is directly below"
     allow_index_in_robots_txt: "Site should be indexed by search engines (update robots.txt)"
+    email_domains_blacklist: "A pipe-delimited list of email domains that are not allowed. Example: mailinator.com|trashmail.net"
 
     port: "If you'd like to specify a port in the URL. Useful in development mode. Leave blank for none."
     force_hostname: "If you'd like to specify a hostname in the URL. Useful in development mode. Leave blank for none."
@@ -311,8 +312,6 @@ en:
     max_word_length: "The maximum word length in a topic title"
     title_min_entropy: "The minimum entropy for a topic title"
     body_min_entropy: "The minimum entropy for post body"
-
-    email_blacklist_regexp: "A regexp that finds email addresses to block"
 
     new_user_period_days: "How long a user is highlighted as being new, in days."
 
