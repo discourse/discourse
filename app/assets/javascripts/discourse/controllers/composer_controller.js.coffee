@@ -2,6 +2,8 @@ window.Discourse.ComposerController = Ember.Controller.extend Discourse.Presence
 
   needs: ['modal', 'topic']
 
+  hasReply: false
+
   togglePreview: ->
     @get('content').togglePreview()
 
@@ -20,10 +22,18 @@ window.Discourse.ComposerController = Ember.Controller.extend Discourse.Presence
       .then (opts) =>
         opts = opts || {}
         @close()
+        Discourse.set('currentUser.post_count', Discourse.get('currentUser.post_count') + 1)
         Discourse.routeTo(opts.post.get('url'))
       , (error) =>
         composer.set('disableDrafts', false)
         bootbox.alert error
+
+  checkReplyLength: ->
+    if @present('content.reply')
+      @set('hasReply', true) 
+    else
+      @set('hasReply', false)
+
 
   saveDraft: ->
     model = @get('content')
@@ -39,6 +49,8 @@ window.Discourse.ComposerController = Ember.Controller.extend Discourse.Presence
   #
   open: (opts={}) ->
     opts.promise = promise = opts.promise || new RSVP.Promise
+
+    @set('hasReply', false)
 
     unless opts.draftKey
       alert("composer was opened without a draft key")
@@ -164,7 +176,7 @@ window.Discourse.ComposerController = Ember.Controller.extend Discourse.Presence
 
   # ESC key hit
   hitEsc: ->
-    @shrink() if @get('content.composeState') == @OPEN
+    @shrink() if @get('content.composeState') is Discourse.Composer.OPEN
 
 
   showOptions: ->

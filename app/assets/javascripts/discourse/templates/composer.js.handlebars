@@ -2,6 +2,12 @@
 
 <div class='contents'>
 
+  <div id='new-user-education' {{bindAttr class="view.newUserEducationVisible"}}>
+    <a href='#' {{action closeEducation target="view"}} class='close'>{{i18n ok}}</a>
+
+    {{{view.educationContents}}}
+  </div>
+
   <div class='control'>
     <a href='#' class='toggler' {{action toggle bubbles=false}} title='toggle'></a>      
 

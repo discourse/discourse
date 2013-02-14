@@ -31,14 +31,17 @@
     lastMousePos = thisMousePos
     size = Math.min(size, $(window).height())
     size = Math.max(min, size)
-    div.height size + "px"
+
+    sizePx = size + "px"
+    opts.onDrag?(sizePx)
+    div.height(sizePx)
     endDrag e,opts if size < min
     false
   endDrag = (e,opts) ->
     $(document).unbind("mousemove", wrappedPerformDrag).unbind "mouseup", wrappedEndDrag
     div.removeClass('clear-transitions')
     div.focus()
-    opts.resize() if opts.resize
+    opts.resize?()
     div = null
   mousePosition = (e) ->
     x: e.clientX + document.documentElement.scrollLeft

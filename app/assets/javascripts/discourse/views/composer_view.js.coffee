@@ -10,6 +10,8 @@ window.Discourse.ComposerView = window.Discourse.View.extend
                       'content.showPreview',
                       'content.hidePreview']
 
+  educationClosed: null
+
   composeState: (->
     state = @get('content.composeState')
     unless state
@@ -49,28 +51,58 @@ window.Discourse.ComposerView = window.Discourse.View.extend
           if $wmdPreview.length > 0
             $wmdPreview.scrollTop($wmdPreview[0].scrollHeight)
 
-
   ).observes('content.reply', 'content.hidePreview')
 
-  willDestroyElement: ->
-    $('body').off 'keydown.composer'
+  closeEducation: ->
+    @set('educationClosed', true)
+    false
+
+  fetchNewUserEducation: (->
+
+    if (Discourse.get('currentUser.post_count') >= Discourse.SiteSettings.educate_until_posts)
+      @set('educationClosed', true)
+      return 
+
+    return unless @get('controller.hasReply')
+
+    @set('educationClosed', false)
+
+    # If visible update the text
+    educationKey = if @get('content.creatingTopic') then 'new-topic' else 'new-reply'
+    $.get("/education/#{educationKey}").then (result) => @set('educationContents', result)
+
+  ).observes('controller.hasReply', 'content.creatingTopic', 'Discourse.currentUser.post_count')
+
+  newUserEducationVisible: (->
+    return 'collapsed' unless @get('educationContents')
+    return 'collapsed' unless @get('content.composeState') is Discourse.Composer.OPEN
+    return 'collapsed' unless @present('content.reply')
+    return 'collapsed' if @get('educationClosed')
+
+    return 'visible'
+  ).property('content.composeState', 'content.reply', 'educationClosed', 'educationContents')
+
+  moveNewUserEducation: (sizePx) ->
+    $('#new-user-education').css('bottom', sizePx)
 
   resize: (->
     # this still needs to wait on animations, need a clean way to do that
     Em.run.next null, =>
       replyControl = $('#reply-control')
       h = replyControl.height() || 0
-      $('.topic-area').css('padding-bottom', "#{h}px")
+      sizePx = "#{h}px"
+      $('.topic-area').css('padding-bottom', sizePx)
+      $('#new-user-education').css('bottom', sizePx)
   ).observes('content.composeState')
 
+  keyUp: (e) -> 
+    controller = @get('controller')
+    controller.checkReplyLength()
+    controller.hitEsc() if e.which == 27
+
   didInsertElement: ->
-
-    # Delegate ESC to the composer
-    $('body').on 'keydown.composer', (e) =>
-      @get('controller').hitEsc() if e.which == 27
-
     replyControl = $('#reply-control')
-    replyControl.DivResizer(resize: @resize)
+    replyControl.DivResizer(resize: @resize, onDrag: @moveNewUserEducation)
     Discourse.TransitionHelper.after(replyControl, @resize)
 
   click: ->

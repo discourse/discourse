@@ -137,6 +137,7 @@ Discourse::Application.routes.draw do
     end
   end
   resources :user_actions
+  resources :education
 
   get 'category/:category' => 'list#category'
   get 'popular' => 'list#index'
