@@ -164,7 +164,7 @@ window.Discourse.ComposerController = Ember.Controller.extend Discourse.Presence
 
   # ESC key hit
   hitEsc: ->
-    @shrink() if @get('content.composeState') == @OPEN
+    @shrink() if @get('content.composeState') == Discourse.Composer.OPEN
 
 
   showOptions: ->
