@@ -30,7 +30,7 @@ en:
       For more guidance, [see our FAQ](/faq). This panel will only appear for your first %{education_posts_text}.
 
     'new-reply': |
-      Welcome to %{site_name} and **thanks for contributing to the conversation!**
+      Welcome to %{site_name} &mdash; **thanks for contributing to the conversation!**
 
       Keep in mind as you compose your reply:
 
