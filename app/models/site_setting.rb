@@ -136,7 +136,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:body_min_entropy, 7)
   setting(:max_word_length, 30)
 
-  setting(:new_user_period_days, 10)
+  setting(:new_user_period_days, 2)
 
   def self.call_mothership?
     self.enforce_global_nicknames? and self.discourse_org_access_key.present?
