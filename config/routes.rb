@@ -3,7 +3,7 @@ require 'sidekiq/web'
 require_dependency 'admin_constraint'
 
 # This used to be User#username_format, but that causes a preload of the User object
-# and makes Guard not work properly. 
+# and makes Guard not work properly.
 USERNAME_ROUTE_FORMAT = /[A-Za-z0-9\._]+/
 
 Discourse::Application.routes.draw do
@@ -12,8 +12,8 @@ Discourse::Application.routes.draw do
 
   mount Sidekiq::Web => '/sidekiq', constraints: AdminConstraint.new
 
-  resources :forums do 
-    collection do 
+  resources :forums do
+    collection do
       get 'request_access'
       post 'request_access_submit'
     end
@@ -60,24 +60,24 @@ Discourse::Application.routes.draw do
   post 'email/resubscribe/:key' => 'email#resubscribe', as: 'email_resubscribe'
 
 
-  resources :session, id: USERNAME_ROUTE_FORMAT do 
-    collection do 
+  resources :session, id: USERNAME_ROUTE_FORMAT do
+    collection do
       post 'forgot_password'
     end
-  end  
+  end
 
-  resources :users, :except => [:show, :update] do 
-    collection do 
+  resources :users, :except => [:show, :update] do
+    collection do
       get 'check_username'
       get 'is_local_username'
     end
   end
 
   resources :static
-  get 'faq' => 'static#show', id: 'faq'  
+  get 'faq' => 'static#show', id: 'faq'
   get 'tos' => 'static#show', id: 'tos'
   get 'privacy' => 'static#show', id: 'privacy'
-  
+
   get 'users/search/users' => 'users#search_users'
   get 'users/password-reset/:token' => 'users#password_reset'
   put 'users/password-reset/:token' => 'users#password_reset'
@@ -88,10 +88,10 @@ Discourse::Application.routes.draw do
   get 'user_preferences' => 'users#user_preferences_redirect'
   get 'users/:username/private-messages' => 'user_actions#private_messages', :format => false, :constraints => {:username => USERNAME_ROUTE_FORMAT}
   get 'users/:username' => 'users#show', :format => false, :constraints => {:username => USERNAME_ROUTE_FORMAT}
-  put 'users/:username' => 'users#update', :format => false, :constraints => {:username => USERNAME_ROUTE_FORMAT}  
+  put 'users/:username' => 'users#update', :format => false, :constraints => {:username => USERNAME_ROUTE_FORMAT}
   get 'users/:username/preferences' => 'users#preferences', :format => false, :constraints => {:username => USERNAME_ROUTE_FORMAT}, :as => :email_preferences
   get 'users/:username/preferences/email' => 'users#preferences', :format => false, :constraints => {:username => USERNAME_ROUTE_FORMAT}
-  put 'users/:username/preferences/email' => 'users#change_email', :format => false, :constraints => {:username => USERNAME_ROUTE_FORMAT}  
+  put 'users/:username/preferences/email' => 'users#change_email', :format => false, :constraints => {:username => USERNAME_ROUTE_FORMAT}
   get 'users/:username/preferences/username' => 'users#preferences', :format => false, :constraints => {:username => USERNAME_ROUTE_FORMAT}
   put 'users/:username/preferences/username' => 'users#username', :format => false, :constraints => {:username => USERNAME_ROUTE_FORMAT}
   get 'users/:username/avatar(/:size)' => 'users#avatar', :constraints => {:username => USERNAME_ROUTE_FORMAT}
@@ -115,13 +115,14 @@ Discourse::Application.routes.draw do
   resources :categories
 
   match "/auth/:provider/callback", to: "users/omniauth_callbacks#complete"
+  match "/auth/failure", to: "users/omniauth_callbacks#failure"
 
   get 'twitter/frame' => 'twitter#frame'
   get 'twitter/complete' => 'twitter#complete'
 
   get 'facebook/frame' => 'facebook#frame'
   get 'facebook/complete' => 'facebook#complete'
-  
+
   resources :clicks do
     collection do
       get 'track' => 'clicks#track'
@@ -162,13 +163,13 @@ Discourse::Application.routes.draw do
   get 't/:id' => 'topics#show'
   delete 't/:id' => 'topics#destroy'
   put 't/:id' => 'topics#update'
-  post 't' => 'topics#create'  
+  post 't' => 'topics#create'
   post 'topics/timings' => 'topics#timings'
 
   # Legacy route for old avatars
   get 'threads/:topic_id/:post_number/avatar' => 'topics#avatar', :constraints => {:topic_id => /\d+/, :post_number => /\d+/}
 
-  # Topic routes  
+  # Topic routes
   get 't/:slug/:topic_id/best_of' => 'topics#show', :constraints => {:topic_id => /\d+/, :post_number => /\d+/}
   get 't/:topic_id/best_of' => 'topics#show', :constraints => {:topic_id => /\d+/, :post_number => /\d+/}
   put 't/:slug/:topic_id' => 'topics#update', :constraints => {:topic_id => /\d+/}
@@ -181,18 +182,18 @@ Discourse::Application.routes.draw do
 
   get 't/:topic_id/:post_number' => 'topics#show', :constraints => {:topic_id => /\d+/, :post_number => /\d+/}
   get 't/:slug/:topic_id' => 'topics#show', :constraints => {:topic_id => /\d+/}
-  get 't/:slug/:topic_id/:post_number' => 'topics#show', :constraints => {:topic_id => /\d+/, :post_number => /\d+/}  
+  get 't/:slug/:topic_id/:post_number' => 'topics#show', :constraints => {:topic_id => /\d+/, :post_number => /\d+/}
   post 't/:topic_id/timings' => 'topics#timings', :constraints => {:topic_id => /\d+/}
   post 't/:topic_id/invite' => 'topics#invite', :constraints => {:topic_id => /\d+/}
   post 't/:topic_id/move-posts' => 'topics#move_posts', :constraints => {:topic_id => /\d+/}
   delete 't/:topic_id/timings' => 'topics#destroy_timings', :constraints => {:topic_id => /\d+/}
 
   post 't/:topic_id/notifications' => 'topics#set_notifications' , :constraints => {:topic_id => /\d+/}
-  
+
 
   resources :invites
   delete 'invites' => 'invites#destroy'
-  
+
   get 'request_access' => 'request_access#new'
   post 'request_access' => 'request_access#create'
 

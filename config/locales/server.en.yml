@@ -13,7 +13,7 @@ en:
 
   education:
     until_posts:
-      one: "post" 
+      one: "post"
       other: "%{count} posts"
 
     'new-topic': |
@@ -66,7 +66,7 @@ en:
   trust_levels:
     new:
       title: "new user"
-    basic: 
+    basic:
       title: "basic user"
     regular:
       title: "regular user"
@@ -91,7 +91,7 @@ en:
 
   datetime:
     distance_in_words:
-      half_a_minute: "< 1m"   
+      half_a_minute: "< 1m"
       less_than_x_seconds:
         one:   "< 1s"
         other: "< %{count}s"
@@ -127,7 +127,7 @@ en:
         other: "%{count}y"
 
     distance_in_words_verbose:
-      half_a_minute: "just now"   
+      half_a_minute: "just now"
       less_than_x_seconds:
         one:   "just now"
         other: "just now"
@@ -212,7 +212,7 @@ en:
     user_must_edit: '<p>Flagged content hidden.</p>'
 
   archetypes:
-    regular: 
+    regular:
       title: "Regular Topic"
 
   unsubscribed:
@@ -363,7 +363,7 @@ en:
     types:
       category: 'Categories'
       topic: 'Topics'
-      user: 'Users'   
+      user: 'Users'
 
   youve_posted: "You've Posted"
   original_poster: "Original Poster"
@@ -397,7 +397,7 @@ en:
     edited: "edited"
 
   move_posts:
-    moderator_post: 
+    moderator_post:
       one: "I moved a post to a new topic: %{topic_link}"
       other: "I moved %{count} posts to a new topic: %{topic_link}"
 
@@ -411,7 +411,7 @@ en:
     visible_enabled: "This topic is now visible. It will be displayed in topic lists."
     visible_disabled: "This topic is now invisible. It will no longer be displayed in any topic lists. The only way to access this topic is via direct link."
 
-  login: 
+  login:
     not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
     incorrect_username_email_or_password: "Incorrect username, email or password"
     wait_approval: "Thanks for signing up. We will notify you when your account has been approved."
@@ -420,6 +420,8 @@ en:
     not_activated: "You can't log in yet. We sent an activation email to you. Please follow the instructions in the email to activate your account."
     errors: "%{errors}"
     not_available: "Not available. Try %{suggestion}?"
+    omniauth_error: "Sorry, there was an error authorizing your %{strategy} account. Perhaps you did not approve authorization?"
+
 
   user:
     username:
@@ -494,7 +496,7 @@ en:
       subject_template: "%{site_name} Notice: Posting Hidden due to Community Flagging"
       text_body_template: |
         Hello,
-        
+
         This is an automated message from %{site_name} to inform you that the following post was hidden as a result of community flagging.
 
         %{base_url}%{url}
@@ -608,7 +610,7 @@ en:
   unsubscribe_link: "If you'd like to unsubscribe from these emails, visit your [user preferences](%{user_preferences_url})."
 
   user_notifications:
-    unsubscribe: 
+    unsubscribe:
       title: "Unsubscribe"
       description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
 
@@ -627,7 +629,7 @@ en:
         ---
         %{message}
 
-        --- 
+        ---
         Please visit this link to respond: %{base_url}%{url}
 
     user_quoted:
@@ -638,7 +640,7 @@ en:
         ---
         %{message}
 
-        --- 
+        ---
         Please visit this link to respond: %{base_url}%{url}
 
     user_mentioned:
@@ -649,7 +651,7 @@ en:
         ---
         %{message}
 
-        --- 
+        ---
         Please visit this link to respond: %{base_url}%{url}
 
 
@@ -675,9 +677,9 @@ en:
       subject_template: "[%{site_name}] Password reset"
       text_body_template: |
         Somebody asked to reset your password on [%{site_name}](%{base_url}).
-        
-        If it was not you, you can safely ignore this email. 
-        
+
+        If it was not you, you can safely ignore this email.
+
         Click the following link to choose a new password:
         %{base_url}/users/password-reset/%{email_token}
 
@@ -685,14 +687,14 @@ en:
       subject_template: "[%{site_name}] Confirm your new email address"
       text_body_template: |
         Confirm your new email address for %{site_name} by clicking on the following link:
-        
+
         %{base_url}/users/authorize-email/%{email_token}
 
     signup:
       subject_template: "[%{site_name}] Activate your new account"
       text_body_template: |
         Welcome to %{site_name}!
-        
+
         Click the following link to confirm and activate your new account:
         %{base_url}/users/activate-account/%{email_token}
 
