@@ -25,7 +25,9 @@ Discourse.Topic = Discourse.Model.extend Discourse.Presence,
   ).property('categoryName', 'categories')
 
   url: (->
-    "/t/#{@get('slug')}/#{@get('id')}"
+    slug = @get('slug')
+    slug = "topic" if slug.isBlank()
+    "/t/#{slug}/#{@get('id')}"
   ).property('id', 'slug')
 
   # Helper to build a Url with a post number

@@ -49,6 +49,22 @@ describe Topic do
 
   end
 
+  context 'slug' do
+
+    let(:title) { "hello world topic" }
+    let(:slug) { "hello-world-slug" }
+
+    it "returns a Slug for a title" do
+      Slug.expects(:for).with(title).returns(slug)
+      Fabricate.build(:topic, title: title).slug.should == slug
+    end
+
+    it "returns 'topic' when the slug is empty (say, non-english chars)" do
+      Slug.expects(:for).with(title).returns("")
+      Fabricate.build(:topic, title: title).slug.should == "topic"
+    end
+
+  end
 
   context 'topic title uniqueness' do
 
