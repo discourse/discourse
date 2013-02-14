@@ -34,6 +34,8 @@ Discourse::Application.routes.draw do
       put 'unban' => 'users#unban'
       put 'revoke_admin' => 'users#revoke_admin'
       put 'grant_admin' => 'users#grant_admin'
+      put 'revoke_moderation' => 'users#revoke_moderation'
+      put 'grant_moderation' => 'users#grant_moderation'
       put 'approve' => 'users#approve'
       post 'refresh_browsers' => 'users#refresh_browsers'
     end

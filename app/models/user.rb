@@ -405,6 +405,11 @@ class User < ActiveRecord::Base
     (self.trust_level || TrustLevel.Levels[:new]) >= TrustLevel.Levels[level]
   end
 
+  def change_trust_level(level)
+    raise "Invalid trust level #{level}" unless TrustLevel.Levels.has_key?(level)
+    self.trust_level = TrustLevel.Levels[level]
+  end
+
   def guardian
     Guardian.new(self)
   end

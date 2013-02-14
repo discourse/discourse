@@ -84,6 +84,21 @@
   <div class='display-row'>
     <div class='field'>{{i18n admin.user.moderator}}</div>
     <div class='value'>{{content.moderator}}</div>
+    <div class='controls'>
+      {{#if content.can_revoke_moderation}}        
+        <button class='btn' {{action revokeModeration target="content"}}>
+          <i class='icon icon-eye-close'></i>
+          {{i18n admin.user.revoke_moderation}}
+        </button>
+      {{/if}}
+      {{#if content.can_grant_moderation}}
+        <button class='btn' {{action grantModeration target="content"}}>
+          <i class='icon icon-eye-open'></i>
+          {{i18n admin.user.grant_moderation}}
+        </button>
+      {{/if}}      
+    </div>
+    
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n trust_level}}</div>
