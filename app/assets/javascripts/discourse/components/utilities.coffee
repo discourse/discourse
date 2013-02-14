@@ -11,15 +11,21 @@ Discourse.Utilities =
       when 'large' then size=45
     return size
 
+  categoryUrlId: (category) ->
+    return "" unless category
+    id = Em.get(category, 'id')
+    slug = Em.get(category, 'slug')
+    return "#{id}-category" if (!slug) or slug.isBlank()
+    slug
+
   # Create a badge like category link
   categoryLink: (category) ->
     return "" unless category
 
-    slug = Em.get(category, 'slug')
     color = Em.get(category, 'color')
     name = Em.get(category, 'name')
 
-    "<a href=\"/category/#{slug}\" class=\"badge-category excerptable\" data-excerpt-size=\"medium\" style=\"background-color: ##{color}\">#{name}</a>"
+    "<a href=\"/category/#{@categoryUrlId(category)}\" class=\"badge-category excerptable\" data-excerpt-size=\"medium\" style=\"background-color: ##{color}\">#{name}</a>"
 
   avatarUrl: (username, size, template)->
     return "" unless username

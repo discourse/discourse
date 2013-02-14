@@ -34,6 +34,15 @@ describe ListController do
 
         it { should respond_with(:success) }
       end
+
+      context 'with a link that includes an id' do
+        before do
+          xhr :get, :category, category: "#{category.slug}-#{category.id}"
+        end
+
+        it { should respond_with(:success) }
+      end
+
     end
 
     context 'uncategorized' do

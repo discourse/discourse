@@ -1,6 +1,17 @@
 describe "Discourse.Utilities", ->
 
 
+  describe "categoryUrlId", ->
+
+    it "returns the slug when it exists", ->
+      expect(Discourse.Utilities.categoryUrlId(slug: 'hello')).toBe("hello")
+
+    it "returns id-category when slug is an empty string", ->
+      expect(Discourse.Utilities.categoryUrlId(id: 123, slug: '')).toBe("123-category")
+
+    it "returns id-category without a slug", ->
+      expect(Discourse.Utilities.categoryUrlId(id: 456)).toBe("456-category")
+
   describe "Cooking", ->
 
     cook = (contents, opts) ->

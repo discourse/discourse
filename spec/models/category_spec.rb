@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'spec_helper'
 
 describe Category do
@@ -57,6 +59,16 @@ describe Category do
       Site.expects(:invalidate_cache).once
       cat.destroy
     end
+  end
+
+  describe 'non-english characters' do
+
+    let(:category) { Fabricate(:category, name: "電車男") }
+
+    it "creates a blank slug, this is OK." do
+      category.slug.should be_blank
+    end
+
   end
 
   describe 'after create' do

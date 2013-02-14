@@ -38,7 +38,7 @@ class ListController < ApplicationController
     if params[:category] == Slug.for(SiteSetting.uncategorized_name) or params[:category] == SiteSetting.uncategorized_name
       list = query.list_uncategorized
     else
-      category = Category.where(slug: params[:category]).includes(:featured_users).first
+      category = Category.where("slug = ? or id = ?", params[:category], params[:category].to_i).includes(:featured_users).first
       guardian.ensure_can_see!(category)
       list = query.list_category(category)
     end
