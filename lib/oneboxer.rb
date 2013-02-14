@@ -34,7 +34,7 @@ module Oneboxer
     if Whitelist.allowed?(url)
       page_html = open(url).read
       if page_html.present?
-        doc = Hpricot(page_html)
+        doc = Nokogiri::HTML(page_html)
 
         # See if if it has an oembed thing we can use
         (doc/"link[@type='application/json+oembed']").each do |oembed|
@@ -56,7 +56,7 @@ module Oneboxer
   # Parse URLs out of HTML, returning the document when finished.
   def self.each_onebox_link(string_or_doc)
     doc = string_or_doc
-    doc = Hpricot(doc) if doc.is_a?(String)
+    doc = Nokogiri::HTML(doc) if doc.is_a?(String)
 
     onebox_links = doc.search("a.onebox")
     if onebox_links.present?

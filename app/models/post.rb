@@ -4,7 +4,6 @@ require_dependency 'rate_limiter'
 require_dependency 'post_revisor'
 
 require 'archetype'
-require 'hpricot'
 require 'digest/sha1'
 
 class Post < ActiveRecord::Base
