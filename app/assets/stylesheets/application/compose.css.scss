@@ -6,15 +6,7 @@
 
 #new-user-education {
 
-  &.collapsed {
-    max-height: 0;
-    visibility: hidden;
-  }
-
-  &.visible {
-    max-height: 1000px;
-    visibility: visible;
-  }
+  @include box-shadow(3px 3px 3px rgba($black, 0.14));
 
   p {
     margin: 0 0 10px 0;

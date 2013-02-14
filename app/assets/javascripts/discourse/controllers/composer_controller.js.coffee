@@ -22,7 +22,12 @@ window.Discourse.ComposerController = Ember.Controller.extend Discourse.Presence
       .then (opts) =>
         opts = opts || {}
         @close()
-        Discourse.set('currentUser.post_count', Discourse.get('currentUser.post_count') + 1)
+        
+        if composer.get('creatingTopic')
+          Discourse.set('currentUser.topic_count', Discourse.get('currentUser.topic_count') + 1)
+        else
+          Discourse.set('currentUser.reply_count', Discourse.get('currentUser.reply_count') + 1)
+
         Discourse.routeTo(opts.post.get('url'))
       , (error) =>
         composer.set('disableDrafts', false)

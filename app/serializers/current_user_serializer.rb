@@ -7,7 +7,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :notification_channel_position, 
              :site_flagged_posts_count,
              :moderator?,
-             :post_count
+             :reply_count,
+             :topic_count
 
   # we probably want to move this into site, but that json is cached so hanging it off current user seems okish
 
@@ -15,8 +16,12 @@ class CurrentUserSerializer < BasicUserSerializer
     object.admin
   end
 
-  def post_count
-    object.posts.count
+  def topic_count
+    object.topics.count
+  end
+
+  def reply_count
+    object.posts.where("post_number > 1").count
   end
 
   def moderator?
@@ -26,4 +31,5 @@ class CurrentUserSerializer < BasicUserSerializer
   def site_flagged_posts_count
     PostAction.flagged_posts_count
   end
+
 end

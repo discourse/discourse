@@ -59,8 +59,11 @@ window.Discourse.ComposerView = window.Discourse.View.extend
 
   fetchNewUserEducation: (->
 
-    if (Discourse.get('currentUser.post_count') >= Discourse.SiteSettings.educate_until_posts)
+    # If creating a topic, use topic_count, otherwise post_count
+    count = if @get('content.creatingTopic') then Discourse.get('currentUser.topic_count') else Discourse.get('currentUser.reply_count')    
+    if (count >= Discourse.SiteSettings.educate_until_posts)
       @set('educationClosed', true)
+      @set('educationContents', '')
       return 
 
     return unless @get('controller.hasReply')
@@ -71,16 +74,24 @@ window.Discourse.ComposerView = window.Discourse.View.extend
     educationKey = if @get('content.creatingTopic') then 'new-topic' else 'new-reply'
     $.get("/education/#{educationKey}").then (result) => @set('educationContents', result)
 
-  ).observes('controller.hasReply', 'content.creatingTopic', 'Discourse.currentUser.post_count')
+  ).observes('controller.hasReply', 'content.creatingTopic', 'Discourse.currentUser.reply_count')
 
   newUserEducationVisible: (->
-    return 'collapsed' unless @get('educationContents')
-    return 'collapsed' unless @get('content.composeState') is Discourse.Composer.OPEN
-    return 'collapsed' unless @present('content.reply')
-    return 'collapsed' if @get('educationClosed')
+    return false unless @get('educationContents')
+    return false unless @get('content.composeState') is Discourse.Composer.OPEN
+    return false unless @present('content.reply')
+    return false if @get('educationClosed')
 
-    return 'visible'
+    true
   ).property('content.composeState', 'content.reply', 'educationClosed', 'educationContents')
+
+  newUserEducationVisibilityChanged: (->
+    $panel = $('#new-user-education')
+    if @get('newUserEducationVisible')
+      $panel.slideDown('fast')
+    else
+      $panel.slideUp('fast')
+  ).observes('newUserEducationVisible')
 
   moveNewUserEducation: (sizePx) ->
     $('#new-user-education').css('bottom', sizePx)
