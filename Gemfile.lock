@@ -193,7 +193,6 @@ GEM
     highline (1.6.15)
     hike (1.2.1)
     hiredis (0.4.5)
-    hpricot (0.8.6)
     httpauth (0.2.0)
     i18n (0.6.1)
     i18n-js (2.1.2)
@@ -447,6 +446,7 @@ DEPENDENCIES
   airbrake (= 3.1.2)
   better_errors
   binding_of_caller
+  bundler (~> 1.2.4)
   certified
   clockwork
   coffee-rails
