@@ -9,7 +9,7 @@ class CookedPostProcessor
     @dirty = false
     @opts = opts
     @post = post
-    @doc = Hpricot(post.cooked)
+    @doc = Nokogiri::HTML(post.cooked)
   end
 
   def dirty?

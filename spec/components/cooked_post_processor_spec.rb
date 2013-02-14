@@ -19,7 +19,10 @@ describe CookedPostProcessor do
     end
 
     it 'inserts the onebox' do
-      @cpp.html.should == "GANGNAM STYLE"
+      @cpp.html.should == <<EXPECTED
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><body>GANGNAM STYLE</body></html>
+EXPECTED
     end
 
   end
