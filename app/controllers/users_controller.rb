@@ -1,4 +1,4 @@
-require_dependency 'mothership'
+require_dependency 'discourse_hub'
 
 class UsersController < ApplicationController
 
@@ -80,7 +80,7 @@ class UsersController < ApplicationController
     validator = UsernameValidator.new(params[:username])
     if !validator.valid_format?
       render json: {errors: validator.errors}
-    elsif !SiteSetting.call_mothership?
+    elsif !SiteSetting.call_discourse_hub?
       if User.username_available?(params[:username])
         render json: {available: true}
       else
@@ -88,16 +88,16 @@ class UsersController < ApplicationController
       end
     else
 
-      # Contact the mothership
+      # Contact the Discourse Hub server
       email_given = (params[:email].present? or current_user.present?)
       available_locally = User.username_available?(params[:username])
       global_match = false
-      available_globally, suggestion_from_mothership = begin
+      available_globally, suggestion_from_discourse_hub = begin
         if email_given
-          global_match, available, suggestion = Mothership.nickname_match?( params[:username], params[:email] || current_user.email )
+          global_match, available, suggestion = DiscourseHub.nickname_match?( params[:username], params[:email] || current_user.email )
           [available || global_match, suggestion]
         else
-          Mothership.nickname_available?(params[:username])
+          DiscourseHub.nickname_available?(params[:username])
         end
       end
 
@@ -105,12 +105,12 @@ class UsersController < ApplicationController
         render json: {available: true, global_match: (global_match ? true : false)}
       elsif available_locally and !available_globally
         if email_given
-          # Nickname and email do not match what's registered on the mothership.
-          render json: {available: false, global_match: false, suggestion: suggestion_from_mothership}
+          # Nickname and email do not match what's registered on the discourse hub.
+          render json: {available: false, global_match: false, suggestion: suggestion_from_discourse_hub}
         else
-          # The nickname is available locally, but is registered on the mothership.
+          # The nickname is available locally, but is registered on the discourse hub.
           # We need an email to see if the nickname belongs to this person.
-          # Don't give a suggestion until we get the email and try to match it with on the mothership.
+          # Don't give a suggestion until we get the email and try to match it with on the discourse hub.
           render json: {available: false}
         end
       elsif available_globally and !available_locally
@@ -118,12 +118,12 @@ class UsersController < ApplicationController
         render json: {available: false, suggestion: User.suggest_username(params[:username])}
       else
         # Not available anywhere.
-        render json: {available: false, suggestion: suggestion_from_mothership}
+        render json: {available: false, suggestion: suggestion_from_discourse_hub}
       end
 
     end
   rescue RestClient::Forbidden
-    render json: {errors: [I18n.t("mothership.access_token_problem")]}
+    render json: {errors: [I18n.t("discourse_hub.access_token_problem")]}
   end
 
   def create
@@ -145,7 +145,7 @@ class UsersController < ApplicationController
     end
     user.password_required unless auth
 
-    Mothership.register_nickname( user.username, user.email ) if user.valid? and SiteSetting.call_mothership?
+    DiscourseHub.register_nickname( user.username, user.email ) if user.valid? and SiteSetting.call_discourse_hub?
 
     if user.save
 
@@ -188,10 +188,10 @@ class UsersController < ApplicationController
     else
       render :json => {success: false, message: I18n.t("login.errors", errors: user.errors.full_messages.join("\n"))}
     end
-  rescue Mothership::NicknameUnavailable
+  rescue DiscourseHub::NicknameUnavailable
     render :json => {success: false, message: I18n.t("login.errors", errors:I18n.t("login.not_available", suggestion: User.suggest_username(params[:username])) )}
   rescue RestClient::Forbidden
-    render json: {errors: [I18n.t("mothership.access_token_problem")]}
+    render json: {errors: [I18n.t("discourse_hub.access_token_problem")]}
   end
 
   def get_honeypot_value

@@ -1337,5 +1337,5 @@ en:
 
         If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
 
-  mothership:
+  discourse_hub:
     access_token_problem: "Tell an admin: Please update the site settings to include the correct discourse_org_access_key."

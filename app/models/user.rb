@@ -91,9 +91,9 @@ class User < ActiveRecord::Base
   def self.create_for_email(email, opts={})
     username = suggest_username(email)
 
-    if SiteSetting.call_mothership?
+    if SiteSetting.call_discourse_hub?
       begin
-        match, available, suggestion = Mothership.nickname_match?( username, email )
+        match, available, suggestion = DiscourseHub.nickname_match?( username, email )
         username = suggestion unless match or available
       rescue => e
         Rails.logger.error e.message + "\n" + e.backtrace.join("\n")
@@ -104,9 +104,9 @@ class User < ActiveRecord::Base
     user.trust_level = opts[:trust_level] if opts[:trust_level].present?
     user.save!
 
-    if SiteSetting.call_mothership?
+    if SiteSetting.call_discourse_hub?
       begin
-        Mothership.register_nickname( username, email )
+        DiscourseHub.register_nickname( username, email )
       rescue => e
         Rails.logger.error e.message + "\n" + e.backtrace.join("\n")
       end
@@ -142,10 +142,10 @@ class User < ActiveRecord::Base
     current_username = self.username
     self.username = new_username
 
-    if SiteSetting.call_mothership? and self.valid?
+    if SiteSetting.call_discourse_hub? and self.valid?
       begin
-        Mothership.change_nickname( current_username, new_username )
-      rescue Mothership::NicknameUnavailable
+        DiscourseHub.change_nickname( current_username, new_username )
+      rescue DiscourseHub::NicknameUnavailable
         return false
       rescue => e
         Rails.logger.error e.message + "\n" + e.backtrace.join("\n")

@@ -138,7 +138,7 @@ class SiteSetting < ActiveRecord::Base
 
   setting(:new_user_period_days, 2)
 
-  def self.call_mothership?
+  def self.call_discourse_hub?
     self.enforce_global_nicknames? and self.discourse_org_access_key.present?
   end
 

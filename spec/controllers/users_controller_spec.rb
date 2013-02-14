@@ -270,7 +270,7 @@ describe UsersController do
     before do
       @user = Fabricate.build(:user)
       @user.password = "strongpassword"
-      Mothership.stubs(:register_nickname).returns([true, nil])
+      DiscourseHub.stubs(:register_nickname).returns([true, nil])
     end
 
     context 'when creating a non active user (unconfirmed email)' do
@@ -438,7 +438,7 @@ describe UsersController do
 
   context '.check_username' do
     before do
-      Mothership.stubs(:nickname_available?).returns([true, nil])
+      DiscourseHub.stubs(:nickname_available?).returns([true, nil])
     end
 
     it 'raises an error without a username parameter' do
@@ -469,11 +469,11 @@ describe UsersController do
       end
     end
 
-    context 'when call_mothership is disabled' do
+    context 'when call_discourse_hub is disabled' do
       before do
-        SiteSetting.stubs(:call_mothership?).returns(false)
-        Mothership.expects(:nickname_available?).never
-        Mothership.expects(:nickname_match?).never
+        SiteSetting.stubs(:call_discourse_hub?).returns(false)
+        DiscourseHub.expects(:nickname_available?).never
+        DiscourseHub.expects(:nickname_match?).never
       end
 
       context 'available everywhere' do
@@ -543,15 +543,15 @@ describe UsersController do
       end
     end
 
-    context 'when call_mothership is enabled' do
+    context 'when call_discourse_hub is enabled' do
       before do
-        SiteSetting.stubs(:call_mothership?).returns(true)
+        SiteSetting.stubs(:call_discourse_hub?).returns(true)
       end
 
       context 'available locally and globally' do
         before do
-          Mothership.stubs(:nickname_available?).returns([true, nil])
-          Mothership.stubs(:nickname_match?).returns([false, true, nil])  # match = false, available = true, suggestion = nil
+          DiscourseHub.stubs(:nickname_available?).returns([true, nil])
+          DiscourseHub.stubs(:nickname_match?).returns([false, true, nil])  # match = false, available = true, suggestion = nil
         end
 
         shared_examples_for 'check_username when nickname is available everywhere' do
@@ -599,7 +599,7 @@ describe UsersController do
 
       context 'available locally but not globally' do
         before do
-          Mothership.stubs(:nickname_available?).returns([false, 'suggestion'])
+          DiscourseHub.stubs(:nickname_available?).returns([false, 'suggestion'])
         end
 
         context 'email param is not given' do
@@ -618,7 +618,7 @@ describe UsersController do
 
         context 'email matches global nickname' do
           before do
-            Mothership.stubs(:nickname_match?).returns([true, false, nil])
+            DiscourseHub.stubs(:nickname_match?).returns([true, false, nil])
             xhr :get, :check_username, username: 'BruceWayne', email: 'brucie@example.com'
           end
           it_should_behave_like 'when username is available everywhere'
@@ -630,7 +630,7 @@ describe UsersController do
 
         context 'email does not match global nickname' do
           before do
-            Mothership.stubs(:nickname_match?).returns([false, false, 'suggestion'])
+            DiscourseHub.stubs(:nickname_match?).returns([false, false, 'suggestion'])
             xhr :get, :check_username, username: 'BruceWayne', email: 'brucie@example.com'
           end
           it_should_behave_like 'when username is unavailable locally'
@@ -645,7 +645,7 @@ describe UsersController do
         let!(:user) { Fabricate(:user) }
 
         before do
-          Mothership.stubs(:nickname_available?).returns([false, 'suggestion'])
+          DiscourseHub.stubs(:nickname_available?).returns([false, 'suggestion'])
           xhr :get, :check_username, username: user.username
         end
 
@@ -656,7 +656,7 @@ describe UsersController do
         let!(:user) { Fabricate(:user) }
 
         before do
-          Mothership.stubs(:nickname_available?).returns([true, nil])
+          DiscourseHub.stubs(:nickname_available?).returns([true, nil])
           xhr :get, :check_username, username: user.username
         end
 
@@ -666,9 +666,9 @@ describe UsersController do
 
     context 'when discourse_org_access_key is wrong' do
       before do
-        SiteSetting.stubs(:call_mothership?).returns(true)
-        Mothership.stubs(:nickname_available?).raises(RestClient::Forbidden)
-        Mothership.stubs(:nickname_match?).raises(RestClient::Forbidden)
+        SiteSetting.stubs(:call_discourse_hub?).returns(true)
+        DiscourseHub.stubs(:nickname_available?).raises(RestClient::Forbidden)
+        DiscourseHub.stubs(:nickname_match?).raises(RestClient::Forbidden)
       end
 
       it 'should return an error message' do
