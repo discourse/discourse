@@ -41,7 +41,16 @@ window.Discourse.User = Discourse.Model.extend Discourse.Presence,
 
   save: (finished) ->
     jQuery.ajax "/users/" + @get('username').toLowerCase(),
-      data: @getProperties('auto_track_topics_after_msecs','bio_raw', 'website', 'name', 'email_digests', 'email_direct', 'email_private_messages', 'digest_after_days')
+      data: @getProperties('auto_track_topics_after_msecs',
+        'bio_raw',
+        'website',
+        'name',
+        'email_digests',
+        'email_direct',
+        'email_private_messages',
+        'digest_after_days',
+        'new_topic_duration_minutes'
+      )
       type: 'PUT'
       success: => finished(true)
       error: => finished(false)

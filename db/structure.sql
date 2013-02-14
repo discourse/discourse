@@ -1178,7 +1178,8 @@ CREATE TABLE users (
     flag_level integer DEFAULT 0 NOT NULL,
     time_read integer DEFAULT 0 NOT NULL,
     days_visited integer DEFAULT 0 NOT NULL,
-    ip_address inet
+    ip_address inet,
+    new_topic_duration_minutes integer
 );
 
 
@@ -2538,3 +2539,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130207200019');
 INSERT INTO schema_migrations (version) VALUES ('20130208220635');
 
 INSERT INTO schema_migrations (version) VALUES ('20130213021450');
+
+INSERT INTO schema_migrations (version) VALUES ('20130213203300');

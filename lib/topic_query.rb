@@ -128,12 +128,10 @@ class TopicQuery
     end
 
     def new_results(list_opts={})
-      date = @user.previous_visit_at
-      date = @user.created_at unless date
 
       default_list(list_opts)
         .joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{@user_id})")
-        .where("topics.created_at >= :created_at", created_at: date)
+        .where("topics.created_at >= :created_at", created_at: @user.treat_as_new_topic_start_date)
         .where("tu.last_read_post_number IS NULL")
         .where("COALESCE(tu.notification_level, :tracking) >= :tracking", tracking: TopicUser::NotificationLevel::TRACKING)
     end

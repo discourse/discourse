@@ -155,6 +155,14 @@ describe TopicQuery do
         topics.should == [new_topic]
       end
 
+      it "contains no new topics for a user that has missed the window" do
+        user.new_topic_duration_minutes = 5 
+        user.save
+        new_topic.created_at = 10.minutes.ago
+        new_topic.save
+        topics.should == []
+      end
+
       context "muted topics" do
         before do
           new_topic.notify_muted!(user)

@@ -33,7 +33,8 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:email_domains_blacklist, 'mailinator.com')
 
   # settings only available server side
-  setting(:auto_track_topics_after, 60000)
+  setting(:auto_track_topics_after, 300000)
+  setting(:new_topic_duration_minutes, 60 * 48)
   setting(:long_polling_interval, 15000)
   setting(:flags_required_to_hide_post, 3)
   setting(:cooldown_minutes_after_hiding_posts, 10)

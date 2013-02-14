@@ -43,10 +43,15 @@ class UserSerializer < BasicUserSerializer
              :email_private_messages,
              :email_direct,
              :digest_after_days,
-             :auto_track_topics_after_msecs
+             :auto_track_topics_after_msecs,
+             :new_topic_duration_minutes
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.auto_track_topics_after
+  end
+  
+  def new_topic_duration_minutes
+    object.new_topic_duration_minutes || SiteSetting.new_topic_duration_minutes
   end
 
   def can_send_private_message_to_user

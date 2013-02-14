@@ -34,6 +34,7 @@ class UsersController < ApplicationController
       u.website = website || u.website
       u.digest_after_days = params[:digest_after_days] || u.digest_after_days
       u.auto_track_topics_after_msecs = params[:auto_track_topics_after_msecs].to_i if params[:auto_track_topics_after_msecs]
+      u.new_topic_duration_minutes = params[:new_topic_duration_minutes].to_i if params[:new_topic_duration_minutes]
 
       [:email_digests, :email_direct, :email_private_messages].each do |i|
         if params[i].present?

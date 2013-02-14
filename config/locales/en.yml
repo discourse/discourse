@@ -243,6 +243,7 @@ en:
     anon_polling_interval: "How often should the anon clients poll in milliseconds"
 
     auto_track_topics_after: "How many milliseconds before a topic is automatically tracked (0 for always, -1 for never)"
+    new_topic_duration_minutes: "How many minutes is a topic considered new (-1 for always, -2 for last visit)"
 
     flags_required_to_hide_post: "Posts will be automatically hidden once the flag count reaches this threshold (0 for never)"
     cooldown_minutes_after_hiding_posts: "How many minutes must a user wait till they can edit their post after it is hidden due to flagging"
@@ -536,6 +537,18 @@ en:
       email_private_messages: "Receive an email when someone sends you a private message"
 
       other_settings: "Other"
+      
+      new_topic_duration:
+        label: "Consider topics new when"
+        not_viewed: "I haven't viewed them yet"
+        last_here: "they were posted since I was here last"
+        after_n_days:
+          one: "they were posted in the last day" 
+          other: "they were posted in the last {{count}} days" 
+        after_n_weeks:
+          one: "they were posted in the last week" 
+          other: "they were posted in the last {{count}} week" 
+
       auto_track_topics: "Automatically track topics I enter"
       auto_track_options:
         never: "never"

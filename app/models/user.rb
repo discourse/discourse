@@ -1,6 +1,5 @@
 require_dependency 'email_token'
 require_dependency 'trust_level'
-require_dependency 'sql_builder'
 
 class User < ActiveRecord::Base
 
@@ -45,6 +44,11 @@ class User < ActiveRecord::Base
 
   # This is just used to pass some information into the serializer
   attr_accessor :notification_channel_position
+
+  module NewTopicDuration
+    ALWAYS = -1 
+    LAST_VISIT = -2
+  end
 
   def self.username_length
     3..15
@@ -416,6 +420,17 @@ class User < ActiveRecord::Base
     email_tokens.where(email: self.email, confirmed: true).present? or email_tokens.count == 0
   end
 
+  def treat_as_new_topic_start_date
+    duration = new_topic_duration_minutes || SiteSetting.new_topic_duration_minutes 
+    case duration 
+    when User::NewTopicDuration::ALWAYS
+      created_at
+    when User::NewTopicDuration::LAST_VISIT
+      previous_visit_at || created_at
+    else
+      duration.minutes.ago
+    end 
+  end
 
   protected
 
