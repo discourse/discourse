@@ -740,7 +740,7 @@ en:
       not_found:
         title: "Topic Not Found"
         description: "Sorry, we couldn't find that topic. Perhaps it has been deleted?"
-      unread_posts: "you have {{unread}} unread posts in this topic"
+      unread_posts: "you have {{unread}} old unread posts in this topic"
       new_posts: "there are {{new_posts}} new posts in this topic since you last read it"
       likes: "there are {{likes}} likes in this topic"
       back_to_list: "Back to Topic List"
