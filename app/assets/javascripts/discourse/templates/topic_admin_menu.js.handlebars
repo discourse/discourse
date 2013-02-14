@@ -4,55 +4,55 @@
 
     <ul>
         <li>
-          <button {{action toggleMultiSelect}} class='btn btn-info'><i class='icon-tasks'></i> {{i18n topic.actions.multi_select}}</button>
+          <button {{action toggleMultiSelect}} class='btn btn-admin'><i class='icon-tasks'></i> {{i18n topic.actions.multi_select}}</button>
         </li>
 
       {{#if content.can_delete}}
         <li>
-          <button {{action deleteTopic}} class='btn btn-danger'><i class='icon-trash'></i> {{i18n topic.actions.delete}}</button>
+          <button {{action deleteTopic}} class='btn btn-admin btn-danger'><i class='icon-trash'></i> {{i18n topic.actions.delete}}</button>
         </li>
       {{/if}}
 
       <li>
         {{#if content.closed}}
-          <button {{action toggleClosed}} class='btn'><i class='icon-unlock'></i> {{i18n topic.actions.open}}</button>
+          <button {{action toggleClosed}} class='btn btn-admin'><i class='icon-unlock'></i> {{i18n topic.actions.open}}</button>
         {{else}}
-          <button {{action toggleClosed}} class='btn'><i class='icon-lock'></i> {{i18n topic.actions.close}}</button>
+          <button {{action toggleClosed}} class='btn btn-admin'><i class='icon-lock'></i> {{i18n topic.actions.close}}</button>
         {{/if}}
       </li>
 
       <li>
         {{#if content.pinned}}
-          <button {{action togglePinned}} class='btn'><i class='icon-pushpin'></i> {{i18n topic.actions.unpin}}</button>
+          <button {{action togglePinned}} class='btn btn-admin'><i class='icon-pushpin'></i> {{i18n topic.actions.unpin}}</button>
         {{else}}
-          <button {{action togglePinned}} class='btn'><i class='icon-pushpin'></i> {{i18n topic.actions.pin}}</button>
+          <button {{action togglePinned}} class='btn btn-admin'><i class='icon-pushpin'></i> {{i18n topic.actions.pin}}</button>
         {{/if}}
       </li>    
 
       <li>
         {{#if content.archived}}
-          <button {{action toggleArchived}} class='btn'><i class='icon-folder-close'></i> {{i18n topic.actions.unarchive}}</button>
+          <button {{action toggleArchived}} class='btn btn-admin'><i class='icon-folder-close'></i> {{i18n topic.actions.unarchive}}</button>
         {{else}}
-          <button {{action toggleArchived}} class='btn'><i class='icon-folder-close'></i> {{i18n topic.actions.archive}}</button>
+          <button {{action toggleArchived}} class='btn btn-admin'><i class='icon-folder-close'></i> {{i18n topic.actions.archive}}</button>
         {{/if}}
       </li>     
 
       <li>
         {{#if content.visible}}
-          <button {{action toggleVisibility}} class='btn'><i class='icon-eye-close'></i> {{i18n topic.actions.invisible}}</button>
+          <button {{action toggleVisibility}} class='btn btn-admin'><i class='icon-eye-close'></i> {{i18n topic.actions.invisible}}</button>
         {{else}}
-          <button {{action toggleVisibility}} class='btn'><i class='icon-eye-open'></i> {{i18n topic.actions.visible}}</button>
+          <button {{action toggleVisibility}} class='btn btn-admin'><i class='icon-eye-open'></i> {{i18n topic.actions.visible}}</button>
         {{/if}}
       </li>
 
       {{#if view.topic.canConvertToRegular}}
       <li>
-          <button {{action convertToRegular}} class='btn'><i class='icon-minus'></i> {{i18n topic.actions.convert_to_topic}}</button>
+          <button {{action convertToRegular}} class='btn btn-admin'><i class='icon-minus'></i> {{i18n topic.actions.convert_to_topic}}</button>
       </li>
       {{/if}}
 
       <li>
-        <button class='btn' {{action resetRead target="view.parentView"}}><i class='icon-remove'></i> {{i18n topic.actions.reset_read}}</button>
+        <button class='btn btn-admin' {{action resetRead target="view.parentView"}}><i class='icon-remove'></i> {{i18n topic.actions.reset_read}}</button>
       </li>
     </ul>
   </div>

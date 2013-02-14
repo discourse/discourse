@@ -59,6 +59,12 @@
   }
 }
 
+// Buttons used in admin panel
+// --------------------------------------------------
+.btn-admin {
+  text-align:left;
+}
+
 // Primary button
 // --------------------------------------------------
 
@@ -86,6 +92,34 @@
     @include linear-gradient($btn-primary-background-color, $btn-primary-background-color-dark);
     @include box-shadow((inset 0 1px 0 rgba($white, 0.33), inset 0 -1px 2px rgba($black, 0.2)));
   }
+
+  // Danger button
+  // --------------------------------------------------
+
+  .btn-danger {
+    border: 1px solid $btn-danger-border-color;
+    color: $white;
+    text-shadow: 0 1px 0 rgba($black, 0.2);
+    font-weight: bold;
+    @include linear-gradient($btn-danger-background-color, $btn-danger-background-color-dark);
+    @include box-shadow((inset 0 1px 0 rgba($white, 0.33), inset 0 -1px 2px rgba($black, 0.2)));
+    &[href] {
+      color: $white;
+    }
+    &:hover,
+    &:focus {
+      @include linear-gradient($btn-danger-background-color, $btn-danger-background-color-light);
+      @include box-shadow(inset 0 1px 0 rgba($white, 0.33));
+    }
+    &:active {
+      @include linear-gradient($btn-danger-background-color-dark, $btn-danger-background-color);
+      @include box-shadow(inset 0 1px 3px rgba($black, 0.2));
+    }
+    &[disabled] {
+      text-shadow: 0 1px 0 rgba($black, 0.2);
+      @include linear-gradient($btn-danger-background-color, $btn-danger-background-color-dark);
+      @include box-shadow((inset 0 1px 0 rgba($white, 0.33), inset 0 -1px 2px rgba($black, 0.2)));
+    }
 }
 
 // Social buttons
