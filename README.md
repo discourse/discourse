@@ -15,7 +15,7 @@ Whenever you need ...
 
 If you're interested in helping us develop Discourse, please start with our **[Discourse Vagrant Developer Guide](https://github.com/discourse/discourse/blob/master/docs/VAGRANT.md)**, which includes instructions to get up and running in a development environment using a virtual machine. It's the easiest way to hack on Discourse.
 
-If you're familiar with how Rails works and are comfortable setting up your own environemnt, you can use our **[Discourse Advanced Developer Guide](https://github.com/discourse/discourse/blob/master/docs/DEVELOPER-ADVANCED.md)**
+If you're familiar with how Rails works and are comfortable setting up your own environment, you can use our **[Discourse Advanced Developer Guide](https://github.com/discourse/discourse/blob/master/docs/DEVELOPER-ADVANCED.md)**
 
 ### Requirements
 
