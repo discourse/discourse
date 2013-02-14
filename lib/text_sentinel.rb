@@ -54,8 +54,8 @@ class TextSentinel
 
     return false if @opts[:max_word_length] and @text =~ /\w{#{@opts[:max_word_length]},}(\s|$)/
 
-    # We don't allow all upper case content
-    return false if @text == @text.upcase
+    # We don't allow all upper case content in english
+    return false if (@text =~ /[A-Z]+/) and (@text == @text.upcase)
 
     true
   end
