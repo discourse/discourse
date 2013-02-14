@@ -145,16 +145,16 @@ describe Oneboxer do
 
     it 'yields each url and element when given a string' do
       result = Oneboxer.each_onebox_link(@html) do |url, element|
-        element.is_a?(Hpricot::Elem).should be_true
+        element.is_a?(Nokogiri::XML::Element).should be_true
         url.should == 'http://discourse.org'
       end
-      result.kind_of?(Hpricot::Doc).should be_true
+      result.kind_of?(Nokogiri::HTML::Document).should be_true
     end
 
     it 'yields each url and element when given a doc' do
-      doc = Hpricot(@html)
+      doc = Nokogiri::HTML(@html)
       Oneboxer.each_onebox_link(doc) do |url, element|
-        element.is_a?(Hpricot::Elem).should be_true
+        element.is_a?(Nokogiri::XML::Element).should be_true
         url.should == 'http://discourse.org'
       end
     end    
