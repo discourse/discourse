@@ -8,34 +8,39 @@ describe UserAction do
 
   describe 'lists' do 
 
-    before do 
-      a = UserAction.new 
-      @post = Fabricate(:post)
-      @user = Fabricate(:coding_horror)
-      row = { 
-        action_type: UserAction::NEW_PRIVATE_MESSAGE,
-        user_id: @user.id, 
-        acting_user_id: @user.id, 
-        target_topic_id: @post.topic_id,
-        target_post_id: @post.id, 
-      }
+    let(:public_post) { Fabricate(:post) }
+    let(:public_topic) { public_post.topic }
+    let(:user) { Fabricate(:user) }
 
-      UserAction.log_action!(row)
-      
-      row[:action_type] = UserAction::GOT_PRIVATE_MESSAGE
-      UserAction.log_action!(row)
-     
-      row[:action_type] = UserAction::NEW_TOPIC
-      UserAction.log_action!(row)
-        
-      row[:action_type] = UserAction::BOOKMARK
-      UserAction.log_action!(row)
+    let(:private_post) { Fabricate(:post) }
+    let(:private_topic) do 
+      topic = private_post.topic
+      topic.update_column(:archetype, Archetype::private_message) 
+      topic
+    end
+
+    def log_test_action(opts={})
+      UserAction.log_action!({
+        action_type: UserAction::NEW_PRIVATE_MESSAGE,
+        user_id: user.id, 
+        acting_user_id: user.id, 
+        target_topic_id: private_topic.id,
+        target_post_id: private_post.id, 
+      }.merge(opts))
+    end
+
+    before do 
+      # Create some test data using a helper
+      log_test_action
+      log_test_action(action_type: UserAction::GOT_PRIVATE_MESSAGE)
+      log_test_action(action_type: UserAction::NEW_TOPIC, target_topic_id: public_topic.id, target_post_id: public_post.id)
+      log_test_action(action_type: UserAction::BOOKMARK)      
     end
 
     describe 'stats' do
 
       let :mystats do 
-        UserAction.stats(@user.id,Guardian.new(@user))
+        UserAction.stats(user.id, Guardian.new(user))
       end
 
       it 'should include non private message events' do 
@@ -43,11 +48,11 @@ describe UserAction do
       end
 
       it 'should exclude private messages for non owners' do 
-        UserAction.stats(@user.id,Guardian.new).map{|r| r["action_type"].to_i}.should_not include(UserAction::NEW_PRIVATE_MESSAGE)
+        UserAction.stats(user.id,Guardian.new).map{|r| r["action_type"].to_i}.should_not include(UserAction::NEW_PRIVATE_MESSAGE)
       end
 
       it 'should not include got private messages for owners' do 
-        UserAction.stats(@user.id,Guardian.new).map{|r| r["action_type"].to_i}.should_not include(UserAction::GOT_PRIVATE_MESSAGE)
+        UserAction.stats(user.id,Guardian.new).map{|r| r["action_type"].to_i}.should_not include(UserAction::GOT_PRIVATE_MESSAGE)
       end
     
       it 'should include private messages for owners' do 
@@ -62,11 +67,11 @@ describe UserAction do
     describe 'stream' do 
 
       it 'should have 1 item for non owners' do
-        UserAction.stream(user_id: @user.id, guardian: Guardian.new).count.should == 1
+        UserAction.stream(user_id: user.id, guardian: Guardian.new).count.should == 1
       end
       
       it 'should have bookmarks and pms for owners' do
-        UserAction.stream(user_id: @user.id, guardian: @user.guardian).count.should == 4
+        UserAction.stream(user_id: user.id, guardian: user.guardian).count.should == 4
       end
 
     end
@@ -78,22 +83,53 @@ describe UserAction do
   end
 
   describe 'when user likes' do 
-    before do 
-      @post = Fabricate(:post)
-      @likee = @post.user
-      @liker = Fabricate(:coding_horror) 
-      PostAction.act(@liker, @post, PostActionType.Types[:like])
-      @liker_action = @liker.user_actions.where(action_type: UserAction::LIKE).first
-      @likee_action = @likee.user_actions.where(action_type: UserAction::WAS_LIKED).first
+
+    let!(:post) { Fabricate(:post) }
+    let(:likee) { post.user }
+    let(:liker) { Fabricate(:coding_horror) }
+
+    def likee_stream
+      UserAction.stream(user_id: likee.id, guardian: Guardian.new)
     end
 
-    it 'should create a like action on the liker' do 
-      @liker_action.should_not be_nil 
+    before do
+      @old_count = likee_stream.count
     end
 
-    it 'should create a like action on the likee' do
-      @likee_action.should_not be_nil 
+    it "creates a new stream entry" do      
+      PostAction.act(liker, post, PostActionType.Types[:like])      
+      likee_stream.count.should == @old_count + 1
     end
+
+    context "successful like" do
+      before do 
+        PostAction.act(liker, post, PostActionType.Types[:like])
+        @liker_action = liker.user_actions.where(action_type: UserAction::LIKE).first
+        @likee_action = likee.user_actions.where(action_type: UserAction::WAS_LIKED).first
+      end
+
+      it 'should create a like action on the liker' do 
+        @liker_action.should_not be_nil 
+      end
+
+      it 'should create a like action on the likee' do
+        @likee_action.should_not be_nil 
+      end
+    end
+
+    context "liking a private message" do
+
+      before do
+        post.topic.update_column(:archetype, Archetype::private_message)
+      end
+
+      it "doesn't add the entry to the stream" do
+        PostAction.act(liker, post, PostActionType.Types[:like])      
+        likee_stream.count.should_not == @old_count + 1      
+      end
+
+    end
+
   end
 
   describe 'when a user posts a new topic' do

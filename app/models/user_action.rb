@@ -4,6 +4,7 @@ require_dependency 'sql_builder'
 class UserAction < ActiveRecord::Base
   belongs_to :user
   belongs_to :target_post, :class_name => "Post"
+  belongs_to :target_topic, :class_name => "Topic"
   attr_accessible :acting_user_id, :action_type, :target_topic_id, :target_post_id, :target_user_id, :user_id
 
   validates_presence_of :action_type
@@ -38,15 +39,17 @@ class UserAction < ActiveRecord::Base
   ].each_with_index.to_a.flatten]
 
   def self.stats(user_id, guardian)
-    results = UserAction.select("action_type, COUNT(*) count, '' description")
+    results = UserAction.select("action_type, COUNT(*) count, '' AS description")
+      .joins(:target_topic)
       .where(user_id: user_id)
-      .group('action_type')
-      .to_a
+      .group('action_type', 'topics.archetype')
 
     # should push this into the sql at some point, but its simple enough for now
     unless guardian.can_see_private_messages?(user_id)
-      results.reject!{|a| [GOT_PRIVATE_MESSAGE, NEW_PRIVATE_MESSAGE].include?(a.action_type)}
+      results = results.where('topics.archetype <> ?', Archetype::private_message)
     end
+
+    results = results.to_a
 
     results.sort!{|a,b| ORDER[a.action_type] <=> ORDER[b.action_type]}
     results.each do |row|
@@ -100,7 +103,7 @@ JOIN users pu on pu.id = COALESCE(p.user_id, t.user_id)
     end
 
     if !guardian.can_see_private_messages?(user_id) || ignore_private_messages
-      builder.where("a.action_type not in (#{NEW_PRIVATE_MESSAGE},#{GOT_PRIVATE_MESSAGE})")
+      builder.where("t.archetype != :archetype", archetype: Archetype::private_message)
     end
 
     if action_id
