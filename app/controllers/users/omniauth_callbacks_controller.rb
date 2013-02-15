@@ -22,6 +22,11 @@ class Users::OmniauthCallbacksController < ApplicationController
     end
   end
 
+  def failure
+    flash[:error] = I18n.t("login.omniauth_error", strategy: params[:strategy].titleize)
+    render :layout => 'no_js'
+  end
+
   def create_or_sign_on_user_using_twitter(auth_token)
 
     data = auth_token[:info]
@@ -62,7 +67,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     email = data[:email]
     name = data["name"]
     fb_uid = auth_token["uid"]
-  
+
 
     username = User.suggest_username(name)
 
