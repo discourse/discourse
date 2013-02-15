@@ -88,7 +88,7 @@ Discourse.BBCode =
     if stripped_hashed == contents_hashed
       result += ", full:true"
 
-    result += "\"]#{sansQuotes}[/quote]\n\n"
+    result += "\"]\n#{sansQuotes}\n[/quote]\n\n"
 
   formatQuote: (text, opts) ->
 

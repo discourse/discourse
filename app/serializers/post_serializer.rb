@@ -37,6 +37,7 @@ class PostSerializer < ApplicationSerializer
              :bookmarked,
              :raw,
              :actions_summary,
+             :new_user?,
              :moderator?,
              :avatar_template,
              :user_id,
@@ -45,6 +46,10 @@ class PostSerializer < ApplicationSerializer
              :hidden_reason_id,
              :deleted_at
 
+
+  def new_user?
+    object.user.created_at > SiteSetting.new_user_period_days.days.ago
+  end
 
   def moderator?
     object.user.has_trust_level?(:moderator)

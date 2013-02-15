@@ -1,6 +1,17 @@
 describe "Discourse.Utilities", ->
 
 
+  describe "categoryUrlId", ->
+
+    it "returns the slug when it exists", ->
+      expect(Discourse.Utilities.categoryUrlId(slug: 'hello')).toBe("hello")
+
+    it "returns id-category when slug is an empty string", ->
+      expect(Discourse.Utilities.categoryUrlId(id: 123, slug: '')).toBe("123-category")
+
+    it "returns id-category without a slug", ->
+      expect(Discourse.Utilities.categoryUrlId(id: 456)).toBe("456-category")
+
   describe "Cooking", ->
 
     cook = (contents, opts) ->
@@ -80,3 +91,11 @@ describe "Discourse.Utilities", ->
 
       it "works with links that have underscores in them", ->
         expect(cook("http://en.wikipedia.org/wiki/Homicide:_Life_on_the_Street")).toBe("<p><a href=\"http://en.wikipedia.org/wiki/Homicide:_Life_on_the_Street\" class=\"onebox\" target=\"_blank\">http://en.wikipedia.org/wiki/Homicide:_Life_on_the_Street</a></p>")
+
+  describe "emailValid", ->
+
+    it "allows upper case in first part of emails", ->
+      expect(Discourse.Utilities.emailValid('Bob@example.com')).toBe(true)
+
+    it "allows upper case in domain of emails", ->
+      expect(Discourse.Utilities.emailValid('bob@EXAMPLE.com')).toBe(true)

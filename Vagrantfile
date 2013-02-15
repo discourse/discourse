@@ -27,4 +27,27 @@ Vagrant::Config.run do |config|
 
   nfs_setting = RUBY_PLATFORM =~ /darwin/ ? true : false
   config.vm.share_folder("v-root", "/vagrant", ".", :nfs => nfs_setting)
+
+  chef_cookbooks_path = ["chef/cookbooks"]
+
+  # The first chef run just upgrades the chef installation using omnibus
+  config.vm.provision :chef_solo do |chef|
+    chef.binary_env = "GEM_HOME=/opt/vagrant_ruby/lib/ruby/gems/1.8/ GEM_PATH= "
+    chef.binary_path = "/opt/vagrant_ruby/bin/"
+    chef.cookbooks_path = chef_cookbooks_path
+    chef.add_recipe "recipe[omnibus_updater]"
+    chef.add_recipe "discourse"
+    chef.json = { :omnibus_updater => { 'version_search' => false }}
+  end
+
+  # The second chef run uses the updated chef-solo and does normal configuration
+  config.vm.provision :chef_solo do |chef|
+    chef.binary_env = "GEM_HOME=/opt/chef/embedded/lib/ruby/gems/1.9.1/ GEM_PATH= "
+    chef.binary_path = "/opt/chef/bin/"
+    chef.cookbooks_path = chef_cookbooks_path
+    chef.add_recipe "recipe[apt]"
+    chef.add_recipe "recipe[build-essential]"
+    chef.add_recipe "recipe[phantomjs]"
+    chef.add_recipe "recipe[vim]"    
+  end
 end

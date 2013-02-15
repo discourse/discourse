@@ -26,15 +26,13 @@ window.Discourse.PostMenuView = Ember.View.extend Discourse.Presence,
   # Trigger re rendering
   needsToRender: (->
     @rerender()
-  ).observes('post.deleted_at', 'post.flagsAvailable.@each', 'post.url', 'post.bookmarked', 'post.reply_count', 'post.can_delete')
+  ).observes('post.deleted_at', 'post.flagsAvailable.@each', 'post.url', 'post.bookmarked', 'post.reply_count', 'post.showRepliesBelow', 'post.can_delete')
 
   # Replies Button
   renderReplies: (post, buffer) ->
 
-    return if @get('post.replyFollowing')
-
+    return unless post.get('showRepliesBelow')
     reply_count = post.get('reply_count')
-    return if reply_count == 0
 
     buffer.push("<button class='show-replies' data-action='replies'>")
     buffer.push("<span class='badge-posts'>#{reply_count}</span>")
@@ -56,9 +54,9 @@ window.Discourse.PostMenuView = Ember.View.extend Discourse.Presence,
     # Show the correct button
     if post.get('deleted_at')
       if post.get('can_recover')
-        buffer.push("<button title=\"#{Em.String.i18n("post.controls.undelete")}\" data-action=\"recover\"><i class=\"icon-undo\"></i></button>")
+        buffer.push("<button title=\"#{Em.String.i18n("post.controls.undelete")}\" data-action=\"recover\" class=\"delete\"><i class=\"icon-undo\"></i></button>")
     else if post.get('can_delete')
-      buffer.push("<button title=\"#{Em.String.i18n("post.controls.delete")}\" data-action=\"delete\"><i class=\"icon-trash\"></i></button>")
+      buffer.push("<button title=\"#{Em.String.i18n("post.controls.delete")}\" data-action=\"delete\" class=\"delete\"><i class=\"icon-trash\"></i></button>")
 
   clickDeleteTopic: -> @get('controller').deleteTopic()
   clickRecover: -> @get('controller').recoverPost(@get('post'))        
@@ -96,7 +94,6 @@ window.Discourse.PostMenuView = Ember.View.extend Discourse.Presence,
     buffer.push("<button title=\"#{Em.String.i18n("post.controls.reply")}\" class='create' data-action=\"reply\"><i class='icon-reply'></i>#{Em.String.i18n("topic.reply.title")}</button>")
 
   clickReply: -> @get('controller').replyToPost(@get('post'))
-
 
   # Bookmark button
   renderBookmark: (post, buffer) ->

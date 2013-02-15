@@ -1,6 +1,5 @@
 require_dependency 'email_token'
 require_dependency 'trust_level'
-require_dependency 'sql_builder'
 
 class User < ActiveRecord::Base
 
@@ -28,6 +27,7 @@ class User < ActiveRecord::Base
   validates_presence_of :email
   validates_uniqueness_of :email
   validate :username_validator
+  validate :email_validator
   validate :password_validator
 
   before_save :cook
@@ -45,11 +45,19 @@ class User < ActiveRecord::Base
   # This is just used to pass some information into the serializer
   attr_accessor :notification_channel_position
 
+  module NewTopicDuration
+    ALWAYS = -1 
+    LAST_VISIT = -2
+  end
+
   def self.username_length
     3..15
   end
 
   def self.suggest_username(name)
+
+    return nil unless name.present?
+    
     # If it's an email
     if name =~ /([^@]+)@([^\.]+)/
       name = Regexp.last_match[1]
@@ -83,9 +91,9 @@ class User < ActiveRecord::Base
   def self.create_for_email(email, opts={})
     username = suggest_username(email)
 
-    if SiteSetting.call_mothership?
+    if SiteSetting.call_discourse_hub?
       begin
-        match, available, suggestion = Mothership.nickname_match?( username, email )
+        match, available, suggestion = DiscourseHub.nickname_match?( username, email )
         username = suggestion unless match or available
       rescue => e
         Rails.logger.error e.message + "\n" + e.backtrace.join("\n")
@@ -96,9 +104,9 @@ class User < ActiveRecord::Base
     user.trust_level = opts[:trust_level] if opts[:trust_level].present?
     user.save!
 
-    if SiteSetting.call_mothership?
+    if SiteSetting.call_discourse_hub?
       begin
-        Mothership.register_nickname( username, email )
+        DiscourseHub.register_nickname( username, email )
       rescue => e
         Rails.logger.error e.message + "\n" + e.backtrace.join("\n")
       end
@@ -131,12 +139,13 @@ class User < ActiveRecord::Base
   end
 
   def change_username(new_username)
+    current_username = self.username
     self.username = new_username
 
-    if SiteSetting.call_mothership? and self.valid?
+    if SiteSetting.call_discourse_hub? and self.valid?
       begin
-        Mothership.register_nickname( self.username, self.email )
-      rescue Mothership::NicknameUnavailable
+        DiscourseHub.change_nickname( current_username, new_username )
+      rescue DiscourseHub::NicknameUnavailable
         return false
       rescue => e
         Rails.logger.error e.message + "\n" + e.backtrace.join("\n")
@@ -240,39 +249,66 @@ class User < ActiveRecord::Base
     end
   end
 
+  # Indicate that this is NOT a passwordless account for the purposes of validation
+  def password_required
+    @password_required = true
+  end
+
   def confirm_password?(password)
     return false unless self.password_hash && self.salt
     self.password_hash == hash_password(password,self.salt)
   end
 
+  def seen?(date)
+    if last_seen_at.present?
+      !(last_seen_at.to_date < date)
+    end
+  end
+
+  def seen_before?
+    last_seen_at.present?
+  end
+
+  def has_visit_record?(date)
+    user_visits.where(["visited_at =? ", date ]).first
+  end
+
+  def adding_visit_record(date)
+    user_visits.create!(visited_at: date )
+  end
+
+  def update_visit_record!(date)
+    if !seen_before?
+      adding_visit_record(date)
+      update_column(:days_visited, 1)
+    end
+
+    if !seen?(date)
+      if !has_visit_record?(date)
+        adding_visit_record(date)
+        User.increment_counter(:days_visited, 1)
+      end
+    end
+  end
+
   def update_last_seen!
     now = DateTime.now
     now_date = now.to_date
-
     # Only update last seen once every minute
     redis_key = "user:#{self.id}:#{now_date.to_s}"
     if $redis.setnx(redis_key, "1")
       $redis.expire(redis_key, SiteSetting.active_user_rate_limit_secs)
 
-      if self.last_seen_at.nil? || self.last_seen_at.to_date < now_date
-        # count it
-        row_count = User.exec_sql('insert into user_visits(user_id,visited_at) select  :user_id, :visited_at
-                      where not exists(select 1 from user_visits where user_id = :user_id and visited_at = :visited_at)', user_id: self.id, visited_at: now.to_date)
-        if row_count.cmd_tuples == 1
-          User.update_all "days_visited = days_visited + 1", ["id = ? and days_visited = ?", self.id, self.days_visited]
-        end
-      end
+      update_visit_record!(now_date)
 
-      # using a builder to avoid the AR transaction
-      sql = SqlBuilder.new "update users /*set*/ where id = :id"
+      # using update_column to avoid the AR transaction
       # Keep track of our last visit
-      if self.last_seen_at.present? and (self.last_seen_at < (now - SiteSetting.previous_visit_timeout_hours.hours))
-        self.previous_visit_at = self.last_seen_at
-        sql.set('previous_visit_at = :prev', prev: self.previous_visit_at)
+      if seen_before? && (self.last_seen_at < (now - SiteSetting.previous_visit_timeout_hours.hours))
+        previous_visit_at = last_seen_at
+        update_column(:previous_visit_at, previous_visit_at )
       end
-      self.last_seen_at = now
-      sql.set('last_seen_at = :last', last: self.last_seen_at)
-      sql.exec(id: self.id)
+      update_column(:last_seen_at,  now )
+
     end
 
   end
@@ -369,6 +405,11 @@ class User < ActiveRecord::Base
     (self.trust_level || TrustLevel.Levels[:new]) >= TrustLevel.Levels[level]
   end
 
+  def change_trust_level(level)
+    raise "Invalid trust level #{level}" unless TrustLevel.Levels.has_key?(level)
+    self.trust_level = TrustLevel.Levels[level]
+  end
+
   def guardian
     Guardian.new(self)
   end
@@ -381,9 +422,20 @@ class User < ActiveRecord::Base
   end
 
   def email_confirmed?
-    email_tokens.where(email: self.email, confirmed: true).present?
+    email_tokens.where(email: self.email, confirmed: true).present? or email_tokens.count == 0
   end
 
+  def treat_as_new_topic_start_date
+    duration = new_topic_duration_minutes || SiteSetting.new_topic_duration_minutes 
+    case duration 
+    when User::NewTopicDuration::ALWAYS
+      created_at
+    when User::NewTopicDuration::LAST_VISIT
+      previous_visit_at || created_at
+    else
+      duration.minutes.ago
+    end 
+  end
 
   protected
 
@@ -453,9 +505,19 @@ class User < ActiveRecord::Base
       end
     end
 
+    def email_validator
+      if (setting = SiteSetting.email_domains_blacklist).present?
+        domains = setting.gsub('.', '\.')
+        regexp = Regexp.new("@(#{domains})", true)
+        if self.email =~ regexp
+          return errors.add(:email, I18n.t(:'user.email.not_allowed'))
+        end
+      end
+    end
+
     def password_validator
-      if @raw_password
-        return errors.add(:password, "must be 6 letters or longer") if @raw_password.length < 6
+      if (@raw_password and @raw_password.length < 6) or (@password_required and !@raw_password)
+        return errors.add(:password, "must be 6 letters or longer")
       end
     end
 

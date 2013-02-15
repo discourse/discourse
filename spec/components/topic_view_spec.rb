@@ -26,6 +26,62 @@ describe TopicView do
     lambda { TopicView.new(topic.id, nil) }.should raise_error(Discourse::NotLoggedIn)
   end
 
+  describe "#get_canonical_path" do
+    let(:user) { Fabricate(:user) }
+    let(:topic) { Fabricate(:topic) }
+    let(:path) { "/1234" }
+
+    before do
+      topic.expects(:relative_url).returns(path)
+      described_class.any_instance.expects(:find_topic).with(1234).returns(topic)
+    end
+
+    context "without a post number" do
+      context "without a page" do
+        it "generates a canonical path for a topic" do
+          described_class.new(1234, user).canonical_path.should eql(path)
+        end
+      end
+
+      context "with a page" do
+        let(:path_with_page) { "/1234?page=5" }
+
+        it "generates a canonical path for a topic" do
+          described_class.new(1234, user, page: 5).canonical_path.should eql(path_with_page)
+        end
+      end
+    end
+    context "with a post number" do
+      let(:path_with_page) { "/1234?page=10" }
+      before { SiteSetting.stubs(:posts_per_page).returns(5) }
+
+      it "generates a canonical path for a topic" do
+        described_class.new(1234, user, post_number: 50).canonical_path.should eql(path_with_page)
+      end
+    end
+  end
+
+  describe "#next_page" do
+    let(:posts) { [stub(post_number: 1), stub(post_number: 2)] }
+    let(:topic) do
+      topic = Fabricate(:topic)
+      topic.stubs(:posts).returns(posts)
+      topic.stubs(:highest_post_number).returns(5)
+      topic
+    end
+    let(:user) { Fabricate(:user) }
+
+    before do
+      described_class.any_instance.expects(:find_topic).with(1234).returns(topic)
+      described_class.any_instance.stubs(:filter_posts)
+      SiteSetting.stubs(:posts_per_page).returns(2)
+    end
+
+    it "should return the next page" do
+      described_class.new(1234, user).next_page.should eql(1)
+    end
+  end
+
   context '.posts_count' do
     it 'returns the two posters with their counts' do
       topic_view.posts_count.to_a.should =~ [[first_poster.id, 2], [coding_horror.id, 1]]
@@ -50,10 +106,12 @@ describe TopicView do
   end
 
   it 'allows admins to see deleted posts' do 
+    post_number = p3.post_number
     p3.destroy
     admin = Fabricate(:admin)
     topic_view = TopicView.new(topic.id, admin) 
     topic_view.posts.count.should == 3
+    topic_view.highest_post_number.should == post_number
   end
   
   it 'does not allow non admins to see deleted posts' do 
@@ -61,7 +119,7 @@ describe TopicView do
     topic_view.posts.count.should == 2
   end
 
-  # Sam: disabled for now, we only need this for poss, if we do, roll it into topic
+  # Sam: disabled for now, we only need this for polls, if we do, roll it into topic
   #  having to walk every post action is not really a good idea
   #
   # context '.voted_in_topic?' do
@@ -111,28 +169,23 @@ describe TopicView do
   context '.posts' do
     context 'near a post_number' do
 
-      context 'with a valid post_number' do
-        before do
-          topic.reload
-          topic_view.filter_posts_near(p2.post_number)
-        end
+      let (:near_topic_view) { TopicView.new(topic.id, coding_horror, post_number: p2.post_number) }
 
-        it 'returns posts around a post number' do
-          topic_view.posts.should == [p1, p2, p3]
-        end
-
-        it 'has a min of the 1st post number' do
-          topic_view.min.should == p1.post_number
-        end
-
-        it 'has a max of the 3rd post number' do
-          topic_view.max.should == p3.post_number
-        end
-
-        it 'is the inital load' do
-          topic_view.should be_initial_load
-        end       
+      it 'returns posts around a post number' do
+        near_topic_view.posts.should == [p1, p2, p3]
       end
+
+      it 'has a min of the 1st post number' do
+        near_topic_view.min.should == p1.post_number
+      end
+
+      it 'has a max of the 3rd post number' do
+        near_topic_view.max.should == p3.post_number
+      end
+
+      it 'is the inital load' do
+        near_topic_view.should be_initial_load
+      end       
 
     end
 

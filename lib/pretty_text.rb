@@ -216,6 +216,18 @@ module PrettyText
     doc.css("a").each do |l|
       links << l.attributes["href"].to_s
     end
+
+    doc.css("aside.quote").each do |a|
+      topic_id = a.attributes['data-topic']
+      
+      url = "/t/topic/#{topic_id}"
+      if post_number = a.attributes['data-post']
+        url << "/#{post_number}"
+      end
+
+      links << url
+    end
+
     links
   end
 

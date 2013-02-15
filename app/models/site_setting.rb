@@ -10,8 +10,8 @@ class SiteSetting < ActiveRecord::Base
 
   # settings available in javascript under Discourse.SiteSettings
   client_setting(:title, "Discourse")
-  client_setting(:logo_url, '/assets/logo.png')
-  client_setting(:logo_small_url, '')
+  client_setting(:logo_url, '/assets/d-logo-sketch.png')
+  client_setting(:logo_small_url, '/assets/d-logo-sketch-small.png')
   client_setting(:traditional_markdown_linebreaks, false)
   client_setting(:popup_delay, 1500)
   client_setting(:top_menu, 'popular|new|unread|favorited|categories')
@@ -29,9 +29,12 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:min_topic_title_length, 5)
   client_setting(:max_topic_title_length, 255)
   client_setting(:flush_timings_secs, 5)
+  client_setting(:supress_reply_directly_below, true)
+  client_setting(:email_domains_blacklist, 'mailinator.com')
 
   # settings only available server side
-  setting(:auto_track_topics_after, 60000)
+  setting(:auto_track_topics_after, 300000)
+  setting(:new_topic_duration_minutes, 60 * 48)
   setting(:long_polling_interval, 15000)
   setting(:flags_required_to_hide_post, 3)
   setting(:cooldown_minutes_after_hiding_posts, 10)
@@ -57,7 +60,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:invite_expiry_days, 14)
   setting(:active_user_rate_limit_secs, 60)
   setting(:previous_visit_timeout_hours, 1)
-  setting(:favicon_url, '/assets/favicon.ico')
+  setting(:favicon_url, '/assets/default-favicon.png')
 
   setting(:ninja_edit_window, 5.minutes.to_i)
   setting(:post_undo_action_window_mins, 10)
@@ -125,7 +128,7 @@ class SiteSetting < ActiveRecord::Base
 
   # Trust related
   setting(:basic_requires_topics_entered, 5)
-  setting(:basic_requires_read_posts, 100)
+  setting(:basic_requires_read_posts, 50)
   setting(:basic_requires_time_spent_mins, 30)
 
   # Entropy checks
@@ -133,10 +136,11 @@ class SiteSetting < ActiveRecord::Base
   setting(:body_min_entropy, 7)
   setting(:max_word_length, 30)
 
-  # Ways to catch griefers and other nasties
-  setting(:email_blacklist_regexp, '')
+  setting(:new_user_period_days, 2)
 
-  def self.call_mothership?
+  client_setting(:educate_until_posts, 2)
+
+  def self.call_discourse_hub?
     self.enforce_global_nicknames? and self.discourse_org_access_key.present?
   end
 

@@ -129,7 +129,6 @@ class Topic < ActiveRecord::Base
     end
   end
 
-
   def new_version_required?
     return true if title_changed?
     return true if category_id_changed?
@@ -497,7 +496,9 @@ class Topic < ActiveRecord::Base
   end
 
   def slug
-    Slug.for(title)
+    result = Slug.for(title)
+    return "topic" if result.blank?
+    result
   end
 
   def last_post_url

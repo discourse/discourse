@@ -3,6 +3,26 @@
 @import "foundation/variables";
 @import "foundation/mixins";
 
+
+#new-user-education {
+
+  @include box-shadow(3px 3px 3px rgba($black, 0.14));
+
+  p {
+    margin: 0 0 10px 0;
+  }
+
+  a.close {
+    float: right;
+  }
+
+  background-color: lighten($yellow, 40%);
+  border: 1px solid $yellow;
+  padding: 10px;
+  width: 600px;
+  position: absolute;
+}
+
 #reply-control {
   .toggle-preview, .saving-draft {
     position: absolute;

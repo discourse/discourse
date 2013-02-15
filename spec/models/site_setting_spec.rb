@@ -77,33 +77,33 @@ describe SiteSetting do
     end
   end
 
-  describe 'call_mothership?' do
+  describe 'call_discourse_hub?' do
     it 'should be true when enforce_global_nicknames is true and discourse_org_access_key is set' do
       SiteSetting.enforce_global_nicknames = true
       SiteSetting.discourse_org_access_key = 'asdfasfsafd'
       SiteSetting.refresh!
-      SiteSetting.call_mothership?.should == true
+      SiteSetting.call_discourse_hub?.should == true
     end
 
     it 'should be false when enforce_global_nicknames is false and discourse_org_access_key is set' do
       SiteSetting.enforce_global_nicknames = false
       SiteSetting.discourse_org_access_key = 'asdfasfsafd'
       SiteSetting.refresh!
-      SiteSetting.call_mothership?.should == false
+      SiteSetting.call_discourse_hub?.should == false
     end
 
     it 'should be false when enforce_global_nicknames is true and discourse_org_access_key is not set' do
       SiteSetting.enforce_global_nicknames = true
       SiteSetting.discourse_org_access_key = ''
       SiteSetting.refresh!
-      SiteSetting.call_mothership?.should == false
+      SiteSetting.call_discourse_hub?.should == false
     end
 
     it 'should be false when enforce_global_nicknames is false and discourse_org_access_key is not set' do
       SiteSetting.enforce_global_nicknames = false
       SiteSetting.discourse_org_access_key = ''
       SiteSetting.refresh!
-      SiteSetting.call_mothership?.should == false
+      SiteSetting.call_discourse_hub?.should == false
     end
   end
 

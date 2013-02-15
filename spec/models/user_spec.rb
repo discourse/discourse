@@ -394,6 +394,11 @@ describe User do
   end
 
   describe '.suggest_username' do
+
+    it "doesn't raise an error on nil username" do
+      User.suggest_username(nil).should be_nil
+    end
+
     it 'corrects weird characters' do
       User.suggest_username("Darth%^Vadar").should == "Darth_Vadar"
     end
@@ -442,6 +447,36 @@ describe User do
 
     it 'should handle typical facebook usernames' do
       User.suggest_username('roger.nelson.3344913').should == 'roger_nelson_33'
+    end
+  end
+
+  describe 'email_validator' do
+    it 'should allow good emails' do
+      user = Fabricate.build(:user, email: 'good@gmail.com')
+      user.should be_valid
+    end
+
+    it 'should reject some emails based on the email_domains_blacklist site setting' do
+      SiteSetting.stubs(:email_domains_blacklist).returns('mailinator.com')
+      Fabricate.build(:user, email: 'notgood@mailinator.com').should_not be_valid
+      Fabricate.build(:user, email: 'mailinator@gmail.com').should be_valid
+    end
+
+    it 'should reject some emails based on the email_domains_blacklist site setting' do
+      SiteSetting.stubs(:email_domains_blacklist).returns('mailinator.com|trashmail.net')
+      Fabricate.build(:user, email: 'notgood@mailinator.com').should_not be_valid
+      Fabricate.build(:user, email: 'notgood@trashmail.net').should_not be_valid
+      Fabricate.build(:user, email: 'mailinator.com@gmail.com').should be_valid
+    end
+
+    it 'should reject some emails based on the email_domains_blacklist site setting ignoring case' do
+      SiteSetting.stubs(:email_domains_blacklist).returns('trashmail.net')
+      Fabricate.build(:user, email: 'notgood@TRASHMAIL.NET').should_not be_valid
+    end
+
+    it 'should not interpret a period as a wildcard' do
+      SiteSetting.stubs(:email_domains_blacklist).returns('trashmail.net')
+      Fabricate.build(:user, email: 'good@trashmailinet.com').should be_valid
     end
   end
 
@@ -638,7 +673,7 @@ describe User do
       it 'should return false' do
         user.email_tokens.each {|t| t.destroy}
         user.reload
-        user.email_confirmed?.should be_false
+        user.email_confirmed?.should be_true
       end
     end
   end

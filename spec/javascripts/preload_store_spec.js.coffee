@@ -9,7 +9,7 @@ describe "PreloadStore", ->
       expect(PreloadStore.contains('joker')).toBe(false)
 
     it "returns true for a stored key", ->
-      expect(PreloadStore.contains('bane')).toBe(true)      
+      expect(PreloadStore.contains('bane')).toBe(true)
 
   describe 'getStatic', ->
 
@@ -17,7 +17,7 @@ describe "PreloadStore", ->
       expect(PreloadStore.getStatic('joker')).toBe(undefined)
 
     it "returns the the key if it exists", ->
-      expect(PreloadStore.getStatic('bane')).toBe('evil')      
+      expect(PreloadStore.getStatic('bane')).toBe('evil')
 
     it "removes the key after being called", ->
       PreloadStore.getStatic('bane')

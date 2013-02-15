@@ -17,6 +17,19 @@ window.Discourse.AdminUser = Discourse.Model.extend
     @set('can_revoke_admin',true)
     $.ajax "/admin/users/#{@get('id')}/grant_admin", type: 'PUT'
 
+  # Revoke the user's moderation access
+  revokeModeration: ->
+    @set('moderator',false)
+    @set('can_grant_moderation',true)
+    @set('can_revoke_moderation',false)
+    $.ajax "/admin/users/#{@get('id')}/revoke_moderation", type: 'PUT'
+
+  grantModeration: ->
+    @set('moderator',true)
+    @set('can_grant_moderation',false)
+    @set('can_revoke_moderation',true)
+    $.ajax "/admin/users/#{@get('id')}/grant_moderation", type: 'PUT'
+
   refreshBrowsers: ->
     $.ajax "/admin/users/#{@get('id')}/refresh_browsers",
       type: 'POST'

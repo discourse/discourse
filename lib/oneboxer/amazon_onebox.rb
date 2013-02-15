@@ -22,19 +22,19 @@ module Oneboxer
     end
 
     def parse(data)
-      hp = Hpricot(data)
+      html_doc = Nokogiri::HTML(data)
 
       result = {}
-      result[:title] = hp.at("h1")
+      result[:title] = html_doc.at("h1")
       result[:title] = result[:title].inner_html if result[:title].present?
 
-      image = hp.at(".main-image img")
+      image = html_doc.at(".main-image img")
       result[:image] = image['src'] if image
 
-      result[:by_info] = hp.at("#by-line")
+      result[:by_info] = html_doc.at("#by-line")
       result[:by_info] = BaseOnebox.remove_whitespace(result[:by_info].inner_html) if result[:by_info].present?
 
-      summary = hp.at("#description-and-details-content") 
+      summary = html_doc.at("#description-and-details-content") 
       result[:text] = summary.inner_html if summary.present?
 
       result

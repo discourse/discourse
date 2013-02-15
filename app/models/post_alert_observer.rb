@@ -101,7 +101,7 @@ class PostAlertObserver < ActiveRecord::Observer
       result = []
       post.raw.scan(/\[quote=\"([^,]+),.+\"\]/).uniq.each do |m|
         username = m.first.strip.downcase
-        user = User.where("(LOWER(username_lower) = :username or LOWER(name) = :username) and id != :id", username: username, id: post.user_id).first
+        user = User.where("username_lower = :username and id != :id", username: username, id: post.user_id).first
         result << user if user.present?
       end
       result
@@ -131,7 +131,6 @@ class PostAlertObserver < ActiveRecord::Observer
         exclude_user_ids << extract_mentioned_users(post).map{|u| u.id}
         exclude_user_ids << extract_quoted_users(post).map{|u| u.id}
         exclude_user_ids.flatten!
-
         TopicUser.where(topic_id: post.topic_id, notification_level: TopicUser::NotificationLevel::WATCHING).includes(:user).each do |tu|
           create_notification(tu.user, Notification.Types[:posted], post) unless exclude_user_ids.include?(tu.user_id)
         end

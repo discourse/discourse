@@ -13,8 +13,8 @@ describe Slug do
     Slug.for('àllo').should == 'allo'
   end
 
-  it 'removes symbols' do
-    Slug.for('evil#trout').should == 'eviltrout'
+  it 'replaces symbols' do
+    Slug.for('evil#trout').should == 'evil-trout'
   end
 
   it 'handles a.b.c properly' do 
@@ -37,6 +37,10 @@ describe Slug do
     from = "àáäâčďèéëěêìíïîľĺňòóöôŕřšťůùúüûýžñç"
     to   = "aaaacdeeeeeiiiillnoooorrstuuuuuyznc"
     Slug.for(from).should == to
+  end
+
+  it 'replaces underscores' do
+    Slug.for("o_o_o").should == "o-o-o"
   end
 
 end

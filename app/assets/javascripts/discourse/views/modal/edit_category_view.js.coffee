@@ -32,7 +32,7 @@ window.Discourse.EditCategoryView = window.Discourse.ModalBodyView.extend
 
   saveSuccess: (result) ->
     $('#discourse-modal').modal('hide')
-    window.location = "/category/#{result.category.slug}"
+    window.location = "/category/#{Discourse.Utilities.categoryUrlId(result.category)}"
 
   saveCategory: ->
 

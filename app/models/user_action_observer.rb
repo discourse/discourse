@@ -110,21 +110,6 @@ class UserActionObserver < ActiveRecord::Observer
         UserAction.remove_action!(row)
       end
     end
-
-    return if model.topic.private_message?
-
-    # a bit odd but we may have stray records
-    if model.topic and model.topic.user_id != model.user_id
-      row[:action_type] = UserAction::TOPIC_RESPONSE
-      row[:user_id] = model.topic.user_id
-
-      if model.deleted_at.nil?
-        UserAction.log_action!(row)
-      else
-        UserAction.remove_action!(row)
-      end
-    end
-
   end
 
   def log_topic(model)

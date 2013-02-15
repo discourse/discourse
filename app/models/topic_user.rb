@@ -18,7 +18,7 @@ class TopicUser < ActiveRecord::Base
   end
 
   def self.auto_track(user_id, topic_id, reason)
-    if exec_sql("select 1 from topic_users where user_id = ? and topic_id = ? and notifications_reason_id is null", user_id, topic_id).count == 1
+    if TopicUser.where(user_id: user_id, topic_id: topic_id, notifications_reason_id: nil).exists? 
       self.change(user_id, topic_id,
           notification_level: NotificationLevel::TRACKING,
           notifications_reason_id: reason

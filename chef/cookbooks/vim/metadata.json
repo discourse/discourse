@@ -1,0 +1,36 @@
+{
+  "name": "vim",
+  "description": "Installs vim and optional extra packages.",
+  "long_description": "Description\n===========\n\nInstalls vim.\n\nRequirements\n============\n\n## Platform:\n\n* Ubuntu/Debian\n* Red Hat/CentOS/Fedora/Scientific\n* ArchLinux\n\nAttributes\n==========\n\n* `node[:vim][:extra_packages]` - An array of extra packages related to vim to install (like plugins). Empty array by default.\n\nUsage\n=====\n\nPut `recipe[vim]` in a run list, or `include_recipe 'vim'` to ensure that vim is installed on your systems.\n\nIf you would like to install additional vim plugin packages, include their package names in the `node[:vim][:extra_packages]` attribute. Verify that your operating sytem has the package available.\n\nChanges\n=======\n\n## v1.0.2:\n\n* Fixes COOK-598 (RHEL platforms support).\n\nLicense and Author\n==================\n\nAuthor:: Joshua Timberman <joshua@opscode.com>\n\nCopyright 2010, Opscode, Inc\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\n",
+  "maintainer": "Opscode, Inc.",
+  "maintainer_email": "cookbooks@opscode.com",
+  "license": "Apache 2.0",
+  "platforms": {
+    "debian": ">= 0.0.0",
+    "ubuntu": ">= 0.0.0",
+    "arch": ">= 0.0.0",
+    "redhat": ">= 0.0.0",
+    "centos": ">= 0.0.0",
+    "fedora": ">= 0.0.0",
+    "scientific": ">= 0.0.0"
+  },
+  "dependencies": {
+  },
+  "recommendations": {
+  },
+  "suggestions": {
+  },
+  "conflicting": {
+  },
+  "providing": {
+  },
+  "replacing": {
+  },
+  "attributes": {
+  },
+  "groupings": {
+  },
+  "recipes": {
+  },
+  "version": "1.0.2"
+}

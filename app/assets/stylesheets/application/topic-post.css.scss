@@ -279,7 +279,12 @@
         }
       }
       button.delete {
+        &:hover {
+          color: white;
+          background-color: $btn-danger-background-color;
+        }
       }
+
       button.like {
         &:hover {
           color: $nav-like-button-color-hover;
@@ -324,6 +329,10 @@
       h3.moderator a {
         background-color: #ffe;
         border: 1px solid #ffd;
+      }
+
+      h3.new-user a[href] {
+        color: $dark_gray;
       }
 
       div {

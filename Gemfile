@@ -2,7 +2,6 @@ source 'https://rubygems.org'
 
 gem 'active_model_serializers', git: 'git://github.com/rails-api/active_model_serializers.git'
 gem 'ember-rails', git: 'git://github.com/emberjs/ember-rails.git' # so we get the pre version
-gem 'rack-mini-profiler', git: 'git://github.com/SamSaffron/MiniProfiler'
 gem 'vestal_versions', git: 'git://github.com/zhangyuan/vestal_versions'
 
 gem 'message_bus', path: 'vendor/gems/message_bus'
@@ -20,14 +19,16 @@ gem 'fastimage'
 gem 'fog', require: false
 gem 'has_ip_address'
 gem 'hiredis'
-gem 'hpricot'
 gem 'i18n-js'
 gem 'jquery-rails'
-gem 'koala', require: false
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
-gem 'oauth', require: false
+gem "omniauth"
+gem "omniauth-openid"
+gem "openid-redis-store"
+gem "omniauth-facebook"
+gem "omniauth-twitter"
 gem 'oj'
 gem 'pbkdf2'
 gem 'pg'
@@ -37,7 +38,6 @@ gem 'redis'
 gem 'redis-rails'
 gem 'rest-client'
 gem 'rinku'
-gem 'ruby-openid', require: 'openid'
 gem 'sanitize'
 gem 'sass'
 gem 'seed-fu'
@@ -69,6 +69,10 @@ group :assets do
   gem 'uglifier'
 end
 
+group :test do
+  gem "fakeweb", "~> 1.3.0"
+end
+
 group :test, :development do
   gem 'certified'
   gem 'fabrication'
@@ -89,5 +93,11 @@ end
 group :development do 
   gem 'better_errors'
   gem 'binding_of_caller' # I tried adding this and got an occational crash
-  gem 'pry-rails'
+  gem 'librarian', '>= 0.0.25', require: false
+  gem 'pry-rails'  
 end
+
+# IMPORTANT: mini profiler monkey patches, so it better be required last
+#  If you want to amend mini profiler to do the monkey patches in the railstie
+#  we are open to it.
+gem 'rack-mini-profiler', git: 'git://github.com/SamSaffron/MiniProfiler'

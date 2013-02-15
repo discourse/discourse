@@ -25,7 +25,9 @@ Discourse.Topic = Discourse.Model.extend Discourse.Presence,
   ).property('categoryName', 'categories')
 
   url: (->
-    "/t/#{@get('slug')}/#{@get('id')}"
+    slug = @get('slug')
+    slug = "topic" if slug.isBlank()
+    "/t/#{slug}/#{@get('id')}"
   ).property('id', 'slug')
 
   # Helper to build a Url with a post number
@@ -242,6 +244,18 @@ Discourse.Topic = Discourse.Model.extend Discourse.Presence,
 
     newPosts.each (p)->
       posts.pushObject(p) unless map[p.get('post_number')]
+
+  # Is the reply to a post directly below it?
+  isReplyDirectlyBelow: (post) ->
+    posts = @get('posts')
+    return unless posts
+
+    postBelow = posts[posts.indexOf(post) + 1]
+
+    # If the post directly below's reply_to_post_number is our post number, it's
+    # considered directly below.
+    return postBelow?.get('reply_to_post_number') is post.get('post_number')
+
 
 window.Discourse.Topic.reopenClass
 

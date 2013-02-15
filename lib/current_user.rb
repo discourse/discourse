@@ -1,5 +1,16 @@
 module CurrentUser
 
+  def self.lookup_from_env(env)
+    request = Rack::Request.new(env)
+    auth_token = request.cookies["_t"]
+    user = nil
+    if auth_token && auth_token.length == 32
+      user = User.where(auth_token: auth_token).first 
+    end
+    
+    return user
+  end
+
   def current_user
     return @current_user if @current_user || @not_logged_in
 

@@ -4,7 +4,6 @@ require_dependency 'rate_limiter'
 require_dependency 'post_revisor'
 
 require 'archetype'
-require 'hpricot'
 require 'digest/sha1'
 
 class Post < ActiveRecord::Base
@@ -115,10 +114,21 @@ class Post < ActiveRecord::Base
     self.cooked = nil
   end
 
+  def self.white_listed_image_classes
+    @white_listed_image_classes ||= ['avatar']
+  end
+
   def image_count
     return 0 unless self.raw.present?
-    cooked_document.search("img.emoji").remove
-    cooked_document.search("img").count
+
+    cooked_document.search("img").reject{ |t|
+      dom_class = t["class"]
+      if dom_class
+        (Post.white_listed_image_classes & dom_class.split(" ")).count > 0
+      else
+        false
+      end
+    }.count
   end
 
   def link_count

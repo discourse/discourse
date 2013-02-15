@@ -116,6 +116,10 @@ class PostsController < ApplicationController
     render_serialized(post.replies, PostSerializer)
   end
 
+  # Returns the "you're creating a post education"
+  def education_text
+    
+  end
 
   def bookmark
     post = find_post_from_params

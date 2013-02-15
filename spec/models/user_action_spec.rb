@@ -28,6 +28,8 @@ describe UserAction do
       row[:action_type] = UserAction::NEW_TOPIC
       UserAction.log_action!(row)
         
+      row[:action_type] = UserAction::BOOKMARK
+      UserAction.log_action!(row)
     end
 
     describe 'stats' do
@@ -63,8 +65,8 @@ describe UserAction do
         UserAction.stream(user_id: @user.id, guardian: Guardian.new).count.should == 1
       end
       
-      it 'should have 3 items for non owners' do
-        UserAction.stream(user_id: @user.id, guardian: @user.guardian).count.should == 3
+      it 'should have bookmarks and pms for owners' do
+        UserAction.stream(user_id: @user.id, guardian: @user.guardian).count.should == 4
       end
 
     end
@@ -111,7 +113,6 @@ describe UserAction do
       end
     end
 
- 
     it 'should not log a post user action' do 
       @post.user.user_actions.where(action_type: UserAction::POST).first.should be_nil
     end
@@ -121,7 +122,7 @@ describe UserAction do
       before do 
         @other_user = Fabricate(:coding_horror)
         @mentioned = Fabricate(:admin)
-        @response = Fabricate(:post, topic: @post.topic, user: @other_user, raw: "perhaps @#{@mentioned.username} knows how this works?")
+        @response = Fabricate(:post, reply_to_post_number: 1, topic: @post.topic, user: @other_user, raw: "perhaps @#{@mentioned.username} knows how this works?")
       end
       
       it 'should log a post action for the poster' do 
@@ -129,7 +130,7 @@ describe UserAction do
       end
 
       it 'should log a post action for the original poster' do 
-        @post.user.user_actions.where(action_type: UserAction::TOPIC_RESPONSE).first.should_not be_nil
+        @post.user.user_actions.where(action_type: UserAction::RESPONSE).first.should_not be_nil
       end
 
       it 'should log a mention for the mentioned' do 
@@ -140,6 +141,10 @@ describe UserAction do
         @response.raw = "here it goes again"
         @response.save! 
         @response.user.user_actions.where(action_type: UserAction::POST).count.should == 1
+      end
+
+      it 'should not log topic reply and reply for a single post' do 
+        @post.user.user_actions.joins(:target_post).where('posts.post_number = 2').count.should == 1
       end
 
     end

@@ -90,11 +90,16 @@
     </div>     
   </div>
   
-  <div class="control-group">  
+  <div class="control-group other">  
     <label class="control-label">{{i18n user.other_settings}}</label>    
     <div class="controls">
       <label>{{i18n user.auto_track_topics}}</label>
       {{view Discourse.ComboboxView valueAttribute="value" contentBinding="controller.autoTrackDurations" valueBinding="content.auto_track_topics_after_msecs"}}          
+    </div>
+    
+    <div class="controls">
+      <label>{{i18n user.new_topic_duration.label}}</label>
+      {{view Discourse.ComboboxView valueAttribute="value" contentBinding="controller.considerNewTopicOptions" valueBinding="content.new_topic_duration_minutes"}}          
     </div>
   </div>
 
