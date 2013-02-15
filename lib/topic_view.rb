@@ -31,6 +31,8 @@ class TopicView
     @user = user
     @initial_load = true
 
+    @all_posts = @posts
+
     filter_posts(options)
 
     @draft_key = @topic.draft_key
@@ -229,7 +231,7 @@ class TopicView
   #  the end of the stream (for mods), nor is it correct for filtered 
   #  streams
   def highest_post_number
-    @highest_post_number ||= @posts.maximum(:post_number)
+    @highest_post_number ||= @all_posts.maximum(:post_number)
   end
 
   protected
