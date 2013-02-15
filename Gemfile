@@ -2,7 +2,6 @@ source 'https://rubygems.org'
 
 gem 'active_model_serializers', git: 'git://github.com/rails-api/active_model_serializers.git'
 gem 'ember-rails', git: 'git://github.com/emberjs/ember-rails.git' # so we get the pre version
-gem 'rack-mini-profiler', git: 'git://github.com/SamSaffron/MiniProfiler'
 gem 'vestal_versions', git: 'git://github.com/zhangyuan/vestal_versions'
 
 gem 'message_bus', path: 'vendor/gems/message_bus'
@@ -98,3 +97,7 @@ group :development do
   gem 'pry-rails'  
 end
 
+# IMPORTANT: mini profiler monkey patches, so it better be required last
+#  If you want to amend mini profiler to do the monkey patches in the railstie
+#  we are open to it.
+gem 'rack-mini-profiler', git: 'git://github.com/SamSaffron/MiniProfiler'
