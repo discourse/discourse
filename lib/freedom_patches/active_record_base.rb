@@ -25,7 +25,7 @@ class ActiveRecord::Base
     begin
       yield
     rescue ActiveRecord::StatementInvalid => e
-      if e.message =~ /Deadlock found when trying to get lock/ and (retries.nil? || retries > 0)
+      if e.message =~ /deadlock detected/ and (retries.nil? || retries > 0)
         retry_lock_error(retries ? retries - 1 : nil, &block)
       else
         raise e
