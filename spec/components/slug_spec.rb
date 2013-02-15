@@ -39,5 +39,9 @@ describe Slug do
     Slug.for(from).should == to
   end
 
+  it 'replaces underscores' do
+    Slug.for("o_o_o").should == "o-o-o"
+  end
+
 end
 

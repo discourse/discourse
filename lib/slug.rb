@@ -6,7 +6,7 @@
 module Slug
 
   def self.for(string)
-    string.parameterize
+    string.parameterize.gsub("_", "-")
   end
 
 end
