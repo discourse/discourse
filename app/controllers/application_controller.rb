@@ -1,4 +1,5 @@
 require 'current_user'
+require 'canonical_url'
 require_dependency 'discourse'
 require_dependency 'custom_renderer'
 require 'archetype'
@@ -6,6 +7,8 @@ require_dependency 'rate_limiter'
 
 class ApplicationController < ActionController::Base
   include CurrentUser
+  
+  include CanonicalURL::ControllerExtensions
 
   serialization_scope :guardian
 

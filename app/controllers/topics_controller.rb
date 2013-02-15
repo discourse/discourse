@@ -30,6 +30,8 @@ class TopicsController < ApplicationController
       track_visit_to_topic
       perform_show_response
     end
+
+    canonical_url @topic_view.canonical_path
   end
 
   def destroy_timings
