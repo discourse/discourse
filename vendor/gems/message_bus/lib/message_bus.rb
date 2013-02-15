@@ -20,6 +20,18 @@ end
 module MessageBus; end
 module MessageBus::Implementation
 
+  def cache_assets=(val)
+    @cache_assets = val
+  end
+
+  def cache_assets
+    if defined? @cache_assets
+      @cache_assets
+    else
+      true
+    end
+  end
+
   def logger=(logger)
     @logger = logger
   end

@@ -3,12 +3,7 @@ MessageBus.site_id_lookup do
 end
 
 MessageBus.user_id_lookup do |env|
-  request = Rack::Request.new(env)
-  auth_token = request.cookies["_t"]
-  user = nil
-  if auth_token && auth_token.length == 32
-    user = User.where(auth_token: auth_token).first 
-  end
+  user = CurrentUser.lookup_from_env(env)
   user.id if user
 end
 
@@ -25,3 +20,14 @@ MessageBus.redis_config = YAML::load(File.open("#{Rails.root}/config/redis.yml")
 
 MessageBus.long_polling_enabled = SiteSetting.enable_long_polling
 MessageBus.long_polling_interval = SiteSetting.long_polling_interval
+
+MessageBus.is_admin_lookup do |env| 
+  user = CurrentUser.lookup_from_env(env)
+  if user && user.admin
+    true
+  else
+    false
+  end
+end
+
+MessageBus.cache_assets = !Rails.env.development?

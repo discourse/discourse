@@ -122,6 +122,14 @@ describe MessageBus::Rack::Middleware do
       get "/message-bus/_diagnostics"
       last_response.status.should == 200
     end
+
+    it "should get the script it asks for" do
+      MessageBus.stub(:is_admin_lookup).and_return(lambda{ true })
+      get "/message-bus/_diagnostics/assets/message-bus.js"
+      last_response.status.should == 200
+      last_response.content_type.should == "text/javascript;"
+    end
+
   end
   
   describe "polling" do
