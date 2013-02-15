@@ -2,7 +2,6 @@
 
 require 'spec_helper'
 require 'text_sentinel'
-require 'iconv'
 
 describe TextSentinel do
 
