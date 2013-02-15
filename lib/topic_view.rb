@@ -31,6 +31,8 @@ class TopicView
     @user = user
     @initial_load = true
 
+    @all_posts = @posts
+
     filter_posts(options)
 
     @draft_key = @topic.draft_key
@@ -221,6 +223,15 @@ class TopicView
   def suggested_topics
     return nil if topic.private_message?
     @suggested_topics ||= TopicQuery.new(@user).list_suggested_for(topic)
+  end
+
+  # This is pending a larger refactor, that allows custom orders
+  #  for now we need to look for the highest_post_number in the stream 
+  #  the cache on topics is not correct if there are deleted posts at 
+  #  the end of the stream (for mods), nor is it correct for filtered 
+  #  streams
+  def highest_post_number
+    @highest_post_number ||= @all_posts.maximum(:post_number)
   end
 
   protected

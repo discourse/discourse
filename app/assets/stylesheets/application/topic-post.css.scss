@@ -326,6 +326,10 @@
         border: 1px solid #ffd;
       }
 
+      h3.new-user a[href] {
+        color: $dark_gray;
+      }
+
       div {
         display: block;
       }

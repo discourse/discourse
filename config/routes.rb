@@ -34,6 +34,8 @@ Discourse::Application.routes.draw do
       put 'unban' => 'users#unban'
       put 'revoke_admin' => 'users#revoke_admin'
       put 'grant_admin' => 'users#grant_admin'
+      put 'revoke_moderation' => 'users#revoke_moderation'
+      put 'grant_moderation' => 'users#grant_moderation'
       put 'approve' => 'users#approve'
       post 'refresh_browsers' => 'users#refresh_browsers'
     end
@@ -111,12 +113,8 @@ Discourse::Application.routes.draw do
 
   resources :notifications
   resources :categories
-  resources :user_open_ids do 
-    collection do
-      get 'frame'
-      get 'complete'
-    end
-  end
+
+  match "/auth/:provider/callback", to: "users/omniauth_callbacks#complete"
 
   get 'twitter/frame' => 'twitter#frame'
   get 'twitter/complete' => 'twitter#complete'
@@ -139,6 +137,7 @@ Discourse::Application.routes.draw do
     end
   end
   resources :user_actions
+  resources :education
 
   get 'category/:category' => 'list#category'
   get 'popular' => 'list#index'

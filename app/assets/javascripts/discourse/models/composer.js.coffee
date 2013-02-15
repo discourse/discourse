@@ -335,14 +335,16 @@ window.Discourse.Composer = Discourse.Model.extend
 
   saveDraft: ->
 
-    return if @disableDrafts
+    return if @get('disableDrafts')
+    return unless @get('reply')
+    return if @get('reply').length < Discourse.SiteSettings.min_post_length
 
     data =
-      reply: @get("reply"),
-      action: @get("action"),
-      title: @get("title"),
-      categoryName: @get("categoryName"),
-      postId: @get("post.id"),
+      reply: @get('reply'),
+      action: @get('action'),
+      title: @get('title'),
+      categoryName: @get('categoryName'),
+      postId: @get('post.id'),
       archetypeId: @get('archetypeId')
       metaData: @get('metaData')
       usernames: @get('targetUsernames')
@@ -356,7 +358,14 @@ window.Discourse.Composer = Discourse.Model.extend
       )
 
   resetDraftStatus: (->
-    @set('draftStatus', null)
+    reply = @get('reply')
+    len = Discourse.SiteSettings.min_post_length
+    if !reply
+      @set('draftStatus', Em.String.i18n('composer.min_length.at_least', n: len))
+    else if reply.length < len
+      @set('draftStatus', Em.String.i18n('composer.min_length.more', n: len - reply.length))
+    else
+      @set('draftStatus', null)
   ).observes('reply','title')
 
 

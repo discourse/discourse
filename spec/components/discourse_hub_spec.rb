@@ -1,16 +1,16 @@
 require 'spec_helper'
-require_dependency 'mothership'
+require_dependency 'discourse_hub'
 
-describe Mothership do
+describe DiscourseHub do
   describe '#nickname_available?' do
     it 'should return true when nickname is available and no suggestion' do
       RestClient.stubs(:get).returns( {success: 'OK', available: true}.to_json )
-      Mothership.nickname_available?('MacGyver').should == [true, nil]
+      DiscourseHub.nickname_available?('MacGyver').should == [true, nil]
     end
 
     it 'should return false and a suggestion when nickname is not available' do
       RestClient.stubs(:get).returns( {success: 'OK', available: false, suggestion: 'MacGyver1'}.to_json )
-      available, suggestion = Mothership.nickname_available?('MacGyver')
+      available, suggestion = DiscourseHub.nickname_available?('MacGyver')
       available.should be_false
       suggestion.should_not be_nil
     end
@@ -21,12 +21,12 @@ describe Mothership do
   describe '#nickname_match?' do
     it 'should return true when it is a match and no suggestion' do
       RestClient.stubs(:get).returns( {success: 'OK', match: true, available: false}.to_json )
-      Mothership.nickname_match?('MacGyver', 'macg@example.com').should == [true, false, nil]
+      DiscourseHub.nickname_match?('MacGyver', 'macg@example.com').should == [true, false, nil]
     end
 
     it 'should return false and a suggestion when it is not a match and the nickname is not available' do
       RestClient.stubs(:get).returns( {success: 'OK', match: false, available: false, suggestion: 'MacGyver1'}.to_json )
-      match, available, suggestion = Mothership.nickname_match?('MacGyver', 'macg@example.com')
+      match, available, suggestion = DiscourseHub.nickname_match?('MacGyver', 'macg@example.com')
       match.should be_false
       available.should be_false
       suggestion.should_not be_nil
@@ -34,7 +34,7 @@ describe Mothership do
 
     it 'should return false and no suggestion when it is not a match and the nickname is available' do
       RestClient.stubs(:get).returns( {success: 'OK', match: false, available: true}.to_json )
-      match, available, suggestion = Mothership.nickname_match?('MacGyver', 'macg@example.com')
+      match, available, suggestion = DiscourseHub.nickname_match?('MacGyver', 'macg@example.com')
       match.should be_false
       available.should be_true
       suggestion.should be_nil
@@ -44,51 +44,50 @@ describe Mothership do
   describe '#register_nickname' do
     it 'should return true when registration succeeds' do
       RestClient.stubs(:post).returns( {success: 'OK'}.to_json )
-      Mothership.register_nickname('MacGyver', 'macg@example.com').should be_true
+      DiscourseHub.register_nickname('MacGyver', 'macg@example.com').should be_true
     end
 
     it 'should return raise an exception when registration fails' do
       RestClient.stubs(:post).returns( {failed: -200}.to_json )
       expect {
-        Mothership.register_nickname('MacGyver', 'macg@example.com')
-      }.to raise_error(Mothership::NicknameUnavailable)
+        DiscourseHub.register_nickname('MacGyver', 'macg@example.com')
+      }.to raise_error(DiscourseHub::NicknameUnavailable)
     end
   end
 
   describe '#current_discourse_version' do
     it 'should return the latest version of discourse' do
       RestClient.stubs(:get).returns( {success: 'OK', version: 1.0}.to_json )
-      Mothership.current_discourse_version().should == 1.0
+      DiscourseHub.current_discourse_version().should == 1.0
     end
   end
 
   describe '#change_nickname' do
     it 'should return true when nickname is changed successfully' do
       RestClient.stubs(:put).returns( {success: 'OK'}.to_json )
-      Mothership.change_nickname('MacGyver', 'MacG').should be_true
+      DiscourseHub.change_nickname('MacGyver', 'MacG').should be_true
     end
 
     it 'should return raise NicknameUnavailable when nickname is not available' do
       RestClient.stubs(:put).returns( {failed: -200}.to_json )
       expect {
-        Mothership.change_nickname('MacGyver', 'MacG')
-      }.to raise_error(Mothership::NicknameUnavailable)
+        DiscourseHub.change_nickname('MacGyver', 'MacG')
+      }.to raise_error(DiscourseHub::NicknameUnavailable)
     end
 
-    # TODO: General error handling in mothership.rb
 
     # it 'should return raise NicknameUnavailable when nickname does not belong to this forum' do
     #   RestClient.stubs(:put).returns( {failed: -13}.to_json )
     #   expect {
-    #     Mothership.change_nickname('MacGyver', 'MacG')
-    #   }.to raise_error(Mothership::ActionForbidden)
+    #      DiscourseHub.change_nickname('MacGyver', 'MacG')
+    #   }.to raise_error(DiscourseHub::ActionForbidden)
     # end
 
     # it 'should return raise NicknameUnavailable when nickname does not belong to this forum' do
     #   RestClient.stubs(:put).returns( {failed: -13}.to_json )
     #   expect {
-    #     Mothership.change_nickname('MacGyver', 'MacG')
-    #   }.to raise_error(Mothership::ActionForbidden)
+    #     DiscourseHub.change_nickname('MacGyver', 'MacG')
+    #   }.to raise_error(DiscourseHub::ActionForbidden)
     # end
   end
 end

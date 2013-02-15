@@ -1,6 +1,6 @@
 require_dependency 'rest_client'
 
-module Mothership
+module DiscourseHub
 
   class NicknameUnavailable < RuntimeError; end
 
@@ -41,25 +41,25 @@ module Mothership
   private
 
   def self.get(rel_url, params={})
-    response = RestClient.get( "#{mothership_base_url}#{rel_url}", {params: {access_token: access_token}.merge(params), accept: accepts } )
+    response = RestClient.get( "#{hub_base_url}#{rel_url}", {params: {access_token: access_token}.merge(params), accept: accepts } )
     JSON.parse(response)
   end
 
   def self.post(rel_url, params={})
-    response = RestClient.post( "#{mothership_base_url}#{rel_url}", {access_token: access_token}.merge(params), content_type: :json, accept: accepts )
+    response = RestClient.post( "#{hub_base_url}#{rel_url}", {access_token: access_token}.merge(params), content_type: :json, accept: accepts )
     JSON.parse(response)
   end
 
   def self.put(rel_url, params={})
-    response = RestClient.put( "#{mothership_base_url}#{rel_url}", {access_token: access_token}.merge(params), content_type: :json, accept: accepts )
+    response = RestClient.put( "#{hub_base_url}#{rel_url}", {access_token: access_token}.merge(params), content_type: :json, accept: accepts )
     JSON.parse(response)
   end
 
-  def self.mothership_base_url
+  def self.hub_base_url
     if Rails.env == 'production'
       'http://api.discourse.org/api'
     else
-      'http://local.mothership:3000/api'
+      'http://local.hub:3000/api'
     end
   end
 

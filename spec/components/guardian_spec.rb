@@ -761,6 +761,46 @@ describe Guardian do
     end
   end
 
+  context 'can_grant_moderation?' do
+    it "wont allow a non logged in user to grant an moderator's access" do
+      Guardian.new.can_grant_moderation?(user).should be_false
+    end
+
+    it "wont allow a regular user to revoke an modearator's access" do
+      Guardian.new(user).can_grant_moderation?(moderator).should be_false
+    end
+
+    it 'wont allow an admin to grant their own access' do
+      Guardian.new(admin).can_grant_moderation?(admin).should be_false     
+    end
+
+    it 'wont allow an admin to grant it to an already moderator' do
+      Guardian.new(admin).can_grant_moderation?(moderator).should be_false     
+    end
+
+    it "allows an admin to grant a regular user access" do
+      Guardian.new(admin).can_grant_moderation?(user).should be_true     
+    end
+  end
+
+  context 'can_revoke_moderation?' do
+    it "wont allow a non logged in user to revoke an moderator's access" do
+      Guardian.new.can_revoke_moderation?(moderator).should be_false
+    end
+
+    it "wont allow a regular user to revoke an moderator's access" do
+      Guardian.new(user).can_revoke_moderation?(moderator).should be_false
+    end
+
+    it 'wont allow an moderator to revoke their own moderator' do
+      Guardian.new(moderator).can_revoke_moderation?(moderator).should be_false     
+    end
+
+    it "allows an admin to revoke a moderator's access" do
+      Guardian.new(admin).can_revoke_moderation?(moderator).should be_true     
+    end
+  end
+
   context "can_see_pending_invites_from?" do
 
     it 'is false without a logged in user' do

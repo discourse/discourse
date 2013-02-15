@@ -26,7 +26,18 @@ Discourse.PreferencesController = Ember.ObjectController.extend Discourse.Presen
     freqs.addObject(name: Em.String.i18n('user.auto_track_options.after_n_minutes', count: 1), value: 60000)
     freqs.addObject(name: Em.String.i18n('user.auto_track_options.after_n_minutes', count: 2), value: 120000)
     freqs.addObject(name: Em.String.i18n('user.auto_track_options.after_n_minutes', count: 5), value: 300000)
+    freqs.addObject(name: Em.String.i18n('user.auto_track_options.after_n_minutes', count: 10), value: 600000)
     freqs
+  ).property()
+
+  considerNewTopicOptions: (->
+    opts = Em.A()
+    opts.addObject(name: Em.String.i18n('user.new_topic_duration.not_viewed'), value: -1) # always
+    opts.addObject(name: Em.String.i18n('user.new_topic_duration.after_n_days', count: 1), value: 60 * 24)
+    opts.addObject(name: Em.String.i18n('user.new_topic_duration.after_n_days', count: 2), value: 60 * 48)
+    opts.addObject(name: Em.String.i18n('user.new_topic_duration.after_n_weeks', count: 1), value: 7 * 60 * 24)
+    opts.addObject(name: Em.String.i18n('user.new_topic_duration.last_here'), value: -2) # last visit
+    opts
   ).property()
 
   save: ->

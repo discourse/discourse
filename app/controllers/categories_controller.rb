@@ -30,7 +30,7 @@ class CategoriesController < ApplicationController
     @category = Category.where(id: params[:id]).first
     guardian.ensure_can_edit!(@category)
 
-    json_result(@category, :serializer => CategorySerializer) {|cat| cat.update_attributes(category_params) }
+    json_result(@category, serializer: CategorySerializer) { |cat| cat.update_attributes(category_params) }
   end
 
   def destroy

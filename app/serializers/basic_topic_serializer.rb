@@ -18,14 +18,7 @@ class BasicTopicSerializer < ApplicationSerializer
     return false if scope.blank?
     return false if scope.user.blank?
     return false if object.user_data.present?
-    return false if object.created_at < scope.user.created_at
-
-    # Only mark things as new since your last visit
-    if scope.user.previous_visit_at.present?
-      return false if object.created_at < scope.user.previous_visit_at
-    end
-
-
+    return false if object.created_at < scope.user.treat_as_new_topic_start_date
     true
   end
 

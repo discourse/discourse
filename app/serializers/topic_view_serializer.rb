@@ -5,7 +5,6 @@ class TopicViewSerializer < ApplicationSerializer
     [:id,
      :title,
      :posts_count,
-     :highest_post_number,
      :created_at,
      :views,
      :reply_count,
@@ -41,7 +40,8 @@ class TopicViewSerializer < ApplicationSerializer
              :notification_level,
              :notifications_reason_id,
              :posts,
-             :at_bottom
+             :at_bottom,
+             :highest_post_number
 
   has_one :created_by, serializer: BasicUserSerializer, embed: :objects
   has_one :last_poster, serializer: BasicUserSerializer, embed: :objects
@@ -185,7 +185,11 @@ class TopicViewSerializer < ApplicationSerializer
 
   # Whether we're at the bottom of a topic (last page)
   def at_bottom
-    posts.present? and (@highest_number_in_posts == object.topic.highest_post_number)
+    posts.present? and (@highest_number_in_posts == object.highest_post_number)
+  end
+
+  def highest_post_number
+    object.highest_post_number
   end
 
   def posts

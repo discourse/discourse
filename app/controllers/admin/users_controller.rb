@@ -63,6 +63,22 @@ class Admin::UsersController < Admin::AdminController
     render_serialized(@user, AdminUserSerializer)
   end
 
+  def revoke_moderation
+    @moderator = User.where(id: params[:user_id]).first
+    guardian.ensure_can_revoke_moderation!(@moderator)
+    @moderator.change_trust_level(:advanced)
+    @moderator.save
+    render nothing: true
+  end
+
+  def grant_moderation
+    @user = User.where(id: params[:user_id]).first
+    guardian.ensure_can_grant_moderation!(@user)
+    @user.change_trust_level(:moderator)
+    @user.save
+    render_serialized(@user, AdminUserSerializer)
+  end
+
   def approve
     @user = User.where(id: params[:user_id]).first
     guardian.ensure_can_approve!(@user)

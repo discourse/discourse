@@ -4,7 +4,7 @@
       <h1>{{content.name}}<span>{{unbound content.username}}</span></h1>
 
       {{#if viewingSelf}}
-        <button {{action "logout" target="Discourse"}} class='btn btn-danger'>{{i18n user.log_out}}</button>      
+        <button {{action "logout" target="Discourse"}} class='btn'>{{i18n user.log_out}}</button>      
       {{/if}}
       {{#if Discourse.currentUser.admin}}
         <a href="/admin/users/{{unbound content.username_lower}}" class='btn'>{{i18n admin.user.show_admin_profile}}</a>

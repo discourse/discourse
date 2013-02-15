@@ -188,6 +188,9 @@
   // Notifications
 
   &#notifications-dropdown {
+    .icon {
+      color: #777;
+    }
     li {
       background-color: $header-item-highlight;
     }

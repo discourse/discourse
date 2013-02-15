@@ -106,10 +106,12 @@ describe TopicView do
   end
 
   it 'allows admins to see deleted posts' do 
+    post_number = p3.post_number
     p3.destroy
     admin = Fabricate(:admin)
     topic_view = TopicView.new(topic.id, admin) 
     topic_view.posts.count.should == 3
+    topic_view.highest_post_number.should == post_number
   end
   
   it 'does not allow non admins to see deleted posts' do 
@@ -117,7 +119,7 @@ describe TopicView do
     topic_view.posts.count.should == 2
   end
 
-  # Sam: disabled for now, we only need this for poss, if we do, roll it into topic
+  # Sam: disabled for now, we only need this for polls, if we do, roll it into topic
   #  having to walk every post action is not really a good idea
   #
   # context '.voted_in_topic?' do
