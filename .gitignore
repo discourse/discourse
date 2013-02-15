@@ -67,4 +67,4 @@ script/refresh_db
 chef/tmp/*
 
 # .procfile
-.profile
+.procfile
