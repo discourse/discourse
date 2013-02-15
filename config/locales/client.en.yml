@@ -244,6 +244,10 @@ en:
       saved_draft_tip: "saved"  
       saved_local_draft_tip: "saved locally"  
 
+      min_length:
+        at_least: "enter at least {{n}} characters"
+        more: "{{n}} to go..."
+      
       save_edit: "Save Edit"  
       reply: "Reply"
       create_topic: "Create Topic"
