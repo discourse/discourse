@@ -164,8 +164,10 @@ window.Discourse.Post = Ember.Object.extend Discourse.Presence,
     @set('loadingReplies', true)
     @set('replies', [])
     jQuery.getJSON "/posts/#{@get('id')}/replies", (loaded) =>      
-      loaded.each (reply) =>        
-        @get('replies').pushObject Discourse.Post.create(reply)
+      loaded.each (reply) =>          
+        post = Discourse.Post.create(reply)
+        post.set('topic', @get('topic'))
+        @get('replies').pushObject post
       @set('loadingReplies', false)
       promise.resolve()
     promise

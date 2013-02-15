@@ -11,7 +11,9 @@
 
     </div>
     <div class='span11 topic-body'>
+      {{#if view.previousPost}}<a href='{{unbound url}}' class="arrow"><i class='icon icon-arrow-up'></i></a>{{/if}}      
       {{{unbound cooked}}}
+      {{#unless view.previousPost}}<a href='{{unbound url}}' class="arrow"><i class='icon icon-arrow-down'></i></a>{{/unless}}
     </div>
   </div>
 {{/with}}

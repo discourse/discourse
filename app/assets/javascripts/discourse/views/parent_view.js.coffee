@@ -1,5 +1,7 @@
 window.Discourse.ParentView = Discourse.EmbeddedPostView.extend
 
+  previousPost: true
+
   # Nice animation for when the replies appear
   didInsertElement: ->
     @_super()

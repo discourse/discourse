@@ -1,7 +1,6 @@
 window.Discourse.EmbeddedPostView = Ember.View.extend
   templateName: 'embedded_post'
   classNames: ['reply']
-  screenTrackBinding: 'postView.screenTrack'
 
   didInsertElement: ->
     postView = @get('postView') || @get('parentView.postView')
