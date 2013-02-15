@@ -279,7 +279,12 @@
         }
       }
       button.delete {
+        &:hover {
+          color: white;
+          background-color: $btn-danger-background-color;
+        }
       }
+
       button.like {
         &:hover {
           color: $nav-like-button-color-hover;

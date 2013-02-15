@@ -156,7 +156,7 @@
     <div class='value'>{{content.post_count}}</div>
     <div class='controls'>
       {{#if content.can_delete_all_posts}}
-        <button class='btn' {{action deleteAllPosts target="content"}}>
+        <button class='btn btn-danger' {{action deleteAllPosts target="content"}}>
           <i class='icon icon-trash'></i>
           {{i18n admin.user.delete_all_posts}}
         </button>

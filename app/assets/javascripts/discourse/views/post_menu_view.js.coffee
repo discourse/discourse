@@ -54,9 +54,9 @@ window.Discourse.PostMenuView = Ember.View.extend Discourse.Presence,
     # Show the correct button
     if post.get('deleted_at')
       if post.get('can_recover')
-        buffer.push("<button title=\"#{Em.String.i18n("post.controls.undelete")}\" data-action=\"recover\"><i class=\"icon-undo\"></i></button>")
+        buffer.push("<button title=\"#{Em.String.i18n("post.controls.undelete")}\" data-action=\"recover\" class=\"delete\"><i class=\"icon-undo\"></i></button>")
     else if post.get('can_delete')
-      buffer.push("<button title=\"#{Em.String.i18n("post.controls.delete")}\" data-action=\"delete\"><i class=\"icon-trash\"></i></button>")
+      buffer.push("<button title=\"#{Em.String.i18n("post.controls.delete")}\" data-action=\"delete\" class=\"delete\"><i class=\"icon-trash\"></i></button>")
 
   clickDeleteTopic: -> @get('controller').deleteTopic()
   clickRecover: -> @get('controller').recoverPost(@get('post'))        
