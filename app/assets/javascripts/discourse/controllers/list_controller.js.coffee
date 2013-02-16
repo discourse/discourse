@@ -39,6 +39,7 @@ Discourse.ListController = Ember.Controller.extend Discourse.Presence,
         Discourse.TopicList.list(current).then (items) =>
           @set('filterSummary', items.filter_summary)
           @set('filterMode', filterMode)
+          @set('allLoaded', true) unless items.more_topics_url
           @set('loading', false)
           deferred.resolve(items)
 

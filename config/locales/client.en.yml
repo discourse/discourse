@@ -314,6 +314,7 @@ en:
       no_read: "You haven't read any topics yet."
       no_posted: "You haven't posted in any topics yet."
       no_popular: "There are no popular topics. That's sad."
+      footer: "No more topics in this category. <a href=\"/categories\">Browse all categories</a> or <a href=\"/\">view popular topics</a>"
 
     topic:      
       create_in: 'Create {{categoryName}} Topic'
