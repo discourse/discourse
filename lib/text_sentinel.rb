@@ -1,5 +1,3 @@
-require 'iconv'
-
 #
 # Given a string, tell us whether or not is acceptable. Also, remove stuff we don't like
 # such as leading / trailing space.
@@ -13,14 +11,11 @@ class TextSentinel
   end
 
   def initialize(text, opts=nil)
-    if text.present?
-      @text = Iconv.new('UTF-8//IGNORE', 'UTF-8').iconv(text.dup)
-    end
-
     @opts = opts || {}
 
-    if @text.present?
-      @text.strip! 
+    if text.present?
+      @text = text.encode('UTF-8', invalid: :replace, undef: :replace, replace: '')
+      @text.strip!
       @text.gsub!(/ +/m, ' ') if @opts[:remove_interior_spaces]
     end
   end
