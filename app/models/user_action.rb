@@ -42,7 +42,7 @@ class UserAction < ActiveRecord::Base
     results = UserAction.select("action_type, COUNT(*) count, '' AS description")
       .joins(:target_topic)
       .where(user_id: user_id)
-      .group('action_type', 'topics.archetype')
+      .group('action_type')
 
     # should push this into the sql at some point, but its simple enough for now
     unless guardian.can_see_private_messages?(user_id)
