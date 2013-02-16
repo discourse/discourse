@@ -44,9 +44,13 @@ class UserAction < ActiveRecord::Base
       .where(user_id: user_id)
       .group('action_type')
 
-    # should push this into the sql at some point, but its simple enough for now
+    # We apply similar filters in stream, might consider trying to consolidate somehow
     unless guardian.can_see_private_messages?(user_id)
       results = results.where('topics.archetype <> ?', Archetype::private_message)
+    end
+    
+    unless guardian.user && guardian.user.id == user_id
+      results = results.where("action_type <> ?", BOOKMARK)
     end
 
     results = results.to_a
