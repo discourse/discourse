@@ -167,7 +167,11 @@ class Topic < ActiveRecord::Base
   def self.visible
     where(visible: true)
   end
-
+  
+  def self.created_since(time_ago)
+    where("created_at > ?", time_ago)
+  end
+  
   def private_message?
     self.archetype == Archetype.private_message
   end
