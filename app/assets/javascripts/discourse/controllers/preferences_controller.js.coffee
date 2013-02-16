@@ -42,6 +42,7 @@ Discourse.PreferencesController = Ember.ObjectController.extend Discourse.Presen
 
   save: ->
     @set('saving', true)
+    @set('saved', false)
 
     # Cook the bio for preview
     @get('content').save (result) =>
