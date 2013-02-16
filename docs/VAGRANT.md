@@ -10,7 +10,7 @@ on Discourse with:
 ### Getting Started
 
 1. Install VirtualBox: https://www.virtualbox.org/wiki/Downloads
-2. Install Vagrant: https://www.vagrantup.com/
+2. Install Vagrant: http://www.vagrantup.com/
 3. Open a terminal
 4. Clone the project: `git clone git@github.com:discourse/discourse.git`
 5. Enter the project directory: `cd discourse`
