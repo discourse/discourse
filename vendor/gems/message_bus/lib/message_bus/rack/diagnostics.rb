@@ -71,8 +71,9 @@ HTML
 
     return index unless route
 
-    if route == 'discover'
-      MessageBus.publish('/discover', {user_id: MessageBus() })
+    if route == '/discover'
+      MessageBus.publish('/discover', {user_id: MessageBus.user_id_lookup.call(env)})
+      return [200, {}, ['ok']]
     end
 
     asset = route.split('/assets/')[1]

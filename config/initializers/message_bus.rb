@@ -31,3 +31,4 @@ MessageBus.is_admin_lookup do |env|
 end
 
 MessageBus.cache_assets = !Rails.env.development?
+MessageBus.enable_diagnostics

@@ -1,5 +1,4 @@
 
-
 window.App = Ember.Application.createWithMixins({
   start: function(){
     MessageBus.start();
@@ -29,7 +28,7 @@ App.IndexModel = Ember.Object.extend({
     this.set("discovering", true);
     Ember.run.later(function(){
       _this.set("discovering", false);
-    }, 20 * 1000);
+    }, 1 * 1000);
 
     $.post("/message-bus/_diagnostics/discover");
 

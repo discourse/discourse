@@ -125,6 +125,12 @@ module MessageBus::Implementation
     @reliable_pub_sub ||= MessageBus::ReliablePubSub.new redis_config
   end
 
+  def enable_diagnostics
+    subscribe('/discover') do |msg|
+      MessageBus.publish '/process-discovery', Process.pid, user_id: msg.data[:user_id]
+    end
+  end
+
   def publish(channel, data, opts = nil) 
     return if @off 
     
