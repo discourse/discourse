@@ -20,8 +20,8 @@ class TextSentinel
     @opts = opts || {}
 
     if @text.present?
-      @text.strip! 
       @text.gsub!(/ +/m, ' ') if @opts[:remove_interior_spaces]
+      @text.strip! if @opts[:strip]
     end
   end
 
@@ -29,19 +29,20 @@ class TextSentinel
     TextSentinel.new(text, 
                      min_entropy: SiteSetting.title_min_entropy,
                      max_word_length: SiteSetting.max_word_length,
-                     remove_interior_spaces: true)    
+                     remove_interior_spaces: true,
+                     strip: true)
   end
 
   # Entropy is a number of how many unique characters the string needs. 
   def entropy
     return 0 if @text.blank?
-    @entropy ||= @text.each_char.to_a.uniq.size
+    @entropy ||= @text.strip.each_char.to_a.uniq.size
   end
 
   def valid?    
 
     # Blank strings are not valid
-    return false if @text.blank?
+    return false if @text.blank? || @text.strip.blank?
 
     # Entropy check if required
     return false if @opts[:min_entropy].present? and (entropy < @opts[:min_entropy])

@@ -38,10 +38,6 @@ describe TextSentinel do
 
   context "cleaning up" do
 
-    it "strips leading or trailing whitespace" do
-      TextSentinel.new("   \t  test \t  ").text.should == "test"
-    end
-
     it "allows utf-8 chars" do
       TextSentinel.new("йȝîûηыეமிᚉ⠛").text.should == "йȝîûηыეமிᚉ⠛"
     end
@@ -49,15 +45,37 @@ describe TextSentinel do
     context "interior spaces" do
 
       let(:spacey_string) { "hello     there's weird     spaces here." }
+      let(:unspacey_string) { "hello there's weird spaces here." }
 
       it "ignores intra spaces by default" do
         TextSentinel.new(spacey_string).text.should == spacey_string
       end
 
       it "fixes intra spaces when enabled" do
-        TextSentinel.new(spacey_string, remove_interior_spaces: true).text.should == "hello there's weird spaces here."
-      end      
+        TextSentinel.new(spacey_string, remove_interior_spaces: true).text.should == unspacey_string
+      end
 
+      it "fixes intra spaces in titles" do
+        TextSentinel.title_sentinel(spacey_string).text.should == unspacey_string
+      end
+
+    end
+
+    context "stripping whitespace" do
+      let(:spacey_string) { "   \t  test \t  " }
+      let(:unspacey_string) { "test" }
+
+      it "does not strip leading and trailing whitespace by default" do
+        TextSentinel.new(spacey_string).text.should == spacey_string
+      end
+
+      it "strips leading and trailing whitespace when enabled" do
+        TextSentinel.new(spacey_string, strip: true).text.should == unspacey_string
+      end
+
+      it "strips leading and trailing whitespace in titles" do
+        TextSentinel.title_sentinel(spacey_string).text.should == unspacey_string
+      end
     end
 
   end
