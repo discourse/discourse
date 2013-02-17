@@ -168,7 +168,13 @@ en:
         instructions: "We use <a href='https://gravatar.com' target='_blank'>Gravatar</a> for avatars based on your email"
 
       filters:
-        all: "All"        
+        all: "All"
+        
+      stream:
+        posted_by: "Posted by"
+        sent_by: "Sent by"
+        private_message: "private message"
+        the_topic: "the topic"
 
     loading: "Loading..."
     close: "Close"
