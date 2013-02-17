@@ -32,6 +32,28 @@ Once the machine has booted up, you can shell into it by typing:
 vagrant ssh
 ```
 
+**Note to Windows users**: You cannot run ```vagrant ssh``` from a cmd prompt; you'll receive the error message:
+
+```
+`vagrant ssh` isn't available on the Windows platform. You are still able
+to SSH into the virtual machine if you get a Windows SSH client (such as 
+PuTTY). The authentication information is shown below:
+
+Host: 127.0.0.1
+Port: 2222
+Username: vagrant
+Private key: C:/Users/Your Name/.vagrant.d/insecure_private_key
+```
+
+At this point, you will want to get an SSH client, and use it to connect to your Vagrant VM instead. We recommend
+PuTTY:
+
+**[PuTTY Download Link](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html)**
+
+You may use this client to connect to the VM by using ```vagrant/vagrant``` as your username/password, or by [using
+PuTTYGen to import the insecure_private_key file](http://jason.sharonandjason.com/key_based_putty_logins_mini_how_to.htm)
+(mentioned above) into a PuTTY profile to quickly access your VM.
+
 ### Keeping your VM up to date
 
 Now you're in a virtual machine is almost ready to start developing. It's a good idea to perform the following instructions
