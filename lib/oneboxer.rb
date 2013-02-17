@@ -42,7 +42,7 @@ module Oneboxer
         end
         (doc/"link[@type='text/json+oembed']").each do |oembed|
           return OembedOnebox.new(oembed[:href]).onebox   
-        end        
+        end
 
         # Check for opengraph
         open_graph = Oneboxer.parse_open_graph(doc)
@@ -50,7 +50,9 @@ module Oneboxer
       end
     end
 
-    nil    
+    nil
+  rescue OpenURI::HTTPError
+    nil
   end
 
   # Parse URLs out of HTML, returning the document when finished.
