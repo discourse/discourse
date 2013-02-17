@@ -3,6 +3,10 @@ Fabricator(:topic) do
   title { sequence(:title) { |i| "Test topic #{i}" } }
 end
 
+Fabricator(:deleted_topic, from: :topic) do
+  deleted_at Time.now 
+end
+
 Fabricator(:topic_allowed_user) do 
 end
 

@@ -17,7 +17,6 @@ class Category < ActiveRecord::Base
   after_save :invalidate_site_cache
   after_destroy :invalidate_site_cache
 
-
   def uncategorized_validator
     return errors.add(:name, I18n.t(:is_reserved)) if name == SiteSetting.uncategorized_name
     return errors.add(:slug, I18n.t(:is_reserved)) if slug == SiteSetting.uncategorized_name
@@ -26,24 +25,22 @@ class Category < ActiveRecord::Base
   def self.popular
     order('topic_count desc')
   end
-
+  
+  # Recalculates `topics_year`, `topics_month`, and `topics_week`
+  # for each Category.
   def self.update_stats
-    exec_sql "UPDATE categories
-              SET topics_week = (SELECT COUNT(*)
-                                FROM topics as ft
-                                WHERE ft.category_id = categories.id
-                                  AND ft.created_at > (CURRENT_TIMESTAMP - INTERVAL '1 WEEK')
-                                  AND ft.visible),
-                  topics_month = (SELECT COUNT(*)
-                                FROM topics as ft
-                                WHERE ft.category_id = categories.id
-                                  AND ft.created_at > (CURRENT_TIMESTAMP - INTERVAL '1 MONTH')
-                                  AND ft.visible),
-                  topics_year = (SELECT COUNT(*)
-                                FROM topics as ft
-                                WHERE ft.category_id = categories.id
-                                  AND ft.created_at > (CURRENT_TIMESTAMP - INTERVAL '1 YEAR')
-                                  AND ft.visible)"
+    topics = Topic
+               .select("COUNT(*)")
+               .where("topics.category_id = categories.id")
+               .visible
+
+    topics_year = topics.created_since(1.year.ago).to_sql
+    topics_month = topics.created_since(1.month.ago).to_sql
+    topics_week = topics.created_since(1.week.ago).to_sql
+    
+    Category.update_all("topics_year = (#{topics_year}), 
+                         topics_month = (#{topics_month}), 
+                         topics_week = (#{topics_week})")
   end
 
   # Use the first paragraph of the topic's first post as the excerpt
