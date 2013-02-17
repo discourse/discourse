@@ -8,6 +8,11 @@ module Oneboxer
         node = doc.at("/html/head/meta[@property='og:#{prop}']")
         result[prop] = (node['content'] || node['value']) if node
       end
+      
+      # If there's no title, try using the page's title
+      if result['title'].blank?
+        result['title'] = doc.title
+      end
 
       # If there's no description, try and get one from the meta tags
       if result['description'].blank?
