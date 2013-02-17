@@ -258,6 +258,9 @@
   .type {
     color: lighten($black, 40%);
   }
+  span.name {
+    color: lighten($black, 40%);
+  }
   .time {
     display: block;
     float: right;

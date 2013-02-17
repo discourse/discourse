@@ -2,10 +2,19 @@ window.Discourse.UserAction = Discourse.Model.extend
   postUrl:(->
     Discourse.Utilities.postUrl(@get('slug'), @get('topic_id'), @get('post_number'))
   ).property()
+  
+  replyUrl: (->
+    Discourse.Utilities.postUrl(@get('slug'), @get('topic_id'), @get('reply_to_post_number'))
+  ).property()
 
   isPM: (->
     a = @get('action_type')
-    a == UserAction.NEW_PRIVATE_MESSAGE || UserAction.GOT_PRIVATE_MESSAGE
+    a == Discourse.UserAction.NEW_PRIVATE_MESSAGE || a == Discourse.UserAction.GOT_PRIVATE_MESSAGE
+  ).property()
+  
+  isPostAction: (->
+    a = @get('action_type')
+    a == Discourse.UserAction.RESPONSE || a == Discourse.UserAction.POST || a == Discourse.UserAction.NEW_TOPIC
   ).property()
 
   addChild: (action)->
