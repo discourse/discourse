@@ -79,6 +79,7 @@ class UserAction < ActiveRecord::Base
 SELECT 
   t.title, a.action_type, a.created_at, t.id topic_id, 
   coalesce(p.post_number, 1) post_number, 
+  p.reply_to_post_number,
   pu.email ,pu.username, pu.name, pu.id user_id, 
   u.email acting_email, u.username acting_username, u.name acting_name, u.id acting_user_id, 
   coalesce(p.cooked, p2.cooked) cooked
