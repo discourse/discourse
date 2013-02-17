@@ -603,6 +603,7 @@ en:
         clear_title: "dismiss all flags on this post (will unhide hidden posts)"
         delete: "Delete Post"
         delete_title: "delete post (if its the first post delete topic)"
+        flagged_by: "Flagged by"
 
       customize: 
         title: "Customize"
