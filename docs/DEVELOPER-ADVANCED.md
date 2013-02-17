@@ -11,7 +11,7 @@ to rails, you are likely much better off with our **[Discourse Vagrant Developer
 3. Clone the project.
 4. Create development and test databases in postgres.
 5. Copy `config/database.yml.sample` and `config/redis.yml.sample` to `config/database.yml` and `config/redis.yml` and input the correct values to point to your postgres and redis instances.
-6. We recommend starting with seed data to play around in your development environment. [Download Seed SQL Data](http://discourse.org/vms/dev-discourse-seed.sql). Install it into postgres using a command like this: `psql -d discourse_development < dev-discourse-seed.sql`.
+6. We recommend starting with seed data to play around in your development environment. [Download Seed SQL Data][seed_download]. Install it into postgres using a command like this: `psql -d discourse_development < dev-discourse-seed.sql`.
 
 
 ## Before you start Rails
@@ -107,7 +107,7 @@ Edit /etc/postgresql/9.1/main/pg_hba.conf to have this:
     host all all ::1/128 trust
     host all all 0.0.0.0/0 trust # wide-open
 
-Download a database image from [http://discourse.org/vms/dev-discourse-seed.sql][1]
+Download a database image from [http://discourse.org/vms/dev-discourse-seed.sql][seed_download].
 
 Load it (as vagrant user):
 
@@ -126,3 +126,5 @@ Load it (as vagrant user):
     ./install_server.sh
     # Press enter to accept all the defaults
     /etc/init.d/redis_6379 start
+
+[seed_download]: (http://discourse.org/vms/dev-discourse-seed.sql)
