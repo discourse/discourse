@@ -100,7 +100,7 @@ module Search
 
       db_result = []
       [user_query_sql, category_query_sql, topic_query_sql].each do |sql|
-        sql << " LIMIT " << Search.per_facet.to_s
+        sql << " LIMIT " << (Search.per_facet + 1).to_s
         db_result += ActiveRecord::Base.exec_sql(sql , query: terms.join(" & ")).to_a
       end
     end
@@ -157,9 +157,12 @@ module Search
     end
 
     result = grouped.map do |type, results|
+      more = type_filter.blank? && (results.size > Search.per_facet)
+      results = results[0..([results.length, Search.per_facet].min - 1)] if type_filter.blank?
+    
       {type: type, 
        name: I18n.t("search.types.#{type}"),
-       more: type_filter.blank? && (results.size == Search.per_facet),
+       more: more,
        results: results}
     end
     result
