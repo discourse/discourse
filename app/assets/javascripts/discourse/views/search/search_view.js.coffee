@@ -92,8 +92,8 @@ window.Discourse.SearchView = Ember.View.extend Discourse.Presence,
     count
   ).property('content')
 
-  moreOfType: (e) ->
-    @set('typeFilter', e.context)
+  moreOfType: (type) ->
+    @set('typeFilter', type)
     false
 
   cancelType: ->
