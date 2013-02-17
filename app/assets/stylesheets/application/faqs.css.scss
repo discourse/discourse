@@ -36,16 +36,12 @@
      margin-bottom: 8px;
   }
 
-  // Lists
   ul,
   ol {
     margin-left: 40px;
   }
 
 }
-
-// Content wrapper
-// --------------------------------------------------
 
 .body-page {
 
@@ -54,44 +50,12 @@
     width: 960px;
     margin: 0 auto;
     padding: 20px 10px;
+    margin-top: -60px;
   }
 
 }
 
-// Navigation
-// --------------------------------------------------
-
-.body-page {
-
-  nav {
-    width: 280px;
-    overflow: hidden;
-    position: fixed;
-    float: left;
-    border: 1px solid #b9b9b9;
-    background-color: #fafafa;
-    @include border-radius-all(4px);
-    @include box-shadow(0 1px 0 #fff);
-    > a {
-      display: block;
-      border-top: 1px solid #e6e6e6;
-      padding: 13px;
-      font-weight: bold;
-      font-size: 16px;
-      line-height: 20px;
-      text-shadow: 0 1px 0 rgba($white, 0.5);
-      &:first-child {
-        border-top: 0;
-      }
-      &:hover {
-        background-color: #eee;
-      }
-      &.active {
-        color: #f15b22;
-        background-color: #f9e7e0;
-        cursor: default;
-      }
-    }
-  }
-
+.nav-pills {
+  margin-left:0px !important;
+  font: 13px/18px "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
