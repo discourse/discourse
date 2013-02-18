@@ -44,6 +44,14 @@ module Discourse
     !!$redis.get( maintenance_mode_key )
   end
 
+  def self.git_version
+    begin
+      $git_version ||= `git rev-parse HEAD`
+    rescue
+      $git_version = "unknown"
+    end
+  end
+
 
 private
 
