@@ -1,4 +1,4 @@
-window.Discourse.PreferencesUsernameRoute = Discourse.Route.extend
+window.Discourse.PreferencesUsernameRoute = Discourse.RestrictedUserRoute.extend
   renderTemplate: ->
     @render into: 'user', outlet: 'userOutlet'
   setupController: (controller) ->

@@ -1,4 +1,4 @@
-window.Discourse.PreferencesEmailRoute = Discourse.Route.extend
+window.Discourse.PreferencesEmailRoute = Discourse.RestrictedUserRoute.extend
   renderTemplate: ->
     @render into: 'user', outlet: 'userOutlet'
   setupController: (controller) ->

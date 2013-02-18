@@ -1,4 +1,4 @@
-window.Discourse.UserPrivateMessagesRoute = Discourse.Route.extend
+window.Discourse.UserPrivateMessagesRoute = Discourse.RestrictedUserRoute.extend
   renderTemplate: ->
     @render into: 'user', outlet: 'userOutlet'
   setupController: (controller, user) ->
