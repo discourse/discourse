@@ -1,7 +1,4 @@
 require File.expand_path('../boot', __FILE__)
-# our version info can be missing, we will do our best to figure it out
-require File.expand_path('../version', __FILE__) rescue nil
-
 require 'rails/all'
 require 'redis-store' # HACK
 
