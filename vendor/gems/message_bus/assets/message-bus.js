@@ -39,7 +39,7 @@ window.MessageBus = (function() {
           callback.last_id = message.message_id;
           callback.func(message.data);
         }
-        if (message["channel"] === "/__status") {
+        if (message.channel === "/__status") {
           if (message.data[callback.channel] !== void 0) {
             callback.last_id = message.data[callback.channel];
           }
@@ -60,7 +60,7 @@ window.MessageBus = (function() {
     start: function(opts) {
       var poll,
         _this = this;
-      if (opts == null) {
+      if (opts === null) {
         opts = {};
       }
       poll = function() {

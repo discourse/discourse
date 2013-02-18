@@ -9,6 +9,7 @@ require "message_bus/reliable_pub_sub"
 require "message_bus/client"
 require "message_bus/connection_manager"
 require "message_bus/message_handler"
+require "message_bus/diagnostics"
 require "message_bus/rack/middleware"
 require "message_bus/rack/diagnostics"
 
@@ -126,9 +127,7 @@ module MessageBus::Implementation
   end
 
   def enable_diagnostics
-    subscribe('/discover') do |msg|
-      MessageBus.publish '/process-discovery', Process.pid, user_id: msg.data[:user_id]
-    end
+    MessageBus::Diagnostics.enable
   end
 
   def publish(channel, data, opts = nil) 

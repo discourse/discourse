@@ -38,7 +38,7 @@ class MessageBus::Rack::Diagnostics
   <body>
     <div id="app"></div>
     #{js_asset "jquery-1.8.2.js"}
-    #{js_asset "handlebars-1.0.rc.2.js"}
+    #{js_asset "handlebars.js"}
     #{js_asset "ember.js"}
     #{js_asset "message-bus.js"}
     #{js_asset "application.handlebars"}
@@ -72,7 +72,14 @@ HTML
     return index unless route
 
     if route == '/discover'
-      MessageBus.publish('/discover', {user_id: MessageBus.user_id_lookup.call(env)})
+      user_id =  MessageBus.user_id_lookup.call(env)
+      MessageBus.publish('/_diagnostics/discover', user_id: user_id)
+      return [200, {}, ['ok']]
+    end
+
+    if route =~ /^\/hup\//
+      hostname, pid = route.split('/hup/')[1].split('/')
+      MessageBus.publish('/_diagnostics/hup', {hostname: hostname, pid: pid.to_i})
       return [200, {}, ['ok']]
     end
 
