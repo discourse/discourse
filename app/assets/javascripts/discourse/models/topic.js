@@ -127,11 +127,6 @@ Discourse.Topic = Discourse.Model.extend({
     return this.get('archetype') === 'private_message';
   }).property('archetype'),
 
-  // Does this topic only have a single post?
-  singlePost: (function() {
-    return this.get('posts_count') === 1;
-  }).property('posts_count'),
-
   toggleStatus: function(property) {
     this.toggleProperty(property);
     return $.post("" + (this.get('url')) + "/status", {

@@ -25,18 +25,18 @@
 
   <td class='num'>{{number views numberKey="views_long"}}</td>
 
-  {{#if singlePost}}
-    <td class='num activity'>
-      <a href="{{url}}" class='age' title='{{i18n first_post}}: {{{unboundDate created_at}}}'>{{{age}}}</a>
-    </td>
-    <td></td>
-  {{else}}
+  {{#if bumped}}
     <td class='num activity'>
       <a href="{{url}}" {{{bindAttr class=":age ageCold"}}} title='{{i18n first_post}}: {{{unboundDate created_at}}}' >{{{age}}}</a>
     </td>
     <td class='num activity last'>
-      <a href="{{lastPostUrl}}" class='age' title='{{i18n last_post}}: {{{unboundDate last_posted_at}}}'>{{{last_post_age}}}</a>
+      <a href="{{lastPostUrl}}" class='age' title='{{i18n last_post}}: {{{unboundDate bumped_at}}}'>{{{bumped_age}}}</a>
     </td>
+  {{else}}
+    <td class='num activity'>
+      <a href="{{url}}" class='age' title='{{i18n first_post}}: {{{unboundDate created_at}}}'>{{{age}}}</a>
+    </td>
+    <td></td>
   {{/if}}
 
   {{/group}}
