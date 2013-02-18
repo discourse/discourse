@@ -2,5 +2,5 @@
 # free account here: https://signup.airbrake.io/account/new/Free
 # and add your API key below
 Airbrake.configure do |config|                                                                                                     
-  # config.api_key = ''                           
+  config.api_key = ''                           
 end
