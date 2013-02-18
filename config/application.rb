@@ -1,7 +1,9 @@
 require File.expand_path('../boot', __FILE__)
+# our version info can be missing, we will do our best to figure it out
+require File.expand_path('../version', __FILE__) rescue nil
 
 require 'rails/all'
-require "redis-store" # HACK
+require 'redis-store' # HACK
 
 # Plugin related stuff
 require './lib/discourse_plugin_registry'
@@ -50,7 +52,7 @@ module Discourse
     # config.i18n.default_locale = :de
 
     # Configure the default encoding used in templates for Ruby 1.9.
-    config.encoding = "utf-8"
+    config.encoding = 'utf-8'
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
