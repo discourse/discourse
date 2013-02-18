@@ -9,8 +9,6 @@ class MessageBus::Rack::Middleware
   def self.start_listener
     unless @started_listener
       MessageBus.subscribe do |msg|
-        p msg.channel
-        p msg.message_id
         EM.next_tick do 
           @@connection_manager.notify_clients(msg) if @@connection_manager
         end

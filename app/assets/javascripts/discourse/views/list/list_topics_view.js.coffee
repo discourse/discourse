@@ -18,6 +18,10 @@ window.Discourse.ListTopicsView = Ember.View.extend Discourse.Scrolling, Discour
 
   willDestroyElement: -> @unbindScrolling()
 
+  allLoaded: (->
+    !@get('loading') && !@get('controller.content.more_topics_url')
+  ).property('loading', 'controller.content.more_topics_url')
+
   didInsertElement: ->
     @bindScrolling()
     eyeline = new Discourse.Eyeline('.topic-list-item')

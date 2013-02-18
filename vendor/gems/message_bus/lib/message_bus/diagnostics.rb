@@ -32,6 +32,7 @@ class MessageBus::Diagnostics
     end
 
     MessageBus.subscribe('/_diagnostics/discover') do |msg|
+      MessageBus.on_connect.call msg.site_id if MessageBus.on_connect
       MessageBus.publish '/_diagnostics/process-discovery', { 
         pid: Process.pid,
         process_name: $0,
@@ -39,6 +40,7 @@ class MessageBus::Diagnostics
         uptime: (Time.now.to_f - start_time).to_i,
         hostname: hostname
       }, user_ids: [msg.data["user_id"]]
+      MessageBus.on_disconnect.call msg.site_id if MessageBus.on_disconnect
     end
   end
 end
