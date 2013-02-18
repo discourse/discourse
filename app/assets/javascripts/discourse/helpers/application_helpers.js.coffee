@@ -72,8 +72,7 @@ Handlebars.registerHelper 'avatar', (user, options) ->
 
 Handlebars.registerHelper 'unboundDate', (property, options) ->
   dt = new Date(Ember.Handlebars.get(this, property, options))
-  month = Date.SugarMethods.getLocale.method().months[12 + dt.getMonth()]
-  "#{dt.getDate()} #{month}, #{dt.getFullYear()} #{dt.getHours()}:#{dt.getMinutes()}"
+  dt.format("{d} {Mon}, {yyyy} {hh}:{mm}")
 
 Handlebars.registerHelper 'editDate', (property, options) ->
   dt = Date.create(Ember.Handlebars.get(this, property, options))
