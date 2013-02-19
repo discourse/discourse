@@ -7,9 +7,6 @@ Discourse.Onebox = (->
 
   cache = (url, contents) ->
     localCache[url] = contents
-
-    #if localStorage && localStorage.setItem
-    #  localStorage.setItme
     null
 
   lookupCache = (url) ->
