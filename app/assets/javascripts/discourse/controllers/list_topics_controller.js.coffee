@@ -4,6 +4,10 @@ Discourse.ListTopicsController = Ember.ObjectController.extend
   # If we're changing our channel
   previousChannel: null
 
+  popular: (-> 
+    @get('content.filter') is 'popular'
+  ).property('content.filter')
+
   filterModeChanged: (->
     # Unsubscribe from a previous channel if necessary
     if previousChannel = @get('previousChannel')
@@ -34,6 +38,10 @@ Discourse.ListTopicsController = Ember.ObjectController.extend
   # Star a topic
   toggleStar: (topic) ->
     topic.toggleStar()
+    false
+
+  createTopic: ->
+    @get('controllers.list').createTopic()
     false
 
   observer: (->

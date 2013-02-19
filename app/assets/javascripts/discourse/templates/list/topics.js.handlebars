@@ -1,7 +1,7 @@
 {{#unless controller.loading}}
   {{#if content.loaded}}
     <div class='contents'>    
-      {{#unless content.emptyListTip}}
+      {{#if content.topics.length}}
       <table id='topic-list' {{bindAttr class="controller.category:filter-category"}}>
         <thead>
         <tr>
@@ -42,11 +42,7 @@
         {{/group}}
 
       </table>
-      {{else}} 
-        <p class='empty-topic-list'>
-          {{content.emptyListTip}}
-        </p>
-      {{/unless}}
+      {{/if}}
     </div>
 
     <footer id='topic-list-bottom'>
@@ -55,9 +51,18 @@
       {{/if}}
     </footer>
 
-    {{#if view.allLoaded}}
-      <h3>{{{i18n topics.footer}}}</h3>
-    {{/if}}
+    <h3>
+      {{view.footerMessage}} 
+      {{#if view.allLoaded}}
+        {{#if controller.popular}}
+          {{#if view.canCreateTopic}}
+            <a href='#' {{action createTopic}}>{{i18n topic.suggest_create_topic}}</a>
+          {{/if}}
+        {{else}}
+          {{#linkTo list.categories}}{{i18n topic.browse_all_categories}}{{/linkTo}} {{i18n or}} {{#linkTo list.popular}}{{i18n topic.view_popular_topics}}{{/linkTo}}
+        {{/if}}
+      {{/if}}
+    </h3>
 
   {{/if}}
 {{/unless}}

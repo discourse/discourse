@@ -2,6 +2,7 @@ window.Discourse.ListTopicsView = Ember.View.extend Discourse.Scrolling, Discour
   templateName: 'list/topics'
   categoryBinding: 'Discourse.router.listController.category'
   filterModeBinding: 'Discourse.router.listController.filterMode'
+  canCreateTopicBinding: 'controller.controllers.list.canCreateTopic'
 
   insertedCount: (->
     inserted = @get('controller.inserted')
@@ -52,3 +53,15 @@ window.Discourse.ListTopicsView = Ember.View.extend Discourse.Scrolling, Discour
   scrolled: (e) ->
     @saveScrollPos()
     @get('eyeline')?.update()
+
+  footerMessage: (->
+    return unless @get('allLoaded')
+
+    content = @get('controller.content')
+    if content.get('topics.length') == 0
+      Em.String.i18n("topics.none.#{content.get('filter')}")
+    else
+      Em.String.i18n("topics.bottom.#{content.get('filter')}")
+
+  ).property('allLoaded', 'controller.content.topics.length')
+

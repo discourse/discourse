@@ -23,6 +23,7 @@ en:
     faq: "FAQ"
     you: "You"
     ok: "ok"
+    or: "or"
 
     suggested_topics:
       title: "Suggested Topics"
@@ -309,13 +310,22 @@ en:
       help: 'add this topic to your favorites list'
 
     topics:
-      no_favorited: "You haven't favorited any topics yet. To favorite a topic, click or tap the star next to the title."
-      no_unread: "You have no unread topics to read."
-      no_new: "You have no new topics to read."
-      no_read: "You haven't read any topics yet."
-      no_posted: "You haven't posted in any topics yet."
-      no_popular: "There are no popular topics. That's sad."
-      footer: "No more topics in this category. <a href=\"/categories\">Browse all categories</a> or <a href=\"/\">view popular topics</a>"
+      none:
+        favorited: "You haven't favorited any topics yet. To favorite a topic, click or tap the star next to the title."
+        unread: "You have no unread topics to read."
+        new: "You have no new topics to read."
+        read: "You haven't read any topics yet."
+        posted: "You haven't posted in any topics yet."
+        popular: "There are no popular topics. That's sad."
+      bottom:
+        popular: "There are no more popular topics to read."
+        posted: "There are no more posted topics to read."
+        read: "There are no more read topics to read."
+        new: "There are no more new topics to read."
+        unread: "There are no more unread topics to read."
+        favorited: "There are no more favorited topics to read."
+
+
 
     topic:
       create_in: 'Create {{categoryName}} Topic'
@@ -342,6 +352,7 @@ en:
       read_more: "Want to read more? {{catLink}} or {{popularLink}}."
       browse_all_categories: Browse all categories
       view_popular_topics: view popular topics
+      suggest_create_topic: Why not create a topic?
 
       progress:
         title: topic progress
