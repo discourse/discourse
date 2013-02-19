@@ -2,85 +2,103 @@ module Oneboxer
 
   module Whitelist
     def self.entries
-      [/^https?:\/\/(?:www\.)?cnn\.com\/.+/,
-       /^https?:\/\/(?:www\.)?washingtonpost\.com\/.+/,
-       /^https?:\/\/(?:www\.)?\/\d{4}\/\d{2}\/\d{2}\//,   # wordpress
-       /^https?:\/\/(?:www\.)?funnyordie\.com\/.+/,
-       /^https?:\/\/(?:www\.)?youtube\.com\/.+/,
-       /^https?:\/\/(?:www\.)?youtu\.be\/.+/,
-       /^https?:\/\/(?:www\.)?500px\.com\/.+/,
-       /^https?:\/\/(?:www\.)?scribd\.com\/.+/,
-       /^https?:\/\/(?:www\.)?photobucket\.com\/.+/,
-       /^https?:\/\/(?:www\.)?ebay\.(com|ca|co\.uk)\/.+/,
-       /^https?:\/\/(?:www\.)?nytimes\.com\/.+/,
-       /^https?:\/\/(?:www\.)?tumblr\.com\/.+/,
-       /^https?:\/\/(?:www\.)?pinterest\.com\/.+/,
-       /^https?:\/\/(?:www\.)?imdb\.com\/.+/,
-       /^https?:\/\/(?:www\.)?bbc\.co\.uk\/.+/,
-       /^https?:\/\/(?:www\.)?ask\.com\/.+/,
-       /^https?:\/\/(?:www\.)?huffingtonpost\.com\/.+/,
-       /^https?:\/\/(?:www\.)?aol\.(com|ca)\/.+/,
-       /^https?:\/\/(?:www\.)?espn\.go\.com\/.+/,
-       /^https?:\/\/(?:www\.)?about\.com\/.+/,
-       /^https?:\/\/(?:www\.)?cnet\.com\/.+/,
-       /^https?:\/\/(?:www\.)?ehow\.com\/.+/,
-       /^https?:\/\/(?:www\.)?dailymail\.co\.uk\/.+/,
-       /^https?:\/\/(?:www\.)?indiatimes\.com\/.+/,
-       /^https?:\/\/(?:www\.)?answers\.com\/.+/,
-       /^https?:\/\/(?:www\.)?instagr\.am\/.+/,
-       /^https?:\/\/(?:www\.)?battle\.net\/.+/,
-       /^https?:\/\/(?:www\.)?sourceforge\.net\/.+/,
-       /^https?:\/\/(?:www\.)?myspace\.com\/.+/,
-       /^https?:\/\/(?:www\.)?wikia\.com\/.+/,
-       /^https?:\/\/(?:www\.)?etsy\.com\/.+/,
-       /^https?:\/\/(?:www\.)?walmart\.com\/.+/,
-       /^https?:\/\/(?:www\.)?reference\.com\/.+/,
-       /^https?:\/\/(?:www\.)?yelp\.com\/.+/,
-       /^https?:\/\/(?:www\.)?foxnews\.com\/.+/,
-       /^https?:\/\/(?:www\.)?guardian\.co\.uk\/.+/,
-       /^https?:\/\/(?:www\.)?digg\.com\/.+/,
-       /^https?:\/\/(?:www\.)?squidoo\.com\/.+/,
-       /^https?:\/\/(?:www\.)?wsj\.com\/.+/,
-       /^https?:\/\/(?:www\.)?archive\.org\/.+/,
-       /^https?:\/\/(?:www\.)?nba\.com\/.+/,
-       /^https?:\/\/(?:www\.)?samsung\.com\/.+/,
-       /^https?:\/\/(?:www\.)?mashable\.com\/.+/,
-       /^https?:\/\/(?:www\.)?forbes\.com\/.+/,
-       /^https?:\/\/(?:www\.)?soundcloud\.com\/.+/,
-       /^https?:\/\/(?:www\.)?thefreedictionary\.com\/.+/,
-       /^https?:\/\/(?:www\.)?groupon\.com\/.+/,
-       /^https?:\/\/(?:www\.)?ikea\.com\/.+/,
-       /^https?:\/\/(?:www\.)?dell\.com\/.+/,
-       /^https?:\/\/(?:www\.)?mlb\.com\/.+/,
-       /^https?:\/\/(?:www\.)?bestbuy\.(com|ca)\/.+/,
-       /^https?:\/\/(?:www\.)?bloomberg\.com\/.+/,
-       /^https?:\/\/(?:www\.)?ign\.com\/.+/,
-       /^https?:\/\/(?:www\.)?twitpic\.com\/.+/,
-       /^https?:\/\/(?:www\.)?techcrunch\.com\/.+/,
-       /^https?:\/\/(?:www\.)?usatoday\.com\/.+/,
-       /^https?:\/\/(?:www\.)?go\.com\/.+/,
-       /^https?:\/\/(?:www\.)?businessinsider\.com\/.+/,
-       /^https?:\/\/(?:www\.)?zillow\.com\/.+/,
-       /^https?:\/\/(?:www\.)?tmz\.com\/.+/,
-       /^https?:\/\/(?:www\.)?thesun\.co\.uk\/.+/,
-       /^https?:\/\/(?:www\.)?thestar\.(com|ca)\/.+/,
-       /^https?:\/\/(?:www\.)?theglobeandmail\.com\/.+/,
-       /^https?:\/\/(?:www\.)?torontosun\.com\/.+/,
-       /^https?:\/\/(?:www\.)?kickstarter\.com\/.+/,
-       /^https?:\/\/(?:www\.)?wired\.com\/.+/,
-       /^https?:\/\/(?:www\.)?time\.com\/.+/,
-       /^https?:\/\/(?:www\.)?npr\.org\/.+/,
-       /^https?:\/\/(?:www\.)?cracked\.com\/.+/,
-       /^https?:\/\/(?:www\.)?thinkgeek\.com\/.+/,
-       /^https?:\/\/(?:www\.)?deadline\.com\/.+/
-     ]
-    end    
-
-    def self.allowed?(url)
-      #return true
-      entries.each {|e| return true if url =~ e }
-      false
+      [
+       Entry.new(/^https?:\/\/(?:www\.)?cnn\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?washingtonpost\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?funnyordie\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?youtube\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?youtu\.be\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?500px\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?scribd\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?photobucket\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?ebay\.(com|ca|co\.uk)\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?nytimes\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?pinterest\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?imdb\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?bbc\.co\.uk\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?ask\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?huffingtonpost\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?aol\.(com|ca)\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?espn\.go\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?about\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?cnet\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?ehow\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?dailymail\.co\.uk\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?indiatimes\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?answers\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?instagr\.am\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?battle\.net\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?sourceforge\.net\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?myspace\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?wikia\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?etsy\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?walmart\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?reference\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?yelp\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?foxnews\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?guardian\.co\.uk\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?digg\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?squidoo\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?wsj\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?archive\.org\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?nba\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?samsung\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?mashable\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?forbes\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?soundcloud\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?thefreedictionary\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?groupon\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?ikea\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?dell\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?mlb\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?bestbuy\.(com|ca)\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?bloomberg\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?ign\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?twitpic\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?techcrunch\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?usatoday\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?go\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?businessinsider\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?zillow\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?tmz\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?thesun\.co\.uk\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?thestar\.(com|ca)\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?theglobeandmail\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?torontosun\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?kickstarter\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?wired\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?time\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?npr\.org\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?cracked\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?deadline\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?thinkgeek\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?tumblr\.com\/.+/, false),
+       Entry.new(/\/\d{4}\/\d{2}\/\d{2}\//, false),   # wordpress
+      ]
     end
+    
+    def self.entry_for_url(url)
+      entries.each {|e| return e if e.matches?(url) }
+      nil
+    end
+    
+    private
+
+      class Entry
+        # oembed = false is probably safer, but this is the least-drastic change
+        def initialize(pattern, oembed = true)
+          @pattern = pattern
+          @oembed = oembed
+        end
+      
+        def allows_oembed?
+          @oembed
+        end
+      
+        def matches?(url)
+          url =~ @pattern
+        end
+      end
 
   end
 

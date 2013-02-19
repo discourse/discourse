@@ -30,18 +30,22 @@ module Oneboxer
   def self.onebox_nocache(url)
     oneboxer = onebox_for_url(url)
     return oneboxer.onebox if oneboxer.present?
+    
+    whitelist_entry = Whitelist.entry_for_url(url)
 
-    if Whitelist.allowed?(url)
+    if whitelist_entry.present?
       page_html = open(url).read
       if page_html.present?
         doc = Nokogiri::HTML(page_html)
 
-        # See if if it has an oembed thing we can use
-        (doc/"link[@type='application/json+oembed']").each do |oembed|
-          return OembedOnebox.new(oembed[:href]).onebox
-        end
-        (doc/"link[@type='text/json+oembed']").each do |oembed|
-          return OembedOnebox.new(oembed[:href]).onebox   
+        if whitelist_entry.allows_oembed?
+          # See if if it has an oembed thing we can use
+          (doc/"link[@type='application/json+oembed']").each do |oembed|
+            return OembedOnebox.new(oembed[:href]).onebox
+          end
+          (doc/"link[@type='text/json+oembed']").each do |oembed|
+            return OembedOnebox.new(oembed[:href]).onebox   
+          end
         end
 
         # Check for opengraph
