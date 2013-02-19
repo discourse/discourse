@@ -25,7 +25,11 @@ class TopicQuery
       return TopicList.new(@user, random_suggested_results_for(topic, SiteSetting.suggested_topics, exclude_topic_ids))
     end
 
-    results = unread_results(per_page: SiteSetting.suggested_topics).where('topics.id NOT IN (?)', exclude_topic_ids).all
+    results = unread_results(per_page: SiteSetting.suggested_topics)
+                .where('topics.id NOT IN (?)', exclude_topic_ids)
+                .where(closed: false, archived: false, visible: true)
+                .all
+
     results_left = SiteSetting.suggested_topics - results.size
 
     # If we don't have enough results, go to new posts
@@ -33,7 +37,11 @@ class TopicQuery
       exclude_topic_ids << results.map {|t| t.id}
       exclude_topic_ids.flatten!
 
-      results << new_results(per_page: results_left).where('topics.id NOT IN (?)', exclude_topic_ids).all
+      results << new_results(per_page: results_left)
+                  .where('topics.id NOT IN (?)', exclude_topic_ids)
+                  .where(closed: false, archived: false, visible: true)
+                  .all
+
       results.flatten!
 
       results_left = SiteSetting.suggested_topics - results.size
@@ -43,7 +51,10 @@ class TopicQuery
         exclude_topic_ids << results.map {|t| t.id}
         exclude_topic_ids.flatten!
 
-        results << random_suggested_results_for(topic, results_left, exclude_topic_ids).all
+        results << random_suggested_results_for(topic, results_left, exclude_topic_ids)
+                    .where(closed: false, archived: false, visible: true)
+                    .all
+
         results.flatten!
       end
     end
@@ -145,6 +156,7 @@ class TopicQuery
     def random_suggested_results_for(topic, count, exclude_topic_ids)
       results = default_list(unordered: true, per_page: count)
                  .where('topics.id NOT IN (?)', exclude_topic_ids)
+                 .where(closed: false, archived: false, visible: true)
                  .order('RANDOM()')
 
       results = results.where('category_id = ?', topic.category_id) if topic.category_id.present?    

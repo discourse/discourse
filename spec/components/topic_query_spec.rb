@@ -220,8 +220,19 @@ describe TopicQuery do
 
       it "should return the new topic" do
         TopicQuery.new.list_suggested_for(topic).topics.should == [new_topic]  
-      end
+      end      
+    end
 
+    context "anonymously browswing with invisible, closed and archived" do
+      let!(:topic) { Fabricate(:topic) }
+      let!(:regular_topic) { Fabricate(:post, user: creator).topic }
+      let!(:closed_topic) { Fabricate(:topic, user: creator, closed: true) }
+      let!(:archived_topic) { Fabricate(:topic, user: creator, archived: true) }
+      let!(:invisible_topic) { Fabricate(:topic, user: creator, visible: false) }
+
+      it "should omit the closed/archived/invisbiel topics from suggested" do
+        TopicQuery.new.list_suggested_for(topic).topics.should == [regular_topic]  
+      end
     end
 
     context 'when logged in' do
@@ -237,6 +248,9 @@ describe TopicQuery do
         let!(:partially_read) { Fabricate(:post, user: creator).topic }
         let!(:new_topic) { Fabricate(:post, user: creator).topic }
         let!(:fully_read) { Fabricate(:post, user: creator).topic }     
+        let!(:closed_topic) { Fabricate(:topic, user: creator, closed: true) }
+        let!(:archived_topic) { Fabricate(:topic, user: creator, archived: true) }
+        let!(:invisible_topic) { Fabricate(:topic, user: creator, visible: false) }
 
         before do
           user.auto_track_topics_after_msecs = 0
