@@ -332,6 +332,7 @@ GEM
       ffi (>= 0.5.0)
     rdoc (3.12.1)
       json (~> 1.4)
+    redcarpet (2.2.2)
     redis (3.0.2)
     redis-actionpack (3.2.3)
       actionpack (~> 3.2.3)
@@ -494,6 +495,7 @@ DEPENDENCIES
   rake
   rb-fsevent
   rb-inotify (~> 0.8.8)
+  redcarpet
   redis
   redis-rails
   rest-client

@@ -280,7 +280,9 @@ window.Discourse.TopicView = Ember.View.extend Discourse.Scrolling,
   finishedEdit: ->
     if @get('editingTopic')
       topic = @get('topic')
-      topic.set('title', $('#edit-title').val())
+      new_val = $('#edit-title').val()
+      topic.set('title', new_val)
+      topic.set('fancy_title', new_val)
       topic.save()
       @set('editingTopic', false)
 

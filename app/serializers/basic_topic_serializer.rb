@@ -3,8 +3,20 @@ require_dependency 'age_words'
 class BasicTopicSerializer < ApplicationSerializer
   include ActionView::Helpers
 
-  attributes :id, :title, :reply_count, :posts_count, :highest_post_number, :image_url, :created_at,
-             :last_posted_at, :age, :unseen, :last_read_post_number, :unread, :new_posts
+  attributes :id, 
+             :title, 
+             :fancy_title,
+             :reply_count, 
+             :posts_count, 
+             :highest_post_number, 
+             :image_url, 
+             :created_at,
+             :last_posted_at, 
+             :age, 
+             :unseen, 
+             :last_read_post_number, 
+             :unread, 
+             :new_posts
 
   def age
     AgeWords.age_words(Time.now - (object.created_at || Time.now))

@@ -4,6 +4,7 @@ class TopicViewSerializer < ApplicationSerializer
   def self.topic_attributes
     [:id,
      :title,
+     :fancy_title,
      :posts_count,
      :created_at,
      :views,

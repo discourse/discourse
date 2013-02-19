@@ -20,7 +20,9 @@ Handlebars.registerHelper 'shorten', (property, options) ->
 
 Handlebars.registerHelper 'topicLink', (property, options) ->
   topic = Ember.Handlebars.get(this, property, options)
-  "<a href='#{topic.get('lastReadUrl')}' class='title excerptable'>#{Handlebars.Utils.escapeExpression(topic.get('title'))}</a>"
+
+  title = topic.get('fancy_title') || topic.get('title')
+  "<a href='#{topic.get('lastReadUrl')}' class='title excerptable'>#{title}</a>"
 
 Handlebars.registerHelper 'categoryLink', (property, options) ->
   category = Ember.Handlebars.get(this, property, options)

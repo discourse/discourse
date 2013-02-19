@@ -342,12 +342,11 @@ en:
 
     email_time_window_mins: "How many minutes we wait before sending a user mail, to give them a chance to see it first."
     flush_timings_secs: "How frequently we flush timing data to the server, in seconds."
-
     max_word_length: "The maximum word length in a topic title"
     title_min_entropy: "The minimum entropy for a topic title"
     body_min_entropy: "The minimum entropy for post body"
-
     new_user_period_days: "How long a user is highlighted as being new, in days."
+    title_fancy_entities: "Convert fancy HTML entities in topic titles"
 
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"

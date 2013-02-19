@@ -5,6 +5,7 @@ require_dependency 'rate_limiter'
 require_dependency 'text_sentinel'
 
 class Topic < ActiveRecord::Base
+  include ActionView::Helpers
   include RateLimiter::OnCreateRecord
 
   MAX_SORT_ORDER = 2147483647
@@ -67,7 +68,10 @@ class Topic < ActiveRecord::Base
   end
 
   before_validation do
-    self.title.strip! if self.title.present?
+    if self.title.present?
+      self.title = sanitize(self.title)
+      self.title.strip! 
+    end
   end
 
   before_create do
@@ -115,6 +119,14 @@ class Topic < ActiveRecord::Base
     errors.add(:title, I18n.t(:has_already_been_used)) if finder.exists?
   end
 
+  def fancy_title    
+    return title unless SiteSetting.title_fancy_entities?
+
+    # We don't always have to require this, if fancy is disabled
+    require 'redcarpet'
+
+    Redcarpet::Render::SmartyPants.render(title)
+  end
 
   def title_quality
     # We don't care about quality on private messages

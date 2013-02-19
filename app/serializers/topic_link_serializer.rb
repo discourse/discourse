@@ -1,6 +1,12 @@
 class TopicLinkSerializer < ApplicationSerializer
 
-  attributes :url, :title, :internal, :reflection, :clicks, :user_id
+  attributes :url, 
+             :title, 
+             :fancy_title,
+             :internal, 
+             :reflection, 
+             :clicks, 
+             :user_id
 
   def url
     object['url']
@@ -8,6 +14,10 @@ class TopicLinkSerializer < ApplicationSerializer
 
   def title
     object['title']
+  end
+
+  def fancy_title
+    object['fancy_title']
   end
 
   def internal
@@ -25,6 +35,7 @@ class TopicLinkSerializer < ApplicationSerializer
   def user_id
     object['user_id'].to_i
   end
+
   def include_user_id?
     object['user_id'].present?
   end

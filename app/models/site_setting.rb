@@ -138,6 +138,8 @@ class SiteSetting < ActiveRecord::Base
 
   setting(:new_user_period_days, 2)
 
+  setting(:title_fancy_entities, true)
+
   client_setting(:educate_until_posts, 2)
 
   def self.call_discourse_hub?

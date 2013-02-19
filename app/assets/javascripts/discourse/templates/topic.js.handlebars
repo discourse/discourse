@@ -15,9 +15,9 @@
             <button class='btn btn-small' {{action cancelEdit target="view"}}><i class='icon-remove'></i></button>
           {{else}}
             <h1>
-              {{#if view.topic.title}}
+              {{#if view.topic.fancy_title}}
                 {{view Discourse.TopicStatusView topicBinding="view.topic"}}
-                <a href='{{unbound view.topic.url}}'>{{unbound view.topic.title}}</a>
+                <a href='{{unbound view.topic.url}}'>{{{unbound view.topic.fancy_title}}}</a>
               {{else}}
                 {{#if view.topic.missing}}
                   {{i18n topic.not_found.title}}
