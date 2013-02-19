@@ -1,4 +1,5 @@
 require_dependency 'rest_client'
+require_dependency 'version'
 
 module DiscourseHub
 
@@ -33,8 +34,8 @@ module DiscourseHub
   end
 
 
-  def self.current_discourse_version
-    get('/current_version')['version']
+  def self.discourse_version_check
+    get('/version_check', {installed_version: Discourse::VERSION::STRING})
   end
 
 

@@ -10,6 +10,7 @@ gem 'simple_handlebars_rails', path: 'vendor/gems/simple_handlebars_rails'
 
 gem 'activerecord-postgres-hstore'
 gem 'acts_as_paranoid'
+gem 'active_attr' # until we get ActiveModel::Model with Rails 4
 gem 'airbrake', '3.1.2' # errbit is broken with 3.1.3 for now
 gem 'clockwork', require: false
 gem 'em-redis'

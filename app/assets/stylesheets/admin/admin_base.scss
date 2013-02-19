@@ -77,6 +77,38 @@
   }
 }
 
+.version-check {
+  .version-number {
+    font-size: 18px;
+    font-weight: bold
+  }
+
+  .version-notes {
+    margin-left: 24px;
+  }
+
+  .critical .version-notes .normal-note {
+    display: none;
+  }
+  .normal .version-notes .critical-note {
+    display: none;
+  }
+
+  i.icon {
+    font-size: 20px;
+  }
+
+  i.update-to-date {
+    color: green;
+  }
+  i.updates-available {
+    color: orange;
+  }
+  i.critical-updates-available {
+    color: red;
+  }
+}
+
 .settings {
   .setting {
     padding-bottom: 20px;

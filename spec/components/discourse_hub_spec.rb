@@ -55,10 +55,11 @@ describe DiscourseHub do
     end
   end
 
-  describe '#current_discourse_version' do
-    it 'should return the latest version of discourse' do
-      RestClient.stubs(:get).returns( {success: 'OK', version: 1.0}.to_json )
-      DiscourseHub.current_discourse_version().should == 1.0
+  describe '#discourse_version_check' do
+    it 'should return just return the json that the hub returns' do
+      hub_response = {'success' => 'OK', 'latest_version' => '0.8.1', 'critical_updates' => false}
+      RestClient.stubs(:get).returns( hub_response.to_json )
+      DiscourseHub.discourse_version_check.should == hub_response
     end
   end
 

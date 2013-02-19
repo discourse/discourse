@@ -1,4 +1,23 @@
 <h3>Welcome to the admin section.</h3>
 
-<p>Not much to see here right now. Why not try the Site Settings?</p>
+<p class="version-check">
+  {{#if loading }}
+    Loading...
+  {{else}}
+    <p {{bindAttr class="priorityClass"}}>
+      Discourse version: <span class="version-number">{{ versionCheck.installed_version }}</span>
 
+      <span class="version-notes">
+        {{#if upToDate }}
+          <i class='icon icon-ok update-to-date'></i> You are running the latest version of Discourse.
+        {{else}}
+            <i {{bindAttr class="updateIconClasses"}}></i>
+            <span class="critical-note">A critical update is available.</span>
+            <span class="normal-note">Updates are available.</span>
+            Please upgrade!
+            Latest version: <span class="version-number">{{ versionCheck.latest_version }}</span>
+        {{/if}}
+      </span>
+    </p>
+  {{/if}}
+</p>
