@@ -44,6 +44,18 @@ module Discourse
     !!$redis.get( maintenance_mode_key )
   end
 
+  def self.git_version
+    return $git_version if $git_version 
+    f = Rails.root.to_s + "/config/version"
+    require f if File.exists?("#{f}.rb")
+
+    begin
+      $git_version ||= `git rev-parse HEAD`.strip
+    rescue
+      $git_version = "unknown"
+    end
+  end
+
 
 private
 

@@ -1,61 +1,30 @@
+# this is a trivial graceful restart on touch of tmp/restart. 
+#
+# It simply drains all the requests (waits up to 4 seconds) and issues a HUP
+#  if you need a more sophisticated cycling restart for multiple thins it will need to be written
+#
+# This works fine for Discourse.org cause we host our app accross multiple machines, if you hosting
+#  on a single machine you have a trickier problem at hand as you need to cycle the processes in order
+
 Thread.new do 
   file = "#{Rails.root}/tmp/restart"
-  did_exist = nil
-  old_time = nil
+  old_time = File.ctime(file).to_i if File.exists? file
+  wait_seconds = 4
 
   return if $PROGRAM_NAME !~ /thin/
   
-  processes = {}
-  got_new = false
-  MessageBus.subscribe "/processes" do |msg|
-    filetime = msg.data["filetime"]
-    pid = msg.data["pid"]
-    got_new = processes[pid].nil? || (processes[pid][:filetime] != filetime)
-    # puts "#{got_new} #{pid}"
-    processes[pid] = {time: Time.now.to_i, filetime: filetime} 
-  end
-  
   while true
-    exists = File.exists? file 
-    time = File.ctime(file).to_i if exists
-    
-    if (did_exist != nil && did_exist != exists) ||
-      (old_time != nil && time != nil && old_time != time)
+    time = File.ctime(file).to_i if File.exists? file
 
-      got_new = false
-      probably_restarted = []
-
-      give_up_time = Time.now.to_i + 60
-
-      while Time.now.to_i < give_up_time
-        candidates = []
-        processes.each do |pid,data|
-          if data[:filetime] == old_time && data[:time] > Time.now.to_i - 40
-            candidates << pid
-          end
-        end
-
-        candidates = candidates - probably_restarted
-
-        break if (candidates.min || $$) >= $$ 
-        sleep 1
-        probably_restarted << candidates.min if got_new
-        got_new = false
-      end
-      
-
-      Rails.logger.info "attempting to reload #{$$} #{$PROGRAM_NAME} in 3 seconds restarted #{probably_restarted.inspect}"
+    if old_time != time
+      Rails.logger.info "attempting to reload #{$$} #{$PROGRAM_NAME} in #{wait_seconds} seconds"
       $shutdown = true
-      sleep 4
+      sleep wait_seconds
       Rails.logger.info "restarting #{$$}" 
       Process.kill("HUP", $$) 
-      
-      break
+      return
     end
 
-    MessageBus.publish "/processes", {pid: $$, filetime: time}
-    did_exist = exists
-    old_time = time
-    sleep 10
+    sleep 1
   end
 end

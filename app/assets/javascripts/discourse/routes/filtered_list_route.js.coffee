@@ -5,6 +5,7 @@ window.Discourse.FilteredListRoute = Discourse.Route.extend
     listController = @controllerFor('list')
     listController.set('canCreateTopic', false)
     listController.set('filterMode', '')
+
   renderTemplate: ->
     @render 'listTopics', into: 'list', outlet: 'listView', controller: 'listTopics'
   setupController: ->

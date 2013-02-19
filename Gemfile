@@ -47,7 +47,7 @@ gem 'slim'  # required for sidekiq-web
 gem 'therubyracer', require: 'v8'
 gem 'thin'
 
-# Gem that enables support for plugins. It is required
+# Gem that enables support for plugins. It is required.
 gem 'discourse_plugin', path: 'vendor/gems/discourse_plugin'
 
 # Discourse Plugins (optional)

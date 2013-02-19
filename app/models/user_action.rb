@@ -42,11 +42,15 @@ class UserAction < ActiveRecord::Base
     results = UserAction.select("action_type, COUNT(*) count, '' AS description")
       .joins(:target_topic)
       .where(user_id: user_id)
-      .group('action_type', 'topics.archetype')
+      .group('action_type')
 
-    # should push this into the sql at some point, but its simple enough for now
+    # We apply similar filters in stream, might consider trying to consolidate somehow
     unless guardian.can_see_private_messages?(user_id)
       results = results.where('topics.archetype <> ?', Archetype::private_message)
+    end
+    
+    unless guardian.user && guardian.user.id == user_id
+      results = results.where("action_type <> ?", BOOKMARK)
     end
 
     results = results.to_a
@@ -79,6 +83,7 @@ class UserAction < ActiveRecord::Base
 SELECT 
   t.title, a.action_type, a.created_at, t.id topic_id, 
   coalesce(p.post_number, 1) post_number, 
+  p.reply_to_post_number,
   pu.email ,pu.username, pu.name, pu.id user_id, 
   u.email acting_email, u.username acting_username, u.name acting_name, u.id acting_user_id, 
   coalesce(p.cooked, p2.cooked) cooked

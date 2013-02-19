@@ -9,12 +9,12 @@
   </div>
 
   <div class='control'>
-    <a href='#' class='toggler' {{action toggle bubbles=false}} title='toggle'></a>      
+    <a href='#' class='toggler' {{action toggle bubbles=false}} title='toggle'></a>
 
     {{#if content.viewOpen}}
       <div class='control-row reply-area'>
           <div class='reply-to'>{{{content.actionTitle}}}:</div>
-          
+
           {{#if content.editTitle}}
             <div class='form-element clearfix'>
 
@@ -28,7 +28,7 @@
                     <button class='btn' {{action showOptions target="controller"}}>{{i18n topic.options}}</button>
                   {{/if}}
                 {{/unless}}
-            </div>  
+            </div>
           {{/if}}
 
 
@@ -41,7 +41,7 @@
               <div id='wmd-preview' {{bindAttr class="controller.hidePreview:hidden"}}></div>
             </div>
             {{#if Discourse.currentUser}}
-               <a href="#" {{action togglePreview target="controller"}} class='toggle-preview'>{{{content.toggleText}}}</a>          
+               <a href="#" {{action togglePreview target="controller"}} class='toggle-preview'>{{{content.toggleText}}}</a>
                <div class='saving-draft'></div>
 
             {{/if}}
@@ -54,7 +54,7 @@
 
               {{#if view.loadingImage}}
                 <div id="image-uploading">
-                  Uploading image {{view.uploadProgress}}% <a {{action cancelUpload target="view"}}>cancel</a>
+                  {{i18n image_selector.uploading_image}} {{view.uploadProgress}}% <a {{action cancelUpload target="view"}}>{{i18n cancel}}</a>
                 </div>
               {{/if}}
             </div>
@@ -69,7 +69,7 @@
               {{i18n composer.saved}} <a class='permalink' href="{{unbound createdPost.url}}" {{action viewNewReply target="controller"}}>{{i18n composer.view_new_post}}</a>
             {{else}}
               {{i18n composer.saving}}
-            {{/if}}          
+            {{/if}}
           </div>
           <div class='draft-text'>
             {{i18n composer.saved_draft}}

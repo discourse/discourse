@@ -7,23 +7,29 @@ Discourse.Onebox = (->
 
   cache = (url, contents) ->
     localCache[url] = contents
-
-    #if localStorage && localStorage.setItem
-    #  localStorage.setItme
     null
 
   lookupCache = (url) ->
-    localCache[url]
+    cached = localCache[url]
+    if cached && cached.then # its a promise
+      null
+    else
+      cached
 
   lookup = (url, refresh, callback) ->
-    cached = lookupCache(url) unless refresh
+    cached = localCache[url]
+    cached = null if refresh && cached && !cached.then
     if cached
-      callback(cached)
+      if cached.then
+        cached.then(callback(lookupCache(url)))
+      else
+        callback(cached)
       return false
     else
-      $.get "/onebox", url: url, refresh: refresh, (html) ->
+      cache(url, $.get "/onebox", url: url, refresh: refresh, (html) ->
         cache(url,html)
         callback(html)
+      )
       return true
 
   load = (e, refresh=false) ->

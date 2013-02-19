@@ -3,9 +3,9 @@
 
 en:
   js:
-    share: 
-      topic: 'share a link to this topic' 
-      post: 'share a link to this post' 
+    share:
+      topic: 'share a link to this topic'
+      post: 'share a link to this post'
 
     edit: 'edit the title and category of this topic'
     not_implemented: "That feature hasn't been implemented yet, sorry!"
@@ -61,7 +61,7 @@ en:
       invited_by: "Invited By"
       trust_level: "Trust Level"
 
-      change_username: 
+      change_username:
         action: "change"
         title: "Change Username"
         confirm: "There could be consequences to changing your username. Are you absolutely sure you want to?"
@@ -75,7 +75,7 @@ en:
         error: "There was an error changing your email. Perhaps that address is already in use?"
         success: "We've sent an email to that address. Please follow the confirmation instructions."
 
-      email: 
+      email:
         title: "Email"
         instructions: "Your email will never be shown to the public."
         ok: "Looks good. We will email you to confirm."
@@ -83,12 +83,12 @@ en:
         authenticated: "Your email has been authenticated by {{provider}}."
         frequency: "We'll only email you if we haven't seen you recently and you haven't already seen the thing we're emailing you about."
 
-      name: 
+      name:
         title: "Name"
         instructions: "The longer version of your name; does not need to be unique."
         too_short: "Your name is too short."
         ok: "Your name looks good."
-      username: 
+      username:
         title: "Username"
         #instructions: "People can mention you as @{{username}}. This is an unregistered nickname. You can register it at <a href='http://discourse.org'>discourse.org</a>."
         instructions: "People can mention you as @{{username}}."
@@ -108,7 +108,7 @@ en:
       log_out: "Log Out"
       website: "Web Site"
       email_settings: "Email"
-      email_digests: 
+      email_digests:
         title: "When I don't visit the site, send me an email digest of what's new"
         daily: "daily"
         weekly: "weekly"
@@ -124,11 +124,11 @@ en:
         not_viewed: "I haven't viewed them yet"
         last_here: "they were posted since I was here last"
         after_n_days:
-          one: "they were posted in the last day" 
-          other: "they were posted in the last {{count}} days" 
+          one: "they were posted in the last day"
+          other: "they were posted in the last {{count}} days"
         after_n_weeks:
-          one: "they were posted in the last week" 
-          other: "they were posted in the last {{count}} week" 
+          one: "they were posted in the last week"
+          other: "they were posted in the last {{count}} week"
 
       auto_track_topics: "Automatically track topics I enter"
       auto_track_options:
@@ -141,7 +141,7 @@ en:
           one: "after 1 minute"
           other: "after {{count}} minutes"
 
-      invited: 
+      invited:
         title: "Invites"
         user: "Invited User"
         none: "{{username}} hasn't invited any users to the site."
@@ -156,19 +156,25 @@ en:
         days_visited: "Days Visited"
         account_age_days: "Account age in days"
 
-      password: 
+      password:
         title: "Password"
         too_short: "Your password is too short."
         ok: "Your password looks good."
 
-      ip_address: 
+      ip_address:
         title: "Last IP Address"
-      avatar: 
+      avatar:
         title: "Avatar"
         instructions: "We use <a href='https://gravatar.com' target='_blank'>Gravatar</a> for avatars based on your email"
 
       filters:
-        all: "All"        
+        all: "All"
+        
+      stream:
+        posted_by: "Posted by"
+        sent_by: "Sent by"
+        private_message: "private message"
+        the_topic: "the topic"
 
     loading: "Loading..."
     close: "Close"
@@ -207,7 +213,7 @@ en:
       invite: "Don't have an account yet?"
       failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
 
-    forgot_password: 
+    forgot_password:
       title: "Forgot Password"
       action: "I forgot my password"
       invite: "Enter your username or email address, and we'll send you a password reset email."
@@ -240,15 +246,15 @@ en:
         message: "Authenticating with Yahoo (make sure pop up blockers are not enabled)"
 
     composer:
-      saving_draft_tip: "saving"  
-      saved_draft_tip: "saved"  
-      saved_local_draft_tip: "saved locally"  
+      saving_draft_tip: "saving"
+      saved_draft_tip: "saved"
+      saved_local_draft_tip: "saved locally"
 
       min_length:
         at_least: "enter at least {{n}} characters"
         more: "{{n}} to go..."
-      
-      save_edit: "Save Edit"  
+
+      save_edit: "Save Edit"
       reply: "Reply"
       create_topic: "Create Topic"
       create_pm: "Create Private Message"
@@ -286,8 +292,9 @@ en:
       remote_tip: "enter address of an image in the form http://example.com/image.jpg"
       local_tip: "click to select an image from your device."
       upload: "Upload"
+      uploading_image: "Uploading image"
 
-    search: 
+    search:
       title: "search for topics, posts, users, or categories"
       placeholder: "type your search terms here"
       no_results: "No results found."
@@ -301,15 +308,16 @@ en:
       title: 'Favorite'
       help: 'add this topic to your favorites list'
 
-    topics: 
+    topics:
       no_favorited: "You haven't favorited any topics yet. To favorite a topic, click or tap the star next to the title."
       no_unread: "You have no unread topics to read."
       no_new: "You have no new topics to read."
       no_read: "You haven't read any topics yet."
       no_posted: "You haven't posted in any topics yet."
       no_popular: "There are no popular topics. That's sad."
+      footer: "No more topics in this category. <a href=\"/categories\">Browse all categories</a> or <a href=\"/\">view popular topics</a>"
 
-    topic:      
+    topic:
       create_in: 'Create {{categoryName}} Topic'
       create: 'Create Topic'
       create_long: 'Create a new Topic'
@@ -354,7 +362,7 @@ en:
           "1_2": 'You will be notified only if someone mentions your @name or replies to your post.'
           "0": 'You are ignoring all notifications on this topic.'
           "0_2": 'You are ignoring all notifications on this topic.'
-        watching: 
+        watching:
           title: "Watching"
           description: "same as Tracking, plus you will be notified of all new posts."
         tracking:
@@ -381,11 +389,11 @@ en:
         multi_select: "Toggle Multi-Select"
         convert_to_topic: "Convert to Regular Topic"
 
-      reply: 
+      reply:
         title: 'Reply'
         help: 'begin composing a reply to this topic'
 
-      share: 
+      share:
         title: 'Share'
         help: 'share a link to this topic'
 
@@ -399,11 +407,11 @@ en:
         success: "Thanks! We've invited that user to participate in this private conversation."
         error: "Sorry there was an error inviting that user."
 
-      invite_reply: 
+      invite_reply:
         title: 'Invite Friends to Reply'
         help: 'send invitations to friends so they can reply to this topic with a single click'
         email: "We'll send your friend a brief email allowing them to reply to this topic by clicking a link."
-        email_placeholder: 'email address' 
+        email_placeholder: 'email address'
         success: "Thanks! We mailed out an invitation to <b>{{email}}</b>. We'll let you know when they redeem your invitation. Check the invitations tab on your user page to keep track of who you've invited."
         error: "Sorry we couldn't invite that person. Perhaps they are already a user?"
 
@@ -418,7 +426,7 @@ en:
         title: "Move Selected Posts"
         topic_name: "New Topic Name:"
         error: "Sorry, there was an error moving those posts."
-        instructions: 
+        instructions:
           one: "You are about to create a new topic and populate it with the post you've selected."
           other: "You are about to create a new topic and populate it with the <b>{{count}}</b> posts you've selected."
 
@@ -433,7 +441,7 @@ en:
           other: "You have selected <b>{{count}}</b> posts."
 
     post:
-      reply: "Replying to {{link}} by {{replyAvatar}} {{username}}" 
+      reply: "Replying to {{link}} by {{replyAvatar}} {{username}}"
       reply_topic: "Reply to {{link}}"
       edit: "Edit {{link}}"
       in_reply_to: "in reply to"
@@ -482,13 +490,13 @@ en:
           one: "1 person {{long_form}}"
           other: "{{count}} people {{long_form}}"
 
-      edits: 
+      edits:
         one: 1 edit
         other: "{{count}} edits"
         zero: no edits
 
       delete:
-        confirm: 
+        confirm:
           one: "Are you sure you want to delete that post?"
           other: "Are you sure you want to delete all those posts?"
 
@@ -546,27 +554,27 @@ en:
     categories_list: "Categories List"
 
     filters:
-      popular: 
+      popular:
         title: "Popular"
         help: "the most popular recent topics"
-      favorited: 
+      favorited:
         title: "Favorited"
         help: "topics you marked as favorites"
-      read: 
+      read:
         title: "Read"
         help: "topics you've read"
-      categories: 
+      categories:
         title: "Categories"
         title_in: "Category - {{categoryName}}"
         help: "all topics grouped by category"
       unread:
-        title: 
+        title:
           zero: "Unread"
           one: "Unread (1)"
           other: "Unread ({{count}})"
         help: "tracked topics with unread posts"
-      new: 
-        title: 
+      new:
+        title:
           zero: "New"
           one: "New (1)"
           other: "New ({{count}})"
@@ -585,7 +593,7 @@ en:
   admin_js:
     type_to_filter: "type to filter..."
 
-    admin:      
+    admin:
       title: 'Discourse Admin'
       dashboard: 'Admin Dashboard'
 
@@ -597,8 +605,9 @@ en:
         clear_title: "dismiss all flags on this post (will unhide hidden posts)"
         delete: "Delete Post"
         delete_title: "delete post (if its the first post delete topic)"
+        flagged_by: "Flagged by"
 
-      customize: 
+      customize:
         title: "Customize"
         header: "Header"
         css: "Stylesheet"

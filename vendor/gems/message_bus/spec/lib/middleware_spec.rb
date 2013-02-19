@@ -118,13 +118,13 @@ describe MessageBus::Rack::Middleware do
     end
 
     it "should get a 200 with html for an authorized user" do
-      MessageBus.stub(:is_admin_lookup).and_return(lambda{ true })
+      MessageBus.stub(:is_admin_lookup).and_return(lambda{|env| true })
       get "/message-bus/_diagnostics"
       last_response.status.should == 200
     end
 
     it "should get the script it asks for" do
-      MessageBus.stub(:is_admin_lookup).and_return(lambda{ true })
+      MessageBus.stub(:is_admin_lookup).and_return(lambda{|env| true })
       get "/message-bus/_diagnostics/assets/message-bus.js"
       last_response.status.should == 200
       last_response.content_type.should == "text/javascript;"

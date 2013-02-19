@@ -9,6 +9,7 @@ window.Discourse.TopicList = Discourse.Model.extend
     Em.String.i18n('topics.no_' + @get('filter'))
   ).property('topics', 'topics@each', 'filter', 'loaded')
 
+
   loadMoreTopics: ->
     promise = new RSVP.Promise()
     if moreUrl = @get('more_topics_url')

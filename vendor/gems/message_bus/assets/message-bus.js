@@ -30,6 +30,24 @@ window.MessageBus = (function() {
     }
   };
 
+  var processMessages = function(messages) {
+    failCount = 0;
+    $.each(messages,function(idx,message) {
+      gotData = true;
+      $.each(callbacks,function(idx,callback) {
+        if (callback.channel === message.channel) {
+          callback.last_id = message.message_id;
+          callback.func(message.data);
+        }
+        if (message.channel === "/__status") {
+          if (message.data[callback.channel] !== void 0) {
+            callback.last_id = message.data[callback.channel];
+          }
+        }
+      });
+    });
+  };
+
   return {
 
     enableLongPolling: true,
@@ -42,7 +60,7 @@ window.MessageBus = (function() {
     start: function(opts) {
       var poll,
         _this = this;
-      if (opts == null) {
+      if (opts === null) {
         opts = {};
       }
       poll = function() {
@@ -52,7 +70,7 @@ window.MessageBus = (function() {
           return;
         }
         data = {};
-        callbacks.each(function(c) {
+        $.each(callbacks, function(idx,c) {
           return data[c.channel] = c.last_id === void 0 ? -1 : c.last_id;
         });
         gotData = false;
@@ -65,21 +83,7 @@ window.MessageBus = (function() {
             'X-SILENCE-LOGGER': 'true'
           },
           success: function(messages) {
-            failCount = 0;
-            return messages.each(function(message) {
-              gotData = true;
-              return callbacks.each(function(callback) {
-                if (callback.channel === message.channel) {
-                  callback.last_id = message.message_id;
-                  callback.func(message.data);
-                }
-                if (message["channel"] === "/__status") {
-                  if (message.data[callback.channel] !== void 0) {
-                    callback.last_id = message.data[callback.channel];
-                  }
-                }
-              });
-            });
+            processMessages(messages);
           },
           error: failCount += 1,
           complete: function() {

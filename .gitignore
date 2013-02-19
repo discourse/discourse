@@ -68,3 +68,6 @@ chef/tmp/*
 
 # .procfile
 .procfile
+
+# exclude our git version file for now 
+config/version.rb

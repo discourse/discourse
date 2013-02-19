@@ -10,7 +10,7 @@ on Discourse with:
 ### Getting Started
 
 1. Install VirtualBox: https://www.virtualbox.org/wiki/Downloads
-2. Install Vagrant: https://www.vagrantup.com/
+2. Install Vagrant: http://www.vagrantup.com/
 3. Open a terminal
 4. Clone the project: `git clone git@github.com:discourse/discourse.git`
 5. Enter the project directory: `cd discourse`
@@ -32,6 +32,28 @@ Once the machine has booted up, you can shell into it by typing:
 vagrant ssh
 ```
 
+**Note to Windows users**: You cannot run ```vagrant ssh``` from a cmd prompt; you'll receive the error message:
+
+```
+`vagrant ssh` isn't available on the Windows platform. You are still able
+to SSH into the virtual machine if you get a Windows SSH client (such as 
+PuTTY). The authentication information is shown below:
+
+Host: 127.0.0.1
+Port: 2222
+Username: vagrant
+Private key: C:/Users/Your Name/.vagrant.d/insecure_private_key
+```
+
+At this point, you will want to get an SSH client, and use it to connect to your Vagrant VM instead. We recommend
+PuTTY:
+
+**[PuTTY Download Link](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html)**
+
+You may use this client to connect to the VM by using ```vagrant/vagrant``` as your username/password, or by [using
+PuTTYGen to import the insecure_private_key file](http://jason.sharonandjason.com/key_based_putty_logins_mini_how_to.htm)
+(mentioned above) into a PuTTY profile to quickly access your VM.
+
 ### Keeping your VM up to date
 
 Now you're in a virtual machine is almost ready to start developing. It's a good idea to perform the following instructions
@@ -51,7 +73,7 @@ Once your VM is up to date, you can start a rails instance using the following c
 bundle exec rails server
 ```
 
-In a few seconds, rails will start serving pages. To access them, open a web browser to http://localhost:4000 - if it all worked you should see discourse! Congratulations, you are ready to start working!
+In a few seconds, rails will start serving pages. To access them, open a web browser to [http://localhost:4000](http://localhost:4000) - if it all worked you should see discourse! Congratulations, you are ready to start working!
 
 You can now edit files on your local file system, using your favorite text editor or IDE. When you reload your web browser, it should have the latest changes.
 
@@ -87,7 +109,7 @@ To start mailcatcher, run the following command in the vagrant image:
 mailcatcher --http-ip 0.0.0.0
 ```
 
-Then in a browser, go to http://localhost:4080
+Then in a browser, go to [http://localhost:4080](http://localhost:4080)
 
 Sent emails will be received by mailcatcher and shown in its web ui.
 
