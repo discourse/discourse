@@ -14,12 +14,10 @@ class Post < ActiveRecord::Base
     FLAG_THRESHOLD_REACHED_AGAIN = 2
   end
 
-
   versioned
-
   rate_limit
-
   acts_as_paranoid
+
   after_recover :update_flagged_posts_count
   after_destroy :update_flagged_posts_count
 

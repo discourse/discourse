@@ -5,11 +5,13 @@ require_dependency 'oneboxer'
 
 class CookedPostProcessor
 
+
   def initialize(post, opts={})
     @dirty = false
     @opts = opts
     @post = post
     @doc = Nokogiri::HTML(post.cooked)
+    @size_cache = {}
   end
 
   def dirty?
@@ -33,42 +35,82 @@ class CookedPostProcessor
   # First let's consider the images       
   def post_process_images    
     images = @doc.search("img")
-    if images.present?
+    return unless images.present? 
 
-      # Extract the first image from the first post and use it as the 'topic image'
-      if @post.post_number == 1
-        img = images.first
-        @post.topic.update_column :image_url, img['src'] if img['src'].present?
-      end
+    # Extract the first image from the first post and use it as the 'topic image'
+    if @post.post_number == 1
+      img = images.first
+      @post.topic.update_column :image_url, img['src'] if img['src'].present?
+    end
 
-      images.each do |img|
-        if img['src'].present?
+    images.each do |img|
+      src = img['src']
+      src = Discourse.base_url + src if src[0] == "/"
 
-          # If we provided some image sizes, look those up first
-          if @opts[:image_sizes].present?
-            if dim = @opts[:image_sizes][img['src']]
-              w, h = ImageSizer.resize(dim['width'], dim['height'])
-              img.set_attribute 'width', w.to_s
-              img.set_attribute 'height', h.to_s
-              @dirty = true
-            end
-          end
+      if src.present? && (img['width'].blank? || img['height'].blank?)
 
-          # If the image has no width or height, figure them out.
-          if img['width'].blank? or img['height'].blank?               
-            dim = CookedPostProcessor.image_dimensions(img['src'])
-            if dim.present?
-              img.set_attribute 'width', dim[0].to_s
-              img.set_attribute 'height', dim[1].to_s
-              @dirty = true
-            end
-          end
+        w,h = 
+          get_size_from_image_sizes(src, @opts[:image_sizes]) || 
+          image_dimensions(src)
 
+        if w && h
+          img['width'] = w.to_s
+          img['height'] = h.to_s
+          @dirty = true
         end
       end
-    end      
+      
+      if src.present? 
+        if src != img['src']
+          img['src'] = src
+          @dirty = true
+        end
+        convert_to_link!(img) 
+        img.set_attribute('src', optimize_image(src))
+      end
+
+    end
   end
 
+  def optimize_image(src)
+    src
+  end
+
+  def convert_to_link!(img)
+    src = img["src"]
+    width = img["width"].to_i
+    height = img["height"].to_i
+
+    return unless src.present? && width > SiteSetting.auto_link_images_wider_than
+
+    original_width, original_height  = get_size(src)
+
+    return unless original_width.to_i > width && original_height.to_i > height
+
+    parent = img.parent
+    while parent
+      return if parent.name == "a"
+      break unless parent.respond_to? :parent
+      parent = parent.parent
+    end
+
+    # not a hyperlink so we can apply 
+    a = Nokogiri::XML::Node.new "a", @doc
+    img.add_next_sibling(a)
+    a["href"] = src
+    a["class"] = "lightbox"
+    a.add_child(img)
+    @dirty = true
+
+  end
+
+  def get_size_from_image_sizes(src, image_sizes)
+    if image_sizes.present?
+      if dim = image_sizes[src]
+        ImageSizer.resize(dim['width'], dim['height'])
+      end
+    end
+  end
 
   def post_process
     return unless @doc.present?
@@ -80,14 +122,18 @@ class CookedPostProcessor
     @doc.try(:to_html)
   end
 
-  # Retrieve the image dimensions for a url
-  def self.image_dimensions(url)
-    return nil unless SiteSetting.crawl_images?
-    uri = URI.parse(url)
-    return nil unless %w(http https).include?(uri.scheme)
-    w, h = FastImage.size(url)
+  def get_size(url)
+    return nil unless SiteSetting.crawl_images? || url.start_with?(Discourse.base_url)
+    @size_cache[url] ||= FastImage.size(url)
+  end
 
-    ImageSizer.resize(w, h)
+  # Retrieve the image dimensions for a url
+  def image_dimensions(url)
+    uri = URI.parse(url)
+    
+    return nil unless %w(http https).include?(uri.scheme)
+    w, h = get_size(url)
+    ImageSizer.resize(w, h) if w && h
   end
 
 end

@@ -107,7 +107,7 @@ footer:after{ content: '#{error}' }"
 
     @lock.synchronize do
       style = self.where(key: key).first
-      style.ensure_stylesheet_on_disk!
+      style.ensure_stylesheet_on_disk! if style
       @cache[key] = style
     end
   end

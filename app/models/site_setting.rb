@@ -81,7 +81,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:max_flags_per_day, 20)
   setting(:max_edits_per_day, 30)
   setting(:max_favorites_per_day, 20)
-
+  setting(:auto_link_images_wider_than, 50)
 
   setting(:email_time_window_mins, 5)
 

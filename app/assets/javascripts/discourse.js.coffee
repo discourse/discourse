@@ -134,6 +134,7 @@ window.Discourse = Ember.Application.createWithMixins
       return if href is '#'
       return if $currentTarget.attr('target')
       return if $currentTarget.data('auto-route')
+      return if $currentTarget.hasClass('lightbox')
       return if href.indexOf("mailto:") is 0
 
       if href.match(/^http[s]?:\/\//i) && !href.match new RegExp("^http:\\/\\/" + window.location.hostname,"i")

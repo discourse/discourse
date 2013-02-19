@@ -212,6 +212,7 @@ window.Discourse.PostView = Ember.View.extend
 
     # Add syntax highlighting
     Discourse.SyntaxHighlighting.apply($post)
+    Discourse.Lightbox.apply($post)
 
     # If we're scrolling upwards, adjust the scroll position accordingly
     if scrollTo = @get('post.scrollTo')

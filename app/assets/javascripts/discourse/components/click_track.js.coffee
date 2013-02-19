@@ -6,6 +6,8 @@ window.Discourse.ClickTrack =
 
     $a = $(e.currentTarget)
 
+    return if $a.hasClass('lightbox')
+
     e.preventDefault()
 
     # We don't track clicks on quote back buttons
