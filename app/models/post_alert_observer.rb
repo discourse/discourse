@@ -77,6 +77,9 @@ class PostAlertObserver < ActiveRecord::Observer
     def create_notification(user, type, post, opts={})
       return if user.blank?
 
+      # Make sure the user can see the post
+      return unless Guardian.new(user).can_see?(post)
+
       # skip if muted on the topic
       return if TopicUser.get(post.topic, user).try(:notification_level) == TopicUser::NotificationLevel::MUTED
 

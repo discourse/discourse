@@ -35,7 +35,6 @@ describe PostAlertObserver do
     end
   end
 
-
   context 'quotes' do
 
     it 'notifies a user by username' do
@@ -79,6 +78,7 @@ describe PostAlertObserver do
     end
 
 
+
     it "doesn't notify the user who created the topic in regular mode" do
       topic.notify_regular!(user)
       mention_post
@@ -92,6 +92,21 @@ describe PostAlertObserver do
       lambda { 
         post.destroy
       }.should change(evil_trout.notifications, :count).by(-1)
+    end
+  end
+
+
+  context 'private message' do
+    let(:user) { Fabricate(:user) }
+    let(:mention_post) { Fabricate(:post, user: user, raw: 'Hello @eviltrout')}
+    let(:topic) { mention_post.topic }   
+    let(:post)  
+
+    it "won't notify someone who can't see the post" do
+      lambda {
+        Guardian.any_instance.expects(:can_see?).with(instance_of(Post)).returns(false)
+        mention_post
+      }.should_not change(evil_trout.notifications, :count)
     end
 
   end
