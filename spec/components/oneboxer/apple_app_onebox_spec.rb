@@ -29,7 +29,7 @@ private
     <img src="http://a5.mzstatic.com/us/r1000/087/Purple/99/2f/dd/mzl.erzwvjsi.175x175-75.jpg" class="thumbnail">
     <h3><a href="https://itunes.apple.com/us/app/minecraft-pocket-edition-lite/id479651754" target="_blank">Minecraft – Pocket Edition Lite</a></h3>
     
-    Imagine it, build it. Create worlds on the go with Minecraft - Pocket EditionThis is the Lite version of Minecraft - Pocket Edition. Minecraft - Pocket Edition allows you to build on the go. Use blocks to create masterpieces as you travel, hangout with friends, sit at the park, the possibilities are endless. Move beyond the limits of your computer and play Minecraft everywhere you go.Limitations of the Lite version* The world is not saved between sessions* Multiplayer worlds can not be copied to 
+      Imagine it, build it. Create worlds on the go with Minecraft - Pocket EditionThis is the Lite version of Minecraft - Pocket Edition. Minecraft - Pocket Edition allows you to build on the go. Use blocks to create masterpieces as you travel, hangout with friends, sit at the park, the possibilities are endless. Move beyond the limits of your computer and play Minecraft everywhere you go.Limitations of the Lite version* The world is not saved between sessions* Multiplayer worlds can not be copied to 
   </div>
   <div class='clearfix'></div>
 </div>
