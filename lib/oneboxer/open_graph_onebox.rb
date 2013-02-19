@@ -20,6 +20,7 @@ module Oneboxer
 
       @opts[:original_url] = @url
       @opts[:text] = @opts['description']
+      @opts[:unsafe] = true
 
       begin
         parsed = URI.parse(@url)

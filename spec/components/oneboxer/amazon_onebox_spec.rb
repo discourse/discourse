@@ -33,7 +33,7 @@ private
     <img src="http://ecx.images-amazon.com/images/I/716dULgyHNL._SY180_.jpg" class="thumbnail">
     <h3><a href="http://www.amazon.com/Ruby-Programming-Language-David-Flanagan/dp/0596516177" target="_blank">The Ruby Programming Language (Paperback)</a></h3>
     <h4>David Flanagan, Yukihiro Matsumoto</h4>
-    
+      
 The Ruby Programming Language is the authoritative guide to Ruby ...
 
   </div>
