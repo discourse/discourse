@@ -3,7 +3,7 @@ require_dependency 'oneboxer/handlebars_onebox'
 module Oneboxer
   class GithubBlobOnebox < HandlebarsOnebox
 
-    matcher /github\.com\/[^\/]+\/[^\/]+\/blob\/.*/
+    matcher /^https?:\/\/(?:www\.)?github\.com\/[^\/]+\/[^\/]+\/blob\/.*/
     favicon 'github.png'
 
     def translate_url  
