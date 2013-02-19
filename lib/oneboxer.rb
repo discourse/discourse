@@ -36,12 +36,14 @@ module Oneboxer
       if page_html.present?
         doc = Nokogiri::HTML(page_html)
 
-        # See if if it has an oembed thing we can use
-        (doc/"link[@type='application/json+oembed']").each do |oembed|
-          return OembedOnebox.new(oembed[:href]).onebox
-        end
-        (doc/"link[@type='text/json+oembed']").each do |oembed|
-          return OembedOnebox.new(oembed[:href]).onebox   
+        if Whitelist.oembed_allowed?(url)
+          # See if if it has an oembed thing we can use
+          (doc/"link[@type='application/json+oembed']").each do |oembed|
+            return OembedOnebox.new(oembed[:href]).onebox
+          end
+          (doc/"link[@type='text/json+oembed']").each do |oembed|
+            return OembedOnebox.new(oembed[:href]).onebox   
+          end
         end
 
         # Check for opengraph
