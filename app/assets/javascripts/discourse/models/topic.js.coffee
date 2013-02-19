@@ -69,13 +69,6 @@ Discourse.Topic = Discourse.Model.extend Discourse.Presence,
 
   ).property('new_posts', 'id')
 
-  displayTitle: (->
-    return null unless @get('title')
-    return @get('title') unless @get('category')
-    matches = @get('title').match(/^([a-zA-Z0-9]+\: )?(.*)/)
-    return matches[2]
-  ).property('title')
-
   # The coldmap class for the age of the topic
   ageCold: (->
     return unless lastPost = @get('last_posted_at')

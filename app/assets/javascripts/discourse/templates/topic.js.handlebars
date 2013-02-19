@@ -17,7 +17,7 @@
             <h1>
               {{#if view.topic.title}}
                 {{view Discourse.TopicStatusView topicBinding="view.topic"}}
-                <a href='{{unbound view.topic.url}}'>{{unbound view.topic.displayTitle}}</a>
+                <a href='{{unbound view.topic.url}}'>{{unbound view.topic.title}}</a>
               {{else}}
                 {{#if view.topic.missing}}
                   {{i18n topic.not_found.title}}
