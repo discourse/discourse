@@ -589,7 +589,9 @@ fr:
 
     admin:      
       title: 'Administation Discourse'
-      dashboard: "Panel d'administration"
+
+      dashboard:
+        title: "Panel d'administration"
 
       flags:
         title: "Signalements"

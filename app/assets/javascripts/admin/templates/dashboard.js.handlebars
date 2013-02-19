@@ -1,21 +1,21 @@
-<h3>Welcome to the admin section.</h3>
+<h3>{{i18n admin.dashboard.welcome}}</h3>
 
 <p class="version-check">
   {{#if loading }}
-    Loading...
+    {{i18n loading}}
   {{else}}
     <p {{bindAttr class="priorityClass"}}>
-      Discourse version: <span class="version-number">{{ versionCheck.installed_version }}</span>
+      {{i18n admin.dashboard.version}}: <span class="version-number">{{ versionCheck.installed_version }}</span>
 
       <span class="version-notes">
         {{#if upToDate }}
-          <i class='icon icon-ok update-to-date'></i> You are running the latest version of Discourse.
+          <i class='icon icon-ok update-to-date'></i> {{i18n admin.dashboard.up_to_date}}
         {{else}}
             <i {{bindAttr class="updateIconClasses"}}></i>
-            <span class="critical-note">A critical update is available.</span>
-            <span class="normal-note">Updates are available.</span>
-            Please upgrade!
-            Latest version: <span class="version-number">{{ versionCheck.latest_version }}</span>
+            <span class="critical-note">{{i18n admin.dashboard.critical_available}}</span>
+            <span class="normal-note">{{i18n admin.dashboard.updates_available}}</span>
+            {{i18n admin.dashboard.please_upgrade}}
+            {{i18n admin.dashboard.latest_version}}: <span class="version-number">{{ versionCheck.latest_version }}</span>
         {{/if}}
       </span>
     </p>

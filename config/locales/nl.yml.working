@@ -327,7 +327,9 @@ nl:
 
     admin:      
       title: 'Discourse Beheer'
-      dashboard: 'Beheer Dashboard'
+
+      dashboard:
+        title: 'Beheer Dashboard'
 
       flags:
         title: "Meldingen"
