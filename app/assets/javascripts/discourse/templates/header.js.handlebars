@@ -2,9 +2,13 @@
   <div class='contents clearfix'>
     <div class='title'>
       {{#if controller.showExtraInfo}}
+      
         {{#linkTo list.popular}}{{{Discourse.logoSmall}}}{{/linkTo}}
+
       {{else}}
+
         {{#linkTo list.popular}}<img src="{{unbound Discourse.SiteSettings.logo_url}}" alt="{{unbound Discourse.SiteSettings.title}}" id='site-logo'>{{/linkTo}}
+
       {{/if}}
     </div>      
 

@@ -1,6 +1,5 @@
 window.Discourse.UserPrivateMessagesView = Ember.View.extend
   templateName: 'user/private_messages'
-  elementId: 'user-private-messages'
 
   selectCurrent: (evt) ->
     t = $(evt.currentTarget)

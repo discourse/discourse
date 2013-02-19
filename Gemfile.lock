@@ -7,9 +7,9 @@ GIT
 
 GIT
   remote: git://github.com/emberjs/ember-rails.git
-  revision: 587a55a8c53aae2193a3602895e89311eb8544b0
+  revision: 57bbe3202725e55a8e4eaccba83d663b26bcf024
   specs:
-    ember-rails (0.9.2)
+    ember-rails (0.10.1)
       active_model_serializers
       barber
       execjs (>= 1.2)
@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: git://github.com/rails-api/active_model_serializers.git
-  revision: cef10cf01dfe18f72060bda279d5246c156ae737
+  revision: 0114e492388ff84defcd1afbbb315e547849cb96
   specs:
     active_model_serializers (0.5.2)
       activemodel (>= 3.0)
@@ -100,7 +100,7 @@ GEM
       builder
     archive-tar-minitar (0.5.2)
     arel (3.0.2)
-    barber (0.2.0)
+    barber (0.3.0)
       execjs
     better_errors (0.5.0)
       coderay (>= 1.0.0)
@@ -238,7 +238,7 @@ GEM
     mixlib-shellout (1.1.0)
     mocha (0.10.5)
       metaclass (~> 0.0.1)
-    multi_json (1.5.1)
+    multi_json (1.6.1)
     multipart-post (1.1.5)
     mustache (0.99.4)
     net-scp (1.0.4)
