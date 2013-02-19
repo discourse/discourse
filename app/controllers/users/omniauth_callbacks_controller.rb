@@ -159,7 +159,7 @@ class Users::OmniauthCallbacksController < ApplicationController
         name: User.suggest_name(name),
         username: User.suggest_username(username),
         email_valid: true ,
-        auth_provider: data[:provider]
+        auth_provider: data[:provider] || params[:provider].try(:capitalize)
       }
       session[:authentication] = {
         email: @data[:email],
