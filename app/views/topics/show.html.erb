@@ -15,7 +15,7 @@
 
 <% if @topic_view.next_page %>
   <p>
-    <b><%= link_to("next page &rarr;", @topic_view.next_page_path ) %></b>
+    <b><%= link_to("next page &rarr;".html_safe, @topic_view.next_page_path ) %></b>
   </p>
 <% end %>
 
