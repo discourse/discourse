@@ -28,7 +28,7 @@ Discourse is a **Civilized Discourse Construction Kit**, an 100% open-source dis
 
 Key Discourse mission goals:
 
-- A **flattened discussion**, to avoid the akwardness of threaded discussion, while allowing replies to be expanded for additional context.
+- A **flattened, endlessly scrolling discussion**, avoiding the akwardness of traditionally threaded and paginated discussion, while allowing replies to be expanded in place for additional context.
 
 - A **user trust system** that grants users additional rights to assist in moderating the forum as they participate in good faith over time. The goal is for the forum to be nearly self-moderating in the absence of any formal moderators, although excellent moderators accelerate the process greatly.
 
@@ -36,7 +36,7 @@ Key Discourse mission goals:
 
 - A **contemporary, robust technology stack**, free of legacy PHP and MySQL constraints limiting developers and administrators.
 
-The Discourse team wishes to **foster an active community of contributors**, all of whom commit to delivering this continued vision, and ensure that online discussions can grow and thrive in an Internet age dominated by micro-blogging and diminishing attention spans.
+The Discourse team wishes to **foster an active community of contributors**, all of whom commit to delivering this continued vision, ensuring that free, unfettered online discussion can grow and thrive in an Internet age dominated by micro-blogging, and diminishing attention spans. Online discussion belongs to all of us, not just huge corporate websites.
 
 This vision translates to the following functional commitments:
 
@@ -62,7 +62,7 @@ This vision translates to the following functional commitments:
 Discourse is **100% free** and **open-source**. We encourage and support an active, healthy community that
 accepts contributions from the public, and we'd like you to be a part of that community.
 
-In order to be prepared for contributing to Discourse, please:
+Before contributing to Discourse, please:
 
 1. Review the **VISION** section above, which will help you understand the needs of the team, and the focus of the project,
 2. Read and sign the **[Electronic Discourse Forums Contribution License Agreement](https://docs.google.com/a/discourse.org/spreadsheet/viewform?formkey=dGUwejFfbDhDYXR4bVFMRG1TUENqLWc6MQ)**, to confirm you've read and acknowledged the legal aspects of your contributions, and
