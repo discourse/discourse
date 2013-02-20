@@ -200,6 +200,7 @@
   section.post-menu-area {
     .discourse-no-touch & {
       opacity: 0.2;
+      @include fade-soft(1s);
     }
   }
 

@@ -484,6 +484,13 @@ describe User do
       SiteSetting.stubs(:email_domains_blacklist).returns('fakemail.com')
       u.should be_valid
     end
+
+    it 'should be used when email is being changed' do
+      SiteSetting.stubs(:email_domains_blacklist).returns('mailinator.com')
+      u = Fabricate(:user, email: 'good@gmail.com')
+      u.email = 'nope@mailinator.com'
+      u.should_not be_valid
+    end
   end
 
   describe 'passwords' do
