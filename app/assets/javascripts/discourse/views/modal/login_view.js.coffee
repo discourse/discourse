@@ -86,7 +86,7 @@ window.Discourse.LoginView = window.Discourse.ModalBodyView.extend Discourse.Pre
       accountEmail: options['email']
       accountUsername: options['username']
       accountName: options['name']
-      authOptions: options
+      authOptions: Em.Object.create(options)
 
   mouseMove: (e) ->
     @set('lastX', e.screenX)
