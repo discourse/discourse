@@ -4,6 +4,7 @@ require 'spec_helper'
 
 describe Category do
 
+  it { should validate_presence_of :user_id }
   it { should validate_presence_of :name }
 
   it 'validates uniqueness of name' do
