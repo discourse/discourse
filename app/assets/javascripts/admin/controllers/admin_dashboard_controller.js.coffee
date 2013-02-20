@@ -20,7 +20,7 @@ window.Discourse.AdminDashboardController = Ember.Controller.extend
   
   priorityClass: (->
     if @get('versionCheck.critical_updates')
-      'critical'
+      'version-check critical'
     else
-      'normal'
+      'version-check normal'
   ).property('versionCheck')
