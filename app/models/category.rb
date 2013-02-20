@@ -10,6 +10,7 @@ class Category < ActiveRecord::Base
   has_many :category_featured_users
   has_many :featured_users, through: :category_featured_users, source: :user
 
+  validates_presence_of :user_id
   validates_presence_of :name
   validates_uniqueness_of :name
   validate :uncategorized_validator
