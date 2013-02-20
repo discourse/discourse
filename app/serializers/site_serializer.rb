@@ -1,13 +1,21 @@
 class SiteSerializer < ApplicationSerializer
 
-  attributes :default_archetype, :notification_types
+  attributes :default_archetype, 
+             :notification_types,
+             :post_types
+
   has_many :categories, embed: :objects
   has_many :post_action_types, embed: :objects
   has_many :trust_levels, embed: :objects
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
 
+
   def default_archetype
     Archetype.default
   end
 
+  def post_types
+    {regular: Post::REGULAR, moderator_action: Post::MODERATOR_ACTION}
+  end
+  
 end

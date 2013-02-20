@@ -159,7 +159,7 @@ var EXTRA_PARENT_PATHS_RE = /^(?:\.\.\/)*(?:\.\.$)?/;
  * }
  */
 function collapse_dots(path) {
-  if (path === null) { return null; }
+  if (path == null) { return null; }
   var p = normPath(path);
   // Only /../ left to flatten
   var r = PARENT_DIRECTORY_HANDLER_RE;
@@ -1875,7 +1875,7 @@ var html = (function(html4) {
       var parts = [];
       var lastPos = 0;
       var m;
-      while ((m = re.exec(str)) !== null) {
+      while ((m = re.exec(str)) != null) {
         parts.push(str.substring(lastPos, m.index));
         parts.push(m[0]);
         lastPos = m.index + m[0].length;
@@ -2085,7 +2085,7 @@ var html = (function(html4) {
         for (var i = 0, n = attribs.length; i < n; i += 2) {
           var attribName = attribs[i],
               value = attribs[i + 1];
-          if (value !== null && value !== void 0) {
+          if (value != null && value !== void 0) {
             out.push(' ', attribName, '="', escapeAttrib(value), '"');
           }
         }
@@ -2241,7 +2241,7 @@ var html = (function(html4) {
            html4.ATTRIBS.hasOwnProperty(attribKey))) {
         atype = html4.ATTRIBS[attribKey];
       }
-      if (atype !== null) {
+      if (atype != null) {
         switch (atype) {
           case html4.atype['NONE']: break;
           case html4.atype['SCRIPT']:
@@ -2318,7 +2318,7 @@ var html = (function(html4) {
             if (value && '#' === value.charAt(0)) {
               value = value.substring(1);  // remove the leading '#'
               value = opt_nmTokenPolicy ? opt_nmTokenPolicy(value) : value;
-              if (value !== null && value !== void 0) {
+              if (value != null && value !== void 0) {
                 value = '#' + value;  // restore the leading '#'
               }
             } else {

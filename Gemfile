@@ -66,8 +66,6 @@ gem 'discourse_emoji', path: 'vendor/gems/discourse_emoji'
 # in production environments by default.
 # allow everywhere for now cause we are allowing asset debugging in prd
 group :assets do
-  gem 'coffee-rails'
-  gem 'coffee-script'  # need this to compile coffee on the fly 
   gem 'sass'
   gem 'sass-rails'
   gem 'turbo-sprockets-rails3'
@@ -79,6 +77,7 @@ group :test do
 end
 
 group :test, :development do
+  gem 'guard-jshint-on-rails'
   gem 'certified'
   gem 'fabrication'
   gem 'guard-jasmine'

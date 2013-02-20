@@ -54,7 +54,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:imgur_api_key, '')
   setting(:imgur_endpoint, "http://api.imgur.com/2/upload.json")
   setting(:max_image_width, 690)
-  setting(:category_featured_topics, 6)
+  client_setting(:category_featured_topics, 6)
   setting(:topics_per_page, 30)
   setting(:posts_per_page, 20)
   setting(:invite_expiry_days, 14)

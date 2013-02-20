@@ -40,15 +40,15 @@
 //   }; 
 //   
 //   var elementMap = {};
-//   $.each(elements, function(idx,e){
+//   jQuery.each(elements, function(idx,e){
 //     elementMap[e] = true;
 //   });
 // 
 //   var scrubAttributes = function(e){
-//     $.each(e.attributes, function(idx, attr){
+//     jQuery.each(e.attributes, function(idx, attr){
 // 
-//       if($.inArray(attr.name, attributes.all) === -1 &&
-//          $.inArray(attr.name, attributes[e.tagName.toLowerCase()]) === -1) {
+//       if(jQuery.inArray(attr.name, attributes.all) === -1 &&
+//          jQuery.inArray(attr.name, attributes[e.tagName.toLowerCase()]) === -1) {
 //            e.removeAttribute(attr.name);
 //          } 
 //     });
@@ -74,7 +74,7 @@
 //       e.parentNode.removeChild(e);
 //     }
 //     else {
-//       $.each(clean.children, function(idx, inner){
+//       jQuery.each(clean.children, function(idx, inner){
 //         scrubTree(inner);
 //       });
 //     }

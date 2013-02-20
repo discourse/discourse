@@ -1,3 +1,4 @@
+/*global historyState:true */
 (function() {
   /**
   @module ember
@@ -18,8 +19,8 @@
   Ember.DiscourseLocation = Ember.Object.extend({
     init: function() {
       set(this, 'location', get(this, 'location') || window.location);
-      if ( $.inArray('state', $.event.props) < 0 )
-        $.event.props.push('state')
+      if ( jQuery.inArray('state', jQuery.event.props) < 0 )
+        jQuery.event.props.push('state')
       this.initState();
     },
 
@@ -150,7 +151,7 @@
       var guid = Ember.guidFor(this),
           self = this;
 
-      Ember.$(window).bind('popstate.ember-location-'+guid, function(e) {
+      jQuery(window).bind('popstate.ember-location-'+guid, function(e) {
         if (e.state) {
           var currentState = self.get('currentState');
           if (currentState) {
@@ -184,7 +185,7 @@
     willDestroy: function() {
       var guid = Ember.guidFor(this);
 
-      Ember.$(window).unbind('popstate.ember-location-'+guid);
+      Ember.jQuery(window).unbind('popstate.ember-location-'+guid);
     }
   });
 

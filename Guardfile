@@ -22,9 +22,17 @@ else
   jasmine_options[:server_timeout] = 300
 end
 
-guard 'jasmine', jasmine_options do watch(%r{spec/javascripts/spec\.(js\.coffee|js|coffee)$})         { "spec/javascripts" }
-  watch(%r{spec/javascripts/.+_spec\.(js\.coffee|js|coffee)$})
-  watch(%r{app/assets/javascripts/(.+?)\.(js\.coffee|js|coffee)$})  { "spec/javascripts" }
+guard 'jasmine', jasmine_options do watch(%r{spec/javascripts/spec\.js$})         { "spec/javascripts" }
+  watch(%r{spec/javascripts/.+_spec\.js$})
+  watch(%r{app/assets/javascripts/(.+?)\.js$})  { "spec/javascripts" }
+end
+
+# verify that we pass jshint
+# see https://github.com/MrOrz/guard-jshint-on-rails
+guard 'jshint-on-rails', config_path: 'config/jshint.yml' do
+  # watch for changes to application javascript files
+  watch(%r{^app/assets/javascripts/.*\.js$})
+  watch(%r{^spec/javascripts/.*\.js$})
 end
 
 guard 'rspec', :focus_on_failed => true, :cli => "--drb" do
@@ -44,6 +52,7 @@ guard 'rspec', :focus_on_failed => true, :cli => "--drb" do
   watch(%r{^app/views/(.+)/.*\.(erb|haml)$})          { |m| "spec/requests/#{m[1]}_spec.rb" }
   
 end
+
 
 module ::Guard
   class AutoReload < ::Guard::Guard
@@ -85,3 +94,5 @@ guard :autoreload do
   watch(/\.sass\.erb$/)
   watch(/\.handlebars$/)
 end
+
+

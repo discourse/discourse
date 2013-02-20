@@ -183,6 +183,9 @@ GEM
       guard (>= 1.1.0)
       multi_json
       thor
+    guard-jshint-on-rails (0.0.2)
+      guard (>= 1.0.0)
+      jshint_on_rails (>= 1.0.2)
     guard-rspec (2.4.0)
       guard (>= 1.1)
       rspec (~> 2.11)
@@ -215,6 +218,7 @@ GEM
     jquery-rails (2.2.0)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
+    jshint_on_rails (1.0.2)
     json (1.7.7)
     jwt (0.1.5)
       multi_json (>= 1.0)
@@ -453,8 +457,6 @@ DEPENDENCIES
   binding_of_caller
   certified
   clockwork
-  coffee-rails
-  coffee-script
   discourse_emoji!
   discourse_plugin!
   em-redis
@@ -466,6 +468,7 @@ DEPENDENCIES
   fastimage
   fog
   guard-jasmine
+  guard-jshint-on-rails
   guard-rspec
   guard-spork
   has_ip_address

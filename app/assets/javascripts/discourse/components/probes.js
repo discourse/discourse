@@ -51,19 +51,19 @@ someFunction = window.probes.measure(someFunction, "someFunction");
     }
     else 
     {
-      nameParam = options["name"];
+      nameParam = options.name;
 
-      if (nameParam === "measure" || nameParam == "clear") {
-        throw Error("can not be called measure or clear"); 
+      if (nameParam === "measure" || nameParam === "clear") {
+        throw new Error("can not be called measure or clear"); 
       }
       
       if (!nameParam)
       {
-        throw Error("you must specify the name option measure(fn, {name: 'some name'})");
+        throw new Error("you must specify the name option measure(fn, {name: 'some name'})");
       }
 
-      before = options["before"];
-      after = options["after"];
+      before = options.before;
+      after = options.after;
     }
 
     var now = (function(){
@@ -74,11 +74,11 @@ someFunction = window.probes.measure(someFunction, "someFunction");
 
     return function() {
       var name = nameParam;
-      if (typeof name == "function"){
+      if (typeof name === "function"){
         name = nameParam(arguments);
       }
       var p = window.probes[name];
-      var owner = start === null;
+      var owner = (!start);
       
       if (before) {
         // would like to avoid try catch so its optimised properly by chrome
