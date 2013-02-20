@@ -5,7 +5,7 @@
 <h1>
 {{#if view.topic.title}}
   {{view Discourse.TopicStatusView topicBinding="view.topic"}}
-  <a class='topic-link' href='{{unbound view.topic.url}}'>{{view Discourse.AutoSizedTextView tagName="span" class="auto-sizer" contentBinding="view.topic.title"}}</a>
+  <a class='topic-link' href='{{unbound view.topic.url}}'>{{view.topic.title}}</a>
 {{else}}
   {{#if view.topic.missing}}
     {{i18n topic.not_found.title}}
