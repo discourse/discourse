@@ -195,12 +195,10 @@ window.Discourse = Ember.Application.createWithMixins
 
             window.probes.clear()
 
-
     Ember.View.prototype.renderToBuffer = window.probes.measure Ember.View.prototype.renderToBuffer, "renderToBuffer"
 
     Discourse.routeTo = topLevel(Discourse.routeTo, "Discourse.routeTo")
     Ember.run.end = topLevel(Ember.run.end, "Ember.run.end")
-
     return
 
   authenticationComplete: (options)->
@@ -239,7 +237,7 @@ window.Discourse = Ember.Application.createWithMixins
 
     # possibly move this to dev only
     Discourse.MessageBus.subscribe "/file-change", (data)->
-      Ember.TEMPLATES["empty"] = Handlebars.compile("")
+      Ember.TEMPLATES["empty"] = Handlebars.compile("<div></div>")
       data.each (me)->
         if me == "refresh"
           document.location.reload(true)
