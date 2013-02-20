@@ -1,15 +1,14 @@
 <a href="http://www.discourse.org/">![Logo](https://raw.github.com/discourse/discourse/master/images/discourse.png)</a>
 
-Discourse is the 100% open source, next-generation discussion platform built for the next 10 years of the Internet.
+Discourse is the 100% open source, next-generation discussion platform built for the next decade of the Internet.
 
 Whenever you need ...
 
-* a mailing list
-* a forum to discuss something
-* a chat room where you can type paragraphs
+- a mailing list
+- a forum to discuss something
+- a chat room where you can type paragraphs
 
 ... consider Discourse.
-
 
 ## Getting Started
 
@@ -19,36 +18,43 @@ If you're familiar with how Rails works and are comfortable setting up your own 
 
 ### Requirements
 
-* PostgreSQL 9.1+
-* Redis 2+
+- PostgreSQL 9.1+
+- Redis 2.6+
+- Ruby 1.9.3+
 
 ## Vision
 
-This is the **Civilized Discourse Construction Kit**, a fully open-source package of forum software that is free to use and contribute to. Discourse embraces the changes that are necessary to evolve forum software, namely:
+This is a **Civilized Discourse Construction Kit**, an 100% open-source discussion platform that is free to use and contribute to -- forever. 
 
-* A **flattened discussion**, which avoids the pains of threaded forums, and delivers a more robust, intuitive interface to join a conversation at any point.
-* A **self-learning system**, capable of examining the behavior of the community, and adapting to budding moderators and forum trolls alike.
-* A **seamless web-only** interface that delivers usability on both the desktop and the tablet, without the need for a native app.
-* A **contemporary, robust technology stack**, so that both users and administrators alike have another choice BESIDES php.
+Key Discourse mission goals:
+
+- **Flattened discussion**, to avoid the akwardness of threaded discussion, while attaching replies which can be expanded in place for additional context.
+- A **user trust system** that grants users additional rights to assist in moderating the forum as they participate in good faith over time. The goal is for the forum to be nearly self-moderating in the absence of any formal moderators, although excellent moderators accelerate the process greatly.
+- An **advanced JavaScript app** which runs in modern browsers, but delivers usability on both the desktop and the tablet, without the need for a native app.
+- A **contemporary, robust technology stack**, free of legacy PHP and MySQL constraints limiting developers and administrators.
 
 The Discourse team wishes to **foster an active community of contributors**, all of whom commit to delivering this continued vision, and ensure that online discussions can grow and thrive in an Internet age dominated by micro-blogging and diminishing attention spans.
 
 This vision translates to the following functional commitments:
 
-1. Support all contemporary browsers on the desktop:
-  * Internet Explorer 9.0, 10.0+
-  * Firefox 16+
-  * Google Chrome *infinite*
-   
-2. Supporting the latest generation of tablets:  
-  * iPad 2+
-  * Android 4.1+ on 7" and 10"
-  * Windows 8
+1. Support only modern browsers on the desktop:
 
-3. Deliver support for mobile/smartphones *as soon as possible*:
-  * Windows Phone 8
-  * iPhone 4+
-  * Android 4.0+
+  - Internet Explorer 9.0, 10.0+
+  - Firefox 16+
+  - Google Chrome *infinite*
+  - Safari 5+
+   
+2. Support the latest generation of tablets:
+
+  - iPad 2+
+  - Android 4.1+ on 7" and 10"
+  - Windows 8
+
+3. Deliver support for the latest generation of small screen mobile/smartphones *as soon as possible*:
+
+  - Windows Phone 8
+  - iOS 5+
+  - Android 4.0+
 
 ## Contributing
 
@@ -63,9 +69,9 @@ In order to be prepared for contributing to Discourse, please:
 1. Review the **VISION** section above, which will help you understand the needs of the team, and the focus of the project,
 2. Read & sign the **[Electronic Discourse Forums Contribution License Agreement](https://docs.google.com/a/discourse.org/spreadsheet/viewform?formkey=dGUwejFfbDhDYXR4bVFMRG1TUENqLWc6MQ)**, to confirm you've read and acknowledged the legal aspects of your contributions, and
 3. Dig into **[CONTRIBUTING.MD](https://github.com/discourse/discourse/blob/master/docs/CONTRIBUTING.md)**, which houses all of the necessary info to:
-   * submit bugs,
-   * request new features, and
-   * step you through the entire process of preparing your code for a Pull Request.
+   - submit bugs,
+   - request new features, and
+   - step you through the entire process of preparing your code for a Pull Request.
 
 **We look forward to seeing your cool stuff!**
 
@@ -97,9 +103,9 @@ Releases will be numbered with the following format:
 
 And constructed with the following guidelines:
 
-* Breaking backward compatibility bumps the major (and resets the minor and patch)
-* New additions without breaking backward compatibility bumps the minor (and resets the patch)
-* Bug fixes and misc changes bumps the patch
+- Breaking backward compatibility bumps the major (and resets the minor and patch)
+- New additions without breaking backward compatibility bumps the minor (and resets the patch)
+- Bug fixes and misc changes bumps the patch
 
 For more information on SemVer, please visit http://semver.org/.
 
