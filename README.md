@@ -12,25 +12,28 @@ Whenever you need ...
 
 ## Getting Started
 
-If you're interested in helping us develop Discourse, please start with our **[Discourse Vagrant Developer Guide](https://github.com/discourse/discourse/blob/master/docs/VAGRANT.md)**, which includes instructions to get up and running in a development environment using a virtual machine. It's the easiest way to hack on Discourse.
+If you're interested in helping us develop Discourse, please start with our **[Discourse Vagrant Developer Guide](https://github.com/discourse/discourse/blob/master/docs/VAGRANT.md)**, which includes instructions to get up and running in a development environment using a virtual machine. It's the easiest way to hack on Discourse!
 
-If you're familiar with how Rails works and are comfortable setting up your own environment, you can use our **[Discourse Advanced Developer Guide](https://github.com/discourse/discourse/blob/master/docs/DEVELOPER-ADVANCED.md)**
+If you're familiar with how Rails works and are comfortable setting up your own environment, use our **[Discourse Advanced Developer Guide](https://github.com/discourse/discourse/blob/master/docs/DEVELOPER-ADVANCED.md)**.
 
 ### Requirements
 
+- Ruby 1.9.3+
 - PostgreSQL 9.1+
 - Redis 2.6+
-- Ruby 1.9.3+
 
 ## Vision
 
-This is a **Civilized Discourse Construction Kit**, an 100% open-source discussion platform that is free to use and contribute to -- forever. 
+Discourse is a **Civilized Discourse Construction Kit**, an 100% open-source discussion platform that is free for everyone to use and contribute to -- forever. 
 
 Key Discourse mission goals:
 
-- **Flattened discussion**, to avoid the akwardness of threaded discussion, while attaching replies which can be expanded in place for additional context.
+- A **flattened discussion**, to avoid the akwardness of threaded discussion, while allowing replies to be expanded for additional context.
+
 - A **user trust system** that grants users additional rights to assist in moderating the forum as they participate in good faith over time. The goal is for the forum to be nearly self-moderating in the absence of any formal moderators, although excellent moderators accelerate the process greatly.
-- An **advanced JavaScript app** which runs in modern browsers, but delivers usability on both the desktop and the tablet, without the need for a native app.
+
+- An **advanced JavaScript app** which runs in modern browsers and works identically on desktop and tablet, without the need for a native app.
+
 - A **contemporary, robust technology stack**, free of legacy PHP and MySQL constraints limiting developers and administrators.
 
 The Discourse team wishes to **foster an active community of contributors**, all of whom commit to delivering this continued vision, and ensure that online discussions can grow and thrive in an Internet age dominated by micro-blogging and diminishing attention spans.
@@ -38,20 +41,15 @@ The Discourse team wishes to **foster an active community of contributors**, all
 This vision translates to the following functional commitments:
 
 1. Support only modern browsers on the desktop:
-
   - Internet Explorer 9.0, 10.0+
   - Firefox 16+
-  - Google Chrome *infinite*
-  - Safari 5+
-   
-2. Support the latest generation of tablets:
-
+  - Google Chrome 23+
+  - Safari 5+   
+2. Support the latest generation of tablets, 7" or larger
   - iPad 2+
-  - Android 4.1+ on 7" and 10"
+  - Android 4.1+
   - Windows 8
-
 3. Deliver support for the latest generation of small screen mobile/smartphones *as soon as possible*:
-
   - Windows Phone 8
   - iOS 5+
   - Android 4.0+
@@ -67,7 +65,7 @@ accepts contributions from the public, and we'd like you to be a part of that co
 In order to be prepared for contributing to Discourse, please:
 
 1. Review the **VISION** section above, which will help you understand the needs of the team, and the focus of the project,
-2. Read & sign the **[Electronic Discourse Forums Contribution License Agreement](https://docs.google.com/a/discourse.org/spreadsheet/viewform?formkey=dGUwejFfbDhDYXR4bVFMRG1TUENqLWc6MQ)**, to confirm you've read and acknowledged the legal aspects of your contributions, and
+2. Read and sign the **[Electronic Discourse Forums Contribution License Agreement](https://docs.google.com/a/discourse.org/spreadsheet/viewform?formkey=dGUwejFfbDhDYXR4bVFMRG1TUENqLWc6MQ)**, to confirm you've read and acknowledged the legal aspects of your contributions, and
 3. Dig into **[CONTRIBUTING.MD](https://github.com/discourse/discourse/blob/master/docs/CONTRIBUTING.md)**, which houses all of the necessary info to:
    - submit bugs,
    - request new features, and
@@ -77,7 +75,7 @@ In order to be prepared for contributing to Discourse, please:
 
 ## Expertise
 
-Discourse implements a variety of open source tech. You may wish to familiarize yourself with the various components that Discourse is built on, in order to be an effective contributor:
+In order to be an effective contributor, familiarize yourself with the various open source omponents that Discourse is built on:
 
 ### Languages/Frameworks
 
