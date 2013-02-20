@@ -29,7 +29,9 @@ module Discourse
 
     config.assets.paths += %W(#{config.root}/config/locales)
 
-    config.assets.precompile += ['admin.js', 'admin.css', 'shiny/shiny.css', 'preload_store.js', 'jquery.js']
+    config.assets.precompile += [
+      'admin.js', 'admin.css', 'shiny/shiny.css', 'preload_store.js', 'jquery.js', 'defer/html-sanitizer-bundle.js'
+    ]
 
     # Activate observers that should always be running.
     config.active_record.observers = [

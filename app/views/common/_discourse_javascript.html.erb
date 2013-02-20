@@ -1,25 +1,41 @@
-    <%- if mini_profiler_enabled? %>
-      <%- Rack::MiniProfiler.step "application" do %>
-        <%= javascript_include_tag "application" %>
-      <%-end%>
-    
-      <%- Rack::MiniProfiler.step "admin" do %> 
-        <%= javascript_include_tag "admin"%>
-      <%-end%>
-    <%- else %>
-      <%= javascript_include_tag "application" %>
-      <%- if admin? %>
-        <%= javascript_include_tag "admin"%>
-      <%- end %>
-    <%- end%>
-    
-    <script>
-      Discourse.CDN = '<%= Rails.configuration.action_controller.asset_host  %>';
-      Discourse.BaseUrl = '<%= RailsMultisite::ConnectionManagement.current_hostname  %>';
-      Discourse.Environment = '<%= Rails.env %>';
-      window.Discourse.Router.map(function() {
-        return Discourse.routeBuilder.call(this);
-      });
-      Discourse.start()
-      Discourse.initialize()
-    </script>
+<script>
+  window.assetPath = (function(){
+
+    // TODO: automate this to grab from the manifest, Rails voodoo should be able to get it
+    var map = {
+      'defer/html-sanitizer-bundle': <%= asset_path('defer/html-sanitizer-bundle').inspect.html_safe %>
+    };
+
+    var assetPath = function(asset){
+      return map[asset]; 
+    };
+
+    return assetPath;
+  })();
+</script>
+
+<%- if mini_profiler_enabled? %>
+  <%- Rack::MiniProfiler.step "application" do %>
+    <%= javascript_include_tag "application" %>
+  <%-end%>
+
+  <%- Rack::MiniProfiler.step "admin" do %> 
+    <%= javascript_include_tag "admin"%>
+  <%-end%>
+<%- else %>
+  <%= javascript_include_tag "application" %>
+  <%- if admin? %>
+    <%= javascript_include_tag "admin"%>
+  <%- end %>
+<%- end%>
+
+<script>
+  Discourse.CDN = '<%= Rails.configuration.action_controller.asset_host  %>';
+  Discourse.BaseUrl = '<%= RailsMultisite::ConnectionManagement.current_hostname  %>';
+  Discourse.Environment = '<%= Rails.env %>';
+  window.Discourse.Router.map(function() {
+    return Discourse.routeBuilder.call(this);
+  });
+  Discourse.start()
+  Discourse.initialize()
+</script>

@@ -97,10 +97,7 @@ Discourse.Utilities =
       range.select()
 
   markdownConverter: (opts)->
-    if opts.sanitize
-      converter = new Markdown.getSanitizingConverter()
-    else
-      converter = new Markdown.Converter()
+    converter = new Markdown.Converter()
 
     mentionLookup = opts.mentionLookup if opts
     mentionLookup = mentionLookup || Discourse.Mention.lookupCache
@@ -156,6 +153,12 @@ Discourse.Utilities =
 
     converter.hooks.chain "postConversion", (text) =>
       Discourse.BBCode.format(text, opts)
+
+
+    if opts.sanitize
+      converter.hooks.chain "postConversion", (text) =>
+        return "" unless window.sanitizeHtml
+        sanitizeHtml(text)
 
     converter
 

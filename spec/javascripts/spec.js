@@ -40,6 +40,7 @@
 //= require_tree ../../app/assets/javascripts/discourse/templates
 //= require_tree ../../app/assets/javascripts/discourse/routes
 
+//= require_tree ../../app/assets/javascripts/defer
 
 //= require_tree .
 

@@ -60,11 +60,11 @@ window.Discourse.ComposerView = window.Discourse.View.extend
   fetchNewUserEducation: (->
 
     # If creating a topic, use topic_count, otherwise post_count
-    count = if @get('content.creatingTopic') then Discourse.get('currentUser.topic_count') else Discourse.get('currentUser.reply_count')    
+    count = if @get('content.creatingTopic') then Discourse.get('currentUser.topic_count') else Discourse.get('currentUser.reply_count')
     if (count >= Discourse.SiteSettings.educate_until_posts)
       @set('educationClosed', true)
       @set('educationContents', '')
-      return 
+      return
 
     return unless @get('controller.hasReply')
 
@@ -106,7 +106,7 @@ window.Discourse.ComposerView = window.Discourse.View.extend
       $('#new-user-education').css('bottom', sizePx)
   ).observes('content.composeState')
 
-  keyUp: (e) -> 
+  keyUp: (e) ->
     controller = @get('controller')
     controller.checkReplyLength()
     controller.hitEsc() if e.which == 27
@@ -138,6 +138,8 @@ window.Discourse.ComposerView = window.Discourse.View.extend
     #    but if you start replying to another topic it will get the avatars wrong
     @wmdInput = $wmdInput = $('#wmd-input')
     return if $wmdInput.length == 0 || $wmdInput.data('init') == true
+
+    $LAB.script(assetPath('defer/html-sanitizer-bundle'))
 
     Discourse.ComposerView.trigger("initWmdEditor")
 
