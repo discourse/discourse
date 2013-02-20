@@ -506,7 +506,7 @@ class User < ActiveRecord::Base
     end
 
     def email_validator
-      if (setting = SiteSetting.email_domains_blacklist).present?
+      if new_record? and (setting = SiteSetting.email_domains_blacklist).present?
         domains = setting.gsub('.', '\.')
         regexp = Regexp.new("@(#{domains})", true)
         if self.email =~ regexp

@@ -478,6 +478,12 @@ describe User do
       SiteSetting.stubs(:email_domains_blacklist).returns('trashmail.net')
       Fabricate.build(:user, email: 'good@trashmailinet.com').should be_valid
     end
+
+    it 'should not be used to validate existing records' do
+      u = Fabricate(:user, email: 'in_before_blacklisted@fakemail.com')
+      SiteSetting.stubs(:email_domains_blacklist).returns('fakemail.com')
+      u.should be_valid
+    end
   end
 
   describe 'passwords' do
