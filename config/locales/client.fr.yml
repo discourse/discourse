@@ -345,11 +345,12 @@ fr:
       notifications:
         title: ''
         reasons:
-          "3_2": 'Vous receverez des notifications car vous suivez attentivement cette discussion.'
-          "3_1": "Vous receverez des notifications car vous avez créé cette discussion."
-          "2_4": 'Vous receverez des notifications car vous avez posté une réponse dans cette discussion.'
-          "2_2": 'Vous receverez des notifications car vous suivez cette discussion.'
-          "2": 'Vous receverez des notifications car vous <a href="/users/{{username}}/preferences">lu cette discussion</a>.'
+          "3_2": 'Vous recevrez des notifications car vous suivez attentivement cette discussion.'
+          "3_1": "Vous recevrez des notifications car vous avez créé cette discussion."
+          "3": "Vous recevrez des notifications car vous suivez cette discussion."
+          "2_4": 'Vous recevrez des notifications car vous avez posté une réponse dans cette discussion.'
+          "2_2": 'Vous recevrez des notifications car vous suivez cette discussion.'
+          "2": 'Vous recevrez des notifications car vous <a href="/users/{{username}}/preferences">lu cette discussion</a>.'
           "1": 'Vous serez notifié seulement si un utilisateur mentionne votre @pseudo ou réponds à vos messages.'
           "1_2": 'Vous serez notifié seulement si un utilisateur mentionne votre @pseudo ou réponds à vos messages.'
           "0": 'Vous ignorez toutes les notifications de cette discussion.'
@@ -362,10 +363,10 @@ fr:
           description: "vous serez notifié des messages non lus, des mentions de votre @pseudo et des réponses à vos messages."
         regular:
           title: "Normal"
-          description: "vous receverez des notifications seuelement si un utilisateur mentionne votre @pseudo ou répond à un de vos messages"
+          description: "vous recevrez des notifications seuelement si un utilisateur mentionne votre @pseudo ou répond à un de vos messages"
         muted:
           title: "Silencieux"
-          description: "vous ne receverez aucune notification de cette discussion et elle n'apparaitra pas dans l'onglet des discussions non lues"
+          description: "vous ne recevrez aucune notification de cette discussion et elle n'apparaitra pas dans l'onglet des discussions non lues"
 
       actions:
         delete: "Supprimer la discussion"
@@ -590,6 +591,13 @@ fr:
 
       dashboard:
         title: "Panel d'administration"
+        welcome: "Bienvenue dans la section administration."
+        version: "Version de Discourse"
+        up_to_date: "Vous utilisez la dernière version de Discourse."
+        critical_available: "Une mise à jour critique est disponible."
+        updates_available: "Des mises à jour sont disponibles."
+        please_upgrade: "Veuillez mettre à jour !"
+        latest_version: "Dernière version"
 
       flags:
         title: "Signalements"
