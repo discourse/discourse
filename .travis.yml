@@ -7,7 +7,13 @@ before_script:
   - psql -c 'create database discourse_test;' -U postgres
   - rake db:migrate
   - npm install -g jshint
+  - jshint .
 script: 'rake spec && bundle exec guard-jasmine --server-timeout=60'
 services:
   - redis-server
   
+  before_script:
+	- ""
+	- "git submodule update --init"
+script: 
+	- "jshint ."
