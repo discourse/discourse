@@ -2,30 +2,30 @@
 
 <p>The page you requested doesn't exist on this discussion forum. Perhaps we can help find it, or another topic like it:</p>
 <table>
-    <tr>
-      <td style="vertical-align:top; padding:0 20px 20px 0;">
-        <h2>Popular topics</h2>
-        <% @popular.each do |t| %>
-          <a href='<%= t.relative_url %>'><%= t.title %></a><br/>
-        <% end %>
-        <br/>
-        <a href="/popular" class="btn">See More&hellip;</a>
+  <tr>
+    <td style="vertical-align:top; padding:0 20px 20px 0;">
+      <h2>Popular topics</h2>
+      <% @popular.each do |t| %>
+        <%= link_to t.title, t.relative_url %><br/>
+      <% end %>
+      <br/>
+      <a href="/popular" class="btn">See More&hellip;</a>
     </td>
-      <td style="vertical-align:top; padding:0 0 20px 0;">
-        <h2>Recent topics</h2>
-        <% @recent.each do |t| %>
-          <a href='<%= t.relative_url %>'><%= t.title %></a><br/>
-        <% end %>
-        <br/>
-        <a href="/popular" class="btn">See More&hellip;</a>
+    <td style="vertical-align:top; padding:0 0 20px 0;">
+      <h2>Recent topics</h2>
+      <% @recent.each do |t| %>
+        <%= link_to t.title, t.relative_url %><br/>
+      <% end %>
+      <br/>
+      <a href="/popular" class="btn">See More&hellip;</a>
     </td>
-    </tr>
+  </tr>
 </table>
 <h2>Search for this topic</h2>
 <p>
-    <form action='http://google.com'>
+  <form action='http://google.com'>
     <input type="text" name='q' value="site:<%= local_domain %> <%= @slug %>">
     <!--<input type="button" class="btn" value="Search Here" onclick="alert('single page search results not implemented yet');" />-->
     <input type="submit" class="btn btn-primary" value="Search Google" />
-    </form>
+  </form>
 </p>
