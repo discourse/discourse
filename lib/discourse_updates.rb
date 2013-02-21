@@ -5,8 +5,9 @@ module DiscourseUpdates
     def check_version
       DiscourseVersionCheck.new(
         latest_version: latest_version || Discourse::VERSION::STRING,
+        critical_updates: critical_update_available?,
         installed_version: Discourse::VERSION::STRING,
-        critical_updates: critical_update_available?
+        installed_sha: (Discourse.git_version == 'unknown' ? nil : Discourse.git_version)
         # TODO: more info, like links and release messages
       )
     end

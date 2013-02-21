@@ -87,10 +87,10 @@
     margin-left: 24px;
   }
 
-  .critical .version-notes .normal-note {
+  &.critical .version-notes .normal-note {
     display: none;
   }
-  .normal .version-notes .critical-note {
+  &.normal .version-notes .critical-note {
     display: none;
   }
 

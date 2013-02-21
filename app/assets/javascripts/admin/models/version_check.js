@@ -4,7 +4,7 @@
 
   Discourse.VersionCheck.reopenClass({
     find: function() {
-      var promise = new RSVP.Promise()
+      var promise = new RSVP.Promise();
       jQuery.ajax({
         url: '/admin/version_check',
         dataType: 'json',

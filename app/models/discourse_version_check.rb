@@ -5,7 +5,7 @@ class DiscourseVersionCheck
   include ActiveAttr::MassAssignment
   include ActiveModel::Serialization
 
-  attr_accessor :latest_version, :installed_version, :critical_updates
+  attr_accessor :latest_version, :critical_updates, :installed_version, :installed_sha
 
   def active_model_serializer
     DiscourseVersionCheckSerializer

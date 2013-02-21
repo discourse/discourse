@@ -7,8 +7,9 @@
     {{else}}
       {{i18n admin.dashboard.version}}: <span class="version-number">{{ versionCheck.installed_version }}</span>
 
-      {{log versionCheck}}
-      
+      {{#if versionCheck.installed_sha}}
+        <span class="git-version">(<a {{bindAttr href="gitLink"}} target="_blank">{{shortSha}}</a>)</span>
+      {{/if}}
 
       <span class="version-notes">
         {{#if upToDate }}
