@@ -166,6 +166,7 @@
         result += ", full:true";
       }
       result += "\"]\n" + sansQuotes + "\n[/quote]\n\n";
+      return result;
     },
 
     formatQuote: function(text, opts) {

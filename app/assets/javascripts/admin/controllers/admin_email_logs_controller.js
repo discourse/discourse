@@ -1,9 +1,11 @@
 (function() {
 
   window.Discourse.AdminEmailLogsController = Ember.ArrayController.extend(Discourse.Presence, {
+    
     sendTestEmailDisabled: (function() {
       return this.blank('testEmailAddress');
     }).property('testEmailAddress'),
+
     sendTestEmail: function() {
       var _this = this;
       this.set('sentTestEmail', false);
@@ -19,6 +21,7 @@
       });
       return false;
     }
+    
   });
 
 }).call(this);

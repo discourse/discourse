@@ -3,6 +3,7 @@
   window.Discourse.AdminSiteSettingsController = Ember.ArrayController.extend(Discourse.Presence, {
     filter: null,
     onlyOverridden: false,
+
     filteredContent: (function() {
       var filter,
         _this = this;
@@ -32,16 +33,20 @@
         }
       });
     }).property('filter', 'content.@each', 'onlyOverridden'),
+
     resetDefault: function(setting) {
       setting.set('value', setting.get('default'));
       return setting.save();
     },
+
     save: function(setting) {
       return setting.save();
     },
+
     cancel: function(setting) {
       return setting.resetValue();
     }
+    
   });
 
 }).call(this);

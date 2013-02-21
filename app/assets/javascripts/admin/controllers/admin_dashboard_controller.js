@@ -3,6 +3,7 @@
   window.Discourse.AdminDashboardController = Ember.Controller.extend({
     loading: true,
     versionCheck: null,
+
     upToDate: (function() {
       if (this.versionCheck) {
         return this.versionCheck.latest_version === this.versionCheck.installed_version;
@@ -10,6 +11,7 @@
         return true;
       }
     }).property('versionCheck'),
+
     updateIconClasses: (function() {
       var classes;
       classes = "icon icon-warning-sign ";
@@ -20,6 +22,7 @@
       }
       return classes;
     }).property('versionCheck'),
+
     priorityClass: (function() {
       if (this.get('versionCheck.critical_updates')) {
         return 'version-check critical';
@@ -27,6 +30,7 @@
         return 'version-check normal';
       }
     }).property('versionCheck')
+    
   });
 
 }).call(this);

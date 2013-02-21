@@ -1,17 +1,23 @@
 (function() {
 
-  window.Discourse.VersionCheck = Discourse.Model.extend({});
+  window.Discourse.VersionCheck = Discourse.Model.extend({
+    hasInstalledSha: function() {
+      console.log( 'hello??' );
+      return( this.get('installed_sha') && this.get('installed_sha') != 'unknown' );
+    }.property('installed_sha')
+  });
 
   Discourse.VersionCheck.reopenClass({
     find: function() {
-      var _this = this;
-      return jQuery.ajax({
+      var promise = new RSVP.Promise()
+      jQuery.ajax({
         url: '/admin/version_check',
         dataType: 'json',
         success: function(json) {
-          return Discourse.VersionCheck.create(json);
+          promise.resolve(Discourse.VersionCheck.create(json));
         }
       });
+      return promise;
     }
   });
 
