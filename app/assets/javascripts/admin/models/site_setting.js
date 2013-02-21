@@ -3,7 +3,7 @@
   /**
     Our data model for interacting with site settings.
 
-    @class SiteCustomization    
+    @class SiteSetting    
     @extends Discourse.Model
     @namespace Discourse
     @module Discourse

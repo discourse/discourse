@@ -10,10 +10,20 @@
   **/ 
   window.Discourse.AdminEmailLogsController = Ember.ArrayController.extend(Discourse.Presence, {
     
+    /**
+      Is the "send test email" button disabled?
+
+      @property sendTestEmailDisabled
+    **/    
     sendTestEmailDisabled: (function() {
       return this.blank('testEmailAddress');
     }).property('testEmailAddress'),
 
+    /**
+      Sends a test email to the currently entered email address
+
+      @method sendTestEmail
+    **/
     sendTestEmail: function() {
       var _this = this;
       _this.set('sentTestEmail', false);
