@@ -8,10 +8,8 @@ if(system.args.length !== 2) {
 
 var page = require('webpage').create();
 
-page.waitFor = function(desc, fn, t) {
+page.waitFor = function(desc, fn, timeout, after) {
   var check,start,promise;
-
-  console.log("RUNNING: " + desc);
 
   start = +new Date();
   promise = {};
@@ -25,14 +23,15 @@ page.waitFor = function(desc, fn, t) {
       // next time
     }
 
+    var diff = (+new Date()) - start;
+
     if(r) {
-      promise.success = true;
-      console.log("PASSED: " + desc);
+      console.log("PASSED: " + desc + " " + diff + "ms" );
+      after(true);
     } else {
-      var diff = (+new Date()) - start;
-      if(diff > t) {
-        promise.failure = true;
-        console.log("FAILED: " + desc);
+      if(diff > timeout) {
+        console.log("FAILED: " + desc + " " + diff + "ms");
+        after(false);
       } else {
         setTimeout(check, 50);
       }
@@ -40,41 +39,88 @@ page.waitFor = function(desc, fn, t) {
   };
 
   check();
-  return promise;
 };
 
-function afterAll(promises, fn){
-  var i;
-  var test = function(){
-    var good = true;
-    var allDone = true;
-    
-    for(i=0;i<promises.length;i++){
-      good = good && promises[i].success; 
-      allDone = allDone && (promises[i].success || promises[i].failure);
-    }
 
-    if(allDone){
-      fn(good);
+var actions = [];
+
+var test = function(desc, fn) {
+  actions.push({test: fn, desc: desc});
+};
+
+var navigate = function(desc, fn) {
+  actions.push({navigate: fn, desc: desc});
+};
+
+var run = function(){
+  var allPassed = true;
+  var done = function() {
+    if(allPassed) {
+      console.log("ALL PASSED");
     } else {
-      setTimeout(test, 50);
+      console.log("SMOKE TEST FAILED");
+    }
+    phantom.exit();
+  };
+
+  var performNextAction = function(){
+    if(actions.length === 0) {
+      done();
+    }
+    else{
+      var action = actions[0];
+      actions = actions.splice(1);
+      if(action.test) {
+        page.waitFor(action.desc, action.test, 10000, function(success){
+          allPassed = allPassed && success;
+          performNextAction();
+        });
+      } 
+      else if(action.navigate) {
+        console.log("NAVIGATE: " + action.desc);
+        page.evaluate(action.navigate);
+        performNextAction();
+      }
     }
   };
-  test();
-}
+
+  performNextAction();
+};
+
+page.runTests = function(){
+
+  test("more than one topic shows up", function() {
+    return $('#topic-list tbody tr').length > 0;
+  });
+
+  test("expect a log in button", function(){
+    return $('.current-username .btn').text() === 'Log In';
+  });
+
+  navigate("navigate to first topic", function(){
+    Em.run.next(function(){
+      $('.main-link a:first').click();
+    });
+  });
+
+  test("at least one post body", function(){
+    return $('.topic-post').length > 0;
+  });
+  
+  navigate("navigate to first user", function(){
+    Em.run.next(function(){
+      $('.topic-meta-data a:first').focus().click();
+    });
+  });
+
+  test("has about me section",function(){
+    return $('.about-me').length === 1;
+  });
+
+  run();
+};
 
 page.open(system.args[1], function (status) {
-    
     console.log("Opened " + system.args[1]);
-
-    var gotTopics = page.waitFor("more than one topic shows up" , function(){ 
-      return ($('#topic-list tbody tr').length > 0); 
-    }, 5000);
-
-    afterAll([gotTopics], function(success){
-      if(success) {
-        console.log("ALL PASSED");
-      }
-      phantom.exit();
-    });
+    page.runTests();
 });
