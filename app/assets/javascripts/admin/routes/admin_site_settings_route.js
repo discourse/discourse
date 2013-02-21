@@ -11,7 +11,11 @@
   Discourse.AdminSiteSettingsRoute = Discourse.Route.extend({
     model: function() {
       return Discourse.SiteSetting.findAll();
-    }
+    },
+
+    renderTemplate: function() {
+      this.render('admin/templates/site_settings', {into: 'admin/templates/admin'});
+    }    
   });
 
 }).call(this);

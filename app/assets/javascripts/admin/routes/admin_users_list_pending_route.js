@@ -11,7 +11,7 @@
   Discourse.AdminUsersListPendingRoute = Discourse.Route.extend({
     setupController: function() {
       return this.controllerFor('adminUsersList').show('pending');
-    }
+    }   
   });
 
 }).call(this);

@@ -2,7 +2,7 @@
 <div class='list'>
   <div class='well'>
   <ul class='nav nav-list'>
-    {{#each view.content}}
+    {{#each content}}
     <li {{bindAttr class="this.selected:active"}}><a {{action selectStyle this target="controller"}}>{{this.description}}</a></li>
     {{/each}}
   </ul>

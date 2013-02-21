@@ -16,6 +16,10 @@
           c.set('loading', false);
         });
       }
+    },
+
+    renderTemplate: function() {
+      this.render({into: 'admin/templates/admin'});
     }
   });
 

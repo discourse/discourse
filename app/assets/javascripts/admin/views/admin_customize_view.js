@@ -12,7 +12,6 @@
   Discourse.AdminCustomizeView = window.Discourse.View.extend({
     templateName: 'admin/templates/customize',
     classNames: ['customize'],
-    contentBinding: 'controller.content',
 
     init: function() {
       this._super();
