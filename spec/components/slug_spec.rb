@@ -17,11 +17,11 @@ describe Slug do
     Slug.for('evil#trout').should == 'evil-trout'
   end
 
-  it 'handles a.b.c properly' do 
+  it 'handles a.b.c properly' do
     Slug.for("a.b.c").should == "a-b-c"
   end
 
-  it 'handles double dots right' do 
+  it 'handles double dots right' do
     Slug.for("a....b.....c").should == "a-b-c"
   end
 
@@ -43,5 +43,10 @@ describe Slug do
     Slug.for("o_o_o").should == "o-o-o"
   end
 
+  it 'processes cyrillic letters in :ru locale' do
+    I18n.locale = :ru
+    Slug.for("первый пост").should == "pervyy-post"
+    I18n.locale = :en
+  end
 end
 
