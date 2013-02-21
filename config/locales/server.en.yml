@@ -294,6 +294,7 @@ en:
     supress_reply_directly_below: "Don't show replies button below a post when the reply is directly below"
     allow_index_in_robots_txt: "Site should be indexed by search engines (update robots.txt)"
     email_domains_blacklist: "A pipe-delimited list of email domains that are not allowed. Example: mailinator.com|trashmail.net"
+    version_checks: 'Whether to check for Discourse updates and report them on the admin dashboard.'
 
     port: "If you'd like to specify a port in the URL. Useful in development mode. Leave blank for none."
     force_hostname: "If you'd like to specify a hostname in the URL. Useful in development mode. Leave blank for none."

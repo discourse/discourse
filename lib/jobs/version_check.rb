@@ -5,9 +5,11 @@ module Jobs
   class VersionCheck < Jobs::Base
 
     def execute(args)
-      json = DiscourseHub.discourse_version_check
-      DiscourseUpdates.latest_version = json['latestVersion']
-      DiscourseUpdates.critical_update_available = json['criticalUpdates']
+      if SiteSetting.version_checks
+        json = DiscourseHub.discourse_version_check
+        DiscourseUpdates.latest_version = json['latestVersion']
+        DiscourseUpdates.critical_update_available = json['criticalUpdates']
+      end
       true
     end
 
