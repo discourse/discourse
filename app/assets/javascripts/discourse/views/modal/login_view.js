@@ -109,9 +109,9 @@
         return;
       }
       return this.showView(Discourse.CreateAccountView.create({
-        accountEmail: options['email'],
-        accountUsername: options['username'],
-        accountName: options['name'],
+        accountEmail: options.email,
+        accountUsername: options.username,
+        accountName: options.name,
         authOptions: Em.Object.create(options)
       }));
     },

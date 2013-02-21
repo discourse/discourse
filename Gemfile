@@ -77,6 +77,7 @@ group :test do
 end
 
 group :test, :development do
+  gem 'jshint_on_rails'
   gem 'guard-jshint-on-rails'
   gem 'certified'
   gem 'fabrication'

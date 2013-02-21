@@ -9,6 +9,13 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 
 --
+-- Name: backup; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA backup;
+
+
+--
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -36,11 +43,1175 @@ CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
 COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs';
 
 
-SET search_path = public, pg_catalog;
+SET search_path = backup, pg_catalog;
 
 SET default_tablespace = '';
 
 SET default_with_oids = false;
+
+--
+-- Name: categories; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE categories (
+    id integer NOT NULL,
+    name character varying(50) NOT NULL,
+    color character varying(6) DEFAULT 'AB9364'::character varying NOT NULL,
+    topic_id integer,
+    top1_topic_id integer,
+    top2_topic_id integer,
+    top1_user_id integer,
+    top2_user_id integer,
+    topic_count integer DEFAULT 0 NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    user_id integer NOT NULL,
+    topics_year integer,
+    topics_month integer,
+    topics_week integer,
+    slug character varying(255) NOT NULL
+);
+
+
+--
+-- Name: categories_id_seq; Type: SEQUENCE; Schema: backup; Owner: -
+--
+
+CREATE SEQUENCE categories_id_seq
+    START WITH 5
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: categories_id_seq; Type: SEQUENCE OWNED BY; Schema: backup; Owner: -
+--
+
+ALTER SEQUENCE categories_id_seq OWNED BY categories.id;
+
+
+--
+-- Name: category_featured_topics; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE category_featured_topics (
+    category_id integer NOT NULL,
+    topic_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: category_featured_users; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE category_featured_users (
+    id integer NOT NULL,
+    category_id integer,
+    user_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: category_featured_users_id_seq; Type: SEQUENCE; Schema: backup; Owner: -
+--
+
+CREATE SEQUENCE category_featured_users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: category_featured_users_id_seq; Type: SEQUENCE OWNED BY; Schema: backup; Owner: -
+--
+
+ALTER SEQUENCE category_featured_users_id_seq OWNED BY category_featured_users.id;
+
+
+--
+-- Name: draft_sequences; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE draft_sequences (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    draft_key character varying(255) NOT NULL,
+    sequence integer NOT NULL
+);
+
+
+--
+-- Name: draft_sequences_id_seq; Type: SEQUENCE; Schema: backup; Owner: -
+--
+
+CREATE SEQUENCE draft_sequences_id_seq
+    START WITH 20
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: draft_sequences_id_seq; Type: SEQUENCE OWNED BY; Schema: backup; Owner: -
+--
+
+ALTER SEQUENCE draft_sequences_id_seq OWNED BY draft_sequences.id;
+
+
+--
+-- Name: drafts; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE drafts (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    draft_key character varying(255) NOT NULL,
+    data text NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    sequence integer DEFAULT 0 NOT NULL
+);
+
+
+--
+-- Name: drafts_id_seq; Type: SEQUENCE; Schema: backup; Owner: -
+--
+
+CREATE SEQUENCE drafts_id_seq
+    START WITH 2
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: drafts_id_seq; Type: SEQUENCE OWNED BY; Schema: backup; Owner: -
+--
+
+ALTER SEQUENCE drafts_id_seq OWNED BY drafts.id;
+
+
+--
+-- Name: email_logs; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE email_logs (
+    id integer NOT NULL,
+    to_address character varying(255) NOT NULL,
+    email_type character varying(255) NOT NULL,
+    user_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: email_logs_id_seq; Type: SEQUENCE; Schema: backup; Owner: -
+--
+
+CREATE SEQUENCE email_logs_id_seq
+    START WITH 3
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: email_logs_id_seq; Type: SEQUENCE OWNED BY; Schema: backup; Owner: -
+--
+
+ALTER SEQUENCE email_logs_id_seq OWNED BY email_logs.id;
+
+
+--
+-- Name: email_tokens; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE email_tokens (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    email character varying(255) NOT NULL,
+    token character varying(255) NOT NULL,
+    confirmed boolean DEFAULT false NOT NULL,
+    expired boolean DEFAULT false NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: email_tokens_id_seq; Type: SEQUENCE; Schema: backup; Owner: -
+--
+
+CREATE SEQUENCE email_tokens_id_seq
+    START WITH 3
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: email_tokens_id_seq; Type: SEQUENCE OWNED BY; Schema: backup; Owner: -
+--
+
+ALTER SEQUENCE email_tokens_id_seq OWNED BY email_tokens.id;
+
+
+--
+-- Name: facebook_user_infos; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE facebook_user_infos (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    facebook_user_id integer NOT NULL,
+    username character varying(255) NOT NULL,
+    first_name character varying(255),
+    last_name character varying(255),
+    email character varying(255),
+    gender character varying(255),
+    name character varying(255),
+    link character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: facebook_user_infos_id_seq; Type: SEQUENCE; Schema: backup; Owner: -
+--
+
+CREATE SEQUENCE facebook_user_infos_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: facebook_user_infos_id_seq; Type: SEQUENCE OWNED BY; Schema: backup; Owner: -
+--
+
+ALTER SEQUENCE facebook_user_infos_id_seq OWNED BY facebook_user_infos.id;
+
+
+--
+-- Name: incoming_links; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE incoming_links (
+    id integer NOT NULL,
+    url character varying(1000) NOT NULL,
+    referer character varying(1000) NOT NULL,
+    domain character varying(100) NOT NULL,
+    topic_id integer,
+    post_number integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: incoming_links_id_seq; Type: SEQUENCE; Schema: backup; Owner: -
+--
+
+CREATE SEQUENCE incoming_links_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: incoming_links_id_seq; Type: SEQUENCE OWNED BY; Schema: backup; Owner: -
+--
+
+ALTER SEQUENCE incoming_links_id_seq OWNED BY incoming_links.id;
+
+
+--
+-- Name: invites; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE invites (
+    id integer NOT NULL,
+    invite_key character varying(32) NOT NULL,
+    email character varying(255) NOT NULL,
+    invited_by_id integer NOT NULL,
+    user_id integer,
+    redeemed_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    deleted_at timestamp without time zone
+);
+
+
+--
+-- Name: invites_id_seq; Type: SEQUENCE; Schema: backup; Owner: -
+--
+
+CREATE SEQUENCE invites_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: invites_id_seq; Type: SEQUENCE OWNED BY; Schema: backup; Owner: -
+--
+
+ALTER SEQUENCE invites_id_seq OWNED BY invites.id;
+
+
+--
+-- Name: notifications; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE notifications (
+    id integer NOT NULL,
+    notification_type integer NOT NULL,
+    user_id integer NOT NULL,
+    data character varying(255) NOT NULL,
+    read boolean DEFAULT false NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    topic_id integer,
+    post_number integer,
+    post_action_id integer
+);
+
+
+--
+-- Name: notifications_id_seq; Type: SEQUENCE; Schema: backup; Owner: -
+--
+
+CREATE SEQUENCE notifications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: notifications_id_seq; Type: SEQUENCE OWNED BY; Schema: backup; Owner: -
+--
+
+ALTER SEQUENCE notifications_id_seq OWNED BY notifications.id;
+
+
+--
+-- Name: onebox_renders; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE onebox_renders (
+    id integer NOT NULL,
+    url character varying(255) NOT NULL,
+    cooked text NOT NULL,
+    expires_at timestamp without time zone NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    preview text
+);
+
+
+--
+-- Name: onebox_renders_id_seq; Type: SEQUENCE; Schema: backup; Owner: -
+--
+
+CREATE SEQUENCE onebox_renders_id_seq
+    START WITH 2
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: onebox_renders_id_seq; Type: SEQUENCE OWNED BY; Schema: backup; Owner: -
+--
+
+ALTER SEQUENCE onebox_renders_id_seq OWNED BY onebox_renders.id;
+
+
+--
+-- Name: post_action_types; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE post_action_types (
+    name_key character varying(50) NOT NULL,
+    is_flag boolean DEFAULT false NOT NULL,
+    icon character varying(20),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    id integer NOT NULL
+);
+
+
+--
+-- Name: post_action_types_id_seq; Type: SEQUENCE; Schema: backup; Owner: -
+--
+
+CREATE SEQUENCE post_action_types_id_seq
+    START WITH 6
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: post_action_types_id_seq; Type: SEQUENCE OWNED BY; Schema: backup; Owner: -
+--
+
+ALTER SEQUENCE post_action_types_id_seq OWNED BY post_action_types.id;
+
+
+--
+-- Name: post_actions; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE post_actions (
+    id integer NOT NULL,
+    post_id integer NOT NULL,
+    user_id integer NOT NULL,
+    post_action_type_id integer NOT NULL,
+    deleted_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: post_actions_id_seq; Type: SEQUENCE; Schema: backup; Owner: -
+--
+
+CREATE SEQUENCE post_actions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: post_actions_id_seq; Type: SEQUENCE OWNED BY; Schema: backup; Owner: -
+--
+
+ALTER SEQUENCE post_actions_id_seq OWNED BY post_actions.id;
+
+
+--
+-- Name: post_onebox_renders; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE post_onebox_renders (
+    post_id integer NOT NULL,
+    onebox_render_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: post_replies; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE post_replies (
+    post_id integer,
+    reply_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: post_timings; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE post_timings (
+    topic_id integer NOT NULL,
+    post_number integer NOT NULL,
+    user_id integer NOT NULL,
+    msecs integer NOT NULL
+);
+
+
+--
+-- Name: posts; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE posts (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    topic_id integer NOT NULL,
+    post_number integer NOT NULL,
+    raw text NOT NULL,
+    cooked text NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    reply_to_post_number integer,
+    cached_version integer DEFAULT 1 NOT NULL,
+    reply_count integer DEFAULT 0 NOT NULL,
+    quote_count integer DEFAULT 0 NOT NULL,
+    reply_below_post_number integer,
+    deleted_at timestamp without time zone,
+    off_topic_count integer DEFAULT 0 NOT NULL,
+    offensive_count integer DEFAULT 0 NOT NULL,
+    like_count integer DEFAULT 0 NOT NULL,
+    incoming_link_count integer DEFAULT 0 NOT NULL,
+    bookmark_count integer DEFAULT 0 NOT NULL,
+    avg_time integer,
+    score double precision,
+    reads integer DEFAULT 0 NOT NULL,
+    post_type integer DEFAULT 1 NOT NULL,
+    vote_count integer DEFAULT 0 NOT NULL,
+    sort_order integer,
+    last_editor_id integer
+);
+
+
+--
+-- Name: posts_id_seq; Type: SEQUENCE; Schema: backup; Owner: -
+--
+
+CREATE SEQUENCE posts_id_seq
+    START WITH 16
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: posts_id_seq; Type: SEQUENCE OWNED BY; Schema: backup; Owner: -
+--
+
+ALTER SEQUENCE posts_id_seq OWNED BY posts.id;
+
+
+--
+-- Name: site_customizations; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE site_customizations (
+    id integer NOT NULL,
+    name character varying(255) NOT NULL,
+    stylesheet text,
+    header text,
+    "position" integer NOT NULL,
+    user_id integer NOT NULL,
+    enabled boolean NOT NULL,
+    key character varying(255) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    override_default_style boolean DEFAULT false NOT NULL,
+    stylesheet_baked text DEFAULT ''::text NOT NULL
+);
+
+
+--
+-- Name: site_customizations_id_seq; Type: SEQUENCE; Schema: backup; Owner: -
+--
+
+CREATE SEQUENCE site_customizations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: site_customizations_id_seq; Type: SEQUENCE OWNED BY; Schema: backup; Owner: -
+--
+
+ALTER SEQUENCE site_customizations_id_seq OWNED BY site_customizations.id;
+
+
+--
+-- Name: site_settings; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE site_settings (
+    id integer NOT NULL,
+    name character varying(255) NOT NULL,
+    data_type integer NOT NULL,
+    value text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: site_settings_id_seq; Type: SEQUENCE; Schema: backup; Owner: -
+--
+
+CREATE SEQUENCE site_settings_id_seq
+    START WITH 4
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: site_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: backup; Owner: -
+--
+
+ALTER SEQUENCE site_settings_id_seq OWNED BY site_settings.id;
+
+
+--
+-- Name: topic_allowed_users; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE topic_allowed_users (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    topic_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: topic_allowed_users_id_seq; Type: SEQUENCE; Schema: backup; Owner: -
+--
+
+CREATE SEQUENCE topic_allowed_users_id_seq
+    START WITH 3
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: topic_allowed_users_id_seq; Type: SEQUENCE OWNED BY; Schema: backup; Owner: -
+--
+
+ALTER SEQUENCE topic_allowed_users_id_seq OWNED BY topic_allowed_users.id;
+
+
+--
+-- Name: topic_invites; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE topic_invites (
+    id integer NOT NULL,
+    topic_id integer NOT NULL,
+    invite_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: topic_invites_id_seq; Type: SEQUENCE; Schema: backup; Owner: -
+--
+
+CREATE SEQUENCE topic_invites_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: topic_invites_id_seq; Type: SEQUENCE OWNED BY; Schema: backup; Owner: -
+--
+
+ALTER SEQUENCE topic_invites_id_seq OWNED BY topic_invites.id;
+
+
+--
+-- Name: topic_link_clicks; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE topic_link_clicks (
+    id integer NOT NULL,
+    topic_link_id integer NOT NULL,
+    user_id integer,
+    ip bigint NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: topic_link_clicks_id_seq; Type: SEQUENCE; Schema: backup; Owner: -
+--
+
+CREATE SEQUENCE topic_link_clicks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: topic_link_clicks_id_seq; Type: SEQUENCE OWNED BY; Schema: backup; Owner: -
+--
+
+ALTER SEQUENCE topic_link_clicks_id_seq OWNED BY topic_link_clicks.id;
+
+
+--
+-- Name: topic_links; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE topic_links (
+    id integer NOT NULL,
+    topic_id integer NOT NULL,
+    post_id integer,
+    user_id integer NOT NULL,
+    url character varying(500) NOT NULL,
+    domain character varying(100) NOT NULL,
+    internal boolean DEFAULT false NOT NULL,
+    link_topic_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    reflection boolean DEFAULT false,
+    clicks integer DEFAULT 0 NOT NULL,
+    link_post_id integer
+);
+
+
+--
+-- Name: topic_links_id_seq; Type: SEQUENCE; Schema: backup; Owner: -
+--
+
+CREATE SEQUENCE topic_links_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: topic_links_id_seq; Type: SEQUENCE OWNED BY; Schema: backup; Owner: -
+--
+
+ALTER SEQUENCE topic_links_id_seq OWNED BY topic_links.id;
+
+
+--
+-- Name: topic_users; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE topic_users (
+    user_id integer NOT NULL,
+    topic_id integer NOT NULL,
+    starred boolean DEFAULT false NOT NULL,
+    posted boolean DEFAULT false NOT NULL,
+    last_read_post_number integer,
+    seen_post_count integer,
+    starred_at timestamp without time zone,
+    muted_at timestamp without time zone,
+    last_visited_at timestamp without time zone,
+    first_visited_at timestamp without time zone,
+    notifications integer DEFAULT 2,
+    notifications_changed_at timestamp without time zone,
+    notifications_reason_id integer,
+    CONSTRAINT test_starred_at CHECK (((starred = false) OR (starred_at IS NOT NULL)))
+);
+
+
+--
+-- Name: topics; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE topics (
+    id integer NOT NULL,
+    title character varying(255) NOT NULL,
+    last_posted_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    views integer DEFAULT 0 NOT NULL,
+    posts_count integer DEFAULT 0 NOT NULL,
+    user_id integer NOT NULL,
+    last_post_user_id integer NOT NULL,
+    reply_count integer DEFAULT 0 NOT NULL,
+    featured_user1_id integer,
+    featured_user2_id integer,
+    featured_user3_id integer,
+    avg_time integer,
+    deleted_at timestamp without time zone,
+    highest_post_number integer DEFAULT 0 NOT NULL,
+    image_url character varying(255),
+    off_topic_count integer DEFAULT 0 NOT NULL,
+    offensive_count integer DEFAULT 0 NOT NULL,
+    like_count integer DEFAULT 0 NOT NULL,
+    incoming_link_count integer DEFAULT 0 NOT NULL,
+    bookmark_count integer DEFAULT 0 NOT NULL,
+    star_count integer DEFAULT 0 NOT NULL,
+    category_id integer,
+    visible boolean DEFAULT true NOT NULL,
+    moderator_posts_count integer DEFAULT 0 NOT NULL,
+    closed boolean DEFAULT false NOT NULL,
+    pinned boolean DEFAULT false NOT NULL,
+    archived boolean DEFAULT false NOT NULL,
+    bumped_at timestamp without time zone NOT NULL,
+    sub_tag character varying(255),
+    has_best_of boolean DEFAULT false NOT NULL,
+    meta_data public.hstore,
+    vote_count integer DEFAULT 0 NOT NULL,
+    archetype character varying(255) DEFAULT 'regular'::character varying NOT NULL,
+    featured_user4_id integer
+);
+
+
+--
+-- Name: topics_id_seq; Type: SEQUENCE; Schema: backup; Owner: -
+--
+
+CREATE SEQUENCE topics_id_seq
+    START WITH 16
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: topics_id_seq; Type: SEQUENCE OWNED BY; Schema: backup; Owner: -
+--
+
+ALTER SEQUENCE topics_id_seq OWNED BY topics.id;
+
+
+--
+-- Name: trust_levels; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE trust_levels (
+    id integer NOT NULL,
+    name_key character varying(255) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: trust_levels_id_seq; Type: SEQUENCE; Schema: backup; Owner: -
+--
+
+CREATE SEQUENCE trust_levels_id_seq
+    START WITH 3
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: trust_levels_id_seq; Type: SEQUENCE OWNED BY; Schema: backup; Owner: -
+--
+
+ALTER SEQUENCE trust_levels_id_seq OWNED BY trust_levels.id;
+
+
+--
+-- Name: twitter_user_infos; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE twitter_user_infos (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    screen_name character varying(255) NOT NULL,
+    twitter_user_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: twitter_user_infos_id_seq; Type: SEQUENCE; Schema: backup; Owner: -
+--
+
+CREATE SEQUENCE twitter_user_infos_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: twitter_user_infos_id_seq; Type: SEQUENCE OWNED BY; Schema: backup; Owner: -
+--
+
+ALTER SEQUENCE twitter_user_infos_id_seq OWNED BY twitter_user_infos.id;
+
+
+--
+-- Name: uploads; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE uploads (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    topic_id integer NOT NULL,
+    original_filename character varying(255) NOT NULL,
+    filesize integer NOT NULL,
+    width integer,
+    height integer,
+    url character varying(255) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: uploads_id_seq; Type: SEQUENCE; Schema: backup; Owner: -
+--
+
+CREATE SEQUENCE uploads_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: uploads_id_seq; Type: SEQUENCE OWNED BY; Schema: backup; Owner: -
+--
+
+ALTER SEQUENCE uploads_id_seq OWNED BY uploads.id;
+
+
+--
+-- Name: user_actions; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE user_actions (
+    id integer NOT NULL,
+    action_type integer NOT NULL,
+    user_id integer NOT NULL,
+    target_topic_id integer,
+    target_post_id integer,
+    target_user_id integer,
+    acting_user_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: user_actions_id_seq; Type: SEQUENCE; Schema: backup; Owner: -
+--
+
+CREATE SEQUENCE user_actions_id_seq
+    START WITH 40
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_actions_id_seq; Type: SEQUENCE OWNED BY; Schema: backup; Owner: -
+--
+
+ALTER SEQUENCE user_actions_id_seq OWNED BY user_actions.id;
+
+
+--
+-- Name: user_open_ids; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE user_open_ids (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    email character varying(255) NOT NULL,
+    url character varying(255) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    active boolean NOT NULL
+);
+
+
+--
+-- Name: user_open_ids_id_seq; Type: SEQUENCE; Schema: backup; Owner: -
+--
+
+CREATE SEQUENCE user_open_ids_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_open_ids_id_seq; Type: SEQUENCE OWNED BY; Schema: backup; Owner: -
+--
+
+ALTER SEQUENCE user_open_ids_id_seq OWNED BY user_open_ids.id;
+
+
+--
+-- Name: user_visits; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE user_visits (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    visited_at date NOT NULL
+);
+
+
+--
+-- Name: user_visits_id_seq; Type: SEQUENCE; Schema: backup; Owner: -
+--
+
+CREATE SEQUENCE user_visits_id_seq
+    START WITH 4
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_visits_id_seq; Type: SEQUENCE OWNED BY; Schema: backup; Owner: -
+--
+
+ALTER SEQUENCE user_visits_id_seq OWNED BY user_visits.id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE users (
+    id integer NOT NULL,
+    username character varying(20) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    name character varying(255),
+    bio_raw text,
+    seen_notification_id integer DEFAULT 0 NOT NULL,
+    last_posted_at timestamp without time zone,
+    email character varying(256) NOT NULL,
+    password_hash character varying(64),
+    salt character varying(32),
+    active boolean,
+    username_lower character varying(20) NOT NULL,
+    auth_token character varying(32),
+    last_seen_at timestamp without time zone,
+    website character varying(255),
+    admin boolean DEFAULT false NOT NULL,
+    moderator boolean DEFAULT false NOT NULL,
+    last_emailed_at timestamp without time zone,
+    email_digests boolean DEFAULT true NOT NULL,
+    trust_level_id integer DEFAULT 1 NOT NULL,
+    bio_cooked text,
+    email_private_messages boolean DEFAULT true,
+    email_direct boolean DEFAULT true NOT NULL,
+    approved boolean DEFAULT false NOT NULL,
+    approved_by_id integer,
+    approved_at timestamp without time zone,
+    topics_entered integer DEFAULT 0 NOT NULL,
+    posts_read_count integer DEFAULT 0 NOT NULL,
+    digest_after_days integer DEFAULT 7 NOT NULL,
+    previous_visit_at timestamp without time zone
+);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: backup; Owner: -
+--
+
+CREATE SEQUENCE users_id_seq
+    START WITH 3
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: backup; Owner: -
+--
+
+ALTER SEQUENCE users_id_seq OWNED BY users.id;
+
+
+--
+-- Name: versions; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE versions (
+    id integer NOT NULL,
+    versioned_id integer,
+    versioned_type character varying(255),
+    user_id integer,
+    user_type character varying(255),
+    user_name character varying(255),
+    modifications text,
+    number integer,
+    reverted_from integer,
+    tag character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: versions_id_seq; Type: SEQUENCE; Schema: backup; Owner: -
+--
+
+CREATE SEQUENCE versions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: versions_id_seq; Type: SEQUENCE OWNED BY; Schema: backup; Owner: -
+--
+
+ALTER SEQUENCE versions_id_seq OWNED BY versions.id;
+
+
+--
+-- Name: views; Type: TABLE; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE TABLE views (
+    parent_id integer NOT NULL,
+    parent_type character varying(50) NOT NULL,
+    ip bigint NOT NULL,
+    viewed_at timestamp without time zone NOT NULL,
+    user_id integer
+);
+
+
+SET search_path = public, pg_catalog;
 
 --
 -- Name: categories; Type: TABLE; Schema: public; Owner: -; Tablespace: 
@@ -71,7 +1242,7 @@ CREATE TABLE categories (
 --
 
 CREATE SEQUENCE categories_id_seq
-    START WITH 1
+    START WITH 5
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -156,7 +1327,7 @@ CREATE TABLE draft_sequences (
 --
 
 CREATE SEQUENCE draft_sequences_id_seq
-    START WITH 1
+    START WITH 20
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -190,7 +1361,7 @@ CREATE TABLE drafts (
 --
 
 CREATE SEQUENCE drafts_id_seq
-    START WITH 1
+    START WITH 2
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -223,7 +1394,7 @@ CREATE TABLE email_logs (
 --
 
 CREATE SEQUENCE email_logs_id_seq
-    START WITH 1
+    START WITH 3
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -258,7 +1429,7 @@ CREATE TABLE email_tokens (
 --
 
 CREATE SEQUENCE email_tokens_id_seq
-    START WITH 1
+    START WITH 3
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -471,7 +1642,7 @@ CREATE TABLE onebox_renders (
 --
 
 CREATE SEQUENCE onebox_renders_id_seq
-    START WITH 1
+    START WITH 2
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -505,7 +1676,7 @@ CREATE TABLE post_action_types (
 --
 
 CREATE SEQUENCE post_action_types_id_seq
-    START WITH 1
+    START WITH 6
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -636,7 +1807,7 @@ CREATE TABLE posts (
 --
 
 CREATE SEQUENCE posts_id_seq
-    START WITH 1
+    START WITH 16
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -727,7 +1898,7 @@ CREATE TABLE site_settings (
 --
 
 CREATE SEQUENCE site_settings_id_seq
-    START WITH 1
+    START WITH 4
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -759,7 +1930,7 @@ CREATE TABLE topic_allowed_users (
 --
 
 CREATE SEQUENCE topic_allowed_users_id_seq
-    START WITH 1
+    START WITH 3
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -951,7 +2122,7 @@ CREATE TABLE topics (
 --
 
 CREATE SEQUENCE topics_id_seq
-    START WITH 1
+    START WITH 16
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1057,7 +2228,7 @@ CREATE TABLE user_actions (
 --
 
 CREATE SEQUENCE user_actions_id_seq
-    START WITH 1
+    START WITH 40
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1121,7 +2292,7 @@ CREATE TABLE user_visits (
 --
 
 CREATE SEQUENCE user_visits_id_seq
-    START WITH 1
+    START WITH 4
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1188,7 +2359,7 @@ CREATE TABLE users (
 --
 
 CREATE SEQUENCE users_id_seq
-    START WITH 1
+    START WITH 3
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1263,6 +2434,213 @@ CREATE TABLE views (
     user_id integer
 );
 
+
+SET search_path = backup, pg_catalog;
+
+--
+-- Name: id; Type: DEFAULT; Schema: backup; Owner: -
+--
+
+ALTER TABLE ONLY categories ALTER COLUMN id SET DEFAULT nextval('categories_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: backup; Owner: -
+--
+
+ALTER TABLE ONLY category_featured_users ALTER COLUMN id SET DEFAULT nextval('category_featured_users_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: backup; Owner: -
+--
+
+ALTER TABLE ONLY draft_sequences ALTER COLUMN id SET DEFAULT nextval('draft_sequences_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: backup; Owner: -
+--
+
+ALTER TABLE ONLY drafts ALTER COLUMN id SET DEFAULT nextval('drafts_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: backup; Owner: -
+--
+
+ALTER TABLE ONLY email_logs ALTER COLUMN id SET DEFAULT nextval('email_logs_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: backup; Owner: -
+--
+
+ALTER TABLE ONLY email_tokens ALTER COLUMN id SET DEFAULT nextval('email_tokens_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: backup; Owner: -
+--
+
+ALTER TABLE ONLY facebook_user_infos ALTER COLUMN id SET DEFAULT nextval('facebook_user_infos_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: backup; Owner: -
+--
+
+ALTER TABLE ONLY incoming_links ALTER COLUMN id SET DEFAULT nextval('incoming_links_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: backup; Owner: -
+--
+
+ALTER TABLE ONLY invites ALTER COLUMN id SET DEFAULT nextval('invites_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: backup; Owner: -
+--
+
+ALTER TABLE ONLY notifications ALTER COLUMN id SET DEFAULT nextval('notifications_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: backup; Owner: -
+--
+
+ALTER TABLE ONLY onebox_renders ALTER COLUMN id SET DEFAULT nextval('onebox_renders_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: backup; Owner: -
+--
+
+ALTER TABLE ONLY post_action_types ALTER COLUMN id SET DEFAULT nextval('post_action_types_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: backup; Owner: -
+--
+
+ALTER TABLE ONLY post_actions ALTER COLUMN id SET DEFAULT nextval('post_actions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: backup; Owner: -
+--
+
+ALTER TABLE ONLY posts ALTER COLUMN id SET DEFAULT nextval('posts_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: backup; Owner: -
+--
+
+ALTER TABLE ONLY site_customizations ALTER COLUMN id SET DEFAULT nextval('site_customizations_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: backup; Owner: -
+--
+
+ALTER TABLE ONLY site_settings ALTER COLUMN id SET DEFAULT nextval('site_settings_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: backup; Owner: -
+--
+
+ALTER TABLE ONLY topic_allowed_users ALTER COLUMN id SET DEFAULT nextval('topic_allowed_users_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: backup; Owner: -
+--
+
+ALTER TABLE ONLY topic_invites ALTER COLUMN id SET DEFAULT nextval('topic_invites_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: backup; Owner: -
+--
+
+ALTER TABLE ONLY topic_link_clicks ALTER COLUMN id SET DEFAULT nextval('topic_link_clicks_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: backup; Owner: -
+--
+
+ALTER TABLE ONLY topic_links ALTER COLUMN id SET DEFAULT nextval('topic_links_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: backup; Owner: -
+--
+
+ALTER TABLE ONLY topics ALTER COLUMN id SET DEFAULT nextval('topics_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: backup; Owner: -
+--
+
+ALTER TABLE ONLY trust_levels ALTER COLUMN id SET DEFAULT nextval('trust_levels_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: backup; Owner: -
+--
+
+ALTER TABLE ONLY twitter_user_infos ALTER COLUMN id SET DEFAULT nextval('twitter_user_infos_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: backup; Owner: -
+--
+
+ALTER TABLE ONLY uploads ALTER COLUMN id SET DEFAULT nextval('uploads_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: backup; Owner: -
+--
+
+ALTER TABLE ONLY user_actions ALTER COLUMN id SET DEFAULT nextval('user_actions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: backup; Owner: -
+--
+
+ALTER TABLE ONLY user_open_ids ALTER COLUMN id SET DEFAULT nextval('user_open_ids_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: backup; Owner: -
+--
+
+ALTER TABLE ONLY user_visits ALTER COLUMN id SET DEFAULT nextval('user_visits_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: backup; Owner: -
+--
+
+ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: backup; Owner: -
+--
+
+ALTER TABLE ONLY versions ALTER COLUMN id SET DEFAULT nextval('versions_id_seq'::regclass);
+
+
+SET search_path = public, pg_catalog;
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
@@ -1466,6 +2844,242 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 
 ALTER TABLE ONLY versions ALTER COLUMN id SET DEFAULT nextval('versions_id_seq'::regclass);
 
+
+SET search_path = backup, pg_catalog;
+
+--
+-- Name: actions_pkey; Type: CONSTRAINT; Schema: backup; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY user_actions
+    ADD CONSTRAINT actions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: categories_pkey; Type: CONSTRAINT; Schema: backup; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY categories
+    ADD CONSTRAINT categories_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: category_featured_users_pkey; Type: CONSTRAINT; Schema: backup; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY category_featured_users
+    ADD CONSTRAINT category_featured_users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: draft_sequences_pkey; Type: CONSTRAINT; Schema: backup; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY draft_sequences
+    ADD CONSTRAINT draft_sequences_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: drafts_pkey; Type: CONSTRAINT; Schema: backup; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY drafts
+    ADD CONSTRAINT drafts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: email_logs_pkey; Type: CONSTRAINT; Schema: backup; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY email_logs
+    ADD CONSTRAINT email_logs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: email_tokens_pkey; Type: CONSTRAINT; Schema: backup; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY email_tokens
+    ADD CONSTRAINT email_tokens_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: facebook_user_infos_pkey; Type: CONSTRAINT; Schema: backup; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY facebook_user_infos
+    ADD CONSTRAINT facebook_user_infos_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: forum_thread_link_clicks_pkey; Type: CONSTRAINT; Schema: backup; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY topic_link_clicks
+    ADD CONSTRAINT forum_thread_link_clicks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: forum_thread_links_pkey; Type: CONSTRAINT; Schema: backup; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY topic_links
+    ADD CONSTRAINT forum_thread_links_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: forum_threads_pkey; Type: CONSTRAINT; Schema: backup; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY topics
+    ADD CONSTRAINT forum_threads_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: incoming_links_pkey; Type: CONSTRAINT; Schema: backup; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY incoming_links
+    ADD CONSTRAINT incoming_links_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: invites_pkey; Type: CONSTRAINT; Schema: backup; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY invites
+    ADD CONSTRAINT invites_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: notifications_pkey; Type: CONSTRAINT; Schema: backup; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY notifications
+    ADD CONSTRAINT notifications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: onebox_renders_pkey; Type: CONSTRAINT; Schema: backup; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY onebox_renders
+    ADD CONSTRAINT onebox_renders_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: post_action_types_pkey; Type: CONSTRAINT; Schema: backup; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY post_action_types
+    ADD CONSTRAINT post_action_types_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: post_actions_pkey; Type: CONSTRAINT; Schema: backup; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY post_actions
+    ADD CONSTRAINT post_actions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: posts_pkey; Type: CONSTRAINT; Schema: backup; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY posts
+    ADD CONSTRAINT posts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: site_customizations_pkey; Type: CONSTRAINT; Schema: backup; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY site_customizations
+    ADD CONSTRAINT site_customizations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: site_settings_pkey; Type: CONSTRAINT; Schema: backup; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY site_settings
+    ADD CONSTRAINT site_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: topic_allowed_users_pkey; Type: CONSTRAINT; Schema: backup; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY topic_allowed_users
+    ADD CONSTRAINT topic_allowed_users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: topic_invites_pkey; Type: CONSTRAINT; Schema: backup; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY topic_invites
+    ADD CONSTRAINT topic_invites_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: trust_levels_pkey; Type: CONSTRAINT; Schema: backup; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY trust_levels
+    ADD CONSTRAINT trust_levels_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: twitter_user_infos_pkey; Type: CONSTRAINT; Schema: backup; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY twitter_user_infos
+    ADD CONSTRAINT twitter_user_infos_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: uploads_pkey; Type: CONSTRAINT; Schema: backup; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY uploads
+    ADD CONSTRAINT uploads_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_open_ids_pkey; Type: CONSTRAINT; Schema: backup; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY user_open_ids
+    ADD CONSTRAINT user_open_ids_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_visits_pkey; Type: CONSTRAINT; Schema: backup; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY user_visits
+    ADD CONSTRAINT user_visits_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users_pkey; Type: CONSTRAINT; Schema: backup; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: versions_pkey; Type: CONSTRAINT; Schema: backup; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY versions
+    ADD CONSTRAINT versions_pkey PRIMARY KEY (id);
+
+
+SET search_path = public, pg_catalog;
 
 --
 -- Name: actions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
@@ -1722,6 +3336,430 @@ ALTER TABLE ONLY users_search
 ALTER TABLE ONLY versions
     ADD CONSTRAINT versions_pkey PRIMARY KEY (id);
 
+
+SET search_path = backup, pg_catalog;
+
+--
+-- Name: cat_featured_threads; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX cat_featured_threads ON category_featured_topics USING btree (category_id, topic_id);
+
+
+--
+-- Name: idx_search_thread; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX idx_search_thread ON topics USING gin (to_tsvector('english'::regconfig, (title)::text));
+
+
+--
+-- Name: idx_search_user; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX idx_search_user ON users USING gin (to_tsvector('english'::regconfig, (username)::text));
+
+
+--
+-- Name: idx_unique_actions; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX idx_unique_actions ON post_actions USING btree (user_id, post_action_type_id, post_id) WHERE (deleted_at IS NULL);
+
+
+--
+-- Name: idx_unique_rows; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX idx_unique_rows ON user_actions USING btree (action_type, user_id, target_topic_id, target_post_id, acting_user_id);
+
+
+--
+-- Name: incoming_index; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX incoming_index ON incoming_links USING btree (topic_id, post_number);
+
+
+--
+-- Name: index_actions_on_acting_user_id; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_actions_on_acting_user_id ON user_actions USING btree (acting_user_id);
+
+
+--
+-- Name: index_actions_on_user_id_and_action_type; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_actions_on_user_id_and_action_type ON user_actions USING btree (user_id, action_type);
+
+
+--
+-- Name: index_categories_on_forum_thread_count; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_categories_on_forum_thread_count ON categories USING btree (topic_count);
+
+
+--
+-- Name: index_categories_on_name; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_categories_on_name ON categories USING btree (name);
+
+
+--
+-- Name: index_category_featured_users_on_category_id_and_user_id; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_category_featured_users_on_category_id_and_user_id ON category_featured_users USING btree (category_id, user_id);
+
+
+--
+-- Name: index_draft_sequences_on_user_id_and_draft_key; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_draft_sequences_on_user_id_and_draft_key ON draft_sequences USING btree (user_id, draft_key);
+
+
+--
+-- Name: index_drafts_on_user_id_and_draft_key; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_drafts_on_user_id_and_draft_key ON drafts USING btree (user_id, draft_key);
+
+
+--
+-- Name: index_email_logs_on_created_at; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_email_logs_on_created_at ON email_logs USING btree (created_at DESC);
+
+
+--
+-- Name: index_email_logs_on_user_id_and_created_at; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_email_logs_on_user_id_and_created_at ON email_logs USING btree (user_id, created_at DESC);
+
+
+--
+-- Name: index_email_tokens_on_token; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_email_tokens_on_token ON email_tokens USING btree (token);
+
+
+--
+-- Name: index_facebook_user_infos_on_facebook_user_id; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_facebook_user_infos_on_facebook_user_id ON facebook_user_infos USING btree (facebook_user_id);
+
+
+--
+-- Name: index_facebook_user_infos_on_user_id; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_facebook_user_infos_on_user_id ON facebook_user_infos USING btree (user_id);
+
+
+--
+-- Name: index_forum_thread_link_clicks_on_forum_thread_link_id; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_forum_thread_link_clicks_on_forum_thread_link_id ON topic_link_clicks USING btree (topic_link_id);
+
+
+--
+-- Name: index_forum_thread_links_on_forum_thread_id; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_forum_thread_links_on_forum_thread_id ON topic_links USING btree (topic_id);
+
+
+--
+-- Name: index_forum_thread_links_on_forum_thread_id_and_post_id_and_url; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_forum_thread_links_on_forum_thread_id_and_post_id_and_url ON topic_links USING btree (topic_id, post_id, url);
+
+
+--
+-- Name: index_forum_thread_users_on_forum_thread_id_and_user_id; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_forum_thread_users_on_forum_thread_id_and_user_id ON topic_users USING btree (topic_id, user_id);
+
+
+--
+-- Name: index_forum_threads_on_bumped_at; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_forum_threads_on_bumped_at ON topics USING btree (bumped_at DESC);
+
+
+--
+-- Name: index_forum_threads_on_category_id_and_sub_tag_and_bumped_at; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_forum_threads_on_category_id_and_sub_tag_and_bumped_at ON topics USING btree (category_id, sub_tag, bumped_at);
+
+
+--
+-- Name: index_invites_on_email_and_invited_by_id; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_invites_on_email_and_invited_by_id ON invites USING btree (email, invited_by_id);
+
+
+--
+-- Name: index_invites_on_invite_key; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_invites_on_invite_key ON invites USING btree (invite_key);
+
+
+--
+-- Name: index_notifications_on_post_action_id; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_notifications_on_post_action_id ON notifications USING btree (post_action_id);
+
+
+--
+-- Name: index_notifications_on_user_id_and_created_at; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_notifications_on_user_id_and_created_at ON notifications USING btree (user_id, created_at);
+
+
+--
+-- Name: index_onebox_renders_on_url; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_onebox_renders_on_url ON onebox_renders USING btree (url);
+
+
+--
+-- Name: index_post_actions_on_post_id; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_post_actions_on_post_id ON post_actions USING btree (post_id);
+
+
+--
+-- Name: index_post_onebox_renders_on_post_id_and_onebox_render_id; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_post_onebox_renders_on_post_id_and_onebox_render_id ON post_onebox_renders USING btree (post_id, onebox_render_id);
+
+
+--
+-- Name: index_post_replies_on_post_id_and_reply_id; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_post_replies_on_post_id_and_reply_id ON post_replies USING btree (post_id, reply_id);
+
+
+--
+-- Name: index_posts_on_reply_to_post_number; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_posts_on_reply_to_post_number ON posts USING btree (reply_to_post_number);
+
+
+--
+-- Name: index_posts_on_topic_id_and_post_number; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_posts_on_topic_id_and_post_number ON posts USING btree (topic_id, post_number);
+
+
+--
+-- Name: index_site_customizations_on_key; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_site_customizations_on_key ON site_customizations USING btree (key);
+
+
+--
+-- Name: index_topic_allowed_users_on_topic_id_and_user_id; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_topic_allowed_users_on_topic_id_and_user_id ON topic_allowed_users USING btree (topic_id, user_id);
+
+
+--
+-- Name: index_topic_allowed_users_on_user_id_and_topic_id; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_topic_allowed_users_on_user_id_and_topic_id ON topic_allowed_users USING btree (user_id, topic_id);
+
+
+--
+-- Name: index_topic_invites_on_invite_id; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_topic_invites_on_invite_id ON topic_invites USING btree (invite_id);
+
+
+--
+-- Name: index_topic_invites_on_topic_id_and_invite_id; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_topic_invites_on_topic_id_and_invite_id ON topic_invites USING btree (topic_id, invite_id);
+
+
+--
+-- Name: index_twitter_user_infos_on_twitter_user_id; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_twitter_user_infos_on_twitter_user_id ON twitter_user_infos USING btree (twitter_user_id);
+
+
+--
+-- Name: index_twitter_user_infos_on_user_id; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_twitter_user_infos_on_user_id ON twitter_user_infos USING btree (user_id);
+
+
+--
+-- Name: index_uploads_on_forum_thread_id; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_uploads_on_forum_thread_id ON uploads USING btree (topic_id);
+
+
+--
+-- Name: index_uploads_on_user_id; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_uploads_on_user_id ON uploads USING btree (user_id);
+
+
+--
+-- Name: index_user_open_ids_on_url; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_user_open_ids_on_url ON user_open_ids USING btree (url);
+
+
+--
+-- Name: index_user_visits_on_user_id_and_visited_at; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_user_visits_on_user_id_and_visited_at ON user_visits USING btree (user_id, visited_at);
+
+
+--
+-- Name: index_users_on_auth_token; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_users_on_auth_token ON users USING btree (auth_token);
+
+
+--
+-- Name: index_users_on_email; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_users_on_email ON users USING btree (email);
+
+
+--
+-- Name: index_users_on_last_posted_at; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_users_on_last_posted_at ON users USING btree (last_posted_at);
+
+
+--
+-- Name: index_users_on_username; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_users_on_username ON users USING btree (username);
+
+
+--
+-- Name: index_users_on_username_lower; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_users_on_username_lower ON users USING btree (username_lower);
+
+
+--
+-- Name: index_versions_on_created_at; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_versions_on_created_at ON versions USING btree (created_at);
+
+
+--
+-- Name: index_versions_on_number; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_versions_on_number ON versions USING btree (number);
+
+
+--
+-- Name: index_versions_on_tag; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_versions_on_tag ON versions USING btree (tag);
+
+
+--
+-- Name: index_versions_on_user_id_and_user_type; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_versions_on_user_id_and_user_type ON versions USING btree (user_id, user_type);
+
+
+--
+-- Name: index_versions_on_user_name; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_versions_on_user_name ON versions USING btree (user_name);
+
+
+--
+-- Name: index_versions_on_versioned_id_and_versioned_type; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_versions_on_versioned_id_and_versioned_type ON versions USING btree (versioned_id, versioned_type);
+
+
+--
+-- Name: index_views_on_parent_id_and_parent_type; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_views_on_parent_id_and_parent_type ON views USING btree (parent_id, parent_type);
+
+
+--
+-- Name: post_timings_summary; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE INDEX post_timings_summary ON post_timings USING btree (topic_id, post_number);
+
+
+--
+-- Name: post_timings_unique; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX post_timings_unique ON post_timings USING btree (topic_id, post_number, user_id);
+
+
+--
+-- Name: unique_views; Type: INDEX; Schema: backup; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX unique_views ON views USING btree (parent_id, parent_type, ip, viewed_at);
+
+
+SET search_path = public, pg_catalog;
 
 --
 -- Name: cat_featured_threads; Type: INDEX; Schema: public; Owner: -; Tablespace: 
