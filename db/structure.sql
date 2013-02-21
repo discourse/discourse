@@ -1222,10 +1222,6 @@ CREATE TABLE categories (
     name character varying(50) NOT NULL,
     color character varying(6) DEFAULT 'AB9364'::character varying NOT NULL,
     topic_id integer,
-    top1_topic_id integer,
-    top2_topic_id integer,
-    top1_user_id integer,
-    top2_user_id integer,
     topic_count integer DEFAULT 0 NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
@@ -1233,7 +1229,8 @@ CREATE TABLE categories (
     topics_year integer,
     topics_month integer,
     topics_week integer,
-    slug character varying(255) NOT NULL
+    slug character varying(255) NOT NULL,
+    description text
 );
 
 
@@ -1242,7 +1239,7 @@ CREATE TABLE categories (
 --
 
 CREATE SEQUENCE categories_id_seq
-    START WITH 5
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1327,7 +1324,7 @@ CREATE TABLE draft_sequences (
 --
 
 CREATE SEQUENCE draft_sequences_id_seq
-    START WITH 20
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1361,7 +1358,7 @@ CREATE TABLE drafts (
 --
 
 CREATE SEQUENCE drafts_id_seq
-    START WITH 2
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1394,7 +1391,7 @@ CREATE TABLE email_logs (
 --
 
 CREATE SEQUENCE email_logs_id_seq
-    START WITH 3
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1429,7 +1426,7 @@ CREATE TABLE email_tokens (
 --
 
 CREATE SEQUENCE email_tokens_id_seq
-    START WITH 3
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1642,7 +1639,7 @@ CREATE TABLE onebox_renders (
 --
 
 CREATE SEQUENCE onebox_renders_id_seq
-    START WITH 2
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1676,7 +1673,7 @@ CREATE TABLE post_action_types (
 --
 
 CREATE SEQUENCE post_action_types_id_seq
-    START WITH 6
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1807,7 +1804,7 @@ CREATE TABLE posts (
 --
 
 CREATE SEQUENCE posts_id_seq
-    START WITH 16
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1898,7 +1895,7 @@ CREATE TABLE site_settings (
 --
 
 CREATE SEQUENCE site_settings_id_seq
-    START WITH 4
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1930,7 +1927,7 @@ CREATE TABLE topic_allowed_users (
 --
 
 CREATE SEQUENCE topic_allowed_users_id_seq
-    START WITH 3
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -2122,7 +2119,7 @@ CREATE TABLE topics (
 --
 
 CREATE SEQUENCE topics_id_seq
-    START WITH 16
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -2228,7 +2225,7 @@ CREATE TABLE user_actions (
 --
 
 CREATE SEQUENCE user_actions_id_seq
-    START WITH 40
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -2292,7 +2289,7 @@ CREATE TABLE user_visits (
 --
 
 CREATE SEQUENCE user_visits_id_seq
-    START WITH 4
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -2359,7 +2356,7 @@ CREATE TABLE users (
 --
 
 CREATE SEQUENCE users_id_seq
-    START WITH 3
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -4579,3 +4576,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130208220635');
 INSERT INTO schema_migrations (version) VALUES ('20130213021450');
 
 INSERT INTO schema_migrations (version) VALUES ('20130213203300');
+
+INSERT INTO schema_migrations (version) VALUES ('20130221215017');

@@ -1,6 +1,7 @@
 (function() {
 
   window.Discourse.Site = Discourse.Model.extend({
+
     notificationLookup: (function() {
       var result;
       result = [];
@@ -9,6 +10,7 @@
       });
       return result;
     }).property('notification_types'),
+
     flagTypes: (function() {
       var postActionTypes;
       postActionTypes = this.get('post_action_types');
@@ -17,8 +19,14 @@
       }
       return postActionTypes.filterProperty('is_flag', true);
     }).property('post_action_types.@each'),
+
     postActionTypeById: function(id) {
       return this.get("postActionByIdLookup.action" + id);
+    },
+
+    updateCategory: function(newCategory) {
+      var existingCategory = this.get('categories').findProperty('id', Em.get(newCategory, 'id'));
+      if (existingCategory) existingCategory.mergeAttributes(newCategory);
     }
   });
 

@@ -144,22 +144,25 @@
           url: "/posts/" + (this.get('id')),
           type: 'PUT',
           data: {
-            post: {
-              raw: this.get('raw')
-            },
+            post: { raw: this.get('raw') },
             image_sizes: this.get('imageSizes')
           },
           success: function(result) {
-            return typeof complete === "function" ? complete(Discourse.Post.create(result)) : void 0;
+
+            console.log(result)
+            
+            // If we received a category update, update it
+            if (result.category) Discourse.get('site').updateCategory(result.category);
+
+            return typeof complete === "function" ? complete(Discourse.Post.create(result.post)) : void 0;
           },
           error: function(result) {
             return typeof error === "function" ? error(result) : void 0;
           }
         });
       } else {
-        /* We're saving a post
-        */
 
+        // We're saving a post
         data = {
           post: this.getProperties('raw', 'topic_id', 'reply_to_post_number', 'category'),
           archetype: this.get('archetype'),

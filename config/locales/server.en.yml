@@ -62,6 +62,8 @@ en:
 
   category:
     topic_prefix: "Category definition for %{category}"
+    replace_paragraph: "[Replace this first paragraph with a short description of your new category. Try to keep it below 200 characters.]"
+    post_template: "%{replace_paragraph}\n\nUse this space below for a longer description, as well as to establish any rules or discussion!"
 
   trust_levels:
     new:
@@ -254,7 +256,6 @@ en:
     exclude_rel_nofollow_domains: "A comma delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
     post_excerpt_maxlength: "Maximum length in chars of a post's excerpt."
     post_onebox_maxlength: "Maximum length of a oneboxed discourse post."
-    category_post_template: "The post template that appears once you create a category"
     new_topics_rollup: "How many topics can be inserted on the topic list before rolling up."
     onebox_max_chars: "The maximum amount of characters a onebox will import in a text blob."
     logo_url: "The logo for your site eg: http://xyz.com/x.png"

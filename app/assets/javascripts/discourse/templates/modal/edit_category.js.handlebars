@@ -3,10 +3,17 @@
     <label>{{i18n category.name}}</label>
     {{view Discourse.TextField valueBinding="view.category.name" placeholderKey="category.name_placeholder"}}
 
-    {{#if view.category.excerpt}}
+    <div class='description-controls' style="margin-bottom: 20px">
       <label>{{i18n category.description}}</label>
-      <p>{{view.category.excerpt}} <a href="{{unbound view.category.topic_url}}">{{i18n category.topic}}</a></p>
-    {{/if}}
+
+      {{#if view.category.description}}
+        {{view.category.description}}
+        <a href="#" {{action showCategoryTopic target="view"}}>{{i18n category.change_in_category_topic}}</a>
+      {{else}}
+        {{i18n category.no_description}} <a {{action showCategoryTopic target="view"}} href="#">{{i18n category.change_in_category_topic}}</a>
+      {{/if}}
+
+    </div>
 
     <label>{{i18n category.color}}</label>
 

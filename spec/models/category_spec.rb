@@ -83,6 +83,10 @@ describe Category do
       @category.slug.should == 'amazing-category'
     end
 
+    it 'has a default description' do
+      @category.description.should be_blank
+    end
+
     it 'has one topic' do
       Topic.where(category_id: @category).count.should == 1
     end
@@ -107,13 +111,11 @@ describe Category do
       @topic.posts.count.should == 1
     end
 
-    it 'should have an excerpt' do
-      @category.excerpt.should be_present
-    end
-
     it 'should have a topic url' do
       @category.topic_url.should be_present
     end
+
+
 
     describe "trying to change the category topic's category" do
 
@@ -166,8 +168,7 @@ describe Category do
     context 'with regular topics' do
 
       before do
-        @category.topics << Fabricate(:topic, 
-                                      user: @category.user)     
+        @category.topics << Fabricate(:topic, user: @category.user)     
         Category.update_stats
         @category.reload
       end

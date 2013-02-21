@@ -40,16 +40,22 @@
     */
 
     categoryLink: function(category) {
-      var color, name;
-      if (!category) {
-        return "";
-      }
+      var color, name, description, result;
+      if (!category) return "";
+
       color = Em.get(category, 'color');
       name = Em.get(category, 'name');
-      return "<a href=\"/category/" + 
-             (this.categoryUrlId(category)) + 
-             "\" class=\"badge-category excerptable\" data-excerpt-size=\"medium\" style=\"background-color: #" + color + "\">" + 
-             name + "</a>";
+      description = Em.get(category, 'description');
+
+      // Build the HTML link
+      result = "<a href=\"/category/" + 
+                this.categoryUrlId(category) + 
+                "\" class=\"badge-category excerptable\" data-excerpt-size=\"medium\" ";
+
+      // Add description if we have it
+      if (description) result += "title=\"" + description + "\" ";
+
+      return result + "style=\"background-color: #" + color + "\">" + name + "</a>";
     },
     avatarUrl: function(username, size, template) {
       var rawSize;

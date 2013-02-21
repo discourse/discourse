@@ -44,19 +44,6 @@ class Category < ActiveRecord::Base
                          topics_week = (#{topics_week})")
   end
 
-  # Use the first paragraph of the topic's first post as the excerpt
-  def excerpt
-    if topic.present?
-      first_post = topic.posts.order(:post_number).first
-      body = first_post.cooked
-      matches = body.scan(/\<p\>(.*)\<\/p\>/)
-      if matches and matches[0] and matches[0][0]
-        return matches[0][0]
-      end
-    end
-    nil
-  end
-
   def topic_url
     topic.try(:relative_url)
   end
@@ -67,9 +54,15 @@ class Category < ActiveRecord::Base
 
   after_create do
     topic = Topic.create!(title: I18n.t("category.topic_prefix", category: name), user: user, visible: false)
-    topic.posts.create!(raw: SiteSetting.category_post_template, user: user)
+
+    post_contents = I18n.t("category.post_template", replace_paragraph: I18n.t("category.replace_paragraph"))
+    topic.posts.create!(raw: post_contents, user: user)
     update_column(:topic_id, topic.id)
     topic.update_column(:category_id, self.id)
+  end
+
+  def self.post_template
+    I18n.t("category.post_template", replace_paragraph: I18n.t("category.replace_paragraph"))
   end
 
   # We cache the categories in the site json, so we need to invalidate it when they change

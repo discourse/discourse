@@ -43,6 +43,11 @@ describe PostRevisor do
       it "doesn't change the last_version_at" do
         post.last_version_at.should == first_version_at
       end
+
+      it "doesn't update a category" do
+        subject.category_changed.should be_blank
+      end
+
     end
 
     describe 'revision much later' do
@@ -53,6 +58,10 @@ describe PostRevisor do
         SiteSetting.stubs(:ninja_edit_window).returns(1.minute.to_i)
         subject.revise!(post.user, 'updated body', revised_at: revised_at)
         post.reload
+      end
+
+      it "doesn't update a category" do
+        subject.category_changed.should be_blank
       end
 
       it 'updates the cached_version' do
@@ -82,6 +91,10 @@ describe PostRevisor do
           post.last_version_at.to_i.should == revised_at.to_i
         end
 
+        it "doesn't update a category" do
+          subject.category_changed.should be_blank
+        end
+
         context "after second window" do
 
           let!(:new_revised_at) {revised_at + 2.minutes}
@@ -100,6 +113,68 @@ describe PostRevisor do
           end
         end
       end
+    end
+
+    describe 'category topic' do
+
+      let!(:category) do 
+        category = Fabricate(:category)
+        category.update_column(:topic_id, topic.id)
+        category
+      end
+
+      let(:new_description) { "this is my new description." }
+
+      it "should have to description by default" do
+        category.description.should be_blank
+      end
+
+      context "one paragraph description" do
+        before do
+          subject.revise!(post.user, new_description)
+          category.reload
+        end
+
+        it "returns true for category_changed" do
+          subject.category_changed.should be_true
+        end
+
+        it "updates the description of the category" do
+          category.description.should == new_description
+        end
+      end
+
+      context "multiple paragraph description" do
+        before do
+          subject.revise!(post.user, "#{new_description}\n\nOther content goes here.")
+          category.reload
+        end
+
+        it "returns the changed category info" do
+          subject.category_changed.should == category
+        end
+
+        it "updates the description of the category" do
+          category.description.should == new_description
+        end        
+      end
+
+      context 'when updating back to the original paragraph' do
+        before do
+          category.update_column(:description, 'this is my description')
+          subject.revise!(post.user, Category.post_template)
+          category.reload
+        end
+
+        it "puts the description back to nothing" do
+          category.description.should be_blank
+        end
+
+        it "returns true for category_changed" do
+          subject.category_changed.should == category
+        end
+      end
+
     end
 
     describe 'rate limiter' do

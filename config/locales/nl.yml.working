@@ -228,7 +228,6 @@ nl:
     exclude_rel_nofollow_domains: "Een commagescheiden lijst van domeinen waar 'nofollow' niet is toegevoegd. (voorbeelddomein.com zal automatisch sub.voorbeelddomein.com toestaan)"
     post_excerpt_maxlength: "Maximale lengte in karakters van een post-uittreksel."
     post_onebox_maxlength: "Maximale lengte van een 'oneboxed' discourse post."
-    category_post_template: "De post-template die verschijnt wanneer je een categorie aanmaakt"
     new_topics_rollup: "Hoeveel topics er aan een topic-lijst kunnen worden toegevoegd voordat de lijst oprolt."
     onebox_max_chars: "Het maximaal aantal karakters dat een 'onebox' zal importeren in een lap text."
     logo_url: "Het logo van je site bijv: http://xyz.com/x.png"

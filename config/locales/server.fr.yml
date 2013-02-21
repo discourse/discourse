@@ -261,7 +261,6 @@ fr:
     exclude_rel_nofollow_domains: "Une liste séparée par des virgules contenant les noms de domaines de premier niveau pour lesquels il faut ajouter un attribut nofollow (exemple.com va automatiquement fonctionner aussi avec sous.domaine.exemple.com)"
     post_excerpt_maxlength: "Longueur maximale d'un extrait de message."
     post_onebox_maxlength: "Longueur maximale d'un message emboîté."
-    category_post_template: "Le modèle de message qui va apparaitre quand vous créez une catégorie"
     new_topics_rollup: "Combien de discussions peuvent être insérées dans la liste des discussions avant de remonter."
     onebox_max_chars: "Nombre maximal de caractères qu'une boîte peut importer en blob de texte."
     logo_url: "Le logo de votre site, par exemple: http://xyz.com/x.png"

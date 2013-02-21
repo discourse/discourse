@@ -312,6 +312,7 @@
       post.set('cooked', jQuery('#wmd-preview').html());
       this.set('composeState', CLOSED);
       post.save(function(savedPost) {
+       
         var idx, postNumber, posts;
         posts = _this.get('topic.posts');
         /* perhaps our post came from elsewhere eg. draft
