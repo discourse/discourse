@@ -1,21 +1,21 @@
 <h3>{{i18n admin.dashboard.welcome}}</h3>
 
 {{#if Discourse.SiteSettings.version_checks}}
-  <p {{bindAttr class="priorityClass"}}>
+  <p {{bindAttr class="view.priorityClass"}}>
     {{#if loading }}
       {{i18n loading}}
     {{else}}
       {{i18n admin.dashboard.version}}: <span class="version-number">{{ versionCheck.installed_version }}</span>
 
       {{#if versionCheck.installed_sha}}
-        <span class="git-version">(<a {{bindAttr href="gitLink"}} target="_blank">{{shortSha}}</a>)</span>
+        <span class="git-version">(<a {{bindAttr href="versionCheck.gitLink"}} target="_blank">{{versionCheck.shortSha}}</a>)</span>
       {{/if}}
 
       <span class="version-notes">
-        {{#if upToDate }}
+        {{#if versionCheck.upToDate }}
           <i class='icon icon-ok update-to-date'></i> {{i18n admin.dashboard.up_to_date}}
         {{else}}
-          <i {{bindAttr class="updateIconClasses"}}></i>
+          <i {{bindAttr class="view.updateIconClasses"}}></i>
           <span class="critical-note">{{i18n admin.dashboard.critical_available}}</span>
           <span class="normal-note">{{i18n admin.dashboard.updates_available}}</span>
           {{i18n admin.dashboard.please_upgrade}}
