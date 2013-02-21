@@ -7,9 +7,9 @@
 
 fr:
   js:
-    share: 
-      topic: 'partager un lien vers cette discussion' 
-      post: 'partager un lien vers ce message' 
+    share:
+      topic: 'partager un lien vers cette discussion'
+      post: 'partager un lien vers ce message'
     edit: 'éditer le titre et la catégorie de cette discussion'
     not_implemented: "Cette fonctionnalité n'a pas encore été implémentée, désolé."
     no_value: "Non"
@@ -33,7 +33,7 @@ fr:
     bookmarks:
       not_logged_in: "Désolé vous devez être connecté pour placer ce message dans vos favoris."
       created: "Vous avez placé ce message dans vos favoris."
-      not_bookmarked: "Vous avez lu ce message; cliquez pour le placer dans vos favoris."
+      not_bookmarked: "Vous avez lu ce message; Cliquez pour le placer dans vos favoris."
       last_read: "Voici le dernier message que vous avez lu."
 
     new_topics_inserted: "{{count}} nouvelles discussions."
@@ -64,12 +64,12 @@ fr:
       invited_by: "Invité par"
       trust_level: "Niveau de confiance"
 
-      change_username: 
+      change_username:
         action: "changer"
         title: "Changer le pseudo"
         confirm: "Changer de pseudo peut avoir des conséquences. Êtes-vous absolument sûr de le vouloir ?"
         taken: "Désolé, ce pseudo est déjà pris"
-        error: "Il y a eu une erreur en changant votre pseudo."
+        error: "Il y a eu une erreur en changeant votre pseudo."
         invalid: "Ce pseudo est invalide. Il ne doit être composé que de lettres et de chiffres."
       change_email:
         action: 'changer'
@@ -78,7 +78,7 @@ fr:
         error: "Il y a eu une erreur lors du changement d'email. Cette adresse est peut-être déjà utilisée ?"
         success: "Nous vous avons envoyé un mail à cette adresse. Merci de suivre les instructions."
 
-      email: 
+      email:
         title: "Email"
         instructions: "Votre adresse email ne sera jamais comuniquée."
         ok: "Ça à l'air bien ! On vous envoie un mail pour confirmer."
@@ -86,14 +86,13 @@ fr:
         authenticated: "Votre adresse email a été authentifiée par {{provider}}."
         frequency: "Nous vous envoyons des mails contenant uniquement des informations que vous n'avez pas déjà vues lors d'une précédente connexion."
 
-      name: 
+      name:
         title: "Nom"
         instructions: "Votre nom complet (pas nécessairement unique)."
         too_short: "Votre nom est trop court."
         ok: "Votre nom à l'air sympa !."
-      username: 
+      username:
         title: "Pseudo"
-        #instructions: "People can mention you as @{{username}}. This is an unregistered nickname. You can register it at <a href='http://discourse.org'>discourse.org</a>."
         instructions: "Les gens peuvent vous mentionner avec @{{username}}. Ce pseudo n'est pas enregistré. Vous pouvez l'enregistrer sur <a href='http://discourse.org'>discourse.org</a>."
         available: "Votre pseudo est disponible."
         global_match: "L'adresse email correspond au pseudo enregistré."
@@ -111,7 +110,7 @@ fr:
       log_out: "Déconnexion"
       website: "site internet"
       email_settings: "Email"
-      email_digests: 
+      email_digests:
         title: "Quand je ne visite pas ce site, m'envoyer un résumé par mail des nouveautés"
         daily: "quotidiennes"
         weekly: "hebdomadaires"
@@ -127,11 +126,11 @@ fr:
         not_viewed: "Je ne les ai pas encore vues"
         last_here: "elles ont été publiées depuis ma dernière visite"
         after_n_days:
-          one: "elles ont été publiées hier" 
-          other: "elles ont été publiées lors des {{count}} derniers jours" 
+          one: "elles ont été publiées hier"
+          other: "elles ont été publiées lors des {{count}} derniers jours"
         after_n_weeks:
-          one: "elles ont été publiées la semaine dernière" 
-          other: "elles ont été publiées lors des {{count}} dernières semaines" 
+          one: "elles ont été publiées la semaine dernière"
+          other: "elles ont été publiées lors des {{count}} dernières semaines"
 
       auto_track_topics: "Suivre automatiquement les discussions que j'ai postées"
       auto_track_options:
@@ -144,7 +143,7 @@ fr:
           one: "dans une minute"
           other: "dans {{count}} minutes"
 
-      invited: 
+      invited:
         title: "Invités"
         user: "Utilisateurs invités"
         none: "{{username}} n'a invité personne sur le site."
@@ -159,30 +158,30 @@ fr:
         days_visited: "nombre de jours de visite"
         account_age_days: "Âge du compte en jours"
 
-      password: 
+      password:
         title: "Mot de passe"
         too_short: "Votre mot de passe est trop court"
         ok: "Votre mot de passe est correct"
 
-      ip_address: 
+      ip_address:
         title: "Dernières adresses IP"
-      avatar: 
+      avatar:
         title: "Avatar"
         instructions: "Nous utilisons <a href='https://gravatar.com' target='_blank'>Gravatar</a> pour associer votre avatar avec votre adresse email."
 
       filters:
-        all: "Tout"        
+        all: "Tout"
 
     loading: "Chargement..."
     close: "Fermeture"
     learn_more: "en savoir plus..."
 
     year: 'an'
-    year_desc: 'discussions postés dans les 365 derniers jours'
+    year_desc: 'discussions postées dans les 365 derniers jours'
     month: 'mois'
-    month_desc: 'discussions postés dans les 30 derniers jours'
+    month_desc: 'discussions postées dans les 30 derniers jours'
     week: 'semaine'
-    week_desc: 'discussions postés dans les 7 derniers jours'
+    week_desc: 'discussions postées dans les 7 derniers jours'
 
     first_post: Premier message
     mute: Désactiver
@@ -209,7 +208,7 @@ fr:
       action: "Créer !"
       invite: "Vous n'avez pas encore de compte ?"
       failed: "Quelque chose s'est mal passé, peut-être que cette adresse email est déjà enregistrée, essayez le lien Mot de passe oublié."
-    forgot_password: 
+    forgot_password:
       title: "Mot de passe oublié ?"
       action: "J'ai oublié mon mot de passe"
       invite: "Entrez votre pseudo ou votre adresse email, et vous recevrez un nouveau mot de passe par mail"
@@ -242,14 +241,14 @@ fr:
         message: "Authentification via Yahoo (assurez-vous que les popups ne soient pas bloquées)"
 
     composer:
-      saving_draft_tip: "sauvegarde..."  
-      saved_draft_tip: "sauvegardé"  
-      saved_local_draft_tip: "sauvegardé en local"  
+      saving_draft_tip: "sauvegarde..."
+      saved_draft_tip: "sauvegardé"
+      saved_local_draft_tip: "sauvegardé en local"
 
       min_length:
         at_least: "Saisir au moins {{n}} caractères"
         more: "{{n}} restants..."
-      save_edit: "Sauvegarder la modification"  
+      save_edit: "Sauvegarder la modification"
       reply: "Répondre"
       create_topic: "Créer une discussion"
       create_pm: "Créer un message privé."
@@ -288,7 +287,7 @@ fr:
       local_tip: "Cliquez pour sélectionner une image depuis votre terminal."
       upload: "Envoyer"
 
-    search: 
+    search:
       title: "Rechercher les discussions, messages, utilisateurs ou catégories"
       placeholder: "saisir votre requête ici"
       no_results: "Aucun résultat."
@@ -302,7 +301,7 @@ fr:
       title: 'Favoris'
       help: 'ajouter cette discussion à vos favoris'
 
-    topics: 
+    topics:
       no_favorited: "Vous n'avez aucune discussion favorite pour le moment. Pour ajouter une discussion aux favoris, cliquez sur l'étoile suivant le titre"
       no_unread: "Vous avez des discussions non lues."
       no_new: "Vous n'avez aucune discussion non lue."
@@ -310,7 +309,7 @@ fr:
       no_posted: "Vous n'avez écrit aucun message pour le moment."
       no_popular: "Il n'y a aucune discussion populaire pour le moment. C'est triste..."
 
-    topic:      
+    topic:
       create_in: 'Créer une discussion dans la catégorie {{categoryName}}'
       create: 'Créer une discussion'
       create_long: 'Créer une nouvelle discussion'
@@ -346,16 +345,17 @@ fr:
       notifications:
         title: ''
         reasons:
-          "3_2": 'Vous receverez des notifications car vous suivez attentivement cette discussion.'
-          "3_1": "Vous receverez des notifications car vous avez créé cette discussion."
-          "2_4": 'Vous receverez des notifications car vous avez posté une réponse dans cette discussion.'
-          "2_2": 'Vous receverez des notifications car vous suivez cette discussion.'
-          "2": 'Vous receverez des notifications car vous <a href="/users/{{username}}/preferences">lu cette discussion</a>.'
+          "3_2": 'Vous recevrez des notifications car vous suivez attentivement cette discussion.'
+          "3_1": "Vous recevrez des notifications car vous avez créé cette discussion."
+          "3": "Vous recevrez des notifications car vous suivez cette discussion."
+          "2_4": 'Vous recevrez des notifications car vous avez posté une réponse dans cette discussion.'
+          "2_2": 'Vous recevrez des notifications car vous suivez cette discussion.'
+          "2": 'Vous recevrez des notifications car vous <a href="/users/{{username}}/preferences">lu cette discussion</a>.'
           "1": 'Vous serez notifié seulement si un utilisateur mentionne votre @pseudo ou réponds à vos messages.'
           "1_2": 'Vous serez notifié seulement si un utilisateur mentionne votre @pseudo ou réponds à vos messages.'
           "0": 'Vous ignorez toutes les notifications de cette discussion.'
           "0_2": 'Vous ignorez toutes les notifications de cette discussion.'
-        watching: 
+        watching:
           title: "Suivre attentivement"
           description: "pareil que le suivi simple, plus une notification systématique pour chaque nouveau message."
         tracking:
@@ -363,10 +363,10 @@ fr:
           description: "vous serez notifié des messages non lus, des mentions de votre @pseudo et des réponses à vos messages."
         regular:
           title: "Normal"
-          description: "vous receverez des notifications seuelement si un utilisateur mentionne votre @pseudo ou répond à un de vos messages"
+          description: "vous recevrez des notifications seuelement si un utilisateur mentionne votre @pseudo ou répond à un de vos messages"
         muted:
           title: "Silencieux"
-          description: "vous ne receverez aucune notification de cette discussion et elle n'apparaitra pas dans l'onglet des discussions non lues"
+          description: "vous ne recevrez aucune notification de cette discussion et elle n'apparaitra pas dans l'onglet des discussions non lues"
 
       actions:
         delete: "Supprimer la discussion"
@@ -382,11 +382,11 @@ fr:
         multi_select: "Basculer sur la multi-sélection"
         convert_to_topic: "Convertir en discussion normale"
 
-      reply: 
+      reply:
         title: 'Répondre'
         help: 'commencez à répondre à cette discussion'
 
-      share: 
+      share:
         title: 'Partager'
         help: 'partager un lien vers cette discussion'
 
@@ -400,11 +400,11 @@ fr:
         success: "Merci ! Vous avez invité cet utilisateur à participer à la discussion privée."
         error: "Désolé, il y a eu une erreur lors de l'invitation de cet utilisateur"
 
-      invite_reply: 
+      invite_reply:
         title: 'Inviter des amis à répondre'
         help: "envoyer des invitations à des amis pour qu'ils puissent participer à cette discussion en un simple clic"
         email: "Nous allons envoyer un mail à votre ami pour lui permettre de participer à cette conversation."
-        email_placeholder: 'adresse email' 
+        email_placeholder: 'adresse email'
         success: "Merci ! Nous avons envoyé un mail à <b>{{email}}</b>. Suivez vos invitations dans l'onglet prévu à cet effet sur votre page utilisateur."
         error: "Désolé nous ne pouvons pas inviter cette personne."
 
@@ -419,7 +419,7 @@ fr:
         title: "Déplacer les messages sélectionnés"
         topic_name: "Nom de la nouvelle conversation"
         error: "Désolé, nous n'avons pas réussi à déplacer ces messages."
-        instructions: 
+        instructions:
           one: "Vous êtes sur le point de créer une nouvelle discussion à partir du message sélectionné."
           other: "Vous êtes sur le point de créer une nouvelle discussion à partir des <b>{{count}}</b> messages sélectionnés."
 
@@ -434,7 +434,7 @@ fr:
           other: "Vous avez sélectionné <b>{{count}}</b> messages."
 
     post:
-      reply: "Répondre à {{link}} via {{replyAvatar}} {{username}}" 
+      reply: "Répondre à {{link}} via {{replyAvatar}} {{username}}"
       reply_topic: "Répondre à {{link}}"
       edit: "Éditer {{link}}"
       in_reply_to: "Réponse courte"
@@ -483,13 +483,13 @@ fr:
           one: "Une personne {{long_form}}"
           other: "{{count}} personnes {{long_form}}"
 
-      edits: 
+      edits:
         one: Une édition
         other: "{{count}} éditions"
         zero: pas d'édition
 
       delete:
-        confirm: 
+        confirm:
           one: "Êtes-vous sûr de vouloir supprimer ce message ?"
           other: "Êtes-vous sûr de vouloir supprimer tous ces messages ?"
 
@@ -504,7 +504,7 @@ fr:
       description: "Description"
       topic: "Catégorie de la discussion"
       color: "Couleur"
-      name_placeholder: "Devrait être conçis."
+      name_placeholder: "Devrait être concis."
       color_placeholder: "N'importe quelle couleur"
       delete_confirm: "Voulez-vous vraiment supprimer cette catégorie ?"
       list: "Liste des categories"
@@ -531,7 +531,6 @@ fr:
       archived:
         help: "cette discussion est archivée, elle est gelée et ne peut être modifiée"
       invisible:
-        #help: "this topic is invisible; it will not be displayed in topic lists, and can only be accessed via a direct link"
         help: "cette discussion est invisible, elle ne sera pas affichée dans la liste des discussions et est seulement accessible via un lien direct"
 
     posts: "Messages"
@@ -548,27 +547,27 @@ fr:
     categories_list: "Liste des catégories"
 
     filters:
-      popular: 
+      popular:
         title: "Populaires"
         help: "discussions récentes les plus populaires"
-      favorited: 
+      favorited:
         title: "Favorites"
         help: "discussions que vous avez ajoutées à vos favoris"
-      read: 
+      read:
         title: "Lues"
         help: "discussions que vous avez lues"
-      categories: 
+      categories:
         title: "Catégorie"
         title_in: "Catégorie - {{categoryName}}"
         help: "toutes les discussions regroupées par categorie"
       unread:
-        title: 
+        title:
           zero: "Non lue (0)"
           one: "Non lue (1)"
           other: "Non lues ({{count}})"
         help: "discussions suivies contenant des réponses non lues"
-      new: 
-        title: 
+      new:
+        title:
           zero: "Nouvelle (0)"
           one: "Nouvelle (1)"
           other: "Nouvelles ({{count}})"
@@ -585,25 +584,31 @@ fr:
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
-    type_to_filter: "type to filter..."
+    type_to_filter: "Commencez à taper pour filter..."
 
-    admin:      
+    admin:
       title: 'Administation Discourse'
 
       dashboard:
         title: "Panel d'administration"
+        welcome: "Bienvenue dans la section administration."
+        version: "Version de Discourse"
+        up_to_date: "Vous utilisez la dernière version de Discourse."
+        critical_available: "Une mise à jour critique est disponible."
+        updates_available: "Des mises à jour sont disponibles."
+        please_upgrade: "Veuillez mettre à jour !"
+        latest_version: "Dernière version"
 
       flags:
         title: "Signalements"
         old: "Vieux"
         active: "Actifs"
         clear: "Vider les signalements"
-        #clear_title: "dismiss all flags on this post (will unhide hidden posts)"
-        clear_title: "Rejeter tous les signalements sur ce message (va ré-afficher les messages cachés)"
+        clear_title: "Rejeter tous les signalements sur ce message (va réafficher les messages cachés)"
         delete: "Supprimer le message"
         delete_title: "supprimer le message (va supprimer la discussion si c'est le premier message)"
 
-      customize: 
+      customize:
         title: "Personnaliser"
         header: "En-tête"
         css: "Feuille de style"
@@ -627,7 +632,7 @@ fr:
       impersonate:
         title: "Se faire passer pour un utilisateur"
         username_or_email: "Pseudo ou adresse mail de l'utilisateur"
-        help: "Utiliser cet outil pour usurper l'identité d'un utilisateur (developpeur)."
+        help: "Utiliser cet outil pour usurper l'identité d'un utilisateur (développeur)."
         not_found: "Cet utilisateur n'a pas été trouvé."
         invalid: "Désolé, vous ne pouvez pas vous faire passer pour cet utilisateur."
 
@@ -647,7 +652,7 @@ fr:
       user:
         ban_failed: "Il y a eu un problème pendant le bannissement de cet utilisateur {{error}}"
         unban_failed: "Il y a eu un problème pendant le débannissement de cet utilisateur {{error}}"
-        ban_duration: "Pour combien de temps voulez-vous banir cet utilisateur ? (jours)"
+        ban_duration: "Pour combien de temps voulez-vous bannir cet utilisateur ? (jours)"
         delete_all_posts: "Supprimer tous les messages"
         ban: "Bannir"
         unban: "Débannir"
