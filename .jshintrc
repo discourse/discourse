@@ -1,0 +1,26 @@
+{
+	"bitwise" :true,
+	"eqeqeq": true,
+	"forin": false,
+	"immed": true,
+	"latedef": true,
+	"noarg": true,
+	"noempty": true,
+	"nonew": true,
+	"strict": true,
+	"trailing": true,
+	"undef": true,
+	"unused": true,
+	"quotmark": "single",
+
+	"browser": true,
+	"loopfunc": true,
+	"laxbreak": true,
+	"smarttabs": true,
+
+	"predef": [
+		"mw",
+		"$",
+		"prompt"
+	]
+}
