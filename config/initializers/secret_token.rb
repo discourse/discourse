@@ -4,7 +4,9 @@
 #  however, the stock one should never be used in production, people will be able to crack 
 #  session cookies. 
 #
-
+# Generate a new secret with "rake secret".  Copy the output of that command and paste it
+# in your secret_token.rb as the value of Discourse::Application.config.secret_token:
+#
 # Discourse::Application.config.secret_token = "SET_SECRET_HERE" 
 
 # delete all lines below in production
