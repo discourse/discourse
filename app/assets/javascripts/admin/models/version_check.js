@@ -1,11 +1,6 @@
 (function() {
 
-  window.Discourse.VersionCheck = Discourse.Model.extend({
-    hasInstalledSha: function() {
-      console.log( 'hello??' );
-      return( this.get('installed_sha') && this.get('installed_sha') != 'unknown' );
-    }.property('installed_sha')
-  });
+  window.Discourse.VersionCheck = Discourse.Model.extend({});
 
   Discourse.VersionCheck.reopenClass({
     find: function() {
