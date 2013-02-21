@@ -1,3 +1,5 @@
+/*global phantom:true */
+
 console.log('Starting Smoke Test');
 var system = require('system');
 
@@ -90,33 +92,33 @@ var run = function(){
 page.runTests = function(){
 
   test("more than one topic shows up", function() {
-    return $('#topic-list tbody tr').length > 0;
+    return jQuery('#topic-list tbody tr').length > 0;
   });
 
   test("expect a log in button", function(){
-    return $('.current-username .btn').text() === 'Log In';
+    return jQuery('.current-username .btn').text() === 'Log In';
   });
 
   navigate("navigate to first topic", function(){
     Em.run.later(function(){
-      $('.main-link a:first').click();
+      jQuery('.main-link a:first').click();
     }, 500);
   });
 
   test("at least one post body", function(){
-    return $('.topic-post').length > 0;
+    return jQuery('.topic-post').length > 0;
   });
   
   navigate("navigate to first user", function(){
     // for whatever reason the clicks do not respond at the begining
     //  defering
     Em.run.later(function(){
-      $('.topic-meta-data a:first').focus().click();
+      jQuery('.topic-meta-data a:first').focus().click();
     },500);
   });
 
   test("has about me section",function(){
-    return $('.about-me').length === 1;
+    return jQuery('.about-me').length === 1;
   });
 
   run();

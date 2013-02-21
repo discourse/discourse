@@ -9,6 +9,7 @@
 paths:
   - app/assets/javascripts/**/*.js
   - spec/javascripts/**/*.js
+  - spec/phantom_js/**/*.js
 
 exclude_paths:
   - app/assets/javascripts/external/*
@@ -22,7 +23,7 @@ exclude_paths:
 # "enforce" type options (true means potentially more warnings)
 
 adsafe:   false     # true if ADsafe rules should be enforced. See http://www.ADsafe.org/
-bitwise:  false     # true if bitwise operators should not be allowed
+bitwise:  true     # true if bitwise operators should not be allowed
 newcap:   true      # true if Initial Caps must be used with constructor functions
 eqeqeq:   true      # true if === should be required (for ALL equality comparisons)
 immed:    false     # true if immediate function invocations must be wrapped in parens
