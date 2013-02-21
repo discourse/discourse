@@ -98,9 +98,9 @@ page.runTests = function(){
   });
 
   navigate("navigate to first topic", function(){
-    Em.run.next(function(){
+    Em.run.later(function(){
       $('.main-link a:first').click();
-    });
+    }, 500);
   });
 
   test("at least one post body", function(){
@@ -108,9 +108,11 @@ page.runTests = function(){
   });
   
   navigate("navigate to first user", function(){
-    Em.run.next(function(){
+    // for whatever reason the clicks do not respond at the begining
+    //  defering
+    Em.run.later(function(){
       $('.topic-meta-data a:first').focus().click();
-    });
+    },500);
   });
 
   test("has about me section",function(){

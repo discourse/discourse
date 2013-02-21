@@ -6,7 +6,17 @@ task "smoke:test" => :environment do
   phantom_path = phantom_path || 'phantomjs'
 
   url = ENV["URL"] || Discourse.base_url
+  
   puts "Testing: #{url}"
+
+  require 'open-uri'
+  require 'net/http'
+
+  res = Net::HTTP.get_response(URI.parse(url))
+  if res.code != "200"
+    raise "TRIVIAL GET FAILED WITH #{res.code}"
+  end
+
   results = `#{phantom_path} #{Rails.root}/spec/phantom_js/smoke_test.js #{url}`
 
   puts results
