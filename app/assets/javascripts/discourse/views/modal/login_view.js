@@ -88,6 +88,14 @@ Discourse.LoginView = Discourse.ModalBodyView.extend({
     return window.open("/auth/facebook", "_blank", "menubar=no,status=no,height=400,width=800,left=" + left + ",top=" + top);
   },
 
+  clefLogin: function() {
+    var left, top;
+    this.set('authenticate', 'clef');
+    left = this.get('lastX') - 400;
+    top = this.get('lastY') - 200;
+    return window.open("/auth/clef", "_blank", "menubar=no,status=no,height=600,width=800,left=" + left + ",top=" + top);
+  },
+
   openidLogin: function(provider) {
     var left, top;
     left = this.get('lastX') - 400;

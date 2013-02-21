@@ -248,6 +248,9 @@ en:
       yahoo:
         title: "Log In with Yahoo"
         message: "Authenticating with Yahoo (make sure pop up blockers are not enabled)"
+      clef:
+        title: "Log In with Your Phone"
+        message: "Authenticating with Clef (make sure pop up blockers are not enabled)"
 
     composer:
       saving_draft_tip: "saving"
@@ -329,7 +332,6 @@ en:
         unread: "There are no more unread topics to read."
         favorited: "There are no more favorited topics to read."
         category: "There are no more {{category}} topics."
-
 
     topic:
       create_in: 'Create {{categoryName}} Topic'

@@ -162,6 +162,12 @@
       content: "Y";
     }
   }
+  &.clef {
+    background: $clef;
+    &:before {
+      content: "7";
+    }
+  }
 }
 
 // Button Sizes

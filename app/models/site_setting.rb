@@ -116,6 +116,9 @@ class SiteSetting < ActiveRecord::Base
   setting(:facebook_app_id, '')
   setting(:facebook_app_secret, '')
 
+  setting(:clef_app_id, '')
+  setting(:clef_app_secret, '')
+
   setting(:enforce_global_nicknames, true)
   setting(:discourse_org_access_key, '')
   setting(:enable_s3_uploads, false)

@@ -27,4 +27,8 @@ Rails.application.config.middleware.use OmniAuth::Builder do
            SiteSetting.twitter_consumer_key,
            SiteSetting.twitter_consumer_secret
 
+  provider :clef,
+           SiteSetting.clef_app_id,
+           SiteSetting.clef_app_secret
+
 end

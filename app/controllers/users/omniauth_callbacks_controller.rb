@@ -17,6 +17,8 @@ class Users::OmniauthCallbacksController < ApplicationController
       create_or_sign_on_user_using_facebook(auth_token)
     when "twitter"
       create_or_sign_on_user_using_twitter(auth_token)
+    when "clef"
+      create_or_sign_on_user_using_clef(auth_token)
     when "google", "yahoo"
       create_or_sign_on_user_using_openid(auth_token)
     end
@@ -111,6 +113,66 @@ class Users::OmniauthCallbacksController < ApplicationController
       user = User.where(email: email).first
       if user
         FacebookUserInfo.create!(session[:authentication][:facebook].merge(user_id: user.id))
+        unless user.active
+          user.active = true
+          user.save
+        end
+        log_on_user(user)
+        @data[:authenticated] = true
+      end
+    end
+
+  end
+
+  def create_or_sign_on_user_using_clef(auth_token)
+
+    data = auth_token[:info]
+    raw_info = auth_token["extra"]["raw_info"]
+
+    email = data[:email]
+    first_name = data["first_name"]
+    last_name = data["last_name"]
+    clef_uid = raw_info["id"]
+    name = "#{first_name} #{last_name}"
+
+    username = User.suggest_username(name.clone)
+
+    session[:authentication] = {
+      clef: {
+        clef_user_id: clef_uid ,
+        first_name: raw_info["first_name"],
+        last_name: raw_info["last_name"],
+        email: raw_info["email"],
+        name: name
+      },
+      email: email,
+      email_valid: true
+    }
+
+    user_info = ClefUserInfo.where(:clef_user_id => clef_uid ).first
+
+    @data = {
+      username: username,
+      name: name,
+      email: email,
+      auth_provider: "Clef",
+      email_valid: true
+    }
+
+    if user_info
+      user = user_info.user
+      if user
+        unless user.active
+          user.active = true
+          user.save
+        end
+        log_on_user(user)
+        @data[:authenticated] = true
+      end
+    else
+      user = User.where(email: email).first
+      if user
+        ClefUserInfo.create!(session[:authentication][:clef].merge(user_id: user.id))
         unless user.active
           user.active = true
           user.save

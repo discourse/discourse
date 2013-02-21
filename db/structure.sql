@@ -1308,6 +1308,42 @@ ALTER SEQUENCE category_featured_users_id_seq OWNED BY category_featured_users.i
 
 
 --
+-- Name: clef_user_infos; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE clef_user_infos (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    clef_user_id integer NOT NULL,
+    first_name character varying(255),
+    last_name character varying(255),
+    email character varying(255),
+    name character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: clef_user_infos_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE clef_user_infos_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: clef_user_infos_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE clef_user_infos_id_seq OWNED BY clef_user_infos.id;
+
+
+--
 -- Name: draft_sequences; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2657,6 +2693,13 @@ ALTER TABLE ONLY category_featured_users ALTER COLUMN id SET DEFAULT nextval('ca
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY clef_user_infos ALTER COLUMN id SET DEFAULT nextval('clef_user_infos_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY draft_sequences ALTER COLUMN id SET DEFAULT nextval('draft_sequences_id_seq'::regclass);
 
 
@@ -3108,6 +3151,14 @@ ALTER TABLE ONLY categories_search
 
 ALTER TABLE ONLY category_featured_users
     ADD CONSTRAINT category_featured_users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: clef_user_infos_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY clef_user_infos
+    ADD CONSTRAINT clef_user_infos_pkey PRIMARY KEY (id);
 
 
 --
@@ -3840,6 +3891,20 @@ CREATE UNIQUE INDEX index_categories_on_name ON categories USING btree (name);
 --
 
 CREATE UNIQUE INDEX index_category_featured_users_on_category_id_and_user_id ON category_featured_users USING btree (category_id, user_id);
+
+
+--
+-- Name: index_clef_user_infos_on_clef_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_clef_user_infos_on_clef_user_id ON clef_user_infos USING btree (clef_user_id);
+
+
+--
+-- Name: index_clef_user_infos_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_clef_user_infos_on_user_id ON clef_user_infos USING btree (user_id);
 
 
 --
@@ -4576,5 +4641,7 @@ INSERT INTO schema_migrations (version) VALUES ('20130208220635');
 INSERT INTO schema_migrations (version) VALUES ('20130213021450');
 
 INSERT INTO schema_migrations (version) VALUES ('20130213203300');
+
+INSERT INTO schema_migrations (version) VALUES ('20130215000212');
 
 INSERT INTO schema_migrations (version) VALUES ('20130221215017');
