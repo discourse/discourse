@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.ShareView = Discourse.View.extend({
+  window.Discourse.ShareView = Em.View.extend({
     templateName: 'share',
     elementId: 'share-link',
     classNameBindings: ['hasLink'],

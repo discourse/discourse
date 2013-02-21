@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.ModalBodyView = window.Discourse.View.extend({
+  window.Discourse.ModalBodyView = window.Em.View.extend({
     // Focus on first element
     didInsertElement: function() {
       var _this = this;

@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.TopicStatusView = Discourse.View.extend({
+  window.Discourse.TopicStatusView = Em.View.extend({
     classNames: ['topic-statuses'],
     hasDisplayableStatus: (function() {
       if (this.get('topic.closed')) {

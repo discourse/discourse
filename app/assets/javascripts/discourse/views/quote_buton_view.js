@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.QuoteButtonView = Discourse.View.extend({
+  window.Discourse.QuoteButtonView = Em.View.extend({
     classNames: ['quote-button'],
     classNameBindings: ['hasBuffer'],
     render: function(buffer) {
