@@ -457,7 +457,6 @@ fr:
   test_mailer:
     subject_template: "[%{site_name}] Test de livrabilité d'email"
     text_body_template: |
-      #This is an email test from the %{site_name} forum. You can access this forum via your web browser at
       Ceci est un mail de test envoyé pour le forum %{site_name}. Vous pouvez accéder à ce forum avec votre navigateur à l'adresse suivante :
 
       [*%{base_url}*][0]
@@ -470,7 +469,7 @@ fr:
 
       - L'enregistrement SPF de votre domaine est-il correct ? Vous pouvez [tester votre enregistrement SPF][1] ici.
 
-      - Avez-vous configuré [DKIM email key signing][3] dans votre client mail, et ajouté la clé publique DKIM dans vos enregistrements DNS ? 
+      - Avez-vous configuré [DKIM email key signing][3] dans votre client mail, et ajouté la clé publique DKIM dans vos enregistrements DNS ?
 
       - Avez-vous vérifié que les IPs du serveur d'où proviennent les mails [ne sont sur aucune liste noire d'emails][4] ?
 
@@ -594,7 +593,7 @@ fr:
 
         Pour vous reconnecter, vous pouvez :
 
-        1. Utiliser Facebook, Google, Twitter ou de nombreux autres fournisseurs d'informations supportés (mais ces fournisseurs doivent utiliser la **même adresse email** que l'invitation que vous avez reçue. Autrement, on ne pourra pas vous reconnaitre).
+        1. Utiliser Facebook, Google, Twitter ou de nombreux autres fournisseurs d'informations supportés (mais ces fournisseurs doivent utiliser la **même adresse email** que l'invitation que vous avez reçue. Autrement, nous ne pourrons pas vous reconnaitre).
 
         2. Créer un mot de passe unique pour %{site_name} sur votre [page de profil utilisateur][prefs], et vous connecter avec
 
@@ -710,4 +709,4 @@ fr:
         Si le lien ci-dessus n'est pas cliquable, essayez de le copier et coller dans la barre d'adresse de votre navigateur web.
 
   discourse_hub:
-    access_token_problem: "Informer un administateur : Veuillez mettre à jour les paramètres du site pour inclure la discourse_org_access_key  correcte."
+    access_token_problem: "Informer un administateur : Veuillez mettre à jour les paramètres du site pour inclure la discourse_org_access_key correcte."
