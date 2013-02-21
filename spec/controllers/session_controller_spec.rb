@@ -38,7 +38,7 @@ describe SessionController do
         end
 
         it 'sets a cookie with the auth token' do
-          cookies[:_t].should == user.auth_token
+          cookies.signed[:_t].should == user.auth_token
         end
       end
 

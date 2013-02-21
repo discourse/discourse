@@ -2,7 +2,7 @@ module CurrentUser
 
   def self.lookup_from_env(env)
     request = Rack::Request.new(env)
-    auth_token = request.cookies["_t"]
+    auth_token = request.cookies[:_t]
     user = nil
     if auth_token && auth_token.length == 32
       user = User.where(auth_token: auth_token).first 
@@ -16,7 +16,7 @@ module CurrentUser
 
     if session[:current_user_id].blank?
       # maybe we have a cookie? 
-      auth_token = cookies[:_t]
+      auth_token = cookies.signed[:_t]
       if auth_token && auth_token.length == 32
         @current_user = User.where(auth_token: auth_token).first
         session[:current_user_id] = @current_user.id if @current_user
