@@ -57,6 +57,9 @@ class Post < ActiveRecord::Base
     TopicUser.auto_track(self.user_id, self.topic_id, TopicUser::NotificationReasons::CREATED_POST)
   end
 
+  scope :by_newest, order('created_at desc, id desc')
+  scope :with_user, includes(:user)
+
   def raw_quality
 
     sentinel = TextSentinel.new(self.raw, min_entropy: SiteSetting.body_min_entropy)
@@ -296,6 +299,10 @@ class Post < ActiveRecord::Base
 
   def url
     "/t/#{Slug.for(topic.title)}/#{topic.id}/#{post_number}"
+  end
+
+  def author_readable
+    user.readable_name
   end
 
   def revise(updated_by, new_raw, opts={})

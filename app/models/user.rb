@@ -458,6 +458,14 @@ class User < ActiveRecord::Base
     $redis.set(last_seen_key, Time.now.to_f)
   end
 
+  def readable_name
+    if name.present? && name != username
+      "#{name} (#{username})"
+    else
+      username
+    end
+  end
+
   protected
 
     def cook
