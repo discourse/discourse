@@ -5,11 +5,11 @@
     A view that wraps the ACE editor (http://ace.ajax.org/)
 
     @class AceEditorView    
-    @extends Em.View
+    @extends Discourse.View
     @namespace Discourse
     @module Discourse
   **/ 
-  Discourse.AceEditorView = window.Em.View.extend({
+  Discourse.AceEditorView = window.Discourse.View.extend({
     mode: 'css',
     classNames: ['ace-wrapper'],
 

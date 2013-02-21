@@ -4,11 +4,11 @@
     The default view in the admin section
 
     @class AdminDashboardView
-    @extends Em.View
+    @extends Discourse.View
     @namespace Discourse
     @module Discourse
   **/
-  Discourse.AdminDashboardView = window.Em.View.extend({
+  Discourse.AdminDashboardView = window.Discourse.View.extend({
     templateName: 'admin/templates/dashboard',
 
     updateIconClasses: function() {

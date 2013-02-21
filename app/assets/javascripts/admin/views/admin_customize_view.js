@@ -5,11 +5,11 @@
     A view to handle site customizations
 
     @class AdminCustomizeView    
-    @extends Em.View
+    @extends Discourse.View
     @namespace Discourse
     @module Discourse
   **/ 
-  Discourse.AdminCustomizeView = window.Em.View.extend({
+  Discourse.AdminCustomizeView = window.Discourse.View.extend({
     templateName: 'admin/templates/customize',
     classNames: ['customize'],
 

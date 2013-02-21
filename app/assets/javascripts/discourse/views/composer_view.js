@@ -1,7 +1,7 @@
 /*global Markdown:true assetPath:true */
 (function() {
 
-  window.Discourse.ComposerView = window.Em.View.extend({
+  window.Discourse.ComposerView = window.Discourse.View.extend({
     templateName: 'composer',
     elementId: 'reply-control',
     classNameBindings: ['content.creatingPrivateMessage:private-message', 

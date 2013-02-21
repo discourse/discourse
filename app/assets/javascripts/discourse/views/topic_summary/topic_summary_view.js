@@ -66,7 +66,7 @@
       /* If we have a best of view
       */
       if (this.get('controller.showBestOf')) {
-        container.pushObject(Em.View.create({
+        container.pushObject(Discourse.View.create({
           templateName: 'topic_summary/best_of_toggle',
           tagName: 'section',
           classNames: ['information']
@@ -76,7 +76,7 @@
       */
 
       if (this.get('topic.isPrivateMessage')) {
-        return container.pushObject(Em.View.create({
+        return container.pushObject(Discourse.View.create({
           templateName: 'topic_summary/private_message',
           tagName: 'section',
           classNames: ['information']

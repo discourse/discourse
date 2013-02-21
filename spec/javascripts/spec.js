@@ -26,6 +26,7 @@
 // Stuff we need to load first
 //= require_tree ../../app/assets/javascripts/discourse/mixins
 //= require ../../app/assets/javascripts/discourse/components/debounce
+//= require ../../app/assets/javascripts/discourse/views/view
 //= require ../../app/assets/javascripts/discourse/controllers/controller
 //= require ../../app/assets/javascripts/discourse/views/modal/modal_body_view
 //= require ../../app/assets/javascripts/discourse/models/model
