@@ -1,11 +1,14 @@
 <div class="topic-list">
 <% @list.topics.each do |t| %>
-<a href="<%= t.relative_url %>"><%= t.title %></a> <span title='posts'>(<%= t.posts_count %>)</span><br/>
+<%= render_topic_title(t) %> 
+<%= render_topic_posts_count(t) %>
+<br/>
 <% end %>
 </div>
 
 <% if @list.topics.length > 0 %>
-<p><a href="<%= @list.more_topics_url.sub('.json?','?') %>">next page &rarr;</a></p>
+<p> <%= link_to("next page &rarr;", @list.more_topics_url.sub('.json?','?')) %></p>
 <% end %>
 
 <p>Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled</p>
+
