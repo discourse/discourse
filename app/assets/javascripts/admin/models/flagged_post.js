@@ -1,6 +1,15 @@
 (function() {
 
+  /**
+    Our data model for interacting with flagged posts.
+
+    @class FlaggedPost    
+    @extends Discourse.Post
+    @namespace Discourse
+    @module Discourse
+  **/ 
   window.Discourse.FlaggedPost = Discourse.Post.extend({
+
     flaggers: (function() {
       var r,
         _this = this;
@@ -10,6 +19,7 @@
       });
       return r;
     }).property(),
+
     messages: (function() {
       var r,
         _this = this;
@@ -24,15 +34,19 @@
       });
       return r;
     }).property(),
+
     lastFlagged: (function() {
       return this.post_actions[0].created_at;
     }).property(),
+
     user: (function() {
       return this.userLookup[this.user_id];
     }).property(),
+
     topicHidden: (function() {
       return this.get('topic_visible') === 'f';
     }).property('topic_hidden'),
+
     deletePost: function() {
       var promise;
       promise = new RSVP.Promise();
@@ -41,10 +55,10 @@
           type: 'DELETE',
           cache: false,
           success: function() {
-            return promise.resolve();
+            promise.resolve();
           },
           error: function(e) {
-            return promise.reject();
+            promise.reject();
           }
         });
       } else {
@@ -52,14 +66,15 @@
           type: 'DELETE',
           cache: false,
           success: function() {
-            return promise.resolve();
+            promise.resolve();
           },
           error: function(e) {
-            return promise.reject();
+            promise.reject();
           }
         });
       }
     },
+
     clearFlags: function() {
       var promise;
       promise = new RSVP.Promise();
@@ -67,19 +82,19 @@
         type: 'POST',
         cache: false,
         success: function() {
-          return promise.resolve();
+          promise.resolve();
         },
         error: function(e) {
-          return promise.reject();
+          promise.reject();
         }
       });
       return promise;
     },
+
     hiddenClass: (function() {
-      if (this.get('hidden') === "t") {
-        return "hidden-post";
-      }
+      if (this.get('hidden') === "t") return "hidden-post";
     }).property()
+
   });
 
   window.Discourse.FlaggedPost.reopenClass({

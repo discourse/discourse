@@ -1,79 +1,81 @@
 (function() {
 
+  /**
+    Our data model for dealing with users from the admin section.
+
+    @class AdminUser    
+    @extends Discourse.Model
+    @namespace Discourse
+    @module Discourse
+  **/ 
   window.Discourse.AdminUser = Discourse.Model.extend({
+    
     deleteAllPosts: function() {
       this.set('can_delete_all_posts', false);
-      return jQuery.ajax("/admin/users/" + (this.get('id')) + "/delete_all_posts", {
-        type: 'PUT'
-      });
+      jQuery.ajax("/admin/users/" + (this.get('id')) + "/delete_all_posts", {type: 'PUT'});
     },
-    /* Revoke the user's admin access
-    */
 
+    // Revoke the user's admin access
     revokeAdmin: function() {
       this.set('admin', false);
       this.set('can_grant_admin', true);
       this.set('can_revoke_admin', false);
-      return jQuery.ajax("/admin/users/" + (this.get('id')) + "/revoke_admin", {
-        type: 'PUT'
-      });
+      return jQuery.ajax("/admin/users/" + (this.get('id')) + "/revoke_admin", {type: 'PUT'});
     },
+
     grantAdmin: function() {
       this.set('admin', true);
       this.set('can_grant_admin', false);
       this.set('can_revoke_admin', true);
-      return jQuery.ajax("/admin/users/" + (this.get('id')) + "/grant_admin", {
-        type: 'PUT'
-      });
+      jQuery.ajax("/admin/users/" + (this.get('id')) + "/grant_admin", {type: 'PUT'});
     },
-    /* Revoke the user's moderation access
-    */
 
+    // Revoke the user's moderation access
     revokeModeration: function() {
       this.set('moderator', false);
       this.set('can_grant_moderation', true);
       this.set('can_revoke_moderation', false);
-      return jQuery.ajax("/admin/users/" + (this.get('id')) + "/revoke_moderation", {
-        type: 'PUT'
-      });
+      return jQuery.ajax("/admin/users/" + (this.get('id')) + "/revoke_moderation", {type: 'PUT'});
     },
+
     grantModeration: function() {
       this.set('moderator', true);
       this.set('can_grant_moderation', false);
       this.set('can_revoke_moderation', true);
-      return jQuery.ajax("/admin/users/" + (this.get('id')) + "/grant_moderation", {
-        type: 'PUT'
-      });
+      jQuery.ajax("/admin/users/" + (this.get('id')) + "/grant_moderation", {type: 'PUT'});
     },
+
     refreshBrowsers: function() {
-      jQuery.ajax("/admin/users/" + (this.get('id')) + "/refresh_browsers", {
-        type: 'POST'
-      });
-      return bootbox.alert("Message sent to all clients!");
+      jQuery.ajax("/admin/users/" + (this.get('id')) + "/refresh_browsers", {type: 'POST'});
+      bootbox.alert("Message sent to all clients!");
     },
+
     approve: function() {
       this.set('can_approve', false);
       this.set('approved', true);
       this.set('approved_by', Discourse.get('currentUser'));
-      return jQuery.ajax("/admin/users/" + (this.get('id')) + "/approve", {
-        type: 'PUT'
-      });
+      jQuery.ajax("/admin/users/" + (this.get('id')) + "/approve", {type: 'PUT'});
     },
+
     username_lower: (function() {
       return this.get('username').toLowerCase();
     }).property('username'),
+
     trustLevel: (function() {
       return Discourse.get('site.trust_levels').findProperty('id', this.get('trust_level'));
     }).property('trust_level'),
+
     canBan: (function() {
       return !this.admin && !this.moderator;
     }).property('admin', 'moderator'),
+
     banDuration: (function() {
       var banned_at, banned_till;
       banned_at = Date.create(this.banned_at);
       banned_till = Date.create(this.banned_till);
       return "" + (banned_at.short()) + " - " + (banned_till.short());
     }).property('banned_till', 'banned_at'),
+
     ban: function() {
       var duration,
         _this = this;
@@ -81,9 +83,7 @@
         if (duration > 0) {
           return jQuery.ajax("/admin/users/" + this.id + "/ban", {
             type: 'PUT',
-            data: {
-              duration: duration
-            },
+            data: {duration: duration},
             success: function() {
               window.location.reload();
             },
@@ -98,6 +98,7 @@
         }
       }
     },
+
     unban: function() {
       var _this = this;
       return jQuery.ajax("/admin/users/" + this.id + "/unban", {
@@ -114,6 +115,7 @@
         }
       });
     },
+
     impersonate: function() {
       var _this = this;
       return jQuery.ajax("/admin/impersonate", {
@@ -134,13 +136,11 @@
         }
       });
     }
+
   });
 
   window.Discourse.AdminUser.reopenClass({
-    create: function(result) {
-      result = this._super(result);
-      return result;
-    },
+
     bulkApprove: function(users) {
       users.each(function(user) {
         user.set('approved', true);
@@ -156,6 +156,7 @@
         }
       });
     },
+
     find: function(username) {
       var promise;
       promise = new RSVP.Promise();
@@ -167,6 +168,7 @@
       });
       return promise;
     },
+
     findAll: function(query, filter) {
       var result;
       result = Em.A();

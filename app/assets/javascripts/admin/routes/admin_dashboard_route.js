@@ -1,11 +1,19 @@
 (function() {
 
+  /**
+    Handles the default admin route
+
+    @class AdminDashboardRoute    
+    @extends Discourse.Route
+    @namespace Discourse
+    @module Discourse
+  **/
   Discourse.AdminDashboardRoute = Discourse.Route.extend({
     setupController: function(c) {
       if( Discourse.SiteSettings.version_checks ) {
-        return Discourse.VersionCheck.find().then(function(vc) {
+        Discourse.VersionCheck.find().then(function(vc) {
           c.set('versionCheck', vc);
-          return c.set('loading', false);
+          c.set('loading', false);
         });
       }
     }

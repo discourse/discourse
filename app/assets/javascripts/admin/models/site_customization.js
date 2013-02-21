@@ -1,15 +1,26 @@
 (function() {
   var SiteCustomizations;
 
+  /**
+    Our data model for interacting with site customizations.
+
+    @class SiteCustomization    
+    @extends Discourse.Model
+    @namespace Discourse
+    @module Discourse
+  **/ 
   window.Discourse.SiteCustomization = Discourse.Model.extend({
+    trackedProperties: ['enabled', 'name', 'stylesheet', 'header', 'override_default_style'],
+
     init: function() {
       this._super();
       return this.startTrackingChanges();
     },
-    trackedProperties: ['enabled', 'name', 'stylesheet', 'header', 'override_default_style'],
+   
     description: (function() {
       return "" + this.name + (this.enabled ? ' (*)' : '');
     }).property('selected', 'name'),
+
     changed: (function() {
       var _this = this;
       if (!this.originals) {
@@ -19,6 +30,7 @@
         return _this.originals[p] !== _this.get(p);
       });
     }).property('override_default_style', 'enabled', 'name', 'stylesheet', 'header', 'originals'),
+
     startTrackingChanges: function() {
       var _this = this;
       this.set('originals', {});
@@ -27,12 +39,15 @@
         return true;
       });
     },
+
     previewUrl: (function() {
       return "/?preview-style=" + (this.get('key'));
     }).property('key'),
+
     disableSave: (function() {
       return !this.get('changed');
     }).property('changed'),
+
     save: function() {
       var data;
       this.startTrackingChanges();
@@ -51,15 +66,16 @@
         type: this.id ? 'PUT' : 'POST'
       });
     },
+
     "delete": function() {
-      if (!this.id) {
-        return;
-      }
+      if (!this.id) return;
+      
       return jQuery.ajax({
         url: "/admin/site_customizations/" + this.id,
         type: 'DELETE'
       });
     }
+
   });
 
   SiteCustomizations = Ember.ArrayProxy.extend({

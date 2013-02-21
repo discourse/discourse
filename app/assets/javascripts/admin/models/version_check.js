@@ -1,5 +1,13 @@
 (function() {
 
+  /**
+    Our data model for determining whether there's a new version of Discourse
+
+    @class VersionCheck    
+    @extends Discourse.Model
+    @namespace Discourse
+    @module Discourse
+  **/ 
   window.Discourse.VersionCheck = Discourse.Model.extend({});
 
   Discourse.VersionCheck.reopenClass({
