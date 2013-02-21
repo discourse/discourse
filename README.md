@@ -75,7 +75,7 @@ Before contributing to Discourse, please:
 
 ## Expertise
 
-In order to be an effective contributor, familiarize yourself with the various open source omponents that Discourse is built on:
+In order to be an effective contributor, familiarize yourself with the various open source components that Discourse is built on:
 
 ### Languages/Frameworks
 
