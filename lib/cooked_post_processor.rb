@@ -4,7 +4,7 @@
 require_dependency 'oneboxer'
 
 class CookedPostProcessor
-
+  require 'open-uri'
 
   def initialize(post, opts={})
     @dirty = false
@@ -73,6 +73,11 @@ class CookedPostProcessor
   end
 
   def optimize_image(src)
+    # uri = get_image_uri(src)
+    # uri.open(read_timeout: 20) do |f|
+    #    
+    # end
+
     src
   end
 
@@ -127,11 +132,19 @@ class CookedPostProcessor
     @size_cache[url] ||= FastImage.size(url)
   end
 
+  def get_image_uri(url)
+    uri = URI.parse(url)
+    if %w(http https).include?(uri.scheme)
+      uri
+    else
+      nil
+    end
+  end
+
   # Retrieve the image dimensions for a url
   def image_dimensions(url)
-    uri = URI.parse(url)
-    
-    return nil unless %w(http https).include?(uri.scheme)
+    uri = get_image_uri(url)     
+    return nil unless uri
     w, h = get_size(url)
     ImageSizer.resize(w, h) if w && h
   end
