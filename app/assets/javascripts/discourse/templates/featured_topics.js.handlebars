@@ -13,20 +13,23 @@
     <th class='num'>{{i18n age}}</th>
   </tr>      
 
-  {{#each topics itemTagName="tr"}}
-    <td class='main-link'>
-      <div class='topic-inset'>
-        <a class='title excerptable' href="{{unbound lastReadUrl}}">{{unbound title}}</a>
-      {{#if unread}}
-        <a href="{{unbound lastReadUrl}}" class='badge unread badge-notification' title='{{i18n topic.unread_posts unread="unread"}}'>{{unbound unread}}</a>
-      {{/if}}
-      {{#if new_posts}}
-        <a href="{{unbound lastReadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new_posts new_posts="new_posts"}}'>{{unbound new_posts}}</a>
-      {{/if}}           
-      </div>
-    </td>
-    <td class='num'><span class='badge-posts'>{{number posts_count}}</span></td>
-    <td class='num'><span {{bindAttr class=":age ageCold"}} title='{{unboundDate created_at}}'>{{{unbound age}}}</a></td>      
+  {{#each topics}}
+    <tr {{bindAttr class="archived"}}>
+      <td class='main-link'>
+        <div class='topic-inset'>
+          {{view Discourse.TopicStatusView topicBinding="this"}} 
+          {{{topicLink this}}        
+        {{#if unread}}
+          <a href="{{unbound lastReadUrl}}" class='badge unread badge-notification' title='{{i18n topic.unread_posts unread="unread"}}'>{{unbound unread}}</a>
+        {{/if}}
+        {{#if new_posts}}
+          <a href="{{unbound lastReadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new_posts new_posts="new_posts"}}'>{{unbound new_posts}}</a>
+        {{/if}}           
+        </div>
+      </td>
+      <td class='num'><span class='badge-posts'>{{number posts_count}}</span></td>
+      <td class='num'><span {{bindAttr class=":age ageCold"}} title='{{unboundDate created_at}}'>{{{unbound age}}}</a></td>      
+    </tr>
   {{/each}}
 
 </table>
