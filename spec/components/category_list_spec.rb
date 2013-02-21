@@ -42,11 +42,22 @@ describe CategoryList do
 
   context "with a category" do
 
-    let(:topic_category) { Fabricate(:category) }
+    let!(:topic_category) { Fabricate(:category) }
 
-    it "should not return empty categories (no featured topics)" do
-      category_list.categories.should be_blank
+    context "without a featured topic" do
+
+      it "should not return empty categories" do
+        category_list.categories.should be_blank
+      end
+
+      it "returns empty categories for those who can create them" do
+        Guardian.any_instance.expects(:can_create?).with(Category).returns(true)
+        category_list.categories.should be_present
+      end
+
+
     end
+
 
     context "with a topic in a category" do
       let!(:topic) { Fabricate(:topic, category: topic_category)}
