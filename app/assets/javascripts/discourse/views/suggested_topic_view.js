@@ -1,7 +1,13 @@
-(function() {
+/**
+  This view is used for rendering a suggested topic
 
-  Discourse.SuggestedTopicView = Discourse.View.extend({
-    templateName: 'suggested_topic'
-  });
+  @class SuggestedTopicView
+  @extends Discourse.View
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.SuggestedTopicView = Discourse.View.extend({
+  templateName: 'suggested_topic'
+});
 
-}).call(this);
+

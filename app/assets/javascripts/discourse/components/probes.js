@@ -5,27 +5,26 @@
  *
  * Examples: 
  *
-
-someFunction = window.probes.measure(someFunction, {
-  name: "somename" // or function(args) { return "name"; },
-  before: function(data, owner, args) {
-    // if owner is true, we are not in a recursive function call. 
-    //
-    // data contains the bucker of data already measuer 
-    // data.count >= 0 
-    // data.time is the total time measured till now 
-    //
-    // arguments contains the original arguments sent to the function 
-  },
-  after: function(data, owner, args) {
-    // same format as before
-  }
-});
-
-
-// minimal 
-someFunction = window.probes.measure(someFunction, "someFunction");
-
+ *
+ *  someFunction = window.probes.measure(someFunction, {
+ *    name: "somename" // or function(args) { return "name"; },
+ *    before: function(data, owner, args) {
+ *      // if owner is true, we are not in a recursive function call. 
+ *      //
+ *      // data contains the bucker of data already measuer 
+ *      // data.count >= 0 
+ *      // data.time is the total time measured till now 
+ *      //
+ *      // arguments contains the original arguments sent to the function 
+ *    },
+ *    after: function(data, owner, args) {
+ *      // same format as before
+ *    }
+ *  });
+ *
+ *
+ *  // minimal 
+ *  someFunction = window.probes.measure(someFunction, "someFunction");
  * 
  *
  * */

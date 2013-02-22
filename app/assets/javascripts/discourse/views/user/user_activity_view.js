@@ -1,12 +1,20 @@
-(function() {
+/**
+  This view handles rendering of a user's activity stream
 
-  window.Discourse.UserActivityView = Discourse.View.extend({
-    templateName: 'user/activity',
-    currentUserBinding: 'Discourse.currentUser',
-    userBinding: 'controller.content',
-    didInsertElement: function() {
-      return window.scrollTo(0, 0);
-    }
-  });
+  @class UserActivityView
+  @extends Discourse.View
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.UserActivityView = Discourse.View.extend({
+  templateName: 'user/activity',
+  currentUserBinding: 'Discourse.currentUser',
+  userBinding: 'controller.content',
 
-}).call(this);
+  didInsertElement: function() {
+    window.scrollTo(0, 0);
+  }
+
+});
+
+

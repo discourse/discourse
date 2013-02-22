@@ -1,20 +1,28 @@
-(function() {
+/**
+  This controller supports all actions on a user's activity stream
 
-  Discourse.UserActivityController = Ember.ObjectController.extend({
-    needs: ['composer'],
-    kickOffPrivateMessage: (function() {
-      if (this.get('content.openPrivateMessage')) {
-        return this.composePrivateMessage();
-      }
-    }).observes('content.openPrivateMessage'),
-    composePrivateMessage: function() {
-      return this.get('controllers.composer').open({
-        action: Discourse.Composer.PRIVATE_MESSAGE,
-        usernames: this.get('content').username,
-        archetypeId: 'private_message',
-        draftKey: 'new_private_message'
-      });
+  @class UserActivityController
+  @extends Discourse.ObjectController
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.UserActivityController = Discourse.ObjectController.extend({
+  needs: ['composer'],
+
+  kickOffPrivateMessage: (function() {
+    if (this.get('content.openPrivateMessage')) {
+      this.composePrivateMessage();
     }
-  });
+  }).observes('content.openPrivateMessage'),
 
-}).call(this);
+  composePrivateMessage: function() {
+    return this.get('controllers.composer').open({
+      action: Discourse.Composer.PRIVATE_MESSAGE,
+      usernames: this.get('content').username,
+      archetypeId: 'private_message',
+      draftKey: 'new_private_message'
+    });
+  }
+});
+
+

@@ -1,14 +1,22 @@
-(function() {
+/**
+  The routes used for rendering static content
 
-  Discourse.StaticController.pages.forEach(function(page) {
-    window.Discourse["" + (page.capitalize()) + "Route"] = Discourse.Route.extend({
-      renderTemplate: function() {
-        return this.render('static');
-      },
-      setupController: function() {
-        return this.controllerFor('static').loadPath("/" + page);
-      }
-    });
+  @class StaticRoute
+  @extends Discourse.Route
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.StaticController.pages.forEach(function(page) {
+
+  Discourse[(page.capitalize()) + "Route"] = Discourse.Route.extend({
+    renderTemplate: function() {
+      this.render('static');
+    },
+    setupController: function() {
+      this.controllerFor('static').loadPath("/" + page);
+    }
   });
 
-}).call(this);
+});
+
+

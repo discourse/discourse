@@ -3,7 +3,7 @@
     [
       {
         "path": "app",
-        "folder_exclude_patterns": ["external", "external_production", "images", "imported", "fonts"]
+        "folder_exclude_patterns": ["external", "external_production", "images", "imported", "fonts", "defer"]
       },
       {"path": "config"},
       {

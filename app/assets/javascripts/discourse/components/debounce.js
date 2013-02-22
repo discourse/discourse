@@ -1,4 +1,14 @@
-window.Discourse.debounce = function(func, wait, trickle) {
+/**
+  Debounce a Javascript function. This means if it's called many times in a time limit it
+  should only be executed once.
+
+  @method debounce
+  @module Discourse
+  @param {function} func The function to debounce
+  @param {Numbers} wait how long to wait
+  @param {Boolean} trickle 
+**/
+Discourse.debounce = function(func, wait, trickle) {
   var timeout;
 
   timeout = null;
@@ -12,7 +22,7 @@ window.Discourse.debounce = function(func, wait, trickle) {
     };
 
     if (timeout && trickle) {
-      /* already queued, let it through */
+      // already queued, let it through
       return;
     }
 

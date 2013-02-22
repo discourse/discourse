@@ -1,7 +1,16 @@
 /*global _gaq:true */
 
-window.Discourse.ApplicationController = Ember.Controller.extend({
+/**
+  The base controller for all things Discourse
+
+  @class ApplicationController
+  @extends Discourse.Controller
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.ApplicationController = Discourse.Controller.extend({
   needs: ['modal'],
+
   showLogin: function() {
     var _ref;
     return (_ref = this.get('controllers.modal')) ? _ref.show(Discourse.LoginView.create()) : void 0;
@@ -18,5 +27,5 @@ window.Discourse.ApplicationController = Ember.Controller.extend({
       this.afterFirstHit = true;
     }
   }.observes('currentPath')
-  
+
 });

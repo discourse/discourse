@@ -62,6 +62,7 @@ passfail: false     # true if the scan should stop on first error (per file)
 predef:
   - Ember
   - jQuery
+  - $
   - RSVP
   - Discourse
   - $LAB

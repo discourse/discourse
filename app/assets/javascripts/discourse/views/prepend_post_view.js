@@ -1,10 +1,16 @@
-(function() {
+/**
+  This view allows us to prepend content to a post (for use in plugins)
 
-  window.Discourse.PrependPostView = Em.ContainerView.extend({
-    init: function() {
-      this._super();
-      return this.trigger('prependPostContent');
-    }
-  });
+  @class PrependPostView
+  @extends Discourse.View
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.PrependPostView = Em.ContainerView.extend({
+  init: function() {
+    this._super();
+    return this.trigger('prependPostContent');
+  }
+});
 
-}).call(this);
+

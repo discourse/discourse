@@ -1,32 +1,30 @@
-(function() {
+/**
+  The base route for all routes on Discourse. Includes global enter functionality.
+
+  @class Route
+  @extends Em.Route
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.Route = Em.Route.extend({
 
   /**
-    The base admin route for all routes on Discourse. Includes global enter functionality.
+    Called every time we enter a route on Discourse.
 
-    @class Route    
-    @extends Em.Route
-    @namespace Discourse
-    @module Discourse
+    @method enter
   **/
-  Discourse.Route = Em.Route.extend({
+  enter: function(router, context) {
+    // Close mini profiler
+    $('.profiler-results .profiler-result').remove();
 
-    /** 
-      Called every time we enter a route on Discourse.
+    // Close some elements that may be open
+    $('.d-dropdown').hide();
+    $('header ul.icons li').removeClass('active');
+    $('[data-toggle="dropdown"]').parent().removeClass('open');
 
-      @method enter
-    **/
-    enter: function(router, context) {
-      // Close mini profiler
-      jQuery('.profiler-results .profiler-result').remove();
+    var hideDropDownFunction = $('html').data('hide-dropdown');
+    if (hideDropDownFunction) return hideDropDownFunction();
+  }
+});
 
-      // Close some elements that may be open
-      jQuery('.d-dropdown').hide();
-      jQuery('header ul.icons li').removeClass('active');
-      jQuery('[data-toggle="dropdown"]').parent().removeClass('open');
 
-      var hideDropDownFunction = jQuery('html').data('hide-dropdown');
-      if (hideDropDownFunction) return hideDropDownFunction();
-    }
-  });
-
-}).call(this);

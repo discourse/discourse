@@ -1,11 +1,17 @@
-(function() {
+/**
+  This view handles rendering of a user's email preferences
 
-  window.Discourse.PreferencesEmailView = Discourse.View.extend({
-    templateName: 'user/email',
-    classNames: ['user-preferences'],
-    didInsertElement: function() {
-      return jQuery('#change_email').focus();
-    }
-  });
+  @class PreferencesEmailView
+  @extends Discourse.View
+  @namespace Discourse
+  @module Discourse
+**/
+window.Discourse.PreferencesEmailView = Discourse.View.extend({
+  templateName: 'user/email',
+  classNames: ['user-preferences'],
+  didInsertElement: function() {
+    return $('#change_email').focus();
+  }
+});
 
-}).call(this);
+

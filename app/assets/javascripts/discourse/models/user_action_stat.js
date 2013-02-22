@@ -1,5 +1,11 @@
-(function() {
+/**
+  A data model representing a statistic on a UserAction
 
-  window.Discourse.UserActionStat = Discourse.Model.extend({});
+  @class UserActionStat
+  @extends Discourse.Model
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.UserActionStat = Discourse.Model.extend({});
 
-}).call(this);
+

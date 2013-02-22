@@ -7,8 +7,8 @@
     if (currentWindowOnload) {
       currentWindowOnload();
     }
-    
-    jQuery('<div id="main"><div class="rootElement"></div></div>').appendTo(jQuery('body')).hide();
+
+    $('<div id="main"><div class="rootElement"></div></div>').appendTo($('body')).hide();
 
     Discourse.SiteSettings = {}
 

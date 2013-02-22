@@ -1,6 +1,4 @@
 /*global waitsFor:true expect:true describe:true beforeEach:true it:true */
-(function() {
-
   describe("Discourse.BBCode", function() {
     var format;
     format = Discourse.BBCode.format;
@@ -178,4 +176,4 @@
     });
   });
 
-}).call(this);
+

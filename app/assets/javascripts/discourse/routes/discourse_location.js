@@ -107,7 +107,7 @@
       historyState = get(this, 'history').state;
       if (historyState) return historyState;
 
-      return {path: window.location.pathname};      
+      return {path: window.location.pathname};
     },
 
     /**
@@ -134,7 +134,7 @@
     */
     replaceState: function(path) {
       if (!window.history.replaceState) return;
-      this.set('currentState', { path: path } );      
+      this.set('currentState', { path: path } );
       window.history.replaceState({ path: path }, null, path);
     },
 
@@ -151,7 +151,7 @@
       var guid = Ember.guidFor(this),
           self = this;
 
-      jQuery(window).bind('popstate.ember-location-'+guid, function(e) {
+      $(window).bind('popstate.ember-location-'+guid, function(e) {
         if (e.state) {
           var currentState = self.get('currentState');
           if (currentState) {
@@ -185,9 +185,10 @@
     willDestroy: function() {
       var guid = Ember.guidFor(this);
 
-      Ember.jQuery(window).unbind('popstate.ember-location-'+guid);
+      Ember.$(window).unbind('popstate.ember-location-'+guid);
     }
   });
 
   Ember.Location.registerImplementation('discourse_location', Ember.DiscourseLocation);
-}).call(this);
+
+})(this);

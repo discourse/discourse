@@ -1,15 +1,21 @@
-(function() {
+/**
+  This controller supports actions on the site header
 
-  Discourse.HeaderController = Ember.Controller.extend(Discourse.Presence, {
-    topic: null,
-    showExtraInfo: false,
-    toggleStar: function() {
-      var _ref;
-      if (_ref = this.get('topic')) {
-        _ref.toggleStar();
-      }
-      return false;
-    }
-  });
+  @class HeaderController 
+  @extends Discourse.Controller
+  @namespace Discourse
+  @module Discourse
+**/ 
+Discourse.HeaderController = Discourse.Controller.extend({
+  topic: null,
+  showExtraInfo: false,
 
-}).call(this);
+  toggleStar: function() {
+    var topic = this.get('topic');
+    if (topic) topic.toggleStar();
+    return false;
+  }
+  
+});
+
+

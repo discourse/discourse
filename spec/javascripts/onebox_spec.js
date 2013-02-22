@@ -1,6 +1,4 @@
 /*global waitsFor:true expect:true describe:true beforeEach:true it:true spyOn:true */
-(function() {
-
   describe("Discourse.Onebox", function() {
     beforeEach(function() {
       return spyOn(jQuery, 'ajax').andCallThrough();
@@ -25,4 +23,4 @@
     });
   });
 
-}).call(this);
+

@@ -1,7 +1,5 @@
 /*global waitsFor:true expect:true describe:true beforeEach:true it:true */
 
-(function() {
-
   describe("Discourse.KeyValueStore", function() {
     return describe("Setting values", function() {
       var store;
@@ -27,4 +25,4 @@
     });
   });
 
-}).call(this);
+

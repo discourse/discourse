@@ -1,26 +1,35 @@
-(function() {
+/**
+  A data model representing an Invite
 
-  window.Discourse.Invite = Discourse.Model.extend({
-    rescind: function() {
-      jQuery.ajax('/invites', {
-        type: 'DELETE',
-        data: {
-          email: this.get('email')
-        }
-      });
-      return this.set('rescinded', true);
+  @class Invite
+  @extends Discourse.Model
+  @namespace Discourse
+  @module Discourse
+**/
+
+Discourse.Invite = Discourse.Model.extend({
+
+  rescind: function() {
+    jQuery.ajax('/invites', {
+      type: 'DELETE',
+      data: { email: this.get('email') }
+    });
+    this.set('rescinded', true);
+  }
+
+});
+
+Discourse.Invite.reopenClass({
+
+  create: function(invite) {
+    var result;
+    result = this._super(invite);
+    if (result.user) {
+      result.user = Discourse.User.create(result.user);
     }
-  });
+    return result;
+  }
 
-  window.Discourse.Invite.reopenClass({
-    create: function(invite) {
-      var result;
-      result = this._super(invite);
-      if (result.user) {
-        result.user = Discourse.User.create(result.user);
-      }
-      return result;
-    }
-  });
+});
 
-}).call(this);
+
