@@ -1,0 +1,14 @@
+<div id='simple-container'>
+  <p>
+    <% if @user %>
+      <%= t 'login.sent_activate_email_again', email: @user.email %>
+    <% else %>
+      <%
+        # We should never get here because we only show the link to resend
+        # the activation email if you successfully logged in, but your
+        # email hasn't been confirmed.
+      %>
+      <%= t 'login.incorrect_username_email_or_password' %>
+    <% end %>
+  </p>
+</div>

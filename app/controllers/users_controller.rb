@@ -292,6 +292,16 @@ class UsersController < ApplicationController
     render :layout => 'no_js'
   end
 
+  def send_activation_email
+    @user = fetch_user_from_params
+    @email_token = @user.email_tokens.unconfirmed.active.first
+    if @user
+      @email_token = @user.email_tokens.create(email: @user.email) if @email_token.nil?
+      Jobs.enqueue(:user_email, type: :signup, user_id: @user.id, email_token: @email_token.token)
+    end
+    render nothing: true
+  end
+
   def search_users
     term = params[:term].to_s.strip
     topic_id = params[:topic_id]

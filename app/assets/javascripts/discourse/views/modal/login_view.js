@@ -45,7 +45,10 @@
       }).success(function(result) {
         if (result.error) {
           _this.set('loggingIn', false);
-          return _this.flash(result.error, 'error');
+          if( result.reason == 'not_activated' ) {
+            return _this.showView(Discourse.NotActivatedView.create({username: _this.get('loginName'), sentTo: result.sent_to_email, currentEmail: result.current_email}));
+          }
+          _this.flash(result.error, 'error');
         } else {
           return window.location.reload();
         }

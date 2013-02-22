@@ -22,6 +22,14 @@ class EmailToken < ActiveRecord::Base
     1.week.ago
   end
 
+  def self.unconfirmed
+    where(confirmed: false)
+  end
+
+  def self.active
+    where(expired: false)
+  end
+
   def self.generate_token
     SecureRandom.hex(EmailToken.token_length)
   end

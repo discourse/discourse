@@ -19,7 +19,7 @@
     // like an actual ember view
     flash: function(msg, flashClass) {
       var $alert;
-      if (!flashClass) flashClass = "success";      
+      if (!flashClass) flashClass = "success";
       $alert = jQuery('#modal-alert').hide().removeClass('alert-error', 'alert-success');
       $alert.addClass("alert alert-" + flashClass).html(msg);
       return $alert.fadeIn();

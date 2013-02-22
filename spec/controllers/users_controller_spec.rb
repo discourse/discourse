@@ -761,4 +761,46 @@ describe UsersController do
 
   end
 
+  describe 'send_activation_email' do
+    context 'for an existing user' do
+      let(:user) { Fabricate(:user) }
+
+      before do
+        UsersController.any_instance.stubs(:fetch_user_from_params).returns(user)
+      end
+
+      context 'with a valid email_token' do
+        it 'should send the activation email' do
+          Jobs.expects(:enqueue).with(:user_email, has_entries(type: :signup))
+          xhr :get, :send_activation_email, username: user.username
+        end
+      end
+
+      context 'without an existing email_token' do
+        before do
+          user.email_tokens.each {|t| t.destroy}
+          user.reload
+        end
+
+        it 'should generate a new token' do
+          expect {
+            xhr :get, :send_activation_email, username: user.username
+          }.to change{ user.email_tokens(true).count }.by(1)
+        end
+
+        it 'should send an email' do
+          Jobs.expects(:enqueue).with(:user_email, has_entries(type: :signup))
+          xhr :get, :send_activation_email, username: user.username
+        end
+      end
+    end
+
+    context 'when username does not exist' do
+      it 'should not send an email' do
+        Jobs.expects(:enqueue).never
+        xhr :get, :send_activation_email, username: 'nopenopenopenope'
+      end
+    end
+  end
+
 end

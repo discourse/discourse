@@ -233,6 +233,9 @@ en:
       authenticating: "Authenticating..."
       awaiting_confirmation: "Your account is awaiting activation, use the forgot password link to issue another activation email."
       awaiting_approval: "Your account has not been approved by a moderator yet. You will receive an email when it is approved."
+      not_activated: "You can't log in yet. We sent an activation email to you at <b>{{sentTo}}</b>. Please follow the instructions in the email to activate your account."
+      resend_activation_email: "Click here to send the activation email again."
+      sent_activation_email_again: "We sent another activation email to you at your current email address: <b>{{currentEmail}}</b>. It might take a few minutes for it to arrive. Be sure to check your spam folder."
       google:
         title: "Log In with Google"
         message: "Authenticating with Google (make sure pop up blockers are not enabled)"

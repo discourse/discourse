@@ -27,7 +27,7 @@ class SessionController < ApplicationController
           render_serialized(@user, UserSerializer)
           return
         else
-          render :json => {error: I18n.t("login.not_activated")}
+          render :json => {error: I18n.t("login.not_activated"), reason: 'not_activated', sent_to_email: @user.email_logs.where(email_type: 'signup').order('created_at DESC').first.try(:to_address), current_email: @user.email}
           return
         end
       end
