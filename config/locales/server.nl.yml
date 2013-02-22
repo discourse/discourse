@@ -285,7 +285,6 @@ nl:
     ga_tracking_code: "Google analytics tracking code, zie: http://google.com/analytics"
     top_menu: "De volgorde van de item in het hoofdmenu. Bijvoorbeeld populiar|gelezen|favorieten|ongelezen|nieuw|gepost|categorieën"
     post_menu: "De volgorde van de items in het post menu."
-    max_length_show_reply: "Ingevoegde reacties op posts zullen niet worden weergegeven als ze direct onder de post gemaakt zijn en niet langer zijn dan deze lengte."
     track_external_right_clicks: "Houd bij welke externe links met de rechtermuisknop worden aangeklikt (bijv: open in nieuwe tab). Dit staat standaard uit, gezien het de URLs moet herschrijven, waardoor het gebruiksgemak afneemt"
     topics_per_page: "Hoeveel topics er moeten worden weergegeven op de topiclijst-pagina."
     posts_per_page: "Hoeveel posts er worden weergeven op een topic-pagina"

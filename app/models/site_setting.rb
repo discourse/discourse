@@ -16,7 +16,6 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:popup_delay, 1500)
   client_setting(:top_menu, 'popular|new|unread|favorited|categories')
   client_setting(:post_menu, 'like|edit|flag|delete|share|bookmark|reply')
-  client_setting(:max_length_show_reply, 1500)
   client_setting(:track_external_right_clicks, false)
   client_setting(:must_approve_users, false)
   client_setting(:ga_tracking_code, "")

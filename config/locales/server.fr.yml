@@ -291,7 +291,6 @@ fr:
     ga_tracking_code: "Code de suivi de Google Analytics, voir: http://google.com/analytics"
     top_menu: "L'ordre des éléments dans le menu du haut. Exemple populaire|lus|favoris|non lus|nouveaux|posté|categories"
     post_menu: "L'ordre des éléments dans le menu de rédaction"
-    max_length_show_reply: "Les réponses intégrées aux messages ne seront pas affichées si elles sont directement en desous et inférieures à cette longueur."
     track_external_right_clicks: "Suivi des clics sur les liens externes (ex: ouverture dans un nouvel onglet) désactivé par défaut car nécessite une ré-écrite de toutes les urls et nuit à l'accessibilité"
     topics_per_page: "Nombre de discussions à afficher sur la page de liste des discussions."
     posts_per_page: "Nombre de messages retournés sur une page de discussion"
