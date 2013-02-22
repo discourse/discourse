@@ -704,3 +704,11 @@ en:
 
   discourse_hub:
     access_token_problem: "Tell an admin: Please update the site settings to include the correct discourse_org_access_key."
+
+  page_not_found:
+    title: "The page you requested doesn't exist on this discussion forum. Perhaps we can help find it, or another topic like it:"
+    popular_topics: "Popular topics"
+    recent_topics: "Recent topics"
+    see_more: "See More"
+    search_title: "Search for this topic"
+    search_google: "Search Google"
