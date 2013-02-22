@@ -27,7 +27,7 @@ class EmailToken < ActiveRecord::Base
   end
 
   def self.active
-    where(expired: false)
+    where(expired: false).where('created_at > ?', valid_after)
   end
 
   def self.generate_token
