@@ -147,11 +147,11 @@ class Topic < ActiveRecord::Base
     false
   end
 
-  # Returns new topics since a date
+  # Returns new topics since a date for display in email digest.
   def self.new_topics(since)
     Topic
       .visible
-      .where("created_at >= ?", since)
+      .created_since(since)
       .listable_topics
       .topic_list_order
       .includes(:user)
