@@ -10,10 +10,8 @@ class AddDescriptionToCategories < ActiveRecord::Migration
 
     # Migrate excerpts over
     Category.all.each do |c| 
-      excerpt = c.excerpt
-      unless excerpt == I18n.t("category.replace_paragraph")
-        c.update_column(:description, c.excerpt)
-      end
+      post = c.topic.posts.order(:post_number).first
+      PostRevisor.new(post).send(:update_category_description)
     end
 
   end
