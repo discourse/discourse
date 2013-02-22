@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.ForgotPasswordView = window.Discourse.ModalBodyView.extend(Discourse.Presence, {
+  window.Discourse.ForgotPasswordView = Discourse.ModalBodyView.extend({
     templateName: 'modal/forgot_password',
     title: Em.String.i18n('forgot_password.title'),
     /* You need a value in the field to submit it.

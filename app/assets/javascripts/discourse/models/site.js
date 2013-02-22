@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.Site = Ember.Object.extend({
+  window.Discourse.Site = Discourse.Model.extend({
     notificationLookup: (function() {
       var result;
       result = [];

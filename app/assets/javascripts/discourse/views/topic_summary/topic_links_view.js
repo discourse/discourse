@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.TopicLinksView = Ember.View.extend({
+  window.Discourse.TopicLinksView = Discourse.View.extend({
     templateName: 'topic_summary/links'
   });
 

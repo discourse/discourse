@@ -1,10 +1,10 @@
 (function() {
 
-  window.Discourse.ExcerptUserView = Ember.View.extend({
+  window.Discourse.ExcerptUserView = Discourse.View.extend({
     privateMessage: function(e) {
       var $target, composerController, post, postView, url, username;
       $target = this.get("link");
-      postView = Ember.View.views[$target.closest('.ember-view')[0].id];
+      postView = Discourse.View.views[$target.closest('.ember-view')[0].id];
       post = postView.get("post");
       url = post.get("url");
       username = post.get("username");

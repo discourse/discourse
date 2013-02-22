@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.UserActivityView = Ember.View.extend({
+  window.Discourse.UserActivityView = Discourse.View.extend({
     templateName: 'user/activity',
     currentUserBinding: 'Discourse.currentUser',
     userBinding: 'controller.content',

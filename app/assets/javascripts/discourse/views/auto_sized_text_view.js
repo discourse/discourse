@@ -1,6 +1,6 @@
 (function() {
 
-  Discourse.AutoSizedTextView = Ember.View.extend({
+  Discourse.AutoSizedTextView = Discourse.View.extend({
     render: function(buffer) {
       return null;
     },

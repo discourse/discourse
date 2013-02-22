@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.PreferencesEmailView = Ember.View.extend({
+  window.Discourse.PreferencesEmailView = Discourse.View.extend({
     templateName: 'user/email',
     classNames: ['user-preferences'],
     didInsertElement: function() {

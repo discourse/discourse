@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.OptionBooleanView = Em.View.extend({
+  window.Discourse.OptionBooleanView = Discourse.View.extend({
     classNames: ['archetype-option'],
     composerControllerBinding: 'Discourse.router.composerController',
     templateName: "modal/option_boolean",

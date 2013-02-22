@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.HeaderView = Ember.View.extend({
+  window.Discourse.HeaderView = Discourse.View.extend({
     tagName: 'header',
     classNames: ['d-header', 'clearfix'],
     classNameBindings: ['editingTopic'],

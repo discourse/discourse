@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.HistoryView = Ember.View.extend({
+  window.Discourse.HistoryView = Discourse.View.extend({
     templateName: 'history',
     title: 'History',
     modalClass: 'history-modal',

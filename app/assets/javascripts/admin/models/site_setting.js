@@ -8,7 +8,7 @@
     @namespace Discourse
     @module Discourse
   **/ 
-  window.Discourse.SiteSetting = Discourse.Model.extend(Discourse.Presence, {
+  window.Discourse.SiteSetting = Discourse.Model.extend({
     
     // Whether a property is short.
     short: (function() {

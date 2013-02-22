@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.ListView = Ember.View.extend({
+  window.Discourse.ListView = Discourse.View.extend({
     templateName: 'list/list',
     composeViewBinding: Ember.Binding.oneWay('Discourse.composeView'),
     categoriesBinding: 'Discourse.site.categories',

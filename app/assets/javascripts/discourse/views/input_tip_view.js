@@ -1,6 +1,6 @@
 (function() {
 
-  Discourse.InputTipView = Ember.View.extend(Discourse.Presence, {
+  Discourse.InputTipView = Discourse.View.extend({
     templateName: 'input_tip',
     classNameBindings: [':tip', 'good', 'bad'],
     good: (function() {

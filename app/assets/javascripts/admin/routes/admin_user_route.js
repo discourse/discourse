@@ -1,7 +1,7 @@
 (function() {
 
   /**
-    Handles routes related to users.
+    Handles routes related to users in the admin section.
 
     @class AdminUserRoute    
     @extends Discourse.Route

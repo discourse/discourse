@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.EmbeddedPostView = Ember.View.extend({
+  window.Discourse.EmbeddedPostView = Discourse.View.extend({
     templateName: 'embedded_post',
     classNames: ['reply'],
     didInsertElement: function() {

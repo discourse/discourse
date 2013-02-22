@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.PostActionType = Em.Object.extend({
+  window.Discourse.PostActionType = Discourse.Model.extend({
     alsoName: (function() {
       if (this.get('is_flag')) {
         return Em.String.i18n('post.actions.flag');

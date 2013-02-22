@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.ImageSelectorView = Ember.View.extend({
+  window.Discourse.ImageSelectorView = Discourse.View.extend({
     templateName: 'image_selector',
     classNames: ['image-selector'],
     title: 'Insert Image',

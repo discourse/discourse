@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.ListTopicsView = Ember.View.extend(Discourse.Scrolling, Discourse.Presence, {
+  window.Discourse.ListTopicsView = Discourse.View.extend(Discourse.Scrolling, {
     templateName: 'list/topics',
     categoryBinding: 'Discourse.router.listController.category',
     filterModeBinding: 'Discourse.router.listController.filterMode',

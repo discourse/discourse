@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.UserStreamView = Ember.View.extend(Discourse.Scrolling, {
+  window.Discourse.UserStreamView = Discourse.View.extend(Discourse.Scrolling, {
     templateName: 'user/stream',
     currentUserBinding: 'Discourse.currentUser',
     userBinding: 'controller.content',

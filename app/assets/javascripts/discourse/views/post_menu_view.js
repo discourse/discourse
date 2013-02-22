@@ -13,7 +13,7 @@
 
 (function() {
 
-  window.Discourse.PostMenuView = Ember.View.extend(Discourse.Presence, {
+  window.Discourse.PostMenuView = Discourse.View.extend({
     tagName: 'section',
     classNames: ['post-menu-area', 'clearfix'],
     /* Delegate to render#{button}

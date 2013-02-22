@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.LoginView = window.Discourse.ModalBodyView.extend(Discourse.Presence, {
+  window.Discourse.LoginView = Discourse.ModalBodyView.extend({
     templateName: 'modal/login',
     siteBinding: 'Discourse.site',
     title: Em.String.i18n('login.title'),

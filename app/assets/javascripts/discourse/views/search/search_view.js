@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.SearchView = Ember.View.extend(Discourse.Presence, {
+  window.Discourse.SearchView = Discourse.View.extend({
     tagName: 'div',
     classNames: ['d-dropdown'],
     elementId: 'search-dropdown',

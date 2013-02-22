@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.ActionSummary = Em.Object.extend(Discourse.Presence, {
+  window.Discourse.ActionSummary = Discourse.Model.extend({
     /* Description for the action
     */
 

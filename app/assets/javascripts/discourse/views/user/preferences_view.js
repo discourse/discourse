@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.PreferencesView = Ember.View.extend({
+  window.Discourse.PreferencesView = Discourse.View.extend({
     templateName: 'user/preferences',
     classNames: ['user-preferences']
   });

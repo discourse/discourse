@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.PostView = Ember.View.extend({
+  window.Discourse.PostView = Discourse.View.extend({
     classNames: ['topic-post', 'clearfix'],
     templateName: 'post',
     classNameBindings: ['lastPostClass', 'postTypeClass', 'selectedClass', 'post.hidden:hidden', 'isDeleted:deleted', 'parentPost:replies-above'],

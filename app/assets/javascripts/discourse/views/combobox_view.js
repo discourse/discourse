@@ -1,6 +1,6 @@
 (function() {
 
-  Discourse.ComboboxView = window.Ember.View.extend({
+  Discourse.ComboboxView = Discourse.View.extend({
     tagName: 'select',
     classNames: ['combobox'],
     valueAttribute: 'id',

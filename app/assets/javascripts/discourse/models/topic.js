@@ -1,6 +1,6 @@
 (function() {
 
-  Discourse.Topic = Discourse.Model.extend(Discourse.Presence, {
+  Discourse.Topic = Discourse.Model.extend({
     categoriesBinding: 'Discourse.site.categories',
     fewParticipants: (function() {
       if (!this.present('participants')) {

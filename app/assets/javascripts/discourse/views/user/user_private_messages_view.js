@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.UserPrivateMessagesView = Ember.View.extend({
+  window.Discourse.UserPrivateMessagesView = Discourse.View.extend({
     templateName: 'user/private_messages',
     selectCurrent: function(evt) {
       var t;

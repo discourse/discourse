@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.CreateAccountView = window.Discourse.ModalBodyView.extend(Discourse.Presence, {
+  window.Discourse.CreateAccountView = Discourse.ModalBodyView.extend({
     templateName: 'modal/create_account',
     title: Em.String.i18n('create_account.title'),
     uniqueUsernameValidation: null,

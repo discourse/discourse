@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.ActionsHistoryView = Em.View.extend(Discourse.Presence, {
+  window.Discourse.ActionsHistoryView = Discourse.View.extend({
     tagName: 'section',
     classNameBindings: [':post-actions', 'hidden'],
     hidden: (function() {

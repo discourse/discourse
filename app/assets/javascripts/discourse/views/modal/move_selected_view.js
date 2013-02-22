@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.MoveSelectedView = window.Discourse.ModalBodyView.extend(Discourse.Presence, {
+  window.Discourse.MoveSelectedView = Discourse.ModalBodyView.extend({
     templateName: 'modal/move_selected',
     title: Em.String.i18n('topic.move_selected.title'),
     saving: false,

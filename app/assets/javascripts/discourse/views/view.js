@@ -1,13 +1,16 @@
 (function() {
 
-  window.Discourse.View = Ember.View.extend(Discourse.Presence, {
-    /* Overwrite this to do a different display
-    */
+  /**
+    A base view that gives us common functionality, for example `present` and `blank`
 
-    displayErrors: function(errors, callback) {
-      alert(errors.join("\n"));
-      return typeof callback === "function" ? callback() : void 0;
-    }
+    @class View
+    @extends Ember.View
+    @uses Discourse.Presence
+    @namespace Discourse
+    @module Discourse
+  **/ 
+  window.Discourse.View = Ember.View.extend(Discourse.Presence, {
+    
   });
 
 }).call(this);

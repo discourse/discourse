@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.ActivityFilterView = Em.View.extend(Discourse.Presence, {
+  window.Discourse.ActivityFilterView = Discourse.View.extend({
     tagName: 'li',
     classNameBindings: ['active'],
     active: (function() {

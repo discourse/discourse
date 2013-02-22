@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.UserView = Ember.View.extend({
+  window.Discourse.UserView = Discourse.View.extend({
     templateName: 'user/user',
     userBinding: 'controller.content',
     updateTitle: (function() {

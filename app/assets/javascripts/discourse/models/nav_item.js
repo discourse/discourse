@@ -10,7 +10,7 @@
 
   validAnon = ['popular', 'category', 'categories'];
 
-  window.Discourse.NavItem = Em.Object.extend({
+  window.Discourse.NavItem = Discourse.Model.extend({
     categoryName: (function() {
       var split;
       split = this.get('name').split('/');

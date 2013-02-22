@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.User = Discourse.Model.extend(Discourse.Presence, {
+  window.Discourse.User = Discourse.Model.extend({
     avatarLarge: (function() {
       return Discourse.Utilities.avatarUrl(this.get('username'), 'large', this.get('avatar_template'));
     }).property('username'),

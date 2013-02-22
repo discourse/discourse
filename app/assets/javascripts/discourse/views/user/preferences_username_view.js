@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.PreferencesUsernameView = Ember.View.extend({
+  window.Discourse.PreferencesUsernameView = Discourse.View.extend({
     templateName: 'user/username',
     classNames: ['user-preferences'],
     didInsertElement: function() {

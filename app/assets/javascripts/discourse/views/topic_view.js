@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.TopicView = Ember.View.extend(Discourse.Scrolling, {
+  window.Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     templateName: 'topic',
     topicBinding: 'controller.content',
     userFiltersBinding: 'controller.userFilters',

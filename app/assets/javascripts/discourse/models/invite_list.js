@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.InviteList = Discourse.Model.extend(Discourse.Presence, {
+  window.Discourse.InviteList = Discourse.Model.extend({
     empty: (function() {
       return this.blank('pending') && this.blank('redeemed');
     }).property('pending.@each', 'redeemed.@each')

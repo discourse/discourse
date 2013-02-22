@@ -27,7 +27,7 @@
 
   Ember.Handlebars.registerHelper('countI18n', function(key, options) {
     var view;
-    view = Em.View.extend({
+    view = Discourse.View.extend({
       tagName: 'span',
       render: function(buffer) {
         return buffer.push(Ember.String.i18n(key, {

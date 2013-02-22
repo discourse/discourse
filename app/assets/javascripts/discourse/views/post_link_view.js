@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.PostLinkView = Ember.View.extend({
+  window.Discourse.PostLinkView = Discourse.View.extend({
     tagName: 'li',
     classNameBindings: ['direction'],
     direction: (function() {

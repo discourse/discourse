@@ -1,6 +1,6 @@
 (function() {
 
-  Discourse.SuggestedTopicView = Ember.View.extend({
+  Discourse.SuggestedTopicView = Discourse.View.extend({
     templateName: 'suggested_topic'
   });
 

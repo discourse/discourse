@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.NavItemView = Ember.View.extend({
+  window.Discourse.NavItemView = Discourse.View.extend({
     tagName: 'li',
     classNameBindings: ['isActive', 'content.hasIcon:has-icon'],
     attributeBindings: ['title'],

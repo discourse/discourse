@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.NotificationsView = Ember.View.extend({
+  window.Discourse.NotificationsView = Discourse.View.extend({
     classNameBindings: ['content.read', ':notifications'],
     templateName: 'notifications'
   });

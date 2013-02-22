@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.UserInvitedView = Ember.View.extend({
+  window.Discourse.UserInvitedView = Discourse.View.extend({
     templateName: 'user/invited'
   });
 

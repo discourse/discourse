@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.InvitePrivateModalView = window.Discourse.ModalBodyView.extend(Discourse.Presence, {
+  window.Discourse.InvitePrivateModalView = Discourse.ModalBodyView.extend({
     templateName: 'modal/invite_private',
     title: Em.String.i18n('topic.invite_private.title'),
     email: null,

@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.ExcerptCategoryView = Ember.View.extend({
+  window.Discourse.ExcerptCategoryView = Discourse.View.extend({
     editCategory: function() {
       var cat, _ref;
       this.get('parentView').close();

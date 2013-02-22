@@ -1,6 +1,6 @@
 (function() {
 
-  Discourse.DropdownButtonView = Ember.View.extend(Discourse.Presence, {
+  Discourse.DropdownButtonView = Discourse.View.extend({
     classNames: ['btn-group'],
     attributeBindings: ['data-not-implemented'],
     didInsertElement: function(e) {

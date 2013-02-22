@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.TopicListItemView = Ember.View.extend({
+  window.Discourse.TopicListItemView = Discourse.View.extend({
     tagName: 'tr',
     templateName: 'list/topic_list_item',
     classNameBindings: ['content.archived', ':topic-list-item'],

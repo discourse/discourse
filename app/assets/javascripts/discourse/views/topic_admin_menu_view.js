@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.TopicAdminMenuView = Em.View.extend({
+  window.Discourse.TopicAdminMenuView = Discourse.View.extend({
     willDestroyElement: function() {
       return jQuery('html').off('mouseup.discourse-topic-admin-menu');
     },

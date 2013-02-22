@@ -1,6 +1,6 @@
 (function() {
 
-  window.Discourse.Post = Ember.Object.extend(Discourse.Presence, {
+  window.Discourse.Post = Discourse.Model.extend({
     /* Url to this post
     */
 
