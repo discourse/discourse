@@ -1,5 +1,3 @@
-(function() {
-
   /**
     A base view that gives us common functionality, for example `present` and `blank`
 
@@ -8,9 +6,7 @@
     @uses Discourse.Presence
     @namespace Discourse
     @module Discourse
-  **/ 
-  window.Discourse.View = Ember.View.extend(Discourse.Presence, {
-    
-  });
+  **/
+  window.Discourse.View = Ember.View.extend(Discourse.Presence, {});
 
-}).call(this);
+

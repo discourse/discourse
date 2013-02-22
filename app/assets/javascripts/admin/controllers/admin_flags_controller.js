@@ -1,63 +1,59 @@
-(function() {
+/**
+  This controller supports the interface for dealing with flags in the admin section.
+
+  @class AdminFlagsController    
+  @extends Ember.Controller
+  @namespace Discourse
+  @module Discourse
+**/ 
+Discourse.AdminFlagsController = Ember.Controller.extend({
+  
+  /**
+    Clear all flags on a post
+
+    @method clearFlags
+    @param {Discourse.FlaggedPost} item The post whose flags we want to clear
+  **/
+  clearFlags: function(item) {
+    var _this = this;
+    item.clearFlags().then((function() {
+      _this.content.removeObject(item);
+    }), (function() {
+      bootbox.alert("something went wrong");
+    }));
+  },
 
   /**
-    This controller supports the interface for dealing with flags in the admin section.
+    Deletes a post
 
-    @class AdminFlagsController    
-    @extends Ember.Controller
-    @namespace Discourse
-    @module Discourse
-  **/ 
-  window.Discourse.AdminFlagsController = Ember.Controller.extend({
-    
-    /**
-      Clear all flags on a post
+    @method deletePost
+    @param {Discourse.FlaggedPost} item The post to delete
+  **/
+  deletePost: function(item) {
+    var _this = this;
+    item.deletePost().then((function() {
+      _this.content.removeObject(item);
+    }), (function() {
+      bootbox.alert("something went wrong");
+    }));
+  },
 
-      @method clearFlags
-      @param {Discourse.FlaggedPost} item The post whose flags we want to clear
-    **/
-    clearFlags: function(item) {
-      var _this = this;
-      item.clearFlags().then((function() {
-        _this.content.removeObject(item);
-      }), (function() {
-        bootbox.alert("something went wrong");
-      }));
-    },
+  /**
+    Are we viewing the 'old' view?
 
-    /**
-      Deletes a post
+    @property adminOldFlagsView
+  **/
+  adminOldFlagsView: (function() {
+    return this.query === 'old';
+  }).property('query'),
 
-      @method deletePost
-      @param {Discourse.FlaggedPost} item The post to delete
-    **/
-    deletePost: function(item) {
-      var _this = this;
-      item.deletePost().then((function() {
-        _this.content.removeObject(item);
-      }), (function() {
-        bootbox.alert("something went wrong");
-      }));
-    },
+  /**
+    Are we viewing the 'active' view?
 
-    /**
-      Are we viewing the 'old' view?
-
-      @property adminOldFlagsView
-    **/
-    adminOldFlagsView: (function() {
-      return this.query === 'old';
-    }).property('query'),
-
-    /**
-      Are we viewing the 'active' view?
-
-      @property adminActiveFlagsView
-    **/
-    adminActiveFlagsView: (function() {
-      return this.query === 'active';
-    }).property('query')
-    
-  });
-
-}).call(this);
+    @property adminActiveFlagsView
+  **/
+  adminActiveFlagsView: (function() {
+    return this.query === 'active';
+  }).property('query')
+  
+});

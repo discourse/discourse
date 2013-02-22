@@ -1,5 +1,11 @@
-(function() {
+/**
+  A trivial model we use to handle input validation
 
-  window.Discourse.InputValidation = Discourse.Model.extend({});
+  @class InputValidation
+  @extends Discourse.Model
+  @namespace Discourse
+  @module Discourse
+**/
+window.Discourse.InputValidation = Discourse.Model.extend({});
 
-}).call(this);
+

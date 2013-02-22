@@ -1,5 +1,3 @@
-(function() {
-
   window.PagedownCustom = {
     insertButtons: [
       {
@@ -17,4 +15,4 @@
     ]
   };
 
-}).call(this);
+

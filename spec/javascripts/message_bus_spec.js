@@ -1,6 +1,4 @@
 /*global waitsFor:true expect:true describe:true beforeEach:true it:true */
-(function() {
-
 
   describe("Discourse.MessageBus", function() {
     return describe("Long polling", function() {
@@ -10,4 +8,4 @@
     });
   });
 
-}).call(this);
+

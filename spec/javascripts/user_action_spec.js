@@ -1,6 +1,4 @@
 /*global waitsFor:true expect:true describe:true beforeEach:true it:true */
-(function() {
-
   describe("Discourse.UserAction", function() {
     return describe("collapseStream", function() {
       return it("collapses all likes", function() {
@@ -31,4 +29,4 @@
     });
   });
 
-}).call(this);
+

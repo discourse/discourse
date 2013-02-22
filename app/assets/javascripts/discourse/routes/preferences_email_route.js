@@ -1,15 +1,21 @@
-(function() {
+/**
+  The route for editing a user's email
 
-  window.Discourse.PreferencesEmailRoute = Discourse.RestrictedUserRoute.extend({
-    renderTemplate: function() {
-      return this.render({
-        into: 'user',
-        outlet: 'userOutlet'
-      });
-    },
-    setupController: function(controller) {
-      return controller.set('content', this.controllerFor('user').get('content'));
-    }
-  });
+  @class PreferencesEmailRoute
+  @extends Discourse.RestrictedUserRoute
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.PreferencesEmailRoute = Discourse.RestrictedUserRoute.extend({
 
-}).call(this);
+  renderTemplate: function() {
+    this.render({ into: 'user', outlet: 'userOutlet' });
+  },
+
+  setupController: function(controller) {
+    controller.set('content', this.controllerFor('user').get('content'));
+  }
+
+});
+
+

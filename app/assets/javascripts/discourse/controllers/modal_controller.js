@@ -1,9 +1,15 @@
-(function() {
+/**
+  This controller supports actions related to showing modals
 
-  Discourse.ModalController = Ember.Controller.extend(Discourse.Presence, {
-    show: function(view) {
-      return this.set('currentView', view);
-    }
-  });
+  @class ModalController 
+  @extends Discourse.Controller
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.ModalController = Discourse.Controller.extend({
+  show: function(view) {
+    this.set('currentView', view);
+  }
+});
 
-}).call(this);
+

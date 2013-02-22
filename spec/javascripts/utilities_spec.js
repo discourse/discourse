@@ -1,7 +1,5 @@
 /*global waitsFor:true expect:true describe:true beforeEach:true it:true */
 
-(function() {
-
   describe("Discourse.Utilities", function() {
     describe("categoryUrlId", function() {
       it("returns the slug when it exists", function() {
@@ -133,4 +131,4 @@
     });
   });
 
-}).call(this);
+

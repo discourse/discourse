@@ -1,29 +1,36 @@
-(function() {
+/**
+  A base class for helping us display modal content
 
-  window.Discourse.ModalBodyView = Discourse.View.extend({
-    // Focus on first element
-    didInsertElement: function() {
-      var _this = this;
-      return Em.run.next(function() {
-        return _this.$('form input:first').focus();
-      });
-    },
+  @class ModalBodyView
+  @extends Discourse.View
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.ModalBodyView = Discourse.View.extend({
 
-    // Pass the errors to our errors view
-    displayErrors: function(errors, callback) {
-      this.set('parentView.parentView.modalErrorsView.errors', errors);
-      return typeof callback === "function" ? callback() : void 0;
-    },
+  // Focus on first element
+  didInsertElement: function() {
+    var _this = this;
+    Em.run.next(function() {
+      _this.$('form input:first').focus();
+    });
+  },
 
-    // Just use jQuery to show an alert. We don't need anythign fancier for now
-    // like an actual ember view
-    flash: function(msg, flashClass) {
-      var $alert;
-      if (!flashClass) flashClass = "success";
-      $alert = jQuery('#modal-alert').hide().removeClass('alert-error', 'alert-success');
-      $alert.addClass("alert alert-" + flashClass).html(msg);
-      return $alert.fadeIn();
-    }
-  });
+  // Pass the errors to our errors view
+  displayErrors: function(errors, callback) {
+    this.set('parentView.parentView.modalErrorsView.errors', errors);
+    typeof callback === "function" ? callback() : void 0;
+  },
 
-}).call(this);
+  // Just use jQuery to show an alert. We don't need anythign fancier for now
+  // like an actual ember view
+  flash: function(msg, flashClass) {
+    var $alert;
+    if (!flashClass) flashClass = "success";
+    $alert = $('#modal-alert').hide().removeClass('alert-error', 'alert-success');
+    $alert.addClass("alert alert-" + flashClass).html(msg);
+    $alert.fadeIn();
+  }
+});
+
+

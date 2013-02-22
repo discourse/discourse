@@ -1,5 +1,12 @@
+/**
+  A modal view for telling a user they're not activated
 
-window.Discourse.NotActivatedView = window.Discourse.ModalBodyView.extend(Discourse.Presence, {
+  @class NotActivatedView
+  @extends Discourse.ModalBodyView
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.NotActivatedView = Discourse.ModalBodyView.extend({
   templateName: 'modal/not_activated',
   title: Em.String.i18n('log_in'),
   emailSent: false,

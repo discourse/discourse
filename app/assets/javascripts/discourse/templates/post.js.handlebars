@@ -28,9 +28,9 @@
 
     <div class='topic-meta-data span2'>
       <div class='contents'>
-        <a href='/users/{{unbound username}}' class='excerptable' data-excerpt-position="right" data-excerpt-size="small" >{{avatar this imageSize="large"}}</a>
+        <a href='/users/{{unbound username}}'>{{avatar this imageSize="large"}}</a>
         <h3 {{bindAttr class="moderator new_user"}}><a href='/users/{{unbound username}}'>{{breakUp username}}</a></h3>
-        
+
         <div class='post-info'>
           <a href='#' class='post-date' {{bindAttr data-share-url="url"}}>{{date created_at}}</a>
         </div>
@@ -38,14 +38,14 @@
           <div class='post-info'>
             <a href='#' class="{{unbound historyHeat}}" {{action showHistory this}} title="{{editDate updated_at}}">
               <i class='icon-pencil'></i>
-              {{editCount}} 
+              {{editCount}}
             </a>
           </div>
-        {{/if}}        
+        {{/if}}
       </div>
-    </div>    
+    </div>
 
-    <div class='topic-body span14'>           
+    <div class='topic-body span14'>
       <div {{bindAttr class="showUserReplyTab:avoid-tab view.repliesHidden:bottom-round :contents :regular view.extraClass"}}>
         {{view Discourse.PrependPostView postBinding="this"}}
         <div class='cooked'>{{{cooked}}}</div>

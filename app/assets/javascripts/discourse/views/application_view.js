@@ -1,7 +1,13 @@
-(function() {
+/**
+  This view handles rendering of the core application template
 
-  window.Discourse.ApplicationView = Discourse.View.extend({
-    templateName: 'application'
-  });
+  @class ApplicationView
+  @extends Discourse.View
+  @namespace Discourse
+  @module Discourse
+**/
+window.Discourse.ApplicationView = Discourse.View.extend({
+  templateName: 'application'
+});
 
-}).call(this);
+

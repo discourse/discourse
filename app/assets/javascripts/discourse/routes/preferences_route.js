@@ -1,16 +1,25 @@
-(function() {
+/**
+  The common route stuff for a user's preference
 
-  window.Discourse.PreferencesRoute = Discourse.RestrictedUserRoute.extend({
-    renderTemplate: function() {
-      return this.render('preferences', {
-        into: 'user',
-        outlet: 'userOutlet',
-        controller: 'preferences'
-      });
-    },
-    setupController: function(controller) {
-      return controller.set('content', this.controllerFor('user').get('content'));
-    }
-  });
+  @class PreferencesRoute
+  @extends Discourse.RestrictedUserRoute
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.PreferencesRoute = Discourse.RestrictedUserRoute.extend({
 
-}).call(this);
+  renderTemplate: function() {
+    this.render('preferences', {
+      into: 'user',
+      outlet: 'userOutlet',
+      controller: 'preferences'
+    });
+  },
+
+  setupController: function(controller) {
+    controller.set('content', this.controllerFor('user').get('content'));
+  }
+
+});
+
+

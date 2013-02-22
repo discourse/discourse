@@ -1,10 +1,16 @@
-(function() {
+/**
+  This view is for rendering the posts in a topic
 
-  window.Discourse.TopicPostsView = Em.CollectionView.extend({
-    itemViewClass: Discourse.PostView,
-    didInsertElement: function() {
-      return this.get('topicView').postsRendered();
-    }
-  });
+  @class TopicPostsView
+  @extends Ember.CollectionView
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.TopicPostsView = Em.CollectionView.extend({
+  itemViewClass: Discourse.PostView,
+  didInsertElement: function() {
+    this.get('topicView').postsRendered();
+  }
+});
 
-}).call(this);
+

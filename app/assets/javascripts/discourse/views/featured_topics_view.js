@@ -1,8 +1,14 @@
-(function() {
+/**
+  This view handles rendering of featured topics at the bottom of a topic
 
-  window.Discourse.FeaturedTopicsView = Discourse.View.extend({
-    templateName: 'featured_topics',
-    classNames: ['category-list-item']
-  });
+  @class FeaturedTopicsView
+  @extends Discourse.View
+  @namespace Discourse
+  @module Discourse
+**/
+window.Discourse.FeaturedTopicsView = Discourse.View.extend({
+  templateName: 'featured_topics',
+  classNames: ['category-list-item']
+});
 
-}).call(this);
+

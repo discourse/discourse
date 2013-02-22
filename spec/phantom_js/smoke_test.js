@@ -20,7 +20,7 @@ page.waitFor = function(desc, fn, timeout, after) {
 
     try {
       r = page.evaluate(fn);
-    } 
+    }
     catch(err) {
       // next time
     }
@@ -77,7 +77,7 @@ var run = function(){
           allPassed = allPassed && success;
           performNextAction();
         });
-      } 
+      }
       else if(action.navigate) {
         console.log("NAVIGATE: " + action.desc);
         page.evaluate(action.navigate);
@@ -92,33 +92,33 @@ var run = function(){
 page.runTests = function(){
 
   test("more than one topic shows up", function() {
-    return jQuery('#topic-list tbody tr').length > 0;
+    return $('#topic-list tbody tr').length > 0;
   });
 
   test("expect a log in button", function(){
-    return jQuery('.current-username .btn').text() === 'Log In';
+    return $('.current-username .btn').text() === 'Log In';
   });
 
   navigate("navigate to first topic", function(){
     Em.run.later(function(){
-      jQuery('.main-link a:first').click();
+      $('.main-link a:first').click();
     }, 500);
   });
 
   test("at least one post body", function(){
-    return jQuery('.topic-post').length > 0;
+    return $('.topic-post').length > 0;
   });
-  
+
   navigate("navigate to first user", function(){
     // for whatever reason the clicks do not respond at the begining
     //  defering
     Em.run.later(function(){
-      jQuery('.topic-meta-data a:first').focus().click();
+      $('.topic-meta-data a:first').focus().click();
     },500);
   });
 
   test("has about me section",function(){
-    return jQuery('.about-me').length === 1;
+    return $('.about-me').length === 1;
   });
 
   run();

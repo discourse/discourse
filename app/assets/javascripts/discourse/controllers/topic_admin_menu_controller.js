@@ -1,13 +1,20 @@
-(function() {
+/**
+  This controller supports the admin menu on topics
 
-  Discourse.TopicAdminMenuController = Ember.ObjectController.extend({
-    visible: false,
-    show: function() {
-      return this.set('visible', true);
-    },
-    hide: function() {
-      return this.set('visible', false);
-    }
-  });
+  @class TopicAdminMenuController
+  @extends Discourse.ObjectController
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.TopicAdminMenuController = Discourse.ObjectController.extend({
+  visible: false,
 
-}).call(this);
+  show: function() {
+    this.set('visible', true);
+  },
+
+  hide: function() {
+    this.set('visible', false);
+  }
+
+});
