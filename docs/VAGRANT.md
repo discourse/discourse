@@ -26,6 +26,16 @@ Vagrant will prompt you for your admin password. This is so it can mount your lo
 
 (The first time you do this, it will take a while as it downloads the VM image and installs it. Go grab a coffee.)
 
+**Note to OSX/Linux users**: Vagrant will mount your local files via an NFS share. Therefore, make sure that NFS is installed or else you'll receive the error message:
+
+```
+Mounting NFS shared folders failed. This is most often caused by the NFS
+client software not being installed on the guest machine. Please verify
+that the NFS client software is properly installed, and consult any resources
+specific to the linux distro you're using for more information on how to
+do this.
+```
+
 Once the machine has booted up, you can shell into it by typing:
 
 ```
