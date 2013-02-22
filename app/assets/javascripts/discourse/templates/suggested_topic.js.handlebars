@@ -1,7 +1,7 @@
 {{#with view.content}}
   {{#group}}
   <td class='main-link'>
-    <a class='title excerptable' href="{{unbound lastReadUrl}}">{{unbound title}}</a>
+    <a class='title excerptable' href="{{unbound lastReadUrl}}">{{{unbound fancy_title}}}</a>
     {{#if unread}}
       <a href="{{unbound lastReadUrl}}" class='badge unread badge-notification' title='{{i18n topic.unread_posts unread="unread"}}'>{{unbound unread}}</a>
     {{/if}}
