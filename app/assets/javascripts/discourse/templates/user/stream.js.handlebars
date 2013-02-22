@@ -4,7 +4,9 @@
       <div class='clearfix info'>
         <a href="/users/{{unbound username}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar this imageSize="large" extraClasses="actor" avatarTemplatePath="avatar_template" ignoreTitle="true"}}</div></a>
         <span class='time'>{{date path="created_at" leaveAgo="true"}}</span>
-        <a class="title" href="{{unbound postUrl}}">{{unbound title}}</a><br>
+        <span class="title">
+          <a href="{{unbound postUrl}}">{{unbound title}}</a>
+        </span>
         {{#unless description}}
           <span class="type">
           {{#if isPM}}
