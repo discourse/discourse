@@ -102,10 +102,17 @@
         cache: 'false',
         success: function(result) {
           if (result) {
+            var action;
+          
             if ((_this.get('streamFilter') || result.action_type) !== result.action_type) {
               return;
             }
-            return stream.insertAt(0, Discourse.UserAction.create(result));
+            
+            action = Em.A();
+            action.pushObject(Discourse.UserAction.create(result));
+            action = Discourse.UserAction.collapseStream(action);
+            
+            return stream.insertAt(0, action[0]);
           }
         }
       });
