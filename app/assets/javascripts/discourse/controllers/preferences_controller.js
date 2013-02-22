@@ -65,6 +65,18 @@
       });
       freqs.addObject({
         name: Em.String.i18n('user.auto_track_options.after_n_minutes', {
+          count: 3
+        }),
+        value: 180000
+      });
+      freqs.addObject({
+        name: Em.String.i18n('user.auto_track_options.after_n_minutes', {
+          count: 4
+        }),
+        value: 240000
+      });
+      freqs.addObject({
+        name: Em.String.i18n('user.auto_track_options.after_n_minutes', {
           count: 5
         }),
         value: 300000
