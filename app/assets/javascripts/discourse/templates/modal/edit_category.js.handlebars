@@ -8,9 +8,14 @@
 
       {{#if view.category.description}}
         {{view.category.description}}
-        <a href="#" {{action showCategoryTopic target="view"}}>{{i18n category.change_in_category_topic}}</a>
+        {{#if view.category.topic_url}}
+          <a href="#" {{action showCategoryTopic target="view"}}>{{i18n category.change_in_category_topic}}</a>
+        {{/if}}
       {{else}}
-        {{i18n category.no_description}} <a {{action showCategoryTopic target="view"}} href="#">{{i18n category.change_in_category_topic}}</a>
+        {{i18n category.no_description}} 
+          {{#if view.category.topic_url}}
+          <a {{action showCategoryTopic target="view"}} href="#">{{i18n category.change_in_category_topic}}</a>
+          {{/if}}}
       {{/if}}
 
     </div>
