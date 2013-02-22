@@ -25,7 +25,8 @@ Vagrant::Config.run do |config|
   config.vm.forward_port 3000, 4000
   config.vm.forward_port 1080, 4080 # Mailcatcher
 
-  nfs_setting = RUBY_PLATFORM =~ /darwin/ ? true : false
+  nfs_setting = (RUBY_PLATFORM =~ /darwin/ or
+                 RUBY_PLATFORM =~ /linux/) ? true : false
   config.vm.share_folder("v-root", "/vagrant", ".", :nfs => nfs_setting)
 
   chef_cookbooks_path = ["chef/cookbooks"]
