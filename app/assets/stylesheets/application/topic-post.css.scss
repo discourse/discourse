@@ -668,7 +668,7 @@
     margin-right: 4px;
   }
   .poster.toggled .avatar {
-    @include box-shadow(0 0 5px lighten($link_color, 10%));
+    @include box-shadow(0 0 6px 1px desaturate(lighten($link_color, 18%), 35%));
   }
   .summary {
     border-bottom: 1px solid #d1d1d2;
