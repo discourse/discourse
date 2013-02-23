@@ -70,6 +70,7 @@ Before contributing to Discourse, please:
    - submit bugs,
    - request new features, and
    - step you through the entire process of preparing your code for a Pull Request.
+4. Have a look here: http://meta.discourse.org/t/so-you-want-to-help-out-with-discourse/3823
 
 **We look forward to seeing your cool stuff!**
 
