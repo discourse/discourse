@@ -87,6 +87,11 @@
       this.$('a.unread-private-messages, a.unread-notifications, a[data-notifications]').on('click touchstart', function(e) {
         return _this.showNotifications(e);
       });
+      this.$('div.title').on('click', function() {
+        if (window.location.pathname === '/') {
+          window.scrollTo(0, 0);
+        }
+      });
       jQuery(window).bind('scroll.discourse-dock', function() {
         return _this.examineDockHeader();
       });
