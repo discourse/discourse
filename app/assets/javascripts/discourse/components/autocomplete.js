@@ -126,7 +126,7 @@
         });
       };
       updateAutoComplete = function(r) {
-        if (!completeStart) return;
+        if (completeStart === null) return;
         
         autocompleteOptions = r;
         if (!r || r.length === 0) {
@@ -197,7 +197,7 @@
         if (e.which === 16) {
           return;
         }
-        if ((!completeStart) && e.which === 8 && options.key) {
+        if ((completeStart === null) && e.which === 8 && options.key) {
           c = Discourse.Utilities.caretPosition(me[0]);
           next = me[0].value[c];
           nextIsGood = next === void 0 || /\s/.test(next);
@@ -222,13 +222,13 @@
           }
         }
         if (e.which === 27) {
-          if (completeStart) {
+          if (completeStart !== null) {
             closeAutocomplete();
             return false;
           }
           return true;
         }
-        if (completeStart) {
+        if (completeStart !== null) {
           caretPosition = Discourse.Utilities.caretPosition(me[0]);
           /* If we've backspaced past the beginning, cancel unless no key
           */
