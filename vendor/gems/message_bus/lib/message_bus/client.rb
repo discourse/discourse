@@ -38,7 +38,6 @@ class MessageBus::Client
     r = []
     @subscriptions.each do |k,v| 
       next if v.to_i < 0
-
       messages = MessageBus.backlog(k,v)
       messages.each do |msg|
         allowed = !msg.user_ids || msg.user_ids.include?(self.user_id)

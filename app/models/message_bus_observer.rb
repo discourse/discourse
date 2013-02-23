@@ -49,10 +49,10 @@ class MessageBusObserver < DiscourseObserver
 
     def refresh_notification_count(notification)
       user_id = notification.user.id
-      MessageBus.publish("/notification",
+      MessageBus.publish("/notification/#{user_id}",
         {unread_notifications: notification.user.unread_notifications,
          unread_private_messages: notification.user.unread_private_messages},
-        user_ids: [notification.user.id] # only publish the notification to this user
+        user_ids: [user_id] # only publish the notification to this user
       )
     end
 end
