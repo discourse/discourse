@@ -344,7 +344,7 @@ en:
       missing: "Topic Not Found"
       not_found:
         title: "Topic Not Found"
-        description: "Sorry, we couldn't find that topic. Perhaps it has been deleted?"
+        description: "Sorry, we couldn't load that topic, possibly due to a connection problem. Please try again. If the problem persists, perhaps the topic was deleted."
       unread_posts: "you have {{unread}} unread old posts in this topic"
       new_posts: "there are {{new_posts}} new posts in this topic since you last read it"
       likes: "there are {{likes}} likes in this topic"
