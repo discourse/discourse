@@ -26,6 +26,7 @@ gem 'i18n-js'
 # sudo apt-get install -y advancecomp gifsicle jpegoptim libjpeg-progs optipng pngcrush
 gem 'image_optim'
 gem 'jquery-rails'
+gem 'minitest'
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
