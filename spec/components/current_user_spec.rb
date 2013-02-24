@@ -9,7 +9,7 @@ describe CurrentUser do
     CurrentUser.lookup_from_env("HTTP_COOKIE" => "_t=#{token};").should == user
   end
 
-  it "allows us to lookup a user from our app" do 
-  end
+  # it "allows us to lookup a user from our app" do 
+  # end
 
 end
