@@ -173,7 +173,7 @@ class User < ActiveRecord::Base
   # tricky, we need our bus to be subscribed from the right spot
   def sync_notification_channel_position
     @unread_notifications_by_type = nil
-    self.notification_channel_position = MessageBus.last_id('/notification')
+    self.notification_channel_position = MessageBus.last_id("/notification/#{id}")
   end
 
   def invited_by
