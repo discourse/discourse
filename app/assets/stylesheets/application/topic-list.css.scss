@@ -137,7 +137,7 @@
   }
   .avatar {
     &.latest {
-      @include box-shadow(0 0 5px lighten($link_color, 10%));
+      @include box-shadow(0 0 6px 1px desaturate(lighten($link_color, 18%), 35%));
     }
   }
   .num {
