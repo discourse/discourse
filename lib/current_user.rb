@@ -2,25 +2,16 @@ module CurrentUser
 
   def self.lookup_from_env(env)
     request = Rack::Request.new(env)
-    auth_token = request.cookies[:_t]
-    user = nil
-    if auth_token && auth_token.length == 32
-      user = User.where(auth_token: auth_token).first 
-    end
-    
-    return user
+    user_from_auth_token(request.cookies)
   end
 
   def current_user
     return @current_user if @current_user || @not_logged_in
 
     if session[:current_user_id].blank?
-      # maybe we have a cookie? 
-      auth_token = cookies[:_t]
-      if auth_token && auth_token.length == 32
-        @current_user = User.where(auth_token: auth_token).first
-        session[:current_user_id] = @current_user.id if @current_user
-      end
+      # maybe we have a cookie?
+      @current_user = CurrentUser.user_from_auth_token(cookies)
+      session[:current_user_id] = @current_user.id if @current_user
     else
       @current_user ||= User.where(id: session[:current_user_id]).first
     end
@@ -38,6 +29,17 @@ module CurrentUser
       end
     end
     @current_user
+  end
+  
+  def self.user_from_auth_token(cookies)
+    auth_token = cookies[:_t]
+    user = nil
+      
+    if auth_token && auth_token.length == 32
+      user = User.where(auth_token: auth_token).first
+    end
+      
+    user
   end
 
 end
