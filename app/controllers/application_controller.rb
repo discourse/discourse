@@ -111,15 +111,6 @@ class ApplicationController < ActionController::Base
     @guardian ||= Guardian.new(current_user)
   end
 
-  def log_on_user(user)
-    session[:current_user_id] = user.id
-    unless user.auth_token
-      user.auth_token = SecureRandom.hex(16)
-      user.save!
-    end
-    cookies.permanent[:_t] = { :value => user.auth_token, :httponly => true }
-  end
-
   # This is odd, but it seems that in Rails `render json: obj` is about
   # 20% slower than calling MultiJSON.dump ourselves. I'm not sure why
   # Rails doesn't call MultiJson.dump when you pass it json: obj but

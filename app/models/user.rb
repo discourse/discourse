@@ -291,6 +291,13 @@ class User < ActiveRecord::Base
     end
   end
 
+  def update_ip_address!(new_ip_address)
+    if (ip_address != new_ip_address) and new_ip_address.present?
+      @current_user.ip_address = new_ip_address
+      @current_user.update_column(:ip_address, new_ip_address)
+    end
+  end
+
   def update_last_seen!
     now = DateTime.now
     now_date = now.to_date
