@@ -17,7 +17,11 @@ module CurrentUser
       user.auth_token = SecureRandom.hex(16)
       user.save!
     end
-    cookies.permanent[:_t] = { :value => user.auth_token, :httponly => true }
+    set_permanent_cookie!(user)
+  end
+
+  def set_permanent_cookie!(user)
+    cookies.permanent["_t"] = { :value => user.auth_token, :httponly => true }
   end
 
   def current_user
@@ -29,6 +33,12 @@ module CurrentUser
       session[:current_user_id] = @current_user.id if @current_user
     else
       @current_user ||= User.where(id: session[:current_user_id]).first
+      
+      # cookie recovery from session, we have been messing with it, fix it up
+      if @current_user && cookies["_t"] != @current_user.auth_token
+        set_permanent_cookie!(@current_user)
+      end
+
     end
 
     if @current_user && @current_user.is_banned? 
