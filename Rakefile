@@ -5,3 +5,5 @@
 require File.expand_path('../config/application', __FILE__)
 
 Discourse::Application.load_tasks
+
+#DISREGARD MUAHAHAH#
