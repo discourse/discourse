@@ -293,8 +293,8 @@ class User < ActiveRecord::Base
 
   def update_ip_address!(new_ip_address)
     if (ip_address != new_ip_address) and new_ip_address.present?
-      @current_user.ip_address = new_ip_address
-      @current_user.update_column(:ip_address, new_ip_address)
+      ip_address = new_ip_address
+      update_column(:ip_address, new_ip_address)
     end
   end
 

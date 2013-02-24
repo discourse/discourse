@@ -34,9 +34,11 @@ module CurrentUser
     else
       @current_user ||= User.where(id: session[:current_user_id]).first
       
-      # cookie recovery from session, we have been messing with it, fix it up
+      # I have flip flopped on this (sam), if our permanent cookie
+      #  conflicts with our current session assume session is bust
+      #  kill it
       if @current_user && cookies["_t"] != @current_user.auth_token
-        set_permanent_cookie!(@current_user)
+        @current_user = nil
       end
 
     end
