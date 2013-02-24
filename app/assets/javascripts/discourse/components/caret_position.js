@@ -70,7 +70,7 @@
       });
       before = void 0;
       after = void 0;
-      pos = options && options.pos ? options.pos : getCaret(textarea[0]);
+      pos = options && (options.pos || options.pos === 0) ? options.pos : getCaret(textarea[0]);
       val = textarea.val().replace("\r", "");
       if (options && options.key) {
         val = val.substring(0, pos) + options.key + val.substring(pos);
