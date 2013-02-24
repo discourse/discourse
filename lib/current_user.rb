@@ -2,7 +2,6 @@ module CurrentUser
 
   def self.lookup_from_env(env)
     request = Rack::Request.new(env)
-    puts request.inspect
     auth_token = request.cookies[:_t]
     user = nil
     if auth_token && auth_token.length == 32
