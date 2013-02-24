@@ -1270,7 +1270,7 @@ else
             // must be preceded by a non-word character (and not by =" or <) and followed by non-word/EOF character
             // simulating the lookbehind in a consuming way is okay here, since a URL can neither and with a " nor
             // with a <, so there is no risk of overlapping matches.
-            text = text.replace(/(="|<)?\b(https?|ftp)(:\/\/[-A-Z0-9+&@#\/%?=~_|\[\]\(\)!:,\.;]*[-A-Z0-9+&@#\/%=~_|\[\])])(?=$|\W)/gi, handleTrailingParens);
+            text = text.replace(/(="|='|<)?\b(https?|ftp)(:\/\/[-A-Z0-9+&@#\/%?=~_|\[\]\(\)!:,\.;]*[-A-Z0-9+&@#\/%=~_|\[\])])(?=$|\W)/gi, handleTrailingParens);
 
             //  autolink anything like <http://example.com>
             
