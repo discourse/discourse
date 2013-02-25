@@ -1,6 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
-# See https://github.com/discourse/core/blob/master/DEVELOPMENT.md
+# See https://github.com/discourse/discourse/blob/master/docs/VAGRANT.md
 #
 Vagrant::Config.run do |config|
   config.vm.box = 'discourse-pre'
