@@ -652,9 +652,6 @@ describe User do
       end
 
     end
-
-
-
   end
 
   describe '#create_for_email' do
@@ -689,6 +686,34 @@ describe User do
         user.email_confirmed?.should be_true
       end
     end
+  end
+
+
+  describe 'update_time_read!' do 
+    let(:user) { Fabricate(:user) }
+
+    it 'makes no changes if nothing is cached' do 
+      $redis.expects(:get).with("user-last-seen:#{user.id}").returns(nil)
+      user.update_time_read!
+      user.reload
+      user.time_read.should == 0
+    end
+
+    it 'makes a change if time read is below threshold' do 
+      $redis.expects(:get).with("user-last-seen:#{user.id}").returns(Time.now - 10.0)
+      user.update_time_read!
+      user.reload
+      user.time_read.should == 10
+    end
+
+    it 'makes no change if time read is above threshold' do 
+      t = Time.now - 1 - User::MAX_TIME_READ_DIFF
+      $redis.expects(:get).with("user-last-seen:#{user.id}").returns(t)
+      user.update_time_read!
+      user.reload
+      user.time_read.should == 0
+    end
+
   end
 
 end

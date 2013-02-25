@@ -27,8 +27,8 @@ class Notification < ActiveRecord::Base
     where(read: false)
   end
 
-  def self.mark_post_read(user, topic_id, post_number)
-    Notification.update_all "read = true", ["user_id = ? and topic_id = ? and post_number = ?", user.id, topic_id, post_number]
+  def self.mark_posts_read(user, topic_id, post_numbers)
+    Notification.update_all "read = 't'", ["user_id = ? and topic_id = ? and post_number in (?) and read = ?", user.id, topic_id, post_numbers, false]
   end
 
   def self.recent

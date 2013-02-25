@@ -108,4 +108,17 @@ describe Notification do
     end
   end
 
+  describe 'mark_posts_read' do 
+    it "marks multiple posts as read if needed" do 
+      user = Fabricate(:user)
+
+      notifications = (1..3).map do |i| 
+        Notification.create!(read: false, user_id: user.id, topic_id: 2, post_number: i, data: '[]', notification_type: 1)
+      end
+      Notification.create!(read: true, user_id: user.id, topic_id: 2, post_number: 4, data: '[]', notification_type: 1)
+
+      Notification.mark_posts_read(user,2,[1,2,3,4]).should == 3
+    end
+  end
+
 end
