@@ -350,7 +350,7 @@ en:
     body_min_entropy: "The minimum allowed entropy for post body"
     new_user_period_days: "How long a user is highlighted as being new, in days"
     title_fancy_entities: "Convert fancy HTML entities in topic titles"
-    
+
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"
     liked: "%{display_username} liked your post in %{link}"

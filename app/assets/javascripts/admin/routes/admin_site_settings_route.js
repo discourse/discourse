@@ -15,5 +15,3 @@ Discourse.AdminSiteSettingsRoute = Discourse.Route.extend({
     this.render('admin/templates/site_settings', {into: 'admin/templates/admin'});
   }    
 });
-
-

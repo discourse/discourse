@@ -29,7 +29,7 @@ module Oneboxer
 
       # get the first image > 150 pix high
       images = html_doc.search("img").select { |img| img['height'].to_i > 150 }
-      
+
       result[:image] = "http:#{images[0]["src"]}" unless images.empty?
 
       # remove the table from mobile layout, as it can contain paras in some rare cases

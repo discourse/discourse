@@ -9,10 +9,10 @@ class SystemMessage
   end
 
   def initialize(recipient)
-    @recipient = recipient  
+    @recipient = recipient
   end
 
-  def create(type, params = {})    
+  def create(type, params = {})
 
     defaults = {site_name: SiteSetting.title,
                 username: @recipient.username,
@@ -26,7 +26,7 @@ class SystemMessage
     if SiteSetting.restrict_access?
       params[:site_password] = MultisiteI18n.t('system_messages.site_password', access_password: SiteSetting.access_password)
     end
-              
+
     title = MultisiteI18n.t("system_messages.#{type}.subject_template", params)
     raw_body = MultisiteI18n.t("system_messages.#{type}.text_body_template", params)
 

@@ -101,13 +101,13 @@ ExTreshold: 4
 # Experimental feature for apt-listbugs: pass-through SOAP requests and
 # responses to/from bugs.debian.org. If not set, default is true if
 # ForceManaged is enabled and false otherwise.
-# ForwardBtsSoap: 1 
+# ForwardBtsSoap: 1
 
 # The daemon has a small cache for DNS data, to speed up resolution. The
 # expiration time of the DNS entries can be configured in seconds.
 # DnsCacheSeconds: 3600
 
-# Don't touch the following values without good consideration! 
+# Don't touch the following values without good consideration!
 #
 # Max. count of connection threads kept ready (for faster response in the
 # future). Should be a sane value between 0 and average number of connections,
@@ -196,7 +196,7 @@ ExTreshold: 4
 #
 #
 # It's possible to use use apt-cacher-ng as a regular web server with limited
-# feature set, i.e. 
+# feature set, i.e.
 # including directory browsing and download of any file;
 # excluding sorting, mime types/encodings, CGI execution, index page
 # redirection and other funny things.
@@ -213,13 +213,13 @@ ExTreshold: 4
 # Precache a set of files referenced by specified index files. This can be used
 # to create a partial mirror usable for offline work. There are certain limits
 # and restrictions on the path specification, see manual for details. A list of
-# (maybe) relevant index files could be retrieved via 
+# (maybe) relevant index files could be retrieved via
 # "apt-get --print-uris update" on a client machine.
 #
 # PrecacheFor: debrep/dists/unstable/*/source/Sources* debrep/dists/unstable/*/binary-amd64/Packages*
 
 # Arbitrary set of data to append to request headers sent over the wire. Should
-# be a well formated HTTP headers part including newlines (DOS style) which 
+# be a well formated HTTP headers part including newlines (DOS style) which
 # can be entered as escape sequences (\r\n).
 # RequestAppendix: X-Tracking-Choice: do-not-track\r\n
 

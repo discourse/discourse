@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe UserNotifications do
-  
+
   let(:user) { Fabricate(:user) }
 
   describe ".signup" do
@@ -19,7 +19,7 @@ describe UserNotifications do
     its(:to) { should == [user.email] }
     its(:subject) { should be_present }
     its(:from) { should == [SiteSetting.notification_email] }
-    its(:body) { should be_present }   
+    its(:body) { should be_present }
   end
 
   describe '.daily_digest' do
@@ -37,7 +37,7 @@ describe UserNotifications do
       its(:to) { should == [user.email] }
       its(:subject) { should be_present }
       its(:from) { should == [SiteSetting.notification_email] }
-      its(:body) { should be_present }      
+      its(:body) { should be_present }
     end
   end
 
@@ -53,7 +53,7 @@ describe UserNotifications do
     its(:to) { should == [user.email] }
     its(:subject) { should be_present }
     its(:from) { should == [SiteSetting.notification_email] }
-    its(:body) { should be_present }      
+    its(:body) { should be_present }
   end
 
 

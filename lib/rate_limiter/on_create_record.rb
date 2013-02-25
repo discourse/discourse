@@ -4,7 +4,7 @@ class RateLimiter
   # based on a SiteSetting.
   #
   # It expects a SiteSetting called `rate_limit_create_{model_name}` where
-  # `model_name` is the class name of your model, underscored. 
+  # `model_name` is the class name of your model, underscored.
   #
   module OnCreateRecord
 
@@ -14,20 +14,20 @@ class RateLimiter
 
       limit_key = "create_#{self.class.name.underscore}"
       max_setting = SiteSetting.send("rate_limit_#{limit_key}")
-      @rate_limiter = RateLimiter.new(user, limit_key, 1, max_setting)      
+      @rate_limiter = RateLimiter.new(user, limit_key, 1, max_setting)
     end
 
     def self.included(base)
-      base.extend(ClassMethods)      
+      base.extend(ClassMethods)
     end
 
     module ClassMethods
       def rate_limit(limiter_method=nil)
-      
+
         limiter_method = limiter_method || :default_rate_limiter
 
-        self.after_create do   
- 
+        self.after_create do
+
           rate_limiter = send(limiter_method)
           return unless rate_limiter.present?
 

@@ -35,7 +35,7 @@ module Oneboxer
     end
 
     def initialize(url, opts={})
-      @url = url     
+      @url = url
       @opts = opts
     end
 

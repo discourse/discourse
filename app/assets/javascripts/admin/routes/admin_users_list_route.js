@@ -11,5 +11,3 @@ Discourse.AdminUsersListRoute = Discourse.Route.extend({
     this.render('admin/templates/users_list', {into: 'admin/templates/admin'});
   }    
 });
-
-

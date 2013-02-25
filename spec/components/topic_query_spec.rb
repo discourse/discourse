@@ -36,10 +36,10 @@ describe TopicQuery do
   end
 
   context 'categorized' do
-    let(:category) { Fabricate(:category) }    
-    let!(:topic_no_cat) { Fabricate(:topic) }    
+    let(:category) { Fabricate(:category) }
+    let!(:topic_no_cat) { Fabricate(:topic) }
     let!(:topic_in_cat) { Fabricate(:topic, category: category) }
-    
+
     it "returns the topic without a category when filtering uncategorized" do
       topic_query.list_uncategorized.topics.should == [topic_no_cat]
     end
@@ -89,12 +89,12 @@ describe TopicQuery do
         end
       end
 
-      context 'user with auto_track_topics list_unread' do 
-        before do 
+      context 'user with auto_track_topics list_unread' do
+        before do
           user.auto_track_topics_after_msecs = 0
           user.save
         end
-        
+
         it 'only contains the partially read topic' do
           topic_query.list_unread.topics.should == [partially_read]
         end
@@ -107,7 +107,7 @@ describe TopicQuery do
       context 'list_read' do
         it 'contain both topics ' do
           topic_query.list_read.topics.should =~ [fully_read, partially_read]
-        end      
+        end
       end
     end
 
@@ -122,7 +122,7 @@ describe TopicQuery do
     end
 
     context 'with a favorited topic' do
-      
+
       before do
         topic.toggle_star(user, true)
       end
@@ -147,7 +147,7 @@ describe TopicQuery do
     end
 
     context 'with a new topic' do
-      let!(:new_topic) { Fabricate(:topic, user: creator, bumped_at: 10.minutes.ago) }      
+      let!(:new_topic) { Fabricate(:topic, user: creator, bumped_at: 10.minutes.ago) }
       let(:topics) { topic_query.list_new.topics }
 
 
@@ -156,7 +156,7 @@ describe TopicQuery do
       end
 
       it "contains no new topics for a user that has missed the window" do
-        user.new_topic_duration_minutes = 5 
+        user.new_topic_duration_minutes = 5
         user.save
         new_topic.created_at = 10.minutes.ago
         new_topic.save
@@ -168,7 +168,7 @@ describe TopicQuery do
           new_topic.notify_muted!(user)
         end
 
-        it "returns an empty set" do          
+        it "returns an empty set" do
           topics.should be_blank
         end
 
@@ -181,9 +181,9 @@ describe TopicQuery do
             topics.should == [new_topic]
           end
         end
-      end        
+      end
     end
-   
+
   end
 
   context 'list_posted' do
@@ -219,8 +219,8 @@ describe TopicQuery do
       let!(:new_topic) { Fabricate(:post, user: creator).topic }
 
       it "should return the new topic" do
-        TopicQuery.new.list_suggested_for(topic).topics.should == [new_topic]  
-      end      
+        TopicQuery.new.list_suggested_for(topic).topics.should == [new_topic]
+      end
     end
 
     context "anonymously browswing with invisible, closed and archived" do
@@ -231,7 +231,7 @@ describe TopicQuery do
       let!(:invisible_topic) { Fabricate(:topic, user: creator, visible: false) }
 
       it "should omit the closed/archived/invisbiel topics from suggested" do
-        TopicQuery.new.list_suggested_for(topic).topics.should == [regular_topic]  
+        TopicQuery.new.list_suggested_for(topic).topics.should == [regular_topic]
       end
     end
 
@@ -247,7 +247,7 @@ describe TopicQuery do
       context 'with some existing topics' do
         let!(:partially_read) { Fabricate(:post, user: creator).topic }
         let!(:new_topic) { Fabricate(:post, user: creator).topic }
-        let!(:fully_read) { Fabricate(:post, user: creator).topic }     
+        let!(:fully_read) { Fabricate(:post, user: creator).topic }
         let!(:closed_topic) { Fabricate(:topic, user: creator, closed: true) }
         let!(:archived_topic) { Fabricate(:topic, user: creator, archived: true) }
         let!(:invisible_topic) { Fabricate(:topic, user: creator, visible: false) }
@@ -274,7 +274,7 @@ describe TopicQuery do
           suggested_topics.should == [partially_read.id, new_topic.id, fully_read.id]
         end
 
-      end        
+      end
     end
 
   end

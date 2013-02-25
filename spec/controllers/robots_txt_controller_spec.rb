@@ -13,9 +13,9 @@ describe RobotsTxtController do
       SiteSetting.stubs(:allow_index_in_robots_txt).returns(false)
       get :index
       response.should render_template :no_index
-    end    
-    
-    it "serves it regardless if a site is in private mode" do 
+    end
+
+    it "serves it regardless if a site is in private mode" do
       SiteSetting.stubs(:allow_index_in_robots_txt).returns(true)
       SiteSetting.stubs(:restrict_access).returns(true)
       get :index

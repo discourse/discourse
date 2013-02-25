@@ -162,5 +162,3 @@ Discourse.PostMenuView = Discourse.View.extend({
   }
 
 });
-
-

@@ -49,7 +49,7 @@ class UserSerializer < BasicUserSerializer
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.auto_track_topics_after
   end
-  
+
   def new_topic_duration_minutes
     object.new_topic_duration_minutes || SiteSetting.new_topic_duration_minutes
   end

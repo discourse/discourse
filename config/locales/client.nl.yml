@@ -1,7 +1,7 @@
---- 
-nl: 
+---
+nl:
   js: ~
-share: 
+share:
   ? "0"
   : "Je negeert alle notificaties in dit topic."
   ? "0_2"

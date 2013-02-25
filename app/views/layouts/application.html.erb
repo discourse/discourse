@@ -32,7 +32,7 @@
               <div class="row">
                 <div class="title span13">
                   <a href="/"><img src="<%=SiteSetting.logo_url%>" alt="<%=SiteSetting.title%>" id="site-logo"></a>
-                </div>      
+                </div>
               </div>
             </div>
           </div>
@@ -48,11 +48,11 @@
       <%- @preloaded.each do |key, json| %>
         PreloadStore.store("<%= key %>", <%= raw json %>)
       <% end %>
-      </script>      
+      </script>
     <%- end %>
 
     <%= yield :data %>
-    
+
     <footer id='bottom'></footer>
 
     <%= render :partial => "common/discourse_javascript" %>

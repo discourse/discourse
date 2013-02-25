@@ -9,6 +9,6 @@ class DropReadPosts < ActiveRecord::Migration
       t.integer :user_id, null: false
       t.column :page, :integer, null: false
       t.column :seen, :integer, null: false
-    end    
+    end
   end
 end

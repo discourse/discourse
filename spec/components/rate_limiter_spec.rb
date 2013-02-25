@@ -10,7 +10,7 @@ describe RateLimiter do
     before do
       RateLimiter.stubs(:disabled?).returns(true)
       rate_limiter.performed!
-      rate_limiter.performed!      
+      rate_limiter.performed!
     end
 
     it "returns true for can_perform?" do
@@ -26,7 +26,7 @@ describe RateLimiter do
   context 'enabled' do
     before do
       RateLimiter.stubs(:disabled?).returns(false)
-      rate_limiter.clear!      
+      rate_limiter.clear!
     end
 
     context 'never done' do
@@ -93,7 +93,7 @@ describe RateLimiter do
 
       end
 
-    end     
+    end
 
   end
 

@@ -48,7 +48,7 @@
         $el.addClass(d).attr(d, d) :
         $el.removeClass(d).removeAttr(d)
     }, 0)
-  } 
+  }
 
   Button.prototype.toggle = function () {
     var $parent = this.$element.parent('[data-toggle="buttons-radio"]')

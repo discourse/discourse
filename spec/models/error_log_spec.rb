@@ -5,8 +5,8 @@ describe ErrorLog do
     raise "boom"
   end
 
-  def exception 
-    begin 
+  def exception
+    begin
       boom
     rescue => e
       return e
@@ -29,30 +29,30 @@ describe ErrorLog do
     end
   end
 
-  describe "logging data" do 
+  describe "logging data" do
     it "is able to read the data it writes" do
       ErrorLog.clear_all!
       ErrorLog.report!(exception, controller, request, nil)
       ErrorLog.report!(exception, controller, request, nil)
       i = 0
-      ErrorLog.each do |h| 
+      ErrorLog.each do |h|
         i += 1
-      end  
+      end
       i.should == 2
     end
 
-    it "is able to skip rows" do 
+    it "is able to skip rows" do
       ErrorLog.clear_all!
       ErrorLog.report!(exception, controller, request, nil)
       ErrorLog.report!(exception, controller, request, nil)
       ErrorLog.report!(exception, controller, request, nil)
       ErrorLog.report!(exception, controller, request, nil)
       i = 0
-      ErrorLog.skip(3) do |h| 
+      ErrorLog.skip(3) do |h|
         i += 1
       end
       i.should == 1
     end
   end
 
-end 
+end

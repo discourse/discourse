@@ -7,7 +7,7 @@ module CurrentUser
 
   def self.lookup_from_auth_token(auth_token)
     if auth_token && auth_token.length == 32
-      User.where(auth_token: auth_token).first 
+      User.where(auth_token: auth_token).first
     end
   end
 
@@ -28,12 +28,12 @@ module CurrentUser
     return @current_user if @current_user || @not_logged_in
 
     if session[:current_user_id].blank?
-      # maybe we have a cookie? 
+      # maybe we have a cookie?
       @current_user = CurrentUser.lookup_from_auth_token(cookies["_t"])
       session[:current_user_id] = @current_user.id if @current_user
     else
       @current_user ||= User.where(id: session[:current_user_id]).first
-      
+
       # I have flip flopped on this (sam), if our permanent cookie
       #  conflicts with our current session assume session is bust
       #  kill it
@@ -43,13 +43,13 @@ module CurrentUser
 
     end
 
-    if @current_user && @current_user.is_banned? 
+    if @current_user && @current_user.is_banned?
       @current_user = nil
     end
 
     @not_logged_in = session[:current_user_id].blank?
     if @current_user
-      @current_user.update_last_seen! 
+      @current_user.update_last_seen!
       @current_user.update_ip_address!(request.remote_ip)
     end
     @current_user

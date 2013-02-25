@@ -4,7 +4,7 @@ class CreateForumThreadLinks < ActiveRecord::Migration
       t.integer :forum_thread_id, null: false
       t.integer :post_id, null: false
       t.integer :user_id, null: false
-      t.string  :url, limit: 500, null: false      
+      t.string  :url, limit: 500, null: false
       t.string  :domain, limit: 100, null: false
       t.boolean :internal, null: false, default: false
       t.integer :link_forum_thread_id, null: true

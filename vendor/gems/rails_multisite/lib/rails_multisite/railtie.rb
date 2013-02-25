@@ -16,6 +16,6 @@ module RailsMultisite
     end
 
 
-  end  
+  end
 end
 

@@ -1,7 +1,7 @@
 (function() {
   window.Discourse.Post.reopen({
 
-    voteAction: function () {      
+    voteAction: function () {
       return this.get('actionByName.vote');
     }.property('actionByName.vote'),
 
@@ -12,12 +12,12 @@
     }.property('replyBelowUrlComputed', 'topic.archetype'),
 
     // Vote for this post
-    vote: function() {     
+    vote: function() {
       voteType = Discourse.get('site.post_action_types').findProperty('name_key', 'vote');
       this.get('voteAction').act();
       Em.run.next(function () {
         this.set('topic.voted_in_topic', true);
-      }.bind(this));      
+      }.bind(this));
       return false;
     },
 
@@ -37,7 +37,7 @@
       this.get('voteAction').undo();
       Em.run.next(function () {
         this.set('topic.voted_in_topic', false);
-      }.bind(this));      
+      }.bind(this));
       return false;
     }
 

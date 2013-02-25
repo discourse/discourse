@@ -5,9 +5,9 @@ module DiscoursePoll
 
     MAX_SORT_ORDER = 2147483647
     POLL_OPTIONS = {private_poll: 1, single_vote: 1}
-    
+
     def setup
-      
+
       # Add our Assets
       register_js('discourse_poll')
       register_css('discourse_poll')
@@ -26,15 +26,15 @@ module DiscoursePoll
         post.sort_order = 1
       else
         post.sort_order = DiscoursePoll::Plugin::MAX_SORT_ORDER
-      end         
+      end
     end
 
     module TopicViewSerializerMixin
 
       def self.included(base)
-        base.attributes :private_poll, :single_vote  
+        base.attributes :private_poll, :single_vote
       end
-      
+
       def private_poll
         object.topic.has_meta_data_boolean?(:private_poll)
       end

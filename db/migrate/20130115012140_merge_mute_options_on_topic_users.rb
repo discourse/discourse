@@ -5,7 +5,7 @@ class MergeMuteOptionsOnTopicUsers < ActiveRecord::Migration
     execute "update topic_users set notifications = 2 where notifications = 1"
 
     execute "update topic_users set notifications = 0 where muted_at is not null"
-    rename_column :topic_users, :notifications, :notification_level 
+    rename_column :topic_users, :notifications, :notification_level
     remove_column :topic_users, :muted_at
   end
 end

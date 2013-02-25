@@ -4,23 +4,23 @@ class MessageBus::ConnectionManager
 
   def initialize
     @clients = {}
-    @subscriptions = {} 
+    @subscriptions = {}
   end
 
   def notify_clients(msg)
-    begin 
-      site_subs = @subscriptions[msg.site_id]      
+    begin
+      site_subs = @subscriptions[msg.site_id]
       subscription = site_subs[msg.channel] if site_subs
 
       return unless subscription
-      
+
       subscription.each do |client_id|
         client = @clients[client_id]
         if client
           allowed = !msg.user_ids || msg.user_ids.include?(client.user_id)
-          if allowed         
+          if allowed
             client << msg
-            # turns out you can delete from a set while itereating 
+            # turns out you can delete from a set while itereating
             remove_client(client)
           end
         end
@@ -29,7 +29,7 @@ class MessageBus::ConnectionManager
       MessageBus.logger.error "notify clients crash #{e} : #{e.backtrace}"
     end
   end
-  
+
   def add_client(client)
     @clients[client.client_id] = client
     @subscriptions[client.site_id] ||= {}
@@ -51,8 +51,8 @@ class MessageBus::ConnectionManager
   end
 
   def subscribe_client(client,channel)
-    set = @subscriptions[client.site_id][channel] 
-    unless set 
+    set = @subscriptions[client.site_id][channel]
+    unless set
       set = Set.new
       @subscriptions[client.site_id][channel] = set
     end
@@ -65,5 +65,5 @@ class MessageBus::ConnectionManager
       subscriptions: @subscriptions
     }
   end
-  
+
 end

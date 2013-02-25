@@ -20,7 +20,7 @@ describe Admin::UsersController do
       it 'returns JSON' do
         xhr :get, :index
         ::JSON.parse(response.body).should be_present
-      end    
+      end
     end
 
     context '.show' do
@@ -81,7 +81,7 @@ describe Admin::UsersController do
         response.should be_forbidden
       end
 
-      it 'updates the admin flag' do        
+      it 'updates the admin flag' do
         xhr :put, :revoke_admin, user_id: @another_admin.id
         @another_admin.reload
         @another_admin.should_not be_admin
@@ -99,12 +99,12 @@ describe Admin::UsersController do
         response.should be_forbidden
       end
 
-      it "returns a 404 if the username doesn't exist" do        
+      it "returns a 404 if the username doesn't exist" do
         xhr :put, :grant_admin, user_id: 123123
         response.should be_forbidden
       end
 
-      it 'updates the admin flag' do        
+      it 'updates the admin flag' do
         xhr :put, :grant_admin, user_id: @another_user.id
         @another_user.reload
         @another_user.should be_admin
@@ -122,7 +122,7 @@ describe Admin::UsersController do
         response.should be_forbidden
       end
 
-      it 'updates the moderator flag' do        
+      it 'updates the moderator flag' do
         xhr :put, :revoke_moderation, user_id: @moderator.id
         @moderator.reload
         @moderator.has_trust_level?(:moderator).should_not be_true
@@ -140,12 +140,12 @@ describe Admin::UsersController do
         response.should be_forbidden
       end
 
-      it "returns a 404 if the username doesn't exist" do        
+      it "returns a 404 if the username doesn't exist" do
         xhr :put, :grant_moderation, user_id: 123123
         response.should be_forbidden
       end
 
-      it 'updates the moderator flag' do        
+      it 'updates the moderator flag' do
         xhr :put, :grant_moderation, user_id: @another_user.id
         @another_user.reload
         @another_user.has_trust_level?(:moderator).should be_true

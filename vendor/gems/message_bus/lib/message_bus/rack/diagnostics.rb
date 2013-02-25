@@ -57,14 +57,14 @@ HTML
   # from ember-rails
   def indent(string)
     string.gsub(/$(.)/m, "\\1  ").strip
-  end 
+  end
 
   def call(env)
 
     return @app.call(env) unless env['PATH_INFO'].start_with? '/message-bus/_diagnostics'
 
     route = env['PATH_INFO'].split('/message-bus/_diagnostics')[1]
-    
+
     if MessageBus.is_admin_lookup.nil? || !MessageBus.is_admin_lookup.call(env)
       return [403, {}, ['not allowed']]
     end
@@ -85,14 +85,14 @@ HTML
 
     asset = route.split('/assets/')[1]
     if asset && !asset !~ /\//
-      content = asset_contents(asset) 
+      content = asset_contents(asset)
       split = asset.split('.')
       if split[1] == 'handlebars'
         content = translate_handlebars(split[0],content)
       end
       return [200, {'content-type' => 'text/javascript;'}, [content]]
     end
-    
+
     return [404, {}, ['not found']]
   end
 end

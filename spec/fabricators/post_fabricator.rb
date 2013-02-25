@@ -1,7 +1,7 @@
 Fabricator(:post) do
   user
   topic {|attrs| Fabricate(:topic, user: attrs[:user] ) }
-  raw "Hello world"  
+  raw "Hello world"
 end
 
 Fabricator(:post_with_youtube, from: :post) do
@@ -17,7 +17,7 @@ Fabricator(:moderator_post, from: :post) do
   user
   topic {|attrs| Fabricate(:topic, user: attrs[:user] ) }
   post_type Post::MODERATOR_ACTION
-  raw "Hello world"  
+  raw "Hello world"
 end
 
 

@@ -8,5 +8,5 @@ class AddQuoteCountToPosts < ActiveRecord::Migration
   def down
     remove_column :posts, :quote_count
     add_column :posts, :quoteless, :boolean, default: false
-  end  
+  end
 end

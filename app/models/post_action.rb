@@ -21,7 +21,7 @@ class PostAction < ActiveRecord::Base
   def self.update_flagged_posts_count
 
     posts_flagged_count = PostAction.joins(post: :topic)
-                                    .where('post_actions.post_action_type_id' => PostActionType.FlagTypes, 
+                                    .where('post_actions.post_action_type_id' => PostActionType.FlagTypes,
                                            'posts.deleted_at' => nil,
                                            'topics.deleted_at' => nil).count('DISTINCT posts.id')
 
@@ -85,7 +85,7 @@ class PostAction < ActiveRecord::Base
     if action = self.where(post_id: post.id, user_id: user.id, post_action_type_id: post_action_type_id).first
       action.destroy
       action.deleted_at = Time.now
-      action.run_callbacks(:save)      
+      action.run_callbacks(:save)
     end
   end
 
@@ -127,9 +127,9 @@ class PostAction < ActiveRecord::Base
   end
 
   before_create do
-    raise AlreadyFlagged if is_flag? and PostAction.where(user_id: user_id, 
-                                                          post_id: post_id, 
-                                                          post_action_type_id: PostActionType.FlagTypes).exists?    
+    raise AlreadyFlagged if is_flag? and PostAction.where(user_id: user_id,
+                                                          post_id: post_id,
+                                                          post_action_type_id: PostActionType.FlagTypes).exists?
   end
 
   after_save do
@@ -167,8 +167,8 @@ class PostAction < ActiveRecord::Base
 
         # inform user
         if self.post.user
-          SystemMessage.create(self.post.user, :post_hidden, 
-                               url: self.post.url, 
+          SystemMessage.create(self.post.user, :post_hidden,
+                               url: self.post.url,
                                edit_delay: SiteSetting.cooldown_minutes_after_hiding_posts)
         end
       end

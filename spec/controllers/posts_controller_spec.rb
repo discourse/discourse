@@ -24,18 +24,18 @@ describe PostsController do
         post.destroy
       end
 
-      it "can't find deleted posts as an anonymous user" do        
+      it "can't find deleted posts as an anonymous user" do
         xhr :get, :show, id: post.id
         response.should be_forbidden
       end
 
-      it "can't find deleted posts as a regular user" do        
+      it "can't find deleted posts as a regular user" do
         log_in(:user)
         xhr :get, :show, id: post.id
         response.should be_forbidden
       end
 
-      it "can find posts as a moderator" do        
+      it "can find posts as a moderator" do
         log_in(:moderator)
         xhr :get, :show, id: post.id
         response.should be_success
@@ -121,7 +121,7 @@ describe PostsController do
   describe 'destroy_many' do
     it 'raises an exception when not logged in' do
       lambda { xhr :delete, :destroy_many, post_ids: [123, 345] }.should raise_error(Discourse::NotLoggedIn)
-    end    
+    end
 
     describe 'when logged in' do
 
@@ -168,7 +168,7 @@ describe PostsController do
 
       let(:post) { Fabricate(:post, user: log_in) }
       let(:update_params) do
-        {id: post.id, 
+        {id: post.id,
          post: {raw: 'edited body'},
          image_sizes: {'http://image.com/image.jpg' => {'width' => 123, 'height' => 456}}}
       end
@@ -180,7 +180,7 @@ describe PostsController do
 
       it "raises an error when the post parameter is missing" do
         update_params.delete(:post)
-        lambda { 
+        lambda {
           xhr :put, :update, update_params
         }.should raise_error(Discourse::InvalidParameters)
       end
@@ -217,7 +217,7 @@ describe PostsController do
 
       it "raises an error if the user doesn't have permission to see the post" do
         Guardian.any_instance.expects(:can_see?).with(post).returns(false)
-        xhr :put, :bookmark, post_id: post.id, bookmarked: 'true'  
+        xhr :put, :bookmark, post_id: post.id, bookmarked: 'true'
         response.should be_forbidden
       end
 
@@ -278,7 +278,7 @@ describe PostsController do
 
         it "passes title through" do
           PostCreator.expects(:new).with(user, has_entries(title: 'new topic title')).returns(post_creator)
-          xhr :post, :create, post: {raw: 'hello'}, title: 'new topic title'          
+          xhr :post, :create, post: {raw: 'hello'}, title: 'new topic title'
         end
 
         it "passes topic_id through" do
@@ -293,12 +293,12 @@ describe PostsController do
 
         it "passes category through" do
           PostCreator.expects(:new).with(user, has_entries(category: 'cool')).returns(post_creator)
-          xhr :post, :create, post: {raw: 'hello', category: 'cool'} 
+          xhr :post, :create, post: {raw: 'hello', category: 'cool'}
         end
 
         it "passes target_usernames through" do
           PostCreator.expects(:new).with(user, has_entries(target_usernames: 'evil,trout')).returns(post_creator)
-          xhr :post, :create, post: {raw: 'hello'}, target_usernames: 'evil,trout' 
+          xhr :post, :create, post: {raw: 'hello'}, target_usernames: 'evil,trout'
         end
 
         it "passes reply_to_post_number through" do
@@ -309,12 +309,12 @@ describe PostsController do
         it "passes image_sizes through" do
           PostCreator.expects(:new).with(user, has_entries(image_sizes: 'test')).returns(post_creator)
           xhr :post, :create, post: {raw: 'hello'}, image_sizes: 'test'
-        end  
+        end
 
         it "passes meta_data through" do
           PostCreator.expects(:new).with(user, has_entries(meta_data: {'xyz' => 'abc'})).returns(post_creator)
           xhr :post, :create, post: {raw: 'hello'}, meta_data: {xyz: 'abc'}
-        end 
+        end
 
       end
 

@@ -10,9 +10,9 @@ class DiscourseObserver < ActiveRecord::Observer
 
   def after_create_delegator(model)
     observer_method = :"after_create_#{model.class.name.underscore}"
-    send(observer_method, model) if respond_to?(observer_method)    
+    send(observer_method, model) if respond_to?(observer_method)
   end
-    
+
   def after_destroy_delegator(model)
     observer_method = :"after_destroy_#{model.class.name.underscore}"
     send(observer_method, model) if respond_to?(observer_method)
@@ -25,7 +25,7 @@ if Rails.env.test?
   # In test mode, call the delegator right away
   class DiscourseObserver < ActiveRecord::Observer
     alias_method :after_create, :after_create_delegator
-    alias_method :after_destroy, :after_destroy_delegator    
+    alias_method :after_destroy, :after_destroy_delegator
   end
 
 else
@@ -40,7 +40,7 @@ else
       if model.send(:transaction_include_action?, :destroy)
         after_destroy_delegator(model)
       end
-      
+
     end
   end
 

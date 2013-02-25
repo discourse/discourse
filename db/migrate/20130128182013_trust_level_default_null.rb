@@ -4,6 +4,6 @@ class TrustLevelDefaultNull < ActiveRecord::Migration
   end
 
   def down
-    change_column_default :users, :trust_level, 0    
+    change_column_default :users, :trust_level, 0
   end
 end

@@ -25,19 +25,19 @@ describe ClicksController do
       context 'with a post_id' do
         it 'calls create_from' do
           TopicLinkClick.expects(:create_from).with(url: 'http://discourse.org', post_id: 123, ip: '192.168.0.1')
-          xhr :get, :track, url: 'http://discourse.org', post_id: 123       
+          xhr :get, :track, url: 'http://discourse.org', post_id: 123
           response.should redirect_to("http://discourse.org")
         end
 
         it 'redirects to the url' do
           TopicLinkClick.stubs(:create_from)
-          xhr :get, :track, url: 'http://discourse.org', post_id: 123       
+          xhr :get, :track, url: 'http://discourse.org', post_id: 123
           response.should redirect_to("http://discourse.org")
         end
 
         it 'will pass the user_id to create_from' do
           TopicLinkClick.expects(:create_from).with(url: 'http://discourse.org', post_id: 123, ip: '192.168.0.1')
-          xhr :get, :track, url: 'http://discourse.org', post_id: 123       
+          xhr :get, :track, url: 'http://discourse.org', post_id: 123
           response.should redirect_to("http://discourse.org")
         end
 
@@ -52,9 +52,9 @@ describe ClicksController do
       context 'with a topic_id' do
         it 'calls create_from' do
           TopicLinkClick.expects(:create_from).with(url: 'http://discourse.org', topic_id: 789, ip: '192.168.0.1')
-          xhr :get, :track, url: 'http://discourse.org', topic_id: 789       
+          xhr :get, :track, url: 'http://discourse.org', topic_id: 789
           response.should redirect_to("http://discourse.org")
-        end        
+        end
       end
 
     end

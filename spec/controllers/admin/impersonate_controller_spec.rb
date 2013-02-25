@@ -50,12 +50,12 @@ describe Admin::ImpersonateController do
         it "also works with an email address" do
           xhr :post, :create, username_or_email: user.email
           session[:current_user_id].should == user.id
-        end        
+        end
 
         it "also works with a name" do
           xhr :post, :create, username_or_email: user.name
           session[:current_user_id].should == user.id
-        end        
+        end
 
       end
 

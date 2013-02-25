@@ -1,10 +1,10 @@
-# cdn related tasks 
+# cdn related tasks
 #
 desc 'pre-stage assets on cdn'
 task 'assets:prestage' => :environment do |t|
   require "net/https"
   require "uri"
-  
+
   config = YAML::load(File.open("#{Rails.root}/config/cdn.yml"))
 
   # pre-stage css/js only for now
@@ -17,7 +17,7 @@ task 'assets:prestage' => :environment do |t|
   puts "pre staging: #{a.join(' ')}"
   start = Time.now
 
-  uri = URI.parse("https://client.cdn77.com/api/prefetch") 
+  uri = URI.parse("https://client.cdn77.com/api/prefetch")
   http = Net::HTTP.new(uri.host, uri.port)
   http.use_ssl = true
   http.verify_mode = OpenSSL::SSL::VERIFY_NONE
@@ -36,5 +36,5 @@ task 'assets:prestage' => :environment do |t|
     raise "Failed to pre-stage"
   end
   puts "Done (took: #{((Time.now - start) * 1000.0).to_i}ms)"
-  
+
 end

@@ -4,7 +4,7 @@ require 'jobs/process_post'
 describe Jobs::ProcessPost do
 
   it "returns when the post cannot be found" do
-    lambda { Jobs::ProcessPost.new.perform(post_id: 1, sync_exec: true) }.should_not raise_error    
+    lambda { Jobs::ProcessPost.new.perform(post_id: 1, sync_exec: true) }.should_not raise_error
   end
 
   context 'with a post' do
@@ -29,7 +29,7 @@ describe Jobs::ProcessPost do
       CookedPostProcessor.any_instance.expects(:dirty?).returns(false)
       Post.any_instance.expects(:update_column).never
       Jobs::ProcessPost.new.execute(post_id: @post.id)
-    end    
+    end
 
   end
 

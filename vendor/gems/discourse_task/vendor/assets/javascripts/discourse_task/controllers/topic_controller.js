@@ -1,5 +1,5 @@
 (function() {
-  
+
   Discourse.TopicController.reopen({
 
     // Allow the user to complete the task
@@ -10,6 +10,6 @@
 
   })
 
-}).call(this); 
+}).call(this);
 
 

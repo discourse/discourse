@@ -95,7 +95,7 @@ describe TextSentinel do
       TextSentinel.new(valid_string, min_entropy: 16).should be_valid
     end
 
-    it "enforces the minimum entropy" do      
+    it "enforces the minimum entropy" do
       TextSentinel.new(valid_string, min_entropy: 17).should_not be_valid
     end
 
@@ -110,7 +110,7 @@ describe TextSentinel do
     it "doesn't except junk symbols as a string" do
       TextSentinel.new("[[[").should_not be_valid
       TextSentinel.new("<<<").should_not be_valid
-      TextSentinel.new("{{$!").should_not be_valid        
+      TextSentinel.new("{{$!").should_not be_valid
     end
 
 

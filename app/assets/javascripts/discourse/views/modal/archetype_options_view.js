@@ -28,5 +28,3 @@ Discourse.ArchetypeOptionsView = Em.ContainerView.extend({
   }
 
 });
-
-

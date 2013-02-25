@@ -9,7 +9,7 @@ class CategoryList
                     .includes(:featured_users)
                     .order('topics_week desc, topics_month desc, topics_year desc')
                     .to_a
-                  
+
     # Support for uncategorized topics
     uncategorized_topics = Topic
                       .listable_topics

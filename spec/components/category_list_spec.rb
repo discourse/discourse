@@ -7,7 +7,7 @@ describe CategoryList do
   let(:category_list) { CategoryList.new(user) }
 
   context "with no categories" do
-   
+
     it "has no categories" do
       category_list.categories.should be_blank
     end
@@ -35,7 +35,7 @@ describe CategoryList do
       it "contains the topic in featured_topics" do
         category.featured_topics.should == [topic]
       end
- 
+
     end
 
   end
@@ -73,7 +73,7 @@ describe CategoryList do
 
       it "should contain our topic" do
         category.featured_topics.should == [topic]
-      end      
+      end
     end
 
 

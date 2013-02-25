@@ -1,4 +1,4 @@
-# Like a hash, just does its best to stay in sync accross the farm 
+# Like a hash, just does its best to stay in sync accross the farm
 #
 # Redis backed with an allowance for a certain amount of latency
 
@@ -8,8 +8,8 @@ class DistributedHash
   @lock = Mutex.new
 
   def self.ensure_subscribed
-    @lock.synchronize do 
-      unless @subscribed 
+    @lock.synchronize do
+      unless @subscribed
 
       end
       @subscribed = true

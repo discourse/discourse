@@ -4,6 +4,6 @@ class RemoveExcerptFromCategories < ActiveRecord::Migration
   end
 
   def down
-    add_column :categories, :excerpt, :string, limit: 250 
+    add_column :categories, :excerpt, :string, limit: 250
   end
 end

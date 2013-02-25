@@ -5,7 +5,7 @@ class CreateViews < ActiveRecord::Migration
       t.string   :parent_type, limit: 50, null: false
       t.integer  :ip, limit: 8, null: false
       t.datetime :viewed_at, null: false
-      t.integer  :user_id, null: true      
+      t.integer  :user_id, null: true
     end
 
     add_index :views, [:parent_id, :parent_type]

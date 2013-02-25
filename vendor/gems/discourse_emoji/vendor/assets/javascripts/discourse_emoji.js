@@ -10,9 +10,9 @@
     style = ""
     if (opts && opts.environment === "email") {
       // Hard code sizes for email view
-      style = 'width="20" height="20"'; 
+      style = 'width="20" height="20"';
     }
-    
+
     this.textResult = text.replace(/\:([a-z\_\+\-0-9]+)\:/g, function (m1, m2) {
         return (emoji.indexOf(m2) !== -1) ?
                '<img alt="' + m2 + '" title=":' + m2 + ':" src="/assets/emoji/' + m2 + '.png" ' + style + ' class="emoji"/>' :
@@ -23,7 +23,7 @@
 
   if (Discourse && Discourse.ComposerView) {
     Discourse.ComposerView.on("initWmdEditor", function(event){
-      
+
       template = Handlebars.compile("<div class='autocomplete'>" +
      "<ul>" +
         "{{#each options}}" +
@@ -38,7 +38,7 @@
 
       $('#wmd-input').autocomplete({
         template: template,
-        key: ":", 
+        key: ":",
         transformComplete: function(v){ return v + ":"; },
         dataSource: function(term, callback){
 
@@ -50,14 +50,14 @@
           }
 
           var options = []
-          var i; 
+          var i;
           for (i=0; i < emoji.length; i++) {
             if (emoji[i].indexOf(term) == 0) {
               options.push(emoji[i]);
               if(options.length > 4) { break; }
             }
           }
-          
+
           if (options.length <= 4) {
             for (i=0; i < emoji.length; i++) {
               if (emoji[i].indexOf(term) > 0) {
@@ -66,7 +66,7 @@
               }
             }
           }
-          
+
           callback(options)
         }
       });

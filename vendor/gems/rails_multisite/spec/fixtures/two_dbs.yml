@@ -1,9 +1,9 @@
-second: 
+second:
   adapter: sqlite3
   database: second_db
   username: username
   password: password
-  db_id: 1 
+  db_id: 1
   host_names:
     - second.localhost
     - 2nd.localhost

@@ -5,17 +5,17 @@ require 'redis'
 
 describe MessageBus do
 
-  before do 
-    MessageBus.site_id_lookup do  
+  before do
+    MessageBus.site_id_lookup do
       "magic"
     end
     MessageBus.redis_config = {}
   end
 
-  it "should automatically decode hashed messages" do 
+  it "should automatically decode hashed messages" do
     data = nil
-    MessageBus.subscribe("/chuck") do |msg| 
-      data = msg.data 
+    MessageBus.subscribe("/chuck") do |msg|
+      data = msg.data
     end
     MessageBus.publish("/chuck", {:norris => true})
     wait_for(1000){ data }
@@ -23,10 +23,10 @@ describe MessageBus do
     data["norris"].should == true
   end
 
-  it "should get a message if it subscribes to it" do 
+  it "should get a message if it subscribes to it" do
     @data,@site_id,@channel = nil
-    
-    MessageBus.subscribe("/chuck") do |msg| 
+
+    MessageBus.subscribe("/chuck") do |msg|
       @data = msg.data
       @site_id = msg.site_id
       @channel = msg.channel
@@ -36,7 +36,7 @@ describe MessageBus do
     MessageBus.publish("/chuck", "norris", user_ids: [1,2,3])
 
     wait_for(1000){@data}
-    
+
     @data.should == 'norris'
     @site_id.should == 'magic'
     @channel.should == '/chuck'
@@ -45,10 +45,10 @@ describe MessageBus do
   end
 
 
-  it "should get global messages if it subscribes to them" do 
+  it "should get global messages if it subscribes to them" do
     @data,@site_id,@channel = nil
-    
-    MessageBus.subscribe do |msg| 
+
+    MessageBus.subscribe do |msg|
       @data = msg.data
       @site_id = msg.site_id
       @channel = msg.channel
@@ -57,7 +57,7 @@ describe MessageBus do
     MessageBus.publish("/chuck", "norris")
 
     wait_for(1000){@data}
-    
+
     @data.should == 'norris'
     @site_id.should == 'magic'
     @channel.should == '/chuck'

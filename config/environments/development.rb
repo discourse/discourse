@@ -26,15 +26,15 @@ Discourse::Application.configure do
   config.assets.debug = true
 
   config.watchable_dirs['lib'] = [:rb]
- 
+
   config.sass.debug_info = false
   config.ember.variant = :development
   config.ember.handlebars_location = "#{Rails.root}/app/assets/javascripts/external/handlebars-1.0.rc.3.js"
   config.ember.ember_location = "#{Rails.root}/app/assets/javascripts/external/ember.js"
   config.handlebars.precompile = false
-  
+
   # a bit hacky but works
-  config.after_initialize do  
+  config.after_initialize do
     config.middleware.delete Airbrake::UserInformer
     config.middleware.delete Airbrake::Rack
   end

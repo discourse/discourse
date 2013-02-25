@@ -13,13 +13,13 @@ describe TopicLink do
   end
 
   before do
-    @topic = Fabricate(:topic, title: 'unique topic name')   
+    @topic = Fabricate(:topic, title: 'unique topic name')
     @user = @topic.user
   end
 
   it "can't link to the same topic" do
-    ftl = TopicLink.new(url: "/t/#{@topic.id}", 
-                              topic_id: @topic.id, 
+    ftl = TopicLink.new(url: "/t/#{@topic.id}",
+                              topic_id: @topic.id,
                               link_topic_id: @topic.id)
     ftl.valid?.should be_false
   end
@@ -27,7 +27,7 @@ describe TopicLink do
   describe 'external links' do
     before do
       @post = Fabricate(:post_with_external_links, user: @user, topic: @topic)
-      TopicLink.extract_from(@post)      
+      TopicLink.extract_from(@post)
     end
 
     it 'has the forum topic links' do
@@ -69,7 +69,7 @@ describe TopicLink do
 
       it "should be the canonical URL" do
         @link.url.should == @url
-      end      
+      end
 
 
     end
@@ -167,7 +167,7 @@ describe TopicLink do
           @reflection = @other_topic.topic_links.should be_blank
         end
 
-      end 
+      end
 
     end
 
@@ -177,7 +177,7 @@ describe TopicLink do
         TopicLink.extract_from(post)
       end
 
-      it 'does not extract a link' do 
+      it 'does not extract a link' do
         @topic.topic_links.should be_blank
       end
     end
@@ -188,7 +188,7 @@ describe TopicLink do
         TopicLink.extract_from(post)
       end
 
-      it 'does not extract a link' do 
+      it 'does not extract a link' do
         @topic.topic_links.should be_present
       end
     end
@@ -200,20 +200,20 @@ describe TopicLink do
         TopicLink.extract_from(post)
       end
 
-      it 'does not extract a link' do 
+      it 'does not extract a link' do
         @topic.topic_links.should be_blank
       end
-    end    
-   
+    end
+
   end
 
-  describe 'internal link from pm' do 
-    before do 
+  describe 'internal link from pm' do
+    before do
       @pm = Fabricate(:topic, user: @user, archetype: 'private_message')
       @other_post = @pm.posts.create(user: @user, raw: "some content")
-      
+
       @url = "http://#{test_uri.host}/t/topic-slug/#{@topic.id}"
-      
+
       @pm.posts.create(user: @user, raw: 'initial post')
       @linked_post = @pm.posts.create(user: @user, raw: "Link to another topic: #{@url}")
 
@@ -225,7 +225,7 @@ describe TopicLink do
     it 'should not create a reflection' do
       @topic.topic_links.first.should be_nil
     end
-    
+
     it 'should not create a normal link' do
       @pm.topic_links.first.should_not be_nil
     end

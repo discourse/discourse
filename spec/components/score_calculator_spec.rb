@@ -4,7 +4,7 @@ require 'score_calculator'
 describe ScoreCalculator do
 
   before do
-    @post = Fabricate(:post, reads: 111)    
+    @post = Fabricate(:post, reads: 111)
     @topic = @post.topic
   end
 
@@ -23,14 +23,14 @@ describe ScoreCalculator do
 
     it "won't update the site settings when the site settings don't match" do
       ScoreCalculator.new(reads: 3).calculate
-      @topic.reload      
+      @topic.reload
       @topic.has_best_of.should be_false
     end
 
     it "removes the best_of flag if the topic no longer qualifies" do
       @topic.update_column(:has_best_of, true)
       ScoreCalculator.new(reads: 3).calculate
-      @topic.reload      
+      @topic.reload
       @topic.has_best_of.should be_false
     end
 
@@ -40,7 +40,7 @@ describe ScoreCalculator do
       SiteSetting.expects(:best_of_score_threshold).returns(100)
 
       ScoreCalculator.new(reads: 3).calculate
-      @topic.reload      
+      @topic.reload
       @topic.has_best_of.should be_true
     end
 

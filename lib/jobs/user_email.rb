@@ -18,7 +18,7 @@ module Jobs
       seen_recently = (user.last_seen_at.present? and user.last_seen_at > SiteSetting.email_time_window_mins.minutes.ago)
 
       email_args = {}
-      
+
       if args[:post_id]
 
         # Don't email a user about a post when we've seen them recently.
@@ -43,9 +43,9 @@ module Jobs
 
         # Don't email a user about a post when we've seen them recently.
         return if seen_recently
-        
+
         # Load the post if present
-        email_args[:post] ||= notification.post if notification.post.present?        
+        email_args[:post] ||= notification.post if notification.post.present?
         email_args[:notification] = notification
 
         # Don't send email if the notification this email is about has already been read
@@ -54,7 +54,7 @@ module Jobs
 
       # Make sure that mailer exists
       raise Discourse::InvalidParameters.new(:type) unless UserNotifications.respond_to?(args[:type])
-      
+
       message = UserNotifications.send(args[:type], user, email_args)
 
       # Update the to address if we have a custom one

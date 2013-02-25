@@ -15,5 +15,3 @@ Discourse.UserRoute = Discourse.Route.extend({
     return { username: Em.get(params, 'username').toLowerCase() };
   }
 });
-
-

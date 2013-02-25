@@ -1,14 +1,14 @@
 module Oneboxer
 
   class << self
-    def parse_open_graph(doc)      
+    def parse_open_graph(doc)
       result = {}
 
       %w(title type image url description).each do |prop|
         node = doc.at("/html/head/meta[@property='og:#{prop}']")
         result[prop] = (node['content'] || node['value']) if node
       end
-      
+
       # If there's no title, try using the page's title
       if result['title'].blank?
         result['title'] = doc.title
@@ -33,7 +33,7 @@ module Oneboxer
     def matchers
       @matchers ||= {}
       @matchers
-    end     
+    end
 
     # Add a matcher
     def add_matcher(regexp, klass)

@@ -3,7 +3,7 @@ class CreateForumThreadLinkClicks < ActiveRecord::Migration
     create_table :forum_thread_link_clicks do |t|
       t.references :forum_thread_link, null: false
       t.references :user, null: true
-      t.integer :ip, null: false, limit: 8      
+      t.integer :ip, null: false, limit: 8
       t.timestamps
     end
 

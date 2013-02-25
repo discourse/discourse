@@ -1,4 +1,4 @@
-# 
+#
 # Helps us find topics. Returns a TopicList object containing the topics
 # found.
 #
@@ -7,7 +7,7 @@ require_dependency 'topic_list'
 class TopicQuery
 
   def initialize(user=nil, opts={})
-    @user = user 
+    @user = user
 
     # Cast to int to avoid sql injection
     @user_id = user.id.to_i if @user.present?
@@ -16,7 +16,7 @@ class TopicQuery
   end
 
   # Return a list of suggested topics for a topic
-  def list_suggested_for(topic)   
+  def list_suggested_for(topic)
 
     exclude_topic_ids = [topic.id]
 
@@ -73,7 +73,7 @@ class TopicQuery
   def list_favorited
     return_list do |list|
       list.joins("INNER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.starred AND tu.user_id = #{@user_id})")
-    end   
+    end
   end
 
   def list_read
@@ -117,7 +117,7 @@ class TopicQuery
   protected
 
     def return_list(list_opts={})
-      TopicList.new(@user, yield(default_list(list_opts)))      
+      TopicList.new(@user, yield(default_list(list_opts)))
     end
 
     # Create a list based on a bunch of detault options
@@ -127,15 +127,15 @@ class TopicQuery
       page_size = query_opts[:per_page] || SiteSetting.topics_per_page
 
       result = Topic
-      result = result.topic_list_order unless query_opts[:unordered] 
-      result = result.listable_topics.includes(:category)    
+      result = result.topic_list_order unless query_opts[:unordered]
+      result = result.listable_topics.includes(:category)
       result = result.where('categories.name is null or categories.name <> ?', query_opts[:exclude_category]) if query_opts[:exclude_category]
       result = result.where('categories.name = ?', query_opts[:only_category]) if query_opts[:only_category]
-      result = result.limit(page_size) unless query_opts[:limit] == false 
+      result = result.limit(page_size) unless query_opts[:limit] == false
       result = result.visible if @user.blank? or @user.regular?
-      result = result.where('topics.id <> ?', query_opts[:except_topic_id]) if query_opts[:except_topic_id].present?    
+      result = result.where('topics.id <> ?', query_opts[:except_topic_id]) if query_opts[:except_topic_id].present?
       result = result.offset(query_opts[:page].to_i * page_size) if query_opts[:page].present?
-      result      
+      result
     end
 
     def new_results(list_opts={})
@@ -159,7 +159,7 @@ class TopicQuery
                  .where(closed: false, archived: false, visible: true)
                  .order('RANDOM()')
 
-      results = results.where('category_id = ?', topic.category_id) if topic.category_id.present?    
+      results = results.where('category_id = ?', topic.category_id) if topic.category_id.present?
       results
     end
 

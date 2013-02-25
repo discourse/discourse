@@ -38,7 +38,7 @@ Discourse::Application.configure do
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
-  
+
   # lower iteration count for test
   config.pbkdf2_iterations = 10
   config.ember.variant = :development

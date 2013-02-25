@@ -2,7 +2,7 @@ module SiteSettingExtension
 
   module Types
     String = 1
-    Time = 2 
+    Time = 2
     Fixnum = 3
     Float = 4
     Bool = 5
@@ -19,18 +19,18 @@ module SiteSettingExtension
   end
 
   def defaults
-    @defaults ||= {} 
+    @defaults ||= {}
   end
 
   def setting(name, default = nil, type = nil)
-    mutex.synchronize do  
+    mutex.synchronize do
       self.defaults[name] = default
       current_value = current.has_key?(name) ? current[name] : default
       setup_methods(name, current_value)
     end
   end
 
-  # just like a setting, except that it is available in javascript via DiscourseSession 
+  # just like a setting, except that it is available in javascript via DiscourseSession
   def client_setting(name, default = nil, type = nil)
     setting(name,default,type)
     @@client_settings ||= []
@@ -38,7 +38,7 @@ module SiteSettingExtension
   end
 
   def client_settings
-    @@client_settings 
+    @@client_settings
   end
 
 
@@ -73,9 +73,9 @@ module SiteSettingExtension
   end
 
   # refresh all the site settings
-  def refresh!  
-    return unless table_exists? 
-    mutex.synchronize do 
+  def refresh!
+    return unless table_exists?
+    mutex.synchronize do
       ensure_listen_for_changes
       old = current
       changes = []
@@ -91,14 +91,14 @@ module SiteSettingExtension
         changes << [name,value] if !old.has_key?(name) || old[name] != value
       end
 
-      old.each do |name,value| 
-        deletions << [name,value] unless new_hash.has_key?(name)        
+      old.each do |name,value|
+        deletions << [name,value] unless new_hash.has_key?(name)
       end
 
       if deletions.length > 0 || changes.length > 0
         @current = new_hash
-        changes.each do |name, val| 
-          setup_methods name, val 
+        changes.each do |name, val|
+          setup_methods name, val
         end
         deletions.each do |name,val|
           setup_methods name, defaults[name]
@@ -112,12 +112,12 @@ module SiteSettingExtension
   def ensure_listen_for_changes
     unless @subscribed
       pid = process_id
-      MessageBus.subscribe("/site_settings") do |msg| 
+      MessageBus.subscribe("/site_settings") do |msg|
         message = msg.data
-        if message["process"] != pid 
+        if message["process"] != pid
           begin
             # picks a db
-            MessageBus.on_connect.call(msg.site_id) 
+            MessageBus.on_connect.call(msg.site_id)
             SiteSetting.refresh!
           ensure
             MessageBus.on_disconnect.call(msg.site_id)
@@ -133,7 +133,7 @@ module SiteSettingExtension
   end
 
   def remove_override!(name)
-    return unless table_exists? 
+    return unless table_exists?
     SiteSetting.where(:name => name).destroy_all
   end
 
@@ -142,7 +142,7 @@ module SiteSettingExtension
 
     setting = SiteSetting.where(:name => name).first
     type = get_data_type(defaults[name])
-    
+
     if type == Types::Bool && val != true && val != false
       val = (val == "t" || val == "true")
     end
@@ -153,9 +153,9 @@ module SiteSettingExtension
 
     if setting
       setting.value = val
-      setting.data_type = type 
+      setting.data_type = type
       setting.save
-    else 
+    else
       SiteSetting.create!(:name => name, :value => val, :data_type => type)
     end
 
@@ -163,24 +163,24 @@ module SiteSettingExtension
   end
 
 
-  protected 
+  protected
 
   def get_data_type(val)
     return Types::Null if val.nil?
 
     if String === val
       Types::String
-    elsif Fixnum === val 
+    elsif Fixnum === val
       Types::Fixnum
-    elsif TrueClass === val || FalseClass === val 
+    elsif TrueClass === val || FalseClass === val
       Types::Bool
-    else 
+    else
       raise ArgumentError.new :val
     end
   end
 
   def convert(value, type)
-    case type 
+    case type
     when Types::Fixnum
       value.to_i
     when Types::String
@@ -195,21 +195,21 @@ module SiteSettingExtension
 
   def setup_methods(name, current_value)
 
-    # trivial multi db support, we can optimize this later 
+    # trivial multi db support, we can optimize this later
     db = RailsMultisite::ConnectionManagement.current_db
-    
+
     @@containers ||= {}
     @@containers[db] ||= {}
     @@containers[db][name] = current_value
 
     setter = ("#{name}=").sub("?","")
 
-    eval "define_singleton_method :#{name} do 
+    eval "define_singleton_method :#{name} do
       c = @@containers[RailsMultisite::ConnectionManagement.current_db]
       c = c[name] if c
       c
     end
-    
+
     define_singleton_method :#{setter} do |val|
       add_override!(:#{name}, val)
       refresh!
@@ -219,8 +219,8 @@ module SiteSettingExtension
 
   def method_missing(method, *args, &block)
     as_question = method.to_s.gsub(/\?$/, '')
-    if respond_to?(as_question) 
-      return send(as_question, *args, &block)  
+    if respond_to?(as_question)
+      return send(as_question, *args, &block)
     end
     super(method, *args, &block)
   end

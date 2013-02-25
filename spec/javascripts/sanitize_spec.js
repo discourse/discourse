@@ -4,7 +4,7 @@ describe("sanitize", function(){
 
 
   it("strips all script tags", function(){
-    var sanitized = sanitizeHtml("<div><script>alert('hi');</script></div>");  
+    var sanitized = sanitizeHtml("<div><script>alert('hi');</script></div>");
 
     expect(sanitized)
       .toBe("<div></div>");

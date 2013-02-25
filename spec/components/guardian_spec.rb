@@ -45,7 +45,7 @@ describe Guardian do
       Guardian.new(user).post_can_act?(post, :like, taken_actions: {PostActionType.Types[:like] => 1}).should be_false
     end
 
-    it "returns false when you already flagged a post" do 
+    it "returns false when you already flagged a post" do
       Guardian.new(user).post_can_act?(post, :off_topic, taken_actions: {PostActionType.Types[:spam] => 1}).should be_false
     end
 
@@ -68,7 +68,7 @@ describe Guardian do
   end
 
 
-  describe "can_clear_flags" do    
+  describe "can_clear_flags" do
     let(:post) { Fabricate(:post) }
     let(:user) { post.user }
     let(:moderator) { Fabricate(:moderator) }
@@ -97,7 +97,7 @@ describe Guardian do
 
     it "returns false when the user is nil" do
       Guardian.new(nil).can_send_private_message?(user).should be_false
-    end    
+    end
 
     it "returns false when the target user is nil" do
       Guardian.new(user).can_send_private_message?(nil).should be_false
@@ -320,7 +320,7 @@ describe Guardian do
           end
 
         end
-  
+
         it "allows new posts from moderators" do
           Guardian.new(moderator).can_create?(Post, topic).should be_true
         end
@@ -341,8 +341,8 @@ describe Guardian do
     end
 
     describe 'a Post' do
-      
-      let (:guardian) do 
+
+      let (:guardian) do
         Guardian.new(user)
       end
 
@@ -361,14 +361,14 @@ describe Guardian do
 
       it "allows voting if the user has performed a different action" do
         guardian.post_can_act?(post,:vote,taken_actions: {PostActionType.Types[:like] => 1}).should be_true
-      end      
+      end
 
       it "isn't allowed on archived topics" do
         topic.archived = true
         Guardian.new(user).post_can_act?(post,:like).should be_false
       end
 
-       
+
       describe 'multiple voting' do
 
         it "isn't allowed if the user voted and the topic doesn't allow multiple votes" do
@@ -490,7 +490,7 @@ describe Guardian do
 
       it 'returns true when trying to edit yourself' do
         Guardian.new(user).can_edit?(user).should be_true
-      end      
+      end
 
       it 'returns false as a moderator' do
         Guardian.new(moderator).can_edit?(user).should be_false
@@ -527,7 +527,7 @@ describe Guardian do
         Guardian.new(admin).can_moderate?(topic).should be_true
       end
 
-    end    
+    end
 
   end
 
@@ -578,7 +578,7 @@ describe Guardian do
         Guardian.new(admin).can_move_posts?(topic).should be_true
       end
 
-    end    
+    end
 
   end
 
@@ -735,11 +735,11 @@ describe Guardian do
     end
 
     it 'wont allow an admin to grant their own access' do
-      Guardian.new(admin).can_grant_admin?(admin).should be_false     
+      Guardian.new(admin).can_grant_admin?(admin).should be_false
     end
 
     it "allows an admin to grant a regular user access" do
-      Guardian.new(admin).can_grant_admin?(user).should be_true     
+      Guardian.new(admin).can_grant_admin?(user).should be_true
     end
   end
 
@@ -753,11 +753,11 @@ describe Guardian do
     end
 
     it 'wont allow an admin to revoke their own access' do
-      Guardian.new(admin).can_revoke_admin?(admin).should be_false     
+      Guardian.new(admin).can_revoke_admin?(admin).should be_false
     end
 
     it "allows an admin to revoke another admin's access" do
-      Guardian.new(admin).can_revoke_admin?(another_admin).should be_true     
+      Guardian.new(admin).can_revoke_admin?(another_admin).should be_true
     end
   end
 
@@ -771,15 +771,15 @@ describe Guardian do
     end
 
     it 'wont allow an admin to grant their own access' do
-      Guardian.new(admin).can_grant_moderation?(admin).should be_false     
+      Guardian.new(admin).can_grant_moderation?(admin).should be_false
     end
 
     it 'wont allow an admin to grant it to an already moderator' do
-      Guardian.new(admin).can_grant_moderation?(moderator).should be_false     
+      Guardian.new(admin).can_grant_moderation?(moderator).should be_false
     end
 
     it "allows an admin to grant a regular user access" do
-      Guardian.new(admin).can_grant_moderation?(user).should be_true     
+      Guardian.new(admin).can_grant_moderation?(user).should be_true
     end
   end
 
@@ -793,11 +793,11 @@ describe Guardian do
     end
 
     it 'wont allow an moderator to revoke their own moderator' do
-      Guardian.new(moderator).can_revoke_moderation?(moderator).should be_false     
+      Guardian.new(moderator).can_revoke_moderation?(moderator).should be_false
     end
 
     it "allows an admin to revoke a moderator's access" do
-      Guardian.new(admin).can_revoke_moderation?(moderator).should be_true     
+      Guardian.new(admin).can_revoke_moderation?(moderator).should be_true
     end
   end
 
@@ -818,4 +818,4 @@ describe Guardian do
   end
 
 end
- 
+

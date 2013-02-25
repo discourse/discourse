@@ -66,7 +66,7 @@ EXPECTED
         @post = Fabricate(:post_with_images)
       end
 
-      it "adds a topic image if there's one in the post" do    
+      it "adds a topic image if there's one in the post" do
         @post.topic.reload
         @post.topic.image_url.should == "/path/to/img.jpg"
       end
@@ -79,31 +79,31 @@ EXPECTED
     end
   end
 
-  context 'link convertor' do 
-    before do 
+  context 'link convertor' do
+    before do
       SiteSetting.stubs(:crawl_images?).returns(true)
     end
-    
-    let :post_with_img do 
+
+    let :post_with_img do
       Fabricate.build(:post, cooked: '<p><img src="http://hello.com/image.png"></p>')
     end
 
-    let :cpp_for_post do 
+    let :cpp_for_post do
       CookedPostProcessor.new(post_with_img)
     end
 
-    it 'convert img tags to links if they are sized down' do 
+    it 'convert img tags to links if they are sized down' do
       cpp_for_post.expects(:get_size).returns([2000,2000]).twice
-      cpp_for_post.post_process 
+      cpp_for_post.post_process
       cpp_for_post.html.should =~ /a href/
     end
 
-    it 'does not convert img tags to links if they are small' do 
+    it 'does not convert img tags to links if they are small' do
       cpp_for_post.expects(:get_size).returns([200,200]).twice
-      cpp_for_post.post_process 
+      cpp_for_post.post_process
       (cpp_for_post.html !~ /a href/).should be_true
     end
-    
+
   end
 
   context 'image_dimensions' do
@@ -126,7 +126,7 @@ EXPECTED
         SiteSetting.expects(:crawl_images?).returns(true)
         FastImage.expects(:size).with(@url)
         cpp.image_dimensions(@url)
-      end      
+      end
     end
   end
 

@@ -52,7 +52,7 @@
   *border: 1px solid #999;
   /* IE6-7 */
 
-  @include border-radius-all (6px); 
+  @include border-radius-all (6px);
   -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
   box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
@@ -106,19 +106,19 @@
   border-bottom: 1px solid #9baab2;
   @include box-shadow((0 1px 3px rgba($black, 0.12), inset 0 -4px 4px -4px rgba($black, 0.3)));
   h3 {
-    color: $nav-pills-background-color-active; 
+    color: $nav-pills-background-color-active;
     font-size: 20px;
     padding: 10px 15px 7px;
-  } 
+  }
   .close {
     float: right;
     font-size: 20px;
     margin: 10px 10px 0px;
     text-decoration: none;
-    color: $modal-close-button-color; 
+    color: $modal-close-button-color;
     cursor: pointer;
     &:hover {
-      color: darken($modal-close-button-color,20); 
+      color: darken($modal-close-button-color,20);
     }
   }
 }
