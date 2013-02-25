@@ -118,12 +118,6 @@ Discourse::Application.routes.draw do
   match "/auth/:provider/callback", to: "users/omniauth_callbacks#complete"
   match "/auth/failure", to: "users/omniauth_callbacks#failure"
 
-  get 'twitter/frame' => 'twitter#frame'
-  get 'twitter/complete' => 'twitter#complete'
-
-  get 'facebook/frame' => 'facebook#frame'
-  get 'facebook/complete' => 'facebook#complete'
-
   resources :clicks do
     collection do
       get 'track'
