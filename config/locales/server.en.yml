@@ -470,6 +470,8 @@ en:
 
       - Have you checked to make sure the IPs of the server the mail originates from are [not on any email blacklists][4]?
 
+      - Have you verified that your email server is *definitely* sending a fully qualified hostname in its HELO message? This will cause your email to be rejected by many mail services.
+
       We hope you received this email deliverability test OK!
 
       Good luck,
