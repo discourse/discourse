@@ -1,4 +1,7 @@
 /*global Modernizr:true*/
+/*global assetPath:true*/
+/*global FastClick:true*/
+
 (function() {
   var csrf_token;
 
@@ -148,7 +151,9 @@
 
         $LAB.script(assetPath('defer/fastclick'))
             .wait(function(){
-                new FastClick(document.body);
+                // work around jshint hating side-effects
+                //   its just the way the FastClick api is
+                var ignore = new FastClick(document.body);
             });
 
       } else {
