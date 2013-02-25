@@ -86,7 +86,7 @@ en:
 
       name:
         title: "Name"
-        instructions: "The longer version of your name; does not need to be unique."
+        instructions: "The longer version of your name; does not need to be unique. Used for alternate @name matching and shown only on your user page."
         too_short: "Your name is too short."
         ok: "Your name looks good."
       username:
