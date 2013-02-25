@@ -71,6 +71,7 @@ module Oneboxer
        /time\.com\/.+/,
        /npr\.org\/.+/,
        /cracked\.com\/.+/,
+       /thinkgeek\.com\/.+/,
        /deadline\.com\/.+/
      ]
     end    
