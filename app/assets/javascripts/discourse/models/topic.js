@@ -142,18 +142,15 @@ Discourse.Topic = Discourse.Model.extend({
   },
 
   toggleStar: function() {
-    var _this = this;
-    this.toggleProperty('starred');
+    var topic = this;
+    topic.toggleProperty('starred');
     return jQuery.ajax({
       url: "" + (this.get('url')) + "/star",
       type: 'PUT',
-      data: {
-        starred: this.get('starred') ? true : false
-      },
+      data: { starred: topic.get('starred') ? true : false },
       error: function(error) {
-        var errors;
-        _this.toggleProperty('starred');
-        errors = jQuery.parseJSON(error.responseText).errors;
+        topic.toggleProperty('starred');
+        var errors = jQuery.parseJSON(error.responseText).errors;
         return bootbox.alert(errors[0]);
       }
     });
@@ -203,31 +200,22 @@ Discourse.Topic = Discourse.Model.extend({
 
   // Load the posts for this topic
   loadPosts: function(opts) {
-    var _this = this;
-    if (!opts) {
-      opts = {};
-    }
+    var topic = this;
+
+    if (!opts) opts = {};
 
     // Load the first post by default
-    if (!opts.bestOf) {
-      if (!opts.nearPost) opts.nearPost = 1
-    }
+    if ((!opts.bestOf) && (!opts.nearPost)) opts.nearPost = 1;
 
     // If we already have that post in the DOM, jump to it
     if (Discourse.TopicView.scrollTo(this.get('id'), opts.nearPost)) return;
 
-    return Discourse.Topic.find(this.get('id'), {
-      nearPost: opts.nearPost,
-      bestOf: opts.bestOf,
-      trackVisit: opts.trackVisit
-    }).then(function(result) {
-
-      // If loading the topic succeeded...
-      // Update the slug if different
+    // If loading the topic succeeded...
+    var afterTopicLoaded = function(result) {
       var closestPostNumber, lastPost, postDiff;
-      if (result.slug) {
-        _this.set('slug', result.slug);
-      }
+
+      // Update the slug if different
+      if (result.slug) topic.set('slug', result.slug);
 
       // If we want to scroll to a post that doesn't exist, just pop them to the closest
       // one instead. This is likely happening due to a deleted post.
@@ -235,34 +223,29 @@ Discourse.Topic = Discourse.Model.extend({
       closestPostNumber = 0;
       postDiff = Number.MAX_VALUE;
       result.posts.each(function(p) {
-        var diff;
-        diff = Math.abs(p.post_number - opts.nearPost);
+        var diff = Math.abs(p.post_number - opts.nearPost);
         if (diff < postDiff) {
           postDiff = diff;
           closestPostNumber = p.post_number;
-          if (diff === 0) {
-            return false;
-          }
+          if (diff === 0) return false;
         }
       });
 
       opts.nearPost = closestPostNumber;
-      if (_this.get('participants')) {
-        _this.get('participants').clear();
+      if (topic.get('participants')) {
+        topic.get('participants').clear();
       }
       if (result.suggested_topics) {
-        _this.set('suggested_topics', Em.A());
+        topic.set('suggested_topics', Em.A());
       }
-      _this.mergeAttributes(result, {
-        suggested_topics: Discourse.Topic
-      });
-      _this.set('posts', Em.A());
+      topic.mergeAttributes(result, { suggested_topics: Discourse.Topic });
+      topic.set('posts', Em.A());
       if (opts.trackVisit && result.draft && result.draft.length > 0) {
         Discourse.openComposer({
           draft: Discourse.Draft.getLocal(result.draft_key, result.draft),
           draftKey: result.draft_key,
           draftSequence: result.draft_sequence,
-          topic: _this,
+          topic: topic,
           ignoreIfChanged: true
         });
       }
@@ -273,15 +256,41 @@ Discourse.Topic = Discourse.Model.extend({
         var post;
         p.scrollToAfterInsert = opts.nearPost;
         post = Discourse.Post.create(p);
-        post.set('topic', _this);
-        _this.get('posts').pushObject(post);
+        post.set('topic', topic);
+        topic.get('posts').pushObject(post);
         lastPost = post;
       });
-      return _this.set('loaded', true);
-    }, function(result) {
-      _this.set('missing', true);
-      return _this.set('message', Em.String.i18n('topic.not_found.description'));
-    });
+      topic.set('loaded', true);
+    }
+
+    var errorLoadingTopic = function(result) {
+      topic.set('errorLoading', true);
+
+      // If the result was 404 the post is not found
+      if (result.status == 404) {
+        topic.set('errorTitle', Em.String.i18n('topic.not_found.title'))
+        topic.set('message', Em.String.i18n('topic.not_found.description'));
+        return;
+      }
+
+      // If the result is 403 it means invalid access
+      if (result.status == 403) {
+        topic.set('errorTitle', Em.String.i18n('topic.invalid_access.title'))
+        topic.set('message', Em.String.i18n('topic.invalid_access.description'));
+        return;
+      }
+
+      // Otherwise supply a generic error message
+      topic.set('errorTitle', Em.String.i18n('topic.server_error.title'))
+      topic.set('message', Em.String.i18n('topic.server_error.description'));
+    }
+
+    // Finally, call our find method
+    Discourse.Topic.find(this.get('id'), {
+      nearPost: opts.nearPost,
+      bestOf: opts.bestOf,
+      trackVisit: opts.trackVisit
+    }).then(afterTopicLoaded, errorLoadingTopic);
   },
 
   notificationReasonText: (function() {
@@ -324,10 +333,10 @@ Discourse.Topic = Discourse.Model.extend({
   isReplyDirectlyBelow: function(post) {
     var postBelow, posts;
     posts = this.get('posts');
-    if (!posts) {
-      return;
-    }
+    if (!posts) return;
+
     postBelow = posts[posts.indexOf(post) + 1];
+
     // If the post directly below's reply_to_post_number is our post number, it's
     // considered directly below.
     return (postBelow ? postBelow.get('reply_to_post_number') : void 0) === post.get('post_number');
@@ -346,12 +355,13 @@ window.Discourse.Topic.reopenClass({
   //  options:
   //    onLoad - the callback after the topic is loaded
   find: function(topicId, opts) {
-    var data, promise, url,
-      _this = this;
+    var data, promise, url;
     url = "/t/" + topicId;
+
     if (opts.nearPost) {
       url += "/" + opts.nearPost;
     }
+
     data = {};
     if (opts.postsAfter) {
       data.posts_after = opts.postsAfter;
@@ -397,15 +407,11 @@ window.Discourse.Topic.reopenClass({
   movePosts: function(topicId, title, postIds) {
     return jQuery.ajax("/t/" + topicId + "/move-posts", {
       type: 'POST',
-      data: {
-        title: title,
-        post_ids: postIds
-      }
+      data: { title: title, post_ids: postIds }
     });
   },
 
   create: function(obj, topicView) {
-    var _this = this;
     return Object.tap(this._super(obj), function(result) {
       if (result.participants) {
         result.participants = result.participants.map(function(u) {
@@ -413,9 +419,7 @@ window.Discourse.Topic.reopenClass({
         });
         result.fewParticipants = Em.A();
         return result.participants.each(function(p) {
-          if (result.fewParticipants.length >= 8) {
-            return false;
-          }
+          if (result.fewParticipants.length >= 8) return false;
           result.fewParticipants.pushObject(p);
           return true;
         });

@@ -170,7 +170,7 @@ en:
 
       filters:
         all: "All"
-        
+
       stream:
         posted_by: "Posted by"
         sent_by: "Sent by"
@@ -341,10 +341,15 @@ en:
       title: 'Topic'
       loading_more: "Loading more Topics..."
       loading: 'Loading topic...'
-      missing: "Topic Not Found"
+      invalid_access:
+        title: "You can't do that!"
+        description: "You don't have access to view that topic."
+      server_error:
+        title: "Error loading topic!"
+        description: "Sorry, we couldn't load that topic, possibly due to a connection problem. Please try again."
       not_found:
-        title: "Topic Not Found"
-        description: "Sorry, we couldn't load that topic, possibly due to a connection problem. Please try again. If the problem persists, perhaps the topic was deleted."
+        title: "Topic not found!"
+        description: "That topic could not be found. It's likely it was deleted by a moderator."
       unread_posts: "you have {{unread}} unread old posts in this topic"
       new_posts: "there are {{new_posts}} new posts in this topic since you last read it"
       likes: "there are {{likes}} likes in this topic"
