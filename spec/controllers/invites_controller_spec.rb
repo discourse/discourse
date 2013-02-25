@@ -10,11 +10,11 @@ describe InvitesController do
       }.should raise_error(Discourse::NotLoggedIn)
     end
 
-    context 'while logged in' do      
+    context 'while logged in' do
       let!(:user) { log_in }
       let!(:invite) { Fabricate(:invite, invited_by: user) }
       let(:another_invite) { Fabricate(:invite, email: 'anotheremail@address.com') }
-      
+
 
       it 'raises an error when the email is missing' do
         lambda { delete :destroy }.should raise_error(Discourse::InvalidParameters)
@@ -46,13 +46,13 @@ describe InvitesController do
         get :show, id: "doesn't exist"
       end
 
-      it "redirects to the root" do      
+      it "redirects to the root" do
         response.should redirect_to("/")
-      end      
+      end
 
-      it "should not change the session" do      
+      it "should not change the session" do
         session[:current_user_id].should be_blank
-      end      
+      end
 
     end
 
@@ -64,13 +64,13 @@ describe InvitesController do
         get :show, id: deleted_invite.invite_key
       end
 
-      it "redirects to the root" do      
+      it "redirects to the root" do
         response.should redirect_to("/")
-      end  
+      end
 
-      it "should not change the session" do      
+      it "should not change the session" do
         session[:current_user_id].should be_blank
-      end 
+      end
 
     end
 
@@ -78,7 +78,7 @@ describe InvitesController do
     context 'with a valid invite id' do
       let(:topic) { Fabricate(:topic) }
       let(:invite) { topic.invite_by_email(topic.user, "iceking@adventuretime.ooo") }
-      
+
 
       it 'redeems the invite' do
         Invite.any_instance.expects(:redeem)
@@ -88,10 +88,10 @@ describe InvitesController do
       context 'when redeem returns a user' do
         let(:user) { Fabricate(:coding_horror) }
 
-        context 'success' do          
+        context 'success' do
           before do
             Invite.any_instance.expects(:redeem).returns(user)
-            get :show, id: invite.invite_key            
+            get :show, id: invite.invite_key
           end
 
           it 'logs in the user' do
@@ -109,13 +109,13 @@ describe InvitesController do
             Jobs.expects(:enqueue).with(:invite_email, has_key(:invite_id))
           end
 
-          it 'sends a welcome message if set' do        
-            user.send_welcome_message = true    
+          it 'sends a welcome message if set' do
+            user.send_welcome_message = true
             user.expects(:enqueue_welcome_message).with('welcome_invite')
             get :show, id: invite.invite_key
           end
 
-          it "doesn't send a welcome message if not set" do            
+          it "doesn't send a welcome message if not set" do
             user.expects(:enqueue_welcome_message).with('welcome_invite').never
             get :show, id: invite.invite_key
           end
@@ -137,11 +137,11 @@ describe InvitesController do
             Invite.any_instance.expects(:redeem).returns(user)
             get :show, id: invite.invite_key
             cookies[:_access].should == 'adventure time!'
-          end        
+          end
 
-        end       
+        end
 
-      end      
+      end
 
     end
 

@@ -42,7 +42,7 @@ class PostTiming < ActiveRecord::Base
 
   def self.process_timings(current_user, topic_id, highest_seen, topic_time, timings)
     current_user.update_time_read!
-   
+
     original_unread = current_user.unread_notifications_by_type
     timings.each do |post_number, time|
       if post_number >= 0
@@ -57,7 +57,7 @@ class PostTiming < ActiveRecord::Base
     if timings.length > 0
       total_changed = Notification.mark_posts_read(current_user, topic_id, timings.map{|t| t[0]})
     end
-    
+
     TopicUser.update_last_read(current_user, topic_id, highest_seen, topic_time)
 
     if total_changed > 0

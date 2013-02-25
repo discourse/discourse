@@ -8,7 +8,7 @@ RSpec.configure do |config|
 
   config.mock_framework = :mocha
   config.color_enabled = true
-  
+
   config.before(:each) do
     DiscourseEvent.clear
   end

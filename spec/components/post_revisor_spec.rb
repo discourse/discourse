@@ -117,7 +117,7 @@ describe PostRevisor do
 
     describe 'category topic' do
 
-      let!(:category) do 
+      let!(:category) do
         category = Fabricate(:category)
         category.update_column(:topic_id, topic.id)
         category
@@ -156,7 +156,7 @@ describe PostRevisor do
 
         it "updates the description of the category" do
           category.description.should == new_description
-        end        
+        end
       end
 
       context 'when updating back to the original paragraph' do

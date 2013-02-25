@@ -8,20 +8,20 @@ describe DiscourseTask::Plugin do
 
   context '.setup' do
 
-    it 'registers its js' do      
+    it 'registers its js' do
       plugin.expects(:register_js).with('discourse_task')
       plugin.setup
-    end    
+    end
 
-    it 'registers its css' do      
+    it 'registers its css' do
       plugin.expects(:register_css).with('discourse_task')
       plugin.setup
-    end    
+    end
 
-    it 'registers a task archetype' do      
+    it 'registers a task archetype' do
       plugin.expects(:register_archetype).with('task')
       plugin.setup
-    end    
+    end
 
   end
 

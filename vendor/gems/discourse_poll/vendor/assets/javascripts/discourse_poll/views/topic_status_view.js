@@ -6,7 +6,7 @@
     if (this.get('topic.archetype') === 'poll') {
       this.renderIcon(buffer, 'check-empty', 'poll');
     }
-        
+
   });
 
-}).call(this); 
+}).call(this);

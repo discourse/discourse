@@ -77,7 +77,7 @@
     // -------------------------------------------------------------------
     //  YOUR CHANGES GO HERE
     //
-    // I've tried to localize the things you are likely to change to 
+    // I've tried to localize the things you are likely to change to
     // this area.
     // -------------------------------------------------------------------
 
@@ -109,7 +109,7 @@
     // - run() actually starts the editor; should be called after all necessary plugins are registered. Calling this more than once is a no-op.
     // - refreshPreview() forces the preview to be updated. This method is only available after run() was called.
     Markdown.Editor = function (markdownConverter, idPostfix, options) {
-        
+
         options = options || {};
 
         if (typeof options.handler === "function") { //backwards compatible behavior
@@ -230,7 +230,7 @@
             beforeReplacer = function (s) { that.before += s; return ""; }
             afterReplacer = function (s) { that.after = s + that.after; return ""; }
         }
-        
+
         this.selection = this.selection.replace(/^(\s*)/, beforeReplacer).replace(/(\s*)$/, afterReplacer);
     };
 
@@ -298,14 +298,14 @@
         }
     };
 
-    // end of Chunks 
+    // end of Chunks
 
     // A collection of the important regions on the page.
     // Cached so we don't have to keep traversing the DOM.
     // Also holds ieCachedRange and ieCachedScrollTop, where necessary; working around
     // this issue:
     // Internet explorer has problems with CSS sprite buttons that use HTML
-    // lists.  When you click on the background image "button", IE will 
+    // lists.  When you click on the background image "button", IE will
     // select the non-existent link text and discard the selection in the
     // textarea.  The solution to this is to cache the textarea selection
     // on the button's mousedown event and set a flag.  In the part of the
@@ -652,7 +652,7 @@
                     setMode("escape");
                 }
                 else if ((keyCode < 16 || keyCode > 20) && keyCode != 91) {
-                    // 16-20 are shift, etc. 
+                    // 16-20 are shift, etc.
                     // 91: left window key
                     // I think this might be a little messed up since there are
                     // a lot of nonprinting keys above 20.
@@ -796,7 +796,7 @@
 
                 if (panels.ieCachedRange)
                     stateObj.scrollTop = panels.ieCachedScrollTop; // this is set alongside with ieCachedRange
-                
+
                 panels.ieCachedRange = null;
 
                 this.setInputAreaSelection();
@@ -907,7 +907,7 @@
 
             pushPreviewHtml(text);
         };
-       
+
         // makePreviewHtml = window.probes.measure(makePreviewHtml, {
         //   before: function(){ window.probes.clear(); },
         //   name: "makePreview",
@@ -915,7 +915,7 @@
         // });
 
 
-        // TODO allow us to inject this in (its our debouncer) 
+        // TODO allow us to inject this in (its our debouncer)
         var debounce = function(func,wait,trickle) {
           var timeout = null;
           return function(){
@@ -926,26 +926,26 @@
               timeout = null;
               func.apply(context, args);
             };
-            
+
             if (timeout!=null && trickle) {
               return;
             }
 
-            var currentWait; 
+            var currentWait;
             if (typeof wait == "function") {
               currentWait = wait();
             } else {
               currentWait = wait;
             }
-            
+
             //console.log(currentWait);
             if (timeout) { clearTimeout(timeout); }
             timeout = setTimeout(later, currentWait);
           }
         }
 
-        makePreviewHtml = debounce(makePreviewHtml, function(){ 
-          return Math.min(Math.max((elapsedTime || 1) * 10, 80),1000); 
+        makePreviewHtml = debounce(makePreviewHtml, function(){
+          return Math.min(Math.max((elapsedTime || 1) * 10, 80),1000);
         }, true);
 
 
@@ -1086,9 +1086,9 @@
 
         var background = doc.createElement("div"),
             style = background.style;
-        
+
         background.className = "wmd-prompt-background";
-        
+
         style.position = "absolute";
         style.top = "0";
 
@@ -1400,7 +1400,7 @@
                 //
                 // var link = CreateLinkDialog();
                 // makeMarkdownLink(link);
-                // 
+                //
                 // Instead of this straightforward method of handling a
                 // dialog I have to pass any code which would execute
                 // after the dialog is dismissed (e.g. link creation)
@@ -1511,7 +1511,7 @@
                         var b = insertButtons[i];
                         makeButton(b.id, b.description, b.execute)
                     }
-                }                
+                }
             }
 
             buttons.bold = makeButton("wmd-bold-button", getString("bold"), bindCommand("doBold"));
@@ -1767,7 +1767,7 @@
 
         }
         else {
-            
+
             // We're moving start and end tag back into the selection, since (as we're in the else block) we're not
             // *removing* a link, but *adding* one, so whatever findTags() found is now back to being part of the
             // link text. linkEnteredCallback takes care of escaping any brackets.
@@ -1805,7 +1805,7 @@
                     // would mean a zero-width match at the start. Since zero-width matches advance the string position,
                     // the first bracket could then not act as the "not a backslash" for the second.
                     chunk.selection = (" " + chunk.selection).replace(/([^\\](?:\\\\)*)(?=[[\]])/g, "$1\\").substr(1);
-                    
+
                     var linkDef = " [999]: " + properlyEncoded(link);
 
                     var num = that.addLinkDef(chunk, linkDef);
@@ -1847,7 +1847,7 @@
         chunk.before = chunk.before.replace(/(\n|^)[ ]{0,3}([*+-]|\d+[.])[ \t]*\n$/, "\n\n");
         chunk.before = chunk.before.replace(/(\n|^)[ ]{0,3}>[ \t]*\n$/, "\n\n");
         chunk.before = chunk.before.replace(/(\n|^)[ \t]+\n$/, "\n\n");
-        
+
         // There's no selection, end the cursor wasn't at the end of the line:
         // The user wants to split the current list item / code line / blockquote line
         // (for the latter it doesn't really matter) in two. Temporarily select the
@@ -1875,7 +1875,7 @@
                 commandMgr.doCode(chunk);
             }
         }
-        
+
         if (fakeSelection) {
             chunk.after = chunk.selection + chunk.after;
             chunk.selection = "";

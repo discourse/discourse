@@ -36,7 +36,7 @@ describe ImageSizer do
     it 'resizes the height retaining the aspect ratio' do
       @h.should == 102
     end
-    
+
   end
 
 end

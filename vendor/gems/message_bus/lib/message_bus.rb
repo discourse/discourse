@@ -40,11 +40,11 @@ module MessageBus::Implementation
   def logger
     return @logger if @logger
     require 'logger'
-    @logger = Logger.new(STDOUT) 
+    @logger = Logger.new(STDOUT)
   end
 
   def sockets_enabled?
-    @sockets_enabled == false ? false : true 
+    @sockets_enabled == false ? false : true
   end
 
   def sockets_enabled=(val)
@@ -68,13 +68,13 @@ module MessageBus::Implementation
   end
 
   def off
-    @off = true 
+    @off = true
   end
 
-  def on 
-    @off = false 
+  def on
+    @off = false
   end
-  
+
   # Allow us to inject a redis db
   def redis_config=(config)
     @redis_config = config
@@ -114,10 +114,10 @@ module MessageBus::Implementation
   end
 
   def allow_broadcast?
-    @allow_broadcast ||= 
+    @allow_broadcast ||=
       if defined? ::Rails
         ::Rails.env.test? || ::Rails.env.development?
-      else 
+      else
         false
       end
   end
@@ -130,9 +130,9 @@ module MessageBus::Implementation
     MessageBus::Diagnostics.enable
   end
 
-  def publish(channel, data, opts = nil) 
-    return if @off 
-    
+  def publish(channel, data, opts = nil)
+    return if @off
+
     user_ids = nil
     if opts
       user_ids = opts[:user_ids] if opts
@@ -142,14 +142,14 @@ module MessageBus::Implementation
       data: data,
       user_ids: user_ids
     })
-   
+
     reliable_pub_sub.publish(encode_channel_name(channel), encoded_data)
   end
 
   def blocking_subscribe(channel=nil, &blk)
     if channel
       reliable_pub_sub.subscribe(encode_channel_name(channel), &blk)
-    else 
+    else
       reliable_pub_sub.global_subscribe(&blk)
     end
   end
@@ -173,7 +173,7 @@ module MessageBus::Implementation
   def subscribe(channel=nil, &blk)
     subscribe_impl(channel, nil, &blk)
   end
-  
+
   # subscribe only on current site
   def local_subscribe(channel=nil, &blk)
     site_id = MessageBus.site_id_lookup.call if MessageBus.site_id_lookup
@@ -181,15 +181,15 @@ module MessageBus::Implementation
   end
 
   def backlog(channel=nil, last_id)
-    old = 
+    old =
       if channel
         reliable_pub_sub.backlog(encode_channel_name(channel), last_id)
-      else 
+      else
         reliable_pub_sub.global_backlog(encode_channel_name(channel), last_id)
       end
 
     old.each{ |m|
-      decode_message!(m) 
+      decode_message!(m)
     }
     old
   end
@@ -199,32 +199,32 @@ module MessageBus::Implementation
     reliable_pub_sub.last_id(encode_channel_name(channel))
   end
 
-  protected 
+  protected
 
   def decode_message!(msg)
     channel, site_id = decode_channel_name(msg.channel)
-    msg.channel = channel 
+    msg.channel = channel
     msg.site_id = site_id
-    parsed = JSON.parse(msg.data) 
+    parsed = JSON.parse(msg.data)
     msg.data = parsed["data"]
     msg.user_ids = parsed["user_ids"]
   end
 
   def subscribe_impl(channel, site_id, &blk)
-    @subscriptions ||= {} 
+    @subscriptions ||= {}
     @subscriptions[site_id] ||= {}
-    @subscriptions[site_id][channel] ||=  [] 
-    @subscriptions[site_id][channel] << blk 
+    @subscriptions[site_id][channel] ||=  []
+    @subscriptions[site_id][channel] << blk
     ensure_subscriber_thread
   end
 
   def ensure_subscriber_thread
     @mutex ||= Mutex.new
-    @mutex.synchronize do 
+    @mutex.synchronize do
       return if @subscriber_thread
       @subscriber_thread = Thread.new do
         reliable_pub_sub.global_subscribe do |msg|
-          begin 
+          begin
             decode_message!(msg)
 
             globals = @subscriptions[nil]
@@ -232,7 +232,7 @@ module MessageBus::Implementation
 
             global_globals = globals[nil] if globals
             local_globals = locals[nil] if locals
-            
+
             globals = globals[msg.channel] if globals
             locals = locals[msg.channel] if locals
 
@@ -243,7 +243,7 @@ module MessageBus::Implementation
           rescue => e
             MessageBus.logger.warn "failed to process message #{msg.inspect}\n ex: #{e} backtrace: #{e.backtrace}"
           end
-          
+
         end
       end
     end

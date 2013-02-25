@@ -38,4 +38,4 @@
     }.property('post.voteAction.can_act')
 
   })
-}).call(this); 
+}).call(this);

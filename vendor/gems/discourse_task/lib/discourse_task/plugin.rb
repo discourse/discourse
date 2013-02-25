@@ -20,7 +20,7 @@ module DiscourseTask
 
     module TopicViewSerializerMixin
       def self.included(base)
-        base.attributes :can_complete_task, :complete, :completed_at  
+        base.attributes :can_complete_task, :complete, :completed_at
       end
 
       def can_complete_task
@@ -73,7 +73,7 @@ module DiscourseTask
 
         end
 
-          
+
         render nothing: true
       end
 

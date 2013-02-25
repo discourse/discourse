@@ -4,12 +4,12 @@ require_dependency 'sql_builder'
 
 describe SqlBuilder do
 
-  describe "attached" do 
-    before do 
+  describe "attached" do
+    before do
       @builder = Post.sql_builder("select * from posts /*where*/ /*limit*/")
     end
 
-    it "should find a post by id" do 
+    it "should find a post by id" do
       p = Fabricate(:post)
       @builder.where('id = :id and topic_id = :topic_id', id: p.id, topic_id: p.topic_id)
       p2 = @builder.exec.first
@@ -18,18 +18,18 @@ describe SqlBuilder do
     end
   end
 
-  describe "detached" do 
-    before do 
+  describe "detached" do
+    before do
       @builder = SqlBuilder.new("select * from (select :a A union all select :b) as X /*where*/ /*order_by*/ /*limit*/ /*offset*/")
     end
 
-    it "should allow for 1 param exec" do 
-      @builder.exec(a: 1, b: 2).values[0][0].should == '1' 
+    it "should allow for 1 param exec" do
+      @builder.exec(a: 1, b: 2).values[0][0].should == '1'
     end
 
-    it "should allow for a single where" do 
+    it "should allow for a single where" do
       @builder.where(":a = 1")
-      @builder.exec(a: 1, b: 2).values[0][0].should == '1' 
+      @builder.exec(a: 1, b: 2).values[0][0].should == '1'
     end
 
     it "should allow where chaining" do

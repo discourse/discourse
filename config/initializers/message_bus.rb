@@ -1,4 +1,4 @@
-MessageBus.site_id_lookup do 
+MessageBus.site_id_lookup do
   RailsMultisite::ConnectionManagement.current_db
 end
 
@@ -21,7 +21,7 @@ MessageBus.redis_config = YAML::load(File.open("#{Rails.root}/config/redis.yml")
 MessageBus.long_polling_enabled = SiteSetting.enable_long_polling
 MessageBus.long_polling_interval = SiteSetting.long_polling_interval
 
-MessageBus.is_admin_lookup do |env| 
+MessageBus.is_admin_lookup do |env|
   user = CurrentUser.lookup_from_env(env)
   if user && user.admin
     true

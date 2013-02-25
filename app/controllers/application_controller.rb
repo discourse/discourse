@@ -7,7 +7,7 @@ require_dependency 'rate_limiter'
 
 class ApplicationController < ActionController::Base
   include CurrentUser
-  
+
   include CanonicalURL::ControllerExtensions
 
   serialization_scope :guardian
@@ -79,8 +79,8 @@ class ApplicationController < ActionController::Base
 
   def store_preloaded(key, json)
     @preloaded ||= {}
-    # I dislike that there is a gsub as opposed to a gsub! 
-    #  but we can not be mucking with user input, I wonder if there is a way 
+    # I dislike that there is a gsub as opposed to a gsub!
+    #  but we can not be mucking with user input, I wonder if there is a way
     #  to inject this safty deeper in the library or even in AM serializer
     @preloaded[key] = json.gsub("</", "<\\/")
   end

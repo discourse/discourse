@@ -46,5 +46,3 @@ Discourse.AdminCustomizeView = Discourse.View.extend({
   }
   
 });
-
-

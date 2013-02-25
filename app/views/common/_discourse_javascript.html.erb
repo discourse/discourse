@@ -8,7 +8,7 @@
     };
 
     var assetPath = function(asset){
-      return map[asset]; 
+      return map[asset];
     };
 
     return assetPath;
@@ -20,7 +20,7 @@
     <%= javascript_include_tag "application" %>
   <%-end%>
 
-  <%- Rack::MiniProfiler.step "admin" do %> 
+  <%- Rack::MiniProfiler.step "admin" do %>
     <%= javascript_include_tag "admin"%>
   <%-end%>
 <%- else %>

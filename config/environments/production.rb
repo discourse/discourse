@@ -16,7 +16,7 @@ Discourse::Application.configure do
 
   # stuff should be pre-compiled
   config.assets.compile = false
-  
+
   # Generate digests for assets URLs
   config.assets.digest = true
 

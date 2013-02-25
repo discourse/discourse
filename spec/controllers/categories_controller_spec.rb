@@ -65,19 +65,19 @@ describe CategoriesController do
     describe 'logged in' do
       before do
         @user = log_in
-        @category = Fabricate(:category, user: @user)        
+        @category = Fabricate(:category, user: @user)
       end
 
       it "raises an exception if they don't have permission to delete it" do
         Guardian.any_instance.expects(:can_delete_category?).returns(false)
         xhr :delete, :destroy, id: @category.slug
         response.should be_forbidden
-      end  
+      end
 
       it "deletes the record" do
         Guardian.any_instance.expects(:can_delete_category?).returns(true)
         lambda { xhr :delete, :destroy, id: @category.slug}.should change(Category, :count).by(-1)
-      end 
+      end
     end
 
   end
@@ -90,7 +90,7 @@ describe CategoriesController do
 
 
     describe 'logged in' do
-      before do        
+      before do
         @user = log_in(:moderator)
         @category = Fabricate(:category, user: @user)
       end
@@ -101,11 +101,11 @@ describe CategoriesController do
         response.should be_forbidden
       end
 
-      it "requires a name" do      
+      it "requires a name" do
         lambda { xhr :put, :update, id: @category.slug, color: '#fff' }.should raise_error(Discourse::InvalidParameters)
       end
 
-      it "requires a color" do      
+      it "requires a color" do
         lambda { xhr :put, :update, id: @category.slug, name: 'asdf'}.should raise_error(Discourse::InvalidParameters)
       end
 

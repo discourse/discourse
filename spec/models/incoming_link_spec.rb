@@ -19,7 +19,7 @@ describe IncomingLink do
       before do
         @post = Fabricate(:post)
         @topic = @post.topic
-        @incoming_link = IncomingLink.create(url: "/t/slug/#{@topic.id}/#{@post.post_number}", 
+        @incoming_link = IncomingLink.create(url: "/t/slug/#{@topic.id}/#{@post.post_number}",
                                              referer: "http://twitter.com")
       end
 

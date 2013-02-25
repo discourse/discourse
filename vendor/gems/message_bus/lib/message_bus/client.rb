@@ -8,7 +8,7 @@ class MessageBus::Client
     @subscriptions = {}
   end
 
-  def close 
+  def close
     return unless @async_response
     write_and_close "[]"
   end
@@ -31,12 +31,12 @@ class MessageBus::Client
   end
 
   def subscriptions
-    @subscriptions 
+    @subscriptions
   end
 
   def backlog
     r = []
-    @subscriptions.each do |k,v| 
+    @subscriptions.each do |k,v|
       next if v.to_i < 0
       messages = MessageBus.backlog(k,v)
       messages.each do |msg|
@@ -46,8 +46,8 @@ class MessageBus::Client
     end
     # stats message for all newly subscribed
     status_message = nil
-    @subscriptions.each do |k,v| 
-      if v.to_i == -1 
+    @subscriptions.each do |k,v|
+      if v.to_i == -1
         status_message ||= {}
         status_message[k] = MessageBus.last_id(k)
       end

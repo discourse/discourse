@@ -11,5 +11,3 @@ Discourse.AdminFlagsRoute = Discourse.Route.extend({
     this.render('admin/templates/flags');
   }
 });
-
-

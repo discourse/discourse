@@ -153,7 +153,7 @@ class TopicView
   end
 
   def all_post_actions
-    @all_post_actions ||= PostAction.counts_for(posts, @user)  
+    @all_post_actions ||= PostAction.counts_for(posts, @user)
   end
 
   def voted_in_topic?
@@ -182,8 +182,8 @@ class TopicView
   end
 
   def link_counts
-    @link_counts ||= TopicLinkClick.counts_for(@topic, posts) 
-  end 
+    @link_counts ||= TopicLinkClick.counts_for(@topic, posts)
+  end
 
   # Binary search for closest value
   def self.closest(array, target, min, max)
@@ -226,9 +226,9 @@ class TopicView
   end
 
   # This is pending a larger refactor, that allows custom orders
-  #  for now we need to look for the highest_post_number in the stream 
-  #  the cache on topics is not correct if there are deleted posts at 
-  #  the end of the stream (for mods), nor is it correct for filtered 
+  #  for now we need to look for the highest_post_number in the stream
+  #  the cache on topics is not correct if there are deleted posts at
+  #  the end of the stream (for mods), nor is it correct for filtered
   #  streams
   def highest_post_number
     @highest_post_number ||= @all_posts.maximum(:post_number)
@@ -245,7 +245,7 @@ class TopicView
       posts_max = @max > (topic_user.last_read_post_number || 1 ) ? (topic_user.last_read_post_number || 1) : @max
 
       PostTiming.select(:post_number)
-                .where("topic_id = ? AND user_id = ? AND post_number BETWEEN ? AND ?", 
+                .where("topic_id = ? AND user_id = ? AND post_number BETWEEN ? AND ?",
                        @topic.id, @user.id, @min, posts_max)
                 .each {|t| result << t.post_number}
       result

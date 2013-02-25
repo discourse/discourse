@@ -18,7 +18,7 @@ describe MultisiteI18n do
   context "with a value for the multisite key" do
     it "returns the overwritten value" do
       MultisiteI18n.site_translate('other_site', 'test').should == "overwritten i18n"
-    end    
+    end
   end
 
   context "when we call t, it uses the current site" do

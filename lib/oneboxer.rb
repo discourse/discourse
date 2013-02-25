@@ -2,8 +2,8 @@ require 'open-uri'
 
 require_dependency 'oneboxer/base'
 require_dependency 'oneboxer/whitelist'
-Dir["#{Rails.root}/lib/oneboxer/*_onebox.rb"].each {|f| 
-  require_dependency(f.split('/')[-2..-1].join('/')) 
+Dir["#{Rails.root}/lib/oneboxer/*_onebox.rb"].each {|f|
+  require_dependency(f.split('/')[-2..-1].join('/'))
 }
 
 module Oneboxer
@@ -78,7 +78,7 @@ module Oneboxer
 
   def self.create_post_reference(result, args={})
     result.post_onebox_renders.create(post_id: args[:post_id]) if args[:post_id].present?
-  rescue ActiveRecord::RecordNotUnique    
+  rescue ActiveRecord::RecordNotUnique
   end
 
   def self.render_from_cache(url, args={})
@@ -89,7 +89,7 @@ module Oneboxer
       create_post_reference(result, args)
       return result
     end
-    nil    
+    nil
   end
 
   # Cache results from a onebox call
@@ -103,13 +103,13 @@ module Oneboxer
         render = OneboxRender.create(url: url, preview: preview, cooked: cooked, expires_at: Oneboxer.default_expiry.from_now)
         create_post_reference(render, args)
       rescue ActiveRecord::RecordNotUnique
-      end      
-    end  
+      end
+    end
 
-    [cooked, preview]  
+    [cooked, preview]
   end
 
-  # Retrieve a preview of a onebox, caching the result for performance 
+  # Retrieve a preview of a onebox, caching the result for performance
   def self.preview(url, args={})
     cached = render_from_cache(url, args) unless args[:no_cache].present?
 

@@ -30,15 +30,15 @@ module Discourse
     config.assets.paths += %W(#{config.root}/config/locales)
 
     config.assets.precompile += [
-      'admin.js', 'admin.css', 'shiny/shiny.css', 'preload_store.js', 
+      'admin.js', 'admin.css', 'shiny/shiny.css', 'preload_store.js',
       'jquery.js', 'defer/html-sanitizer-bundle.js', 'defer/fastclick.js'
     ]
 
     # Activate observers that should always be running.
     config.active_record.observers = [
         :user_email_observer,
-        :user_action_observer, 
-        :message_bus_observer, 
+        :user_action_observer,
+        :message_bus_observer,
         :post_alert_observer,
         :search_observer
     ]
@@ -66,10 +66,10 @@ module Discourse
     # We need to be able to spin threads
     config.active_record.thread_safe!
 
-    # see: http://stackoverflow.com/questions/11894180/how-does-one-correctly-add-custom-sql-dml-in-migrations/11894420#11894420 
+    # see: http://stackoverflow.com/questions/11894180/how-does-one-correctly-add-custom-sql-dml-in-migrations/11894420#11894420
     config.active_record.schema_format = :sql
 
-    # per https://www.owasp.org/index.php/Password_Storage_Cheat_Sheet 
+    # per https://www.owasp.org/index.php/Password_Storage_Cheat_Sheet
     config.pbkdf2_iterations = 64000
 
     # dumping rack lock cause the message bus does not work with it (throw :async, it catches Exception)
@@ -93,7 +93,7 @@ module Discourse
     config.action_dispatch.rack_cache =  nil
 
     # So open id logs somewhere sane
-    config.after_initialize do 
+    config.after_initialize do
       OpenID::Util.logger = Rails.logger
     end
   end

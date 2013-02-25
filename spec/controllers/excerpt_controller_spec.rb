@@ -25,7 +25,7 @@ describe ExcerptController do
         xhr :get, :show, url: @url
       end
 
-      it 'returns a valid status' do        
+      it 'returns a valid status' do
         response.should be_success
       end
 
@@ -44,7 +44,7 @@ describe ExcerptController do
         xhr :get, :show, url: @url
       end
 
-      it 'returns a valid status' do        
+      it 'returns a valid status' do
         response.should be_success
       end
 
@@ -63,7 +63,7 @@ describe ExcerptController do
         xhr :get, :show, url: @url
       end
 
-      it 'returns a valid status' do        
+      it 'returns a valid status' do
         response.should be_success
       end
 

@@ -9,7 +9,7 @@ describe Admin::EmailLogsController do
   let!(:user) { log_in(:admin) }
 
   context '.index' do
-    before do    
+    before do
       xhr :get, :index
     end
 
@@ -26,7 +26,7 @@ describe Admin::EmailLogsController do
     context 'with an email address' do
 
       it 'enqueues a test email job' do
-        Jobs.expects(:enqueue).with(:test_email, to_address: 'eviltrout@test.domain')    
+        Jobs.expects(:enqueue).with(:test_email, to_address: 'eviltrout@test.domain')
         xhr :post, :test, email_address: 'eviltrout@test.domain'
       end
 

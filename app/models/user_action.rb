@@ -48,7 +48,7 @@ class UserAction < ActiveRecord::Base
     unless guardian.can_see_private_messages?(user_id)
       results = results.where('topics.archetype <> ?', Archetype::private_message)
     end
-    
+
     unless guardian.user && guardian.user.id == user_id
       results = results.where("action_type <> ?", BOOKMARK)
     end
@@ -76,16 +76,16 @@ class UserAction < ActiveRecord::Base
     guardian = opts[:guardian]
     ignore_private_messages = opts[:ignore_private_messages]
 
-    # The weird thing is that target_post_id can be null, so it makes everything 
-    #  ever so more complex. Should we allow this, not sure. 
+    # The weird thing is that target_post_id can be null, so it makes everything
+    #  ever so more complex. Should we allow this, not sure.
 
     builder = SqlBuilder.new("
-SELECT 
-  t.title, a.action_type, a.created_at, t.id topic_id, 
-  coalesce(p.post_number, 1) post_number, 
+SELECT
+  t.title, a.action_type, a.created_at, t.id topic_id,
+  coalesce(p.post_number, 1) post_number,
   p.reply_to_post_number,
-  pu.email ,pu.username, pu.name, pu.id user_id, 
-  u.email acting_email, u.username acting_username, u.name acting_name, u.id acting_user_id, 
+  pu.email ,pu.username, pu.name, pu.id user_id,
+  u.email acting_email, u.username acting_username, u.name acting_name, u.id acting_user_id,
   coalesce(p.cooked, p2.cooked) cooked
 FROM user_actions as a
 JOIN topics t on t.id = a.target_topic_id
@@ -102,7 +102,7 @@ JOIN users pu on pu.id = COALESCE(p.user_id, t.user_id)
     unless guardian.can_see_deleted_posts?
       builder.where("p.deleted_at is null and p2.deleted_at is null")
     end
-    
+
     unless guardian.user && guardian.user.id == user_id
       builder.where("a.action_type not in (#{BOOKMARK})")
     end

@@ -8,7 +8,7 @@ task 'build_test_topic' => :environment do
   # Acceptable options:
   #
   #   raw                     - raw text of post
-  #   image_sizes             - We can pass a list of the sizes of images in the post as a shortcut.  
+  #   image_sizes             - We can pass a list of the sizes of images in the post as a shortcut.
   #
   #   When replying to a topic:
   #     topic_id              - topic we're replying to
@@ -37,14 +37,14 @@ task 'build_test_topic' => :environment do
         links << "Link to ##{where}: #{topic_url}/#{where}"
       end
     end
- 
+
     raw = <<eos
 This is post ##{post_number}.
 
 #{links.join("\n")}
 eos
 
-    PostCreator.new(evil_trout, raw: raw, topic_id: topic.id).create 
+    PostCreator.new(evil_trout, raw: raw, topic_id: topic.id).create
   end
 
 end

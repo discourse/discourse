@@ -26,7 +26,7 @@ class Category < ActiveRecord::Base
   def self.popular
     order('topic_count desc')
   end
-  
+
   # Recalculates `topics_year`, `topics_month`, and `topics_week`
   # for each Category.
   def self.update_stats
@@ -38,9 +38,9 @@ class Category < ActiveRecord::Base
     topics_year = topics.created_since(1.year.ago).to_sql
     topics_month = topics.created_since(1.month.ago).to_sql
     topics_week = topics.created_since(1.week.ago).to_sql
-    
-    Category.update_all("topics_year = (#{topics_year}), 
-                         topics_month = (#{topics_month}), 
+
+    Category.update_all("topics_year = (#{topics_year}),
+                         topics_month = (#{topics_month}),
                          topics_week = (#{topics_week})")
   end
 

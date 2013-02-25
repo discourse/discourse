@@ -29,7 +29,7 @@ describe Jobs::FeatureTopicUsers do
       topic.reload.featured_user_ids.include?(coding_horror.id).should be_true
     end
 
-    it "will not feature the second poster if we supply their post to be ignored" do      
+    it "will not feature the second poster if we supply their post to be ignored" do
       Jobs::FeatureTopicUsers.new.execute(topic_id: topic.id, except_post_id: second_post.id)
       topic.reload.featured_user_ids.include?(coding_horror.id).should be_false
     end

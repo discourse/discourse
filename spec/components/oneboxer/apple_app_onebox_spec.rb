@@ -9,11 +9,11 @@ describe Oneboxer::AppleAppOnebox do
     @o = Oneboxer::AppleAppOnebox.new("https://itunes.apple.com/us/app/minecraft-pocket-edition-lite/id479651754")
     FakeWeb.register_uri(:get, @o.translate_url, :response => fixture_file('oneboxer/apple.response'))
   end
-  
+
   it "generates the expected onebox for Apple app" do
     @o.onebox.should == expected_apple_app_result
   end
-  
+
 private
   def expected_apple_app_result
     <<EXPECTED

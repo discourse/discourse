@@ -6,7 +6,7 @@ class RateLimiter
 
   # We don't observe rate limits in test mode
   def self.disabled?
-    Rails.env.test? 
+    Rails.env.test?
   end
 
   def initialize(user, key, max, secs)
@@ -41,7 +41,7 @@ class RateLimiter
       # In case we go over, clamp it to the maximum
       $redis.decr(@key)
 
-      raise LimitExceeded.new($redis.ttl(@key)) 
+      raise LimitExceeded.new($redis.ttl(@key))
     end
   end
 

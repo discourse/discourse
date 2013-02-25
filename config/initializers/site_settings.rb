@@ -1,5 +1,3 @@
-
-
-RailsMultisite::ConnectionManagement.each_connection do 
+RailsMultisite::ConnectionManagement.each_connection do
   SiteSetting.refresh!
 end

@@ -20,7 +20,7 @@ describe Admin::SiteSettingsController do
       it 'returns JSON' do
         xhr :get, :index
         ::JSON.parse(response.body).should be_present
-      end    
+      end
     end
 
     context 'update' do

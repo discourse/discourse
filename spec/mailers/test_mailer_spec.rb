@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe TestMailer do
-  
+
   describe "send_test" do
     subject { TestMailer.send_test('marcheline@adventuretime.ooo') }
 

@@ -72,14 +72,14 @@
     input.data('tester_id', testerId);
     input.css('width', minWidth);
   };
-  
+
 	$.fn.addTag = function(value,options) {
 			options = jQuery.extend({focus:false,callback:true},options);
-			this.each(function() { 
+			this.each(function() {
 				var id = $(this).attr('id');
 
 				var tagslist = $(this).val().split(delimiter[id]);
-				if (tagslist[0] == '') { 
+				if (tagslist[0] == '') {
 					tagslist = new Array();
 				}
 
@@ -92,10 +92,10 @@
     				    $('#'+id+'_tag').addClass('not_valid');
     				}
 				} else {
-					var skipTag = false; 
+					var skipTag = false;
 				}
 				
-				if (value !='' && skipTag != true) { 
+				if (value !='' && skipTag != true) {
                     $('<span>').addClass('tag').append(
                         $('<span>').text(value).append('&nbsp;&nbsp;'),
                         $('<a>', {
@@ -135,17 +135,17 @@
 			return false;
 		};
 		
-	$.fn.removeTag = function(value) { 
+	$.fn.removeTag = function(value) {
 			value = unescape(value);
-			this.each(function() { 
+			this.each(function() {
 				var id = $(this).attr('id');
 	
 				var old = $(this).val().split(delimiter[id]);
 					
 				$('#'+id+'_tagsinput .tag').remove();
 				str = '';
-				for (i=0; i< old.length; i++) { 
-					if (old[i]!=value) { 
+				for (i=0; i< old.length; i++) {
+					if (old[i]!=value) {
 						str = str + delimiter[id] +old[i];
 					}
 				}
@@ -174,7 +174,7 @@
 		$.fn.tagsInput.importTags(this,str);
 	}
 		
-	$.fn.tagsInput = function(options) { 
+	$.fn.tagsInput = function(options) {
     var settings = jQuery.extend({
       interactive:true,
       defaultText:'add a tag',
@@ -191,8 +191,8 @@
       inputPadding: 6*2
     },options);
 
-		this.each(function() { 
-			if (settings.hide) { 
+		this.each(function() {
+			if (settings.hide) {
 				$(this).hide();				
 			}
 			var id = $(this).attr('id');
@@ -231,10 +231,10 @@
 			$(data.holder).css('min-height',settings.height);
 			$(data.holder).css('height','100%');
 	
-			if ($(data.real_input).val()!='') { 
+			if ($(data.real_input).val()!='') {
 				$.fn.tagsInput.importTags($(data.real_input),$(data.real_input).val());
 			}		
-			if (settings.interactive) { 
+			if (settings.interactive) {
 		    $(data.fake_input).resetAutosize(settings);
 		
 				$(data.holder).bind('click',data,function(event) {
@@ -244,8 +244,8 @@
 						
 				if (settings.autocomplete_url != undefined) {
 					autocomplete_options = {source: settings.autocomplete_url};
-					for (attrname in settings.autocomplete) { 
-						autocomplete_options[attrname] = settings.autocomplete[attrname]; 
+					for (attrname in settings.autocomplete) {
+						autocomplete_options[attrname] = settings.autocomplete[attrname];
 					}
 				
 					if (jQuery.Autocompleter !== undefined) {
@@ -267,9 +267,9 @@
 				} else {
 						// if a user tabs out of the field, create a new tag
 						// this is only available if autocomplete is not used.
-						$(data.fake_input).bind('blur',data,function(event) { 
+						$(data.fake_input).bind('blur',data,function(event) {
 							var d = $(this).attr('data-default');
-							if ($(event.data.fake_input).val()!='' && $(event.data.fake_input).val()!=d) { 
+							if ($(event.data.fake_input).val()!='' && $(event.data.fake_input).val()!=d) {
 								if( (event.data.minChars <= $(event.data.fake_input).val().length) && (!event.data.maxChars || (event.data.maxChars >= $(event.data.fake_input).val().length)) )
 									$(event.data.real_input).addTag($(event.data.fake_input).val(),{focus:true,unique:(settings.unique)});
 							} else {
@@ -290,7 +290,7 @@
 						return false;
 					} else if (event.data.autosize) {
 			            $(event.data.fake_input).doAutosize(settings);
-            
+
           			}
 				});
 				//Delete last tag on backspace
@@ -323,7 +323,7 @@
 	
 	};
 	
-	$.fn.tagsInput.updateTagsField = function(obj,tagslist) { 
+	$.fn.tagsInput.updateTagsField = function(obj,tagslist) {
 		var id = $(obj).attr('id');
 		$(obj).val(tagslist.join(delimiter[id]));
 	};
@@ -332,7 +332,7 @@
 		$(obj).val('');
 		var id = $(obj).attr('id');
 		var tags = val.split(delimiter[id]);
-		for (i=0; i<tags.length; i++) { 
+		for (i=0; i<tags.length; i++) {
 			$(obj).addTag(tags[i],{focus:false,callback:false});
 		}
 		if(tags_callbacks[id] && tags_callbacks[id]['onChange'])

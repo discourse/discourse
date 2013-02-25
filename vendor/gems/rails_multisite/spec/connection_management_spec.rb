@@ -24,7 +24,7 @@ describe RailsMultisite::ConnectionManagement do
     before do
       subject.config_filename = "spec/fixtures/two_dbs.yml"
       subject.load_settings!
-    end  
+    end
     its(:all_dbs) { should == ['default', 'second']}
 
     context 'second db' do

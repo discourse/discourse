@@ -5,16 +5,16 @@ class Archetype
 
   def initialize(id, options)
     @id = id
-    @options = options  
+    @options = options
   end
 
   def attributes
-    {'id' => @id, 
+    {'id' => @id,
      'options' => @options}
   end
 
   def self.default
-    'regular'  
+    'regular'
   end
 
   def self.poll

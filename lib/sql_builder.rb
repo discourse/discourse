@@ -22,7 +22,7 @@ class SqlBuilder
 
     @sections.each do |k,v|
       joined = nil
-      case k 
+      case k
       when :where, :where2
         joined = "WHERE " << v.join(" AND ")
       when :join
@@ -41,7 +41,7 @@ class SqlBuilder
 
       sql.sub!("/*#{k}*/", joined)
     end
-    
+
     if @klass
       @klass.find_by_sql(ActiveRecord::Base.send(:sanitize_sql_array, [sql, @args]))
     else
@@ -50,7 +50,7 @@ class SqlBuilder
   end
 end
 
-class ActiveRecord::Base 
+class ActiveRecord::Base
   def self.sql_builder(template)
     SqlBuilder.new(template, self)
   end
