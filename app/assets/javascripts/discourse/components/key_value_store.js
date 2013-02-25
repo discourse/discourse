@@ -4,25 +4,25 @@
   @class KeyValueStore
   @namespace Discourse
   @module Discourse
-**/ 
+**/
 Discourse.KeyValueStore = {
   initialized: false,
   context: "",
 
   init: function(ctx, messageBus) {
-    initialized = true;
-    context = ctx;
+    this.initialized = true;
+    this.context = ctx;
   },
 
   abandonLocal: function() {
     var i, k;
-    if (!(localStorage && initialized)) {
+    if (!(localStorage && this.initialized)) {
       return;
     }
     i = localStorage.length - 1;
     while (i >= 0) {
       k = localStorage.key(i);
-      if (k.substring(0, context.length) === context) {
+      if (k.substring(0, this.context.length) === this.context) {
         localStorage.removeItem(k);
       }
       i--;
@@ -31,21 +31,21 @@ Discourse.KeyValueStore = {
   },
 
   remove: function(key) {
-    return localStorage.removeItem(context + key);
+    return localStorage.removeItem(this.context + key);
   },
 
   set: function(opts) {
-    if (!(localStorage && initialized)) {
+    if (!(localStorage && this.initialized)) {
       return false;
     }
-    localStorage[context + opts.key] = opts.value;
+    localStorage[this.context + opts.key] = opts.value;
   },
 
   get: function(key) {
     if (!localStorage) {
       return null;
     }
-    return localStorage[context + key];
+    return localStorage[this.context + key];
   }
 }
 
