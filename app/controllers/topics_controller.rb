@@ -129,49 +129,14 @@ class TopicsController < ApplicationController
   end
 
   def timings
-    # TODO: all this should be optimised, tested better
-
-    last_seen_key = "user-last-seen:#{current_user.id}"
-    last_seen = $redis.get(last_seen_key)
-    if last_seen.present?
-      diff = (Time.now.to_f - last_seen.to_f).round
-      if diff > 0
-        User.update_all ["time_read = time_read + ?", diff], ["id = ? and time_read = ?", current_user.id, current_user.time_read]
-      end
-    end
-    $redis.set(last_seen_key, Time.now.to_f)
-
-    original_unread = current_user.unread_notifications_by_type
-
-    topic_id = params["topic_id"].to_i
-    highest_seen = params["highest_seen"].to_i
-    added_time = 0
-
-
-    if params[:timings].present?
-      params[:timings].each do |post_number_str, t|
-        post_number = post_number_str.to_i
-
-        if post_number >= 0
-          if (highest_seen || 0) >= post_number
-            Notification.mark_post_read(current_user, topic_id, post_number)
-          end
-
-          PostTiming.record_timing(topic_id: topic_id,
-                                   post_number: post_number,
-                                   user_id: current_user.id,
-                                   msecs: t.to_i)
-        end
-      end
-    end
-
-    TopicUser.update_last_read(current_user, topic_id, highest_seen, params[:topic_time].to_i)
-
-    current_user.reload
-
-    if current_user.unread_notifications_by_type != original_unread
-      current_user.publish_notifications_state
-    end
+    
+    PostTiming.process_timings(
+        current_user, 
+        params[:topic_id].to_i, 
+        params[:highest_seen].to_i, 
+        params[:topic_time].to_i, 
+        (params[:timings] || []).map{|post_number, t| [post_number.to_i, t.to_i]}
+    )
 
     render nothing: true
   end

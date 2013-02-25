@@ -26,9 +26,9 @@
         $dropdown.fadeOut('fast');
         $li.removeClass('active');
         $html.data('hide-dropdown', null);
-        return $html.off('click.d-dropdown touchstart.d-dropdown');
+        return $html.off('click.d-dropdown');
       };
-      $html.on('click.d-dropdown touchstart.d-dropdown', function(e) {
+      $html.on('click.d-dropdown', function(e) {
         if (jQuery(e.target).closest('.d-dropdown').length > 0) {
           return true;
         }
@@ -81,10 +81,10 @@
     },
     didInsertElement: function() {
       var _this = this;
-      this.$('a[data-dropdown]').on('click touchstart', function(e) {
+      this.$('a[data-dropdown]').on('click', function(e) {
         return _this.showDropdown(jQuery(e.currentTarget));
       });
-      this.$('a.unread-private-messages, a.unread-notifications, a[data-notifications]').on('click touchstart', function(e) {
+      this.$('a.unread-private-messages, a.unread-notifications, a[data-notifications]').on('click', function(e) {
         return _this.showNotifications(e);
       });
       jQuery(window).bind('scroll.discourse-dock', function() {

@@ -29,21 +29,21 @@ Discourse::Application.routes.draw do
         get 'list/:query' => 'users#index'
         put 'approve-bulk' => 'users#approve_bulk'
       end
-      put 'ban' => 'users#ban'
-      put 'delete_all_posts' => 'users#delete_all_posts'
-      put 'unban' => 'users#unban'
-      put 'revoke_admin' => 'users#revoke_admin'
-      put 'grant_admin' => 'users#grant_admin'
-      put 'revoke_moderation' => 'users#revoke_moderation'
-      put 'grant_moderation' => 'users#grant_moderation'
-      put 'approve' => 'users#approve'
-      post 'refresh_browsers' => 'users#refresh_browsers'
+      put 'ban'
+      put 'delete_all_posts'
+      put 'unban'
+      put 'revoke_admin'
+      put 'grant_admin'
+      put 'revoke_moderation'
+      put 'grant_moderation'
+      put 'approve'
+      post 'refresh_browsers'
     end
 
     resources :impersonate
     resources :email_logs do
       collection do
-        post 'test' => 'email_logs#test'
+        post 'test'
       end
     end
     get 'customize' => 'site_customizations#index'
@@ -126,7 +126,7 @@ Discourse::Application.routes.draw do
 
   resources :clicks do
     collection do
-      get 'track' => 'clicks#track'
+      get 'track'
     end
   end
 
@@ -134,8 +134,8 @@ Discourse::Application.routes.draw do
 
   resources :post_actions do
     collection do
-      get 'users' => 'post_actions#users'
-      post 'clear_flags' => 'post_actions#clear_flags'
+      get 'users'
+      post 'clear_flags'
     end
   end
   resources :user_actions
@@ -213,6 +213,6 @@ Discourse::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  root :to => 'list#index'
+  root to: 'list#index'
 
 end

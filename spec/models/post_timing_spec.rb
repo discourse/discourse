@@ -8,6 +8,28 @@ describe PostTiming do
   it { should validate_presence_of :post_number }
   it { should validate_presence_of :msecs }
 
+  describe 'process_timings' do 
+    
+    # integration test
+
+    it 'processes timings correctly' do 
+      post = Fabricate(:post)
+      user2 = Fabricate(:coding_horror)
+
+      PostAction.act(user2, post, PostActionType.Types[:like])
+      post.user.unread_notifications.should == 1
+      
+      post.user.unread_notifications_by_type.should == {Notification.Types[:liked] => 1}
+      
+      PostTiming.process_timings(post.user, post.topic_id, 1, 100, [[post.post_number, 100]])
+
+      post.user.reload
+      post.user.unread_notifications_by_type.should == {}
+      post.user.unread_notifications.should == 0
+      
+    end
+  end
+
   describe 'recording' do
     before do
       @post = Fabricate(:post)

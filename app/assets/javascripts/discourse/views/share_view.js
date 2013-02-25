@@ -31,13 +31,6 @@
         _this.get('controller').close();
         return true;
       });
-      jQuery('html').on('touchstart.outside-share-link', function(e) {
-        if (_this.$().has(e.target).length !== 0) {
-          return;
-        }
-        _this.get('controller').close();
-        return true;
-      });
       return jQuery('html').on('click.discoure-share-link', '[data-share-url]', function(e) {
         var $currentTarget, url;
         e.preventDefault();
@@ -56,7 +49,6 @@
     willDestroyElement: function() {
       jQuery('html').off('click.discoure-share-link');
       jQuery('html').off('click.outside-share-link');
-      return jQuery('html').off('touchstart.outside-share-link');
     }
   });
 
