@@ -145,6 +145,12 @@
         $html.addClass('discourse-touch');
         this.touch = true;
         this.hasTouch = true;
+
+        $LAB.script(assetPath('defer/fastclick'))
+            .wait(function(){
+                new FastClick(document.body);
+            });
+
       } else {
         $html.addClass('discourse-no-touch');
         this.touch = false;
