@@ -19,7 +19,7 @@ Discourse.ModalBodyView = Discourse.View.extend({
   // Pass the errors to our errors view
   displayErrors: function(errors, callback) {
     this.set('parentView.parentView.modalErrorsView.errors', errors);
-    typeof callback === "function" ? callback() : void 0;
+    if (typeof callback === "function") callback();
   },
 
   // Just use jQuery to show an alert. We don't need anythign fancier for now
