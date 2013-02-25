@@ -7,8 +7,8 @@
   {{view Discourse.TopicStatusView topicBinding="view.topic"}}
   <a class='topic-link' href='{{unbound view.topic.url}}'>{{{view.topic.fancy_title}}}</a>
 {{else}}
-  {{#if view.topic.missing}}
-    {{i18n topic.not_found.title}}
+  {{#if view.topic.errorLoading}}
+    {{topic.errorTitle}}
   {{else}}
     {{i18n topic.loading}}
   {{/if}}

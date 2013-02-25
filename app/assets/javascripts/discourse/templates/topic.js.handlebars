@@ -8,7 +8,7 @@
           {{#if view.showFavoriteButton}}
             <a {{bindAttr class=":star view.topic.starred:starred"}} {{action toggleStar target="controller"}} href='#' title="{{i18n favorite.help}}"></a>
           {{/if}}
-          {{#if view.editingTopic}}  
+          {{#if view.editingTopic}}
             <input id='edit-title' type='text' {{bindAttr value="view.topic.title"}}>
             {{view Discourse.ComboboxViewCategory valueAttribute="name" contentBinding="view.categories" valueBinding="view.topic.categoryName"}}
             <button class='btn btn-primary btn-small' {{action finishedEdit target="view"}}><i class='icon-ok'></i></button>
@@ -19,8 +19,8 @@
                 {{view Discourse.TopicStatusView topicBinding="view.topic"}}
                 <a href='{{unbound view.topic.url}}'>{{{unbound view.topic.fancy_title}}}</a>
               {{else}}
-                {{#if view.topic.missing}}
-                  {{i18n topic.not_found.title}}
+                {{#if view.topic.errorLoading}}
+                  {{view.topic.errorTitle}}
                 {{else}}
                   {{i18n topic.loading}}
                 {{/if}}
@@ -33,7 +33,7 @@
             </h1>
           {{/if}}
         </div>
-      </div> 
+      </div>
     </div>
     {{/if}}
 
@@ -102,7 +102,7 @@
           {{/if}}
 
 
-        </section>   
+        </section>
       </div>
 
     </div>

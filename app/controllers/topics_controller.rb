@@ -129,12 +129,12 @@ class TopicsController < ApplicationController
   end
 
   def timings
-    
+
     PostTiming.process_timings(
-        current_user, 
-        params[:topic_id].to_i, 
-        params[:highest_seen].to_i, 
-        params[:topic_time].to_i, 
+        current_user,
+        params[:topic_id].to_i,
+        params[:highest_seen].to_i,
+        params[:topic_time].to_i,
         (params[:timings] || []).map{|post_number, t| [post_number.to_i, t.to_i]}
     )
 
