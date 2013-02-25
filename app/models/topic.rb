@@ -8,10 +8,10 @@ class Topic < ActiveRecord::Base
   include ActionView::Helpers
   include RateLimiter::OnCreateRecord
 
-  MAX_SORT_ORDER = 2147483647
+  MAX_SORT_ORDER = 2**31 - 1
   FEATURED_USERS = 4
 
-  versioned :if => :new_version_required?
+  versioned if: :new_version_required?
   acts_as_paranoid
   after_recover :update_flagged_posts_count
   after_destroy :update_flagged_posts_count
@@ -22,7 +22,7 @@ class Topic < ActiveRecord::Base
 
   validate :title_quality
   validates_presence_of :title
-  validates :title, length: {in: SiteSetting.min_topic_title_length..SiteSetting.max_topic_title_length}
+  validates :title, length: { in: SiteSetting.min_topic_title_length..SiteSetting.max_topic_title_length }
 
   serialize :meta_data, ActiveRecord::Coders::Hstore
 
@@ -360,7 +360,6 @@ class Topic < ActiveRecord::Base
   def invite_by_email(invited_by, email)
     lower_email = email.downcase
 
-    #
     invite = Invite.with_deleted.where('invited_by_id = ? and email = ?', invited_by.id, lower_email).first
 
 
@@ -414,7 +413,7 @@ class Topic < ActiveRecord::Base
       topic_url = "#{Discourse.base_url}#{topic.relative_url}"
       topic_link = "[#{new_title}](#{topic_url})"
 
-      post = add_moderator_post(moved_by, I18n.t("move_posts.moderator_post", count: post_ids.size, topic_link: topic_link), post_number: first_post_number)
+      add_moderator_post(moved_by, I18n.t("move_posts.moderator_post", count: post_ids.size, topic_link: topic_link), post_number: first_post_number)
       Jobs.enqueue(:notify_moved_posts, post_ids: post_ids, moved_by_id: moved_by.id)
     end
 
