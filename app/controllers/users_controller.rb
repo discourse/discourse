@@ -177,6 +177,10 @@ class UsersController < ApplicationController
         if auth[:facebook].present? and FacebookUserInfo.find_by_facebook_user_id(auth[:facebook][:facebook_user_id]).nil?
           FacebookUserInfo.create!(auth[:facebook].merge(user_id: user.id))
         end
+
+        if auth[:github_user_id] && auth[:github_screen_name] && GithubUserInfo.find_by_github_user_id(auth[:github_user_id]).nil?
+          GithubUserInfo.create(:user_id => user.id, :screen_name => auth[:github_screen_name], :github_user_id => auth[:github_user_id])
+        end
       end
 
 

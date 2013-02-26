@@ -279,6 +279,9 @@ GEM
       rack
     omniauth-facebook (1.4.1)
       omniauth-oauth2 (~> 1.1.0)
+    omniauth-github (1.1.0)
+      omniauth (~> 1.0)
+      omniauth-oauth2 (~> 1.1)
     omniauth-oauth (1.0.1)
       oauth
       omniauth (~> 1.0)
@@ -489,6 +492,7 @@ DEPENDENCIES
   oj
   omniauth
   omniauth-facebook
+  omniauth-github
   omniauth-openid
   omniauth-twitter
   openid-redis-store

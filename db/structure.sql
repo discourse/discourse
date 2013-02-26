@@ -309,6 +309,39 @@ ALTER SEQUENCE facebook_user_infos_id_seq OWNED BY facebook_user_infos.id;
 
 
 --
+-- Name: github_user_infos; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE github_user_infos (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    screen_name character varying(255) NOT NULL,
+    github_user_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: github_user_infos_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE github_user_infos_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: github_user_infos_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE github_user_infos_id_seq OWNED BY github_user_infos.id;
+
+
+--
 -- Name: incoming_links; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1314,6 +1347,13 @@ ALTER TABLE ONLY facebook_user_infos ALTER COLUMN id SET DEFAULT nextval('facebo
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY github_user_infos ALTER COLUMN id SET DEFAULT nextval('github_user_infos_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY incoming_links ALTER COLUMN id SET DEFAULT nextval('incoming_links_id_seq'::regclass);
 
 
@@ -1558,6 +1598,14 @@ ALTER TABLE ONLY topic_links
 
 ALTER TABLE ONLY topics
     ADD CONSTRAINT forum_threads_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: github_user_infos_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY github_user_infos
+    ADD CONSTRAINT github_user_infos_pkey PRIMARY KEY (id);
 
 
 --
@@ -1886,6 +1934,20 @@ CREATE UNIQUE INDEX index_forum_thread_users_on_forum_thread_id_and_user_id ON t
 --
 
 CREATE INDEX index_forum_threads_on_bumped_at ON topics USING btree (bumped_at DESC);
+
+
+--
+-- Name: index_github_user_infos_on_github_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_github_user_infos_on_github_user_id ON github_user_infos USING btree (github_user_id);
+
+
+--
+-- Name: index_github_user_infos_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_github_user_infos_on_user_id ON github_user_infos USING btree (user_id);
 
 
 --
@@ -2540,3 +2602,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130213021450');
 INSERT INTO schema_migrations (version) VALUES ('20130213203300');
 
 INSERT INTO schema_migrations (version) VALUES ('20130221215017');
+
+INSERT INTO schema_migrations (version) VALUES ('20130226015336');
