@@ -4,7 +4,7 @@
   @method buildRoutes
   @for Discourse.AdminRoute
 **/
-Discourse.buildRoutes(function() {
+Discourse.Route.buildRoutes(function() {
   this.resource('admin', { path: '/admin' }, function() {
     this.route('dashboard', { path: '/' });
     this.route('site_settings', { path: '/site_settings' });

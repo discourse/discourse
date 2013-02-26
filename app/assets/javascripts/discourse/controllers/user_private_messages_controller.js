@@ -9,7 +9,7 @@
 Discourse.UserPrivateMessagesController = Discourse.ObjectController.extend({
 
   editPreferences: function() {
-    return Discourse.routeTo("/users/" + (this.get('content.username_lower')) + "/preferences");
+    return Discourse.URL.routeTo("/users/" + (this.get('content.username_lower')) + "/preferences");
   },
 
   composePrivateMessage: function() {

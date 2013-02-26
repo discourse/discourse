@@ -139,13 +139,10 @@ window.Discourse.SearchView = Discourse.View.extend({
   },
 
   select: function() {
-    var href;
-    if (this.get('loading')) {
-      return;
-    }
-    href = $('#search-dropdown li.selected a').prop('href');
+    if (this.get('loading')) return;
+    var href = $('#search-dropdown li.selected a').prop('href');
     if (href) {
-      Discourse.routeTo(href);
+      Discourse.URL.routeTo(href);
     }
     return false;
   }

@@ -84,7 +84,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
         postUrl += "/best_of";
       }
     }
-    Discourse.replaceState(postUrl);
+    Discourse.URL.replaceState(postUrl);
 
     // Show appropriate jump tools
     if (current === 1) {
@@ -441,10 +441,12 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
         this.docAt = title.offset().top;
       }
     }
+
+    var headerController = this.get('controller.controllers.header');
     if (this.docAt) {
-      this.set('controller.showExtraHeaderInfo', offset >= this.docAt || !firstLoaded);
+      headerController.set('showExtraInfo', offset >= this.docAt || !firstLoaded);
     } else {
-      this.set('controller.showExtraHeaderInfo', !firstLoaded);
+      headerController.set('showExtraInfo', !firstLoaded);
     }
 
     // there is a whole bunch of caching we could add here

@@ -42,7 +42,7 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
 
   showCategoryTopic: function() {
     $('#discourse-modal').modal('hide');
-    Discourse.routeTo(this.get('category.topic_url'));
+    Discourse.URL.routeTo(this.get('category.topic_url'));
     return false;
   },
 

@@ -36,8 +36,8 @@ Discourse.MoveSelectedView = Discourse.ModalBodyView.extend({
     Discourse.Topic.movePosts(this.get('topic.id'), this.get('topicName'), postIds).then(function(result) {
       if (result.success) {
         $('#discourse-modal').modal('hide');
-        return Em.run.next(function() {
-          return Discourse.routeTo(result.url);
+        Em.run.next(function() {
+          Discourse.URL.routeTo(result.url);
         });
       } else {
         _this.flash(Em.String.i18n('topic.move_selected.error'));

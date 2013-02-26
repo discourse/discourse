@@ -4,7 +4,7 @@
   @method buildRoutes
   @for Discourse.ApplicationRoute
 **/
-Discourse.buildRoutes(function() {
+Discourse.Route.buildRoutes(function() {
   var router = this;
 
   // Topic routes
