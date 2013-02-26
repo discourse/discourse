@@ -5,7 +5,7 @@ class CreatePosts < ActiveRecord::Migration
       t.integer :forum_thread_id, null: false
       t.integer :post_number, null: false
       t.text :content, null: false
-      t.text :formatted_content, null: false      
+      t.text :formatted_content, null: false
       t.timestamps
     end
 

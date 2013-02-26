@@ -8,25 +8,25 @@ describe PostTiming do
   it { should validate_presence_of :post_number }
   it { should validate_presence_of :msecs }
 
-  describe 'process_timings' do 
-    
+  describe 'process_timings' do
+
     # integration test
 
-    it 'processes timings correctly' do 
+    it 'processes timings correctly' do
       post = Fabricate(:post)
       user2 = Fabricate(:coding_horror)
 
       PostAction.act(user2, post, PostActionType.Types[:like])
       post.user.unread_notifications.should == 1
-      
+
       post.user.unread_notifications_by_type.should == {Notification.Types[:liked] => 1}
-      
+
       PostTiming.process_timings(post.user, post.topic_id, 1, 100, [[post.post_number, 100]])
 
       post.user.reload
       post.user.unread_notifications_by_type.should == {}
       post.user.unread_notifications.should == 0
-      
+
     end
   end
 
@@ -65,14 +65,14 @@ describe PostTiming do
       it 'sums the msecs together' do
         @timing.msecs.should == 2468
       end
-    end    
+    end
 
     describe 'avg times' do
 
       describe 'posts' do
         it 'has no avg_time by default' do
           @post.avg_time.should be_blank
-        end    
+        end
 
         it "doesn't change when we calculate the avg time for the post because there's no timings" do
           Post.calculate_avg_time
@@ -84,7 +84,7 @@ describe PostTiming do
       describe 'topics' do
         it 'has no avg_time by default' do
           @topic.avg_time.should be_blank
-        end    
+        end
 
         it "doesn't change when we calculate the avg time for the post because there's no timings" do
           Topic.calculate_avg_time

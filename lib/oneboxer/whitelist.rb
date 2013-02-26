@@ -76,12 +76,12 @@ module Oneboxer
        Entry.new(/\/\d{4}\/\d{2}\/\d{2}\//, false),   # wordpress
       ]
     end
-    
+
     def self.entry_for_url(url)
       entries.each {|e| return e if e.matches?(url) }
       nil
     end
-    
+
     private
 
       class Entry
@@ -90,11 +90,11 @@ module Oneboxer
           @pattern = pattern
           @oembed = oembed
         end
-      
+
         def allows_oembed?
           @oembed
         end
-      
+
         def matches?(url)
           url =~ @pattern
         end

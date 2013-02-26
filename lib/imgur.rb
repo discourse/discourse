@@ -15,7 +15,7 @@ module Imgur
     # Resize the image
     json['image']['width'], json['image']['height'] = ImageSizer.resize(json['image']['width'], json['image']['height'])
 
-    {url: json['links']['original'], 
+    {url: json['links']['original'],
      filesize: json['image']['size'],
      width: json['image']['width'],
      height: json['image']['height']}

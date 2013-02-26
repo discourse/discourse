@@ -10,13 +10,13 @@ describe RobotsTxtController do
       response.should render_template :index
     end
 
-    it "returns noindex when indexing is disallowed" do    
+    it "returns noindex when indexing is disallowed" do
       SiteSetting.stubs(:allow_index_in_robots_txt).returns(false)
       get :index
       response.should render_template :no_index
-    end    
-    
-    it "serves noindex when in private mode regardless of the configuration" do 
+    end
+
+    it "serves noindex when in private mode regardless of the configuration" do
       SiteSetting.stubs(:allow_index_in_robots_txt).returns(true)
       SiteSetting.stubs(:restrict_access).returns(true)
       get :index

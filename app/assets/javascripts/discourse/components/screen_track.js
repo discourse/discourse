@@ -155,5 +155,3 @@ Discourse.ScreenTrack = Ember.Object.extend({
   }
 
 });
-
-

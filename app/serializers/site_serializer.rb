@@ -1,6 +1,6 @@
 class SiteSerializer < ApplicationSerializer
 
-  attributes :default_archetype, 
+  attributes :default_archetype,
              :notification_types,
              :post_types
 
@@ -17,5 +17,5 @@ class SiteSerializer < ApplicationSerializer
   def post_types
     {regular: Post::REGULAR, moderator_action: Post::MODERATOR_ACTION}
   end
-  
+
 end

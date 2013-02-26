@@ -8,5 +8,3 @@
     @module Discourse
   **/
   window.Discourse.View = Ember.View.extend(Discourse.Presence, {});
-
-

@@ -56,7 +56,7 @@ window.MessageBus = (function() {
     callbacks: callbacks,
     clientId: clientId,
     stop: false,
-    
+
     start: function(opts) {
       var poll,
         _this = this;

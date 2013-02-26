@@ -2,7 +2,7 @@
 class Guardian
 
   attr_reader :user
-  
+
   def initialize(user=nil)
     @user = user
   end
@@ -19,10 +19,10 @@ class Guardian
   def can_see?(obj)
     return false if obj.blank?
 
-    see_method = :"can_see_#{obj.class.name.underscore}?" 
+    see_method = :"can_see_#{obj.class.name.underscore}?"
     return send(see_method, obj) if respond_to?(see_method)
 
-    return true 
+    return true
   end
 
   # Can the user edit the obj
@@ -30,7 +30,7 @@ class Guardian
     return false if obj.blank?
     return false if @user.blank?
 
-    edit_method = :"can_edit_#{obj.class.name.underscore}?" 
+    edit_method = :"can_edit_#{obj.class.name.underscore}?"
     return send(edit_method, obj) if respond_to?(edit_method)
 
     true
@@ -39,7 +39,7 @@ class Guardian
   # Can we delete the object
   def can_delete?(obj)
     return false if obj.blank?
-    return false if @user.blank?    
+    return false if @user.blank?
 
     delete_method = :"can_delete_#{obj.class.name.underscore}?"
     return send(delete_method, obj) if respond_to?(delete_method)
@@ -52,7 +52,7 @@ class Guardian
     return false if @user.blank?
     @user.has_trust_level?(:moderator)
   end
-  alias :can_move_posts? :can_moderate? 
+  alias :can_move_posts? :can_moderate?
   alias :can_see_flags? :can_moderate?
 
   # Can the user create a topic in the forum
@@ -70,12 +70,12 @@ class Guardian
       return false unless can_see?(parent)
       target << "_on_#{parent.class.name.underscore}"
     end
-    create_method = :"can_create_#{target}?" 
+    create_method = :"can_create_#{target}?"
 
     return send(create_method, parent) if respond_to?(create_method)
 
     true
-  end  
+  end
 
   # Can we impersonate this user?
   def can_impersonate?(target)
@@ -194,7 +194,7 @@ class Guardian
     return false unless is_admin?
     return false if user.created_at < 7.days.ago
 
-    true 
+    true
   end
 
   # Support for ensure_{blah}! methods.
@@ -203,7 +203,7 @@ class Guardian
       can_method = :"#{Regexp.last_match[1]}?"
 
       if respond_to?(can_method)
-        raise Discourse::InvalidAccess.new("#{can_method} failed") unless send(can_method, *args, &block) 
+        raise Discourse::InvalidAccess.new("#{can_method} failed") unless send(can_method, *args, &block)
         return
       end
     end
@@ -254,7 +254,7 @@ class Guardian
   def can_delete_post?(post)
     # Can't delete the first post
     return false if post.post_number == 1
-    
+
     # You can delete your own posts
     return !post.user_deleted? if post.user == @user
 
@@ -263,23 +263,23 @@ class Guardian
 
   # Recovery Method
   def can_recover_post?(post)
-    return false if @user.blank?    
+    return false if @user.blank?
     @user.has_trust_level?(:moderator)
   end
 
   def can_delete_category?(category)
     return false unless @user.has_trust_level?(:moderator)
-    return category.topic_count == 0       
+    return category.topic_count == 0
   end
 
   def can_delete_topic?(topic)
     return false unless @user.has_trust_level?(:moderator)
-    return false if Category.exists?(topic_id: topic.id)    
+    return false if Category.exists?(topic_id: topic.id)
     true
   end
 
   def can_delete_post_action?(post_action)
-    
+
     # You can only undo your own actions
     return false unless post_action.user == @user
 
@@ -291,12 +291,12 @@ class Guardian
     return false unless User === target_user
     return false if @user.blank?
 
-    # Can't send message to yourself 
+    # Can't send message to yourself
     return false if @user.id == target_user.id
 
     # Have to be a basic level at least
     return false unless @user.has_trust_level?(:basic)
-    
+
     SiteSetting.enable_private_messages
   end
 
@@ -321,10 +321,10 @@ class Guardian
     post_can_act?(post,:vote, opts)
   end
 
-  # Can the user act on the post in a particular way. 
+  # Can the user act on the post in a particular way.
   #  taken_actions = the list of actions the user has already taken
   def post_can_act?(post, action_key, opts={})
-    return false if @user.blank?        
+    return false if @user.blank?
     return false if post.blank?
     return false if post.topic.archived?
 
@@ -335,16 +335,16 @@ class Guardian
       return false unless @user.has_trust_level?(:basic)
 
       if taken
-        return false unless (taken & PostActionType.FlagTypes).empty? 
+        return false unless (taken & PostActionType.FlagTypes).empty?
       end
-    else 
-      return false if taken && taken.include?(PostActionType.Types[action_key]) 
+    else
+      return false if taken && taken.include?(PostActionType.Types[action_key])
     end
 
     case action_key
     when :like
-      return false if post.user == @user          
-    when :vote then 
+      return false if post.user == @user
+    when :vote then
       return false if opts[:voted_in_topic] and post.topic.has_meta_data_boolean?(:single_vote)
     end
 

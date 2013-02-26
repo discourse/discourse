@@ -6,7 +6,7 @@ module Oneboxer
     matcher /^https?:\/\/(?:www\.)?github\.com\/[^\/]+\/[^\/]+\/blob\/.*/
     favicon 'github.png'
 
-    def translate_url  
+    def translate_url
       m = @url.match(/github\.com\/(?<user>[^\/]+)\/(?<repo>[^\/]+)\/blob\/(?<sha1>[^\/]+)\/(?<file>[^#]+)(#(L(?<from>[^-]*)(-L(?<to>.*))?))?/mi)
       if m
         @from = (m[:from] || -1).to_i
@@ -19,7 +19,7 @@ module Oneboxer
 
     def parse(data)
 
-      if @from > 0 
+      if @from > 0
         if @to < 0
           @from = @from - 10
           @to = @from + 20
@@ -42,7 +42,7 @@ module Oneboxer
         truncated = true
       end
 
-      {content: data, truncated: truncated}      
+      {content: data, truncated: truncated}
     end
 
   end

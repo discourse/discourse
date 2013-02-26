@@ -49,8 +49,8 @@ describe PostCreator do
       it 'passes the image sizes through' do
         Post.any_instance.expects(:image_sizes=).with(image_sizes)
         creator_with_image_sizes.create
-      end      
-    end  
+      end
+    end
 
   end
 
@@ -74,7 +74,7 @@ describe PostCreator do
 
       it "passes through the reply_to_post_number" do
         creator.create.reply_to_post_number.should == 4
-      end      
+      end
     end
 
   end
@@ -89,11 +89,11 @@ describe PostCreator do
                                target_usernames: [target_user1.username, target_user2.username].join(','))
     end
 
-    it 'has the right archetype' do 
+    it 'has the right archetype' do
       post.topic.archetype.should == Archetype.private_message
     end
 
-    it 'has the right count (me and 2 other users)' do 
+    it 'has the right count (me and 2 other users)' do
       post.topic.topic_allowed_users.count.should == 3
     end
   end

@@ -1,11 +1,11 @@
 require "spec_helper"
 
 describe "Stores incoming links" do
-  before do 
+  before do
     TopicUser.stubs(:track_visit!)
   end
 
-  let :topic do 
+  let :topic do
     Fabricate(:post).topic
   end
 

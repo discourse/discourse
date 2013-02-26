@@ -69,7 +69,7 @@ describe EmailController do
 
       it 'sets not found' do
         assigns(:not_found).should be_true
-      end      
+      end
     end
 
     context 'when logged in as the keyed user' do
@@ -86,7 +86,7 @@ describe EmailController do
 
       it "doesn't set not found" do
         assigns(:not_found).should be_blank
-      end      
+      end
     end
 
     it "sets not_found when the key didn't match anything" do

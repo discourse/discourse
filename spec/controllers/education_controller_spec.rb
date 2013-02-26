@@ -21,7 +21,7 @@ describe EducationController do
     end
 
     context 'with a valid id' do
-      
+
       let(:markdown_content) { "Education *markdown* content" }
       let(:html_content) {"HTML Content"}
 

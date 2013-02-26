@@ -9,21 +9,21 @@ end
 
 Fabricator(:coding_horror, from: :user) do
   name 'Coding Horror'
-  username 'CodingHorror'  
+  username 'CodingHorror'
   email 'jeff@somewhere.com'
   password 'mymoreawesomepassword'
 end
 
 Fabricator(:evil_trout, from: :user) do
   name 'Evil Trout'
-  username 'eviltrout'  
+  username 'eviltrout'
   email 'eviltrout@somewhere.com'
   password 'imafish'
 end
 
 Fabricator(:walter_white, from: :user) do
   name 'Walter White'
-  username 'heisenberg'  
+  username 'heisenberg'
   email 'wwhite@bluemeth.com'
   password 'letscook'
 end

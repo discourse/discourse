@@ -17,11 +17,11 @@ describe Slug do
     Slug.for('evil#trout').should == 'evil-trout'
   end
 
-  it 'handles a.b.c properly' do 
+  it 'handles a.b.c properly' do
     Slug.for("a.b.c").should == "a-b-c"
   end
 
-  it 'handles double dots right' do 
+  it 'handles double dots right' do
     Slug.for("a....b.....c").should == "a-b-c"
   end
 

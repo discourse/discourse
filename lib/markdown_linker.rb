@@ -9,9 +9,9 @@ class MarkdownLinker
   end
 
   def create(title, url)
-    @markdown_links[@index] = "#{@base_url}#{url}"    
+    @markdown_links[@index] = "#{@base_url}#{url}"
     result = "[#{title}][#{@index}]"
-    @index += 1    
+    @index += 1
     result
   end
 
@@ -23,5 +23,5 @@ class MarkdownLinker
     @rendered = @index
     result
   end
-  
+
 end

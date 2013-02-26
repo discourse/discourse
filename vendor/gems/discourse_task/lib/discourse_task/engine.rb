@@ -7,7 +7,7 @@ module DiscourseTask
 
     initializer "discourse_task.configure_rails_initialization" do |app|
 
-      app.config.after_initialize do 
+      app.config.after_initialize do
         DiscoursePluginRegistry.setup(DiscourseTask::Plugin)
       end
 

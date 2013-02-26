@@ -3,8 +3,8 @@ class SilenceLogger < Rails::Rack::Logger
     @app = app
     @opts = opts
     @opts[:silenced] ||= []
-    
-    # Rails introduces something called taggers in the Logger, needs to be initialized 
+
+    # Rails introduces something called taggers in the Logger, needs to be initialized
     super(app)
   end
 

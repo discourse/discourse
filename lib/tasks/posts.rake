@@ -1,5 +1,5 @@
 desc "walk all posts updating cooked with latest markdown"
-task "posts:rebake" => :environment do 
+task "posts:rebake" => :environment do
   RailsMultisite::ConnectionManagement.each_connection do |db|
     puts "Re baking post markdown for #{db} , changes are denoted with # , no change with ."
     i = 0

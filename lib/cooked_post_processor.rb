@@ -19,23 +19,23 @@ class CookedPostProcessor
   end
 
   # Bake onebox content into the post
-  def post_process_oneboxes    
+  def post_process_oneboxes
     args = {post_id: @post.id}
     args[:invalidate_oneboxes] = true if @opts[:invalidate_oneboxes]
 
     Oneboxer.each_onebox_link(@doc) do |url, element|
       onebox = Oneboxer.onebox(url, args)
       if onebox
-        element.swap onebox 
+        element.swap onebox
         @dirty = true
       end
-    end    
+    end
   end
 
-  # First let's consider the images       
-  def post_process_images    
+  # First let's consider the images
+  def post_process_images
     images = @doc.search("img")
-    return unless images.present? 
+    return unless images.present?
 
     # Extract the first image from the first post and use it as the 'topic image'
     if @post.post_number == 1
@@ -49,8 +49,8 @@ class CookedPostProcessor
 
       if src.present? && (img['width'].blank? || img['height'].blank?)
 
-        w,h = 
-          get_size_from_image_sizes(src, @opts[:image_sizes]) || 
+        w,h =
+          get_size_from_image_sizes(src, @opts[:image_sizes]) ||
           image_dimensions(src)
 
         if w && h
@@ -59,13 +59,13 @@ class CookedPostProcessor
           @dirty = true
         end
       end
-      
-      if src.present? 
+
+      if src.present?
         if src != img['src']
           img['src'] = src
           @dirty = true
         end
-        convert_to_link!(img) 
+        convert_to_link!(img)
         img.set_attribute('src', optimize_image(src))
       end
 
@@ -75,7 +75,7 @@ class CookedPostProcessor
   def optimize_image(src)
     # uri = get_image_uri(src)
     # uri.open(read_timeout: 20) do |f|
-    #    
+    #
     # end
 
     src
@@ -99,7 +99,7 @@ class CookedPostProcessor
       parent = parent.parent
     end
 
-    # not a hyperlink so we can apply 
+    # not a hyperlink so we can apply
     a = Nokogiri::XML::Node.new "a", @doc
     img.add_next_sibling(a)
     a["href"] = src
@@ -143,7 +143,7 @@ class CookedPostProcessor
 
   # Retrieve the image dimensions for a url
   def image_dimensions(url)
-    uri = get_image_uri(url)     
+    uri = get_image_uri(url)
     return nil unless uri
     w, h = get_size(url)
     ImageSizer.resize(w, h) if w && h

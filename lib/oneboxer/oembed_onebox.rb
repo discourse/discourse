@@ -10,7 +10,7 @@ module Oneboxer
     def oembed_endpoint
       @url
     end
-    
+
     def template
       template_path('oembed_onebox')
     end

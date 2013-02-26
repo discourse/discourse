@@ -84,7 +84,7 @@ when 'deb'
   if(pkgs_avail)
     path_name = pkgs_avail.find_all{ |path|
       ver = node[:omnibus_updater][:version] || '.'
-      path.include?('.deb') && path.include?(platform_name) && 
+      path.include?('.deb') && path.include?(platform_name) &&
       path.include?(platform_version) && path.include?(node.kernel.machine) &&
       path.include?(ver)
     }.sort.last
@@ -104,7 +104,7 @@ when 'rpm'
   if(pkgs_avail)
     path_name = pkgs_avail.find_all{ |path|
       ver = node[:omnibus_updater][:version] || '.'
-      path.include?('.rpm') && path.include?(platform_name) && 
+      path.include?('.rpm') && path.include?(platform_name) &&
       path.include?(platform_version) && path.include?(node.kernel.machine) &&
       path.include?(ver)
     }.sort.last

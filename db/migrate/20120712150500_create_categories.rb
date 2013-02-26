@@ -8,7 +8,7 @@ class CreateCategories < ActiveRecord::Migration
       t.integer :top2_forum_thread_id, null: true
       t.integer :top1_user_id, null: true
       t.integer :top2_user_id, null: true
-      t.integer :forum_thread_count, null: false, default: 0 
+      t.integer :forum_thread_count, null: false, default: 0
       t.timestamps
     end
 
@@ -22,7 +22,7 @@ class CreateCategories < ActiveRecord::Migration
   end
 
   def down
-    drop_table :categories    
+    drop_table :categories
   end
 
 end

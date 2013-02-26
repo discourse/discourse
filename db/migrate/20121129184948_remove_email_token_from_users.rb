@@ -4,7 +4,7 @@ class RemoveEmailTokenFromUsers < ActiveRecord::Migration
               SELECT id, email, email_token, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
               FROM users WHERE email_token IS NOT NULL"
 
-    remove_column :users, :email_token          
+    remove_column :users, :email_token
   end
 
   def down

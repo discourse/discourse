@@ -18,7 +18,7 @@ class TopicUser < ActiveRecord::Base
   end
 
   def self.auto_track(user_id, topic_id, reason)
-    if TopicUser.where(user_id: user_id, topic_id: topic_id, notifications_reason_id: nil).exists? 
+    if TopicUser.where(user_id: user_id, topic_id: topic_id, notifications_reason_id: nil).exists?
       self.change(user_id, topic_id,
           notification_level: NotificationLevel::TRACKING,
           notifications_reason_id: reason

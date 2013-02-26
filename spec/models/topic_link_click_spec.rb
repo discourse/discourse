@@ -2,7 +2,7 @@ require 'discourse'
 require 'spec_helper'
 
 describe TopicLinkClick do
-  
+
   it { should belong_to :topic_link }
   it { should belong_to :user }
 
@@ -18,11 +18,11 @@ describe TopicLinkClick do
 
   context 'topic_links' do
     before do
-      @topic = Fabricate(:topic)   
+      @topic = Fabricate(:topic)
       @post = Fabricate(:post_with_external_links, user: @topic.user, topic: @topic)
-      TopicLink.extract_from(@post)     
+      TopicLink.extract_from(@post)
       @topic_link = @topic.topic_links.first
-    end    
+    end
 
     it 'has 0 clicks at first' do
       @topic_link.clicks.should == 0
@@ -49,7 +49,7 @@ describe TopicLinkClick do
       context 'counts for' do
 
         before do
-          @counts_for = TopicLinkClick.counts_for(@topic, [@post])          
+          @counts_for = TopicLinkClick.counts_for(@topic, [@post])
         end
 
         it 'has a counts_for result' do

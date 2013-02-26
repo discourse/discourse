@@ -24,7 +24,7 @@ If you're familiar with how Rails works and are comfortable setting up your own 
 
 ## Vision
 
-Discourse is a **Civilized Discourse Construction Kit**, an 100% open-source discussion platform that is free for everyone to use and contribute to -- forever. 
+Discourse is a **Civilized Discourse Construction Kit**, an 100% open-source discussion platform that is free for everyone to use and contribute to -- forever.
 
 Key Discourse mission goals:
 
@@ -44,7 +44,7 @@ This vision translates to the following functional commitments:
   - Internet Explorer 9.0, 10.0+
   - Firefox 16+
   - Google Chrome 23+
-  - Safari 5+   
+  - Safari 5+
 2. Support the latest generation of tablets, 7" or larger
   - iPad 2+
   - Android 4.1+

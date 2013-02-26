@@ -11,11 +11,11 @@ describe PostAction do
   let(:post) { Fabricate(:post) }
   let(:bookmark) { PostAction.new(user_id: post.user_id, post_action_type_id: PostActionType.Types[:bookmark] , post_id: post.id) }
 
-  describe "flag counts" do 
+  describe "flag counts" do
     before do
       PostAction.update_flagged_posts_count
-    end   
-    it "starts of with 0 flag counts" do 
+    end
+    it "starts of with 0 flag counts" do
       PostAction.flagged_posts_count.should == 0
     end
 
@@ -27,13 +27,13 @@ describe PostAction do
       PostAction.flagged_posts_count.should == 0
     end
 
-    it "should reset counts when a topic is deleted" do 
+    it "should reset counts when a topic is deleted" do
       PostAction.act(codinghorror, post, PostActionType.Types[:off_topic])
       post.topic.destroy
       PostAction.flagged_posts_count.should == 0
     end
-    
-    it "should reset counts when a post is deleted" do 
+
+    it "should reset counts when a post is deleted" do
       post2 = Fabricate(:post, topic_id: post.topic_id)
       PostAction.act(codinghorror, post2, PostActionType.Types[:off_topic])
       post2.destroy
@@ -50,16 +50,16 @@ describe PostAction do
     lambda { bookmark.save; post.topic.reload }.should change(post.topic, :bookmark_count).by(1)
   end
 
-  
-  describe 'when a user likes something' do 
-    it 'should increase the post counts when a user likes' do 
+
+  describe 'when a user likes something' do
+    it 'should increase the post counts when a user likes' do
       lambda {
         PostAction.act(codinghorror, post, PostActionType.Types[:like])
         post.reload
       }.should change(post, :like_count).by(1)
     end
-    
-    it 'should increase the forum topic like count when a user likes' do 
+
+    it 'should increase the forum topic like count when a user likes' do
       lambda {
         PostAction.act(codinghorror, post, PostActionType.Types[:like])
         post.topic.reload
@@ -69,15 +69,15 @@ describe PostAction do
   end
 
 
-  describe 'when a user votes for something' do 
-    it 'should increase the vote counts when a user likes' do 
+  describe 'when a user votes for something' do
+    it 'should increase the vote counts when a user likes' do
       lambda {
         PostAction.act(codinghorror, post, PostActionType.Types[:vote])
         post.reload
       }.should change(post, :vote_count).by(1)
     end
-    
-    it 'should increase the forum topic vote count when a user votes' do 
+
+    it 'should increase the forum topic vote count when a user votes' do
       lambda {
         PostAction.act(codinghorror, post, PostActionType.Types[:vote])
         post.topic.reload
@@ -97,13 +97,13 @@ describe PostAction do
     end
 
     it 'reduces the bookmark count of the post' do
-      lambda { 
+      lambda {
         post.reload
       }.should change(post, :bookmark_count).by(-1)
     end
 
     it 'reduces the bookmark count of the forum topic' do
-      lambda { 
+      lambda {
         @topic.reload
       }.should change(post.topic, :bookmark_count).by(-1)
     end
@@ -118,7 +118,7 @@ describe PostAction do
       lambda { PostAction.act(u1, post, PostActionType.Types[:off_topic]) }.should raise_error(PostAction::AlreadyFlagged)
     end
 
-    it 'should update counts when you clear flags' do 
+    it 'should update counts when you clear flags' do
       post = Fabricate(:post)
       u1 = Fabricate(:evil_trout)
       PostAction.act(u1, post, PostActionType.Types[:spam])
@@ -132,7 +132,7 @@ describe PostAction do
       post.spam_count.should == 0
     end
 
-    it 'should follow the rules for automatic hiding workflow' do 
+    it 'should follow the rules for automatic hiding workflow' do
 
       post = Fabricate(:post)
       u1 = Fabricate(:evil_trout)
@@ -141,7 +141,7 @@ describe PostAction do
       # we need an admin for the messages
       admin = Fabricate(:admin)
 
-      SiteSetting.flags_required_to_hide_post = 2 
+      SiteSetting.flags_required_to_hide_post = 2
 
       PostAction.act(u1, post, PostActionType.Types[:spam])
       PostAction.act(u2, post, PostActionType.Types[:spam])
@@ -149,7 +149,7 @@ describe PostAction do
       post.reload
 
       post.hidden.should.should be_true
-      post.hidden_reason_id.should == Post::HiddenReason::FLAG_THRESHOLD_REACHED   
+      post.hidden_reason_id.should == Post::HiddenReason::FLAG_THRESHOLD_REACHED
       post.topic.visible.should be_false
 
       post.revise(post.user, post.raw + " ha I edited it ")
@@ -165,14 +165,14 @@ describe PostAction do
       post.reload
 
       post.hidden.should be_true
-      post.hidden_reason_id.should == Post::HiddenReason::FLAG_THRESHOLD_REACHED_AGAIN   
+      post.hidden_reason_id.should == Post::HiddenReason::FLAG_THRESHOLD_REACHED_AGAIN
 
       post.revise(post.user, post.raw + " ha I edited it again ")
-      
+
       post.reload
 
       post.hidden.should be_true
-      post.hidden_reason_id.should == Post::HiddenReason::FLAG_THRESHOLD_REACHED_AGAIN   
+      post.hidden_reason_id.should == Post::HiddenReason::FLAG_THRESHOLD_REACHED_AGAIN
     end
   end
 

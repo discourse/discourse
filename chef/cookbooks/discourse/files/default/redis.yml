@@ -8,7 +8,7 @@ development:
   <<: *defaults
 
 test:
-  <<: *defaults 
+  <<: *defaults
   db: 1
 
 staging:

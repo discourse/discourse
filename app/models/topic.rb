@@ -70,7 +70,7 @@ class Topic < ActiveRecord::Base
   before_validation do
     if self.title.present?
       self.title = sanitize(self.title)
-      self.title.strip! 
+      self.title.strip!
     end
   end
 
@@ -119,7 +119,7 @@ class Topic < ActiveRecord::Base
     errors.add(:title, I18n.t(:has_already_been_used)) if finder.exists?
   end
 
-  def fancy_title    
+  def fancy_title
     return title unless SiteSetting.title_fancy_entities?
 
     # We don't always have to require this, if fancy is disabled
@@ -132,7 +132,7 @@ class Topic < ActiveRecord::Base
     # We don't care about quality on private messages
     return if private_message?
 
-    sentinel = TextSentinel.title_sentinel(title)    
+    sentinel = TextSentinel.title_sentinel(title)
     if sentinel.valid?
       # It's possible the sentinel has cleaned up the title a bit
       self.title = sentinel.text
@@ -179,11 +179,11 @@ class Topic < ActiveRecord::Base
   def self.visible
     where(visible: true)
   end
-  
+
   def self.created_since(time_ago)
     where("created_at > ?", time_ago)
   end
-  
+
   def private_message?
     self.archetype == Archetype.private_message
   end

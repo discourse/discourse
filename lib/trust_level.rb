@@ -18,7 +18,7 @@ class TrustLevel
   end
 
   def initialize(name_key, id)
-    @name = I18n.t("trust_levels.#{name_key}.title")    
+    @name = I18n.t("trust_levels.#{name_key}.title")
     @id = id
   end
 

@@ -46,7 +46,7 @@ class User < ActiveRecord::Base
   attr_accessor :notification_channel_position
 
   module NewTopicDuration
-    ALWAYS = -1 
+    ALWAYS = -1
     LAST_VISIT = -2
   end
 
@@ -57,7 +57,7 @@ class User < ActiveRecord::Base
   def self.suggest_username(name)
 
     return nil unless name.present?
-    
+
     # If it's an email
     if name =~ /([^@]+)@([^\.]+)/
       name = Regexp.last_match[1]
@@ -433,20 +433,20 @@ class User < ActiveRecord::Base
   end
 
   def treat_as_new_topic_start_date
-    duration = new_topic_duration_minutes || SiteSetting.new_topic_duration_minutes 
-    case duration 
+    duration = new_topic_duration_minutes || SiteSetting.new_topic_duration_minutes
+    case duration
     when User::NewTopicDuration::ALWAYS
       created_at
     when User::NewTopicDuration::LAST_VISIT
       previous_visit_at || created_at
     else
       duration.minutes.ago
-    end 
+    end
   end
 
   MAX_TIME_READ_DIFF = 100
   # attempt to add total read time to user based on previous time this was called
-  def update_time_read! 
+  def update_time_read!
     last_seen_key = "user-last-seen:#{id}"
     last_seen = $redis.get(last_seen_key)
     if last_seen.present?

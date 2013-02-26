@@ -2,7 +2,7 @@
 
   <%if flash[:error]%>
     <div class='alert alert-error'>
-      <%=flash[:error]%> 
+      <%=flash[:error]%>
     </div>
   <%else%>
     <h2><%= t 'activation.welcome_to', site_name: SiteSetting.title %></h2>
@@ -13,7 +13,7 @@
       <%= raw t('activation.please_continue', link: link_to(SiteSetting.title, root_path)) %></a>.
     <% end %>
     </p>
-    
+
   <%end%>
 
 </div>

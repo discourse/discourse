@@ -20,16 +20,16 @@ describe Admin::SiteCustomizationsController do
       it 'returns JSON' do
         xhr :get, :index
         ::JSON.parse(response.body).should be_present
-      end    
+      end
     end
 
     context ' .create' do
-      it 'returns success' do 
+      it 'returns success' do
         xhr :post, :create, site_customization: {name: 'my test name'}
         response.should be_success
       end
-      
-      it 'returns json' do 
+
+      it 'returns json' do
         xhr :post, :create, site_customization: {name: 'my test name'}
         ::JSON.parse(response.body).should be_present
       end

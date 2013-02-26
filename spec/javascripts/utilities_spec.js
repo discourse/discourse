@@ -42,7 +42,7 @@
             return "" + name;
           }
         });
-        return expect(cooked).toBe("<p>1</p><aside class='quote' data-post=\"1\" >\n  <div class='title'>\n    <div class='quote-controls'></div>\n" + 
+        return expect(cooked).toBe("<p>1</p><aside class='quote' data-post=\"1\" >\n  <div class='title'>\n    <div class='quote-controls'></div>\n" +
                                    "  bob\n  bob\n  said:\n  </div>\n  <blockquote>my quote</blockquote>\n</aside>\n<p>2</p>");
       });
       it("includes no avatar if none is found", function() {

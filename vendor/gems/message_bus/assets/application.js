@@ -44,7 +44,7 @@ App.IndexModel = Ember.Object.extend({
       processes = processes.sort(function(a,b){
         return a.get('uniqueId') < b.get('uniqueId') ? -1 : 1;
       });
-      // somewhat odd ... 
+      // somewhat odd ...
       _this.set('processes', null);
       _this.set('processes', processes);
     });
@@ -55,7 +55,7 @@ App.IndexModel = Ember.Object.extend({
   discover: function(){
     var _this = this;
     this.set('processes', Em.A());
-     
+
     this.ensureSubscribed();
 
     this.set("discovering", true);

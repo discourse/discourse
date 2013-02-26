@@ -40,7 +40,7 @@ describe Invite do
     context 'to a topic' do
       let!(:topic) { Fabricate(:topic) }
       let(:inviter) { topic.user }
-      
+
       context 'email' do
         it 'enqueues a job to email the invite' do
           Jobs.expects(:enqueue).with(:invite_email, has_key(:invite_id))
@@ -54,7 +54,7 @@ describe Invite do
           invite.destroy
           invite = topic.invite_by_email(inviter, 'iceking@adventuretime.ooo')
           invite.should be_present
-        end        
+        end
       end
 
       context 'after created' do
@@ -85,7 +85,7 @@ describe Invite do
 
           it 'has a different key' do
             new_invite.invite_key.should_not == @invite.invite_key
-          end   
+          end
 
           it 'has the topic relationship' do
             new_invite.topics.should == [topic]
@@ -120,7 +120,7 @@ describe Invite do
           it 'has references to both topics' do
             @invite.topics.should =~ [topic, another_topic]
           end
-        end        
+        end
       end
     end
   end
@@ -168,7 +168,7 @@ describe Invite do
     end
 
     context 'simple invite' do
-      
+
       let!(:user) { invite.redeem }
 
       it 'returns a user record' do
@@ -207,7 +207,7 @@ describe Invite do
         context 'again' do
           it 'will not redeem twice' do
             invite.redeem.should == user
-          end        
+          end
 
           it "doesn't want us to send a welcome message" do
             invite.redeem.send_welcome_message.should be_false
@@ -276,11 +276,11 @@ describe Invite do
           it 'marks the second invite as redeemed' do
             another_invite.reload
             another_invite.should be_redeemed
-          end          
+          end
 
         end
       end
-    end    
+    end
   end
 
 end

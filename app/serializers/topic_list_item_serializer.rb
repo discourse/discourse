@@ -1,15 +1,15 @@
 class TopicListItemSerializer < BasicTopicSerializer
 
-  attributes :views, 
-             :like_count, 
-             :visible, 
-             :pinned, 
-             :closed, 
-             :archived, 
-             :last_post_age, 
-             :starred, 
-             :has_best_of, 
-             :archetype, 
+  attributes :views,
+             :like_count,
+             :visible,
+             :pinned,
+             :closed,
+             :archived,
+             :last_post_age,
+             :starred,
+             :has_best_of,
+             :archetype,
              :slug
 
   has_one :category

@@ -2,7 +2,7 @@
 module MultisiteI18n
 
   class << self
-    
+
     # It would be nice if there was an easier way to detect if a key is missing.
     def translation_or_nil(key, opts)
       missing_text = "missing multisite translation"
@@ -17,12 +17,12 @@ module MultisiteI18n
       if translation.blank?
         return I18n.t(key, opts)
       else
-        return translation  
+        return translation
       end
     end
 
     def t(*args)
-      MultisiteI18n.site_translate(RailsMultisite::ConnectionManagement.current_db, *args)    
+      MultisiteI18n.site_translate(RailsMultisite::ConnectionManagement.current_db, *args)
     end
 
     alias :translate :t

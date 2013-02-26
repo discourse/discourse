@@ -7,7 +7,7 @@ module DiscoursePoll
 
     initializer "discourse_poll.configure_rails_initialization" do |app|
 
-      app.config.after_initialize do 
+      app.config.after_initialize do
         DiscoursePluginRegistry.setup(DiscoursePoll::Plugin)
       end
 

@@ -118,28 +118,28 @@ describe SessionController do
     end
 
     context 'for a non existant username' do
-      it "doesn't generate a new token for a made up username" do      
+      it "doesn't generate a new token for a made up username" do
         lambda { xhr :post, :forgot_password, username: 'made_up'}.should_not change(EmailToken, :count)
       end
 
-      it "doesn't enqueue an email" do      
+      it "doesn't enqueue an email" do
         Jobs.expects(:enqueue).with(:user_mail, anything).never
         xhr :post, :forgot_password, username: 'made_up'
-      end      
-    end   
+      end
+    end
 
     context 'for an existing username' do
       let(:user) { Fabricate(:user) }
 
-      it "generates a new token for a made up username" do      
+      it "generates a new token for a made up username" do
         lambda { xhr :post, :forgot_password, username: user.username}.should change(EmailToken, :count)
       end
 
-      it "enqueues an email" do      
+      it "enqueues an email" do
         Jobs.expects(:enqueue).with(:user_email, has_entries(type: :forgot_password, user_id: user.id))
         xhr :post, :forgot_password, username: user.username
-      end      
-    end      
+      end
+    end
 
   end
 
