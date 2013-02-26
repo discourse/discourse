@@ -7,10 +7,10 @@
           <li class='heading'>
             {{name}}
             {{#if more}}
-              <a href='#' class='filter' {{action moreOfType type target="view"}}>{{i18n show_more}}</a>
+              <a href='#' class='filter' {{action moreOfType type target="view" bubbles=false}}>{{i18n show_more}}</a>
             {{else}}
               {{#if view.showCancelFilter}}
-                <a href='#' class='filter' {{action cancelType target="view"}}><i class='icon icon-remove-sign'></i></a>
+                <a href='#' class='filter' {{action cancelType target="view" bubbles=false}}><i class='icon icon-remove-sign'></i></a>
               {{/if}}
             {{/if}}
           </li>
