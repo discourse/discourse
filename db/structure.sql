@@ -3927,6 +3927,20 @@ CREATE INDEX index_forum_threads_on_bumped_at ON topics USING btree (bumped_at D
 
 
 --
+-- Name: index_github_user_infos_on_github_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_github_user_infos_on_github_user_id ON github_user_infos USING btree (github_user_id);
+
+
+--
+-- Name: index_github_user_infos_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_github_user_infos_on_user_id ON github_user_infos USING btree (user_id);
+
+
+--
 -- Name: index_invites_on_email_and_invited_by_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4578,3 +4592,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130213021450');
 INSERT INTO schema_migrations (version) VALUES ('20130213203300');
 
 INSERT INTO schema_migrations (version) VALUES ('20130221215017');
+
+INSERT INTO schema_migrations (version) VALUES ('20130226015336');

@@ -19,6 +19,8 @@ class Users::OmniauthCallbacksController < ApplicationController
       create_or_sign_on_user_using_twitter(auth_token)
     when "google", "yahoo"
       create_or_sign_on_user_using_openid(auth_token)
+    when "github"
+      create_or_sign_on_user_using_github(auth_token)
     end
   end
 
@@ -166,6 +168,37 @@ class Users::OmniauthCallbacksController < ApplicationController
         email_valid: @data[:email_valid],
         openid_url: identity_url
       }
+    end
+  end
+
+  def create_or_sign_on_user_using_github(auth_token)
+
+    data = auth_token[:info]
+    screen_name = data["nickname"]
+    github_user_id = auth_token["uid"]
+
+    session[:authentication] = {
+      github_user_id: github_user_id,
+      github_screen_name: screen_name
+    }
+
+    user_info = GithubUserInfo.where(:github_user_id => github_user_id).first
+
+    @data = {
+      username: screen_name,
+      auth_provider: "Github"
+    }
+
+    if user_info
+      if user_info.user.active
+        log_on_user(user_info.user)
+        @data[:authenticated] = true
+      else
+        @data[:awaiting_activation] = true
+        # send another email ?
+      end
+    else
+      @data[:name] = screen_name
     end
   end
 
