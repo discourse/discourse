@@ -7,6 +7,12 @@
 **/
 Discourse.URL = {
 
+  // Used for matching a topic
+  TOPIC_REGEXP: /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/,
+
+  // Used for matching a /more URL
+  MORE_REGEXP: /\/more$/,
+
   /**
     Browser aware replaceState. Will only be invoked if the browser supports it.
 
@@ -37,31 +43,41 @@ Discourse.URL = {
     @param {String} path The path we are routing to.
   **/
   routeTo: function(path) {
-    var newMatches, newTopicId, oldMatches, oldTopicId, opts, router, topicController, topicRegexp;
+    var oldPath = window.location.pathname;
     path = path.replace(/https?\:\/\/[^\/]+/, '');
 
-    console.log("route to: " + path);
-
-    // If we're in the same topic, don't push the state
-    topicRegexp = /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/;
-    newMatches = topicRegexp.exec(path);
-    newTopicId = newMatches ? newMatches[2] : null;
+    /*
+      If the URL is in the topic form, /t/something/:topic_id/:post_number
+      then we want to apply some special logic. If the post_number changes within the
+      same topic, use replaceState and instruct our controller to load more posts.
+    */
+    var newMatches = this.TOPIC_REGEXP.exec(path);
+    var newTopicId = newMatches ? newMatches[2] : null;
     if (newTopicId) {
-      oldMatches = topicRegexp.exec(window.location.pathname);
-      if ((oldTopicId = oldMatches ? oldMatches[2] : void 0) && (oldTopicId === newTopicId)) {
+      var oldMatches = this.TOPIC_REGEXP.exec(oldPath);
+      var oldTopicId = oldMatches ? oldMatches[2] : null;
+
+      // If the topic_id is the same
+      if (oldTopicId === newTopicId) {
         Discourse.URL.replaceState(path);
-        topicController = Discourse.__container__.lookup('controller:topic');
-        opts = { trackVisit: false };
-        if (newMatches[3]) {
-          opts.nearPost = newMatches[3];
-        }
+        var topicController = Discourse.__container__.lookup('controller:topic');
+        var opts = { trackVisit: false };
+        if (newMatches[3]) opts.nearPost = newMatches[3];
         topicController.get('content').loadPosts(opts);
+
+        // Abort routing, we have replaced our state.
         return;
       }
     }
+
+    // If we transition from a /more path, scroll to the top
+    if (this.MORE_REGEXP.exec(oldPath) && (!this.MORE_REGEXP.exec(path))) {
+      window.scrollTo(0, 0);
+    }
+
     // Be wary of looking up the router. In this case, we have links in our
     // HTML, say form compiled markdown posts, that need to be routed.
-    router = Discourse.__container__.lookup('router:main');
+    var router = Discourse.__container__.lookup('router:main');
     router.router.updateURL(path);
     return router.handleURL(path);
   }
