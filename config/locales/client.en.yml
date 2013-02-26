@@ -364,6 +364,9 @@ en:
       browse_all_categories: Browse all categories
       view_popular_topics: view popular topics
       suggest_create_topic: Why not create a topic?
+      read_position_reset: "Your read position has been reset."
+      jump_reply_up: jump to earlier reply
+      jump_reply_down: jump to later reply
 
       progress:
         title: topic progress
