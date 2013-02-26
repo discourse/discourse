@@ -19,8 +19,9 @@ to rails, you are likely much better off with our **[Discourse Vagrant Developer
 1. `bundle install`
 2. `rake db:migrate`
 3. `rake db:test:prepare`
-4. Try running the specs: `bundle exec rspec`
-5. `bundle exec rails server`
+4. `rake db:seed_fu`
+5. Try running the specs: `bundle exec rspec`
+6. `bundle exec rails server`
 
 You should now be able to connect to rails on http://localhost:3000 - try it out! The seed data includes a pinned topic that explains how to get an admin account, so start there! Happy hacking!
 
@@ -38,7 +39,7 @@ Vagrant version 1.0.5. With this Vagrantfile:
       config.vm.box     = 'precise32'
       config.vm.box_url = 'http://files.vagrantup.com/precise32.box'
       config.vm.network :hostonly, '192.168.10.200'
-    
+
       if RUBY_PLATFORM =~ /darwin/
         config.vm.share_folder("v-root", "/vagrant", ".", :nfs => true)
       end
@@ -63,21 +64,21 @@ Vagrant version 1.0.5. With this Vagrantfile:
     export LANGUAGE=en_US.UTF-8
     export LANG=en_US.UTF-8
     export LC_ALL=en_US.UTF-8
-    
+
     locale-gen en_US.UTF-8
     dpkg-reconfigure locales
 
 ## RVM and Ruby
 
     apt-get -yqq install libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake libtool bison subversion pkg-config curl build-essential git
-    
+
     su - vagrant -c "sudo bash -s stable < <(curl -s https://raw.github.com/wayneeseguin/rvm/master/binscripts/rvm-installer)"
     adduser vagrant rvm
     source /etc/profile.d/rvm.sh
     su - vagrant -c "rvm pkg install libyaml"
     su - vagrant -c "rvm install 1.9.3-p374"
     su - vagrant -c "rvm use 1.9.3-p374 --default"
-    
+
     echo "gem: --no-rdoc --no-ri" >> /etc/gemrc
     su - vagrant -c "echo 'gem: --no-rdoc --no-ri' >> ~/.gemrc"
 
@@ -102,7 +103,7 @@ Also, a user "discourse" is needed when importing a database image.
 
 Edit /etc/postgresql/9.1/main/pg_hba.conf to have this:
 
-    local all all trust 
+    local all all trust
     host all all 127.0.0.1/32 trust
     host all all ::1/128 trust
     host all all 0.0.0.0/0 trust # wide-open
