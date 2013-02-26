@@ -22,7 +22,7 @@ class Topic < ActiveRecord::Base
 
   validate :title_quality
   validates_presence_of :title
-  validates :title, length: { in: SiteSetting.min_topic_title_length..SiteSetting.max_topic_title_length }
+  validates :title, length: { in: SiteSetting.topic_title_length }
 
   serialize :meta_data, ActiveRecord::Coders::Hstore
 
@@ -137,14 +137,12 @@ class Topic < ActiveRecord::Base
       # It's possible the sentinel has cleaned up the title a bit
       self.title = sentinel.text
     else
-      errors.add(:title, I18n.t(:is_invalid)) unless sentinel.valid?
+      errors.add(:title, I18n.t(:is_invalid))
     end
   end
 
   def new_version_required?
-    return true if title_changed?
-    return true if category_id_changed?
-    false
+    title_changed? || category_id_changed?
   end
 
   # Returns new topics since a date for display in email digest.
@@ -332,7 +330,7 @@ class Topic < ActiveRecord::Base
   def invite(invited_by, username_or_email)
     if private_message?
       # If the user exists, add them to the topic.
-      user = User.where("lower(username) = :user OR lower(email) = :user", user: username_or_email.downcase).first
+      user = User.find_by_username_or_email(username_or_email).first
       if user.present?
         if topic_allowed_users.create!(user_id: user.id)
           # Notify the user they've been invited
@@ -485,7 +483,6 @@ class Topic < ActiveRecord::Base
 
   # Enable/disable the star on the topic
   def toggle_star(user, starred)
-
     Topic.transaction do
       TopicUser.change(user, self.id, starred: starred, starred_at: starred ? DateTime.now : nil)
 
@@ -511,9 +508,7 @@ class Topic < ActiveRecord::Base
   end
 
   def slug
-    result = Slug.for(title)
-    return "topic" if result.blank?
-    result
+    Slug.for(title).presence || "topic"
   end
 
   def last_post_url
