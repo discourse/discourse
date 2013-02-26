@@ -173,7 +173,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     this.set('screenTrack', null);
     this.get('controller').unsubscribe();
     this.get('topic').resetRead(function() {
-      _this.set('controller.message', "Your read position has been reset.");
+      _this.set('controller.message', Em.String.i18n("topic.read_position_reset"));
       _this.set('controller.loaded', false);
     });
   },
