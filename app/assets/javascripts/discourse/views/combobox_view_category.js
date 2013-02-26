@@ -14,7 +14,7 @@ Discourse.ComboboxViewCategory = Discourse.ComboboxView.extend({
     if (!templateData.color) return text;
 
     var result = "<span class='badge-category' style='background-color: #" + templateData.color + "' "
-    if (templateData.description && templateData.description != 'null') {
+    if (templateData.description && templateData.description !== 'null') {
       result += "title=\"" + templateData.description + "\" ";
     }
     return result + ">" + text + "</span>";
