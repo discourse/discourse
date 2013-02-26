@@ -31,7 +31,7 @@ module Discourse
 
     config.assets.precompile += [
       'admin.js', 'admin.css', 'shiny/shiny.css', 'preload_store.js',
-      'jquery.js', 'defer/html-sanitizer-bundle.js', 'defer/fastclick.js'
+      'jquery.js', 'defer/html-sanitizer-bundle.js'
     ]
 
     # Activate observers that should always be running.
