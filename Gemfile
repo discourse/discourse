@@ -35,6 +35,7 @@ gem "omniauth-openid"
 gem "openid-redis-store"
 gem "omniauth-facebook"
 gem "omniauth-twitter"
+gem "omniauth-github"
 gem 'oj'
 gem 'pbkdf2'
 gem 'pg'
