@@ -352,7 +352,9 @@ en:
         description: "Sorry, we couldn't find that topic. Perhaps it was removed by a moderator?"
       unread_posts: "you have {{unread}} unread old posts in this topic"
       new_posts: "there are {{new_posts}} new posts in this topic since you last read it"
-      likes: "there are {{likes}} likes in this topic"
+      likes:
+        one: "there is 1 like in this topic"
+        other: "there are {{likes}} likes in this topic"
       back_to_list: "Back to Topic List"
       options: "Topic Options"
       show_links: "show links within this topic"
