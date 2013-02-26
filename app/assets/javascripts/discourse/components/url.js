@@ -14,18 +14,37 @@ Discourse.URL = {
   MORE_REGEXP: /\/more$/,
 
   /**
+    @private
+
+    Get a handle on the application's router. Note that currently it uses `__container__` which is not
+    advised but there is no other way to access the router.
+
+    @method router
+  **/
+  router: function(path) {
+    return Discourse.__container__.lookup('router:main');
+  },
+
+  /**
     Browser aware replaceState. Will only be invoked if the browser supports it.
 
     @method replaceState
     @param {String} path The path we are replacing our history state with.
   **/
   replaceState: function(path) {
+
     if (window.history &&
         window.history.pushState &&
         window.history.replaceState &&
         !navigator.userAgent.match(/((iPod|iPhone|iPad).+\bOS\s+[1-4]|WebApps\/.+CFNetwork)/) &&
         (window.location.pathname !== path)) {
-        return history.replaceState({ path: path }, null, path);
+
+        // Always use replaceState in the next runloop to prevent weird routes changing
+        // while URLs are loading. For example, while a topic loads it sets `currentPost`
+        // which triggers a replaceState even though the topic hasn't fully loaded yet!
+        Em.run.next(function() {
+          Discourse.URL.router().get('location').replaceURL(path);
+        });
     }
   },
 
@@ -35,9 +54,6 @@ Discourse.URL = {
 
     It contains the logic necessary to route within a topic using replaceState to
     keep the history intact.
-
-    Note that currently it uses `__container__` which is not advised
-    but there is no other way to access the router.
 
     @method routeTo
     @param {String} path The path we are routing to.
@@ -71,13 +87,13 @@ Discourse.URL = {
     }
 
     // If we transition from a /more path, scroll to the top
-    if (this.MORE_REGEXP.exec(oldPath) && (!this.MORE_REGEXP.exec(path))) {
+    if (this.MORE_REGEXP.exec(oldPath) && (oldPath.indexOf(path) === 0)) {
       window.scrollTo(0, 0);
     }
 
     // Be wary of looking up the router. In this case, we have links in our
     // HTML, say form compiled markdown posts, that need to be routed.
-    var router = Discourse.__container__.lookup('router:main');
+    var router = this.router();
     router.router.updateURL(path);
     return router.handleURL(path);
   }

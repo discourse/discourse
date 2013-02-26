@@ -69,14 +69,16 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
   }).observes('topic.highest_post_number'),
 
   currentPostChanged: (function() {
-    var current, postUrl, topic;
-    current = this.get('controller.currentPost');
-    topic = this.get('topic');
+    var current = this.get('controller.currentPost');
+
+    var topic = this.get('topic');
     if (!(current && topic)) return;
+
     if (current > (this.get('maxPost') || 0)) {
       this.set('maxPost', current);
     }
-    postUrl = topic.get('url');
+
+    var postUrl = topic.get('url');
     if (current > 1) {
       postUrl += "/" + current;
     } else {
