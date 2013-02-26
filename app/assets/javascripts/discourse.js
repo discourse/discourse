@@ -1,6 +1,5 @@
 /*global Modernizr:true*/
 /*global assetPath:true*/
-/*global FastClick:true*/
 
 var csrf_token;
 
@@ -147,13 +146,6 @@ Discourse = Ember.Application.createWithMixins({
       $html.addClass('discourse-touch');
       this.touch = true;
       this.hasTouch = true;
-
-      $LAB.script(assetPath('defer/fastclick'))
-          .wait(function(){
-              // work around jshint hating side-effects
-              //   its just the way the FastClick api is
-              var ignore = new FastClick(document.body);
-          });
 
     } else {
       $html.addClass('discourse-no-touch');
