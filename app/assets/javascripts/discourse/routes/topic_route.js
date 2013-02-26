@@ -34,10 +34,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
   },
 
   setupController: function(controller, model) {
-    var headerController;
-    controller.set('showExtraHeaderInfo', false);
-    headerController = this.controllerFor('header');
-    headerController.set('topic', model);
+    this.controllerFor('header').set('topic', model);
   }
 
 });

@@ -10,7 +10,6 @@ Discourse.TopicController = Discourse.ObjectController.extend({
   userFilters: new Em.Set(),
   multiSelect: false,
   bestOf: false,
-  showExtraHeaderInfo: false,
   needs: ['header', 'modal', 'composer', 'quoteButton'],
 
   filter: (function() {
@@ -41,10 +40,6 @@ Discourse.TopicController = Discourse.ObjectController.extend({
     // For now, we can move it if we can delete it since the posts need to be deleted.
     return this.get('canDeleteSelected');
   }).property('canDeleteSelected'),
-
-  showExtraHeaderInfoChanged: (function() {
-    this.set('controllers.header.showExtraInfo', this.get('showExtraHeaderInfo'));
-  }).observes('showExtraHeaderInfo'),
 
   canDeleteSelected: (function() {
     var canDelete, selectedPosts;
@@ -109,11 +104,11 @@ Discourse.TopicController = Discourse.ObjectController.extend({
   },
 
   jumpTop: function() {
-    Discourse.routeTo(this.get('content.url'));
+    Discourse.URL.routeTo(this.get('content.url'));
   },
 
   jumpBottom: function() {
-    Discourse.routeTo(this.get('content.lastPostUrl'));
+    Discourse.URL.routeTo(this.get('content.lastPostUrl'));
   },
 
   cancelFilter: function() {

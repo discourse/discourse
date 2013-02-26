@@ -1,17 +1,7 @@
 <div class='container'>
   <div class='contents clearfix'>
-    <div class='title'>
-      {{#if controller.showExtraInfo}}
-      
-        {{#linkTo list.popular}}{{{Discourse.logoSmall}}}{{/linkTo}}
 
-      {{else}}
-
-        {{#linkTo list.popular}}<img src="{{unbound Discourse.SiteSettings.logo_url}}" alt="{{unbound Discourse.SiteSettings.title}}" id='site-logo'>{{/linkTo}}
-
-      {{/if}}
-    </div>      
-
+    {{view.logoHTML}}
     {{view Discourse.TopicExtraInfoView}}
 
     <div class='panel clearfix'>
@@ -24,7 +14,7 @@
           {{/if}}
         </div>
       {{/unless}}
-      <ul class='icons clearfix'> 
+      <ul class='icons clearfix'>
         <li class='notifications'>
           {{#if view.currentUser}}
             <a class='icon' href="#" {{action showNotifications target="view"}} data-notifications="notifications-dropdown" id='user-notifications' title='{{i18n notifications.title}}'><i class='icon-comment'></i></a>
@@ -38,7 +28,7 @@
             <a class='icon' href="#" {{action showLogin}} title='{{i18n notifications.title}}'><i class='icon-comment'></i></a>
           {{/if}}
         </li>
-        <li> 
+        <li>
           <a class='icon expand' href='#' data-dropdown="search-dropdown" title='{{i18n search.title}}'><i class='icon-search'></i></a>
         </li>
         <li class='categories dropdown'>
@@ -46,7 +36,7 @@
           {{#if view.currentUser.site_flagged_posts_count}}
             <a href='/admin/flags/active' title='total flagged posts' class='badge-notification flagged-posts'>{{view.currentUser.site_flagged_posts_count}}</a>
           {{/if}}
-        </li>  
+        </li>
         <li class='current-user'>
           {{#if view.currentUser}}
             {{#titledLinkTo user.activity view.currentUser titleKey="current_user" class="icon"}}{{avatar Discourse.currentUser imageSize="medium" }}{{/titledLinkTo}}
@@ -58,7 +48,7 @@
 
       {{view Discourse.SearchView currentUserBinding="view.currentUser"}}
 
-      <section class='d-dropdown' id='notifications-dropdown'>            
+      <section class='d-dropdown' id='notifications-dropdown'>
         {{#if view.notifications}}
           <ul>
             {{#each view.notifications}}
@@ -73,7 +63,7 @@
         {{/if}}
       </section>
 
-      <section class='d-dropdown' id='site-map-dropdown'> 
+      <section class='d-dropdown' id='site-map-dropdown'>
       <ul>
         {{#if Discourse.currentUser.admin}}
           <li><a href="/admin"><i class='icon-cog'></i>{{i18n admin_title}}</a></li>
@@ -99,7 +89,7 @@
           <li class='heading' title="{{i18n filters.categories.help}}">
             {{#linkTo "list.categories"}}{{i18n filters.categories.title}}{{/linkTo}}
           </li>
-        
+
           {{#each view.categories}}
             <li class='category'>
               {{categoryLink this}}

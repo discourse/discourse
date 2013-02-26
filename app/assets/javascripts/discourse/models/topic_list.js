@@ -14,7 +14,7 @@ Discourse.TopicList = Discourse.Model.extend({
       _this = this;
     promise = new RSVP.Promise();
     if (moreUrl = this.get('more_topics_url')) {
-      Discourse.replaceState("/" + (this.get('filter')) + "/more");
+      Discourse.URL.replaceState("/" + (this.get('filter')) + "/more");
       jQuery.ajax(moreUrl, {
         success: function(result) {
           var newTopics, topicIds, topics;

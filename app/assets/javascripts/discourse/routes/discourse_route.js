@@ -28,3 +28,14 @@ Discourse.Route = Em.Route.extend({
 });
 
 
+Discourse.Route.reopenClass({
+
+  buildRoutes: function(builder) {
+    var oldBuilder = Discourse.routeBuilder;
+    Discourse.routeBuilder = function() {
+      if (oldBuilder) oldBuilder.call(this);
+      return builder.call(this);
+    };
+  }
+
+});

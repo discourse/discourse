@@ -88,7 +88,7 @@ Discourse.ClickTrack = {
         topic_id: topicId,
         redirect: false
       });
-      Discourse.routeTo(href);
+      Discourse.URL.routeTo(href);
       return false;
     }
 

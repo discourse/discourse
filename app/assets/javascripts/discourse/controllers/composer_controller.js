@@ -42,7 +42,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
       } else {
         Discourse.set('currentUser.reply_count', Discourse.get('currentUser.reply_count') + 1);
       }
-      Discourse.routeTo(opts.post.get('url'));
+      Discourse.URL.routeTo(opts.post.get('url'));
     }, function(error) {
       composer.set('disableDrafts', false);
       bootbox.alert(error);
@@ -159,7 +159,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
 
   // View a new reply we've made
   viewNewReply: function() {
-    Discourse.routeTo(this.get('createdPost.url'));
+    Discourse.URL.routeTo(this.get('createdPost.url'));
     this.close();
     return false;
   },
