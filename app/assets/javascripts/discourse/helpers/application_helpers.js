@@ -121,23 +121,28 @@ Handlebars.registerHelper('lower', function(property, options) {
   @for Handlebars
 **/
 Handlebars.registerHelper('avatar', function(user, options) {
-  var title, username;
+
   if (typeof user === 'string') {
     user = Ember.Handlebars.get(this, user, options);
   }
-  username = Em.get(user, 'username');
-  if (!username) {
-    username = Em.get(user, options.hash.usernamePath);
-  }
+
+  var username = Em.get(user, 'username');
+  if (!username) username = Em.get(user, options.hash.usernamePath);
+
+  var avatarTemplate = Ember.get(user, 'avatar_template');
+  if (!avatarTemplate) avatarTemplate = Em.get(user, 'user.avatar_template');
+
+  var title;
   if (!options.hash.ignoreTitle) {
     title = Em.get(user, 'title') || Em.get(user, 'description');
   }
+
   return new Handlebars.SafeString(Discourse.Utilities.avatarImg({
     size: options.hash.imageSize,
     extraClasses: Em.get(user, 'extras') || options.hash.extraClasses,
     username: username,
     title: title || username,
-    avatarTemplate: Ember.get(user, 'avatar_template') || options.hash.avatarTemplate
+    avatarTemplate: avatarTemplate
   }));
 });
 
