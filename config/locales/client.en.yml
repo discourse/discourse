@@ -342,14 +342,14 @@ en:
       loading_more: "Loading more Topics..."
       loading: 'Loading topic...'
       invalid_access:
-        title: "You can't do that!"
-        description: "You don't have access to view that topic."
+        title: "Topic is private"
+        description: "Sorry, you don't have access to that topic!"
       server_error:
-        title: "Error loading topic!"
-        description: "Sorry, we couldn't load that topic, possibly due to a connection problem. Please try again."
+        title: "Topic failed to load"
+        description: "Sorry, we couldn't load that topic, possibly due to a connection problem. Please try again. If the problem persists, please let us know."
       not_found:
-        title: "Topic not found!"
-        description: "That topic could not be found. It's likely it was deleted by a moderator."
+        title: "Topic not found"
+        description: "Sorry, we couldn't find that topic. Perhaps it was removed by a moderator?"
       unread_posts: "you have {{unread}} unread old posts in this topic"
       new_posts: "there are {{new_posts}} new posts in this topic since you last read it"
       likes: "there are {{likes}} likes in this topic"
