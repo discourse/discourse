@@ -1,6 +1,6 @@
 module Discourse
 
-  # When they try to do something they should be logged in for  
+  # When they try to do something they should be logged in for
   class NotLoggedIn < Exception; end
 
   # When the input is somehow bad
@@ -22,13 +22,13 @@ module Discourse
     protocol = "http"
     protocol = "https" if SiteSetting.use_ssl?
     if SiteSetting.force_hostname.present?
-      result = "#{protocol}://#{SiteSetting.force_hostname}"    
+      result = "#{protocol}://#{SiteSetting.force_hostname}"
     else
-      result = "#{protocol}://#{current_hostname}"    
+      result = "#{protocol}://#{current_hostname}"
     end
     result << ":#{SiteSetting.port}" if SiteSetting.port.present? && SiteSetting.port.to_i > 0
     result
-  end  
+  end
 
   def self.enable_maintenance_mode
     $redis.set maintenance_mode_key, 1
@@ -45,7 +45,7 @@ module Discourse
   end
 
   def self.git_version
-    return $git_version if $git_version 
+    return $git_version if $git_version
     f = Rails.root.to_s + "/config/version"
     require f if File.exists?("#{f}.rb")
 

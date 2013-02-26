@@ -11,5 +11,3 @@ Discourse.AdminUsersListNewRoute = Discourse.Route.extend({
     return this.controllerFor('adminUsersList').show('new');
   }  
 });
-
-

@@ -171,7 +171,7 @@ class Post < ActiveRecord::Base
       # As a moderator, delete the post.
       Post.transaction do
         self.destroy
-        Topic.reset_highest(self.topic_id)    
+        Topic.reset_highest(self.topic_id)
       end
     elsif deleted_by.id == self.user_id
       # As the poster, make a revision that says deleted.

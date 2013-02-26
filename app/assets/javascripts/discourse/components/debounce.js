@@ -31,7 +31,7 @@ Discourse.debounce = function(func, wait, trickle) {
     } else {
       currentWait = wait;
     }
-    
+
     if (timeout) {
       clearTimeout(timeout);
     }

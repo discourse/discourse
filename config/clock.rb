@@ -2,7 +2,7 @@ require 'clockwork'
 require_relative 'boot'
 require_relative 'environment'
 
-# These are jobs you should run on a regular basis to make your 
+# These are jobs you should run on a regular basis to make your
 # forum work properly.
 
 module Clockwork

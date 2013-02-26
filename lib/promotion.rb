@@ -4,7 +4,7 @@
 class Promotion
 
   def initialize(user)
-    @user = user  
+    @user = user
   end
 
   # Review a user for a promotion. Delegates work to a review_#{trust_level} method.
@@ -21,14 +21,14 @@ class Promotion
     false
   end
 
-  def review_new    
+  def review_new
     return false if @user.topics_entered < SiteSetting.basic_requires_topics_entered
     return false if @user.posts_read_count < SiteSetting.basic_requires_read_posts
     return false if (@user.time_read / 60) < SiteSetting.basic_requires_time_spent_mins
 
     @user.trust_level = TrustLevel.Levels[:basic]
     @user.save
-    
+
     true
   end
 

@@ -5,11 +5,11 @@ module Oneboxer
 
     matcher /^https?:\/\/(?:www\.)?amazon.(com|ca)\/.*$/
     favicon 'amazon.png'
-    
+
     def template
       template_path("simple_onebox")
     end
-    
+
     # Use the mobile version of the site
     def translate_url
 
@@ -34,7 +34,7 @@ module Oneboxer
       result[:by_info] = html_doc.at("#by-line")
       result[:by_info] = BaseOnebox.remove_whitespace(result[:by_info].inner_html) if result[:by_info].present?
 
-      summary = html_doc.at("#description-and-details-content") 
+      summary = html_doc.at("#description-and-details-content")
       result[:text] = summary.inner_html if summary.present?
 
       result

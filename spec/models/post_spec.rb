@@ -18,7 +18,7 @@ describe Post do
 
   let(:topic) { Fabricate(:topic) }
   let(:post_args) do
-    {user: topic.user, topic: topic} 
+    {user: topic.user, topic: topic}
   end
 
   it_behaves_like "a versioned model"
@@ -59,17 +59,17 @@ describe Post do
 
   end
 
-  describe 'flagging helpers' do 
-    it 'isFlagged is accurate' do 
+  describe 'flagging helpers' do
+    it 'isFlagged is accurate' do
       post = Fabricate(:post)
       user = Fabricate(:coding_horror)
       PostAction.act(user, post, PostActionType.Types[:off_topic])
 
-      post.reload 
+      post.reload
       post.is_flagged?.should == true
-      
+
       PostAction.remove_act(user, post, PostActionType.Types[:off_topic])
-      post.reload 
+      post.reload
       post.is_flagged?.should == false
     end
   end
@@ -106,7 +106,7 @@ describe Post do
     end
 
     it "doesn't count whitelisted images" do
-      Post.stubs(:white_listed_image_classes).returns(["classy"]) 
+      Post.stubs(:white_listed_image_classes).returns(["classy"])
       post_with_two_classy_images.image_count.should == 0
     end
 
@@ -209,12 +209,12 @@ describe Post do
       it "ignores code" do
         post = Fabricate.build(:post, post_args.merge(raw: "@Jake <code>@Finn</code>"))
         post.raw_mentions.should == ['jake']
-      end      
+      end
 
       it "ignores quotes" do
         post = Fabricate.build(:post, post_args.merge(raw: "[quote=\"Evil Trout\"]@Jake[/quote] @Finn"))
         post.raw_mentions.should == ['finn']
-      end       
+      end
 
     end
 
@@ -238,7 +238,7 @@ describe Post do
 
     let(:raw) { "this is our test post body"}
     let(:post) { Fabricate.build(:post, raw: raw) }
-    
+
     it "returns a value" do
       post.raw_hash.should be_present
     end
@@ -340,11 +340,11 @@ describe Post do
         end
 
         it "doesn't create a new version if you do another" do
-          post.cached_version.should == 2          
+          post.cached_version.should == 2
         end
 
         it "doesn't change last_version_at" do
-          post.last_version_at.to_i.should == revised_at.to_i         
+          post.last_version_at.to_i.should == revised_at.to_i
         end
 
         context "after second window" do
@@ -357,7 +357,7 @@ describe Post do
           end
 
           it "does create a new version after the edit window" do
-            post.cached_version.should == 3          
+            post.cached_version.should == 3
           end
 
           it "does create a new version after the edit window" do
@@ -373,7 +373,7 @@ describe Post do
 
     describe 'rate limiter' do
       let(:changed_by) { Fabricate(:coding_horror) }
-      
+
       it "triggers a rate limiter" do
         EditRateLimiter.any_instance.expects(:performed!)
         post.revise(changed_by, 'updated body')
@@ -425,7 +425,7 @@ describe Post do
 
         it 'is a ninja edit, because the second poster posted again quickly' do
           post.all_versions.size.should == 2
-        end        
+        end
 
       end
 
@@ -446,7 +446,7 @@ describe Post do
 
   it 'passes the invalidate_oneboxes along to the job if present' do
     Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
-    Jobs.expects(:enqueue).with(:process_post, has_key(:invalidate_oneboxes))    
+    Jobs.expects(:enqueue).with(:process_post, has_key(:invalidate_oneboxes))
     post = Fabricate.build(:post, post_args)
     post.invalidate_oneboxes = true
     post.save
@@ -454,7 +454,7 @@ describe Post do
 
   it 'passes the image_sizes along to the job if present' do
     Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
-    Jobs.expects(:enqueue).with(:process_post, has_key(:image_sizes))    
+    Jobs.expects(:enqueue).with(:process_post, has_key(:image_sizes))
     post = Fabricate.build(:post, post_args)
     post.image_sizes = {'http://an.image.host/image.jpg' => {'width' => 17, 'height' => 31}}
     post.save
@@ -467,7 +467,7 @@ describe Post do
     describe 'replies' do
 
       let(:post) { Fabricate(:post, post_args.merge(raw: "Hello @CodingHorror")) }
-      
+
       it 'notifies the poster on reply' do
         lambda {
           @reply = Fabricate(:basic_reply, user: coding_horror, topic: post.topic)
@@ -492,7 +492,7 @@ describe Post do
       end
     end
 
-    describe 'muting' do 
+    describe 'muting' do
       it "does not notify users of new posts" do
         post = Fabricate(:post, post_args)
         user = post_args[:user]
@@ -530,7 +530,7 @@ describe Post do
 
       it "creates a new version" do
         post.version.should == 2
-      end      
+      end
 
     end
 
@@ -538,7 +538,7 @@ describe Post do
 
       before do
         post.delete_by(post.user)
-        post.reload       
+        post.reload
       end
 
       it "deletes the post" do
@@ -578,14 +578,14 @@ describe Post do
         }.should change(post.post_replies, :count).by(-1)
       end
 
-      it 'should increase the post_number when there are deletion gaps' do 
+      it 'should increase the post_number when there are deletion gaps' do
         reply.destroy
         p = Fabricate(:post, user: post.user, topic: post.topic)
         p.post_number.should == 3
       end
 
     end
-  
+
   end
 
 
@@ -612,14 +612,14 @@ describe Post do
 
     it 'has no versions' do
       post.versions.should be_blank
-    end    
+    end
 
     it 'has cooked content' do
       post.cooked.should be_present
     end
 
     it 'has an external id' do
-      post.external_id.should be_present      
+      post.external_id.should be_present
     end
 
     it 'has no quotes' do

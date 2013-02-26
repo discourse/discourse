@@ -7,7 +7,7 @@ describe MessageBus::Rack::Middleware do
 
   class FakeAsyncMiddleware
 
-    def self.in_async? 
+    def self.in_async?
       @@in_async if defined? @@in_async
     end
 
@@ -20,7 +20,7 @@ describe MessageBus::Rack::Middleware do
       EM.run {
         env['async.callback'] = lambda { |r|
           # more judo with deferrable body, at this point we just have headers
-          r[2].callback do 
+          r[2].callback do
             # even more judo cause rack test does not call each like the spec says
             body = ""
             r[2].each do |m|
@@ -35,7 +35,7 @@ describe MessageBus::Rack::Middleware do
         }
 
         EM::Timer.new(1) { EM.stop }
-          
+
         defer = lambda {
           if !result
             @@in_async = true
@@ -63,7 +63,7 @@ describe MessageBus::Rack::Middleware do
   end
 
   describe "long polling" do
-    before do 
+    before do
       MessageBus.sockets_enabled = false
       MessageBus.long_polling_enabled = true
     end
@@ -83,7 +83,7 @@ describe MessageBus::Rack::Middleware do
       parsed[0]["data"]["/foo"].should == MessageBus.last_id("/foo")
     end
 
-    it "should respond to long polls when data is available" do 
+    it "should respond to long polls when data is available" do
 
       Thread.new do
         wait_for(2000) { FakeAsyncMiddleware.in_async? }
@@ -98,7 +98,7 @@ describe MessageBus::Rack::Middleware do
       parsed[0]["data"].should == "bar"
     end
 
-    it "should timeout within its alloted slot" do 
+    it "should timeout within its alloted slot" do
       begin
         MessageBus.long_polling_interval = 10
         s = Time.now.to_f * 1000
@@ -110,9 +110,9 @@ describe MessageBus::Rack::Middleware do
     end
   end
 
-  describe "diagnostics" do 
+  describe "diagnostics" do
 
-    it "should return a 403 if a user attempts to get at the _diagnostics path" do 
+    it "should return a 403 if a user attempts to get at the _diagnostics path" do
       get "/message-bus/_diagnostics"
       last_response.status.should == 403
     end
@@ -131,9 +131,9 @@ describe MessageBus::Rack::Middleware do
     end
 
   end
-  
+
   describe "polling" do
-    before do 
+    before do
       MessageBus.sockets_enabled = false
       MessageBus.long_polling_enabled = false
     end
@@ -149,8 +149,8 @@ describe MessageBus::Rack::Middleware do
       last_response.should be_ok
     end
 
-    it "should correctly understand that -1 means stuff from now onwards" do 
-      
+    it "should correctly understand that -1 means stuff from now onwards" do
+
       MessageBus.publish('foo', 'bar')
 
       post "/message-bus/ABCD", {
@@ -164,7 +164,7 @@ describe MessageBus::Rack::Middleware do
 
     end
 
-    it "should respond with the data if messages exist in the backlog" do 
+    it "should respond with the data if messages exist in the backlog" do
       id = MessageBus.last_id('/foo')
 
       MessageBus.publish("/foo", "barbs")
@@ -182,10 +182,10 @@ describe MessageBus::Rack::Middleware do
       parsed[1]["data"].should == "borbs"
     end
 
-    it "should not get consumed messages" do 
+    it "should not get consumed messages" do
       MessageBus.publish("/foo", "barbs")
       id = MessageBus.last_id('/foo')
-      
+
       client_id = "ABCD"
       post "/message-bus/#{client_id}", {
         '/foo' => id

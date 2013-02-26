@@ -1,5 +1,5 @@
 (function() {
-  
+
   Discourse.TopicFooterButtonsView.prototype.on("additionalButtons", function(childViews) {
     var topic = this.get('topic');
     if (topic.get('archetype') == 'task' && topic.get('can_complete_task')) {
@@ -15,16 +15,16 @@
 
         renderIcon: function (buffer) {
           if (!this.get('complete')) {
-            buffer.push("<i class='icon-cog'></i>")  
-          }          
-        },          
+            buffer.push("<i class='icon-cog'></i>")
+          }
+        },
 
         text: function () {
           if (this.get('complete')) {
-            return Em.String.i18n("task.reverse");           
+            return Em.String.i18n("task.reverse");
           } else {
             return Em.String.i18n("task.complete_action");
-          }          
+          }
         }.property('complete'),
 
         click: function(e) {
@@ -35,6 +35,6 @@
     }
   });
 
-}).call(this); 
+}).call(this);
 
 

@@ -1,12 +1,12 @@
 require 'spec_helper'
 require 'oneboxer'
 
-describe "Dynamic Oneboxer" do 
+describe "Dynamic Oneboxer" do
   class DummyDynamicOnebox < Oneboxer::BaseOnebox
-    matcher do 
+    matcher do
       /^https?:\/\/dummy2.localhost/
     end
-    
+
     def onebox
       "dummy2!"
     end
@@ -46,7 +46,7 @@ describe Oneboxer do
     end
   end
 
-  
+
   before do
     Oneboxer.add_onebox DummyOnebox
     @dummy_onebox_url = "http://dummy.localhost/dummy-object"
@@ -72,7 +72,7 @@ describe Oneboxer do
 
   end
 
-  context 'without caching' do  
+  context 'without caching' do
     it 'calls the onebox method of our matched class' do
       Oneboxer.onebox_nocache(@dummy_onebox_url).should == 'dummy!'
     end
@@ -108,7 +108,7 @@ describe Oneboxer do
       end
 
       it "created a OneboxRender record with the url" do
-        @onebox_render.url.should == @dummy_onebox_url        
+        @onebox_render.url.should == @dummy_onebox_url
       end
 
       it "associated the render with a post" do
@@ -157,11 +157,11 @@ describe Oneboxer do
         element.is_a?(Nokogiri::XML::Element).should be_true
         url.should == 'http://discourse.org'
       end
-    end    
+    end
 
   end
 
 
 end
 
- 
+

@@ -1,11 +1,11 @@
 class TopicLinkSerializer < ApplicationSerializer
 
-  attributes :url, 
-             :title, 
+  attributes :url,
+             :title,
              :fancy_title,
-             :internal, 
-             :reflection, 
-             :clicks, 
+             :internal,
+             :reflection,
+             :clicks,
              :user_id
 
   def url

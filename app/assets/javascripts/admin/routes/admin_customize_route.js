@@ -15,5 +15,3 @@ Discourse.AdminCustomizeRoute = Discourse.Route.extend({
     this.render({into: 'admin/templates/admin'});
   }
 });
-
-

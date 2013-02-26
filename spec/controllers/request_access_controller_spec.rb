@@ -11,7 +11,7 @@ describe RequestAccessController do
     it "assigns the return path we provide" do
       get :new, return_path: '/asdf'
       assigns(:return_path).should == "/asdf"
-    end    
+    end
   end
 
 
@@ -43,7 +43,7 @@ describe RequestAccessController do
 
       it 'redirects to the return path' do
         response.should redirect_to('/the-path')
-      end      
+      end
 
       it 'sets no flash error' do
         flash[:error].should be_blank

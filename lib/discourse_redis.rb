@@ -2,17 +2,17 @@
 #  A wrapper around redis that namespaces keys with the current site id
 #
 class DiscourseRedis
-  
+
   def initialize
     @config = YAML::load(File.open("#{Rails.root}/config/redis.yml"))[Rails.env]
     redis_opts = {:host => @config['host'], :port => @config['port'], :db => @config['db']}
-    @redis = Redis.new(redis_opts)    
+    @redis = Redis.new(redis_opts)
   end
 
   # prefix the key with the namespace
   def method_missing(meth, *args, &block)
     if @redis.respond_to?(meth)
-      @redis.send(meth, *args, &block)  
+      @redis.send(meth, *args, &block)
     else
       super
     end

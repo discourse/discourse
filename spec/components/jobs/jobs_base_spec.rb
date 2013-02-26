@@ -11,7 +11,7 @@ describe Jobs::Base do
   it 'converts to an indifferent access hash' do
     Jobs::Base.any_instance.expects(:execute).with(instance_of(HashWithIndifferentAccess))
     Jobs::Base.new.perform('hello' => 'world', 'sync_exec' => true)
-  end  
+  end
 
 end
 

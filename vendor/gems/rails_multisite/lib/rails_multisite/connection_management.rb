@@ -14,7 +14,7 @@ module RailsMultisite
             handler = ActiveRecord::ConnectionAdapters::ConnectionHandler.new
             @@connection_handlers[spec] = handler
           end
-        else 
+        else
           handler = @@default_connection_handler
         end
         ActiveRecord::Base.connection_handler = handler
@@ -30,25 +30,25 @@ module RailsMultisite
         yield db
         ActiveRecord::Base.connection_handler.clear_active_connections!
       end
-      establish_connection(:db => old) 
+      establish_connection(:db => old)
       ActiveRecord::Base.connection_handler.clear_active_connections! unless connected
     end
 
     def self.all_dbs
-      ["default"] + 
+      ["default"] +
         if defined?(@@db_spec_cache) && @@db_spec_cache
           @@db_spec_cache.keys.to_a
-        else 
+        else
           []
         end
     end
 
     def self.current_db
-      db = ActiveRecord::Base.connection_pool.spec.config[:db_key] || "default" 
+      db = ActiveRecord::Base.connection_pool.spec.config[:db_key] || "default"
     end
 
     def self.config_filename=(config_filename)
-      @@config_filename = config_filename  
+      @@config_filename = config_filename
     end
 
     def self.config_filename
@@ -90,8 +90,8 @@ module RailsMultisite
         @@host_spec_cache[host] = @@default_spec
       end
 
-      # inject our connection_handler pool 
-      # WARNING MONKEY PATCH 
+      # inject our connection_handler pool
+      # WARNING MONKEY PATCH
       #
       # see: https://github.com/rails/rails/issues/8344#issuecomment-10800848
       #
@@ -103,7 +103,7 @@ module RailsMultisite
 
     module NewConnectionHandler
       def self.included(klass)
-        klass.class_eval do 
+        klass.class_eval do
           define_singleton_method :connection_handler do
             Thread.current[:connection_handler] || @connection_handler
           end
@@ -122,7 +122,7 @@ module RailsMultisite
 
     def call(env)
       request = Rack::Request.new(env)
-      begin 
+      begin
 
         #TODO: add a callback so users can simply go to a domain to register it, or something
         return [404, {}, ["not found"]] unless @@host_spec_cache[request.host]
@@ -139,9 +139,9 @@ module RailsMultisite
       if opts[:host]
         @@host_spec_cache[opts[:host]]
       else
-        @@db_spec_cache[opts[:db]] 
+        @@db_spec_cache[opts[:db]]
       end
     end
-    
+
   end
 end

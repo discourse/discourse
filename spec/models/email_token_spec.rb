@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe EmailToken do
-  
+
   it { should validate_presence_of :user_id }
   it { should validate_presence_of :email }
   it { should belong_to :user }
@@ -60,13 +60,13 @@ describe EmailToken do
     it 'returns nil when a token is expired' do
       email_token.update_column(:expired, true)
       EmailToken.confirm(email_token.token).should be_blank
-    end    
+    end
 
     it 'returns nil when a token is older than a specific time' do
       EmailToken.expects(:valid_after).returns(1.week.ago)
       email_token.update_column(:created_at, 2.weeks.ago)
       EmailToken.confirm(email_token.token).should be_blank
-    end    
+    end
 
     context 'taken email address' do
 

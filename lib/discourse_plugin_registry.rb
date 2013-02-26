@@ -14,11 +14,11 @@ class DiscoursePluginRegistry
   def self.stylesheets
     @stylesheets ||= Set.new
   end
-  
+
   def self.javascripts
     @javascripts ||= Set.new
   end
-  
+
   def self.server_side_javascripts
     @server_side_javascripts ||= Set.new
   end
@@ -56,7 +56,7 @@ class DiscoursePluginRegistry
     self.javascripts = nil
   end
 
-  def self.setup(plugin_class)    
+  def self.setup(plugin_class)
     registry = DiscoursePluginRegistry.new
     plugin = plugin_class.new(registry)
     plugin.setup

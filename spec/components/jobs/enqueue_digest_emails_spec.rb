@@ -5,7 +5,7 @@ describe Jobs::EnqueueDigestEmails do
 
 
   describe '#target_users' do
-   
+
     context 'disabled digests' do
       let!(:user_no_digests) { Fabricate(:user, email_digests: false, last_emailed_at: 8.days.ago, last_seen_at: 10.days.ago) }
 
@@ -19,7 +19,7 @@ describe Jobs::EnqueueDigestEmails do
 
       it "doesn't return users who have been emailed recently" do
         Jobs::EnqueueDigestEmails.new.target_users.include?(user_emailed_recently).should be_false
-      end      
+      end
     end
 
     context 'visited the site today' do
@@ -27,7 +27,7 @@ describe Jobs::EnqueueDigestEmails do
 
       it "doesn't return users who have been emailed recently" do
         Jobs::EnqueueDigestEmails.new.target_users.include?(user_visited_today).should be_false
-      end      
+      end
     end
 
 

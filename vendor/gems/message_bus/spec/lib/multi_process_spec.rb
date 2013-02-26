@@ -28,12 +28,12 @@ describe MessageBus::ReliablePubSub do
     end
   end
 
-  it 'gets every response from child processes' do 
+  it 'gets every response from child processes' do
     pid = nil
     Redis.new(:db => 10).flushall
     begin
-      pids = (1..10).map{spawn_child} 
-      responses = [] 
+      pids = (1..10).map{spawn_child}
+      responses = []
       bus = MessageBus::ReliablePubSub.new(:db => 10)
       Thread.new do
         bus.subscribe("/response", 0) do |msg|
@@ -41,7 +41,7 @@ describe MessageBus::ReliablePubSub do
         end
       end
       10.times{bus.publish("/echo", Process.pid.to_s)}
-      wait_for 4000 do 
+      wait_for 4000 do
         responses.count == 100
       end
 
@@ -50,7 +50,7 @@ describe MessageBus::ReliablePubSub do
       responses.count.should == 100
     ensure
       if pids
-        pids.each do |pid| 
+        pids.each do |pid|
           Process.kill("HUP", pid)
           Process.wait(pid)
         end

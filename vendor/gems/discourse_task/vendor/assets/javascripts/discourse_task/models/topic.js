@@ -1,5 +1,5 @@
 (function() {
-  
+
   Discourse.Topic.reopen({
 
     // Allow the user to complete the task
@@ -10,14 +10,14 @@
       jQuery.ajax(this.get('url') + "/complete", {
         type: 'PUT',
         data: {
-          complete: this.get('complete') ? 'true' : 'false'  
+          complete: this.get('complete') ? 'true' : 'false'
         }
-        
+
       });
     }
 
   })
 
-}).call(this); 
+}).call(this);
 
 

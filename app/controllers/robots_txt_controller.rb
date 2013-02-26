@@ -9,7 +9,7 @@ class RobotsTxtController < ApplicationController
     else
       :no_index
     end
-    
+
     render path, content_type: 'text/plain'
   end
 end

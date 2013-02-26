@@ -25,7 +25,7 @@ describe Jobs::UserEmail do
   it "doesn't call the mailer when the user is missing" do
     UserNotifications.expects(:digest).never
     Jobs::UserEmail.new.execute(type: :digest, user_id: 1234)
-  end 
+  end
 
 
   context 'to_address' do
@@ -34,12 +34,12 @@ describe Jobs::UserEmail do
       EmailSender.any_instance.expects(:send)
       Jobs::UserEmail.new.execute(type: :authorize_email, user_id: user.id, to_address: 'jake@adventuretime.ooo')
       mailer.to.should == ['jake@adventuretime.ooo']
-    end    
+    end
   end
 
   context "recently seen" do
     let(:post) { Fabricate(:post, user: user) }
-    
+
     it "doesn't send an email to a user that's been recently seen" do
       user.update_column(:last_seen_at, 9.minutes.ago)
       EmailSender.any_instance.expects(:send).never
@@ -48,7 +48,7 @@ describe Jobs::UserEmail do
   end
 
   context 'args' do
-  
+
     it 'passes a token as an argument when a token is present' do
       UserNotifications.expects(:forgot_password).with(user, {email_token: 'asdfasdf'}).returns(mailer)
       EmailSender.any_instance.expects(:send)
@@ -88,7 +88,7 @@ describe Jobs::UserEmail do
         Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id)
       end
 
-    end   
+    end
 
   end
 

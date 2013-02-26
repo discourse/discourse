@@ -15,5 +15,3 @@ Discourse.AdminEmailLogsRoute = Discourse.Route.extend({
     this.render('admin/templates/email_logs');
   }
 });
-
-

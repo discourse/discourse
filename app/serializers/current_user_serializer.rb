@@ -1,10 +1,10 @@
 class CurrentUserSerializer < BasicUserSerializer
 
-  attributes :name, 
-             :unread_notifications, 
-             :unread_private_messages, 
-             :admin?, 
-             :notification_channel_position, 
+  attributes :name,
+             :unread_notifications,
+             :unread_private_messages,
+             :admin?,
+             :notification_channel_position,
              :site_flagged_posts_count,
              :moderator?,
              :reply_count,

@@ -3,7 +3,7 @@ class FixLinkPostId < ActiveRecord::Migration
     to_remove = []
 
     TopicLink.where('internal = TRUE AND link_post_id IS NULL').each do |tl|
-      
+
       begin
         parsed = URI.parse(tl.url)
         route = Rails.application.routes.recognize_path(parsed.path)

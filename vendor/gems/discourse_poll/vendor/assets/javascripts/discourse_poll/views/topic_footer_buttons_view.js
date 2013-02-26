@@ -6,4 +6,4 @@
     }.property()
 
   });
-}).call(this); 
+}).call(this);

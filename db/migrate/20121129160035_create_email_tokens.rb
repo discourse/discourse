@@ -8,6 +8,6 @@ class CreateEmailTokens < ActiveRecord::Migration
       t.boolean :expired, null: false, default: false
       t.timestamps
     end
-    add_index :email_tokens, :token, unique: true 
+    add_index :email_tokens, :token, unique: true
   end
 end

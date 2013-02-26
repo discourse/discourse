@@ -1,12 +1,12 @@
 
-    <%# 
+    <%#
         The fonts are loaded outside of the stylesheet so that we can dynamically change
         the path. This is to get around CDN caching on the Origin:
 
         https://forums.aws.amazon.com/thread.jspa?threadID=114646
     %>
 
-<% font_domain = "#{request.protocol}#{request.host_with_port}" %>    
+<% font_domain = "#{request.protocol}#{request.host_with_port}" %>
 
 <style>
   @font-face {
@@ -27,5 +27,5 @@
         font-weight: normal;
         font-style: normal;
 
-  }    
+  }
 </style>

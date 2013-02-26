@@ -7,7 +7,7 @@ module DiscourseEmoji
 
     initializer "discourse_emoji.configure_rails_initialization" do |app|
 
-      app.config.after_initialize do 
+      app.config.after_initialize do
         DiscoursePluginRegistry.setup(DiscourseEmoji::Plugin)
         Post.white_listed_image_classes << "emoji"
       end

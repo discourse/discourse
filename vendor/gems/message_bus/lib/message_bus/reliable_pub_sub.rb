@@ -1,17 +1,17 @@
 require 'redis'
-# the heart of the message bus, it acts as 2 things 
+# the heart of the message bus, it acts as 2 things
 #
 # 1. A channel multiplexer
-# 2. Backlog storage per-multiplexed channel. 
+# 2. Backlog storage per-multiplexed channel.
 #
-# ids are all sequencially increasing numbers starting at 0 
+# ids are all sequencially increasing numbers starting at 0
 #
 
 
 class MessageBus::ReliablePubSub
 
   class NoMoreRetries < StandardError; end
-  class BackLogOutOfOrder < StandardError 
+  class BackLogOutOfOrder < StandardError
     attr_accessor :highest_id
 
     def initialize(highest_id)
@@ -26,7 +26,7 @@ class MessageBus::ReliablePubSub
   def max_publish_retries
     @max_publish_retries ||= 10
   end
-  
+
   def max_publish_wait=(ms)
     @max_publish_wait = ms
   end
@@ -35,11 +35,11 @@ class MessageBus::ReliablePubSub
     @max_publish_wait ||= 500
   end
 
-  # max_backlog_size is per multiplexed channel 
+  # max_backlog_size is per multiplexed channel
   def initialize(redis_config = {}, max_backlog_size = 1000)
     @redis_config = redis_config
     @max_backlog_size = 1000
-    # we can store a ton here ... 
+    # we can store a ton here ...
     @max_global_backlog_size = 100000
   end
 
@@ -47,7 +47,7 @@ class MessageBus::ReliablePubSub
   def max_global_backlog_size=(val)
     @max_global_backlog_size = val
   end
-  
+
   # per channel backlog size
   def max_backlog_size=(val)
     @max_backlog_size = val
@@ -62,7 +62,7 @@ class MessageBus::ReliablePubSub
     "discourse_#{db}"
   end
 
-  # redis connection used for publishing messages 
+  # redis connection used for publishing messages
   def pub_redis
     @pub_redis ||= new_redis_connection
   end
@@ -84,14 +84,14 @@ class MessageBus::ReliablePubSub
   end
 
   # use with extreme care, will nuke all of the data
-  def reset! 
+  def reset!
     pub_redis.keys("__mb_*").each do |k|
       pub_redis.del k
     end
   end
 
   def publish(channel, data)
-    redis = pub_redis 
+    redis = pub_redis
     backlog_id_key = backlog_id_key(channel)
     backlog_key = backlog_key(channel)
 
@@ -126,13 +126,13 @@ class MessageBus::ReliablePubSub
   end
 
   def last_id(channel)
-    redis = pub_redis 
+    redis = pub_redis
     backlog_id_key = backlog_id_key(channel)
     redis.get(backlog_id_key).to_i
   end
 
   def backlog(channel, last_id = nil)
-    redis = pub_redis 
+    redis = pub_redis
     backlog_key = backlog_key(channel)
     items = redis.zrangebyscore backlog_key, last_id.to_i + 1, "+inf"
 
@@ -150,7 +150,7 @@ class MessageBus::ReliablePubSub
     items.map! do |i|
       pipe = i.index "|"
       message_id = i[0..pipe].to_i
-      channel = i[pipe+1..-1] 
+      channel = i[pipe+1..-1]
       m = get_message(channel, message_id)
       m
     end
@@ -160,11 +160,11 @@ class MessageBus::ReliablePubSub
   end
 
   def get_message(channel, message_id)
-    redis = pub_redis 
+    redis = pub_redis
     backlog_key = backlog_key(channel)
 
     items = redis.zrangebyscore backlog_key, message_id, message_id
-    if items && items[0] 
+    if items && items[0]
       MessageBus::Message.decode(items[0])
     else
       nil
@@ -172,8 +172,8 @@ class MessageBus::ReliablePubSub
   end
 
   def subscribe(channel, last_id = nil)
-    # trivial implementation for now, 
-    #   can cut down on connections if we only have one global subscriber 
+    # trivial implementation for now,
+    #   can cut down on connections if we only have one global subscriber
     raise ArgumentError unless block_given?
 
     if last_id
@@ -212,7 +212,7 @@ class MessageBus::ReliablePubSub
 
     clear_backlog = lambda do
       retries = 4
-      begin 
+      begin
         highest_id = process_global_backlog(highest_id, retries > 0, &blk)
       rescue BackLogOutOfOrder => e
         highest_id = e.highest_id
@@ -231,7 +231,7 @@ class MessageBus::ReliablePubSub
       end
 
       redis.subscribe(redis_channel_name) do |on|
-        on.subscribe do 
+        on.subscribe do
           if highest_id
             clear_backlog.call(&blk)
           end
@@ -242,12 +242,12 @@ class MessageBus::ReliablePubSub
           # we have 2 options
           #
           # 1. message came in the correct order GREAT, just deal with it
-          # 2. message came in the incorrect order COMPLICATED, wait a tiny bit and clear backlog 
-          
+          # 2. message came in the incorrect order COMPLICATED, wait a tiny bit and clear backlog
+
           if highest_id.nil? || m.global_id == highest_id + 1
-            highest_id = m.global_id 
+            highest_id = m.global_id
             yield m
-          else 
+          else
             clear_backlog.call(&blk)
           end
         end

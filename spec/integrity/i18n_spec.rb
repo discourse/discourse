@@ -17,7 +17,7 @@ describe "i18n integrity checks" do
 
   it "needs an i18n key (notification_types) for each Notification type" do
     Notification.Types.keys.each do |type|
-      I18n.t("notification_types.#{type}").should_not =~ /translation missing/      
+      I18n.t("notification_types.#{type}").should_not =~ /translation missing/
     end
   end
 

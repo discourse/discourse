@@ -10,7 +10,7 @@ class PostCreator
   # Acceptable options:
   #
   #   raw                     - raw text of post
-  #   image_sizes             - We can pass a list of the sizes of images in the post as a shortcut.  
+  #   image_sizes             - We can pass a list of the sizes of images in the post as a shortcut.
   #
   #   When replying to a topic:
   #     topic_id              - topic we're replying to
@@ -23,7 +23,7 @@ class PostCreator
   #     target_usernames      - comma delimited list of usernames for membership (private message)
   #     meta_data             - Topic meta data hash
   def initialize(user, opts)
-    @user = user    
+    @user = user
     @opts = opts
     raise Discourse::InvalidParameters.new(:raw) if @opts[:raw].blank?
   end
@@ -48,7 +48,7 @@ class PostCreator
         topic_params[:meta_data] = @opts[:meta_data] if @opts[:meta_data].present?
 
         topic = Topic.new(topic_params)
-        
+
         if @opts[:archetype] == Archetype.private_message
 
           usernames = @opts[:target_usernames].split(',')
@@ -67,23 +67,23 @@ class PostCreator
 
         unless topic.save
           @errors = topic.errors
-          raise ActiveRecord::Rollback.new 
+          raise ActiveRecord::Rollback.new
         end
       else
         topic = Topic.where(id: @opts[:topic_id]).first
         guardian.ensure_can_create!(Post, topic)
       end
 
-      post = topic.posts.new(raw: @opts[:raw], 
+      post = topic.posts.new(raw: @opts[:raw],
                              user: @user,
                              reply_to_post_number: @opts[:reply_to_post_number])
       post.image_sizes = @opts[:image_sizes] if @opts[:image_sizes].present?
       unless post.save
         @errors = post.errors
-        raise ActiveRecord::Rollback.new 
+        raise ActiveRecord::Rollback.new
       end
 
-      # Extract links      
+      # Extract links
       TopicLink.extract_from(post)
     end
 
@@ -92,7 +92,7 @@ class PostCreator
 
   # Shortcut
   def self.create(user, opts)
-    PostCreator.new(user, opts).create    
+    PostCreator.new(user, opts).create
   end
 
 end

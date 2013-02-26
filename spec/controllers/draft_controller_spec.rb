@@ -12,11 +12,11 @@ describe DraftController do
     Draft.get(user, 'xyz', 0).should == 'my data'
   end
 
-  it 'destroys drafts when required' do 
+  it 'destroys drafts when required' do
     user = log_in
     Draft.set(user, 'xxx', 0, 'hi')
     delete :destroy, draft_key: 'xxx', sequence: 0
     Draft.get(user, 'xxx', 0).should be_nil
   end
-  
+
 end

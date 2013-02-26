@@ -11,24 +11,24 @@ describe Search do
     nil
   end
 
-  context 'post indexing observer' do 
-    before do 
+  context 'post indexing observer' do
+    before do
       @category = Fabricate(:category, name: 'america')
       @topic = Fabricate(:topic, title: 'sam test topic', category: @category)
       @post = Fabricate(:post, topic: @topic, raw: 'this <b>fun test</b> <img src="bla" title="my image">')
       @indexed = Topic.exec_sql("select search_data from posts_search where id = #{@post.id}").first["search_data"]
     end
-    it "should include body in index" do 
+    it "should include body in index" do
       @indexed.should =~ /fun/
     end
-    it "should include title in index" do 
+    it "should include title in index" do
       @indexed.should =~ /sam/
     end
-    it "should include category in index" do 
+    it "should include category in index" do
       @indexed.should =~ /america/
     end
 
-    it "should pick up on title updates" do 
+    it "should pick up on title updates" do
       @topic.title = "harpi is the new title"
       @topic.save!
       @indexed = Topic.exec_sql("select search_data from posts_search where id = #{@post.id}").first["search_data"]
@@ -37,28 +37,28 @@ describe Search do
     end
   end
 
-  context 'user indexing observer' do 
-    before do 
+  context 'user indexing observer' do
+    before do
       @user = Fabricate(:user, username: 'fred', name: 'bob jones')
       @indexed = User.exec_sql("select search_data from users_search where id = #{@user.id}").first["search_data"]
     end
 
-    it "should pick up on username" do 
+    it "should pick up on username" do
       @indexed.should =~ /fred/
     end
 
-    it "should pick up on name" do 
+    it "should pick up on name" do
       @indexed.should =~ /jone/
     end
   end
 
-  context 'category indexing observer' do 
-    before do 
+  context 'category indexing observer' do
+    before do
       @category = Fabricate(:category, name: 'america')
       @indexed = Topic.exec_sql("select search_data from categories_search where id = #{@category.id}").first["search_data"]
     end
 
-    it "should pick up on name" do 
+    it "should pick up on name" do
       @indexed.should =~ /america/
     end
 
@@ -103,9 +103,9 @@ describe Search do
   context 'topics' do
     let!(:topic) { Fabricate(:topic) }
 
-    context 'searching the OP' do 
+    context 'searching the OP' do
 
-      let!(:post) { Fabricate(:post, topic: topic, user: topic.user) }      
+      let!(:post) { Fabricate(:post, topic: topic, user: topic.user) }
       let(:result) { first_of_type(Search.query('hello'), 'topic') }
 
       it 'returns a result' do
@@ -118,7 +118,7 @@ describe Search do
 
       it 'has a url for the post' do
         result['url'].should == topic.relative_url
-      end  
+      end
     end
 
   end
@@ -138,7 +138,7 @@ describe Search do
 
     it 'has a url for the topic' do
       result['url'].should == "/category/#{category.slug}"
-    end    
+    end
 
   end
 
@@ -147,7 +147,7 @@ describe Search do
 
     let!(:user) { Fabricate(:user, username: 'amazing', email: 'amazing@amazing.com') }
     let!(:category) { Fabricate(:category, name: 'amazing category', user: user) }
-    
+
 
     context 'user filter' do
       let(:results) { Search.query('amazing', 'user') }

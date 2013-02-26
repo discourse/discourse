@@ -12,14 +12,14 @@ describe Notification do
 
     let(:user) { Fabricate(:user) }
 
-    context 'a regular notification' do      
+    context 'a regular notification' do
       it 'increases unread_notifications' do
         lambda { Fabricate(:notification, user: user); user.reload }.should change(user, :unread_notifications)
       end
 
       it "doesn't increase unread_private_messages" do
         lambda { Fabricate(:notification, user: user); user.reload }.should_not change(user, :unread_private_messages)
-      end      
+      end
     end
 
     context 'a private message' do
@@ -29,7 +29,7 @@ describe Notification do
 
       it "increases unread_private_messages" do
         lambda { Fabricate(:private_message_notification, user: user); user.reload }.should change(user, :unread_private_messages)
-      end      
+      end
     end
 
   end
@@ -46,8 +46,8 @@ describe Notification do
       let!(:notification) { Fabricate(:notification) }
 
       it 'updates the notification count on destroy' do
-        MessageBusObserver.any_instance.expects(:refresh_notification_count).with(instance_of(Notification))      
-        notification.destroy        
+        MessageBusObserver.any_instance.expects(:refresh_notification_count).with(instance_of(Notification))
+        notification.destroy
       end
 
     end
@@ -58,7 +58,7 @@ describe Notification do
     it "calls email_user_mentioned on creating a notification" do
       UserEmailObserver.any_instance.expects(:email_user_mentioned).with(instance_of(Notification))
       Fabricate(:notification)
-    end    
+    end
 
   end
 
@@ -66,11 +66,11 @@ describe Notification do
     it "calls email_user_quoted on creating a quote notification" do
       UserEmailObserver.any_instance.expects(:email_user_quoted).with(instance_of(Notification))
       Fabricate(:quote_notification)
-    end    
+    end
   end
 
-  describe 'private message' do 
-    before do 
+  describe 'private message' do
+    before do
       @topic = Fabricate(:private_message_topic)
       @post = Fabricate(:post, :topic => @topic, :user => @topic.user)
       @target = @post.topic.topic_allowed_users.reject{|a| a.user_id == @post.user_id}[0].user
@@ -80,7 +80,7 @@ describe Notification do
       @target.notifications.first.notification_type.should == Notification.Types[:private_message]
     end
 
-    it 'should not add a pm notification for the creator' do 
+    it 'should not add a pm notification for the creator' do
       @post.user.unread_notifications.should == 0
     end
   end
@@ -98,21 +98,21 @@ describe Notification do
 
   describe 'data' do
     let(:notification) { Fabricate.build(:notification) }
-    
+
     it 'should have a data hash' do
       notification.data_hash.should be_present
     end
-    
+
     it 'should have the data within the json' do
       notification.data_hash[:poison].should == 'ivy'
     end
   end
 
-  describe 'mark_posts_read' do 
-    it "marks multiple posts as read if needed" do 
+  describe 'mark_posts_read' do
+    it "marks multiple posts as read if needed" do
       user = Fabricate(:user)
 
-      notifications = (1..3).map do |i| 
+      notifications = (1..3).map do |i|
         Notification.create!(read: false, user_id: user.id, topic_id: 2, post_number: i, data: '[]', notification_type: 1)
       end
       Notification.create!(read: true, user_id: user.id, topic_id: 2, post_number: 4, data: '[]', notification_type: 1)

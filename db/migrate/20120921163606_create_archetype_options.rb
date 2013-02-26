@@ -9,9 +9,9 @@ class CreateArchetypeOptions < ActiveRecord::Migration
 
     add_index :archetype_options, :archetype_id
 
-    execute "INSERT INTO archetype_options (archetype_id, key, option_type, created_at, updated_at) 
+    execute "INSERT INTO archetype_options (archetype_id, key, option_type, created_at, updated_at)
               VALUES (2, 'private_poll', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)"
-    execute "INSERT INTO archetype_options (archetype_id, key, option_type, created_at, updated_at) 
+    execute "INSERT INTO archetype_options (archetype_id, key, option_type, created_at, updated_at)
               VALUES (2, 'single_vote', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)"
   end
 end

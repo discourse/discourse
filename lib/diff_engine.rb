@@ -1,11 +1,11 @@
-# This class is used to generate diffs, it will be consumed by the UI on 
+# This class is used to generate diffs, it will be consumed by the UI on
 # on the client the displays diffs.
 #
-# Ruby has the diff/lcs engine that can do some of the work, the devil 
+# Ruby has the diff/lcs engine that can do some of the work, the devil
 #  is in the details
 
 class DiffEngine
-  
+
   # generate an html friendly diff similar to the way Stack Exchange generate
   #  html diffs
   #

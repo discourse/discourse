@@ -9,7 +9,7 @@ module Oneboxer
     def template
       template_path('simple_onebox')
     end
-    
+
     def parse(data)
 
       html_doc = Nokogiri::HTML(data)

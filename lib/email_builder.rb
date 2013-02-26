@@ -13,7 +13,7 @@ module EmailBuilder
       body << "\n"
       body << I18n.t("unsubscribe_link", params)
     end
-    
+
     mail to: to, subject: I18n.t("#{email_key}.subject_template", params), body: body
   end
 

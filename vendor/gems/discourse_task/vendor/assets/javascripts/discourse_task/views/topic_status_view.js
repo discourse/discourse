@@ -9,7 +9,7 @@
       if (topic.get('complete')) icon = 'ok';
       this.renderIcon(buffer, icon, 'task');
     }
-        
+
   });
 
   Discourse.TopicStatusView.reopen({
@@ -18,4 +18,4 @@
     }.observes('topic.complete')
   })
 
-}).call(this); 
+}).call(this);

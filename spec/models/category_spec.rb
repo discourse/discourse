@@ -24,9 +24,9 @@ describe Category do
     let(:category) { Fabricate.build(:category, name: SiteSetting.uncategorized_name) }
 
     it "is invalid to create a category with the reserved name" do
-      category.should_not be_valid  
+      category.should_not be_valid
     end
-    
+
   end
 
   describe "short name" do
@@ -92,7 +92,7 @@ describe Category do
     end
 
     it 'creates a topic post' do
-      @topic.should be_present      
+      @topic.should be_present
     end
 
     it 'points back to itself' do
@@ -160,15 +160,15 @@ describe Category do
   end
 
   describe 'update_stats' do
-    
+
     before do
       @category = Fabricate(:category)
     end
-    
+
     context 'with regular topics' do
 
       before do
-        @category.topics << Fabricate(:topic, user: @category.user)     
+        @category.topics << Fabricate(:topic, user: @category.user)
         Category.update_stats
         @category.reload
       end
@@ -184,13 +184,13 @@ describe Category do
       it 'updates topics_year' do
         @category.topics_year.should == 1
       end
-    
+
     end
-    
+
     context 'with deleted topics' do
 
       before do
-        @category.topics << Fabricate(:deleted_topic, 
+        @category.topics << Fabricate(:deleted_topic,
                                       user: @category.user)
         Category.update_stats
         @category.reload

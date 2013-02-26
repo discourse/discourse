@@ -20,7 +20,7 @@ describe PostActionsController do
       it 'raises an error when the post_action_type_id index is missing' do
         lambda { xhr :post, :create, id: @post.id }.should raise_error(Discourse::InvalidParameters)
       end
-      
+
       it "fails when the user doesn't have permission to see the post" do
         Guardian.any_instance.expects(:can_see?).with(@post).returns(false)
         xhr :post, :create, id: @post.id, post_action_type_id: PostActionType.Types[:like]
@@ -92,7 +92,7 @@ describe PostActionsController do
     context "not logged in" do
       it "should not allow them to clear flags" do
         lambda { xhr :post, :clear_flags }.should raise_error(Discourse::NotLoggedIn)
-      end      
+      end
     end
 
     context 'logged in' do
@@ -103,21 +103,21 @@ describe PostActionsController do
       end
 
       it "raises an error when the user doesn't have access" do
-        Guardian.any_instance.expects(:can_clear_flags?).returns(false) 
+        Guardian.any_instance.expects(:can_clear_flags?).returns(false)
         xhr :post, :clear_flags, id: flagged_post.id, post_action_type_id: PostActionType.Types[:spam]
         response.should be_forbidden
       end
 
       context "success" do
         before do
-          Guardian.any_instance.expects(:can_clear_flags?).returns(true) 
+          Guardian.any_instance.expects(:can_clear_flags?).returns(true)
           PostAction.expects(:clear_flags!).with(flagged_post, user.id, PostActionType.Types[:spam])
         end
 
-        it "delegates to clear_flags" do        
+        it "delegates to clear_flags" do
           xhr :post, :clear_flags, id: flagged_post.id, post_action_type_id: PostActionType.Types[:spam]
           response.should be_success
-        end    
+        end
 
         it "works with a deleted post" do
           flagged_post.destroy
@@ -163,7 +163,7 @@ describe PostActionsController do
       xhr :get, :users, id: post.id, post_action_type_id: PostActionType.Types[:like]
       response.should be_forbidden
     end
-      
+
     it 'succeeds' do
       xhr :get, :users, id: post.id, post_action_type_id: PostActionType.Types[:like]
       response.should be_success

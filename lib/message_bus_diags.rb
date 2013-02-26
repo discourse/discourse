@@ -17,7 +17,7 @@ class MessageBusDiags
   def self.seen_hosts
     @host_info
   end
-  
+
   unless @subscribed
 
     MessageBus.subscribe "/server-name-reply/#{my_id}" do |msg|

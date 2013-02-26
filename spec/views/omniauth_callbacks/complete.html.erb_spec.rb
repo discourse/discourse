@@ -37,7 +37,7 @@ describe "users/omniauth_callbacks/complete.html.erb" do
     rendered_data["auth_provider"].should eq("OpenId")
     rendered_data["awaiting_activation"].should eq(true)
   end
-  
+
 end
 
 

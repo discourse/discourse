@@ -57,7 +57,7 @@ class PostsController < ApplicationController
 
     result = {post: post_serializer.as_json}
     if revisor.category_changed.present?
-      result[:category] = CategorySerializer.new(revisor.category_changed, scope: guardian, root: false).as_json      
+      result[:category] = CategorySerializer.new(revisor.category_changed, scope: guardian, root: false).as_json
     end
 
     render_json_dump(result)
@@ -127,7 +127,7 @@ class PostsController < ApplicationController
 
   # Returns the "you're creating a post education"
   def education_text
-    
+
   end
 
   def bookmark
@@ -149,10 +149,10 @@ class PostsController < ApplicationController
       finder = Post.where(id: params[:id] || params[:post_id])
 
       # Include deleted posts if the user is a moderator
-      finder = finder.with_deleted if current_user.try(:has_trust_level?, :moderator)      
+      finder = finder.with_deleted if current_user.try(:has_trust_level?, :moderator)
 
       post = finder.first
       guardian.ensure_can_see!(post)
       post
-    end    
+    end
 end

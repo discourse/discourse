@@ -8,7 +8,7 @@ describe SystemMessage do
   context 'send' do
 
     let(:user) { Fabricate(:user) }
-    let(:system_message) { SystemMessage.new(user) } 
+    let(:system_message) { SystemMessage.new(user) }
     let(:post) { system_message.create(:welcome_invite) }
     let(:topic) { post.topic }
 

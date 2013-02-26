@@ -23,10 +23,10 @@ describe Admin::FlagsController do
       it 'returns a valid json payload when some thing is flagged' do
         p = Fabricate(:post)
         u = Fabricate(:user)
-        
+
         PostAction.act(u, p, PostActionType.Types[:spam])
         xhr :get, :index
-        
+
         data = ::JSON.parse(response.body)
         data["users"].length == 2
         data["posts"].length == 1
@@ -34,4 +34,4 @@ describe Admin::FlagsController do
     end
   end
 end
-    
+

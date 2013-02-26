@@ -74,7 +74,7 @@ module Oneboxer
        /thinkgeek\.com\/.+/,
        /deadline\.com\/.+/
      ]
-    end    
+    end
 
     def self.allowed?(url)
       #return true

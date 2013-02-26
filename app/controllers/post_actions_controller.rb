@@ -72,7 +72,7 @@ class PostActionsController < ApplicationController
       finder = Post.where(id: params[:id])
 
       # Include deleted posts if the user is a moderator
-      finder = finder.with_deleted if current_user.try(:has_trust_level?, :moderator)      
+      finder = finder.with_deleted if current_user.try(:has_trust_level?, :moderator)
 
       @post = finder.first
       guardian.ensure_can_see!(@post)

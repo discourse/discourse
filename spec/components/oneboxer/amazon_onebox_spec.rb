@@ -9,15 +9,15 @@ describe Oneboxer::AmazonOnebox do
     @o = Oneboxer::AmazonOnebox.new("http://www.amazon.com/Ruby-Programming-Language-David-Flanagan/dp/0596516177")
     FakeWeb.register_uri(:get, @o.translate_url, :response => fixture_file('oneboxer/amazon.response'))
   end
-  
+
   it "translates the URL" do
     @o.translate_url.should == "http://www.amazon.com/gp/aw/d/0596516177"
   end
-  
+
   it "generates the expected onebox for Amazon" do
     @o.onebox.should == expected_amazon_result
   end
-  
+
 private
   def expected_amazon_result
     <<EXPECTED

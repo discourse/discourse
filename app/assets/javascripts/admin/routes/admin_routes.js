@@ -6,7 +6,6 @@
 **/
 Discourse.buildRoutes(function() {
   this.resource('admin', { path: '/admin' }, function() {
-
     this.route('dashboard', { path: '/' });
     this.route('site_settings', { path: '/site_settings' });
     this.route('email_logs', { path: '/email_logs' });

@@ -5,7 +5,7 @@ module Oneboxer
 
     matcher /^https?:\/\/itunes\.apple\.com\/.+$/
     favicon 'apple.png'
-    
+
     # Don't masquerade as mobile
     def http_params
       {}
@@ -14,7 +14,7 @@ module Oneboxer
     def template
       template_path('simple_onebox')
     end
-    
+
     def parse(data)
 
       html_doc = Nokogiri::HTML(data)

@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe InviteMailer do
-  
+
   describe "send_invite" do
     let(:invite) { Fabricate(:invite) }
     subject { InviteMailer.send_invite(invite) }
