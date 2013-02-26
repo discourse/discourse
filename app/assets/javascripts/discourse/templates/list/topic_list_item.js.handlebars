@@ -3,17 +3,17 @@
     <td class='star'>
       <a {{bindAttr class=":star :icon-star starred:starred"}} {{action toggleStar this target="controller"}} href='#' title='{{i18n favorite.help}}'></a>
     </td>
-  {{/if}}       
+  {{/if}}
 
   <td class='main-link clearfix'>
-      {{view Discourse.TopicStatusView topicBinding="this"}} 
+      {{view Discourse.TopicStatusView topicBinding="this"}}
       {{{topicLink this showTagIfPresent="controller.category"}}}
       {{#if unread}}
         <a href="{{lastReadUrl}}" class='badge unread badge-notification' title='{{i18n topic.unread_posts unread="unread"}}'>{{unread}}</a>
       {{/if}}
       {{#if displayNewPosts}}
         <a href="{{lastReadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new_posts new_posts="displayNewPosts"}}'>{{displayNewPosts}}</a>
-      {{/if}}  
+      {{/if}}
       {{#if unseen}}
         <a href="{{lastReadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new}}'><i class='icon icon-asterisk'></i></a>
       {{/if}}
@@ -32,13 +32,13 @@
 
   <td class='num'>
     {{#if like_count}}
-      <a href='{{url}}{{#if has_best_of}}/best_of{{/if}}' title='{{i18n topic.likes likes="like_count"}}'>{{like_count}} <i class='icon-heart'></i></a>
+      <a href='{{url}}{{#if has_best_of}}/best_of{{/if}}' title='{{i18n topic.likes count="like_count"}}'>{{like_count}} <i class='icon-heart'></i></a>
     {{/if}}
   </td>
-  
-  <td class='num'>{{number views numberKey="views_long"}}</td>  
-  
-  {{#if singlePost}}          
+
+  <td class='num'>{{number views numberKey="views_long"}}</td>
+
+  {{#if singlePost}}
     <td class='num activity'>
       <a href="{{url}}" class='age' title='{{i18n first_post}}: {{{unboundDate created_at}}}'>{{{age}}}</a>
     </td>
@@ -49,5 +49,5 @@
     </td>
     <td class='num activity last'>
       <a href="{{lastPostUrl}}" class='age' title='{{i18n last_post}}: {{{unboundDate last_posted_at}}}'>{{{last_post_age}}}</a>
-    </td>                
+    </td>
   {{/if}}
