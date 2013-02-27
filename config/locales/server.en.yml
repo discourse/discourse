@@ -666,6 +666,16 @@ en:
         ---
         Please visit this link to respond: %{base_url}%{url}
 
+    user_posted:
+      subject_template: "[%{site_name}] %{username} posted in '%{topic_title}'"
+      text_body_template: |
+        %{username} posted in '%{topic_title}' on %{site_name}:
+
+        ---
+        %{message}
+
+        ---
+        Please visit this link to respond: %{base_url}%{url}
 
     digest:
       why: "Here's a brief summary of what happened on %{site_link} since we last saw you on %{last_seen_at}."
