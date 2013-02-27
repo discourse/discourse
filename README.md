@@ -16,17 +16,11 @@ If you're interested in helping us develop Discourse, please start with our [**D
 
 If you're familiar with how Rails works and are comfortable setting up your own environment, use our [**Discourse Advanced Developer Guide**](https://github.com/discourse/discourse/blob/master/docs/DEVELOPER-ADVANCED.md).
 
-### Requirements
-
-- [Ruby 1.9.3+](http://www.ruby-lang.org/en/downloads/)
-- [PostgreSQL 9.1+](http://www.postgresql.org/download/)
-- [Redis 2.6+](http://redis.io/download)
+Before you get started, ensure you have the following minimum versions: [Ruby 1.9.3+](http://www.ruby-lang.org/en/downloads/), [PostgreSQL 9.1+](http://www.postgresql.org/download/), [Redis 2.6+](http://redis.io/download).
 
 ## Vision
 
-Discourse is a **Civilized Discourse Construction Kit**, an 100% open-source discussion platform that is free for everyone to use and contribute to -- forever.
-
-Key Discourse mission goals:
+Discourse is a **Civilized Discourse Construction Kit**, an 100% open-source discussion platform that is free for everyone to use and contribute to -- forever. Our key mission goals:
 
 - A **flattened, endlessly scrolling discussion**, avoiding the awkardness of traditionally threaded and paginated discussion, while allowing replies to be expanded in place for additional context.
 
