@@ -21,6 +21,7 @@ Discourse.ActionsHistoryView = Discourse.View.extend({
 
   // This was creating way too many bound ifs and subviews in the handlebars version.
   render: function(buffer) {
+
     if (!this.present('content')) return;
     return this.get('content').forEach(function(c) {
       var alsoName;

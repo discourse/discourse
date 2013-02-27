@@ -152,13 +152,14 @@ class PostSerializer < ApplicationSerializer
                         hidden: (sym == :vote),
                         can_act: scope.post_can_act?(object, sym, taken_actions: post_actions)}
 
-      next if !action_summary[:can_act] && !scope.current_user
+      # The following only applies if you're logged in
+      if action_summary[:can_act] and scope.current_user.present?
+        action_summary[:can_clear_flags] = scope.is_admin? && PostActionType.FlagTypes.include?(id)
 
-      action_summary[:can_clear_flags] = scope.is_admin? && PostActionType.FlagTypes.include?(id)
-
-      if post_actions.present? and post_actions.has_key?(id)
-        action_summary[:acted] = true
-        action_summary[:can_undo] = scope.can_delete?(post_actions[id])
+        if post_actions.present? and post_actions.has_key?(id)
+          action_summary[:acted] = true
+          action_summary[:can_undo] = scope.can_delete?(post_actions[id])
+        end
       end
 
       # anonymize flags

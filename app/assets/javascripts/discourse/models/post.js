@@ -110,13 +110,10 @@ Discourse.Post = Discourse.Model.extend({
 
   actionsHistory: (function() {
     if (!this.present('actions_summary')) return null;
+
     return this.get('actions_summary').filter(function(i) {
-      if (i.get('count') === 0) {
-        return false;
-      }
-      if (i.get('users') && i.get('users').length > 0) {
-        return true;
-      }
+      if (i.get('count') === 0) return false;
+      if (i.get('users') && i.get('users').length > 0) return true;
       return !i.get('hidden');
     });
   }).property('actions_summary.@each.users', 'actions_summary.@each.count'),
