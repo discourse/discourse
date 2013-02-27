@@ -17,7 +17,7 @@ class TopicsController < ApplicationController
                                           :move_posts]
   before_filter :consider_user_for_promotion, only: :show
 
-  skip_before_filter :check_xhr, only: [:avatar, :show]
+  skip_before_filter :check_xhr, only: [:avatar, :show, :feed]
   caches_action :avatar, :cache_path => Proc.new {|c| "#{c.params[:post_number]}-#{c.params[:topic_id]}" }
 
 
@@ -139,6 +139,11 @@ class TopicsController < ApplicationController
     )
 
     render nothing: true
+  end
+
+  def feed
+    @topic_view = TopicView.new(params[:topic_id])
+    render 'topics/show', formats: [:rss]
   end
 
   private
