@@ -20,6 +20,15 @@ class UserEmailObserver < ActiveRecord::Observer
                    notification_id: notification.id)
   end
 
+  def email_user_posted(notification)
+    return unless notification.user.email_direct?
+    Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes,
+                   :user_email,
+                   type: :user_posted,
+                   user_id: notification.user_id,
+                   notification_id: notification.id)
+  end
+
   def email_user_quoted(notification)
     return unless notification.user.email_direct?
     Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes,

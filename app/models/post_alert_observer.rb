@@ -85,6 +85,8 @@ class PostAlertObserver < ActiveRecord::Observer
 
       # Don't notify the same user about the same notification on the same post
       return if user.notifications.exists?(notification_type: type, topic_id: post.topic_id, post_number: post.post_number)
+
+      # Create the notification
       user.notifications.create(notification_type: type,
                                 topic_id: post.topic_id,
                                 post_number: post.post_number,

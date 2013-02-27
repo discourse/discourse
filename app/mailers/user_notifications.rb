@@ -76,5 +76,6 @@ class UserNotifications < ActionMailer::Base
   alias :user_replied :notification_template
   alias :user_quoted :notification_template
   alias :user_mentioned :notification_template
+  alias :user_posted :notification_template
 
 end
