@@ -21,7 +21,10 @@
 // The rest of the externals
 //= require_tree ./external
 //= require i18n
-//= require discourse/translations
+
+// The following needs to go right after including i18n, because other scripts
+// below require correctly set locale already
+//= require init_locale
 
 //= require ./discourse/helpers/i18n_helpers
 //= require ./discourse
