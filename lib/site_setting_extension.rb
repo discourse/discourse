@@ -144,7 +144,7 @@ module SiteSettingExtension
     type = get_data_type(defaults[name])
 
     if type == Types::Bool && val != true && val != false
-      val = (val == "t" || val == "true")
+      val = (val == "t" || val == "true") ? 't' : 'f'
     end
 
     if type == Types::Fixnum && !(Fixnum === val)
