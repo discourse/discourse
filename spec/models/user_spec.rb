@@ -716,4 +716,22 @@ describe User do
 
   end
 
+  describe '#readable_name' do
+    context 'when name is missing' do
+      it 'returns just the username' do
+        Fabricate(:user, username: 'foo', name: nil).readable_name.should == 'foo'
+      end
+    end
+    context 'when name and username are identical' do
+      it 'returns just the username' do
+        Fabricate(:user, username: 'foo', name: 'foo').readable_name.should == 'foo'
+      end
+    end
+    context 'when name and username are not identical' do
+      it 'returns the name and username' do
+        Fabricate(:user, username: 'foo', name: 'Bar Baz').readable_name.should == 'Bar Baz (foo)'
+      end
+    end
+  end
+
 end

@@ -234,6 +234,10 @@ class TopicView
     @highest_post_number ||= @all_posts.maximum(:post_number)
   end
 
+  def recent_posts
+    @all_posts.by_newest.with_user.first(25)
+  end
+
   protected
 
   def read_posts_set

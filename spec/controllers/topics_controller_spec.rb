@@ -299,6 +299,16 @@ describe TopicsController do
 
   end
 
+  describe '#feed' do
+    let(:topic) { Fabricate(:post).topic }
+
+    it 'renders rss of the topic' do
+      get :feed, topic_id: topic.id, slug: 'foo', format: :rss
+      response.should be_success
+      response.content_type.should == 'application/rss+xml'
+    end
+  end
+
   describe 'update' do
     it "won't allow us to update a topic when we're not logged in" do
       lambda { xhr :put, :update, topic_id: 1, slug: 'xyz' }.should raise_error(Discourse::NotLoggedIn)

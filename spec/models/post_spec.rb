@@ -23,6 +23,24 @@ describe Post do
 
   it_behaves_like "a versioned model"
 
+  describe 'scopes' do
+
+    describe '#by_newest' do
+      it 'returns posts ordered by created_at desc' do
+        2.times { Fabricate(:post) }
+        Post.by_newest.first.created_at.should > Post.by_newest.last.created_at
+      end
+    end
+
+    describe '#with_user' do
+      it 'gives you a user' do
+        Fabricate(:post, user: Fabricate(:user))
+        Post.with_user.first.user.should be_a User
+      end
+    end
+
+  end
+
   describe 'post uniqueness' do
 
     context "disabled" do
@@ -760,5 +778,11 @@ describe Post do
 
   end
 
+  describe '#readable_author' do
+    it 'delegates to the associated user' do
+      User.any_instance.expects(:readable_name)
+      Fabricate(:post).author_readable
+    end
+  end
 
 end
