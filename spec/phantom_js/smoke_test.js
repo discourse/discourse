@@ -91,7 +91,7 @@ var run = function(){
 
 page.runTests = function(){
 
-  test("more than one topic shows up", function() {
+  test("at least one topic shows up", function() {
     return $('#topic-list tbody tr').length > 0;
   });
 
