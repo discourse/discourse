@@ -64,7 +64,7 @@ Before contributing to Discourse, please:
    - submit bugs,
    - request new features, and
    - step you through the entire process of preparing your code for a Pull Request.
-4. For ideas about areas of Discourse that need your assistance with, see http://meta.discourse.org/t/so-you-want-to-help-out-with-discourse/3823
+4. Not sure what to work on? [**We've got some ideas!**](http://meta.discourse.org/t/so-you-want-to-help-out-with-discourse/3823)
 
 **We look forward to seeing your cool stuff!**
 
@@ -81,9 +81,7 @@ Plus *lots* of Ruby Gems, a complete list of which is at [**SOFTWARE.MD**](https
 
 ## Versioning
 
-Discourse implements the [Semantic Versioning guidelines](http://semver.org/).
-
-Releases will be numbered with the following format:
+Discourse implements the [Semantic Versioning guidelines](http://semver.org/). Releases will be numbered with the following format:
 
 `<major>.<minor>.<patch>`
 
