@@ -44,8 +44,10 @@ describe UserNotifications do
   describe '.user_mentioned' do
 
     let(:post) { Fabricate(:post, user: user) }
+    let(:username) { "walterwhite"}
+
     let(:notification) do
-      Fabricate(:notification, user: user, topic: post.topic, post_number: post.post_number )
+      Fabricate(:notification, user: user, topic: post.topic, post_number: post.post_number, data: {display_username: username}.to_json )
     end
 
     subject { UserNotifications.user_mentioned(user, notification: notification, post: notification.post) }
@@ -53,6 +55,12 @@ describe UserNotifications do
     its(:to) { should == [user.email] }
     its(:subject) { should be_present }
     its(:from) { should == [SiteSetting.notification_email] }
+
+    it "should have the correct from address" do
+      subject.header['from'].to_s.should == "\"#{username} @ #{SiteSetting.title}\" <#{SiteSetting.notification_email}>"
+    end
+
+
     its(:body) { should be_present }
   end
 
