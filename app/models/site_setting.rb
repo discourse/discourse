@@ -118,6 +118,7 @@ class SiteSetting < ActiveRecord::Base
 
   setting(:clef_app_id, '')
   setting(:clef_app_secret, '')
+  client_setting(:clef_login_enabled, false)
 
   setting(:enforce_global_nicknames, true)
   setting(:discourse_org_access_key, '')
