@@ -313,6 +313,10 @@ en:
     facebook_app_id: "App id for Facebook authentication, registered at https://developers.facebook.com/apps"
     facebook_app_secret: "App secret for Facebook authentication, registered at https://developers.facebook.com/apps"
 
+    clef_app_id: "App id for Clef authentication, registered at https://developer.clef.io/"
+    clef_app_secret: "App secret for Clef authentication, registered at https://developer.clef.io/"
+    clef_login_enabled: "Enable Clef authentication, requires clef_app_id and clef_app_secret"
+
     allow_import: "Allow import, which can replace ALL site data; leave false unless you plan to do imports"
 
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
