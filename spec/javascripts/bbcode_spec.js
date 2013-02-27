@@ -108,15 +108,28 @@ describe("Discourse.BBCode", function() {
     describe("quoting", function() {
 
       it("can quote", function() {
-        expect(format("[quote=\"eviltrout, post:1, topic:1\"]abc[/quote]", { lookupAvatar: false })).toBe("</p><aside class='quote' data-post=\"1\" data-topic=\"1\" >\n  <div class='title'>\n    <div class='quote-controls'></div>\n  \n  eviltrout\n  said:\n  </div>\n  <blockquote>abc</blockquote>\n</aside>\n<p>");
+        expect(format("[quote=\"eviltrout, post:1, topic:1\"]abc[/quote]",
+                      { lookupAvatar: false })
+                     ).toBe("</p><aside class='quote' data-post=\"1\" data-topic=\"1\" >\n  <div class='title'>\n    " +
+                            "<div class='quote-controls'></div>\n  \n  eviltrout\n  said:\n  </div>\n  <blockquote>abc</blockquote>\n</aside>\n<p>");
       });
 
       it("can nest quotes", function() {
-        expect(format("[quote=\"eviltrout, post:1, topic:1\"]abc[quote=\"eviltrout, post:2, topic:2\"]nested[/quote][/quote]", { lookupAvatar: false })).toBe("</p><aside class='quote' data-post=\"1\" data-topic=\"1\" >\n  <div class='title'>\n    <div class='quote-controls'></div>\n  \n  eviltrout\n  said:\n  </div>\n  <blockquote>abc</p><aside class='quote' data-post=\"2\" data-topic=\"2\" >\n  <div class='title'>\n    <div class='quote-controls'></div>\n  \n  eviltrout\n  said:\n  </div>\n  <blockquote>nested</blockquote>\n</aside>\n<p></blockquote>\n</aside>\n<p>");
+        expect(format("[quote=\"eviltrout, post:1, topic:1\"]abc[quote=\"eviltrout, post:2, topic:2\"]nested[/quote][/quote]",
+                      { lookupAvatar: false })
+                     ).toBe("</p><aside class='quote' data-post=\"1\" data-topic=\"1\" >\n  <div class='title'>\n    <div " +
+                            "class='quote-controls'></div>\n  \n  eviltrout\n  said:\n  </div>\n  <blockquote>abc</p><aside " +
+                            "class='quote' data-post=\"2\" data-topic=\"2\" >\n  <div class='title'>\n    <div class='quote-" +
+                            "controls'></div>\n  \n  eviltrout\n  said:\n  </div>\n  <blockquote>nested</blockquote>\n</aside>\n<p></blockquote>\n</aside>\n<p>");
       });
 
       it("can handle more than one quote", function() {
-        expect(format("before[quote=\"eviltrout, post:1, topic:1\"]first[/quote]middle[quote=\"eviltrout, post:2, topic:2\"]second[/quote]after", { lookupAvatar: false })).toBe("before</p><aside class='quote' data-post=\"1\" data-topic=\"1\" >\n  <div class='title'>\n    <div class='quote-controls'></div>\n  \n  eviltrout\n  said:\n  </div>\n  <blockquote>first</blockquote>\n</aside>\n<p>middle</p><aside class='quote' data-post=\"2\" data-topic=\"2\" >\n  <div class='title'>\n    <div class='quote-controls'></div>\n  \n  eviltrout\n  said:\n  </div>\n  <blockquote>second</blockquote>\n</aside>\n<p>after");
+        expect(format("before[quote=\"eviltrout, post:1, topic:1\"]first[/quote]middle[quote=\"eviltrout, post:2, topic:2\"]second[/quote]after",
+                      { lookupAvatar: false })
+                     ).toBe("before</p><aside class='quote' data-post=\"1\" data-topic=\"1\" >\n  <div class='title'>\n    <div class='quote-cont" +
+                            "rols'></div>\n  \n  eviltrout\n  said:\n  </div>\n  <blockquote>first</blockquote>\n</aside>\n<p>middle</p><aside cla" +
+                            "ss='quote' data-post=\"2\" data-topic=\"2\" >\n  <div class='title'>\n    <div class='quote-controls'></div>\n  \n  " +
+                            "eviltrout\n  said:\n  </div>\n  <blockquote>second</blockquote>\n</aside>\n<p>after");
       });
 
     });
