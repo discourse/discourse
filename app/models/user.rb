@@ -21,6 +21,7 @@ class User < ActiveRecord::Base
   has_many :user_visits
   has_many :invites
   has_one :twitter_user_info
+  has_one :github_user_info
   belongs_to :approved_by, class_name: 'User'
 
   validates_presence_of :username

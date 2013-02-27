@@ -248,6 +248,9 @@ en:
       yahoo:
         title: "Log In with Yahoo"
         message: "Authenticating with Yahoo (make sure pop up blockers are not enabled)"
+      github:
+        title: "Log In with Github"
+        message: "Authenticating with Github (make sure pop up blockers are not enabled)"
 
     composer:
       saving_draft_tip: "saving"

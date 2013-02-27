@@ -162,6 +162,12 @@
       content: "Y";
     }
   }
+  &.github {
+    background: $github;
+    &:before {
+      content: "g";
+    }
+  }
 }
 
 // Button Sizes

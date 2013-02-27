@@ -116,6 +116,10 @@ class SiteSetting < ActiveRecord::Base
   setting(:facebook_app_id, '')
   setting(:facebook_app_secret, '')
 
+  client_setting(:enable_github_logins, false)
+  setting(:github_client_id, '')
+  setting(:github_client_secret, '')
+
   setting(:enforce_global_nicknames, true)
   setting(:discourse_org_access_key, '')
   setting(:enable_s3_uploads, false)

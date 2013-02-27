@@ -314,6 +314,9 @@ en:
     facebook_app_secret: "App secret for Facebook authentication, registered at https://developers.facebook.com/apps"
 
     allow_import: "Allow import, which can replace ALL site data; leave false unless you plan to do data imports"
+    enable_github_logins: "Enable Github authentication, requires github_client_id and github_client_secret"
+    github_client_id: "Client id for Github authentication, registered at https://github.com/settings/applications"
+    github_client_secret: "Client secret for Github authentication, registered at https://github.com/settings/applications"
 
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
     previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"

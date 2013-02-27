@@ -101,6 +101,14 @@ Discourse.LoginView = Discourse.ModalBodyView.extend({
     }
   },
 
+  githubLogin: function() {
+    var left, top;
+    this.set('authenticate', 'github');
+    left = this.get('lastX') - 400;
+    top = this.get('lastY') - 200;
+    return window.open("/auth/github", "_blank", "menubar=no,status=no,height=400,width=800,left=" + left + ",top=" + top);
+  },
+
   authenticationComplete: function(options) {
     if (options.awaiting_approval) {
       this.flash(Em.String.i18n('login.awaiting_approval'), 'success');

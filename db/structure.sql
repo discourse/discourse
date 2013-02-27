@@ -1239,7 +1239,7 @@ CREATE TABLE categories (
 --
 
 CREATE SEQUENCE categories_id_seq
-    START WITH 5
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1324,7 +1324,7 @@ CREATE TABLE draft_sequences (
 --
 
 CREATE SEQUENCE draft_sequences_id_seq
-    START WITH 20
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1358,7 +1358,7 @@ CREATE TABLE drafts (
 --
 
 CREATE SEQUENCE drafts_id_seq
-    START WITH 2
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1391,7 +1391,7 @@ CREATE TABLE email_logs (
 --
 
 CREATE SEQUENCE email_logs_id_seq
-    START WITH 3
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1426,7 +1426,7 @@ CREATE TABLE email_tokens (
 --
 
 CREATE SEQUENCE email_tokens_id_seq
-    START WITH 3
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1477,6 +1477,39 @@ CREATE SEQUENCE facebook_user_infos_id_seq
 --
 
 ALTER SEQUENCE facebook_user_infos_id_seq OWNED BY facebook_user_infos.id;
+
+
+--
+-- Name: github_user_infos; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE github_user_infos (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    screen_name character varying(255) NOT NULL,
+    github_user_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: github_user_infos_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE github_user_infos_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: github_user_infos_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE github_user_infos_id_seq OWNED BY github_user_infos.id;
 
 
 --
@@ -1639,7 +1672,7 @@ CREATE TABLE onebox_renders (
 --
 
 CREATE SEQUENCE onebox_renders_id_seq
-    START WITH 2
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1673,7 +1706,7 @@ CREATE TABLE post_action_types (
 --
 
 CREATE SEQUENCE post_action_types_id_seq
-    START WITH 6
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1804,7 +1837,7 @@ CREATE TABLE posts (
 --
 
 CREATE SEQUENCE posts_id_seq
-    START WITH 16
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1895,7 +1928,7 @@ CREATE TABLE site_settings (
 --
 
 CREATE SEQUENCE site_settings_id_seq
-    START WITH 4
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1927,7 +1960,7 @@ CREATE TABLE topic_allowed_users (
 --
 
 CREATE SEQUENCE topic_allowed_users_id_seq
-    START WITH 3
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -2119,7 +2152,7 @@ CREATE TABLE topics (
 --
 
 CREATE SEQUENCE topics_id_seq
-    START WITH 16
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -2225,7 +2258,7 @@ CREATE TABLE user_actions (
 --
 
 CREATE SEQUENCE user_actions_id_seq
-    START WITH 40
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -2289,7 +2322,7 @@ CREATE TABLE user_visits (
 --
 
 CREATE SEQUENCE user_visits_id_seq
-    START WITH 4
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -2356,7 +2389,7 @@ CREATE TABLE users (
 --
 
 CREATE SEQUENCE users_id_seq
-    START WITH 3
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -2686,6 +2719,13 @@ ALTER TABLE ONLY email_tokens ALTER COLUMN id SET DEFAULT nextval('email_tokens_
 --
 
 ALTER TABLE ONLY facebook_user_infos ALTER COLUMN id SET DEFAULT nextval('facebook_user_infos_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY github_user_infos ALTER COLUMN id SET DEFAULT nextval('github_user_infos_id_seq'::regclass);
 
 
 --
@@ -3172,6 +3212,14 @@ ALTER TABLE ONLY topic_links
 
 ALTER TABLE ONLY topics
     ADD CONSTRAINT forum_threads_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: github_user_infos_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY github_user_infos
+    ADD CONSTRAINT github_user_infos_pkey PRIMARY KEY (id);
 
 
 --
@@ -3927,6 +3975,20 @@ CREATE INDEX index_forum_threads_on_bumped_at ON topics USING btree (bumped_at D
 
 
 --
+-- Name: index_github_user_infos_on_github_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_github_user_infos_on_github_user_id ON github_user_infos USING btree (github_user_id);
+
+
+--
+-- Name: index_github_user_infos_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_github_user_infos_on_user_id ON github_user_infos USING btree (user_id);
+
+
+--
 -- Name: index_invites_on_email_and_invited_by_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4578,3 +4640,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130213021450');
 INSERT INTO schema_migrations (version) VALUES ('20130213203300');
 
 INSERT INTO schema_migrations (version) VALUES ('20130221215017');
+
+INSERT INTO schema_migrations (version) VALUES ('20130226015336');

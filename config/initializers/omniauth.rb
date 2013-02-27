@@ -27,4 +27,8 @@ Rails.application.config.middleware.use OmniAuth::Builder do
            SiteSetting.twitter_consumer_key,
            SiteSetting.twitter_consumer_secret
 
+  provider :github,
+           SiteSetting.github_client_id,
+           SiteSetting.github_client_secret
+
 end
