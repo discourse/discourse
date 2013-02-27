@@ -151,4 +151,8 @@ class SiteSetting < ActiveRecord::Base
     self.enforce_global_nicknames? and self.discourse_org_access_key.present?
   end
 
+  def self.topic_title_length
+    min_topic_title_length..max_topic_title_length
+  end
+
 end

@@ -107,4 +107,13 @@ describe SiteSetting do
     end
   end
 
+  describe 'topic_title_length' do
+    it 'returns a range of min/max topic title length' do
+      SiteSetting.min_topic_title_length = 1
+      SiteSetting.max_topic_title_length = 2
+
+      SiteSetting.topic_title_length.should == (1..2)
+    end
+  end
+
 end
