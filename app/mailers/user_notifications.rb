@@ -63,15 +63,25 @@ class UserNotifications < ActionMailer::Base
     @post = opts[:post]
     return unless @post.present?
 
+    username = @notification.data_hash[:display_username]
     notification_type = Notification.InvertedTypes[opts[:notification].notification_type].to_s
-    build_email user.email,
-                "user_notifications.user_#{notification_type}",
-                topic_title: @notification.data_hash[:topic_title],
-                message: @post.raw,
-                url: @post.url,
-                username: @notification.data_hash[:display_username],
-                add_unsubscribe_link: true
+
+    email_opts = {
+      topic_title: @notification.data_hash[:topic_title],
+      message: @post.raw,
+      url: @post.url,
+      username: username,
+      add_unsubscribe_link: true
+    }
+
+    # If we have a display name, change the from address
+    if username.present?
+      email_opts[:from] = "\"#{username} @ #{SiteSetting.title}\" <#{SiteSetting.notification_email}>"
+    end
+
+    email = build_email user.email, "user_notifications.user_#{notification_type}", email_opts
   end
+
   alias :user_invited_to_private_message :notification_template
   alias :user_replied :notification_template
   alias :user_quoted :notification_template

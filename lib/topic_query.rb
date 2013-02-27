@@ -157,9 +157,13 @@ class TopicQuery
       results = default_list(unordered: true, per_page: count)
                  .where('topics.id NOT IN (?)', exclude_topic_ids)
                  .where(closed: false, archived: false, visible: true)
-                 .order('RANDOM()')
 
-      results = results.where('category_id = ?', topic.category_id) if topic.category_id.present?
+      if topic.category_id.present?
+        results = results.order("CASE WHEN topics.category_id = #{topic.category_id.to_i} THEN 0 ELSE 1 END, RANDOM()")
+      else
+        results = results.order("RANDOM()")
+      end
+
       results
     end
 
