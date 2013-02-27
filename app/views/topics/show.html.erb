@@ -23,5 +23,5 @@
 <p>Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled</p>
 
 <% content_for :head do %>
-  <%= auto_discovery_link_tag(@topic_view, {action: :feed, format: :rss}, title: "RSS feed of '#{@topic_view.title}'") %>
+  <%= auto_discovery_link_tag(@topic_view, {action: :feed, format: :rss}, title: "RSS feed of '#{@topic_view.title}'", type: 'application/rss+xml') %>
 <% end %>
