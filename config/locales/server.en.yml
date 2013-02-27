@@ -239,11 +239,11 @@ en:
     enforce_global_nicknames: "Enforce global nickname uniqueness (WARNING: only change this during initial setup)"
     discourse_org_access_key: "The access key used to access the Discourse Hub nickname registry at discourse.org"
     educate_until_posts: "Show pop-up composer education panel until the user has made this many posts"
-    title: "Title of this website"
-    company_full_name: "The full name of the company that runs this site. This is used in places like the terms of service."
-    company_short_name: "The short name of the company that runs this site."
-    company_domain: "The domain at which this site is found"
-    secret_token: "Secret token used to secure cookies"
+    title: "Title of this site, will be used in the title tag and elsewhere"
+    company_full_name: "The full name of the company that runs this site, used in legal documents like the /tos"
+    company_short_name: "The short name of the company that runs this site, used in legal documents like the /tos"
+    company_domain: "The domain name owned by the company that runs this site, used in legal documents like the /tos"
+    secret_token: "Generate a new secret with 'rake secret', copy the output of that command and paste it here"
     restrict_access: "Restrict forum access unless a password is entered"
     access_password: "When restricted access is enabled, this password must be entered"
     queue_jobs: "Queue various jobs in sidekiq, if false queues are inline"
@@ -299,10 +299,10 @@ en:
     supress_reply_directly_below: "Don't show reply count on a post when there is a single reply directly below"
     allow_index_in_robots_txt: "Site should be indexed by search engines (update robots.txt)"
     email_domains_blacklist: "A pipe-delimited list of email domains that are not allowed. Example: mailinator.com|trashmail.net"
-    version_checks: "Ping Discourse Hub for version updates and report them on the admin dashboard."
+    version_checks: "Ping the Discourse Hub for version updates and show version messages on the /admin dashboard"
 
-    port: "If you'd like to specify a port in the URL. Useful in development mode. Leave blank for none"
-    force_hostname: "If you'd like to specify a hostname in the URL. Useful in development mode. Leave blank for none"
+    port: "Use this HTTP port rather than the default of port 80. Leave blank for none, mainly useful for development"
+    force_hostname: "Specify a hostname in the URL. Leave blank for none, mainly useful for development"
 
     invite_expiry_days: "How long user invitation keys are valid, in days"
 
@@ -313,7 +313,7 @@ en:
     facebook_app_id: "App id for Facebook authentication, registered at https://developers.facebook.com/apps"
     facebook_app_secret: "App secret for Facebook authentication, registered at https://developers.facebook.com/apps"
 
-    allow_import: "Allow import, which can replace ALL site data; leave false unless you plan to do imports"
+    allow_import: "Allow import, which can replace ALL site data; leave false unless you plan to do data imports"
 
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
     previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"
@@ -324,18 +324,18 @@ en:
     rate_limit_create_topic: "How many seconds, after creating a topic, before you can create another topic"
     rate_limit_create_post: "How many seconds, after creating a post, before you can create another post"
 
-    max_likes_per_day: "Maximum number of likes a user can perform in a day"
-    max_flags_per_day: "Maximum number of flags a user can perform in a day"
-    max_bookmarks_per_day: "Maximum number of bookmarks a user can create in a day"
-    max_edits_per_day: "Maximum number of edits a user can perform in a day"
-    max_favorites_per_day: "Maximum number of topics that can be favorited in a day"
-    max_topics_per_day: "Maximum number of topics a user can create in a day"
-    max_private_messages_per_day: "The maximum amount of private messages you can send in a day"
+    max_likes_per_day: "Maximum number of likes per user per day"
+    max_flags_per_day: "Maximum number of flags per user per day"
+    max_bookmarks_per_day: "Maximum number of bookmarks per user per day"
+    max_edits_per_day: "Maximum number of edits per user per day"
+    max_favorites_per_day: "Maximum number of topics that can be favorited per user per day"
+    max_topics_per_day: "Maximum number of topics a user can create per day"
+    max_private_messages_per_day: "The maximum amount of private messages users can create per day"
 
-    suggested_topics: "The number of suggested topics at the bottom of a topic"
+    suggested_topics: "The number of suggested topics shown at the bottom of a topic"
 
     enable_s3_uploads: "Place uploads on Amazon S3"
-    s3_upload_bucket: "The Amazon S3 bucket files will be uploaded into"
+    s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into"
 
     default_invitee_trust_level: "Default trust level (0-5) for invited users"
     default_trust_level: "Default trust level (0-5) for users"
@@ -349,8 +349,8 @@ en:
     email_time_window_mins: "How many minutes we wait before sending a user mail, to give them a chance to see it first"
     flush_timings_secs: "How frequently we flush timing data to the server, in seconds"
     max_word_length: "The maximum allowed word length, in characters, in a topic title"
-    title_min_entropy: "The minimum allowed entropy for a topic title"
-    body_min_entropy: "The minimum allowed entropy for post body"
+    title_min_entropy: "The minimum allowed entropy (unique characters) required for a topic title"
+    body_min_entropy: "The minimum allowed entropy (unique characters) required for a post body"
     new_user_period_days: "How long a user is highlighted as being new, in days"
     title_fancy_entities: "Convert fancy HTML entities in topic titles"
 
