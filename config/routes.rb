@@ -137,10 +137,13 @@ Discourse::Application.routes.draw do
   resources :user_actions
   resources :education
 
+  get 'category/:category.rss' => 'list#category_feed', format: :rss, as: 'category_feed'
   get 'category/:category' => 'list#category'
+  get 'category/:category' => 'list#category', as: 'category'
+  get 'category/:category/more' => 'list#category', as: 'category'
+  get 'categories' => 'categories#index'
   get 'popular' => 'list#index'
   get 'popular/more' => 'list#index'
-  get 'categories' => 'categories#index'
   get 'favorited' => 'list#favorited'
   get 'favorited/more' => 'list#favorited'
   get 'read' => 'list#read'
@@ -151,8 +154,6 @@ Discourse::Application.routes.draw do
   get 'new/more' => 'list#new'
   get 'posted' => 'list#posted'
   get 'posted/more' => 'list#posted'
-  get 'category/:category' => 'list#category', as: 'category'
-  get 'category/:category/more' => 'list#category', as: 'category'
 
   get 'search' => 'search#query'
 

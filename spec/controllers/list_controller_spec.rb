@@ -43,6 +43,14 @@ describe ListController do
         it { should respond_with(:success) }
       end
 
+      describe 'feed' do
+        it 'renders RSS' do
+          get :category_feed, category: category.slug, format: :rss
+          response.should be_success
+          response.content_type.should == 'application/rss+xml'
+        end
+      end
+
     end
 
     context 'uncategorized' do
@@ -58,8 +66,6 @@ describe ListController do
       end
 
     end
-
-
 
   end
 

@@ -60,6 +60,8 @@ class Topic < ActiveRecord::Base
 
   scope :listable_topics, lambda { where('topics.archetype <> ?', [Archetype.private_message]) }
 
+  scope :by_newest, order('created_at desc, id desc')
+
   # Helps us limit how many favorites can be made in a day
   class FavoriteLimiter < RateLimiter
     def initialize(user)
