@@ -36,7 +36,7 @@ module Discourse
 
     # Precompile all available locales
     Dir.glob("app/assets/javascripts/locales/*.js.erb").each do |file|
-      config.assets.precompile << file.match(/([a-z]+\.js)\.erb$/)[1]
+      config.assets.precompile << "locales/#{file.match(/([a-z]+\.js)\.erb$/)[1]}"
     end
 
     # Activate observers that should always be running.
