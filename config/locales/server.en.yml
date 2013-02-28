@@ -230,6 +230,12 @@ en:
     title: "Re-Subscribed!"
     description: "You have been re-subscribed."
 
+  reports:
+    visits:
+      title: "Users Visits by Day"
+      xaxis: "Day"
+      yaxis: "Visits"
+
   site_settings:
     min_post_length: "Minimum post length in characters"
     max_post_length: "Maximum post length in characters"

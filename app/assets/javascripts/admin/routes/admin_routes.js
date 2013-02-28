@@ -11,6 +11,8 @@ Discourse.Route.buildRoutes(function() {
     this.route('email_logs', { path: '/email_logs' });
     this.route('customize', { path: '/customize' });
 
+    this.resource('adminReports', { path: '/reports/:type' });
+
     this.resource('adminFlags', { path: '/flags' }, function() {
       this.route('active', { path: '/active' });
       this.route('old', { path: '/old' });

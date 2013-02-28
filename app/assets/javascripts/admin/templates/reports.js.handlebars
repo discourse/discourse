@@ -1,0 +1,20 @@
+{{#if content.loaded}}
+  <h3>{{content.title}}</h3>
+
+  <table class='table'>
+    <tr>
+      <th>{{content.xaxis}}</th>
+      <th>{{content.yaxis}}</th>
+    </tr>
+
+    {{#each content.data}}
+      <tr>
+        <td>{{x}}</td>
+        <td>{{y}}</td>
+      </tr>
+    {{/each}}
+  </table>
+
+{{else}}
+  {{i18n loading}}
+{{/if}}
