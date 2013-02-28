@@ -19,10 +19,11 @@ module Search
                   u.username AS title,
                   u.email,
                   NULL AS color
-          FROM users AS u
-          JOIN users_search s on s.id = u.id
-          WHERE s.search_data @@ TO_TSQUERY('english', :query)
-          ORDER BY last_posted_at desc
+    FROM users AS u
+    JOIN users_search s on s.id = u.id
+    WHERE s.search_data @@ TO_TSQUERY(:locale, :query)
+    ORDER BY last_posted_at desc
+    LIMIT :limit
     "
   end
 
@@ -36,14 +37,16 @@ module Search
     FROM topics AS ft
       JOIN posts AS p ON p.topic_id = ft.id AND p.post_number = 1
       JOIN posts_search s on s.id = p.id
-    WHERE s.search_data @@ TO_TSQUERY('english', :query)
+    WHERE s.search_data @@ TO_TSQUERY(:locale, :query)
       AND ft.deleted_at IS NULL
       AND ft.visible
       AND ft.archetype <> '#{Archetype.private_message}'
     ORDER BY
-            TS_RANK_CD(TO_TSVECTOR('english', ft.title), TO_TSQUERY('english', :query)) desc,
-            TS_RANK_CD(search_data, TO_TSQUERY('english', :query)) desc,
-            bumped_at desc"
+            TS_RANK_CD(TO_TSVECTOR(:locale, ft.title), TO_TSQUERY(:locale, :query)) desc,
+            TS_RANK_CD(search_data, TO_TSQUERY(:locale, :query)) desc,
+            bumped_at desc
+    LIMIT :limit
+    "
   end
 
 
@@ -57,14 +60,16 @@ module Search
     FROM topics AS ft
       JOIN posts AS p ON p.topic_id = ft.id AND p.post_number <> 1
       JOIN posts_search s on s.id = p.id
-    WHERE s.search_data @@ TO_TSQUERY('english', :query)
+    WHERE s.search_data @@ TO_TSQUERY(:locale, :query)
       AND ft.deleted_at IS NULL and p.deleted_at IS NULL
       AND ft.visible
       AND ft.archetype <> '#{Archetype.private_message}'
     ORDER BY
-            TS_RANK_CD(TO_TSVECTOR('english', ft.title), TO_TSQUERY('english', :query)) desc,
-            TS_RANK_CD(search_data, TO_TSQUERY('english', :query)) desc,
-            bumped_at desc"
+            TS_RANK_CD(TO_TSVECTOR(:locale, ft.title), TO_TSQUERY(:locale, :query)) desc,
+            TS_RANK_CD(search_data, TO_TSQUERY(:locale, :query)) desc,
+            bumped_at desc
+    LIMIT :limit
+    "
   end
 
   def self.category_query_sql
@@ -76,15 +81,16 @@ module Search
             c.color
     FROM categories AS c
     JOIN categories_search s on s.id = c.id
-    WHERE s.search_data @@ TO_TSQUERY('english', :query)
+    WHERE s.search_data @@ TO_TSQUERY(:locale, :query)
     ORDER BY topics_month desc
+    LIMIT :limit
     "
   end
 
   def self.query(term, type_filter=nil)
 
     return nil if term.blank?
-    sanitized_term = term.gsub(/[^0-9a-zA-Z_ ]/, '')
+    sanitized_term = PG::Connection.escape_string(term) #term.gsub(/[^0-9a-zA-Z_ ]/, '')
 
     # really short terms are totally pointless
     return nil if sanitized_term.blank? || sanitized_term.length < self.min_search_term_length
@@ -94,14 +100,13 @@ module Search
 
     if type_filter.present?
       raise Discourse::InvalidAccess.new("invalid type filter") unless Search.facets.include?(type_filter)
-      sql = Search.send("#{type_filter}_query_sql") << " LIMIT #{Search.per_facet * Search.facets.size}"
-      db_result = ActiveRecord::Base.exec_sql(sql , query: terms.join(" & "))
+      sql = Search.send("#{type_filter}_query_sql")
+      db_result = ActiveRecord::Base.exec_sql(sql , query: terms.join(" & "), locale: 'english', limit: Search.per_facet * Search.facets.size)
     else
 
       db_result = []
       [user_query_sql, category_query_sql, topic_query_sql].each do |sql|
-        sql << " LIMIT " << (Search.per_facet + 1).to_s
-        db_result += ActiveRecord::Base.exec_sql(sql , query: terms.join(" & ")).to_a
+        db_result += ActiveRecord::Base.exec_sql(sql , query: terms.join(" & "),locale: 'english', limit: (Search.per_facet + 1)).to_a
       end
     end
 
@@ -118,8 +123,8 @@ module Search
     end
 
     if expected_topics > 0
-      tmp = ActiveRecord::Base.exec_sql "#{post_query_sql} limit :per_facet",
-        query: terms.join(" & "), per_facet: expected_topics * 3
+      tmp = ActiveRecord::Base.exec_sql post_query_sql,
+        query: terms.join(" & "), locale: 'english', limit: expected_topics * 3
 
       topic_ids = Set.new db_result.map{|r| r["id"]}
 
