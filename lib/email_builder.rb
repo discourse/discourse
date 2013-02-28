@@ -14,7 +14,14 @@ module EmailBuilder
       body << I18n.t("unsubscribe_link", params)
     end
 
-    mail to: to, subject: I18n.t("#{email_key}.subject_template", params), body: body
+    mail_args = {
+      to: to,
+      subject: I18n.t("#{email_key}.subject_template", params),
+      body: body
+    }
+    mail_args[:from] = params[:from] if params[:from].present?
+
+    mail(mail_args)
   end
 
 end

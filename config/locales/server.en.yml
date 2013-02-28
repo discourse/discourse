@@ -2,6 +2,7 @@ en:
   title: "Discourse"
   topics: "Topics"
 
+  via: "%{username} via %{site_name}"
   is_reserved: "is reserved"
   too_many_mentions: "has too many users mentioned"
   too_many_images: "has too many images"
