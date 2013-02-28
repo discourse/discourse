@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'spec_helper'
 require 'search'
 
@@ -70,8 +72,7 @@ describe Search do
   end
 
   it 'escapes non alphanumeric characters' do
-    ActiveRecord::Base.expects(:exec_sql).never
-    Search.query(':!$').should be_blank
+    Search.query(':!$);}]>@\#\"\'').should be_blank # There are at least three levels of sanitation for Search.query!
   end
 
   it 'works when given two terms with spaces' do
@@ -121,6 +122,20 @@ describe Search do
       end
     end
 
+  end
+
+  context 'cyrillic topic' do
+    let!(:cyrillic_topic) { Fabricate(:topic) do
+                                                user
+                                                title { sequence(:title) { |i| "Тестовая запись #{i}" } }
+                                              end
+    }
+    let!(:post) {Fabricate(:post, topic: cyrillic_topic, user: cyrillic_topic.user)}
+    let(:result) { first_of_type(Search.query('запись'), 'topic') }
+
+    it 'finds something when given cyrillic query' do
+      result.should be_present
+    end
   end
 
   context 'categories' do
