@@ -232,7 +232,7 @@ describe("Discourse.BBCode", function() {
         cooked: "<p><b>lorem</b> ipsum</p>",
         username: "eviltrout",
         post_number: 1,
-        topic_id: 2,
+        topic_id: 2
       });
 
       it("returns an empty string when contents is undefined", function() {
