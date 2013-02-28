@@ -78,13 +78,23 @@
 }
 
 .version-check {
+  float: left;
+  width: 500px;
+}
+.version-check-right {
+  float:right;
+  width: 500px;
+  margin-right: 15px;
+}
+
+.version-check {
   .version-number {
     font-size: 18px;
     font-weight: bold
   }
 
-  .version-notes {
-    margin-left: 24px;
+  .version-notes i.icon {
+    margin-left: 20px;
   }
 
   &.critical .version-notes .normal-note {
@@ -109,8 +119,10 @@
   }
 }
 
-#git-commits-widget {
-  margin: 10px 0;
+.update-nag {
+  i.icon {
+    font-size: 20px;
+  }
 }
 
 .settings {

@@ -1,17 +1,20 @@
 <h3>{{i18n admin.dashboard.welcome}}</h3>
 
 {{#if Discourse.SiteSettings.version_checks}}
-  <p {{bindAttr class=":version-check versionCheck.critical_updates:critical:normal"}}>
+  <div {{bindAttr class=":version-check versionCheck.critical_updates:critical:normal"}}>
     {{#if loading }}
-      {{i18n loading}}
+      <p>{{i18n loading}}</p>
     {{else}}
-      {{i18n admin.dashboard.version}}: <span class="version-number">{{ versionCheck.installed_version }}</span>
+      <p>
+        {{i18n admin.dashboard.version}}: <span class="version-number">{{ versionCheck.installed_version }}</span>
 
-      {{#if versionCheck.installed_sha}}
-        <span class="git-version">(<a {{bindAttr href="versionCheck.gitLink"}} target="_blank">{{versionCheck.shortSha}}</a>)</span>
-      {{/if}}
+        {{#if versionCheck.installed_sha}}
+          <span class="git-version">(<a {{bindAttr href="versionCheck.gitLink"}} target="_blank">{{versionCheck.shortSha}}</a>)</span>
+        {{/if}}
+      </p>
 
-      <span class="version-notes">
+      <p class="version-notes">
+        {{i18n admin.dashboard.latest_version}}: <span class="version-number">{{ versionCheck.latest_version }}</span>
         {{#if versionCheck.upToDate }}
           <i class='icon icon-ok update-to-date'></i> {{i18n admin.dashboard.up_to_date}}
         {{else}}
@@ -19,11 +22,19 @@
           <span class="critical-note">{{i18n admin.dashboard.critical_available}}</span>
           <span class="normal-note">{{i18n admin.dashboard.updates_available}}</span>
           {{i18n admin.dashboard.please_upgrade}}
-          {{i18n admin.dashboard.latest_version}}: <span class="version-number">{{ versionCheck.latest_version }}</span>
         {{/if}}
-      </span>
-    {{/if}}
-  </p>
+      </p>
 
-  <iframe src="http://tylerlh.github.com/github-latest-commits-widget/?username=discourse&repo=discourse&limit=10" allowtransparency="true" frameborder="0" scrolling="no" width="502px" height="252px" id="git-commits-widget"></iframe>
+      <p class="update-nag">
+        <i class="icon icon-github"></i>
+        <a href="https://github.com/discourse/discourse" target="_blank">{{i18n admin.dashboard.update_often}}</a>
+      </p>
+    {{/if}}
+  </div>
+
+  <div class="version-check-right">
+    <iframe src="http://tylerlh.github.com/github-latest-commits-widget/?username=discourse&repo=discourse&limit=10" allowtransparency="true" frameborder="0" scrolling="no" width="502px" height="252px" id="git-commits-widget"></iframe>
+  </div>
+
+  <div class='clearfix'></div>
 {{/if}}
