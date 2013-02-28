@@ -1,13 +1,12 @@
 class IncomingLink < ActiveRecord::Base
   belongs_to :topic
 
-  validates :domain, :length => { :in => 1..100 }
-  validates :referer, :length => { :in => 3..1000 }
+  validates :domain, length: { in: 1..100 }
+  validates :referer, length: { in: 3..1000 }
   validates_presence_of :url
 
   # Extract the domain
   before_validation do
-
     # Referer (remote URL)
     if referer.present?
       parsed = URI.parse(referer)
@@ -27,7 +26,6 @@ class IncomingLink < ActiveRecord::Base
         # If we can't route to the url, that's OK. Don't save those two fields.
       end
     end
-
   end
 
   # Update appropriate incoming link counts
@@ -43,5 +41,4 @@ class IncomingLink < ActiveRecord::Base
       end
     end
   end
-
 end

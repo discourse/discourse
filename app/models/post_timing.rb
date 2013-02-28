@@ -1,5 +1,4 @@
 class PostTiming < ActiveRecord::Base
-
   belongs_to :topic
   belongs_to :user
 
@@ -9,7 +8,6 @@ class PostTiming < ActiveRecord::Base
 
   # Increases a timer if a row exists, otherwise create it
   def self.record_timing(args)
-
     rows = exec_sql_row_count("UPDATE post_timings
                                SET msecs = msecs + :msecs
                                WHERE topic_id = :topic_id
@@ -28,7 +26,6 @@ class PostTiming < ActiveRecord::Base
                args)
 
     end
-
   end
 
 
@@ -43,7 +40,6 @@ class PostTiming < ActiveRecord::Base
   def self.process_timings(current_user, topic_id, highest_seen, topic_time, timings)
     current_user.update_time_read!
 
-    original_unread = current_user.unread_notifications_by_type
     timings.each do |post_number, time|
       if post_number >= 0
         PostTiming.record_timing(topic_id: topic_id,
@@ -64,7 +60,5 @@ class PostTiming < ActiveRecord::Base
       current_user.reload
       current_user.publish_notifications_state
     end
-
   end
-
 end

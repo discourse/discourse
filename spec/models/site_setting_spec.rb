@@ -116,4 +116,12 @@ describe SiteSetting do
     end
   end
 
+  describe 'post_length' do
+    it 'returns a range of min/max post length' do
+      SiteSetting.min_post_length = 1
+      SiteSetting.max_post_length = 2
+
+      SiteSetting.post_length.should == (1..2)
+    end
+  end
 end

@@ -14,5 +14,4 @@ class TopicPoster < OpenStruct
   def [](attr)
     send(attr)
   end
-
 end

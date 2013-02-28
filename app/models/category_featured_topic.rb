@@ -4,19 +4,16 @@ class CategoryFeaturedTopic < ActiveRecord::Base
 
   # Populates the category featured topics
   def self.feature_topics
-
     transaction do
       Category.all.each do |c|
         feature_topics_for(c)
         CategoryFeaturedUser.feature_users_in(c)
       end
     end
-
-    nil
   end
 
   def self.feature_topics_for(c)
-    return unless c.present?
+    return if c.blank?
 
     CategoryFeaturedTopic.transaction do
       exec_sql "DELETE FROM category_featured_topics WHERE category_id = :category_id", category_id: c.id

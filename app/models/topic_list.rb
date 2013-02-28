@@ -67,10 +67,8 @@ class TopicList
         query = TopicQuery.new(@current_user, only_category: catSplit[1], limit: false)
         s[name] = query.unread_count + query.new_count
       end
-
     end
 
     s
   end
-
 end

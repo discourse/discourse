@@ -5,5 +5,4 @@ class UserVisit < ActiveRecord::Base
   def self.by_day
     where("visited_at > ?", 1.month.ago).group(:visited_at).order(:visited_at).count
   end
-
 end
