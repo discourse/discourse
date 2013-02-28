@@ -110,9 +110,14 @@ class SiteSetting < ActiveRecord::Base
 
   setting(:send_welcome_message, true)
 
+  client_setting(:enable_google_logins, true)
+  client_setting(:enable_yahoo_logins, true)
+
+  client_setting(:enable_twitter_logins, true)
   setting(:twitter_consumer_key, '')
   setting(:twitter_consumer_secret, '')
 
+  client_setting(:enable_facebook_logins, true)
   setting(:facebook_app_id, '')
   setting(:facebook_app_secret, '')
 
