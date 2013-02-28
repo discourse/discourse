@@ -17,7 +17,6 @@
 
 // The rest of the externals
 //= require_tree ../../app/assets/javascripts/external
-//= require i18n
 
 //= require ../../app/assets/javascripts/discourse/helpers/i18n_helpers
 //= require ../../app/assets/javascripts/discourse

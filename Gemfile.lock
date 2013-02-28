@@ -203,8 +203,6 @@ GEM
     hiredis (0.4.5)
     httpauth (0.2.0)
     i18n (0.6.1)
-    i18n-js (2.1.2)
-      i18n
     image_optim (0.7.2)
       fspath (~> 2.0.3)
       image_size (~> 1.1)
@@ -479,7 +477,6 @@ DEPENDENCIES
   guard-spork
   has_ip_address
   hiredis
-  i18n-js
   image_optim
   jasminerice
   jquery-rails

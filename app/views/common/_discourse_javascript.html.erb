@@ -16,10 +16,6 @@
 
 <%# load the selected locale before any other scripts %>
 <%= javascript_include_tag "locales/#{I18n.locale}" %>
-<%# store the locale into a variable, because the scripts need it, see init_locale.js %>
-<script>
-  window.currentLocale = "<%= I18n.locale %>";
-</script>
 
 <%- if mini_profiler_enabled? %>
   <%- Rack::MiniProfiler.step "application" do %>

@@ -237,6 +237,7 @@ en:
       yaxis: "Visits"
 
   site_settings:
+    default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"
     min_post_length: "Minimum post length in characters"
     max_post_length: "Maximum post length in characters"
     min_topic_title_length: "Minimum topic title length in characters"

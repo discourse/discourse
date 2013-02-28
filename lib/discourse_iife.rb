@@ -4,7 +4,7 @@ class DiscourseIIFE < Sprockets::Processor
   def evaluate(context, locals)
 
     path = context.pathname.to_s
-    
+
     # Only discourse or admin paths
     return data unless (path =~ /\/javascripts\/discourse/ or path =~ /\/javascripts\/admin/)
 
@@ -13,8 +13,8 @@ class DiscourseIIFE < Sprockets::Processor
 
     # We don't add IIFEs to handlebars
     return data if path =~ /\.handlebars/
-    return data if path =~ /\.shbrs/    
-    return data if path =~ /\.hbrs/    
+    return data if path =~ /\.shbrs/
+    return data if path =~ /\.hbrs/
 
     "(function () {\n\nvar $ = window.jQuery;\n\n#{data}\n\n})(this);"
   end

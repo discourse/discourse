@@ -149,6 +149,9 @@ class SiteSetting < ActiveRecord::Base
 
   setting(:title_fancy_entities, true)
 
+  # The default locale for the site
+  setting(:default_locale, 'en')
+
   client_setting(:educate_until_posts, 2)
 
   def self.call_discourse_hub?

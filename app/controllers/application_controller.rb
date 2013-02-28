@@ -21,6 +21,7 @@ class ApplicationController < ActionController::Base
   before_filter :store_incoming_links
   before_filter :preload_json
   before_filter :check_xhr
+  before_filter :set_locale
 
   rescue_from Exception do |exception|
     unless [ ActiveRecord::RecordNotFound, ActionController::RoutingError,
@@ -75,6 +76,11 @@ class ApplicationController < ActionController::Base
 
   rescue_from Discourse::InvalidAccess do
     render file: 'public/403', formats: [:html], layout: false, status: 403
+  end
+
+
+  def set_locale
+    I18n.locale = SiteSetting.default_locale
   end
 
   def store_preloaded(key, json)

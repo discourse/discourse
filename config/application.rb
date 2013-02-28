@@ -34,6 +34,11 @@ module Discourse
       'jquery.js', 'defer/html-sanitizer-bundle.js'
     ]
 
+    # Precompile all available locales
+    Dir.glob("app/assets/javascripts/locales/*.js.erb").each do |file|
+      config.assets.precompile << file.match(/([a-z]+\.js)\.erb$/)[1]
+    end
+
     # Activate observers that should always be running.
     config.active_record.observers = [
         :user_email_observer,
