@@ -212,7 +212,6 @@ nl:
     discourse_org_access_key: "De toegangscode voor het discourse.org nickname-register"
 
     title: "titel van deze website"
-    secret_token: "geheim token om cookies te beveiligen"
     restrict_access: "beperk forumtoegang aan gebruikers tenzij dit wachtwoord door hen is ingevuld"
     access_password: "restrict_access (Beperk Toegang) staat aan. Zorg ervoor dat dit wachtwoord staat ingevuld"
     queue_jobs: "zet verschillende taken in een queue binnen sidekiq, als ongeldige queues zich op dezelfde lijn bevinden"

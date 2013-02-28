@@ -48,7 +48,6 @@ class SiteSetting < ActiveRecord::Base
   setting(:port, Rails.env.development? ? 3000 : '')
   setting(:enable_private_messages, true)
   setting(:use_ssl, false)
-  setting(:secret_token)
   setting(:restrict_access, false)
   setting(:access_password)
   setting(:queue_jobs, !Rails.env.test?)

@@ -245,7 +245,6 @@ fr:
     discourse_org_access_key: "La clé d'accès utilisée pour le registre de pseudos de discourse.org"
     educate_until_posts: "Afficher les aides à la saisie tant que l'utilisateur n'a pas posté ce nombre de messages"
     title: "titre de ce site internet"
-    secret_token: "jeton secret utilisé pour sécuriser les cookies"
     restrict_access: "restreindre l'acces au forum à ceux qui possèdent ce mot de passe"
     access_password: "Si l'accès restreint est activé, assurez-vous que le mot de passe soit saisi ici."
     queue_jobs: "mettre les différents jobs en attente sur différentes queues, si false les queues sont en file"

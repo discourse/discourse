@@ -250,7 +250,6 @@ en:
     company_full_name: "The full name of the company that runs this site, used in legal documents like the /tos"
     company_short_name: "The short name of the company that runs this site, used in legal documents like the /tos"
     company_domain: "The domain name owned by the company that runs this site, used in legal documents like the /tos"
-    secret_token: "Generate a new secret with 'rake secret', copy the output of that command and paste it here"
     restrict_access: "Restrict forum access unless a password is entered"
     access_password: "When restricted access is enabled, this password must be entered"
     queue_jobs: "Queue various jobs in sidekiq, if false queues are inline"
