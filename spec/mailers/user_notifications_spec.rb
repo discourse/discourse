@@ -57,7 +57,7 @@ describe UserNotifications do
     its(:from) { should == [SiteSetting.notification_email] }
 
     it "should have the correct from address" do
-      subject.header['from'].to_s.should == "\"#{username} @ #{SiteSetting.title}\" <#{SiteSetting.notification_email}>"
+      subject.header['from'].to_s.should == "#{username} via #{SiteSetting.title} <#{SiteSetting.notification_email}>"
     end
 
 
