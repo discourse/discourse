@@ -9,7 +9,7 @@
 **/
 Discourse.BBCode = {
 
-  QUOTE_REGEXP: /\[quote=([^\]]*)\]([\s\S]*?)\[\/quote\]/im,
+  QUOTE_REGEXP: /\[quote=([^\]]*)\]((?:[^](?!\[quote=[^\]]*\]))*?)\[\/quote\]/im,
 
   // Define our replacers
   replacers: {
