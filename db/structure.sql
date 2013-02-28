@@ -1239,7 +1239,7 @@ CREATE TABLE categories (
 --
 
 CREATE SEQUENCE categories_id_seq
-    START WITH 1
+    START WITH 5
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1324,7 +1324,7 @@ CREATE TABLE draft_sequences (
 --
 
 CREATE SEQUENCE draft_sequences_id_seq
-    START WITH 1
+    START WITH 20
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1358,7 +1358,7 @@ CREATE TABLE drafts (
 --
 
 CREATE SEQUENCE drafts_id_seq
-    START WITH 1
+    START WITH 2
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1391,7 +1391,7 @@ CREATE TABLE email_logs (
 --
 
 CREATE SEQUENCE email_logs_id_seq
-    START WITH 1
+    START WITH 3
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1426,7 +1426,7 @@ CREATE TABLE email_tokens (
 --
 
 CREATE SEQUENCE email_tokens_id_seq
-    START WITH 1
+    START WITH 3
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1672,7 +1672,7 @@ CREATE TABLE onebox_renders (
 --
 
 CREATE SEQUENCE onebox_renders_id_seq
-    START WITH 1
+    START WITH 2
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1706,7 +1706,7 @@ CREATE TABLE post_action_types (
 --
 
 CREATE SEQUENCE post_action_types_id_seq
-    START WITH 1
+    START WITH 6
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1837,7 +1837,7 @@ CREATE TABLE posts (
 --
 
 CREATE SEQUENCE posts_id_seq
-    START WITH 1
+    START WITH 16
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1928,7 +1928,7 @@ CREATE TABLE site_settings (
 --
 
 CREATE SEQUENCE site_settings_id_seq
-    START WITH 1
+    START WITH 4
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1960,7 +1960,7 @@ CREATE TABLE topic_allowed_users (
 --
 
 CREATE SEQUENCE topic_allowed_users_id_seq
-    START WITH 1
+    START WITH 3
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -2152,7 +2152,7 @@ CREATE TABLE topics (
 --
 
 CREATE SEQUENCE topics_id_seq
-    START WITH 1
+    START WITH 16
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -2258,7 +2258,7 @@ CREATE TABLE user_actions (
 --
 
 CREATE SEQUENCE user_actions_id_seq
-    START WITH 1
+    START WITH 40
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -2322,7 +2322,7 @@ CREATE TABLE user_visits (
 --
 
 CREATE SEQUENCE user_visits_id_seq
-    START WITH 1
+    START WITH 4
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -2389,7 +2389,7 @@ CREATE TABLE users (
 --
 
 CREATE SEQUENCE users_id_seq
-    START WITH 1
+    START WITH 3
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE

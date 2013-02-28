@@ -13,7 +13,7 @@ class Promotion
     # nil users are never promoted
     return false if @user.blank?
 
-    trust_key = TrustLevel.Levels.invert[@user.trust_level]
+    trust_key = TrustLevel.level_key(@user.trust_level)
 
     review_method = :"review_#{trust_key.to_s}"
     return send(review_method) if respond_to?(review_method)

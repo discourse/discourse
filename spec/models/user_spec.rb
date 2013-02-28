@@ -87,7 +87,7 @@ describe User do
 
   end
 
-  describe '.approve!' do
+  describe '.approve' do
     let(:user) { Fabricate(:user) }
     let(:admin) { Fabricate(:admin) }
 
@@ -231,7 +231,7 @@ describe User do
       User.new.trust_level.should == TrustLevel.Levels[:advanced]
     end
 
-    describe 'has_trust_level' do
+    describe 'has_trust_level?' do
 
       it "raises an error with an invalid level" do
         lambda { user.has_trust_level?(:wat) }.should raise_error
