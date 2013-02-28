@@ -48,10 +48,6 @@ This vision translates to the following functional commitments:
   - iOS 5+
   - Android 4.0+
 
-## Having Problems getting set up?
-
-Before contacting us for help, please review our [Troubleshooting Guide](https://github.com/discourse/discourse/blob/master/docs/TROUBLESHOOTING.md).
-
 ## Contributing
 
 [![Build Status](https://travis-ci.org/discourse/discourse.png)](https://travis-ci.org/discourse/discourse)
@@ -71,6 +67,10 @@ Before contributing to Discourse, please:
 4. Not sure what to work on? [**We've got some ideas!**](http://meta.discourse.org/t/so-you-want-to-help-out-with-discourse/3823)
 
 **We look forward to seeing your cool stuff!**
+
+## Having Problems getting set up?
+
+Before contacting us for help, please review our [Troubleshooting Guide](https://github.com/discourse/discourse/blob/master/docs/TROUBLESHOOTING.md).
 
 ## Expertise
 
