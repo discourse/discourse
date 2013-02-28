@@ -1,13 +1,13 @@
-{{#if content.loaded}}
-  <h3>{{content.title}}</h3>
+{{#if loaded}}
+  <h3>{{title}}</h3>
 
   <table class='table'>
     <tr>
-      <th>{{content.xaxis}}</th>
-      <th>{{content.yaxis}}</th>
+      <th>{{xaxis}}</th>
+      <th>{{yaxis}}</th>
     </tr>
 
-    {{#each content.data}}
+    {{#each data}}
       <tr>
         <td>{{x}}</td>
         <td>{{y}}</td>
