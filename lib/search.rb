@@ -87,6 +87,16 @@ module Search
     "
   end
 
+  def self.current_locale_long
+    case I18n.locale         # Currently-present in /conf/locales/* only, sorry :-( Add as needed
+      when :ru then 'russian'
+      when :fr then 'french'
+      when :nl then 'dutch'
+      when :sv then 'swedish'
+      else 'english'
+    end
+  end
+
   def self.query(term, type_filter=nil)
 
     return nil if term.blank?
@@ -101,12 +111,12 @@ module Search
     if type_filter.present?
       raise Discourse::InvalidAccess.new("invalid type filter") unless Search.facets.include?(type_filter)
       sql = Search.send("#{type_filter}_query_sql")
-      db_result = ActiveRecord::Base.exec_sql(sql , query: terms.join(" & "), locale: 'english', limit: Search.per_facet * Search.facets.size)
+      db_result = ActiveRecord::Base.exec_sql(sql , query: terms.join(" & "), locale: current_locale_long, limit: Search.per_facet * Search.facets.size)
     else
 
       db_result = []
       [user_query_sql, category_query_sql, topic_query_sql].each do |sql|
-        db_result += ActiveRecord::Base.exec_sql(sql , query: terms.join(" & "),locale: 'english', limit: (Search.per_facet + 1)).to_a
+        db_result += ActiveRecord::Base.exec_sql(sql , query: terms.join(" & "),locale: current_locale_long, limit: (Search.per_facet + 1)).to_a
       end
     end
 
@@ -124,7 +134,7 @@ module Search
 
     if expected_topics > 0
       tmp = ActiveRecord::Base.exec_sql post_query_sql,
-        query: terms.join(" & "), locale: 'english', limit: expected_topics * 3
+        query: terms.join(" & "), locale: current_locale_long, limit: expected_topics * 3
 
       topic_ids = Set.new db_result.map{|r| r["id"]}
 
