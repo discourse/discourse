@@ -76,7 +76,8 @@ class UserNotifications < ActionMailer::Base
 
     # If we have a display name, change the from address
     if username.present?
-      email_opts[:from] = "\"#{username} @ #{SiteSetting.title}\" <#{SiteSetting.notification_email}>"
+      aliased = I18n.t(:via, username: username, site_name: SiteSetting.title)
+      email_opts[:from] = "#{aliased} <#{SiteSetting.notification_email}>"
     end
 
     email = build_email user.email, "user_notifications.user_#{notification_type}", email_opts
