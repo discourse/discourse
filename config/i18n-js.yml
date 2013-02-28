@@ -26,3 +26,13 @@ translations:
     only: 'en.js.*'
   - file: 'app/assets/javascripts/i18n/admin.en.js'
     only: 'en.admin_js.*'
+
+  - file: 'app/assets/javascripts/i18n/pseudo.js'
+    only: 'pseudo.js.*'
+  - file: 'app/assets/javascripts/i18n/admin.pseudo.js'
+    only: 'pseudo.admin_js.*'
+
+  - file: 'app/assets/javascripts/i18n/fr.js'
+    only: 'fr.js.*'
+  - file: 'app/assets/javascripts/i18n/admin.fr.js'
+    only: 'fr.admin_js.*'
