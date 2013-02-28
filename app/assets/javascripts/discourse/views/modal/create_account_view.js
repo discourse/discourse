@@ -10,6 +10,7 @@ Discourse.CreateAccountView = Discourse.ModalBodyView.extend({
   templateName: 'modal/create_account',
   title: Em.String.i18n('create_account.title'),
   uniqueUsernameValidation: null,
+  globalNicknameExists: false,
   complete: false,
   accountPasswordConfirm: 0,
   accountChallenge: 0,
@@ -85,21 +86,23 @@ Discourse.CreateAccountView = Discourse.ModalBodyView.extend({
   }).property('accountEmail'),
 
   usernameMatch: (function() {
-    if (this.get('emailValidation.failed')) {
-      if (this.shouldCheckUsernameMatch()) {
-        return this.set('uniqueUsernameValidation', Discourse.InputValidation.create({
+    if (this.usernameNeedsToBeValidatedWithEmail()) {
+      if (this.get('emailValidation.failed')) {
+        if (this.shouldCheckUsernameMatch()) {
+          return this.set('uniqueUsernameValidation', Discourse.InputValidation.create({
+            failed: true,
+            reason: Em.String.i18n('user.username.enter_email')
+          }));
+        } else {
+          return this.set('uniqueUsernameValidation', Discourse.InputValidation.create({ failed: true }));
+        }
+      } else if (this.shouldCheckUsernameMatch()) {
+        this.set('uniqueUsernameValidation', Discourse.InputValidation.create({
           failed: true,
-          reason: Em.String.i18n('user.username.enter_email')
+          reason: Em.String.i18n('user.username.checking')
         }));
-      } else {
-        return this.set('uniqueUsernameValidation', Discourse.InputValidation.create({ failed: true }));
+        return this.checkUsernameAvailability();
       }
-    } else if (this.shouldCheckUsernameMatch()) {
-      this.set('uniqueUsernameValidation', Discourse.InputValidation.create({
-        failed: true,
-        reason: Em.String.i18n('user.username.checking')
-      }));
-      return this.checkUsernameAvailability();
     }
   }).observes('accountEmail'),
 
@@ -145,8 +148,10 @@ Discourse.CreateAccountView = Discourse.ModalBodyView.extend({
     var _this = this;
     if (this.shouldCheckUsernameMatch()) {
       return Discourse.User.checkUsername(this.get('accountUsername'), this.get('accountEmail')).then(function(result) {
+        _this.set('globalNicknameExists', false);
         if (result.available) {
           if (result.global_match) {
+            _this.set('globalNicknameExists', true);
             return _this.set('uniqueUsernameValidation', Discourse.InputValidation.create({
               ok: true,
               reason: Em.String.i18n('user.username.global_match')
@@ -160,6 +165,7 @@ Discourse.CreateAccountView = Discourse.ModalBodyView.extend({
         } else {
           if (result.suggestion) {
             if (result.global_match !== void 0 && result.global_match === false) {
+              _this.set('globalNicknameExists', true);
               return _this.set('uniqueUsernameValidation', Discourse.InputValidation.create({
                 failed: true,
                 reason: Em.String.i18n('user.username.global_mismatch', result)
@@ -176,9 +182,10 @@ Discourse.CreateAccountView = Discourse.ModalBodyView.extend({
               reason: result.errors.join(' ')
             }));
           } else {
+            _this.set('globalNicknameExists', true);
             return _this.set('uniqueUsernameValidation', Discourse.InputValidation.create({
               failed: true,
-              reason: Em.String.i18n('user.username.enter_email', result)
+              reason: Em.String.i18n('user.username.enter_email')
             }));
           }
         }
@@ -196,6 +203,10 @@ Discourse.CreateAccountView = Discourse.ModalBodyView.extend({
     }
     return basicValidation;
   }).property('uniqueUsernameValidation', 'basicUsernameValidation'),
+
+  usernameNeedsToBeValidatedWithEmail: function() {
+    return( this.get('globalNicknameExists') || false );
+  },
 
   // Validate the password
   passwordValidation: (function() {
