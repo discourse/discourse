@@ -100,7 +100,8 @@ module Search
   def self.query(term, type_filter=nil)
 
     return nil if term.blank?
-    sanitized_term = PG::Connection.escape_string(term) #term.gsub(/[^0-9a-zA-Z_ ]/, '')
+    sanitized_term = PG::Connection.escape_string(term.gsub(/[:()&!]/,'')) # Instead of original term.gsub(/[^0-9a-zA-Z_ ]/, '')
+    # We are stripping only symbols taking place in FTS and simply sanitizing the rest.
 
     # really short terms are totally pointless
     return nil if sanitized_term.blank? || sanitized_term.length < self.min_search_term_length
