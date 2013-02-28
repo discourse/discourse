@@ -27,4 +27,4 @@ production:
   pool: 5
   timeout: 5000
   host_names:
-    - production.localhost
+    - production.localhost # Update this to be the domain of your production site
