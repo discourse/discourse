@@ -35,7 +35,11 @@ module DiscourseHub
 
 
   def self.discourse_version_check
-    get('/version_check', {installed_version: Discourse::VERSION::STRING})
+    get('/version_check', {
+      installed_version: Discourse::VERSION::STRING,
+      forum_title: SiteSetting.title,
+      forum_domain: Discourse.current_hostname
+    })
   end
 
 
