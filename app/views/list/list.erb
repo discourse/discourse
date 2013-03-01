@@ -5,7 +5,7 @@
 </div>
 
 <% if @list.topics.length > 0 %>
-<p><a href="<%= @list.more_topics_url.sub('.json?','?') %>">next page &rarr;</a></p>
+<p><a href="<%= @list.more_topics_url.sub('.json?','?') %>"><%= t 'next_page'%></a></p>
 <% end %>
 
-<p>Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled</p>
+<p><%= t 'powered_by' %></p>
