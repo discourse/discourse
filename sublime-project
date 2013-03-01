@@ -21,6 +21,8 @@
     // indentation
     "tab_size": 2,
     "translate_tabs_to_spaces": true,
-    "trim_trailing_white_space_on_save": true
+    "trim_trailing_white_space_on_save": true,
+    // ensure line endings is linux style (even when on Windows)
+    "default_line_ending": "LF"
   }
 }
