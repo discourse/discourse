@@ -1,5 +1,4 @@
 class UserSearch
-
   def self.search term, topic_id = nil
     sql = User.sql_builder(
 "select id, username, name, email from users u
@@ -34,5 +33,4 @@ class UserSearch
 
     sql.exec
   end
-
 end

@@ -26,7 +26,7 @@ class Site
   end
 
   def archetypes
-    Archetype.list.reject{|t| t.id==Archetype.private_message}
+    Archetype.list.reject { |t| t.id == Archetype.private_message }
   end
 
   def self.cache_key
@@ -45,5 +45,4 @@ class Site
   def self.invalidate_cache
     Rails.cache.delete(Site.cache_key)
   end
-
 end

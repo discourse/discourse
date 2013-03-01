@@ -29,7 +29,7 @@ class Post < ActiveRecord::Base
   has_many :post_actions
 
   validates_presence_of :raw, :user_id, :topic_id
-  validates :raw, stripped_length: {in: SiteSetting.min_post_length..SiteSetting.max_post_length}
+  validates :raw, stripped_length: { in: SiteSetting.post_length }
   validate :raw_quality
   validate :max_mention_validator
   validate :max_images_validator
@@ -54,15 +54,14 @@ class Post < ActiveRecord::Base
   after_commit :store_unique_post_key, on: :create
 
   after_create do
-    TopicUser.auto_track(self.user_id, self.topic_id, TopicUser::NotificationReasons::CREATED_POST)
+    TopicUser.auto_track(user_id, topic_id, TopicUser::NotificationReasons::CREATED_POST)
   end
 
   scope :by_newest, order('created_at desc, id desc')
   scope :with_user, includes(:user)
 
   def raw_quality
-
-    sentinel = TextSentinel.new(self.raw, min_entropy: SiteSetting.body_min_entropy)
+    sentinel = TextSentinel.new(raw, min_entropy: SiteSetting.body_min_entropy)
     if sentinel.valid?
       # It's possible the sentinel has cleaned up the title a bit
       self.raw = sentinel.text
@@ -75,7 +74,7 @@ class Post < ActiveRecord::Base
   # Stop us from posting the same thing too quickly
   def unique_post_validator
     return if SiteSetting.unique_posts_mins == 0
-    return if user.admin? or user.has_trust_level?(:moderator)
+    return if user.admin? || user.moderator?
 
     # If the post is empty, default to the validates_presence_of
     return if raw.blank?
@@ -97,13 +96,13 @@ class Post < ActiveRecord::Base
   end
 
   def raw_hash
-    return nil if raw.blank?
+    return if raw.blank?
     Digest::SHA1.hexdigest(raw.gsub(/\s+/, "").downcase)
   end
 
   def cooked_document
-    self.cooked ||= cook(self.raw, topic_id: topic_id)
-    @cooked_document ||= Nokogiri::HTML.fragment(self.cooked)
+    self.cooked ||= cook(raw, topic_id: topic_id)
+    @cooked_document ||= Nokogiri::HTML.fragment(cooked)
   end
 
   def reset_cooked
@@ -116,20 +115,18 @@ class Post < ActiveRecord::Base
   end
 
   def image_count
-    return 0 unless self.raw.present?
+    return 0 unless raw.present?
 
-    cooked_document.search("img").reject{ |t|
+    cooked_document.search("img").reject do |t|
       dom_class = t["class"]
       if dom_class
         (Post.white_listed_image_classes & dom_class.split(" ")).count > 0
-      else
-        false
       end
-    }.count
+    end.count
   end
 
   def link_count
-    return 0 unless self.raw.present?
+    return 0 unless raw.present?
     cooked_document.search("a[href]").count
   end
 
@@ -138,12 +135,12 @@ class Post < ActiveRecord::Base
   end
 
   def max_images_validator
-    return if user.present? and user.has_trust_level?(:basic)
+    return if user.present? && user.has_trust_level?(:basic)
     errors.add(:raw, I18n.t(:too_many_images)) if image_count > 0
   end
 
   def max_links_validator
-    return if user.present? and user.has_trust_level?(:basic)
+    return if user.present? && user.has_trust_level?(:basic)
     errors.add(:raw, I18n.t(:too_many_links)) if link_count > 1
   end
 
@@ -161,22 +158,18 @@ class Post < ActiveRecord::Base
     doc.search("code").remove
 
     results = doc.to_html.scan(PrettyText.mention_matcher)
-    if results.present?
-      @raw_mentions = results.uniq.map {|un| un.first.downcase.gsub!(/^@/, '')}
-    else
-      @raw_mentions = []
-    end
+    @raw_mentions = results.uniq.map { |un| un.first.downcase.gsub!(/^@/, '') }
   end
 
   # The rules for deletion change depending on who is doing it.
   def delete_by(deleted_by)
-    if deleted_by.has_trust_level?(:moderator)
+    if deleted_by.moderator?
       # As a moderator, delete the post.
       Post.transaction do
         self.destroy
-        Topic.reset_highest(self.topic_id)
+        Topic.reset_highest(topic_id)
       end
-    elsif deleted_by.id == self.user_id
+    elsif deleted_by.id == user_id
       # As the poster, make a revision that says deleted.
       Post.transaction do
         revise(deleted_by, I18n.t('js.post.deleted_by_author'), force_new_version: true)
@@ -205,7 +198,7 @@ class Post < ActiveRecord::Base
     PostAction.update_flagged_posts_count
   end
 
-  def filter_quotes(parent_post=nil)
+  def filter_quotes(parent_post = nil)
     return cooked if parent_post.blank?
 
     # We only filter quotes when there is exactly 1
@@ -229,31 +222,30 @@ class Post < ActiveRecord::Base
   end
 
   def quoteless?
-    (quote_count == 0) and (reply_to_post_number.present?)
+    (quote_count == 0) && (reply_to_post_number.present?)
   end
 
   # Get the post that we reply to.
   def reply_to_user
-    return nil unless reply_to_post_number.present?
-    User.where('id = (select user_id from posts where topic_id = ? and post_number = ?)', topic_id, reply_to_post_number).first
+    return if reply_to_post_number.blank?
+    Post.where(topic_id: topic_id, post_number: reply_to_post_number).first.try(:user)
   end
 
   def reply_notification_target
-    return nil unless reply_to_post_number.present?
-    reply_post = Post.where("topic_id = :topic_id AND post_number = :post_number AND user_id <> :user_id",
-                            topic_id: topic_id,
-                            post_number: reply_to_post_number,
-                            user_id: user_id).first
-    return reply_post.try(:user)
+    return if reply_to_post_number.blank?
+    Post.where("topic_id = :topic_id AND post_number = :post_number AND user_id <> :user_id",
+                topic_id: topic_id,
+                post_number: reply_to_post_number,
+                user_id: user_id).first.try(:user)
   end
 
-  def self.excerpt(cooked, maxlength=nil)
+  def self.excerpt(cooked, maxlength = nil)
     maxlength ||= SiteSetting.post_excerpt_maxlength
     PrettyText.excerpt(cooked, maxlength)
   end
 
   # Strip out most of the markup
-  def excerpt(maxlength=nil)
+  def excerpt(maxlength = nil)
     Post.excerpt(cooked, maxlength)
   end
 
@@ -279,22 +271,22 @@ class Post < ActiveRecord::Base
   # A list of versions including the initial version
   def all_versions
     result = []
-    result << {number: 1, display_username: user.name, created_at: created_at}
+    result << { number: 1, display_username: user.name, created_at: created_at }
     versions.order(:number).includes(:user).each do |v|
-      result << {number: v.number, display_username: v.user.name, created_at: v.created_at}
+      result << { number: v.number, display_username: v.user.name, created_at: v.created_at }
     end
     result
   end
 
   def is_flagged?
-    post_actions.where('post_action_type_id in (?) and deleted_at is null', PostActionType.FlagTypes).count != 0
+    post_actions.where(post_action_type_id: PostActionType.FlagTypes, deleted_at: nil).count != 0
   end
 
   def unhide!
     self.hidden = false
     self.hidden_reason_id = nil
     self.topic.update_attributes(visible: true)
-    self.save
+    save
   end
 
   def url
@@ -305,7 +297,7 @@ class Post < ActiveRecord::Base
     user.readable_name
   end
 
-  def revise(updated_by, new_raw, opts={})
+  def revise(updated_by, new_raw, opts = {})
     PostRevisor.new(self).revise!(updated_by, new_raw, opts)
   end
 
@@ -320,21 +312,20 @@ class Post < ActiveRecord::Base
 
   # TODO: Move some of this into an asynchronous job?
   after_create do
-
     # Update attributes on the topic - featured users and last posted.
-    attrs = {last_posted_at: self.created_at, last_post_user_id: self.user_id}
-    attrs[:bumped_at] = self.created_at unless no_bump
+    attrs = {last_posted_at: created_at, last_post_user_id: user_id}
+    attrs[:bumped_at] = created_at unless no_bump
     topic.update_attributes(attrs)
 
     # Update the user's last posted at date
-    user.update_column(:last_posted_at, self.created_at)
+    user.update_column(:last_posted_at, created_at)
 
     # Update topic user data
     TopicUser.change(user,
-                           topic.id,
-                           posted: true,
-                           last_read_post_number: self.post_number,
-                           seen_post_count: self.post_number)
+                     topic.id,
+                     posted: true,
+                     last_read_post_number: post_number,
+                     seen_post_count: post_number)
   end
 
   def email_private_message
@@ -371,57 +362,54 @@ class Post < ActiveRecord::Base
   end
 
   before_save do
-    self.last_editor_id ||= self.user_id
+    self.last_editor_id ||= user_id
     self.cooked = cook(raw, topic_id: topic_id) unless new_record?
   end
 
   before_destroy do
 
     # Update the last post id to the previous post if it exists
-    last_post = Post.where("topic_id = ? and id <> ?", self.topic_id, self.id).order('created_at desc').limit(1).first
+    last_post = Post.where("topic_id = ? and id <> ?", topic_id, id).order('created_at desc').limit(1).first
     if last_post.present?
       topic.update_attributes(last_posted_at: last_post.created_at,
                               last_post_user_id: last_post.user_id,
                               highest_post_number: last_post.post_number)
 
       # If the poster doesn't have any other posts in the topic, clear their posted flag
-      unless Post.exists?(["topic_id = ? and user_id = ? and id <> ?", self.topic_id, self.user_id, self.id])
-        TopicUser.update_all 'posted = false', ['topic_id = ? and user_id = ?', self.topic_id, self.user_id]
+      unless Post.exists?(["topic_id = ? and user_id = ? and id <> ?", topic_id, user_id, id])
+        TopicUser.update_all 'posted = false', topic_id: topic_id, user_id: user_id
       end
     end
 
     # Feature users in the topic
-    Jobs.enqueue(:feature_topic_users, topic_id: topic_id, except_post_id: self.id)
+    Jobs.enqueue(:feature_topic_users, topic_id: topic_id, except_post_id: id)
 
   end
 
   after_destroy do
-
     # Remove any reply records that point to deleted posts
-    post_ids = PostReply.select(:post_id).where(reply_id: self.id).map(&:post_id)
-    PostReply.delete_all ["reply_id = ?", self.id]
+    post_ids = PostReply.select(:post_id).where(reply_id: id).map(&:post_id)
+    PostReply.delete_all reply_id: id
 
     if post_ids.present?
-      Post.where(id: post_ids).each {|p| p.update_column :reply_count, p.replies.count}
+      Post.where(id: post_ids).each { |p| p.update_column :reply_count, p.replies.count }
     end
 
     # Remove any notifications that point to this deleted post
-    Notification.delete_all ["topic_id = ? and post_number = ?", self.topic_id, self.post_number]
+    Notification.delete_all topic_id: topic_id, post_number: post_number
   end
 
   after_save do
-
-    DraftSequence.next! self.last_editor_id, self.topic.draft_key if self.topic # could be deleted
+    DraftSequence.next! last_editor_id, topic.draft_key if topic # could be deleted
 
     quoted_post_numbers << reply_to_post_number if reply_to_post_number.present?
 
     # Create a reply relationship between quoted posts and this new post
-    if self.quoted_post_numbers.present?
-      self.quoted_post_numbers.map! {|pid| pid.to_i}.uniq!
-      self.quoted_post_numbers.each do |p|
+    if quoted_post_numbers.present?
+      quoted_post_numbers.map(&:to_i).uniq.each do |p|
         post = Post.where(topic_id: topic_id, post_number: p).first
         if post.present?
-          post_reply = post.post_replies.new(reply_id: self.id)
+          post_reply = post.post_replies.new(reply_id: id)
           if post_reply.save
             Post.update_all ['reply_count = reply_count + 1'], id: post.id
           end
@@ -443,7 +431,7 @@ class Post < ActiveRecord::Base
 
         if args[:topic].present?
           # If the topic attribute is present, ensure it's the same topic
-          self.quoted_post_numbers << args[:post] if self.topic_id == args[:topic]
+          self.quoted_post_numbers << args[:post] if topic_id == args[:topic]
         else
           self.quoted_post_numbers << args[:post]
         end
@@ -452,15 +440,14 @@ class Post < ActiveRecord::Base
     end
 
     self.quoted_post_numbers.uniq!
-    self.quote_count = self.quoted_post_numbers.size
+    self.quote_count = quoted_post_numbers.size
   end
 
   # Process this post after comitting it
   def trigger_post_process
-    args = {post_id: self.id}
-    args[:image_sizes] = self.image_sizes if self.image_sizes.present?
-    args[:invalidate_oneboxes] = true if self.invalidate_oneboxes.present?
+    args = { post_id: id }
+    args[:image_sizes] = image_sizes if image_sizes.present?
+    args[:invalidate_oneboxes] = true if invalidate_oneboxes.present?
     Jobs.enqueue(:process_post, args)
   end
-
 end

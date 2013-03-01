@@ -1,5 +1,4 @@
 class Draft < ActiveRecord::Base
-
   NEW_TOPIC = 'new_topic'
   NEW_PRIVATE_MESSAGE = 'new_private_message'
   EXISTING_TOPIC = 'topic_'
@@ -20,8 +19,6 @@ class Draft < ActiveRecord::Base
     d = find_draft(user,key)
     if d && d.sequence == sequence
       d.data
-    else
-      nil
     end
   end
 
@@ -29,8 +26,6 @@ class Draft < ActiveRecord::Base
     d = find_draft(user,key)
     if d && d.sequence <= sequence
       d.destroy
-    else
-      nil
     end
   end
 
@@ -41,5 +36,4 @@ class Draft < ActiveRecord::Base
     user_id = user.id if User === user
     Draft.where(user_id: user_id, draft_key: key).first
   end
-
 end

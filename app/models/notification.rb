@@ -6,6 +6,9 @@ class Notification < ActiveRecord::Base
   validates_presence_of :data
   validates_presence_of :notification_type
 
+  scope :unread, lambda { where(read: false) }
+  scope :recent, lambda { order('created_at desc').limit(10) }
+
   def self.Types
     {:mentioned => 1,
      :replied => 2,
@@ -23,16 +26,8 @@ class Notification < ActiveRecord::Base
     @inverted_types ||= Notification.Types.invert
   end
 
-  def self.unread
-    where(read: false)
-  end
-
   def self.mark_posts_read(user, topic_id, post_numbers)
-    Notification.update_all "read = 't'", ["user_id = ? and topic_id = ? and post_number in (?) and read = ?", user.id, topic_id, post_numbers, false]
-  end
-
-  def self.recent
-    order('created_at desc').limit(10)
+    Notification.update_all "read = 't'", user_id: user.id, topic_id: topic_id, post_number: post_numbers, read: false
   end
 
   def self.interesting_after(min_date)
@@ -68,7 +63,7 @@ class Notification < ActiveRecord::Base
   def data_hash
     @data_hash ||= begin
       return nil if data.blank?
-      ::JSON.parse(data).with_indifferent_access
+      JSON.parse(data).with_indifferent_access
     end
   end
 
@@ -81,15 +76,12 @@ class Notification < ActiveRecord::Base
     if topic.present?
       return topic.relative_url(post_number)
     end
-    nil
   end
 
   def post
-    return nil unless topic_id.present?
-    return nil unless post_number.present?
+    return if topic_id.blank? || post_number.blank?
 
     Post.where(topic_id: topic_id, post_number: post_number).first
   end
-
 end
 

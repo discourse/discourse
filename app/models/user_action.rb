@@ -55,7 +55,7 @@ class UserAction < ActiveRecord::Base
 
     results = results.to_a
 
-    results.sort!{|a,b| ORDER[a.action_type] <=> ORDER[b.action_type]}
+    results.sort! { |a,b| ORDER[a.action_type] <=> ORDER[b.action_type] }
     results.each do |row|
       row.description = self.description(row.action_type, detailed: true)
     end
@@ -64,13 +64,13 @@ class UserAction < ActiveRecord::Base
   end
 
   def self.stream_item(action_id, guardian)
-    stream(action_id:action_id, guardian: guardian)[0]
+    stream(action_id: action_id, guardian: guardian).first
   end
 
   def self.stream(opts={})
     user_id = opts[:user_id]
-    offset = opts[:offset]||0
-    limit = opts[:limit] ||60
+    offset = opts[:offset] || 0
+    limit = opts[:limit] || 60
     action_id = opts[:action_id]
     action_types = opts[:action_types]
     guardian = opts[:guardian]
@@ -198,7 +198,7 @@ JOIN users pu on pu.id = COALESCE(p.user_id, t.user_id)
     require_parameters(hash, :action_type, :user_id, :acting_user_id, :target_topic_id, :target_post_id)
     transaction(requires_new: true) do
       begin
-        action = self.new(hash)
+        action = new(hash)
 
         if hash[:created_at]
           action.created_at = hash[:created_at]
@@ -225,5 +225,4 @@ JOIN users pu on pu.id = COALESCE(p.user_id, t.user_id)
       raise Discourse::InvalidParameters.new(p) if data[p].nil?
     end
   end
-
 end

@@ -162,4 +162,7 @@ class SiteSetting < ActiveRecord::Base
     min_topic_title_length..max_topic_title_length
   end
 
+  def self.post_length
+    min_post_length..max_post_length
+  end
 end

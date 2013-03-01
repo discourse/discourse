@@ -2,7 +2,6 @@ require 'uri'
 require_dependency 'slug'
 
 class TopicLink < ActiveRecord::Base
-
   belongs_to :topic
   belongs_to :user
   belongs_to :post
@@ -118,8 +117,6 @@ class TopicLink < ActiveRecord::Base
       else
         TopicLink.delete_all ["post_id = :post_id OR link_post_id = :post_id", post_id: post.id]
       end
-
     end
   end
-
 end

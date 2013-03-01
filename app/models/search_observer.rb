@@ -58,7 +58,6 @@ class SearchObserver < ActiveRecord::Observer
   end
 
 
-
   class HtmlScrubber < Nokogiri::XML::SAX::Document
     attr_reader :scrubbed
 
@@ -67,7 +66,7 @@ class SearchObserver < ActiveRecord::Observer
     end
 
     def self.scrub(html)
-      me = self.new
+      me = new
       parser = Nokogiri::HTML::SAX::Parser.new(me)
       begin
         copy = "<div>"
@@ -98,6 +97,5 @@ class SearchObserver < ActiveRecord::Observer
       scrubbed << " "
     end
   end
-
 end
 

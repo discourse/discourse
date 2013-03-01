@@ -1,10 +1,9 @@
 class UserActionObserver < ActiveRecord::Observer
   observe :post_action, :topic, :post, :notification, :topic_user
 
-
   def after_save(model)
     case
-    when (model.is_a?(PostAction) and (model.is_bookmark? or model.is_like?))
+    when (model.is_a?(PostAction) && (model.is_bookmark? || model.is_like?))
       log_post_action(model)
     when (model.is_a?(Topic))
       log_topic(model)
@@ -39,7 +38,6 @@ class UserActionObserver < ActiveRecord::Observer
   end
 
   def log_notification(model)
-
     action =
       case model.notification_type
         when Notification.Types[:quoted]
@@ -77,10 +75,8 @@ class UserActionObserver < ActiveRecord::Observer
   end
 
   def log_post(model)
-
     # first post gets nada
     return if model.post_number == 1
-
 
     row = {
         action_type: UserAction::POST,
@@ -103,11 +99,11 @@ class UserActionObserver < ActiveRecord::Observer
       end
     end
 
-    rows.each do |row|
+    rows.each do |r|
       if model.deleted_at.nil?
-        UserAction.log_action!(row)
+        UserAction.log_action!(r)
       else
-        UserAction.remove_action!(row)
+        UserAction.remove_action!(r)
       end
     end
   end
@@ -125,7 +121,7 @@ class UserActionObserver < ActiveRecord::Observer
     rows = [row]
 
     if model.private_message?
-      model.topic_allowed_users.reject{|a| a.user_id == model.user_id}.each do |ta|
+      model.topic_allowed_users.reject { |a| a.user_id == model.user_id }.each do |ta|
         row = row.dup
         row[:user_id] = ta.user_id
         row[:action_type] = UserAction::GOT_PRIVATE_MESSAGE
@@ -133,11 +129,11 @@ class UserActionObserver < ActiveRecord::Observer
       end
     end
 
-    rows.each do |row|
+    rows.each do |r|
       if model.deleted_at.nil?
-        UserAction.log_action!(row)
+        UserAction.log_action!(r)
       else
-        UserAction.remove_action!(row)
+        UserAction.remove_action!(r)
       end
     end
   end

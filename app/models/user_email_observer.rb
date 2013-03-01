@@ -55,5 +55,4 @@ class UserEmailObserver < ActiveRecord::Observer
                    user_id: notification.user_id,
                    notification_id: notification.id)
   end
-
 end

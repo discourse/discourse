@@ -2,7 +2,6 @@
 # a mechanism to iterate through errors in reverse
 # async logging should queue, if dupe stack traces are found in batch error should be merged into prev one
 
-
 class ErrorLog
 
   @lock = Mutex.new
@@ -12,7 +11,7 @@ class ErrorLog
   end
 
   def self.clear!(guid)
-    raise "not implemented"
+    raise NotImplementedError
   end
 
   def self.clear_all!()
@@ -21,22 +20,22 @@ class ErrorLog
 
   def self.report_async!(exception, controller, request, user)
     Thread.new do
-      self.report!(exception, controller, request, user)
+      report!(exception, controller, request, user)
     end
   end
 
   def self.report!(exception, controller, request, user)
     add_row!(
-      :date => DateTime.now,
-      :guid => SecureRandom.uuid,
-      :user_id => user && user.id,
-      :request => filter_sensitive_post_data_parameters(controller, request.parameters).inspect,
-      :action => controller.action_name,
-      :controller => controller.controller_name,
-      :backtrace => sanitize_backtrace(exception.backtrace).join("\n"),
-      :message => exception.message,
-      :url => "#{request.protocol}#{request.env["HTTP_X_FORWARDED_HOST"] || request.env["HTTP_HOST"]}#{request.fullpath}",
-      :exception_class => exception.class.to_s
+      date: DateTime.now,
+      guid: SecureRandom.uuid,
+      user_id: user && user.id,
+      request: filter_sensitive_post_data_parameters(controller, request.parameters).inspect,
+      action: controller.action_name,
+      controller: controller.controller_name,
+      backtrace: sanitize_backtrace(exception.backtrace).join("\n"),
+      message: exception.message,
+      url: "#{request.protocol}#{request.env["HTTP_X_FORWARDED_HOST"] || request.env["HTTP_HOST"]}#{request.fullpath}",
+      exception_class: exception.class.to_s
     )
   end
 
@@ -44,7 +43,7 @@ class ErrorLog
     data = hash.to_xml(skip_instruct: true)
     # use background thread to write the log cause it may block if it gets backed up
     @lock.synchronize do
-      File.open(self.filename, "a") do |f|
+      File.open(filename, "a") do |f|
         f.flock(File::LOCK_EX)
         f.write(data)
         f.close
@@ -54,13 +53,12 @@ class ErrorLog
 
 
   def self.each(&blk)
-    skip(0,&blk)
+    skip(0, &blk)
   end
 
   def self.skip(skip=0)
-    data = nil
     pos = 0
-    return [] unless File.exists?(self.filename)
+    return [] unless File.exists?(filename)
 
     loop do
       lines = ""
@@ -107,5 +105,4 @@ class ErrorLog
     return PARAM_FILTER_REPLACEMENT if (env_key =~ /RAW_POST_DATA/i)
     return controller.__send__(:filter_parameters, {env_key => env_value}).values[0]
   end
-
 end

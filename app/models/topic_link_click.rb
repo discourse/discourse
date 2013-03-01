@@ -2,7 +2,6 @@ require_dependency 'discourse'
 require 'ipaddr'
 
 class TopicLinkClick < ActiveRecord::Base
-
   belongs_to :topic_link, counter_cache: :clicks
   belongs_to :user
 
@@ -54,5 +53,4 @@ class TopicLinkClick < ActiveRecord::Base
 
     result
   end
-
 end

@@ -20,7 +20,6 @@ class Upload < ActiveRecord::Base
 
   # Store uploads on s3
   def self.create_on_imgur(user, file, topic_id)
-
     @imgur_loaded = require 'imgur' unless @imgur_loaded
 
 
@@ -56,7 +55,6 @@ class Upload < ActiveRecord::Base
   end
 
   def self.create_on_s3(user, file, topic_id)
-
     @fog_loaded = require 'fog' unless @fog_loaded
 
     tempfile = file.tempfile
@@ -90,5 +88,4 @@ class Upload < ActiveRecord::Base
 
     upload
   end
-
 end

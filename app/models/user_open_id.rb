@@ -4,5 +4,4 @@ class UserOpenId < ActiveRecord::Base
 
   validates_presence_of :email
   validates_presence_of :url
-
 end
