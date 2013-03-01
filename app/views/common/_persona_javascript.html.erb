@@ -1,15 +1,20 @@
 <script src="https://login.persona.org/include.js"></script>
-<form id="persona_assertion_form" action="/auth/persona/callback" method="post" target="_blank">
-  <input type='hidden' name='assertion'/>
-</form>
 <script>
   (function() {
     var readyCalled = false;
     navigator.id.watch({
       onlogin: function(assertion) {
         if (readyCalled) {
-          $('#persona_assertion_form input[name=assertion]').val(assertion);
-          $('#persona_assertion_form').submit();
+
+          $.ajax({
+            type: 'POST',
+            url: '/auth/persona/callback',
+            data: { 'assertion': assertion },
+            success: function(data, textStatus, jqXHR) {
+              Discourse.authenticationComplete(data);
+            },
+            dataType: 'json'
+          });
         }
       },
       onlogout: function() {

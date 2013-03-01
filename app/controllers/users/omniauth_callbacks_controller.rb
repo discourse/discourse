@@ -24,6 +24,11 @@ class Users::OmniauthCallbacksController < ApplicationController
     when "persona"
       create_or_sign_on_user_using_persona(auth_token)
     end
+
+    respond_to do |format|
+      format.html
+      format.json { render :json => @data }
+    end
   end
 
   def failure
