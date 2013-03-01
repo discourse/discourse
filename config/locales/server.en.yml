@@ -1,6 +1,7 @@
 en:
   title: "Discourse"
   topics: "Topics"
+  loading: "Loading"
 
   via: "%{username} via %{site_name}"
   is_reserved: "is reserved"
@@ -209,6 +210,10 @@ en:
       title: 'Like'
       description: 'Like this post'
       long_form: 'liked this'
+    vote:
+      title: 'Vote'
+      description: 'Vote for this post'
+      long_form: 'voted for this post'
 
   flagging:
     you_must_edit: '<p>Your post reached the flagging threshold. Please see your private messages.</p>'
