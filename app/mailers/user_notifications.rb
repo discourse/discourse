@@ -27,7 +27,8 @@ class UserNotifications < ActionMailer::Base
                 url: post.url,
                 subject_prefix: post.post_number != 1 ? "re: " : "",
                 topic_title: post.topic.title,
-                from: post.user.name,
+                private_message_from: post.user.name,
+                from: "#{I18n.t(:via, username: post.user.name, site_name: SiteSetting.title)} <#{SiteSetting.notification_email}>",
                 add_unsubscribe_link: true
   end
 

@@ -708,7 +708,7 @@ en:
     private_message:
       subject_template: "[%{site_name}] %{subject_prefix}%{topic_title}"
       text_body_template: |
-        %{from} just sent you a private message
+        %{private_message_from} just sent you a private message
 
         ---
         %{message}
