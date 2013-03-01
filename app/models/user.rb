@@ -315,7 +315,7 @@ class User < ActiveRecord::Base
     email_hash = self.email_hash(email)
     # robohash was possibly causing caching issues
     # robohash = CGI.escape("http://robohash.org/size_") << "{size}x{size}" << CGI.escape("/#{email_hash}.png")
-    "http://www.gravatar.com/avatar/#{email_hash}.png?s={size}&r=pg&d=identicon"
+    "https://www.gravatar.com/avatar/#{email_hash}.png?s={size}&r=pg&d=identicon"
   end
 
   # return null for local avatars, a template for gravatar
