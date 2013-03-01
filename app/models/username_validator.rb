@@ -1,5 +1,4 @@
 class UsernameValidator
-
   def initialize(username)
     @username = username
     @errors = []
@@ -56,5 +55,4 @@ class UsernameValidator
       self.errors << I18n.t(:'user.username.must_begin_with_alphanumeric')
     end
   end
-
 end

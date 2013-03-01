@@ -68,28 +68,28 @@ class Topic < ActiveRecord::Base
   end
 
   before_validation do
-    if self.title.present?
-      self.title = sanitize(self.title)
+    if title.present?
+      self.title = sanitize(title)
       self.title.strip!
     end
   end
 
   before_create do
     self.bumped_at ||= Time.now
-    self.last_post_user_id ||= self.user_id
+    self.last_post_user_id ||= user_id
   end
 
   after_create do
     changed_to_category(category)
     TopicUser.change(
-                     self.user_id, self.id,
+                     user_id, id,
                      notification_level: TopicUser::NotificationLevel::WATCHING,
                      notifications_reason_id: TopicUser::NotificationReasons::CREATED_TOPIC
                     )
-    if self.archetype == Archetype.private_message
-      DraftSequence.next!(self.user, Draft::NEW_PRIVATE_MESSAGE)
+    if archetype == Archetype.private_message
+      DraftSequence.next!(user, Draft::NEW_PRIVATE_MESSAGE)
     else
-      DraftSequence.next!(self.user, Draft::NEW_TOPIC)
+      DraftSequence.next!(user, Draft::NEW_TOPIC)
     end
   end
 
@@ -170,7 +170,7 @@ class Topic < ActiveRecord::Base
   end
 
   def meta_data_string(key)
-    return nil unless meta_data.present?
+    return unless meta_data.present?
     meta_data[key.to_s]
   end
 
@@ -199,7 +199,7 @@ class Topic < ActiveRecord::Base
               WHERE ftl.topic_id = ?
               GROUP BY ftl.url, ft.title, ftl.link_topic_id, ftl.reflection, ftl.internal
               ORDER BY clicks DESC",
-              self.id).to_a
+              id).to_a
   end
 
   def update_status(property, status, user)
@@ -218,7 +218,7 @@ class Topic < ActiveRecord::Base
   end
 
   # Atomically creates the next post number
-  def self.next_post_number(topic_id, reply=false)
+  def self.next_post_number(topic_id, reply = false)
     highest = exec_sql("select coalesce(max(post_number),0) as max from posts where topic_id = ?", topic_id).first['max'].to_i
 
     reply_sql = reply ? ", reply_count = reply_count + 1" : ""
@@ -265,7 +265,7 @@ class Topic < ActiveRecord::Base
   def changed_to_category(cat)
 
     return if cat.blank?
-    return if Category.where(topic_id: self.id).first.present?
+    return if Category.where(topic_id: id).first.present?
 
     Topic.transaction do
       old_category = category
@@ -275,10 +275,10 @@ class Topic < ActiveRecord::Base
       end
 
       self.category_id = cat.id
-      self.save
+      save
 
       CategoryFeaturedTopic.feature_topics_for(old_category)
-      Category.update_all 'topic_count = topic_count + 1', ['id = ?', cat.id]
+      Category.update_all 'topic_count = topic_count + 1', id: cat.id
       CategoryFeaturedTopic.feature_topics_for(cat) unless old_category.try(:id) == cat.try(:id)
     end
   end
@@ -310,10 +310,10 @@ class Topic < ActiveRecord::Base
     if name.blank?
       if category_id.present?
         CategoryFeaturedTopic.feature_topics_for(category)
-        Category.update_all 'topic_count = topic_count - 1', ['id = ?', category_id]
+        Category.update_all 'topic_count = topic_count - 1', id: category_id
       end
       self.category_id = nil
-      self.save
+      save
       return
     end
 
@@ -335,10 +335,10 @@ class Topic < ActiveRecord::Base
         if topic_allowed_users.create!(user_id: user.id)
           # Notify the user they've been invited
           user.notifications.create(notification_type: Notification.Types[:invited_to_private_message],
-                                    topic_id: self.id,
+                                    topic_id: id,
                                     post_number: 1,
-                                    data: {topic_title: self.title,
-                                           display_username: invited_by.username}.to_json)
+                                    data: { topic_title: title,
+                                            display_username: invited_by.username }.to_json)
           return true
         end
       elsif username_or_email =~ /^.+@.+$/
@@ -371,7 +371,7 @@ class Topic < ActiveRecord::Base
           topic_allowed_users.create!(user_id: user.id)
         end
 
-        return nil
+        return
       end
     end
 
@@ -387,15 +387,14 @@ class Topic < ActiveRecord::Base
     topic = nil
     first_post_number = nil
     Topic.transaction do
-      topic = Topic.create(user: moved_by, title: new_title, category: self.category)
+      topic = Topic.create(user: moved_by, title: new_title, category: category)
 
       to_move = posts.where(id: post_ids).order(:created_at)
       raise Discourse::InvalidParameters.new(:post_ids) if to_move.blank?
 
       to_move.each_with_index do |post, i|
         first_post_number ||= post.post_number
-        row_count = Post.update_all ["post_number = :post_number, topic_id = :topic_id, sort_order = :post_number", post_number: i+1, topic_id: topic.id],
-                                    ['id = ? AND topic_id = ?', post.id, self.id]
+        row_count = Post.update_all ["post_number = :post_number, topic_id = :topic_id, sort_order = :post_number", post_number: i+1, topic_id: topic.id], id: post.id, topic_id: id
 
         # We raise an error if any of the posts can't be moved
         raise Discourse::InvalidParameters.new(:post_ids) if row_count == 0
@@ -403,7 +402,7 @@ class Topic < ActiveRecord::Base
 
       # Update denormalized values since we've manually moved stuff
       Topic.reset_highest(topic.id)
-      Topic.reset_highest(self.id)
+      Topic.reset_highest(id)
     end
 
     # Add a moderator post explaining that the post was moved
@@ -425,7 +424,7 @@ class Topic < ActiveRecord::Base
 
   # Create the summary of the interesting posters in a topic. Cheats to avoid
   # many queries.
-  def posters_summary(topic_user=nil, current_user=nil, opts={})
+  def posters_summary(topic_user = nil, current_user = nil, opts={})
     return @posters_summary if @posters_summary.present?
     descriptions = {}
 
@@ -484,7 +483,7 @@ class Topic < ActiveRecord::Base
   # Enable/disable the star on the topic
   def toggle_star(user, starred)
     Topic.transaction do
-      TopicUser.change(user, self.id, starred: starred, starred_at: starred ? DateTime.now : nil)
+      TopicUser.change(user, id, starred: starred, starred_at: starred ? DateTime.now : nil)
 
       # Update the star count
       exec_sql "UPDATE topics
@@ -492,7 +491,7 @@ class Topic < ActiveRecord::Base
                                   FROM topic_users AS ftu
                                   WHERE ftu.topic_id = topics.id
                                     AND ftu.starred = true)
-                WHERE id = ?", self.id
+                WHERE id = ?", id
 
       if starred
         FavoriteLimiter.new(user).performed!
@@ -517,7 +516,7 @@ class Topic < ActiveRecord::Base
 
   def relative_url(post_number=nil)
     url = "/t/#{slug}/#{id}"
-    url << "/#{post_number}" if post_number.present? and post_number.to_i > 1
+    url << "/#{post_number}" if post_number.present? && post_number.to_i > 1
     url
   end
 
@@ -528,23 +527,23 @@ class Topic < ActiveRecord::Base
   end
 
   def draft_key
-    "#{Draft::EXISTING_TOPIC}#{self.id}"
+    "#{Draft::EXISTING_TOPIC}#{id}"
   end
 
   # notification stuff
   def notify_watch!(user)
-    TopicUser.change(user, self.id, notification_level: TopicUser::NotificationLevel::WATCHING)
+    TopicUser.change(user, id, notification_level: TopicUser::NotificationLevel::WATCHING)
   end
 
   def notify_tracking!(user)
-    TopicUser.change(user, self.id, notification_level: TopicUser::NotificationLevel::TRACKING)
+    TopicUser.change(user, id, notification_level: TopicUser::NotificationLevel::TRACKING)
   end
 
   def notify_regular!(user)
-    TopicUser.change(user, self.id, notification_level: TopicUser::NotificationLevel::REGULAR)
+    TopicUser.change(user, id, notification_level: TopicUser::NotificationLevel::REGULAR)
   end
 
   def notify_muted!(user)
-    TopicUser.change(user, self.id, notification_level: TopicUser::NotificationLevel::MUTED)
+    TopicUser.change(user, id, notification_level: TopicUser::NotificationLevel::MUTED)
   end
 end

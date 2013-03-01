@@ -47,25 +47,22 @@ class CategoryList
 
     # Remove categories with no featured topics unless we have the ability to edit one
     unless Guardian.new(current_user).can_create?(Category)
-      @categories.delete_if {|c| c.featured_topics.blank? }
+      @categories.delete_if { |c| c.featured_topics.blank? }
     end
 
     # Get forum topic user records if appropriate
     if current_user.present?
       topics = []
-      @categories.each {|c| topics << c.featured_topics}
+      @categories.each { |c| topics << c.featured_topics }
       topics << @uncategorized
 
       topics.flatten! if topics.present?
       topics.compact! if topics.present?
 
-
       topic_lookup = TopicUser.lookup_for(current_user, topics)
 
       # Attach some data for serialization to each topic
-      topics.each {|ft| ft.user_data = topic_lookup[ft.id]}
+      topics.each { |ft| ft.user_data = topic_lookup[ft.id] }
     end
-
   end
-
 end

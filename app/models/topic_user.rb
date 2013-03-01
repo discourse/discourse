@@ -1,5 +1,4 @@
 class TopicUser < ActiveRecord::Base
-
   belongs_to :user
   belongs_to :topic
 
@@ -19,7 +18,7 @@ class TopicUser < ActiveRecord::Base
 
   def self.auto_track(user_id, topic_id, reason)
     if TopicUser.where(user_id: user_id, topic_id: topic_id, notifications_reason_id: nil).exists?
-      self.change(user_id, topic_id,
+      change(user_id, topic_id,
           notification_level: NotificationLevel::TRACKING,
           notifications_reason_id: reason
       )
@@ -34,12 +33,10 @@ class TopicUser < ActiveRecord::Base
 
   # Find the information specific to a user in a forum topic
   def self.lookup_for(user, topics)
-
     # If the user isn't logged in, there's no last read posts
-    return {} if user.blank?
-    return {} if topics.blank?
+    return {} if user.blank? || topics.blank?
 
-    topic_ids = topics.map {|ft| ft.id}
+    topic_ids = topics.map(&:id)
     create_lookup(TopicUser.where(topic_id: topic_ids, user_id: user.id))
   end
 
@@ -70,7 +67,6 @@ class TopicUser < ActiveRecord::Base
   # since there's more likely to be an existing record than not. If the update returns 0 rows affected
   # it then creates the row instead.
   def self.change(user_id, topic_id, attrs)
-
     # Sometimes people pass objs instead of the ids. We can handle that.
     topic_id = topic_id.id if topic_id.is_a?(Topic)
     user_id = user_id.id if user_id.is_a?(User)
@@ -85,9 +81,9 @@ class TopicUser < ActiveRecord::Base
       end
       attrs_array = attrs.to_a
 
-      attrs_sql = attrs_array.map {|t| "#{t[0]} = ?"}.join(", ")
-      vals = attrs_array.map {|t| t[1]}
-      rows = TopicUser.update_all([attrs_sql, *vals], ["topic_id = ? and user_id = ?", topic_id.to_i, user_id])
+      attrs_sql = attrs_array.map { |t| "#{t[0]} = ?" }.join(", ")
+      vals = attrs_array.map { |t| t[1] }
+      rows = TopicUser.update_all([attrs_sql, *vals], topic_id: topic_id.to_i, user_id: user_id)
 
       if rows == 0
         now = DateTime.now
@@ -101,7 +97,6 @@ class TopicUser < ActiveRecord::Base
 
         TopicUser.create(attrs.merge!(user_id: user_id, topic_id: topic_id.to_i, first_visited_at: now ,last_visited_at: now))
       end
-
     end
   rescue ActiveRecord::RecordNotUnique
     # In case of a race condition to insert, do nothing
@@ -119,7 +114,6 @@ class TopicUser < ActiveRecord::Base
                values(?,?,?,?)',
                topic.id, user.id, now, now)
     end
-
   end
 
   # Update the last read and the last seen post count, but only if it doesn't exist.
@@ -174,9 +168,6 @@ class TopicUser < ActiveRecord::Base
     end
 
     if rows.length == 0
-
-      self
-
       args[:tracking] = TopicUser::NotificationLevel::TRACKING
       args[:regular] = TopicUser::NotificationLevel::REGULAR
       args[:site_setting] = SiteSetting.auto_track_topics_after
@@ -192,6 +183,4 @@ class TopicUser < ActiveRecord::Base
                 args)
     end
   end
-
-
 end

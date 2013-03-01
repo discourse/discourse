@@ -55,7 +55,7 @@ class User < ActiveRecord::Base
   end
 
   def self.suggest_username(name)
-    return nil unless name.present?
+    return unless name.present?
 
     # If it's an email
     if name =~ /([^@]+)@([^\.]+)/
@@ -266,7 +266,7 @@ class User < ActiveRecord::Base
   end
 
   def has_visit_record?(date)
-    user_visits.where(["visited_at =? ", date]).first
+    user_visits.where(visited_at: date).first
   end
 
   def adding_visit_record(date)
@@ -361,7 +361,7 @@ class User < ActiveRecord::Base
   end
 
   def flags_received_count
-    posts.includes(:post_actions).where('post_actions.post_action_type_id in (?)', PostActionType.FlagTypes).count
+    posts.includes(:post_actions).where(post_actions: { post_action_type_id: PostActionType.FlagTypes }).count
   end
 
   def private_topics_count
@@ -435,7 +435,7 @@ class User < ActiveRecord::Base
     if last_seen.present?
       diff = (Time.now.to_f - last_seen.to_f).round
       if diff > 0 && diff < MAX_TIME_READ_DIFF
-        User.update_all ["time_read = time_read + ?", diff], ["id = ? and time_read = ?", id, time_read]
+        User.update_all ["time_read = time_read + ?", diff], id: id, time_read: time_read
       end
     end
     $redis.set(last_seen_key, Time.now.to_f)
