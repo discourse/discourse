@@ -29,7 +29,7 @@ module SiteSettingExtension
 
   # just like a setting, except that it is available in javascript via DiscourseSession
   def client_setting(name, default = nil)
-    setting(name,default,type)
+    setting(name,default)
     @@client_settings ||= []
     @@client_settings << name
   end
