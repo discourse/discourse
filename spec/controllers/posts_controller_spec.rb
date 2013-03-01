@@ -222,12 +222,12 @@ describe PostsController do
       end
 
       it 'creates a bookmark' do
-        PostAction.expects(:act).with(post.user, post, PostActionType.Types[:bookmark])
+        PostAction.expects(:act).with(post.user, post, PostActionType.types[:bookmark])
         xhr :put, :bookmark, post_id: post.id, bookmarked: 'true'
       end
 
       it 'removes a bookmark' do
-        PostAction.expects(:remove_act).with(post.user, post, PostActionType.Types[:bookmark])
+        PostAction.expects(:remove_act).with(post.user, post, PostActionType.types[:bookmark])
         xhr :put, :bookmark, post_id: post.id
       end
 

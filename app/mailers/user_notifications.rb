@@ -64,7 +64,7 @@ class UserNotifications < ActionMailer::Base
     return unless @post.present?
 
     username = @notification.data_hash[:display_username]
-    notification_type = Notification.InvertedTypes[opts[:notification].notification_type].to_s
+    notification_type = Notification.types[opts[:notification].notification_type].to_s
 
     email_opts = {
       topic_title: @notification.data_hash[:topic_title],

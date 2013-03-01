@@ -20,7 +20,7 @@ class PostAction < ActiveRecord::Base
 
   def self.update_flagged_posts_count
     posts_flagged_count = PostAction.joins(post: :topic)
-                                    .where('post_actions.post_action_type_id' => PostActionType.FlagTypes,
+                                    .where('post_actions.post_action_type_id' => PostActionType.flag_types.values,
                                            'posts.deleted_at' => nil,
                                            'topics.deleted_at' => nil).count('DISTINCT posts.id')
 
@@ -55,13 +55,12 @@ class PostAction < ActiveRecord::Base
     actions = if action_type_id
       [action_type_id]
     else
-      moderator_id == -1 ? PostActionType.AutoActionFlagTypes : PostActionType.FlagTypes
+      moderator_id == -1 ? PostActionType.auto_action_flag_types.values : PostActionType.flag_types.values
     end
 
     PostAction.update_all({ deleted_at: Time.now, deleted_by: moderator_id }, { post_id: post.id, post_action_type_id: actions })
 
-    r = PostActionType.Types.invert
-    f = actions.map { |t| ["#{r[t]}_count", 0] }
+    f = actions.map{|t| ["#{PostActionType.types[t]}_count", 0]}
 
     Post.with_deleted.update_all(Hash[*f.flatten], id: post.id)
 
@@ -87,15 +86,15 @@ class PostAction < ActiveRecord::Base
   end
 
   def is_bookmark?
-    post_action_type_id == PostActionType.Types[:bookmark]
+    post_action_type_id == PostActionType.types[:bookmark]
   end
 
   def is_like?
-    post_action_type_id == PostActionType.Types[:like]
+    post_action_type_id == PostActionType.types[:like]
   end
 
   def is_flag?
-    PostActionType.FlagTypes.include?(post_action_type_id)
+    PostActionType.flag_types.values.include?(post_action_type_id)
   end
 
   # A custom rate limiter for this model
@@ -124,15 +123,15 @@ class PostAction < ActiveRecord::Base
   end
 
   before_create do
-    raise AlreadyFlagged if is_flag? && PostAction.where(user_id: user_id,
-                                                         post_id: post_id,
-                                                         post_action_type_id: PostActionType.FlagTypes).exists?
+    raise AlreadyFlagged if is_flag? and PostAction.where(user_id: user_id,
+                                                          post_id: post_id,
+                                                          post_action_type_id: PostActionType.flag_types.values).exists?
   end
 
   after_save do
     # Update denormalized counts
-    post_action_type = PostActionType.Types.invert[post_action_type_id]
-    column = "#{post_action_type}_count"
+    post_action_type = PostActionType.types[post_action_type_id]
+    column = "#{post_action_type.to_s}_count"
     delta = deleted_at.nil? ? 1 : -1
 
     # Voting also changes the sort_order
@@ -144,7 +143,7 @@ class PostAction < ActiveRecord::Base
     Topic.update_all ["#{column} = #{column} + ?", delta], id: post.topic_id
 
 
-    if PostActionType.FlagTypes.include?(post_action_type_id)
+    if PostActionType.flag_types.values.include?(post_action_type_id)
       PostAction.update_flagged_posts_count
     end
 
@@ -153,7 +152,7 @@ class PostAction < ActiveRecord::Base
       flag_counts = exec_sql("SELECT SUM(CASE WHEN deleted_at IS NULL THEN 1 ELSE 0 END) AS new_flags,
                                      SUM(CASE WHEN deleted_at IS NOT NULL THEN 1 ELSE 0 END) AS old_flags
                               FROM post_actions
-                              WHERE post_id = ? AND post_action_type_id IN (?)", post.id, PostActionType.AutoActionFlagTypes).first
+                              WHERE post_id = ? AND post_action_type_id IN (?)", post.id, PostActionType.auto_action_flag_types.values).first
       old_flags, new_flags = flag_counts['old_flags'].to_i, flag_counts['new_flags'].to_i
 
       if new_flags >= SiteSetting.flags_required_to_hide_post

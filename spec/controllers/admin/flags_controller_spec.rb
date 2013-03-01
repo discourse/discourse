@@ -24,7 +24,7 @@ describe Admin::FlagsController do
         p = Fabricate(:post)
         u = Fabricate(:user)
 
-        PostAction.act(u, p, PostActionType.Types[:spam])
+        PostAction.act(u, p, PostActionType.types[:spam])
         xhr :get, :index
 
         data = ::JSON.parse(response.body)

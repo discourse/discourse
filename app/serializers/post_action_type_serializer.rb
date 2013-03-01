@@ -3,7 +3,7 @@ class PostActionTypeSerializer < ApplicationSerializer
   attributes :name_key, :name, :description, :long_form, :is_flag, :icon, :id, :is_custom_flag
 
   def is_custom_flag
-    object.id == PostActionType.Types[:custom_flag]
+    object.id == PostActionType.types[:custom_flag]
   end
 
   def name

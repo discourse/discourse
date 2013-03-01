@@ -163,14 +163,14 @@ class TopicView
 
     @voted_in_topic ||= begin
       return false unless all_post_actions.present?
-      all_post_actions.values.flatten.map {|ac| ac.keys}.flatten.include?(PostActionType.Types[:vote])
+      all_post_actions.values.flatten.map {|ac| ac.keys}.flatten.include?(PostActionType.types[:vote])
     end
   end
 
   def post_action_visibility
     @post_action_visibility ||= begin
       result = []
-      PostActionType.Types.each do |k, v|
+      PostActionType.types.each do |k, v|
         result << v if Guardian.new(@user).can_see_post_actors?(@topic, v)
       end
       result

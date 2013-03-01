@@ -1,5 +1,6 @@
-class Notification < ActiveRecord::Base
+require_dependency 'enum'
 
+class Notification < ActiveRecord::Base
   belongs_to :user
   belongs_to :topic
 
@@ -9,21 +10,11 @@ class Notification < ActiveRecord::Base
   scope :unread, lambda { where(read: false) }
   scope :recent, lambda { order('created_at desc').limit(10) }
 
-  def self.Types
-    {:mentioned => 1,
-     :replied => 2,
-     :quoted => 3,
-     :edited => 4,
-     :liked => 5,
-     :private_message => 6,
-     :invited_to_private_message => 7,
-     :invitee_accepted => 8,
-     :posted => 9,
-     :moved_post => 10}
-  end
-
-  def self.InvertedTypes
-    @inverted_types ||= Notification.Types.invert
+  def self.types
+    @types ||= Enum.new(
+      :mentioned, :replied, :quoted, :edited, :liked, :private_message,
+      :invited_to_private_message, :invitee_accepted, :posted, :moved_post
+    )
   end
 
   def self.mark_posts_read(user, topic_id, post_numbers)
@@ -35,8 +26,8 @@ class Notification < ActiveRecord::Base
               .includes(:topic)
               .unread
               .limit(20)
-              .order("CASE WHEN notification_type = #{Notification.Types[:replied]} THEN 1
-                           WHEN notification_type = #{Notification.Types[:mentioned]} THEN 2
+              .order("CASE WHEN notification_type = #{Notification.types[:replied]} THEN 1
+                           WHEN notification_type = #{Notification.types[:mentioned]} THEN 2
                            ELSE 3
                       END, created_at DESC").to_a
 
@@ -69,7 +60,7 @@ class Notification < ActiveRecord::Base
 
   def text_description
     link = block_given? ? yield : ""
-    I18n.t("notification_types.#{Notification.InvertedTypes[notification_type]}", data_hash.merge(link: link))
+    I18n.t("notification_types.#{Notification.types[notification_type]}", data_hash.merge(link: link))
   end
 
   def url

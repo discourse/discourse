@@ -42,26 +42,26 @@ describe Guardian do
     end
 
     it "returns false when you've already done it" do
-      Guardian.new(user).post_can_act?(post, :like, taken_actions: {PostActionType.Types[:like] => 1}).should be_false
+      Guardian.new(user).post_can_act?(post, :like, taken_actions: {PostActionType.types[:like] => 1}).should be_false
     end
 
     it "returns false when you already flagged a post" do
-      Guardian.new(user).post_can_act?(post, :off_topic, taken_actions: {PostActionType.Types[:spam] => 1}).should be_false
+      Guardian.new(user).post_can_act?(post, :off_topic, taken_actions: {PostActionType.types[:spam] => 1}).should be_false
     end
 
     describe "trust levels" do
       it "returns true for a new user liking something" do
-        user.trust_level = TrustLevel.Levels[:new]
+        user.trust_level = TrustLevel.levels[:new]
         Guardian.new(user).post_can_act?(post, :like).should be_true
       end
 
       it "returns false for a new user flagging something as spam" do
-        user.trust_level = TrustLevel.Levels[:new]
+        user.trust_level = TrustLevel.levels[:new]
         Guardian.new(user).post_can_act?(post, :spam).should be_false
       end
 
       it "returns false for a new user flagging something as off topic" do
-        user.trust_level = TrustLevel.Levels[:new]
+        user.trust_level = TrustLevel.levels[:new]
         Guardian.new(user).post_can_act?(post, :off_topic).should be_false
       end
     end
@@ -108,7 +108,7 @@ describe Guardian do
     end
 
     it "returns false when you are untrusted" do
-      user.trust_level = TrustLevel.Levels[:new]
+      user.trust_level = TrustLevel.levels[:new]
       Guardian.new(user).can_send_private_message?(another_user).should be_false
     end
 
@@ -130,7 +130,7 @@ describe Guardian do
     end
 
     it "returns false for an untrusted user" do
-      user.trust_level = TrustLevel.Levels[:new]
+      user.trust_level = TrustLevel.levels[:new]
       Guardian.new(user).can_reply_as_new_topic?(topic).should be_false
     end
 
@@ -144,32 +144,32 @@ describe Guardian do
     let(:topic) { Fabricate(:topic, user: coding_horror)}
 
     it 'returns false when the post is nil' do
-      Guardian.new(user).can_see_post_actors?(nil, PostActionType.Types[:like]).should be_false
+      Guardian.new(user).can_see_post_actors?(nil, PostActionType.types[:like]).should be_false
     end
 
     it 'returns true for likes' do
-      Guardian.new(user).can_see_post_actors?(topic, PostActionType.Types[:like]).should be_true
+      Guardian.new(user).can_see_post_actors?(topic, PostActionType.types[:like]).should be_true
     end
 
     it 'returns false for bookmarks' do
-      Guardian.new(user).can_see_post_actors?(topic, PostActionType.Types[:bookmark]).should be_false
+      Guardian.new(user).can_see_post_actors?(topic, PostActionType.types[:bookmark]).should be_false
     end
 
     it 'returns false for off-topic flags' do
-      Guardian.new(user).can_see_post_actors?(topic, PostActionType.Types[:off_topic]).should be_false
+      Guardian.new(user).can_see_post_actors?(topic, PostActionType.types[:off_topic]).should be_false
     end
 
     it 'returns false for spam flags' do
-      Guardian.new(user).can_see_post_actors?(topic, PostActionType.Types[:spam]).should be_false
+      Guardian.new(user).can_see_post_actors?(topic, PostActionType.types[:spam]).should be_false
     end
 
     it 'returns true for public votes' do
-      Guardian.new(user).can_see_post_actors?(topic, PostActionType.Types[:vote]).should be_true
+      Guardian.new(user).can_see_post_actors?(topic, PostActionType.types[:vote]).should be_true
     end
 
     it 'returns false for private votes' do
       topic.expects(:has_meta_data_boolean?).with(:private_poll).returns(true)
-      Guardian.new(user).can_see_post_actors?(topic, PostActionType.Types[:vote]).should be_false
+      Guardian.new(user).can_see_post_actors?(topic, PostActionType.types[:vote]).should be_false
     end
 
   end
@@ -356,11 +356,11 @@ describe Guardian do
       end
 
       it "doesn't allow voting if the user has an action from voting already" do
-        guardian.post_can_act?(post,:vote,taken_actions: {PostActionType.Types[:vote] => 1}).should be_false
+        guardian.post_can_act?(post,:vote,taken_actions: {PostActionType.types[:vote] => 1}).should be_false
       end
 
       it "allows voting if the user has performed a different action" do
-        guardian.post_can_act?(post,:vote,taken_actions: {PostActionType.Types[:like] => 1}).should be_true
+        guardian.post_can_act?(post,:vote,taken_actions: {PostActionType.types[:like] => 1}).should be_true
       end
 
       it "isn't allowed on archived topics" do

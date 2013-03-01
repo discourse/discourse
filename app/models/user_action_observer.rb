@@ -40,13 +40,13 @@ class UserActionObserver < ActiveRecord::Observer
   def log_notification(model)
     action =
       case model.notification_type
-        when Notification.Types[:quoted]
+        when Notification.types[:quoted]
           UserAction::QUOTE
-        when Notification.Types[:replied]
+        when Notification.types[:replied]
           UserAction::RESPONSE
-        when Notification.Types[:mentioned]
+        when Notification.types[:mentioned]
           UserAction::MENTION
-        when Notification.Types[:edited]
+        when Notification.types[:edited]
           UserAction::EDIT
       end
 

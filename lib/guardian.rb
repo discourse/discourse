@@ -135,7 +135,7 @@ class Guardian
     return false unless @user.try(:admin?)
     return false if moderator.blank?
     return false if @user.id == moderator.id
-    return false unless moderator.trust_level == TrustLevel.Levels[:moderator]
+    return false unless moderator.trust_level == TrustLevel.levels[:moderator]
     true
   end
 
@@ -152,7 +152,7 @@ class Guardian
   def can_see_post_actors?(topic, post_action_type_id)
     return false unless topic.present?
 
-    type_symbol = PostActionType.Types.invert[post_action_type_id]
+    type_symbol = PostActionType.types[post_action_type_id]
     return false if type_symbol == :bookmark
     return can_see_flags?(topic) if PostActionType.is_flag?(type_symbol)
 
@@ -335,10 +335,10 @@ class Guardian
       return false unless @user.has_trust_level?(:basic)
 
       if taken
-        return false unless (taken & PostActionType.FlagTypes).empty?
+        return false unless (taken & PostActionType.flag_types.values).empty?
       end
     else
-      return false if taken && taken.include?(PostActionType.Types[action_key])
+      return false if taken && taken.include?(PostActionType.types[action_key])
     end
 
     case action_key

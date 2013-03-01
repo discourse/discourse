@@ -161,8 +161,8 @@ describe Invite do
     context 'invite trust levels' do
 
       it "returns the trust level in default_invitee_trust_level" do
-        SiteSetting.stubs(:default_invitee_trust_level).returns(TrustLevel.Levels[:experienced])
-        invite.redeem.trust_level.should == TrustLevel.Levels[:experienced]
+        SiteSetting.stubs(:default_invitee_trust_level).returns(TrustLevel.levels[:experienced])
+        invite.redeem.trust_level.should == TrustLevel.levels[:experienced]
       end
 
     end

@@ -14,7 +14,7 @@ class Site
   end
 
   def notification_types
-    Notification.Types
+    Notification.types
   end
 
   def trust_levels

@@ -18,7 +18,7 @@ describe Jobs::NotifyMovedPosts do
     let!(:p3) { Fabricate(:post, user: p1.user, topic: p1.topic) }
     let(:admin) { Fabricate(:admin) }
 
-    let(:moved_post_notifications) { Notification.where(notification_type: Notification.Types[:moved_post]) }
+    let(:moved_post_notifications) { Notification.where(notification_type: Notification.types[:moved_post]) }
 
     it "should create two notifications" do
       lambda { Jobs::NotifyMovedPosts.new.execute(post_ids: [p1.id, p2.id, p3.id], moved_by_id: admin.id) }.should change(moved_post_notifications, :count).by(2)

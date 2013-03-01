@@ -66,12 +66,12 @@ describe RateLimiter do
         end
 
         it "returns true for can_perform if the user is a mod" do
-          user.trust_level = TrustLevel.Levels[:moderator]
+          user.trust_level = TrustLevel.levels[:moderator]
           rate_limiter.can_perform?.should be_true
         end
 
         it "doesn't raise an error when a moderator performs the task" do
-          user.trust_level = TrustLevel.Levels[:moderator]
+          user.trust_level = TrustLevel.levels[:moderator]
           lambda { rate_limiter.performed! }.should_not raise_error
         end
 

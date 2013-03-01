@@ -134,9 +134,9 @@ class PostsController < ApplicationController
     post = find_post_from_params
     if current_user
       if params[:bookmarked] == "true"
-        PostAction.act(current_user, post, PostActionType.Types[:bookmark])
+        PostAction.act(current_user, post, PostActionType.types[:bookmark])
       else
-        PostAction.remove_act(current_user, post, PostActionType.Types[:bookmark])
+        PostAction.remove_act(current_user, post, PostActionType.types[:bookmark])
       end
     end
     render :nothing => true

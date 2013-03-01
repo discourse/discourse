@@ -334,7 +334,7 @@ class Topic < ActiveRecord::Base
       if user.present?
         if topic_allowed_users.create!(user_id: user.id)
           # Notify the user they've been invited
-          user.notifications.create(notification_type: Notification.Types[:invited_to_private_message],
+          user.notifications.create(notification_type: Notification.types[:invited_to_private_message],
                                     topic_id: id,
                                     post_number: 1,
                                     data: { topic_title: title,
