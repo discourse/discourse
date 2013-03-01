@@ -151,6 +151,10 @@ module SiteSettingExtension
       val = val.to_i
     end
 
+    if type == Types::Null && val != ''
+      type = get_data_type(val)
+    end
+
     if setting
       setting.value = val
       setting.data_type = type
