@@ -1,31 +1,28 @@
+require_dependency 'enum'
+
 class PostActionType < ActiveRecord::Base
   attr_accessible :id, :is_flag, :name_key, :icon
 
-  def self.ordered
-    order('position asc').all
-  end
+  class << self
+    def ordered
+      order('position asc').all
+    end
 
-  def self.Types
-    {
-      bookmark: 1,
-      like: 2,
-      off_topic: 3,
-      inappropriate: 4,
-      vote: 5,
-      custom_flag: 6,
-      spam: 8
-    }
-  end
+    def types
+      @types ||= Enum.new(:bookmark, :like, :off_topic, :inappropriate, :vote,
+                          :custom_flag, :spam)
+    end
 
-  def self.is_flag?(sym)
-    self.FlagTypes.include?(self.Types[sym])
-  end
+    def auto_action_flag_types
+      @auto_action_flag_types ||= flag_types.except(:custom_flag)
+    end
 
-  def self.AutoActionFlagTypes
-    @auto_action_flag_types ||= [self.Types[:off_topic], self.Types[:spam], self.Types[:inappropriate]]
-  end
+    def flag_types
+      @flag_types ||= types.only(:off_topic, :spam, :inappropriate, :custom_flag)
+    end
 
-  def self.FlagTypes
-    @flag_types ||= self.AutoActionFlagTypes + [self.Types[:custom_flag]]
+    def is_flag?(sym)
+      flag_types.valid?(sym)
+    end
   end
 end

@@ -141,7 +141,7 @@ class PostSerializer < ApplicationSerializer
   # Summary of the actions taken on this post
   def actions_summary
     result = []
-    PostActionType.Types.each do |sym, id|
+    PostActionType.types.each do |sym, id|
       next if [:bookmark].include?(sym)
       count_col = "#{sym}_count".to_sym
 
@@ -154,7 +154,7 @@ class PostSerializer < ApplicationSerializer
 
       # The following only applies if you're logged in
       if action_summary[:can_act] and scope.current_user.present?
-        action_summary[:can_clear_flags] = scope.is_admin? && PostActionType.FlagTypes.include?(id)
+        action_summary[:can_clear_flags] = scope.is_admin? && PostActionType.flag_types.values.include?(id)
 
         if post_actions.present? and post_actions.has_key?(id)
           action_summary[:acted] = true
@@ -163,7 +163,7 @@ class PostSerializer < ApplicationSerializer
       end
 
       # anonymize flags
-      if !scope.is_admin? && PostActionType.FlagTypes.include?(id)
+      if !scope.is_admin? && PostActionType.flag_types.values.include?(id)
         action_summary[:count] = action_summary[:acted] ? 1 : 0
       end
 
@@ -200,7 +200,7 @@ class PostSerializer < ApplicationSerializer
   end
 
   def include_bookmarked?
-    post_actions.present? and post_actions.keys.include?(PostActionType.Types[:bookmark])
+    post_actions.present? and post_actions.keys.include?(PostActionType.types[:bookmark])
   end
 
   private

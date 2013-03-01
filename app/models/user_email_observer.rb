@@ -3,7 +3,7 @@ class UserEmailObserver < ActiveRecord::Observer
 
   def after_commit(notification)
     if notification.send(:transaction_include_action?, :create)
-      notification_type = Notification.InvertedTypes[notification.notification_type]
+      notification_type = Notification.types[notification.notification_type]
 
       # Delegate to email_user_{{NOTIFICATION_TYPE}} if exists
       email_method = :"email_user_#{notification_type.to_s}"

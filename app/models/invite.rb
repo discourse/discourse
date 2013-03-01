@@ -72,7 +72,7 @@ class Invite < ActiveRecord::Base
         end
 
           # Notify the invitee
-          invited_by.notifications.create(notification_type: Notification.Types[:invitee_accepted],
+          invited_by.notifications.create(notification_type: Notification.types[:invitee_accepted],
                                           data: { display_username: result.username }.to_json)
 
       else
