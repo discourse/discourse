@@ -109,6 +109,10 @@ Discourse.LoginView = Discourse.ModalBodyView.extend({
     return window.open("/auth/github", "_blank", "menubar=no,status=no,height=400,width=800,left=" + left + ",top=" + top);
   },
 
+  personaLogin: function() {
+      navigator.id.request();
+  },
+
   authenticationComplete: function(options) {
     if (options.awaiting_approval) {
       this.flash(Em.String.i18n('login.awaiting_approval'), 'success');
