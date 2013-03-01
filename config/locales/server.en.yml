@@ -15,7 +15,10 @@ en:
   is_invalid: "is invalid; try to be a little more descriptive"
   next_page: "next page &rarr;"
   by: "By"
-  rss_feed: "RSS feed of %{topic}"
+  topics_in_category: "Topics in the '%{category}' category"
+  rss_posts_in_topic: "RSS feed of '%{topic}'"
+  rss_topics_in_category: "RSS feed of topics in the '%{category}' category"
+  author_wrote: "%{author} wrote:"
 
   education:
     until_posts:

@@ -114,6 +114,10 @@ class TopicQuery
     new_results(limit: false).count
   end
 
+  def list_new_in_category(category)
+    return_list {|l| l.where(category_id: category.id).by_newest.first(25)}
+  end
+
   protected
 
     def return_list(list_opts={})

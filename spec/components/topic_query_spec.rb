@@ -51,6 +51,12 @@ describe TopicQuery do
     it "returns nothing when filtering by another category" do
       topic_query.list_category(Fabricate(:category, name: 'new cat')).topics.should be_blank
     end
+
+    describe '#list_new_in_category' do
+      it 'returns only the categorized topic' do
+        topic_query.list_new_in_category(category).topics.should == [topic_in_cat]
+      end
+    end
   end
 
   context 'unread / read topics' do
