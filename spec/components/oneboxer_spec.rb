@@ -17,21 +17,21 @@ describe "Dynamic Oneboxer" do
     @dummy_onebox_url = "http://dummy2.localhost/dummy-object"
   end
 
-   context 'find onebox for url' do
+  context 'find onebox for url' do
 
-     it 'returns blank with an unknown url' do
-       Oneboxer.onebox_for_url('http://asdfasdfasdfasdf.asdf').should be_blank
-     end
+    it 'returns blank with an unknown url' do
+      Oneboxer.onebox_for_url('http://asdfasdfasdfasdf.asdf').should be_blank
+    end
 
-     it 'returns something when matched' do
-       Oneboxer.onebox_for_url(@dummy_onebox_url).should be_present
-     end
+    it 'returns something when matched' do
+      Oneboxer.onebox_for_url(@dummy_onebox_url).should be_present
+    end
 
-     it 'returns an instance of our class when matched' do
-       Oneboxer.onebox_for_url(@dummy_onebox_url).kind_of?(DummyDynamicOnebox).should be_true
-     end
+    it 'returns an instance of our class when matched' do
+      Oneboxer.onebox_for_url(@dummy_onebox_url).kind_of?(DummyDynamicOnebox).should be_true
+    end
 
-   end
+  end
 
 end
 
@@ -181,5 +181,3 @@ describe Oneboxer do
 
 
 end
-
-
