@@ -1,12 +1,9 @@
+require_dependency 'enum'
+
 module SiteSettingExtension
 
-  module Types
-    String = 1
-    Time = 2
-    Fixnum = 3
-    Float = 4
-    Bool = 5
-    Null = 6
+  def types
+    @types ||= Enum.new(:string, :time, :fixnum, :float, :bool, :null)
   end
 
   def mutex
@@ -55,7 +52,7 @@ module SiteSettingExtension
       {setting: s,
        description: description(s),
        default: v,
-       type: get_data_type_string(value),
+       type: types[get_data_type(value)].to_s,
        value: value.to_s}
     end
   end
@@ -145,15 +142,15 @@ module SiteSettingExtension
     setting = SiteSetting.where(:name => name).first
     type = get_data_type(defaults[name])
 
-    if type == Types::Bool && val != true && val != false
+    if type == types[:bool] && val != true && val != false
       val = (val == "t" || val == "true") ? 't' : 'f'
     end
 
-    if type == Types::Fixnum && !(Fixnum === val)
+    if type == types[:fixnum] && !(Fixnum === val)
       val = val.to_i
     end
 
-    if type == Types::Null && val != ''
+    if type == types[:null] && val != ''
       type = get_data_type(val)
     end
 
@@ -171,25 +168,15 @@ module SiteSettingExtension
 
   protected
 
-  # We're currently in the process of refactoring our Enums. When that's
-  # done we should pop back and fix this to something better.
-  def get_data_type_string(val)
-    case get_data_type(val)
-      when Types::String then 'string'
-      when Types::Fixnum then 'number'
-      when Types::Bool then 'bool'
-    end
-  end
-
   def get_data_type(val)
-    return Types::Null if val.nil?
+    return types[:null] if val.nil?
 
     if String === val
-      Types::String
+      types[:string]
     elsif Fixnum === val
-      Types::Fixnum
+      types[:fixnum]
     elsif TrueClass === val || FalseClass === val
-      Types::Bool
+      types[:bool]
     else
       raise ArgumentError.new :val
     end
@@ -197,13 +184,13 @@ module SiteSettingExtension
 
   def convert(value, type)
     case type
-    when Types::Fixnum
+    when types[:fixnum]
       value.to_i
-    when Types::String
+    when types[:string]
       value
-    when Types::Bool
+    when types[:bool]
       value == "t"
-    when Types::Null
+    when types[:null]
       nil
     end
   end
