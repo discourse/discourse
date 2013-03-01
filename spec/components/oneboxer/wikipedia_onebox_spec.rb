@@ -22,7 +22,7 @@ private
     <div class='source'>
       <div class='info'>
         <a href='http://en.wikipedia.org/wiki/Ruby' target="_blank">
-          <img class='favicon' src="/assets/favicons/wikipedia.png"> wikipedia.org
+          <img class='favicon' src="/assets/favicons/wikipedia.png"> en.wikipedia.org
         </a>
       </div>
     </div>

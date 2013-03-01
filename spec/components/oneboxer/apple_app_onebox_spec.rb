@@ -21,7 +21,7 @@ private
     <div class='source'>
       <div class='info'>
         <a href='https://itunes.apple.com/us/app/minecraft-pocket-edition-lite/id479651754' target="_blank">
-          <img class='favicon' src="/assets/favicons/apple.png"> apple.com
+          <img class='favicon' src="/assets/favicons/apple.png"> itunes.apple.com
         </a>
       </div>
     </div>

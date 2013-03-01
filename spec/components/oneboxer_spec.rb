@@ -72,6 +72,24 @@ describe Oneboxer do
 
   end
 
+  describe '#nice_host' do
+    it 'strips www from the domain' do
+      DummyOnebox.new('http://www.cnn.com/thing').nice_host.should eq 'cnn.com'
+    end
+
+    it 'respects double TLDs' do
+      DummyOnebox.new('http://news.bbc.co.uk/thing').nice_host.should eq 'news.bbc.co.uk'
+    end
+
+    it 'returns an empty string if the URL is bogus' do
+      DummyOnebox.new('whatever').nice_host.should eq ''
+    end
+
+    it 'returns an empty string if the URL unparsable' do
+      DummyOnebox.new(nil).nice_host.should eq ''
+    end
+  end
+
   context 'without caching' do
     it 'calls the onebox method of our matched class' do
       Oneboxer.onebox_nocache(@dummy_onebox_url).should == 'dummy!'
