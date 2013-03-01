@@ -5,7 +5,7 @@
 
 <% @topic_view.posts.each do |post| %>
   <div class='creator'>
-    #<%=post.post_number%> By: <b><%= post.user.name %></b>, <%= post.created_at.to_formatted_s(:long_ordinal) %>
+    #<%=post.post_number%> <%= t 'by'%>: <b><%= post.user.name %></b>, <%= post.created_at.to_formatted_s(:long_ordinal) %>
   </div>
   <div class='post'>
     <%= post.cooked.html_safe %>
@@ -15,13 +15,13 @@
 
 <% if @topic_view.next_page %>
   <p>
-    <b><%= link_to("next page &rarr;".html_safe, @topic_view.next_page_path ) %></b>
+    <b><%= link_to(t('next_page').html_safe, @topic_view.next_page_path ) %></b>
   </p>
 <% end %>
 
 
-<p>Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled</p>
+<p><%= t 'powered_by' %></p>
 
 <% content_for :head do %>
-  <%= auto_discovery_link_tag(@topic_view, {action: :feed, format: :rss}, title: "RSS feed of '#{@topic_view.title}'", type: 'application/rss+xml') %>
+  <%= auto_discovery_link_tag(@topic_view, {action: :feed, format: :rss}, title: t('rss_feed', topic: @topic_view.title), type: 'application/rss+xml') %>
 <% end %>
