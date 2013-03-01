@@ -1033,4 +1033,17 @@ describe Topic do
 
   end
 
+  describe 'scopes' do
+    describe '#by_most_recently_created' do
+      it 'returns topics ordered by created_at desc, id desc' do
+        now = Time.now
+        a = Fabricate(:topic, created_at: now - 2.minutes)
+        b = Fabricate(:topic, created_at: now)
+        c = Fabricate(:topic, created_at: now)
+        d = Fabricate(:topic, created_at: now - 2.minutes)
+        Topic.by_newest.should == [c,b,d,a]
+      end
+    end
+  end
+
 end

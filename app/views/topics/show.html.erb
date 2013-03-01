@@ -23,5 +23,5 @@
 <p><%= t 'powered_by' %></p>
 
 <% content_for :head do %>
-  <%= auto_discovery_link_tag(@topic_view, {action: :feed, format: :rss}, title: t('rss_feed', topic: @topic_view.title), type: 'application/rss+xml') %>
+  <%= auto_discovery_link_tag(@topic_view, {action: :feed, format: :rss}, title: t('rss_posts_in_topic', topic: @topic_view.title), type: 'application/rss+xml') %>
 <% end %>
