@@ -51,7 +51,20 @@ Anyone wishing to contribute to the **[Discourse/Discourse](https://github.com/d
   
   Completing these steps will increase the chances of your code making it into **[Discourse/Discourse](https://github.com/discourse/discourse)**.
 
-4. Commit
+4. Follow the Coding Conventions
+
+ Discourse follows those code style conventions:
+ * two spaces, no tabs
+ * no trailing whitespaces, blank lines should have no spaces
+ * use spaces around operators, after commas, colons, semicolons, around `{` and before `}`
+ * no space after `(`, `[` or before `]`, `)`
+ * use Ruby 1.9 hash syntax: prefer `{ a: 1 }` over `{ :a => 1 }`
+ * use `&&` and `||` over `and`/`or`
+ * prefer `class << self; def method; end` over `def class.method` for class methods
+ * prefer `{ ... }` over `do ... end` for single-line blocks, avoid using `{ ... }` for multi-line blocks
+ * avoid `return` when not requried
+
+5. Commit
 
   ```
   git commit -a
@@ -76,26 +89,26 @@ Anyone wishing to contribute to the **[Discourse/Discourse](https://github.com/d
   git push origin new_discourse_branch -f
   ```
 
-5. Update your branch
+6. Update your branch
 
   ```
   git checkout master
   git pull --rebase
   ```
 
-6. Fork
+7. Fork
 
   ```
   git remote add mine git@github.com:<your user name>/discourse.git
   ```
 
-7. Push to your remote
+8. Push to your remote
 
   ```
   git push mine new_discourse_branch
   ```
 
-8. Issue a Pull Request
+9. Issue a Pull Request
 
   In order to make a pull request,
   * Navigate to the Discourse repository you just pushed to (e.g. https://github.com/your-user-name/discourse)
@@ -109,6 +122,6 @@ Anyone wishing to contribute to the **[Discourse/Discourse](https://github.com/d
   
   Once these steps are done, you will soon receive feedback from The Discourse team!
 
-9. Responding to Feedback
+10. Responding to Feedback
 
   The Discourse team may recommend adjustments to your code, and this is perfectly normal. Part of interacting with a healthy open-source community requires you to be open to learning new techniques and strategies; *don't get discouraged!* Remember: if the Discourse team suggest changes to your code, **they care enough about your work that they want to include it**, and hope that you can assist by implementing those revisions on your own.
