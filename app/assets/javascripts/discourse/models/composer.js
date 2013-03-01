@@ -431,7 +431,7 @@ Discourse.Composer = Discourse.Model.extend({
       _this = this;
     if (this.get('disableDrafts')) return;
     if (!this.get('reply')) return;
-    if (this.get('reply').length < Discourse.SiteSettings.min_post_length) return;
+    if (this.get('replyLength') < Discourse.SiteSettings.min_post_length) return;
 
     data = {
       reply: this.get('reply'),
@@ -453,34 +453,42 @@ Discourse.Composer = Discourse.Model.extend({
   },
 
   resetDraftStatus: (function() {
-    var len, reply;
-    reply = this.get('reply');
-    len = Discourse.SiteSettings.min_post_length;
-    if (!reply) {
-      return this.set('draftStatus', Em.String.i18n('composer.min_length.at_least', {
-        n: len
-      }));
-    } else if (reply.length < len) {
-      return this.set('draftStatus', Em.String.i18n('composer.min_length.more', {
-        n: len - reply.length
-      }));
+    var len = Discourse.SiteSettings.min_post_length,
+        replyLength = this.get('replyLength');
+
+    if (replyLength === 0) {
+      this.set('draftStatus', Em.String.i18n('composer.min_length.at_least', { n: len }));
+    } else if (replyLength < len) {
+      this.set('draftStatus', Em.String.i18n('composer.min_length.more', { n: len - replyLength }));
     } else {
-      return this.set('draftStatus', null);
+      this.set('draftStatus', null);
     }
+
   }).observes('reply', 'title'),
 
   blank: function(prop) {
-    var p;
-    p = this.get(prop);
+    var p = this.get(prop);
     return !(p && p.length > 0);
-  }
+  },
+
+  /**
+    Computes the length of the reply minus the quote(s).
+
+    @property replyLength
+  **/
+  replyLength: function() {
+    var reply = this.get('reply');
+    if(!reply) reply = "";
+    while (Discourse.BBCode.QUOTE_REGEXP.test(reply)) { reply = reply.replace(Discourse.BBCode.QUOTE_REGEXP, ""); }
+    return reply.trim().length;
+  }.property('reply')
+
 });
 
 Discourse.Composer.reopenClass({
 
   open: function(opts) {
-    var composer;
-    composer = Discourse.Composer.create();
+    var composer = Discourse.Composer.create();
     composer.open(opts);
     return composer;
   },
