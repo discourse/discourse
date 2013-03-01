@@ -706,7 +706,7 @@ en:
       subject_template: "[%{site_name}] Forum Activity for %{date}"
       new_activity: "New activity on your topics and posts:"
       new_topics: "New topics:"
-      unsubscribe: "This summary email is sent as a courtesy notification from %{site_link} when we haven't seen you for 7 days.\nIf you'd like to turn it off or change your email preferences, %{unsubscribe_link}."
+      unsubscribe: "This summary email is sent as a courtesy notification from %{site_link} when we haven't seen you in a while.\nIf you'd like to turn it off or change your email preferences, %{unsubscribe_link}."
 
     private_message:
       subject_template: "[%{site_name}] %{subject_prefix}%{topic_title}"
