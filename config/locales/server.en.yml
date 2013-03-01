@@ -260,7 +260,6 @@ en:
     company_full_name: "The full name of the company that runs this site, used in legal documents like the /tos"
     company_short_name: "The short name of the company that runs this site, used in legal documents like the /tos"
     company_domain: "The domain name owned by the company that runs this site, used in legal documents like the /tos"
-    restrict_access: "Restrict forum access unless a password is entered"
     access_password: "When restricted access is enabled, this password must be entered"
     queue_jobs: "Queue various jobs in sidekiq, if false queues are inline"
     crawl_images: "Enable retrieving images from third party sources to insert width and height dimensions"
@@ -270,7 +269,6 @@ en:
     imgur_endpoint: "End point for uploading imgur.com images"
     max_image_width: "Maximum allowed width of images in a post"
     category_featured_topics: "Number of topics displayed per category in the /categories page"
-    popup_delay: "Milliseconds of hover time before popups appear on the screen"
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains) changing this requires you update all your baked markdown"
     exclude_rel_nofollow_domains: "A comma delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
 

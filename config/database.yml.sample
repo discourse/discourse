@@ -1,6 +1,7 @@
 development:
   adapter: postgresql
   database: discourse_development
+  min_messages: warning
   host: localhost
   pool: 5
   timeout: 5000
@@ -13,6 +14,7 @@ development:
 test:
   adapter: postgresql
   database: discourse_test
+  min_messages: warning
   host: localhost
   pool: 5
   timeout: 5000

@@ -146,7 +146,7 @@ class ApplicationController < ActionController::Base
     return false if current_user.present?
 
     # Don't cache if there's restricted access
-    return false if SiteSetting.restrict_access?
+    return false if SiteSetting.access_password.present?
 
     true
   end
@@ -216,7 +216,7 @@ class ApplicationController < ActionController::Base
 
     def check_restricted_access
       # note current_user is defined in the CurrentUser mixin
-      if SiteSetting.restrict_access? && cookies[:_access] != SiteSetting.access_password
+      if SiteSetting.access_password.present? && cookies[:_access] != SiteSetting.access_password
         redirect_to request_access_path(:return_path => request.fullpath)
         return false
       end

@@ -15,7 +15,7 @@ class InvitesController < ApplicationController
         user.enqueue_welcome_message('welcome_invite') if user.send_welcome_message
 
         # We skip the access password if we come in via an invite link
-        cookies.permanent['_access'] = SiteSetting.access_password if SiteSetting.restrict_access?
+        cookies.permanent['_access'] = SiteSetting.access_password if SiteSetting.access_password.present?
 
         topic = invite.topics.first
         if topic.present?

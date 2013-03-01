@@ -4,7 +4,7 @@ class RobotsTxtController < ApplicationController
   skip_before_filter :check_restricted_access
 
   def index
-    path = if SiteSetting.allow_index_in_robots_txt && !SiteSetting.restrict_access
+    path = if SiteSetting.allow_index_in_robots_txt && SiteSetting.access_password.blank?
       :index
     else
       :no_index

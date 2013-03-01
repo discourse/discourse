@@ -3,11 +3,11 @@
 /**
   A view to handle site customizations
 
-  @class AdminCustomizeView    
-  @extends Em.View
+  @class AdminCustomizeView
+  @extends Discourse.View
   @namespace Discourse
   @module Discourse
-**/ 
+**/
 Discourse.AdminCustomizeView = Discourse.View.extend({
   templateName: 'admin/templates/customize',
   classNames: ['customize'],
@@ -44,5 +44,5 @@ Discourse.AdminCustomizeView = Discourse.View.extend({
   willDestroyElement: function() {
     return Mousetrap.unbindGlobal('meta+s', 'ctrl+s');
   }
-  
+
 });

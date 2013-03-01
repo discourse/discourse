@@ -1,11 +1,11 @@
 /**
   This controller supports the interface for SiteSettings.
 
-  @class AdminSiteSettingsController    
+  @class AdminSiteSettingsController
   @extends Ember.ArrayController
   @namespace Discourse
   @module Discourse
-**/ 
+**/
 Discourse.AdminSiteSettingsController = Ember.ArrayController.extend(Discourse.Presence, {
   filter: null,
   onlyOverridden: false,
@@ -16,15 +16,18 @@ Discourse.AdminSiteSettingsController = Ember.ArrayController.extend(Discourse.P
     @property filteredContent
   **/
   filteredContent: (function() {
-    var filter,
-      _this = this;
+
+    // If we have no content, don't bother filtering anything
     if (!this.present('content')) return null;
+
+    var filter;
     if (this.get('filter')) {
       filter = this.get('filter').toLowerCase();
     }
 
+    var adminSettingsController = this;
     return this.get('content').filter(function(item, index, enumerable) {
-      if (_this.get('onlyOverridden') && !item.get('overridden')) return false;
+      if (adminSettingsController.get('onlyOverridden') && !item.get('overridden')) return false;
       if (filter) {
         if (item.get('setting').toLowerCase().indexOf(filter) > -1) return true;
         if (item.get('description').toLowerCase().indexOf(filter) > -1) return true;
@@ -66,5 +69,5 @@ Discourse.AdminSiteSettingsController = Ember.ArrayController.extend(Discourse.P
   cancel: function(setting) {
     setting.resetValue();
   }
-  
+
 });

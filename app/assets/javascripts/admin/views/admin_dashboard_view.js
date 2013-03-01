@@ -2,7 +2,7 @@
   The default view in the admin section
 
   @class AdminDashboardView
-  @extends Em.View
+  @extends Discourse.View
   @namespace Discourse
   @module Discourse
 **/

@@ -51,10 +51,12 @@ module SiteSettingExtension
   # Retrieve all settings
   def all_settings
     @defaults.map do |s, v|
+      value = send(s)
       {setting: s,
        description: description(s),
        default: v,
-       value: send(s).to_s}
+       type: get_data_type_string(value),
+       value: value.to_s}
     end
   end
 
@@ -168,6 +170,16 @@ module SiteSettingExtension
 
 
   protected
+
+  # We're currently in the process of refactoring our Enums. When that's
+  # done we should pop back and fix this to something better.
+  def get_data_type_string(val)
+    case get_data_type(val)
+      when Types::String then 'string'
+      when Types::Fixnum then 'number'
+      when Types::Bool then 'bool'
+    end
+  end
 
   def get_data_type(val)
     return Types::Null if val.nil?

@@ -101,6 +101,7 @@ module Search
 
     return nil if term.blank?
     sanitized_term = PG::Connection.escape_string(term.gsub(/[:()&!]/,'')) # Instead of original term.gsub(/[^0-9a-zA-Z_ ]/, '')
+
     # We are stripping only symbols taking place in FTS and simply sanitizing the rest.
 
     # really short terms are totally pointless
@@ -117,7 +118,7 @@ module Search
 
       db_result = []
       [user_query_sql, category_query_sql, topic_query_sql].each do |sql|
-        db_result += ActiveRecord::Base.exec_sql(sql , query: terms.join(" & "),locale: current_locale_long, limit: (Search.per_facet + 1)).to_a
+        db_result += ActiveRecord::Base.exec_sql(sql , query: terms.join(" & "), locale: current_locale_long, limit: (Search.per_facet + 1)).to_a
       end
     end
 

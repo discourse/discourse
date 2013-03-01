@@ -23,7 +23,7 @@ class SystemMessage
 
     params = defaults.merge(params)
 
-    if SiteSetting.restrict_access?
+    if SiteSetting.access_password.present?
       params[:site_password] = MultisiteI18n.t('system_messages.site_password', access_password: SiteSetting.access_password)
     end
 

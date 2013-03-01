@@ -1,3 +1,5 @@
+/*global waitsFor:true expect:true describe:true beforeEach:true it:true */
+
 describe("Discourse.Composer", function() {
 
   describe("replyLength", function() {

@@ -1,6 +1,6 @@
 <div class='admin-controls'>
   <div class='span15 search controls'>
-  <label>    
+  <label>
     {{view Ember.Checkbox checkedBinding="controller.onlyOverridden"}}
     {{i18n admin.site_settings.show_overriden}}
   </label>
@@ -11,24 +11,4 @@
 
 </div>
 
-{{#collection contentBinding="filteredContent" classNames="form-horizontal settings" itemClass="row setting"}}
-  {{#with view.content}}
-    <div class='span4 offset1'>
-      {{unbound setting}}
-    </div>
-    <div {{bindAttr class=":span11 overridden:overridden"}}>
-      {{view Ember.TextField valueBinding="value" classNames="input-xxlarge"}}
-      <div class='desc'>{{unbound description}}</div>
-    </div>
-    {{#if dirty}}
-      <div class='span3'>   
-        <button class='btn ok' {{action save this target="controller"}}><i class='icon-ok'></i></button>
-        <button class='btn cancel' {{action cancel this target="controller"}}><i class='icon-remove'></i></button>
-      </div>
-    {{else}}
-      {{#if overridden}}
-        <button class='btn' href='#' {{action resetDefault this target="controller"}}>{{i18n admin.site_settings.reset}}</button>
-      {{/if}} 
-    {{/if}}
-  {{/with}}
-{{/collection}}
+{{collection contentBinding="filteredContent" classNames="form-horizontal settings" itemViewClass="Discourse.SiteSettingView"}}

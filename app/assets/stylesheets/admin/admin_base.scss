@@ -128,14 +128,24 @@
 .settings {
   .setting {
     padding-bottom: 20px;
-    .overridden {
-      input[type=text] {
-        background-color: lighten($yellow, 40%);
-      }
-    }
     .desc {
       padding-top: 3px;
       color: darken($white, 40%);
+    }
+
+    h3 {
+      font-size: 13px;
+      font-weight: normal;
+    }
+  }
+
+  .setting.overridden {
+    input[type=text] {
+      background-color: lighten($yellow, 40%);
+    }
+
+    h3 {
+      color: darken($yellow, 20%);
     }
   }
 }
