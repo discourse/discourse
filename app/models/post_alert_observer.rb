@@ -38,7 +38,7 @@ class PostAlertObserver < ActiveRecord::Observer
     return if post.topic.private_message?
 
     create_notification(post.user,
-                        Notification.Types[:liked],
+                        Notification.types[:liked],
                         post,
                         display_username: post_action.user.username,
                         post_action_id: post_action.id)
@@ -52,14 +52,14 @@ class PostAlertObserver < ActiveRecord::Observer
     return if version.user_id == post.user_id
     return if post.topic.private_message?
 
-    create_notification(post.user, Notification.Types[:edited], post, display_username: version.user.username)
+    create_notification(post.user, Notification.types[:edited], post, display_username: version.user.username)
   end
 
   def after_create_post(post)
     if post.topic.private_message?
       # If it's a private message, notify the topic_allowed_users
-      post.topic.topic_allowed_users.reject { |a| a.user_id == post.user_id }.each do |a|
-        create_notification(a.user, Notification.Types[:private_message], post)
+      post.topic.topic_allowed_users.reject{ |a| a.user_id == post.user_id }.each do |a|
+        create_notification(a.user, Notification.types[:private_message], post)
       end
     else
       # If it's not a private message, notify the users
@@ -114,7 +114,7 @@ class PostAlertObserver < ActiveRecord::Observer
     def notify_users(users, type, post)
       users = [users] unless users.is_a?(Array)
       users.each do |u|
-        create_notification(u, Notification.Types[type], post)
+        create_notification(u, Notification.types[type], post)
       end
     end
 
@@ -133,7 +133,7 @@ class PostAlertObserver < ActiveRecord::Observer
         exclude_user_ids << extract_quoted_users(post).map(&:id)
         exclude_user_ids.flatten!
         TopicUser.where(topic_id: post.topic_id, notification_level: TopicUser::NotificationLevel::WATCHING).includes(:user).each do |tu|
-          create_notification(tu.user, Notification.Types[:posted], post) unless exclude_user_ids.include?(tu.user_id)
+          create_notification(tu.user, Notification.types[:posted], post) unless exclude_user_ids.include?(tu.user_id)
         end
       end
     end

@@ -1,17 +1,14 @@
-class TrustLevel
+require_dependency 'enum'
 
+class TrustLevel
   attr_reader :id, :name
 
   class << self
     def levels
-      { new: 0,
-        basic: 1,
-        regular: 2,
-        experienced: 3,
-        advanced: 4,
-        moderator: 5 }
+      @levels ||= Enum.new(
+        :new, :basic, :regular, :experienced, :advanced, :moderator, start: 0
+      )
     end
-    alias_method :Levels, :levels
 
     def all
       levels.map do |name_key, id|
@@ -20,15 +17,11 @@ class TrustLevel
     end
 
     def valid_level?(level)
-      levels.has_key?(level)
+      levels.valid?(level)
     end
 
     def compare(current_level, level)
-      (current_level || levels[:new]) >= levels[level]
-    end
-
-    def level_key(level)
-      levels.invert[level]
+      (current_level || levels[:new]) >= levels[level] rescue binding.pry
     end
   end
 

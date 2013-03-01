@@ -16,10 +16,10 @@ describe PostTiming do
       post = Fabricate(:post)
       user2 = Fabricate(:coding_horror)
 
-      PostAction.act(user2, post, PostActionType.Types[:like])
+      PostAction.act(user2, post, PostActionType.types[:like])
       post.user.unread_notifications.should == 1
 
-      post.user.unread_notifications_by_type.should == {Notification.Types[:liked] => 1}
+      post.user.unread_notifications_by_type.should == { Notification.types[:liked] => 1 }
 
       PostTiming.process_timings(post.user, post.topic_id, 1, 100, [[post.post_number, 100]])
 

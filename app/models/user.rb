@@ -210,11 +210,11 @@ class User < ActiveRecord::Base
 
 
   def unread_private_messages
-    unread_notifications_by_type[Notification.Types[:private_message]] || 0
+    unread_notifications_by_type[Notification.types[:private_message]] || 0
   end
 
   def unread_notifications
-    unread_notifications_by_type.except(Notification.Types[:private_message]).values.sum
+    unread_notifications_by_type.except(Notification.types[:private_message]).values.sum
   end
 
   def saw_notification_id(notification_id)
@@ -357,11 +357,11 @@ class User < ActiveRecord::Base
   end
 
   def flags_given_count
-    PostAction.where(user_id: id, post_action_type_id: PostActionType.FlagTypes).count
+    PostAction.where(user_id: id, post_action_type_id: PostActionType.flag_types.values).count
   end
 
   def flags_received_count
-    posts.includes(:post_actions).where(post_actions: { post_action_type_id: PostActionType.FlagTypes }).count
+    posts.includes(:post_actions).where('post_actions.post_action_type_id' => PostActionType.flag_types.values).count
   end
 
   def private_topics_count
@@ -397,7 +397,7 @@ class User < ActiveRecord::Base
 
   def change_trust_level(level)
     raise "Invalid trust level #{level}" unless TrustLevel.valid_level?(level)
-    self.trust_level = TrustLevel.Levels[level]
+    self.trust_level = TrustLevel.levels[level]
   end
 
   def guardian

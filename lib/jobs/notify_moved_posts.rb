@@ -14,7 +14,7 @@ module Jobs
 
         posts.each do |p|
           unless users_notified.include?(p.user_id)
-            p.user.notifications.create(notification_type: Notification.Types[:moved_post],
+            p.user.notifications.create(notification_type: Notification.types[:moved_post],
                                         topic_id: p.topic_id,
                                         post_number: p.post_number,
                                         data: {topic_title: p.topic.title,

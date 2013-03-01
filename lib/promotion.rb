@@ -13,7 +13,7 @@ class Promotion
     # nil users are never promoted
     return false if @user.blank?
 
-    trust_key = TrustLevel.level_key(@user.trust_level)
+    trust_key = TrustLevel.levels[@user.trust_level]
 
     review_method = :"review_#{trust_key.to_s}"
     return send(review_method) if respond_to?(review_method)
@@ -26,7 +26,7 @@ class Promotion
     return false if @user.posts_read_count < SiteSetting.basic_requires_read_posts
     return false if (@user.time_read / 60) < SiteSetting.basic_requires_time_spent_mins
 
-    @user.trust_level = TrustLevel.Levels[:basic]
+    @user.trust_level = TrustLevel.levels[:basic]
     @user.save
 
     true

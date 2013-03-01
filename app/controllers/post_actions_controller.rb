@@ -8,7 +8,7 @@ class PostActionsController < ApplicationController
   def create
     id = params[:post_action_type_id].to_i
     if action = PostActionType.where(id: id).first
-      guardian.ensure_post_can_act!(@post, PostActionType.Types.invert[id])
+      guardian.ensure_post_can_act!(@post, PostActionType.types[id])
 
       post_action = PostAction.act(current_user, @post, action.id, params[:message])
 

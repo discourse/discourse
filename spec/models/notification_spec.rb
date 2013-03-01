@@ -77,7 +77,7 @@ describe Notification do
     end
 
     it 'should create a private message notification' do
-      @target.notifications.first.notification_type.should == Notification.Types[:private_message]
+      @target.notifications.first.notification_type.should == Notification.types[:private_message]
     end
 
     it 'should not add a pm notification for the creator' do

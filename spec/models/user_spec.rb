@@ -123,19 +123,19 @@ describe User do
 
     it "creates a bookmark with the true parameter" do
       lambda {
-        PostAction.act(@post.user, @post, PostActionType.Types[:bookmark])
+        PostAction.act(@post.user, @post, PostActionType.types[:bookmark])
       }.should change(PostAction, :count).by(1)
     end
 
     describe 'when removing a bookmark' do
       before do
-        PostAction.act(@post.user, @post, PostActionType.Types[:bookmark])
+        PostAction.act(@post.user, @post, PostActionType.types[:bookmark])
       end
 
       it 'reduces the bookmark count of the post' do
         active = PostAction.where(deleted_at: nil)
         lambda {
-          PostAction.remove_act(@post.user, @post, PostActionType.Types[:bookmark])
+          PostAction.remove_act(@post.user, @post, PostActionType.types[:bookmark])
         }.should change(active, :count).by(-1)
       end
     end
@@ -224,11 +224,11 @@ describe User do
   end
 
   describe "trust levels" do
-    let(:user) { Fabricate(:user, trust_level: TrustLevel.Levels[:new]) }
+    let(:user) { Fabricate(:user, trust_level: TrustLevel.levels[:new]) }
 
     it "sets to the default trust level setting" do
-      SiteSetting.expects(:default_trust_level).returns(TrustLevel.Levels[:advanced])
-      User.new.trust_level.should == TrustLevel.Levels[:advanced]
+      SiteSetting.expects(:default_trust_level).returns(TrustLevel.levels[:advanced])
+      User.new.trust_level.should == TrustLevel.levels[:advanced]
     end
 
     describe 'has_trust_level?' do
@@ -246,12 +246,12 @@ describe User do
       end
 
       it "is true if you exceed the level" do
-        user.trust_level = TrustLevel.Levels[:advanced]
+        user.trust_level = TrustLevel.levels[:advanced]
         user.has_trust_level?(:basic).should be_true
       end
 
       it "is true for an admin even with a low trust level" do
-        user.trust_level = TrustLevel.Levels[:new]
+        user.trust_level = TrustLevel.levels[:new]
         user.admin = true
         user.has_trust_level?(:advanced).should be_true
       end
@@ -264,7 +264,7 @@ describe User do
       end
 
       it "is a moderator if the user level is moderator" do
-        user.trust_level = TrustLevel.Levels[:moderator]
+        user.trust_level = TrustLevel.levels[:moderator]
         user.has_trust_level?(:moderator).should be_true
       end
 

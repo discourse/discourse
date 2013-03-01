@@ -97,13 +97,13 @@ describe UserAction do
     end
 
     it "creates a new stream entry" do
-      PostAction.act(liker, post, PostActionType.Types[:like])
+      PostAction.act(liker, post, PostActionType.types[:like])
       likee_stream.count.should == @old_count + 1
     end
 
     context "successful like" do
       before do
-        PostAction.act(liker, post, PostActionType.Types[:like])
+        PostAction.act(liker, post, PostActionType.types[:like])
         @liker_action = liker.user_actions.where(action_type: UserAction::LIKE).first
         @likee_action = likee.user_actions.where(action_type: UserAction::WAS_LIKED).first
       end
@@ -124,7 +124,7 @@ describe UserAction do
       end
 
       it "doesn't add the entry to the stream" do
-        PostAction.act(liker, post, PostActionType.Types[:like])
+        PostAction.act(liker, post, PostActionType.types[:like])
         likee_stream.count.should_not == @old_count + 1
       end
 
@@ -191,7 +191,7 @@ describe UserAction do
     before do
       @post = Fabricate(:post)
       @user = @post.user
-      PostAction.act(@user, @post, PostActionType.Types[:bookmark])
+      PostAction.act(@user, @post, PostActionType.types[:bookmark])
       @action = @user.user_actions.where(action_type: UserAction::BOOKMARK).first
     end
 
@@ -208,7 +208,7 @@ describe UserAction do
       @action.user_id.should == @user.id
     end
     it 'should nuke the action when unbookmarked' do
-      PostAction.remove_act(@user, @post, PostActionType.Types[:bookmark])
+      PostAction.remove_act(@user, @post, PostActionType.types[:bookmark])
       @user.user_actions.where(action_type: UserAction::BOOKMARK).first.should be_nil
     end
   end

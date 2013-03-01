@@ -70,7 +70,7 @@ describe Post do
       end
 
       it "returns true for moderators" do
-        topic.user.trust_level = TrustLevel.Levels[:moderator]
+        topic.user.trust_level = TrustLevel.levels[:moderator]
         Fabricate.build(:post, post_args).should be_valid
       end
     end
@@ -81,12 +81,12 @@ describe Post do
     it 'isFlagged is accurate' do
       post = Fabricate(:post)
       user = Fabricate(:coding_horror)
-      PostAction.act(user, post, PostActionType.Types[:off_topic])
+      PostAction.act(user, post, PostActionType.types[:off_topic])
 
       post.reload
       post.is_flagged?.should == true
 
-      PostAction.remove_act(user, post, PostActionType.Types[:off_topic])
+      PostAction.remove_act(user, post, PostActionType.types[:off_topic])
       post.reload
       post.is_flagged?.should == false
     end
@@ -130,22 +130,22 @@ describe Post do
 
     context "validation" do
       it "allows a new user to make a post with one image" do
-        post_no_images.user.trust_level = TrustLevel.Levels[:new]
+        post_no_images.user.trust_level = TrustLevel.levels[:new]
         post_no_images.should be_valid
       end
 
       it "doesn't allow multiple images for new accounts" do
-        post_one_image.user.trust_level = TrustLevel.Levels[:new]
+        post_one_image.user.trust_level = TrustLevel.levels[:new]
         post_one_image.should_not be_valid
       end
 
       it "allows multiple images for basic accounts" do
-        post_one_image.user.trust_level = TrustLevel.Levels[:basic]
+        post_one_image.user.trust_level = TrustLevel.levels[:basic]
         post_one_image.should be_valid
       end
 
       it "doesn't allow a new user to edit their post to insert an image" do
-        post_no_images.user.trust_level = TrustLevel.Levels[:new]
+        post_no_images.user.trust_level = TrustLevel.levels[:new]
         post_no_images.save
         -> {
           post_no_images.revise(post_no_images.user, post_two_images.raw)
@@ -176,17 +176,17 @@ describe Post do
 
     context "validation" do
       it "allows a new user to make a post with one image" do
-        post_one_link.user.trust_level = TrustLevel.Levels[:new]
+        post_one_link.user.trust_level = TrustLevel.levels[:new]
         post_one_link.should be_valid
       end
 
       it "doesn't allow multiple images for new accounts" do
-        post_two_links.user.trust_level = TrustLevel.Levels[:new]
+        post_two_links.user.trust_level = TrustLevel.levels[:new]
         post_two_links.should_not be_valid
       end
 
       it "allows multiple images for basic accounts" do
-        post_two_links.user.trust_level = TrustLevel.Levels[:basic]
+        post_two_links.user.trust_level = TrustLevel.levels[:basic]
         post_two_links.should be_valid
       end
     end

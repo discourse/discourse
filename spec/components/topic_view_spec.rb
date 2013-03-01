@@ -100,8 +100,8 @@ describe TopicView do
     end
 
     it 'returns the like' do
-      PostAction.act(coding_horror, p1, PostActionType.Types[:like])
-      topic_view.all_post_actions[p1.id][PostActionType.Types[:like]].should be_present
+      PostAction.act(coding_horror, p1, PostActionType.types[:like])
+      topic_view.all_post_actions[p1.id][PostActionType.types[:like]].should be_present
     end
   end
 
@@ -128,7 +128,7 @@ describe TopicView do
   #   end
 
   #   it "is true when the user has voted for a post" do
-  #     PostAction.act(coding_horror, p1, PostActionType.Types[:vote])
+  #     PostAction.act(coding_horror, p1, PostActionType.types[:vote])
   #     topic_view.voted_in_topic?.should be_true
   #   end
   # end
@@ -136,7 +136,7 @@ describe TopicView do
   context '.post_action_visibility' do
 
     it "is allows users to see likes" do
-      topic_view.post_action_visibility.include?(PostActionType.Types[:like]).should be_true
+      topic_view.post_action_visibility.include?(PostActionType.types[:like]).should be_true
     end
 
   end
