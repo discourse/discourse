@@ -51,13 +51,16 @@ class ListController < ApplicationController
     raise Discourse::InvalidParameters.new('Category RSS of "uncategorized"') if params[:category] == Slug.for(SiteSetting.uncategorized_name) || params[:category] == SiteSetting.uncategorized_name
 
     @category = Category.where("slug = ?", params[:category]).includes(:featured_users).first
+
     guardian.ensure_can_see!(@category)
-    @topic_list = TopicQuery.new.list_new_in_category(@category)
-    render 'list', formats: [:rss]
+
+    anonymous_etag(@category) do
+      @topic_list = TopicQuery.new.list_new_in_category(@category)
+      render 'list', formats: [:rss]
+    end
   end
 
   protected
-
 
   def respond(list)
 
