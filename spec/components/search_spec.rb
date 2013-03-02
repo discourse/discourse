@@ -72,7 +72,7 @@ describe Search do
   end
 
   it 'escapes non alphanumeric characters' do
-    Search.query(':!$);}]>@\#\"\'').should be_blank # There are at least three levels of sanitation for Search.query!
+    Search.query('foo :!$);}]>@\#\"\'').should be_blank # There are at least three levels of sanitation for Search.query!
   end
 
   it 'works when given two terms with spaces' do
