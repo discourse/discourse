@@ -2,6 +2,9 @@
 pseudo:
   title: ! '[[ Ďíščóůřšé ]]'
   topics: ! '[[ Ťóƿíčš ]]'
+  loading: ! '[[ Łóáďíɳǧ ]]'
+  powered_by: ! '[[ Рóŵéřéď ƀý <á ĥřéƒ="ĥťťƿ://ŵŵŵ.ďíščóůřšé.óřǧ">Ďíščóůřšé</á>, ƀéšť
+    νíéŵéď ŵíťĥ ǰáνáŠčříƿť éɳáƀłéď ]]'
   via: ! '[[ %{username} νíá %{site_name} ]]'
   is_reserved: ! '[[ íš řéšéřνéď ]]'
   too_many_mentions: ! '[[ ĥáš ťóó ɱáɳý ůšéřš ɱéɳťíóɳéď ]]'
@@ -11,6 +14,13 @@ pseudo:
   has_already_been_used: ! '[[ ĥáš áłřéáďý ƀééɳ ůšéď ]]'
   invalid_characters: ! '[[ čóɳťáíɳš íɳνáłíď čĥářáčťéřš ]]'
   is_invalid: ! '[[ íš íɳνáłíď; ťřý ťó ƀé á łíťťłé ɱóřé ďéščříƿťíνé ]]'
+  next_page: ! '[[ ɳéхť ƿáǧé &řářř; ]]'
+  by: ! '[[ Ɓý ]]'
+  topics_in_category: ! '[[ Ťóƿíčš íɳ ťĥé ''%{category}'' čáťéǧóřý ]]'
+  rss_posts_in_topic: ! '[[ ŘŠŠ ƒééď óƒ ''%{topic}'' ]]'
+  rss_topics_in_category: ! '[[ ŘŠŠ ƒééď óƒ ťóƿíčš íɳ ťĥé ''%{category}'' čáťéǧóřý
+    ]]'
+  author_wrote: ! '[[ %{author} ŵřóťé: ]]'
   education:
     until_posts:
       one: ! '[[ ƿóšť ]]'
@@ -208,6 +218,10 @@ pseudo:
       title: ! '[[ Łíǩé ]]'
       description: ! '[[ Łíǩé ťĥíš ƿóšť ]]'
       long_form: ! '[[ łíǩéď ťĥíš ]]'
+    vote:
+      title: ! '[[ Ѷóťé ]]'
+      description: ! '[[ Ѷóťé ƒóř ťĥíš ƿóšť ]]'
+      long_form: ! '[[ νóťéď ƒóř ťĥíš ƿóšť ]]'
   flagging:
     you_must_edit: ! '[[ <ƿ>Ýóůř ƿóšť řéáčĥéď ťĥé ƒłáǧǧíɳǧ ťĥřéšĥółď. Рłéášé šéé ýóůř
       ƿříνáťé ɱéššáǧéš.</ƿ> ]]'
@@ -665,13 +679,13 @@ pseudo:
       new_activity: ! '[[ Ѝéŵ áčťíνíťý óɳ ýóůř ťóƿíčš áɳď ƿóšťš: ]]'
       new_topics: ! '[[ Ѝéŵ ťóƿíčš: ]]'
       unsubscribe: ! '[[ Ťĥíš šůɱɱářý éɱáíł íš šéɳť áš á čóůřťéšý ɳóťíƒíčáťíóɳ ƒřóɱ
-        %{site_link} ŵĥéɳ ŵé ĥáνéɳ''ť šééɳ ýóů ƒóř 7 ďáýš.
+        %{site_link} ŵĥéɳ ŵé ĥáνéɳ''ť šééɳ ýóů íɳ á ŵĥíłé.
 
         Íƒ ýóů''ď łíǩé ťó ťůřɳ íť óƒƒ óř čĥáɳǧé ýóůř éɱáíł ƿřéƒéřéɳčéš, %{unsubscribe_link}.
         ]]'
     private_message:
       subject_template: ! '[[ [%{site_name}] %{subject_prefix}%{topic_title} ]]'
-      text_body_template: ! "[[ %{from} ʲůšť šéɳť ýóů á ƿříνáťé ɱéššáǧé\n\n---\n%{message}\n\n---\nРłéášé
+      text_body_template: ! "[[ %{private_message_from} ʲůšť šéɳť ýóů á ƿříνáťé ɱéššáǧé\n\n---\n%{message}\n\n---\nРłéášé
         νíšíť ťĥíš łíɳǩ ťó řéšƿóɳď: %{base_url}%{url}\n ]]"
     forgot_password:
       subject_template: ! '[[ [%{site_name}] Рáššŵóřď řéšéť ]]'

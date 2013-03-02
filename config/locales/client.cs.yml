@@ -579,7 +579,7 @@ cs:
     replies: "Odpovědi"
     views_long: "toto téma bylo zobrazeno {{number}}krát"
     activity: "Aktivita"
-    likes: "To se mi líbí"
+    likes: "líbí se"
     top_contributors: "Účastníci"
     category_title: "Kategorie"
 
@@ -637,6 +637,7 @@ cs:
         updates_available: "Jsou k dispozici aktualizace."
         please_upgrade: "Prosím aktualizujte!"
         latest_version: "Poslední verze"
+        update_often: 'Prosím aktualizujte často!'
 
       flags:
         title: "Nahlášení"
@@ -724,5 +725,5 @@ cs:
 
       site_settings:
         show_overriden: 'Zobrazit pouze přenastavené'
-        title: 'Nastavený webu'
+        title: 'Nastavení webu'
         reset: 'vrátit do původního nastavení'
