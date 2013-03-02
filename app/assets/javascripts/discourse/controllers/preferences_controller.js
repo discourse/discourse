@@ -53,14 +53,18 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
   }).property(),
 
   save: function() {
-    var _this = this;
+    var _this = this, model = this.get('content');
     this.set('saving', true);
     this.set('saved', false);
 
     // Cook the bio for preview
-    return this.get('content').save(function(result) {
+    return model.save(function(result) {
       _this.set('saving', false);
       if (result) {
+        if (Discourse.currentUser.id === model.get('id')) {
+          Discourse.currentUser.set('name', model.get('name'));
+        }
+      
         _this.set('content.bio_cooked', Discourse.Utilities.cook(_this.get('content.bio_raw')));
         return _this.set('saved', true);
       } else {

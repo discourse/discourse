@@ -8,7 +8,7 @@
       {{#unless controller.showExtraInfo}}
         <div class='current-username'>
           {{#if view.currentUser}}
-          <span class='username'><a {{bindAttr href="view.currentUser.path"}}>{{unbound view.currentUser.name}}</a></span>
+          <span class='username'><a {{bindAttr href="view.currentUser.path"}}>{{view.currentUser.name}}</a></span>
           {{else}}
             <button {{action showLogin}} class='btn btn-primary btn-small'>{{i18n log_in}}</button>
           {{/if}}
