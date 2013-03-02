@@ -2,6 +2,7 @@ language: ruby
 rvm:
   - 1.9.3
 before_script:
+  - rake jshint
   - cp config/database.yml.sample config/database.yml
   - cp config/redis.yml.sample config/redis.yml
   - psql -c 'create database discourse_test;' -U postgres
