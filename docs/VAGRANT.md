@@ -70,7 +70,7 @@ Now you're in a virtual machine is almost ready to start developing. It's a good
 *every time* you pull from master to ensure your environment is still up to date. 
 
 ```
-bundle install
+bundle update
 bundle exec rake db:migrate
 bundle exec rake db:seed_fu
 ```
