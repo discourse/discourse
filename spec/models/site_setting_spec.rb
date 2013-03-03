@@ -80,13 +80,13 @@ describe SiteSetting do
       SiteSetting.refresh!
     end
 
+    it "should have the correct default" do
+      SiteSetting.test_hello?.should == false
+    end
+
     context "when overridden" do
       after :each do 
         SiteSetting.remove_override!(:test_hello?)
-      end
-
-      it "should have the correct default" do
-        SiteSetting.test_hello?.should == false
       end
 
       it "should be overridable" do
