@@ -43,7 +43,15 @@ describe SiteSetting do
       end
 
       #POSSIBLE BUG
+<<<<<<< HEAD
+<<<<<<< HEAD
 			it "should not set default when reset" do
+=======
+      it "should not reset default on ::setting" do
+>>>>>>> 3f0a065... Fix order dependency in site_setting_spec.rb
+=======
+			it "should not set default when reset" do
+>>>>>>> d55befb... Rephrase tests
         SiteSetting.test_setting = 100
         SiteSetting.setting(:test_setting, 77)
         SiteSetting.refresh!
@@ -68,8 +76,22 @@ describe SiteSetting do
       end
 
       it "should coerce int to string" do
+<<<<<<< HEAD
+<<<<<<< HEAD
         SiteSetting.test_str = 100
         SiteSetting.test_str.should.eql? "100"
+=======
+        SiteSetting.test_setting = 100
+<<<<<<< HEAD
+        SiteSEtting.test_setting.should.eql? "100"
+>>>>>>> 3f0a065... Fix order dependency in site_setting_spec.rb
+=======
+        SiteSetting.test_setting.should.eql? "100"
+>>>>>>> 10755b7... Fix minor typo
+=======
+        SiteSetting.test_str = 100
+        SiteSetting.test_str.should.eql? "100"
+>>>>>>> 97b1a02... Fix another godddamn bug
       end
     end
   end
@@ -89,7 +111,27 @@ describe SiteSetting do
         SiteSetting.remove_override!(:test_hello?)
       end
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+    context "when overridden" do
+      after :each do 
+        SiteSetting.remove_override!(:test_hello?)
+      end
+
       it "should have the correct override" do
+=======
+      it "should have the correct default" do
+        SiteSetting.test_hello?.should == false
+      end
+
+=======
+>>>>>>> a97c526... Move test outside of block
+      it "should be overridable" do
+>>>>>>> 3f0a065... Fix order dependency in site_setting_spec.rb
+=======
+      it "should have the correct override" do
+>>>>>>> d55befb... Rephrase tests
         SiteSetting.test_hello = true
         SiteSetting.test_hello?.should == true
       end
@@ -105,7 +147,15 @@ describe SiteSetting do
       end
 
       #POSSIBLE BUG
+<<<<<<< HEAD
+<<<<<<< HEAD
 			it "should not set default when reset" do
+=======
+      it "should not reset default on ::setting" do
+>>>>>>> 3f0a065... Fix order dependency in site_setting_spec.rb
+=======
+			it "should not set default when reset" do
+>>>>>>> d55befb... Rephrase tests
         SiteSetting.test_hello = true
         SiteSetting.setting(:test_hello?, false)
         SiteSetting.refresh!
