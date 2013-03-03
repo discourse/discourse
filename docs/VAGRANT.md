@@ -26,6 +26,10 @@ Vagrant will prompt you for your admin password. This is so it can mount your lo
 
 (The first time you do this, it will take a while as it downloads the VM image and installs it. Go grab a coffee.)
 
+If you are having **trouble** downloading the VM: 
+- Download this file: http://www.discourse.org/vms/discourse-pre.box using your favorite web browser/download tool.
+- Add it to vagrant: `vagrant box add discourse-pre /path/to/the/downloaded/discourse-pre.box`.
+
 **Note to OSX/Linux users**: Vagrant will mount your local files via an NFS share. Therefore, make sure that NFS is installed or else you'll receive the error message:
 
 ```
