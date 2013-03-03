@@ -455,6 +455,7 @@ en:
     errors: "%{errors}"
     not_available: "Not available. Try %{suggestion}?"
     omniauth_error: "Sorry, there was an error authorizing your %{strategy} account. Perhaps you did not approve authorization?"
+    omniauth_error_unknown: "Something went wrong processing your log in, please try again."
 
 
   user:
@@ -707,6 +708,7 @@ en:
       new_activity: "New activity on your topics and posts:"
       new_topics: "New topics:"
       unsubscribe: "This summary email is sent as a courtesy notification from %{site_link} when we haven't seen you in a while.\nIf you'd like to turn it off or change your email preferences, %{unsubscribe_link}."
+      click_here: "click here"
 
     private_message:
       subject_template: "[%{site_name}] %{subject_prefix}%{topic_title}"
