@@ -69,7 +69,7 @@ describe SiteSetting do
 
       it "should coerce int to string" do
         SiteSetting.test_setting = 100
-        SiteSEtting.test_setting.should.eql? "100"
+        SiteSetting.test_setting.should.eql? "100"
       end
     end
   end
