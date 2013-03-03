@@ -9,10 +9,15 @@ class StaticController < ApplicationController
     # Don't allow paths like ".." or "/" or anything hacky like that
     page.gsub!(/[^a-z0-9\_\-]/, '')
 
-    file = "static/#{page}.html"
-    templates = lookup_context.find_all(file)
-    if templates.any?
-      render "static/#{page}", layout: !request.xhr?, formats: [:html]
+    file = "static/#{page}.#{I18n.locale}"
+
+    # if we don't have a localized version, try the English one
+    if not lookup_context.find_all("#{file}.html").any?
+      file = "static/#{page}.en"
+    end
+
+    if lookup_context.find_all("#{file}.html").any?
+      render file, layout: !request.xhr?, formats: [:html]
       return
     end
 
