@@ -43,7 +43,7 @@ describe SiteSetting do
       end
 
       #POSSIBLE BUG
-      it "should not reset default on ::setting" do
+			it "should not set default when reset" do
         SiteSetting.test_setting = 100
         SiteSetting.setting(:test_setting, 77)
         SiteSetting.refresh!
@@ -89,7 +89,7 @@ describe SiteSetting do
         SiteSetting.remove_override!(:test_hello?)
       end
 
-      it "should be overridable" do
+      it "should have the correct override" do
         SiteSetting.test_hello = true
         SiteSetting.test_hello?.should == true
       end
@@ -105,7 +105,7 @@ describe SiteSetting do
       end
 
       #POSSIBLE BUG
-      it "should not reset default on ::setting" do
+			it "should not set default when reset" do
         SiteSetting.test_hello = true
         SiteSetting.setting(:test_hello?, false)
         SiteSetting.refresh!
