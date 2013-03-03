@@ -344,8 +344,8 @@ fr:
     flush_timings_secs: "A quelle fréquence requêter les données de timing au serveur, en secondes."
 
     max_word_length: "Le nombre maximum de mots dans un titre de discussion"
-    title_min_entropy: "L'entropie minimale d'un titre de discussion"
-    body_min_entropy: "L'entropie minimale pour le corps d'un message"
+    title_min_entropy: "L'entropie minimale (ie. nombre de caractères) d'un titre de discussion"
+    body_min_entropy: "L'entropie minimale (ie. nombre de caractères) du contenu d'un message"
 
     new_user_period_days: "Combien de temps en jours, un utilisateur est-il consideré comme nouveau."
 
