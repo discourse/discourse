@@ -18,7 +18,8 @@ Discourse.StaticController = Discourse.Controller.extend({
     $preloaded = $("noscript[data-path=\"" + path + "\"]");
     if ($preloaded.length) {
       text = $preloaded.text();
-      text = text.replace(/<header[\s\S]*<\/header\>/, '');
+      text = text.match(/<!-- preload-content: -->((?:.|[\n\r])*)<!-- :preload-content -->/);
+      text = text[1];
       return this.set('content', text);
     } else {
       return jQuery.ajax({
