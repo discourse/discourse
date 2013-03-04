@@ -86,7 +86,7 @@ sv:
 
       name:
         title: "Namn"
-        instructions: "Den längre versionen av ditt namn; behöver inte vara unikt."
+        instructions: "Den längre versionen av ditt namn; behöver inte vara unikt. Används som ett alternativt @namn och visas bara på din användarsida."
         too_short: "Ditt namn är för kort."
         ok: "Ditt namn ser bra ut."
       username:
@@ -233,9 +233,9 @@ sv:
       authenticating: "Autentiserar..."
       awaiting_confirmation: "Ditt konto väntar på aktivering, använd glömt lösenordslänken för att skicka ett nytt aktiveringsmail."
       awaiting_approval: "Ditt konto har inte godkänts av en moderator än. Du kommer att få ett mail när det är godkänt."
-      not_activated: "Du kan inte logga in än. Vi har skickat ett aktiveringsmail till dig via <b>{{sentTo}}</b>. Var god följ instruktionerna i mailet för att aktivera ditt konto."
+      not_activated: "Du kan inte logga in än. Vi har tidigare skickat ett aktiveringsmail till dig via <b>{{sentTo}}</b>. Var god följ instruktionerna i det mailet för att aktivera ditt konto."
       resend_activation_email: "Klicka här för att skicka aktiveringsmailet igen."
-      sent_activation_email_again: "Vi har skickat ännu ett aktiveringsmail till dig via din nuvarande e-postadress: <b>{{currentEmail}}</b>. Det kan ta ett par minuter för det att komma fram. Var noga med att kolla din skräppost."
+      sent_activation_email_again: "Vi har skickat ännu ett aktiveringsmail till dig via <b>{{currentEmail}}</b>. Det kan ta ett par minuter för det att komma fram; var noga med att kolla din skräppost."
       google:
         title: "Logga In med Google"
         message: "Autentiserar med Google (kolla så att pop up-blockare inte är aktiverade)"
@@ -248,6 +248,9 @@ sv:
       yahoo:
         title: "Logga In med Yahoo"
         message: "Autentiserar med Yahoo (kolla så att pop up-blockare inte är aktiverade)"
+      github:
+        title: "Logga In med Github"
+        description: "Autentiserar med Github (kolla så att pop up-blockare inte är aktiverade)"
 
     composer:
       saving_draft_tip: "sparar"
@@ -341,13 +344,20 @@ sv:
       title: 'Tråd'
       loading_more: "Laddar fler Trådar..."
       loading: 'Laddar tråd...'
-      missing: "Tråden Hittades Inte"
+      invalid_access:
+        title: "Tråden är privat"
+        description: "Tyvärr, du har inte behörighet till den tråden."
+      server_error:
+        title: "Tråden misslyckades med att ladda"
+        description: "Tyvärr, vi kunde inte ladda den tråden, troligen p.g.a. ett anslutningsproblem. Var go försök igen. Om problemet kvarstår, låt oss gärna veta det!"
       not_found:
-        title: "Tråden Hittades Inte"
-        description: "Tyvärr, vi kunde inte ladda den tråden, troligen p.g.a. ett anslutningsproblem. Var go försök igen. Om problemet kvarstår är tråden kanske raderad."
+        title: "Tråden hittades inte"
+        description: "Tyvärr, vi kunde inte hitta den tråden. Kanske har den tagits bort av en moderator?"
       unread_posts: "du har {{unread}} gamla olästa inlägg i den här tråden"
       new_posts: "det finns {{new_posts}} nya inlägg i den här tråden sen du senaste läste det"
-      likes: "det finns {{likes}} gillningar i den här tråden"
+      likes:
+        one: "det finns 1 gillning i den här tråden"
+        other: "det finns {{count}} gillningar i den här tråden"
       back_to_list: "Tillbaka till Trådlistan"
       options: "Trådinställningar"
       show_links: "visa länkar som finns i den här tråden"
@@ -357,6 +367,9 @@ sv:
       browse_all_categories: Bläddra bland alla kategorier
       view_popular_topics: visa populära trådar
       suggest_create_topic: Varför inte skapa en tråd?
+      read_position_reset: "Din läsposition har blivit återställd."
+      jump_reply_up: hoppa till tidigare svar
+      jump_reply_down: hoppa till senare svar
 
       progress:
         title: trådplacering
@@ -618,12 +631,13 @@ sv:
       dashboard:
         title: "Översiktspanel"
         welcome: "Välkommen till adminsektionen."
-        version: "Discourse-version"
+        version: "Installerad version"
         up_to_date: "Du kör den senaste versionen av Discourse."
         critical_available: "En kritisk uppdatering är tillgänglig."
         updates_available: "Uppdateringar är tillgängliga."
         please_upgrade: "Var god uppgradera!"
         latest_version: "Senaste versionen"
+        update_often: "Snälla uppdatera ofta!"
 
       flags:
         title: "Flaggningar"
