@@ -8,7 +8,7 @@ describe SiteSetting do
       SiteSetting.refresh!
     end
 
-    it 'should have a key in all_settings' do
+    it "should have a key in all_settings" do
       SiteSetting.all_settings.detect {|s| s[:setting] == :test_setting }.should be_present
     end
 
@@ -21,19 +21,34 @@ describe SiteSetting do
       SiteSetting.test_setting.should == 77
     end
 
-    describe "when overidden" do
-      before :all do
-        SiteSetting.test_setting = 100
-      end
-
-      after :all do
+    context "when overidden" do
+      after :each do
         SiteSetting.remove_override!(:test_setting)
       end
 
       it "should have the correct override" do
+        SiteSetting.test_setting = 100
         SiteSetting.test_setting.should == 100
       end
 
+      it "should coerce correct string to int" do
+        SiteSetting.test_setting = "101"
+        SiteSetting.test_setting.should.eql? 101
+      end
+
+      #POSSIBLE BUG
+      it "should coerce incorrect string to 0" do
+        SiteSetting.test_setting = "pie"
+        SiteSetting.test_setting.should.eql? 0
+      end
+
+      #POSSIBLE BUG
+			it "should not set default when reset" do
+        SiteSetting.test_setting = 100
+        SiteSetting.setting(:test_setting, 77)
+        SiteSetting.refresh!
+        SiteSetting.test_setting.should_not == 77
+      end
     end
   end
 
@@ -45,6 +60,17 @@ describe SiteSetting do
 
     it "should have the correct default" do
       SiteSetting.test_str.should == "str"
+    end
+
+    context "when overridden" do
+      after :each do
+        SiteSetting.remove_override!(:test_str)
+      end
+
+      it "should coerce int to string" do
+        SiteSetting.test_str = 100
+        SiteSetting.test_str.should.eql? "100"
+      end
     end
   end
 
@@ -58,22 +84,33 @@ describe SiteSetting do
       SiteSetting.test_hello?.should == false
     end
 
-    it "should be overridable" do
-      SiteSetting.test_hello = true
-      SiteSetting.refresh!
-      SiteSetting.test_hello?.should == true
-    end
+    context "when overridden" do
+      after :each do 
+        SiteSetting.remove_override!(:test_hello?)
+      end
 
-    it "should coerce true strings to true" do
-      SiteSetting.test_hello = "true"
-      SiteSetting.refresh!
-      SiteSetting.test_hello?.should == true
-    end
+      it "should have the correct override" do
+        SiteSetting.test_hello = true
+        SiteSetting.test_hello?.should == true
+      end
 
-    it "should coerce all other strings to false" do
-      SiteSetting.test_hello = "f"
-      SiteSetting.refresh!
-      SiteSetting.test_hello?.should == false
+      it "should coerce true strings to true" do
+        SiteSetting.test_hello = "true"
+        SiteSetting.test_hello?.should.eql? true
+      end
+
+      it "should coerce all other strings to false" do
+        SiteSetting.test_hello = "f"
+        SiteSetting.test_hello?.should.eql? false
+      end
+
+      #POSSIBLE BUG
+			it "should not set default when reset" do
+        SiteSetting.test_hello = true
+        SiteSetting.setting(:test_hello?, false)
+        SiteSetting.refresh!
+        SiteSetting.test_hello?.should_not == false
+      end
     end
   end
 
