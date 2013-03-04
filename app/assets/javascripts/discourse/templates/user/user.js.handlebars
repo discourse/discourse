@@ -4,23 +4,23 @@
       <h1>{{content.name}}<span>{{unbound content.username}}</span></h1>
 
       {{#if viewingSelf}}
-        <button {{action "logout" target="Discourse"}} class='btn'>{{i18n user.log_out}}</button>      
+        <button {{action "logout" target="Discourse"}} class='btn'>{{i18n user.log_out}}</button>
       {{/if}}
       {{#if Discourse.currentUser.admin}}
-        <a href="/admin/users/{{unbound content.username_lower}}" class='btn'>{{i18n admin.user.show_admin_profile}}</a>
+        <a href="/admin/users/{{unbound content.username_lower}}" class='btn'><i class="icon-cog"></i>&nbsp;{{i18n admin.user.show_admin_profile}}</a>
       {{/if}}
       <ul class="nav nav-pills">
         <li>
           {{#linkTo 'user.activity'}}{{i18n user.activity_stream}}{{/linkTo}}
-        </li>      
+        </li>
         {{#if controller.canSeePrivateMessages}}
           <li>
             {{#linkTo "user.privateMessages"}}{{i18n user.private_messages}}{{/linkTo}}
-          </li>      
-        {{/if}}        
+          </li>
+        {{/if}}
         <li>
           {{#linkTo 'user.invited'}}{{i18n user.invited.title}}{{/linkTo}}
-        </li>      
+        </li>
         {{#if content.can_edit}}
           <li>
             {{#linkTo 'preferences'}}{{i18n user.preferences}}{{/linkTo}}
@@ -34,7 +34,7 @@
   </div>
 </div>
 <div class="container">
-  <div class='user-info clearfix'>  
+  <div class='user-info clearfix'>
      <div class='about-me'>
        {{{content.bio_excerpt}}}
       </div>
