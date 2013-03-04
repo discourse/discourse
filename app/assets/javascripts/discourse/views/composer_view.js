@@ -243,7 +243,7 @@ Discourse.ComposerView = Discourse.View.extend({
     });
 
     topic = this.get('topic');
-    this.editor = editor = new Markdown.Editor(Discourse.Utilities.markdownConverter({
+    this.editor = editor = createNewMarkdownEditor(Discourse.Utilities.markdownConverter({
       lookupAvatar: function(username) {
         return Discourse.Utilities.avatarImg({
           username: username,
