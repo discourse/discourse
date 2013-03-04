@@ -45,6 +45,7 @@ describe SiteSetting do
       #POSSIBLE BUG
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 			it "should not set default when reset" do
 =======
       it "should not reset default on ::setting" do
@@ -52,6 +53,9 @@ describe SiteSetting do
 =======
 			it "should not set default when reset" do
 >>>>>>> d55befb... Rephrase tests
+=======
+			it "should not set default when reset" do
+>>>>>>> 65383abd70ec5151a8eb96d02d8654b4d3bf9117
         SiteSetting.test_setting = 100
         SiteSetting.setting(:test_setting, 77)
         SiteSetting.refresh!
@@ -78,6 +82,7 @@ describe SiteSetting do
       it "should coerce int to string" do
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         SiteSetting.test_str = 100
         SiteSetting.test_str.should.eql? "100"
 =======
@@ -92,6 +97,10 @@ describe SiteSetting do
         SiteSetting.test_str = 100
         SiteSetting.test_str.should.eql? "100"
 >>>>>>> 97b1a02... Fix another godddamn bug
+=======
+        SiteSetting.test_str = 100
+        SiteSetting.test_str.should.eql? "100"
+>>>>>>> 65383abd70ec5151a8eb96d02d8654b4d3bf9117
       end
     end
   end
@@ -111,6 +120,7 @@ describe SiteSetting do
         SiteSetting.remove_override!(:test_hello?)
       end
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -136,6 +146,13 @@ describe SiteSetting do
         SiteSetting.test_hello?.should == true
       end
 
+=======
+      it "should have the correct override" do
+        SiteSetting.test_hello = true
+        SiteSetting.test_hello?.should == true
+      end
+
+>>>>>>> 65383abd70ec5151a8eb96d02d8654b4d3bf9117
       it "should coerce true strings to true" do
         SiteSetting.test_hello = "true"
         SiteSetting.test_hello?.should.eql? true
@@ -149,6 +166,7 @@ describe SiteSetting do
       #POSSIBLE BUG
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 			it "should not set default when reset" do
 =======
       it "should not reset default on ::setting" do
@@ -156,6 +174,9 @@ describe SiteSetting do
 =======
 			it "should not set default when reset" do
 >>>>>>> d55befb... Rephrase tests
+=======
+			it "should not set default when reset" do
+>>>>>>> 65383abd70ec5151a8eb96d02d8654b4d3bf9117
         SiteSetting.test_hello = true
         SiteSetting.setting(:test_hello?, false)
         SiteSetting.refresh!
