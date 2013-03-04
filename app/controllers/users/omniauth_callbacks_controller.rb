@@ -1,8 +1,14 @@
 # -*- encoding : utf-8 -*-
 require_dependency 'email'
+require_dependency 'enum'
+
 class Users::OmniauthCallbacksController < ApplicationController
 
   layout false
+
+  def self.types
+    @types ||= Enum.new(:facebook, :twitter, :google, :yahoo, :github, :persona)
+  end
 
   # need to be able to call this
   skip_before_filter :check_xhr
@@ -11,19 +17,15 @@ class Users::OmniauthCallbacksController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => :complete
 
   def complete
-    auth_token = env["omniauth.auth"]
-    case params[:provider]
-    when "facebook"
-      create_or_sign_on_user_using_facebook(auth_token)
-    when "twitter"
-      create_or_sign_on_user_using_twitter(auth_token)
-    when "google", "yahoo"
-      create_or_sign_on_user_using_openid(auth_token)
-    when "github"
-      create_or_sign_on_user_using_github(auth_token)
-    when "persona"
-      create_or_sign_on_user_using_persona(auth_token)
-    end
+    # Make sure we support that provider
+    provider = params[:provider]
+    raise Discourse::InvalidAccess.new unless self.class.types.include?(provider.to_sym)
+
+    # Check if the provider is enabled
+    raise Discourse::InvalidAccess.new("provider is not enabled") unless SiteSetting.send("enable_#{provider}_logins?")
+
+    # Call the appropriate logic
+    send("create_or_sign_on_user_using_#{provider}", request.env["omniauth.auth"])
 
     respond_to do |format|
       format.html
@@ -79,7 +81,6 @@ class Users::OmniauthCallbacksController < ApplicationController
 
 
     username = User.suggest_username(name)
-
 
     session[:authentication] = {
       facebook: {
@@ -178,6 +179,9 @@ class Users::OmniauthCallbacksController < ApplicationController
     end
 
   end
+
+  alias_method :create_or_sign_on_user_using_yahoo, :create_or_sign_on_user_using_openid
+  alias_method :create_or_sign_on_user_using_google, :create_or_sign_on_user_using_openid
 
   def create_or_sign_on_user_using_github(auth_token)
 
