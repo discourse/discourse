@@ -41,7 +41,10 @@ reaching out to the community for help:
    experience any failures, that's a bad sign! Our master branch should *always* pass 
    every test.
 
+6. Have you updated host_names in your database.yml?
 
+   If links in emails have localhost in them, then you are still using the default host_names
+   value in database.yml.  Update it to use your site's host name(s).
 
 
 
