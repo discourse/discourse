@@ -122,6 +122,8 @@ class SiteSetting < ActiveRecord::Base
   setting(:github_client_id, '')
   setting(:github_client_secret, '')
 
+  client_setting(:enable_persona_logins, true)
+
   setting(:enforce_global_nicknames, true)
   setting(:discourse_org_access_key, '')
   setting(:enable_s3_uploads, false)
