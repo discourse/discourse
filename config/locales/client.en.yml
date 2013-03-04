@@ -251,6 +251,9 @@ en:
       github:
         title: "Log In with Github"
         message: "Authenticating with Github (make sure pop up blockers are not enabled)"
+      persona:
+        title: "Log In with Any Email Address (Mozilla Persona)"
+        message: "Authenticating with Persona (make sure pop up blockers are not enabled)"
 
     composer:
       saving_draft_tip: "saving"

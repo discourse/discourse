@@ -31,4 +31,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
            SiteSetting.github_client_id,
            SiteSetting.github_client_secret
 
+  provider :browser_id,
+           :name => 'persona'
+
 end

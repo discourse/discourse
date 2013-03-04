@@ -1,0 +1,30 @@
+<script src="https://login.persona.org/include.js"></script>
+<script>
+  (function() {
+    var readyCalled = false;
+    navigator.id.watch({
+      onlogin: function(assertion) {
+        if (readyCalled) {
+
+          $.ajax({
+            type: 'POST',
+            url: '/auth/persona/callback',
+            data: { 'assertion': assertion },
+            success: function(data, textStatus, jqXHR) {
+              Discourse.authenticationComplete(data);
+            },
+            dataType: 'json'
+          });
+        }
+      },
+      onlogout: function() {
+        if (readyCalled) {
+          Discourse.logout();
+        }
+      },
+      onready: function() {
+        readyCalled = true;
+      }
+    });
+  }());
+</script>

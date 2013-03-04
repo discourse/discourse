@@ -168,6 +168,12 @@
       content: "g";
     }
   }
+  &.persona {
+    background: $persona;
+    &:before {
+      content: "]";
+    }
+  }
 }
 
 // Button Sizes

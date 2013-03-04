@@ -21,6 +21,13 @@ class Users::OmniauthCallbacksController < ApplicationController
       create_or_sign_on_user_using_openid(auth_token)
     when "github"
       create_or_sign_on_user_using_github(auth_token)
+    when "persona"
+      create_or_sign_on_user_using_persona(auth_token)
+    end
+
+    respond_to do |format|
+      format.html
+      format.json { render :json => @data }
     end
   end
 
@@ -169,6 +176,7 @@ class Users::OmniauthCallbacksController < ApplicationController
         openid_url: identity_url
       }
     end
+
   end
 
   def create_or_sign_on_user_using_github(auth_token)
@@ -200,6 +208,37 @@ class Users::OmniauthCallbacksController < ApplicationController
     else
       @data[:name] = screen_name
     end
+
+  end
+
+  def create_or_sign_on_user_using_persona(auth_token)
+
+    email = auth_token[:info][:email]
+
+    user = User.find_by_email(email)
+
+    if user
+      if SiteSetting.must_approve_users? and !user.approved?
+        @data = {awaiting_approval: true}
+      else
+        log_on_user(user)
+        @data = {authenticated: true}
+      end
+    else
+      @data = {
+        email: email,
+        email_valid: true,
+        name: User.suggest_name(email),
+        username: User.suggest_username(email),
+        auth_provider: params[:provider].try(:capitalize)
+      }
+
+      session[:authentication] = {
+        email: email,
+        email_valid: true,
+      }
+    end
+
   end
 
 end
