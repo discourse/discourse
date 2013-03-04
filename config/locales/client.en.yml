@@ -252,7 +252,7 @@ en:
         title: "Log In with Github"
         message: "Authenticating with Github (make sure pop up blockers are not enabled)"
       persona:
-        title: "Log In with Any Email Address (Mozilla Persona)"
+        title: "Log In with Mozilla Persona"
         message: "Authenticating with Persona (make sure pop up blockers are not enabled)"
 
     composer:
