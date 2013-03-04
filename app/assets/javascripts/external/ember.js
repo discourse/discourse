@@ -1,5 +1,5 @@
-// Version: v1.0.0-pre.2-756-gb26f1f0
-// Last commit: b26f1f0 (2013-02-26 09:03:26 -0800)
+// Version: v1.0.0-pre.2-790-ge26f105
+// Last commit: e26f105 (2013-03-04 09:58:40 -0800)
 
 
 (function() {
@@ -150,8 +150,8 @@ Ember.deprecateFunc = function(message, func) {
 
 })();
 
-// Version: v1.0.0-pre.2-756-gb26f1f0
-// Last commit: b26f1f0 (2013-02-26 09:03:26 -0800)
+// Version: v1.0.0-pre.2-790-ge26f105
+// Last commit: e26f105 (2013-03-04 09:58:40 -0800)
 
 
 (function() {
@@ -4273,7 +4273,7 @@ var run = Ember.run;
 /**
   Begins a new RunLoop. Any deferred actions invoked after the begin will
   be buffered until you invoke a matching call to `Ember.run.end()`. This is
-  an lower-level way to use a RunLoop instead of using `Ember.run()`.
+  a lower-level way to use a RunLoop instead of using `Ember.run()`.
 
   ```javascript
   Ember.run.begin();
@@ -4319,9 +4319,9 @@ Ember.run.end = function() {
 
   @property queues
   @type Array
-  @default ['sync', 'actions', 'destroy', 'timers']
+  @default ['sync', 'actions', 'destroy']
 */
-Ember.run.queues = ['sync', 'actions', 'destroy', 'timers'];
+Ember.run.queues = ['sync', 'actions', 'destroy'];
 
 /**
   Adds the passed target/method and any optional arguments to the named
@@ -4334,19 +4334,19 @@ Ember.run.queues = ['sync', 'actions', 'destroy', 'timers'];
   the `run.queues` property.
 
   ```javascript
-  Ember.run.schedule('timers', this, function(){
-    // this will be executed at the end of the RunLoop, when timers are run
-    console.log("scheduled on timers queue");
+  Ember.run.schedule('sync', this, function(){
+    // this will be executed in the first RunLoop queue, when bindings are synced
+    console.log("scheduled on sync queue");
   });
 
-  Ember.run.schedule('sync', this, function(){
-    // this will be executed at the end of the RunLoop, when bindings are synced
-    console.log("scheduled on sync queue");
+  Ember.run.schedule('actions', this, function(){
+    // this will be executed in the 'actions' queue, after bindings have synced.
+    console.log("scheduled on actions queue");
   });
 
   // Note the functions will be run in order based on the run queues order. Output would be:
   //   scheduled on sync queue
-  //   scheduled on timers queue
+  //   scheduled on actions queue
   ```
 
   @method schedule
@@ -4372,7 +4372,7 @@ function autorun() {
 
 // Used by global test teardown
 Ember.run.hasScheduledTimers = function() {
-  return !!(scheduledAutorun || scheduledLater || scheduledNext);
+  return !!(scheduledAutorun || scheduledLater);
 };
 
 // Used by global test teardown
@@ -4384,10 +4384,6 @@ Ember.run.cancelTimers = function () {
   if (scheduledLater) {
     clearTimeout(scheduledLater);
     scheduledLater = null;
-  }
-  if (scheduledNext) {
-    clearTimeout(scheduledNext);
-    scheduledNext = null;
   }
   timers = {};
 };
@@ -4423,7 +4419,8 @@ Ember.run.autorun = function() {
   bindings in the application to sync.
 
   You should call this method anytime you need any changed state to propagate
-  throughout the app immediately without repainting the UI.
+  throughout the app immediately without repainting the UI (which happens
+  in the later 'render' queue added by the `ember-views` package).
 
   ```javascript
   Ember.run.sync();
@@ -4443,25 +4440,30 @@ Ember.run.sync = function() {
 
 var timers = {}; // active timers...
 
-var scheduledLater;
+var scheduledLater, scheduledLaterExpires;
 function invokeLaterTimers() {
   scheduledLater = null;
-  var now = (+ new Date()), earliest = -1;
-  for (var key in timers) {
-    if (!timers.hasOwnProperty(key)) { continue; }
-    var timer = timers[key];
-    if (timer && timer.expires) {
-      if (now >= timer.expires) {
-        delete timers[key];
-        invoke(timer.target, timer.method, timer.args, 2);
-      } else {
-        if (earliest<0 || (timer.expires < earliest)) earliest=timer.expires;
+  run(function() {
+    var now = (+ new Date()), earliest = -1;
+    for (var key in timers) {
+      if (!timers.hasOwnProperty(key)) { continue; }
+      var timer = timers[key];
+      if (timer && timer.expires) {
+        if (now >= timer.expires) {
+          delete timers[key];
+          invoke(timer.target, timer.method, timer.args, 2);
+        } else {
+          if (earliest < 0 || (timer.expires < earliest)) { earliest = timer.expires; }
+        }
       }
     }
-  }
 
-  // schedule next timeout to fire...
-  if (earliest > 0) { scheduledLater = setTimeout(invokeLaterTimers, earliest-(+ new Date())); }
+    // schedule next timeout to fire when the earliest timer expires
+    if (earliest > 0) { 
+      scheduledLater = setTimeout(invokeLaterTimers, earliest - now); 
+      scheduledLaterExpires = earliest;
+    }
+  });
 }
 
 /**
@@ -4509,7 +4511,19 @@ Ember.run.later = function(target, method) {
   timer   = { target: target, method: method, expires: expires, args: args };
   guid    = Ember.guidFor(timer);
   timers[guid] = timer;
-  run.once(timers, invokeLaterTimers);
+    
+  if(scheduledLater && expires < scheduledLaterExpires) {
+    // Cancel later timer (then reschedule earlier timer below)
+    clearTimeout(scheduledLater);
+    scheduledLater = null;
+  }
+
+  if (!scheduledLater) { 
+    // Schedule later timers to be run.
+    scheduledLater = setTimeout(invokeLaterTimers, wait);
+    scheduledLaterExpires = expires;
+  } 
+
   return guid;
 };
 
@@ -4564,6 +4578,21 @@ function scheduleOnce(queue, target, method, args) {
     // doFoo will only be executed once at the end of the RunLoop
   });
   ```
+  
+  Also note that passing an anonymous function to `Ember.run.once` will
+  not prevent additional calls with an identical anonymous function from 
+  scheduling the items multiple times, e.g.:
+  
+  ```javascript
+  function scheduleIt() {
+    Ember.run.once(myContext, function() { console.log("Closure"); });
+  }
+  scheduleIt();
+  scheduleIt();
+  // "Closure" will print twice, even though we're using `Ember.run.once`,
+  // because the function we pass to it is anonymous and won't match the 
+  // previously scheduled operation.
+  ```
 
   @method once
   @param {Object} [target] target of method to invoke
@@ -4581,22 +4610,9 @@ Ember.run.scheduleOnce = function(queue, target, method, args) {
   return scheduleOnce(queue, target, method, slice.call(arguments, 3));
 };
 
-var scheduledNext;
-function invokeNextTimers() {
-  scheduledNext = null;
-  for(var key in timers) {
-    if (!timers.hasOwnProperty(key)) { continue; }
-    var timer = timers[key];
-    if (timer.next) {
-      delete timers[key];
-      invoke(timer.target, timer.method, timer.args, 2);
-    }
-  }
-}
-
 /**
   Schedules an item to run after control has been returned to the system.
-  This is often equivalent to calling `setTimeout(function() {}, 1)`.
+  This is equivalent to calling `Ember.run.later` with a wait time of 1ms. 
 
   ```javascript
   Ember.run.next(myContext, function(){
@@ -4612,20 +4628,10 @@ function invokeNextTimers() {
   @param {Object} [args*] Optional arguments to pass to the timeout.
   @return {Object} timer
 */
-Ember.run.next = function(target, method) {
-  var guid,
-      timer = {
-        target: target,
-        method: method,
-        args: slice.call(arguments),
-        next: true
-      };
-
-  guid = Ember.guidFor(timer);
-  timers[guid] = timer;
-
-  if (!scheduledNext) { scheduledNext = setTimeout(invokeNextTimers, 1); }
-  return guid;
+Ember.run.next = function() {
+  var args = slice.call(arguments);
+  args.push(1); // 1 millisecond wait
+  return run.later.apply(this, args);
 };
 
 /**
@@ -5499,6 +5505,38 @@ Mixin.finishPartial = finishPartial;
 Ember.anyUnprocessedMixins = false;
 
 /**
+  Creates an instance of a class. Accepts either no arguments, or an object
+  containing values to initialize the newly instantiated object with.
+  
+  ```javascript
+  App.Person = Ember.Object.extend({
+    helloWorld: function() {
+      alert("Hi, my name is " + this.get('name'));
+    }
+  });
+
+  var tom = App.Person.create({
+    name: 'Tom Dale'
+  });
+
+  tom.helloWorld(); // alerts "Hi, my name is Tom Dale".
+  ```
+
+  `create` will call the `init` function if defined during
+  `Ember.AnyObject.extend`
+
+  If no arguments are passed to `create`, it will not set values to the new
+  instance during initialization:
+
+  ```javascript
+  var noName = App.Person.create();
+  noName.helloWorld(); // alerts undefined
+  ```
+
+  NOTE: For performance reasons, you cannot declare methods or computed
+  properties during `create`. You should instead declare methods and computed
+  properties when using `extend`.
+
   @method create
   @static
   @param arguments*
@@ -6924,10 +6962,11 @@ Ember.String = {
   */
   dasherize: function(str) {
     var cache = STRING_DASHERIZE_CACHE,
-        ret   = cache[str];
+        hit   = cache.hasOwnProperty(str),
+        ret;
 
-    if (ret) {
-      return ret;
+    if (hit) {
+      return cache[str];
     } else {
       ret = Ember.String.decamelize(str).replace(STRING_DASHERIZE_REGEXP,'-');
       cache[str] = ret;
@@ -6937,7 +6976,7 @@ Ember.String = {
   },
 
   /**
-    Returns the lowerCaseCamel form of a string.
+    Returns the lowerCamelCase form of a string.
 
     ```javascript
     'innerHTML'.camelize();          // 'innerHTML'
@@ -7008,10 +7047,10 @@ Ember.String = {
   /**
     Returns the Capitalized form of a string
 
-       'innerHTML'.capitalize()         => 'InnerHTML'
-       'action_name'.capitalize()       => 'Action_name'
-       'css-class-name'.capitalize()    => 'Css-class-name'
-       'my favorite items'.capitalize() => 'My favorite items'
+       'innerHTML'.capitalize()         // 'InnerHTML'
+       'action_name'.capitalize()       // 'Action_name'
+       'css-class-name'.capitalize()    // 'Css-class-name'
+       'my favorite items'.capitalize() // 'My favorite items'
 
     @method capitalize
     @param {String} str
@@ -7408,10 +7447,10 @@ Ember.Enumerable = Ember.Mixin.create(
 
     ```javascript
     var arr = ["a", "b", "c"];
-    arr.firstObject();  // "a"
+    arr.get('firstObject');  // "a"
 
     var arr = [];
-    arr.firstObject();  // undefined
+    arr.get('firstObject');  // undefined
     ```
 
     @property firstObject
@@ -7434,10 +7473,10 @@ Ember.Enumerable = Ember.Mixin.create(
 
     ```javascript
     var arr = ["a", "b", "c"];
-    arr.lastObject();  // "c"
+    arr.get('lastObject');  // "c"
 
     var arr = [];
-    arr.lastObject();  // undefined
+    arr.get('lastObject');  // undefined
     ```
 
     @property lastObject
@@ -7570,7 +7609,7 @@ Ember.Enumerable = Ember.Mixin.create(
     @return {Array} The mapped array.
   */
   map: function(callback, target) {
-    var ret = [];
+    var ret = Ember.A([]);
     this.forEach(function(x, idx, i) {
       ret[idx] = callback.call(target, x, idx,i);
     });
@@ -7620,7 +7659,7 @@ Ember.Enumerable = Ember.Mixin.create(
     @return {Array} A filtered array.
   */
   filter: function(callback, target) {
-    var ret = [];
+    var ret = Ember.A([]);
     this.forEach(function(x, idx, i) {
       if (callback.call(target, x, idx, i)) ret.push(x);
     });
@@ -7909,7 +7948,7 @@ Ember.Enumerable = Ember.Mixin.create(
     @return {Array} return values from calling invoke.
   */
   invoke: function(methodName) {
-    var args, ret = [];
+    var args, ret = Ember.A([]);
     if (arguments.length>1) args = a_slice.call(arguments, 1);
 
     this.forEach(function(x, idx) {
@@ -7930,7 +7969,7 @@ Ember.Enumerable = Ember.Mixin.create(
     @return {Array} the enumerable as an array.
   */
   toArray: function() {
-    var ret = [];
+    var ret = Ember.A([]);
     this.forEach(function(o, idx) { ret[idx] = o; });
     return ret ;
   },
@@ -7964,7 +8003,7 @@ Ember.Enumerable = Ember.Mixin.create(
   */
   without: function(value) {
     if (!this.contains(value)) return this; // nothing to do
-    var ret = [] ;
+    var ret = Ember.A([]);
     this.forEach(function(k) {
       if (k !== value) ret[ret.length] = k;
     }) ;
@@ -7984,7 +8023,7 @@ Ember.Enumerable = Ember.Mixin.create(
     @return {Ember.Enumerable}
   */
   uniq: function() {
-    var ret = [];
+    var ret = Ember.A([]);
     this.forEach(function(k){
       if (a_indexOf(ret, k)<0) ret.push(k);
     });
@@ -8016,7 +8055,7 @@ Ember.Enumerable = Ember.Mixin.create(
 
     @method addEnumerableObserver
     @param {Object} target
-    @param {Hash} opts
+    @param {Hash} [opts]
   */
   addEnumerableObserver: function(target, opts) {
     var willChange = (opts && opts.willChange) || 'enumerableWillChange',
@@ -8152,7 +8191,7 @@ Ember.Enumerable = Ember.Mixin.create(
 // HELPERS
 //
 
-var get = Ember.get, set = Ember.set, meta = Ember.meta, map = Ember.EnumerableUtils.map, cacheFor = Ember.cacheFor;
+var get = Ember.get, set = Ember.set, map = Ember.EnumerableUtils.map, cacheFor = Ember.cacheFor;
 
 function none(obj) { return obj===null || obj===undefined; }
 
@@ -8294,12 +8333,12 @@ Ember.Array = Ember.Mixin.create(Ember.Enumerable, /** @scope Ember.Array.protot
     ```
 
     @method slice
-    @param beginIndex {Integer} (Optional) index to begin slicing from.
-    @param endIndex {Integer} (Optional) index to end the slice at.
+    @param {Integer} beginIndex (Optional) index to begin slicing from.
+    @param {Integer} endIndex (Optional) index to end the slice at.
     @return {Array} New array with specified slice
   */
   slice: function(beginIndex, endIndex) {
-    var ret = [];
+    var ret = Ember.A([]);
     var length = get(this, 'length') ;
     if (none(beginIndex)) beginIndex = 0 ;
     if (none(endIndex) || (endIndex > length)) endIndex = length ;
@@ -9201,7 +9240,7 @@ Ember.MutableArray = Ember.Mixin.create(Ember.Array, Ember.MutableEnumerable,
 @submodule ember-runtime
 */
 
-var get = Ember.get, set = Ember.set, defineProperty = Ember.defineProperty;
+var get = Ember.get, set = Ember.set;
 
 /**
   ## Overview
@@ -10147,6 +10186,37 @@ CoreObject.PrototypeMixin = Mixin.create({
 
   isInstance: true,
 
+  /**
+    An overridable method called when objects are instantiated. By default,
+    does nothing unless it is overridden during class definition.
+
+    Example:
+
+    ```javascript
+    App.Person = Ember.Object.extend({
+      init: function() {
+        this._super();
+        alert('Name is ' + this.get('name'));
+      }
+    });
+
+    var steve = App.Person.create({
+      name: "Steve"
+    });
+
+    // alerts 'Name is Steve'.
+    ```
+
+    NOTE: If you do override `init` for a framework class like `Ember.View` or
+    `Ember.ArrayController`, be sure to call `this._super()` in your
+    `init` declaration! If you don't, Ember may not have an opportunity to
+    do important setup work, and you'll see strange behavior in your
+    application.
+
+    ```
+
+    @method init
+  */
   init: function() {},
 
   /**
@@ -10297,7 +10367,7 @@ CoreObject.PrototypeMixin = Mixin.create({
           }
         });
         teacher = App.Teacher.create()
-        teacher.toString(); // #=> "<App.Teacher:ember1026:Tom Dale>"
+        teacher.toString(); //=> "<App.Teacher:ember1026:Tom Dale>"
 
     @method toString
     @return {String} string representation
@@ -14825,7 +14895,6 @@ Ember.View = Ember.CoreView.extend(
       // JavaScript property changes.
       var observer = function() {
         elem = this.$();
-        if (!elem) { return; }
 
         attributeValue = get(this, property);
 
@@ -15693,10 +15762,18 @@ Ember.View = Ember.CoreView.extend(
   },
 
   registerObserver: function(root, path, target, observer) {
-    Ember.addObserver(root, path, target, observer);
+    if (!observer && 'function' === typeof target) {
+      observer = target;
+      target = null;
+    }
+    var view = this,
+        stateCheckedObserver = function(){
+          view.currentState.invokeObserver(this, observer);
+        };
+    Ember.addObserver(root, path, target, stateCheckedObserver);
 
     this.one('willClearRender', function() {
-      Ember.removeObserver(root, path, target, observer);
+      Ember.removeObserver(root, path, target, stateCheckedObserver);
     });
   }
 
@@ -15974,7 +16051,8 @@ Ember.View.states._default = {
     return false;
   },
 
-  rerender: Ember.K
+  rerender: Ember.K,
+  invokeObserver: Ember.K
 };
 
 })();
@@ -16095,6 +16173,10 @@ Ember.merge(inBuffer, {
     }
 
     return value;
+  },
+
+  invokeObserver: function(target, observer) {
+    observer.call(target);
   }
 });
 
@@ -16182,6 +16264,10 @@ Ember.merge(hasElement, {
     } else {
       return true; // continue event propagation
     }
+  },
+
+  invokeObserver: function(target, observer) {
+    observer.call(target);
   }
 });
 
@@ -23862,10 +23948,10 @@ Ember.onLoad('Ember.Handlebars', function(Handlebars) {
     The default target for `{{action}}`s in the rendered template is the
     named controller.
 
-    @method action
+    @method render
     @for Ember.Handlebars.helpers
-    @param {String} actionName
-    @param {Object?} model
+    @param {String} name
+    @param {Object?} contextString
     @param {Hash} options
   */
   Ember.Handlebars.registerHelper('render', function(name, contextString, options) {
@@ -24668,6 +24754,7 @@ Ember.HistoryLocation = Ember.Object.extend({
 
     if (this.getState() && this.getState().path !== path) {
       popstateReady = true;
+      console.log('pushin');
       this.pushState(path);
     }
   },
@@ -24698,7 +24785,7 @@ Ember.HistoryLocation = Ember.Object.extend({
    @method getState
   */
   getState: function() {
-    return get(this, 'history').state;
+    return window.history.state;
   },
 
   /**
@@ -25141,6 +25228,7 @@ var Application = Ember.Application = Ember.Namespace.extend({
     }
 
     if ( Ember.LOG_VERSION ) {
+      Ember.LOG_VERSION = false; // we only need to see this once per Application#init
       Ember.debug('-------------------------------');
       Ember.debug('Ember.VERSION : ' + Ember.VERSION);
       Ember.debug('Handlebars.VERSION : ' + Ember.Handlebars.VERSION);
@@ -26947,8 +27035,8 @@ Ember States
 
 
 })();
-// Version: v1.0.0-pre.2-756-gb26f1f0
-// Last commit: b26f1f0 (2013-02-26 09:03:26 -0800)
+// Version: v1.0.0-pre.2-790-ge26f105
+// Last commit: e26f105 (2013-03-04 09:58:40 -0800)
 
 
 (function() {

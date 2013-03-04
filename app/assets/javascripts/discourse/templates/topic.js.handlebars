@@ -25,7 +25,7 @@
                   {{i18n topic.loading}}
                 {{/if}}
               {{/if}}
-              {{#bind view.topic.category}}{{categoryLink this}}{{/bind}}
+              {{boundCategoryLink category}}
 
               {{#if view.topic.can_edit}}
                 <a href='#' {{action editTopic target="view"}} class='edit-topic' title='{{i18n edit}}'><i class="icon-pencil"></i></a>

@@ -6,16 +6,14 @@
   @method breakUp
   @for Handlebars
 **/
-Handlebars.registerHelper('breakUp', function(property, options) {
+Ember.Handlebars.registerHelper('breakUp', function(property, options) {
   var prop, result, tokens;
   prop = Ember.Handlebars.get(this, property, options);
-  if (!prop) {
-    return "";
-  }
+  if (!prop) return "";
+
   tokens = prop.match(new RegExp(".{1,14}", 'g'));
-  if (tokens.length === 1) {
-    return prop;
-  }
+  if (tokens.length === 1) return prop;
+
   result = "";
   tokens.each(function(token, index) {
     result += token;
@@ -32,7 +30,7 @@ Handlebars.registerHelper('breakUp', function(property, options) {
   @method shorten
   @for Handlebars
 **/
-Handlebars.registerHelper('shorten', function(property, options) {
+Ember.Handlebars.registerHelper('shorten', function(property, options) {
   return Ember.Handlebars.get(this, property, options).truncate(35);
 });
 
@@ -42,7 +40,7 @@ Handlebars.registerHelper('shorten', function(property, options) {
   @method topicLink
   @for Handlebars
 **/
-Handlebars.registerHelper('topicLink', function(property, options) {
+Ember.Handlebars.registerHelper('topicLink', function(property, options) {
   var title, topic;
   topic = Ember.Handlebars.get(this, property, options);
   title = topic.get('fancy_title') || topic.get('title');
@@ -55,9 +53,18 @@ Handlebars.registerHelper('topicLink', function(property, options) {
   @method categoryLink
   @for Handlebars
 **/
-Handlebars.registerHelper('categoryLink', function(property, options) {
-  var category;
-  category = Ember.Handlebars.get(this, property, options);
+Ember.Handlebars.registerHelper('categoryLink', function(property, options) {
+  var category = Ember.Handlebars.get(this, property, options);
+  return new Handlebars.SafeString(Discourse.Utilities.categoryLink(category));
+});
+
+/**
+  Produces a bound link to a category
+
+  @method boundCategoryLink
+  @for Handlebars
+**/
+Ember.Handlebars.registerBoundHelper('boundCategoryLink', function(category) {
   return new Handlebars.SafeString(Discourse.Utilities.categoryLink(category));
 });
 
@@ -67,7 +74,7 @@ Handlebars.registerHelper('categoryLink', function(property, options) {
   @method titledLinkTo
   @for Handlebars
 **/
-Handlebars.registerHelper('titledLinkTo', function(name, object) {
+Ember.Handlebars.registerHelper('titledLinkTo', function(name, object) {
   var options;
   options = [].slice.call(arguments, -1)[0];
   if (options.hash.titleKey) {
@@ -86,7 +93,7 @@ Handlebars.registerHelper('titledLinkTo', function(name, object) {
   @method shortenUrl
   @for Handlebars
 **/
-Handlebars.registerHelper('shortenUrl', function(property, options) {
+Ember.Handlebars.registerHelper('shortenUrl', function(property, options) {
   var url;
   url = Ember.Handlebars.get(this, property, options);
   // Remove trailing slash if it's a top level URL
@@ -104,7 +111,7 @@ Handlebars.registerHelper('shortenUrl', function(property, options) {
   @method lower
   @for Handlebars
 **/
-Handlebars.registerHelper('lower', function(property, options) {
+Ember.Handlebars.registerHelper('lower', function(property, options) {
   var o;
   o = Ember.Handlebars.get(this, property, options);
   if (o && typeof o === 'string') {
@@ -120,7 +127,7 @@ Handlebars.registerHelper('lower', function(property, options) {
   @method avatar
   @for Handlebars
 **/
-Handlebars.registerHelper('avatar', function(user, options) {
+Ember.Handlebars.registerHelper('avatar', function(user, options) {
 
   if (typeof user === 'string') {
     user = Ember.Handlebars.get(this, user, options);
@@ -152,7 +159,7 @@ Handlebars.registerHelper('avatar', function(user, options) {
   @method unboundDate
   @for Handlebars
 **/
-Handlebars.registerHelper('unboundDate', function(property, options) {
+Ember.Handlebars.registerHelper('unboundDate', function(property, options) {
   var dt;
   dt = new Date(Ember.Handlebars.get(this, property, options));
   return dt.format("{d} {Mon}, {yyyy} {hh}:{mm}");
@@ -164,7 +171,7 @@ Handlebars.registerHelper('unboundDate', function(property, options) {
   @method editDate
   @for Handlebars
 **/
-Handlebars.registerHelper('editDate', function(property, options) {
+Ember.Handlebars.registerHelper('editDate', function(property, options) {
   var dt, yesterday;
   dt = Date.create(Ember.Handlebars.get(this, property, options));
   yesterday = new Date() - (60 * 60 * 24 * 1000);
@@ -181,7 +188,7 @@ Handlebars.registerHelper('editDate', function(property, options) {
   @method number
   @for Handlebars
 **/
-Handlebars.registerHelper('number', function(property, options) {
+Ember.Handlebars.registerHelper('number', function(property, options) {
   var n, orig, title;
   orig = parseInt(Ember.Handlebars.get(this, property, options), 10);
   if (isNaN(orig)) {
@@ -207,7 +214,7 @@ Handlebars.registerHelper('number', function(property, options) {
   @method date
   @for Handlebars
 **/
-Handlebars.registerHelper('date', function(property, options) {
+Ember.Handlebars.registerHelper('date', function(property, options) {
   var displayDate, dt, fiveDaysAgo, fullReadable, humanized, leaveAgo, val;
   if (property.hash) {
     if (property.hash.leaveAgo) {
@@ -250,7 +257,7 @@ Handlebars.registerHelper('date', function(property, options) {
   @method personalizedName
   @for Handlebars
 **/
-Handlebars.registerHelper('personalizedName', function(property, options) {
+Ember.Handlebars.registerHelper('personalizedName', function(property, options) {
   var name, username;
   name = Ember.Handlebars.get(this, property, options);
   if (options.hash.usernamePath) {
