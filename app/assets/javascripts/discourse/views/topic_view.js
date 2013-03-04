@@ -494,14 +494,22 @@ window.Discourse.TopicView.reopenClass({
   // Scroll to a given post, if in the DOM. Returns whether it was in the DOM or not.
   scrollTo: function(topicId, postNumber, callback) {
     // Make sure we're looking at the topic we want to scroll to
-    var existing;
+    var existing, header, title, expectedOffset;
     if (parseInt(topicId, 10) !== parseInt($('#topic').data('topic-id'), 10)) return false;
     existing = $("#post_" + postNumber);
     if (existing.length) {
       if (postNumber === 1) {
         $('html, body').scrollTop(0);
       } else {
-        $('html, body').scrollTop(existing.offset().top - 55);
+        header = $('header');
+        title = $('#topic-title');
+        expectedOffset = title.height() - header.find('.contents').height();
+        
+        if (expectedOffset < 0) {
+            expectedOffset = 0;
+        }
+        
+        $('html, body').scrollTop(existing.offset().top - (header.outerHeight(true) + expectedOffset));
       }
       return true;
     }
