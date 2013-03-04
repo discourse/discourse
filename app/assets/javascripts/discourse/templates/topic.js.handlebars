@@ -17,7 +17,7 @@
             <h1>
               {{#if view.topic.fancy_title}}
                 {{view Discourse.TopicStatusView topicBinding="view.topic"}}
-                <a href='{{unbound view.topic.url}}'>{{{unbound view.topic.fancy_title}}}</a>
+                <a href='{{unbound view.topic.url}}'>{{{view.topic.fancy_title}}}</a>
               {{else}}
                 {{#if view.topic.errorLoading}}
                   {{view.topic.errorTitle}}
@@ -25,7 +25,7 @@
                   {{i18n topic.loading}}
                 {{/if}}
               {{/if}}
-              {{categoryLink view.topic.category}}
+              {{#bind view.topic.category}}{{categoryLink this}}{{/bind}}
 
               {{#if view.topic.can_edit}}
                 <a href='#' {{action editTopic target="view"}} class='edit-topic' title='{{i18n edit}}'><i class="icon-pencil"></i></a>
