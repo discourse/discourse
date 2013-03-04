@@ -32,12 +32,7 @@ module Oneboxer
       args[:original_url] = @url
       args[:lang] = @lang || ""
       args[:favicon] = ActionController::Base.helpers.image_path(self.class.favicon_file) if self.class.favicon_file.present?
-      begin
-        parsed = URI.parse(@url)
-        args[:host] = parsed.host.split('.').last(2).join('.')
-      rescue URI::InvalidURIError
-        # In case there is a problem with the URL, we just won't set the host
-      end
+      args[:host] = nice_host
 
       Mustache.render(File.read(template), args)
     rescue => ex

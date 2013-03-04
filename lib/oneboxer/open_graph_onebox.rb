@@ -21,16 +21,9 @@ module Oneboxer
       @opts[:original_url] = @url
       @opts[:text] = @opts['description']
       @opts[:unsafe] = true
-
-      begin
-        parsed = URI.parse(@url)
-        @opts[:host] = parsed.host.split('.').last(2).join('.')
-      rescue URI::InvalidURIError
-        # In case there is a problem with the URL, we just won't set the host
-      end
+      @opts[:host] = nice_host
 
       Mustache.render(File.read(template), @opts)
     end
-
   end
 end

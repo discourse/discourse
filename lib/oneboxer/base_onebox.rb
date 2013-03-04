@@ -43,6 +43,11 @@ module Oneboxer
       @url
     end
 
+    def nice_host
+      host = URI.parse(@url).host
+      host.nil? ? '' : host.gsub('www.', '')
+    rescue URI::InvalidURIError
+      '' # In case there is a problem with the URL, we just won't set the host
+    end
   end
-
 end

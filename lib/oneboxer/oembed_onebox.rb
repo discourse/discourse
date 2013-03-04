@@ -33,13 +33,7 @@ module Oneboxer
       end
 
       parsed['html'] ||= parsed['abstract']
-
-      begin
-        parsed_uri = URI.parse(@url)
-        parsed['host'] = parsed_uri.host.split('.').last(2).join('.')
-      rescue URI::InvalidURIError
-        # In case there is a problem with the URL, we just won't set the host
-      end
+      parsed['host'] = nice_host
 
 
       Mustache.render(File.read(template), parsed)
