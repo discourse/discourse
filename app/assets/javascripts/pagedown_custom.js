@@ -2,7 +2,7 @@
     insertButtons: [
       {
         id: 'wmd-quote-post',
-        description: 'Quote Post',
+        description: I18n.t("js.composer.quote_title"),
         execute: function() {
           /* AWFUL but I can't figure out how to call a controller method from outside
           */

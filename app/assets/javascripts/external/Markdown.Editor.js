@@ -37,40 +37,40 @@
         };
 
     var defaultsStrings = {
-        bold: "Strong <strong> Ctrl+B",
-        boldexample: "strong text",
+        bold: I18n.t("js.composer.bold_title") + " <strong> Ctrl+B",
+        boldexample: I18n.t("js.composer.bold_text"),
 
-        italic: "Emphasis <em> Ctrl+I",
-        italicexample: "emphasized text",
+        italic: I18n.t("js.composer.italic_title") + " <em> Ctrl+I",
+        italicexample: I18n.t("js.composer.italic_text"),
 
-        link: "Hyperlink <a> Ctrl+L",
+        link: I18n.t("js.composer.link_title") + " <a> Ctrl+L",
         linkdescription: "enter link description here",
-        linkdialog: "<p><b>Insert Hyperlink</b></p><p>http://example.com/ \"optional title\"</p>",
+        linkdialog: "<p><b>" + I18n.t("js.composer.link_dialog_title") + "</b></p><p>http://example.com/ \"" + I18n.t("js.composer.link_optional_text") + "\"</p>",
 
-        quote: "Blockquote <blockquote> Ctrl+Q",
-        quoteexample: "Blockquote",
+        quote: I18n.t("js.composer.quote_title") + " <blockquote> Ctrl+Q",
+        quoteexample: I18n.t("js.composer.quote_text"),
 
-        code: "Code Sample <pre><code> Ctrl+K",
-        codeexample: "enter code here",
+        code: I18n.t("js.composer.code_title") + " <pre><code> Ctrl+K",
+        codeexample: I18n.t("js.composer.code_text"),
 
-        image: "Image <img> Ctrl+G",
-        imagedescription: "enter image description here",
-        imagedialog: "<p><b>Insert Image</b></p><p>http://example.com/images/diagram.jpg \"optional title\"<br><br>Need <a href='http://www.google.com/search?q=free+image+hosting' target='_blank'>free image hosting?</a></p>",
+        image: I18n.t("js.composer.image_title") + " <img> Ctrl+G",
+        imagedescription: I18n.t("js.composer.image_description"),
+        imagedialog: "<p><b>" + I18n.t("js.composer.image_dialog_title") + "</b></p><p>http://example.com/images/diagram.jpg \"" + I18n.t("js.composer.image_optional_text") + "\"<br><br>" + I18n.t("js.composer.image_hosting_hint") + "</p>",
 
-        olist: "Numbered List <ol> Ctrl+O",
-        ulist: "Bulleted List <ul> Ctrl+U",
-        litem: "List item",
+        olist: I18n.t("js.composer.olist_title") + " <ol> Ctrl+O",
+        ulist: I18n.t("js.composer.ulist_title") + " <ul> Ctrl+U",
+        litem: I18n.t("js.compser.list_item"),
 
-        heading: "Heading <h1>/<h2> Ctrl+H",
-        headingexample: "Heading",
+        heading: I18n.t("js.composer.heading_title") + " <h1>/<h2> Ctrl+H",
+        headingexample: I18n.t("js.composer.heading_text"),
 
-        hr: "Horizontal Rule <hr> Ctrl+R",
+        hr: I18n.t("js.composer_hr_title") + " <hr> Ctrl+R",
 
-        undo: "Undo - Ctrl+Z",
-        redo: "Redo - Ctrl+Y",
-        redomac: "Redo - Ctrl+Shift+Z",
+        undo: I18n.t("js.composer.undo_title") + " - Ctrl+Z",
+        redo: I18n.t("js.composer.redo_title") + " - Ctrl+Y",
+        redomac: I18n.t("js.composer.redo_title") + " - Ctrl+Shift+Z",
 
-        help: "Markdown Editing Help"
+        help: I18n.t("js.composer.help")
     };
 
 
