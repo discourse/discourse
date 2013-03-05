@@ -459,7 +459,6 @@ en:
     omniauth_error: "Sorry, there was an error authorizing your %{strategy} account. Perhaps you did not approve authorization?"
     omniauth_error_unknown: "Something went wrong processing your log in, please try again."
 
-
   user:
     username:
       short: "must be longer than %{min} characters"
@@ -587,6 +586,7 @@ en:
         - To get back to the home page at any time, **click the icon at the upper left.**
 
         - To search, visit your user page, or otherwise navigate, click on the icons at the upper right.
+
         - While reading a topic, you can move to the top by clicking its title at the top of the page. To reach the *bottom*, click the down arrow on the topic progress indicator at the bottom of the page, or click the last post field on the topic summary under the first post.
 
     welcome_approved:
