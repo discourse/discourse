@@ -91,7 +91,6 @@ en:
         ok: "Your name looks good."
       username:
         title: "Username"
-        #instructions: "People can mention you as @{{username}}. This is an unregistered nickname. You can register it at <a href='http://discourse.org'>discourse.org</a>."
         instructions: "People can mention you as @{{username}}."
         available: "Your username is available."
         global_match: "Email matches the registered username."
@@ -336,7 +335,6 @@ en:
         unread: "There are no more unread topics to read."
         favorited: "There are no more favorited topics to read."
         category: "There are no more {{category}} topics."
-
 
     topic:
       create_in: 'Create {{categoryName}} Topic'
