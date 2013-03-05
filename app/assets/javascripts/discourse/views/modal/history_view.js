@@ -8,7 +8,7 @@
 **/
 Discourse.HistoryView = Discourse.View.extend({
   templateName: 'history',
-  title: 'History',
+  title: Em.String.i18n('history'),
   modalClass: 'history-modal',
 
   loadSide: function(side) {

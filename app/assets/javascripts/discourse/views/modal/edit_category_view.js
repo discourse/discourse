@@ -23,7 +23,7 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
 
   title: (function() {
     if (this.get('category.id')) return Em.String.i18n("category.edit_long");
-    return "Create Category";
+    return Em.String.i18n("category.create");
   }).property('category.id'),
 
   buttonTitle: (function() {
