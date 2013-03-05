@@ -151,6 +151,7 @@ class Topic < ActiveRecord::Base
   def self.new_topics(since)
     Topic
       .visible
+      .where(closed: false, archived: false)
       .created_since(since)
       .listable_topics
       .topic_list_order
