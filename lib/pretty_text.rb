@@ -92,6 +92,7 @@ module PrettyText
 
     @ctx.load(app_root + "app/assets/javascripts/discourse/components/bbcode.js")
     @ctx.load(app_root + "app/assets/javascripts/discourse/components/utilities.js")
+    @ctx.load(app_root + "app/assets/javascripts/discourse/components/markdown.js")
 
     # Load server side javascripts
     if DiscoursePluginRegistry.server_side_javascripts.present?
@@ -123,7 +124,7 @@ module PrettyText
       v8['raw'] = text
       v8.eval('opts["mentionLookup"] = function(u){return helpers.is_username_valid(u);}')
       v8.eval('opts["lookupAvatar"] = function(p){return Discourse.Utilities.avatarImg({username: p, size: "tiny", avatarTemplate: helpers.avatar_template(p)});}')
-      baked = v8.eval('Discourse.Utilities.markdownConverter(opts).makeHtml(raw)')
+      baked = v8.eval('Discourse.Markdown.markdownConverter(opts).makeHtml(raw)')
     end
 
     # we need some minimal server side stuff, apply CDN and TODO filter disallowed markup

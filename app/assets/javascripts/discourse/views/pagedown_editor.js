@@ -34,7 +34,7 @@ Discourse.PagedownEditor = Ember.ContainerView.extend({
     var $wmdInput;
     $wmdInput = $('#wmd-input');
     $wmdInput.data('init', true);
-    this.editor = new Markdown.Editor(Discourse.Utilities.markdownConverter({
+    this.editor = Discourse.Markdown.createNewMarkdownEditor(Discourse.Markdown.markdownConverter({
       sanitize: true
     }));
     return this.editor.run();
