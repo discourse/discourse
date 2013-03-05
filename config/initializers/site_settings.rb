@@ -1,3 +1,7 @@
 RailsMultisite::ConnectionManagement.each_connection do
-  SiteSetting.refresh!
+  begin
+    SiteSetting.refresh!
+  rescue ActiveRecord::StatementInvalid
+    # This will happen when migrating a new database
+  end
 end
