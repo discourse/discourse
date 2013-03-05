@@ -152,19 +152,27 @@ Discourse.ComposerView = Discourse.View.extend({
 
   // Called after the preview renders. Debounced for performance
   afterRender: Discourse.debounce(function() {
-    var $wmdPreview, refresh,
-      _this = this;
-    $wmdPreview = $('#wmd-preview');
-    if ($wmdPreview.length === 0) {
-      return;
-    }
+    var $wmdPreview = $('#wmd-preview');
+    if ($wmdPreview.length === 0) return;
+
     Discourse.SyntaxHighlighting.apply($wmdPreview);
-    refresh = this.get('controller.content.post.id') !== void 0;
+
+    var post = this.get('controller.content.post');
+    var refresh = false;
+
+    // If we are editing a post, we'll refresh its contents once. This is a feature that
+    // allows a user to refresh its contents once.
+    if (post && post.blank('refreshedPost')) {
+      refresh = true
+      post.set('refreshedPost', true);
+    }
+
+    // Load the post processing effects
     $('a.onebox', $wmdPreview).each(function(i, e) {
-      return Discourse.Onebox.load(e, refresh);
+      Discourse.Onebox.load(e, refresh);
     });
-    return $('span.mention', $wmdPreview).each(function(i, e) {
-      return Discourse.Mention.load(e, refresh);
+    $('span.mention', $wmdPreview).each(function(i, e) {
+      Discourse.Mention.load(e, refresh);
     });
   }, 100),
 
