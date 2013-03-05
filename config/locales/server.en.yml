@@ -711,6 +711,7 @@ en:
       new_topics: "New topics:"
       unsubscribe: "This summary email is sent as a courtesy notification from %{site_link} when we haven't seen you in a while.\nIf you'd like to turn it off or change your email preferences, %{unsubscribe_link}."
       click_here: "click here"
+      from: "%{site_name} digest"
 
     private_message:
       subject_template: "[%{site_name}] %{subject_prefix}%{topic_title}"

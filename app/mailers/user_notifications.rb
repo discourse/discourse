@@ -51,6 +51,7 @@ class UserNotifications < ActionMailer::Base
     # Don't send email unless there is content in it
     if @new_topics.present? || @notifications.present?
       mail to: user.email,
+           from: "#{I18n.t('user_notifications.digest.from', site_name: SiteSetting.title)} <#{SiteSetting.notification_email}>",
            subject: I18n.t('user_notifications.digest.subject_template',
                             :site_name => @site_name,
                             :date => Time.now.strftime("%m-%d-%Y"))
