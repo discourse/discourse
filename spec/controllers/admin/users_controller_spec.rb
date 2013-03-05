@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Admin::UsersController do
 
-  it "is a subclass of AdminController" do
+  it 'is a subclass of AdminController' do
     (Admin::UsersController < Admin::AdminController).should be_true
   end
 
@@ -23,10 +23,19 @@ describe Admin::UsersController do
       end
     end
 
-    context '.show' do
-      it 'returns success' do
-        xhr :get, :show, id: @user.username
-        response.should be_success
+    describe '.show' do
+      context 'an existing user' do
+        it 'returns success' do
+          xhr :get, :show, id: @user.username
+          response.should be_success
+        end
+      end
+
+      context 'an existing user' do
+        it 'returns success' do
+          xhr :get, :show, id: 'foobar'
+          response.should_not be_success
+        end
       end
     end
 
