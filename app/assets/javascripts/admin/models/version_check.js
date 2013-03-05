@@ -8,8 +8,12 @@
 **/
 Discourse.VersionCheck = Discourse.Model.extend({
   upToDate: function() {
-    return this.get('latest_version') === this.get('installed_version');
-  }.property('latest_version', 'installed_version'),
+    return this.get('missing_versions_count') === 0;
+  }.property('missing_versions_count'),
+
+  behindByOneVersion: function() {
+    return this.get('missing_versions_count') === 1;
+  }.property('missing_versions_count'),
 
   gitLink: function() {
     return "https://github.com/discourse/discourse/tree/" + this.get('installed_sha');

@@ -9,6 +9,7 @@ module Jobs
         json = DiscourseHub.discourse_version_check
         DiscourseUpdates.latest_version = json['latestVersion']
         DiscourseUpdates.critical_update_available = json['criticalUpdates']
+        DiscourseUpdates.missing_versions_count = json['missingVersionsCount']
       end
       true
     end

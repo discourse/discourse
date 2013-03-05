@@ -93,7 +93,7 @@
     font-weight: bold
   }
 
-  .version-notes i.icon {
+  .version-notes .icon {
     margin-left: 20px;
   }
 
@@ -104,17 +104,17 @@
     display: none;
   }
 
-  i.icon {
-    font-size: 20px;
+  .icon {
+    font-size: 26px;
   }
 
-  i.update-to-date {
+  .update-to-date {
     color: green;
   }
-  i.updates-available {
-    color: orange;
+  .updates-available {
+    color: #FF9500;
   }
-  i.critical-updates-available {
+  .critical-updates-available {
     color: red;
   }
 }

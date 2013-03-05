@@ -7,25 +7,28 @@ module DiscourseUpdates
         latest_version: latest_version || Discourse::VERSION::STRING,
         critical_updates: critical_update_available?,
         installed_version: Discourse::VERSION::STRING,
-        installed_sha: (Discourse.git_version == 'unknown' ? nil : Discourse.git_version)
+        installed_sha: (Discourse.git_version == 'unknown' ? nil : Discourse.git_version),
+        missing_versions_count: missing_versions_count || nil
         # TODO: more info, like links and release messages
       )
-    end
-
-    def latest_version=(arg)
-      $redis.set latest_version_key, arg
     end
 
     def latest_version
       $redis.get latest_version_key
     end
 
-    def critical_update_available=(arg)
-      $redis.set critical_updates_available_key, arg
+    def missing_versions_count
+      $redis.get(missing_versions_count_key).try(:to_i)
     end
 
     def critical_update_available?
       ($redis.get(critical_updates_available_key) || false) == 'true'
+    end
+
+    ['latest_version', 'missing_versions_count', 'critical_update_available'].each do |name|
+      eval "define_method :#{name}= do |arg|
+        $redis.set #{name}_key, arg
+      end"
     end
 
 
@@ -37,6 +40,10 @@ module DiscourseUpdates
 
       def critical_updates_available_key
         'critical_updates_available'
+      end
+
+      def missing_versions_count_key
+        'missing_versions_count'
       end
   end
 end
