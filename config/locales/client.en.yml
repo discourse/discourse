@@ -633,7 +633,6 @@ en:
 
       dashboard:
         title: "Admin Dashboard"
-        welcome: "Welcome to the admin section."
         version: "Installed version"
         up_to_date: "You are running the latest version of Discourse."
         critical_available: "A critical update is available."

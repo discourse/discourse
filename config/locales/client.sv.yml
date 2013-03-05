@@ -630,7 +630,6 @@ sv:
 
       dashboard:
         title: "Översiktspanel"
-        welcome: "Välkommen till adminsektionen."
         version: "Installerad version"
         up_to_date: "Du kör den senaste versionen av Discourse."
         critical_available: "En kritisk uppdatering är tillgänglig."

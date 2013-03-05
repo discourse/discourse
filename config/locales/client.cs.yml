@@ -630,7 +630,6 @@ cs:
 
       dashboard:
         title: "Administrátorský rozcestník"
-        welcome: "Vítejte v administrátorské sekci."
         version: "Verze Discourse"
         up_to_date: "Používáte nejnovější verzi Discourse."
         critical_available: "Je k dispozici důležitá aktualizace."

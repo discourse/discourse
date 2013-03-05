@@ -637,7 +637,6 @@ fr:
 
       dashboard:
         title: "Panel d'administration"
-        welcome: "Bienvenue dans la section administration."
         version: "Version de Discourse"
         up_to_date: "Vous utilisez la dernière version de Discourse."
         critical_available: "Une mise à jour critique est disponible."
