@@ -174,19 +174,19 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def include_participants?
-    object.initial_load? and object.posts_count.present?
+    object.initial_load? && object.posts_count.present?
   end
 
   def suggested_topics
     object.suggested_topics.topics
   end
   def include_suggested_topics?
-    at_bottom and object.suggested_topics.present?
+    at_bottom && object.suggested_topics.present?
   end
 
   # Whether we're at the bottom of a topic (last page)
   def at_bottom
-    posts.present? and (@highest_number_in_posts == object.highest_post_number)
+    posts.present? && (@highest_number_in_posts == object.highest_post_number)
   end
 
   def highest_post_number

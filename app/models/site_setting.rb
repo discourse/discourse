@@ -155,7 +155,7 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:educate_until_posts, 2)
 
   def self.call_discourse_hub?
-    self.enforce_global_nicknames? and self.discourse_org_access_key.present?
+    self.enforce_global_nicknames? && self.discourse_org_access_key.present?
   end
 
   def self.topic_title_length

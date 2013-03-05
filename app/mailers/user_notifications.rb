@@ -49,7 +49,7 @@ class UserNotifications < ActionMailer::Base
     @markdown_linker = MarkdownLinker.new(Discourse.base_url)
 
     # Don't send email unless there is content in it
-    if @new_topics.present? or @notifications.present?
+    if @new_topics.present? || @notifications.present?
       mail to: user.email,
            subject: I18n.t('user_notifications.digest.subject_template',
                             :site_name => @site_name,

@@ -10,7 +10,7 @@ class ListController < ApplicationController
       list_opts = {page: params[:page]}
 
       # html format means we need to farm exclude from the site options
-      if params[:format].blank? or params[:format] == "html"
+      if params[:format].blank? || params[:format] == "html"
         #TODO objectify this stuff
         SiteSetting.top_menu.split('|').each do |f|
           s = f.split(",")
@@ -35,7 +35,7 @@ class ListController < ApplicationController
     list = nil
 
     # If they choose uncategorized, return topics NOT in a category
-    if params[:category] == Slug.for(SiteSetting.uncategorized_name) or params[:category] == SiteSetting.uncategorized_name
+    if params[:category] == Slug.for(SiteSetting.uncategorized_name) || params[:category] == SiteSetting.uncategorized_name
       list = query.list_uncategorized
     else
       @category = Category.where("slug = ? or id = ?", params[:category], params[:category].to_i).includes(:featured_users).first

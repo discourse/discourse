@@ -13,7 +13,7 @@ module Oneboxer
 
       # A site is supposed to supply all the basic og attributes, but some don't (like deviant art)
       # If it just has image and no title, embed it as an image.
-      return BaseOnebox.image_html(@opts['image'], nil, @url) if @opts['image'].present? and @opts['title'].blank?
+      return BaseOnebox.image_html(@opts['image'], nil, @url) if @opts['image'].present? && @opts['title'].blank?
 
       @opts['title'] ||= @opts['description']
       return nil if @opts['title'].blank?

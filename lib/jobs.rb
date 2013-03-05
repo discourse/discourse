@@ -19,7 +19,7 @@ module Jobs
       opts = opts.with_indifferent_access
 
       if opts.delete(:sync_exec)
-        if opts.has_key?(:current_site_id) and opts[:current_site_id] != RailsMultisite::ConnectionManagement.current_db
+        if opts.has_key?(:current_site_id) && opts[:current_site_id] != RailsMultisite::ConnectionManagement.current_db
           raise ArgumentError.new("You can't connect to another database when executing a job synchronously.")
         else
           return execute(opts)

@@ -223,7 +223,7 @@ class ApplicationController < ActionController::Base
     end
 
     def mini_profiler_enabled?
-      defined?(Rack::MiniProfiler) and current_user.try(:admin?)
+      defined?(Rack::MiniProfiler) && current_user.try(:admin?)
     end
 
     def authorize_mini_profiler
@@ -250,8 +250,7 @@ class ApplicationController < ActionController::Base
 
     def check_xhr
       unless (controller_name == 'forums' || controller_name == 'user_open_ids')
-        # render 'default/empty' unless ((request.format && request.format.json?) or request.xhr?)
-        raise RenderEmpty.new unless ((request.format && request.format.json?) or request.xhr?)
+        raise RenderEmpty.new unless ((request.format && request.format.json?) || request.xhr?)
       end
     end
 

@@ -272,7 +272,7 @@ class Topic < ActiveRecord::Base
     Topic.transaction do
       old_category = category
 
-      if category_id.present? and category_id != cat.id
+      if category_id.present? && category_id != cat.id
         Category.update_all 'topic_count = topic_count - 1', ['id = ?', category_id]
       end
 
@@ -444,7 +444,7 @@ class Topic < ActiveRecord::Base
       end
     end
 
-    posted = if topic_user.present? and current_user.present?
+    posted = if topic_user.present? && current_user.present?
       current_user if topic_user.posted?
     end
 

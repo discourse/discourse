@@ -47,7 +47,7 @@ class RateLimiter
           rate_limiter = send(limiter_method)
           return unless rate_limiter.present?
 
-          if @performed.present? and @performed[limiter_method]
+          if @performed.present? && @performed[limiter_method]
             rate_limiter.rollback!
             @performed[limiter_method] = false
           end

@@ -12,7 +12,7 @@ class PostActionsController < ApplicationController
 
       post_action = PostAction.act(current_user, @post, action.id, params[:message])
 
-      if post_action.blank? or post_action.errors.present?
+      if post_action.blank? || post_action.errors.present?
         render_json_error(post_action)
       else
         # We need to reload or otherwise we are showing the old values on the front end
