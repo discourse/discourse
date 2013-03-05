@@ -8,15 +8,24 @@
 fr:
   title: "Discourse"
   topics: "Discussions"
+  loading: "Chargement"
+  powered_by: 'Propulsé par <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
 
+  via: "%{username} via %{site_name}"
   is_reserved: "est réservé"
   too_many_mentions: "possède trop de mentions utilisateurs"
   too_many_images: "possède trop d'images"
   too_many_links: "possède trop de liens"
-  just_posted_that: "est trop similaire a ce que vous avez récemment posté"
+  just_posted_that: "est trop similaire à ce que vous avez récemment posté"
   has_already_been_used: "a déjà été utilisé"
   invalid_characters: "contient des caractères invalides"
-  is_invalid: "est invalide ; essayez d'être plus précis"
+  is_invalid: "est invalide; essayez d'être plus précis"
+  next_page: "page suivante &rarr;"
+  by: "Par"
+  topics_in_category: "Discussions dans la catégorie '%{category}'"
+  rss_posts_in_topic: "Flux RSS de '%{topic}'"
+  rss_topics_in_category: "Flux RSS des discussions de la catégorie '%{category}'"
+  author_wrote: "%{author} a écrit :"
 
   education:
     until_posts:
@@ -68,7 +77,9 @@ fr:
     no_info_other: "<div class='missing-profile'>%{name} n'a rien renseigné dans le champ À propos de moi de son profil</div>"
 
   category:
-    topic_prefix: "Définition de catégorie pour %{category}"
+    topic_prefix: "Définition de la catégorie %{category}"
+    replace_paragraph: "[Remplacez ce paragraphe par une courte description de votre nouvelle catégorie. Essayez de rester en dessous de 200 caractères.]"
+    post_template: "%{replace_paragraph}\n\nUtilisez l'espace ci-dessous pour une plus longue description, voire pour établir des règles."
 
   trust_levels:
     new:
@@ -213,6 +224,10 @@ fr:
       title: "J'aime"
       description: 'Aimer ce message'
       long_form: 'a été aimé'
+    vote:
+      title: 'Vote'
+      description: 'Votez pour ce message'
+      long_form: 'a voté pour ce message'
 
   flagging:
     you_must_edit: '<p>Votre message a atteint la limite de signalements. Vérifiez vos messages privés.</p>'
@@ -234,7 +249,14 @@ fr:
     title: "Ré-Abonné !"
     description: "Vous avez été ré-abonné."
 
+  reports:
+    visits:
+      title: "Visites utilisateur par jour"
+      xaxis: "Jour"
+      yaxis: "Visites"
+
   site_settings:
+    default_locale: "Le langage par défaut de cette instance de Discourse (code ISO 639-1)"
     min_post_length: "longueur minimale des messages"
     max_post_length: "longueur maximale des messages"
     min_topic_title_length: "longueur minimale des titres de discussion"
@@ -245,6 +267,9 @@ fr:
     discourse_org_access_key: "La clé d'accès utilisée pour le registre de pseudos de discourse.org"
     educate_until_posts: "Afficher les aides à la saisie tant que l'utilisateur n'a pas posté ce nombre de messages"
     title: "titre de ce site internet"
+    company_full_name: "Le nom complet de la société qui gère ce site (utilisé dans les documents légaux, tels que /tos)"
+    company_short_name: "Le nom de la société qui gère ce site (utilisé dans les documents légaux, tels que /tos)"
+    company_domain: "Le nom de domaine de la société qui gère ce site (utilisé dans les documents légaux, tels que /tos)"
     access_password: "Si l'accès restreint est activé, assurez-vous que le mot de passe soit saisi ici."
     queue_jobs: "mettre les différents jobs en attente sur différentes queues, si false les queues sont en file"
     crawl_images: "permettre la récupération des images provenant de sources tierces"
@@ -256,10 +281,13 @@ fr:
     category_featured_topics: "nombre de discussions affichées dans la liste par catégories"
     add_rel_nofollow_to_user_content: "Ajouter rel nofollow à tous les contenus des utilisateurs, sauf les liens internes (incluant les domaines parents) Modifier ceci requiert une mise à jour de tout votre markdown"
     exclude_rel_nofollow_domains: "Une liste séparée par des virgules contenant les noms de domaines de premier niveau pour lesquels il faut ajouter un attribut nofollow (exemple.com va automatiquement fonctionner aussi avec sous.domaine.exemple.com)"
+
     post_excerpt_maxlength: "Longueur maximale d'un extrait de message."
     post_onebox_maxlength: "Longueur maximale d'un message emboîté."
     new_topics_rollup: "Combien de discussions peuvent être insérées dans la liste des discussions avant de remonter."
+    category_post_template: "Le modèle de message de définition d'une catégorie utilisé lorsque vous créez une nouvelle catégorie"
     onebox_max_chars: "Nombre maximal de caractères qu'une boîte peut importer en blob de texte."
+
     logo_url: "Le logo de votre site, par exemple: http://xyz.com/x.png"
     logo_small_url: "La version minifiée du logo de votre site (affichée sur les pages de discussions) ex: http://xyz.com/x-min.png"
     favicon_url: "Le favicon de votre site"
@@ -272,7 +300,6 @@ fr:
 
     enable_long_polling: "Utiliser les requêtes longues pour le flux de notifications."
     long_polling_interval: "Intervalle en millisecondes avant de lancer une nouvelle requête longue."
-
     polling_interval: "À quelle fréquence les clients doivent-ils requêter le serveur, en millisecondes"
     anon_polling_interval: "À quelle fréquence les clients anonymes doivent-ils  requêter le serveur, en millisecondes"
 
@@ -296,6 +323,7 @@ fr:
     supress_reply_directly_below: "Ne pas afficher les boutons de réponse sous un message lorsque la réponse est juste en dessous"
     allow_index_in_robots_txt: "Le site doit-être indexé par les moteurs de recherche (met à jour le fichier robots.txt)"
     email_domains_blacklist: "Une liste de domaines d'email interdits, délimités par un pipe. Exemple: mailinator.com|trashmail.net"
+    version_checks: "Ping les serveurs de Discourse afin d'obtenir les mises à jours et affiche les messages d'information dans le tableau de board /admin"
 
     port: "Voulez-vous spécifier un port dans l'URL ? Utile en mode de dévelopement . Sinon, laisser vide."
     force_hostname: "Voulez-vous spécifier un nom d'hôte dans l'URL ? Utile en mode de dévelopement . Sinon, laisser vide."
@@ -303,11 +331,23 @@ fr:
     invite_expiry_days: "Combien de temps (en jours) les clés d'invitation sont-elles valides."
 
     # TODO: perhaps we need a way of protecting these settings for hosted solution, global settings ...
-    twitter_consumer_key: "clé utilisateur enregistrée sur dev.twitter.com (utilisé pour l'authentification twitter)"
-    twitter_consumer_secret: "secret client enregistré sur dev.twitter.com (utilisé pour l'authentification twitter)"
 
+    enable_google_logins: "Active l'authentification Google"
+    enable_yahoo_logins: "Active l'authentification Yahoo"
+
+    enable_twitter_logins: "Active l'authentification Twitter (nécessite twitter_consumer_key et twitter_consumer_secret)"
+    twitter_consumer_key: "clé utilisateur, enregistrée sur dev.twitter.com (utilisé pour l'authentification twitter)"
+    twitter_consumer_secret: "secret client, enregistré sur dev.twitter.com (utilisé pour l'authentification twitter)"
+
+    enable_facebook_logins: "Active l'authentification Facebook (nécessite facebook_app_id et facebook_app_secret)"
     facebook_app_id: "identifiant de l'application, enregistré sur https://developers.facebook.com/apps (utilisé pour l'authentification facebook)"
     facebook_app_secret: "secret de l'application, enregistré sur https://developers.facebook.com/apps (utilisé pour l'authentification facebook)"
+
+    enable_github_logins: "Active l'authentification GitHub (nécessite github_client_id et github_client_secret)"
+    github_client_id: "id client, enregistré sur https://github.com/settings/applications"
+    github_client_secret: "secret client , enregistré sur https://github.com/settings/applications"
+
+    enable_persona_logins: "Active l'authentification par e-mail avec Mozilla Persona"
 
     allow_import: "Autoriser l'importation qui remplacera TOUTES les données du site. Laisser sur faux, sauf si vous prévoyez d'importer des données."
 
@@ -340,14 +380,15 @@ fr:
     basic_requires_read_posts: "Combien de discussions un utilisateur doit avoir lues pour être promu au rang de niveau basique"
     basic_requires_time_spent_mins: "Combien de minutes un utilisateur doit avoir passées à lire des messages pour être promu au rang de niveau basique"
 
+    auto_link_images_wider_than: ""
+
     email_time_window_mins: "Combien de minutes attendre avant d'envoyer un mail à l'utilisateur, pour lui donner une chance de voir lui-même avant l'envoi."
     flush_timings_secs: "A quelle fréquence requêter les données de timing au serveur, en secondes."
-
     max_word_length: "Le nombre maximum de mots dans un titre de discussion"
     title_min_entropy: "L'entropie minimale (ie. nombre de caractères) d'un titre de discussion"
     body_min_entropy: "L'entropie minimale (ie. nombre de caractères) du contenu d'un message"
-
     new_user_period_days: "Combien de temps en jours, un utilisateur est-il consideré comme nouveau."
+    title_fancy_entities: "Convertir les entitées HTML dans les titres des discussion"
 
   notification_types:
     mentioned: "%{display_username} vous a mentionné dans %{link}"
@@ -423,7 +464,7 @@ fr:
     errors: "%{errors}"
     not_available: "Pas disponible. Essayez %{suggestion}?"
     omniauth_error: "Désolé, il y a eu une erreur lors de l'autorisation de votre compte %{strategy}. Vous n'avez peut-être pas approuvé l'autorisation ?"
-
+    omniauth_error_unknown: "Quelque chose s'est mal passé lors de votre connexion, merci de réessayer."
 
   user:
     username:
@@ -467,6 +508,8 @@ fr:
       - Avez-vous configuré [DKIM email key signing][3] dans votre client mail, et ajouté la clé publique DKIM dans vos enregistrements DNS ?
 
       - Avez-vous vérifié que les IPs du serveur d'où proviennent les mails [ne sont sur aucune liste noire d'emails][4] ?
+
+      - Avez-vous vérifié que votre serveur de messagerie envoi *vraiment* un nom d'hôte pleinement qualifié présent dans le message HELO lors d'une résolution DNS ? Si ce n'est pas le cas, cela augmentera les chances que votre adresse email soit rejetée par de nombreux services de messagerie.
 
       Nous esperons que vous avez correctement reçu ce mail de test de livrabilité !
 
@@ -657,6 +700,16 @@ fr:
         ---
         Merci de suivre ce lien pour répondre : %{base_url}%{url}
 
+    user_posted:
+      subject_template: "[%{site_name}] %{username} à répondu à '%{topic_title}'"
+      text_body_template: |
+        %{username} à répondu à '%{topic_title}' sur %{site_name}:
+
+        ---
+        %{message}
+
+        ---
+        Merci de suivre ce lien pour répondre : %{base_url}%{url}
 
     digest:
       why: "Voici un bref résumé de ce qui s'est passé sur %{site_link} depuis la dernière fois que nous vous avons vu(e) le %{last_seen_at}."
@@ -664,6 +717,7 @@ fr:
       new_activity: "Nouvelles activités sur vos discussions et messages :"
       new_topics: "Nouvelles discussions :"
       unsubscribe: "Ce mail de résumé vous est envoyé comme une notification de courtoisie par le site %{site_link} que vous n'avez pas visité depuis 7 jours.\nSi vous voulez désactiver cette fonction ou changer vos préférences e-mail, utilisez ce lien : %{unsubscribe_link}."
+      click_here: "cliquez ici"
 
     private_message:
       subject_template: "[%{site_name}] %{subject_prefix}%{topic_title}"
@@ -705,3 +759,11 @@ fr:
 
   discourse_hub:
     access_token_problem: "Informer un administateur : Veuillez mettre à jour les paramètres du site pour inclure la discourse_org_access_key correcte."
+
+  page_not_found:
+    title: "La page que vous avez demandée n'existe pas dans ce forum de discussion.Peut-être nous pouvons vous aider à la trouver, ou une autre discussion similaire :"
+    popular_topics: "Discussions populaires"
+    recent_topics: "Discussions récentes"
+    see_more: "Voir plus"
+    search_title: "Rechercher pour cette discussion"
+    search_google: "Rechercher avec Google"
