@@ -1,0 +1,29 @@
+{
+  "name": "chef_handler",
+  "description": "Distribute and enable Chef Exception and Report handlers",
+  "long_description": "Description\n===========\n\nCreates a configured handler path for distributing [Chef report and exception handlers](http://wiki.opscode.com/display/chef/Exception+and+Report+Handlers).  Also exposes an LWRP for enabling Chef handlers from within recipe code (as opposed to hard coding in the client.rb file).  This is useful for cookbook authors who may want to ship a product specific handler (see the `cloudkick` cookbook for an example) with their cookbook.\n\nAttributes\n==========\n\n`node[\"chef_handler\"][\"handler_path\"]` - location to drop off handlers directory, default is `/var/chef/handlers`.\n\nResource/Provider\n=================\n\n`chef_handler`\n--------------\n\nRequires, configures and enables handlers on the node for the current Chef run.  Also has the ability to pass arguments to the handlers initializer.  This allows initialization data to be pulled from a node's attribute data.\n\nIt is best to declare `chef_handler` resources early on in the compile phase so they are available to fire for any exceptions during the Chef run.  If you have a base role you would want any recipes that register Chef handlers to come first in the run_list.\n\n### Actions\n\n- :enable: Enables the Chef handler for the current Chef run on the current node\n- :disable: Disables the Chef handler for the current Chef run on the current node\n\n### Attribute Parameters\n\n- class_name: name attribute. The name of the handler class (can be module name-spaced).\n- source: full path to the handler file.  can also be a gem path if the handler ships as part of a Ruby gem.\n- arguments: an array of arguments to pass the handler's class initializer\n- supports: type of Chef Handler to register as, ie :report, :exception or both. default is `:report => true, :exception => true`\n\n### Example\n\n    # register the Chef::Handler::JsonFile handler\n    # that ships with the Chef gem\n    chef_handler \"Chef::Handler::JsonFile\" do\n      source \"chef/handler/json_file\"\n      arguments :path => '/var/chef/reports'\n      action :enable\n    end\n\n    # do the same but during the compile phase\n    chef_handler \"Chef::Handler::JsonFile\" do\n      source \"chef/handler/json_file\"\n      arguments :path => '/var/chef/reports'\n      action :nothing\n    end.run_action(:enable)\n\n    # handle exceptions only\n    chef_handler \"Chef::Handler::JsonFile\" do\n      source \"chef/handler/json_file\"\n      arguments :path => '/var/chef/reports'\n      supports :exception => true\n      action :enable\n    end\n\n\n    # enable the CloudkickHandler which was\n    # dropped off in the default handler path.\n    # passes the oauth key/secret to the handler's\n    # intializer.\n    chef_handler \"CloudkickHandler\" do\n      source \"#{node['chef_handler']['handler_path']}/cloudkick_handler.rb\"\n      arguments [node['cloudkick']['oauth_key'], node['cloudkick']['oauth_secret']]\n      action :enable\n    end\n\n\nUsage\n=====\n\ndefault\n-------\n\nPut the recipe `chef_handler` at the start of the node's run list to make sure that custom handlers are dropped off early on in the Chef run and available for later recipes.\n\nFor information on how to write report and exception handlers for Chef, please see the Chef wiki pages:\nhttp://wiki.opscode.com/display/chef/Exception+and+Report+Handlers\n\njson_file\n---------\n\nLeverages the `chef_handler` LWRP to automatically register the `Chef::Handler::JsonFile` handler that ships as part of Chef. This handler serializes the run status data to a JSON file located at `/var/chef/reports`.\n\nLicense and Author\n==================\n\nAuthor:: Seth Chisamore (<schisamo@opscode.com>)\n\nCopyright:: 2011, Opscode, Inc\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n",
+  "maintainer": "Opscode, Inc.",
+  "maintainer_email": "cookbooks@opscode.com",
+  "license": "Apache 2.0",
+  "platforms": {
+  },
+  "dependencies": {
+  },
+  "recommendations": {
+  },
+  "suggestions": {
+  },
+  "conflicting": {
+  },
+  "providing": {
+  },
+  "replacing": {
+  },
+  "attributes": {
+  },
+  "groupings": {
+  },
+  "recipes": {
+  },
+  "version": "1.1.4"
+}

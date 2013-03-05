@@ -49,5 +49,6 @@ Vagrant::Config.run do |config|
     chef.add_recipe "recipe[build-essential]"
     chef.add_recipe "recipe[phantomjs]"
     chef.add_recipe "recipe[vim]"
+    chef.add_recipe "recipe[java]"
   end
 end
