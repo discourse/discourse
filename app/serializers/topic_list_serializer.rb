@@ -9,7 +9,7 @@ class TopicListSerializer < ApplicationSerializer
   end
 
   def include_more_topics_url?
-    object.more_topics_url.present? and (object.topics.size == SiteSetting.topics_per_page)
+    object.more_topics_url.present? && (object.topics.size == SiteSetting.topics_per_page)
   end
 
 end

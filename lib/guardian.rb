@@ -345,7 +345,7 @@ class Guardian
     when :like
       return false if post.user == @user
     when :vote then
-      return false if opts[:voted_in_topic] and post.topic.has_meta_data_boolean?(:single_vote)
+      return false if opts[:voted_in_topic] && post.topic.has_meta_data_boolean?(:single_vote)
     end
 
     return true

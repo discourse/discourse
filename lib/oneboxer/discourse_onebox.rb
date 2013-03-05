@@ -26,7 +26,7 @@ module Oneboxer
 
         @template = 'user'
       when 'topics'
-        if route[:post_number].present? and route[:post_number].to_i > 1
+        if route[:post_number].present? && route[:post_number].to_i > 1
           # Post Link
           post = Post.where(topic_id: route[:topic_id], post_number: route[:post_number].to_i).first
           Guardian.new.ensure_can_see!(post)

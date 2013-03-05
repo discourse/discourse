@@ -528,7 +528,7 @@ class User < ActiveRecord::Base
     end
 
     def password_validator
-      if (@raw_password and @raw_password.length < 6) || (@password_required && !@raw_password)
+      if (@raw_password && @raw_password.length < 6) || (@password_required && !@raw_password)
         errors.add(:password, "must be 6 letters or longer")
       end
     end

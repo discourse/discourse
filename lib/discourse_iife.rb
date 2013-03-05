@@ -6,7 +6,7 @@ class DiscourseIIFE < Sprockets::Processor
     path = context.pathname.to_s
 
     # Only discourse or admin paths
-    return data unless (path =~ /\/javascripts\/discourse/ or path =~ /\/javascripts\/admin/)
+    return data unless (path =~ /\/javascripts\/discourse/ || path =~ /\/javascripts\/admin/)
 
     # Ugh, ignore translations
     return data if (path =~ /\/translations/)

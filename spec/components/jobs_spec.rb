@@ -28,7 +28,7 @@ describe Jobs do
 
       it "should enqueue with the correct database id when the current_site_id option is given" do
         Sidekiq::Client.expects(:enqueue).with do |arg1, arg2|
-          arg2[:current_site_id] == 'test_db' and arg2[:sync_exec].nil?
+          arg2[:current_site_id] == 'test_db' && arg2[:sync_exec].nil?
         end
         Jobs.enqueue(:process_post, post_id: 1, current_site_id: 'test_db')
       end
