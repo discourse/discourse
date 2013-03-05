@@ -17,31 +17,37 @@ Discourse.HeaderView = Discourse.View.extend({
   topicBinding: 'Discourse.router.topicController.content',
 
   showDropdown: function($target) {
-    var $dropdown, $html, $li, $ul, elementId, hideDropdown,
-      _this = this;
-    elementId = $target.data('dropdown') || $target.data('notifications');
-    $dropdown = $("#" + elementId);
-    $li = $target.closest('li');
-    $ul = $target.closest('ul');
-    $li.addClass('active');
-    $('li', $ul).not($li).removeClass('active');
-    $('.d-dropdown').not($dropdown).fadeOut('fast');
-    $dropdown.fadeIn('fast');
-    $dropdown.find('input[type=text]').focus().select();
-    $html = $('html');
-    hideDropdown = function() {
+    var elementId = $target.data('dropdown') || $target.data('notifications'),
+        $dropdown = $("#" + elementId),
+        $li = $target.closest('li'),
+        $ul = $target.closest('ul'),
+        $html = $('html');
+
+    var hideDropdown = function() {
       $dropdown.fadeOut('fast');
       $li.removeClass('active');
       $html.data('hide-dropdown', null);
       return $html.off('click.d-dropdown');
     };
+
+    // if a dropdown is active and the user clics on it, close it
+    if($li.hasClass('active')) { return hideDropdown(); }
+    // otherwhise, mark it as active
+    $li.addClass('active');
+    // hide the other dropdowns
+    $('li', $ul).not($li).removeClass('active');
+    $('.d-dropdown').not($dropdown).fadeOut('fast');
+    // fade it fast
+    $dropdown.fadeIn('fast');
+    // autofocus any text input field
+    $dropdown.find('input[type=text]').focus().select();
+
     $html.on('click.d-dropdown', function(e) {
-      if ($(e.target).closest('.d-dropdown').length > 0) {
-        return true;
-      }
-      return hideDropdown();
+      return $(e.target).closest('.d-dropdown').length > 0 ? true : hideDropdown();
     });
+
     $html.data('hide-dropdown', hideDropdown);
+
     return false;
   },
 
