@@ -62,7 +62,7 @@ Anyone wishing to contribute to the **[Discourse/Discourse](https://github.com/d
  * use `&&` and `||` over `and`/`or`
  * prefer `class << self; def method; end` over `def class.method` for class methods
  * prefer `{ ... }` over `do ... end` for single-line blocks, avoid using `{ ... }` for multi-line blocks
- * avoid `return` when not requried
+ * avoid `return` when not required
 
 5. Commit
 
