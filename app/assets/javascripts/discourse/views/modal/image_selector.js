@@ -9,7 +9,7 @@
 Discourse.ImageSelectorView = Discourse.View.extend({
   templateName: 'image_selector',
   classNames: ['image-selector'],
-  title: 'Insert Image',
+  title: Em.String.i18n('image_selector.title'),
 
   init: function() {
     this._super();
