@@ -296,6 +296,7 @@ en:
       moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} moved post to {{link}}"
 
     image_selector:
+      title: "Insert Image"
       from_my_computer: "From My Device"
       from_the_web: "From The Web"
       add_image: "Add Image"
