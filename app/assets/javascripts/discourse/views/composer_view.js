@@ -89,7 +89,7 @@ Discourse.ComposerView = Discourse.View.extend({
 
     // If visible update the text
     educationKey = this.get('content.creatingTopic') ? 'new-topic' : 'new-reply';
-    return jQuery.get("/education/" + educationKey).then(function(result) {
+    return $.get("/education/" + educationKey).then(function(result) {
       return _this.set('educationContents', result);
     });
   }).observes('controller.hasReply', 'content.creatingTopic', 'Discourse.currentUser.reply_count'),
@@ -251,15 +251,11 @@ Discourse.ComposerView = Discourse.View.extend({
     });
 
     topic = this.get('topic');
-    this.editor = editor = Discourse.Markdown.createNewMarkdownEditor(Discourse.Markdown.markdownConverter({
+    this.editor = editor = Discourse.Markdown.createEditor({
       lookupAvatar: function(username) {
-        return Discourse.Utilities.avatarImg({
-          username: username,
-          size: 'tiny'
-        });
-      },
-      sanitize: true
-    }));
+        return Discourse.Utilities.avatarImg({ username: username, size: 'tiny' });
+      }
+    });
 
     $uploadTarget = $('#reply-control');
     this.editor.hooks.insertImageDialog = function(callback) {

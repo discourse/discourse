@@ -34,7 +34,7 @@ Discourse.CategoryList.reopenClass({
     var promise,
       _this = this;
     promise = new RSVP.Promise();
-    jQuery.getJSON("/" + filter + ".json").then(function(result) {
+    $.getJSON("/" + filter + ".json").then(function(result) {
       var categoryList;
       categoryList = Discourse.TopicList.create();
       categoryList.set('can_create_category', result.category_list.can_create_category);

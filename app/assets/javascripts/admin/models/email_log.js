@@ -1,11 +1,11 @@
 /**
   Our data model for representing an email log.
 
-  @class EmailLog    
+  @class EmailLog
   @extends Discourse.Model
   @namespace Discourse
   @module Discourse
-**/ 
+**/
 Discourse.EmailLog = Discourse.Model.extend({});
 
 Discourse.EmailLog.reopenClass({
@@ -19,7 +19,7 @@ Discourse.EmailLog.reopenClass({
   findAll: function(filter) {
     var result;
     result = Em.A();
-    jQuery.ajax({
+    $.ajax({
       url: "/admin/email_logs.json",
       data: { filter: filter },
       success: function(logs) {

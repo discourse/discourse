@@ -15,7 +15,7 @@ Discourse.TopicList = Discourse.Model.extend({
     promise = new RSVP.Promise();
     if (moreUrl = this.get('more_topics_url')) {
       Discourse.URL.replaceState("/" + (this.get('filter')) + "/more");
-      jQuery.ajax(moreUrl, {
+      $.ajax(moreUrl, {
         success: function(result) {
           var newTopics, topicIds, topics;
           if (result) {
@@ -108,7 +108,7 @@ Discourse.TopicList.reopenClass({
     promise = new RSVP.Promise();
     found = PreloadStore.contains('topic_list');
     PreloadStore.get("topic_list", function() {
-      return jQuery.getJSON(url);
+      return $.getJSON(url);
     }).then(function(result) {
       topic_list.set('topics', Discourse.TopicList.topicsFrom(result));
       topic_list.set('can_create_topic', result.topic_list.can_create_topic);

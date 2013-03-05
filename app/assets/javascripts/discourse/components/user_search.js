@@ -3,7 +3,7 @@
 
   @class UserSearch
   @namespace Discourse
-  @module Discourse  
+  @module Discourse
 **/
 var cache, cacheTime, cacheTopicId, debouncedSearch, doSearch;
 
@@ -14,7 +14,7 @@ cacheTopicId = null;
 cacheTime = null;
 
 doSearch = function(term, topicId, success) {
-  return jQuery.ajax({
+  return $.ajax({
     url: '/users/search/users',
     dataType: 'JSON',
     data: {

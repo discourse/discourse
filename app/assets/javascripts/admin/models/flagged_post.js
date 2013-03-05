@@ -1,11 +1,11 @@
 /**
   Our data model for interacting with flagged posts.
 
-  @class FlaggedPost    
+  @class FlaggedPost
   @extends Discourse.Post
   @namespace Discourse
   @module Discourse
-**/ 
+**/
 Discourse.FlaggedPost = Discourse.Post.extend({
 
   flaggers: (function() {
@@ -49,7 +49,7 @@ Discourse.FlaggedPost = Discourse.Post.extend({
     var promise;
     promise = new RSVP.Promise();
     if (this.get('post_number') === "1") {
-      return jQuery.ajax("/t/" + this.topic_id, {
+      return $.ajax("/t/" + this.topic_id, {
         type: 'DELETE',
         cache: false,
         success: function() {
@@ -60,7 +60,7 @@ Discourse.FlaggedPost = Discourse.Post.extend({
         }
       });
     } else {
-      return jQuery.ajax("/posts/" + this.id, {
+      return $.ajax("/posts/" + this.id, {
         type: 'DELETE',
         cache: false,
         success: function() {
@@ -76,7 +76,7 @@ Discourse.FlaggedPost = Discourse.Post.extend({
   clearFlags: function() {
     var promise;
     promise = new RSVP.Promise();
-    jQuery.ajax("/admin/flags/clear/" + this.id, {
+    $.ajax("/admin/flags/clear/" + this.id, {
       type: 'POST',
       cache: false,
       success: function() {
@@ -99,7 +99,7 @@ Discourse.FlaggedPost.reopenClass({
   findAll: function(filter) {
     var result;
     result = Em.A();
-    jQuery.ajax({
+    $.ajax({
       url: "/admin/flags/" + filter + ".json",
       success: function(data) {
         var userLookup;

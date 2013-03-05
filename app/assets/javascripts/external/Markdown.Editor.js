@@ -1023,6 +1023,7 @@
         var previewSetter;
 
         var previewSet = function (text) {
+
             if (previewSetter)
                 return previewSetter(text);
 

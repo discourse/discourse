@@ -21,7 +21,7 @@ Discourse.Mention = (function() {
       callback(cached);
       return false;
     } else {
-      jQuery.get("/users/is_local_username", {
+      $.get("/users/is_local_username", {
         username: name
       }, function(r) {
         cache(name, r.valid);

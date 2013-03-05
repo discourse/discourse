@@ -6,7 +6,7 @@
   @class MessageBus
   @namespace Discourse
   @module Discourse
-**/ 
+**/
 Discourse.MessageBus = (function() {
   // http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
   var callbacks, clientId, failCount, interval, isHidden, queue, responseCallbacks, uniqueId;
@@ -68,7 +68,7 @@ Discourse.MessageBus = (function() {
           data[c.channel] = c.last_id === void 0 ? -1 : c.last_id;
         });
         gotData = false;
-        _this.longPoll = jQuery.ajax("/message-bus/" + clientId + "/poll?" + (isHidden() || !_this.enableLongPolling ? "dlp=t" : ""), {
+        _this.longPoll = $.ajax("/message-bus/" + clientId + "/poll?" + (isHidden() || !_this.enableLongPolling ? "dlp=t" : ""), {
           data: data,
           cache: false,
           dataType: 'json',

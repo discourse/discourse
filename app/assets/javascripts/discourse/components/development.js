@@ -129,7 +129,7 @@ Discourse.Development = {
           return $LAB.script(js + "?hash=" + me.hash).wait(function() {
             var templateName;
             templateName = js.replace(".js", "").replace("/assets/", "");
-            return jQuery.each(Ember.View.views, function() {
+            return $.each(Ember.View.views, function() {
               var _this = this;
               if (this.get('templateName') === templateName) {
                 this.set('templateName', 'empty');

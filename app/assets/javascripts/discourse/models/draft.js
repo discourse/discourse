@@ -11,7 +11,7 @@ Discourse.Draft = Discourse.Model.extend({});
 Discourse.Draft.reopenClass({
 
   clear: function(key, sequence) {
-    return jQuery.ajax({
+    return $.ajax({
       type: 'DELETE',
       url: "/draft",
       data: {
@@ -25,7 +25,7 @@ Discourse.Draft.reopenClass({
     var promise,
       _this = this;
     promise = new RSVP.Promise();
-    jQuery.ajax({
+    $.ajax({
       url: '/draft',
       data: {
         draft_key: key
@@ -47,7 +47,7 @@ Discourse.Draft.reopenClass({
     var promise;
     promise = new RSVP.Promise();
     data = typeof data === "string" ? data : JSON.stringify(data);
-    jQuery.ajax({
+    $.ajax({
       type: 'POST',
       url: "/draft",
       data: {

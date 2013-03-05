@@ -318,7 +318,7 @@ Discourse.Composer = Discourse.Model.extend({
       }
     }, function(error) {
       var errors;
-      errors = jQuery.parseJSON(error.responseText).errors;
+      errors = $.parseJSON(error.responseText).errors;
       promise.reject(errors[0]);
       post.set('cooked', oldCooked);
       return _this.set('composeState', OPEN);
@@ -419,7 +419,7 @@ Discourse.Composer = Discourse.Model.extend({
       if (topic) {
         topic.posts.removeObject(createdPost);
       }
-      errors = jQuery.parseJSON(error.responseText).errors;
+      errors = $.parseJSON(error.responseText).errors;
       promise.reject(errors[0]);
       return _this.set('composeState', OPEN);
     });

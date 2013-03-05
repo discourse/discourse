@@ -53,7 +53,7 @@ Discourse.HeaderView = Discourse.View.extend({
 
   showNotifications: function() {
     var _this = this;
-    jQuery.get("/notifications").then(function(result) {
+    $.get("/notifications").then(function(result) {
       _this.set('notifications', result.map(function(n) {
         return Discourse.Notification.create(n);
       }));

@@ -42,7 +42,7 @@ Discourse.Category = Discourse.Model.extend({
 
   "delete": function(callback) {
     var _this = this;
-    return jQuery.ajax("/categories/" + (this.get('slug')), {
+    return $.ajax("/categories/" + (this.get('slug')), {
       type: 'DELETE',
       success: function() {
         return callback();

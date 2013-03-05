@@ -142,7 +142,7 @@ Discourse = Ember.Application.createWithMixins({
 
     // Add a CSRF token to all AJAX requests
     var csrfToken = $('meta[name=csrf-token]').attr('content');
-    jQuery.ajaxPrefilter(function(options, originalOptions, xhr) {
+    $.ajaxPrefilter(function(options, originalOptions, xhr) {
       if (!options.crossDomain) {
         xhr.setRequestHeader('X-CSRF-Token', csrfToken);
       }
@@ -156,7 +156,7 @@ Discourse = Ember.Application.createWithMixins({
   **/
   logout: function() {
     Discourse.KeyValueStore.abandonLocal();
-    return jQuery.ajax("/session/" + this.get('currentUser.username'), {
+    return $.ajax("/session/" + this.get('currentUser.username'), {
       type: 'DELETE',
       success: function(result) {
         // To keep lots of our variables unbound, we can handle a redirect on logging out.

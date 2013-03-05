@@ -1,4 +1,4 @@
-/*global Markdown:true*/
+/*global Markdown:true assetPath:true */
 
 /**
   A control to support using PageDown as an Ember view.
@@ -14,14 +14,13 @@ Discourse.PagedownEditor = Ember.ContainerView.extend({
   init: function() {
     this._super();
 
+    $LAB.script(assetPath('defer/html-sanitizer-bundle'));
+
     // Add a button bar
     this.pushObject(Em.View.create({ elementId: 'wmd-button-bar' }));
-    this.pushObject(Em.TextArea.create({
-      valueBinding: 'parentView.value',
-      elementId: 'wmd-input'
-    }));
+    this.pushObject(Em.TextArea.create({ valueBinding: 'parentView.value', elementId: 'wmd-input' }));
 
-    this.pushObject(Em.View.createWithMixins(Discourse.Presence, {
+    this.pushObject(Discourse.View.createWithMixins({
       elementId: 'wmd-preview',
       classNameBindings: [':preview', 'hidden'],
       hidden: (function() {
@@ -31,12 +30,9 @@ Discourse.PagedownEditor = Ember.ContainerView.extend({
   },
 
   didInsertElement: function() {
-    var $wmdInput;
-    $wmdInput = $('#wmd-input');
+    var $wmdInput = $('#wmd-input');
     $wmdInput.data('init', true);
-    this.editor = Discourse.Markdown.createNewMarkdownEditor(Discourse.Markdown.markdownConverter({
-      sanitize: true
-    }));
+    this.editor = Discourse.Markdown.createEditor();
     return this.editor.run();
   }
 

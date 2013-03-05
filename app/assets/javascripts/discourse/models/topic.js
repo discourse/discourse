@@ -24,7 +24,7 @@ Discourse.Topic = Discourse.Model.extend({
     a = this.get('archetype');
     if (a !== 'regular' && a !== 'private_message') {
       this.set('archetype', 'regular');
-      return jQuery.post(this.get('url'), {
+      return $.post(this.get('url'), {
         _method: 'put',
         archetype: 'regular'
       });
@@ -134,7 +134,7 @@ Discourse.Topic = Discourse.Model.extend({
 
   toggleStatus: function(property) {
     this.toggleProperty(property);
-    return jQuery.post("" + (this.get('url')) + "/status", {
+    return $.post("" + (this.get('url')) + "/status", {
       _method: 'put',
       status: property,
       enabled: this.get(property) ? 'true' : 'false'
@@ -144,13 +144,13 @@ Discourse.Topic = Discourse.Model.extend({
   toggleStar: function() {
     var topic = this;
     topic.toggleProperty('starred');
-    return jQuery.ajax({
+    return $.ajax({
       url: "" + (this.get('url')) + "/star",
       type: 'PUT',
       data: { starred: topic.get('starred') ? true : false },
       error: function(error) {
         topic.toggleProperty('starred');
-        var errors = jQuery.parseJSON(error.responseText).errors;
+        var errors = $.parseJSON(error.responseText).errors;
         return bootbox.alert(errors[0]);
       }
     });
@@ -160,7 +160,7 @@ Discourse.Topic = Discourse.Model.extend({
   save: function() {
     // Don't save unless we can
     if (!this.get('can_edit')) return;
-    return jQuery.post(this.get('url'), {
+    return $.post(this.get('url'), {
       _method: 'put',
       title: this.get('title'),
       category: this.get('category.name')
@@ -169,7 +169,7 @@ Discourse.Topic = Discourse.Model.extend({
 
   // Reset our read data for this topic
   resetRead: function(callback) {
-    return jQuery.ajax("/t/" + (this.get('id')) + "/timings", {
+    return $.ajax("/t/" + (this.get('id')) + "/timings", {
       type: 'DELETE',
       success: function() {
         return typeof callback === "function" ? callback() : void 0;
@@ -179,7 +179,7 @@ Discourse.Topic = Discourse.Model.extend({
 
   // Invite a user to this topic
   inviteUser: function(user) {
-    return jQuery.ajax({
+    return $.ajax({
       type: 'POST',
       url: "/t/" + (this.get('id')) + "/invite",
       data: {
@@ -190,7 +190,7 @@ Discourse.Topic = Discourse.Model.extend({
 
   // Delete this topic
   "delete": function(callback) {
-    return jQuery.ajax("/t/" + (this.get('id')), {
+    return $.ajax("/t/" + (this.get('id')), {
       type: 'DELETE',
       success: function() {
         return typeof callback === "function" ? callback() : void 0;
@@ -305,7 +305,7 @@ Discourse.Topic = Discourse.Model.extend({
   updateNotifications: function(v) {
     this.set('notification_level', v);
     this.set('notifications_reason_id', null);
-    return jQuery.ajax({
+    return $.ajax({
       url: "/t/" + (this.get('id')) + "/notifications",
       type: 'POST',
       data: {
@@ -389,7 +389,7 @@ Discourse.Topic.reopenClass({
     // Check the preload store. If not, load it via JSON
     promise = new RSVP.Promise();
     PreloadStore.get("topic_" + topicId, function() {
-      return jQuery.getJSON(url + ".json", data);
+      return $.getJSON(url + ".json", data);
     }).then(function(result) {
       var first;
       first = result.posts.first();
@@ -405,7 +405,7 @@ Discourse.Topic.reopenClass({
 
   // Create a topic from posts
   movePosts: function(topicId, title, postIds) {
-    return jQuery.ajax("/t/" + topicId + "/move-posts", {
+    return $.ajax("/t/" + topicId + "/move-posts", {
       type: 'POST',
       data: { title: title, post_ids: postIds }
     });

@@ -10,7 +10,7 @@
 Discourse.Invite = Discourse.Model.extend({
 
   rescind: function() {
-    jQuery.ajax('/invites', {
+    $.ajax('/invites', {
       type: 'DELETE',
       data: { email: this.get('email') }
     });

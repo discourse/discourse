@@ -54,7 +54,7 @@ Discourse.ActionSummary = Discourse.Model.extend({
 
     // Create our post action
     promise = new RSVP.Promise();
-    jQuery.ajax({
+    $.ajax({
       url: "/post_actions",
       type: 'POST',
       data: {
@@ -65,7 +65,7 @@ Discourse.ActionSummary = Discourse.Model.extend({
       error: function(error) {
         var errors;
         _this.removeAction();
-        errors = jQuery.parseJSON(error.responseText).errors;
+        errors = $.parseJSON(error.responseText).errors;
         return promise.reject(errors);
       },
       success: function() {
@@ -80,7 +80,7 @@ Discourse.ActionSummary = Discourse.Model.extend({
     this.removeAction();
 
     // Remove our post action
-    return jQuery.ajax({
+    return $.ajax({
       url: "/post_actions/" + (this.get('post.id')),
       type: 'DELETE',
       data: {
@@ -91,7 +91,7 @@ Discourse.ActionSummary = Discourse.Model.extend({
 
   clearFlags: function() {
     var _this = this;
-    return jQuery.ajax({
+    return $.ajax({
       url: "/post_actions/clear_flags",
       type: "POST",
       data: {
@@ -107,7 +107,7 @@ Discourse.ActionSummary = Discourse.Model.extend({
 
   loadUsers: function() {
     var _this = this;
-    return jQuery.getJSON("/post_actions/users", {
+    return $.getJSON("/post_actions/users", {
       id: this.get('post.id'),
       post_action_type_id: this.get('id')
     }, function(result) {

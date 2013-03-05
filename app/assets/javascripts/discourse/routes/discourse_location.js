@@ -18,7 +18,7 @@ var popstateReady = false;
 Ember.DiscourseLocation = Ember.Object.extend({
   init: function() {
     set(this, 'location', get(this, 'location') || window.location);
-    if ( jQuery.inArray('state', jQuery.event.props) < 0 )
+    if ( $.inArray('state', $.event.props) < 0 )
       jQuery.event.props.push('state')
     this.initState();
   },

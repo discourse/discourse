@@ -33,7 +33,7 @@ Discourse.User = Discourse.Model.extend({
   }).property('trust_level'),
 
   changeUsername: function(newUsername) {
-    return jQuery.ajax({
+    return $.ajax({
       url: "/users/" + (this.get('username_lower')) + "/preferences/username",
       type: 'PUT',
       data: {
@@ -43,7 +43,7 @@ Discourse.User = Discourse.Model.extend({
   },
 
   changeEmail: function(email) {
-    return jQuery.ajax({
+    return $.ajax({
       url: "/users/" + (this.get('username_lower')) + "/preferences/email",
       type: 'PUT',
       data: {
@@ -58,7 +58,7 @@ Discourse.User = Discourse.Model.extend({
 
   save: function(finished) {
     var _this = this;
-    return jQuery.ajax("/users/" + this.get('username').toLowerCase(), {
+    return $.ajax("/users/" + this.get('username').toLowerCase(), {
       data: this.getProperties('auto_track_topics_after_msecs',
                                'bio_raw',
                                'website',
@@ -77,7 +77,7 @@ Discourse.User = Discourse.Model.extend({
   changePassword: function(callback) {
     var good;
     good = false;
-    return jQuery.ajax({
+    return $.ajax({
       url: '/session/forgot_password',
       dataType: 'json',
       data: {
@@ -109,7 +109,7 @@ Discourse.User = Discourse.Model.extend({
     var stream,
       _this = this;
     stream = this.get('stream');
-    return jQuery.ajax({
+    return $.ajax({
       url: "/user_actions/" + id + ".json",
       dataType: 'json',
       cache: 'false',
@@ -142,7 +142,7 @@ Discourse.User = Discourse.Model.extend({
       url += "&filter=" + (this.get('streamFilter'));
     }
 
-    return jQuery.ajax({
+    return $.ajax({
       url: url,
       dataType: 'json',
       cache: 'false',
@@ -226,7 +226,7 @@ Discourse.User = Discourse.Model.extend({
 Discourse.User.reopenClass({
 
   checkUsername: function(username, email) {
-    return jQuery.ajax({
+    return $.ajax({
       url: '/users/check_username',
       type: 'GET',
       data: {
@@ -278,7 +278,7 @@ Discourse.User.reopenClass({
     var promise,
       _this = this;
     promise = new RSVP.Promise();
-    jQuery.ajax({
+    $.ajax({
       url: "/users/" + username + '.json',
       success: function(json) {
         // todo: decompose to object
@@ -305,7 +305,7 @@ Discourse.User.reopenClass({
   },
 
   createAccount: function(name, email, password, username, passwordConfirm, challenge) {
-    return jQuery.ajax({
+    return $.ajax({
       url: '/users',
       dataType: 'json',
       data: {

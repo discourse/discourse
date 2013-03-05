@@ -23,7 +23,7 @@ Discourse.VersionCheck = Discourse.Model.extend({
 Discourse.VersionCheck.reopenClass({
   find: function() {
     var promise = new RSVP.Promise();
-    jQuery.ajax({
+    $.ajax({
       url: '/admin/version_check',
       dataType: 'json',
       success: function(json) {

@@ -14,14 +14,14 @@ Discourse.Model = Ember.Object.extend(Discourse.Presence, {
 
     @method ajax
     @param {String} url The url to contact
-    @param {Object} args The arguments to pass to jQuery.ajax
+    @param {Object} args The arguments to pass to $.ajax
   **/
   ajax: function(url, args) {
     var oldError = args.error;
     args.error = function(xhr) {
-      return oldError(jQuery.parseJSON(xhr.responseText).errors);
+      return oldError($.parseJSON(xhr.responseText).errors);
     };
-    return jQuery.ajax(url, args);
+    return $.ajax(url, args);
   },
 
   /**

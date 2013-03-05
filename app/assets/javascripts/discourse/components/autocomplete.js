@@ -47,7 +47,7 @@ $.fn.autocomplete = function(options) {
     }
     return d.find('a').click(function() {
       closeAutocomplete();
-      inputSelectedItems.splice(jQuery.inArray(item), 1);
+      inputSelectedItems.splice($.inArray(item), 1);
       $(this).parent().parent().remove();
       if (options.onChangeItems) {
         return options.onChangeItems(inputSelectedItems);

@@ -12,13 +12,13 @@ describe("Discourse.Onebox", function() {
   it("Stops rapid calls with cache true", function() {
     Discourse.Onebox.load(anchor, true);
     Discourse.Onebox.load(anchor, true);
-    expect(jQuery.ajax.calls.length).toBe(1);
+    expect($.ajax.calls.length).toBe(1);
   });
 
   it("Stops rapid calls with cache false", function() {
     Discourse.Onebox.load(anchor, false);
     Discourse.Onebox.load(anchor, false);
-    expect(jQuery.ajax.calls.length).toBe(1);
+    expect($.ajax.calls.length).toBe(1);
   });
 
 });

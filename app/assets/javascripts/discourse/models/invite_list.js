@@ -17,7 +17,7 @@ Discourse.InviteList.reopenClass({
   findInvitedBy: function(user) {
     var promise;
     promise = new RSVP.Promise();
-    jQuery.ajax({
+    $.ajax({
       url: "/users/" + (user.get('username_lower')) + "/invited.json",
       success: function(result) {
         var invitedList;

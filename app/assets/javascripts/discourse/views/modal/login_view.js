@@ -45,7 +45,7 @@ Discourse.LoginView = Discourse.ModalBodyView.extend({
   login: function() {
     var _this = this;
     this.set('loggingIn', true);
-    jQuery.post("/session", {
+    $.post("/session", {
       login: this.get('loginName'),
       password: this.get('loginPassword')
     }).success(function(result) {

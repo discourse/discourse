@@ -1,11 +1,11 @@
 /**
   Our data model for interacting with site customizations.
 
-  @class SiteCustomization    
+  @class SiteCustomization
   @extends Discourse.Model
   @namespace Discourse
   @module Discourse
-**/ 
+**/
 Discourse.SiteCustomization = Discourse.Model.extend({
   trackedProperties: ['enabled', 'name', 'stylesheet', 'header', 'override_default_style'],
 
@@ -13,7 +13,7 @@ Discourse.SiteCustomization = Discourse.Model.extend({
     this._super();
     return this.startTrackingChanges();
   },
- 
+
   description: (function() {
     return "" + this.name + (this.enabled ? ' (*)' : '');
   }).property('selected', 'name'),
@@ -55,7 +55,7 @@ Discourse.SiteCustomization = Discourse.Model.extend({
       header: this.header,
       override_default_style: this.override_default_style
     };
-    return jQuery.ajax({
+    return $.ajax({
       url: "/admin/site_customizations" + (this.id ? '/' + this.id : ''),
       data: {
         site_customization: data
@@ -66,8 +66,8 @@ Discourse.SiteCustomization = Discourse.Model.extend({
 
   "delete": function() {
     if (!this.id) return;
-    
-    return jQuery.ajax({
+
+    return $.ajax({
       url: "/admin/site_customizations/" + this.id,
       type: 'DELETE'
     });
@@ -93,7 +93,7 @@ Discourse.SiteCustomization.reopenClass({
       content: [],
       loading: true
     });
-    jQuery.ajax({
+    $.ajax({
       url: "/admin/site_customizations",
       dataType: "json",
       success: function(data) {

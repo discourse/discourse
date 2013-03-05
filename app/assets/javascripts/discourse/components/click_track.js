@@ -70,7 +70,7 @@ Discourse.ClickTrack = {
 
     // if they want to open in a new tab, do an AJAX request
     if (e.metaKey || e.ctrlKey || e.which === 2) {
-      jQuery.get("/clicks/track", {
+      $.get("/clicks/track", {
         url: href,
         post_id: postId,
         topic_id: topicId,
@@ -82,7 +82,7 @@ Discourse.ClickTrack = {
 
     // If we're on the same site, use the router and track via AJAX
     if (href.indexOf(window.location.origin) === 0) {
-      jQuery.get("/clicks/track", {
+      $.get("/clicks/track", {
         url: href,
         post_id: postId,
         topic_id: topicId,
