@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-window.Discourse.ListCategoriesView = Discourse.View.extend({
+Discourse.ListCategoriesView = Discourse.View.extend({
 
   templateName: 'list/categories',
 

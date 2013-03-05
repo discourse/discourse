@@ -6,6 +6,6 @@
   @namespace Discourse
   @module Discourse
 **/
-window.Discourse.InputValidation = Discourse.Model.extend({});
+Discourse.InputValidation = Discourse.Model.extend({});
 
 

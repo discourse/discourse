@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-window.Discourse.ApplicationView = Discourse.View.extend({
+Discourse.ApplicationView = Discourse.View.extend({
   templateName: 'application'
 });
 

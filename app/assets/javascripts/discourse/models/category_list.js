@@ -6,9 +6,9 @@
   @namespace Discourse
   @module Discourse
 **/
-window.Discourse.CategoryList = Discourse.Model.extend({});
+Discourse.CategoryList = Discourse.Model.extend({});
 
-window.Discourse.CategoryList.reopenClass({
+Discourse.CategoryList.reopenClass({
 
   categoriesFrom: function(result) {
     var categories, users;

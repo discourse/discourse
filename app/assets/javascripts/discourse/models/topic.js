@@ -343,7 +343,7 @@ Discourse.Topic = Discourse.Model.extend({
   }
 });
 
-window.Discourse.Topic.reopenClass({
+Discourse.Topic.reopenClass({
   NotificationLevel: {
     WATCHING: 3,
     TRACKING: 2,

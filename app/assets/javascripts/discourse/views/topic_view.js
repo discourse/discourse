@@ -489,7 +489,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
   }
 });
 
-window.Discourse.TopicView.reopenClass({
+Discourse.TopicView.reopenClass({
 
   // Scroll to a given post, if in the DOM. Returns whether it was in the DOM or not.
   scrollTo: function(topicId, postNumber, callback) {
@@ -504,11 +504,11 @@ window.Discourse.TopicView.reopenClass({
         header = $('header');
         title = $('#topic-title');
         expectedOffset = title.height() - header.find('.contents').height();
-        
+
         if (expectedOffset < 0) {
             expectedOffset = 0;
         }
-        
+
         $('html, body').scrollTop(existing.offset().top - (header.outerHeight(true) + expectedOffset));
       }
       return true;

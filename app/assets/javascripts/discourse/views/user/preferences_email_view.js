@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-window.Discourse.PreferencesEmailView = Discourse.View.extend({
+Discourse.PreferencesEmailView = Discourse.View.extend({
   templateName: 'user/email',
   classNames: ['user-preferences'],
   didInsertElement: function() {

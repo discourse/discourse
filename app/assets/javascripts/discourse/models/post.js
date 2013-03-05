@@ -260,7 +260,7 @@ Discourse.Post = Discourse.Model.extend({
   }).property('reply_count')
 });
 
-window.Discourse.Post.reopenClass({
+Discourse.Post.reopenClass({
 
   createActionSummary: function(result) {
     var lookup;

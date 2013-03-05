@@ -1,13 +1,13 @@
 /**
   Our data model for dealing with users from the admin section.
 
-  @class AdminUser    
+  @class AdminUser
   @extends Discourse.Model
   @namespace Discourse
   @module Discourse
-**/ 
+**/
 Discourse.AdminUser = Discourse.Model.extend({
-  
+
   deleteAllPosts: function() {
     this.set('can_delete_all_posts', false);
     jQuery.ajax("/admin/users/" + (this.get('id')) + "/delete_all_posts", {type: 'PUT'});
@@ -137,7 +137,7 @@ Discourse.AdminUser = Discourse.Model.extend({
 
 });
 
-window.Discourse.AdminUser.reopenClass({
+Discourse.AdminUser.reopenClass({
 
   bulkApprove: function(users) {
     users.each(function(user) {

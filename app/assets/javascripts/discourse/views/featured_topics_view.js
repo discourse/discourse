@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-window.Discourse.FeaturedTopicsView = Discourse.View.extend({
+Discourse.FeaturedTopicsView = Discourse.View.extend({
   templateName: 'featured_topics',
   classNames: ['category-list-item']
 });

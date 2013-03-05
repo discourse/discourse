@@ -7,4 +7,4 @@
     @namespace Discourse
     @module Discourse
   **/
-  window.Discourse.View = Ember.View.extend(Discourse.Presence, {});
+  Discourse.View = Ember.View.extend(Discourse.Presence, {});

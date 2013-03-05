@@ -138,7 +138,7 @@ Discourse.UserAction.reopenClass({
   GOT_PRIVATE_MESSAGE: 13
 });
 
-window.Discourse.UserAction.reopenClass({
+Discourse.UserAction.reopenClass({
   statGroups: (function() {
     var g;
     g = {};

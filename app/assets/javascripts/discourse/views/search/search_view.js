@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-window.Discourse.SearchView = Discourse.View.extend({
+Discourse.SearchView = Discourse.View.extend({
   tagName: 'div',
   classNames: ['d-dropdown'],
   elementId: 'search-dropdown',

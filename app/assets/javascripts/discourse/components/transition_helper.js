@@ -34,7 +34,7 @@ _getTransitionEndEventName = function() {
 };
 transitionEnd = _getTransitionEndEventName();
 
-window.Discourse.TransitionHelper = {
+Discourse.TransitionHelper = {
   after: function(element, callback) {
     return $(element).on(transitionEnd, callback);
   }
