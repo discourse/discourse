@@ -69,7 +69,7 @@ module DiscourseHub
   end
 
   def self.access_token
-    @access_token ||= SiteSetting.discourse_org_access_key
+    SiteSetting.discourse_org_access_key
   end
 
   def self.accepts
