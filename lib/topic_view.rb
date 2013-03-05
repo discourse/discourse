@@ -11,7 +11,7 @@ class TopicView
 
     # Special case: If the topic is private and the user isn't logged in, ask them
     # to log in!
-    if @topic.present? and @topic.private_message? and user.blank?
+    if @topic.present? && @topic.private_message? && user.blank?
       raise Discourse::NotLoggedIn.new
     end
 
@@ -52,7 +52,7 @@ class TopicView
 
   def next_page
     last_post = @posts.last
-    if last_post.present? and (@topic.highest_post_number > last_post.post_number)
+    if last_post.present? && (@topic.highest_post_number > last_post.post_number)
       (@posts[0].post_number / SiteSetting.posts_per_page) + 1
     end
   end

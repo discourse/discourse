@@ -156,7 +156,7 @@ class Users::OmniauthCallbacksController < ApplicationController
       user = user_open_id.user
 
       # If we have to approve users
-      if SiteSetting.must_approve_users? and !user.approved?
+      if SiteSetting.must_approve_users? && !user.approved?
         @data = {awaiting_approval: true}
       else
         log_on_user(user)
@@ -222,7 +222,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     user = User.find_by_email(email)
 
     if user
-      if SiteSetting.must_approve_users? and !user.approved?
+      if SiteSetting.must_approve_users? && !user.approved?
         @data = {awaiting_approval: true}
       else
         log_on_user(user)

@@ -25,7 +25,7 @@ module ApplicationHelper
   end
 
   def mini_profiler_enabled?
-    defined?(Rack::MiniProfiler) and admin?
+    defined?(Rack::MiniProfiler) && admin?
   end
 
   def admin?

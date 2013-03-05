@@ -41,7 +41,7 @@ module Oneboxer
 
       unless paras.empty?
         cnt = 0
-        while text.length < MAX_TEXT and cnt <= 3
+        while text.length < MAX_TEXT && cnt <= 3
           text << " " unless cnt == 0
           paragraph = paras[cnt].inner_text[0..MAX_TEXT]
           paragraph.gsub!(/\[\d+\]/mi, "")

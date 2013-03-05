@@ -125,8 +125,8 @@ module Jobs
     end
 
     def set_schema_info(arg)
-      if arg[:source] and arg[:source].downcase == 'discourse'
-        if arg[:version] and arg[:version] <= Export.current_schema_version
+      if arg[:source] && arg[:source].downcase == 'discourse'
+        if arg[:version] && arg[:version] <= Export.current_schema_version
           @export_schema_version = arg[:version]
           if arg[:table_count] == ordered_models_for_import.size
             true
@@ -210,7 +210,7 @@ module Jobs
 
         # The indexdef statements don't create the primary keys, so we need to find the primary key and do it ourselves.
         pkey_index_def = @index_definitions[model.table_name].find { |ixdef| ixdef =~ / ([\S]{1,}_pkey) / }
-        if pkey_index_def and pkey_index_name = / ([\S]{1,}_pkey) /.match(pkey_index_def)[1]
+        if pkey_index_def && pkey_index_name = / ([\S]{1,}_pkey) /.match(pkey_index_def)[1]
           model.exec_sql( "ALTER TABLE ONLY #{model.table_name} ADD PRIMARY KEY USING INDEX #{pkey_index_name}" )
         end
 
@@ -263,9 +263,9 @@ module Jobs
     def send_notification
       # Doesn't work.  "WARNING: Can't mass-assign protected attributes: created_at"
       # Still a problem with the activerecord schema_cache I think.
-      # if @user_info and @user_info[:user_id]
+      # if @user_info && @user_info[:user_id]
       #   user = User.where(id: @user_info[:user_id]).first
-      #   if user and user.email == @user_info[:email]
+      #   if user && user.email == @user_info[:email]
       #     SystemMessage.new(user).create('import_succeeded')
       #   end
       # end

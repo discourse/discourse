@@ -206,7 +206,7 @@ class Post < ActiveRecord::Base
 
     parent_raw = parent_post.raw.sub(/\[quote.+\/quote\]/m, '')
 
-    if raw[parent_raw] or (parent_raw.size < SHORT_POST_CHARS)
+    if raw[parent_raw] || (parent_raw.size < SHORT_POST_CHARS)
       return cooked.sub(/\<aside.+\<\/aside\>/m, '')
     end
 

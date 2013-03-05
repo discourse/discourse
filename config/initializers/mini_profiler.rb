@@ -6,12 +6,12 @@ if defined?(Rack::MiniProfiler)
 
   # For our app, let's just show mini profiler always, polling is chatty so nuke that
   Rack::MiniProfiler.config.pre_authorize_cb = lambda do |env|
-    (env['HTTP_USER_AGENT'] !~ /iPad|iPhone|Nexus 7/) and
-    (env['PATH_INFO'] !~ /^\/message-bus/) and
-    (env['PATH_INFO'] !~ /topics\/timings/) and
-    (env['PATH_INFO'] !~ /assets/) and
-    (env['PATH_INFO'] !~ /jasmine/) and
-    (env['PATH_INFO'] !~ /users\/.*\/avatar/) and
+    (env['HTTP_USER_AGENT'] !~ /iPad|iPhone|Nexus 7/) &&
+    (env['PATH_INFO'] !~ /^\/message-bus/) &&
+    (env['PATH_INFO'] !~ /topics\/timings/) &&
+    (env['PATH_INFO'] !~ /assets/) &&
+    (env['PATH_INFO'] !~ /jasmine/) &&
+    (env['PATH_INFO'] !~ /users\/.*\/avatar/) &&
     (env['PATH_INFO'] !~ /srv\/status/)
   end
 
@@ -27,7 +27,7 @@ if defined?(Rack::MiniProfiler)
   inst = Class.new
   class << inst
     def start(name,id,payload)
-      if Rack::MiniProfiler.current and  name !~ /(process_action.action_controller)|(render_template.action_view)/
+      if Rack::MiniProfiler.current && name !~ /(process_action.action_controller)|(render_template.action_view)/
         @prf ||= {}
         @prf[id] ||= []
         @prf[id] << Rack::MiniProfiler.start_step("#{payload[:serializer] if name =~ /serialize.serializer/} #{name}")
@@ -35,7 +35,7 @@ if defined?(Rack::MiniProfiler)
     end
 
     def finish(name,id,payload)
-      if Rack::MiniProfiler.current and  name !~ /(process_action.action_controller)|(render_template.action_view)/
+      if Rack::MiniProfiler.current && name !~ /(process_action.action_controller)|(render_template.action_view)/
         t = @prf[id].pop
         @prf.delete id unless t
         Rack::MiniProfiler.finish_step t

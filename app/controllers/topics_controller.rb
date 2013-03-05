@@ -25,7 +25,7 @@ class TopicsController < ApplicationController
     create_topic_view
 
     anonymous_etag(@topic_view.topic) do
-      redirect_to_correct_topic and return if slugs_do_not_match
+      redirect_to_correct_topic && return if slugs_do_not_match
       View.create_for(@topic_view.topic, request.remote_ip, current_user)
       track_visit_to_topic
       perform_show_response

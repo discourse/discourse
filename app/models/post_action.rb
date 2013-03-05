@@ -123,9 +123,9 @@ class PostAction < ActiveRecord::Base
   end
 
   before_create do
-    raise AlreadyFlagged if is_flag? and PostAction.where(user_id: user_id,
-                                                          post_id: post_id,
-                                                          post_action_type_id: PostActionType.flag_types.values).exists?
+    raise AlreadyFlagged if is_flag? && PostAction.where(user_id: user_id,
+                                                         post_id: post_id,
+                                                         post_action_type_id: PostActionType.flag_types.values).exists?
   end
 
   after_save do
