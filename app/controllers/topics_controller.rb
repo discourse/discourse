@@ -83,7 +83,6 @@ class TopicsController < ApplicationController
     toggle_mute(false)
   end
 
-
   def destroy
     topic = Topic.where(id: params[:id]).first
     guardian.ensure_can_delete!(topic)
@@ -143,7 +142,9 @@ class TopicsController < ApplicationController
 
   def feed
     @topic_view = TopicView.new(params[:topic_id])
-    render 'topics/show', formats: [:rss]
+    anonymous_etag(@topic_view.topic) do
+      render 'topics/show', formats: [:rss]
+    end
   end
 
   private
