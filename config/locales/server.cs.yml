@@ -340,6 +340,8 @@ cs:
     github_client_id: "'Client id' pro přihlašování přes Github, registrace na https://github.com/settings/applications"
     github_client_secret: "'Client secret' pro přihlašování přes Github, registrace na https://github.com/settings/applications"
 
+    enable_persona_logins: "Povolit autorizaci přes službu Mozilla Persona"
+
     allow_import: "Povolit import, kterým lze přepsat VŠECHNA data na tomto webu; nechte nastaveno na 'false', pokud neplánujete dělat importy dat"
 
     active_user_rate_limit_secs: "Jak často aktualizujeme informaci o poslední návštěvě uživatelů, v sekundách"
@@ -455,6 +457,7 @@ cs:
     errors: "%{errors}"
     not_available: "Není k dispozici. Nechcete zkusit %{suggestion}?"
     omniauth_error: "Bohužel nepovedlo se vás autorizovat přes %{strategy}. Ujistěte se, že jste správně schválili autorizaci."
+    omniauth_error_unknown: "Nastala chyba při zpracování vašeho přihlášení, prosím zkuste to znovu."
 
 
   user:
@@ -707,6 +710,7 @@ cs:
       new_activity: "Nová aktivita ve vašich tématech a příspěvcích:"
       new_topics: "Nová témata:"
       unsubscribe: "Tento souhrnný email je zaslán jako oznámení od %{site_link}, pokud jste se nepřihlásil za posledních 7 dní.\nPokud nechcete tento souhrn dostávat, navštivte %{unsubscribe_link}."
+      click_here: "klikněte zde"
 
     private_message:
       subject_template: "[%{site_name}] %{subject_prefix}%{topic_title}"

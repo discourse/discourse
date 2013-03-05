@@ -249,8 +249,11 @@ cs:
         title: "Přihlásit přes Yahoo"
         message: "Autorizuji přes Yahoo (ujistěte se, že nemáte zablokovaná popup okna)"
       github:
-        title: "řihlásit přes Github"
+        title: "Přihlásit přes Github"
         message: "Autorizuji přes Github (ujistěte se, že nemáte zablokovaná popup okna)"
+      persona:
+        title: "Přihlásit přes Mozilla Persona"
+        message: "Autorizuji přes Mozilla Persona (ujistěte se, že nemáte zablokovaná popup okna)"
 
     composer:
       saving_draft_tip: "ukládám"
@@ -293,6 +296,7 @@ cs:
       moved_post: "<i title='přesunutý příspěvek' class='icon icon-arrow-right'></i> {{username}} přesunul příspěvek do {{link}}"
 
     image_selector:
+      title: "Vložit obrázek"
       from_my_computer: "Z mého zařízení"
       from_the_web: "Z webu"
       add_image: "Přidat obrázek"
@@ -582,6 +586,7 @@ cs:
     likes: "líbí se"
     top_contributors: "Účastníci"
     category_title: "Kategorie"
+    history: "Historie"
 
     categories_list: "Seznam kategorií"
 
