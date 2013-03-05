@@ -280,6 +280,7 @@ fr:
       moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} a déplacé le message vers {{link}}"
 
     image_selector:
+      title: "Insérer une image"
       from_my_computer: "Local"
       from_the_web: "Depuis internet"
       add_image: "Ajouter une image"
