@@ -9,7 +9,7 @@ class DiffEngine
   # generate an html friendly diff similar to the way Stack Exchange generate
   #  html diffs
   #
-  #  retruns: html containing decorations indicating the changes
+  #  returns: html containing decorations indicating the changes
   def self.html_diff(html_before, html_after)
   end
 
