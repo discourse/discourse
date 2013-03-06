@@ -71,7 +71,7 @@ class Topic < ActiveRecord::Base
 
   before_validation do
     if title.present?
-      self.title = sanitize(title)
+      self.title = sanitize(title, tags: [], attributes: [])
       self.title.strip!
     end
   end

@@ -110,10 +110,20 @@ describe Topic do
   end
 
   context 'html in title' do
-    let(:topic) { Fabricate(:topic, title: "<script>alert('title')</script> is my topic title" ) }
+    let(:topic_bold) { Fabricate(:topic, title: "topic with <b>bold</b> text in its title" ) }
+    let(:topic_image) { Fabricate(:topic, title: "topic with <img src='something'> image in its title" ) }
+    let(:topic_script) { Fabricate(:topic, title: "<script>alert('title')</script> is my topic title" ) }
 
-    it "should escape the HTML" do
-      topic.title.should == "is my topic title"
+    it "escapes script contents" do
+      topic_script.title.should == "is my topic title"
+    end
+
+    it "escapes bold contents" do
+      topic_bold.title.should == "topic with bold text in its title"
+    end
+
+    it "escapes bold contents" do
+      topic_image.title.should == "topic with image in its title"
     end
 
   end
