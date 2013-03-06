@@ -307,7 +307,6 @@ GEM
     openid-redis-store (0.0.2)
       redis
       ruby-openid
-    pbkdf2 (0.1.0)
     pg (0.14.1)
     polyglot (0.3.3)
     progress (2.4.0)
@@ -506,7 +505,6 @@ DEPENDENCIES
   omniauth-openid
   omniauth-twitter
   openid-redis-store
-  pbkdf2
   pg
   pry-rails
   rack-mini-profiler!

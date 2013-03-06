@@ -1,5 +1,6 @@
 require_dependency 'email_token'
 require_dependency 'trust_level'
+require_dependency 'pbkdf2'
 
 class User < ActiveRecord::Base
   attr_accessible :name, :username, :password, :email, :bio_raw, :website
@@ -495,7 +496,7 @@ class User < ActiveRecord::Base
     end
 
     def hash_password(password, salt)
-      PBKDF2.new(password: password, salt: salt, iterations: Rails.configuration.pbkdf2_iterations).hex_string
+      Pbkdf2.hash_password(password, salt, Rails.configuration.pbkdf2_iterations)
     end
 
     def add_trust_level
