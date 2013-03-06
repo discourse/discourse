@@ -12,7 +12,8 @@ if defined?(Rack::MiniProfiler)
     (env['PATH_INFO'] !~ /assets/) &&
     (env['PATH_INFO'] !~ /jasmine/) &&
     (env['PATH_INFO'] !~ /users\/.*\/avatar/) &&
-    (env['PATH_INFO'] !~ /srv\/status/)
+    (env['PATH_INFO'] !~ /srv\/status/) &&
+    (env['PATH_INFO'] !~ /commits-widget/)
   end
 
   Rack::MiniProfiler.config.position = 'left'
