@@ -93,13 +93,18 @@
     .gutter {
       .reply-new,
       .track-link {
-        visibility: visible;
+        opacity:1;
       }
     }
   }
 
   .gutter {
-    .reply-new {visibility: hidden;}
+    .reply-new{
+      opacity:0;
+      transition:opacity 1s linear;
+      -webkit-transition:opacity 1s linear;
+      -moz-transition:opacity 1s linear;
+      }
     .reply-new,
     .track-link {
       display: inline-block;
