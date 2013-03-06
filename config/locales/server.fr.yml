@@ -718,6 +718,7 @@ fr:
       new_topics: "Nouvelles discussions :"
       unsubscribe: "Ce mail de résumé vous est envoyé comme une notification de courtoisie par le site %{site_link} que vous n'avez pas visité depuis 7 jours.\nSi vous voulez désactiver cette fonction ou changer vos préférences e-mail, utilisez ce lien : %{unsubscribe_link}."
       click_here: "cliquez ici"
+      from: "Résumé de %{site_name}"
 
     private_message:
       subject_template: "[%{site_name}] %{subject_prefix}%{topic_title}"
