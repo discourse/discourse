@@ -64,10 +64,10 @@ en:
       change_username:
         action: "alterar"
         title: "Alterar Nome de Utilizador"
-        confirm: "There could be consequences to changing your username. Are you absolutely sure you want to?"
-        taken: "Desculpa, esse username já está a ser usado"
-        error: "Houve um erro ao alterar o teu username"
-        invalid: "Esse username é inválido. Tem que conter apenas numeros e letras"
+        confirm: "Poderá haver consequências ao alterar o nome de utilizador. Tens a certeza que o queres fazer?"
+        taken: "Desculpa, esse nome de utilizador já está a ser usado"
+        error: "Houve um erro ao alterar o teu nome de utilizador"
+        invalid: "Esse nome de utilizador é inválido. Tem que conter apenas números e letras"
       change_email:
         action: 'alterar'
         title: "Alterar Email"
@@ -77,60 +77,60 @@ en:
 
       email:
         title: "Email"
-        instructions: "O teu email nunca vai ser visivel publicamente"
-        ok: "Parace estár ok. Vamos enviar-te um email para confirmar"
-        invalid: "Por favor intruduz um endereço de email válido"
+        instructions: "O teu email nunca vai ser visível publicamente"
+        ok: "Parace estár bem. Vamos enviar-te um email para confirmar"
+        invalid: "Por favor introduz um endereço de email válido"
         authenticated: "O teu email foi autenticado por {{provider}}."
         frequency: "Vamos apenas enviar-te emails quando não te virmos à algum tempo e tu não tiveres visto as coisas que te temos enviado"
 
       name:
         title: "Nome"
-        instructions: "O teu nome completo; não precisa de ser unico."
+        instructions: "O teu nome completo; não precisa de ser único."
         too_short: "O teu nome é demasiado curto"
-        ok: "O teu nome parece estár ok"
+        ok: "O teu nome parece estar bem"
       username:
-        title: "Username"
+        title: "Nome de Utilizador"
         #instructions: "People can mention you as @{{username}}. This is an unregistered nickname. You can register it at <a href='http://discourse.org'>discourse.org</a>."
         instructions: "As pessoas podem mencionar-te como @{{username}}."
-        available: "O teu username está disponível."
-        global_match: "O email corresponde ao username registado."
+        available: "O teu nome de utilizador está disponível."
+        global_match: "O email corresponde ao nome de utilizador registado."
         global_mismatch: "Já está registado. Tenta {{suggestion}}?"
         not_available: "Não está disponível. Tenta {{suggestion}}?"
-        too_short: "O teu username é demasiado curto."
-        too_long: "O teu username é demasiado comprido."
-        checking: "A verificar disponibilidade do username..."
-        enter_email: 'Username encontrado. Intruduz o email referente.'
+        too_short: "O teu nome de utilizador é demasiado curto."
+        too_long: "O teu nome de utilizador é demasiado comprido."
+        checking: "A verificar disponibilidade do nome de utilizador..."
+        enter_email: 'Nome de utilizador encontrado. Intruduz o email referente.'
 
-      last_posted: "Ultimo Post"
-      last_emailed: "Ultimo Email"
-      last_seen: "Ultima vez visto"
+      last_posted: "Último Post"
+      last_emailed: "Último Email"
+      last_seen: "Última vez visto"
       created: "Criado a"
       log_out: "Log Out"
       website: "Web Site"
       email_settings: "Email"
       email_digests:
         title: "Quando não visito o site, enviar-me um email com um resumo do que é novo"
-        daily: "diáriamente"
+        daily: "diariamente"
         weekly: "semanalmente"
         bi_weekly: "duas em duas semanas"
 
-      email_direct: "Receber um email quando alguém te cita, responde aos teus posts, ou menciona o teu @username"
+      email_direct: "Receber um email quando alguém te cita, responde aos teus posts, ou menciona o teu @nome_de_utilizador"
       email_private_messages: "Recebe um email quando alguém te envia uma mensagem privada"
 
       other_settings: "Outros"
 
       new_topic_duration:
-        label: "Considerar topicos como novos quando"
+        label: "Considerar tópicos como novos quando"
         not_viewed: "Não os vi ainda"
-        last_here: "foram postados desde a ultima vez que estive lá"
+        last_here: "foram postados desde a última vez que estive lá"
         after_n_days:
-          one: "foram postados no ultimo dia"
-          other: "foram postados nos ultimos {{count}} dias"
+          one: "foram postados no último dia"
+          other: "foram postados nos últimos {{count}} dias"
         after_n_weeks:
-          one: "foram postados na ultima semana"
-          other: "foram postados nas ultimas {{count}} semanas"
+          one: "foram postados na última semana"
+          other: "foram postados nas últimas {{count}} semanas"
 
-      auto_track_topics: "Automaticamente vigiar os topicos em que eu entro"
+      auto_track_topics: "Automaticamente vigiar os tópicos em que eu entro"
       auto_track_options:
         never: "nunca"
         always: "sempre"
@@ -144,11 +144,11 @@ en:
       invited:
         title: "Convites"
         user: "Utilizadores convidados"
-        none: "{{username}} ainda não convidou ninguem para o site."
+        none: "{{username}} ainda não convidou ninguém para o site."
         redeemed: "Convites usados"
         redeemed_at: "Usado em"
         pending: "Convites Pendentes"
-        topics_entered: "Topicos em que entrou"
+        topics_entered: "Tópicos em que entrou"
         posts_read_count: "Posts Vistos"
         rescind: "Remover Convite"
         rescinded: "Convite Removido"
@@ -162,10 +162,10 @@ en:
         ok: "A tua password parece estár ok."
 
       ip_address:
-        title: "Ultimo endereço IP"
+        title: "Último endereço IP"
       avatar:
         title: "Avatar"
-        instructions: "Nós usamos <a href='https://gravatar.com' target='_blank'>Gravatar</a> para os avatares basiado no teu email"
+        instructions: "Nós utilizamos <a href='https://gravatar.com' target='_blank'>Gravatar</a> para os avatares baseados no teu email"
 
       filters:
         all: "Todos"
@@ -174,23 +174,23 @@ en:
         posted_by: "Postado por"
         sent_by: "Enviado por"
         private_message: "mansagem privada"
-        the_topic: "o topico"
+        the_topic: "o tópico"
 
     loading: "A Carregar..."
     close: "Fechar"
     learn_more: "sabe mais..."
 
     year: 'ano'
-    year_desc: 'topicos postados nos ultimos 365 dias'
+    year_desc: 'tópicos postados nos últimos 365 dias'
     month: 'mês'
-    month_desc: 'topicos postados nos ultimos 30 dias'
+    month_desc: 'tópicos postados nos últimos 30 dias'
     week: 'semana'
-    week_desc: 'topicos postados nos ultimos 7 dias'
+    week_desc: 'tópicos postados nos últimos 7 dias'
 
     first_post: Primeiro post
     mute: Silenciar
     unmute: Reativar
-    last_post: Ultimo post
+    last_post: Último post
 
     best_of:
       title: "Melhor De"
@@ -211,12 +211,12 @@ en:
       title: "Criar Conta"
       action: "Criar uma agora!"
       invite: "Ainda sem conta?"
-      failed: "Alguma coisa correu mal, talvez este email já esteja registado, tenta o link para password esquecida"
+      failed: "Alguma coisa correu mal, talvez este email já esteja registado, tenta o link para password esquecida."
 
     forgot_password:
       title: "Esqueci a Password"
       action: "Esqueci-me da minha password"
-      invite: "Insere o teu username ou endereço de email, e nós enviamos-te um email para repor a password."
+      invite: "Insere o teu nome de utilizador ou endereço de email, e nós enviamos-te um email para repor a password."
       reset: "Repor Password"
       complete: "Deverás receber um email com instruções de como repor a tua password em breve."
 
@@ -224,7 +224,7 @@ en:
       title: "Log In"
       username: "Login"
       password: "Password"
-      email_placeholder: "endereço de email ou username"
+      email_placeholder: "endereço de email ou nome de utilizador"
       error: "Erro desconhecido"
       reset_password: 'Repor Password'
       logging_in: "A fazer Log In..."
@@ -315,7 +315,7 @@ en:
       no_read: "Ainda não leste nenhum tópico."
       no_posted: "Ainda não postaste em nenhum tópico."
       no_popular: "Não há tópicos populares. Isso é triste."
-      footer: "Não há mais tópicos neste categoria. <a href=\"/categories\">Procuarar todas as categorias</a> ou <a href=\"/\">ver tópicos populares</a>"
+      footer: "Não há mais tópicos neste categoria. <a href=\"/categories\">Procurar todas as categorias</a> ou <a href=\"/\">ver tópicos populares</a>"
 
     topic:
       create_in: 'Criar Tópico sobre {{categoryName}}'
@@ -325,8 +325,8 @@ en:
       list: 'Tópicos'
       new: 'novo tópico'
       title: 'Tópico'
-      loading_more: "A carregar mais Tópicos..."
-      loading: 'A carregar Tópico...'
+      loading_more: "A carregar mais tópicos..."
+      loading: 'A carregar tópico...'
       missing: "Tópico não encontrado"
       not_found:
         title: "Tópico não encontrado"
@@ -364,7 +364,7 @@ en:
           "0_2": 'Estás a ignorar todas as notificações para este tópico.'
         watching:
           title: "Observar"
-          description: "o mesmo que Monitorizar, mas ainda serás notificado de todos os novos posts."
+          description: "o mesmo que monitorizar, mas ainda serás notificado de todos os novos posts."
         tracking:
           title: "Monitorizar"
           description: "serás notificado de posts não lidos, mencionamentos de @nome, e respostas aos teus posts."
@@ -401,7 +401,7 @@ en:
 
       invite_private:
         title: 'Convidar para Conersa Privada'
-        email_or_username: "Email ou Username do Convidado"
+        email_or_username: "Email ou Nome de Utilizador do Convidado"
         email_or_username_placeholder: "endereço de email ou username"
         action: "Convite"
         success: "Obrigado! Convidamos esse utilizador para participar nesta conversa privada."
@@ -446,7 +446,7 @@ en:
       edit: "Editar {{link}}"
       in_reply_to: "Em resposta a"
       reply_as_new_topic: "Responder como um novo Tópico"
-      continue_discussion: "Continuar a discução desde {{postLink}}:"
+      continue_discussion: "Continuar a discussão desde {{postLink}}:"
       follow_quote: "ir para o post citado"
       deleted_by_author: "(post removido pelo autor)"
 
@@ -455,9 +455,9 @@ en:
         other: "Respostas"
 
       errors:
-        create: "Desculpa, houve um erro ao criar o teu post. Por-favor tenta outra vez."
-        edit: "Desculpa, houve um erro ao editar o teu post. Por-favor tenta outra vez."
-        upload: "Desculpa, houve um erro ao enviar esse ficheiro. Por-favor tenta otura vez."
+        create: "Desculpa, houve um erro ao criar o teu post. Por favor tenta outra vez."
+        edit: "Desculpa, houve um erro ao editar o teu post. Por favor tenta outra vez."
+        upload: "Desculpa, houve um erro ao enviar esse ficheiro. Por favor tenta otura vez."
 
       abandon: "De certeza que queres abandonar o teu post?"
 
@@ -520,10 +520,10 @@ en:
       title: 'Porque estás a pôr uma flag neste post?'
       action: 'Flag Post'
       cant: "Desculpa, não podes por uma flag neste momento."
-      custom_placeholder: "Porquê a necessidade deste post ter atenção da moderação? Faz-nos saber especificamente quais as tuas preocupações, e fornece links relevantes se possivel."
+      custom_placeholder: "Porquê a necessidade deste post ter atenção da moderação? Faz-nos saber especificamente quais as tuas preocupações, e fornece links relevantes se possível."
       custom_message:
         at_least: "insere pelo menos {{n}} caracteres"
-        more: "{{n}} to go..."
+        more: "{{n}} em falta..."
         left: "{{n}} restantes"
 
     topic_summary:
@@ -578,7 +578,7 @@ en:
           zero: "Novo"
           one: "Novo (1)"
           other: "Novos ({{count}})"
-        help: "novos tópicos desde a tua última visita, e tópicos monitotizados com posts novos"
+        help: "novos tópicos desde a tua última visita, e tópicos monitorizados com posts novos"
       posted:
         title: "Meus posts"
         help: "tópicos em que postastes em"
@@ -609,7 +609,7 @@ en:
 
       customize:
         title: "Personalizar"
-        header: "Header"
+        header: "Cabeçalho"
         css: "Stylesheet"
         override_default: "Sobrepor padrão?"
         enabled: "Habilitado?"
@@ -630,7 +630,7 @@ en:
 
       impersonate:
         title: "Personificar Utilizador"
-        username_or_email: "Username ou Email do Utilizador"
+        username_or_email: "Nome do Utilizador ou Email do Utilizador"
         help: "Utiliza este ferramenta para personificar uma conta de utilizador para efeitos de depuração."
         not_found: "Esse utilizador não consegue ser encotrado."
         invalid: "Desculpa, não podes personificar esse utilizador."
@@ -639,7 +639,7 @@ en:
         title: 'Utilizadores'
         create: 'Adicionar Utilizador Admin'
         last_emailed: "Último email enviado"
-        not_found: "Desculpa, esse username não existe no nosso sistema."
+        not_found: "Desculpa, esse nome de utilizador não existe no nosso sistema."
         new: "Novo"
         active: "Ativo"
         pending: "Pendente"
@@ -666,7 +666,7 @@ en:
         grant_admin: 'Conceder Admin'
         revoke_moderation: 'Revogar Moderação'
         grant_moderation: 'Conceder Moderação'
-        basics: Basicos
+        basics: Básicos
         reputation: Reputação
         permissions: Permissões
         activity: Atividade

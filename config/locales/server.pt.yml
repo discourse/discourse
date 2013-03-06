@@ -21,26 +21,26 @@ pt:
 
       Pensa nisto enquanto escreves o teu tópico:
 
-      - Does the title adequately describe what someone could reasonably expect to find if they opened your topic?
+      - O título descreve razoavelmente o que alguém espera encontrar quando abre o tópico?
 
-      - The first post defines your topic: What is this about? Who would be interested in it? Why does it matter? What kind of responses are you hoping for from the community?
+      - O primeiro tópico define o teu tópico: Isto é sobre o quê? Quem poderá estar interessado nisto? Por que é que importa? Que tipo de respostas esperas da comunidade?
 
-      - Try to choose the right words so others can *find* your topic. If it needs to be in a category, pick an appropriate category.
+      - Tenta escolher as palavras certas para que outros possam *encontrar* o teu tópico. Se precisa de estar numa categoria, escolhe a categoria apropriada.
 
-      For more guidance, [see our FAQ](/faq). This panel will only appear for your first %{education_posts_text}.
+      Para mais guias, [vê a nossa FAQ](/faq). Este painel irá apenas aparecer para o teu primeiro %{education_posts_text}.
 
     'new-reply': |
-      Welcome to %{site_name} &mdash; **thanks for contributing to the conversation!**
+      Bem vindo ao %{site_name} &mdash; **obrigado por contribuires para a conversa!**
 
-      Keep in mind as you compose your reply:
+      Pensa nisto enquanto escreves a tua resposta:
 
-      - Does your reply improve the conversation in some way, however small?
+      - A tua resposta melhora a conversa de alguma forma, mesmo que pequena?
 
-      - Treat your fellow community members with the same respect you'd wish to be treated.
+      - Trata os membros da comunidade da mesma forma que gostavas de ser tratado.
 
-      - It's fine to be critical, but remember to criticize *ideas*, not people.
+      - Não faz mal ser crítico, mas lembra-te de criticar *ideias*, não pessoas.
 
-      For more guidance, [see our FAQ](/faq). This panel will only appear for your first %{education_posts_text}.
+      Para mais guias, [vê a nossa FAQ](/faq). Este painel irá apenas aparecer para o teu primeiro first %{education_posts_text}.
 
 
   activerecord:
@@ -57,8 +57,8 @@ pt:
               cant_send_pm: "Desculpa, não podes enviar uma mensagem privada para esse utilizador."
 
   user_profile:
-    no_info_me: "<div class='missing-profile'>the About Me field of your profile is currently blank, <a href='/users/%{username_lower}/preferences'>would you like to fill it out?</a></div>"
-    no_info_other: "<div class='missing-profile'>%{name} hasn't entered anything in the About Me field of their profile yet</div>"
+    no_info_me: "<div class='missing-profile'>o campo Sobre mim do teu perfil está em branco, <a href='/users/%{username_lower}/preferences'>gostavas de o completar?</a></div>"
+    no_info_other: "<div class='missing-profile'>%{name} ainda não colocou nada no campo Sobre Mim</div>"
 
   category:
     topic_prefix: "Definição da categoria %{category}"
@@ -67,7 +67,7 @@ pt:
     new:
       title: "novo utilizador"
     basic:
-      title: "utilizador basico"
+      title: "utilizador básico"
     regular:
       title: "utilizador regular"
     experienced:
@@ -78,7 +78,7 @@ pt:
       title: "moderador"
 
   rate_limiter:
-    too_many_requests: "Estás a fazer isso demasiadas vezes. Por favor espera %{time_left} antes de tentar outra vez."
+    too_many_requests: "Estás a fazer isso demasiadas vezes. Por favor espera %{time_left} antes de tentar novamente."
     hours:
       one: "1 hora"
       other: "%{count} horas"
@@ -163,11 +163,11 @@ pt:
         other: "há quase %{count} anos atrás"
 
   password_reset:
-    no_token: "Desculpa, o teu token expirou. Por favor tenta redefinir a tua password outra vez."
+    no_token: "Desculpa, o teu token expirou. Por favor tenta redefinir a tua password novamente."
     choose_new: "Por favor escolhe uma password nova"
     update: 'atualizar password'
     title: 'redefinir password'
-    success: "Alteraste com sucesso a tua password e estás agora com login feito."
+    success: "Alteraste com sucesso a tua password e estás agora com o login feito."
     success_unapproved: "Alteraste com sucesso a tua password."
 
   change_email:
@@ -176,7 +176,7 @@ pt:
     error: "Houve um erro ao alterar o teu endereço de email. Talvez o endereço já esteja a ser utilizado?"
 
   activation:
-    already_done: "Desculpa, este link the confirmação já não é válido. Talvez a tua conta já esteja ativa?"
+    already_done: "Desculpa, este link de confirmação já não é válido. Talvez a tua conta já esteja ativa?"
     please_continue: "A tua nova conta está confimada e estás agora com login feito. Segue para %{link}"
     welcome_to: "Bem-vindo a %{site_name}!"
     approval_required: "Um moderador tem que aprovar a tua conta para poderes aceder a este forum. Irás receber um email quando a tua conta for aprovada!"
@@ -184,7 +184,7 @@ pt:
   post_action_types:
     off_topic:
       title: 'Off-Topic'
-      description: 'Este post é radicalmente off-topic nesta conversa, e provavelmente deveria ser movido para um topico diferente.'
+      description: 'Este post é radicalmente off-topic nesta conversa, e provavelmente deveria ser movido para um tópico diferente.'
       long_form: 'sinalizou isto como off-topic'
     spam:
       title: 'Spam'
@@ -192,11 +192,11 @@ pt:
       long_form: 'sinalizado como spam'
     inappropriate:
       title: 'Inapropriado'
-      description: 'Este post contém conteudo que uma pessoa normal consideraria ofensivo, abusivo, ou odio.'
-      long_form: 'sinalizado como desapropriado'
+      description: 'Este post contém conteúdo que uma pessoa normal consideraria ofensivo, abusivo, ou ódio.'
+      long_form: 'sinalizado como inapropriado'
     custom_flag:
       title: 'Outro'
-      description: 'Este post precisa de atenção de moderação geral basiado no <a href="/faq">FAQ</a>, <a href="/tos">TOS</a>, ou por outra rasão não listada em cima.'
+      description: 'Este post precisa de atenção de moderação geral basiado no <a href="/faq">FAQ</a>, <a href="/tos">TOS</a>, ou por outra razão não listada acima.'
       long_form: 'sinalizado para moderação'
     bookmark:
       title: 'Marca'
@@ -216,11 +216,11 @@ pt:
       title: "Tópico Regular"
 
   unsubscribed:
-    title: 'Desisncrito'
+    title: 'Desinscrito'
     description: "Desinscreveste-te. Não te vamos contactar mais!"
     oops: "No caso de não ser isto o pretendido, clica em baixo."
     not_found: "Erro ao desinscrever"
-    not_found_description: "Desculpa, não conseguimos desinscrever-te. É possivel que o link no teu email tenha expirado."
+    not_found_description: "Desculpa, não conseguimos desinscrever-te. É possível que o link no teu email tenha expirado."
 
   resubscribe:
     action: "Re-Inscrever"
@@ -234,17 +234,17 @@ pt:
     max_topic_title_length: "tamanho máximo para título do tópico"
     allow_duplicate_topic_titles: "se o utilizadores podem criar tópicos com o mesmo título"
     unique_posts_mins: "Quantos minutos antes para um utilizador poder criar um post com o mesmo conteúdo outra vez?"
-    enforce_global_nicknames: "Forçar único nickname global. Nota: Apenas alterar isto setup inicial."
+    enforce_global_nicknames: "Forçar único nickname global. Nota: Apenas alterar isto no setup inicial."
     discourse_org_access_key: "A chave de acesso para aceder ao registo de nicknames em discourse.org"
-    educate_until_posts: "Mostrar educação até o utilizador ter postado este numero de vezes"
+    educate_until_posts: "Mostrar educação até o utilizador ter postado este número de vezes"
     title: "título deste website"
     secret_token: "token secreto para ser usado para proteger cookies"
     restrict_access: "restringir acesso a não ser que esta password seja utilizada"
-    access_password: "restrict_access está ativo. Garanta que está password é preenchida"
+    access_password: "restrict_access está ativo. Garanta que esta password é preenchida"
     queue_jobs: "'queue' vários 'jobs' no sidekiq, if false queues are inline"
-    crawl_images: "habilitar mostrar imagens de sites terceiros"
+    crawl_images: "permitir mostrar imagens de sites terceiros"
     ninja_edit_window: "quão rápido é possivél fazer uma alteração sem guardar uma nova versão, em segundos."
-    enable_imgur: "habilitar imgur api para uploading, não guardar ficheiros localmente"
+    enable_imgur: "permitir imgur api para uploading, não guardar ficheiros localmente"
     imgur_api_key: "chave para imgur.com api - necessária para image upload"
     imgur_endpoint: "end point para uploading imgur.com images"
     max_image_width: "máxima largura para uma imagem num post"
@@ -265,7 +265,7 @@ pt:
     best_of_score_threshold: "A pontuação mínima de um post para ser incluído no 'melhor de'"
     best_of_posts_required: "Um tópico precisa deste número de posts antes de ser ativado o modo 'melhor de'."
     best_of_likes_required: "Um tópico precisa deste número de gostos antes de ser ativado o mode 'melhor de'."
-    enable_private_messages: "Habilitar membros a ter conversas com mensagens privadas"
+    enable_private_messages: "permitir membros a ter conversas com mensagens privadas"
 
     enable_long_polling: "Message bus used for notification can use long polling."
     long_polling_interval: "Interval in milliseconds before a new long poll is issued"
@@ -276,7 +276,7 @@ pt:
     auto_track_topics_after: "How many milliseconds before a topic is automatically tracked (0 for always, -1 for never)"
     new_topic_duration_minutes: "How many minutes is a topic considered new (-1 for always, -2 for last visit)"
 
-    flags_required_to_hide_post: "Os post vão ser escondidos automáticamente quando o númereo de sinalizações atingir este número (0 para nunca)"
+    flags_required_to_hide_post: "Os post vão ser escondidos automaticamente quando o númereo de sinalizações atingir este número (0 para nunca)"
     cooldown_minutes_after_hiding_posts: "How many minutes must a user wait till they can edit their post after it is hidden due to flagging"
 
     traditional_markdown_linebreaks: "Use traditional linebreaks in markdown, wrapping is implicit unless postfixed with 2 spaces"
