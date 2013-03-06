@@ -1,0 +1,770 @@
+zh_CN:
+  title: "论道"
+  topics: "主题"
+  loading: "载入中"
+  powered_by: '由<a href="http://www.discourse.org">论道 - Discourse</a>强力驱动，请开启JavaScript支持以获得最佳效果'
+
+  via: "%{username} 自 %{site_name}"
+  is_reserved: "保留权利"
+  too_many_mentions: "提到了太多用户"
+  too_many_images: "包含了太多图片"
+  too_many_links: "包含了太多链接"
+  just_posted_that: "与你最近发表的内容太过相似"
+  has_already_been_used: "已经被使用"
+  invalid_characters: "包含无效字符"
+  is_invalid: "无效，请描述得更清楚一点"
+  next_page: "下一页 &rarr;"
+  by: "由"
+  topics_in_category: "分类'%{category}'中的主题"
+  rss_posts_in_topic: "'%{topic}'的RSS内容聚合"
+  rss_topics_in_category: "分类'%{category}'中主题的RSS内容聚合"
+  author_wrote: "%{author}写道："
+
+  education:
+    until_posts:
+      one: "帖子"
+      other: "%{count}个帖子"
+
+    'new-topic': |
+      欢迎来到 %{site_name} &mdash; **衷心感谢你开启一段新的讨论！**
+
+      当你撰写主题时请注意：
+
+      - 你的标题是否清晰明了的告诉了读者他们能在你的主题中找到的内容？
+
+      - 你的主题第一帖确定了：主题是关于什么的？谁会对它感兴趣？它为什么重要？你期望从社区中获得什么样的回应？
+
+      - 选择恰当的词句以便别人能 *找到* 你的主题，如果该主题应该属于某个分类，请选择一个恰当的分类。
+
+      更多的帮助信息，[请查看我们的常见问答](/faq)。此信息面板只在你的最早的 %{education_posts_text} 显示。
+
+    'new-reply': |
+      欢迎来到 %{site_name} &mdash; **衷心感谢你参与讨论！**
+
+      当你撰写回复时请注意：
+
+      - 你的回复是否从某个方面多多少少的帮助到了这段讨论？
+
+      - 请给予论坛其他成员同等的尊重，多换位思考，将心比心。
+
+      - 持批判态度是可以的，但是请对事不对人。
+
+      更多的帮助信息，[请查看我们的常见问答](/faq)。此信息面板只在你的最早的 %{education_posts_text} 显示。
+
+
+  activerecord:
+    attributes:
+      category:
+        name: "分类名称"
+      post:
+        raw: "内容"
+    errors:
+      models:
+        topic:
+          attributes:
+            archetype:
+              cant_send_pm: "抱歉，你不能向该用户发送私信。"
+
+  user_profile:
+    no_info_me: "<div class='missing-profile'>你的介绍信息中，“关于我”部分目前还是空白，<a href='/users/%{username_lower}/preferences'>介绍一下你自己，好不好？</a></div>"
+    no_info_other: "<div class='missing-profile'>%{name} 尚未在他/她的介绍中的“关于我”部分填写任何信息</div>"
+
+  category:
+    topic_prefix: "分类%{category}的定义"
+    replace_paragraph: "[用一段简短的分类描述替换此第一段内容，请不要超过200个字符。]"
+    post_template: "%{replace_paragraph}\n\n使用下面的空间输入分类的详细描述信息，可包括在此分类下讨论的规则、内容导向等等。"
+
+  trust_levels:
+    new:
+      title: "新用户"
+    basic:
+      title: "初级用户"
+    regular:
+      title: "常规用户"
+    experienced:
+      title: "中级用户"
+    advanced:
+      title: "高级用户"
+    moderator:
+      title: "论坛版主"
+
+  rate_limiter:
+    too_many_requests: "你的请求过于频繁，请等待 %{time_left} 之后再试。"
+    hours:
+      one: "1 小时"
+      other: "%{count} 小时"
+    minutes:
+      one: "1 分钟"
+      other: "%{count} 分钟"
+    seconds:
+      one: "1 秒"
+      other: "%{count} 秒"
+
+  datetime:
+    distance_in_words:
+      half_a_minute: "< 1分"
+      less_than_x_seconds:
+        one:   "< 1秒"
+        other: "< %{count}秒"
+      x_seconds:
+        one:   "1秒"
+        other: "%{count}秒"
+      less_than_x_minutes:
+        one:   "< 1分"
+        other: "< %{count}分"
+      x_minutes:
+        one:   "1分"
+        other: "%{count}分"
+      about_x_hours:
+        one:   "1小时"
+        other: "%{count}小时"
+      x_days:
+        one:   "1天"
+        other: "%{count}天"
+      about_x_months:
+        one:   "1个月"
+        other: "%{count}个月"
+      x_months:
+        one:   "1个月"
+        other: "%{count}个月"
+      about_x_years:
+        one:   "1年"
+        other: "%{count}年"
+      over_x_years:
+        one:   "> 1年"
+        other: "> %{count}年"
+      almost_x_years:
+        one:   "1年"
+        other: "%{count}年"
+
+    distance_in_words_verbose:
+      half_a_minute: "刚刚"
+      less_than_x_seconds:
+        one:   "刚刚"
+        other: "刚刚"
+      x_seconds:
+        one:   "1 秒前"
+        other: "%{count} 秒前"
+      less_than_x_minutes:
+        one:   "不到 1 分钟前"
+        other: "不到 %{count} 分钟前"
+      x_minutes:
+        one:   "1 分钟前"
+        other: "%{count} 分钟前"
+      about_x_hours:
+        one:   "1 小时前"
+        other: "%{count} 小时前"
+      x_days:
+        one:   "1 天前"
+        other: "%{count} 天前"
+      about_x_months:
+        one:   "大概 1 个月前"
+        other: "大概 %{count} 个月前"
+      x_months:
+        one:   "1 个月前"
+        other: "%{count} 个月前"
+      about_x_years:
+        one:   "大概 1 年前"
+        other: "大概 %{count} 年前"
+      over_x_years:
+        one:   "超过 1 年前"
+        other: "超过 %{count} 年前"
+      almost_x_years:
+        one:   "差不多 1 年前"
+        other: "差不多 %{count} 年前"
+
+  password_reset:
+    no_token: "抱歉，你的令牌已过期，请尝试再次重置你的密码。"
+    choose_new: "请选择一个新密码"
+    update: '更新密码'
+    title: '重置密码'
+    success: "你的密码已经修改成功，你现在已经登录。"
+    success_unapproved: "你的密码已经修改成功。"
+
+  change_email:
+    confirmed: "你的电子邮箱已被更新。"
+    please_continue: "请点击 %{link} 来继续"
+    error: "在修改你的电子邮箱地址时出现了错误，可能此邮箱已经在论坛中使用了？"
+
+  activation:
+    already_done: "抱歉，此帐号激活链接已经失效。可能你的帐号已经被激活了？"
+    please_continue: "你的新帐号已激活，你现在已登录论坛。点击 %{link} 继续"
+    welcome_to: "欢迎来到%{site_name}！"
+    approval_required: "你的新帐号需要由一位论坛版主手动批准方可使用。一旦你的帐号获得批准，你将收到一封电子邮件通知！"
+
+  post_action_types:
+    off_topic:
+      title: '题外话'
+      description: '此帖对于当前讨论而言属于题外话，应该移动到其它相关主题下。'
+      long_form: '标记为题外话'
+    spam:
+      title: '垃圾'
+      description: '此帖为明显的广告，它不包含任何对当前讨论有帮助的内容，只有促销信息。'
+      long_form: '标记为垃圾'
+    inappropriate:
+      title: '不当内容'
+      description: '此帖内容包含对他人的攻击、侮辱或仇视语言。'
+      long_form: '标记为不当内容'
+    custom_flag:
+      title: '其它'
+      description: '此帖需要版主依据<a href="/faq">常见问答 FAQ</a>、<a href="/tos">服务条款 TOS</a>或其它未列出的原因来给予关注。'
+      long_form: '标记为需要调解'
+    bookmark:
+      title: '书签'
+      description: '给本帖加书签'
+      long_form: '已给本帖加上书签'
+    like:
+      title: '喜欢'
+      description: '喜欢本帖'
+      long_form: '喜欢本帖内容'
+    vote:
+      title: '投票'
+      description: '给本帖投票'
+      long_form: '已给本帖投票'
+
+  flagging:
+    you_must_edit: '<p>你的帖子已经到达标记阈值，请查看你的私信。</p>'
+    user_must_edit: '<p>标记的内容已隐藏。</p>'
+
+  archetypes:
+    regular:
+      title: "常规主题"
+
+  unsubscribed:
+    title: '取消订阅'
+    description: "你已经取消订阅，我们不会再联系你！"
+    oops: "如果你并非想要取消订阅，请点击下面。"
+    not_found: "取消订阅出错"
+    not_found_description: "抱歉，我们无法帮你取消订阅。可能你的邮件里的链接已过期。"
+
+  resubscribe:
+    action: "重新订阅"
+    title: "已重新订阅！"
+    description: "你已经重新订阅。"
+
+  reports:
+    visits:
+      title: "每天用户访问量"
+      xaxis: "天"
+      yaxis: "访问量"
+
+  site_settings:
+    default_locale: "此 论道 - Discourse 实例的缺省语言 (ISO 639-1 代码)"
+    min_post_length: "帖子最少字符数"
+    max_post_length: "帖子最大字符数"
+    min_topic_title_length: "标题最少字符数"
+    max_topic_title_length: "标题最大字符数"
+    allow_duplicate_topic_titles: "允许主题有相同的标题"
+    unique_posts_mins: "几分钟之后才允许一个用户再次发表包含相同内容的帖子"
+    enforce_global_nicknames: "强制昵称必须唯一（警告：只在刚刚安装完成时修改此设置）"
+    discourse_org_access_key: "访问 discourse.org 上的 Discourse Hub 昵称注册表的访问密匙（access key）"
+    educate_until_posts: "显示弹出指导面板直到用户发表了这么多数量的帖子"
+    title: "本站点标题，用于 HTML 标题标签（title）和其它地方"
+    company_full_name: "运行本站点的公司全称，用于法律文档，例如服务条款 /tos"
+    company_short_name: "运行本站点的公司短名，用于法律文档，例如服务条款 /tos"
+    company_domain: "运行本站点的公司域名，用于法律文档，例如服务条款 /tos"
+    access_password: "当启用访问限制时，必须填写此密码"
+    queue_jobs: "如果失败队列在排队，使用 Sidekiq 消息引擎对不同的工作排队"
+    crawl_images: "允许从第三方获取图片来插入宽、高数值"
+    ninja_edit_window: "在多少秒钟之内，对帖子的多次编辑不生成新版本"
+    enable_imgur: "启用 Imgur API 来上传文件，不在本地（站点服务器）保存文件"
+    imgur_api_key: "你的 imgur.com API 密匙，上传文件到 Imgur 必须"
+    imgur_endpoint: "上传图片到 imgur.com 的终点"
+    max_image_width: "帖子中图片允许的最大宽度"
+    category_featured_topics: "在分类 /categories 页面每个分类显示的主题数目"
+    add_rel_nofollow_to_user_content: "添加 rel nofollow 标签到所有提交的用户信息（以防止搜索引擎搜集），除了内部链接（包括父域名）。修改此设置将要求你更新所有已有的 markdown 标签内容"
+    exclude_rel_nofollow_domains: "不添加 nofollow 标签到一列逗号分割的域名 （使用父域名，例如 tld.com，将自动允许子域名，例如 sub.tld.com）"
+
+    post_excerpt_maxlength: "帖子摘要的最大字符长度"
+    post_onebox_maxlength: "一个 论道 - Discourse 单厢帖（Onebox post）的最大字符长度"
+    category_post_template: "当你创建新分类时，分类的定义帖模板（创建新分类时会自动生成一个属于该分类的新帖子）"
+    new_topics_rollup: "主题列表卷起显示为主题数量前，可以往主题列表中插入多少新主题"
+    onebox_max_chars: "从外部网站导入到一个单厢帖（Onebox post）的最大字符数"
+
+    logo_url: "你的站点标志图片，例如：http://xyz.com/x.png"
+    logo_small_url: "你的站点的小号标志图片，例如：http://xyz.com/x-small.png，用于卷起主题列表时显示"
+    favicon_url: "你的站点图标（favicon），参考 http://zh.wikipedia.org/wiki/Favicon"
+    notification_email: "邮件回复地址，当发送系统邮件，例如通知用户找回密码、新用户注册等等时，所使用的发信人地址"
+    use_ssl: "使用 SSL 安全套接层来访问本站吗？"
+    best_of_score_threshold: "将一个帖子包含到“优选”帖子中所需的最小分值"
+    best_of_posts_required: "在一个主题中启用“优选”模式所要求的最小帖子数量"
+    best_of_likes_required: "在一个主题中启用“优选”模式所要求的最小喜欢数量"
+    enable_private_messages: "用户创建私信和私下交流要达到的用户级别"
+
+    enable_long_polling: "启用消息总线使通知功能可以使用长轮询（long polling）"
+    long_polling_interval: "长轮询每次请求之间的时间间隔（单位 毫秒） "
+    polling_interval: "已登录用户客户端轮询时间间隔（单位 毫秒）"
+    anon_polling_interval: "匿名用户客户端轮询时间间隔（单位 毫秒）"
+
+    auto_track_topics_after: "经过多少毫秒之后一个主题就被自动追踪的全局缺省设置，用户可以覆盖此设置（0为始终，-1为从不）"
+    new_topic_duration_minutes: "一个主题在多少分钟之内被系统判断为新主题的全局缺省设置，用户可以覆盖此设置（-1为始终，-2为最后一次访问）"
+
+    flags_required_to_hide_post: "一个帖子累计多少个标记之后会被自动隐藏，并向帖子作者发送私信通知（0为从不）"
+    cooldown_minutes_after_hiding_posts: "当一个帖子因为标记而隐藏之后，用户需要等待多少分钟才能编辑该帖子"
+
+    traditional_markdown_linebreaks: "在 Markdown 中使用传统换行符，而不是用两个尾随空格来换行"
+    post_undo_action_window_mins: "允许用户在帖子上进行撤销操作（喜欢、标记等）所需等待的间隔秒数"
+    must_approve_users: "用户必须获得管理员批准方能访问"
+    ga_tracking_code: "谷歌分析追踪代码，例如：UA-12345678-9。参考 http://google.com/analytics"
+    top_menu: "确定在主页导航条包含哪些条目，以及排列顺序。例如：popular|read|favorited|unread|new|posted|categories"
+    post_menu: "确定在帖子菜单条包含哪些条目，以及排列顺序。例如：like|edit|flag|delete|share|bookmark|reply"
+    track_external_right_clicks: "追踪外部链接的右键点击（例如：在浏览器新标签打开），缺省是禁用的，因为它会重写URL"
+    topics_per_page: "在主题列表页面，缺省载入多少个主题"
+    posts_per_page: "在主题页面，返回多少个帖子"
+    system_username: "论坛给用户发送自动私信时使用的用户名"
+    send_welcome_message: "给新用户发送欢迎私信？"
+    supress_reply_directly_below: "当一个帖子只有一个回复时，不显示帖子回复数量"
+    allow_index_in_robots_txt: "允许搜索引擎索引站点内容（更新 robots.txt）"
+    email_domains_blacklist: "将一列竖线分隔的邮箱域名放入黑名单，例如：mailinator.com|trashmail.net"
+    version_checks: "访问 Discourse Hub 来检查版本更新，并在管理面板 /admin 显示版本信息"
+
+    port: "使用此 HTTP 端口而不是80端口。留空为不使用，主要用于开发调试"
+    force_hostname: "指定 URL 里的主机名。留空为不使用，主要用于开发调试"
+
+    invite_expiry_days: "多少天以内用户的邀请码是有效的"
+
+    # TODO: perhaps we need a way of protecting these settings for hosted solution, global settings ...
+
+    enable_google_logins: "启用谷歌（Google）帐号验证登录"
+    enable_yahoo_logins: "启用雅虎（Yahoo）帐号验证登录"
+
+    enable_twitter_logins: "启用推特（Twitter）帐号验证登录，需要 twitter_consumer_key 和 twitter_consumer_secret"
+    twitter_consumer_key: "推特帐号验证的客户密匙（Consumer key），到 http://dev.twitter.com 来注册获取"
+    twitter_consumer_secret: "推特帐号验证的客户密码（Consumer secret），到 http://dev.twitter.com 来注册获取"
+
+    enable_facebook_logins: "启用脸书（Facebook）帐号验证登录，需要 facebook_app_id 和 facebook_app_secret"
+    facebook_app_id: "脸书帐号验证的应用帐号（App id），到 https://developers.facebook.com/apps 来注册获取"
+    facebook_app_secret: "脸书帐号验证的应用密码（App secret），到 https://developers.facebook.com/apps 来注册获取"
+
+    enable_github_logins: "启用 Github 帐号验证登录，需要 github_client_id 和 github_client_secret"
+    github_client_id: "Github 帐号验证的客户端帐号（Client id），到 https://github.com/settings/applications 来注册获取"
+    github_client_secret: "Github 帐号验证的客户端密码（Client secret），到 https://github.com/settings/applications 来注册获取"
+
+    enable_persona_logins: "启用基于电子邮箱的 Mozilla Persona 帐号验证登录"
+    
+    enable_sina_logins: "启用新浪帐号验证登录，需要 sina_app_id 和 sina_app_secret"
+    sina_app_id: "新浪帐号验证的应用帐号（App id），到 http://open.weibo.com/connect 来注册获取"
+    sina_app_secret: "新浪帐号验证的应用密码（App secret），到 http://open.weibo.com/connect 来注册获取"
+    
+    enable_qq_logins: "启用腾讯QQ帐号验证登录，需要 qq_app_id 和 qq_app_secret"
+    qq_app_id: "腾讯QQ帐号验证的应用帐号（App id），到 http://connect.qq.com/intro/login/ 来注册获取"
+    qq_app_secret: "腾讯QQ帐号验证的应用密码（App secret），到 http://connect.qq.com/intro/login/ 来注册获取"
+
+    allow_import: "允许导入数据，这将替换全站数据。除非你计划导入数据，否则请保持设置为false"
+
+    active_user_rate_limit_secs: "更新“最后一次见到”数据的频率，单位为秒"
+    previous_visit_timeout_hours: "系统判断一次访问之后多少小时后为“上一次”访问"
+
+    uncategorized_name: "在分类 /categories 页面，没有分类的主题的缺省分类"
+    max_mentions_per_post: "在一个帖子中你能使用的 @name 提及到的最多人数"
+
+    rate_limit_create_topic: "在创建一个主题之后间隔多少秒你才能创建另一个主题"
+    rate_limit_create_post: "在创建一个帖子之后间隔多少秒你才能创建另一个帖子"
+
+    max_likes_per_day: "每个用户每天能标明喜欢数量的最大值"
+    max_flags_per_day: "每个用户每天能做标记数量的最大值"
+    max_bookmarks_per_day: "每个用户每天能做书签数量的最大值"
+    max_edits_per_day: "每个用户每天能编辑的次数的最大值"
+    max_favorites_per_day: "每个用户每天能收藏的主题数量的最大值"
+    max_topics_per_day: "每个用户每天能创建的主题数量的最大值"
+    max_private_messages_per_day: "每个用户每天能发私信数量的最大值"
+
+    suggested_topics: "在一个主题底部显示的推荐主题的数量"
+
+    enable_s3_uploads: "上传文件到 Amazon S3"
+    s3_upload_bucket: "Amazon S3 上上传文件保存的 bucket name"
+
+    default_invitee_trust_level: "受邀用户的缺省用户级别（0-5）"
+    default_trust_level: "用户的缺省用户级别（0-5）"
+
+    basic_requires_topics_entered: "新用户升级到初级用户（1）所需要进入的主题数量"
+    basic_requires_read_posts: "新用户升级到初级用户（1）所需要阅读的帖子数量"
+    basic_requires_time_spent_mins: "新用户升级到初级用户（1）所需要阅读帖子耗费的分钟数"
+
+    auto_link_images_wider_than: "图片宽度超过此设定像素值的，将被自动附加一个链接并且使用灯箱（lightbox）来展示"
+
+    email_time_window_mins: "等待多少分钟才给用户发送通知电子邮件，好让他们有机会自己来浏览"
+    flush_timings_secs: "刷新时间数据的频率，以秒为单位"
+    max_word_length: "在主题的标题中，允许的词语长度的最大字符数"
+    title_min_entropy: "在主题的标题中，允许的最低熵值（单个字符）"
+    body_min_entropy: "在一个帖子内文中，允许的最低熵值（单个字符）"
+    new_user_period_days: "在多少天以内一个用户会被高亮显示为新用户"
+    title_fancy_entities: "转换主题标题中的 HTML 实体"
+
+  notification_types:
+    mentioned: "%{display_username} 在 %{link} 提及到了你"
+    liked: "%{display_username} 在 %{link} 喜欢了你的帖子 "
+    replied: "%{display_username} 在 %{link} 回复了你的帖子"
+    quoted: "%{display_username} 在 %{link} 引用了你的帖子"
+    edited: "%{display_username} 在 %{link} 编辑了你的帖子"
+    posted: "%{display_username} 发表了 %{link}"
+    moved_post: "%{display_username} 把你的帖子移动到了 %{link}"
+    private_message: "%{display_username} 发送给你一条私信：%{link}"
+    invited_to_private_message: "%{display_username} 邀请你进行私信：%{link}"
+    invitee_accepted: "%{display_username} 接受了你的邀请"
+
+  search:
+    types:
+      category: '分类'
+      topic: '主题'
+      user: '用户'
+
+  youve_posted: "你已发表了"
+  original_poster: "原始作者"
+  most_posts: "大部分帖子"
+  most_recent_poster: "当前大部分帖子作者"
+  frequent_poster: "频繁发帖者"
+
+  user_action_descriptions:
+    bookmarks: "书签"
+    topics: "主题"
+    likes_received: "收到的喜欢"
+    likes_given: "送出的喜欢"
+    responses: "回复"
+    topic_responses: "主题回复"
+    posts: "帖子"
+    mentions: "提及"
+    quotes: "引用"
+    edits: "编辑"
+    favorites: "收藏"
+    sent_items: "已发送条目"
+    inbox: "收件箱"
+
+    was_liked: "曾被喜欢过"
+    liked: "喜欢过"
+    bookmarked: "标过书签"
+    posted: "发表过"
+    responded_to: "回复给"
+    mentioned: "提及过"
+    quoted: "引用过"
+    favorited: "收藏过"
+    edited: "编辑过"
+
+  move_posts:
+    moderator_post:
+      one: "我移动了一个帖子到一个新主题：%{topic_link}"
+      other: "我移动了 %{count} 个帖子到一个新主题：%{topic_link}"
+
+  topic_statuses:
+    archived_enabled: "本主题已归档，即已经冻结，无法修改。"
+    archived_disabled: "本主题已被解除归档，即不再冻结，可以修改。"
+    closed_enabled: "本主题已关闭，不再接受新的回复。"
+    closed_disabled: "本主题已开放，可以发表新的回复。"
+    pinned_enabled: "本主题已置顶，它将始终显示在它所属分类的顶部。"
+    pinned_disabled: "本主题已被解除置顶，它将不再显示在它所属分类的顶部。"
+    visible_enabled: "本主题可见，它将显示在主题列表中。"
+    visible_disabled: "本主题不可见，它将不被显示在主题列表中，只能通过一个直接链接来访问。"
+
+  login:
+    not_approved: "你的帐号尚未获得批准。一旦你的帐号获得批准，你会收到一封电子邮件。"
+    incorrect_username_email_or_password: "用户名、电子邮箱或密码不正确"
+    wait_approval: "谢谢注册帐号。我们会在你的帐号获得批准之后通知你。"
+    active: "你的帐号已经被激活，可以使用了。"
+    activate_email: "快完成了！我们发送了一封激活邮件<b>%{email}</b>给你，请按照邮件中的步骤来激活你的帐号。"
+    not_activated: "你还不能登录。我们发送了一封激活邮件给你，请按照邮件中的步骤来激活你的帐号。"
+    errors: "%{errors}"
+    not_available: "不可用，试试 %{suggestion}？"
+    something_already_taken: "出了一些问题，可能此用户名或电子邮箱已经被注册。试试 忘记密码 链接吧。"
+    omniauth_error: "抱歉，在给你的 %{strategy} 帐号授权时发生了错误。有可能你没有批准授权申请？"
+    omniauth_error_unknown: "在处理你的登录过程中发生了错误，请重试。"
+
+  user:
+    username:
+      short: "必须超过 %{min} 个字符"
+      long: "必须少于 %{max} 个字符"
+      characters: "必须只包含字母和数字"
+      unique: "必须是唯一的"
+      blank: "必须存在"
+      must_begin_with_alphanumeric: "必须以字母或数字开头"
+    email:
+      not_allowed: "本站不允许使用该邮箱服务商提供的电子邮箱，请使用其它邮箱地址。"
+
+  invite_mailer:
+    subject_template: "[%{site_name}] %{invitee_name} 邀请你参与 %{site_name} 上的一个讨论"
+    text_body_template: |
+      %{invitee_name} 邀请你加入 %{site_name} 网站上的讨论主题 "%{topic_title}"。
+
+      如果你感兴趣，请点击下面的链接来访问该讨论：
+
+      [访问 %{site_name}][1]
+
+      你是被一个受信任的用户邀请的，所以你可以不用登录就直接发表回复。
+
+      [1]: %{invite_link}
+
+  test_mailer:
+    subject_template: "[%{site_name}] 电子邮件发送测试"
+    text_body_template: |
+      这是一封来自 %{site_name} 论坛的测试邮件。你可以通过浏览器访问该论坛：
+
+      [*%{base_url}*][0]
+
+      电子邮件分发可能会很复杂，但是你可以快速检查如下几点：
+
+      - 确定你会使用你的邮件客户端查看 *电子邮件源代码*，这样你可以通过查看邮件头来获取重要线索。
+
+      - **重要：** 你的ISP是否对你发送邮件的域名和IP作了反向DNS解析？你可以在此 [测试你的反向枚举指针（PTR）记录][2]。如果你的ISP没有正确的反向DNS记录，那么很可能你的任何电子邮件都不会被成功发送。
+
+      - 你的域名的发件人策略框架（SPF）记录是否正确？你可以在此 [测试你的SPF记录][1]。
+
+      - 你是否在你的电子邮件软件中配置了 [域名密钥身份识别邮件（DKIM）的电子邮件密钥签名][3]，并且把DKIM公匙输入到了DNS记录中？
+
+      - 你是否检查过你发送电子邮件的服务器IP [不在任何邮件黑名单中][4]？
+
+      - 你是否确认过你的邮件服务器 *确定无疑的* 在它的 HELO 消息中送出了完整的主机名？如果没有，那么会导致很多邮件服务商拒绝你的邮件。
+
+      我们衷心希望你收到这封邮件，发送测试成功！
+
+      祝好运！
+
+      你的来自 %{site_name} 的朋友。
+
+      [0]: %{base_url}
+      [1]: http://www.kitterman.com/spf/validate.html
+      [2]: http://mxtoolbox.com/SuperTool.aspx
+      [3]: http://www.dkim.org/
+      [4]: http://whatismyipaddress.com/blacklist-check
+      [5]: %{base_url}/unsubscribe
+
+      ----
+
+      <small>在每封你发送的邮件底部应该都有取消订阅的链接，让我们模拟一下。这封邮件发送自 中华人民共和国 北京市海淀区中关村南大街3号 海淀资本中心 14层 公司名称，邮编 100081。如果你不希望将来继续收到我们的邮件，[点击此处取消订阅][5].</small>
+
+  request_access:
+    code: "访问码"
+    instructions: "本站点限制访问，请在下面输入访问码："
+    enter: "进入"
+    incorrect: "访问码不正确"
+
+  system_messages:
+    site_password: "另外，如果你需要，此站点密码是 `%{access_password}`。"
+
+    post_hidden:
+      subject_template: "%{site_name} 提示：由于论坛用户举报，系统隐藏了你的帖子"
+      text_body_template: |
+        你好，
+
+        这是一封从 %{site_name} 自动发出的邮件，通知你下面的帖子由于论坛用户的举报而被隐藏不可见。
+
+        %{base_url}%{url}
+
+        你的帖子是因为被举报而被隐藏的。请检查你的帖子以了解为何会收到他们的投诉。
+
+        你可以在 %{edit_delay} 分钟后开始编辑你的帖子，然后它会被自动取消隐藏。这将提高你的论坛级别积分。
+
+        但是，如果帖子再次被网友投诉而隐藏，论坛版主将收到通知，这将可能导致进一步的措施，包括可能禁止你的用户帐号。
+
+        需要更多指导，请查看我们的 [FAQ](%{base_url}/faq).
+
+    usage_tips:
+      text_body_template: |
+        这条私信包含了一些可以让你快速开始的技巧提示：
+
+        ### 保持滚动
+
+        论道 - Discourse 没有所谓下一页按钮或者页码，要继续阅读帖子，只需要继续向下滚动页面，这样更多的内容会自动加载！
+
+        当新的回复进来时，它们会自动显示在主题的底部。你不需要刷新页面或者退出主题然后重新进入来查看新帖子。
+
+        ### 我怎么回复？
+
+        - 要回复一个帖子，点击该帖子底部的回复按钮。
+
+        - 如果要回复整个主题的 *主旨*，而不是回复该主题里某个特定的人或帖子，请使用该主题最底下的回复按钮。
+
+        - 如果你想把讨论导向另一个方向，但是保持讨论之间的联系，请使用帖子右侧的 回复为新主题 按钮。
+
+        ### 谁在跟我交谈？
+
+        当有人回复你的帖子，引用你的内容，或者使用 @username 提及到你的时候，一个通知消息会显示在页面顶部。点击通知消息的数目就可以查看是谁、在哪儿在跟你交谈，交谈。加入讨论吧！
+
+        - 要提及某人的名字，输入 `@` 符号，页面会自动弹出可用人名。
+
+        - 要引用整个帖子，使用编辑器工具栏里的 引用帖子 按钮。
+
+        - 要引用帖子的部分内容，选中要引用的内容，然后点击显示在选择区上的回复按钮。
+
+        ### 看那个帖子吧！
+
+        要想让别人知道你喜欢他们的帖子，请点击帖子底部的 喜欢 按钮。如果你看到某个有问题的帖子，请不要犹豫，点击帖子底部的 标记 小旗帜按钮来引起论坛版主以及你的社区成员们的注意。
+
+        ### 我在哪？
+
+        - 任何时候想要回到首页，**点击左上角的图标**。
+
+        - 要搜索，访问你的用户页面或者其他导航内容，点击右上角的那些图标。
+
+        - 当阅读一个主题时，你可以通过点击页面顶部的标题回到顶部；要去到 *底部*，点击页面底部的主题浏览进度指示器里的向下箭头，或者点击该主题第一帖下面的汇总信息里的最后一帖区域。
+
+    welcome_approved:
+      subject_template: "你已经获得了 %{site_name} 的批准！"
+      text_body_template: |
+        恭喜你！
+
+        你已经被批准加入 %{site_name}，欢迎来到我们论坛参与讨论！        
+
+        %{new_user_tips}
+
+        我们始终相信 [文明的社会行为]（%{base_url}/faq）。
+
+        好好享受你在论坛的时光吧！
+
+    welcome_user:
+      subject_template: "欢迎来到 %{site_name}！"
+      text_body_template: |
+        你好！
+
+        感谢加入 %{site_name}，欢迎来到我们论坛参与讨论！
+
+        %{new_user_tips}
+
+        我们始终相信 [文明的社会行为]（%{base_url}/faq）。
+
+        好好享受你在论坛的时光吧！
+
+    welcome_invite:
+      subject_template: "欢迎来到 %{site_name}！"
+      text_body_template: |
+        感谢你接受邀请到 %{site_name}，欢迎来到我们论坛参与讨论！
+
+        我们为你自动生成了一个用户名：**%{username}**，不过你在任何时候都可以通过访问 [你的用户设置][prefs] 来修改它。
+
+        要再次登录，或者：
+
+        1. 使用脸书（Facebook）、谷歌（Google）、推特（Twitter）或很多其他我们支持的验证方式——不过你选择的验证方式必须指向到和你最初接收邀请的邮箱地址 **相同的邮箱地址**，否则我们就无法确定到底是不是你本人！
+
+        2. 在 [你的用户设置][prefs] 页面为 %{site_name} 创建一个密码，然后使用该密码来登录。
+
+        %{site_password}
+
+        %{new_user_tips}
+
+        我们始终相信 [文明的社会行为]（%{base_url}/faq）。
+
+        好好享受你在论坛的时光吧！
+
+        [prefs]: %{user_preferences_url}
+
+    export_succeeded:
+      subject_template: "导出成功"
+      text_body_template: "导出操作成功。"
+
+    import_succeeded:
+      subject_template: "导入成功"
+      text_body_template: "导入操作成功。"
+
+  unsubscribe_link: "如果你希望取消这些邮件的订阅，请访问 [用户设置]（%{user_preferences_url}）。"
+
+  user_notifications:
+    unsubscribe:
+      title: "取消订阅"
+      description: "不再对这些邮件感兴趣？没问题！点击下面按钮来立即取消订阅："
+
+    user_invited_to_private_message:
+      subject_template: "[%{site_name}] %{username} 邀请你私下交流：'%{topic_title}'"
+      text_body_template: |
+        %{username} 邀请你在 %{site_name} 就 '%{topic_title}' 进行私下交流：
+
+        请访问 %{base_url}%{url} 来查看该主题。
+
+    user_replied:
+      subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 主题回复了你的帖子"
+      text_body_template: |
+        %{username} 在 %{site_name} 的 '%{topic_title}' 主题中回复了你的帖子：
+
+        ---
+        %{message}
+
+        ---
+        请访问 %{base_url}%{url} 来回复。
+
+    user_quoted:
+      subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 主题引用了你的内容"
+      text_body_template: |
+        %{username} 在 %{site_name} 的 '%{topic_title}' 主题中引用了你的内容：
+
+        ---
+        %{message}
+
+        ---
+        请访问 %{base_url}%{url} 来回复。
+
+    user_mentioned:
+      subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 主题提及了你"
+      text_body_template: |
+        %{username} 在 %{site_name} 的 '%{topic_title}' 主题中提及到了你：
+
+        ---
+        %{message}
+
+        ---
+        请访问 %{base_url}%{url} 来回复。
+
+    user_posted:
+      subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 主题发表了帖子"
+      text_body_template: |
+        %{username} 在 %{site_name} 的 '%{topic_title}' 主题中发表了帖子：
+
+        ---
+        %{message}
+
+        ---
+        请访问 %{base_url}%{url} 来回复。
+
+    digest:
+      why: "这里是自从我们在 %{last_seen_at} 最后一次见到你之后，在 %{site_link} 发生的事情的简单汇总。"
+      subject_template: "[%{site_name}] %{date} 的论坛动态"
+      new_activity: "在你的主题和帖子里的动态："
+      new_topics: "新主题："
+      unsubscribe: "这封来自 %{site_link} 的汇总邮件是当我们有一段时间没有见到你之后，作为一个礼貌的通知发送给你的。\n如果你希望关闭它或者修改你的邮件设置，请访问 %{unsubscribe_link}。"
+      click_here: "点击此处"
+      from: "%{site_name} 摘要"
+
+    private_message:
+      subject_template: "[%{site_name}] %{subject_prefix}%{topic_title}"
+      text_body_template: |
+        %{private_message_from} 刚刚发送了一条私信给你
+
+        ---
+        %{message}
+
+        ---
+        请访问 %{base_url}%{url} 来回复。
+
+    forgot_password:
+      subject_template: "[%{site_name}] 密码重置"
+      text_body_template: |
+        有人请求重置你在 [%{site_name}](%{base_url}) 上的密码。
+
+        如果那不是你，你可以直接忽略本邮件。
+
+        点击下面的链接来选择一个新密码：
+        %{base_url}/users/password-reset/%{email_token}
+
+    authorize_email:
+      subject_template: "[%{site_name}] 确认你的新电子邮箱地址"
+      text_body_template: |
+        点击下面的链接来确认你在 %{site_name} 上的新电子邮箱地址：
+
+        %{base_url}/users/authorize-email/%{email_token}
+
+    signup:
+      subject_template: "[%{site_name}] 激活你的新帐号"
+      text_body_template: |
+        欢迎来到 %{site_name}！
+
+        点击下面的链接来确认和激活你的新帐号：
+        %{base_url}/users/activate-account/%{email_token}
+
+        如果上面的链接无法点击，请拷贝该链接并粘贴到你的浏览器的地址栏里。
+
+  discourse_hub:
+    access_token_problem: "告诉一个管理员：请更新站点设置以包含正确的 discourse_org_access_key。"
+
+  page_not_found:
+    title: "你请求的页面在本论坛不存在。可能我们能帮助你找到它，或者类似的其它主题："
+    popular_topics: "热门主题"
+    recent_topics: "近期主题"
+    see_more: "查看更多"
+    search_title: "搜索该主题"
+    search_google: "用谷歌（Google）搜索"
