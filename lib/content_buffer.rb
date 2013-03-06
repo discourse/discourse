@@ -1,4 +1,4 @@
-# this class is used to track changes to an arbirary buffer
+# this class is used to track changes to an arbitrary buffer
 
 class ContentBuffer
 

@@ -348,7 +348,7 @@ class User < ActiveRecord::Base
   end
 
   # The following count methods are somewhat slow - definitely don't use them in a loop.
-  # They might need to be denormialzied
+  # They might need to be denormalized
   def like_count
     UserAction.where(user_id: id, action_type: UserAction::WAS_LIKED).count
   end
