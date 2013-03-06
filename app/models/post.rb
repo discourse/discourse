@@ -443,7 +443,7 @@ class Post < ActiveRecord::Base
     self.quote_count = quoted_post_numbers.size
   end
 
-  # Process this post after comitting it
+  # Process this post after committing it
   def trigger_post_process
     args = { post_id: id }
     args[:image_sizes] = image_sizes if image_sizes.present?

@@ -1,4 +1,4 @@
-# Like a hash, just does its best to stay in sync accross the farm
+# Like a hash, just does its best to stay in sync across the farm
 #
 # Redis backed with an allowance for a certain amount of latency
 

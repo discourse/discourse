@@ -10,7 +10,7 @@ module ImageSizer
 
     return [w.floor, h.floor] if w < max_width
 
-    # Using the maximum width, resize the heigh retaining the aspect ratio
+    # Using the maximum width, resize the height retaining the aspect ratio
     [max_width.floor, (h * (max_width / w)).floor]
   end
 
