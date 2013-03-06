@@ -27,6 +27,8 @@ Discourse.TopicList = Discourse.Model.extend({
             });
             newTopics.each(function(t) {
               if (!topicIds[t.get('id')]) {
+                // highlight new topics so we can get a visual feedback
+                t.set('highlight', true);
                 return topics.pushObject(t);
               }
             });
@@ -43,13 +45,11 @@ Discourse.TopicList = Discourse.Model.extend({
   },
 
   insert: function(json) {
-    var newTopic;
-    newTopic = Discourse.TopicList.decodeTopic(json);
-    /* New Topics are always unseen
-    */
-
+    var newTopic  = Discourse.TopicList.decodeTopic(json);
+    // new Topics are always unseen
     newTopic.set('unseen', true);
-    newTopic.set('highlightAfterInsert', true);
+    // and highlighted on the topics list view
+    newTopic.set('highlight', true);
     return this.get('inserted').unshiftObject(newTopic);
   }
 
@@ -126,5 +126,3 @@ Discourse.TopicList.reopenClass({
     return promise;
   }
 });
-
-
