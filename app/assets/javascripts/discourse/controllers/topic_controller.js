@@ -255,6 +255,15 @@ Discourse.TopicController = Discourse.ObjectController.extend({
     this.get('content').toggleStar();
   },
 
+  /**
+    Clears the pin from a topic for the currentUser
+
+    @method clearPin
+  **/
+  clearPin: function() {
+    this.get('content').clearPin();
+  },
+
   // Receive notifications for this topic
   subscribe: function() {
     var bus,

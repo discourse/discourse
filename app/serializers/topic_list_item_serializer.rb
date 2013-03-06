@@ -1,3 +1,5 @@
+require_dependency 'pinned_check'
+
 class TopicListItemSerializer < BasicTopicSerializer
 
   attributes :views,
@@ -27,6 +29,10 @@ class TopicListItemSerializer < BasicTopicSerializer
 
   def posters
     object.posters || []
+  end
+
+  def pinned
+    PinnedCheck.new(object, object.user_data).pinned?
   end
 
 end

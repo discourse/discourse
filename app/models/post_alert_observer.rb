@@ -80,7 +80,7 @@ class PostAlertObserver < ActiveRecord::Observer
       return unless Guardian.new(user).can_see?(post)
 
       # skip if muted on the topic
-      return if TopicUser.get(post.topic, user).try(:notification_level) == TopicUser::NotificationLevel::MUTED
+      return if TopicUser.get(post.topic, user).try(:notification_level) == TopicUser.notification_levels[:muted]
 
       # Don't notify the same user about the same notification on the same post
       return if user.notifications.exists?(notification_type: type, topic_id: post.topic_id, post_number: post.post_number)
@@ -132,7 +132,7 @@ class PostAlertObserver < ActiveRecord::Observer
         exclude_user_ids << extract_mentioned_users(post).map(&:id)
         exclude_user_ids << extract_quoted_users(post).map(&:id)
         exclude_user_ids.flatten!
-        TopicUser.where(topic_id: post.topic_id, notification_level: TopicUser::NotificationLevel::WATCHING).includes(:user).each do |tu|
+        TopicUser.where(topic_id: post.topic_id, notification_level: TopicUser.notification_levels[:watching]).includes(:user).each do |tu|
           create_notification(tu.user, Notification.types[:posted], post) unless exclude_user_ids.include?(tu.user_id)
         end
       end

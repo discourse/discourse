@@ -175,6 +175,7 @@ Discourse::Application.routes.draw do
   put 't/:topic_id/star' => 'topics#star', :constraints => {:topic_id => /\d+/}
   put 't/:slug/:topic_id/status' => 'topics#status', :constraints => {:topic_id => /\d+/}
   put 't/:topic_id/status' => 'topics#status', :constraints => {:topic_id => /\d+/}
+  put 't/:topic_id/clear-pin' => 'topics#clear_pin', :constraints => {:topic_id => /\d+/}
   put 't/:topic_id/mute' => 'topics#mute', :constraints => {:topic_id => /\d+/}
   put 't/:topic_id/unmute' => 'topics#unmute', :constraints => {:topic_id => /\d+/}
 

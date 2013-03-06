@@ -74,6 +74,37 @@ describe TopicsController do
 
   end
 
+  context 'clear_pin' do
+    it 'needs you to be logged in' do
+      lambda { xhr :put, :clear_pin, topic_id: 1 }.should raise_error(Discourse::NotLoggedIn)
+    end
+
+    context 'when logged in' do
+      let(:topic) { Fabricate(:topic) }
+      let!(:user) { log_in }
+
+      it "fails when the user can't see the topic" do
+        Guardian.any_instance.expects(:can_see?).with(topic).returns(false)
+        xhr :put, :clear_pin, topic_id: topic.id
+        response.should_not be_success
+      end
+
+      describe 'when the user can see the topic' do
+        it "calls clear_pin_for if the user can see the topic" do
+          Topic.any_instance.expects(:clear_pin_for).with(user).once
+          xhr :put, :clear_pin, topic_id: topic.id
+        end
+
+        it "succeeds" do
+          xhr :put, :clear_pin, topic_id: topic.id
+          response.should be_success
+        end
+      end
+
+    end
+
+  end
+
   context 'status' do
     it 'needs you to be logged in' do
       lambda { xhr :put, :status, topic_id: 1, status: 'visible', enabled: true }.should raise_error(Discourse::NotLoggedIn)

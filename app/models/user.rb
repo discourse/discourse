@@ -443,11 +443,8 @@ class User < ActiveRecord::Base
   end
 
   def readable_name
-    if name.present? && name != username
-      "#{name} (#{username})"
-    else
-      username
-    end
+    return "#{name} (#{username})" if name.present? && name != username
+    username
   end
 
   protected
@@ -461,25 +458,14 @@ class User < ActiveRecord::Base
     end
 
     def update_tracked_topics
-      if auto_track_topics_after_msecs_changed?
+      return unless auto_track_topics_after_msecs_changed?
 
-        if auto_track_topics_after_msecs < 0
-
-          User.exec_sql('update topic_users set notification_level = ?
-                         where notifications_reason_id is null and
-                           user_id = ?' , TopicUser::NotificationLevel::REGULAR , id)
-        else
-
-          User.exec_sql('update topic_users set notification_level = ?
-                         where notifications_reason_id is null and
-                           user_id = ? and
-                           total_msecs_viewed < ?' , TopicUser::NotificationLevel::REGULAR , id, auto_track_topics_after_msecs)
-
-          User.exec_sql('update topic_users set notification_level = ?
-                         where notifications_reason_id is null and
-                           user_id = ? and
-                           total_msecs_viewed >= ?' , TopicUser::NotificationLevel::TRACKING , id, auto_track_topics_after_msecs)
-        end
+      where_conditions = {notifications_reason_id: nil, user_id: id}
+      if auto_track_topics_after_msecs < 0
+        TopicUser.update_all({notification_level: TopicUser.notification_levels[:regular]}, where_conditions)
+      else
+        TopicUser.update_all(["notification_level = CASE WHEN total_msecs_viewed < ? THEN ? ELSE ? END",
+                              auto_track_topics_after_msecs, TopicUser.notification_levels[:regular], TopicUser.notification_levels[:tracking]], where_conditions)
       end
     end
 

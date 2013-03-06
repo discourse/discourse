@@ -547,8 +547,12 @@ describe Topic do
           @topic.reload
         end
 
+        it "doesn't have a pinned_at" do
+          @topic.pinned_at.should be_blank
+        end
+
         it 'should not be pinned' do
-          @topic.should_not be_pinned
+          @topic.pinned_at.should be_blank
         end
 
         it 'adds a moderator post' do
@@ -562,13 +566,13 @@ describe Topic do
 
       context 'enable' do
         before do
-          @topic.update_attribute :pinned, false
+          @topic.update_attribute :pinned_at, nil
           @topic.update_status('pinned', true, @user)
           @topic.reload
         end
 
         it 'should be pinned' do
-          @topic.should be_pinned
+          @topic.pinned_at.should be_present
         end
 
         it 'adds a moderator post' do
@@ -588,7 +592,7 @@ describe Topic do
           @topic.reload
         end
 
-        it 'should not be pinned' do
+        it 'should not be archived' do
           @topic.should_not be_archived
         end
 
@@ -866,8 +870,12 @@ describe Topic do
       topic.should be_visible
     end
 
+    it "has an empty pinned_at" do
+      topic.pinned_at.should be_blank
+    end
+
     it 'is not pinned' do
-      topic.should_not be_pinned
+      topic.pinned_at.should be_blank
     end
 
     it 'is not closed' do

@@ -12,14 +12,13 @@ describe TopicQuery do
 
   context 'a bunch of topics' do
     let!(:regular_topic) { Fabricate(:topic, title: 'this is a regular topic', user: creator, bumped_at: 15.minutes.ago) }
-    let!(:pinned_topic) { Fabricate(:topic, title: 'this is a pinned topic', user: creator, pinned: true, bumped_at: 10.minutes.ago) }
+    let!(:pinned_topic) { Fabricate(:topic, title: 'this is a pinned topic', user: creator, pinned_at: 10.minutes.ago, bumped_at: 10.minutes.ago) }
     let!(:archived_topic) { Fabricate(:topic, title: 'this is an archived topic', user: creator, archived: true, bumped_at: 6.minutes.ago) }
     let!(:invisible_topic) { Fabricate(:topic, title: 'this is an invisible topic', user: creator, visible: false, bumped_at: 5.minutes.ago) }
     let!(:closed_topic) { Fabricate(:topic, title: 'this is a closed topic', user: creator, closed: true, bumped_at: 1.minute.ago) }
+    let(:topics) { topic_query.list_popular.topics }
 
     context 'list_popular' do
-      let(:topics) { topic_query.list_popular.topics }
-
       it "returns the topics in the correct order" do
         topics.should == [pinned_topic, closed_topic, archived_topic, regular_topic]
       end
@@ -31,6 +30,17 @@ describe TopicQuery do
       it "includes the invisible topic if you're an admin" do
         TopicQuery.new(admin).list_popular.topics.include?(invisible_topic).should be_true
       end
+    end
+
+    context 'after clearring a pinned topic' do
+      before do
+        pinned_topic.clear_pin_for(user)
+      end
+
+      it "no longer shows the pinned topic at the top" do
+        topics.should == [closed_topic, archived_topic, pinned_topic, regular_topic]
+      end
+
     end
 
   end

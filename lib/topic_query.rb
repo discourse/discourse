@@ -6,6 +6,47 @@ require_dependency 'topic_list'
 
 class TopicQuery
 
+  class << self
+    # use the constants in conjuction with COALESCE to determine the order with regard to pinned
+    # topics that have been cleared by the user. There
+    # might be a cleaner way to do this.
+    def lowest_date
+      "2010-01-01"
+    end
+
+    def highest_date
+      "3000-01-01"
+    end
+
+    # If you've clearned the pin, use bumped_at, otherwise put it at the top
+    def order_with_pinned_sql
+      "CASE
+        WHEN (COALESCE(topics.pinned_at, '#{lowest_date}') > COALESCE(tu.cleared_pinned_at, '#{lowest_date}'))
+          THEN '#{highest_date}'
+        ELSE topics.bumped_at
+       END DESC"
+    end
+
+    # If you've clearned the pin, use bumped_at, otherwise put it at the top
+    def order_nocategory_with_pinned_sql
+      "CASE
+        WHEN topics.category_id IS NULL and (COALESCE(topics.pinned_at, '#{lowest_date}') > COALESCE(tu.cleared_pinned_at, '#{lowest_date}'))
+          THEN '#{highest_date}'
+        ELSE topics.bumped_at
+       END DESC"
+    end
+
+    # For anonymous users
+    def order_nocategory_basic_bumped
+      "CASE WHEN topics.category_id IS NULL and (topics.pinned_at IS NOT NULL) THEN 0 ELSE 1 END, topics.bumped_at DESC"
+    end
+
+    def order_basic_bumped
+      "CASE WHEN (topics.pinned_at IS NOT NULL) THEN 0 ELSE 1 END, topics.bumped_at DESC"
+    end
+
+  end
+
   def initialize(user=nil, opts={})
     @user = user
 
@@ -64,23 +105,19 @@ class TopicQuery
 
   # The popular view of topics
   def list_popular
-    return_list(unordered: true) do |list|
-      list.order('CASE WHEN topics.category_id IS NULL and topics.pinned THEN 0 ELSE 1 END, topics.bumped_at DESC')
-    end
+    TopicList.new(@user, default_list)
   end
 
   # The favorited topics
   def list_favorited
     return_list do |list|
-      list.joins("INNER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.starred AND tu.user_id = #{@user_id})")
+      list.where('tu.starred')
     end
   end
 
   def list_read
     return_list(unordered: true) do |list|
-      list
-        .joins("INNER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{@user_id})")
-        .order('COALESCE(tu.last_visited_at, topics.bumped_at) DESC')
+      list.order('COALESCE(tu.last_visited_at, topics.bumped_at) DESC')
     end
   end
 
@@ -93,17 +130,30 @@ class TopicQuery
   end
 
   def list_posted
-    return_list do |list|
-      list.joins("INNER JOIN topic_users AS tu ON (tu.topic_id = topics.id AND tu.posted AND tu.user_id = #{@user_id})")
-    end
+    return_list {|l| l.where('tu.user_id IS NOT NULL') }
   end
 
   def list_uncategorized
-    return_list {|l| l.where(category_id: nil).order('topics.pinned desc')}
+    return_list(unordered: true) do |list|
+      list = list.where(category_id: nil)
+
+      if @user_id.present?
+        list.order(TopicQuery.order_with_pinned_sql)
+      else
+        list.order(TopicQuery.order_nocategory_basic_bumped)
+      end
+    end
   end
 
   def list_category(category)
-    return_list {|l| l.where(category_id: category.id).order('topics.pinned desc')}
+    return_list(unordered: true) do |list|
+      list = list.where(category_id: category.id)
+      if @user_id.present?
+        list.order(TopicQuery.order_with_pinned_sql)
+      else
+        list.order(TopicQuery.order_basic_bumped)
+      end
+    end
   end
 
   def unread_count
@@ -130,8 +180,22 @@ class TopicQuery
       query_opts = @opts.merge(list_opts)
       page_size = query_opts[:per_page] || SiteSetting.topics_per_page
 
+      # Start with a list of all topics
       result = Topic
-      result = result.topic_list_order unless query_opts[:unordered]
+
+      if @user_id.present?
+        result = result.joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{@user_id})")
+      end
+
+      unless query_opts[:unordered]
+        # If we're logged in, we have to pay attention to our pinned settings
+        if @user_id.present?
+          result = result.order(TopicQuery.order_nocategory_with_pinned_sql)
+        else
+          result = result.order(TopicQuery.order_basic_bumped)
+        end
+      end
+
       result = result.listable_topics.includes(:category)
       result = result.where('categories.name is null or categories.name <> ?', query_opts[:exclude_category]) if query_opts[:exclude_category]
       result = result.where('categories.name = ?', query_opts[:only_category]) if query_opts[:only_category]
@@ -145,16 +209,15 @@ class TopicQuery
     def new_results(list_opts={})
 
       default_list(list_opts)
-        .joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{@user_id})")
         .where("topics.created_at >= :created_at", created_at: @user.treat_as_new_topic_start_date)
         .where("tu.last_read_post_number IS NULL")
-        .where("COALESCE(tu.notification_level, :tracking) >= :tracking", tracking: TopicUser::NotificationLevel::TRACKING)
+        .where("COALESCE(tu.notification_level, :tracking) >= :tracking", tracking: TopicUser.notification_levels[:tracking])
     end
 
     def unread_results(list_opts={})
       default_list(list_opts)
-        .joins("INNER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{@user_id} AND tu.last_read_post_number < topics.highest_post_number)")
-        .where("COALESCE(tu.notification_level, :regular) >= :tracking", regular: TopicUser::NotificationLevel::REGULAR, tracking: TopicUser::NotificationLevel::TRACKING)
+        .where("tu.last_read_post_number < topics.highest_post_number")
+        .where("COALESCE(tu.notification_level, :regular) >= :tracking", regular: TopicUser.notification_levels[:regular], tracking: TopicUser.notification_levels[:tracking])
     end
 
     def random_suggested_results_for(topic, count, exclude_topic_ids)

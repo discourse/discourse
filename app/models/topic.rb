@@ -83,11 +83,9 @@ class Topic < ActiveRecord::Base
 
   after_create do
     changed_to_category(category)
-    TopicUser.change(
-                     user_id, id,
-                     notification_level: TopicUser::NotificationLevel::WATCHING,
-                     notifications_reason_id: TopicUser::NotificationReasons::CREATED_TOPIC
-                    )
+    TopicUser.change(user_id, id,
+                     notification_level: TopicUser.notification_levels[:watching],
+                     notifications_reason_id: TopicUser.notification_reasons[:created_topic])
     if archetype == Archetype.private_message
       DraftSequence.next!(user, Draft::NEW_PRIVATE_MESSAGE)
     else
@@ -206,8 +204,17 @@ class Topic < ActiveRecord::Base
   end
 
   def update_status(property, status, user)
+
     Topic.transaction do
-      update_column(property, status)
+
+      # Special case: if it's pinned, update that
+      if property.to_sym == :pinned
+        update_pinned(status)
+      else
+        # otherwise update the column
+        update_column(property, status)
+      end
+
       key = "topic_statuses.#{property}_"
       key << (status ? 'enabled' : 'disabled')
 
@@ -506,7 +513,7 @@ class Topic < ActiveRecord::Base
 
   # Enable/disable the mute on the topic
   def toggle_mute(user, muted)
-    TopicUser.change(user, self.id, notification_level: muted?(user) ? TopicUser::NotificationLevel::REGULAR : TopicUser::NotificationLevel::MUTED )
+    TopicUser.change(user, self.id, notification_level: muted?(user) ? TopicUser.notification_levels[:regular] : TopicUser.notification_levels[:muted] )
   end
 
   def slug
@@ -526,7 +533,17 @@ class Topic < ActiveRecord::Base
   def muted?(user)
     return false unless user && user.id
     tu = topic_users.where(user_id: user.id).first
-    tu && tu.notification_level == TopicUser::NotificationLevel::MUTED
+    tu && tu.notification_level == TopicUser.notification_levels[:muted]
+  end
+
+  def clear_pin_for(user)
+    return unless user.present?
+
+    TopicUser.change(user.id, id, cleared_pinned_at: Time.now)
+  end
+
+  def update_pinned(status)
+    update_column(:pinned_at, status ? Time.now : nil)
   end
 
   def draft_key
@@ -535,18 +552,18 @@ class Topic < ActiveRecord::Base
 
   # notification stuff
   def notify_watch!(user)
-    TopicUser.change(user, id, notification_level: TopicUser::NotificationLevel::WATCHING)
+    TopicUser.change(user, id, notification_level: TopicUser.notification_levels[:watching])
   end
 
   def notify_tracking!(user)
-    TopicUser.change(user, id, notification_level: TopicUser::NotificationLevel::TRACKING)
+    TopicUser.change(user, id, notification_level: TopicUser.notification_levels[:tracking])
   end
 
   def notify_regular!(user)
-    TopicUser.change(user, id, notification_level: TopicUser::NotificationLevel::REGULAR)
+    TopicUser.change(user, id, notification_level: TopicUser.notification_levels[:regular])
   end
 
   def notify_muted!(user)
-    TopicUser.change(user, id, notification_level: TopicUser::NotificationLevel::MUTED)
+    TopicUser.change(user, id, notification_level: TopicUser.notification_levels[:muted])
   end
 end
