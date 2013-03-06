@@ -33,16 +33,15 @@ Discourse.TopicListItemView = Discourse.View.extend({
   },
 
   didInsertElement: function() {
+    // highligth the last topic viewed
     if (Discourse.get('transient.lastTopicIdViewed') === this.get('content.id')) {
       Discourse.set('transient.lastTopicIdViewed', null);
       this.highlight();
-      return;
     }
-    if (this.get('content.highlightAfterInsert')) {
-      return this.highlight();
+    // highlight new topics that have been loaded from the server or the one we just created
+    else if (this.get('content.highlight')) {
+      this.highlight();
     }
   }
 
 });
-
-
