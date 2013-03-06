@@ -6,6 +6,7 @@ before_script:
   - cp config/redis.yml.sample config/redis.yml
   - psql -c 'create database discourse_test;' -U postgres
   - rake db:migrate
+bundler_args: --without development
 script: 'rake jshint && rake spec && bundle exec guard-jasmine --server-timeout=60'
 services:
   - redis-server
