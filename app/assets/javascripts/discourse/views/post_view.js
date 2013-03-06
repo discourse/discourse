@@ -175,14 +175,13 @@ Discourse.PostView = Discourse.View.extend({
   },
 
   toggleQuote: function($aside) {
-    var $blockQuote, originalText, post, topic_id,
-      _this = this;
-    this.toggleProperty('quoteExpanded');
-    if (this.get('quoteExpanded')) {
+    var $blockQuote, originalText, post, topic_id;
+    $aside.data('expanded',!$aside.data('expanded'));
+    if ($aside.data('expanded')) {
       this.updateQuoteElements($aside, 'chevron-up');
       // Show expanded quote
       $blockQuote = $('blockquote', $aside);
-      this.originalContents = $blockQuote.html();
+      $aside.data('original-contents',$blockQuote.html());
       originalText = $blockQuote.text().trim();
       $blockQuote.html(Em.String.i18n("loading"));
       post = this.get('post');
@@ -191,15 +190,14 @@ Discourse.PostView = Discourse.View.extend({
         topic_id = $aside.data('topic');
       }
       $.getJSON("/posts/by_number/" + topic_id + "/" + ($aside.data('post')), function(result) {
-        var parsed;
-        parsed = $(result.cooked);
+        var parsed = $(result.cooked);
         parsed.replaceText(originalText, "<span class='highlighted'>" + originalText + "</span>");
         return $blockQuote.showHtml(parsed);
       });
     } else {
       // Hide expanded quote
       this.updateQuoteElements($aside, 'chevron-down');
-      $('blockquote', $aside).showHtml(this.originalContents);
+      $('blockquote', $aside).showHtml($aside.data('original-contents'));
     }
     return false;
   },
@@ -236,6 +234,7 @@ Discourse.PostView = Discourse.View.extend({
       if (!($aside.data('full') || $title.data('has-quote-controls'))) {
         $title.on('click', function(e) {
           if ($(e.target).is('a')) {
+            // if we clicked on a link, follow it
             return true;
           }
           return _this.toggleQuote($aside);
