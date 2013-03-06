@@ -91,7 +91,6 @@ cs:
         ok: "Vaše jméno vypadá dobře"
       username:
         title: "Uživatelské jméno"
-        #instructions: "People can mention you as @{{username}}. This is an unregistered nickname. You can register it at <a href='http://discourse.org'>discourse.org</a>."
         instructions: "Ostatní vás mohou zmínit jako @{{username}}."
         available: "Toto uživatelské jméno je volné."
         global_match: "Emailová adresa odpovídá registrovaného uživatelskému jménu."
@@ -280,6 +279,34 @@ cs:
       show_preview: 'zobrazit náhled &raquo;'
       hide_preview: '&laquo; skrýt náhled'
 
+      quote_title: "Citovat příspěvek"
+      bold_title: "Tučně"
+      bold_text: "tučný text"
+      italic_title: "Kurzíva"
+      italic_text: "text kurzívou"
+      link_title: "Odkazy"
+      link_description: "sem vložte popis odkazu"
+      link_dialog_title: "Vložit odkaz"
+      link_optional_text: "volitelný popis"
+      quote_title: "Bloková citace"
+      quote_text: "Bloková citace"
+      code_title: "Ukázka kódu"
+      code_text: "sem vložte kód"
+      image_title: "Obrázek"
+      image_description: "sem vložek popis obrázku"
+      image_dialog_title: "Vložit obrázek"
+      image_optional_text: "volitelný popis"
+      image_hosting_hint: "Potřebujete <a href='http://www.google.com/search?q=free+image+hosting' target='_blank'>hosting obrázků zdarma?</a>"
+      olist_title: "Číslovaný seznam"
+      ulist_title: "Odrážkový seznam"
+      list_item: "Položka seznam"
+      heading_title: "Nadpis"
+      heading_text: "Nadpis"
+      hr_title: "Horizontální oddělovač"
+      undo_title: "Zpět"
+      redo_title: "Opakovat"
+      help: "Nápověda pro Markdown"
+
     notifications:
       title: "oznámení o zmínkách pomocí @name, odpovědi na vaše příspěvky a témata, soukromé zprávy, atd."
       none: "V tuto chvíli nemáte žádná oznámení."
@@ -336,7 +363,6 @@ cs:
         unread: "Nejsou tu žádná další nepřečtená témata."
         favorited: "Nejsou tu žádná další oblíbená témata k přečtení."
         category: "V kategorii {{category}} nejsou žádná další témata."
-
 
     topic:
       create_in: 'Nové téma v kategorii {{categoryName}}'
