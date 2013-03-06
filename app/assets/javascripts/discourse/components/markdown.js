@@ -52,7 +52,7 @@ Discourse.Markdown = {
         italicexample: I18n.t("js.composer.italic_text"),
 
         link: I18n.t("js.composer.link_title") + " <a> Ctrl+L",
-        linkdescription: "enter link description here",
+        linkdescription: I18n.t("js.composer.link_description"),
         linkdialog: "<p><b>" + I18n.t("js.composer.link_dialog_title") + "</b></p><p>http://example.com/ \"" +
             I18n.t("js.composer.link_optional_text") + "\"</p>",
 
@@ -69,12 +69,12 @@ Discourse.Markdown = {
 
         olist: I18n.t("js.composer.olist_title") + " <ol> Ctrl+O",
         ulist: I18n.t("js.composer.ulist_title") + " <ul> Ctrl+U",
-        litem: I18n.t("js.compser.list_item"),
+        litem: I18n.t("js.composer.list_item"),
 
         heading: I18n.t("js.composer.heading_title") + " <h1>/<h2> Ctrl+H",
         headingexample: I18n.t("js.composer.heading_text"),
 
-        hr: I18n.t("js.composer_hr_title") + " <hr> Ctrl+R",
+        hr: I18n.t("js.composer.hr_title") + " <hr> Ctrl+R",
 
         undo: I18n.t("js.composer.undo_title") + " - Ctrl+Z",
         redo: I18n.t("js.composer.redo_title") + " - Ctrl+Y",
