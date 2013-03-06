@@ -67,12 +67,10 @@
     }
   }
   .search {
+    float: right;
+    margin-left: 10px;
     label {
       margin-top: 5px;
-      float: right;
-    }
-    input[type=text] {
-      float: right;
     }
   }
 }
