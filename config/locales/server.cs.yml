@@ -459,7 +459,6 @@ cs:
     omniauth_error: "Bohužel nepovedlo se vás autorizovat přes %{strategy}. Ujistěte se, že jste správně schválili autorizaci."
     omniauth_error_unknown: "Nastala chyba při zpracování vašeho přihlášení, prosím zkuste to znovu."
 
-
   user:
     username:
       short: "musí být delší než %{min} znaků"
@@ -587,6 +586,7 @@ cs:
         - Pro návrat na hlavní stránku můžete kdykoliv **kliknout na ikonu vlevo nahoře**.
 
         - Pro hledání, zobrazení vaší uživatelské stránky nebo jinou navigaci použijte ikony vpravo nahoře.
+
         - Během čtení nějakého tématu se můžete kliknutím na název tématu v horní části stránky vrátit na začátek tématu. Chcete-li naopak skočit na *konec* tématu, klikněte na šipku dolů v indikátoru pozice v dolní části stránky, nebo klikněte na odkaz 'poslední příspěvek' v souhrnu tématu u prvního příspěvku.
 
     welcome_approved:
@@ -711,6 +711,7 @@ cs:
       new_topics: "Nová témata:"
       unsubscribe: "Tento souhrnný email je zaslán jako oznámení od %{site_link}, pokud jste se nepřihlásil za posledních 7 dní.\nPokud nechcete tento souhrn dostávat, navštivte %{unsubscribe_link}."
       click_here: "klikněte zde"
+      from: "souhrn z %{site_name}"
 
     private_message:
       subject_template: "[%{site_name}] %{subject_prefix}%{topic_title}"
