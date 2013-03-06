@@ -8,8 +8,8 @@
 **/
 Discourse.VersionCheck = Discourse.Model.extend({
   upToDate: function() {
-    return this.get('missing_versions_count') === 0;
-  }.property('missing_versions_count'),
+    return this.get('latest_version') === this.get('installed_version');
+  }.property('latest_version', 'installed_version'),
 
   behindByOneVersion: function() {
     return this.get('missing_versions_count') === 1;
