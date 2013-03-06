@@ -1,0 +1,707 @@
+pt:
+  title: "Discourse"
+  topics: "Tópicos"
+
+  is_reserved: "está reservado"
+  too_many_mentions: "tem demasiados utilizadores mencionados"
+  too_many_images: "tem demasiadas imagens"
+  too_many_links: "tem demasiados links"
+  just_posted_that: "é demasiado similar ao que postaste recentemente"
+  has_already_been_used: "já foi usado"
+  invalid_characters: "contém caracteres inválidos"
+  is_invalid: "é inválido; tenta ser um bocado mais descritivo"
+
+  education:
+    until_posts:
+      one: "post"
+      other: "%{count} posts"
+
+    'new-topic': |
+      Bem vindo ao %{site_name} &mdash; **obrigado por começar uma nova conversa!**
+
+      Pensa nisto enquanto escreves o teu tópico:
+
+      - O título descreve razoavelmente o que alguém espera encontrar quando abre o tópico?
+
+      - O primeiro tópico define o teu tópico: Isto é sobre o quê? Quem poderá estar interessado nisto? Por que é que importa? Que tipo de respostas esperas da comunidade?
+
+      - Tenta escolher as palavras certas para que outros possam *encontrar* o teu tópico. Se precisa de estar numa categoria, escolhe a categoria apropriada.
+
+      Para mais guias, [vê a nossa FAQ](/faq). Este painel irá apenas aparecer para o teu primeiro %{education_posts_text}.
+
+    'new-reply': |
+      Bem vindo ao %{site_name} &mdash; **obrigado por contribuires para a conversa!**
+
+      Pensa nisto enquanto escreves a tua resposta:
+
+      - A tua resposta melhora a conversa de alguma forma, mesmo que pequena?
+
+      - Trata os membros da comunidade da mesma forma que gostavas de ser tratado.
+
+      - Não faz mal ser crítico, mas lembra-te de criticar *ideias*, não pessoas.
+
+      Para mais guias, [vê a nossa FAQ](/faq). Este painel irá apenas aparecer para o teu primeiro first %{education_posts_text}.
+
+
+  activerecord:
+    attributes:
+      category:
+        name: "Nome da Categoria"
+      post:
+        raw: "Corpo"
+    errors:
+      models:
+        topic:
+          attributes:
+            archetype:
+              cant_send_pm: "Desculpa, não podes enviar uma mensagem privada para esse utilizador."
+
+  user_profile:
+    no_info_me: "<div class='missing-profile'>o campo Sobre mim do teu perfil está em branco, <a href='/users/%{username_lower}/preferences'>gostavas de o completar?</a></div>"
+    no_info_other: "<div class='missing-profile'>%{name} ainda não colocou nada no campo Sobre Mim</div>"
+
+  category:
+    topic_prefix: "Definição da categoria %{category}"
+
+  trust_levels:
+    new:
+      title: "novo utilizador"
+    basic:
+      title: "utilizador básico"
+    regular:
+      title: "utilizador regular"
+    experienced:
+      title: "utilizador experiente"
+    advanced:
+      title: "utilizador avançado"
+    moderator:
+      title: "moderador"
+
+  rate_limiter:
+    too_many_requests: "Estás a fazer isso demasiadas vezes. Por favor espera %{time_left} antes de tentar novamente."
+    hours:
+      one: "1 hora"
+      other: "%{count} horas"
+    minutes:
+      one: "1 minuto"
+      other: "%{count} minutos"
+    seconds:
+      one: "1 segundo"
+      other: "%{count} segundos"
+
+  datetime:
+    distance_in_words:
+      half_a_minute: "< 1m"
+      less_than_x_seconds:
+        one:   "< 1s"
+        other: "< %{count}s"
+      x_seconds:
+        one:   "1s"
+        other: "%{count}s"
+      less_than_x_minutes:
+        one:   "< 1m"
+        other: "< %{count}m"
+      x_minutes:
+        one:   "1m"
+        other: "%{count}m"
+      about_x_hours:
+        one:   "1h"
+        other: "%{count}h"
+      x_days:
+        one:   "1d"
+        other: "%{count}d"
+      about_x_months:
+        one:   "1mês"
+        other: "%{count}mon"
+      x_months:
+        one:   "1mês"
+        other: "%{count}mon"
+      about_x_years:
+        one:   "1ano"
+        other: "%{count}anos"
+      over_x_years:
+        one:   "> 1ano"
+        other: "> %{count}anos"
+      almost_x_years:
+        one:   "1ano"
+        other: "%{count}anos"
+
+    distance_in_words_verbose:
+      half_a_minute: "mesmo agora"
+      less_than_x_seconds:
+        one:   "mesmo agora"
+        other: "mesmo agora"
+      x_seconds:
+        one:   "1 segundo atrás"
+        other: "%{count} segundos atrás"
+      less_than_x_minutes:
+        one:   "menos de 1 minuto atrás"
+        other: "menos de %{count} minutos atrás"
+      x_minutes:
+        one:   "1 minuto atrás"
+        other: "%{count} minutos atrás"
+      about_x_hours:
+        one:   "1 hora atrás"
+        other: "%{count} horas atrás"
+      x_days:
+        one:   "1 dia atrás"
+        other: "%{count} dias atrás"
+      about_x_months:
+        one:   "há cerca de 1 mês atrás"
+        other: "há cerca de %{count} meses atrás"
+      x_months:
+        one:   "1 mês atrás"
+        other: "%{count} meses atrás"
+      about_x_years:
+        one:   "há cerca de 1 ano atrás"
+        other: "há cerca %{count} anos atrás"
+      over_x_years:
+        one:   "há mais de 1 ano atrás"
+        other: "há mais de %{count} anos atrás"
+      almost_x_years:
+        one:   "há quase 1 ano atrás"
+        other: "há quase %{count} anos atrás"
+
+  password_reset:
+    no_token: "Desculpa, o teu token expirou. Por favor tenta redefinir a tua password novamente."
+    choose_new: "Por favor escolhe uma password nova"
+    update: 'atualizar password'
+    title: 'redefinir password'
+    success: "Alteraste com sucesso a tua password e estás agora com o login feito."
+    success_unapproved: "Alteraste com sucesso a tua password."
+
+  change_email:
+    confirmed: "O teu email foi atualizado."
+    please_continue: "Por favor segue para %{link}"
+    error: "Houve um erro ao alterar o teu endereço de email. Talvez o endereço já esteja a ser utilizado?"
+
+  activation:
+    already_done: "Desculpa, este link de confirmação já não é válido. Talvez a tua conta já esteja ativa?"
+    please_continue: "A tua nova conta está confimada e estás agora com login feito. Segue para %{link}"
+    welcome_to: "Bem-vindo a %{site_name}!"
+    approval_required: "Um moderador tem que aprovar a tua conta para poderes aceder a este forum. Irás receber um email quando a tua conta for aprovada!"
+
+  post_action_types:
+    off_topic:
+      title: 'Off-Topic'
+      description: 'Este post é radicalmente off-topic nesta conversa, e provavelmente deveria ser movido para um tópico diferente.'
+      long_form: 'sinalizou isto como off-topic'
+    spam:
+      title: 'Spam'
+      description: 'Este post é claramente um anúncio sem interesse. Não é util nem relevante para esta conversa, mas promocional por natureza.'
+      long_form: 'sinalizado como spam'
+    inappropriate:
+      title: 'Inapropriado'
+      description: 'Este post contém conteúdo que uma pessoa normal consideraria ofensivo, abusivo, ou ódio.'
+      long_form: 'sinalizado como inapropriado'
+    custom_flag:
+      title: 'Outro'
+      description: 'Este post precisa de atenção de moderação geral basiado no <a href="/faq">FAQ</a>, <a href="/tos">TOS</a>, ou por outra razão não listada acima.'
+      long_form: 'sinalizado para moderação'
+    bookmark:
+      title: 'Marca'
+      description: 'Marcar este post'
+      long_form: 'Marcou este post'
+    like:
+      title: 'Gosto'
+      description: 'Gostar deste post'
+      long_form: 'gostou disto'
+
+  flagging:
+    you_must_edit: '<p>O teu post atingiu o nível máximo de sinalizações. Por favor vê as tuas mensagens privadas.</p>'
+    user_must_edit: '<p>Conteúdo sinalizado escondido.</p>'
+
+  archetypes:
+    regular:
+      title: "Tópico Regular"
+
+  unsubscribed:
+    title: 'Desinscrito'
+    description: "Desinscreveste-te. Não te vamos contactar mais!"
+    oops: "No caso de não ser isto o pretendido, clica em baixo."
+    not_found: "Erro ao desinscrever"
+    not_found_description: "Desculpa, não conseguimos desinscrever-te. É possível que o link no teu email tenha expirado."
+
+  resubscribe:
+    action: "Re-Inscrever"
+    title: "Re-Inscrever!"
+    description: "Foste re-inscrito."
+
+  site_settings:
+    min_post_length: "tamanho mínimo para o post"
+    max_post_length: "tamanho máximo para o post"
+    min_topic_title_length: "tamanho mínimo para título do tópico"
+    max_topic_title_length: "tamanho máximo para título do tópico"
+    allow_duplicate_topic_titles: "se o utilizadores podem criar tópicos com o mesmo título"
+    unique_posts_mins: "Quantos minutos antes para um utilizador poder criar um post com o mesmo conteúdo outra vez?"
+    enforce_global_nicknames: "Forçar único nickname global. Nota: Apenas alterar isto no setup inicial."
+    discourse_org_access_key: "A chave de acesso para aceder ao registo de nicknames em discourse.org"
+    educate_until_posts: "Mostrar educação até o utilizador ter postado este número de vezes"
+    title: "título deste website"
+    secret_token: "token secreto para ser usado para proteger cookies"
+    restrict_access: "restringir acesso a não ser que esta password seja utilizada"
+    access_password: "restrict_access está ativo. Garanta que esta password é preenchida"
+    queue_jobs: "'queue' vários 'jobs' no sidekiq, if false queues are inline"
+    crawl_images: "permitir mostrar imagens de sites terceiros"
+    ninja_edit_window: "quão rápido é possivél fazer uma alteração sem guardar uma nova versão, em segundos."
+    enable_imgur: "permitir imgur api para uploading, não guardar ficheiros localmente"
+    imgur_api_key: "chave para imgur.com api - necessária para image upload"
+    imgur_endpoint: "end point para uploading imgur.com images"
+    max_image_width: "máxima largura para uma imagem num post"
+    category_featured_topics: "numero de tópicos mostrados na lista de categorias"
+    popup_delay: "Espaço de tempo em ms antes dos popus aparecer no ecrã"
+    add_rel_nofollow_to_user_content: "Adicionar rel nofollow em todos os conteúdos submetidos pelo utilizador, excepto links internos (incluido dominios parentes) mudando isto exige uma atualização a todos os teus baked markdown"
+    exclude_rel_nofollow_domains: "Lista de domínios onde o nofollow não é adicionado (tld.com irá automáticamente disponibilizar sub.tld.com também)"
+    post_excerpt_maxlength: "Tamanho máximo em caracteres para um post."
+    post_onebox_maxlength: "Tamanho máximo para um oneboxed discourse post."
+    category_post_template: "O template para um post que aparece quando crias uma categoria."
+    new_topics_rollup: "Quantos tópicos podem ser inseridos na lista de tópicos antes de serem puxados."
+    onebox_max_chars: "Máximo número de caracteres que um onebox vai importar num único pedaço."
+    logo_url: "O logo para o teu site eg: http://xyz.com/x.png"
+    logo_small_url: "O logo em pequeno para o teu site (aparece nas páginas dos tópicos) eg: http://xyz.com/x.png"
+    favicon_url: "Um favicon para o teu site"
+    notification_email: "O endereço de email a ser usado para notificar os utilizadores de password esquecida, novas contas, etc."
+    use_ssl: "Deverá o site estár acessivel via SSL?"
+    best_of_score_threshold: "A pontuação mínima de um post para ser incluído no 'melhor de'"
+    best_of_posts_required: "Um tópico precisa deste número de posts antes de ser ativado o modo 'melhor de'."
+    best_of_likes_required: "Um tópico precisa deste número de gostos antes de ser ativado o mode 'melhor de'."
+    enable_private_messages: "permitir membros a ter conversas com mensagens privadas"
+
+    enable_long_polling: "Message bus used for notification can use long polling."
+    long_polling_interval: "Interval in milliseconds before a new long poll is issued"
+
+    polling_interval: "How often should the client poll in milliseconds"
+    anon_polling_interval: "How often should the anon clients poll in milliseconds"
+
+    auto_track_topics_after: "How many milliseconds before a topic is automatically tracked (0 for always, -1 for never)"
+    new_topic_duration_minutes: "How many minutes is a topic considered new (-1 for always, -2 for last visit)"
+
+    flags_required_to_hide_post: "Os post vão ser escondidos automaticamente quando o númereo de sinalizações atingir este número (0 para nunca)"
+    cooldown_minutes_after_hiding_posts: "How many minutes must a user wait till they can edit their post after it is hidden due to flagging"
+
+    traditional_markdown_linebreaks: "Use traditional linebreaks in markdown, wrapping is implicit unless postfixed with 2 spaces"
+    post_undo_action_window_mins: "The window in which someone can reverse an action on a post (such as liking)"
+    must_approve_users: "The owners of the forum must approve users before they gain access."
+    ga_tracking_code: "Google analytics tracking code, see: http://google.com/analytics"
+    top_menu: "The order of the items in the top menu. Example popular|read|favorited|unread|new|posted|categories"
+    post_menu: "The order of the items on the post menu."
+    max_length_show_reply: "Embedded replies to posts won't be shown if they directly below and are below this length."
+    track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default cause it has to re-write urls, hurting usability"
+    topics_per_page: "How many topics to show on the topics list page."
+    posts_per_page: "How many posts are returned on a topic page"
+    system_username: "Username that sends system messages"
+    send_welcome_message: "Do new users get a welcome private message?"
+    supress_reply_directly_below: "Don't show replies button below a post when the reply is directly below"
+    allow_index_in_robots_txt: "Site should be indexed by search engines (update robots.txt)"
+    email_domains_blacklist: "A pipe-delimited list of email domains that are not allowed. Example: mailinator.com|trashmail.net"
+
+    port: "If you'd like to specify a port in the URL. Useful in development mode. Leave blank for none."
+    force_hostname: "If you'd like to specify a hostname in the URL. Useful in development mode. Leave blank for none."
+
+    invite_expiry_days: "How long (in days) that invite keys are valid."
+
+    # TODO: perhaps we need a way of protecting these settings for hosted solution, global settings ...
+    twitter_consumer_key: "consumer key registered at dev.twitter.com (used for twitter auth)"
+    twitter_consumer_secret: "consumer secret registered at dev.twitter.com (used for twitter auth)"
+
+    facebook_app_id: "app id, registered at https://developers.facebook.com/apps (used for facebook auth)"
+    facebook_app_secret: "app secret, registered at https://developers.facebook.com/apps (used for facebook auth)"
+
+    allow_import: "Allow import, which will replace ALL site data. Set to false unless you plan to do imports."
+
+    active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds."
+    previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours."
+
+    uncategorized_name: "The name for the uncategorized topics on the category list"
+    max_mentions_per_post: "The maximum amount of @notifications you can add to a post"
+
+    rate_limit_create_topic: "How many seconds before you can create another topic"
+    rate_limit_create_post: "How many seconds before you can create another post"
+
+    max_likes_per_day: "The maximum amount of likes a user can perform in a day"
+    max_flags_per_day: "The maximum amount of flags a user can perform in a day"
+    max_bookmarks_per_day: "The maximum amount of bookmarks a user can create in a day"
+    max_edits_per_day: "The maximum amount of edits a user can perform in a day"
+    max_favorites_per_day: "The maximum amount of topics that can be favorited in a day"
+    max_topics_per_day: "The maximum amount of topics you can create in a day"
+    max_private_messages_per_day: "The maximum amount of private messages you can send in a day"
+
+    suggested_topics: "The amount of suggested topics you'll see at the bottom of a topic"
+
+    enable_s3_uploads: "Whether or not to put uploads on s3"
+    s3_upload_bucket: "The bucket we want to upload into for s3"
+
+    default_invitee_trust_level: "The default trust level for invited users"
+    default_trust_level: "The default trust level for users"
+
+    basic_requires_topics_entered: "How many a topics a user needs to have entered to be promoted to basic level"
+    basic_requires_read_posts: "How many posts a user needs to have read to be promoted to basic level"
+    basic_requires_time_spent_mins: "How many mins a user needs to have spent reading posts to be promoted to basic level"
+
+    auto_link_images_wider_than: "How wide does an image need to be, to be considered for auto link and lightbox treatment"
+
+    email_time_window_mins: "How many minutes we wait before sending a user mail, to give them a chance to see it first."
+    flush_timings_secs: "How frequently we flush timing data to the server, in seconds."
+
+    max_word_length: "The maximum word length in a topic title"
+    title_min_entropy: "The minimum entropy for a topic title"
+    body_min_entropy: "The minimum entropy for post body"
+
+    new_user_period_days: "How long a user is highlighted as being new, in days."
+
+  notification_types:
+    mentioned: "%{display_username} mencionou-te em %{link}"
+    liked: "%{display_username} gostou do teu post em %{link}"
+    replied: "%{display_username} repondeu ao teu post em %{link}"
+    quoted: "%{display_username} citou o teu post em %{link}"
+    edited: "%{display_username} editou o teu post em %{link}"
+    posted: "%{display_username} postou em %{link}"
+    moved_post: "%{display_username} moveu o teu post para %{link}"
+    private_message: "%{display_username} enviou-te uma mensagem privada: %{link}"
+    invited_to_private_message: "%{display_username} convidou-te para uma conversa privada: %{link}"
+    invitee_accepted: "%{display_username} aceitou o teu convite"
+
+  search:
+    types:
+      category: 'Categorias'
+      topic: 'Tópicos'
+      user: 'Utilizadores'
+
+  youve_posted: "Postaste"
+  original_poster: "Postador original"
+  most_posts: "Maior parte dos Posts"
+  most_recent_poster: "Maior parte dos Posts Recentes"
+  frequent_poster: "Postador frequente"
+
+  user_action_descriptions:
+    bookmarks: "Marcar"
+    topics: "Tópicos"
+    likes_received: "Gostos recebidos"
+    likes_given: "Gostos dados"
+    responses: "Respostas"
+    topic_responses: "Respostas a tópicos"
+    posts: "Posts"
+    mentions: "Menções"
+    quotes: "Citações"
+    edits: "Edições"
+    favorites: "Favoritos"
+    sent_items: "Items Enviados"
+    inbox: "Caixa de Entrada"
+
+    was_liked: "foi gostado"
+    liked: "gostou"
+    bookmarked: "marcou"
+    posted: "postou"
+    responded_to: "respondeu a"
+    mentioned: "mencionou"
+    quoted: "citou"
+    favorited: "favoritou"
+    edited: "editou"
+
+  move_posts:
+    moderator_post:
+      one: "Movi um post para um novo tópico: %{topic_link}"
+      other: "Movi %{count} posts para um novo tópico: %{topic_link}"
+
+  topic_statuses:
+    archived_enabled: "Este tópico está agora arquivado. Está congelado e não pode ser alterado de qualquer forma."
+    archived_disabled: "Este tópico foi agora desarquivado. Já não está congelado, e pode ser alterado."
+    closed_enabled: "Este tópico está agora fechado. Novas respostas não são aceites."
+    closed_disabled: "Este tópico está agora aberto. Novas respostas serão aceites."
+    pinned_enabled: "Este tópico está agora afixado. Irá aparecer no topo das suas categorias"
+    pinned_disabled: "Este tópico deixou de estár afixado. Não irá mais aparecer no topo das suas categorias."
+    visible_enabled: "Este tópico está agora visivél. Irá aparecer na lista dos tópicos."
+    visible_disabled: "Este tópico está agora invisivel. Não irá mais aparecer em qualquer listagem de tópicos. A única forma de aceder a este tópico é com o link direto."
+
+  login:
+    not_approved: "A tua conta ainda não foi aprovada. Vais ser notificado por email assim que estiver pronto para fazeres log in."
+    incorrect_username_email_or_password: "Incorrect username, email or password"
+    wait_approval: "Obrigado por se registar. Serás notificado por email quando a tua conta for aprovada."
+    active: "A tua conta está ativa e pronta."
+    activate_email: "Estámos quase despachados! Enviamos-te um email de ativação para <b>%{email}</b>. Por favor segue as instruções no email para ativar a tua conta."
+    not_activated: "Ainda não podes fazer log in. Enviamos-te um email de ativação. Por favor segue as instruções no email para ativar a tua conta."
+    errors: "%{errors}"
+    not_available: "Não disponível. Tenta %{suggestion}?"
+    omniauth_error: "Desculpa, Houve um erro ao autorizar a tua conta %{strategy}. Talves não tenhas aprovado a autorização?"
+
+
+  user:
+    username:
+      short: "tem que conter mais de %{min} caracteres"
+      long: "tem que conter menos de %{max} caracteres"
+      characters: "deve apenas conter numeros e letras"
+      unique: "tem que ser único"
+      blank: "tem que ser preenchido"
+      must_begin_with_alphanumeric: "tem de começar com uma letra ou um número"
+    email:
+      not_allowed: "não é permitido esse fornecedor de emails. Por-favor utilize outro endereço de email."
+
+  invite_mailer:
+    subject_template: "[%{site_name}] %{invitee_name} convidou-te para participares numa conversa em %{site_name}"
+    text_body_template: |
+      %{invitee_name} convidou-te para o tópico "%{topic_title}" em %{site_name}.
+
+      Se estiveres interessado, clica no link em baxio para visitares a conversa:
+
+      [Visitar %{site_name}][1]
+
+      Foste convidado por um utilizador de confiança, por isso poderás responder imediátamente, sem ter que fazer log in.
+
+      [1]: %{invite_link}
+
+  test_mailer:
+    subject_template: "[%{site_name}] Teste de entrega de email"
+    text_body_template: |
+      Isto é um email de teste do forum %{site_name}. Podes aceder a este forum via browser em
+
+      [*%{base_url}*][0]
+
+      Entregar emails pode ser complexo, mas algumas coisas que podes verificar já são:
+
+      - Garante que sabes como ver a *fonte fo email* no teu cliente de email, para que possas examinar os cabeçalhos para teres pistas importantes.
+
+      - **IMPORTANT:** Does your ISP have a reverse DNS record entered to associate the domain name you mail from with the IPs you use to email? You can [test your Reverse PTR record][2] here. If the proper reverse DNS pointer record isn't entered by your ISP, it's very unlikely any of your email will be delivered.
+
+      - Is your domain's SPF record correct? You can [test your SPF record][1] here.
+
+      - Have you configured [DKIM email key signing][3] in your email software, and put the public DKIM key in your DNS records?
+
+      - Have you checked to make sure the IPs of the server the mail originates from are [not on any email blacklists][4]?
+
+      We hope you received this email deliverability test OK!
+
+      Good luck,
+
+      Your friends at %{site_name}.
+
+      [0]: %{base_url}
+      [1]: http://www.kitterman.com/spf/validate.html
+      [2]: http://mxtoolbox.com/SuperTool.aspx
+      [3]: http://www.dkim.org/
+      [4]: http://whatismyipaddress.com/blacklist-check
+      [5]: %{base_url}/unsubscribe
+
+      ----
+
+      <small>There should be an unsubscribe footer on every email you send, so let's mock one up. This email was sent by Name of Company, 55 Main Street, Anytown, USA 12345. If you would like to opt out of future emails, [click here to unsubscribe][5].</small>
+
+  request_access:
+    code: "Código de Acesso"
+    instructions: "Este site tem acesso restrito, insere o códio de acesso em baico::"
+    enter: "Inserir"
+    incorrect: "O código de acesso estava incorreto"
+
+  system_messages:
+    site_password: "Também, a password para o site é `%{access_password}` caso precisares."
+
+    post_hidden:
+      subject_template: "%{site_name} Aviso: Post escondido devido a Sinalização pela Comunidade"
+      text_body_template: |
+        Olá,
+
+        Está é uma mensagem automática de %{site_name} para te informar que o seguinte post foi escondido devido a sinalização da comunidade.
+
+        %{base_url}%{url}
+
+        O teu post foi escondido porque foi sinalizado pela comunidade.
+
+        Atenção que vários membros da comunidade sinalizaram este post antes do mesmo ser escondido, por tanto por-favor considera como deves rever os teus posts para refletir o seu feedback.
+
+        Podes editar o post passados %{edit_delay} minutos, e depois será automáticamente tornado visível outra vez. Isto irá aumentar o teu nível de confiança no forum.
+
+        No entanto, caso o post for escondido pela comunidade uma segunda vez, os moderadores serão notificados -- e haverá futuras atuações, incluindo uma possível suspenção da tua conta.
+
+        Para mais ajuda, por-favor segue para [FAQ](%{base_url}/faq).
+
+    usage_tips:
+      text_body_template: |
+        Esta mensagem privada tem algumas dicas para te iniciares:
+
+        ### Scroll contínuo
+
+        Não há butões para páginas seguintes ou número de páginas -- para continuar a leitura, apenas continua a fazer scroll para baixo, e mais conteudo aparecerá!
+
+        Quando chegarem novas respostas, elas aparecerão automáticamente no fundo do tópico. Não há necessidade de fazer refresh ou entrar outra vez no tópico para ver novos posts.
+
+        ### Como é que respondo?
+
+        - Para responder a um post especifico, usa o botão Responder no fundo desse post.
+
+        - Se quiseres responder para o *tema* geral do tópico, em vez de responder a uma única pessoa no tópico, usa o botão Responder no fundo de todo do tópico.
+
+        - Se quiseres levar a conversa numa direção diferente, mas manter uma ligação, usa o Responder como Novo Tópico à direita do post.
+
+        ### Quem é que está a falar comigo?
+
+        Quando alguém responde a um dos teus posts, cita-te, ou menciona o teu @nome, uma notificação aparecerá no topo da página. Clica no número de notificação para ver quem está a falar contigo e onde. Entra na conversa!
+
+        - Para mencionar o nome de alguém, começar por escrever `@` e de seguida um completador automático irá aparecer.
+
+        - Para citar um post inteiro, usa o botão Importar Citação na barra de composição.
+
+        - Para citar apenas uma secção de um post, destaca-o, e depois clica no botão Responder que aparece em cima do destáque.
+
+        ### Olha-me para Este Post!
+
+        Para mostrares a alguém que gostaste do post dele(a), clica no botão Gosto no fundo do post. Se vires um prblema com um post, não hesites em clicar no botão de Flag para avisar os moderadores -- e os teus companheiros, amigos da comunidade -- sabe sobre isto.
+
+        ### Onde estou?
+
+        - Para voltar atrás até à página inicial em qualquer altura, **clica no icon no canto superior esquerdo.**
+
+        - Para pesquisar, ir para a tua página de utilizador, ou então navegar, clica no icon no canto superior direito.
+
+        - Enquanto estiveres a ler um tópico, podes mover para o topo clicando no título no topo da página. Para chegar ao fundo clica na seta na barra de prograsso no fundo da página, ou clica no último campo sumário do tópico debaixo do primeiro post.
+
+    welcome_approved:
+      subject_template: "Foste aprovado no %{site_name}!"
+      text_body_template: |
+        Parabéns!
+
+        Estás aprovado para te juntares a %{site_name}, ben-vindo ao nosso foum!
+
+        %{new_user_tips}
+
+        Acreditamos num [comportamento civilizado na comunidade](%{base_url}/faq) a toda a hora.
+
+        Diverte-te durante a estadia!
+
+    welcome_user:
+      subject_template: "Welcome to %{site_name}!"
+      text_body_template: |
+        Olá!
+
+        Obrigado por te juntares a %{site_name}, e sê ben-vindo ao nosso forum!
+
+        %{new_user_tips}
+
+        Acreditamos num [comportamento civilizado na comunidade](%{base_url}/faq) a toda a hora.
+
+        Diverte-te durante a estadia!
+
+    welcome_invite:
+      subject_template: "Ben-vindo ao %{site_name}!"
+      text_body_template: |
+        Obrigado por aceitar o teu convite para %{site_name}, e ben-vindo ao nosso forum!
+
+        Geramos automáticamente um username para ti: **%{username}**, mas se quiseres podes altera-lo as vezes que quiseres, visitando [o teu perfil de utilizador][prefs].
+
+        Para entrar outra vez, escolhe uma das opções:
+
+        1. Utiliza Facebook, Google, Twitter, ou uma das outras credenciais disponivies -- mas essa credencial tem que se traduzir no **mesmo endereço de email** que recebeste o convite original. Caso contrário não podemos saber se és tu!
+
+        2. Cria uma password única Create para %{site_name} em [your user profile][prefs], depois entra com ela.
+
+        %{site_password}
+
+        %{new_user_tips}
+
+        Acreditamos num [comportamento civilizado na comunidade](%{base_url}/faq) a toda a hora.
+
+        Diverte-te durante a estadia!
+
+        [prefs]: %{user_preferences_url}
+
+    export_succeeded:
+      subject_template: "Exportação completada com sucesso"
+      text_body_template: "A exportação foi bem sucedida."
+
+    import_succeeded:
+      subject_template: "Importação completada com sucesso"
+      text_body_template: "A importação foi bem sucedida."
+
+  unsubscribe_link: "If you'd like to unsubscribe from these emails, visit your [user preferences](%{user_preferences_url})."
+
+  user_notifications:
+    unsubscribe:
+      title: "Desinscrever"
+      description: "Não estás interessado em receber estes email? Não há problema! Clica em baixo para desinscrever-te instantáneamente:"
+
+    user_invited_to_private_message:
+      subject_template: "[%{site_name}] %{username} convidou-te para uma conversa privada '%{topic_title}'"
+      text_body_template: |
+        %{username} convidou-te para uma conversa privada '%{topic_title}' em %{site_name}:
+
+        Por-favor visita este link para ver o tópico: %{base_url}%{url}
+
+    user_replied:
+      subject_template: "[%{site_name}] %{username} respondeu ao teu post em '%{topic_title}'"
+      text_body_template: |
+        %{username} respondeu ao teu post em '%{topic_title}' em %{site_name}:
+
+        ---
+        %{message}
+
+        ---
+        Por-favor visita este link para responder: %{base_url}%{url}
+
+    user_quoted:
+      subject_template: "[%{site_name}] %{username} citou-te em '%{topic_title}'"
+      text_body_template: |
+        %{username} citou-te em '%{topic_title}' em %{site_name}:
+
+        ---
+        %{message}
+
+        ---
+        Por-favor visita este link para responder: %{base_url}%{url}
+
+    user_mentioned:
+      subject_template: "[%{site_name}] %{username} mencionou-te em '%{topic_title}'"
+      text_body_template: |
+        %{username} mencionou-te em '%{topic_title}' em %{site_name}:
+
+        ---
+        %{message}
+
+        ---
+        Por-favor visita este link para responder: %{base_url}%{url}
+
+
+    digest:
+      why: "Aqui está um pequeno sumário sobre o que se tem passado em %{site_link} desde a ultima vez que te vimos em %{last_seen_at}."
+      subject_template: "[%{site_name}] Atividade do Forum para %{date}"
+      new_activity: "Nova atividade nos teus tópicos e posts:"
+      new_topics: "Tópicos novos:"
+      unsubscribe: "Este email sumário é enviado como uma notificação de cortesia de %{site_link} quando não te vemos há de 7 dias.\nCaso quiseres desliga-lo ou alterar as configurações de email, %{unsubscribe_link}."
+
+    private_message:
+      subject_template: "[%{site_name}] %{subject_prefix}%{topic_title}"
+      text_body_template: |
+        %{from} acabou de te enviar uma mensagem privada
+
+        ---
+        %{message}
+
+        ---
+        Por-favor vista este link para responder: %{base_url}%{url}
+
+    forgot_password:
+      subject_template: "[%{site_name}] Repor password"
+      text_body_template: |
+        Alguém pediu para repor a tua password em [%{site_name}](%{base_url}).
+
+        Se não foste tu, então podes com seguraça ignorar este email.
+
+        Clica no link seguinte para escolher a tua nova password:
+        %{base_url}/users/password-reset/%{email_token}
+
+    authorize_email:
+      subject_template: "[%{site_name}] Confirma o teu novo endereço de email"
+      text_body_template: |
+        Confirma o teu endereço de email novo para %{site_name} clicando no seguinte link:
+
+        %{base_url}/users/authorize-email/%{email_token}
+
+    signup:
+      subject_template: "[%{site_name}] Ativar a tua nova conta"
+      text_body_template: |
+        Ben-vindo ao %{site_name}!
+
+        Clica no seguinte link para confirmar e aticar a tua nova conta:
+        %{base_url}/users/activate-account/%{email_token}
+
+        Se não conseguires clicar no link em cima, tenta copia-lo e cola-lo na barra de endereções do teu browser de internet.
+
+  discourse_hub:
+    access_token_problem: "Conta a um admin: Por-favor atualiza as configurações do site para incluir o discourse_org_access_key correto."
