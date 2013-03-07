@@ -435,7 +435,7 @@ GEM
     temple (0.5.5)
     terminal-notifier-guard (1.5.3)
     terminal-table (1.4.5)
-    therubyracer (0.11.3)
+    therubyracer (0.11.4)
       libv8 (~> 3.11.8.12)
       ref
     thin (1.5.0)
