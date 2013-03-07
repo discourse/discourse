@@ -301,3 +301,21 @@ table {
   .flaggers { padding: 0 10px; }
   .last-flagged { padding: 0 10px; }
 }
+
+.dashboard-stats {
+  margin-top: 10px;
+
+  table {
+    width: 450px;
+
+    th {
+      font-weight: normal;
+      text-align: center;
+    }
+
+    td.value {
+      font-weight: bold;
+      text-align: center;
+    }
+  }
+}

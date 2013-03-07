@@ -244,9 +244,13 @@ en:
 
   reports:
     visits:
-      title: "Users Visits by Day"
-      xaxis: "Day"
-      yaxis: "Visits"
+      title: "Users Visits"
+    signups:
+      title: "New Users"
+    topics:
+      title: "New Topics"
+    posts:
+      title: "New Posts"
 
   site_settings:
     default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"

@@ -42,3 +42,21 @@
 
   <div class='clearfix'></div>
 {{/if}}
+
+<div class="dashboard-stats">
+  <table class="table table-condensed table-hover">
+    <thead>
+      <tr>
+        <th>&nbsp;</th>
+        <th>{{i18n admin.dashboard.reports.today}}</th>
+        <th>{{i18n admin.dashboard.reports.yesterday}}</th>
+        <th>{{i18n admin.dashboard.reports.last_7_days}}</th>
+        <th>{{i18n admin.dashboard.reports.last_30_days}}</th>
+      </tr>
+    </thead>
+    {{ render 'admin_signups' signups }}
+    {{ render 'admin_visits' visits }}
+    {{ render 'admin_topics' topics }}
+    {{ render 'admin_posts' posts }}
+  </table>
+</div>

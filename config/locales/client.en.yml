@@ -673,6 +673,13 @@ en:
         latest_version: "Latest version"
         update_often: 'Please update often!'
 
+        reports:
+          today: "Today"
+          yesterday: "Yesterday"
+          last_7_days: "Last 7 Days"
+          last_30_days: "Last 30 Days"
+          all_time: "All Time"
+
       flags:
         title: "Flags"
         old: "Old"

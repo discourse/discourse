@@ -183,6 +183,10 @@ class Topic < ActiveRecord::Base
     where("created_at > ?", time_ago)
   end
 
+  def self.count_per_day(since=30.days.ago)
+    where('created_at > ?', since).group('date(created_at)').order('date(created_at)').count
+  end
+
   def private_message?
     self.archetype == Archetype.private_message
   end

@@ -450,4 +450,8 @@ class Post < ActiveRecord::Base
     args[:invalidate_oneboxes] = true if invalidate_oneboxes.present?
     Jobs.enqueue(:process_post, args)
   end
+
+  def self.count_per_day(since=30.days.ago)
+    where('created_at > ?', since).group('date(created_at)').order('date(created_at)').count
+  end
 end

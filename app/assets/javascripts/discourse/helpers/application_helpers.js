@@ -268,5 +268,3 @@ Handlebars.registerHelper('personalizedName', function(property, options) {
   }
   return Em.String.i18n('you');
 });
-
-

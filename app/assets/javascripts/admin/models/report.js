@@ -2,7 +2,7 @@ Discourse.Report = Discourse.Model.extend({});
 
 Discourse.Report.reopenClass({
   find: function(type) {
-    var model = Discourse.Report.create();
+    var model = Discourse.Report.create({type: type});
     $.ajax("/admin/reports/" + type, {
       type: 'GET',
       success: function(json) {
