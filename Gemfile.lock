@@ -292,6 +292,8 @@ GEM
     omniauth-github (1.1.0)
       omniauth (~> 1.0)
       omniauth-oauth2 (~> 1.1)
+    omniauth-linkedin (0.1.0)
+      omniauth-oauth (~> 1.0)
     omniauth-oauth (1.0.1)
       oauth
       omniauth (~> 1.0)
@@ -502,6 +504,7 @@ DEPENDENCIES
   omniauth-browserid!
   omniauth-facebook
   omniauth-github
+  omniauth-linkedin
   omniauth-openid
   omniauth-twitter
   openid-redis-store

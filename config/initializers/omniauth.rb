@@ -31,6 +31,10 @@ Rails.application.config.middleware.use OmniAuth::Builder do
            SiteSetting.github_client_id,
            SiteSetting.github_client_secret
 
+  provider :linked_in,
+           SiteSetting.linkedin_consumer_key,
+           SiteSetting.linkedin_consumer_secret
+
   provider :browser_id,
            :name => 'persona'
 

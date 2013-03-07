@@ -16,6 +16,9 @@
     {{#if Discourse.SiteSettings.enable_github_logins}}
       <button class="btn btn-social github" title="{{i18n login.github.title}}" {{action "githubLogin" target="view"}}>{{i18n login.github.title}}</button>
     {{/if}}
+    {{#if Discourse.SiteSettings.enable_linkedin_logins}}
+      <button class="btn btn-social linkedin" title="{{i18n login.linkedin.title}}" {{action "linkedinLogin" target="view"}}>{{i18n login.linkedin.title}}</button>
+    {{/if}}
     {{#if Discourse.SiteSettings.enable_persona_logins}}
     <br>
     <button class="btn btn-social persona" title="{{i18n login.persona.title}}" {{action "personaLogin" target="view"}}>{{i18n login.persona.title}}</button>

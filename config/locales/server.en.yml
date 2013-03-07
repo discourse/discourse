@@ -340,6 +340,10 @@ en:
     github_client_id: "Client id for Github authentication, registered at https://github.com/settings/applications"
     github_client_secret: "Client secret for Github authentication, registered at https://github.com/settings/applications"
 
+    enable_linkedin_logins: "Enable Linkedin authentication, requires linkedin_consumer_key and linkedin_consumer_secret"
+    linkedin_consumer_key: "Consumer key for Linkedin authentication, registered at https://www.linkedin.com/secure/developer"
+    linkedin_consumer_secret: "Consumer secret for Linkedin authentication, registered at https://www.linkedin.com/secure/developer"
+
     enable_persona_logins: "Enable email-based authentication with Mozilla Persona"
 
     allow_import: "Allow import, which can replace ALL site data; leave false unless you plan to do data imports"

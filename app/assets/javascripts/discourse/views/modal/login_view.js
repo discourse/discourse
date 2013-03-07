@@ -109,6 +109,14 @@ Discourse.LoginView = Discourse.ModalBodyView.extend({
     return window.open("/auth/github", "_blank", "menubar=no,status=no,height=400,width=800,left=" + left + ",top=" + top);
   },
 
+  linkedinLogin: function() {
+    var left, top;
+    this.set('authenticate', 'linkedin');
+    left = this.get('lastX') - 400;
+    top = this.get('lastY') - 200;
+    return window.open("/auth/linkedin", "_blank", "menubar=no,status=no,height=400,width=800,left=" + left + ",top=" + top);
+  },
+
   personaLogin: function() {
       navigator.id.request();
   },
