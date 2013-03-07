@@ -1,5 +1,3 @@
-/*global humaneDate:true */
-
 /**
   Breaks up a long string
 
@@ -162,7 +160,7 @@ Handlebars.registerHelper('avatar', function(user, options) {
 Handlebars.registerHelper('unboundDate', function(property, options) {
   var dt;
   dt = new Date(Ember.Handlebars.get(this, property, options));
-  return dt.format("{d} {Mon}, {yyyy} {hh}:{mm}");
+  return dt.format("long");
 });
 
 /**
@@ -176,9 +174,9 @@ Handlebars.registerHelper('editDate', function(property, options) {
   dt = Date.create(Ember.Handlebars.get(this, property, options));
   yesterday = new Date() - (60 * 60 * 24 * 1000);
   if (yesterday > dt.getTime()) {
-    return dt.format("{d} {Mon}, {yyyy} {hh}:{mm}");
+    return dt.format("long");
   } else {
-    return humaneDate(dt);
+    return dt.relative();
   }
 });
 
@@ -215,7 +213,7 @@ Handlebars.registerHelper('number', function(property, options) {
   @for Handlebars
 **/
 Handlebars.registerHelper('date', function(property, options) {
-  var displayDate, dt, fiveDaysAgo, fullReadable, humanized, leaveAgo, val;
+  var displayDate, dt, fiveDaysAgo, oneMinuteAgo, fullReadable, humanized, leaveAgo, val;
   if (property.hash) {
     if (property.hash.leaveAgo) {
       leaveAgo = property.hash.leaveAgo === "true";
@@ -229,23 +227,26 @@ Handlebars.registerHelper('date', function(property, options) {
     return new Handlebars.SafeString("&mdash;");
   }
   dt = new Date(val);
-  fullReadable = dt.format("{d} {Mon}, {yyyy} {hh}:{mm}");
+  fullReadable = dt.format("long");
   displayDate = "";
   fiveDaysAgo = (new Date()) - 432000000;
-  if (fiveDaysAgo > (dt.getTime())) {
+  oneMinuteAgo = (new Date()) - 60000;
+  if (oneMinuteAgo <= dt.getTime() && dt.getTime() <= (new Date())) {
+    displayDate = Em.String.i18n("now");
+  } else if (fiveDaysAgo > (dt.getTime())) {
     if ((new Date()).getFullYear() !== dt.getFullYear()) {
-      displayDate = dt.format("{d} {Mon} '{yy}");
+      displayDate = dt.format("short");
     } else {
-      displayDate = dt.format("{d} {Mon}");
+      displayDate = dt.format("short_no_year");
     }
   } else {
-    humanized = humaneDate(dt);
+    humanized = dt.relative();
     if (!humanized) {
       return "";
     }
     displayDate = humanized;
     if (!leaveAgo) {
-      displayDate = displayDate.replace(' ago', '');
+        displayDate = (dt.millisecondsAgo()).duration();
     }
   }
   return new Handlebars.SafeString("<span class='date' title='" + fullReadable + "'>" + displayDate + "</span>");
