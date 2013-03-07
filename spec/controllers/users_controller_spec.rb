@@ -380,7 +380,7 @@ describe UsersController do
       it_should_behave_like 'honeypot fails'
     end
 
-    shared_examples_for 'failed signup due to password problem' do
+    shared_examples_for 'failed signup' do
       it 'should not create a new User' do
         expect { xhr :post, :create, create_params }.to_not change { User.count }
       end
@@ -394,12 +394,20 @@ describe UsersController do
 
     context 'when password is blank' do
       let(:create_params) { {:name => @user.name, :username => @user.username, :password => "", :email => @user.email} }
-      it_should_behave_like 'failed signup due to password problem'
+      it_should_behave_like 'failed signup'
     end
 
     context 'when password param is missing' do
       let(:create_params) { {:name => @user.name, :username => @user.username, :email => @user.email} }
-      it_should_behave_like 'failed signup due to password problem'
+      it_should_behave_like 'failed signup'
+    end
+
+    context 'when InvalidStatement is raised' do
+      before do
+        User.any_instance.stubs(:save).raises(ActiveRecord::StatementInvalid)
+      end
+      let(:create_params) { {:name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email} }
+      it_should_behave_like 'failed signup'
     end
   end
 

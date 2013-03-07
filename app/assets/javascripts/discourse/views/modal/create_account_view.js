@@ -266,7 +266,7 @@ Discourse.CreateAccountView = Discourse.ModalBodyView.extend({
         _this.flash(result.message);
         _this.set('complete', true);
       } else {
-        _this.flash(result.message, 'error');
+        _this.flash(result.message || Em.String.i18n('create_account.failed'), 'error');
         _this.set('formSubmitted', false);
       }
       if (result.active) {

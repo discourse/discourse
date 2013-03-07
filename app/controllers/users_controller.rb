@@ -192,6 +192,8 @@ class UsersController < ApplicationController
     else
       render :json => {success: false, message: I18n.t("login.errors", errors: user.errors.full_messages.join("\n"))}
     end
+  rescue ActiveRecord::StatementInvalid
+    render :json => {success: false, message: I18n.t("login.something_already_taken")}
   rescue DiscourseHub::NicknameUnavailable
     render :json => {success: false, message: I18n.t("login.errors", errors:I18n.t("login.not_available", suggestion: User.suggest_username(params[:username])) )}
   rescue RestClient::Forbidden
