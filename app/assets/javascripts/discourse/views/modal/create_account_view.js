@@ -14,14 +14,16 @@ Discourse.CreateAccountView = Discourse.ModalBodyView.extend({
   complete: false,
   accountPasswordConfirm: 0,
   accountChallenge: 0,
+  formSubmitted: false,
 
   submitDisabled: (function() {
+    if (this.get('formSubmitted')) return true;
     if (this.get('nameValidation.failed')) return true;
     if (this.get('emailValidation.failed')) return true;
     if (this.get('usernameValidation.failed')) return true;
     if (this.get('passwordValidation.failed')) return true;
     return false;
-  }).property('nameValidation.failed', 'emailValidation.failed', 'usernameValidation.failed', 'passwordValidation.failed'),
+  }).property('nameValidation.failed', 'emailValidation.failed', 'usernameValidation.failed', 'passwordValidation.failed', 'formSubmitted'),
 
   passwordRequired: (function() {
     return this.blank('authOptions.auth_provider');
@@ -252,6 +254,7 @@ Discourse.CreateAccountView = Discourse.ModalBodyView.extend({
   createAccount: function() {
     var challenge, email, name, password, passwordConfirm, username,
       _this = this;
+    this.set('formSubmitted', true);
     name = this.get('accountName');
     email = this.get('accountEmail');
     password = this.get('accountPassword');
@@ -264,11 +267,13 @@ Discourse.CreateAccountView = Discourse.ModalBodyView.extend({
         _this.set('complete', true);
       } else {
         _this.flash(result.message, 'error');
+        _this.set('formSubmitted', false);
       }
       if (result.active) {
         return window.location.reload();
       }
     }, function() {
+      _this.set('formSubmitted', false);
       return _this.flash(Em.String.i18n('create_account.failed'), 'error');
     });
   }
