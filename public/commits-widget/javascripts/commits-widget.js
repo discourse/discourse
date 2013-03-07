@@ -39,11 +39,23 @@ $(function(){
       var data = response.data;
       $.each(data, function(i, commit){
         var $li = $('<li></li>').appendTo( $commitsList );
-        $('<div class="left"><img src="https://www.gravatar.com/avatar/' + commit.author.gravatar_id + '.png?s=38&r=pg&d=identicon"></div>').appendTo( $li );
-        $right = $('<div class="right"></div>').appendTo( $li );
-        $('<span class="commit-message"><a href="https://github.com/discourse/discourse/commit/' + commit.sha + '" target="_blank">' + commit.commit.message + '</a></span><br/>').appendTo( $right );
-        $('<span class="commit-meta">by <span class="committer-name">' + commit.committer.login + '</span> - <span class="commit-time">' + $.timeago(commit.commit.committer.date) + '</span></span>').appendTo( $right );
-        $('<div class="clearfix"></div>').appendTo( $li );
+        if( commit.sha && commit.commit && commit.commit.message && commit.commit.author && commit.commit.committer && commit.commit.committer.date ) {
+          if( commit.author && commit.author.gravatar_id ) {
+            $('<div class="left"><img src="https://www.gravatar.com/avatar/' + commit.author.gravatar_id + '.png?s=38&r=pg&d=identicon"></div>').appendTo( $li );
+          } else {
+            $('<div class="left"><img src="https://www.gravatar.com/avatar/b30fff48d257cdd17c4437afac19fd30.png?s=38&r=pg&d=identicon"></div>').appendTo( $li );
+          }
+          $right = $('<div class="right"></div>').appendTo( $li );
+          $('<span class="commit-message"><a href="https://github.com/discourse/discourse/commit/' + commit.sha + '" target="_blank">' + commit.commit.message + '</a></span><br/>').appendTo( $right );
+          $('<span class="commit-meta">by <span class="committer-name">' + commit.commit.author.name + '</span> - <span class="commit-time">' + $.timeago(commit.commit.committer.date) + '</span></span>').appendTo( $right );
+          $('<div class="clearfix"></div>').appendTo( $li );
+        } else {
+          // Render nothing.  Or render a message:
+          // $('<div class="left">&nbsp;</div>').appendTo( $li );
+          // $right = $('<div class="right"></div>').appendTo( $li );
+          // $('<span class="commit-meta">this commit cannot be rendered</span>').appendTo( $right );
+          // $('<div class="clearfix"></div>').appendTo( $li );
+        }
       });
     }
   });
