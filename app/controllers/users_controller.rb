@@ -181,6 +181,11 @@ class UsersController < ApplicationController
         if auth[:github_user_id] && auth[:github_screen_name] && GithubUserInfo.find_by_github_user_id(auth[:github_user_id]).nil?
           GithubUserInfo.create(:user_id => user.id, :screen_name => auth[:github_screen_name], :github_user_id => auth[:github_user_id])
         end
+
+        if auth[:linkedin_user_id] && auth[:linkedin_screen_name] && LinkedinUserInfo.find_by_linkedin_user_id(auth[:linkedin_user_id]).nil?
+          LinkedinUserInfo.create(:user_id => user.id, :screen_name => auth[:linkedin_screen_name], :linkedin_user_id => auth[:linkedin_user_id])
+        end
+
       end
 
 

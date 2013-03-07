@@ -122,6 +122,10 @@ class SiteSetting < ActiveRecord::Base
   setting(:github_client_id, '')
   setting(:github_client_secret, '')
 
+  client_setting(:enable_linkedin_logins, false)
+  setting(:linkedin_consumer_key, '')
+  setting(:linkedin_consumer_secret, '')
+
   client_setting(:enable_persona_logins, false)
 
   setting(:enforce_global_nicknames, true)

@@ -168,6 +168,12 @@
       content: "g";
     }
   }
+  &.linkedin{
+    background: $linkedin;
+    &:before {
+      content: "L";
+    }
+  }
   &.persona {
     background: $persona;
     &:before {
