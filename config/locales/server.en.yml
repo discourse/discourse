@@ -2,7 +2,7 @@ en:
   title: "Discourse"
   topics: "Topics"
   loading: "Loading"
-  powered_by: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
+  powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
 
   via: "%{username} via %{site_name}"
   is_reserved: "is reserved"
@@ -13,7 +13,7 @@ en:
   has_already_been_used: "has already been used"
   invalid_characters: "contains invalid characters"
   is_invalid: "is invalid; try to be a little more descriptive"
-  next_page: "next page &rarr;"
+  next_page: "next page →"
   by: "By"
   topics_in_category: "Topics in the '%{category}' category"
   rss_posts_in_topic: "RSS feed of '%{topic}'"
