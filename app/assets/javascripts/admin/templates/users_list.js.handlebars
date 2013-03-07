@@ -7,7 +7,7 @@
         <li>{{#linkTo adminUsersList.pending}}{{i18n admin.users.pending}}{{/linkTo}}</li>
       {{/if}}
     </ul>
-  </div>  
+  </div>
   <div class='span5 username controls'>
     {{view Discourse.TextField valueBinding="controller.username" placeholderKey="username"}}
   </div>
@@ -20,7 +20,7 @@
 {{/if}}
 
 {{#if content.length}}
-  <table class='table'> 
+  <table class='table'>
     <tr>
       {{#if showApproval}}
         <th>{{view Ember.Checkbox checkedBinding="selectAll"}}</th>
@@ -33,7 +33,7 @@
       <th>{{i18n admin.user.topics_entered}}</th>
       <th>{{i18n admin.user.posts_read_count}}</th>
       <th>{{i18n admin.user.time_read}}</th>
-      <th>{{i18n created}}</th>  
+      <th>{{i18n created}}</th>
       {{#if showApproval}}
         <th>{{i18n admin.users.approved}}</th>
       {{/if}}
@@ -54,15 +54,15 @@
           <a href="/admin/users/{{unbound username_lower}}">{{avatar this imageSize="small"}}</a>
         </td>
         <td><a href="/admin/users/{{unbound username_lower}}">{{unbound username}}</a></td>
-        <td>{{unbound email}}</td>
+        <td>{{shorten email}}</td>
         <td>{{{unbound last_emailed_age}}}</td>
         <td>{{{unbound last_seen_age}}}</td>
         <td>{{{unbound topics_entered}}}</td>
         <td>{{{unbound posts_read_count}}}</td>
         <td>{{{unbound time_read}}}</td>
-        
+
         <td>{{{unbound created_at_age}}}</td>
-        
+
         {{#if controller.showApproval}}
         <td>
           {{#if approved}}

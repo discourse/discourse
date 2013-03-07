@@ -28,7 +28,7 @@ class ImageOptimizer
   def clear_local!
   end
 
-  # yeild a list of relative paths to local images cached
+  # yield a list of relative paths to local images cached
   def each_local
   end
 

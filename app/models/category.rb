@@ -30,6 +30,7 @@ class Category < ActiveRecord::Base
     topics = Topic
                .select("COUNT(*)")
                .where("topics.category_id = categories.id")
+               .where("categories.topic_id <> topics.id")
                .visible
 
     topics_year = topics.created_since(1.year.ago).to_sql
@@ -50,7 +51,7 @@ class Category < ActiveRecord::Base
   end
 
   after_create do
-    topic = Topic.create!(title: I18n.t("category.topic_prefix", category: name), user: user, visible: false)
+    topic = Topic.create!(title: I18n.t("category.topic_prefix", category: name), user: user, pinned_at: Time.now)
 
     post_contents = I18n.t("category.post_template", replace_paragraph: I18n.t("category.replace_paragraph"))
     topic.posts.create!(raw: post_contents, user: user)

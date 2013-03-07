@@ -5,14 +5,32 @@ require 'oneboxer'
 require 'oneboxer/wikipedia_onebox'
 
 describe Oneboxer::WikipediaOnebox do
-  before(:each) do
-    @o = Oneboxer::WikipediaOnebox.new("http://en.wikipedia.org/wiki/Ruby")
-    FakeWeb.register_uri(:get, @o.translate_url, :response => fixture_file('oneboxer/wikipedia.response'))
-    FakeWeb.register_uri(:get, 'http://en.m.wikipedia.org/wiki/Ruby', :response => fixture_file('oneboxer/wikipedia_redirected.response'))
-  end
 
   it "generates the expected onebox for Wikipedia" do
-    @o.onebox.should == expected_wikipedia_result
+    o = Oneboxer::WikipediaOnebox.new('http://en.wikipedia.org/wiki/Ruby')
+    FakeWeb.register_uri(:get, o.translate_url, :response => fixture_file('oneboxer/wikipedia.response'))
+    FakeWeb.register_uri(:get, 'http://en.m.wikipedia.org/wiki/Ruby', :response => fixture_file('oneboxer/wikipedia_redirected.response'))
+    o.onebox.should == expected_wikipedia_result
+  end
+
+  it "accepts .com extention" do
+    o = Oneboxer::WikipediaOnebox.new('http://en.wikipedia.com/wiki/Postgres')
+    o.translate_url.should == 'http://en.m.wikipedia.org/w/index.php?title=Postgres'
+  end
+
+  it "encodes identifier" do
+    o = Oneboxer::WikipediaOnebox.new('http://en.wikipedia.com/wiki/Café')
+    o.translate_url.should == 'http://en.m.wikipedia.org/w/index.php?title=Caf%C3%A9'
+  end
+
+  it "defaults to en locale" do
+    o = Oneboxer::WikipediaOnebox.new('http://wikipedia.org/wiki/Ruby_on_rails')
+    o.translate_url.should == 'http://en.m.wikipedia.org/w/index.php?title=Ruby_on_rails'
+  end
+
+  it "generates localized url" do
+    o = Oneboxer::WikipediaOnebox.new('http://fr.wikipedia.org/wiki/Ruby')
+    o.translate_url.should == 'http://fr.m.wikipedia.org/w/index.php?title=Ruby'
   end
 
 private

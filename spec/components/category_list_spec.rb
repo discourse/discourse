@@ -72,7 +72,7 @@ describe CategoryList do
       end
 
       it "should contain our topic" do
-        category.featured_topics.should == [topic]
+        category.featured_topics.include?(topic).should be_true
       end
     end
 

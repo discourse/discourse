@@ -68,6 +68,30 @@ Discourse.TopicFooterButtonsView = Ember.ContainerView.extend({
             buffer.push("<i class='icon icon-share'></i>");
           }
         }));
+
+        // Add our clear pin button
+        this.addObject(Discourse.ButtonView.createWithMixins({
+          textKey: 'topic.clear_pin.title',
+          helpKey: 'topic.clear_pin.help',
+          classNameBindings: ['unpinned'],
+
+          // Hide the button if it becomes unpinned
+          unpinned: function() {
+            // When not logged in don't show the button
+            if (!Discourse.get('currentUser')) return 'hidden'
+
+            return this.get('controller.pinned') ? null : 'hidden';
+          }.property('controller.pinned'),
+
+          click: function(buffer) {
+            this.get('controller').clearPin();
+          },
+
+          renderIcon: function(buffer) {
+            buffer.push("<i class='icon icon-pushpin'></i>");
+          }
+        }));
+
       }
 
       this.addObject(Discourse.ButtonView.createWithMixins({

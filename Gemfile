@@ -38,7 +38,6 @@ gem "omniauth-twitter"
 gem "omniauth-github"
 gem "omniauth-browserid", :git => "git://github.com/callahad/omniauth-browserid.git", :branch => "observer_api"
 gem 'oj'
-gem 'pbkdf2'
 gem 'pg'
 gem 'rails'
 gem 'rake'
@@ -90,7 +89,7 @@ group :test, :development do
   gem 'jasminerice'
   gem 'mocha', require: false
   gem 'rb-fsevent'
-  gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM.include?('linux') && 'rb-inotify'
+  gem 'rb-inotify', '~> 0.8.8', require: RUBY_PLATFORM.include?('linux') && 'rb-inotify'
   gem 'rspec-rails'
   gem 'shoulda'
   gem 'simplecov', require: false

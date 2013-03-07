@@ -54,7 +54,7 @@ class Post < ActiveRecord::Base
   after_commit :store_unique_post_key, on: :create
 
   after_create do
-    TopicUser.auto_track(user_id, topic_id, TopicUser::NotificationReasons::CREATED_POST)
+    TopicUser.auto_track(user_id, topic_id, TopicUser.notification_reasons[:created_post])
   end
 
   scope :by_newest, order('created_at desc, id desc')
@@ -443,7 +443,7 @@ class Post < ActiveRecord::Base
     self.quote_count = quoted_post_numbers.size
   end
 
-  # Process this post after comitting it
+  # Process this post after committing it
   def trigger_post_process
     args = { post_id: id }
     args[:image_sizes] = image_sizes if image_sizes.present?

@@ -12,14 +12,13 @@ describe TopicQuery do
 
   context 'a bunch of topics' do
     let!(:regular_topic) { Fabricate(:topic, title: 'this is a regular topic', user: creator, bumped_at: 15.minutes.ago) }
-    let!(:pinned_topic) { Fabricate(:topic, title: 'this is a pinned topic', user: creator, pinned: true, bumped_at: 10.minutes.ago) }
+    let!(:pinned_topic) { Fabricate(:topic, title: 'this is a pinned topic', user: creator, pinned_at: 10.minutes.ago, bumped_at: 10.minutes.ago) }
     let!(:archived_topic) { Fabricate(:topic, title: 'this is an archived topic', user: creator, archived: true, bumped_at: 6.minutes.ago) }
     let!(:invisible_topic) { Fabricate(:topic, title: 'this is an invisible topic', user: creator, visible: false, bumped_at: 5.minutes.ago) }
     let!(:closed_topic) { Fabricate(:topic, title: 'this is a closed topic', user: creator, closed: true, bumped_at: 1.minute.ago) }
+    let(:topics) { topic_query.list_popular.topics }
 
     context 'list_popular' do
-      let(:topics) { topic_query.list_popular.topics }
-
       it "returns the topics in the correct order" do
         topics.should == [pinned_topic, closed_topic, archived_topic, regular_topic]
       end
@@ -33,10 +32,22 @@ describe TopicQuery do
       end
     end
 
+    context 'after clearring a pinned topic' do
+      before do
+        pinned_topic.clear_pin_for(user)
+      end
+
+      it "no longer shows the pinned topic at the top" do
+        topics.should == [closed_topic, archived_topic, pinned_topic, regular_topic]
+      end
+
+    end
+
   end
 
   context 'categorized' do
     let(:category) { Fabricate(:category) }
+    let(:topic_category) { category.topic }
     let!(:topic_no_cat) { Fabricate(:topic) }
     let!(:topic_in_cat) { Fabricate(:topic, category: category) }
 
@@ -45,16 +56,17 @@ describe TopicQuery do
     end
 
     it "returns the topic with a category when filtering by category" do
-      topic_query.list_category(category).topics.should == [topic_in_cat]
+      topic_query.list_category(category).topics.should == [topic_category, topic_in_cat]
     end
 
-    it "returns nothing when filtering by another category" do
-      topic_query.list_category(Fabricate(:category, name: 'new cat')).topics.should be_blank
+    it "returns only the topic category when filtering by another category" do
+      another_category = Fabricate(:category, name: 'new cat')
+      topic_query.list_category(another_category).topics.should == [another_category.topic]
     end
 
     describe '#list_new_in_category' do
-      it 'returns only the categorized topic' do
-        topic_query.list_new_in_category(category).topics.should == [topic_in_cat]
+      it 'returns the topic category and the categorized topic' do
+        topic_query.list_new_in_category(category).topics.should == [topic_in_cat, topic_category]
       end
     end
   end

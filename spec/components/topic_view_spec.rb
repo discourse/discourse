@@ -26,6 +26,14 @@ describe TopicView do
     lambda { TopicView.new(topic.id, nil) }.should raise_error(Discourse::NotLoggedIn)
   end
 
+  it "provides an absolute url" do
+    topic_view.absolute_url.should be_present
+  end
+
+  it "provides a summary of the first post" do
+    topic_view.summary.should be_present
+  end
+
   describe "#get_canonical_path" do
     let(:user) { Fabricate(:user) }
     let(:topic) { Fabricate(:topic) }

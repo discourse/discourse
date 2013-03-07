@@ -1,3 +1,5 @@
+require_dependency 'pinned_check'
+
 class TopicViewSerializer < ApplicationSerializer
 
   # These attributes will be delegated to the topic
@@ -12,7 +14,6 @@ class TopicViewSerializer < ApplicationSerializer
      :last_posted_at,
      :visible,
      :closed,
-     :pinned,
      :archived,
      :moderator_posts_count,
      :has_best_of,
@@ -42,7 +43,8 @@ class TopicViewSerializer < ApplicationSerializer
              :notifications_reason_id,
              :posts,
              :at_bottom,
-             :highest_post_number
+             :highest_post_number,
+             :pinned
 
   has_one :created_by, serializer: BasicUserSerializer, embed: :objects
   has_one :last_poster, serializer: BasicUserSerializer, embed: :objects
@@ -191,6 +193,10 @@ class TopicViewSerializer < ApplicationSerializer
 
   def highest_post_number
     object.highest_post_number
+  end
+
+  def pinned
+    PinnedCheck.new(object.topic, object.topic_user).pinned?
   end
 
   def posts

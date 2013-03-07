@@ -1,5 +1,6 @@
 require_dependency 'email_token'
 require_dependency 'trust_level'
+require_dependency 'pbkdf2'
 
 class User < ActiveRecord::Base
   attr_accessible :name, :username, :password, :email, :bio_raw, :website
@@ -347,7 +348,7 @@ class User < ActiveRecord::Base
   end
 
   # The following count methods are somewhat slow - definitely don't use them in a loop.
-  # They might need to be denormialzied
+  # They might need to be denormalized
   def like_count
     UserAction.where(user_id: id, action_type: UserAction::WAS_LIKED).count
   end
@@ -442,11 +443,8 @@ class User < ActiveRecord::Base
   end
 
   def readable_name
-    if name.present? && name != username
-      "#{name} (#{username})"
-    else
-      username
-    end
+    return "#{name} (#{username})" if name.present? && name != username
+    username
   end
 
   protected
@@ -460,25 +458,14 @@ class User < ActiveRecord::Base
     end
 
     def update_tracked_topics
-      if auto_track_topics_after_msecs_changed?
+      return unless auto_track_topics_after_msecs_changed?
 
-        if auto_track_topics_after_msecs < 0
-
-          User.exec_sql('update topic_users set notification_level = ?
-                         where notifications_reason_id is null and
-                           user_id = ?' , TopicUser::NotificationLevel::REGULAR , id)
-        else
-
-          User.exec_sql('update topic_users set notification_level = ?
-                         where notifications_reason_id is null and
-                           user_id = ? and
-                           total_msecs_viewed < ?' , TopicUser::NotificationLevel::REGULAR , id, auto_track_topics_after_msecs)
-
-          User.exec_sql('update topic_users set notification_level = ?
-                         where notifications_reason_id is null and
-                           user_id = ? and
-                           total_msecs_viewed >= ?' , TopicUser::NotificationLevel::TRACKING , id, auto_track_topics_after_msecs)
-        end
+      where_conditions = {notifications_reason_id: nil, user_id: id}
+      if auto_track_topics_after_msecs < 0
+        TopicUser.update_all({notification_level: TopicUser.notification_levels[:regular]}, where_conditions)
+      else
+        TopicUser.update_all(["notification_level = CASE WHEN total_msecs_viewed < ? THEN ? ELSE ? END",
+                              auto_track_topics_after_msecs, TopicUser.notification_levels[:regular], TopicUser.notification_levels[:tracking]], where_conditions)
       end
     end
 
@@ -495,7 +482,7 @@ class User < ActiveRecord::Base
     end
 
     def hash_password(password, salt)
-      PBKDF2.new(password: password, salt: salt, iterations: Rails.configuration.pbkdf2_iterations).hex_string
+      Pbkdf2.hash_password(password, salt, Rails.configuration.pbkdf2_iterations)
     end
 
     def add_trust_level

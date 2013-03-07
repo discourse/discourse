@@ -14,7 +14,9 @@ class TopicsController < ApplicationController
                                           :mute,
                                           :unmute,
                                           :set_notifications,
-                                          :move_posts]
+                                          :move_posts,
+                                          :clear_pin]
+
   before_filter :consider_user_for_promotion, only: :show
 
   skip_before_filter :check_xhr, only: [:avatar, :show, :feed]
@@ -127,16 +129,21 @@ class TopicsController < ApplicationController
     end
   end
 
+  def clear_pin
+    topic = Topic.where(id: params[:topic_id].to_i).first
+    guardian.ensure_can_see!(topic)
+    topic.clear_pin_for(current_user)
+    render nothing: true
+  end
+
   def timings
-
     PostTiming.process_timings(
-        current_user,
-        params[:topic_id].to_i,
-        params[:highest_seen].to_i,
-        params[:topic_time].to_i,
-        (params[:timings] || []).map{|post_number, t| [post_number.to_i, t.to_i]}
+      current_user,
+      params[:topic_id].to_i,
+      params[:highest_seen].to_i,
+      params[:topic_time].to_i,
+      (params[:timings] || []).map{|post_number, t| [post_number.to_i, t.to_i]}
     )
-
     render nothing: true
   end
 

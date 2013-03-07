@@ -329,6 +329,27 @@ Discourse.Topic = Discourse.Model.extend({
     });
   },
 
+  /**
+    Clears the pin from a topic for the currentUser
+
+    @method clearPin
+  **/
+  clearPin: function() {
+
+    var topic = this;
+
+    // Clear the pin optimistically from the object
+    topic.set('pinned', false);
+
+    $.ajax("/t/" + this.get('id') + "/clear-pin", {
+      type: 'PUT',
+      error: function() {
+        // On error, put the pin back
+        topic.set('pinned', true);
+      }
+    });
+  },
+
   // Is the reply to a post directly below it?
   isReplyDirectlyBelow: function(post) {
     var postBelow, posts;

@@ -12,13 +12,10 @@
     <link rel="icon" type="image/png" href=<%=SiteSetting.favicon_url%>>
     <%= javascript_include_tag "preload_store" %>
 
-
-
     <%= render :partial => "common/special_font_face" %>
     <%= render :partial => "common/discourse_stylesheet" %>
 
-
-    <%=csrf_meta_tags%>
+    <%= csrf_meta_tags %>
 
     <%= yield :head %>
   </head>

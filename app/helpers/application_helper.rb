@@ -32,4 +32,25 @@ module ApplicationHelper
     current_user.try(:admin?)
   end
 
+  def crawlable_meta_data(url, title, description)
+    # Image to supply as meta data
+    image = "#{Discourse.base_url}#{SiteSetting.logo_url}"
+
+    # Add opengraph tags
+    result =  tag(:meta, property: 'og:site_name', content: SiteSetting.title) << "\n"
+    result << tag(:meta, property: 'og:image', content: image) << "\n"
+    result << tag(:meta, property: 'og:url', content: url) << "\n"
+    result << tag(:meta, property: 'og:title', content: title) << "\n"
+    result << tag(:meta, property: 'og:description', content: description) << "\n"
+
+    # Add twitter card
+    result << tag(:meta, property: 'twitter:card', content: "summary") << "\n"
+    result << tag(:meta, property: 'twitter:url', content: url) << "\n"
+    result << tag(:meta, property: 'twitter:title', content: title) << "\n"
+    result << tag(:meta, property: 'twitter:description', content: description) << "\n"
+    result << tag(:meta, property: 'twitter:image', content: image) << "\n"
+
+    result
+  end
+
 end

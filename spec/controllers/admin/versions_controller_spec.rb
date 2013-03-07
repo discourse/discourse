@@ -5,7 +5,7 @@ describe Admin::VersionsController do
 
   before do
     DiscourseUpdates.stubs(:latest_version).returns('1.2.33')
-    DiscourseUpdates.stubs(:critical_update_available?).returns(false)
+    DiscourseUpdates.stubs(:critical_updates_available?).returns(false)
   end
 
   it "is a subclass of AdminController" do

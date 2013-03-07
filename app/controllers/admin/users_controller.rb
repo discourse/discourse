@@ -16,6 +16,7 @@ class Admin::UsersController < Admin::AdminController
 
   def show
     @user = User.where(username_lower: params[:id]).first
+    raise Discourse::NotFound.new unless @user
     render_serialized(@user, AdminDetailedUserSerializer, root: false)
   end
 

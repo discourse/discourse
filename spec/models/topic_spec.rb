@@ -110,10 +110,20 @@ describe Topic do
   end
 
   context 'html in title' do
-    let(:topic) { Fabricate(:topic, title: "<script>alert('title')</script> is my topic title" ) }
+    let(:topic_bold) { Fabricate(:topic, title: "topic with <b>bold</b> text in its title" ) }
+    let(:topic_image) { Fabricate(:topic, title: "topic with <img src='something'> image in its title" ) }
+    let(:topic_script) { Fabricate(:topic, title: "<script>alert('title')</script> is my topic title" ) }
 
-    it "should escape the HTML" do
-      topic.title.should == "is my topic title"
+    it "escapes script contents" do
+      topic_script.title.should == "is my topic title"
+    end
+
+    it "escapes bold contents" do
+      topic_bold.title.should == "topic with bold text in its title"
+    end
+
+    it "escapes bold contents" do
+      topic_image.title.should == "topic with image in its title"
     end
 
   end
@@ -537,8 +547,12 @@ describe Topic do
           @topic.reload
         end
 
+        it "doesn't have a pinned_at" do
+          @topic.pinned_at.should be_blank
+        end
+
         it 'should not be pinned' do
-          @topic.should_not be_pinned
+          @topic.pinned_at.should be_blank
         end
 
         it 'adds a moderator post' do
@@ -552,13 +566,13 @@ describe Topic do
 
       context 'enable' do
         before do
-          @topic.update_attribute :pinned, false
+          @topic.update_attribute :pinned_at, nil
           @topic.update_status('pinned', true, @user)
           @topic.reload
         end
 
         it 'should be pinned' do
-          @topic.should be_pinned
+          @topic.pinned_at.should be_present
         end
 
         it 'adds a moderator post' do
@@ -578,7 +592,7 @@ describe Topic do
           @topic.reload
         end
 
-        it 'should not be pinned' do
+        it 'should not be archived' do
           @topic.should_not be_archived
         end
 
@@ -856,8 +870,12 @@ describe Topic do
       topic.should be_visible
     end
 
+    it "has an empty pinned_at" do
+      topic.pinned_at.should be_blank
+    end
+
     it 'is not pinned' do
-      topic.should_not be_pinned
+      topic.pinned_at.should be_blank
     end
 
     it 'is not closed' do
