@@ -71,6 +71,11 @@ describe Search do
     Search.query(nil).should be_blank
   end
 
+  it 'does not search when the search term is too small' do
+    ActiveRecord::Base.expects(:exec_sql).never
+    Search.query('evil', nil, 5).should be_blank
+  end
+
   it 'escapes non alphanumeric characters' do
     Search.query('foo :!$);}]>@\#\"\'').should be_blank # There are at least three levels of sanitation for Search.query!
   end
