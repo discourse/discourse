@@ -285,18 +285,33 @@ zh_CN:
       show_preview: '显示预览 &raquo;'
       hide_preview: '&laquo; 隐藏预览'
       
-      quote_title: 引用
-      bold_title: 加粗
-      italic_title: 斜体
-      link_title: 插入链接
-      code_title: 代码
-      image_title: 插入图片
-      olist_title: 数字列表
-      ulist_title: 符号列表
-      heading_title: 标题
-      #hr_title: 分割线
-      undo_title: 撤销
-      redo_title: 重做
+      quote_title: "引用帖子"
+      bold_title: "加粗"
+      bold_text: "加粗文字"
+      italic_title: "斜体"
+      italic_text: "斜体文字"
+      link_title: "链接"
+      link_description: "在此输入链接描述"
+      link_dialog_title: "插入链接"
+      link_optional_text: "可选标题"
+      quote_title: "引用"
+      quote_text: "引用"
+      code_title: "代码"
+      code_text: "在此输入代码"
+      image_title: "图片"
+      image_description: "在此输入图片描述"
+      image_dialog_title: "插入图片"
+      image_optional_text: "可选标题"
+      image_hosting_hint: "需要 <a href='http://www.google.com/search?q=free+image+hosting' target='_blank'>免费图片存储？</a>"
+      olist_title: "数字列表"
+      ulist_title: "符号列表"
+      list_item: "列表条目"
+      heading_title: "标题"
+      heading_text: "标题头"
+      hr_title: "分割线"
+      undo_title: "撤销"
+      redo_title: "重做"
+      help: "Markdown 编辑帮助"
     
     composer_hr_title: 分割线  # this should be a bug
       
@@ -444,6 +459,10 @@ zh_CN:
       reply:
         title: '回复'
         help: '开始给本主题撰写回复'
+
+      clear_pin:
+        title: "清除置顶"
+        help: "将本主题的置顶状态清除，这样它将不再始终显示在主题列表顶部"
 
       share:
         title: '分享'
