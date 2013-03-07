@@ -9,7 +9,7 @@ fr:
   title: "Discourse"
   topics: "Discussions"
   loading: "Chargement"
-  powered_by: 'Propulsé par <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
+  powered_by_html: 'Propulsé par <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
 
   via: "%{username} via %{site_name}"
   is_reserved: "est réservé"
@@ -20,7 +20,7 @@ fr:
   has_already_been_used: "a déjà été utilisé"
   invalid_characters: "contient des caractères invalides"
   is_invalid: "est invalide; essayez d'être plus précis"
-  next_page: "page suivante &rarr;"
+  next_page: "page suivante →"
   by: "Par"
   topics_in_category: "Discussions dans la catégorie '%{category}'"
   rss_posts_in_topic: "Flux RSS de '%{topic}'"
