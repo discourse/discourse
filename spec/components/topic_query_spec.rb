@@ -47,6 +47,7 @@ describe TopicQuery do
 
   context 'categorized' do
     let(:category) { Fabricate(:category) }
+    let(:topic_category) { category.topic }
     let!(:topic_no_cat) { Fabricate(:topic) }
     let!(:topic_in_cat) { Fabricate(:topic, category: category) }
 
@@ -55,16 +56,17 @@ describe TopicQuery do
     end
 
     it "returns the topic with a category when filtering by category" do
-      topic_query.list_category(category).topics.should == [topic_in_cat]
+      topic_query.list_category(category).topics.should == [topic_category, topic_in_cat]
     end
 
-    it "returns nothing when filtering by another category" do
-      topic_query.list_category(Fabricate(:category, name: 'new cat')).topics.should be_blank
+    it "returns only the topic category when filtering by another category" do
+      another_category = Fabricate(:category, name: 'new cat')
+      topic_query.list_category(another_category).topics.should == [another_category.topic]
     end
 
     describe '#list_new_in_category' do
-      it 'returns only the categorized topic' do
-        topic_query.list_new_in_category(category).topics.should == [topic_in_cat]
+      it 'returns the topic category and the categorized topic' do
+        topic_query.list_new_in_category(category).topics.should == [topic_in_cat, topic_category]
       end
     end
   end

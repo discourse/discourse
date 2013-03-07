@@ -99,8 +99,12 @@ describe Category do
       @topic.category.should == @category
     end
 
-    it 'is an invisible topic' do
-      @topic.should_not be_visible
+    it 'is a visible topic' do
+      @topic.should be_visible
+    end
+
+    it 'is pinned' do
+      @topic.pinned_at.should be_present
     end
 
     it 'is an undeletable topic' do
