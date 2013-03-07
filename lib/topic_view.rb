@@ -2,6 +2,7 @@ require_dependency 'guardian'
 require_dependency 'topic_query'
 
 class TopicView
+  include ActionView::Helpers
 
   attr_accessor :topic, :min, :max, :draft, :draft_key, :draft_sequence, :posts
 
@@ -61,12 +62,25 @@ class TopicView
     "#{@topic.relative_url}?page=#{next_page}"
   end
 
+  def absolute_url
+    "#{Discourse.base_url}#{@topic.relative_url}"
+  end
+
   def relative_url
     @topic.relative_url
   end
 
   def title
     @topic.title
+  end
+
+  def summary
+    return nil if posts.blank?
+    first_post_content = sanitize(posts.first.cooked, tags: [], attributes: [])
+    first_post_content.gsub!(/\n/, ' ')
+
+    return first_post_content if first_post_content.length <= 500
+    "#{first_post_content[0..500]}..."
   end
 
   def filter_posts(opts = {})
