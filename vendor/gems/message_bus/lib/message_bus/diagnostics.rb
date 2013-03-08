@@ -1,8 +1,13 @@
 class MessageBus::Diagnostics
   def self.full_process_path
     begin
-      info = `ps -eo "%p|$|%a" | grep '^\\s*#{Process.pid}'`
-      info.strip.split('|$|')[1]
+      system = `uname`.strip
+      if system == "Darwin"
+        `ps -o "comm=" -p #{Process.pid}`
+      else
+        info = `ps -eo "%p|$|%a" | grep '^\\s*#{Process.pid}'`
+        info.strip.split('|$|')[1]
+      end
     rescue
       # skip it ... not linux or something weird
     end
