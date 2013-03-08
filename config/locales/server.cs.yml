@@ -456,6 +456,7 @@ cs:
     not_activated: "Ještě se nemůžete přihlásit. Zaslali jsme vám aktivační email na <b>%{email}</b>. Prosím následujte instrukce v tomto emailu a aktivujte si tak svůj účet."
     errors: "%{errors}"
     not_available: "Není k dispozici. Nechcete zkusit %{suggestion}?"
+    something_already_taken: "Nastala chyba při zpracování, zřejmě je dané uživatelské jméno nebo email již zaregistrován. Zkuste odkaz pro obnovení hesla."
     omniauth_error: "Bohužel nepovedlo se vás autorizovat přes %{strategy}. Ujistěte se, že jste správně schválili autorizaci."
     omniauth_error_unknown: "Nastala chyba při zpracování vašeho přihlášení, prosím zkuste to znovu."
 
