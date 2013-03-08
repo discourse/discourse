@@ -34,7 +34,7 @@ class Category < ActiveRecord::Base
   end
 
   def topic_url
-    topic.try(:relative_url)
+    topic_only_relative_url.try(:relative_url)
   end
 
   def ensure_slug
