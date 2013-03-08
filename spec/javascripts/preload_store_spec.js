@@ -37,7 +37,7 @@ describe("PreloadStore", function() {
 
   describe('get', function() {
 
-    it("returns a promise that resolves to undefined", function() {
+    it("returns a promise that resolves to null", function() {
       var done, storeResult;
       done = storeResult = null;
       PreloadStore.get('joker').then(function(result) {
@@ -46,7 +46,7 @@ describe("PreloadStore", function() {
       });
       waitsFor((function() { return done; }), "Promise never resolved", 1000);
       runs(function() {
-        expect(storeResult).toBe(void 0);
+        expect(storeResult).toBe(null);
       });
     });
 
