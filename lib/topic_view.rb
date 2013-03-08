@@ -79,6 +79,11 @@ class TopicView
     Summarize.new(posts.first.cooked).summary
   end
 
+  def image_url
+    return nil if posts.blank?
+    posts.first.user.small_avatar_url
+  end
+
   def filter_posts(opts = {})
     if opts[:post_number].present?
       # Get posts near a post

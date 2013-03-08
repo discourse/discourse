@@ -36,7 +36,7 @@ module ApplicationHelper
   def crawlable_meta_data(opts=nil)
 
     opts ||= {}
-    opts[:image] ||= "#{Discourse.base_url}#{SiteSetting.logo_url}"
+    opts[:image] ||= "#{Discourse.base_url}#{SiteSetting.logo_small_url}"
     opts[:url] ||= "#{Discourse.base_url}#{request.fullpath}"
 
     # Add opengraph tags
@@ -45,8 +45,8 @@ module ApplicationHelper
     result << tag(:meta, property: 'twitter:card', content: "summary")
     [:image, :url, :title, :description].each do |property|
       if opts[property].present?
-        result << tag(:meta, property: "og:#{property}", content: opts[property]) << "\n"
-        result << tag(:meta, property: "twitter:#{property}", content: opts[property]) << "\n"
+        result << tag(:meta, {property: "og:#{property}", content: opts[property]}, nil, false) << "\n"
+        result << tag(:meta, {property: "twitter:#{property}", content: opts[property]}, nil, false) << "\n"
       end
     end
 

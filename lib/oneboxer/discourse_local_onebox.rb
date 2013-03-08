@@ -2,7 +2,7 @@ require_dependency 'oneboxer/oembed_onebox'
 require_dependency 'freedom_patches/rails4'
 
 module Oneboxer
-  class DiscourseOnebox < BaseOnebox
+  class DiscourseLocalOnebox < BaseOnebox
     include ActionView::Helpers::DateHelper
 
     matcher do
