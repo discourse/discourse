@@ -254,6 +254,7 @@ cs:
     max_post_length: "Maximální délka příspěvku"
     min_topic_title_length: "Minimální délka názvu tématu"
     max_topic_title_length: "Maximální délka názvu tématu"
+    min_search_term_length: "Minimální délka hledaného výrazu ve znacích"
     allow_duplicate_topic_titles: "Mohou uživatelé vytvářet témata se stejnými názvy"
     unique_posts_mins: "Kolik minut musí uplynout, než může uživatel zaslat příspěvek se stejným obsahem"
     enforce_global_nicknames: "Vyžadovat globálně unikátní uživatelská jména. Poznámka: Měňte toto nastavení pouze při prvnotní konfiguraci."
