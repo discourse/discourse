@@ -17,6 +17,7 @@ gem 'clockwork', require: false
 gem 'em-redis'
 gem 'eventmachine'
 gem 'fast_xs'
+gem 'fast_xor'
 gem 'fastimage'
 gem 'fog', require: false
 gem 'has_ip_address'

@@ -9,6 +9,7 @@
 # 3. It does not monkey patch string
 
 require 'openssl'
+require 'xor'
 
 class Pbkdf2
   
@@ -20,7 +21,7 @@ class Pbkdf2
 
     2.upto(iterations) do 
      u = prf(h, password, u)
-     ret = xor(ret, u)
+     ret.xor!(u) 
     end
 
     ret.bytes.map{|b| ("0" + b.to_s(16))[-2..-1]}.join("")
@@ -28,6 +29,7 @@ class Pbkdf2
 
   protected 
 
+  # fallback xor in case we need it for jruby ... way slower
   def self.xor(x,y)
     x.bytes.zip(y.bytes).map{|x,y| x ^ y}.pack('c*')
   end
