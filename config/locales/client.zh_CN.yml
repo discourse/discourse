@@ -11,13 +11,13 @@ zh_CN:
     not_implemented: "非常抱歉，此功能暂时尚未实现！"
     no_value: "否"
     yes_value: "是"
-    of_value: "of"
+    of_value: "之于"
     generic_error: "抱歉，发生了一个错误。"
     log_in: "登录"
     age: "寿命"
     last_post: "最后一帖"
     admin_title: "管理员"
-    flags_title: "标志"
+    flags_title: "标记"
     show_more: "显示更多"
     links: 链接
     faq: "常见问题"
@@ -165,7 +165,7 @@ zh_CN:
         title: "最后使用的IP地址"
       avatar:
         title: "头像"
-        instructions: "我们目前使用<a href='https://gravatar.com' target='_blank'>Gravatar</a>来基于你的邮箱生成头像"
+        instructions: "我们目前使用 <a href='https://gravatar.com' target='_blank'>Gravatar</a> 来基于你的邮箱生成头像"
 
       filters:
         all: "全部"
@@ -198,7 +198,7 @@ zh_CN:
       button: '切换到“优选”视图'
 
     private_message_info:
-      title: "私密交流"
+      title: "私下交流"
       invite: "邀请其他人……"
 
     email: '电子邮箱'
@@ -231,7 +231,7 @@ zh_CN:
       or: "或"
       authenticating: "验证中……"
       awaiting_confirmation: "你的帐号尚未激活，点击忘记密码链接来重新发送激活邮件。"
-      awaiting_approval: "你的帐号尚未被论坛仲裁人批准。一旦你的帐号获得批准，你会收到一封电子邮件。"
+      awaiting_approval: "你的帐号尚未被论坛版主批准。一旦你的帐号获得批准，你会收到一封电子邮件。"
       not_activated: "你还不能登录。我们之前在<b>{{sentTo}}</b>发送了一封激活邮件给你。请按照邮件中的介绍来激活你的帐号。"
       resend_activation_email: "点击此处来重新发送激活邮件。"
       sent_activation_email_again: "我们在<b>{{currentEmail}}</b>又发送了一封激活邮件给你，邮件送达可能需要几分钟，有的电子邮箱服务商可能会认为此邮件为垃圾邮件，请检查一下你邮箱的垃圾邮件文件夹。"
@@ -248,11 +248,11 @@ zh_CN:
         title: "使用雅虎帐号登录"
         message: "使用雅虎（Yahoo）帐号验证登录（请确保没有禁止浏览器弹出对话框）"
       github:
-        title: "使用Github帐号登录"
-        message: "使用Github帐号验证登录（请确保没有禁止浏览器弹出对话框）"
+        title: "使用 Github 帐号登录"
+        message: "使用 Github 帐号验证登录（请确保没有禁止浏览器弹出对话框）"
       persona:
-        title: "使用Mozilla Persona帐号登录"
-        message: "使用Mozilla Persona帐号验证登录（请确保没有禁止浏览器弹出对话框）"
+        title: "使用 Mozilla Persona 帐号登录"
+        message: "使用 Mozilla Persona 帐号验证登录（请确保没有禁止浏览器弹出对话框）"
       sina:
         title: "使用新浪帐号登录"
         message: "使用新浪帐号验证登录（请确保没有禁止浏览器弹出对话框）"
@@ -276,7 +276,7 @@ zh_CN:
 
       users_placeholder: "添加一个用户"
       title_placeholder: "在此输入你的标题，简明扼要的用一句话说明讨论的内容。"
-      reply_placeholder: "在此输入你的回复。你可以使用 Markdown 或 BBCode 来格式化内容。拖拽或粘贴一幅图片到这儿即可将它上传。"
+      reply_placeholder: "在此输入你的回复。你可以使用 Markdown（参考 http://wowubuntu.com/markdown/） 或 BBCode（参考 http://www.bbcode.org/reference.php） 来格式化内容。拖拽或粘贴一幅图片到这儿即可将它上传。"
       view_new_post: "浏览你的新帖子。"
       saving: "保存中……"
       saved: "已保存！"
@@ -313,10 +313,10 @@ zh_CN:
       redo_title: "重做"
       help: "Markdown 编辑帮助"
     
-    composer_hr_title: 分割线  # this should be a bug
+    #composer_hr_title: 分割线  # this should be a bug
       
     notifications:
-      title: "使用@name提及到你，回复你的帖子和主题，私密消息等等的通知消息"
+      title: "使用@name提及到你，回复你的帖子和主题，私信等等的通知消息"
       none: "你当前没有任何通知。"
       more: "浏览以前的通知"
       mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
@@ -326,7 +326,7 @@ zh_CN:
       edited: "<i title='edited' class='icon icon-pencil'></i> {{username}} {{link}}"
       liked: "<i title='liked' class='icon icon-heart'></i> {{username}} {{link}}"
       private_message: "<i class='icon icon-lock' title='私信'></i> {{username}} 发送给你一条私信：{{link}}"
-      invited_to_private_message: "{{username}} 邀请你进行私下交流： {{link}}"
+      invited_to_private_message: "{{username}} 邀请你进行私下交流：{{link}}"
       invitee_accepted: "<i title='已接受你的邀请' class='icon icon-signin'></i> {{username}} 已接受你的邀请"
       moved_post: "<i title='移动帖子' class='icon icon-arrow-right'></i> {{username}} 已将帖子移动到 {{link}}"
 
@@ -390,7 +390,7 @@ zh_CN:
         description: "抱歉，无法载入此主题。有可能是网络连接问题导致的，请重试。如果问题始终存在，请告诉我们。"
       not_found:
         title: "未找到主题"
-        description: "抱歉，无法找到此主题。有可能它被论坛仲裁人删掉了？"
+        description: "抱歉，无法找到此主题。有可能它被论坛版主删掉了？"
       unread_posts: "此主题中你有 {{unread}} 个帖子未阅"
       new_posts: "从你最近一次阅读此主题后，又有 {{new_posts}} 个新帖子发表"
       likes:
@@ -539,7 +539,7 @@ zh_CN:
         reply: "开始给本帖撰写回复"
         like: "喜欢本帖"
         edit: "编辑本帖"
-        flag: "给本帖做标记以提醒论坛仲裁人"
+        flag: "给本帖做标记以提醒论坛版主"
         delete: "删除本帖"
         undelete: "恢复本帖"
         share: "分享一个到本帖的链接"
@@ -594,7 +594,7 @@ zh_CN:
       title: '你为何要给本帖做标记？'
       action: '标记帖子'
       cant: "抱歉，当前你不能标记本帖。"
-      custom_placeholder: "为何本帖需要论坛仲裁人的关注？请告诉我们你的关注点，如果可能请一并提供相关链接。"
+      custom_placeholder: "为何本帖需要论坛版主的关注？请告诉我们你的关注点，如果可能请一并提供相关链接。"
       custom_message:
         at_least: "输入至少 {{n}} 个字符"
         more: "还差 {{n}} 个……"
@@ -740,7 +740,7 @@ zh_CN:
         ban: "禁止"
         unban: "解禁"
         banned: "已禁止？"
-        moderator: "仲裁人？"
+        moderator: "版主？"
         admin: "管理员？"
         show_admin_profile: "管理员"
         refresh_browsers: "强制浏览器刷新"
@@ -748,8 +748,8 @@ zh_CN:
         impersonate: '假冒用户'
         revoke_admin: '吊销管理员资格'
         grant_admin: '赋予管理员资格'
-        revoke_moderation: '吊销论坛仲裁资格'
-        grant_moderation: '赋予论坛仲裁资格'
+        revoke_moderation: '吊销论坛版主资格'
+        grant_moderation: '赋予论坛版主资格'
         basics: 基础
         reputation: 声誉
         permissions: 权限
