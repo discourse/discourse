@@ -12,7 +12,7 @@ Discourse.User = Discourse.Model.extend({
     Large version of this user's avatar.
 
     @property avatarLarge
-	@type {String}
+    @type {String}
   **/   
   avatarLarge: (function() {
     return Discourse.Utilities.avatarUrl(this.get('username'), 'large', this.get('avatar_template'));
@@ -22,17 +22,17 @@ Discourse.User = Discourse.Model.extend({
     Small version of this user's avatar.
 
     @property avatarSmall
-	@type {String}
+    @type {String}
   **/   
   avatarSmall: (function() {
-	return Discourse.Utilities.avatarUrl(this.get('username'), 'small', this.get('avatar_template'));
+  return Discourse.Utilities.avatarUrl(this.get('username'), 'small', this.get('avatar_template'));
   }).property('username'),
 
   /**
     This user's website.
 
     @property websiteName
-	@type {String}
+    @type {String}
   **/   
   websiteName: (function() {
     return this.get('website').split("/")[2];
@@ -42,7 +42,7 @@ Discourse.User = Discourse.Model.extend({
     Path to this user.
 
     @property path
-	@type {String}
+    @type {String}
   **/   
   path: (function() {
     return "/users/" + (this.get('username_lower'));
@@ -52,7 +52,7 @@ Discourse.User = Discourse.Model.extend({
     This user's username in lowercase.
 
     @property username_lower
-	@type {String}
+    @type {String}
   **/   
   username_lower: (function() {
     return this.get('username').toLowerCase();
@@ -62,7 +62,7 @@ Discourse.User = Discourse.Model.extend({
     This user's trust level.
 
     @property trustLevel
-	@type {Integer}
+    @type {Integer}
   **/   
   trustLevel: (function() {
     return Discourse.get('site.trust_levels').findProperty('id', this.get('trust_level'));
@@ -73,7 +73,7 @@ Discourse.User = Discourse.Model.extend({
 
     @method changeUsername
     @param {String} newUsername The user's new username
-	@returns Result of ajax call
+    @returns Result of ajax call
   **/
   changeUsername: function(newUsername) {
     return jQuery.ajax({
@@ -90,7 +90,7 @@ Discourse.User = Discourse.Model.extend({
 
     @method changeEmail
     @param {String} email The user's new email address\
-	@returns Result of ajax call
+    @returns Result of ajax call
   **/
   changeEmail: function(email) {
     return jQuery.ajax({
@@ -106,7 +106,7 @@ Discourse.User = Discourse.Model.extend({
     Returns a copy of this user.
 
     @method copy
-	@returns {User}
+    @returns {User}
   **/
   copy: function() {
     return Discourse.User.create(this.getProperties(Ember.keys(this)));
@@ -116,8 +116,8 @@ Discourse.User = Discourse.Model.extend({
     Save's this user's properties over AJAX via a PUT request.
 
     @method save
-	@param {Function} finished Function called on completion of AJAX call
-	@returns The result of finished(true) on a success, the result of finished(false) on an error
+    @param {Function} finished Function called on completion of AJAX call
+    @returns The result of finished(true) on a success, the result of finished(false) on an error
   **/
   save: function(finished) {
     var _this = this;
@@ -141,13 +141,13 @@ Discourse.User = Discourse.Model.extend({
     Changes the password and calls the callback function on AJAX.complete.
 
     @method changePassword
-	@param {Function} callback Function called on completion of AJAX call
-	@returns The result of the callback() function on complete
+    @param {Function} callback Function called on completion of AJAX call
+    @returns The result of the callback() function on complete
   **/
   changePassword: function(callback) {
     var good;
     good = false;
-	jQuery.ajax({
+  jQuery.ajax({
       url: '/session/forgot_password',
       dataType: 'json',
       data: {
@@ -170,7 +170,7 @@ Discourse.User = Discourse.Model.extend({
     Filters out this user's stream of user actions by a given filter
 
     @method filterStream
-	@param {String} filter
+    @param {String} filter
   **/
   filterStream: function(filter) {
     if (Discourse.UserAction.statGroups[filter]) {
@@ -185,8 +185,8 @@ Discourse.User = Discourse.Model.extend({
     Loads a single user action by id.
 
     @method loadUserAction
-	@param {Integer} id The id of the user action being loaded
-	@returns A stream of the user's actions containing the action of id
+    @param {Integer} id The id of the user action being loaded
+    @returns A stream of the user's actions containing the action of id
   **/
   loadUserAction: function(id) {
     var stream,
@@ -216,10 +216,10 @@ Discourse.User = Discourse.Model.extend({
 
   /**
     Loads more user actions, and then calls a callback if defined.
-	
-	@method loadMoreUserActions
-	@param {String} callback Called after completion, on success of AJAX call, if it is defined
-	@returns the result of the callback
+  
+    @method loadMoreUserActions
+    @param {String} callback Called after completion, on success of AJAX call, if it is defined
+    @returns the result of the callback
   **/
   loadMoreUserActions: function(callback) {
     var stream, url,
@@ -255,10 +255,10 @@ Discourse.User = Discourse.Model.extend({
   },
 
   /**
-	The user's stat count, excluding PMs.
+  The user's stat count, excluding PMs.
 
     @property statsCountNonPM
-	@type {Integer}
+    @type {Integer}
   **/   
   statsCountNonPM: (function() {
     var stats, total;
@@ -273,10 +273,10 @@ Discourse.User = Discourse.Model.extend({
   }).property('stats.@each'),
   
   /**
-	The user's stats, excluding PMs.
+  The user's stats, excluding PMs.
 
     @property statsExcludingPms
-	@type {Array}
+    @type {Array}
   **/   
   statsExcludingPms: (function() {
     var r;
@@ -291,10 +291,10 @@ Discourse.User = Discourse.Model.extend({
   }).property('stats.@each'),
   
   /**
-	This user's stats, only including PMs.
+  This user's stats, only including PMs.
 
     @property statsPmsOnly
-	@type {Array}
+    @type {Array}
   **/  
   statsPmsOnly: (function() {
     var r;
@@ -307,10 +307,10 @@ Discourse.User = Discourse.Model.extend({
   }).property('stats.@each'),
   
   /**
-	Number of items in this user's inbox.
+  Number of items in this user's inbox.
 
     @property inboxCount
-	@type {Integer}
+    @type {Integer}
   **/  
   inboxCount: (function() {
     var r;
@@ -325,10 +325,10 @@ Discourse.User = Discourse.Model.extend({
   }).property('stats.@each'),
   
   /**
-	Number of items this user has sent.
+  Number of items this user has sent.
 
     @property sentItemsCount
-	@type {Integer}
+    @type {Integer}
   **/  
   sentItemsCount: (function() {
     var r;
@@ -346,10 +346,10 @@ Discourse.User = Discourse.Model.extend({
 Discourse.User.reopenClass({
   /**
     Checks if given username is valid for this email address
-	
-	@method checkUsername
-	@param {String} username A username to check
-	@param {String} email An email address to check
+  
+    @method checkUsername
+    @param {String} username A username to check
+    @param {String} email An email address to check
   **/
   checkUsername: function(username, email) {
     return jQuery.ajax({
@@ -364,10 +364,10 @@ Discourse.User.reopenClass({
   
   /**
     Groups the user's statistics
-	
-	@method groupStats
-	@param {Array} Given stats
-	@returns {Object}
+  
+    @method groupStats
+    @param {Array} Given stats
+    @returns {Object}
   **/
   groupStats: function(stats) {
     var g,
@@ -409,10 +409,10 @@ Discourse.User.reopenClass({
   
   /**
     Finds a user based on a username
-	
-	@method find
-	@param {String} username The username 
-	@returns the resolution of the promise if 
+  
+    @method find
+    @param {String} username The username 
+    @returns the resolution of the promise if 
   **/
   find: function(username) {
     var promise,
@@ -445,15 +445,15 @@ Discourse.User.reopenClass({
   },
   
   /**
-	Creates a new account over POST
-	
-	@method createAccount
-	@param {String} name This user's name
-	@param {String} email This user's email
-	@param {String} password This user's password
-	@param {String} passwordConfirm This user's confirmed password
-	@param {String} challenge
-	@returns Result of ajax call
+  Creates a new account over POST
+  
+    @method createAccount
+    @param {String} name This user's name
+    @param {String} email This user's email
+    @param {String} password This user's password
+    @param {String} passwordConfirm This user's confirmed password
+    @param {String} challenge
+    @returns Result of ajax call
   **/
   createAccount: function(name, email, password, username, passwordConfirm, challenge) {
     return jQuery.ajax({
