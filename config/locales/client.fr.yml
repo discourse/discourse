@@ -272,7 +272,6 @@ fr:
       create_topic: "Créer une discussion"
       create_pm: "Créer un message privé."
 
-      quote_title: "Citer un message"
       bold_title: "Gras"
       bold_text: "texte en gras"
       italic_title: "Italique"

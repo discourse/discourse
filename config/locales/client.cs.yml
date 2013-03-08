@@ -279,7 +279,6 @@ cs:
       show_preview: 'zobrazit náhled &raquo;'
       hide_preview: '&laquo; skrýt náhled'
 
-      quote_title: "Citovat příspěvek"
       bold_title: "Tučně"
       bold_text: "tučný text"
       italic_title: "Kurzíva"
