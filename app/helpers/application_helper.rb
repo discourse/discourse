@@ -32,23 +32,23 @@ module ApplicationHelper
     current_user.try(:admin?)
   end
 
-  def crawlable_meta_data(url, title, description)
-    # Image to supply as meta data
-    image = "#{Discourse.base_url}#{SiteSetting.logo_url}"
+  # Creates open graph and twitter card meta data
+  def crawlable_meta_data(opts=nil)
+
+    opts ||= {}
+    opts[:image] ||= "#{Discourse.base_url}#{SiteSetting.logo_url}"
+    opts[:url] ||= "#{Discourse.base_url}#{request.fullpath}"
 
     # Add opengraph tags
     result =  tag(:meta, property: 'og:site_name', content: SiteSetting.title) << "\n"
-    result << tag(:meta, property: 'og:image', content: image) << "\n"
-    result << tag(:meta, property: 'og:url', content: url) << "\n"
-    result << tag(:meta, property: 'og:title', content: title) << "\n"
-    result << tag(:meta, property: 'og:description', content: description) << "\n"
 
-    # Add twitter card
-    result << tag(:meta, property: 'twitter:card', content: "summary") << "\n"
-    result << tag(:meta, property: 'twitter:url', content: url) << "\n"
-    result << tag(:meta, property: 'twitter:title', content: title) << "\n"
-    result << tag(:meta, property: 'twitter:description', content: description) << "\n"
-    result << tag(:meta, property: 'twitter:image', content: image) << "\n"
+    result << tag(:meta, property: 'twitter:card', content: "summary")
+    [:image, :url, :title, :description].each do |property|
+      if opts[property].present?
+        result << tag(:meta, property: "og:#{property}", content: opts[property]) << "\n"
+        result << tag(:meta, property: "twitter:#{property}", content: opts[property]) << "\n"
+      end
+    end
 
     result
   end

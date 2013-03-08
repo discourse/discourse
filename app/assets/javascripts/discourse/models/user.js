@@ -274,34 +274,35 @@ Discourse.User.reopenClass({
     });
   },
 
+  /**
+    Find a user by username
+
+    @method find
+    @param {String} username the username of the user we want to find
+  **/
   find: function(username) {
-    var promise,
-      _this = this;
-    promise = new RSVP.Promise();
-    $.ajax({
-      url: "/users/" + username + '.json',
-      success: function(json) {
-        // todo: decompose to object
-        var user;
-        json.user.stats = _this.groupStats(json.user.stats.map(function(s) {
-          var obj;
-          obj = Em.Object.create(s);
-          obj.isPM = obj.action_type === Discourse.UserAction.NEW_PRIVATE_MESSAGE || obj.action_type === Discourse.UserAction.GOT_PRIVATE_MESSAGE;
-          return obj;
+
+    // Check the preload store first
+    return PreloadStore.get("user_" + username, function() {
+      return $.ajax({ url: "/users/" + username + '.json' });
+    }).then(function (json) {
+
+      // Create a user from the resulting JSON
+      json.user.stats = Discourse.User.groupStats(json.user.stats.map(function(s) {
+        var stat = Em.Object.create(s);
+        stat.set('isPM', stat.get('action_type') === Discourse.UserAction.NEW_PRIVATE_MESSAGE ||
+                         stat.get('action_type') === Discourse.UserAction.GOT_PRIVATE_MESSAGE);
+        return stat;
+      }));
+
+      if (json.user.stream) {
+        json.user.stream = Discourse.UserAction.collapseStream(json.user.stream.map(function(ua) {
+          return Discourse.UserAction.create(ua);
         }));
-        if (json.user.stream) {
-          json.user.stream = Discourse.UserAction.collapseStream(json.user.stream.map(function(ua) {
-            return Discourse.UserAction.create(ua);
-          }));
-        }
-        user = Discourse.User.create(json.user);
-        return promise.resolve(user);
-      },
-      error: function(xhr) {
-        return promise.reject(xhr);
       }
+
+      return Discourse.User.create(json.user);
     });
-    return promise;
   },
 
   createAccount: function(name, email, password, username, passwordConfirm, challenge) {

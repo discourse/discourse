@@ -1,8 +1,8 @@
 require_dependency 'guardian'
 require_dependency 'topic_query'
+require_dependency 'summarize'
 
 class TopicView
-  include ActionView::Helpers
 
   attr_accessor :topic, :min, :max, :draft, :draft_key, :draft_sequence, :posts
 
@@ -76,11 +76,7 @@ class TopicView
 
   def summary
     return nil if posts.blank?
-    first_post_content = sanitize(posts.first.cooked, tags: [], attributes: [])
-    first_post_content.gsub!(/\n/, ' ')
-
-    return first_post_content if first_post_content.length <= 500
-    "#{first_post_content[0..500]}..."
+    Summarize.new(posts.first.cooked).summary
   end
 
   def filter_posts(opts = {})

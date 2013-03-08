@@ -1,6 +1,7 @@
 require_dependency 'email_token'
 require_dependency 'trust_level'
 require_dependency 'pbkdf2'
+require_dependency 'summarize'
 
 class User < ActiveRecord::Base
   attr_accessible :name, :username, :password, :email, :bio_raw, :website
@@ -445,6 +446,11 @@ class User < ActiveRecord::Base
   def readable_name
     return "#{name} (#{username})" if name.present? && name != username
     username
+  end
+
+  def bio_summary
+    return nil unless bio_cooked.present?
+    Summarize.new(bio_cooked).summary
   end
 
   protected

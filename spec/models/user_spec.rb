@@ -218,6 +218,7 @@ describe User do
 
       its(:email_tokens) { should be_present }
       its(:bio_cooked) { should be_present }
+      its(:bio_summary) { should be_present }
       its(:topics_entered) { should == 0 }
       its(:posts_read_count) { should == 0 }
     end

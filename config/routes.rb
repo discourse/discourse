@@ -4,7 +4,7 @@ require_dependency 'admin_constraint'
 
 # This used to be User#username_format, but that causes a preload of the User object
 # and makes Guard not work properly.
-USERNAME_ROUTE_FORMAT = /[A-Za-z0-9\._]+/
+USERNAME_ROUTE_FORMAT = /[A-Za-z0-9\_]+/
 
 Discourse::Application.routes.draw do
 
@@ -88,14 +88,14 @@ Discourse::Application.routes.draw do
   get 'users/hp' => 'users#get_honeypot_value'
 
   get 'user_preferences' => 'users#user_preferences_redirect'
-  get 'users/:username/private-messages' => 'user_actions#private_messages', :format => false, :constraints => {:username => USERNAME_ROUTE_FORMAT}
-  get 'users/:username' => 'users#show', :format => false, :constraints => {:username => USERNAME_ROUTE_FORMAT}
-  put 'users/:username' => 'users#update', :format => false, :constraints => {:username => USERNAME_ROUTE_FORMAT}
-  get 'users/:username/preferences' => 'users#preferences', :format => false, :constraints => {:username => USERNAME_ROUTE_FORMAT}, :as => :email_preferences
-  get 'users/:username/preferences/email' => 'users#preferences', :format => false, :constraints => {:username => USERNAME_ROUTE_FORMAT}
-  put 'users/:username/preferences/email' => 'users#change_email', :format => false, :constraints => {:username => USERNAME_ROUTE_FORMAT}
-  get 'users/:username/preferences/username' => 'users#preferences', :format => false, :constraints => {:username => USERNAME_ROUTE_FORMAT}
-  put 'users/:username/preferences/username' => 'users#username', :format => false, :constraints => {:username => USERNAME_ROUTE_FORMAT}
+  get 'users/:username/private-messages' => 'user_actions#private_messages', :constraints => {:username => USERNAME_ROUTE_FORMAT}
+  get 'users/:username' => 'users#show', :constraints => {:username => USERNAME_ROUTE_FORMAT}
+  put 'users/:username' => 'users#update', :constraints => {:username => USERNAME_ROUTE_FORMAT}
+  get 'users/:username/preferences' => 'users#preferences', :constraints => {:username => USERNAME_ROUTE_FORMAT}, :as => :email_preferences
+  get 'users/:username/preferences/email' => 'users#preferences', :constraints => {:username => USERNAME_ROUTE_FORMAT}
+  put 'users/:username/preferences/email' => 'users#change_email', :constraints => {:username => USERNAME_ROUTE_FORMAT}
+  get 'users/:username/preferences/username' => 'users#preferences', :constraints => {:username => USERNAME_ROUTE_FORMAT}
+  put 'users/:username/preferences/username' => 'users#username', :constraints => {:username => USERNAME_ROUTE_FORMAT}
   get 'users/:username/avatar(/:size)' => 'users#avatar', :constraints => {:username => USERNAME_ROUTE_FORMAT}
   get 'users/:username/invited' => 'users#invited', :constraints => {:username => USERNAME_ROUTE_FORMAT}
   get 'users/:username/send_activation_email' => 'users#send_activation_email', :constraints => {:username => USERNAME_ROUTE_FORMAT}
