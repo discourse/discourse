@@ -1,5 +1,9 @@
 class Category < ActiveRecord::Base
   belongs_to :topic, dependent: :destroy
+  belongs_to :topic_only_relative_url, 
+    select: "id, title",
+    class_name: "Topic",
+    foreign_key: "topic_id"
   belongs_to :user
 
   has_many :topics
@@ -43,7 +47,7 @@ class Category < ActiveRecord::Base
   end
 
   def topic_url
-    topic.try(:relative_url)
+    topic_only_relative_url.try(:relative_url)
   end
 
   before_save do
