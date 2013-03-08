@@ -5,7 +5,6 @@ describe UserAction do
   it { should validate_presence_of :action_type }
   it { should validate_presence_of :user_id }
 
-
   describe 'lists' do
 
     let(:public_post) { Fabricate(:post) }
@@ -78,8 +77,10 @@ describe UserAction do
   end
 
   it 'calls the message bus observer' do
-    MessageBusObserver.any_instance.expects(:after_create_user_action).with(instance_of(UserAction))
-    Fabricate(:user_action)
+    with_observer(:message_bus_observer) do
+      MessageBusObserver.any_instance.expects(:after_create_user_action).with(instance_of(UserAction))
+      Fabricate(:user_action)
+    end
   end
 
   describe 'when user likes' do
@@ -97,15 +98,19 @@ describe UserAction do
     end
 
     it "creates a new stream entry" do
-      PostAction.act(liker, post, PostActionType.types[:like])
-      likee_stream.count.should == @old_count + 1
+      with_observers(:user_action_observer, :post_alert_observer) do
+        PostAction.act(liker, post, PostActionType.types[:like])
+        likee_stream.count.should == @old_count + 1
+      end
     end
 
     context "successful like" do
       before do
-        PostAction.act(liker, post, PostActionType.types[:like])
-        @liker_action = liker.user_actions.where(action_type: UserAction::LIKE).first
-        @likee_action = likee.user_actions.where(action_type: UserAction::WAS_LIKED).first
+        with_observer(:user_action_observer) do
+          PostAction.act(liker, post, PostActionType.types[:like])
+          @liker_action = liker.user_actions.where(action_type: UserAction::LIKE).first
+          @likee_action = likee.user_actions.where(action_type: UserAction::WAS_LIKED).first
+        end
       end
 
       it 'should create a like action on the liker' do
@@ -134,7 +139,9 @@ describe UserAction do
 
   describe 'when a user posts a new topic' do
     before do
-      @post = Fabricate(:old_post)
+      with_observer(:user_action_observer) do
+        @post = Fabricate(:old_post)
+      end
     end
 
     describe 'topic action' do
@@ -144,7 +151,7 @@ describe UserAction do
       it 'should exist' do
         @action.should_not be_nil
       end
-      it 'shoule have the correct date' do
+      it 'should have the correct date' do
         @action.created_at.should be_within(1).of(@post.topic.created_at)
       end
     end
@@ -153,12 +160,13 @@ describe UserAction do
       @post.user.user_actions.where(action_type: UserAction::POST).first.should be_nil
     end
 
-
     describe 'when another user posts on the topic' do
       before do
-        @other_user = Fabricate(:coding_horror)
-        @mentioned = Fabricate(:admin)
-        @response = Fabricate(:post, reply_to_post_number: 1, topic: @post.topic, user: @other_user, raw: "perhaps @#{@mentioned.username} knows how this works?")
+        with_observer(:user_action_observer, :post_alert_observer) do
+          @other_user = Fabricate(:coding_horror)
+          @mentioned = Fabricate(:admin)
+          @response = Fabricate(:post, reply_to_post_number: 1, topic: @post.topic, user: @other_user, raw: "perhaps @#{@mentioned.username} knows how this works?")
+        end
       end
 
       it 'should log a post action for the poster' do
@@ -189,10 +197,12 @@ describe UserAction do
 
   describe 'when user bookmarks' do
     before do
-      @post = Fabricate(:post)
-      @user = @post.user
-      PostAction.act(@user, @post, PostActionType.types[:bookmark])
-      @action = @user.user_actions.where(action_type: UserAction::BOOKMARK).first
+      with_observer(:user_action_observer) do
+        @post = Fabricate(:post)
+        @user = @post.user
+        PostAction.act(@user, @post, PostActionType.types[:bookmark])
+        @action = @user.user_actions.where(action_type: UserAction::BOOKMARK).first
+      end
     end
 
     it 'should create a bookmark action' do
@@ -208,8 +218,10 @@ describe UserAction do
       @action.user_id.should == @user.id
     end
     it 'should nuke the action when unbookmarked' do
-      PostAction.remove_act(@user, @post, PostActionType.types[:bookmark])
-      @user.user_actions.where(action_type: UserAction::BOOKMARK).first.should be_nil
+      with_observer(:user_action_observer) do
+        PostAction.remove_act(@user, @post, PostActionType.types[:bookmark])
+        @user.user_actions.where(action_type: UserAction::BOOKMARK).first.should be_nil
+      end
     end
   end
 end

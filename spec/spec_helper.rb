@@ -67,6 +67,13 @@ Spork.prefork do
       DiscoursePluginRegistry.clear
     end
 
+    # allows temporary activation of observers
+    config.include ManagedObservers
+    # desactivate all observers by default
+    config.before(:all) do
+      ActiveRecord::Base.observers.disable(:all)
+    end
+
   end
 
   class DateTime
