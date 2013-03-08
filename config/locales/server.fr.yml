@@ -261,6 +261,7 @@ fr:
     max_post_length: "longueur maximale des messages"
     min_topic_title_length: "longueur minimale des titres de discussion"
     max_topic_title_length: "longueur maximale des titres de discussion"
+    min_search_term_length: "longueur mimimale du texte saisie avant de lancer une recherche"
     allow_duplicate_topic_titles: "deux utilisateurs peuvent-ils créer des discussions avec le même titre"
     unique_posts_mins: "Combien de temps avant qu'un utilisateur puisse poster le même contenu à nouveau"
     enforce_global_nicknames: "Imposer un pseudo global. Note: fonctionne uniquement pendant la phase initiale de paramétrage."
