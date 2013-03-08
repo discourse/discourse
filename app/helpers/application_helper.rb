@@ -45,8 +45,9 @@ module ApplicationHelper
     result << tag(:meta, property: 'twitter:card', content: "summary")
     [:image, :url, :title, :description].each do |property|
       if opts[property].present?
-        result << tag(:meta, {property: "og:#{property}", content: opts[property]}, nil, false) << "\n"
-        result << tag(:meta, {property: "twitter:#{property}", content: opts[property]}, nil, false) << "\n"
+        escape = (property != :image)
+        result << tag(:meta, {property: "og:#{property}", content: opts[property]}, nil, escape) << "\n"
+        result << tag(:meta, {property: "twitter:#{property}", content: opts[property]}, nil, escape) << "\n"
       end
     end
 

@@ -322,7 +322,7 @@ class User < ActiveRecord::Base
 
   # Don't pass this up to the client - it's meant for server side use
   def small_avatar_url
-    "https://www.gravatar.com/avatar/#{email_hash}.png?s=50&r=pg&d=identicon"
+    "https://www.gravatar.com/avatar/#{email_hash}.png?s=200&r=pg&d=identicon"
   end
 
   # return null for local avatars, a template for gravatar
