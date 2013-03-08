@@ -36,9 +36,10 @@ Discourse.SearchView = Discourse.View.extend({
   // If we need to perform another search
   newSearchNeeded: (function() {
     this.set('noResults', false);
-    if (this.present('term')) {
+    var term = this.get('term');
+    if (term && term.length >= Discourse.SiteSettings.min_search_term_length) {
       this.set('loading', true);
-      this.searchTerm(this.get('term'), this.get('typeFilter'));
+      this.searchTerm(term, this.get('typeFilter'));
     } else {
       this.set('results', null);
     }

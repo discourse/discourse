@@ -254,6 +254,7 @@ en:
     max_post_length: "Maximum post length in characters"
     min_topic_title_length: "Minimum topic title length in characters"
     max_topic_title_length: "Maximum topic title length in characters"
+    min_search_term_length: "Minimum search term length in characters"
     allow_duplicate_topic_titles: "Allow topics with identical titles"
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
     enforce_global_nicknames: "Enforce global nickname uniqueness (WARNING: only change this during initial setup)"
