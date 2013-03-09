@@ -6,31 +6,31 @@
 #
 
 fr:
-  title: "Discourse"
-  topics: "Discussions"
-  loading: "Chargement"
-  powered_by_html: 'Propulsé par <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
+  title: Discourse
+  topics: Discussions
+  loading: Chargement
+  powered_by_html: Propulsé par <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled
 
-  via: "%{username} via %{site_name}"
-  is_reserved: "est réservé"
-  too_many_mentions: "possède trop de mentions utilisateurs"
-  too_many_images: "possède trop d'images"
-  too_many_links: "possède trop de liens"
-  just_posted_that: "est trop similaire à ce que vous avez récemment posté"
-  has_already_been_used: "a déjà été utilisé"
-  invalid_characters: "contient des caractères invalides"
-  is_invalid: "est invalide; essayez d'être plus précis"
-  next_page: "page suivante →"
-  by: "Par"
-  topics_in_category: "Discussions dans la catégorie '%{category}'"
-  rss_posts_in_topic: "Flux RSS de '%{topic}'"
-  rss_topics_in_category: "Flux RSS des discussions de la catégorie '%{category}'"
-  author_wrote: "%{author} a écrit :"
+  via: %{username} via %{site_name}
+  is_reserved: est réservé
+  too_many_mentions: possède trop de mentions utilisateurs
+  too_many_images: possède trop d'images
+  too_many_links: possède trop de liens
+  just_posted_that: est trop similaire à ce que vous avez récemment posté
+  has_already_been_used: a déjà été utilisé
+  invalid_characters: contient des caractères invalides
+  is_invalid: est invalide; essayez d'être plus précis
+  next_page: page suivante →
+  by: Par
+  topics_in_category: Discussions dans la catégorie '%{category}'
+  rss_posts_in_topic: Flux RSS de '%{topic}'
+  rss_topics_in_category: Flux RSS des discussions de la catégorie '%{category}'
+  author_wrote: %{author} a écrit :
 
   education:
     until_posts:
-      one: "message"
-      other: "%{count} messages"
+      one: message
+      other: %{count} messages
 
     'new-topic': |
       Bienvenue sur %{site_name} &mdash; **merci de lancer une nouvelle conversation** ,
@@ -62,425 +62,425 @@ fr:
   activerecord:
     attributes:
       category:
-        name: "Nom de catégorie"
+        name: Nom de catégorie
       post:
-        raw: "Corps"
+        raw: Corps
     errors:
       models:
         topic:
           attributes:
             archetype:
-              cant_send_pm: "Désolé, vous ne pouvez pas envoyer de message privé à cet utilisateur."
+              cant_send_pm: Désolé, vous ne pouvez pas envoyer de message privé à cet utilisateur.
 
   user_profile:
-    no_info_me: "<div class='missing-profile'>le champ À propos de moi de votre profil est actuellement vide, <a href='/users/%{username_lower}/preferences'>souhaitez-vous le remplir ?</a></div>"
-    no_info_other: "<div class='missing-profile'>%{name} n'a rien renseigné dans le champ À propos de moi de son profil</div>"
+    no_info_me: <div class='missing-profile'>le champ À propos de moi de votre profil est actuellement vide, <a href='/users/%{username_lower}/preferences'>souhaitez-vous le remplir ?</a></div>
+    no_info_other: <div class='missing-profile'>%{name} n'a rien renseigné dans le champ À propos de moi de son profil</div>
 
   category:
-    topic_prefix: "Définition de la catégorie %{category}"
-    replace_paragraph: "[Remplacez ce paragraphe par une courte description de votre nouvelle catégorie. Essayez de rester en dessous de 200 caractères.]"
-    post_template: "%{replace_paragraph}\n\nUtilisez l'espace ci-dessous pour une plus longue description, voire pour établir des règles."
+    topic_prefix: Définition de la catégorie %{category}
+    replace_paragraph: [Remplacez ce paragraphe par une courte description de votre nouvelle catégorie. Essayez de rester en dessous de 200 caractères.]
+    post_template: %{replace_paragraph}\n\nUtilisez l'espace ci-dessous pour une plus longue description, voire pour établir des règles.
 
   trust_levels:
     new:
-      title: "nouvel utilisateur"
+      title: nouvel utilisateur
     basic:
-      title: "utilisateur basique"
+      title: utilisateur basique
     regular:
-      title: "utilisateur régulier"
+      title: utilisateur régulier
     experienced:
-      title: "utilisateur experimenté"
+      title: utilisateur experimenté
     advanced:
-      title: "utilisateur avancé"
+      title: utilisateur avancé
     moderator:
-      title: "modérateur"
+      title: modérateur
 
   rate_limiter:
-    too_many_requests: "Vous avez fait ceci trop souvent. Veuillez attendre %{time_left} avant de réessayer."
+    too_many_requests: Vous avez fait ceci trop souvent. Veuillez attendre %{time_left} avant de réessayer.
     hours:
-      one: "1 heure"
-      other: "%{count} heures"
+      one: 1 heure
+      other: %{count} heures
     minutes:
-      one: "1 minute"
-      other: "%{count} minutes"
+      one: 1 minute
+      other: %{count} minutes
     seconds:
-      one: "1 seconde"
-      other: "%{count} secondes"
+      one: 1 seconde
+      other: %{count} secondes
 
   datetime:
     distance_in_words:
-      half_a_minute: "< 1m"
+      half_a_minute: < 1m
       less_than_x_seconds:
-        one:   "< 1s"
-        other: "< %{count}s"
+        one: < 1s
+        other: < %{count}s
       x_seconds:
-        one:   "1s"
-        other: "%{count}s"
+        one: 1s
+        other: %{count}s
       less_than_x_minutes:
-        one:   "< 1m"
-        other: "< %{count}m"
+        one: < 1m
+        other: < %{count}m
       x_minutes:
-        one:   "1m"
-        other: "%{count}m"
+        one: 1m
+        other: %{count}m
       about_x_hours:
-        one:   "1h"
-        other: "%{count}h"
+        one: 1h
+        other: %{count}h
       x_days:
-        one:   "1d"
-        other: "%{count}d"
+        one: 1d
+        other: %{count}d
       about_x_months:
-        one:   "1 mois"
-        other: "%{count} mois"
+        one: 1 mois
+        other: %{count} mois
       x_months:
-        one:   "1 mois"
-        other: "%{count} mois"
+        one: 1 mois
+        other: %{count} mois
       about_x_years:
-        one:   "1 an"
-        other: "%{count} ans"
+        one: 1 an
+        other: %{count} ans
       over_x_years:
-        one:   "> 1 an"
-        other: "> %{count} ans"
+        one: > 1 an
+        other: > %{count} ans
       almost_x_years:
-        one:   "1 an"
-        other: "%{count} ans"
+        one: 1 an
+        other: %{count} ans
 
     distance_in_words_verbose:
-      half_a_minute: "à l'instant"
+      half_a_minute: à l'instant
       less_than_x_seconds:
-        one:   "à l'instant"
-        other: "à l'instant"
+        one: à l'instant
+        other: à l'instant
       x_seconds:
-        one:   "il y a une seconde"
-        other: "il y a %{count} secondes"
+        one: il y a une seconde
+        other: il y a %{count} secondes
       less_than_x_minutes:
-        one:   "il y a moins d'une minute"
-        other: "il y a moins de %{count} minutes"
+        one: il y a moins d'une minute
+        other: il y a moins de %{count} minutes
       x_minutes:
-        one:   "il y a 1 minute"
-        other: "il y a %{count} minutes"
+        one: il y a 1 minute
+        other: il y a %{count} minutes
       about_x_hours:
-        one:   "il y a 1 heure"
-        other: "il y a %{count} heures"
+        one: il y a 1 heure
+        other: il y a %{count} heures
       x_days:
-        one:   "il y a un jour"
-        other: "il y a %{count} jours"
+        one: il y a un jour
+        other: il y a %{count} jours
       about_x_months:
-        one:   "il y a environ 1 mois"
-        other: "il y a environ %{count} mois"
+        one: il y a environ 1 mois
+        other: il y a environ %{count} mois
       x_months:
-        one:   "il y a un mois"
-        other: "il y a %{count} mois"
+        one: il y a un mois
+        other: il y a %{count} mois
       about_x_years:
-        one:   "il y a environ un an"
-        other: "il y a environ %{count} ans"
+        one: il y a environ un an
+        other: il y a environ %{count} ans
       over_x_years:
-        one:   "il y a plus d'un an"
-        other: "il y a plus de %{count} ans"
+        one: il y a plus d'un an
+        other: il y a plus de %{count} ans
       almost_x_years:
-        one:   "il y a presque un an"
-        other: "il y a presque %{count} ans"
+        one: il y a presque un an
+        other: il y a presque %{count} ans
 
   password_reset:
-    no_token: "Désolé, votre jeton a expiré.  Veuillez retenter la réinitialisation de votre mot de passe."
-    choose_new: "Veuillez choisir un autre mot de passe"
-    update: 'mettre le mot de passe à jour'
-    title: 'réinitialiser le mot de passe'
-    success: "Vous avez modifié votre mot de passe avec succès et vous êtes maintenant connecté."
-    success_unapproved: "Vous avez modifié votre mot de passe avec succès."
+    no_token: Désolé, votre jeton a expiré.  Veuillez retenter la réinitialisation de votre mot de passe.
+    choose_new: Veuillez choisir un autre mot de passe
+    update: mettre le mot de passe à jour
+    title: réinitialiser le mot de passe
+    success: Vous avez modifié votre mot de passe avec succès et vous êtes maintenant connecté.
+    success_unapproved: Vous avez modifié votre mot de passe avec succès.
 
   change_email:
-    confirmed: "Votre adresse email a été mise à jour."
-    please_continue: "Veuillez continuer vers %{link}"
-    error: "Il y a eu une erreur pendant le changement de votre adresse mail. Elle est peut-être déjà utilisée ?"
+    confirmed: Votre adresse email a été mise à jour.
+    please_continue: Veuillez continuer vers %{link}
+    error: Il y a eu une erreur pendant le changement de votre adresse mail. Elle est peut-être déjà utilisée ?
 
   activation:
-    already_done: "Désolé, ce lien de confirmation n'est plus valide. Votre compte est peut-être déjà activé ?"
-    please_continue: "Votre nouveau compte est activé, et vous êtes connecté. Continuer vers %{link}"
-    welcome_to: "Bienvenue sur %{site_name}!"
-    approval_required: "Un modérateur doit approuver manuellement votre nouveau compte avant que vous accédiez au forum. Vous recevrez un mail lorsque que votre compte sera approuvé !"
+    already_done: Désolé, ce lien de confirmation n'est plus valide. Votre compte est peut-être déjà activé ?
+    please_continue: Votre nouveau compte est activé, et vous êtes connecté. Continuer vers %{link}
+    welcome_to: Bienvenue sur %{site_name}!
+    approval_required: Un modérateur doit approuver manuellement votre nouveau compte avant que vous accédiez au forum. Vous recevrez un mail lorsque que votre compte sera approuvé !
 
   post_action_types:
     off_topic:
-      title: 'Hors-sujet'
-      description: "Ce message est radicalement hors-sujet, et devrait probablement être déplacé dans une autre conversation."
-      long_form: 'signalé comme hors-sujet.'
+      title: Hors-sujet
+      description: Ce message est radicalement hors-sujet, et devrait probablement être déplacé dans une autre conversation.
+      long_form: signalé comme hors-sujet.
     spam:
-      title: 'Spam'
-      description: "Ce message est une publicité sans information. Elle n'est pas pertinente dans le cadre de cette discussion, mais est uniquement de nature promotionelle."
-      long_form: 'signalé comme spam'
+      title: Spam
+      description: Ce message est une publicité sans information. Elle n'est pas pertinente dans le cadre de cette discussion, mais est uniquement de nature promotionelle.
+      long_form: signalé comme spam
     inappropriate:
-      title: 'Inapproprié'
-      description: "Ce message contient des propos qu'une personne peut raisonablement considérer comme abusifs, offensants ou haineux."
-      long_form: 'signalé comme inapproprié'
+      title: Inapproprié
+      description: Ce message contient des propos qu'une personne peut raisonablement considérer comme abusifs, offensants ou haineux.
+      long_form: signalé comme inapproprié
     custom_flag:
-      title: 'Autre'
-      description: "Ce message requiert l'attention de la modération d'après la <a href='/faq'>FAQ</a>, <a href='/tos'>TOS</a>, ou pour une autre raison indeterminée."
-      long_form: 'signalé pour modération'
+      title: Autre
+      description: Ce message requiert l'attention de la modération d'après la <a href='/faq'>FAQ</a>, <a href='/tos'>TOS</a>, ou pour une autre raison indeterminée.
+      long_form: signalé pour modération
     bookmark:
-      title: 'Favoris'
-      description: 'Ajouter aux favoris'
-      long_form: 'ajouté aux favoris'
+      title: Favoris
+      description: Ajouter aux favoris
+      long_form: ajouté aux favoris
     like:
-      title: "J'aime"
-      description: 'Aimer ce message'
-      long_form: 'a été aimé'
+      title: J'aime
+      description: Aimer ce message
+      long_form: a été aimé
     vote:
-      title: 'Vote'
-      description: 'Votez pour ce message'
-      long_form: 'a voté pour ce message'
+      title: Vote
+      description: Votez pour ce message
+      long_form: a voté pour ce message
 
   flagging:
-    you_must_edit: '<p>Votre message a atteint la limite de signalements. Vérifiez vos messages privés.</p>'
-    user_must_edit: '<p>Contenu caché car signalé.</p>'
+    you_must_edit: <p>Votre message a atteint la limite de signalements. Vérifiez vos messages privés.</p>
+    user_must_edit: <p>Contenu caché car signalé.</p>
 
   archetypes:
     regular:
-      title: "Discussion normale"
+      title: Discussion normale
 
   unsubscribed:
-    title: 'Désabonner'
-    description: "Vous avez été désabonné. Nous ne vous contacterons plus !"
-    oops: "Si vous vous êtes trompé, cliquez dessous."
-    not_found: "Erreur lors du désabonnement"
-    not_found_description: "Désolé, nous ne pouvons pas vous désabonner. Il est possible que le lien de votre mail soit expiré."
+    title: Désabonner
+    description: Vous avez été désabonné. Nous ne vous contacterons plus !
+    oops: Si vous vous êtes trompé, cliquez dessous.
+    not_found: Erreur lors du désabonnement
+    not_found_description: Désolé, nous ne pouvons pas vous désabonner. Il est possible que le lien de votre mail soit expiré.
 
   resubscribe:
-    action: "Ré-Abonnement"
-    title: "Ré-Abonné !"
-    description: "Vous avez été ré-abonné."
+    action: Ré-Abonnement
+    title: Ré-Abonné !
+    description: Vous avez été ré-abonné.
 
   reports:
     visits:
-      title: "Visites utilisateur par jour"
-      xaxis: "Jour"
-      yaxis: "Visites"
+      title: Visites utilisateur par jour
+      xaxis: Jour
+      yaxis: Visites
 
   site_settings:
-    default_locale: "Le langage par défaut de cette instance de Discourse (code ISO 639-1)"
-    min_post_length: "longueur minimale des messages"
-    max_post_length: "longueur maximale des messages"
-    min_topic_title_length: "longueur minimale des titres de discussion"
-    max_topic_title_length: "longueur maximale des titres de discussion"
-    min_search_term_length: "longueur mimimale du texte saisie avant de lancer une recherche"
-    allow_duplicate_topic_titles: "deux utilisateurs peuvent-ils créer des discussions avec le même titre"
-    unique_posts_mins: "Combien de temps avant qu'un utilisateur puisse poster le même contenu à nouveau"
-    enforce_global_nicknames: "Imposer un pseudo global. Note: fonctionne uniquement pendant la phase initiale de paramétrage."
-    discourse_org_access_key: "La clé d'accès utilisée pour le registre de pseudos de discourse.org"
-    educate_until_posts: "Afficher les aides à la saisie tant que l'utilisateur n'a pas posté ce nombre de messages"
-    title: "titre de ce site internet"
-    company_full_name: "Le nom complet de la société qui gère ce site (utilisé dans les documents légaux, tels que /tos)"
-    company_short_name: "Le nom de la société qui gère ce site (utilisé dans les documents légaux, tels que /tos)"
-    company_domain: "Le nom de domaine de la société qui gère ce site (utilisé dans les documents légaux, tels que /tos)"
-    access_password: "Si l'accès restreint est activé, assurez-vous que le mot de passe soit saisi ici."
-    queue_jobs: "mettre les différents jobs en attente sur différentes queues, si false les queues sont en file"
-    crawl_images: "permettre la récupération des images provenant de sources tierces"
-    ninja_edit_window: "temps d'édition avant de sauvegarder une nouvelle version, en secondes."
-    enable_imgur: "utiliser l'envoi des images avec l'API imgur, ne pas stocker les fichiers localement"
-    imgur_api_key: "clé de l'API imgur.com - requis pour l'envoi d'images"
-    imgur_endpoint: "point d'arrêt pour le chargement d'images sur imgur.com"
-    max_image_width: "largeur maximale des images d'un message"
-    category_featured_topics: "nombre de discussions affichées dans la liste par catégories"
-    add_rel_nofollow_to_user_content: "Ajouter rel nofollow à tous les contenus des utilisateurs, sauf les liens internes (incluant les domaines parents) Modifier ceci requiert une mise à jour de tout votre markdown"
-    exclude_rel_nofollow_domains: "Une liste séparée par des virgules contenant les noms de domaines de premier niveau pour lesquels il faut ajouter un attribut nofollow (exemple.com va automatiquement fonctionner aussi avec sous.domaine.exemple.com)"
+    default_locale: Le langage par défaut de cette instance de Discourse (code ISO 639-1)
+    min_post_length: longueur minimale des messages
+    max_post_length: longueur maximale des messages
+    min_topic_title_length: longueur minimale des titres de discussion
+    max_topic_title_length: longueur maximale des titres de discussion
+    min_search_term_length: longueur mimimale du texte saisie avant de lancer une recherche
+    allow_duplicate_topic_titles: deux utilisateurs peuvent-ils créer des discussions avec le même titre
+    unique_posts_mins: Combien de temps avant qu'un utilisateur puisse poster le même contenu à nouveau
+    enforce_global_nicknames: Imposer un pseudo global. Note: fonctionne uniquement pendant la phase initiale de paramétrage.
+    discourse_org_access_key: La clé d'accès utilisée pour le registre de pseudos de discourse.org
+    educate_until_posts: Afficher les aides à la saisie tant que l'utilisateur n'a pas posté ce nombre de messages
+    title: titre de ce site internet
+    company_full_name: Le nom complet de la société qui gère ce site (utilisé dans les documents légaux, tels que /tos)
+    company_short_name: Le nom de la société qui gère ce site (utilisé dans les documents légaux, tels que /tos)
+    company_domain: Le nom de domaine de la société qui gère ce site (utilisé dans les documents légaux, tels que /tos)
+    access_password: Si l'accès restreint est activé, assurez-vous que le mot de passe soit saisi ici.
+    queue_jobs: mettre les différents jobs en attente sur différentes queues, si false les queues sont en file
+    crawl_images: permettre la récupération des images provenant de sources tierces
+    ninja_edit_window: temps d'édition avant de sauvegarder une nouvelle version, en secondes.
+    enable_imgur: utiliser l'envoi des images avec l'API imgur, ne pas stocker les fichiers localement
+    imgur_api_key: clé de l'API imgur.com - requis pour l'envoi d'images
+    imgur_endpoint: point d'arrêt pour le chargement d'images sur imgur.com
+    max_image_width: largeur maximale des images d'un message
+    category_featured_topics: nombre de discussions affichées dans la liste par catégories
+    add_rel_nofollow_to_user_content: Ajouter rel nofollow à tous les contenus des utilisateurs, sauf les liens internes (incluant les domaines parents) Modifier ceci requiert une mise à jour de tout votre markdown
+    exclude_rel_nofollow_domains: Une liste séparée par des virgules contenant les noms de domaines de premier niveau pour lesquels il faut ajouter un attribut nofollow (exemple.com va automatiquement fonctionner aussi avec sous.domaine.exemple.com)
 
-    post_excerpt_maxlength: "Longueur maximale d'un extrait de message."
-    post_onebox_maxlength: "Longueur maximale d'un message emboîté."
-    new_topics_rollup: "Combien de discussions peuvent être insérées dans la liste des discussions avant de remonter."
-    category_post_template: "Le modèle de message de définition d'une catégorie utilisé lorsque vous créez une nouvelle catégorie"
-    onebox_max_chars: "Nombre maximal de caractères qu'une boîte peut importer en blob de texte."
+    post_excerpt_maxlength: Longueur maximale d'un extrait de message.
+    post_onebox_maxlength: Longueur maximale d'un message emboîté.
+    new_topics_rollup: Combien de discussions peuvent être insérées dans la liste des discussions avant de remonter.
+    category_post_template: Le modèle de message de définition d'une catégorie utilisé lorsque vous créez une nouvelle catégorie
+    onebox_max_chars: Nombre maximal de caractères qu'une boîte peut importer en blob de texte.
 
-    logo_url: "Le logo de votre site, par exemple: http://xyz.com/x.png"
-    logo_small_url: "La version minifiée du logo de votre site (affichée sur les pages de discussions) ex: http://xyz.com/x-min.png"
-    favicon_url: "Le favicon de votre site"
-    notification_email: "L'adresse email utilisée pour notifier les utilisateurs de mots de passe perdus, d'activation de compte, etc."
-    use_ssl: "Le site doit-il être accessible via SSL?"
-    best_of_score_threshold: "Le score minimum pour qu'un message soit inclus dans les 'messages populaires'"
-    best_of_posts_required: "Une discussion nécessite ce nombre de messages avant d'activer le mode 'discussions populaires'"
-    best_of_likes_required: "Une discussion nécessite ce nombre de J'aime avant d'activer le mode 'discussions populaires'."
-    enable_private_messages: "Autoriser les membres à créer des messages et conversations privés."
+    logo_url: Le logo de votre site, par exemple: http://xyz.com/x.png
+    logo_small_url: La version minifiée du logo de votre site (affichée sur les pages de discussions) ex: http://xyz.com/x-min.png
+    favicon_url: Le favicon de votre site
+    notification_email: L'adresse email utilisée pour notifier les utilisateurs de mots de passe perdus, d'activation de compte, etc.
+    use_ssl: Le site doit-il être accessible via SSL?
+    best_of_score_threshold: Le score minimum pour qu'un message soit inclus dans les 'messages populaires'
+    best_of_posts_required: Une discussion nécessite ce nombre de messages avant d'activer le mode 'discussions populaires'
+    best_of_likes_required: Une discussion nécessite ce nombre de J'aime avant d'activer le mode 'discussions populaires'.
+    enable_private_messages: Autoriser les membres à créer des messages et conversations privés.
 
-    enable_long_polling: "Utiliser les requêtes longues pour le flux de notifications."
-    long_polling_interval: "Intervalle en millisecondes avant de lancer une nouvelle requête longue."
-    polling_interval: "À quelle fréquence les clients doivent-ils requêter le serveur, en millisecondes"
-    anon_polling_interval: "À quelle fréquence les clients anonymes doivent-ils  requêter le serveur, en millisecondes"
+    enable_long_polling: Utiliser les requêtes longues pour le flux de notifications.
+    long_polling_interval: Intervalle en millisecondes avant de lancer une nouvelle requête longue.
+    polling_interval: À quelle fréquence les clients doivent-ils requêter le serveur, en millisecondes
+    anon_polling_interval: À quelle fréquence les clients anonymes doivent-ils  requêter le serveur, en millisecondes
 
-    auto_track_topics_after: "Combien de millisecondes avant qu'une discussion soit automatiquement suivie (0 pour toujours, -1 pour jamais)"
-    new_topic_duration_minutes: "Combien de millisecondes avant qu'une discussion soit considérée comme nouvelle (-1 pour toujours, -2 pour dernière visite)"
+    auto_track_topics_after: Combien de millisecondes avant qu'une discussion soit automatiquement suivie (0 pour toujours, -1 pour jamais)
+    new_topic_duration_minutes: Combien de millisecondes avant qu'une discussion soit considérée comme nouvelle (-1 pour toujours, -2 pour dernière visite)
 
-    flags_required_to_hide_post: "Les messages seront automatiquement cachés lorsque le compteur de signalements atteint cette limite (0 pour jamais)"
-    cooldown_minutes_after_hiding_posts: "Combien de minutes un utilisateur doit-il attendre avant qu'il puisse modifier un message caché à la suite d'un ou de plusieurs signalements."
+    flags_required_to_hide_post: Les messages seront automatiquement cachés lorsque le compteur de signalements atteint cette limite (0 pour jamais)
+    cooldown_minutes_after_hiding_posts: Combien de minutes un utilisateur doit-il attendre avant qu'il puisse modifier un message caché à la suite d'un ou de plusieurs signalements.
 
-    traditional_markdown_linebreaks: "Utiliser le retour à la ligne traditionnel dans markdown, le wrapping est implicite sauf si suivi de 2 espaces"
-    post_undo_action_window_mins: "La fenêtre dans laquelle chacun peut annuler une action sur un message (comme signaler)"
-    must_approve_users: "Les propriétaires du forum doivent approuver les utilisateurs avant qu'il y aient accès."
-    ga_tracking_code: "Code de suivi de Google Analytics, voir: http://google.com/analytics"
-    top_menu: "L'ordre des éléments dans le menu du haut. Exemple populaire|lus|favoris|non lus|nouveaux|posté|categories"
-    post_menu: "L'ordre des éléments dans le menu de rédaction"
-    track_external_right_clicks: "Suivi des clics sur les liens externes (ex: ouverture dans un nouvel onglet) désactivé par défaut car nécessite une ré-écrite de toutes les urls et nuit à l'accessibilité"
-    topics_per_page: "Nombre de discussions à afficher sur la page de liste des discussions."
-    posts_per_page: "Nombre de messages retournés sur une page de discussion"
-    system_username: "Pseudo qui envoie les messages automatiques"
-    send_welcome_message: "Les nouveaux utilisateurs reçoivent-ils un message privé de bienvenue ?"
-    supress_reply_directly_below: "Ne pas afficher les boutons de réponse sous un message lorsque la réponse est juste en dessous"
-    allow_index_in_robots_txt: "Le site doit-être indexé par les moteurs de recherche (met à jour le fichier robots.txt)"
-    email_domains_blacklist: "Une liste de domaines d'email interdits, délimités par un pipe. Exemple: mailinator.com|trashmail.net"
-    version_checks: "Ping les serveurs de Discourse afin d'obtenir les mises à jours et affiche les messages d'information dans le tableau de board /admin"
+    traditional_markdown_linebreaks: Utiliser le retour à la ligne traditionnel dans markdown, le wrapping est implicite sauf si suivi de 2 espaces
+    post_undo_action_window_mins: La fenêtre dans laquelle chacun peut annuler une action sur un message (comme signaler)
+    must_approve_users: Les propriétaires du forum doivent approuver les utilisateurs avant qu'il y aient accès.
+    ga_tracking_code: Code de suivi de Google Analytics, voir: http://google.com/analytics
+    top_menu: L'ordre des éléments dans le menu du haut. Exemple populaire|lus|favoris|non lus|nouveaux|posté|categories
+    post_menu: L'ordre des éléments dans le menu de rédaction
+    track_external_right_clicks: Suivi des clics sur les liens externes (ex: ouverture dans un nouvel onglet) désactivé par défaut car nécessite une ré-écrite de toutes les urls et nuit à l'accessibilité
+    topics_per_page: Nombre de discussions à afficher sur la page de liste des discussions.
+    posts_per_page: Nombre de messages retournés sur une page de discussion
+    system_username: Pseudo qui envoie les messages automatiques
+    send_welcome_message: Les nouveaux utilisateurs reçoivent-ils un message privé de bienvenue ?
+    supress_reply_directly_below: Ne pas afficher les boutons de réponse sous un message lorsque la réponse est juste en dessous
+    allow_index_in_robots_txt: Le site doit-être indexé par les moteurs de recherche (met à jour le fichier robots.txt)
+    email_domains_blacklist: Une liste de domaines d'email interdits, délimités par un pipe. Exemple: mailinator.com|trashmail.net
+    version_checks: Ping les serveurs de Discourse afin d'obtenir les mises à jours et affiche les messages d'information dans le tableau de board /admin
 
-    port: "Voulez-vous spécifier un port dans l'URL ? Utile en mode de dévelopement . Sinon, laisser vide."
-    force_hostname: "Voulez-vous spécifier un nom d'hôte dans l'URL ? Utile en mode de dévelopement . Sinon, laisser vide."
+    port: Voulez-vous spécifier un port dans l'URL ? Utile en mode de dévelopement . Sinon, laisser vide.
+    force_hostname: Voulez-vous spécifier un nom d'hôte dans l'URL ? Utile en mode de dévelopement . Sinon, laisser vide.
 
-    invite_expiry_days: "Combien de temps (en jours) les clés d'invitation sont-elles valides."
+    invite_expiry_days: Combien de temps (en jours) les clés d'invitation sont-elles valides.
 
     # TODO: perhaps we need a way of protecting these settings for hosted solution, global settings ...
 
-    enable_google_logins: "Active l'authentification Google"
-    enable_yahoo_logins: "Active l'authentification Yahoo"
+    enable_google_logins: Active l'authentification Google
+    enable_yahoo_logins: Active l'authentification Yahoo
 
-    enable_twitter_logins: "Active l'authentification Twitter (nécessite twitter_consumer_key et twitter_consumer_secret)"
-    twitter_consumer_key: "clé utilisateur, enregistrée sur dev.twitter.com (utilisé pour l'authentification twitter)"
-    twitter_consumer_secret: "secret client, enregistré sur dev.twitter.com (utilisé pour l'authentification twitter)"
+    enable_twitter_logins: Active l'authentification Twitter (nécessite twitter_consumer_key et twitter_consumer_secret)
+    twitter_consumer_key: clé utilisateur, enregistrée sur dev.twitter.com (utilisé pour l'authentification twitter)
+    twitter_consumer_secret: secret client, enregistré sur dev.twitter.com (utilisé pour l'authentification twitter)
 
-    enable_facebook_logins: "Active l'authentification Facebook (nécessite facebook_app_id et facebook_app_secret)"
-    facebook_app_id: "identifiant de l'application, enregistré sur https://developers.facebook.com/apps (utilisé pour l'authentification facebook)"
-    facebook_app_secret: "secret de l'application, enregistré sur https://developers.facebook.com/apps (utilisé pour l'authentification facebook)"
+    enable_facebook_logins: Active l'authentification Facebook (nécessite facebook_app_id et facebook_app_secret)
+    facebook_app_id: identifiant de l'application, enregistré sur https://developers.facebook.com/apps (utilisé pour l'authentification facebook)
+    facebook_app_secret: secret de l'application, enregistré sur https://developers.facebook.com/apps (utilisé pour l'authentification facebook)
 
-    enable_github_logins: "Active l'authentification GitHub (nécessite github_client_id et github_client_secret)"
-    github_client_id: "id client, enregistré sur https://github.com/settings/applications"
-    github_client_secret: "secret client , enregistré sur https://github.com/settings/applications"
+    enable_github_logins: Active l'authentification GitHub (nécessite github_client_id et github_client_secret)
+    github_client_id: id client, enregistré sur https://github.com/settings/applications
+    github_client_secret: secret client , enregistré sur https://github.com/settings/applications
 
-    enable_persona_logins: "Active l'authentification par e-mail avec Mozilla Persona"
+    enable_persona_logins: Active l'authentification par e-mail avec Mozilla Persona
 
-    allow_import: "Autoriser l'importation qui remplacera TOUTES les données du site. Laisser sur faux, sauf si vous prévoyez d'importer des données."
+    allow_import: Autoriser l'importation qui remplacera TOUTES les données du site. Laisser sur faux, sauf si vous prévoyez d'importer des données.
 
-    active_user_rate_limit_secs: "A quelle fréquence mettre à jour le champ 'dernier_vu_a', en secondes."
-    previous_visit_timeout_hours: "Combien de temps dure une visite avant de la considérer comme la visite 'précédente', en heures."
+    active_user_rate_limit_secs: A quelle fréquence mettre à jour le champ 'dernier_vu_a', en secondes.
+    previous_visit_timeout_hours: Combien de temps dure une visite avant de la considérer comme la visite 'précédente', en heures.
 
-    uncategorized_name: "Nom pour les discussions sans catégorie dans la liste des catégories"
-    max_mentions_per_post: "Le nombre maximal de @mentions que vous pouvez ajouter à un message"
+    uncategorized_name: Nom pour les discussions sans catégorie dans la liste des catégories
+    max_mentions_per_post: Le nombre maximal de @mentions que vous pouvez ajouter à un message
 
-    rate_limit_create_topic: "Combien de secondes avant de pouvoir démarrer une nouvelle discussion"
-    rate_limit_create_post: "Combien de secondes avant de pouvoir poster un nouveau message"
+    rate_limit_create_topic: Combien de secondes avant de pouvoir démarrer une nouvelle discussion
+    rate_limit_create_post: Combien de secondes avant de pouvoir poster un nouveau message
 
-    max_likes_per_day: "Quantité maximale  de J'aime qu'un utilisateur peut effectuer en un jour"
-    max_flags_per_day: "Quantité maximale de signalements qu'un utilisateur peut effectuer en un jour"
-    max_bookmarks_per_day: "Quantité maximale de favoris qu'un utilisateur peut ajouter en un jour"
-    max_edits_per_day: "Quantité maximale de modifications qu'un utilisateur peut effectuer en un jour"
-    max_favorites_per_day: "Quantité maximale de disscussions  pouvant être mises en favoris en un jour"
-    max_topics_per_day: "Quantité maximale de discussions que vous pouvez créer en un jour"
-    max_private_messages_per_day: "Quantité maximale de messages privés que vous pouvez envoyer en un jour"
+    max_likes_per_day: Quantité maximale  de J'aime qu'un utilisateur peut effectuer en un jour
+    max_flags_per_day: Quantité maximale de signalements qu'un utilisateur peut effectuer en un jour
+    max_bookmarks_per_day: Quantité maximale de favoris qu'un utilisateur peut ajouter en un jour
+    max_edits_per_day: Quantité maximale de modifications qu'un utilisateur peut effectuer en un jour
+    max_favorites_per_day: Quantité maximale de disscussions  pouvant être mises en favoris en un jour
+    max_topics_per_day: Quantité maximale de discussions que vous pouvez créer en un jour
+    max_private_messages_per_day: Quantité maximale de messages privés que vous pouvez envoyer en un jour
 
-    suggested_topics: "Nombre de discussions suggerées en dessous d'une discussion"
+    suggested_topics: Nombre de discussions suggerées en dessous d'une discussion
 
-    enable_s3_uploads: "S'il faut ou non uploader sur s3"
-    s3_upload_bucket: "Le bucket dans lequel uploader sur s3"
+    enable_s3_uploads: S'il faut ou non uploader sur s3
+    s3_upload_bucket: Le bucket dans lequel uploader sur s3
 
-    default_invitee_trust_level: "Le niveau de confiance par défaut des utilisateurs invités"
-    default_trust_level: "Le niveau de confiance par défaut des utilisateurs"
+    default_invitee_trust_level: Le niveau de confiance par défaut des utilisateurs invités
+    default_trust_level: Le niveau de confiance par défaut des utilisateurs
 
-    basic_requires_topics_entered: "A combien de discussions un utilisateur doit avoir participé pour être promu au rang de niveau basique"
-    basic_requires_read_posts: "Combien de discussions un utilisateur doit avoir lues pour être promu au rang de niveau basique"
-    basic_requires_time_spent_mins: "Combien de minutes un utilisateur doit avoir passées à lire des messages pour être promu au rang de niveau basique"
+    basic_requires_topics_entered: A combien de discussions un utilisateur doit avoir participé pour être promu au rang de niveau basique
+    basic_requires_read_posts: Combien de discussions un utilisateur doit avoir lues pour être promu au rang de niveau basique
+    basic_requires_time_spent_mins: Combien de minutes un utilisateur doit avoir passées à lire des messages pour être promu au rang de niveau basique
 
     auto_link_images_wider_than: ""
 
-    email_time_window_mins: "Combien de minutes attendre avant d'envoyer un mail à l'utilisateur, pour lui donner une chance de voir lui-même avant l'envoi."
-    flush_timings_secs: "A quelle fréquence requêter les données de timing au serveur, en secondes."
-    max_word_length: "Le nombre maximum de mots dans un titre de discussion"
-    title_min_entropy: "L'entropie minimale (ie. nombre de caractères) d'un titre de discussion"
-    body_min_entropy: "L'entropie minimale (ie. nombre de caractères) du contenu d'un message"
-    new_user_period_days: "Combien de temps en jours, un utilisateur est-il consideré comme nouveau."
-    title_fancy_entities: "Convertir les entitées HTML dans les titres des discussion"
+    email_time_window_mins: Combien de minutes attendre avant d'envoyer un mail à l'utilisateur, pour lui donner une chance de voir lui-même avant l'envoi.
+    flush_timings_secs: A quelle fréquence requêter les données de timing au serveur, en secondes.
+    max_word_length: Le nombre maximum de mots dans un titre de discussion
+    title_min_entropy: L'entropie minimale (ie. nombre de caractères) d'un titre de discussion
+    body_min_entropy: L'entropie minimale (ie. nombre de caractères) du contenu d'un message
+    new_user_period_days: Combien de temps en jours, un utilisateur est-il consideré comme nouveau.
+    title_fancy_entities: Convertir les entitées HTML dans les titres des discussion
 
   notification_types:
-    mentioned: "%{display_username} vous a mentionné dans %{link}"
-    liked: "%{display_username} a aimé votre message dans %{link}"
-    replied: "%{display_username} a répondu à votre message dans %{link}"
-    quoted: "%{display_username} vous a cité dans %{link}"
-    edited: "%{display_username} a modifié votre message dans %{link}"
-    posted: "%{display_username} a répondu à %{link}"
-    moved_post: "%{display_username} a déplacé votre message vers %{link}"
-    private_message: "%{display_username} vous a envoyé un message privé: %{link}"
-    invited_to_private_message: "%{display_username} vous a invité dans une conversation privée: %{link}"
-    invitee_accepted: "%{display_username} a accepté votre invitation"
+    mentioned: %{display_username} vous a mentionné dans %{link}
+    liked: %{display_username} a aimé votre message dans %{link}
+    replied: %{display_username} a répondu à votre message dans %{link}
+    quoted: %{display_username} vous a cité dans %{link}
+    edited: %{display_username} a modifié votre message dans %{link}
+    posted: %{display_username} a répondu à %{link}
+    moved_post: %{display_username} a déplacé votre message vers %{link}
+    private_message: %{display_username} vous a envoyé un message privé: %{link}
+    invited_to_private_message: %{display_username} vous a invité dans une conversation privée: %{link}
+    invitee_accepted: %{display_username} a accepté votre invitation
 
   search:
     types:
-      category: 'Catégories'
-      topic: 'Discussions'
-      user: 'Utilisateurs'
+      category: Catégories
+      topic: Discussions
+      user: Utilisateurs
 
-  youve_posted: "Vous avez posté"
-  original_poster: "Auteur originel"
-  most_posts: "Le plus de messages"
-  most_recent_poster: "Auteur le plus récent"
-  frequent_poster: "Auteur frequent"
+  youve_posted: Vous avez posté
+  original_poster: Auteur originel
+  most_posts: Le plus de messages
+  most_recent_poster: Auteur le plus récent
+  frequent_poster: Auteur frequent
 
   user_action_descriptions:
-    bookmarks: "Bookmarks"
-    topics: "Discussions"
-    likes_received: "J'aime reçus"
-    likes_given: "J'aime donnés"
-    responses: "Réponses"
-    topic_responses: "Réponses à la discussion"
-    posts: "Messages"
-    mentions: "Mentions"
-    quotes: "Citations"
-    edits: "Modifications"
-    favorites: "Favoris"
-    sent_items: "Elements envoyés"
-    inbox: "Boîte de réception"
+    bookmarks: Bookmarks
+    topics: Discussions
+    likes_received: J'aime reçus
+    likes_given: J'aime donnés
+    responses: Réponses
+    topic_responses: Réponses à la discussion
+    posts: Messages
+    mentions: Mentions
+    quotes: Citations
+    edits: Modifications
+    favorites: Favoris
+    sent_items: Elements envoyés
+    inbox: Boîte de réception
 
-    was_liked: "a été aimé"
-    liked: "aimé"
-    bookmarked: "bookmarké"
-    posted: "posté"
-    responded_to: "réponse_à"
-    mentioned: "mentionné"
-    quoted: "cité"
-    favorited: "mis en favoris"
-    edited: "modifié"
+    was_liked: a été aimé
+    liked: aimé
+    bookmarked: bookmarké
+    posted: posté
+    responded_to: réponse_à
+    mentioned: mentionné
+    quoted: cité
+    favorited: mis en favoris
+    edited: modifié
 
   move_posts:
     moderator_post:
-      one: "J'ai déplacé un message vers une nouvelle discussion: %{topic_link}"
-      other: "J'ai déplacé %{count} messages vers une nouvelle discussion: %{topic_link}"
+      one: J'ai déplacé un message vers une nouvelle discussion: %{topic_link}
+      other: J'ai déplacé %{count} messages vers une nouvelle discussion: %{topic_link}
 
   topic_statuses:
-    archived_enabled: "Cette discussion est maintenant archivée. Elle est gelée et ne peut plus être modifiée."
-    archived_disabled: "Cette discussion est maintenant désarchivée. Elle n'est plus gelée, et peut être modifiée."
-    closed_enabled: "Cette discussion est maintenant fermée. Les nouvelles réponses ne sont plus autorisées."
-    closed_disabled: "Cette discussion est maintenant ouverte. Les nouvelles réponses sont autorisées."
-    pinned_enabled: "Cette discussion est maintenant épinglée. Elle apparaîtra en haut de sa catégorie jusqu'à ce qu'elle soit désépinglée par un modérateur, ou par chaque utilisateur utilisant le bouton Désépingler."
-    pinned_disabled: "Cette discussion est maintenant désépinglée. Elle n'apparaîtra plus en haut de sa categorie."
-    visible_enabled: "Cette discussion est maintenant visible. Elle sera affichée dans la liste des discussions."
-    visible_disabled: "Cette discussion est maintenant invisible. Elle ne sera plus affichée dans la liste des discussions. Le seul moyen d'y accéder est par lien direct."
+    archived_enabled: Cette discussion est maintenant archivée. Elle est gelée et ne peut plus être modifiée.
+    archived_disabled: Cette discussion est maintenant désarchivée. Elle n'est plus gelée, et peut être modifiée.
+    closed_enabled: Cette discussion est maintenant fermée. Les nouvelles réponses ne sont plus autorisées.
+    closed_disabled: Cette discussion est maintenant ouverte. Les nouvelles réponses sont autorisées.
+    pinned_enabled: Cette discussion est maintenant épinglée. Elle apparaîtra en haut de sa catégorie jusqu'à ce qu'elle soit désépinglée par un modérateur, ou par chaque utilisateur utilisant le bouton Désépingler.
+    pinned_disabled: Cette discussion est maintenant désépinglée. Elle n'apparaîtra plus en haut de sa categorie.
+    visible_enabled: Cette discussion est maintenant visible. Elle sera affichée dans la liste des discussions.
+    visible_disabled: Cette discussion est maintenant invisible. Elle ne sera plus affichée dans la liste des discussions. Le seul moyen d'y accéder est par lien direct.
 
   login:
-    not_approved: "Votre compte n'a pas encore été approuvé. Vous serez notifié par mail quand cela sera fait."
-    incorrect_username_email_or_password: "pseudo, adresse email ou mot de passe incorrect"
-    wait_approval: "Merci de vous être inscrit. Nous vous informerons lorsque votre compte aura été approuvé."
-    active: "Votre compte est activé et prêt."
-    activate_email: "Vous avez presque fini ! Un mail de confirmation a été envoyé à <b>%{email}</b>. Suivez les instructions pour activer votre compte."
-    not_activated: "Vous ne pouvez pas vous connecter pour le moment. Nous vous avons envoyé un mail d'activation. Merci de suivre les instructions qui y sont contenues pour activer votre compte."
-    errors: "%{errors}"
-    not_available: "Pas disponible. Essayez %{suggestion}?"
-    something_already_taken: "Quelque chose s'est mal passé. Peut-être que votre nom d'utilisateur ou adresse email est déjà enregistré ? Essayez le lien : j'ai oublié mon mot de passe.."
-    omniauth_error: "Désolé, il y a eu une erreur lors de l'autorisation de votre compte %{strategy}. Vous n'avez peut-être pas approuvé l'autorisation ?"
-    omniauth_error_unknown: "Quelque chose s'est mal passé lors de votre connexion, merci de réessayer."
+    not_approved: Votre compte n'a pas encore été approuvé. Vous serez notifié par mail quand cela sera fait.
+    incorrect_username_email_or_password: pseudo, adresse email ou mot de passe incorrect
+    wait_approval: Merci de vous être inscrit. Nous vous informerons lorsque votre compte aura été approuvé.
+    active: Votre compte est activé et prêt.
+    activate_email: Vous avez presque fini ! Un mail de confirmation a été envoyé à <b>%{email}</b>. Suivez les instructions pour activer votre compte.
+    not_activated: Vous ne pouvez pas vous connecter pour le moment. Nous vous avons envoyé un mail d'activation. Merci de suivre les instructions qui y sont contenues pour activer votre compte.
+    errors: %{errors}
+    not_available: Pas disponible. Essayez %{suggestion}?
+    something_already_taken: Quelque chose s'est mal passé. Peut-être que votre nom d'utilisateur ou adresse email est déjà enregistré ? Essayez le lien : j'ai oublié mon mot de passe..
+    omniauth_error: Désolé, il y a eu une erreur lors de l'autorisation de votre compte %{strategy}. Vous n'avez peut-être pas approuvé l'autorisation ?
+    omniauth_error_unknown: Quelque chose s'est mal passé lors de votre connexion, merci de réessayer.
 
   user:
     username:
-      short: "doit avoir plus de %{min} caractères"
-      long: "doit avoir moins de %{max} caractères"
-      characters: "ne doit contenir que des chiffres et des lettres"
-      unique: "doit être unique"
-      blank: "doit être présent"
-      must_begin_with_alphanumeric: "doit commencer par une lettre ou un nombre"
+      short: doit avoir plus de %{min} caractères
+      long: doit avoir moins de %{max} caractères
+      characters: ne doit contenir que des chiffres et des lettres
+      unique: doit être unique
+      blank: doit être présent
+      must_begin_with_alphanumeric: doit commencer par une lettre ou un nombre
     email:
-      not_allowed: "n'est pas autorisé pour ce fournisseur de mails. Merci d'utiliser une autre adresse."
+      not_allowed: n'est pas autorisé pour ce fournisseur de mails. Merci d'utiliser une autre adresse.
 
   invite_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} vous a invité(e) à participer à une discussion sur %{site_name}"
+    subject_template: [%{site_name}] %{invitee_name} vous a invité(e) à participer à une discussion sur %{site_name}
     text_body_template: |
       %{invitee_name} vous a invité(e) dans la discussion "%{topic_title}" sur %{site_name}.
 
@@ -493,7 +493,7 @@ fr:
       [1]: %{invite_link}
 
   test_mailer:
-    subject_template: "[%{site_name}] Test de livrabilité d'email"
+    subject_template: [%{site_name}] Test de livrabilité d'email
     text_body_template: |
       Ceci est un mail de test envoyé pour le forum %{site_name}. Vous pouvez accéder à ce forum avec votre navigateur à l'adresse suivante :
 
@@ -531,16 +531,16 @@ fr:
       <small>Il devrait toujours y avoir un lien de déinscription dans le pied de page d'un mail. Donc en voici-un. Ce mail a été envoyé par Nom de la Société,  55 Main Street, Anytown, USA 12345. Si vous ne voulez plus recevoir nos e-mails, [cliquez ici pour vous désinscrire][5].</small>
 
   request_access:
-    code: "Code d'accès"
-    instructions: "Ce site possède une zone restreinte, vous devez saisir le code d'accès pour entrer."
-    enter: "Entrer"
-    incorrect: "Le code d''accès est incorrect."
+    code: Code d'accès
+    instructions: Ce site possède une zone restreinte, vous devez saisir le code d'accès pour entrer.
+    enter: Entrer
+    incorrect: Le code d''accès est incorrect.
 
   system_messages:
-    site_password: "Si vous en avez besoin, le mot de passe du site est `%{access_password}`."
+    site_password: Si vous en avez besoin, le mot de passe du site est `%{access_password}`.
 
     post_hidden:
-      subject_template: "%{site_name} Notice: Message caché suite à un signalement par la communauté"
+      subject_template: %{site_name} Notice: Message caché suite à un signalement par la communauté
       text_body_template: |
         Bonjour,
 
@@ -599,7 +599,7 @@ fr:
         - Pendant que vous lisez une discussion, vous pouvez retourner au début en cliquant sur son titre situé en haut de l'écran. Pour atteindre la *fin*, cliquez sur la flèche vers le bas sur l'indiquateur de progression en bas de la page, ou cliquez sur le champ "dernier message" dans le résumé de la discussion, sous le premier message.
 
     welcome_approved:
-      subject_template: "Vous avez été accepté sur %{site_name} !"
+      subject_template: Vous avez été accepté sur %{site_name} !
       text_body_template: |
         Félicitations !
 
@@ -612,7 +612,7 @@ fr:
         Amusez-vous bien !
 
     welcome_user:
-      subject_template: "Bienvenue sur %{site_name} !"
+      subject_template: Bienvenue sur %{site_name} !
       text_body_template: |
         Salut !
 
@@ -625,7 +625,7 @@ fr:
         Amusez-vous bien !
 
     welcome_invite:
-      subject_template: "Bienvenue sur %{site_name} !"
+      subject_template: Bienvenue sur %{site_name} !
       text_body_template: |
         Merci d'avoir accepté l'invitation sur %{site_name}, et bienvenue sur notre forum de discussion !
 
@@ -648,29 +648,29 @@ fr:
         [prefs]: %{user_preferences_url}
 
     export_succeeded:
-      subject_template: "Export terminé avec succès"
-      text_body_template: "L'export a réussi."
+      subject_template: Export terminé avec succès
+      text_body_template: L'export a réussi.
 
     import_succeeded:
-      subject_template: "Import terminé avec succès"
-      text_body_template: "L'import a réussi."
+      subject_template: Import terminé avec succès
+      text_body_template: L'import a réussi.
 
-  unsubscribe_link: "Si vous ne souhaitez plus recevoir ces emails, visitez vos [préférences utilisateur](%{user_preferences_url})."
+  unsubscribe_link: Si vous ne souhaitez plus recevoir ces emails, visitez vos [préférences utilisateur](%{user_preferences_url}).
 
   user_notifications:
     unsubscribe:
-      title: "Désabonnement"
-      description: "Ces emails ne vous intéressent pas ? Aucun problème! Cliquez ci-dessous pour vous désabonner immédiatement :"
+      title: Désabonnement
+      description: Ces emails ne vous intéressent pas ? Aucun problème! Cliquez ci-dessous pour vous désabonner immédiatement :
 
     user_invited_to_private_message:
-      subject_template: "[%{site_name}] %{username} vous a invité(e) à une conversation privée '%{topic_title}'"
+      subject_template: [%{site_name}] %{username} vous a invité(e) à une conversation privée '%{topic_title}'
       text_body_template: |
         %{username} vous a invité(e) à une conversation privée '%{topic_title}' sur %{site_name}:
 
         Merci de visiter ce lien pour voir la discussion: %{base_url}%{url}
 
     user_replied:
-      subject_template: "[%{site_name}] %{username} a répondu à votre message dans '%{topic_title}'"
+      subject_template: [%{site_name}] %{username} a répondu à votre message dans '%{topic_title}'
       text_body_template: |
         %{username} a répondu à votre message dans '%{topic_title}' sur %{site_name}:
 
@@ -681,7 +681,7 @@ fr:
         Merci de suivre ce lien pour répondre : %{base_url}%{url}
 
     user_quoted:
-      subject_template: "[%{site_name}] %{username} vous a cité(e) dans '%{topic_title}'"
+      subject_template: [%{site_name}] %{username} vous a cité(e) dans '%{topic_title}'
       text_body_template: |
         %{username} vous a cité(e) dans '%{topic_title}' sur %{site_name}:
 
@@ -692,7 +692,7 @@ fr:
         Merci de suivre ce lien pour répondre : %{base_url}%{url}
 
     user_mentioned:
-      subject_template: "[%{site_name}] %{username} vous a mentioné(e) dans '%{topic_title}'"
+      subject_template: [%{site_name}] %{username} vous a mentioné(e) dans '%{topic_title}'
       text_body_template: |
         %{username} vous a mentioné(e) dans '%{topic_title}' sur %{site_name}:
 
@@ -703,7 +703,7 @@ fr:
         Merci de suivre ce lien pour répondre : %{base_url}%{url}
 
     user_posted:
-      subject_template: "[%{site_name}] %{username} à répondu à '%{topic_title}'"
+      subject_template: [%{site_name}] %{username} à répondu à '%{topic_title}'
       text_body_template: |
         %{username} à répondu à '%{topic_title}' sur %{site_name}:
 
@@ -714,16 +714,16 @@ fr:
         Merci de suivre ce lien pour répondre : %{base_url}%{url}
 
     digest:
-      why: "Voici un bref résumé de ce qui s'est passé sur %{site_link} depuis la dernière fois que nous vous avons vu(e) le %{last_seen_at}."
-      subject_template: "[%{site_name}] Activité du Forum pour %{date}"
-      new_activity: "Nouvelles activités sur vos discussions et messages :"
-      new_topics: "Nouvelles discussions :"
-      unsubscribe: "Ce mail de résumé vous est envoyé comme une notification de courtoisie par le site %{site_link} que vous n'avez pas visité depuis 7 jours.\nSi vous voulez désactiver cette fonction ou changer vos préférences e-mail, utilisez ce lien : %{unsubscribe_link}."
-      click_here: "cliquez ici"
-      from: "Résumé de %{site_name}"
+      why: Voici un bref résumé de ce qui s'est passé sur %{site_link} depuis la dernière fois que nous vous avons vu(e) le %{last_seen_at}.
+      subject_template: [%{site_name}] Activité du Forum pour %{date}
+      new_activity: Nouvelles activités sur vos discussions et messages :
+      new_topics: Nouvelles discussions :
+      unsubscribe: Ce mail de résumé vous est envoyé comme une notification de courtoisie par le site %{site_link} que vous n'avez pas visité depuis 7 jours.\nSi vous voulez désactiver cette fonction ou changer vos préférences e-mail, utilisez ce lien : %{unsubscribe_link}.
+      click_here: cliquez ici
+      from: Résumé de %{site_name}
 
     private_message:
-      subject_template: "[%{site_name}] %{subject_prefix}%{topic_title}"
+      subject_template: [%{site_name}] %{subject_prefix}%{topic_title}
       text_body_template: |
         %{from} vous a envoyé un message privé
 
@@ -734,7 +734,7 @@ fr:
         Merci de suivre ce lien pour répondre : %{base_url}%{url}
 
     forgot_password:
-      subject_template: "[%{site_name}] Réinitialisation du mot de passe"
+      subject_template: [%{site_name}] Réinitialisation du mot de passe
       text_body_template: |
         Quelqu'un a demandé la réinitialisation de votre mot de passe sur [%{site_name}](%{base_url}).
 
@@ -744,14 +744,14 @@ fr:
         %{base_url}/users/password-reset/%{email_token}
 
     authorize_email:
-      subject_template: "[%{site_name}] Confirmation de votre nouvelle adresse mail"
+      subject_template: [%{site_name}] Confirmation de votre nouvelle adresse mail
       text_body_template: |
         Confirmez votre nouvelle adresse mail pour %{site_name} en cliquant sur le lien suivant :
 
         %{base_url}/users/authorize-email/%{email_token}
 
     signup:
-      subject_template: "[%{site_name}] Activer votre nouveau compte"
+      subject_template: [%{site_name}] Activer votre nouveau compte
       text_body_template: |
         Bienvenue sur %{site_name} !
 
@@ -761,12 +761,12 @@ fr:
         Si le lien ci-dessus n'est pas cliquable, essayez de le copier et coller dans la barre d'adresse de votre navigateur web.
 
   discourse_hub:
-    access_token_problem: "Informer un administateur : Veuillez mettre à jour les paramètres du site pour inclure la discourse_org_access_key correcte."
+    access_token_problem: Informer un administateur : Veuillez mettre à jour les paramètres du site pour inclure la discourse_org_access_key correcte.
 
   page_not_found:
-    title: "La page que vous avez demandée n'existe pas dans ce forum de discussion.Peut-être nous pouvons vous aider à la trouver, ou une autre discussion similaire :"
-    popular_topics: "Discussions populaires"
-    recent_topics: "Discussions récentes"
-    see_more: "Voir plus"
-    search_title: "Rechercher pour cette discussion"
-    search_google: "Rechercher avec Google"
+    title: La page que vous avez demandée n'existe pas dans ce forum de discussion.Peut-être nous pouvons vous aider à la trouver, ou une autre discussion similaire :
+    popular_topics: Discussions populaires
+    recent_topics: Discussions récentes
+    see_more: Voir plus
+    search_title: Rechercher pour cette discussion
+    search_google: Rechercher avec Google
