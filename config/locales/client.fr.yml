@@ -456,6 +456,10 @@ fr:
         title: 'Répondre'
         help: 'commencez à répondre à cette discussion'
 
+      clear_pin:
+        title: "Désépingler"
+        help: "Désépingler cette discussion afin qu'elle n'apparaisse plus en tête des discussions"
+
       share:
         title: 'Partager'
         help: 'partager un lien vers cette discussion'
