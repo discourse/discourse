@@ -447,11 +447,11 @@ fr:
 
   topic_statuses:
     archived_enabled: "Cette discussion est maintenant archivée. Elle est gelée et ne peut plus être modifiée."
-    archived_disabled: "Cette discussion est maintenant  désarchivée. Elle n'est plus gelée, et peut être modifiée."
-    closed_enabled: "Cette discussion est maintenant  fermée. Les nouvelles réponses ne sont plus autorisées."
-    closed_disabled: "Cette discussion est maintenant  ouverte. Les nouvelles réponses sont autorisées."
-    pinned_enabled: "Cette discussion est maintenant  épinglée. Elle apparaîtra en haut de sa catégorie."
-    pinned_disabled: "Cette discussion est maintenant  désépinglée. Elle n'apparaîtra plus en haut de sa categorie."
+    archived_disabled: "Cette discussion est maintenant désarchivée. Elle n'est plus gelée, et peut être modifiée."
+    closed_enabled: "Cette discussion est maintenant fermée. Les nouvelles réponses ne sont plus autorisées."
+    closed_disabled: "Cette discussion est maintenant ouverte. Les nouvelles réponses sont autorisées."
+    pinned_enabled: "Cette discussion est maintenant épinglée. Elle apparaîtra en haut de sa catégorie jusqu'à ce qu'elle soit désépinglée par un modérateur, ou par chaque utilisateur utilisant le bouton Désépingler."
+    pinned_disabled: "Cette discussion est maintenant désépinglée. Elle n'apparaîtra plus en haut de sa categorie."
     visible_enabled: "Cette discussion est maintenant visible. Elle sera affichée dans la liste des discussions."
     visible_disabled: "Cette discussion est maintenant invisible. Elle ne sera plus affichée dans la liste des discussions. Le seul moyen d'y accéder est par lien direct."
 
@@ -464,6 +464,7 @@ fr:
     not_activated: "Vous ne pouvez pas vous connecter pour le moment. Nous vous avons envoyé un mail d'activation. Merci de suivre les instructions qui y sont contenues pour activer votre compte."
     errors: "%{errors}"
     not_available: "Pas disponible. Essayez %{suggestion}?"
+    something_already_taken: "Quelque chose s'est mal passé. Peut-être que votre nom d'utilisateur ou adresse email est déjà enregistré ? Essayez le lien : j'ai oublié mon mot de passe.."
     omniauth_error: "Désolé, il y a eu une erreur lors de l'autorisation de votre compte %{strategy}. Vous n'avez peut-être pas approuvé l'autorisation ?"
     omniauth_error_unknown: "Quelque chose s'est mal passé lors de votre connexion, merci de réessayer."
 
