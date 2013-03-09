@@ -288,7 +288,7 @@ class User < ActiveRecord::Base
   end
 
   def update_ip_address!(new_ip_address)
-    unless ip_address == new_ip_address && new_ip_address.blank?
+    unless ip_address == new_ip_address || new_ip_address.blank?
       update_column(:ip_address, new_ip_address)
     end
   end
