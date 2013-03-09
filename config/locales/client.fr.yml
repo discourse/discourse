@@ -677,6 +677,13 @@ fr:
         latest_version: "Dernière version"
         update_often: "Merci de mettre à jour régulièrement !"
 
+        reports:
+          today: "Aujourd'hui"
+          yesterday: Hier
+          last_7_days: Les 7 derniers jours
+          last_30_days: Les 30 derniers jours
+          all_time: Depuis toujours
+
       flags:
         title: "Signalements"
         old: "Vieux"
