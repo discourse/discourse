@@ -8,7 +8,7 @@ Handlebars.registerHelper('valueAtDaysAgo', function(property, i) {
   var data = Ember.Handlebars.get(this, property);
   if( data ) {
     var wantedDate = Date.create(i + ' days ago').format('{yyyy}-{MM}-{dd}');
-    var item = data.find( function(d, i, arr) { return d.x == wantedDate; } );
+    var item = data.find( function(d, i, arr) { return d.x === wantedDate; } );
     if( item ) {
       return item.y;
     } else {
