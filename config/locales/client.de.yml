@@ -21,7 +21,7 @@ de:
     show_more: "zeige mehr"
     links: Links
     faq: "FAQ"
-    you: "Dir"
+    you: "Du"
     ok: "Okay"
     or: "oder"
 
@@ -180,11 +180,11 @@ de:
     close: "Schließen"
     learn_more: "Erfahre mehr..."
 
-    year: 'Jahr'
+    year: 'Jahr(e)'
     year_desc: 'Beigesteuerte Themen der letzten 365 Tage'
-    month: 'Monat'
+    month: 'Monat(e)'
     month_desc: 'Beigesteuerte Themen der letzten 30 Tage'
-    week: 'Woche'
+    week: 'Woche(n)'
     week_desc: 'Beigesteuerte Themen der letzten 7 Tage'
 
     first_post: Erster Beitrag
@@ -356,18 +356,18 @@ de:
         popular: "Es gibt keine populären Themen. Wie traurig."
         category: "Es gibt keine Themen in {{category}}."
       bottom:
-        popular: "Es gibt keine weiteren populären Themen."
-        posted: "Es gibt keine weiteren Themen."
-        read: "Es gibt keine weiteren gelesenen Themen."
-        new: "Es gibt keine weiteren neuen Themen."
-        unread: "Es gibt keine weiteren ungelesen Themen."
-        favorited: "Es gibt keine weiteren favorisierten Themen."
-        category: "Es gibt keine weiteren Themen in {{category}}."
+        popular: "Das waren alle populären Themen."
+        posted: "Das waren alle Themen."
+        read: "Das waren alle gelesenen Themen."
+        new: "Das waren alle neuen Themen."
+        unread: "Das waren alle ungelesen Themen."
+        favorited: "Das waren alle favorisierten Themen."
+        category: "Das waren alle Themen der Kategorie {{category}}."
 
     topic:
       create_in: 'Neues Thema in {{categoryName}}'
       create: 'Neues Thema'
-      create_long: 'Erstelle ein neues Thema'
+      create_long: 'Neues Thema beginnen'
       private_message: 'Beginne ein privates Gespräch'
       list: 'Themen'
       new: 'Neues Thema'
@@ -396,7 +396,7 @@ de:
       read_more: "Möchtest Du mehr lesen? {{catLink}} oder {{popularLink}}."
       browse_all_categories: Zeige alle Kategorien
       view_popular_topics: Zeige populäre Themen
-      suggest_create_topic: Warum nicht ein neues Thema erstellen?
+      suggest_create_topic: Fang ein neues Thema an?
       read_position_reset: "Deine Leseposition wurde zurückgesetzt."
       jump_reply_up: Springe zur vorigen Antwort
       jump_reply_down: Springe zur folgenden Antwort
@@ -471,7 +471,7 @@ de:
         error: "Entschuldige, es gab einen Fehler beim Einladen des Benutzers."
 
       invite_reply:
-        title: 'Freunde zu einer Antwort einladen'
+        title: 'Freunde zum Gespräch einladen'
         help: 'Sendet Freunden eine Einladung, so dass mit einem Klick auf dieses Thema antworten können.'
         email: "Wir schicken Deiner Freundin / Deinem Freund eine kurze Mail, die es mit einem Klick erlaubt, auf dieses Thema zu antworten."
         email_placeholder: 'Mailadresse'
@@ -508,8 +508,8 @@ de:
       reply_topic: "Auf {{link}} antworten"
       edit: "{{link}} bearbeiten"
       in_reply_to: "Antwort auf"
-      reply_as_new_topic: "Mit neuem Thema antworten"
-      continue_discussion: "Fortsetzung der Diskussion von {{postLink}}:"
+      reply_as_new_topic: "Mit Themenwechsel antworten"
+      continue_discussion: "Fortsetzung des Gesprächs {{postLink}}:"
       follow_quote: "Springe zu zitiertem Beitrag"
       deleted_by_author: "(Beitrag vom Autor entfernt)"
 
@@ -522,7 +522,7 @@ de:
         edit: "Entschuldige, es gab einen Fehler beim Bearbeiten des Beitrags. Versuche es noch einmal."
         upload: "Entschuldige, es gab einen Fehler beim Hochladen der Datei. Versuche es noch einmal."
 
-      abandon: "Willst Du diesen Beitrag wirklich abbrechen?"
+      abandon: "Willst Du diesen Beitrag wirklich verwerfen?"
 
       archetypes:
         save: 'Speicheroptionen'
