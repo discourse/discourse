@@ -428,14 +428,14 @@ de:
     inbox: "Posteingang"
 
     was_liked: "wurde geliket"
-    liked: "likete"
-    bookmarked: "markierte"
-    posted: "posteste"
-    responded_to: "antwortete auf"
-    mentioned: "erwähnte"
-    quoted: "zitierte"
-    favorited: "favorisierte"
-    edited: "bearbeitete"
+    liked: "likest"
+    bookmarked: "markierst"
+    posted: "postest"
+    responded_to: "antwortest auf"
+    mentioned: "erwähntest"
+    quoted: "zitierst"
+    favorited: "favorisierst"
+    edited: "bearbeitest"
 
   move_posts:
     moderator_post:
