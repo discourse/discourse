@@ -4,8 +4,8 @@
 de:
   js:
     share:
-      topic: 'teile einen Link zu diesem Thema'
-      post: 'teile einen Link zu diesem Beitrag'
+      topic: 'Teile einen Link zu diesem Thema'
+      post: 'Teile einen Link zu diesem Beitrag'
 
     edit: 'editiere den Titel und die Kategorie dieses Themas'
     not_implemented: "Entschuldigung, diese Funktion wurde noch nicht implementiert."
@@ -17,11 +17,11 @@ de:
     age: "Alter"
     last_post: "Letzter Beitrag"
     admin_title: "Administrator"
-    flags_title: "Markierungen"
-    show_more: "zeig mehr"
+    flags_title: "Meldungen"
+    show_more: "zeige mehr"
     links: Links
     faq: "FAQ"
-    you: "Du"
+    you: "Dir"
     ok: "Okay"
     or: "oder"
 
@@ -85,8 +85,8 @@ de:
         frequency: "Wir mailen nur, falls Du längere Zeit nicht hier gewesen bist und wir etwas Neues für Dich haben."
 
       name:
-        title: "Name"
-        instructions: "Die Langversion deines Namens (muss nicht eindeutig sein). Ermöglicht alternative @Name-Zuordnungen und wird sonst nur auf deiner Profilseite angezeigt."
+        title: "Realname"
+        instructions: "Dieser Name muss nicht eindeutig sein, wird nur auf deiner Profilseite angezeigt und ermöglicht alternative @Namens-Erwähnungen."
         too_short: "Name zu kurz."
         ok: "Der Name ist in Ordnung."
       username:
@@ -101,21 +101,21 @@ de:
         checking: "Prüfe Verfügbarkeit des Benutzernamens..."
         enter_email: 'Benutzername gefunden. Gib die zugehörige Mailadresse ein.'
 
-      last_posted: "Zuletzt geschrieben"
-      last_emailed: "Zuletzt gemailt"
-      last_seen: "Zuletzt gesehen"
-      created: "Angemeldet seit"
+      last_posted: "Letzter Beitrag"
+      last_emailed: "Letzte Mail"
+      last_seen: "Letzter Login"
+      created: "Mitglied seit"
       log_out: "Abmelden"
       website: "Webseite"
       email_settings: "Email"
       email_digests:
-        title: "Wenn ich die Seite nicht besuche, schicke eine Übersichtsmail über Neuigkeiten"
+        title: "Schicke eine Mail mit Neuigkeiten, wenn ich die Seite länger nicht besuche"
         daily: "täglich"
         weekly: "wöchentlich"
         bi_weekly: "all zwei Wochen"
 
       email_direct: "Schicke eine Mail, wenn jemand mich zitiert, auf meine Beiträge antwortet oder meinen @Namen erwähnt."
-      email_private_messages: "Schicke eine Mail, wenn jemand mit eine private Nachricht sendet."
+      email_private_messages: "Schicke eine Mail, wenn jemand mir eine private Nachricht sendet."
 
       other_settings: "Sonstiges"
 
@@ -125,7 +125,7 @@ de:
         last_here: "sie seit meiner letzten Anmeldung gepostet wurden"
         after_n_days:
           one: "sie gestern gepostet wurden"
-          other: "sie die letzten {{count}} Tagen gepostet wurden"
+          other: "sie in den letzten {{count}} Tagen gepostet wurden"
         after_n_weeks:
           one: "sie letzte Woche gepostet wurden"
           other: "they die letzten {{count}} Wochen gepostet wurden"
@@ -165,7 +165,7 @@ de:
         title: "Letzte IP-Adresse"
       avatar:
         title: "Avatar"
-        instructions: "Wir nutzen <a href='https://gravatar.com' target='_blank'>Gravatar</a> zur Darstellung von Avataren basierend auf deiner Mailadresse."
+        instructions: "Wir nutzen <a href='https://gravatar.com' target='_blank'>Gravatar</a> zur Darstellung von Avataren basierend auf deiner Mailadresse:"
 
       filters:
         all: "Alle"
@@ -228,7 +228,7 @@ de:
       error: "Unbekannter Fehler"
       reset_password: 'Passwort zurücksetzen'
       logging_in: "Anmeldung läuft..."
-      or: "Oder"
+      or: "oder"
       authenticating: "Authentisiere..."
       awaiting_confirmation: 'Dein Konto ist noch nicht aktiviert. Benutze den "Passwort vergesse"-Link um eine neue Aktivierungsmail zu erhalten.'
       awaiting_approval: "Dein Konto wurde noch nicht von einem Moderator bewilligt. Du bekommst eine Mail, sobald das geschehen ist."
@@ -263,7 +263,7 @@ de:
         at_least: "Gib mindestens {{n}} Zeichen ein."
         more: "{{n}} weitere..."
 
-      save_edit: "Änderung speichern"
+      save_edit: "Änderungen speichern"
       reply: "Antworten"
       create_topic: "Thema erstellen"
       create_pm: "Private Nachricht erstellen"
@@ -365,8 +365,8 @@ de:
         category: "Es gibt keine weiteren Themen in {{category}}."
 
     topic:
-      create_in: 'Erstelle ein Thema in {{categoryName}}'
-      create: 'Erstelle Thema'
+      create_in: 'Neues Thema in {{categoryName}}'
+      create: 'Neues Thema'
       create_long: 'Erstelle ein neues Thema'
       private_message: 'Beginne ein privates Gespräch'
       list: 'Themen'
@@ -423,16 +423,16 @@ de:
           "0_2": 'Du ignorierst alle Benachrichtigungen dieses Themas.'
         watching:
           title: "Beobachten"
-          description: "Wie Verfolgen, sowie Benachrichtigungen über neue Beiträge."
+          description: "Wie 'Verfolgen', zuzüglich Benachrichtigungen über neue Beiträge."
         tracking:
           title: "Verfolgen"
-          description: "Du wirst über ungelesene Beiträge benachrichtigt, wenn jemand Deinen @Namen erwähnt oder auf Deine Beiträge antwortet."
+          description: "Du wirst über ungelesene Beiträge, Erwähnungen Deines @Namens oder Antworten auf Deine Beiträge benachrichtigt."
         regular:
           title: "Normal"
-          description: "Du wirst nur benachrichtigt, wenn jemand Deinen @Namen erwähnt oder auf Deine Beiträge antwortet."
+          description: "Du wirst nur dann benachrichtigt, wenn jemand Deinen @Namen erwähnt oder auf Deine Beiträge antwortet."
         muted:
           title: "Ignorieren"
-          description: "Du wirst keine Benachrichtigungen im Zusammenhang mit diesem Thema erhalten und es wird nicht in Deiner Liste ungelesener Themen auftauchen."
+          description: "Du erhältst keine Benachrichtigungen im Zusammenhang mit diesem Thema und es wird nicht in Deiner Liste ungelesener Themen auftauchen."
 
       actions:
         delete: "Thema löschen"
@@ -464,8 +464,8 @@ de:
 
       invite_private:
         title: 'Zu privatem Gespräch einladen'
-        email_or_username: "Mail oder Nutzername des Einzuladenden"
-        email_or_username_placeholder: "Mailadresse oder Nutzername"
+        email_or_username: "Einzuladender Nutzer"
+        email_or_username_placeholder: "Mailadresse oder Benutzername"
         action: "Einladen"
         success: "Danke! Wir haben den Benutzer eingeladen, an diesem privaten Gespräch teilzunehmen."
         error: "Entschuldige, es gab einen Fehler beim Einladen des Benutzers."
@@ -528,10 +528,10 @@ de:
         save: 'Speicheroptionen'
 
       controls:
-        reply: "Fange eine Antwort auf diese Beitrag an"
-        like: "Diese Beitrag liken"
-        edit: "Diese Beitrag bearbeiten"
-        flag: "Diese Beitrag den Moderatoren melden"
+        reply: "Fange eine Antwort auf diesen Beitrag an"
+        like: "Diesen Beitrag liken"
+        edit: "Diesen Beitrag bearbeiten"
+        flag: "Diesen Beitrag den Moderatoren melden"
         delete: "Diesen Beitrag löschen"
         undelete: "Diesen Beitrag wiederherstellen"
         share: "Link zu diesem Beitrag teilen"
@@ -561,7 +561,7 @@ de:
       delete:
         confirm:
           one: "Bist Du sicher, dass Du diesen Beitrag löschen willst?"
-          other: "Bist Du sicher, dass Du all diese Beiträge löschen willst?"
+          other: "Bist Du sicher, dass Du all diesen Beiträge löschen willst?"
 
     category:
       none: '(keine Kategorie)'
@@ -569,7 +569,7 @@ de:
       edit_long: "Kategorie bearbeiten"
       view: 'Zeige Themen dieser Kategorie'
       delete: 'Kategorie löschen'
-      create: 'Kategorie erstellen'
+      create: 'Neue Kategorie'
       more_posts: "Zeige alle {{posts}}..."
       name: "Name der Kategorie"
       description: "Beschreibung"
@@ -580,10 +580,10 @@ de:
       delete_confirm: "Bist Du sicher, dass Du diese Kategorie löschen willst?"
       list: "Kategorien auflisten"
       no_description: "Es gibt keine Beschreibung zu dieser Kategorie."
-      change_in_category_topic: "Besuche die Themen dieser Kategorie, um die Beschreibung zu bearbeiten"
+      change_in_category_topic: "Besuche die Themen dieser Kategorie, um einen Eindruck für eine gute Beschreibung zu gewinnen."
 
     flagging:
-      title: 'Aus welchem Grund meldest Du diese Beitrag?'
+      title: 'Aus welchem Grund meldest Du diesen Beitrag?'
       action: 'Beitrag melden'
       cant: "Entschuldige, Du kannst diesen Beitrag augenblicklich nicht melden."
       custom_placeholder: "Warum soll ein Moderator sich diesen Beitrag ansehen? Bitte lass uns wissen, was genau Dich beunruhigt, und wenn möglich dafür relevante Links."
@@ -708,7 +708,7 @@ de:
         email_type: "Mailtyp"
         to_address: "Adressat"
         test_email_address: "Mailadresse zum Testen"
-        send_test: "Sende Testmail"
+        send_test: "Testmail senden"
         sent_test: "Gesendet!"
 
       impersonate:
