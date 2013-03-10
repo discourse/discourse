@@ -252,8 +252,12 @@ fr:
   reports:
     visits:
       title: "Visites utilisateur par jour"
-      xaxis: "Jour"
-      yaxis: "Visites"
+    signups:
+      title: Nouveaux utilisateurs
+    topics:
+      title: Nouvelles discussions
+    posts:
+      title: Nouveaux messages
 
   site_settings:
     default_locale: "Le langage par défaut de cette instance de Discourse (code ISO 639-1)"
