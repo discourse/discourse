@@ -673,6 +673,13 @@ cs:
         latest_version: "Poslední verze"
         update_often: 'Prosím aktualizujte často!'
 
+        reports:
+          today: "Dnes"
+          yesterday: "Včera"
+          last_7_days: "Posledních 7 dní"
+          last_30_days: "Posledních 30 dní"
+          all_time: "Za celou dobu"
+
       flags:
         title: "Nahlášení"
         old: "Staré"

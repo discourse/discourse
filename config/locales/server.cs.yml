@@ -245,8 +245,12 @@ cs:
   reports:
     visits:
       title: "Návštěvy uživalteů podle dnů"
-      xaxis: "Den"
-      yaxis: "Návštěvy"
+    signups:
+      title: "Noví uživatelé"
+    topics:
+      title: "Nová témata"
+    posts:
+      title: "Nové příspěvky"
 
   site_settings:
     default_locale: "Výchozí jazyk této Discourse instance (kód ve formátu ISO 639-1)"
