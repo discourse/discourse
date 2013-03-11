@@ -9,8 +9,10 @@ class MessageBus::Rack::Middleware
   def self.start_listener
     unless @started_listener
       MessageBus.subscribe do |msg|
-        EM.next_tick do
-          @@connection_manager.notify_clients(msg) if @@connection_manager
+        if EM.reactor_running?
+          EM.next_tick do
+            @@connection_manager.notify_clients(msg) if @@connection_manager
+          end
         end
       end
       @started_listener = true
@@ -73,7 +75,7 @@ class MessageBus::Rack::Middleware
 
     if backlog.length > 0
       [200, headers, [self.class.backlog_to_json(backlog)] ]
-    elsif MessageBus.long_polling_enabled? && env['QUERY_STRING'] !~ /dlp=t/
+    elsif MessageBus.long_polling_enabled? && env['QUERY_STRING'] !~ /dlp=t/ && EM.reactor_running?
       response = Thin::AsyncResponse.new(env)
       response.headers["Cache-Control"] = "must-revalidate, private, max-age=0"
       response.headers["Content-Type"] ="application/json; charset=utf-8"
