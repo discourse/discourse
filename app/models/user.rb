@@ -501,9 +501,9 @@ class User < ActiveRecord::Base
     end
 
     def add_trust_level
+      # there is a possiblity we did no load trust level column, skip it
+      return unless attributes.key? "trust_level"
       self.trust_level ||= SiteSetting.default_trust_level
-    rescue ActiveModel::MissingAttributeError
-      # Ignore it, safely - see http://www.tatvartha.com/2011/03/activerecordmissingattributeerror-missing-attribute-a-bug-or-a-features/
     end
 
     def update_username_lower
