@@ -111,5 +111,8 @@ gem 'rack-mini-profiler', git: 'git://github.com/SamSaffron/MiniProfiler'
 
 # perftools only works on 1.9 atm
 group :profile do
-  gem 'rack-perftools_profiler', require: 'rack/perftools_profiler', platform: :mri_19 
+  # travis refuses to install this, instead of fuffing, just avoid it for now
+  #
+  # if you need to profile, uncomment out this line
+  # gem 'rack-perftools_profiler', require: 'rack/perftools_profiler', platform: :mri_19 
 end
