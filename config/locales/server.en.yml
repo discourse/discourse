@@ -286,8 +286,8 @@ en:
     new_topics_rollup: "How many new topics can be inserted on the topic list before rolling up into a count"
     onebox_max_chars: "Maximum characters a onebox will import from an external website into the post"
 
-    logo_url: "The logo for your site eg: http://xyz.com/x.png"
-    logo_small_url: "The small logo for your site used when scrolling down on topics eg: http://xyz.com/x-small.png"
+    logo_url: "The logo for your site eg: http://example.com/logo.png"
+    logo_small_url: "The small logo for your site used when scrolling down on topics eg: http://example.com/logo-small.png"
     favicon_url: "A favicon for your site, see http://en.wikipedia.org/wiki/Favicon"
     notification_email: "The return email address used when sending system emails such as notifying users of lost passwords, new accounts etc"
     use_ssl: "Should the site be accessible via SSL?"
