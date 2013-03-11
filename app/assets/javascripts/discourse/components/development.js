@@ -29,50 +29,44 @@ Discourse.Development = {
         },
 
         after: function(data, owner, args) {
-          var ary, f, n, v, _ref;
+
+          if (typeof console === "undefined") return;
+          if (console === null) return;
+
+          var f, n, v;
           if (owner && data.time > 10) {
 
             f = function(name, data) {
               if (data && data.count) return name + " - " + data.count + " calls " + ((data.time + 0.0).toFixed(2)) + "ms";
             };
 
-            if (console && console.group) {
+            if (console.group) {
               console.group(f(name, data));
             } else {
               console.log("");
               console.log(f(name, data));
             }
 
-            ary = [];
-            _ref = window.probes;
-            for (n in _ref) {
-              v = _ref[n];
-              if (n === name || v.time < 1) {
-                continue;
-              }
-              ary.push({
-                k: n,
-                v: v
-              });
+            var ary = [];
+            for (n in window.probes) {
+              v = window.probes[n];
+              if (n === name || v.time < 1) continue;
+              ary.push({ k: n, v: v });
             }
             ary.sortBy(function(item) {
-              if (item.v && item.v.time) {
-                return -item.v.time;
-              } else {
-                return 0;
-              }
+              if (item.v && item.v.time) return -item.v.time;
+              return 0;
             }).each(function(item) {
               var output = f("" + item.k, item.v);
               if (output) {
-                return console.log(output);
+                console.log(output);
               }
             });
-            if (typeof console !== "undefined" && console !== null) {
-              if (typeof console.groupEnd === "function") {
-                console.groupEnd();
-              }
+
+            if (console.group) {
+              console.groupEnd();
             }
-            return window.probes.clear();
+            window.probes.clear();
           }
         }
       });

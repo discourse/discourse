@@ -8,13 +8,13 @@
  *  someFunction = window.probes.measure(someFunction, {
  *    name: "somename" // or function(args) { return "name"; },
  *    before: function(data, owner, args) {
- *      // if owner is true, we are not in a recursive function call. 
+ *      // if owner is true, we are not in a recursive function call.
  *      //
- *      // data contains the bucker of data already measuer 
- *      // data.count >= 0 
- *      // data.time is the total time measured till now 
+ *      // data contains the bucker of data already measuer
+ *      // data.count >= 0
+ *      // data.time is the total time measured till now
  *      //
- *      // arguments contains the original arguments sent to the function 
+ *      // arguments contains the original arguments sent to the function
  *    },
  *    after: function(data, owner, args) {
  *      // same format as before
@@ -22,9 +22,9 @@
  *  });
  *
  *
- *  // minimal 
+ *  // minimal
  *  someFunction = window.probes.measure(someFunction, "someFunction");
- * 
+ *
  * */
 (function(){
   var measure, clear;
@@ -92,8 +92,7 @@
         start = now();
         callStart = start;
       }
-      else if(after)
-      {
+      else if(after) {
         callStart = now();
       }
 
