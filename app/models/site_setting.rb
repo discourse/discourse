@@ -27,7 +27,7 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:anon_polling_interval, 30000)
   client_setting(:min_post_length, Rails.env.test? ? 5 : 20)
   client_setting(:max_post_length, 16000)
-  client_setting(:min_topic_title_length, 5)
+  client_setting(:min_topic_title_length, 15)
   client_setting(:max_topic_title_length, 255)
   client_setting(:min_search_term_length, 3)
   client_setting(:flush_timings_secs, 5)
