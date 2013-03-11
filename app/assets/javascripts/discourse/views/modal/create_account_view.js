@@ -276,8 +276,19 @@ Discourse.CreateAccountView = Discourse.ModalBodyView.extend({
       _this.set('formSubmitted', false);
       return _this.flash(Em.String.i18n('create_account.failed'), 'error');
     });
+  },
+
+  didInsertElement: function(e) {
+    // allows the submission the form when pressing 'ENTER' on *any* text input field
+    // but only when the submit button is enabled
+    var _this = this;
+    return Em.run.next(function() {
+      return $("input[type='text']").keydown(function(e) {
+        if (_this.get('submitDisabled') === false && e.keyCode === 13) {
+          return _this.createAccount();
+        }
+      });
+    });
   }
 
 });
-
-
