@@ -34,7 +34,14 @@ Discourse.PagedownEditor = Ember.ContainerView.extend({
     $wmdInput.data('init', true);
     this.editor = Discourse.Markdown.createEditor();
     return this.editor.run();
-  }
+  },
+
+  observeValue: (function() {
+    var _this = this;
+    Ember.run.next(null, function() {
+      _this.editor && _this.editor.refreshPreview();
+    });
+  }).observes('value')
 
 });
 
