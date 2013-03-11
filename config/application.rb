@@ -89,8 +89,8 @@ module Discourse
     config.handlebars.templates_root = 'discourse/templates'
 
     # Use redis for our cache
-    redis_config = YAML::load(File.open("#{Rails.root}/config/redis.yml"))[Rails.env]
-    redis_store = ActiveSupport::Cache::RedisStore.new "redis://#{redis_config['host']}:#{redis_config['port']}/#{redis_config['cache_db']}"
+    redis_config = YAML.load(ERB.new(File.new("#{Rails.root}/config/redis.yml").read).result)[Rails.env]
+    redis_store = ActiveSupport::Cache::RedisStore.new "redis://#{ (':' + redis_config['password'] + '@') if redis_config['password'] }#{redis_config['host']}:#{redis_config['port']}/#{redis_config['cache_db']}"
     redis_store.options[:namespace] = -> { DiscourseRedis.namespace }
     config.cache_store = redis_store
 
