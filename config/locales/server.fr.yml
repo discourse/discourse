@@ -293,8 +293,8 @@ fr:
     category_post_template: "Le modèle de message de définition d'une catégorie utilisé lorsque vous créez une nouvelle catégorie"
     onebox_max_chars: "Nombre maximal de caractères qu'une boîte peut importer en blob de texte."
 
-    logo_url: "Le logo de votre site, par exemple: http://xyz.com/x.png"
-    logo_small_url: "La version minifiée du logo de votre site (affichée sur les pages de discussions) ex: http://xyz.com/x-min.png"
+    logo_url: "Le logo de votre site, par exemple: http://example.com/logo.png"
+    logo_small_url: "La version minifiée du logo de votre site (affichée sur les pages de discussions) ex: http://example.com/logo-small.png"
     favicon_url: "Le favicon de votre site"
     notification_email: "L'adresse email utilisée pour notifier les utilisateurs de mots de passe perdus, d'activation de compte, etc."
     use_ssl: "Le site doit-il être accessible via SSL?"
