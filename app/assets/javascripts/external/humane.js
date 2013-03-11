@@ -99,10 +99,13 @@ function humaneDate(date, compareTo){
             }
 
             var val = Math.ceil(normalize(seconds, format[3]) / (format[3]));
-            return val +
-                    ' ' +
-                    (val != 1 ? format[2] : format[1]) +
-                    (i > 0 ? token : '');
+            
+            if (val * format[3] < format[0]) {            
+                return val +
+                        ' ' +
+                        (val != 1 ? format[2] : format[1]) +
+                        (i > 0 ? token : '');
+            }
         }
     }
 };
