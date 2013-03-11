@@ -40,6 +40,7 @@ Discourse.TopicListItemView = Discourse.View.extend({
     }
     // highlight new topics that have been loaded from the server or the one we just created
     else if (this.get('content.highlight')) {
+      this.set('content.highlight', false);
       this.highlight();
     }
   }
