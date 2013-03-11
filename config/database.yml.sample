@@ -30,3 +30,13 @@ production:
   timeout: 5000
   host_names:
     - production.localhost # Update this to be the domain of your production site
+
+profile:
+  adapter: postgresql
+  database: discourse_development
+  min_messages: warning
+  host: localhost
+  pool: 5
+  timeout: 5000
+  host_names:
+    - "localhost"

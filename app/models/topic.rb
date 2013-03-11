@@ -123,6 +123,7 @@ class Topic < ActiveRecord::Base
     return title unless SiteSetting.title_fancy_entities?
 
     # We don't always have to require this, if fancy is disabled
+    # see: http://meta.discourse.org/t/pattern-for-defer-loading-gems-and-profiling-with-perftools-rb/4629 
     require 'redcarpet' unless defined? Redcarpet
 
     Redcarpet::Render::SmartyPants.render(title)

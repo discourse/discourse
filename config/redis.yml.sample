@@ -7,6 +7,9 @@ defaults: &defaults
 development:
   <<: *defaults
 
+profile:
+  <<: *defaults
+
 test:
   <<: *defaults 
   db: 1
