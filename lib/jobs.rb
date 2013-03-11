@@ -38,6 +38,7 @@ module Jobs
         begin
           Jobs::Base.mutex.synchronize do
             RailsMultisite::ConnectionManagement.establish_connection(:db => db)
+            I18n.locale = SiteSetting.default_locale
             execute(opts)
           end
         ensure
