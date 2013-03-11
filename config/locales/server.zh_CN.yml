@@ -281,8 +281,8 @@ zh_CN:
     new_topics_rollup: "主题列表卷起显示为主题数量前，可以往主题列表中插入多少新主题"
     onebox_max_chars: "从外部网站导入到一个单厢帖（Onebox post）的最大字符数"
 
-    logo_url: "你的站点标志图片，例如：http://xyz.com/x.png"
-    logo_small_url: "你的站点的小号标志图片，例如：http://xyz.com/x-small.png，用于卷起主题列表时显示"
+    logo_url: "你的站点标志图片，例如：http://example.com/logo.png"
+    logo_small_url: "你的站点的小号标志图片，例如：http://example.com/logo-small.png，用于卷起主题列表时显示"
     favicon_url: "你的站点图标（favicon），参考 http://zh.wikipedia.org/wiki/Favicon"
     notification_email: "邮件回复地址，当发送系统邮件，例如通知用户找回密码、新用户注册等等时，所使用的发信人地址"
     use_ssl: "使用 SSL 安全套接层来访问本站吗？"

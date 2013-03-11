@@ -286,8 +286,8 @@ cs:
     new_topics_rollup: "Kolik nových témat může být vloženo do seznamu než budou tato témata shrnuta do číselné hodnoty"
     onebox_max_chars: "Maximální počet znaků, které může 'onebox' naimportovat z externího webu"
 
-    logo_url: "Logo vašeho webu, např. http://xyz.com/x.png"
-    logo_small_url: "Malé logo, které se použije pokud odskrolujete dolů v tématu, např. http://xyz.com/x-small.png"
+    logo_url: "Logo vašeho webu, např. http://example.com/logo.png"
+    logo_small_url: "Malé logo, které se použije pokud odskrolujete dolů v tématu, např. http://example.com/logo-small.png"
     favicon_url: "Favicona vašeho webu, viz http://en.wikipedia.org/wiki/Favicon"
     notification_email: "Návratová emailová adresa, která se použije u systémových emailů, jako jsou notifikace o zapomenutém heslu, nových účtech, atd."
     use_ssl: "Má být web přístupný přes SSL?"
