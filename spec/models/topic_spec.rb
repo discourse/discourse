@@ -181,12 +181,18 @@ describe Topic do
 
   context 'move_posts' do
     let(:user) { Fabricate(:user) }
+    let(:another_user) { Fabricate(:evil_trout) }
     let(:category) { Fabricate(:category, user: user) }
     let!(:topic) { Fabricate(:topic, user: user, category: category) }
     let!(:p1) { Fabricate(:post, topic: topic, user: user) }
-    let!(:p2) { Fabricate(:post, topic: topic, user: user)}
+    let!(:p2) { Fabricate(:post, topic: topic, user: another_user)}
     let!(:p3) { Fabricate(:post, topic: topic, user: user)}
     let!(:p4) { Fabricate(:post, topic: topic, user: user)}
+
+    before do
+      # add a like to a post
+      PostAction.act(another_user, p4, PostActionType.types[:like])
+    end
 
     context 'success' do
 
@@ -233,8 +239,20 @@ describe Topic do
           new_topic.should be_present
         end
 
+        it "has the featured user" do
+          new_topic.featured_user1_id.should == another_user.id
+        end
+
+        it "has the correct like_count" do
+          new_topic.like_count.should == 1
+        end
+
         it "has the correct category" do
           new_topic.category.should == category
+        end
+
+        it "has removed the second poster from the featured users, since they moved" do
+          topic.featured_user1_id.should be_blank
         end
 
         it "has two posts" do
@@ -275,6 +293,14 @@ describe Topic do
       context "original topic" do
         before do
           topic.reload
+        end
+
+        it "has removed the second poster from the featured users, since they moved" do
+          topic.featured_user1_id.should be_blank
+        end
+
+        it "has the correct like_count" do
+          topic.like_count.should == 0
         end
 
         it "has 2 posts now" do
