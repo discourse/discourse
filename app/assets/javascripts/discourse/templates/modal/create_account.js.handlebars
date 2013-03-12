@@ -36,7 +36,7 @@
       </tr>
       <tr>
         <td></td>
-        <td><label>Must be unique, no spaces. People can mention you as @username.</label></td>
+        <td><label>{{i18n user.username.instructions}}</label></td>
       </tr>
 
       {{#if view.passwordRequired}}
@@ -50,7 +50,7 @@
       {{/if}}
 
       <tr class="password-confirmation">
-          <td><label for='new-account-password-confirmation'>Password Again</label></td>
+          <td><label for='new-account-password-confirmation'>{{i18n user.password_confirmation.title}}</label></td>
           <td>
           {{view Ember.TextField valueBinding="view.accountPasswordConfirm" type="password" id="new-account-password-confirmation"}}
           {{view Ember.TextField valueBinding="view.accountChallenge" id="new-account-challenge"}}

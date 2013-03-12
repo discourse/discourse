@@ -102,10 +102,7 @@ describe Report do
 
           it 'should cache the data set' do
             $redis.expects(:setex).with do |key, expiry, string|
-              key == 'signups:data' and
-                expiry == Report.cache_expiry # and
-                string.include? "#{1.days.ago.to_date.to_s},1" and
-                string.include? "#{0.days.ago.to_date.to_s},2"
+              string =~ /(\d)+-(\d)+-(\d)+,1/ and string =~ /(\d)+-(\d)+-(\d)+,2/
             end
             report()
           end

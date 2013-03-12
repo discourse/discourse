@@ -103,11 +103,11 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def can_reply_as_new_topic
-    scope.can_reply_as_new_topic?(object.topic)
+    true
   end
 
   def include_can_reply_as_new_topic?
-    scope.can_create?(Post, object.topic)
+    scope.can_reply_as_new_topic?(object.topic)
   end
 
   def can_create_post

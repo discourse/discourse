@@ -33,12 +33,6 @@ Discourse::Application.configure do
   config.ember.ember_location = "#{Rails.root}/app/assets/javascripts/external/ember.js"
   config.handlebars.precompile = false
 
-  # a bit hacky but works
-  config.after_initialize do
-    config.middleware.delete Airbrake::UserInformer
-    config.middleware.delete Airbrake::Rack
-  end
-
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = { :address => "localhost", :port => 1025 }
   config.action_mailer.raise_delivery_errors = true

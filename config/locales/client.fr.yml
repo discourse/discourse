@@ -95,7 +95,8 @@ fr:
         ok: "Votre nom à l'air sympa !."
       username:
         title: "Pseudo"
-        instructions: "Les gens peuvent vous mentionner avec @{{username}}."
+        instructions: "Doit être unique et ne pas contenir d'espace. Les gens pourrons vous mentionner avec @pseudo."
+        short_instructions: "Les gens peuvent vous mentionner avec @{{username}}."
         available: "Votre pseudo est disponible."
         global_match: "L'adresse email correspond au pseudo enregistré."
         global_mismatch: "Déjà enregistré. Essayez {{suggestion}} ?"
@@ -104,6 +105,9 @@ fr:
         too_long: "Votre pseudo est trop long."
         checking: "Vérification de la disponibilité de votre pseudo..."
         enter_email: "Pseudo trouvé. Entrez l'adresse email correspondante."
+
+      password_confirmation:
+        title: "Confirmation"
 
       last_posted: "Dernier message"
       last_emailed: "Dernier mail"
@@ -272,7 +276,6 @@ fr:
       create_topic: "Créer une discussion"
       create_pm: "Créer un message privé."
 
-      quote_title: "Citer un message"
       bold_title: "Gras"
       bold_text: "texte en gras"
       italic_title: "Italique"

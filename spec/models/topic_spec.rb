@@ -193,12 +193,12 @@ describe Topic do
       it "enqueues a job to notify users" do
         topic.stubs(:add_moderator_post)
         Jobs.expects(:enqueue).with(:notify_moved_posts, post_ids: [p1.id, p4.id], moved_by_id: user.id)
-        topic.move_posts(user, "new topic name", [p1.id, p4.id])
+        topic.move_posts(user, "new testing topic name", [p1.id, p4.id])
       end
 
       it "adds a moderator post at the location of the first moved post" do
         topic.expects(:add_moderator_post).with(user, instance_of(String), has_entries(post_number: 2))
-        topic.move_posts(user, "new topic name", [p2.id, p4.id])
+        topic.move_posts(user, "new testing topic name", [p2.id, p4.id])
       end
 
     end
@@ -206,11 +206,11 @@ describe Topic do
     context "errors" do
 
       it "raises an error when one of the posts doesn't exist" do
-        lambda { topic.move_posts(user, "new topic name", [1003]) }.should raise_error(Discourse::InvalidParameters)
+        lambda { topic.move_posts(user, "new testing topic name", [1003]) }.should raise_error(Discourse::InvalidParameters)
       end
 
       it "raises an error if no posts were moved" do
-        lambda { topic.move_posts(user, "new topic name", []) }.should raise_error(Discourse::InvalidParameters)
+        lambda { topic.move_posts(user, "new testing topic name", []) }.should raise_error(Discourse::InvalidParameters)
       end
 
     end
@@ -221,7 +221,7 @@ describe Topic do
         TopicUser.update_last_read(user, topic.id, p4.post_number, 0)
       end
 
-      let!(:new_topic) { topic.move_posts(user, "new topic name", [p2.id, p4.id]) }
+      let!(:new_topic) { topic.move_posts(user, "new testing topic name", [p2.id, p4.id]) }
 
 
       it "updates the user's last_read_post_number" do

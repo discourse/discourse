@@ -13,8 +13,8 @@
       {{#linkTo "preferences.username" class="btn pad-left"}}{{i18n user.change_username.action}}{{/linkTo}}
     </div>
     <div class='instructions'>
-      {{{i18n user.username.instructions username="content.username"}}}
-    </div>  
+      {{{i18n user.username.short_instructions username="content.username"}}}
+    </div>
   </div>
 
   <div class="control-group">
@@ -24,7 +24,7 @@
     </div>
     <div class='instructions'>
       {{i18n user.name.instructions}}
-    </div>    
+    </div>
   </div>
 
   <div class="control-group">
@@ -39,7 +39,7 @@
   </div>
 
   <div class="control-group">
-    <label class="control-label">{{i18n user.password.title}}</label>   
+    <label class="control-label">{{i18n user.password.title}}</label>
     <div class="controls">
       <a href="#" {{action changePassword target="controller"}} class='btn'>{{i18n user.change_password}}</a> {{controller.passwordProgress}}
     </div>
@@ -52,32 +52,32 @@
     </div>
     <div class='instructions'>
       {{{i18n user.avatar.instructions}}} {{content.email}}
-    </div>    
-  </div>
-
-  <div class="control-group">  
-    <label class="control-label">{{i18n user.bio}}</label>
-    <div class="controls">      
-      {{view Discourse.PagedownEditor valueBinding="content.bio_raw"}}      
     </div>
   </div>
 
-  <div class="control-group">  
+  <div class="control-group">
+    <label class="control-label">{{i18n user.bio}}</label>
+    <div class="controls">
+      {{view Discourse.PagedownEditor valueBinding="content.bio_raw"}}
+    </div>
+  </div>
+
+  <div class="control-group">
     <label class="control-label">{{i18n user.website}}</label>
     <div class="controls">
       {{view Ember.TextField valueBinding="content.website" classNames="input-xxlarge"}}
     </div>
   </div>
 
-  <div class="control-group">  
-    <label class="control-label">{{i18n user.email_settings}}</label>      
+  <div class="control-group">
+    <label class="control-label">{{i18n user.email_settings}}</label>
     <div class="controls">
       <label>{{view Ember.Checkbox checkedBinding="content.email_digests"}}
       {{i18n user.email_digests.title}}</label>
 
       {{#if content.email_digests}}
         <div class='control-indent'>
-          {{view Discourse.ComboboxView valueAttribute="value" contentBinding="controller.digestFrequencies" valueBinding="content.digest_after_days"}}          
+          {{view Discourse.ComboboxView valueAttribute="value" contentBinding="controller.digestFrequencies" valueBinding="content.digest_after_days"}}
         </div>
       {{/if}}
       <label>{{view Ember.Checkbox checkedBinding="content.email_private_messages"}}
@@ -87,19 +87,19 @@
     </div>
     <div class='instructions'>
       {{i18n user.email.frequency}}
-    </div>     
+    </div>
   </div>
-  
-  <div class="control-group other">  
-    <label class="control-label">{{i18n user.other_settings}}</label>    
+
+  <div class="control-group other">
+    <label class="control-label">{{i18n user.other_settings}}</label>
     <div class="controls">
       <label>{{i18n user.auto_track_topics}}</label>
-      {{view Discourse.ComboboxView valueAttribute="value" contentBinding="controller.autoTrackDurations" valueBinding="content.auto_track_topics_after_msecs"}}          
+      {{view Discourse.ComboboxView valueAttribute="value" contentBinding="controller.autoTrackDurations" valueBinding="content.auto_track_topics_after_msecs"}}
     </div>
-    
+
     <div class="controls">
       <label>{{i18n user.new_topic_duration.label}}</label>
-      {{view Discourse.ComboboxView valueAttribute="value" contentBinding="controller.considerNewTopicOptions" valueBinding="content.new_topic_duration_minutes"}}          
+      {{view Discourse.ComboboxView valueAttribute="value" contentBinding="controller.considerNewTopicOptions" valueBinding="content.new_topic_duration_minutes"}}
     </div>
   </div>
 

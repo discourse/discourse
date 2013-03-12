@@ -1,0 +1,18 @@
+<div class="commits-widget">
+  <div class="header" {{action "goToGithub"}}>
+    <h1>Latest Changes</h4>
+  </div>
+  <ul class="commits-list">
+    {{#each controller}}
+      <li>
+        <div class="left">
+          <img {{bindAttr src="gravatarUrl"}}>
+        </div>
+        <div class="right">
+          <span class="commit-message"><a {{bindAttr href="commitUrl"}} target="_blank">{{ commit.message }}</a></span><br/>
+          <span class="commit-meta">by <span class="committer-name">{{ commit.author.name }}</span> - <span class="commit-time">{{ timeAgo }}</span></span>
+        </div>
+      </li>
+    {{/each}}
+  </ul>
+</div>

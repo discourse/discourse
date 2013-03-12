@@ -24,6 +24,7 @@ en:
     you: "You"
     ok: "ok"
     or: "or"
+    now: "just now"
 
     suggested_topics:
       title: "Suggested Topics"
@@ -91,7 +92,8 @@ en:
         ok: "Your name looks good."
       username:
         title: "Username"
-        instructions: "People can mention you as @{{username}}."
+        instructions: "Must be unique, no spaces. People can mention you as @username."
+        short_instructions: "People can mention you as @{{username}}."
         available: "Your username is available."
         global_match: "Email matches the registered username."
         global_mismatch: "Already registered. Try {{suggestion}}?"
@@ -100,6 +102,9 @@ en:
         too_long: "Your username is too long."
         checking: "Checking username availability..."
         enter_email: 'Username found. Enter matching email.'
+
+      password_confirmation:
+        title: "Password Again"
 
       last_posted: "Last Post"
       last_emailed: "Last Emailed"
@@ -279,7 +284,6 @@ en:
       show_preview: 'show preview &raquo;'
       hide_preview: '&laquo; hide preview'
 
-      quote_title: "Quote Post"
       bold_title: "Strong"
       bold_text: "strong text"
       italic_title: "Emphasis"

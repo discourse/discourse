@@ -8,12 +8,9 @@
 **/
 Discourse.AdminDashboardRoute = Discourse.Route.extend({
   setupController: function(c) {
-    if( !c.get('versionCheckedAt') || Date.create('12 hours ago') > c.get('versionCheckedAt') ) {
-      this.checkVersion(c);
-    }
-    if( !c.get('reportsCheckedAt') || Date.create('1 hour ago') > c.get('reportsCheckedAt') ) {
-      this.fetchReports(c);
-    }
+    this.checkVersion(c);
+    this.fetchReports(c);
+    this.fetchGithubCommits(c);
   },
 
   renderTemplate: function() {
@@ -21,7 +18,7 @@ Discourse.AdminDashboardRoute = Discourse.Route.extend({
   },
 
   checkVersion: function(c) {
-    if( Discourse.SiteSettings.version_checks ) {
+    if( Discourse.SiteSettings.version_checks && (!c.get('versionCheckedAt') || Date.create('12 hours ago') > c.get('versionCheckedAt')) ) {
       c.set('versionCheckedAt', new Date());
       Discourse.VersionCheck.find().then(function(vc) {
         c.set('versionCheck', vc);
@@ -31,11 +28,20 @@ Discourse.AdminDashboardRoute = Discourse.Route.extend({
   },
 
   fetchReports: function(c) {
-    // TODO: use one request to get all reports, or maybe one request for all dashboard data including version check.
-    c.set('reportsCheckedAt', new Date());
-    ['visits', 'signups', 'topics', 'posts'].each(function(reportType){
-      c.set(reportType,  Discourse.Report.find(reportType));
-    });
+    if( !c.get('reportsCheckedAt') || Date.create('1 hour ago') > c.get('reportsCheckedAt') ) {
+      // TODO: use one request to get all reports, or maybe one request for all dashboard data including version check.
+      c.set('reportsCheckedAt', new Date());
+      ['visits', 'signups', 'topics', 'posts'].each(function(reportType){
+        c.set(reportType,  Discourse.Report.find(reportType));
+      });
+    }
+  },
+
+  fetchGithubCommits: function(c) {
+    if( !c.get('commitsCheckedAt') || Date.create('1 hour ago') > c.get('commitsCheckedAt') ) {
+      c.set('commitsCheckedAt', new Date());
+      c.set('githubCommits', Discourse.GithubCommit.findAll());
+    }
   }
 });
 

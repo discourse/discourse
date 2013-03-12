@@ -98,7 +98,7 @@ module Search
     return nil if term.blank?
 
     # We are stripping only symbols taking place in FTS and simply sanitizing the rest.
-    sanitized_term = PG::Connection.escape_string(term.gsub(/[:()&!]/,'')) 
+    sanitized_term = PG::Connection.escape_string(term.gsub(/[:()&!]/,''))
 
     # really short terms are totally pointless
     return nil if sanitized_term.blank? || sanitized_term.length < min_search_term_length
@@ -155,7 +155,11 @@ module Search
       type = row.delete('type')
 
       # Add the slug for topics
-      row['url'].gsub!('slug', Slug.for(row['title'])) if type == 'topic'
+      if type == 'topic'
+        new_slug = Slug.for(row['title'])
+        new_slug = "topic" if new_slug.blank?
+        row['url'].gsub!('slug', new_slug)
+      end
 
       # Remove attributes when we know they don't matter
       row.delete('id')
