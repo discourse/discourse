@@ -104,7 +104,7 @@ Discourse.Composer = Discourse.Model.extend({
   actionTitle: (function() {
     var topic = this.get('topic');
 
-    var postLink;
+    var postLink, topicLink;
     if (topic) {
       var postNumber = this.get('post.post_number');
       postLink = "<a href='" + (topic.get('url')) + "/" + postNumber + "'>" +
@@ -112,7 +112,7 @@ Discourse.Composer = Discourse.Model.extend({
       topicLink = "<a href='" + (topic.get('url')) + "'> " + (Handlebars.Utils.escapeExpression(topic.get('title'))) + "</a>";
     }
 
-    var replyAvatar, topicLink;
+    var replyAvatar;
     if (this.get('post')) {
       replyAvatar = Discourse.Utilities.avatarImg({
         username: this.get('post.username'),
