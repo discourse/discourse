@@ -244,9 +244,13 @@ zh_CN:
 
   reports:
     visits:
-      title: "每天用户访问量"
-      xaxis: "天"
-      yaxis: "访问量"
+      title: "用户访问量"
+    signups:
+      title: "新注册用户"
+    topics:
+      title: "新发表主题"
+    posts:
+      title: "新发表帖子"
 
   site_settings:
     default_locale: "此 论道 - Discourse 实例的缺省语言 (ISO 639-1 代码)"
@@ -254,6 +258,7 @@ zh_CN:
     max_post_length: "帖子最大字符数"
     min_topic_title_length: "标题最少字符数"
     max_topic_title_length: "标题最大字符数"
+    min_search_term_length: "搜索条件最少字符数"
     allow_duplicate_topic_titles: "允许主题有相同的标题"
     unique_posts_mins: "几分钟之后才允许一个用户再次发表包含相同内容的帖子"
     enforce_global_nicknames: "强制昵称必须唯一（警告：只在刚刚安装完成时修改此设置）"
@@ -605,7 +610,7 @@ zh_CN:
 
         %{new_user_tips}
 
-        我们始终相信 [文明的社会行为]（%{base_url}/faq）。
+        我们始终相信 [文明的社会行为](%{base_url}/faq)。
 
         好好享受你在论坛的时光吧！
 
@@ -618,7 +623,7 @@ zh_CN:
 
         %{new_user_tips}
 
-        我们始终相信 [文明的社会行为]（%{base_url}/faq）。
+        我们始终相信 [文明的社会行为](%{base_url}/faq)。
 
         好好享受你在论坛的时光吧！
 
@@ -639,7 +644,7 @@ zh_CN:
 
         %{new_user_tips}
 
-        我们始终相信 [文明的社会行为]（%{base_url}/faq）。
+        我们始终相信 [文明的社会行为](%{base_url}/faq)。
 
         好好享受你在论坛的时光吧！
 
@@ -653,7 +658,7 @@ zh_CN:
       subject_template: "导入成功"
       text_body_template: "导入操作成功。"
 
-  unsubscribe_link: "如果你希望取消这些邮件的订阅，请访问 [用户设置]（%{user_preferences_url}）。"
+  unsubscribe_link: "如果你希望取消这些邮件的订阅，请访问 [用户设置](%{user_preferences_url})。"
 
   user_notifications:
     unsubscribe:
