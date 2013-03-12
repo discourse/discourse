@@ -192,7 +192,7 @@ class TopicQuery
         if @user_id.present?
           result = result.order(TopicQuery.order_nocategory_with_pinned_sql)
         else
-          result = result.order(TopicQuery.order_basic_bumped)
+          result = result.order(TopicQuery.order_nocategory_basic_bumped)
         end
       end
 
