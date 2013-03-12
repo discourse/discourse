@@ -93,7 +93,8 @@ cs:
         ok: "Vaše jméno vypadá dobře"
       username:
         title: "Uživatelské jméno"
-        instructions: "Ostatní vás mohou zmínit jako @{{username}}."
+        instructions: "Musí být unikátní a bez mezer. Ostatní vás mohou zmínit jako @{{username}}."
+        short_instructions: "Ostatní vás mohou zmínit jako @{{username}}."
         available: "Toto uživatelské jméno je volné."
         global_match: "Emailová adresa odpovídá registrovaného uživatelskému jménu."
         global_mismatch: "již zaregistrováno. Co třeba {{suggestion}}?"
@@ -102,6 +103,9 @@ cs:
         too_long: "Vaše uživatelské jméno je příliš dlouhé."
         checking: "Zjišťuji, zda je uživatelské jméno volné..."
         enter_email: 'Uživatelské jméno nalezeno. Zadejte odpovídající emailovou adresu.'
+
+      password_confirmation:
+        title: "Heslo znovu"
 
       last_posted: "Poslední příspěvek"
       last_emailed: "Naposledy zaslán email"
@@ -257,6 +261,7 @@ cs:
         message: "Autorizuji přes Mozilla Persona (ujistěte se, že nemáte zablokovaná popup okna)"
 
     composer:
+      posting_not_on_topic: "Rozepsali jste odpověď na téma \"{{title}}\", ale nyní máte otevřené jiné téma."
       saving_draft_tip: "ukládám"
       saved_draft_tip: "uloženo"
       saved_local_draft_tip: "uloženo lokálně"
@@ -266,7 +271,10 @@ cs:
         more: "{{n}} zbývá..."
 
       save_edit: "Uložit změnu"
+      reply_original: "Odpovědět na původní téma"
+      reply_here: "Odpovědět sem"
       reply: "Odpovědět"
+      cancel: "Zrušit"
       create_topic: "Vytvořit téma"
       create_pm: "Vytvořit soukromou zprávu"
 
