@@ -39,7 +39,6 @@
   padding-left: 2px;
   padding-right: 3px;
   margin-right: 5px;
-  background-image: image-url("wmd-buttons.png");
   background-repeat: no-repeat;
   background-position: 0px 0px;
   border: 0px;
@@ -48,70 +47,79 @@
   position: relative;
   border: 0;
   float: left;
+
+  font-family: FontAwesome;
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: inherit;
+  display: inline;
+  width: auto;
+  height: auto;
+  line-height: normal;
+  vertical-align: baseline;
+  background-image: none !important;
+  background-position: 0% 0%;
+  background-repeat: repeat;
+  background-color: white;
+  padding: 4px;
 }
 
-@mixin wmd-button($offset: 0px) {
-  background-position: $offset 0;
-  @include hover {
-    background-position: $offset -40px;
-  }
-
-  &:disabled {
-    background-position: $offset -20px;
-  }
+.wmd-button:hover {
+  background-color: #99c0fa;
 }
 
-#wmd-bold-button {
-  @include wmd-button(0px);
+
+#wmd-bold-button:before { 
+  content: "\f032"; 
 }
 
-#wmd-italic-button {
-  @include wmd-button(-20px);
+
+#wmd-italic-button:before {
+  content: "\f033"; 
 }
 
-#wmd-link-button {
-  @include wmd-button(-40px);
+#wmd-link-button:before {
+  content: "\f0c1";
 }
 
-#wmd-quote-button {
-  @include wmd-button(-60px);
+#wmd-quote-button:before {
+  content: "\f10e";
 }
 
-#wmd-code-button {
-  @include wmd-button(-80px);
+#wmd-code-button:before {
+  content: "\f039";
 }
 
-#wmd-image-button {
-  @include wmd-button(-100px);
+#wmd-image-button:before {
+  content: "\f03e"; 
 }
 
-#wmd-olist-button {
-  @include wmd-button(-120px);
+#wmd-olist-button:before {
+  content: "\f0cb"; 
 }
 
-#wmd-ulist-button {
-  @include wmd-button(-140px);
+#wmd-ulist-button:before {
+  content: "\f0ca"; 
 }
 
-#wmd-heading-button {
-  @include wmd-button(-160px);
+#wmd-heading-button:before {
+  content:  "\f031";
 }
 
-#wmd-hr-button {
-  @include wmd-button(-180px);
+#wmd-hr-button:before {
+  content:  "\f068";
 }
 
-#wmd-undo-button {
-  @include wmd-button(-200px);
+#wmd-undo-button:before {
+  content:  "\f0e2";
 }
 
-#wmd-redo-button {
-  @include wmd-button(-220px);
+#wmd-redo-button:before {
+  content:  "\f01e";
 }
 
-#wmd-quote-post {
-  background-image: image-url("wmd-quote-post.gif");
-  @include wmd-button(0px);
+#wmd-quote-post:before {
+  content:  "\f0e5";
 }
 
 .wmd-prompt-background {
