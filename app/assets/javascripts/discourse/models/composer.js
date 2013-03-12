@@ -102,41 +102,43 @@ Discourse.Composer = Discourse.Model.extend({
 
   // Determine the appropriate title for this action
   actionTitle: (function() {
-    var postLink, postNumber, replyAvatar, topic, topicLink;
-    topic = this.get('topic');
-    postNumber = this.get('post.post_number');
+    var topic = this.get('topic');
+
+    var postLink;
     if (topic) {
+      var postNumber = this.get('post.post_number');
       postLink = "<a href='" + (topic.get('url')) + "/" + postNumber + "'>" +
-          Em.String.i18n("post.post_number", { number: postNumber }) + "</a>";
+        Em.String.i18n("post.post_number", { number: postNumber }) + "</a>";
     }
+
+    var replyAvatar, topicLink;
+    if (this.get('post')) {
+      replyAvatar = Discourse.Utilities.avatarImg({
+        username: this.get('post.username'),
+        size: 'tiny'
+      });
+    } else {
+      topicLink = "<a href='" + (topic.get('url')) + "'> " + (Handlebars.Utils.escapeExpression(topic.get('title'))) + "</a>";
+    }
+
     switch (this.get('action')) {
       case PRIVATE_MESSAGE:
         return Em.String.i18n('topic.private_message');
       case CREATE_TOPIC:
         return Em.String.i18n('topic.create_long');
       case REPLY:
-        if (this.get('post')) {
-          replyAvatar = Discourse.Utilities.avatarImg({
-            username: this.get('post.username'),
-            size: 'tiny'
-          });
-          return Em.String.i18n('post.reply', {
+      case EDIT:
+        if (replyAvatar) {
+          return Em.String.i18n('post.' +  this.get('action'), {
             link: postLink,
             replyAvatar: replyAvatar,
             username: this.get('post.username')
           });
         } else if (topic) {
-          topicLink = "<a href='" + (topic.get('url')) + "'> " + (Handlebars.Utils.escapeExpression(topic.get('title'))) + "</a>";
-          return Em.String.i18n('post.reply_topic', {
-            link: topicLink
-          });
+          return Em.String.i18n('post.reply_topic', { link: topicLink });
         }
-        break;
-      case EDIT:
-        return Em.String.i18n('post.edit', {
-          link: postLink
-        });
     }
+
   }).property('action', 'post', 'topic', 'topic.title'),
 
   toggleText: (function() {
