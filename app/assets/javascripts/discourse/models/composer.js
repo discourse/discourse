@@ -478,7 +478,7 @@ Discourse.Composer = Discourse.Model.extend({
   },
 
   /**
-    Computes the length of the reply minus the quote(s).
+    Computes the length of the reply minus the quote(s) and non-significant whitespaces
 
     @property replyLength
   **/
@@ -486,7 +486,7 @@ Discourse.Composer = Discourse.Model.extend({
     var reply = this.get('reply');
     if(!reply) reply = "";
     while (Discourse.BBCode.QUOTE_REGEXP.test(reply)) { reply = reply.replace(Discourse.BBCode.QUOTE_REGEXP, ""); }
-    return reply.trim().length;
+    return reply.replace(/\s+/img, " ").trim().length;
   }.property('reply')
 
 });
