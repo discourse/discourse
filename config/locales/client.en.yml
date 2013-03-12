@@ -516,6 +516,7 @@ en:
       reply: "Replying to {{link}} by {{replyAvatar}} {{username}}"
       reply_topic: "Reply to {{link}}"
       edit: "Edit {{link}}"
+      post_number: "post {{number}}"
       in_reply_to: "in reply to"
       reply_as_new_topic: "Reply as new Topic"
       continue_discussion: "Continuing the discussion from {{postLink}}:"
