@@ -1,4 +1,8 @@
 cs:
+  time:
+    formats:
+      short: "%d.%m.%Y"
+
   title: "Discourse"
   topics: "Témata"
   loading: "Nahrávám"
