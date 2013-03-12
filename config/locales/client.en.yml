@@ -6,6 +6,7 @@ en:
     share:
       topic: 'share a link to this topic'
       post: 'share a link to this post'
+      close: 'close'
 
     edit: 'edit the title and category of this topic'
     not_implemented: "That feature hasn't been implemented yet, sorry!"
