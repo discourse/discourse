@@ -689,6 +689,8 @@ cs:
           last_7_days: "Posledních 7 dní"
           last_30_days: "Posledních 30 dní"
           all_time: "Za celou dobu"
+          7_days_ago: "Před 7 dny"
+          30_days_ago: "Před 30 dny"
 
       flags:
         title: "Nahlášení"
