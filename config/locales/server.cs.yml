@@ -462,7 +462,7 @@ cs:
     errors: "%{errors}"
     not_available: "Není k dispozici. Nechcete zkusit %{suggestion}?"
     something_already_taken: "Nastala chyba při zpracování, zřejmě je dané uživatelské jméno nebo email již zaregistrován. Zkuste odkaz pro obnovení hesla."
-    omniauth_error: "Bohužel nepovedlo se vás autorizovat přes %{strategy}. Ujistěte se, že jste správně schválili autorizaci."
+    omniauth_error: "Bohužel se vás nepovedlo autorizovat přes %{strategy}. Ujistěte se, že jste správně schválili autorizaci."
     omniauth_error_unknown: "Nastala chyba při zpracování vašeho přihlášení, prosím zkuste to znovu."
 
   user:
@@ -498,9 +498,9 @@ cs:
 
       Doručování emailu je komplexní operace, zde je pár věcí, které byste měli zkontrolovat:
 
-      - Ujistěte, že si prohlížíce *čistý zdrojový kód emailu* ve vašem emailovém klientovi, abyste si mohli prohlédnout hlavičky emailu.
+      - Ujistěte, že si prohlížíte *čistý zdrojový kód emailu* ve vašem emailovém klientovi, abyste si mohli prohlédnout hlavičky emailu.
 
-      - **DŮLEŽITÉ:** Má váš poskytovatel připojení reverzdní DNS záznam, aby byla přiřazena doména, ze které odesíláte emaily, s IP adresou, kterou k odesílání používáte? Můžete si [otestovat reverzní PTR záznam][2]. Pokud váš poskytovatel nemá správně nastavený reverzní DNS záznam, je pravděpodobné, že vám nebudou správně doručovány emaily.
+      - **DŮLEŽITÉ:** Má váš poskytovatel připojení reverzní DNS záznam, aby byla přiřazena doména, ze které odesíláte emaily, s IP adresou, kterou k odesílání používáte? Můžete si [otestovat reverzní PTR záznam][2]. Pokud váš poskytovatel nemá správně nastavený reverzní DNS záznam, je pravděpodobné, že vám nebudou správně doručovány emaily.
 
       - Máte správně nastavený SPF záznam u domény? Můžete si [otestovat SPF záznam][1].
 
@@ -563,13 +563,13 @@ cs:
 
         Neexistuje zde tlačítko 'další stránka' nebo číslování stránek -- chcete-li pokračovat ve čtení, prostě skrolujte dál a další obsah se bude sám nahrávat.
 
-        Jak přicházejí nové odpovědi, budou se automaticky objevovat ve spodu tématu. Není potřeba obnovovoat stránku nebo znovu otevírat téma, abyste dostali nové příspěvky.
+        Jak přicházejí nové odpovědi, budou se automaticky objevovat ve spodu tématu. Není potřeba obnovovat stránku nebo znovu otevírat téma, abyste dostali nové příspěvky.
 
         ### Jak odpovědět?
 
         - Chcete-li odpovědět na konkrétní příspěvek, použijte tlačítko 'Odpovědět' na konci tohoto příspěvku.
 
-        - Chtete-li odpovědět obecně *na dané téma* (a ne konkretnímu člověku), použijte tlačítko 'Odpovědět', které se nachází uplně na konci daného tématu.
+        - Chtete-li odpovědět obecně *na dané téma* (a ne konkrétnímu člověku), použijte tlačítko 'Odpovědět', které se nachází uplně na konci daného tématu.
 
         - Pokud chcete, aby se konverzace ubírala jiným směrem, ale aby zůstala zachovaná návaznost, použijte 'Odpovědět jako nové téma' po pravé straně příspěvku.
 
@@ -715,7 +715,7 @@ cs:
       subject_template: "[%{site_name}] Aktivita na fóru %{date}"
       new_activity: "Nová aktivita ve vašich tématech a příspěvcích:"
       new_topics: "Nová témata:"
-      unsubscribe: "Tento souhrnný email je zaslán jako oznámení od %{site_link}, pokud jste se nepřihlásil za posledních 7 dní.\nPokud nechcete tento souhrn dostávat, navštivte %{unsubscribe_link}."
+      unsubscribe: "Tento souhrnný email je zaslán jako oznámení od %{site_link}, pokud jste se nepřihlásili v poslední době.\nPokud nechcete tento souhrn dostávat, navštivte %{unsubscribe_link}."
       click_here: "klikněte zde"
       from: "souhrn z %{site_name}"
 
