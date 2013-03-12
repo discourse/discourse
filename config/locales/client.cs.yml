@@ -516,6 +516,7 @@ cs:
       reply: "Odpovídáte na {{link}} od {{replyAvatar}} {{username}}"
       reply_topic: "Odpověď na {{link}}"
       edit: "Editovat {{link}}"
+      post_number: "příspěvek č. {{number}}"
       in_reply_to: "v odpovědi na"
       reply_as_new_topic: "Odpovědět jako nové téma"
       continue_discussion: "Pokračující diskuze z {{postLink}}:"

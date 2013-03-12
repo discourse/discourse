@@ -106,7 +106,8 @@ Discourse.Composer = Discourse.Model.extend({
     topic = this.get('topic');
     postNumber = this.get('post.post_number');
     if (topic) {
-      postLink = "<a href='" + (topic.get('url')) + "/" + postNumber + "'>post " + postNumber + "</a>";
+      postLink = "<a href='" + (topic.get('url')) + "/" + postNumber + "'>" +
+          Em.String.i18n("post.post_number", { number: postNumber }) + "</a>";
     }
     switch (this.get('action')) {
       case PRIVATE_MESSAGE:
