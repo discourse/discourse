@@ -10,8 +10,14 @@ describe("Discourse.Composer", function() {
     });
 
     it("trims whitespaces", function() {
-      var composer = Discourse.Composer.create({ reply: "\nbasic reply\t" });
+      var composer = Discourse.Composer.create({ reply: " \nbasic reply\t" });
       expect(composer.get('replyLength')).toBe(11);
+    });
+
+    it("count only significant whitespaces", function() {
+      // this will count the '\n' only once
+      var composer = Discourse.Composer.create({ reply: "ba sic\n\nreply" });
+      expect(composer.get('replyLength')).toBe(12);
     });
 
     it("removes quotes", function() {
