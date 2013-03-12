@@ -1,4 +1,8 @@
 en:
+  time:
+    formats:
+      short: "%m-%d-%Y"
+
   title: "Discourse"
   topics: "Topics"
   loading: "Loading"
