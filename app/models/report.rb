@@ -69,6 +69,17 @@ class Report
     end
   end
 
+  def self.report_total_users(report)
+    report.data = []
+    fetch report do
+      (0..30).each do |i|
+        if (count = User.where('created_at < ?', i.days.ago).count) > 0
+          report.data << {x: i.days.ago.to_date.to_s, y: count}
+        end
+      end
+    end
+  end
+
 
   private
 

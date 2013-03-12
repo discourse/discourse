@@ -54,9 +54,26 @@
         <th>{{i18n admin.dashboard.reports.last_30_days}}</th>
       </tr>
     </thead>
-    {{ render 'admin_signups' signups }}
-    {{ render 'admin_visits' visits }}
-    {{ render 'admin_topics' topics }}
-    {{ render 'admin_posts' posts }}
+    {{ render 'admin_report_signups' signups }}
+    {{ render 'admin_report_topics' topics }}
+    {{ render 'admin_report_posts' posts }}
   </table>
 </div>
+
+<div class="dashboard-stats">
+  <table class="table table-condensed table-hover">
+    <thead>
+      <tr>
+        <th>&nbsp;</th>
+        <th>{{i18n admin.dashboard.reports.today}}</th>
+        <th>{{i18n admin.dashboard.reports.yesterday}}</th>
+        <th>{{i18n admin.dashboard.reports.7_days_ago}}</th>
+        <th>{{i18n admin.dashboard.reports.30_days_ago}}</th>
+      </tr>
+    </thead>
+    {{ render 'admin_report_total_users' total_users }}
+    {{ render 'admin_report_visits' visits }}
+  </table>
+</div>
+
+<div class="clearfix"></div>

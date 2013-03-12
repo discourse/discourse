@@ -689,6 +689,8 @@ en:
           last_7_days: "Last 7 Days"
           last_30_days: "Last 30 Days"
           all_time: "All Time"
+          7_days_ago: "7 Days Ago"
+          30_days_ago: "30 Days Ago"
 
       flags:
         title: "Flags"

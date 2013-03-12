@@ -45,15 +45,38 @@ describe Report do
       context "with #{pluralized}" do
         before do
           fabricator = (arg == :signup ? :user : arg)
-          Fabricate(fabricator, created_at: 2.days.ago)
-          Fabricate(fabricator, created_at: 1.day.ago)
-          Fabricate(fabricator, created_at: 1.day.ago)
+          Fabricate(fabricator, created_at: 25.hours.ago)
+          Fabricate(fabricator, created_at: 1.hours.ago)
+          Fabricate(fabricator, created_at: 1.hours.ago)
         end
 
         it 'returns correct data' do
           report.data[0][:y].should == 1
           report.data[1][:y].should == 2
         end
+      end
+    end
+  end
+
+  describe "total_users report" do
+    let(:report) { Report.find("total_users", cache: false) }
+
+    context "no total_users" do
+      it 'returns an empty report' do
+        report.data.should be_blank
+      end
+    end
+
+    context "with users" do
+      before do
+        Fabricate(:user, created_at: 25.hours.ago)
+        Fabricate(:user, created_at: 1.hours.ago)
+        Fabricate(:user, created_at: 1.hours.ago)
+      end
+
+      it 'returns correct data' do
+        report.data[0][:y].should == 3
+        report.data[1][:y].should == 1
       end
     end
   end
@@ -90,9 +113,9 @@ describe Report do
 
       context 'with data' do
         before do
-          Fabricate(:user, created_at: 2.days.ago)
-          Fabricate(:user, created_at: 1.day.ago)
-          Fabricate(:user, created_at: 1.day.ago)
+          Fabricate(:user, created_at: 25.hours.ago)
+          Fabricate(:user, created_at: 1.hour.ago)
+          Fabricate(:user, created_at: 1.hour.ago)
         end
 
         context 'cache miss' do

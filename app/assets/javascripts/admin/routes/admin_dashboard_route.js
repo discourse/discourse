@@ -31,7 +31,7 @@ Discourse.AdminDashboardRoute = Discourse.Route.extend({
     if( !c.get('reportsCheckedAt') || Date.create('1 hour ago') > c.get('reportsCheckedAt') ) {
       // TODO: use one request to get all reports, or maybe one request for all dashboard data including version check.
       c.set('reportsCheckedAt', new Date());
-      ['visits', 'signups', 'topics', 'posts'].each(function(reportType){
+      ['visits', 'signups', 'topics', 'posts', 'total_users'].each(function(reportType){
         c.set(reportType,  Discourse.Report.find(reportType));
       });
     }

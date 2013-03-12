@@ -304,10 +304,13 @@ table {
 }
 
 .dashboard-stats {
-  margin-top: 10px;
+  margin-top: 30px;
+  width: 450px;
+  float: left;
+  margin-left: 40px;
 
   table {
-    width: 450px;
+    width: 100%;
 
     th {
       font-weight: normal;
