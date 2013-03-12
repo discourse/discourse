@@ -260,6 +260,7 @@ en:
         message: "Authenticating with Persona (make sure pop up blockers are not enabled)"
 
     composer:
+      posting_not_on_topic: "You have composed a reply to \"{{title}}\", however you are no longer looking at that topic."
       saving_draft_tip: "saving"
       saved_draft_tip: "saved"
       saved_local_draft_tip: "saved locally"
@@ -269,7 +270,10 @@ en:
         more: "{{n}} to go..."
 
       save_edit: "Save Edit"
+      reply_original: "Reply on Original Topic"
+      reply_here: "Reply Here"
       reply: "Reply"
+      cancel: "Cancel"
       create_topic: "Create Topic"
       create_pm: "Create Private Message"
 

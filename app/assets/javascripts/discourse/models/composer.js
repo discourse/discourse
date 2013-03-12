@@ -44,6 +44,10 @@ Discourse.Composer = Discourse.Model.extend({
     return this.get('action') === EDIT;
   }).property('action'),
 
+  replyingToTopic: (function() {
+    return this.get('action') === REPLY;
+  }).property('action'),
+
   viewOpen: (function() {
     return this.get('composeState') === OPEN;
   }).property('composeState'),
