@@ -30,7 +30,7 @@ describe Report do
 
   end
 
-  [:signup, :topic, :post].each do |arg|
+  [:signup, :topic, :post, :flag].each do |arg|
     describe "#{arg} report" do
       pluralized = arg.to_s.pluralize
 
@@ -75,8 +75,8 @@ describe Report do
       end
 
       it 'returns correct data' do
-        report.data[0][:y].should == 3
-        report.data[1][:y].should == 1
+        report.data[0][:y].should == 1
+        report.data[1][:y].should == 3
       end
     end
   end
