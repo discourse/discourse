@@ -339,32 +339,34 @@ Discourse.Composer = Discourse.Model.extend({
 
   // Create a new Post
   createPost: function(opts) {
-    var addedToStream, createdPost, diff, lastPost, post, promise, topic,
-      _this = this;
-    promise = new RSVP.Promise();
-    post = this.get('post');
-    topic = this.get('topic');
-    createdPost = Discourse.Post.create({
-      raw: this.get('reply'),
-      title: this.get('title'),
-      category: this.get('categoryName'),
-      topic_id: this.get('topic.id'),
-      reply_to_post_number: post ? post.get('post_number') : null,
-      imageSizes: opts.imageSizes,
-      post_number: this.get('topic.highest_post_number') + 1,
-      cooked: $('#wmd-preview').html(),
-      reply_count: 0,
-      display_username: Discourse.get('currentUser.name'),
-      username: Discourse.get('currentUser.username'),
-      metaData: this.get('metaData'),
-      archetype: this.get('archetypeId'),
-      post_type: Discourse.get('site.post_types.regular'),
-      target_usernames: this.get('targetUsernames'),
-      actions_summary: Em.A(),
-      yours: true,
-      newPost: true
-    });
-    addedToStream = false;
+    var promise = new RSVP.Promise(),
+        post = this.get('post'),
+        topic = this.get('topic'),
+        currentUser = Discourse.get('currentUser'),
+        addedToStream = false;
+
+    // Build the post object
+    var createdPost = Discourse.Post.create({
+        raw: this.get('reply'),
+        title: this.get('title'),
+        category: this.get('categoryName'),
+        topic_id: this.get('topic.id'),
+        reply_to_post_number: post ? post.get('post_number') : null,
+        imageSizes: opts.imageSizes,
+        post_number: this.get('topic.highest_post_number') + 1,
+        cooked: $('#wmd-preview').html(),
+        reply_count: 0,
+        display_username: currentUser.get('name'),
+        username: currentUser.get('username'),
+        metaData: this.get('metaData'),
+        archetype: this.get('archetypeId'),
+        post_type: Discourse.get('site.post_types.regular'),
+        target_usernames: this.get('targetUsernames'),
+        actions_summary: Em.A(),
+        moderator: currentUser.get('moderator'),
+        yours: true,
+        newPost: true
+      });
 
     // If we're in a topic, we can append the post instantly.
     if (topic) {
@@ -385,9 +387,9 @@ Discourse.Composer = Discourse.Model.extend({
       createdPost.set('created_at', new Date());
 
       // If we're near the end of the topic, load new posts
-      lastPost = topic.posts.last();
+      var lastPost = topic.posts.last();
       if (lastPost) {
-        diff = topic.get('highest_post_number') - lastPost.get('post_number');
+        var diff = topic.get('highest_post_number') - lastPost.get('post_number');
 
         // If the new post is within a threshold of the end of the topic,
         // add it and scroll there instead of adding the link.
@@ -401,10 +403,10 @@ Discourse.Composer = Discourse.Model.extend({
     }
 
     // Save callback
+    var composer = this;
     createdPost.save(function(result) {
-      var addedPost, saving;
-      addedPost = false;
-      saving = true;
+      var addedPost = false,
+          saving = true;
       createdPost.updateFromSave(result);
       if (topic) {
         // It's no longer a new post
@@ -412,27 +414,26 @@ Discourse.Composer = Discourse.Model.extend({
         topic.set('draft_sequence', result.draft_sequence);
       } else {
         // We created a new topic, let's show it.
-        _this.set('composeState', CLOSED);
+        composer.set('composeState', CLOSED);
         saving = false;
       }
-      _this.set('reply', '');
-      _this.set('createdPost', createdPost);
+      composer.set('reply', '');
+      composer.set('createdPost', createdPost);
       if (addedToStream) {
-        _this.set('composeState', CLOSED);
+        composer.set('composeState', CLOSED);
       } else if (saving) {
-        _this.set('composeState', SAVING);
+        composer.set('composeState', SAVING);
       }
-      return promise.resolve({
-        post: result
-      });
+      return promise.resolve({ post: result });
     }, function(error) {
+      // If an error occurs
       var errors;
       if (topic) {
         topic.posts.removeObject(createdPost);
       }
       errors = $.parseJSON(error.responseText).errors;
       promise.reject(errors[0]);
-      return _this.set('composeState', OPEN);
+      composer.set('composeState', OPEN);
     });
     return promise;
   },
