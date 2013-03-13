@@ -347,6 +347,11 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
   },
 
   cancelEdit: function() {
+    // set the previous category back
+    this.set('controller.content.category', this.get('previousCategory'));
+    // clear the previous category
+    this.set('previousCategory', null);
+    // close editing mode
     this.set('editingTopic', false);
   },
 
@@ -358,12 +363,18 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
       topic.set('title', new_val);
       topic.set('fancy_title', new_val);
       topic.save();
+      // clear the previous category
+      this.set('previousCategory', null);
+      // close editing mode
       this.set('editingTopic', false);
     }
   },
 
   editTopic: function() {
     if (!this.get('topic.can_edit')) return false;
+    // save the category so we can get it back when cancelling the edit
+    this.set('previousCategory', this.get('controller.content.category'));
+    // enable editing mode
     this.set('editingTopic', true);
     return false;
   },
