@@ -14,7 +14,8 @@ class Post < ActiveRecord::Base
     FLAG_THRESHOLD_REACHED_AGAIN = 2
   end
 
-  versioned
+  versioned if: :raw_changed?
+
   rate_limit
   acts_as_paranoid
 
@@ -271,9 +272,11 @@ class Post < ActiveRecord::Base
   # A list of versions including the initial version
   def all_versions
     result = []
-    result << { number: 1, display_username: user.name, created_at: created_at }
+    result << { number: 1, display_username: user.username, created_at: created_at }
     versions.order(:number).includes(:user).each do |v|
-      result << { number: v.number, display_username: v.user.name, created_at: v.created_at }
+      if v.user.present?
+        result << { number: v.number, display_username: v.user.username, created_at: v.created_at }
+      end
     end
     result
   end

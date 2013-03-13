@@ -41,6 +41,32 @@ describe Post do
 
   end
 
+  describe "versions and deleting/recovery" do
+    let(:post) { Fabricate(:post, post_args) }
+
+    before do
+      post.destroy
+      post.reload
+    end
+
+    it "doesn't create a new version when deleted" do
+      post.versions.count.should == 0
+    end
+
+    describe "recovery" do
+      before do
+        post.recover
+        post.reload
+      end
+
+      it "doesn't create a new version when recovered" do
+        post.versions.count.should == 0
+      end
+    end
+
+  end
+
+
   describe 'post uniqueness' do
 
     context "disabled" do
