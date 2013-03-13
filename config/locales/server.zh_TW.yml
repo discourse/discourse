@@ -1,4 +1,8 @@
 zh_TW:
+  time:
+    formats:
+      short: "%Y-%m-%d"
+
   title: "論道"
   topics: "主題"
   loading: "載入中"

@@ -24,7 +24,7 @@ zh_CN:
     links: 链接
     faq: "常见问题"
     you: "你"
-    ok: "ok"
+    ok: "知道了"
     or: "或"
     now: "刚刚"
 
@@ -525,6 +525,7 @@ zh_CN:
       reply: "回复 {{replyAvatar}} {{username}} 发表的 {{link}}"
       reply_topic: "回复 {{link}}"
       edit: "编辑 {{link}}"
+      post_number: "帖子 {{number}}"
       in_reply_to: "回复给"
       reply_as_new_topic: "回复为新主题"
       continue_discussion: "从 {{postLink}} 继续讨论："
@@ -635,6 +636,7 @@ zh_CN:
     top_contributors: "参与者"
     category_title: "分类"
     history: "历史"
+    changed_by: "由 {{author}}"
 
     categories_list: "分类列表"
 
@@ -697,6 +699,8 @@ zh_CN:
           last_7_days: "7 天以内"
           last_30_days: "30 天以内"
           all_time: "所有时间内"
+          7_days_ago: "7 天之前"
+          30_days_ago: "30 天之前"
 
       flags:
         title: "标记"

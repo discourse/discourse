@@ -1,4 +1,8 @@
 zh_CN:
+  time:
+    formats:
+      short: "%Y-%m-%d"
+
   title: "论道"
   topics: "主题"
   loading: "载入中"

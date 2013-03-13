@@ -23,7 +23,7 @@ zh_TW:
     links: 鏈接
     faq: "常見問題"
     you: "你"
-    ok: "ok"
+    ok: "知道了"
     or: "或"
     now: "剛剛"
 
@@ -296,7 +296,7 @@ zh_TW:
       uploading: "上傳中……"
       show_preview: '顯示預覽 &raquo;'
       hide_preview: '&laquo; 隱藏預覽'
-      
+
       bold_title: "加粗"
       bold_text: "加粗文字"
       italic_title: "斜體"
@@ -325,7 +325,7 @@ zh_TW:
       help: "Markdown 編輯幫助"
 
     notifications:
-      title: "使用@name提及到你，回複你的帖子和主題，私信等等的通知消息"
+      title: "使用 @name 提及到你，回複你的帖子和主題，私信等等的通知消息"
       none: "你當前沒有任何通知。"
       more: "浏覽以前的通知"
       mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
@@ -524,6 +524,7 @@ zh_TW:
       reply: "回複 {{replyAvatar}} {{username}} 發表的 {{link}}"
       reply_topic: "回複 {{link}}"
       edit: "編輯 {{link}}"
+      post_number: "帖子 {{number}}"
       in_reply_to: "回複給"
       reply_as_new_topic: "回複爲新主題"
       continue_discussion: "從 {{postLink}} 繼續討論："
@@ -634,6 +635,7 @@ zh_TW:
     top_contributors: "參與者"
     category_title: "分類"
     history: "曆史"
+    changed_by: "由 {{author}}"
 
     categories_list: "分類列表"
 
@@ -696,6 +698,8 @@ zh_TW:
           last_7_days: "7 天以內"
           last_30_days: "30 天以內"
           all_time: "所有時間內"
+          7_days_ago: "7 天之前"
+          30_days_ago: "30 天之前"
 
       flags:
         title: "標記"
