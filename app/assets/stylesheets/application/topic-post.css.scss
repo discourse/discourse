@@ -100,10 +100,13 @@
 
   .gutter {
     .reply-new{
-      opacity:0;
+      .discourse-no-touch & {
+        opacity: 0;
+      }
       transition:opacity 1s linear;
       -webkit-transition:opacity 1s linear;
       -moz-transition:opacity 1s linear;
+
       }
     .reply-new,
     .track-link {
