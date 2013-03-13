@@ -629,6 +629,7 @@ en:
     top_contributors: "Participants"
     category_title: "Category"
     history: "History"
+    changed_by: "by {{author}}"
 
     categories_list: "Categories List"
 
