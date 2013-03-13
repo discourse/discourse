@@ -108,6 +108,7 @@ Discourse.User = Discourse.Model.extend({
     }
     this.set('streamFilter', filter);
     this.set('stream', Em.A());
+    this.set('totalItems', 0);
     return this.loadMoreUserActions();
   },
 
