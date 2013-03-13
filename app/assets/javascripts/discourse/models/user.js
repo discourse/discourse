@@ -131,6 +131,8 @@ Discourse.User = Discourse.Model.extend({
           action.pushObject(Discourse.UserAction.create(result));
           action = Discourse.UserAction.collapseStream(action);
 
+          _this.set('totalItems', _this.get('totalItems') + 1);
+
           return stream.insertAt(0, action[0]);
         }
       }
@@ -143,7 +145,7 @@ Discourse.User = Discourse.Model.extend({
     stream = this.get('stream');
     if (!stream) return;
 
-    url = "/user_actions?offset=" + stream.length + "&user_id=" + (this.get("id"));
+    url = "/user_actions?offset=" + this.get('totalItems') + "&user_id=" + (this.get("id"));
     if (this.get('streamFilter')) {
       url += "&filter=" + (this.get('streamFilter'));
     }
@@ -162,6 +164,7 @@ Discourse.User = Discourse.Model.extend({
           copy = Discourse.UserAction.collapseStream(copy);
           stream.pushObjects(copy);
           _this.set('stream', stream);
+          _this.set('totalItems', _this.get('totalItems') + result.user_actions.length);
         }
         if (callback) {
           return callback();
@@ -301,13 +304,17 @@ Discourse.User.reopenClass({
         return stat;
       }));
 
+      var count = 0;
       if (json.user.stream) {
+        count = json.user.stream.length;
         json.user.stream = Discourse.UserAction.collapseStream(json.user.stream.map(function(ua) {
           return Discourse.UserAction.create(ua);
         }));
       }
 
-      return Discourse.User.create(json.user);
+      var user = Discourse.User.create(json.user);
+      user.set('totalItems', count);
+      return user; 
     });
   },
 
