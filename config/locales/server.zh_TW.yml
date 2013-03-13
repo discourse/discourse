@@ -245,12 +245,28 @@ zh_TW:
   reports:
     visits:
       title: "用戶訪問量"
+      xaxis: "天"
+      yaxis: "訪問量"
     signups:
       title: "新注冊用戶"
+      xaxis: "天"
+      yaxis: "新用戶數"
     topics:
       title: "新發表主題"
+      xaxis: "天"
+      yaxis: "新主題數"
     posts:
       title: "新發表帖子"
+      xaxis: "天"
+      yaxis: "新帖子數"
+    total_users:
+      title: "用戶總數"
+      xaxis: "天"
+      yaxis: "用戶總數"
+    flags:
+      title: "標記"
+      xaxis: "天"
+      yaxis: "標記數"
 
   site_settings:
     default_locale: "此 論道 - Discourse 實例的缺省語言 (ISO 639-1 代碼)"

@@ -245,12 +245,28 @@ zh_CN:
   reports:
     visits:
       title: "用户访问量"
+      xaxis: "天"
+      yaxis: "访问量"
     signups:
       title: "新注册用户"
+      xaxis: "天"
+      yaxis: "新用户数"
     topics:
       title: "新发表主题"
+      xaxis: "天"
+      yaxis: "新主题数"
     posts:
       title: "新发表帖子"
+      xaxis: "天"
+      yaxis: "新帖子数"
+    total_users:
+      title: "用户总数"
+      xaxis: "天"
+      yaxis: "用户总数"
+    flags:
+      title: "标记"
+      xaxis: "天"
+      yaxis: "标记数"
 
   site_settings:
     default_locale: "此 论道 - Discourse 实例的缺省语言 (ISO 639-1 代码)"

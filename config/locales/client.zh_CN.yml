@@ -7,6 +7,7 @@ zh_CN:
     share:
       topic: '分享一个到本主题的链接'
       post: '分享一个到本帖的链接'
+      close: '关闭'
 
     edit: '编辑本主题的标题和分类'
     not_implemented: "非常抱歉，此功能暂时尚未实现！"
@@ -63,6 +64,8 @@ zh_CN:
       change_password: "修改"
       invited_by: "邀请者为"
       trust_level: "用户级别"
+      external_links_in_new_tab: "始终在新的标签页打开外部链接"
+      enable_quoting: "在高亮选择文字时启用引用回复"
 
       change_username:
         action: "修改"
@@ -93,7 +96,8 @@ zh_CN:
         ok: "你的名字符合要求。"
       username:
         title: "用户名"
-        instructions: "其他人可以使用 @{{username}} 来提及你。"
+        instructions: "必须是独一无二的，中间不能有空格。其他人可以使用 @{{username}} 来提及你。"
+        short_instructions: "其他人可以用 @{{username}} 来提及你。"
         available: "你的用户名可用。"
         global_match: "电子邮箱与注册用户名相匹配。"
         global_mismatch: "已被人注册。试试 {{suggestion}} ？"
@@ -266,6 +270,7 @@ zh_CN:
         message: "使用腾讯QQ帐号验证登录（请确保没有禁止浏览器弹出对话框）"
 
     composer:
+      posting_not_on_topic: "你正在回复主题 \"{{title}}\"，但是当前你正在浏览的是另外一个主题。"
       saving_draft_tip: "保存中"
       saved_draft_tip: "已保存"
       saved_local_draft_tip: "已本地保存"
@@ -275,7 +280,10 @@ zh_CN:
         more: "尚需 {{n}} 个字符……"
 
       save_edit: "保存编辑"
+      reply_original: "回复原始帖"
+      reply_here: "在此回复"
       reply: "回复"
+      cancel: "取消"
       create_topic: "创建主题"
       create_pm: "创建私信"
 
@@ -289,7 +297,7 @@ zh_CN:
       uploading: "上传中……"
       show_preview: '显示预览 &raquo;'
       hide_preview: '&laquo; 隐藏预览'
-      
+
       bold_title: "加粗"
       bold_text: "加粗文字"
       italic_title: "斜体"
