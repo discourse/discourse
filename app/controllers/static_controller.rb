@@ -24,4 +24,14 @@ class StaticController < ApplicationController
     render file: 'public/404', layout: false, status: 404
   end
 
+  # This method just redirects to a given url.
+  # It's used when an ajax login was successful but we want the browser to see
+  # a post of a login form so that it offers to remember your password.
+  def enter
+    params.delete(:username)
+    params.delete(:password)
+    redirect_to(params[:redirect] || '/')
+  end
+
+
 end

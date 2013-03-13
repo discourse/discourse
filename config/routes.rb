@@ -76,6 +76,7 @@ Discourse::Application.routes.draw do
   end
 
   resources :static
+  post 'login' => 'static#enter'
   get 'faq' => 'static#show', id: 'faq'
   get 'tos' => 'static#show', id: 'tos'
   get 'privacy' => 'static#show', id: 'privacy'

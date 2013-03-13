@@ -56,7 +56,11 @@ Discourse.LoginView = Discourse.ModalBodyView.extend({
         }
         _this.flash(result.error, 'error');
       } else {
-        return window.location.reload();
+        // Trigger the browser's password manager using the hidden static login form:
+        $('#hidden-login-form input[name=username]').val(_this.get('loginName'));
+        $('#hidden-login-form input[name=password]').val(_this.get('loginPassword'));
+        $('#hidden-login-form input[name=redirect]').val(window.location.href);
+        $('#hidden-login-form').submit();
       }
     }).fail(function(result) {
       _this.flash(Em.String.i18n('login.error'), 'error');
@@ -143,6 +147,11 @@ Discourse.LoginView = Discourse.ModalBodyView.extend({
   },
 
   didInsertElement: function(e) {
+    // Get username and password from the browser's password manager,
+    // if it filled the hidden static login form:
+    this.set('loginName', $('#hidden-login-form input[name=username]').val());
+    this.set('loginPassword', $('#hidden-login-form input[name=password]').val());
+
     var _this = this;
     return Em.run.next(function() {
       return $('#login-account-password').keydown(function(e) {
