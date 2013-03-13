@@ -9,22 +9,22 @@ describe DiscoursePoll::Plugin do
 
   context '.setup' do
 
-    it 'registers its js' do      
+    it 'registers its js' do
       plugin.expects(:register_js)
       plugin.setup
-    end    
+    end
 
-    it 'registers its css' do      
+    it 'registers its css' do
       plugin.expects(:register_css)
       plugin.setup
-    end    
+    end
 
-    it 'registers a poll archetype' do      
+    it 'registers a poll archetype' do
       plugin.expects(:register_archetype).with('poll', DiscoursePoll::Plugin::POLL_OPTIONS)
       plugin.setup
-    end    
+    end
 
-    it 'registers a handler on post_create' do      
+    it 'registers a handler on post_create' do
       plugin.expects(:listen_for).with(:before_create_post)
       plugin.setup
     end
@@ -38,7 +38,7 @@ describe DiscoursePoll::Plugin do
 
       it "doesn't set the sort order" do
         plugin.before_create_post(post)
-        post.sort_order.should_not == DiscoursePoll::Plugin::MAX_SORT_ORDER        
+        post.sort_order.should_not == DiscoursePoll::Plugin::MAX_SORT_ORDER
       end
 
     end

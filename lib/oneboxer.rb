@@ -2,8 +2,8 @@ require 'open-uri'
 
 require_dependency 'oneboxer/base'
 require_dependency 'oneboxer/whitelist'
-Dir["#{Rails.root}/lib/oneboxer/*_onebox.rb"].each {|f| 
-  require_dependency(f.split('/')[-2..-1].join('/')) 
+Dir["#{Rails.root}/lib/oneboxer/*_onebox.rb"].each {|f|
+  require_dependency(f.split('/')[-2..-1].join('/'))
 }
 
 module Oneboxer
@@ -31,18 +31,22 @@ module Oneboxer
     oneboxer = onebox_for_url(url)
     return oneboxer.onebox if oneboxer.present?
 
-    if Whitelist.allowed?(url)
+    whitelist_entry = Whitelist.entry_for_url(url)
+
+    if whitelist_entry.present?
       page_html = open(url).read
       if page_html.present?
-        doc = Hpricot(page_html)
+        doc = Nokogiri::HTML(page_html)
 
-        # See if if it has an oembed thing we can use
-        (doc/"link[@type='application/json+oembed']").each do |oembed|
-          return OembedOnebox.new(oembed[:href]).onebox
+        if whitelist_entry.allows_oembed?
+          # See if if it has an oembed thing we can use
+          (doc/"link[@type='application/json+oembed']").each do |oembed|
+            return OembedOnebox.new(oembed[:href]).onebox
+          end
+          (doc/"link[@type='text/json+oembed']").each do |oembed|
+            return OembedOnebox.new(oembed[:href]).onebox
+          end
         end
-        (doc/"link[@type='text/json+oembed']").each do |oembed|
-          return OembedOnebox.new(oembed[:href]).onebox   
-        end        
 
         # Check for opengraph
         open_graph = Oneboxer.parse_open_graph(doc)
@@ -50,13 +54,15 @@ module Oneboxer
       end
     end
 
-    nil    
+    nil
+  rescue OpenURI::HTTPError
+    nil
   end
 
   # Parse URLs out of HTML, returning the document when finished.
   def self.each_onebox_link(string_or_doc)
     doc = string_or_doc
-    doc = Hpricot(doc) if doc.is_a?(String)
+    doc = Nokogiri::HTML(doc) if doc.is_a?(String)
 
     onebox_links = doc.search("a.onebox")
     if onebox_links.present?
@@ -72,7 +78,7 @@ module Oneboxer
 
   def self.create_post_reference(result, args={})
     result.post_onebox_renders.create(post_id: args[:post_id]) if args[:post_id].present?
-  rescue ActiveRecord::RecordNotUnique    
+  rescue ActiveRecord::RecordNotUnique
   end
 
   def self.render_from_cache(url, args={})
@@ -83,7 +89,7 @@ module Oneboxer
       create_post_reference(result, args)
       return result
     end
-    nil    
+    nil
   end
 
   # Cache results from a onebox call
@@ -97,13 +103,13 @@ module Oneboxer
         render = OneboxRender.create(url: url, preview: preview, cooked: cooked, expires_at: Oneboxer.default_expiry.from_now)
         create_post_reference(render, args)
       rescue ActiveRecord::RecordNotUnique
-      end      
-    end  
+      end
+    end
 
-    [cooked, preview]  
+    [cooked, preview]
   end
 
-  # Retrieve a preview of a onebox, caching the result for performance 
+  # Retrieve a preview of a onebox, caching the result for performance
   def self.preview(url, args={})
     cached = render_from_cache(url, args) unless args[:no_cache].present?
 

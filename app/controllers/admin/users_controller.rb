@@ -3,10 +3,10 @@ class Admin::UsersController < Admin::AdminController
   def index
     # Sort order
     if params[:query] == "active"
-      @users = User.order("COALESCE(last_seen_at, '01-01-1970') DESC, username")      
+      @users = User.order("COALESCE(last_seen_at, to_date('1970-01-01', 'YYYY-MM-DD')) DESC, username")
     else
       @users = User.order("created_at DESC, username")
-    end    
+    end
 
     @users = @users.where('approved = false') if params[:query] == 'pending'
     @users = @users.where('username_lower like :filter or email like :filter', filter: "%#{params[:filter]}%") if params[:filter].present?
@@ -16,9 +16,15 @@ class Admin::UsersController < Admin::AdminController
 
   def show
     @user = User.where(username_lower: params[:id]).first
+    raise Discourse::NotFound.new unless @user
     render_serialized(@user, AdminDetailedUserSerializer, root: false)
   end
 
+  def delete_all_posts
+    @user = User.where(id: params[:user_id]).first
+    @user.delete_all_posts!(guardian)
+    render nothing: true
+  end
   def ban
     @user = User.where(id: params[:user_id]).first
     guardian.ensure_can_ban!(@user)
@@ -55,7 +61,23 @@ class Admin::UsersController < Admin::AdminController
     @user = User.where(id: params[:user_id]).first
     guardian.ensure_can_grant_admin!(@user)
     @user.update_column(:admin, true)
-    render_serialized(@user, AdminUserSerializer)    
+    render_serialized(@user, AdminUserSerializer)
+  end
+
+  def revoke_moderation
+    @moderator = User.where(id: params[:user_id]).first
+    guardian.ensure_can_revoke_moderation!(@moderator)
+    @moderator.change_trust_level(:advanced)
+    @moderator.save
+    render nothing: true
+  end
+
+  def grant_moderation
+    @user = User.where(id: params[:user_id]).first
+    guardian.ensure_can_grant_moderation!(@user)
+    @user.change_trust_level(:moderator)
+    @user.save
+    render_serialized(@user, AdminUserSerializer)
   end
 
   def approve

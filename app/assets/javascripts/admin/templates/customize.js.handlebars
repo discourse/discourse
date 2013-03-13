@@ -2,7 +2,7 @@
 <div class='list'>
   <div class='well'>
   <ul class='nav nav-list'>
-    {{#each view.content}}
+    {{#each content}}
     <li {{bindAttr class="this.selected:active"}}><a {{action selectStyle this target="controller"}}>{{this.description}}</a></li>
     {{/each}}
   </ul>
@@ -46,7 +46,7 @@
 
   <div class='buttons'>
     <button {{action save target="controller"}} {{bindAttr disabled="content.selectedItem.disableSave"}} class='btn btn-primary'>{{i18n admin.customize.save}}</button> 
-    <a {{action delete target="controller"}} class='delete-link'>{{i18n admin.customize.delete}}</a> 
+    <a {{action destroy target="controller"}} class='delete-link'>{{i18n admin.customize.delete}}</a> 
     <span class='saving'>{{content.savingStatus}}</span>
   </div>
 

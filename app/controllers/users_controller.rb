@@ -1,17 +1,24 @@
-require_dependency 'mothership'
+require_dependency 'discourse_hub'
 
 class UsersController < ApplicationController
 
-  skip_before_filter :check_xhr, only: [:password_reset, :update, :activate_account, :avatar, :authorize_email, :user_preferences_redirect]
+  skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :activate_account, :avatar, :authorize_email, :user_preferences_redirect]
   skip_before_filter :authorize_mini_profiler, only: [:avatar]
   skip_before_filter :check_restricted_access, only: [:avatar]
 
   before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect]
-  
-  def show    
+
+  def show
     @user = fetch_user_from_params
-    anonymous_etag(@user) do
-      render_serialized(@user, UserSerializer)
+    user_serializer = UserSerializer.new(@user, scope: guardian, root: 'user')
+    respond_to do |format|
+      format.html do
+        store_preloaded("user_#{@user.username}", MultiJson.dump(user_serializer))
+      end
+
+      format.json do
+        render_json_dump(user_serializer)
+      end
     end
   end
 
@@ -25,7 +32,7 @@ class UsersController < ApplicationController
     json_result(user) do |u|
 
       website = params[:website]
-      if website 
+      if website
         website = "http://" + website unless website =~ /^http/
       end
 
@@ -34,27 +41,29 @@ class UsersController < ApplicationController
       u.website = website || u.website
       u.digest_after_days = params[:digest_after_days] || u.digest_after_days
       u.auto_track_topics_after_msecs = params[:auto_track_topics_after_msecs].to_i if params[:auto_track_topics_after_msecs]
+      u.new_topic_duration_minutes = params[:new_topic_duration_minutes].to_i if params[:new_topic_duration_minutes]
 
-      [:email_digests, :email_direct, :email_private_messages].each do |i|
+      [:email_digests, :email_direct, :email_private_messages, 
+       :external_links_in_new_tab, :enable_quoting].each do |i|
         if params[i].present?
           u.send("#{i.to_s}=", params[i] == 'true')
         end
       end
 
       u.save
-    end 
+    end
   end
 
   def username
     requires_parameter(:new_username)
 
     user = fetch_user_from_params
-    guardian.ensure_can_edit!(user)    
-    
+    guardian.ensure_can_edit!(user)
+
     result = user.change_username(params[:new_username])
     raise Discourse::InvalidParameters.new(:new_username) unless result
 
-    render nothing: true  
+    render nothing: true
   end
 
   def preferences
@@ -76,7 +85,10 @@ class UsersController < ApplicationController
   def check_username
     requires_parameter(:username)
 
-    if !SiteSetting.call_mothership?
+    validator = UsernameValidator.new(params[:username])
+    if !validator.valid_format?
+      render json: {errors: validator.errors}
+    elsif !SiteSetting.call_discourse_hub?
       if User.username_available?(params[:username])
         render json: {available: true}
       else
@@ -84,45 +96,51 @@ class UsersController < ApplicationController
       end
     else
 
-      # Contact the mothership
-      email_given = (params[:email].present? or current_user.present?)
+      # Contact the Discourse Hub server
+      email_given = (params[:email].present? || current_user.present?)
       available_locally = User.username_available?(params[:username])
       global_match = false
-      available_globally, suggestion_from_mothership = begin
+      available_globally, suggestion_from_discourse_hub = begin
         if email_given
-          global_match, available, suggestion = Mothership.nickname_match?( params[:username], params[:email] || current_user.email )
+          global_match, available, suggestion = DiscourseHub.nickname_match?( params[:username], params[:email] || current_user.email )
           [available || global_match, suggestion]
         else
-          Mothership.nickname_available?(params[:username])
+          DiscourseHub.nickname_available?(params[:username])
         end
       end
 
-      if available_globally and available_locally
+      if available_globally && available_locally
         render json: {available: true, global_match: (global_match ? true : false)}
-      elsif available_locally and !available_globally
+      elsif available_locally && !available_globally
         if email_given
-          # Nickname and email do not match what's registered on the mothership.
-          render json: {available: false, global_match: false, suggestion: suggestion_from_mothership}
+          # Nickname and email do not match what's registered on the discourse hub.
+          render json: {available: false, global_match: false, suggestion: suggestion_from_discourse_hub}
         else
-          # The nickname is available locally, but is registered on the mothership.
+          # The nickname is available locally, but is registered on the discourse hub.
           # We need an email to see if the nickname belongs to this person.
-          # Don't give a suggestion until we get the email and try to match it with on the mothership.
+          # Don't give a suggestion until we get the email and try to match it with on the discourse hub.
           render json: {available: false}
         end
-      elsif available_globally and !available_locally
+      elsif available_globally && !available_locally
         # Already registered on this site with the matching nickname and email address. Why are you signing up again?
         render json: {available: false, suggestion: User.suggest_username(params[:username])}
       else
         # Not available anywhere.
-        render json: {available: false, suggestion: suggestion_from_mothership}
+        render json: {available: false, suggestion: suggestion_from_discourse_hub}
       end
 
     end
   rescue RestClient::Forbidden
-    render json: {errors: [I18n.t("mothership.access_token_problem")]}
+    render json: {errors: [I18n.t("discourse_hub.access_token_problem")]}
   end
 
   def create
+
+    if params[:password_confirmation] != honeypot_value || params[:challenge] != challenge_value.try(:reverse)
+      # Don't give any indication that we caught you in the honeypot
+      return render(:json => {success: true, active: false, message: I18n.t("login.activate_email", email: params[:email]) })
+    end
+
     user = User.new
     user.name = params[:name]
     user.email = params[:email]
@@ -133,12 +151,13 @@ class UsersController < ApplicationController
     if auth && auth[:email] == params[:email] && auth[:email_valid]
       user.active = true
     end
+    user.password_required! unless auth
 
-    Mothership.register_nickname( user.username, user.email ) if user.valid? and SiteSetting.call_mothership?
+    DiscourseHub.register_nickname( user.username, user.email ) if user.valid? && SiteSetting.call_discourse_hub?
 
     if user.save
 
-      msg = nil      
+      msg = nil
       active_result = user.active?
       if active_result
 
@@ -152,7 +171,7 @@ class UsersController < ApplicationController
           msg = I18n.t("login.active")
         end
 
-      else 
+      else
         msg = I18n.t("login.activate_email", email: user.email)
         Jobs.enqueue(:user_email, type: :signup, user_id: user.id, email_token: user.email_tokens.first.token)
       end
@@ -163,13 +182,17 @@ class UsersController < ApplicationController
           TwitterUserInfo.create(:user_id => user.id, :screen_name => auth[:twitter_screen_name], :twitter_user_id => auth[:twitter_user_id])
         end
 
-        if auth[:facebook].present? and FacebookUserInfo.find_by_facebook_user_id(auth[:facebook][:facebook_user_id]).nil?
+        if auth[:facebook].present? && FacebookUserInfo.find_by_facebook_user_id(auth[:facebook][:facebook_user_id]).nil?
           FacebookUserInfo.create!(auth[:facebook].merge(user_id: user.id))
+        end
+
+        if auth[:github_user_id] && auth[:github_screen_name] && GithubUserInfo.find_by_github_user_id(auth[:github_user_id]).nil?
+          GithubUserInfo.create(:user_id => user.id, :screen_name => auth[:github_screen_name], :github_user_id => auth[:github_user_id])
         end
       end
 
-      
-      # Clear authentication session.  
+
+      # Clear authentication session.
       session[:authentication] = nil
 
       # JSON result
@@ -177,31 +200,37 @@ class UsersController < ApplicationController
     else
       render :json => {success: false, message: I18n.t("login.errors", errors: user.errors.full_messages.join("\n"))}
     end
-  rescue Mothership::NicknameUnavailable
+  rescue ActiveRecord::StatementInvalid
+    render :json => {success: false, message: I18n.t("login.something_already_taken")}
+  rescue DiscourseHub::NicknameUnavailable
     render :json => {success: false, message: I18n.t("login.errors", errors:I18n.t("login.not_available", suggestion: User.suggest_username(params[:username])) )}
   rescue RestClient::Forbidden
-    render json: {errors: [I18n.t("mothership.access_token_problem")]}
+    render json: {errors: [I18n.t("discourse_hub.access_token_problem")]}
+  end
+
+  def get_honeypot_value
+    render json: {value: honeypot_value, challenge: challenge_value}
   end
 
 
   # all avatars are funneled through here
   def avatar
-    
+
     # TEMP to catch all missing spots
     # raise ActiveRecord::RecordNotFound
-    
+
     user = User.select(:email).where(:username_lower => params[:username].downcase).first
     if user
       # for now we only support gravatar in square (redirect cached for a day), later we can use x-sendfile and/or a cdn to serve local
       size = params[:size].to_i
       size = 64 if size == 0
       size = 10 if size < 10
-      size = 128 if size > 128 
-      
+      size = 128 if size > 128
+
       url = user.avatar_template.gsub("{size}", size.to_s)
       expires_in 1.day
-      redirect_to url 
-    else 
+      redirect_to url
+    else
       raise ActiveRecord::RecordNotFound
     end
   end
@@ -213,11 +242,11 @@ class UsersController < ApplicationController
     if @user.blank?
       flash[:error] = I18n.t('password_reset.no_token')
     else
-      if request.put? and params[:password].present?
+      if request.put? && params[:password].present?
         @user.password = params[:password]
         if @user.save
 
-          if SiteSetting.must_approve_users? and !@user.approved?
+          if SiteSetting.must_approve_users? && !@user.approved?
             @requires_approval = true
             flash[:success] = I18n.t('password_reset.success_unapproved')
           else
@@ -225,12 +254,12 @@ class UsersController < ApplicationController
             log_on_user(@user)
             flash[:success] = I18n.t('password_reset.success')
           end
-        end        
-      end     
+        end
+      end
     end
     render :layout => 'no_js'
   end
-  
+
   def change_email
     requires_parameter(:email)
     user = fetch_user_from_params
@@ -240,13 +269,13 @@ class UsersController < ApplicationController
     raise Discourse::InvalidParameters.new(:email) if User.where("lower(email) = ?", params[:email].downcase).exists?
 
     email_token = user.email_tokens.create(email: params[:email])
-    Jobs.enqueue(:user_email, 
-                 to_address: params[:email], 
-                 type: :authorize_email, 
-                 user_id: user.id, 
+    Jobs.enqueue(:user_email,
+                 to_address: params[:email],
+                 type: :authorize_email,
+                 user_id: user.id,
                  email_token: email_token.token)
 
-    render nothing: true  
+    render nothing: true
   end
 
   def authorize_email
@@ -264,7 +293,7 @@ class UsersController < ApplicationController
     if @user = EmailToken.confirm(params[:token])
 
       # Log in the user unless they need to be approved
-      if SiteSetting.must_approve_users?        
+      if SiteSetting.must_approve_users?
         @needs_approval = true
       else
         @user.enqueue_welcome_message('welcome_user') if @user.send_welcome_message
@@ -277,57 +306,45 @@ class UsersController < ApplicationController
     render :layout => 'no_js'
   end
 
-  def search_users
+  def send_activation_email
+    @user = fetch_user_from_params
+    @email_token = @user.email_tokens.unconfirmed.active.first
+    if @user
+      @email_token = @user.email_tokens.create(email: @user.email) if @email_token.nil?
+      Jobs.enqueue(:user_email, type: :signup, user_id: @user.id, email_token: @email_token.token)
+    end
+    render nothing: true
+  end
 
-    term = (params[:term] || "").strip.downcase
+  def search_users
+    term = params[:term].to_s.strip
     topic_id = params[:topic_id]
     topic_id = topic_id.to_i if topic_id
 
-    sql = "select username, name, email from users u "
-    if topic_id
-      sql << "left join (select distinct p.user_id from posts p where topic_id = :topic_id) s on 
-        s.user_id = u.id "
-    end
+    results = UserSearch.search term, topic_id
 
-    if term.length > 0
-      sql << "where username_lower like :term_like or 
-              to_tsvector('simple', name) @@ 
-              to_tsquery('simple',
-                regexp_replace(
-	                regexp_replace( 
-	                  cast(plainto_tsquery(:term) as text) 
-		                ,'\''(?: |$)', ':*''', 'g'),
-                '''', '', 'g')
-              ) "
-      
-    end
-
-    sql << "order by case when username_lower = :term then 0 else 1 end asc, "
-    if topic_id 
-      sql << " case when s.user_id is null then 0 else 1 end desc, "
-    end
-
-    sql << " case when last_seen_at is null then 0 else 1 end desc, last_seen_at desc, username asc limit(20)"
-
-    results = User.exec_sql(sql, topic_id: topic_id, term_like: "#{term}%", term: term)
-    results = results.map do |r|
-      r["avatar_template"] = User.avatar_template(r["email"])
-      r.delete("email")
-      r
-    end
-    render :json => results 
+    render json: { users: results.as_json( only:    [ :username, :name ],
+                                           methods: :avatar_template ) }
   end
 
   private
 
+    def honeypot_value
+      Digest::SHA1::hexdigest("#{Discourse.current_hostname}:#{Discourse::Application.config.secret_token}")[0,15]
+    end
+
+    def challenge_value
+      '3019774c067cc2b'
+    end
+
     def fetch_user_from_params
       username_lower = params[:username].downcase
       username_lower.gsub!(/\.json$/, '')
-      
+
       user = User.where(username_lower: username_lower).first
       raise Discourse::NotFound.new if user.blank?
 
       guardian.ensure_can_see!(user)
       user
-    end      
+    end
 end

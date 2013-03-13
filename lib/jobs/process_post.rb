@@ -5,7 +5,7 @@ module Jobs
 
   class ProcessPost < Jobs::Base
 
-    def execute(args)      
+    def execute(args)
       post = Post.where(id: args[:post_id]).first
       return unless post.present?
 

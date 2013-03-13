@@ -3,7 +3,7 @@
     <div class='topic-meta-data span2'>
       <div class='contents'>
         <div>
-          <a href='/users/{{unbound username}}' class='excerptable' data-excerpt-position="right" data-excerpt-size="small">{{avatar this imageSize="small"}}</a>
+          <a href='/users/{{unbound username}}'>{{avatar this imageSize="small"}}</a>
         </div>
         <h5><a href='/users/{{unbound username}}'>{{username}}</a></h5>
         <span class='post-date'>{{date created_at}}</span>
@@ -11,7 +11,9 @@
 
     </div>
     <div class='span11 topic-body'>
+      {{#if view.previousPost}}<a href='{{unbound url}}' class="arrow" title="{{i18n topic.jump_reply_up}}"><i class='icon icon-arrow-up'></i></a>{{/if}}
       {{{unbound cooked}}}
+      {{#unless view.previousPost}}<a href='{{unbound url}}' class="arrow" title="{{i18n topic.jump_reply_down}}"><i class='icon icon-arrow-down'></i></a>{{/unless}}
     </div>
   </div>
 {{/with}}

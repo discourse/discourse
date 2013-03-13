@@ -6,25 +6,28 @@ class DiscoursePlugin
   attr_reader :registry
 
   def initialize(registry)
-    @registry = registry  
+    @registry = registry
   end
 
-  def setup  
-    # Initialize the plugin here 
+  def setup
+    # Initialize the plugin here
   end
 
-  # Find the modules in our class with the name mixin, then include them in the appropriate places
-  # automagically.
+  # Loads and mixes in the plugin's mixins into the host app's classes.
+  # A mixin named "UserMixin" will be included into the "User" class.
   def self.include_mixins
-    modules = constants.collect {|const_name| const_get(const_name)}.select {|const| const.class == Module}
-    unless modules.empty?
-      modules.each do |m|
-        original_class = m.to_s.sub("#{self.name}::", '').sub("Mixin", "")
-        dependency_file_name = original_class.underscore
-        require_dependency(dependency_file_name)  
-        original_class.constantize.send(:include, m)
-      end
+    mixins.each do |mixin|
+      original_class = mixin.to_s.demodulize.sub("Mixin", "")
+      dependency_file_name = original_class.underscore
+      require_dependency(dependency_file_name)
+      original_class.constantize.send(:include, mixin)
     end
+  end
+
+  # Find the modules defined in the plugin with "Mixin" in their name.
+  def self.mixins
+    constants.map { |const_name| const_get(const_name) }
+             .select { |const| const.class == Module && const.name["Mixin"] }
   end
 
   def register_js(file, opts={})
@@ -40,7 +43,7 @@ class DiscoursePlugin
   end
 
   def listen_for(event_name)
-    return unless self.respond_to?(event_name)    
+    return unless self.respond_to?(event_name)
     DiscourseEvent.on(event_name, &self.method(event_name))
   end
 

@@ -5,6 +5,27 @@ describe DiscoursePluginRegistry do
 
   let(:registry) { DiscoursePluginRegistry.new }
 
+  context '#stylesheets' do
+    it 'defaults to an empty Set' do
+      DiscoursePluginRegistry.stylesheets = nil
+      DiscoursePluginRegistry.stylesheets.should == Set.new
+    end
+  end
+
+  context '#javascripts' do
+    it 'defaults to an empty Set' do
+      DiscoursePluginRegistry.javascripts = nil
+      DiscoursePluginRegistry.javascripts.should == Set.new
+    end
+  end
+
+  context '#server_side_javascripts' do
+    it 'defaults to an empty Set' do
+      DiscoursePluginRegistry.server_side_javascripts = nil
+      DiscoursePluginRegistry.server_side_javascripts.should == Set.new
+    end
+  end
+
   context '.register_css' do
     before do
       registry.register_css('hello.css')
@@ -16,7 +37,7 @@ describe DiscoursePluginRegistry do
 
     it "won't add the same file twice" do
       lambda { registry.register_css('hello.css') }.should_not change(registry.stylesheets, :size)
-    end    
+    end
   end
 
   context '.register_js' do
@@ -30,7 +51,7 @@ describe DiscoursePluginRegistry do
 
     it "won't add the same file twice" do
       lambda { registry.register_js('hello.js') }.should_not change(registry.javascripts, :size)
-    end    
+    end
   end
 
   context '.register_archetype' do

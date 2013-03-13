@@ -1,12 +1,9 @@
+require_dependency 'enum'
+
 module SiteSettingExtension
 
-  module Types
-    String = 1
-    Time = 2 
-    Fixnum = 3
-    Float = 4
-    Bool = 5
-    Null = 6
+  def types
+    @types ||= Enum.new(:string, :time, :fixnum, :float, :bool, :null)
   end
 
   def mutex
@@ -19,26 +16,26 @@ module SiteSettingExtension
   end
 
   def defaults
-    @defaults ||= {} 
+    @defaults ||= {}
   end
 
-  def setting(name, default = nil, type = nil)
-    mutex.synchronize do  
+  def setting(name, default = nil)
+    mutex.synchronize do
       self.defaults[name] = default
       current_value = current.has_key?(name) ? current[name] : default
       setup_methods(name, current_value)
     end
   end
 
-  # just like a setting, except that it is available in javascript via DiscourseSession 
-  def client_setting(name, defualt = nil, type = nil)
-    setting(name,defualt,type)
+  # just like a setting, except that it is available in javascript via DiscourseSession
+  def client_setting(name, default = nil)
+    setting(name,default)
     @@client_settings ||= []
     @@client_settings << name
   end
 
   def client_settings
-    @@client_settings 
+    @@client_settings
   end
 
 
@@ -51,10 +48,12 @@ module SiteSettingExtension
   # Retrieve all settings
   def all_settings
     @defaults.map do |s, v|
+      value = send(s)
       {setting: s,
        description: description(s),
        default: v,
-       value: send(s).to_s}
+       type: types[get_data_type(value)].to_s,
+       value: value.to_s}
     end
   end
 
@@ -73,9 +72,9 @@ module SiteSettingExtension
   end
 
   # refresh all the site settings
-  def refresh!  
-    return unless table_exists? 
-    mutex.synchronize do 
+  def refresh!
+    return unless table_exists?
+    mutex.synchronize do
       ensure_listen_for_changes
       old = current
       changes = []
@@ -91,33 +90,33 @@ module SiteSettingExtension
         changes << [name,value] if !old.has_key?(name) || old[name] != value
       end
 
-      old.each do |name,value| 
-        deletions << [name,value] unless new_hash.has_key?(name)        
+      old.each do |name,value|
+        deletions << [name,value] unless new_hash.has_key?(name)
       end
 
       if deletions.length > 0 || changes.length > 0
         @current = new_hash
-        changes.each do |name, val| 
-          setup_methods name, val 
+        changes.each do |name, val|
+          setup_methods name, val
         end
         deletions.each do |name,val|
           setup_methods name, defaults[name]
         end
       end
 
-      $redis.del(SiteSettingExtension.client_settings_cache_key)
+      Rails.cache.delete(SiteSettingExtension.client_settings_cache_key)
     end
   end
 
   def ensure_listen_for_changes
     unless @subscribed
       pid = process_id
-      MessageBus.subscribe("/site_settings") do |msg| 
+      MessageBus.subscribe("/site_settings") do |msg|
         message = msg.data
-        if message["process"] != pid 
+        if message["process"] != pid
           begin
             # picks a db
-            MessageBus.on_connect.call(msg.site_id) 
+            MessageBus.on_connect.call(msg.site_id)
             SiteSetting.refresh!
           ensure
             MessageBus.on_disconnect.call(msg.site_id)
@@ -133,7 +132,7 @@ module SiteSettingExtension
   end
 
   def remove_override!(name)
-    return unless table_exists? 
+    return unless table_exists?
     SiteSetting.where(:name => name).destroy_all
   end
 
@@ -142,20 +141,24 @@ module SiteSettingExtension
 
     setting = SiteSetting.where(:name => name).first
     type = get_data_type(defaults[name])
-    
-    if type == Types::Bool && val != true && val != false
-      val = (val == "t" || val == "true")
+
+    if type == types[:bool] && val != true && val != false
+      val = (val == "t" || val == "true") ? 't' : 'f'
     end
 
-    if type == Types::Fixnum && !(Fixnum === val)
+    if type == types[:fixnum] && !(Fixnum === val)
       val = val.to_i
+    end
+
+    if type == types[:null] && val != ''
+      type = get_data_type(val)
     end
 
     if setting
       setting.value = val
-      setting.data_type = type 
+      setting.data_type = type
       setting.save
-    else 
+    else
       SiteSetting.create!(:name => name, :value => val, :data_type => type)
     end
 
@@ -163,31 +166,31 @@ module SiteSettingExtension
   end
 
 
-  protected 
+  protected
 
   def get_data_type(val)
-    return Types::Null if val.nil?
+    return types[:null] if val.nil?
 
     if String === val
-      Types::String
-    elsif Fixnum === val 
-      Types::Fixnum
-    elsif TrueClass === val || FalseClass === val 
-      Types::Bool
-    else 
+      types[:string]
+    elsif Fixnum === val
+      types[:fixnum]
+    elsif TrueClass === val || FalseClass === val
+      types[:bool]
+    else
       raise ArgumentError.new :val
     end
   end
 
   def convert(value, type)
-    case type 
-    when Types::Fixnum
+    case type
+    when types[:fixnum]
       value.to_i
-    when Types::String
+    when types[:string]
       value
-    when Types::Bool
+    when types[:bool]
       value == "t"
-    when Types::Null
+    when types[:null]
       nil
     end
   end
@@ -195,21 +198,21 @@ module SiteSettingExtension
 
   def setup_methods(name, current_value)
 
-    # trivial multi db support, we can optimize this later 
+    # trivial multi db support, we can optimize this later
     db = RailsMultisite::ConnectionManagement.current_db
-    
+
     @@containers ||= {}
     @@containers[db] ||= {}
     @@containers[db][name] = current_value
 
     setter = ("#{name}=").sub("?","")
 
-    eval "define_singleton_method :#{name} do 
+    eval "define_singleton_method :#{name} do
       c = @@containers[RailsMultisite::ConnectionManagement.current_db]
       c = c[name] if c
       c
     end
-    
+
     define_singleton_method :#{setter} do |val|
       add_override!(:#{name}, val)
       refresh!
@@ -219,8 +222,8 @@ module SiteSettingExtension
 
   def method_missing(method, *args, &block)
     as_question = method.to_s.gsub(/\?$/, '')
-    if respond_to?(as_question) 
-      return send(as_question, *args, &block)  
+    if respond_to?(as_question)
+      return send(as_question, *args, &block)
     end
     super(method, *args, &block)
   end

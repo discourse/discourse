@@ -1,12 +1,12 @@
 require 'spec_helper'
 require 'oneboxer'
 
-describe "Dynamic Oneboxer" do 
+describe "Dynamic Oneboxer" do
   class DummyDynamicOnebox < Oneboxer::BaseOnebox
-    matcher do 
+    matcher do
       /^https?:\/\/dummy2.localhost/
     end
-    
+
     def onebox
       "dummy2!"
     end
@@ -17,21 +17,21 @@ describe "Dynamic Oneboxer" do
     @dummy_onebox_url = "http://dummy2.localhost/dummy-object"
   end
 
-   context 'find onebox for url' do
+  context 'find onebox for url' do
 
-     it 'returns blank with an unknown url' do
-       Oneboxer.onebox_for_url('http://asdfasdfasdfasdf.asdf').should be_blank
-     end
+    it 'returns blank with an unknown url' do
+      Oneboxer.onebox_for_url('http://asdfasdfasdfasdf.asdf').should be_blank
+    end
 
-     it 'returns something when matched' do
-       Oneboxer.onebox_for_url(@dummy_onebox_url).should be_present
-     end
+    it 'returns something when matched' do
+      Oneboxer.onebox_for_url(@dummy_onebox_url).should be_present
+    end
 
-     it 'returns an instance of our class when matched' do
-       Oneboxer.onebox_for_url(@dummy_onebox_url).kind_of?(DummyDynamicOnebox).should be_true
-     end
+    it 'returns an instance of our class when matched' do
+      Oneboxer.onebox_for_url(@dummy_onebox_url).kind_of?(DummyDynamicOnebox).should be_true
+    end
 
-   end
+  end
 
 end
 
@@ -46,7 +46,7 @@ describe Oneboxer do
     end
   end
 
-  
+
   before do
     Oneboxer.add_onebox DummyOnebox
     @dummy_onebox_url = "http://dummy.localhost/dummy-object"
@@ -72,7 +72,25 @@ describe Oneboxer do
 
   end
 
-  context 'without caching' do  
+  describe '#nice_host' do
+    it 'strips www from the domain' do
+      DummyOnebox.new('http://www.cnn.com/thing').nice_host.should eq 'cnn.com'
+    end
+
+    it 'respects double TLDs' do
+      DummyOnebox.new('http://news.bbc.co.uk/thing').nice_host.should eq 'news.bbc.co.uk'
+    end
+
+    it 'returns an empty string if the URL is bogus' do
+      DummyOnebox.new('whatever').nice_host.should eq ''
+    end
+
+    it 'returns an empty string if the URL unparsable' do
+      DummyOnebox.new(nil).nice_host.should eq ''
+    end
+  end
+
+  context 'without caching' do
     it 'calls the onebox method of our matched class' do
       Oneboxer.onebox_nocache(@dummy_onebox_url).should == 'dummy!'
     end
@@ -108,7 +126,7 @@ describe Oneboxer do
       end
 
       it "created a OneboxRender record with the url" do
-        @onebox_render.url.should == @dummy_onebox_url        
+        @onebox_render.url.should == @dummy_onebox_url
       end
 
       it "associated the render with a post" do
@@ -145,23 +163,21 @@ describe Oneboxer do
 
     it 'yields each url and element when given a string' do
       result = Oneboxer.each_onebox_link(@html) do |url, element|
-        element.is_a?(Hpricot::Elem).should be_true
+        element.is_a?(Nokogiri::XML::Element).should be_true
         url.should == 'http://discourse.org'
       end
-      result.kind_of?(Hpricot::Doc).should be_true
+      result.kind_of?(Nokogiri::HTML::Document).should be_true
     end
 
     it 'yields each url and element when given a doc' do
-      doc = Hpricot(@html)
+      doc = Nokogiri::HTML(@html)
       Oneboxer.each_onebox_link(doc) do |url, element|
-        element.is_a?(Hpricot::Elem).should be_true
+        element.is_a?(Nokogiri::XML::Element).should be_true
         url.should == 'http://discourse.org'
       end
-    end    
+    end
 
   end
 
 
 end
-
- 

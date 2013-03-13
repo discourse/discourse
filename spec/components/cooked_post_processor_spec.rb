@@ -3,6 +3,11 @@ require 'spec_helper'
 require 'cooked_post_processor'
 
 describe CookedPostProcessor do
+  let :cpp do
+    post = Fabricate.build(:post_with_youtube)
+    post.id = 123
+    CookedPostProcessor.new(post)
+  end
 
   context 'process_onebox' do
 
@@ -19,7 +24,10 @@ describe CookedPostProcessor do
     end
 
     it 'inserts the onebox' do
-      @cpp.html.should == "GANGNAM STYLE"
+      @cpp.html.should == <<EXPECTED
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><body>GANGNAM STYLE</body></html>
+EXPECTED
     end
 
   end
@@ -36,10 +44,11 @@ describe CookedPostProcessor do
         @topic = Fabricate(:topic)
         @post = Fabricate.build(:post_with_image_url, topic: @topic, user: @topic.user)
         @cpp = CookedPostProcessor.new(@post, :image_sizes => {'http://www.forumwarz.com/images/header/logo.png' => {'width' => 111, 'height' => 222}})
+        @cpp.expects(:get_size).returns([111,222])
       end
 
       it "doesn't call image_dimensions because it knows the size" do
-        CookedPostProcessor.expects(:image_dimensions).never
+        @cpp.expects(:image_dimensions).never
         @cpp.post_process_images
       end
 
@@ -52,11 +61,12 @@ describe CookedPostProcessor do
 
     context 'with unsized images in the post' do
       before do
-        CookedPostProcessor.expects(:image_dimensions).returns([123, 456])
+        FastImage.stubs(:size).returns([123, 456])
+        CookedPostProcessor.any_instance.expects(:image_dimensions).returns([123, 456])
         @post = Fabricate(:post_with_images)
       end
 
-      it "adds a topic image if there's one in the post" do    
+      it "adds a topic image if there's one in the post" do
         @post.topic.reload
         @post.topic.image_url.should == "/path/to/img.jpg"
       end
@@ -69,10 +79,36 @@ describe CookedPostProcessor do
     end
   end
 
+  context 'link convertor' do
+    before do
+      SiteSetting.stubs(:crawl_images?).returns(true)
+    end
+
+    let :post_with_img do
+      Fabricate.build(:post, cooked: '<p><img src="http://hello.com/image.png"></p>')
+    end
+
+    let :cpp_for_post do
+      CookedPostProcessor.new(post_with_img)
+    end
+
+    it 'convert img tags to links if they are sized down' do
+      cpp_for_post.expects(:get_size).returns([2000,2000]).twice
+      cpp_for_post.post_process
+      cpp_for_post.html.should =~ /a href/
+    end
+
+    it 'does not convert img tags to links if they are small' do
+      cpp_for_post.expects(:get_size).returns([200,200]).twice
+      cpp_for_post.post_process
+      (cpp_for_post.html !~ /a href/).should be_true
+    end
+
+  end
 
   context 'image_dimensions' do
     it "returns unless called with a http or https url" do
-      CookedPostProcessor.image_dimensions('/tmp/image.jpg').should be_blank
+      cpp.image_dimensions('/tmp/image.jpg').should be_blank
     end
 
     context 'with valid url' do
@@ -83,14 +119,14 @@ describe CookedPostProcessor do
       it "doesn't call fastimage if image crawling is disabled" do
         SiteSetting.expects(:crawl_images?).returns(false)
         FastImage.expects(:size).never
-        CookedPostProcessor.image_dimensions(@url)
+        cpp.image_dimensions(@url)
       end
 
       it "calls fastimage if image crawling is enabled" do
         SiteSetting.expects(:crawl_images?).returns(true)
         FastImage.expects(:size).with(@url)
-        CookedPostProcessor.image_dimensions(@url)
-      end      
+        cpp.image_dimensions(@url)
+      end
     end
   end
 

@@ -12,5 +12,5 @@ class Admin::AdminController < ApplicationController
     def ensure_is_admin
       raise Discourse::InvalidAccess.new unless current_user.admin?
     end
-  
+
 end

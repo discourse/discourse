@@ -1,6 +1,6 @@
 class ScoreCalculator
 
-  def self.default_score_weights  
+  def self.default_score_weights
     {
       reply_count: 5,
       like_count: 15,
@@ -16,14 +16,14 @@ class ScoreCalculator
   end
 
   # Calculate the score for all posts based on the weightings
-  def calculate    
+  def calculate
 
     # First update the scores of the posts
     exec_sql(post_score_sql, @weightings)
 
     # Update the best of flag
     exec_sql "
-      UPDATE topics SET has_best_of = 
+      UPDATE topics SET has_best_of =
         CASE
           WHEN like_count >= :likes_required AND
           posts_count >= :posts_required AND
@@ -34,8 +34,8 @@ class ScoreCalculator
         END",
       likes_required: SiteSetting.best_of_likes_required,
       posts_required: SiteSetting.best_of_posts_required,
-      score_required: SiteSetting.best_of_score_threshold   
-      
+      score_required: SiteSetting.best_of_score_threshold
+
   end
 
 
@@ -53,6 +53,6 @@ class ScoreCalculator
           components << "COALESCE(#{k.to_s}, 0) * :#{k.to_s}"
         end
         sql << components.join(" + ")
-      end      
+      end
     end
 end

@@ -1,5 +1,5 @@
 class Admin::SiteCustomizationsController < Admin::AdminController
-  
+
   def index
     @site_customizations = SiteCustomization.all
 

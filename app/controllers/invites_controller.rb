@@ -8,14 +8,14 @@ class InvitesController < ApplicationController
 
     if invite.present?
       user = invite.redeem
-      if user.present?        
+      if user.present?
         log_on_user(user)
 
         # Send a welcome message if required
         user.enqueue_welcome_message('welcome_invite') if user.send_welcome_message
 
         # We skip the access password if we come in via an invite link
-        cookies.permanent['_access'] = SiteSetting.access_password if SiteSetting.restrict_access?
+        cookies.permanent['_access'] = SiteSetting.access_password if SiteSetting.access_password.present?
 
         topic = invite.topics.first
         if topic.present?
@@ -31,7 +31,7 @@ class InvitesController < ApplicationController
   def destroy
     requires_parameter(:email)
 
-    invite = Invite.where(invited_by_id: current_user.id, email: params[:email]).first   
+    invite = Invite.where(invited_by_id: current_user.id, email: params[:email]).first
     raise Discourse::InvalidParameters.new(:email) if invite.blank?
     invite.destroy
 

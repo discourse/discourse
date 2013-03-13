@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe EmailLog do
-  
+
   it { should belong_to :user }
 
   it { should validate_presence_of :to_address }

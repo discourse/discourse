@@ -1,28 +1,36 @@
-class TrustLevel
+require_dependency 'enum'
 
+class TrustLevel
   attr_reader :id, :name
 
-  def self.Levels
-    {:new => 0,
-     :basic => 1,
-     :regular => 2,
-     :experienced => 3,
-     :advanced => 4,
-     :moderator => 5}
-  end
+  class << self
+    def levels
+      @levels ||= Enum.new(
+        :new, :basic, :regular, :experienced, :advanced, :moderator, start: 0
+      )
+    end
 
-  def self.all
-    self.Levels.map do |name_key, id|
-      TrustLevel.new(name_key, id)
+    def all
+      levels.map do |name_key, id|
+        TrustLevel.new(name_key, id)
+      end
+    end
+
+    def valid_level?(level)
+      levels.valid?(level)
+    end
+
+    def compare(current_level, level)
+      (current_level || levels[:new]) >= levels[level] rescue binding.pry
     end
   end
 
   def initialize(name_key, id)
-    @name = I18n.t("trust_levels.#{name_key}.title")    
+    @name = I18n.t("trust_levels.#{name_key}.title")
     @id = id
   end
 
   def serializable_hash
-    {id: @id, name: @name}
+    { id: @id, name: @name }
   end
 end

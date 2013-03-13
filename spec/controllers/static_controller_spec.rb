@@ -8,7 +8,7 @@ describe StaticController do
       xhr :get, :show, :id => 'faq'
     end
 
-    it 'renders the static file if present' do      
+    it 'renders the static file if present' do
       response.should be_success
     end
 

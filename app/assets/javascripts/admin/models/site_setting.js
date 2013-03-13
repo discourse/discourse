@@ -1,0 +1,104 @@
+/**
+  Our data model for interacting with site settings.
+
+  @class SiteSetting
+  @extends Discourse.Model
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.SiteSetting = Discourse.Model.extend({
+
+  /**
+    Is the boolean setting true?
+
+    @property enabled
+  **/
+  enabled: function(key, value) {
+
+    if (arguments.length === 1) {
+      // get the boolean value of the setting
+      if (this.blank('value')) return false;
+      return this.get('value') === 'true';
+
+    } else {
+      // set the boolean value of the setting
+      this.set('value', value ? 'true' : 'false');
+
+      // We save booleans right away, it's not like a text field where it makes sense to
+      // undo what you typed in.
+      this.save();
+    }
+
+  }.property('value'),
+
+  /**
+    Has the user changed the setting? If so we should save it.
+
+    @property dirty
+  **/
+  dirty: function() {
+    return this.get('originalValue') !== this.get('value');
+  }.property('originalValue', 'value'),
+
+  /**
+    Has the setting been overridden from its default value?
+
+    @property overridden
+  **/
+  overridden: function() {
+    var val = this.get('value');
+    var defaultVal = this.get('default');
+
+    if (val === null) val = '';
+    if (defaultVal === null) defaultVal = '';
+
+    return val.toString() !== defaultVal.toString();
+  }.property('value'),
+
+  /**
+    Reset the setting to its original value.
+
+    @method resetValue
+  **/
+  resetValue: function() {
+    this.set('value', this.get('originalValue'));
+  },
+
+  /**
+    Save the setting's value.
+
+    @method save
+  **/
+  save: function() {
+    // Update the setting
+    var setting = this;
+    return $.ajax("/admin/site_settings/" + (this.get('setting')), {
+      data: { value: this.get('value') },
+      type: 'PUT',
+      success: function() {
+        setting.set('originalValue', setting.get('value'));
+      }
+    });
+  }
+});
+
+Discourse.SiteSetting.reopenClass({
+
+  /**
+    Retrieve all settings from the server
+
+    @method findAll
+  **/
+  findAll: function() {
+    var result = Em.A();
+    $.get("/admin/site_settings", function(settings) {
+      return settings.each(function(s) {
+        s.originalValue = s.value;
+        return result.pushObject(Discourse.SiteSetting.create(s));
+      });
+    });
+    return result;
+  }
+});
+
+

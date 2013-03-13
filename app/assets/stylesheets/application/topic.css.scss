@@ -272,9 +272,9 @@
   #topic-footer-buttons {
     margin: 20px 0 0 103px;
 
-    width: 1110px;
-    @include medium-width { width: 970px; }
-    @include small-width { width: 870px; }
+    width: 1027px;
+    @include medium-width { width: 887px; }
+    @include small-width { width: 787px; }
 
     .btn-group {
       margin-top: 20px;
@@ -346,7 +346,7 @@ kbd {
   width: 0;
   bottom: 0px;
   right: 50%;
-  z-index: 1;
+  z-index: 500;
   outline: 1px solid transparent;
 }
 
@@ -387,7 +387,7 @@ kbd {
     z-index: 1;
   }
   button {
-    padding: 0;
+    padding: 0 1px;
     cursor: pointer;
     z-index: 1000;
     position: absolute;

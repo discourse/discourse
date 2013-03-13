@@ -42,31 +42,54 @@ describe Guardian do
     end
 
     it "returns false when you've already done it" do
-      Guardian.new(user).post_can_act?(post, :like, taken_actions: {PostActionType.Types[:like] => 1}).should be_false
+      Guardian.new(user).post_can_act?(post, :like, taken_actions: {PostActionType.types[:like] => 1}).should be_false
     end
 
-    it "returns false when you already flagged a post" do 
-      Guardian.new(user).post_can_act?(post, :off_topic, taken_actions: {PostActionType.Types[:spam] => 1}).should be_false
+    it "returns false when you already flagged a post" do
+      Guardian.new(user).post_can_act?(post, :off_topic, taken_actions: {PostActionType.types[:spam] => 1}).should be_false
     end
 
     describe "trust levels" do
       it "returns true for a new user liking something" do
-        user.trust_level = TrustLevel.Levels[:new]
+        user.trust_level = TrustLevel.levels[:new]
         Guardian.new(user).post_can_act?(post, :like).should be_true
       end
 
       it "returns false for a new user flagging something as spam" do
-        user.trust_level = TrustLevel.Levels[:new]
+        user.trust_level = TrustLevel.levels[:new]
         Guardian.new(user).post_can_act?(post, :spam).should be_false
       end
 
       it "returns false for a new user flagging something as off topic" do
-        user.trust_level = TrustLevel.Levels[:new]
+        user.trust_level = TrustLevel.levels[:new]
         Guardian.new(user).post_can_act?(post, :off_topic).should be_false
       end
     end
   end
 
+
+  describe "can_clear_flags" do
+    let(:post) { Fabricate(:post) }
+    let(:user) { post.user }
+    let(:moderator) { Fabricate(:moderator) }
+
+    it "returns false when the user is nil" do
+      Guardian.new(nil).can_clear_flags?(post).should be_false
+    end
+
+    it "returns false when the post is nil" do
+      Guardian.new(moderator).can_clear_flags?(nil).should be_false
+    end
+
+    it "returns false when the user is not a moderator" do
+      Guardian.new(user).can_clear_flags?(post).should be_false
+    end
+
+    it "returns true when the user is a moderator" do
+      Guardian.new(moderator).can_clear_flags?(post).should be_true
+    end
+
+  end
 
   describe 'can_send_private_message' do
     let(:user) { Fabricate(:user) }
@@ -74,7 +97,7 @@ describe Guardian do
 
     it "returns false when the user is nil" do
       Guardian.new(nil).can_send_private_message?(user).should be_false
-    end    
+    end
 
     it "returns false when the target user is nil" do
       Guardian.new(user).can_send_private_message?(nil).should be_false
@@ -85,7 +108,7 @@ describe Guardian do
     end
 
     it "returns false when you are untrusted" do
-      user.trust_level = TrustLevel.Levels[:new]
+      user.trust_level = TrustLevel.levels[:new]
       Guardian.new(user).can_send_private_message?(another_user).should be_false
     end
 
@@ -107,7 +130,7 @@ describe Guardian do
     end
 
     it "returns false for an untrusted user" do
-      user.trust_level = TrustLevel.Levels[:new]
+      user.trust_level = TrustLevel.levels[:new]
       Guardian.new(user).can_reply_as_new_topic?(topic).should be_false
     end
 
@@ -121,32 +144,32 @@ describe Guardian do
     let(:topic) { Fabricate(:topic, user: coding_horror)}
 
     it 'returns false when the post is nil' do
-      Guardian.new(user).can_see_post_actors?(nil, PostActionType.Types[:like]).should be_false
+      Guardian.new(user).can_see_post_actors?(nil, PostActionType.types[:like]).should be_false
     end
 
     it 'returns true for likes' do
-      Guardian.new(user).can_see_post_actors?(topic, PostActionType.Types[:like]).should be_true
+      Guardian.new(user).can_see_post_actors?(topic, PostActionType.types[:like]).should be_true
     end
 
     it 'returns false for bookmarks' do
-      Guardian.new(user).can_see_post_actors?(topic, PostActionType.Types[:bookmark]).should be_false
+      Guardian.new(user).can_see_post_actors?(topic, PostActionType.types[:bookmark]).should be_false
     end
 
     it 'returns false for off-topic flags' do
-      Guardian.new(user).can_see_post_actors?(topic, PostActionType.Types[:off_topic]).should be_false
+      Guardian.new(user).can_see_post_actors?(topic, PostActionType.types[:off_topic]).should be_false
     end
 
     it 'returns false for spam flags' do
-      Guardian.new(user).can_see_post_actors?(topic, PostActionType.Types[:spam]).should be_false
+      Guardian.new(user).can_see_post_actors?(topic, PostActionType.types[:spam]).should be_false
     end
 
     it 'returns true for public votes' do
-      Guardian.new(user).can_see_post_actors?(topic, PostActionType.Types[:vote]).should be_true
+      Guardian.new(user).can_see_post_actors?(topic, PostActionType.types[:vote]).should be_true
     end
 
     it 'returns false for private votes' do
       topic.expects(:has_meta_data_boolean?).with(:private_poll).returns(true)
-      Guardian.new(user).can_see_post_actors?(topic, PostActionType.Types[:vote]).should be_false
+      Guardian.new(user).can_see_post_actors?(topic, PostActionType.types[:vote]).should be_false
     end
 
   end
@@ -297,7 +320,7 @@ describe Guardian do
           end
 
         end
-  
+
         it "allows new posts from moderators" do
           Guardian.new(moderator).can_create?(Post, topic).should be_true
         end
@@ -318,8 +341,8 @@ describe Guardian do
     end
 
     describe 'a Post' do
-      
-      let (:guardian) do 
+
+      let (:guardian) do
         Guardian.new(user)
       end
 
@@ -333,19 +356,19 @@ describe Guardian do
       end
 
       it "doesn't allow voting if the user has an action from voting already" do
-        guardian.post_can_act?(post,:vote,taken_actions: {PostActionType.Types[:vote] => 1}).should be_false
+        guardian.post_can_act?(post,:vote,taken_actions: {PostActionType.types[:vote] => 1}).should be_false
       end
 
       it "allows voting if the user has performed a different action" do
-        guardian.post_can_act?(post,:vote,taken_actions: {PostActionType.Types[:like] => 1}).should be_true
-      end      
+        guardian.post_can_act?(post,:vote,taken_actions: {PostActionType.types[:like] => 1}).should be_true
+      end
 
       it "isn't allowed on archived topics" do
         topic.archived = true
         Guardian.new(user).post_can_act?(post,:like).should be_false
       end
 
-       
+
       describe 'multiple voting' do
 
         it "isn't allowed if the user voted and the topic doesn't allow multiple votes" do
@@ -359,6 +382,26 @@ describe Guardian do
       end
 
     end
+  end
+
+  describe "can_recover_post?" do
+
+    it "returns false for a nil user" do
+      Guardian.new(nil).can_recover_post?(post).should be_false
+    end
+
+    it "returns false for a nil object" do
+      Guardian.new(user).can_recover_post?(nil).should be_false
+    end
+
+    it "returns false for a regular user" do
+      Guardian.new(user).can_recover_post?(post).should be_false
+    end
+
+    it "returns true for a moderator" do
+      Guardian.new(moderator).can_recover_post?(post).should be_true
+    end
+
   end
 
   describe 'can_edit?' do
@@ -447,7 +490,7 @@ describe Guardian do
 
       it 'returns true when trying to edit yourself' do
         Guardian.new(user).can_edit?(user).should be_true
-      end      
+      end
 
       it 'returns false as a moderator' do
         Guardian.new(moderator).can_edit?(user).should be_false
@@ -484,7 +527,7 @@ describe Guardian do
         Guardian.new(admin).can_moderate?(topic).should be_true
       end
 
-    end    
+    end
 
   end
 
@@ -535,7 +578,7 @@ describe Guardian do
         Guardian.new(admin).can_move_posts?(topic).should be_true
       end
 
-    end    
+    end
 
   end
 
@@ -576,8 +619,18 @@ describe Guardian do
         Guardian.new.can_delete?(post).should be_false
       end
 
-      it 'returns false when not a moderator' do
+      it "returns false when trying to delete your own post that has already been deleted" do
+        post.delete_by(user)
+        post.reload
         Guardian.new(user).can_delete?(post).should be_false
+      end
+
+      it 'returns true when trying to delete your own post' do
+        Guardian.new(user).can_delete?(post).should be_true
+      end
+
+      it "returns false when trying to delete another user's own post" do
+        Guardian.new(Fabricate(:user)).can_delete?(post).should be_false
       end
 
       it "returns false when it's the OP, even as a moderator" do
@@ -682,11 +735,11 @@ describe Guardian do
     end
 
     it 'wont allow an admin to grant their own access' do
-      Guardian.new(admin).can_grant_admin?(admin).should be_false     
+      Guardian.new(admin).can_grant_admin?(admin).should be_false
     end
 
     it "allows an admin to grant a regular user access" do
-      Guardian.new(admin).can_grant_admin?(user).should be_true     
+      Guardian.new(admin).can_grant_admin?(user).should be_true
     end
   end
 
@@ -700,11 +753,51 @@ describe Guardian do
     end
 
     it 'wont allow an admin to revoke their own access' do
-      Guardian.new(admin).can_revoke_admin?(admin).should be_false     
+      Guardian.new(admin).can_revoke_admin?(admin).should be_false
     end
 
     it "allows an admin to revoke another admin's access" do
-      Guardian.new(admin).can_revoke_admin?(another_admin).should be_true     
+      Guardian.new(admin).can_revoke_admin?(another_admin).should be_true
+    end
+  end
+
+  context 'can_grant_moderation?' do
+    it "wont allow a non logged in user to grant an moderator's access" do
+      Guardian.new.can_grant_moderation?(user).should be_false
+    end
+
+    it "wont allow a regular user to revoke an modearator's access" do
+      Guardian.new(user).can_grant_moderation?(moderator).should be_false
+    end
+
+    it 'wont allow an admin to grant their own access' do
+      Guardian.new(admin).can_grant_moderation?(admin).should be_false
+    end
+
+    it 'wont allow an admin to grant it to an already moderator' do
+      Guardian.new(admin).can_grant_moderation?(moderator).should be_false
+    end
+
+    it "allows an admin to grant a regular user access" do
+      Guardian.new(admin).can_grant_moderation?(user).should be_true
+    end
+  end
+
+  context 'can_revoke_moderation?' do
+    it "wont allow a non logged in user to revoke an moderator's access" do
+      Guardian.new.can_revoke_moderation?(moderator).should be_false
+    end
+
+    it "wont allow a regular user to revoke an moderator's access" do
+      Guardian.new(user).can_revoke_moderation?(moderator).should be_false
+    end
+
+    it 'wont allow an moderator to revoke their own moderator' do
+      Guardian.new(moderator).can_revoke_moderation?(moderator).should be_false
+    end
+
+    it "allows an admin to revoke a moderator's access" do
+      Guardian.new(admin).can_revoke_moderation?(moderator).should be_true
     end
   end
 
@@ -725,4 +818,4 @@ describe Guardian do
   end
 
 end
- 
+

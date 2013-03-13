@@ -1,4 +1,3 @@
-require 'coffee_script'
 require 'v8'
 require 'nokogiri'
 
@@ -41,12 +40,12 @@ module PrettyText
         'ins'        => {'cite' => ['http', 'https', :relative]},
         'q'          => {'cite' => ['http', 'https', :relative]}
       }
-    }     
+    }
   end
 
 
   class Helpers
-    # function here are available to v8 
+    # function here are available to v8
     def avatar_template(username)
       return "" unless username
 
@@ -67,7 +66,7 @@ module PrettyText
 
   def self.mention_matcher
     /(\@[a-zA-Z0-9\-]+)/
-  end  
+  end
 
   def self.app_root
     Rails.root
@@ -77,13 +76,13 @@ module PrettyText
     return @ctx unless @ctx.nil?
 
     @ctx = V8::Context.new
-    
-    @ctx["helpers"] = Helpers.new 
+
+    @ctx["helpers"] = Helpers.new
 
     @ctx.load(app_root + "app/assets/javascripts/external/Markdown.Converter.js")
-    @ctx.load(app_root + "app/assets/javascripts/external/twitter-text-1.5.0.js")    
+    @ctx.load(app_root + "app/assets/javascripts/external/twitter-text-1.5.0.js")
     @ctx.load(app_root + "lib/headless-ember.js")
-    @ctx.load(app_root + "app/assets/javascripts/external/rsvp.js")    
+    @ctx.load(app_root + "app/assets/javascripts/external/rsvp.js")
     @ctx.load(Rails.configuration.ember.handlebars_location)
     #@ctx.load(Rails.configuration.ember.ember_location)
 
@@ -91,8 +90,9 @@ module PrettyText
     @ctx.eval("var Discourse = {}; Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
     @ctx.eval("var window = {}; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
 
-    @ctx.eval(CoffeeScript.compile(File.read(app_root + "app/assets/javascripts/discourse/components/bbcode.js.coffee")))
-    @ctx.eval(CoffeeScript.compile(File.read(app_root + "app/assets/javascripts/discourse/components/utilities.coffee")))
+    @ctx.load(app_root + "app/assets/javascripts/discourse/components/bbcode.js")
+    @ctx.load(app_root + "app/assets/javascripts/discourse/components/utilities.js")
+    @ctx.load(app_root + "app/assets/javascripts/discourse/components/markdown.js")
 
     # Load server side javascripts
     if DiscoursePluginRegistry.server_side_javascripts.present?
@@ -103,7 +103,7 @@ module PrettyText
 
     @ctx['quoteTemplate'] = File.open(app_root + 'app/assets/javascripts/discourse/templates/quote.js.shbrs') {|f| f.read}
     @ctx['quoteEmailTemplate'] = File.open(app_root + 'lib/assets/quote_email.js.shbrs') {|f| f.read}
-    @ctx.eval("HANDLEBARS_TEMPLATES = { 
+    @ctx.eval("HANDLEBARS_TEMPLATES = {
       'quote': Handlebars.compile(quoteTemplate),
       'quote_email': Handlebars.compile(quoteEmailTemplate),
      };")
@@ -112,11 +112,11 @@ module PrettyText
 
   def self.markdown(text, opts=nil)
     # we use the exact same markdown converter as the client
-    # TODO: use the same extensions on both client and server (in particular the template for mentions) 
-    
+    # TODO: use the same extensions on both client and server (in particular the template for mentions)
+
     baked = nil
 
-    @mutex.synchronize do        
+    @mutex.synchronize do
       # we need to do this to work in a multi site environment, many sites, many settings
       v8.eval("Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
       v8.eval("Discourse.BaseUrl = 'http://#{RailsMultisite::ConnectionManagement.current_hostname}';")
@@ -124,24 +124,24 @@ module PrettyText
       v8['raw'] = text
       v8.eval('opts["mentionLookup"] = function(u){return helpers.is_username_valid(u);}')
       v8.eval('opts["lookupAvatar"] = function(p){return Discourse.Utilities.avatarImg({username: p, size: "tiny", avatarTemplate: helpers.avatar_template(p)});}')
-      baked = v8.eval('Discourse.Utilities.markdownConverter(opts).makeHtml(raw)') 
+      baked = v8.eval('Discourse.Markdown.markdownConverter(opts).makeHtml(raw)')
     end
 
     # we need some minimal server side stuff, apply CDN and TODO filter disallowed markup
-    baked = apply_cdn(baked, Rails.configuration.action_controller.asset_host)  
+    baked = apply_cdn(baked, Rails.configuration.action_controller.asset_host)
     baked
   end
 
   # leaving this here, cause it invokes v8, don't want to implement twice
   def self.avatar_img(username, size)
     r = nil
-    @mutex.synchronize do        
+    @mutex.synchronize do
       v8['username'] = username
       v8['size'] = size
       v8.eval("Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
       v8.eval("Discourse.CDN = '#{Rails.configuration.action_controller.asset_host}';")
       v8.eval("Discourse.BaseUrl = '#{RailsMultisite::ConnectionManagement.current_hostname}';")
-      r = v8.eval("Discourse.Utilities.avatarImg({ username: username, size: size });") 
+      r = v8.eval("Discourse.Utilities.avatarImg({ username: username, size: size });")
     end
     r
   end
@@ -160,7 +160,7 @@ module PrettyText
     end
     doc.css("img").each do |l|
       src = l.attributes["src"].to_s
-      if src[0] == '/' 
+      if src[0] == '/'
         l["src"] = url + src
       end
     end
@@ -172,7 +172,42 @@ module PrettyText
     cloned = opts.dup
     # we have a minor inconsistency
     cloned[:topicId] = opts[:topic_id]
-    Sanitize.clean(markdown(text.dup, cloned), PrettyText.whitelist)    
+    sanitized = Sanitize.clean(markdown(text.dup, cloned), PrettyText.whitelist)
+    if SiteSetting.add_rel_nofollow_to_user_content
+      sanitized = add_rel_nofollow_to_user_content(sanitized)
+    end
+    sanitized
+  end
+
+  def self.add_rel_nofollow_to_user_content(html)
+    whitelist = []
+
+    l = SiteSetting.exclude_rel_nofollow_domains
+    if l.present?
+      whitelist = l.split(",")
+    end
+
+    site_uri = nil
+    doc = Nokogiri::HTML.fragment(html)
+    doc.css("a").each do |l|
+      href = l["href"].to_s
+      begin
+        uri = URI(href)
+        site_uri ||= URI(Discourse.base_url)
+
+        if  !uri.host.present? ||
+            uri.host.ends_with?(site_uri.host) ||
+            whitelist.any?{|u| uri.host.ends_with?(u)}
+          # we are good no need for nofollow
+        else
+          l["rel"] = "nofollow"
+        end
+      rescue URI::InvalidURIError
+        # add a nofollow anyway
+        l["rel"] = "nofollow"
+      end
+    end
+    doc.to_html
   end
 
   def self.extract_links(html)
@@ -181,17 +216,29 @@ module PrettyText
     doc.css("a").each do |l|
       links << l.attributes["href"].to_s
     end
+
+    doc.css("aside.quote").each do |a|
+      topic_id = a.attributes['data-topic']
+
+      url = "/t/topic/#{topic_id}"
+      if post_number = a.attributes['data-post']
+        url << "/#{post_number}"
+      end
+
+      links << url
+    end
+
     links
   end
 
   class ExcerptParser < Nokogiri::XML::SAX::Document
 
-    class DoneException < StandardError; end 
+    class DoneException < StandardError; end
 
     attr_reader :excerpt
 
     def initialize(length)
-      @length = length 
+      @length = length
       @excerpt = ""
       @current_length = 0
     end
@@ -199,19 +246,19 @@ module PrettyText
     def self.get_excerpt(html, length)
       me = self.new(length)
       parser = Nokogiri::HTML::SAX::Parser.new(me)
-      begin 
-        copy = "<div>" 
+      begin
+        copy = "<div>"
         copy << html unless html.nil?
         copy << "</div>"
         parser.parse(html) unless html.nil?
       rescue DoneException
-        # we are done 
+        # we are done
       end
       me.excerpt
     end
 
     def start_element(name, attributes=[])
-      case name 
+      case name
         when "img"
           attributes = Hash[*attributes.flatten]
           if attributes["alt"]
@@ -228,12 +275,12 @@ module PrettyText
           characters(c, false, false, false)
           @in_a = true
         when "aside"
-          @in_quote = true 
+          @in_quote = true
       end
     end
 
     def end_element(name)
-      case name 
+      case name
       when "a"
         characters("</a>",false, false, false)
         @in_a = false
@@ -246,7 +293,7 @@ module PrettyText
 
     def characters(string, truncate = true, count_it = true, encode = true)
       return if @in_quote
-      encode = encode ? lambda{|s| ERB::Util.html_escape(s)} : lambda {|s| s} 
+      encode = encode ? lambda{|s| ERB::Util.html_escape(s)} : lambda {|s| s}
       if @current_length + string.length > @length && count_it
         @excerpt << encode.call(string[0..(@length-@current_length)-1]) if truncate
         @excerpt << "&hellip;"

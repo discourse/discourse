@@ -24,7 +24,7 @@ module Export
     end
 
     def write_schema_info(args)
-      raise SchemaArgumentsError unless args[:source].present? and args[:version].present?
+      raise SchemaArgumentsError unless args[:source].present? && args[:version].present?
 
       @schema_data = {
           schema: {
@@ -50,7 +50,7 @@ module Export
         # TODO: write to multiple files as needed.
         #       one file per table? multiple files per table?
 
-      end while rows and rows.size > 0
+      end while rows && rows.size > 0
 
       @table_data[table_name][:rows].flatten!(1)
       @table_data[table_name][:row_count] = @table_data[table_name][:rows].size

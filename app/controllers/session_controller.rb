@@ -12,19 +12,24 @@ class SessionController < ApplicationController
       @user = User.where(username_lower: login).first
     end
 
-    if @user.present? 
+    if @user.present?
 
       # If the site requires user approval and the user is not approved yet
-      if SiteSetting.must_approve_users? and !@user.approved?
+      if SiteSetting.must_approve_users? && !@user.approved?
         render :json => {error: I18n.t("login.not_approved")}
         return
       end
 
       # If their password is correct
       if @user.confirm_password?(params[:password])
-        log_on_user(@user)
-        render_serialized(@user, UserSerializer)
-        return
+        if @user.email_confirmed?
+          log_on_user(@user)
+          render_serialized(@user, UserSerializer)
+          return
+        else
+          render :json => {error: I18n.t("login.not_activated"), reason: 'not_activated', sent_to_email: @user.email_logs.where(email_type: 'signup').order('created_at DESC').first.try(:to_address), current_email: @user.email}
+          return
+        end
       end
     end
 

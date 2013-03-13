@@ -8,6 +8,9 @@ require 'spork'
 #uncomment the following line to use spork with the debugger
 #require 'spork/ext/ruby-debug'
 
+require 'fakeweb'
+FakeWeb.allow_net_connect = false
+
 module Helpers
   def log_in(fabricator=nil)
     user = Fabricate(fabricator || :user)
@@ -19,6 +22,11 @@ module Helpers
     session[:current_user_id] = user.id
   end
 
+  def fixture_file(filename)
+    return '' if filename == ''
+    file_path = File.expand_path(File.dirname(__FILE__) + '/fixtures/' + filename)
+    File.read(file_path)
+  end
 end
 
 Spork.prefork do
@@ -52,7 +60,7 @@ Spork.prefork do
     config.infer_base_class_for_anonymous_controllers = true
 
     config.before(:suite) do
-      SeedFu.seed      
+      SeedFu.seed
     end
 
     config.before(:all) do
@@ -63,7 +71,7 @@ Spork.prefork do
 
   class DateTime
     class << self
-      alias_method :old_now, :now 
+      alias_method :old_now, :now
       def now
         @now || old_now
       end
@@ -87,7 +95,9 @@ end
 
 Spork.each_run do
   # This code will be run each time you run your specs.
-  $redis.client.reconnect  
+  $redis.client.reconnect
+  MessageBus.reliable_pub_sub.pub_redis.client.reconnect
+  Rails.cache.reconnect
 end
 
 # --- Instructions ---

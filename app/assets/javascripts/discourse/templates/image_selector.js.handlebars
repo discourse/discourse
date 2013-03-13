@@ -1,4 +1,4 @@
-<ul class="nav nav-pills image-options"> 
+<ul class="nav nav-pills image-options">
   <li title="local image" {{bindAttr class="view.localSelected:active"}}>
   <a href="#" {{action selectLocal target="view"}}>{{i18n image_selector.from_my_computer}}</a>
   </li>
@@ -23,7 +23,7 @@
 {{else}}
 <div class='modal-body'>
   <form>
-    <input type="text" name="text" id="fileurl-input"><br>
+    <input type="text" name="text" id="fileurl-input" autofocus><br>
     <span class='description'>{{i18n image_selector.remote_tip}}</span> <br>
   </form>
 </div>

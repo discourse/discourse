@@ -1,6 +1,6 @@
 class CreateForumThreads < ActiveRecord::Migration
   def change
-    create_table :forum_threads do |t|      
+    create_table :forum_threads do |t|
       t.integer :forum_id, null: false
       t.string :title, null: false
       t.integer :last_post_id

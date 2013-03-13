@@ -1,27 +1,31 @@
-<p>The page you requested doesn't exist on this discussion forum. Perhaps we can help find it, or another topic like it:</p>
+<% local_domain = "#{request.protocol}#{request.host_with_port}" %>
+
+<p><%= t 'page_not_found.title' %></p>
 <table>
-    <tr>
-    <td style='padding: 5px 10px 20px 0'>
-        <h2>Most popular topics</h2>
-        <% @popular.each do |t| %>
-          <a href='<%= t.relative_url %>'><%= t.title %></a><br/>
-        <% end %>
-        <a href="/popular">See More...</a>
+  <tr>
+    <td style="vertical-align:top; padding:0 20px 20px 0;">
+      <h2><%= t 'page_not_found.popular_topics' %></h2>
+      <% @popular.each do |t| %>
+        <%= link_to t.title, t.relative_url %><br/>
+      <% end %>
+      <br/>
+      <a href="/popular" class="btn"><%= t 'page_not_found.see_more' %>&hellip;</a>
     </td>
-    <td style='padding: 5px 0 20px'>
-        <h2>Recent topics</h2>
-        <% @recent.each do |t| %>
-          <a href='<%= t.relative_url %>'><%= t.title %></a><br/>
-        <% end %>
-        <a href="/popular">See More...</a>
+    <td style="vertical-align:top; padding:0 0 20px 0;">
+      <h2><%= t 'page_not_found.recent_topics' %></h2>
+      <% @recent.each do |t| %>
+        <%= link_to t.title, t.relative_url %><br/>
+      <% end %>
+      <br/>
+      <a href="/new" class="btn"><%= t 'page_not_found.see_more' %>&hellip;</a>
     </td>
-    </tr>
+  </tr>
 </table>
-<h2>Search for this topic</h2>
+<h2><%= t 'page_not_found.search_title' %></h2>
 <p>
-    <form action='http://google.com'>
-    <input type="text" name='q' value="<%= @slug %>">
-    <input type="button" value="Search Here" onclick="alert('single page search results not implemented yet');" />
-    <input type="submit" value="Search Google" />
-    </form>
+  <form action='http://google.com'>
+    <input type="text" name='q' value="site:<%= local_domain %> <%= @slug %>">
+    <!--<input type="button" class="btn" value="Search Here" onclick="alert('single page search results not implemented yet');" />-->
+    <input type="submit" class="btn btn-primary" value="<%= t 'page_not_found.search_google' %>" />
+  </form>
 </p>

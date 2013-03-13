@@ -1,4 +1,4 @@
-guard 'spork' do
+guard :spork, wait: 120 do
   watch('config/application.rb')
   watch('config/environment.rb')
   watch(%r{^config/environments/.*\.rb$})
@@ -8,7 +8,7 @@ guard 'spork' do
   watch('spec/spec_helper.rb') { :rspec }
 end
 
-phantom_path = File.expand_path('~/phantomjs/bin/phantomjs') 
+phantom_path = File.expand_path('~/phantomjs/bin/phantomjs')
 phantom_path = nil unless File.exists?(phantom_path)
 
 jasmine_options = {:phantomjs_bin => phantom_path}
@@ -22,15 +22,23 @@ else
   jasmine_options[:server_timeout] = 300
 end
 
-guard 'jasmine', jasmine_options do watch(%r{spec/javascripts/spec\.(js\.coffee|js|coffee)$})         { "spec/javascripts" }
-  watch(%r{spec/javascripts/.+_spec\.(js\.coffee|js|coffee)$})
-  watch(%r{app/assets/javascripts/(.+?)\.(js\.coffee|js|coffee)$})  { "spec/javascripts" }
+guard 'jasmine', jasmine_options do
+  watch(%r{spec/javascripts/spec\.js$})         { "spec/javascripts" }
+  watch(%r{spec/javascripts/.+_spec\.js$})
+  watch(%r{app/assets/javascripts/(.+?)\.js$})  { "spec/javascripts" }
 end
 
-guard 'rspec', :focus_on_failed => true, :version => 2, :cli => "--drb" do
+# verify that we pass jshint
+# see https://github.com/MrOrz/guard-jshint-on-rails
+guard 'jshint-on-rails', config_path: 'config/jshint.yml' do
+  # watch for changes to application javascript files
+  watch(%r{^app/assets/javascripts/.*\.js$})
+  watch(%r{^spec/javascripts/.*\.js$})
+end
+
+guard 'rspec', :focus_on_failed => true, :cli => "--drb" do
   watch(%r{^spec/.+_spec\.rb$})
-  #watch(%r{^lib/jobs/(.+)\.rb$})     { |m| "spec/components/jobs/#{m[1]}_spec.rb" }  
-  watch(%r{^lib/(.+)\.rb$})     { |m| "spec/components/#{m[1]}_spec.rb" }  
+  watch(%r{^lib/(.+)\.rb$})     { |m| "spec/components/#{m[1]}_spec.rb" }
   watch('spec/spec_helper.rb')  { "spec" }
 
   # Rails example
@@ -39,11 +47,12 @@ guard 'rspec', :focus_on_failed => true, :version => 2, :cli => "--drb" do
   watch(%r{^app/controllers/(.+)_(controller)\.rb$})  { |m| "spec/#{m[2]}s/#{m[1]}_#{m[2]}_spec.rb" }
   watch(%r{^spec/support/(.+)\.rb$})                  { "spec" }
   watch('app/controllers/application_controller.rb')  { "spec/controllers" }
-  
+
   # Capybara request specs
   watch(%r{^app/views/(.+)/.*\.(erb|haml)$})          { |m| "spec/requests/#{m[1]}_spec.rb" }
-  
+
 end
+
 
 module ::Guard
   class AutoReload < ::Guard::Guard
@@ -77,7 +86,7 @@ Thread.new do
   end
 end
 
-guard :autoreload do 
+guard :autoreload do
   watch(/tmp\/refresh_browser/)
   watch(/\.css$/)
   watch(/\.sass$/)

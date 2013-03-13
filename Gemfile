@@ -1,40 +1,61 @@
 source 'https://rubygems.org'
 
-gem 'redis'
-gem 'redis-rails'
-gem 'hiredis'
-gem 'em-redis'
-gem 'rails'
-gem 'pg'
-gem 'haml'
-gem 'sass'
-gem 'rake'
-# errbit is broken with 3.1.3 for now
-gem 'airbrake', "3.1.2"
-gem 'rest-client'
-gem 'rails3_acts_as_paranoid', "~>0.2.0"
-gem 'activerecord-postgres-hstore'
-gem 'sidekiq'
-gem 'fastimage'
-gem 'nokogiri'
-gem 'seed-fu'
-gem 'sanitize'
+gem 'active_model_serializers', git: 'git://github.com/rails-api/active_model_serializers.git'
+gem 'ember-rails', git: 'git://github.com/emberjs/ember-rails.git' # so we get the pre version
+gem 'vestal_versions', git: 'git://github.com/zhangyuan/vestal_versions'
 
-
-gem 'slim', '<= 1.3.0'
-gem 'sinatra', :require => nil
-gem 'clockwork', :require => false
-
-gem 'i18n-js'
-# gem 'rack-mini-profiler', '0.1.21'
-# gem 'rack-mini-profiler', :path => '/home/sam/Source/MiniProfiler'
-gem 'rack-mini-profiler', :git => 'git://github.com/SamSaffron/MiniProfiler'
-gem 'oauth', :require => false
-gem 'fast_xs'
-gem 'pbkdf2'
+gem 'message_bus', path: 'vendor/gems/message_bus'
+gem 'rails_multisite', path: 'vendor/gems/rails_multisite'
 gem 'simple_handlebars_rails', path: 'vendor/gems/simple_handlebars_rails'
 
-# Gem that enables support for plugins. It is required
+gem 'redcarpet', require: false
+gem 'activerecord-postgres-hstore'
+gem 'acts_as_paranoid'
+gem 'active_attr' # until we get ActiveModel::Model with Rails 4
+gem 'airbrake', '3.1.2', require: false # errbit is broken with 3.1.3 for now
+gem 'clockwork', require: false
+gem 'em-redis'
+gem 'eventmachine'
+gem 'fast_xs'
+gem 'fast_xor'
+gem 'fastimage'
+gem 'fog', require: false
+gem 'has_ip_address'
+gem 'hiredis'
+
+# note: for image_optim to correctly work you need
+# sudo apt-get install -y advancecomp gifsicle jpegoptim libjpeg-progs optipng pngcrush
+gem 'image_optim'
+gem 'jquery-rails'
+gem 'minitest'
+gem 'multi_json'
+gem 'mustache'
+gem 'nokogiri'
+gem "omniauth"
+gem "omniauth-openid"
+gem "openid-redis-store"
+gem "omniauth-facebook"
+gem "omniauth-twitter"
+gem "omniauth-github"
+gem "omniauth-browserid", :git => "git://github.com/callahad/omniauth-browserid.git", :branch => "observer_api"
+gem 'oj'
+gem 'pg'
+gem 'rails'
+gem 'rake'
+gem 'redis'
+gem 'redis-rails'
+gem 'rest-client'
+gem 'rinku'
+gem 'sanitize'
+gem 'sass'
+gem 'seed-fu'
+gem 'sidekiq'
+gem 'sinatra', require: nil
+gem 'slim'  # required for sidekiq-web
+gem 'therubyracer', require: 'v8'
+gem 'thin'
+
+# Gem that enables support for plugins. It is required.
 gem 'discourse_plugin', path: 'vendor/gems/discourse_plugin'
 
 # Discourse Plugins (optional)
@@ -44,72 +65,54 @@ gem 'discourse_plugin', path: 'vendor/gems/discourse_plugin'
 gem 'discourse_emoji', path: 'vendor/gems/discourse_emoji'
 # gem 'discourse_task', path: 'vendor/gems/discourse_task'
 
-gem 'rails_multisite', path: 'vendor/gems/rails_multisite'
-gem 'message_bus', path: 'vendor/gems/message_bus'
-
-gem 'koala', :require => false
-gem 'multi_json'
-gem 'oj'
-gem 'eventmachine'
-gem 'thin'
-
-gem "active_model_serializers", :git => "git://github.com/rails-api/active_model_serializers.git"
-gem 'has_ip_address'
-
-gem 'vestal_versions', :git => 'git://github.com/zhangyuan/vestal_versions'
-
-gem 'fog', :require => false
-
 # Gems used only for assets and not required
 # in production environments by default.
 # allow everywhere for now cause we are allowing asset debugging in prd
 group :assets do
   gem 'sass'
   gem 'sass-rails'
-  gem 'coffee-rails'
-  gem 'uglifier'
-  # gem "asset_sync"
   gem 'turbo-sprockets-rails3'
+  gem 'uglifier'
 end
 
-# need this to compile coffee on the fly 
-gem 'coffee-script'
-
-gem 'hpricot'
-gem 'jquery-rails'
-
-gem "ember-rails", :git => 'git://github.com/emberjs/ember-rails.git' # so we get the pre version
-gem 'mustache'
-gem 'therubyracer', :require => 'v8'
-gem 'rinku'
-
-
-gem 'ruby-openid', :require => 'openid'
+group :test do
+  gem "fakeweb", "~> 1.3.0"
+end
 
 group :test, :development do
-  # Pretty printed test output
-  gem 'rspec-rails'
-  gem 'shoulda'
-  #gem 'turn', :require => false
-  gem 'jasminerice'
+  gem 'jshint_on_rails'
+  gem 'guard-jshint-on-rails'
+  gem 'certified'
   gem 'fabrication'
   gem 'guard-jasmine'
   gem 'guard-rspec' 
   gem 'guard-spork'
-  gem 'mocha', :require => false
-  gem 'test-unit', :require => "test/unit"
-  gem 'simplecov', :require => false
-  gem 'image_optim'
-  gem 'certified'
+  gem 'jasminerice'
+  gem 'mocha', require: false
   gem 'rb-fsevent'
-  gem 'rb-inotify', :require => RUBY_PLATFORM.include?('linux') && 'rb-inotify'
-  gem 'terminal-notifier-guard', :require => RUBY_PLATFORM.include?('darwin') && 'terminal-notifier-guard'
+  gem 'rb-inotify', '~> 0.8.8', require: RUBY_PLATFORM.include?('linux') && 'rb-inotify'
+  gem 'rspec-rails'
+  gem 'shoulda'
+  gem 'simplecov', require: false
+  gem 'terminal-notifier-guard', require: RUBY_PLATFORM.include?('darwin') && 'terminal-notifier-guard'
 end
 
 group :development do 
-  gem 'pry-rails'
   gem 'better_errors'
   gem 'binding_of_caller' # I tried adding this and got an occational crash
+  gem 'librarian', '>= 0.0.25', require: false
+  gem 'pry-rails'  
 end
 
-# gem 'stacktrace', :require => false
+# IMPORTANT: mini profiler monkey patches, so it better be required last
+#  If you want to amend mini profiler to do the monkey patches in the railstie
+#  we are open to it.
+gem 'rack-mini-profiler', git: 'git://github.com/SamSaffron/MiniProfiler'
+
+# perftools only works on 1.9 atm
+group :profile do
+  # travis refuses to install this, instead of fuffing, just avoid it for now
+  #
+  # if you need to profile, uncomment out this line
+  # gem 'rack-perftools_profiler', require: 'rack/perftools_profiler', platform: :mri_19 
+end

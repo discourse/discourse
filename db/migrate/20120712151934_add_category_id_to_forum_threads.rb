@@ -2,8 +2,8 @@ class AddCategoryIdToForumThreads < ActiveRecord::Migration
   def up
     add_column :forum_threads, :category_id, :integer
 
-    execute "UPDATE forum_threads SET category_id = 
-             (SELECT id 
+    execute "UPDATE forum_threads SET category_id =
+             (SELECT id
               FROM categories
               WHERE name = forum_threads.tag)"
 

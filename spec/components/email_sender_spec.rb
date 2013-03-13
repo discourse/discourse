@@ -22,7 +22,7 @@ describe EmailSender do
 
   context 'with a valid message' do
 
-    let(:message) do 
+    let(:message) do
       message = Mail::Message.new to: 'eviltrout@test.domain',
                                   body: '**hello**'
       message.stubs(:deliver)
@@ -67,22 +67,22 @@ describe EmailSender do
         email_sender.send
       end
 
-      it 'makes the message multipart' do        
+      it 'makes the message multipart' do
         message.should be_multipart
       end
 
-      it 'has a html part' do        
+      it 'has a html part' do
         message.parts.detect {|p| p.content_type == "text/html; charset=UTF-8"}.should be_true
       end
 
       context 'html part' do
         let(:html_part) { message.parts.detect {|p| p.content_type == "text/html; charset=UTF-8"} }
 
-        it 'has a html part' do        
+        it 'has a html part' do
           html_part.should be_present
         end
 
-        it 'has run markdown on the body' do       
+        it 'has run markdown on the body' do
           html_part.body.to_s.should == "<p><strong>hello</strong></p>"
         end
 
@@ -95,7 +95,7 @@ describe EmailSender do
   end
 
   context 'with a user' do
-    let(:message) do 
+    let(:message) do
       message = Mail::Message.new to: 'eviltrout@test.domain', body: 'test body'
       message.stubs(:deliver)
       message

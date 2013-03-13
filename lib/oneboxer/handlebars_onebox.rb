@@ -26,24 +26,19 @@ module Oneboxer
     end
 
     def onebox
-      html = open(translate_url, http_params).read      
+      html = open(translate_url, http_params).read
       args = parse(html)
       return default_url unless args.present?
       args[:original_url] = @url
       args[:lang] = @lang || ""
       args[:favicon] = ActionController::Base.helpers.image_path(self.class.favicon_file) if self.class.favicon_file.present?
-      begin
-        parsed = URI.parse(@url)
-        args[:host] = parsed.host.split('.').last(2).join('.')
-      rescue URI::InvalidURIError
-        # In case there is a problem with the URL, we just won't set the host
-      end
+      args[:host] = nice_host
 
       Mustache.render(File.read(template), args)
     rescue => ex
       # If there's an exception, just embed the link
-      raise ex if Rails.env.development? 
-      default_url  
+      raise ex if Rails.env.development?
+      default_url
     end
 
   end

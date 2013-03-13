@@ -18,23 +18,23 @@ class RenameForumThreadTables < ActiveRecord::Migration
     rename_column 'category_featured_topics', 'forum_thread_id', 'topic_id'
 
     rename_column 'topic_link_clicks', 'forum_thread_link_id', 'topic_link_id'
-    
+
     rename_column 'topic_links', 'forum_thread_id', 'topic_id'
     rename_column 'topic_links', 'link_forum_thread_id', 'link_topic_id'
-  
+
 
     rename_column 'topic_users', 'forum_thread_id', 'topic_id'
 
     rename_column 'incoming_links', 'forum_thread_id', 'topic_id'
-    
+
     rename_column 'notifications', 'forum_thread_id', 'topic_id'
-    
+
     rename_column 'post_timings', 'forum_thread_id', 'topic_id'
-    
+
     rename_column 'posts', 'forum_thread_id', 'topic_id'
-    
+
     rename_column 'user_actions', 'target_forum_thread_id', 'target_topic_id'
-    
+
     rename_column 'uploads', 'forum_thread_id', 'topic_id'
   end
 end

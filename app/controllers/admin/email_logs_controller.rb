@@ -8,7 +8,7 @@ class Admin::EmailLogsController < Admin::AdminController
 
   def test
     requires_parameter(:email_address)
-    Jobs.enqueue(:test_email, to_address: params[:email_address])    
+    Jobs.enqueue(:test_email, to_address: params[:email_address])
     render nothing: true
   end
 

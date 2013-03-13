@@ -1,19 +1,30 @@
 <h2>
-  <a href="<%= @topic_view.topic.relative_url %>"><%= @topic_view.topic.title %></a>
+   <%= render_topic_title(@topic_view.topic) %>
 </h2>
-<% (@post ? [@post] : @topic_view.posts).each do |post| %>
+<hr/>
+
+<% @topic_view.posts.each do |post| %>
   <div class='creator'>
-    #<%=post.post_number%> By: <b><%= post.user.name %></b>, <%= post.created_at.to_formatted_s(:long_ordinal) %>
+    #<%=post.post_number%> <%= t 'by'%>: <b><%= post.user.name %></b>, <%= post.created_at.to_formatted_s(:long_ordinal) %>
   </div>
   <div class='post'>
     <%= post.cooked.html_safe %>
   </div>
+  <hr/>
 <% end %>
 
-<% if @next_page%>
+<% if @topic_view.next_page %>
   <p>
-  <b><a href="<%= @topic_view.topic.relative_url %>?page=<%= @next_page%>">next page</a></b>
+    <b><%= link_to(t('next_page').html_safe, @topic_view.next_page_path ) %></b>
   </p>
 <% end %>
 
-<%- content_for :canonical do %><%= @canonical %><%- end %>
+
+<p><%= t 'powered_by_html' %></p>
+
+<% content_for :head do %>
+  <%= auto_discovery_link_tag(@topic_view, {action: :feed, format: :rss}, title: t('rss_posts_in_topic', topic: @topic_view.title), type: 'application/rss+xml') %>
+  <%= crawlable_meta_data(title: @topic_view.title,
+                          description: @topic_view.summary,
+                          image: @topic_view.image_url) %>
+<% end %>

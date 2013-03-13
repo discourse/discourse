@@ -93,13 +93,18 @@
     .gutter {
       .reply-new,
       .track-link {
-        visibility: visible;
+        opacity:1;
       }
     }
   }
 
   .gutter {
-    .reply-new {visibility: hidden;}
+    .reply-new{
+      opacity:0;
+      transition:opacity 1s linear;
+      -webkit-transition:opacity 1s linear;
+      -moz-transition:opacity 1s linear;
+      }
     .reply-new,
     .track-link {
       display: inline-block;
@@ -200,6 +205,7 @@
   section.post-menu-area {
     .discourse-no-touch & {
       opacity: 0.2;
+      @include fade-soft(1s);
     }
   }
 
@@ -233,7 +239,7 @@
   }
 
   section.post-menu-area {
-    background-color: $post_footer; 
+    background-color: $post_footer;
     border-top: 1px solid $inner_border;
     overflow: hidden;
     @include box-shadow(inset 0 -4px 4px -4px rgba($black, 0.14));
@@ -279,7 +285,12 @@
         }
       }
       button.delete {
+        &:hover {
+          color: white;
+          background-color: $btn-danger-background-color;
+        }
       }
+
       button.like {
         &:hover {
           color: $nav-like-button-color-hover;
@@ -317,9 +328,19 @@
       padding: 0 10px 0 0;
       h3 {
         margin: 3px 0 0;
-        font-size: 14px;
+        font-size: 13px;
         line-height: 18px;
       }
+
+      h3.moderator a {
+        background-color: #ffe;
+        border: 1px solid #ffd;
+      }
+
+      h3.new-user a[href] {
+        color: $dark_gray;
+      }
+
       div {
         display: block;
       }
@@ -341,7 +362,7 @@
     }
   }
   .reply-to-tab {
-    z-index: 999;
+    z-index: 980;
     font-size: 12px;
     color: $darkish_gray;
     display: block;
@@ -412,6 +433,13 @@
         &:after {
           left: -9px;
         }
+
+        a.arrow {
+          float: right;
+          margin: 3px 0 3px 0;
+          color: grey;
+        }
+
       }
       .about {
         .contents {
@@ -521,7 +549,7 @@
       }
       .contents.bottom-round {
         overflow: hidden;
-        background-clip: padding-box; 
+        background-clip: padding-box;
         @include border-radius-bottom(4px);
         @include box-shadow(0 1px 2px rgba($black, 0.07));
       }
@@ -529,7 +557,7 @@
         padding-top: 30px;
       }
       .post-actions {
-        padding: 10px 0 0px 15px;
+        padding: 5px 0 0px 15px;
         font-size: 12px;
         img {
           margin-right: 2px;
@@ -576,7 +604,7 @@
 }
 
 .topic-post.hidden {
-  display: block; 
+  display: block;
   opacity: 0.4;
 }
 
@@ -584,7 +612,7 @@
   opacity: 0.8;
   article.boxed {
     .topic-body .contents {
-      background-color: #ffcece; 
+      background-color: #ffcece;
     }
     .topic-body::after {
       border-right-color: #ffcece;
@@ -645,7 +673,7 @@
     margin-right: 4px;
   }
   .poster.toggled .avatar {
-    @include box-shadow(0 0 5px lighten($link_color, 10%));
+    @include box-shadow(0 0 6px 1px desaturate(lighten($link_color, 18%), 35%));
   }
   .summary {
     border-bottom: 1px solid #d1d1d2;

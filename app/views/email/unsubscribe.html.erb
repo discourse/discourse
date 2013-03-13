@@ -9,7 +9,7 @@
 
     <%= form_tag(email_resubscribe_path(key: params[:key])) do %>
       <%= submit_tag t(:'resubscribe.action'), class: 'btn btn-danger' %>
-    <% end %>  
+    <% end %>
   <%- else %>
     <h2><%= t :'unsubscribed.not_found' %></h2>
     <p><%= t :'unsubscribed.not_found_description' %></p>

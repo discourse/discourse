@@ -1,6 +1,6 @@
 #
 # A helper class to send an email. It will also handle a nil message, which it considers
-# to be "do nothing". This is because some Mailers will decide not to do work for some 
+# to be "do nothing". This is because some Mailers will decide not to do work for some
 # reason. For example, emailing a user too frequently. A nil to address is also considered
 # "do nothing"
 #

@@ -67,12 +67,8 @@ describe User do
           user.reload
           user.posts_read_count.should == 1
         end
-
       end
-
     end
-
-
   end
 
   context '.enqueue_welcome_message' do
@@ -91,7 +87,7 @@ describe User do
 
   end
 
-  describe '.approve!' do
+  describe '.approve' do
     let(:user) { Fabricate(:user) }
     let(:admin) { Fabricate(:admin) }
 
@@ -127,19 +123,19 @@ describe User do
 
     it "creates a bookmark with the true parameter" do
       lambda {
-        PostAction.act(@post.user, @post, PostActionType.Types[:bookmark])
+        PostAction.act(@post.user, @post, PostActionType.types[:bookmark])
       }.should change(PostAction, :count).by(1)
     end
 
     describe 'when removing a bookmark' do
       before do
-        PostAction.act(@post.user, @post, PostActionType.Types[:bookmark])
+        PostAction.act(@post.user, @post, PostActionType.types[:bookmark])
       end
 
       it 'reduces the bookmark count of the post' do
         active = PostAction.where(deleted_at: nil)
         lambda {
-          PostAction.remove_act(@post.user, @post, PostActionType.Types[:bookmark])
+          PostAction.remove_act(@post.user, @post, PostActionType.types[:bookmark])
         }.should change(active, :count).by(-1)
       end
     end
@@ -174,6 +170,28 @@ describe User do
 
   end
 
+  describe 'delete posts' do
+    before do
+      @post1 = Fabricate(:post)
+      @user = @post1.user
+      @post2 = Fabricate(:post, topic: @post1.topic, user: @user)
+      @post3 = Fabricate(:post, user: @user)
+      @posts = [@post1, @post2, @post3]
+      @guardian = Guardian.new(Fabricate(:admin))
+    end
+
+    it 'allows moderator to delete all posts' do
+      @user.delete_all_posts!(@guardian)
+      @posts.each do |p|
+        p.reload
+        if p
+          p.topic.should be_nil
+        else
+          p.should be_nil
+        end
+      end
+    end
+  end
 
   describe 'new' do
 
@@ -200,20 +218,21 @@ describe User do
 
       its(:email_tokens) { should be_present }
       its(:bio_cooked) { should be_present }
+      its(:bio_summary) { should be_present }
       its(:topics_entered) { should == 0 }
       its(:posts_read_count) { should == 0 }
     end
   end
 
   describe "trust levels" do
-    let(:user) { Fabricate(:user, trust_level: TrustLevel.Levels[:new]) }
+    let(:user) { Fabricate(:user, trust_level: TrustLevel.levels[:new]) }
 
     it "sets to the default trust level setting" do
-      SiteSetting.expects(:default_trust_level).returns(TrustLevel.Levels[:advanced])
-      User.new.trust_level.should == TrustLevel.Levels[:advanced]
+      SiteSetting.expects(:default_trust_level).returns(TrustLevel.levels[:advanced])
+      User.new.trust_level.should == TrustLevel.levels[:advanced]
     end
 
-    describe 'has_trust_level' do
+    describe 'has_trust_level?' do
 
       it "raises an error with an invalid level" do
         lambda { user.has_trust_level?(:wat) }.should raise_error
@@ -228,12 +247,12 @@ describe User do
       end
 
       it "is true if you exceed the level" do
-        user.trust_level = TrustLevel.Levels[:advanced]
+        user.trust_level = TrustLevel.levels[:advanced]
         user.has_trust_level?(:basic).should be_true
       end
 
       it "is true for an admin even with a low trust level" do
-        user.trust_level = TrustLevel.Levels[:new]
+        user.trust_level = TrustLevel.levels[:new]
         user.admin = true
         user.has_trust_level?(:advanced).should be_true
       end
@@ -246,7 +265,7 @@ describe User do
       end
 
       it "is a moderator if the user level is moderator" do
-        user.trust_level = TrustLevel.Levels[:moderator]
+        user.trust_level = TrustLevel.levels[:moderator]
         user.has_trust_level?(:moderator).should be_true
       end
 
@@ -376,6 +395,11 @@ describe User do
   end
 
   describe '.suggest_username' do
+
+    it "doesn't raise an error on nil username" do
+      User.suggest_username(nil).should be_nil
+    end
+
     it 'corrects weird characters' do
       User.suggest_username("Darth%^Vadar").should == "Darth_Vadar"
     end
@@ -424,6 +448,49 @@ describe User do
 
     it 'should handle typical facebook usernames' do
       User.suggest_username('roger.nelson.3344913').should == 'roger_nelson_33'
+    end
+  end
+
+  describe 'email_validator' do
+    it 'should allow good emails' do
+      user = Fabricate.build(:user, email: 'good@gmail.com')
+      user.should be_valid
+    end
+
+    it 'should reject some emails based on the email_domains_blacklist site setting' do
+      SiteSetting.stubs(:email_domains_blacklist).returns('mailinator.com')
+      Fabricate.build(:user, email: 'notgood@mailinator.com').should_not be_valid
+      Fabricate.build(:user, email: 'mailinator@gmail.com').should be_valid
+    end
+
+    it 'should reject some emails based on the email_domains_blacklist site setting' do
+      SiteSetting.stubs(:email_domains_blacklist).returns('mailinator.com|trashmail.net')
+      Fabricate.build(:user, email: 'notgood@mailinator.com').should_not be_valid
+      Fabricate.build(:user, email: 'notgood@trashmail.net').should_not be_valid
+      Fabricate.build(:user, email: 'mailinator.com@gmail.com').should be_valid
+    end
+
+    it 'should reject some emails based on the email_domains_blacklist site setting ignoring case' do
+      SiteSetting.stubs(:email_domains_blacklist).returns('trashmail.net')
+      Fabricate.build(:user, email: 'notgood@TRASHMAIL.NET').should_not be_valid
+    end
+
+    it 'should not interpret a period as a wildcard' do
+      SiteSetting.stubs(:email_domains_blacklist).returns('trashmail.net')
+      Fabricate.build(:user, email: 'good@trashmailinet.com').should be_valid
+    end
+
+    it 'should not be used to validate existing records' do
+      u = Fabricate(:user, email: 'in_before_blacklisted@fakemail.com')
+      SiteSetting.stubs(:email_domains_blacklist).returns('fakemail.com')
+      u.should be_valid
+    end
+
+    it 'should be used when email is being changed' do
+      SiteSetting.stubs(:email_domains_blacklist).returns('mailinator.com')
+      u = Fabricate(:user, email: 'good@gmail.com')
+      u.email = 'nope@mailinator.com'
+      u.should_not be_valid
     end
   end
 
@@ -586,9 +653,6 @@ describe User do
       end
 
     end
-
-
-
   end
 
   describe '#create_for_email' do
@@ -597,6 +661,78 @@ describe User do
     its(:username) { should == 'test' }
     its(:name) { should == 'test'}
     it { should_not be_active }
+  end
+
+  describe 'email_confirmed?' do
+    let(:user) { Fabricate(:user) }
+
+    context 'when email has not been confirmed yet' do
+      it 'should return false' do
+        user.email_confirmed?.should be_false
+      end
+    end
+
+    context 'when email has been confirmed' do
+      it 'should return true' do
+        token = user.email_tokens.where(email: user.email).first
+        EmailToken.confirm(token.token)
+        user.email_confirmed?.should be_true
+      end
+    end
+
+    context 'when user has no email tokens for some reason' do
+      it 'should return false' do
+        user.email_tokens.each {|t| t.destroy}
+        user.reload
+        user.email_confirmed?.should be_true
+      end
+    end
+  end
+
+
+  describe 'update_time_read!' do
+    let(:user) { Fabricate(:user) }
+
+    it 'makes no changes if nothing is cached' do
+      $redis.expects(:get).with("user-last-seen:#{user.id}").returns(nil)
+      user.update_time_read!
+      user.reload
+      user.time_read.should == 0
+    end
+
+    it 'makes a change if time read is below threshold' do
+      $redis.expects(:get).with("user-last-seen:#{user.id}").returns(Time.now - 10.0)
+      user.update_time_read!
+      user.reload
+      user.time_read.should == 10
+    end
+
+    it 'makes no change if time read is above threshold' do
+      t = Time.now - 1 - User::MAX_TIME_READ_DIFF
+      $redis.expects(:get).with("user-last-seen:#{user.id}").returns(t)
+      user.update_time_read!
+      user.reload
+      user.time_read.should == 0
+    end
+
+  end
+
+  describe '#readable_name' do
+    context 'when name is missing' do
+      it 'returns just the username' do
+        Fabricate(:user, username: 'foo', name: nil).readable_name.should == 'foo'
+      end
+    end
+    context 'when name and username are identical' do
+      it 'returns just the username' do
+        Fabricate(:user, username: 'foo', name: 'foo').readable_name.should == 'foo'
+      end
+    end
+    context 'when name and username are not identical' do
+      it 'returns the name and username' do
+        Fabricate(:user, username: 'foo', name: 'Bar Baz').readable_name.should == 'Bar Baz (foo)'
+      end
+    end
   end
 
 end

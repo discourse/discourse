@@ -11,15 +11,14 @@ describe TopicQuery do
   let(:admin) { Fabricate(:moderator) }
 
   context 'a bunch of topics' do
-    let!(:regular_topic) { Fabricate(:topic, title: 'regular', user: creator, bumped_at: 15.minutes.ago) }
-    let!(:pinned_topic) { Fabricate(:topic, title: 'pinned', user: creator, pinned: true, bumped_at: 10.minutes.ago) }
-    let!(:archived_topic) { Fabricate(:topic, title: 'archived', user: creator, archived: true, bumped_at: 6.minutes.ago) }
-    let!(:invisible_topic) { Fabricate(:topic, title: 'invisible', user: creator, visible: false, bumped_at: 5.minutes.ago) }
-    let!(:closed_topic) { Fabricate(:topic, title: 'closed', user: creator, closed: true, bumped_at: 1.minute.ago) }
+    let!(:regular_topic) { Fabricate(:topic, title: 'this is a regular topic', user: creator, bumped_at: 15.minutes.ago) }
+    let!(:pinned_topic) { Fabricate(:topic, title: 'this is a pinned topic', user: creator, pinned_at: 10.minutes.ago, bumped_at: 10.minutes.ago) }
+    let!(:archived_topic) { Fabricate(:topic, title: 'this is an archived topic', user: creator, archived: true, bumped_at: 6.minutes.ago) }
+    let!(:invisible_topic) { Fabricate(:topic, title: 'this is an invisible topic', user: creator, visible: false, bumped_at: 5.minutes.ago) }
+    let!(:closed_topic) { Fabricate(:topic, title: 'this is a closed topic', user: creator, closed: true, bumped_at: 1.minute.ago) }
+    let(:topics) { topic_query.list_popular.topics }
 
     context 'list_popular' do
-      let(:topics) { topic_query.list_popular.topics }
-
       it "returns the topics in the correct order" do
         topics.should == [pinned_topic, closed_topic, archived_topic, regular_topic]
       end
@@ -33,23 +32,42 @@ describe TopicQuery do
       end
     end
 
+    context 'after clearring a pinned topic' do
+      before do
+        pinned_topic.clear_pin_for(user)
+      end
+
+      it "no longer shows the pinned topic at the top" do
+        topics.should == [closed_topic, archived_topic, pinned_topic, regular_topic]
+      end
+
+    end
+
   end
 
   context 'categorized' do
-    let(:category) { Fabricate(:category) }    
-    let!(:topic_no_cat) { Fabricate(:topic) }    
+    let(:category) { Fabricate(:category) }
+    let(:topic_category) { category.topic }
+    let!(:topic_no_cat) { Fabricate(:topic) }
     let!(:topic_in_cat) { Fabricate(:topic, category: category) }
-    
+
     it "returns the topic without a category when filtering uncategorized" do
       topic_query.list_uncategorized.topics.should == [topic_no_cat]
     end
 
     it "returns the topic with a category when filtering by category" do
-      topic_query.list_category(category).topics.should == [topic_in_cat]
+      topic_query.list_category(category).topics.should == [topic_category, topic_in_cat]
     end
 
-    it "returns nothing when filtering by another category" do
-      topic_query.list_category(Fabricate(:category, name: 'new cat')).topics.should be_blank
+    it "returns only the topic category when filtering by another category" do
+      another_category = Fabricate(:category, name: 'new cat')
+      topic_query.list_category(another_category).topics.should == [another_category.topic]
+    end
+
+    describe '#list_new_in_category' do
+      it 'returns the topic category and the categorized topic' do
+        topic_query.list_new_in_category(category).topics.should == [topic_in_cat, topic_category]
+      end
     end
   end
 
@@ -89,12 +107,12 @@ describe TopicQuery do
         end
       end
 
-      context 'user with auto_track_topics list_unread' do 
-        before do 
+      context 'user with auto_track_topics list_unread' do
+        before do
           user.auto_track_topics_after_msecs = 0
           user.save
         end
-        
+
         it 'only contains the partially read topic' do
           topic_query.list_unread.topics.should == [partially_read]
         end
@@ -107,7 +125,7 @@ describe TopicQuery do
       context 'list_read' do
         it 'contain both topics ' do
           topic_query.list_read.topics.should =~ [fully_read, partially_read]
-        end      
+        end
       end
     end
 
@@ -122,7 +140,7 @@ describe TopicQuery do
     end
 
     context 'with a favorited topic' do
-      
+
       before do
         topic.toggle_star(user, true)
       end
@@ -147,7 +165,7 @@ describe TopicQuery do
     end
 
     context 'with a new topic' do
-      let!(:new_topic) { Fabricate(:topic, user: creator, bumped_at: 10.minutes.ago) }      
+      let!(:new_topic) { Fabricate(:topic, user: creator, bumped_at: 10.minutes.ago) }
       let(:topics) { topic_query.list_new.topics }
 
 
@@ -155,12 +173,20 @@ describe TopicQuery do
         topics.should == [new_topic]
       end
 
+      it "contains no new topics for a user that has missed the window" do
+        user.new_topic_duration_minutes = 5
+        user.save
+        new_topic.created_at = 10.minutes.ago
+        new_topic.save
+        topics.should == []
+      end
+
       context "muted topics" do
         before do
           new_topic.notify_muted!(user)
         end
 
-        it "returns an empty set" do          
+        it "returns an empty set" do
           topics.should be_blank
         end
 
@@ -173,9 +199,9 @@ describe TopicQuery do
             topics.should == [new_topic]
           end
         end
-      end        
+      end
     end
-   
+
   end
 
   context 'list_posted' do
@@ -211,9 +237,20 @@ describe TopicQuery do
       let!(:new_topic) { Fabricate(:post, user: creator).topic }
 
       it "should return the new topic" do
-        TopicQuery.new.list_suggested_for(topic).topics.should == [new_topic]  
+        TopicQuery.new.list_suggested_for(topic).topics.should == [new_topic]
       end
+    end
 
+    context "anonymously browswing with invisible, closed and archived" do
+      let!(:topic) { Fabricate(:topic) }
+      let!(:regular_topic) { Fabricate(:post, user: creator).topic }
+      let!(:closed_topic) { Fabricate(:topic, user: creator, closed: true) }
+      let!(:archived_topic) { Fabricate(:topic, user: creator, archived: true) }
+      let!(:invisible_topic) { Fabricate(:topic, user: creator, visible: false) }
+
+      it "should omit the closed/archived/invisbiel topics from suggested" do
+        TopicQuery.new.list_suggested_for(topic).topics.should == [regular_topic]
+      end
     end
 
     context 'when logged in' do
@@ -228,7 +265,10 @@ describe TopicQuery do
       context 'with some existing topics' do
         let!(:partially_read) { Fabricate(:post, user: creator).topic }
         let!(:new_topic) { Fabricate(:post, user: creator).topic }
-        let!(:fully_read) { Fabricate(:post, user: creator).topic }     
+        let!(:fully_read) { Fabricate(:post, user: creator).topic }
+        let!(:closed_topic) { Fabricate(:topic, user: creator, closed: true) }
+        let!(:archived_topic) { Fabricate(:topic, user: creator, archived: true) }
+        let!(:invisible_topic) { Fabricate(:topic, user: creator, visible: false) }
 
         before do
           user.auto_track_topics_after_msecs = 0
@@ -252,7 +292,7 @@ describe TopicQuery do
           suggested_topics.should == [partially_read.id, new_topic.id, fully_read.id]
         end
 
-      end        
+      end
     end
 
   end

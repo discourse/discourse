@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe ListController do
 
-  # we need some data 
-  before do 
+  # we need some data
+  before do
     @user = Fabricate(:coding_horror)
     @post = Fabricate(:post, :user => @user)
   end
@@ -34,6 +34,23 @@ describe ListController do
 
         it { should respond_with(:success) }
       end
+
+      context 'with a link that includes an id' do
+        before do
+          xhr :get, :category, category: "#{category.id}-#{category.slug}"
+        end
+
+        it { should respond_with(:success) }
+      end
+
+      describe 'feed' do
+        it 'renders RSS' do
+          get :category_feed, category: category.slug, format: :rss
+          response.should be_success
+          response.content_type.should == 'application/rss+xml'
+        end
+      end
+
     end
 
     context 'uncategorized' do
@@ -49,8 +66,6 @@ describe ListController do
       end
 
     end
-
-
 
   end
 

@@ -13,23 +13,17 @@ module Oneboxer
 
       # A site is supposed to supply all the basic og attributes, but some don't (like deviant art)
       # If it just has image and no title, embed it as an image.
-      return BaseOnebox.image_html(@opts['image'], nil, @url) if @opts['image'].present? and @opts['title'].blank?
+      return BaseOnebox.image_html(@opts['image'], nil, @url) if @opts['image'].present? && @opts['title'].blank?
 
       @opts['title'] ||= @opts['description']
       return nil if @opts['title'].blank?
 
       @opts[:original_url] = @url
       @opts[:text] = @opts['description']
-
-      begin
-        parsed = URI.parse(@url)
-        @opts[:host] = parsed.host.split('.').last(2).join('.')
-      rescue URI::InvalidURIError
-        # In case there is a problem with the URL, we just won't set the host
-      end
+      @opts[:unsafe] = true
+      @opts[:host] = nice_host
 
       Mustache.render(File.read(template), @opts)
     end
-
   end
 end

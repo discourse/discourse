@@ -17,9 +17,9 @@ module Jobs
 
     def perform(opts={})
       opts = opts.with_indifferent_access
-      
+
       if opts.delete(:sync_exec)
-        if opts.has_key?(:current_site_id) and opts[:current_site_id] != RailsMultisite::ConnectionManagement.current_db
+        if opts.has_key?(:current_site_id) && opts[:current_site_id] != RailsMultisite::ConnectionManagement.current_db
           raise ArgumentError.new("You can't connect to another database when executing a job synchronously.")
         else
           return execute(opts)
@@ -28,9 +28,9 @@ module Jobs
 
 
       dbs =
-        if opts[:current_site_id]  
+        if opts[:current_site_id]
           [opts[:current_site_id]]
-        else 
+        else
           RailsMultisite::ConnectionManagement.all_dbs
         end
 
@@ -38,6 +38,7 @@ module Jobs
         begin
           Jobs::Base.mutex.synchronize do
             RailsMultisite::ConnectionManagement.establish_connection(:db => db)
+            I18n.locale = SiteSetting.default_locale
             execute(opts)
           end
         ensure

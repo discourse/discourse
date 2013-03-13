@@ -3,7 +3,7 @@ class CategoryFeaturedUser < ActiveRecord::Base
   belongs_to :user
 
   def self.max_featured_users
-    5  
+    5
   end
 
   def self.feature_users_in(category)
@@ -20,7 +20,7 @@ class CategoryFeaturedUser < ActiveRecord::Base
     ", category_id: category.id, max_featured_users: max_featured_users
 
     transaction do
-      CategoryFeaturedUser.delete_all ['category_id = ?', category.id]
+      CategoryFeaturedUser.delete_all category_id: category.id
       user_counts.each do |uc|
         create(category_id: category.id, user_id: uc['user_id'])
       end

@@ -1,0 +1,9 @@
+{
+  "name": "Discourse Client",
+  "description": "This is the EmberJS client to access a Discourse Server",
+  "url": "http://www.discourse.org/",
+  "options": {
+    "exclude": "external,external_production,defer",
+    "outdir":   "./build"
+  }
+}

@@ -31,6 +31,13 @@
     color: $white;
     width: 520px;
   }
+
+  .other .controls {
+    margin-top: 10px;
+    select {
+      width: 280px;
+    }
+  }
 }
 
 #user-menu {
@@ -237,13 +244,10 @@
   .excerpt {
     margin: 5px 0px;
     font-size: 13px;
+    word-wrap: break-word;
     color: lighten($black, 30%);
   }
   .item {
-    .post-number {
-      color: lighten($black, 40%);
-      margin-right: 4px;
-    }
     padding: 10px 8px;
     background-color: white;
     border: 1px solid #b9b9b9;
@@ -252,6 +256,9 @@
     @include box-shadow((0 1px 2px rgba($black, 0.07), inset 0 -4px 4px -4px rgba($black, 0.14)));
   }
   .type {
+    color: lighten($black, 40%);
+  }
+  span.name {
     color: lighten($black, 40%);
   }
   .time {
@@ -265,12 +272,33 @@
     float: left;
     margin-right: 10px;
   }
-  .name {
-    display: inline-block;
+  .title {
+    display: block;
     margin-bottom: 4px;
     font-size: 14px;
   }
 }
+
+// styling of bottom section
+#user-stream .child-actions {
+  margin-top: 8px;
+  .avatar-link {
+    float: none;
+  }
+  .icon {
+    width: 15px;
+    display: inline-block;
+    color: #777;
+  }
+  .avatar-wrapper {
+    border: none;
+  }
+  .avatar-link {
+    margin-right: 3px;
+
+  }
+}
+
 @include medium-width {
   #user-stream {
     width: 725px;

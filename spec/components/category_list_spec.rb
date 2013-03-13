@@ -7,7 +7,7 @@ describe CategoryList do
   let(:category_list) { CategoryList.new(user) }
 
   context "with no categories" do
-   
+
     it "has no categories" do
       category_list.categories.should be_blank
     end
@@ -35,18 +35,29 @@ describe CategoryList do
       it "contains the topic in featured_topics" do
         category.featured_topics.should == [topic]
       end
- 
+
     end
 
   end
 
   context "with a category" do
 
-    let(:topic_category) { Fabricate(:category) }
+    let!(:topic_category) { Fabricate(:category) }
 
-    it "should not return empty categories (no featured topics)" do
-      category_list.categories.should be_blank
+    context "without a featured topic" do
+
+      it "should not return empty categories" do
+        category_list.categories.should be_blank
+      end
+
+      it "returns empty categories for those who can create them" do
+        Guardian.any_instance.expects(:can_create?).with(Category).returns(true)
+        category_list.categories.should be_present
+      end
+
+
     end
+
 
     context "with a topic in a category" do
       let!(:topic) { Fabricate(:topic, category: topic_category)}
@@ -61,8 +72,8 @@ describe CategoryList do
       end
 
       it "should contain our topic" do
-        category.featured_topics.should == [topic]
-      end      
+        category.featured_topics.include?(topic).should be_true
+      end
     end
 
 

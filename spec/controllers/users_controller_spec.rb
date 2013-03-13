@@ -1,8 +1,13 @@
 require 'spec_helper'
 
-describe UsersController do 
+describe UsersController do
 
-  describe '.show' do    
+  before do
+    UsersController.any_instance.stubs(:honeypot_value).returns(nil)
+    UsersController.any_instance.stubs(:challenge_value).returns(nil)
+  end
+
+  describe '.show' do
     let!(:user) { log_in }
 
     it 'returns success' do
@@ -47,7 +52,7 @@ describe UsersController do
 
       it 'sets a flash error' do
         flash[:error].should be_present
-      end      
+      end
     end
 
     context 'valid token' do
@@ -69,7 +74,7 @@ describe UsersController do
       it 'logs in as the user' do
         session[:current_user_id].should be_present
       end
-    end    
+    end
   end
 
   describe '.activate_account' do
@@ -85,7 +90,7 @@ describe UsersController do
 
       it 'sets a flash error' do
         flash[:error].should be_present
-      end      
+      end
     end
 
     context 'valid token' do
@@ -97,13 +102,13 @@ describe UsersController do
         end
 
         it 'enqueues a welcome message if the user object indicates so' do
-          user.send_welcome_message = true          
+          user.send_welcome_message = true
           user.expects(:enqueue_welcome_message).with('welcome_user')
           get :activate_account, token: 'asdfasdf'
         end
 
         it "doesn't enqueue the welcome message if the object returns false" do
-          user.send_welcome_message = false          
+          user.send_welcome_message = false
           user.expects(:enqueue_welcome_message).with('welcome_user').never
           get :activate_account, token: 'asdfasdf'
         end
@@ -126,12 +131,12 @@ describe UsersController do
 
         it 'logs in as the user' do
           session[:current_user_id].should be_present
-        end       
+        end
 
         it "doesn't set @needs_approval" do
           assigns[:needs_approval].should be_blank
-        end 
-        
+        end
+
       end
 
       context 'must_approve_users' do
@@ -161,7 +166,7 @@ describe UsersController do
     end
   end
 
-  describe '.change_email' do    
+  describe '.change_email' do
     let(:new_email) { 'bubblegum@adventuretime.ooo' }
 
     it "requires you to be logged in" do
@@ -218,11 +223,11 @@ describe UsersController do
 
       it 'sets a flash error' do
         flash[:error].should be_present
-      end      
+      end
 
       it "doesn't log in the user" do
         session[:current_user_id].should be_blank
-      end      
+      end
     end
 
     context 'valid token' do
@@ -254,18 +259,18 @@ describe UsersController do
         SiteSetting.expects(:must_approve_users?).returns(true)
         put :password_reset, token: 'asdfasdf', password: 'newpassword'
         session[:current_user_id].should be_blank
-      end       
+      end
     end
 
 
   end
 
 
-  describe '.create' do 
-    before do 
+  describe '.create' do
+    before do
       @user = Fabricate.build(:user)
-      @user.password = "strongpassword"      
-      Mothership.stubs(:register_nickname).returns([true, nil])
+      @user.password = "strongpassword"
+      DiscourseHub.stubs(:register_nickname).returns([true, nil])
     end
 
     context 'when creating a non active user (unconfirmed email)' do
@@ -277,7 +282,7 @@ describe UsersController do
       it "doesn't send a welcome email" do
         User.any_instance.expects(:enqueue_welcome_message).with('welcome_user').never
         xhr :post, :create, :name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email
-      end    
+      end
     end
 
     context 'when creating an active user (confirmed email)' do
@@ -289,7 +294,7 @@ describe UsersController do
       it 'should enqueue a signup email' do
         User.any_instance.expects(:enqueue_welcome_message).with('welcome_user')
         xhr :post, :create, :name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email
-      end      
+      end
 
       it "should be logged in" do
         User.any_instance.expects(:enqueue_welcome_message)
@@ -326,20 +331,84 @@ describe UsersController do
         xhr :post, :create, :name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email
       end
 
-      it 'should succeed' do 
+      it 'should succeed' do
         should respond_with(:success)
       end
 
       it 'has the proper JSON' do
         json = JSON::parse(response.body)
-        json["success"].should be_true 
+        json["success"].should be_true
       end
 
-      it 'should not result in an active account' do 
+      it 'should not result in an active account' do
         User.where(username: @user.username).first.active.should be_false
       end
     end
-  
+
+    shared_examples_for 'honeypot fails' do
+      it 'should not create a new user' do
+        expect {
+          xhr :post, :create, create_params
+        }.to_not change { User.count }
+      end
+
+      it 'should not send an email' do
+        User.any_instance.expects(:enqueue_welcome_message).never
+        xhr :post, :create, create_params
+      end
+
+      it 'should say it was successful' do
+        xhr :post, :create, create_params
+        json = JSON::parse(response.body)
+        json["success"].should be_true
+      end
+    end
+
+    context 'when honeypot value is wrong' do
+      before do
+        UsersController.any_instance.stubs(:honeypot_value).returns('abc')
+      end
+      let(:create_params) { {:name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email, :password_confirmation => 'wrong'} }
+      it_should_behave_like 'honeypot fails'
+    end
+
+    context 'when challenge answer is wrong' do
+      before do
+        UsersController.any_instance.stubs(:challenge_value).returns('abc')
+      end
+      let(:create_params) { {:name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email, :challenge => 'abc'} }
+      it_should_behave_like 'honeypot fails'
+    end
+
+    shared_examples_for 'failed signup' do
+      it 'should not create a new User' do
+        expect { xhr :post, :create, create_params }.to_not change { User.count }
+      end
+
+      it 'should report failed' do
+        xhr :post, :create, create_params
+        json = JSON::parse(response.body)
+        json["success"].should_not be_true
+      end
+    end
+
+    context 'when password is blank' do
+      let(:create_params) { {:name => @user.name, :username => @user.username, :password => "", :email => @user.email} }
+      it_should_behave_like 'failed signup'
+    end
+
+    context 'when password param is missing' do
+      let(:create_params) { {:name => @user.name, :username => @user.username, :email => @user.email} }
+      it_should_behave_like 'failed signup'
+    end
+
+    context 'when InvalidStatement is raised' do
+      before do
+        User.any_instance.stubs(:save).raises(ActiveRecord::StatementInvalid)
+      end
+      let(:create_params) { {:name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email} }
+      it_should_behave_like 'failed signup'
+    end
   end
 
   context '.username' do
@@ -352,7 +421,7 @@ describe UsersController do
       let(:new_username) { "#{user.username}1234" }
 
       it 'raises an error without a new_username param' do
-        lambda { xhr :put, :username, username: user.username }.should raise_error(Discourse::InvalidParameters) 
+        lambda { xhr :put, :username, username: user.username }.should raise_error(Discourse::InvalidParameters)
       end
 
       it 'raises an error when you don\'t have permission to change the user' do
@@ -363,7 +432,7 @@ describe UsersController do
 
       it 'raises an error when change_username fails' do
         User.any_instance.expects(:change_username).with(new_username).returns(false)
-        lambda { xhr :put, :username, username: user.username, new_username: new_username }.should raise_error(Discourse::InvalidParameters)        
+        lambda { xhr :put, :username, username: user.username, new_username: new_username }.should raise_error(Discourse::InvalidParameters)
       end
 
       it 'should succeed when the change_username returns true' do
@@ -377,7 +446,7 @@ describe UsersController do
 
   context '.check_username' do
     before do
-      Mothership.stubs(:nickname_available?).returns([true, nil])
+      DiscourseHub.stubs(:nickname_available?).returns([true, nil])
     end
 
     it 'raises an error without a username parameter' do
@@ -408,11 +477,11 @@ describe UsersController do
       end
     end
 
-    context 'when call_mothership is disabled' do
+    context 'when call_discourse_hub is disabled' do
       before do
-        SiteSetting.stubs(:call_mothership?).returns(false)
-        Mothership.expects(:nickname_available?).never
-        Mothership.expects(:nickname_match?).never
+        SiteSetting.stubs(:call_discourse_hub?).returns(false)
+        DiscourseHub.expects(:nickname_available?).never
+        DiscourseHub.expects(:nickname_match?).never
       end
 
       context 'available everywhere' do
@@ -444,17 +513,53 @@ describe UsersController do
         end
         it_should_behave_like 'when username is unavailable locally'
       end
+
+      shared_examples_for 'checking an invalid username' do
+        it 'should return success' do
+          response.should be_success
+        end
+
+        it 'should not return an available key' do
+          ::JSON.parse(response.body)['available'].should be_nil
+        end
+
+        it 'should return an error message' do
+          ::JSON.parse(response.body)['errors'].should_not be_empty
+        end
+      end
+
+      context 'has invalid characters' do
+        before do
+          xhr :get, :check_username, username: 'bad username'
+        end
+        it_should_behave_like 'checking an invalid username'
+
+        it 'should return the invalid characters message' do
+          ::JSON.parse(response.body)['errors'].should include(I18n.t(:'user.username.characters'))
+        end
+      end
+
+      context 'is too long' do
+        before do
+          xhr :get, :check_username, username: 'abcdefghijklmnop'
+        end
+        it_should_behave_like 'checking an invalid username'
+
+        it 'should return the "too short" message' do
+          ::JSON.parse(response.body)['errors'].should include(I18n.t(:'user.username.long', max: User.username_length.end))
+        end
+      end
     end
 
-    context 'when call_mothership is enabled' do
+    context 'when call_discourse_hub is enabled' do
       before do
-        SiteSetting.stubs(:call_mothership?).returns(true)
+        SiteSetting.stubs(:call_discourse_hub?).returns(true)
       end
 
       context 'available locally and globally' do
         before do
-          Mothership.stubs(:nickname_available?).returns([true, nil])
-          Mothership.stubs(:nickname_match?).returns([false, true, nil])  # match = false, available = true, suggestion = nil
+          DiscourseHub.stubs(:nickname_available?).returns([true, nil])
+          DiscourseHub.stubs(:nickname_match?).returns([false, true, nil])  # match = false, available = true, suggestion = nil
         end
 
         shared_examples_for 'check_username when nickname is available everywhere' do
@@ -502,7 +607,7 @@ describe UsersController do
 
       context 'available locally but not globally' do
         before do
-          Mothership.stubs(:nickname_available?).returns([false, 'suggestion'])
+          DiscourseHub.stubs(:nickname_available?).returns([false, 'suggestion'])
         end
 
         context 'email param is not given' do
@@ -521,7 +626,7 @@ describe UsersController do
 
         context 'email matches global nickname' do
           before do
-            Mothership.stubs(:nickname_match?).returns([true, false, nil])
+            DiscourseHub.stubs(:nickname_match?).returns([true, false, nil])
             xhr :get, :check_username, username: 'BruceWayne', email: 'brucie@example.com'
           end
           it_should_behave_like 'when username is available everywhere'
@@ -533,7 +638,7 @@ describe UsersController do
 
         context 'email does not match global nickname' do
           before do
-            Mothership.stubs(:nickname_match?).returns([false, false, 'suggestion'])
+            DiscourseHub.stubs(:nickname_match?).returns([false, false, 'suggestion'])
             xhr :get, :check_username, username: 'BruceWayne', email: 'brucie@example.com'
           end
           it_should_behave_like 'when username is unavailable locally'
@@ -548,7 +653,7 @@ describe UsersController do
         let!(:user) { Fabricate(:user) }
 
         before do
-          Mothership.stubs(:nickname_available?).returns([false, 'suggestion'])
+          DiscourseHub.stubs(:nickname_available?).returns([false, 'suggestion'])
           xhr :get, :check_username, username: user.username
         end
 
@@ -559,7 +664,7 @@ describe UsersController do
         let!(:user) { Fabricate(:user) }
 
         before do
-          Mothership.stubs(:nickname_available?).returns([true, nil])
+          DiscourseHub.stubs(:nickname_available?).returns([true, nil])
           xhr :get, :check_username, username: user.username
         end
 
@@ -569,9 +674,9 @@ describe UsersController do
 
     context 'when discourse_org_access_key is wrong' do
       before do
-        SiteSetting.stubs(:call_mothership?).returns(true)
-        Mothership.stubs(:nickname_available?).raises(RestClient::Forbidden)
-        Mothership.stubs(:nickname_match?).raises(RestClient::Forbidden)
+        SiteSetting.stubs(:call_discourse_hub?).returns(true)
+        DiscourseHub.stubs(:nickname_available?).raises(RestClient::Forbidden)
+        DiscourseHub.stubs(:nickname_match?).raises(RestClient::Forbidden)
       end
 
       it 'should return an error message' do
@@ -630,6 +735,80 @@ describe UsersController do
       end
     end
 
+  end
+
+  describe "search_users" do
+
+    let(:topic) { Fabricate :topic }
+    let(:user)  { Fabricate :user, username: "joecabot", name: "Lawrence Tierney" }
+
+    before do
+      Fabricate :post, user: user, topic: topic
+    end
+
+    it "searches when provided the term only" do
+      xhr :post, :search_users, term: user.name.split(" ").last
+      response.should be_success
+      json = JSON.parse(response.body)
+      json["users"].map { |u| u["username"] }.should include(user.username)
+    end
+
+    it "searches when provided the topic only" do
+      xhr :post, :search_users, topic_id: topic.id
+      response.should be_success
+      json = JSON.parse(response.body)
+      json["users"].map { |u| u["username"] }.should include(user.username)
+    end
+
+    it "searches when provided the term and topic" do
+      xhr :post, :search_users, term: user.name.split(" ").last, topic_id: topic.id
+      response.should be_success
+      json = JSON.parse(response.body)
+      json["users"].map { |u| u["username"] }.should include(user.username)
+    end
+
+  end
+
+  describe 'send_activation_email' do
+    context 'for an existing user' do
+      let(:user) { Fabricate(:user) }
+
+      before do
+        UsersController.any_instance.stubs(:fetch_user_from_params).returns(user)
+      end
+
+      context 'with a valid email_token' do
+        it 'should send the activation email' do
+          Jobs.expects(:enqueue).with(:user_email, has_entries(type: :signup))
+          xhr :get, :send_activation_email, username: user.username
+        end
+      end
+
+      context 'without an existing email_token' do
+        before do
+          user.email_tokens.each {|t| t.destroy}
+          user.reload
+        end
+
+        it 'should generate a new token' do
+          expect {
+            xhr :get, :send_activation_email, username: user.username
+          }.to change{ user.email_tokens(true).count }.by(1)
+        end
+
+        it 'should send an email' do
+          Jobs.expects(:enqueue).with(:user_email, has_entries(type: :signup))
+          xhr :get, :send_activation_email, username: user.username
+        end
+      end
+    end
+
+    context 'when username does not exist' do
+      it 'should not send an email' do
+        Jobs.expects(:enqueue).never
+        xhr :get, :send_activation_email, username: 'nopenopenopenope'
+      end
+    end
   end
 
 end

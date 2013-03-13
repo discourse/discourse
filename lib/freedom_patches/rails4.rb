@@ -1,4 +1,6 @@
-# this file can be deleted when we port to rails4
+# Sam: This has now forked of rails. Trouble is we would never like to use "about 1 month" ever, we only want months for 2 or more months. 
+#
+# Backporting a fix to rails itself may get too complex
 module FreedomPatches
   module Rails4
 
@@ -33,9 +35,10 @@ module FreedomPatches
           when 45..89          then locale.t :about_x_hours,  :count => 1
           when 90..1439        then locale.t :about_x_hours,  :count => (distance_in_minutes.to_f / 60.0).round
           when 1440..2519      then locale.t :x_days,         :count => 1
-          when 2520..43199     then locale.t :x_days,         :count => (distance_in_minutes.to_f / 1440.0).round
-          when 43200..86399    then locale.t :about_x_months, :count => 1
-          when 86400..525599   then locale.t :x_months,       :count => (distance_in_minutes.to_f / 43200.0).round
+          
+          # this is were we diverge from Rails
+          when 2520..129599     then locale.t :x_days,         :count => (distance_in_minutes.to_f / 1440.0).round
+          when 129600..525599   then locale.t :x_months,       :count => (distance_in_minutes.to_f / 43200.0).round
           else
             fyear = from_time.year
             fyear += 1 if from_time.month >= 3

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe CategoryFeaturedUser do
-  
+
   it { should belong_to :category }
   it { should belong_to :user }
 

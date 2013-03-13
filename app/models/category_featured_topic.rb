@@ -4,20 +4,17 @@ class CategoryFeaturedTopic < ActiveRecord::Base
 
   # Populates the category featured topics
   def self.feature_topics
-
     transaction do
-      Category.all.each do |c| 
+      Category.all.each do |c|
         feature_topics_for(c)
         CategoryFeaturedUser.feature_users_in(c)
       end
     end
-
-    nil
   end
 
   def self.feature_topics_for(c)
-    return unless c.present?
-    
+    return if c.blank?
+
     CategoryFeaturedTopic.transaction do
       exec_sql "DELETE FROM category_featured_topics WHERE category_id = :category_id", category_id: c.id
       exec_sql "INSERT INTO category_featured_topics (category_id, topic_id, created_at, updated_at)
@@ -31,7 +28,7 @@ class CategoryFeaturedTopic < ActiveRecord::Base
                   AND ft.deleted_at IS NULL
                   AND ft.archetype <> '#{Archetype.private_message}'
                 ORDER BY ft.bumped_at DESC
-                LIMIT :featured_limit", 
+                LIMIT :featured_limit",
                 category_id: c.id,
                 featured_limit: SiteSetting.category_featured_topics
     end

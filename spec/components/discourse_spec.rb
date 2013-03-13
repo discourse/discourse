@@ -48,7 +48,7 @@ describe Discourse do
 
     end
 
-    
+
   end
 
 

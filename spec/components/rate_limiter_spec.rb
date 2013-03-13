@@ -10,7 +10,7 @@ describe RateLimiter do
     before do
       RateLimiter.stubs(:disabled?).returns(true)
       rate_limiter.performed!
-      rate_limiter.performed!      
+      rate_limiter.performed!
     end
 
     it "returns true for can_perform?" do
@@ -26,7 +26,7 @@ describe RateLimiter do
   context 'enabled' do
     before do
       RateLimiter.stubs(:disabled?).returns(false)
-      rate_limiter.clear!      
+      rate_limiter.clear!
     end
 
     context 'never done' do
@@ -66,12 +66,12 @@ describe RateLimiter do
         end
 
         it "returns true for can_perform if the user is a mod" do
-          user.trust_level = TrustLevel.Levels[:moderator]
+          user.trust_level = TrustLevel.levels[:moderator]
           rate_limiter.can_perform?.should be_true
         end
 
         it "doesn't raise an error when a moderator performs the task" do
-          user.trust_level = TrustLevel.Levels[:moderator]
+          user.trust_level = TrustLevel.levels[:moderator]
           lambda { rate_limiter.performed! }.should_not raise_error
         end
 
@@ -93,7 +93,7 @@ describe RateLimiter do
 
       end
 
-    end     
+    end
 
   end
 

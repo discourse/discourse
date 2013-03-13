@@ -36,12 +36,12 @@ en:
       long_form: 'voted for this post'
 
   archetypes:
-    poll: 
+    poll:
       title: "Poll Topic"
       options:
-        single_vote: 
+        single_vote:
           title: "Only allow one vote"
           description: "A user may only vote on one post."
-        private_poll: 
+        private_poll:
           title: "Voting is Private"
           description: "Hide who voted for what choice."

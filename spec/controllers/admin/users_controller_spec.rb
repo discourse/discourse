@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Admin::UsersController do
 
-  it "is a subclass of AdminController" do
+  it 'is a subclass of AdminController' do
     (Admin::UsersController < Admin::AdminController).should be_true
   end
 
@@ -20,13 +20,22 @@ describe Admin::UsersController do
       it 'returns JSON' do
         xhr :get, :index
         ::JSON.parse(response.body).should be_present
-      end    
+      end
     end
 
-    context '.show' do
-      it 'returns success' do
-        xhr :get, :show, id: @user.username
-        response.should be_success
+    describe '.show' do
+      context 'an existing user' do
+        it 'returns success' do
+          xhr :get, :show, id: @user.username
+          response.should be_success
+        end
+      end
+
+      context 'an existing user' do
+        it 'returns success' do
+          xhr :get, :show, id: 'foobar'
+          response.should_not be_success
+        end
       end
     end
 
@@ -81,7 +90,7 @@ describe Admin::UsersController do
         response.should be_forbidden
       end
 
-      it 'updates the admin flag' do        
+      it 'updates the admin flag' do
         xhr :put, :revoke_admin, user_id: @another_admin.id
         @another_admin.reload
         @another_admin.should_not be_admin
@@ -99,20 +108,59 @@ describe Admin::UsersController do
         response.should be_forbidden
       end
 
-      it "returns a 404 if the username doesn't exist" do        
+      it "returns a 404 if the username doesn't exist" do
         xhr :put, :grant_admin, user_id: 123123
         response.should be_forbidden
       end
 
-      it 'updates the admin flag' do        
+      it 'updates the admin flag' do
         xhr :put, :grant_admin, user_id: @another_user.id
         @another_user.reload
         @another_user.should be_admin
       end
     end
 
+    describe '.revoke_moderation' do
+      before do
+        @moderator = Fabricate(:moderator)
+      end
+
+      it 'raises an error unless the user can revoke access' do
+        Guardian.any_instance.expects(:can_revoke_moderation?).with(@moderator).returns(false)
+        xhr :put, :revoke_moderation, user_id: @moderator.id
+        response.should be_forbidden
+      end
+
+      it 'updates the moderator flag' do
+        xhr :put, :revoke_moderation, user_id: @moderator.id
+        @moderator.reload
+        @moderator.has_trust_level?(:moderator).should_not be_true
+      end
+    end
+
+    context '.grant_moderation' do
+      before do
+        @another_user = Fabricate(:coding_horror)
+      end
+
+      it "raises an error when the user doesn't have permission" do
+        Guardian.any_instance.expects(:can_grant_moderation?).with(@another_user).returns(false)
+        xhr :put, :grant_moderation, user_id: @another_user.id
+        response.should be_forbidden
+      end
+
+      it "returns a 404 if the username doesn't exist" do
+        xhr :put, :grant_moderation, user_id: 123123
+        response.should be_forbidden
+      end
+
+      it 'updates the moderator flag' do
+        xhr :put, :grant_moderation, user_id: @another_user.id
+        @another_user.reload
+        @another_user.has_trust_level?(:moderator).should be_true
+      end
+    end
+
   end
-
-
 
 end

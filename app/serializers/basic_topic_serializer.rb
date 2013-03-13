@@ -3,29 +3,34 @@ require_dependency 'age_words'
 class BasicTopicSerializer < ApplicationSerializer
   include ActionView::Helpers
 
-  attributes :id, :title, :reply_count, :posts_count, :highest_post_number, :image_url, :created_at, 
-             :last_posted_at, :age, :unseen, :last_read_post_number, :unread, :new_posts
+  attributes :id,
+             :title,
+             :fancy_title,
+             :reply_count,
+             :posts_count,
+             :highest_post_number,
+             :image_url,
+             :created_at,
+             :last_posted_at,
+             :age,
+             :unseen,
+             :last_read_post_number,
+             :unread,
+             :new_posts
 
   def age
     AgeWords.age_words(Time.now - (object.created_at || Time.now))
   end
 
   def seen
-    object.user_data.present?  
+    object.user_data.present?
   end
 
   def unseen
     return false if scope.blank?
-    return false if scope.user.blank?    
+    return false if scope.user.blank?
     return false if object.user_data.present?
-    return false if object.created_at < scope.user.created_at
-
-    # Only mark things as new since your last visit
-    if scope.user.previous_visit_at.present?      
-      return false if object.created_at < scope.user.previous_visit_at
-    end
-
-
+    return false if object.created_at < scope.user.treat_as_new_topic_start_date
     true
   end
 

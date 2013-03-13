@@ -5,10 +5,21 @@ require 'ostruct'
 describe DiscoursePlugin do
 
   class TestPlugin < DiscoursePlugin
+    module SomeModule
+    end
+
+    module TestMixin
+    end
   end
 
   let(:registry) { mock }
   let(:plugin) { TestPlugin.new(registry) }
+
+  describe ".mixins" do
+    it "finds its mixins" do
+      TestPlugin.mixins.should == [TestPlugin::TestMixin]
+    end
+  end
 
   it "delegates adding js to the registry" do
     registry.expects(:register_js).with('test.js', any_parameters)
@@ -37,6 +48,5 @@ describe DiscoursePlugin do
     end
 
   end
-
 
 end

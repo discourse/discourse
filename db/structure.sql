@@ -51,10 +51,6 @@ CREATE TABLE categories (
     name character varying(50) NOT NULL,
     color character varying(6) DEFAULT 'AB9364'::character varying NOT NULL,
     topic_id integer,
-    top1_topic_id integer,
-    top2_topic_id integer,
-    top1_user_id integer,
-    top2_user_id integer,
     topic_count integer DEFAULT 0 NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
@@ -62,7 +58,8 @@ CREATE TABLE categories (
     topics_year integer,
     topics_month integer,
     topics_week integer,
-    slug character varying(255) NOT NULL
+    slug character varying(255) NOT NULL,
+    description text
 );
 
 
@@ -309,6 +306,39 @@ CREATE SEQUENCE facebook_user_infos_id_seq
 --
 
 ALTER SEQUENCE facebook_user_infos_id_seq OWNED BY facebook_user_infos.id;
+
+
+--
+-- Name: github_user_infos; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE github_user_infos (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    screen_name character varying(255) NOT NULL,
+    github_user_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: github_user_infos_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE github_user_infos_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: github_user_infos_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE github_user_infos_id_seq OWNED BY github_user_infos.id;
 
 
 --
@@ -608,7 +638,6 @@ CREATE TABLE posts (
     cached_version integer DEFAULT 1 NOT NULL,
     reply_count integer DEFAULT 0 NOT NULL,
     quote_count integer DEFAULT 0 NOT NULL,
-    reply_below_post_number integer,
     deleted_at timestamp without time zone,
     off_topic_count integer DEFAULT 0 NOT NULL,
     like_count integer DEFAULT 0 NOT NULL,
@@ -627,7 +656,8 @@ CREATE TABLE posts (
     spam_count integer DEFAULT 0 NOT NULL,
     illegal_count integer DEFAULT 0 NOT NULL,
     inappropriate_count integer DEFAULT 0 NOT NULL,
-    last_version_at timestamp without time zone NOT NULL
+    last_version_at timestamp without time zone NOT NULL,
+    user_deleted boolean DEFAULT false NOT NULL
 );
 
 
@@ -896,6 +926,7 @@ CREATE TABLE topic_users (
     notifications_changed_at timestamp without time zone,
     notifications_reason_id integer,
     total_msecs_viewed integer DEFAULT 0 NOT NULL,
+    cleared_pinned_at timestamp without time zone,
     CONSTRAINT test_starred_at CHECK (((starred = false) OR (starred_at IS NOT NULL)))
 );
 
@@ -931,7 +962,6 @@ CREATE TABLE topics (
     visible boolean DEFAULT true NOT NULL,
     moderator_posts_count integer DEFAULT 0 NOT NULL,
     closed boolean DEFAULT false NOT NULL,
-    pinned boolean DEFAULT false NOT NULL,
     archived boolean DEFAULT false NOT NULL,
     bumped_at timestamp without time zone NOT NULL,
     has_best_of boolean DEFAULT false NOT NULL,
@@ -942,7 +972,8 @@ CREATE TABLE topics (
     custom_flag_count integer DEFAULT 0 NOT NULL,
     spam_count integer DEFAULT 0 NOT NULL,
     illegal_count integer DEFAULT 0 NOT NULL,
-    inappropriate_count integer DEFAULT 0 NOT NULL
+    inappropriate_count integer DEFAULT 0 NOT NULL,
+    pinned_at timestamp without time zone
 );
 
 
@@ -1178,7 +1209,10 @@ CREATE TABLE users (
     flag_level integer DEFAULT 0 NOT NULL,
     time_read integer DEFAULT 0 NOT NULL,
     days_visited integer DEFAULT 0 NOT NULL,
-    ip_address inet
+    ip_address inet,
+    new_topic_duration_minutes integer,
+    external_links_in_new_tab boolean DEFAULT false NOT NULL,
+    enable_quoting boolean DEFAULT true NOT NULL
 );
 
 
@@ -1310,6 +1344,13 @@ ALTER TABLE ONLY email_tokens ALTER COLUMN id SET DEFAULT nextval('email_tokens_
 --
 
 ALTER TABLE ONLY facebook_user_infos ALTER COLUMN id SET DEFAULT nextval('facebook_user_infos_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY github_user_infos ALTER COLUMN id SET DEFAULT nextval('github_user_infos_id_seq'::regclass);
 
 
 --
@@ -1560,6 +1601,14 @@ ALTER TABLE ONLY topic_links
 
 ALTER TABLE ONLY topics
     ADD CONSTRAINT forum_threads_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: github_user_infos_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY github_user_infos
+    ADD CONSTRAINT github_user_infos_pkey PRIMARY KEY (id);
 
 
 --
@@ -1888,6 +1937,20 @@ CREATE UNIQUE INDEX index_forum_thread_users_on_forum_thread_id_and_user_id ON t
 --
 
 CREATE INDEX index_forum_threads_on_bumped_at ON topics USING btree (bumped_at DESC);
+
+
+--
+-- Name: index_github_user_infos_on_github_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_github_user_infos_on_github_user_id ON github_user_infos USING btree (github_user_id);
+
+
+--
+-- Name: index_github_user_infos_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_github_user_infos_on_user_id ON github_user_infos USING btree (user_id);
 
 
 --
@@ -2532,3 +2595,21 @@ INSERT INTO schema_migrations (version) VALUES ('20130203204338');
 INSERT INTO schema_migrations (version) VALUES ('20130204000159');
 
 INSERT INTO schema_migrations (version) VALUES ('20130205021905');
+
+INSERT INTO schema_migrations (version) VALUES ('20130207200019');
+
+INSERT INTO schema_migrations (version) VALUES ('20130208220635');
+
+INSERT INTO schema_migrations (version) VALUES ('20130213021450');
+
+INSERT INTO schema_migrations (version) VALUES ('20130213203300');
+
+INSERT INTO schema_migrations (version) VALUES ('20130221215017');
+
+INSERT INTO schema_migrations (version) VALUES ('20130226015336');
+
+INSERT INTO schema_migrations (version) VALUES ('20130306180148');
+
+INSERT INTO schema_migrations (version) VALUES ('20130311181327');
+
+INSERT INTO schema_migrations (version) VALUES ('20130313004922');

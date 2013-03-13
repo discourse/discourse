@@ -44,7 +44,7 @@ describe TopicsController do
 
         it "has a url" do
           ::JSON.parse(response.body)['url'].should be_present
-        end        
+        end
       end
 
       context 'failure' do
@@ -67,10 +67,41 @@ describe TopicsController do
           ::JSON.parse(response.body)['url'].should be_blank
         end
 
-      end      
+      end
 
     end
 
+
+  end
+
+  context 'clear_pin' do
+    it 'needs you to be logged in' do
+      lambda { xhr :put, :clear_pin, topic_id: 1 }.should raise_error(Discourse::NotLoggedIn)
+    end
+
+    context 'when logged in' do
+      let(:topic) { Fabricate(:topic) }
+      let!(:user) { log_in }
+
+      it "fails when the user can't see the topic" do
+        Guardian.any_instance.expects(:can_see?).with(topic).returns(false)
+        xhr :put, :clear_pin, topic_id: topic.id
+        response.should_not be_success
+      end
+
+      describe 'when the user can see the topic' do
+        it "calls clear_pin_for if the user can see the topic" do
+          Topic.any_instance.expects(:clear_pin_for).with(user).once
+          xhr :put, :clear_pin, topic_id: topic.id
+        end
+
+        it "succeeds" do
+          xhr :put, :clear_pin, topic_id: topic.id
+          response.should be_success
+        end
+      end
+
+    end
 
   end
 
@@ -96,7 +127,7 @@ describe TopicsController do
       end
 
       it 'requires the enabled parameter' do
-        lambda { xhr :put, :status, topic_id: @topic.id, status: 'visible' }.should raise_error(Discourse::InvalidParameters)        
+        lambda { xhr :put, :status, topic_id: @topic.id, status: 'visible' }.should raise_error(Discourse::InvalidParameters)
       end
 
       it 'raises an error with a status not in the whitelist' do
@@ -132,7 +163,7 @@ describe TopicsController do
 
       it 'deletes the forum topic user record' do
         PostTiming.expects(:destroy_for).with(@user.id, @topic.id)
-        xhr :delete, :destroy_timings, topic_id: @topic.id        
+        xhr :delete, :destroy_timings, topic_id: @topic.id
       end
 
     end
@@ -140,7 +171,7 @@ describe TopicsController do
   end
 
 
-  describe 'mute/unmute' do 
+  describe 'mute/unmute' do
 
     it 'needs you to be logged in' do
       lambda { xhr :put, :mute, topic_id: 99}.should raise_error(Discourse::NotLoggedIn)
@@ -150,7 +181,7 @@ describe TopicsController do
       lambda { xhr :put, :unmute, topic_id: 99}.should raise_error(Discourse::NotLoggedIn)
     end
 
-    describe 'when logged in' do 
+    describe 'when logged in' do
       before do
         @topic = Fabricate(:topic, user: log_in)
       end
@@ -158,12 +189,12 @@ describe TopicsController do
       it "changes the user's starred flag when the parameter is present" do
         Topic.any_instance.expects(:toggle_mute).with(@topic.user, true)
         xhr :put, :mute, topic_id: @topic.id, starred: 'true'
-      end      
+      end
 
       it "removes the user's starred flag when the parameter is not true" do
         Topic.any_instance.expects(:toggle_mute).with(@topic.user, false)
         xhr :put, :unmute, topic_id: @topic.id, starred: 'false'
-      end      
+      end
 
     end
 
@@ -182,20 +213,20 @@ describe TopicsController do
 
       it "ensures the user can see the topic" do
         Guardian.any_instance.expects(:can_see?).with(@topic).returns(false)
-        xhr :put, :star, topic_id: @topic.id, starred: 'true'  
+        xhr :put, :star, topic_id: @topic.id, starred: 'true'
         response.should be_forbidden
       end
 
       it "changes the user's starred flag when the parameter is present" do
         Topic.any_instance.expects(:toggle_star).with(@topic.user, true)
         xhr :put, :star, topic_id: @topic.id, starred: 'true'
-      end      
+      end
 
       it "removes the user's starred flag when the parameter is not true" do
         Topic.any_instance.expects(:toggle_star).with(@topic.user, false)
         xhr :put, :star, topic_id: @topic.id, starred: 'false'
-      end      
-    end   
+      end
+    end
   end
 
   describe 'delete' do
@@ -213,7 +244,7 @@ describe TopicsController do
           Guardian.any_instance.expects(:can_delete?).with(@topic).returns(false)
           xhr :delete, :destroy, id: @topic.id
           response.should be_forbidden
-        end        
+        end
       end
 
       describe 'with permission' do
@@ -236,7 +267,7 @@ describe TopicsController do
     end
   end
 
-  describe 'show' do 
+  describe 'show' do
 
     let(:topic) { Fabricate(:post).topic }
     let!(:p1) { Fabricate(:post, user: topic.user) }
@@ -251,7 +282,7 @@ describe TopicsController do
       lambda { xhr :get, :show, id: topic.id }.should change(View, :count).by(1)
     end
 
-    it 'tracks a visit for all html requests' do 
+    it 'tracks a visit for all html requests' do
       current_user = log_in(:coding_horror)
       TopicUser.expects(:track_visit!).with(topic, current_user)
       get :show, id: topic.id
@@ -266,16 +297,10 @@ describe TopicsController do
       end
 
       it "reviews the user for a promotion if they're new" do
-        user.update_column(:trust_level, TrustLevel.Levels[:new])
-        promotion.expects(:review)
+        user.update_column(:trust_level, TrustLevel.levels[:new])
+        Promotion.any_instance.expects(:review)
         get :show, id: topic.id
       end
-
-      it "doesn't reviews the user for a promotion if they're basic" do
-        promotion.expects(:review).never
-        get :show, id: topic.id
-      end      
-
     end
 
     context 'filters' do
@@ -299,10 +324,20 @@ describe TopicsController do
       it 'delegates a posts_before param to TopicView#filter_posts_before' do
         TopicView.any_instance.expects(:filter_posts_before).with(p2.post_number)
         xhr :get, :show, id: topic.id, posts_before: p2.post_number
-      end      
+      end
 
     end
 
+  end
+
+  describe '#feed' do
+    let(:topic) { Fabricate(:post).topic }
+
+    it 'renders rss of the topic' do
+      get :feed, topic_id: topic.id, slug: 'foo', format: :rss
+      response.should be_success
+      response.content_type.should == 'application/rss+xml'
+    end
   end
 
   describe 'update' do
@@ -320,7 +355,7 @@ describe TopicsController do
           Guardian.any_instance.expects(:can_edit?).with(@topic).returns(false)
           xhr :put, :update, topic_id: @topic.id, slug: @topic.title
           response.should be_forbidden
-        end        
+        end
       end
 
       describe 'with permission' do
@@ -334,9 +369,9 @@ describe TopicsController do
         end
 
         it 'allows a change of title' do
-          xhr :put, :update, topic_id: @topic.id, slug: @topic.title, title: 'new title'
+          xhr :put, :update, topic_id: @topic.id, slug: @topic.title, title: 'this is a new title for the topic'
           @topic.reload
-          @topic.title.should == 'new title'
+          @topic.title.should == 'this is a new title for the topic'
         end
 
         it 'triggers a change of category' do
@@ -351,7 +386,7 @@ describe TopicsController do
   describe 'invite' do
     it "won't allow us to invite toa topic when we're not logged in" do
       lambda { xhr :post, :invite, topic_id: 1, email: 'jake@adventuretime.ooo' }.should raise_error(Discourse::NotLoggedIn)
-    end    
+    end
 
     describe 'when logged in' do
       before do
@@ -367,7 +402,7 @@ describe TopicsController do
           Guardian.any_instance.expects(:can_invite_to?).with(@topic).returns(false)
           xhr :post, :invite, topic_id: @topic.id, user: 'jake@adventuretime.ooo'
           response.should be_forbidden
-        end        
+        end
       end
 
       describe 'with permission' do
@@ -388,7 +423,7 @@ describe TopicsController do
 
           it 'returns success JSON' do
             ::JSON.parse(response.body).should == {'success' => 'OK'}
-          end          
+          end
         end
 
         context 'when it fails and returns nil' do
@@ -404,7 +439,7 @@ describe TopicsController do
 
           it 'returns success JSON' do
             ::JSON.parse(response.body).should == {'failed' => 'FAILED'}
-          end   
+          end
 
         end
 

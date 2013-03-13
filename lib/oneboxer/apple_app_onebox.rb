@@ -5,7 +5,7 @@ module Oneboxer
 
     matcher /^https?:\/\/itunes\.apple\.com\/.+$/
     favicon 'apple.png'
-    
+
     # Don't masquerade as mobile
     def http_params
       {}
@@ -14,20 +14,20 @@ module Oneboxer
     def template
       template_path('simple_onebox')
     end
-    
+
     def parse(data)
 
-      hp = Hpricot(data)
+      html_doc = Nokogiri::HTML(data)
 
       result = {}
 
-      m = hp.at("h1")
+      m = html_doc.at("h1")
       result[:title] = m.inner_text if m
 
-      m = hp.at("h4 ~ p")
+      m = html_doc.at("h4 ~ p")
       result[:text] = m.inner_text[0..MAX_TEXT] if m
 
-      m = hp.at(".product img.artwork")
+      m = html_doc.at(".product img.artwork")
       result[:image] = m['src'] if m
 
       result

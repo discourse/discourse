@@ -9,7 +9,7 @@ module Oneboxer
 
       page_html = open(@url).read
       return nil if page_html.blank?
-      doc = Hpricot(page_html)
+      doc = Nokogiri::HTML(page_html)
 
       # Flikrs oembed just stopped returning images for no reason. Let's use opengraph instead.
       open_graph = Oneboxer.parse_open_graph(doc)
