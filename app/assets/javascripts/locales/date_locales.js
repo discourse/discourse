@@ -1,7 +1,22 @@
+// fix DE locale
+Date.getLocale('de').short_no_year = '{d}. {month}';
+
 // fix EN locale
 Date.getLocale('en').short_no_year = '{d} {Mon}';
 
-// create CS locale
+// fix FR locale
+Date.getLocale('de').short_no_year = '{d} {month}';
+
+// fix NL locale
+Date.getLocale('nl').short_no_year = '{d} {Month}';
+
+// fix SV locale
+Date.getLocale('sv').short_no_year = 'den {d} {month}';
+
+// fix zh_CN locale
+Date.getLocale('zh-CN').short_no_year = '{yyyy}年{M}月';
+
+// create CS locale, because it's not supported by Sugar at all
 Date.addLocale('cs', {
     'plural': true,
     'capitalizeUnit': false,
