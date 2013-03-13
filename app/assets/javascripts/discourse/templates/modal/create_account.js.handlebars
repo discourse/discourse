@@ -6,7 +6,7 @@
       <tr>
           <td style="width:80px"><label for='new-account-name'>{{i18n user.name.title}}</label></td>
           <td style="width:496px">
-          {{view Ember.TextField valueBinding="view.accountName" elementId="new-account-name"}}
+          {{view Discourse.TextField valueBinding="view.accountName" elementId="new-account-name" autofocus="autofocus"}}
           &nbsp;{{view Discourse.InputTipView validationBinding="view.nameValidation"}}
           </td>
       </tr>
