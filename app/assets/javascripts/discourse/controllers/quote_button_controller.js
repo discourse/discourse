@@ -10,6 +10,11 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
   needs: ['topic', 'composer'],
   started: null,
 
+  init: function() {
+    this._super();
+    $LAB.script(assetPath('defer/html-sanitizer-bundle'));
+  },
+
   // If the buffer is cleared, clear out other state (post)
   bufferChanged: (function() {
     if (this.blank('buffer')) {
@@ -35,6 +40,7 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
     selectedText = Discourse.Utilities.selectedText();
     if (this.get('buffer') === selectedText) return;
     if (this.get('lastSelected') === selectedText) return;
+
     this.set('post', e.context);
     this.set('buffer', selectedText);
     top = e.pageY + 5;
@@ -44,35 +50,33 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
       top = this.started[1] - 50;
       left = ((left - this.started[0]) / 2) + this.started[0] - ($quoteButton.width() / 2);
     }
-    $quoteButton.css({
-      top: top,
-      left: left
-    });
+    $quoteButton.css({ top: top, left: left });
     this.started = null;
     return false;
   },
 
-  quoteText: function(e) {
-    var buffer, composerController, composerOpts, composerPost, post, quotedText,
-      _this = this;
-    e.stopPropagation();
-    post = this.get('post');
-    composerController = this.get('controllers.composer');
-    composerOpts = {
+  /**
+    Quote the currently selected text
+
+    @method quoteText
+  **/
+  quoteText: function() {
+    var post = this.get('post');
+    var composerController = this.get('controllers.composer');
+    var composerOpts = {
       post: post,
       action: Discourse.Composer.REPLY,
       draftKey: this.get('post.topic.draft_key')
     };
 
     // If the composer is associated with a different post, we don't change it.
-    if (composerPost = composerController.get('content.post')) {
-      if (composerPost.get('id') !== this.get('post.id')) {
-        composerOpts.post = composerPost;
-      }
+    var composerPost = composerController.get('content.post');
+    if (composerPost && (composerPost.get('id') !== this.get('post.id'))) {
+      composerOpts.post = composerPost;
     }
-    buffer = this.get('buffer');
-    quotedText = Discourse.BBCode.buildQuoteBBCode(post, buffer);
 
+    var buffer = this.get('buffer');
+    var quotedText = Discourse.BBCode.buildQuoteBBCode(post, buffer);
     if (composerController.wouldLoseChanges()) {
       composerController.appendText(quotedText);
     } else {
@@ -83,4 +87,5 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
     this.set('buffer', '');
     return false;
   }
+
 });
