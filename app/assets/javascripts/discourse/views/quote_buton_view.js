@@ -11,7 +11,7 @@ Discourse.QuoteButtonView = Discourse.View.extend({
   classNameBindings: ['hasBuffer'],
 
   render: function(buffer) {
-    buffer.push("quote reply");
+    buffer.push(Em.String.i18n("post.quote_reply"));
   },
 
   hasBuffer: (function() {
@@ -25,17 +25,18 @@ Discourse.QuoteButtonView = Discourse.View.extend({
 
   didInsertElement: function() {
     // Clear quote button if they click elsewhere
-    var _this = this;
+    var quoteButtonView = this;
     return $(document).bind("mousedown.quote-button", function(e) {
       if ($(e.target).hasClass('quote-button')) return;
       if ($(e.target).hasClass('create')) return;
-      _this.controller.mouseDown(e);
-      _this.set('controller.lastSelected', _this.get('controller.buffer'));
-      return _this.set('controller.buffer', '');
+      quoteButtonView.controller.mouseDown(e);
+      quoteButtonView.set('controller.lastSelected', quoteButtonView.get('controller.buffer'));
+      return quoteButtonView.set('controller.buffer', '');
     });
   },
 
   click: function(e) {
+    e.stopPropagation();
     return this.get('controller').quoteText(e);
   }
 
