@@ -10,6 +10,7 @@ fr:
     share:
       topic: 'partager un lien vers cette discussion'
       post: 'partager un lien vers ce message'
+      close: fermer
 
     edit: 'éditer le titre et la catégorie de cette discussion'
     not_implemented: "Cette fonctionnalité n'a pas encore été implémentée, désolé."
@@ -28,6 +29,7 @@ fr:
     you: "vous"
     ok: "ok"
     or: "ou"
+    now: "à l'instant"
 
     suggested_topics:
       title: "discussions proposées"
@@ -263,6 +265,7 @@ fr:
         message: "Authentification via Persona (assurez-vous que les popups ne soient pas bloquées)"
 
     composer:
+      posting_not_on_topic: "Vous répondez à la discussion \"{{title}}\", mais vous êtes actuellement en train de consulter une autre discussion."
       saving_draft_tip: "sauvegarde..."
       saved_draft_tip: "sauvegardé"
       saved_local_draft_tip: "sauvegardé en local"
@@ -272,7 +275,10 @@ fr:
         more: "{{n}} restants..."
 
       save_edit: "Sauvegarder la modification"
+      reply_original: Répondre à la discussion initiale
+      reply_here: Répondre ici
       reply: "Répondre"
+      cancel: Annuler
       create_topic: "Créer une discussion"
       create_pm: "Créer un message privé."
 
@@ -511,9 +517,10 @@ fr:
           other: "Vous avez sélectionné <b>{{count}}</b> messages."
 
     post:
-      reply: "Répondre à {{link}} via {{replyAvatar}} {{username}}"
+      reply: "Répondre à {{link}} par {{replyAvatar}} {{username}}"
       reply_topic: "Répondre à {{link}}"
-      edit: "Éditer {{link}}"
+      edit: "Éditer {{link}} par {{replyAvatar}} {{username}}"
+      post_number: message {{number}}
       in_reply_to: "Réponse courte"
       reply_as_new_topic: "Répondre dans une nouvelle conversation"
       continue_discussion: "Continuer la discussion suivante {{postLink}}:"
@@ -686,6 +693,8 @@ fr:
           last_7_days: Les 7 derniers jours
           last_30_days: Les 30 derniers jours
           all_time: Depuis toujours
+          7_days_ago: Il y a 7 jours
+          30_days_ago: Il y a 30 jours
 
       flags:
         title: "Signalements"
