@@ -112,12 +112,24 @@ Discourse.Composer = Discourse.Model.extend({
       topicLink = "<a href='" + (topic.get('url')) + "'> " + (Handlebars.Utils.escapeExpression(topic.get('title'))) + "</a>";
     }
 
-    var replyAvatar;
-    if (this.get('post')) {
-      replyAvatar = Discourse.Utilities.avatarImg({
-        username: this.get('post.username'),
-        size: 'tiny'
+    var postDescription,
+        post = this.get('post');
+
+    if (post) {
+
+      postDescription = Em.String.i18n('post.' +  this.get('action'), {
+        link: postLink,
+        replyAvatar: Discourse.Utilities.tinyAvatar(post.get('username')),
+        username: this.get('post.username')
       });
+
+      var replyUsername = post.get('reply_to_user.username');
+      if (replyUsername && this.get('action') === EDIT) {
+        postDescription += " " + Em.String.i18n("post.in_reply_to") + " " +
+                           Discourse.Utilities.tinyAvatar(replyUsername) + " " + replyUsername;
+      }
+
+
     }
 
     switch (this.get('action')) {
@@ -127,15 +139,8 @@ Discourse.Composer = Discourse.Model.extend({
         return Em.String.i18n('topic.create_long');
       case REPLY:
       case EDIT:
-        if (replyAvatar) {
-          return Em.String.i18n('post.' +  this.get('action'), {
-            link: postLink,
-            replyAvatar: replyAvatar,
-            username: this.get('post.username')
-          });
-        } else if (topic) {
-          return Em.String.i18n('post.reply_topic', { link: topicLink });
-        }
+        if (postDescription) return postDescription;
+        if (topic) return Em.String.i18n('post.reply_topic', { link: topicLink });
     }
 
   }).property('action', 'post', 'topic', 'topic.title'),
