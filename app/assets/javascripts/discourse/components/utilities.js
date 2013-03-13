@@ -78,6 +78,10 @@ Discourse.Utilities = {
             (extraClasses || "") + "' title='" + (Handlebars.Utils.escapeExpression(title || "")) + "'>";
   },
 
+  tinyAvatar: function(username) {
+    return Discourse.Utilities.avatarImg({ username: username, size: 'tiny' });
+  },
+
   postUrl: function(slug, topicId, postNumber) {
     var url;
     url = "/t/";
