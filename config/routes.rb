@@ -62,7 +62,7 @@ Discourse::Application.routes.draw do
   post 'email/resubscribe/:key' => 'email#resubscribe', as: 'email_resubscribe'
 
 
-  resources :session, id: USERNAME_ROUTE_FORMAT do
+  resources :session, id: USERNAME_ROUTE_FORMAT, :only => [:create, :destroy] do
     collection do
       post 'forgot_password'
     end

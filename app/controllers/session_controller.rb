@@ -36,11 +36,6 @@ class SessionController < ApplicationController
     render :json => {error: I18n.t("login.incorrect_username_email_or_password")}
   end
 
-  # Retrieve information about the site and session
-  def index
-    render_serialized(DiscourseSession.new, DiscourseSessionSerializer)
-  end
-
   def forgot_password
     requires_parameter(:username)
 
