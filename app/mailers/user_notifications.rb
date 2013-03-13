@@ -40,7 +40,7 @@ class UserNotifications < ActionMailer::Base
 
     @site_name = SiteSetting.title
 
-    @last_seen_at = (@user.last_seen_at || @user.created_at).strftime("%m-%d-%Y")
+    @last_seen_at = I18n.l(@user.last_seen_at || @user.created_at, format: :short)
 
     # A list of new topics to show the user
     @new_topics = Topic.new_topics(min_date)
@@ -54,7 +54,7 @@ class UserNotifications < ActionMailer::Base
            from: "#{I18n.t('user_notifications.digest.from', site_name: SiteSetting.title)} <#{SiteSetting.notification_email}>",
            subject: I18n.t('user_notifications.digest.subject_template',
                             :site_name => @site_name,
-                            :date => Time.now.strftime("%m-%d-%Y"))
+                            :date => I18n.l(Time.now, format: :short))
     end
   end
 
