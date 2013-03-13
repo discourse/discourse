@@ -25,7 +25,8 @@ reaching out to the community for help:
 
    Don't. Running `bundle update` will download gem versions that we haven't tested with.
    The Gemfile.lock has the gem versions that Discourse currently uses, so `bundle install`
-   will work.  If you ran update, then you should uninstall the gems and run `bundle install`.
+   will work.  If you ran update, then you should uninstall the gems, run
+   `git checkout -- Gemfile.lock` and then run `bundle install`.
 
 5. Have you migrated your database?
 
