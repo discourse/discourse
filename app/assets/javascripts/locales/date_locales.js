@@ -32,5 +32,5 @@ Date.addLocale('cs', {
     }
 });
 
-// set the current date locale
-Date.setLocale(I18n.locale);
+// set the current date locale, replace underscore with dash to make zh_CN work
+Date.setLocale(I18n.locale.replace("_","-"));
