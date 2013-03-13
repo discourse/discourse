@@ -232,7 +232,7 @@ cs:
 
   unsubscribed:
     title: 'Odhlášen'
-    description: "Byl jste odhlášen ze seznamu. Již vás nebudeme kontaktovat."
+    description: "Byli jste odhlášeni ze seznamu. Již vás nebudeme kontaktovat."
     oops: "Pokud jste tuto akci provedli omylem, klikněte na odkaz níže."
     not_found: "Chyba při odhlašování"
     not_found_description: "Bohužel jsme vás nemohli odhlásit ze seznamu. Je možné, že váš odkaz z emailu již není platný."
@@ -240,17 +240,33 @@ cs:
   resubscribe:
     action: "Znovu přihlásit"
     title: "Znovu přihlásit!"
-    description: "Byl jste opět přihlášen k odběru."
+    description: "Byli jste opět přihlášen k odběru."
 
   reports:
     visits:
-      title: "Návštěvy uživalteů podle dnů"
+      title: "Návštěvy uživatelů podle dnů"
+      xaxis: "Den"
+      yaxis: "Počet návštěv"
     signups:
       title: "Noví uživatelé"
+      xaxis: "Den"
+      yaxis: "Počet nových uživatelů"
     topics:
       title: "Nová témata"
+      xaxis: "Den"
+      yaxis: "Počet nových témat"
     posts:
       title: "Nové příspěvky"
+      xaxis: "Den"
+      yaxis: "Počet nových příspěvků"
+    total_users:
+      title: "Celkem uživatelů"
+      xaxis: "Den"
+      yaxis: "Celkový počet uživatelů"
+    flags:
+      title: "Nahlášení"
+      xaxis: "Den"
+      yaxis: "Počet nahlášení"
 
   site_settings:
     default_locale: "Výchozí jazyk této Discourse instance (kód ve formátu ISO 639-1)"
