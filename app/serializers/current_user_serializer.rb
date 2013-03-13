@@ -8,7 +8,9 @@ class CurrentUserSerializer < BasicUserSerializer
              :site_flagged_posts_count,
              :moderator?,
              :reply_count,
-             :topic_count
+             :topic_count,
+             :enable_quoting, 
+             :external_links_in_new_tab
 
   # we probably want to move this into site, but that json is cached so hanging it off current user seems okish
 

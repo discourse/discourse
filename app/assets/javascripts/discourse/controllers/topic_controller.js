@@ -407,7 +407,7 @@ Discourse.TopicController = Discourse.ObjectController.extend({
     if (Discourse.get('currentUser.moderator')) {
       post.set('deleted_at', new Date());
     } else {
-      post.set('cooked', Discourse.Utilities.cook(Em.String.i18n("post.deleted_by_author")));
+      post.set('cooked', Discourse.Markdown.cook(Em.String.i18n("post.deleted_by_author")));
       post.set('can_delete', false);
       post.set('version', post.get('version') + 1);
     }

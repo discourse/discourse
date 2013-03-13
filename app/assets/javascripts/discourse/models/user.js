@@ -67,9 +67,15 @@ Discourse.User = Discourse.Model.extend({
                                'email_direct',
                                'email_private_messages',
                                'digest_after_days',
-                               'new_topic_duration_minutes'),
+                               'new_topic_duration_minutes', 
+                               'external_links_in_new_tab',
+                               'enable_quoting'),
       type: 'PUT',
-      success: function() { return finished(true); },
+      success: function() { 
+        Discourse.set('currentUser.enable_quoting', _this.get('enable_quoting'));
+        Discourse.set('currentUser.external_links_in_new_tab', _this.get('external_links_in_new_tab'));
+        return finished(true); 
+      },
       error: function() { return finished(false); }
     });
   },

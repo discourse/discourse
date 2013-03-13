@@ -93,7 +93,14 @@ Discourse.ClickTrack = {
     }
 
     // Otherwise, use a custom URL with a redirect
-    window.location = trackingUrl;
+    if (Discourse.get('currentUser.external_links_in_new_tab')) {
+      var win = window.open(trackingUrl, '_blank');
+      win.focus();
+    }
+    else {
+      window.location = trackingUrl;
+    }
+
     return false;
   }
 };

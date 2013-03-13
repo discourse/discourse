@@ -65,7 +65,7 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
           Discourse.currentUser.set('name', model.get('name'));
         }
       
-        _this.set('content.bio_cooked', Discourse.Utilities.cook(_this.get('content.bio_raw')));
+        _this.set('content.bio_cooked', Discourse.Markdown.cook(_this.get('content.bio_raw')));
         return _this.set('saved', true);
       } else {
         return alert('failed');
