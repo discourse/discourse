@@ -1,6 +1,3 @@
-require_dependency 'message_bus'
-require_dependency 'sql_builder'
-
 class UserAction < ActiveRecord::Base
   belongs_to :user
   belongs_to :target_post, :class_name => "Post"

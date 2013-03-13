@@ -1,4 +1,3 @@
-require_dependency 'message_bus'
 require_dependency 'discourse_observer'
 
 # This class is responsible for notifying the message bus of various

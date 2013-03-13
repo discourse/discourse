@@ -6,6 +6,7 @@ en:
     share:
       topic: 'share a link to this topic'
       post: 'share a link to this post'
+      close: 'close'
 
     edit: 'edit the title and category of this topic'
     not_implemented: "That feature hasn't been implemented yet, sorry!"
@@ -62,6 +63,8 @@ en:
       change_password: "change"
       invited_by: "Invited By"
       trust_level: "Trust Level"
+      external_links_in_new_tab: "Open all external links in a new tab"
+      enable_quoting: "Enable quote reply for highlighted text"
 
       change_username:
         action: "change"
@@ -260,6 +263,7 @@ en:
         message: "Authenticating with Persona (make sure pop up blockers are not enabled)"
 
     composer:
+      posting_not_on_topic: "You are replying to the topic \"{{title}}\", but you are currently viewing a different topic."
       saving_draft_tip: "saving"
       saved_draft_tip: "saved"
       saved_local_draft_tip: "saved locally"
@@ -269,7 +273,10 @@ en:
         more: "{{n}} to go..."
 
       save_edit: "Save Edit"
+      reply_original: "Reply on Original Topic"
+      reply_here: "Reply Here"
       reply: "Reply"
+      cancel: "Cancel"
       create_topic: "Create Topic"
       create_pm: "Create Private Message"
 
@@ -510,7 +517,8 @@ en:
     post:
       reply: "Replying to {{link}} by {{replyAvatar}} {{username}}"
       reply_topic: "Reply to {{link}}"
-      edit: "Edit {{link}}"
+      edit: "Editing {{link}} by {{replyAvatar}} {{username}}"
+      post_number: "post {{number}}"
       in_reply_to: "in reply to"
       reply_as_new_topic: "Reply as new Topic"
       continue_discussion: "Continuing the discussion from {{postLink}}:"
@@ -683,6 +691,8 @@ en:
           last_7_days: "Last 7 Days"
           last_30_days: "Last 30 Days"
           all_time: "All Time"
+          7_days_ago: "7 Days Ago"
+          30_days_ago: "30 Days Ago"
 
       flags:
         title: "Flags"

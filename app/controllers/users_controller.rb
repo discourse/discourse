@@ -43,7 +43,8 @@ class UsersController < ApplicationController
       u.auto_track_topics_after_msecs = params[:auto_track_topics_after_msecs].to_i if params[:auto_track_topics_after_msecs]
       u.new_topic_duration_minutes = params[:new_topic_duration_minutes].to_i if params[:new_topic_duration_minutes]
 
-      [:email_digests, :email_direct, :email_private_messages].each do |i|
+      [:email_digests, :email_direct, :email_private_messages, 
+       :external_links_in_new_tab, :enable_quoting].each do |i|
         if params[i].present?
           u.send("#{i.to_s}=", params[i] == 'true')
         end

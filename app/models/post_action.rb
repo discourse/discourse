@@ -136,7 +136,7 @@ class PostAction < ActiveRecord::Base
 
     # Voting also changes the sort_order
     if post_action_type == :vote
-      Post.update_all ["vote_count = vote_count + :delta, sort_order = :max - (vote_count + :delta)", delta: delta, max: Topic::MAX_SORT_ORDER], id: post_id
+      Post.update_all ["vote_count = vote_count + :delta, sort_order = :max - (vote_count + :delta)", delta: delta, max: Topic.max_sort_order], id: post_id
     else
       Post.update_all ["#{column} = #{column} + ?", delta], id: post_id
     end

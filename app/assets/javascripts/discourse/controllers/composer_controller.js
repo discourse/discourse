@@ -27,11 +27,56 @@ Discourse.ComposerController = Discourse.Controller.extend({
     }
   },
 
-  save: function() {
+  save: function(force) {
     var composer,
-      _this = this;
+      _this = this,
+      topic,
+      message,
+      buttons;
+
     composer = this.get('content');
     composer.set('disableDrafts', true);
+
+    // for now handle a very narrow use case
+    // if we are replying to a topic AND not on the topic pop the window up
+
+    if(!force && composer.get('replyingToTopic')) {
+      topic = this.get('topic');
+      if (!topic || topic.get('id') !== composer.get('topic.id'))
+      {
+        message = Em.String.i18n("composer.posting_not_on_topic", {title: this.get('content.topic.title')});
+
+        buttons = [{
+          "label": Em.String.i18n("composer.cancel"),
+          "class": "btn"
+        }];
+
+        buttons.push({
+          "label": Em.String.i18n("composer.reply_original"),
+          "class": "btn-primary",
+          "callback": function(){
+            _this.save(true);
+          }
+        });
+
+        if(topic) {
+          buttons.push({
+            "label": Em.String.i18n("composer.reply_here"),
+            "class": "btn-primary",
+            "callback": function(){
+              composer.set('topic', topic);
+              composer.set('post', null);
+              _this.save(true);
+            }
+          });
+        }
+
+        bootbox.dialog(message, buttons);
+
+        return;
+      }
+    }
+    
     return composer.save({
       imageSizes: this.get('view').imageSizes()
     }).then(function(opts) {

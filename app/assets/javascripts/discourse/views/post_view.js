@@ -64,25 +64,18 @@ Discourse.PostView = Discourse.View.extend({
     return this.set('context', this.get('content'));
   },
 
-  mouseDown: function(e) {
-    var qbc;
-    if (qbc = Discourse.get('router.quoteButtonController')) {
-      return qbc.mouseDown(e);
-    }
-  },
-
   mouseUp: function(e) {
     var $target, qbc;
-    if (qbc = Discourse.get('router.quoteButtonController')) {
-      qbc.mouseUp(e);
-    }
     if (this.get('controller.multiSelect') && (e.metaKey || e.ctrlKey)) {
       this.toggleProperty('post.selected');
     }
 
     $target = $(e.target);
     if ($target.closest('.cooked').length === 0) return;
-    if (qbc = this.get('controller.controllers.quoteButton')) {
+    qbc = this.get('controller.controllers.quoteButton');
+
+    
+    if (qbc && Discourse.get('currentUser.enable_quoting')) {
       e.context = this.get('post');
       return qbc.selectText(e);
     }

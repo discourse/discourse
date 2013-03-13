@@ -8,8 +8,13 @@ class Topic < ActiveRecord::Base
   include ActionView::Helpers
   include RateLimiter::OnCreateRecord
 
-  MAX_SORT_ORDER = 2**31 - 1
-  FEATURED_USERS = 4
+  def self.max_sort_order
+    2**31 - 1
+  end
+
+  def self.featured_users_count
+    4
+  end
 
   versioned if: :new_version_required?
   acts_as_paranoid
@@ -123,7 +128,7 @@ class Topic < ActiveRecord::Base
     return title unless SiteSetting.title_fancy_entities?
 
     # We don't always have to require this, if fancy is disabled
-    # see: http://meta.discourse.org/t/pattern-for-defer-loading-gems-and-profiling-with-perftools-rb/4629 
+    # see: http://meta.discourse.org/t/pattern-for-defer-loading-gems-and-profiling-with-perftools-rb/4629
     require 'redcarpet' unless defined? Redcarpet
 
     Redcarpet::Render::SmartyPants.render(title)
@@ -416,8 +421,6 @@ class Topic < ActiveRecord::Base
       end
 
       # Update denormalized values since we've manually moved stuff
-      Topic.reset_highest(topic.id)
-      Topic.reset_highest(id)
     end
 
     # Add a moderator post explaining that the post was moved
@@ -427,15 +430,61 @@ class Topic < ActiveRecord::Base
 
       add_moderator_post(moved_by, I18n.t("move_posts.moderator_post", count: post_ids.size, topic_link: topic_link), post_number: first_post_number)
       Jobs.enqueue(:notify_moved_posts, post_ids: post_ids, moved_by_id: moved_by.id)
+
+      topic.update_statistics
+      update_statistics
     end
 
+
     topic
+  end
+
+  # Updates the denormalized statistics of a topic including featured posters. They shouldn't
+  # go out of sync unless you do something drastic live move posts from one topic to another.
+  # this recalculates everything.
+  def update_statistics
+    feature_topic_users
+    update_action_counts
+    Topic.reset_highest(id)
   end
 
   def update_flagged_posts_count
     PostAction.update_flagged_posts_count
   end
 
+  def update_action_counts
+    PostActionType.types.keys.each do |type|
+      count_field = "#{type}_count"
+      update_column(count_field, Post.where(topic_id: id).sum(count_field))
+    end
+  end
+
+  # Chooses which topic users to feature
+  def feature_topic_users(args={})
+    reload
+
+    to_feature = posts
+
+    # Don't include the OP or the last poster
+    to_feature = to_feature.where('user_id NOT IN (?, ?)', user_id, last_post_user_id)
+
+    # Exclude a given post if supplied (in the case of deletes)
+    to_feature = to_feature.where("id <> ?", args[:except_post_id]) if args[:except_post_id].present?
+
+    # Clear the featured users by default
+    Topic.featured_users_count.times do |i|
+      send("featured_user#{i+1}_id=", nil)
+    end
+
+    # Assign the featured_user{x} columns
+    to_feature = to_feature.group(:user_id).order('count_all desc').limit(Topic.featured_users_count)
+
+    to_feature.count.keys.each_with_index do |user_id, i|
+      send("featured_user#{i+1}_id=", user_id)
+    end
+
+    save
+  end
 
   # Create the summary of the interesting posters in a topic. Cheats to avoid
   # many queries.

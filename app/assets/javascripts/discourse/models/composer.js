@@ -44,6 +44,10 @@ Discourse.Composer = Discourse.Model.extend({
     return this.get('action') === EDIT;
   }).property('action'),
 
+  replyingToTopic: (function() {
+    return this.get('action') === REPLY;
+  }).property('action'),
+
   viewOpen: (function() {
     return this.get('composeState') === OPEN;
   }).property('composeState'),
@@ -98,40 +102,42 @@ Discourse.Composer = Discourse.Model.extend({
 
   // Determine the appropriate title for this action
   actionTitle: (function() {
-    var postLink, postNumber, replyAvatar, topic, topicLink;
-    topic = this.get('topic');
-    postNumber = this.get('post.post_number');
+    var topic = this.get('topic');
+
+    var postLink, topicLink;
     if (topic) {
-      postLink = "<a href='" + (topic.get('url')) + "/" + postNumber + "'>post " + postNumber + "</a>";
+      var postNumber = this.get('post.post_number');
+      postLink = "<a href='" + (topic.get('url')) + "/" + postNumber + "'>" +
+        Em.String.i18n("post.post_number", { number: postNumber }) + "</a>";
+      topicLink = "<a href='" + (topic.get('url')) + "'> " + (Handlebars.Utils.escapeExpression(topic.get('title'))) + "</a>";
     }
+
+    var replyAvatar;
+    if (this.get('post')) {
+      replyAvatar = Discourse.Utilities.avatarImg({
+        username: this.get('post.username'),
+        size: 'tiny'
+      });
+    }
+
     switch (this.get('action')) {
       case PRIVATE_MESSAGE:
         return Em.String.i18n('topic.private_message');
       case CREATE_TOPIC:
         return Em.String.i18n('topic.create_long');
       case REPLY:
-        if (this.get('post')) {
-          replyAvatar = Discourse.Utilities.avatarImg({
-            username: this.get('post.username'),
-            size: 'tiny'
-          });
-          return Em.String.i18n('post.reply', {
+      case EDIT:
+        if (replyAvatar) {
+          return Em.String.i18n('post.' +  this.get('action'), {
             link: postLink,
             replyAvatar: replyAvatar,
             username: this.get('post.username')
           });
         } else if (topic) {
-          topicLink = "<a href='" + (topic.get('url')) + "'> " + (Handlebars.Utils.escapeExpression(topic.get('title'))) + "</a>";
-          return Em.String.i18n('post.reply_topic', {
-            link: topicLink
-          });
+          return Em.String.i18n('post.reply_topic', { link: topicLink });
         }
-        break;
-      case EDIT:
-        return Em.String.i18n('post.edit', {
-          link: postLink
-        });
     }
+
   }).property('action', 'post', 'topic', 'topic.title'),
 
   toggleText: (function() {
@@ -472,7 +478,7 @@ Discourse.Composer = Discourse.Model.extend({
   },
 
   /**
-    Computes the length of the reply minus the quote(s).
+    Computes the length of the reply minus the quote(s) and non-significant whitespaces
 
     @property replyLength
   **/
@@ -480,7 +486,7 @@ Discourse.Composer = Discourse.Model.extend({
     var reply = this.get('reply');
     if(!reply) reply = "";
     while (Discourse.BBCode.QUOTE_REGEXP.test(reply)) { reply = reply.replace(Discourse.BBCode.QUOTE_REGEXP, ""); }
-    return reply.trim().length;
+    return reply.replace(/\s+/img, " ").trim().length;
   }.property('reply')
 
 });

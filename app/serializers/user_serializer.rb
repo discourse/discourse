@@ -44,7 +44,10 @@ class UserSerializer < BasicUserSerializer
              :email_direct,
              :digest_after_days,
              :auto_track_topics_after_msecs,
-             :new_topic_duration_minutes
+             :new_topic_duration_minutes, 
+             :external_links_in_new_tab,
+             :enable_quoting 
+             
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.auto_track_topics_after
