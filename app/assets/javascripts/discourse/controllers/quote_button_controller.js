@@ -1,3 +1,5 @@
+/*global assetPath:true */
+
 /**
   This controller supports the pop up quote button
 

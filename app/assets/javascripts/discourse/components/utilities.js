@@ -105,7 +105,7 @@ Discourse.Utilities = {
   selectedText: function() {
     var html = '';
 
-    if (typeof window.getSelection != "undefined") {
+    if (typeof window.getSelection !== "undefined") {
         var sel = window.getSelection();
         if (sel.rangeCount) {
             var container = document.createElement("div");
@@ -114,8 +114,8 @@ Discourse.Utilities = {
             }
             html = container.innerHTML;
         }
-    } else if (typeof document.selection != "undefined") {
-        if (document.selection.type == "Text") {
+    } else if (typeof document.selection !== "undefined") {
+        if (document.selection.type === "Text") {
             html = document.selection.createRange().htmlText;
         }
     }
