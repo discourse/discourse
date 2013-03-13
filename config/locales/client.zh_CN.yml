@@ -1,3 +1,4 @@
+# encoding: utf-8
 # This file contains content for the client portion of Discourse, sent out
 # to the Javascript app.
 
@@ -24,6 +25,7 @@ zh_CN:
     you: "你"
     ok: "ok"
     or: "或"
+    now: "刚刚"
 
     suggested_topics:
       title: "推荐主题"
@@ -100,6 +102,9 @@ zh_CN:
         too_long: "你设置的用户名太长了。"
         checking: "查看用户名是否可用……"
         enter_email: '找到用户名，请输入对应电子邮箱。'
+
+      password_confirmation:
+        title: "请再次输入密码"
 
       last_posted: "最后一帖"
       last_emailed: "最后一次邮寄"
@@ -311,11 +316,9 @@ zh_CN:
       undo_title: "撤销"
       redo_title: "重做"
       help: "Markdown 编辑帮助"
-    
-    #composer_hr_title: 分割线  # this should be a bug
-      
+
     notifications:
-      title: "使用@name提及到你，回复你的帖子和主题，私信等等的通知消息"
+      title: "使用 @name 提及到你，回复你的帖子和主题，私信等等的通知消息"
       none: "你当前没有任何通知。"
       more: "浏览以前的通知"
       mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
