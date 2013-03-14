@@ -1,8 +1,12 @@
 zh_CN:
+  time:
+    formats:
+      short: "%Y-%m-%d"
+
   title: "论道"
   topics: "主题"
   loading: "载入中"
-  powered_by: '由<a href="http://www.discourse.org">论道 - Discourse</a>强力驱动，请开启JavaScript支持以获得最佳效果'
+  powered_by_html: '由<a href="http://www.discourse.org">论道 - Discourse</a>强力驱动，请开启JavaScript支持以获得最佳效果'
 
   via: "%{username} 自 %{site_name}"
   is_reserved: "保留权利"
@@ -70,7 +74,7 @@ zh_CN:
     no_info_other: "<div class='missing-profile'>%{name} 尚未在他/她的介绍中的“关于我”部分填写任何信息</div>"
 
   category:
-    topic_prefix: "分类%{category}的定义"
+    topic_prefix: "分类的定义信息，用于分类： %{category}"
     replace_paragraph: "[用一段简短的分类描述替换此第一段内容，请不要超过200个字符。]"
     post_template: "%{replace_paragraph}\n\n使用下面的空间输入分类的详细描述信息，可包括在此分类下讨论的规则、内容导向等等。"
 
@@ -196,26 +200,26 @@ zh_CN:
     off_topic:
       title: '题外话'
       description: '此帖对于当前讨论而言属于题外话，应该移动到其它相关主题下。'
-      long_form: '标记为题外话'
+      long_form: '投诉为题外话'
     spam:
       title: '垃圾'
       description: '此帖为明显的广告，它不包含任何对当前讨论有帮助的内容，只有促销信息。'
-      long_form: '标记为垃圾'
+      long_form: '投诉为垃圾'
     inappropriate:
       title: '不当内容'
       description: '此帖内容包含对他人的攻击、侮辱或仇视语言。'
-      long_form: '标记为不当内容'
+      long_form: '投诉为不当内容'
     custom_flag:
       title: '其它'
       description: '此帖需要版主依据<a href="/faq">常见问答 FAQ</a>、<a href="/tos">服务条款 TOS</a>或其它未列出的原因来给予关注。'
-      long_form: '标记为需要调解'
+      long_form: '投诉为需要调解'
     bookmark:
       title: '书签'
       description: '给本帖加书签'
       long_form: '已给本帖加上书签'
     like:
-      title: '喜欢'
-      description: '喜欢本帖'
+      title: '赞'
+      description: '赞本帖'
       long_form: '喜欢本帖内容'
     vote:
       title: '投票'
@@ -223,8 +227,8 @@ zh_CN:
       long_form: '已给本帖投票'
 
   flagging:
-    you_must_edit: '<p>你的帖子已经到达标记阈值，请查看你的私信。</p>'
-    user_must_edit: '<p>标记的内容已隐藏。</p>'
+    you_must_edit: '<p>你的帖子已经到达投诉阈值，请查看你的私信。</p>'
+    user_must_edit: '<p>投诉的内容已隐藏。</p>'
 
   archetypes:
     regular:
@@ -245,12 +249,28 @@ zh_CN:
   reports:
     visits:
       title: "用户访问量"
+      xaxis: "天"
+      yaxis: "访问量"
     signups:
       title: "新注册用户"
+      xaxis: "天"
+      yaxis: "新用户数"
     topics:
       title: "新发表主题"
+      xaxis: "天"
+      yaxis: "新主题数"
     posts:
       title: "新发表帖子"
+      xaxis: "天"
+      yaxis: "新帖子数"
+    total_users:
+      title: "用户总数"
+      xaxis: "天"
+      yaxis: "用户总数"
+    flags:
+      title: "投诉"
+      xaxis: "天"
+      yaxis: "投诉数"
 
   site_settings:
     default_locale: "此 论道 - Discourse 实例的缺省语言 (ISO 639-1 代码)"
@@ -293,7 +313,7 @@ zh_CN:
     use_ssl: "使用 SSL 安全套接层来访问本站吗？"
     best_of_score_threshold: "将一个帖子包含到“优选”帖子中所需的最小分值"
     best_of_posts_required: "在一个主题中启用“优选”模式所要求的最小帖子数量"
-    best_of_likes_required: "在一个主题中启用“优选”模式所要求的最小喜欢数量"
+    best_of_likes_required: "在一个主题中启用“优选”模式所要求的最小赞数量"
     enable_private_messages: "用户创建私信和私下交流要达到的用户级别"
 
     enable_long_polling: "启用消息总线使通知功能可以使用长轮询（long polling）"
@@ -304,11 +324,11 @@ zh_CN:
     auto_track_topics_after: "经过多少毫秒之后一个主题就被自动追踪的全局缺省设置，用户可以覆盖此设置（0为始终，-1为从不）"
     new_topic_duration_minutes: "一个主题在多少分钟之内被系统判断为新主题的全局缺省设置，用户可以覆盖此设置（-1为始终，-2为最后一次访问）"
 
-    flags_required_to_hide_post: "一个帖子累计多少个标记之后会被自动隐藏，并向帖子作者发送私信通知（0为从不）"
-    cooldown_minutes_after_hiding_posts: "当一个帖子因为标记而隐藏之后，用户需要等待多少分钟才能编辑该帖子"
+    flags_required_to_hide_post: "一个帖子累计多少个投诉之后会被自动隐藏，并向帖子作者发送私信通知（0为从不）"
+    cooldown_minutes_after_hiding_posts: "当一个帖子因为投诉而隐藏之后，用户需要等待多少分钟才能编辑该帖子"
 
     traditional_markdown_linebreaks: "在 Markdown 中使用传统换行符，而不是用两个尾随空格来换行"
-    post_undo_action_window_mins: "允许用户在帖子上进行撤销操作（喜欢、标记等）所需等待的间隔秒数"
+    post_undo_action_window_mins: "允许用户在帖子上进行撤销操作（赞、投诉等）所需等待的间隔秒数"
     must_approve_users: "用户必须获得管理员批准方能访问"
     ga_tracking_code: "谷歌分析追踪代码，例如：UA-12345678-9。参考 http://google.com/analytics"
     top_menu: "确定在主页导航条包含哪些条目，以及排列顺序。例如：popular|read|favorited|unread|new|posted|categories"
@@ -366,8 +386,8 @@ zh_CN:
     rate_limit_create_topic: "在创建一个主题之后间隔多少秒你才能创建另一个主题"
     rate_limit_create_post: "在创建一个帖子之后间隔多少秒你才能创建另一个帖子"
 
-    max_likes_per_day: "每个用户每天能标明喜欢数量的最大值"
-    max_flags_per_day: "每个用户每天能做标记数量的最大值"
+    max_likes_per_day: "每个用户每天能标明赞数量的最大值"
+    max_flags_per_day: "每个用户每天能做投诉数量的最大值"
     max_bookmarks_per_day: "每个用户每天能做书签数量的最大值"
     max_edits_per_day: "每个用户每天能编辑的次数的最大值"
     max_favorites_per_day: "每个用户每天能收藏的主题数量的最大值"
@@ -398,7 +418,7 @@ zh_CN:
 
   notification_types:
     mentioned: "%{display_username} 在 %{link} 提及到了你"
-    liked: "%{display_username} 在 %{link} 喜欢了你的帖子 "
+    liked: "%{display_username} 在 %{link} 赞了你的帖子 "
     replied: "%{display_username} 在 %{link} 回复了你的帖子"
     quoted: "%{display_username} 在 %{link} 引用了你的帖子"
     edited: "%{display_username} 在 %{link} 编辑了你的帖子"
@@ -423,8 +443,8 @@ zh_CN:
   user_action_descriptions:
     bookmarks: "书签"
     topics: "主题"
-    likes_received: "收到的喜欢"
-    likes_given: "送出的喜欢"
+    likes_received: "收到的赞"
+    likes_given: "送出的赞"
     responses: "回复"
     topic_responses: "主题回复"
     posts: "帖子"
@@ -435,8 +455,8 @@ zh_CN:
     sent_items: "已发送条目"
     inbox: "收件箱"
 
-    was_liked: "曾被喜欢过"
-    liked: "喜欢过"
+    was_liked: "曾被赞过"
+    liked: "赞过"
     bookmarked: "标过书签"
     posted: "发表过"
     responded_to: "回复给"
@@ -591,7 +611,7 @@ zh_CN:
 
         ### 看那个帖子吧！
 
-        要想让别人知道你喜欢他们的帖子，请点击帖子底部的 喜欢 按钮。如果你看到某个有问题的帖子，请不要犹豫，点击帖子底部的 标记 小旗帜按钮来引起论坛版主以及你的社区成员们的注意。
+        要想让别人知道你喜欢他们的帖子，请点击帖子底部的 赞 按钮。如果你看到某个有问题的帖子，请不要犹豫，点击帖子底部的 投诉 小旗帜按钮来引起论坛版主以及你的社区成员们的注意。
 
         ### 我在哪？
 
