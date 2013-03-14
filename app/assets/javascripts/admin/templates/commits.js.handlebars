@@ -1,6 +1,6 @@
 <div class="commits-widget">
   <div class="header" {{action "goToGithub"}}>
-    <h1>Latest Changes</h4>
+    <h1>Latest Changes</h1>
   </div>
   <ul class="commits-list">
     {{#each controller}}
@@ -10,7 +10,10 @@
         </div>
         <div class="right">
           <span class="commit-message"><a {{bindAttr href="commitUrl"}} target="_blank">{{ commit.message }}</a></span><br/>
-          <span class="commit-meta">by <span class="committer-name">{{ commit.author.name }}</span> - <span class="commit-time">{{ timeAgo }}</span></span>
+          <span class="commit-meta">
+              {{ sha }}<br/>
+              by <span class="committer-name">{{ commit.author.name }}</span> - <span class="commit-time">{{ timeAgo }}</span>
+          </span>
         </div>
       </li>
     {{/each}}
