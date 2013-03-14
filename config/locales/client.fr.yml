@@ -712,6 +712,7 @@ fr:
         delete: "Supprimer le message"
         delete_title: "supprimer le message (va supprimer la discussion si c'est le premier message)"
         flagged_by: "Signalé par"
+        error: "Quelque chose s'est mal passé"
 
       customize:
         title: "Personnaliser"
@@ -723,6 +724,7 @@ fr:
         undo_preview: "annuler la prévisualisation"
         save: "Sauvegarder"
         new: "Nouveau"
+        new_style: "Nouveau style"
         delete: "Supprimer"
         delete_confirm: "Supprimer cette personnalisation"
 

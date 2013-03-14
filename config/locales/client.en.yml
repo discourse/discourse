@@ -708,6 +708,7 @@ en:
         delete: "Delete Post"
         delete_title: "delete post (if its the first post delete topic)"
         flagged_by: "Flagged by"
+        error: "Something went wrong"
 
       customize:
         title: "Customize"
@@ -719,6 +720,7 @@ en:
         undo_preview: "undo preview"
         save: "Save"
         new: "New"
+        new_style: "New Style"
         delete: "Delete"
         delete_confirm: "Delete this customization?"
 
