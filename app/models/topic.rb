@@ -213,8 +213,22 @@ class Topic < ActiveRecord::Base
               id).to_a
   end
 
-  def update_status(property, status, user)
+  # Search for similar topics
+  def self.similar_to(title, raw)
+    return [] unless title.present?
+    return [] unless raw.present?
 
+    # For now, we only match on title. We'll probably add body later on, hence the API hook
+    Topic.select(sanitize_sql_array(["topics.*, similarity(topics.title, :title) AS similarity", title: title]))
+         .visible
+         .where(closed: false, archived: false)
+         .listable_topics
+         .limit(5)
+         .order('similarity desc')
+         .all
+  end
+
+  def update_status(property, status, user)
     Topic.transaction do
 
       # Special case: if it's pinned, update that
@@ -592,7 +606,6 @@ class Topic < ActiveRecord::Base
 
   def clear_pin_for(user)
     return unless user.present?
-
     TopicUser.change(user.id, id, cleared_pinned_at: Time.now)
   end
 

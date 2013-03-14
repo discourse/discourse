@@ -235,7 +235,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     if (this.loading) return;
     this.set('loading', true);
     this.set('loadingAbove', true);
-    opts = jQuery.extend({
+    opts = $.extend({
       postsBefore: post.get('post_number')
     }, this.get('controller.postFilters'));
 
@@ -303,9 +303,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     if (this.topic.posts.last().post_number !== post.post_number) return;
     this.set('loadingBelow', true);
     this.set('loading', true);
-    opts = jQuery.extend({
-      postsAfter: post.get('post_number')
-    }, this.get('controller.postFilters'));
+    opts = $.extend({ postsAfter: post.get('post_number') }, this.get('controller.postFilters'));
     return Discourse.Topic.find(this.get('topic.id'), opts).then(function(result) {
       var suggested;
       if (result.at_bottom || result.posts.length === 0) {

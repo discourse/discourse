@@ -1,6 +1,6 @@
-class SuggestedTopicSerializer < BasicTopicSerializer
+class SuggestedTopicSerializer < ListableTopicSerializer
 
-  attributes :archetype, :slug, :like_count, :views, :last_post_age
+  attributes :archetype, :like_count, :views, :last_post_age
   has_one :category, embed: :objects
 
   def last_post_age

@@ -19,36 +19,32 @@ Discourse.ComposerView = Discourse.View.extend({
                       'content.creatingTopic:topic',
                       'content.showPreview',
                       'content.hidePreview'],
-  educationClosed: null,
 
-  composeState: (function() {
-    var state;
-    state = this.get('content.composeState');
-    if (!state) {
-      state = Discourse.Composer.CLOSED;
-    }
-    return state;
-  }).property('content.composeState'),
+  composeState: function() {
+    var state = this.get('content.composeState');
+    if (state) return state;
+    return Discourse.Composer.CLOSED;
+  }.property('content.composeState'),
 
-  draftStatus: (function() {
-    return this.$('.saving-draft').text(this.get('content.draftStatus') || "");
-  }).observes('content.draftStatus'),
+  draftStatus: function() {
+    this.$('.saving-draft').text(this.get('content.draftStatus') || "");
+  }.observes('content.draftStatus'),
 
   // Disable fields when we're loading
-  loadingChanged: (function() {
+  loadingChanged: function() {
     if (this.get('loading')) {
       $('#wmd-input, #reply-title').prop('disabled', 'disabled');
     } else {
       $('#wmd-input, #reply-title').prop('disabled', '');
     }
-  }).observes('loading'),
+  }.observes('loading'),
 
-  postMade: (function() {
+  postMade: function() {
     if (this.present('controller.createdPost')) return 'created-post';
     return null;
-  }).property('content.createdPost'),
+  }.property('content.createdPost'),
 
-  observeReplyChanges: (function() {
+  observeReplyChanges: function() {
     var _this = this;
     if (this.get('content.hidePreview')) return;
     Ember.run.next(null, function() {
@@ -65,89 +61,70 @@ Discourse.ComposerView = Discourse.View.extend({
         }
       }
     });
-  }).observes('content.reply', 'content.hidePreview'),
+  }.observes('content.reply', 'content.hidePreview'),
 
-  closeEducation: function() {
-    this.set('educationClosed', true);
-    return false;
-  },
-
-  fetchNewUserEducation: (function() {
-    // If creating a topic, use topic_count, otherwise post_count
-    var count, educationKey,
-      _this = this;
-    count = this.get('content.creatingTopic') ? Discourse.get('currentUser.topic_count') : Discourse.get('currentUser.reply_count');
-    if (count >= Discourse.SiteSettings.educate_until_posts) {
-      this.set('educationClosed', true);
-      this.set('educationContents', '');
-      return;
-    }
-    if (!this.get('controller.hasReply')) {
-      return;
-    }
-    this.set('educationClosed', false);
-
-    // If visible update the text
-    educationKey = this.get('content.creatingTopic') ? 'new-topic' : 'new-reply';
-    return $.get("/education/" + educationKey).then(function(result) {
-      return _this.set('educationContents', result);
-    });
-  }).observes('controller.hasReply', 'content.creatingTopic', 'Discourse.currentUser.reply_count'),
-
-  newUserEducationVisible: (function() {
-    if (!this.get('educationContents')) return false;
-    if (this.get('content.composeState') !== Discourse.Composer.OPEN) return false;
-    if (!this.present('content.reply')) return false;
-    if (this.get('educationClosed')) return false;
-    return true;
-  }).property('content.composeState', 'content.reply', 'educationClosed', 'educationContents'),
-
-  newUserEducationVisibilityChanged: (function() {
-    var $panel;
-    $panel = $('#new-user-education');
-    if (this.get('newUserEducationVisible')) {
-      return $panel.slideDown('fast');
+  newUserEducationVisibilityChanged: function() {
+    var $panel = $('#new-user-education');
+    if (this.get('controller.newUserEducationVisible')) {
+      $panel.slideDown('fast');
     } else {
-      return $panel.slideUp('fast');
+      $panel.slideUp('fast')
     }
-  }).observes('newUserEducationVisible'),
+  }.observes('controller.newUserEducationVisible'),
 
-  moveNewUserEducation: function(sizePx) {
-    $('#new-user-education').css('bottom', sizePx);
+  similarVisibilityChanged: function() {
+    var $panel = $('#similar-topics');
+    if (this.get('controller.similarVisible')) {
+      $panel.slideDown('fast');
+    } else {
+      $panel.slideUp('fast')
+    }
+  }.observes('controller.similarVisible'),
+
+  movePanels: function(sizePx) {
+    $('.composer-popup').css('bottom', sizePx);
   },
 
-  resize: (function() {
+  resize: function() {
     // this still needs to wait on animations, need a clean way to do that
-    var _this = this;
     return Em.run.next(null, function() {
-      var h, replyControl, sizePx;
-      replyControl = $('#reply-control');
-      h = replyControl.height() || 0;
-      sizePx = "" + h + "px";
+      var replyControl = $('#reply-control');
+      var h = replyControl.height() || 0;
+      var sizePx = "" + h + "px";
       $('.topic-area').css('padding-bottom', sizePx);
-      return $('#new-user-education').css('bottom', sizePx);
+      $('.composer-popup').css('bottom', sizePx);
     });
-  }).observes('content.composeState'),
+  }.observes('content.composeState'),
 
   keyUp: function(e) {
-    var controller;
-    controller = this.get('controller');
+    var controller = this.get('controller');
     controller.checkReplyLength();
+
+    var lastKeyUp = new Date();
+    this.set('lastKeyUp', lastKeyUp);
+
+    // One second from now, check to see if the last key was hit when
+    // we recorded it. If it was, the user paused typing.
+    var composerView = this;
+    Em.run.later(function() {
+      if (lastKeyUp !== composerView.get('lastKeyUp')) return;
+
+      // Search for similar topics if the user pauses typing
+      controller.findSimilarTopics();
+    }, 1000);
+
+    // If the user hit ESC
     if (e.which === 27) controller.hitEsc();
   },
 
   didInsertElement: function() {
-    var replyControl;
-    replyControl = $('#reply-control');
-    replyControl.DivResizer({
-      resize: this.resize,
-      onDrag: this.moveNewUserEducation
-    });
+    var replyControl = $('#reply-control');
+    replyControl.DivResizer({ resize: this.resize, onDrag: this.movePanels });
     Discourse.TransitionHelper.after(replyControl, this.resize);
   },
 
   click: function() {
-    return this.get('controller').click();
+    this.get('controller').openIfDraft();
   },
 
   // Called after the preview renders. Debounced for performance
@@ -229,7 +206,7 @@ Discourse.ComposerView = Discourse.View.extend({
         });
       },
       onChangeItems: function(items) {
-        items = jQuery.map(items, function(i) {
+        items = $.map(items, function(i) {
           if (i.username) {
             return i.username;
           } else {
@@ -243,9 +220,7 @@ Discourse.ComposerView = Discourse.View.extend({
       transformComplete: transformTemplate,
 
       reverseTransform: function(i) {
-        return {
-          username: i
-        };
+        return { username: i };
       }
 
     });

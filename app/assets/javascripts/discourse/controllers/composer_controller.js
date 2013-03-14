@@ -8,22 +8,20 @@
 **/
 Discourse.ComposerController = Discourse.Controller.extend({
   needs: ['modal', 'topic'],
-  hasReply: false,
 
   togglePreview: function() {
-    return this.get('content').togglePreview();
+    this.get('content').togglePreview();
   },
 
   // Import a quote from the post
   importQuote: function() {
-    return this.get('content').importQuote();
+    this.get('content').importQuote();
   },
 
   appendText: function(text) {
-    var c;
-    c = this.get('content');
+    var c = this.get('content');
     if (c) {
-      return c.appendText(text);
+      c.appendText(text);
     }
   },
 
@@ -72,11 +70,10 @@ Discourse.ComposerController = Discourse.Controller.extend({
         }
 
         bootbox.dialog(message, buttons);
-
         return;
       }
     }
-    
+
     return composer.save({
       imageSizes: this.get('view').imageSizes()
     }).then(function(opts) {
@@ -94,17 +91,80 @@ Discourse.ComposerController = Discourse.Controller.extend({
     });
   },
 
-  checkReplyLength: function() {
-    if (this.present('content.reply')) {
-      this.set('hasReply', true);
-    } else {
-      this.set('hasReply', false);
+  closeEducation: function() {
+    this.set('educationClosed', true);
+  },
+
+  closeSimilar: function() {
+    this.set('similarClosed', true);
+  },
+
+  similarVisible: function() {
+    if (this.get('similarClosed')) return false;
+    if (this.get('content.composeState') !== Discourse.Composer.OPEN) return false;
+    return (this.get('similarTopics.length') || 0) > 0;
+  }.property('similarTopics.length', 'similarClosed', 'content.composeState'),
+
+  newUserEducationVisible: function() {
+    if (!this.get('educationContents')) return false;
+    if (this.get('content.composeState') !== Discourse.Composer.OPEN) return false;
+    if (!this.present('content.reply')) return false;
+    if (this.get('educationClosed')) return false;
+    return true;
+  }.property('content.composeState', 'content.reply', 'educationClosed', 'educationContents'),
+
+  fetchNewUserEducation: function() {
+    // If creating a topic, use topic_count, otherwise post_count
+    var count = this.get('content.creatingTopic') ? Discourse.get('currentUser.topic_count') : Discourse.get('currentUser.reply_count');
+    if (count >= Discourse.SiteSettings.educate_until_posts) {
+      this.set('educationClosed', true);
+      this.set('educationContents', '');
+      return;
     }
+
+    // The user must have typed a reply
+    if (!this.get('typedReply')) return;
+
+    this.set('educationClosed', false);
+
+    // If visible update the text
+    var educationKey = this.get('content.creatingTopic') ? 'new-topic' : 'new-reply';
+    var composerController = this;
+    $.get("/education/" + educationKey).then(function(result) {
+      composerController.set('educationContents', result);
+    });
+  }.observes('typedReply', 'content.creatingTopic', 'Discourse.currentUser.reply_count'),
+
+  checkReplyLength: function() {
+    this.set('typedReply', this.present('content.reply'));
+  },
+
+  /**
+    Fired after a user stops typing. Considers whether to check for similar
+    topics based on the current composer state.
+
+    @method findSimilarTopics
+  **/
+  findSimilarTopics: function() {
+
+    // We don't care about similar topics unless creating a topic
+    if (!this.get('content.creatingTopic')) return;
+
+    var body = this.get('content.reply');
+    var title = this.get('content.title');
+
+    // Ensure the fields are of the minimum length
+    if (body.length < Discourse.SiteSettings.min_body_similar_length) return;
+    if (title.length < Discourse.SiteSettings.min_title_similar_length) return;
+
+    var composerController = this;
+    Discourse.Topic.findSimilarTo(title, body).then(function (topics) {
+      composerController.set('similarTopics', topics);
+    });
   },
 
   saveDraft: function() {
-    var model;
-    model = this.get('content');
+    var model = this.get('content');
     if (model) model.saveDraft();
   },
 
@@ -123,8 +183,11 @@ Discourse.ComposerController = Discourse.Controller.extend({
       _this = this;
     if (!opts) opts = {};
 
-    opts.promise = promise = opts.promise || new RSVP.Promise();
-    this.set('hasReply', false);
+    opts.promise = promise = opts.promise || Ember.Deferred.create();
+    this.set('typedReply', false);
+    this.set('similarTopics', null);
+    this.set('similarClosed', false);
+
     if (!opts.draftKey) {
       alert("composer was opened without a draft key");
       throw "composer opened without a proper draft key";
@@ -133,9 +196,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
     // ensure we have a view now, without it transitions are going to be messed
     view = this.get('view');
     if (!view) {
-      view = Discourse.ComposerView.create({
-        controller: this
-      });
+      view = Discourse.ComposerView.create({ controller: this });
       view.appendTo($('#main'));
       this.set('view', view);
       // the next runloop is too soon, need to get the control rendered and then
@@ -197,8 +258,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
   },
 
   wouldLoseChanges: function() {
-    var composer;
-    composer = this.get('content');
+    var composer = this.get('content');
     return composer && composer.wouldLoseChanges();
   },
 
@@ -210,10 +270,9 @@ Discourse.ComposerController = Discourse.Controller.extend({
   },
 
   destroyDraft: function() {
-    var key;
-    key = this.get('content.draftKey');
+    var key = this.get('content.draftKey');
     if (key) {
-      return Discourse.Draft.clear(key, this.get('content.draftSequence'));
+      Discourse.Draft.clear(key, this.get('content.draftSequence'));
     }
   },
 
@@ -243,17 +302,17 @@ Discourse.ComposerController = Discourse.Controller.extend({
     }
   },
 
-  click: function() {
+  openIfDraft: function() {
     if (this.get('content.composeState') === Discourse.Composer.DRAFT) {
-      return this.set('content.composeState', Discourse.Composer.OPEN);
+      this.set('content.composeState', Discourse.Composer.OPEN);
     }
   },
 
   shrink: function() {
     if (this.get('content.reply') === this.get('content.originalText')) {
-      return this.close();
+      this.close();
     } else {
-      return this.collapse();
+      this.collapse();
     }
   },
 

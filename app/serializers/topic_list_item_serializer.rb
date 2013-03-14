@@ -1,6 +1,6 @@
 require_dependency 'pinned_check'
 
-class TopicListItemSerializer < BasicTopicSerializer
+class TopicListItemSerializer < ListableTopicSerializer
 
   attributes :views,
              :like_count,
@@ -11,8 +11,7 @@ class TopicListItemSerializer < BasicTopicSerializer
              :last_post_age,
              :starred,
              :has_best_of,
-             :archetype,
-             :slug
+             :archetype
 
   has_one :category
   has_many :posters, serializer: TopicPosterSerializer, embed: :objects

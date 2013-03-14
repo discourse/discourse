@@ -117,19 +117,18 @@ Discourse.TopicController = Discourse.ObjectController.extend({
   },
 
   replyAsNewTopic: function(post) {
-    var composerController, postLink, postUrl, promise;
-    composerController = this.get('controllers.composer');
-
     // TODO shut down topic draft cleanly if it exists ...
-    promise = composerController.open({
+    var composerController = this.get('controllers.composer');
+    var promise = composerController.open({
       action: Discourse.Composer.CREATE_TOPIC,
       draftKey: Discourse.Composer.REPLY_AS_NEW_TOPIC_KEY
     });
-    postUrl = "" + location.protocol + "//" + location.host + (post.get('url'));
-    postLink = "[" + (this.get('title')) + "](" + postUrl + ")";
-    return promise.then(function() {
-      return Discourse.Post.loadQuote(post.get('id')).then(function(q) {
-        return composerController.appendText("" + (Em.String.i18n("post.continue_discussion", {
+    var postUrl = "" + location.protocol + "//" + location.host + (post.get('url'));
+    var postLink = "[" + (this.get('title')) + "](" + postUrl + ")";
+
+    promise.then(function() {
+      Discourse.Post.loadQuote(post.get('id')).then(function(q) {
+        composerController.appendText("" + (Em.String.i18n("post.continue_discussion", {
           postLink: postLink
         })) + "\n\n" + q);
       });

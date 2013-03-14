@@ -164,7 +164,8 @@ Discourse::Application.routes.draw do
   delete 't/:id' => 'topics#destroy'
   put 't/:id' => 'topics#update'
   post 't' => 'topics#create'
-  post 'topics/timings' => 'topics#timings'
+  post 'topics/timings'
+  get 'topics/similar_to'
 
   # Legacy route for old avatars
   get 'threads/:topic_id/:post_number/avatar' => 'topics#avatar', :constraints => {:topic_id => /\d+/, :post_number => /\d+/}

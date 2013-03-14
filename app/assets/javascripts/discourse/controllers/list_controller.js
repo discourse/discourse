@@ -42,13 +42,11 @@ Discourse.ListController = Discourse.Controller.extend({
     this.set('loading', true);
 
     if (filterMode === 'categories') {
-      return Ember.Deferred.promise(function(deferred) {
-        Discourse.CategoryList.list(filterMode).then(function(items) {
-          listController.set('loading', false);
-          listController.set('filterMode', filterMode);
-          listController.set('categoryMode', true);
-          return deferred.resolve(items);
-        });
+      return Discourse.CategoryList.list(filterMode).then(function(items) {
+        listController.set('loading', false);
+        listController.set('filterMode', filterMode);
+        listController.set('categoryMode', true);
+        return items;
       });
     }
 
@@ -56,13 +54,11 @@ Discourse.ListController = Discourse.Controller.extend({
     if (!current) {
       current = Discourse.NavItem.create({ name: filterMode });
     }
-    return Ember.Deferred.promise(function(deferred) {
-      Discourse.TopicList.list(current).then(function(items) {
-        listController.set('filterSummary', items.filter_summary);
-        listController.set('filterMode', filterMode);
-        listController.set('loading', false);
-        return deferred.resolve(items);
-      });
+    return Discourse.TopicList.list(current).then(function(items) {
+      listController.set('filterSummary', items.filter_summary);
+      listController.set('filterMode', filterMode);
+      listController.set('loading', false);
+      return items;
     });
   },
 

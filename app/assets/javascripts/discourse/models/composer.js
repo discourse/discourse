@@ -85,9 +85,9 @@ Discourse.Composer = Discourse.Model.extend({
     if (post) {
       this.set('loading', true);
       var composer = this;
-      return Discourse.Post.load(post.get('id'), function(result) {
+      Discourse.Post.load(post.get('id')).then(function(result) {
         composer.appendText(Discourse.BBCode.buildQuoteBBCode(post, result.get('raw')));
-        return composer.set('loading', false);
+        composer.set('loading', false);
       });
     }
   },
@@ -249,9 +249,10 @@ Discourse.Composer = Discourse.Model.extend({
     this.set('reply', opts.reply || this.get("reply") || "");
     if (opts.postId) {
       this.set('loading', true);
-      Discourse.Post.load(opts.postId, function(result) {
+      Discourse.Post.load(opts.postId).then(function(result) {
+        console.log(result);
         composer.set('post', result);
-        return composer.set('loading', false);
+        composer.set('loading', false);
       });
     }
 
@@ -259,7 +260,7 @@ Discourse.Composer = Discourse.Model.extend({
     if (opts.action === EDIT && opts.post) {
       this.set('title', this.get('topic.title'));
       this.set('loading', true);
-      Discourse.Post.load(opts.post.get('id'), function(result) {
+      Discourse.Post.load(opts.post.get('id')).then(function(result) {
         composer.set('reply', result.get('raw'));
         composer.set('originalText', composer.get('reply'));
         composer.set('loading', false);
@@ -285,7 +286,6 @@ Discourse.Composer = Discourse.Model.extend({
 
   // When you edit a post
   editPost: function(opts) {
-    var promise = new RSVP.Promise();
     var post = this.get('post');
     var oldCooked = post.get('cooked');
     var composer = this;
@@ -304,40 +304,37 @@ Discourse.Composer = Discourse.Model.extend({
     post.set('cooked', $('#wmd-preview').html());
     this.set('composeState', CLOSED);
 
+    return Ember.Deferred.promise(function(promise) {
+      post.save(function(savedPost) {
+        var posts = composer.get('topic.posts');
 
-    post.save(function(savedPost) {
-
-      var idx, postNumber;
-      var posts = composer.get('topic.posts');
-
-      // perhaps our post came from elsewhere eg. draft
-      idx = -1;
-      postNumber = post.get('post_number');
-      posts.each(function(p, i) {
-        if (p.get('post_number') === postNumber) {
-          idx = i;
+        // perhaps our post came from elsewhere eg. draft
+        var idx = -1;
+        var postNumber = post.get('post_number');
+        posts.each(function(p, i) {
+          if (p.get('post_number') === postNumber) {
+            idx = i;
+          }
+        });
+        if (idx > -1) {
+          savedPost.set('topic', composer.get('topic'));
+          posts.replace(idx, 1, [savedPost]);
+          promise.resolve({ post: post });
+          composer.set('topic.draft_sequence', savedPost.draft_sequence);
         }
+      }, function(error) {
+        var errors;
+        errors = $.parseJSON(error.responseText).errors;
+        promise.reject(errors[0]);
+        post.set('cooked', oldCooked);
+        return composer.set('composeState', OPEN);
       });
-      if (idx > -1) {
-        savedPost.set('topic', composer.get('topic'));
-        posts.replace(idx, 1, [savedPost]);
-        promise.resolve({ post: post });
-        composer.set('topic.draft_sequence', savedPost.draft_sequence);
-      }
-    }, function(error) {
-      var errors;
-      errors = $.parseJSON(error.responseText).errors;
-      promise.reject(errors[0]);
-      post.set('cooked', oldCooked);
-      return composer.set('composeState', OPEN);
     });
-    return promise;
   },
 
   // Create a new Post
   createPost: function(opts) {
-    var promise = new RSVP.Promise(),
-        post = this.get('post'),
+    var post = this.get('post'),
         topic = this.get('topic'),
         currentUser = Discourse.get('currentUser'),
         addedToStream = false;
@@ -401,38 +398,37 @@ Discourse.Composer = Discourse.Model.extend({
 
     // Save callback
     var composer = this;
-    createdPost.save(function(result) {
-      var addedPost = false,
-          saving = true;
-      createdPost.updateFromSave(result);
-      if (topic) {
-        // It's no longer a new post
-        createdPost.set('newPost', false);
-        topic.set('draft_sequence', result.draft_sequence);
-      } else {
-        // We created a new topic, let's show it.
-        composer.set('composeState', CLOSED);
-        saving = false;
-      }
-      composer.set('reply', '');
-      composer.set('createdPost', createdPost);
-      if (addedToStream) {
-        composer.set('composeState', CLOSED);
-      } else if (saving) {
-        composer.set('composeState', SAVING);
-      }
-      return promise.resolve({ post: result });
-    }, function(error) {
-      // If an error occurs
-      var errors;
-      if (topic) {
-        topic.posts.removeObject(createdPost);
-      }
-      errors = $.parseJSON(error.responseText).errors;
-      promise.reject(errors[0]);
-      composer.set('composeState', OPEN);
+    return Ember.Deferred.promise(function(promise) {
+      createdPost.save(function(result) {
+        var addedPost = false,
+            saving = true;
+        createdPost.updateFromSave(result);
+        if (topic) {
+          // It's no longer a new post
+          createdPost.set('newPost', false);
+          topic.set('draft_sequence', result.draft_sequence);
+        } else {
+          // We created a new topic, let's show it.
+          composer.set('composeState', CLOSED);
+          saving = false;
+        }
+        composer.set('reply', '');
+        composer.set('createdPost', createdPost);
+        if (addedToStream) {
+          composer.set('composeState', CLOSED);
+        } else if (saving) {
+          composer.set('composeState', SAVING);
+        }
+        return promise.resolve({ post: result });
+      }, function(error) {
+        // If an error occurs
+        if (topic) {
+          topic.posts.removeObject(createdPost);
+        }
+        promise.reject($.parseJSON(error.responseText).errors[0]);
+        composer.set('composeState', OPEN);
+      });
     });
-    return promise;
   },
 
   saveDraft: function() {

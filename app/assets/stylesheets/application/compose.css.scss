@@ -4,7 +4,7 @@
 @import "foundation/mixins";
 
 
-#new-user-education {
+.composer-popup {
 
   @include box-shadow(3px 3px 3px rgba($black, 0.14));
 
@@ -17,10 +17,21 @@
   }
 
   background-color: lighten($yellow, 40%);
-  border: 1px solid $yellow;
+  border: 1px solid darken($yellow, 5%);
   padding: 10px;
   width: 600px;
   position: absolute;
+
+  ul.topics {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      font-weight: normal;
+      margin-top: 3px;
+    }
+  }
 }
 
 #reply-control {

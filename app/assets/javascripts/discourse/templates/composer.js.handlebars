@@ -2,10 +2,20 @@
 
 <div class='contents'>
 
-  <div id='new-user-education' style='display: none'>
-    <a href='#' {{action closeEducation target="view"}} class='close'>{{i18n ok}}</a>
+  <div id='new-user-education' class='composer-popup' style='display: none'>
+    <a href='#' {{action closeEducation}} class='close'>{{i18n ok}}</a>
+    {{{controller.educationContents}}}
+  </div>
 
-    {{{view.educationContents}}}
+  <div id='similar-topics' class='composer-popup' style='display: none'>
+    <a href='#' {{action closeSimilar}} class='close'>{{i18n ok}}</a>
+    <h3>{{i18n composer.similar_topics}}<h3>
+
+    <ul class='topics'>
+      {{#each controller.similarTopics}}
+        <li>{{{topicLink this}}}</li>
+      {{/each}}
+    </ul>
   </div>
 
   <div class='control'>

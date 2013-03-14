@@ -46,47 +46,15 @@ Discourse.FlaggedPost = Discourse.Post.extend({
   }).property('topic_hidden'),
 
   deletePost: function() {
-    var promise;
-    promise = new RSVP.Promise();
     if (this.get('post_number') === "1") {
-      return $.ajax("/t/" + this.topic_id, {
-        type: 'DELETE',
-        cache: false,
-        success: function() {
-          promise.resolve();
-        },
-        error: function(e) {
-          promise.reject();
-        }
-      });
+      return $.ajax("/t/" + this.topic_id, { type: 'DELETE', cache: false });
     } else {
-      return $.ajax("/posts/" + this.id, {
-        type: 'DELETE',
-        cache: false,
-        success: function() {
-          promise.resolve();
-        },
-        error: function(e) {
-          promise.reject();
-        }
-      });
+      return $.ajax("/posts/" + this.id, { type: 'DELETE', cache: false });
     }
   },
 
   clearFlags: function() {
-    var promise;
-    promise = new RSVP.Promise();
-    $.ajax("/admin/flags/clear/" + this.id, {
-      type: 'POST',
-      cache: false,
-      success: function() {
-        promise.resolve();
-      },
-      error: function(e) {
-        promise.reject();
-      }
-    });
-    return promise;
+    return $.ajax("/admin/flags/clear/" + this.id, { type: 'POST', cache: false });
   },
 
   hiddenClass: (function() {

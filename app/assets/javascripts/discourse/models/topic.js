@@ -372,6 +372,20 @@ Discourse.Topic.reopenClass({
     MUTE: 0
   },
 
+  /**
+    Find similar topics to a given title and body
+
+    @method findSimilar
+    @param {String} title The current title
+    @param {String} body The current body
+    @returns A promise that will resolve to the topics
+  **/
+  findSimilarTo: function(title, body) {
+    return $.ajax({url: "/topics/similar_to", data: {title: title, raw: body} }).then(function (results) {
+      return results.map(function(topic) { return Discourse.Topic.create(topic) });
+    });
+  },
+
   // Load a topic, but accepts a set of filters
   //  options:
   //    onLoad - the callback after the topic is loaded
@@ -408,20 +422,15 @@ Discourse.Topic.reopenClass({
     }
 
     // Check the preload store. If not, load it via JSON
-    promise = new RSVP.Promise();
-    PreloadStore.get("topic_" + topicId, function() {
+    return PreloadStore.get("topic_" + topicId, function() {
       return $.getJSON(url + ".json", data);
     }).then(function(result) {
-      var first;
-      first = result.posts.first();
+      var first = result.posts.first();
       if (first && opts && opts.bestOf) {
         first.bestOfFirst = true;
       }
-      return promise.resolve(result);
-    }, function(result) {
-      return promise.reject(result);
+      return result;
     });
-    return promise;
   },
 
   // Create a topic from posts

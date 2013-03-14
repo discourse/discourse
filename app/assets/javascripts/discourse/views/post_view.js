@@ -74,7 +74,7 @@ Discourse.PostView = Discourse.View.extend({
     if ($target.closest('.cooked').length === 0) return;
     qbc = this.get('controller.controllers.quoteButton');
 
-    
+
     if (qbc && Discourse.get('currentUser.enable_quoting')) {
       e.context = this.get('post');
       return qbc.selectText(e);
@@ -109,9 +109,8 @@ Discourse.PostView = Discourse.View.extend({
 
   // Toggle visibility of parent post
   toggleParent: function(e) {
-    var $parent, post,
-      _this = this;
-    $parent = this.$('.parent-post');
+    var postView = this;
+    var $parent = this.$('.parent-post');
     if (this.get('parentPost')) {
       $('nav', $parent).removeClass('toggled');
       // Don't animate on touch
@@ -119,19 +118,18 @@ Discourse.PostView = Discourse.View.extend({
         $parent.hide();
         this.set('parentPost', null);
       } else {
-        $parent.slideUp(function() {
-          return _this.set('parentPost', null);
-        });
+        $parent.slideUp(function() { postView.set('parentPost', null); });
       }
     } else {
-      post = this.get('post');
+      var post = this.get('post');
       this.set('loadingParent', true);
       $('nav', $parent).addClass('toggled');
-      Discourse.Post.loadByPostNumber(post.get('topic_id'), post.get('reply_to_post_number'), function(result) {
-        _this.set('loadingParent', false);
+
+      Discourse.Post.loadByPostNumber(post.get('topic_id'), post.get('reply_to_post_number')).then(function(result) {
+        postView.set('loadingParent', false);
         // Give the post a reference back to the topic
-        result.topic = _this.get('post.topic');
-        return _this.set('parentPost', result);
+        result.topic = postView.get('post.topic');
+        postView.set('parentPost', result);
       });
     }
     return false;
