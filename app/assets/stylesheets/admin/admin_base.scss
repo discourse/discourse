@@ -76,55 +76,6 @@
   }
 }
 
-.version-check {
-  float: left;
-  width: 500px;
-}
-.version-check-right {
-  float:right;
-  width: 500px;
-  margin-right: 15px;
-}
-
-.version-check {
-  .version-number {
-    font-size: 18px;
-    font-weight: bold
-  }
-
-  .version-notes .icon {
-    margin-left: 20px;
-    vertical-align: bottom;
-  }
-
-  &.critical .version-notes .normal-note {
-    display: none;
-  }
-  &.normal .version-notes .critical-note {
-    display: none;
-  }
-
-  .icon {
-    font-size: 26px;
-  }
-
-  .update-to-date {
-    color: green;
-  }
-  .updates-available {
-    color: #FF9500;
-  }
-  .critical-updates-available {
-    color: red;
-  }
-}
-
-.update-nag {
-  i.icon {
-    font-size: 20px;
-  }
-}
-
 .settings {
   .setting {
     padding-bottom: 20px;
@@ -304,10 +255,60 @@ table {
   .last-flagged { padding: 0 10px; }
 }
 
+/* Dashboard */
+
+.dashboard-left {
+  float: left;
+  width: 500px;
+}
+.dashboard-right {
+  float: right;
+  width: 500px;
+  margin-right: 15px;
+}
+
+.version-check {
+  .version-number {
+    font-size: 18px;
+    font-weight: bold
+  }
+
+  .version-notes .icon {
+    margin-left: 20px;
+    vertical-align: bottom;
+  }
+
+  &.critical .version-notes .normal-note {
+    display: none;
+  }
+  &.normal .version-notes .critical-note {
+    display: none;
+  }
+
+  .icon {
+    font-size: 26px;
+  }
+
+  .update-to-date {
+    color: green;
+  }
+  .updates-available {
+    color: #FF9500;
+  }
+  .critical-updates-available {
+    color: red;
+  }
+}
+
+.update-nag {
+  i.icon {
+    font-size: 20px;
+  }
+}
+
 .dashboard-stats {
   margin-top: 30px;
   width: 450px;
-  float: left;
   margin-left: 40px;
 
   table {
@@ -328,8 +329,9 @@ table {
 
 .commits-widget {
   border: solid 1px #ccc;
+  margin-top: 10px;
   width: 500px;
-  height: 160px;
+  height: 380px;
 
   ul, li {
     margin: 0;
@@ -340,7 +342,7 @@ table {
   }
   a {
     color: #222;
-    text-decoration: none
+    text-decoration: none;
   }
   a:hover {
     text-decoration: underline;
@@ -375,7 +377,7 @@ table {
   }
 
   .commits-list {
-    height: 129px;
+    height: 349px;
     overflow-y:auto;
 
     li {
@@ -425,5 +427,17 @@ table {
     li:last-child {
       border: none;
     }
+  }
+
+  // Always show the scrollbar:
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #d1d1d1;
+    -webkit-border-radius: 3px;
+  }
+  ::-webkit-scrollbar-track {
+    border-left: solid 1px #ddd;
   }
 }
