@@ -11,7 +11,7 @@ profile:
   <<: *defaults
 
 test:
-  <<: *defaults 
+  <<: *defaults
   db: 1
 
 staging:
@@ -19,3 +19,13 @@ staging:
 
 production:
   <<: *defaults
+
+# Example for using environment variables
+#
+# production:
+#   uri: <%= uri = URI.parse(ENV['OPENREDIS_URL']) if ENV['OPENREDIS_URL'] %>
+#   host: <%= uri.host if uri %>
+#   port: <%= uri.port if uri %>
+#   password: <%= uri.password if uri %>
+#   db: 0
+#   cache_db: 2
