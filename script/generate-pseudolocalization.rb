@@ -35,14 +35,25 @@ def transform(p)
   end
 end
 
-def process_file(basename, locale)
+def replace(hash, hash2, dotted_path)
+  parts = dotted_path.split '.', 2
+  match = hash[parts[0]]
+  if !parts[1] or match.nil?
+    return match
+  else
+    return dig(match, parts[1])
+  end
+end
+
+def process_file(basename, locale, &block)
   strings = YAML.load_file("./config/locales/#{basename}.#{locale}.yml")
-  strings = transform(strings)
-  strings = Hash["pseudo" => strings[locale]]
+  new_strings = transform(strings)
+  new_strings = Hash["pseudo" => new_strings[locale]]
+  yield new_strings, strings if block_given?
   File.open("./config/locales/#{basename}.pseudo.yml", 'w+' ) do |f|
-    f.puts strings.to_yaml
+    f.puts new_strings.to_yaml
   end
 end
 
 process_file("client", "en")
-process_file("server", "en")
+process_file("server", "en") { |new,orig| new["pseudo"]["time"] = orig["en"]["time"] }
