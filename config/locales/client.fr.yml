@@ -67,6 +67,8 @@ fr:
       change_password: "changer"
       invited_by: "Invité par"
       trust_level: "Niveau de confiance"
+      external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
+      enable_quoting: "Active la citation automatique du texte surligné"
 
       change_username:
         action: "changer"
@@ -519,6 +521,7 @@ fr:
     post:
       reply: "Répondre à {{link}} par {{replyAvatar}} {{username}}"
       reply_topic: "Répondre à {{link}}"
+      quote_reply: "Citer"
       edit: "Éditer {{link}} par {{replyAvatar}} {{username}}"
       post_number: message {{number}}
       in_reply_to: "Réponse courte"
@@ -631,6 +634,7 @@ fr:
     top_contributors: "Participants"
     category_title: "Catégorie"
     history: "Historique"
+    changed_by: "par {{author}}"
 
     categories_list: "Liste des catégories"
 
