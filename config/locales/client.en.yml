@@ -696,6 +696,9 @@ en:
           7_days_ago: "7 Days Ago"
           30_days_ago: "30 Days Ago"
 
+      commits:
+        latest_changes: "Latest changes"
+
       flags:
         title: "Flags"
         old: "Old"
@@ -715,6 +718,7 @@ en:
         preview: "preview"
         undo_preview: "undo preview"
         save: "Save"
+        new: "New"
         delete: "Delete"
         delete_confirm: "Delete this customization?"
 
