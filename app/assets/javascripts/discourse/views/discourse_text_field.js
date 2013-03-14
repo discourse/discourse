@@ -10,7 +10,11 @@ Discourse.TextField = Ember.TextField.extend({
   attributeBindings: ['autocorrect', 'autocapitalize', 'autofocus'],
 
   placeholder: (function() {
-    return Em.String.i18n(this.get('placeholderKey'));
+    if( this.get('placeholderKey') ) {
+      return Em.String.i18n(this.get('placeholderKey'));
+    } else {
+      return '';
+    }
   }).property('placeholderKey')
 
 });

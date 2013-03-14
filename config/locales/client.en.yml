@@ -517,6 +517,7 @@ en:
     post:
       reply: "Replying to {{link}} by {{replyAvatar}} {{username}}"
       reply_topic: "Reply to {{link}}"
+      quote_reply: "quote reply"
       edit: "Editing {{link}} by {{replyAvatar}} {{username}}"
       post_number: "post {{number}}"
       in_reply_to: "in reply to"
@@ -695,6 +696,9 @@ en:
           7_days_ago: "7 Days Ago"
           30_days_ago: "30 Days Ago"
 
+      commits:
+        latest_changes: "Latest changes"
+
       flags:
         title: "Flags"
         old: "Old"
@@ -714,6 +718,7 @@ en:
         preview: "preview"
         undo_preview: "undo preview"
         save: "Save"
+        new: "New"
         delete: "Delete"
         delete_confirm: "Delete this customization?"
 
