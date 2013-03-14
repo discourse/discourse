@@ -1211,6 +1211,9 @@ CREATE TABLE users (
     days_visited integer DEFAULT 0 NOT NULL,
     ip_address inet,
     new_topic_duration_minutes integer,
+    "position" character varying(255),
+    teams text DEFAULT '--- []
+'::text,
     external_links_in_new_tab boolean DEFAULT false NOT NULL,
     enable_quoting boolean DEFAULT true NOT NULL
 );
@@ -2605,6 +2608,8 @@ INSERT INTO schema_migrations (version) VALUES ('20130213021450');
 INSERT INTO schema_migrations (version) VALUES ('20130213203300');
 
 INSERT INTO schema_migrations (version) VALUES ('20130221215017');
+
+INSERT INTO schema_migrations (version) VALUES ('20130223193912');
 
 INSERT INTO schema_migrations (version) VALUES ('20130226015336');
 
