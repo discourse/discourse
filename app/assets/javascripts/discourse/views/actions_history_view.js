@@ -29,7 +29,7 @@ Discourse.ActionsHistoryView = Discourse.View.extend({
 
       if (c.get('users')) {
         c.get('users').forEach(function(u) {
-          buffer.push("<a href=\"/users/" + (u.get('username_lower')) + "\">");
+          buffer.push("<a href=\"" + Discourse.getURL("/users/") + (u.get('username_lower')) + "\">");
           buffer.push(Discourse.Utilities.avatarImg({
             size: 'small',
             username: u.get('username'),

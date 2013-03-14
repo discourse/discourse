@@ -18,6 +18,14 @@ module Discourse
     RailsMultisite::ConnectionManagement.current_hostname
   end
 
+  def self.base_uri
+    if !ActionController::Base.config.relative_url_root.blank?
+      return ActionController::Base.config.relative_url_root 
+    else
+      return ""
+    end
+  end
+
   def self.base_url
     protocol = "http"
     protocol = "https" if SiteSetting.use_ssl?
@@ -27,6 +35,7 @@ module Discourse
       result = "#{protocol}://#{current_hostname}"
     end
     result << ":#{SiteSetting.port}" if SiteSetting.port.present? && SiteSetting.port.to_i > 0
+    result << ActionController::Base.config.relative_url_root if !ActionController::Base.config.relative_url_root.blank?
     result
   end
 

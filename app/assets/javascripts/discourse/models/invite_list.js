@@ -15,7 +15,7 @@ Discourse.InviteList = Discourse.Model.extend({
 Discourse.InviteList.reopenClass({
 
   findInvitedBy: function(user) {
-    return $.ajax({ url: "/users/" + (user.get('username_lower')) + "/invited.json" }).then(function (result) {
+    return $.ajax({ url: Discourse.getURL("/users/") + (user.get('username_lower')) + "/invited.json" }).then(function (result) {
       var invitedList = result.invited_list;
       if (invitedList.pending) {
         invitedList.pending = invitedList.pending.map(function(i) {

@@ -120,6 +120,7 @@ module PrettyText
       # we need to do this to work in a multi site environment, many sites, many settings
       v8.eval("Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
       v8.eval("Discourse.BaseUrl = 'http://#{RailsMultisite::ConnectionManagement.current_hostname}';")
+      v8.eval("Discourse.getURL = function(url) {return '#{Discourse::base_uri}' + url};")
       v8['opts'] = opts || {}
       v8['raw'] = text
       v8.eval('opts["mentionLookup"] = function(u){return helpers.is_username_valid(u);}')

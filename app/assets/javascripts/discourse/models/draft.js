@@ -13,7 +13,7 @@ Discourse.Draft.reopenClass({
   clear: function(key, sequence) {
     return $.ajax({
       type: 'DELETE',
-      url: "/draft",
+      url: Discourse.getURL("/draft"),
       data: {
         draft_key: key,
         sequence: sequence
@@ -23,7 +23,7 @@ Discourse.Draft.reopenClass({
 
   get: function(key) {
     return $.ajax({
-      url: '/draft',
+      url: Discourse.getURL('/draft'),
       data: { draft_key: key },
       dataType: 'json'
     });
@@ -38,7 +38,7 @@ Discourse.Draft.reopenClass({
     data = typeof data === "string" ? data : JSON.stringify(data);
     return $.ajax({
       type: 'POST',
-      url: "/draft",
+      url: Discourse.getURL("/draft"),
       data: {
         draft_key: key,
         data: data,

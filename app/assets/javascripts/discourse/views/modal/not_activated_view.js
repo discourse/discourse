@@ -12,7 +12,7 @@ Discourse.NotActivatedView = Discourse.ModalBodyView.extend({
   emailSent: false,
 
   sendActivationEmail: function() {
-    $.get('/users/' + this.get('username') + '/send_activation_email');
+    $.get(Discourse.getURL('/users/') + this.get('username') + '/send_activation_email');
     this.set('emailSent', true);
   }
 });

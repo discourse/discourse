@@ -16,7 +16,7 @@ Discourse.ForgotPasswordView = Discourse.ModalBodyView.extend({
   }).property('accountEmailOrUsername'),
 
   submit: function() {
-    $.post("/session/forgot_password", {
+    $.post(Discourse.getURL("/session/forgot_password"), {
       username: this.get('accountEmailOrUsername')
     });
     // don't tell people what happened, this keeps it more secure (ensure same on server)

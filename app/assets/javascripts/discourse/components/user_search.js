@@ -15,7 +15,7 @@ cacheTime = null;
 
 doSearch = function(term, topicId, success) {
   return $.ajax({
-    url: '/users/search/users',
+    url: Discourse.getURL('/users/search/users'),
     dataType: 'JSON',
     data: {
       term: term,
