@@ -520,13 +520,18 @@ class User < ActiveRecord::Base
     end
 
     def email_validator
-      if (setting = SiteSetting.email_domains_blacklist).present?
+      if (setting = SiteSetting.email_domains_whitelist).present?
+        domains = settings.downcase.split('|')
+        unless domains.include?(self.email.downcase.split('@')[1]) 
+          errors.add(:email, I18n.t(:'user.email.not_allowed'))
+        end
+      elsif (setting = SiteSetting.email_domains_blacklist).present?
         domains = setting.gsub('.', '\.')
         regexp = Regexp.new("@(#{domains})", true)
         if self.email =~ regexp
           errors.add(:email, I18n.t(:'user.email.not_allowed'))
         end
-      end
+      end  
     end
 
     def password_validator

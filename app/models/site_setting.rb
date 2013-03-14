@@ -33,6 +33,7 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:flush_timings_secs, 5)
   client_setting(:supress_reply_directly_below, true)
   client_setting(:email_domains_blacklist, 'mailinator.com')
+  client_setting(:email_domains_whitelist)
   client_setting(:version_checks, true)
 
   # settings only available server side
