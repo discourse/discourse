@@ -696,6 +696,9 @@ fr:
           7_days_ago: Il y a 7 jours
           30_days_ago: Il y a 30 jours
 
+      commits:
+        latest_changes: Derniers changements
+
       flags:
         title: "Signalements"
         old: "Vieux"
@@ -715,6 +718,7 @@ fr:
         preview: "prévisualiser"
         undo_preview: "annuler la prévisualisation"
         save: "Sauvegarder"
+        new: "Nouveau"
         delete: "Supprimer"
         delete_confirm: "Supprimer cette personnalisation"
 
