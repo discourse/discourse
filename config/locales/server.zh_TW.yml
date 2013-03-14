@@ -200,26 +200,26 @@ zh_TW:
     off_topic:
       title: '題外話'
       description: '此帖對于當前討論而言屬于題外話，應該移動到其它相關主題下。'
-      long_form: '標記爲題外話'
+      long_form: '投訴爲題外話'
     spam:
       title: '垃圾'
       description: '此帖爲明顯的廣告，它不包含任何對當前討論有幫助的內容，只有促銷信息。'
-      long_form: '標記爲垃圾'
+      long_form: '投訴爲垃圾'
     inappropriate:
       title: '不當內容'
       description: '此帖內容包含對他人的攻擊、侮辱或仇視語言。'
-      long_form: '標記爲不當內容'
+      long_form: '投訴爲不當內容'
     custom_flag:
       title: '其它'
       description: '此帖需要版主依據<a href="/faq">常見問答 FAQ</a>、<a href="/tos">服務條款 TOS</a>或其它未列出的原因來給予關注。'
-      long_form: '標記爲需要調解'
+      long_form: '投訴爲需要調解'
     bookmark:
       title: '書簽'
       description: '給本帖加書簽'
       long_form: '已給本帖加上書簽'
     like:
-      title: '喜歡'
-      description: '喜歡本帖'
+      title: '贊'
+      description: '贊本帖'
       long_form: '喜歡本帖內容'
     vote:
       title: '投票'
@@ -227,8 +227,8 @@ zh_TW:
       long_form: '已給本帖投票'
 
   flagging:
-    you_must_edit: '<p>你的帖子已經到達標記阈值，請查看你的私信。</p>'
-    user_must_edit: '<p>標記的內容已隱藏。</p>'
+    you_must_edit: '<p>你的帖子已經到達投訴阈值，請查看你的私信。</p>'
+    user_must_edit: '<p>投訴的內容已隱藏。</p>'
 
   archetypes:
     regular:
@@ -268,9 +268,9 @@ zh_TW:
       xaxis: "天"
       yaxis: "用戶總數"
     flags:
-      title: "標記"
+      title: "投訴"
       xaxis: "天"
-      yaxis: "標記數"
+      yaxis: "投訴數"
 
   site_settings:
     default_locale: "此 論道 - Discourse 實例的缺省語言 (ISO 639-1 代碼)"
@@ -313,7 +313,7 @@ zh_TW:
     use_ssl: "使用 SSL 安全套接層來訪問本站嗎？"
     best_of_score_threshold: "將一個帖子包含到“優選”帖子中所需的最小分值"
     best_of_posts_required: "在一個主題中啓用“優選”模式所要求的最小帖子數量"
-    best_of_likes_required: "在一個主題中啓用“優選”模式所要求的最小喜歡數量"
+    best_of_likes_required: "在一個主題中啓用“優選”模式所要求的最小贊數量"
     enable_private_messages: "用戶創建私信和私下交流要達到的用戶級別"
 
     enable_long_polling: "啓用消息總線使通知功能可以使用長輪詢（long polling）"
@@ -324,11 +324,11 @@ zh_TW:
     auto_track_topics_after: "經過多少毫秒之後一個主題就被自動追蹤的全局缺省設置，用戶可以覆蓋此設置（0爲始終，-1爲從不）"
     new_topic_duration_minutes: "一個主題在多少分鍾之內被系統判斷爲新主題的全局缺省設置，用戶可以覆蓋此設置（-1爲始終，-2爲最後一次訪問）"
 
-    flags_required_to_hide_post: "一個帖子累計多少個標記之後會被自動隱藏，並向帖子作者發送私信通知（0爲從不）"
-    cooldown_minutes_after_hiding_posts: "當一個帖子因爲標記而隱藏之後，用戶需要等待多少分鍾才能編輯該帖子"
+    flags_required_to_hide_post: "一個帖子累計多少個投訴之後會被自動隱藏，並向帖子作者發送私信通知（0爲從不）"
+    cooldown_minutes_after_hiding_posts: "當一個帖子因爲投訴而隱藏之後，用戶需要等待多少分鍾才能編輯該帖子"
 
     traditional_markdown_linebreaks: "在 Markdown 中使用傳統換行符，而不是用兩個尾隨空格來換行"
-    post_undo_action_window_mins: "允許用戶在帖子上進行撤銷操作（喜歡、標記等）所需等待的間隔秒數"
+    post_undo_action_window_mins: "允許用戶在帖子上進行撤銷操作（贊、投訴等）所需等待的間隔秒數"
     must_approve_users: "用戶必須獲得管理員批准方能訪問"
     ga_tracking_code: "谷歌分析追蹤代碼，例如：UA-12345678-9。參考 http://google.com/analytics"
     top_menu: "確定在主頁導航條包含哪些條目，以及排列順序。例如：popular|read|favorited|unread|new|posted|categories"
@@ -386,8 +386,8 @@ zh_TW:
     rate_limit_create_topic: "在創建一個主題之後間隔多少秒你才能創建另一個主題"
     rate_limit_create_post: "在創建一個帖子之後間隔多少秒你才能創建另一個帖子"
 
-    max_likes_per_day: "每個用戶每天能標明喜歡數量的最大值"
-    max_flags_per_day: "每個用戶每天能做標記數量的最大值"
+    max_likes_per_day: "每個用戶每天能標明贊數量的最大值"
+    max_flags_per_day: "每個用戶每天能做投訴數量的最大值"
     max_bookmarks_per_day: "每個用戶每天能做書簽數量的最大值"
     max_edits_per_day: "每個用戶每天能編輯的次數的最大值"
     max_favorites_per_day: "每個用戶每天能收藏的主題數量的最大值"
@@ -418,7 +418,7 @@ zh_TW:
 
   notification_types:
     mentioned: "%{display_username} 在 %{link} 提及到了你"
-    liked: "%{display_username} 在 %{link} 喜歡了你的帖子 "
+    liked: "%{display_username} 在 %{link} 贊了你的帖子 "
     replied: "%{display_username} 在 %{link} 回複了你的帖子"
     quoted: "%{display_username} 在 %{link} 引用了你的帖子"
     edited: "%{display_username} 在 %{link} 編輯了你的帖子"
@@ -443,8 +443,8 @@ zh_TW:
   user_action_descriptions:
     bookmarks: "書簽"
     topics: "主題"
-    likes_received: "收到的喜歡"
-    likes_given: "送出的喜歡"
+    likes_received: "收到的贊"
+    likes_given: "送出的贊"
     responses: "回複"
     topic_responses: "主題回複"
     posts: "帖子"
@@ -455,8 +455,8 @@ zh_TW:
     sent_items: "已發送條目"
     inbox: "收件箱"
 
-    was_liked: "曾被喜歡過"
-    liked: "喜歡過"
+    was_liked: "曾被贊過"
+    liked: "贊過"
     bookmarked: "標過書簽"
     posted: "發表過"
     responded_to: "回複給"
@@ -611,7 +611,7 @@ zh_TW:
 
         ### 看那個帖子吧！
 
-        要想讓別人知道你喜歡他們的帖子，請點擊帖子底部的 喜歡 按鈕。如果你看到某個有問題的帖子，請不要猶豫，點擊帖子底部的 標記 小旗幟按鈕來引起論壇版主以及你的社區成員們的注意。
+        要想讓別人知道你喜歡他們的帖子，請點擊帖子底部的 贊 按鈕。如果你看到某個有問題的帖子，請不要猶豫，點擊帖子底部的 投訴 小旗幟按鈕來引起論壇版主以及你的社區成員們的注意。
 
         ### 我在哪？
 

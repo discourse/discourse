@@ -1,3 +1,4 @@
+# encoding: utf-8
 # This file contains content for the client portion of Discourse, sent out
 # to the Javascript app.
 
@@ -18,10 +19,10 @@ zh_TW:
     age: "壽命"
     last_post: "最後一帖"
     admin_title: "管理員"
-    flags_title: "標記"
+    flags_title: "投訴"
     show_more: "顯示更多"
     links: 鏈接
-    faq: "常見問題"
+    faq: "常見問答（FAQ）"
     you: "你"
     ok: "知道了"
     or: "或"
@@ -288,7 +289,7 @@ zh_TW:
 
       users_placeholder: "添加一個用戶"
       title_placeholder: "在此輸入你的標題，簡明扼要的用一句話說明討論的內容。"
-      reply_placeholder: "在此輸入你的回複。你可以使用 Markdown（參考 http://wowubuntu.com/markdown/） 或 BBCode（參考 http://www.bbcode.org/reference.php） 來格式化內容。拖拽或粘貼一幅圖片到這兒即可將它上傳。"
+      reply_placeholder: "在此輸入你的內容。你可以使用 Markdown（參考 http://wowubuntu.com/markdown/） 或 BBCode（參考 http://www.bbcode.org/reference.php） 來格式化內容。拖拽或粘貼一幅圖片到這兒即可將它上傳。"
       view_new_post: "浏覽你的新帖子。"
       saving: "保存中……"
       saved: "已保存！"
@@ -403,8 +404,8 @@ zh_TW:
       unread_posts: "此主題中你有 {{unread}} 個帖子未閱"
       new_posts: "從你最近一次閱讀此主題後，又有 {{new_posts}} 個新帖子發表"
       likes:
-        one: "此主題得到了一個喜歡"
-        other: "此主題得到了 {{count}} 個喜歡"
+        one: "此主題得到了一個贊"
+        other: "此主題得到了 {{count}} 個贊"
       back_to_list: "返回主題列表"
       options: "主題選項"
       show_links: "顯示此主題中的鏈接"
@@ -548,9 +549,9 @@ zh_TW:
 
       controls:
         reply: "開始給本帖撰寫回複"
-        like: "喜歡本帖"
+        like: "贊本帖"
         edit: "編輯本帖"
-        flag: "給本帖做標記以提醒論壇版主"
+        flag: "投訴本帖以提醒論壇版主"
         delete: "刪除本帖"
         undelete: "恢複本帖"
         share: "分享一個到本帖的鏈接"
@@ -558,10 +559,10 @@ zh_TW:
         more: "更多"
 
       actions:
-        flag: '標記'
+        flag: '投訴'
         clear_flags:
-          one: "清除標記"
-          other: "清除標記"
+          one: "清除投訴"
+          other: "清除投訴"
         it_too: "還有 {{alsoName}}"
         undo: "撤銷 {{alsoName}}"
         by_you_and_others:
@@ -602,9 +603,9 @@ zh_TW:
       change_in_category_topic: "訪問分類主題來編輯描述信息"
 
     flagging:
-      title: '你爲何要給本帖做標記？'
-      action: '標記帖子'
-      cant: "抱歉，當前你不能標記本帖。"
+      title: '你爲何要給投訴本帖？'
+      action: '投訴帖子'
+      cant: "抱歉，當前你不能投訴本帖。"
       custom_placeholder: "爲何本帖需要論壇版主的關注？請告訴我們你的關注點，如果可能請一並提供相關鏈接。"
       custom_message:
         at_least: "輸入至少 {{n}} 個字符"
@@ -632,7 +633,7 @@ zh_TW:
     replies: "回複"
     views_long: "本主題已經被浏覽過 {{number}} 次"
     activity: "活動"
-    likes: "喜歡"
+    likes: "贊"
     top_contributors: "參與者"
     category_title: "分類"
     history: "曆史"
@@ -703,14 +704,14 @@ zh_TW:
           30_days_ago: "30 天之前"
 
       flags:
-        title: "標記"
+        title: "投訴"
         old: "過去的"
         active: "活躍的"
-        clear: "清除標記"
-        clear_title: "撤銷本帖的所有標記（已隱藏的帖子將會被取消隱藏）"
+        clear: "清除投訴"
+        clear_title: "撤銷本帖的所有投訴（已隱藏的帖子將會被取消隱藏）"
         delete: "刪除帖子"
         delete_title: "刪除帖子（如果它是主題第一帖，那麽將刪除主題）"
-        flagged_by: "標記者爲"
+        flagged_by: "投訴者爲"
 
       customize:
         title: "定制"
@@ -775,13 +776,13 @@ zh_TW:
         reputation: 聲譽
         permissions: 權限
         activity: 活動
-        like_count: 收到的喜歡
+        like_count: 收到的贊
         private_topics_count: 私有主題數量
         posts_read_count: 已閱帖子數量
         post_count: 創建的帖子數量
         topics_entered: 進入的主題數量
-        flags_given_count: 所做標記數量
-        flags_received_count: 收到標記數量
+        flags_given_count: 所做投訴數量
+        flags_received_count: 收到投訴數量
         approve: '批准'
         approved_by: "批准人"
         time_read: "閱讀次數"

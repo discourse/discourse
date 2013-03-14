@@ -19,10 +19,10 @@ zh_CN:
     age: "寿命"
     last_post: "最后一帖"
     admin_title: "管理员"
-    flags_title: "标记"
+    flags_title: "投诉"
     show_more: "显示更多"
     links: 链接
-    faq: "常见问题"
+    faq: "常见问答（FAQ）"
     you: "你"
     ok: "知道了"
     or: "或"
@@ -289,7 +289,7 @@ zh_CN:
 
       users_placeholder: "添加一个用户"
       title_placeholder: "在此输入你的标题，简明扼要的用一句话说明讨论的内容。"
-      reply_placeholder: "在此输入你的回复。你可以使用 Markdown（参考 http://wowubuntu.com/markdown/） 或 BBCode（参考 http://www.bbcode.org/reference.php） 来格式化内容。拖拽或粘贴一幅图片到这儿即可将它上传。"
+      reply_placeholder: "在此输入你的内容。你可以使用 Markdown（参考 http://wowubuntu.com/markdown/） 或 BBCode（参考 http://www.bbcode.org/reference.php） 来格式化内容。拖拽或粘贴一幅图片到这儿即可将它上传。"
       view_new_post: "浏览你的新帖子。"
       saving: "保存中……"
       saved: "已保存！"
@@ -404,8 +404,8 @@ zh_CN:
       unread_posts: "此主题中你有 {{unread}} 个帖子未阅"
       new_posts: "从你最近一次阅读此主题后，又有 {{new_posts}} 个新帖子发表"
       likes:
-        one: "此主题得到了一个喜欢"
-        other: "此主题得到了 {{count}} 个喜欢"
+        one: "此主题得到了一个赞"
+        other: "此主题得到了 {{count}} 个赞"
       back_to_list: "返回主题列表"
       options: "主题选项"
       show_links: "显示此主题中的链接"
@@ -549,9 +549,9 @@ zh_CN:
 
       controls:
         reply: "开始给本帖撰写回复"
-        like: "喜欢本帖"
+        like: "赞本帖"
         edit: "编辑本帖"
-        flag: "给本帖做标记以提醒论坛版主"
+        flag: "投诉本帖以提醒论坛版主"
         delete: "删除本帖"
         undelete: "恢复本帖"
         share: "分享一个到本帖的链接"
@@ -559,10 +559,10 @@ zh_CN:
         more: "更多"
 
       actions:
-        flag: '标记'
+        flag: '投诉'
         clear_flags:
-          one: "清除标记"
-          other: "清除标记"
+          one: "清除投诉"
+          other: "清除投诉"
         it_too: "还有 {{alsoName}}"
         undo: "撤销 {{alsoName}}"
         by_you_and_others:
@@ -603,9 +603,9 @@ zh_CN:
       change_in_category_topic: "访问分类主题来编辑描述信息"
 
     flagging:
-      title: '你为何要给本帖做标记？'
-      action: '标记帖子'
-      cant: "抱歉，当前你不能标记本帖。"
+      title: '你为何要给投诉本帖？'
+      action: '投诉帖子'
+      cant: "抱歉，当前你不能投诉本帖。"
       custom_placeholder: "为何本帖需要论坛版主的关注？请告诉我们你的关注点，如果可能请一并提供相关链接。"
       custom_message:
         at_least: "输入至少 {{n}} 个字符"
@@ -633,7 +633,7 @@ zh_CN:
     replies: "回复"
     views_long: "本主题已经被浏览过 {{number}} 次"
     activity: "活动"
-    likes: "喜欢"
+    likes: "赞"
     top_contributors: "参与者"
     category_title: "分类"
     history: "历史"
@@ -704,14 +704,14 @@ zh_CN:
           30_days_ago: "30 天之前"
 
       flags:
-        title: "标记"
+        title: "投诉"
         old: "过去的"
         active: "活跃的"
-        clear: "清除标记"
-        clear_title: "撤销本帖的所有标记（已隐藏的帖子将会被取消隐藏）"
+        clear: "清除投诉"
+        clear_title: "撤销本帖的所有投诉（已隐藏的帖子将会被取消隐藏）"
         delete: "删除帖子"
         delete_title: "删除帖子（如果它是主题第一帖，那么将删除主题）"
-        flagged_by: "标记者为"
+        flagged_by: "投诉者为"
 
       customize:
         title: "定制"
@@ -776,13 +776,13 @@ zh_CN:
         reputation: 声誉
         permissions: 权限
         activity: 活动
-        like_count: 收到的喜欢
+        like_count: 收到的赞
         private_topics_count: 私有主题数量
         posts_read_count: 已阅帖子数量
         post_count: 创建的帖子数量
         topics_entered: 进入的主题数量
-        flags_given_count: 所做标记数量
-        flags_received_count: 收到标记数量
+        flags_given_count: 所做投诉数量
+        flags_received_count: 收到投诉数量
         approve: '批准'
         approved_by: "批准人"
         time_read: "阅读次数"
