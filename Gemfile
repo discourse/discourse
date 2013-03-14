@@ -115,4 +115,6 @@ group :profile do
   #
   # if you need to profile, uncomment out this line
   # gem 'rack-perftools_profiler', require: 'rack/perftools_profiler', platform: :mri_19 
+  # you could also use this for profiling
+  # gem 'ruby-prof'
 end
