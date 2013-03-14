@@ -57,10 +57,11 @@ Discourse.LoginView = Discourse.ModalBodyView.extend({
         _this.flash(result.error, 'error');
       } else {
         // Trigger the browser's password manager using the hidden static login form:
-        $('#hidden-login-form input[name=username]').val(_this.get('loginName'));
-        $('#hidden-login-form input[name=password]').val(_this.get('loginPassword'));
-        $('#hidden-login-form input[name=redirect]').val(window.location.href);
-        $('#hidden-login-form').submit();
+        var $hidden_login_form = $('#hidden-login-form');
+        $hidden_login_form.find('input[name=username]').val(_this.get('loginName'));
+        $hidden_login_form.find('input[name=password]').val(_this.get('loginPassword'));
+        $hidden_login_form.find('input[name=redirect]').val(window.location.href);
+        $hidden_login_form.submit();
       }
     }).fail(function(result) {
       _this.flash(Em.String.i18n('login.error'), 'error');
