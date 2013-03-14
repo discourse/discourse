@@ -526,7 +526,12 @@ class User < ActiveRecord::Base
         if self.email =~ regexp
           errors.add(:email, I18n.t(:'user.email.not_allowed'))
         end
-      end
+      elsif (setting = SiteSetting.email_domains_whitelist).present?
+        domains = SiteSetting.email_domains_whitelist.downcase.split('|')
+        unless domains.include?(self.email.downcase.split('@')[1]) 
+          errors.add(:email, I18n.t(:'user.email.not_allowed'))
+        end
+      end  
     end
 
     def password_validator
