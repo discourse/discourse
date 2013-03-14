@@ -524,6 +524,7 @@ zh_CN:
     post:
       reply: "回复 {{replyAvatar}} {{username}} 发表的 {{link}}"
       reply_topic: "回复 {{link}}"
+      quote_reply: "引用回复"
       edit: "编辑 {{link}}"
       post_number: "帖子 {{number}}"
       in_reply_to: "回复给"

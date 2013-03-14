@@ -6,7 +6,7 @@ zh_TW:
   title: "論道"
   topics: "主題"
   loading: "載入中"
-  powered_by: '由<a href="http://www.discourse.org">論道 - Discourse</a>強力驅動，請開啓JavaScript支持以獲得最佳效果'
+  powered_by_html: '由<a href="http://www.discourse.org">論道 - Discourse</a>強力驅動，請開啓JavaScript支持以獲得最佳效果'
 
   via: "%{username} 自 %{site_name}"
   is_reserved: "保留權利"

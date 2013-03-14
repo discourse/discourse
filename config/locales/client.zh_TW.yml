@@ -523,6 +523,7 @@ zh_TW:
     post:
       reply: "回複 {{replyAvatar}} {{username}} 發表的 {{link}}"
       reply_topic: "回複 {{link}}"
+      quote_reply: "引用回複"
       edit: "編輯 {{link}}"
       post_number: "帖子 {{number}}"
       in_reply_to: "回複給"
