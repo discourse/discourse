@@ -63,6 +63,8 @@ cs:
       change_password: "změnit heslo"
       invited_by: "Poznánka od"
       trust_level: "Věrohodnost"
+      external_links_in_new_tab: "Otevírat všechny externí odkazy do nové záložky"
+      enable_quoting: "Povolit odpověď s citací z označeného textu"
 
       change_username:
         action: "změnit uživatelské jméno"
@@ -515,7 +517,8 @@ cs:
     post:
       reply: "Odpovídáte na {{link}} od {{replyAvatar}} {{username}}"
       reply_topic: "Odpověď na {{link}}"
-      edit: "Editovat {{link}}"
+      quote_reply: "odpověď s citací"
+      edit: "Editujete {{link}} od uživatele {{replyAvatar}} {{username}}"
       post_number: "příspěvek č. {{number}}"
       in_reply_to: "v odpovědi na"
       reply_as_new_topic: "Odpovědět jako nové téma"
@@ -616,17 +619,18 @@ cs:
       invisible:
         help: "toto téma je neviditelné; nebude se zobrazovat v seznamu témat a lze ho navštívit pouze přes přímý odkaz"
 
-    posts: "příspěvky"
+    posts: "Příspěvky"
     posts_long: "{{number}} příspěvků v tomto tématu"
     original_post: "Původní příspěvek"
     views: "Zobrazení"
     replies: "Odpovědi"
     views_long: "toto téma bylo zobrazeno {{number}}krát"
     activity: "Aktivita"
-    likes: "líbí se"
+    likes: "Líbí se"
     top_contributors: "Účastníci"
     category_title: "Kategorie"
     history: "Historie"
+    changed_by: "od uživatele {{author}}"
 
     categories_list: "Seznam kategorií"
 
@@ -777,6 +781,6 @@ cs:
         time_read: "Čas čtení"
 
       site_settings:
-        show_overriden: 'Zobrazit pouze přenastavené'
+        show_overriden: 'Zobrazit pouze změněná nastavení'
         title: 'Nastavení webu'
         reset: 'vrátit do původního nastavení'
