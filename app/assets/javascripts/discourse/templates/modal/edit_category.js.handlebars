@@ -20,11 +20,22 @@
 
     </div>
 
-    <label>{{i18n category.color}}</label>
+    <label>{{i18n category.badge_colors}}</label>
 
-    <div class='input-prepend input-append'>
-      <span class='add-on'>#</span>{{view Discourse.TextField valueBinding="view.category.color" placeholderKey="category.color_placeholder" maxlength="6"}}
-      <span class='badge-category' {{bindAttr style="view.colorStyle"}}>{{i18n preview}}</span>
+    <div class="category-color-editor">
+        <span class='badge-category' {{bindAttr style="view.colorStyle"}}>{{i18n preview}}</span>
+
+        <div class='input-prepend input-append' style="margin-top: 10px;">
+          <span class='color-title'>{{i18n category.background_color}}:</span>
+          <span class='add-on'>#</span>{{view Discourse.TextField valueBinding="view.category.color" placeholderKey="category.color_placeholder" maxlength="6"}}
+          {{view Discourse.ColorsView colorsBinding="view.predefinedColors" valueBinding="view.category.color"}}
+        </div>
+
+        <div class='input-prepend input-append'>
+          <span class='color-title'>{{i18n category.foreground_color}}:</span>
+          <span class='add-on'>#</span>{{view Discourse.TextField valueBinding="view.category.text_color" placeholderKey="category.color_placeholder" maxlength="6"}}
+          {{view Discourse.ColorsView colorsBinding="view.predefinedColors" valueBinding="view.category.text_color"}}
+        </div>
     </div>
 
   </form>

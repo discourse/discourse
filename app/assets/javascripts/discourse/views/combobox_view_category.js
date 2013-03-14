@@ -8,12 +8,13 @@
 **/
 Discourse.ComboboxViewCategory = Discourse.ComboboxView.extend({
   none: 'category.none',
-  dataAttributes: ['color', 'description'],
+  dataAttributes: ['color', 'text_color', 'description'],
 
   template: function(text, templateData) {
     if (!templateData.color) return text;
 
-    var result = "<span class='badge-category' style='background-color: #" + templateData.color + "' "
+    var result = "<span class='badge-category' style='background-color: #" + templateData.color + '; color: #' +
+        templateData.text_color + ";' ";
     if (templateData.description && templateData.description !== 'null') {
       result += "title=\"" + templateData.description + "\" ";
     }

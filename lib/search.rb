@@ -14,7 +14,8 @@ module Search
                   '/users/' || u.username_lower AS url,
                   u.username AS title,
                   u.email,
-                  NULL AS color
+                  NULL AS color,
+                  NULL AS text_color
     FROM users AS u
     JOIN users_search s on s.id = u.id
     WHERE s.search_data @@ TO_TSQUERY(:locale, :query)
@@ -29,7 +30,8 @@ module Search
             '/t/slug/' || ft.id AS url,
             ft.title,
             NULL AS email,
-            NULL AS color
+            NULL AS color,
+            NULL AS text_color
     FROM topics AS ft
       JOIN posts AS p ON p.topic_id = ft.id AND p.post_number = 1
       JOIN posts_search s on s.id = p.id
@@ -52,7 +54,8 @@ module Search
             '/t/slug/' || ft.id || '/' || p.post_number AS url,
             ft.title,
             NULL AS email,
-            NULL AS color
+            NULL AS color,
+            NULL AS text_color
     FROM topics AS ft
       JOIN posts AS p ON p.topic_id = ft.id AND p.post_number <> 1
       JOIN posts_search s on s.id = p.id
@@ -74,7 +77,8 @@ module Search
             '/category/' || c.slug AS url,
             c.name AS title,
             NULL AS email,
-            c.color
+            c.color,
+            c.text_color
     FROM categories AS c
     JOIN categories_search s on s.id = c.id
     WHERE s.search_data @@ TO_TSQUERY(:locale, :query)
@@ -168,6 +172,7 @@ module Search
       end
       row.delete('email')
       row.delete('color') unless type == 'category'
+      row.delete('text_color') unless type == 'category'
 
       grouped[type] ||= []
       grouped[type] << row
