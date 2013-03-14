@@ -4,6 +4,7 @@ pseudo:
     share:
       topic: ! '[[ šĥářé á łíɳǩ ťó ťĥíš ťóƿíč ]]'
       post: ! '[[ šĥářé á łíɳǩ ťó ťĥíš ƿóšť ]]'
+      close: ! '[[ čłóšé ]]'
     edit: ! '[[ éďíť ťĥé ťíťłé áɳď čáťéǧóřý óƒ ťĥíš ťóƿíč ]]'
     not_implemented: ! '[[ Ťĥáť ƒéáťůřé ĥášɳ''ť ƀééɳ íɱƿłéɱéɳťéď ýéť, šóřřý! ]]'
     no_value: ! '[[ Ѝó ]]'
@@ -21,6 +22,7 @@ pseudo:
     you: ! '[[ Ýóů ]]'
     ok: ! '[[ óǩ ]]'
     or: ! '[[ óř ]]'
+    now: ! '[[ ʲůšť ɳóŵ ]]'
     suggested_topics:
       title: ! '[[ Šůǧǧéšťéď Ťóƿíčš ]]'
     bookmarks:
@@ -52,6 +54,8 @@ pseudo:
       change_password: ! '[[ čĥáɳǧé ]]'
       invited_by: ! '[[ Íɳνíťéď Ɓý ]]'
       trust_level: ! '[[ Ťřůšť Łéνéł ]]'
+      external_links_in_new_tab: ! '[[ Óƿéɳ áłł éхťéřɳáł łíɳǩš íɳ á ɳéŵ ťáƀ ]]'
+      enable_quoting: ! '[[ Éɳáƀłé ƣůóťé řéƿłý ƒóř ĥíǧĥłíǧĥťéď ťéхť ]]'
       change_username:
         action: ! '[[ čĥáɳǧé ]]'
         title: ! '[[ Čĥáɳǧé Ůšéřɳáɱé ]]'
@@ -85,7 +89,9 @@ pseudo:
         ok: ! '[[ Ýóůř ɳáɱé łóóǩš ǧóóď. ]]'
       username:
         title: ! '[[ Ůšéřɳáɱé ]]'
-        instructions: ! '[[ Рéóƿłé čáɳ ɱéɳťíóɳ ýóů áš @{{username}}. ]]'
+        instructions: ! '[[ Ϻůšť ƀé ůɳíƣůé, ɳó šƿáčéš. Рéóƿłé čáɳ ɱéɳťíóɳ ýóů áš @ůšéřɳáɱé.
+          ]]'
+        short_instructions: ! '[[ Рéóƿłé čáɳ ɱéɳťíóɳ ýóů áš @{{username}}. ]]'
         available: ! '[[ Ýóůř ůšéřɳáɱé íš áνáíłáƀłé. ]]'
         global_match: ! '[[ Éɱáíł ɱáťčĥéš ťĥé řéǧíšťéřéď ůšéřɳáɱé. ]]'
         global_mismatch: ! '[[ Áłřéáďý řéǧíšťéřéď. Ťřý {{suggestion}}? ]]'
@@ -94,6 +100,8 @@ pseudo:
         too_long: ! '[[ Ýóůř ůšéřɳáɱé íš ťóó łóɳǧ. ]]'
         checking: ! '[[ Čĥéčǩíɳǧ ůšéřɳáɱé áνáíłáƀíłíťý... ]]'
         enter_email: ! '[[ Ůšéřɳáɱé ƒóůɳď. Éɳťéř ɱáťčĥíɳǧ éɱáíł. ]]'
+      password_confirmation:
+        title: ! '[[ Рáššŵóřď Áǧáíɳ ]]'
       last_posted: ! '[[ Łášť Рóšť ]]'
       last_emailed: ! '[[ Łášť Éɱáíłéď ]]'
       last_seen: ! '[[ Łášť Šééɳ ]]'
@@ -250,6 +258,8 @@ pseudo:
         message: ! '[[ Áůťĥéɳťíčáťíɳǧ ŵíťĥ Рéřšóɳá (ɱáǩé šůřé ƿóƿ ůƿ ƀłóčǩéřš ářé
           ɳóť éɳáƀłéď) ]]'
     composer:
+      posting_not_on_topic: ! '[[ Ýóů ářé řéƿłýíɳǧ ťó ťĥé ťóƿíč "{{title}}", ƀůť ýóů
+        ářé čůřřéɳťłý νíéŵíɳǧ á ďíƒƒéřéɳť ťóƿíč. ]]'
       saving_draft_tip: ! '[[ šáνíɳǧ ]]'
       saved_draft_tip: ! '[[ šáνéď ]]'
       saved_local_draft_tip: ! '[[ šáνéď łóčáłłý ]]'
@@ -257,7 +267,10 @@ pseudo:
         at_least: ! '[[ éɳťéř áť łéášť {{n}} čĥářáčťéřš ]]'
         more: ! '[[ {{n}} ťó ǧó... ]]'
       save_edit: ! '[[ Šáνé Éďíť ]]'
+      reply_original: ! '[[ Řéƿłý óɳ Óříǧíɳáł Ťóƿíč ]]'
+      reply_here: ! '[[ Řéƿłý Ĥéřé ]]'
       reply: ! '[[ Řéƿłý ]]'
+      cancel: ! '[[ Čáɳčéł ]]'
       create_topic: ! '[[ Čřéáťé Ťóƿíč ]]'
       create_pm: ! '[[ Čřéáťé Рříνáťé Ϻéššáǧé ]]'
       users_placeholder: ! '[[ Áďď á ůšéř ]]'
@@ -273,7 +286,6 @@ pseudo:
       uploading: ! '[[ Ůƿłóáďíɳǧ... ]]'
       show_preview: ! '[[ šĥóŵ ƿřéνíéŵ &řáƣůó; ]]'
       hide_preview: ! '[[ &łáƣůó; ĥíďé ƿřéνíéŵ ]]'
-      quote_title: ! '[[ Ɓłóčǩƣůóťé ]]'
       bold_title: ! '[[ Šťřóɳǧ ]]'
       bold_text: ! '[[ šťřóɳǧ ťéхť ]]'
       italic_title: ! '[[ Éɱƿĥášíš ]]'
@@ -282,6 +294,7 @@ pseudo:
       link_description: ! '[[ éɳťéř łíɳǩ ďéščříƿťíóɳ ĥéřé ]]'
       link_dialog_title: ! '[[ Íɳšéřť Ĥýƿéřłíɳǩ ]]'
       link_optional_text: ! '[[ óƿťíóɳáł ťíťłé ]]'
+      quote_title: ! '[[ Ɓłóčǩƣůóťé ]]'
       quote_text: ! '[[ Ɓłóčǩƣůóťé ]]'
       code_title: ! '[[ Čóďé Šáɱƿłé ]]'
       code_text: ! '[[ éɳťéř čóďé ĥéřé ]]'
@@ -518,7 +531,9 @@ pseudo:
     post:
       reply: ! '[[ Řéƿłýíɳǧ ťó {{link}} ƀý {{replyAvatar}} {{username}} ]]'
       reply_topic: ! '[[ Řéƿłý ťó {{link}} ]]'
-      edit: ! '[[ Éďíť {{link}} ]]'
+      quote_reply: ! '[[ ƣůóťé řéƿłý ]]'
+      edit: ! '[[ Éďíťíɳǧ {{link}} ƀý {{replyAvatar}} {{username}} ]]'
+      post_number: ! '[[ ƿóšť {{number}} ]]'
       in_reply_to: ! '[[ íɳ řéƿłý ťó ]]'
       reply_as_new_topic: ! '[[ Řéƿłý áš ɳéŵ Ťóƿíč ]]'
       continue_discussion: ! '[[ Čóɳťíɳůíɳǧ ťĥé ďíščůššíóɳ ƒřóɱ {{postLink}}: ]]'
@@ -624,6 +639,7 @@ pseudo:
     top_contributors: ! '[[ Рářťíčíƿáɳťš ]]'
     category_title: ! '[[ Čáťéǧóřý ]]'
     history: ! '[[ Ĥíšťóřý ]]'
+    changed_by: ! '[[ ƀý {{author}} ]]'
     categories_list: ! '[[ Čáťéǧóříéš Łíšť ]]'
     filters:
       popular:
@@ -674,6 +690,16 @@ pseudo:
         please_upgrade: ! '[[ Рłéášé ůƿǧřáďé! ]]'
         latest_version: ! '[[ Łáťéšť νéřšíóɳ ]]'
         update_often: ! '[[ Рłéášé ůƿďáťé óƒťéɳ! ]]'
+        reports:
+          today: ! '[[ Ťóďáý ]]'
+          yesterday: ! '[[ Ýéšťéřďáý ]]'
+          last_7_days: ! '[[ Łášť 7 Ďáýš ]]'
+          last_30_days: ! '[[ Łášť 30 Ďáýš ]]'
+          all_time: ! '[[ Áłł Ťíɱé ]]'
+          7_days_ago: ! '[[ 7 Ďáýš Áǧó ]]'
+          30_days_ago: ! '[[ 30 Ďáýš Áǧó ]]'
+      commits:
+        latest_changes: ! '[[ Łáťéšť čĥáɳǧéš ]]'
       flags:
         title: ! '[[ Ƒłáǧš ]]'
         old: ! '[[ Ółď ]]'
@@ -693,6 +719,7 @@ pseudo:
         preview: ! '[[ ƿřéνíéŵ ]]'
         undo_preview: ! '[[ ůɳďó ƿřéνíéŵ ]]'
         save: ! '[[ Šáνé ]]'
+        new: ! '[[ Ѝéŵ ]]'
         delete: ! '[[ Ďéłéťé ]]'
         delete_confirm: ! '[[ Ďéłéťé ťĥíš čůšťóɱížáťíóɳ? ]]'
       email_logs:
