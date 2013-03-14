@@ -583,6 +583,7 @@ en:
       view: 'View Topics in Category'
       delete: 'Delete Category'
       create: 'Create Category'
+      creation_error: There has been an error during the creation of the category.
       more_posts: "view all {{posts}}..."
       name: "Category Name"
       description: "Description"

@@ -1,7 +1,7 @@
-<div class="modal-body">    
+<div class="modal-body">
   <form>
     <label>{{i18n category.name}}</label>
-    {{view Discourse.TextField valueBinding="view.category.name" placeholderKey="category.name_placeholder"}}
+    {{view Discourse.TextField valueBinding="view.category.name" placeholderKey="category.name_placeholder" maxlength="50"}}
 
     <div class='description-controls' style="margin-bottom: 20px">
       <label>{{i18n category.description}}</label>
@@ -12,7 +12,7 @@
           <a href="#" {{action showCategoryTopic target="view"}}>{{i18n category.change_in_category_topic}}</a>
         {{/if}}
       {{else}}
-        {{i18n category.no_description}} 
+        {{i18n category.no_description}}
           {{#if view.category.topic_url}}
           <a {{action showCategoryTopic target="view"}} href="#">{{i18n category.change_in_category_topic}}</a>
           {{/if}}}
@@ -31,4 +31,4 @@
 </div>
 <div class="modal-footer">
   <button class='btn btn-primary' {{bindAttr disabled="view.disabled"}} {{action saveCategory target="view"}}>{{view.buttonTitle}}</button>
-</div>  
+</div>
