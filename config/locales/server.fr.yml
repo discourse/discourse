@@ -6,6 +6,10 @@
 #
 
 fr:
+  time:
+    formats:
+      short: "%d-%m-%Y"
+
   title: "Discourse"
   topics: "Discussions"
   loading: "Chargement"
