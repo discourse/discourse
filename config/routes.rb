@@ -55,6 +55,7 @@ Discourse::Application.routes.draw do
     resources :site_customizations
     resources :export
     get 'version_check' => 'versions#show'
+    resources :dashboard, only: [:index]
   end
 
   get 'email_preferences' => 'email#preferences_redirect'

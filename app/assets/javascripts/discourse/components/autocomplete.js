@@ -60,7 +60,7 @@ $.fn.autocomplete = function(options) {
     height = this.height();
     wrap = this.wrap("<div class='ac-wrap clearfix'/>").parent();
     wrap.width(width);
-    this.width(80);
+    this.width(150);
     this.attr('name', this.attr('name') + "-renamed");
     vals = this.val().split(",");
     vals.each(function(x) {

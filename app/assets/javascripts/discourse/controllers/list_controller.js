@@ -1,11 +1,11 @@
 /**
   This controller supports actions when listing topics or categories
 
-  @class ListController 
+  @class ListController
   @extends Discourse.Controller
   @namespace Discourse
   @module Discourse
-**/ 
+**/
 Discourse.ListController = Discourse.Controller.extend({
   currentUserBinding: 'Discourse.currentUser',
   categoriesBinding: 'Discourse.site.categories',
@@ -30,37 +30,40 @@ Discourse.ListController = Discourse.Controller.extend({
     });
   }).property('filterSummary'),
 
+  /**
+    Load a list based on a filter
+
+    @method load
+    @param {String} filterMode the filter we want to load
+    @returns {Ember.Deferred} the promise that will resolve to the list of items.
+  **/
   load: function(filterMode) {
-    var current,
-      _this = this;
+    var listController = this;
     this.set('loading', true);
+
     if (filterMode === 'categories') {
       return Ember.Deferred.promise(function(deferred) {
-        return Discourse.CategoryList.list(filterMode).then(function(items) {
-          _this.set('loading', false);
-          _this.set('filterMode', filterMode);
-          _this.set('categoryMode', true);
-          return deferred.resolve(items);
-        });
-      });
-    } else {
-      current = (this.get('availableNavItems').filter(function(f) {
-        return f.name === filterMode;
-      }))[0];
-      if (!current) {
-        current = Discourse.NavItem.create({
-          name: filterMode
-        });
-      }
-      return Ember.Deferred.promise(function(deferred) {
-        return Discourse.TopicList.list(current).then(function(items) {
-          _this.set('filterSummary', items.filter_summary);
-          _this.set('filterMode', filterMode);
-          _this.set('loading', false);
+        Discourse.CategoryList.list(filterMode).then(function(items) {
+          listController.set('loading', false);
+          listController.set('filterMode', filterMode);
+          listController.set('categoryMode', true);
           return deferred.resolve(items);
         });
       });
     }
+
+    var current = (this.get('availableNavItems').filter(function(f) { return f.name === filterMode; }))[0];
+    if (!current) {
+      current = Discourse.NavItem.create({ name: filterMode });
+    }
+    return Ember.Deferred.promise(function(deferred) {
+      Discourse.TopicList.list(current).then(function(items) {
+        listController.set('filterSummary', items.filter_summary);
+        listController.set('filterMode', filterMode);
+        listController.set('loading', false);
+        return deferred.resolve(items);
+      });
+    });
   },
 
   // Put in the appropriate page title based on our view

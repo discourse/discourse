@@ -11,7 +11,7 @@ Discourse.GithubCommit = Discourse.Model.extend({
     if( this.get('author') && this.get('author.gravatar_id') ){
       return("https://www.gravatar.com/avatar/" + this.get('author.gravatar_id') + ".png?s=38&r=pg&d=identicon");
     } else {
-      return "https://www.gravatar.com/avatar/b30fff48d257cdd17c4437afac19fd30.png?s=38&r=pg&d=identicon";  
+      return "https://www.gravatar.com/avatar/b30fff48d257cdd17c4437afac19fd30.png?s=38&r=pg&d=identicon";
     }
   }.property("commit"),
 
@@ -31,7 +31,7 @@ Discourse.GithubCommit.reopenClass({
     $.ajax( "https://api.github.com/repos/discourse/discourse/commits?callback=callback", {
       dataType: 'jsonp',
       type: 'get',
-      data: { per_page: 10 },
+      data: { per_page: 25 },
       success: function(response, textStatus, jqXHR) {
         response.data.each(function(commit) {
           result.pushObject( Discourse.GithubCommit.create(commit) );
