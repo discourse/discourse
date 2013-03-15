@@ -103,6 +103,9 @@
       .discourse-no-touch & {
         opacity: 0;
       }
+      .discourse-touch & {
+        opacity: 1;
+      }
       transition:opacity 1s linear;
       -webkit-transition:opacity 1s linear;
       -moz-transition:opacity 1s linear;
