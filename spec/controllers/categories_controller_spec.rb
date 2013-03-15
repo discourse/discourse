@@ -14,22 +14,26 @@ describe CategoriesController do
 
       it "raises an exception when they don't have permission to create it" do
         Guardian.any_instance.expects(:can_create?).with(Category, nil).returns(false)
-        xhr :post, :create, name: 'hello', color: '#ff0'
+        xhr :post, :create, name: 'hello', color: 'ff0', text_color: 'fff'
         response.should be_forbidden
       end
 
       it 'raises an exception when the name is missing' do
-        lambda { xhr :post, :create, color: '#ff0' }.should raise_error(Discourse::InvalidParameters)
+        lambda { xhr :post, :create, color: 'ff0', text_color: 'fff' }.should raise_error(Discourse::InvalidParameters)
       end
 
       it 'raises an exception when the color is missing' do
-        lambda { xhr :post, :create, name: 'hello' }.should raise_error(Discourse::InvalidParameters)
+        lambda { xhr :post, :create, name: 'hello', text_color: 'fff' }.should raise_error(Discourse::InvalidParameters)
+      end
+
+      it 'raises an exception when the text color is missing' do
+        lambda { xhr :post, :create, name: 'hello', color: 'ff0' }.should raise_error(Discourse::InvalidParameters)
       end
 
       describe 'failure' do
         before do
           @category = Fabricate(:category, user: @user)
-          xhr :post, :create, name: @category.name, color: '#ff0'
+          xhr :post, :create, name: @category.name, color: 'ff0', text_color: 'fff'
         end
 
         it { should_not respond_with(:success) }
@@ -42,7 +46,7 @@ describe CategoriesController do
 
       describe 'success' do
         before do
-          xhr :post, :create, name: 'hello', color: '#ff0'
+          xhr :post, :create, name: 'hello', color: 'ff0', text_color: 'fff'
         end
 
         it 'creates a category' do
@@ -97,22 +101,26 @@ describe CategoriesController do
 
       it "raises an exception if they don't have permission to edit it" do
         Guardian.any_instance.expects(:can_edit?).returns(false)
-        xhr :put, :update, id: @category.slug, name: 'hello', color: '#ff0'
+        xhr :put, :update, id: @category.slug, name: 'hello', color: 'ff0', text_color: 'fff'
         response.should be_forbidden
       end
 
       it "requires a name" do
-        lambda { xhr :put, :update, id: @category.slug, color: '#fff' }.should raise_error(Discourse::InvalidParameters)
+        lambda { xhr :put, :update, id: @category.slug, color: 'fff', text_color: '0ff' }.should raise_error(Discourse::InvalidParameters)
       end
 
       it "requires a color" do
-        lambda { xhr :put, :update, id: @category.slug, name: 'asdf'}.should raise_error(Discourse::InvalidParameters)
+        lambda { xhr :put, :update, id: @category.slug, name: 'asdf', text_color: '0ff' }.should raise_error(Discourse::InvalidParameters)
+      end
+
+      it "requires a text color" do
+        lambda { xhr :put, :update, id: @category.slug, name: 'asdf', color: 'fff' }.should raise_error(Discourse::InvalidParameters)
       end
 
       describe 'failure' do
         before do
           @other_category = Fabricate(:category, name: 'Other', user: @user )
-          xhr :put, :update, id: @category.id, name: @other_category.name, color: '#ff0'
+          xhr :put, :update, id: @category.id, name: @other_category.name, color: 'ff0', text_color: 'fff'
         end
 
         it 'returns errors on a duplicate category name' do
@@ -126,7 +134,7 @@ describe CategoriesController do
 
       describe 'success' do
         before do
-          xhr :put, :update, id: @category.id, name: 'science', color: '#000'
+          xhr :put, :update, id: @category.id, name: 'science', color: '000', text_color: '0ff'
           @category.reload
         end
 
@@ -135,7 +143,11 @@ describe CategoriesController do
         end
 
         it 'updates the color' do
-          @category.color.should == '#000'
+          @category.color.should == '000'
+        end
+
+        it 'updates the text color' do
+          @category.text_color.should == '0ff'
         end
 
       end

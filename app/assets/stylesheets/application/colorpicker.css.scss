@@ -1,0 +1,29 @@
+// styles for the category badge color picker
+
+@import "foundation/variables";
+@import "foundation/mixins";
+
+.category-color-editor {
+  input {
+    width: 70px;
+  }
+
+  .color-title {
+    display: inline-block;
+    width: 130px;
+  }
+
+  .colors-container {
+    display: inline-block;
+    vertical-align: bottom;
+    padding-bottom: 2px;
+    padding-left: 15px;
+
+    .colorpicker {
+      border: 1px solid $darkish_gray;
+      width: 15px;
+      height: 15px;
+      margin-right: 2px;
+    }
+  }
+}

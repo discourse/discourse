@@ -43,7 +43,7 @@ class CategoriesController < ApplicationController
   private
 
     def category_param_keys
-      [:name, :color]
+      [:name, :color, :text_color]
     end
 
     def category_params
