@@ -267,7 +267,7 @@ en:
       saving_draft_tip: "saving"
       saved_draft_tip: "saved"
       saved_local_draft_tip: "saved locally"
-      similar_topics: "Similar Topics"
+      similar_topics: "Your topic is similar to..."
       drafts_offline: "drafts offline"
 
       min_length:
