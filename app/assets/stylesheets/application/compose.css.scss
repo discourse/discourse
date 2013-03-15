@@ -17,7 +17,7 @@
   }
 
   background-color: lighten($yellow, 40%);
-  border: 1px solid darken($yellow, 5%);
+  border: 1px solid darken($yellow, 10%);
   padding: 10px;
   width: 600px;
   position: absolute;
@@ -32,6 +32,19 @@
       margin-top: 3px;
     }
   }
+}
+
+#similar-topics {
+  background-color: #b5e8fd;
+  border: 1px solid darken(#b5e8fd, 10%);
+
+  a[href] {
+    color: #000;
+  }
+}
+
+.composer-popup:nth-of-type(2) {
+  margin-left: 10px;
 }
 
 #reply-control {
