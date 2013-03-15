@@ -46,7 +46,7 @@
     &:nth-child(even) {
       background-color: darken($white, 2%);
     }
-    &.archived {
+    &.archived a {
       opacity: 0.6;
     }
   }
