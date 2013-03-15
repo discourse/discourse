@@ -22,8 +22,7 @@ Discourse.ComposerView = Discourse.View.extend({
   educationClosed: null,
 
   composeState: (function() {
-    var state;
-    state = this.get('content.composeState');
+    var state = this.get('content.composeState');
     if (!state) {
       state = Discourse.Composer.CLOSED;
     }
@@ -103,8 +102,7 @@ Discourse.ComposerView = Discourse.View.extend({
   }).property('content.composeState', 'content.reply', 'educationClosed', 'educationContents'),
 
   newUserEducationVisibilityChanged: (function() {
-    var $panel;
-    $panel = $('#new-user-education');
+    var $panel = $('#new-user-education');
     if (this.get('newUserEducationVisible')) {
       return $panel.slideDown('fast');
     } else {
@@ -115,6 +113,11 @@ Discourse.ComposerView = Discourse.View.extend({
   moveNewUserEducation: function(sizePx) {
     $('#new-user-education').css('bottom', sizePx);
   },
+
+  focusIn: (function() {
+    var controller = this.get('controller');
+    if(controller) controller.resetDraftStatus();
+  }),
 
   resize: (function() {
     // this still needs to wait on animations, need a clean way to do that
@@ -130,15 +133,13 @@ Discourse.ComposerView = Discourse.View.extend({
   }).observes('content.composeState'),
 
   keyUp: function(e) {
-    var controller;
-    controller = this.get('controller');
+    var controller = this.get('controller');
     controller.checkReplyLength();
     if (e.which === 27) controller.hitEsc();
   },
 
   didInsertElement: function() {
-    var replyControl;
-    replyControl = $('#reply-control');
+    var replyControl = $('#reply-control');
     replyControl.DivResizer({
       resize: this.resize,
       onDrag: this.moveNewUserEducation

@@ -19,12 +19,13 @@ Discourse.ComposerController = Discourse.Controller.extend({
     return this.get('content').importQuote();
   },
 
+  resetDraftStatus: function() {
+    this.get('content').resetDraftStatus();
+  },
+
   appendText: function(text) {
-    var c;
-    c = this.get('content');
-    if (c) {
-      return c.appendText(text);
-    }
+    var c = this.get('content');
+    if (c) return c.appendText(text);
   },
 
   save: function(force) {
@@ -95,16 +96,11 @@ Discourse.ComposerController = Discourse.Controller.extend({
   },
 
   checkReplyLength: function() {
-    if (this.present('content.reply')) {
-      this.set('hasReply', true);
-    } else {
-      this.set('hasReply', false);
-    }
+    this.set('hasReply', this.present('content.reply'));
   },
 
   saveDraft: function() {
-    var model;
-    model = this.get('content');
+    var model = this.get('content');
     if (model) model.saveDraft();
   },
 

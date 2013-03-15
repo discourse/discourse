@@ -17,7 +17,6 @@
 
           {{#if content.editTitle}}
             <div class='form-element clearfix'>
-
                 {{#if content.creatingPrivateMessage}}
                   {{view Discourse.TextField id="private-message-users" class="span8" placeholderKey="composer.users_placeholder"}}
                 {{/if}}
@@ -31,7 +30,6 @@
             </div>
           {{/if}}
 
-
           <div class='wmd-controls'>
             <div class='textarea-wrapper'>
               <div class='wmd-button-bar' id='wmd-button-bar'></div>
@@ -43,7 +41,6 @@
             {{#if Discourse.currentUser}}
                <a href="#" {{action togglePreview target="controller"}} class='toggle-preview'>{{{content.toggleText}}}</a>
                <div class='saving-draft'></div>
-
             {{/if}}
           </div>
 
@@ -51,7 +48,6 @@
             <div class='submit-panel'>
               <button {{action save target="controller"}} tabindex="3" {{bindAttr disabled="content.cantSubmitPost"}} class='btn btn-primary create'>{{view.content.saveText}}</button>
               <a href='#' {{action cancel target="controller"}} class='cancel' tabindex="4">{{i18n cancel}}</a>
-
               {{#if view.loadingImage}}
                 <div id="image-uploading">
                   {{i18n image_selector.uploading_image}} {{view.uploadProgress}}% <a {{action cancelUpload target="view"}}>{{i18n cancel}}</a>
