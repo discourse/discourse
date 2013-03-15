@@ -29,6 +29,11 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
     return Em.String.i18n("category.create");
   }).property('category.id'),
 
+  categoryName: (function() {
+    var name = this.get('category.name') || "";
+    return name.trim().length > 0 ? name : Em.String.i18n("preview");
+  }).property('category.name'),
+
   buttonTitle: (function() {
     if (this.get('saving')) return Em.String.i18n("saving");
     return this.get('title');
@@ -69,5 +74,3 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
   }
 
 });
-
-
