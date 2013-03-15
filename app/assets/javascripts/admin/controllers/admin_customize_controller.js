@@ -1,11 +1,11 @@
 /**
   This controller supports interface for creating custom CSS skins in Discourse.
 
-  @class AdminCustomizeController    
+  @class AdminCustomizeController
   @extends Ember.Controller
   @namespace Discourse
   @module Discourse
-**/ 
+**/
 Discourse.AdminCustomizeController = Ember.Controller.extend({
 
   /**
@@ -14,7 +14,7 @@ Discourse.AdminCustomizeController = Ember.Controller.extend({
     @method newCustomization
   **/
   newCustomization: function() {
-    var item = Discourse.SiteCustomization.create({name: 'New Style'});
+    var item = Discourse.SiteCustomization.create({name: Em.String.i18n("admin.customize.new_style")});
     this.get('content').pushObject(item);
     this.set('content.selectedItem', item);
   },
