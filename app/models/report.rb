@@ -80,6 +80,15 @@ class Report
     end
   end
 
+  def self.report_users_by_trust_level(report)
+    report.data = []
+    fetch report do
+      User.counts_by_trust_level.each do |level, count|
+        report.data << {x: level.to_i, y: count}
+      end
+    end
+  end
+
 
   private
 

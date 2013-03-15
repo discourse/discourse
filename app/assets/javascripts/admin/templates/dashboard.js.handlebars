@@ -38,12 +38,27 @@
     </p>
   </div>
 
-  <div class="dashboard-stats totals">
+
+  <div class="dashboard-stats">
+    {{i18n admin.dashboard.total_users}}: <strong>{{#unless loading}}{{ totalUsers }}{{/unless}}</strong><br/>
+  </div>
+
+  <div class="dashboard-stats trust-levels">
     <table class="table table-condensed table-hover">
-      <tr>
-        <td class="title">{{i18n admin.dashboard.total_users}}</td>
-        <td class="value">{{#unless loading}}{{ totalUsers }}{{/unless}}</td>
-      </tr>
+      <thead>
+        <tr>
+          <th>&nbsp;</th>
+          <th>0</th>
+          <th>1</th>
+          <th>2</th>
+          <th>3</th>
+          <th>4</th>
+          <th>5</th>
+        </tr>
+      </thead>
+      {{#unless loading}}
+        {{ render 'admin_report_trust_levels' users_by_trust_level }}
+      {{/unless}}
     </table>
   </div>
 

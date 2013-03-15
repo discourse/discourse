@@ -462,6 +462,10 @@ class User < ActiveRecord::Base
     where('created_at > ?', since).group('date(created_at)').order('date(created_at)').count
   end
 
+  def self.counts_by_trust_level
+    group('trust_level').count
+  end
+
   protected
 
     def cook

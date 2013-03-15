@@ -4,7 +4,6 @@ describe Report do
 
 
   describe 'visits report' do
-
     let(:report) { Report.find('visits', cache: false) }
 
     context "no visits" do
@@ -24,10 +23,7 @@ describe Report do
       it "returns a report with data" do
         report.data.should be_present
       end
-
     end
-
-
   end
 
   [:signup, :topic, :post, :flag].each do |arg|
@@ -54,6 +50,31 @@ describe Report do
           report.data[0][:y].should == 1
           report.data[1][:y].should == 2
         end
+      end
+    end
+  end
+
+  describe 'users by trust level report' do
+    let(:report) { Report.find('users_by_trust_level', cache: false) }
+
+    context "no users" do
+      it "returns an empty report" do
+        report.data.should be_blank
+      end
+    end
+
+    context "with users at different trust levels" do
+      before do
+        3.times { Fabricate(:user, trust_level: TrustLevel.levels[:new]) }
+        2.times { Fabricate(:user, trust_level: TrustLevel.levels[:regular]) }
+        Fabricate(:user, trust_level: TrustLevel.levels[:moderator])
+      end
+
+      it "returns a report with data" do
+        report.data.should be_present
+        report.data.find {|d| d[:x] == TrustLevel.levels[:new]} [:y].should == 3
+        report.data.find {|d| d[:x] == TrustLevel.levels[:regular]}[:y].should == 2
+        report.data.find {|d| d[:x] == TrustLevel.levels[:moderator]}[:y].should == 1
       end
     end
   end
