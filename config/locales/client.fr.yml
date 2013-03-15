@@ -271,10 +271,11 @@ fr:
       saving_draft_tip: "sauvegarde..."
       saved_draft_tip: "sauvegardé"
       saved_local_draft_tip: "sauvegardé en local"
+      drafts_offline: "sauvegardé hors ligne"
 
       min_length:
-        at_least: "Saisir au moins {{n}} caractères"
-        more: "{{n}} restants..."
+        need_more_for_title: "{{n}} caractères restant pour le titre"
+        need_more_for_reply: "{{n}} caractères restant pour le message"
 
       save_edit: "Sauvegarder la modification"
       reply_original: Répondre à la discussion initiale

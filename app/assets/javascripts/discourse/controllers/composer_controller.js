@@ -18,11 +18,13 @@ Discourse.ComposerController = Discourse.Controller.extend({
     this.get('content').importQuote();
   },
 
+  resetDraftStatus: function() {
+    this.get('content').resetDraftStatus();
+  },
+
   appendText: function(text) {
     var c = this.get('content');
-    if (c) {
-      c.appendText(text);
-    }
+    if (c) return c.appendText(text);
   },
 
   save: function(force) {
@@ -91,6 +93,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
     });
   },
 
+<<<<<<< HEAD
   closeEducation: function() {
     this.set('educationClosed', true);
   },
@@ -161,6 +164,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
     Discourse.Topic.findSimilarTo(title, body).then(function (topics) {
       composerController.set('similarTopics', topics);
     });
+
   },
 
   saveDraft: function() {

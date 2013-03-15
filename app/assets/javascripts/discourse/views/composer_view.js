@@ -85,7 +85,13 @@ Discourse.ComposerView = Discourse.View.extend({
     $('.composer-popup').css('bottom', sizePx);
   },
 
-  resize: function() {
+  focusIn: (function() {
+    var controller = this.get('controller');
+    if(controller) controller.resetDraftStatus();
+  }),
+
+
+  resize: (function() {
     // this still needs to wait on animations, need a clean way to do that
     return Em.run.next(null, function() {
       var replyControl = $('#reply-control');

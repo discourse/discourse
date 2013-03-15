@@ -28,7 +28,7 @@ Discourse.Composer = Discourse.Model.extend({
     this._super();
     var val = Discourse.KeyValueStore.get('composer.showPreview') || 'true';
     this.set('showPreview', val === 'true');
-    return this.set('archetypeId', Discourse.get('site.default_archetype'));
+    this.set('archetypeId', Discourse.get('site.default_archetype'));
   },
 
   creatingTopic: (function() {
@@ -142,10 +142,7 @@ Discourse.Composer = Discourse.Model.extend({
   }).property('action', 'post', 'topic', 'topic.title'),
 
   toggleText: (function() {
-    if (this.get('showPreview')) {
-      return Em.String.i18n('composer.hide_preview');
-    }
-    return Em.String.i18n('composer.show_preview');
+    return this.get('showPreview') ? Em.String.i18n('composer.hide_preview') : Em.String.i18n('composer.show_preview');
   }).property('showPreview'),
 
   hidePreview: (function() {
@@ -159,14 +156,11 @@ Discourse.Composer = Discourse.Model.extend({
     if (this.get('loading')) return true;
 
     // Title is required on new posts
-    if (this.get('creatingTopic')) {
-      if (this.blank('title')) return true;
-      if (this.get('title').trim().length < Discourse.SiteSettings.min_topic_title_length) return true;
-    }
+    if (this.get('creatingTopic') && this.get('titleLength') < Discourse.SiteSettings.min_topic_title_length) return true;
 
     // Otherwise just reply is required
-    if (this.blank('reply')) return true;
-    if (this.get('reply').trim().length < Discourse.SiteSettings.min_post_length) return true;
+    if (this.get('replyLength') < Discourse.SiteSettings.min_post_length) return true;
+
     return false;
   }).property('reply', 'title', 'creatingTopic', 'loading'),
 
@@ -434,6 +428,7 @@ Discourse.Composer = Discourse.Model.extend({
   saveDraft: function() {
     if (this.get('disableDrafts')) return;
     if (!this.get('reply')) return;
+    if (this.get('titleLength') < Discourse.SiteSettings.min_topic_title_length) return;
     if (this.get('replyLength') < Discourse.SiteSettings.min_post_length) return;
 
     var data = {
@@ -453,28 +448,38 @@ Discourse.Composer = Discourse.Model.extend({
     return Discourse.Draft.save(this.get('draftKey'), this.get('draftSequence'), data).then((function() {
       composer.set('draftStatus', Em.String.i18n('composer.saved_draft_tip'));
     }), (function() {
-      composer.set('draftStatus', 'drafts offline');
+      composer.set('draftStatus', Em.String.i18n('composer.drafts_offline'));
     }));
   },
 
   resetDraftStatus: (function() {
-    var len = Discourse.SiteSettings.min_post_length,
-        replyLength = this.get('replyLength');
-
-    if (replyLength === 0) {
-      this.set('draftStatus', Em.String.i18n('composer.min_length.at_least', { n: len }));
-    } else if (replyLength < len) {
-      this.set('draftStatus', Em.String.i18n('composer.min_length.more', { n: len - replyLength }));
-    } else {
-      this.set('draftStatus', null);
+    // 'title' is focused
+    if ($('#reply-title').is(':focus')) {
+      var titleDiff = Discourse.SiteSettings.min_topic_title_length - this.get('titleLength');
+      if (titleDiff > 0) {
+        return this.set('draftStatus', Em.String.i18n('composer.min_length.need_more_for_title', { n: titleDiff }));
+      }
+    // 'reply' is focused
+    } else if ($('#wmd-input').is(':focus')) {
+      var replyDiff = Discourse.SiteSettings.min_post_length - this.get('replyLength');
+      if (replyDiff > 0) {
+        return this.set('draftStatus', Em.String.i18n('composer.min_length.need_more_for_reply', { n: replyDiff }));
+      }
     }
+    // hide the counters if the currently focused text field is OK
+    this.set('draftStatus', null);
 
   }).observes('reply', 'title'),
 
-  blank: function(prop) {
-    var p = this.get(prop);
-    return !(p && p.length > 0);
-  },
+  /**
+    Computes the length of the title minus non-significant whitespaces
+
+    @property titleLength
+  **/
+  titleLength: function() {
+    var title = this.get('title') || "";
+    return title.replace(/\s+/img, " ").trim().length;
+  }.property('title'),
 
   /**
     Computes the length of the reply minus the quote(s) and non-significant whitespaces
@@ -482,8 +487,7 @@ Discourse.Composer = Discourse.Model.extend({
     @property replyLength
   **/
   replyLength: function() {
-    var reply = this.get('reply');
-    if(!reply) reply = "";
+    var reply = this.get('reply') || "";
     while (Discourse.BBCode.QUOTE_REGEXP.test(reply)) { reply = reply.replace(Discourse.BBCode.QUOTE_REGEXP, ""); }
     return reply.replace(/\s+/img, " ").trim().length;
   }.property('reply')
@@ -543,5 +547,3 @@ Discourse.Composer.reopenClass({
   // Draft key
   REPLY_AS_NEW_TOPIC_KEY: REPLY_AS_NEW_TOPIC_KEY
 });
-
-

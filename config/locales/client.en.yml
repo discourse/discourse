@@ -268,10 +268,11 @@ en:
       saved_draft_tip: "saved"
       saved_local_draft_tip: "saved locally"
       similar_topics: "Similar Topics"
+      drafts_offline: "drafts offline"
 
       min_length:
-        at_least: "enter at least {{n}} characters"
-        more: "{{n}} to go..."
+        need_more_for_title: "{{n}} to go for the title"
+        need_more_for_reply: "{{n}} to go for the reply"
 
       save_edit: "Save Edit"
       reply_original: "Reply on Original Topic"
