@@ -18,8 +18,11 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
   }).property('category.name', 'category.color'),
 
   colorStyle: (function() {
-    return "background-color: #" + (this.get('category.color')) + ";";
-  }).property('category.color'),
+    return "background-color: #" + (this.get('category.color')) + "; color: #" + (this.get('category.text_color')) + ";";
+  }).property('category.color', 'category.text_color'),
+
+  predefinedColors: ["FFFFFF", "000000", "AECFC6", "836953", "77DD77", "FFB347", "FDFD96", "536878",
+      "EC5800", "0096E0", "7C4848", "9AC932", "BA160C", "003366", "B19CD9", "E4717A"],
 
   title: (function() {
     if (this.get('category.id')) return Em.String.i18n("category.edit_long");
@@ -36,7 +39,7 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
     if (this.get('category')) {
       this.set('id', this.get('category.slug'));
     } else {
-      this.set('category', Discourse.Category.create({ color: 'AB9364' }));
+      this.set('category', Discourse.Category.create({ color: 'AB9364', text_color: 'FFFFFF' }));
     }
   },
 

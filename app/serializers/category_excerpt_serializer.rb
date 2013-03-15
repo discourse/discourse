@@ -3,7 +3,7 @@ require_dependency 'excerpt_type'
 class CategoryExcerptSerializer < ActiveModel::Serializer
   include ExcerptType
 
-  attributes :excerpt, :name, :color, :slug, :topic_url, :topics_year,
+  attributes :excerpt, :name, :color, :text_color, :slug, :topic_url, :topics_year,
              :topics_month, :topics_week, :category_url, :can_edit, :can_delete
 
 
