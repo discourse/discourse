@@ -27,9 +27,9 @@ GIT
 
 GIT
   remote: git://github.com/rails-api/active_model_serializers.git
-  revision: 6408b73e3cd3d11ab08b541acbd5b4071da5fabd
+  revision: 0114e492388ff84defcd1afbbb315e547849cb96
   specs:
-    active_model_serializers (0.7.0)
+    active_model_serializers (0.5.2)
       activemodel (>= 3.0)
 
 GIT
@@ -215,7 +215,7 @@ GEM
     hike (1.2.1)
     hiredis (0.4.5)
     httpauth (0.2.0)
-    i18n (0.6.4)
+    i18n (0.6.1)
     image_optim (0.7.2)
       fspath (~> 2.0.3)
       image_size (~> 1.1)
