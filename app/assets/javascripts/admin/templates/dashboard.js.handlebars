@@ -38,6 +38,15 @@
     </p>
   </div>
 
+  <div class="dashboard-stats totals">
+    <table class="table table-condensed table-hover">
+      <tr>
+        <td class="title">{{i18n admin.dashboard.total_users}}</td>
+        <td class="value">{{#unless loading}}{{ totalUsers }}{{/unless}}</td>
+      </tr>
+    </table>
+  </div>
+
   <div class="dashboard-stats">
     <table class="table table-condensed table-hover">
       <thead>
@@ -70,7 +79,6 @@
         </tr>
       </thead>
       {{#unless loading}}
-        {{ render 'admin_report_total_users' total_users }}
         {{ render 'admin_report_visits' visits }}
       {{/unless}}
     </table>

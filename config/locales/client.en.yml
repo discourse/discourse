@@ -690,6 +690,7 @@ en:
         please_upgrade: "Please upgrade!"
         latest_version: "Latest version"
         update_often: 'Please update often!'
+        total_users: "Total Users"
 
         reports:
           today: "Today"

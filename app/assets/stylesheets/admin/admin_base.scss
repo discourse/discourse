@@ -324,6 +324,14 @@ table {
       text-align: center;
     }
   }
+
+  &.totals {
+    width: 160px;
+
+    table tr:first-child td {
+      border-top: none;
+    }
+  }
 }
 
 

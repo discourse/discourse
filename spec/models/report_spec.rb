@@ -58,29 +58,6 @@ describe Report do
     end
   end
 
-  describe "total_users report" do
-    let(:report) { Report.find("total_users", cache: false) }
-
-    context "no total_users" do
-      it 'returns an empty report' do
-        report.data.should be_blank
-      end
-    end
-
-    context "with users" do
-      before do
-        Fabricate(:user, created_at: 25.hours.ago)
-        Fabricate(:user, created_at: 1.hours.ago)
-        Fabricate(:user, created_at: 1.hours.ago)
-      end
-
-      it 'returns correct data' do
-        report.data[0][:y].should == 1
-        report.data[1][:y].should == 3
-      end
-    end
-  end
-
   describe '#fetch' do
     context 'signups' do
       let(:report) { Report.find('signups', cache: true) }
