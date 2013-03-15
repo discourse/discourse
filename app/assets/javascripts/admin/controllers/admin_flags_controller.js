@@ -1,13 +1,13 @@
 /**
   This controller supports the interface for dealing with flags in the admin section.
 
-  @class AdminFlagsController    
+  @class AdminFlagsController
   @extends Ember.Controller
   @namespace Discourse
   @module Discourse
-**/ 
+**/
 Discourse.AdminFlagsController = Ember.Controller.extend({
-  
+
   /**
     Clear all flags on a post
 
@@ -19,7 +19,7 @@ Discourse.AdminFlagsController = Ember.Controller.extend({
     item.clearFlags().then((function() {
       _this.content.removeObject(item);
     }), (function() {
-      bootbox.alert("something went wrong");
+      bootbox.alert(Em.String.i18n("admin.flags.error"));
     }));
   },
 
@@ -34,7 +34,7 @@ Discourse.AdminFlagsController = Ember.Controller.extend({
     item.deletePost().then((function() {
       _this.content.removeObject(item);
     }), (function() {
-      bootbox.alert("something went wrong");
+      bootbox.alert(Em.String.i18n("admin.flags.error"));
     }));
   },
 
@@ -55,5 +55,5 @@ Discourse.AdminFlagsController = Ember.Controller.extend({
   adminActiveFlagsView: (function() {
     return this.query === 'active';
   }).property('query')
-  
+
 });
