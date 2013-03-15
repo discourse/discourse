@@ -93,7 +93,6 @@ Discourse.ComposerController = Discourse.Controller.extend({
     });
   },
 
-<<<<<<< HEAD
   closeEducation: function() {
     this.set('educationClosed', true);
   },
