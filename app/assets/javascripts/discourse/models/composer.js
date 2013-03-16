@@ -426,9 +426,13 @@ Discourse.Composer = Discourse.Model.extend({
   },
 
   saveDraft: function() {
+    // Do not save when drafts are disabled
     if (this.get('disableDrafts')) return;
+    // Do not save when there is no reply
     if (!this.get('reply')) return;
-    if (this.get('titleLength') < Discourse.SiteSettings.min_topic_title_length) return;
+    // Do not save when the title's length is too small (only when creating a new post)
+    if (this.get('creatingTopic') && this.get('titleLength') < Discourse.SiteSettings.min_topic_title_length) return;
+    // Do not save when the reply's length is too small
     if (this.get('replyLength') < Discourse.SiteSettings.min_post_length) return;
 
     var data = {
