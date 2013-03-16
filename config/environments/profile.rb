@@ -40,6 +40,6 @@ Discourse::Application.configure do
   config.ember.handlebars_location = "#{Rails.root}/app/assets/javascripts/external/handlebars-1.0.rc.3.js"
   config.handlebars.precompile = true
 
-  config.middleware.use ::Rack::PerftoolsProfiler, :default_printer => 'gif'
+  # config.middleware.use ::Rack::PerftoolsProfiler, :default_printer => 'gif'
 
 end
