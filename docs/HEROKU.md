@@ -12,19 +12,12 @@ For details on how to reduce the monthly cost of your application, see the Advan
         cd discourse
         git checkout -b heroku
 
-2. Modify `production:` in the redis.yml file to use environment variables provided by Heroku and the Redis provider of your choice.
+2. Modify the redis.yml file to use the environment variable provided by Heroku and the Redis provider of your choice.
 
     *config/redis.yml*
 
-        ...
-
-        production:
-          uri: <%= uri = URI.parse(ENV['OPENREDIS_URL']) if ENV['OPENREDIS_URL'] %>
-          host: <%= uri.host if uri %>
-          port: <%= uri.port if uri %>
-          password: <%= uri.password if uri %>
-          db: 0
-          cache_db: 2
+         - uri: <%= uri = URI.parse(ENV['SET_REDIS_PROVIDER_URL'] || "redis://localhost:6379") %>
+         + uri: <%= uri = URI.parse(ENV['OPENREDIS_URL'] || "redis://localhost:6379") %>
 
 3. Comment out or delete `config/redis.yml` from .gitignore. We want to include redis.yml when we push to Heroku.
 
@@ -39,7 +32,7 @@ For details on how to reduce the monthly cost of your application, see the Advan
         git commit -m "ready for Heroku"
 
 
-## Configure Heroku
+## Deploy to Heroku
 
 1. Create the heroku app. This automatically creates a git remote called heroku.
 
@@ -61,17 +54,36 @@ For details on how to reduce the monthly cost of your application, see the Advan
 
         heroku config:add SECRET_TOKEN=<generated secret>
 
-    ##### The next step is optional, as it is still in experimental 'labs' status with Heroku. You can choose to precompile your assets locally before deployment instead. If you do choose to precompile locally, remember to do it each time, before you deploy. For more information on this experimental feature see [Heroku Labs: user-env-compile](https://devcenter.heroku.com/articles/labs-user-env-compile).
+6. Precompile assets.
 
-6.  Make the environment variables available to heroku during deployment.
+    There are two options for precompilation. Either precompile locally, **before each deploy** or enable [Heroku's experimental user-env-compile](https://devcenter.heroku.com/articles/labs-user-env-compile) feature and Heroku will precompile your assets for you.
 
-        heroku labs:enable user-env-compile -a your-app-name
+    1. **Option 1:** Enable user-env-compile.
 
-    **Caveat:** If you should need to change or add environment variables for any reason, you will need to remove `user-env-compile`, then re-apply it after making the changes. This will then require you to make a commit, even if it is an empty commit, and then push to Heroku for the changes to be applied.
+            heroku labs:enable user-env-compile
 
-    If needed, you can remove the user-env-compile option with this command.
+        **Caveat:** If you should need to change or add environment variables for any reason, you will need to remove `user-env-compile`, then re-apply it after making the changes. This will then require you to make a commit, even if it is an empty commit, and then push to Heroku for the changes to be applied.
 
-        heroku labs:disable user-env-compile -a your-app-name
+        If needed, you can remove the user-env-compile option with this command.
+
+            heroku labs:disable user-env-compile
+
+    2. **Option 2:** Precompile locally.
+
+            bundle exec rake assets:precompile
+
+        **Notice:** We don't use Foreman to start precompilation, as this would precompile in the development environment. Instead, rake assets:precompile runs in the production environment by default, as it should.
+
+        If Rails complains that the SECRET_TOKEN is not set, you can pass this to the environment by prefixing it to the rake method call.
+
+            SECRET_TOKEN=5310bc16ef6ecfd0...  bundle exec rake assets:precompile
+
+        **Tip:** OSX/Linux users can set/unset environment variables in their shell.
+
+            # Set var
+            export SECRET_TOKEN=5310bc16ef6ecfd0...
+            # Unset var
+            unset SECRET_TOKEN
 
 7. Push your heroku branch to Heroku.
 
@@ -98,28 +110,31 @@ For details on how to reduce the monthly cost of your application, see the Advan
         u.approved = true
         u.save
 
-4. Provision the Heroku Scheduler
+4. Provision the Heroku Scheduler.
 
   This will allow Heroku Scheduler to cue up tasks rather than running a separate clock process.
   In the [Heroku dashboard](https://dashboard.heroku.com/apps), select your app, then click on **Heroku Scheduler Standard** under your Add-ons.
 
     Next, add a Job for each of the following:
 
-    ##### TASK: `rake enqueue_digest_emails` FREQUENCY: `Daily` NEXT RUN: `06:00`
+        TASK                        FREQUENCY         NEXT RUN
+        ------------------------------------------------------
 
-    ##### TASK: `rake category_stats` FREQUENCY: `Daily` NEXT RUN: `04:00`
+        rake enqueue_digest_emails  Daily                06:00
 
-    ##### TASK: `rake calculate_avg_time` FREQUENCY: `Every 10 minutes`
+        rake category_stats         Daily                04:00
 
-    ##### TASK: `rake feature_topics` FREQUENCY: `Every 10 minutes`
+        rake calculate_avg_time     Every 10 minutes     --:--
 
-    ##### TASK: `rake calculate_score` FREQUENCY: `Every 10 minutes`
+        rake feature_topics         Every 10 minutes     --:--
 
-    ##### TASK: `rake calculate_view_counts` FREQUENCY: `Every 10 minutes`
+        rake calculate_score        Every 10 minutes     --:--
 
-    ##### TASK: `rake version_check` FREQUENCY: `Daily` NEXT RUN: `01:00`
+        rake calculate_view_counts  Every 10 minutes     --:--
 
-5. Start Sidekiq
+        rake version_check          Daily                01:00
+
+5. Start Sidekiq.
 
     In the [Heroku dashboard](https://dashboard.heroku.com/apps), select your app and you will see the separate processes that have been created for your application under Resources. You will only need to start the sidekiq process for your application to run properly. The clock process is covered by Heroku Scheduler, and you can even remove this from the Procfile before deploying if you so wish. The worker process has been generated as a Rails default and can be ignored. As you can see **the Sidekiq process costs $34 monthly** to run. If you want to reduce this cost, check out the Advanced Heroku deployment(coming soon).
 
@@ -131,13 +146,9 @@ For details on how to reduce the monthly cost of your application, see the Advan
 
 Using Foreman to start the application allows you to mimic the way the application is started on Heroku. It loads environment variables via the .env file and instantiates the application using the Procfile. In the .env sample file, we have set `RAILS_ENV='development'`, this makes the Rails environment variable available globally, and is required when starting this application using Foreman.
 
-##### Create the .env file
-
-  *.env*
+##### First, create a .env file from .env.sample
 
       RAILS_ENV='development'
-
-
 
 ###Foreman commands:
 
