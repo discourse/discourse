@@ -271,6 +271,7 @@ fr:
       saving_draft_tip: "sauvegarde..."
       saved_draft_tip: "sauvegardé"
       saved_local_draft_tip: "sauvegardé en local"
+      similar_topics: "Votre message est trop similaire à..."
       drafts_offline: "sauvegardé hors ligne"
 
       min_length:
@@ -592,7 +593,9 @@ fr:
       name: "Nom de la catégorie"
       description: "Description"
       topic: "Catégorie de la discussion"
-      color: "Couleur"
+      badge_colors: "Couleurs du badge"
+      background_color: "Couleur du fond"
+      foreground_color: "Couleur du texte"
       name_placeholder: "Devrait être concis."
       color_placeholder: "N'importe quelle couleur"
       delete_confirm: "Voulez-vous vraiment supprimer cette catégorie ?"
@@ -691,6 +694,7 @@ fr:
         please_upgrade: "Veuillez mettre à jour !"
         latest_version: "Dernière version"
         update_often: "Merci de mettre à jour régulièrement !"
+        total_users: "Total d'utilisateurs"
 
         reports:
           today: "Aujourd'hui"
