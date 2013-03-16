@@ -703,6 +703,7 @@ en:
 
       commits:
         latest_changes: "Latest changes"
+        by: "by"
 
       flags:
         title: "Flags"
