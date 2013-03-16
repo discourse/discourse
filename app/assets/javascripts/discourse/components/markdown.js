@@ -81,7 +81,8 @@ Discourse.Markdown = {
         redomac: I18n.t("js.composer.redo_title") + " - Ctrl+Shift+Z",
 
         help: I18n.t("js.composer.help")
-      }
+      },
+      manualPreview: true
     };
 
     return new Markdown.Editor(markdownConverter, undefined, editorOptions);

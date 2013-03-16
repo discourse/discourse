@@ -142,7 +142,7 @@
 
             panels = new PanelCollection(idPostfix);
             var commandManager = new CommandManager(hooks, getString);
-            var previewManager = new PreviewManager(markdownConverter, panels, function () { hooks.onPreviewRefresh(); });
+            var previewManager = new PreviewManager(markdownConverter, panels, function () { hooks.onPreviewRefresh(); }, options.manualPreview);
             var undoManager, uiManager;
 
             if (!/\?noundo/.test(doc.location.href)) {
@@ -841,7 +841,7 @@
         this.init();
     };
 
-    function PreviewManager(converter, panels, previewRefreshCallback) {
+    function PreviewManager(converter, panels, previewRefreshCallback, withoutEvents) {
 
         var managerObj = this;
         var timeout;
@@ -887,7 +887,6 @@
             if (!panels.preview)
                 return;
 
-
             var text = panels.input.value;
             if (text && text == oldInputText) {
                 return; // Input text hasn't changed.
@@ -914,7 +913,6 @@
         //   after: function(p) { window.probes.clear(); console.log("Total time to preview: " + p.time); }
         // });
 
-
         // TODO allow us to inject this in (its our debouncer)
         var debounce = function(func,wait,trickle) {
           var timeout = null;
@@ -923,29 +921,27 @@
             var args = arguments;
 
             later = function(){
-              timeout = null;
-              func.apply(context, args);
+                timeout = null;
+                func.apply(context, args);
             };
 
-            if (timeout!=null && trickle) {
+            if (timeout !== null && trickle) {
               return;
             }
 
-            var currentWait;
-            if (typeof wait == "function") {
-              currentWait = wait();
-            } else {
-              currentWait = wait;
-            }
+            var currentWait = typeof wait === "function" ? wait() : wait;
 
             //console.log(currentWait);
-            if (timeout) { clearTimeout(timeout); }
+            if (timeout !== null) {
+                clearTimeout(timeout); 
+            }
+
             timeout = setTimeout(later, currentWait);
           }
         }
 
         makePreviewHtml = debounce(makePreviewHtml, function(){
-          return Math.min(Math.max((elapsedTime || 1) * 10, 80),1000);
+            return Math.min(Math.max((elapsedTime || 1) * 10, 80),1000);
         }, true);
 
 
@@ -972,16 +968,20 @@
             }
         };
 
-        var getScaleFactor = function (panel) {
-            if (panel.scrollHeight <= panel.clientHeight) {
+        var getScaleFactor = function (panel, scrollHeight, clientHeight) {
+            if (scrollHeight <= clientHeight) {
                 return 1;
             }
-            return panel.scrollTop / (panel.scrollHeight - panel.clientHeight);
+            return panel.scrollTop / (scrollHeight - clientHeight);
         };
 
         var setPanelScrollTops = function () {
             if (panels.preview) {
-                panels.preview.scrollTop = (panels.preview.scrollHeight - panels.preview.clientHeight) * getScaleFactor(panels.preview);
+                var preview = panels.preview;
+                var scrollHeight = preview.scrollHeight;
+                var clientHeight = preview.clientHeight;
+
+                preview.scrollTop = (scrollHeight - clientHeight) * getScaleFactor(preview, scrollHeight, clientHeight);
             }
         };
 
@@ -991,7 +991,12 @@
                 makePreviewHtml();
             }
             else {
-                applyTimeout();
+                if(withoutEvents){
+                    makePreviewHtml();   
+                }
+                else {
+                  applyTimeout();  
+                }
             }
         };
 
@@ -1066,8 +1071,9 @@
 
         var init = function () {
 
-            // TODO: make option to disable. We don't need this in discourse
-            // setupEvents(panels.input, applyTimeout);
+            if(!withoutEvents){
+                setupEvents(panels.input, applyTimeout);    
+            }
 
             makePreviewHtml();
 
