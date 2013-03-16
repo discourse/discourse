@@ -54,6 +54,7 @@ gem 'sinatra', require: nil
 gem 'slim'  # required for sidekiq-web
 gem 'therubyracer', require: 'v8'
 gem 'thin'
+gem 'diffy'
 
 # Gem that enables support for plugins. It is required.
 gem 'discourse_plugin', path: 'vendor/gems/discourse_plugin'

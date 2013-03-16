@@ -17,11 +17,12 @@ to rails, you are likely much better off with our **[Discourse Vagrant Developer
 ## Before you start Rails
 
 1. `bundle install`
-2. `rake db:migrate`
-3. `rake db:test:prepare`
-4. `rake db:seed_fu`
-5. Try running the specs: `bundle exec rspec`
-6. `bundle exec rails server`
+2. `rake db:create`
+3. `rake db:migrate`
+4. `rake db:test:prepare`
+5. `rake db:seed_fu`
+6. Try running the specs: `bundle exec rspec`
+7. `bundle exec rails server`
 
 You should now be able to connect to rails on http://localhost:3000 - try it out! The seed data includes a pinned topic that explains how to get an admin account, so start there! Happy hacking!
 
