@@ -408,6 +408,9 @@ cs:
     new_user_period_days: "Jak dlouho je uživatel zvýrazněn jako nový, ve dnech"
     title_fancy_entities: "Převádět HTML entity v názvech témat"
 
+    min_title_similar_length: "Minimální délka názvu tématu, než budou hledána podobná témata"
+    min_body_similar_length: "Minimální délka těla příspěvku, než budou hledána podobná témata"
+
   notification_types:
     mentioned: "%{display_username} vás zmínil v %{link}"
     liked: "%{display_username} se líbí váš příspěvek v %{link}"
