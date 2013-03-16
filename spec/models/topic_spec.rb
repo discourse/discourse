@@ -155,6 +155,24 @@ describe Topic do
   end
 
 
+  context 'similar_to' do
+
+    it 'returns blank with nil params' do
+      Topic.similar_to(nil, nil).should be_blank
+    end
+
+    context 'with a similar topic' do
+      let!(:topic) { Fabricate(:topic, title: "Evil trout is the dude who posted this topic") }
+
+      it 'returns the similar topic if the title is similar' do
+        Topic.similar_to("has evil trout made any topics?", "i am wondering has evil trout made any topics?").should == [topic]
+      end
+
+    end
+
+  end
+
+
   context 'message bus' do
     it 'calls the message bus observer after create' do
       MessageBusObserver.any_instance.expects(:after_create_topic).with(instance_of(Topic))

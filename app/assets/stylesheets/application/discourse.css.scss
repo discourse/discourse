@@ -123,7 +123,7 @@ body {
   }
   #main {
     .icon-star.starred {
-      color: #e8d81f;
+      color: #fe1;
     }
     a.star {
       display: inline-block;
@@ -135,7 +135,8 @@ body {
         content: "\f005";
       }
       &.starred {
-        color: #e8d81f;
+        color: #fe1;
+        text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5);
         @include hover {
           opacity: 1;
           &:before {

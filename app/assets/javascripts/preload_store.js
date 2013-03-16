@@ -28,34 +28,34 @@ PreloadStore = {
     @method get
     @param {String} key the key to look up the object with
     @param {function} finder a function to find the object with
-    @returns {Promise} a promise that will eventually be the object we want.
+    @returns {Ember.Deferred} a promise that will eventually be the object we want.
   **/
   get: function(key, finder) {
-    var promise = new RSVP.Promise();
-
-    if (this.data[key]) {
-      promise.resolve(this.data[key]);
-      delete this.data[key];
-    } else {
-
-      if (finder) {
-        var result = finder();
-
-        // If the finder returns a promise, we support that too
-        if (result.then) {
-          result.then(function(result) {
-            return promise.resolve(result);
-          }, function(result) {
-            return promise.reject(result);
-          });
-        } else {
-          promise.resolve(result);
-        }
+    var preloadStore = this;
+    return Ember.Deferred.promise(function(promise) {
+      if (preloadStore.data[key]) {
+        promise.resolve(preloadStore.data[key]);
+        delete preloadStore.data[key];
       } else {
-        promise.resolve(null);
+
+        if (finder) {
+          var result = finder();
+
+          // If the finder returns a promise, we support that too
+          if (result.then) {
+            result.then(function(result) {
+              return promise.resolve(result);
+            }, function(result) {
+              return promise.reject(result);
+            });
+          } else {
+            promise.resolve(result);
+          }
+        } else {
+          promise.resolve(null);
+        }
       }
-    }
-    return promise;
+    });
   },
 
   /**

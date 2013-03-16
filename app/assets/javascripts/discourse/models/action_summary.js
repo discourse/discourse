@@ -40,8 +40,6 @@ Discourse.ActionSummary = Discourse.Model.extend({
   act: function(opts) {
 
     // Mark it as acted
-    var promise,
-      _this = this;
     this.set('acted', true);
     this.set('count', this.get('count') + 1);
     this.set('can_act', false);
@@ -53,26 +51,19 @@ Discourse.ActionSummary = Discourse.Model.extend({
     }
 
     // Create our post action
-    promise = new RSVP.Promise();
-    $.ajax({
+    var actionSummary = this;
+    return $.ajax({
       url: "/post_actions",
       type: 'POST',
       data: {
         id: this.get('post.id'),
         post_action_type_id: this.get('id'),
         message: (opts ? opts.message : void 0) || ""
-      },
-      error: function(error) {
-        var errors;
-        _this.removeAction();
-        errors = $.parseJSON(error.responseText).errors;
-        return promise.reject(errors);
-      },
-      success: function() {
-        return promise.resolve();
       }
+    }).then(null, function (error) {
+      actionSummary.removeAction();
+      return $.parseJSON(error.responseText).errors;
     });
-    return promise;
   },
 
   // Undo this action

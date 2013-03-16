@@ -271,6 +271,10 @@ en:
       title: "Flags"
       xaxis: "Day"
       yaxis: "Number of flags"
+    users_by_trust_level:
+      title: "Users per Trust Level"
+      xaxis: "Trust Level"
+      yaxis: "Number of Users"
 
   site_settings:
     default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"
@@ -407,6 +411,9 @@ en:
     body_min_entropy: "The minimum allowed entropy (unique characters) required for a post body"
     new_user_period_days: "How long a user is highlighted as being new, in days"
     title_fancy_entities: "Convert fancy HTML entities in topic titles"
+
+    min_title_similar_length: "The minimum length of a title before it will be checked for similar topics"
+    min_body_similar_length: "The minimum length of a post's body before it will be checked for similar topics"
 
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"

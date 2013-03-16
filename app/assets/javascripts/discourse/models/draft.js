@@ -22,20 +22,11 @@ Discourse.Draft.reopenClass({
   },
 
   get: function(key) {
-    var promise,
-      _this = this;
-    promise = new RSVP.Promise();
-    $.ajax({
+    return $.ajax({
       url: '/draft',
-      data: {
-        draft_key: key
-      },
-      dataType: 'json',
-      success: function(data) {
-        return promise.resolve(data);
-      }
+      data: { draft_key: key },
+      dataType: 'json'
     });
-    return promise;
   },
 
   getLocal: function(key, current) {
@@ -44,35 +35,16 @@ Discourse.Draft.reopenClass({
   },
 
   save: function(key, sequence, data) {
-    var promise;
-    promise = new RSVP.Promise();
     data = typeof data === "string" ? data : JSON.stringify(data);
-    $.ajax({
+    return $.ajax({
       type: 'POST',
       url: "/draft",
       data: {
         draft_key: key,
         data: data,
         sequence: sequence
-      },
-      success: function() {
-        /* don't keep local
-        */
-
-        /* Discourse.KeyValueStore.remove("draft_#{key}")
-        */
-        return promise.resolve();
-      },
-      error: function() {
-        /* save local
-        */
-
-        /* Discourse.KeyValueStore.set(key: "draft_#{key}", value: data)
-        */
-        return promise.reject();
       }
     });
-    return promise;
   }
 
 });

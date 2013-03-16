@@ -59,6 +59,17 @@ class TopicsController < ApplicationController
     render nothing: true
   end
 
+  def similar_to
+    requires_parameters(:title, :raw)
+    title, raw = params[:title], params[:raw]
+
+    raise Discourse::InvalidParameters.new(:title) if title.length < SiteSetting.min_title_similar_length
+    raise Discourse::InvalidParameters.new(:raw) if raw.length < SiteSetting.min_body_similar_length
+
+    topics = Topic.similar_to(title, raw)
+    render_serialized(topics, BasicTopicSerializer)
+  end
+
   def status
     requires_parameters(:status, :enabled)
 

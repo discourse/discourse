@@ -267,10 +267,12 @@ en:
       saving_draft_tip: "saving"
       saved_draft_tip: "saved"
       saved_local_draft_tip: "saved locally"
+      similar_topics: "Your topic is similar to..."
+      drafts_offline: "drafts offline"
 
       min_length:
-        at_least: "enter at least {{n}} characters"
-        more: "{{n}} to go..."
+        need_more_for_title: "{{n}} to go for the title"
+        need_more_for_reply: "{{n}} to go for the reply"
 
       save_edit: "Save Edit"
       reply_original: "Reply on Original Topic"
@@ -587,7 +589,9 @@ en:
       name: "Category Name"
       description: "Description"
       topic: "category topic"
-      color: "Color"
+      badge_colors: "Badge colors"
+      background_color: "Background color"
+      foreground_color: "Foreground color"
       name_placeholder: "Should be short and succinct."
       color_placeholder: "Any web color"
       delete_confirm: "Are you sure you want to delete that category?"
@@ -686,6 +690,7 @@ en:
         please_upgrade: "Please upgrade!"
         latest_version: "Latest version"
         update_often: 'Please update often!'
+        total_users: "Total Users"
 
         reports:
           today: "Today"
@@ -698,6 +703,7 @@ en:
 
       commits:
         latest_changes: "Latest changes"
+        by: "by"
 
       flags:
         title: "Flags"

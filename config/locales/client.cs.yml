@@ -267,6 +267,7 @@ cs:
       saving_draft_tip: "ukládám"
       saved_draft_tip: "uloženo"
       saved_local_draft_tip: "uloženo lokálně"
+      similar_topics: "Podobná témata"
 
       min_length:
         at_least: "vložte alespoň {{n}} znaků"
@@ -587,7 +588,9 @@ cs:
       name: "Název kategorie"
       description: "Popis"
       topic: "téma kategorie"
-      color: "Barva"
+      badge_colors: "Barvy štítku"
+      background_color: "Barva pozadí"
+      foreground_color: "Barva textu"
       name_placeholder: "Měl by být krátký a výstižný."
       color_placeholder: "Jakákoliv webová barva"
       delete_confirm: "Opravdu chcete odstranit tuto kategorii?"
@@ -708,6 +711,7 @@ cs:
         delete: "Odstranit příspěvek"
         delete_title: "odstranit příspěvek (smaže celé téma, je-li to první příspěvek v tématu)"
         flagged_by: "Nahlásil"
+        error: "Něco se pokazilo"
 
       customize:
         title: "Přizpůsobení"
@@ -719,6 +723,7 @@ cs:
         undo_preview: "zrušit náhled"
         save: "Uložit"
         new: "Nový"
+        new_style: "Nový styl"
         delete: "Smazat"
         delete_confirm: "Smazat toto přizpůsobení?"
 

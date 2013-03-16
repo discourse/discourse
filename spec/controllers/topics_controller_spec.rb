@@ -70,9 +70,38 @@ describe TopicsController do
       end
 
     end
+  end
 
+  context 'similar_to' do
+
+    let(:title) { 'this title is long enough to search for' }
+    let(:raw) { 'this body is long enough to search for' }
+
+    it "requires a title" do
+      -> { xhr :get, :similar_to, raw: raw }.should raise_error(Discourse::InvalidParameters)
+    end
+
+    it "requires a raw body" do
+      -> { xhr :get, :similar_to, title: title }.should raise_error(Discourse::InvalidParameters)
+    end
+
+    it "raises an error if the title length is below the minimum" do
+      SiteSetting.stubs(:min_title_similar_length).returns(100)
+      -> { xhr :get, :similar_to, title: title, raw: raw }.should raise_error(Discourse::InvalidParameters)
+    end
+
+    it "raises an error if the body length is below the minimum" do
+      SiteSetting.stubs(:min_body_similar_length).returns(100)
+      -> { xhr :get, :similar_to, title: title, raw: raw }.should raise_error(Discourse::InvalidParameters)
+    end
+
+    it "delegates to Topic.similar_to" do
+      Topic.expects(:similar_to).with(title, raw).returns([Fabricate(:topic)])
+      xhr :get, :similar_to, title: title, raw: raw
+    end
 
   end
+
 
   context 'clear_pin' do
     it 'needs you to be logged in' do

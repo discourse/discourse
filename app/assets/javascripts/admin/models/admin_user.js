@@ -156,15 +156,9 @@ Discourse.AdminUser.reopenClass({
   },
 
   find: function(username) {
-    var promise;
-    promise = new RSVP.Promise();
-    $.ajax({
-      url: "/admin/users/" + username,
-      success: function(result) {
-        return promise.resolve(Discourse.AdminUser.create(result));
-      }
-    });
-    return promise;
+    return $.ajax({url: "/admin/users/" + username}).then(function (result) {
+      return Discourse.AdminUser.create(result);
+    })
   },
 
   findAll: function(query, filter) {

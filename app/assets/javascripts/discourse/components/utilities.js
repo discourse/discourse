@@ -39,10 +39,11 @@ Discourse.Utilities = {
 
   // Create a badge like category link
   categoryLink: function(category) {
-    var color, name, description, result;
+    var color, textColor, name, description, result;
     if (!category) return "";
 
     color = Em.get(category, 'color');
+    textColor = Em.get(category, 'text_color');
     name = Em.get(category, 'name');
     description = Em.get(category, 'description');
 
@@ -52,7 +53,7 @@ Discourse.Utilities = {
     // Add description if we have it
     if (description) result += "title=\"" + description + "\" ";
 
-    return result + "style=\"background-color: #" + color + "\">" + name + "</a>";
+    return result + "style=\"background-color: #" + color + "; color: #" + textColor + ";\">" + name + "</a>";
   },
 
   avatarUrl: function(username, size, template) {

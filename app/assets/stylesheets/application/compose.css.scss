@@ -4,7 +4,7 @@
 @import "foundation/mixins";
 
 
-#new-user-education {
+.composer-popup {
 
   @include box-shadow(3px 3px 3px rgba($black, 0.14));
 
@@ -17,10 +17,34 @@
   }
 
   background-color: lighten($yellow, 40%);
-  border: 1px solid $yellow;
+  border: 1px solid darken($yellow, 10%);
   padding: 10px;
   width: 600px;
   position: absolute;
+
+  ul.topics {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      font-weight: normal;
+      margin-top: 3px;
+    }
+  }
+}
+
+#similar-topics {
+  background-color: #b5e8fd;
+  border: 1px solid darken(#b5e8fd, 10%);
+
+  a[href] {
+    color: #000;
+  }
+}
+
+.composer-popup:nth-of-type(2) {
+  margin-left: 10px;
 }
 
 #reply-control {

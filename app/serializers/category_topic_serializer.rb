@@ -1,10 +1,6 @@
-class CategoryTopicSerializer < BasicTopicSerializer
+class CategoryTopicSerializer < ListableTopicSerializer
 
-  attributes :slug,
-             :visible,
-             :closed,
-             :archived
-
+  attributes :visible, :closed, :archived
   has_one :category
 
 end

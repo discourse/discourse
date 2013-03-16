@@ -215,22 +215,19 @@ Discourse.Post = Discourse.Model.extend({
 
   // Load replies to this post
   loadReplies: function() {
-    var promise,
-      _this = this;
-    promise = new RSVP.Promise();
     this.set('loadingReplies', true);
     this.set('replies', []);
-    $.getJSON("/posts/" + (this.get('id')) + "/replies", function(loaded) {
+
+    var parent = this;
+    return $.ajax({url: "/posts/" + (this.get('id')) + "/replies"}).then(function(loaded) {
+      var replies = parent.get('replies');
       loaded.each(function(reply) {
-        var post;
-        post = Discourse.Post.create(reply);
-        post.set('topic', _this.get('topic'));
-        return _this.get('replies').pushObject(post);
+        var post = Discourse.Post.create(reply);
+        post.set('topic', parent.get('topic'));
+        replies.pushObject(post);
       });
-      _this.set('loadingReplies', false);
-      return promise.resolve();
+      parent.set('loadingReplies', false);
     });
-    return promise;
   },
 
   loadVersions: function(callback) {
@@ -293,43 +290,33 @@ Discourse.Post.reopenClass({
     return $.ajax("/posts/destroy_many", {
       type: 'DELETE',
       data: {
-        post_ids: posts.map(function(p) {
-          return p.get('id');
-        })
+        post_ids: posts.map(function(p) { return p.get('id'); })
       }
     });
   },
 
   loadVersion: function(postId, version, callback) {
-    var _this = this;
-    return $.getJSON("/posts/" + postId + ".json?version=" + version, function(result) {
-      return callback(Discourse.Post.create(result));
+    return $.ajax({url: "/posts/" + postId + ".json?version=" + version}).then(function(result) {
+      return Discourse.Post.create(result);
     });
   },
 
-  loadByPostNumber: function(topicId, postId, callback) {
-    var _this = this;
-    return $.getJSON("/posts/by_number/" + topicId + "/" + postId + ".json", function(result) {
-      return callback(Discourse.Post.create(result));
+  loadByPostNumber: function(topicId, postId) {
+    return $.ajax({url: "/posts/by_number/" + topicId + "/" + postId + ".json"}).then(function (result) {
+      return Discourse.Post.create(result);
     });
   },
 
   loadQuote: function(postId) {
-    var promise,
-      _this = this;
-    promise = new RSVP.Promise();
-    $.getJSON("/posts/" + postId + ".json", function(result) {
-      var post;
-      post = Discourse.Post.create(result);
-      return promise.resolve(Discourse.BBCode.buildQuoteBBCode(post, post.get('raw')));
+    return $.ajax({url: "/posts/" + postId + ".json"}).then(function(result) {
+      var post = Discourse.Post.create(result);
+      return Discourse.BBCode.buildQuoteBBCode(post, post.get('raw'));
     });
-    return promise;
   },
 
-  load: function(postId, callback) {
-    var _this = this;
-    return $.getJSON("/posts/" + postId + ".json", function(result) {
-      return callback(Discourse.Post.create(result));
+  load: function(postId) {
+    return $.ajax({url: "/posts/" + postId + ".json"}).then(function (result) {
+      return Discourse.Post.create(result);
     });
   }
 

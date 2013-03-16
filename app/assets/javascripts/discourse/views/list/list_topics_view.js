@@ -58,21 +58,23 @@ Discourse.ListTopicsView = Discourse.View.extend(Discourse.Scrolling, {
   },
 
   loadMore: function() {
-    var _this = this;
-    if (this.get('loading')) {
-      return;
-    }
+    if (this.get('loading')) return;
     this.set('loading', true);
-    return this.get('controller.content').loadMoreTopics().then(function(hasMoreResults) {
-      _this.set('loadedMore', true);
-      _this.set('loading', false);
-      Em.run.next(function() {
-        return _this.saveScrollPos();
+
+    var listTopicsView = this;
+    var promise = this.get('controller.content').loadMoreTopics();
+    if (promise) {
+      promise.then(function(hasMoreResults) {
+        listTopicsView.set('loadedMore', true);
+        listTopicsView.set('loading', false);
+        Em.run.next(function() { listTopicsView.saveScrollPos(); });
+        if (!hasMoreResults) {
+          listTopicsView.get('eyeline').flushRest();
+        }
       });
-      if (!hasMoreResults) {
-        return _this.get('eyeline').flushRest();
-      }
-    });
+    } else {
+      this.set('loading', false);
+    }
   },
 
   // Remember where we were scrolled to

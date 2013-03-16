@@ -31,18 +31,14 @@ Discourse.CategoryList.reopenClass({
   },
 
   list: function(filter) {
-    var promise,
-      _this = this;
-    promise = new RSVP.Promise();
-    $.getJSON("/" + filter + ".json").then(function(result) {
-      var categoryList;
-      categoryList = Discourse.TopicList.create();
+    var route = this;
+    return $.getJSON("/" + filter + ".json").then(function(result) {
+      var categoryList = Discourse.TopicList.create();
       categoryList.set('can_create_category', result.category_list.can_create_category);
-      categoryList.set('categories', _this.categoriesFrom(result));
+      categoryList.set('categories', route.categoriesFrom(result));
       categoryList.set('loaded', true);
-      return promise.resolve(categoryList);
+      return categoryList;
     });
-    return promise;
   }
 
 });

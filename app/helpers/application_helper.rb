@@ -42,12 +42,12 @@ module ApplicationHelper
     # Add opengraph tags
     result =  tag(:meta, property: 'og:site_name', content: SiteSetting.title) << "\n"
 
-    result << tag(:meta, property: 'twitter:card', content: "summary")
+    result << tag(:meta, name: 'twitter:card', content: "summary")
     [:image, :url, :title, :description].each do |property|
       if opts[property].present?
         escape = (property != :image)
         result << tag(:meta, {property: "og:#{property}", content: opts[property]}, nil, escape) << "\n"
-        result << tag(:meta, {property: "twitter:#{property}", content: opts[property]}, nil, escape) << "\n"
+        result << tag(:meta, {name: "twitter:#{property}", content: opts[property]}, nil, escape) << "\n"
       end
     end
 

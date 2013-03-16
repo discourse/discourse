@@ -18,7 +18,7 @@ Discourse.User = Discourse.Model.extend({
     return Discourse.Utilities.avatarUrl(this.get('username'), 'large', this.get('avatar_template'));
   }).property('username'),
 
-   /**
+  /**
     Small version of this user's avatar.
 
     @property avatarSmall
@@ -68,7 +68,7 @@ Discourse.User = Discourse.Model.extend({
     return Discourse.get('site.trust_levels').findProperty('id', this.get('trust_level'));
   }).property('trust_level'),
 
-   /**
+  /**
     Changes this user's username.
 
     @method changeUsername
@@ -76,7 +76,7 @@ Discourse.User = Discourse.Model.extend({
     @returns Result of ajax call
   **/
   changeUsername: function(newUsername) {
-    return jQuery.ajax({
+    return $.ajax({
       url: "/users/" + (this.get('username_lower')) + "/preferences/username",
       type: 'PUT',
       data: {
@@ -93,7 +93,7 @@ Discourse.User = Discourse.Model.extend({
     @returns Result of ajax call
   **/
   changeEmail: function(email) {
-    return jQuery.ajax({
+    return $.ajax({
       url: "/users/" + (this.get('username_lower')) + "/preferences/email",
       type: 'PUT',
       data: {
@@ -121,7 +121,7 @@ Discourse.User = Discourse.Model.extend({
   **/
   save: function(finished) {
     var _this = this;
-    jQuery.ajax("/users/" + this.get('username').toLowerCase(), {
+    $.ajax("/users/" + this.get('username').toLowerCase(), {
       data: this.getProperties('auto_track_topics_after_msecs',
                                'bio_raw',
                                'website',
@@ -153,7 +153,7 @@ Discourse.User = Discourse.Model.extend({
   changePassword: function(callback) {
     var good;
     good = false;
-  jQuery.ajax({
+  $.ajax({
       url: '/session/forgot_password',
       dataType: 'json',
       data: {
@@ -199,7 +199,7 @@ Discourse.User = Discourse.Model.extend({
     var stream,
       _this = this;
     stream = this.get('stream');
-    jQuery.ajax({
+    $.ajax({
       url: "/user_actions/" + id + ".json",
       dataType: 'json',
       cache: 'false',
@@ -241,7 +241,7 @@ Discourse.User = Discourse.Model.extend({
       url += "&filter=" + (this.get('streamFilter'));
     }
 
-    return jQuery.ajax({
+    return $.ajax({
       url: url,
       dataType: 'json',
       cache: 'false',
@@ -362,7 +362,7 @@ Discourse.User.reopenClass({
     @param {String} email An email address to check
   **/
   checkUsername: function(username, email) {
-    return jQuery.ajax({
+    return $.ajax({
       url: '/users/check_username',
       type: 'GET',
       data: {
@@ -465,7 +465,7 @@ Discourse.User.reopenClass({
     @returns Result of ajax call
   **/
   createAccount: function(name, email, password, username, passwordConfirm, challenge) {
-    return jQuery.ajax({
+    return $.ajax({
       url: '/users',
       dataType: 'json',
       data: {

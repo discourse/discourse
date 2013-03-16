@@ -68,9 +68,7 @@ describe("PreloadStore", function() {
       var done, finder, storeResult;
       done = storeResult = null;
       finder = function() {
-        var promise = new RSVP.Promise();
-        promise.resolve('evil');
-        return promise;
+        return Ember.Deferred.promise(function(promise) { promise.resolve('evil'); });
       };
       PreloadStore.get('joker', finder).then(function(result) {
         done = true;
@@ -86,9 +84,7 @@ describe("PreloadStore", function() {
       var done, finder, storeResult;
       done = storeResult = null;
       finder = function() {
-        var promise = new RSVP.Promise();
-        promise.reject('evil');
-        return promise;
+        return Ember.Deferred.promise(function(promise) { promise.reject('evil'); });
       };
       PreloadStore.get('joker', finder).then(null, function(rejectedResult) {
         done = true;
