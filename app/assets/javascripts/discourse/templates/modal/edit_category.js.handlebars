@@ -1,7 +1,7 @@
 <div class="modal-body">
   <form>
     <label>{{i18n category.name}}</label>
-    {{view Discourse.TextField valueBinding="view.category.name" placeholderKey="category.name_placeholder"}}
+    {{view Discourse.TextField valueBinding="view.category.name" placeholderKey="category.name_placeholder" maxlength="50"}}
 
     <div class='description-controls' style="margin-bottom: 20px">
       <label>{{i18n category.description}}</label>

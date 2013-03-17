@@ -67,7 +67,12 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
         _this.saveSuccess(result);
       },
       error: function(errors) {
+        // displays a generic error message when none is sent from the server
+        // this might happen when some "after" callbacks throws an exception server-side
+        if(errors.length === 0) errors.push(Em.String.i18n("category.creation_error"));
+        // display the errors
         _this.displayErrors(errors);
+        // not saving anymore
         _this.set('saving', false);
       }
     });
