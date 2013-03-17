@@ -422,6 +422,8 @@ fr:
     min_title_similar_length: "La taille minimale du titre avant que l'on vérifie l'existence de discussions identiques"
     min_body_similar_length: "La taille minimale du message avant que l'on vérifie l'existence de discussions identiques"
 
+    category_colors: "Une liste de couleurs autorisées pour les catégories (au format hexadécimal, séparés par un |)"
+
   notification_types:
     mentioned: "%{display_username} vous a mentionné dans %{link}"
     liked: "%{display_username} a aimé votre message dans %{link}"
