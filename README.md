@@ -12,9 +12,11 @@ Whenever you need ...
 
 ## Getting Started
 
-If you're interested in helping us develop Discourse, please start with our [**Discourse Vagrant Developer Guide**](https://github.com/discourse/discourse/blob/master/docs/VAGRANT.md), which includes instructions to get up and running in a development environment using a virtual machine. It's the easiest way to hack on Discourse!
+1. If you're **brand new to Ruby and Rails**, please start with our [**Discourse Vagrant Developer Guide**](https://github.com/discourse/discourse/blob/master/docs/VAGRANT.md), which includes instructions to get up and running in a development environment using a virtual machine. This beginner's guide is also adequate for developers ready to sink their teeth quickly; it's the easiest way to hack on Discourse!
 
-If you're familiar with how Rails works and are comfortable setting up your own environment, use our [**Discourse Advanced Developer Guide**](https://github.com/discourse/discourse/blob/master/docs/DEVELOPER-ADVANCED.md).
+2. Once you have Discourse up and running, you'll want to know **some of the basics**, like "How do I log in as an admin?" and "Where do I customize Discourse's settings?" These questions are covered in the [**Admin "How to"**](https://github.com/discourse/discourse/wiki/Admin:-%22How-To%22-Guide) Wiki page.
+
+3. If you're familiar with how Rails works and are comfortable setting up your own environment, use our [**Discourse Advanced Developer Guide**](https://github.com/discourse/discourse/blob/master/docs/DEVELOPER-ADVANCED.md).
 
 Before you get started, ensure you have the following minimum versions: [Ruby 1.9.3+](http://www.ruby-lang.org/en/downloads/), [PostgreSQL 9.1+](http://www.postgresql.org/download/), [Redis 2.6+](http://redis.io/download). And if you're having trouble, please see our [**TROUBLESHOOTING GUIDE**](https://github.com/discourse/discourse/blob/master/docs/TROUBLESHOOTING.md) first!
 
