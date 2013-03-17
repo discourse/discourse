@@ -21,8 +21,13 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
     return "background-color: #" + (this.get('category.color')) + "; color: #" + (this.get('category.text_color')) + ";";
   }).property('category.color', 'category.text_color'),
 
-  predefinedColors: ["FFFFFF", "000000", "AECFC6", "836953", "77DD77", "FFB347", "FDFD96", "536878",
-      "EC5800", "0096E0", "7C4848", "9AC932", "BA160C", "003366", "B19CD9", "E4717A"],
+  // background colors are available as a pipe-separated string
+  backgroundColors: (function() {
+    return Discourse.SiteSettings.category_colors.split("|").map(function(i) { return i.toUpperCase(); });
+  }).property('Discourse.SiteSettings.category_colors'),
+
+  // black & white only for foreground colors
+  foregroundColors: ['FFFFFF', '000000'],
 
   title: (function() {
     if (this.get('category.id')) return Em.String.i18n("category.edit_long");

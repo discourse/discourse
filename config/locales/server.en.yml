@@ -415,6 +415,8 @@ en:
     min_title_similar_length: "The minimum length of a title before it will be checked for similar topics"
     min_body_similar_length: "The minimum length of a post's body before it will be checked for similar topics"
 
+    category_colors: "A pipe (|) separated list of hexadecimal color values allowed for categories"
+
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"
     liked: "%{display_username} liked your post in %{link}"
