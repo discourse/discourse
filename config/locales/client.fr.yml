@@ -361,7 +361,9 @@ fr:
 
     favorite:
       title: 'Favoris'
-      help: 'ajouter cette discussion à vos favoris'
+      help:
+        star: 'ajouter cette discussion à vos favoris'
+        unstar: 'enlever cette discussion de vos favoris'
 
     topics:
       none:

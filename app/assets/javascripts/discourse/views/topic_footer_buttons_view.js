@@ -40,7 +40,7 @@ Discourse.TopicFooterButtonsView = Ember.ContainerView.extend({
 
         this.addObject(Discourse.ButtonView.createWithMixins({
           textKey: 'favorite.title',
-          helpKey: 'favorite.help',
+          helpKeyBinding: 'controller.content.favoriteTooltipKey',
 
           favoriteChanged: (function() {
             this.rerender();
