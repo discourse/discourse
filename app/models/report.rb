@@ -98,6 +98,14 @@ class Report
     end
   end
 
+  def self.report_emails(report)
+    report.data = []
+    fetch report do
+      EmailLog.count_per_day(30.days.ago).each do |date, count|
+        report.data << {x: date, y: count}
+      end
+    end
+  end
 
   private
 

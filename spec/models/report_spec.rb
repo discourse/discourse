@@ -26,7 +26,7 @@
 #     end
 #   end
 
-#   [:signup, :topic, :post, :flag, :like].each do |arg|
+#   [:signup, :topic, :post, :flag, :like, :email].each do |arg|
 #     describe "#{arg} report" do
 #       pluralized = arg.to_s.pluralize
 
@@ -40,7 +40,14 @@
 
 #       context "with #{pluralized}" do
 #         before do
-#           fabricator = (arg == :signup ? :user : arg)
+#           fabricator = case arg
+#           when :signup
+#             :user
+#           when :email
+#             :email_log
+#           else
+#             arg
+#           end
 #           Fabricate(fabricator, created_at: 25.hours.ago)
 #           Fabricate(fabricator, created_at: 1.hours.ago)
 #           Fabricate(fabricator, created_at: 1.hours.ago)

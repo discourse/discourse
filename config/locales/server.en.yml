@@ -279,6 +279,10 @@ en:
       title: "Users per Trust Level"
       xaxis: "Trust Level"
       yaxis: "Number of Users"
+    emails:
+      title: "Emails Sent"
+      xaxis: "Day"
+      yaxis: "Number of Emails"
 
   site_settings:
     default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"
