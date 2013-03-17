@@ -263,12 +263,16 @@ en:
       title: "New Posts"
       xaxis: "Day"
       yaxis: "Number of new posts"
+    likes:
+      title: "New Likes"
+      xaxis: "Day"
+      yaxis: "Number of new likes"
     total_users:
       title: "Total Users"
       xaxis: "Day"
       yaxis: "Total number of users"
     flags:
-      title: "Flags"
+      title: "New Flags"
       xaxis: "Day"
       yaxis: "Number of flags"
     users_by_trust_level:

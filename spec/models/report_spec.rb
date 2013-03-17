@@ -26,7 +26,7 @@
 #     end
 #   end
 
-#   [:signup, :topic, :post, :flag].each do |arg|
+#   [:signup, :topic, :post, :flag, :like].each do |arg|
 #     describe "#{arg} report" do
 #       pluralized = arg.to_s.pluralize
 

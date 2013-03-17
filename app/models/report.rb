@@ -89,6 +89,15 @@ class Report
     end
   end
 
+  def self.report_likes(report)
+    report.data = []
+    fetch report do
+      PostAction.count_likes_per_day(30.days.ago).each do |date, count|
+        report.data << {x: date, y: count}
+      end
+    end
+  end
+
 
   private
 
