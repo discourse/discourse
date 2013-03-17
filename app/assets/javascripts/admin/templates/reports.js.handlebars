@@ -1,7 +1,15 @@
 {{#if loaded}}
   <h3>{{title}}</h3>
 
-  <table class='table'>
+  <button class='btn'
+          {{action viewAsTable}}
+          {{bindAttr disabled="viewingTable"}}>View as Table</button>
+
+  <button class='btn'
+          {{action viewAsBarChart}}
+          {{bindAttr disabled="viewingBarChart"}}>View as Bar Chart</button>
+
+  <table class='table report'>
     <tr>
       <th>{{xaxis}}</th>
       <th>{{yaxis}}</th>
@@ -10,7 +18,16 @@
     {{#each data}}
       <tr>
         <td>{{x}}</td>
-        <td>{{y}}</td>
+        <td>
+          {{#if controller.viewingTable}}
+            {{y}}
+          {{/if}}
+          {{#if controller.viewingBarChart}}
+            <div class='bar-container'>
+              <div class='bar' style="width: {{unbound percentage}}%">{{y}}</div>
+            </div>
+          {{/if}}
+        </td>
       </tr>
     {{/each}}
   </table>

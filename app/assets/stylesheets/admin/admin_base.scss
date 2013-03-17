@@ -8,6 +8,31 @@
   .admin-contents {
     padding: 8px;
   }
+
+  table.report {
+    tr {
+      th:nth-of-type(1) {
+        width: 20%;
+      }
+    }
+
+    .bar-container {
+      float: left;
+      width: 300px;
+      margin-right: 15px;
+      margin-bottom: 5px;
+      display: inline-block;
+
+      .bar {
+        margin-top: 5px;
+        background-color: $blue;
+        display: inline-block;
+        text-align: right;
+        padding-right: 8px;
+        color: $white;
+      }
+    }
+  }
 }
 
 .admin-loading {
