@@ -9,6 +9,7 @@
 Discourse.ComboboxViewCategory = Discourse.ComboboxView.extend({
   none: 'category.none',
   dataAttributes: ['color', 'text_color', 'description'],
+  valueBinding: Ember.Binding.oneWay('source'),
 
   template: function(text, templateData) {
     if (!templateData.color) return text;
