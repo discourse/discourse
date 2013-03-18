@@ -51,17 +51,6 @@ Fabricator(:reply, from: :post) do
   '
 end
 
-Fabricator(:multi_quote_reply, from: :post) do
-  user(:coding_horror)
-  topic
-  raw '
-    [quote="Evil Trout, post:1"]post1 quote[/quote]
-    Aha!
-    [quote="Evil Trout, post:2"]post2 quote[/quote]
-    Neat-o
-  '
-end
-
 Fabricator(:post_with_external_links, from: :post) do
   user
   topic

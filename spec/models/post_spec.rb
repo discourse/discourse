@@ -533,6 +533,7 @@ describe Post do
     describe 'with a reply' do
 
       let!(:reply) { Fabricate(:basic_reply, user: coding_horror, topic: post.topic) }
+      let!(:post_reply) { PostReply.create(post_id: post.id, reply_id: reply.id) }
 
       it 'changes the post count of the topic' do
         post.reload
@@ -623,7 +624,7 @@ describe Post do
 
     end
 
-    describe 'quote counts' do
+    describe 'extract_quoted_post_numbers' do
 
       let!(:post) { Fabricate(:post, post_args) }
       let(:reply) { Fabricate.build(:post, post_args) }
@@ -644,8 +645,11 @@ describe Post do
 
     describe 'a new reply' do
 
-      let!(:post) { Fabricate(:post, post_args) }
-      let!(:reply) { Fabricate(:reply, post_args.merge(reply_to_post_number: post.post_number)) }
+      let(:topic) { Fabricate(:topic) }
+      let(:other_user) { Fabricate(:coding_horror) }
+      let(:reply_text) { "[quote=\"Evil Trout, post:1\"]\nhello\n[/quote]\nHmmm!"}
+      let!(:post) { PostCreator.new(topic.user, raw: Fabricate.build(:post).raw, topic_id: topic.id).create }
+      let!(:reply) { PostCreator.new(other_user, raw: reply_text, topic_id: topic.id, reply_to_post_number: post.post_number ).create }
 
       it 'has a quote' do
         reply.quote_count.should == 1
@@ -683,7 +687,10 @@ describe Post do
 
       context 'a multi-quote reply' do
 
-        let!(:multi_reply) { Fabricate(:multi_quote_reply, post_args.merge(reply_to_post_number: post.post_number)) }
+        let!(:multi_reply) do
+          raw = "[quote=\"Evil Trout, post:1\"]post1 quote[/quote]\nAha!\n[quote=\"Evil Trout, post:2\"]post2 quote[/quote]\nNeat-o"
+          PostCreator.new(other_user, raw: raw, topic_id: topic.id, reply_to_post_number: post.post_number).create
+        end
 
         it 'has two quotes' do
           multi_reply.quote_count.should == 2

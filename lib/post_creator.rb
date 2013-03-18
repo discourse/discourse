@@ -77,6 +77,8 @@ class PostCreator
       post = topic.posts.new(raw: @opts[:raw],
                              user: @user,
                              reply_to_post_number: @opts[:reply_to_post_number])
+      post.extract_quoted_post_numbers
+
       post.image_sizes = @opts[:image_sizes] if @opts[:image_sizes].present?
       post.invalidate_oneboxes = @opts[:invalidate_oneboxes] if @opts[:invalidate_oneboxes].present?
       unless post.save
@@ -120,6 +122,9 @@ class PostCreator
 
       # Advance the draft sequence
       post.advance_draft_sequence
+
+      # Save the quote relationships
+      post.save_reply_relationships
     end
 
     post

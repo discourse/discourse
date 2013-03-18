@@ -42,8 +42,6 @@ class Post < ActiveRecord::Base
   REGULAR = 1
   MODERATOR_ACTION = 2
 
-  before_save :extract_quoted_post_numbers
-
   scope :by_newest, order('created_at desc, id desc')
   scope :with_user, includes(:user)
 
@@ -376,23 +374,7 @@ class Post < ActiveRecord::Base
     DraftSequence.next!(last_editor_id, topic.draft_key)
   end
 
-  after_save do
-    quoted_post_numbers << reply_to_post_number if reply_to_post_number.present?
-
-    # Create a reply relationship between quoted posts and this new post
-    if quoted_post_numbers.present?
-      quoted_post_numbers.map(&:to_i).uniq.each do |p|
-        post = Post.where(topic_id: topic_id, post_number: p).first
-        if post.present?
-          post_reply = post.post_replies.new(reply_id: id)
-          if post_reply.save
-            Post.update_all ['reply_count = reply_count + 1'], id: post.id
-          end
-        end
-      end
-    end
-  end
-
+  # Determine what posts are quoted by this post
   def extract_quoted_post_numbers
     self.quoted_post_numbers = []
 
@@ -416,6 +398,24 @@ class Post < ActiveRecord::Base
 
     self.quoted_post_numbers.uniq!
     self.quote_count = quoted_post_numbers.size
+  end
+
+  def save_reply_relationships
+    self.quoted_post_numbers ||= []
+    self.quoted_post_numbers << reply_to_post_number if reply_to_post_number.present?
+
+    # Create a reply relationship between quoted posts and this new post
+    if self.quoted_post_numbers.present?
+      self.quoted_post_numbers.map(&:to_i).uniq.each do |p|
+        post = Post.where(topic_id: topic_id, post_number: p).first
+        if post.present?
+          post_reply = post.post_replies.new(reply_id: id)
+          if post_reply.save
+            Post.update_all ['reply_count = reply_count + 1'], id: post.id
+          end
+        end
+      end
+    end
   end
 
   # Enqueue post processing for this post

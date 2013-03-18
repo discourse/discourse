@@ -78,7 +78,9 @@ class PostRevisor
       PostAction.clear_flags!(@post, -1)
     end
 
+    @post.extract_quoted_post_numbers
     @post.save
+    @post.save_reply_relationships
   end
 
   def update_category_description
