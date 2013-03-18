@@ -26,18 +26,22 @@ Discourse.PreferencesUsernameController = Discourse.ObjectController.extend({
   }).property('newUsername', 'content.username'),
 
   checkTaken: (function() {
-    var _this = this;
-    this.set('taken', false);
-    this.set('errorMessage', null);
-    if (this.blank('newUsername')) return;
-    if (this.get('unchanged')) return;
-    Discourse.User.checkUsername(this.get('newUsername')).then(function(result) {
-      if (result.errors) {
-        return _this.set('errorMessage', result.errors.join(' '));
-      } else if (result.available === false) {
-        return _this.set('taken', true);
-      }
-    });
+    if( this.get('newUsername') && this.get('newUsername').length < 3 ) {
+      this.set('errorMessage', Em.String.i18n('user.name.too_short'));
+    } else {
+      var _this = this;
+      this.set('taken', false);
+      this.set('errorMessage', null);
+      if (this.blank('newUsername')) return;
+      if (this.get('unchanged')) return;
+      Discourse.User.checkUsername(this.get('newUsername')).then(function(result) {
+        if (result.errors) {
+          return _this.set('errorMessage', result.errors.join(' '));
+        } else if (result.available === false) {
+          return _this.set('taken', true);
+        }
+      });
+    }
   }).observes('newUsername'),
 
   saveButtonText: (function() {
