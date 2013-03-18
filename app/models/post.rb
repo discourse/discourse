@@ -143,25 +143,6 @@ class Post < ActiveRecord::Base
     @raw_mentions = results.uniq.map { |un| un.first.downcase.gsub!(/^@/, '') }
   end
 
-  # The rules for deletion change depending on who is doing it.
-  def delete_by(deleted_by)
-    if deleted_by.moderator?
-      # As a moderator, delete the post.
-      Post.transaction do
-        self.destroy
-        Topic.reset_highest(topic_id)
-        update_flagged_posts_count
-      end
-    elsif deleted_by.id == user_id
-      # As the poster, make a revision that says deleted.
-      Post.transaction do
-        revise(deleted_by, I18n.t('js.post.deleted_by_author'), force_new_version: true)
-        update_column(:user_deleted, true)
-        update_flagged_posts_count
-      end
-    end
-  end
-
   def archetype
     topic.archetype
   end
@@ -335,40 +316,6 @@ class Post < ActiveRecord::Base
     self.last_editor_id ||= user_id
     self.cooked = cook(raw, topic_id: topic_id) unless new_record?
   end
-
-  before_destroy do
-
-    # Update the last post id to the previous post if it exists
-    last_post = Post.where("topic_id = ? and id <> ?", topic_id, id).order('created_at desc').limit(1).first
-    if last_post.present?
-      topic.update_attributes(last_posted_at: last_post.created_at,
-                              last_post_user_id: last_post.user_id,
-                              highest_post_number: last_post.post_number)
-
-      # If the poster doesn't have any other posts in the topic, clear their posted flag
-      unless Post.exists?(["topic_id = ? and user_id = ? and id <> ?", topic_id, user_id, id])
-        TopicUser.update_all 'posted = false', topic_id: topic_id, user_id: user_id
-      end
-    end
-
-    # Feature users in the topic
-    Jobs.enqueue(:feature_topic_users, topic_id: topic_id, except_post_id: id)
-
-  end
-
-  after_destroy do
-    # Remove any reply records that point to deleted posts
-    post_ids = PostReply.select(:post_id).where(reply_id: id).map(&:post_id)
-    PostReply.delete_all reply_id: id
-
-    if post_ids.present?
-      Post.where(id: post_ids).each { |p| p.update_column :reply_count, p.replies.count }
-    end
-
-    # Remove any notifications that point to this deleted post
-    Notification.delete_all topic_id: topic_id, post_number: post_number
-  end
-
 
   def advance_draft_sequence
     return if topic.blank? # could be deleted

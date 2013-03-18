@@ -1,4 +1,5 @@
 require 'spec_helper'
+require_dependency 'post_destroyer'
 
 describe PostAlertObserver do
 
@@ -90,7 +91,7 @@ describe PostAlertObserver do
     it 'removes notifications' do
       post = mention_post
       lambda {
-        post.destroy
+        PostDestroyer.new(Fabricate(:moderator), post).destroy
       }.should change(evil_trout.notifications, :count).by(-1)
     end
   end

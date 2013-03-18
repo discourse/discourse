@@ -1,4 +1,5 @@
 require_dependency 'post_creator'
+require_dependency 'post_destroyer'
 
 class PostsController < ApplicationController
 
@@ -83,7 +84,10 @@ class PostsController < ApplicationController
   def destroy
     post = find_post_from_params
     guardian.ensure_can_delete!(post)
-    post.delete_by(current_user)
+
+    destroyer = PostDestroyer.new(current_user, post)
+    destroyer.destroy
+
     render nothing: true
   end
 

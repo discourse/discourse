@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'guardian'
+require_dependency 'post_destroyer'
 
 describe Guardian do
 
@@ -620,7 +621,7 @@ describe Guardian do
       end
 
       it "returns false when trying to delete your own post that has already been deleted" do
-        post.delete_by(user)
+        PostDestroyer.new(user, post).destroy
         post.reload
         Guardian.new(user).can_delete?(post).should be_false
       end

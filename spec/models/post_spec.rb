@@ -1,4 +1,5 @@
 require 'spec_helper'
+require_dependency 'post_destroyer'
 
 describe Post do
 
@@ -486,7 +487,7 @@ describe Post do
     context "as the creator of the post" do
 
       before do
-        post.delete_by(post.user)
+        PostDestroyer.new(post.user, post).destroy
         post.reload
       end
 
@@ -508,12 +509,12 @@ describe Post do
     context "as a moderator" do
 
       before do
-        post.delete_by(post.user)
+        PostDestroyer.new(moderator, post).destroy
         post.reload
       end
 
       it "deletes the post" do
-        post.deleted_at.should be_blank
+        post.deleted_at.should be_present
       end
 
     end
@@ -522,12 +523,13 @@ describe Post do
 
   describe 'after delete' do
 
+    let(:moderator) { Fabricate(:moderator) }
     let!(:coding_horror) { Fabricate(:coding_horror) }
     let!(:post) { Fabricate(:post, post_args.merge(raw: "Hello @CodingHorror")) }
 
     it "should feature the users again (in case they've changed)" do
       Jobs.expects(:enqueue).with(:feature_topic_users, has_entries(topic_id: post.topic_id, except_post_id: post.id))
-      post.destroy
+      PostDestroyer.new(moderator, post).destroy
     end
 
     describe 'with a reply' do
@@ -545,7 +547,7 @@ describe Post do
 
       it 'lowers the reply_count when the reply is deleted' do
         lambda {
-          reply.destroy
+          PostDestroyer.new(moderator, reply).destroy
           post.reload
         }.should change(post.post_replies, :count).by(-1)
       end

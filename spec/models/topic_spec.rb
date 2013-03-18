@@ -1,6 +1,7 @@
 # encoding: UTF-8
 
 require 'spec_helper'
+require_dependency 'post_destroyer'
 
 describe Topic do
 
@@ -808,7 +809,7 @@ describe Topic do
       context 'after deleting that post' do
 
         before do
-          @new_post.destroy
+          PostDestroyer.new(Fabricate(:moderator), @new_post).destroy
           Topic.reset_highest(@topic.id)
           @topic.reload
         end
