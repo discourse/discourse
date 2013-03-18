@@ -61,6 +61,7 @@ Discourse.LoginView = Discourse.ModalBodyView.extend({
         $hidden_login_form.find('input[name=username]').val(_this.get('loginName'));
         $hidden_login_form.find('input[name=password]').val(_this.get('loginPassword'));
         $hidden_login_form.find('input[name=redirect]').val(window.location.href);
+        $hidden_login_form.find('input[name=authenticity_token]').val($('meta[name=csrf-token]').attr('content'));
         $hidden_login_form.submit();
       }
     }).fail(function(result) {
