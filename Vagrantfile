@@ -2,31 +2,33 @@
 # vi: set ft=ruby :
 # See https://github.com/discourse/discourse/blob/master/docs/VAGRANT.md
 #
-Vagrant::Config.run do |config|
+Vagrant.configure("2") do |config|
   config.vm.box = 'discourse-pre'
   config.vm.box_url = 'http://www.discourse.org/vms/discourse-pre.box'
 
   # Make this VM reachable on the host network as well, so that other
   # VM's running other browsers can access our dev server.
-  config.vm.network :hostonly, '192.168.10.200'
+  config.vm.network :private_network, ip: "192.168.10.200"
 
   # Make it so that network access from the vagrant guest is able to
   # use SSH private keys that are present on the host without copying
   # them into the VM.
   config.ssh.forward_agent = true
 
-  # This setting gives the VM 1024MB of MEMORIES instead of the default 384.
-  config.vm.customize ["modifyvm", :id, "--memory", 1024]
+  config.vm.provider :virtualbox do |v|
+    # This setting gives the VM 1024MB of MEMORIES instead of the default 384.
+    v.customize ["modifyvm", :id, "--memory", 1024]
 
-  # This setting makes it so that network access from inside the vagrant guest
-  # is able to resolve DNS using the hosts VPN connection.
-  config.vm.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    # This setting makes it so that network access from inside the vagrant guest
+    # is able to resolve DNS using the hosts VPN connection.
+    v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+  end
 
-  config.vm.forward_port 3000, 4000
-  config.vm.forward_port 1080, 4080 # Mailcatcher
+  config.vm.network :forwarded_port, guest: 3000, host: 4000
+  config.vm.network :forwarded_port, guest: 1080, host: 4080 # Mailcatcher
 
   nfs_setting = RUBY_PLATFORM =~ /darwin/ || RUBY_PLATFORM =~ /linux/
-  config.vm.share_folder("v-root", "/vagrant", ".", :nfs => nfs_setting)
+  config.vm.synced_folder ".", "/vagrant", :nfs => nfs_setting
 
   chef_cookbooks_path = ["chef/cookbooks"]
 
