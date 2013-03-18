@@ -27,9 +27,9 @@ Discourse.NavItem = Discourse.Model.extend({
     var name;
     name = this.get('name');
     if (name === 'category') {
-      return "/" + name + "/" + (this.get('categoryName'));
+      return Discourse.getURL("/") + name + "/" + (this.get('categoryName'));
     } else {
-      return "/" + name;
+      return Discourse.getURL("/") + name;
     }
   }).property()
 });

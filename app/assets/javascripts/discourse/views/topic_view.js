@@ -487,7 +487,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
       opts.catLink = Discourse.Utilities.categoryLink(category);
       return Ember.String.i18n("topic.read_more_in_category", opts);
     } else {
-      opts.catLink = "<a href=\"/categories\">" + (Em.String.i18n("topic.browse_all_categories")) + "</a>";
+      opts.catLink = "<a href=\"" + Discourse.getURL("/categories") + "\">" + (Em.String.i18n("topic.browse_all_categories")) + "</a>";
       return Ember.String.i18n("topic.read_more", opts);
     }
   }).property(),

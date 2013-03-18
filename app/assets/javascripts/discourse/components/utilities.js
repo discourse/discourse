@@ -48,7 +48,7 @@ Discourse.Utilities = {
     description = Em.get(category, 'description');
 
     // Build the HTML link
-    result = "<a href=\"/category/" + this.categoryUrlId(category) + "\" class=\"badge-category\" ";
+    result = "<a href=\"" + Discourse.getURL("/category/") + this.categoryUrlId(category) + "\" class=\"badge-category\" ";
 
     // Add description if we have it
     if (description) result += "title=\"" + description + "\" ";
@@ -85,7 +85,7 @@ Discourse.Utilities = {
 
   postUrl: function(slug, topicId, postNumber) {
     var url;
-    url = "/t/";
+    url = Discourse.getURL("/t/");
     if (slug) {
       url += slug + "/";
     }

@@ -9,7 +9,7 @@
 Discourse.Category = Discourse.Model.extend({
 
   url: (function() {
-    return "/category/" + (this.get('slug'));
+    return Discourse.getURL("/category/") + (this.get('slug'));
   }).property('name'),
 
   style: (function() {
@@ -24,9 +24,9 @@ Discourse.Category = Discourse.Model.extend({
     var url,
       _this = this;
 
-    url = "/categories";
+    url = Discourse.getURL("/categories");
     if (this.get('id')) {
-      url = "/categories/" + (this.get('id'));
+      url = Discourse.getURL("/categories/") + (this.get('id'));
     }
 
     return this.ajax(url, {
@@ -43,7 +43,7 @@ Discourse.Category = Discourse.Model.extend({
 
   "delete": function(callback) {
     var _this = this;
-    return $.ajax("/categories/" + (this.get('slug')), {
+    return $.ajax(Discourse.getURL("/categories/") + (this.get('slug')), {
       type: 'DELETE',
       success: function() {
         return callback();

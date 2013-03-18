@@ -8,7 +8,7 @@
 
           $.ajax({
             type: 'POST',
-            url: '/auth/persona/callback',
+            url: Discourse.getURL('/auth/persona/callback'),
             data: { 'assertion': assertion },
             success: function(data, textStatus, jqXHR) {
               Discourse.authenticationComplete(data);

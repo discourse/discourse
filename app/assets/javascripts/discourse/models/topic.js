@@ -42,7 +42,7 @@ Discourse.Topic = Discourse.Model.extend({
     if (slug.isBlank()) {
       slug = "topic";
     }
-    return "/t/" + slug + "/" + (this.get('id'));
+    return Discourse.getURL("/t/") + slug + "/" + (this.get('id'));
   }).property('id', 'slug'),
 
   // Helper to build a Url with a post number
@@ -169,7 +169,7 @@ Discourse.Topic = Discourse.Model.extend({
 
   // Reset our read data for this topic
   resetRead: function(callback) {
-    return $.ajax("/t/" + (this.get('id')) + "/timings", {
+    return $.ajax(Discourse.getURL("/t/") + (this.get('id')) + "/timings", {
       type: 'DELETE',
       success: function() {
         return typeof callback === "function" ? callback() : void 0;
@@ -181,7 +181,7 @@ Discourse.Topic = Discourse.Model.extend({
   inviteUser: function(user) {
     return $.ajax({
       type: 'POST',
-      url: "/t/" + (this.get('id')) + "/invite",
+      url: Discourse.getURL("/t/") + (this.get('id')) + "/invite",
       data: {
         user: user
       }
@@ -190,7 +190,7 @@ Discourse.Topic = Discourse.Model.extend({
 
   // Delete this topic
   "delete": function(callback) {
-    return $.ajax("/t/" + (this.get('id')), {
+    return $.ajax(Discourse.getURL("/t/") + (this.get('id')), {
       type: 'DELETE',
       success: function() {
         return typeof callback === "function" ? callback() : void 0;
@@ -306,7 +306,7 @@ Discourse.Topic = Discourse.Model.extend({
     this.set('notification_level', v);
     this.set('notifications_reason_id', null);
     return $.ajax({
-      url: "/t/" + (this.get('id')) + "/notifications",
+      url: Discourse.getURL("/t/") + (this.get('id')) + "/notifications",
       type: 'POST',
       data: {
         notification_level: v
@@ -341,7 +341,7 @@ Discourse.Topic = Discourse.Model.extend({
     // Clear the pin optimistically from the object
     topic.set('pinned', false);
 
-    $.ajax("/t/" + this.get('id') + "/clear-pin", {
+    $.ajax(Discourse.getURL("/t/") + this.get('id') + "/clear-pin", {
       type: 'PUT',
       error: function() {
         // On error, put the pin back
@@ -391,7 +391,7 @@ Discourse.Topic.reopenClass({
   //    onLoad - the callback after the topic is loaded
   find: function(topicId, opts) {
     var data, promise, url;
-    url = "/t/" + topicId;
+    url = Discourse.getURL("/t/") + topicId;
 
     if (opts.nearPost) {
       url += "/" + opts.nearPost;
@@ -435,7 +435,7 @@ Discourse.Topic.reopenClass({
 
   // Create a topic from posts
   movePosts: function(topicId, title, postIds) {
-    return $.ajax("/t/" + topicId + "/move-posts", {
+    return $.ajax(Discourse.getURL(Discourse.getURL("/t/")) + topicId + "/move-posts", {
       type: 'POST',
       data: { title: title, post_ids: postIds }
     });

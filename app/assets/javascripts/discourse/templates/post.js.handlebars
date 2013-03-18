@@ -28,8 +28,8 @@
 
     <div class='topic-meta-data span2'>
       <div class='contents'>
-        <a href='/users/{{unbound username}}'>{{avatar this imageSize="large"}}</a>
-        <h3 {{bindAttr class="moderator new_user"}}><a href='/users/{{unbound username}}'>{{breakUp username}}</a></h3>
+        <a href='{{unbound usernameUrl}}'>{{avatar this imageSize="large"}}</a>
+        <h3 {{bindAttr class="moderator new_user"}}><a href='{{unbound usernameUrl}}'>{{breakUp username}}</a></h3>
 
         <div class='post-info'>
           <a href='#' class='post-date' {{bindAttr data-share-url="url"}}>{{date created_at}}</a>
