@@ -514,7 +514,7 @@ describe Topic do
     end
 
     it 'has the moderator action type' do
-      @mod_post.post_type.should == Post::MODERATOR_ACTION
+      @mod_post.post_type.should == Post.types[:moderator_action]
     end
 
     it 'increases the moderator_posts count' do

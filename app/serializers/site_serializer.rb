@@ -15,7 +15,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def post_types
-    {regular: Post::REGULAR, moderator_action: Post::MODERATOR_ACTION}
+    Post.types
   end
 
 end

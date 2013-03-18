@@ -16,7 +16,7 @@ end
 Fabricator(:moderator_post, from: :post) do
   user
   topic {|attrs| Fabricate(:topic, user: attrs[:user] ) }
-  post_type Post::MODERATOR_ACTION
+  post_type Post.types[:moderator_action]
   raw "Hello world"
 end
 

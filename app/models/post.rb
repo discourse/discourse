@@ -16,7 +16,6 @@ class Post < ActiveRecord::Base
   acts_as_paranoid
 
   after_recover :update_flagged_posts_count
-  after_destroy :update_flagged_posts_count
 
   belongs_to :user
   belongs_to :topic, counter_cache: :posts_count
@@ -38,15 +37,15 @@ class Post < ActiveRecord::Base
 
   SHORT_POST_CHARS = 1200
 
-  # Post Types
-  REGULAR = 1
-  MODERATOR_ACTION = 2
-
   scope :by_newest, order('created_at desc, id desc')
   scope :with_user, includes(:user)
 
   def self.hidden_reasons
     @hidden_reasons ||= Enum.new(:flag_threshold_reached, :flag_threshold_reached_again)
+  end
+
+  def self.types
+    @types ||= Enum.new(:regular, :moderator_action)
   end
 
   def raw_quality
@@ -151,12 +150,14 @@ class Post < ActiveRecord::Base
       Post.transaction do
         self.destroy
         Topic.reset_highest(topic_id)
+        update_flagged_posts_count
       end
     elsif deleted_by.id == user_id
       # As the poster, make a revision that says deleted.
       Post.transaction do
         revise(deleted_by, I18n.t('js.post.deleted_by_author'), force_new_version: true)
         update_column(:user_deleted, true)
+        update_flagged_posts_count
       end
     end
   end

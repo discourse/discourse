@@ -579,7 +579,7 @@ describe Post do
     end
 
     it 'is of the regular post type' do
-      post.post_type.should == Post::REGULAR
+      post.post_type.should == Post.types[:regular]
     end
 
     it 'has no versions' do
