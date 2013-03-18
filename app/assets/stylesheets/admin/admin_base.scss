@@ -290,6 +290,13 @@ table {
   float: right;
   width: 500px;
   margin-right: 15px;
+
+  @include medium-width {
+    width: 430px;
+  }
+  @include small-width {
+    width: 390px;
+  }
 }
 
 .version-check {
@@ -373,6 +380,13 @@ table {
   margin-top: 10px;
   width: 500px;
   height: 380px;
+
+  @include medium-width {
+    width: 430px;
+  }
+  @include small-width {
+    width: 390px;
+  }
 
   ul, li {
     margin: 0;
