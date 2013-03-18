@@ -117,6 +117,9 @@ class PostCreator
                     created_at: post.created_at,
                     user: BasicUserSerializer.new(post.user).as_json(root: false),
                     post_number: post.post_number)
+
+      # Advance the draft sequence
+      post.advance_draft_sequence
     end
 
     post

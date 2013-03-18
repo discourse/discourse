@@ -13,6 +13,7 @@ class PostRevisor
     revise_post
     update_category_description
     post_process_post
+    @post.advance_draft_sequence
     true
   end
 

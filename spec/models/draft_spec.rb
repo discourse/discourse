@@ -61,9 +61,12 @@ describe Draft do
     end
 
     it 'nukes the post draft when a post is created' do
-      p = Fabricate(:post)
+      user = Fabricate(:user)
+      topic = Fabricate(:topic)
+      p = PostCreator.new(user, raw: Fabricate.build(:post).raw, topic_id: topic.id).create
       Draft.set(p.user, p.topic.draft_key, 0,'hello')
-      Fabricate(:post, topic: p.topic, user: p.user)
+
+      PostCreator.new(user, raw: Fabricate.build(:post).raw).create
       Draft.get(p.user, p.topic.draft_key, DraftSequence.current(p.user, p.topic.draft_key)).should be_nil
     end
 

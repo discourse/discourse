@@ -2,6 +2,7 @@ require_dependency 'jobs'
 require_dependency 'pretty_text'
 require_dependency 'rate_limiter'
 require_dependency 'post_revisor'
+require_dependency 'enum'
 
 require 'archetype'
 require 'digest/sha1'
@@ -369,9 +370,13 @@ class Post < ActiveRecord::Base
     Notification.delete_all topic_id: topic_id, post_number: post_number
   end
 
-  after_save do
-    DraftSequence.next! last_editor_id, topic.draft_key if topic # could be deleted
 
+  def advance_draft_sequence
+    return if topic.blank? # could be deleted
+    DraftSequence.next!(last_editor_id, topic.draft_key)
+  end
+
+  after_save do
     quoted_post_numbers << reply_to_post_number if reply_to_post_number.present?
 
     # Create a reply relationship between quoted posts and this new post
