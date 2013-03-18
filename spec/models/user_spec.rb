@@ -471,7 +471,12 @@ describe User do
       Fabricate.build(:user, email: 'notgood@trashmail.net').should_not be_valid
       Fabricate.build(:user, email: 'mailinator.com@gmail.com').should be_valid
     end
-
+    
+    it 'should not reject partial matches' do
+      SiteSetting.stubs(:email_domains_blacklist).returns('mail.com')
+      Fabricate.build(:user, email: 'mailinator@gmail.com').should be_valid
+    end
+    
     it 'should reject some emails based on the email_domains_blacklist site setting ignoring case' do
       SiteSetting.stubs(:email_domains_blacklist).returns('trashmail.net')
       Fabricate.build(:user, email: 'notgood@TRASHMAIL.NET').should_not be_valid
@@ -491,6 +496,38 @@ describe User do
     it 'should be used when email is being changed' do
       SiteSetting.stubs(:email_domains_blacklist).returns('mailinator.com')
       u = Fabricate(:user, email: 'good@gmail.com')
+      u.email = 'nope@mailinator.com'
+      u.should_not be_valid
+    end
+    
+    it 'whitelist should reject some emails based on the email_domains_whitelist site setting' do
+      SiteSetting.stubs(:email_domains_whitelist).returns('vaynermedia.com')
+      Fabricate.build(:user, email: 'notgood@mailinator.com').should_not be_valid
+      Fabricate.build(:user, email: 'sbauch@vaynermedia.com').should be_valid
+    end
+
+    it 'should reject some emails based on the email_domains_whitelist site setting when whitelisting multiple domains' do
+      SiteSetting.stubs(:email_domains_whitelist).returns('vaynermedia.com|gmail.com')
+      Fabricate.build(:user, email: 'notgood@mailinator.com').should_not be_valid
+      Fabricate.build(:user, email: 'notgood@trashmail.net').should_not be_valid
+      Fabricate.build(:user, email: 'mailinator.com@gmail.com').should be_valid
+      Fabricate.build(:user, email: 'mailinator.com@vaynermedia.com').should be_valid
+    end
+
+    it 'should accept some emails based on the email_domains_whitelist site setting ignoring case' do
+      SiteSetting.stubs(:email_domains_whitelist).returns('vaynermedia.com')
+      Fabricate.build(:user, email: 'good@VAYNERMEDIA.COM').should be_valid
+    end
+
+    it 'email whitelist should not be used to validate existing records' do
+      u = Fabricate(:user, email: 'in_before_whitelisted@fakemail.com')
+      SiteSetting.stubs(:email_domains_blacklist).returns('vaynermedia.com')
+      u.should be_valid
+    end
+
+    it 'email whitelist should be used when email is being changed' do      
+      SiteSetting.stubs(:email_domains_whitelist).returns('vaynermedia.com')
+      u = Fabricate(:user, email: 'good@vaynermedia.com')
       u.email = 'nope@mailinator.com'
       u.should_not be_valid
     end
