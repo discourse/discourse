@@ -360,6 +360,10 @@ table {
 
   &.trust-levels {
     margin-top: 0px;
+
+    td.value {
+      width: 33px;
+    }
   }
 }
 

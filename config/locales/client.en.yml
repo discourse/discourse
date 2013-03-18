@@ -692,6 +692,7 @@ en:
         latest_version: "Latest version"
         update_often: 'Please update often!'
         total_users: "Total Users"
+        moderator_short: "mod"
 
         reports:
           today: "Today"
