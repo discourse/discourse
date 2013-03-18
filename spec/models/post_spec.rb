@@ -81,14 +81,6 @@ describe Post do
     end
   end
 
-  describe 'message bus' do
-    it 'enqueues the post on the message bus' do
-      topic = self.topic
-      MessageBus.expects(:publish).with("/topic/#{topic.id}", instance_of(Hash))
-      Fabricate(:post, post_args)
-    end
-  end
-
   describe "maximum images" do
     let(:post_no_images) { Fabricate.build(:post, post_args) }
     let(:post_one_image) { Fabricate.build(:post, post_args.merge(raw: "![sherlock](http://bbc.co.uk/sherlock.jpg)")) }

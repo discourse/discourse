@@ -11,6 +11,7 @@ describe PostCreator do
 
   context 'new topic' do
     let(:category) { Fabricate(:category, user: user) }
+    let(:topic) { Fabricate(:topic, user: user) }
     let(:basic_topic_params) { {title: 'hello world topic', raw: 'my name is fred', archetype_id: 1} }
     let(:image_sizes) { {'http://an.image.host/image.jpg' => {'width' => 111, 'height' => 222}} }
 
@@ -36,6 +37,12 @@ describe PostCreator do
       it 'extracts links from the post' do
         TopicLink.expects(:extract_from).with(instance_of(Post))
         creator.create
+      end
+
+      it 'enqueues the post on the message bus' do
+        MessageBus.stubs(:publish).with("/users/#{user.username}", anything)
+        MessageBus.expects(:publish).with("/topic/#{topic.id}", instance_of(Hash))
+        PostCreator.new(user, raw: basic_topic_params[:raw], topic_id: topic.id)
       end
 
       it 'features topic users' do

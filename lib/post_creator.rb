@@ -110,6 +110,13 @@ class PostCreator
 
       # Update `last_posted_at` to match the post's created_at
       @user.update_column(:last_posted_at, post.created_at)
+
+      # Publish the post in the message bus
+      MessageBus.publish("/topic/#{post.topic_id}",
+                    id: post.id,
+                    created_at: post.created_at,
+                    user: BasicUserSerializer.new(post.user).as_json(root: false),
+                    post_number: post.post_number)
     end
 
     post
