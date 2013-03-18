@@ -69,7 +69,7 @@ class PostRevisor
     @post.updated_by = @user
     @post.last_editor_id = @user.id
 
-    if @post.hidden && @post.hidden_reason_id == Post::HiddenReason::FLAG_THRESHOLD_REACHED
+    if @post.hidden && @post.hidden_reason_id == Post.hidden_reasons[:flag_threshold_reached]
       @post.hidden = false
       @post.hidden_reason_id = nil
       @post.topic.update_attributes(visible: true)

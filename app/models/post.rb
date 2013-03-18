@@ -9,11 +9,6 @@ require 'digest/sha1'
 class Post < ActiveRecord::Base
   include RateLimiter::OnCreateRecord
 
-  module HiddenReason
-    FLAG_THRESHOLD_REACHED = 1
-    FLAG_THRESHOLD_REACHED_AGAIN = 2
-  end
-
   versioned if: :raw_changed?
 
   rate_limit
@@ -50,6 +45,10 @@ class Post < ActiveRecord::Base
 
   scope :by_newest, order('created_at desc, id desc')
   scope :with_user, includes(:user)
+
+  def self.hidden_reasons
+    @hidden_reasons ||= Enum.new(:flag_threshold_reached, :flag_threshold_reached_again)
+  end
 
   def raw_quality
     sentinel = TextSentinel.new(raw, min_entropy: SiteSetting.body_min_entropy)
