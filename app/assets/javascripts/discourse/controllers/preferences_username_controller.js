@@ -51,7 +51,7 @@ Discourse.PreferencesUsernameController = Discourse.ObjectController.extend({
       if (result) {
         _this.set('saving', true);
         return _this.get('content').changeUsername(_this.get('newUsername')).then(function() {
-          window.location = "/users/" + (_this.get('newUsername').toLowerCase()) + "/preferences";
+          window.location = Discourse.getURL("/users/") + (_this.get('newUsername').toLowerCase()) + "/preferences";
         }, function() {
           /* Error
           */

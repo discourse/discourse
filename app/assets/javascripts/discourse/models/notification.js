@@ -17,7 +17,7 @@ Discourse.Notification = Discourse.Model.extend({
     var slug;
     if (this.blank('data.topic_title')) return "";
     slug = this.get('slug');
-    return "/t/" + slug + "/" + (this.get('topic_id')) + "/" + (this.get('post_number'));
+    return Discourse.getURL("/t/") + slug + "/" + (this.get('topic_id')) + "/" + (this.get('post_number'));
   }).property(),
 
   rendered: (function() {

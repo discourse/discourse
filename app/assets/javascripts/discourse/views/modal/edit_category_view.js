@@ -61,7 +61,7 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
 
   saveSuccess: function(result) {
     $('#discourse-modal').modal('hide');
-    window.location = "/category/" + (Discourse.Utilities.categoryUrlId(result.category));
+    window.location = Discourse.getURL("/category/") + (Discourse.Utilities.categoryUrlId(result.category));
   },
 
   saveCategory: function() {

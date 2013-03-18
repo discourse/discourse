@@ -54,4 +54,15 @@ module ApplicationHelper
     result
   end
 
+  def faq_path
+    return "#{Discourse::base_uri}/faq"
+  end
+
+  def tos_path
+    return "#{Discourse::base_uri}/tos"
+  end
+
+  def privacy_path
+    return "#{Discourse::base_uri}/privacy"
+  end
 end

@@ -141,7 +141,7 @@ Discourse.Markdown = {
       // Add @mentions of names
       text = text.replace(/([\s\t>,:'|";\]])(@[A-Za-z0-9_-|\.]*[A-Za-z0-9_-|]+)(?=[\s\t<\!:|;',"\?\.])/g, function(x, pre, name) {
         if (mentionLookup(name.substr(1))) {
-          return pre + "<a href='/users/" + (name.substr(1).toLowerCase()) + "' class='mention'>" + name + "</a>";
+          return pre + "<a href='" + Discourse.getURL("/users/") + (name.substr(1).toLowerCase()) + "' class='mention'>" + name + "</a>";
         } else {
           return pre + "<span class='mention'>" + name + "</span>";
         }

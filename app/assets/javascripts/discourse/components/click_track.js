@@ -44,7 +44,7 @@ Discourse.ClickTrack = {
     ownLink = userId && (userId === Discourse.get('currentUser.id'));
 
     // Build a Redirect URL
-    trackingUrl = "/clicks/track?url=" + encodeURIComponent(href);
+    trackingUrl = Discourse.getURL("/clicks/track?url=" + encodeURIComponent(href));
     if (postId && (!$a.data('ignore-post-id'))) {
       trackingUrl += "&post_id=" + encodeURI(postId);
     }
@@ -70,7 +70,7 @@ Discourse.ClickTrack = {
 
     // if they want to open in a new tab, do an AJAX request
     if (e.metaKey || e.ctrlKey || e.which === 2) {
-      $.get("/clicks/track", {
+      $.get(Discourse.getURL("/clicks/track"), {
         url: href,
         post_id: postId,
         topic_id: topicId,
@@ -82,7 +82,7 @@ Discourse.ClickTrack = {
 
     // If we're on the same site, use the router and track via AJAX
     if (href.indexOf(window.location.origin) === 0) {
-      $.get("/clicks/track", {
+      $.get(Discourse.getURL("/clicks/track"), {
         url: href,
         post_id: postId,
         topic_id: topicId,

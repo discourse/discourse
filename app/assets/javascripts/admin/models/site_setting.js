@@ -72,7 +72,7 @@ Discourse.SiteSetting = Discourse.Model.extend({
   save: function() {
     // Update the setting
     var setting = this;
-    return $.ajax("/admin/site_settings/" + (this.get('setting')), {
+    return $.ajax(Discourse.getURL("/admin/site_settings/") + (this.get('setting')), {
       data: { value: this.get('value') },
       type: 'PUT',
       success: function() {
@@ -91,7 +91,7 @@ Discourse.SiteSetting.reopenClass({
   **/
   findAll: function() {
     var result = Em.A();
-    $.get("/admin/site_settings", function(settings) {
+    $.get(Discourse.getURL("/admin/site_settings"), function(settings) {
       return settings.each(function(s) {
         s.originalValue = s.value;
         return result.pushObject(Discourse.SiteSetting.create(s));

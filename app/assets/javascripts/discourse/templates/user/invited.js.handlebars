@@ -21,8 +21,8 @@
             {{#each content.redeemed}}
               <tr>
                 <td>
-                  <a href="/users/{{unbound user.username_lower}}">{{avatar user imageSize="tiny"}}</a>
-                  <a href="/users/{{unbound user.username_lower}}">{{user.username}}</a>
+                  <a href="{{unbound user.path}}">{{avatar user imageSize="tiny"}}</a>
+                  <a href="{{unbound user.path}}">{{user.username}}</a>
                 </td>
                 <td>{{date redeemed_at}}</td>
                 <td>{{date user.last_seen_at}}</td>

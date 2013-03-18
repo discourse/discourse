@@ -149,7 +149,7 @@ Discourse.PostView = Discourse.View.extend({
           navLink = "<a href='" + (topic.urlForPostNumber(postNumber)) + "' title='" + quoteTitle + "' class='back'></a>";
         } else {
           // Made up slug should be replaced with canonical URL
-          navLink = "<a href='/t/via-quote/" + topicId + "/" + postNumber + "' title='" + quoteTitle + "' class='quote-other-topic'></a>";
+          navLink = "<a href='" + Discourse.getURL("/t/via-quote/") + topicId + "/" + postNumber + "' title='" + quoteTitle + "' class='quote-other-topic'></a>";
         }
       } else if (topic = this.get('controller.content')) {
         // assume the same topic
@@ -180,7 +180,7 @@ Discourse.PostView = Discourse.View.extend({
       if ($aside.data('topic')) {
         topic_id = $aside.data('topic');
       }
-      $.getJSON("/posts/by_number/" + topic_id + "/" + ($aside.data('post')), function(result) {
+      $.getJSON(Discourse.getURL("/posts/by_number/") + topic_id + "/" + ($aside.data('post')), function(result) {
         var parsed = $(result.cooked);
         parsed.replaceText(originalText, "<span class='highlighted'>" + originalText + "</span>");
         return $blockQuote.showHtml(parsed);

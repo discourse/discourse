@@ -13,8 +13,12 @@ Discourse.Post = Discourse.Model.extend({
   }).property('post_number', 'topic_id', 'topic.slug'),
 
   originalPostUrl: (function() {
-    return "/t/" + (this.get('topic_id')) + "/" + (this.get('reply_to_post_number'));
+    return Discourse.getURL("/t/") + (this.get('topic_id')) + "/" + (this.get('reply_to_post_number'));
   }).property('reply_to_post_number'),
+
+  usernameUrl: (function() {
+    return Discourse.getURL("/users/" + this.get('username'));
+  }).property('username'),
 
   showUserReplyTab: (function() {
     return this.get('reply_to_user') && (this.get('reply_to_post_number') < (this.get('post_number') - 1));
@@ -65,7 +69,7 @@ Discourse.Post = Discourse.Model.extend({
   bookmarkedChanged: (function() {
     var _this = this;
     return $.ajax({
-      url: "/posts/" + (this.get('id')) + "/bookmark",
+      url: Discourse.getURL("/posts/") + (this.get('id')) + "/bookmark",
       type: 'PUT',
       data: {
         bookmarked: this.get('bookmarked') ? true : false
@@ -124,7 +128,7 @@ Discourse.Post = Discourse.Model.extend({
     if (!this.get('newPost')) {
       // We're updating a post
       return $.ajax({
-        url: "/posts/" + (this.get('id')),
+        url: Discourse.getURL("/posts/") + (this.get('id')),
         type: 'PUT',
         data: {
           post: { raw: this.get('raw') },
@@ -155,7 +159,7 @@ Discourse.Post = Discourse.Model.extend({
       }
       return $.ajax({
         type: 'POST',
-        url: "/posts",
+        url: Discourse.getURL("/posts"),
         data: data,
         success: function(result) {
           return typeof complete === "function" ? complete(Discourse.Post.create(result)) : void 0;
@@ -168,11 +172,11 @@ Discourse.Post = Discourse.Model.extend({
   },
 
   recover: function() {
-    return $.ajax("/posts/" + (this.get('id')) + "/recover", { type: 'PUT', cache: false });
+    return $.ajax(Discourse.getURL("/posts/") + (this.get('id')) + "/recover", { type: 'PUT', cache: false });
   },
 
   "delete": function(complete) {
-    return $.ajax("/posts/" + (this.get('id')), {
+    return $.ajax(Discourse.getURL("/posts/") + (this.get('id')), {
       type: 'DELETE',
       success: function(result) {
         return typeof complete === "function" ? complete() : void 0;
@@ -219,7 +223,7 @@ Discourse.Post = Discourse.Model.extend({
     this.set('replies', []);
 
     var parent = this;
-    return $.ajax({url: "/posts/" + (this.get('id')) + "/replies"}).then(function(loaded) {
+    return $.ajax({url: Discourse.getURL("/posts/") + (this.get('id')) + "/replies"}).then(function(loaded) {
       var replies = parent.get('replies');
       loaded.each(function(reply) {
         var post = Discourse.Post.create(reply);
@@ -231,7 +235,7 @@ Discourse.Post = Discourse.Model.extend({
   },
 
   loadVersions: function(callback) {
-    return $.get("/posts/" + (this.get('id')) + "/versions.json", function(result) {
+    return $.get(Discourse.getURL("/posts/") + (this.get('id')) + "/versions.json", function(result) {
       return callback(result);
     });
   },
@@ -287,7 +291,7 @@ Discourse.Post.reopenClass({
   },
 
   deleteMany: function(posts) {
-    return $.ajax("/posts/destroy_many", {
+    return $.ajax(Discourse.getURL("/posts/destroy_many"), {
       type: 'DELETE',
       data: {
         post_ids: posts.map(function(p) { return p.get('id'); })
@@ -296,26 +300,26 @@ Discourse.Post.reopenClass({
   },
 
   loadVersion: function(postId, version, callback) {
-    return $.ajax({url: "/posts/" + postId + ".json?version=" + version}).then(function(result) {
+    return $.ajax({url: Discourse.getURL("/posts/") + postId + ".json?version=" + version}).then(function(result) {
       return Discourse.Post.create(result);
     });
   },
 
   loadByPostNumber: function(topicId, postId) {
-    return $.ajax({url: "/posts/by_number/" + topicId + "/" + postId + ".json"}).then(function (result) {
+    return $.ajax({url: Discourse.getURL("/posts/by_number/") + topicId + "/" + postId + ".json"}).then(function (result) {
       return Discourse.Post.create(result);
     });
   },
 
   loadQuote: function(postId) {
-    return $.ajax({url: "/posts/" + postId + ".json"}).then(function(result) {
+    return $.ajax({url: Discourse.getURL("/posts/") + postId + ".json"}).then(function(result) {
       var post = Discourse.Post.create(result);
       return Discourse.BBCode.buildQuoteBBCode(post, post.get('raw'));
     });
   },
 
   load: function(postId) {
-    return $.ajax({url: "/posts/" + postId + ".json"}).then(function (result) {
+    return $.ajax({url: Discourse.getURL("/posts/") + postId + ".json"}).then(function (result) {
       return Discourse.Post.create(result);
     });
   }

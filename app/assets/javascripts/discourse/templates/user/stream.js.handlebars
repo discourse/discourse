@@ -2,7 +2,7 @@
   {{#collection contentBinding="stream" itemClass="item"}}
     {{#with view.content}}
       <div class='clearfix info'>
-        <a href="/users/{{unbound username}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar this imageSize="large" extraClasses="actor" ignoreTitle="true"}}</div></a>
+        <a href="{{unbound usernameUrl}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar this imageSize="large" extraClasses="actor" ignoreTitle="true"}}</div></a>
         <span class='time'>{{date path="created_at" leaveAgo="true"}}</span>
         <span class="title">
           <a href="{{unbound postUrl}}">{{unbound title}}</a>
@@ -17,7 +17,7 @@
           {{/if}}
           </span>
         {{/unless}}
-        <a class='name' href="/users/{{unbound username}}">{{personalizedName name usernamePath="username"}}</a>
+        <a class='name' href="{{unbound usernameUrl}}">{{personalizedName name usernamePath="username"}}</a>
         {{#if description}}
           <span class='type'>{{unbound description}}</span>
           {{#if isPostAction}}
@@ -40,7 +40,7 @@
         <div class='child-actions'>
           <i class="icon {{unbound icon}}"></i>
         {{#each items}}
-        <a href="/users/{{unbound username}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar this imageSize="tiny" extraClasses="actor" ignoreTitle="true"}}</div></a>
+        <a href="{{unbound usernameUrl}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar this imageSize="tiny" extraClasses="actor" ignoreTitle="true"}}</div></a>
         {{/each}}
         </div>
       {{/each}}

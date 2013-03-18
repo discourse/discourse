@@ -13,7 +13,7 @@ Discourse.TopicList = Discourse.Model.extend({
     var moreUrl, _this = this;
 
     if (moreUrl = this.get('more_topics_url')) {
-      Discourse.URL.replaceState("/" + (this.get('filter')) + "/more");
+      Discourse.URL.replaceState(Discourse.getURL("/") + (this.get('filter')) + "/more");
       return $.ajax({url: moreUrl}).then(function (result) {
         var newTopics, topicIds, topics, topicsAdded = 0;
         if (result) {
@@ -91,7 +91,7 @@ Discourse.TopicList.reopenClass({
     topic_list = Discourse.TopicList.create();
     topic_list.set('inserted', Em.A());
     topic_list.set('filter', filter);
-    url = "/" + filter + ".json";
+    url = Discourse.getURL("/") + filter + ".json";
     if (menuItem.filters && menuItem.filters.length > 0) {
       url += "?exclude_category=" + menuItem.filters[0].substring(1);
     }

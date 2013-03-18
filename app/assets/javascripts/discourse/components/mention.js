@@ -21,7 +21,7 @@ Discourse.Mention = (function() {
       callback(cached);
       return false;
     } else {
-      $.get("/users/is_local_username", {
+      $.get(Discourse.getURL("/users/is_local_username"), {
         username: name
       }, function(r) {
         cache(name, r.valid);
@@ -40,7 +40,7 @@ Discourse.Mention = (function() {
     username = username.substr(1);
     loading = lookup(username, function(valid) {
       if (valid) {
-        return $elem.replaceWith("<a href='/users/" + (username.toLowerCase()) + "' class='mention'>@" + username + "</a>");
+        return $elem.replaceWith("<a href='" + Discourse.getURL("/users/") + (username.toLowerCase()) + "' class='mention'>@" + username + "</a>");
       } else {
         return $elem.removeClass('mention-loading').addClass('mention-tested');
       }
