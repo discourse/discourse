@@ -432,15 +432,17 @@ describe Topic do
 
     context "other user" do
 
+      let(:creator) { PostCreator.new(topic.user, raw: Fabricate.build(:post).raw, topic_id: topic.id )}
+
       it "sends the other user an email when there's a new post" do
         UserNotifications.expects(:private_message).with(coding_horror, has_key(:post))
-        Fabricate(:post, topic: topic, user: topic.user)
+        creator.create
       end
 
       it "doesn't send the user an email when they have them disabled" do
         coding_horror.update_column(:email_private_messages, false)
         UserNotifications.expects(:private_message).with(coding_horror, has_key(:post)).never
-        Fabricate(:post, topic: topic, user: topic.user)
+        creator.create
       end
 
     end

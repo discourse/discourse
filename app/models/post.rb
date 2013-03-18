@@ -47,16 +47,6 @@ class Post < ActiveRecord::Base
   MODERATOR_ACTION = 2
 
   before_save :extract_quoted_post_numbers
-  after_commit :feature_topic_users, on: :create
-  after_commit :trigger_post_process, on: :create
-  after_commit :email_private_message, on: :create
-
-  # Related to unique post tracking
-  after_commit :store_unique_post_key, on: :create
-
-  after_create do
-    TopicUser.auto_track(user_id, topic_id, TopicUser.notification_reasons[:created_post])
-  end
 
   scope :by_newest, order('created_at desc, id desc')
   scope :with_user, includes(:user)
@@ -83,12 +73,6 @@ class Post < ActiveRecord::Base
     if $redis.exists(unique_post_key)
       errors.add(:raw, I18n.t(:just_posted_that))
     end
-  end
-
-  # On successful post, store a hash key to prevent the same post from happening again
-  def store_unique_post_key
-    return if SiteSetting.unique_posts_mins == 0
-    $redis.setex(unique_post_key, SiteSetting.unique_posts_mins.minutes.to_i, "1")
   end
 
   # The key we use in reddit to ensure unique posts
@@ -320,28 +304,12 @@ class Post < ActiveRecord::Base
     attrs[:bumped_at] = created_at unless no_bump
     topic.update_attributes(attrs)
 
-    # Update the user's last posted at date
-    user.update_column(:last_posted_at, created_at)
-
     # Update topic user data
     TopicUser.change(user,
                      topic.id,
                      posted: true,
                      last_read_post_number: post_number,
                      seen_post_count: post_number)
-  end
-
-  def email_private_message
-    # send a mail to notify users in case of a private message
-    if topic.private_message?
-      topic.allowed_users.where(["users.email_private_messages = true and users.id != ?", self.user_id]).each do |u|
-        Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes, :user_email, type: :private_message, user_id: u.id, post_id: self.id)
-      end
-    end
-  end
-
-  def feature_topic_users
-    Jobs.enqueue(:feature_topic_users, topic_id: self.topic_id)
   end
 
   # This calculates the geometric mean of the post timings and stores it along with
@@ -446,7 +414,7 @@ class Post < ActiveRecord::Base
     self.quote_count = quoted_post_numbers.size
   end
 
-  # Process this post after committing it
+  # Enqueue post processing for this post
   def trigger_post_process
     args = { post_id: id }
     args[:image_sizes] = image_sizes if image_sizes.present?

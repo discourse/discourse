@@ -66,43 +66,6 @@ describe Post do
 
   end
 
-
-  describe 'post uniqueness' do
-
-    context "disabled" do
-      before do
-        SiteSetting.stubs(:unique_posts_mins).returns(0)
-        Fabricate(:post, post_args)
-      end
-
-      it "returns true for another post with the same content" do
-        Fabricate.build(:post, post_args).should be_valid
-      end
-    end
-
-    context 'enabled' do
-      before do
-        SiteSetting.stubs(:unique_posts_mins).returns(10)
-        Fabricate(:post, post_args)
-      end
-
-      it "returns false for another post with the same content" do
-        Fabricate.build(:post, post_args).should_not be_valid
-      end
-
-      it "returns true for admins" do
-        topic.user.admin = true
-        Fabricate.build(:post, post_args).should be_valid
-      end
-
-      it "returns true for moderators" do
-        topic.user.trust_level = TrustLevel.levels[:moderator]
-        Fabricate.build(:post, post_args).should be_valid
-      end
-    end
-
-  end
-
   describe 'flagging helpers' do
     it 'isFlagged is accurate' do
       post = Fabricate(:post)
@@ -474,34 +437,6 @@ describe Post do
       end
 
     end
-  end
-
-  it 'should feature users after create' do
-    Jobs.stubs(:enqueue).with(:process_post, anything)
-    Jobs.expects(:enqueue).with(:feature_topic_users, has_key(:topic_id))
-    Fabricate(:post, post_args)
-  end
-
-  it 'should queue up a post processing job when saved' do
-    Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
-    Jobs.expects(:enqueue).with(:process_post, has_key(:post_id))
-    Fabricate(:post, post_args)
-  end
-
-  it 'passes the invalidate_oneboxes along to the job if present' do
-    Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
-    Jobs.expects(:enqueue).with(:process_post, has_key(:invalidate_oneboxes))
-    post = Fabricate.build(:post, post_args)
-    post.invalidate_oneboxes = true
-    post.save
-  end
-
-  it 'passes the image_sizes along to the job if present' do
-    Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
-    Jobs.expects(:enqueue).with(:process_post, has_key(:image_sizes))
-    post = Fabricate.build(:post, post_args)
-    post.image_sizes = {'http://an.image.host/image.jpg' => {'width' => 17, 'height' => 31}}
-    post.save
   end
 
   describe 'notifications' do

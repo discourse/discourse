@@ -137,18 +137,20 @@ describe TopicUser do
 
     context 'auto tracking' do
 
+      let(:post_creator) { PostCreator.new(new_user, raw: Fabricate.build(:post).raw, topic_id: topic.id) }
+
       before do
         TopicUser.update_last_read(new_user, topic.id, 2, 0)
       end
 
       it 'should automatically track topics you reply to' do
-        post = Fabricate(:post, topic: topic, user: new_user)
+        post_creator.create
         topic_new_user.notification_level.should == TopicUser.notification_levels[:tracking]
         topic_new_user.notifications_reason_id.should == TopicUser.notification_reasons[:created_post]
       end
 
       it 'should not automatically track topics you reply to and have set state manually' do
-        Fabricate(:post, topic: topic, user: new_user)
+        post_creator.create
         TopicUser.change(new_user, topic, notification_level: TopicUser.notification_levels[:regular])
         topic_new_user.notification_level.should == TopicUser.notification_levels[:regular]
         topic_new_user.notifications_reason_id.should == TopicUser.notification_reasons[:user_changed]
