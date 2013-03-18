@@ -345,24 +345,25 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
   },
 
   cancelEdit: function() {
-    // set the previous category back
-    this.set('controller.content.category', this.get('previousCategory'));
-    // clear the previous category
-    this.set('previousCategory', null);
     // close editing mode
     this.set('editingTopic', false);
   },
 
   finishedEdit: function() {
-    var new_val, topic;
     if (this.get('editingTopic')) {
-      topic = this.get('topic');
-      new_val = $('#edit-title').val();
-      topic.set('title', new_val);
-      topic.set('fancy_title', new_val);
+      var topic = this.get('topic');
+      // retrieve the title from the text field
+      var newTitle = $('#edit-title').val();
+      // retrieve the category from the combox box
+      var newCategoryName = $('#topic-title select option:selected').val();
+      // manually update the titles & category
+      topic.setProperties({
+        title: newTitle,
+        fancy_title: newTitle,
+        categoryName: newCategoryName
+      });
+      // save the modifications
       topic.save();
-      // clear the previous category
-      this.set('previousCategory', null);
       // close editing mode
       this.set('editingTopic', false);
     }
@@ -370,8 +371,6 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
   editTopic: function() {
     if (!this.get('topic.can_edit')) return false;
-    // save the category so we can get it back when cancelling the edit
-    this.set('previousCategory', this.get('controller.content.category'));
     // enable editing mode
     this.set('editingTopic', true);
     return false;

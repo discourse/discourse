@@ -10,7 +10,7 @@
           {{/if}}
           {{#if view.editingTopic}}
             <input id='edit-title' type='text' {{bindAttr value="view.topic.title"}}>
-            {{view Discourse.ComboboxViewCategory valueAttribute="name" contentBinding="Discourse.site.categories" valueBinding="view.topic.categoryName"}}
+            {{view Discourse.ComboboxViewCategory valueAttribute="name" contentBinding="Discourse.site.categories" sourceBinding="view.topic.categoryName"}}
             <button class='btn btn-primary btn-small' {{action finishedEdit target="view"}}><i class='icon-ok'></i></button>
             <button class='btn btn-small' {{action cancelEdit target="view"}}><i class='icon-remove'></i></button>
           {{else}}
