@@ -302,11 +302,15 @@ table {
 .version-check {
   .version-number {
     font-size: 18px;
-    font-weight: bold
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .face {
+    width: 20px;
   }
 
   .version-notes .icon {
-    margin-left: 20px;
     vertical-align: bottom;
   }
 
@@ -371,6 +375,10 @@ table {
     td.value {
       width: 33px;
     }
+  }
+
+  &.total-users {
+    margin-left: 45px;
   }
 }
 

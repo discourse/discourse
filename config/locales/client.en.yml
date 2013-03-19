@@ -687,12 +687,13 @@ en:
 
       dashboard:
         title: "Admin Dashboard"
-        version: "Installed version"
-        up_to_date: "You are running the latest version of Discourse."
+        version: "Version"
+        up_to_date: "You're up to date!"
         critical_available: "A critical update is available."
         updates_available: "Updates are available."
         please_upgrade: "Please upgrade!"
-        latest_version: "Latest version"
+        installed_version: "Installed"
+        latest_version: "Latest"
         update_often: 'Please update often!'
         total_users: "Total Users"
         moderator_short: "mod"

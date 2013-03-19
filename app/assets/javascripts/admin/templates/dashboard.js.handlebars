@@ -1,45 +1,51 @@
 <div class="dashboard-left">
-  <div {{bindAttr class=":version-check versionCheck.critical_updates:critical:normal"}}>
-    {{#if Discourse.SiteSettings.version_checks}}
-      {{#if loading }}
-        <p>{{i18n loading}}</p>
-      {{else}}
-        <p>
-          {{i18n admin.dashboard.version}}: <span class="version-number">{{ versionCheck.installed_version }}</span>
-
-          {{#if versionCheck.installed_sha}}
-            <span class="git-version">(<a {{bindAttr href="versionCheck.gitLink"}} target="_blank">{{versionCheck.shortSha}}</a>)</span>
-          {{/if}}
-        </p>
-
-        <p class="version-notes">
-          {{i18n admin.dashboard.latest_version}}: <span class="version-number">{{ versionCheck.latest_version }}</span>
-          {{#if versionCheck.upToDate }}
-            <span class='icon update-to-date'>☻</span> {{i18n admin.dashboard.up_to_date}}
-          {{else}}
-            <span {{bindAttr class=":icon versionCheck.critical_updates:critical-updates-available:updates-available"}}>
-              {{#if versionCheck.behindByOneVersion}}
-                ☺
+  {{#if Discourse.SiteSettings.version_checks}}
+    <div {{bindAttr class=":dashboard-stats :version-check versionCheck.critical_updates:critical:normal"}}>
+      <table class="table table-condensed table-hover">
+        <thead>
+          <tr>
+            <th>&nbsp;</th>
+            <th>{{i18n admin.dashboard.installed_version}}</th>
+            <th>{{i18n admin.dashboard.latest_version}}</th>
+            <th>&nbsp;</th>
+            <th>&nbsp;</th>
+          </tr>
+        </thead>
+        {{#unless loading}}
+          <tbody>
+            <td class="title">{{i18n admin.dashboard.version}}</td>
+            <td class="version-number">{{ versionCheck.installed_version }}</td>
+            <td class="version-number">{{ versionCheck.latest_version }}</td>
+            <td class="face">
+              {{#if versionCheck.upToDate }}
+                <span class='icon update-to-date'>☻</span>
               {{else}}
-                ☹
+                <span {{bindAttr class=":icon versionCheck.critical_updates:critical-updates-available:updates-available"}}>
+                  {{#if versionCheck.behindByOneVersion}}
+                    ☺
+                  {{else}}
+                    ☹
+                  {{/if}}
+                </span>
               {{/if}}
-            </span>
-            <span class="critical-note">{{i18n admin.dashboard.critical_available}}</span>
-            <span class="normal-note">{{i18n admin.dashboard.updates_available}}</span>
-            {{i18n admin.dashboard.please_upgrade}}
-          {{/if}}
-        </p>
-      {{/if}}
-    {{/if}}
+            </td>
+            <td class="version-notes">
+              {{#if versionCheck.upToDate }}
+                {{i18n admin.dashboard.up_to_date}}
+              {{else}}
+                <span class="critical-note">{{i18n admin.dashboard.critical_available}}</span>
+                <span class="normal-note">{{i18n admin.dashboard.updates_available}}</span>
+                {{i18n admin.dashboard.please_upgrade}}
+              {{/if}}
+            </td>
+          </tbody>
+        {{/unless}}
+      </table>
+    </div>
+  {{/if}}
 
-    <p class="update-nag">
-      <i class="icon icon-github"></i>
-      <a href="https://github.com/discourse/discourse" target="_blank">{{i18n admin.dashboard.update_often}}</a>
-    </p>
-  </div>
 
-
-  <div class="dashboard-stats">
+  <div class="dashboard-stats total-users">
     {{i18n admin.dashboard.total_users}}: <strong>{{#unless loading}}{{ totalUsers }}{{/unless}}</strong><br/>
   </div>
 
