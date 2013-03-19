@@ -574,19 +574,17 @@ en:
     site_password: "Also, the site password is `%{access_password}` if you need it."
 
     post_hidden:
-      subject_template: "%{site_name} Notice: Posting Hidden due to Community Flagging"
+      subject_template: "Post hidden due to community flagging"
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that the following post was hidden as a result of community flagging.
+        This is an automated message from %{site_name} to inform you that your post ...
 
         %{base_url}%{url}
 
-        Your post was hidden because it was flagged by the community.
+        ... was hidden due to community flagging.
 
-        Keep in mind that multiple community members flagged this post before it was hidden, so please consider how you might revise your post to reflect their feedback.
-
-        You can edit the post after %{edit_delay} minutes, and it will be automatically unhidden. This will increase your forum trust level.
+        Keep in mind that multiple community members flagged this post before it was hidden, so **please consider how you might revise your post to reflect their feedback.** You can edit your post after %{edit_delay} minutes, and it will be automatically unhidden. This will increase your forum trust level.
 
         However, if the post is hidden by the community a second time, the moderators will be notified -- and there may be further action, including the possible suspension of your account.
 
