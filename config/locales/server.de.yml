@@ -1,3 +1,4 @@
+# encoding: utf-8
 de:
   title: "Discourse"
   topics: "Themen"
@@ -34,7 +35,7 @@ de:
 
       - Der erste Beitrag umschreibt das Thema: Worum geht es? Wer wäre interessiert daran? Warum ist es wichtig? Welche Arten von Antworten erhoffst Du dir von der Community?
 
-      - Versuche, die richtigen Worte zu verwenden, so dass andere Dein Thema *finden* können. Wenn möglich, wähle eine angemessene Kategorie für Dein Thema. 
+      - Versuche, die richtigen Worte zu verwenden, so dass andere Dein Thema *finden* können. Wenn möglich, wähle eine angemessene Kategorie für Dein Thema.
 
       Weitere Hilfe findest Du [in unseren FAQ](/faq). Dieser Hilfetext wird nur bei Deinen ersten %{education_posts_text} Beiträgen angezeigt.
 
@@ -42,13 +43,13 @@ de:
       Willkommen auf %{site_name} &mdash; **Danke für deinen Beitrag zum Thema!**
 
       Beachte bitte folgende Dinge während des Schreibens:
-      
+
       - Fügt dein Beitrag dem Gespräch etwas Neues hinzu, und sei es auch wenig?
-      
+
       - Behandle Deine Gesprächspartner mit demselben Respekt, den Du von ihnen erwartest.
-      
+
       - Kritk ist in Ordnung, aber bitte kritisiere nur *Ideen*, nicht Menschen.
-      
+
       Weitere Hilfe findest Du [in unseren FAQ](/faq). Dieser Hilfetext wird nur bei Deinen ersten %{education_posts_text} Beiträgen angezeigt.
 
 
@@ -497,23 +498,23 @@ de:
       [*%{base_url}*][0]
 
       Mailzustellbarkeitstests können komplex sein, aber einige Dinge solltest Du sofort prüfen:
-      
+
       - Stelle sicher, dass Du den *Quelltext der Mail* in deinem Mailprogramm betrachten kannst, um die Mailheader auf Hinweise zu untersuchen.
-      
+
       - **WICHTIG:** Hat Dein Internetprovider einen Reverse-DNS-Eintrag eingetragen, um den Domainnamen, die Du als Absender angibst, mit den IPs von denen die Mails verschickt werden zu verknüpfen? Du kannst [den Reverse-PTR-Eintrag hier testen][2]. Wenn Dein Internetprovider keinen passenden Reverse-DNS-Eintrag eingetragen hat, ist sehr unwahrscheinlich, dass Mails tatsächlich versendet werden.
-      
+
       - Ist der SPF-Eintrag Deiner Domain korrekt? Du kannst [den SPF-Eintrag hier testen][1].
-      
+
       - Hast Du [DKIM-Mailsignierung][3] in deiner Mailsoftware konfiguriert und den öffentlichen DKIM-Schlüssel Deinen DNS-Einträge hinzugefügt?
-      
+
       - Hast Du sichergestellt, dass die IPs der Server von denen Mails verschickt werden [nicht auf einer schwarzen Liste stehen][4]?
-      
+
       - Hast Du sichergestellt, dass Deine Mailserver *definitiv* einen voll qualifizierten Hostnamen in ihre HELO-Nachrichten angeben, der per DNS aufgelöst werden kann? Falls das nicht der Fall ist, werden Deine Mails von vielen Mailprovidern abgelehnt.
-      
+
       Wir hoffen, dass Du diesen Zustellbarkeitstest problemlos erhalten hast!
-      
+
       Viel Erfolg,
-      
+
       Deine Freunde von %{site_name}.
 
       [0]: %{base_url}
@@ -524,9 +525,9 @@ de:
       [5]: %{base_url}/unsubscribe
 
       ----
-      
+
       <small>Am Fuß jeder Mail, die Du verschickst, sollte eine Möglichkeit zum Abbestellen gegeben werden. Hier ein Beispiel: Diese Mail wurde von Unternehmensname, Hauptstraße 55, 12345 Stadtname, Deutschland, versendet. Wenn Du zukünftig keine weiteren Mail erhalten möchtest, [klicke hier, um dich abzumelden][5].</small>
-      
+
   request_access:
     code: "Zugangscode"
     instructions: "Der Zugang zu dieser Seite ist beschränkt. Geben Sie unten den Zugangscode ein:"
@@ -546,13 +547,13 @@ de:
         %{base_url}%{url}
 
         Dein Beitrag wurde versteckt, da er von der Community gemeldet wurde.
-        
+
         Beachte, dass mehrere Mitglieder der Community diesen Beitrag gemeldet haben, bevor er versteckt wurde. Daher bitten wir Dich, zu überlegen, wie Du Deinen Beitrag unter Berücksichtigung dieses Feedbacks überarbeiten könntest.
-        
+
         Du kannst den Beitrag nach %{edit_delay} Minuten überarbeiten. Anschließend wird er automatisch wieder sichtbar und Deine Vertrauenswürdigkeit erhöht sich.
-        
+
         Wenn dieser Beitrag ein zweites Mal von der Community versteckt wird, werden die Moderatoren darauf aufmerksam gemacht. Dass kann weitere Konsequenzen haben, unter anderem auch eine Sperrung Deines Kontos.
-        
+
         Weitere Hilfestellung findest Du in unseren [FAQ](%{base_url}/faq).
 
     usage_tips:
@@ -560,27 +561,27 @@ de:
         Diese private Nachricht gibt ein paar Tipps für einen schnellen Start:
 
         ### Immer weiterscrollen
-        
+
         Es gibt keinen 'Nächste Seite'-Button und keine Seitennummern. Um weiterzulesen, scrolle einfach weiter nach unten und weitere Inhalte werden nachgeladen!
-        
+
         Neue Antworten erscheinen automatisch unten auf der Seite eines Themas. Du musst die Seite nicht neu laden oder neu aufrufen, um neue Beiträge zu sehen.
-        
+
         ### Wie kann ich Antworten?
-        
+
         - Um auf einen bestimmten Beitrag zu antworten, benutze den Antworten-Button unter dem Beitrag.
-        
+
         - Wenn Du auf die generelle *Thematik* eines Themas antworten möchtest, anstatt einer bestimmten Person, benutze den Antworten-Button unten auf der Seite des Themas.
-        
+
         - Wenn Du das Gespräch in eine anderen Richtung führen willst, aber die Themen weiter verknüpft sein sollen, klicke auf 'Mit neuem Thema antworten' rechts vom Beitrag.
 
         ### Wer spricht mit mir?
-        
+
         Wenn jemand auf Deine Beiträge antwortet, Dich zitiert oder Deinen @Namen erwähnt, erhältst du eine Benachrichtigung oben auf der Seite. Klicke oder berühre die Benachrichtigungszahl, um zu erfahren, wer mit Dir spricht und wo. Nimm am Gespräch teil!
-        
+
         - Um jemanden zu erwähnen, tippe `@` und eine Autovervollständigung erscheint.
-        
+
         - Um einen kompletten Beitrag zu zitieren, benutze den Button `Beitrag zitieren` in der Werkzeugleiste des Entwurfsdialogs.
-        
+
         - Um nur eine Abschnitt eines Beitrags zu zitieren, markiere ihn und klicke den Antworten-Button, der darüber erscheint.
 
         ### Bewerte Beiträge
@@ -590,9 +591,9 @@ de:
         ### Wo bin ich?
 
         - Um zur Startseite zu gelangen, **klicke auf das Logo oben links.**
-        
+
         - Um etwas zu suchen, gehe auf deine Profilseite oder benutze die Icons oben rechts.
-       
+
         - Um an den Anfang eines Themas zu gelangen, klicke auf den Titel am oberen Rand der Seite. Um ans *Ende* zu springen, klicke auf den Abwärtspfeil in der Fortschrittsanzeige des Themas unten auf der Seite oder auf das Feld 'Letzter Beitrag' in der Zusammenfassung des Themas unter dem ersten Beitrag.
 
     welcome_approved:
@@ -603,9 +604,9 @@ de:
         Du wurdest auf %{site_name} zugelassen, willkommen in unserem Forum!
 
         %{new_user_tips}
-        
+
         Wir stehen für [zivilisiertes Verhalten in Online-Communitys](%{base_url}/faq).
-        
+
         Viel Vergnügen!
 
     welcome_user:
@@ -618,20 +619,20 @@ de:
         %{new_user_tips}
 
         Wir stehen für [zivilisiertes Verhalten in Online-Communitys](%{base_url}/faq).
-        
+
         Viel Vergnügen!
 
     welcome_invite:
       subject_template: "Willkommen auf %{site_name}!"
       text_body_template: |
         Danke fürs Akzeptieren der Einladung zu %{site_name}, willkommen in unserem Forum!
-        
+
         Wir haben automatisch einen Benutzernamen für dich erzeugt: **%{username}**, aber Du kannst ihn jederzeit in [Deinem Benutzerprofil][prefs] ändern.
-        
+
         Um Dich anzumelden, hast du folgende Optionen:
-        
+
         1. Verwende Facebook, Google, Twitter oder andere unterstütze Anbieter. Achte aber darauf, dass bei diesem Anbieter **dieselbe Mailadresse** über die Du die Einladung erhalten hast hinterlegt ist. Andernfalls können nicht feststellen, dass Du es bist!
-        
+
         2. Erstelle ein eigenes Passwort auf %{site_name} in [Deinem Benutzerprofil][prefs], um dich damit anzumelden.
 
         %{site_password}
@@ -639,7 +640,7 @@ de:
         %{new_user_tips}
 
         Wir stehen für [zivilisiertes Verhalten in Online-Communitys](%{base_url}/faq).
-        
+
         Viel Vergnügen!
 
         [prefs]: %{user_preferences_url}
@@ -663,7 +664,7 @@ de:
       subject_template: "[%{site_name}] %{username} hat Dich zu einem privaten Gespräch eingeladen: '%{topic_title}'"
       text_body_template: |
         %{username} hat Dich eingeladen, am privaten Gespräch '%{topic_title}' auf %{site_name} teilzunehmen:
-        
+
         Rufe den folgenden Link auf, um das Thema zu betrachten: %{base_url}%{url}
 
     user_replied:
@@ -734,9 +735,9 @@ de:
       subject_template: "[%{site_name}] Passwort zurückgesetzt"
       text_body_template: |
         Jemand hat darum gebeten, Dein Passwort auf [%{site_name}](%{base_url}) zurückzusetzen.
-        
+
         Wenn Du es nicht warst, kannst Du diese Mail einfach ignorieren.
-        
+
         Andernfalls, besuche den folgenden Link, um ein neues Passwort zu wählen:
         %{base_url}/users/password-reset/%{email_token}
 
@@ -751,10 +752,10 @@ de:
       subject_template: "[%{site_name}] Aktiviere Deinen neues Konto"
       text_body_template: |
         Willkommen auf %{site_name}!
-        
+
         Um dein Konto zu aktivieren, klicke auf den folgenden Link:
         %{base_url}/users/activate-account/%{email_token}
-        
+
         Wenn dieser Link nicht klickbar ist, kopiere ihn in die Adresszeile Deines Web-Browsers.
 
   discourse_hub:

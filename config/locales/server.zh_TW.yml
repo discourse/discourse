@@ -1,3 +1,4 @@
+# encoding: utf-8
 zh_TW:
   time:
     formats:
@@ -372,11 +373,11 @@ zh_TW:
     github_client_secret: "Github 帳號驗證的客戶端密碼（Client secret），到 https://github.com/settings/applications 來注冊獲取"
 
     enable_persona_logins: "啓用基于電子郵箱的 Mozilla Persona 帳號驗證登錄"
-    
+
     enable_sina_logins: "啓用新浪帳號驗證登錄，需要 sina_app_id 和 sina_app_secret"
     sina_app_id: "新浪帳號驗證的應用帳號（App id），到 http://open.weibo.com/connect 來注冊獲取"
     sina_app_secret: "新浪帳號驗證的應用密碼（App secret），到 http://open.weibo.com/connect 來注冊獲取"
-    
+
     enable_qq_logins: "啓用騰訊QQ帳號驗證登錄，需要 qq_app_id 和 qq_app_secret"
     qq_app_id: "騰訊QQ帳號驗證的應用帳號（App id），到 http://connect.qq.com/intro/login/ 來注冊獲取"
     qq_app_secret: "騰訊QQ帳號驗證的應用密碼（App secret），到 http://connect.qq.com/intro/login/ 來注冊獲取"
@@ -638,7 +639,7 @@ zh_TW:
       text_body_template: |
         恭喜你！
 
-        你已經被批准加入 %{site_name}，歡迎來到我們論壇參與討論！        
+        你已經被批准加入 %{site_name}，歡迎來到我們論壇參與討論！
 
         %{new_user_tips}
 
