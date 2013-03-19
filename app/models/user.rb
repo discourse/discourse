@@ -506,7 +506,7 @@ class User < ActiveRecord::Base
 
     def add_trust_level
       # there is a possiblity we did no load trust level column, skip it
-      return unless attributes.key? "trust_level"
+      return unless attribute_present? :trust_level
       self.trust_level ||= SiteSetting.default_trust_level
     end
 
