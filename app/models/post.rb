@@ -19,6 +19,7 @@ class Post < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :topic, counter_cache: :posts_count
+  belongs_to :reply_to_user, class_name: "User"
 
   has_many :post_replies
   has_many :replies, through: :post_replies
@@ -190,12 +191,6 @@ class Post < ActiveRecord::Base
     (quote_count == 0) && (reply_to_post_number.present?)
   end
 
-  # Get the post that we reply to.
-  def reply_to_user
-    return if reply_to_post_number.blank?
-    Post.where(topic_id: topic_id, post_number: reply_to_post_number).first.try(:user)
-  end
-
   def reply_notification_target
     return if reply_to_post_number.blank?
     Post.where("topic_id = :topic_id AND post_number = :post_number AND user_id <> :user_id",
@@ -268,8 +263,14 @@ class Post < ActiveRecord::Base
     PostRevisor.new(self).revise!(updated_by, new_raw, opts)
   end
 
+
+  # TODO: move into PostCreator
   # Various callbacks
   before_create do
+    if reply_to_post_number.present?
+      self.reply_to_user_id ||= Post.select(:user_id).where(topic_id: topic_id, post_number: reply_to_post_number).first.try(:user_id) 
+    end
+
     self.post_number ||= Topic.next_post_number(topic_id, reply_to_post_number.present?)
     self.cooked ||= cook(raw, topic_id: topic_id)
     self.sort_order = post_number
@@ -278,6 +279,7 @@ class Post < ActiveRecord::Base
   end
 
   # TODO: Move some of this into an asynchronous job?
+  # TODO: Move into PostCreator
   after_create do
     # Update attributes on the topic - featured users and last posted.
     attrs = {last_posted_at: created_at, last_post_user_id: user_id}

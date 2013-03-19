@@ -34,6 +34,7 @@ class TopicView
 
     @all_posts = @posts
 
+
     filter_posts(options)
 
     @draft_key = @topic.draft_key
@@ -130,7 +131,8 @@ class TopicView
     @max = post_number - 1
 
     @posts = @posts.reverse_order.where("post_number < ?", post_number)
-    @posts = @posts.includes(:topic).joins(:user).limit(SiteSetting.posts_per_page)
+
+    @posts = @posts.includes(:reply_to_user).includes(:topic).joins(:user).limit(SiteSetting.posts_per_page)
     @min = @max - @posts.size
     @min = 1 if @min < 1
   end
@@ -140,7 +142,7 @@ class TopicView
     @initial_load = false
     @min = post_number
     @posts = @posts.regular_order.where("post_number > ?", post_number)
-    @posts = @posts.includes(:topic).joins(:user).limit(SiteSetting.posts_per_page)
+    @posts = @posts.includes(:reply_to_user).includes(:topic).joins(:user).limit(SiteSetting.posts_per_page)
     @max = @min + @posts.size
   end
 
@@ -275,7 +277,7 @@ class TopicView
 
   def filter_posts_in_range(min, max)
     @min, @max = min, max
-    @posts = @posts.where("post_number between ? and ?", @min, @max).includes(:user).regular_order
+    @posts = @posts.where("post_number between ? and ?", @min, @max).includes(:user).includes(:reply_to_user).regular_order
   end
 
   def find_topic(topic_id)

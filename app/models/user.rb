@@ -402,6 +402,11 @@ class User < ActiveRecord::Base
     admin? || TrustLevel.compare(trust_level, level)
   end
 
+  # a touch faster than automatic
+  def admin? 
+    admin
+  end
+
   def change_trust_level(level)
     raise "Invalid trust level #{level}" unless TrustLevel.valid_level?(level)
     self.trust_level = TrustLevel.levels[level]
