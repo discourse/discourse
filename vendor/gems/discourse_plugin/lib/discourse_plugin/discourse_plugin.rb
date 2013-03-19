@@ -46,6 +46,10 @@ class DiscoursePlugin
     return unless self.respond_to?(event_name)
     DiscourseEvent.on(event_name, &self.method(event_name))
   end
+  
+  def register_nav_item(nav_item_name)
+    @registry.register_nav_item
+  end
 
 end
 

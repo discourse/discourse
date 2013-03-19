@@ -2,6 +2,8 @@
 #  A class that handles interaction between a plugin and the Discourse App.
 #
 class DiscoursePluginRegistry
+  require 'tempfile'
+  require 'fileutils'
 
   class << self
     attr_accessor :javascripts
@@ -61,5 +63,50 @@ class DiscoursePluginRegistry
     plugin = plugin_class.new(registry)
     plugin.setup
   end
-
+  
+  def register_nav_item(nav_item_name, reset = false)
+    path = Rails.root.join('app','assets','javascripts','discourse','models','nav_item.js')
+    temp_file = Tempfile.new('temp-nav')
+    begin
+      File.open(path, 'r') do |file|
+        file.each_line do |line|
+          if line.match(/^validNavNames/)
+            nav_items =  ExecJS.eval(line.gsub(';',''))
+            if nav_items.include?(nav_item_name)
+              temp_file.puts line
+            elsif reset == true
+              temp_file.puts 'validNavNames = ["read", "popular", "categories", "favorited", "category", "unread", "new", "posted"];' + "\n"
+            else  
+              nav_items << nav_item_name
+              temp_file.puts 'validNavNames = ' + nav_items.to_s + ";\n"
+            end
+          else
+            temp_file.puts line  
+          end
+        end
+      end
+      temp_file.rewind
+      FileUtils.mv(temp_file.path, path)
+    ensure
+      temp_file.close
+      temp_file.unlink
+    end
+  end
+  
+  def valid_nav_items
+    path = Rails.root.join('app','assets','javascripts','discourse','models','nav_item.js')
+    File.open(path, 'r') do |file|
+      file.each_line do |line|
+        if line.match(/^validNavNames/) 
+          @nav_items =  ExecJS.eval(line.gsub(';',''))
+        end  
+      end
+    end 
+    @nav_items 
+  end
+  
+  def reset_default_nav_items
+    
+  end
+  
 end
