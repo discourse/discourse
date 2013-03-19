@@ -354,6 +354,12 @@ table {
       font-weight: normal;
       text-align: center;
     }
+    thead {
+      tr:hover > td,
+      tr:hover > th {
+        background-color: $white;
+      }
+    }
 
     td.value {
       font-weight: bold;
@@ -436,7 +442,7 @@ table {
   }
 
   .header:hover h1 {
-    text-decoration: underline;
+    color: $link-color-hover;
   }
 
   .commits-list {
