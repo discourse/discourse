@@ -9,7 +9,7 @@
             <a {{bindAttr class=":star view.topic.starred:starred"}} {{action toggleStar target="controller"}} href='#' title="{{i18n favorite.help}}"></a>
           {{/if}}
           {{#if view.editingTopic}}
-            <input id='edit-title' type='text' {{bindAttr value="view.topic.title"}}>
+            <input id='edit-title' type='text' {{bindAttr value="view.topic.title"}} autofocus>
             {{view Discourse.ComboboxViewCategory valueAttribute="name" contentBinding="Discourse.site.categories" sourceBinding="view.topic.categoryName"}}
             <button class='btn btn-primary btn-small' {{action finishedEdit target="view"}}><i class='icon-ok'></i></button>
             <button class='btn btn-small' {{action cancelEdit target="view"}}><i class='icon-remove'></i></button>
