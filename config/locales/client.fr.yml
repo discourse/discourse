@@ -708,6 +708,7 @@ fr:
 
       commits:
         latest_changes: Derniers changements
+        by: par
 
       flags:
         title: "Signalements"
