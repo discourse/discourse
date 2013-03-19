@@ -1,4 +1,8 @@
-Discourse.Report = Discourse.Model.extend({});
+Discourse.Report = Discourse.Model.extend({
+  reportUrl: function() {
+    return("/admin/reports/" + this.get('type'));
+  }.property('type')
+});
 
 Discourse.Report.reopenClass({
   find: function(type) {
