@@ -422,6 +422,12 @@ zh_TW:
     new_user_period_days: "在多少天以內一個用戶會被高亮顯示爲新用戶"
     title_fancy_entities: "轉換主題標題中的 HTML 實體"
 
+    min_title_similar_length: "開始檢查相似主題的帖子標題的最小長度"
+    min_body_similar_length: "開始檢查相似主題的帖子內容的最小長度"
+
+    category_colors: "設置分類顏色的用'|'分隔的十六進色彩值列表"
+    max_upload_size_kb: "允許用戶上傳的最大文件大小(以kb為單位) - 確保在nginx(client_max_body_size), apache或代理服務中進行限制文件大小的配置."
+
   notification_types:
     mentioned: "%{display_username} 在 %{link} 提及到了你"
     liked: "%{display_username} 在 %{link} 贊了你的帖子 "
