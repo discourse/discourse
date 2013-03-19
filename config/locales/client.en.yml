@@ -357,7 +357,9 @@ en:
 
     favorite:
       title: 'Favorite'
-      help: 'add this topic to your favorites list'
+      help:
+        star: 'add this topic to your favorites list'
+        unstar: 'remove this topic from your favorites list'
 
     topics:
       none:

@@ -141,6 +141,14 @@ Discourse.Topic = Discourse.Model.extend({
     });
   },
 
+  favoriteTooltipKey: (function() {
+    return this.get('starred') ? 'favorite.help.unstar' : 'favorite.help.star';
+  }).property('starred'),
+
+  favoriteTooltip: (function() {
+    return Em.String.i18n(this.get('favoriteTooltipKey'));
+  }).property('favoriteTooltipKey'),
+
   toggleStar: function() {
     var topic = this;
     topic.toggleProperty('starred');

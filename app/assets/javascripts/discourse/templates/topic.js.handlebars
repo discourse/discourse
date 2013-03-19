@@ -6,7 +6,7 @@
       <div class='container'>
         <div class='inner'>
           {{#if view.showFavoriteButton}}
-            <a {{bindAttr class=":star view.topic.starred:starred"}} {{action toggleStar target="controller"}} href='#' title="{{i18n favorite.help}}"></a>
+            <a {{bindAttr class=":star view.topic.starred:starred"}} {{action toggleStar target="controller"}} href='#' {{bindAttr title="favoriteTooltip"}}></a>
           {{/if}}
           {{#if view.editingTopic}}
             <input id='edit-title' type='text' {{bindAttr value="view.topic.title"}} autofocus>
