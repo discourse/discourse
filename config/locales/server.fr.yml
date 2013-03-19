@@ -270,18 +270,26 @@ fr:
       title: Nouveaux messages
       xaxis: Jour
       yaxis: Nombre de messages
+    likes:
+      title: Nouveau Likes
+      xaxis: Jour
+      yaxis: Nombre de Likes
     total_users:
       title: "Total d'utilisateurs"
       xaxis: Jour
       yaxis: "Total d'utilisateurs"
     flags:
-      title: Signalements
+      title: Nouveaux Signalements
       xaxis: Jour
       yaxis: Nombre de signalements
     users_by_trust_level:
       title: Utilisateurs par niveau de confiance
       xaxis: Niveau de confiance
       yaxis: "Nombre d'utilisateurs"
+    emails:
+      title: Emails envoyés
+      xaxis: Jour
+      yaxis: "Nombre d'emails"
 
   site_settings:
     default_locale: "Le langage par défaut de cette instance de Discourse (code ISO 639-1)"
