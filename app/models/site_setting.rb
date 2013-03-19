@@ -161,6 +161,8 @@ class SiteSetting < ActiveRecord::Base
 
   client_setting(:educate_until_posts, 2)
 
+  setting(:max_similar_results, 7)
+
   def self.call_discourse_hub?
     self.enforce_global_nicknames? && self.discourse_org_access_key.present?
   end

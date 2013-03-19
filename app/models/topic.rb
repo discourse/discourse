@@ -223,7 +223,7 @@ class Topic < ActiveRecord::Base
          .visible
          .where(closed: false, archived: false)
          .listable_topics
-         .limit(5)
+         .limit(SiteSetting.max_similar_results)
          .order('similarity desc')
          .all
   end
