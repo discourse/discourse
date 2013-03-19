@@ -305,7 +305,12 @@ Discourse.ComposerView = Discourse.View.extend({
         return _this.addMarkdown(html);
       },
       fail: function(e, data) {
-        bootbox.alert(Em.String.i18n('post.errors.upload'));
+        // 413 == entity too large, returned usually from nginx
+        if(data.jqXHR && data.jqXHR.status === 413) {
+          bootbox.alert(Em.String.i18n('post.errors.upload_too_large', {max_size_kb: Discourse.SiteSettings.max_upload_size_kb}));
+        } else {
+          bootbox.alert(Em.String.i18n('post.errors.upload'));
+        }
         return _this.set('loadingImage', false);
       }
     });

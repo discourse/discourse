@@ -538,6 +538,7 @@ en:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
         upload: "Sorry, there was an error uploading that file. Please try again."
+        upload_too_large: "Sorry, the file you are trying to upload is too big (maximum size is {{max_size_kb}}kb), please resize it and try again."
 
       abandon: "Are you sure you want to abandon your post?"
 
