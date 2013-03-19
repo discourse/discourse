@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/SamSaffron/MiniProfiler
-  revision: a5755d6610d603e0df57d9dac3d5fafa181ff60a
+  revision: 00be389867a43f5b95cf520c521d00b22aa8f1c2
   specs:
     rack-mini-profiler (0.1.23)
       rack (>= 1.1.3)
