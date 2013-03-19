@@ -1,7 +1,7 @@
 
   {{#if Discourse.currentUser.id}}
     <td class='star'>
-      <a {{bindAttr class=":star :icon-star starred:starred"}} {{action toggleStar this target="controller"}} href='#' title='{{i18n favorite.help}}'></a>
+      <a {{bindAttr class=":star :icon-star starred:starred"}} {{action toggleStar this target="controller"}} href='#' {{bindAttr title="favoriteTooltip"}}></a>
     </td>
   {{/if}}
 
