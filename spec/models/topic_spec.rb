@@ -804,46 +804,6 @@ describe Topic do
         topic_user = @second_user.topic_users.where(topic_id: @topic.id).first
         topic_user.posted?.should be_true
       end
-
-
-      context 'after deleting that post' do
-
-        before do
-          PostDestroyer.new(Fabricate(:moderator), @new_post).destroy
-          Topic.reset_highest(@topic.id)
-          @topic.reload
-        end
-
-        it 'resets the last_poster_id back to the OP' do
-          @topic.last_post_user_id.should == @user.id
-        end
-
-        it 'resets the last_posted_at back to the OP' do
-          @topic.last_posted_at.to_i.should == @post.created_at.to_i
-        end
-
-        context 'topic_user' do
-          before do
-            @topic_user = @second_user.topic_users.where(topic_id: @topic.id).first
-          end
-
-          it 'clears the posted flag for the second user' do
-            @topic_user.posted?.should be_false
-          end
-
-          it "sets the second user's last_read_post_number back to 1" do
-            @topic_user.last_read_post_number.should == 1
-          end
-
-          it "sets the second user's last_read_post_number back to 1" do
-            @topic_user.seen_post_count.should == 1
-          end
-
-        end
-
-
-      end
-
     end
 
   end

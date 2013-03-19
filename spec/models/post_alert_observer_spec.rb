@@ -78,8 +78,6 @@ describe PostAlertObserver do
       }.should_not change(evil_trout.notifications, :count)
     end
 
-
-
     it "doesn't notify the user who created the topic in regular mode" do
       topic.notify_regular!(user)
       mention_post
@@ -88,12 +86,6 @@ describe PostAlertObserver do
       }.should_not change(user.notifications, :count).by(1)
     end
 
-    it 'removes notifications' do
-      post = mention_post
-      lambda {
-        PostDestroyer.new(Fabricate(:moderator), post).destroy
-      }.should change(evil_trout.notifications, :count).by(-1)
-    end
   end
 
 

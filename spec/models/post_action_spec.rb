@@ -35,13 +35,6 @@ describe PostAction do
       PostAction.flagged_posts_count.should == 0
     end
 
-    it "should reset counts when a post is deleted" do
-      post2 = Fabricate(:post, topic_id: post.topic_id)
-      PostAction.act(codinghorror, post2, PostActionType.types[:off_topic])
-      PostDestroyer.new(moderator, post2).destroy
-      PostAction.flagged_posts_count.should == 0
-    end
-
   end
 
   it "increases the post's bookmark count when saved" do
