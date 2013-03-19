@@ -125,7 +125,6 @@ Discourse.Composer = Discourse.Model.extend({
                            Discourse.Utilities.tinyAvatar(replyUsername) + " " + replyUsername;
       }
 
-
     }
 
     switch (this.get('action')) {
@@ -155,14 +154,20 @@ Discourse.Composer = Discourse.Model.extend({
     // Can't submit while loading
     if (this.get('loading')) return true;
 
-    // Title is required on new posts
-    if (this.get('creatingTopic') && this.get('titleLength') < Discourse.SiteSettings.min_topic_title_length) return true;
+    // Title is required when:
+    //    - creating a new topic
+    //    - editing the 1st post
+    //    - creating a private message
+    if (this.get('editTitle') && this.get('titleLength') < Discourse.SiteSettings.min_topic_title_length) return true;
 
-    // Otherwise just reply is required
+    // Need at least one user when sending a private message
+    if (this.get('creatingPrivateMessage') && (this.get('targetUsernames').trim() + ',').indexOf(',') === 0) return true;
+
+    // reply is always required
     if (this.get('replyLength') < Discourse.SiteSettings.min_post_length) return true;
 
     return false;
-  }).property('reply', 'title', 'creatingTopic', 'loading'),
+  }).property('loading', 'editTitle', 'titleLength', 'targetUsernames', 'replyLength'),
 
   // The text for the save button
   saveText: (function() {
@@ -179,8 +184,7 @@ Discourse.Composer = Discourse.Model.extend({
   }).property('action'),
 
   hasMetaData: (function() {
-    var metaData;
-    metaData = this.get('metaData');
+    var metaData = this.get('metaData');
     if (!this.get('metaData')) {
       return false;
     }
@@ -430,8 +434,6 @@ Discourse.Composer = Discourse.Model.extend({
     if (this.get('disableDrafts')) return;
     // Do not save when there is no reply
     if (!this.get('reply')) return;
-    // Do not save when the title's length is too small (only when creating a new post)
-    if (this.get('creatingTopic') && this.get('titleLength') < Discourse.SiteSettings.min_topic_title_length) return;
     // Do not save when the reply's length is too small
     if (this.get('replyLength') < Discourse.SiteSettings.min_post_length) return;
 
@@ -473,7 +475,7 @@ Discourse.Composer = Discourse.Model.extend({
     // hide the counters if the currently focused text field is OK
     this.set('draftStatus', null);
 
-  }).observes('reply', 'title'),
+  }).observes('replyLength', 'titleLength'),
 
   /**
     Computes the length of the title minus non-significant whitespaces
