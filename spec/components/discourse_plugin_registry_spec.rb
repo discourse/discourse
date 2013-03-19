@@ -61,4 +61,23 @@ describe DiscoursePluginRegistry do
     end
   end
 
+  context '.register_nav_item' do
+    before do
+      registry.register_nav_item('Click Here!')
+    end
+
+    it 'is returned by DiscoursePluginRegistry.valid_nav_items' do
+      registry.valid_nav_items.include?('Click Here!').should be_true
+    end
+    
+    it 'wont add the same nav item twice' do
+      lambda { registry.register_nav_item('Click Here!') }.should_not change(registry.valid_nav_items, :size)
+    end
+    
+    after do
+      registry.register_nav_item('resetting', true)
+    end
+    
+  end
+
 end
