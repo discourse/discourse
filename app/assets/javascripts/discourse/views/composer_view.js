@@ -68,7 +68,7 @@ Discourse.ComposerView = Discourse.View.extend({
     if (this.get('controller.newUserEducationVisible')) {
       $panel.slideDown('fast');
     } else {
-      $panel.slideUp('fast')
+      $panel.slideUp('fast');
     }
   }.observes('controller.newUserEducationVisible'),
 
@@ -77,7 +77,7 @@ Discourse.ComposerView = Discourse.View.extend({
     if (this.get('controller.similarVisible')) {
       $panel.slideDown('fast');
     } else {
-      $panel.slideUp('fast')
+      $panel.slideUp('fast');
     }
   }.observes('controller.similarVisible'),
 
@@ -145,7 +145,7 @@ Discourse.ComposerView = Discourse.View.extend({
     // If we are editing a post, we'll refresh its contents once. This is a feature that
     // allows a user to refresh its contents once.
     if (post && post.blank('refreshedPost')) {
-      refresh = true
+      refresh = true;
       post.set('refreshedPost', true);
     }
 
