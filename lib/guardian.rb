@@ -281,7 +281,8 @@ class Guardian
   def can_delete_post_action?(post_action)
 
     # You can only undo your own actions
-    return false unless post_action.user == @user
+    return false unless @user
+    return false unless post_action.user_id == @user.id
 
     # Make sure they want to delete it within the window
     return post_action.created_at > SiteSetting.post_undo_action_window_mins.minutes.ago
