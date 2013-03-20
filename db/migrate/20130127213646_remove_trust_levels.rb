@@ -4,8 +4,7 @@ class RemoveTrustLevels < ActiveRecord::Migration
     change_column_default :users, :trust_level_id, TrustLevel.levels[:new]
     rename_column :users, :trust_level_id, :trust_level
 
-    update "UPDATE users set trust_level = #{TrustLevel.levels[:regular]}"
-    update "UPDATE users set trust_level = #{TrustLevel.levels[:moderator]} where moderator = true"
+    update "UPDATE users set trust_level = 1"
 
     remove_column :users, :moderator
     add_column :users, :flag_level, :integer, null: false, default: 0
