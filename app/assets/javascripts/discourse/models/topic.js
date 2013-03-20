@@ -430,7 +430,7 @@ Discourse.Topic.reopenClass({
     }
 
     // Check the preload store. If not, load it via JSON
-    return PreloadStore.get("topic_" + topicId, function() {
+    return PreloadStore.getAndRemove("topic_" + topicId, function() {
       return $.getJSON(url + ".json", data);
     }).then(function(result) {
       var first = result.posts.first();

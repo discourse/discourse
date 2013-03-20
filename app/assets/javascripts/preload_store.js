@@ -20,17 +20,17 @@ PreloadStore = {
   },
 
   /**
-    To retrieve a key, you provide the key you want, plus a finder to
-    load it if the key cannot be found. Once the key is used once, it is
-    removed from the store. So, for example, you can't load a preloaded topic
-    more than once.
+    To retrieve a key, you provide the key you want, plus a finder to load
+    it if the key cannot be found. Once the key is used once, it is removed
+    from the store.
+    So, for example, you can't load a preloaded topic more than once.
 
-    @method get
+    @method getAndRemove
     @param {String} key the key to look up the object with
     @param {function} finder a function to find the object with
     @returns {Ember.Deferred} a promise that will eventually be the object we want.
   **/
-  get: function(key, finder) {
+  getAndRemove: function(key, finder) {
     var preloadStore = this;
     return Ember.Deferred.promise(function(promise) {
       if (preloadStore.data[key]) {
@@ -59,28 +59,25 @@ PreloadStore = {
   },
 
   /**
-    Does the store contain a particular key? Does not delete.
+    If we are sure it's preloaded, we don't have to supply a finder.
+    Just returns undefined if it's not in the store.
 
-    @method contains
-    @param {String} key the key to look up the object with
-    @returns {Boolean} whether the object exists
-  **/
-  contains: function(key) {
-    return this.data[key] !== void 0;
-  },
-
-  /**
-    If we are sure it's preloaded, we don't have to supply a finder. Just returns
-    undefined if it's not in the store.
-
-    @method getStatic
+    @method get
     @param {String} key the key to look up the object with
     @returns {Object} the object from the store
   **/
-  getStatic: function(key) {
-    var result = this.data[key];
-    delete this.data[key];
-    return result;
+  get: function(key) {
+    return this.data[key];
+  },
+
+  /**
+    Removes the stored value if the key exists
+
+    @method remove
+    @param {String} key the key to remove
+  **/
+  remove: function(key) {
+    if (this.data[key]) delete this.data[key];
   }
 
 };
