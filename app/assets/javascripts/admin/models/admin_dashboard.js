@@ -5,6 +5,7 @@ Discourse.AdminDashboard.reopenClass({
     var model = Discourse.AdminDashboard.create();
     return $.ajax("/admin/dashboard", {
       type: 'GET',
+      dataType: 'json',
       success: function(json) {
         model.mergeAttributes(json);
         model.set('loaded', true);
