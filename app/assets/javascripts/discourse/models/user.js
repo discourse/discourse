@@ -437,7 +437,7 @@ Discourse.User.reopenClass({
   find: function(username) {
 
     // Check the preload store first
-    return PreloadStore.get("user_" + username, function() {
+    return PreloadStore.getAndRemove("user_" + username, function() {
       return $.ajax({ url: Discourse.getURL("/users/") + username + '.json' });
     }).then(function (json) {
 
