@@ -274,10 +274,12 @@ zh_TW:
       saving_draft_tip: "保存中"
       saved_draft_tip: "已保存"
       saved_local_draft_tip: "已本地保存"
+      similar_topics: "你的主題與此有些類似..."
+      drafts_offline: "離線草稿"
 
       min_length:
-        at_least: "請輸入至少 {{n}} 個字符"
-        more: "尚需 {{n}} 個字符……"
+        need_more_for_title: "請給標題再輸入至少 {{n}} 個字符"
+        need_more_for_reply: "請給正文內容再輸入至少 {{n}} 個字符"
 
       save_edit: "保存編輯"
       reply_original: "回複原始帖"
@@ -362,7 +364,9 @@ zh_TW:
 
     favorite:
       title: '收藏'
-      help: '將此主題加入你的收藏列表'
+      help:
+        star: '將此主題加入你的收藏列表'
+        unstar: '將此主題從你的收藏列表中移除'
 
     topics:
       none:
@@ -418,6 +422,7 @@ zh_TW:
       read_position_reset: "你的閱讀位置已經被重置。"
       jump_reply_up: 跳轉至更早的回複
       jump_reply_down: 跳轉至更晚的回複
+      deleted: "此主題已被刪除"
 
       progress:
         title: 主題進度
@@ -541,6 +546,7 @@ zh_TW:
         create: "抱歉，在創建你的帖子時發生了錯誤。請重試。"
         edit: "抱歉，在編輯你的帖子時發生了錯誤。請重試。"
         upload: "抱歉，在上傳文件時發生了錯誤。請重試。"
+        upload_too_large: "抱歉，你上傳的文件太大了（最大不能超過 {{max_size_kb}}kb），請調整文件大小後重新上傳。"
 
       abandon: "你確定要丟棄你的帖子嗎？"
 
@@ -590,11 +596,14 @@ zh_TW:
       view: '浏覽分類下的主題'
       delete: '刪除分類'
       create: '創建分類'
+      creation_error: 創建此分類時發生了錯誤。
       more_posts: "浏覽全部 {{posts}} ……"
       name: "分類名稱"
       description: "描述"
       topic: "分類主題"
-      color: "顔色"
+      badge_colors: "徽章顔色"
+      background_color: "背景色"
+      foreground_color: "前景色"
       name_placeholder: "應該簡明扼要。"
       color_placeholder: "任何網絡色彩"
       delete_confirm: "你確定要刪除此分類嗎？"
@@ -691,8 +700,11 @@ zh_TW:
         critical_available: "有一個關鍵更新可用。"
         updates_available: "目前有可用更新。"
         please_upgrade: "請升級！"
+        installed_version: "已安裝"
         latest_version: "最新版本"
         update_often: '請經常升級！'
+        total_users: "用戶總數"
+        moderator_short: "版主"
 
         reports:
           today: "今天"
@@ -703,6 +715,10 @@ zh_TW:
           7_days_ago: "7 天之前"
           30_days_ago: "30 天之前"
 
+      commits:
+        latest_changes: "最後的改動"
+        by: "來自"
+
       flags:
         title: "投訴"
         old: "過去的"
@@ -712,6 +728,7 @@ zh_TW:
         delete: "刪除帖子"
         delete_title: "刪除帖子（如果它是主題第一帖，那麽將刪除主題）"
         flagged_by: "投訴者爲"
+        error: "出錯了"
 
       customize:
         title: "定制"
@@ -722,6 +739,8 @@ zh_TW:
         preview: "預覽"
         undo_preview: "撤銷預覽"
         save: "保存"
+        new: "新建"
+        new_style: "新樣式"
         delete: "刪除"
         delete_confirm: "刪除本定制內容？"
 
