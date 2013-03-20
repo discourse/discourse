@@ -1,4 +1,5 @@
 require_dependency 'post_creator'
+require_dependency 'post_destroyer'
 
 class PostsController < ApplicationController
 
@@ -83,7 +84,10 @@ class PostsController < ApplicationController
   def destroy
     post = find_post_from_params
     guardian.ensure_can_delete!(post)
-    post.delete_by(current_user)
+
+    destroyer = PostDestroyer.new(current_user, post)
+    destroyer.destroy
+
     render nothing: true
   end
 
@@ -149,7 +153,7 @@ class PostsController < ApplicationController
       finder = Post.where(id: params[:id] || params[:post_id])
 
       # Include deleted posts if the user is a moderator
-      finder = finder.with_deleted if current_user.try(:has_trust_level?, :moderator)
+      finder = finder.with_deleted if current_user.try(:moderator?)
 
       post = finder.first
       guardian.ensure_can_see!(post)

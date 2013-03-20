@@ -22,6 +22,16 @@ Discourse = Ember.Application.createWithMixins({
   // The highest seen post number by topic
   highestSeenByTopic: {},
 
+  rootURL: '/',
+
+  getURL: function(url) {
+    var u = this.get('rootURL');
+    if (u[u.length-1] === '/') {
+      u = u.substring(0, u.length-1);
+    }
+    return u + url;
+  },
+
   titleChanged: function() {
     var title;
     title = "";
@@ -156,7 +166,7 @@ Discourse = Ember.Application.createWithMixins({
   **/
   logout: function() {
     Discourse.KeyValueStore.abandonLocal();
-    return $.ajax("/session/" + this.get('currentUser.username'), {
+    return $.ajax(Discourse.getURL("/session/") + this.get('currentUser.username'), {
       type: 'DELETE',
       success: function(result) {
         // To keep lots of our variables unbound, we can handle a redirect on logging out.
@@ -174,10 +184,11 @@ Discourse = Ember.Application.createWithMixins({
 
   start: function() {
     Discourse.bindDOMEvents();
-    Discourse.SiteSettings = PreloadStore.getStatic('siteSettings');
+    Discourse.SiteSettings = PreloadStore.get('siteSettings');
     Discourse.MessageBus.start();
     Discourse.KeyValueStore.init("discourse_", Discourse.MessageBus);
-
+    // Make sure we delete preloaded data
+    PreloadStore.remove('siteSettings');
     // Developer specific functions
     Discourse.Development.setupProbes();
     Discourse.Development.observeLiveChanges();

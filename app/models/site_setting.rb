@@ -36,6 +36,10 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:version_checks, true)
   client_setting(:min_title_similar_length, 10)
   client_setting(:min_body_similar_length, 15)
+  # cf. https://github.com/discourse/discourse/pull/462#issuecomment-14991562
+  client_setting(:category_colors, 'BF1E2E|F1592A|F7941D|9EB83B|3AB54A|12A89D|25AAE2|0E76BD|652D90|92278F|ED207B|8C6238|231F20|808281|B3B5B4|283890')
+
+  client_setting(:max_upload_size_kb, 1024)
 
   # settings only available server side
   setting(:auto_track_topics_after, 300000)
@@ -156,6 +160,8 @@ class SiteSetting < ActiveRecord::Base
   setting(:default_locale, 'en')
 
   client_setting(:educate_until_posts, 2)
+
+  setting(:max_similar_results, 7)
 
   def self.call_discourse_hub?
     self.enforce_global_nicknames? && self.discourse_org_access_key.present?

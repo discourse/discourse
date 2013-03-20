@@ -35,81 +35,60 @@ class Report
 
   def self.report_visits(report)
     report.data = []
-    fetch report do
-      UserVisit.by_day(30.days.ago).each do |date, count|
-        report.data << {x: date, y: count}
-      end
+    UserVisit.by_day(30.days.ago).each do |date, count|
+      report.data << {x: date, y: count}
     end
   end
 
   def self.report_signups(report)
     report.data = []
-    fetch report do
-      User.count_by_signup_date(30.days.ago).each do |date, count|
-        report.data << {x: date, y: count}
-      end
+    User.count_by_signup_date(30.days.ago).each do |date, count|
+      report.data << {x: date, y: count}
     end
   end
 
   def self.report_topics(report)
     report.data = []
-    fetch report do
-      Topic.count_per_day(30.days.ago).each do |date, count|
-        report.data << {x: date, y: count}
-      end
+    Topic.count_per_day(30.days.ago).each do |date, count|
+      report.data << {x: date, y: count}
     end
   end
 
   def self.report_posts(report)
     report.data = []
-    fetch report do
-      Post.count_per_day(30.days.ago).each do |date, count|
-        report.data << {x: date, y: count}
-      end
+    Post.count_per_day(30.days.ago).each do |date, count|
+      report.data << {x: date, y: count}
     end
   end
 
   def self.report_flags(report)
     report.data = []
-    fetch report do
-      (0..30).to_a.reverse.each do |i|
-        if (count = PostAction.where('date(created_at) = ?', i.days.ago.to_date).where(post_action_type_id: PostActionType.flag_types.values).count) > 0
-          report.data << {x: i.days.ago.to_date.to_s, y: count}
-        end
+    (0..30).to_a.reverse.each do |i|
+      if (count = PostAction.where('date(created_at) = ?', i.days.ago.to_date).where(post_action_type_id: PostActionType.flag_types.values).count) > 0
+        report.data << {x: i.days.ago.to_date.to_s, y: count}
       end
     end
   end
 
   def self.report_users_by_trust_level(report)
     report.data = []
-    fetch report do
-      User.counts_by_trust_level.each do |level, count|
-        report.data << {x: level.to_i, y: count}
-      end
+    User.counts_by_trust_level.each do |level, count|
+      report.data << {x: level.to_i, y: count}
     end
   end
 
-
-  private
-
-    def self.fetch(report)
-      unless report.cache and $redis
-        yield
-        return
-      end
-
-      data_set = "#{report.type}:data"
-      if $redis.exists(data_set)
-        $redis.get(data_set).split('|').each do |pair|
-          date, count = pair.split(',')
-          report.data << {x: date, y: count.to_i}
-        end
-      else
-        yield
-        $redis.setex data_set, cache_expiry, report.data.map { |item| "#{item[:x]},#{item[:y]}" }.join('|')
-      end
-    rescue Redis::BaseConnectionError
-      yield
+  def self.report_likes(report)
+    report.data = []
+    PostAction.count_likes_per_day(30.days.ago).each do |date, count|
+      report.data << {x: date, y: count}
     end
+  end
+
+  def self.report_emails(report)
+    report.data = []
+    EmailLog.count_per_day(30.days.ago).each do |date, count|
+      report.data << {x: date, y: count}
+    end
+  end
 
 end

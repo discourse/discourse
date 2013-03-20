@@ -50,6 +50,10 @@ class PostAction < ActiveRecord::Base
     user_actions
   end
 
+  def self.count_likes_per_day(since = 30.days.ago)
+    where(post_action_type_id: PostActionType.types[:like]).where('created_at > ?', since).group('date(created_at)').order('date(created_at)').count
+  end
+
   def self.clear_flags!(post, moderator_id, action_type_id = nil)
     # -1 is the automatic system cleary
     actions = if action_type_id
@@ -156,7 +160,7 @@ class PostAction < ActiveRecord::Base
       old_flags, new_flags = flag_counts['old_flags'].to_i, flag_counts['new_flags'].to_i
 
       if new_flags >= SiteSetting.flags_required_to_hide_post
-        reason = old_flags > 0 ? Post::HiddenReason::FLAG_THRESHOLD_REACHED_AGAIN : Post::HiddenReason::FLAG_THRESHOLD_REACHED
+        reason = old_flags > 0 ? Post.hidden_reasons[:flag_threshold_reached_again] : Post.hidden_reasons[:flag_threshold_reached]
         Post.update_all(["hidden = true, hidden_reason_id = COALESCE(hidden_reason_id, ?)", reason], id: post_id)
         Topic.update_all({ visible: false },
                          ["id = :topic_id AND NOT EXISTS(SELECT 1 FROM POSTS WHERE topic_id = :topic_id AND NOT hidden)", topic_id: post.topic_id])

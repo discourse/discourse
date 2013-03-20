@@ -19,7 +19,7 @@ class InvitesController < ApplicationController
 
         topic = invite.topics.first
         if topic.present?
-          redirect_to topic.relative_url
+          redirect_to "#{Discourse.base_uri}#{topic.relative_url}"
           return
         end
       end

@@ -1,6 +1,7 @@
 # encoding: UTF-8
 
 require 'spec_helper'
+require_dependency 'post_destroyer'
 
 describe Topic do
 
@@ -432,15 +433,17 @@ describe Topic do
 
     context "other user" do
 
+      let(:creator) { PostCreator.new(topic.user, raw: Fabricate.build(:post).raw, topic_id: topic.id )}
+
       it "sends the other user an email when there's a new post" do
         UserNotifications.expects(:private_message).with(coding_horror, has_key(:post))
-        Fabricate(:post, topic: topic, user: topic.user)
+        creator.create
       end
 
       it "doesn't send the user an email when they have them disabled" do
         coding_horror.update_column(:email_private_messages, false)
         UserNotifications.expects(:private_message).with(coding_horror, has_key(:post)).never
-        Fabricate(:post, topic: topic, user: topic.user)
+        creator.create
       end
 
     end
@@ -512,7 +515,7 @@ describe Topic do
     end
 
     it 'has the moderator action type' do
-      @mod_post.post_type.should == Post::MODERATOR_ACTION
+      @mod_post.post_type.should == Post.types[:moderator_action]
     end
 
     it 'increases the moderator_posts count' do
@@ -801,46 +804,6 @@ describe Topic do
         topic_user = @second_user.topic_users.where(topic_id: @topic.id).first
         topic_user.posted?.should be_true
       end
-
-
-      context 'after deleting that post' do
-
-        before do
-          @new_post.destroy
-          Topic.reset_highest(@topic.id)
-          @topic.reload
-        end
-
-        it 'resets the last_poster_id back to the OP' do
-          @topic.last_post_user_id.should == @user.id
-        end
-
-        it 'resets the last_posted_at back to the OP' do
-          @topic.last_posted_at.to_i.should == @post.created_at.to_i
-        end
-
-        context 'topic_user' do
-          before do
-            @topic_user = @second_user.topic_users.where(topic_id: @topic.id).first
-          end
-
-          it 'clears the posted flag for the second user' do
-            @topic_user.posted?.should be_false
-          end
-
-          it "sets the second user's last_read_post_number back to 1" do
-            @topic_user.last_read_post_number.should == 1
-          end
-
-          it "sets the second user's last_read_post_number back to 1" do
-            @topic_user.seen_post_count.should == 1
-          end
-
-        end
-
-
-      end
-
     end
 
   end

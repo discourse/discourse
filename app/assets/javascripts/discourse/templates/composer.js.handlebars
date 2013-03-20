@@ -28,9 +28,9 @@
           {{#if content.editTitle}}
             <div class='form-element clearfix'>
                 {{#if content.creatingPrivateMessage}}
-                  {{view Discourse.TextField id="private-message-users" class="span8" placeholderKey="composer.users_placeholder"}}
+                  {{view Discourse.TextField id="private-message-users" class="span8" placeholderKey="composer.users_placeholder" tabindex="1"}}
                 {{/if}}
-                {{view Discourse.TextField valueBinding="content.title" tabindex="1" id="reply-title" maxlength="255" class="span8" placeholderKey="composer.title_placeholder"}}
+                {{view Discourse.TextField valueBinding="content.title" tabindex="2" id="reply-title" maxlength="255" class="span8" placeholderKey="composer.title_placeholder"}}
                 {{#unless content.creatingPrivateMessage}}
                   {{view Discourse.ComboboxViewCategory valueAttribute="name" contentBinding="Discourse.site.categories" valueBinding="content.categoryName"}}
                   {{#if content.archetype.hasOptions}}
@@ -43,7 +43,7 @@
           <div class='wmd-controls'>
             <div class='textarea-wrapper'>
               <div class='wmd-button-bar' id='wmd-button-bar'></div>
-              {{view Discourse.NotifyingTextArea parentBinding="view" tabindex="2" valueBinding="content.reply" id="wmd-input" placeholderKey="composer.reply_placeholder"}}
+              {{view Discourse.NotifyingTextArea parentBinding="view" tabindex="3" valueBinding="content.reply" id="wmd-input" placeholderKey="composer.reply_placeholder"}}
             </div>
             <div class='preview-wrapper'>
               <div id='wmd-preview' {{bindAttr class="controller.hidePreview:hidden"}}></div>
@@ -56,7 +56,7 @@
 
           {{#if Discourse.currentUser}}
             <div class='submit-panel'>
-              <button {{action save target="controller"}} tabindex="3" {{bindAttr disabled="content.cantSubmitPost"}} class='btn btn-primary create'>{{view.content.saveText}}</button>
+              <button {{action save target="controller"}} tabindex="4" {{bindAttr disabled="content.cantSubmitPost"}} class='btn btn-primary create'>{{view.content.saveText}}</button>
               <a href='#' {{action cancel target="controller"}} class='cancel' tabindex="4">{{i18n cancel}}</a>
               {{#if view.loadingImage}}
                 <div id="image-uploading">

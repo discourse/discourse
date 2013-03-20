@@ -3,9 +3,9 @@ require 'promotion'
 
 describe Promotion do
 
-  context "new user" do
+  context "visitor" do
 
-    let(:user) { Fabricate(:user, trust_level: TrustLevel.levels[:new])}
+    let(:user) { Fabricate(:user, trust_level: TrustLevel.levels[:visitor])}
     let(:promotion) { Promotion.new(user) }
 
     it "doesn't raise an error with a nil user" do
@@ -20,7 +20,7 @@ describe Promotion do
       end
 
       it "has not changed the user's trust level" do
-        user.trust_level.should == TrustLevel.levels[:new]
+        user.trust_level.should == TrustLevel.levels[:visitor]
       end
     end
 

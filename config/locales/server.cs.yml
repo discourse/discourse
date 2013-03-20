@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 cs:
   time:
     formats:
@@ -263,6 +265,10 @@ cs:
       title: "Nové příspěvky"
       xaxis: "Den"
       yaxis: "Počet nových příspěvků"
+    likes:
+      title: "Nová 'líbí se'"
+      xaxis: "Den"
+      yaxis: "Počet nových 'líbí se'"
     total_users:
       title: "Celkem uživatelů"
       xaxis: "Den"
@@ -271,6 +277,14 @@ cs:
       title: "Nahlášení"
       xaxis: "Den"
       yaxis: "Počet nahlášení"
+    users_by_trust_level:
+      title: "Uživatelé podle věrohodnosti"
+      xaxis: "Věrohodnost"
+      yaxis: "Počet uživatelů"
+    emails:
+      title: "Odesláno emailů"
+      xaxis: "Den"
+      yaxis: "Počet emailů"
 
   site_settings:
     default_locale: "Výchozí jazyk této Discourse instance (kód ve formátu ISO 639-1)"
@@ -410,6 +424,9 @@ cs:
 
     min_title_similar_length: "Minimální délka názvu tématu, než budou hledána podobná témata"
     min_body_similar_length: "Minimální délka těla příspěvku, než budou hledána podobná témata"
+
+    category_colors: "Seznam hexadecimálních barev oddělený svislítkem (|) pro barvy kategorií"
+    max_upload_size_kb: "Maximální povolená velikost nahrávaných souborů v kb - nezapomeňte tento limit změnit v nginx (client_max_body_size) / apache a na proxy serverech."
 
   notification_types:
     mentioned: "%{display_username} vás zmínil v %{link}"
@@ -570,9 +587,7 @@ cs:
 
         Váš příspěvek byl komunitou nahlášen jako závadný.
 
-        Mějte na paměti, že již několik členů komunity označilo tento příspěvek jako závadný (než byl skryt) a zvažte, jak byste mohli svůj příspěvek zrevidovat.
-
-        Můžete příspěvek upravit za %{edit_delay} minut, a tím bude zase zviditelněn. Zároveň tím zvýšíte svoji věrohodnost na fóru.
+        Mějte na paměti, že již několik členů komunity označilo tento příspěvek jako závadný (než byl skryt) a zvažte, jak byste mohli svůj příspěvek zrevidovat. Můžete příspěvek upravit za %{edit_delay} minut, a tím bude zase zviditelněn. Zároveň tím zvýšíte svoji věrohodnost na fóru.
 
         Pokud však bude příspěvek znovu označen komunitou jako závadný, budou informováni moderátoři fóra, kteří mohou vyvodit další důsledky, včetně možného zablokování vašeho účtu.
 

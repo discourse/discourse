@@ -1,13 +1,9 @@
-
 class Admin::DashboardController < Admin::AdminController
 
+  caches_action :index, expires_in: 1.hour
+
   def index
-    render_json_dump({
-      reports: ['visits', 'signups', 'topics', 'posts', 'flags', 'users_by_trust_level'].map { |type| Report.find(type) },
-      total_users: User.count
-    }.merge(
-      SiteSetting.version_checks? ? {version_check: DiscourseUpdates.check_version} : {}
-    ))
+    render_json_dump(AdminDashboardData.fetch)
   end
 
 end

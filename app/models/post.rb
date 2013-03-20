@@ -2,6 +2,7 @@ require_dependency 'jobs'
 require_dependency 'pretty_text'
 require_dependency 'rate_limiter'
 require_dependency 'post_revisor'
+require_dependency 'enum'
 
 require 'archetype'
 require 'digest/sha1'
@@ -9,21 +10,16 @@ require 'digest/sha1'
 class Post < ActiveRecord::Base
   include RateLimiter::OnCreateRecord
 
-  module HiddenReason
-    FLAG_THRESHOLD_REACHED = 1
-    FLAG_THRESHOLD_REACHED_AGAIN = 2
-  end
-
   versioned if: :raw_changed?
 
   rate_limit
   acts_as_paranoid
 
   after_recover :update_flagged_posts_count
-  after_destroy :update_flagged_posts_count
 
   belongs_to :user
   belongs_to :topic, counter_cache: :posts_count
+  belongs_to :reply_to_user, class_name: "User"
 
   has_many :post_replies
   has_many :replies, through: :post_replies
@@ -42,24 +38,16 @@ class Post < ActiveRecord::Base
 
   SHORT_POST_CHARS = 1200
 
-  # Post Types
-  REGULAR = 1
-  MODERATOR_ACTION = 2
-
-  before_save :extract_quoted_post_numbers
-  after_commit :feature_topic_users, on: :create
-  after_commit :trigger_post_process, on: :create
-  after_commit :email_private_message, on: :create
-
-  # Related to unique post tracking
-  after_commit :store_unique_post_key, on: :create
-
-  after_create do
-    TopicUser.auto_track(user_id, topic_id, TopicUser.notification_reasons[:created_post])
-  end
-
   scope :by_newest, order('created_at desc, id desc')
   scope :with_user, includes(:user)
+
+  def self.hidden_reasons
+    @hidden_reasons ||= Enum.new(:flag_threshold_reached, :flag_threshold_reached_again)
+  end
+
+  def self.types
+    @types ||= Enum.new(:regular, :moderator_action)
+  end
 
   def raw_quality
     sentinel = TextSentinel.new(raw, min_entropy: SiteSetting.body_min_entropy)
@@ -83,12 +71,6 @@ class Post < ActiveRecord::Base
     if $redis.exists(unique_post_key)
       errors.add(:raw, I18n.t(:just_posted_that))
     end
-  end
-
-  # On successful post, store a hash key to prevent the same post from happening again
-  def store_unique_post_key
-    return if SiteSetting.unique_posts_mins == 0
-    $redis.setex(unique_post_key, SiteSetting.unique_posts_mins.minutes.to_i, "1")
   end
 
   # The key we use in reddit to ensure unique posts
@@ -162,23 +144,6 @@ class Post < ActiveRecord::Base
     @raw_mentions = results.uniq.map { |un| un.first.downcase.gsub!(/^@/, '') }
   end
 
-  # The rules for deletion change depending on who is doing it.
-  def delete_by(deleted_by)
-    if deleted_by.moderator?
-      # As a moderator, delete the post.
-      Post.transaction do
-        self.destroy
-        Topic.reset_highest(topic_id)
-      end
-    elsif deleted_by.id == user_id
-      # As the poster, make a revision that says deleted.
-      Post.transaction do
-        revise(deleted_by, I18n.t('js.post.deleted_by_author'), force_new_version: true)
-        update_column(:user_deleted, true)
-      end
-    end
-  end
-
   def archetype
     topic.archetype
   end
@@ -224,12 +189,6 @@ class Post < ActiveRecord::Base
 
   def quoteless?
     (quote_count == 0) && (reply_to_post_number.present?)
-  end
-
-  # Get the post that we reply to.
-  def reply_to_user
-    return if reply_to_post_number.blank?
-    Post.where(topic_id: topic_id, post_number: reply_to_post_number).first.try(:user)
   end
 
   def reply_notification_target
@@ -304,8 +263,14 @@ class Post < ActiveRecord::Base
     PostRevisor.new(self).revise!(updated_by, new_raw, opts)
   end
 
+
+  # TODO: move into PostCreator
   # Various callbacks
   before_create do
+    if reply_to_post_number.present?
+      self.reply_to_user_id ||= Post.select(:user_id).where(topic_id: topic_id, post_number: reply_to_post_number).first.try(:user_id) 
+    end
+
     self.post_number ||= Topic.next_post_number(topic_id, reply_to_post_number.present?)
     self.cooked ||= cook(raw, topic_id: topic_id)
     self.sort_order = post_number
@@ -314,14 +279,12 @@ class Post < ActiveRecord::Base
   end
 
   # TODO: Move some of this into an asynchronous job?
+  # TODO: Move into PostCreator
   after_create do
     # Update attributes on the topic - featured users and last posted.
     attrs = {last_posted_at: created_at, last_post_user_id: user_id}
     attrs[:bumped_at] = created_at unless no_bump
     topic.update_attributes(attrs)
-
-    # Update the user's last posted at date
-    user.update_column(:last_posted_at, created_at)
 
     # Update topic user data
     TopicUser.change(user,
@@ -329,19 +292,6 @@ class Post < ActiveRecord::Base
                      posted: true,
                      last_read_post_number: post_number,
                      seen_post_count: post_number)
-  end
-
-  def email_private_message
-    # send a mail to notify users in case of a private message
-    if topic.private_message?
-      topic.allowed_users.where(["users.email_private_messages = true and users.id != ?", self.user_id]).each do |u|
-        Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes, :user_email, type: :private_message, user_id: u.id, post_id: self.id)
-      end
-    end
-  end
-
-  def feature_topic_users
-    Jobs.enqueue(:feature_topic_users, topic_id: self.topic_id)
   end
 
   # This calculates the geometric mean of the post timings and stores it along with
@@ -369,58 +319,12 @@ class Post < ActiveRecord::Base
     self.cooked = cook(raw, topic_id: topic_id) unless new_record?
   end
 
-  before_destroy do
-
-    # Update the last post id to the previous post if it exists
-    last_post = Post.where("topic_id = ? and id <> ?", topic_id, id).order('created_at desc').limit(1).first
-    if last_post.present?
-      topic.update_attributes(last_posted_at: last_post.created_at,
-                              last_post_user_id: last_post.user_id,
-                              highest_post_number: last_post.post_number)
-
-      # If the poster doesn't have any other posts in the topic, clear their posted flag
-      unless Post.exists?(["topic_id = ? and user_id = ? and id <> ?", topic_id, user_id, id])
-        TopicUser.update_all 'posted = false', topic_id: topic_id, user_id: user_id
-      end
-    end
-
-    # Feature users in the topic
-    Jobs.enqueue(:feature_topic_users, topic_id: topic_id, except_post_id: id)
-
+  def advance_draft_sequence
+    return if topic.blank? # could be deleted
+    DraftSequence.next!(last_editor_id, topic.draft_key)
   end
 
-  after_destroy do
-    # Remove any reply records that point to deleted posts
-    post_ids = PostReply.select(:post_id).where(reply_id: id).map(&:post_id)
-    PostReply.delete_all reply_id: id
-
-    if post_ids.present?
-      Post.where(id: post_ids).each { |p| p.update_column :reply_count, p.replies.count }
-    end
-
-    # Remove any notifications that point to this deleted post
-    Notification.delete_all topic_id: topic_id, post_number: post_number
-  end
-
-  after_save do
-    DraftSequence.next! last_editor_id, topic.draft_key if topic # could be deleted
-
-    quoted_post_numbers << reply_to_post_number if reply_to_post_number.present?
-
-    # Create a reply relationship between quoted posts and this new post
-    if quoted_post_numbers.present?
-      quoted_post_numbers.map(&:to_i).uniq.each do |p|
-        post = Post.where(topic_id: topic_id, post_number: p).first
-        if post.present?
-          post_reply = post.post_replies.new(reply_id: id)
-          if post_reply.save
-            Post.update_all ['reply_count = reply_count + 1'], id: post.id
-          end
-        end
-      end
-    end
-  end
-
+  # Determine what posts are quoted by this post
   def extract_quoted_post_numbers
     self.quoted_post_numbers = []
 
@@ -446,7 +350,25 @@ class Post < ActiveRecord::Base
     self.quote_count = quoted_post_numbers.size
   end
 
-  # Process this post after committing it
+  def save_reply_relationships
+    self.quoted_post_numbers ||= []
+    self.quoted_post_numbers << reply_to_post_number if reply_to_post_number.present?
+
+    # Create a reply relationship between quoted posts and this new post
+    if self.quoted_post_numbers.present?
+      self.quoted_post_numbers.map(&:to_i).uniq.each do |p|
+        post = Post.where(topic_id: topic_id, post_number: p).first
+        if post.present?
+          post_reply = post.post_replies.new(reply_id: id)
+          if post_reply.save
+            Post.update_all ['reply_count = reply_count + 1'], id: post.id
+          end
+        end
+      end
+    end
+  end
+
+  # Enqueue post processing for this post
   def trigger_post_process
     args = { post_id: id }
     args[:image_sizes] = image_sizes if image_sizes.present?

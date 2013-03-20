@@ -1,7 +1,7 @@
 <div class="modal-body">
   <form>
     <label>{{i18n category.name}}</label>
-    {{view Discourse.TextField valueBinding="view.category.name" placeholderKey="category.name_placeholder"}}
+    {{view Discourse.TextField valueBinding="view.category.name" placeholderKey="category.name_placeholder" maxlength="50"}}
 
     <div class='description-controls' style="margin-bottom: 20px">
       <label>{{i18n category.description}}</label>
@@ -28,13 +28,13 @@
         <div class='input-prepend input-append' style="margin-top: 10px;">
           <span class='color-title'>{{i18n category.background_color}}:</span>
           <span class='add-on'>#</span>{{view Discourse.TextField valueBinding="view.category.color" placeholderKey="category.color_placeholder" maxlength="6"}}
-          {{view Discourse.ColorsView colorsBinding="view.predefinedColors" valueBinding="view.category.color"}}
+          {{view Discourse.ColorsView colorsBinding="view.backgroundColors" valueBinding="view.category.color"}}
         </div>
 
         <div class='input-prepend input-append'>
           <span class='color-title'>{{i18n category.foreground_color}}:</span>
           <span class='add-on'>#</span>{{view Discourse.TextField valueBinding="view.category.text_color" placeholderKey="category.color_placeholder" maxlength="6"}}
-          {{view Discourse.ColorsView colorsBinding="view.predefinedColors" valueBinding="view.category.text_color"}}
+          {{view Discourse.ColorsView colorsBinding="view.foregroundColors" valueBinding="view.category.text_color"}}
         </div>
     </div>
 

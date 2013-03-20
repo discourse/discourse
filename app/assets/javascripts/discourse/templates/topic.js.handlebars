@@ -6,11 +6,11 @@
       <div class='container'>
         <div class='inner'>
           {{#if view.showFavoriteButton}}
-            <a {{bindAttr class=":star view.topic.starred:starred"}} {{action toggleStar target="controller"}} href='#' title="{{i18n favorite.help}}"></a>
+            <a {{bindAttr class=":star view.topic.starred:starred"}} {{action toggleStar target="controller"}} href='#' {{bindAttr title="favoriteTooltip"}}></a>
           {{/if}}
           {{#if view.editingTopic}}
-            <input id='edit-title' type='text' {{bindAttr value="view.topic.title"}}>
-            {{view Discourse.ComboboxViewCategory valueAttribute="name" contentBinding="Discourse.site.categories" valueBinding="view.topic.categoryName"}}
+            <input id='edit-title' type='text' {{bindAttr value="view.topic.title"}} autofocus>
+            {{view Discourse.ComboboxViewCategory valueAttribute="name" contentBinding="Discourse.site.categories" sourceBinding="view.topic.categoryName"}}
             <button class='btn btn-primary btn-small' {{action finishedEdit target="view"}}><i class='icon-ok'></i></button>
             <button class='btn btn-small' {{action cancelEdit target="view"}}><i class='icon-remove'></i></button>
           {{else}}
@@ -73,7 +73,7 @@
             {{#if view.fullyLoaded}}
               {{view Discourse.TopicFooterButtonsView topicBinding="controller.content"}}
 
-              {{#if controller.content.suggested_topics}}
+              {{#if controller.content.suggested_topics.length}}
                 <div id='suggested-topics'>
 
                   <h3>{{i18n suggested_topics.title}}</h3>
@@ -91,7 +91,7 @@
                         <th class='num activity' colspan='2'>{{i18n activity}}</th>
                       </tr>
 
-                    {{each controller.content.suggested_topics tagName="tbody" itemTagName="tr" itemViewClass="Discourse.SuggestedTopicView"}}
+                    {{each controller.content.suggested_topics itemTagName="tr" itemViewClass="Discourse.SuggestedTopicView"}}
                     </table>
                   </div>
                   <br/>

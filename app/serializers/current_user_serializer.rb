@@ -27,7 +27,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def moderator?
-    object.has_trust_level?(:moderator)
+    object.moderator?
   end
 
   def site_flagged_posts_count

@@ -50,7 +50,7 @@ class Guardian
   def can_moderate?(obj)
     return false if obj.blank?
     return false if @user.blank?
-    @user.has_trust_level?(:moderator)
+    @user.moderator?
   end
   alias :can_move_posts? :can_moderate?
   alias :can_see_flags? :can_moderate?
@@ -99,7 +99,7 @@ class Guardian
     return false if target.blank?
     return false if @user.blank?
     return false if target.approved?
-    @user.has_trust_level?(:moderator)
+    @user.moderator?
   end
 
   def can_ban?(user)
@@ -112,7 +112,7 @@ class Guardian
   def can_clear_flags?(post)
     return false if @user.blank?
     return false if post.blank?
-    @user.has_trust_level?(:moderator)
+    @user.moderator?
   end
 
   def can_revoke_admin?(admin)
@@ -135,7 +135,7 @@ class Guardian
     return false unless @user.try(:admin?)
     return false if moderator.blank?
     return false if @user.id == moderator.id
-    return false unless moderator.trust_level == TrustLevel.levels[:moderator]
+    return false unless moderator.moderator?
     true
   end
 
@@ -144,7 +144,7 @@ class Guardian
     return false if user.blank?
     return false if @user.id == user.id
     return false if user.admin?
-    return false if user.has_trust_level?(:moderator)
+    return false if user.moderator?
     true
   end
 
@@ -175,7 +175,7 @@ class Guardian
     return false if @user.blank?
     return false unless can_see?(object)
     return false if SiteSetting.must_approve_users?
-    @user.has_trust_level?(:moderator)
+    @user.moderator?
   end
 
 
@@ -218,11 +218,11 @@ class Guardian
 
   # Creating Methods
   def can_create_category?(parent)
-    @user.has_trust_level?(:moderator)
+    @user.moderator?
   end
 
   def can_create_post_on_topic?(topic)
-    return true if @user.has_trust_level?(:moderator)
+    return true if @user.moderator?
     return false if topic.closed?
     return false if topic.archived?
     true
@@ -230,11 +230,11 @@ class Guardian
 
   # Editing Methods
   def can_edit_category?(category)
-    @user.has_trust_level?(:moderator)
+    @user.moderator?
   end
 
   def can_edit_post?(post)
-    return true if @user.has_trust_level?(:moderator)
+    return true if @user.moderator?
     return false if post.topic.archived?
     (post.user == @user)
   end
@@ -245,7 +245,7 @@ class Guardian
   end
 
   def can_edit_topic?(topic)
-    return true if @user.has_trust_level?(:moderator)
+    return true if @user.moderator?
     return true if topic.user == @user
     false
   end
@@ -258,22 +258,22 @@ class Guardian
     # You can delete your own posts
     return !post.user_deleted? if post.user == @user
 
-    @user.has_trust_level?(:moderator)
+    @user.moderator?
   end
 
   # Recovery Method
   def can_recover_post?(post)
     return false if @user.blank?
-    @user.has_trust_level?(:moderator)
+    @user.moderator?
   end
 
   def can_delete_category?(category)
-    return false unless @user.has_trust_level?(:moderator)
+    return false unless @user.moderator?
     return category.topic_count == 0
   end
 
   def can_delete_topic?(topic)
-    return false unless @user.has_trust_level?(:moderator)
+    return false unless @user.moderator?
     return false if Category.exists?(topic_id: topic.id)
     true
   end
@@ -281,7 +281,8 @@ class Guardian
   def can_delete_post_action?(post_action)
 
     # You can only undo your own actions
-    return false unless post_action.user == @user
+    return false unless @user
+    return false unless post_action.user_id == @user.id
 
     # Make sure they want to delete it within the window
     return post_action.created_at > SiteSetting.post_undo_action_window_mins.minutes.ago

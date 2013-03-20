@@ -23,7 +23,7 @@ Discourse.StaticController = Discourse.Controller.extend({
       return this.set('content', text);
     } else {
       return $.ajax({
-        url: "" + path + ".json",
+        url: Discourse.getURL("" + path + ".json"),
         success: function(result) {
           return _this.set('content', result);
         }

@@ -26,7 +26,7 @@ Discourse.VersionCheck = Discourse.Model.extend({
 
 Discourse.VersionCheck.reopenClass({
   find: function() {
-    return $.ajax({ url: '/admin/version_check', dataType: 'json' }).then(function(json) {
+    return $.ajax({ url: Discourse.getURL('/admin/version_check'), dataType: 'json' }).then(function(json) {
       return Discourse.VersionCheck.create(json);
     });
   }

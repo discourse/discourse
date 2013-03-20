@@ -8,6 +8,31 @@
   .admin-contents {
     padding: 8px;
   }
+
+  table.report {
+    tr {
+      th:nth-of-type(1) {
+        width: 20%;
+      }
+    }
+
+    .bar-container {
+      float: left;
+      width: 300px;
+      margin-right: 15px;
+      margin-bottom: 5px;
+      display: inline-block;
+
+      .bar {
+        margin-top: 5px;
+        background-color: $blue;
+        display: inline-block;
+        text-align: right;
+        padding-right: 8px;
+        color: $white;
+      }
+    }
+  }
 }
 
 .admin-loading {
@@ -265,16 +290,27 @@ table {
   float: right;
   width: 500px;
   margin-right: 15px;
+
+  @include medium-width {
+    width: 430px;
+  }
+  @include small-width {
+    width: 390px;
+  }
 }
 
 .version-check {
   .version-number {
     font-size: 18px;
-    font-weight: bold
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .face {
+    width: 20px;
   }
 
   .version-notes .icon {
-    margin-left: 20px;
     vertical-align: bottom;
   }
 
@@ -318,10 +354,41 @@ table {
       font-weight: normal;
       text-align: center;
     }
+    thead {
+      tr:hover > td,
+      tr:hover > th {
+        background-color: $white;
+      }
+    }
 
     td.value {
       font-weight: bold;
       text-align: center;
+    }
+  }
+
+  &.detected-problems {
+    @include border-radius-all(5px);
+    background-color: #eee;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    box-shadow: inset 0 0 10px #bbb;
+
+    .look-here {
+      float: left;
+      margin: 20px 20px 0 20px;
+
+      .icon {
+        font-size: 32px;
+        vertical-align: middle;
+        color: $darkish_gray;
+      }
+    }
+
+    .problem-messages {
+      float: left;
+      width: 355px;
     }
   }
 
@@ -335,6 +402,14 @@ table {
 
   &.trust-levels {
     margin-top: 0px;
+
+    td.value {
+      width: 33px;
+    }
+  }
+
+  &.total-users {
+    margin-left: 45px;
   }
 }
 
@@ -344,6 +419,13 @@ table {
   margin-top: 10px;
   width: 500px;
   height: 380px;
+
+  @include medium-width {
+    width: 430px;
+  }
+  @include small-width {
+    width: 390px;
+  }
 
   ul, li {
     margin: 0;
@@ -385,7 +467,7 @@ table {
   }
 
   .header:hover h1 {
-    text-decoration: underline;
+    color: $link-color-hover;
   }
 
   .commits-list {

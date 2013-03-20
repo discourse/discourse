@@ -243,7 +243,7 @@ Discourse.CreateAccountView = Discourse.ModalBodyView.extend({
   fetchConfirmationValue: function() {
     var _this = this;
     return $.ajax({
-      url: '/users/hp.json',
+      url: Discourse.getURL('/users/hp.json'),
       success: function(json) {
         _this.set('accountPasswordConfirm', json.value);
         return _this.set('accountChallenge', json.challenge.split("").reverse().join(""));

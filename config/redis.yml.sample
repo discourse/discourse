@@ -1,6 +1,8 @@
 defaults: &defaults
-  host: localhost
-  port: 6379
+  uri: <%= uri = URI.parse(ENV['SET_REDIS_PROVIDER_URL'] || "redis://localhost:6379") %>
+  host: <%= uri.host %>
+  port: <%= uri.port %>
+  password: <%= uri.password %>
   db: 0
   cache_db: 2
 
@@ -19,13 +21,3 @@ staging:
 
 production:
   <<: *defaults
-
-# Example for using environment variables
-#
-# production:
-#   uri: <%= uri = URI.parse(ENV['OPENREDIS_URL']) if ENV['OPENREDIS_URL'] %>
-#   host: <%= uri.host if uri %>
-#   port: <%= uri.port if uri %>
-#   password: <%= uri.password if uri %>
-#   db: 0
-#   cache_db: 2

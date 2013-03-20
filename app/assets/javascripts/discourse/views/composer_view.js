@@ -68,7 +68,7 @@ Discourse.ComposerView = Discourse.View.extend({
     if (this.get('controller.newUserEducationVisible')) {
       $panel.slideDown('fast');
     } else {
-      $panel.slideUp('fast')
+      $panel.slideUp('fast');
     }
   }.observes('controller.newUserEducationVisible'),
 
@@ -77,7 +77,7 @@ Discourse.ComposerView = Discourse.View.extend({
     if (this.get('controller.similarVisible')) {
       $panel.slideDown('fast');
     } else {
-      $panel.slideUp('fast')
+      $panel.slideUp('fast');
     }
   }.observes('controller.similarVisible'),
 
@@ -145,7 +145,7 @@ Discourse.ComposerView = Discourse.View.extend({
     // If we are editing a post, we'll refresh its contents once. This is a feature that
     // allows a user to refresh its contents once.
     if (post && post.blank('refreshedPost')) {
-      refresh = true
+      refresh = true;
       post.set('refreshedPost', true);
     }
 
@@ -305,7 +305,12 @@ Discourse.ComposerView = Discourse.View.extend({
         return _this.addMarkdown(html);
       },
       fail: function(e, data) {
-        bootbox.alert(Em.String.i18n('post.errors.upload'));
+        // 413 == entity too large, returned usually from nginx
+        if(data.jqXHR && data.jqXHR.status === 413) {
+          bootbox.alert(Em.String.i18n('post.errors.upload_too_large', {max_size_kb: Discourse.SiteSettings.max_upload_size_kb}));
+        } else {
+          bootbox.alert(Em.String.i18n('post.errors.upload'));
+        }
         return _this.set('loadingImage', false);
       }
     });

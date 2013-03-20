@@ -85,8 +85,10 @@ describe PostsController do
         response.should be_forbidden
       end
 
-      it "calls delete_by" do
-        Post.any_instance.expects(:delete_by).with(user)
+      it "uses a PostDestroyer" do
+        destroyer = mock
+        PostDestroyer.expects(:new).with(user, post).returns(destroyer)
+        destroyer.expects(:destroy)
         xhr :delete, :destroy, id: post.id
       end
 

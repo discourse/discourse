@@ -53,7 +53,7 @@ Discourse.HeaderView = Discourse.View.extend({
 
   showNotifications: function() {
     var _this = this;
-    $.get("/notifications").then(function(result) {
+    $.get(Discourse.getURL("/notifications")).then(function(result) {
       _this.set('notifications', result.map(function(n) {
         return Discourse.Notification.create(n);
       }));
@@ -93,7 +93,7 @@ Discourse.HeaderView = Discourse.View.extend({
     @property logoHTML
   **/
   logoHTML: function() {
-    var result = "<div class='title'><a href='/'>";
+    var result = "<div class='title'><a href='" + Discourse.getURL("/") + "'>";
     if (this.get('controller.showExtraInfo')) {
       var logo = Discourse.SiteSettings.logo_small_url;
       if (logo && logo.length > 1) {

@@ -7,7 +7,7 @@
         <button {{action "logout" target="Discourse"}} class='btn'>{{i18n user.log_out}}</button>
       {{/if}}
       {{#if Discourse.currentUser.admin}}
-        <a href="/admin/users/{{unbound content.username_lower}}" class='btn'><i class="icon-wrench"></i>&nbsp;{{i18n admin.user.show_admin_profile}}</a>
+        <a href="{{unbound content.adminPath}}" class='btn'><i class="icon-wrench"></i>&nbsp;{{i18n admin.user.show_admin_profile}}</a>
       {{/if}}
       <ul class="nav nav-pills">
         <li>

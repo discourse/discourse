@@ -60,10 +60,14 @@ EXPECTED
     end
 
     context 'with unsized images in the post' do
+      let(:user) { Fabricate(:user) }
+      let(:topic) { Fabricate(:topic, user: user) }
+
       before do
         FastImage.stubs(:size).returns([123, 456])
         CookedPostProcessor.any_instance.expects(:image_dimensions).returns([123, 456])
-        @post = Fabricate(:post_with_images)
+        creator = PostCreator.new(user, raw: Fabricate.build(:post_with_images).raw, topic_id: topic.id)
+        @post = creator.create
       end
 
       it "adds a topic image if there's one in the post" do

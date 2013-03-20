@@ -1,7 +1,7 @@
 
   {{#if Discourse.currentUser.id}}
     <td class='star'>
-      <a {{bindAttr class=":star :icon-star starred:starred"}} {{action toggleStar this target="controller"}} href='#' title='{{i18n favorite.help}}'></a>
+      <a {{bindAttr class=":star :icon-star starred:starred"}} {{action toggleStar this target="controller"}} href='#' {{bindAttr title="favoriteTooltip"}}></a>
     </td>
   {{/if}}
 
@@ -24,7 +24,7 @@
 
   <td class='posters'>
     {{#each posters}}
-      <a href="/users/{{user.username_lower}}">{{avatar this usernamePath="user.username" imageSize="small"}}</a>
+      <a href="{{user.path}}">{{avatar this usernamePath="user.username" imageSize="small"}}</a>
     {{/each}}
   </td>
 

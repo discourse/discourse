@@ -16,7 +16,7 @@ end
 Fabricator(:moderator_post, from: :post) do
   user
   topic {|attrs| Fabricate(:topic, user: attrs[:user] ) }
-  post_type Post::MODERATOR_ACTION
+  post_type Post.types[:moderator_action]
   raw "Hello world"
 end
 
@@ -48,17 +48,6 @@ Fabricator(:reply, from: :post) do
   raw '
     [quote="Evil Trout, post:1"]hello[/quote]
     Hmmm!
-  '
-end
-
-Fabricator(:multi_quote_reply, from: :post) do
-  user(:coding_horror)
-  topic
-  raw '
-    [quote="Evil Trout, post:1"]post1 quote[/quote]
-    Aha!
-    [quote="Evil Trout, post:2"]post2 quote[/quote]
-    Neat-o
   '
 end
 

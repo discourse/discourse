@@ -1,3 +1,4 @@
+# encoding: utf-8
 en:
   time:
     formats:
@@ -79,18 +80,16 @@ en:
     post_template: "%{replace_paragraph}\n\nUse this space below for a longer description, as well as to establish any rules or discussion!"
 
   trust_levels:
-    new:
-      title: "new user"
+    visitor:
+      title: "visitor"
     basic:
       title: "basic user"
     regular:
       title: "regular user"
-    experienced:
-      title: "experienced user"
-    advanced:
-      title: "advanced user"
-    moderator:
-      title: "moderator"
+    leader:
+      title: "leader"
+    elder:
+      title: "elder"
 
   rate_limiter:
     too_many_requests: "You're doing that too often. Please wait %{time_left} before trying again."
@@ -184,6 +183,7 @@ en:
     title: 'reset password'
     success: "You successfully changed your password and are now logged in."
     success_unapproved: "You successfully changed your password."
+    continue: "Continue to %{site_name}"
 
   change_email:
     confirmed: "Your email has been updated."
@@ -263,18 +263,31 @@ en:
       title: "New Posts"
       xaxis: "Day"
       yaxis: "Number of new posts"
+    likes:
+      title: "New Likes"
+      xaxis: "Day"
+      yaxis: "Number of new likes"
     total_users:
       title: "Total Users"
       xaxis: "Day"
       yaxis: "Total number of users"
     flags:
-      title: "Flags"
+      title: "New Flags"
       xaxis: "Day"
       yaxis: "Number of flags"
     users_by_trust_level:
       title: "Users per Trust Level"
       xaxis: "Trust Level"
       yaxis: "Number of Users"
+    emails:
+      title: "Emails Sent"
+      xaxis: "Day"
+      yaxis: "Number of Emails"
+
+  dashboard:
+    rails_env_warning: "Your server is running in %{env} mode."
+    host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
+    gc_warning: 'Your server is using default ruby garbage collection parameters, which will not give you the best performance. Read this topic on performance tuning: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>.'
 
   site_settings:
     default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"
@@ -414,6 +427,10 @@ en:
 
     min_title_similar_length: "The minimum length of a title before it will be checked for similar topics"
     min_body_similar_length: "The minimum length of a post's body before it will be checked for similar topics"
+
+    category_colors: "A pipe (|) separated list of hexadecimal color values allowed for categories"
+    max_upload_size_kb: "The maximum size of files we allow users to upload in kb - be sure to configure the limit in nginx (client_max_body_size) / apache or proxy as well."
+    max_similar_results: "How many similar topics to show a user while they are composing a new topic"
 
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"
@@ -564,19 +581,17 @@ en:
     site_password: "Also, the site password is `%{access_password}` if you need it."
 
     post_hidden:
-      subject_template: "%{site_name} Notice: Posting Hidden due to Community Flagging"
+      subject_template: "Post hidden due to community flagging"
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that the following post was hidden as a result of community flagging.
+        This is an automated message from %{site_name} to inform you that your post ...
 
         %{base_url}%{url}
 
-        Your post was hidden because it was flagged by the community.
+        ... was hidden due to community flagging.
 
-        Keep in mind that multiple community members flagged this post before it was hidden, so please consider how you might revise your post to reflect their feedback.
-
-        You can edit the post after %{edit_delay} minutes, and it will be automatically unhidden. This will increase your forum trust level.
+        Keep in mind that multiple community members flagged this post before it was hidden, so **please consider how you might revise your post to reflect their feedback.** You can edit your post after %{edit_delay} minutes, and it will be automatically unhidden. This will increase your forum trust level.
 
         However, if the post is hidden by the community a second time, the moderators will be notified -- and there may be further action, including the possible suspension of your account.
 

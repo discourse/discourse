@@ -53,7 +53,7 @@ Discourse.ActionSummary = Discourse.Model.extend({
     // Create our post action
     var actionSummary = this;
     return $.ajax({
-      url: "/post_actions",
+      url: Discourse.getURL("/post_actions"),
       type: 'POST',
       data: {
         id: this.get('post.id'),
@@ -72,7 +72,7 @@ Discourse.ActionSummary = Discourse.Model.extend({
 
     // Remove our post action
     return $.ajax({
-      url: "/post_actions/" + (this.get('post.id')),
+      url: Discourse.getURL("/post_actions/") + (this.get('post.id')),
       type: 'DELETE',
       data: {
         post_action_type_id: this.get('id')
@@ -83,7 +83,7 @@ Discourse.ActionSummary = Discourse.Model.extend({
   clearFlags: function() {
     var _this = this;
     return $.ajax({
-      url: "/post_actions/clear_flags",
+      url: Discourse.getURL("/post_actions/clear_flags"),
       type: "POST",
       data: {
         post_action_type_id: this.get('id'),
@@ -98,7 +98,7 @@ Discourse.ActionSummary = Discourse.Model.extend({
 
   loadUsers: function() {
     var _this = this;
-    return $.getJSON("/post_actions/users", {
+    return $.getJSON(Discourse.getURL("/post_actions/users"), {
       id: this.get('post.id'),
       post_action_type_id: this.get('id')
     }, function(result) {

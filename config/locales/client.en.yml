@@ -1,3 +1,4 @@
+# encoding: utf-8
 # This file contains content for the client portion of Discourse, sent out
 # to the Javascript app.
 
@@ -357,7 +358,9 @@ en:
 
     favorite:
       title: 'Favorite'
-      help: 'add this topic to your favorites list'
+      help:
+        star: 'add this topic to your favorites list'
+        unstar: 'remove this topic from your favorites list'
 
     topics:
       none:
@@ -413,6 +416,7 @@ en:
       read_position_reset: "Your read position has been reset."
       jump_reply_up: jump to earlier reply
       jump_reply_down: jump to later reply
+      deleted: "The topic has been deleted"
 
       progress:
         title: topic progress
@@ -536,6 +540,7 @@ en:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
         upload: "Sorry, there was an error uploading that file. Please try again."
+        upload_too_large: "Sorry, the file you are trying to upload is too big (maximum size is {{max_size_kb}}kb), please resize it and try again."
 
       abandon: "Are you sure you want to abandon your post?"
 
@@ -585,6 +590,7 @@ en:
       view: 'View Topics in Category'
       delete: 'Delete Category'
       create: 'Create Category'
+      creation_error: There has been an error during the creation of the category.
       more_posts: "view all {{posts}}..."
       name: "Category Name"
       description: "Description"
@@ -683,14 +689,17 @@ en:
 
       dashboard:
         title: "Admin Dashboard"
-        version: "Installed version"
-        up_to_date: "You are running the latest version of Discourse."
+        version: "Version"
+        up_to_date: "You're up to date!"
         critical_available: "A critical update is available."
         updates_available: "Updates are available."
         please_upgrade: "Please upgrade!"
-        latest_version: "Latest version"
+        installed_version: "Installed"
+        latest_version: "Latest"
         update_often: 'Please update often!'
         total_users: "Total Users"
+        moderator_short: "mod"
+        problems_found: "Some problems have been found with your installation of Discourse:"
 
         reports:
           today: "Today"
@@ -702,7 +711,7 @@ en:
           30_days_ago: "30 Days Ago"
 
       commits:
-        latest_changes: "Latest changes"
+        latest_changes: "Latest changes."
         by: "by"
 
       flags:

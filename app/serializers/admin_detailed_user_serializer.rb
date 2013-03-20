@@ -36,7 +36,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
   end
 
   def moderator
-    object.has_trust_level?(:moderator)
+    object.moderator
   end
 
 end

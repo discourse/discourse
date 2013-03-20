@@ -1,3 +1,4 @@
+# encoding: utf-8
 #
 # French translation - Traduction française
 #
@@ -86,18 +87,16 @@ fr:
     post_template: "%{replace_paragraph}\n\nUtilisez l'espace ci-dessous pour une plus longue description, voire pour établir des règles."
 
   trust_levels:
-    new:
-      title: "nouvel utilisateur"
+    visitor:
+      title: "visiteur"
     basic:
       title: "utilisateur basique"
     regular:
       title: "utilisateur régulier"
-    experienced:
+    leader:
       title: "utilisateur experimenté"
-    advanced:
+    elder:
       title: "utilisateur avancé"
-    moderator:
-      title: "modérateur"
 
   rate_limiter:
     too_many_requests: "Vous avez fait ceci trop souvent. Veuillez attendre %{time_left} avant de réessayer."
@@ -191,6 +190,7 @@ fr:
     title: 'réinitialiser le mot de passe'
     success: "Vous avez modifié votre mot de passe avec succès et vous êtes maintenant connecté."
     success_unapproved: "Vous avez modifié votre mot de passe avec succès."
+    continue: "Continuez vers %{site_name}"
 
   change_email:
     confirmed: "Votre adresse email a été mise à jour."
@@ -270,18 +270,31 @@ fr:
       title: Nouveaux messages
       xaxis: Jour
       yaxis: Nombre de messages
+    likes:
+      title: Nouveau Likes
+      xaxis: Jour
+      yaxis: Nombre de Likes
     total_users:
       title: "Total d'utilisateurs"
       xaxis: Jour
       yaxis: "Total d'utilisateurs"
     flags:
-      title: Signalements
+      title: Nouveaux Signalements
       xaxis: Jour
       yaxis: Nombre de signalements
     users_by_trust_level:
       title: Utilisateurs par niveau de confiance
       xaxis: Niveau de confiance
       yaxis: "Nombre d'utilisateurs"
+    emails:
+      title: Emails envoyés
+      xaxis: Jour
+      yaxis: "Nombre d'emails"
+
+  dashboard:
+    rails_env_warning: "Votre serveur fonctionne dans l'environnement de %{env}."
+    host_names_warning: "Le fichier config/database.yml utilise le nom d'hôte par défaut. Veuillez renseigner votre nom d'hôte."
+    gc_warning: "Votre serveur utilise les paramètres par défaut de collection du GC de ruby, ce qui ne vous donneras pas les meilleures performances. Merci de lire cette discussion sur <a href=\"http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126\">l'optimisation des performances de Ruby et Rails pour Discourse [EN]</a>."
 
   site_settings:
     default_locale: "Le langage par défaut de cette instance de Discourse (code ISO 639-1)"
@@ -421,6 +434,10 @@ fr:
 
     min_title_similar_length: "La taille minimale du titre avant que l'on vérifie l'existence de discussions identiques"
     min_body_similar_length: "La taille minimale du message avant que l'on vérifie l'existence de discussions identiques"
+
+    category_colors: "Une liste de couleurs autorisées pour les catégories (au format hexadécimal, séparés par un |)"
+    max_upload_size_kb: "La taille maximum des fichiers que les utilisateurs peuvent envoyer en Kb - assurez-vous de configurer également cette limite dans nginx (client_max_body_size) / apache ou votre proxy."
+    max_similar_results: "Nombre de discussions similaires à afficher lorsqu'un utilisateur est en train de créer une nouvelle discussion"
 
   notification_types:
     mentioned: "%{display_username} vous a mentionné dans %{link}"

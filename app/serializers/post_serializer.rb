@@ -48,11 +48,12 @@ class PostSerializer < ApplicationSerializer
 
 
   def new_user?
+    # 21 calls = 5ms ... if there was a proper date in the RHS it would be 1ms 
     object.user.created_at > SiteSetting.new_user_period_days.days.ago
   end
 
   def moderator?
-    object.user.has_trust_level?(:moderator)
+    object.user.moderator?
   end
 
   def avatar_template

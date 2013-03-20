@@ -1,6 +1,6 @@
 <div class='admin-controls'>
   <div class='span5 controls'>
-    {{view Discourse.TextField valueBinding="controller.testEmailAddress" placeholderKey="admin.email_logs.test_email_address"}}    
+    {{view Discourse.TextField valueBinding="controller.testEmailAddress" placeholderKey="admin.email_logs.test_email_address"}}
   </div>
   <div class='span10 controls'>
     <button class='btn' {{action sendTestEmail target="controller"}} {{bindAttr disabled="sendTestEmailDisabled"}}>{{i18n admin.email_logs.send_test}}</button>
@@ -8,7 +8,7 @@
   </div>
 </div>
 
-<table class='table'> 
+<table class='table'>
   <tr>
     <th>{{i18n admin.email_logs.sent_at}}</th>
     <th>{{i18n user.title}}</th>
@@ -22,13 +22,13 @@
           <td>{{date view.content.created_at}}</td>
           <td>
             {{#if view.content.user}}
-              <a href="/admin/users/{{unbound view.content.user.username_lower}}">{{avatar view.content.user imageSize="tiny"}}</a>
-              <a href="/admin/users/{{unbound view.content.user.username_lower}}">{{view.content.user.username}}</a>
+              <a href="{{unbound view.content.user.adminPath}}">{{avatar view.content.user imageSize="tiny"}}</a>
+              <a href="{{unbound view.content.user.adminPath}}">{{view.content.user.username}}</a>
             {{else}}
               &mdash;
             {{/if}}
-          </td>  
-          <td><a href='mailto:{{unbound view.content.to_address}}'>{{view.content.to_address}}</a></td>  
+          </td>
+          <td><a href='mailto:{{unbound view.content.to_address}}'>{{view.content.to_address}}</a></td>
           <td>{{view.content.email_type}}</td>
       {{/collection}}
     {{/group}}

@@ -223,7 +223,7 @@ class Topic < ActiveRecord::Base
          .visible
          .where(closed: false, archived: false)
          .listable_topics
-         .limit(5)
+         .limit(SiteSetting.max_similar_results)
          .order('similarity desc')
          .all
   end
@@ -320,7 +320,7 @@ class Topic < ActiveRecord::Base
   def add_moderator_post(user, text, opts={})
     new_post = nil
     Topic.transaction do
-      new_post = posts.create(user: user, raw: text, post_type: Post::MODERATOR_ACTION, no_bump: opts[:bump].blank?)
+      new_post = posts.create(user: user, raw: text, post_type: Post.types[:moderator_action], no_bump: opts[:bump].blank?)
       increment!(:moderator_posts_count)
       new_post
     end

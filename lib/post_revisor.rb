@@ -13,6 +13,7 @@ class PostRevisor
     revise_post
     update_category_description
     post_process_post
+    @post.advance_draft_sequence
     true
   end
 
@@ -69,7 +70,7 @@ class PostRevisor
     @post.updated_by = @user
     @post.last_editor_id = @user.id
 
-    if @post.hidden && @post.hidden_reason_id == Post::HiddenReason::FLAG_THRESHOLD_REACHED
+    if @post.hidden && @post.hidden_reason_id == Post.hidden_reasons[:flag_threshold_reached]
       @post.hidden = false
       @post.hidden_reason_id = nil
       @post.topic.update_attributes(visible: true)
@@ -77,7 +78,9 @@ class PostRevisor
       PostAction.clear_flags!(@post, -1)
     end
 
+    @post.extract_quoted_post_numbers
     @post.save
+    @post.save_reply_relationships
   end
 
   def update_category_description

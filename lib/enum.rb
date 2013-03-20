@@ -1,4 +1,4 @@
-class Enum < SimpleDelegator
+class Enum < Hash
   # Public: Initialize an enum.
   #
   # members - the array of enum members. May contain a hash of options:
@@ -33,14 +33,14 @@ class Enum < SimpleDelegator
   # Public: Create a subset of enum, only include specified keys.
   def only(*keys)
     dup.tap do |d|
-      d.__getobj__.keep_if { |k| keys.include?(k) }
+      d.keep_if { |k| keys.include?(k) }
     end
   end
 
   # Public: Create a subset of enum, preserve all items but specified ones.
   def except(*keys)
     dup.tap do |d|
-      d.__getobj__.delete_if { |k| keys.include?(k) }
+      d.delete_if { |k| keys.include?(k) }
     end
   end
 end

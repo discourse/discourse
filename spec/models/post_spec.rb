@@ -1,4 +1,5 @@
 require 'spec_helper'
+require_dependency 'post_destroyer'
 
 describe Post do
 
@@ -66,43 +67,6 @@ describe Post do
 
   end
 
-
-  describe 'post uniqueness' do
-
-    context "disabled" do
-      before do
-        SiteSetting.stubs(:unique_posts_mins).returns(0)
-        Fabricate(:post, post_args)
-      end
-
-      it "returns true for another post with the same content" do
-        Fabricate.build(:post, post_args).should be_valid
-      end
-    end
-
-    context 'enabled' do
-      before do
-        SiteSetting.stubs(:unique_posts_mins).returns(10)
-        Fabricate(:post, post_args)
-      end
-
-      it "returns false for another post with the same content" do
-        Fabricate.build(:post, post_args).should_not be_valid
-      end
-
-      it "returns true for admins" do
-        topic.user.admin = true
-        Fabricate.build(:post, post_args).should be_valid
-      end
-
-      it "returns true for moderators" do
-        topic.user.trust_level = TrustLevel.levels[:moderator]
-        Fabricate.build(:post, post_args).should be_valid
-      end
-    end
-
-  end
-
   describe 'flagging helpers' do
     it 'isFlagged is accurate' do
       post = Fabricate(:post)
@@ -115,14 +79,6 @@ describe Post do
       PostAction.remove_act(user, post, PostActionType.types[:off_topic])
       post.reload
       post.is_flagged?.should == false
-    end
-  end
-
-  describe 'message bus' do
-    it 'enqueues the post on the message bus' do
-      topic = self.topic
-      MessageBus.expects(:publish).with("/topic/#{topic.id}", instance_of(Hash))
-      Fabricate(:post, post_args)
     end
   end
 
@@ -476,34 +432,6 @@ describe Post do
     end
   end
 
-  it 'should feature users after create' do
-    Jobs.stubs(:enqueue).with(:process_post, anything)
-    Jobs.expects(:enqueue).with(:feature_topic_users, has_key(:topic_id))
-    Fabricate(:post, post_args)
-  end
-
-  it 'should queue up a post processing job when saved' do
-    Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
-    Jobs.expects(:enqueue).with(:process_post, has_key(:post_id))
-    Fabricate(:post, post_args)
-  end
-
-  it 'passes the invalidate_oneboxes along to the job if present' do
-    Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
-    Jobs.expects(:enqueue).with(:process_post, has_key(:invalidate_oneboxes))
-    post = Fabricate.build(:post, post_args)
-    post.invalidate_oneboxes = true
-    post.save
-  end
-
-  it 'passes the image_sizes along to the job if present' do
-    Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
-    Jobs.expects(:enqueue).with(:process_post, has_key(:image_sizes))
-    post = Fabricate.build(:post, post_args)
-    post.image_sizes = {'http://an.image.host/image.jpg' => {'width' => 17, 'height' => 31}}
-    post.save
-  end
-
   describe 'notifications' do
 
     let(:coding_horror) { Fabricate(:coding_horror) }
@@ -551,89 +479,6 @@ describe Post do
 
   end
 
-  describe 'delete_by' do
-
-    let(:moderator) { Fabricate(:moderator) }
-    let(:post) { Fabricate(:post) }
-
-    context "as the creator of the post" do
-
-      before do
-        post.delete_by(post.user)
-        post.reload
-      end
-
-      it "doesn't delete the post" do
-        post.deleted_at.should be_blank
-      end
-
-      it "updates the text of the post" do
-        post.raw.should == I18n.t('js.post.deleted_by_author')
-      end
-
-
-      it "creates a new version" do
-        post.version.should == 2
-      end
-
-    end
-
-    context "as a moderator" do
-
-      before do
-        post.delete_by(post.user)
-        post.reload
-      end
-
-      it "deletes the post" do
-        post.deleted_at.should be_blank
-      end
-
-    end
-
-  end
-
-  describe 'after delete' do
-
-    let!(:coding_horror) { Fabricate(:coding_horror) }
-    let!(:post) { Fabricate(:post, post_args.merge(raw: "Hello @CodingHorror")) }
-
-    it "should feature the users again (in case they've changed)" do
-      Jobs.expects(:enqueue).with(:feature_topic_users, has_entries(topic_id: post.topic_id, except_post_id: post.id))
-      post.destroy
-    end
-
-    describe 'with a reply' do
-
-      let!(:reply) { Fabricate(:basic_reply, user: coding_horror, topic: post.topic) }
-
-      it 'changes the post count of the topic' do
-        post.reload
-        lambda {
-          reply.destroy
-          post.topic.reload
-        }.should change(post.topic, :posts_count).by(-1)
-      end
-
-      it 'lowers the reply_count when the reply is deleted' do
-        lambda {
-          reply.destroy
-          post.reload
-        }.should change(post.post_replies, :count).by(-1)
-      end
-
-      it 'should increase the post_number when there are deletion gaps' do
-        reply.destroy
-        p = Fabricate(:post, user: post.user, topic: post.topic)
-        p.post_number.should == 3
-      end
-
-    end
-
-  end
-
-
-
   describe 'after save' do
 
     let(:post) { Fabricate(:post, post_args) }
@@ -651,7 +496,7 @@ describe Post do
     end
 
     it 'is of the regular post type' do
-      post.post_type.should == Post::REGULAR
+      post.post_type.should == Post.types[:regular]
     end
 
     it 'has no versions' do
@@ -696,7 +541,7 @@ describe Post do
 
     end
 
-    describe 'quote counts' do
+    describe 'extract_quoted_post_numbers' do
 
       let!(:post) { Fabricate(:post, post_args) }
       let(:reply) { Fabricate.build(:post, post_args) }
@@ -717,8 +562,11 @@ describe Post do
 
     describe 'a new reply' do
 
-      let!(:post) { Fabricate(:post, post_args) }
-      let!(:reply) { Fabricate(:reply, post_args.merge(reply_to_post_number: post.post_number)) }
+      let(:topic) { Fabricate(:topic) }
+      let(:other_user) { Fabricate(:coding_horror) }
+      let(:reply_text) { "[quote=\"Evil Trout, post:1\"]\nhello\n[/quote]\nHmmm!"}
+      let!(:post) { PostCreator.new(topic.user, raw: Fabricate.build(:post).raw, topic_id: topic.id).create }
+      let!(:reply) { PostCreator.new(other_user, raw: reply_text, topic_id: topic.id, reply_to_post_number: post.post_number ).create }
 
       it 'has a quote' do
         reply.quote_count.should == 1
@@ -756,7 +604,10 @@ describe Post do
 
       context 'a multi-quote reply' do
 
-        let!(:multi_reply) { Fabricate(:multi_quote_reply, post_args.merge(reply_to_post_number: post.post_number)) }
+        let!(:multi_reply) do
+          raw = "[quote=\"Evil Trout, post:1\"]post1 quote[/quote]\nAha!\n[quote=\"Evil Trout, post:2\"]post2 quote[/quote]\nNeat-o"
+          PostCreator.new(other_user, raw: raw, topic_id: topic.id, reply_to_post_number: post.post_number).create
+        end
 
         it 'has two quotes' do
           multi_reply.quote_count.should == 2

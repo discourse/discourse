@@ -11,6 +11,7 @@ describe PostCreator do
 
   context 'new topic' do
     let(:category) { Fabricate(:category, user: user) }
+    let(:topic) { Fabricate(:topic, user: user) }
     let(:basic_topic_params) { {title: 'hello world topic', raw: 'my name is fred', archetype_id: 1} }
     let(:image_sizes) { {'http://an.image.host/image.jpg' => {'width' => 111, 'height' => 222}} }
 
@@ -38,6 +39,39 @@ describe PostCreator do
         creator.create
       end
 
+      it 'enqueues the post on the message bus' do
+        MessageBus.stubs(:publish).with("/users/#{user.username}", anything)
+        MessageBus.expects(:publish).with("/topic/#{topic.id}", instance_of(Hash))
+        PostCreator.new(user, raw: basic_topic_params[:raw], topic_id: topic.id)
+      end
+
+      it 'features topic users' do
+        Jobs.stubs(:enqueue).with(:process_post, anything)
+        Jobs.expects(:enqueue).with(:feature_topic_users, has_key(:topic_id))
+        creator.create
+      end
+
+      it 'queues up post processing job when saved' do
+        Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
+        Jobs.expects(:enqueue).with(:process_post, has_key(:post_id))
+        creator.create
+      end
+
+      it 'passes the invalidate_oneboxes along to the job if present' do
+        Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
+        Jobs.expects(:enqueue).with(:process_post, has_key(:invalidate_oneboxes))
+        creator.opts[:invalidate_oneboxes] = true
+        creator.create
+      end
+
+      it 'passes the image_sizes along to the job if present' do
+        Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
+        Jobs.expects(:enqueue).with(:process_post, has_key(:image_sizes))
+        creator.opts[:image_sizes] = {'http://an.image.host/image.jpg' => {'width' => 17, 'height' => 31}}
+        creator.create
+      end
+
+
       it 'assigns a category when supplied' do
         creator_with_category.create.topic.category.should == category
       end
@@ -49,6 +83,52 @@ describe PostCreator do
       it 'passes the image sizes through' do
         Post.any_instance.expects(:image_sizes=).with(image_sizes)
         creator_with_image_sizes.create
+      end
+    end
+
+  end
+
+  context 'uniqueness' do
+
+    let!(:topic) { Fabricate(:topic, user: user) }
+    let(:basic_topic_params) { { raw: 'test reply', topic_id: topic.id, reply_to_post_number: 4} }
+    let(:creator) { PostCreator.new(user, basic_topic_params) }
+
+    context "disabled" do
+      before do
+        SiteSetting.stubs(:unique_posts_mins).returns(0)
+        creator.create
+      end
+
+      it "returns true for another post with the same content" do
+        new_creator = PostCreator.new(user, basic_topic_params)
+        new_creator.create.should be_present
+      end
+    end
+
+    context 'enabled' do
+      let(:new_post_creator) { PostCreator.new(user, basic_topic_params) }
+
+      before do
+        SiteSetting.stubs(:unique_posts_mins).returns(10)
+        creator.create
+      end
+
+      it "returns blank for another post with the same content" do
+        new_post_creator.create
+        new_post_creator.errors.should be_present
+      end
+
+      it "returns a post for admins" do
+        user.admin = true
+        new_post_creator.create
+        new_post_creator.errors.should be_blank
+      end
+
+      it "returns a post for moderators" do
+        user.moderator = true
+        new_post_creator.create
+        new_post_creator.errors.should be_blank
       end
     end
 

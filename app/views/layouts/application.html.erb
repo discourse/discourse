@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title><%=t :title%></title>
+    <title><%= content_for?(:title) ? yield(:title) + ' - ' + t(:title) : t(:title) %></title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="description">
     <meta content="" name="author">
@@ -22,10 +22,11 @@
 
   <body>
     <% unless current_user %>
-      <form id='hidden-login-form' method="post" action="/login" style="display: none;">
+      <form id='hidden-login-form' method="post" action="<%=login_path%>" style="display: none;">
         <input name="username" type="text"     id="signin_username">
         <input name="password" type="password" id="signin_password">
         <input name="redirect" type="hidden">
+        <input name="authenticity_token" type="hidden" />
         <input type="submit" id="signin-button" value="Log In">
       </form>
     <% end %>

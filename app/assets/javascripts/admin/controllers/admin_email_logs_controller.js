@@ -26,7 +26,7 @@ Discourse.AdminEmailLogsController = Ember.ArrayController.extend(Discourse.Pres
     var _this = this;
     _this.set('sentTestEmail', false);
     $.ajax({
-      url: '/admin/email_logs/test',
+      url: Discourse.getURL("/admin/email_logs/test"),
       type: 'POST',
       data: { email_address: this.get('testEmailAddress') },
       success: function() {

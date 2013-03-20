@@ -1,3 +1,4 @@
+# encoding: utf-8
 zh_TW:
   time:
     formats:
@@ -79,18 +80,16 @@ zh_TW:
     post_template: "%{replace_paragraph}\n\n使用下面的空間輸入分類的詳細描述信息，可包括在此分類下討論的規則、內容導向等等。"
 
   trust_levels:
-    new:
-      title: "新用戶"
+    visitor:
+      title: "訪客"
     basic:
       title: "初級用戶"
     regular:
       title: "常規用戶"
-    experienced:
-      title: "中級用戶"
-    advanced:
-      title: "高級用戶"
-    moderator:
-      title: "論壇版主"
+    leader:
+      title: "領先用戶"
+    elder:
+      title: "資深用戶"
 
   rate_limiter:
     too_many_requests: "你的請求過于頻繁，請等待 %{time_left} 之後再試。"
@@ -263,6 +262,10 @@ zh_TW:
       title: "新發表帖子"
       xaxis: "天"
       yaxis: "新帖子數"
+    likes:
+      title: "新的贊"
+      xaxis: "天"
+      yaxis: "新的贊數"
     total_users:
       title: "用戶總數"
       xaxis: "天"
@@ -271,6 +274,14 @@ zh_TW:
       title: "投訴"
       xaxis: "天"
       yaxis: "投訴數"
+    users_by_trust_level:
+      title: "按用戶等級的用戶統計"
+      xaxis: "用戶等級"
+      yaxis: "用戶數"
+    emails:
+      title: "已發送郵件"
+      xaxis: "天"
+      yaxis: "郵件數"
 
   site_settings:
     default_locale: "此 論道 - Discourse 實例的缺省語言 (ISO 639-1 代碼)"
@@ -366,11 +377,11 @@ zh_TW:
     github_client_secret: "Github 帳號驗證的客戶端密碼（Client secret），到 https://github.com/settings/applications 來注冊獲取"
 
     enable_persona_logins: "啓用基于電子郵箱的 Mozilla Persona 帳號驗證登錄"
-    
+
     enable_sina_logins: "啓用新浪帳號驗證登錄，需要 sina_app_id 和 sina_app_secret"
     sina_app_id: "新浪帳號驗證的應用帳號（App id），到 http://open.weibo.com/connect 來注冊獲取"
     sina_app_secret: "新浪帳號驗證的應用密碼（App secret），到 http://open.weibo.com/connect 來注冊獲取"
-    
+
     enable_qq_logins: "啓用騰訊QQ帳號驗證登錄，需要 qq_app_id 和 qq_app_secret"
     qq_app_id: "騰訊QQ帳號驗證的應用帳號（App id），到 http://connect.qq.com/intro/login/ 來注冊獲取"
     qq_app_secret: "騰訊QQ帳號驗證的應用密碼（App secret），到 http://connect.qq.com/intro/login/ 來注冊獲取"
@@ -415,6 +426,13 @@ zh_TW:
     body_min_entropy: "在一個帖子內文中，允許的最低熵值（單個字符）"
     new_user_period_days: "在多少天以內一個用戶會被高亮顯示爲新用戶"
     title_fancy_entities: "轉換主題標題中的 HTML 實體"
+
+    min_title_similar_length: "開始檢查相似主題的帖子標題的最小長度"
+    min_body_similar_length: "開始檢查相似主題的帖子內容的最小長度"
+
+    category_colors: "設置分類顔色的用'|'分隔的十六進色彩值列表"
+    max_upload_size_kb: "允許用戶上傳的最大文件大小(以kb爲單位) - 確保在nginx(client_max_body_size), apache或代理服務中進行限制文件大小的配置."
+    max_similar_results: "當用戶撰寫新主題時，顯示多少類似主題給用戶"
 
   notification_types:
     mentioned: "%{display_username} 在 %{link} 提及到了你"
@@ -626,7 +644,7 @@ zh_TW:
       text_body_template: |
         恭喜你！
 
-        你已經被批准加入 %{site_name}，歡迎來到我們論壇參與討論！        
+        你已經被批准加入 %{site_name}，歡迎來到我們論壇參與討論！
 
         %{new_user_tips}
 

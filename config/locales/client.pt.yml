@@ -1,7 +1,8 @@
+# encoding: utf-8
 # This file contains content for the client portion of Discourse, sent out
 # to the Javascript app.
 
-en:
+pt:
   js:
     share:
       topic: 'partilhe um link para este tópico'

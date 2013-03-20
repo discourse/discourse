@@ -1,3 +1,4 @@
+# encoding: utf-8
 zh_CN:
   time:
     formats:
@@ -79,18 +80,16 @@ zh_CN:
     post_template: "%{replace_paragraph}\n\n使用下面的空间输入分类的详细描述信息，可包括在此分类下讨论的规则、内容导向等等。"
 
   trust_levels:
-    new:
-      title: "新用户"
+    visitor:
+      title: "访客"
     basic:
       title: "初级用户"
     regular:
       title: "常规用户"
-    experienced:
-      title: "中级用户"
-    advanced:
-      title: "高级用户"
-    moderator:
-      title: "论坛版主"
+    leader:
+      title: "领先用户"
+    elder:
+      title: "资深用户"
 
   rate_limiter:
     too_many_requests: "你的请求过于频繁，请等待 %{time_left} 之后再试。"
@@ -263,6 +262,10 @@ zh_CN:
       title: "新发表帖子"
       xaxis: "天"
       yaxis: "新帖子数"
+    likes:
+      title: "新的赞"
+      xaxis: "天"
+      yaxis: "新的赞数"
     total_users:
       title: "用户总数"
       xaxis: "天"
@@ -271,6 +274,14 @@ zh_CN:
       title: "投诉"
       xaxis: "天"
       yaxis: "投诉数"
+    users_by_trust_level:
+      title: "按用户等级的用户统计"
+      xaxis: "用户等级"
+      yaxis: "用户数"
+    emails:
+      title: "已发送邮件"
+      xaxis: "天"
+      yaxis: "邮件数"
 
   site_settings:
     default_locale: "此 论道 - Discourse 实例的缺省语言 (ISO 639-1 代码)"
@@ -366,11 +377,11 @@ zh_CN:
     github_client_secret: "Github 帐号验证的客户端密码（Client secret），到 https://github.com/settings/applications 来注册获取"
 
     enable_persona_logins: "启用基于电子邮箱的 Mozilla Persona 帐号验证登录"
-    
+
     enable_sina_logins: "启用新浪帐号验证登录，需要 sina_app_id 和 sina_app_secret"
     sina_app_id: "新浪帐号验证的应用帐号（App id），到 http://open.weibo.com/connect 来注册获取"
     sina_app_secret: "新浪帐号验证的应用密码（App secret），到 http://open.weibo.com/connect 来注册获取"
-    
+
     enable_qq_logins: "启用腾讯QQ帐号验证登录，需要 qq_app_id 和 qq_app_secret"
     qq_app_id: "腾讯QQ帐号验证的应用帐号（App id），到 http://connect.qq.com/intro/login/ 来注册获取"
     qq_app_secret: "腾讯QQ帐号验证的应用密码（App secret），到 http://connect.qq.com/intro/login/ 来注册获取"
@@ -415,6 +426,13 @@ zh_CN:
     body_min_entropy: "在一个帖子内文中，允许的最低熵值（单个字符）"
     new_user_period_days: "在多少天以内一个用户会被高亮显示为新用户"
     title_fancy_entities: "转换主题标题中的 HTML 实体"
+
+    min_title_similar_length: "开始检查相似主题的帖子标题的最小长度"
+    min_body_similar_length: "开始检查相似主题的帖子内容的最小长度"
+
+    category_colors: "设置分类颜色的用'|'分隔的十六进色彩值列表"
+    max_upload_size_kb: "允许用户上传的最大文件大小(以kb为单位) - 确保在nginx(client_max_body_size), apache或代理服务中进行限制文件大小的配置."
+    max_similar_results: "当用户撰写新主题时，显示多少类似主题给用户"
 
   notification_types:
     mentioned: "%{display_username} 在 %{link} 提及到了你"
@@ -626,7 +644,7 @@ zh_CN:
       text_body_template: |
         恭喜你！
 
-        你已经被批准加入 %{site_name}，欢迎来到我们论坛参与讨论！        
+        你已经被批准加入 %{site_name}，欢迎来到我们论坛参与讨论！
 
         %{new_user_tips}
 

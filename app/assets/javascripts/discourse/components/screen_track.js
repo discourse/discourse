@@ -98,7 +98,7 @@ Discourse.ScreenTrack = Ember.Object.extend({
       highestSeenByTopic[topicId] = this.highestSeen;
     }
     if (!Object.isEmpty(newTimings)) {
-      $.ajax('/topics/timings', {
+      $.ajax(Discourse.getURL('/topics/timings'), {
         data: {
           timings: newTimings,
           topic_time: this.topicTime,

@@ -1,3 +1,4 @@
+# encoding: utf-8
 # This file contains content for the client portion of Discourse, sent out
 # to the Javascript app.
 
@@ -268,6 +269,7 @@ cs:
       saved_draft_tip: "uloženo"
       saved_local_draft_tip: "uloženo lokálně"
       similar_topics: "Podobná témata"
+      drafts_offline: "koncepty offline"
 
       min_length:
         at_least: "vložte alespoň {{n}} znaků"
@@ -356,7 +358,9 @@ cs:
 
     favorite:
       title: 'Oblíbené'
-      help: 'přidat toto téma do oblíbených'
+      help:
+        star: 'přidat toto téma do oblíbených'
+        unstar: 'odebrat toto téma z oblíbených'
 
     topics:
       none:
@@ -535,6 +539,7 @@ cs:
         create: "Bohužel nastala chyba při vytváření příspěvku. Prosím zkuste to znovu."
         edit: "Bohužel nastala chyba při editaci příspěvku. Prosím zkuste to znovu."
         upload: "Bohužel nastala chyba při nahrávání příspěvku. Prosím zkuste to znovu."
+        upload_too_large: "Soubour, který se snažíte nahrát je bohužel příliš velký (maximální velikost je {{max_size_kb}}kb). Prosím zmenšete ho zkuste to znovu."
 
       abandon: "Opravdu chcete opustit váš příspěvek?"
 
@@ -584,6 +589,7 @@ cs:
       view: 'Zobrazit témata v kategorii'
       delete: 'Smazat kategorii'
       create: 'Nová kategorie'
+      creation_error: Během vytváření nové kategorie nastala chyba.
       more_posts: "zobrazit všechny {{posts}}..."
       name: "Název kategorie"
       description: "Popis"
@@ -689,6 +695,8 @@ cs:
         please_upgrade: "Prosím aktualizujte!"
         latest_version: "Poslední verze"
         update_often: 'Prosím aktualizujte často!'
+        total_users: "Celkem uživatelů"
+        moderator_short: "mod"
 
         reports:
           today: "Dnes"
@@ -701,6 +709,7 @@ cs:
 
       commits:
         latest_changes: "Poslední změny"
+        by: "od"
 
       flags:
         title: "Nahlášení"

@@ -21,5 +21,17 @@ describe "i18n integrity checks" do
     end
   end
 
+  pending "does not overwrite another language" do
+    Dir["#{Rails.root}/config/locales/*.yml"].each do |f|
+      locale = /.*\.([^.]{2,})\.yml$/.match(f)[1] + ':'
+      IO.foreach(f) do |line|
+        next if line.start_with? "#"
+        next if line.start_with? "---"
+        next if line.strip!.blank?
+        line.should eq locale
+        break
+      end
+    end
+  end
 
 end

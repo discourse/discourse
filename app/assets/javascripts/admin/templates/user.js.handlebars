@@ -5,7 +5,7 @@
     <div class='field'>{{i18n user.username.title}}</div>
     <div class='value'>{{content.username}}</div>
     <div class='controls'>
-      <a href="/users/{{unbound content.username_lower}}" class='btn'>
+      <a href="{{unbound content.path}}" class='btn'>
         <i class='icon icon-user'></i>
         {{i18n admin.user.show_public_profile}}
       </a> 
@@ -45,8 +45,8 @@
     <div class='value'>
       {{#if content.approved}}
         {{i18n admin.user.approved_by}}        
-        <a href="/admin/users/{{unbound content.approved_by.username_lower}}">{{avatar approved_by imageSize="small"}}</a>
-        <a href="/admin/users/{{unbound username_lower}}">{{content.approved_by.username}}</a>
+        <a href="{{unbound content.approved_by.adminPath}}">{{avatar approved_by imageSize="small"}}</a>
+        <a href="{{unbound adminPath}}">{{content.approved_by.username}}</a>
       {{else}}
         {{i18n no_value}}
       {{/if}}

@@ -8,5 +8,9 @@
 **/
 Discourse.AdminDashboardController = Ember.Controller.extend({
   loading: true,
-  versionCheck: null
+  versionCheck: null,
+
+  foundProblems: function() {
+    return(this.get('problems') && this.get('problems').length > 0);
+  }.property('problems')
 });
