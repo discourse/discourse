@@ -5,16 +5,21 @@ task 'assets:prestage' => :environment do |t|
   require "net/https"
   require "uri"
 
+  def get_assets(path)
+    a = Dir.glob("#{Rails.root}/public/assets/#{path}*").map do |f|
+      if f =~ /[a-f0-9]{16}\.(css|js)$/
+        "/assets/#{path}#{f.split('/')[-1]}"
+      end
+    end.compact
+  end
+  
+  # pre-stage css/js only for now
+  a = get_assets("locales/") + get_assets("")
+  puts "pre staging: #{a.join(' ')}"
+
+  # makes testing simpler leaving this here
   config = YAML::load(File.open("#{Rails.root}/config/cdn.yml"))
 
-  # pre-stage css/js only for now
-  a = Dir.glob("#{Rails.root}/public/assets/*").map do |f|
-    if f =~ /[a-f0-9]{16}\.(css|js)$/
-      "/assets/#{f.split('/')[-1]}"
-    end
-  end.compact
-
-  puts "pre staging: #{a.join(' ')}"
   start = Time.now
 
   uri = URI.parse("https://client.cdn77.com/api/prefetch")
