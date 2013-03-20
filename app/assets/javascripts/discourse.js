@@ -184,10 +184,11 @@ Discourse = Ember.Application.createWithMixins({
 
   start: function() {
     Discourse.bindDOMEvents();
-    Discourse.SiteSettings = PreloadStore.getStatic('siteSettings');
+    Discourse.SiteSettings = PreloadStore.get('siteSettings');
     Discourse.MessageBus.start();
     Discourse.KeyValueStore.init("discourse_", Discourse.MessageBus);
-
+    // Make sure we delete preloaded data
+    PreloadStore.remove('siteSettings');
     // Developer specific functions
     Discourse.Development.setupProbes();
     Discourse.Development.observeLiveChanges();
