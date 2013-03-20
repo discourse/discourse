@@ -13345,7 +13345,7 @@ Ember.EventDispatcher = Ember.Object.extend(
   setup: function(addedEvents) {
     var event, events = {
       touchstart  : 'touchStart',
-      touchmove   : 'touchMove',
+      // touchmove   : 'touchMove',
       touchend    : 'touchEnd',
       touchcancel : 'touchCancel',
       keydown     : 'keyDown',
@@ -13356,7 +13356,7 @@ Ember.EventDispatcher = Ember.Object.extend(
       contextmenu : 'contextMenu',
       click       : 'click',
       dblclick    : 'doubleClick',
-      mousemove   : 'mouseMove',
+      // mousemove   : 'mouseMove',
       focusin     : 'focusIn',
       focusout    : 'focusOut',
       mouseenter  : 'mouseEnter',
