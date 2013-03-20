@@ -1,7 +1,6 @@
 require_dependency 'age_words'
 
 class ListableTopicSerializer < BasicTopicSerializer
-  include ActionView::Helpers
 
   attributes :reply_count,
              :posts_count,
