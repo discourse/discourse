@@ -1,4 +1,21 @@
 <div class="dashboard-left">
+  {{#if foundProblems}}
+    <div class="dashboard-stats detected-problems">
+      <div class="look-here"><i class="icon icon-warning-sign"></i></div>
+      <div class="problem-messages">
+        <p>
+          {{i18n admin.dashboard.problems_found}}
+          <ul>
+            {{#each problem in problems}}
+              <li>{{problem}}</li>
+            {{/each}}
+          </ul>
+        </p>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  {{/if}}
+
   {{#if Discourse.SiteSettings.version_checks}}
     <div {{bindAttr class=":dashboard-stats :version-check versionCheck.critical_updates:critical:normal"}}>
       <table class="table table-condensed table-hover">

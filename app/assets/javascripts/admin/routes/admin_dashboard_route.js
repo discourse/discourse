@@ -27,6 +27,7 @@ Discourse.AdminDashboardRoute = Discourse.Route.extend({
           c.set(report.type, Discourse.Report.create(report));
         });
         c.set('totalUsers', d.total_users);
+        c.set('problems', d.problems);
         c.set('loading', false);
       });
     }

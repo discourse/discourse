@@ -698,6 +698,7 @@ en:
         update_often: 'Please update often!'
         total_users: "Total Users"
         moderator_short: "mod"
+        problems_found: "Some problems have been found with your installation of Discourse:"
 
         reports:
           today: "Today"

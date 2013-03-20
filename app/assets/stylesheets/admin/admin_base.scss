@@ -367,6 +367,31 @@ table {
     }
   }
 
+  &.detected-problems {
+    @include border-radius-all(5px);
+    background-color: #eee;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    box-shadow: inset 0 0 10px #bbb;
+
+    .look-here {
+      float: left;
+      margin: 20px 20px 0 20px;
+
+      .icon {
+        font-size: 32px;
+        vertical-align: middle;
+        color: $darkish_gray;
+      }
+    }
+
+    .problem-messages {
+      float: left;
+      width: 355px;
+    }
+  }
+
   &.totals {
     width: 160px;
 

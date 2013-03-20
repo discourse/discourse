@@ -283,6 +283,9 @@ en:
       xaxis: "Day"
       yaxis: "Number of Emails"
 
+  dashboard:
+    rails_env_warning: "Your server is running in %{env} mode."
+
   site_settings:
     default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"
     min_post_length: "Minimum post length in characters"
