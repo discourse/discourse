@@ -422,6 +422,7 @@ zh_TW:
       read_position_reset: "你的閱讀位置已經被重置。"
       jump_reply_up: 跳轉至更早的回複
       jump_reply_down: 跳轉至更晚的回複
+      deleted: "此主題已被刪除"
 
       progress:
         title: 主題進度

@@ -422,6 +422,7 @@ zh_CN:
       read_position_reset: "你的阅读位置已经被重置。"
       jump_reply_up: 跳转至更早的回复
       jump_reply_down: 跳转至更晚的回复
+      deleted: "此主题已被删除"
 
       progress:
         title: 主题进度
