@@ -126,7 +126,7 @@ describe PostCreator do
       end
 
       it "returns a post for moderators" do
-        user.trust_level = TrustLevel.levels[:moderator]
+        user.moderator = true
         new_post_creator.create
         new_post_creator.errors.should be_blank
       end

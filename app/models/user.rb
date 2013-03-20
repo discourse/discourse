@@ -237,7 +237,10 @@ class User < ActiveRecord::Base
   end
 
   def moderator?
-    has_trust_level?(:moderator)
+    # this saves us from checking both, admins are always moderators 
+    #
+    # in future we may split this out
+    admin || moderator
   end
 
   def regular?
@@ -399,7 +402,7 @@ class User < ActiveRecord::Base
   # Takes into account admin, etc.
   def has_trust_level?(level)
     raise "Invalid trust level #{level}" unless TrustLevel.valid_level?(level)
-    admin? || TrustLevel.compare(trust_level, level)
+    admin? || moderator? || TrustLevel.compare(trust_level, level)
   end
 
   # a touch faster than automatic

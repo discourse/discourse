@@ -134,7 +134,7 @@ describe Admin::UsersController do
       it 'updates the moderator flag' do
         xhr :put, :revoke_moderation, user_id: @moderator.id
         @moderator.reload
-        @moderator.has_trust_level?(:moderator).should_not be_true
+        @moderator.moderator.should_not be_true
       end
     end
 
@@ -157,7 +157,7 @@ describe Admin::UsersController do
       it 'updates the moderator flag' do
         xhr :put, :grant_moderation, user_id: @another_user.id
         @another_user.reload
-        @another_user.has_trust_level?(:moderator).should be_true
+        @another_user.moderator.should be_true
       end
     end
 

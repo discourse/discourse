@@ -80,18 +80,16 @@ en:
     post_template: "%{replace_paragraph}\n\nUse this space below for a longer description, as well as to establish any rules or discussion!"
 
   trust_levels:
-    new:
-      title: "new user"
+    visitor:
+      title: "visitor"
     basic:
       title: "basic user"
     regular:
       title: "regular user"
-    experienced:
-      title: "experienced user"
-    advanced:
-      title: "advanced user"
-    moderator:
-      title: "moderator"
+    leader:
+      title: "leader"
+    elder:
+      title: "elder"
 
   rate_limiter:
     too_many_requests: "You're doing that too often. Please wait %{time_left} before trying again."

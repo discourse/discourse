@@ -53,7 +53,7 @@ class PostSerializer < ApplicationSerializer
   end
 
   def moderator?
-    object.user.has_trust_level?(:moderator)
+    object.user.moderator?
   end
 
   def avatar_template
