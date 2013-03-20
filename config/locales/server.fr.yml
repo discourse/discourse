@@ -432,6 +432,8 @@ fr:
     min_body_similar_length: "La taille minimale du message avant que l'on vérifie l'existence de discussions identiques"
 
     category_colors: "Une liste de couleurs autorisées pour les catégories (au format hexadécimal, séparés par un |)"
+    max_upload_size_kb: "La taille maximum des fichiers que les utilisateurs peuvent envoyer en Kb - assurez-vous de configurer également cette limite dans nginx (client_max_body_size) / apache ou votre proxy."
+    max_similar_results: "Nombre de discussions similaires à afficher lorsqu'un utilisateur est en train de créer une nouvelle discussion"
 
   notification_types:
     mentioned: "%{display_username} vous a mentionné dans %{link}"
