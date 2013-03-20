@@ -5,7 +5,7 @@ Date.getLocale('de').short_no_year = '{d}. {month}';
 Date.getLocale('en').short_no_year = '{d} {Mon}';
 
 // fix FR locale
-Date.getLocale('de').short_no_year = '{d} {month}';
+Date.getLocale('fr').short_no_year = '{d} {month}';
 
 // fix NL locale
 Date.getLocale('nl').short_no_year = '{d} {Month}';
