@@ -10,7 +10,7 @@ class AdminDashboardData
     @json ||= {
       reports: REPORTS.map { |type| Report.find(type) },
       total_users: User.count,
-      problems: [rails_env_check].compact
+      problems: [rails_env_check, host_names_check].compact
     }.merge(
       SiteSetting.version_checks? ? {version_check: DiscourseUpdates.check_version} : {}
     )
@@ -18,5 +18,9 @@ class AdminDashboardData
 
   def rails_env_check
     I18n.t("dashboard.rails_env_warning", env: Rails.env) unless Rails.env == 'production'
+  end
+
+  def host_names_check
+    I18n.t("dashboard.host_names_warning") if ['localhost', 'production.localhost'].include?(Discourse.current_hostname)
   end
 end

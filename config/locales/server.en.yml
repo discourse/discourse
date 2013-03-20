@@ -285,6 +285,7 @@ en:
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
+    host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
 
   site_settings:
     default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"

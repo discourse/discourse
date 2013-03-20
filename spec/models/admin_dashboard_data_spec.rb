@@ -21,4 +21,23 @@ describe AdminDashboardData do
     end
   end
 
+  describe 'host_names_check' do
+    subject { AdminDashboardData.new.host_names_check }
+
+    it 'returns nil when host_names is set' do
+      Discourse.stubs(:current_hostname).returns('something.com')
+      subject.should be_nil
+    end
+
+    it 'returns a string when host_name is localhost' do
+      Discourse.stubs(:current_hostname).returns('localhost')
+      subject.should_not be_nil
+    end
+
+    it 'returns a string when host_name is production.localhost' do
+      Discourse.stubs(:current_hostname).returns('production.localhost')
+      subject.should_not be_nil
+    end
+  end
+
 end
