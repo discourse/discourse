@@ -320,7 +320,7 @@ fr:
       view_new_post: "Voir votre nouveau message."
       saving: "Sauvegarde..."
       saved: "Sauvegardé !"
-      saved_draft: "Vous avez un brouillon en attente. Cliquez sur cette boite pour reprendre l'édition"
+      saved_draft: "Vous avez un brouillon en attente. Cliquez n'importe où pour en reprendre l'édition"
       uploading: "Envoi en cours..."
       show_preview: 'afficher la prévisualisation &raquo;'
       hide_preview: '&laquo; cacher la prévisualisation'
@@ -420,6 +420,7 @@ fr:
       read_position_reset: "Votre position de lecture à été remise à zéro."
       jump_reply_up: aller à des réponses précédentes
       jump_reply_down: allez à des réponses ultérieures
+      deleted: Cette discussion à été supprimée
 
       progress:
         title: progession dans la discussion
@@ -610,7 +611,7 @@ fr:
 
     flagging:
       title: 'Pourquoi voulez-vous signaler ce message ?'
-      action: "Signalement d'un message"
+      action: "Signaler ce message"
       cant: "Désolé, vous ne pouvez pas signaler ce message pour le moment"
       custom_placeholder: "Pourquoi ce message requiert-il l'attention des modérateur ? Dites-nous ce qui vous dérange spécifiquement, et fournissez des liens pertinents si possible."
       custom_message:
@@ -652,13 +653,13 @@ fr:
         title: "Populaires"
         help: "discussions récentes les plus populaires"
       favorited:
-        title: "Favorites"
+        title: "Favoris"
         help: "discussions que vous avez ajoutées à vos favoris"
       read:
         title: "Lues"
         help: "discussions que vous avez lues"
       categories:
-        title: "Catégorie"
+        title: "Catégories"
         title_in: "Catégorie - {{categoryName}}"
         help: "toutes les discussions regroupées par categorie"
       unread:
@@ -702,6 +703,7 @@ fr:
         update_often: "Merci de mettre à jour régulièrement !"
         total_users: "Total d'utilisateurs"
         moderator_short: "mod"
+        problems_found: "Quelques problèmes ont été trouvés dans votre installation de Discourse :"
 
         reports:
           today: "Aujourd'hui"
@@ -742,7 +744,7 @@ fr:
         delete_confirm: "Supprimer cette personnalisation"
 
       email_logs:
-        title: "Logs par mail"
+        title: "Historique des mails"
         sent_at: "Envoyer à"
         email_type: "Type d'email"
         to_address: "À l'adresse"
