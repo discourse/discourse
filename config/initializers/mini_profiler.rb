@@ -1,8 +1,7 @@
 # If Mini Profiler is included via gem
 if defined?(Rack::MiniProfiler)
 
-  Rack::MiniProfiler.config.storage_options = YAML.load(ERB.new(File.new("#{Rails.root}/config/redis.yml").read).result)[Rails.env].symbolize_keys
-  Rack::MiniProfiler.config.storage = Rack::MiniProfiler::RedisStore
+  Rack::MiniProfiler::RedisStore.new(:connection =>  DiscourseRedis.new)
 
   # For our app, let's just show mini profiler always, polling is chatty so nuke that
   Rack::MiniProfiler.config.pre_authorize_cb = lambda do |env|
