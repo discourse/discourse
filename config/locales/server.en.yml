@@ -183,6 +183,7 @@ en:
     title: 'reset password'
     success: "You successfully changed your password and are now logged in."
     success_unapproved: "You successfully changed your password."
+    continue: "Continue to %{site_name}"
 
   change_email:
     confirmed: "Your email has been updated."
