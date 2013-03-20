@@ -274,10 +274,12 @@ zh_CN:
       saving_draft_tip: "保存中"
       saved_draft_tip: "已保存"
       saved_local_draft_tip: "已本地保存"
+      similar_topics: "你的主题与此有些类似..."
+      drafts_offline: "离线草稿"
 
       min_length:
-        at_least: "请输入至少 {{n}} 个字符"
-        more: "尚需 {{n}} 个字符……"
+        need_more_for_title: "请给标题再输入至少 {{n}} 个字符"
+        need_more_for_reply: "请给正文内容再输入至少 {{n}} 个字符"
 
       save_edit: "保存编辑"
       reply_original: "回复原始帖"
@@ -362,7 +364,9 @@ zh_CN:
 
     favorite:
       title: '收藏'
-      help: '将此主题加入你的收藏列表'
+      help:
+        star: '将此主题加入你的收藏列表'
+        unstar: '将此主题从你的收藏列表中移除'
 
     topics:
       none:
@@ -418,6 +422,7 @@ zh_CN:
       read_position_reset: "你的阅读位置已经被重置。"
       jump_reply_up: 跳转至更早的回复
       jump_reply_down: 跳转至更晚的回复
+      deleted: "此主题已被删除"
 
       progress:
         title: 主题进度
@@ -541,6 +546,7 @@ zh_CN:
         create: "抱歉，在创建你的帖子时发生了错误。请重试。"
         edit: "抱歉，在编辑你的帖子时发生了错误。请重试。"
         upload: "抱歉，在上传文件时发生了错误。请重试。"
+        upload_too_large: "抱歉，你上传的文件太大了（最大不能超过 {{max_size_kb}}kb），请调整文件大小后重新上传。"
 
       abandon: "你确定要丢弃你的帖子吗？"
 
@@ -590,11 +596,14 @@ zh_CN:
       view: '浏览分类下的主题'
       delete: '删除分类'
       create: '创建分类'
+      creation_error: 创建此分类时发生了错误。
       more_posts: "浏览全部 {{posts}} ……"
       name: "分类名称"
       description: "描述"
       topic: "分类主题"
-      color: "颜色"
+      badge_colors: "徽章颜色"
+      background_color: "背景色"
+      foreground_color: "前景色"
       name_placeholder: "应该简明扼要。"
       color_placeholder: "任何网络色彩"
       delete_confirm: "你确定要删除此分类吗？"
@@ -691,8 +700,11 @@ zh_CN:
         critical_available: "有一个关键更新可用。"
         updates_available: "目前有可用更新。"
         please_upgrade: "请升级！"
+        installed_version: "已安装"
         latest_version: "最新版本"
         update_often: '请经常升级！'
+        total_users: "用户总数"
+        moderator_short: "版主"
 
         reports:
           today: "今天"
@@ -703,6 +715,10 @@ zh_CN:
           7_days_ago: "7 天之前"
           30_days_ago: "30 天之前"
 
+      commits:
+        latest_changes: "最后的改动"
+        by: "来自"
+
       flags:
         title: "投诉"
         old: "过去的"
@@ -712,6 +728,7 @@ zh_CN:
         delete: "删除帖子"
         delete_title: "删除帖子（如果它是主题第一帖，那么将删除主题）"
         flagged_by: "投诉者为"
+        error: "出错了"
 
       customize:
         title: "定制"
@@ -722,6 +739,8 @@ zh_CN:
         preview: "预览"
         undo_preview: "撤销预览"
         save: "保存"
+        new: "新建"
+        new_style: "新样式"
         delete: "删除"
         delete_confirm: "删除本定制内容？"
 

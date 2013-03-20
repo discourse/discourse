@@ -63,18 +63,12 @@ zh_CN:
         name: "分类名称"
       post:
         raw: "内容"
-      user:
-        email: "电子邮箱"
     errors:
       models:
         topic:
           attributes:
             archetype:
               cant_send_pm: "抱歉，你不能向该用户发送私信。"
-        user:
-          attributes:
-            email:
-              taken: "已经被使用"
 
   user_profile:
     no_info_me: "<div class='missing-profile'>你的介绍信息中，“关于我”部分目前还是空白，<a href='/users/%{username_lower}/preferences'>介绍一下你自己，好不好？</a></div>"
@@ -86,18 +80,16 @@ zh_CN:
     post_template: "%{replace_paragraph}\n\n使用下面的空间输入分类的详细描述信息，可包括在此分类下讨论的规则、内容导向等等。"
 
   trust_levels:
-    new:
-      title: "新用户"
+    visitor:
+      title: "访客"
     basic:
       title: "初级用户"
     regular:
       title: "常规用户"
-    experienced:
-      title: "中级用户"
-    advanced:
-      title: "高级用户"
-    moderator:
-      title: "论坛版主"
+    leader:
+      title: "领先用户"
+    elder:
+      title: "资深用户"
 
   rate_limiter:
     too_many_requests: "你的请求过于频繁，请等待 %{time_left} 之后再试。"
@@ -270,6 +262,10 @@ zh_CN:
       title: "新发表帖子"
       xaxis: "天"
       yaxis: "新帖子数"
+    likes:
+      title: "新的赞"
+      xaxis: "天"
+      yaxis: "新的赞数"
     total_users:
       title: "用户总数"
       xaxis: "天"
@@ -278,6 +274,14 @@ zh_CN:
       title: "投诉"
       xaxis: "天"
       yaxis: "投诉数"
+    users_by_trust_level:
+      title: "按用户等级的用户统计"
+      xaxis: "用户等级"
+      yaxis: "用户数"
+    emails:
+      title: "已发送邮件"
+      xaxis: "天"
+      yaxis: "邮件数"
 
   site_settings:
     default_locale: "此 论道 - Discourse 实例的缺省语言 (ISO 639-1 代码)"
@@ -428,6 +432,7 @@ zh_CN:
 
     category_colors: "设置分类颜色的用'|'分隔的十六进色彩值列表"
     max_upload_size_kb: "允许用户上传的最大文件大小(以kb为单位) - 确保在nginx(client_max_body_size), apache或代理服务中进行限制文件大小的配置."
+    max_similar_results: "当用户撰写新主题时，显示多少类似主题给用户"
 
   notification_types:
     mentioned: "%{display_username} 在 %{link} 提及到了你"

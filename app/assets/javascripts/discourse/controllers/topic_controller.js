@@ -211,7 +211,7 @@ Discourse.TopicController = Discourse.ObjectController.extend({
     var _this = this;
     this.unsubscribe();
     this.get('content')["delete"](function() {
-      _this.set('message', "The topic has been deleted");
+      _this.set('message', Em.String.i18n('topic.deleted'));
       _this.set('loaded', false);
     });
   },
