@@ -16,17 +16,34 @@ For details on how to reduce the monthly cost of your application, see the Advan
 
     *config/redis.yml*
 
-         - uri: <%= uri = URI.parse(ENV['SET_REDIS_PROVIDER_URL'] || "redis://localhost:6379") %>
-         + uri: <%= uri = URI.parse(ENV['OPENREDIS_URL'] || "redis://localhost:6379") %>
+    ```erb
+     - uri: <%= uri = URI.parse(ENV['SET_REDIS_PROVIDER_URL'] || "redis://localhost:6379") %>
+     + uri: <%= uri = URI.parse(ENV['OPENREDIS_URL'] || "redis://localhost:6379") %>
+    ```
 
 3. Comment out or delete `config/redis.yml` from .gitignore. We want to include redis.yml when we push to Heroku.
 
     *.gitignore*
 
-        - config/redis.yml
-        + # config/redis.yml
+    ```ruby
+    - config/redis.yml
+    + # config/redis.yml
+    ```
 
-4. Commit your changes.
+4. Specify the Ruby version at the top of the Gemfile.
+
+    Heroku defaults to `ruby 1.9.2`, but Discourse requires a **minimum** of `ruby 1.9.3`.
+
+    *Gemfile*
+
+    ```ruby
+      source 'https://rubygems.org'
+
+    + ruby "2.0.0"
+      ...
+    ```
+
+5. Commit your changes.
 
         git add .
         git commit -m "ready for Heroku"
@@ -93,7 +110,7 @@ For details on how to reduce the monthly cost of your application, see the Advan
 
         heroku run rake db:migrate db:seed_fu
 
-    ##### You should now be able to visit your app at http://`<your-app-name>`.herokuapp.com
+    You should now be able to visit your app at `http://<your-app-name>.herokuapp.com`
 
 ## Configure the deployed application
 
@@ -104,11 +121,12 @@ For details on how to reduce the monthly cost of your application, see the Advan
         heroku run console
 
 3. Enter the following commands.
-
-        u = User.first
-        u.admin = true
-        u.approved = true
-        u.save
+```ruby
+    u = User.first
+    u.admin = true
+    u.approved = true
+    u.save
+```
 
 4. Provision the Heroku Scheduler.
 
@@ -140,17 +158,19 @@ For details on how to reduce the monthly cost of your application, see the Advan
 
     Click on the check-box next to the Sidekiq process and click Apply Changes
 
-    ##### Your Discourse application should now be functional. However, you will still need to configure mail functionality and file storage for uploaded images. For some recommendations on doing this within Heroku, see the Advanced Heroku deployment guide (coming soon).
+    ##### Your Discourse application should now be functional. However, you will still need to [configure mail](#email) functionality and file storage for uploaded images. For some examples of doing this within Heroku, see [Heroku add-on examples](#heroku-add-on-examples).
 
 ## Running the application locally
 
 Using Foreman to start the application allows you to mimic the way the application is started on Heroku. It loads environment variables via the .env file and instantiates the application using the Procfile. In the .env sample file, we have set `RAILS_ENV='development'`, this makes the Rails environment variable available globally, and is required when starting this application using Foreman.
 
-##### First, create a .env file from .env.sample
+**First**, save the file `.env.sample` as `.env`
 
-      RAILS_ENV='development'
+*.env*
 
-###Foreman commands:
+    RAILS_ENV='development'
+
+### Foreman commands:
 
 
 ##### Create the database
@@ -168,3 +188,37 @@ Using Foreman to start the application allows you to mimic the way the applicati
 ##### Use Rails console, with pry
 
     bundle exec foreman run rails console
+
+
+## Heroku add-on examples
+
+# Email
+
+##### Mandrill example
+
+1. Add the [Mandrill by MailChimp](https://devcenter.heroku.com/articles/mandrill) add-on from the [Heroku add-ons](https://addons.heroku.com/) page, or install from the command line using:
+
+        heroku addons:add mandrill:starter
+
+2. Configure the smtp settings in the production environment config file.
+
+    *config/environments/production.rb*
+
+    ```ruby
+    - config.action_mailer.delivery_method = :sendmail
+    - config.action_mailer.sendmail_settings = {arguments: '-i'}
+
+    + config.action_mailer.delivery_method = :smtp
+    + config.action_mailer.smtp_settings = {
+    +     :port =>           '587',
+    +     :address =>        'smtp.mandrillapp.com',
+    +     :user_name =>      ENV['MANDRILL_USERNAME'],
+    +     :password =>       ENV['MANDRILL_APIKEY'],
+    +     :domain =>         'heroku.com',
+    +     :authentication => :plain
+    + }
+    ```
+
+3. In Discourse admin settings, set `force_hostname` to your applications Heroku domain.
+
+    This step is required for Discourse to properly form links sent with account confirmation emails and password resets. The auto detected application url would point to an Amazon AWS instance.
