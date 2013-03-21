@@ -197,13 +197,8 @@ Discourse.Topic = Discourse.Model.extend({
   },
 
   // Delete this topic
-  "delete": function(callback) {
-    return $.ajax(Discourse.getURL("/t/") + (this.get('id')), {
-      type: 'DELETE',
-      success: function() {
-        return typeof callback === "function" ? callback() : void 0;
-      }
-    });
+  destroy: function() {
+    return $.ajax(Discourse.getURL("/t/") + (this.get('id')), { type: 'DELETE' });
   },
 
   // Load the posts for this topic
@@ -420,7 +415,7 @@ Discourse.Topic.reopenClass({
     if (opts.userFilters && opts.userFilters.length > 0) {
       data.username_filters = [];
       opts.userFilters.forEach(function(username) {
-        return data.username_filters.push(username);
+        data.username_filters.push(username);
       });
     }
 

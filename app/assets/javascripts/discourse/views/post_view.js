@@ -15,17 +15,12 @@ Discourse.PostView = Discourse.View.extend({
                       'post.hidden:hidden',
                       'post.deleted_at:deleted',
                       'parentPost:replies-above'],
-
-  siteBinding: Ember.Binding.oneWay('Discourse.site'),
-  composeViewBinding: Ember.Binding.oneWay('Discourse.composeView'),
-  quoteButtonViewBinding: Ember.Binding.oneWay('Discourse.quoteButtonView'),
   postBinding: 'content',
 
   // TODO really we should do something cleaner here... this makes it work in debug but feels really messy
   screenTrack: (function() {
-    var parentView, screenTrack;
-    parentView = this.get('parentView');
-    screenTrack = null;
+    var parentView = this.get('parentView');
+    var screenTrack = null;
     while (parentView && !screenTrack) {
       screenTrack = parentView.get('screenTrack');
       parentView = parentView.get('parentView');
@@ -41,9 +36,7 @@ Discourse.PostView = Discourse.View.extend({
   // If the cooked content changed, add the quote controls
   cookedChanged: (function() {
     var postView = this;
-    Em.run.next(function() {
-      postView.insertQuoteControls();
-    });
+    Em.run.next(function() { postView.insertQuoteControls(); });
   }).observes('post.cooked'),
 
   init: function() {
@@ -56,10 +49,9 @@ Discourse.PostView = Discourse.View.extend({
       this.toggleProperty('post.selected');
     }
 
-    var $target = $(e.target);
-    if ($target.closest('.cooked').length === 0) return;
-    var qbc = this.get('controller.controllers.quoteButton');
+    if ($(e.target).closest('.cooked').length === 0) return;
 
+    var qbc = this.get('controller.controllers.quoteButton');
     if (qbc && Discourse.get('currentUser.enable_quoting')) {
       e.context = this.get('post');
       qbc.selectText(e);

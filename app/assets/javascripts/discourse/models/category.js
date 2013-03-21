@@ -21,10 +21,7 @@ Discourse.Category = Discourse.Model.extend({
   }).property('topic_count'),
 
   save: function(args) {
-    var url,
-      _this = this;
-
-    url = Discourse.getURL("/categories");
+    var url = Discourse.getURL("/categories");
     if (this.get('id')) {
       url = Discourse.getURL("/categories/") + (this.get('id'));
     }
@@ -41,14 +38,8 @@ Discourse.Category = Discourse.Model.extend({
     });
   },
 
-  "delete": function(callback) {
-    var _this = this;
-    return $.ajax(Discourse.getURL("/categories/") + (this.get('slug')), {
-      type: 'DELETE',
-      success: function() {
-        return callback();
-      }
-    });
+  destroy: function(callback) {
+    return $.ajax(Discourse.getURL("/categories/") + (this.get('slug')), { type: 'DELETE' });
   }
 
 });

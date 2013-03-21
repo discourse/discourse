@@ -49,7 +49,7 @@ Discourse.AdminCustomizeController = Ember.Controller.extend({
       var selected;
       if (result) {
         selected = _this.get('content.selectedItem');
-        selected["delete"]();
+        selected.destroy();
         _this.set('content.selectedItem', null);
         return _this.get('content').removeObject(selected);
       }

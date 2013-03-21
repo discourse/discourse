@@ -10,7 +10,6 @@ Discourse.TopicSummaryView = Ember.ContainerView.extend(Discourse.Presence, {
   topicBinding: 'controller.content',
   classNameBindings: ['hidden', ':topic-summary'],
   LINKS_SHOWN: 5,
-  collapsed: true,
   allLinksShown: false,
 
   showAllLinksControls: (function() {
@@ -21,15 +20,15 @@ Discourse.TopicSummaryView = Ember.ContainerView.extend(Discourse.Presence, {
   }).property('allLinksShown', 'topic.links'),
 
   infoLinks: (function() {
-    var allLinks;
     if (this.blank('topic.links')) return [];
-    allLinks = this.get('topic.links');
+
+    var allLinks = this.get('topic.links');
     if (this.get('allLinksShown')) return allLinks;
     return allLinks.slice(0, this.LINKS_SHOWN);
   }).property('topic.links', 'allLinksShown'),
 
   newPostCreated: (function() {
-    return this.rerender();
+    this.rerender();
   }).observes('topic.posts_count'),
 
   hidden: (function() {
@@ -47,21 +46,17 @@ Discourse.TopicSummaryView = Ember.ContainerView.extend(Discourse.Presence, {
       topic: this.get('topic'),
       summaryView: this
     }));
-    return this.trigger('appendSummaryInformation', this);
-  },
-
-  toggleMore: function() {
-    return this.toggleProperty('collapsed');
+    this.trigger('appendSummaryInformation', this);
   },
 
   showAllLinks: function() {
-    return this.set('allLinksShown', true);
+    this.set('allLinksShown', true);
   },
 
   appendSummaryInformation: function(container) {
 
     // If we have a best of view
-    if (this.get('controller.showBestOf')) {
+    if (this.get('controller.has_best_of')) {
       container.pushObject(Em.View.create({
         templateName: 'topic_summary/best_of_toggle',
         tagName: 'section',

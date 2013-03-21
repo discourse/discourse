@@ -203,8 +203,10 @@ en:
 
     best_of:
       title: "Best Of"
+      enabled_description: You are currently viewing the "Best Of" view of this topic.
       description: "There are <b>{{count}}</b> posts in this topic. That's a lot! Would you like to save time by switching your view to show only the posts with the most interactions and responses?"
-      button: 'Switch to "Best Of" view'
+      enable: 'Switch to "Best Of" view'
+      disable: 'Cancel "Best Of"'
 
     private_message_info:
       title: "Private Conversation"
@@ -498,7 +500,9 @@ en:
       login_reply: 'Log In to Reply'
 
       filters:
-        user: "You're viewing only posts by specific user(s)."
+        user:
+          one: "You're viewing only posts by a specific user."
+          other: "You're viewing only posts made by specific users."
         best_of: "You're viewing only the 'Best Of' posts."
         cancel: "Show all posts in this topic again."
 

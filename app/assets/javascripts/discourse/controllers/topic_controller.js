@@ -10,6 +10,7 @@ Discourse.TopicController = Discourse.ObjectController.extend({
   userFilters: new Em.Set(),
   multiSelect: false,
   bestOf: false,
+  summaryCollapsed: true,
   needs: ['header', 'modal', 'composer', 'quoteButton'],
 
   filter: (function() {
@@ -19,9 +20,14 @@ Discourse.TopicController = Discourse.ObjectController.extend({
   }).property('userFilters.[]', 'bestOf'),
 
   filterDesc: (function() {
-    var filter;
-    if (!(filter = this.get('filter'))) return null;
-    return Em.String.i18n("topic.filters." + filter);
+    var filter = this.get('filter');
+    if (!filter) return null;
+
+    if (filter !== 'user') return Em.String.i18n("topic.filters." + filter);
+
+    // If we're a user filter, include the count
+    return Em.String.i18n("topic.filters.user", {count: this.get('userFilters.length')});
+
   }).property('filter'),
 
   selectedPosts: (function() {
@@ -81,6 +87,10 @@ Discourse.TopicController = Discourse.ObjectController.extend({
 
   toggleMultiSelect: function() {
     this.toggleProperty('multiSelect');
+  },
+
+  toggleSummary: function() {
+    this.toggleProperty('summaryCollapsed');
   },
 
   moveSelected: function() {
@@ -148,71 +158,56 @@ Discourse.TopicController = Discourse.ObjectController.extend({
   },
 
   toggleParticipant: function(user) {
-    var userFilters, username;
     this.set('bestOf', false);
-    username = Em.get(user, 'username');
-    userFilters = this.get('userFilters');
+    var username = Em.get(user, 'username');
+    var userFilters = this.get('userFilters');
     if (userFilters.contains(username)) {
       userFilters.remove(username);
     } else {
       userFilters.add(username);
     }
-    return false;
   },
 
   enableBestOf: function(e) {
     this.set('bestOf', true);
     this.get('userFilters').clear();
-    return false;
   },
 
-  showBestOf: (function() {
-    if (this.get('bestOf') === true) {
-      return false;
-    }
-    return this.get('content.has_best_of') === true;
-  }).property('bestOf', 'content.has_best_of'),
-
   postFilters: (function() {
-    if (this.get('bestOf') === true) {
-      return {
-        bestOf: true
-      };
-    }
-    return {
-      userFilters: this.get('userFilters')
-    };
+    if (this.get('bestOf') === true) return { bestOf: true };
+    return { userFilters: this.get('userFilters') };
   }).property('userFilters.[]', 'bestOf'),
 
-  reloadTopics: (function() {
-    var posts, topic,
-      _this = this;
-    topic = this.get('content');
+  reloadPosts: (function() {
+    var topic = this.get('content');
     if (!topic) return;
-    posts = topic.get('posts');
+
+    var posts = topic.get('posts');
     if (!posts) return;
-    posts.clear();
-    this.set('content.loaded', false);
-    return Discourse.Topic.find(this.get('content.id'), this.get('postFilters')).then(function(result) {
-      var first;
-      first = result.posts.first();
+
+    // Leave the first post -- we keep it above the filter controls
+    posts.removeAt(1, posts.length - 1);
+    var topicController = this;
+    return Discourse.Topic.find(this.get('id'), this.get('postFilters')).then(function(result) {
+      var first = result.posts.first();
       if (first) {
-        _this.set('currentPost', first.post_number);
+        topicController.set('currentPost', first.post_number);
       }
       $('#topic-progress .solid').data('progress', false);
       result.posts.each(function(p) {
-        return posts.pushObject(Discourse.Post.create(p, topic));
+        // Skip the first post
+        if (p.post_number === 1) return;
+        posts.pushObject(Discourse.Post.create(p, topic));
       });
-      return _this.set('content.loaded', true);
     });
   }).observes('postFilters'),
 
   deleteTopic: function(e) {
-    var _this = this;
+    var topicController = this;
     this.unsubscribe();
-    this.get('content')["delete"](function() {
-      _this.set('message', Em.String.i18n('topic.deleted'));
-      _this.set('loaded', false);
+    this.get('content').destroy().then(function() {
+      topicController.set('message', Em.String.i18n('topic.deleted'));
+      topicController.set('loaded', false);
     });
   },
 
@@ -411,7 +406,7 @@ Discourse.TopicController = Discourse.ObjectController.extend({
       post.set('can_delete', false);
       post.set('version', post.get('version') + 1);
     }
-    return post["delete"]();
+    post.destroy();
   },
 
   postRendered: function(post) {
