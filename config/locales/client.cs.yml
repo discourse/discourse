@@ -695,7 +695,6 @@ cs:
         please_upgrade: "Prosím aktualizujte!"
         latest_version: "Poslední verze"
         update_often: 'Prosím aktualizujte často!'
-        total_users: "Celkem uživatelů"
         moderator_short: "mod"
 
         reports:

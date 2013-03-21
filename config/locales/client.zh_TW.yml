@@ -703,7 +703,6 @@ zh_TW:
         installed_version: "已安裝"
         latest_version: "最新版本"
         update_often: '請經常升級！'
-        total_users: "用戶總數"
         moderator_short: "版主"
 
         reports:

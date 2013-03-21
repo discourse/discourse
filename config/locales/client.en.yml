@@ -700,7 +700,6 @@ en:
         installed_version: "Installed"
         latest_version: "Latest"
         update_often: 'Please update often!'
-        total_users: "Total Users"
         moderator_short: "mod"
         problems_found: "Some problems have been found with your installation of Discourse:"
 
@@ -712,6 +711,7 @@ en:
           all_time: "All Time"
           7_days_ago: "7 Days Ago"
           30_days_ago: "30 Days Ago"
+          all: "All"
 
       commits:
         latest_changes: "Latest changes."

@@ -703,7 +703,6 @@ zh_CN:
         installed_version: "已安装"
         latest_version: "最新版本"
         update_often: '请经常升级！'
-        total_users: "用户总数"
         moderator_short: "版主"
 
         reports:

@@ -266,10 +266,6 @@ zh_CN:
       title: "新的赞"
       xaxis: "天"
       yaxis: "新的赞数"
-    total_users:
-      title: "用户总数"
-      xaxis: "天"
-      yaxis: "用户总数"
     flags:
       title: "投诉"
       xaxis: "天"

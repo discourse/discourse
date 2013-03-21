@@ -9,7 +9,6 @@ class AdminDashboardData
   def as_json
     @json ||= {
       reports: REPORTS.map { |type| Report.find(type) },
-      total_users: User.count,
       problems: [rails_env_check, host_names_check, gc_checks].compact
     }.merge(
       SiteSetting.version_checks? ? {version_check: DiscourseUpdates.check_version} : {}

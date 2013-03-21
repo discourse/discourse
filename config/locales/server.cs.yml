@@ -269,10 +269,6 @@ cs:
       title: "Nová 'líbí se'"
       xaxis: "Den"
       yaxis: "Počet nových 'líbí se'"
-    total_users:
-      title: "Celkem uživatelů"
-      xaxis: "Den"
-      yaxis: "Celkový počet uživatelů"
     flags:
       title: "Nahlášení"
       xaxis: "Den"

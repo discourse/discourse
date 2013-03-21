@@ -274,10 +274,6 @@ fr:
       title: Nouveau Likes
       xaxis: Jour
       yaxis: Nombre de Likes
-    total_users:
-      title: "Total d'utilisateurs"
-      xaxis: Jour
-      yaxis: "Total d'utilisateurs"
     flags:
       title: Nouveaux Signalements
       xaxis: Jour

@@ -61,11 +61,6 @@
     </div>
   {{/if}}
 
-
-  <div class="dashboard-stats total-users">
-    {{i18n admin.dashboard.total_users}}: <strong>{{#unless loading}}{{ totalUsers }}{{/unless}}</strong><br/>
-  </div>
-
   <div class="dashboard-stats trust-levels">
     <table class="table table-condensed table-hover">
       <thead>
@@ -94,6 +89,7 @@
           <th>{{i18n admin.dashboard.reports.yesterday}}</th>
           <th>{{i18n admin.dashboard.reports.last_7_days}}</th>
           <th>{{i18n admin.dashboard.reports.last_30_days}}</th>
+          <th>{{i18n admin.dashboard.reports.all}}</th>
         </tr>
       </thead>
       {{#unless loading}}
