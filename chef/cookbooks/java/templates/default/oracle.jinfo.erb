@@ -1,0 +1,6 @@
+name=<%= @name %>
+priority=<%= @priority %>
+section=main
+
+<% @bin_cmds.each do |cmd| -%>jdk <%= cmd %> <%= @app_dir %>/bin/<%= cmd %>
+<% end -%>
