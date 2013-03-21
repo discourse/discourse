@@ -1,4 +1,5 @@
 require 'open-uri'
+require 'digest/sha1'
 
 require_dependency 'oneboxer/base'
 require_dependency 'oneboxer/whitelist'
@@ -14,7 +15,7 @@ module Oneboxer
   end
 
   def self.default_expiry
-    1.month
+    1.day
   end
 
   # Return a oneboxer for a given URL
@@ -79,72 +80,39 @@ module Oneboxer
     doc
   end
 
-  def self.create_post_reference(result, args={})
-    result.post_onebox_renders.create(post_id: args[:post_id]) if args[:post_id].present?
-  rescue ActiveRecord::RecordNotUnique
+  def self.cache_key_for(url)
+    "onebox:#{Digest::SHA1.hexdigest(url)}"
   end
 
-  def self.render_from_cache(url, args={})
-    result = OneboxRender.where(url: url).first
-
-    # Return the result but also create a reference to it
-    if result.present?
-      create_post_reference(result, args)
-      return result
-    end
-    nil
+  def self.render_from_cache(url)
+    Rails.cache.read(cache_key_for(url))
   end
 
   # Cache results from a onebox call
   def self.fetch_and_cache(url, args)
-    cooked, preview = onebox_nocache(url)
-    return nil if cooked.blank?
+    contents = onebox_nocache(url)
+    return nil if contents.blank?
 
-    # Store a cooked version in the database
-    OneboxRender.transaction do
-      begin
-        render = OneboxRender.create(url: url, preview: preview, cooked: cooked, expires_at: Oneboxer.default_expiry.from_now)
-        create_post_reference(render, args)
-      rescue ActiveRecord::RecordNotUnique
-      end
-    end
-
-    [cooked, preview]
-  end
-
-  # Retrieve a preview of a onebox, caching the result for performance
-  def self.preview(url, args={})
-    cached = render_from_cache(url, args) unless args[:no_cache].present?
-
-    # If we have a preview stored, return that. Otherwise return cooked content.
-    if cached.present?
-      return cached.preview if cached.preview.present?
-      return cached.cooked
-    end
-    cooked, preview = fetch_and_cache(url, args)
-
-    return preview if preview.present?
-    cooked
+    Rails.cache.write(cache_key_for(url), contents, expires_in: default_expiry)
+    contents
   end
 
   def self.invalidate(url)
-    OneboxRender.destroy_all(url: url)
+    Rails.cache.delete(cache_key_for(url))
   end
 
   # Return the cooked content for a url, caching the result for performance
   def self.onebox(url, args={})
 
-    if args[:invalidate_oneboxes].present?
+    if args[:invalidate_oneboxes]
       # Remove the onebox from the cache
       Oneboxer.invalidate(url)
     else
-      cached = render_from_cache(url, args) unless args[:no_cache].present?
-      return cached.cooked if cached.present?
+      contents = render_from_cache(url)
+      return contents if contents.present?
     end
 
-
-    cooked, preview = fetch_and_cache(url, args)
-    cooked
+    fetch_and_cache(url, args)
   end
 
 end

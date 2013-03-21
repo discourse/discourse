@@ -219,7 +219,7 @@ class Post < ActiveRecord::Base
     doc = Oneboxer.each_onebox_link(cooked) do |url, elem|
       cached = Oneboxer.render_from_cache(url)
       if cached.present?
-        elem.swap(cached.cooked)
+        elem.swap(cached)
         dirty = true
       end
     end
@@ -268,7 +268,7 @@ class Post < ActiveRecord::Base
   # Various callbacks
   before_create do
     if reply_to_post_number.present?
-      self.reply_to_user_id ||= Post.select(:user_id).where(topic_id: topic_id, post_number: reply_to_post_number).first.try(:user_id) 
+      self.reply_to_user_id ||= Post.select(:user_id).where(topic_id: topic_id, post_number: reply_to_post_number).first.try(:user_id)
     end
 
     self.post_number ||= Topic.next_post_number(topic_id, reply_to_post_number.present?)

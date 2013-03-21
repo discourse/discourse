@@ -46,14 +46,66 @@ describe Oneboxer do
     end
   end
 
+  let(:dummy_onebox_url) { "http://dummy.localhost/dummy-object" }
 
   before do
     Oneboxer.add_onebox DummyOnebox
-    @dummy_onebox_url = "http://dummy.localhost/dummy-object"
   end
 
   it 'should have matchers set up by default' do
     Oneboxer.matchers.should be_present
+  end
+
+  context 'caching' do
+
+    let(:result) { "onebox result string" }
+
+    context "with invalidate_oneboxes true" do
+
+      it "invalidates the url" do
+        Oneboxer.expects(:invalidate).with(dummy_onebox_url)
+        Oneboxer.onebox(dummy_onebox_url, invalidate_oneboxes: true)
+      end
+
+      it "doesn't render from cache" do
+        Oneboxer.expects(:render_from_cache).never
+        Oneboxer.onebox(dummy_onebox_url, invalidate_oneboxes: true)
+      end
+
+      it "calls fetch and cache" do
+        Oneboxer.expects(:fetch_and_cache).returns(result)
+        Oneboxer.onebox(dummy_onebox_url, invalidate_oneboxes: true).should == result
+      end
+
+    end
+
+    context 'with invalidate_oneboxes false' do
+
+      it "doesn't invalidate the url" do
+        Oneboxer.expects(:invalidate).with(dummy_onebox_url).never
+        Oneboxer.onebox(dummy_onebox_url, invalidate_oneboxes: false)
+      end
+
+      it "returns render_from_cache if present" do
+        Oneboxer.expects(:render_from_cache).with(dummy_onebox_url).returns(result)
+        Oneboxer.onebox(dummy_onebox_url, invalidate_oneboxes: false).should == result
+      end
+
+      it "doesn't call fetch_and_cache" do
+        Oneboxer.expects(:render_from_cache).with(dummy_onebox_url).returns(result)
+        Oneboxer.expects(:fetch_and_cache).never
+        Oneboxer.onebox(dummy_onebox_url, invalidate_oneboxes: false)
+      end
+
+
+      it "calls fetch_and_cache if render from cache is blank" do
+        Oneboxer.stubs(:render_from_cache)
+        Oneboxer.expects(:fetch_and_cache).returns(result)
+        Oneboxer.onebox(dummy_onebox_url, invalidate_oneboxes: false).should == result
+      end
+
+    end
+
   end
 
   context 'find onebox for url' do
@@ -63,11 +115,11 @@ describe Oneboxer do
     end
 
     it 'returns something when matched' do
-      Oneboxer.onebox_for_url(@dummy_onebox_url).should be_present
+      Oneboxer.onebox_for_url(dummy_onebox_url).should be_present
     end
 
     it 'returns an instance of our class when matched' do
-      Oneboxer.onebox_for_url(@dummy_onebox_url).kind_of?(DummyOnebox).should be_true
+      Oneboxer.onebox_for_url(dummy_onebox_url).kind_of?(DummyOnebox).should be_true
     end
 
   end
@@ -92,67 +144,8 @@ describe Oneboxer do
 
   context 'without caching' do
     it 'calls the onebox method of our matched class' do
-      Oneboxer.onebox_nocache(@dummy_onebox_url).should == 'dummy!'
+      Oneboxer.onebox_nocache(dummy_onebox_url).should == 'dummy!'
     end
-  end
-
-  context 'with caching' do
-
-    context 'initial cache is empty' do
-
-      it 'has no OneboxRender records' do
-        OneboxRender.count.should == 0
-      end
-
-      it 'calls the onebox_nocache method if there is no cache record yet' do
-        Oneboxer.expects(:onebox_nocache).with(@dummy_onebox_url).once
-        Oneboxer.onebox(@dummy_onebox_url)
-      end
-    end
-
-    context 'caching result' do
-      before do
-        @post = Fabricate(:post)
-        @result = Oneboxer.onebox(@dummy_onebox_url, post_id: @post.id)
-        @onebox_render = OneboxRender.where(url: @dummy_onebox_url).first
-      end
-
-      it "returns the correct result" do
-        @result.should == 'dummy!'
-      end
-
-      it "created a OneboxRender record with the url" do
-        @onebox_render.should be_present
-      end
-
-      it "created a OneboxRender record with the url" do
-        @onebox_render.url.should == @dummy_onebox_url
-      end
-
-      it "associated the render with a post" do
-        @onebox_render.posts.should == [@post]
-      end
-
-      it "has an expires_at value" do
-        @onebox_render.expires_at.should be_present
-      end
-
-      it "doesn't call onebox_nocache on a cache hit" do
-        Oneboxer.expects(:onebox_nocache).never
-        Oneboxer.onebox(@dummy_onebox_url).should == 'dummy!'
-      end
-
-      context 'invalidating cache' do
-
-        it "deletes the onebox render" do
-          Oneboxer.expects(:onebox_nocache).once.returns('new cache value!')
-          Oneboxer.onebox(@dummy_onebox_url, invalidate_oneboxes: true).should == 'new cache value!'
-        end
-
-      end
-
-    end
-
   end
 
   context 'each_onebox_link' do
