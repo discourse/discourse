@@ -22,8 +22,11 @@ Discourse.Eyeline = function Eyeline(selector) {
   @method update
 **/
 Discourse.Eyeline.prototype.update = function() {
-  var $elements, $results, atBottom, bottomOffset, docViewBottom, docViewTop, documentHeight, foundElement, windowHeight,
+  var $elements, atBottom, bottomOffset, docViewBottom, docViewTop, documentHeight, foundElement, windowHeight,
     _this = this;
+
+  // before anything ... let us not do anything if we have no focus
+  if (!Discourse.get('hasFocus')) { return; }
 
   docViewTop = $(window).scrollTop();
   windowHeight = $(window).height();
@@ -38,9 +41,10 @@ Discourse.Eyeline.prototype.update = function() {
 
   // Whether we've seen any elements in this search
   foundElement = false;
-  $results = $(this.selector);
-  return $results.each(function(i, elem) {
+
+  return $elements.each(function(i, elem) {
     var $elem, elemBottom, elemTop, markSeen;
+
     $elem = $(elem);
     elemTop = $elem.offset().top;
     elemBottom = elemTop + $elem.height();
@@ -71,7 +75,7 @@ Discourse.Eyeline.prototype.update = function() {
     if (i === 0) {
       _this.trigger('sawTop', { detail: $elem });
     }
-    if (i === ($results.length - 1)) {
+    if (i === ($elements.length - 1)) {
       return _this.trigger('sawBottom', { detail: $elem });
     }
   });

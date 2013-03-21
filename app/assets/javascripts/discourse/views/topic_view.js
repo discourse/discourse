@@ -110,22 +110,31 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
   // This view is being removed. Shut down operations
   willDestroyElement: function() {
-    var _ref;
+    var screenTrack, controller;
     this.unbindScrolling();
-    this.get('controller').unsubscribe();
-    if (_ref = this.get('screenTrack')) {
-      _ref.stop();
+    
+    controller = this.get('controller');
+    controller.unsubscribe();
+    controller.set('onPostRendered', null);
+
+    screenTrack = this.get('screenTrack');
+    if (screenTrack) {
+      screenTrack.stop();
     }
+
     this.set('screenTrack', null);
+
     $(window).unbind('scroll.discourse-on-scroll');
     $(document).unbind('touchmove.discourse-on-scroll');
     $(window).unbind('resize.discourse-on-scroll');
-    return this.resetExamineDockCache();
+    
+    this.resetExamineDockCache();
   },
 
   didInsertElement: function(e) {
-    var eyeline, onScroll, screenTrack,
+    var eyeline, onScroll, screenTrack, controller,
       _this = this;
+
     onScroll = Discourse.debounce((function() {
       return _this.onScroll();
     }), 10);
@@ -133,7 +142,12 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     $(document).bind('touchmove.discourse-on-scroll', onScroll);
     $(window).bind('resize.discourse-on-scroll', onScroll);
     this.bindScrolling();
-    this.get('controller').subscribe();
+    controller = this.get('controller'); 
+    
+    controller.subscribe();
+    controller.set('onPostRendered', function(){
+      _this.postsRendered.apply(_this);
+    });
 
     // Insert our screen tracker
     screenTrack = Discourse.ScreenTrack.create({ topic_id: this.get('topic.id') });
@@ -142,19 +156,33 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
     // Track the user's eyeline
     eyeline = new Discourse.Eyeline('.topic-post');
-    eyeline.on('saw', function(e) { return _this.postSeen(e.detail); });
-    eyeline.on('sawBottom', function(e) { _this.nextPage(e.detail); });
-    eyeline.on('sawTop', function(e) { _this.prevPage(e.detail); });
+    
+    eyeline.on('saw', function(e) { 
+      _this.postSeen(e.detail); 
+    });
+    
+    eyeline.on('sawBottom', function(e) { 
+      _this.postSeen(e.detail); 
+      _this.nextPage(e.detail); 
+    });
+
+    eyeline.on('sawTop', function(e) { 
+      _this.postSeen(e.detail); 
+      _this.prevPage(e.detail); 
+    });
+
     this.set('eyeline', eyeline);
     this.$().on('mouseup.discourse-redirect', '.cooked a, a.track-link', function(e) {
       return Discourse.ClickTrack.trackClick(e);
     });
 
-    return this.onScroll();
+    this.onScroll();
+
   },
 
-  // Triggered from the post view all posts are rendered
-  postsRendered: function(postDiv, post) {
+  // Triggered whenever any posts are rendered, debounced to save over calling 
+  postsRendered: Discourse.debounce(function() {
+
     var $lastPost, $window,
       _this = this;
     $window = $(window);
@@ -166,7 +194,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
       // last is not in view, so only examine in 2 seconds
       Em.run.later(function() { _this.examineRead(); }, 2000);
     }
-  },
+  }, 100),
 
   resetRead: function(e) {
     var _this = this;
@@ -178,6 +206,12 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
       _this.set('controller.loaded', false);
     });
   },
+
+  gotFocus: function(){
+    if (Discourse.get('hasFocus')){
+      this.examineRead();
+    }
+  }.observes("Discourse.hasFocus"),
 
   // Called for every post seen
   postSeen: function($post) {
@@ -192,7 +226,8 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
       }
       if (!post.get('read')) {
         post.set('read', true);
-        return (_ref = this.get('screenTrack')) ? _ref.guessedSeen(post.get('post_number')) : void 0;
+        _ref = this.get('screenTrack');
+        if (_ref) { _ref.guessedSeen(post.get('post_number')); }
       }
     }
   },
@@ -277,8 +312,6 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
   postCountChanged: (function() {
     this.set('seenBottom', false);
-    var eyeline = this.get('eyeline');
-    if (eyeline) eyeline.update()
   }).observes('topic.highest_post_number'),
 
   loadMore: function(post) {

@@ -271,7 +271,8 @@ Discourse.TopicController = Discourse.ObjectController.extend({
 
     // there is a condition where the view never calls unsubscribe, navigate to a topic from a topic
     bus.unsubscribe('/topic/*');
-    return bus.subscribe("/topic/" + (this.get('content.id')), function(data) {
+
+    bus.subscribe("/topic/" + (this.get('content.id')), function(data) {
       var posts, topic;
       topic = _this.get('content');
       if (data.notification_level_change) {
@@ -289,7 +290,7 @@ Discourse.TopicController = Discourse.ObjectController.extend({
       topic.set('highest_post_number', data.post_number);
       topic.set('last_poster', data.user);
       topic.set('last_posted_at', data.created_at);
-      return Discourse.notifyTitle();
+      Discourse.notifyTitle();
     });
   },
 
@@ -411,6 +412,13 @@ Discourse.TopicController = Discourse.ObjectController.extend({
       post.set('version', post.get('version') + 1);
     }
     return post["delete"]();
+  },
+
+  postRendered: function(post) {
+    var onPostRendered = this.get('onPostRendered');
+    if (onPostRendered) {
+      onPostRendered(post);
+    }
   }
 });
 

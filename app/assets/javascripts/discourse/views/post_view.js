@@ -240,8 +240,10 @@ Discourse.PostView = Discourse.View.extend({
     $post = this.$();
     post = this.get('post');
 
+    postNumber = post.get('scrollToAfterInsert');
+
     // Do we want to scroll to this post now that we've inserted it?
-    if (postNumber = post.get('scrollToAfterInsert')) {
+    if (postNumber) {
       Discourse.TopicView.scrollTo(this.get('post.topic_id'), postNumber);
       if (postNumber === post.get('post_number')) {
         $contents = $('.topic-body .contents', $post);
@@ -271,7 +273,13 @@ Discourse.PostView = Discourse.View.extend({
     }
 
     // Find all the quotes
-    return this.insertQuoteControls();
+    this.insertQuoteControls();
+
+    // be sure that eyeline tracked it
+    var controller = this.get('controller');
+    if (controller && controller.postRendered) {
+      controller.postRendered(post);
+    }
   }
 });
 
