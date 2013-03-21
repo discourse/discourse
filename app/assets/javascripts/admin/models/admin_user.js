@@ -71,15 +71,18 @@ Discourse.AdminUser = Discourse.Model.extend({
     return Discourse.get('site.trust_levels').findProperty('id', this.get('trust_level'));
   }).property('trust_level'),
 
+  isBanned: (function() {
+    return this.get('is_banned') === true;
+  }).property('is_banned'),
+
   canBan: (function() {
-    return !this.admin && !this.moderator;
+    return !this.get('admin') && !this.get('moderator');
   }).property('admin', 'moderator'),
 
   banDuration: (function() {
-    var banned_at, banned_till;
-    banned_at = Date.create(this.banned_at);
-    banned_till = Date.create(this.banned_till);
-    return "" + (banned_at.short()) + " - " + (banned_till.short());
+    var banned_at = Date.create(this.banned_at);
+    var banned_till = Date.create(this.banned_till);
+    return banned_at.short() + " - " + banned_till.short();
   }).property('banned_till', 'banned_at'),
 
   ban: function() {
@@ -94,10 +97,7 @@ Discourse.AdminUser = Discourse.Model.extend({
             window.location.reload();
           },
           error: function(e) {
-            var error;
-            error = Em.String.i18n('admin.user.ban_failed', {
-              error: "http: " + e.status + " - " + e.body
-            });
+            var error = Em.String.i18n('admin.user.ban_failed', { error: "http: " + e.status + " - " + e.body });
             bootbox.alert(error);
           }
         });
@@ -113,10 +113,7 @@ Discourse.AdminUser = Discourse.Model.extend({
         window.location.reload();
       },
       error: function(e) {
-        var error;
-        error = Em.String.i18n('admin.user.unban_failed', {
-          error: "http: " + e.status + " - " + e.body
-        });
+        var error = Em.String.i18n('admin.user.unban_failed', { error: "http: " + e.status + " - " + e.body });
         bootbox.alert(error);
       }
     });

@@ -8,13 +8,13 @@
       <a href="{{unbound content.path}}" class='btn'>
         <i class='icon icon-user'></i>
         {{i18n admin.user.show_public_profile}}
-      </a> 
+      </a>
       {{#if content.can_impersonate}}
           <button class='btn' {{action impersonate target="content"}}>
             <i class='icon icon-screenshot'></i>
             {{i18n admin.user.impersonate}}
           </button>
-      {{/if}}      
+      {{/if}}
     </div>
   </div>
   <div class='display-row'>
@@ -44,21 +44,21 @@
     <div class='field'>{{i18n admin.users.approved}}</div>
     <div class='value'>
       {{#if content.approved}}
-        {{i18n admin.user.approved_by}}        
+        {{i18n admin.user.approved_by}}
         <a href="{{unbound content.approved_by.adminPath}}">{{avatar approved_by imageSize="small"}}</a>
         <a href="{{unbound adminPath}}">{{content.approved_by.username}}</a>
       {{else}}
         {{i18n no_value}}
       {{/if}}
-      
+
     </div>
     <div class='controls'>
-      {{#if content.can_approve}}        
+      {{#if content.can_approve}}
         <button class='btn' {{action approve target="content"}}>
           <i class='icon icon-ok'></i>
           {{i18n admin.user.approve}}
         </button>
-      {{/if}}    
+      {{/if}}
     </div>
   </div>
 
@@ -66,7 +66,7 @@
     <div class='field'>{{i18n admin.user.admin}}</div>
     <div class='value'>{{content.admin}}</div>
     <div class='controls'>
-      {{#if content.can_revoke_admin}}        
+      {{#if content.can_revoke_admin}}
         <button class='btn' {{action revokeAdmin target="content"}}>
           <i class='icon icon-trophy'></i>
           {{i18n admin.user.revoke_admin}}
@@ -77,7 +77,7 @@
           <i class='icon icon-trophy'></i>
           {{i18n admin.user.grant_admin}}
         </button>
-      {{/if}}      
+      {{/if}}
     </div>
 
   </div>
@@ -85,7 +85,7 @@
     <div class='field'>{{i18n admin.user.moderator}}</div>
     <div class='value'>{{content.moderator}}</div>
     <div class='controls'>
-      {{#if content.can_revoke_moderation}}        
+      {{#if content.can_revoke_moderation}}
         <button class='btn' {{action revokeModeration target="content"}}>
           <i class='icon icon-eye-close'></i>
           {{i18n admin.user.revoke_moderation}}
@@ -96,26 +96,24 @@
           <i class='icon icon-eye-open'></i>
           {{i18n admin.user.grant_moderation}}
         </button>
-      {{/if}}      
+      {{/if}}
     </div>
-    
+
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n trust_level}}</div>
     <div class='value'>{{content.trustLevel.name}}</div>
-  </div>   
+  </div>
   <div class='display-row'>
     <div class='field'>{{i18n admin.user.banned}}</div>
-    <div class='value'>{{content.is_banned}}</div>
+    <div class='value'>{{content.isBanned}}</div>
     <div class='controls'>
-    {{#if content.is_banned}}
-      {{#if content.canBan}}
-        <button class='btn' {{action unban target="content"}}>
-          <i class='icon icon-screenshot'></i>
-          {{i18n admin.user.unban}}
-        </button>
-        {{content.banDuration}}
-      {{/if}}
+    {{#if content.isBanned}}
+      <button class='btn' {{action unban target="content"}}>
+        <i class='icon icon-screenshot'></i>
+        {{i18n admin.user.unban}}
+      </button>
+      {{content.banDuration}}
     {{else}}
       {{#if content.canBan}}
         <button class='btn' {{action ban target="content"}}>
@@ -125,7 +123,7 @@
       {{/if}}
     {{/if}}
     </div>
-  </div>   
+  </div>
 </section>
 
 <section class='details'>
@@ -150,7 +148,7 @@
   <div class='display-row'>
     <div class='field'>{{i18n admin.user.topics_entered}}</div>
     <div class='value'>{{content.topics_entered}}</div>
-  </div>  
+  </div>
   <div class='display-row'>
     <div class='field'>{{i18n admin.user.post_count}}</div>
     <div class='value'>{{content.post_count}}</div>
@@ -166,15 +164,15 @@
   <div class='display-row'>
     <div class='field'>{{i18n admin.user.posts_read_count}}</div>
     <div class='value'>{{content.posts_read_count}}</div>
-  </div>  
+  </div>
   <div class='display-row'>
     <div class='field'>{{i18n admin.user.flags_given_count}}</div>
     <div class='value'>{{content.flags_given_count}}</div>
-  </div>  
+  </div>
   <div class='display-row'>
     <div class='field'>{{i18n admin.user.flags_received_count}}</div>
     <div class='value'>{{content.flags_received_count}}</div>
-  </div>    
+  </div>
   <div class='display-row'>
     <div class='field'>{{i18n admin.user.private_topics_count}}</div>
     <div class='value'>{{content.private_topics_count}}</div>
@@ -182,10 +180,10 @@
   <div class='display-row'>
     <div class='field'>{{i18n admin.user.time_read}}</div>
     <div class='value'>{{{content.time_read}}}</div>
-  </div>  
+  </div>
   <div class='display-row'>
     <div class='field'>{{i18n user.invited.days_visited}}</div>
     <div class='value'>{{{content.days_visited}}}</div>
-  </div>  
+  </div>
 </section>
 
