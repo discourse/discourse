@@ -389,7 +389,7 @@ Discourse.Topic.reopenClass({
     @returns A promise that will resolve to the topics
   **/
   findSimilarTo: function(title, body) {
-    return $.ajax({url: "/topics/similar_to", data: {title: title, raw: body} }).then(function (results) {
+    return $.ajax({url: Discourse.getURL("/topics/similar_to"), data: {title: title, raw: body} }).then(function (results) {
       return results.map(function(topic) { return Discourse.Topic.create(topic) });
     });
   },
