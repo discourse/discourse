@@ -9,7 +9,7 @@ Dir["#{Rails.root}/lib/oneboxer/*_onebox.rb"].each {|f|
 module Oneboxer
   extend Oneboxer::Base
 
-  Dir["#{Rails.root}/lib/oneboxer/*_onebox.rb"].each do |f|
+  Dir["#{Rails.root}/lib/oneboxer/*_onebox.rb"].sort.each do |f|
     add_onebox "Oneboxer::#{Pathname.new(f).basename.to_s.gsub(/\.rb$/, '').classify}".constantize
   end
 
@@ -19,9 +19,12 @@ module Oneboxer
 
   # Return a oneboxer for a given URL
   def self.onebox_for_url(url)
-    matchers.each do |regexp, oneboxer|
+    matchers.each do |matcher|
+      regexp = matcher.regexp
+      klass = matcher.klass
+
       regexp = regexp.call if regexp.class == Proc
-      return oneboxer.new(url) if url =~ regexp
+      return klass.new(url) if url =~ regexp
     end
     nil
   end

@@ -28,22 +28,23 @@ module Oneboxer
     end
   end
 
-  module Base
+  class Matcher
+    attr_reader :regexp, :klass
 
-    def matchers
-      @matchers ||= {}
-      @matchers
+    def initialize(klass)
+      @klass = klass
+      @regexp = klass.regexp
     end
+  end
 
-    # Add a matcher
-    def add_matcher(regexp, klass)
-      matchers[regexp] = klass
+  module Base
+    def matchers
+      @matchers ||= []
     end
 
     def add_onebox(klass)
-      matchers[klass.regexp] = klass
+      matchers << Matcher.new(klass)
     end
-
   end
 
 end
