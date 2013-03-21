@@ -96,6 +96,10 @@ Discourse.Utilities = {
     return url;
   },
 
+  userUrl: function(username) {
+    return Discourse.getURL("/users/" + username);
+  },
+
   emailValid: function(email) {
    // see:  http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
    var re;
