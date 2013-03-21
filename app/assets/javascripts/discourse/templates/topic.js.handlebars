@@ -57,7 +57,7 @@
             {{#if view.loadingAbove}}
               <div class='spinner'>{{i18n loading}}</div>
             {{/if}}
-            {{view Discourse.TopicPostsView contentBinding="content.posts" topicViewBinding="view"}}
+            {{collection itemViewClass="Discourse.PostView" contentBinding="content.posts" topicViewBinding="view"}}
 
             {{#if view.loadingBelow}}
               <div class='spinner'>{{i18n loading}}</div>
