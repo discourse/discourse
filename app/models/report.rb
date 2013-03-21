@@ -1,15 +1,10 @@
 class Report
 
-  attr_accessor :type, :data, :cache
-
-  def self.cache_expiry
-    3600  # In seconds
-  end
+  attr_accessor :type, :data
 
   def initialize(type)
     @type = type
     @data = nil
-    @cache = true
   end
 
   def as_json
@@ -28,7 +23,6 @@ class Report
 
     # Load the report
     report = Report.new(type)
-    report.cache = false if opts[:cache] == false
     send(report_method, report)
     report
   end
