@@ -8,6 +8,10 @@
 **/
 Discourse.UserAction = Discourse.Model.extend({
 
+  userUrl: (function() {
+    return Discourse.Utilities.userUrl(this.get('username'));
+  }).property(),
+
   postUrl: (function() {
     return Discourse.Utilities.postUrl(this.get('slug'), this.get('topic_id'), this.get('post_number'));
   }).property(),
