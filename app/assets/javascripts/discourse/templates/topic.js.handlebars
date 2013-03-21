@@ -54,19 +54,19 @@
               </nav>
             </div>
 
-            {{#if view.loadingAbove}}
+            {{#if loadingAbove}}
               <div class='spinner'>{{i18n loading}}</div>
             {{/if}}
             {{collection itemViewClass="Discourse.PostView" contentBinding="content.posts" topicViewBinding="view"}}
 
-            {{#if view.loadingBelow}}
+            {{#if loadingBelow}}
               <div class='spinner'>{{i18n loading}}</div>
             {{/if}}
           </div>
           <div id='topic-bottom'></div>
 
-          {{#if view.loading}}
-            {{#unless view.loadingBelow}}
+          {{#if loading}}
+            {{#unless loadingBelow}}
               <div class='spinner small'>{{i18n loading}}</div>
             {{/unless}}
           {{else}}

@@ -11,6 +11,9 @@ Discourse.TopicController = Discourse.ObjectController.extend({
   multiSelect: false,
   bestOf: false,
   summaryCollapsed: true,
+  loading: false,
+  loadingBelow: false,
+  loadingAbove: false,
   needs: ['header', 'modal', 'composer', 'quoteButton'],
 
   filter: (function() {
@@ -64,11 +67,11 @@ Discourse.TopicController = Discourse.ObjectController.extend({
 
   multiSelectChanged: (function() {
     // Deselect all posts when multi select is turned off
-    var posts;
     if (!this.get('multiSelect')) {
-      if (posts = this.get('content.posts')) {
-        return posts.forEach(function(p) {
-          return p.set('selected', false);
+      var posts = this.get('content.posts');
+      if (posts) {
+        posts.forEach(function(p) {
+          p.set('selected', false);
         });
       }
     }
@@ -187,6 +190,9 @@ Discourse.TopicController = Discourse.ObjectController.extend({
 
     // Leave the first post -- we keep it above the filter controls
     posts.removeAt(1, posts.length - 1);
+
+    this.set('loadingBelow', true);
+
     var topicController = this;
     return Discourse.Topic.find(this.get('id'), this.get('postFilters')).then(function(result) {
       var first = result.posts.first();
@@ -199,6 +205,7 @@ Discourse.TopicController = Discourse.ObjectController.extend({
         if (p.post_number === 1) return;
         posts.pushObject(Discourse.Post.create(p, topic));
       });
+      topicController.set('loadingBelow', false);
     });
   }).observes('postFilters'),
 
