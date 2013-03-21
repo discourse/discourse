@@ -14,7 +14,7 @@ Whenever you need ...
 
 1. If you're **brand new to Ruby and Rails**, please start with our [**Discourse Vagrant Developer Guide**](https://github.com/discourse/discourse/blob/master/docs/VAGRANT.md), which includes instructions to get up and running in a development environment using a virtual machine. This beginner's guide is also adequate for developers ready to sink their teeth quickly; it's the easiest way to hack on Discourse!
 
-2. Once you have Discourse up and running, be sure to load the appropriate seed data on your forum, either the **developer** seed data, which is the same data you'll see on [try.discourse.org](http://try.discourse.org), or the **production** seed data which includes the [Discourse Admin Quick Start Guide](https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide) and meta guidance.
+2. Once you have Discourse up and running, be sure to load [the appropriate seed data](https://github.com/discourse/discourse/tree/master/pg_dumps) on your forum, either the **developer** seed data, which is the same data you'll see on [try.discourse.org](http://try.discourse.org), or the **production** seed data which includes the [Discourse Admin Quick Start Guide](https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide) and meta guidance.
 
 3. If you're familiar with how Rails works and are comfortable setting up your own environment, use our [**Discourse Advanced Developer Guide**](https://github.com/discourse/discourse/blob/master/docs/DEVELOPER-ADVANCED.md).
 
