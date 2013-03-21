@@ -49,6 +49,18 @@ Once the machine has booted up, you can shell into it by typing:
 vagrant ssh
 ```
 
+If NFS shared folders failed, install NFS on the virtual machine by typing:
+```
+sudo apt-get install nfs-kernel-server
+exit
+```
+Halt the virtual machine, bring it up again with NFS enabled, and ssh in:
+```
+vagrant halt
+vagrant up
+vagrant ssh
+```
+
 **Note to Windows users**: You cannot run ```vagrant ssh``` from a cmd prompt; you'll receive the error message:
 
 ```
