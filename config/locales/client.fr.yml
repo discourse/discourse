@@ -28,7 +28,6 @@ fr:
     links: "Liens"
     faq: "FAQ"
     you: "vous"
-    ok: "ok"
     or: "ou"
     now: "à l'instant"
 
@@ -206,9 +205,11 @@ fr:
     last_post: Dernier message
 
     best_of:
-      title: "Les plus populaires"
+      title: Les plus populaires
       description: "Il y a <b>{{count}}</b> messages dans cette discussion. C'est beaucoup ! Voulez-vous gagner du temps en basculant sur la liste des messages possédant le plus d'interactions et de réponses ?"
-      button: 'Basculer sur la vue "Messages populaires"'
+      enabled_description: Vous êtes actuellement en train de consulter seulement les messages les plus populaires de cette discussion.
+      enable: Ne voir que les plus populaires
+      disable: Ré-afficher tous les messages
 
     private_message_info:
       title: "discussion privée"
@@ -502,8 +503,10 @@ fr:
       login_reply: 'Connectez-vous pour répondre'
 
       filters:
-        user: "Vous voyez uniquement les messages d'un utilisateur spécifique."
-        best_of: "Vous voyez uniquement les messages les plus populaires"
+        user:
+          one: "Vous voyez uniquement les messages d'un utilisateur spécifique."
+          other: "Vous voyez uniquement les messages d'utilisateurs spécifiques."
+        best_of: "Vous voyez uniquement les messages les plus populaires."
         cancel: "Ré-afficher l'ensemble des messages de cette discussion."
 
       move_selected:
@@ -712,6 +715,7 @@ fr:
           all_time: Depuis toujours
           7_days_ago: Il y a 7 jours
           30_days_ago: Il y a 30 jours
+          all: Tous
 
       commits:
         latest_changes: Derniers changements

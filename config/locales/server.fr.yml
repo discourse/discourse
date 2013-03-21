@@ -291,6 +291,7 @@ fr:
     rails_env_warning: "Votre serveur fonctionne dans l'environnement de %{env}."
     host_names_warning: "Le fichier config/database.yml utilise le nom d'hôte par défaut. Veuillez renseigner votre nom d'hôte."
     gc_warning: "Votre serveur utilise les paramètres par défaut de collection du GC de ruby, ce qui ne vous donneras pas les meilleures performances. Merci de lire cette discussion sur <a href=\"http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126\">l'optimisation des performances de Ruby et Rails pour Discourse [EN]</a>."
+    clockwork_warning: "Clockwork n'est pas lancé. Assurez-vous qu'un processus clockwork soit toujours lancé afin que les tâches importantes soient planifiées. <a href=\"https://github.com/tomykaira/clockwork\">En savoir plus sur clockwork [EN]</a>."
 
   site_settings:
     default_locale: "Le langage par défaut de cette instance de Discourse (code ISO 639-1)"
