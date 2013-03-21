@@ -54,4 +54,18 @@ describe AdminDashboardData do
     end
   end
 
+  describe 'clockwork_check' do
+    subject { AdminDashboardData.new.clockwork_check }
+
+    it 'returns nil when clockwork is running' do
+      Jobs::ClockworkHeartbeat.stubs(:is_clockwork_running?).returns(true)
+      subject.should be_nil
+    end
+
+    it 'returns a string when clockwork is not running' do
+      Jobs::ClockworkHeartbeat.stubs(:is_clockwork_running?).returns(false)
+      subject.should_not be_nil
+    end
+  end
+
 end
