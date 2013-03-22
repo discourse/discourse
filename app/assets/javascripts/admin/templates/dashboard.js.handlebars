@@ -93,12 +93,12 @@
         </tr>
       </thead>
       {{#unless loading}}
-        {{ render 'admin_report_signups' signups }}
-        {{ render 'admin_report_topics' topics }}
-        {{ render 'admin_report_posts' posts }}
-        {{ render 'admin_report_likes' likes }}
-        {{ render 'admin_report_flags' flags }}
-        {{ render 'admin_report_emails' emails }}
+        {{ render 'admin_report_counts' signups }}
+        {{ render 'admin_report_counts' topics }}
+        {{ render 'admin_report_counts' posts }}
+        {{ render 'admin_report_counts' likes }}
+        {{ render 'admin_report_counts' flags }}
+        {{ render 'admin_report_counts' emails }}
       {{/unless}}
     </table>
   </div>
