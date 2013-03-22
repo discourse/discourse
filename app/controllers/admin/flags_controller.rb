@@ -43,7 +43,7 @@ limit 100
     posts = sql.exec.to_a
 
     if posts.length == 0
-      render :json => {users: [], posts: []}
+      render json: {users: [], posts: []}
       return
     end
 

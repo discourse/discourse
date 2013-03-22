@@ -29,13 +29,13 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render :json => @data }
+      format.json { render json: @data }
     end
   end
 
   def failure
     flash[:error] = I18n.t("login.omniauth_error", strategy: params[:strategy].titleize)
-    render :layout => 'no_js'
+    render layout: 'no_js'
   end
 
   def create_or_sign_on_user_using_twitter(auth_token)
