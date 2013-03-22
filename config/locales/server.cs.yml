@@ -1,5 +1,4 @@
 # encoding: utf-8
-
 cs:
   time:
     formats:
@@ -81,18 +80,16 @@ cs:
     post_template: "%{replace_paragraph}\n\nPoužijte toto místo níže pro delší popis a stanovení pravidel diskuze!"
 
   trust_levels:
-    new:
-      title: "nový uživatel"
+    visitor:
+      title: "návštěvník"
     basic:
       title: "základní uživatel"
     regular:
-      title: "běžný uživatel"
-    experienced:
-      title: "zkušený uživatel"
-    advanced:
-      title: "pokročilý uživatel"
-    moderator:
-      title: "moderátor"
+      title: "pravidelný uživatel"
+    leader:
+      title: "vůdce"
+    elder:
+      title: "starší"
 
   rate_limiter:
     too_many_requests: "Děláte tuto akci příliš často. Prosím počkejte %{time_left} a zkuste to znovu."
@@ -186,6 +183,7 @@ cs:
     title: 'resetovat heslo'
     success: "Heslo bylo úspěšně změněno a nyní jste přihlášeni."
     success_unapproved: "Heslo bylo úšpěšně změněno."
+    continue: "Pokračovat na %{site_name}"
 
   change_email:
     confirmed: "Váše emailová adresa bylo změněna."
@@ -281,6 +279,12 @@ cs:
       title: "Odesláno emailů"
       xaxis: "Den"
       yaxis: "Počet emailů"
+
+  dashboard:
+    rails_env_warning: "Váš server běží v módu %{env}."
+    host_names_warning: "Vaše konfigurace v souboru config/database.yml používá 'localhost' jako jméno hostitele. Změňte toto nastavení na doménu vašeho webu."
+    gc_warning: 'Váš server používá výchozí nastavení ruby gargabe collectoru, což způsobuje snížený výkon. Přečtěte si toto téma ohledně ladění výkonu: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>.'
+    clockwork_warning: 'Clockwork neběží. Ujistěte se, že process clockwork vždy běží, aby mohly být plánovány důležité úlohy na pozadí. <a href="https://github.com/tomykaira/clockwork">Více informací o clockwork</a>.'
 
   site_settings:
     default_locale: "Výchozí jazyk této Discourse instance (kód ve formátu ISO 639-1)"
@@ -423,6 +427,7 @@ cs:
 
     category_colors: "Seznam hexadecimálních barev oddělený svislítkem (|) pro barvy kategorií"
     max_upload_size_kb: "Maximální povolená velikost nahrávaných souborů v kb - nezapomeňte tento limit změnit v nginx (client_max_body_size) / apache a na proxy serverech."
+    max_similar_results: "Kolik podobných témat se má zobrazovat uživateli, když vytváří nové téma"
 
   notification_types:
     mentioned: "%{display_username} vás zmínil v %{link}"

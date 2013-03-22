@@ -24,7 +24,6 @@ cs:
     links: Odkazy
     faq: "FAQ"
     you: "Vy"
-    ok: "ok"
     or: "nebo"
     now: "právě teď"
 
@@ -203,8 +202,10 @@ cs:
 
     best_of:
       title: "Nejlepší příspěvky"
+      enabled_description: Právě máte zobrazeny "nejlepší příspěvky" tohoto tématu.
       description: "V tomto tématu je <b>{{count}}</b> příspěvků. A to už je hodně! Nechcete ušetřit čas při čtení tím, že zobrazíte pouze příspěvky, které mají nejvíce interakcí a odpovědí?"
-      button: 'Přepnout na "nejlepší příspěvky"'
+      enable: 'Přepnout na "nejlepší příspěvky"'
+      disable: 'Přepnout na normální zobrazení'
 
     private_message_info:
       title: "Soukromé konverzace"
@@ -416,6 +417,7 @@ cs:
       read_position_reset: "Vaše pozice čtení byla zresetována."
       jump_reply_up: přejít na předchozí odpověď
       jump_reply_down: přejít na následující odpověď
+      deleted: "Téma bylo smazáno"
 
       progress:
         title: pozice v tématu
@@ -497,7 +499,9 @@ cs:
       login_reply: 'Přihlašte se, chcete-li odpovědět'
 
       filters:
-        user: "Jsou zobrazeny pouze příspěvky od daných uživatelů."
+        user:
+          one: "Jsou zobrazeny pouze příspěvky od daného uživatele."
+          other: "Jsou zobrazeny pouze příspěvky od daných uživatelů."
         best_of: "Jsou zobrazeny pouze 'nejlepší' příspěvky."
         cancel: "Zobrazí znovu všechny příspěvky v tomto tématu."
 
@@ -693,9 +697,11 @@ cs:
         critical_available: "Je k dispozici důležitá aktualizace."
         updates_available: "Jsou k dispozici aktualizace."
         please_upgrade: "Prosím aktualizujte!"
+        installed_version: "Nainstalováno"
         latest_version: "Poslední verze"
         update_often: 'Prosím aktualizujte často!'
         moderator_short: "mod"
+        problems_found: "Byly nalezeny problémy s vaší instalací systému Discourse:"
 
         reports:
           today: "Dnes"
@@ -705,6 +711,7 @@ cs:
           all_time: "Za celou dobu"
           7_days_ago: "Před 7 dny"
           30_days_ago: "Před 30 dny"
+          all: "Všechny"
 
       commits:
         latest_changes: "Poslední změny"
