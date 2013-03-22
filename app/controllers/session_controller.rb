@@ -16,7 +16,7 @@ class SessionController < ApplicationController
 
       # If the site requires user approval and the user is not approved yet
       if SiteSetting.must_approve_users? && !@user.approved?
-        render :json => {error: I18n.t("login.not_approved")}
+        render json: {error: I18n.t("login.not_approved")}
         return
       end
 
@@ -27,13 +27,13 @@ class SessionController < ApplicationController
           render_serialized(@user, UserSerializer)
           return
         else
-          render :json => {error: I18n.t("login.not_activated"), reason: 'not_activated', sent_to_email: @user.email_logs.where(email_type: 'signup').order('created_at DESC').first.try(:to_address), current_email: @user.email}
+          render json: {error: I18n.t("login.not_activated"), reason: 'not_activated', sent_to_email: @user.email_logs.where(email_type: 'signup').order('created_at DESC').first.try(:to_address), current_email: @user.email}
           return
         end
       end
     end
 
-    render :json => {error: I18n.t("login.incorrect_username_email_or_password")}
+    render json: {error: I18n.t("login.incorrect_username_email_or_password")}
   end
 
   def forgot_password
@@ -45,7 +45,7 @@ class SessionController < ApplicationController
       Jobs.enqueue(:user_email, type: :forgot_password, user_id: user.id, email_token: email_token.token)
     end
     # always render of so we don't leak information
-    render :json => {result: "ok"}
+    render json: {result: "ok"}
   end
 
   def destroy
