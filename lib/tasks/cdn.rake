@@ -14,7 +14,7 @@ task 'assets:prestage' => :environment do |t|
   end
   
   # pre-stage css/js only for now
-  a = get_assets("locales/") + get_assets("")
+  assets = get_assets("locales/") + get_assets("")
   puts "pre staging: #{a.join(' ')}"
 
   # makes testing simpler leaving this here
@@ -27,19 +27,25 @@ task 'assets:prestage' => :environment do |t|
   http.use_ssl = true
   http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
+  failed_assets = []
   request = Net::HTTP::Post.new(uri.request_uri)
-  request.set_form_data(
-    "id" => config["id"],
-    "login" => config["login"],
-    "passwd" => config["password"],
-    "json" => {"prefetch_paths" => a.join("\n")}.to_json
-  )
+  assets.each do |asset|
+    request.set_form_data(
+      "id" => config["id"],
+      "login" => config["login"],
+      "passwd" => config["password"],
+      "json" => {"prefetch_paths" => asset}.to_json
+    )
 
-  response = http.request(request)
-  json = JSON.parse(response.body)
-  if json["status"] != "ok"
-    raise "Failed to pre-stage"
+    response = http.request(request)
+    json = JSON.parse(response.body)
+    if json["status"] != "ok"
+      failed_assets.push(asset)
+    end
+  end
+  
+  if failed_assets.length > 0
+    raise "Failed to pre-stage #{failed_assets.length}/#{assets.length} files"
   end
   puts "Done (took: #{((Time.now - start) * 1000.0).to_i}ms)"
-
 end
