@@ -1,5 +1,5 @@
-// Version: v1.0.0-pre.2-880-ga1cbd22
-// Last commit: a1cbd22 (2013-03-18 10:31:41 -0700)
+// Version: v1.0.0-pre.2-892-g1283274
+// Last commit: 1283274 (2013-03-21 14:18:06 -0700)
 
 
 (function() {
@@ -140,6 +140,7 @@ Ember.deprecate = function(message, test) {
   @method deprecateFunc
   @param {String} message A description of the deprecation.
   @param {Function} func The function to be deprecated.
+  @return {Function} a new function that wrapped the original function with a deprecation warning
 */
 Ember.deprecateFunc = function(message, func) {
   return function() {
@@ -150,8 +151,8 @@ Ember.deprecateFunc = function(message, func) {
 
 })();
 
-// Version: v1.0.0-pre.2-880-ga1cbd22
-// Last commit: a1cbd22 (2013-03-18 10:31:41 -0700)
+// Version: v1.0.0-pre.2-892-g1283274
+// Last commit: 1283274 (2013-03-21 14:18:06 -0700)
 
 
 (function() {
@@ -824,7 +825,7 @@ if (isDefinePropertySimulated) {
   @param {Object} obj The object to retrieve meta for
   @param {Boolean} [writable=true] Pass `false` if you do not intend to modify
     the meta hash, allowing the method to avoid making an unnecessary copy.
-  @return {Hash}
+  @return {Object} the meta hash for an object
 */
 Ember.meta = function meta(obj, writable) {
 
@@ -976,7 +977,7 @@ Ember.wrap = function(func, superFunc) {
   @method isArray
   @for Ember
   @param {Object} obj The object to test
-  @return {Boolean}
+  @return {Boolean} true if the passed object is an array or Array-like
 */
 Ember.isArray = function(obj) {
   if (!obj || obj.setInterval) { return false; }
@@ -3370,6 +3371,7 @@ var ComputedPropertyPrototype = ComputedProperty.prototype;
 
   @method cacheable
   @param {Boolean} aFlag optional set to `false` to disable caching
+  @return {Ember.ComputedProperty} this
   @chainable
 */
 ComputedPropertyPrototype.cacheable = function(aFlag) {
@@ -3390,6 +3392,7 @@ ComputedPropertyPrototype.cacheable = function(aFlag) {
   ```
 
   @method volatile
+  @return {Ember.ComputedProperty} this
   @chainable
 */
 ComputedPropertyPrototype.volatile = function() {
@@ -3411,6 +3414,7 @@ ComputedPropertyPrototype.volatile = function() {
   ```
 
   @method readOnly
+  @return {Ember.ComputedProperty} this
   @chainable
 */
 ComputedPropertyPrototype.readOnly = function(readOnly) {
@@ -3435,6 +3439,7 @@ ComputedPropertyPrototype.readOnly = function(readOnly) {
 
   @method property
   @param {String} path* zero or more property paths
+  @return {Ember.ComputedProperty} this
   @chainable
 */
 ComputedPropertyPrototype.property = function() {
@@ -3664,6 +3669,7 @@ Ember.computed = function(func) {
   @param {Object} obj the object whose property you want to check
   @param {String} key the name of the property whose cached value you want
     to return
+  @return {any} the cached value
 */
 Ember.cacheFor = function cacheFor(obj, key) {
   var cache = metaFor(obj, false).cache;
@@ -3677,6 +3683,7 @@ Ember.cacheFor = function cacheFor(obj, key) {
   @method computed.not
   @for Ember
   @param {String} dependentKey
+  @return {Ember.ComputedProperty} computed property which negate the original value for property
 */
 Ember.computed.not = function(dependentKey) {
   return Ember.computed(dependentKey, function(key) {
@@ -3712,6 +3719,7 @@ Ember.computed.empty = function(dependentKey) {
   @method computed.bool
   @for Ember
   @param {String} dependentKey
+  @return {Ember.ComputedProperty} computed property which convert to boolean the original value for property
 */
 Ember.computed.bool = function(dependentKey) {
   return Ember.computed(dependentKey, function(key) {
@@ -4866,6 +4874,10 @@ Binding.prototype = {
     return this;
   },
 
+  /**
+    @method toString
+    @return {String} string representation of binding
+  */
   toString: function() {
     var oneWay = this._oneWay ? '[oneWay]' : '';
     return "Ember.Binding<" + guidFor(this) + ">(" + this._from + " -> " + this._to + ")" + oneWay;
@@ -8002,17 +8014,19 @@ Ember.Enumerable = Ember.Mixin.create({
   },
 
   /**
-    Returns a copy of the array with all null elements removed.
+    Returns a copy of the array with all null and undefined elements removed.
 
     ```javascript
-    var arr = ["a", null, "c", null];
+    var arr = ["a", null, "c", undefined];
     arr.compact();  // ["a", "c"]
     ```
 
     @method compact
-    @return {Array} the array without null elements.
+    @return {Array} the array without null and undefined elements.
   */
-  compact: function() { return this.without(null); },
+  compact: function() {
+    return this.filter(function(value) { return value != null; });
+  },
 
   /**
     Returns a new enumerable that excludes the passed value. The default
@@ -8067,6 +8081,7 @@ Ember.Enumerable = Ember.Mixin.create({
 
     @property []
     @type Ember.Array
+    @return this
   */
   '[]': Ember.computed(function(key, value) {
     return this;
@@ -8083,6 +8098,7 @@ Ember.Enumerable = Ember.Mixin.create({
     @method addEnumerableObserver
     @param {Object} target
     @param {Hash} [opts]
+    @return this
   */
   addEnumerableObserver: function(target, opts) {
     var willChange = (opts && opts.willChange) || 'enumerableWillChange',
@@ -8102,6 +8118,7 @@ Ember.Enumerable = Ember.Mixin.create({
     @method removeEnumerableObserver
     @param {Object} target
     @param {Hash} [opts]
+    @return this
   */
   removeEnumerableObserver: function(target, opts) {
     var willChange = (opts && opts.willChange) || 'enumerableWillChange',
@@ -8291,6 +8308,7 @@ Ember.Array = Ember.Mixin.create(Ember.Enumerable, /** @scope Ember.Array.protot
 
     @method objectAt
     @param {Number} idx The index of the item to return.
+    @return {any} item at index or undefined
   */
   objectAt: function(idx) {
     if ((idx < 0) || (idx>=get(this, 'length'))) return undefined ;
@@ -8308,6 +8326,7 @@ Ember.Array = Ember.Mixin.create(Ember.Enumerable, /** @scope Ember.Array.protot
 
     @method objectsAt
     @param {Array} indexes An array of indexes of items to return.
+    @return {Array}
    */
   objectsAt: function(indexes) {
     var self = this;
@@ -8327,6 +8346,7 @@ Ember.Array = Ember.Mixin.create(Ember.Enumerable, /** @scope Ember.Array.protot
     This property overrides the default property defined in `Ember.Enumerable`.
 
     @property []
+    @return this
   */
   '[]': Ember.computed(function(key, value) {
     if (value !== undefined) this.replace(0, get(this, 'length'), value) ;
@@ -9044,6 +9064,7 @@ Ember.MutableArray = Ember.Mixin.create(Ember.Array, Ember.MutableEnumerable,
     @method insertAt
     @param {Number} idx index of insert the object at.
     @param {Object} object object to insert
+    @return this
   */
   insertAt: function(idx, object) {
     if (idx > get(this, 'length')) throw new Error(OUT_OF_RANGE_EXCEPTION) ;
@@ -9097,6 +9118,7 @@ Ember.MutableArray = Ember.Mixin.create(Ember.Array, Ember.MutableEnumerable,
 
     @method pushObject
     @param {anything} obj object to push
+    @return {any} the same obj passed as param
   */
   pushObject: function(obj) {
     this.insertAt(get(this, 'length'), obj) ;
@@ -9176,6 +9198,7 @@ Ember.MutableArray = Ember.Mixin.create(Ember.Array, Ember.MutableEnumerable,
 
     @method unshiftObject
     @param {anything} obj object to unshift
+    @return {any} the same obj passed as param
   */
   unshiftObject: function(obj) {
     this.insertAt(0, obj) ;
@@ -9902,6 +9925,7 @@ Ember.Evented = Ember.Mixin.create({
    @param {String} name The name of the event
    @param {Object} [target] The "this" binding for the callback
    @param {Function} method The callback to execute
+   @return this
   */
   on: function(name, target, method) {
     Ember.addListener(this, name, target, method);
@@ -9921,6 +9945,7 @@ Ember.Evented = Ember.Mixin.create({
     @param {String} name The name of the event
     @param {Object} [target] The "this" binding for the callback
     @param {Function} method The callback to execute
+    @return this
   */
   one: function(name, target, method) {
     if (!method) {
@@ -9970,6 +9995,7 @@ Ember.Evented = Ember.Mixin.create({
     @param {String} name The name of the event
     @param {Object} target The target of the subscription
     @param {Function} method The function of the subscription
+    @return this
   */
   off: function(name, target, method) {
     Ember.removeListener(this, name, target, method);
@@ -10326,12 +10352,22 @@ CoreObject.PrototypeMixin = Mixin.create({
   concatenatedProperties: null,
 
   /**
+    Destroyed object property flag.
+
+    if this property is `true` the observers and bindings were already
+    removed by the effect of calling the `destroy()` method.
+
     @property isDestroyed
     @default false
   */
   isDestroyed: false,
 
   /**
+    Destruction scheduled flag. The `destroy()` method has been called.
+
+    The object stays intact until the end of the run loop at which point
+    the `isDestroyed` flag is set.
+
     @property isDestroying
     @default false
   */
@@ -13511,7 +13547,7 @@ Ember.EventDispatcher = Ember.Object.extend(
   setup: function(addedEvents) {
     var event, events = {
       touchstart  : 'touchStart',
-      // touchmove   : 'touchMove',
+      touchmove   : 'touchMove',
       touchend    : 'touchEnd',
       touchcancel : 'touchCancel',
       keydown     : 'keyDown',
@@ -13522,7 +13558,7 @@ Ember.EventDispatcher = Ember.Object.extend(
       contextmenu : 'contextMenu',
       click       : 'click',
       dblclick    : 'doubleClick',
-      // mousemove   : 'mouseMove',
+      mousemove   : 'mouseMove',
       focusin     : 'focusIn',
       focusout    : 'focusOut',
       mouseenter  : 'mouseEnter',
@@ -15891,14 +15927,19 @@ Ember.View = Ember.CoreView.extend(
       observer = target;
       target = null;
     }
+
     var view = this,
         stateCheckedObserver = function(){
           view.currentState.invokeObserver(this, observer);
+        },
+        scheduledObserver = function() {
+          Ember.run.scheduleOnce('render', this, stateCheckedObserver);
         };
-    Ember.addObserver(root, path, target, stateCheckedObserver);
+
+    Ember.addObserver(root, path, target, scheduledObserver);
 
     this.one('willClearRender', function() {
-      Ember.removeObserver(root, path, target, stateCheckedObserver);
+      Ember.removeObserver(root, path, target, scheduledObserver);
     });
   }
 
@@ -18204,10 +18245,10 @@ Ember.Handlebars.registerBoundHelper = function(name, fn) {
 
     view.appendChild(bindView);
 
-    view.registerObserver(pathRoot, path, bindView, rerenderBoundHelperView);
+    view.registerObserver(pathRoot, path, bindView, bindView.rerender);
 
     for (var i=0, l=dependentKeys.length; i<l; i++) {
-      view.registerObserver(pathRoot, path + '.' + dependentKeys[i], bindView, rerenderBoundHelperView);
+      view.registerObserver(pathRoot, path + '.' + dependentKeys[i], bindView, bindView.rerender);
     }
   }
 
@@ -18271,20 +18312,9 @@ function evaluateMultiPropertyBoundHelper(context, fn, normalizedProperties, opt
   // Observe each property.
   for (loc = 0, len = watchedProperties.length; loc < len; ++loc) {
     property = watchedProperties[loc];
-    view.registerObserver(property.root, property.path, bindView, rerenderBoundHelperView);
+    view.registerObserver(property.root, property.path, bindView, bindView.rerender);
   }
 
-}
-
-/**
-  @private
-
-  An observer function used with bound helpers which
-  will schedule a re-render of the _SimpleHandlebarsView
-  connected with the helper.
-*/
-function rerenderBoundHelperView() {
-  Ember.run.scheduleOnce('render', this, 'rerender');
 }
 
 /**
@@ -19329,17 +19359,13 @@ EmberHandlebars.registerHelper('bindAttr', function(options) {
       Ember.View.applyAttributeBindings(elem, attr, result);
     };
 
-    invoker = function() {
-      Ember.run.scheduleOnce('render', observer);
-    };
-
     // Add an observer to the view for when the property changes.
     // When the observer fires, find the element using the
     // unique data id and update the attribute to the new value.
     // Note: don't add observer when path is 'this' or path
     // is whole keyword e.g. {{#each x in list}} ... {{bindAttr attr="x"}}
     if (path !== 'this' && !(normalized.isKeyword && normalized.path === '' )) {
-      view.registerObserver(normalized.root, normalized.path, invoker);
+      view.registerObserver(normalized.root, normalized.path, observer);
     }
 
     // if this changes, also change the logic in ember-views/lib/views/view.js
@@ -19453,12 +19479,8 @@ EmberHandlebars.bindClasses = function(context, classBindings, view, bindAttrId,
       }
     };
 
-    invoker = function() {
-      Ember.run.scheduleOnce('render', observer);
-    };
-
     if (path !== '' && path !== 'this') {
-      view.registerObserver(pathRoot, path, invoker);
+      view.registerObserver(pathRoot, path, observer);
     }
 
     // We've already setup the observer; now we just need to figure out the
@@ -20714,7 +20736,7 @@ Ember.Checkbox = Ember.View.extend({
 
   tagName: 'input',
 
-  attributeBindings: ['type', 'checked', 'disabled', 'tabindex'],
+  attributeBindings: ['type', 'checked', 'disabled', 'tabindex', 'name'],
 
   type: "checkbox",
   checked: false,
@@ -20846,7 +20868,7 @@ Ember.TextField = Ember.View.extend(Ember.TextSupport,
 
   classNames: ['ember-text-field'],
   tagName: "input",
-  attributeBindings: ['type', 'value', 'size', 'pattern'],
+  attributeBindings: ['type', 'value', 'size', 'pattern', 'name'],
 
   /**
     The `value` attribute of the input element. As the user inputs text, this
@@ -21106,7 +21128,7 @@ Ember.TextArea = Ember.View.extend(Ember.TextSupport, {
   classNames: ['ember-text-area'],
 
   tagName: "textarea",
-  attributeBindings: ['rows', 'cols'],
+  attributeBindings: ['rows', 'cols', 'name'],
   rows: null,
   cols: null,
 
@@ -21431,7 +21453,7 @@ function program3(depth0,data) {
   return buffer;
   
 }),
-  attributeBindings: ['multiple', 'disabled', 'tabindex'],
+  attributeBindings: ['multiple', 'disabled', 'tabindex', 'name'],
 
   /**
     The `multiple` attribute of the select element. Indicates whether multiple
@@ -24184,7 +24206,7 @@ Ember.onLoad('Ember.Handlebars', function(Handlebars) {
     options.hash.template = container.lookup('template:' + name);
     options.hash.controller = controller;
 
-    if (router) {
+    if (router && !contextString) {
       router._connectActiveView(name, view);
     }
 
@@ -27446,8 +27468,8 @@ Ember States
 
 
 })();
-// Version: v1.0.0-pre.2-880-ga1cbd22
-// Last commit: a1cbd22 (2013-03-18 10:31:41 -0700)
+// Version: v1.0.0-pre.2-892-g1283274
+// Last commit: 1283274 (2013-03-21 14:18:06 -0700)
 
 
 (function() {
