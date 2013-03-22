@@ -13,6 +13,7 @@ dump.rdb
 .sass-cache/*
 
 # Ignore bundler config
+/bin
 /.bundle
 /.vagrant
 /.vagrantfile
