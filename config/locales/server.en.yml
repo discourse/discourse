@@ -286,6 +286,7 @@ en:
     gc_warning: 'Your server is using default ruby garbage collection parameters, which will not give you the best performance. Read this topic on performance tuning: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>.'
     clockwork_warning: 'Clockwork is not running. Ensure that a clockwork process is always running so that important jobs can be scheduled. <a href="https://github.com/tomykaira/clockwork">Learn about clockwork here</a>.'
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq">Learn about Sidekiq here</a>.'
+    memory_warning: 'Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended.'
 
   site_settings:
     default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"

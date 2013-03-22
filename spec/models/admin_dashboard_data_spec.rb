@@ -102,4 +102,23 @@ describe AdminDashboardData do
     end
   end
 
+  describe 'ram_check' do
+    subject { AdminDashboardData.new.ram_check }
+
+    it 'returns nil when total ram is 1 GB' do
+      MemInfo.any_instance.stubs(:mem_total).returns(1025272)
+      subject.should be_nil
+    end
+
+    it 'returns nil when total ram cannot be determined' do
+      MemInfo.any_instance.stubs(:mem_total).returns(nil)
+      subject.should be_nil
+    end
+
+    it 'returns a string when total ram is less than 1 GB' do
+      MemInfo.any_instance.stubs(:mem_total).returns(512636)
+      subject.should_not be_nil
+    end
+  end
+
 end

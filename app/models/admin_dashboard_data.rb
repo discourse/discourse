@@ -1,3 +1,5 @@
+require_dependency 'mem_info'
+
 class AdminDashboardData
 
   REPORTS = ['visits', 'signups', 'topics', 'posts', 'flags', 'users_by_trust_level', 'likes', 'emails']
@@ -9,7 +11,7 @@ class AdminDashboardData
   def as_json
     @json ||= {
       reports: REPORTS.map { |type| Report.find(type) },
-      problems: [rails_env_check, host_names_check, gc_checks, sidekiq_check || clockwork_check].compact
+      problems: [rails_env_check, host_names_check, gc_checks, sidekiq_check || clockwork_check, ram_check].compact
     }.merge(
       SiteSetting.version_checks? ? {version_check: DiscourseUpdates.check_version} : {}
     )
@@ -34,5 +36,9 @@ class AdminDashboardData
 
   def clockwork_check
     I18n.t('dashboard.clockwork_warning') unless Jobs::ClockworkHeartbeat.is_clockwork_running?
+  end
+
+  def ram_check
+    I18n.t('dashboard.memory_warning') if MemInfo.new.mem_total and MemInfo.new.mem_total < 1_000_000
   end
 end
