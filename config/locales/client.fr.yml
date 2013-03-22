@@ -1,4 +1,4 @@
-# encoding: utf-8
+# encoding: "utf-8"
 #
 # French translation - Traduction française
 #
@@ -11,7 +11,7 @@ fr:
     share:
       topic: 'partager un lien vers cette discussion'
       post: 'partager un lien vers ce message'
-      close: fermer
+      close: 'fermer'
 
     edit: 'éditer le titre et la catégorie de cette discussion'
     not_implemented: "Cette fonctionnalité n'a pas encore été implémentée, désolé."
@@ -54,10 +54,10 @@ fr:
 
     user:
       information: "informations sur l'utilisateur"
-      profile: Profil
+      profile: "profil"
       title: "Utilisateur"
-      mute: Couper
-      edit: Éditer les préférences
+      mute: "couper"
+      edit: "Éditer les préférences"
       download_archive: "télécharger l'archive de mes messages"
       private_message: "Message privé"
       private_messages: "Messages"
@@ -199,17 +199,17 @@ fr:
     week: 'semaine'
     week_desc: 'discussions postées dans les 7 derniers jours'
 
-    first_post: Premier message
-    mute: Désactiver
-    unmute: Activer
-    last_post: Dernier message
+    first_post: "premier message"
+    mute: "Désactiver"
+    unmute: "activer"
+    last_post: "dernier message"
 
     best_of:
-      title: Les plus populaires
+      title: "les plus populaires"
       description: "Il y a <b>{{count}}</b> messages dans cette discussion. C'est beaucoup ! Voulez-vous gagner du temps en basculant sur la liste des messages possédant le plus d'interactions et de réponses ?"
-      enabled_description: Vous êtes actuellement en train de consulter seulement les messages les plus populaires de cette discussion.
-      enable: Ne voir que les plus populaires
-      disable: Ré-afficher tous les messages
+      enabled_description: "vous êtes actuellement en train de consulter seulement les messages les plus populaires de cette discussion."
+      enable: "ne voir que les plus populaires"
+      disable: "Ré-afficher tous les messages"
 
     private_message_info:
       title: "discussion privée"
@@ -281,10 +281,10 @@ fr:
         need_more_for_reply: "{{n}} caractères restant pour le message"
 
       save_edit: "Sauvegarder la modification"
-      reply_original: Répondre à la discussion initiale
-      reply_here: Répondre ici
+      reply_original: "Répondre à la discussion initiale"
+      reply_here: "Répondre ici"
       reply: "Répondre"
-      cancel: Annuler
+      cancel: "annuler"
       create_topic: "Créer une discussion"
       create_pm: "Créer un message privé."
 
@@ -415,20 +415,20 @@ fr:
       toggle_information: "afficher les détails de la discussion"
       read_more_in_category: "Vous voulez en lire plus ? Afficher d'autres discussions dans {{catLink}} ou {{popularLink}}."
       read_more: "Vous voulez en lire plus? {{catLink}} or {{popularLink}}."
-      browse_all_categories: Voir toutes les catégories
-      view_popular_topics: voir la liste des discussions populaires
-      suggest_create_topic: Pourquoi ne pas créer une nouvelle discussion ?
+      browse_all_categories: 'Voir toutes les catégories'
+      view_popular_topics: "voir la liste des discussions populaires"
+      suggest_create_topic: "pourquoi ne pas créer une nouvelle discussion ?"
       read_position_reset: "Votre position de lecture à été remise à zéro."
-      jump_reply_up: aller à des réponses précédentes
-      jump_reply_down: allez à des réponses ultérieures
-      deleted: Cette discussion à été supprimée
+      jump_reply_up: "aller à des réponses précédentes"
+      jump_reply_down: "allez à des réponses ultérieures"
+      deleted: "cette discussion à été supprimée"
 
       progress:
-        title: progession dans la discussion
-        jump_top: aller au premier message
-        jump_bottom: aller au dernier message
-        total: total messages
-        current: message courant
+        title: "progession dans la discussion"
+        jump_top: "aller au premier message"
+        jump_bottom: "aller au dernier message"
+        total: "total messages"
+        current: "message courant"
 
       notifications:
         title: ''
@@ -520,11 +520,11 @@ fr:
       multi_select:
         select: 'sélectioner'
         selected: '({{count}}) sélectionés'
-        delete: supprimer la sélection
-        cancel: annuler la sélection
-        move: déplacer la sélection
+        delete: "supprimer la sélection"
+        cancel: "annuler la sélection"
+        move: "déplacer la sélection"
         description:
-          one: Vous avez sélectionné <b>1</b> message.
+          one: "vous avez sélectionné <b>1</b> message."
           other: "Vous avez sélectionné <b>{{count}}</b> messages."
 
     post:
@@ -532,7 +532,7 @@ fr:
       reply_topic: "Répondre à {{link}}"
       quote_reply: "Citer"
       edit: "Éditer {{link}} par {{replyAvatar}} {{username}}"
-      post_number: message {{number}}
+      post_number: "message {{number}}"
       in_reply_to: "Réponse courte"
       reply_as_new_topic: "Répondre dans une nouvelle conversation"
       continue_discussion: "Continuer la discussion suivante {{postLink}}:"
@@ -581,9 +581,9 @@ fr:
           other: "{{count}} personnes {{long_form}}"
 
       edits:
-        one: Une édition
+        one: "une édition"
         other: "{{count}} éditions"
-        zero: pas d'édition
+        zero: "pas d'édition"
 
       delete:
         confirm:
@@ -709,17 +709,17 @@ fr:
 
         reports:
           today: "Aujourd'hui"
-          yesterday: Hier
-          last_7_days: Les 7 derniers jours
-          last_30_days: Les 30 derniers jours
-          all_time: Depuis toujours
-          7_days_ago: Il y a 7 jours
-          30_days_ago: Il y a 30 jours
-          all: Tous
+          yesterday: "hier"
+          last_7_days: "les 7 derniers jours"
+          last_30_days: "les 30 derniers jours"
+          all_time: "depuis toujours"
+          7_days_ago: "il y a 7 jours"
+          30_days_ago: "il y a 30 jours"
+          all: "tous"
 
       commits:
-        latest_changes: Derniers changements
-        by: par
+        latest_changes: "derniers changements"
+        by: "par"
 
       flags:
         title: "Signalements"
@@ -789,21 +789,21 @@ fr:
         refresh_browsers: "Forcer le rafraîchissement du navigateur"
         show_public_profile: "Montrer un profil public"
         impersonate: 'Imiter'
-        revoke_admin: "Révoquer droits d'admin"
-        grant_admin: "Accorder droits d'admin"
-        revoke_moderation: 'Révoquer droits de modération'
-        grant_moderation: 'Accorder droits de modération'
-        basics: Bases
-        reputation: Réputation
-        permissions: Permissions
-        activity: Activité
-        like_count: J'aime reçus
-        private_topics_count: Compte des discussions privées
-        posts_read_count: Messages lus
-        post_count: Messages postés
-        topics_entered: Discussions avec participation
-        flags_given_count: Flags donnés
-        flags_received_count: Flags reçus
+        revoke_admin: "Révoquer les droits d'admin"
+        grant_admin: "Accorder les droits d'admin"
+        revoke_moderation: 'Révoquer les droits de modération'
+        grant_moderation: 'Accorder les droits de modération'
+        basics: "bases"
+        reputation: "Réputation"
+        permissions: "permissions"
+        activity: "activité"
+        like_count: "J'aime reçus"
+        private_topics_count: "compte des discussions privées"
+        posts_read_count: "messages lus"
+        post_count: "messages postés"
+        topics_entered: "discussions avec participation"
+        flags_given_count: "flags donnés"
+        flags_received_count: "flags reçus"
         approve: 'Approuver'
         approved_by: "approuvé par"
         time_read: "Temps de lecture"
