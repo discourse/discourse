@@ -16,13 +16,13 @@ Discourse.TopicController = Discourse.ObjectController.extend({
   loadingAbove: false,
   needs: ['header', 'modal', 'composer', 'quoteButton'],
 
-  filter: (function() {
+  filter: function() {
     if (this.get('bestOf') === true) return 'best_of';
     if (this.get('userFilters').length > 0) return 'user';
     return null;
-  }).property('userFilters.[]', 'bestOf'),
+  }.property('userFilters.[]', 'bestOf'),
 
-  filterDesc: (function() {
+  filterDesc: function() {
     var filter = this.get('filter');
     if (!filter) return null;
 
@@ -31,31 +31,30 @@ Discourse.TopicController = Discourse.ObjectController.extend({
     // If we're a user filter, include the count
     return Em.String.i18n("topic.filters.user", {count: this.get('userFilters.length')});
 
-  }).property('filter'),
+  }.property('filter'),
 
-  selectedPosts: (function() {
-    var posts;
-    if (!(posts = this.get('content.posts'))) return null;
+  selectedPosts: function() {
+    var posts = this.get('content.posts');
+    if (!posts) return null;
     return posts.filterProperty('selected');
-  }).property('content.posts.@each.selected'),
+  }.property('content.posts.@each.selected'),
 
-  selectedCount: (function() {
+  selectedCount: function() {
     if (!this.get('selectedPosts')) return 0;
     return this.get('selectedPosts').length;
-  }).property('selectedPosts'),
+  }.property('selectedPosts'),
 
-  canMoveSelected: (function() {
+  canMoveSelected: function() {
     if (!this.get('content.can_move_posts')) return false;
     // For now, we can move it if we can delete it since the posts need to be deleted.
     return this.get('canDeleteSelected');
-  }).property('canDeleteSelected'),
+  }.property('canDeleteSelected'),
 
-  canDeleteSelected: (function() {
-    var canDelete, selectedPosts;
-    selectedPosts = this.get('selectedPosts');
+  canDeleteSelected: function() {
+    var selectedPosts = this.get('selectedPosts');
     if (!(selectedPosts && selectedPosts.length > 0)) return false;
 
-    canDelete = true;
+    var canDelete = true;
     selectedPosts.each(function(p) {
       if (!p.get('can_delete')) {
         canDelete = false;
@@ -63,9 +62,9 @@ Discourse.TopicController = Discourse.ObjectController.extend({
       }
     });
     return canDelete;
-  }).property('selectedPosts'),
+  }.property('selectedPosts'),
 
-  multiSelectChanged: (function() {
+  multiSelectChanged: function() {
     // Deselect all posts when multi select is turned off
     if (!this.get('multiSelect')) {
       var posts = this.get('content.posts');
@@ -75,14 +74,14 @@ Discourse.TopicController = Discourse.ObjectController.extend({
         });
       }
     }
-  }).observes('multiSelect'),
+  }.observes('multiSelect'),
 
-  hideProgress: (function() {
+  hideProgress: function() {
     if (!this.get('content.loaded')) return true;
     if (!this.get('currentPost')) return true;
     if (this.get('content.highest_post_number') < 2) return true;
     return this.present('filter');
-  }).property('filter', 'content.loaded', 'currentPost'),
+  }.property('filter', 'content.loaded', 'currentPost'),
 
   selectPost: function(post) {
     post.toggleProperty('selected');
@@ -97,21 +96,24 @@ Discourse.TopicController = Discourse.ObjectController.extend({
   },
 
   moveSelected: function() {
-    var _ref;
-    return (_ref = this.get('controllers.modal')) ? _ref.show(Discourse.MoveSelectedView.create({
+    var modalController = this.get('controllers.modal');
+    if (!modalController) return;
+
+    modalController.show(Discourse.MoveSelectedView.create({
       topic: this.get('content'),
       selectedPosts: this.get('selectedPosts')
-    })) : void 0;
+    }));
   },
 
   deleteSelected: function() {
-    var _this = this;
+    var topicController = this;
     return bootbox.confirm(Em.String.i18n("post.delete.confirm", {
       count: this.get('selectedCount')
     }), function(result) {
       if (result) {
-        Discourse.Post.deleteMany(_this.get('selectedPosts'));
-        return _this.get('content.posts').removeObjects(_this.get('selectedPosts'));
+        var selectedPosts = topicController.get('selectedPosts');
+        Discourse.Post.deleteMany(selectedPosts);
+        topicController.get('content.posts').removeObjects(selectedPosts);
       }
     });
   },
@@ -150,9 +152,7 @@ Discourse.TopicController = Discourse.ObjectController.extend({
 
   // Topic related
   reply: function() {
-    var composerController;
-    composerController = this.get('controllers.composer');
-    return composerController.open({
+    this.get('controllers.composer').open({
       topic: this.get('content'),
       action: Discourse.Composer.REPLY,
       draftKey: this.get('content.draft_key'),
@@ -176,12 +176,12 @@ Discourse.TopicController = Discourse.ObjectController.extend({
     this.get('userFilters').clear();
   },
 
-  postFilters: (function() {
+  postFilters: function() {
     if (this.get('bestOf') === true) return { bestOf: true };
     return { userFilters: this.get('userFilters') };
-  }).property('userFilters.[]', 'bestOf'),
+  }.property('userFilters.[]', 'bestOf'),
 
-  reloadPosts: (function() {
+  reloadPosts: function() {
     var topic = this.get('content');
     if (!topic) return;
 
@@ -207,7 +207,7 @@ Discourse.TopicController = Discourse.ObjectController.extend({
       });
       topicController.set('loadingBelow', false);
     });
-  }).observes('postFilters'),
+  }.observes('postFilters'),
 
   deleteTopic: function(e) {
     var topicController = this;
@@ -239,10 +239,9 @@ Discourse.TopicController = Discourse.ObjectController.extend({
   },
 
   startTracking: function() {
-    var screenTrack;
-    screenTrack = Discourse.ScreenTrack.create({ topic_id: this.get('content.id') });
+    var screenTrack = Discourse.ScreenTrack.create({ topic_id: this.get('content.id') });
     screenTrack.start();
-    return this.set('content.screenTrack', screenTrack);
+    this.set('content.screenTrack', screenTrack);
   },
 
   stopTracking: function() {
@@ -267,22 +266,20 @@ Discourse.TopicController = Discourse.ObjectController.extend({
 
   // Receive notifications for this topic
   subscribe: function() {
-    var bus,
-      _this = this;
-    bus = Discourse.MessageBus;
+    var bus = Discourse.MessageBus;
 
     // there is a condition where the view never calls unsubscribe, navigate to a topic from a topic
     bus.unsubscribe('/topic/*');
 
+    var topicController = this;
     bus.subscribe("/topic/" + (this.get('content.id')), function(data) {
-      var posts, topic;
-      topic = _this.get('content');
+      var topic = topicController.get('content');
       if (data.notification_level_change) {
         topic.set('notification_level', data.notification_level_change);
         topic.set('notifications_reason_id', data.notifications_reason_id);
         return;
       }
-      posts = topic.get('posts');
+      var posts = topic.get('posts');
       if (posts.some(function(p) {
         return p.get('post_number') === data.post_number;
       })) {
@@ -297,42 +294,38 @@ Discourse.TopicController = Discourse.ObjectController.extend({
   },
 
   unsubscribe: function() {
-    var bus, topicId;
-    topicId = this.get('content.id');
-    if (!topicId) {
-      return;
-    }
-    bus = Discourse.MessageBus;
-    return bus.unsubscribe("/topic/" + topicId);
+    var topicId = this.get('content.id');
+    if (!topicId) return;
+    Discourse.MessageBus.unsubscribe("/topic/" + topicId);
   },
 
   // Post related methods
   replyToPost: function(post) {
-    var composerController, promise, quoteController, quotedText,
-      _this = this;
-    composerController = this.get('controllers.composer');
-    quoteController = this.get('controllers.quoteButton');
-    quotedText = Discourse.BBCode.buildQuoteBBCode(quoteController.get('post'), quoteController.get('buffer'));
+    var composerController = this.get('controllers.composer');
+    var quoteController = this.get('controllers.quoteButton');
+    var quotedText = Discourse.BBCode.buildQuoteBBCode(quoteController.get('post'), quoteController.get('buffer'));
     quoteController.set('buffer', '');
-    if (composerController.get('content.topic.id') === post.get('topic.id') && composerController.get('content.action') === Discourse.Composer.REPLY) {
+
+    if (composerController.get('content.topic.id') === post.get('topic.id') &&
+        composerController.get('content.action') === Discourse.Composer.REPLY) {
       composerController.set('content.post', post);
       composerController.set('content.composeState', Discourse.Composer.OPEN);
       composerController.appendText(quotedText);
     } else {
-      promise = composerController.open({
+      var promise = composerController.open({
         post: post,
         action: Discourse.Composer.REPLY,
         draftKey: post.get('topic.draft_key'),
         draftSequence: post.get('topic.draft_sequence')
       });
-      promise.then(function() { return composerController.appendText(quotedText); });
+      promise.then(function() { composerController.appendText(quotedText); });
     }
     return false;
   },
 
   // Edits a post
   editPost: function(post) {
-    return this.get('controllers.composer').open({
+    this.get('controllers.composer').open({
       post: post,
       action: Discourse.Composer.EDIT,
       draftKey: post.get('topic.draft_key'),
@@ -356,52 +349,51 @@ Discourse.TopicController = Discourse.ObjectController.extend({
   // Who acted on a particular post / action type
   whoActed: function(actionType) {
     actionType.loadUsers();
-    return false;
   },
 
   showPrivateInviteModal: function() {
-    var modal, _ref;
-    modal = Discourse.InvitePrivateModalView.create({
+    var modal = Discourse.InvitePrivateModalView.create({
       topic: this.get('content')
     });
-    if (_ref = this.get('controllers.modal')) {
-      _ref.show(modal);
+
+    var modalController = this.get('controllers.modal');
+    if (modalController) {
+      modalController.show(modal);
     }
-    return false;
   },
 
   showInviteModal: function() {
-    var _ref;
-    if (_ref = this.get('controllers.modal')) {
-      _ref.show(Discourse.InviteModalView.create({
+    var modalController = this.get('controllers.modal');
+    if (modalController) {
+      modalController.show(Discourse.InviteModalView.create({
         topic: this.get('content')
       }));
     }
-    return false;
   },
 
   // Clicked the flag button
   showFlags: function(post) {
-    var flagView, _ref;
-    flagView = Discourse.FlagView.create({
-      post: post,
-      controller: this
-    });
-    return (_ref = this.get('controllers.modal')) ? _ref.show(flagView) : void 0;
+    var modalController = this.get('controllers.modal');
+    if (modalController) {
+      modalController.show(Discourse.FlagView.create({
+        post: post,
+        controller: this
+      }));
+    }
   },
 
   showHistory: function(post) {
-    var view, _ref;
-    view = Discourse.HistoryView.create({ originalPost: post });
-    if (_ref = this.get('controllers.modal')) {
-      _ref.show(view);
+    var modalController = this.get('controllers.modal');
+    if (modalController) {
+      modalController.show(Discourse.HistoryView.create({
+        originalPost: post
+      }));
     }
-    return false;
   },
 
   recoverPost: function(post) {
     post.set('deleted_at', null);
-    return post.recover();
+    post.recover();
   },
 
   deletePost: function(post) {
