@@ -292,6 +292,8 @@ fr:
     host_names_warning: "Le fichier config/database.yml utilise le nom d'hôte par défaut. Veuillez renseigner votre nom d'hôte."
     gc_warning: "Votre serveur utilise les paramètres par défaut de collection du GC de ruby, ce qui ne vous donneras pas les meilleures performances. Merci de lire cette discussion sur <a href=\"http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126\">l'optimisation des performances de Ruby et Rails pour Discourse [EN]</a>."
     clockwork_warning: "Clockwork n'est pas lancé. Assurez-vous qu'un processus clockwork soit toujours lancé afin que les tâches importantes soient planifiées. <a href=\"https://github.com/tomykaira/clockwork\">En savoir plus sur clockwork [EN]</a>."
+    sidekiq_warning: "Sidekiq n'est pas lancé. De nombreuses tâches, comme l'envoie d'e-mails, sont executées de manière asynchrome par sidekiq. Assurez-vous d'avoir au moins un processus sidekiq de lancé. <a href=\"https://github.com/mperham/sidekiq\">En savoir plus sur sidekiq [EN]</a>."
+    memory_warning: "Votre serveur dispose de moins de 1 Go de mémoire vive. Au moins 1 Go de RAM est recommandé."
 
   site_settings:
     default_locale: "Le langage par défaut de cette instance de Discourse (code ISO 639-1)"
@@ -327,14 +329,15 @@ fr:
     category_post_template: "Le modèle de message de définition d'une catégorie utilisé lorsque vous créez une nouvelle catégorie"
     onebox_max_chars: "Nombre maximal de caractères qu'une boîte peut importer en blob de texte."
 
-    logo_url: "Le logo de votre site, par exemple: http://example.com/logo.png"
-    logo_small_url: "La version minifiée du logo de votre site (affichée sur les pages de discussions) ex: http://example.com/logo-small.png"
+    logo_url: "Le logo de votre site, par exemple : http://example.com/logo.png"
+    logo_small_url: "La version minifiée du logo de votre site (affichée sur les pages de discussions) ex : http://example.com/logo-small.png"
     favicon_url: "Le favicon de votre site"
     notification_email: "L'adresse email utilisée pour notifier les utilisateurs de mots de passe perdus, d'activation de compte, etc."
     use_ssl: "Le site doit-il être accessible via SSL?"
     best_of_score_threshold: "Le score minimum pour qu'un message soit inclus dans les 'messages populaires'"
     best_of_posts_required: "Une discussion nécessite ce nombre de messages avant d'activer le mode 'discussions populaires'"
     best_of_likes_required: "Une discussion nécessite ce nombre de J'aime avant d'activer le mode 'discussions populaires'."
+    best_of_percent_filter: "% des meilleurs messages à afficher lorsqu'un utilisateur active le mode 'discussions populaires'."
     enable_private_messages: "Autoriser les membres à créer des messages et conversations privés."
 
     enable_long_polling: "Utiliser les requêtes longues pour le flux de notifications."
