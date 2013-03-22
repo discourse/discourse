@@ -15,6 +15,11 @@ describe Summarize do
     Summarize.new("hello <b>robin</b>").summary.should == "hello robin"
   end
 
+  it "removes doctype entries" do
+    # this is not valid html but this is just testing DOCTYPE entries
+    Summarize.new("<!DOCTYPE html>Discourse").summary.should == "Discourse"
+  end
+
   it "strips leading and trailing space" do
     Summarize.new("\t  \t hello   \t ").summary.should == "hello"
   end
