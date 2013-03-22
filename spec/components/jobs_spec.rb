@@ -7,7 +7,7 @@ describe Jobs do
 
     describe 'when queue_jobs is true' do
       before do
-        SiteSetting.expects(:queue_jobs?).returns(true)
+        SiteSetting.expects(:queue_jobs?).at_least_once.returns(true)
       end
 
       it 'enqueues a job in sidekiq' do
@@ -36,7 +36,7 @@ describe Jobs do
 
     describe 'when queue_jobs is false' do
       before do
-        SiteSetting.expects(:queue_jobs?).returns(false)
+        SiteSetting.expects(:queue_jobs?).at_least_once.returns(false)
       end
 
       it "doesn't enqueue in sidekiq" do

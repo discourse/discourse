@@ -68,4 +68,38 @@ describe AdminDashboardData do
     end
   end
 
+  describe 'sidekiq_check' do
+    subject { AdminDashboardData.new.sidekiq_check }
+
+    it 'returns nil when sidekiq processed a job recently' do
+      Jobs.stubs(:last_job_performed_at).returns(1.minute.ago)
+      Jobs.stubs(:queued).returns(0)
+      subject.should be_nil
+    end
+
+    it 'returns nil when last job processed was a long time ago, but no jobs are queued' do
+      Jobs.stubs(:last_job_performed_at).returns(7.days.ago)
+      Jobs.stubs(:queued).returns(0)
+      subject.should be_nil
+    end
+
+    it 'returns nil when no jobs have ever been processed, but no jobs are queued' do
+      Jobs.stubs(:last_job_performed_at).returns(nil)
+      Jobs.stubs(:queued).returns(0)
+      subject.should be_nil
+    end
+
+    it 'returns a string when no jobs were processed recently and some jobs are queued' do
+      Jobs.stubs(:last_job_performed_at).returns(20.minutes.ago)
+      Jobs.stubs(:queued).returns(1)
+      subject.should_not be_nil
+    end
+
+    it 'returns a string when no jobs have ever been processed, and some jobs are queued' do
+      Jobs.stubs(:last_job_performed_at).returns(nil)
+      Jobs.stubs(:queued).returns(1)
+      subject.should_not be_nil
+    end
+  end
+
 end

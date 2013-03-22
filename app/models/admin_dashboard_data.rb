@@ -9,7 +9,7 @@ class AdminDashboardData
   def as_json
     @json ||= {
       reports: REPORTS.map { |type| Report.find(type) },
-      problems: [rails_env_check, host_names_check, gc_checks, clockwork_check].compact
+      problems: [rails_env_check, host_names_check, gc_checks, sidekiq_check || clockwork_check].compact
     }.merge(
       SiteSetting.version_checks? ? {version_check: DiscourseUpdates.check_version} : {}
     )
@@ -25,6 +25,11 @@ class AdminDashboardData
 
   def gc_checks
     I18n.t("dashboard.gc_warning") if ENV['RUBY_GC_MALLOC_LIMIT'].nil?
+  end
+
+  def sidekiq_check
+    last_job_performed_at = Jobs.last_job_performed_at
+    I18n.t('dashboard.sidekiq_warning') if Jobs.queued > 0 and (last_job_performed_at.nil? or last_job_performed_at < 2.minutes.ago)
   end
 
   def clockwork_check

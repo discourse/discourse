@@ -1,5 +1,16 @@
 module Jobs
 
+  def self.queued
+    Sidekiq::Stats.new.enqueued
+  end
+
+  def self.last_job_performed_at
+    Sidekiq.redis do |r|
+      int = r.get('last_job_perform_at')
+      int ? Time.at(int.to_i) : nil
+    end
+  end
+
   class Base
     include Sidekiq::Worker
 
@@ -17,6 +28,12 @@ module Jobs
 
     def perform(opts={})
       opts = opts.with_indifferent_access
+
+      if SiteSetting.queue_jobs?
+        Sidekiq.redis do |r|
+          r.set('last_job_perform_at', Time.now.to_i)
+        end
+      end
 
       if opts.delete(:sync_exec)
         if opts.has_key?(:current_site_id) && opts[:current_site_id] != RailsMultisite::ConnectionManagement.current_db
