@@ -329,6 +329,7 @@ en:
     best_of_score_threshold: "The minimum score of a post to be included in the 'best of'"
     best_of_posts_required: "Minimum posts in a topic before 'best of' mode is enabled"
     best_of_likes_required: "Minimum likes in a topic before the 'best of' mode will be enabled"
+    best_of_percent_filter: "When a user clicks best of, show the top % of posts"
     enable_private_messages: "Allow trust level 1 users to create private messages and conversations"
 
     enable_long_polling: "Message bus used for notification can use long polling"

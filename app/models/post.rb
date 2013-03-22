@@ -157,7 +157,7 @@ class Post < ActiveRecord::Base
   end
 
   def self.best_of
-    where("(post_number = 1) or (score >= ?)", SiteSetting.best_of_score_threshold)
+    where(["(post_number = 1) or (percent_rank <= ?)", SiteSetting.best_of_percent_filter.to_f / 100.0])
   end
 
   def update_flagged_posts_count
