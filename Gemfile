@@ -40,7 +40,7 @@ gem "omniauth-github"
 gem "omniauth-browserid", :git => "git://github.com/callahad/omniauth-browserid.git", :branch => "observer_api"
 gem 'oj'
 gem 'pg'
-gem 'rails'
+gem 'rails', '3.2.13'
 gem 'rake'
 gem 'redis'
 gem 'redis-rails'
@@ -61,7 +61,7 @@ gem 'discourse_plugin', path: 'vendor/gems/discourse_plugin'
 
 # Discourse Plugins (optional)
 # Polls and Tasks have been disabled for launch, we need think all sorts of stuff through before adding them back in
-#   biggest concern is core support for custom sort orders, but there is also styling that just gets mishmashed into our core theme. 
+#   biggest concern is core support for custom sort orders, but there is also styling that just gets mishmashed into our core theme.
 # gem 'discourse_poll', path: 'vendor/gems/discourse_poll'
 gem 'discourse_emoji', path: 'vendor/gems/discourse_emoji'
 # gem 'discourse_task', path: 'vendor/gems/discourse_task'
@@ -86,7 +86,7 @@ group :test, :development do
   gem 'certified'
   gem 'fabrication'
   gem 'guard-jasmine'
-  gem 'guard-rspec' 
+  gem 'guard-rspec'
   gem 'guard-spork'
   gem 'jasminerice'
   gem 'mocha', require: false
@@ -98,11 +98,11 @@ group :test, :development do
   gem 'terminal-notifier-guard', require: RUBY_PLATFORM.include?('darwin') && 'terminal-notifier-guard'
 end
 
-group :development do 
+group :development do
   gem 'better_errors'
   gem 'binding_of_caller' # I tried adding this and got an occational crash
   gem 'librarian', '>= 0.0.25', require: false
-  gem 'pry-rails'  
+  gem 'pry-rails'
 end
 
 # IMPORTANT: mini profiler monkey patches, so it better be required last
@@ -115,5 +115,5 @@ group :profile do
   # travis refuses to install this, instead of fuffing, just avoid it for now
   #
   # if you need to profile, uncomment out this line
-  # gem 'rack-perftools_profiler', require: 'rack/perftools_profiler', platform: :mri_19 
+  # gem 'rack-perftools_profiler', require: 'rack/perftools_profiler', platform: :mri_19
 end
