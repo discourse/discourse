@@ -16,23 +16,6 @@ Discourse.TopicController = Discourse.ObjectController.extend({
   loadingAbove: false,
   needs: ['header', 'modal', 'composer', 'quoteButton'],
 
-  filter: function() {
-    if (this.get('bestOf') === true) return 'best_of';
-    if (this.get('userFilters').length > 0) return 'user';
-    return null;
-  }.property('userFilters.[]', 'bestOf'),
-
-  filterDesc: function() {
-    var filter = this.get('filter');
-    if (!filter) return null;
-
-    if (filter !== 'user') return Em.String.i18n("topic.filters." + filter);
-
-    // If we're a user filter, include the count
-    return Em.String.i18n("topic.filters.user", {count: this.get('userFilters.length')});
-
-  }.property('filter'),
-
   selectedPosts: function() {
     var posts = this.get('content.posts');
     if (!posts) return null;
@@ -80,8 +63,10 @@ Discourse.TopicController = Discourse.ObjectController.extend({
     if (!this.get('content.loaded')) return true;
     if (!this.get('currentPost')) return true;
     if (this.get('content.highest_post_number') < 2) return true;
-    return this.present('filter');
-  }.property('filter', 'content.loaded', 'currentPost'),
+    if (this.get('bestOf')) return true;
+    if (this.get('userFilters.length')) return true;
+    return false;
+  }.property('content.loaded', 'currentPost', 'bestOf', 'userFilters.length'),
 
   selectPost: function(post) {
     post.toggleProperty('selected');
@@ -171,6 +156,28 @@ Discourse.TopicController = Discourse.ObjectController.extend({
     }
   },
 
+  /**
+    Show or hide the bottom bar, depending on our filter options.
+
+    @method updateBottomBar
+  **/
+  updateBottomBar: function() {
+
+    var postFilters = this.get('postFilters');
+
+    if (postFilters.bestOf) {
+      this.set('filterDesc', Em.String.i18n("topic.filters.best_of"));
+    } else if (postFilters.userFilters.length > 0) {
+      this.set('filterDesc', Em.String.i18n("topic.filters.user", {count: postFilters.userFilters.length}));
+    } else {
+      // Hide the bottom bar
+      $('#topic-filter').slideUp();
+      return;
+    }
+
+    $('#topic-filter').slideDown();
+  },
+
   enableBestOf: function(e) {
     this.set('bestOf', true);
     this.get('userFilters').clear();
@@ -194,7 +201,8 @@ Discourse.TopicController = Discourse.ObjectController.extend({
     this.set('loadingBelow', true);
 
     var topicController = this;
-    return Discourse.Topic.find(this.get('id'), this.get('postFilters')).then(function(result) {
+    var postFilters = this.get('postFilters');
+    return Discourse.Topic.find(this.get('id'), postFilters).then(function(result) {
       var first = result.posts.first();
       if (first) {
         topicController.set('currentPost', first.post_number);
@@ -205,6 +213,8 @@ Discourse.TopicController = Discourse.ObjectController.extend({
         if (p.post_number === 1) return;
         posts.pushObject(Discourse.Post.create(p, topic));
       });
+
+      topicController.updateBottomBar();
       topicController.set('loadingBelow', false);
     });
   }.observes('postFilters'),

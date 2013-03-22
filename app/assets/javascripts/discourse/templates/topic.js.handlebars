@@ -126,12 +126,10 @@
   {{/if}}
 {{/if}}
 
-{{#if controller.filter}}
-  <div id='topic-filter'>
-    {{filterDesc}}
-    <a href='#' {{action cancelFilter target="controller"}}>{{i18n topic.filters.cancel}}</a>
-  </div>
-{{/if}}
+<div id='topic-filter' style='display: none'>
+  {{filterDesc}}
+  <a href='#' {{action cancelFilter target="controller"}}>{{i18n topic.filters.cancel}}</a>
+</div>
 
 {{render share}}
 {{render quoteButton}}
