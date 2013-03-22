@@ -24,7 +24,7 @@ class CookedPostProcessor
     args[:invalidate_oneboxes] = true if @opts[:invalidate_oneboxes]
 
     Oneboxer.each_onebox_link(@doc) do |url, element|
-      onebox = Oneboxer.onebox(url, args)
+      onebox, preview = Oneboxer.onebox(url, args)
       if onebox
         element.swap onebox
         @dirty = true

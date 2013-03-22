@@ -84,21 +84,44 @@ module Oneboxer
     "onebox:#{Digest::SHA1.hexdigest(url)}"
   end
 
+  def self.preview_cache_key_for(url)
+    "onebox:preview:#{Digest::SHA1.hexdigest(url)}"
+  end
+
   def self.render_from_cache(url)
     Rails.cache.read(cache_key_for(url))
   end
 
   # Cache results from a onebox call
   def self.fetch_and_cache(url, args)
-    contents = onebox_nocache(url)
+    contents, preview = onebox_nocache(url)
     return nil if contents.blank?
 
     Rails.cache.write(cache_key_for(url), contents, expires_in: default_expiry)
-    contents
+    if preview.present?
+      Rails.cache.write(preview_cache_key_for(url), preview, expires_in: default_expiry)
+    end
+
+    [contents, preview]
   end
 
   def self.invalidate(url)
     Rails.cache.delete(cache_key_for(url))
+  end
+
+  def self.preview(url, args={})
+    # Look for a preview
+    cached = Rails.cache.read(preview_cache_key_for(url)) unless args[:no_cache].present?
+    return cached if cached.present?
+
+    # Try the full version
+    cached = render_from_cache(url)
+    return cached if cached.present?
+
+    # If that fails, look it up
+    contents, cached = fetch_and_cache(url, args)
+    return cached if cached.present?
+    contents
   end
 
   # Return the cooked content for a url, caching the result for performance

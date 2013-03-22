@@ -3,7 +3,7 @@ require_dependency 'oneboxer'
 class OneboxController < ApplicationController
 
   def show
-    result = Oneboxer.onebox(params[:url], invalidate_oneboxes: params[:refresh] == 'true')
+    result = Oneboxer.preview(params[:url], invalidate_oneboxes: params[:refresh] == 'true')
     result.strip! if result.present?
 
     # If there is no result, return a 404

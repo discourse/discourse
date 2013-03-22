@@ -5,7 +5,7 @@ describe OneboxController do
   let(:url) { "http://google.com" }
 
   it 'invalidates the cache if refresh is passed' do
-    Oneboxer.expects(:onebox).with(url, invalidate_oneboxes: true)
+    Oneboxer.expects(:preview).with(url, invalidate_oneboxes: true)
     xhr :get, :show, url: url, refresh: 'true'
   end
 
@@ -14,7 +14,7 @@ describe OneboxController do
     let(:body) { "this is the onebox body"}
 
     before do
-      Oneboxer.expects(:onebox).with(url, invalidate_oneboxes: false).returns(body)
+      Oneboxer.expects(:preview).with(url, invalidate_oneboxes: false).returns(body)
       xhr :get, :show, url: url
     end
 
@@ -31,13 +31,13 @@ describe OneboxController do
   describe "missing onebox" do
 
     it "returns 404 if the onebox is nil" do
-      Oneboxer.expects(:onebox).with(url, invalidate_oneboxes: false).returns(nil)
+      Oneboxer.expects(:preview).with(url, invalidate_oneboxes: false).returns(nil)
       xhr :get, :show, url: url
       response.response_code.should == 404
     end
 
     it "returns 404 if the onebox is an empty string" do
-      Oneboxer.expects(:onebox).with(url, invalidate_oneboxes: false).returns(" \t ")
+      Oneboxer.expects(:preview).with(url, invalidate_oneboxes: false).returns(" \t ")
       xhr :get, :show, url: url
       response.response_code.should == 404
     end
