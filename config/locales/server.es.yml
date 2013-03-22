@@ -1,6 +1,6 @@
 # Updated with client.en.yml from commit 21b5183d6ab8c41ede8371d00e834865d3b35299
 
-en:
+es:
   time:
     formats:
       short: "%m-%d-%Y"
