@@ -115,7 +115,7 @@ GEM
     arel (3.0.2)
     barber (0.3.0)
       execjs
-    better_errors (0.5.0)
+    better_errors (0.7.2)
       coderay (>= 1.0.0)
       erubis (>= 2.6.6)
     binding_of_caller (0.7.1)
@@ -145,7 +145,7 @@ GEM
       ffi (~> 1.0, >= 1.0.6)
     clockwork (0.4.1)
       tzinfo
-    coderay (1.0.8)
+    coderay (1.0.9)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
       railties (~> 3.2.0)
