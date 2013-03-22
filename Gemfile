@@ -89,11 +89,11 @@ group :test, :development do
   gem 'guard-rspec'
   gem 'guard-spork'
   gem 'jasminerice'
-  gem 'mocha', require: false
+  gem 'mocha', '~> 0.13.3', require: false
   gem 'rb-fsevent'
   gem 'rb-inotify', '~> 0.8.8', require: RUBY_PLATFORM.include?('linux') && 'rb-inotify'
   gem 'rspec-rails'
-  gem 'shoulda'
+  gem 'shoulda', '~> 3.4.0'
   gem 'simplecov', require: false
   gem 'terminal-notifier-guard', require: RUBY_PLATFORM.include?('darwin') && 'terminal-notifier-guard'
 end

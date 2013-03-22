@@ -120,8 +120,8 @@ GEM
       erubis (>= 2.6.6)
     binding_of_caller (0.7.1)
       debug_inspector (>= 0.0.1)
-    bourne (1.1.2)
-      mocha (= 0.10.5)
+    bourne (1.4.0)
+      mocha (~> 0.13.2)
     builder (3.0.4)
     celluloid (0.12.4)
       facter (>= 1.6.12)
@@ -258,7 +258,7 @@ GEM
     mixlib-config (1.1.2)
     mixlib-log (1.4.1)
     mixlib-shellout (1.1.0)
-    mocha (0.10.5)
+    mocha (0.13.3)
       metaclass (~> 0.0.1)
     multi_json (1.7.1)
     multipart-post (1.1.5)
@@ -406,13 +406,13 @@ GEM
     seed-fu (2.2.0)
       activerecord (~> 3.1)
       activesupport (~> 3.1)
-    shoulda (3.3.2)
-      shoulda-context (~> 1.0.1)
-      shoulda-matchers (~> 1.4.1)
+    shoulda (3.4.0)
+      shoulda-context (~> 1.0, >= 1.0.1)
+      shoulda-matchers (~> 1.0, >= 1.4.1)
     shoulda-context (1.0.2)
-    shoulda-matchers (1.4.2)
+    shoulda-matchers (1.5.4)
       activesupport (>= 3.0.0)
-      bourne (~> 1.1.2)
+      bourne (~> 1.3)
     sidekiq (2.7.0)
       celluloid (~> 0.12.0)
       connection_pool (~> 1.0)
@@ -501,7 +501,7 @@ DEPENDENCIES
   librarian (>= 0.0.25)
   message_bus!
   minitest
-  mocha
+  mocha (~> 0.13.3)
   multi_json
   mustache
   nokogiri
@@ -531,7 +531,7 @@ DEPENDENCIES
   sass
   sass-rails
   seed-fu
-  shoulda
+  shoulda (~> 3.4.0)
   sidekiq
   simple_handlebars_rails!
   simplecov

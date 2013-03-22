@@ -37,6 +37,7 @@ Spork.prefork do
   require File.expand_path("../../config/environment", __FILE__)
   require 'rspec/rails'
   require 'rspec/autorun'
+  require 'mocha/setup'
 
   # Requires supporting ruby files with custom matchers and macros, etc,
   # in spec/support/ and its subdirectories.
@@ -45,7 +46,7 @@ Spork.prefork do
   load "#{Rails.root}/db/seeds.rb"
 
   RSpec.configure do |config|
-    
+
     config.fail_fast = ENV['RSPEC_FAIL_FAST'] == "1"
     config.include Helpers
     config.mock_framework = :mocha
