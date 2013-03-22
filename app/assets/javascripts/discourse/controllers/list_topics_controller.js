@@ -55,10 +55,6 @@ Discourse.ListTopicsController = Discourse.ObjectController.extend({
     this.get('controllers.list').createTopic();
   },
 
-  observer: (function() {
-    return this.set('filterMode', this.get('controllser.list.filterMode'));
-  }).observes('controller.list.filterMode'),
-
   // Show newly inserted topics
   showInserted: function(e) {
     // Move inserted into topics
