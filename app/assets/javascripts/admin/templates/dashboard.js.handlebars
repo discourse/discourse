@@ -71,12 +71,26 @@
           <th>2</th>
           <th>3</th>
           <th>4</th>
-          <th>{{i18n admin.dashboard.moderator_short}}</th>
         </tr>
       </thead>
       {{#unless loading}}
         {{ render 'admin_report_trust_levels' users_by_trust_level }}
       {{/unless}}
+    </table>
+  </div>
+
+  <div class="dashboard-stats totals">
+    <table class="table table-condensed table-hover">
+      <tbody>
+        <tr>
+          <td class="title">{{i18n admin.dashboard.moderators}}</td>
+          <td class="value">{{moderators}}</td>
+        </tr>
+        <tr>
+          <td class="title">{{i18n admin.dashboard.admins}}</td>
+          <td class="value">{{admins}}</td>
+        </tr>
+      </tbody>
     </table>
   </div>
 

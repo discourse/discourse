@@ -700,8 +700,9 @@ en:
         installed_version: "Installed"
         latest_version: "Latest"
         update_often: 'Please update often!'
-        moderator_short: "mod"
         problems_found: "Some problems have been found with your installation of Discourse:"
+        moderators: 'Moderators:'
+        admins: 'Admins:'
 
         reports:
           today: "Today"
