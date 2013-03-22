@@ -73,7 +73,7 @@ class Post < ActiveRecord::Base
     end
   end
 
-  # The key we use in reddit to ensure unique posts
+  # The key we use in redis to ensure unique posts
   def unique_post_key
     "post-#{user_id}:#{raw_hash}"
   end
