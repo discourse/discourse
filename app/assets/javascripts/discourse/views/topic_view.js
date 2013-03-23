@@ -390,7 +390,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
       currentPost = currentPost || seen;
     });
 
-    this.nonUrgentPositionUpdate({userActive: userActive, currentPost: currentPost});
+    this.nonUrgentPositionUpdate({userActive: userActive, currentPost: currentPost || info.bottom});
     
     offset = window.pageYOffset || $('html').scrollTop();
     firstLoaded = this.get('firstPostLoaded');
