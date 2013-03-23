@@ -12,11 +12,12 @@ on Discourse with:
 
 ### Getting Started
 
-1. Install VirtualBox: https://www.virtualbox.org/wiki/Downloads
-2. Install Vagrant: http://www.vagrantup.com/
-3. Open a terminal
-4. Clone the project: `git clone git@github.com:discourse/discourse.git`
-5. Enter the project directory: `cd discourse`
+1. Install Git: http://git-scm.com/downloads (or [GitHub for Windows](http://windows.github.com/) if you want a GUI)
+2. Install VirtualBox: https://www.virtualbox.org/wiki/Downloads
+3. Install Vagrant: http://www.vagrantup.com/
+4. Open a terminal
+5. Clone the project: `git clone git@github.com:discourse/discourse.git`
+6. Enter the project directory: `cd discourse`
 
 ### Using Vagrant
 
