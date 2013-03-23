@@ -123,7 +123,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
   didInsertElement: function(e) {
     var topicView = this;
     this.bindScrolling({debounce: 0});
-    $(window).bind('resize.discourse-on-scroll', function() { scrolled(false); });
+    $(window).bind('resize.discourse-on-scroll', function() { topicView.updatePosition(false); });
 
     var controller = this.get('controller');
     controller.subscribe();
@@ -140,14 +140,12 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
       return Discourse.ClickTrack.trackClick(e);
     });
 
-    this.scrolled();
+    this.updatePosition(true);
   },
 
   // Triggered whenever any posts are rendered, debounced to save over calling
   postsRendered: Discourse.debounce(function() {
-    var $window = $(window);
-    var $lastPost = $('.row:last');
-    this.scrolled(false);
+    this.updatePosition(false);
   }, 50),
 
   resetRead: function(e) {
@@ -345,21 +343,26 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
   },
 
   updateDock: function(postView) {
+    var post;
     if (!postView) return;
     post = postView.get('post');
     if (!post) return;
     this.set('progressPosition', post.get('post_number'));
   },
 
-  nonUrgentScrolled: Discourse.debounce(function(opts){
+  nonUrgentPositionUpdate: Discourse.debounce(function(opts){
       var screenTrack = this.get('screenTrack');
-      if(opts.track && screenTrack) {
+      if(opts.userActive && screenTrack) {
         screenTrack.scrolled();
       }
       this.set('controller.currentPost', opts.currentPost);
   },500),
 
-  scrolled: function(track) {
+  scrolled: function(){
+    this.updatePosition(true);
+  },
+
+  updatePosition: function(userActive) {
     var $lastPost, firstLoaded, lastPostOffset, offset, 
         title, info, rows, screenTrack, _this, currentPost;
 
@@ -387,7 +390,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
       currentPost = currentPost || seen;
     });
 
-    this.nonUrgentScrolled({track: track!==false, currentPost: currentPost});
+    this.nonUrgentPositionUpdate({userActive: userActive, currentPost: currentPost});
     
     offset = window.pageYOffset || $('html').scrollTop();
     firstLoaded = this.get('firstPostLoaded');
@@ -425,6 +428,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
   browseMoreMessage: (function() {
     var category, opts;
+
     opts = {
       popularLink: "<a href=\"/\">" + (Em.String.i18n("topic.view_popular_topics")) + "</a>"
     };

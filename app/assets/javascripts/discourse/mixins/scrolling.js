@@ -29,8 +29,6 @@ Discourse.Scrolling = Em.Mixin.create({
 
     $(document).bind('touchmove.discourse', onScroll);
     $(window).bind('scroll.discourse', onScroll);
-
-    // resize is should also fire this cause it causes scrolling of sorts
   },
 
   /**
