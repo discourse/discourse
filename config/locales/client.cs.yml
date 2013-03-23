@@ -273,8 +273,8 @@ cs:
       drafts_offline: "koncepty offline"
 
       min_length:
-        at_least: "vložte alespoň {{n}} znaků"
-        more: "{{n}} zbývá..."
+        need_more_for_title: "ještě {{n}} znaků nadpisu tématu"
+        need_more_for_reply: "ještě {{n}} znaků textu odpovědi"
 
       save_edit: "Uložit změnu"
       reply_original: "Odpovědět na původní téma"
@@ -700,8 +700,9 @@ cs:
         installed_version: "Nainstalováno"
         latest_version: "Poslední verze"
         update_often: 'Prosím aktualizujte často!'
-        moderator_short: "mod"
         problems_found: "Byly nalezeny problémy s vaší instalací systému Discourse:"
+        moderators: 'Moderátoři:'
+        admins: 'Administrátoři:'
 
         reports:
           today: "Dnes"
@@ -714,7 +715,7 @@ cs:
           all: "Všechny"
 
       commits:
-        latest_changes: "Poslední změny"
+        latest_changes: "Poslední změny."
         by: "od"
 
       flags:
