@@ -704,8 +704,9 @@ fr:
         installed_version: "Version installée"
         latest_version: "Dernière version"
         update_often: "Merci de mettre à jour régulièrement !"
-        moderator_short: "mod"
         problems_found: "Quelques problèmes ont été trouvés dans votre installation de Discourse :"
+        moderators: "Modérateurs :"
+        admins: "Administateurs :"
 
         reports:
           today: "Aujourd'hui"
