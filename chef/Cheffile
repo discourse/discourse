@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-#^syntax detection
+#^syntax detection 
 
 site 'http://community.opscode.com/api/v1'
 
