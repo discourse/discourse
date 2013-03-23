@@ -1,15 +1,21 @@
 class MemInfo
 
-  # Total memory in kb. Only works on systems with /proc/meminfo.
+  # Total memory in kb. On Mac OS uses "sysctl", elsewhere expects the system has /proc/meminfo.
   # Returns nil if it cannot be determined.
   def mem_total
-    @mem_total ||= begin
-      if s = `grep MemTotal /proc/meminfo`
-        /(\d+)/.match(s)[0].try(:to_i)
-      else
+    @mem_total ||=
+      begin
+        system = `uname`.strip
+        if system == "Darwin"
+          s = `sysctl -n hw.memsize`.strip
+          s.to_i / 1024
+        else
+          s = `grep MemTotal /proc/meminfo`
+          /(\d+)/.match(s)[0].try(:to_i)
+        end
+      rescue
         nil
       end
-    end
   end
 
 end
