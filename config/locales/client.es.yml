@@ -331,7 +331,7 @@ es:
       posted: "<i title='replicado' class='icon icon-reply'></i> {{username}} {{link}}"
       edited: "<i title='editado' class='icon icon-pencil'></i> {{username}} {{link}}"
       liked: "<i title='gustaron' class='icon icon-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='icon icon-lock' title='mensaje privado'></i> {{username}} te envió un mensaje privado: {{link}}"
+      private_message: "<i class='icon icon-envelope-alt' title='mensaje privado'></i> {{username}} te envió un mensaje privado: {{link}}"
       invited_to_private_message: "{{username}} te invitó a una conversación privada: {{link}}"
       invitee_accepted: "<i title='aceptó tu invitación' class='icon icon-signin'></i> {{username}} aceptó tu invitación"
       moved_post: "<i title='publicación trasladada' class='icon icon-arrow-right'></i> {{username}} trasladó la publicación a {{link}}"

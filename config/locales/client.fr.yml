@@ -336,7 +336,7 @@ fr:
       posted: "<i title='avec réponse' class='icon icon-reply'></i> {{username}} {{link}}"
       edited: "<i title='édité' class='icon icon-pencil'></i> {{username}} {{link}}"
       liked: "<i title='apprécié' class='icon icon-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='icon icon-lock' title='messag²e privé'></i> {{username}} vous a envoyé un message: {{link}}"
+      private_message: "<i class='icon icon-envelope-altk' title='messag²e privé'></i> {{username}} vous a envoyé un message: {{link}}"
       invited_to_private_message: "{{username}} vous a invité à une discussion privée: {{link}}"
       invitee_accepted: "<i title='a accepté votre invitation' class='icon icon-signin'></i> {{username}} a accepté votre invitation"
       moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} a déplacé le message vers {{link}}"
