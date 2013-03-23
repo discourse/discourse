@@ -106,7 +106,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:best_of_score_threshold, 15)
   setting(:best_of_posts_required, 50)
   setting(:best_of_likes_required, 1)
-  setting(:best_of_percent_filter, 5)
+  setting(:best_of_percent_filter, 20)
 
   # we need to think of a way to force users to enter certain settings, this is a minimal config thing
   setting(:notification_email, 'info@discourse.org')
