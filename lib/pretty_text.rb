@@ -5,14 +5,14 @@ module PrettyText
 
   def self.whitelist
     {
-      :elements => %w[
+      elements: %w[
         a abbr aside b bdo blockquote br caption cite code col colgroup dd div del dfn dl
         dt em hr figcaption figure h1 h2 h3 h4 h5 h6 hgroup i img ins kbd li mark
         ol p pre q rp rt ruby s samp small span strike strong sub sup table tbody td
         tfoot th thead time tr u ul var wbr
       ],
 
-      :attributes => {
+      attributes: {
         :all         => ['dir', 'lang', 'title', 'class'],
         'aside'      => ['data-post', 'data-full', 'data-topic'],
         'a'          => ['href'],
@@ -32,7 +32,7 @@ module PrettyText
         'ul'         => ['type']
       },
 
-      :protocols => {
+      protocols: {
         'a'          => {'href' => ['ftp', 'http', 'https', 'mailto', :relative]},
         'blockquote' => {'cite' => ['http', 'https', :relative]},
         'del'        => {'cite' => ['http', 'https', :relative]},

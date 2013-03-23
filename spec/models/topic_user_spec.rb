@@ -24,7 +24,7 @@ describe TopicUser do
   describe "unpinned" do
 
     before do
-      TopicUser.change(user, topic, {:starred_at => yesterday})
+      TopicUser.change(user, topic, {starred_at: yesterday})
     end
 
     it "defaults to blank" do
@@ -37,19 +37,19 @@ describe TopicUser do
 
     it 'should be set to tracking if auto_track_topics is enabled' do
       user.update_column(:auto_track_topics_after_msecs, 0)
-      TopicUser.change(user, topic, {:starred_at => yesterday})
+      TopicUser.change(user, topic, {starred_at: yesterday})
       TopicUser.get(topic, user).notification_level.should == TopicUser.notification_levels[:tracking]
     end
 
     it 'should reset regular topics to tracking topics if auto track is changed' do
-      TopicUser.change(user, topic, {:starred_at => yesterday})
+      TopicUser.change(user, topic, {starred_at: yesterday})
       user.auto_track_topics_after_msecs = 0
       user.save
       topic_user.notification_level.should == TopicUser.notification_levels[:tracking]
     end
 
     it 'should be set to "regular" notifications, by default on non creators' do
-      TopicUser.change(user, topic, {:starred_at => yesterday})
+      TopicUser.change(user, topic, {starred_at: yesterday})
       TopicUser.get(topic,user).notification_level.should == TopicUser.notification_levels[:regular]
     end
 

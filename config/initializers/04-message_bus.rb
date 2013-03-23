@@ -8,7 +8,7 @@ MessageBus.user_id_lookup do |env|
 end
 
 MessageBus.on_connect do |site_id|
-  RailsMultisite::ConnectionManagement.establish_connection(:db => site_id)
+  RailsMultisite::ConnectionManagement.establish_connection(db: site_id)
 end
 
 MessageBus.on_disconnect do |site_id|

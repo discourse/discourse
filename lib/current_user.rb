@@ -21,7 +21,7 @@ module CurrentUser
   end
 
   def set_permanent_cookie!(user)
-    cookies.permanent["_t"] = { :value => user.auth_token, :httponly => true }
+    cookies.permanent["_t"] = { value: user.auth_token, httponly: true }
   end
 
   def current_user

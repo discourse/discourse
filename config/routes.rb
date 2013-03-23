@@ -8,7 +8,7 @@ USERNAME_ROUTE_FORMAT = /[A-Za-z0-9\_]+/
 
 Discourse::Application.routes.draw do
 
-  match "/404", :to => "exceptions#not_found"
+  match "/404", to: "exceptions#not_found"
 
   mount Sidekiq::Web => '/sidekiq', constraints: AdminConstraint.new
 
@@ -63,13 +63,13 @@ Discourse::Application.routes.draw do
   post 'email/resubscribe/:key' => 'email#resubscribe', as: 'email_resubscribe'
 
 
-  resources :session, id: USERNAME_ROUTE_FORMAT, :only => [:create, :destroy] do
+  resources :session, id: USERNAME_ROUTE_FORMAT, only: [:create, :destroy] do
     collection do
       post 'forgot_password'
     end
   end
 
-  resources :users, :except => [:show, :update] do
+  resources :users, except: [:show, :update] do
     collection do
       get 'check_username'
       get 'is_local_username'
@@ -90,17 +90,17 @@ Discourse::Application.routes.draw do
   get 'users/hp' => 'users#get_honeypot_value'
 
   get 'user_preferences' => 'users#user_preferences_redirect'
-  get 'users/:username/private-messages' => 'user_actions#private_messages', :constraints => {:username => USERNAME_ROUTE_FORMAT}
-  get 'users/:username' => 'users#show', :constraints => {:username => USERNAME_ROUTE_FORMAT}
-  put 'users/:username' => 'users#update', :constraints => {:username => USERNAME_ROUTE_FORMAT}
-  get 'users/:username/preferences' => 'users#preferences', :constraints => {:username => USERNAME_ROUTE_FORMAT}, :as => :email_preferences
-  get 'users/:username/preferences/email' => 'users#preferences', :constraints => {:username => USERNAME_ROUTE_FORMAT}
-  put 'users/:username/preferences/email' => 'users#change_email', :constraints => {:username => USERNAME_ROUTE_FORMAT}
-  get 'users/:username/preferences/username' => 'users#preferences', :constraints => {:username => USERNAME_ROUTE_FORMAT}
-  put 'users/:username/preferences/username' => 'users#username', :constraints => {:username => USERNAME_ROUTE_FORMAT}
-  get 'users/:username/avatar(/:size)' => 'users#avatar', :constraints => {:username => USERNAME_ROUTE_FORMAT}
-  get 'users/:username/invited' => 'users#invited', :constraints => {:username => USERNAME_ROUTE_FORMAT}
-  get 'users/:username/send_activation_email' => 'users#send_activation_email', :constraints => {:username => USERNAME_ROUTE_FORMAT}
+  get 'users/:username/private-messages' => 'user_actions#private_messages', constraints: {username: USERNAME_ROUTE_FORMAT}
+  get 'users/:username' => 'users#show', constraints: {username: USERNAME_ROUTE_FORMAT}
+  put 'users/:username' => 'users#update', constraints: {username: USERNAME_ROUTE_FORMAT}
+  get 'users/:username/preferences' => 'users#preferences', constraints: {username: USERNAME_ROUTE_FORMAT}, as: :email_preferences
+  get 'users/:username/preferences/email' => 'users#preferences', constraints: {username: USERNAME_ROUTE_FORMAT}
+  put 'users/:username/preferences/email' => 'users#change_email', constraints: {username: USERNAME_ROUTE_FORMAT}
+  get 'users/:username/preferences/username' => 'users#preferences', constraints: {username: USERNAME_ROUTE_FORMAT}
+  put 'users/:username/preferences/username' => 'users#username', constraints: {username: USERNAME_ROUTE_FORMAT}
+  get 'users/:username/avatar(/:size)' => 'users#avatar', constraints: {username: USERNAME_ROUTE_FORMAT}
+  get 'users/:username/invited' => 'users#invited', constraints: {username: USERNAME_ROUTE_FORMAT}
+  get 'users/:username/send_activation_email' => 'users#send_activation_email', constraints: {username: USERNAME_ROUTE_FORMAT}
 
   resources :uploads
 
@@ -168,30 +168,30 @@ Discourse::Application.routes.draw do
   get 'topics/similar_to'
 
   # Legacy route for old avatars
-  get 'threads/:topic_id/:post_number/avatar' => 'topics#avatar', :constraints => {:topic_id => /\d+/, :post_number => /\d+/}
+  get 'threads/:topic_id/:post_number/avatar' => 'topics#avatar', constraints: {topic_id: /\d+/, post_number: /\d+/}
 
   # Topic routes
-  get 't/:slug/:topic_id/best_of' => 'topics#show', :defaults => {best_of: true}, :constraints => {:topic_id => /\d+/, :post_number => /\d+/}
-  get 't/:topic_id/best_of' => 'topics#show', :constraints => {:topic_id => /\d+/, :post_number => /\d+/}
-  put 't/:slug/:topic_id' => 'topics#update', :constraints => {:topic_id => /\d+/}
-  put 't/:slug/:topic_id/star' => 'topics#star', :constraints => {:topic_id => /\d+/}
-  put 't/:topic_id/star' => 'topics#star', :constraints => {:topic_id => /\d+/}
-  put 't/:slug/:topic_id/status' => 'topics#status', :constraints => {:topic_id => /\d+/}
-  put 't/:topic_id/status' => 'topics#status', :constraints => {:topic_id => /\d+/}
-  put 't/:topic_id/clear-pin' => 'topics#clear_pin', :constraints => {:topic_id => /\d+/}
-  put 't/:topic_id/mute' => 'topics#mute', :constraints => {:topic_id => /\d+/}
-  put 't/:topic_id/unmute' => 'topics#unmute', :constraints => {:topic_id => /\d+/}
+  get 't/:slug/:topic_id/best_of' => 'topics#show', defaults: {best_of: true}, constraints: {topic_id: /\d+/, post_number: /\d+/}
+  get 't/:topic_id/best_of' => 'topics#show', constraints: {topic_id: /\d+/, post_number: /\d+/}
+  put 't/:slug/:topic_id' => 'topics#update', constraints: {topic_id: /\d+/}
+  put 't/:slug/:topic_id/star' => 'topics#star', constraints: {topic_id: /\d+/}
+  put 't/:topic_id/star' => 'topics#star', constraints: {topic_id: /\d+/}
+  put 't/:slug/:topic_id/status' => 'topics#status', constraints: {topic_id: /\d+/}
+  put 't/:topic_id/status' => 'topics#status', constraints: {topic_id: /\d+/}
+  put 't/:topic_id/clear-pin' => 'topics#clear_pin', constraints: {topic_id: /\d+/}
+  put 't/:topic_id/mute' => 'topics#mute', constraints: {topic_id: /\d+/}
+  put 't/:topic_id/unmute' => 'topics#unmute', constraints: {topic_id: /\d+/}
 
-  get 't/:topic_id/:post_number' => 'topics#show', :constraints => {:topic_id => /\d+/, :post_number => /\d+/}
-  get 't/:slug/:topic_id.rss' => 'topics#feed', :format => :rss, :constraints => {:topic_id => /\d+/}
-  get 't/:slug/:topic_id' => 'topics#show', :constraints => {:topic_id => /\d+/}
-  get 't/:slug/:topic_id/:post_number' => 'topics#show', :constraints => {:topic_id => /\d+/, :post_number => /\d+/}
-  post 't/:topic_id/timings' => 'topics#timings', :constraints => {:topic_id => /\d+/}
-  post 't/:topic_id/invite' => 'topics#invite', :constraints => {:topic_id => /\d+/}
-  post 't/:topic_id/move-posts' => 'topics#move_posts', :constraints => {:topic_id => /\d+/}
-  delete 't/:topic_id/timings' => 'topics#destroy_timings', :constraints => {:topic_id => /\d+/}
+  get 't/:topic_id/:post_number' => 'topics#show', constraints: {topic_id: /\d+/, post_number: /\d+/}
+  get 't/:slug/:topic_id.rss' => 'topics#feed', format: :rss, constraints: {topic_id: /\d+/}
+  get 't/:slug/:topic_id' => 'topics#show', constraints: {topic_id: /\d+/}
+  get 't/:slug/:topic_id/:post_number' => 'topics#show', constraints: {topic_id: /\d+/, post_number: /\d+/}
+  post 't/:topic_id/timings' => 'topics#timings', constraints: {topic_id: /\d+/}
+  post 't/:topic_id/invite' => 'topics#invite', constraints: {topic_id: /\d+/}
+  post 't/:topic_id/move-posts' => 'topics#move_posts', constraints: {topic_id: /\d+/}
+  delete 't/:topic_id/timings' => 'topics#destroy_timings', constraints: {topic_id: /\d+/}
 
-  post 't/:topic_id/notifications' => 'topics#set_notifications' , :constraints => {:topic_id => /\d+/}
+  post 't/:topic_id/notifications' => 'topics#set_notifications' , constraints: {topic_id: /\d+/}
 
 
   resources :invites

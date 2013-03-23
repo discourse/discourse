@@ -5,7 +5,7 @@ describe StaticController do
   context "with a static file that's present" do
 
     before do
-      xhr :get, :show, :id => 'faq'
+      xhr :get, :show, id: 'faq'
     end
 
     it 'renders the static file if present' do
@@ -19,7 +19,7 @@ describe StaticController do
 
   context "with a missing file" do
     it "should respond 404" do
-      xhr :get, :show, :id => 'does-not-exist'
+      xhr :get, :show, id: 'does-not-exist'
       response.response_code.should == 404
     end
   end

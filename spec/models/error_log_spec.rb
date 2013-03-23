@@ -18,7 +18,7 @@ describe ErrorLog do
   end
 
   def request
-    ActionController::TestRequest.new(:host => 'test')
+    ActionController::TestRequest.new(host: 'test')
   end
 
   describe "add_row!" do
