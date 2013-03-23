@@ -22,7 +22,7 @@ Before you get started, ensure you have the following minimum versions: [Ruby 1.
 
 ## Vision
 
-Discourse is a **Civilized Discourse Construction Kit**, an 100% open-source discussion platform that is free for everyone to use and contribute to -- forever. Our key mission goals:
+Discourse is a **Civilized Discourse Construction Kit**, a 100% open-source discussion platform that is free for everyone to use and contribute to -- forever. Our key mission goals:
 
 - A **flattened, endlessly scrolling discussion**, avoiding the awkwardness of traditionally threaded and paginated discussion, while allowing replies to be expanded in place for additional context.
 
