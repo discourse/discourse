@@ -216,6 +216,7 @@ Discourse.TopicController = Discourse.ObjectController.extend({
 
       topicController.updateBottomBar();
       topicController.set('loadingBelow', false);
+      topicController.set('seenBottom', false);
     });
   }.observes('postFilters'),
 

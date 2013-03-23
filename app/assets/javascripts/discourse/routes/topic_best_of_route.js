@@ -19,7 +19,7 @@ Discourse.TopicBestOfRoute = Discourse.Route.extend({
     this.modelFor('topic').loadPosts(params);
 
     // After we load, show the bottom bar
-    //Em.run.next(function () { topicController.updateBottomBar(); })
+    Em.run.next(function () { topicController.updateBottomBar(); })
   }
 
 });
