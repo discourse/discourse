@@ -65,7 +65,7 @@ module PrettyText
   @mutex = Mutex.new
 
   def self.mention_matcher
-    /(\@[a-zA-Z0-9\-]+)/
+    Regexp.new("(\@[a-zA-Z0-9_]{#{User.username_length.begin},#{User.username_length.end}})")
   end
 
   def self.app_root
