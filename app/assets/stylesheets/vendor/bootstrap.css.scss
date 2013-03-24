@@ -958,17 +958,20 @@ body {
   input, textarea, select, .uneditable-input {
     color: #222222;
   }
+
   p, pre, li, ul {
     font-size: 14px;
   }
   p {
     line-height: 20px;
   }
+
   code, pre {
     font-family: Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace, serif;
   }
+
   h1, h2, h3, h4, h5, h6 {
-    margin: 0;
+    margin: 20px 0 10px;
     font-family: inherit;
     font-weight: bold;
     color: inherit;
@@ -1016,6 +1019,12 @@ body {
     color: #999999;
     text-transform: uppercase;
   }
+
+  // this removes the unwanted top margin on a paragraph under a heading
+  h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+    margin-top:0px;
+  }
+
   blockquote {
     margin: 15px 0 8px;
   }
