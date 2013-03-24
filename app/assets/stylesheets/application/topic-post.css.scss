@@ -539,9 +539,6 @@
         background-color: $white;
         word-wrap: break-word;
         @include border-radius-top(4px);
-        p:nth-of-type(1) {
-          margin-top: 0;
-        }
         .calc {
           background-color: $highlight;
           margin-bottom: 10px;
@@ -583,9 +580,17 @@
   }
 }
 
+
 .topic-body {
   position: relative;
 
+  // this removes the topmost margin;
+  // if we don't have this, all posts would have extra space at the top
+  .cooked > *:first-child {
+    margin-top: 0px !important;
+  }
+
+  // set up proper header margins in posts
   h1, h2, h3, h4, h5, h6 {
     margin: 20px 0 10px;
   }
