@@ -216,6 +216,11 @@ describe Post do
         post.raw_mentions.should == ['finn']
       end
 
+      it "handles underscore in username" do
+        post = Fabricate.build(:post, post_args.merge(raw: "@Jake @Finn @Jake_Old"))
+        post.raw_mentions.should == ['jake', 'finn', 'jake_old']
+      end
+
     end
 
     context "With a @mention limit of 1" do
