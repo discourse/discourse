@@ -48,6 +48,7 @@ class Admin::UsersController < Admin::AdminController
   def refresh_browsers
     @user = User.where(id: params[:user_id]).first
     MessageBus.publish "/file-change", ["refresh"], user_ids: [@user.id]
+    render nothing: true
   end
 
   def revoke_admin
