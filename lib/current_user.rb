@@ -13,7 +13,7 @@ module CurrentUser
 
   def log_on_user(user)
     session[:current_user_id] = user.id
-    unless user.auth_token
+    unless user.auth_token && user.auth_token.length == 32
       user.auth_token = SecureRandom.hex(16)
       user.save!
     end
