@@ -395,15 +395,11 @@ body {
   }
 
   h1, h2, h3, h4, h5, h6 {
-    margin: 20px 0 10px;
+    margin: 0;
     font-family: inherit;
     font-weight: bold;
     color: inherit;
     text-rendering: optimizelegibility;
-  }
-  h1 small, h2 small, h3 small, h4 small, h5 small, h6 small {
-    font-weight: normal;
-    color: #999999;
   }
   h1 {
     font-size: 30px;
