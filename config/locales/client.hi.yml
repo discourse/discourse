@@ -2,7 +2,7 @@
 # This file contains content for the client portion of Discourse, sent out
 # to the Javascript app.
 
-en:
+hi:
   js:
     share:
       topic: 'share a link to this topic'
