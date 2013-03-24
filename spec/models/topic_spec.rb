@@ -823,7 +823,7 @@ describe Topic do
   end
 
   describe 'meta data' do
-    let(:topic) { Fabricate(:topic, :meta_data => {hello: 'world'}) }
+    let(:topic) { Fabricate(:topic, meta_data: {hello: 'world'}) }
 
     it 'allows us to create a topic with meta data' do
       topic.meta_data['hello'].should == 'world'

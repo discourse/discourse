@@ -4,6 +4,6 @@ class RemoveLastPostId < ActiveRecord::Migration
   end
 
   def down
-    add_column :forum_threads, :last_post_id, :integer, :default => 0
+    add_column :forum_threads, :last_post_id, :integer, default: 0
   end
 end

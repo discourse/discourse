@@ -9,8 +9,8 @@ class CreateActions < ActiveRecord::Migration
       # but this table is wider and is intended for non-notifying actions as well
 
 
-      t.integer :action_type, :null => false
-      t.integer :user_id, :null => false
+      t.integer :action_type, null: false
+      t.integer :user_id, null: false
       t.integer :target_forum_thread_id
       t.integer :target_post_id
       t.integer :target_user_id

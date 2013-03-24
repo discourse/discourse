@@ -133,13 +133,13 @@ module SiteSettingExtension
 
   def remove_override!(name)
     return unless table_exists?
-    SiteSetting.where(:name => name).destroy_all
+    SiteSetting.where(name: name).destroy_all
   end
 
   def add_override!(name,val)
     return unless table_exists?
 
-    setting = SiteSetting.where(:name => name).first
+    setting = SiteSetting.where(name: name).first
     type = get_data_type(defaults[name])
 
     if type == types[:bool] && val != true && val != false
@@ -159,7 +159,7 @@ module SiteSettingExtension
       setting.data_type = type
       setting.save
     else
-      SiteSetting.create!(:name => name, :value => val, :data_type => type)
+      SiteSetting.create!(name: name, value: val, data_type: type)
     end
 
     MessageBus.publish('/site_settings', {process: process_id})

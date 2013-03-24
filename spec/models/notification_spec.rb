@@ -72,7 +72,7 @@ describe Notification do
   describe 'private message' do
     before do
       @topic = Fabricate(:private_message_topic)
-      @post = Fabricate(:post, :topic => @topic, :user => @topic.user)
+      @post = Fabricate(:post, topic: @topic, user: @topic.user)
       @target = @post.topic.topic_allowed_users.reject{|a| a.user_id == @post.user_id}[0].user
     end
 

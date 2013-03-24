@@ -276,12 +276,12 @@ describe UsersController do
     context 'when creating a non active user (unconfirmed email)' do
       it 'should enqueue a signup email' do
         Jobs.expects(:enqueue).with(:user_email, has_entries(type: :signup))
-        xhr :post, :create, :name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email
+        xhr :post, :create, name: @user.name, username: @user.username, password: "strongpassword", email: @user.email
       end
 
       it "doesn't send a welcome email" do
         User.any_instance.expects(:enqueue_welcome_message).with('welcome_user').never
-        xhr :post, :create, :name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email
+        xhr :post, :create, name: @user.name, username: @user.username, password: "strongpassword", email: @user.email
       end
     end
 
@@ -293,25 +293,25 @@ describe UsersController do
 
       it 'should enqueue a signup email' do
         User.any_instance.expects(:enqueue_welcome_message).with('welcome_user')
-        xhr :post, :create, :name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email
+        xhr :post, :create, name: @user.name, username: @user.username, password: "strongpassword", email: @user.email
       end
 
       it "should be logged in" do
         User.any_instance.expects(:enqueue_welcome_message)
-        xhr :post, :create, :name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email
+        xhr :post, :create, name: @user.name, username: @user.username, password: "strongpassword", email: @user.email
         session[:current_user_id].should be_present
       end
 
       it "returns true in the active part of the JSON" do
         User.any_instance.expects(:enqueue_welcome_message)
-        xhr :post, :create, :name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email
+        xhr :post, :create, name: @user.name, username: @user.username, password: "strongpassword", email: @user.email
         ::JSON.parse(response.body)['active'].should == true
       end
 
       context 'when approving of users is required' do
         before do
           SiteSetting.expects(:must_approve_users).returns(true)
-          xhr :post, :create, :name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email
+          xhr :post, :create, name: @user.name, username: @user.username, password: "strongpassword", email: @user.email
         end
 
         it "doesn't log in the user" do
@@ -328,7 +328,7 @@ describe UsersController do
 
     context 'after success' do
       before do
-        xhr :post, :create, :name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email
+        xhr :post, :create, name: @user.name, username: @user.username, password: "strongpassword", email: @user.email
       end
 
       it 'should succeed' do
@@ -368,7 +368,7 @@ describe UsersController do
       before do
         UsersController.any_instance.stubs(:honeypot_value).returns('abc')
       end
-      let(:create_params) { {:name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email, :password_confirmation => 'wrong'} }
+      let(:create_params) { {name: @user.name, username: @user.username, password: "strongpassword", email: @user.email, password_confirmation: 'wrong'} }
       it_should_behave_like 'honeypot fails'
     end
 
@@ -376,7 +376,7 @@ describe UsersController do
       before do
         UsersController.any_instance.stubs(:challenge_value).returns('abc')
       end
-      let(:create_params) { {:name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email, :challenge => 'abc'} }
+      let(:create_params) { {name: @user.name, username: @user.username, password: "strongpassword", email: @user.email, challenge: 'abc'} }
       it_should_behave_like 'honeypot fails'
     end
 
@@ -393,12 +393,12 @@ describe UsersController do
     end
 
     context 'when password is blank' do
-      let(:create_params) { {:name => @user.name, :username => @user.username, :password => "", :email => @user.email} }
+      let(:create_params) { {name: @user.name, username: @user.username, password: "", email: @user.email} }
       it_should_behave_like 'failed signup'
     end
 
     context 'when password param is missing' do
-      let(:create_params) { {:name => @user.name, :username => @user.username, :email => @user.email} }
+      let(:create_params) { {name: @user.name, username: @user.username, email: @user.email} }
       it_should_behave_like 'failed signup'
     end
 
@@ -406,7 +406,7 @@ describe UsersController do
       before do
         User.any_instance.stubs(:save).raises(ActiveRecord::StatementInvalid)
       end
-      let(:create_params) { {:name => @user.name, :username => @user.username, :password => "strongpassword", :email => @user.email} }
+      let(:create_params) { {name: @user.name, username: @user.username, password: "strongpassword", email: @user.email} }
       it_should_behave_like 'failed signup'
     end
   end

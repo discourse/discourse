@@ -7,7 +7,7 @@ class CreateReadPosts < ActiveRecord::Migration
       t.column :seen, :integer, null: false
     end
 
-    add_index :read_posts, [:forum_thread_id, :user_id, :page], :unique => true
+    add_index :read_posts, [:forum_thread_id, :user_id, :page], unique: true
   end
 
   def down

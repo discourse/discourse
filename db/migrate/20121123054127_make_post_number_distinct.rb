@@ -21,7 +21,7 @@ from
 where calc <> p.post_number and X.id = p.id')
 
     remove_index :posts, :forum_thread_id_and_post_number
-    add_index :posts, [:topic_id, :post_number], :unique => true
+    add_index :posts, [:topic_id, :post_number], unique: true
   end
 
   def down

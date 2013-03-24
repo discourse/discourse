@@ -7,21 +7,21 @@ require 'openid_redis_store'
 Rails.application.config.middleware.use OmniAuth::Builder do
 
   provider :open_id,
-           :store => OpenID::Store::Redis.new($redis),
-           :name => 'google',
-           :identifier => 'https://www.google.com/accounts/o8/id',
-           :require => 'omniauth-openid'
+           store: OpenID::Store::Redis.new($redis),
+           name: 'google',
+           identifier: 'https://www.google.com/accounts/o8/id',
+           require: 'omniauth-openid'
 
   provider :open_id,
-           :store => OpenID::Store::Redis.new($redis),
-           :name => 'yahoo',
-           :identifier => 'https://me.yahoo.com',
-           :require => 'omniauth-openid'
+           store: OpenID::Store::Redis.new($redis),
+           name: 'yahoo',
+           identifier: 'https://me.yahoo.com',
+           require: 'omniauth-openid'
 
   provider :facebook,
            SiteSetting.facebook_app_id,
            SiteSetting.facebook_app_secret,
-           :scope => "email"
+           scope: "email"
 
   provider :twitter,
            SiteSetting.twitter_consumer_key,
@@ -32,6 +32,6 @@ Rails.application.config.middleware.use OmniAuth::Builder do
            SiteSetting.github_client_secret
 
   provider :browser_id,
-           :name => 'persona'
+           name: 'persona'
 
 end
