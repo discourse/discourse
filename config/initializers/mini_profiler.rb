@@ -1,7 +1,7 @@
 # If Mini Profiler is included via gem
 if defined?(Rack::MiniProfiler)
 
-  Rack::MiniProfiler.config.storage_instance = Rack::MiniProfiler::RedisStore.new(:connection =>  DiscourseRedis.new)
+  Rack::MiniProfiler.config.storage_instance = Rack::MiniProfiler::RedisStore.new(connection:  DiscourseRedis.new)
 
   # For our app, let's just show mini profiler always, polling is chatty so nuke that
   Rack::MiniProfiler.config.pre_authorize_cb = lambda do |env|

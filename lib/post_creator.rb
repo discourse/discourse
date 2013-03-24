@@ -52,7 +52,7 @@ class PostCreator
         if @opts[:archetype] == Archetype.private_message
 
           usernames = @opts[:target_usernames].split(',')
-          User.where(:username => usernames).each do |u|
+          User.where(username: usernames).each do |u|
 
             unless guardian.can_send_private_message?(u)
               topic.errors.add(:archetype, :cant_send_pm)

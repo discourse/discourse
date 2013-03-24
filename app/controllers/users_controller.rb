@@ -27,7 +27,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    user = User.where(:username_lower => params[:username].downcase).first
+    user = User.where(username_lower: params[:username].downcase).first
     guardian.ensure_can_edit!(user)
     json_result(user) do |u|
 
@@ -179,7 +179,7 @@ class UsersController < ApplicationController
       # Create auth records
       if auth.present?
         if auth[:twitter_user_id] && auth[:twitter_screen_name] && TwitterUserInfo.find_by_twitter_user_id(auth[:twitter_user_id]).nil?
-          TwitterUserInfo.create(:user_id => user.id, :screen_name => auth[:twitter_screen_name], :twitter_user_id => auth[:twitter_user_id])
+          TwitterUserInfo.create(user_id: user.id, screen_name: auth[:twitter_screen_name], twitter_user_id: auth[:twitter_user_id])
         end
 
         if auth[:facebook].present? && FacebookUserInfo.find_by_facebook_user_id(auth[:facebook][:facebook_user_id]).nil?
@@ -187,7 +187,7 @@ class UsersController < ApplicationController
         end
 
         if auth[:github_user_id] && auth[:github_screen_name] && GithubUserInfo.find_by_github_user_id(auth[:github_user_id]).nil?
-          GithubUserInfo.create(:user_id => user.id, :screen_name => auth[:github_screen_name], :github_user_id => auth[:github_user_id])
+          GithubUserInfo.create(user_id: user.id, screen_name: auth[:github_screen_name], github_user_id: auth[:github_user_id])
         end
       end
 
@@ -219,7 +219,7 @@ class UsersController < ApplicationController
     # TEMP to catch all missing spots
     # raise ActiveRecord::RecordNotFound
 
-    user = User.select(:email).where(:username_lower => params[:username].downcase).first
+    user = User.select(:email).where(username_lower: params[:username].downcase).first
     if user
       # for now we only support gravatar in square (redirect cached for a day), later we can use x-sendfile and/or a cdn to serve local
       size = params[:size].to_i

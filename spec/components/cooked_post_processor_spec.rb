@@ -43,7 +43,7 @@ EXPECTED
       before do
         @topic = Fabricate(:topic)
         @post = Fabricate.build(:post_with_image_url, topic: @topic, user: @topic.user)
-        @cpp = CookedPostProcessor.new(@post, :image_sizes => {'http://www.forumwarz.com/images/header/logo.png' => {'width' => 111, 'height' => 222}})
+        @cpp = CookedPostProcessor.new(@post, image_sizes: {'http://www.forumwarz.com/images/header/logo.png' => {'width' => 111, 'height' => 222}})
         @cpp.expects(:get_size).returns([111,222])
       end
 

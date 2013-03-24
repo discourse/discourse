@@ -6,7 +6,7 @@ module Jobs
 
   class Exporter < Jobs::Base
 
-    sidekiq_options :retry => false
+    sidekiq_options retry: false
 
     def execute(args)
       raise Import::ImportInProgressError if Import::is_import_running?

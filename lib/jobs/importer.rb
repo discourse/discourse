@@ -10,7 +10,7 @@ module Jobs
 
   class Importer < Jobs::Base
 
-    sidekiq_options :retry => false
+    sidekiq_options retry: false
 
     BACKUP_SCHEMA = 'backup'
 

@@ -196,7 +196,7 @@ class TopicQuery
         end
       end
 
-      result = result.listable_topics.includes(:category => :topic_only_relative_url)
+      result = result.listable_topics.includes(category: :topic_only_relative_url)
       result = result.where('categories.name is null or categories.name <> ?', query_opts[:exclude_category]) if query_opts[:exclude_category]
       result = result.where('categories.name = ?', query_opts[:only_category]) if query_opts[:only_category]
       result = result.limit(page_size) unless query_opts[:limit] == false

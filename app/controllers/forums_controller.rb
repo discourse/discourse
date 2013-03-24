@@ -6,7 +6,7 @@ class ForumsController < ApplicationController
 
   def status
     if $shutdown
-      render text: 'shutting down', :status => 500
+      render text: 'shutting down', status: 500
     else
       render text: 'ok'
     end

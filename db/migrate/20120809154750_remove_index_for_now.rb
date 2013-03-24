@@ -6,6 +6,6 @@ class RemoveIndexForNow < ActiveRecord::Migration
 
   def down
     remove_index "posts", ["forum_thread_id","post_number"]
-    add_index "posts", ["forum_thread_id","post_number"], :unique => true
+    add_index "posts", ["forum_thread_id","post_number"], unique: true
   end
 end
