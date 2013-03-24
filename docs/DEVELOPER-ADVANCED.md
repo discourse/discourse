@@ -111,12 +111,13 @@ Edit /etc/postgresql/9.1/main/pg_hba.conf to have this:
 
 Load the seed data (as vagrant user):
 
-    psql -d discourse_development < pg_dump/development-image.sql
+    psql -d discourse_development < pg_dumps/development-image.sql
 
 (You may wish to try the `production-image.sql` file for a good seed for a production database.)
 
 ## Redis
 
+    sudo su -
     mkdir /tmp/redis_install
     cd /tmp/redis_install
     wget http://redis.googlecode.com/files/redis-2.6.7.tar.gz
