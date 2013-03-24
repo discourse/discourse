@@ -586,7 +586,7 @@
 .topic-body {
   position: relative;
 
-  
+
 
   // this is the little pointy bit of the speech bubble on the post, on the left side
   &:before,
@@ -645,7 +645,7 @@
     line-height: 23px;
   }
   h4 {
-    margin-bottom: 3px;
+    margin: 0 0 3px 0;
     color: #6c7376;
     font-weight: normal;
     font-size: 12px;
