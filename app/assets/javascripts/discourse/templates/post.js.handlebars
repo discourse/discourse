@@ -48,7 +48,7 @@
     <div class='topic-body span14'>
       <div {{bindAttr class="showUserReplyTab:avoid-tab view.repliesHidden:bottom-round :contents :regular view.extraClass"}}>
         {{view Discourse.PrependPostView postBinding="this"}}
-        <div class='cooked'>{{{cooked}}}</div>
+        {{view Discourse.RawDivView class="cooked" contentBinding="cooked"}}
         {{view Discourse.PostMenuView postBinding="this" postViewBinding="view"}}
       </div>
       {{view Discourse.RepliesView contentBinding="replies" postViewBinding="view"}}
