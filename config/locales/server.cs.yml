@@ -186,7 +186,7 @@ cs:
     continue: "Pokračovat na %{site_name}"
 
   change_email:
-    confirmed: "Váše emailová adresa bylo změněna."
+    confirmed: "Vaše emailová adresa bylo změněna."
     please_continue: "Prosím, pokračujte na %{link}"
     error: "Nastala chyba běhěm změny emailové adresy. Není nová adresa již někým používána?"
 
@@ -358,6 +358,7 @@ cs:
     supress_reply_directly_below: "Nezobrazovat počet odpovědí, pokud existuje jen jediná odpověď hned pod příspěvkem"
     allow_index_in_robots_txt: "Povolit robotům indexaci tohoto webu (aktualizuje robots.txt)"
     email_domains_blacklist: "Seznam domén, jejichž emailové adresy nebudou přijímány, oddělený znakem '|'. Příklad: mailinator.com|trashmail.net"
+    email_domains_whitelist: "Seznam domén, ze kterých bude povolena registrace, oddělený znamek '|'. POZOR: Emailové adresy z jiných než z těchto domén nebudou přijímány."
     version_checks: "Kontrolovat aktuálnost z 'Discourse Hubu' a zobrazovat zprávy o nových verzích v administrační sekci"
 
     port: "Používat tento HTTP port místo standardního portu 80. Nechte prázdné pro výchozí port, užitečné hlavně pro vývoj"
