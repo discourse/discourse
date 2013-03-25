@@ -110,7 +110,17 @@ class Post < ActiveRecord::Base
 
   def link_count
     return 0 unless raw.present?
-    cooked_document.search("a[href]").count
+
+    # Don't include @mentions in the link count
+    total = 0
+    cooked_document.search("a[href]").each do |l|
+      html_class = l.attributes['class']
+      if html_class.present?
+        next if html_class.to_s == 'mention' && l.attributes['href'].to_s =~ /^\/users\//
+      end
+      total +=1
+    end
+    total
   end
 
   def max_mention_validator

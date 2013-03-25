@@ -149,16 +149,21 @@ describe Post do
     let(:visitor) { Fabricate(:user, trust_level: TrustLevel.levels[:visitor]) }
     let(:post_one_link) { Fabricate.build(:post, post_args.merge(raw: "[sherlock](http://www.bbc.co.uk/programmes/b018ttws)", user: visitor)) }
     let(:post_two_links) { Fabricate.build(:post, post_args.merge(raw: "<a href='http://discourse.org'>discourse</a> <a href='http://twitter.com'>twitter</a>", user: visitor)) }
+    let(:post_with_mentions) { Fabricate.build(:post, post_args.merge(raw: "hello @#{visitor.username} how are you doing?") )}
 
-    it "returns 0 images for an empty post" do
+    it "returns 0 links for an empty post" do
       Fabricate.build(:post).link_count.should == 0
     end
 
-    it "finds images from markdown" do
+    it "returns 0 links for a post with mentions" do
+      post_with_mentions.link_count.should == 0
+    end
+
+    it "finds links from markdown" do
       post_one_link.link_count.should == 1
     end
 
-    it "finds images from HTML" do
+    it "finds links from HTML" do
       post_two_links.link_count.should == 2
     end
 
