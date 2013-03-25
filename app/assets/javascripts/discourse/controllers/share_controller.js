@@ -27,6 +27,17 @@ Discourse.ShareController = Discourse.Controller.extend({
   close: function() {
     this.set('link', '');
     return false;
+  },
+
+  popupHeights: {
+    twitter: 265,
+    facebook: 315,
+    googlePlus: 600
+  },
+
+  sharePopup: function(target, url) {
+    window.open(url, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=600,height=' + this.popupHeights[target]);
+    return false;
   }
 });
 

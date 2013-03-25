@@ -27,6 +27,18 @@ Discourse.ShareView = Discourse.View.extend({
     }
   }).observes('controller.link'),
 
+  facebookUrl: function() {
+    return ("http://www.facebook.com/sharer.php?u=" + this.get('controller.link'));
+  }.property('controller.link'),
+
+  twitterUrl: function() {
+    return ("http://twitter.com/home?status=" + this.get('controller.link'));
+  }.property('controller.link'),
+
+  googlePlusUrl: function() {
+    return ("https://plus.google.com/share?url=" + this.get('controller.link'));
+  }.property('controller.link'),
+
   didInsertElement: function() {
     var _this = this;
     $('html').on('click.outside-share-link', function(e) {
