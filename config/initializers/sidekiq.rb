@@ -1,7 +1,4 @@
-Sidekiq.configure_server do |config|
-  config.redis = { url: $redis.url, namespace: 'sidekiq' }
-end
+sidekiq_redis = { url: $redis.url, namespace: 'sidekiq' }
 
-Sidekiq.configure_client do |config|
-  config.redis = { url: $redis.url, namespace: 'sidekiq' }
-end
+Sidekiq.configure_server { |config| config.redis = sidekiq_redis }
+Sidekiq.configure_client { |config| config.redis = sidekiq_redis }
