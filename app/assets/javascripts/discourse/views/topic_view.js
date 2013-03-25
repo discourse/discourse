@@ -145,6 +145,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
   // Triggered whenever any posts are rendered, debounced to save over calling
   postsRendered: Discourse.debounce(function() {
+    this.set('renderedPosts', $('.topic-post'));
     this.updatePosition(false);
   }, 50),
 
@@ -166,19 +167,29 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     }
   }.observes("Discourse.hasFocus"),
 
-  // Called for every post seen, returns the post number
-  postSeen: function($post) {
-    var post, postView, _ref;
+  getPost: function($post){
+    var post, postView;
     postView = Ember.View.views[$post.prop('id')];
     if (postView) {
-      post = postView.get('post');
-      if (post.get('post_number') > (this.get('topic.last_read_post_number') || 0)) {
-        this.set('topic.last_read_post_number', post.get('post_number'));
+      return postView.get('post');
+    }
+    return null;
+  },
+
+  // Called for every post seen, returns the post number
+  postSeen: function($post) {
+    var post, postNumber, screenTrack;
+    post = this.getPost($post);
+
+    if (post) {
+      postNumber = post.get('post_number');
+      if (postNumber > (this.get('topic.last_read_post_number') || 0)) {
+        this.set('topic.last_read_post_number', postNumber);
       }
       if (!post.get('read')) {
         post.set('read', true);
-        _ref = this.get('screenTrack');
-        if (_ref) { _ref.guessedSeen(post.get('post_number')); }
+        screenTrack = this.get('screenTrack');
+        if (screenTrack) { screenTrack.guessedSeen(postNumber); }
       }
       return post.get('post_number');
     }
@@ -253,12 +264,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
   // Load new posts if there are some
   nextPage: function($post) {
     if (this.get('controller.loading') || this.get('controller.seenBottom')) return;
-
-    var postView = Ember.View.views[$post.prop('id')];
-    if (!postView) return;
-
-    var post = postView.get('post');
-    return this.loadMore(post);
+    return this.loadMore(this.getPost($post));
   },
 
   postCountChanged: (function() {
@@ -266,6 +272,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
   }).observes('topic.highest_post_number'),
 
   loadMore: function(post) {
+    if (!post) { return; }
     if (this.get('controller.loading')) { return; }
 
     // Don't load if we know we're at the bottom
@@ -367,7 +374,9 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
         title, info, rows, screenTrack, _this, currentPost;
 
     _this = this;
-    rows = $('.topic-post');
+    rows = this.get('renderedPosts');
+
+    if (!rows || rows.length === 0) { return; }
     info = Discourse.Eyeline.analyze(rows);
 
     // if we have no rows
@@ -393,7 +402,10 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
       currentPost = currentPost || seen;
     });
 
-    this.nonUrgentPositionUpdate({userActive: userActive, currentPost: currentPost || info.bottom});
+    this.nonUrgentPositionUpdate({
+        userActive: userActive, 
+        currentPost: currentPost || this.getPost($(rows[info.bottom])).get('post_number')
+    });
     
     offset = window.pageYOffset || $('html').scrollTop();
     firstLoaded = this.get('firstPostLoaded');
