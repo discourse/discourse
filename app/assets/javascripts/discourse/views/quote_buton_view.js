@@ -11,6 +11,7 @@ Discourse.QuoteButtonView = Discourse.View.extend({
   classNameBindings: ['hasBuffer'],
 
   render: function(buffer) {
+    buffer.push('<i class="icon-quote-right"></i> ');
     buffer.push(Em.String.i18n("post.quote_reply"));
   },
 
