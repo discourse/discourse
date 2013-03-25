@@ -24,7 +24,6 @@ zh_TW:
     links: 鏈接
     faq: "常見問答（FAQ）"
     you: "你"
-    ok: "知道了"
     or: "或"
     now: "剛剛"
 
@@ -203,8 +202,10 @@ zh_TW:
 
     best_of:
       title: "優選"
+      enabled_description: 你現在正在浏覽本主題的“優選”視圖。
       description: "此主題中有 <b>{{count}}</b> 個帖子，是不是有點多哦！你願意切換到只顯示最多交互和回複的帖子視圖麽？"
-      button: '切換到“優選”視圖'
+      enable: '切換到“優選”視圖'
+      disable: '取消“優選”'
 
     private_message_info:
       title: "私下交流"
@@ -504,7 +505,9 @@ zh_TW:
       login_reply: '登錄來回複'
 
       filters:
-        user: "你在浏覽指定用戶的帖子。"
+        user:
+          one: "你在浏覽一個指定用戶的帖子。"
+          other: "你在浏覽指定用戶的帖子。"
         best_of: "你在浏覽“優選”帖子。"
         cancel: "再次顯示本主題下的所有帖子。"
 
@@ -703,7 +706,9 @@ zh_TW:
         installed_version: "已安裝"
         latest_version: "最新版本"
         update_often: '請經常升級！'
-        moderator_short: "版主"
+        problems_found: "你安裝的論道目前有以下問題："
+        moderators: '版主：'
+        admins: '管理員：'
 
         reports:
           today: "今天"
@@ -713,6 +718,9 @@ zh_TW:
           all_time: "所有時間內"
           7_days_ago: "7 天之前"
           30_days_ago: "30 天之前"
+          all: "全部"
+          view_table: "以表格展示"
+          view_chart: "以柱狀圖展示"
 
       commits:
         latest_changes: "最後的改動"
