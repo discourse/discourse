@@ -85,7 +85,7 @@ cs:
         instructions: "Vaše emailová adresa nikdy nebude veřejně zobrazena."
         ok: "To vypadá dobře. Zašleme vám email s potvrzením."
         invalid: "Prosím zadejte platnou emailovou adresu."
-        authenticated: "Váše emailová adresa byla autorizována přes službu {{provider}}."
+        authenticated: "Vaše emailová adresa byla autorizována přes službu {{provider}}."
         frequency: "Budeme vás informovat emailem pouze pokud jste se na našem webu dlouho neukázali a pokud jste obsah, o kterém vás chceme informovat, doposud neviděli."
 
       name:
@@ -713,6 +713,8 @@ cs:
           7_days_ago: "Před 7 dny"
           30_days_ago: "Před 30 dny"
           all: "Všechny"
+          view_table: "Zobrazit jako tabulku"
+          view_chart: "Zobrazit jako sloupcový graf"
 
       commits:
         latest_changes: "Poslední změny."
