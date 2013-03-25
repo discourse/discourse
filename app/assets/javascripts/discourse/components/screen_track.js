@@ -138,6 +138,9 @@ Discourse.ScreenTrack = Ember.Object.extend({
     this.topicTime += diff;
     docViewTop = $(window).scrollTop() + $('header').height();
     docViewBottom = docViewTop + $(window).height();
+
+    // TODO: Eyeline has a smarter more accurate function here
+
     return Object.keys(this.timings, function(id) {
       var $element, elemBottom, elemTop, timing;
       $element = $(id);
