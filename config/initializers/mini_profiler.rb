@@ -15,6 +15,9 @@ if defined?(Rack::MiniProfiler)
     (env['PATH_INFO'] !~ /commits-widget/)
   end
 
+  # without a user provider our results will use the ip address for namespacing
+  #  with a load balancer in front this becomes really bad as some results can
+  #  be stored associated with ip1 as the user and retrieved using ip2 causing 404s 
   Rack::MiniProfiler.config.user_provider = lambda do |env|
     user = CurrentUser.lookup_from_env(env)
     user ? user.id.to_s : Rack::Request.new(env).ip
@@ -25,28 +28,27 @@ if defined?(Rack::MiniProfiler)
   Rack::MiniProfiler.config.backtrace_ignores << /lib\/rack\/message_bus.rb/
   Rack::MiniProfiler.config.backtrace_ignores << /config\/initializers\/silence_logger/
   Rack::MiniProfiler.config.backtrace_ignores << /config\/initializers\/quiet_logger/
-  #Rack::MiniProfiler.config.style = :awesome_bar
 
   # require "#{Rails.root}/vendor/backports/notification"
 
-  inst = Class.new
-  class << inst
-    def start(name,id,payload)
-      if Rack::MiniProfiler.current && name !~ /(process_action.action_controller)|(render_template.action_view)/
-        @prf ||= {}
-        @prf[id] ||= []
-        @prf[id] << Rack::MiniProfiler.start_step("#{payload[:serializer] if name =~ /serialize.serializer/} #{name}")
-      end
-    end
+  # inst = Class.new
+  # class << inst
+  #   def start(name,id,payload)
+  #     if Rack::MiniProfiler.current && name !~ /(process_action.action_controller)|(render_template.action_view)/
+  #       @prf ||= {}
+  #       @prf[id] ||= []
+  #       @prf[id] << Rack::MiniProfiler.start_step("#{payload[:serializer] if name =~ /serialize.serializer/} #{name}")
+  #     end
+  #   end
 
-    def finish(name,id,payload)
-      if Rack::MiniProfiler.current && name !~ /(process_action.action_controller)|(render_template.action_view)/
-        t = @prf[id].pop
-        @prf.delete id unless t
-        Rack::MiniProfiler.finish_step t
-      end
-    end
-  end
+  #   def finish(name,id,payload)
+  #     if Rack::MiniProfiler.current && name !~ /(process_action.action_controller)|(render_template.action_view)/
+  #       t = @prf[id].pop
+  #       @prf.delete id unless t
+  #       Rack::MiniProfiler.finish_step t
+  #     end
+  #   end
+  # end
   # disabling for now cause this slows stuff down too much
   # ActiveSupport::Notifications.subscribe(/.*/, inst)
 
