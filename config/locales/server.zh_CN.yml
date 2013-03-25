@@ -183,6 +183,7 @@ zh_CN:
     title: '重置密码'
     success: "你的密码已经修改成功，你现在已经登录。"
     success_unapproved: "你的密码已经修改成功。"
+    continue: "转入到 %{site_name}"
 
   change_email:
     confirmed: "你的电子邮箱已被更新。"
@@ -279,6 +280,14 @@ zh_CN:
       xaxis: "天"
       yaxis: "邮件数"
 
+  dashboard:
+    rails_env_warning: "你的服务器运行在 %{env} 模式。"
+    host_names_warning: "你的 config/database.yml 文件使用的是缺省的 localhost 主机名。请更改成你的站点主机名。"
+    gc_warning: '你的服务器使用的是缺省的 ruby 垃圾回收参数，这个配置无法提供最高性能。请阅读此性能调优文档：<a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>。'
+    clockwork_warning: '发条装置（Clockwork）并未运行。请确保运行一个 clockwork 进程，这样一些重要的工作能够被安排执行。<a href="https://github.com/tomykaira/clockwork">了解发条装置（clockwork）</a>。'
+    sidekiq_warning: 'Sidekiq 不在运行。很多任务，例如发送电子邮件，是异步的被 sidekiq 调度执行的。请确保至少运行一个 sidekiq 进程。<a href="https://github.com/mperham/sidekiq">了解 Sidekiq</a>。'
+    memory_warning: '你的服务器环境内存少于 1GB，我们建议至少要有 1GB 内存'
+
   site_settings:
     default_locale: "此 论道 - Discourse 实例的缺省语言 (ISO 639-1 代码)"
     min_post_length: "帖子最少字符数"
@@ -321,6 +330,7 @@ zh_CN:
     best_of_score_threshold: "将一个帖子包含到“优选”帖子中所需的最小分值"
     best_of_posts_required: "在一个主题中启用“优选”模式所要求的最小帖子数量"
     best_of_likes_required: "在一个主题中启用“优选”模式所要求的最小赞数量"
+    best_of_percent_filter: "当用户点击“优选”，显示前 % 几的帖子"
     enable_private_messages: "用户创建私信和私下交流要达到的用户级别"
 
     enable_long_polling: "启用消息总线使通知功能可以使用长轮询（long polling）"
@@ -348,6 +358,7 @@ zh_CN:
     supress_reply_directly_below: "当一个帖子只有一个回复时，不显示帖子回复数量"
     allow_index_in_robots_txt: "允许搜索引擎索引站点内容（更新 robots.txt）"
     email_domains_blacklist: "将一列竖线分隔的邮箱域名放入黑名单，例如：mailinator.com|trashmail.net"
+    email_domains_whitelist: "竖线 | 分隔的电子邮箱域名，用户只能使用这些邮箱域名注册。注意：用户使用不包含在这个列表里的邮箱域名，将无法成功注册。"
     version_checks: "访问 Discourse Hub 来检查版本更新，并在管理面板 /admin 显示版本信息"
 
     port: "使用此 HTTP 端口而不是80端口。留空为不使用，主要用于开发调试"
@@ -426,7 +437,7 @@ zh_CN:
     min_title_similar_length: "开始检查相似主题的帖子标题的最小长度"
     min_body_similar_length: "开始检查相似主题的帖子内容的最小长度"
 
-    category_colors: "设置分类颜色的用'|'分隔的十六进色彩值列表"
+    category_colors: "设置分类颜色的用'|'分隔的十六进制色彩值列表"
     max_upload_size_kb: "允许用户上传的最大文件大小(以kb为单位) - 确保在nginx(client_max_body_size), apache或代理服务中进行限制文件大小的配置."
     max_similar_results: "当用户撰写新主题时，显示多少类似主题给用户"
 
