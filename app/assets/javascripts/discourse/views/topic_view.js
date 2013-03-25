@@ -370,6 +370,9 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     rows = $('.topic-post');
     info = Discourse.Eyeline.analyze(rows);
 
+    // if we have no rows
+    if(!info) { return; }
+
     // top on screen 
     if(info.top === 0 || info.onScreen[0] === 0 || info.bottom === 0) {
       this.prevPage($(rows[0]));
