@@ -7,31 +7,42 @@ require 'openid_redis_store'
 Rails.application.config.middleware.use OmniAuth::Builder do
 
   provider :open_id,
-           store: OpenID::Store::Redis.new($redis),
-           name: 'google',
-           identifier: 'https://www.google.com/accounts/o8/id',
-           require: 'omniauth-openid'
+           :store => OpenID::Store::Redis.new($redis),
+           :name => 'google',
+           :identifier => 'https://www.google.com/accounts/o8/id',
+           :require => 'omniauth-openid'
 
   provider :open_id,
-           store: OpenID::Store::Redis.new($redis),
-           name: 'yahoo',
-           identifier: 'https://me.yahoo.com',
-           require: 'omniauth-openid'
+           :store => OpenID::Store::Redis.new($redis),
+           :name => 'yahoo',
+           :identifier => 'https://me.yahoo.com',
+           :require => 'omniauth-openid'
 
+  # lambda is required for proper multisite support, 
+  #  without it subdomains will not function correctly 
   provider :facebook,
-           SiteSetting.facebook_app_id,
-           SiteSetting.facebook_app_secret,
-           scope: "email"
+           :setup => lambda { |env|
+              strategy = env['omniauth.strategy']
+              strategy.options[:client_id] = SiteSetting.facebook_app_id
+              strategy.options[:client_secret] = SiteSetting.facebook_app_secret
+           },
+           :scope => "email"
 
   provider :twitter,
-           SiteSetting.twitter_consumer_key,
-           SiteSetting.twitter_consumer_secret
+           :setup => lambda { |env|
+              strategy = env['omniauth.strategy']
+              strategy.options[:consumer_key] = SiteSetting.twitter_consumer_key
+              strategy.options[:consumer_secret] = SiteSetting.twitter_consumer_secret
+           }
 
   provider :github,
-           SiteSetting.github_client_id,
-           SiteSetting.github_client_secret
+           :setup => lambda { |env|
+              strategy = env['omniauth.strategy']
+              strategy.options[:client_id] = SiteSetting.github_client_id
+              strategy.options[:client_secret] = SiteSetting.github_client_secret
+           }
 
   provider :browser_id,
-           name: 'persona'
+           :name => 'persona'
 
 end
