@@ -53,6 +53,33 @@ Discourse.Model = Ember.Object.extend(Discourse.Presence, {
 
 Discourse.Model.reopenClass({
 
+  /** 
+   $.get shortcut that uses Discourse.Url and returns a promise
+   **/
+  getAjax: function(url) {
+    var _this = this;
+    var promise = new Ember.Deferred();
+
+    $.ajax(Discourse.getURL(url), {
+      cache: false,
+      type: 'GET',
+      dataType: 'json',
+      success: function(result){
+        promise.resolve(_this.create(result)); 
+      }, 
+      error: function(jqXHR, textStatus, errorThrown){
+        promise.reject({
+          jqXHR: jqXHR, 
+          textStatus: textStatus,
+          errorThrown: errorThrown
+        });
+      }
+    }); 
+
+    return promise;
+  },
+
+
   /**
     Given an array of values, return them in a hash
 
