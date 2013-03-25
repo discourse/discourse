@@ -27,6 +27,9 @@ module Jobs
         post = Post.where(id: args[:post_id]).first
         return unless post.present?
 
+        # Don't email posts that were deleted
+        return if post.user_deleted?
+
         # Don't send the email if the user has read the post
         return if PostTiming.where(topic_id: post.topic_id, post_number: post.post_number, user_id: user.id).present?
 

@@ -70,6 +70,12 @@ describe Jobs::UserEmail do
         Jobs::UserEmail.new.execute(type: :private_message, user_id: user.id, post_id: post.id)
       end
 
+      it "doesn't send the email if the user deleted the post" do
+        EmailSender.any_instance.expects(:send).never
+        post.update_column(:user_deleted, true)
+        Jobs::UserEmail.new.execute(type: :private_message, user_id: user.id, post_id: post.id)
+      end
+
     end
 
 
