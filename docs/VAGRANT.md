@@ -113,7 +113,7 @@ If you change your mind and want to use the test data again, just execute the ab
 
 ### Guard + Rspec
 
-If you're actively working on Discourse, we recommend that you run Guard. It'll automatically run our unit tests over and over, and includes support
+If you're actively working on Discourse, we recommend that you run [Guard](https://github.com/guard/guard). It'll automatically run our unit tests over and over, and includes support
 for live CSS reloading.
 
 To use it, follow all the above steps. Once rails is running, open a new terminal window or tab, and then do this:
