@@ -88,19 +88,13 @@ Configure so that the vagrant user doesn't need to provide username and password
 
     apt-get -yqq install postgresql postgresql-contrib-9.1 libpq-dev postgresql-server-dev-9.1
     su - postgres
-    psql -c "CREATE USER vagrant WITH PASSWORD 'password';"
+    createuser --createdb --superuser -Upostgres vagrant
     psql -c "ALTER USER vagrant WITH PASSWORD 'password';"
-    createdb vagrant
-    psql -c "CREATE EXTENSION hstore;"
-    psql -c "CREATE EXTENSION pg_trgm;"
-    psql -c "ALTER USER vagrant CREATEDB"
     psql -c "create database discourse_development owner vagrant encoding 'UTF8' TEMPLATE template0;"
     psql -c "create database discourse_test        owner vagrant encoding 'UTF8' TEMPLATE template0;"
+    psql -d discourse_development -c "CREATE EXTENSION hstore;"
+    psql -d discourse_development -c "CREATE EXTENSION pg_trgm;"
 
-Also, a user "discourse" is needed when importing a database image.
-
-    createuser --createdb --superuser discourse
-    psql -c "ALTER USER discourse WITH PASSWORD 'password';"
 
 Edit /etc/postgresql/9.1/main/pg_hba.conf to have this:
 
@@ -130,3 +124,13 @@ Load the seed data (as vagrant user):
     # Press enter to accept all the defaults
     /etc/init.d/redis_6379 start
 
+
+## Phantomjs
+
+Needed to run javascript tests.
+
+    cd /usr/local/share
+    wget https://phantomjs.googlecode.com/files/phantomjs-1.8.2-linux-i686.tar.bz2
+    tar xvf phantomjs-1.8.2-linux-i686.tar.bz2
+    rm phantomjs-1.8.2-linux-i686.tar.bz2
+    ln -s /usr/local/share/phantomjs-1.8.2-linux-i686/bin/phantomjs /usr/local/bin/phantomjs
