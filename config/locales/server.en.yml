@@ -11,9 +11,21 @@ en:
 
   via: "%{username} via %{site_name}"
   is_reserved: "is reserved"
-  too_many_mentions: "has too many users mentioned"
-  too_many_images: "has too many images"
-  too_many_links: "has too many links"
+
+  too_many_mentions:
+    zero: "Sorry, you can't mention any users at your trust level."
+    one: "Sorry, you can only mention one user at your trust level."
+    other: "Sorry, you can only mention %{count} users at your trust level."
+
+  too_many_images:
+    zero: "Sorry, you can't put any images in a post at your trust level."
+    one: "Sorry, we only allow one image in a post at your trust level."
+    other: "Sorry, we only allow %{count} images in a post at your trust level."
+  too_many_links:
+    zero: "Sorry, you can't put any links in a post at your trust level."
+    one: "Sorry, we only allow one link in a post at your trust level."
+    other: "Sorry, we only allow %{count} links in a post at your trust level."
+
   just_posted_that: "is too similar to what you recently posted"
   has_already_been_used: "has already been used"
   invalid_characters: "contains invalid characters"
@@ -391,7 +403,6 @@ en:
     previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"
 
     uncategorized_name: "The default category for topics that have no category in the /categories page"
-    max_mentions_per_post: "Maximum number of @name notifications you can use in a single post"
 
     rate_limit_create_topic: "How many seconds, after creating a topic, before you can create another topic"
     rate_limit_create_post: "How many seconds, after creating a post, before you can create another post"
@@ -415,6 +426,10 @@ en:
     basic_requires_topics_entered: "How many a topics a new user must enter before promotion to basic (1) trust level"
     basic_requires_read_posts: "How many posts a new user must read before promotion to basic (1) trust level"
     basic_requires_time_spent_mins: "How many minutes a new user must read posts before promotion to basic (1) trust level"
+    visitor_max_links: "How many links a visitor can add to a post"
+    visitor_max_images: "How many images a visitor can add to a post"
+    visitor_max_mentions_per_post: "Maximum number of @name notifications a visitor can use in a post"
+    max_mentions_per_post: "Maximum number of @name notifications you can use in a post"
 
     auto_link_images_wider_than: "Images wider than this, in pixels, will get auto link and lightbox treatment"
 
@@ -424,6 +439,7 @@ en:
     title_min_entropy: "The minimum allowed entropy (unique characters) required for a topic title"
     body_min_entropy: "The minimum allowed entropy (unique characters) required for a post body"
     new_user_period_days: "How long a user is highlighted as being new, in days"
+
     title_fancy_entities: "Convert fancy HTML entities in topic titles"
 
     min_title_similar_length: "The minimum length of a title before it will be checked for similar topics"

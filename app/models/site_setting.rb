@@ -74,6 +74,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:post_undo_action_window_mins, 10)
   setting(:system_username, '')
   setting(:max_mentions_per_post, 5)
+  setting(:visitor_max_mentions_per_post, 2)
 
   setting(:uncategorized_name, 'uncategorized')
 
@@ -155,6 +156,8 @@ class SiteSetting < ActiveRecord::Base
   setting(:max_word_length, 30)
 
   setting(:new_user_period_days, 2)
+  setting(:visitor_max_links, 2)
+  setting(:visitor_max_images, 0)
 
   setting(:title_fancy_entities, true)
 
