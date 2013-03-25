@@ -15,6 +15,11 @@ if defined?(Rack::MiniProfiler)
     (env['PATH_INFO'] !~ /commits-widget/)
   end
 
+  Rack::MiniProfiler.config.user_provider = lambda do |env|
+    user = CurrentUser.lookup_from_env(env)
+    user ? user.id.to_s : Rack::Request.new(env).ip
+  end
+
   Rack::MiniProfiler.config.position = 'left'
   Rack::MiniProfiler.config.backtrace_ignores ||= []
   Rack::MiniProfiler.config.backtrace_ignores << /lib\/rack\/message_bus.rb/
