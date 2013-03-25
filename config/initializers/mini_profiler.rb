@@ -1,7 +1,11 @@
 # If Mini Profiler is included via gem
 if defined?(Rack::MiniProfiler)
 
-  Rack::MiniProfiler.config.storage_instance = Rack::MiniProfiler::RedisStore.new(connection:  DiscourseRedis.new)
+  # note, we may want to add some extra security here that disables mini profiler in a multi hosted env unless user global admin
+  #   raw_connection means results are not namespaced
+  #
+  # namespacing gets complex, cause mini profiler is in the rack chain way before multisite
+  Rack::MiniProfiler.config.storage_instance = Rack::MiniProfiler::RedisStore.new(connection:  DiscourseRedis.raw_connection)
 
   # For our app, let's just show mini profiler always, polling is chatty so nuke that
   Rack::MiniProfiler.config.pre_authorize_cb = lambda do |env|

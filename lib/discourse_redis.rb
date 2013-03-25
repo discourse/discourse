@@ -3,11 +3,20 @@
 #
 class DiscourseRedis
 
+  def self.raw_connection(config = nil)
+    config ||= self.config
+    redis_opts = {host: config['host'], port: config['port'], db: config['db']}
+    redis_opts[:password] = config['password'] if config['password']
+    Redis.new(redis_opts)
+  end
+
+  def self.config
+    YAML.load(ERB.new(File.new("#{Rails.root}/config/redis.yml").read).result)[Rails.env]
+  end
+
   def initialize
-    @config = YAML.load(ERB.new(File.new("#{Rails.root}/config/redis.yml").read).result)[Rails.env]
-    redis_opts = {host: @config['host'], port: @config['port'], db: @config['db']}
-    redis_opts[:password] = @config['password'] if @config['password']
-    @redis = Redis.new(redis_opts)
+    @config = DiscourseRedis.config
+    @redis = DiscourseRedis.raw_connection(@config)
   end
 
   # prefix the key with the namespace
