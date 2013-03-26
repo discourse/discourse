@@ -7,7 +7,6 @@ describe TopicView do
   let(:coding_horror) { Fabricate(:coding_horror) }
   let(:first_poster) { topic.user }
 
-
   let(:topic_view) { TopicView.new(topic.id, coding_horror) }
 
   it "raises a not found error if the topic doesn't exist" do
@@ -192,10 +191,14 @@ describe TopicView do
       it "returns undeleted posts after a post" do
         topic_view.filter_posts_after(p1.post_number).should == [p2, p3, p5]
         topic_view.should_not be_initial_load
+        topic_view.index_offset.should == 1
+        topic_view.index_reverse.should be_false
       end
 
       it "clips to the end boundary" do
         topic_view.filter_posts_after(p2.post_number).should == [p3, p5]
+        topic_view.index_offset.should == 2
+        topic_view.index_reverse.should be_false
       end
 
       it "returns nothing after the last post" do
@@ -209,6 +212,8 @@ describe TopicView do
       it "returns deleted posts to an admin" do
         coding_horror.admin = true
         topic_view.filter_posts_after(p1.post_number).should == [p2, p3, p4]
+        topic_view.index_offset.should == 1
+        topic_view.index_reverse.should be_false
       end
     end
 
@@ -216,10 +221,14 @@ describe TopicView do
       it "returns undeleted posts before a post" do
         topic_view.filter_posts_before(p5.post_number).should == [p3, p2, p1]
         topic_view.should_not be_initial_load
+        topic_view.index_offset.should == 3
+        topic_view.index_reverse.should be_true
       end
 
       it "clips to the beginning boundary" do
         topic_view.filter_posts_before(p3.post_number).should == [p2, p1]
+        topic_view.index_offset.should == 2
+        topic_view.index_reverse.should be_true
       end
 
       it "returns nothing before the first post" do
@@ -234,34 +243,46 @@ describe TopicView do
       it "returns deleted posts to an admin" do
         coding_horror.admin = true
         topic_view.filter_posts_before(p5.post_number).should == [p4, p3, p2]
+        topic_view.index_offset.should == 4
+        topic_view.index_reverse.should be_true
       end
     end
 
     describe "filter_posts_near" do
 
-      def topic_view_posts_near(post)
-        TopicView.new(topic.id, coding_horror, post_number: post.post_number).posts
+      def topic_view_near(post)
+        TopicView.new(topic.id, coding_horror, post_number: post.post_number)
       end
 
       it "snaps to the lower boundary" do
-        topic_view_posts_near(p1).should == [p1, p2, p3]
+        near_view = topic_view_near(p1)
+        near_view.posts.should == [p1, p2, p3]
+        near_view.index_offset.should == 0
+        near_view.index_reverse.should be_false
       end
 
       it "snaps to the upper boundary" do
-        topic_view_posts_near(p5).should == [p2, p3, p5]
+        near_view = topic_view_near(p5)
+        near_view.posts.should == [p2, p3, p5]
+        near_view.index_offset.should == 1
+        near_view.index_reverse.should be_false
       end
 
       it "returns the posts in the middle" do
-        topic_view_posts_near(p2).should == [p1, p2, p3]
+        near_view = topic_view_near(p2)
+        near_view.posts.should == [p1, p2, p3]
+        near_view.index_offset.should == 0
+        near_view.index_reverse.should be_false
       end
 
       it "returns deleted posts to an admin" do
         coding_horror.admin = true
-        topic_view_posts_near(p3).should == [p2, p3, p4]
+        near_view = topic_view_near(p3)
+        near_view.posts.should == [p2, p3, p4]
+        near_view.index_offset.should == 1
+        near_view.index_reverse.should be_false
       end
-
     end
-
 
   end
 

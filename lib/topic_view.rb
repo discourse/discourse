@@ -4,11 +4,8 @@ require_dependency 'summarize'
 
 class TopicView
 
-  attr_accessor :topic,
-                :draft,
-                :draft_key,
-                :draft_sequence,
-                :posts
+  attr_reader :topic, :posts, :index_offset, :index_reverse
+  attr_accessor :draft, :draft_key, :draft_sequence
 
   def initialize(topic_id, user=nil, options={})
     @topic = find_topic(topic_id)
@@ -34,6 +31,7 @@ class TopicView
 
     @user = user
     @initial_load = true
+    @index_reverse = false
 
     filter_posts(options)
 
@@ -73,6 +71,10 @@ class TopicView
 
   def title
     @topic.title
+  end
+
+  def filtered_posts_count
+    @filtered_posts_count ||= @filtered_posts.count
   end
 
   def summary
@@ -146,8 +148,13 @@ class TopicView
     sort_order = sort_order_for_post_number(post_number)
     return nil unless sort_order
 
+
+
     # Find posts before the `sort_order`
     @posts = @filtered_posts.order('sort_order desc').where("sort_order < ?", sort_order)
+    @index_offset = @posts.count
+    @index_reverse = true
+
     @posts = @posts.includes(:reply_to_user).includes(:topic).joins(:user).limit(SiteSetting.posts_per_page)
   end
 
@@ -158,6 +165,7 @@ class TopicView
     sort_order = sort_order_for_post_number(post_number)
     return nil unless sort_order
 
+    @index_offset = @filtered_posts.where("sort_order <= ?", sort_order).count
     @posts = @filtered_posts.order('sort_order').where("sort_order > ?", sort_order)
     @posts = @posts.includes(:reply_to_user).includes(:topic).joins(:user).limit(SiteSetting.posts_per_page)
   end
@@ -263,6 +271,7 @@ class TopicView
   private
 
   def filter_posts_in_range(min, max)
+
     max_index = (filtered_post_ids.length - 1)
 
     # If we're off the charts, return nil
@@ -271,6 +280,8 @@ class TopicView
     # Pin max to the last post
     max = max_index if max > max_index
     min = 0 if min < 0
+
+    @index_offset = min
 
     # TODO: Sort might be off
     @posts = Post.where(id: filtered_post_ids[min..max])

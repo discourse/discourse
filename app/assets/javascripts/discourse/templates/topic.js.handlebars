@@ -6,7 +6,7 @@
       <div class='container'>
         <div class='inner'>
           {{#if view.showFavoriteButton}}
-            <a {{bindAttr class=":star view.topic.starred:starred"}} {{action toggleStar target="controller"}} href='#' {{bindAttr title="favoriteTooltip"}}></a>
+            <a {{bindAttr class=":star view.topic.starred:starred"}} {{action toggleStar}} href='#' {{bindAttr title="favoriteTooltip"}}></a>
           {{/if}}
           {{#if view.editingTopic}}
             <input id='edit-title' type='text' {{bindAttr value="view.topic.title"}} autofocus>
@@ -41,15 +41,15 @@
 
       {{view Discourse.SelectedPostsView}}
       <div class="row">
-        <section class="topic-area" id='topic' data-topic-id='{{unbound content.id}}'>
+        <section class="topic-area" id='topic' data-topic-id='{{unbound id}}'>
           <div class='posts-wrapper'>
             <div id='topic-progress-wrapper'>
-              <nav id='topic-progress' title="{{i18n topic.progress.title}}" {{bindAttr class="controller.hideProgress:hidden"}}>
-                <button id='jump-top' title="{{i18n topic.progress.jump_top}}" {{action jumpTop target="controller"}}><i class="icon-circle-arrow-up"></i></button>
+              <nav id='topic-progress' title="{{i18n topic.progress.title}}" {{bindAttr class="hideProgress:hidden"}}>
+                <button id='jump-top' title="{{i18n topic.progress.jump_top}}" {{action jumpTop}}><i class="icon-circle-arrow-up"></i></button>
                 <div class='nums'>
-                  <h4 title="{{i18n topic.progress.current}}">{{view.progressPosition}}</h4> <span>{{i18n of_value}}</span> <h4>{{content.highest_post_number}}</h4>
+                  <h4 title="{{i18n topic.progress.current}}">{{view.progressPosition}}</h4> <span>{{i18n of_value}}</span> <h4>{{filtered_posts_count}}</h4>
                 </div>
-                <button id='jump-bottom' title="{{i18n topic.progress.jump_bottom}}" {{action jumpBottom target="controller"}}><i class="icon-circle-arrow-down"></i></button>
+                <button id='jump-bottom' title="{{i18n topic.progress.jump_bottom}}" {{action jumpBottom}}><i class="icon-circle-arrow-down"></i></button>
                 <div class='bg'>&nbsp;</div>
               </nav>
             </div>
@@ -128,12 +128,12 @@
 
 <div id='topic-filter' style='display: none'>
   {{filterDesc}}
-  <a href='#' {{action cancelFilter target="controller"}}>{{i18n topic.filters.cancel}}</a>
+  <a href='#' {{action cancelFilter}}>{{i18n topic.filters.cancel}}</a>
 </div>
 
 {{render share}}
 {{render quoteButton}}
 
 {{#if Discourse.currentUser.admin}}
-  {{render topicAdminMenu controller.content}}
+  {{render topicAdminMenu content}}
 {{/if}}

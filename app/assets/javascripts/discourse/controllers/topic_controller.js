@@ -62,11 +62,9 @@ Discourse.TopicController = Discourse.ObjectController.extend({
   hideProgress: function() {
     if (!this.get('content.loaded')) return true;
     if (!this.get('currentPost')) return true;
-    if (this.get('content.highest_post_number') < 2) return true;
-    if (this.get('bestOf')) return true;
-    if (this.get('userFilters.length')) return true;
+    if (this.get('content.filtered_posts_count') < 2) return true;
     return false;
-  }.property('content.loaded', 'currentPost', 'bestOf', 'userFilters.length'),
+  }.property('content.loaded', 'currentPost', 'content.filtered_posts_count'),
 
   selectPost: function(post) {
     post.toggleProperty('selected');
@@ -215,6 +213,7 @@ Discourse.TopicController = Discourse.ObjectController.extend({
       });
 
       topicController.updateBottomBar();
+      topicController.set('filtered_posts_count', result.filtered_posts_count);
       topicController.set('loadingBelow', false);
       topicController.set('seenBottom', false);
     });

@@ -18,20 +18,13 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
   SHORT_POST: 1200,
 
   // Update the progress bar using sweet animations
-  updateBar: (function() {
+  updateBar: function() {
     var $topicProgress, bg, currentWidth, progressWidth, ratio, totalWidth;
     if (!this.get('topic.loaded')) return;
     $topicProgress = $('#topic-progress');
     if (!$topicProgress.length) return;
 
-    // Don't show progress when there is only one post
-    if (this.get('topic.highest_post_number') === 1) {
-      $topicProgress.hide();
-    } else {
-      $topicProgress.show();
-    }
-
-    ratio = this.get('progressPosition') / this.get('topic.highest_post_number');
+    ratio = this.get('progressPosition') / this.get('topic.filtered_posts_count');
     totalWidth = $topicProgress.width();
     progressWidth = ratio * totalWidth;
     bg = $topicProgress.find('.bg');
@@ -53,15 +46,15 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     } else {
       bg.animate({ width: progressWidth }, 400);
     }
-  }).observes('progressPosition', 'topic.highest_post_number', 'topic.loaded'),
+  }.observes('progressPosition', 'topic.filtered_posts_count', 'topic.loaded'),
 
-  updateTitle: (function() {
+  updateTitle: function() {
     var title;
     title = this.get('topic.title');
     if (title) return Discourse.set('title', title);
-  }).observes('topic.loaded', 'topic.title'),
+  }.observes('topic.loaded', 'topic.title'),
 
-  currentPostChanged: (function() {
+  currentPostChanged: function() {
     var current = this.get('controller.currentPost');
 
     var topic = this.get('topic');
@@ -93,13 +86,13 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     } else {
       $('#jump-bottom').attr('disabled', false);
     }
-  }).observes('controller.currentPost', 'controller.bestOf', 'topic.highest_post_number'),
+  }.observes('controller.currentPost', 'controller.bestOf', 'topic.highest_post_number'),
 
-  composeChanged: (function() {
+  composeChanged: function() {
     var composerController = Discourse.get('router.composerController');
     composerController.clearState();
-    return composerController.set('topic', this.get('topic'));
-  }).observes('composer'),
+    composerController.set('topic', this.get('topic'));
+  }.observes('composer'),
 
   // This view is being removed. Shut down operations
   willDestroyElement: function() {
@@ -267,18 +260,18 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     return this.loadMore(this.getPost($post));
   },
 
-  postCountChanged: (function() {
+  postCountChanged: function() {
     this.set('controller.seenBottom', false);
-  }).observes('topic.highest_post_number'),
+  }.observes('topic.highest_post_number'),
 
   loadMore: function(post) {
-    if (!post) { return; }
-    if (this.get('controller.loading')) { return; }
+    if (!post) return;
+    if (this.get('controller.loading')) return;
 
     // Don't load if we know we're at the bottom
-    if (this.get('topic.highest_post_number') === post.get('post_number')) { return; }
+    if (this.get('topic.highest_post_number') === post.get('post_number')) return;
 
-    if (this.get('controller.seenBottom')) { return; }
+    if (this.get('controller.seenBottom')) return;
 
     // Don't double load ever
     if (this.topic.posts.last().post_number !== post.post_number) return;
@@ -298,7 +291,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
       if (result.suggested_topics) {
         var suggested = Em.A();
         result.suggested_topics.each(function(st) {
-          return suggested.pushObject(Discourse.Topic.create(st));
+          suggested.pushObject(Discourse.Topic.create(st));
         });
         topicView.set('topic.suggested_topics', suggested);
       }
@@ -350,11 +343,10 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
   },
 
   updateDock: function(postView) {
-    var post;
     if (!postView) return;
-    post = postView.get('post');
+    var post = postView.get('post');
     if (!post) return;
-    this.set('progressPosition', post.get('post_number'));
+    this.set('progressPosition', post.get('index'));
   },
 
   nonUrgentPositionUpdate: Discourse.debounce(function(opts){
@@ -370,7 +362,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
   },
 
   updatePosition: function(userActive) {
-    var $lastPost, firstLoaded, lastPostOffset, offset, 
+    var $lastPost, firstLoaded, lastPostOffset, offset,
         title, info, rows, screenTrack, _this, currentPost;
 
     _this = this;
@@ -382,7 +374,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     // if we have no rows
     if(!info) { return; }
 
-    // top on screen 
+    // top on screen
     if(info.top === 0 || info.onScreen[0] === 0 || info.bottom === 0) {
       this.prevPage($(rows[0]));
     }
@@ -393,7 +385,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
       this.nextPage($(rows[info.bottom]));
     }
 
-    // update dock 
+    // update dock
     this.updateDock(Ember.View.views[rows[info.bottom].id]);
 
     // mark everything on screen read
@@ -403,10 +395,10 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     });
 
     this.nonUrgentPositionUpdate({
-        userActive: userActive, 
+        userActive: userActive,
         currentPost: currentPost || this.getPost($(rows[info.bottom])).get('post_number')
     });
-    
+
     offset = window.pageYOffset || $('html').scrollTop();
     firstLoaded = this.get('firstPostLoaded');
     if (!this.docAt) {
