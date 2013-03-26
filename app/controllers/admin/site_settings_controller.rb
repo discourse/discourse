@@ -1,8 +1,11 @@
 class Admin::SiteSettingsController < Admin::AdminController
 
   def index
-    @site_settings = SiteSetting.all_settings
-    render_json_dump(@site_settings.as_json)
+    settings = {
+      restart_required: Discourse.restart_required?,
+      settings: SiteSetting.all_settings,
+    }
+    render_json_dump(settings.as_json)
   end
 
   def update

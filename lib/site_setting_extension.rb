@@ -19,17 +19,25 @@ module SiteSettingExtension
     @defaults ||= {}
   end
 
-  def setting(name, default = nil)
+  def requires_restart
+    @requires_restart ||= {}
+  end
+
+  def setting(name, default = nil, options = {})
+    # this should be updated to real named parameters once the migration to ruby 2.0 is done
+    requires_restart = options[:requires_restart] || false
+
     mutex.synchronize do
       self.defaults[name] = default
+      self.requires_restart[name] = requires_restart
       current_value = current.has_key?(name) ? current[name] : default
       setup_methods(name, current_value)
     end
   end
 
   # just like a setting, except that it is available in javascript via DiscourseSession
-  def client_setting(name, default = nil)
-    setting(name,default)
+  def client_setting(name, default = nil, options = {})
+    setting(name, default, options)
     @@client_settings ||= []
     @@client_settings << name
   end
@@ -37,7 +45,6 @@ module SiteSettingExtension
   def client_settings
     @@client_settings
   end
-
 
   def client_settings_json
     Rails.cache.fetch(SiteSettingExtension.client_settings_cache_key, expires_in: 30.minutes) do
@@ -49,11 +56,15 @@ module SiteSettingExtension
   def all_settings
     @defaults.map do |s, v|
       value = send(s)
-      {setting: s,
-       description: description(s),
-       default: v,
-       type: types[get_data_type(value)].to_s,
-       value: value.to_s}
+      setting = {
+        setting: s,
+        description: description(s),
+        default: v,
+        type: types[get_data_type(value)].to_s,
+        value: value.to_s,
+      }
+      setting[:requires_restart] = @requires_restart[s] if @requires_restart[s]
+      setting
     end
   end
 
@@ -133,11 +144,15 @@ module SiteSettingExtension
 
   def remove_override!(name)
     return unless table_exists?
+    Discourse.require_restart if @requires_restart[name]
     SiteSetting.where(name: name).destroy_all
   end
 
-  def add_override!(name,val)
+  def add_override!(name, val)
     return unless table_exists?
+    # set a special app flag that is communicated to all processes
+    # indicating a restart is required for the setting to take effect
+    Discourse.require_restart if @requires_restart[name]
 
     setting = SiteSetting.where(name: name).first
     type = get_data_type(defaults[name])

@@ -6,7 +6,7 @@ class SiteSetting < ActiveRecord::Base
   validates_presence_of :name
   validates_presence_of :data_type
 
-  attr_accessible :description, :name, :value, :data_type
+  attr_accessible :description, :name, :value, :data_type, :requires_restart
 
   # settings available in javascript under Discourse.SiteSettings
   client_setting(:title, "Discourse")
@@ -17,7 +17,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:company_domain, 'www.example.com')
   setting(:api_key, '')
   client_setting(:traditional_markdown_linebreaks, false)
-  client_setting(:top_menu, 'popular|new|unread|favorited|categories')
+  client_setting(:top_menu, 'popular|new|unread|favorited|categories', requires_restart: true)
   client_setting(:post_menu, 'like|edit|flag|delete|share|bookmark|reply')
   client_setting(:share_links, 'twitter|facebook|google+')
   client_setting(:track_external_right_clicks, false)

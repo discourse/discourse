@@ -20,7 +20,7 @@ module Discourse
 
   def self.base_uri
     if !ActionController::Base.config.relative_url_root.blank?
-      return ActionController::Base.config.relative_url_root 
+      return ActionController::Base.config.relative_url_root
     else
       return ""
     end
@@ -65,10 +65,28 @@ module Discourse
     end
   end
 
+  def self.require_restart
+    $redis.set requires_restart_key, 1
+    true
+  end
+
+  def self.application_started
+    $redis.del requires_restart_key
+    true
+  end
+
+  def self.restart_required?
+    !!$redis.get( requires_restart_key )
+  end
 
 private
 
   def self.maintenance_mode_key
     'maintenance_mode'
   end
+
+  def self.requires_restart_key
+    'requires_restart'
+  end
+
 end

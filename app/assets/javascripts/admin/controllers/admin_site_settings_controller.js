@@ -9,6 +9,7 @@
 Discourse.AdminSiteSettingsController = Ember.ArrayController.extend(Discourse.Presence, {
   filter: null,
   onlyOverridden: false,
+  restartRequired: false,
 
   /**
     The list of settings based on the current filters

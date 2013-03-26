@@ -815,4 +815,6 @@ fr:
         show_overriden: 'Ne montrer que ce qui a été changé'
         title: 'Paramètres du site'
         reset: 'rétablir par défaut'
+        requires_restart: 'Vous devrez redémarrer Discourse pour que les modifications de ce paramètre prennent effet'
+        restart_required: 'Vous devrez redémarrer Discourse afin de prendre en compte vos dernières modifications'
 

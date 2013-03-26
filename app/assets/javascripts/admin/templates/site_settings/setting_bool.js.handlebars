@@ -5,5 +5,8 @@
   <div class="span11">
     {{view Ember.Checkbox checkedBinding="enabled" value="true"}}
     {{unbound description}}
+    {{#if requires_restart}}
+      <div class='alert'>{{i18n admin.site_settings.requires_restart}}</div>
+    {{/if}}
   </div>
 {{/with}}
