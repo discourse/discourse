@@ -1,14 +1,14 @@
 <h3>{{view.title}}</h3>
 <div><input type='text' /></div>
 <div class="social-link">
-  <a href="#" {{action sharePopup "twitter" view.twitterUrl}}><i class="icon icon-twitter"></i></a>
+  <a href="#" {{action sharePopup "twitter" view.twitterUrl}} title='{{i18n share.twitter}}'><i class="icon icon-twitter"></i></a>
 </div>
 <div class="social-link">
-  <a href="#" {{action sharePopup "facebook" view.facebookUrl}}><i class="icon icon-facebook-sign"></i></a>
+  <a href="#" {{action sharePopup "facebook" view.facebookUrl}} title='{{i18n share.facebook}}'><i class="icon icon-facebook-sign"></i></a>
 </div>
 <div class="social-link">
-  <a href="#" {{action sharePopup "googlePlus" view.googlePlusUrl}}><i class="icon icon-google-plus"></i></a>
+  <a href="#" {{action sharePopup "googlePlus" view.googlePlusUrl}} title='{{i18n share.google_plus}}'><i class="icon icon-google-plus"></i></a>
 </div>
 <div class='link'>
-  <a href='#' {{action close target="controller"}}><i class="icon icon-remove-sign"></i></a>
+  <a href='#' {{action close target="controller"}} title='{{i18n share.close}}'><i class="icon icon-remove-sign"></i></a>
 </div>
