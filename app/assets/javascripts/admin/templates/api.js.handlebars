@@ -1,0 +1,11 @@
+<!-- Hold off on localizing for a few days while I finalize this page -->
+<h3>API Information</h3>
+{{#if content.keyExists}}
+  <strong>Key:</strong> {{content.key}} <button {{action regenerateKey}}>Regenerate API Key</button>
+  <p>Keep this key <strong>secret</strong>, all users that have it may create arbirary posts on the forum as any user.</p>
+{{else}}
+  <p>Your API key will allow you to create and update topics using JSON calls.</p>
+  <button {{action generateKey target="content"}}>Generate API Key</button>
+{{/if}}
+</p>
+

@@ -48,7 +48,8 @@ Discourse.Model = Ember.Object.extend(Discourse.Presence, {
         _this.set(k, v);
       }
     });
-  }
+  } 
+
 });
 
 Discourse.Model.reopenClass({

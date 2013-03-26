@@ -56,6 +56,11 @@ Discourse::Application.routes.draw do
     resources :export
     get 'version_check' => 'versions#show'
     resources :dashboard, only: [:index]
+    resources :api, only: [:index] do
+      collection do
+        post 'generate_key'
+      end
+    end
   end
 
   get 'email_preferences' => 'email#preferences_redirect'

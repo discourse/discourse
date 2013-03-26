@@ -731,6 +731,8 @@ en:
         flagged_by: "Flagged by"
         error: "Something went wrong"
 
+      api: 
+        title: "API"
       customize:
         title: "Customize"
         header: "Header"

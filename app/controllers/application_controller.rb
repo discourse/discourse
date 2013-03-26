@@ -250,6 +250,11 @@ class ApplicationController < ActionController::Base
 
     def check_xhr
       unless (controller_name == 'forums' || controller_name == 'user_open_ids')
+        # bypass xhr check on PUT / POST / DELETE provided api key is there, otherwise calling api is annoying
+        if !request.get? && request["api_key"]
+          return
+        end
+
         raise RenderEmpty.new unless ((request.format && request.format.json?) || request.xhr?)
       end
     end
