@@ -94,9 +94,9 @@ describe TopicView do
       end
     end
 
-    context '.posts_count' do
+    context '.post_counts_by_user' do
       it 'returns the two posters with their counts' do
-        topic_view.posts_count.to_a.should =~ [[first_poster.id, 2], [coding_horror.id, 1]]
+        topic_view.post_counts_by_user.to_a.should =~ [[first_poster.id, 2], [coding_horror.id, 1]]
       end
     end
 

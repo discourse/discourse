@@ -172,11 +172,11 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def participants
-    object.posts_count.collect {|tuple| {user: object.participants[tuple.first], post_count: tuple[1]}}
+    object.post_counts_by_user.collect {|tuple| {user: object.participants[tuple.first], post_count: tuple[1]}}
   end
 
   def include_participants?
-    object.initial_load? && object.posts_count.present?
+    object.initial_load? && object.post_counts_by_user.present?
   end
 
   def suggested_topics

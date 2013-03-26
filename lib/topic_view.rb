@@ -4,7 +4,11 @@ require_dependency 'summarize'
 
 class TopicView
 
-  attr_accessor :topic, :draft, :draft_key, :draft_sequence, :posts
+  attr_accessor :topic,
+                :draft,
+                :draft_key,
+                :draft_sequence,
+                :posts
 
   def initialize(topic_id, user=nil, options={})
     @topic = find_topic(topic_id)
@@ -169,14 +173,14 @@ class TopicView
     end
   end
 
-  def posts_count
-    @posts_count ||= Post.where(topic_id: @topic.id).group(:user_id).order('count_all desc').limit(24).count
+  def post_counts_by_user
+    @post_counts_by_user ||= Post.where(topic_id: @topic.id).group(:user_id).order('count_all desc').limit(24).count
   end
 
   def participants
     @participants ||= begin
       participants = {}
-      User.where(id: posts_count.map {|k,v| k}).each {|u| participants[u.id] = u}
+      User.where(id: post_counts_by_user.map {|k,v| k}).each {|u| participants[u.id] = u}
       participants
     end
   end
