@@ -15,7 +15,7 @@ class CategoriesController < ApplicationController
   end
 
   def create
-    requires_parameters(*category_param_keys)
+    requires_parameters(*required_param_keys)
     guardian.ensure_can_create!(Category)
 
     @category = Category.create(category_params.merge(user: current_user))
@@ -25,7 +25,7 @@ class CategoriesController < ApplicationController
   end
 
   def update
-    requires_parameters(*category_param_keys)
+    requires_parameters(*required_param_keys)
 
     @category = Category.where(id: params[:id]).first
     guardian.ensure_can_edit!(@category)
@@ -42,8 +42,12 @@ class CategoriesController < ApplicationController
 
   private
 
-    def category_param_keys
+    def required_param_keys
       [:name, :color, :text_color]
+    end
+
+    def category_param_keys
+      [required_param_keys, :hotness].flatten!
     end
 
     def category_params

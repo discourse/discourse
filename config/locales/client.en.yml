@@ -610,6 +610,7 @@ en:
       list: "List Categories"
       no_description: "There is no description for this category."
       change_in_category_topic: "visit category topic to edit the description"
+      hotness: "Hotness"
 
     flagging:
       title: 'Why are you flagging this post?'

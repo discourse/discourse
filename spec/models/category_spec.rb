@@ -75,6 +75,10 @@ describe Category do
       @category.slug.should == 'amazing-category'
     end
 
+    it "has a hotness of 5.0 by default" do
+      @category.hotness.should == 5.0
+    end
+
     it 'has a default description' do
       @category.description.should be_blank
     end
