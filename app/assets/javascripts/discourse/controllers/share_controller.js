@@ -29,16 +29,19 @@ Discourse.ShareController = Discourse.Controller.extend({
     return false;
   },
 
-  popupHeights: {
-    twitter: 265,
-    facebook: 315,
-    googlePlus: 600
-  },
+  shareLinks: function() {
+    return Discourse.SiteSettings.share_links.split('|').map(function(i) {
+      if( Discourse.ShareLink.supportedTargets.indexOf(i) >= 0 ) {
+        return Discourse.ShareLink.create({target: i, link: this.get('link')});
+      } else {
+        return null;
+      }
+    }, this).compact();
+  }.property('link'),
 
   sharePopup: function(target, url) {
-    window.open(url, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=600,height=' + this.popupHeights[target]);
+    window.open(url, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=600,height=' + Discourse.ShareLink.popupHeight(target));
     return false;
   }
+
 });
-
-
