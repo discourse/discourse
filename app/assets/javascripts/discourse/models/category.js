@@ -33,7 +33,7 @@ Discourse.Category = Discourse.Model.extend({
         text_color: this.get('text_color'),
         hotness: this.get('hotness')
       },
-      type: this.get('id') ? 'PUT' : 'POST',
+      type: this.get('id') ? 'PUT' : 'POST'
     });
   },
 
