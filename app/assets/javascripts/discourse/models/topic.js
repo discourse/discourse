@@ -210,8 +210,11 @@ Discourse.Topic = Discourse.Model.extend({
     // Load the first post by default
     if ((!opts.bestOf) && (!opts.nearPost)) opts.nearPost = 1;
 
-    // If we already have that post in the DOM, jump to it
-    if (Discourse.TopicView.scrollTo(this.get('id'), opts.nearPost)) return;
+    // If we already have that post in the DOM, jump to it. Return a promise
+    // that's already complete.
+    if (Discourse.TopicView.scrollTo(this.get('id'), opts.nearPost)) {
+      return Ember.Deferred.promise(function(promise) { promise.resolve(); });
+    }
 
     // If loading the topic succeeded...
     var afterTopicLoaded = function(result) {
@@ -289,7 +292,7 @@ Discourse.Topic = Discourse.Model.extend({
     }
 
     // Finally, call our find method
-    Discourse.Topic.find(this.get('id'), {
+    return Discourse.Topic.find(this.get('id'), {
       nearPost: opts.nearPost,
       bestOf: opts.bestOf,
       trackVisit: opts.trackVisit

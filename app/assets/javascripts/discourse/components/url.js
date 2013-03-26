@@ -94,7 +94,8 @@ Discourse.URL = {
         var topicController = Discourse.__container__.lookup('controller:topic');
         var opts = { trackVisit: false };
         if (newMatches[3]) opts.nearPost = newMatches[3];
-        topicController.get('content').loadPosts(opts);
+        topicController.cancelFilter();
+        topicController.loadPosts(opts);
 
         // Abort routing, we have replaced our state.
         return;

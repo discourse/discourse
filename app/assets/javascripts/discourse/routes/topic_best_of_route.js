@@ -16,10 +16,7 @@ Discourse.TopicBestOfRoute = Discourse.Route.extend({
     topicController = this.controllerFor('topic');
     topicController.cancelFilter();
     topicController.set('bestOf', true);
-    this.modelFor('topic').loadPosts(params);
-
-    // After we load, show the bottom bar
-    Em.run.next(function () { topicController.updateBottomBar(); })
+    topicController.loadPosts(params);
   }
 
 });

@@ -9,12 +9,12 @@
 Discourse.TopicFromParamsRoute = Discourse.Route.extend({
 
   setupController: function(controller, params) {
-    var topicController;
     params = params || {};
     params.trackVisit = true;
-    topicController = this.controllerFor('topic');
+
+    var topicController = this.controllerFor('topic');
     topicController.cancelFilter();
-    this.modelFor('topic').loadPosts(params);
+    topicController.loadPosts(params);
   }
 
 });
