@@ -717,6 +717,8 @@ fr:
           7_days_ago: "il y a 7 jours"
           30_days_ago: "il y a 30 jours"
           all: "tous"
+          view_table: "Tableau"
+          view_chart: "Graphique à barre"
 
       commits:
         latest_changes: "derniers changements"

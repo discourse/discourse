@@ -18,9 +18,22 @@ fr:
 
   via: "%{username} via %{site_name}"
   is_reserved: "est réservé"
-  too_many_mentions: "possède trop de mentions utilisateurs"
-  too_many_images: "possède trop d'images"
-  too_many_links: "possède trop de liens"
+
+  too_many_mentions:
+    zero: "Désolé, vous ne pouvez pas mentionner d'utilisateur à votre niveau de confiance."
+    one: "Désolé, vous ne pouvez mentionner qu'un seul utilisateur à votre niveau de confiance."
+    other: "Désolé, vous ne pouvez mentionner que %{count} utilisateur à votre niveau de confiance."
+
+  too_many_images:
+    zero: "Désolé, vous ne pouvez pas ajouter d'image à votre niveau de confiance."
+    one: "Désolé, vous ne pouvez ajouter qu'une seule image à votre niveau de confiance."
+    other: "Désolé, vous ne pouver ajouter que %{count} images à votre niveau de confiance."
+
+  too_many_links:
+    zero: "Désolé, vous ne pouvez pas insérer de liens à votre niveau de confiance."
+    one: "Désolé, vous ne pouvez insérer qu'un seul lien à votre niveau de confiance."
+    other: "Désolé, vous ne pouvez insérer que %{count} liens à votre niveau de confiance."
+
   just_posted_that: "est trop similaire à ce que vous avez récemment posté"
   has_already_been_used: "a déjà été utilisé"
   invalid_characters: "contient des caractères invalides"
@@ -364,7 +377,8 @@ fr:
     send_welcome_message: "Les nouveaux utilisateurs reçoivent-ils un message privé de bienvenue ?"
     supress_reply_directly_below: "Ne pas afficher les boutons de réponse sous un message lorsque la réponse est juste en dessous"
     allow_index_in_robots_txt: "Le site doit-être indexé par les moteurs de recherche (met à jour le fichier robots.txt)"
-    email_domains_blacklist: "Une liste de domaines d'email interdits, délimités par un pipe. Exemple: mailinator.com|trashmail.net"
+    email_domains_blacklist: "Liste des domaines d'email interdits, délimités par un pipe. Exemple: mailinator.com|trashmail.net"
+    email_domains_whitelist: "Liste des domaines d'email autorisés, délimités par un pipe. ATTENTION : les utilisateurs ayant un email sur un autre domaine ne pourrons pas s'enregistrer."
     version_checks: "Ping les serveurs de Discourse afin d'obtenir les mises à jours et affiche les messages d'information dans le tableau de board /admin"
 
     port: "Voulez-vous spécifier un port dans l'URL ? Utile en mode de dévelopement . Sinon, laisser vide."
@@ -397,6 +411,9 @@ fr:
     previous_visit_timeout_hours: "Combien de temps dure une visite avant de la considérer comme la visite 'précédente', en heures."
 
     uncategorized_name: "Nom pour les discussions sans catégorie dans la liste des catégories"
+    visitor_max_links: "Nombre maximum de liens qu'un visiteur peut ajouter à un message"
+    visitor_max_images: "Nombre maximum d'images qu'un visiteur peut ajouter à un message"
+    visitor_max_mentions_per_post: "Nombre maximum de référence à un @utilisateur qu'un visiteur peut ajouter à un message"
     max_mentions_per_post: "Le nombre maximal de @mentions que vous pouvez ajouter à un message"
 
     rate_limit_create_topic: "Combien de secondes avant de pouvoir démarrer une nouvelle discussion"
