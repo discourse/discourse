@@ -10,7 +10,7 @@
   @include border-radius-all(3px);
   @include box-shadow(1px 1px 5px $darkish_gray);
   background-color: $light_gray;
-  padding: 3px 7px 5px 7px;
+  padding: 3px 7px 6px 7px;
   width: 300px;
   @include fades-in(0.25s);
   &.visible {
@@ -26,10 +26,14 @@
     margin-left: 2px;
     margin-right: 8px;
     float: left;
-    font-size: 18px;
+    font-size: 22px;
   }
   .link {
     margin-right: 2px;
     float: right;
+    font-size: 20px;
+    a {
+      color: $black;
+    }
   }
 }
