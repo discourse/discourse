@@ -11,9 +11,20 @@ cs:
 
   via: "%{username} přes %{site_name}"
   is_reserved: "je rezervováno"
-  too_many_mentions: "má příliš mnoho zmínek od uživatelů"
-  too_many_images: "má přiliš mnoho obrázků"
-  too_many_links: "má příliš mnoho odkazů"
+
+  too_many_mentions:
+    zero: "Bohužel, návštěvníci nemohou zmiňovat ostatní uživatele."
+    one: "Bohužel, návštěvníci mohou zmínit jen jednoho uživatele v jednom příspěvku."
+    other: "Bohužel, návštěvníci mohou zmínit jen %{count} uživatelů v jednom příspěvku."
+  too_many_images:
+    zero: "Bohužel, návštěvníci nemohou vkládat obrázky do příspěvků."
+    one: "Bohužel, návštěvníci mohou do jednoho příspěvku vložit jen jeden obrázek."
+    other: "Bohužel, návštěvníci mohou do jednoho příspěvku vložit maximálně %{count} obrázků."
+  too_many_links:
+    zero: "Bohužel, návštěvníci nemohou vkládat odkazy do příspěvků."
+    one: "Bohužel, návštěvníci mohou do jednoho příspěvku vložit jen jeden odkaz."
+    other: "Bohužel, návštěvníci mohou do jednoho příspěvku vložit maximálně %{count} odkazů."
+
   just_posted_that: "je příliš podobný vašemu příspěvku z poslední doby"
   has_already_been_used: "již bylo použito"
   invalid_characters: "obsahuje neplatné znaky"
@@ -304,6 +315,7 @@ cs:
     company_full_name: "Plné jméno společnosti, která provozuje tento web, používá se v dokumentech jako je /tos"
     company_short_name: "Krátké jméno společnosti, která provozuje tento web, používá se v dokumentech jako je /tos"
     company_domain: "Doménové jméno vlastněné společností, která provozuje tento web, používá se v dokumentech jako je /tos"
+    api_key: "Zabezpečený API klíč, který se používá pro vytváření a aktualizaci témat, použijte sekci /admin/api k nastavení"
     access_password: "Restrict_access je nastaveno, ujistěte se, že je zde nastaveno heslo"
     queue_jobs: "Zařazovat úlohy do fronty v sidekiq, není-li nastaveno, jsou úlohy vyřizovány okamžitě"
     crawl_images: "Povolit získávání obrázků z webů třetích stran"
@@ -350,6 +362,7 @@ cs:
     ga_tracking_code: "Kód pro sledování přes 'Google analytics', např. UA-12345678-9; viz http://google.com/analytics"
     top_menu: "Určuje, které položky se zobrazí v navigaci na hlavní stránce a v jakém pořadí. Příklad: popular|read|favorited|unread|new|posted|categories"
     post_menu: "Určuje, které položky se zobrazí v menu u příspěvku a v jakém pořadí. Příklad: like|edit|flag|delete|share|bookmark|reply"
+    share_links: "Určuje, které položky se zobrazí ve sdílecím dialogu a v jakém pořadí. Příklad: twitter|facebook|google+"
     track_external_right_clicks: "Počítat kliknutí na externí odkazy pravým tlačítkem (např. otevření do nové záložky); defaultně zakázáno kvůli přepisu URL"
     topics_per_page: "Kolik témat je načteno do seznamu témat"
     posts_per_page: "Kolik příspěvků je zobrazeno ve stránce tématu"
@@ -391,7 +404,6 @@ cs:
     previous_visit_timeout_hours: "Kolik času musí uplynout v hodinách, než je návštěva uživatele považována za uplynulou"
 
     uncategorized_name: "Výchozí kategorie pro témata, která nemají nastavou kategorii"
-    max_mentions_per_post: "Maximální počet zmínek přes @name, které mohou být použity v jednom příspěvku"
 
     rate_limit_create_topic: "Počet sekund, které je nutné počkat od vytvoření tématu, než smí uživatel vytvořit další"
     rate_limit_create_post: "Počet sekund, které je nutné počkat od zaslání příspěvku, než smí uživatel zaslat další"
@@ -415,6 +427,10 @@ cs:
     basic_requires_topics_entered: "Kolik příspěvků musí nový uživatel zaslat než získá základní (1) věrohodnost"
     basic_requires_read_posts: "Kolik příspěvků musí uživatel přečíst než získá základní (1) věrohodnost"
     basic_requires_time_spent_mins: "Kolik minut musí nový uživatel strávit čtením příspěvků než získá základní (1) věrohodnost"
+    visitor_max_links: "Kolik odkazů může návštěvník vložit do příspěvku"
+    visitor_max_images: "Kolik obrázků může návštěvník vložit do příspěvku"
+    visitor_max_mentions_per_post: "Kolik zmínek přes @name může návštěvník vložit do příspěvku"
+    max_mentions_per_post: "Maximální počet zmínek přes @name, které mohou být použity v jednom příspěvku"
 
     auto_link_images_wider_than: "Obrázky širší než tato hodnota v pixelech budou odkazovány do lightboxu"
 
@@ -424,6 +440,7 @@ cs:
     title_min_entropy: "Minimální entropie (unikátní znaky) požadovaná v názvu tématu"
     body_min_entropy: "Minimální entropie (unikátní znaky) požadovaná v obsahu příspěvku"
     new_user_period_days: "Jak dlouho je uživatel zvýrazněn jako nový, ve dnech"
+
     title_fancy_entities: "Převádět HTML entity v názvech témat"
 
     min_title_similar_length: "Minimální délka názvu tématu, než budou hledána podobná témata"
