@@ -817,3 +817,5 @@ en:
         show_overriden: 'Only show overridden'
         title: 'Site Settings'
         reset: 'reset to default'
+        requires_restart: 'You need to restart Discourse for this setting to take effect'
+        restart_required: 'You have changed a setting that requires Discourse to be restarted in order to be applied'

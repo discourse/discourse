@@ -85,7 +85,7 @@ describe SiteSetting do
     end
 
     context "when overridden" do
-      after :each do 
+      after :each do
         SiteSetting.remove_override!(:test_hello?)
       end
 
@@ -161,4 +161,21 @@ describe SiteSetting do
       SiteSetting.post_length.should == (1..2)
     end
   end
+
+  describe "requires a restart when needed" do
+
+    it "sets the require_restart flag when overriding a setting that requires a restart" do
+      Discourse.expects(:require_restart).once
+      SiteSetting.setting(:test_flag, false, requires_restart: true)
+      SiteSetting.test_flag = true
+    end
+
+    it "does not set the require_restart flag when overriding a standard setting" do
+      Discourse.expects(:require_restart).never
+      SiteSetting.setting(:test_flag, false)
+      SiteSetting.test_flag = true
+    end
+
+  end
+
 end

@@ -8,7 +8,10 @@
   <div class='search controls'>
     {{view Discourse.TextField valueBinding="controller.filter" placeholderKey="type_to_filter"}}
   </div>
-
 </div>
+
+{{#if controller.restartRequired}}
+  <div class='search controls alert alert-error'>{{i18n admin.site_settings.restart_required}}</div>
+{{/if}}
 
 {{collection contentBinding="filteredContent" classNames="form-horizontal settings" itemViewClass="Discourse.SiteSettingView"}}

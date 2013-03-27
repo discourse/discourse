@@ -76,6 +76,7 @@ Discourse.SiteSetting = Discourse.Model.extend({
       data: { value: this.get('value') },
       type: 'PUT',
       success: function() {
+        if(!!setting.get('requires_restart')) Discourse.__container__.lookup('controller:adminSiteSettings').set('restartRequired', true);
         setting.set('originalValue', setting.get('value'));
       }
     });
@@ -91,10 +92,11 @@ Discourse.SiteSetting.reopenClass({
   **/
   findAll: function() {
     var result = Em.A();
-    $.get(Discourse.getURL("/admin/site_settings"), function(settings) {
-      return settings.each(function(s) {
+    $.get(Discourse.getURL("/admin/site_settings"), function(data) {
+      Discourse.__container__.lookup('controller:adminSiteSettings').set('restartRequired', data.restart_required);
+      data.settings.each(function(s) {
         s.originalValue = s.value;
-        return result.pushObject(Discourse.SiteSetting.create(s));
+        result.pushObject(Discourse.SiteSetting.create(s));
       });
     });
     return result;

@@ -5,6 +5,9 @@
   <div class="span11">
     {{view Ember.TextField valueBinding="value" classNames="input-xxlarge"}}
     <div class='desc'>{{unbound description}}</div>
+    {{#if requires_restart}}
+      <div class='alert'>{{i18n admin.site_settings.requires_restart}}</div>
+    {{/if}}
   </div>
   {{#if dirty}}
     <div class='span3'>
