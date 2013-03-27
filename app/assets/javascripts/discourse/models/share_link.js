@@ -10,8 +10,8 @@
 Discourse.ShareLink = Discourse.Model.extend({
 
   href: function() {
-    return Discourse.ShareLink.urlFor(this.get('target'), this.get('link'));
-  }.property('target', 'link'),
+    return Discourse.ShareLink.urlFor(this.get('target'), this.get('link'), this.get('topicTitle'));
+  }.property('target', 'link', 'topicTitle'),
 
   title: function() {
     return Em.String.i18n("share." + this.get('target'));
@@ -27,27 +27,27 @@ Discourse.ShareLink.reopenClass({
 
   supportedTargets: ['twitter', 'facebook', 'google+'],
 
-  urlFor: function(target,link) {
+  urlFor: function(target,link,title) {
     switch(target) {
       case 'twitter':
-        return this.twitterUrl(link);
+        return this.twitterUrl(link,title);
       case 'facebook':
-        return this.facebookUrl(link);
+        return this.facebookUrl(link,title);
       case 'google+':
         return this.googlePlusUrl(link);
     }
   },
 
-  twitterUrl: function(link) {
-    return ("http://twitter.com/home?status=" + link);
+  twitterUrl: function(link, title) {
+    return ("http://twitter.com/intent/tweet?url=" + encodeURIComponent(link) + "&text=" + encodeURIComponent(title) );
   },
 
-  facebookUrl: function(link) {
-    return ("http://www.facebook.com/sharer.php?u=" + link);
+  facebookUrl: function(link, title) {
+    return ("http://www.facebook.com/sharer.php?u=" + encodeURIComponent(link) + '&t=' + encodeURIComponent(title));
   },
 
   googlePlusUrl: function(link) {
-    return ("https://plus.google.com/share?url=" + link);
+    return ("https://plus.google.com/share?url=" + encodeURIComponent(link));
   },
 
   iconClasses: {

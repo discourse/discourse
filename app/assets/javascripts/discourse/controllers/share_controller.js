@@ -8,6 +8,8 @@
 **/
 Discourse.ShareController = Discourse.Controller.extend({
 
+  needs: ['topic'],
+
   // When the user clicks the post number, we pop up a share box
   shareLink: function(e, url) {
     var x;
@@ -32,7 +34,7 @@ Discourse.ShareController = Discourse.Controller.extend({
   shareLinks: function() {
     return Discourse.SiteSettings.share_links.split('|').map(function(i) {
       if( Discourse.ShareLink.supportedTargets.indexOf(i) >= 0 ) {
-        return Discourse.ShareLink.create({target: i, link: this.get('link')});
+        return Discourse.ShareLink.create({target: i, link: this.get('link'), topicTitle: this.get('controllers.topic.title')});
       } else {
         return null;
       }
