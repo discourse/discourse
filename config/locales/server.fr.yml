@@ -20,19 +20,19 @@ fr:
   is_reserved: "est réservé"
 
   too_many_mentions:
-    zero: "Désolé, vous ne pouvez pas mentionner d'utilisateur à votre niveau de confiance."
-    one: "Désolé, vous ne pouvez mentionner qu'un seul utilisateur à votre niveau de confiance."
-    other: "Désolé, vous ne pouvez mentionner que %{count} utilisateur à votre niveau de confiance."
+    zero: "Désolé, les visiteurs ne peuvent pas mentionner d'utilisateur."
+    one: "Désolé, les visiteurs ne peuvent mentionner qu'un seul utilisateur."
+    other: "Désolé, les visiteurs ne peuvent mentionner que %{count} utilisateur."
 
   too_many_images:
-    zero: "Désolé, vous ne pouvez pas ajouter d'image à votre niveau de confiance."
-    one: "Désolé, vous ne pouvez ajouter qu'une seule image à votre niveau de confiance."
-    other: "Désolé, vous ne pouver ajouter que %{count} images à votre niveau de confiance."
+    zero: "Désolé, les visiteurs ne peuvent pas ajouter d'image."
+    one: "Désolé, les visiteurs ne peuvent ajouter qu'une seule image."
+    other: "Désolé, les visiteurs ne peuvent ajouter que %{count} images."
 
   too_many_links:
-    zero: "Désolé, vous ne pouvez pas insérer de liens à votre niveau de confiance."
-    one: "Désolé, vous ne pouvez insérer qu'un seul lien à votre niveau de confiance."
-    other: "Désolé, vous ne pouvez insérer que %{count} liens à votre niveau de confiance."
+    zero: "Désolé, les visiteurs ne peuvent pas insérer de liens."
+    one: "Désolé, les visiteurs ne peuvent insérer qu'un seul lien."
+    other: "Désolé, les visiteurs ne peuvent insérer que %{count} liens."
 
   just_posted_that: "est trop similaire à ce que vous avez récemment posté"
   has_already_been_used: "a déjà été utilisé"
@@ -324,6 +324,7 @@ fr:
     company_full_name: "Le nom complet de la société qui gère ce site (utilisé dans les documents légaux, tels que /tos)"
     company_short_name: "Le nom de la société qui gère ce site (utilisé dans les documents légaux, tels que /tos)"
     company_domain: "Le nom de domaine de la société qui gère ce site (utilisé dans les documents légaux, tels que /tos)"
+    api_key: "La clé API sécurisé à utiliser pour créer et mettre à jour des discussions. Utilisez la section /admin/api pour la configurer."
     access_password: "Si l'accès restreint est activé, assurez-vous que le mot de passe soit saisi ici."
     queue_jobs: "mettre les différents jobs en attente sur différentes queues, si false les queues sont en file"
     crawl_images: "permettre la récupération des images provenant de sources tierces"
@@ -370,6 +371,7 @@ fr:
     ga_tracking_code: "Code de suivi de Google Analytics, voir: http://google.com/analytics"
     top_menu: "L'ordre des éléments dans le menu du haut. Exemple populaire|lus|favoris|non lus|nouveaux|posté|categories"
     post_menu: "L'ordre des éléments dans le menu de rédaction"
+    share_links: "Liste ordonnée des boutons de partage. Exemple : twitter|facebook|google+"
     track_external_right_clicks: "Suivi des clics sur les liens externes (ex: ouverture dans un nouvel onglet) désactivé par défaut car nécessite une ré-écrite de toutes les urls et nuit à l'accessibilité"
     topics_per_page: "Nombre de discussions à afficher sur la page de liste des discussions."
     posts_per_page: "Nombre de messages retournés sur une page de discussion"
