@@ -1,5 +1,8 @@
 # Discourse Developer Install Guide (Vagrant)
 
+**We require Vagrant 1.1.2+ for our Vagrant image to work. You may have to upgrade if you are running
+an earlier release.**
+
 If you'd like to set up a development environment for Discourse, the easiest way is by using a virtual machine.
 If you have experience setting up Rails projects, you might want to take a look at our **[Discourse Advanced Developer Guide](https://github.com/discourse/discourse/blob/master/docs/DEVELOPER-ADVANCED.md)**.
 It also contains instructions on building your own Vagrant VM.
@@ -9,11 +12,12 @@ on Discourse with:
 
 ### Getting Started
 
-1. Install VirtualBox: https://www.virtualbox.org/wiki/Downloads
-2. Install Vagrant: http://www.vagrantup.com/
-3. Open a terminal
-4. Clone the project: `git clone git@github.com:discourse/discourse.git`
-5. Enter the project directory: `cd discourse`
+1. Install Git: http://git-scm.com/downloads (or [GitHub for Windows](http://windows.github.com/) if you want a GUI)
+2. Install VirtualBox: https://www.virtualbox.org/wiki/Downloads
+3. Install Vagrant: http://www.vagrantup.com/
+4. Open a terminal
+5. Clone the project: `git clone git@github.com:discourse/discourse.git`
+6. Enter the project directory: `cd discourse`
 
 ### Using Vagrant
 
@@ -26,9 +30,9 @@ Vagrant will prompt you for your admin password. This is so it can mount your lo
 
 (The first time you do this, it will take a while as it downloads the VM image and installs it. Go grab a coffee.)
 
-If you are having **trouble** downloading the VM: 
-- Download this file: http://www.discourse.org/vms/discourse-pre.box using your favorite web browser/download tool.
-- Add it to vagrant: `vagrant box add discourse-pre /path/to/the/downloaded/discourse-pre.box`.
+If you are having **trouble** downloading the VM:
+- Download this file: http://www.discourse.org/vms/discourse-0.8.4.box using your favorite web browser/download tool.
+- Add it to vagrant: `vagrant box add discourse-0.8.4 /path/to/the/downloaded/discourse-0.8.4.box virtualbox`.
 
 **Note to OSX/Linux users**: Vagrant will mount your local files via an NFS share. Therefore, make sure that NFS is installed or else you'll receive the error message:
 
@@ -50,7 +54,7 @@ vagrant ssh
 
 ```
 `vagrant ssh` isn't available on the Windows platform. You are still able
-to SSH into the virtual machine if you get a Windows SSH client (such as 
+to SSH into the virtual machine if you get a Windows SSH client (such as
 PuTTY). The authentication information is shown below:
 
 Host: 127.0.0.1
@@ -71,7 +75,7 @@ PuTTYGen to import the insecure_private_key file](http://jason.sharonandjason.co
 ### Keeping your VM up to date
 
 Now you're in a virtual machine is almost ready to start developing. It's a good idea to perform the following instructions
-*every time* you pull from master to ensure your environment is still up to date. 
+*every time* you pull from master to ensure your environment is still up to date.
 
 ```
 bundle install
@@ -91,9 +95,25 @@ In a few seconds, rails will start serving pages. To access them, open a web bro
 
 You can now edit files on your local file system, using your favorite text editor or IDE. When you reload your web browser, it should have the latest changes.
 
+### Changing the Seed Data
+
+By default, the Vagrant virtual machine comes seeded with test data. You'll have a few topics to play around with
+and some user accounts. If you'd like to use the default production seed data instead you can execute the following
+commands:
+
+```
+vagrant ssh
+cd /vagrant
+psql discourse_development < pg_dumps/production-image.sql
+rake db:migrate
+rake db:test:prepare
+```
+
+If you change your mind and want to use the test data again, just execute the above but using `pg_dumps/development-image.sql` instead.
+
 ### Guard + Rspec
 
-If you're actively working on Discourse, we recommend that you run Guard. It'll automatically run our unit tests over and over, and includes support
+If you're actively working on Discourse, we recommend that you run [Guard](https://github.com/guard/guard). It'll automatically run our unit tests over and over, and includes support
 for live CSS reloading.
 
 To use it, follow all the above steps. Once rails is running, open a new terminal window or tab, and then do this:
@@ -131,7 +151,7 @@ Sent emails will be received by mailcatcher and shown in its web ui.
 
 When you're done working on Discourse, you can shut down Vagrant like so:
 
-``` 
+```
 vagrant halt
 ```
 

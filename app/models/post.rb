@@ -73,7 +73,7 @@ class Post < ActiveRecord::Base
     end
   end
 
-  # The key we use in reddit to ensure unique posts
+  # The key we use in redis to ensure unique posts
   def unique_post_key
     "post-#{user_id}:#{raw_hash}"
   end
@@ -110,21 +110,33 @@ class Post < ActiveRecord::Base
 
   def link_count
     return 0 unless raw.present?
-    cooked_document.search("a[href]").count
+
+    # Don't include @mentions in the link count
+    total = 0
+    cooked_document.search("a[href]").each do |l|
+      html_class = l.attributes['class']
+      if html_class.present?
+        next if html_class.to_s == 'mention' && l.attributes['href'].to_s =~ /^\/users\//
+      end
+      total +=1
+    end
+    total
   end
 
   def max_mention_validator
-    errors.add(:raw, I18n.t(:too_many_mentions)) if raw_mentions.size > SiteSetting.max_mentions_per_post
+    max_mentions = SiteSetting.visitor_max_mentions_per_post
+    max_mentions = SiteSetting.max_mentions_per_post if user.present? && user.has_trust_level?(:basic)
+    errors.add(:base, I18n.t(:too_many_mentions, count: max_mentions)) if raw_mentions.size > max_mentions
   end
 
   def max_images_validator
     return if user.present? && user.has_trust_level?(:basic)
-    errors.add(:raw, I18n.t(:too_many_images)) if image_count > 0
+    errors.add(:base, I18n.t(:too_many_images, count: SiteSetting.visitor_max_images)) if image_count > SiteSetting.visitor_max_images
   end
 
   def max_links_validator
     return if user.present? && user.has_trust_level?(:basic)
-    errors.add(:raw, I18n.t(:too_many_links)) if link_count > 1
+    errors.add(:base, I18n.t(:too_many_links, count: SiteSetting.visitor_max_links)) if link_count > SiteSetting.visitor_max_links
   end
 
 
@@ -157,7 +169,7 @@ class Post < ActiveRecord::Base
   end
 
   def self.best_of
-    where("(post_number = 1) or (score >= ?)", SiteSetting.best_of_score_threshold)
+    where(["(post_number = 1) or (percent_rank <= ?)", SiteSetting.best_of_percent_filter.to_f / 100.0])
   end
 
   def update_flagged_posts_count
@@ -219,7 +231,7 @@ class Post < ActiveRecord::Base
     doc = Oneboxer.each_onebox_link(cooked) do |url, elem|
       cached = Oneboxer.render_from_cache(url)
       if cached.present?
-        elem.swap(cached.cooked)
+        elem.swap(cached)
         dirty = true
       end
     end
@@ -268,7 +280,7 @@ class Post < ActiveRecord::Base
   # Various callbacks
   before_create do
     if reply_to_post_number.present?
-      self.reply_to_user_id ||= Post.select(:user_id).where(topic_id: topic_id, post_number: reply_to_post_number).first.try(:user_id) 
+      self.reply_to_user_id ||= Post.select(:user_id).where(topic_id: topic_id, post_number: reply_to_post_number).first.try(:user_id)
     end
 
     self.post_number ||= Topic.next_post_number(topic_id, reply_to_post_number.present?)

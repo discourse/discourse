@@ -1,5 +1,4 @@
 # encoding: utf-8
-
 cs:
   time:
     formats:
@@ -81,18 +80,16 @@ cs:
     post_template: "%{replace_paragraph}\n\nPoužijte toto místo níže pro delší popis a stanovení pravidel diskuze!"
 
   trust_levels:
-    new:
-      title: "nový uživatel"
+    visitor:
+      title: "návštěvník"
     basic:
       title: "základní uživatel"
     regular:
-      title: "běžný uživatel"
-    experienced:
-      title: "zkušený uživatel"
-    advanced:
-      title: "pokročilý uživatel"
-    moderator:
-      title: "moderátor"
+      title: "pravidelný uživatel"
+    leader:
+      title: "vůdce"
+    elder:
+      title: "starší"
 
   rate_limiter:
     too_many_requests: "Děláte tuto akci příliš často. Prosím počkejte %{time_left} a zkuste to znovu."
@@ -186,9 +183,10 @@ cs:
     title: 'resetovat heslo'
     success: "Heslo bylo úspěšně změněno a nyní jste přihlášeni."
     success_unapproved: "Heslo bylo úšpěšně změněno."
+    continue: "Pokračovat na %{site_name}"
 
   change_email:
-    confirmed: "Váše emailová adresa bylo změněna."
+    confirmed: "Vaše emailová adresa bylo změněna."
     please_continue: "Prosím, pokračujte na %{link}"
     error: "Nastala chyba běhěm změny emailové adresy. Není nová adresa již někým používána?"
 
@@ -269,10 +267,6 @@ cs:
       title: "Nová 'líbí se'"
       xaxis: "Den"
       yaxis: "Počet nových 'líbí se'"
-    total_users:
-      title: "Celkem uživatelů"
-      xaxis: "Den"
-      yaxis: "Celkový počet uživatelů"
     flags:
       title: "Nahlášení"
       xaxis: "Den"
@@ -285,6 +279,14 @@ cs:
       title: "Odesláno emailů"
       xaxis: "Den"
       yaxis: "Počet emailů"
+
+  dashboard:
+    rails_env_warning: "Váš server běží v módu %{env}."
+    host_names_warning: "Vaše konfigurace v souboru config/database.yml používá 'localhost' jako jméno hostitele. Změňte toto nastavení na doménu vašeho webu."
+    gc_warning: 'Váš server používá výchozí nastavení ruby gargabe collectoru, což způsobuje snížený výkon. Přečtěte si toto téma ohledně ladění výkonu: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>.'
+    clockwork_warning: 'Clockwork neběží. Ujistěte se, že process clockwork vždy běží, aby mohly být plánovány důležité úlohy na pozadí. <a href="https://github.com/tomykaira/clockwork">Více informací o clockwork</a>.'
+    sidekiq_warning: 'Sidekiq neběží. Řada úloh, jako je zasílání emailů, se provádí asynchronně na pozadí přes sidekiq. Prosím, ujistěte se, že alespoň jeden process sidekiq běží. <a href="https://github.com/mperham/sidekiq">Více o Sidekiq</a>.'
+    memory_warning: 'Váš server má méně než 1 GB paměti. Doporučená konfigurace je alespoň 1 GB paměti.'
 
   site_settings:
     default_locale: "Výchozí jazyk této Discourse instance (kód ve formátu ISO 639-1)"
@@ -328,6 +330,7 @@ cs:
     best_of_score_threshold: "Minimální skóre příspěvku, aby byl zařazen mezi 'nejlepší'"
     best_of_posts_required: "Minimální počet příspěvků v tématu, aby byl povolen mód 'nejlepší příspěvky'"
     best_of_likes_required: "Minimální počet 'líbí se' v tématu, aby byl povolen mód 'nejlepší příspěvky'"
+    best_of_percent_filter: "Když si uživatel zobrazí 'nejlepší příspěvky', zobrazí se tolik % příspěvků"
     enable_private_messages: "Povolit uživatelům s věrohodností 1, aby zasílali soukromé zprávy a zahajovali soukromé konverzace"
 
     enable_long_polling: "'Message bus' smí používat dlouhé výzvy"
@@ -355,6 +358,7 @@ cs:
     supress_reply_directly_below: "Nezobrazovat počet odpovědí, pokud existuje jen jediná odpověď hned pod příspěvkem"
     allow_index_in_robots_txt: "Povolit robotům indexaci tohoto webu (aktualizuje robots.txt)"
     email_domains_blacklist: "Seznam domén, jejichž emailové adresy nebudou přijímány, oddělený znakem '|'. Příklad: mailinator.com|trashmail.net"
+    email_domains_whitelist: "Seznam domén, ze kterých bude povolena registrace, oddělený znamek '|'. POZOR: Emailové adresy z jiných než z těchto domén nebudou přijímány."
     version_checks: "Kontrolovat aktuálnost z 'Discourse Hubu' a zobrazovat zprávy o nových verzích v administrační sekci"
 
     port: "Používat tento HTTP port místo standardního portu 80. Nechte prázdné pro výchozí port, užitečné hlavně pro vývoj"
@@ -427,6 +431,7 @@ cs:
 
     category_colors: "Seznam hexadecimálních barev oddělený svislítkem (|) pro barvy kategorií"
     max_upload_size_kb: "Maximální povolená velikost nahrávaných souborů v kb - nezapomeňte tento limit změnit v nginx (client_max_body_size) / apache a na proxy serverech."
+    max_similar_results: "Kolik podobných témat se má zobrazovat uživateli, když vytváří nové téma"
 
   notification_types:
     mentioned: "%{display_username} vás zmínil v %{link}"

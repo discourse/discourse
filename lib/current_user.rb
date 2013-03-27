@@ -13,7 +13,7 @@ module CurrentUser
 
   def log_on_user(user)
     session[:current_user_id] = user.id
-    unless user.auth_token
+    unless user.auth_token && user.auth_token.length == 32
       user.auth_token = SecureRandom.hex(16)
       user.save!
     end
@@ -21,7 +21,7 @@ module CurrentUser
   end
 
   def set_permanent_cookie!(user)
-    cookies.permanent["_t"] = { :value => user.auth_token, :httponly => true }
+    cookies.permanent["_t"] = { value: user.auth_token, httponly: true }
   end
 
   def current_user
@@ -52,6 +52,18 @@ module CurrentUser
       @current_user.update_last_seen!
       @current_user.update_ip_address!(request.remote_ip)
     end
+
+    # possible we have an api call, impersonate 
+    unless @current_user
+      if api_key = request["api_key"] 
+        if api_username = request["api_username"]
+          if SiteSetting.api_key_valid?(api_key)
+            @current_user = User.where(username_lower: api_username.downcase).first
+          end
+        end
+      end
+    end
+
     @current_user
   end
 

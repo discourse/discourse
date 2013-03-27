@@ -5,7 +5,7 @@ describe ListController do
   # we need some data
   before do
     @user = Fabricate(:coding_horror)
-    @post = Fabricate(:post, :user => @user)
+    @post = Fabricate(:post, user: @user)
   end
 
   context 'index' do

@@ -24,7 +24,6 @@ zh_CN:
     links: 链接
     faq: "常见问答（FAQ）"
     you: "你"
-    ok: "知道了"
     or: "或"
     now: "刚刚"
 
@@ -203,8 +202,10 @@ zh_CN:
 
     best_of:
       title: "优选"
+      enabled_description: 你现在正在浏览本主题的“优选”视图。
       description: "此主题中有 <b>{{count}}</b> 个帖子，是不是有点多哦！你愿意切换到只显示最多交互和回复的帖子视图么？"
-      button: '切换到“优选”视图'
+      enable: '切换到“优选”视图'
+      disable: '取消“优选”'
 
     private_message_info:
       title: "私下交流"
@@ -337,7 +338,7 @@ zh_CN:
       posted: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
       edited: "<i title='edited' class='icon icon-pencil'></i> {{username}} {{link}}"
       liked: "<i title='liked' class='icon icon-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='icon icon-lock' title='私信'></i> {{username}} 发送给你一条私信：{{link}}"
+      private_message: "<i class='icon icon-envelope-alt' title='私信'></i> {{username}} 发送给你一条私信：{{link}}"
       invited_to_private_message: "{{username}} 邀请你进行私下交流：{{link}}"
       invitee_accepted: "<i title='已接受你的邀请' class='icon icon-signin'></i> {{username}} 已接受你的邀请"
       moved_post: "<i title='移动帖子' class='icon icon-arrow-right'></i> {{username}} 已将帖子移动到 {{link}}"
@@ -504,7 +505,9 @@ zh_CN:
       login_reply: '登录来回复'
 
       filters:
-        user: "你在浏览指定用户的帖子。"
+        user:
+          one: "你在浏览一个指定用户的帖子。"
+          other: "你在浏览指定用户的帖子。"
         best_of: "你在浏览“优选”帖子。"
         cancel: "再次显示本主题下的所有帖子。"
 
@@ -703,8 +706,9 @@ zh_CN:
         installed_version: "已安装"
         latest_version: "最新版本"
         update_often: '请经常升级！'
-        total_users: "用户总数"
-        moderator_short: "版主"
+        problems_found: "你安装的论道目前有以下问题："
+        moderators: '版主：'
+        admins: '管理员：'
 
         reports:
           today: "今天"
@@ -714,6 +718,9 @@ zh_CN:
           all_time: "所有时间内"
           7_days_ago: "7 天之前"
           30_days_ago: "30 天之前"
+          all: "全部"
+          view_table: "以表格展示"
+          view_chart: "以柱状图展示"
 
       commits:
         latest_changes: "最后的改动"

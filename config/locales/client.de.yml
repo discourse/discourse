@@ -318,7 +318,7 @@ de:
       posted: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
       edited: "<i title='edited' class='icon icon-pencil'></i> {{username}} {{link}}"
       liked: "<i title='liked' class='icon icon-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='icon icon-lock' title='private message'></i> {{username}} hat Dir eine private Nachricht geschickt: {{link}}"
+      private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} hat Dir eine private Nachricht geschickt: {{link}}"
       invited_to_private_message: "{{username}} hat sich zu einem privaten Gespräch eingeladen: {{link}}"
       invitee_accepted: "<i title='accepted your invitation' class='icon icon-signin'></i> {{username}} hat Deine Einladung akzeptiert"
       moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} hat einen Beitrag nach {{link}} verschoben"

@@ -288,7 +288,7 @@ sv:
       posted: "<i title='svarad' class='icon icon-reply'></i> {{username}} {{link}}"
       edited: "<i title='ändrad' class='icon icon-pencil'></i> {{username}} {{link}}"
       liked: "<i title='gillad' class='icon icon-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='icon icon-lock' title='privat meddelande'></i> {{username}} skickade dig ett privat meddelande: {{link}}"
+      private_message: "<i class='icon icon-envelope-alt' title='privat meddelande'></i> {{username}} skickade dig ett privat meddelande: {{link}}"
       invited_to_private_message: "{{username}} bjöd in dig till en privat konversation: {{link}}"
       invitee_accepted: "<i title='accepterade din inbjudan' class='icon icon-signin'></i> {{username}} accepterade din inbjudan"
       moved_post: "<i title='flyttade inlägg' class='icon icon-arrow-right'></i> {{username}} flyttade inlägg till {{link}}"

@@ -11,18 +11,17 @@ to rails, you are likely much better off with our **[Discourse Vagrant Developer
 3. Clone the project.
 4. Create development and test databases in postgres.
 5. Copy `config/database.yml.sample` and `config/redis.yml.sample` to `config/database.yml` and `config/redis.yml` and input the correct values to point to your postgres and redis instances.
-6. We recommend starting with seed data to play around in your development environment. [Download Seed SQL Data](http://www.discourse.org/vms/dev-discourse-seed.sql). Install it into postgres using a command like this: `psql -d discourse_development < dev-discourse-seed.sql`.
+6. Install the seed data to set up an admin account and meta topic: `psql DATABASE_NAME < pg_dumps/production-image.sql`
 
 
 ## Before you start Rails
 
 1. `bundle install`
-2. `rake db:create`
-3. `rake db:migrate`
-4. `rake db:test:prepare`
-5. `rake db:seed_fu`
-6. Try running the specs: `bundle exec rspec`
-7. `bundle exec rails server`
+2. `rake db:migrate`
+3. `rake db:test:prepare`
+4. `rake db:seed_fu`
+5. Try running the specs: `bundle exec rspec`
+6. `bundle exec rails server`
 
 You should now be able to connect to rails on http://localhost:3000 - try it out! The seed data includes a pinned topic that explains how to get an admin account, so start there! Happy hacking!
 
@@ -34,7 +33,7 @@ Here are the steps we used to create the **[Vagrant Virtual Machine](https://git
 
 ## Base box
 
-Vagrant version 1.0.5. With this Vagrantfile:
+Vagrant version 1.1.2. With this Vagrantfile:
 
     Vagrant::Config.run do |config|
       config.vm.box     = 'precise32'
@@ -77,8 +76,8 @@ Vagrant version 1.0.5. With this Vagrantfile:
     adduser vagrant rvm
     source /etc/profile.d/rvm.sh
     su - vagrant -c "rvm pkg install libyaml"
-    su - vagrant -c "rvm install 1.9.3-p374"
-    su - vagrant -c "rvm use 1.9.3-p374 --default"
+    su - vagrant -c "rvm install 2.0.0-turbo"
+    su - vagrant -c "rvm use 2.0.0-turbo --default"
 
     echo "gem: --no-rdoc --no-ri" >> /etc/gemrc
     su - vagrant -c "echo 'gem: --no-rdoc --no-ri' >> ~/.gemrc"
@@ -89,18 +88,13 @@ Configure so that the vagrant user doesn't need to provide username and password
 
     apt-get -yqq install postgresql postgresql-contrib-9.1 libpq-dev postgresql-server-dev-9.1
     su - postgres
-    psql -c "CREATE USER vagrant WITH PASSWORD 'password';"
+    createuser --createdb --superuser -Upostgres vagrant
     psql -c "ALTER USER vagrant WITH PASSWORD 'password';"
-    createdb vagrant
-    psql -c "CREATE EXTENSION hstore;"
-    psql -c "ALTER USER vagrant CREATEDB"
     psql -c "create database discourse_development owner vagrant encoding 'UTF8' TEMPLATE template0;"
     psql -c "create database discourse_test        owner vagrant encoding 'UTF8' TEMPLATE template0;"
+    psql -d discourse_development -c "CREATE EXTENSION hstore;"
+    psql -d discourse_development -c "CREATE EXTENSION pg_trgm;"
 
-Also, a user "discourse" is needed when importing a database image.
-
-    createuser --createdb --superuser discourse
-    psql -c "ALTER USER discourse WITH PASSWORD 'password';"
 
 Edit /etc/postgresql/9.1/main/pg_hba.conf to have this:
 
@@ -109,14 +103,15 @@ Edit /etc/postgresql/9.1/main/pg_hba.conf to have this:
     host all all ::1/128 trust
     host all all 0.0.0.0/0 trust # wide-open
 
-Download a database image from [http://discourse.org/vms/dev-discourse-seed.sql][seed_download].
+Load the seed data (as vagrant user):
 
-Load it (as vagrant user):
+    psql -d discourse_development < pg_dumps/development-image.sql
 
-    psql -d discourse_development < dev-discourse-seed.sql
+(You may wish to try the `production-image.sql` file for a good seed for a production database.)
 
 ## Redis
 
+    sudo su -
     mkdir /tmp/redis_install
     cd /tmp/redis_install
     wget http://redis.googlecode.com/files/redis-2.6.7.tar.gz
@@ -129,4 +124,13 @@ Load it (as vagrant user):
     # Press enter to accept all the defaults
     /etc/init.d/redis_6379 start
 
-[seed_download]: (http://discourse.org/vms/dev-discourse-seed.sql)
+
+## Phantomjs
+
+Needed to run javascript tests.
+
+    cd /usr/local/share
+    wget https://phantomjs.googlecode.com/files/phantomjs-1.8.2-linux-i686.tar.bz2
+    tar xvf phantomjs-1.8.2-linux-i686.tar.bz2
+    rm phantomjs-1.8.2-linux-i686.tar.bz2
+    ln -s /usr/local/share/phantomjs-1.8.2-linux-i686/bin/phantomjs /usr/local/bin/phantomjs

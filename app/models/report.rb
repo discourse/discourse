@@ -1,15 +1,11 @@
 class Report
 
-  attr_accessor :type, :data, :cache
-
-  def self.cache_expiry
-    3600  # In seconds
-  end
+  attr_accessor :type, :data, :total
 
   def initialize(type)
     @type = type
     @data = nil
-    @cache = true
+    @total = nil
   end
 
   def as_json
@@ -18,7 +14,8 @@ class Report
      title: I18n.t("reports.#{self.type}.title"),
      xaxis: I18n.t("reports.#{self.type}.xaxis"),
      yaxis: I18n.t("reports.#{self.type}.yaxis"),
-     data: self.data
+     data: self.data,
+     total: self.total
     }
   end
 
@@ -28,7 +25,6 @@ class Report
 
     # Load the report
     report = Report.new(type)
-    report.cache = false if opts[:cache] == false
     send(report_method, report)
     report
   end
@@ -45,6 +41,7 @@ class Report
     User.count_by_signup_date(30.days.ago).each do |date, count|
       report.data << {x: date, y: count}
     end
+    report.total = User.count
   end
 
   def self.report_topics(report)
@@ -52,6 +49,7 @@ class Report
     Topic.count_per_day(30.days.ago).each do |date, count|
       report.data << {x: date, y: count}
     end
+    report.total = Topic.count
   end
 
   def self.report_posts(report)
@@ -59,6 +57,7 @@ class Report
     Post.count_per_day(30.days.ago).each do |date, count|
       report.data << {x: date, y: count}
     end
+    report.total = Post.count
   end
 
   def self.report_flags(report)
@@ -68,6 +67,7 @@ class Report
         report.data << {x: i.days.ago.to_date.to_s, y: count}
       end
     end
+    report.total = PostAction.where(post_action_type_id: PostActionType.flag_types.values).count
   end
 
   def self.report_users_by_trust_level(report)
@@ -82,6 +82,7 @@ class Report
     PostAction.count_likes_per_day(30.days.ago).each do |date, count|
       report.data << {x: date, y: count}
     end
+    report.total = PostAction.where(post_action_type_id: PostActionType.types[:like]).count
   end
 
   def self.report_emails(report)
@@ -89,6 +90,7 @@ class Report
     EmailLog.count_per_day(30.days.ago).each do |date, count|
       report.data << {x: date, y: count}
     end
+    report.total = EmailLog.count
   end
 
 end

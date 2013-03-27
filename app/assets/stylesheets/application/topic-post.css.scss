@@ -539,9 +539,6 @@
         background-color: $white;
         word-wrap: break-word;
         @include border-radius-top(4px);
-        p:nth-of-type(1) {
-          margin-top: 0;
-        }
         .calc {
           background-color: $highlight;
           margin-bottom: 10px;
@@ -583,8 +580,22 @@
   }
 }
 
+
 .topic-body {
   position: relative;
+
+  // this removes the topmost margin;
+  // if we don't have this, all posts would have extra space at the top
+  .cooked > *:first-child {
+    margin-top: 0px !important;
+  }
+
+  // set up proper header margins in posts
+  h1, h2, h3, h4, h5, h6 {
+    margin: 20px 0 10px;
+  }
+
+  // this is the little pointy bit of the speech bubble on the post, on the left side
   &:before,
   &:after {
     position: absolute;
@@ -641,7 +652,7 @@
     line-height: 23px;
   }
   h4 {
-    margin-bottom: 3px;
+    margin: 0 0 3px 0;
     color: #6c7376;
     font-weight: normal;
     font-size: 12px;
@@ -758,6 +769,6 @@
     left: 0;
     color: rgba($black, 0.05);
     font: 90px/1 FontAwesome;
-    content: "\f023";
+    content: "\f0e0";
   }
 }

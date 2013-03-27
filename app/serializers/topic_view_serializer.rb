@@ -44,7 +44,8 @@ class TopicViewSerializer < ApplicationSerializer
              :posts,
              :at_bottom,
              :highest_post_number,
-             :pinned
+             :pinned,
+             :filtered_posts_count
 
   has_one :created_by, serializer: BasicUserSerializer, embed: :objects
   has_one :last_poster, serializer: BasicUserSerializer, embed: :objects
@@ -96,6 +97,10 @@ class TopicViewSerializer < ApplicationSerializer
 
   def include_post_action_visibility?
     object.post_action_visibility.present?
+  end
+
+  def filtered_posts_count
+    object.filtered_posts_count
   end
 
   def voted_in_topic
@@ -172,11 +177,11 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def participants
-    object.posts_count.collect {|tuple| {user: object.participants[tuple.first], post_count: tuple[1]}}
+    object.post_counts_by_user.collect {|tuple| {user: object.participants[tuple.first], post_count: tuple[1]}}
   end
 
   def include_participants?
-    object.initial_load? && object.posts_count.present?
+    object.initial_load? && object.post_counts_by_user.present?
   end
 
   def suggested_topics
@@ -204,13 +209,22 @@ class TopicViewSerializer < ApplicationSerializer
     @posts = []
     @highest_number_in_posts = 0
     if object.posts.present?
-      object.posts.each do |p|
+      object.posts.each_with_index do |p, idx|
         @highest_number_in_posts = p.post_number if p.post_number > @highest_number_in_posts
         ps = PostSerializer.new(p, scope: scope, root: false)
         ps.topic_slug = object.topic.slug
         ps.topic_view = object
         p.topic = object.topic
-        @posts << ps.as_json
+
+        post_json = ps.as_json
+
+        if object.index_reverse
+          post_json[:index] = object.index_offset - idx
+        else
+          post_json[:index] = object.index_offset + idx + 1
+        end
+
+        @posts << post_json
       end
     end
     @posts

@@ -8,6 +8,9 @@ en:
       topic: 'share a link to this topic'
       post: 'share a link to this post'
       close: 'close'
+      twitter: 'share this link on Twitter'
+      facebook: 'share this link on Facebook'
+      google+: 'share this link on Google+'
 
     edit: 'edit the title and category of this topic'
     not_implemented: "That feature hasn't been implemented yet, sorry!"
@@ -24,7 +27,6 @@ en:
     links: Links
     faq: "FAQ"
     you: "You"
-    ok: "ok"
     or: "or"
     now: "just now"
 
@@ -203,8 +205,10 @@ en:
 
     best_of:
       title: "Best Of"
+      enabled_description: You are currently viewing the "Best Of" view of this topic.
       description: "There are <b>{{count}}</b> posts in this topic. That's a lot! Would you like to save time by switching your view to show only the posts with the most interactions and responses?"
-      button: 'Switch to "Best Of" view'
+      enable: 'Switch to "Best Of" view'
+      disable: 'Cancel "Best Of"'
 
     private_message_info:
       title: "Private Conversation"
@@ -331,7 +335,7 @@ en:
       posted: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
       edited: "<i title='edited' class='icon icon-pencil'></i> {{username}} {{link}}"
       liked: "<i title='liked' class='icon icon-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='icon icon-lock' title='private message'></i> {{username}} sent you a private message: {{link}}"
+      private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} sent you a private message: {{link}}"
       invited_to_private_message: "{{username}} invited you to a private conversation: {{link}}"
       invitee_accepted: "<i title='accepted your invitation' class='icon icon-signin'></i> {{username}} accepted your invitation"
       moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} moved post to {{link}}"
@@ -498,8 +502,10 @@ en:
       login_reply: 'Log In to Reply'
 
       filters:
-        user: "You're viewing only posts by specific user(s)."
-        best_of: "You're viewing only the 'Best Of' posts."
+        user:
+          one: "You're viewing only posts by a specific user."
+          other: "You're viewing only posts made by specific users."
+        best_of: "You're viewing the {{filtered_posts_count}} best posts of {{posts_count}} in the topic."
         cancel: "Show all posts in this topic again."
 
       move_selected:
@@ -604,6 +610,7 @@ en:
       list: "List Categories"
       no_description: "There is no description for this category."
       change_in_category_topic: "visit category topic to edit the description"
+      hotness: "Hotness"
 
     flagging:
       title: 'Why are you flagging this post?'
@@ -697,9 +704,9 @@ en:
         installed_version: "Installed"
         latest_version: "Latest"
         update_often: 'Please update often!'
-        total_users: "Total Users"
-        moderator_short: "mod"
         problems_found: "Some problems have been found with your installation of Discourse:"
+        moderators: 'Moderators:'
+        admins: 'Admins:'
 
         reports:
           today: "Today"
@@ -709,6 +716,9 @@ en:
           all_time: "All Time"
           7_days_ago: "7 Days Ago"
           30_days_ago: "30 Days Ago"
+          all: "All"
+          view_table: "View as Table"
+          view_chart: "View as Bar Chart"
 
       commits:
         latest_changes: "Latest changes."
@@ -725,6 +735,8 @@ en:
         flagged_by: "Flagged by"
         error: "Something went wrong"
 
+      api:
+        title: "API"
       customize:
         title: "Customize"
         header: "Header"

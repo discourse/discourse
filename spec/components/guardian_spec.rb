@@ -374,11 +374,11 @@ describe Guardian do
 
         it "isn't allowed if the user voted and the topic doesn't allow multiple votes" do
           Topic.any_instance.expects(:has_meta_data_boolean?).with(:single_vote).returns(true)
-          Guardian.new(user).can_vote?(post, :voted_in_topic => true).should be_false
+          Guardian.new(user).can_vote?(post, voted_in_topic: true).should be_false
         end
 
         it "is allowed if the user voted and the topic doesn't allow multiple votes" do
-          Guardian.new(user).can_vote?(post, :voted_in_topic => false).should be_true
+          Guardian.new(user).can_vote?(post, voted_in_topic: false).should be_true
         end
       end
 

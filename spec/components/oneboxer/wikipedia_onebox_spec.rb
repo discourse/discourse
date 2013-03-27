@@ -8,8 +8,8 @@ describe Oneboxer::WikipediaOnebox do
 
   it "generates the expected onebox for Wikipedia" do
     o = Oneboxer::WikipediaOnebox.new('http://en.wikipedia.org/wiki/Ruby')
-    FakeWeb.register_uri(:get, o.translate_url, :response => fixture_file('oneboxer/wikipedia.response'))
-    FakeWeb.register_uri(:get, 'http://en.m.wikipedia.org/wiki/Ruby', :response => fixture_file('oneboxer/wikipedia_redirected.response'))
+    FakeWeb.register_uri(:get, o.translate_url, response: fixture_file('oneboxer/wikipedia.response'))
+    FakeWeb.register_uri(:get, 'http://en.m.wikipedia.org/wiki/Ruby', response: fixture_file('oneboxer/wikipedia_redirected.response'))
     o.onebox.should == expected_wikipedia_result
   end
 

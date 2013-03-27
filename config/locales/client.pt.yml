@@ -281,7 +281,7 @@ pt:
       posted: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
       edited: "<i title='edited' class='icon icon-pencil'></i> {{username}} {{link}}"
       liked: "<i title='liked' class='icon icon-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='icon icon-lock' title='private message'></i> {{username}} enviou-te uma mensagem privada: {{link}}"
+      private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} enviou-te uma mensagem privada: {{link}}"
       invited_to_private_message: "{{username}} convidou-te para uma conversa privada: {{link}}"
       invitee_accepted: "<i title='accepted your invitation' class='icon icon-signin'></i> {{username}} aceitou o teu convite"
       moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} moveu o post para {{link}}"

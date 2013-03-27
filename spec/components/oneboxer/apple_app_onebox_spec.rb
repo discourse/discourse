@@ -7,7 +7,7 @@ require 'oneboxer/apple_app_onebox'
 describe Oneboxer::AppleAppOnebox do
   before(:each) do
     @o = Oneboxer::AppleAppOnebox.new("https://itunes.apple.com/us/app/minecraft-pocket-edition-lite/id479651754")
-    FakeWeb.register_uri(:get, @o.translate_url, :response => fixture_file('oneboxer/apple.response'))
+    FakeWeb.register_uri(:get, @o.translate_url, response: fixture_file('oneboxer/apple.response'))
   end
 
   it "generates the expected onebox for Apple app" do

@@ -7,6 +7,7 @@ class CategorySerializer < ApplicationSerializer
              :slug,
              :topic_count,
              :description,
-             :topic_url
+             :topic_url,
+             :hotness
 
 end

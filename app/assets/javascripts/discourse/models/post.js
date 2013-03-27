@@ -175,13 +175,8 @@ Discourse.Post = Discourse.Model.extend({
     return $.ajax(Discourse.getURL("/posts/") + (this.get('id')) + "/recover", { type: 'PUT', cache: false });
   },
 
-  "delete": function(complete) {
-    return $.ajax(Discourse.getURL("/posts/") + (this.get('id')), {
-      type: 'DELETE',
-      success: function(result) {
-        return typeof complete === "function" ? complete() : void 0;
-      }
-    });
+  destroy: function(complete) {
+    return $.ajax(Discourse.getURL("/posts/") + (this.get('id')), { type: 'DELETE' });
   },
 
   // Update the properties of this post from an obj, ignoring cooked as we should already

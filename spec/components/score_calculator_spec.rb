@@ -3,19 +3,25 @@ require 'score_calculator'
 
 describe ScoreCalculator do
 
-  before do
-    @post = Fabricate(:post, reads: 111)
-    @topic = @post.topic
-  end
+  let!(:post) { Fabricate(:post, reads: 111) }
+  let!(:another_post) { Fabricate(:post, topic: post.topic, reads: 222) }
+  let(:topic) { post.topic }
 
   context 'with weightings' do
     before do
       ScoreCalculator.new(reads: 3).calculate
-      @post.reload
+      post.reload
+      another_post.reload
     end
 
     it 'takes the supplied weightings into effect' do
-      @post.score.should == 333
+      post.score.should == 333
+      another_post.score.should == 666
+    end
+
+    it "creates the percent_ranks" do
+      another_post.percent_rank.should == 0.0
+      post.percent_rank.should == 1.0
     end
   end
 
@@ -23,15 +29,15 @@ describe ScoreCalculator do
 
     it "won't update the site settings when the site settings don't match" do
       ScoreCalculator.new(reads: 3).calculate
-      @topic.reload
-      @topic.has_best_of.should be_false
+      topic.reload
+      topic.has_best_of.should be_false
     end
 
     it "removes the best_of flag if the topic no longer qualifies" do
-      @topic.update_column(:has_best_of, true)
+      topic.update_column(:has_best_of, true)
       ScoreCalculator.new(reads: 3).calculate
-      @topic.reload
-      @topic.has_best_of.should be_false
+      topic.reload
+      topic.has_best_of.should be_false
     end
 
     it "won't update the site settings when the site settings don't match" do
@@ -40,8 +46,8 @@ describe ScoreCalculator do
       SiteSetting.expects(:best_of_score_threshold).returns(100)
 
       ScoreCalculator.new(reads: 3).calculate
-      @topic.reload
-      @topic.has_best_of.should be_true
+      topic.reload
+      topic.has_best_of.should be_true
     end
 
   end

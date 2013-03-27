@@ -22,7 +22,7 @@
     {{#each content}}
     <tr {{bindAttr class="hiddenClass"}}>
       <td class='user'><a href="/admin{{unbound user.path}}">{{avatar user imageSize="small"}}</a></td>
-      <td class='excerpt'>{{#if topicHidden}}<i title='this topic is invisible' class='icon icon-eye-close'></i> {{/if}}<h3><a href='{{unbound url}}'>{{title}}</a></h3><br>{{{excerpt}}}
+      <td class='excerpt'>{{#if topicHidden}}<i title='{{i18n topic_statuses.invisible.help}}' class='icon icon-eye-close'></i> {{/if}}<h3><a href='{{unbound url}}'>{{title}}</a></h3><br>{{{excerpt}}}
       </td>
       <td class='flaggers'>{{#each flaggers}}<a href="/admin{{unbound path}}">{{avatar this imageSize="small"}}</a>{{/each}}</td>
       <td class='last-flagged'>{{date lastFlagged}}</td>

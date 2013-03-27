@@ -5,7 +5,7 @@ class CategoryList
 
   def initialize(current_user)
     @categories = Category
-                    .includes(:featured_topics => [:category])
+                    .includes(featured_topics: [:category])
                     .includes(:featured_users)
                     .order('topics_week desc, topics_month desc, topics_year desc')
                     .to_a

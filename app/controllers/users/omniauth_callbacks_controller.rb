@@ -14,7 +14,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   skip_before_filter :check_xhr
 
   # must be done, cause we may trigger a POST
-  skip_before_filter :verify_authenticity_token, :only => :complete
+  skip_before_filter :verify_authenticity_token, only: :complete
 
   def complete
     # Make sure we support that provider
@@ -29,13 +29,13 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json { render :json => @data }
+      format.json { render json: @data }
     end
   end
 
   def failure
     flash[:error] = I18n.t("login.omniauth_error", strategy: params[:strategy].titleize)
-    render :layout => 'no_js'
+    render layout: 'no_js'
   end
 
   def create_or_sign_on_user_using_twitter(auth_token)
@@ -49,7 +49,7 @@ class Users::OmniauthCallbacksController < ApplicationController
       twitter_screen_name: screen_name
     }
 
-    user_info = TwitterUserInfo.where(:twitter_user_id => twitter_user_id).first
+    user_info = TwitterUserInfo.where(twitter_user_id: twitter_user_id).first
 
     @data = {
       username: screen_name,
@@ -97,7 +97,7 @@ class Users::OmniauthCallbacksController < ApplicationController
       email_valid: true
     }
 
-    user_info = FacebookUserInfo.where(:facebook_user_id => fb_uid ).first
+    user_info = FacebookUserInfo.where(facebook_user_id: fb_uid).first
 
     @data = {
       username: username,
@@ -194,7 +194,7 @@ class Users::OmniauthCallbacksController < ApplicationController
       github_screen_name: screen_name
     }
 
-    user_info = GithubUserInfo.where(:github_user_id => github_user_id).first
+    user_info = GithubUserInfo.where(github_user_id: github_user_id).first
 
     @data = {
       username: screen_name,

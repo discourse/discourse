@@ -21,6 +21,15 @@ class ScoreCalculator
     # First update the scores of the posts
     exec_sql(post_score_sql, @weightings)
 
+    # Update the percent rankings of the posts
+
+    exec_sql("UPDATE posts SET percent_rank = x.percent_rank
+              FROM (SELECT id, percent_rank()
+                    OVER (PARTITION BY topic_id ORDER BY SCORE DESC) as percent_rank
+                    FROM posts) AS x
+              WHERE x.id = posts.id")
+
+
     # Update the best of flag
     exec_sql "
       UPDATE topics SET has_best_of =
@@ -41,7 +50,7 @@ class ScoreCalculator
 
   private
 
-    def exec_sql(sql, params)
+    def exec_sql(sql, params=nil)
       ActiveRecord::Base.exec_sql(sql, params)
     end
 

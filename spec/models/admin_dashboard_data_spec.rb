@@ -54,4 +54,71 @@ describe AdminDashboardData do
     end
   end
 
+  describe 'clockwork_check' do
+    subject { AdminDashboardData.new.clockwork_check }
+
+    it 'returns nil when clockwork is running' do
+      Jobs::ClockworkHeartbeat.stubs(:is_clockwork_running?).returns(true)
+      subject.should be_nil
+    end
+
+    it 'returns a string when clockwork is not running' do
+      Jobs::ClockworkHeartbeat.stubs(:is_clockwork_running?).returns(false)
+      subject.should_not be_nil
+    end
+  end
+
+  describe 'sidekiq_check' do
+    subject { AdminDashboardData.new.sidekiq_check }
+
+    it 'returns nil when sidekiq processed a job recently' do
+      Jobs.stubs(:last_job_performed_at).returns(1.minute.ago)
+      Jobs.stubs(:queued).returns(0)
+      subject.should be_nil
+    end
+
+    it 'returns nil when last job processed was a long time ago, but no jobs are queued' do
+      Jobs.stubs(:last_job_performed_at).returns(7.days.ago)
+      Jobs.stubs(:queued).returns(0)
+      subject.should be_nil
+    end
+
+    it 'returns nil when no jobs have ever been processed, but no jobs are queued' do
+      Jobs.stubs(:last_job_performed_at).returns(nil)
+      Jobs.stubs(:queued).returns(0)
+      subject.should be_nil
+    end
+
+    it 'returns a string when no jobs were processed recently and some jobs are queued' do
+      Jobs.stubs(:last_job_performed_at).returns(20.minutes.ago)
+      Jobs.stubs(:queued).returns(1)
+      subject.should_not be_nil
+    end
+
+    it 'returns a string when no jobs have ever been processed, and some jobs are queued' do
+      Jobs.stubs(:last_job_performed_at).returns(nil)
+      Jobs.stubs(:queued).returns(1)
+      subject.should_not be_nil
+    end
+  end
+
+  describe 'ram_check' do
+    subject { AdminDashboardData.new.ram_check }
+
+    it 'returns nil when total ram is 1 GB' do
+      MemInfo.any_instance.stubs(:mem_total).returns(1025272)
+      subject.should be_nil
+    end
+
+    it 'returns nil when total ram cannot be determined' do
+      MemInfo.any_instance.stubs(:mem_total).returns(nil)
+      subject.should be_nil
+    end
+
+    it 'returns a string when total ram is less than 1 GB' do
+      MemInfo.any_instance.stubs(:mem_total).returns(512636)
+      subject.should_not be_nil
+    end
+  end
+
 end

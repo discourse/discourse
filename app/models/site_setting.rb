@@ -15,9 +15,11 @@ class SiteSetting < ActiveRecord::Base
   setting(:company_full_name, 'My Unconfigured Forum Ltd.')
   setting(:company_short_name, 'Unconfigured Forum')
   setting(:company_domain, 'www.example.com')
+  setting(:api_key, '')
   client_setting(:traditional_markdown_linebreaks, false)
   client_setting(:top_menu, 'popular|new|unread|favorited|categories')
   client_setting(:post_menu, 'like|edit|flag|delete|share|bookmark|reply')
+  client_setting(:share_links, 'twitter|facebook|google+')
   client_setting(:track_external_right_clicks, false)
   client_setting(:must_approve_users, false)
   client_setting(:ga_tracking_code, "")
@@ -33,6 +35,7 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:flush_timings_secs, 5)
   client_setting(:supress_reply_directly_below, true)
   client_setting(:email_domains_blacklist, 'mailinator.com')
+  client_setting(:email_domains_whitelist)
   client_setting(:version_checks, true)
   client_setting(:min_title_similar_length, 10)
   client_setting(:min_body_similar_length, 15)
@@ -73,6 +76,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:post_undo_action_window_mins, 10)
   setting(:system_username, '')
   setting(:max_mentions_per_post, 5)
+  setting(:visitor_max_mentions_per_post, 2)
 
   setting(:uncategorized_name, 'uncategorized')
 
@@ -106,6 +110,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:best_of_score_threshold, 15)
   setting(:best_of_posts_required, 50)
   setting(:best_of_likes_required, 1)
+  setting(:best_of_percent_filter, 20)
 
   # we need to think of a way to force users to enter certain settings, this is a minimal config thing
   setting(:notification_email, 'info@discourse.org')
@@ -145,7 +150,7 @@ class SiteSetting < ActiveRecord::Base
   # Trust related
   setting(:basic_requires_topics_entered, 5)
   setting(:basic_requires_read_posts, 50)
-  setting(:basic_requires_time_spent_mins, 30)
+  setting(:basic_requires_time_spent_mins, 15)
 
   # Entropy checks
   setting(:title_min_entropy, 10)
@@ -153,6 +158,8 @@ class SiteSetting < ActiveRecord::Base
   setting(:max_word_length, 30)
 
   setting(:new_user_period_days, 2)
+  setting(:visitor_max_links, 2)
+  setting(:visitor_max_images, 0)
 
   setting(:title_fancy_entities, true)
 
@@ -162,6 +169,15 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:educate_until_posts, 2)
 
   setting(:max_similar_results, 7)
+
+  def self.generate_api_key!
+    self.api_key = SecureRandom.hex(32) 
+  end
+
+  def self.api_key_valid?(tested)
+    t = tested.strip 
+    t.length == 64 && t == self.api_key
+  end
 
   def self.call_discourse_hub?
     self.enforce_global_nicknames? && self.discourse_org_access_key.present?

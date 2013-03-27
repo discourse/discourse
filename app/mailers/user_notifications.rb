@@ -53,8 +53,8 @@ class UserNotifications < ActionMailer::Base
       mail to: user.email,
            from: "#{I18n.t('user_notifications.digest.from', site_name: SiteSetting.title)} <#{SiteSetting.notification_email}>",
            subject: I18n.t('user_notifications.digest.subject_template',
-                            :site_name => @site_name,
-                            :date => I18n.l(Time.now, format: :short))
+                            site_name: @site_name,
+                            date: I18n.l(Time.now, format: :short))
     end
   end
 

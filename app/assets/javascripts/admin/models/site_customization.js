@@ -64,7 +64,7 @@ Discourse.SiteCustomization = Discourse.Model.extend({
     });
   },
 
-  "delete": function() {
+  destroy: function() {
     if (!this.id) return;
 
     return $.ajax({

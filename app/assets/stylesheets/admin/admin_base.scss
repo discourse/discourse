@@ -394,22 +394,27 @@ table {
 
   &.totals {
     width: 160px;
+    margin-top: 0px;
 
-    table tr:first-child td {
+    table td {
       border-top: none;
+      &.value {
+        text-align: left;
+        width: 55px;
+      }
     }
   }
 
   &.trust-levels {
     margin-top: 0px;
 
-    td.value {
-      width: 33px;
+    table {
+      margin-bottom: 0px;
     }
-  }
 
-  &.total-users {
-    margin-left: 45px;
+    td.value {
+      width: 45px;
+    }
   }
 }
 

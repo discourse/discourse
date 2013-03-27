@@ -26,7 +26,8 @@ Discourse.AdminDashboardRoute = Discourse.Route.extend({
         d.reports.each(function(report){
           c.set(report.type, Discourse.Report.create(report));
         });
-        c.set('totalUsers', d.total_users);
+        c.set('admins', d.admins);
+        c.set('moderators', d.moderators);
         c.set('problems', d.problems);
         c.set('loading', false);
       });

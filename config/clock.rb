@@ -17,4 +17,5 @@ module Clockwork
   every(1.minute, 'calculate_score')
   every(20.minutes, 'calculate_view_counts')
   every(1.day, 'version_check')
+  every(1.minute, 'clockwork_heartbeat')
 end

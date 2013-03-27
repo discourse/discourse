@@ -17,16 +17,16 @@ class ExcerptController < ApplicationController
         post = route.has_key?(:post_number) ? topic_posts.last : topic_posts.first
         guardian.ensure_can_see!(post)
 
-        render :json => post, serializer: PostExcerptSerializer, root: false
+        render json: post, serializer: PostExcerptSerializer, root: false
       when 'users'
         user = User.where(username_lower: route[:username].downcase).first
         guardian.ensure_can_see!(user)
-        render :json => user, serializer: UserExcerptSerializer, root: false
+        render json: user, serializer: UserExcerptSerializer, root: false
       when 'list'
         if route[:action] == 'category'
           category = Category.where(slug: route[:category]).first
           guardian.ensure_can_see!(category)
-          render :json => category, serializer: CategoryExcerptSerializer, root: false
+          render json: category, serializer: CategoryExcerptSerializer, root: false
         end
       else
         render nothing: true, status: 404

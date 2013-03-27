@@ -197,13 +197,8 @@ Discourse.Topic = Discourse.Model.extend({
   },
 
   // Delete this topic
-  "delete": function(callback) {
-    return $.ajax(Discourse.getURL("/t/") + (this.get('id')), {
-      type: 'DELETE',
-      success: function() {
-        return typeof callback === "function" ? callback() : void 0;
-      }
-    });
+  destroy: function() {
+    return $.ajax(Discourse.getURL("/t/") + (this.get('id')), { type: 'DELETE' });
   },
 
   // Load the posts for this topic
@@ -215,8 +210,11 @@ Discourse.Topic = Discourse.Model.extend({
     // Load the first post by default
     if ((!opts.bestOf) && (!opts.nearPost)) opts.nearPost = 1;
 
-    // If we already have that post in the DOM, jump to it
-    if (Discourse.TopicView.scrollTo(this.get('id'), opts.nearPost)) return;
+    // If we already have that post in the DOM, jump to it. Return a promise
+    // that's already complete.
+    if (Discourse.TopicView.scrollTo(this.get('id'), opts.nearPost)) {
+      return Ember.Deferred.promise(function(promise) { promise.resolve(); });
+    }
 
     // If loading the topic succeeded...
     var afterTopicLoaded = function(result) {
@@ -294,7 +292,7 @@ Discourse.Topic = Discourse.Model.extend({
     }
 
     // Finally, call our find method
-    Discourse.Topic.find(this.get('id'), {
+    return Discourse.Topic.find(this.get('id'), {
       nearPost: opts.nearPost,
       bestOf: opts.bestOf,
       trackVisit: opts.trackVisit
@@ -389,7 +387,7 @@ Discourse.Topic.reopenClass({
     @returns A promise that will resolve to the topics
   **/
   findSimilarTo: function(title, body) {
-    return $.ajax({url: "/topics/similar_to", data: {title: title, raw: body} }).then(function (results) {
+    return $.ajax({url: Discourse.getURL("/topics/similar_to"), data: {title: title, raw: body} }).then(function (results) {
       return results.map(function(topic) { return Discourse.Topic.create(topic) });
     });
   },
@@ -420,7 +418,7 @@ Discourse.Topic.reopenClass({
     if (opts.userFilters && opts.userFilters.length > 0) {
       data.username_filters = [];
       opts.userFilters.forEach(function(username) {
-        return data.username_filters.push(username);
+        data.username_filters.push(username);
       });
     }
 
