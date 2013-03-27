@@ -29,11 +29,32 @@ Date.addLocale('cs', {
   }
 });
 
+// create DA locale, because it's not supported by Sugar at all
+// TODO: currently just English, needs to be translated and localized
+Date.addLocale('da', {
+  'plural': true,
+  'capitalizeUnit': false,
+  'months': 'January,February,March,April,May,June,July,August,September,October,November,December',
+  'weekdays': 'Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday',
+  'units': 'millisecond:|s,second:|s,minute:|s,hour:|s,day:|s,week:|s,month:|s,year:|s',
+  'short': '{Month} {d}, {yyyy}',
+  'short_no_year': '{Month} {d}',
+  'long': '{Month} {d}, {yyyy} {h}:{mm}{tt}',
+  'full': '{Weekday} {Month} {d}, {yyyy} {h}:{mm}:{ss}{tt}',
+  'past': '{num} {unit} {sign}',
+  'future': '{num} {unit} {sign}',
+  'duration': '{num} {unit}'
+});
+
+
 // fix DE locale
 Date.getLocale('de').short_no_year = '{d}. {month}';
 
 // fix EN locale
 Date.getLocale('en').short_no_year = '{d} {Mon}';
+
+// fix ES locale
+Date.getLocale('es').short_no_year = '{d} {month}';
 
 // fix FR locale
 Date.getLocale('fr').short_no_year = '{d} {month}';
@@ -54,6 +75,9 @@ Date.addLocale('id', {
   'future': '{num} {unit} {sign}',
   'duration': '{num} {unit}'
 });
+
+// fix IT locale
+Date.getLocale('it').short_no_year = '{d} {Month}';
 
 // fix NL locale
 Date.getLocale('nl').short_no_year = '{d} {Month}';
