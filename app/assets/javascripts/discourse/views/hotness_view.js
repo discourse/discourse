@@ -14,7 +14,7 @@ Discourse.HotnessView = Discourse.View.extend({
     // Our scale goes to 11!
     for (var i=1; i<12; i++) {
       buffer.push("<button value='" + i + "'");
-      if (this.get('hotness') == i) {
+      if (this.get('hotness') === i) {
         buffer.push(" class='selected'");
       }
       buffer.push(">" + i + "</button>");
