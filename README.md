@@ -7,6 +7,7 @@ Whenever you need ...
 - a mailing list
 - a forum to discuss something
 - a chat room where you can type paragraphs
+- a wiki
 
 ... consider Discourse.
 
