@@ -70,7 +70,6 @@ Ember.DiscourseLocation = Ember.Object.extend({
   */
   setURL: function(path) {
     path = this.formatURL(path);
-
     if (this.getState() && this.getState().path !== path) {
       popstateReady = true;
       this.pushState(path);

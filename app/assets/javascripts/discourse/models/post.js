@@ -182,33 +182,31 @@ Discourse.Post = Discourse.Model.extend({
   // Update the properties of this post from an obj, ignoring cooked as we should already
   // have that rendered.
   updateFromSave: function(obj) {
-    var lookup,
-      _this = this;
-    if (!obj) {
-      return;
-    }
+
+    var post = this;
+
+    // Update all the properties
+    if (!obj) return;
     Object.each(obj, function(key, val) {
-      if (key === 'actions_summary') {
-        return false;
-      }
+      if (key === 'actions_summary') return false;
       if (val) {
-        return _this.set(key, val);
+        post.set(key, val);
       }
     });
 
     // Rebuild actions summary
     this.set('actions_summary', Em.A());
     if (obj.actions_summary) {
-      lookup = Em.Object.create();
+      var lookup = Em.Object.create();
       obj.actions_summary.each(function(a) {
         var actionSummary;
-        a.post = _this;
+        a.post = post;
         a.actionType = Discourse.get("site").postActionTypeById(a.id);
         actionSummary = Discourse.ActionSummary.create(a);
-        _this.get('actions_summary').pushObject(actionSummary);
-        return lookup.set(a.actionType.get('name_key'), actionSummary);
+        post.get('actions_summary').pushObject(actionSummary);
+        lookup.set(a.actionType.get('name_key'), actionSummary);
       });
-      return this.set('actionByName', lookup);
+      this.set('actionByName', lookup);
     }
   },
 
