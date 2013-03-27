@@ -36,7 +36,7 @@ Discourse.ShareView = Discourse.View.extend({
       _this.get('controller').close();
       return true;
     });
-    return $('html').on('click.discoure-share-link', '[data-share-url]', function(e) {
+    $('html').on('click.discoure-share-link', '[data-share-url]', function(e) {
       var $currentTarget, url;
       e.preventDefault();
       $currentTarget = $(e.currentTarget);
@@ -50,11 +50,17 @@ Discourse.ShareView = Discourse.View.extend({
       _this.get('controller').shareLink(e, url);
       return false;
     });
+    $('html').on('keydown.shareView', function(e){
+      if (e.keyCode === 27) {
+        _this.get('controller').close();
+      }
+    });
   },
 
   willDestroyElement: function() {
     $('html').off('click.discoure-share-link');
     $('html').off('click.outside-share-link');
+    $('html').off('keydown.shareView');
   }
 
 });
