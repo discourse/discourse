@@ -249,22 +249,22 @@ cs:
       resend_activation_email: "Klikněte sem pro zaslání aktivačního emailu."
       sent_activation_email_again: "Zaslali jsme vám další aktivační email na <b>{{currentEmail}}</b>. Může trvat několik minut, než vám dorazí. Zkontrolujte také vaši složku s nevyžádanou pošlou."
       google:
-        title: "Přihlásit přes Google"
+        title: "přes Google"
         message: "Autorizuji přes Google (ujistěte se, že nemáte zablokovaná popup okna)"
       twitter:
-        title: "Přihlásit přes Twitter"
+        title: "přes Twitter"
         message: "Autorizuji přes Twitter (ujistěte se, že nemáte zablokovaná popup okna)"
       facebook:
-        title: "Přihlásit přes Facebook"
+        title: "přes Facebook"
         message: "Autorizuji přes Facebook (ujistěte se, že nemáte zablokovaná popup okna)"
       yahoo:
-        title: "Přihlásit přes Yahoo"
+        title: "přes Yahoo"
         message: "Autorizuji přes Yahoo (ujistěte se, že nemáte zablokovaná popup okna)"
       github:
-        title: "Přihlásit přes Github"
+        title: "přes Github"
         message: "Autorizuji přes Github (ujistěte se, že nemáte zablokovaná popup okna)"
       persona:
-        title: "Přihlásit přes Persona"
+        title: "přes Persona"
         message: "Autorizuji přes Mozilla Persona (ujistěte se, že nemáte zablokovaná popup okna)"
 
     composer:

@@ -253,22 +253,22 @@ fr:
       resend_activation_email: "Cliquez ici pour réenvoyer l'email d'activation."
       sent_activation_email_again: "Nous venous de vous envoyer un nouvel email d'activation à <b>{{currentEmail}}</b>. Il peut prendre quelques minutes à arriver; n'oubliez pas de vérifier votre répertoire spam."
       google:
-        title: "Connexion via Google"
+        title: "via Google"
         message: "Authentification via Google (assurez-vous que les popups ne soient pas bloquées)"
       twitter:
-        title: "Connexion via Twitter"
+        title: "via Twitter"
         message: "Authentification via Twitter (assurez-vous que les popups ne soient pas bloquées)"
       facebook:
-        title: "Connexion via Facebook"
+        title: "via Facebook"
         message: "Authentification via Facebook (assurez-vous que les popups ne soient pas bloquées)"
       yahoo:
-        title: "Connexion via Yahoo"
+        title: "via Yahoo"
         message: "Authentification via Yahoo (assurez-vous que les popups ne soient pas bloquées)"
       github:
-        title: "Connexion via GitHub"
+        title: "via GitHub"
         message: "Authentification via GitHub (assurez-vous que les popups ne soient pas bloquées)"
       persona:
-        title: "Connexion via Persona"
+        title: "via Persona"
         message: "Authentification via Mozilla Persona (assurez-vous que les popups ne soient pas bloquées)"
 
     composer:

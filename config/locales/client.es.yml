@@ -247,22 +247,22 @@ es:
       resend_activation_email: "Has click aquí para enviar el email de activación nuevamente."
       sent_activation_email_again: "Te hemos enviado otro email de activación a <b>{{currentEmail}}</b>. Podría tomar algunos minutos en llegar; asegúrate de revisar tu carpeta de spam."
       google:
-        title: "Entrar con Google"
+        title: "con Google"
         message: "Autenticando con Google (asegúrate de desactivar cualquier bloqueador de pop ups)"
       twitter:
-        title: "Entrar con Twitter"
+        title: "con Twitter"
         message: "Autenticando con Twitter (asegúrate de desactivar cualquier bloqueador de pop ups)"
       facebook:
-        title: "Entrar con Facebook"
+        title: "con Facebook"
         message: "Autenticando con Facebook (asegúrate de desactivar cualquier bloqueador de pop ups)"
       yahoo:
-        title: "Entrar con Yahoo"
+        title: "con Yahoo"
         message: "Autenticando con Yahoo (asegúrate de desactivar cualquier bloqueador de pop ups)"
       github:
-        title: "Entrar con Github"
+        title: "con Github"
         message: "Autenticando con Github (asegúrate de desactivar cualquier bloqueador de pop ups)"
       persona:
-        title: "Entrar con Persona"
+        title: "con Persona"
         message: "Autenticando con Mozilla Persona (asegúrate de desactivar cualquier bloqueador de pop ups)"
 
     composer:

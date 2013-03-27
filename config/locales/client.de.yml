@@ -237,22 +237,22 @@ de:
       resend_activation_email: "Klick hier, um ein neue Aktivierungsmail zu erhalten."
       sent_activation_email_again: "Wir haben noch eine Aktivierungsmail an <b>{{currentEmail}}</b> verschickt. Es kann einige Minuten dauern, bis sie ankommt. Im Zweifel schaue auch im Spam-Ordner nach."
       google:
-        title: "Mit Google anmelden"
+        title: "Mit Google"
         message: "Authentisierung via Google (stelle sicher, dass Popup-Blocker deaktiviert sind)"
       twitter:
-        title: "Mit Twitter anmelden"
+        title: "Mit Twitter"
         message: "Authentisierung via Twitter (stelle sicher, dass Popup-Blocker deaktiviert sind)"
       facebook:
-        title: "Mit Facebook anmelden"
+        title: "Mit Facebook"
         message: "Authentisierung via Facebook (stelle sicher, dass Popup-Blocker deaktiviert sind)"
       yahoo:
-        title: "Mit Yahoo anmelden"
+        title: "Mit Yahoo"
         message: "Authentisierung via Yahoo (stelle sicher, dass Popup-Blocker deaktiviert sind)"
       github:
-        title: "Mit Github anmelden"
+        title: "Mit Github"
         message: "Authentisierung via Github (stelle sicher, dass Popup-Blocker deaktiviert sind)"
       persona:
-        title: "Mit Persona anmelden"
+        title: "Mit Persona"
         message: "Authentisierung via Mozilla Persona (stelle sicher, dass Popup-Blocker deaktiviert sind)"
 
     composer:

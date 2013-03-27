@@ -246,22 +246,22 @@ it:
       resend_activation_email: "Clicca qui per far partire la mail di attivazione una seconda volta."
       sent_activation_email_again: "Ti abbiamo mandato un altro link di attivazione all'indirizzo<b>{{currentEmail}}</b>. Potrebbe volerci qualche minuto prima che arrivi; controlla anche fra lo spam."
       google:
-        title: "Log In con Google"
+        title: "con Google"
         message: "Autenticazione con Google (l'apertura di pop up deve essere permessa dal browser)"
       twitter:
-        title: "Log In con Twitter"
+        title: "con Twitter"
         message: "Autenticazione con Twitter (l'apertura di pop up deve essere permessa dal browser)"
       facebook:
-        title: "Log In con Facebook"
+        title: "con Facebook"
         message: "Autenticazione con Facebook (l'apertura di pop up deve essere permessa dal browser)"
       yahoo:
-        title: "Log In con Yahoo"
+        title: "con Yahoo"
         message: "Autenticazione con Yahoo (l'apertura di pop up deve essere permessa dal browser)"
       github:
-        title: "Log In con Github"
+        title: "con Github"
         message: "Autenticazione con Github (l'apertura di pop up deve essere permessa dal browser)"
       persona:
-        title: "Log In con Persona"
+        title: "con Persona"
         message: "Autenticazione con Mozilla Persona (l'apertura di pop up deve essere permessa dal browser)"
 
     composer:

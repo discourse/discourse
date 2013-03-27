@@ -244,22 +244,22 @@ da:
       resend_activation_email: "Klik her for at sende aktiverings-e-mail’en igen."
       sent_activation_email_again: "Vi har sendt endnu en aktiverings-e-mail til dig på <b>{{currentEmail}}</b>. Det kan tage nogen få minutter før den når frem; check også din spam-mappe."
       google:
-        title: "Log ind med Google"
+        title: "med Google"
         message: "Logger ind med Google (check at pop-op-blokering ikke er aktiv)"
       twitter:
-        title: "Log ind med Twitter"
+        title: "med Twitter"
         message: "Logger ind med Twitter (check at pop-op-blokering ikke er aktiv)"
       facebook:
-        title: "Log ind med Facebook"
+        title: "med Facebook"
         message: "Logger ind med Facebook (check at pop-op-blokering ikke er aktiv)"
       yahoo:
-        title: "Log ind med Yahoo"
+        title: "med Yahoo"
         message: "Logger ind med Yahoo (check at pop-op-blokering ikke er aktiv)"
       github:
-        title: "Log ind med Github"
+        title: "med Github"
         message: "Logger ind med Github (check at pop-op-blokering ikke er aktiv)"
       persona:
-        title: "Log ind med Persona"
+        title: "med Persona"
         message: "Logger ind med Mozilla Persona (check at pop-op-blokering ikke er aktiv)"
 
     composer:

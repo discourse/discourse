@@ -249,22 +249,22 @@ en:
       resend_activation_email: "Click here to send the activation email again."
       sent_activation_email_again: "We sent another activation email to you at <b>{{currentEmail}}</b>. It might take a few minutes for it to arrive; be sure to check your spam folder."
       google:
-        title: "Log In with Google"
+        title: "with Google"
         message: "Authenticating with Google (make sure pop up blockers are not enabled)"
       twitter:
-        title: "Log In with Twitter"
+        title: "with Twitter"
         message: "Authenticating with Twitter (make sure pop up blockers are not enabled)"
       facebook:
-        title: "Log In with Facebook"
+        title: "with Facebook"
         message: "Authenticating with Facebook (make sure pop up blockers are not enabled)"
       yahoo:
-        title: "Log In with Yahoo"
+        title: "with Yahoo"
         message: "Authenticating with Yahoo (make sure pop up blockers are not enabled)"
       github:
-        title: "Log In with Github"
+        title: "with Github"
         message: "Authenticating with Github (make sure pop up blockers are not enabled)"
       persona:
-        title: "Log In with Persona"
+        title: "with Persona"
         message: "Authenticating with Mozilla Persona (make sure pop up blockers are not enabled)"
 
     composer:
