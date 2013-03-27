@@ -262,8 +262,8 @@ es:
         title: "Entrar con Github"
         message: "Autenticando con Github (asegúrate de desactivar cualquier bloqueador de pop ups)"
       persona:
-        title: "Entrar con Mozilla Persona"
-        message: "Autenticando con Persona (asegúrate de desactivar cualquier bloqueador de pop ups)"
+        title: "Entrar con Persona"
+        message: "Autenticando con Mozilla Persona (asegúrate de desactivar cualquier bloqueador de pop ups)"
 
     composer:
       posting_not_on_topic: "Estas respondiendo al tema \"{{title}}\", pero estas viendo un tema distinto."

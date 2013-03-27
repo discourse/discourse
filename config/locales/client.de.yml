@@ -252,8 +252,8 @@ de:
         title: "Mit Github anmelden"
         message: "Authentisierung via Github (stelle sicher, dass Popup-Blocker deaktiviert sind)"
       persona:
-        title: "Mit Mozilla Persona anmelden"
-        message: "Authentisierung via Persona (stelle sicher, dass Popup-Blocker deaktiviert sind)"
+        title: "Mit Persona anmelden"
+        message: "Authentisierung via Mozilla Persona (stelle sicher, dass Popup-Blocker deaktiviert sind)"
 
     composer:
       saving_draft_tip: "speichert"

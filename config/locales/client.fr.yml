@@ -268,8 +268,8 @@ fr:
         title: "Connexion via GitHub"
         message: "Authentification via GitHub (assurez-vous que les popups ne soient pas bloquées)"
       persona:
-        title: "Connexion via Mozilla Persona"
-        message: "Authentification via Persona (assurez-vous que les popups ne soient pas bloquées)"
+        title: "Connexion via Persona"
+        message: "Authentification via Mozilla Persona (assurez-vous que les popups ne soient pas bloquées)"
 
     composer:
       posting_not_on_topic: "Vous répondez à la discussion \"{{title}}\", mais vous êtes actuellement en train de consulter une autre discussion."

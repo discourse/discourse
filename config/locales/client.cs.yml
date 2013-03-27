@@ -264,7 +264,7 @@ cs:
         title: "Přihlásit přes Github"
         message: "Autorizuji přes Github (ujistěte se, že nemáte zablokovaná popup okna)"
       persona:
-        title: "Přihlásit přes Mozilla Persona"
+        title: "Přihlásit přes Persona"
         message: "Autorizuji přes Mozilla Persona (ujistěte se, že nemáte zablokovaná popup okna)"
 
     composer:

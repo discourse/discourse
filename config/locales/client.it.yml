@@ -261,8 +261,8 @@ it:
         title: "Log In con Github"
         message: "Autenticazione con Github (l'apertura di pop up deve essere permessa dal browser)"
       persona:
-        title: "Log In con Mozilla Persona"
-        message: "Autenticazione con Persona (l'apertura di pop up deve essere permessa dal browser)"
+        title: "Log In con Persona"
+        message: "Autenticazione con Mozilla Persona (l'apertura di pop up deve essere permessa dal browser)"
 
     composer:
       posting_not_on_topic: "Stai rispondendo al topic \"{{title}}\", ma al momento stai visualizzando un topic diverso."

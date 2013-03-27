@@ -259,8 +259,8 @@ da:
         title: "Log ind med Github"
         message: "Logger ind med Github (check at pop-op-blokering ikke er aktiv)"
       persona:
-        title: "Log ind med Mozilla Persona"
-        message: "Logger ind med Persona (check at pop-op-blokering ikke er aktiv)"
+        title: "Log ind med Persona"
+        message: "Logger ind med Mozilla Persona (check at pop-op-blokering ikke er aktiv)"
 
     composer:
       posting_not_on_topic: "Du svarer nu på emnet \"{{title}}\", men du ser i øjeblikket på et andet emne."

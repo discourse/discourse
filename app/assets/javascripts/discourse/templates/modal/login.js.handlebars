@@ -6,7 +6,6 @@
     {{#if Discourse.SiteSettings.enable_facebook_logins}}
       <button class="btn btn-social facebook" title="{{i18n login.facebook.title}}" {{action "facebookLogin" target="view"}}>{{i18n login.facebook.title}}</button>
     {{/if}}
-    <br>
     {{#if Discourse.SiteSettings.enable_twitter_logins}}
       <button class="btn btn-social twitter" title="{{i18n login.twitter.title}}" {{action "twitterLogin" target="view"}}>{{i18n login.twitter.title}}</button>
     {{/if}}
@@ -17,7 +16,6 @@
       <button class="btn btn-social github" title="{{i18n login.github.title}}" {{action "githubLogin" target="view"}}>{{i18n login.github.title}}</button>
     {{/if}}
     {{#if Discourse.SiteSettings.enable_persona_logins}}
-    <br>
     <button class="btn btn-social persona" title="{{i18n login.persona.title}}" {{action "personaLogin" target="view"}}>{{i18n login.persona.title}}</button>
     {{/if}}
   </div>
