@@ -29,7 +29,9 @@ Discourse.ShareView = Discourse.View.extend({
 
   didInsertElement: function() {
     var _this = this;
-    $('html').on('click.outside-share-link', function(e) {
+    $('html').on('mousedown.outside-share-link', function(e) {
+      // Use mousedown instead of click so this event is handled before routing occurs when a
+      // link is clicked (which is a click event) while the share dialog is showing.
       if (_this.$().has(e.target).length !== 0) {
         return;
       }
@@ -50,7 +52,7 @@ Discourse.ShareView = Discourse.View.extend({
       _this.get('controller').shareLink(e, url);
       return false;
     });
-    $('html').on('keydown.shareView', function(e){
+    $('html').on('keydown.share-view', function(e){
       if (e.keyCode === 27) {
         _this.get('controller').close();
       }
@@ -59,8 +61,8 @@ Discourse.ShareView = Discourse.View.extend({
 
   willDestroyElement: function() {
     $('html').off('click.discoure-share-link');
-    $('html').off('click.outside-share-link');
-    $('html').off('keydown.shareView');
+    $('html').off('mousedown.outside-share-link');
+    $('html').off('keydown.share-view');
   }
 
 });
