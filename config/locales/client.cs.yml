@@ -8,6 +8,9 @@ cs:
       topic: 'sdílet odkaz na toto téma'
       post: 'sdílet odkaz na tento příspěvek'
       close: 'zavřít'
+      twitter: 'sdílet odkaz na Twitteru'
+      facebook: 'sdílet odkaz na Facebooku'
+      google+: 'sdílet odkaz na Google+'
 
     edit: 'upravit název a kategorii příspěvku'
     not_implemented: "Tato fičura ještě není implementovaná"
@@ -607,6 +610,7 @@ cs:
       list: "Seznam kategorií"
       no_description: "K této kategorii zatím není žádný popis."
       change_in_category_topic: "navštivte téma kategorie pro editaci jejího popisu"
+      hotness: "Popularita"
 
     flagging:
       title: 'Proč chcete nahlásit tento příspěvek?'
@@ -731,6 +735,8 @@ cs:
         flagged_by: "Nahlásil"
         error: "Něco se pokazilo"
 
+      api:
+        title: "API"
       customize:
         title: "Přizpůsobení"
         header: "Hlavička"
