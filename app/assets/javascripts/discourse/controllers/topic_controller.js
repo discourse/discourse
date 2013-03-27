@@ -169,7 +169,10 @@ Discourse.TopicController = Discourse.ObjectController.extend({
         posts_count: this.get('posts_count')
       }));
     } else if (postFilters.userFilters.length > 0) {
-      this.set('filterDesc', Em.String.i18n("topic.filters.user", {count: postFilters.userFilters.length}));
+      this.set('filterDesc', Em.String.i18n("topic.filters.user", {
+        filtered_posts_count: this.get('filtered_posts_count'),
+        count: postFilters.userFilters.length
+      }));
     } else {
       // Hide the bottom bar
       $('#topic-filter').slideUp();

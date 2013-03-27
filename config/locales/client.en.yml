@@ -503,8 +503,8 @@ en:
 
       filters:
         user:
-          one: "You're viewing only posts by a specific user."
-          other: "You're viewing only posts made by specific users."
+          one: "You're viewing only {{filtered_posts_count}} posts by a specific user."
+          other: "You're viewing only {{filtered_posts_count}} posts made by {{count}} specific users."
         best_of: "You're viewing the {{filtered_posts_count}} best posts of {{posts_count}} in the topic."
         cancel: "Show all posts in this topic again."
 
