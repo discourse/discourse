@@ -354,10 +354,10 @@ de:
         new: "Es sind keine für Dich neuen Themen da."
         read: "Du hast bislang keine Themen gelesen."
         posted: "Du hast bislang keine Beiträge gepostet."
-        popular: "Es gibt keine populären Themen. Wie traurig."
+        latest: "Es gibt keine populären Themen. Wie traurig."
         category: "Es gibt keine Themen in {{category}}."
       bottom:
-        popular: "Das waren alle populären Themen."
+        latest: "Das waren alle populären Themen."
         posted: "Das waren alle Themen."
         read: "Das waren alle gelesenen Themen."
         new: "Das waren alle neuen Themen."
@@ -393,10 +393,11 @@ de:
       options: "Themenoptionen"
       show_links: "Zeige Links in diesem Thema"
       toggle_information: "Themendetails ein-/ausblenden"
-      read_more_in_category: "Möchtest Du mehr lesen? Finde andere Themen in {{catLink}} oder {{popularLink}}."
-      read_more: "Möchtest Du mehr lesen? {{catLink}} oder {{popularLink}}."
+      read_more_in_category: "Möchtest Du mehr lesen? Finde andere Themen in {{catLink}} oder {{latestLink}}."
+      read_more: "Möchtest Du mehr lesen? {{catLink}} oder {{latestLink}}."
       browse_all_categories: Zeige alle Kategorien
-      view_popular_topics: Zeige populäre Themen
+
+      view_latest_topics: Zeige populäre Themen
       suggest_create_topic: Fang ein neues Thema an?
       read_position_reset: "Deine Leseposition wurde zurückgesetzt."
       jump_reply_up: Springe zur vorigen Antwort
@@ -622,7 +623,7 @@ de:
     categories_list: "Liste der Kategorien"
 
     filters:
-      popular:
+      latest:
         title: "Populär"
         help: "Die populärsten unter den jüngsten Themen"
       favorited:

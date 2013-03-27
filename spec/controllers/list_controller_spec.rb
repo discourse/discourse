@@ -69,6 +69,14 @@ describe ListController do
 
   end
 
+  context 'hot' do
+    before do
+      xhr :get, :hot
+    end
+
+    it { should respond_with(:success) }
+  end
+
   context 'favorited' do
     it 'raises an error when not logged in' do
       lambda { xhr :get, :favorited }.should raise_error(Discourse::NotLoggedIn)
@@ -83,6 +91,7 @@ describe ListController do
       it { should respond_with(:success) }
     end
   end
+
 
   context 'read' do
     it 'raises an error when not logged in' do

@@ -348,7 +348,7 @@ it:
     post_undo_action_window_mins: "Numero di secondi durante i quali gli utenti sono autorizzati ad annullare le loro azioni su un post (segnalazioni, like, etc)"
     must_approve_users: "Gli amministratori devono autorizzare ogni utente prima che esso abbia accesso"
     ga_tracking_code: "Codice Google Analytics per il tracking, es: UA-12345678-9; per informazioni http://google.com/analytics"
-    top_menu: "Determina quali elementi vengono mostrati nella navigazione in homepage, ed in quale ordine. Esempio popular|read|favorited|unread|new|posted|categories"
+    top_menu: "Determina quali elementi vengono mostrati nella navigazione in homepage, ed in quale ordine. Esempio latest|hot|read|favorited|unread|new|posted|categories"
     post_menu: "Determina quali elementi vengono mostrati nel menù del post, ed in quale ordine. Esempio like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "Traccia i link esterni sui quali viene fatto click destro (es: apri in una nuova tab). Disabilitato di default perchè viene fatto il rewrite delle URL"
     topics_per_page: "Quanti topic vengono caricati di default nella pagina di lista topic"
@@ -805,7 +805,7 @@ it:
 
   page_not_found:
     title: "La pagina richiesta non esiste in questo forum. Forse possiamo aiutarti a trovarla, o un topic simile:"
-    popular_topics: "Topic popolari"
+    latest_topics: "Topic popolari"
     recent_topics: "Topic recenti"
     see_more: "Di più"
     search_title: "Cerca per questo topic"

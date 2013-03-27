@@ -376,10 +376,10 @@ zh_CN:
         new: "你没有新主题可读。"
         read: "你尚未阅读任何主题。"
         posted: "你尚未在任何主题中发帖。"
-        popular: "伤心啊，没有热门主题。"
+        latest: "伤心啊，没有热门主题。"
         category: "没有 {{category}} 分类的主题。"
       bottom:
-        popular: "没有更多热门主题可看了。"
+        latest: "没有更多热门主题可看了。"
         posted: "没有更多已发布主题可看了。"
         read: "没有更多已阅主题可看了。"
         new: "没有更多新主题可看了。"
@@ -415,10 +415,11 @@ zh_CN:
       options: "主题选项"
       show_links: "显示此主题中的链接"
       toggle_information: "切换主题详细"
-      read_more_in_category: "想阅读更多内容？浏览 {{catLink}} 或 {{popularLink}} 里的其它主题。"
-      read_more: "想阅读更多内容？{{catLink}} 或 {{popularLink}}。"
+      read_more_in_category: "想阅读更多内容？浏览 {{catLink}} 或 {{latestLink}} 里的其它主题。"
+      read_more: "想阅读更多内容？{{catLink}} 或 {{latestLink}}。"
       browse_all_categories: 浏览所有分类
-      view_popular_topics: 浏览热门主题
+
+      view_latest_topics: 浏览热门主题
       suggest_create_topic: 这就创建一个主题吧！
       read_position_reset: "你的阅读位置已经被重置。"
       jump_reply_up: 跳转至更早的回复
@@ -654,7 +655,7 @@ zh_CN:
     categories_list: "分类列表"
 
     filters:
-      popular:
+      latest:
         title: "热门"
         help: "最近最受欢迎的主题"
       favorited:

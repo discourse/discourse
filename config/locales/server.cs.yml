@@ -360,7 +360,7 @@ cs:
     post_undo_action_window_mins: "Počet sekund, během kterých smí uživatelé vrátit akce na příspěvcích (líbí se, nahlášení, atd.)"
     must_approve_users: "Administrátoři musí schválit všechny uživatele, než získají přístup"
     ga_tracking_code: "Kód pro sledování přes 'Google analytics', např. UA-12345678-9; viz http://google.com/analytics"
-    top_menu: "Určuje, které položky se zobrazí v navigaci na hlavní stránce a v jakém pořadí. Příklad: popular|read|favorited|unread|new|posted|categories"
+    top_menu: "Určuje, které položky se zobrazí v navigaci na hlavní stránce a v jakém pořadí. Příklad: latest|hot|read|favorited|unread|new|posted|categories"
     post_menu: "Určuje, které položky se zobrazí v menu u příspěvku a v jakém pořadí. Příklad: like|edit|flag|delete|share|bookmark|reply"
     share_links: "Určuje, které položky se zobrazí ve sdílecím dialogu a v jakém pořadí. Příklad: twitter|facebook|google+"
     track_external_right_clicks: "Počítat kliknutí na externí odkazy pravým tlačítkem (např. otevření do nové záložky); defaultně zakázáno kvůli přepisu URL"
@@ -822,7 +822,7 @@ cs:
 
   page_not_found:
     title: "Stránka, kterou žádáte, na tomto diskuzním fóru neexistuje. Možná vám můžeme pomoci ji najít, nebo poradit jiné téma, které se vám může líbit:"
-    popular_topics: "Populární témata"
+    latest_topics: "Populární témata"
     recent_topics: "Témata z poslední doby"
     see_more: "Více"
     search_title: "Hledat toto téma"

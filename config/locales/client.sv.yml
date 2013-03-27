@@ -323,10 +323,10 @@ sv:
         new: "Du har inga nya trådar att läsa."
         read: "Du har inte läst några trådar än."
         posted: "Du har inte postat i några trådar än."
-        popular: "Det finns inga populära trådar. Det är lite sorgligt."
+        latest: "Det finns inga populära trådar. Det är lite sorgligt."
         category: "Det finns inga {{category}}-trådar."
       bottom:
-        popular: "Det finns inga fler populära trådar att läsa."
+        latest: "Det finns inga fler populära trådar att läsa."
         posted: "Det finns inga fler postade trådar att läsa"
         read: "Det finns inga fler lästa trådar att läsa."
         new: "Det finns inga fler nya trådar att läsa."
@@ -363,10 +363,11 @@ sv:
       options: "Trådinställningar"
       show_links: "visa länkar som finns i den här tråden"
       toggle_information: "slå på/av tråddetaljer"
-      read_more_in_category: "Vill du läsa mer? Bläddra bland andra trådar i {{catLink}} eller {{popularLink}}."
-      read_more: "Vill du läsa mer? {{catLink}} eller {{popularLink}}."
+      read_more_in_category: "Vill du läsa mer? Bläddra bland andra trådar i {{catLink}} eller {{latestLink}}."
+      read_more: "Vill du läsa mer? {{catLink}} eller {{latestLink}}."
       browse_all_categories: Bläddra bland alla kategorier
-      view_popular_topics: visa populära trådar
+
+      view_latest_topics: visa populära trådar
       suggest_create_topic: Varför inte skapa en tråd?
       read_position_reset: "Din läsposition har blivit återställd."
       jump_reply_up: hoppa till tidigare svar
@@ -587,7 +588,7 @@ sv:
     categories_list: "Kategorilista"
 
     filters:
-      popular:
+      latest:
         title: "Populära"
         help: "det populäraste trådarna nyligen"
       favorited:

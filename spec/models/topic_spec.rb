@@ -365,7 +365,7 @@ describe Topic do
     end
 
     it "should be excluded from the list view" do
-      TopicQuery.new(evil_trout).list_popular.topics.should_not include(topic)
+      TopicQuery.new(evil_trout).list_latest.topics.should_not include(topic)
     end
 
     context 'invite' do

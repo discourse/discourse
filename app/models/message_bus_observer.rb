@@ -27,7 +27,7 @@ class MessageBusObserver < DiscourseObserver
     topic.posters = topic.posters_summary
     topic.posts_count = 1
     topic_json = TopicListItemSerializer.new(topic).as_json
-    MessageBus.publish("/popular", topic_json)
+    MessageBus.publish("/latest", topic_json)
 
     # If it has a category, add it to the category views too
     if topic.category.present?

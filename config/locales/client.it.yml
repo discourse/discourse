@@ -370,10 +370,10 @@ it:
         new: "Non hai nuovi topic da leggere."
         read: "Non hai ancora letto alcun topic."
         posted: "Non hai ancora postato in nessun topic."
-        popular: "Non ci sono post popolari. È molto triste."
+        latest: "Non ci sono post popolari. È molto triste."
         category: "Non ci sono topic nella categoria {{category}}."
       bottom:
-        popular: "Non ci sono altri topic popolari topics da leggere."
+        latest: "Non ci sono altri topic popolari topics da leggere."
         posted: "Non ci sono altri post da leggere."
         read: "Non ci sono altri topic da leggere."
         new: "Non ci sono altri nuovi topic da leggere."
@@ -409,10 +409,11 @@ it:
       options: "Opzioni Topic"
       show_links: "mostra i links in questo topic"
       toggle_information: "informazioni sul topic"
-      read_more_in_category: "Vuoi leggere di più? Guarda altri topic nella categoria {{catLink}} o {{popularLink}}."
-      read_more: "Vuoi leggere di più? {{catLink}} o {{popularLink}}."
+      read_more_in_category: "Vuoi leggere di più? Guarda altri topic nella categoria {{catLink}} o {{latestLink}}."
+      read_more: "Vuoi leggere di più? {{catLink}} o {{latestLink}}."
       browse_all_categories: Guarda tutte le categorie
-      view_popular_topics: guarda i topic popolari
+
+      view_latest_topics: guarda i topic popolari
       suggest_create_topic: Perchè non creare un topic?
       read_position_reset: "La tua posizione di lettura è stata resettata (wtf?)."
       jump_reply_up: vai alla risposta precedente
@@ -648,7 +649,7 @@ it:
     categories_list: "Lista Categorie"
 
     filters:
-      popular:
+      latest:
         title: "Popolari"
         help: "i topic recenti più popolari"
       favorited:

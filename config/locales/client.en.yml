@@ -373,10 +373,12 @@ en:
         new: "You have no new topics to read."
         read: "You haven't read any topics yet."
         posted: "You haven't posted in any topics yet."
-        popular: "There are no popular topics. That's sad."
+        latest: "There are no latest topics. That's sad."
+        hot: "There are no hot topics."
         category: "There are no {{category}} topics."
       bottom:
-        popular: "There are no more popular topics to read."
+        latest: "There are no more latest topics to read."
+        hot: "There are no more hot topics to read."
         posted: "There are no more posted topics to read."
         read: "There are no more read topics to read."
         new: "There are no more new topics to read."
@@ -412,10 +414,11 @@ en:
       options: "Topic Options"
       show_links: "show links within this topic"
       toggle_information: "toggle topic details"
-      read_more_in_category: "Want to read more? Browse other topics in {{catLink}} or {{popularLink}}."
-      read_more: "Want to read more? {{catLink}} or {{popularLink}}."
+      read_more_in_category: "Want to read more? Browse other topics in {{catLink}} or {{latestLink}}."
+      read_more: "Want to read more? {{catLink}} or {{latestLink}}."
       browse_all_categories: Browse all categories
-      view_popular_topics: view popular topics
+
+      view_latest_topics: view latest topics
       suggest_create_topic: Why not create a topic?
       read_position_reset: "Your read position has been reset."
       jump_reply_up: jump to earlier reply
@@ -652,9 +655,12 @@ en:
     categories_list: "Categories List"
 
     filters:
-      popular:
-        title: "Popular"
-        help: "the most popular recent topics"
+      latest:
+        title: "Latest"
+        help: "the most recent topics"
+      hot:
+        title: "Hot"
+        help: "a seclection of the hottest topics"
       favorited:
         title: "Favorited"
         help: "topics you marked as favorites"
@@ -685,7 +691,7 @@ en:
           zero: "{{categoryName}}"
           one: "{{categoryName}} (1)"
           other: "{{categoryName}} ({{count}})"
-        help: "popular topics in the {{categoryName}} category"
+        help: "latest topics in the {{categoryName}} category"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:

@@ -16,19 +16,19 @@ describe TopicQuery do
     let!(:archived_topic) { Fabricate(:topic, title: 'this is an archived topic', user: creator, archived: true, bumped_at: 6.minutes.ago) }
     let!(:invisible_topic) { Fabricate(:topic, title: 'this is an invisible topic', user: creator, visible: false, bumped_at: 5.minutes.ago) }
     let!(:closed_topic) { Fabricate(:topic, title: 'this is a closed topic', user: creator, closed: true, bumped_at: 1.minute.ago) }
-    let(:topics) { topic_query.list_popular.topics }
+    let(:topics) { topic_query.list_latest.topics }
 
-    context 'list_popular' do
+    context 'list_latest' do
       it "returns the topics in the correct order" do
         topics.should == [pinned_topic, closed_topic, archived_topic, regular_topic]
       end
 
       it "includes the invisible topic if you're a moderator" do
-        TopicQuery.new(moderator).list_popular.topics.include?(invisible_topic).should be_true
+        TopicQuery.new(moderator).list_latest.topics.include?(invisible_topic).should be_true
       end
 
       it "includes the invisible topic if you're an admin" do
-        TopicQuery.new(admin).list_popular.topics.include?(invisible_topic).should be_true
+        TopicQuery.new(admin).list_latest.topics.include?(invisible_topic).should be_true
       end
     end
 
@@ -69,6 +69,21 @@ describe TopicQuery do
         topic_query.list_new_in_category(category).topics.should == [topic_in_cat, topic_category]
       end
     end
+  end
+
+  context 'hot' do
+    let(:cold_category) { Fabricate(:category, name: 'brrrrrr', hotness: 5) }
+    let(:hot_category) { Fabricate(:category, name: 'yeeouch', hotness: 10) }
+
+    let!(:t1) { Fabricate(:topic, category: cold_category)}
+    let!(:t2) { Fabricate(:topic, category: hot_category)}
+    let!(:t3) { Fabricate(:topic, category: hot_category)}
+    let!(:t4) { Fabricate(:topic, category: cold_category)}
+
+    it "returns the hot categories first" do
+      topic_query.list_hot.topics.should == [t3, t2, t4, t1]
+    end
+
   end
 
   context 'unread / read topics' do

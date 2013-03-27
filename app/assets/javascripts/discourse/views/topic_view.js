@@ -437,7 +437,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     var category, opts;
 
     opts = {
-      popularLink: "<a href=\"/\">" + (Em.String.i18n("topic.view_popular_topics")) + "</a>"
+      latestLink: "<a href=\"/\">" + (Em.String.i18n("topic.view_latest_topics")) + "</a>"
     };
     if (category = this.get('controller.content.category')) {
       opts.catLink = Discourse.Utilities.categoryLink(category);

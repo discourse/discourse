@@ -149,8 +149,15 @@ Discourse::Application.routes.draw do
   get 'category/:category' => 'list#category', as: 'category'
   get 'category/:category/more' => 'list#category', as: 'category'
   get 'categories' => 'categories#index'
-  get 'popular' => 'list#index'
-  get 'popular/more' => 'list#index'
+
+  # We've renamed popular to latest. If people access it we want a permanent redirect.
+  get 'popular' => 'list#popular_redirect'
+  get 'popular/more' => 'list#popular_redirect'
+
+  get 'latest' => 'list#index'
+  get 'latest/more' => 'list#index'
+  get 'hot' => 'list#hot'
+  get 'hot/more' => 'list#hot'
   get 'favorited' => 'list#favorited'
   get 'favorited/more' => 'list#favorited'
   get 'read' => 'list#read'

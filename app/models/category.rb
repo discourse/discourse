@@ -22,7 +22,7 @@ class Category < ActiveRecord::Base
   after_create :create_category_definition
   after_destroy :invalidate_site_cache
 
-  scope :popular, ->{ order('topic_count desc') }
+  scope :latest, ->{ order('topic_count desc') }
 
   delegate :post_template, to: 'self.class'
 

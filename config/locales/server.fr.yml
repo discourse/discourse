@@ -832,7 +832,7 @@ fr:
 
   page_not_found:
     title: "La page que vous avez demandée n'existe pas dans ce forum de discussion.Peut-être nous pouvons vous aider à la trouver, ou une autre discussion similaire :"
-    popular_topics: "Discussions populaires"
+    latest_topics: "Discussions populaires"
     recent_topics: "Discussions récentes"
     see_more: "Voir plus"
     search_title: "Rechercher pour cette discussion"

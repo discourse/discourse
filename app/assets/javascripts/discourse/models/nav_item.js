@@ -6,9 +6,8 @@
   @namespace Discourse
   @module Discourse
 **/
-var validAnon, validNavNames;
-validNavNames = ['read', 'popular', 'categories', 'favorited', 'category', 'unread', 'new', 'posted'];
-validAnon = ['popular', 'category', 'categories'];
+var validNavNames = ['read', 'latest', 'hot', 'categories', 'favorited', 'category', 'unread', 'new', 'posted'];
+var validAnon = ['latest', 'hot', 'category', 'categories'];
 
 Discourse.NavItem = Discourse.Model.extend({
   categoryName: (function() {

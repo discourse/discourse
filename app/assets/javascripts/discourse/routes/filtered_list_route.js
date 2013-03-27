@@ -1,5 +1,5 @@
 /**
-  A class used to handle filtering routes such as popular, read, etc.
+  A class used to handle filtering routes such as latest, hot, read, etc.
 
   @class FilteredListRoute
   @extends Discourse.Route

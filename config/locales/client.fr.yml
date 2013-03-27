@@ -377,10 +377,10 @@ fr:
         new: "Vous n'avez aucune discussion non lue."
         read: "Vous n'avez lu aucune discussion pour le moment."
         posted: "Vous n'avez écrit aucun message pour le moment."
-        popular: "Il n'y a aucune discussion populaire pour le moment. C'est triste..."
+        latest: "Il n'y a aucune discussion populaire pour le moment. C'est triste..."
         category: "Il n'y a aucune discussion sur {{category}}."
       bottom:
-        popular: "Il n'y a plus de discussion populaire à lire."
+        latest: "Il n'y a plus de discussion populaire à lire."
         posted: "Il n'y a plus de discussion à lire."
         read: "Il n'y a plus de discussion à lire."
         new: "Il n'y a plus de discussion à lire."
@@ -416,10 +416,11 @@ fr:
       options: "options de la discussion"
       show_links: "afficher les liens de cette discussion"
       toggle_information: "afficher les détails de la discussion"
-      read_more_in_category: "Vous voulez en lire plus ? Afficher d'autres discussions dans {{catLink}} ou {{popularLink}}."
-      read_more: "Vous voulez en lire plus? {{catLink}} or {{popularLink}}."
+      read_more_in_category: "Vous voulez en lire plus ? Afficher d'autres discussions dans {{catLink}} ou {{latestLink}}."
+      read_more: "Vous voulez en lire plus? {{catLink}} or {{latestLink}}."
       browse_all_categories: 'Voir toutes les catégories'
-      view_popular_topics: "voir la liste des discussions populaires"
+
+      view_latest_topics: "voir la liste des discussions populaires"
       suggest_create_topic: "pourquoi ne pas créer une nouvelle discussion ?"
       read_position_reset: "Votre position de lecture à été remise à zéro."
       jump_reply_up: "aller à des réponses précédentes"
@@ -656,7 +657,7 @@ fr:
     categories_list: "Liste des catégories"
 
     filters:
-      popular:
+      latest:
         title: "Populaires"
         help: "discussions récentes les plus populaires"
       favorited:

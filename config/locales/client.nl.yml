@@ -304,7 +304,7 @@ nl:
       no_new: "Je hebt geen nieuwe topics om te lezen."
       no_read: "Je hebt nog geen topics gelezen."
       no_posted: "Je hebt nog niet in een topic gepost."
-      no_popular: "Er zijn geen populaire topics. Dat is best wel sneu."
+      no_latest: "Er zijn geen populaire topics. Dat is best wel sneu."
 
     topic:
       create_in: 'Maak een {{categoryName}} Topic'
@@ -327,10 +327,11 @@ nl:
       options: "Topic Opties"
       show_links: "laat links binnen dit topic zien"
       toggle_information: "Zet topic details Aan/Uit"
-      read_more_in_category: "Wil je meer lezen? Kijk dan voor andere topics in {{catLink}} of {{popularLink}}."
-      read_more: "Wil je meer lezen? {{catLink}} of {{popularLink}}."
+      read_more_in_category: "Wil je meer lezen? Kijk dan voor andere topics in {{catLink}} of {{latestLink}}."
+      read_more: "Wil je meer lezen? {{catLink}} of {{latestLink}}."
       browse_all_categories: Bekijk alle categorieën
-      view_popular_topics: bekijk populaire topics
+
+      view_latest_topics: bekijk populaire topics
 
       progress:
         title: topic voortgang
@@ -543,7 +544,7 @@ nl:
     categories_list: "Categorie-lijst"
 
     filters:
-      popular:
+      latest:
         title: "Populair"
         help: "de meest populaire recente topics"
       favorited:

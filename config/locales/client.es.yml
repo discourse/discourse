@@ -367,10 +367,10 @@ es:
         new: "No tienes temas nuevos por leer."
         read: "Todavía no has leído ningún tema."
         posted: "Todavía no has publicado en ningún tema."
-        popular: "No hay temas populares. Eso es triste."
+        latest: "No hay temas populares. Eso es triste."
         category: "No hay temas en la categoría {{category}}."
       bottom:
-        popular: "No hay más temas populares para leer."
+        latest: "No hay más temas populares para leer."
         posted: "No hay más temas publicados para leer."
         read: "No hay más temas leídos."
         new: "No hay temas nuevos para leer."
@@ -407,10 +407,11 @@ es:
       options: "Opciones del Tema"
       show_links: "show links within this topic"
       toggle_information: "toggle topic details"
-      read_more_in_category: "Want to read more? Browse other topics in {{catLink}} or {{popularLink}}."
-      read_more: "Want to read more? {{catLink}} or {{popularLink}}."
+      read_more_in_category: "Want to read more? Browse other topics in {{catLink}} or {{latestLink}}."
+      read_more: "Want to read more? {{catLink}} or {{latestLink}}."
       browse_all_categories: Browse all categories
-      view_popular_topics: view popular topics
+
+      view_latest_topics: view latest topics
       suggest_create_topic: Why not create a topic?
       read_position_reset: "Your read position has been reset."
       jump_reply_up: jump to earlier reply
@@ -639,7 +640,7 @@ es:
     categories_list: "Lista de Categorías"
 
     filters:
-      popular:
+      latest:
         title: "Populares"
         help: "los temas más recientes más populares"
       favorited:
@@ -672,7 +673,7 @@ es:
           zero: "{{categoryName}}"
           one: "{{categoryName}} (1)"
           other: "{{categoryName}} ({{count}})"
-        help: "popular topics in the {{categoryName}} category"
+        help: "latest topics in the {{categoryName}} category"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:

@@ -376,10 +376,10 @@ zh_TW:
         new: "你沒有新主題可讀。"
         read: "你尚未閱讀任何主題。"
         posted: "你尚未在任何主題中發帖。"
-        popular: "傷心啊，沒有熱門主題。"
+        latest: "傷心啊，沒有熱門主題。"
         category: "沒有 {{category}} 分類的主題。"
       bottom:
-        popular: "沒有更多熱門主題可看了。"
+        latest: "沒有更多熱門主題可看了。"
         posted: "沒有更多已發布主題可看了。"
         read: "沒有更多已閱主題可看了。"
         new: "沒有更多新主題可看了。"
@@ -415,10 +415,11 @@ zh_TW:
       options: "主題選項"
       show_links: "顯示此主題中的鏈接"
       toggle_information: "切換主題詳細"
-      read_more_in_category: "想閱讀更多內容？浏覽 {{catLink}} 或 {{popularLink}} 裏的其它主題。"
-      read_more: "想閱讀更多內容？{{catLink}} 或 {{popularLink}}。"
+      read_more_in_category: "想閱讀更多內容？浏覽 {{catLink}} 或 {{latestLink}} 裏的其它主題。"
+      read_more: "想閱讀更多內容？{{catLink}} 或 {{latestLink}}。"
       browse_all_categories: 浏覽所有分類
-      view_popular_topics: 浏覽熱門主題
+
+      view_latest_topics: 浏覽熱門主題
       suggest_create_topic: 這就創建一個主題吧！
       read_position_reset: "你的閱讀位置已經被重置。"
       jump_reply_up: 跳轉至更早的回複
@@ -654,7 +655,7 @@ zh_TW:
     categories_list: "分類列表"
 
     filters:
-      popular:
+      latest:
         title: "熱門"
         help: "最近最受歡迎的主題"
       favorited:

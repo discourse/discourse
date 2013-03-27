@@ -348,7 +348,7 @@ zh_TW:
     post_undo_action_window_mins: "允許用戶在帖子上進行撤銷操作（贊、投訴等）所需等待的間隔秒數"
     must_approve_users: "用戶必須獲得管理員批准方能訪問"
     ga_tracking_code: "谷歌分析追蹤代碼，例如：UA-12345678-9。參考 http://google.com/analytics"
-    top_menu: "確定在主頁導航條包含哪些條目，以及排列順序。例如：popular|read|favorited|unread|new|posted|categories"
+    top_menu: "確定在主頁導航條包含哪些條目，以及排列順序。例如：latest|hot|read|favorited|unread|new|posted|categories"
     post_menu: "確定在帖子菜單條包含哪些條目，以及排列順序。例如：like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "追蹤外部鏈接的右鍵點擊（例如：在浏覽器新標簽打開），缺省是禁用的，因爲它會重寫URL"
     topics_per_page: "在主題列表頁面，缺省載入多少個主題"
@@ -813,7 +813,7 @@ zh_TW:
 
   page_not_found:
     title: "你請求的頁面在本論壇不存在。可能我們能幫助你找到它，或者類似的其它主題："
-    popular_topics: "熱門主題"
+    latest_topics: "熱門主題"
     recent_topics: "近期主題"
     see_more: "查看更多"
     search_title: "搜索該主題"

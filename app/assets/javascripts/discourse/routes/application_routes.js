@@ -33,7 +33,8 @@ Discourse.Route.buildRoutes(function() {
       router.route(r, { path: "/" + r + "/more" });
     });
 
-    this.route('popular', { path: '/' });
+    this.route('latest', { path: '/' });
+    this.route('hot', { path: '/hot' });
     this.route('categories', { path: '/categories' });
     this.route('category', { path: '/category/:slug/more' });
     this.route('category', { path: '/category/:slug' });
