@@ -12,6 +12,9 @@ fr:
       topic: 'partager un lien vers cette discussion'
       post: 'partager un lien vers ce message'
       close: 'fermer'
+      twitter: 'partager ce lien sur Twitter'
+      facebook: 'partager ce lien sur Facebook'
+      google+: 'partager ce lien sur Google+'
 
     edit: 'éditer le titre et la catégorie de cette discussion'
     not_implemented: "Cette fonctionnalité n'a pas encore été implémentée, désolé."
@@ -506,7 +509,7 @@ fr:
         user:
           one: "Vous voyez uniquement les messages d'un utilisateur spécifique."
           other: "Vous voyez uniquement les messages d'utilisateurs spécifiques."
-        best_of: "Vous voyez uniquement les messages les plus populaires."
+        best_of: "Vous voyez uniquement les {{filtered_posts_counts}} messages les plus populaires de cette discussion."
         cancel: "Ré-afficher l'ensemble des messages de cette discussion."
 
       move_selected:
@@ -611,6 +614,7 @@ fr:
       list: "Liste des categories"
       no_description: "Il n'y a pas de description pour cette catégorie."
       change_in_category_topic: "visitez les discussions de cette catégorie pour en éditer la description"
+      hotness: "Buzz"
 
     flagging:
       title: 'Pourquoi voulez-vous signaler ce message ?'
@@ -735,6 +739,8 @@ fr:
         flagged_by: "Signalé par"
         error: "Quelque chose s'est mal passé"
 
+      api:
+        title: "API"
       customize:
         title: "Personnaliser"
         header: "En-tête"
