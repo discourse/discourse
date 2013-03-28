@@ -249,8 +249,8 @@ de:
         title: "Mit Yahoo"
         message: "Authentisierung via Yahoo (stelle sicher, dass Popup-Blocker deaktiviert sind)"
       github:
-        title: "Mit Github"
-        message: "Authentisierung via Github (stelle sicher, dass Popup-Blocker deaktiviert sind)"
+        title: "Mit GitHub"
+        message: "Authentisierung via GitHub (stelle sicher, dass Popup-Blocker deaktiviert sind)"
       persona:
         title: "Mit Persona"
         message: "Authentisierung via Mozilla Persona (stelle sicher, dass Popup-Blocker deaktiviert sind)"

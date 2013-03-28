@@ -258,8 +258,8 @@ zh_TW:
         title: "使用雅虎帳號登錄"
         message: "使用雅虎（Yahoo）帳號驗證登錄（請確保沒有禁止瀏覽器彈出對話框）"
       github:
-        title: "使用 Github 帳號登錄"
-        message: "使用 Github 帳號驗證登錄（請確保沒有禁止瀏覽器彈出對話框）"
+        title: "使用 GitHub 帳號登錄"
+        message: "使用 GitHub 帳號驗證登錄（請確保沒有禁止瀏覽器彈出對話框）"
       persona:
         title: "使用 Persona 帳號登錄"
         message: "使用 Mozilla Persona 帳號驗證登錄（請確保沒有禁止瀏覽器彈出對話框）"

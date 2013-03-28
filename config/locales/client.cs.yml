@@ -261,8 +261,8 @@ cs:
         title: "přes Yahoo"
         message: "Autorizuji přes Yahoo (ujistěte se, že nemáte zablokovaná popup okna)"
       github:
-        title: "přes Github"
-        message: "Autorizuji přes Github (ujistěte se, že nemáte zablokovaná popup okna)"
+        title: "přes GitHub"
+        message: "Autorizuji přes GitHub (ujistěte se, že nemáte zablokovaná popup okna)"
       persona:
         title: "přes Persona"
         message: "Autorizuji přes Mozilla Persona (ujistěte se, že nemáte zablokovaná popup okna)"

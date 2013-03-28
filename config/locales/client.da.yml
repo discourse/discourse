@@ -256,8 +256,8 @@ da:
         title: "med Yahoo"
         message: "Logger ind med Yahoo (check at pop-op-blokering ikke er aktiv)"
       github:
-        title: "med Github"
-        message: "Logger ind med Github (check at pop-op-blokering ikke er aktiv)"
+        title: "med GitHub"
+        message: "Logger ind med GitHub (check at pop-op-blokering ikke er aktiv)"
       persona:
         title: "med Persona"
         message: "Logger ind med Mozilla Persona (check at pop-op-blokering ikke er aktiv)"

@@ -250,8 +250,8 @@ sv:
         title: "Logga In med Yahoo"
         message: "Autentiserar med Yahoo (kolla så att pop up-blockare inte är aktiverade)"
       github:
-        title: "Logga In med Github"
-        description: "Autentiserar med Github (kolla så att pop up-blockare inte är aktiverade)"
+        title: "Logga In med GitHub"
+        description: "Autentiserar med GitHub (kolla så att pop up-blockare inte är aktiverade)"
 
     composer:
       saving_draft_tip: "sparar"

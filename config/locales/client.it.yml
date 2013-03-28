@@ -258,8 +258,8 @@ it:
         title: "con Yahoo"
         message: "Autenticazione con Yahoo (l'apertura di pop up deve essere permessa dal browser)"
       github:
-        title: "con Github"
-        message: "Autenticazione con Github (l'apertura di pop up deve essere permessa dal browser)"
+        title: "con GitHub"
+        message: "Autenticazione con GitHub (l'apertura di pop up deve essere permessa dal browser)"
       persona:
         title: "con Persona"
         message: "Autenticazione con Mozilla Persona (l'apertura di pop up deve essere permessa dal browser)"

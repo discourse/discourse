@@ -249,8 +249,8 @@ id:
         title: "with Yahoo"
         message: "Authenticating with Yahoo (make sure pop up blockers are not enabled)"
       github:
-        title: "with Github"
-        message: "Authenticating with Github (make sure pop up blockers are not enabled)"
+        title: "with GitHub"
+        message: "Authenticating with GitHub (make sure pop up blockers are not enabled)"
       persona:
         title: "with Persona"
         message: "Authenticating with Mozilla Persona (make sure pop up blockers are not enabled)"

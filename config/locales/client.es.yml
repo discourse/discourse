@@ -259,8 +259,8 @@ es:
         title: "con Yahoo"
         message: "Autenticando con Yahoo (asegúrate de desactivar cualquier bloqueador de pop ups)"
       github:
-        title: "con Github"
-        message: "Autenticando con Github (asegúrate de desactivar cualquier bloqueador de pop ups)"
+        title: "con GitHub"
+        message: "Autenticando con GitHub (asegúrate de desactivar cualquier bloqueador de pop ups)"
       persona:
         title: "con Persona"
         message: "Autenticando con Mozilla Persona (asegúrate de desactivar cualquier bloqueador de pop ups)"

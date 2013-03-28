@@ -258,8 +258,8 @@ zh_CN:
         title: "使用雅虎帐号登录"
         message: "使用雅虎（Yahoo）帐号验证登录（请确保没有禁止浏览器弹出对话框）"
       github:
-        title: "使用 Github 帐号登录"
-        message: "使用 Github 帐号验证登录（请确保没有禁止浏览器弹出对话框）"
+        title: "使用 GitHub 帐号登录"
+        message: "使用 GitHub 帐号验证登录（请确保没有禁止浏览器弹出对话框）"
       persona:
         title: "使用 Persona 帐号登录"
         message: "使用 Mozilla Persona 帐号验证登录（请确保没有禁止浏览器弹出对话框）"
