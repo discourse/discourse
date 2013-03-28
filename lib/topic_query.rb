@@ -123,11 +123,9 @@ class TopicQuery
 
   def list_hot
     return_list(unordered: true) do |list|
-
-      # Let's not include topic categories on hot
-      list = list.where("categories.topic_id <> topics.id")
-
-      list =list.order("coalesce(categories.hotness, 5) desc, topics.bumped_at desc")
+      # Find hot topics
+      list = list.joins(:hot_topic)
+                 .order('hot_topics.score + (COALESCE(categories.hotness, 5.0) / 11.0) desc')
     end
   end
 

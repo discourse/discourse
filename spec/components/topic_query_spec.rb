@@ -71,7 +71,7 @@ describe TopicQuery do
     end
   end
 
-  context 'hot' do
+  pending 'hot' do
     let(:cold_category) { Fabricate(:category, name: 'brrrrrr', hotness: 5) }
     let(:hot_category) { Fabricate(:category, name: 'yeeouch', hotness: 10) }
 

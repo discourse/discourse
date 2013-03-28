@@ -30,21 +30,28 @@ class ScoreCalculator
               WHERE x.id = posts.id")
 
 
-    # Update the best of flag
-    exec_sql "
-      UPDATE topics SET has_best_of =
-        CASE
-          WHEN like_count >= :likes_required AND
-          posts_count >= :posts_required AND
-            EXISTS(SELECT * FROM posts AS p
-                    WHERE p.topic_id = topics.id
-                      AND p.score >= :score_required) THEN true
-        ELSE false
-        END",
-      likes_required: SiteSetting.best_of_likes_required,
-      posts_required: SiteSetting.best_of_posts_required,
-      score_required: SiteSetting.best_of_score_threshold
+    # Update the topics
+    exec_sql "UPDATE topics AS t
+              SET has_best_of = (t.like_count >= :likes_required AND
+                                 t.posts_count >= :posts_required AND
+                                 x.min_score >= :score_required),
+                  score = x.avg_score
+              FROM (SELECT p.topic_id,
+                           MIN(p.score) AS min_score,
+                           AVG(p.score) AS avg_score
+                    FROM posts AS p
+                    GROUP BY p.topic_id) AS x
+              WHERE x.topic_id = t.id",
+              likes_required: SiteSetting.best_of_likes_required,
+              posts_required: SiteSetting.best_of_posts_required,
+              score_required: SiteSetting.best_of_score_threshold
 
+    # Update percentage rank of topics
+    exec_sql("UPDATE topics SET percent_rank = x.percent_rank
+          FROM (SELECT id, percent_rank()
+                OVER (ORDER BY SCORE DESC) as percent_rank
+                FROM topics) AS x
+          WHERE x.id = topics.id")
   end
 
 
