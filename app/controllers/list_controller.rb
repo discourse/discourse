@@ -1,12 +1,11 @@
 class ListController < ApplicationController
 
-  before_filter :ensure_logged_in, except: [:index, :hot, :category, :category_feed]
+  before_filter :ensure_logged_in, except: [:latest, :hot, :category, :category_feed]
   skip_before_filter :check_xhr
 
   # Create our filters
   [:latest, :hot, :favorited, :read, :posted, :unread, :new].each do |filter|
     define_method(filter) do
-
       list_opts = {page: params[:page]}
 
       # html format means we need to farm exclude from the site options
@@ -14,7 +13,7 @@ class ListController < ApplicationController
         #TODO objectify this stuff
         SiteSetting.top_menu.split('|').each do |f|
           s = f.split(",")
-          if s[0] == action_name || (action_name == "index" && s[0] == "latest")
+          if s[0] == action_name || (action_name == "index" && s[0] == SiteSetting.homepage)
             list_opts[:exclude_category] = s[1][1..-1] if s.length == 2
           end
         end
@@ -27,7 +26,6 @@ class ListController < ApplicationController
       respond(list)
     end
   end
-  alias_method :index, :latest
 
   def category
 

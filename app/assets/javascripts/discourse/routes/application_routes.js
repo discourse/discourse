@@ -19,22 +19,20 @@ Discourse.Route.buildRoutes(function() {
     router.route(p, { path: "/" + p });
   });
 
-  this.route('faq', { path: '/faq' });
-  this.route('tos', { path: '/tos' });
-  this.route('privacy', { path: '/privacy' });
-
   // List routes
   this.resource('list', { path: '/' }, function() {
     router = this;
 
     // Generate routes for all our filters
-    Discourse.ListController.filters.forEach(function(r) {
-      router.route(r, { path: "/" + r });
-      router.route(r, { path: "/" + r + "/more" });
+    Discourse.ListController.filters.forEach(function(filter) {
+      router.route(filter, { path: "/" + filter });
+      router.route(filter, { path: "/" + filter + "/more" });
     });
 
-    this.route('latest', { path: '/' });
-    this.route('hot', { path: '/hot' });
+    // the homepage is the first item of the 'top_menu' site setting
+    var homepage = PreloadStore.get('siteSettings').top_menu.split("|")[0];
+    this.route(homepage, { path: '/' });
+
     this.route('categories', { path: '/categories' });
     this.route('category', { path: '/category/:slug/more' });
     this.route('category', { path: '/category/:slug' });
@@ -51,5 +49,3 @@ Discourse.Route.buildRoutes(function() {
     this.route('invited', { path: 'invited' });
   });
 });
-
-
