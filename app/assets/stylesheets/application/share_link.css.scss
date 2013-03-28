@@ -12,7 +12,7 @@
   background-color: $light_gray;
   padding: 3px 7px 6px 7px;
   width: 300px;
-  @include fades-in(0.25s);
+  @include fades-in(0.15s);
   &.visible {
     @include visible;
   }

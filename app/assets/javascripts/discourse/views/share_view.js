@@ -23,7 +23,13 @@ Discourse.ShareView = Discourse.View.extend({
 
   linkChanged: (function() {
     if (this.present('controller.link')) {
-      $('#share-link input').val(this.get('controller.link')).select().focus();
+      var $linkInput = $('#share-link input');
+      $linkInput.val(this.get('controller.link'));
+
+      // Wait for the fade-in transition to finish before selecting the link:
+      window.setTimeout(function() {
+        $linkInput.select().focus();
+      }, 160);
     }
   }).observes('controller.link'),
 
