@@ -660,7 +660,7 @@ en:
         help: "the most recent topics"
       hot:
         title: "Hot"
-        help: "a seclection of the hottest topics"
+        help: "a selection of the hottest topics"
       favorited:
         title: "Favorited"
         help: "topics you marked as favorites"
