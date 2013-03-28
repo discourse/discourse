@@ -218,8 +218,8 @@ zh_TW:
       description: '給本帖加書簽'
       long_form: '已給本帖加上書簽'
     like:
-      title: '贊'
-      description: '贊本帖'
+      title: '讚'
+      description: '讚本帖'
       long_form: '喜歡本帖內容'
     vote:
       title: '投票'
@@ -264,9 +264,9 @@ zh_TW:
       xaxis: "天"
       yaxis: "新帖子數"
     likes:
-      title: "新的贊"
+      title: "新的讚"
       xaxis: "天"
-      yaxis: "新的贊數"
+      yaxis: "新的讚數"
     flags:
       title: "投訴"
       xaxis: "天"
@@ -329,7 +329,7 @@ zh_TW:
     use_ssl: "使用 SSL 安全套接層來訪問本站嗎？"
     best_of_score_threshold: "將一個帖子包含到“優選”帖子中所需的最小分值"
     best_of_posts_required: "在一個主題中啓用“優選”模式所要求的最小帖子數量"
-    best_of_likes_required: "在一個主題中啓用“優選”模式所要求的最小贊數量"
+    best_of_likes_required: "在一個主題中啓用“優選”模式所要求的最小讚數量"
     best_of_percent_filter: "當用戶點擊“優選”，顯示前 % 幾的帖子"
     enable_private_messages: "用戶創建私信和私下交流要達到的用戶級別"
 
@@ -345,7 +345,7 @@ zh_TW:
     cooldown_minutes_after_hiding_posts: "當一個帖子因爲投訴而隱藏之後，用戶需要等待多少分鍾才能編輯該帖子"
 
     traditional_markdown_linebreaks: "在 Markdown 中使用傳統換行符，而不是用兩個尾隨空格來換行"
-    post_undo_action_window_mins: "允許用戶在帖子上進行撤銷操作（贊、投訴等）所需等待的間隔秒數"
+    post_undo_action_window_mins: "允許用戶在帖子上進行撤銷操作（讚、投訴等）所需等待的間隔秒數"
     must_approve_users: "用戶必須獲得管理員批准方能訪問"
     ga_tracking_code: "谷歌分析追蹤代碼，例如：UA-12345678-9。參考 http://google.com/analytics"
     top_menu: "確定在主頁導航條包含哪些條目，以及排列順序。例如：latest|hot|read|favorited|unread|new|posted|categories"
@@ -404,7 +404,7 @@ zh_TW:
     rate_limit_create_topic: "在創建一個主題之後間隔多少秒你才能創建另一個主題"
     rate_limit_create_post: "在創建一個帖子之後間隔多少秒你才能創建另一個帖子"
 
-    max_likes_per_day: "每個用戶每天能標明贊數量的最大值"
+    max_likes_per_day: "每個用戶每天能標明讚數量的最大值"
     max_flags_per_day: "每個用戶每天能做投訴數量的最大值"
     max_bookmarks_per_day: "每個用戶每天能做書簽數量的最大值"
     max_edits_per_day: "每個用戶每天能編輯的次數的最大值"
@@ -443,7 +443,7 @@ zh_TW:
 
   notification_types:
     mentioned: "%{display_username} 在 %{link} 提及到了你"
-    liked: "%{display_username} 在 %{link} 贊了你的帖子 "
+    liked: "%{display_username} 在 %{link} 讚了你的帖子 "
     replied: "%{display_username} 在 %{link} 回複了你的帖子"
     quoted: "%{display_username} 在 %{link} 引用了你的帖子"
     edited: "%{display_username} 在 %{link} 編輯了你的帖子"
@@ -468,8 +468,8 @@ zh_TW:
   user_action_descriptions:
     bookmarks: "書簽"
     topics: "主題"
-    likes_received: "收到的贊"
-    likes_given: "送出的贊"
+    likes_received: "收到的讚"
+    likes_given: "送出的讚"
     responses: "回複"
     topic_responses: "主題回複"
     posts: "帖子"
@@ -480,8 +480,8 @@ zh_TW:
     sent_items: "已發送條目"
     inbox: "收件箱"
 
-    was_liked: "曾被贊過"
-    liked: "贊過"
+    was_liked: "曾被讚過"
+    liked: "讚過"
     bookmarked: "標過書簽"
     posted: "發表過"
     responded_to: "回複給"
@@ -636,7 +636,7 @@ zh_TW:
 
         ### 看那個帖子吧！
 
-        要想讓別人知道你喜歡他們的帖子，請點擊帖子底部的 贊 按鈕。如果你看到某個有問題的帖子，請不要猶豫，點擊帖子底部的 投訴 小旗幟按鈕來引起論壇版主以及你的社區成員們的注意。
+        要想讓別人知道你喜歡他們的帖子，請點擊帖子底部的 讚 按鈕。如果你看到某個有問題的帖子，請不要猶豫，點擊帖子底部的 投訴 小旗幟按鈕來引起論壇版主以及你的社區成員們的注意。
 
         ### 我在哪？
 

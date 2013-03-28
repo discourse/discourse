@@ -409,8 +409,8 @@ zh_TW:
       unread_posts: "此主題中你有 {{unread}} 個帖子未閱"
       new_posts: "從你最近一次閱讀此主題後，又有 {{new_posts}} 個新帖子發表"
       likes:
-        one: "此主題得到了一個贊"
-        other: "此主題得到了 {{count}} 個贊"
+        one: "此主題得到了一個讚"
+        other: "此主題得到了 {{count}} 個讚"
       back_to_list: "返回主題列表"
       options: "主題選項"
       show_links: "顯示此主題中的鏈接"
@@ -559,7 +559,7 @@ zh_TW:
 
       controls:
         reply: "開始給本帖撰寫回複"
-        like: "贊本帖"
+        like: "讚本帖"
         edit: "編輯本帖"
         flag: "投訴本帖以提醒論壇版主"
         delete: "刪除本帖"
@@ -646,7 +646,7 @@ zh_TW:
     replies: "回複"
     views_long: "本主題已經被瀏覽過 {{number}} 次"
     activity: "活動"
-    likes: "贊"
+    likes: "讚"
     top_contributors: "參與者"
     category_title: "分類"
     history: "曆史"
@@ -803,7 +803,7 @@ zh_TW:
         reputation: 聲譽
         permissions: 權限
         activity: 活動
-        like_count: 收到的贊
+        like_count: 收到的讚
         private_topics_count: 私有主題數量
         posts_read_count: 已閱帖子數量
         post_count: 創建的帖子數量
