@@ -37,9 +37,9 @@ zh_TW:
 
       - 你的標題是否清晰明了的告訴了讀者他們能在你的主題中找到的內容？
 
-      - 你的主題第一帖確定了：主題是關于什麽的？誰會對它感興趣？它爲什麽重要？你期望從社區中獲得什麽樣的回應？
+      - 你的主題第一帖確定了：主題是關於什麽的？誰會對它感興趣？它爲什麽重要？你期望從社區中獲得什麽樣的回應？
 
-      - 選擇恰當的詞句以便別人能 *找到* 你的主題，如果該主題應該屬于某個分類，請選擇一個恰當的分類。
+      - 選擇恰當的詞句以便別人能 *找到* 你的主題，如果該主題應該屬於某個分類，請選擇一個恰當的分類。
 
       更多的幫助信息，[請查看我們的常見問答](/faq)。此信息面板只在你的最早的 %{education_posts_text} 顯示。
 
@@ -71,11 +71,11 @@ zh_TW:
               cant_send_pm: "抱歉，你不能向該用戶發送私信。"
 
   user_profile:
-    no_info_me: "<div class='missing-profile'>你的介紹信息中，“關于我”部分目前還是空白，<a href='/users/%{username_lower}/preferences'>介紹一下你自己，好不好？</a></div>"
-    no_info_other: "<div class='missing-profile'>%{name} 尚未在他/她的介紹中的“關于我”部分填寫任何信息</div>"
+    no_info_me: "<div class='missing-profile'>你的介紹信息中，“關於我”部分目前還是空白，<a href='/users/%{username_lower}/preferences'>介紹一下你自己，好不好？</a></div>"
+    no_info_other: "<div class='missing-profile'>%{name} 尚未在他/她的介紹中的“關於我”部分填寫任何信息</div>"
 
   category:
-    topic_prefix: "分類的定義信息，用于分類： %{category}"
+    topic_prefix: "分類的定義信息，用於分類： %{category}"
     replace_paragraph: "[用一段簡短的分類描述替換此第一段內容，請不要超過200個字符。]"
     post_template: "%{replace_paragraph}\n\n使用下面的空間輸入分類的詳細描述信息，可包括在此分類下討論的規則、內容導向等等。"
 
@@ -92,7 +92,7 @@ zh_TW:
       title: "資深用戶"
 
   rate_limiter:
-    too_many_requests: "你的請求過于頻繁，請等待 %{time_left} 之後再試。"
+    too_many_requests: "你的請求過於頻繁，請等待 %{time_left} 之後再試。"
     hours:
       one: "1 小時"
       other: "%{count} 小時"
@@ -199,7 +199,7 @@ zh_TW:
   post_action_types:
     off_topic:
       title: '題外話'
-      description: '此帖對于當前討論而言屬于題外話，應該移動到其它相關主題下。'
+      description: '此帖對於當前討論而言屬於題外話，應該移動到其它相關主題下。'
       long_form: '投訴爲題外話'
     spam:
       title: '垃圾'
@@ -286,7 +286,7 @@ zh_TW:
     gc_warning: '你的服務器使用的是缺省的 ruby 垃圾回收參數，這個配置無法提供最高性能。請閱讀此性能調優文檔：<a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>。'
     clockwork_warning: '發條裝置（Clockwork）並未運行。請確保運行一個 clockwork 進程，這樣一些重要的工作能夠被安排執行。<a href="https://github.com/tomykaira/clockwork">了解發條裝置（clockwork）</a>。'
     sidekiq_warning: 'Sidekiq 不在運行。很多任務，例如發送電子郵件，是異步的被 sidekiq 調度執行的。請確保至少運行一個 sidekiq 進程。<a href="https://github.com/mperham/sidekiq">了解 Sidekiq</a>。'
-    memory_warning: '你的服務器環境內存少于 1GB，我們建議至少要有 1GB 內存'
+    memory_warning: '你的服務器環境內存少於 1GB，我們建議至少要有 1GB 內存'
 
   site_settings:
     default_locale: "此 論道 - Discourse 實例的缺省語言 (ISO 639-1 代碼)"
@@ -300,10 +300,10 @@ zh_TW:
     enforce_global_nicknames: "強制昵稱必須唯一（警告：只在剛剛安裝完成時修改此設置）"
     discourse_org_access_key: "訪問 discourse.org 上的 Discourse Hub 昵稱注冊表的訪問密匙（access key）"
     educate_until_posts: "顯示彈出指導面板直到用戶發表了這麽多數量的帖子"
-    title: "本站點標題，用于 HTML 標題標簽（title）和其它地方"
-    company_full_name: "運行本站點的公司全稱，用于法律文檔，例如服務條款 /tos"
-    company_short_name: "運行本站點的公司短名，用于法律文檔，例如服務條款 /tos"
-    company_domain: "運行本站點的公司域名，用于法律文檔，例如服務條款 /tos"
+    title: "本站點標題，用於 HTML 標題標簽（title）和其它地方"
+    company_full_name: "運行本站點的公司全稱，用於法律文檔，例如服務條款 /tos"
+    company_short_name: "運行本站點的公司短名，用於法律文檔，例如服務條款 /tos"
+    company_domain: "運行本站點的公司域名，用於法律文檔，例如服務條款 /tos"
     access_password: "當啓用訪問限制時，必須填寫此密碼"
     queue_jobs: "如果失敗隊列在排隊，使用 Sidekiq 消息引擎對不同的工作排隊"
     crawl_images: "允許從第三方獲取圖片來插入寬、高數值"
@@ -318,12 +318,12 @@ zh_TW:
 
     post_excerpt_maxlength: "帖子摘要的最大字符長度"
     post_onebox_maxlength: "一個 論道 - Discourse 單廂帖（Onebox post）的最大字符長度"
-    category_post_template: "當你創建新分類時，分類的定義帖模板（創建新分類時會自動生成一個屬于該分類的新帖子）"
+    category_post_template: "當你創建新分類時，分類的定義帖模板（創建新分類時會自動生成一個屬於該分類的新帖子）"
     new_topics_rollup: "主題列表卷起顯示爲主題數量前，可以往主題列表中插入多少新主題"
     onebox_max_chars: "從外部網站導入到一個單廂帖（Onebox post）的最大字符數"
 
     logo_url: "你的站點標志圖片，例如：http://example.com/logo.png"
-    logo_small_url: "你的站點的小號標志圖片，例如：http://example.com/logo-small.png，用于卷起主題列表時顯示"
+    logo_small_url: "你的站點的小號標志圖片，例如：http://example.com/logo-small.png，用於卷起主題列表時顯示"
     favicon_url: "你的站點圖標（favicon），參考 http://zh.wikipedia.org/wiki/Favicon"
     notification_email: "郵件回複地址，當發送系統郵件，例如通知用戶找回密碼、新用戶注冊等等時，所使用的發信人地址"
     use_ssl: "使用 SSL 安全套接層來訪問本站嗎？"
@@ -361,8 +361,8 @@ zh_TW:
     email_domains_whitelist: "豎線 | 分隔的電子郵箱域名，用戶只能使用這些郵箱域名注冊。注意：用戶使用不包含在這個列表裏的郵箱域名，將無法成功注冊。"
     version_checks: "訪問 Discourse Hub 來檢查版本更新，並在管理面板 /admin 顯示版本信息"
 
-    port: "使用此 HTTP 端口而不是80端口。留空爲不使用，主要用于開發調試"
-    force_hostname: "指定 URL 裏的主機名。留空爲不使用，主要用于開發調試"
+    port: "使用此 HTTP 端口而不是80端口。留空爲不使用，主要用於開發調試"
+    force_hostname: "指定 URL 裏的主機名。留空爲不使用，主要用於開發調試"
 
     invite_expiry_days: "多少天以內用戶的邀請碼是有效的"
 
@@ -383,7 +383,7 @@ zh_TW:
     github_client_id: "Github 帳號驗證的客戶端帳號（Client id），到 https://github.com/settings/applications 來注冊獲取"
     github_client_secret: "Github 帳號驗證的客戶端密碼（Client secret），到 https://github.com/settings/applications 來注冊獲取"
 
-    enable_persona_logins: "啓用基于電子郵箱的 Mozilla Persona 帳號驗證登錄"
+    enable_persona_logins: "啓用基於電子郵箱的 Mozilla Persona 帳號驗證登錄"
 
     enable_sina_logins: "啓用新浪帳號驗證登錄，需要 sina_app_id 和 sina_app_secret"
     sina_app_id: "新浪帳號驗證的應用帳號（App id），到 http://open.weibo.com/connect 來注冊獲取"
@@ -521,7 +521,7 @@ zh_TW:
   user:
     username:
       short: "必須超過 %{min} 個字符"
-      long: "必須少于 %{max} 個字符"
+      long: "必須少於 %{max} 個字符"
       characters: "必須只包含字母和數字"
       unique: "必須是唯一的"
       blank: "必須存在"
@@ -590,11 +590,11 @@ zh_TW:
     site_password: "另外，如果你需要，此站點密碼是 `%{access_password}`。"
 
     post_hidden:
-      subject_template: "%{site_name} 提示：由于論壇用戶舉報，系統隱藏了你的帖子"
+      subject_template: "%{site_name} 提示：由於論壇用戶舉報，系統隱藏了你的帖子"
       text_body_template: |
         你好，
 
-        這是一封從 %{site_name} 自動發出的郵件，通知你下面的帖子由于論壇用戶的舉報而被隱藏不可見。
+        這是一封從 %{site_name} 自動發出的郵件，通知你下面的帖子由於論壇用戶的舉報而被隱藏不可見。
 
         %{base_url}%{url}
 

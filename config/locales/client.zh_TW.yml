@@ -13,7 +13,7 @@ zh_TW:
     not_implemented: "非常抱歉，此功能暫時尚未實現！"
     no_value: "否"
     yes_value: "是"
-    of_value: "之于"
+    of_value: "之於"
     generic_error: "抱歉，發生了一個錯誤。"
     log_in: "登錄"
     age: "壽命"
@@ -59,7 +59,7 @@ zh_TW:
       private_messages: "消息"
       activity_stream: "活動"
       preferences: "設置"
-      bio: "關于我"
+      bio: "關於我"
       change_password: "修改"
       invited_by: "邀請者爲"
       trust_level: "用戶級別"
@@ -90,7 +90,7 @@ zh_TW:
 
       name:
         title: "名字"
-        instructions: "你的名字，不要求獨一無二（可以與他人的名字重複）。用于在@name匹配你時參考，只在你的用戶頁面顯示。"
+        instructions: "你的名字，不要求獨一無二（可以與他人的名字重複）。用於在@name匹配你時參考，只在你的用戶頁面顯示。"
         too_short: "你設置的名字太短了。"
         ok: "你的名字符合要求。"
       username:
@@ -173,7 +173,7 @@ zh_TW:
         title: "最後使用的IP地址"
       avatar:
         title: "頭像"
-        instructions: "我們目前使用 <a href='https://gravatar.com' target='_blank'>Gravatar</a> 來基于你的郵箱生成頭像"
+        instructions: "我們目前使用 <a href='https://gravatar.com' target='_blank'>Gravatar</a> 來基於你的郵箱生成頭像"
 
       filters:
         all: "全部"
@@ -444,20 +444,20 @@ zh_TW:
           "2": '因爲你<a href="/users/{{username}}/preferences">閱讀了此主題</a>，所以你將收到相關通知。'
           "1": '因爲有人 @name 提及了你或回複了你的帖子，所以你將收到相關通知。'
           "1_2": '僅當有人 @name 提及了你或回複了你的帖子，你才會收到相關通知。'
-          "0": '你將忽略關于此主題的所有通知。'
-          "0_2": '你將忽略關于此主題的所有通知。'
+          "0": '你將忽略關於此主題的所有通知。'
+          "0_2": '你將忽略關於此主題的所有通知。'
         watching:
           title: "關注"
           description: "與追蹤一樣，額外的是一旦有新帖子發表，你都會收到通知。"
         tracking:
           title: "追蹤"
-          description: "關于你的未閱帖子、@name 提及與對你的帖子的回複，你都會收到通知。"
+          description: "關於你的未閱帖子、@name 提及與對你的帖子的回複，你都會收到通知。"
         regular:
           title: "常規"
           description: "只有當有人 @name 提及你或者回複你的帖子時，你才會收到通知。"
         muted:
           title: "防打擾"
-          description: "你不會收到關于此主題的任何通知，也不會在你的未閱選項卡中顯示。"
+          description: "你不會收到關於此主題的任何通知，也不會在你的未閱選項卡中顯示。"
 
       actions:
         delete: "刪除主題"
@@ -667,7 +667,7 @@ zh_TW:
       categories:
         title: "分類"
         title_in: "分類 - {{categoryName}}"
-        help: "歸屬于不同分類的所有主題"
+        help: "歸屬於不同分類的所有主題"
       unread:
         title:
           zero: "未閱"
