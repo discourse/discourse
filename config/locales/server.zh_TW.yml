@@ -46,9 +46,9 @@ zh_TW:
     'new-reply': |
       歡迎來到 %{site_name} &mdash; **衷心感謝你參與討論！**
 
-      當你撰寫回複時請注意：
+      當你撰寫回覆時請注意：
 
-      - 你的回複是否從某個方面多多少少的幫助到了這段討論？
+      - 你的回覆是否從某個方面多多少少的幫助到了這段討論？
 
       - 請給予論壇其他成員同等的尊重，多換位思考，將心比心。
 
@@ -325,7 +325,7 @@ zh_TW:
     logo_url: "你的站點標志圖片，例如：http://example.com/logo.png"
     logo_small_url: "你的站點的小號標志圖片，例如：http://example.com/logo-small.png，用於卷起主題列表時顯示"
     favicon_url: "你的站點圖標（favicon），參考 http://zh.wikipedia.org/wiki/Favicon"
-    notification_email: "郵件回複地址，當發送系統郵件，例如通知用戶找回密碼、新用戶注冊等等時，所使用的發信人地址"
+    notification_email: "郵件回覆地址，當發送系統郵件，例如通知用戶找回密碼、新用戶注冊等等時，所使用的發信人地址"
     use_ssl: "使用 SSL 安全套接層來訪問本站嗎？"
     best_of_score_threshold: "將一個帖子包含到“優選”帖子中所需的最小分值"
     best_of_posts_required: "在一個主題中啓用“優選”模式所要求的最小帖子數量"
@@ -355,7 +355,7 @@ zh_TW:
     posts_per_page: "在主題頁面，返回多少個帖子"
     system_username: "論壇給用戶發送自動私信時使用的用戶名"
     send_welcome_message: "給新用戶發送歡迎私信？"
-    supress_reply_directly_below: "當一個帖子只有一個回複時，不顯示帖子回複數量"
+    supress_reply_directly_below: "當一個帖子只有一個回覆時，不顯示帖子回覆數量"
     allow_index_in_robots_txt: "允許搜索引擎索引站點內容（更新 robots.txt）"
     email_domains_blacklist: "將一列豎線分隔的郵箱域名放入黑名單，例如：mailinator.com|trashmail.net"
     email_domains_whitelist: "豎線 | 分隔的電子郵箱域名，用戶只能使用這些郵箱域名注冊。注意：用戶使用不包含在這個列表裏的郵箱域名，將無法成功注冊。"
@@ -444,7 +444,7 @@ zh_TW:
   notification_types:
     mentioned: "%{display_username} 在 %{link} 提及到了你"
     liked: "%{display_username} 在 %{link} 讚了你的帖子 "
-    replied: "%{display_username} 在 %{link} 回複了你的帖子"
+    replied: "%{display_username} 在 %{link} 回覆了你的帖子"
     quoted: "%{display_username} 在 %{link} 引用了你的帖子"
     edited: "%{display_username} 在 %{link} 編輯了你的帖子"
     posted: "%{display_username} 發表了 %{link}"
@@ -470,8 +470,8 @@ zh_TW:
     topics: "主題"
     likes_received: "收到的讚"
     likes_given: "送出的讚"
-    responses: "回複"
-    topic_responses: "主題回複"
+    responses: "回覆"
+    topic_responses: "主題回覆"
     posts: "帖子"
     mentions: "提及"
     quotes: "引用"
@@ -484,7 +484,7 @@ zh_TW:
     liked: "讚過"
     bookmarked: "標過書簽"
     posted: "發表過"
-    responded_to: "回複給"
+    responded_to: "回覆給"
     mentioned: "提及過"
     quoted: "引用過"
     favorited: "收藏過"
@@ -498,8 +498,8 @@ zh_TW:
   topic_statuses:
     archived_enabled: "本主題已歸檔，即已經凍結，無法修改。"
     archived_disabled: "本主題已被解除歸檔，即不再凍結，可以修改。"
-    closed_enabled: "本主題已關閉，不再接受新的回複。"
-    closed_disabled: "本主題已開放，可以發表新的回複。"
+    closed_enabled: "本主題已關閉，不再接受新的回覆。"
+    closed_disabled: "本主題已開放，可以發表新的回覆。"
     pinned_enabled: "本主題已置頂，它將始終顯示在它所屬分類的頂部。"
     pinned_disabled: "本主題已被解除置頂，它將不再顯示在它所屬分類的頂部。"
     visible_enabled: "本主題可見，它將顯示在主題列表中。"
@@ -538,7 +538,7 @@ zh_TW:
 
       [訪問 %{site_name}][1]
 
-      你是被一個受信任的用戶邀請的，所以你可以不用登錄就直接發表回複。
+      你是被一個受信任的用戶邀請的，所以你可以不用登錄就直接發表回覆。
 
       [1]: %{invite_link}
 
@@ -614,25 +614,25 @@ zh_TW:
 
         論道 - Discourse 沒有所謂下一頁按鈕或者頁碼，要繼續閱讀帖子，只需要繼續向下滾動頁面，這樣更多的內容會自動加載！
 
-        當新的回複進來時，它們會自動顯示在主題的底部。你不需要刷新頁面或者退出主題然後重新進入來查看新帖子。
+        當新的回覆進來時，它們會自動顯示在主題的底部。你不需要刷新頁面或者退出主題然後重新進入來查看新帖子。
 
-        ### 我怎麽回複？
+        ### 我怎麽回覆？
 
-        - 要回複一個帖子，點擊該帖子底部的回複按鈕。
+        - 要回覆一個帖子，點擊該帖子底部的回覆按鈕。
 
-        - 如果要回複整個主題的 *主旨*，而不是回複該主題裏某個特定的人或帖子，請使用該主題最底下的回複按鈕。
+        - 如果要回覆整個主題的 *主旨*，而不是回覆該主題裏某個特定的人或帖子，請使用該主題最底下的回覆按鈕。
 
-        - 如果你想把討論導向另一個方向，但是保持討論之間的聯系，請使用帖子右側的 回複爲新主題 按鈕。
+        - 如果你想把討論導向另一個方向，但是保持討論之間的聯系，請使用帖子右側的 回覆爲新主題 按鈕。
 
         ### 誰在跟我交談？
 
-        當有人回複你的帖子，引用你的內容，或者使用 @username 提及到你的時候，一個通知消息會顯示在頁面頂部。點擊通知消息的數目就可以查看是誰、在哪兒在跟你交談，交談。加入討論吧！
+        當有人回覆你的帖子，引用你的內容，或者使用 @username 提及到你的時候，一個通知消息會顯示在頁面頂部。點擊通知消息的數目就可以查看是誰、在哪兒在跟你交談，交談。加入討論吧！
 
         - 要提及某人的名字，輸入 `@` 符號，頁面會自動彈出可用人名。
 
         - 要引用整個帖子，使用編輯器工具欄裏的 引用帖子 按鈕。
 
-        - 要引用帖子的部分內容，選中要引用的內容，然後點擊顯示在選擇區上的回複按鈕。
+        - 要引用帖子的部分內容，選中要引用的內容，然後點擊顯示在選擇區上的回覆按鈕。
 
         ### 看那個帖子吧！
 
@@ -718,15 +718,15 @@ zh_TW:
         請訪問 %{base_url}%{url} 來查看該主題。
 
     user_replied:
-      subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 主題回複了你的帖子"
+      subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 主題回覆了你的帖子"
       text_body_template: |
-        %{username} 在 %{site_name} 的 '%{topic_title}' 主題中回複了你的帖子：
+        %{username} 在 %{site_name} 的 '%{topic_title}' 主題中回覆了你的帖子：
 
         ---
         %{message}
 
         ---
-        請訪問 %{base_url}%{url} 來回複。
+        請訪問 %{base_url}%{url} 來回覆。
 
     user_quoted:
       subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 主題引用了你的內容"
@@ -737,7 +737,7 @@ zh_TW:
         %{message}
 
         ---
-        請訪問 %{base_url}%{url} 來回複。
+        請訪問 %{base_url}%{url} 來回覆。
 
     user_mentioned:
       subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 主題提及了你"
@@ -748,7 +748,7 @@ zh_TW:
         %{message}
 
         ---
-        請訪問 %{base_url}%{url} 來回複。
+        請訪問 %{base_url}%{url} 來回覆。
 
     user_posted:
       subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 主題發表了帖子"
@@ -759,7 +759,7 @@ zh_TW:
         %{message}
 
         ---
-        請訪問 %{base_url}%{url} 來回複。
+        請訪問 %{base_url}%{url} 來回覆。
 
     digest:
       why: "這裏是自從我們在 %{last_seen_at} 最後一次見到你之後，在 %{site_link} 發生的事情的簡單彙總。"
@@ -779,7 +779,7 @@ zh_TW:
         %{message}
 
         ---
-        請訪問 %{base_url}%{url} 來回複。
+        請訪問 %{base_url}%{url} 來回覆。
 
     forgot_password:
       subject_template: "[%{site_name}] 密碼重置"

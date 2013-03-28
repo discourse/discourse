@@ -46,7 +46,7 @@ zh_TW:
     saved: "已保存！"
 
     user_action_descriptions:
-      "6": "回複"
+      "6": "回覆"
 
     user:
       information: "用戶信息"
@@ -64,7 +64,7 @@ zh_TW:
       invited_by: "邀請者爲"
       trust_level: "用戶級別"
       external_links_in_new_tab: "始終在新的標簽頁打開外部鏈接"
-      enable_quoting: "在高亮選擇文字時啓用引用回複"
+      enable_quoting: "在高亮選擇文字時啓用引用回覆"
 
       change_username:
         action: "修改"
@@ -122,7 +122,7 @@ zh_TW:
         weekly: "每周"
         bi_weekly: "每兩周"
 
-      email_direct: "當有人引用你、回複你或提及你 @username 時發送一封郵件給你"
+      email_direct: "當有人引用你、回覆你或提及你 @username 時發送一封郵件給你"
       email_private_messages: "當有人給你發私信時發送一封郵件給你"
 
       other_settings: "其它"
@@ -203,7 +203,7 @@ zh_TW:
     best_of:
       title: "優選"
       enabled_description: 你現在正在瀏覽本主題的“優選”視圖。
-      description: "此主題中有 <b>{{count}}</b> 個帖子，是不是有點多哦！你願意切換到只顯示最多交互和回複的帖子視圖麽？"
+      description: "此主題中有 <b>{{count}}</b> 個帖子，是不是有點多哦！你願意切換到只顯示最多交互和回覆的帖子視圖麽？"
       enable: '切換到“優選”視圖'
       disable: '取消“優選”'
 
@@ -271,7 +271,7 @@ zh_TW:
         message: "使用騰訊QQ帳號驗證登錄（請確保沒有禁止瀏覽器彈出對話框）"
 
     composer:
-      posting_not_on_topic: "你正在回複主題 \"{{title}}\"，但是當前你正在瀏覽的是另外一個主題。"
+      posting_not_on_topic: "你正在回覆主題 \"{{title}}\"，但是當前你正在瀏覽的是另外一個主題。"
       saving_draft_tip: "保存中"
       saved_draft_tip: "已保存"
       saved_local_draft_tip: "已本地保存"
@@ -283,9 +283,9 @@ zh_TW:
         need_more_for_reply: "請給正文內容再輸入至少 {{n}} 個字符"
 
       save_edit: "保存編輯"
-      reply_original: "回複原始帖"
-      reply_here: "在此回複"
-      reply: "回複"
+      reply_original: "回覆原始帖"
+      reply_here: "在此回覆"
+      reply: "回覆"
       cancel: "取消"
       create_topic: "創建主題"
       create_pm: "創建私信"
@@ -329,7 +329,7 @@ zh_TW:
       help: "Markdown 編輯幫助"
 
     notifications:
-      title: "使用 @name 提及到你，回複你的帖子和主題，私信等等的通知消息"
+      title: "使用 @name 提及到你，回覆你的帖子和主題，私信等等的通知消息"
       none: "你當前沒有任何通知。"
       more: "瀏覽以前的通知"
       mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
@@ -422,8 +422,8 @@ zh_TW:
       view_latest_topics: 瀏覽熱門主題
       suggest_create_topic: 這就創建一個主題吧！
       read_position_reset: "你的閱讀位置已經被重置。"
-      jump_reply_up: 跳轉至更早的回複
-      jump_reply_down: 跳轉至更晚的回複
+      jump_reply_up: 跳轉至更早的回覆
+      jump_reply_down: 跳轉至更晚的回覆
       deleted: "此主題已被刪除"
 
       progress:
@@ -439,11 +439,11 @@ zh_TW:
           "3_2": '因爲你在關注此主題，所以你將收到相關通知。'
           "3_1": '因爲你創建了此主題，所以你將收到相關通知。'
           "3": '因爲你在關注此主題，所以你將收到相關通知。'
-          "2_4": '因爲你在此主題內發表了回複，所以你將收到相關通知。'
+          "2_4": '因爲你在此主題內發表了回覆，所以你將收到相關通知。'
           "2_2": '因爲你在追蹤此主題，所以你將收到相關通知。'
           "2": '因爲你<a href="/users/{{username}}/preferences">閱讀了此主題</a>，所以你將收到相關通知。'
-          "1": '因爲有人 @name 提及了你或回複了你的帖子，所以你將收到相關通知。'
-          "1_2": '僅當有人 @name 提及了你或回複了你的帖子，你才會收到相關通知。'
+          "1": '因爲有人 @name 提及了你或回覆了你的帖子，所以你將收到相關通知。'
+          "1_2": '僅當有人 @name 提及了你或回覆了你的帖子，你才會收到相關通知。'
           "0": '你將忽略關於此主題的所有通知。'
           "0_2": '你將忽略關於此主題的所有通知。'
         watching:
@@ -451,10 +451,10 @@ zh_TW:
           description: "與追蹤一樣，額外的是一旦有新帖子發表，你都會收到通知。"
         tracking:
           title: "追蹤"
-          description: "關於你的未閱帖子、@name 提及與對你的帖子的回複，你都會收到通知。"
+          description: "關於你的未閱帖子、@name 提及與對你的帖子的回覆，你都會收到通知。"
         regular:
           title: "常規"
-          description: "只有當有人 @name 提及你或者回複你的帖子時，你才會收到通知。"
+          description: "只有當有人 @name 提及你或者回覆你的帖子時，你才會收到通知。"
         muted:
           title: "防打擾"
           description: "你不會收到關於此主題的任何通知，也不會在你的未閱選項卡中顯示。"
@@ -474,8 +474,8 @@ zh_TW:
         convert_to_topic: "轉換到常規主題"
 
       reply:
-        title: '回複'
-        help: '開始給本主題撰寫回複'
+        title: '回覆'
+        help: '開始給本主題撰寫回覆'
 
       clear_pin:
         title: "清除置頂"
@@ -496,14 +496,14 @@ zh_TW:
         error: "抱歉，在邀請該用戶時發生了錯誤。"
 
       invite_reply:
-        title: '邀請朋友來回複'
-        help: '向你的朋友發送邀請，他們只需要一個點擊就能回複這個主題'
-        email: "我們會給你的朋友發送一封郵件，他們只需要點擊其中的一個鏈接就可以回複這個主題了。"
+        title: '邀請朋友來回覆'
+        help: '向你的朋友發送邀請，他們只需要一個點擊就能回覆這個主題'
+        email: "我們會給你的朋友發送一封郵件，他們只需要點擊其中的一個鏈接就可以回覆這個主題了。"
         email_placeholder: '電子郵箱地址'
         success: "謝謝！我們已發送一個邀請郵件到<b>{{email}}</b>。當他們確認的時候我們會通知你。你也可以在你的用戶頁面的邀請選項卡下查看邀請狀態。"
         error: "抱歉，我們不能邀請此人，可能他/她已經是本站用戶了？"
 
-      login_reply: '登錄來回複'
+      login_reply: '登錄來回覆'
 
       filters:
         user:
@@ -531,20 +531,20 @@ zh_TW:
           other: "你已選擇了<b>{{count}}</b>個帖子。"
 
     post:
-      reply: "回複 {{replyAvatar}} {{username}} 發表的 {{link}}"
-      reply_topic: "回複 {{link}}"
-      quote_reply: "引用回複"
+      reply: "回覆 {{replyAvatar}} {{username}} 發表的 {{link}}"
+      reply_topic: "回覆 {{link}}"
+      quote_reply: "引用回覆"
       edit: "編輯 {{link}}"
       post_number: "帖子 {{number}}"
-      in_reply_to: "回複給"
-      reply_as_new_topic: "回複爲新主題"
+      in_reply_to: "回覆給"
+      reply_as_new_topic: "回覆爲新主題"
       continue_discussion: "從 {{postLink}} 繼續討論："
       follow_quote: "跳轉至所引用的帖子"
       deleted_by_author: "（作者刪除了帖子）"
 
       has_replies:
-        one: "回複"
-        other: "回複"
+        one: "回覆"
+        other: "回覆"
 
       errors:
         create: "抱歉，在創建你的帖子時發生了錯誤。請重試。"
@@ -558,7 +558,7 @@ zh_TW:
         save: '保存選項'
 
       controls:
-        reply: "開始給本帖撰寫回複"
+        reply: "開始給本帖撰寫回覆"
         like: "讚本帖"
         edit: "編輯本帖"
         flag: "投訴本帖以提醒論壇版主"
@@ -631,7 +631,7 @@ zh_TW:
 
     topic_statuses:
       locked:
-        help: "本主題已關閉，不再接受新的回複"
+        help: "本主題已關閉，不再接受新的回覆"
       pinned:
         help: "本主題已置頂，它將始終顯示在它所屬分類的頂部"
       archived:
@@ -643,7 +643,7 @@ zh_TW:
     posts_long: "本主題有 {{number}} 個帖子"
     original_post: "原始帖"
     views: "瀏覽"
-    replies: "回複"
+    replies: "回覆"
     views_long: "本主題已經被瀏覽過 {{number}} 次"
     activity: "活動"
     likes: "讚"
