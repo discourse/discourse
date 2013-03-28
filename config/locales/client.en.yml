@@ -682,7 +682,7 @@ en:
           zero: "New"
           one: "New (1)"
           other: "New ({{count}})"
-        help: "new topics since your last visit, and tracked topics with new posts"
+        help: "new topics since your last visit"
       posted:
         title: "My Posts"
         help: "topics you have posted in"

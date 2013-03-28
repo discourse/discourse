@@ -664,7 +664,7 @@ es:
           zero: "Nuevos"
           one: "Nuevo (1)"
           other: "Nuevos ({{count}})"
-        help: "new topics since your last visit, and tracked topics with new posts"
+        help: "new topics since your last visit"
       posted:
         title: "My Posts"
         help: "topics you have posted in"
