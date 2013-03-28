@@ -508,9 +508,9 @@ fr:
 
       filters:
         user:
-          one: "Vous voyez uniquement les messages d'un utilisateur spécifique."
-          other: "Vous voyez uniquement les messages d'utilisateurs spécifiques."
-        best_of: "Vous voyez uniquement les {{filtered_posts_counts}} messages les plus populaires de cette discussion."
+          one: "Vous voyez seulement les {{filtered_posts_count}} messages de l'utilisateur."
+          other: "Vous voyez seulement les {{filtered_posts_count}} messages écrit par {{count}} utilisateurs."
+        best_of: "Vous voyez seulement les {{filtered_posts_counts}} messages les plus populaires de cette discussion."
         cancel: "Ré-afficher l'ensemble des messages de cette discussion."
 
       move_selected:
