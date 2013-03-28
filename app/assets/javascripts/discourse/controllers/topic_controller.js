@@ -309,6 +309,7 @@ Discourse.TopicController = Discourse.ObjectController.extend({
       })) {
         return;
       }
+
       topic.set('posts_count', topic.get('posts_count') + 1);
       topic.set('highest_post_number', data.post_number);
       topic.set('last_poster', data.user);

@@ -350,11 +350,11 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
   },
 
   nonUrgentPositionUpdate: Discourse.debounce(function(opts){
-      var screenTrack = this.get('screenTrack');
-      if(opts.userActive && screenTrack) {
-        screenTrack.scrolled();
-      }
-      this.set('controller.currentPost', opts.currentPost);
+    var screenTrack = this.get('screenTrack');
+    if(opts.userActive && screenTrack) {
+      screenTrack.scrolled();
+    }
+    this.set('controller.currentPost', opts.currentPost);
   },500),
 
   scrolled: function(){
