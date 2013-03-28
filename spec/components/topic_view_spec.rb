@@ -19,15 +19,22 @@ describe TopicView do
   end
 
   context "with a few sample posts" do
-    let!(:p1) { Fabricate(:post, topic: topic, user: first_poster )}
-    let!(:p2) { Fabricate(:post, topic: topic, user: coding_horror )}
-    let!(:p3) { Fabricate(:post, topic: topic, user: first_poster )}
+    let!(:p1) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 1 )}
+    let!(:p2) { Fabricate(:post, topic: topic, user: coding_horror, percent_rank: 0.5 )}
+    let!(:p3) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 0 )}
+
+    it "it can the best 2 responses" do
+      best2 = TopicView.new(topic.id, nil, best: 2)
+      best2.posts.count.should == 2
+      best2.posts[0].id.should == p2.id
+      best2.posts[1].id.should == p3.id
+    end
 
 
-  it "raises NotLoggedIn if the user isn't logged in and is trying to view a private message" do
-    Topic.any_instance.expects(:private_message?).returns(true)
-    lambda { TopicView.new(topic.id, nil) }.should raise_error(Discourse::NotLoggedIn)
-  end
+    it "raises NotLoggedIn if the user isn't logged in and is trying to view a private message" do
+      Topic.any_instance.expects(:private_message?).returns(true)
+      lambda { TopicView.new(topic.id, nil) }.should raise_error(Discourse::NotLoggedIn)
+    end
 
     it "provides an absolute url" do
       topic_view.absolute_url.should be_present

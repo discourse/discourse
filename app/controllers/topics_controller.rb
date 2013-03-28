@@ -168,7 +168,7 @@ class TopicsController < ApplicationController
   private
 
   def create_topic_view
-    opts = params.slice(:username_filters, :best_of, :page, :post_number, :posts_before, :posts_after)
+    opts = params.slice(:username_filters, :best_of, :page, :post_number, :posts_before, :posts_after, :best)
     @topic_view = TopicView.new(params[:id] || params[:topic_id], current_user, opts)
   end
 

@@ -20,6 +20,8 @@ class TopicView
     Guardian.new(user).ensure_can_see!(@topic)
     @post_number, @page  = options[:post_number], options[:page]
 
+    @limit = options[:limit] || SiteSetting.posts_per_page;
+
     @filtered_posts = @topic.posts
     @filtered_posts = @filtered_posts.with_deleted if user.try(:admin?)
     @filtered_posts = @filtered_posts.best_of if options[:best_of].present?
@@ -91,13 +93,16 @@ class TopicView
     return filter_posts_near(opts[:post_number].to_i) if opts[:post_number].present?
     return filter_posts_before(opts[:posts_before].to_i) if opts[:posts_before].present?
     return filter_posts_after(opts[:posts_after].to_i) if opts[:posts_after].present?
+    return filter_best(opts[:best]) if opts[:best].present?
     filter_posts_paged(opts[:page].to_i)
   end
+
 
   # Find the sort order for a post in the topic
   def sort_order_for_post_number(post_number)
     Post.where(topic_id: @topic.id, post_number: post_number)
         .with_deleted
+        .select(:sort_order)
         .first
         .try(:sort_order)
   end
@@ -148,14 +153,12 @@ class TopicView
     sort_order = sort_order_for_post_number(post_number)
     return nil unless sort_order
 
-
-
     # Find posts before the `sort_order`
     @posts = @filtered_posts.order('sort_order desc').where("sort_order < ?", sort_order)
     @index_offset = @posts.count
     @index_reverse = true
 
-    @posts = @posts.includes(:reply_to_user).includes(:topic).joins(:user).limit(SiteSetting.posts_per_page)
+    @posts = @posts.includes(:reply_to_user).includes(:topic).joins(:user).limit(@limit)
   end
 
   # Filter to all posts after a particular post number
@@ -167,7 +170,16 @@ class TopicView
 
     @index_offset = @filtered_posts.where("sort_order <= ?", sort_order).count
     @posts = @filtered_posts.order('sort_order').where("sort_order > ?", sort_order)
-    @posts = @posts.includes(:reply_to_user).includes(:topic).joins(:user).limit(SiteSetting.posts_per_page)
+    @posts = @posts.includes(:reply_to_user).includes(:topic).joins(:user).limit(@limit)
+  end
+  
+  def filter_best(max)
+    @index_offset = 0
+    @posts = @filtered_posts.order('percent_rank asc, sort_order asc').where("post_number > 1")
+    @posts = @posts.includes(:reply_to_user).includes(:topic).joins(:user).limit(max)
+    @posts = @posts.to_a
+    @posts.sort!{|a,b| a.post_number <=> b.post_number}
+    @posts
   end
 
   def read?(post_number)
