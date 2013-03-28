@@ -14,7 +14,7 @@ Discourse.ListController = Discourse.Controller.extend({
   canCreateTopic: false,
   needs: ['composer', 'modal', 'listTopics'],
 
-  availableNavItems: (function() {
+  availableNavItems: function() {
     var hasCategories, loggedOn, summary;
     summary = this.get('filterSummary');
     loggedOn = !!Discourse.get('currentUser');
@@ -28,7 +28,7 @@ Discourse.ListController = Discourse.Controller.extend({
     }).filter(function(i) {
       return i !== null;
     });
-  }).property('filterSummary'),
+  }.property('filterSummary'),
 
   /**
     Load a list based on a filter
@@ -63,26 +63,23 @@ Discourse.ListController = Discourse.Controller.extend({
   },
 
   // Put in the appropriate page title based on our view
-  updateTitle: (function() {
+  updateTitle: function() {
     if (this.get('filterMode') === 'categories') {
       return Discourse.set('title', Em.String.i18n('categories_list'));
     } else {
       if (this.present('category')) {
-        return Discourse.set('title', "" + (this.get('category.name').capitalize()) + " " + (Em.String.i18n('topic.list')));
+        return Discourse.set('title', this.get('category.name').capitalize() + " " + Em.String.i18n('topic.list'));
       } else {
         return Discourse.set('title', Em.String.i18n('topic.list'));
       }
     }
-  }).observes('filterMode', 'category'),
+  }.observes('filterMode', 'category'),
 
   // Create topic button
   createTopic: function() {
-    var topicList;
-    topicList = this.get('controllers.listTopics.content');
-    if (!topicList) {
-      return;
-    }
-    return this.get('controllers.composer').open({
+    var topicList = this.get('controllers.listTopics.content');
+    if (!topicList) return;
+    this.get('controllers.composer').open({
       categoryName: this.get('category.name'),
       action: Discourse.Composer.CREATE_TOPIC,
       draftKey: topicList.get('draft_key'),
@@ -100,5 +97,3 @@ Discourse.ListController = Discourse.Controller.extend({
 Discourse.ListController.reopenClass({
   filters: ['latest', 'hot', 'favorited', 'read', 'unread', 'new', 'posted']
 });
-
-

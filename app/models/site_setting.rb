@@ -190,4 +190,13 @@ class SiteSetting < ActiveRecord::Base
   def self.post_length
     min_post_length..max_post_length
   end
+
+  def self.homepage
+    top_menu.split('|')[0]
+  end
+
+  def self.anonymous_homepage
+    top_menu.split('|').select{ |f| ['latest', 'hot', 'categories', 'category'].include? f }[0]
+  end
+
 end

@@ -1,6 +1,7 @@
 require 'sidekiq/web'
 
 require_dependency 'admin_constraint'
+require_dependency 'homepage_constraint'
 
 # This used to be User#username_format, but that causes a preload of the User object
 # and makes Guard not work properly.
@@ -154,20 +155,10 @@ Discourse::Application.routes.draw do
   get 'popular' => 'list#popular_redirect'
   get 'popular/more' => 'list#popular_redirect'
 
-  get 'latest' => 'list#index'
-  get 'latest/more' => 'list#index'
-  get 'hot' => 'list#hot'
-  get 'hot/more' => 'list#hot'
-  get 'favorited' => 'list#favorited'
-  get 'favorited/more' => 'list#favorited'
-  get 'read' => 'list#read'
-  get 'read/more' => 'list#read'
-  get 'unread' => 'list#unread'
-  get 'unread/more' => 'list#unread'
-  get 'new' => 'list#new'
-  get 'new/more' => 'list#new'
-  get 'posted' => 'list#posted'
-  get 'posted/more' => 'list#posted'
+  [:latest, :hot, :favorited, :read, :posted, :unread, :new].each do |filter|
+    get "#{filter}" => "list##{filter}"
+    get "#{filter}/more" => "list##{filter}"
+  end
 
   get 'search' => 'search#query'
 
@@ -222,11 +213,12 @@ Discourse::Application.routes.draw do
   post 'draft' => 'draft#update'
   delete 'draft' => 'draft#destroy'
 
-
   get 'robots.txt' => 'robots_txt#index'
 
-  # You can have the root of your site routed with "root"
-  # just remember to delete public/index.html.
-  root to: 'list#index'
+  [:latest, :hot, :unread, :new, :favorited, :read, :posted].each do |filter|
+    root to: "list##{filter}", constraints: HomePageConstraint.new("#{filter}")
+  end
+  # special case for categories
+  root to: "categories#index", constraints: HomePageConstraint.new("categories")
 
 end
