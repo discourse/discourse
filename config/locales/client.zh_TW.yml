@@ -129,7 +129,7 @@ zh_TW:
 
       new_topic_duration:
         label: "認爲主題是新主題，當"
-        not_viewed: "我還沒有浏覽它們"
+        not_viewed: "我還沒有瀏覽它們"
         last_here: "它們是在我最近一次訪問這裏之後發表的"
         after_n_days:
           one: "它們是昨天發表的"
@@ -202,7 +202,7 @@ zh_TW:
 
     best_of:
       title: "優選"
-      enabled_description: 你現在正在浏覽本主題的“優選”視圖。
+      enabled_description: 你現在正在瀏覽本主題的“優選”視圖。
       description: "此主題中有 <b>{{count}}</b> 個帖子，是不是有點多哦！你願意切換到只顯示最多交互和回複的帖子視圖麽？"
       enable: '切換到“優選”視圖'
       disable: '取消“優選”'
@@ -247,31 +247,31 @@ zh_TW:
       sent_activation_email_again: "我們在<b>{{currentEmail}}</b>又發送了一封激活郵件給你，郵件送達可能需要幾分鍾，有的電子郵箱服務商可能會認爲此郵件爲垃圾郵件，請檢查一下你郵箱的垃圾郵件文件夾。"
       google:
         title: "使用谷歌帳號登錄"
-        message: "使用谷歌（Google）帳號驗證登錄（請確保沒有禁止浏覽器彈出對話框）"
+        message: "使用谷歌（Google）帳號驗證登錄（請確保沒有禁止瀏覽器彈出對話框）"
       twitter:
         title: "使用推特帳號登錄"
-        message: "使用推特（Twitter）帳號驗證登錄（請確保沒有禁止浏覽器彈出對話框）"
+        message: "使用推特（Twitter）帳號驗證登錄（請確保沒有禁止瀏覽器彈出對話框）"
       facebook:
         title: "使用臉書帳號登錄"
-        message: "使用臉書（Facebook）帳號驗證登錄（請確保沒有禁止浏覽器彈出對話框）"
+        message: "使用臉書（Facebook）帳號驗證登錄（請確保沒有禁止瀏覽器彈出對話框）"
       yahoo:
         title: "使用雅虎帳號登錄"
-        message: "使用雅虎（Yahoo）帳號驗證登錄（請確保沒有禁止浏覽器彈出對話框）"
+        message: "使用雅虎（Yahoo）帳號驗證登錄（請確保沒有禁止瀏覽器彈出對話框）"
       github:
         title: "使用 Github 帳號登錄"
-        message: "使用 Github 帳號驗證登錄（請確保沒有禁止浏覽器彈出對話框）"
+        message: "使用 Github 帳號驗證登錄（請確保沒有禁止瀏覽器彈出對話框）"
       persona:
         title: "使用 Persona 帳號登錄"
-        message: "使用 Mozilla Persona 帳號驗證登錄（請確保沒有禁止浏覽器彈出對話框）"
+        message: "使用 Mozilla Persona 帳號驗證登錄（請確保沒有禁止瀏覽器彈出對話框）"
       sina:
         title: "使用新浪帳號登錄"
-        message: "使用新浪帳號驗證登錄（請確保沒有禁止浏覽器彈出對話框）"
+        message: "使用新浪帳號驗證登錄（請確保沒有禁止瀏覽器彈出對話框）"
       qq:
         title: "使用騰訊QQ帳號登錄"
-        message: "使用騰訊QQ帳號驗證登錄（請確保沒有禁止浏覽器彈出對話框）"
+        message: "使用騰訊QQ帳號驗證登錄（請確保沒有禁止瀏覽器彈出對話框）"
 
     composer:
-      posting_not_on_topic: "你正在回複主題 \"{{title}}\"，但是當前你正在浏覽的是另外一個主題。"
+      posting_not_on_topic: "你正在回複主題 \"{{title}}\"，但是當前你正在瀏覽的是另外一個主題。"
       saving_draft_tip: "保存中"
       saved_draft_tip: "已保存"
       saved_local_draft_tip: "已本地保存"
@@ -293,7 +293,7 @@ zh_TW:
       users_placeholder: "添加一個用戶"
       title_placeholder: "在此輸入你的標題，簡明扼要的用一句話說明討論的內容。"
       reply_placeholder: "在此輸入你的內容。你可以使用 Markdown（參考 http://wowubuntu.com/markdown/） 或 BBCode（參考 http://www.bbcode.org/reference.php） 來格式化內容。拖拽或粘貼一幅圖片到這兒即可將它上傳。"
-      view_new_post: "浏覽你的新帖子。"
+      view_new_post: "瀏覽你的新帖子。"
       saving: "保存中……"
       saved: "已保存！"
       saved_draft: "你有一個帖子草稿尚發表。在框中任意處點擊即可接著編輯。"
@@ -331,7 +331,7 @@ zh_TW:
     notifications:
       title: "使用 @name 提及到你，回複你的帖子和主題，私信等等的通知消息"
       none: "你當前沒有任何通知。"
-      more: "浏覽以前的通知"
+      more: "瀏覽以前的通知"
       mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
       quoted: "<i title='quoted' class='icon icon-quote-right'></i> {{username}} {{link}}"
       replied: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
@@ -415,11 +415,11 @@ zh_TW:
       options: "主題選項"
       show_links: "顯示此主題中的鏈接"
       toggle_information: "切換主題詳細"
-      read_more_in_category: "想閱讀更多內容？浏覽 {{catLink}} 或 {{latestLink}} 裏的其它主題。"
+      read_more_in_category: "想閱讀更多內容？瀏覽 {{catLink}} 或 {{latestLink}} 裏的其它主題。"
       read_more: "想閱讀更多內容？{{catLink}} 或 {{latestLink}}。"
-      browse_all_categories: 浏覽所有分類
+      browse_all_categories: 瀏覽所有分類
 
-      view_latest_topics: 浏覽熱門主題
+      view_latest_topics: 瀏覽熱門主題
       suggest_create_topic: 這就創建一個主題吧！
       read_position_reset: "你的閱讀位置已經被重置。"
       jump_reply_up: 跳轉至更早的回複
@@ -507,9 +507,9 @@ zh_TW:
 
       filters:
         user:
-          one: "你在浏覽一個指定用戶的帖子。"
-          other: "你在浏覽指定用戶的帖子。"
-        best_of: "你在浏覽“優選”帖子。"
+          one: "你在瀏覽一個指定用戶的帖子。"
+          other: "你在瀏覽指定用戶的帖子。"
+        best_of: "你在瀏覽“優選”帖子。"
         cancel: "再次顯示本主題下的所有帖子。"
 
       move_selected:
@@ -597,11 +597,11 @@ zh_TW:
       none: '（未分類）'
       edit: '編輯'
       edit_long: "編輯分類"
-      view: '浏覽分類下的主題'
+      view: '瀏覽分類下的主題'
       delete: '刪除分類'
       create: '創建分類'
       creation_error: 創建此分類時發生了錯誤。
-      more_posts: "浏覽全部 {{posts}} ……"
+      more_posts: "瀏覽全部 {{posts}} ……"
       name: "分類名稱"
       description: "描述"
       topic: "分類主題"
@@ -642,9 +642,9 @@ zh_TW:
     posts: "帖子"
     posts_long: "本主題有 {{number}} 個帖子"
     original_post: "原始帖"
-    views: "浏覽"
+    views: "瀏覽"
     replies: "回複"
-    views_long: "本主題已經被浏覽過 {{number}} 次"
+    views_long: "本主題已經被瀏覽過 {{number}} 次"
     activity: "活動"
     likes: "贊"
     top_contributors: "參與者"
@@ -792,7 +792,7 @@ zh_TW:
         moderator: "版主？"
         admin: "管理員？"
         show_admin_profile: "管理員"
-        refresh_browsers: "強制浏覽器刷新"
+        refresh_browsers: "強制瀏覽器刷新"
         show_public_profile: "顯示公開介紹"
         impersonate: '假冒用戶'
         revoke_admin: '吊銷管理員資格'

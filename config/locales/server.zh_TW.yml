@@ -350,7 +350,7 @@ zh_TW:
     ga_tracking_code: "谷歌分析追蹤代碼，例如：UA-12345678-9。參考 http://google.com/analytics"
     top_menu: "確定在主頁導航條包含哪些條目，以及排列順序。例如：latest|hot|read|favorited|unread|new|posted|categories"
     post_menu: "確定在帖子菜單條包含哪些條目，以及排列順序。例如：like|edit|flag|delete|share|bookmark|reply"
-    track_external_right_clicks: "追蹤外部鏈接的右鍵點擊（例如：在浏覽器新標簽打開），缺省是禁用的，因爲它會重寫URL"
+    track_external_right_clicks: "追蹤外部鏈接的右鍵點擊（例如：在瀏覽器新標簽打開），缺省是禁用的，因爲它會重寫URL"
     topics_per_page: "在主題列表頁面，缺省載入多少個主題"
     posts_per_page: "在主題頁面，返回多少個帖子"
     system_username: "論壇給用戶發送自動私信時使用的用戶名"
@@ -426,7 +426,7 @@ zh_TW:
 
     auto_link_images_wider_than: "圖片寬度超過此設定像素值的，將被自動附加一個鏈接並且使用燈箱（lightbox）來展示"
 
-    email_time_window_mins: "等待多少分鍾才給用戶發送通知電子郵件，好讓他們有機會自己來浏覽"
+    email_time_window_mins: "等待多少分鍾才給用戶發送通知電子郵件，好讓他們有機會自己來瀏覽"
     flush_timings_secs: "刷新時間數據的頻率，以秒爲單位"
     max_word_length: "在主題的標題中，允許的詞語長度的最大字符數"
     title_min_entropy: "在主題的標題中，允許的最低熵值（單個字符）"
@@ -545,7 +545,7 @@ zh_TW:
   test_mailer:
     subject_template: "[%{site_name}] 電子郵件發送測試"
     text_body_template: |
-      這是一封來自 %{site_name} 論壇的測試郵件。你可以通過浏覽器訪問該論壇：
+      這是一封來自 %{site_name} 論壇的測試郵件。你可以通過瀏覽器訪問該論壇：
 
       [*%{base_url}*][0]
 
@@ -644,7 +644,7 @@ zh_TW:
 
         - 要搜索，訪問你的用戶頁面或者其他導航內容，點擊右上角的那些圖標。
 
-        - 當閱讀一個主題時，你可以通過點擊頁面頂部的標題回到頂部；要去到 *底部*，點擊頁面底部的主題浏覽進度指示器裏的向下箭頭，或者點擊該主題第一帖下面的彙總信息裏的最後一帖區域。
+        - 當閱讀一個主題時，你可以通過點擊頁面頂部的標題回到頂部；要去到 *底部*，點擊頁面底部的主題瀏覽進度指示器裏的向下箭頭，或者點擊該主題第一帖下面的彙總信息裏的最後一帖區域。
 
     welcome_approved:
       subject_template: "你已經獲得了 %{site_name} 的批准！"
@@ -806,7 +806,7 @@ zh_TW:
         點擊下面的鏈接來確認和激活你的新帳號：
         %{base_url}/users/activate-account/%{email_token}
 
-        如果上面的鏈接無法點擊，請拷貝該鏈接並粘貼到你的浏覽器的地址欄裏。
+        如果上面的鏈接無法點擊，請拷貝該鏈接並粘貼到你的瀏覽器的地址欄裏。
 
   discourse_hub:
     access_token_problem: "告訴一個管理員：請更新站點設置以包含正確的 discourse_org_access_key。"
