@@ -1,6 +1,6 @@
 # Discourse Developer Install Guide (Vagrant)
 
-**We require Vagrant 1.1.2+ for our Vagrant image to work. You may have to upgrade if you are running
+**We require [Vagrant 1.1.2+](http://downloads.vagrantup.com/) for our Vagrant image to work. You may have to upgrade if you are running
 an earlier release.**
 
 If you'd like to set up a development environment for Discourse, the easiest way is by using a virtual machine.
