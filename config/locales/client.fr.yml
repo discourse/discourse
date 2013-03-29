@@ -12,6 +12,9 @@ fr:
       topic: 'partager un lien vers cette discussion'
       post: 'partager un lien vers ce message'
       close: 'fermer'
+      twitter: 'partager ce lien sur Twitter'
+      facebook: 'partager ce lien sur Facebook'
+      google+: 'partager ce lien sur Google+'
 
     edit: 'éditer le titre et la catégorie de cette discussion'
     not_implemented: "Cette fonctionnalité n'a pas encore été implémentée, désolé."
@@ -250,23 +253,23 @@ fr:
       resend_activation_email: "Cliquez ici pour réenvoyer l'email d'activation."
       sent_activation_email_again: "Nous venous de vous envoyer un nouvel email d'activation à <b>{{currentEmail}}</b>. Il peut prendre quelques minutes à arriver; n'oubliez pas de vérifier votre répertoire spam."
       google:
-        title: "Connexion via Google"
+        title: "via Google"
         message: "Authentification via Google (assurez-vous que les popups ne soient pas bloquées)"
       twitter:
-        title: "Connexion via Twitter"
+        title: "via Twitter"
         message: "Authentification via Twitter (assurez-vous que les popups ne soient pas bloquées)"
       facebook:
-        title: "Connexion via Facebook"
+        title: "via Facebook"
         message: "Authentification via Facebook (assurez-vous que les popups ne soient pas bloquées)"
       yahoo:
-        title: "Connexion via Yahoo"
+        title: "via Yahoo"
         message: "Authentification via Yahoo (assurez-vous que les popups ne soient pas bloquées)"
       github:
-        title: "Connexion via GitHub"
+        title: "via GitHub"
         message: "Authentification via GitHub (assurez-vous que les popups ne soient pas bloquées)"
       persona:
-        title: "Connexion via Mozilla Persona"
-        message: "Authentification via Persona (assurez-vous que les popups ne soient pas bloquées)"
+        title: "via Persona"
+        message: "Authentification via Mozilla Persona (assurez-vous que les popups ne soient pas bloquées)"
 
     composer:
       posting_not_on_topic: "Vous répondez à la discussion \"{{title}}\", mais vous êtes actuellement en train de consulter une autre discussion."
@@ -374,10 +377,10 @@ fr:
         new: "Vous n'avez aucune discussion non lue."
         read: "Vous n'avez lu aucune discussion pour le moment."
         posted: "Vous n'avez écrit aucun message pour le moment."
-        popular: "Il n'y a aucune discussion populaire pour le moment. C'est triste..."
+        latest: "Il n'y a aucune discussion populaire pour le moment. C'est triste..."
         category: "Il n'y a aucune discussion sur {{category}}."
       bottom:
-        popular: "Il n'y a plus de discussion populaire à lire."
+        latest: "Il n'y a plus de discussion populaire à lire."
         posted: "Il n'y a plus de discussion à lire."
         read: "Il n'y a plus de discussion à lire."
         new: "Il n'y a plus de discussion à lire."
@@ -413,10 +416,11 @@ fr:
       options: "options de la discussion"
       show_links: "afficher les liens de cette discussion"
       toggle_information: "afficher les détails de la discussion"
-      read_more_in_category: "Vous voulez en lire plus ? Afficher d'autres discussions dans {{catLink}} ou {{popularLink}}."
-      read_more: "Vous voulez en lire plus? {{catLink}} or {{popularLink}}."
+      read_more_in_category: "Vous voulez en lire plus ? Afficher d'autres discussions dans {{catLink}} ou {{latestLink}}."
+      read_more: "Vous voulez en lire plus? {{catLink}} or {{latestLink}}."
       browse_all_categories: 'Voir toutes les catégories'
-      view_popular_topics: "voir la liste des discussions populaires"
+
+      view_latest_topics: "voir la liste des discussions populaires"
       suggest_create_topic: "pourquoi ne pas créer une nouvelle discussion ?"
       read_position_reset: "Votre position de lecture à été remise à zéro."
       jump_reply_up: "aller à des réponses précédentes"
@@ -504,9 +508,9 @@ fr:
 
       filters:
         user:
-          one: "Vous voyez uniquement les messages d'un utilisateur spécifique."
-          other: "Vous voyez uniquement les messages d'utilisateurs spécifiques."
-        best_of: "Vous voyez uniquement les messages les plus populaires."
+          one: "Vous voyez seulement les {{filtered_posts_count}} messages de l'utilisateur."
+          other: "Vous voyez seulement les {{filtered_posts_count}} messages écrit par {{count}} utilisateurs."
+        best_of: "Vous voyez seulement les {{filtered_posts_counts}} messages les plus populaires de cette discussion."
         cancel: "Ré-afficher l'ensemble des messages de cette discussion."
 
       move_selected:
@@ -611,6 +615,7 @@ fr:
       list: "Liste des categories"
       no_description: "Il n'y a pas de description pour cette catégorie."
       change_in_category_topic: "visitez les discussions de cette catégorie pour en éditer la description"
+      hotness: "Buzz"
 
     flagging:
       title: 'Pourquoi voulez-vous signaler ce message ?'
@@ -652,7 +657,7 @@ fr:
     categories_list: "Liste des catégories"
 
     filters:
-      popular:
+      latest:
         title: "Populaires"
         help: "discussions récentes les plus populaires"
       favorited:
@@ -676,7 +681,7 @@ fr:
           zero: "Nouvelle (0)"
           one: "Nouvelle (1)"
           other: "Nouvelles ({{count}})"
-        help: "nouvelles discussions depuis votre dernière visite, et discussions suivies contenant des nouvelles réponses"
+        help: "nouvelles discussions depuis votre dernière visite"
       posted:
         title: "Mes messages"
         help: "discussions auxquelles vous avez participé"
@@ -735,6 +740,8 @@ fr:
         flagged_by: "Signalé par"
         error: "Quelque chose s'est mal passé"
 
+      api:
+        title: "API"
       customize:
         title: "Personnaliser"
         header: "En-tête"

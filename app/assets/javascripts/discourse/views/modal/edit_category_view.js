@@ -47,39 +47,17 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
   didInsertElement: function() {
     this._super();
 
-    var editCategoryView = this;
-
     if (this.get('category')) {
       this.set('id', this.get('category.slug'));
     } else {
       this.set('category', Discourse.Category.create({ color: 'AB9364', text_color: 'FFFFFF', hotness: 5 }));
     }
-
-    // Initialize the knob
-    $('#hotness-dial').knob({
-      min: 0,
-      max: 11,
-      width: 50,
-      height: 60,
-      change: function(v) {
-        editCategoryView.set('category.hotness', v);
-      }
-    });
-
-    Em.run.next(function() {
-      $('#hotness-dial').val(editCategoryView.get('category.hotness')).trigger('change');
-    });
-
   },
 
   showCategoryTopic: function() {
     $('#discourse-modal').modal('hide');
     Discourse.URL.routeTo(this.get('category.topic_url'));
     return false;
-  },
-
-  saveSuccess: function(result) {
-
   },
 
   saveCategory: function() {

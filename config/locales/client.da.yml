@@ -244,23 +244,23 @@ da:
       resend_activation_email: "Klik her for at sende aktiverings-e-mail’en igen."
       sent_activation_email_again: "Vi har sendt endnu en aktiverings-e-mail til dig på <b>{{currentEmail}}</b>. Det kan tage nogen få minutter før den når frem; check også din spam-mappe."
       google:
-        title: "Log ind med Google"
+        title: "med Google"
         message: "Logger ind med Google (check at pop-op-blokering ikke er aktiv)"
       twitter:
-        title: "Log ind med Twitter"
+        title: "med Twitter"
         message: "Logger ind med Twitter (check at pop-op-blokering ikke er aktiv)"
       facebook:
-        title: "Log ind med Facebook"
+        title: "med Facebook"
         message: "Logger ind med Facebook (check at pop-op-blokering ikke er aktiv)"
       yahoo:
-        title: "Log ind med Yahoo"
+        title: "med Yahoo"
         message: "Logger ind med Yahoo (check at pop-op-blokering ikke er aktiv)"
       github:
-        title: "Log ind med Github"
-        message: "Logger ind med Github (check at pop-op-blokering ikke er aktiv)"
+        title: "med GitHub"
+        message: "Logger ind med GitHub (check at pop-op-blokering ikke er aktiv)"
       persona:
-        title: "Log ind med Mozilla Persona"
-        message: "Logger ind med Persona (check at pop-op-blokering ikke er aktiv)"
+        title: "med Persona"
+        message: "Logger ind med Mozilla Persona (check at pop-op-blokering ikke er aktiv)"
 
     composer:
       posting_not_on_topic: "Du svarer nu på emnet \"{{title}}\", men du ser i øjeblikket på et andet emne."
@@ -366,10 +366,10 @@ da:
         new: "Du har ingen nye emner."
         read: "Du har ikke læst nogen emner endnu."
         posted: "Du har ikke skrevet nogen indlæg endnu."
-        popular: "Der er ikke nogen populære emner. Det er sørgeligt."
+        latest: "Der er ikke nogen populære emner. Det er sørgeligt."
         category: "Der er ingen emner i kategorien {{category}}."
       bottom:
-        popular: "Der er ikke flere populære emner."
+        latest: "Der er ikke flere populære emner."
         posted: "Der er ikke flere emner."
         read: "Der er ikke flere læste emner."
         new: "Der er ikke flere nye emner."
@@ -405,10 +405,11 @@ da:
       options: "Emneindstillinger"
       show_links: "vis links i dette emne"
       toggle_information: "vis detaljer om emnet"
-      read_more_in_category: "Mere læsestof? Se andre emner i {{catLink}} eller {{popularLink}}."
-      read_more: "Mere læsestof? {{catLink}} else {{popularLink}}."
+      read_more_in_category: "Mere læsestof? Se andre emner i {{catLink}} eller {{latestLink}}."
+      read_more: "Mere læsestof? {{catLink}} else {{latestLink}}."
       browse_all_categories: Vis alle kategorier
-      view_popular_topics: vis populære emner
+
+      view_latest_topics: vis populære emner
       suggest_create_topic: Hvorfor ikke oprette et emne?
       read_position_reset: "Din læseposition er blevet nulstillet."
       jump_reply_up: hop til tidligere svar
@@ -640,7 +641,7 @@ da:
     categories_list: "Kategorioversigt"
 
     filters:
-      popular:
+      latest:
         title: "Populære"
         help: "de mest populære nyere emner"
       favorited:

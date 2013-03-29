@@ -77,6 +77,9 @@ class PostCreator
       post = topic.posts.new(raw: @opts[:raw],
                              user: @user,
                              reply_to_post_number: @opts[:reply_to_post_number])
+
+      post.post_type = @opts[:post_type] if @opts[:post_type].present?
+      post.no_bump = @opts[:no_bump] if @opts[:no_bump].present?
       post.extract_quoted_post_numbers
 
       post.image_sizes = @opts[:image_sizes] if @opts[:image_sizes].present?

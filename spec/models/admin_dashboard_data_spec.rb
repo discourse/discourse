@@ -121,4 +121,70 @@ describe AdminDashboardData do
     end
   end
 
+  describe 'auth_config_checks' do
+
+    shared_examples_for 'problem detection for login providers' do
+      context 'when disabled' do
+        it 'returns nil' do
+          SiteSetting.stubs(enable_setting).returns(false)
+          subject.should be_nil
+        end
+      end
+
+      context 'when enabled' do
+        before do
+          SiteSetting.stubs(enable_setting).returns(true)
+        end
+
+        it 'returns nil key and secret are set' do
+          SiteSetting.stubs(key).returns('12313213')
+          SiteSetting.stubs(secret).returns('12312313123')
+          subject.should be_nil
+        end
+
+        it 'returns a string when key is not set' do
+          SiteSetting.stubs(key).returns('')
+          SiteSetting.stubs(secret).returns('12312313123')
+          subject.should_not be_nil
+        end
+
+        it 'returns a string when secret is not set' do
+          SiteSetting.stubs(key).returns('123123')
+          SiteSetting.stubs(secret).returns('')
+          subject.should_not be_nil
+        end
+
+        it 'returns a string when key and secret are not set' do
+          SiteSetting.stubs(key).returns('')
+          SiteSetting.stubs(secret).returns('')
+          subject.should_not be_nil
+        end
+      end
+    end
+
+    describe 'facebook' do
+      subject { AdminDashboardData.new.facebook_config_check }
+      let(:enable_setting) { :enable_facebook_logins }
+      let(:key) { :facebook_app_id }
+      let(:secret) { :facebook_app_secret }
+      it_should_behave_like 'problem detection for login providers'
+    end
+
+    describe 'twitter' do
+      subject { AdminDashboardData.new.twitter_config_check }
+      let(:enable_setting) { :enable_twitter_logins }
+      let(:key) { :twitter_consumer_key }
+      let(:secret) { :twitter_consumer_secret }
+      it_should_behave_like 'problem detection for login providers'
+    end
+
+    describe 'github' do
+      subject { AdminDashboardData.new.github_config_check }
+      let(:enable_setting) { :enable_github_logins }
+      let(:key) { :github_client_id }
+      let(:secret) { :github_client_secret }
+      it_should_behave_like 'problem detection for login providers'
+    end
+  end
+
 end

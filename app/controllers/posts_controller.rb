@@ -40,10 +40,27 @@ class PostsController < ApplicationController
     post.image_sizes = params[:image_sizes] if params[:image_sizes].present?
     guardian.ensure_can_edit!(post)
 
+    # to stay consistent with the create api, 
+    #  we should allow for title changes and category changes here
+    # we should also move all of this to a post updater.
+    if post.post_number == 1 && (params[:title] || params[:post][:category]) 
+      post.topic.title = params[:title] if params[:title]
+      Topic.transaction do 
+        post.topic.change_category(params[:post][:category])
+        post.topic.save
+      end
+
+      if post.topic.errors.present?
+        render_json_error(post.topic)
+        return
+      end
+    end
+
     revisor = PostRevisor.new(post)
     if revisor.revise!(current_user, params[:post][:raw])
       TopicLink.extract_from(post)
     end
+
 
     if post.errors.present?
       render_json_error(post)
@@ -54,7 +71,7 @@ class PostsController < ApplicationController
     post_serializer.draft_sequence = DraftSequence.current(current_user, post.topic.draft_key)
     link_counts = TopicLinkClick.counts_for(post.topic, [post])
     post_serializer.single_post_link_counts = link_counts[post.id] if link_counts.present?
-
+    post_serializer.topic_slug = post.topic.slug if post.topic.present?
 
     result = {post: post_serializer.as_json}
     if revisor.category_changed.present?

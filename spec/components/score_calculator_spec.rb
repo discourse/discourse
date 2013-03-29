@@ -23,6 +23,15 @@ describe ScoreCalculator do
       another_post.percent_rank.should == 0.0
       post.percent_rank.should == 1.0
     end
+
+    it "gives the topic a score" do
+      topic.score.should be_present
+    end
+
+    it "gives the topic a percent_rank" do
+      topic.percent_rank.should_not == 1.0
+    end
+
   end
 
   context 'best_of' do

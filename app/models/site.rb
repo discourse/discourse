@@ -22,7 +22,7 @@ class Site
   end
 
   def categories
-    Category.popular.includes(:topic_only_relative_url)
+    Category.latest.includes(:topic_only_relative_url)
   end
 
   def archetypes

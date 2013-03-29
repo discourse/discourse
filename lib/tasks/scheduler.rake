@@ -11,23 +11,8 @@ task :category_stats => :environment do
 end
 
 # Every 10 minutes
-task :calculate_avg_time => :environment do
-  Jobs::CalculateAvgTime.new.execute(nil)
-end
-
-# Every 10 minutes
-task :feature_topics => :environment do
-  Jobs::FeatureTopics.new.execute(nil)
-end
-
-# Every 10 minutes
-task :calculate_score => :environment do
-  Jobs::CalculateScore.new.execute(nil)
-end
-
-# Every 10 minutes
-task :calculate_view_counts => :environment do
-  Jobs::CalculateViewCounts.new.execute(nil)
+task :periodical_updates => :environment do
+  Jobs::PeriodicalUpdates.new.execute(nil)
 end
 
 # Every day

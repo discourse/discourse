@@ -249,23 +249,23 @@ en:
       resend_activation_email: "Click here to send the activation email again."
       sent_activation_email_again: "We sent another activation email to you at <b>{{currentEmail}}</b>. It might take a few minutes for it to arrive; be sure to check your spam folder."
       google:
-        title: "Log In with Google"
+        title: "with Google"
         message: "Authenticating with Google (make sure pop up blockers are not enabled)"
       twitter:
-        title: "Log In with Twitter"
+        title: "with Twitter"
         message: "Authenticating with Twitter (make sure pop up blockers are not enabled)"
       facebook:
-        title: "Log In with Facebook"
+        title: "with Facebook"
         message: "Authenticating with Facebook (make sure pop up blockers are not enabled)"
       yahoo:
-        title: "Log In with Yahoo"
+        title: "with Yahoo"
         message: "Authenticating with Yahoo (make sure pop up blockers are not enabled)"
       github:
-        title: "Log In with Github"
-        message: "Authenticating with Github (make sure pop up blockers are not enabled)"
+        title: "with GitHub"
+        message: "Authenticating with GitHub (make sure pop up blockers are not enabled)"
       persona:
-        title: "Log In with Mozilla Persona"
-        message: "Authenticating with Persona (make sure pop up blockers are not enabled)"
+        title: "with Persona"
+        message: "Authenticating with Mozilla Persona (make sure pop up blockers are not enabled)"
 
     composer:
       posting_not_on_topic: "You are replying to the topic \"{{title}}\", but you are currently viewing a different topic."
@@ -373,10 +373,12 @@ en:
         new: "You have no new topics to read."
         read: "You haven't read any topics yet."
         posted: "You haven't posted in any topics yet."
-        popular: "There are no popular topics. That's sad."
+        latest: "There are no latest topics. That's sad."
+        hot: "There are no hot topics."
         category: "There are no {{category}} topics."
       bottom:
-        popular: "There are no more popular topics to read."
+        latest: "There are no more latest topics to read."
+        hot: "There are no more hot topics to read."
         posted: "There are no more posted topics to read."
         read: "There are no more read topics to read."
         new: "There are no more new topics to read."
@@ -412,10 +414,11 @@ en:
       options: "Topic Options"
       show_links: "show links within this topic"
       toggle_information: "toggle topic details"
-      read_more_in_category: "Want to read more? Browse other topics in {{catLink}} or {{popularLink}}."
-      read_more: "Want to read more? {{catLink}} or {{popularLink}}."
+      read_more_in_category: "Want to read more? Browse other topics in {{catLink}} or {{latestLink}}."
+      read_more: "Want to read more? {{catLink}} or {{latestLink}}."
       browse_all_categories: Browse all categories
-      view_popular_topics: view popular topics
+
+      view_latest_topics: view latest topics
       suggest_create_topic: Why not create a topic?
       read_position_reset: "Your read position has been reset."
       jump_reply_up: jump to earlier reply
@@ -503,8 +506,8 @@ en:
 
       filters:
         user:
-          one: "You're viewing only posts by a specific user."
-          other: "You're viewing only posts made by specific users."
+          one: "You're viewing only {{filtered_posts_count}} posts by a specific user."
+          other: "You're viewing only {{filtered_posts_count}} posts made by {{count}} specific users."
         best_of: "You're viewing the {{filtered_posts_count}} best posts of {{posts_count}} in the topic."
         cancel: "Show all posts in this topic again."
 
@@ -652,9 +655,12 @@ en:
     categories_list: "Categories List"
 
     filters:
-      popular:
-        title: "Popular"
-        help: "the most popular recent topics"
+      latest:
+        title: "Latest"
+        help: "the most recent topics"
+      hot:
+        title: "Hot"
+        help: "a selection of the hottest topics"
       favorited:
         title: "Favorited"
         help: "topics you marked as favorites"
@@ -676,7 +682,7 @@ en:
           zero: "New"
           one: "New (1)"
           other: "New ({{count}})"
-        help: "new topics since your last visit, and tracked topics with new posts"
+        help: "new topics since your last visit"
       posted:
         title: "My Posts"
         help: "topics you have posted in"
@@ -685,7 +691,7 @@ en:
           zero: "{{categoryName}}"
           one: "{{categoryName}} (1)"
           other: "{{categoryName}} ({{count}})"
-        help: "popular topics in the {{categoryName}} category"
+        help: "latest topics in the {{categoryName}} category"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:

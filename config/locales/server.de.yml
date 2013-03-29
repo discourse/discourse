@@ -312,7 +312,7 @@ de:
     post_undo_action_window_mins: "Sekunden, die ein Nutzer hat, um Aktionen auf Beiträgen rückgängig zu machen (Like, Meldung, etc.)."
     must_approve_users: "Administratoren müssen Nutzer freischalten, bevor sie Zugriff erlangen."
     ga_tracking_code: "Google Analytics Trackingcode, zum Beispiel: UA-12345678-9; siehe http://google.com/analytics"
-    top_menu: "Bestimme, welche Navigationselemente in welcher Reihenfolge auftauchen. Beispiel: popular|read|favorited|unread|new|posted|categories"
+    top_menu: "Bestimme, welche Navigationselemente in welcher Reihenfolge auftauchen. Beispiel: latest|hot|read|favorited|unread|new|posted|categories"
     post_menu: "Bestimme, welche Funktionen in welcher Reihenfolge im Beitragsmenü auftauchen. Beispiel: like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "Verfolge, welche externen Links per Rechtsklick geöffnet werden (zum Beispiel in einem neuen Browser-Tab). Standardmäßig deaktiviert, da dies URL-Rewrites erfordert."
     topics_per_page: "Zahl der Themen, die standardmäßig auf die Themenübersichtsseite geladen werden."
@@ -763,7 +763,7 @@ de:
 
   page_not_found:
     title: "Die angefragte Seite, gibt es in diesem Forum nicht. Vielleicht können wir aber dabei behilflich sein, sie oder ein ähnliches Thema zu finden:"
-    popular_topics: "Populäre Themen"
+    latest_topics: "Populäre Themen"
     recent_topics: "Kürzliche Themen"
     see_more: "Mehr ansehen"
     search_title: "Suche nach diesem Thema"

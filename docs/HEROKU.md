@@ -142,13 +142,7 @@ For details on how to reduce the monthly cost of your application, see the Advan
 
         rake category_stats         Daily                04:00
 
-        rake calculate_avg_time     Every 10 minutes     --:--
-
-        rake feature_topics         Every 10 minutes     --:--
-
-        rake calculate_score        Every 10 minutes     --:--
-
-        rake calculate_view_counts  Every 10 minutes     --:--
+        rake periodical_updates     Every 10 minutes     --:--
 
         rake version_check          Daily                01:00
 

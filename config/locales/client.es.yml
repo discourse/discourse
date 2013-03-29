@@ -247,23 +247,23 @@ es:
       resend_activation_email: "Has click aquí para enviar el email de activación nuevamente."
       sent_activation_email_again: "Te hemos enviado otro email de activación a <b>{{currentEmail}}</b>. Podría tomar algunos minutos en llegar; asegúrate de revisar tu carpeta de spam."
       google:
-        title: "Entrar con Google"
+        title: "con Google"
         message: "Autenticando con Google (asegúrate de desactivar cualquier bloqueador de pop ups)"
       twitter:
-        title: "Entrar con Twitter"
+        title: "con Twitter"
         message: "Autenticando con Twitter (asegúrate de desactivar cualquier bloqueador de pop ups)"
       facebook:
-        title: "Entrar con Facebook"
+        title: "con Facebook"
         message: "Autenticando con Facebook (asegúrate de desactivar cualquier bloqueador de pop ups)"
       yahoo:
-        title: "Entrar con Yahoo"
+        title: "con Yahoo"
         message: "Autenticando con Yahoo (asegúrate de desactivar cualquier bloqueador de pop ups)"
       github:
-        title: "Entrar con Github"
-        message: "Autenticando con Github (asegúrate de desactivar cualquier bloqueador de pop ups)"
+        title: "con GitHub"
+        message: "Autenticando con GitHub (asegúrate de desactivar cualquier bloqueador de pop ups)"
       persona:
-        title: "Entrar con Mozilla Persona"
-        message: "Autenticando con Persona (asegúrate de desactivar cualquier bloqueador de pop ups)"
+        title: "con Persona"
+        message: "Autenticando con Mozilla Persona (asegúrate de desactivar cualquier bloqueador de pop ups)"
 
     composer:
       posting_not_on_topic: "Estas respondiendo al tema \"{{title}}\", pero estas viendo un tema distinto."
@@ -367,10 +367,10 @@ es:
         new: "No tienes temas nuevos por leer."
         read: "Todavía no has leído ningún tema."
         posted: "Todavía no has publicado en ningún tema."
-        popular: "No hay temas populares. Eso es triste."
+        latest: "No hay temas populares. Eso es triste."
         category: "No hay temas en la categoría {{category}}."
       bottom:
-        popular: "No hay más temas populares para leer."
+        latest: "No hay más temas populares para leer."
         posted: "No hay más temas publicados para leer."
         read: "No hay más temas leídos."
         new: "No hay temas nuevos para leer."
@@ -407,10 +407,11 @@ es:
       options: "Opciones del Tema"
       show_links: "show links within this topic"
       toggle_information: "toggle topic details"
-      read_more_in_category: "Want to read more? Browse other topics in {{catLink}} or {{popularLink}}."
-      read_more: "Want to read more? {{catLink}} or {{popularLink}}."
+      read_more_in_category: "Want to read more? Browse other topics in {{catLink}} or {{latestLink}}."
+      read_more: "Want to read more? {{catLink}} or {{latestLink}}."
       browse_all_categories: Browse all categories
-      view_popular_topics: view popular topics
+
+      view_latest_topics: view latest topics
       suggest_create_topic: Why not create a topic?
       read_position_reset: "Your read position has been reset."
       jump_reply_up: jump to earlier reply
@@ -639,7 +640,7 @@ es:
     categories_list: "Lista de Categorías"
 
     filters:
-      popular:
+      latest:
         title: "Populares"
         help: "los temas más recientes más populares"
       favorited:
@@ -663,7 +664,7 @@ es:
           zero: "Nuevos"
           one: "Nuevo (1)"
           other: "Nuevos ({{count}})"
-        help: "new topics since your last visit, and tracked topics with new posts"
+        help: "new topics since your last visit"
       posted:
         title: "My Posts"
         help: "topics you have posted in"
@@ -672,7 +673,7 @@ es:
           zero: "{{categoryName}}"
           one: "{{categoryName}} (1)"
           other: "{{categoryName}} ({{count}})"
-        help: "popular topics in the {{categoryName}} category"
+        help: "latest topics in the {{categoryName}} category"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:

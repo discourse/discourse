@@ -103,8 +103,8 @@ class TopicQuery
     TopicList.new(@user, results)
   end
 
-  # The popular view of topics
-  def list_popular
+  # The latest view of topics
+  def list_latest
     TopicList.new(@user, default_list)
   end
 
@@ -118,6 +118,14 @@ class TopicQuery
   def list_read
     return_list(unordered: true) do |list|
       list.order('COALESCE(tu.last_visited_at, topics.bumped_at) DESC')
+    end
+  end
+
+  def list_hot
+    return_list(unordered: true) do |list|
+      # Find hot topics
+      list = list.joins(:hot_topic)
+                 .order('hot_topics.score + (COALESCE(categories.hotness, 5.0) / 11.0) desc')
     end
   end
 

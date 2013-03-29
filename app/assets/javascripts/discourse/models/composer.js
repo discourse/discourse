@@ -337,6 +337,9 @@ Discourse.Composer = Discourse.Model.extend({
         currentUser = Discourse.get('currentUser'),
         addedToStream = false;
 
+    // The post number we'll probably get from the server
+    var probablePostNumber = this.get('topic.highest_post_number') + 1;
+
     // Build the post object
     var createdPost = Discourse.Post.create({
         raw: this.get('reply'),
@@ -345,7 +348,8 @@ Discourse.Composer = Discourse.Model.extend({
         topic_id: this.get('topic.id'),
         reply_to_post_number: post ? post.get('post_number') : null,
         imageSizes: opts.imageSizes,
-        post_number: this.get('topic.highest_post_number') + 1,
+        post_number: probablePostNumber,
+        index: probablePostNumber,
         cooked: $('#wmd-preview').html(),
         reply_count: 0,
         display_username: currentUser.get('name'),
@@ -373,6 +377,7 @@ Discourse.Composer = Discourse.Model.extend({
       topic.set('last_posted_at', new Date());
       topic.set('highest_post_number', createdPost.get('post_number'));
       topic.set('last_poster', Discourse.get('currentUser'));
+      topic.set('filtered_posts_count', topic.get('filtered_posts_count') + 1);
 
       // Set the topic view for the new post
       createdPost.set('topic', topic);
@@ -400,6 +405,7 @@ Discourse.Composer = Discourse.Model.extend({
       createdPost.save(function(result) {
         var addedPost = false,
             saving = true;
+
         createdPost.updateFromSave(result);
         if (topic) {
           // It's no longer a new post
@@ -410,6 +416,7 @@ Discourse.Composer = Discourse.Model.extend({
           composer.set('composeState', CLOSED);
           saving = false;
         }
+
         composer.set('reply', '');
         composer.set('createdPost', createdPost);
         if (addedToStream) {
@@ -422,6 +429,7 @@ Discourse.Composer = Discourse.Model.extend({
         // If an error occurs
         if (topic) {
           topic.posts.removeObject(createdPost);
+          topic.set('filtered_posts_count', topic.get('filtered_posts_count') - 1);
         }
         promise.reject($.parseJSON(error.responseText).errors[0]);
         composer.set('composeState', OPEN);
