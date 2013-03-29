@@ -29,8 +29,7 @@ Discourse.PostView = Discourse.View.extend({
   }).property('parentView'),
 
   postTypeClass: (function() {
-    if (this.get('post.post_type') === Discourse.get('site.post_types.moderator_action')) return 'moderator';
-    return 'regular';
+    return this.get('post.post_type') === Discourse.get('site.post_types.moderator_action') ? 'moderator' : 'regular';
   }).property('post.post_type'),
 
   // If the cooked content changed, add the quote controls
@@ -59,12 +58,7 @@ Discourse.PostView = Discourse.View.extend({
   },
 
   selectText: (function() {
-    if (this.get('post.selected')) {
-      return Em.String.i18n('topic.multi_select.selected', {
-        count: this.get('controller.selectedCount')
-      });
-    }
-    return Em.String.i18n('topic.multi_select.select');
+    return this.get('post.selected') ? Em.String.i18n('topic.multi_select.selected', { count: this.get('controller.selectedCount') }) : Em.String.i18n('topic.multi_select.select');
   }).property('post.selected', 'controller.selectedCount'),
 
   repliesHidden: (function() {
@@ -198,10 +192,9 @@ Discourse.PostView = Discourse.View.extend({
     var postView = this;
 
     return this.$('aside.quote').each(function(i, e) {
-      var $aside, $title;
-      $aside = $(e);
+      var $aside = $(e);
       postView.updateQuoteElements($aside, 'chevron-down');
-      $title = $('.title', $aside);
+      var $title = $('.title', $aside);
 
       // Unless it's a full quote, allow click to expand
       if (!($aside.data('full') || $title.data('has-quote-controls'))) {
@@ -261,5 +254,3 @@ Discourse.PostView = Discourse.View.extend({
     }
   }
 });
-
-

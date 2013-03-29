@@ -240,7 +240,6 @@
     border: 5px solid rgba(0, 0, 0, 0.75);
     top: 10px;
     left: 10px;
-    z-index: 99999;
     position: absolute;
     display: none;
     @include border-radius-all(4px);
