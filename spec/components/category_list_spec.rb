@@ -20,6 +20,14 @@ describe CategoryList do
         category.should be_present
       end
 
+      context "when the user cannot see categories" do
+        before { Guardian.any_instance.stubs(:can_see_categories?).returns(false) }
+
+        it "returns an empty list of categories" do
+          category_list.categories.should be_empty
+        end
+      end
+
       it "has the uncategorized label" do
         category.name.should == SiteSetting.uncategorized_name
       end
@@ -73,6 +81,14 @@ describe CategoryList do
 
       it "should contain our topic" do
         category.featured_topics.include?(topic).should be_true
+      end
+
+      context "when the user cannot see categories" do
+        before { Guardian.any_instance.stubs(:can_see_categories?).returns(false) }
+
+        it "returns an empty list of categories" do
+          category_list.categories.should be_empty
+        end
       end
     end
 
