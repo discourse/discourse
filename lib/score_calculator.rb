@@ -34,10 +34,10 @@ class ScoreCalculator
     exec_sql "UPDATE topics AS t
               SET has_best_of = (t.like_count >= :likes_required AND
                                  t.posts_count >= :posts_required AND
-                                 x.min_score >= :score_required),
+                                 x.max_score >= :score_required),
                   score = x.avg_score
               FROM (SELECT p.topic_id,
-                           MIN(p.score) AS min_score,
+                           MAX(p.score) AS max_score,
                            AVG(p.score) AS avg_score
                     FROM posts AS p
                     GROUP BY p.topic_id) AS x
