@@ -681,7 +681,7 @@ fr:
           zero: "Nouvelle (0)"
           one: "Nouvelle (1)"
           other: "Nouvelles ({{count}})"
-        help: "nouvelles discussions depuis votre dernière visite, et discussions suivies contenant des nouvelles réponses"
+        help: "nouvelles discussions depuis votre dernière visite"
       posted:
         title: "Mes messages"
         help: "discussions auxquelles vous avez participé"
