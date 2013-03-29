@@ -590,9 +590,11 @@
     margin-top: 0px !important;
   }
 
-  // set up proper header margins in posts
-  h1, h2, h3, h4, h5, h6 {
-    margin: 20px 0 10px;
+  .cooked {
+    // set up proper header margins in posts
+    h1, h2, h3, h4, h5, h6 {
+      margin: 20px 0 10px;
+    }
   }
 
   // this is the little pointy bit of the speech bubble on the post, on the left side

@@ -355,6 +355,13 @@
     position: absolute;
     top: 50px;
     bottom: 48px;
+
+    // this removes the topmost margin;
+    // if we don't have this, all posts would have extra space at the top
+    #wmd-preview > *:first-child {
+      margin-top: 0px !important;
+    }
+
     #wmd-input, #wmd-preview {
       box-sizing: border-box;
       -moz-box-sizing: border-box;
@@ -365,6 +372,11 @@
       margin: 0;
       background-color: $white;
       word-wrap: break-word;
+
+      // set up proper header margins in post preview
+      h1, h2, h3, h4, h5, h6 {
+        margin: 20px 0 10px;
+      }
     }
     #wmd-input {
       position: absolute;
