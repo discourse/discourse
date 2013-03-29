@@ -241,8 +241,24 @@ describe Guardian do
     end
 
     describe 'a Topic' do
-      it 'allows non logged in users to view topics' do
-        Guardian.new.can_see?(topic).should be_true
+      describe 'when the site does not require login' do
+        before { SiteSetting.stubs(:site_requires_login?).returns(false) }
+
+        it 'allows non logged in users to view topics' do
+          Guardian.new.can_see?(topic).should be_true
+        end
+      end
+
+      describe 'when the site requires login' do
+        before { SiteSetting.stubs(:site_requires_login?).returns(true) }
+
+        it 'does not allow non logged in users to view topics' do
+          Guardian.new.can_see?(topic).should be_false
+        end
+
+        it 'allows logged in users to view topics' do
+          Guardian.new(user).can_see?(topic).should be_true
+        end
       end
     end
   end

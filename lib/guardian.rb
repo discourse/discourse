@@ -315,6 +315,9 @@ class Guardian
       return true if topic.allowed_users.include?(@user)
       return is_admin?
     end
+
+    return false if @user.blank? && SiteSetting.site_requires_login?
+
     true
   end
 
