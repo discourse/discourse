@@ -11,7 +11,7 @@ class AdminDashboardData
   def as_json
     @json ||= {
       reports: REPORTS.map { |type| Report.find(type) },
-      problems: [rails_env_check, host_names_check, gc_checks, sidekiq_check || clockwork_check, ram_check].compact,
+      problems: [rails_env_check, host_names_check, gc_checks, sidekiq_check || clockwork_check, ram_check, facebook_config_check, twitter_config_check, github_config_check].compact,
       admins: User.admins.count,
       moderators: User.moderators.count
     }.merge(
@@ -42,5 +42,17 @@ class AdminDashboardData
 
   def ram_check
     I18n.t('dashboard.memory_warning') if MemInfo.new.mem_total and MemInfo.new.mem_total < 1_000_000
+  end
+
+  def facebook_config_check
+    I18n.t('dashboard.facebook_config_warning') if SiteSetting.enable_facebook_logins and (!SiteSetting.facebook_app_id.present? or !SiteSetting.facebook_app_secret.present?)
+  end
+
+  def twitter_config_check
+    I18n.t('dashboard.twitter_config_warning') if SiteSetting.enable_twitter_logins and (!SiteSetting.twitter_consumer_key.present? or !SiteSetting.twitter_consumer_secret.present?)
+  end
+
+  def github_config_check
+    I18n.t('dashboard.github_config_warning') if SiteSetting.enable_github_logins and (!SiteSetting.github_client_id.present? or !SiteSetting.github_client_secret.present?)
   end
 end
