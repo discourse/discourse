@@ -46,5 +46,39 @@ describe Admin::DashboardController do
         json['reports'].should be_a(Array)
       end
     end
+
+    context '.problems' do
+      it 'should be successful' do
+        AdminDashboardData.stubs(:fetch_problems).returns([])
+        xhr :get, :problems
+        response.should be_successful
+      end
+
+      context 'when there are no problems' do
+        before do
+          AdminDashboardData.stubs(:fetch_problems).returns([])
+        end
+
+        it 'returns an empty array' do
+          xhr :get, :problems
+          json = JSON.parse(response.body)
+          json['problems'].should have(0).problems
+        end
+      end
+
+      context 'when there are problems' do
+        before do
+          AdminDashboardData.stubs(:fetch_problems).returns(['Not enough awesome', 'Too much sass'])
+        end
+
+        it 'returns an array of strings' do
+          xhr :get, :problems
+          json = JSON.parse(response.body)
+          json['problems'].should have(2).problems
+          json['problems'][0].should be_a(String)
+          json['problems'][1].should be_a(String)
+        end
+      end
+    end
   end
 end

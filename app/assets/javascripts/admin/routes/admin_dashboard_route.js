@@ -19,6 +19,7 @@ Discourse.AdminDashboardRoute = Discourse.Route.extend({
   fetchDashboardData: function(c) {
     if( !c.get('dashboardFetchedAt') || Date.create('1 hour ago', 'en') > c.get('dashboardFetchedAt') ) {
       c.set('dashboardFetchedAt', new Date());
+      c.set('problemsFetchedAt', new Date());
       Discourse.AdminDashboard.find().then(function(d) {
         if( Discourse.SiteSettings.version_checks ){
           c.set('versionCheck', Discourse.VersionCheck.create(d.version_check));
@@ -28,6 +29,12 @@ Discourse.AdminDashboardRoute = Discourse.Route.extend({
         });
         c.set('admins', d.admins);
         c.set('moderators', d.moderators);
+        c.set('problems', d.problems);
+        c.set('loading', false);
+      });
+    } else if( !c.get('problemsFetchedAt') || Date.create('1 minute ago', 'en') > c.get('problemsFetchedAt') ) {
+      c.set('problemsFetchedAt', new Date());
+      Discourse.AdminDashboard.fetchProblems().then(function(d) {
         c.set('problems', d.problems);
         c.set('loading', false);
       });
