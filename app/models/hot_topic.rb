@@ -17,10 +17,12 @@ class HotTopic < ActiveRecord::Base
       older_percentage = 0.2      # how many old topics we want as a percentage
       new_days = 21               # how many days old we consider old
 
+
+      # Include high percentile recent topics
       exec_sql("INSERT INTO hot_topics (topic_id, category_id, score)
                 SELECT t.id,
                        t.category_id,
-                       RANDOM()
+                       ((1.0 - (EXTRACT(EPOCH FROM CURRENT_TIMESTAMP-t.created_at)/86400) / :days_ago) * 0.95) + (RANDOM() * 0.05)
                 FROM topics AS t
                 WHERE t.deleted_at IS NULL
                   AND t.visible
@@ -29,7 +31,6 @@ class HotTopic < ActiveRecord::Base
                   AND t.archetype <> :private_message
                   AND created_at >= (CURRENT_TIMESTAMP - INTERVAL ':days_ago' DAY)
                   AND t.percent_rank < :hot_percentile
-                ORDER BY 3 DESC
                 LIMIT :limit",
                 hot_percentile: hot_percentile,
                 limit: ((1.0 - older_percentage) * max_hot_topics).round,
