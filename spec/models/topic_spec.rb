@@ -543,6 +543,7 @@ describe Topic do
       @topic.reload
       @original_bumped_at = @topic.bumped_at.to_f
       @user = @topic.user
+      @user.admin = true
     end
 
     context 'visibility' do
