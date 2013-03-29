@@ -47,6 +47,9 @@ class User < ActiveRecord::Base
   # This is just used to pass some information into the serializer
   attr_accessor :notification_channel_position
 
+  scope :admins, ->{ where(admin: true) }
+  scope :moderators, ->{ where(moderator: true) }
+
   module NewTopicDuration
     ALWAYS = -1
     LAST_VISIT = -2
