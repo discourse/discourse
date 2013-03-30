@@ -30,6 +30,11 @@ describe TopicQuery do
       it "includes the invisible topic if you're an admin" do
         TopicQuery.new(admin).list_latest.topics.include?(invisible_topic).should be_true
       end
+
+      it "is empty for a non logged in user when site_requires_login is set" do
+        SiteSetting.stubs(:site_requires_login?).returns(true)
+        TopicQuery.new.list_latest.topics.should be_empty
+      end
     end
 
     context 'after clearring a pinned topic' do
@@ -62,6 +67,13 @@ describe TopicQuery do
     it "returns only the topic category when filtering by another category" do
       another_category = Fabricate(:category, name: 'new cat')
       topic_query.list_category(another_category).topics.should == [another_category.topic]
+    end
+
+    it "is empty for a non logged in user when site_requires_login is set" do
+      SiteSetting.stubs(:site_requires_login?).returns(true)
+      topic_query = TopicQuery.new
+      topic_query.list_uncategorized.topics.should be_empty
+      topic_query.list_category(category).topics.should be_empty
     end
 
     describe '#list_new_in_category' do
@@ -253,6 +265,11 @@ describe TopicQuery do
 
       it "should return the new topic" do
         TopicQuery.new.list_suggested_for(topic).topics.should == [new_topic]
+      end
+
+      it "is empty for a non logged in user when site_requires_login is set" do
+        SiteSetting.stubs(:site_requires_login?).returns(true)
+        TopicQuery.new.list_suggested_for(topic).topics.should be_empty
       end
     end
 

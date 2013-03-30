@@ -12,6 +12,7 @@ class TopicList
 
   # Lazy initialization
   def topics
+    return [] if @current_user.blank? && SiteSetting.site_requires_login?
     return @topics if @topics.present?
 
     @topics = @topics_input.to_a
