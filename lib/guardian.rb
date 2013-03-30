@@ -321,6 +321,14 @@ class Guardian
     true
   end
 
+  def can_see_categories?
+    !(@user.blank? && SiteSetting.site_requires_login?)
+  end
+
+  def can_see_category?(_category)
+    can_see_categories?
+  end
+
   def can_vote?(post, opts={})
     post_can_act?(post,:vote, opts)
   end
