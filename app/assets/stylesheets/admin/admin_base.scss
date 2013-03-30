@@ -364,6 +364,29 @@ table {
     td.value {
       font-weight: bold;
       text-align: center;
+
+      i {
+        display: none;
+      }
+
+      &.trending-up {
+        color: green;
+        i.up {
+          display: inline;
+        }
+      }
+      &.trending-down {
+        color: red;
+        i.down {
+          display: inline;
+        }
+      }
+      &.no-change {
+        i.down {
+          display: inline;
+          visibility: hidden;
+        }
+      }
     }
   }
 

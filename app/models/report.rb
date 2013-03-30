@@ -1,11 +1,12 @@
 class Report
 
-  attr_accessor :type, :data, :total
+  attr_accessor :type, :data, :total, :prev30Days
 
   def initialize(type)
     @type = type
     @data = nil
     @total = nil
+    @prev30Days = nil
   end
 
   def as_json
@@ -15,7 +16,8 @@ class Report
      xaxis: I18n.t("reports.#{self.type}.xaxis"),
      yaxis: I18n.t("reports.#{self.type}.yaxis"),
      data: self.data,
-     total: self.total
+     total: self.total,
+     prev30Days: self.prev30Days
     }
   end
 
@@ -42,6 +44,7 @@ class Report
       report.data << {x: date, y: count}
     end
     report.total = User.count
+    report.prev30Days = User.where('created_at > ? and created_at < ?', 60.days.ago, 30.days.ago).count
   end
 
   def self.report_topics(report)
@@ -50,6 +53,7 @@ class Report
       report.data << {x: date, y: count}
     end
     report.total = Topic.count
+    report.prev30Days = Topic.where('created_at > ? and created_at < ?', 60.days.ago, 30.days.ago).count
   end
 
   def self.report_posts(report)
@@ -58,6 +62,7 @@ class Report
       report.data << {x: date, y: count}
     end
     report.total = Post.count
+    report.prev30Days = Post.where('created_at > ? and created_at < ?', 60.days.ago, 30.days.ago).count
   end
 
   def self.report_flags(report)
@@ -67,7 +72,9 @@ class Report
         report.data << {x: i.days.ago.to_date.to_s, y: count}
       end
     end
-    report.total = PostAction.where(post_action_type_id: PostActionType.flag_types.values).count
+    flagsQuery = PostAction.where(post_action_type_id: PostActionType.flag_types.values)
+    report.total = flagsQuery.count
+    report.prev30Days = flagsQuery.where('created_at > ? and created_at < ?', 60.days.ago, 30.days.ago).count
   end
 
   def self.report_users_by_trust_level(report)
@@ -82,7 +89,9 @@ class Report
     PostAction.count_likes_per_day(30.days.ago).each do |date, count|
       report.data << {x: date, y: count}
     end
-    report.total = PostAction.where(post_action_type_id: PostActionType.types[:like]).count
+    likesQuery = PostAction.where(post_action_type_id: PostActionType.types[:like])
+    report.total = likesQuery.count
+    report.prev30Days = likesQuery.where('created_at > ? and created_at < ?', 60.days.ago, 30.days.ago).count
   end
 
   def self.report_emails(report)
@@ -91,6 +100,7 @@ class Report
       report.data << {x: date, y: count}
     end
     report.total = EmailLog.count
+    report.prev30Days = EmailLog.where('created_at > ? and created_at < ?', 60.days.ago, 30.days.ago).count
   end
 
 end
