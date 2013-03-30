@@ -307,6 +307,9 @@ fr:
     clockwork_warning: "Clockwork n'est pas lancé. Assurez-vous qu'un processus clockwork soit toujours lancé afin que les tâches importantes soient planifiées. <a href=\"https://github.com/tomykaira/clockwork\">En savoir plus sur clockwork [EN]</a>."
     sidekiq_warning: "Sidekiq n'est pas lancé. De nombreuses tâches, comme l'envoie d'e-mails, sont executées de manière asynchrome par sidekiq. Assurez-vous d'avoir au moins un processus sidekiq de lancé. <a href=\"https://github.com/mperham/sidekiq\">En savoir plus sur sidekiq [EN]</a>."
     memory_warning: "Votre serveur dispose de moins de 1 Go de mémoire vive. Au moins 1 Go de RAM est recommandé."
+    facebook_config_warning: "Le serveur est configuré pour permettre l'authentification par Facebook (enable_facebook_logins), mais les paramètres facebook_app_id et facebook_app_secret ne sont pas renseignés. Vous pouvez modifier ces paramètres dans <a href=\"/admin/site_settings\">l'interface d'administration</a>."
+    twitter_config_warning: "Le serveur est configuré pour permettre l'authentification par Twitter (enable_twitter_logins), mais les paramètres twitter_consumer_key et twitter_consumer_secret ne sont pas renseignés. Vous pouvez modifier ces paramètres dans <a href=\"/admin/site_settings\">l'interface d'administration</a>."
+    github_config_warning: "Le serveur est configuré pour permettre l'authentification par GitHub (enable_github_logins), mais les paramètres github_client_id et github_client_secret ne sont pas renseignés. Vous pouvez modifier ces paramètres dans <a href=\"/admin/site_settings\">l'interface d'administration</a>."
 
   site_settings:
     default_locale: "Le langage par défaut de cette instance de Discourse (code ISO 639-1)"

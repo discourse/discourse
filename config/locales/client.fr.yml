@@ -377,10 +377,12 @@ fr:
         new: "Vous n'avez aucune discussion non lue."
         read: "Vous n'avez lu aucune discussion pour le moment."
         posted: "Vous n'avez écrit aucun message pour le moment."
-        latest: "Il n'y a aucune discussion populaire pour le moment. C'est triste..."
+        latest: "Il n'y a aucune discussion pour le moment. C'est triste..."
+        hot: "Il n'y a aucune discussion populaire pour le moment."
         category: "Il n'y a aucune discussion sur {{category}}."
       bottom:
-        latest: "Il n'y a plus de discussion populaire à lire."
+        latest: "Il n'y a plus de discussion à lire."
+        hot: "Il n'y a plus de discussion populaire à lire."
         posted: "Il n'y a plus de discussion à lire."
         read: "Il n'y a plus de discussion à lire."
         new: "Il n'y a plus de discussion à lire."
@@ -658,8 +660,11 @@ fr:
 
     filters:
       latest:
+        title: "Récentes"
+        help: "discussions récentes"
+      hot:
         title: "Populaires"
-        help: "discussions récentes les plus populaires"
+        help: "discussions populaires"
       favorited:
         title: "Favoris"
         help: "discussions que vous avez ajoutées à vos favoris"
