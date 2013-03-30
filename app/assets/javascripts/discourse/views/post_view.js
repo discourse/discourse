@@ -49,10 +49,11 @@ Discourse.PostView = Discourse.View.extend({
       this.toggleProperty('post.selected');
     }
 
+    if (!Discourse.get('currentUser.enable_quoting')) return;
     if ($(e.target).closest('.cooked').length === 0) return;
 
     var qbc = this.get('controller.controllers.quoteButton');
-    if (qbc && Discourse.get('currentUser.enable_quoting')) {
+    if (qbc) {
       e.context = this.get('post');
       qbc.selectText(e);
     }
@@ -259,6 +260,29 @@ Discourse.PostView = Discourse.View.extend({
     if (controller && controller.postRendered) {
       controller.postRendered(post);
     }
+
+    // make the selection work under iOS
+    // "selectionchange" event is only supported in IE, Safari & Chrome
+    var postView = this;
+    $(document).on('selectionchange', function(e) {
+      // quoting as been disabled by the user
+      if (!Discourse.get('currentUser.enable_quoting')) return;
+      // find out whether we currently are selecting inside a post
+      var closestPosts = $(window.getSelection().anchorNode).closest('.topic-post');
+      if (closestPosts.length === 0) return;
+      // this event is bound for every posts in the topic, but is triggered on "document"
+      // we should therefore filter the event to only the right post
+      if (closestPosts[0].id !== postView.elementId) return;
+      var qbc = postView.get('controller.controllers.quoteButton');
+      if (qbc) {
+        e.context = postView.get('post');
+        qbc.selectText(e);
+      }
+    });
+  },
+
+  willDestroyElement: function() {
+    $(document).off('selectionchange');
   }
 });
 
