@@ -61,11 +61,13 @@ class Category < ActiveRecord::Base
                .where("categories.topic_id <> topics.id")
                .visible
 
+    topic_count = topics.to_sql
     topics_year = topics.created_since(1.year.ago).to_sql
     topics_month = topics.created_since(1.month.ago).to_sql
     topics_week = topics.created_since(1.week.ago).to_sql
 
-    Category.update_all("topics_year = (#{topics_year}),
+    Category.update_all("topic_count = (#{topic_count}),
+                         topics_year = (#{topics_year}),
                          topics_month = (#{topics_month}),
                          topics_week = (#{topics_week})")
   end
