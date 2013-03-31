@@ -302,7 +302,7 @@ $.fn.autocomplete = function(options) {
             return false;
           }
           term = me.val().substring(completeStart + (options.key ? 1 : 0), caretPosition);
-          if (e.which > 48 && e.which < 90) {
+          if (e.which >= 48 && e.which <= 90) {
             term += String.fromCharCode(e.which);
           } else {
             if (e.which !== 8) {
