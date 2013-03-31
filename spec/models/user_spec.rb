@@ -443,7 +443,7 @@ describe User do
     end
 
     it 'corrects weird characters' do
-      User.suggest_username("Darth%^Vadar").should == "Darth_Vadar"
+      User.suggest_username("Darth%^Vader").should == "Darth_Vader"
     end
 
     it 'adds 1 to an existing username' do
@@ -455,8 +455,9 @@ describe User do
       User.suggest_username('a').should == 'a11'
     end
 
-    it "has a special case for me emails" do
+    it "has a special case for me and i emails" do
       User.suggest_username('me@eviltrout.com').should == 'eviltrout'
+      User.suggest_username('i@eviltrout.com').should == 'eviltrout'
     end
 
     it "shortens very long suggestions" do
@@ -511,12 +512,12 @@ describe User do
       Fabricate.build(:user, email: 'notgood@trashmail.net').should_not be_valid
       Fabricate.build(:user, email: 'mailinator.com@gmail.com').should be_valid
     end
-    
+
     it 'should not reject partial matches' do
       SiteSetting.stubs(:email_domains_blacklist).returns('mail.com')
       Fabricate.build(:user, email: 'mailinator@gmail.com').should be_valid
     end
-    
+
     it 'should reject some emails based on the email_domains_blacklist site setting ignoring case' do
       SiteSetting.stubs(:email_domains_blacklist).returns('trashmail.net')
       Fabricate.build(:user, email: 'notgood@TRASHMAIL.NET').should_not be_valid
@@ -539,7 +540,7 @@ describe User do
       u.email = 'nope@mailinator.com'
       u.should_not be_valid
     end
-    
+
     it 'whitelist should reject some emails based on the email_domains_whitelist site setting' do
       SiteSetting.stubs(:email_domains_whitelist).returns('vaynermedia.com')
       Fabricate.build(:user, email: 'notgood@mailinator.com').should_not be_valid
@@ -565,7 +566,7 @@ describe User do
       u.should be_valid
     end
 
-    it 'email whitelist should be used when email is being changed' do      
+    it 'email whitelist should be used when email is being changed' do
       SiteSetting.stubs(:email_domains_whitelist).returns('vaynermedia.com')
       u = Fabricate(:user, email: 'good@vaynermedia.com')
       u.email = 'nope@mailinator.com'
@@ -735,11 +736,12 @@ describe User do
   end
 
   describe '#create_for_email' do
-    let(:subject) { User.create_for_email('test@email.com') }
+    let(:subject) { User.create_for_email('walter.white@email.com') }
     it { should be_present }
-    its(:username) { should == 'test' }
-    its(:name) { should == 'test'}
+    its(:username) { should == 'walter_white' }
+    its(:name) { should == 'walter_white'}
     it { should_not be_active }
+    its(:email) { should == 'walter.white@email.com' }
   end
 
   describe 'email_confirmed?' do
