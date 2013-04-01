@@ -22,8 +22,9 @@ Discourse::Application.configure do
   # Do not compress assets
   config.assets.compress = false
 
-  # Expands the lines which load the assets
-  config.assets.debug = true
+  # Concatenate all assets, even in development mode. This appears to be considerably
+  # faster for reloading in development mode.
+  config.assets.debug = false
 
   config.watchable_dirs['lib'] = [:rb]
 
