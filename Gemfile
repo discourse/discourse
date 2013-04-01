@@ -105,6 +105,8 @@ group :development do
   gem 'pry-rails'  
 end
 
+gem 'fast_blank', github: "SamSaffron/fast_blank"
+
 # IMPORTANT: mini profiler monkey patches, so it better be required last
 #  If you want to amend mini profiler to do the monkey patches in the railstie
 #  we are open to it.
