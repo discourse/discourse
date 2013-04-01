@@ -115,6 +115,12 @@ describe Category do
       @category.topic_url.should be_present
     end
 
+    describe "creating a new category with the same slug" do
+      it "should have a blank slug" do
+        Fabricate(:category, name: "Amazing Categóry").slug.should be_blank
+      end
+    end
+
     describe "trying to change the category topic's category" do
       before do
         @new_cat = Fabricate(:category, name: '2nd Category', user: @category.user)

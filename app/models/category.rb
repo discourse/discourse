@@ -17,7 +17,7 @@ class Category < ActiveRecord::Base
   validates :name, presence: true, uniqueness: true, length: { in: 1..50 }
   validate :uncategorized_validator
 
-  before_save :ensure_slug
+  before_validation :ensure_slug
   after_save :invalidate_site_cache
   after_create :create_category_definition
   after_destroy :invalidate_site_cache
@@ -38,7 +38,15 @@ class Category < ActiveRecord::Base
   end
 
   def ensure_slug
-    self.slug = Slug.for(name)
+    if name.present?
+      self.slug = Slug.for(name)
+
+      # If a category with that slug already exists, set the slug to nil so the category can be found
+      # another way.
+      category = Category.where(slug: self.slug)
+      category = category.where("id != ?", id) if id.present?
+      self.slug = '' if category.exists?
+    end
   end
 
   # Categories are cached in the site json, so the caches need to be
