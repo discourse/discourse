@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: git://github.com/SamSaffron/fast_blank.git
-  revision: 79df15181712f7e140d8443b7ab7a989fa289b88
+  revision: 5d63f521b228fe9aa386ed8b8bff280781b23004
   specs:
     fast_blank (0.0.1)
       rake
