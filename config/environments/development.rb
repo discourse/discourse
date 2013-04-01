@@ -24,7 +24,7 @@ Discourse::Application.configure do
 
   # Concatenate all assets, even in development mode. This appears to be considerably
   # faster for reloading in development mode.
-  config.assets.debug = false
+  config.assets.debug = ENV['DEBUG_ASSETS'] == "1"
 
   config.watchable_dirs['lib'] = [:rb]
 
