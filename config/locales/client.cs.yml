@@ -527,6 +527,7 @@ cs:
         move: přesunout označené
         description:
           one: Máte označen <b>1</b> příspěvek.
+          few: "Máte označeny <b>{{count}}</b> příspěvky."
           other: "Máte označeno <b>{{count}}</b> příspěvků."
 
     post:
