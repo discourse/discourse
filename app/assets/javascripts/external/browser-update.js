@@ -64,13 +64,13 @@ function getBrowser() {
     if (n=="i" && v==7 && window.XDomainRequest) {
         v=8;
     }
-    if (n=="io") {
-﻿  ﻿  n="i";
-        if (v>4) v=9;
-﻿  ﻿  else if (v>3.1) v=8;
-﻿  ﻿  else if (v>3) v=7;
-    }﻿  
-    return {n:n,v:v,t:names[n]+" "+v}
+if (n=="io") {
+n="i";
+if (v>4) v=9;
+else if (v>3.1) v=8;
+else if (v>3) v=7;
+}
+return {n:n,v:v,t:names[n]+" "+v}
 }
 
 this.op.browser=getBrowser();
@@ -79,7 +79,7 @@ if (!this.op.test && (!this.op.browser || !this.op.browser.n || this.op.browser.
 
 if (!this.op.test) {
     var i = new Image();
-﻿  //DISABLED TEMPORARYLY
+    //DISABLED TEMPORARYLY
     //i.src="http://browser-update.org/viewcount.php?n="+this.op.browser.n+"&v="+this.op.browser.v + "&p="+ escape(this.op.pageurl) + "&jsv="+jsv;
 }
 if (this.op.reminder>0) {
@@ -103,7 +103,7 @@ function busprintf() {
     return data;
 }
 
-﻿var t = I18n.t('js.browser_update', {url: this.op.url});
+var t = I18n.t('js.browser_update', {url: this.op.url});
 if (op.text)
     t = op.text;
 
