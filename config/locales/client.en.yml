@@ -505,10 +505,21 @@ en:
       login_reply: 'Log In to Reply'
 
       filters:
-        user:
-          one: "You're viewing only {{filtered_posts_count}} posts by a specific user."
-          other: "You're viewing only {{filtered_posts_count}} posts made by {{count}} specific users."
-        best_of: "You're viewing the {{filtered_posts_count}} best posts of {{posts_count}} in the topic."
+        user: "You're viewing only {{n_posts}} {{by_n_users}}."
+        n_posts:
+          one: "1 post"
+          other: "{{count}} posts"
+        by_n_users:
+          one: "made by 1 specific user"
+          other: "made by {{count}} specific users"
+
+        best_of: "You're viewing the {{n_best_posts}} {{of_n_posts}}."
+        n_best_posts:
+          one: "1 best post"
+          other: "{{count}} best posts"
+        of_n_posts:
+          one: "of 1 in the topic"
+          other: "of {{count}} in the topic"
         cancel: "Show all posts in this topic again."
 
       move_selected:
