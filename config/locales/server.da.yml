@@ -541,7 +541,7 @@ da:
 
       - Is your domain's SPF record correct? [Test your SPF record][1] here.
 
-      - Check to make sure the IPs of mail server are [not on any email blacklists][4].
+      - Check to make sure the IPs of your mail server are [not on any email blacklists][4].
 
       - Verify that your email server is *definitely* sending a fully-qualified hostname that resolves in DNS in its HELO message. If not, this will cause your email to be rejected by many mail services.
 
