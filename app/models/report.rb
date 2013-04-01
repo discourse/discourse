@@ -32,37 +32,40 @@ class Report
   end
 
   def self.report_visits(report)
-    report.data = []
-    UserVisit.by_day(30.days.ago).each do |date, count|
-      report.data << {x: date, y: count}
-    end
+    basic_report_about report, UserVisit, :by_day
   end
 
   def self.report_signups(report)
-    report.data = []
-    User.count_by_signup_date(30.days.ago).each do |date, count|
-      report.data << {x: date, y: count}
-    end
-    report.total = User.count
-    report.prev30Days = User.where('created_at > ? and created_at < ?', 60.days.ago, 30.days.ago).count
+    report_about report, User, :count_by_signup_date
   end
 
   def self.report_topics(report)
-    report.data = []
-    Topic.count_per_day(30.days.ago).each do |date, count|
-      report.data << {x: date, y: count}
-    end
-    report.total = Topic.count
-    report.prev30Days = Topic.where('created_at > ? and created_at < ?', 60.days.ago, 30.days.ago).count
+    report_about report, Topic
   end
 
   def self.report_posts(report)
+    report_about report, Post
+  end
+
+  def self.report_emails(report)
+    report_about report, EmailLog
+  end
+
+  def self.report_about(report, subject_class, report_method = :count_per_day)
+    basic_report_about report, subject_class, report_method
+    add_counts(report, subject_class)
+  end
+
+  def self.basic_report_about(report, subject_class, report_method)
     report.data = []
-    Post.count_per_day(30.days.ago).each do |date, count|
+    subject_class.send(report_method, 30.days.ago).each do |date, count|
       report.data << {x: date, y: count}
     end
-    report.total = Post.count
-    report.prev30Days = Post.where('created_at > ? and created_at < ?', 60.days.ago, 30.days.ago).count
+  end
+
+  def self.add_counts(report, subject_class)
+    report.total      = subject_class.count
+    report.prev30Days = subject_class.where('created_at > ? and created_at < ?', 60.days.ago, 30.days.ago).count
   end
 
   def self.report_flags(report)
@@ -93,14 +96,4 @@ class Report
     report.total = likesQuery.count
     report.prev30Days = likesQuery.where('created_at > ? and created_at < ?', 60.days.ago, 30.days.ago).count
   end
-
-  def self.report_emails(report)
-    report.data = []
-    EmailLog.count_per_day(30.days.ago).each do |date, count|
-      report.data << {x: date, y: count}
-    end
-    report.total = EmailLog.count
-    report.prev30Days = EmailLog.where('created_at > ? and created_at < ?', 60.days.ago, 30.days.ago).count
-  end
-
 end
