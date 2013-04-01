@@ -75,7 +75,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:ninja_edit_window, 5.minutes.to_i)
   setting(:post_undo_action_window_mins, 10)
   setting(:system_username, '')
-  setting(:max_mentions_per_post, 5)
+  setting(:max_mentions_per_post, 10)
   setting(:visitor_max_mentions_per_post, 2)
 
   setting(:uncategorized_name, 'uncategorized')
