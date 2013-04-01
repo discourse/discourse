@@ -136,9 +136,11 @@ cs:
         last_here: "byly zaslány od mé poslední návštěvy"
         after_n_days:
           one: "byly zaslány v posledním dni"
+          few: "byly zaslány v posledních {{count}} dnech"
           other: "byly zaslány v posledních {{count}} dnech"
         after_n_weeks:
           one: "byly zaslány v posledním týdnu"
+          few: "byly zaslány v posledních {{count}} týdnech"
           other: "byly zaslány v posledních {{count}} týdnech"
 
       auto_track_topics: "Automaticky sledovat témata, která navštívím"
@@ -147,9 +149,11 @@ cs:
         always: "vždy"
         after_n_seconds:
           one: "po 1 vteřině"
+          few: "po {{count}} vteřinách"
           other: "po {{count}} vteřinách"
         after_n_minutes:
           one: "po 1 minutě"
+          few: "po {{count}} minutách"
           other: "po {{count}} minutách"
 
       invited:
@@ -409,6 +413,7 @@ cs:
       new_posts: "je zde {{new_posts}} nových příspěvků od doby, kdy jste toto téma naposledy četli"
       likes:
         one: "je zde 1x 'líbí' v tomto tématu"
+        few: "je zde {{count}}x 'líbí' v tomto tématu"
         other: "je zde {{count}}x 'líbí' v tomto tématu"
       back_to_list: "Zpátky na seznam témat"
       options: "Možnosti"
@@ -505,10 +510,25 @@ cs:
       login_reply: 'Přihlašte se, chcete-li odpovědět'
 
       filters:
-        user:
-          one: "Jsou zobrazeny pouze příspěvky od daného uživatele."
-          other: "Jsou zobrazeny pouze příspěvky od daných uživatelů."
-        best_of: "Jsou zobrazeny pouze 'nejlepší' příspěvky."
+        user: "{{n_posts}} {{by_n_users}}."
+        n_posts:
+          one: "Je zobrazen pouze 1 příspěvek"
+          few: "Jsou zobrazeny pouze {{count}} příspěvky"
+          other: "Je zobrazeno pouze {{count}} příspěvků"
+        by_n_users:
+          one: "od 1 vybraného uživatele"
+          few: "od {{count}} vybraného uživatele"
+          other: "od {{count}} vybraných uživatelů"
+
+        best_of: "{{n_best_posts}} {{of_n_posts}}."
+        n_best_posts:
+          one: "Je zobrazen 1 nejlepší příspěvek"
+          few: "Jsou zobrazeny {{count}} nejlepší příspěvky"
+          other: "Je zobrazeno {{count}} nejlepších příspěvků"
+        of_n_posts:
+          one: "z celkem 1 příspěvku v tématu"
+          few: "z celkem {{count}} příspěvků v tématu"
+          other: "z celkem {{count}} příspěvků v tématu"
         cancel: "Zobrazí znovu všechny příspěvky v tomto tématu."
 
       move_selected:
@@ -517,6 +537,7 @@ cs:
         error: "Bohužel nastala chyba při přesouvání příspěvků."
         instructions:
           one: "Chystáte se vytvořit nové téma a naplnit ho příspěvkem, který jste označili."
+          few: "Chystate se vytvořit noté téma a naplnit ho <b>{{count}}</b> příspěvky, které jste označili."
           other: "Chystate se vytvořit noté téma a naplnit ho <b>{{count}}</b> příspěvky, které jste označili."
 
       multi_select:
@@ -544,6 +565,7 @@ cs:
 
       has_replies:
         one: "Odpověď"
+        few: "Odpovědi"
         other: "Odpovědi"
 
       errors:
@@ -572,25 +594,30 @@ cs:
         flag: 'Nahlásit'
         clear_flags:
           one: "Odebrat nahlášení"
+          few: "Odebrat nahlášení"
           other: "Odebrat nahlášení"
         it_too: "{{alsoName}} také"
         undo: "Zrušit {{alsoName}}"
         by_you_and_others:
           zero: "Vy {{long_form}}"
           one: "Vy a 1 další člověk {{long_form}}"
+          few: "Vy a {{count}} dalších lidé {{long_form}}"
           other: "Vy a {{count}} dalších lidí {{long_form}}"
         by_others:
           one: "1 člověk {{long_form}}"
+          few: "{{count}} lidé {{long_form}}"
           other: "{{count}} lidí {{long_form}}"
 
       edits:
         one: 1 úprava
+        few: "{{count}} úpravy"
         other: "{{count}} úprav"
         zero: žádné úpravy
 
       delete:
         confirm:
           one: "Opravdu chcete odstranit tento příspěvek?"
+          few: "Opravdu chcete odstranit všechny tyto příspěvky?"
           other: "Opravdu chcete odstranit všechny tyto příspěvky?"
 
     category:
@@ -676,12 +703,14 @@ cs:
         title:
           zero: "Nepřečtená"
           one: "Nepřečtená (1)"
+          few: "Nepřečtená ({{count}})"
           other: "Nepřečtená ({{count}})"
         help: "sledovaná témata s nepřečtenými příspěvky"
       new:
         title:
           zero: "Nová"
           one: "Nová (1)"
+          few: "Nová ({{count}})"
           other: "Nová ({{count}})"
         help: "nová témata od vaší poslední návštěvy a nové příspěvky v tématech, která sledujete"
       posted:
@@ -691,6 +720,7 @@ cs:
         title:
           zero: "{{categoryName}}"
           one: "{{categoryName}} (1)"
+          few: "{{categoryName}} ({{count}})"
           other: "{{categoryName}} ({{count}})"
         help: "populární témata v kategorii {{categoryName}}"
 
@@ -785,6 +815,7 @@ cs:
         approved: "Schválen?"
         approved_selected:
           one: "schválit uživatele"
+          few: "schválit uživatele ({{count}})"
           other: "schválit uživatele ({{count}})"
 
       user:
