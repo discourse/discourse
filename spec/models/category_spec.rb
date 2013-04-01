@@ -177,6 +177,10 @@ describe Category do
       it 'updates topics_year' do
         @category.topics_year.should == 1
       end
+
+      it 'updates topic_count' do
+        @category.topic_count.should == 1
+      end
     end
 
     context 'with deleted topics' do
@@ -197,6 +201,10 @@ describe Category do
 
       it 'does not count deleted topics for topics_year' do
         @category.topics_year.should == 0
+      end
+
+      it 'does not count deleted topics for topic_count' do
+        @category.topic_count.should == 0
       end
     end
   end
