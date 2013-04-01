@@ -550,6 +550,7 @@ en:
         edit: "Sorry, there was an error editing your post. Please try again."
         upload: "Sorry, there was an error uploading that file. Please try again."
         upload_too_large: "Sorry, the file you are trying to upload is too big (maximum size is {{max_size_kb}}kb), please resize it and try again."
+        upload_too_many_images: "Sorry, but you can only upload one image at a time."
 
       abandon: "Are you sure you want to abandon your post?"
 
