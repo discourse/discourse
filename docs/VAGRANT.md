@@ -50,6 +50,8 @@ Once the machine has booted up, you can shell into it by typing:
 vagrant ssh
 ```
 
+The discourse code is found in the /vagrant directory in the image.
+
 **Note to Windows users**: You cannot run ```vagrant ssh``` from a cmd prompt; you'll receive the error message:
 
 ```
@@ -78,6 +80,7 @@ Now you're in a virtual machine is almost ready to start developing. It's a good
 *every time* you pull from master to ensure your environment is still up to date.
 
 ```
+cd /vagrant
 bundle install
 bundle exec rake db:migrate
 bundle exec rake db:seed_fu
@@ -85,7 +88,7 @@ bundle exec rake db:seed_fu
 
 ### Starting Rails
 
-Once your VM is up to date, you can start a rails instance using the following command:
+Once your VM is up to date, you can start a rails instance using the following command from the /vagrant directory:
 
 ```
 bundle exec rails s
@@ -120,6 +123,7 @@ To use it, follow all the above steps. Once rails is running, open a new termina
 
 ```
 vagrant ssh
+cd /vagrant
 bundle exec rake db:test:prepare
 bundle exec guard -p
 ```
@@ -129,7 +133,7 @@ Wait a minute while it runs all our unit tests. Once it has completed, live relo
 
 ### Sending Email
 
-Mail is sent asynchronously by Sidekiq, so you'll need to have sidekiq running to process jobs. Run it with this command:
+Mail is sent asynchronously by Sidekiq, so you'll need to have sidekiq running to process jobs. Run it with this command in the /vagrant directory:
 
 ```
 bundle exec sidekiq
