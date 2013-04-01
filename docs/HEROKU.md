@@ -2,7 +2,7 @@
 
 This guide takes you through the steps for deploying Discourse to the [Heroku](http://www.heroku.com/) cloud application platform. If you're unfamiliar with Heroku, [read this first](https://devcenter.heroku.com/articles/quickstart). The basic deployment of Discourse requires several services that will cost you money. In addition to the [750 free Dyno hours](https://devcenter.heroku.com/articles/usage-and-billing) provided by Heroku, the application requires one additional process to be running for the Sidekiq queue ($34 monthly), and a Redis database plan that supports a minimum of 2 databases (average $10 monthly).
 
-For details on how to reduce the monthly cost of your application, see the Advanced Heroku deployment instructions (coming soon).
+For details on how to reduce the monthly cost of your application, see [Advanced Heroku deployment](#advanced-heroku-deployment).
 
 ## Download and configure Discourse
 
@@ -148,7 +148,7 @@ For details on how to reduce the monthly cost of your application, see the Advan
 
 5. Start Sidekiq.
 
-    In the [Heroku dashboard](https://dashboard.heroku.com/apps), select your app and you will see the separate processes that have been created for your application under Resources. You will only need to start the sidekiq process for your application to run properly. The clock process is covered by Heroku Scheduler, and you can even remove this from the Procfile before deploying if you so wish. The worker process has been generated as a Rails default and can be ignored. As you can see **the Sidekiq process costs $34 monthly** to run. If you want to reduce this cost, check out the Advanced Heroku deployment(coming soon).
+    In the [Heroku dashboard](https://dashboard.heroku.com/apps), select your app and you will see the separate processes that have been created for your application under Resources. You will only need to start the sidekiq process for your application to run properly. The clock process is covered by Heroku Scheduler, and you can even remove this from the Procfile before deploying if you so wish. The worker process has been generated as a Rails default and can be ignored. As you can see **the Sidekiq process costs $34 monthly** to run. If you want to reduce this cost, check out [Advanced Heroku deployment](#advanced-heroku-deployment).
 
     Click on the check-box next to the Sidekiq process and click Apply Changes
 
@@ -216,3 +216,59 @@ Using Foreman to start the application allows you to mimic the way the applicati
 3. In Discourse admin settings, set `force_hostname` to your applications Heroku domain.
 
     This step is required for Discourse to properly form links sent with account confirmation emails and password resets. The auto detected application url would point to an Amazon AWS instance.
+    
+## Advanced Heroku deployment
+
+# Autoscaler
+
+Adding the [Autoscaler Gem](https://github.com/JustinLove/autoscaler) can help you better manage the running cost of your application by scaling down the Sidekiq worker process when not in use. This could save up to $34 per month depending on your usage levels. 
+
+##### Whilst this Gem has the potential to save you money, it in no way guarantees it. Use of this Gem should be combined with careful monitoring of your applications processes and usage alerts where necessary.
+
+1. Push your Heroku API key and app name to Heroku.
+    
+        heroku config:add HEROKU_API_KEY=<get your API key from acct settings> HEROKU_APP=<your app name>
+
+2. Add the Autoscaler Gem to the Gemfile.
+
+    *Gemfile*
+    
+    ```ruby
+    gem 'autoscaler', require: false
+    ```
+3. Modify the Sidekiq config file to use the Autoscaler middleware in production. 
+
+
+    *config/initializers/sidekiq.rb*
+    
+    ```ruby
+    sidekiq_redis = { url: $redis.url, namespace: 'sidekiq' }
+
+    if Rails.env.production? 
+    
+      require 'autoscaler/sidekiq'
+      require 'autoscaler/heroku_scaler'
+    
+    	Sidekiq.configure_server do |config| 
+    	  config.redis = sidekiq_redis
+    	  config.server_middleware do |chain|
+    	    chain.add(Autoscaler::Sidekiq::Server, Autoscaler::HerokuScaler.new('sidekiq'), 60)
+    	  end
+    	end
+    
+    
+    	Sidekiq.configure_client do |config| 
+    	  config.redis = sidekiq_redis
+    	  config.client_middleware do |chain|
+    	    chain.add Autoscaler::Sidekiq::Client, 'default' => Autoscaler::HerokuScaler.new('sidekiq')
+    	  end
+    	end
+    
+    else
+    
+      Sidekiq.configure_server { |config| config.redis = sidekiq_redis }
+      Sidekiq.configure_client { |config| config.redis = sidekiq_redis }
+    
+    end
+        
+    ```

@@ -505,10 +505,21 @@ en:
       login_reply: 'Log In to Reply'
 
       filters:
-        user:
-          one: "You're viewing only {{filtered_posts_count}} posts by a specific user."
-          other: "You're viewing only {{filtered_posts_count}} posts made by {{count}} specific users."
-        best_of: "You're viewing the {{filtered_posts_count}} best posts of {{posts_count}} in the topic."
+        user: "You're viewing only {{n_posts}} {{by_n_users}}."
+        n_posts:
+          one: "1 post"
+          other: "{{count}} posts"
+        by_n_users:
+          one: "made by 1 specific user"
+          other: "made by {{count}} specific users"
+
+        best_of: "You're viewing the {{n_best_posts}} {{of_n_posts}}."
+        n_best_posts:
+          one: "1 best post"
+          other: "{{count}} best posts"
+        of_n_posts:
+          one: "of 1 in the topic"
+          other: "of {{count}} in the topic"
         cancel: "Show all posts in this topic again."
 
       move_selected:
@@ -550,6 +561,7 @@ en:
         edit: "Sorry, there was an error editing your post. Please try again."
         upload: "Sorry, there was an error uploading that file. Please try again."
         upload_too_large: "Sorry, the file you are trying to upload is too big (maximum size is {{max_size_kb}}kb), please resize it and try again."
+        upload_too_many_images: "Sorry, but you can only upload one image at a time."
 
       abandon: "Are you sure you want to abandon your post?"
 
@@ -692,6 +704,8 @@ en:
           one: "{{categoryName}} (1)"
           other: "{{categoryName}} ({{count}})"
         help: "latest topics in the {{categoryName}} category"
+
+    browser_update: 'Unfortunately, <a href="http://www.discourse.org/faq/#browser">your browser is too old to work on this Discourse forum</a>. Please <a href="%{url}">upgrade your browser</a>.'
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:

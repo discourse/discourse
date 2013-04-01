@@ -1,5 +1,9 @@
 # encoding: utf-8
 de:
+  time:
+    formats:
+      short: "%d. %m. %Y"
+
   title: "Discourse"
   topics: "Themen"
   loading: "Lädt"
@@ -7,9 +11,20 @@ de:
 
   via: "%{username} via %{site_name}"
   is_reserved: "ist reserviert"
-  too_many_mentions: "hat zu viele Nutzer erwähnt"
-  too_many_images: "hat zu viele Bilder"
-  too_many_links: "hat zu viele Links"
+
+  too_many_mentions:
+    zero: "Entschuldige, Gäste können andere Nutzer nicht erwähnen."
+    one: "Entschuldige, Gäste können nur einen anderen Nutzer in einem Beitrag erwähnen."
+    other: "Entschuldige, Gäste können nur %{count} Nutzer in einem Beitrag erwähnen."
+  too_many_images:
+    zero: "Entschuldige, Gäste können Beiträge keine Bilder hinzufügen."
+    one: "Entschuldige, Gäste können Beiträgen nur ein Bild hinzufügen."
+    other: "Entschuldige, Gäste können Beiträge nur %{count} Bilde hinzufügen."
+  too_many_links:
+    zero: "Entschuldige, Gäste können Beiträgen keine Links hinzufügen."
+    one: "Entschuldige, Gäste können Beiträgen nur einen Link hinzufügen."
+    other: "Entschuldige, Gäste können Beiträge nur %{count} Links hinzufügen."
+
   just_posted_that: "ist zu ähnlich dem, was Du kürzlich gepostet hast"
   has_already_been_used: "wurde schon benutzt"
   invalid_characters: "enthält ungültige Zeichen"
@@ -76,18 +91,16 @@ de:
     post_template: "%{replace_paragraph}\n\nBenutze den folgenden Platz für eine ausführliche Beschreibung sowie für Regeln und zur Diskussion!"
 
   trust_levels:
-    new:
-      title: "Neuer Nutzer"
+    visitor:
+      title: "Gast"
     basic:
-      title: "Sporadischer Nutzer"
+      title: "Anfänger"
     regular:
-      title: "Regelmäßiger Nutzer"
-    experienced:
-      title: "Erfahrener Nutzer"
-    advanced:
-      title: "Fortgeschrittener Nutzer"
-    moderator:
-      title: "Moderator"
+      title: "Stammnutzer"
+    leader:
+      title: "Anführer"
+    elder:
+      title: "Ältester"
 
   rate_limiter:
     too_many_requests: "Du machst das zu häufig. Bitte warte %{time_left} vor dem nächsten Versuch."
@@ -181,6 +194,7 @@ de:
     title: 'Passwort zurücksetzen'
     success: "Dein Passwort wurde erfolgreich geändert und Du bist jetzt angemeldet."
     success_unapproved: "Dein Passwort wurde erfolgreich verändert."
+    continue: "Weiter zu %{site_name}"
 
   change_email:
     confirmed: "Deine Mailadresse wurde aktualisiert."
@@ -246,12 +260,44 @@ de:
   reports:
     visits:
       title: "Nutzerbesuche"
+      xaxis: "Tag"
+      yaxis: "Zahl der Besuche"
     signups:
-      title: "Neue Nutzer"
+      title: "Benutzer"
+      xaxis: "Tag"
+      yaxis: "Zahl neuer Nutzer"
     topics:
-      title: "Neue Themen"
+      title: "Themen"
+      xaxis: "Day"
+      yaxis: "Zahl neuer ThemenNumber of new topics"
     posts:
-      title: "Neue Beiträge"
+      title: "Beiträge"
+      xaxis: "Tag"
+      yaxis: "Zahl neuer Beiträge"
+    likes:
+      title: "Likes"
+      xaxis: "Tag"
+      yaxis: "Zahl neuer Likes"
+    flags:
+      title: "Meldungen"
+      xaxis: "Tag"
+      yaxis: "Zahl der Meldungen"
+    users_by_trust_level:
+      title: "Benutzer nach Vertrauenswürdigkeit"
+      xaxis: "Vertrauenswürdigkeit"
+      yaxis: "Zahl der Nutzer"
+    emails:
+      title: "Gesendete Mails"
+      xaxis: "Tag"
+      yaxis: "Zahl der Mails"
+
+  dashboard:
+    rails_env_warning: "Dein Server läuft im %{env}-Modus."
+    host_names_warning: "Deine config/database.yml-Datei verwendet localhost als Hostname. Trage hier den Hostnamen Deiner Webseite ein."
+    gc_warning: 'Dein Server verwendet die Standardparameter für Rubys Garbage-Collector, die nicht optimal sind. Lese dieses Thema über Performanzeinstellungen (en): <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>.'
+    clockwork_warning: 'Clockwork läuft nicht. Stelle sicher, dass immer ein Clockwork-Prozess läuft, so dass wichtige Jobs eingeplant werden können. <a href="https://github.com/tomykaira/clockwork">Mehr über Clockwork erfährst du hier (en)</a>.'
+    sidekiq_warning: 'Sidekiq läuft nicht. Viele Aufgaben, wie zum Beispiel das Versenden von Mails, werden asynchron durch Sidekiq ausgeführt. Stelle sicher, dass mindestens eine Sidekiq-Prozess läuft. <a href="https://github.com/mperham/sidekiq">Mehr über Sidekiq erfährst du hier (en)</a>.'
+    memory_warning: 'Dein Server läuft mit weniger als 1 GB Hauptspeicher. Mindestens 1 GB Hauptspeicher werden empfohlen.'
 
   site_settings:
     default_locale: "Die Standardsprache dieser Discourse-Instanz (kodiert in ISO 639-1)."
@@ -269,6 +315,7 @@ de:
     company_full_name: "Voller Name des Unternehmens, das diese Seite betreibt. Wird in rechtlich relevanten Dokumenten wie den Nutzungsbestimmungen (/tos) verwendet."
     company_short_name: "Kurzname des Unternehmens, das diese Seite betreibt. Wird in rechtlich relevanten Dokumenten wie den Nutzungsbestimmungen (/tos) verwendet."
     company_domain: "Domainname des Unternehmens, das diese Seite betreibt. Wird in rechtlich relevanten Dokumenten wie den Nutzungsbestimmungen (/tos) verwendet."
+    api_key: "Sicherer API-Schlüssel, um Themen zu erstellen und zu aktualisieren. Benutze /admin/api, um ihn einzurichten."
     access_password: "Passwort, dass eingegeben werden muss, wenn diese Seite zugangsbeschränkt ist."
     queue_jobs: "Benutze die sidekiq-Queue, falls falsche Queues inline sind."
     crawl_images: "Lade Bilder von Dritten herunter, um ihre Höhe und Breite zu bestimmen."
@@ -295,6 +342,7 @@ de:
     best_of_score_threshold: "Der Minimalscore eines Beitrags, um zu den Top Beiträgen zu zählen."
     best_of_posts_required: "Minimale Zahl der Beiträge zu einem Thema bevor der Modus 'Top Beiträge' aktiviert wird."
     best_of_likes_required: "Minimale Zahl der Likes in einem Thema, bevor der Modus 'Top Beiträge' aktiviert wird."
+    best_of_percent_filter: "Prozentzahl der Top Beiträge, die gezeigt werden, wenn eine Nutzer in diese Ansicht wechselt."
     enable_private_messages: "Erlaube Nutzern mit Vertrauenswürdigkeit 1, private Nachrichten zu Gespräche."
 
     enable_long_polling: "Nachrichtenbus für Benachrichtigungen kann Long-Polling nutzen."
@@ -314,6 +362,7 @@ de:
     ga_tracking_code: "Google Analytics Trackingcode, zum Beispiel: UA-12345678-9; siehe http://google.com/analytics"
     top_menu: "Bestimme, welche Navigationselemente in welcher Reihenfolge auftauchen. Beispiel: latest|hot|read|favorited|unread|new|posted|categories"
     post_menu: "Bestimme, welche Funktionen in welcher Reihenfolge im Beitragsmenü auftauchen. Beispiel: like|edit|flag|delete|share|bookmark|reply"
+    share_links: "Bestimme, welche Dienste in welcher Reihenfolge im Teilen-Dialog auftauchen. Beispiel: twitter|facebook|google+"
     track_external_right_clicks: "Verfolge, welche externen Links per Rechtsklick geöffnet werden (zum Beispiel in einem neuen Browser-Tab). Standardmäßig deaktiviert, da dies URL-Rewrites erfordert."
     topics_per_page: "Zahl der Themen, die standardmäßig auf die Themenübersichtsseite geladen werden."
     posts_per_page: "Zahl der Beiträge, die auf einer Themenseite gezeigt werden."
@@ -321,7 +370,8 @@ de:
     send_welcome_message: "Bekommen neue Nutzer eine Willkommensnachricht?"
     supress_reply_directly_below: "Zeige die Zahl der Antworten auf einen Beitrag nicht, falls die einzige Antwort direkt darauf folgt."
     allow_index_in_robots_txt: "Diese Seite soll durch Suchmaschinen indiziert werden (aktualisiert robots.txt)."
-    email_domains_blacklist: "Eine durch senkrechte Strich getrennte Liste von unerlaubten Maildomains. Beispiel: mailinator.com|trashmail.net"
+    email_domains_blacklist: "Eine durch senkrechte Striche getrennte Liste von unerlaubten Maildomains. Beispiel: mailinator.com|trashmail.net"
+    email_domains_whitelist: "Eine durch senkrechte Striche getrennte Liste von erlaubte Maildomains. WARNUNG: Benutzer mit Mailadressen anderer Domains können sich nicht registrieren."
     version_checks: "Erfrage Versionsupdate bei Discourse Hub und zeige Versionsbenachrichtigungen auf der Administratorkonsole /admin."
 
     port: "Benutze diesen HTTP-Port anstatt den Standardport 80. Diese Feld leer lassen heißt 'keinen'. Dient hauptsächlich Entwicklungszwecken."
@@ -354,7 +404,6 @@ de:
     previous_visit_timeout_hours: "Stunden, die ein Besuch dauert bevor er als 'früherer' Besuch gezählt wird."
 
     uncategorized_name: "Name der Standardkategorie für Themen, die keiner Kategorie zugeordnet wurden in der Kategorieübersicht /categories."
-    max_mentions_per_post: "Maximale Zahl der @Namens-Erwähnungen, die man in einem Beitrag nutzen kann."
 
     rate_limit_create_topic: "Sekunden Wartezeit nach Erstellung eines Themas, bevor man ein neues Thema erstellen kann."
     rate_limit_create_post: "Sekunden Wartezeit nach Erstellung eines Beitrags, bevor man einen neuen Beitrag erstellen kann."
@@ -378,6 +427,10 @@ de:
     basic_requires_topics_entered: "Zahl der Themen, die ein neuer Nutzer erstellen muss, bevor er zum sporadischen Nutzer (Vertrauenswürdigkeit 1) aufsteigt."
     basic_requires_read_posts: "Zahl der Beiträge, die ein neuer Nutzer lesen muss, bevor bevor er zum sporadischen Nutzer (Vertrauenswürdigkeit 1) aufsteigt."
     basic_requires_time_spent_mins: "Minuten, die ein neuer Nutzer Beiträge lesen muss, bevor er zum sporadischen Nutzer (Vertrauenswürdigkeit 1) aufsteigt."
+    visitor_max_links: "Maximale Zahl der Links, die Gäste Beiträgen hinzufügen dürfen."
+    visitor_max_images: "Maximale Zahl der Bilder, die Gäste Beiträgen hinzufügen dürfen."
+    visitor_max_mentions_per_post: "Maximale Zahl der @Namens-Erwähnungen, die Gäste in Beiträgen nutzen dürfen."
+    max_mentions_per_post: "Maximale Zahl der @Namens-Erwähnungen, die man in einem Beitrag nutzen kann."
 
     auto_link_images_wider_than: "Pixelbreite, ab der Bilder automatisch verlinkt und verkleinert in einer Lightbox dargestellt werden."
 
@@ -387,7 +440,15 @@ de:
     title_min_entropy: "Minimal nötige Entropie (einzigartige Zeichen) in einem Thementitel."
     body_min_entropy: "Minimal nötige Entropie (einzigartige Zeichen) in einem Beitragstext."
     new_user_period_days: "Tage, die ein Nutzer als neu hervorgehoben wird."
+
     title_fancy_entities: "Konvertiere HTML-Entitys in Thementiteln."
+
+    min_title_similar_length: "Minimale Länge eines Titels, bevor nach ähnlichen Titeln gesucht wird."
+    min_body_similar_length: "Minimale Länge eines Beitragstextes, bevor nach ähnlichen Themen gesucht wird."
+
+    category_colors: "Eine durch senkrechte Striche getrennte Liste hexadezimaler Farbwerte, die als Kategoriefarben erlaubt sind."
+    max_upload_size_kb: "Maximale Größe in Kilobytes (KB), die von Benutzer hochgeladene Bilder groß sein dürfen. Stelle sicher, dass dieser Wert auch in nginx (client_max_body_size) / apache und Proxies konfiguriert ist."
+    max_similar_results: "Zahl der Themen, die ein Nutzer sieht während sei ein neues Thema erstellen."
 
   notification_types:
     mentioned: "%{display_username} hat Dich in %{link} erwähnt."
@@ -538,19 +599,17 @@ de:
     site_password: "Das Seitenpasswort ist `%{access_password}`, falls Du es benötigst."
 
     post_hidden:
-      subject_template: "%{site_name} Mitteilung: Beitrag wegen Meldungen aus der Community versteckt"
+      subject_template: "Beitrag wegen Meldungen aus der Community versteckt"
       text_body_template: |
         Hallo,
 
-        dies ist eine automatische Nachricht von %{site_name}, um Dich darüber zu informieren, dass ein Beitrag von Dir wegen Meldungen aus der Community versteckt wurde.
+        dies ist eine automatische Nachricht von %{site_name}, um Dich darüber zu informieren, dass Dein Beitrag
 
         %{base_url}%{url}
 
-        Dein Beitrag wurde versteckt, da er von der Community gemeldet wurde.
+        wegen Meldungen aus der Community versteckt wurde.
 
-        Beachte, dass mehrere Mitglieder der Community diesen Beitrag gemeldet haben, bevor er versteckt wurde. Daher bitten wir Dich, zu überlegen, wie Du Deinen Beitrag unter Berücksichtigung dieses Feedbacks überarbeiten könntest.
-
-        Du kannst den Beitrag nach %{edit_delay} Minuten überarbeiten. Anschließend wird er automatisch wieder sichtbar und Deine Vertrauenswürdigkeit erhöht sich.
+        Beachte, dass mehrere Mitglieder der Community diesen Beitrag gemeldet haben, bevor er versteckt wurde. **Überlege Dir daher, wie Du Deinen Beitrag unter Berücksichtigung dieses Feedbacks überarbeiten könntest.** Du kannst Deinen Beitrag nach %{edit_delay} Minuten überarbeiten. Anschließend wird er automatisch wieder sichtbar und Deine Vertrauenswürdigkeit erhöht sich.
 
         Wenn dieser Beitrag ein zweites Mal von der Community versteckt wird, werden die Moderatoren darauf aufmerksam gemacht. Dass kann weitere Konsequenzen haben, unter anderem auch eine Sperrung Deines Kontos.
 
@@ -763,7 +822,7 @@ de:
 
   page_not_found:
     title: "Die angefragte Seite, gibt es in diesem Forum nicht. Vielleicht können wir aber dabei behilflich sein, sie oder ein ähnliches Thema zu finden:"
-    latest_topics: "Populäre Themen"
+    latest_topics: "Zuletzt gepostete Themen"
     recent_topics: "Kürzliche Themen"
     see_more: "Mehr ansehen"
     search_title: "Suche nach diesem Thema"

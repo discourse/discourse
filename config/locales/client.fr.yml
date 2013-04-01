@@ -377,10 +377,12 @@ fr:
         new: "Vous n'avez aucune discussion non lue."
         read: "Vous n'avez lu aucune discussion pour le moment."
         posted: "Vous n'avez écrit aucun message pour le moment."
-        latest: "Il n'y a aucune discussion populaire pour le moment. C'est triste..."
+        latest: "Il n'y a aucune discussion pour le moment. C'est triste..."
+        hot: "Il n'y a aucune discussion populaire pour le moment."
         category: "Il n'y a aucune discussion sur {{category}}."
       bottom:
-        latest: "Il n'y a plus de discussion populaire à lire."
+        latest: "Il n'y a plus de discussion à lire."
+        hot: "Il n'y a plus de discussion populaire à lire."
         posted: "Il n'y a plus de discussion à lire."
         read: "Il n'y a plus de discussion à lire."
         new: "Il n'y a plus de discussion à lire."
@@ -552,6 +554,7 @@ fr:
         edit: "Désolé, il y a eu une erreur lors de l'édition de votre message. Merci de réessayer."
         upload: "Désolé, il y a eu une erreur lors de l'envoi du fichier. Merci de réessayer."
         upload_too_large: "Désolé, le fichier que vous êtes en train d'envoyer est trop grand (maximum {{max_size_kb}}Kb). Merci de le redimensionner et de réessayer."
+        upload_too_many_images: "Désolé, mais vous ne pouvez envoyer qu'une seule image à la fois."
 
       abandon: "Voulez-vous vraiment abandonner ce message ?"
 
@@ -658,8 +661,11 @@ fr:
 
     filters:
       latest:
+        title: "Récentes"
+        help: "discussions récentes"
+      hot:
         title: "Populaires"
-        help: "discussions récentes les plus populaires"
+        help: "discussions populaires"
       favorited:
         title: "Favoris"
         help: "discussions que vous avez ajoutées à vos favoris"

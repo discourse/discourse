@@ -271,47 +271,65 @@ Discourse.ComposerView = Discourse.View.extend({
 
     // In case it's still bound somehow
     $uploadTarget.fileupload('destroy');
+    $uploadTarget.off();
 
     $uploadTarget.fileupload({
-      url: '/uploads',
-      dataType: 'json',
-      timeout: 20000,
-      formData: {
-        topic_id: 1234
-      },
-      paste: function(e, data) {
-        if (data.files.length > 0) {
-          _this.set('loadingImage', true);
-          _this.set('uploadProgress', 0);
-        }
-        return true;
-      },
-      drop: function(e, data) {
-        if (e.originalEvent.dataTransfer.files.length === 1) {
-          _this.set('loadingImage', true);
-          return _this.set('uploadProgress', 0);
-        }
-      },
-      progressall: function(e, data) {
-        var progress;
-        progress = parseInt(data.loaded / data.total * 100, 10);
-        return _this.set('uploadProgress', progress);
-      },
-      done: function(e, data) {
-        var html, upload;
-        _this.set('loadingImage', false);
-        upload = data.result;
-        html = "<img src=\"" + upload.url + "\" width=\"" + upload.width + "\" height=\"" + upload.height + "\">";
-        return _this.addMarkdown(html);
-      },
-      fail: function(e, data) {
-        // 413 == entity too large, returned usually from nginx
-        if(data.jqXHR && data.jqXHR.status === 413) {
-          bootbox.alert(Em.String.i18n('post.errors.upload_too_large', {max_size_kb: Discourse.SiteSettings.max_upload_size_kb}));
+        url: '/uploads',
+        dataType: 'json',
+        timeout: 20000,
+        formData: { topic_id: 1234 }
+    });
+
+    var addImages = function (e, data) {
+      console.log('addImages');
+      // can only upload one image at a time
+      if (data.files.length > 1) {
+        bootbox.alert(Em.String.i18n('post.errors.upload_too_many_images'));
+      } else if (data.files.length > 0) {
+        // check image size
+        var fileSizeInKB = data.files[0].size / 1024;
+        if (fileSizeInKB > Discourse.SiteSettings.max_upload_size_kb) {
+          bootbox.alert(Em.String.i18n('post.errors.upload_too_large', { max_size_kb: Discourse.SiteSettings.max_upload_size_kb }));
         } else {
-          bootbox.alert(Em.String.i18n('post.errors.upload'));
+          // reset upload status
+          _this.setProperties({
+            uploadProgress: 0,
+            loadingImage: true
+          });
+          return true;
         }
-        return _this.set('loadingImage', false);
+      }
+      return false;
+    };
+
+    // paste
+    $uploadTarget.on('fileuploadpaste', addImages);
+
+    // drop
+    $uploadTarget.on('fileuploaddrop', addImages);
+
+    // progress all
+    $uploadTarget.on('fileuploadprogressall', function (e, data) {
+      var progress = parseInt(data.loaded / data.total * 100, 10);
+      _this.set('uploadProgress', progress);
+    });
+
+    // done
+    $uploadTarget.on('fileuploaddone', function (e, data) {
+      var upload = data.result;
+      var html = "<img src=\"" + upload.url + "\" width=\"" + upload.width + "\" height=\"" + upload.height + "\">";
+      _this.addMarkdown(html);
+      _this.set('loadingImage', false);
+    });
+
+    // fail
+    $uploadTarget.on('fileuploadfail', function (e, data) {
+      _this.set('loadingImage', false);
+      // 413 == entity too large, returned usually from nginx
+      if(data.jqXHR && data.jqXHR.status === 413) {
+        bootbox.alert(Em.String.i18n('post.errors.upload_too_large', {max_size_kb: Discourse.SiteSettings.max_upload_size_kb}));
+      } else {
+        bootbox.alert(Em.String.i18n('post.errors.upload'));
       }
     });
 
@@ -372,5 +390,3 @@ Discourse.NotifyingTextArea = Ember.TextArea.extend({
 });
 
 RSVP.EventTarget.mixin(Discourse.ComposerView);
-
-

@@ -16,23 +16,21 @@ Discourse.QuoteButtonView = Discourse.View.extend({
   },
 
   hasBuffer: (function() {
-    if (this.present('controller.buffer')) return 'visible';
-    return null;
+    return this.present('controller.buffer') ? 'visible' : null;
   }).property('controller.buffer'),
 
   willDestroyElement: function() {
-    $(document).unbind("mousedown.quote-button");
+    $(document).off("mousedown.quote-button");
   },
 
   didInsertElement: function() {
     // Clear quote button if they click elsewhere
     var quoteButtonView = this;
-    return $(document).bind("mousedown.quote-button", function(e) {
+    $(document).on("mousedown.quote-button", function(e) {
       if ($(e.target).hasClass('quote-button')) return;
       if ($(e.target).hasClass('create')) return;
-      quoteButtonView.controller.mouseDown(e);
       quoteButtonView.set('controller.lastSelected', quoteButtonView.get('controller.buffer'));
-      return quoteButtonView.set('controller.buffer', '');
+      quoteButtonView.set('controller.buffer', '');
     });
   },
 
@@ -42,5 +40,3 @@ Discourse.QuoteButtonView = Discourse.View.extend({
   }
 
 });
-
-

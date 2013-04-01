@@ -51,6 +51,11 @@
             {{#if Discourse.currentUser}}
                <a href="#" {{action togglePreview target="controller"}} class='toggle-preview'>{{{content.toggleText}}}</a>
                <div class='saving-draft'></div>
+               {{#if view.loadingImage}}
+                <div id="image-uploading">
+                  {{i18n image_selector.uploading_image}} {{view.uploadProgress}}% <a {{action cancelUpload target="view"}}>{{i18n cancel}}</a>
+                </div>
+              {{/if}}
             {{/if}}
           </div>
 
@@ -58,11 +63,6 @@
             <div class='submit-panel'>
               <button {{action save target="controller"}} tabindex="4" {{bindAttr disabled="content.cantSubmitPost"}} class='btn btn-primary create'>{{view.content.saveText}}</button>
               <a href='#' {{action cancel target="controller"}} class='cancel' tabindex="4">{{i18n cancel}}</a>
-              {{#if view.loadingImage}}
-                <div id="image-uploading">
-                  {{i18n image_selector.uploading_image}} {{view.uploadProgress}}% <a {{action cancelUpload target="view"}}>{{i18n cancel}}</a>
-                </div>
-              {{/if}}
             </div>
           {{/if}}
 

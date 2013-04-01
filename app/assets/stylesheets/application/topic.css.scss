@@ -240,7 +240,6 @@
     border: 5px solid rgba(0, 0, 0, 0.75);
     top: 10px;
     left: 10px;
-    z-index: 99999;
     position: absolute;
     display: none;
     @include border-radius-all(4px);
@@ -362,6 +361,7 @@ kbd {
 #topic-progress-wrapper.docked {
   #topic-progress {
     border-bottom: 1px solid $gray;
+    margin-left: 6px;
   }
   position: absolute;
 }

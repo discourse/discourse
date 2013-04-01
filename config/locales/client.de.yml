@@ -7,6 +7,10 @@ de:
     share:
       topic: 'Teile einen Link zu diesem Thema'
       post: 'Teile einen Link zu diesem Beitrag'
+      close: 'Schließen'
+      twitter: 'Teile diesen Link auf Twitter'
+      facebook: 'Teile diesen Link auf Facebook'
+      google+: 'Teile diesen Link auf Google+'
 
     edit: 'editiere den Titel und die Kategorie dieses Themas'
     not_implemented: "Entschuldigung, diese Funktion wurde noch nicht implementiert."
@@ -17,14 +21,14 @@ de:
     log_in: "Anmelden"
     age: "Alter"
     last_post: "Letzter Beitrag"
-    admin_title: "Administrator"
+    admin_title: "Administration"
     flags_title: "Meldungen"
     show_more: "zeige mehr"
     links: Links
     faq: "FAQ"
     you: "Du"
-    ok: "Okay"
     or: "oder"
+    now: "gerade eben"
 
     suggested_topics:
       title: "Vorgeschlagene Themen"
@@ -62,6 +66,8 @@ de:
       change_password: "ändern"
       invited_by: "Eingeladen von"
       trust_level: "Vertrauenswürdigkeit"
+      external_links_in_new_tab: "Öffne alle externen Links in neuen Tabs"
+      enable_quoting: "Markierten Text bei Antwort zitieren"
 
       change_username:
         action: "ändern"
@@ -92,7 +98,8 @@ de:
         ok: "Der Name ist in Ordnung."
       username:
         title: "Benutzername"
-        instructions: "Andere können Dich mit @{{username}} erwähnen."
+        instructions: "Muss eindeutig sein, keine Leerzeichen. Andere können Dich mit @{{username}} erwähnen."
+        short_instructions: "Andere können Dich mit @{{username}} erwähnen."
         available: "Dein Benutzername ist verfügbar."
         global_match: "Die Mailadresse passt zum registrierten Benutzernamen."
         global_mismatch: "Schon registriert. Wie wäre es mit {{suggestion}}?"
@@ -101,6 +108,9 @@ de:
         too_long: "Der Benutzername ist zu lang."
         checking: "Prüfe Verfügbarkeit des Benutzernamens..."
         enter_email: 'Benutzername gefunden. Gib die zugehörige Mailadresse ein.'
+
+      password_confirmation:
+        title: "Passwort wiederholen"
 
       last_posted: "Letzter Beitrag"
       last_emailed: "Letzte Mail"
@@ -195,9 +205,11 @@ de:
 
     best_of:
       title: "Top Beiträge"
-      description: "Es gibt <b>{{count}}</b> Beiträge zu diesem Thema. Das sind viele! Möchtest Du Zeit sparen und nur die Beiträge mit den meisten Antworten und Nutzerreaktionen betrachten?"
-      button: 'Umschalten zur Ansicht der Top Beiträge'
-
+      enabled_description: Du siehst gerade die Top Beiträge dieses Themas.
+      description: "Es gibt <b>{{count}}</b> Beiträge zu diesem Thema. Das sind eine Menge! Möchtest Du Zeit sparen und nur die Beiträge mit den meisten Antworten und Nutzerreaktionen betrachten?"
+      enable: 'Nur die Top Beiträge anzeigen'
+      disable: 'Alle Beiträge anzeigen'
+      
     private_message_info:
       title: "Privates Gespräch"
       invite: "Andere einladen..."
@@ -256,16 +268,22 @@ de:
         message: "Authentisierung via Mozilla Persona (stelle sicher, dass Popup-Blocker deaktiviert sind)"
 
     composer:
+      posting_not_on_topic: "Du antwortest auf das Thema \"{{title}}\", betrachtest gerade aber ein anderes Thema."
       saving_draft_tip: "speichert"
       saved_draft_tip: "gespeichert"
       saved_local_draft_tip: "lokal gespeichert"
+      similar_topics: "Dein Thema ähnelt..."
+      drafts_offline: "Entwürfe offline"
 
       min_length:
-        at_least: "Gib mindestens {{n}} Zeichen ein."
-        more: "{{n}} weitere..."
+        need_more_for_title: "{{n}} fehlen im Titel noch"
+        need_more_for_reply: "{{n}} fehlen in der Antwort noch"
 
       save_edit: "Änderungen speichern"
+      reply_original: "Auf das Originalthema antworten"
+      reply_here: "Hier antworten"
       reply: "Antworten"
+      cancel: "Abbrechen"
       create_topic: "Thema erstellen"
       create_pm: "Private Nachricht erstellen"
 
@@ -280,7 +298,6 @@ de:
       show_preview: 'Vorschau einblenden &raquo;'
       hide_preview: '&laquo; Vorschau ausblenden'
 
-      quote_title: "Beitrag zitieren"
       bold_title: "Fett"
       bold_text: "fetter Text"
       italic_title: "Kursiv"
@@ -345,7 +362,9 @@ de:
 
     favorite:
       title: 'Favoriten'
-      help: 'Füge dieses Thema zu Deinen Favoriten hinzu'
+      help:
+        star: 'Füge dieses Thema Deinen Favoriten hinzu'
+        unstar: 'Entferne dieses Thema aus Deinen Favoriten'
 
     topics:
       none:
@@ -354,10 +373,12 @@ de:
         new: "Es sind keine für Dich neuen Themen da."
         read: "Du hast bislang keine Themen gelesen."
         posted: "Du hast bislang keine Beiträge gepostet."
-        latest: "Es gibt keine populären Themen. Wie traurig."
-        category: "Es gibt keine Themen in {{category}}."
+        latest: "Es gibt keine Themen. Wie traurig."
+        hot: "Es gibt keine heißen Themen."
+        category: "Es gibt keine Themen der Kategorie {{category}}."
       bottom:
-        latest: "Das waren alle populären Themen."
+        latest: "Das waren die zuletzt geposteten Themen."
+        hot: "Das waren alle heißen Themen."
         posted: "Das waren alle Themen."
         read: "Das waren alle gelesenen Themen."
         new: "Das waren alle neuen Themen."
@@ -397,11 +418,12 @@ de:
       read_more: "Möchtest Du mehr lesen? {{catLink}} oder {{latestLink}}."
       browse_all_categories: Zeige alle Kategorien
 
-      view_latest_topics: Zeige populäre Themen
-      suggest_create_topic: Fang ein neues Thema an?
+      view_latest_topics: Zeige zuletzt gepostete Themen
+      suggest_create_topic: Fang ein neues Thema an!
       read_position_reset: "Deine Leseposition wurde zurückgesetzt."
       jump_reply_up: Springe zur vorigen Antwort
       jump_reply_down: Springe zur folgenden Antwort
+      deleted: "Das Thema wurde gelöscht"
 
       progress:
         title: Themenfortschritt
@@ -483,8 +505,10 @@ de:
       login_reply: 'Anmelden, um zu antworten'
 
       filters:
-        user: "Du betrachtest nur Beiträge bestimmter Nutzer."
-        best_of: "Du betrachtest die 'Best-Of'-Beiträge."
+        user:
+          one: "Du betrachtest nur die {{filtered_posts_count}} Beiträge eines bestimmten Nutzers."
+          other: "Du betrachtest nur die {{filtered_posts_count}} Beiträge {{count}} bestimmter Nutzer."
+        best_of: "Du betrachtest die {{filtered_posts_count}} Top Beiträge dieses Themas."
         cancel: "Zeige wieder alle Beiträge zu diesem Thema."
 
       move_selected:
@@ -508,7 +532,9 @@ de:
     post:
       reply: "Auf {{link}} von {{replyAvatar}} {{username}} antworten"
       reply_topic: "Auf {{link}} antworten"
-      edit: "{{link}} bearbeiten"
+      quote_reply: "Antwort zitieren"
+      edit: "Editing {{link}} von {{replyAvatar}} {{username}}"
+      post_number: "Beitrag {{number}}"
       in_reply_to: "Antwort auf"
       reply_as_new_topic: "Mit Themenwechsel antworten"
       continue_discussion: "Fortsetzung des Gesprächs {{postLink}}:"
@@ -523,6 +549,7 @@ de:
         create: "Entschuldige, es gab einen Fehler beim Anlegen des Beitrags. Versuche es noch einmal."
         edit: "Entschuldige, es gab einen Fehler beim Bearbeiten des Beitrags. Versuche es noch einmal."
         upload: "Entschuldige, es gab einen Fehler beim Hochladen der Datei. Versuche es noch einmal."
+        upload_too_large: "Entschuldige, die Datei, die du hochladen wolltest ist zu groß (Maximalgröße {{max_size_kb}}kb), bitte reduziere die Dateigröße un versuch es nochmal."
 
       abandon: "Willst Du diesen Beitrag wirklich verwerfen?"
 
@@ -572,17 +599,21 @@ de:
       view: 'Zeige Themen dieser Kategorie'
       delete: 'Kategorie löschen'
       create: 'Neue Kategorie'
+      creation_error: Beim Erzeugen der Kategorie ist ein Fehler aufgetreten.
       more_posts: "Zeige alle {{posts}}..."
       name: "Name der Kategorie"
       description: "Beschreibung"
       topic: "Kategorie des Themas"
-      color: "Farbe"
+      badge_colors: "Plakettenfarben"
+      background_color: "Hintergrundfarbe"
+      foreground_color: "Vordergrundfarbe"
       name_placeholder: "Sollte kurz und knapp sein."
       color_placeholder: "Irgendeine Webfarbe"
       delete_confirm: "Bist Du sicher, dass Du diese Kategorie löschen willst?"
       list: "Kategorien auflisten"
       no_description: "Es gibt keine Beschreibung zu dieser Kategorie."
       change_in_category_topic: "Besuche die Themen dieser Kategorie, um einen Eindruck für eine gute Beschreibung zu gewinnen."
+      hotness: "Popularität"
 
     flagging:
       title: 'Aus welchem Grund meldest Du diesen Beitrag?'
@@ -619,13 +650,17 @@ de:
     top_contributors: "Teilnehmer"
     category_title: "Kategorie"
     history: "Verlauf"
+    changed_by: "durch {{author}}"
 
     categories_list: "Liste der Kategorien"
 
     filters:
       latest:
-        title: "Populär"
-        help: "Die populärsten unter den jüngsten Themen"
+        title: "Zuletzt"
+        help: "Die zuletzt geposteten Themen"
+      hot:
+        title: "Heiß"
+        help: "Auswahl der heißesten Themen"
       favorited:
         title: "Favorisiert"
         help: "Themen, die Du als Favoriten markiert hast"
@@ -647,7 +682,7 @@ de:
           zero: "Neu"
           one: "Neu (1)"
           other: "Neu ({{count}})"
-        help: "Neue Themen seit deinem letzten Besuch und verfolgte Themen mit neuen Beiträgen"
+        help: "Neue Themen seit Deinem letzten Besuch"
       posted:
         title: "Deine Beiträge"
         help: "Themen, zu denen Du beigetragen hast"
@@ -656,7 +691,7 @@ de:
           zero: "{{categoryName}}"
           one: "{{categoryName}} (1)"
           other: "{{categoryName}} ({{count}})"
-        help: "Populäre Themen in der Kategorie {{categoryName}}"
+        help: "Zuletzt gepostete Themen in der Kategorie {{categoryName}}"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
@@ -668,19 +703,32 @@ de:
       dashboard:
         title: "Administratorkonsole"
         version: "Installierte Version"
-        up_to_date: "Du verwendest die neueste Version von Discourse."
+        up_to_date: "Discourse ist aktuell."
         critical_available: "Ein kritisches Update ist verfügbar."
         updates_available: "Updates sind verfügbar."
         please_upgrade: "Bitte updaten!"
-        latest_version: "Neueste Version"
+        installed_version: "Installiert"
+        latest_version: "Jüngste"
         update_often: 'Bitte häufig updaten!'
+        problems_found: "Es gibt Probleme mit Deiner Discourse-Installation:"
+        moderators: 'Moderatoren:'
+        admins: 'Administratoren:'
 
         reports:
           today: "Heute"
           yesterday: "Gestern"
-          last_7_days: "In den letzten 7 Tagen"
-          last_30_days: "In den letzten 30 Tagen"
+          last_7_days: "Die letzten 7 Tage"
+          last_30_days: "Die letzten 30 Tage"
           all_time: "Bis heute"
+          7_days_ago: "Vor 7 Tagen"
+          30_days_ago: "Vor 30 Tagen"
+          all: "Alle"
+          view_table: "Als Tabelle anzeigen"
+          view_chart: "Als Balkendiagramm anzeigen"
+
+      commits:
+        latest_changes: "Letzte Änderungen."
+        by: "durch"
 
       flags:
         title: "Meldungen"
@@ -691,7 +739,10 @@ de:
         delete: "Beitrag löschen"
         delete_title: "Beitrag löschen (löscht Thema, wenn es der erste Beitrag ist)"
         flagged_by: "Gemeldet von"
+        error: "Etwas ist schief gelaufen"
 
+      api:
+        title: "API"
       customize:
         title: "Personalisieren"
         header: "Header"
@@ -701,6 +752,8 @@ de:
         preview: "Vorschau"
         undo_preview: "Vorschau rückgängig machen"
         save: "Speichern"
+        new: "Neu"
+        new_style: "Neuer Style"
         delete: "Löschen"
         delete_confirm: "Diese Anpassung löschen?"
 
@@ -757,7 +810,7 @@ de:
         activity: Aktivität
         like_count: Erhaltene Likes
         private_topics_count: Zahl privater Themen
-        posts_read_count: Gelesen Beiträge
+        posts_read_count: Gelesene Beiträge
         post_count: Erstelle Beiträge
         topics_entered: Beigesteuerte Themen
         flags_given_count: Gemachte Meldungen
