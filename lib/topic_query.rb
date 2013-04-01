@@ -28,6 +28,16 @@ class TopicQuery
     end
 
     def order_hotness
+
+      # When anonymous, don't use topic_user
+      if @user.blank?
+        return "CASE
+                  WHEN topics.pinned_at IS NOT NULL THEN 100
+                  ELSE hot_topics.score + (COALESCE(categories.hotness, 5.0) / 11.0)
+                END DESC"
+      end
+
+      # When logged in take into accounts what pins you've closed
       "CASE
         WHEN (COALESCE(topics.pinned_at, '#{lowest_date}') > COALESCE(tu.cleared_pinned_at, '#{lowest_date}'))
           THEN 100
