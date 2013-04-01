@@ -25,15 +25,10 @@ Discourse.Utilities = {
   },
 
   categoryUrlId: function(category) {
-    var id, slug;
-    if (!category) {
-      return "";
-    }
-    id = Em.get(category, 'id');
-    slug = Em.get(category, 'slug');
-    if ((!slug) || slug.isBlank()) {
-      return "" + id + "-category";
-    }
+    if (!category) return "";
+    var id = Em.get(category, 'id');
+    var slug = Em.get(category, 'slug');
+    if ((!slug) || slug.isBlank()) return "" + id + "-category";
     return slug;
   },
 

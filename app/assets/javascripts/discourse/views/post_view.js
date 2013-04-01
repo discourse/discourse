@@ -155,7 +155,7 @@ Discourse.PostView = Discourse.View.extend({
       if ($aside.data('topic')) {
         topic_id = $aside.data('topic');
       }
-      $.getJSON(Discourse.getURL("/posts/by_number/") + topic_id + "/" + ($aside.data('post')), function(result) {
+      Discourse.ajax(Discourse.getURL("/posts/by_number/") + topic_id + "/" + ($aside.data('post'))).then(function (result) {
         var parsed = $(result.cooked);
         parsed.replaceText(originalText, "<span class='highlighted'>" + originalText + "</span>");
         $blockQuote.showHtml(parsed);

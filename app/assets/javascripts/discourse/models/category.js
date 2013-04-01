@@ -38,7 +38,7 @@ Discourse.Category = Discourse.Model.extend({
   },
 
   destroy: function(callback) {
-    return $.ajax(Discourse.getURL("/categories/") + (this.get('slug')), { type: 'DELETE' });
+    return Discourse.ajax(Discourse.getURL("/categories/") + (this.get('slug')), { type: 'DELETE' });
   }
 
 });

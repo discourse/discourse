@@ -28,7 +28,7 @@ Discourse.GithubCommit.reopenClass({
   findAll: function() {
     var result;
     result = Em.A();
-    $.ajax( "https://api.github.com/repos/discourse/discourse/commits?callback=callback", {
+    Discourse.ajax( "https://api.github.com/repos/discourse/discourse/commits?callback=callback", {
       dataType: 'jsonp',
       type: 'get',
       data: { per_page: 25 },

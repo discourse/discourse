@@ -55,7 +55,7 @@ Discourse.SiteCustomization = Discourse.Model.extend({
       header: this.header,
       override_default_style: this.override_default_style
     };
-    return $.ajax({
+    return Discourse.ajax({
       url: Discourse.getURL("/admin/site_customizations") + (this.id ? '/' + this.id : ''),
       data: {
         site_customization: data
@@ -67,7 +67,7 @@ Discourse.SiteCustomization = Discourse.Model.extend({
   destroy: function() {
     if (!this.id) return;
 
-    return $.ajax({
+    return Discourse.ajax({
       url: Discourse.getURL("/admin/site_customizations/") + this.id,
       type: 'DELETE'
     });
@@ -93,7 +93,7 @@ Discourse.SiteCustomization.reopenClass({
       content: [],
       loading: true
     });
-    $.ajax({
+    Discourse.ajax({
       url: Discourse.getURL("/admin/site_customizations"),
       dataType: "json",
       success: function(data) {

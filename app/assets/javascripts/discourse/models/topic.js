@@ -20,13 +20,12 @@ Discourse.Topic = Discourse.Model.extend({
   }).property('archetype'),
 
   convertArchetype: function(archetype) {
-    var a;
-    a = this.get('archetype');
+    var a = this.get('archetype');
     if (a !== 'regular' && a !== 'private_message') {
       this.set('archetype', 'regular');
-      return $.post(this.get('url'), {
-        _method: 'put',
-        archetype: 'regular'
+      return Discourse.ajax(this.get('url'), {
+        type: 'PUT',
+        data: {archetype: 'regular'}
       });
     }
   },
@@ -47,8 +46,7 @@ Discourse.Topic = Discourse.Model.extend({
 
   // Helper to build a Url with a post number
   urlForPostNumber: function(postNumber) {
-    var url;
-    url = this.get('url');
+    var url = this.get('url');
     if (postNumber && (postNumber > 1)) {
       url += "/" + postNumber;
     }
@@ -129,10 +127,9 @@ Discourse.Topic = Discourse.Model.extend({
 
   toggleStatus: function(property) {
     this.toggleProperty(property);
-    return $.post("" + (this.get('url')) + "/status", {
-      _method: 'put',
-      status: property,
-      enabled: this.get(property) ? 'true' : 'false'
+    return Discourse.ajax(this.get('url') + "/status", {
+      type: 'PUT',
+      data: {status: property, enabled: this.get(property) ? 'true' : 'false' }
     });
   },
 
@@ -147,7 +144,7 @@ Discourse.Topic = Discourse.Model.extend({
   toggleStar: function() {
     var topic = this;
     topic.toggleProperty('starred');
-    return $.ajax({
+    return Discourse.ajax({
       url: "" + (this.get('url')) + "/star",
       type: 'PUT',
       data: { starred: topic.get('starred') ? true : false },
@@ -163,16 +160,16 @@ Discourse.Topic = Discourse.Model.extend({
   save: function() {
     // Don't save unless we can
     if (!this.get('can_edit')) return;
-    return $.post(this.get('url'), {
-      _method: 'put',
-      title: this.get('title'),
-      category: this.get('category.name')
+
+    return Discourse.ajax(this.get('url'), {
+      type: 'PUT',
+      data: { title: this.get('title'), category: this.get('category.name') }
     });
   },
 
   // Reset our read data for this topic
   resetRead: function(callback) {
-    return $.ajax(Discourse.getURL("/t/") + (this.get('id')) + "/timings", {
+    return Discourse.ajax(Discourse.getURL("/t/") + (this.get('id')) + "/timings", {
       type: 'DELETE',
       success: function() {
         return typeof callback === "function" ? callback() : void 0;
@@ -182,7 +179,7 @@ Discourse.Topic = Discourse.Model.extend({
 
   // Invite a user to this topic
   inviteUser: function(user) {
-    return $.ajax({
+    return Discourse.ajax({
       type: 'POST',
       url: Discourse.getURL("/t/") + (this.get('id')) + "/invite",
       data: {
@@ -193,7 +190,7 @@ Discourse.Topic = Discourse.Model.extend({
 
   // Delete this topic
   destroy: function() {
-    return $.ajax(Discourse.getURL("/t/") + (this.get('id')), { type: 'DELETE' });
+    return Discourse.ajax(Discourse.getURL("/t/") + (this.get('id')), { type: 'DELETE' });
   },
 
   // Load the posts for this topic
@@ -306,7 +303,7 @@ Discourse.Topic = Discourse.Model.extend({
   updateNotifications: function(v) {
     this.set('notification_level', v);
     this.set('notifications_reason_id', null);
-    return $.ajax({
+    return Discourse.ajax({
       url: Discourse.getURL("/t/") + (this.get('id')) + "/notifications",
       type: 'POST',
       data: {
@@ -342,7 +339,7 @@ Discourse.Topic = Discourse.Model.extend({
     // Clear the pin optimistically from the object
     topic.set('pinned', false);
 
-    $.ajax(Discourse.getURL("/t/") + this.get('id') + "/clear-pin", {
+    Discourse.ajax(Discourse.getURL("/t/") + this.get('id') + "/clear-pin", {
       type: 'PUT',
       error: function() {
         // On error, put the pin back
@@ -382,7 +379,7 @@ Discourse.Topic.reopenClass({
     @returns A promise that will resolve to the topics
   **/
   findSimilarTo: function(title, body) {
-    return $.ajax({url: Discourse.getURL("/topics/similar_to"), data: {title: title, raw: body} }).then(function (results) {
+    return Discourse.ajax({url: Discourse.getURL("/topics/similar_to"), data: {title: title, raw: body} }).then(function (results) {
       return results.map(function(topic) { return Discourse.Topic.create(topic) });
     });
   },
@@ -424,7 +421,7 @@ Discourse.Topic.reopenClass({
 
     // Check the preload store. If not, load it via JSON
     return PreloadStore.getAndRemove("topic_" + topicId, function() {
-      return $.getJSON(url + ".json", data);
+      return Discourse.ajax(url + ".json", {data: data});
     }).then(function(result) {
       var first = result.posts.first();
       if (first && opts && opts.bestOf) {
@@ -436,7 +433,7 @@ Discourse.Topic.reopenClass({
 
   // Create a topic from posts
   movePosts: function(topicId, title, postIds) {
-    return $.ajax(Discourse.getURL(Discourse.getURL("/t/")) + topicId + "/move-posts", {
+    return Discourse.ajax(Discourse.getURL(Discourse.getURL("/t/")) + topicId + "/move-posts", {
       type: 'POST',
       data: { title: title, post_ids: postIds }
     });

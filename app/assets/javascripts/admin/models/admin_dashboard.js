@@ -20,7 +20,7 @@ Discourse.AdminDashboard.reopenClass({
   **/
   find: function() {
     var model = Discourse.AdminDashboard.create();
-    return $.ajax(Discourse.getURL("/admin/dashboard"), {
+    return Discourse.ajax(Discourse.getURL("/admin/dashboard"), {
       type: 'GET',
       dataType: 'json',
       success: function(json) {
@@ -39,7 +39,7 @@ Discourse.AdminDashboard.reopenClass({
   **/
   fetchProblems: function() {
     var model = Discourse.AdminDashboard.create();
-    return $.ajax(Discourse.getURL("/admin/dashboard/problems"), {
+    return Discourse.ajax(Discourse.getURL("/admin/dashboard/problems"), {
       type: 'GET',
       dataType: 'json',
       success: function(json) {

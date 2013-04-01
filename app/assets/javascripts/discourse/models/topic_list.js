@@ -14,7 +14,7 @@ Discourse.TopicList = Discourse.Model.extend({
 
     if (moreUrl = this.get('more_topics_url')) {
       Discourse.URL.replaceState(Discourse.getURL("/") + (this.get('filter')) + "/more");
-      return $.ajax({url: moreUrl}).then(function (result) {
+      return Discourse.ajax({url: moreUrl}).then(function (result) {
         var newTopics, topicIds, topics, topicsAdded = 0;
         if (result) {
           // the new topics loaded from the server
@@ -106,7 +106,9 @@ Discourse.TopicList.reopenClass({
     Discourse.set('transient.topicsList', null);
     Discourse.set('transient.topicListScrollPos', null);
 
-    return PreloadStore.getAndRemove("topic_list", function() { return $.getJSON(url) }).then(function(result) {
+    return PreloadStore.getAndRemove("topic_list", function() {
+      return Discourse.ajax(url);
+    }).then(function(result) {
       topic_list.set('topics', Discourse.TopicList.topicsFrom(result));
       topic_list.set('can_create_topic', result.topic_list.can_create_topic);
       topic_list.set('more_topics_url', result.topic_list.more_topics_url);

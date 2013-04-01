@@ -68,7 +68,7 @@ Discourse.Post = Discourse.Model.extend({
 
   bookmarkedChanged: (function() {
     var _this = this;
-    return $.ajax({
+    return Discourse.ajax({
       url: Discourse.getURL("/posts/") + (this.get('id')) + "/bookmark",
       type: 'PUT',
       data: {
@@ -127,7 +127,7 @@ Discourse.Post = Discourse.Model.extend({
     var data, metaData;
     if (!this.get('newPost')) {
       // We're updating a post
-      return $.ajax({
+      return Discourse.ajax({
         url: Discourse.getURL("/posts/") + (this.get('id')),
         type: 'PUT',
         data: {
@@ -157,7 +157,7 @@ Discourse.Post = Discourse.Model.extend({
         data.meta_data = {};
         Ember.keys(metaData).forEach(function(key) { data.meta_data[key] = metaData.get(key); });
       }
-      return $.ajax({
+      return Discourse.ajax({
         type: 'POST',
         url: Discourse.getURL("/posts"),
         data: data,
@@ -172,11 +172,11 @@ Discourse.Post = Discourse.Model.extend({
   },
 
   recover: function() {
-    return $.ajax(Discourse.getURL("/posts/") + (this.get('id')) + "/recover", { type: 'PUT', cache: false });
+    return Discourse.ajax(Discourse.getURL("/posts/") + (this.get('id')) + "/recover", { type: 'PUT', cache: false });
   },
 
   destroy: function(complete) {
-    return $.ajax(Discourse.getURL("/posts/") + (this.get('id')), { type: 'DELETE' });
+    return Discourse.ajax(Discourse.getURL("/posts/") + (this.get('id')), { type: 'DELETE' });
   },
 
   // Update the properties of this post from an obj, ignoring cooked as we should already
@@ -216,7 +216,7 @@ Discourse.Post = Discourse.Model.extend({
     this.set('replies', []);
 
     var parent = this;
-    return $.ajax({url: Discourse.getURL("/posts/") + (this.get('id')) + "/replies"}).then(function(loaded) {
+    return Discourse.ajax({url: Discourse.getURL("/posts/") + (this.get('id')) + "/replies"}).then(function(loaded) {
       var replies = parent.get('replies');
       loaded.each(function(reply) {
         var post = Discourse.Post.create(reply);
@@ -227,10 +227,8 @@ Discourse.Post = Discourse.Model.extend({
     });
   },
 
-  loadVersions: function(callback) {
-    return $.get(Discourse.getURL("/posts/") + (this.get('id')) + "/versions.json", function(result) {
-      return callback(result);
-    });
+  loadVersions: function() {
+    return Discourse.ajax(Discourse.getURL("/posts/") + (this.get('id')) + "/versions.json");
   },
 
   // Whether to show replies directly below
@@ -284,7 +282,7 @@ Discourse.Post.reopenClass({
   },
 
   deleteMany: function(posts) {
-    return $.ajax(Discourse.getURL("/posts/destroy_many"), {
+    return Discourse.ajax(Discourse.getURL("/posts/destroy_many"), {
       type: 'DELETE',
       data: {
         post_ids: posts.map(function(p) { return p.get('id'); })
@@ -293,26 +291,26 @@ Discourse.Post.reopenClass({
   },
 
   loadVersion: function(postId, version, callback) {
-    return $.ajax({url: Discourse.getURL("/posts/") + postId + ".json?version=" + version}).then(function(result) {
+    return Discourse.ajax({url: Discourse.getURL("/posts/") + postId + ".json?version=" + version}).then(function(result) {
       return Discourse.Post.create(result);
     });
   },
 
   loadByPostNumber: function(topicId, postId) {
-    return $.ajax({url: Discourse.getURL("/posts/by_number/") + topicId + "/" + postId + ".json"}).then(function (result) {
+    return Discourse.ajax({url: Discourse.getURL("/posts/by_number/") + topicId + "/" + postId + ".json"}).then(function (result) {
       return Discourse.Post.create(result);
     });
   },
 
   loadQuote: function(postId) {
-    return $.ajax({url: Discourse.getURL("/posts/") + postId + ".json"}).then(function(result) {
+    return Discourse.ajax({url: Discourse.getURL("/posts/") + postId + ".json"}).then(function(result) {
       var post = Discourse.Post.create(result);
       return Discourse.BBCode.buildQuoteBBCode(post, post.get('raw'));
     });
   },
 
   load: function(postId) {
-    return $.ajax({url: Discourse.getURL("/posts/") + postId + ".json"}).then(function (result) {
+    return Discourse.ajax({url: Discourse.getURL("/posts/") + postId + ".json"}).then(function (result) {
       return Discourse.Post.create(result);
     });
   }

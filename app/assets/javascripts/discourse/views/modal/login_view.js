@@ -43,61 +43,66 @@ Discourse.LoginView = Discourse.ModalBodyView.extend({
   }).property('loginName', 'loginPassword', 'loggingIn'),
 
   login: function() {
-    var _this = this;
     this.set('loggingIn', true);
-    $.post(Discourse.getURL("/session"), {
-      login: this.get('loginName'),
-      password: this.get('loginPassword')
-    }).success(function(result) {
+
+    var loginView = this;
+    Discourse.ajax(Discourse.getURL("/session"), {
+      data: { login: this.get('loginName'), password: this.get('loginPassword') },
+      type: 'POST'
+    }).then(function (result) {
+
+      // Successful login
       if (result.error) {
-        _this.set('loggingIn', false);
+        loginView.set('loggingIn', false);
         if( result.reason === 'not_activated' ) {
-          return _this.showView(Discourse.NotActivatedView.create({username: _this.get('loginName'), sentTo: result.sent_to_email, currentEmail: result.current_email}));
+          return loginView.showView(Discourse.NotActivatedView.create({
+            username: loginView.get('loginName'),
+            sentTo: result.sent_to_email,
+            currentEmail: result.current_email
+          }));
         }
-        _this.flash(result.error, 'error');
+        loginView.flash(result.error, 'error');
       } else {
         // Trigger the browser's password manager using the hidden static login form:
         var $hidden_login_form = $('#hidden-login-form');
-        $hidden_login_form.find('input[name=username]').val(_this.get('loginName'));
-        $hidden_login_form.find('input[name=password]').val(_this.get('loginPassword'));
+        $hidden_login_form.find('input[name=username]').val(loginView.get('loginName'));
+        $hidden_login_form.find('input[name=password]').val(loginView.get('loginPassword'));
         $hidden_login_form.find('input[name=redirect]').val(window.location.href);
         $hidden_login_form.find('input[name=authenticity_token]').val($('meta[name=csrf-token]').attr('content'));
         $hidden_login_form.submit();
       }
-    }).fail(function(result) {
-      _this.flash(Em.String.i18n('login.error'), 'error');
-      return _this.set('loggingIn', false);
-    });
+
+    }, function(result) {
+      // Failed to login
+      loginView.flash(Em.String.i18n('login.error'), 'error');
+      loginView.set('loggingIn', false);
+    })
+
     return false;
   },
 
   authMessage: (function() {
-    if (this.blank('authenticate')) {
-      return "";
-    }
+    if (this.blank('authenticate')) return "";
     return Em.String.i18n("login." + (this.get('authenticate')) + ".message");
   }).property('authenticate'),
 
   twitterLogin: function() {
-    var left, top;
     this.set('authenticate', 'twitter');
-    left = this.get('lastX') - 400;
-    top = this.get('lastY') - 200;
+    var left = this.get('lastX') - 400;
+    var top = this.get('lastY') - 200;
     return window.open(Discourse.getURL("/auth/twitter"), "_blank", "menubar=no,status=no,height=400,width=800,left=" + left + ",top=" + top);
   },
 
   facebookLogin: function() {
-    var left, top;
     this.set('authenticate', 'facebook');
-    left = this.get('lastX') - 400;
-    top = this.get('lastY') - 200;
+    var left = this.get('lastX') - 400;
+    var top = this.get('lastY') - 200;
     return window.open(Discourse.getURL("/auth/facebook"), "_blank", "menubar=no,status=no,height=400,width=800,left=" + left + ",top=" + top);
   },
 
   openidLogin: function(provider) {
-    var left, top;
-    left = this.get('lastX') - 400;
-    top = this.get('lastY') - 200;
+    var left = this.get('lastX') - 400;
+    var top = this.get('lastY') - 200;
     if (provider === "yahoo") {
       this.set("authenticate", 'yahoo');
       return window.open(Discourse.getURL("/auth/yahoo"), "_blank", "menubar=no,status=no,height=400,width=800,left=" + left + ",top=" + top);
@@ -108,15 +113,14 @@ Discourse.LoginView = Discourse.ModalBodyView.extend({
   },
 
   githubLogin: function() {
-    var left, top;
     this.set('authenticate', 'github');
-    left = this.get('lastX') - 400;
-    top = this.get('lastY') - 200;
+    var left = this.get('lastX') - 400;
+    var top = this.get('lastY') - 200;
     return window.open(Discourse.getURL("/auth/github"), "_blank", "menubar=no,status=no,height=400,width=800,left=" + left + ",top=" + top);
   },
 
   personaLogin: function() {
-      navigator.id.request();
+    navigator.id.request();
   },
 
   authenticationComplete: function(options) {
@@ -154,11 +158,11 @@ Discourse.LoginView = Discourse.ModalBodyView.extend({
     this.set('loginName', $('#hidden-login-form input[name=username]').val());
     this.set('loginPassword', $('#hidden-login-form input[name=password]').val());
 
-    var _this = this;
-    return Em.run.next(function() {
-      return $('#login-account-password').keydown(function(e) {
+    var loginView = this;
+    Em.run.next(function() {
+      $('#login-account-password').keydown(function(e) {
         if (e.keyCode === 13) {
-          return _this.login();
+          loginView.login();
         }
       });
     });

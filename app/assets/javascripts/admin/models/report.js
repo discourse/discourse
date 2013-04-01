@@ -69,7 +69,7 @@ Discourse.Report = Discourse.Model.extend({
 Discourse.Report.reopenClass({
   find: function(type) {
     var model = Discourse.Report.create({type: type});
-    $.ajax(Discourse.getURL("/admin/reports/") + type, {
+    Discourse.ajax(Discourse.getURL("/admin/reports/") + type, {
       type: 'GET',
       success: function(json) {
 
