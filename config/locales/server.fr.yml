@@ -563,27 +563,27 @@ fr:
       [1]: %{invite_link}
 
   test_mailer:
-    subject_template: "[%{site_name}] Test de livrabilité d'email"
+    subject_template: "[%{site_name}] Test de délivrabilité d'email"
     text_body_template: |
-      Ceci est un mail de test envoyé pour le forum %{site_name}. Vous pouvez accéder à ce forum avec votre navigateur à l'adresse suivante :
+      Ceci est un mail de test envoyé depuis le forum %{site_name} disponible à l'adresse suivante :
 
-      [*%{base_url}*][0]
+      [**%{base_url}**][0]
 
-      La livrabilité d'email peut être complexe, mais voici quelques aspects que vous pouvez vérifier immédiatement :
+      La délivrabilité d'email est complexe. Voici les points importants que vous devez vérifier immédiatement :
 
       - Soyez sûr de savoir comment voir la *source brute de l'email* dans votre client mail, afin que vous puissiez examiner l'entête de l'email contenant des indices importants.
 
-      - **IMPORTANT** : Votre FAI a-t-elle effectué un enregistrement reverse DNS pour associer le nom de domaine depuis lequel vous envoyez les mails avec les IPs que vous utilisez pour emailer ? Vous pouvez [tester votre enregistrement Reverse PTR][2] ici. Si l'enregistrement du reverse DNS pointer approprié n'est pas effectué par votre FAI, il est peu probable que vos mails soient délivrés.
+      - **IMPORTANT** : Votre FAI a-t-elle effectué un enregistrement reverse DNS pour associer le nom de domaine depuis lequel vous envoyez les mails avec les IPs que vous utilisez pour emailer ? [Testez votre enregistrement Reverse PTR][2] ici. Si l'enregistrement du reverse DNS pointer approprié n'est pas effectué par votre FAI, il est peu probable que vos mails soient délivrés.
 
-      - L'enregistrement SPF de votre domaine est-il correct ? Vous pouvez [tester votre enregistrement SPF][1] ici.
+      - L'enregistrement SPF de votre domaine est-il correct ? [Testez votre enregistrement SPF][1] ici.
 
-      - Avez-vous configuré [DKIM email key signing][3] dans votre client mail, et ajouté la clé publique DKIM dans vos enregistrements DNS ?
+      - Assurez-vous que les IPs du serveur d'où proviennent les mails [ne sont sur aucune liste noire d'emails][4].
 
-      - Avez-vous vérifié que les IPs du serveur d'où proviennent les mails [ne sont sur aucune liste noire d'emails][4] ?
+      - Vérifiez que votre serveur de messagerie envoi *vraiment* un nom d'hôte pleinement qualifié présent dans le message HELO lors d'une résolution DNS. Si ce n'est pas le cas, cela augmentera les chances que votre adresse email soit rejetée par de nombreux services de messagerie.
 
-      - Avez-vous vérifié que votre serveur de messagerie envoi *vraiment* un nom d'hôte pleinement qualifié présent dans le message HELO lors d'une résolution DNS ? Si ce n'est pas le cas, cela augmentera les chances que votre adresse email soit rejetée par de nombreux services de messagerie.
+      - Configurez la [signature de clé DKIM][3] dans votre client mail, et ajoutez la clé publique DKIM dans vos enregistrements DNS. Ce n'est pas obligatoire, mais augmentera grandement votre délivrabilité.
 
-      Nous esperons que vous avez correctement reçu ce mail de test de livrabilité !
+      Nous esperons que vous avez correctement reçu ce mail de test de délivrabilité !
 
       Bonne chance,
 
