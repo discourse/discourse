@@ -281,7 +281,6 @@ Discourse.ComposerView = Discourse.View.extend({
     });
 
     var addImages = function (e, data) {
-      console.log('addImages');
       // can only upload one image at a time
       if (data.files.length > 1) {
         bootbox.alert(Em.String.i18n('post.errors.upload_too_many_images'));
@@ -336,8 +335,7 @@ Discourse.ComposerView = Discourse.View.extend({
     // I hate to use Em.run.later, but I don't think there's a way of waiting for a CSS transition
     // to finish.
     return Em.run.later(jQuery, (function() {
-      var replyTitle;
-      replyTitle = $('#reply-title');
+      var replyTitle = $('#reply-title');
       _this.resize();
       if (replyTitle.length) {
         return replyTitle.putCursorAtEnd();
