@@ -21,6 +21,8 @@
   </head>
 
   <body>
+    <!--[if IE 9]><script type="text/javascript">ie = "new";</script><![endif]-->
+
     <% unless current_user %>
       <form id='hidden-login-form' method="post" action="<%=login_path%>" style="display: none;">
         <input name="username" type="text"     id="signin_username">
@@ -56,7 +58,7 @@
     <%- if @preloaded.present? %>
       <script>
       <%- @preloaded.each do |key, json| %>
-        PreloadStore.store("<%= key %>", <%= raw json %>)
+        PreloadStore.store("<%= key %>",<%= raw json %>);
       <% end %>
       </script>
     <%- end %>

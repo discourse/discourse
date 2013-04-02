@@ -43,6 +43,10 @@ Discourse.PostView = Discourse.View.extend({
     this.set('context', this.get('content'));
   },
 
+  mouseDown: function(e) {
+    this.set('isMouseDown', true);
+  },
+
   mouseUp: function(e) {
     if (this.get('controller.multiSelect') && (e.metaKey || e.ctrlKey)) {
       this.toggleProperty('post.selected');
@@ -56,6 +60,8 @@ Discourse.PostView = Discourse.View.extend({
       e.context = this.get('post');
       qbc.selectText(e);
     }
+
+    this.set('isMouseDown', false);
   },
 
   selectText: (function() {
@@ -260,6 +266,8 @@ Discourse.PostView = Discourse.View.extend({
     $(document).on('selectionchange', function(e) {
       // quoting as been disabled by the user
       if (!Discourse.get('currentUser.enable_quoting')) return;
+      // there is no need to handle this event when the mouse is down
+      if (postView.get('isMouseDown')) return;
       // find out whether we currently are selecting inside a post
       var closestPosts = $(window.getSelection().anchorNode).closest('.topic-post');
       if (closestPosts.length === 0) return;
