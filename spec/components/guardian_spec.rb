@@ -645,7 +645,27 @@ describe Guardian do
 
   end
 
+  context 'can_search?' do
+    context 'when site requires login' do
+      before { SiteSetting.stubs(:site_requires_login?).returns(true) }
 
+      it 'is false when not logged in' do
+        Guardian.new(nil).can_search?.should be_false
+      end
+
+      it 'is true when logged in' do
+        Guardian.new(user).can_search?.should be_true
+      end
+    end
+
+    context 'when site does not require login' do
+      before { SiteSetting.stubs(:site_requires_login?).returns(false) }
+
+      it 'is true' do
+        Guardian.new(nil).can_search?.should be_true
+      end
+    end
+  end
 
   context 'can_delete?' do
 

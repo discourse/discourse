@@ -197,6 +197,10 @@ class Guardian
     true
   end
 
+  def can_search?
+    !(@user.blank? && SiteSetting.site_requires_login?)
+  end
+
   # Support for ensure_{blah}! methods.
   def method_missing(method, *args, &block)
     if method.to_s =~ /^ensure_(.*)\!$/

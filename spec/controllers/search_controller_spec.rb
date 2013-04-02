@@ -12,8 +12,8 @@ describe SearchController do
     xhr :get, :query, term: 'test', type_filter: 'topic'
   end
 
-  it 'is empty without querying when the user is not logged in and site_requires_login is set' do
-    SiteSetting.stubs(:site_requires_login?).returns(true)
+  it 'is empty without querying when the guardian does not allow search' do
+    Guardian.any_instance.stubs(:can_search?).returns(false)
     Search.expects(:query).never
     xhr :get, :query, term: 'foo bar'
     ActiveSupport::JSON.decode(response.body).should == []
