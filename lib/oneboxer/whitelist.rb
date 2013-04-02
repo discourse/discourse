@@ -72,6 +72,7 @@ module Oneboxer
        Entry.new(/^https?:\/\/(?:www\.)?cracked\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?deadline\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?thinkgeek\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?theonion\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?tumblr\.com\/.+/, false),
        Entry.new(/\/\d{4}\/\d{2}\/\d{2}\//, false),   # wordpress
       ]
