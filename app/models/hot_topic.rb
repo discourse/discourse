@@ -11,11 +11,11 @@ class HotTopic < ActiveRecord::Base
       exec_sql "DELETE FROM hot_topics"
 
       # TODO, move these to site settings once we're sure this is how we want to figure out hot
-      max_hot_topics = 200        # how many hot topics we want
-      hot_percentile = 0.2        # What percentile of topics we consider good
-      older_percentage = 0.2      # how many old topics we want as a percentage
-      new_days = 21               # how many days old we consider old
-
+      max_hot_topics = 200          # how many hot topics we want
+      hot_percentile = 0.2          # What percentile of topics we consider good
+      older_percentage = 0.2        # how many old topics we want as a percentage
+      new_days = 21                 # how many days old we consider old
+      no_old_in_first_x_rows = 8    # don't show old results in the first x rows
 
       # Include all sticky uncategorized on Hot
       exec_sql("INSERT INTO hot_topics (topic_id, score)
@@ -28,31 +28,43 @@ class HotTopic < ActiveRecord::Base
                   AND t.category_id IS NULL")
 
       # Include high percentile recent topics
-      exec_sql("INSERT INTO hot_topics (topic_id, category_id, score)
-                SELECT t.id,
-                       t.category_id,
-                       ((1.0 - (EXTRACT(EPOCH FROM CURRENT_TIMESTAMP-t.created_at)/86400) / :days_ago) * 0.95) + (RANDOM() * 0.05)
-                FROM topics AS t
-                WHERE t.deleted_at IS NULL
-                  AND t.visible
-                  AND (NOT t.closed)
-                  AND (NOT t.archived)
-                  AND t.pinned_at IS NULL
-                  AND t.archetype <> :private_message
-                  AND created_at >= (CURRENT_TIMESTAMP - INTERVAL ':days_ago' DAY)
-                  AND t.percent_rank < :hot_percentile
-                  AND NOT EXISTS(SELECT * FROM hot_topics AS ht2 WHERE ht2.topic_id = t.id)
-                LIMIT :limit",
-                hot_percentile: hot_percentile,
-                limit: ((1.0 - older_percentage) * max_hot_topics).round,
-                private_message: Archetype::private_message,
-                days_ago: new_days)
+      inserted_count = exec_sql("INSERT INTO hot_topics (topic_id, category_id, score)
+                                  SELECT t.id,
+                                         t.category_id,
+                                         ((1.0 - (EXTRACT(EPOCH FROM CURRENT_TIMESTAMP-t.created_at)/86400) / :days_ago) * 0.95) +
+                                            (RANDOM() * 0.05)
+                                  FROM topics AS t
+                                  WHERE t.deleted_at IS NULL
+                                    AND t.visible
+                                    AND (NOT t.closed)
+                                    AND (NOT t.archived)
+                                    AND t.pinned_at IS NULL
+                                    AND t.archetype <> :private_message
+                                    AND created_at >= (CURRENT_TIMESTAMP - INTERVAL ':days_ago' DAY)
+                                    AND t.percent_rank < :hot_percentile
+                                    AND NOT EXISTS(SELECT * FROM hot_topics AS ht2 WHERE ht2.topic_id = t.id)
+                                  LIMIT :limit",
+                                  hot_percentile: hot_percentile,
+                                  limit: ((1.0 - older_percentage) * max_hot_topics).round,
+                                  private_message: Archetype::private_message,
+                                  days_ago: new_days)
+
+      max_old_score = 1.0
+
+      # Finding the highest score in the first x rows
+      if HotTopic.count > no_old_in_first_x_rows
+        max_old_score = HotTopic.order('score desc').limit(no_old_in_first_x_rows).last.score
+      end
+
+
+
+
 
       # Add a sprinkling of random older topics
       exec_sql("INSERT INTO hot_topics (topic_id, category_id, score)
                 SELECT t.id,
                        t.category_id,
-                       RANDOM()
+                       RANDOM() * :max_old_score
                 FROM topics AS t
                 WHERE t.deleted_at IS NULL
                   AND t.visible
@@ -67,7 +79,8 @@ class HotTopic < ActiveRecord::Base
                 hot_percentile: hot_percentile,
                 limit: (older_percentage * max_hot_topics).round,
                 private_message: Archetype::private_message,
-                days_ago: new_days)
+                days_ago: new_days,
+                max_old_score: max_old_score)
     end
   end
 
