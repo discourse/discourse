@@ -33,7 +33,6 @@
 
     <%=SiteCustomization.custom_header(session[:preview_style])%>
     <section id='main'>
-      <section id='loading-message' style='display:none'><%= t :loading %>...</section>
       <noscript data-path="<%= request.env['PATH_INFO'] %>">
         <header class="d-header">
           <div class="container">
