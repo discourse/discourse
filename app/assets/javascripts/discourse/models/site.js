@@ -49,7 +49,7 @@ Discourse.Site.reopenClass({
         result.postActionByIdLookup = Em.Object.create();
         result.post_action_types = result.post_action_types.map(function(p) {
           var actionType;
-          actionType = Discourse.PostActionType.create(p);
+          actionType = Discourse.Model.create(p);
           result.postActionByIdLookup.set("action" + p.id, actionType);
           return actionType;
         });
