@@ -12,4 +12,11 @@ describe SearchController do
     xhr :get, :query, term: 'test', type_filter: 'topic'
   end
 
+  it 'is empty without querying when the guardian does not allow search' do
+    Guardian.any_instance.stubs(:can_search?).returns(false)
+    Search.expects(:query).never
+    xhr :get, :query, term: 'foo bar'
+    ActiveSupport::JSON.decode(response.body).should == []
+  end
+
 end

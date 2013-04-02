@@ -382,6 +382,8 @@ en:
 
     invite_expiry_days: "How long user invitation keys are valid, in days"
 
+    site_requires_login: "Hide all post content from users who are not logged in"
+
     # TODO: perhaps we need a way of protecting these settings for hosted solution, global settings ...
 
     enable_google_logins: "Enable Google authentication"

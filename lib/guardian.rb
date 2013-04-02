@@ -197,6 +197,10 @@ class Guardian
     true
   end
 
+  def can_search?
+    !(@user.blank? && SiteSetting.site_requires_login?)
+  end
+
   # Support for ensure_{blah}! methods.
   def method_missing(method, *args, &block)
     if method.to_s =~ /^ensure_(.*)\!$/
@@ -315,7 +319,20 @@ class Guardian
       return true if topic.allowed_users.include?(@user)
       return is_admin?
     end
-    true
+
+    can_see_topics?
+  end
+
+  def can_see_topics?
+    !(@user.blank? && SiteSetting.site_requires_login?)
+  end
+
+  def can_see_categories?
+    !(@user.blank? && SiteSetting.site_requires_login?)
+  end
+
+  def can_see_category?(_category)
+    can_see_categories?
   end
 
   def can_vote?(post, opts={})
