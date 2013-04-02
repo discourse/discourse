@@ -64,7 +64,10 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
 
     // move the quote button at the beginning of the selection
     var $quoteButton = $('.quote-button');
-    $quoteButton.css({ top: top - $quoteButton.outerHeight(), left: left });
+    $quoteButton.css({
+      top: top - $quoteButton.outerHeight() - 5,
+      left: left
+    });
 
     // remove the marker
     markerElement.parentNode.removeChild(markerElement);
