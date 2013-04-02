@@ -53,7 +53,7 @@
                <div class='saving-draft'></div>
                {{#if view.loadingImage}}
                 <div id="image-uploading">
-                  {{i18n image_selector.uploading_image}} {{view.uploadProgress}}% <a {{action cancelUpload target="view"}}>{{i18n cancel}}</a>
+                  {{i18n image_selector.uploading_image}} {{view.uploadProgress}}% <a id="cancel-image-upload">{{i18n cancel}}</a>
                 </div>
               {{/if}}
             {{/if}}
