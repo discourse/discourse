@@ -28,7 +28,8 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
     if (!this.get('controllers.topic.content.can_create_post')) return;
 
     // retrieve the selected range
-    var range = window.getSelection().getRangeAt(0).cloneRange();
+    var range = window.getSelection().getRangeAt(0);
+    var cloned = range.cloneRange();
 
     // do not be present the "quote reply" button if you select text spanning two posts
     // this basically look for the first "DIV" container...
@@ -53,6 +54,10 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
     markerElement.appendChild(document.createTextNode("\ufeff"));
     // insert it at the beginning of our range
     range.insertNode(markerElement);
+
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(cloned);
 
     // find marker position (cf. http://www.quirksmode.org/js/findpos.html)
     var obj = markerElement, left = 0, top = 0;
