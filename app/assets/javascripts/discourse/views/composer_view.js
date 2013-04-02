@@ -285,11 +285,13 @@ Discourse.ComposerView = Discourse.View.extend({
       // can only upload one image at a time
       if (data.files.length > 1) {
         bootbox.alert(Em.String.i18n('post.errors.upload_too_many_images'));
+        return false;
       } else if (data.files.length > 0) {
         // check image size
         var fileSizeInKB = data.files[0].size / 1024;
         if (fileSizeInKB > Discourse.SiteSettings.max_upload_size_kb) {
           bootbox.alert(Em.String.i18n('post.errors.upload_too_large', { max_size_kb: Discourse.SiteSettings.max_upload_size_kb }));
+          return false;
         } else {
           // reset upload status
           _this.setProperties({
@@ -299,7 +301,8 @@ Discourse.ComposerView = Discourse.View.extend({
           return true;
         }
       }
-      return false;
+      // we need to return true here, otherwise it prevents the default paste behavior
+      return true;
     };
 
     // paste
