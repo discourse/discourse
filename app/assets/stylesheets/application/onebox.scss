@@ -40,6 +40,9 @@ a.loading-onebox {
   .onebox-result-body {
     padding: 5px;
     font-family: Georgia, Times, "Times New Roman", serif;
+    h3, h4 {
+      margin: 0px !important;
+    }
     img.thumbnail {
       width: 25%;
       height: auto;
