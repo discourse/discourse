@@ -11,7 +11,7 @@ end
 phantom_path = File.expand_path('~/phantomjs/bin/phantomjs')
 phantom_path = nil unless File.exists?(phantom_path)
 
-jasmine_options = {:phantomjs_bin => phantom_path}
+jasmine_options = {:phantomjs_bin => phantom_path, :server_env => :test}
 
 if ENV['JASMINE_URL']
   jasmine_options[:jasmine_url] = ENV['JASMINE_URL']
