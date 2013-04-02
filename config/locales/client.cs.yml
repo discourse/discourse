@@ -572,7 +572,8 @@ cs:
         create: "Bohužel nastala chyba při vytváření příspěvku. Prosím zkuste to znovu."
         edit: "Bohužel nastala chyba při editaci příspěvku. Prosím zkuste to znovu."
         upload: "Bohužel nastala chyba při nahrávání příspěvku. Prosím zkuste to znovu."
-        upload_too_large: "Soubour, který se snažíte nahrát je bohužel příliš velký (maximální velikost je {{max_size_kb}}kb). Prosím zmenšete ho zkuste to znovu."
+        upload_too_large: "Soubor, který se snažíte nahrát je bohužel příliš velký (maximální velikost je {{max_size_kb}}kb). Prosím zmenšete ho zkuste to znovu."
+        upload_too_many_images: "Bohužel, najednou smíte nahrát pouze jeden obrázek."
 
       abandon: "Opravdu chcete opustit váš příspěvek?"
 
@@ -723,6 +724,8 @@ cs:
           few: "{{categoryName}} ({{count}})"
           other: "{{categoryName}} ({{count}})"
         help: "populární témata v kategorii {{categoryName}}"
+
+    browser_update: 'Bohužel, <a href="http://www.discourse.org/faq/#browser">váš prohlížeč je příliš starý, aby na něm Discourse mohl fungovat</a>. Prosím <a href="http://browsehappy.com">aktualizujte svůj prohlížeč</a>.'
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
