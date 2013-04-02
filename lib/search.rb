@@ -19,7 +19,7 @@ module Search
     FROM users AS u
     JOIN users_search s on s.id = u.id
     WHERE s.search_data @@ TO_TSQUERY(:locale, :query)
-    ORDER BY last_posted_at desc
+    ORDER BY CASE WHEN u.username_lower = lower(:orig) then 0 else 1 end,  last_posted_at desc
     LIMIT :limit
     "
   end
@@ -113,12 +113,12 @@ module Search
     if type_filter.present?
       raise Discourse::InvalidAccess.new("invalid type filter") unless Search.facets.include?(type_filter)
       sql = Search.send("#{type_filter}_query_sql")
-      db_result = ActiveRecord::Base.exec_sql(sql , query: terms.join(" & "), locale: current_locale_long, limit: Search.per_facet * Search.facets.size)
+      db_result = ActiveRecord::Base.exec_sql(sql , orig: sanitized_term, query: terms.join(" & "), locale: current_locale_long, limit: Search.per_facet * Search.facets.size)
     else
 
       db_result = []
       [user_query_sql, category_query_sql, topic_query_sql].each do |sql|
-        db_result += ActiveRecord::Base.exec_sql(sql , query: terms.join(" & "), locale: current_locale_long, limit: (Search.per_facet + 1)).to_a
+        db_result += ActiveRecord::Base.exec_sql(sql , orig: sanitized_term, query: terms.join(" & "), locale: current_locale_long, limit: (Search.per_facet + 1)).to_a
       end
     end
 
@@ -136,7 +136,7 @@ module Search
 
     if expected_topics > 0
       tmp = ActiveRecord::Base.exec_sql post_query_sql,
-        query: terms.join(" & "), locale: current_locale_long, limit: expected_topics * 3
+        orig: sanitized_term, query: terms.join(" & "), locale: current_locale_long, limit: expected_topics * 3
 
       topic_ids = Set.new db_result.map{|r| r["id"]}
 

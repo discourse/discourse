@@ -4,8 +4,6 @@ require_dependency 'email_builder'
 class UserNotifications < ActionMailer::Base
   include EmailBuilder
 
-  default from: SiteSetting.notification_email
-
   def signup(user, opts={})
     build_email(user.email, "user_notifications.signup", email_token: opts[:email_token])
   end

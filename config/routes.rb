@@ -56,7 +56,11 @@ Discourse::Application.routes.draw do
     resources :site_customizations
     resources :export
     get 'version_check' => 'versions#show'
-    resources :dashboard, only: [:index]
+    resources :dashboard, only: [:index] do
+      collection do
+        get 'problems'
+      end
+    end
     resources :api, only: [:index] do
       collection do
         post 'generate_key'

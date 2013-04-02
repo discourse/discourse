@@ -6,7 +6,7 @@
       onlogin: function(assertion) {
         if (readyCalled) {
 
-          $.ajax({
+          Discourse.ajax({
             type: 'POST',
             url: Discourse.getURL('/auth/persona/callback'),
             data: { 'assertion': assertion },

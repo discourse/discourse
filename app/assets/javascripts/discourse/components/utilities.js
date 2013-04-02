@@ -25,33 +25,27 @@ Discourse.Utilities = {
   },
 
   categoryUrlId: function(category) {
-    var id, slug;
-    if (!category) {
-      return "";
-    }
-    id = Em.get(category, 'id');
-    slug = Em.get(category, 'slug');
-    if ((!slug) || slug.isBlank()) {
-      return "" + id + "-category";
-    }
+    if (!category) return "";
+    var id = Em.get(category, 'id');
+    var slug = Em.get(category, 'slug');
+    if ((!slug) || slug.isBlank()) return "" + id + "-category";
     return slug;
   },
 
   // Create a badge like category link
   categoryLink: function(category) {
-    var color, textColor, name, description, result;
     if (!category) return "";
 
-    color = Em.get(category, 'color');
-    textColor = Em.get(category, 'text_color');
-    name = Em.get(category, 'name');
-    description = Em.get(category, 'description');
+    var color = Em.get(category, 'color');
+    var textColor = Em.get(category, 'text_color');
+    var name = Em.get(category, 'name');
+    var description = Em.get(category, 'description');
 
     // Build the HTML link
-    result = "<a href=\"" + Discourse.getURL("/category/") + this.categoryUrlId(category) + "\" class=\"badge-category\" ";
+    var result = "<a href=\"" + Discourse.getURL("/category/") + this.categoryUrlId(category) + "\" class=\"badge-category\" ";
 
     // Add description if we have it
-    if (description) result += "title=\"" + description + "\" ";
+    if (description) result += "title=\"" + Handlebars.Utils.escapeExpression(description) + "\" ";
 
     return result + "style=\"background-color: #" + color + "; color: #" + textColor + ";\">" + name + "</a>";
   },

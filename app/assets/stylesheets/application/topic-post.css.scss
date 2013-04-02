@@ -89,6 +89,11 @@
   pre code {
     max-height: 690px;
   }
+  .post-menu-area {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
   @include hover {
     .gutter {
       .reply-new,
@@ -387,6 +392,9 @@
     @include hover {
       background-color: mix($gray, $light_gray, 5%);
     }
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
   }
   .embedded-posts.bottom {
     @include border-radius-bottom(4px);
@@ -526,6 +534,10 @@
     }
     img {
       max-width: 100%;
+      border-radius: 4px;
+      webkit-border-radius: 4px;
+      ms-border-radius: 4px;
+      moz-border-radius: 4px;
     }
     .topic-body {
       position: relative;

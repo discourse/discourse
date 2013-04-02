@@ -165,13 +165,13 @@ Discourse.TopicController = Discourse.ObjectController.extend({
 
     if (postFilters.bestOf) {
       this.set('filterDesc', Em.String.i18n("topic.filters.best_of", {
-        filtered_posts_count: this.get('filtered_posts_count'),
-        posts_count: this.get('posts_count')
+        n_best_posts: Em.String.i18n("topic.filters.n_best_posts", { count: this.get('filtered_posts_count') }),
+        of_n_posts: Em.String.i18n("topic.filters.of_n_posts", { count: this.get('posts_count') })
       }));
     } else if (postFilters.userFilters.length > 0) {
       this.set('filterDesc', Em.String.i18n("topic.filters.user", {
-        filtered_posts_count: this.get('filtered_posts_count'),
-        count: postFilters.userFilters.length
+        n_posts: Em.String.i18n("topic.filters.n_posts", { count: this.get('filtered_posts_count') }),
+        by_n_users: Em.String.i18n("topic.filters.by_n_users", { count: postFilters.userFilters.length })
       }));
     } else {
       // Hide the bottom bar

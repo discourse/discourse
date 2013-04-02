@@ -95,7 +95,7 @@ Discourse.SearchView = Discourse.View.extend({
       this.currentSearch = null;
     }
     this.searcher = this.searcher || Discourse.debounce(function(term, typeFilter) {
-      _this.currentSearch = $.ajax({
+      _this.currentSearch = Discourse.ajax({
         url: Discourse.getURL('/search'),
         data: {
           term: term,

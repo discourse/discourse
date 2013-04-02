@@ -10,7 +10,6 @@
 **/
 Discourse.QuoteButtonController = Discourse.Controller.extend({
   needs: ['topic', 'composer'],
-  started: null,
 
   init: function() {
     this._super();
@@ -19,42 +18,56 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
 
   // If the buffer is cleared, clear out other state (post)
   bufferChanged: (function() {
-    if (this.blank('buffer')) {
-      return this.set('post', null);
-    }
+    if (this.blank('buffer')) this.set('post', null);
   }).observes('buffer'),
 
-  mouseDown: function(e) {
-    this.started = [e.pageX, e.pageY];
-  },
-
-  mouseUp: function(e) {
-    if (this.started[1] > e.pageY) {
-      this.started = [e.pageX, e.pageY];
-    }
-  },
-
   selectText: function(e) {
-    var $quoteButton, left, selectedText, top;
+    // anonymous users cannot "quote-reply"
     if (!Discourse.get('currentUser')) return;
+    // there is no need to display the "quote-reply" button if we can't create a post
     if (!this.get('controllers.topic.content.can_create_post')) return;
 
-    selectedText = Discourse.Utilities.selectedText();
+    // retrieve the selected range
+    var range = window.getSelection().getRangeAt(0).cloneRange();
+
+    // do not be present the "quote reply" button if you select text spanning two posts
+    // this basically look for the first "DIV" container...
+    var commonDivAncestorContainer = range.commonAncestorContainer;
+    while (commonDivAncestorContainer.nodeName !== 'DIV') commonDivAncestorContainer = commonDivAncestorContainer.parentNode;
+    // ... and check it has the 'cooked' class (which indicates we're in a post)
+    if (commonDivAncestorContainer.className.indexOf('cooked') === -1) return;
+
+    var selectedText = Discourse.Utilities.selectedText();
     if (this.get('buffer') === selectedText) return;
     if (this.get('lastSelected') === selectedText) return;
 
     this.set('post', e.context);
     this.set('buffer', selectedText);
-    top = e.pageY + 5;
-    left = e.pageX + 5;
-    $quoteButton = $('.quote-button');
-    if (this.started) {
-      top = this.started[1] - 50;
-      left = ((left - this.started[0]) / 2) + this.started[0] - ($quoteButton.width() / 2);
-    }
-    $quoteButton.css({ top: top, left: left });
-    this.started = null;
-    return false;
+
+    // collapse the range at the beginning of the selection
+    // (ie. moves the end point to the start point)
+    range.collapse(true);
+
+    // create a marker element containing a single invisible character
+    var markerElement = document.createElement("span");
+    markerElement.appendChild(document.createTextNode("\ufeff"));
+    // insert it at the beginning of our range
+    range.insertNode(markerElement);
+
+    // find marker position (cf. http://www.quirksmode.org/js/findpos.html)
+    var obj = markerElement, left = 0, top = 0;
+    do {
+      left += obj.offsetLeft;
+      top += obj.offsetTop;
+      obj = obj.offsetParent;
+    } while (obj.offsetParent);
+
+    // move the quote button at the beginning of the selection
+    var $quoteButton = $('.quote-button');
+    $quoteButton.css({ top: top - $quoteButton.outerHeight(), left: left });
+
+    // remove the marker
+    markerElement.parentNode.removeChild(markerElement);
   },
 
   /**

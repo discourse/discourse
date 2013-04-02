@@ -166,7 +166,7 @@ Discourse = Ember.Application.createWithMixins({
   **/
   logout: function() {
     Discourse.KeyValueStore.abandonLocal();
-    return $.ajax(Discourse.getURL("/session/") + this.get('currentUser.username'), {
+    return Discourse.ajax(Discourse.getURL("/session/") + this.get('currentUser.username'), {
       type: 'DELETE',
       success: function(result) {
         // To keep lots of our variables unbound, we can handle a redirect on logging out.
@@ -182,6 +182,21 @@ Discourse = Ember.Application.createWithMixins({
     return loginView.authenticationComplete(options);
   },
 
+  /**
+    Our own $.ajax method. Makes sure the .then method executes in an Ember runloop
+    for performance reasons.
+
+    @method ajax
+  **/
+  ajax: function() {
+    return $.ajax.apply(this, arguments);
+  },
+
+  /**
+    Start up the Discourse application.
+
+    @method start
+  **/
   start: function() {
     Discourse.bindDOMEvents();
     Discourse.SiteSettings = PreloadStore.get('siteSettings');

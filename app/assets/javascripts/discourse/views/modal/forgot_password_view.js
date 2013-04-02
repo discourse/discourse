@@ -16,9 +16,12 @@ Discourse.ForgotPasswordView = Discourse.ModalBodyView.extend({
   }).property('accountEmailOrUsername'),
 
   submit: function() {
-    $.post(Discourse.getURL("/session/forgot_password"), {
-      username: this.get('accountEmailOrUsername')
+
+    Discourse.ajax(Discourse.getURL("/session/forgot_password"), {
+      data: { username: this.get('accountEmailOrUsername') },
+      type: 'POST'
     });
+
     // don't tell people what happened, this keeps it more secure (ensure same on server)
     this.flash(Em.String.i18n('forgot_password.complete'));
     return false;

@@ -21,7 +21,7 @@ Discourse.Model = Ember.Object.extend(Discourse.Presence, {
     args.error = function(xhr) {
       return oldError($.parseJSON(xhr.responseText).errors);
     };
-    return $.ajax(url, args);
+    return Discourse.ajax(url, args);
   },
 
   /**
@@ -48,36 +48,20 @@ Discourse.Model = Ember.Object.extend(Discourse.Presence, {
         _this.set(k, v);
       }
     });
-  } 
+  }
 
 });
 
 Discourse.Model.reopenClass({
 
-  /** 
+  /**
    $.get shortcut that uses Discourse.Url and returns a promise
    **/
-  getAjax: function(url) {
-    var _this = this;
-    var promise = new Ember.Deferred();
-
-    $.ajax(Discourse.getURL(url), {
-      cache: false,
-      type: 'GET',
-      dataType: 'json',
-      success: function(result){
-        promise.resolve(_this.create(result)); 
-      }, 
-      error: function(jqXHR, textStatus, errorThrown){
-        promise.reject({
-          jqXHR: jqXHR, 
-          textStatus: textStatus,
-          errorThrown: errorThrown
-        });
-      }
-    }); 
-
-    return promise;
+  getModelAjax: function(url) {
+    var modelClass = this;
+    return Discourse.ajax({ url: url, cache: false, dataType: 'json' }).then(function (result) {
+      return modelClass.create(result);
+    });
   },
 
 
@@ -89,15 +73,10 @@ Discourse.Model.reopenClass({
     @param {Object} klass Optional The class to instantiate
   **/
   extractByKey: function(collection, klass) {
-    var retval;
-    retval = {};
-    if (!collection) {
-      return retval;
-    }
+    var retval = {};
+    if (!collection) return retval;
     collection.each(function(c) {
-      var obj;
-      obj = klass.create(c);
-      retval[c.id] = obj;
+      retval[c.id] = klass.create(c);
     });
     return retval;
   }

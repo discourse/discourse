@@ -19,8 +19,7 @@ module EmailBuilder
       subject: I18n.t("#{email_key}.subject_template", params),
       body: body
     }
-    mail_args[:from] = params[:from] if params[:from].present?
-
+    mail_args[:from] = params[:from] || SiteSetting.notification_email
     mail(mail_args)
   end
 

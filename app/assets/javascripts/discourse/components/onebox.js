@@ -49,7 +49,7 @@ Discourse.Onebox = {
     $elem.addClass('loading-onebox');
 
     // Retrieve the onebox
-    var promise = $.ajax({
+    var promise = Discourse.ajax({
       type: 'GET',
       url: "/onebox",
       data: { url: url, refresh: refresh }

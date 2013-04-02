@@ -35,20 +35,21 @@ Discourse.HistoryView = Discourse.View.extend({
   }.observes('versionRight'),
 
   didInsertElement: function() {
-    var _this = this;
     this.set('loading', true);
     this.set('postLeft', null);
     this.set('postRight', null);
-    return this.get('originalPost').loadVersions(function(result) {
+
+    var historyView = this;
+    this.get('originalPost').loadVersions().then(function(result) {
       result.each(function(item) {
         item.description = "v" + item.number + " - " + Date.create(item.created_at).relative() + " - " +
           Em.String.i18n("changed_by", { author: item.display_username });
       });
 
-      _this.set('loading', false);
-      _this.set('versionLeft', result.first());
-      _this.set('versionRight', result.last());
-      return _this.set('versions', result);
+      historyView.set('loading', false);
+      historyView.set('versionLeft', result.first());
+      historyView.set('versionRight', result.last());
+      historyView.set('versions', result);
     });
   }
 });

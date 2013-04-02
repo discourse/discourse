@@ -52,15 +52,17 @@ Discourse.HeaderView = Discourse.View.extend({
   },
 
   showNotifications: function() {
-    var _this = this;
-    $.get(Discourse.getURL("/notifications")).then(function(result) {
-      _this.set('notifications', result.map(function(n) {
+
+    var headerView = this;
+    Discourse.ajax('/notifications').then(function(result) {
+      headerView.set('notifications', result.map(function(n) {
         return Discourse.Notification.create(n);
       }));
+
       // We've seen all the notifications now
-      _this.set('currentUser.unread_notifications', 0);
-      _this.set('currentUser.unread_private_messages', 0);
-      return _this.showDropdown($('#user-notifications'));
+      headerView.set('currentUser.unread_notifications', 0);
+      headerView.set('currentUser.unread_private_messages', 0);
+      headerView.showDropdown($('#user-notifications'));
     });
     return false;
   },
@@ -97,12 +99,12 @@ Discourse.HeaderView = Discourse.View.extend({
     if (this.get('controller.showExtraInfo')) {
       var logo = Discourse.SiteSettings.logo_small_url;
       if (logo && logo.length > 1) {
-        result += "<img src='" + logo + "' width='33' height='33'>";
+        result += "<img class='logo-small' src='" + logo + "' width='33' height='33'>";
       } else {
         result += "<i class='icon-home'></i>";
       }
     } else {
-      result += "<img src=\"" + Discourse.SiteSettings.logo_url + "\" alt=\"" + Discourse.SiteSettings.title + "\" id='site-logo'>";
+      result += "<img class='logo-big' src=\"" + Discourse.SiteSettings.logo_url + "\" alt=\"" + Discourse.SiteSettings.title + "\" id='site-logo'>";
     }
     result += "</a></div>";
     return new Handlebars.SafeString(result);

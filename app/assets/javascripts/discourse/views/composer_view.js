@@ -158,10 +158,6 @@ Discourse.ComposerView = Discourse.View.extend({
     });
   }, 100),
 
-  cancelUpload: function() {
-    // TODO
-  },
-
   initEditor: function() {
     // not quite right, need a callback to pass in, meaning this gets called once,
     // but if you start replying to another topic it will get the avatars wrong
@@ -271,55 +267,99 @@ Discourse.ComposerView = Discourse.View.extend({
 
     // In case it's still bound somehow
     $uploadTarget.fileupload('destroy');
+    $uploadTarget.off();
 
     $uploadTarget.fileupload({
-      url: '/uploads',
-      dataType: 'json',
-      timeout: 20000,
-      formData: {
-        topic_id: 1234
-      },
-      paste: function(e, data) {
-        if (data.files.length > 0) {
-          _this.set('loadingImage', true);
-          _this.set('uploadProgress', 0);
-        }
-        return true;
-      },
-      drop: function(e, data) {
-        if (e.originalEvent.dataTransfer.files.length === 1) {
-          _this.set('loadingImage', true);
-          return _this.set('uploadProgress', 0);
-        }
-      },
-      progressall: function(e, data) {
-        var progress;
-        progress = parseInt(data.loaded / data.total * 100, 10);
-        return _this.set('uploadProgress', progress);
-      },
-      done: function(e, data) {
-        var html, upload;
-        _this.set('loadingImage', false);
-        upload = data.result;
-        html = "<img src=\"" + upload.url + "\" width=\"" + upload.width + "\" height=\"" + upload.height + "\">";
-        return _this.addMarkdown(html);
-      },
-      fail: function(e, data) {
-        // 413 == entity too large, returned usually from nginx
-        if(data.jqXHR && data.jqXHR.status === 413) {
-          bootbox.alert(Em.String.i18n('post.errors.upload_too_large', {max_size_kb: Discourse.SiteSettings.max_upload_size_kb}));
+        url: '/uploads',
+        dataType: 'json',
+        timeout: 20000,
+        formData: { topic_id: 1234 }
+    });
+
+    var addImages = function (e, data) {
+      // can only upload one image at a time
+      if (data.files.length > 1) {
+        bootbox.alert(Em.String.i18n('post.errors.upload_too_many_images'));
+        return false;
+      } else if (data.files.length > 0) {
+        // check image size
+        var fileSizeInKB = data.files[0].size / 1024;
+        if (fileSizeInKB > Discourse.SiteSettings.max_upload_size_kb) {
+          bootbox.alert(Em.String.i18n('post.errors.upload_too_large', { max_size_kb: Discourse.SiteSettings.max_upload_size_kb }));
+          return false;
         } else {
-          bootbox.alert(Em.String.i18n('post.errors.upload'));
+          // reset upload status
+          _this.setProperties({
+            uploadProgress: 0,
+            loadingImage: true
+          });
+          return true;
         }
-        return _this.set('loadingImage', false);
       }
+      // we need to return true here, otherwise it prevents the default paste behavior
+      return true;
+    };
+
+    // paste
+    $uploadTarget.on('fileuploadpaste', addImages);
+
+    // drop
+    $uploadTarget.on('fileuploaddrop', addImages);
+
+    // send
+    $uploadTarget.on('fileuploadsend', function (e, data) {
+      // cf. https://github.com/blueimp/jQuery-File-Upload/wiki/API#how-to-cancel-an-upload
+      var jqXHR = data.xhr();
+      // need to wait for the link to show up in the DOM
+      Em.run.next(function() {
+        // bind on the click event on the cancel link
+        $('#cancel-image-upload').on('click', function() {
+          // cancel the upload
+          // NOTE: this will trigger a 'fileuploadfail' event with status = 0
+          if (jqXHR) jqXHR.abort();
+          // unbind
+          $(this).off('click');
+        });
+      });
+    });
+
+    // progress all
+    $uploadTarget.on('fileuploadprogressall', function (e, data) {
+      var progress = parseInt(data.loaded / data.total * 100, 10);
+      _this.set('uploadProgress', progress);
+    });
+
+    // done
+    $uploadTarget.on('fileuploaddone', function (e, data) {
+      var upload = data.result;
+      var html = "<img src=\"" + upload.url + "\" width=\"" + upload.width + "\" height=\"" + upload.height + "\">";
+      _this.addMarkdown(html);
+      _this.set('loadingImage', false);
+    });
+
+    // fail
+    $uploadTarget.on('fileuploadfail', function (e, data) {
+      // hide upload status
+      _this.set('loadingImage', false);
+      // deal with meaningful errors first
+      if (data.jqXHR) {
+        switch (data.jqXHR.status) {
+          // 0 == cancel from the user
+          case 0: return;
+          // 413 == entity too large, returned usually from nginx
+          case 413:
+            bootbox.alert(Em.String.i18n('post.errors.upload_too_large', {max_size_kb: Discourse.SiteSettings.max_upload_size_kb}));
+            return;
+        }
+      }
+      // otherwise, display a generic error message
+      bootbox.alert(Em.String.i18n('post.errors.upload'));
     });
 
     // I hate to use Em.run.later, but I don't think there's a way of waiting for a CSS transition
     // to finish.
     return Em.run.later(jQuery, (function() {
-      var replyTitle;
-      replyTitle = $('#reply-title');
+      var replyTitle = $('#reply-title');
       _this.resize();
       if (replyTitle.length) {
         return replyTitle.putCursorAtEnd();
@@ -330,11 +370,9 @@ Discourse.ComposerView = Discourse.View.extend({
   },
 
   addMarkdown: function(text) {
-    var caretPosition, ctrl, current,
-      _this = this;
-    ctrl = $('#wmd-input').get(0);
-    caretPosition = Discourse.Utilities.caretPosition(ctrl);
-    current = this.get('content.reply');
+    var ctrl = $('#wmd-input').get(0),
+        caretPosition = Discourse.Utilities.caretPosition(ctrl),
+        current = this.get('content.reply');
     this.set('content.reply', current.substring(0, caretPosition) + text + current.substring(caretPosition, current.length));
     return Em.run.next(function() {
       return Discourse.Utilities.setCaretPosition(ctrl, caretPosition + text.length);
@@ -343,11 +381,9 @@ Discourse.ComposerView = Discourse.View.extend({
 
   // Uses javascript to get the image sizes from the preview, if present
   imageSizes: function() {
-    var result;
-    result = {};
+    var result = {};
     $('#wmd-preview img').each(function(i, e) {
-      var $img;
-      $img = $(e);
+      var $img = $(e);
       result[$img.prop('src')] = {
         width: $img.width(),
         height: $img.height()
@@ -363,14 +399,13 @@ Discourse.ComposerView = Discourse.View.extend({
 
 // not sure if this is the right way, keeping here for now, we could use a mixin perhaps
 Discourse.NotifyingTextArea = Ember.TextArea.extend({
-  placeholder: (function() {
+  placeholder: function() {
     return Em.String.i18n(this.get('placeholderKey'));
-  }).property('placeholderKey'),
+  }.property('placeholderKey'),
+
   didInsertElement: function() {
     return this.get('parent').childDidInsertElement(this);
   }
 });
 
 RSVP.EventTarget.mixin(Discourse.ComposerView);
-
-

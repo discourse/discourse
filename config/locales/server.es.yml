@@ -514,29 +514,29 @@ es:
   test_mailer:
     subject_template: "[%{site_name}] Email Deliverability Test"
     text_body_template: |
-      This is an email test from the %{site_name} forum. You can access this forum via your web browser at
+      This is a test email sent from your %{site_name} forum at:
 
-      [*%{base_url}*][0]
+      [**%{base_url}**][0]
 
-      Email deliverability can be complex, but a few things you want to check immediately are:
+      Email deliverability is complicated. Here are a few important things you should check first:
 
-      - Be sure you know how to view the *raw source of the email* in your mail client, so you can examine the email headers for important clues.
+      - Know how to view the *raw source of the email* in your mail client, so you can examine the email headers for important clues. in Gmail, it is the "show original" option in the drop-down menu on each mail.
 
-      - **IMPORTANT:** Does your ISP have a reverse DNS record entered to associate the domain name you mail from with the IPs you use to email? You can [test your Reverse PTR record][2] here. If the proper reverse DNS pointer record isn't entered by your ISP, it's very unlikely any of your email will be delivered.
+      - **IMPORTANT:** Does your ISP have a reverse DNS record entered to associate the domain names and IP addresses you send mail from? [Test your Reverse PTR record][2] here. If your ISP does not enter the proper reverse DNS pointer record, it's very unlikely any of your email will be delivered.
 
-      - Is your domain's SPF record correct? You can [test your SPF record][1] here.
+      - Is your domain's SPF record correct? [Test your SPF record][1] here.
 
-      - Have you configured [DKIM email key signing][3] in your email software, and put the public DKIM key in your DNS records?
+      - Check to make sure the IPs of your mail server are [not on any email blacklists][4].
 
-      - Have you checked to make sure the IPs of the server the mail originates from are [not on any email blacklists][4]?
+      - Verify that your email server is *definitely* sending a fully-qualified hostname that resolves in DNS in its HELO message. If not, this will cause your email to be rejected by many mail services.
 
-      - Have you verified that your email server is *definitely* sending a fully-qualified hostname that resolves in DNS in its HELO message? If not, this will cause your email to be rejected by many mail services.
+       - Configure [DKIM email key signing][3] in your email software, and place the public DKIM key in your DNS records. This is not required, but will significantly improve email deliverability.
 
       We hope you received this email deliverability test OK!
 
       Good luck,
 
-      Your friends at %{site_name}.
+      Your friends at [Discourse](http://www.discourse.org)
 
       [0]: %{base_url}
       [1]: http://www.kitterman.com/spf/validate.html

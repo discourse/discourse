@@ -17,7 +17,7 @@ class Category < ActiveRecord::Base
   validates :name, presence: true, uniqueness: true, length: { in: 1..50 }
   validate :uncategorized_validator
 
-  before_save :ensure_slug
+  before_validation :ensure_slug
   after_save :invalidate_site_cache
   after_create :create_category_definition
   after_destroy :invalidate_site_cache
@@ -38,7 +38,15 @@ class Category < ActiveRecord::Base
   end
 
   def ensure_slug
-    self.slug = Slug.for(name)
+    if name.present?
+      self.slug = Slug.for(name)
+
+      # If a category with that slug already exists, set the slug to nil so the category can be found
+      # another way.
+      category = Category.where(slug: self.slug)
+      category = category.where("id != ?", id) if id.present?
+      self.slug = '' if category.exists?
+    end
   end
 
   # Categories are cached in the site json, so the caches need to be
@@ -61,11 +69,13 @@ class Category < ActiveRecord::Base
                .where("categories.topic_id <> topics.id")
                .visible
 
+    topic_count = topics.to_sql
     topics_year = topics.created_since(1.year.ago).to_sql
     topics_month = topics.created_since(1.month.ago).to_sql
     topics_week = topics.created_since(1.week.ago).to_sql
 
-    Category.update_all("topics_year = (#{topics_year}),
+    Category.update_all("topic_count = (#{topic_count}),
+                         topics_year = (#{topics_year}),
                          topics_month = (#{topics_month}),
                          topics_week = (#{topics_week})")
   end

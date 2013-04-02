@@ -55,7 +55,7 @@ var define, requireModule;
 
   @class Ember
   @static
-  @version 1.0.0-rc.1
+  @version 1.0.0-rc.2
 */
 
 if ('undefined' === typeof Ember) {
@@ -82,10 +82,10 @@ Ember.toString = function() { return "Ember"; };
 /**
   @property VERSION
   @type String
-  @default '1.0.0-rc.1'
+  @default '1.0.0-rc.2'
   @final
 */
-Ember.VERSION = '1.0.0-rc.1';
+Ember.VERSION = '1.0.0-rc.2';
 
 /**
   Standard environmental variables. You can define these in a global `ENV`
@@ -23035,7 +23035,8 @@ DSL.prototype = {
   },
 
   push: function(url, name, callback) {
-    if (url === "" || url === "/") { this.explicitIndex = true; }
+    var parts = name.split('.');
+    if (url === "" || url === "/" || parts[parts.length-1] === "index") { this.explicitIndex = true; }
 
     this.matches.push([url, name, callback]);
   },
@@ -23303,20 +23304,6 @@ function getHandlerFunction(router) {
     handler.routeName = name;
     return handler;
   };
-}
-
-function handlerIsActive(router, handlerName) {
-  var routeName = 'route:' + handlerName,
-      handler = router.container.lookup(routeName),
-      currentHandlerInfos = router.router.currentHandlerInfos,
-      handlerInfo;
-
-  for (var i=0, l=currentHandlerInfos.length; i<l; i++) {
-    handlerInfo = currentHandlerInfos[i];
-    if (handlerInfo.handler === handler) { return true; }
-  }
-
-  return false;
 }
 
 function routePath(handlerInfos) {
@@ -23588,6 +23575,13 @@ Ember.Route = Ember.Object.extend({
       class is `App.Post`)
     * The find method is called on the model class with the value of
       the dynamic segment.
+
+    Note that for routes with dynamic segments, this hook is only
+    executed when entered via the URL. If the route is entered
+    through a transition (e.g. when using the `linkTo` Handlebars
+    helper), then a model context is already provided and this hook
+    is not called. Routes without dynamic segments will always
+    execute the model hook.
 
     @method model
     @param {Object} params the parameters extracted from the URL
@@ -24272,7 +24266,7 @@ Ember.onLoad('Ember.Handlebars', function(Handlebars) {
     options.hash.template = container.lookup('template:' + name);
     options.hash.controller = controller;
 
-    if (router && !contextString) {
+    if (router && !context) {
       router._connectActiveView(name, view);
     }
 
@@ -24565,7 +24559,6 @@ Ember.onLoad('Ember.Handlebars', function(Handlebars) {
         contexts = a_slice.call(arguments, 1, -1);
 
     var hash = options.hash,
-        view = options.data.view,
         controller;
 
     // create a hash to pass along to registerAction
@@ -24579,7 +24572,7 @@ Ember.onLoad('Ember.Handlebars', function(Handlebars) {
       params: contexts
     };
 
-    action.view = view = get(view, 'concreteView');
+    action.view = options.data.view;
 
     var root, target;
 
@@ -25723,8 +25716,6 @@ var Application = Ember.Application = Ember.Namespace.extend(Ember.DeferredMixin
   */
   customEvents: null,
 
-  isInitialized: false,
-
   // Start off the number of deferrals at 1. This will be
   // decremented by the Application's own `initialize` method.
   _readinessDeferrals: 1,
@@ -25816,15 +25807,12 @@ var Application = Ember.Application = Ember.Namespace.extend(Ember.DeferredMixin
   scheduleInitialize: function() {
     var self = this;
 
-    function initialize(){
-      if (self.isDestroyed) { return; }
-      Ember.run.schedule('actions', self, 'initialize');
-    }
-
     if (!this.$ || this.$.isReady) {
-      initialize();
+      Ember.run.schedule('actions', self, '_initialize');
     } else {
-      this.$().ready(initialize);
+      this.$().ready(function(){
+        Ember.run(self, '_initialize');
+      });
     }
   },
 
@@ -25918,6 +25906,20 @@ var Application = Ember.Application = Ember.Namespace.extend(Ember.DeferredMixin
 
   /**
     @private
+    @deprecated
+
+    Calling initialize manually is not supported.
+
+    Please see Ember.Application#advanceReadiness and
+    Ember.Application#deferReadiness.
+
+    @method initialize
+   **/
+  initialize: function(){
+
+  },
+  /**
+    @private
 
     Initialize the application. This happens automatically.
 
@@ -25925,12 +25927,10 @@ var Application = Ember.Application = Ember.Namespace.extend(Ember.DeferredMixin
     choose to defer readiness. For example, an authentication hook might want
     to defer readiness until the auth token has been retrieved.
 
-    @method initialize
+    @method _initialize
   */
-  initialize: function() {
-
-
-    this.isInitialized = true;
+  _initialize: function() {
+    if (this.isDestroyed) { return; }
 
     // At this point, the App.Router must already be assigned
     this.register('router:main', this.Router);
@@ -25950,10 +25950,8 @@ var Application = Ember.Application = Ember.Namespace.extend(Ember.DeferredMixin
     get(this, '__container__').destroy();
     this.buildContainer();
 
-    this.isInitialized = false;
-
     Ember.run.schedule('actions', this, function(){
-      this.initialize();
+      this._initialize();
       this.startRouting();
     });
   },

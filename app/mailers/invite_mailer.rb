@@ -2,7 +2,6 @@ require_dependency 'email_builder'
 
 class InviteMailer < ActionMailer::Base
   include EmailBuilder
-  default from: SiteSetting.notification_email
 
   def send_invite(invite)
 

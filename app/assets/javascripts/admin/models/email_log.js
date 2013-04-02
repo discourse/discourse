@@ -19,7 +19,7 @@ Discourse.EmailLog.reopenClass({
   findAll: function(filter) {
     var result;
     result = Em.A();
-    $.ajax({
+    Discourse.ajax({
       url: Discourse.getURL("/admin/email_logs.json"),
       data: { filter: filter },
       success: function(logs) {

@@ -70,11 +70,14 @@ Discourse.ClickTrack = {
 
     // if they want to open in a new tab, do an AJAX request
     if (e.metaKey || e.ctrlKey || e.which === 2) {
-      $.get(Discourse.getURL("/clicks/track"), {
-        url: href,
-        post_id: postId,
-        topic_id: topicId,
-        redirect: false
+
+      Discourse.ajax(Discourse.getURL("/clicks/track"), {
+        data: {
+          url: href,
+          post_id: postId,
+          topic_id: topicId,
+          redirect: false
+        }
       });
       window.open(href, '_blank');
       return false;
@@ -82,11 +85,13 @@ Discourse.ClickTrack = {
 
     // If we're on the same site, use the router and track via AJAX
     if (href.indexOf(window.location.origin) === 0) {
-      $.get(Discourse.getURL("/clicks/track"), {
-        url: href,
-        post_id: postId,
-        topic_id: topicId,
-        redirect: false
+      Discourse.ajax(Discourse.getURL("/clicks/track"), {
+        data: {
+          url: href,
+          post_id: postId,
+          topic_id: topicId,
+          redirect: false
+        }
       });
       Discourse.URL.routeTo(href);
       return false;

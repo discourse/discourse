@@ -4,19 +4,27 @@ class AdminDashboardData
 
   REPORTS = ['visits', 'signups', 'topics', 'posts', 'flags', 'users_by_trust_level', 'likes', 'emails']
 
-  def self.fetch
+  def self.fetch_all
     AdminDashboardData.new
+  end
+
+  def self.fetch_problems
+    AdminDashboardData.new.problems
   end
 
   def as_json
     @json ||= {
       reports: REPORTS.map { |type| Report.find(type) },
-      problems: [rails_env_check, host_names_check, gc_checks, sidekiq_check || clockwork_check, ram_check, facebook_config_check, twitter_config_check, github_config_check].compact,
+      problems: problems,
       admins: User.admins.count,
       moderators: User.moderators.count
     }.merge(
       SiteSetting.version_checks? ? {version_check: DiscourseUpdates.check_version} : {}
     )
+  end
+
+  def problems
+    [rails_env_check, host_names_check, gc_checks, sidekiq_check || clockwork_check, ram_check, facebook_config_check, twitter_config_check, github_config_check].compact
   end
 
   def rails_env_check

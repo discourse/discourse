@@ -55,7 +55,7 @@
 }
 
 #reply-control {
-  .toggle-preview, .saving-draft {
+  .toggle-preview, .saving-draft, #image-uploading {
     position: absolute;
     bottom: -31px;
     margin-top: 0px;
@@ -63,6 +63,11 @@
   .toggle-preview {
     right: 5px;
     text-decoration: underline;
+  }
+  #image-uploading {
+    left: 51%;
+    font-size: 12px;
+    color: darken($gray, 40);
   }
   .saving-draft {
     right: 51%;
@@ -250,6 +255,10 @@
       img {
         // Otherwise we get the wrong size in JS
         max-width: none;
+        border-radius: 4px;
+        moz-border-radius: 4px;
+        webkit-border-radius: 4px;
+        ms-border-radius: 4px;
       }
     }
     #wmd-preview {
@@ -271,12 +280,6 @@
       position: absolute;
       display: block;
       bottom: 8px;
-      #image-uploading {
-        display: inline-block;
-        margin-left: 330px;
-        font-size: 12px;
-        color: darken($gray, 40);
-      }
     }
   }
 }
