@@ -29,6 +29,30 @@ Discourse.Report = Discourse.Model.extend({
     }
   },
 
+  todayCount: function() {
+    return this.valueAt(0);
+  }.property('data'),
+
+  yesterdayCount: function() {
+    return this.valueAt(1);
+  }.property('data'),
+
+  lastSevenDaysCount: function() {
+    return this.sumDays(1,7);
+  }.property('data'),
+
+  lastThirtyDaysCount: function() {
+    return this.sumDays(1,30);
+  }.property('data'),
+
+  sevenDaysAgoCount: function() {
+    return this.valueAt(7);
+  }.property('data'),
+
+  thirtyDaysAgoCount: function() {
+    return this.valueAt(30);
+  }.property('data'),
+
   yesterdayTrend: function() {
     var yesterdayVal = this.valueAt(1);
     var twoDaysAgoVal = this.valueAt(2);
