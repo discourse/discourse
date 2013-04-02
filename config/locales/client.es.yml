@@ -442,7 +442,7 @@ es:
           description: "same as Tracking, plus you will be notified of all new posts."
         tracking:
           title: "Tracking"
-          description: "you will be notified of unread posts, @name mentions, and replies to your posts."
+          description: "you will be notified of @name mentions and replies to your posts, plus you will see a count of unread and new posts."
         regular:
           title: "Regular"
           description: "you will be notified only if someone mentions your @name or replies to your post."
