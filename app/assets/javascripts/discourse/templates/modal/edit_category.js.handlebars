@@ -1,53 +1,57 @@
-<div class="modal-body">
-  <form>
-    <section class='field'>
-      <label>{{i18n category.name}}</label>
-      {{view Discourse.TextField valueBinding="view.category.name" placeholderKey="category.name_placeholder" maxlength="50"}}
-    </section>
+{{#with view.category}}
 
-    <section class='field'>
-      <label>{{i18n category.description}}</label>
+  <div class="modal-body">
+    <form>
+      <section class='field'>
+        <label>{{i18n category.name}}</label>
+        {{view Discourse.TextField valueBinding="name" placeholderKey="category.name_placeholder" maxlength="50"}}
+      </section>
 
-      {{#if view.category.description}}
-        {{view.category.description}}
-        {{#if view.category.topic_url}}
-          <a href="#" {{action showCategoryTopic target="view"}}>{{i18n category.change_in_category_topic}}</a>
+      <section class='field'>
+        <label>{{i18n category.description}}</label>
+
+        {{#if description}}
+          {{description}}
+          {{#if topic_url}}
+            <a href="#" {{action showCategoryTopic target="view"}}>{{i18n category.change_in_category_topic}}</a>
+          {{/if}}
+        {{else}}
+          {{i18n category.no_description}}
+            {{#if topic_url}}
+            <a {{action showCategoryTopic target="view"}} href="#">{{i18n category.change_in_category_topic}}</a>
+            {{/if}}}
         {{/if}}
-      {{else}}
-        {{i18n category.no_description}}
-          {{#if view.category.topic_url}}
-          <a {{action showCategoryTopic target="view"}} href="#">{{i18n category.change_in_category_topic}}</a>
-          {{/if}}}
-      {{/if}}
-    </section>
+      </section>
 
-    <section class='field'>
-      <label>{{i18n category.hotness}}</label>
-      {{view Discourse.HotnessView hotnessBinding="view.category.hotness"}}
-    </section>
+      <section class='field'>
+        <label>{{i18n category.hotness}}</label>
+        {{view Discourse.HotnessView hotnessBinding="hotness"}}
+      </section>
 
 
-    <section class='field'>
-      <label>{{i18n category.badge_colors}}</label>
-      <div class="category-color-editor">
-        <span class='badge-category' {{bindAttr style="view.colorStyle"}}>{{view.categoryName}}</span>
+      <section class='field'>
+        <label>{{i18n category.badge_colors}}</label>
+        <div class="category-color-editor">
+          <span class='badge-category' {{bindAttr style="view.colorStyle"}}>{{view.categoryName}}</span>
 
-        <div class='input-prepend input-append' style="margin-top: 10px;">
-          <span class='color-title'>{{i18n category.background_color}}:</span>
-          <span class='add-on'>#</span>{{view Discourse.TextField valueBinding="view.category.color" placeholderKey="category.color_placeholder" maxlength="6"}}
-          {{view Discourse.ColorsView colorsBinding="view.backgroundColors" valueBinding="view.category.color"}}
+          <div class='input-prepend input-append' style="margin-top: 10px;">
+            <span class='color-title'>{{i18n category.background_color}}:</span>
+            <span class='add-on'>#</span>{{view Discourse.TextField valueBinding="color" placeholderKey="category.color_placeholder" maxlength="6"}}
+            {{view Discourse.ColorsView colorsBinding="view.backgroundColors" valueBinding="color"}}
+          </div>
+
+          <div class='input-prepend input-append'>
+            <span class='color-title'>{{i18n category.foreground_color}}:</span>
+            <span class='add-on'>#</span>{{view Discourse.TextField valueBinding="text_color" placeholderKey="category.color_placeholder" maxlength="6"}}
+            {{view Discourse.ColorsView colorsBinding="view.foregroundColors" valueBinding="text_color"}}
+          </div>
         </div>
+      </section>
 
-        <div class='input-prepend input-append'>
-          <span class='color-title'>{{i18n category.foreground_color}}:</span>
-          <span class='add-on'>#</span>{{view Discourse.TextField valueBinding="view.category.text_color" placeholderKey="category.color_placeholder" maxlength="6"}}
-          {{view Discourse.ColorsView colorsBinding="view.foregroundColors" valueBinding="view.category.text_color"}}
-        </div>
-      </div>
-    </section>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class='btn btn-primary' {{bindAttr disabled="view.disabled"}} {{action saveCategory target="view"}}>{{view.buttonTitle}}</button>
+  </div>
 
-  </form>
-</div>
-<div class="modal-footer">
-  <button class='btn btn-primary' {{bindAttr disabled="view.disabled"}} {{action saveCategory target="view"}}>{{view.buttonTitle}}</button>
-</div>
+{{/with}}
