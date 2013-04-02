@@ -240,9 +240,83 @@ describe Guardian do
       Guardian.new.can_see?(nil).should be_false
     end
 
-    describe 'a Topic' do
-      it 'allows non logged in users to view topics' do
-        Guardian.new.can_see?(topic).should be_true
+    describe 'Categories' do
+      let(:category) { Fabricate(:category) }
+
+      describe 'when site requires login' do
+        before { SiteSetting.stubs(:site_requires_login?).returns(true) }
+
+        describe 'when not logged in' do
+          let(:guardian) { Guardian.new }
+
+          it 'returns false for a specific category' do
+            guardian.can_see?(category).should be_false
+          end
+
+          it 'returns false for categories index' do
+            guardian.can_see_categories?.should be_false
+          end
+        end
+
+        describe 'when logged in' do
+          let(:guardian) { Guardian.new(user) }
+
+          it 'returns true for a specific category' do
+            guardian.can_see?(category).should be_true
+          end
+
+          it 'returns true for categories index' do
+            guardian.can_see_categories?.should be_true
+          end
+        end
+      end
+
+      describe 'when site does not require login' do
+        before { SiteSetting.stubs(:site_requires_login?).returns(false) }
+
+        it 'returns true for a specific category' do
+          Guardian.new.can_see?(category).should be_true
+          Guardian.new(user).can_see?(category).should be_true
+        end
+
+        it 'returns true for categories index' do
+          Guardian.new.can_see_categories?.should be_true
+          Guardian.new(user).can_see_categories?.should be_true
+        end
+      end
+    end
+
+    describe 'topics' do
+      describe 'when the site does not require login' do
+        before { SiteSetting.stubs(:site_requires_login?).returns(false) }
+
+        it 'allows non logged in users to view a topic' do
+          Guardian.new.can_see?(topic).should be_true
+        end
+
+        it 'allows non logged in users to view topics' do
+          Guardian.new.can_see_topics?.should be_true
+        end
+      end
+
+      describe 'when the site requires login' do
+        before { SiteSetting.stubs(:site_requires_login?).returns(true) }
+
+        it 'does not allow non logged in users to view topics' do
+          Guardian.new.can_see_topics?.should be_false
+        end
+
+        it 'does not allow non logged in users to view a topic' do
+          Guardian.new.can_see?(topic).should be_false
+        end
+
+        it 'allows logged in users to view topics' do
+          Guardian.new(user).can_see_topics?.should be_true
+        end
+
+        it 'allows logged in users to view a topic' do
+          Guardian.new(user).can_see?(topic).should be_true
+        end
       end
     end
   end
@@ -583,7 +657,27 @@ describe Guardian do
 
   end
 
+  context 'can_search?' do
+    context 'when site requires login' do
+      before { SiteSetting.stubs(:site_requires_login?).returns(true) }
 
+      it 'is false when not logged in' do
+        Guardian.new(nil).can_search?.should be_false
+      end
+
+      it 'is true when logged in' do
+        Guardian.new(user).can_search?.should be_true
+      end
+    end
+
+    context 'when site does not require login' do
+      before { SiteSetting.stubs(:site_requires_login?).returns(false) }
+
+      it 'is true' do
+        Guardian.new(nil).can_search?.should be_true
+      end
+    end
+  end
 
   context 'can_delete?' do
 

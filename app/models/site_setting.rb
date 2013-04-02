@@ -136,6 +136,8 @@ class SiteSetting < ActiveRecord::Base
 
   client_setting(:enable_persona_logins, false)
 
+  setting(:site_requires_login, false)
+
   setting(:enforce_global_nicknames, true)
   setting(:discourse_org_access_key, '')
   setting(:enable_s3_uploads, false)
