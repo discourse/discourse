@@ -181,6 +181,30 @@ Handlebars.registerHelper('editDate', function(property, options) {
 });
 
 /**
+  Displays a percentile based on a `percent_rank` field
+
+  @method percentile
+  @for Ember.Handlebars
+**/
+Ember.Handlebars.registerHelper('percentile', function(property, options) {
+  var percentile = Ember.Handlebars.get(this, property, options);
+  return Math.round((1.0 - percentile) * 100)
+});
+
+/**
+  Displays a float nicely
+
+  @method float
+  @for Ember.Handlebars
+**/
+Ember.Handlebars.registerHelper('float', function(property, options) {
+  var x = Ember.Handlebars.get(this, property, options);
+  if (!x) return "0";
+  if (Math.round(x) === x) return x;
+  return x.toFixed(3)
+});
+
+/**
   Display logic for numbers.
 
   @method number

@@ -18,9 +18,23 @@ class HotTopic < ActiveRecord::Base
       no_old_in_first_x_rows = 8    # don't show old results in the first x rows
 
       # Include all sticky uncategorized on Hot
-      exec_sql("INSERT INTO hot_topics (topic_id, score)
-                SELECT t.id, RANDOM()
+      exec_sql("INSERT INTO hot_topics (topic_id,
+                                        random_bias,
+                                        random_multiplier,
+                                        days_ago_bias,
+                                        days_ago_multiplier,
+                                        score,
+                                        hot_topic_type)
+                SELECT t.id,
+                       calc.random_bias,
+                       1.0,
+                       0,
+                       1.0,
+                       calc.random_bias,
+                       1
                 FROM topics AS t
+                INNER JOIN (SELECT id, RANDOM() as random_bias
+                            FROM topics) AS calc ON calc.id = t.id
                 WHERE t.deleted_at IS NULL
                   AND t.visible
                   AND (NOT t.archived)
@@ -28,12 +42,27 @@ class HotTopic < ActiveRecord::Base
                   AND t.category_id IS NULL")
 
       # Include high percentile recent topics
-      inserted_count = exec_sql("INSERT INTO hot_topics (topic_id, category_id, score)
+      inserted_count = exec_sql("INSERT INTO hot_topics (topic_id,
+                                                         category_id,
+                                                         random_bias,
+                                                         random_multiplier,
+                                                         days_ago_bias,
+                                                         days_ago_multiplier,
+                                                         score,
+                                                         hot_topic_type)
                                   SELECT t.id,
                                          t.category_id,
-                                         ((1.0 - (EXTRACT(EPOCH FROM CURRENT_TIMESTAMP-t.created_at)/86400) / :days_ago) * 0.95) +
-                                            (RANDOM() * 0.05)
+                                         calc.random_bias,
+                                         0.05,
+                                         calc.days_ago_bias,
+                                         0.95,
+                                         (calc.random_bias * 0.05) + (days_ago_bias * 0.95),
+                                         2
                                   FROM topics AS t
+                                  INNER JOIN (SELECT id,
+                                                     RANDOM() as random_bias,
+                                                     ((1.0 - (EXTRACT(EPOCH FROM CURRENT_TIMESTAMP-created_at)/86400) / :days_ago) * 0.95) AS days_ago_bias
+                                              FROM topics) AS calc ON calc.id = t.id
                                   WHERE t.deleted_at IS NULL
                                     AND t.visible
                                     AND (NOT t.closed)
@@ -56,16 +85,26 @@ class HotTopic < ActiveRecord::Base
         max_old_score = HotTopic.order('score desc').limit(no_old_in_first_x_rows).last.score
       end
 
-
-
-
-
       # Add a sprinkling of random older topics
-      exec_sql("INSERT INTO hot_topics (topic_id, category_id, score)
+      exec_sql("INSERT INTO hot_topics (topic_id,
+                                       category_id,
+                                       random_bias,
+                                       random_multiplier,
+                                       days_ago_bias,
+                                       days_ago_multiplier,
+                                       score,
+                                       hot_topic_type)
                 SELECT t.id,
                        t.category_id,
-                       RANDOM() * :max_old_score
+                       calc.random_bias,
+                       :max_old_score,
+                       0,
+                       1.0,
+                       calc.random_bias * :max_old_score,
+                       3
                 FROM topics AS t
+                INNER JOIN (SELECT id, RANDOM() as random_bias
+                            FROM topics) AS calc ON calc.id = t.id
                 WHERE t.deleted_at IS NULL
                   AND t.visible
                   AND (NOT t.closed)

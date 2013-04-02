@@ -1,6 +1,11 @@
 class TopicListSerializer < ApplicationSerializer
 
-  attributes :can_create_topic, :more_topics_url, :filter_summary, :draft, :draft_key, :draft_sequence
+  attributes :can_create_topic,
+             :more_topics_url,
+             :filter_summary,
+             :draft,
+             :draft_key,
+             :draft_sequence
 
   has_many :topics, serializer: TopicListItemSerializer, embed: :objects
 
