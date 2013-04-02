@@ -23,16 +23,6 @@
   <body>
     <!--[if IE 9]><script type="text/javascript">ie = "new";</script><![endif]-->
 
-    <% unless current_user %>
-      <form id='hidden-login-form' method="post" action="<%=login_path%>" style="display: none;">
-        <input name="username" type="text"     id="signin_username">
-        <input name="password" type="password" id="signin_password">
-        <input name="redirect" type="hidden">
-        <input name="authenticity_token" type="hidden" />
-        <input type="submit" id="signin-button" value="Log In">
-      </form>
-    <% end %>
-
     <%=SiteCustomization.custom_header(session[:preview_style])%>
     <section id='main'>
       <noscript data-path="<%= request.env['PATH_INFO'] %>">
@@ -54,6 +44,16 @@
         </div>
       </noscript>
     </section>
+
+    <% unless current_user %>
+      <form id='hidden-login-form' method="post" action="<%=login_path%>" style="display: none;">
+        <input name="username" type="text"     id="signin_username">
+        <input name="password" type="password" id="signin_password">
+        <input name="redirect" type="hidden">
+        <input name="authenticity_token" type="hidden" />
+        <input type="submit" id="signin-button" value="Log In">
+      </form>
+    <% end %>
 
     <%- if @preloaded.present? %>
       <script>
