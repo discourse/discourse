@@ -320,9 +320,11 @@ class Guardian
       return is_admin?
     end
 
-    return false if @user.blank? && SiteSetting.site_requires_login?
+    can_see_topics?
+  end
 
-    true
+  def can_see_topics?
+    !(@user.blank? && SiteSetting.site_requires_login?)
   end
 
   def can_see_categories?

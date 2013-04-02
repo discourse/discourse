@@ -286,12 +286,16 @@ describe Guardian do
       end
     end
 
-    describe 'a Topic' do
+    describe 'topics' do
       describe 'when the site does not require login' do
         before { SiteSetting.stubs(:site_requires_login?).returns(false) }
 
-        it 'allows non logged in users to view topics' do
+        it 'allows non logged in users to view a topic' do
           Guardian.new.can_see?(topic).should be_true
+        end
+
+        it 'allows non logged in users to view topics' do
+          Guardian.new.can_see_topics?.should be_true
         end
       end
 
@@ -299,10 +303,18 @@ describe Guardian do
         before { SiteSetting.stubs(:site_requires_login?).returns(true) }
 
         it 'does not allow non logged in users to view topics' do
+          Guardian.new.can_see_topics?.should be_false
+        end
+
+        it 'does not allow non logged in users to view a topic' do
           Guardian.new.can_see?(topic).should be_false
         end
 
         it 'allows logged in users to view topics' do
+          Guardian.new(user).can_see_topics?.should be_true
+        end
+
+        it 'allows logged in users to view a topic' do
           Guardian.new(user).can_see?(topic).should be_true
         end
       end

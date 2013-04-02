@@ -8,11 +8,12 @@ class TopicList
   def initialize(current_user, topics)
     @current_user = current_user
     @topics_input = topics
+    @guardian = Guardian.new(@current_user)
   end
 
   # Lazy initialization
   def topics
-    return [] if @current_user.blank? && SiteSetting.site_requires_login?
+    return [] unless @guardian.can_see_topics?
     return @topics if @topics.present?
 
     @topics = @topics_input.to_a
