@@ -6,6 +6,13 @@ task "i18n:stats" => :environment do
   def to_dotted_hash(source, target = {}, namespace = nil)
     prefix = "#{namespace}." if namespace
     if source.kind_of?(Hash)
+
+      # detect pluralizable string
+      if (source["other"] != nil)
+        target[namespace] = {pluralizable: true, content: source}
+        return
+      end
+
       source.each do |key, value|
         to_dotted_hash(value, target, "#{prefix}#{key}")
       end
@@ -15,7 +22,7 @@ task "i18n:stats" => :environment do
     target
   end
 
-  def compare(a, b)
+  def compare(a, b, plural_keys)
     locale1 = /.*\.([^.]{2,})\.yml$/.match(a)[1]
     locale2 = /.*\.([^.]{2,})\.yml$/.match(b)[1]
 
@@ -44,7 +51,44 @@ task "i18n:stats" => :environment do
       end
     end
 
+    a.each do |key,value|
+      if value.kind_of?(Hash)
+        if value[:pluralizable]
+          plural_keys.each do |pl|
+            if b[key] == nil || !b[key].kind_of?(Hash) || b[key][:content][pl] == nil
+              minus << "#{key}.#{pl}"
+            end
+          end
+
+          if b[key] != nil && b[key].kind_of?(Hash)
+            b[key][:content].each do |pl,val|
+              if ! plural_keys.include?(pl)
+                if a[key][:content]["zero"] == nil
+                  plus << "#{key}.#{pl}"
+                end
+              end
+            end
+          end
+
+          # special handling for zero
+          if a[key][:content]["zero"] != nil
+            if b[key] == nil || !b[key].kind_of?(Hash) || b[key][:content]["zero"] == nil
+              minus << "#{key}.zero"
+            end
+          end
+        end
+      end
+    end
+
     return plus,minus,same,total
+  end
+
+  def get_plurals(locale)
+    if locale == "pseudo"
+      locale = "en"
+    end
+
+    I18n.t("i18n.plural.keys", :locale => locale).map { |x| x.to_s }
   end
 
   puts "Discourse Translation Status Script"
@@ -68,8 +112,10 @@ task "i18n:stats" => :environment do
     next if !File.exists?("#{Rails.root}/config/locales/client.#{locale}.yml")
     next if !File.exists?("#{Rails.root}/config/locales/server.#{locale}.yml")
 
-    plus1, minus1, same1, total1 = compare("client.en.yml", "client.#{locale}.yml")
-    plus2, minus2, same2, total2 = compare("server.en.yml", "server.#{locale}.yml")
+    pluralization_keys = get_plurals(locale)
+
+    plus1, minus1, same1, total1 = compare("client.en.yml", "client.#{locale}.yml", pluralization_keys)
+    plus2, minus2, same2, total2 = compare("server.en.yml", "server.#{locale}.yml", pluralization_keys)
     puts "%10s %8s %8s %8s %8s %8s %8s %8s %8s" % [locale, plus1.count, minus1.count, same1.count, total1,
                                                    plus2.count, minus2.count, same2.count, total2]
 
