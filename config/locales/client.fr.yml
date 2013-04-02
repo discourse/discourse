@@ -509,10 +509,21 @@ fr:
       login_reply: 'Connectez-vous pour répondre'
 
       filters:
-        user:
-          one: "Vous voyez seulement les {{filtered_posts_count}} messages de l'utilisateur."
-          other: "Vous voyez seulement les {{filtered_posts_count}} messages écrit par {{count}} utilisateurs."
-        best_of: "Vous voyez seulement les {{filtered_posts_counts}} messages les plus populaires de cette discussion."
+        user: "Vous voyez seulement {{n_posts}} {{by_n_users}}."
+        n_posts:
+          one: "1 message"
+          other: "{{count}} messages"
+        by_n_users:
+          one: "de l'utilisateur"
+          other: "rédigés par {{count}} utilisateurs"
+
+        best_of: "Vous voyez seulement {{n_best_posts}} {{of_n_posts}} de cette discussion."
+        n_best_posts:
+          one: "le message"
+          other: "les {{count}} messages"
+        of_n_posts:
+          one: "le plus populaire"
+          other: "les plus populaires"
         cancel: "Ré-afficher l'ensemble des messages de cette discussion."
 
       move_selected:
@@ -697,6 +708,8 @@ fr:
           one: "{{categoryName}} (1)"
           other: "{{categoryName}} ({{count}})"
         help: "discussions populaires dans la catégorie {{categoryName}}"
+
+    browser_update: 'Malheureusement, <a href="http://www.discourse.org/faq/#browser">votre navigateur est trop vieux pour afficher ce forum Discourse</a>. Merci <a href="%{url}">de mettre à jour votre navigateur</a>.'
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
