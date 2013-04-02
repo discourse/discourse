@@ -20,10 +20,12 @@ cs:
   too_many_images:
     zero: "Bohužel, návštěvníci nemohou vkládat obrázky do příspěvků."
     one: "Bohužel, návštěvníci mohou do jednoho příspěvku vložit jen jeden obrázek."
+    few: "Bohužel, návštěvníci mohou do jednoho příspěvku vložit maximálně %{count} obrázky."
     other: "Bohužel, návštěvníci mohou do jednoho příspěvku vložit maximálně %{count} obrázků."
   too_many_links:
     zero: "Bohužel, návštěvníci nemohou vkládat odkazy do příspěvků."
     one: "Bohužel, návštěvníci mohou do jednoho příspěvku vložit jen jeden odkaz."
+    few: "Bohužel, návštěvníci mohou do jednoho příspěvku vložit maximálně %{count} odkazy."
     other: "Bohužel, návštěvníci mohou do jednoho příspěvku vložit maximálně %{count} odkazů."
 
   just_posted_that: "je příliš podobný vašemu příspěvku z poslední doby"
@@ -40,6 +42,7 @@ cs:
   education:
     until_posts:
       one: "příspěvek"
+      few: "%{count} příspěvky"
       other: "%{count} příspěvků"
 
     'new-topic': |
@@ -107,85 +110,110 @@ cs:
     too_many_requests: "Děláte tuto akci příliš často. Prosím počkejte %{time_left} a zkuste to znovu."
     hours:
       one: "1 hodina"
-      other: "%{count} hodiny"
+      few: "%{count} hodiny"
+      other: "%{count} hodin"
     minutes:
       one: "1 minuta"
-      other: "%{count} minuty"
+      few: "%{count} minuty"
+      other: "%{count} minut"
     seconds:
       one: "1 sekunda"
-      other: "%{count} sekundy"
+      few: "%{count} sekundy"
+      other: "%{count} sekund"
 
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
         one:   "< 1s"
+        few:   "< %{count}s"
         other: "< %{count}s"
       x_seconds:
         one:   "1s"
+        few:   "%{count}s"
         other: "%{count}s"
       less_than_x_minutes:
         one:   "< 1m"
+        few:   "< %{count}m"
         other: "< %{count}m"
       x_minutes:
         one:   "1m"
+        few:   "%{count}m"
         other: "%{count}m"
       about_x_hours:
         one:   "1h"
+        few:   "%{count}h"
         other: "%{count}h"
       x_days:
         one:   "1d"
+        few:   "%{count}d"
         other: "%{count}d"
       about_x_months:
         one:   "1měs"
+        few:   "%{count}měs"
         other: "%{count}měs"
       x_months:
         one:   "1měs"
+        few:   "%{count}měs"
         other: "%{count}měs"
       about_x_years:
         one:   "1r"
+        few:   "%{count}r"
         other: "%{count}let"
       over_x_years:
         one:   "> 1r"
+        few:   "> %{count}r"
         other: "> %{count}let"
       almost_x_years:
         one:   "1r"
+        few:   "%{count}r"
         other: "%{count}let"
 
     distance_in_words_verbose:
       half_a_minute: "právě teď"
       less_than_x_seconds:
         one:   "právě teď"
+        few:   "právě teď"
         other: "právě teď"
       x_seconds:
         one:   "před 1 sekundou"
+        few:   "před %{count} sekundami"
         other: "před %{count} sekundami"
       less_than_x_minutes:
         one:   "před méně než 1 minutou"
+        few:   "před méně než %{count} minutami"
         other: "před méně než %{count} minutami"
       x_minutes:
         one:   "před 1 minutou"
+        few:   "před %{count} minutami"
         other: "před %{count} minutami"
       about_x_hours:
         one:   "před 1 hodinou"
+        few:   "před %{count} hodinami"
         other: "před %{count} hodinami"
       x_days:
         one:   "před 1 dnem"
+        few:   "před %{count} dny"
         other: "před %{count} dny"
       about_x_months:
         one:   "asi před 1 měsícem"
+        few:   "asi před %{count} měsíci"
         other: "asi před %{count} měsíci"
       x_months:
         one:   "před 1 měsícem"
+        few:   "před %{count} měsíci"
         other: "před %{count} měsíci"
       about_x_years:
         one:   "asi před 1 rokem"
+        few:   "asi před %{count} roky"
         other: "asi před %{count} roky"
       over_x_years:
         one:   "před více než 1 rokem"
+        few:   "před více než %{count} roky"
         other: "před více než %{count} roky"
       almost_x_years:
         one:   "téměř před 1 rokem"
+        few:   "téměř před %{count} roky"
         other: "téměř před %{count} roky"
 
   password_reset:
@@ -506,6 +534,7 @@ cs:
   move_posts:
     moderator_post:
       one: "Přesunul jsem příspěvek do nového tématu: %{topic_link}"
+      few: "Přesunul jsem %{count} příspěvky do nového tématu: %{topic_link}"
       other: "Přesunul jsem %{count} příspěvků do nového tématu: %{topic_link}"
 
   topic_statuses:
@@ -519,7 +548,7 @@ cs:
     visible_disabled: "Toto téma je neviditelné. Nebude se zobrazovat v seznamu témat. Je možné ho navštívit pouze přes přímý odkaz."
 
   login:
-    not_approved: "Váš účet ještě nebyl schválen. Až se tak stane, odbržíte oznámení emailem."
+    not_approved: "Váš účet ještě nebyl schválen. Až se tak stane, obdržíte oznámení emailem."
     incorrect_username_email_or_password: "Neplatné uživatelské jméno, email nebo heslo"
     wait_approval: "Děkujeme, že jste se zaregistrovali. Dáme vám vědět, až bude váš nový účet schválen."
     active: "Váš účet je aktivní a připraven k používání."
