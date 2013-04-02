@@ -248,7 +248,6 @@ Discourse.Composer = Discourse.Model.extend({
     if (opts.postId) {
       this.set('loading', true);
       Discourse.Post.load(opts.postId).then(function(result) {
-        console.log(result);
         composer.set('post', result);
         composer.set('loading', false);
       });
