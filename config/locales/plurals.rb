@@ -109,6 +109,8 @@
   :wa => { :i18n => { :plural => { :keys => [:one, :other], :rule => lambda { |n| [0, 1].include?(n) ? :one : :other } } } },
   :yo => { :i18n => { :plural => { :keys => [:other], :rule => lambda { |n| :other } } } },
   :zh => { :i18n => { :plural => { :keys => [:other], :rule => lambda { |n| :other } } } },
+  :zh_CN => { :i18n => { :plural => { :keys => [:other], :rule => lambda { |n| :other } } } },
+  :zh_TW => { :i18n => { :plural => { :keys => [:other], :rule => lambda { |n| :other } } } },
   :zu => { :i18n => { :plural => { :keys => [:one, :other], :rule => lambda { |n| n == 1 ? :one : :other } } } }
 }
 
