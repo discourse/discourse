@@ -30,7 +30,7 @@ Discourse.GithubCommit.reopenClass({
     Discourse.ajax( "https://api.github.com/repos/discourse/discourse/commits?callback=callback", {
       dataType: 'jsonp',
       type: 'get',
-      data: { per_page: 25 },
+      data: { per_page: 25 }
     }).then(function (response) {
       response.data.each(function(commit) {
         result.pushObject( Discourse.GithubCommit.create(commit) );
