@@ -527,11 +527,6 @@ class Topic < ActiveRecord::Base
       end
     end
 
-    posted = if topic_user.present? && current_user.present?
-      current_user if topic_user.posted?
-    end
-
-    add_description.call(current_user, :youve_posted) if posted.present?
     add_description.call(al[user_id], :original_poster)
     add_description.call(al[featured_user1_id], :most_posts)
     add_description.call(al[featured_user2_id], :frequent_poster)
@@ -541,7 +536,6 @@ class Topic < ActiveRecord::Base
 
 
     @posters_summary = [al[user_id],
-                        posted,
                         al[last_post_user_id],
                         al[featured_user1_id],
                         al[featured_user2_id],
