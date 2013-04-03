@@ -1,0 +1,283 @@
+HTTP/1.1 200 OK
+Server: GitHub.com
+Date: Wed, 03 Apr 2013 01:26:33 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+Status: 200 OK
+X-RateLimit-Limit: 60
+X-RateLimit-Remaining: 15
+Vary: Accept
+Cache-Control: public, max-age=60, s-maxage=60
+Last-Modified: Tue, 02 Apr 2013 22:00:53 GMT
+ETag: "823fc958f47c82de154fcf2f63f43eb3"
+X-GitHub-Media-Type: github.beta
+X-Content-Type-Options: nosniff
+Content-Length: 32664
+
+{
+  "sha": "ee76f1926defa8309b3a7ea64a25707519529a13",
+  "commit": {
+    "author": {
+      "name": "Robin Ward",
+      "email": "robin.ward@gmail.com",
+      "date": "2013-04-02T20:52:51Z"
+    },
+    "committer": {
+      "name": "Robin Ward",
+      "email": "robin.ward@gmail.com",
+      "date": "2013-04-02T22:00:53Z"
+    },
+    "message": "Debugging Tool for Hot Topics",
+    "tree": {
+      "sha": "bb6851a35b715c2ea376acb2a3fe679cf981d460",
+      "url": "https://api.github.com/repos/discourse/discourse/git/trees/bb6851a35b715c2ea376acb2a3fe679cf981d460"
+    },
+    "url": "https://api.github.com/repos/discourse/discourse/git/commits/ee76f1926defa8309b3a7ea64a25707519529a13",
+    "comment_count": 0
+  },
+  "url": "https://api.github.com/repos/discourse/discourse/commits/ee76f1926defa8309b3a7ea64a25707519529a13",
+  "html_url": "https://github.com/discourse/discourse/commit/ee76f1926defa8309b3a7ea64a25707519529a13",
+  "comments_url": "https://api.github.com/repos/discourse/discourse/commits/ee76f1926defa8309b3a7ea64a25707519529a13/comments",
+  "author": {
+    "login": "eviltrout",
+    "id": 17538,
+    "avatar_url": "https://secure.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png",
+    "gravatar_id": "c6e17f2ae2a215e87ff9e878a4e63cd9",
+    "url": "https://api.github.com/users/eviltrout",
+    "html_url": "https://github.com/eviltrout",
+    "followers_url": "https://api.github.com/users/eviltrout/followers",
+    "following_url": "https://api.github.com/users/eviltrout/following",
+    "gists_url": "https://api.github.com/users/eviltrout/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/eviltrout/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/eviltrout/subscriptions",
+    "organizations_url": "https://api.github.com/users/eviltrout/orgs",
+    "repos_url": "https://api.github.com/users/eviltrout/repos",
+    "events_url": "https://api.github.com/users/eviltrout/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/eviltrout/received_events",
+    "type": "User"
+  },
+  "committer": {
+    "login": "eviltrout",
+    "id": 17538,
+    "avatar_url": "https://secure.gravatar.com/avatar/c6e17f2ae2a215e87ff9e878a4e63cd9?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png",
+    "gravatar_id": "c6e17f2ae2a215e87ff9e878a4e63cd9",
+    "url": "https://api.github.com/users/eviltrout",
+    "html_url": "https://github.com/eviltrout",
+    "followers_url": "https://api.github.com/users/eviltrout/followers",
+    "following_url": "https://api.github.com/users/eviltrout/following",
+    "gists_url": "https://api.github.com/users/eviltrout/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/eviltrout/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/eviltrout/subscriptions",
+    "organizations_url": "https://api.github.com/users/eviltrout/orgs",
+    "repos_url": "https://api.github.com/users/eviltrout/repos",
+    "events_url": "https://api.github.com/users/eviltrout/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/eviltrout/received_events",
+    "type": "User"
+  },
+  "parents": [
+    {
+      "sha": "161fdcb36462dead977fd59d7b7303150fcb255e",
+      "url": "https://api.github.com/repos/discourse/discourse/commits/161fdcb36462dead977fd59d7b7303150fcb255e",
+      "html_url": "https://github.com/discourse/discourse/commit/161fdcb36462dead977fd59d7b7303150fcb255e"
+    }
+  ],
+  "stats": {
+    "total": 288,
+    "additions": 245,
+    "deletions": 43
+  },
+  "files": [
+    {
+      "sha": "f7ad304591831f5dbdb4c5d0131008637456cda4",
+      "filename": "app/assets/javascripts/discourse/controllers/list_topics_controller.js",
+      "status": "modified",
+      "additions": 10,
+      "deletions": 1,
+      "changes": 11,
+      "blob_url": "https://github.com/discourse/discourse/blob/ee76f1926defa8309b3a7ea64a25707519529a13/app/assets/javascripts/discourse/controllers/list_topics_controller.js",
+      "raw_url": "https://github.com/discourse/discourse/raw/ee76f1926defa8309b3a7ea64a25707519529a13/app/assets/javascripts/discourse/controllers/list_topics_controller.js",
+      "contents_url": "https://api.github.com/repos/discourse/discourse/contents/app/assets/javascripts/discourse/controllers/list_topics_controller.js?ref=ee76f1926defa8309b3a7ea64a25707519529a13",
+      "patch": "@@ -7,7 +7,8 @@\n   @module Discourse\n **/\n Discourse.ListTopicsController = Discourse.ObjectController.extend({\n-  needs: ['list', 'composer'],\n+  needs: ['list', 'composer', 'modal'],\n+\n   // If we're changing our channel\n   previousChannel: null,\n \n@@ -50,6 +51,14 @@ Discourse.ListTopicsController = Discourse.ObjectController.extend({\n     topic.toggleStar();\n   },\n \n+  // Show rank details\n+  showRankDetails: function(topic) {\n+    var modalController = this.get('controllers.modal');\n+    if (modalController) {\n+      modalController.show(Discourse.TopicRankDetailsView.create({ topic: topic }));\n+    }\n+  },\n+\n   createTopic: function() {\n     this.get('controllers.list').createTopic();\n   },"
+    },
+    {
+      "sha": "866cdf5a17da91429a147fc649ead98ef7d3ac09",
+      "filename": "app/assets/javascripts/discourse/helpers/application_helpers.js",
+      "status": "modified",
+      "additions": 24,
+      "deletions": 0,
+      "changes": 24,
+      "blob_url": "https://github.com/discourse/discourse/blob/ee76f1926defa8309b3a7ea64a25707519529a13/app/assets/javascripts/discourse/helpers/application_helpers.js",
+      "raw_url": "https://github.com/discourse/discourse/raw/ee76f1926defa8309b3a7ea64a25707519529a13/app/assets/javascripts/discourse/helpers/application_helpers.js",
+      "contents_url": "https://api.github.com/repos/discourse/discourse/contents/app/assets/javascripts/discourse/helpers/application_helpers.js?ref=ee76f1926defa8309b3a7ea64a25707519529a13",
+      "patch": "@@ -181,6 +181,30 @@ Handlebars.registerHelper('editDate', function(property, options) {\n });\n \n /**\n+  Displays a percentile based on a `percent_rank` field\n+\n+  @method percentile\n+  @for Ember.Handlebars\n+**/\n+Ember.Handlebars.registerHelper('percentile', function(property, options) {\n+  var percentile = Ember.Handlebars.get(this, property, options);\n+  return Math.round((1.0 - percentile) * 100)\n+});\n+\n+/**\n+  Displays a float nicely\n+\n+  @method float\n+  @for Ember.Handlebars\n+**/\n+Ember.Handlebars.registerHelper('float', function(property, options) {\n+  var x = Ember.Handlebars.get(this, property, options);\n+  if (!x) return \"0\";\n+  if (Math.round(x) === x) return x;\n+  return x.toFixed(3)\n+});\n+\n+/**\n   Display logic for numbers.\n \n   @method number"
+    },
+    {
+      "sha": "93bd48db8943ea86a54ce4e090a1e8f39b09f3d8",
+      "filename": "app/assets/javascripts/discourse/templates/list/topic_list_item.js.handlebars",
+      "status": "modified",
+      "additions": 5,
+      "deletions": 0,
+      "changes": 5,
+      "blob_url": "https://github.com/discourse/discourse/blob/ee76f1926defa8309b3a7ea64a25707519529a13/app/assets/javascripts/discourse/templates/list/topic_list_item.js.handlebars",
+      "raw_url": "https://github.com/discourse/discourse/raw/ee76f1926defa8309b3a7ea64a25707519529a13/app/assets/javascripts/discourse/templates/list/topic_list_item.js.handlebars",
+      "contents_url": "https://api.github.com/repos/discourse/discourse/contents/app/assets/javascripts/discourse/templates/list/topic_list_item.js.handlebars?ref=ee76f1926defa8309b3a7ea64a25707519529a13",
+      "patch": "@@ -17,7 +17,12 @@\n       {{#if unseen}}\n         <a href=\"{{lastReadUrl}}\" class='badge new-posts badge-notification' title='{{i18n topic.new}}'><i class='icon icon-asterisk'></i></a>\n       {{/if}}\n+\n+      {{#if rank_details}}\n+        <i class='icon icon-beaker score' {{action showRankDetails this}} title='{{i18n rank_details.show}}'></i>\n+      {{/if}}\n   </td>\n+\n   <td class='category'>\n     {{categoryLink category}}\n   </td>"
+    },
+    {
+      "sha": "411d3fb62be23046309bc4254b43f185784429ec",
+      "filename": "app/assets/javascripts/discourse/templates/modal/topic_rank_details.js.handlebars",
+      "status": "added",
+      "additions": 46,
+      "deletions": 0,
+      "changes": 46,
+      "blob_url": "https://github.com/discourse/discourse/blob/ee76f1926defa8309b3a7ea64a25707519529a13/app/assets/javascripts/discourse/templates/modal/topic_rank_details.js.handlebars",
+      "raw_url": "https://github.com/discourse/discourse/raw/ee76f1926defa8309b3a7ea64a25707519529a13/app/assets/javascripts/discourse/templates/modal/topic_rank_details.js.handlebars",
+      "contents_url": "https://api.github.com/repos/discourse/discourse/contents/app/assets/javascripts/discourse/templates/modal/topic_rank_details.js.handlebars?ref=ee76f1926defa8309b3a7ea64a25707519529a13",
+      "patch": "@@ -0,0 +1,46 @@\n+{{#with view.topic.rank_details}}\n+  <div class=\"modal-body\">\n+\n+    <!-- Note this isn't translated because it's a debugging tool for a feature\n+         that is not complete yet. We will probably rip this out altogether -->\n+\n+    <table class='table'>\n+      <tr>\n+        <td>hot topic type</td>\n+        <td>\n+          {{hot_topic_type}}\n+        </td>\n+      </tr>\n+      <tr>\n+        <td>random bias</td>\n+        <td>{{float random_bias}}</td>\n+      </tr>\n+      <tr>\n+        <td>random multiplier</td>\n+        <td>{{float random_multiplier}}</td>\n+      </tr>\n+      <tr>\n+        <td>days ago bias</td>\n+        <td>{{float days_ago_bias}}</td>\n+      </tr>\n+      <tr>\n+        <td>days ago multiplier</td>\n+        <td>{{float days_ago_multiplier}}</td>\n+      </tr>\n+      <tr>\n+        <td>ranking formula</td>\n+        <td>\n+          <p>= (random_bias * random_multiplier) +<br/>\n+             (days_ago_bias * days_ago_multiplier)</p>\n+          <p>= ({{float random_bias}} * {{float random_multiplier}}) + ({{float days_ago_bias}} * {{float days_ago_multiplier}})</p>\n+        </td>\n+      </tr>\n+      <tr>\n+        <td>ranking score</td>\n+        <td><b>{{float ranking_score}}</b></td>\n+      </tr>\n+\n+    </table>\n+\n+  </div>\n+{{/with}}\n\\ No newline at end of file"
+    },
+    {
+      "sha": "390953309891b6e4e7e4773a038915bdcf073a67",
+      "filename": "app/assets/javascripts/discourse/views/modal/topic_rank_details_view.js",
+      "status": "added",
+      "additions": 13,
+      "deletions": 0,
+      "changes": 13,
+      "blob_url": "https://github.com/discourse/discourse/blob/ee76f1926defa8309b3a7ea64a25707519529a13/app/assets/javascripts/discourse/views/modal/topic_rank_details_view.js",
+      "raw_url": "https://github.com/discourse/discourse/raw/ee76f1926defa8309b3a7ea64a25707519529a13/app/assets/javascripts/discourse/views/modal/topic_rank_details_view.js",
+      "contents_url": "https://api.github.com/repos/discourse/discourse/contents/app/assets/javascripts/discourse/views/modal/topic_rank_details_view.js?ref=ee76f1926defa8309b3a7ea64a25707519529a13",
+      "patch": "@@ -0,0 +1,13 @@\n+/**\n+  A modal view for displaying the ranking details of a topic\n+\n+  @class TopicRankDetailsView\n+  @extends Discourse.ModalBodyView\n+  @namespace Discourse\n+  @module Discourse\n+**/\n+Discourse.TopicRankDetailsView = Discourse.ModalBodyView.extend({\n+  templateName: 'modal/topic_rank_details',\n+  title: Em.String.i18n('rank_details.title')\n+\n+});"
+    },
+    {
+      "sha": "3ce7872b0373c136fe76b28482248eb70c5d1c7a",
+      "filename": "app/assets/stylesheets/application/modal.css.scss",
+      "status": "modified",
+      "additions": 2,
+      "deletions": 0,
+      "changes": 2,
+      "blob_url": "https://github.com/discourse/discourse/blob/ee76f1926defa8309b3a7ea64a25707519529a13/app/assets/stylesheets/application/modal.css.scss",
+      "raw_url": "https://github.com/discourse/discourse/raw/ee76f1926defa8309b3a7ea64a25707519529a13/app/assets/stylesheets/application/modal.css.scss",
+      "contents_url": "https://api.github.com/repos/discourse/discourse/contents/app/assets/stylesheets/application/modal.css.scss?ref=ee76f1926defa8309b3a7ea64a25707519529a13",
+      "patch": "@@ -151,6 +151,8 @@\n     .archetype-option {\n       margin-bottom: 20px;\n     }\n+\n+\n   }\n   .password-confirmation {\n     display: none;"
+    },
+    {
+      "sha": "2bbb6fa998a7ff92abe5c30305f0e72dfb494eb9",
+      "filename": "app/assets/stylesheets/application/topic-list.css.scss",
+      "status": "modified",
+      "additions": 13,
+      "deletions": 0,
+      "changes": 13,
+      "blob_url": "https://github.com/discourse/discourse/blob/ee76f1926defa8309b3a7ea64a25707519529a13/app/assets/stylesheets/application/topic-list.css.scss",
+      "raw_url": "https://github.com/discourse/discourse/raw/ee76f1926defa8309b3a7ea64a25707519529a13/app/assets/stylesheets/application/topic-list.css.scss",
+      "contents_url": "https://api.github.com/repos/discourse/discourse/contents/app/assets/stylesheets/application/topic-list.css.scss?ref=ee76f1926defa8309b3a7ea64a25707519529a13",
+      "patch": "@@ -97,7 +97,20 @@\n   .main-link {\n     width: 515px;\n     font-size: 16px;\n+\n+    &:hover i.score {\n+      display: inline-block;\n+    }\n+\n+    i.score {\n+      color: green;\n+      cursor: pointer;\n+      display: none;\n+    }\n   }\n+\n+\n+\n   @include medium-width {\n     .main-link {\n       width: 400px;"
+    },
+    {
+      "sha": "951c4e871cee79f9ec954c75df0c8efdaaba3b94",
+      "filename": "app/controllers/list_controller.rb",
+      "status": "modified",
+      "additions": 0,
+      "deletions": 1,
+      "changes": 1,
+      "blob_url": "https://github.com/discourse/discourse/blob/ee76f1926defa8309b3a7ea64a25707519529a13/app/controllers/list_controller.rb",
+      "raw_url": "https://github.com/discourse/discourse/raw/ee76f1926defa8309b3a7ea64a25707519529a13/app/controllers/list_controller.rb",
+      "contents_url": "https://api.github.com/repos/discourse/discourse/contents/app/controllers/list_controller.rb?ref=ee76f1926defa8309b3a7ea64a25707519529a13",
+      "patch": "@@ -28,7 +28,6 @@ class ListController < ApplicationController\n   end\n \n   def category\n-\n     query = TopicQuery.new(current_user, page: params[:page])\n     list = nil\n "
+    },
+    {
+      "sha": "c4ef81774a6c03f4ca9c7676ee5c4b26a2fc134f",
+      "filename": "app/models/hot_topic.rb",
+      "status": "modified",
+      "additions": 50,
+      "deletions": 11,
+      "changes": 61,
+      "blob_url": "https://github.com/discourse/discourse/blob/ee76f1926defa8309b3a7ea64a25707519529a13/app/models/hot_topic.rb",
+      "raw_url": "https://github.com/discourse/discourse/raw/ee76f1926defa8309b3a7ea64a25707519529a13/app/models/hot_topic.rb",
+      "contents_url": "https://api.github.com/repos/discourse/discourse/contents/app/models/hot_topic.rb?ref=ee76f1926defa8309b3a7ea64a25707519529a13",
+      "patch": "@@ -18,9 +18,23 @@ def self.refresh!\n       no_old_in_first_x_rows = 8    # don't show old results in the first x rows\n \n       # Include all sticky uncategorized on Hot\n-      exec_sql(\"INSERT INTO hot_topics (topic_id, score)\n-                SELECT t.id, RANDOM()\n+      exec_sql(\"INSERT INTO hot_topics (topic_id,\n+                                        random_bias,\n+                                        random_multiplier,\n+                                        days_ago_bias,\n+                                        days_ago_multiplier,\n+                                        score,\n+                                        hot_topic_type)\n+                SELECT t.id,\n+                       calc.random_bias,\n+                       1.0,\n+                       0,\n+                       1.0,\n+                       calc.random_bias,\n+                       1\n                 FROM topics AS t\n+                INNER JOIN (SELECT id, RANDOM() as random_bias\n+                            FROM topics) AS calc ON calc.id = t.id\n                 WHERE t.deleted_at IS NULL\n                   AND t.visible\n                   AND (NOT t.archived)\n@@ -28,12 +42,27 @@ def self.refresh!\n                   AND t.category_id IS NULL\")\n \n       # Include high percentile recent topics\n-      inserted_count = exec_sql(\"INSERT INTO hot_topics (topic_id, category_id, score)\n+      inserted_count = exec_sql(\"INSERT INTO hot_topics (topic_id,\n+                                                         category_id,\n+                                                         random_bias,\n+                                                         random_multiplier,\n+                                                         days_ago_bias,\n+                                                         days_ago_multiplier,\n+                                                         score,\n+                                                         hot_topic_type)\n                                   SELECT t.id,\n                                          t.category_id,\n-                                         ((1.0 - (EXTRACT(EPOCH FROM CURRENT_TIMESTAMP-t.created_at)/86400) / :days_ago) * 0.95) +\n-                                            (RANDOM() * 0.05)\n+                                         calc.random_bias,\n+                                         0.05,\n+                                         calc.days_ago_bias,\n+                                         0.95,\n+                                         (calc.random_bias * 0.05) + (days_ago_bias * 0.95),\n+                                         2\n                                   FROM topics AS t\n+                                  INNER JOIN (SELECT id,\n+                                                     RANDOM() as random_bias,\n+                                                     ((1.0 - (EXTRACT(EPOCH FROM CURRENT_TIMESTAMP-created_at)/86400) / :days_ago) * 0.95) AS days_ago_bias\n+                                              FROM topics) AS calc ON calc.id = t.id\n                                   WHERE t.deleted_at IS NULL\n                                     AND t.visible\n                                     AND (NOT t.closed)\n@@ -56,16 +85,26 @@ def self.refresh!\n         max_old_score = HotTopic.order('score desc').limit(no_old_in_first_x_rows).last.score\n       end\n \n-\n-\n-\n-\n       # Add a sprinkling of random older topics\n-      exec_sql(\"INSERT INTO hot_topics (topic_id, category_id, score)\n+      exec_sql(\"INSERT INTO hot_topics (topic_id,\n+                                       category_id,\n+                                       random_bias,\n+                                       random_multiplier,\n+                                       days_ago_bias,\n+                                       days_ago_multiplier,\n+                                       score,\n+                                       hot_topic_type)\n                 SELECT t.id,\n                        t.category_id,\n-                       RANDOM() * :max_old_score\n+                       calc.random_bias,\n+                       :max_old_score,\n+                       0,\n+                       1.0,\n+                       calc.random_bias * :max_old_score,\n+                       3\n                 FROM topics AS t\n+                INNER JOIN (SELECT id, RANDOM() as random_bias\n+                            FROM topics) AS calc ON calc.id = t.id\n                 WHERE t.deleted_at IS NULL\n                   AND t.visible\n                   AND (NOT t.closed)"
+    },
+    {
+      "sha": "af082c77126fb57f80fc1916bce878a8340fbf8e",
+      "filename": "app/models/topic.rb",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "blob_url": "https://github.com/discourse/discourse/blob/ee76f1926defa8309b3a7ea64a25707519529a13/app/models/topic.rb",
+      "raw_url": "https://github.com/discourse/discourse/raw/ee76f1926defa8309b3a7ea64a25707519529a13/app/models/topic.rb",
+      "contents_url": "https://api.github.com/repos/discourse/discourse/contents/app/models/topic.rb?ref=ee76f1926defa8309b3a7ea64a25707519529a13",
+      "patch": "@@ -55,6 +55,7 @@ def self.featured_users_count\n   # When we want to temporarily attach some data to a forum topic (usually before serialization)\n   attr_accessor :user_data\n   attr_accessor :posters  # TODO: can replace with posters_summary once we remove old list code\n+  attr_accessor :topic_list\n \n \n   # The regular order"
+    },
+    {
+      "sha": "4fc096d0ff1a60d93c9b1692df0b20579b9bb16a",
+      "filename": "app/models/topic_list.rb",
+      "status": "modified",
+      "additions": 9,
+      "deletions": 3,
+      "changes": 12,
+      "blob_url": "https://github.com/discourse/discourse/blob/ee76f1926defa8309b3a7ea64a25707519529a13/app/models/topic_list.rb",
+      "raw_url": "https://github.com/discourse/discourse/raw/ee76f1926defa8309b3a7ea64a25707519529a13/app/models/topic_list.rb",
+      "contents_url": "https://api.github.com/repos/discourse/discourse/contents/app/models/topic_list.rb?ref=ee76f1926defa8309b3a7ea64a25707519529a13",
+      "patch": "@@ -3,9 +3,14 @@\n class TopicList\n   include ActiveModel::Serialization\n \n-  attr_accessor :more_topics_url, :draft, :draft_key, :draft_sequence\n-\n-  def initialize(current_user, topics)\n+  attr_accessor :more_topics_url,\n+                :draft,\n+                :draft_key,\n+                :draft_sequence,\n+                :filter\n+\n+  def initialize(filter, current_user, topics)\n+    @filter = filter\n     @current_user = current_user\n     @topics_input = topics\n   end\n@@ -30,6 +35,7 @@ def topics\n     @topics.each do |ft|\n       ft.user_data = @topic_lookup[ft.id] if @topic_lookup.present?\n       ft.posters = ft.posters_summary(ft.user_data, @current_user, avatar_lookup: avatar_lookup)\n+      ft.topic_list = self\n     end\n \n     return @topics"
+    },
+    {
+      "sha": "e30f8e4e9d296d3d381944a244f98176923ddfa4",
+      "filename": "app/serializers/topic_list_item_serializer.rb",
+      "status": "modified",
+      "additions": 32,
+      "deletions": 1,
+      "changes": 33,
+      "blob_url": "https://github.com/discourse/discourse/blob/ee76f1926defa8309b3a7ea64a25707519529a13/app/serializers/topic_list_item_serializer.rb",
+      "raw_url": "https://github.com/discourse/discourse/raw/ee76f1926defa8309b3a7ea64a25707519529a13/app/serializers/topic_list_item_serializer.rb",
+      "contents_url": "https://api.github.com/repos/discourse/discourse/contents/app/serializers/topic_list_item_serializer.rb?ref=ee76f1926defa8309b3a7ea64a25707519529a13",
+      "patch": "@@ -10,7 +10,8 @@ class TopicListItemSerializer < ListableTopicSerializer\n              :archived,\n              :starred,\n              :has_best_of,\n-             :archetype\n+             :archetype,\n+             :rank_details\n \n   has_one :category\n   has_many :posters, serializer: TopicPosterSerializer, embed: :objects\n@@ -20,6 +21,35 @@ def starred\n   end\n   alias :include_starred? :seen\n \n+\n+  # This is for debugging / tweaking the hot topic rankings.\n+  # We will likely remove it after we are happier with things.\n+  def rank_details\n+\n+    hot_topic_type = case object.hot_topic.hot_topic_type\n+      when 1 then 'sticky'\n+      when 2 then 'recent high scoring'\n+      when 3 then 'old high scoring'\n+    end\n+\n+    {topic_score: object.score,\n+     percent_rank: object.percent_rank,\n+     random_bias: object.hot_topic.random_bias,\n+     random_multiplier: object.hot_topic.random_multiplier,\n+     days_ago_bias: object.hot_topic.days_ago_bias,\n+     days_ago_multiplier: object.hot_topic.days_ago_multiplier,\n+     ranking_score: object.hot_topic.score,\n+     hot_topic_type: hot_topic_type}\n+  end\n+\n+  def include_rank_details?\n+    return false unless object.topic_list.present?\n+    return false unless scope.user.present?\n+    return false unless scope.user.admin?\n+\n+    object.topic_list.filter == :hot\n+  end\n+\n   def posters\n     object.posters || []\n   end\n@@ -28,4 +58,5 @@ def pinned\n     PinnedCheck.new(object, object.user_data).pinned?\n   end\n \n+\n end"
+    },
+    {
+      "sha": "f08b4d373b4069264fb2538baa079dc56de9b9b0",
+      "filename": "app/serializers/topic_list_serializer.rb",
+      "status": "modified",
+      "additions": 6,
+      "deletions": 1,
+      "changes": 7,
+      "blob_url": "https://github.com/discourse/discourse/blob/ee76f1926defa8309b3a7ea64a25707519529a13/app/serializers/topic_list_serializer.rb",
+      "raw_url": "https://github.com/discourse/discourse/raw/ee76f1926defa8309b3a7ea64a25707519529a13/app/serializers/topic_list_serializer.rb",
+      "contents_url": "https://api.github.com/repos/discourse/discourse/contents/app/serializers/topic_list_serializer.rb?ref=ee76f1926defa8309b3a7ea64a25707519529a13",
+      "patch": "@@ -1,6 +1,11 @@\n class TopicListSerializer < ApplicationSerializer\n \n-  attributes :can_create_topic, :more_topics_url, :filter_summary, :draft, :draft_key, :draft_sequence\n+  attributes :can_create_topic,\n+             :more_topics_url,\n+             :filter_summary,\n+             :draft,\n+             :draft_key,\n+             :draft_sequence\n \n   has_many :topics, serializer: TopicListItemSerializer, embed: :objects\n "
+    },
+    {
+      "sha": "4213783efc338811d8242ddb0c49f0df19403543",
+      "filename": "config/locales/client.en.yml",
+      "status": "modified",
+      "additions": 5,
+      "deletions": 0,
+      "changes": 5,
+      "blob_url": "https://github.com/discourse/discourse/blob/ee76f1926defa8309b3a7ea64a25707519529a13/config/locales/client.en.yml",
+      "raw_url": "https://github.com/discourse/discourse/raw/ee76f1926defa8309b3a7ea64a25707519529a13/config/locales/client.en.yml",
+      "contents_url": "https://api.github.com/repos/discourse/discourse/contents/config/locales/client.en.yml?ref=ee76f1926defa8309b3a7ea64a25707519529a13",
+      "patch": "@@ -386,6 +386,10 @@ en:\n         favorited: \"There are no more favorited topics to read.\"\n         category: \"There are no more {{category}} topics.\"\n \n+    rank_details:\n+      show: show topic rank details\n+      title: Topic Rank Details\n+\n     topic:\n       create_in: 'Create {{categoryName}} Topic'\n       create: 'Create Topic'\n@@ -407,6 +411,7 @@ en:\n         description: \"Sorry, we couldn't find that topic. Perhaps it was removed by a moderator?\"\n       unread_posts: \"you have {{unread}} unread old posts in this topic\"\n       new_posts: \"there are {{new_posts}} new posts in this topic since you last read it\"\n+\n       likes:\n         one: \"there is 1 like in this topic\"\n         other: \"there are {{count}} likes in this topic\""
+    },
+    {
+      "sha": "dab4598a6c68a11273256b5200b0bfd6e3b7efee",
+      "filename": "db/migrate/20130402210723_add_values_to_hot_topics.rb",
+      "status": "added",
+      "additions": 9,
+      "deletions": 0,
+      "changes": 9,
+      "blob_url": "https://github.com/discourse/discourse/blob/ee76f1926defa8309b3a7ea64a25707519529a13/db/migrate/20130402210723_add_values_to_hot_topics.rb",
+      "raw_url": "https://github.com/discourse/discourse/raw/ee76f1926defa8309b3a7ea64a25707519529a13/db/migrate/20130402210723_add_values_to_hot_topics.rb",
+      "contents_url": "https://api.github.com/repos/discourse/discourse/contents/db/migrate/20130402210723_add_values_to_hot_topics.rb?ref=ee76f1926defa8309b3a7ea64a25707519529a13",
+      "patch": "@@ -0,0 +1,9 @@\n+class AddValuesToHotTopics < ActiveRecord::Migration\n+  def change\n+    add_column :hot_topics, :random_bias, :float\n+    add_column :hot_topics, :random_multiplier, :float\n+    add_column :hot_topics, :days_ago_bias, :float\n+    add_column :hot_topics, :days_ago_multiplier, :float\n+    add_column :hot_topics, :hot_topic_type, :integer\n+  end\n+end"
+    },
+    {
+      "sha": "e091b99dbb33556ca11e1f99e42933d696ec0dba",
+      "filename": "lib/topic_query.rb",
+      "status": "modified",
+      "additions": 20,
+      "deletions": 25,
+      "changes": 45,
+      "blob_url": "https://github.com/discourse/discourse/blob/ee76f1926defa8309b3a7ea64a25707519529a13/lib/topic_query.rb",
+      "raw_url": "https://github.com/discourse/discourse/raw/ee76f1926defa8309b3a7ea64a25707519529a13/lib/topic_query.rb",
+      "contents_url": "https://api.github.com/repos/discourse/discourse/contents/lib/topic_query.rb?ref=ee76f1926defa8309b3a7ea64a25707519529a13",
+      "patch": "@@ -81,7 +81,7 @@ def list_suggested_for(topic)\n \n     # If not logged in, return some random results, preferably in this category\n     if @user.blank?\n-      return TopicList.new(@user, random_suggested_results_for(topic, SiteSetting.suggested_topics, exclude_topic_ids))\n+      return TopicList.new(:suggested, @user, random_suggested_results_for(topic, SiteSetting.suggested_topics, exclude_topic_ids))\n     end\n \n     results = unread_results(per_page: SiteSetting.suggested_topics)\n@@ -118,49 +118,45 @@ def list_suggested_for(topic)\n       end\n     end\n \n-    TopicList.new(@user, results)\n+    TopicList.new(:suggested, @user, results)\n   end\n \n   # The latest view of topics\n   def list_latest\n-    TopicList.new(@user, default_list)\n+    create_list(:latest)\n   end\n \n   # The favorited topics\n   def list_favorited\n-    return_list do |list|\n-      list.where('tu.starred')\n-    end\n+    create_list(:favorited) {|topics| topics.where('tu.starred') }\n   end\n \n   def list_read\n-    return_list(unordered: true) do |list|\n-      list.order('COALESCE(tu.last_visited_at, topics.bumped_at) DESC')\n+    create_list(:read, unordered: true) do |topics|\n+      topics.order('COALESCE(tu.last_visited_at, topics.bumped_at) DESC')\n     end\n   end\n \n   def list_hot\n-    return_list(unordered: true) do |list|\n-      # Find hot topics\n-      list = list.joins(:hot_topic)\n-                 .order(TopicQuery.order_hotness)\n+    create_list(:hot, unordered: true) do |topics|\n+      topics.joins(:hot_topic).order(TopicQuery.order_hotness)\n     end\n   end\n \n   def list_new\n-    TopicList.new(@user, new_results)\n+    TopicList.new(:new, @user, new_results)\n   end\n \n   def list_unread\n-    TopicList.new(@user, unread_results)\n+    TopicList.new(:unread, @user, unread_results)\n   end\n \n   def list_posted\n-    return_list {|l| l.where('tu.user_id IS NOT NULL') }\n+    create_list(:posted) {|l| l.where('tu.user_id IS NOT NULL') }\n   end\n \n   def list_uncategorized\n-    return_list(unordered: true) do |list|\n+    create_list(:uncategorized, unordered: true) do |list|\n       list = list.where(category_id: nil)\n \n       if @user_id.present?\n@@ -172,7 +168,7 @@ def list_uncategorized\n   end\n \n   def list_category(category)\n-    return_list(unordered: true) do |list|\n+    create_list(:category, unordered: true) do |list|\n       list = list.where(category_id: category.id)\n       if @user_id.present?\n         list.order(TopicQuery.order_with_pinned_sql)\n@@ -191,13 +187,15 @@ def new_count\n   end\n \n   def list_new_in_category(category)\n-    return_list {|l| l.where(category_id: category.id).by_newest.first(25)}\n+    create_list(:new_in_category) {|l| l.where(category_id: category.id).by_newest.first(25)}\n   end\n \n   protected\n \n-    def return_list(list_opts={})\n-      TopicList.new(@user, yield(default_list(list_opts)))\n+    def create_list(filter, list_opts={})\n+      topics = default_list(list_opts)\n+      topics = yield(topics) if block_given?\n+      TopicList.new(filter, @user, topics)\n     end\n \n     # Create a list based on a bunch of detault options\n@@ -233,7 +231,6 @@ def default_list(list_opts={})\n     end\n \n     def new_results(list_opts={})\n-\n       default_list(list_opts)\n         .where(\"topics.created_at >= :created_at\", created_at: @user.treat_as_new_topic_start_date)\n         .where(\"tu.last_read_post_number IS NULL\")\n@@ -252,12 +249,10 @@ def random_suggested_results_for(topic, count, exclude_topic_ids)\n                  .where(closed: false, archived: false, visible: true)\n \n       if topic.category_id.present?\n-        results = results.order(\"CASE WHEN topics.category_id = #{topic.category_id.to_i} THEN 0 ELSE 1 END, RANDOM()\")\n-      else\n-        results = results.order(\"RANDOM()\")\n+        return results.order(\"CASE WHEN topics.category_id = #{topic.category_id.to_i} THEN 0 ELSE 1 END, RANDOM()\")\n       end\n \n-      results\n+      results.order(\"RANDOM()\")\n     end\n \n end"
+    }
+  ]
+}
