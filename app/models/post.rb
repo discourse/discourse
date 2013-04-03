@@ -124,9 +124,11 @@ class Post < ActiveRecord::Base
   end
 
   def max_mention_validator
-    max_mentions = SiteSetting.visitor_max_mentions_per_post
-    max_mentions = SiteSetting.max_mentions_per_post if user.present? && user.has_trust_level?(:basic)
-    errors.add(:base, I18n.t(:too_many_mentions, count: max_mentions)) if raw_mentions.size > max_mentions
+    if user.present? && user.has_trust_level?(:basic)
+      errors.add(:base, I18n.t(:too_many_mentions, count: SiteSetting.max_mentions_per_post)) if raw_mentions.size > SiteSetting.max_mentions_per_post
+    else
+      errors.add(:base, I18n.t(:too_many_mentions_visitor, count: SiteSetting.visitor_max_mentions_per_post)) if raw_mentions.size > SiteSetting.visitor_max_mentions_per_post
+    end
   end
 
   def max_images_validator

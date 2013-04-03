@@ -81,7 +81,7 @@ class TopicQuery
 
     # If not logged in, return some random results, preferably in this category
     if @user.blank?
-      return TopicList.new(@user, random_suggested_results_for(topic, SiteSetting.suggested_topics, exclude_topic_ids))
+      return TopicList.new(:suggested, @user, random_suggested_results_for(topic, SiteSetting.suggested_topics, exclude_topic_ids))
     end
 
     results = unread_results(per_page: SiteSetting.suggested_topics)
@@ -118,49 +118,45 @@ class TopicQuery
       end
     end
 
-    TopicList.new(@user, results)
+    TopicList.new(:suggested, @user, results)
   end
 
   # The latest view of topics
   def list_latest
-    TopicList.new(@user, default_list)
+    create_list(:latest)
   end
 
   # The favorited topics
   def list_favorited
-    return_list do |list|
-      list.where('tu.starred')
-    end
+    create_list(:favorited) {|topics| topics.where('tu.starred') }
   end
 
   def list_read
-    return_list(unordered: true) do |list|
-      list.order('COALESCE(tu.last_visited_at, topics.bumped_at) DESC')
+    create_list(:read, unordered: true) do |topics|
+      topics.order('COALESCE(tu.last_visited_at, topics.bumped_at) DESC')
     end
   end
 
   def list_hot
-    return_list(unordered: true) do |list|
-      # Find hot topics
-      list = list.joins(:hot_topic)
-                 .order(TopicQuery.order_hotness)
+    create_list(:hot, unordered: true) do |topics|
+      topics.joins(:hot_topic).order(TopicQuery.order_hotness)
     end
   end
 
   def list_new
-    TopicList.new(@user, new_results)
+    TopicList.new(:new, @user, new_results)
   end
 
   def list_unread
-    TopicList.new(@user, unread_results)
+    TopicList.new(:unread, @user, unread_results)
   end
 
   def list_posted
-    return_list {|l| l.where('tu.user_id IS NOT NULL') }
+    create_list(:posted) {|l| l.where('tu.user_id IS NOT NULL') }
   end
 
   def list_uncategorized
-    return_list(unordered: true) do |list|
+    create_list(:uncategorized, unordered: true) do |list|
       list = list.where(category_id: nil)
 
       if @user_id.present?
@@ -172,7 +168,7 @@ class TopicQuery
   end
 
   def list_category(category)
-    return_list(unordered: true) do |list|
+    create_list(:category, unordered: true) do |list|
       list = list.where(category_id: category.id)
       if @user_id.present?
         list.order(TopicQuery.order_with_pinned_sql)
@@ -191,13 +187,15 @@ class TopicQuery
   end
 
   def list_new_in_category(category)
-    return_list {|l| l.where(category_id: category.id).by_newest.first(25)}
+    create_list(:new_in_category) {|l| l.where(category_id: category.id).by_newest.first(25)}
   end
 
   protected
 
-    def return_list(list_opts={})
-      TopicList.new(@user, yield(default_list(list_opts)))
+    def create_list(filter, list_opts={})
+      topics = default_list(list_opts)
+      topics = yield(topics) if block_given?
+      TopicList.new(filter, @user, topics)
     end
 
     # Create a list based on a bunch of detault options
@@ -233,7 +231,6 @@ class TopicQuery
     end
 
     def new_results(list_opts={})
-
       default_list(list_opts)
         .where("topics.created_at >= :created_at", created_at: @user.treat_as_new_topic_start_date)
         .where("tu.last_read_post_number IS NULL")
@@ -252,12 +249,10 @@ class TopicQuery
                  .where(closed: false, archived: false, visible: true)
 
       if topic.category_id.present?
-        results = results.order("CASE WHEN topics.category_id = #{topic.category_id.to_i} THEN 0 ELSE 1 END, RANDOM()")
-      else
-        results = results.order("RANDOM()")
+        return results.order("CASE WHEN topics.category_id = #{topic.category_id.to_i} THEN 0 ELSE 1 END, RANDOM()")
       end
 
-      results
+      results.order("RANDOM()")
     end
 
 end

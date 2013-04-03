@@ -3,9 +3,14 @@ require_dependency 'avatar_lookup'
 class TopicList
   include ActiveModel::Serialization
 
-  attr_accessor :more_topics_url, :draft, :draft_key, :draft_sequence
+  attr_accessor :more_topics_url,
+                :draft,
+                :draft_key,
+                :draft_sequence,
+                :filter
 
-  def initialize(current_user, topics)
+  def initialize(filter, current_user, topics)
+    @filter = filter
     @current_user = current_user
     @topics_input = topics
   end
@@ -30,6 +35,7 @@ class TopicList
     @topics.each do |ft|
       ft.user_data = @topic_lookup[ft.id] if @topic_lookup.present?
       ft.posters = ft.posters_summary(ft.user_data, @current_user, avatar_lookup: avatar_lookup)
+      ft.topic_list = self
     end
 
     return @topics

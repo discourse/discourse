@@ -28,7 +28,6 @@ class ListController < ApplicationController
   end
 
   def category
-
     query = TopicQuery.new(current_user, page: params[:page])
     list = nil
 

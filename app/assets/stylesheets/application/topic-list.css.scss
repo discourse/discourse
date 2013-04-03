@@ -97,7 +97,20 @@
   .main-link {
     width: 515px;
     font-size: 16px;
+
+    &:hover i.score {
+      display: inline-block;
+    }
+
+    i.score {
+      color: green;
+      cursor: pointer;
+      display: none;
+    }
   }
+
+
+
   @include medium-width {
     .main-link {
       width: 400px;

@@ -195,7 +195,7 @@ Discourse.TopicController = Discourse.ObjectController.extend({
   loadPosts: function(opts) {
     var topicController = this;
     this.get('content').loadPosts(opts).then(function () {
-      Em.run.next(function () { topicController.updateBottomBar() });
+      Em.run.next(function () { topicController.updateBottomBar(); });
     });
   },
 
@@ -310,7 +310,9 @@ Discourse.TopicController = Discourse.ObjectController.extend({
         return;
       }
 
-      topic.set('posts_count', topic.get('posts_count') + 1);
+      // Robin, TODO when a message comes in we need to figure out if it even goes
+      //  in this view ... for now fixed the general case
+      topic.set('filtered_posts_count', topic.get('filtered_posts_count') + 1);
       topic.set('highest_post_number', data.post_number);
       topic.set('last_poster', data.user);
       topic.set('last_posted_at', data.created_at);

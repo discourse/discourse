@@ -17,7 +17,12 @@
       {{#if unseen}}
         <a href="{{lastReadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new}}'><i class='icon icon-asterisk'></i></a>
       {{/if}}
+
+      {{#if rank_details}}
+        <i class='icon icon-beaker score' {{action showRankDetails this}} title='{{i18n rank_details.show}}'></i>
+      {{/if}}
   </td>
+
   <td class='category'>
     {{categoryLink category}}
   </td>

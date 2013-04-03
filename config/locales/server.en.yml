@@ -13,6 +13,10 @@ en:
   is_reserved: "is reserved"
 
   too_many_mentions:
+    zero: "Sorry, you can't mention other users."
+    one: "Sorry, you can only mention one other user in a post."
+    other: "Sorry, you can only mention %{count} users in a post."
+  too_many_mentions_visitor:
     zero: "Sorry, visitors can't mention other users."
     one: "Sorry, visitors can only mention one other user in a post."
     other: "Sorry, visitors can only mention %{count} users in a post."
