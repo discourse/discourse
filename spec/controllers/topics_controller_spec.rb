@@ -334,10 +334,22 @@ describe TopicsController do
 
     context 'filters' do
 
-
-      it 'grabs first page when no post number is selected' do
-        TopicView.any_instance.expects(:filter_posts_paged).with(0)
+      it 'grabs first page when no filter is provided' do
+        SiteSetting.stubs(:posts_per_page).returns(20)
+        TopicView.any_instance.expects(:filter_posts_in_range).with(0, 20)
         xhr :get, :show, id: topic.id
+      end
+
+      it 'grabs first page when first page is provided' do
+        SiteSetting.stubs(:posts_per_page).returns(20)
+        TopicView.any_instance.expects(:filter_posts_in_range).with(0, 20)
+        xhr :get, :show, id: topic.id, page: 1
+      end
+
+      it 'grabs correct range when a page number is provided' do
+        SiteSetting.stubs(:posts_per_page).returns(20)
+        TopicView.any_instance.expects(:filter_posts_in_range).with(20, 40)
+        xhr :get, :show, id: topic.id, page: 2
       end
 
       it 'delegates a post_number param to TopicView#filter_posts_near' do
