@@ -101,6 +101,19 @@ Discourse.ComposerView = Discourse.View.extend({
     });
   }.observes('content.composeState'),
 
+  keyDown: function() {
+    // we should not be flashing too frequently
+    if (this.get('isFlashing')) return;
+    // flash the requirements in red
+    var $requirements = $(".saving-draft"),
+        originalColor = $requirements.css('color'),
+        composerView = this,
+        flashDuration = 250;
+    this.set('isFlashing', true);
+    $requirements.css({ color: '#f00' }).animate({ color: originalColor }, flashDuration);
+    setTimeout(function() { composerView.set('isFlashing', false); }, flashDuration);
+  },
+
   keyUp: function(e) {
     var controller = this.get('controller');
     controller.checkReplyLength();
@@ -292,7 +305,7 @@ Discourse.ComposerView = Discourse.View.extend({
         // TODO: we should provide support for other types of file
         if (data.files[0].type.indexOf('image/') !== 0) {
           bootbox.alert(Em.String.i18n('post.errors.only_images_are_supported'));
-          return false; 
+          return false;
         }
         // everything is fine, reset upload status
         _this.setProperties({
