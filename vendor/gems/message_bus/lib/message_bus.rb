@@ -237,7 +237,11 @@ module MessageBus::Implementation
             locals = locals[msg.channel] if locals
 
             multi_each(globals,locals, global_globals, local_globals) do |c|
-               c.call msg
+              begin
+                c.call msg
+              rescue => e
+                MessageBus.logger.warn "failed to deliver message, skipping #{msg.inspect}\n ex: #{e} backtrace: #{e.backtrace}"
+              end
             end
 
           rescue => e
