@@ -230,6 +230,7 @@
     min-width: 1280px;
     .form-element {
       .chzn-container {
+        width: 400px;
         margin-top: 6px;
         a {
           padding-top: 4px;
@@ -237,6 +238,28 @@
         }
         b {
           margin-top: 4px;
+        }
+      }
+      .category-combobox {
+        .category-desc {
+          margin: 8px 8px 0px 8px;
+          font-size: 12px;
+        }
+
+        width: 430px;
+        @include medium-width { width: 285px; }
+        @include small-width { width: 220px; }
+
+        .chzn-drop {
+          left: -9000px;
+          width: 428px;
+          @include medium-width { width: 283px; }
+          @include small-width { width: 218px; }
+        }
+        .chzn-search input {
+          width: 398px;
+          @include medium-width { width: 253px; }
+          @include small-width { width: 188px; }
         }
       }
     }

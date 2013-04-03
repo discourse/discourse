@@ -592,6 +592,10 @@ Copyright (c) 2011 by Harvest
         this.result_clear_highlight();
         this.result_highlight = el;
         this.result_highlight.addClass("highlighted");
+        /*
+
+        The following code causes jumpy behaviour while scrolling, and I don't see what problem it solves:
+
         maxHeight = parseInt(this.search_results.css("maxHeight"), 10);
         visible_top = this.search_results.scrollTop();
         visible_bottom = maxHeight + visible_top;
@@ -602,6 +606,7 @@ Copyright (c) 2011 by Harvest
         } else if (high_top < visible_top) {
           return this.search_results.scrollTop(high_top);
         }
+        */
       }
     };
 
