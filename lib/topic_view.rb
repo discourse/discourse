@@ -140,8 +140,8 @@ class TopicView
   end
 
   def filter_posts_paged(page)
-    page ||= 0
-    min = (SiteSetting.posts_per_page * page)
+    page = [page, 1].max
+    min = SiteSetting.posts_per_page * (page - 1)
     max = min + SiteSetting.posts_per_page
     filter_posts_in_range(min, max)
   end
@@ -172,7 +172,7 @@ class TopicView
     @posts = @filtered_posts.order('sort_order').where("sort_order > ?", sort_order)
     @posts = @posts.includes(:reply_to_user).includes(:topic).joins(:user).limit(@limit)
   end
-  
+
   def filter_best(max)
     @index_offset = 0
     @posts = @filtered_posts.order('percent_rank asc, sort_order asc').where("post_number > 1")
@@ -283,7 +283,6 @@ class TopicView
   private
 
   def filter_posts_in_range(min, max)
-
     max_index = (filtered_post_ids.length - 1)
 
     # If we're off the charts, return nil
