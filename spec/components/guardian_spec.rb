@@ -815,6 +815,50 @@ describe Guardian do
     it 'is true when looking at your own invites' do
       Guardian.new(user).can_see_pending_invites_from?(user).should be_true
     end
+  end
+
+  context "can_access_forum?" do
+
+    let(:unapproved_user) { Fabricate.build(:user) }
+
+    context "when must_approve_users is false" do
+      before do
+        SiteSetting.stubs(:must_approve_users?).returns(false)
+      end
+
+      it "returns true for a nil user" do
+        Guardian.new(nil).can_access_forum?.should be_true
+      end
+
+      it "returns true for an unapproved user" do
+        Guardian.new(unapproved_user).can_access_forum?.should be_true
+      end
+    end
+
+    context 'when must_approve_users is true' do
+      before do
+        SiteSetting.stubs(:must_approve_users?).returns(true)
+      end
+
+      it "returns false for a nil user" do
+        Guardian.new(nil).can_access_forum?.should be_false
+      end
+
+      it "returns false for an unapproved user" do
+        Guardian.new(unapproved_user).can_access_forum?.should be_false
+      end
+
+      it "returns true for an admin user" do
+        unapproved_user.admin = true
+        Guardian.new(unapproved_user).can_access_forum?.should be_true
+      end
+
+      it "returns true for an approved user" do
+        unapproved_user.approved = true
+        Guardian.new(unapproved_user).can_access_forum?.should be_true
+      end
+
+    end
 
   end
 

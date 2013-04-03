@@ -58,8 +58,12 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     if user_info
       if user_info.user.active
-        log_on_user(user_info.user)
-        @data[:authenticated] = true
+        if Guardian.new(user_info.user).can_access_forum?
+          log_on_user(user_info.user)
+          @data[:authenticated] = true
+        else
+          @data[:awaiting_approval] = true
+        end
       else
         @data[:awaiting_activation] = true
         # send another email ?
@@ -114,8 +118,14 @@ class Users::OmniauthCallbacksController < ApplicationController
           user.active = true
           user.save
         end
-        log_on_user(user)
-        @data[:authenticated] = true
+
+        # If we have to approve users
+        if Guardian.new(user).can_access_forum?
+          log_on_user(user)
+          @data[:authenticated] = true
+        else
+          @data[:awaiting_approval] = true
+        end
       end
     else
       user = User.where(email: email).first
@@ -156,11 +166,11 @@ class Users::OmniauthCallbacksController < ApplicationController
       user = user_open_id.user
 
       # If we have to approve users
-      if SiteSetting.must_approve_users? && !user.approved?
-        @data = {awaiting_approval: true}
-      else
+      if Guardian.new(user).can_access_forum?
         log_on_user(user)
         @data = {authenticated: true}
+      else
+        @data = {awaiting_approval: true}
       end
 
     else
@@ -203,8 +213,14 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     if user_info
       if user_info.user.active
-        log_on_user(user_info.user)
-        @data[:authenticated] = true
+
+        if Guardian.new(user_info.user).can_access_forum?
+          log_on_user(user_info.user)
+          @data[:authenticated] = true
+        else
+          @data[:awaiting_approval] = true
+        end
+
       else
         @data[:awaiting_activation] = true
         # send another email ?
@@ -222,12 +238,14 @@ class Users::OmniauthCallbacksController < ApplicationController
     user = User.find_by_email(email)
 
     if user
-      if SiteSetting.must_approve_users? && !user.approved?
-        @data = {awaiting_approval: true}
-      else
+
+      if Guardian.new(user).can_access_forum?
         log_on_user(user)
         @data = {authenticated: true}
+      else
+        @data = {awaiting_approval: true}
       end
+
     else
       @data = {
         email: email,
