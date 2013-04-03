@@ -20,6 +20,10 @@ fr:
   is_reserved: "est réservé"
 
   too_many_mentions:
+    zero: "Désolé, vous ne pouvez pas mentionner d'utilisateur."
+    one: "Désolé, vous ne pouvez mentionner qu'un seul utilisateur."
+    other: "Désolé, vous ne pouvez mentionner que %{count} utilisateur."
+  too_many_mentions_visitor:
     zero: "Désolé, les visiteurs ne peuvent pas mentionner d'utilisateur."
     one: "Désolé, les visiteurs ne peuvent mentionner qu'un seul utilisateur."
     other: "Désolé, les visiteurs ne peuvent mentionner que %{count} utilisateur."
