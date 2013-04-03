@@ -25,22 +25,25 @@ Discourse.LoginView = Discourse.ModalBodyView.extend({
     return this.showView(Discourse.ForgotPasswordView.create());
   },
 
-  loginButtonText: (function() {
-    if (this.get('loggingIn')) {
-      return Em.String.i18n('login.logging_in');
-    }
-    return Em.String.i18n('login.title');
-  }).property('loggingIn'),
+  /**
+   Determines whether at least one login button is enabled
+  **/
+  hasAtLeastOneLoginButton: function() {
+    return Discourse.SiteSettings.enable_google_logins ||
+           Discourse.SiteSettings.enable_facebook_logins ||
+           Discourse.SiteSettings.enable_twitter_logins ||
+           Discourse.SiteSettings.enable_yahoo_logins ||
+           Discourse.SiteSettings.enable_github_logins ||
+           Discourse.SiteSettings.enable_persona_logins;
+  }.property(),
 
-  loginDisabled: (function() {
-    if (this.get('loggingIn')) {
-      return true;
-    }
-    if (this.blank('loginName') || this.blank('loginPassword')) {
-      return true;
-    }
-    return false;
-  }).property('loginName', 'loginPassword', 'loggingIn'),
+  loginButtonText: function() {
+    return this.get('loggingIn') ? Em.String.i18n('login.logging_in') : Em.String.i18n('login.title');
+  }.property('loggingIn'),
+
+  loginDisabled: function() {
+    return this.get('loggingIn') || this.blank('loginName') || this.blank('loginPassword');
+  }.property('loginName', 'loginPassword', 'loggingIn'),
 
   login: function() {
     this.set('loggingIn', true);
@@ -50,7 +53,6 @@ Discourse.LoginView = Discourse.ModalBodyView.extend({
       data: { login: this.get('loginName'), password: this.get('loginPassword') },
       type: 'POST'
     }).then(function (result) {
-
       // Successful login
       if (result.error) {
         loginView.set('loggingIn', false);

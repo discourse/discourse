@@ -1,27 +1,27 @@
 <div class="modal-body">
-  <div id="login-buttons">
-    {{#if Discourse.SiteSettings.enable_google_logins}}
-      <button class="btn btn-social google" title="{{i18n login.google.title}}" {{action openidLogin "google" target="view"}}>{{i18n login.google.title}}</button>
-    {{/if}}
-    {{#if Discourse.SiteSettings.enable_facebook_logins}}
-      <button class="btn btn-social facebook" title="{{i18n login.facebook.title}}" {{action "facebookLogin" target="view"}}>{{i18n login.facebook.title}}</button>
-    {{/if}}
-    {{#if Discourse.SiteSettings.enable_twitter_logins}}
-      <button class="btn btn-social twitter" title="{{i18n login.twitter.title}}" {{action "twitterLogin" target="view"}}>{{i18n login.twitter.title}}</button>
-    {{/if}}
-    {{#if Discourse.SiteSettings.enable_yahoo_logins}}
-      <button class="btn btn-social yahoo" title="{{i18n login.yahoo.title}}" {{action openidLogin "yahoo" target="view"}}>{{i18n login.yahoo.title}}</button>
-    {{/if}}
-    {{#if Discourse.SiteSettings.enable_github_logins}}
-      <button class="btn btn-social github" title="{{i18n login.github.title}}" {{action "githubLogin" target="view"}}>{{i18n login.github.title}}</button>
-    {{/if}}
-    {{#if Discourse.SiteSettings.enable_persona_logins}}
-    <button class="btn btn-social persona" title="{{i18n login.persona.title}}" {{action "personaLogin" target="view"}}>{{i18n login.persona.title}}</button>
-    {{/if}}
-  </div>
-  <h3 style="text-align:center; margin-bottom:10px;">
-    {{i18n login.or}}
-  </h3>
+  {{#if view.hasAtLeastOneLoginButton}}
+    <div id="login-buttons">
+      {{#if Discourse.SiteSettings.enable_google_logins}}
+        <button class="btn btn-social google" title="{{i18n login.google.title}}" {{action openidLogin "google" target="view"}}>{{i18n login.google.title}}</button>
+      {{/if}}
+      {{#if Discourse.SiteSettings.enable_facebook_logins}}
+        <button class="btn btn-social facebook" title="{{i18n login.facebook.title}}" {{action "facebookLogin" target="view"}}>{{i18n login.facebook.title}}</button>
+      {{/if}}
+      {{#if Discourse.SiteSettings.enable_twitter_logins}}
+        <button class="btn btn-social twitter" title="{{i18n login.twitter.title}}" {{action "twitterLogin" target="view"}}>{{i18n login.twitter.title}}</button>
+      {{/if}}
+      {{#if Discourse.SiteSettings.enable_yahoo_logins}}
+        <button class="btn btn-social yahoo" title="{{i18n login.yahoo.title}}" {{action openidLogin "yahoo" target="view"}}>{{i18n login.yahoo.title}}</button>
+      {{/if}}
+      {{#if Discourse.SiteSettings.enable_github_logins}}
+        <button class="btn btn-social github" title="{{i18n login.github.title}}" {{action "githubLogin" target="view"}}>{{i18n login.github.title}}</button>
+      {{/if}}
+      {{#if Discourse.SiteSettings.enable_persona_logins}}
+        <button class="btn btn-social persona" title="{{i18n login.persona.title}}" {{action "personaLogin" target="view"}}>{{i18n login.persona.title}}</button>
+      {{/if}}
+    </div>
+    <h3 style="text-align:center; margin-bottom:10px;">{{i18n login.or}}</h3>
+  {{/if}}
   <form id='login-form'>
     <div>
       <table>
