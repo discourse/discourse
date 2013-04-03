@@ -390,6 +390,10 @@ fr:
         favorited: "Il n'y a plus de discussion favorites à lire."
         category: "Il n'y a plus de discussion sur {{category}} à lire."
 
+    rank_details:
+      show: "afficher le détail du classement des discussions"
+      title: "Détail du classement des discussions"
+
     topic:
       create_in: 'Créer une discussion dans la catégorie {{categoryName}}'
       create: 'Créer une discussion'
