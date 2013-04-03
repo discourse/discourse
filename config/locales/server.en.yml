@@ -294,6 +294,10 @@ en:
       title: "Emails Sent"
       xaxis: "Day"
       yaxis: "Number of Emails"
+    private_messages:
+      title: "Private Messages"
+      xaxis: "Day"
+      yaxis: "Number of private messages"
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."

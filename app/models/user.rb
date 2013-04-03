@@ -479,8 +479,8 @@ class User < ActiveRecord::Base
     Summarize.new(bio_cooked).summary
   end
 
-  def self.count_by_signup_date(since=30.days.ago)
-    where('created_at > ?', since).group('date(created_at)').order('date(created_at)').count
+  def self.count_by_signup_date(sinceDaysAgo=30)
+    where('created_at > ?', sinceDaysAgo.days.ago).group('date(created_at)').order('date(created_at)').count
   end
 
   def self.counts_by_trust_level

@@ -390,7 +390,11 @@ class Post < ActiveRecord::Base
     Jobs.enqueue(:process_post, args)
   end
 
-  def self.count_per_day(since=30.days.ago)
-    where('created_at > ?', since).group('date(created_at)').order('date(created_at)').count
+  def self.public_posts_count_per_day(sinceDaysAgo=30)
+    joins(:topic).where('topics.archetype <> ?', [Archetype.private_message]).where('posts.created_at > ?', sinceDaysAgo.days.ago).group('date(posts.created_at)').order('date(posts.created_at)').count
+  end
+
+  def self.private_messages_count_per_day(sinceDaysAgo=30)
+    joins(:topic).where('topics.archetype = ?', Archetype.private_message).where('posts.created_at > ?', sinceDaysAgo.days.ago).group('date(posts.created_at)').order('date(posts.created_at)').count
   end
 end

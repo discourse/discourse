@@ -61,3 +61,18 @@ And a markdown link: [forumwarz](http://forumwarz.com)
 And a markdown link with a period after it [codinghorror](http://www.codinghorror.com/blog).
   "
 end
+
+Fabricator(:private_message_post, from: :post) do
+  user
+  topic do |attrs|
+    Fabricate( :private_message_topic,
+      user: attrs[:user],
+      created_at: attrs[:created_at],
+      topic_allowed_users: [
+        Fabricate.build(:topic_allowed_user, user_id: attrs[:user].id),
+        Fabricate.build(:topic_allowed_user, user_id: Fabricate(:user).id)
+      ]
+    )
+  end
+  raw "Ssshh! This is our secret conversation!"
+end

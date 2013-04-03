@@ -40,11 +40,15 @@ class Report
   end
 
   def self.report_topics(report)
-    report_about report, Topic
+    report_about report, Topic, :listable_count_per_day
   end
 
   def self.report_posts(report)
-    report_about report, Post
+    report_about report, Post, :public_posts_count_per_day
+  end
+
+  def self.report_private_messages(report)
+    report_about report, Post, :private_messages_count_per_day
   end
 
   def self.report_emails(report)
@@ -58,7 +62,7 @@ class Report
 
   def self.basic_report_about(report, subject_class, report_method)
     report.data = []
-    subject_class.send(report_method, 30.days.ago).each do |date, count|
+    subject_class.send(report_method, 30).each do |date, count|
       report.data << {x: date, y: count}
     end
   end
@@ -89,7 +93,7 @@ class Report
 
   def self.report_likes(report)
     report.data = []
-    PostAction.count_likes_per_day(30.days.ago).each do |date, count|
+    PostAction.count_likes_per_day(30).each do |date, count|
       report.data << {x: date, y: count}
     end
     likesQuery = PostAction.where(post_action_type_id: PostActionType.types[:like])

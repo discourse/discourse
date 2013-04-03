@@ -2,7 +2,7 @@ require_dependency 'mem_info'
 
 class AdminDashboardData
 
-  REPORTS = ['visits', 'signups', 'topics', 'posts', 'flags', 'users_by_trust_level', 'likes', 'emails']
+  REPORTS = ['visits', 'signups', 'topics', 'posts', 'flags', 'users_by_trust_level', 'likes', 'emails', 'private_messages']
 
   def self.fetch_all
     AdminDashboardData.new
