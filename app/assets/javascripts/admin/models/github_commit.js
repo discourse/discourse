@@ -26,17 +26,15 @@ Discourse.GithubCommit = Discourse.Model.extend({
 
 Discourse.GithubCommit.reopenClass({
   findAll: function() {
-    var result;
-    result = Em.A();
+    var result = Em.A();
     Discourse.ajax( "https://api.github.com/repos/discourse/discourse/commits?callback=callback", {
       dataType: 'jsonp',
       type: 'get',
       data: { per_page: 25 },
-      success: function(response, textStatus, jqXHR) {
-        response.data.each(function(commit) {
-          result.pushObject( Discourse.GithubCommit.create(commit) );
-        });
-      }
+    }).then(function (response) {
+      response.data.each(function(commit) {
+        result.pushObject( Discourse.GithubCommit.create(commit) );
+      });
     });
     return result;
   }

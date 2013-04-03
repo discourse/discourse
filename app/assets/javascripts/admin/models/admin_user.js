@@ -86,56 +86,48 @@ Discourse.AdminUser = Discourse.Model.extend({
   }).property('banned_till', 'banned_at'),
 
   ban: function() {
-    var duration,
-      _this = this;
-    if (duration = parseInt(window.prompt(Em.String.i18n('admin.user.ban_duration')), 10)) {
-      if (duration > 0) {
-        return Discourse.ajax(Discourse.getURL("/admin/users/") + this.id + "/ban", {
-          type: 'PUT',
-          data: {duration: duration},
-          success: function() {
-            window.location.reload();
-          },
-          error: function(e) {
-            var error = Em.String.i18n('admin.user.ban_failed', { error: "http: " + e.status + " - " + e.body });
-            bootbox.alert(error);
-          }
-        });
-      }
+    var duration = parseInt(window.prompt(Em.String.i18n('admin.user.ban_duration')), 10);
+    if (duration > 0) {
+      Discourse.ajax(Discourse.getURL("/admin/users/") + this.id + "/ban", {
+        type: 'PUT',
+        data: {duration: duration}
+      }).then(function () {
+        // succeeded
+        window.location.reload();
+      }, function(e) {
+        // failure
+        var error = Em.String.i18n('admin.user.ban_failed', { error: "http: " + e.status + " - " + e.body });
+        bootbox.alert(error);
+      });
     }
   },
 
   unban: function() {
-    var _this = this;
-    return Discourse.ajax(Discourse.getURL("/admin/users/") + this.id + "/unban", {
-      type: 'PUT',
-      success: function() {
-        window.location.reload();
-      },
-      error: function(e) {
-        var error = Em.String.i18n('admin.user.unban_failed', { error: "http: " + e.status + " - " + e.body });
-        bootbox.alert(error);
-      }
+    Discourse.ajax(Discourse.getURL("/admin/users/") + this.id + "/unban", {
+      type: 'PUT'
+    }).then(function() {
+      // succeeded
+      window.location.reload();
+    }, function(e) {
+      // failed
+      var error = Em.String.i18n('admin.user.unban_failed', { error: "http: " + e.status + " - " + e.body });
+      bootbox.alert(error);
     });
   },
 
   impersonate: function() {
-    var _this = this;
-    return Discourse.ajax(Discourse.getURL("/admin/impersonate"), {
+    Discourse.ajax(Discourse.getURL("/admin/impersonate"), {
       type: 'POST',
-      data: {
-        username_or_email: this.get('username')
-      },
-      success: function() {
-        document.location = "/";
-      },
-      error: function(e) {
-        _this.set('loading', false);
-        if (e.status === 404) {
-          return bootbox.alert(Em.String.i18n('admin.impersonate.not_found'));
-        } else {
-          return bootbox.alert(Em.String.i18n('admin.impersonate.invalid'));
-        }
+      data: { username_or_email: this.get('username') }
+    }).then(function() {
+      // succeeded
+      document.location = "/";
+    }, function(e) {
+      // failed
+      if (e.status === 404) {
+        bootbox.alert(Em.String.i18n('admin.impersonate.not_found'));
+      } else {
+        bootbox.alert(Em.String.i18n('admin.impersonate.invalid'));
       }
     });
   }
@@ -167,18 +159,14 @@ Discourse.AdminUser.reopenClass({
   },
 
   findAll: function(query, filter) {
-    var result;
-    result = Em.A();
+    var result = Em.A();
     Discourse.ajax({
       url: Discourse.getURL("/admin/users/list/") + query + ".json",
-      data: {
-        filter: filter
-      },
-      success: function(users) {
-        return users.each(function(u) {
-          return result.pushObject(Discourse.AdminUser.create(u));
-        });
-      }
+      data: { filter: filter }
+    }).then(function(users) {
+      users.each(function(u) {
+        result.pushObject(Discourse.AdminUser.create(u));
+      });
     });
     return result;
   }

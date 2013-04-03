@@ -87,26 +87,18 @@ var SiteCustomizations = Ember.ArrayProxy.extend({
 
 Discourse.SiteCustomization.reopenClass({
   findAll: function() {
-    var content,
-      _this = this;
-    content = SiteCustomizations.create({
-      content: [],
-      loading: true
-    });
+    var customizations = SiteCustomizations.create({ content: [], loading: true });
     Discourse.ajax({
       url: Discourse.getURL("/admin/site_customizations"),
-      dataType: "json",
-      success: function(data) {
-        if (data) {
-          data.site_customizations.each(function(c) {
-            var item;
-            item = Discourse.SiteCustomization.create(c);
-            return content.pushObject(item);
-          });
-        }
-        return content.set('loading', false);
+      dataType: "json"
+    }).then(function (data) {
+      if (data) {
+        data.site_customizations.each(function(c) {
+          customizations.pushObject(Discourse.SiteCustomization.create(c));
+        });
       }
+      customizations.set('loading', false);
     });
-    return content;
+    return customizations;
   }
 });

@@ -33,17 +33,17 @@ Discourse.FlaggedPost = Discourse.Post.extend({
     return r;
   }).property(),
 
-  lastFlagged: (function() {
+  lastFlagged: function() {
     return this.post_actions[0].created_at;
-  }).property(),
+  }.property(),
 
-  user: (function() {
+  user: function() {
     return this.userLookup[this.user_id];
-  }).property(),
+  }.property(),
 
-  topicHidden: (function() {
+  topicHidden: function() {
     return this.get('topic_visible') === 'f';
-  }).property('topic_hidden'),
+  }.property('topic_hidden'),
 
   deletePost: function() {
     if (this.get('post_number') === "1") {
@@ -57,31 +57,24 @@ Discourse.FlaggedPost = Discourse.Post.extend({
     return Discourse.ajax(Discourse.getURL("/admin/flags/clear/") + this.id, { type: 'POST', cache: false });
   },
 
-  hiddenClass: (function() {
+  hiddenClass: function() {
     if (this.get('hidden') === "t") return "hidden-post";
-  }).property()
-
+  }.property()
 });
 
 Discourse.FlaggedPost.reopenClass({
   findAll: function(filter) {
-    var result;
-    result = Em.A();
-    Discourse.ajax({
-      url: Discourse.getURL("/admin/flags/") + filter + ".json",
-      success: function(data) {
-        var userLookup;
-        userLookup = {};
-        data.users.each(function(u) {
-          userLookup[u.id] = Discourse.User.create(u);
-        });
-        return data.posts.each(function(p) {
-          var f;
-          f = Discourse.FlaggedPost.create(p);
-          f.userLookup = userLookup;
-          return result.pushObject(f);
-        });
-      }
+    var result = Em.A();
+    Discourse.ajax(Discourse.getURL("/admin/flags/") + filter + ".json").then(function(data) {
+      var userLookup = {};
+      data.users.each(function(u) {
+        userLookup[u.id] = Discourse.User.create(u);
+      });
+      data.posts.each(function(p) {
+        var f = Discourse.FlaggedPost.create(p);
+        f.userLookup = userLookup;
+        result.pushObject(f);
+      });
     });
     return result;
   }
