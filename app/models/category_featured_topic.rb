@@ -26,10 +26,11 @@ class CategoryFeaturedTopic < ActiveRecord::Base
                 WHERE ft.category_id = :category_id
                   AND ft.visible
                   AND ft.deleted_at IS NULL
-                  AND ft.archetype <> '#{Archetype.private_message}'
+                  AND ft.archetype <> :private_message
                 ORDER BY ft.bumped_at DESC
                 LIMIT :featured_limit",
                 category_id: c.id,
+                private_message: Archetype.private_message,
                 featured_limit: SiteSetting.category_featured_topics
     end
   end
