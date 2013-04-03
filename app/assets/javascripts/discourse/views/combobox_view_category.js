@@ -8,6 +8,8 @@
 **/
 Discourse.ComboboxViewCategory = Discourse.ComboboxView.extend({
   none: 'category.none',
+  classNames: ['combobox category-combobox'],
+  overrideWidths: true,
   dataAttributes: ['color', 'text_color', 'description'],
   valueBinding: Ember.Binding.oneWay('source'),
 
@@ -15,11 +17,11 @@ Discourse.ComboboxViewCategory = Discourse.ComboboxView.extend({
     if (!templateData.color) return text;
 
     var result = "<span class='badge-category' style='background-color: #" + templateData.color + '; color: #' +
-        templateData.text_color + ";' ";
+        templateData.text_color + ";' >" + text + "</span>";
     if (templateData.description && templateData.description !== 'null') {
-      result += "title=\"" + templateData.description + "\" ";
+      result += '<div class="category-desc">' + templateData.description + '</div>';
     }
-    return result + ">" + text + "</span>";
+    return result;
   }
 
 });
