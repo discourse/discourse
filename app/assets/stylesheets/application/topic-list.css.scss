@@ -98,18 +98,23 @@
     width: 515px;
     font-size: 16px;
 
-    &:hover i.score {
-      display: inline-block;
-    }
-
     i.score {
       color: green;
       cursor: pointer;
-      display: none;
     }
   }
 
+  .rank-details {
+    background-color: #eee;
+    padding: 6px;
+    margin-bottom: 5px;
 
+    p {
+      font-size: 12px;
+      margin: 0;
+      line-height: 14px;
+    }
+  }
 
   @include medium-width {
     .main-link {

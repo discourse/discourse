@@ -387,6 +387,7 @@ en:
         category: "There are no more {{category}} topics."
 
     rank_details:
+      toggle: toggle topic rank details
       show: show topic rank details
       title: Topic Rank Details
 

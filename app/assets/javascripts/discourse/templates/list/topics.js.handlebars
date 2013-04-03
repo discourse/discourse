@@ -1,7 +1,15 @@
 {{#unless controller.loading}}
-  {{#if content.loaded}}
+  {{#if loaded}}
     <div class='contents'>
-      {{#if content.topics.length}}
+      {{#if topics.length}}
+
+      {{#if canViewRankDetails}}
+        <button class='btn' {{action toggleRankDetails}} style='margin-bottom: 10px'>
+          <i class='icon icon-beaker'></i>
+          {{i18n rank_details.toggle}}
+        </button>
+      {{/if}}
+
       <table id='topic-list' {{bindAttr class="controller.category:filter-category"}}>
         <thead>
         <tr>
@@ -33,12 +41,12 @@
           </tbody>
         {{else}}
           {{#group}}
-            {{collection contentBinding="content.inserted" tagName="tbody" itemViewClass="Discourse.TopicListItemView"}}
+            {{collection contentBinding="inserted" tagName="tbody" itemViewClass="Discourse.TopicListItemView"}}
           {{/group}}
         {{/if}}
 
         {{#group}}
-          {{collection contentBinding="content.topics" tagName="tbody" itemViewClass="Discourse.TopicListItemView"}}
+          {{collection contentBinding="topics" tagName="tbody" itemViewClass="Discourse.TopicListItemView"}}
         {{/group}}
 
       </table>

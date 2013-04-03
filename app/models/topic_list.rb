@@ -49,6 +49,15 @@ class TopicList
     {'more_topics_url' => page}
   end
 
+  def has_rank_details?
+
+    # Only admins can see rank details
+    return false unless @current_user.try(:admin?)
+
+    # Only show them on 'Hot'
+    return @filter == :hot
+  end
+
   protected
 
   def get_summary
