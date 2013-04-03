@@ -30,6 +30,10 @@ if (!('MANDATORY_SETTER' in Ember.ENV)) {
   Ember.ENV.MANDATORY_SETTER = true; // default to true for debug dist
 }
 
+if (!('ROOT_URL' in Ember.ENV)) {
+  Ember.ENV.ROOT_URL = '/';
+}
+
 /**
   Define an assertion that will throw an exception if the condition is not
   met. Ember build tools will remove any calls to `Ember.assert()` when
@@ -22634,10 +22638,16 @@ define("router",
         @return {Array} an Array of `[handler, parameter]` tuples
       */
       handleURL: function(url) {
-        var results = this.recognizer.recognize(url),
-            objects = [];
+        var results,
+            objects = [],
+            rootURL = Ember.ENV.ROOT_URL;
 
+        rootURL = rootURL.replace(/\/$/, '');
+        url = url.replace(rootURL, '');
+
+        results = this.recognizer.recognize(url);
         if (!results) {
+          alert(Ember.ENV.ROOT_URL);
           throw new Error("No route matched the URL '" + url + "'");
         }
 
@@ -23333,17 +23343,12 @@ var get = Ember.get, set = Ember.set;
 
 var DefaultView = Ember._MetamorphView;
 function setupLocation(router) {
-  var location = get(router, 'location'),
-      rootURL = get(router, 'rootURL');
+  var location = get(router, 'location');
 
   if ('string' === typeof location) {
     location = set(router, 'location', Ember.Location.create({
       implementation: location
     }));
-
-    if (typeof rootURL === 'string') {
-      set(location, 'rootURL', rootURL);
-    }
   }
 }
 
@@ -25211,14 +25216,6 @@ Ember.HistoryLocation = Ember.Object.extend({
   },
 
   /**
-    Will be pre-pended to path upon state change
-
-    @property rootURL
-    @default '/'
-  */
-  rootURL: '/',
-
-  /**
     @private
 
     Returns the current `location.pathname` without rootURL
@@ -25226,7 +25223,7 @@ Ember.HistoryLocation = Ember.Object.extend({
     @method getURL
   */
   getURL: function() {
-    var rootURL = get(this, 'rootURL'),
+    var rootURL = Ember.ENV.ROOT_URL,
         url = get(this, 'location').pathname;
 
     rootURL = rootURL.replace(/\/$/, '');
@@ -25335,7 +25332,7 @@ Ember.HistoryLocation = Ember.Object.extend({
     @param url {String}
   */
   formatURL: function(url) {
-    var rootURL = get(this, 'rootURL');
+    var rootURL = Ember.ENV.ROOT_URL;
 
     if (url !== '') {
       rootURL = rootURL.replace(/\/$/, '');
