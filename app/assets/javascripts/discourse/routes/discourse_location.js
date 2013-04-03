@@ -153,7 +153,12 @@ Ember.DiscourseLocation = Ember.Object.extend({
       if (e.state) {
         var currentState = self.get('currentState');
         if (currentState) {
-          callback(e.state.path);
+          var url = e.state.path,
+              rootURL = get(self, 'rootURL');
+
+          rootURL = rootURL.replace(/\/$/, '');
+          url = url.replace(rootURL, '');
+          callback(url);
         } else {
           this.set('currentState', e.state);
         }
