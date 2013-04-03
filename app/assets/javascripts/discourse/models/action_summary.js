@@ -10,16 +10,15 @@ Discourse.ActionSummary = Discourse.Model.extend({
 
   // Description for the action
   description: (function() {
+    var action = this.get('actionType.name_key');
     if (this.get('acted')) {
-      return Em.String.i18n('post.actions.by_you_and_others', {
-        count: this.get('count') - 1,
-        long_form: this.get('actionType.long_form')
-      });
+      if (this.get('count') <= 1) {
+        return Em.String.i18n('post.actions.by_you.' + action);
+      } else {
+        return Em.String.i18n('post.actions.by_you_and_others.' + action, { count: this.get('count') - 1 });
+      }
     } else {
-      return Em.String.i18n('post.actions.by_others', {
-        count: this.get('count'),
-        long_form: this.get('actionType.long_form')
-      });
+      return Em.String.i18n('post.actions.by_others.' + action, { count: this.get('count') });
     }
   }).property('count', 'acted', 'actionType'),
 
@@ -113,5 +112,3 @@ Discourse.ActionSummary = Discourse.Model.extend({
   }
 
 });
-
-
