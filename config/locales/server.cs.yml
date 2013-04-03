@@ -324,6 +324,10 @@ cs:
       title: "Odesláno emailů"
       xaxis: "Den"
       yaxis: "Počet emailů"
+    private_messages:
+      title: "Soukromé zprávy"
+      xaxis: "Den"
+      yaxis: "Počet soukromých zpráv"
 
   dashboard:
     rails_env_warning: "Váš server běží v módu %{env}."
@@ -593,7 +597,7 @@ cs:
     text_body_template: |
       Tohle je testovací email z fóra na %{site_name}. Toto fórum můžete navštívit ve vašem prohlížeči na
 
-      [*%{base_url}*][0]
+      [**%{base_url}**][0]
 
       Doručování emailu je komplexní operace, zde je pár věcí, které byste měli zkontrolovat:
 
