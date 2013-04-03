@@ -13,6 +13,11 @@ cs:
   is_reserved: "je rezervováno"
 
   too_many_mentions:
+    zero: "Bohužel, nemůžete zmiňovat ostatní uživatele."
+    one: "Bohužel, můžete zmínit jen jednoho uživatele v jednom příspěvku."
+    few: "Bohužel, můžete zmínit jen %{count} uživatele v jednom příspěvku."
+    other: "Bohužel, můžete zmínit jen %{count} uživatelů v jednom příspěvku."
+  too_many_mentions_visitor:
     zero: "Bohužel, návštěvníci nemohou zmiňovat ostatní uživatele."
     one: "Bohužel, návštěvníci mohou zmínit jen jednoho uživatele v jednom příspěvku."
     few: "Bohužel, návštěvníci mohou zmínit jen %{count} uživatele v jednom příspěvku."

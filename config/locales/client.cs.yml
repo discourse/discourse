@@ -390,6 +390,10 @@ cs:
         favorited: "Nejsou tu žádná další oblíbená témata k přečtení."
         category: "V kategorii {{category}} nejsou žádná další témata."
 
+    rank_details:
+      show: zobrazit detaily bodování tématu
+      title: Detaily bodování tématu
+
     topic:
       create_in: 'Nové téma v kategorii {{categoryName}}'
       create: 'Nové téma'
@@ -411,6 +415,7 @@ cs:
         description: "Bohužel se nám nepovedlo najít toto téma. Nebylo odstraněno moderátorem?"
       unread_posts: "máte {{unread}} nepřečtených příspěvků v tomto tématu"
       new_posts: "je zde {{new_posts}} nových příspěvků od doby, kdy jste toto téma naposledy četli"
+
       likes:
         one: "je zde 1x 'líbí' v tomto tématu"
         few: "je zde {{count}}x 'líbí' v tomto tématu"
