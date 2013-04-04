@@ -43,11 +43,7 @@ class TopicListItemSerializer < ListableTopicSerializer
   end
 
   def include_rank_details?
-    return false unless object.topic_list.present?
-    return false unless scope.user.present?
-    return false unless scope.user.admin?
-
-    object.topic_list.filter == :hot
+    object.topic_list.try(:has_rank_details?)
   end
 
   def posters

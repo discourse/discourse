@@ -74,10 +74,9 @@ Discourse.SiteSetting = Discourse.Model.extend({
     var setting = this;
     return Discourse.ajax(Discourse.getURL("/admin/site_settings/") + (this.get('setting')), {
       data: { value: this.get('value') },
-      type: 'PUT',
-      success: function() {
-        setting.set('originalValue', setting.get('value'));
-      }
+      type: 'PUT'
+    }).then(function() {
+      setting.set('originalValue', setting.get('value'));
     });
   }
 });

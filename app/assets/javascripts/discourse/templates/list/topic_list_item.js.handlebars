@@ -6,21 +6,28 @@
   {{/if}}
 
   <td class='main-link clearfix'>
-      {{view Discourse.TopicStatusView topicBinding="this"}}
-      {{{topicLink this showTagIfPresent="controller.category"}}}
-      {{#if unread}}
-        <a href="{{lastReadUrl}}" class='badge unread badge-notification' title='{{i18n topic.unread_posts unread="unread"}}'>{{unread}}</a>
-      {{/if}}
-      {{#if displayNewPosts}}
-        <a href="{{lastReadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new_posts new_posts="displayNewPosts"}}'>{{displayNewPosts}}</a>
-      {{/if}}
-      {{#if unseen}}
-        <a href="{{lastReadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new}}'><i class='icon icon-asterisk'></i></a>
-      {{/if}}
 
-      {{#if rank_details}}
-        <i class='icon icon-beaker score' {{action showRankDetails this}} title='{{i18n rank_details.show}}'></i>
-      {{/if}}
+    {{#if controller.rankDetailsVisible}}
+      <div class='rank-details'>
+        <p>{{rank_details.hot_topic_type}}</p>
+        <p>
+          ({{float rank_details.random_bias}} * {{float rank_details.random_multiplier}}) + ({{float rank_details.days_ago_bias}} * {{float rank_details.days_ago_multiplier}}) = <b>{{float rank_details.ranking_score}}</b>
+          <i class='icon icon-beaker score' {{action showRankDetails this}} title='{{i18n rank_details.show}}'></i>
+        </p>
+      </div>
+    {{/if}}
+
+    {{view Discourse.TopicStatusView topicBinding="this"}}
+    {{{topicLink this showTagIfPresent="controller.category"}}}
+    {{#if unread}}
+      <a href="{{lastReadUrl}}" class='badge unread badge-notification' title='{{i18n topic.unread_posts unread="unread"}}'>{{unread}}</a>
+    {{/if}}
+    {{#if displayNewPosts}}
+      <a href="{{lastReadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new_posts new_posts="displayNewPosts"}}'>{{displayNewPosts}}</a>
+    {{/if}}
+    {{#if unseen}}
+      <a href="{{lastReadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new}}'><i class='icon icon-asterisk'></i></a>
+    {{/if}}
   </td>
 
   <td class='category'>

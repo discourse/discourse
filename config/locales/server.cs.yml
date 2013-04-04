@@ -324,6 +324,10 @@ cs:
       title: "Odesláno emailů"
       xaxis: "Den"
       yaxis: "Počet emailů"
+    private_messages:
+      title: "Soukromé zprávy"
+      xaxis: "Den"
+      yaxis: "Počet soukromých zpráv"
 
   dashboard:
     rails_env_warning: "Váš server běží v módu %{env}."
@@ -476,7 +480,6 @@ cs:
     max_word_length: "Maximální povolená délka slova ve znacích v názvu tématu"
     title_min_entropy: "Minimální entropie (unikátní znaky) požadovaná v názvu tématu"
     body_min_entropy: "Minimální entropie (unikátní znaky) požadovaná v obsahu příspěvku"
-    new_user_period_days: "Jak dlouho je uživatel zvýrazněn jako nový, ve dnech"
 
     title_fancy_entities: "Převádět HTML entity v názvech témat"
 
@@ -505,7 +508,6 @@ cs:
       topic: 'Témata'
       user: 'Uživatelé'
 
-  youve_posted: "Zaslal jste"
   original_poster: "Původní zasilatel"
   most_posts: "Více příspěvků"
   most_recent_poster: "Poslední zasilatel"
@@ -594,7 +596,7 @@ cs:
     text_body_template: |
       Tohle je testovací email z fóra na %{site_name}. Toto fórum můžete navštívit ve vašem prohlížeči na
 
-      [*%{base_url}*][0]
+      [**%{base_url}**][0]
 
       Doručování emailu je komplexní operace, zde je pár věcí, které byste měli zkontrolovat:
 

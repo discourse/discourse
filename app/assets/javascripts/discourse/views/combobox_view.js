@@ -42,6 +42,18 @@ Discourse.ComboboxView = Discourse.View.extend({
       _this = this;
     $elem = this.$();
     $elem.chosen({ template: this.template, disable_search_threshold: 5 });
+    if (this.overrideWidths) {
+      // The Chosen plugin hard-codes the widths in style attrs. :<
+      $elem.chosen().next().removeAttr("style");
+      $elem.chosen().next().find('.chzn-drop').removeAttr("style");
+      $elem.chosen().next().find('.chzn-search input').removeAttr("style");
+    }
+    if (this.classNames && this.classNames.length > 0) {
+      // Apply the classes to Chosen's dropdown div too:
+      this.classNames.each( function(c) {
+        $elem.chosen().next().addClass(c);
+      });
+    }
     $elem.change(function(e) {
       _this.set('value', $(e.target).val());
     });

@@ -117,6 +117,7 @@ describe UsersController do
 
       context 'reponse' do
         before do
+          Guardian.any_instance.expects(:can_access_forum?).returns(true)
           EmailToken.expects(:confirm).with('asdfasdf').returns(user)
           get :activate_account, token: 'asdfasdf'
         end
@@ -139,9 +140,9 @@ describe UsersController do
 
       end
 
-      context 'must_approve_users' do
+      context 'user is not approved' do
         before do
-          SiteSetting.expects(:must_approve_users?).returns(true)
+          Guardian.any_instance.expects(:can_access_forum?).returns(false)
           EmailToken.expects(:confirm).with('asdfasdf').returns(user)
           get :activate_account, token: 'asdfasdf'
         end

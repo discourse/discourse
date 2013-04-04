@@ -164,6 +164,17 @@ class Guardian
     true
   end
 
+  # Support sites that have to approve users
+  def can_access_forum?
+    return true unless SiteSetting.must_approve_users?
+    return false if user.blank?
+
+    # Admins can't lock themselves out of a site
+    return true if user.admin?
+
+    user.approved?
+  end
+
   def can_see_pending_invites_from?(user)
     return false if user.blank?
     return false if @user.blank?

@@ -246,13 +246,13 @@ class UsersController < ApplicationController
         @user.password = params[:password]
         if @user.save
 
-          if SiteSetting.must_approve_users? && !@user.approved?
-            @requires_approval = true
-            flash[:success] = I18n.t('password_reset.success_unapproved')
-          else
+          if Guardian.new(@user).can_access_forum?
             # Log in the user
             log_on_user(@user)
             flash[:success] = I18n.t('password_reset.success')
+          else
+            @requires_approval = true
+            flash[:success] = I18n.t('password_reset.success_unapproved')
           end
         end
       end
@@ -293,11 +293,11 @@ class UsersController < ApplicationController
     if @user = EmailToken.confirm(params[:token])
 
       # Log in the user unless they need to be approved
-      if SiteSetting.must_approve_users?
-        @needs_approval = true
-      else
+      if Guardian.new(@user).can_access_forum?
         @user.enqueue_welcome_message('welcome_user') if @user.send_welcome_message
         log_on_user(@user)
+      else
+        @needs_approval = true
       end
 
     else

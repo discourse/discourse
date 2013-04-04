@@ -2,66 +2,121 @@ require 'spec_helper'
 
 describe Report do
 
-  # describe 'visits report' do
-  #   let(:report) { Report.find('visits', cache: false) }
+  describe 'visits report' do
+    let(:report) { Report.find('visits') }
 
-  #   context "no visits" do
-  #     it "returns an empty report" do
-  #       report.data.should be_blank
-  #     end
-  #   end
+    context "no visits" do
+      it "returns an empty report" do
+        report.data.should be_blank
+      end
+    end
 
-  #   context "with visits" do
-  #     let(:user) { Fabricate(:user) }
+    context "with visits" do
+      let(:user) { Fabricate(:user) }
 
-  #     before do
-  #       user.user_visits.create(visited_at: 1.day.ago)
-  #       user.user_visits.create(visited_at: 2.days.ago)
-  #     end
+      before do
+        user.user_visits.create(visited_at: 1.day.ago)
+        user.user_visits.create(visited_at: 2.days.ago)
+      end
 
-  #     it "returns a report with data" do
-  #       report.data.should be_present
-  #     end
-  #   end
-  # end
+      it "returns a report with data" do
+        report.data.should be_present
+      end
+    end
+  end
 
-  # [:signup, :topic, :post, :flag, :like, :email].each do |arg|
-  #   describe "#{arg} report" do
-  #     pluralized = arg.to_s.pluralize
+  [:signup, :topic, :post, :flag, :like, :email].each do |arg|
+    describe "#{arg} report" do
+      pluralized = arg.to_s.pluralize
 
-  #     let(:report) { Report.find(pluralized, cache: false) }
+      let(:report) { Report.find(pluralized) }
 
-  #     context "no #{pluralized}" do
-  #       it 'returns an empty report' do
-  #         report.data.should be_blank
-  #       end
-  #     end
+      context "no #{pluralized}" do
+        it 'returns an empty report' do
+          report.data.should be_blank
+        end
+      end
 
-  #     context "with #{pluralized}" do
-  #       before do
-  #         fabricator = case arg
-  #         when :signup
-  #           :user
-  #         when :email
-  #           :email_log
-  #         else
-  #           arg
-  #         end
-  #         Fabricate(fabricator, created_at: 25.hours.ago)
-  #         Fabricate(fabricator, created_at: 1.hours.ago)
-  #         Fabricate(fabricator, created_at: 1.hours.ago)
-  #       end
+      context "with #{pluralized}" do
+        before do
+          fabricator = case arg
+          when :signup
+            :user
+          when :email
+            :email_log
+          else
+            arg
+          end
+          Fabricate(fabricator, created_at: 25.hours.ago)
+          Fabricate(fabricator, created_at: 1.hours.ago)
+          Fabricate(fabricator, created_at: 1.hours.ago)
+        end
 
-  #       it 'returns correct data' do
-  #         report.data[0][:y].should == 1
-  #         report.data[1][:y].should == 2
-  #       end
-  #     end
-  #   end
-  # end
+        it 'returns correct data' do
+          report.data[0][:y].should == 1
+          report.data[1][:y].should == 2
+        end
+      end
+    end
+  end
+
+  describe 'private messages' do
+    let(:report) { Report.find('private_messages') }
+
+    it 'topic report should not include private messages' do
+      Fabricate(:private_message_topic, created_at: 1.hour.ago)
+      Fabricate(:topic, created_at: 1.hour.ago)
+      report = Report.find('topics')
+      report.data[0][:y].should == 1
+    end
+
+    it 'post report should not include private messages' do
+      Fabricate(:private_message_post, created_at: 1.hour.ago)
+      Fabricate(:post)
+      report = Report.find('posts')
+      report.data[0][:y].should == 1
+    end
+
+    context 'no private messages' do
+      it 'returns an empty report' do
+        report.data.should be_blank
+      end
+
+      context 'some public posts' do
+        it 'returns an empty report' do
+          Fabricate(:post); Fabricate(:post)
+          report.data.should be_blank
+        end
+      end
+    end
+
+    context 'some private messages' do
+      before do
+        Fabricate(:private_message_post, created_at: 25.hours.ago)
+        Fabricate(:private_message_post, created_at: 1.hour.ago)
+        Fabricate(:private_message_post, created_at: 1.hour.ago)
+      end
+
+      it 'returns correct data' do
+        report.data[0][:y].should == 1
+        report.data[1][:y].should == 2
+      end
+
+      context 'and some public posts' do
+        before do
+          Fabricate(:post); Fabricate(:post)
+        end
+
+        it 'returns correct data' do
+          report.data[0][:y].should == 1
+          report.data[1][:y].should == 2
+        end
+      end
+    end
+  end
 
   describe 'users by trust level report' do
-    let(:report) { Report.find('users_by_trust_level', cache: false) }
+    let(:report) { Report.find('users_by_trust_level') }
 
     context "no users" do
       it "returns an empty report" do

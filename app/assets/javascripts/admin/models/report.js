@@ -93,24 +93,19 @@ Discourse.Report = Discourse.Model.extend({
 Discourse.Report.reopenClass({
   find: function(type) {
     var model = Discourse.Report.create({type: type});
-    Discourse.ajax(Discourse.getURL("/admin/reports/") + type, {
-      type: 'GET',
-      success: function(json) {
-
-        // Add a percent field to each tuple
-        var maxY = 0;
+    Discourse.ajax(Discourse.getURL("/admin/reports/") + type).then(function (json) {
+      // Add a percent field to each tuple
+      var maxY = 0;
+      json.report.data.forEach(function (row) {
+        if (row.y > maxY) maxY = row.y;
+      });
+      if (maxY > 0) {
         json.report.data.forEach(function (row) {
-          if (row.y > maxY) maxY = row.y;
+          row.percentage = Math.round((row.y / maxY) * 100);
         });
-        if (maxY > 0) {
-          json.report.data.forEach(function (row) {
-            row.percentage = Math.round((row.y / maxY) * 100);
-          });
-        }
-
-        model.mergeAttributes(json.report);
-        model.set('loaded', true);
       }
+      model.mergeAttributes(json.report);
+      model.set('loaded', true);
     });
     return(model);
   }

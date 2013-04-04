@@ -83,11 +83,11 @@
     <table class="table table-condensed table-hover">
       <tbody>
         <tr>
-          <td class="title">{{i18n admin.dashboard.moderators}}</td>
+          <td class="title"><i class='icon icon-trophy'></i> {{i18n admin.dashboard.moderators}}</td>
           <td class="value">{{moderators}}</td>
         </tr>
         <tr>
-          <td class="title">{{i18n admin.dashboard.admins}}</td>
+          <td class="title"><i class='icon icon-magic'></i> {{i18n admin.dashboard.admins}}</td>
           <td class="value">{{admins}}</td>
         </tr>
       </tbody>
@@ -113,6 +113,7 @@
         {{ render 'admin_report_counts' likes }}
         {{ render 'admin_report_counts' flags }}
         {{ render 'admin_report_counts' emails }}
+        {{ render 'admin_report_counts' private_messages }}
       {{/unless}}
     </table>
   </div>

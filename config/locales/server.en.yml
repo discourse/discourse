@@ -294,6 +294,10 @@ en:
       title: "Emails Sent"
       xaxis: "Day"
       yaxis: "Number of Emails"
+    private_messages:
+      title: "Private Messages"
+      xaxis: "Day"
+      yaxis: "Number of private messages"
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
@@ -446,7 +450,6 @@ en:
     max_word_length: "The maximum allowed word length, in characters, in a topic title"
     title_min_entropy: "The minimum allowed entropy (unique characters) required for a topic title"
     body_min_entropy: "The minimum allowed entropy (unique characters) required for a post body"
-    new_user_period_days: "How long a user is highlighted as being new, in days"
 
     title_fancy_entities: "Convert fancy HTML entities in topic titles"
 
@@ -475,7 +478,6 @@ en:
       topic: 'Topics'
       user: 'Users'
 
-  youve_posted: "You've Posted"
   original_poster: "Original Poster"
   most_posts: "Most Posts"
   most_recent_poster: "Most Recent Poster"

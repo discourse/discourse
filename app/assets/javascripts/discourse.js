@@ -166,19 +166,17 @@ Discourse = Ember.Application.createWithMixins({
   **/
   logout: function() {
     Discourse.KeyValueStore.abandonLocal();
-    return Discourse.ajax(Discourse.getURL("/session/") + this.get('currentUser.username'), {
-      type: 'DELETE',
-      success: function(result) {
-        // To keep lots of our variables unbound, we can handle a redirect on logging out.
-         window.location.reload();
-      }
+    Discourse.ajax(Discourse.getURL("/session/") + this.get('currentUser.username'), {
+      type: 'DELETE'
+    }).then(function() {
+      // Reloading will refresh unbound properties
+      window.location.reload();
     });
   },
 
   authenticationComplete: function(options) {
     // TODO, how to dispatch this to the view without the container?
-    var loginView;
-    loginView = Discourse.__container__.lookup('controller:modal').get('currentView');
+    var loginView = Discourse.__container__.lookup('controller:modal').get('currentView');
     return loginView.authenticationComplete(options);
   },
 

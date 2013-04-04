@@ -391,6 +391,7 @@ cs:
         category: "V kategorii {{category}} nejsou žádná další témata."
 
     rank_details:
+      toggle: zobrazit/skrýt detaily bodování
       show: zobrazit detaily bodování tématu
       title: Detaily bodování tématu
 
@@ -579,6 +580,7 @@ cs:
         upload: "Bohužel nastala chyba při nahrávání příspěvku. Prosím zkuste to znovu."
         upload_too_large: "Soubor, který se snažíte nahrát je bohužel příliš velký (maximální velikost je {{max_size_kb}}kb). Prosím zmenšete ho zkuste to znovu."
         upload_too_many_images: "Bohužel, najednou smíte nahrát pouze jeden obrázek."
+        only_images_are_supported: "Bohužel, smíte nahrávat pouze obrázky."
 
       abandon: "Opravdu chcete opustit váš příspěvek?"
 
@@ -602,17 +604,96 @@ cs:
           one: "Odebrat nahlášení"
           few: "Odebrat nahlášení"
           other: "Odebrat nahlášení"
-        it_too: "{{alsoName}} také"
-        undo: "Zrušit {{alsoName}}"
+        it_too:
+          off_topic: "Také nahlásit"
+          spam: "Také nahlásit"
+          inappropriate: "Také nahlásit"
+          custom_flag: "Také nahlásit"
+          bookmark: "Také přidat do záložek"
+          like: "To se mi také líbí"
+          vote: "Hlasovat také"
+        undo:
+          off_topic: "Zrušit nahlášení"
+          spam: "Zrušit nahlášení"
+          inappropriate: "Zrušit nahlášení"
+          custom_flag: "Zrušit nahlášení"
+          bookmark: "Odebrat ze záložek"
+          like: "Už se mi to nelíbí"
+          vote: "Zrušit hlas"
+        people:
+          off_topic: "{{icons}} označili tento příspěvek jako off-topic"
+          spam: "{{icons}} označili tento příspěvek jako spam"
+          inappropriate: "{{icons}} označili tento příspěvek jako nevhodný"
+          custom_flag: "{{icons}} nahlásili tento příspěvek"
+          bookmark: "{{icons}} si přidali příspěvek do záložek"
+          like: "{{icons}} se líbí tento příspěvek"
+          vote: "{{icons}} hlasovali pro tento příspěvek"
+        by_you:
+          off_topic: "Označili jste tento příspěvek jako off-topic"
+          spam: "Označili jste tento příspěvek jako spam"
+          inappropriate: "Označili jste tento příspěvek jako nevhodný"
+          custom_flag: "Nahlásili jste tento příspěvek"
+          bookmark: "Přidali jste si tento příspěvek do záložek"
+          like: "Toto se vám líbí"
+          vote: "Hlasovali jste pro tento příspěvek"
         by_you_and_others:
-          zero: "Vy {{long_form}}"
-          one: "Vy a 1 další člověk {{long_form}}"
-          few: "Vy a {{count}} dalších lidé {{long_form}}"
-          other: "Vy a {{count}} dalších lidí {{long_form}}"
+          off_topic:
+            one: "Vy a 1 další člověk jste označili tento příspěvek jako off-topic"
+            few: "Vy a {{count}} další lidé jste označili tento příspěvek jako off-topic"
+            other: "Vy a {{count}} dalších lidí jste označili tento příspěvek jako off-topic"
+          spam:
+            one: "Vy a 1 další člověk jste označili tento příspěvek jako spam"
+            few: "Vy a {{count}} další lidé jste označili tento příspěvek jako spam"
+            other: "Vy a {{count}} dalších lidí jste označili tento příspěvek jako spam"
+          inappropriate:
+            one: "Vy a 1 další člověk jste označili tento příspěvek jako nevhodný"
+            few: "Vy a {{count}} další lidé jste označili tento příspěvek jako nevhodný"
+            other: "Vy a {{count}} dalších lidí jste označili tento příspěvek jako nevhodný"
+          custom_flag:
+            one: "Vy a 1 další člověk jste nahlásili tento příspěvek"
+            few: "Vy a {{count}} další lidé jste nahlásili tento příspěvek"
+            other: "Vy a {{count}} dalších lidí jste nahlásili tento příspěvek"
+          bookmark:
+            one: "Vy a 1 další člověk jste si přidali tento příspěvek do záložek"
+            few: "Vy a {{count}} další lidé jste si přidali tento příspěvek do záložek"
+            other: "Vy a {{count}} dalších lidí si přidali tento příspěvek do záložek"
+          like:
+            one: "Vám a 1 dalšímu člověku se tento příspěvek líbí"
+            few: "Vám a {{count}} dalším lidem se tento příspěvek líbí"
+            other: "Vám a {{count}} dalším lidem se tento příspěvek líbí"
+          vote:
+            one: "Vy a 1 další člověk jste hlasovali pro tento příspěvek"
+            few: "Vy a {{count}} další lidé jste hlasovali pro tento příspěvek"
+            other: "Vy a {{count}} dalších lidí jste hlasovali pro tento příspěvek"
         by_others:
-          one: "1 člověk {{long_form}}"
-          few: "{{count}} lidé {{long_form}}"
-          other: "{{count}} lidí {{long_form}}"
+          off_topic:
+            one: "1 člověk označil tento příspěvek jako off-topic"
+            few: "{{count}} lidé označili tento příspěvek jako off-topic"
+            other: "{{count}} lidí označilo tento příspěvek jako off-topic"
+          spam:
+            one: "1 člověk označil tento příspěvek jako spam"
+            few: "{{count}} lidé označili tento příspěvek jako spam"
+            other: "{{count}} lidí označilo tento příspěvek jako spam"
+          inappropriate:
+            one: "1 člověk označil tento příspěvek jako nevhodný"
+            few: "{{count}} lidé označili tento příspěvek jako nevhodný"
+            other: "{{count}} lidí označilo tento příspěvek jako nevhodný"
+          custom_flag:
+            one: "1 člověk nahlásil tento příspěvek"
+            few: "{{count}} lidé nahlásili tento příspěvek"
+            other: "{{count}} lidí nahlásilo tento příspěvek"
+          bookmark:
+            one: "1 člověk si přidal tento příspěvek do záložek"
+            few: "{{count}} lidé si přidali tento příspěvek do záložek"
+            other: "{{count}} lidí si přidalo tento příspěvek do záložek"
+          like:
+            one: "1 člověku se tento příspěvek líbí"
+            few: "{{count}} lidem se tento příspěvek líbí"
+            other: "{{count}} lidem se tento příspěvek líbí"
+          vote:
+            one: "1 člověk hlasoval pro tento příspěvek"
+            few: "{{count}} lidé hlasovali pro tento příspěvek"
+            other: "{{count}} lidí hlasovalo pro tento příspěvek"
 
       edits:
         one: 1 úprava

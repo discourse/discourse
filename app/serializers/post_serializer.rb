@@ -37,20 +37,15 @@ class PostSerializer < ApplicationSerializer
              :bookmarked,
              :raw,
              :actions_summary,
-             :new_user?,
              :moderator?,
              :avatar_template,
              :user_id,
              :draft_sequence,
              :hidden,
              :hidden_reason_id,
-             :deleted_at
+             :deleted_at, 
+             :trust_level
 
-
-  def new_user?
-    # 21 calls = 5ms ... if there was a proper date in the RHS it would be 1ms 
-    object.user.created_at > SiteSetting.new_user_period_days.days.ago
-  end
 
   def moderator?
     object.user.moderator?
@@ -126,6 +121,10 @@ class PostSerializer < ApplicationSerializer
 
   def name
     object.user.name
+  end
+
+  def trust_level
+    object.user.trust_level
   end
 
   def reply_to_user

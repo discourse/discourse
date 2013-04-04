@@ -342,8 +342,6 @@ nl:
     title_min_entropy: "De minimale entropie die een topictitel moet bevatten"
     body_min_entropy: "De minimale entropie die de inhoud van een post moet bevatten"
 
-    new_user_period_days: "Hoe lang een gebruiker als nieuw wordt aangetoond, in dagen."
-
 
 
   notification_types:
@@ -368,7 +366,6 @@ nl:
       topic: 'Topics'
       user: 'Gebruikers'
 
-  youve_posted: "Jij Hebt Dit Gepost"
   original_poster: "Originele Poster"
   most_posts: "Meer Posts"
   most_recent_poster: "Meest Recente Poster"

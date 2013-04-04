@@ -5,9 +5,18 @@ class TopicListSerializer < ApplicationSerializer
              :filter_summary,
              :draft,
              :draft_key,
-             :draft_sequence
+             :draft_sequence,
+             :can_view_rank_details
 
   has_many :topics, serializer: TopicListItemSerializer, embed: :objects
+
+  def can_view_rank_details
+    true
+  end
+
+  def include_can_view_rank_details?
+    object.has_rank_details?
+  end
 
   def can_create_topic
     scope.can_create?(Topic)

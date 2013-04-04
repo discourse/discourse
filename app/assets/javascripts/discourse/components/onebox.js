@@ -64,7 +64,7 @@ Discourse.Onebox = {
     var onebox = this;
     promise.then(function(html) {
 
-      // successfully loaded onebox
+      // loaded onebox
       loadingFinished();
 
       onebox.localCache[url] = html;
