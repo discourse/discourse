@@ -87,13 +87,13 @@
     <div class='controls'>
       {{#if content.can_revoke_moderation}}
         <button class='btn' {{action revokeModeration target="content"}}>
-          <i class='icon icon-eye-close'></i>
+          <i class='icon icon-magic'></i>
           {{i18n admin.user.revoke_moderation}}
         </button>
       {{/if}}
       {{#if content.can_grant_moderation}}
         <button class='btn' {{action grantModeration target="content"}}>
-          <i class='icon icon-eye-open'></i>
+          <i class='icon icon-magic'></i>
           {{i18n admin.user.grant_moderation}}
         </button>
       {{/if}}
