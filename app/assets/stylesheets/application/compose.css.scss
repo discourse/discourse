@@ -55,6 +55,12 @@
 }
 
 #reply-control {
+  .has-error {
+    border: solid 1px #f00;
+            box-shadow: 0 0 5px rgba(255, 0, 0, 0.75);
+       -moz-box-shadow: 0 0 5px rgba(255, 0, 0, 0.75);
+    -webkit-box-shadow: 0 0 5px rgba(255, 0, 0, 0.75);
+  }
   .toggle-preview, .saving-draft, #image-uploading {
     position: absolute;
     bottom: -31px;
