@@ -71,6 +71,16 @@
   .chzn-container {
     margin: 6px 0;
   }
+  .category-combobox {
+    width: 330px;
+    .chzn-drop {
+      left: -9000px;
+      width: 328px;
+    }
+    .chzn-search input {
+      width: 298px;
+    }
+  }
   button {
     margin: 8px 0;
     vertical-align: top;

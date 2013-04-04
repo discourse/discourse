@@ -241,11 +241,6 @@
         }
       }
       .category-combobox {
-        .category-desc {
-          margin: 8px 8px 0px 8px;
-          font-size: 12px;
-        }
-
         width: 430px;
         @include medium-width { width: 285px; }
         @include small-width { width: 220px; }
