@@ -752,7 +752,7 @@ en:
         help: "topics you marked as favorites"
       read:
         title: "Read"
-        help: "topics you've read"
+        help: "topics you've read, in the order that you last read them"
       categories:
         title: "Categories"
         title_in: "Category - {{categoryName}}"
