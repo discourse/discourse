@@ -73,8 +73,7 @@ Ember.Handlebars.registerBoundHelper('boundCategoryLink', function(category) {
   @for Handlebars
 **/
 Handlebars.registerHelper('titledLinkTo', function(name, object) {
-  var options;
-  options = [].slice.call(arguments, -1)[0];
+  var options = [].slice.call(arguments, -1)[0];
   if (options.hash.titleKey) {
     options.hash.title = Em.String.i18n(options.hash.titleKey);
   }

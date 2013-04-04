@@ -36,6 +36,7 @@ Discourse.AceEditorView = Discourse.View.extend({
   didInsertElement: function() {
     var initAce,
       _this = this;
+
     initAce = function() {
       _this.editor = ace.edit(_this.$('.ace')[0]);
       _this.editor.setTheme("ace/theme/chrome");

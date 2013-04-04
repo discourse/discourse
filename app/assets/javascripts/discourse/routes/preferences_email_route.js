@@ -12,6 +12,16 @@ Discourse.PreferencesEmailRoute = Discourse.RestrictedUserRoute.extend({
     this.render({ into: 'user', outlet: 'userOutlet' });
   },
 
+  // A bit odd, but if we leave to /preferences we need to re-render that outlet
+  exit: function() {
+    this._super();
+    this.render('preferences', {
+      into: 'user',
+      outlet: 'userOutlet',
+      controller: 'preferences'
+    });
+  },
+
   setupController: function(controller) {
     controller.set('content', this.controllerFor('user').get('content'));
   }

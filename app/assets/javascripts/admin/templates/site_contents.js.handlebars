@@ -1,0 +1,16 @@
+<div class='row'>
+  <div class='content-list span6'>
+    <h3>{{i18n admin.site_content.edit}}</h3>
+    <ul>
+      {{#each type in content}}
+        <li>
+          {{#linkTo 'adminSiteContentEdit' type}}{{type.title}}{{/linkTo}}
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+
+  <div class='content-editor span15'>
+    {{outlet}}
+  </div>
+</div>

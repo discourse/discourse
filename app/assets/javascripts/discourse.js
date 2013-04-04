@@ -134,6 +134,10 @@ Discourse = Ember.Application.createWithMixins({
       if (href === '#') return;
       if ($currentTarget.attr('target')) return;
       if ($currentTarget.data('auto-route')) return;
+
+      // If it's an ember #linkTo skip it
+      if ($currentTarget.hasClass('ember-view')) return;
+
       if ($currentTarget.hasClass('lightbox')) return;
       if (href.indexOf("mailto:") === 0) return;
       if (href.match(/^http[s]?:\/\//i) && !href.match(new RegExp("^http:\\/\\/" + window.location.hostname, "i"))) return;

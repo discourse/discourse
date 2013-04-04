@@ -310,6 +310,23 @@ en:
     twitter_config_warning: 'The server is configured to allow signup and log in with Twitter (enable_twitter_logins), but the key and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">See this guide to learn more</a>.'
     github_config_warning: 'The server is configured to allow signup and log in with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">See this guide to learn more</a>.'
 
+  content_types:
+    education_new_reply:
+      title: "New User Education: New Reply"
+      description: "The pop up text a user sees when replying."
+    education_new_topic:
+      title: "New User Education: New Topic"
+      description: "The pop up text a user sees when creating a topic."
+    usage_tips:
+      title: "Usage Tips"
+      description: "The usage tips a new user receives when welcomed to the forum."
+    welcome_user:
+      title: "Welcome: New User"
+      description: "The system message a new user receives."
+    welcome_invite:
+      title: "Welcome: Invited User"
+      description: "The system message an invited user receives."
+
   site_settings:
     default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"
     min_post_length: "Minimum post length in characters"

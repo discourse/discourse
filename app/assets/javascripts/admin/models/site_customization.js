@@ -14,19 +14,17 @@ Discourse.SiteCustomization = Discourse.Model.extend({
     return this.startTrackingChanges();
   },
 
-  description: (function() {
+  description: function() {
     return "" + this.name + (this.enabled ? ' (*)' : '');
-  }).property('selected', 'name'),
+  }.property('selected', 'name'),
 
-  changed: (function() {
+  changed: function() {
     var _this = this;
-    if (!this.originals) {
-      return false;
-    }
+    if (!this.originals) return false;
     return this.trackedProperties.any(function(p) {
       return _this.originals[p] !== _this.get(p);
     });
-  }).property('override_default_style', 'enabled', 'name', 'stylesheet', 'header', 'originals'),
+  }.property('override_default_style', 'enabled', 'name', 'stylesheet', 'header', 'originals'),
 
   startTrackingChanges: function() {
     var _this = this;
@@ -37,18 +35,17 @@ Discourse.SiteCustomization = Discourse.Model.extend({
     });
   },
 
-  previewUrl: (function() {
+  previewUrl: function() {
     return "/?preview-style=" + (this.get('key'));
-  }).property('key'),
+  }.property('key'),
 
-  disableSave: (function() {
+  disableSave: function() {
     return !this.get('changed');
-  }).property('changed'),
+  }.property('changed'),
 
   save: function() {
-    var data;
     this.startTrackingChanges();
-    data = {
+    var data = {
       name: this.name,
       enabled: this.enabled,
       stylesheet: this.stylesheet,
@@ -66,7 +63,6 @@ Discourse.SiteCustomization = Discourse.Model.extend({
 
   destroy: function() {
     if (!this.id) return;
-
     return Discourse.ajax({
       url: Discourse.getURL("/admin/site_customizations/") + this.id,
       type: 'DELETE'
@@ -76,13 +72,12 @@ Discourse.SiteCustomization = Discourse.Model.extend({
 });
 
 var SiteCustomizations = Ember.ArrayProxy.extend({
-  selectedItemChanged: (function() {
-    var selected;
-    selected = this.get('selectedItem');
+  selectedItemChanged: function() {
+    var selected = this.get('selectedItem');
     return this.get('content').each(function(i) {
       return i.set('selected', selected === i);
     });
-  }).observes('selectedItem')
+  }.observes('selectedItem')
 });
 
 Discourse.SiteCustomization.reopenClass({

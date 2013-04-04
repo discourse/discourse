@@ -25,6 +25,7 @@ class Admin::UsersController < Admin::AdminController
     @user.delete_all_posts!(guardian)
     render nothing: true
   end
+
   def ban
     @user = User.where(id: params[:user_id]).first
     guardian.ensure_can_ban!(@user)
