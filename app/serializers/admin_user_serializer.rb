@@ -3,6 +3,7 @@ class AdminUserSerializer < BasicUserSerializer
   attributes :email,
              :active,
              :admin,
+             :moderator,
              :last_seen_age,
              :days_visited,
              :last_emailed_age,

@@ -787,6 +787,7 @@ en:
 
     admin:
       title: 'Discourse Admin'
+      moderator: 'Moderator'
 
       dashboard:
         title: "Admin Dashboard"
