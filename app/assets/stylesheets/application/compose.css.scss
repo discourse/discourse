@@ -216,9 +216,9 @@
       height: 400px;
     }
     .contents {
-      input[type=text] {
+      input#reply-title {
         padding: 7px 10px;
-        margin: 6px 0 3px 0;
+        margin: 6px 10px 3px 0;
       }
       .wmd-controls {
         top: 100px;
@@ -252,9 +252,9 @@
           @include small-width { width: 218px; }
         }
         .chzn-search input {
-          width: 398px;
-          @include medium-width { width: 253px; }
-          @include small-width { width: 188px; }
+          width: 378px;
+          @include medium-width { width: 233px; }
+          @include small-width { width: 168px; }
         }
       }
     }
