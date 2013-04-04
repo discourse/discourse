@@ -469,12 +469,14 @@ Discourse.Composer = Discourse.Model.extend({
     // 'title' is focused
     if ($('#reply-title').is(':focus')) {
       var titleDiff = Discourse.SiteSettings.min_topic_title_length - this.get('titleLength');
+      $('#reply-title').toggleClass("has-error", titleDiff > 0);
       if (titleDiff > 0) {
         return this.set('draftStatus', Em.String.i18n('composer.min_length.need_more_for_title', { n: titleDiff }));
       }
     // 'reply' is focused
     } else if ($('#wmd-input').is(':focus')) {
       var replyDiff = Discourse.SiteSettings.min_post_length - this.get('replyLength');
+      $('.textarea-wrapper').toggleClass("has-error", replyDiff > 0);
       if (replyDiff > 0) {
         return this.set('draftStatus', Em.String.i18n('composer.min_length.need_more_for_reply', { n: replyDiff }));
       }
