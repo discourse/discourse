@@ -9,17 +9,10 @@ Discourse.Utilities = {
 
   translateSize: function(size) {
     switch (size) {
-      case 'tiny':
-        size = 20;
-        break;
-      case 'small':
-        size = 25;
-        break;
-      case 'medium':
-        size = 32;
-        break;
-      case 'large':
-        size = 45;
+      case 'tiny': return 20;
+      case 'small': return 25;
+      case 'medium': return 32;
+      case 'large': return 45;
     }
     return size;
   },
@@ -163,6 +156,45 @@ Discourse.Utilities = {
       range.moveStart('character', pos);
       return range.select();
     }
+  },
+
+  /**
+  validateFilesForUpload
+
+  **/
+  /**
+    Validate a list of files to be uploaded
+
+    @method validateFilesForUpload
+    @param {Array} files The list of files we want to upload
+  **/
+  validateFilesForUpload: function(files) {
+    if (files) {
+      // can only upload one file at a time
+      if (files.length > 1) {
+        bootbox.alert(Em.String.i18n('post.errors.upload_too_many_images'));
+        return false;
+      } else if (files.length > 0) {
+        // check that the uploaded file is an image
+        // TODO: we should provide support for other types of file
+        if (files[0].type && files[0].type.indexOf('image/') !== 0) {
+          bootbox.alert(Em.String.i18n('post.errors.only_images_are_supported'));
+          return false;
+        }
+        // check file size
+        if (files[0].size && files[0].size > 0) {
+          var fileSizeInKB = files[0].size / 1024;
+          if (fileSizeInKB > Discourse.SiteSettings.max_upload_size_kb) {
+            bootbox.alert(Em.String.i18n('post.errors.upload_too_large', { max_size_kb: Discourse.SiteSettings.max_upload_size_kb }));
+            return false;
+          }
+          // everything is fine
+          return true;
+        }
+      }
+    }
+    // there has been an error
+    return false;
   }
 
 };

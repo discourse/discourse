@@ -276,43 +276,18 @@ Discourse.ComposerView = Discourse.View.extend({
         formData: { topic_id: 1234 }
     });
 
-    var addFiles = function (e, data) {
-      // can only upload one file at a time
-      if (data.files.length > 1) {
-        bootbox.alert(Em.String.i18n('post.errors.upload_too_many_images'));
-        return false;
-      } else if (data.files.length > 0) {
-        // check file size
-        var fileSizeInKB = data.files[0].size / 1024;
-        if (fileSizeInKB > Discourse.SiteSettings.max_upload_size_kb) {
-          bootbox.alert(Em.String.i18n('post.errors.upload_too_large', { max_size_kb: Discourse.SiteSettings.max_upload_size_kb }));
-          return false;
-        }
-        // check that the uploaded file is an image
-        // TODO: we should provide support for other types of file
-        if (data.files[0].type.indexOf('image/') !== 0) {
-          bootbox.alert(Em.String.i18n('post.errors.only_images_are_supported'));
-          return false; 
-        }
-        // everything is fine, reset upload status
-        _this.setProperties({
-          uploadProgress: 0,
-          loadingImage: true
-        });
-        return true;
-      }
-      // we need to return true here, otherwise it prevents the default paste behavior
-      return true;
-    };
+    // submit - this event is triggered for each upload
+    $uploadTarget.on('fileuploadsubmit', function (e, data) {
+      var result = Discourse.Utilities.validateFilesForUpload(data.files);
+      // reset upload status when everything is ok
+      if (result) _this.setProperties({ uploadProgress: 0, loadingImage: true });
+      return result;
+    });
 
-    // paste
-    $uploadTarget.on('fileuploadpaste', addFiles);
-
-    // drop
-    $uploadTarget.on('fileuploaddrop', addFiles);
-
-    // send
+    // send - this event is triggered when the upload request is about to start
     $uploadTarget.on('fileuploadsend', function (e, data) {
+      // hide the "image selector" modal
+      $('#discourse-modal').modal('hide');
       // cf. https://github.com/blueimp/jQuery-File-Upload/wiki/API#how-to-cancel-an-upload
       var jqXHR = data.xhr();
       // need to wait for the link to show up in the DOM
