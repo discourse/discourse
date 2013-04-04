@@ -75,8 +75,11 @@ class Report
   def self.report_flags(report)
     report.data = []
     (0..30).to_a.reverse.each do |i|
-      if (count = PostAction.where('date(created_at) = ?', i.days.ago.to_date).where(post_action_type_id: PostActionType.flag_types.values).count) > 0
-        report.data << {x: i.days.ago.to_date.to_s, y: count}
+      count = PostAction.where('date(created_at) = ?', i.days.ago.utc.to_date)
+        .where(post_action_type_id: PostActionType.flag_types.values)
+        .count
+      if count > 0
+        report.data << {x: i.days.ago.utc.to_date.to_s, y: count}
       end
     end
     flagsQuery = PostAction.where(post_action_type_id: PostActionType.flag_types.values)
