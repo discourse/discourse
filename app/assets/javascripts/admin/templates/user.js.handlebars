@@ -109,15 +109,15 @@
     <div class='value'>{{content.isBanned}}</div>
     <div class='controls'>
     {{#if content.isBanned}}
-      <button class='btn' {{action unban target="content"}}>
-        <i class='icon icon-screenshot'></i>
+      <button class='btn btn-danger' {{action unban target="content"}}>
+        <i class='icon icon-ban-circle'></i>
         {{i18n admin.user.unban}}
       </button>
       {{content.banDuration}}
     {{else}}
       {{#if content.canBan}}
-        <button class='btn' {{action ban target="content"}}>
-          <i class='icon icon-screenshot'></i>
+        <button class='btn btn-danger' {{action ban target="content"}}>
+          <i class='icon icon-ban-circle'></i>
           {{i18n admin.user.ban}}
         </button>
       {{/if}}
