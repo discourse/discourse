@@ -412,6 +412,9 @@ table {
     .problem-messages {
       float: left;
       width: 355px;
+      a {
+        text-decoration: underline;
+      }
     }
   }
 
