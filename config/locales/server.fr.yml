@@ -455,7 +455,6 @@ fr:
     max_word_length: "Le nombre maximum de mots dans un titre de discussion"
     title_min_entropy: "L'entropie minimale (ie. nombre de caractères) d'un titre de discussion"
     body_min_entropy: "L'entropie minimale (ie. nombre de caractères) du contenu d'un message"
-    new_user_period_days: "Combien de temps en jours, un utilisateur est-il consideré comme nouveau."
     title_fancy_entities: "Convertir les entitées HTML dans les titres des discussion"
 
     min_title_similar_length: "La taille minimale du titre avant que l'on vérifie l'existence de discussions identiques"

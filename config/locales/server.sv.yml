@@ -422,7 +422,6 @@ sv:
     max_word_length: "The maximum allowed word length, in characters, in a topic title"
     title_min_entropy: "The minimum allowed entropy (unique characters) required for a topic title"
     body_min_entropy: "The minimum allowed entropy (unique characters) required for a post body"
-    new_user_period_days: "How long a user is highlighted as being new, in days"
     title_fancy_entities: "Convert fancy HTML entities in topic titles"
 
     min_title_similar_length: "The minimum length of a title before it will be checked for similar topics"

@@ -439,7 +439,6 @@ de:
     max_word_length: "Maximale Wortlänge in Zeichen in Thementiteln."
     title_min_entropy: "Minimal nötige Entropie (einzigartige Zeichen) in einem Thementitel."
     body_min_entropy: "Minimal nötige Entropie (einzigartige Zeichen) in einem Beitragstext."
-    new_user_period_days: "Tage, die ein Nutzer als neu hervorgehoben wird."
 
     title_fancy_entities: "Konvertiere HTML-Entitys in Thementiteln."
 

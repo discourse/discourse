@@ -157,7 +157,6 @@ class SiteSetting < ActiveRecord::Base
   setting(:body_min_entropy, 7)
   setting(:max_word_length, 30)
 
-  setting(:new_user_period_days, 2)
   setting(:visitor_max_links, 2)
   setting(:visitor_max_images, 0)
 

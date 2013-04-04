@@ -431,7 +431,6 @@ zh_CN:
     max_word_length: "在主题的标题中，允许的词语长度的最大字符数"
     title_min_entropy: "在主题的标题中，允许的最低熵值（单个字符）"
     body_min_entropy: "在一个帖子内文中，允许的最低熵值（单个字符）"
-    new_user_period_days: "在多少天以内一个用户会被高亮显示为新用户"
     title_fancy_entities: "转换主题标题中的 HTML 实体"
 
     min_title_similar_length: "开始检查相似主题的帖子标题的最小长度"

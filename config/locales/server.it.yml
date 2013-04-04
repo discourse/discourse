@@ -423,7 +423,6 @@ it:
     max_word_length: "Numero massimo di caratteri che compongono una parola del titolo di un topic"
     title_min_entropy: "Entropia (caratteri unici) richiesta per il titolo di un topic"
     body_min_entropy: "Entropia (caratteri unici) richiesta per il contenuto di un post"
-    new_user_period_days: "Per quanti giorni un utente è considerato 'nuovo'"
     title_fancy_entities: "Converti caratteri HTML strani nei titoli dei topic"
 
     min_title_similar_length: "Lunghezza minima di un titolo per attivare il controllo su topic simili"

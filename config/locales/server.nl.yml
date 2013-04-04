@@ -342,8 +342,6 @@ nl:
     title_min_entropy: "De minimale entropie die een topictitel moet bevatten"
     body_min_entropy: "De minimale entropie die de inhoud van een post moet bevatten"
 
-    new_user_period_days: "Hoe lang een gebruiker als nieuw wordt aangetoond, in dagen."
-
 
 
   notification_types:

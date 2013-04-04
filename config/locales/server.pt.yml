@@ -348,8 +348,6 @@ pt:
     title_min_entropy: "The minimum entropy for a topic title"
     body_min_entropy: "The minimum entropy for post body"
 
-    new_user_period_days: "How long a user is highlighted as being new, in days."
-
   notification_types:
     mentioned: "%{display_username} mencionou-te em %{link}"
     liked: "%{display_username} gostou do teu post em %{link}"

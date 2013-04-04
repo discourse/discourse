@@ -8,6 +8,11 @@
 **/
 Discourse.Post = Discourse.Model.extend({
 
+
+  new_user:(function(){
+    return this.get('trust_level') === 0;
+  }).property('trust_level'),
+
   url: (function() {
     return Discourse.Utilities.postUrl(this.get('topic.slug') || this.get('topic_slug'), this.get('topic_id'), this.get('post_number'));
   }).property('post_number', 'topic_id', 'topic.slug'),
