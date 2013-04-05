@@ -61,6 +61,12 @@ a [class*=" icon-"] {
   line-height: .6em;
 }
 
+li [class^="icon-"],li [class*=" icon-"] {
+    display: inline-block;
+    width: 1.25em;
+    text-align: center;
+}
+
 /*  Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen
     readers do not read off random characters that represent icons */
 .icon-glass:before                { content: "\f000"; }
