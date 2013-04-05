@@ -71,7 +71,6 @@ describe PostCreator do
         creator.create
       end
 
-
       it 'assigns a category when supplied' do
         creator_with_category.create.topic.category.should == category
       end
@@ -83,6 +82,18 @@ describe PostCreator do
       it 'passes the image sizes through' do
         Post.any_instance.expects(:image_sizes=).with(image_sizes)
         creator_with_image_sizes.create
+      end
+
+      it 'increases topic response counts' do
+        first_post = creator.create
+        user2 = Fabricate(:coding_horror)
+
+        user2.topic_reply_count.should == 0
+        first_post.user.reload.topic_reply_count.should == 0
+
+        PostCreator.new(user2, topic_id: first_post.topic_id, raw: "this is my test post 123").create
+        user2.reload.topic_reply_count.should == 1
+        first_post.user.reload.topic_reply_count.should == 0
       end
     end
 

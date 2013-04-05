@@ -186,7 +186,7 @@ class Guardian
     return false if @user.blank?
     return false unless can_see?(object)
     return false if SiteSetting.must_approve_users?
-    @user.moderator?
+    @user.has_trust_level?(:regular) || @user.moderator?
   end
 
 

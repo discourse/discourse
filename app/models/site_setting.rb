@@ -152,6 +152,14 @@ class SiteSetting < ActiveRecord::Base
   setting(:basic_requires_read_posts, 50)
   setting(:basic_requires_time_spent_mins, 15)
 
+  setting(:regular_requires_topics_entered, 3)
+  setting(:regular_requires_read_posts, 100)
+  setting(:regular_requires_time_spent_mins, 60)
+  setting(:regular_requires_days_visited, 15)
+  setting(:regular_requires_likes_received, 1)
+  setting(:regular_requires_likes_given, 1)
+  setting(:regular_requires_topic_reply_count, 3)
+
   # Entropy checks
   setting(:title_min_entropy, 10)
   setting(:body_min_entropy, 7)

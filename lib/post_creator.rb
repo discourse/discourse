@@ -23,6 +23,8 @@ class PostCreator
   #     target_usernames      - comma delimited list of usernames for membership (private message)
   #     meta_data             - Topic meta data hash
   def initialize(user, opts)
+    # TODO: we should reload user in case it is tainted, should take in a user_id as opposed to user
+    # If we don't do this we introduce a rather risky dependency
     @user = user
     @opts = opts
     raise Discourse::InvalidParameters.new(:raw) if @opts[:raw].blank?
@@ -113,8 +115,13 @@ class PostCreator
       # Track the topic
       TopicUser.auto_track(@user.id, topic.id, TopicUser.notification_reasons[:created_post])
 
-      # Update `last_posted_at` to match the post's created_at
-      @user.update_column(:last_posted_at, post.created_at)
+
+      if @user.id != topic.user_id
+        @user.topic_reply_count += 1
+      end
+
+      @user.last_posted_at = post.created_at
+      @user.save!
 
       # Publish the post in the message bus
       MessageBus.publish("/topic/#{post.topic_id}",
