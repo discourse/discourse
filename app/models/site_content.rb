@@ -4,7 +4,8 @@ require_dependency 'site_content_class_methods'
 class SiteContent < ActiveRecord::Base
   extend SiteContentClassMethods
 
-  set_primary_key :content_type
+  self.primary_key = 'content_type'
+
   validates_presence_of :content
 
   def self.formats
