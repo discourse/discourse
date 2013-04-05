@@ -8,6 +8,9 @@ zh_CN:
       topic: '分享一个到本主题的链接'
       post: '分享一个到本帖的链接'
       close: '关闭'
+      twitter: '分享这个链接到 Twitter'
+      facebook: '分享这个链接到 Facebook'
+      google+: '分享这个链接到 Google+'
 
     edit: '编辑本主题的标题和分类'
     not_implemented: "非常抱歉，此功能暂时尚未实现！"
@@ -201,11 +204,11 @@ zh_CN:
     last_post: 最后一帖
 
     best_of:
-      title: "优选"
-      enabled_description: 你现在正在浏览本主题的“优选”视图。
+      title: "优秀"
+      enabled_description: 你现在正在浏览本主题的“优秀”视图。
       description: "此主题中有 <b>{{count}}</b> 个帖子，是不是有点多哦！你愿意切换到只显示最多交互和回复的帖子视图么？"
-      enable: '切换到“优选”视图'
-      disable: '取消“优选”'
+      enable: '切换到“优秀”视图'
+      disable: '取消“优秀”'
 
     private_message_info:
       title: "私下交流"
@@ -376,10 +379,12 @@ zh_CN:
         new: "你没有新主题可读。"
         read: "你尚未阅读任何主题。"
         posted: "你尚未在任何主题中发帖。"
-        latest: "伤心啊，没有热门主题。"
+        latest: "伤心啊，没有主题。"
+        hot: "没有热门主题。"
         category: "没有 {{category}} 分类的主题。"
       bottom:
-        latest: "没有更多热门主题可看了。"
+        latest: "没有更多主题可看了。"
+        hot: "没有更多热门主题可看了。"
         posted: "没有更多已发布主题可看了。"
         read: "没有更多已阅主题可看了。"
         new: "没有更多新主题可看了。"
@@ -506,10 +511,21 @@ zh_CN:
       login_reply: '登录来回复'
 
       filters:
-        user:
-          one: "你在浏览一个指定用户的帖子。"
-          other: "你在浏览指定用户的帖子。"
-        best_of: "你在浏览“优选”帖子。"
+        user: "你在浏览 {{n_posts}} {{by_n_users}}."
+        n_posts:
+          one: "一个帖子"
+          other: "{{count}} 帖子"
+        by_n_users:
+          one: "一个指定用户"
+          other: "{{count}} 个用户中的"
+
+        best_of: "你在浏览 {{n_best_posts}} {{of_n_posts}}."
+        n_best_posts:
+          one: "一个优秀帖子"
+          other: "{{count}} 优秀帖子"
+        of_n_posts:
+          one: "一个帖子中的"
+          other: "{{count}} 个帖子中的"
         cancel: "再次显示本主题下的所有帖子。"
 
       move_selected:
@@ -551,6 +567,7 @@ zh_CN:
         edit: "抱歉，在编辑你的帖子时发生了错误。请重试。"
         upload: "抱歉，在上传文件时发生了错误。请重试。"
         upload_too_large: "抱歉，你上传的文件太大了（最大不能超过 {{max_size_kb}}kb），请调整文件大小后重新上传。"
+        upload_too_many_images: "抱歉, 你只能一次上传一张图片。"
 
       abandon: "你确定要丢弃你的帖子吗？"
 
@@ -656,6 +673,9 @@ zh_CN:
 
     filters:
       latest:
+        title: "最新"
+        help: "最新发布的帖子"
+      hot:
         title: "热门"
         help: "最近最受欢迎的主题"
       favorited:
@@ -690,6 +710,8 @@ zh_CN:
           other: "{{categoryName}}（{{count}}）"
         help: "在 {{categoryName}} 分类中热门的主题"
 
+    browser_update: '抱歉, <a href="http://www.iteriter.com/faq/#browser">你的浏览器版本太低，推荐使用Chrome</a>. 请 <a href="http://www.google.com/chrome/">升级你的浏览器</a>。'
+
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "输入过滤条件……"
@@ -700,14 +722,14 @@ zh_CN:
       dashboard:
         title: "管理面板"
         version: "安装的版本"
-        up_to_date: "你正在运行最新的论道版本。"
+        up_to_date: "你正在运行最新的论坛版本。"
         critical_available: "有一个关键更新可用。"
         updates_available: "目前有可用更新。"
         please_upgrade: "请升级！"
         installed_version: "已安装"
         latest_version: "最新版本"
         update_often: '请经常升级！'
-        problems_found: "你安装的论道目前有以下问题："
+        problems_found: "你安装的论坛目前有以下问题："
         moderators: '版主：'
         admins: '管理员：'
 
@@ -738,6 +760,8 @@ zh_CN:
         flagged_by: "投诉者为"
         error: "出错了"
 
+      api:
+        title: "API"
       customize:
         title: "定制"
         header: "头部"
