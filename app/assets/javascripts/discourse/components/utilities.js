@@ -53,7 +53,7 @@ Discourse.Utilities = {
     if (template) {
       return template.replace(/\{size\}/g, rawSize);
     }
-    return "/users/" + (username.toLowerCase()) + "/avatar/" + rawSize + "?__ws=" + (encodeURIComponent(Discourse.BaseUrl || ""));
+    return Discourse.getURL("/users/") + (username.toLowerCase()) + "/avatar/" + rawSize + "?__ws=" + (encodeURIComponent(Discourse.BaseUrl || ""));
   },
 
   avatarImg: function(options) {

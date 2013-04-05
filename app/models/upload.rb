@@ -48,7 +48,7 @@ class Upload < ActiveRecord::Base
     File.open("#{path}/#{clean_name}", "wb") do |f|
       f.write File.read(file.tempfile)
     end
-    upload.url = "#{url_root}/#{clean_name}"
+    upload.url = Discourse::base_uri + "#{url_root}/#{clean_name}"
     upload.save
 
     upload
