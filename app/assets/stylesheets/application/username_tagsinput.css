@@ -10,8 +10,6 @@ div.tagsinput {
 
 div.tagsinput span.tag {
   border: 1px solid #a5d24a;
-  -moz-border-radius:2px;
-  -webkit-border-radius:2px;
   border-radius: 2px;
   display: block;
   float: left;
