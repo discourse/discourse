@@ -270,7 +270,7 @@ Discourse.ComposerView = Discourse.View.extend({
     $uploadTarget.off();
 
     $uploadTarget.fileupload({
-        url: '/uploads',
+        url: Discourse.getURL('/uploads'),
         dataType: 'json',
         timeout: 20000,
         formData: { topic_id: 1234 }
