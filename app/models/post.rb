@@ -63,7 +63,7 @@ class Post < ActiveRecord::Base
   # Stop us from posting the same thing too quickly
   def unique_post_validator
     return if SiteSetting.unique_posts_mins == 0
-    return if user.admin? || user.moderator?
+    return if acting_user.admin? || acting_user.moderator?
 
     # If the post is empty, default to the validates_presence_of
     return if raw.blank?
