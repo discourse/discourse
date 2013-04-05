@@ -12,11 +12,13 @@ class SiteContent < ActiveRecord::Base
     @formats ||= Enum.new(:plain, :markdown, :html, :css)
   end
 
-  content_type :usage_tips, :markdown, default_18n_key: 'system_messages.usage_tips.text_body_template'
-  content_type :welcome_user, :markdown, default_18n_key: 'system_messages.welcome_user.text_body_template'
-  content_type :welcome_invite, :markdown, default_18n_key: 'system_messages.welcome_invite.text_body_template'
-  content_type :education_new_topic, :markdown, default_18n_key: 'education.new-topic'
-  content_type :education_new_reply, :markdown, default_18n_key: 'education.new-reply'
+  add_content_type :usage_tips, default_18n_key: 'system_messages.usage_tips.text_body_template'
+  add_content_type :welcome_user, default_18n_key: 'system_messages.welcome_user.text_body_template'
+  add_content_type :welcome_invite, default_18n_key: 'system_messages.welcome_invite.text_body_template'
+  add_content_type :education_new_topic, default_18n_key: 'education.new-topic'
+  add_content_type :education_new_reply, default_18n_key: 'education.new-reply'
+  add_content_type :tos_user_content_license, default_18n_key: 'terms_of_service.user_content_license'
+  add_content_type :tos_miscellaneous, default_18n_key: 'terms_of_service.miscellaneous'
 
   def site_content_type
     @site_content_type ||= SiteContent.content_types.find {|t| t.content_type == content_type.to_sym}

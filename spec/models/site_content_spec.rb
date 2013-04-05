@@ -11,6 +11,10 @@ describe SiteContent do
       SiteContent.content_for('breaking.bad').should == ""
     end
 
+    it "returns the default value for a content type with a default" do
+      SiteContent.content_for("usage_tips").should be_present
+    end
+
     context "without replacements" do
       let!(:site_content) { Fabricate(:site_content_basic) }
 
@@ -32,9 +36,25 @@ describe SiteContent do
         SiteContent.content_for('great.poem', replacements.merge(extra: 'key')).should == "roses are red. grapes are blue."
       end
 
-      it "raises an error with missing keys" do
-        -> { SiteContent.content_for('great.poem', flower: 'roses') }.should raise_error
+      it "ignores missing keys" do
+        SiteContent.content_for('great.poem', flower: 'roses').should == "roses are red. %{food} are blue."
       end
+    end
+
+
+    context "replacing site_settings" do
+      let!(:site_content) { Fabricate(:site_content_site_setting) }
+
+      it "replaces site_settings by default" do
+        SiteSetting.stubs(:title).returns("Evil Trout")
+        SiteContent.content_for('site.replacement').should == "Evil Trout is evil."
+      end
+
+      it "allows us to override the default site settings" do
+        SiteSetting.stubs(:title).returns("Evil Trout")
+        SiteContent.content_for('site.replacement', title: 'Good Tuna').should == "Good Tuna is evil."
+      end
+
     end
 
   end
