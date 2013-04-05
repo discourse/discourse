@@ -462,8 +462,8 @@ cs:
     enable_s3_uploads: "Ukládat nahrané soubory na Amazon S3"
     s3_upload_bucket: "Název 'Amazon S3 bucketu', do kterého se mají soubory nahrávat"
 
-    default_invitee_trust_level: "Výchozí věrohodnost pozvaných uživatelů (0-5)"
-    default_trust_level: "Výchozí věrohodnost uživatelů (0-5)"
+    default_invitee_trust_level: "Výchozí věrohodnost pozvaných uživatelů (0-4)"
+    default_trust_level: "Výchozí věrohodnost uživatelů (0-4)"
 
     basic_requires_topics_entered: "Kolik příspěvků musí nový uživatel zaslat než získá základní (1) věrohodnost"
     basic_requires_read_posts: "Kolik příspěvků musí uživatel přečíst než získá základní (1) věrohodnost"

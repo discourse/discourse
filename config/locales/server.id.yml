@@ -408,8 +408,8 @@ id:
     enable_s3_uploads: "Place uploads on Amazon S3"
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into"
 
-    default_invitee_trust_level: "Default trust level (0-5) for invited users"
-    default_trust_level: "Default trust level (0-5) for users"
+    default_invitee_trust_level: "Default trust level (0-4) for invited users"
+    default_trust_level: "Default trust level (0-4) for users"
 
     basic_requires_topics_entered: "How many a topics a new user must enter before promotion to basic (1) trust level"
     basic_requires_read_posts: "How many posts a new user must read before promotion to basic (1) trust level"

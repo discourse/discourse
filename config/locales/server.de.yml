@@ -421,8 +421,8 @@ de:
     enable_s3_uploads: "Speichere hochgeladene Dateien auf Amazon S3."
     s3_upload_bucket: "Der Amazon S3 Bucketname in den hochgeladene Dateien abgelegt werden."
 
-    default_invitee_trust_level: "Standardwert für die Vertrauenswürdigkeit eines eingeladenen Nutzers (0-5)."
-    default_trust_level: "Standardwert für die Vertrauenswürdigkeit von Nutzern (0-5)."
+    default_invitee_trust_level: "Standardwert für die Vertrauenswürdigkeit eines eingeladenen Nutzers (0-4)."
+    default_trust_level: "Standardwert für die Vertrauenswürdigkeit von Nutzern (0-4)."
 
     basic_requires_topics_entered: "Zahl der Themen, die ein neuer Nutzer erstellen muss, bevor er zum sporadischen Nutzer (Vertrauenswürdigkeit 1) aufsteigt."
     basic_requires_read_posts: "Zahl der Beiträge, die ein neuer Nutzer lesen muss, bevor bevor er zum sporadischen Nutzer (Vertrauenswürdigkeit 1) aufsteigt."

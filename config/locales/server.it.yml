@@ -409,8 +409,8 @@ it:
     enable_s3_uploads: "Carica gli uploads su Amazon S3"
     s3_upload_bucket: "Nome del bucket di Amazon S3 nel quale verranno caricati i files"
 
-    default_invitee_trust_level: "Trust level (0-5) di default per utenti invitati"
-    default_trust_level: "Trust level (0-5) di default per gli utenti"
+    default_invitee_trust_level: "Trust level (0-4) di default per utenti invitati"
+    default_trust_level: "Trust level (0-4) di default per gli utenti"
 
     basic_requires_topics_entered: "Numero di topic che un utente deve creare per essere promosso a trust level basic (1)"
     basic_requires_read_posts: "Numero di post che un utente deve leggere per essere promosso a trust level basic (1)"
