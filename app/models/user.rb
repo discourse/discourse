@@ -287,18 +287,14 @@ class User < ActiveRecord::Base
     user_visits.where(visited_at: date).first
   end
 
-  def adding_visit_record(date)
-    user_visits.create!(visited_at: date)
-  end
-
   def update_visit_record!(date)
     unless seen_before?
-      adding_visit_record(date)
+      user_visits.create!(visited_at: date)
       update_column(:days_visited, 1)
     end
 
     unless seen?(date) || has_visit_record?(date)
-      adding_visit_record(date)
+      user_visits.create!(visited_at: date)
       User.update_all('days_visited = days_visited + 1', id: self.id)
     end
   end
