@@ -98,7 +98,7 @@ cs:
         ok: "Vaše jméno vypadá dobře"
       username:
         title: "Uživatelské jméno"
-        instructions: "Musí být unikátní a bez mezer. Ostatní vás mohou zmínit jako @{{username}}."
+        instructions: "Musí být unikátní a bez mezer. Ostatní vás mohou zmínit jako @username."
         short_instructions: "Ostatní vás mohou zmínit jako @{{username}}."
         available: "Toto uživatelské jméno je volné."
         global_match: "Emailová adresa odpovídá registrovaného uživatelskému jménu."
