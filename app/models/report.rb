@@ -40,15 +40,21 @@ class Report
   end
 
   def self.report_topics(report)
-    report_about report, Topic, :listable_count_per_day
+    basic_report_about report, Topic, :listable_count_per_day
+    report.total = Topic.listable_topics.count
+    report.prev30Days = Topic.listable_topics.where('created_at > ? and created_at < ?', 60.days.ago, 30.days.ago).count
   end
 
   def self.report_posts(report)
-    report_about report, Post, :public_posts_count_per_day
+    basic_report_about report, Post, :public_posts_count_per_day
+    report.total = Post.public_posts.count
+    report.prev30Days = Post.public_posts.where('posts.created_at > ? and posts.created_at < ?', 60.days.ago, 30.days.ago).count
   end
 
   def self.report_private_messages(report)
-    report_about report, Post, :private_messages_count_per_day
+    basic_report_about report, Post, :private_messages_count_per_day
+    report.total = Post.private_posts.count
+    report.prev30Days = Post.private_posts.where('posts.created_at > ? and posts.created_at < ?', 60.days.ago, 30.days.ago).count
   end
 
   def self.report_emails(report)

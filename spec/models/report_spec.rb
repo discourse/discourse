@@ -68,6 +68,7 @@ describe Report do
       Fabricate(:topic, created_at: 1.hour.ago)
       report = Report.find('topics')
       report.data[0][:y].should == 1
+      report.total.should == 1
     end
 
     it 'post report should not include private messages' do
@@ -75,6 +76,7 @@ describe Report do
       Fabricate(:post)
       report = Report.find('posts')
       report.data[0][:y].should == 1
+      report.total.should == 1
     end
 
     context 'no private messages' do
@@ -86,6 +88,7 @@ describe Report do
         it 'returns an empty report' do
           Fabricate(:post); Fabricate(:post)
           report.data.should be_blank
+          report.total.should == 0
         end
       end
     end
@@ -100,6 +103,7 @@ describe Report do
       it 'returns correct data' do
         report.data[0][:y].should == 1
         report.data[1][:y].should == 2
+        report.total.should == 3
       end
 
       context 'and some public posts' do
@@ -110,6 +114,7 @@ describe Report do
         it 'returns correct data' do
           report.data[0][:y].should == 1
           report.data[1][:y].should == 2
+          report.total.should == 3
         end
       end
     end

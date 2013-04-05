@@ -40,6 +40,8 @@ class Post < ActiveRecord::Base
 
   scope :by_newest, order('created_at desc, id desc')
   scope :with_user, includes(:user)
+  scope :public_posts, lambda { joins(:topic).where('topics.archetype <> ?', [Archetype.private_message]) }
+  scope :private_posts, lambda { joins(:topic).where('topics.archetype = ?', Archetype.private_message) }
 
   def self.hidden_reasons
     @hidden_reasons ||= Enum.new(:flag_threshold_reached, :flag_threshold_reached_again)
@@ -391,10 +393,10 @@ class Post < ActiveRecord::Base
   end
 
   def self.public_posts_count_per_day(sinceDaysAgo=30)
-    joins(:topic).where('topics.archetype <> ?', [Archetype.private_message]).where('posts.created_at > ?', sinceDaysAgo.days.ago).group('date(posts.created_at)').order('date(posts.created_at)').count
+    public_posts.where('posts.created_at > ?', sinceDaysAgo.days.ago).group('date(posts.created_at)').order('date(posts.created_at)').count
   end
 
   def self.private_messages_count_per_day(sinceDaysAgo=30)
-    joins(:topic).where('topics.archetype = ?', Archetype.private_message).where('posts.created_at > ?', sinceDaysAgo.days.ago).group('date(posts.created_at)').order('date(posts.created_at)').count
+    private_posts.where('posts.created_at > ?', sinceDaysAgo.days.ago).group('date(posts.created_at)').order('date(posts.created_at)').count
   end
 end
