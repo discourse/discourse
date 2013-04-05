@@ -1,8 +1,9 @@
-# This is the standard LF normalization file used on windows
-#
-
-# Auto detect text files and perform LF normalization
+# Set default behaviour, in case users don't have core.autocrlf set.
 * text=auto
+
+# Explicitly declare text files we want to always be normalized and converted 
+# to native line endings on checkout.
+*.yml text
 
 # Custom for Visual Studio, very unlikely, but lets keep it 
 *.cs     diff=csharp
