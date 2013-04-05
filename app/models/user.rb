@@ -487,6 +487,19 @@ class User < ActiveRecord::Base
     group('trust_level').count
   end
 
+  def update_topic_reply_count
+    topic_reply_count =
+      Topic
+        .where(['id in (
+              SELECT topic_id FROM posts p
+              JOIN topics t2 ON t2.id = p.topic_id
+              WHERE deleted_at IS NULL AND
+                t2.user_id <> p.user_id AND
+                p.user_id = ?
+              )', self.id])
+        .count
+  end
+
   protected
 
     def cook
@@ -567,4 +580,5 @@ class User < ActiveRecord::Base
         errors.add(:password, "must be 6 letters or longer")
       end
     end
+
 end
