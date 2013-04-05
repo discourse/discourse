@@ -340,6 +340,23 @@ cs:
     twitter_config_warning: 'Server je nakonfigurován, aby povoloval registraci a přihlášení přes Twitter (enable_twitter_logins), ale nejsou nastaveny hodnoty "key" a "secret". Navštivte <a href="/admin/site_settings">nastevení webu</a> a opravte nastavení. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Pro více informací si přečtěte tento návod</a>.'
     github_config_warning: 'Server je nakonfigurován, aby povoloval registraci a přihlášení přes GitHub (enable_github_logins), ale nejsou nastaveny hodnoty "client id" a "secret". Navštivte <a href="/admin/site_settings">nastevení webu</a> a opravte nastavení. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Pro více informací si přečtěte tento návod</a>.'
 
+  content_types:
+    education_new_reply:
+      title: "Školení nového uživatele: První odpovědi"
+      description: "Návod, který se automaticky zobrazí ve vyskakovacím okně nad editorem zpráv, když uživatelé píšou první dvě nové odpovědi."
+    education_new_topic:
+      title: "Školení nového uživatele: První témata"
+      description: "Návod, který se automaticky zobrazí ve vyskakovacím okně nad editorem zpráv, když uživatelé zakládají první dvě nová témata."
+    usage_tips:
+      title: "Tipy pro nové uživatele"
+      description: "Běžné tipy pro používání, základní informace o fóru, klíčové věci, které by měli noví uživatelé vědět."
+    welcome_user:
+      title: "Uvítání: Nový uživatel"
+      description: "Soukromá zpráva, která je automaticky zaslaná novým uživatelům, když se zaregistrují."
+    welcome_invite:
+      title: "Uvítání: Pozvaný uživatel"
+      description: "Soukromá zpráva, která je automaticky zaslaná novým pozvaným uživatelům, když přijmou pozvánku."
+
   site_settings:
     default_locale: "Výchozí jazyk této Discourse instance (kód ve formátu ISO 639-1)"
     min_post_length: "Minimální délka příspěvku"
@@ -468,6 +485,15 @@ cs:
     basic_requires_topics_entered: "Kolik příspěvků musí nový uživatel zaslat než získá základní (1) věrohodnost"
     basic_requires_read_posts: "Kolik příspěvků musí uživatel přečíst než získá základní (1) věrohodnost"
     basic_requires_time_spent_mins: "Kolik minut musí nový uživatel strávit čtením příspěvků než získá základní (1) věrohodnost"
+
+    regular_requires_topics_entered: "Do kolik témat musí základní uživatel vstoupit, než může získat stálou (2) věrohodnost"
+    regular_requires_read_posts: "Kolik příspěvků musí základní uživatel přečíst, než může získat stálou (2) věrohodnost"
+    regular_requires_time_spent_mins: "Kolik minut musí základní uživatel strávit čtením příspěvků, než může získat stálou (2) věrohodnost"
+    regular_requires_days_visited: "Kolik dní musí základní uživatel navštěvovat tento web, než může získat stálou (2) věrohodnost"
+    regular_requires_likes_received: "Kolik 'líbí se' musí základní uživatel obdržet, než může získat stálou (2) věrohodnost"
+    regular_requires_likes_given: "Kolik 'líbí se' musí základní uživatel rozdat, než může získat stálou (2) věrohodnost"
+    regular_requires_topic_reply_count: "Do kolika témat musí základní uživatel odpovědět, než může získat stálou (2) věrohodnost"
+
     visitor_max_links: "Kolik odkazů může návštěvník vložit do příspěvku"
     visitor_max_images: "Kolik obrázků může návštěvník vložit do příspěvku"
     visitor_max_mentions_per_post: "Kolik zmínek přes @name může návštěvník vložit do příspěvku"

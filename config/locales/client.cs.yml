@@ -819,6 +819,7 @@ cs:
 
     admin:
       title: 'Discourse Administrace'
+      moderator: 'Moderátor'
 
       dashboard:
         title: "Administrátorský rozcestník"
@@ -939,6 +940,11 @@ cs:
         approve: 'Schválit'
         approved_by: "schválil"
         time_read: "Čas čtení"
+
+      site_content:
+        none: "Zvolte typ obsahu a můžete začít editovat."
+        title: 'Obsah webu'
+        edit: "Editovat obsah webu"
 
       site_settings:
         show_overriden: 'Zobrazit pouze změněná nastavení'
