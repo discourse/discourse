@@ -22,10 +22,8 @@ Discourse = Ember.Application.createWithMixins({
   // The highest seen post number by topic
   highestSeenByTopic: {},
 
-  rootURL: '/',
-
   getURL: function(url) {
-    var u = this.get('rootURL');
+    var u = (Discourse.BaseUri === undefined ? "/" : Discourse.BaseUri);
     if (u[u.length-1] === '/') {
       u = u.substring(0, u.length-1);
     }

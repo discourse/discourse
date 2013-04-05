@@ -36,14 +36,6 @@ Ember.DiscourseLocation = Ember.Object.extend({
   },
 
   /**
-    Will be pre-pended to path upon state change
-
-    @property rootURL
-    @default '/'
-  */
-  rootURL: '/',
-
-  /**
     @private
 
     Returns the current `location.pathname` without rootURL
@@ -51,7 +43,7 @@ Ember.DiscourseLocation = Ember.Object.extend({
     @method getURL
   */
   getURL: function() {
-    var rootURL = get(this, 'rootURL'),
+    var rootURL = (Discourse.BaseUri === undefined ? "/" : Discourse.BaseUri),
         url = get(this, 'location').pathname;
 
     rootURL = rootURL.replace(/\/$/, '');
@@ -154,7 +146,7 @@ Ember.DiscourseLocation = Ember.Object.extend({
         var currentState = self.get('currentState');
         if (currentState) {
           var url = e.state.path,
-              rootURL = get(self, 'rootURL');
+              rootURL = (Discourse.BaseUri === undefined ? "/" : Discourse.BaseUri);
 
           rootURL = rootURL.replace(/\/$/, '');
           url = url.replace(rootURL, '');
@@ -176,7 +168,7 @@ Ember.DiscourseLocation = Ember.Object.extend({
     @param url {String}
   */
   formatURL: function(url) {
-    var rootURL = get(this, 'rootURL');
+    var rootURL = (Discourse.BaseUri === undefined ? "/" : Discourse.BaseUri);
 
     if (url !== '') {
       rootURL = rootURL.replace(/\/$/, '');

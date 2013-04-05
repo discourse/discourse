@@ -18,11 +18,11 @@ module Discourse
     RailsMultisite::ConnectionManagement.current_hostname
   end
 
-  def self.base_uri
+  def self.base_uri default_value=""
     if !ActionController::Base.config.relative_url_root.blank?
       return ActionController::Base.config.relative_url_root 
     else
-      return ""
+      return default_value
     end
   end
 

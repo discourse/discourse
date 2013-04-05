@@ -35,6 +35,7 @@
 <script>
   Discourse.CDN = '<%= Rails.configuration.action_controller.asset_host  %>';
   Discourse.BaseUrl = '<%= RailsMultisite::ConnectionManagement.current_hostname  %>';
+  Discourse.BaseUri = '<%= Discourse::base_uri "/" %>';
   Discourse.Environment = '<%= Rails.env %>';
   Discourse.Router.map(function() {
     return Discourse.routeBuilder.call(this);
