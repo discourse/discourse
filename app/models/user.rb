@@ -299,7 +299,7 @@ class User < ActiveRecord::Base
 
     unless seen?(date) || has_visit_record?(date)
       adding_visit_record(date)
-      User.increment_counter(:days_visited, 1)
+      User.update_all('days_visited = days_visited + 1', id: self.id)
     end
   end
 
@@ -493,7 +493,7 @@ class User < ActiveRecord::Base
         .where(['id in (
               SELECT topic_id FROM posts p
               JOIN topics t2 ON t2.id = p.topic_id
-              WHERE deleted_at IS NULL AND
+              WHERE p.deleted_at IS NULL AND
                 t2.user_id <> p.user_id AND
                 p.user_id = ?
               )', self.id])

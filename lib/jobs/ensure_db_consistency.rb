@@ -3,6 +3,7 @@ module Jobs
   class EnsureDbConsistency < Jobs::Base
     def execute(args)
       TopicUser.ensure_consistency!
+      UserVisit.ensure_consistency!
     end
   end
 end
