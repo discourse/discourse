@@ -602,6 +602,11 @@
     margin-top: 0px !important;
   }
 
+  // ditto for blockquotes, no extra margin for first element inside please
+  .cooked > blockquote *:first-child {
+    margin-top: 0px !important;
+  }
+
   .cooked {
     // set up proper header margins in posts
     h1, h2, h3, h4, h5, h6 {
