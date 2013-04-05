@@ -452,11 +452,11 @@ en:
     default_invitee_trust_level: "Default trust level (0-4) for invited users"
     default_trust_level: "Default trust level (0-4) for users"
 
-    basic_requires_topics_entered: "How many a topics a new user must enter before promotion to basic (1) trust level"
+    basic_requires_topics_entered: "How many topics a new user must enter before promotion to basic (1) trust level"
     basic_requires_read_posts: "How many posts a new user must read before promotion to basic (1) trust level"
     basic_requires_time_spent_mins: "How many minutes a new user must read posts before promotion to basic (1) trust level"
 
-    regular_requires_topics_entered: "How many a topics a basic user must enter before promotion to regular (2) trust level"
+    regular_requires_topics_entered: "How many topics a basic user must enter before promotion to regular (2) trust level"
     regular_requires_read_posts: "How many posts a basic user must read before promotion to regular (2) trust level"
     regular_requires_time_spent_mins: "How many minutes a basic user must read posts before promotion to regular (2) trust level"
     regular_requires_days_visited: "How many days a basic user must visit the site before promotion to regular (2) trust level"
