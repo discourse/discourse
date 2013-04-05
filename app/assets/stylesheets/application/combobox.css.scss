@@ -1,4 +1,11 @@
 .category-combobox {
+  .topic-count {
+    font-size: 11px;
+    color: #666;
+  }
+  .highlighted .topic-count {
+    color: white;
+  }
   .category-desc {
     margin: 6px 0px 0px 3px;
     font-size: 12px;
