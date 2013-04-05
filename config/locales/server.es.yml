@@ -316,7 +316,7 @@ es:
     best_of_score_threshold: "The minimum score of a post to be included in the 'best of'"
     best_of_posts_required: "Minimum posts in a topic before 'best of' mode is enabled"
     best_of_likes_required: "Minimum likes in a topic before the 'best of' mode will be enabled"
-    enable_private_messages: "Allow trust level 1 users to create private messages and conversations"
+    enable_private_messages: "Allow basic (1) trust level users to create private messages and reply to private conversations"
 
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_interval: "Interval before a new long poll is issued in milliseconds "
@@ -393,8 +393,8 @@ es:
     enable_s3_uploads: "Place uploads on Amazon S3"
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into"
 
-    default_invitee_trust_level: "Default trust level (0-5) for invited users"
-    default_trust_level: "Default trust level (0-5) for users"
+    default_invitee_trust_level: "Default trust level (0-4) for invited users"
+    default_trust_level: "Default trust level (0-4) for users"
 
     basic_requires_topics_entered: "How many a topics a new user must enter before promotion to basic (1) trust level"
     basic_requires_read_posts: "How many posts a new user must read before promotion to basic (1) trust level"

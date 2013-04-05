@@ -108,13 +108,17 @@ describe UserAction do
         @likee_action = likee.user_actions.where(action_type: UserAction::WAS_LIKED).first
       end
 
-      it 'should create a like action on the liker' do
+      it 'should result in correct data assignment' do
         @liker_action.should_not be_nil
+        @likee_action.should_not be_nil
+        likee.reload.likes_received.should == 1
+        liker.reload.likes_given.should == 1
+
+        PostAction.remove_act(liker, post, PostActionType.types[:like])
+        likee.reload.likes_received.should == 0
+        liker.reload.likes_given.should == 0
       end
 
-      it 'should create a like action on the likee' do
-        @likee_action.should_not be_nil
-      end
     end
 
     context "liking a private message" do

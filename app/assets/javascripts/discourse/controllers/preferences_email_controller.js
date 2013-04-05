@@ -11,6 +11,7 @@ Discourse.PreferencesEmailController = Discourse.ObjectController.extend({
   saving: false,
   error: false,
   success: false,
+  newEmail: null,
 
   saveDisabled: (function() {
     if (this.get('saving')) return true;

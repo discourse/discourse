@@ -54,6 +54,8 @@ Discourse::Application.routes.draw do
     get 'flags/:filter' => 'flags#index'
     post 'flags/clear/:id' => 'flags#clear'
     resources :site_customizations
+    resources :site_contents
+    resources :site_content_types
     resources :export
     get 'version_check' => 'versions#show'
     resources :dashboard, only: [:index] do

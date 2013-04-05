@@ -1,0 +1,36 @@
+{{#if loaded}}
+  <h3>{{title}}</h3>
+  <p class='description'>{{description}}</p>
+
+  {{#if markdown}}
+    {{view Discourse.PagedownEditor valueBinding="content.content"}}
+  {{/if}}
+
+  {{#if plainText}}
+    {{view Ember.TextArea valueBinding="content.content" class="plain"}}
+  {{/if}}
+
+  {{#if html}}
+    {{view Discourse.AceEditorView contentBinding="content.content" mode="html"}}
+  {{/if}}
+
+  {{#if css}}
+    {{view Discourse.AceEditorView contentBinding="content.content" mode="css"}}
+  {{/if}}
+
+
+
+  <div class='controls'>
+    <button class='btn' {{action saveChanges}} {{bindAttr disabled="saveDisabled"}}>
+      {{#if saving}}
+        {{i18n saving}}
+      {{else}}
+        {{i18n save}}
+      {{/if}}
+    </button>
+    {{#if saved}}{{i18n saved}}{{/if}}
+  </div>
+
+{{else}}
+  <div class='spinner'>{{i18n loading}}</div>
+{{/if}}

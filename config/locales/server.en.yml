@@ -310,6 +310,23 @@ en:
     twitter_config_warning: 'The server is configured to allow signup and log in with Twitter (enable_twitter_logins), but the key and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">See this guide to learn more</a>.'
     github_config_warning: 'The server is configured to allow signup and log in with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">See this guide to learn more</a>.'
 
+  content_types:
+    education_new_reply:
+      title: "New User Education: First Replies"
+      description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new replies."
+    education_new_topic:
+      title: "New User Education: First Topics"
+      description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new topics."
+    usage_tips:
+      title: "New User Tips"
+      description: "Common usage tips, essential forum information, and key guidance intended for new users."
+    welcome_user:
+      title: "Welcome: New User"
+      description: "A private message automatically sent to all new users when they sign up."
+    welcome_invite:
+      title: "Welcome: Invited User"
+      description: "A private message automatically sent to all new invited users when they accept the invitation from another user to participate."
+
   site_settings:
     default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"
     min_post_length: "Minimum post length in characters"
@@ -354,7 +371,7 @@ en:
     best_of_posts_required: "Minimum posts in a topic before 'best of' mode is enabled"
     best_of_likes_required: "Minimum likes in a topic before the 'best of' mode will be enabled"
     best_of_percent_filter: "When a user clicks best of, show the top % of posts"
-    enable_private_messages: "Allow trust level 1 users to create private messages and conversations"
+    enable_private_messages: "Allow basic (1) trust level users to create private messages and reply to private conversations"
 
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_interval: "Interval before a new long poll is issued in milliseconds "
@@ -432,12 +449,21 @@ en:
     enable_s3_uploads: "Place uploads on Amazon S3"
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into"
 
-    default_invitee_trust_level: "Default trust level (0-5) for invited users"
-    default_trust_level: "Default trust level (0-5) for users"
+    default_invitee_trust_level: "Default trust level (0-4) for invited users"
+    default_trust_level: "Default trust level (0-4) for users"
 
     basic_requires_topics_entered: "How many a topics a new user must enter before promotion to basic (1) trust level"
     basic_requires_read_posts: "How many posts a new user must read before promotion to basic (1) trust level"
     basic_requires_time_spent_mins: "How many minutes a new user must read posts before promotion to basic (1) trust level"
+
+    regular_requires_topics_entered: "How many a topics a basic user must enter before promotion to regular (2) trust level"
+    regular_requires_read_posts: "How many posts a basic user must read before promotion to regular (2) trust level"
+    regular_requires_time_spent_mins: "How many minutes a basic user must read posts before promotion to regular (2) trust level"
+    regular_requires_days_visited: "How many days a basic user must visit the site before promotion to regular (2) trust level"
+    regular_requires_likes_received: "How many likes a basic user must receive before promotion to regular (2) trust level"
+    regular_requires_likes_given: "How many likes a basic user must cast before promotion to regular (2) trust level"
+    regular_requires_topic_reply_count: "How many topics a basic user must reply to before promotion to regular (2) trust level"
+
     visitor_max_links: "How many links a visitor can add to a post"
     visitor_max_images: "How many images a visitor can add to a post"
     visitor_max_mentions_per_post: "Maximum number of @name notifications a visitor can use in a post"

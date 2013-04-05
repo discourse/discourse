@@ -8,6 +8,12 @@ Discourse.Route.buildRoutes(function() {
   this.resource('admin', { path: '/admin' }, function() {
     this.route('dashboard', { path: '/' });
     this.route('site_settings', { path: '/site_settings' });
+
+
+    this.resource('adminSiteContents', { path: '/site_contents' }, function() {
+      this.resource('adminSiteContentEdit', {path: '/:content_type'});
+    });
+
     this.route('email_logs', { path: '/email_logs' });
     this.route('customize', { path: '/customize' });
     this.route('api', {path: '/api'});

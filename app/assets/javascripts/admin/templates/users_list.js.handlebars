@@ -72,7 +72,10 @@
           {{/if}}
         </td>
         {{/if}}
-        <td>{{#if admin}}<i class="icon-trophy" title="{{i18n admin.title}}"></i>{{/if}}<td>
+        <td>
+          {{#if admin}}<i class="icon-trophy" title="{{i18n admin.title}}"></i>{{/if}}
+          {{#if moderator}}<i class="icon-magic" title="{{i18n admin.moderator}}"></i>{{/if}}
+        <td>
       </tr>
     {{/each}}
 

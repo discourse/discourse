@@ -17,6 +17,7 @@ Discourse.PreferencesRoute = Discourse.RestrictedUserRoute.extend({
   },
 
   setupController: function(controller) {
+    console.log('prefereces');
     controller.set('content', this.controllerFor('user').get('content'));
   }
 

@@ -171,4 +171,24 @@ class TopicUser < ActiveRecord::Base
 
   end
 
+  def self.ensure_consistency!
+    exec_sql <<SQL
+UPDATE topic_users t
+  SET
+    last_read_post_number = last_read,
+    seen_post_count = post_count
+FROM (
+  SELECT topic_id, user_id, COUNT(*) post_count, MAX(post_number) last_read
+  FROM post_timings
+  GROUP BY topic_id, user_id
+) as X
+WHERE X.topic_id = t.topic_id AND
+      X.user_id = t.user_id AND
+      (
+        last_read_post_number <> last_read OR
+        seen_post_count <> post_count
+      )
+SQL
+  end
+
 end

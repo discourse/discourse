@@ -13,30 +13,27 @@ Discourse.ImageSelectorView = Discourse.View.extend({
 
   init: function() {
     this._super();
-    return this.set('localSelected', true);
+    this.set('localSelected', true);
   },
 
   selectLocal: function() {
-    return this.set('localSelected', true);
+    this.set('localSelected', true);
   },
 
   selectRemote: function() {
-    return this.set('localSelected', false);
+    this.set('localSelected', false);
   },
 
-  remoteSelected: (function() {
+  remoteSelected: function() {
     return !this.get('localSelected');
-  }).property('localSelected'),
+  }.property('localSelected'),
 
   upload: function() {
-    this.get('uploadTarget').fileupload('send', { fileInput: $('#filename-input') });
-    return $('#discourse-modal').modal('hide');
+    this.get('uploadTarget').fileupload('add', { fileInput: $('#filename-input') });
   },
 
   add: function() {
-    this.get('composer').addMarkdown("![image](" + ($('#fileurl-input').val()) + ")");
-    return $('#discourse-modal').modal('hide');
+    this.get('composer').addMarkdown("![image](" + $('#fileurl-input').val() + ")");
+    $('#discourse-modal').modal('hide');
   }
 });
-
-

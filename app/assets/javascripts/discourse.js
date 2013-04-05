@@ -22,10 +22,8 @@ Discourse = Ember.Application.createWithMixins({
   // The highest seen post number by topic
   highestSeenByTopic: {},
 
-  rootURL: '/',
-
   getURL: function(url) {
-    var u = this.get('rootURL');
+    var u = (Discourse.BaseUri === undefined ? "/" : Discourse.BaseUri);
     if (u[u.length-1] === '/') {
       u = u.substring(0, u.length-1);
     }
@@ -134,6 +132,10 @@ Discourse = Ember.Application.createWithMixins({
       if (href === '#') return;
       if ($currentTarget.attr('target')) return;
       if ($currentTarget.data('auto-route')) return;
+
+      // If it's an ember #linkTo skip it
+      if ($currentTarget.hasClass('ember-view')) return;
+
       if ($currentTarget.hasClass('lightbox')) return;
       if (href.indexOf("mailto:") === 0) return;
       if (href.match(/^http[s]?:\/\//i) && !href.match(new RegExp("^http:\\/\\/" + window.location.hostname, "i"))) return;

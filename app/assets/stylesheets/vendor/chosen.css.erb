@@ -99,16 +99,28 @@
   white-space: nowrap;
   z-index: 1010;
 }
+.chzn-container-single .chzn-search .chzn-search-icon {
+  display: inline-block;
+  width: auto;
+  height: auto;
+  font-size: 18px;
+  font-weight: normal;
+  position: absolute;
+  right: 10px;
+  top: 12px;
+  z-index: 3;
+  color: #888;
+}
 .chzn-container-single .chzn-search input {
-  background: #fff url(<%=asset_path "chosen-sprite.png"%>) no-repeat 100% -22px;
-  background: url(<%=asset_path "chosen-sprite.png"%>) no-repeat 100% -22px, -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(1%, #eeeeee), color-stop(15%, #ffffff));
-  background: url(<%=asset_path "chosen-sprite.png"%>) no-repeat 100% -22px, -webkit-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
-  background: url(<%=asset_path "chosen-sprite.png"%>) no-repeat 100% -22px, -moz-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
-  background: url(<%=asset_path "chosen-sprite.png"%>) no-repeat 100% -22px, -o-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
-  background: url(<%=asset_path "chosen-sprite.png"%>) no-repeat 100% -22px, -ms-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
-  background: url(<%=asset_path "chosen-sprite.png"%>) no-repeat 100% -22px, linear-gradient(top, #eeeeee 1%, #ffffff 15%);
+  background: #fff;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(1%, #eeeeee), color-stop(15%, #ffffff));
+  background: -webkit-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
+  background: -moz-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
+  background: -o-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
+  background: -ms-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
+  background: linear-gradient(top, #eeeeee 1%, #ffffff 15%);
   margin: 1px 0;
-  padding: 4px 20px 4px 5px;
+  padding: 7px 30px 7px 10px;
   outline: 0;
   border: 1px solid #aaa;
   font-family: sans-serif;
@@ -382,13 +394,13 @@
 .chzn-rtl .chzn-results .group-option { padding-left: 0; padding-right: 15px; }
 .chzn-rtl.chzn-container-active .chzn-single-with-drop div { border-right: none; }
 .chzn-rtl .chzn-search input {
-  background: #fff url(<%=asset_path "chosen-sprite.png"%>) no-repeat -38px -22px;
-  background: url(<%=asset_path "chosen-sprite.png"%>) no-repeat -38px -22px, -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(1%, #eeeeee), color-stop(15%, #ffffff));
-  background: url(<%=asset_path "chosen-sprite.png"%>) no-repeat -38px -22px, -webkit-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
-  background: url(<%=asset_path "chosen-sprite.png"%>) no-repeat -38px -22px, -moz-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
-  background: url(<%=asset_path "chosen-sprite.png"%>) no-repeat -38px -22px, -o-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
-  background: url(<%=asset_path "chosen-sprite.png"%>) no-repeat -38px -22px, -ms-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
-  background: url(<%=asset_path "chosen-sprite.png"%>) no-repeat -38px -22px, linear-gradient(top, #eeeeee 1%, #ffffff 15%);
+  background: #fff;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(1%, #eeeeee), color-stop(15%, #ffffff));
+  background: -webkit-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
+  background: -moz-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
+  background: -o-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
+  background: -ms-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
+  background: linear-gradient(top, #eeeeee 1%, #ffffff 15%);
   padding: 4px 5px 4px 20px;
   direction: rtl;
 }

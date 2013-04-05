@@ -345,12 +345,12 @@ Discourse.User = Discourse.Model.extend({
   }).property('stats.@each'),
 
   /**
-  Number of items this user has sent.
+    Number of items this user has sent.
 
     @property sentItemsCount
     @type {Integer}
   **/
-  sentItemsCount: (function() {
+  sentItemsCount: function() {
     var r;
     r = 0;
     this.get('stats').each(function(s) {
@@ -360,7 +360,42 @@ Discourse.User = Discourse.Model.extend({
       }
     });
     return r;
-  }).property('stats.@each')
+  }.property('stats.@each'),
+
+  /**
+    Load extra details for the user
+
+    @method loadDetails
+  **/
+  loadDetails: function() {
+
+    // Check the preload store first
+    var user = this;
+    var username = this.get('username');
+    PreloadStore.getAndRemove("user_" + username, function() {
+      return Discourse.ajax({ url: Discourse.getURL("/users/") + username + '.json' });
+    }).then(function (json) {
+      // Create a user from the resulting JSON
+      json.user.stats = Discourse.User.groupStats(json.user.stats.map(function(s) {
+        var stat = Em.Object.create(s);
+        stat.set('isPM', stat.get('action_type') === Discourse.UserAction.NEW_PRIVATE_MESSAGE ||
+                         stat.get('action_type') === Discourse.UserAction.GOT_PRIVATE_MESSAGE);
+        return stat;
+      }));
+
+      var count = 0;
+      if (json.user.stream) {
+        count = json.user.stream.length;
+        json.user.stream = Discourse.UserAction.collapseStream(json.user.stream.map(function(ua) {
+          return Discourse.UserAction.create(ua);
+        }));
+      }
+
+      user.setProperties(json.user);
+      user.set('totalItems', count);
+    });
+  }
+
 });
 
 Discourse.User.reopenClass({
@@ -424,42 +459,6 @@ Discourse.User.reopenClass({
       return g[s.action_type];
     }).exclude(function(s) {
       return !s;
-    });
-  },
-
-  /**
-    Finds a user based on a username
-
-    @method find
-    @param {String} username The username
-    @returns a promise that will resolve to the user
-  **/
-  find: function(username) {
-
-    // Check the preload store first
-    return PreloadStore.getAndRemove("user_" + username, function() {
-      return Discourse.ajax({ url: Discourse.getURL("/users/") + username + '.json' });
-    }).then(function (json) {
-
-      // Create a user from the resulting JSON
-      json.user.stats = Discourse.User.groupStats(json.user.stats.map(function(s) {
-        var stat = Em.Object.create(s);
-        stat.set('isPM', stat.get('action_type') === Discourse.UserAction.NEW_PRIVATE_MESSAGE ||
-                         stat.get('action_type') === Discourse.UserAction.GOT_PRIVATE_MESSAGE);
-        return stat;
-      }));
-
-      var count = 0;
-      if (json.user.stream) {
-        count = json.user.stream.length;
-        json.user.stream = Discourse.UserAction.collapseStream(json.user.stream.map(function(ua) {
-          return Discourse.UserAction.create(ua);
-        }));
-      }
-
-      var user = Discourse.User.create(json.user);
-      user.set('totalItems', count);
-      return user;
     });
   },
 

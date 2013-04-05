@@ -787,6 +787,7 @@ en:
 
     admin:
       title: 'Discourse Admin'
+      moderator: 'Moderator'
 
       dashboard:
         title: "Admin Dashboard"
@@ -906,6 +907,11 @@ en:
         approve: 'Approve'
         approved_by: "approved by"
         time_read: "Read Time"
+
+      site_content:
+        none: "Choose a type of content to begin editing."
+        title: 'Site Content'
+        edit: "Edit Site Content"
 
       site_settings:
         show_overriden: 'Only show overridden'
