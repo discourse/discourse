@@ -488,7 +488,7 @@ class User < ActiveRecord::Base
   end
 
   def update_topic_reply_count
-    topic_reply_count =
+    self.topic_reply_count =
       Topic
         .where(['id in (
               SELECT topic_id FROM posts p
