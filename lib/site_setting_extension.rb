@@ -38,6 +38,13 @@ module SiteSettingExtension
     @@client_settings
   end
 
+  def settings_hash
+    result = {}
+    @defaults.each do |s, v|
+      result[s] = send(s).to_s
+    end
+    result
+  end
 
   def client_settings_json
     Rails.cache.fetch(SiteSettingExtension.client_settings_cache_key, expires_in: 30.minutes) do
@@ -115,6 +122,7 @@ module SiteSettingExtension
         message = msg.data
         if message["process"] != pid
           begin
+            @last_message_processed = msg.global_id
             # picks a db
             MessageBus.on_connect.call(msg.site_id)
             SiteSetting.refresh!
@@ -125,6 +133,12 @@ module SiteSettingExtension
       end
       @subscribed = true
     end
+  end
+
+  def diags
+    {
+      last_message_processed: @last_message_processed
+    }
   end
 
   def process_id
@@ -162,7 +176,7 @@ module SiteSettingExtension
       SiteSetting.create!(name: name, value: val, data_type: type)
     end
 
-    MessageBus.publish('/site_settings', {process: process_id})
+    @last_message_sent = MessageBus.publish('/site_settings', {process: process_id})
   end
 
 

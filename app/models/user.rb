@@ -287,19 +287,15 @@ class User < ActiveRecord::Base
     user_visits.where(visited_at: date).first
   end
 
-  def adding_visit_record(date)
-    user_visits.create!(visited_at: date)
-  end
-
   def update_visit_record!(date)
     unless seen_before?
-      adding_visit_record(date)
+      user_visits.create!(visited_at: date)
       update_column(:days_visited, 1)
     end
 
     unless seen?(date) || has_visit_record?(date)
-      adding_visit_record(date)
-      User.increment_counter(:days_visited, 1)
+      user_visits.create!(visited_at: date)
+      User.update_all('days_visited = days_visited + 1', id: self.id)
     end
   end
 
@@ -487,6 +483,19 @@ class User < ActiveRecord::Base
     group('trust_level').count
   end
 
+  def update_topic_reply_count
+    self.topic_reply_count =
+      Topic
+        .where(['id in (
+              SELECT topic_id FROM posts p
+              JOIN topics t2 ON t2.id = p.topic_id
+              WHERE p.deleted_at IS NULL AND
+                t2.user_id <> p.user_id AND
+                p.user_id = ?
+              )', self.id])
+        .count
+  end
+
   protected
 
     def cook
@@ -567,4 +576,5 @@ class User < ActiveRecord::Base
         errors.add(:password, "must be 6 letters or longer")
       end
     end
+
 end

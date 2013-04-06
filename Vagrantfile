@@ -28,7 +28,7 @@ Vagrant.configure("2") do |config|
   config.vm.network :forwarded_port, guest: 1080, host: 4080 # Mailcatcher
 
   nfs_setting = RUBY_PLATFORM =~ /darwin/ || RUBY_PLATFORM =~ /linux/
-  config.vm.synced_folder ".", "/vagrant", :nfs => nfs_setting
+  config.vm.synced_folder ".", "/vagrant", id: "vagrant-root", :nfs => nfs_setting
 
   chef_cookbooks_path = ["chef/cookbooks"]
 

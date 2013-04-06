@@ -55,28 +55,22 @@
 // Border radius
 
 @mixin border-radius-all($radius) {
-  -webkit-border-radius: $radius;
           border-radius: $radius;
 }
 
 @mixin border-radius-top($radius) {
-  -webkit-border-top-right-radius: $radius;
           border-top-right-radius: $radius;
-  -webkit-border-top-left-radius: $radius;
           border-top-left-radius: $radius;
 }
 
 @mixin border-radius-bottom($radius) {
-  -webkit-border-bottom-right-radius: $radius;
           border-bottom-right-radius: $radius;
-  -webkit-border-bottom-left-radius: $radius;
           border-bottom-left-radius: $radius;
 }
 
 // Box shadow
 
 @mixin box-shadow($shadow) {
-  -webkit-box-shadow: $shadow;
           box-shadow: $shadow;
 }
 
@@ -84,24 +78,18 @@
 
 @mixin linear-gradient($start-color, $end-color) {
   background-color: $start-color;
-  background-image: -webkit-gradient(linear, left top, left bottom, from($start-color), to($end-color));
-  background-image: -webkit-linear-gradient(top, $start-color, $end-color);
-  background-image: -moz-linear-gradient(top, $start-color, $end-color);
-  background-image: -o-linear-gradient(top, $start-color, $end-color);
   background-image: linear-gradient(to bottom, $start-color, $end-color);
 }
 
 // Background size
 
 @mixin background-size($size) {
-  -webkit-background-size: $size;
           background-size: $size;
 }
 
 // Background clip
 
 @mixin background-clip($clip) {
-  -webkit-background-clip: $clip;
           background-clip: $clip;
 }
 
@@ -109,9 +97,6 @@
 
 @mixin rotate($degrees) {
   -webkit-transform: rotate($degrees);
-     -moz-transform: rotate($degrees);
-      -ms-transform: rotate($degrees);
-       -o-transform: rotate($degrees);
           transform: rotate($degrees);
 }
 
@@ -119,9 +104,6 @@
 
 @mixin scale($ratio) {
   -webkit-transform: scale($ratio);
-     -moz-transform: scale($ratio);
-      -ms-transform: scale($ratio);
-       -o-transform: scale($ratio);
           transform: scale($ratio);
 }
 
@@ -130,9 +112,7 @@
 @mixin transition($transition) {
   .discourse-no-touch & {
     -webkit-transition: #{$transition};
-       -moz-transition: #{$transition};
         -ms-transition: #{$transition};
-         -o-transition: #{$transition};
             transition: #{$transition};
   }
 }
@@ -153,28 +133,21 @@
   visibility: hidden;
   .discourse-no-touch & {
     -webkit-transition: visibility 0s linear $time, opacity $time linear;
-       -moz-transition: visibility 0s linear $time, opacity $time linear;
         -ms-transition: visibility 0s linear $time, opacity $time linear;
-         -o-transition: visibility 0s linear $time, opacity $time linear;
             transition: visibility 0s linear $time, opacity $time linear;
   }
 }
 
 @mixin fade-soft($time: 1s) {
-  transition: opacity $time ease-in-out;
-  -moz-transition: opacity $time ease-in-out;
   -webkit-transition: opacity $time ease-in-out;
-  -ms-transition: opacity $time ease-in-out;
-  -o-transition: opacity $time ease-in-out;
+      -ms-transition: opacity $time ease-in-out;
+          transition: opacity $time ease-in-out;
 }
 
 @mixin visible {
   opacity: 1;
   visibility: visible;
   -webkit-transition-delay: 0s;
-     -moz-transition-delay: 0s;
-      -ms-transition-delay: 0s;
-       -o-transition-delay: 0s;
           transition-delay: 0s;
 }
 
@@ -184,7 +157,6 @@
 // Glow
 
 @mixin glow($color) {
-  border: 1px solid $color;
-  -webkit-box-shadow: 0 0 5px $color;
-          box-shadow: 0 0 5px $color;
+      border: 1px solid $color;
+  box-shadow: 0 0 5px $color;
 }

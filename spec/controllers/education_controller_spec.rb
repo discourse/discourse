@@ -26,7 +26,7 @@ describe EducationController do
       let(:html_content) {"HTML Content"}
 
       before do
-        MultisiteI18n.expects(:t).with("education.new-topic", anything).returns(markdown_content)
+        SiteContent.expects(:content_for).with(:education_new_topic, anything).returns(markdown_content)
         PrettyText.expects(:cook).with(markdown_content).returns(html_content)
         xhr :get, :show, id: 'new-topic'
       end

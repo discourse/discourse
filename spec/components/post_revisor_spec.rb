@@ -4,10 +4,10 @@ require 'post_revisor'
 describe PostRevisor do
 
   let(:topic) { Fabricate(:topic) }
-  let(:post_args) { {user: topic.user, topic: topic} }
+  let(:visitor) { Fabricate(:visitor) }
+  let(:post_args) { {user: visitor, topic: topic} }
 
   context 'revise' do
-
     let(:post) { Fabricate(:post, post_args) }
     let(:first_version_at) { post.last_version_at }
 
@@ -185,6 +185,32 @@ describe PostRevisor do
         subject.revise!(changed_by, 'updated body')
       end
     end
+
+    describe "admin editing a visitor's post" do
+      let(:changed_by) { Fabricate(:admin) }
+
+      before do
+        SiteSetting.stubs(:too_many_images).returns(0)
+        subject.revise!(changed_by, "So, post them here!\nhttp://i.imgur.com/FGg7Vzu.gif")
+      end
+
+      it "allows an admin to insert images into a visitor's post" do
+        post.errors.should be_blank
+      end
+    end
+
+    describe "visitor editing their own post" do
+      before do
+        SiteSetting.stubs(:too_many_images).returns(0)
+        subject.revise!(post.user, "So, post them here!\nhttp://i.imgur.com/FGg7Vzu.gif")
+      end
+
+      it "allows an admin to insert images into a visitor's post" do
+        post.errors.should be_present
+      end
+
+    end
+
 
     describe 'with a new body' do
       let(:changed_by) { Fabricate(:coding_horror) }

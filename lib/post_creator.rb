@@ -117,7 +117,7 @@ class PostCreator
 
 
       if @user.id != topic.user_id
-        @user.topic_reply_count += 1
+        @user.update_topic_reply_count
       end
 
       @user.last_posted_at = post.created_at

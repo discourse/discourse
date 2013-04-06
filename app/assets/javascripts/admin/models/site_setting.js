@@ -91,10 +91,11 @@ Discourse.SiteSetting.reopenClass({
   findAll: function() {
     var result = Em.A();
     Discourse.ajax({url: Discourse.getURL("/admin/site_settings")}).then(function (settings) {
-      settings.each(function(s) {
+      settings.site_settings.each(function(s) {
         s.originalValue = s.value;
         result.pushObject(Discourse.SiteSetting.create(s));
       });
+      result.set('diags', settings.diags);
     });
     return result;
   }

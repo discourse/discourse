@@ -49,3 +49,9 @@ Fabricator(:another_admin, from: :user) do
   admin true
 end
 
+Fabricator(:visitor, from: :user) do
+  name 'Newbie Newperson'
+  username 'newbie'
+  email 'newbie@new.com'
+  trust_level TrustLevel.levels[:visitor]
+end
