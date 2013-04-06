@@ -41,30 +41,6 @@ img {
 .span24 {
   width: 1236px;
 }
-.span23 {
-  width: 1184px;
-}
-.span22 {
-  width: 1132px;
-}
-.span21 {
-  width: 1080px;
-}
-.span20 {
-  width: 1028px;
-}
-.span19 {
-  width: 976px;
-}
-.span18 {
-  width: 924px;
-}
-.span17 {
-  width: 872px;
-}
-.span16 {
-  width: 820px;
-}
 .span15 {
   width: 768px;
 }
@@ -74,23 +50,14 @@ img {
 .span13 {
   width: 664px;
 }
-.span12 {
-  width: 612px;
-}
 .span11 {
   width: 560px;
 }
 .span10 {
   width: 508px;
 }
-.span9 {
-  width: 456px;
-}
 .span8 {
   width: 404px;
-}
-.span7 {
-  width: 352px;
 }
 .span6 {
   width: 300px;
@@ -106,75 +73,6 @@ img {
 }
 .span2 {
   width: 92px;
-}
-.span1 {
-  width: 40px;
-}
-.offset24 {
-  margin-left: 1260px;
-}
-.offset23 {
-  margin-left: 1208px;
-}
-.offset22 {
-  margin-left: 1156px;
-}
-.offset21 {
-  margin-left: 1104px;
-}
-.offset20 {
-  margin-left: 1052px;
-}
-.offset19 {
-  margin-left: 1000px;
-}
-.offset18 {
-  margin-left: 948px;
-}
-.offset17 {
-  margin-left: 896px;
-}
-.offset16 {
-  margin-left: 844px;
-}
-.offset15 {
-  margin-left: 792px;
-}
-.offset14 {
-  margin-left: 740px;
-}
-.offset13 {
-  margin-left: 688px;
-}
-.offset12 {
-  margin-left: 636px;
-}
-.offset11 {
-  margin-left: 584px;
-}
-.offset10 {
-  margin-left: 532px;
-}
-.offset9 {
-  margin-left: 480px;
-}
-.offset8 {
-  margin-left: 428px;
-}
-.offset7 {
-  margin-left: 376px;
-}
-.offset6 {
-  margin-left: 324px;
-}
-.offset5 {
-  margin-left: 272px;
-}
-.offset4 {
-  margin-left: 220px;
-}
-.offset3 {
-  margin-left: 168px;
 }
 .offset2 {
   margin-left: 116px;
@@ -305,19 +203,6 @@ input[type="submit"].btn::-moz-focus-inner {
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   background-clip: padding-box;
 }
-.dropdown-menu.pull-right {
-  right: 0;
-  left: auto;
-}
-.dropdown-menu .divider {
-  *width: 100%;
-  height: 1px;
-  margin: 8px 1px;
-  *margin: -5px 0 5px;
-  overflow: hidden;
-  background-color: #e5e5e5;
-  border-bottom: 1px solid #ffffff;
-}
 .dropdown-menu a {
   display: block;
   padding: 3px 15px;
@@ -340,10 +225,6 @@ input[type="submit"].btn::-moz-focus-inner {
 .open > .dropdown-menu {
   display: block;
 }
-.pull-right > .dropdown-menu {
-  right: 0;
-  left: auto;
-}
 .fade {
   opacity: 0;
   -webkit-transition: opacity 0.15s linear;
@@ -351,16 +232,6 @@ input[type="submit"].btn::-moz-focus-inner {
 }
 .fade.in {
   opacity: 1;
-}
-.collapse {
-  position: relative;
-  height: 0;
-  overflow: hidden;
-  -webkit-transition: height 0.35s ease;
-  transition: height 0.35s ease;
-}
-.collapse.in {
-  height: auto;
 }
 
 body {
@@ -552,33 +423,12 @@ body {
   .radio.inline .radio.inline, .checkbox.inline .checkbox.inline {
     margin-left: 10px;
   }
-  .input-mini {
-    width: 60px;
-  }
-  .input-small {
-    width: 90px;
-  }
-  .input-medium {
-    width: 150px;
-  }
-  .input-large {
-    width: 210px;
-  }
-  .input-xlarge {
-    width: 270px;
-  }
   .input-xxlarge {
     width: 530px;
   }
   input[class*="span"], select[class*="span"], textarea[class*="span"] {
     float: none;
     margin-left: 0;
-  }
-  .row-fluid {
-    input[class*="span"], select[class*="span"], textarea[class*="span"] {
-      float: none;
-      margin-left: 0;
-    }
   }
   .input-append {
     input[class*="span"] {
@@ -590,49 +440,8 @@ body {
       display: inline-block;
     }
   }
-  .row-fluid {
-    .input-prepend [class*="span"], .input-append [class*="span"] {
-      display: inline-block;
-    }
-  }
   input, textarea {
     margin-left: 0;
-  }
-  input.span12, textarea.span12 {
-    width: 930px;
-  }
-  input.span11, textarea.span11 {
-    width: 850px;
-  }
-  input.span10, textarea.span10 {
-    width: 770px;
-  }
-  input.span9, textarea.span9 {
-    width: 690px;
-  }
-  input.span8, textarea.span8 {
-    width: 610px;
-  }
-  input.span7, textarea.span7 {
-    width: 530px;
-  }
-  input.span6, textarea.span6 {
-    width: 450px;
-  }
-  input.span5, textarea.span5 {
-    width: 370px;
-  }
-  input.span4, textarea.span4 {
-    width: 290px;
-  }
-  input.span3, textarea.span3 {
-    width: 210px;
-  }
-  input.span2, textarea.span2 {
-    width: 130px;
-  }
-  input.span1, textarea.span1 {
-    width: 50px;
   }
   input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly] {
     cursor: not-allowed;
@@ -646,7 +455,7 @@ body {
   }
   .control-group {
     &.warning {
-      > label, .help-block, .help-inline {
+      > label {
         color: #c09853;
       }
       .checkbox, .radio, input, select, textarea {
@@ -664,7 +473,7 @@ body {
       }
     }
     &.error {
-      > label, .help-block, .help-inline {
+      > label {
         color: #b94a48;
       }
       .checkbox, .radio, input, select, textarea {
@@ -682,7 +491,7 @@ body {
       }
     }
     &.success {
-      > label, .help-block, .help-inline {
+      > label {
         color: #468847;
       }
       .checkbox, .radio, input, select, textarea {
@@ -774,7 +583,7 @@ body {
     }
   }
 
-  .form-horizontal input, .form-horizontal textarea, .form-horizontal select,  .form-horizontal .help-inline,  .form-horizontal .input-prepend, .form-horizontal .input-append {
+  .form-horizontal input, .form-horizontal textarea, .form-horizontal select,  .form-horizontal .input-prepend, .form-horizontal .input-append {
     display: inline-block;
     *display: inline;
     margin-bottom: 0;
@@ -819,13 +628,6 @@ body {
         *padding-left: 160px;
       }
     }
-    .help-block {
-      margin-top: 9px;
-      margin-bottom: 0;
-    }
-    .form-actions {
-      padding-left: 160px;
-    }
   }
 
   .alert {
@@ -848,7 +650,7 @@ body {
     border-color: #d6e9c6;
     color: #468847;
   }
-  .alert-danger, .alert-error {
+  .alert-error {
     background-color: #f2dede;
     border-color: #eed3d7;
     color: #b94a48;
@@ -857,18 +659,6 @@ body {
     background-color: #d9edf7;
     border-color: #bce8f1;
     color: #3a87ad;
-  }
-  .alert-block {
-    padding-top: 14px;
-    padding-bottom: 14px;
-    > {
-      p, ul {
-        margin-bottom: 0;
-      }
-    }
-    p p {
-      margin-top: 5px;
-    }
   }
   .alert {
     .close {
@@ -958,133 +748,13 @@ table {
   }
 }
 
-table [class*=span], .row-fluid [class*=span] {
+table [class*=span] {
   display: table-cell;
   float: none;
   margin-left: 0;
 }
 
 .table {
-  .span1 {
-    float: none;
-    width: 44px;
-    margin-left: 0;
-  }
-  .span2 {
-    float: none;
-    width: 124px;
-    margin-left: 0;
-  }
-  .span3 {
-    float: none;
-    width: 204px;
-    margin-left: 0;
-  }
-  .span4 {
-    float: none;
-    width: 284px;
-    margin-left: 0;
-  }
-  .span5 {
-    float: none;
-    width: 364px;
-    margin-left: 0;
-  }
-  .span6 {
-    float: none;
-    width: 444px;
-    margin-left: 0;
-  }
-  .span7 {
-    float: none;
-    width: 524px;
-    margin-left: 0;
-  }
-  .span8 {
-    float: none;
-    width: 604px;
-    margin-left: 0;
-  }
-  .span9 {
-    float: none;
-    width: 684px;
-    margin-left: 0;
-  }
-  .span10 {
-    float: none;
-    width: 764px;
-    margin-left: 0;
-  }
-  .span11 {
-    float: none;
-    width: 844px;
-    margin-left: 0;
-  }
-  .span12 {
-    float: none;
-    width: 924px;
-    margin-left: 0;
-  }
-  .span13 {
-    float: none;
-    width: 1004px;
-    margin-left: 0;
-  }
-  .span14 {
-    float: none;
-    width: 1084px;
-    margin-left: 0;
-  }
-  .span15 {
-    float: none;
-    width: 1164px;
-    margin-left: 0;
-  }
-  .span16 {
-    float: none;
-    width: 1244px;
-    margin-left: 0;
-  }
-  .span17 {
-    float: none;
-    width: 1324px;
-    margin-left: 0;
-  }
-  .span18 {
-    float: none;
-    width: 1404px;
-    margin-left: 0;
-  }
-  .span19 {
-    float: none;
-    width: 1484px;
-    margin-left: 0;
-  }
-  .span20 {
-    float: none;
-    width: 1564px;
-    margin-left: 0;
-  }
-  .span21 {
-    float: none;
-    width: 1644px;
-    margin-left: 0;
-  }
-  .span22 {
-    float: none;
-    width: 1724px;
-    margin-left: 0;
-  }
-  .span23 {
-    float: none;
-    width: 1804px;
-    margin-left: 0;
-  }
-  .span24 {
-    float: none;
-    width: 1884px;
-    margin-left: 0;
-  }
   tbody tr {
     &.success td {
       background-color: #dff0d8;
