@@ -114,25 +114,6 @@ input[type="submit"].btn::-moz-focus-inner {
 .btn-group.open .dropdown-toggle {
   outline: 0;
 }
-.btn .caret {
-  margin-top: 7px;
-  margin-left: 0;
-  border-top-color: #565656;
-}
-.btn:hover .caret,
-.open.btn-group .caret {
-  opacity: 1;
-  filter: alpha(opacity=100);
-}
-.btn-small .caret {
-  margin-top: 6px;
-}
-.btn-large .caret {
-  margin-top: 6px;
-  border-left-width: 5px;
-  border-right-width: 5px;
-  border-top-width: 5px;
-}
 
 .dropdown {
   position: relative;
@@ -153,15 +134,6 @@ input[type="submit"].btn::-moz-focus-inner {
   border-right: 4px solid transparent;
   border-left: 4px solid transparent;
   content: "";
-}
-.dropdown .caret {
-  margin-top: 8px;
-  margin-left: 2px;
-}
-.dropdown:hover .caret,
-.open .caret {
-  opacity: 1;
-  filter: alpha(opacity=100);
 }
 .dropdown-menu {
   position: absolute;
