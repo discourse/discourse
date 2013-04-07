@@ -12,6 +12,9 @@ en:
   via: "%{username} via %{site_name}"
   is_reserved: "is reserved"
 
+  site_under_maintenance: 'Site is currently undergoing maintenance.'
+  operation_already_running: "An %{operation} is currently running. Can't start a new %{operation} job right now."
+
   too_many_mentions:
     zero: "Sorry, you can't mention other users."
     one: "Sorry, you can only mention one other user in a post."
