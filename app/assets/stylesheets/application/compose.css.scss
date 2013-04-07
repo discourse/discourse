@@ -55,7 +55,10 @@
 }
 
 #reply-control {
-  .toggle-preview, .saving-draft, #image-uploading {
+  .requirements-not-met {
+    background-color: rgba(255, 0, 0, 0.12);
+  }
+  .toggle-preview, .draft-status, #image-uploading {
     position: absolute;
     bottom: -31px;
     margin-top: 0px;
@@ -69,7 +72,7 @@
     font-size: 12px;
     color: darken($gray, 40);
   }
-  .saving-draft {
+  .draft-status {
     right: 51%;
     color: lighten($black, 60);
   }
