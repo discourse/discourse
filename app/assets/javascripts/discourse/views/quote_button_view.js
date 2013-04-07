@@ -15,9 +15,9 @@ Discourse.QuoteButtonView = Discourse.View.extend({
     buffer.push(Em.String.i18n("post.quote_reply"));
   },
 
-  hasBuffer: (function() {
+  hasBuffer: function() {
     return this.present('controller.buffer') ? 'visible' : null;
-  }).property('controller.buffer'),
+  }.property('controller.buffer'),
 
   willDestroyElement: function() {
     $(document).off("mousedown.quote-button");
