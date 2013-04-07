@@ -4,8 +4,8 @@ require File.expand_path('../lib/rails_multisite/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ["Sam Saffron"]
   gem.email         = ["sam.saffron@gmail.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.description   = %q{Multi tenancy support for Rails}
+  gem.summary       = %q{Multi tenancy support for Rails}
   gem.homepage      = ""
 
   # when this is extracted comment it back in, prd has no .git 
