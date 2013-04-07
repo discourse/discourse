@@ -207,7 +207,7 @@ class ApplicationController < ActionController::Base
     def block_if_maintenance_mode
       if Discourse.maintenance_mode?
         if request.format.json?
-          render status: 503, json: failed_json.merge( message: 'Site is currently undergoing maintenance.' )
+          render status: 503, json: failed_json.merge(message: I18n.t('site_under_maintenance'))
         else
           render status: 503, file: File.join( Rails.root, 'public', '503.html' ), layout: false
         end

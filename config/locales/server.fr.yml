@@ -19,6 +19,9 @@ fr:
   via: "%{username} via %{site_name}"
   is_reserved: "est réservé"
 
+  site_under_maintenance: 'Le site est en cours de maintenance.'
+  operation_already_running: "Un %{operation} est en train de tourner. Impossible d'en démarrer un autre."
+
   too_many_mentions:
     zero: "Désolé, vous ne pouvez pas mentionner d'utilisateur."
     one: "Désolé, vous ne pouvez mentionner qu'un seul utilisateur."
