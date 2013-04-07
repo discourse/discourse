@@ -27,7 +27,7 @@ Discourse.ComposerView = Discourse.View.extend({
   }.property('content.composeState'),
 
   draftStatus: function() {
-    this.$('.saving-draft').text(this.get('content.draftStatus') || "");
+    this.$('.draft-status').text(this.get('content.draftStatus') || "");
   }.observes('content.draftStatus'),
 
   // Disable fields when we're loading
@@ -87,7 +87,7 @@ Discourse.ComposerView = Discourse.View.extend({
 
   focusIn: function() {
     var controller = this.get('controller');
-    if(controller) controller.resetDraftStatus();
+    if (controller) controller.updateDraftStatus();
   },
 
   resize: function() {

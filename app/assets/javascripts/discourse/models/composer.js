@@ -458,14 +458,17 @@ Discourse.Composer = Discourse.Model.extend({
     this.set('draftStatus', Em.String.i18n('composer.saving_draft_tip'));
 
     var composer = this;
-    return Discourse.Draft.save(this.get('draftKey'), this.get('draftSequence'), data).then((function() {
-      composer.set('draftStatus', Em.String.i18n('composer.saved_draft_tip'));
-    }), (function() {
-      composer.set('draftStatus', Em.String.i18n('composer.drafts_offline'));
-    }));
+
+    // try to save the draft
+    return Discourse.Draft.save(this.get('draftKey'), this.get('draftSequence'), data)
+      .then(function() {
+        composer.set('draftStatus', Em.String.i18n('composer.saved_draft_tip'));
+      }, function() {
+        composer.set('draftStatus', Em.String.i18n('composer.drafts_offline'));
+      });
   },
 
-  resetDraftStatus: (function() {
+  updateDraftStatus: function() {
     // 'title' is focused
     if ($('#reply-title').is(':focus')) {
       var titleDiff = Discourse.SiteSettings.min_topic_title_length - this.get('titleLength');
@@ -482,7 +485,7 @@ Discourse.Composer = Discourse.Model.extend({
     // hide the counters if the currently focused text field is OK
     this.set('draftStatus', null);
 
-  }).observes('replyLength', 'titleLength'),
+  }.observes('replyLength', 'titleLength'),
 
   /**
     Computes the length of the title minus non-significant whitespaces
