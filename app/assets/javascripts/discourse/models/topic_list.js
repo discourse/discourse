@@ -50,8 +50,6 @@ Discourse.TopicList = Discourse.Model.extend({
       unseen: true,
       highlight: true
     });
-    console.log(newTopic);
-
     this.get('inserted').unshiftObject(newTopic);
   }
 
