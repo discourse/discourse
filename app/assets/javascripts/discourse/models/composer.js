@@ -31,43 +31,43 @@ Discourse.Composer = Discourse.Model.extend({
     this.set('archetypeId', Discourse.get('site.default_archetype'));
   },
 
-  creatingTopic: (function() {
+  creatingTopic: function() {
     return this.get('action') === CREATE_TOPIC;
-  }).property('action'),
+  }.property('action'),
 
-  creatingPrivateMessage: (function() {
+  creatingPrivateMessage: function() {
     return this.get('action') === PRIVATE_MESSAGE;
-  }).property('action'),
+  }.property('action'),
 
-  editingPost: (function() {
+  editingPost: function() {
     return this.get('action') === EDIT;
-  }).property('action'),
+  }.property('action'),
 
-  replyingToTopic: (function() {
+  replyingToTopic: function() {
     return this.get('action') === REPLY;
-  }).property('action'),
+  }.property('action'),
 
-  viewOpen: (function() {
+  viewOpen: function() {
     return this.get('composeState') === OPEN;
-  }).property('composeState'),
+  }.property('composeState'),
 
-  archetype: (function() {
+  archetype: function() {
     return this.get('archetypes').findProperty('id', this.get('archetypeId'));
-  }).property('archetypeId'),
+  }.property('archetypeId'),
 
-  archetypeChanged: (function() {
+  archetypeChanged: function() {
     return this.set('metaData', Em.Object.create());
-  }).observes('archetype'),
+  }.observes('archetype'),
 
-  editTitle: (function() {
+  editTitle: function() {
     if (this.get('creatingTopic') || this.get('creatingPrivateMessage')) return true;
     if (this.get('editingPost') && this.get('post.post_number') === 1) return true;
     return false;
-  }).property('editingPost', 'creatingTopic', 'post.post_number'),
+  }.property('editingPost', 'creatingTopic', 'post.post_number'),
 
   togglePreview: function() {
     this.toggleProperty('showPreview');
-    return Discourse.KeyValueStore.set({ key: 'showPreview', value: this.get('showPreview') });
+    Discourse.KeyValueStore.set({ key: 'showPreview', value: this.get('showPreview') });
   },
 
   // Import a quote from the post
@@ -97,7 +97,7 @@ Discourse.Composer = Discourse.Model.extend({
   },
 
   // Determine the appropriate title for this action
-  actionTitle: (function() {
+  actionTitle: function() {
     var topic = this.get('topic');
 
     var postLink, topicLink;
@@ -128,28 +128,26 @@ Discourse.Composer = Discourse.Model.extend({
     }
 
     switch (this.get('action')) {
-      case PRIVATE_MESSAGE:
-        return Em.String.i18n('topic.private_message');
-      case CREATE_TOPIC:
-        return Em.String.i18n('topic.create_long');
+      case PRIVATE_MESSAGE: return Em.String.i18n('topic.private_message');
+      case CREATE_TOPIC: return Em.String.i18n('topic.create_long');
       case REPLY:
       case EDIT:
         if (postDescription) return postDescription;
         if (topic) return Em.String.i18n('post.reply_topic', { link: topicLink });
     }
 
-  }).property('action', 'post', 'topic', 'topic.title'),
+  }.property('action', 'post', 'topic', 'topic.title'),
 
-  toggleText: (function() {
+  toggleText: function() {
     return this.get('showPreview') ? Em.String.i18n('composer.hide_preview') : Em.String.i18n('composer.show_preview');
-  }).property('showPreview'),
+  }.property('showPreview'),
 
-  hidePreview: (function() {
+  hidePreview: function() {
     return !this.get('showPreview');
-  }).property('showPreview'),
+  }.property('showPreview'),
 
   // Whether to disable the post button
-  cantSubmitPost: (function() {
+  cantSubmitPost: function() {
 
     // Can't submit while loading
     if (this.get('loading')) return true;
@@ -167,29 +165,22 @@ Discourse.Composer = Discourse.Model.extend({
     if (this.get('replyLength') < Discourse.SiteSettings.min_post_length) return true;
 
     return false;
-  }).property('loading', 'editTitle', 'titleLength', 'targetUsernames', 'replyLength'),
+  }.property('loading', 'editTitle', 'titleLength', 'targetUsernames', 'replyLength'),
 
   // The text for the save button
-  saveText: (function() {
+  saveText: function() {
     switch (this.get('action')) {
-      case EDIT:
-        return Em.String.i18n('composer.save_edit');
-      case REPLY:
-        return Em.String.i18n('composer.reply');
-      case CREATE_TOPIC:
-        return Em.String.i18n('composer.create_topic');
-      case PRIVATE_MESSAGE:
-        return Em.String.i18n('composer.create_pm');
+      case EDIT: return Em.String.i18n('composer.save_edit');
+      case REPLY: return Em.String.i18n('composer.reply');
+      case CREATE_TOPIC: return Em.String.i18n('composer.create_topic');
+      case PRIVATE_MESSAGE: return Em.String.i18n('composer.create_pm');
     }
-  }).property('action'),
+  }.property('action'),
 
-  hasMetaData: (function() {
+  hasMetaData: function() {
     var metaData = this.get('metaData');
-    if (!this.get('metaData')) {
-      return false;
-    }
-    return Em.empty(Em.keys(this.get('metaData')));
-  }).property('metaData'),
+    return metaData ? Em.empty(Em.keys(this.get('metaData'))) : false;
+  }.property('metaData'),
 
   wouldLoseChanges: function() {
     return this.get('reply') !== this.get('originalText');
@@ -277,8 +268,7 @@ Discourse.Composer = Discourse.Model.extend({
   },
 
   save: function(opts) {
-    if (this.get('editingPost')) return this.editPost(opts);
-    return this.createPost(opts);
+    return this.get('editingPost') ? this.editPost(opts) : this.createPost(opts);
   },
 
   // When you edit a post
@@ -458,31 +448,57 @@ Discourse.Composer = Discourse.Model.extend({
     this.set('draftStatus', Em.String.i18n('composer.saving_draft_tip'));
 
     var composer = this;
-    return Discourse.Draft.save(this.get('draftKey'), this.get('draftSequence'), data).then((function() {
-      composer.set('draftStatus', Em.String.i18n('composer.saved_draft_tip'));
-    }), (function() {
-      composer.set('draftStatus', Em.String.i18n('composer.drafts_offline'));
-    }));
+
+    // try to save the draft
+    return Discourse.Draft.save(this.get('draftKey'), this.get('draftSequence'), data)
+      .then(function() {
+        composer.set('draftStatus', Em.String.i18n('composer.saved_draft_tip'));
+      }, function() {
+        composer.set('draftStatus', Em.String.i18n('composer.drafts_offline'));
+      });
   },
 
-  resetDraftStatus: (function() {
+  updateDraftStatus: function() {
+    var $title = $('#reply-title'),
+        $reply = $('#wmd-input');
+
     // 'title' is focused
-    if ($('#reply-title').is(':focus')) {
-      var titleDiff = Discourse.SiteSettings.min_topic_title_length - this.get('titleLength');
+    if ($title.is(':focus')) {
+      var titleDiff = this.get('missingTitleCharacters');
       if (titleDiff > 0) {
         return this.set('draftStatus', Em.String.i18n('composer.min_length.need_more_for_title', { n: titleDiff }));
       }
     // 'reply' is focused
-    } else if ($('#wmd-input').is(':focus')) {
-      var replyDiff = Discourse.SiteSettings.min_post_length - this.get('replyLength');
+    } else if ($reply.is(':focus')) {
+      var replyDiff = this.get('missingReplyCharacters');
       if (replyDiff > 0) {
         return this.set('draftStatus', Em.String.i18n('composer.min_length.need_more_for_reply', { n: replyDiff }));
       }
     }
+
     // hide the counters if the currently focused text field is OK
     this.set('draftStatus', null);
 
-  }).observes('replyLength', 'titleLength'),
+  }.observes('missingTitleCharacters', 'missingReplyCharacters'),
+
+  /**
+    Number of missing characters in the title until valid.
+
+    @property missingTitleCharacters
+  **/
+  missingTitleCharacters: function() {
+    return Discourse.SiteSettings.min_topic_title_length - this.get('titleLength');
+  }.property('titleLength'),
+
+
+  /**
+    Number of missing characters in the reply until valid.
+
+    @property missingReplyCharacters
+  **/
+  missingReplyCharacters: function() {
+    return Discourse.SiteSettings.min_post_length - this.get('replyLength');
+  }.property('replyLength'),
 
   /**
     Computes the length of the title minus non-significant whitespaces
