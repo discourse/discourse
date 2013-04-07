@@ -330,6 +330,10 @@ Discourse.ComposerView = Discourse.View.extend({
           case 413:
             bootbox.alert(Em.String.i18n('post.errors.upload_too_large', {max_size_kb: Discourse.SiteSettings.max_upload_size_kb}));
             return;
+          // 415 == media type not recognized (ie. not an image)
+          case 415:
+            bootbox.alert(Em.String.i18n('post.errors.only_images_are_supported'));
+            return;
         }
       }
       // otherwise, display a generic error message
