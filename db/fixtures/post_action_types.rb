@@ -47,4 +47,3 @@ PostActionType.seed do |s|
   s.is_flag = true
   s.position = 7
 end
-
