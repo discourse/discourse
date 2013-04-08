@@ -36,17 +36,13 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
     if (!this.get('controllers.topic.content.can_create_post')) return;
 
     // retrieve the selected range
-    var range = window.getSelection().getRangeAt(0);
-    var cloned = range.cloneRange();
+    var range = window.getSelection().getRangeAt(0),
+        cloned = range.cloneRange(),
+        $ancestor = $(range.commonAncestorContainer);
 
     // don't display the "quote reply" button if you select text spanning two posts
-    // this basically look for the first "DIV" container...
-    var commonDivAncestorContainer = range.commonAncestorContainer;
-    while (commonDivAncestorContainer.nodeName !== 'DIV') {
-      commonDivAncestorContainer = commonDivAncestorContainer.parentNode;
-    }
-    // ... and check it has the 'cooked' class (which indicates we're in a post)
-    if (commonDivAncestorContainer.className.indexOf('cooked') === -1) return;
+    // note: the ".contents" is here to prevent selection of the topic summary
+    if ($ancestor.closest('.topic-body > .contents').length === 0) return;
 
     var selectedText = Discourse.Utilities.selectedText();
     if (this.get('buffer') === selectedText) return;

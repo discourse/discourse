@@ -160,3 +160,14 @@
       border: 1px solid $color;
   box-shadow: 0 0 5px $color;
 }
+
+//
+// --------------------------------------------------
+
+// Unselectable
+
+@mixin unselectable {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+}
