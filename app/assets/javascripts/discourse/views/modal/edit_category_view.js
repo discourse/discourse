@@ -32,7 +32,7 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
   usedBackgroundColors: function() {
     return Discourse.site.categories.map(function(c) {
       // If editing a category, don't include its color:
-      return (!this.get('category.id') || this.get('category.color').toUpperCase() !== c.color.toUpperCase()) ? c.color.toUpperCase() : null;
+      return (this.get('category.id') && this.get('category.color').toUpperCase() === c.color.toUpperCase()) ? null : c.color.toUpperCase();
     }, this).compact();
   }.property('Discourse.site.categories', 'category.id', 'category.color'),
 
