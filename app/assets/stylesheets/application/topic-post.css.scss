@@ -89,11 +89,6 @@
   pre code {
     max-height: 690px;
   }
-  .post-menu-area {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-  }
   @include hover {
     .gutter {
       .reply-new,
@@ -104,6 +99,7 @@
   }
 
   .gutter {
+    @include unselectable;
     .reply-new{
       .discourse-no-touch & {
         opacity: 0;
@@ -248,11 +244,13 @@
   }
 
   section.post-menu-area {
+    @include unselectable;
     background-color: $post_footer;
     border-top: 1px solid $inner_border;
     overflow: hidden;
     @include box-shadow(inset 0 -4px 4px -4px rgba($black, 0.14));
     nav.post-controls {
+      @include unselectable;
       float: right;
       padding: 0px;
       button {
@@ -390,9 +388,6 @@
     @include hover {
       background-color: mix($gray, $light_gray, 5%);
     }
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
   }
   .embedded-posts.bottom {
     @include border-radius-bottom(4px);
@@ -749,6 +744,7 @@
     }
   }
   .buttons {
+    @include unselectable;
     float: right;
     .btn {
       border: 0;
