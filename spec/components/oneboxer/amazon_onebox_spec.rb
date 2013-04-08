@@ -24,7 +24,7 @@ private
 <div class='onebox-result'>
     <div class='source'>
       <div class='info'>
-        <a href='http://www.amazon.com/Ruby-Programming-Language-David-Flanagan/dp/0596516177' target="_blank">
+        <a href='http://www.amazon.com/Ruby-Programming-Language-David-Flanagan/dp/0596516177' class="track-link" target="_blank">
           <img class='favicon' src="/assets/favicons/amazon.png"> amazon.com
         </a>
       </div>
