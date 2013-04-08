@@ -8,6 +8,71 @@
 **/
 Discourse.UserAction = Discourse.Model.extend({
 
+  descriptionHtml: (function() {
+    var action = this.get('action_type');
+    var ua = Discourse.UserAction;
+    var actions = [ua.LIKE, ua.WAS_LIKED, ua.STAR, ua.EDIT, ua.BOOKMARK, ua.GOT_PRIVATE_MESSAGE, ua.NEW_PRIVATE_MESSAGE];
+    var icon = "";
+    var sentence = "";
+
+    var fill = function(s, links) {
+      for (var key in links) {
+        var link = links[key];
+        s = s.replace("<" + key + ">", "<a href='" + link + "'>");
+        s = s.replace("</" + key + ">", "</a>");
+      }
+      return s;
+    };
+
+    var sameUser = this.get('username') === Discourse.get('currentUser.username');
+    var params;
+
+    if (action === null || actions.indexOf(action) >= 0) {
+      params = { u: this.get('userUrl') };
+      if (this.get('isPM')) {
+        icon = '<i class="icon icon-envelope-alt" title="{{i18n user.stream.private_message}}"></i>';
+        if (sameUser) {
+          sentence = fill(Em.String.i18n('user_action.sent_by_you'), params);
+        } else {
+          sentence = fill(Em.String.i18n('user_action.sent_by_user', { user: this.get('name') }), params);
+        }
+      } else {
+        if (sameUser) {
+          sentence = fill(Em.String.i18n('user_action.posted_by_you'), params);
+        } else {
+          sentence = fill(Em.String.i18n('user_action.posted_by_user', { user: this.get('name') }), params);
+        }
+      }
+    } else if (action === ua.NEW_TOPIC) {
+      params = { u: this.get('userUrl'), t: this.get('replyUrl') };
+      if (sameUser) {
+        sentence = fill(Em.String.i18n('user_action.you_posted_topic'), params);
+      } else {
+        sentence = fill(Em.String.i18n('user_action.user_posted_topic', { user: this.get('name') }), params);
+      }
+    } else if (action === ua.POST || action === ua.RESPONSE) {
+      if (this.get('reply_to_post_number')) {
+        params = { u: this.get('userUrl'), t: this.get('postUrl') };
+        if (sameUser) {
+          sentence = fill(Em.String.i18n('user_action.you_replied_to_post', { post_number: '#' + this.get('reply_to_post_number') }), params);
+        } else {
+          sentence = fill(Em.String.i18n('user_action.user_replied_to_post', { user: this.get('name'), post_number: '#' + this.get('reply_to_post_number') }), params);
+        }
+      } else {
+        params = { u: this.get('userUrl'), t: this.get('replyUrl') };
+        if (sameUser) {
+          sentence = fill(Em.String.i18n('user_action.you_replied_to_topic'), params);
+        } else {
+          sentence = fill(Em.String.i18n('user_action.user_replied_to_topic', { user: this.get('name') }), params);
+        }
+      }
+    } else {
+      throw "Invalid user action: " + action;
+    }
+
+    return new Handlebars.SafeString(icon + " " + sentence);
+  }).property(),
+
   userUrl: (function() {
     return Discourse.Utilities.userUrl(this.get('username'));
   }).property(),
