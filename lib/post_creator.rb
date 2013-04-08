@@ -132,7 +132,8 @@ class PostCreator
 
     # We need to enqueue jobs after the transaction. Otherwise they might begin before the data has
     # been comitted.
-    Jobs.enqueue(:feature_topic_users, topic_id: topic.id)
+    Jobs.enqueue(:feature_topic_users, topic_id: topic.id) if topic.present?
+
     post.trigger_post_process
 
     post
