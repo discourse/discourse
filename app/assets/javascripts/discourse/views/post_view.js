@@ -53,7 +53,7 @@ Discourse.PostView = Discourse.View.extend({
     }
 
     if (!Discourse.get('currentUser.enable_quoting')) return;
-    if ($(e.target).closest('.cooked').length === 0) return;
+    if ($(e.target).closest('.topic-body').length === 0) return;
 
     var qbc = this.get('controller.controllers.quoteButton');
     if (qbc) {
