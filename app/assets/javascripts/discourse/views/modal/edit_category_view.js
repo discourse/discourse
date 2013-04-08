@@ -29,6 +29,13 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
     return Discourse.SiteSettings.category_colors.split("|").map(function(i) { return i.toUpperCase(); });
   }.property('Discourse.SiteSettings.category_colors'),
 
+  usedBackgroundColors: function() {
+    return Discourse.site.categories.map(function(c) {
+      // If editing a category, don't include its color:
+      return (!this.get('category.id') || this.get('category.color').toUpperCase() !== c.color.toUpperCase()) ? c.color.toUpperCase() : null;
+    }, this).compact();
+  }.property('Discourse.site.categories', 'category.id', 'category.color'),
+
   title: function() {
     if (this.get('category.id')) return Em.String.i18n("category.edit_long");
     return Em.String.i18n("category.create");

@@ -7,28 +7,31 @@
  @module Discourse
  **/
 Discourse.ColorsView = Ember.ContainerView.extend({
-    classNames: 'colors-container',
+  classNames: 'colors-container',
 
-    init: function() {
-        this._super();
-        return this.createButtons();
-    },
+  init: function() {
+    this._super();
+    return this.createButtons();
+  },
 
-    createButtons: function() {
-        var colors = this.get('colors');
-        var _this = this;
+  createButtons: function() {
+    var colors = this.get('colors');
+    var _this = this;
+    var isUsed, usedColors = this.get('usedColors') || [];
 
-        colors.each(function(color) {
-            _this.addObject(Discourse.View.create({
-                tagName: 'button',
-                attributeBindings: ['style'],
-                classNames: ['colorpicker'],
-                style: 'background-color: #' + color + ';',
-                click: function() {
-                    _this.set("value", color);
-                    return false;
-                }
-            }));
-        });
-    }
+    colors.each(function(color) {
+      isUsed = usedColors.indexOf(color.toUpperCase()) >= 0;
+      _this.addObject(Discourse.View.create({
+        tagName: 'button',
+        attributeBindings: ['style', 'title'],
+        classNames: ['colorpicker'].concat( isUsed ? ['used-color'] : ['unused-color'] ),
+        style: 'background-color: #' + color + ';',
+        title: isUsed ? I18n.t("js.category.already_used") : null,
+        click: function() {
+          _this.set("value", color);
+          return false;
+        }
+      }));
+    });
+  }
 });

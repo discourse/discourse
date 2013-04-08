@@ -21,9 +21,12 @@
 
     .colorpicker {
       border: 1px solid $darkish_gray;
-      width: 15px;
-      height: 15px;
       margin-right: 2px;
+      width: 16px;
+      height: 16px;
+      &.used-color {
+        background: image-url("chosen-sprite.png") 1px 13px;
+      }
     }
   }
 }

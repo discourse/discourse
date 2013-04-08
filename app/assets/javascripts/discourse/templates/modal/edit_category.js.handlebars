@@ -37,7 +37,7 @@
           <div class='input-prepend input-append' style="margin-top: 10px;">
             <span class='color-title'>{{i18n category.background_color}}:</span>
             <span class='add-on'>#</span>{{view Discourse.TextField valueBinding="color" placeholderKey="category.color_placeholder" maxlength="6"}}
-            {{view Discourse.ColorsView colorsBinding="view.backgroundColors" valueBinding="color"}}
+            {{view Discourse.ColorsView colorsBinding="view.backgroundColors" usedColorsBinding="view.usedBackgroundColors" valueBinding="color"}}
           </div>
 
           <div class='input-prepend input-append'>
