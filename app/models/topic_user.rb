@@ -180,16 +180,21 @@ class TopicUser < ActiveRecord::Base
 UPDATE topic_users t
   SET
     last_read_post_number = last_read,
-    seen_post_count = GREATEST(t.seen_post_count, last_read)
+    seen_post_count = LEAST(max_post_number,GREATEST(t.seen_post_count, last_read))
 FROM (
   SELECT topic_id, user_id, MAX(post_number) last_read
   FROM post_timings
   GROUP BY topic_id, user_id
 ) as X
+JOIN (
+  SELECT p.topic_id, MAX(p.post_number) max_post_number from posts p
+  GROUP BY p.topic_id
+) as Y on Y.topic_id = X.topic_id
 WHERE X.topic_id = t.topic_id AND
       X.user_id = t.user_id AND
       (
-        last_read_post_number <> last_read
+        last_read_post_number <> last_read OR
+        seen_post_count <> LEAST(max_post_number,GREATEST(t.seen_post_count, last_read))
       )
 SQL
   end
