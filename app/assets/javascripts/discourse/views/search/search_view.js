@@ -29,12 +29,12 @@ Discourse.SearchView = Discourse.View.extend({
     });
   },
 
-  searchPlaceholder: (function() {
+  searchPlaceholder: function() {
     return Em.String.i18n("search.placeholder");
-  }).property(),
+  }.property(),
 
   // If we need to perform another search
-  newSearchNeeded: (function() {
+  newSearchNeeded: function() {
     this.set('noResults', false);
     var term = this.get('term');
     if (term && term.length >= Discourse.SiteSettings.min_search_term_length) {
@@ -44,16 +44,16 @@ Discourse.SearchView = Discourse.View.extend({
       this.set('results', null);
     }
     return this.set('selectedIndex', 0);
-  }).observes('term', 'typeFilter'),
+  }.observes('term', 'typeFilter'),
 
-  showCancelFilter: (function() {
+  showCancelFilter: function() {
     if (this.get('loading')) return false;
     return this.present('typeFilter');
-  }).property('typeFilter', 'loading'),
+  }.property('typeFilter', 'loading'),
 
-  termChanged: (function() {
+  termChanged: function() {
     return this.cancelType();
-  }).observes('term'),
+  }.observes('term'),
 
   // We can re-order them based on the context
   content: (function() {
@@ -88,26 +88,17 @@ Discourse.SearchView = Discourse.View.extend({
     return this.set('loading', false);
   }).observes('results'),
 
-  searchTerm: function(term, typeFilter) {
-    var _this = this;
-    if (this.currentSearch) {
-      this.currentSearch.abort();
-      this.currentSearch = null;
-    }
-    this.searcher = this.searcher || Discourse.debounce(function(term, typeFilter) {
-      _this.currentSearch = Discourse.ajax({
-        url: Discourse.getURL('/search'),
-        data: {
-          term: term,
-          type_filter: typeFilter
-        },
-        success: function(results) {
-          return _this.set('results', results);
-        }
-      });
-    }, 300);
-    return this.searcher(term, typeFilter);
-  },
+  searchTerm: Discourse.debouncePromise(function(term, typeFilter) {
+    var searchView = this;
+    return Discourse.ajax(Discourse.getURL('/search'), {
+      data: {
+        term: term,
+        type_filter: typeFilter
+      }
+    }).then(function(results) {
+      searchView.set('results', results);
+    });
+  }, 300),
 
   resultCount: (function() {
     var count;

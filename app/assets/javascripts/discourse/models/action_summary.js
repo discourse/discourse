@@ -80,18 +80,16 @@ Discourse.ActionSummary = Discourse.Model.extend({
   },
 
   clearFlags: function() {
-    var _this = this;
-    return Discourse.ajax({
-      url: Discourse.getURL("/post_actions/clear_flags"),
+    var actionSummary = this;
+    return Discourse.ajax(Discourse.getURL("/post_actions/clear_flags"), {
       type: "POST",
       data: {
         post_action_type_id: this.get('id'),
         id: this.get('post.id')
-      },
-      success: function(result) {
-        _this.set('post.hidden', result.hidden);
-        return _this.set('count', 0);
       }
+    }).then(function(result) {
+      actionSummary.set('post.hidden', result.hidden);
+      actionSummary.set('count', 0);
     });
   },
 

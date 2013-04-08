@@ -241,13 +241,10 @@ Discourse.CreateAccountView = Discourse.ModalBodyView.extend({
   }).property('accountPassword'),
 
   fetchConfirmationValue: function() {
-    var _this = this;
-    return Discourse.ajax({
-      url: Discourse.getURL('/users/hp.json'),
-      success: function(json) {
-        _this.set('accountPasswordConfirm', json.value);
-        return _this.set('accountChallenge', json.challenge.split("").reverse().join(""));
-      }
+    var createAccountView = this;
+    return Discourse.ajax(Discourse.getURL('/users/hp.json')).then(function (json) {
+      createAccountView.set('accountPasswordConfirm', json.value);
+      createAccountView.set('accountChallenge', json.challenge.split("").reverse().join(""));
     });
   },
 

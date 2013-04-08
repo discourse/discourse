@@ -7,26 +7,21 @@
   @module Discourse
 **/
 Discourse.StaticController = Discourse.Controller.extend({
-  content: null,
 
   loadPath: function(path) {
-    var $preloaded, text,
-      _this = this;
+    var staticController = this;
     this.set('content', null);
 
     // Load from <noscript> if we have it.
-    $preloaded = $("noscript[data-path=\"" + path + "\"]");
+    var $preloaded = $("noscript[data-path=\"" + path + "\"]");
     if ($preloaded.length) {
-      text = $preloaded.text();
+      var text = $preloaded.text();
       text = text.match(/<!-- preload-content: -->((?:.|[\n\r])*)<!-- :preload-content -->/);
       text = text[1];
-      return this.set('content', text);
+      this.set('content', text);
     } else {
-      return Discourse.ajax({
-        url: Discourse.getURL("" + path + ".json"),
-        success: function(result) {
-          return _this.set('content', result);
-        }
+      return Discourse.ajax(Discourse.getURL(path + ".json")).then(function (result) {
+        staticController.set('content', result);
       });
     }
   }

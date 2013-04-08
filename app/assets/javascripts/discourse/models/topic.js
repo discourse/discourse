@@ -168,12 +168,9 @@ Discourse.Topic = Discourse.Model.extend({
   },
 
   // Reset our read data for this topic
-  resetRead: function(callback) {
+  resetRead: function() {
     return Discourse.ajax(Discourse.getURL("/t/") + (this.get('id')) + "/timings", {
-      type: 'DELETE',
-      success: function() {
-        return typeof callback === "function" ? callback() : void 0;
-      }
+      type: 'DELETE'
     });
   },
 

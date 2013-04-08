@@ -63,11 +63,16 @@ en:
       activity_stream: "Activity"
       preferences: "Preferences"
       bio: "About me"
-      change_password: "change"
       invited_by: "Invited By"
       trust_level: "Trust Level"
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
+
+      change_password:
+        action: "change"
+        success: "(email sent)"
+        in_progress: "(sending email)"
+        error: "(error)"
 
       change_username:
         action: "change"

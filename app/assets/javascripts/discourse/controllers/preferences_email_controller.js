@@ -34,15 +34,14 @@ Discourse.PreferencesEmailController = Discourse.ObjectController.extend({
   }).property('saving'),
 
   changeEmail: function() {
-    var _this = this;
+    var preferencesEmailController = this;
     this.set('saving', true);
     return this.get('content').changeEmail(this.get('newEmail')).then(function() {
-      return _this.set('success', true);
+      preferencesEmailController.set('success', true);
     }, function() {
-      /* Error
-      */
-      _this.set('error', true);
-      return _this.set('saving', false);
+      // Error
+      preferencesEmailController.set('error', true);
+      preferencesEmailController.set('saving', false);
     });
   }
 

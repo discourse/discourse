@@ -148,7 +148,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     this.get('controller').unsubscribe();
 
     var topicView = this;
-    this.get('topic').resetRead(function() {
+    this.get('topic').resetRead().then(function() {
       topicView.set('controller.message', Em.String.i18n("topic.read_position_reset"));
       topicView.set('controller.loaded', false);
     });

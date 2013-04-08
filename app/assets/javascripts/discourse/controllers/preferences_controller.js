@@ -53,23 +53,26 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
   }).property(),
 
   save: function() {
-    var _this = this, model = this.get('content');
+    var preferencesController = this;
     this.set('saving', true);
     this.set('saved', false);
 
     // Cook the bio for preview
-    return model.save(function(result) {
-      _this.set('saving', false);
-      if (result) {
-        if (Discourse.currentUser.id === model.get('id')) {
-          Discourse.currentUser.set('name', model.get('name'));
-        }
-      
-        _this.set('content.bio_cooked', Discourse.Markdown.cook(_this.get('content.bio_raw')));
-        return _this.set('saved', true);
-      } else {
-        return alert('failed');
+    var model = this.get('content');
+    return model.save().then(function() {
+      // success
+      preferencesController.set('saving', false);
+      if (Discourse.currentUser.id === model.get('id')) {
+        Discourse.currentUser.set('name', model.get('name'));
       }
+
+      preferencesController.set('content.bio_cooked',
+                                Discourse.Markdown.cook(preferencesController.get('content.bio_raw')));
+      preferencesController.set('saved', true);
+    }, function() {
+      // failed to update
+      preferencesController.set('saving', false);
+      alert(Em.String.i18n('generic_error'));
     });
   },
 
@@ -79,12 +82,20 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
   }).property('saving'),
 
   changePassword: function() {
-    var _this = this;
+    var preferencesController = this;
     if (!this.get('passwordProgress')) {
-      this.set('passwordProgress', '(generating email)');
-      return this.get('content').changePassword(function(message) {
-        _this.set('changePasswordProgress', false);
-        return _this.set('passwordProgress', "(" + message + ")");
+      this.set('passwordProgress', Em.String.i18n("user.change_password.in_progress"));
+      return this.get('content').changePassword().then(function() {
+        // success
+        preferencesController.setProperties({
+          changePasswordProgress: false,
+          passwordProgress: Em.String.i18n("user.change_password.success")
+        });
+      }, function() {
+        preferencesController.setProperties({
+          changePasswordProgress: false,
+          passwordProgress: Em.String.i18n("user.change_password.error")
+        });
       });
     }
   }
