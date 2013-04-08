@@ -39,7 +39,7 @@ private
 <div class='onebox-result'>
     <div class='source'>
       <div class='info'>
-        <a href='http://en.wikipedia.org/wiki/Ruby' target="_blank">
+        <a href='http://en.wikipedia.org/wiki/Ruby' class="track-link" target="_blank">
           <img class='favicon' src="/assets/favicons/wikipedia.png"> en.wikipedia.org
         </a>
       </div>
