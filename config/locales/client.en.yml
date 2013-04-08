@@ -844,7 +844,20 @@ en:
         new: "New"
         new_style: "New Style"
         delete: "Delete"
-        delete_confirm: "Delete this customization?"
+        delete_confirm: "Delete this custimzation?"
+
+      pages:
+        title: "Pages"
+        page: "Page"
+        enabled: "Enabled?"
+        preview: "preview"
+        undo_preview: "undo preview"
+        save: "Save"
+        new: "New"
+        new_page: "New Page"
+        route_placeholder: "path as in /pages/<path>"
+        delete: "Delete"
+        delete_confirm: "Delete this page?"
 
       email_logs:
         title: "Email Logs"

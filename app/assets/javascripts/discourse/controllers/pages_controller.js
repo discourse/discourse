@@ -1,15 +1,15 @@
 /**
-  This controller supports displaying static content.
+  This controller supports displaying custom pages.
 
-  @class StaticController
+  @class PagesController
   @extends Discourse.Controller
   @namespace Discourse
   @module Discourse
 **/
-Discourse.StaticController = Discourse.Controller.extend({
+Discourse.PagesController = Discourse.Controller.extend({
   content: null,
 
-  loadPath: function(path) {
+  loadPage: function(path) {
     var $preloaded, text,
       _this = this;
     this.set('content', null);
@@ -31,8 +31,21 @@ Discourse.StaticController = Discourse.Controller.extend({
   }
 });
 
-Discourse.StaticController.reopenClass({
-  pages: ['faq', 'tos', 'privacy']
+Discourse.PagesController.reopenClass({
+  pages: function() {
+   routesFilter = function(pages) {
+     var routes = []
+     if (pages) {
+       $(pages).each(function(page) {
+         routes.pushObject(pages[page].route);
+       });
+     }
+     return routes;
+   }
+   routes = routesFilter(PreloadStore.get('pages'));
+   PreloadStore.remove('pages');
+   return routes;
+  }()
 });
 
 

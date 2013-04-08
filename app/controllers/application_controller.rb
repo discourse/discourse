@@ -104,6 +104,9 @@ class ApplicationController < ActionController::Base
         store_preloaded("currentUser", MultiJson.dump(CurrentUserSerializer.new(current_user, root: false)))
       end
       store_preloaded("siteSettings", SiteSetting.client_settings_json)
+      @pages = Page.all
+      serializer_opts = {each_serializer: PageSerializer}
+      store_preloaded('pages', MultiJson.dump(ActiveModel::ArraySerializer.new(@pages, serializer_opts).as_json))
     end
   end
 

@@ -18,6 +18,14 @@ Discourse.Route.buildRoutes(function() {
   Discourse.StaticController.pages.forEach(function(p) {
     router.route(p, { path: "/" + p });
   });
+  
+  // Generate routes for all pages
+  // Note: Creating a ressource 'pages' does not work since the setupController
+  // functions of the individual page routes are not called.
+  this.route('pages', { path: '/pages' });
+  Discourse.PagesController.pages.forEach(function(p) {
+    router.route(p, { path: '/pages/' + p });
+  });
 
   // List routes
   this.resource('list', { path: '/' }, function() {

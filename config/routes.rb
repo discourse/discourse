@@ -50,10 +50,12 @@ Discourse::Application.routes.draw do
       end
     end
     get 'customize' => 'site_customizations#index'
+    get 'pages' => 'pages#index'
     get 'flags' => 'flags#index'
     get 'flags/:filter' => 'flags#index'
     post 'flags/clear/:id' => 'flags#clear'
     resources :site_customizations
+    resources :pages
     resources :site_contents
     resources :site_content_types
     resources :export
@@ -220,6 +222,11 @@ Discourse::Application.routes.draw do
   delete 'draft' => 'draft#destroy'
 
   get 'robots.txt' => 'robots_txt#index'
+
+  get 'pages' => 'pages#show', :id => Page.first.id
+  Page.all.each do |page|
+    get 'pages/' + page.route => 'pages#show', :id => page.id if page.route? and page.enabled?
+  end
 
   [:latest, :hot, :unread, :new, :favorited, :read, :posted].each do |filter|
     root to: "list##{filter}", constraints: HomePageConstraint.new("#{filter}")

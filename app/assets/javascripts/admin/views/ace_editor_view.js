@@ -41,6 +41,7 @@ Discourse.AceEditorView = Discourse.View.extend({
       _this.editor = ace.edit(_this.$('.ace')[0]);
       _this.editor.setTheme("ace/theme/chrome");
       _this.editor.setShowPrintMargin(false);
+      _this.editor.getSession().setUseWrapMode(true);
       _this.editor.getSession().setMode("ace/mode/" + (_this.get('mode')));
       return _this.editor.on("change", function(e) {
         /* amending stuff as you type seems a bit out of scope for now - can revisit after launch

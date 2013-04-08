@@ -45,7 +45,8 @@ module Discourse
         :user_action_observer,
         :message_bus_observer,
         :post_alert_observer,
-        :search_observer
+        :search_observer,
+        :page_observer
     ]
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.

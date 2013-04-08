@@ -189,7 +189,7 @@ table {
   }
 }
 
-// Customise area
+// Customize area
 .customize {
   .nav.nav-pills {
     margin-left: 10px;
@@ -227,6 +227,79 @@ table {
     width: 75%;
     .style-name {
       width: 600px;
+      height: 25px;
+      font-size: 20px;
+    }
+    .ace-wrapper {
+      position: relative;
+      height: 600px;
+      width: 100%;
+    }
+    .ace_editor {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+    .status-actions {
+      float: right;
+      span {
+        margin-right: 20px;
+      }
+    }
+    .buttons {
+      float: left;
+      button, a {
+        float: left;
+      }
+    }
+  }
+}
+
+// Pages
+.pages {
+  .nav.nav-pills {
+    margin-left: 10px;
+  }
+  .well {
+    min-height: 20px;
+    padding: 4px;
+    margin-bottom: 20px;
+    background-color: whitesmoke;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    height: 638px;
+    margin-bottom: 10px;
+  }
+  a {
+    cursor: pointer;
+  }
+  .list, .current-page {
+    float: left;
+  }
+  .list {
+    width: 20%;
+    margin-right: 20px;
+    margin-top: 65px;
+  }
+  .current-page {
+    .delete-link {
+      margin-left: 15px;
+      margin-top: 5px;
+    }
+    .preview-link {
+      margin-left: 30px;
+    }
+    width: 75%;
+    .page-name {
+      width: 300px;
+      height: 25px;
+      font-size: 20px;
+    }
+    .page-route {
+      width: 300px;
       height: 25px;
       font-size: 20px;
     }

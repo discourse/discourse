@@ -1,0 +1,8 @@
+<ul class="nav-pills">
+<% @pages.each do |page| %>
+  <li><a <% if page == @current_page then %> class="active" <% end %> href="/pages/<%=page.route%>"><%=page.name%></a></li>
+<% end %>
+</ul>
+
+<%= CGI.unescapeHTML(ERB.new(CGI.unescapeHTML(@current_page.page).html_safe).result(binding)).html_safe %>
+
