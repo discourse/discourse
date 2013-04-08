@@ -4,16 +4,34 @@ zh_CN:
     formats:
       short: "%Y-%m-%d"
 
-  title: "论道"
+  title: "论坛"
   topics: "主题"
   loading: "载入中"
-  powered_by_html: '由<a href="http://www.discourse.org">论道 - Discourse</a>强力驱动，请开启JavaScript支持以获得最佳效果'
+  powered_by_html: '源自<a href="http://www.discourse.org">论坛 - Discourse</a>，请开启JavaScript支持以获得最佳效果'
 
   via: "%{username} 自 %{site_name}"
   is_reserved: "保留权利"
-  too_many_mentions: "提到了太多用户"
-  too_many_images: "包含了太多图片"
-  too_many_links: "包含了太多链接"
+
+  site_under_maintenance: '网站维护中。'
+  operation_already_running: "%{operation} 操作正在运行。 目前无法执行新的 %{operation} 操作。"
+
+  too_many_mentions:
+    zero: "抱歉, 你无法@用户。"
+    one: "抱歉, 你一次仅能@一个用户。"
+    other: "抱歉, 你一次仅能@ %{count} 个用户。"
+  too_many_mentions_visitor:
+    zero: "抱歉, 游客无法@用户。"
+    one: "抱歉, 游客一次仅能@一个用户。"
+    other: "抱歉, 游客一次仅能@ %{count} 个用户。"
+  too_many_images:
+    zero: "抱歉, 游客无法贴图。"
+    one: "抱歉, 游客一次仅能贴一张图。"
+    other: "抱歉, 游客一次仅能贴 %{count} 张图。"
+  too_many_links:
+    zero: "抱歉, 游客无法贴链接。"
+    one: "抱歉, 游客一次仅能贴一条链接。"
+    other: "抱歉, 游客一次仅能贴 %{count} 条链接。"
+
   just_posted_that: "与你最近发表的内容太过相似"
   has_already_been_used: "已经被使用"
   invalid_characters: "包含无效字符"
@@ -279,6 +297,10 @@ zh_CN:
       title: "已发送邮件"
       xaxis: "天"
       yaxis: "邮件数"
+    private_messages:
+      title: "私信"
+      xaxis: "天"
+      yaxis: "私信数"
 
   dashboard:
     rails_env_warning: "你的服务器运行在 %{env} 模式。"
@@ -287,9 +309,35 @@ zh_CN:
     clockwork_warning: '发条装置（Clockwork）并未运行。请确保运行一个 clockwork 进程，这样一些重要的工作能够被安排执行。<a href="https://github.com/tomykaira/clockwork">了解发条装置（clockwork）</a>。'
     sidekiq_warning: 'Sidekiq 不在运行。很多任务，例如发送电子邮件，是异步的被 sidekiq 调度执行的。请确保至少运行一个 sidekiq 进程。<a href="https://github.com/mperham/sidekiq">了解 Sidekiq</a>。'
     memory_warning: '你的服务器环境内存少于 1GB，我们建议至少要有 1GB 内存'
+    facebook_config_warning: '服务器允许使用脸书账号登陆 (enable_facebook_logins), 但是 app id 和 app secret values 没有被设定。 到 <a href="/admin/site_settings">站点设置</a> 更新此设定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">参考设定指南</a>。'
+    twitter_config_warning: '服务器允许使用推特账号登陆 (enable_twitter_logins), 但是 key 和 secret values 没有被设定。 到 <a href="/admin/site_settings">站点设置</a> 更新此设定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">参考设定指南</a>。'
+    github_config_warning: '服务器允许使用GitHub账号登陆  (enable_github_logins), 但是 client id 和 secret values 没有被设定。 到 <a href="/admin/site_settings">站点设置</a> 更新此设定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">参考设定指南</a>。'
+
+  content_types:
+    education_new_reply:
+      title: "New User Education: First Replies"
+      description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new replies."
+    education_new_topic:
+      title: "New User Education: First Topics"
+      description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new topics."
+    usage_tips:
+      title: "New User Tips"
+      description: "Common usage tips, essential forum information, and key guidance intended for new users."
+    welcome_user:
+      title: "Welcome: New User"
+      description: "A private message automatically sent to all new users when they sign up."
+    welcome_invite:
+      title: "Welcome: Invited User"
+      description: "A private message automatically sent to all new invited users when they accept the invitation from another user to participate."
+    tos_user_content_license:
+      title: "Terms of Service: Content License"
+      description: "The text for the Content License section of the Terms of Service."
+    tos_miscellaneous:
+      title: "Terms of Service: Miscellaneous"
+      description: "The text for the Miscellaneous section of the Terms of Service."
 
   site_settings:
-    default_locale: "此 论道 - Discourse 实例的缺省语言 (ISO 639-1 代码)"
+    default_locale: "此 论坛 - Discourse 实例的缺省语言 (ISO 639-1 代码)"
     min_post_length: "帖子最少字符数"
     max_post_length: "帖子最大字符数"
     min_topic_title_length: "标题最少字符数"
@@ -304,6 +352,7 @@ zh_CN:
     company_full_name: "运行本站点的公司全称，用于法律文档，例如服务条款 /tos"
     company_short_name: "运行本站点的公司短名，用于法律文档，例如服务条款 /tos"
     company_domain: "运行本站点的公司域名，用于法律文档，例如服务条款 /tos"
+    api_key: "The secure API key used to create and update topics, use the /admin/api section to set it up"
     access_password: "当启用访问限制时，必须填写此密码"
     queue_jobs: "如果失败队列在排队，使用 Sidekiq 消息引擎对不同的工作排队"
     crawl_images: "允许从第三方获取图片来插入宽、高数值"
@@ -317,7 +366,7 @@ zh_CN:
     exclude_rel_nofollow_domains: "不添加 nofollow 标签到一列逗号分割的域名 （使用父域名，例如 tld.com，将自动允许子域名，例如 sub.tld.com）"
 
     post_excerpt_maxlength: "帖子摘要的最大字符长度"
-    post_onebox_maxlength: "一个 论道 - Discourse 单厢帖（Onebox post）的最大字符长度"
+    post_onebox_maxlength: "一个 论坛 - Discourse 单厢帖（Onebox post）的最大字符长度"
     category_post_template: "当你创建新分类时，分类的定义帖模板（创建新分类时会自动生成一个属于该分类的新帖子）"
     new_topics_rollup: "主题列表卷起显示为主题数量前，可以往主题列表中插入多少新主题"
     onebox_max_chars: "从外部网站导入到一个单厢帖（Onebox post）的最大字符数"
@@ -327,10 +376,10 @@ zh_CN:
     favicon_url: "你的站点图标（favicon），参考 http://zh.wikipedia.org/wiki/Favicon"
     notification_email: "邮件回复地址，当发送系统邮件，例如通知用户找回密码、新用户注册等等时，所使用的发信人地址"
     use_ssl: "使用 SSL 安全套接层来访问本站吗？"
-    best_of_score_threshold: "将一个帖子包含到“优选”帖子中所需的最小分值"
-    best_of_posts_required: "在一个主题中启用“优选”模式所要求的最小帖子数量"
-    best_of_likes_required: "在一个主题中启用“优选”模式所要求的最小赞数量"
-    best_of_percent_filter: "当用户点击“优选”，显示前 % 几的帖子"
+    best_of_score_threshold: "将一个帖子包含到“优秀”帖子中所需的最小分值"
+    best_of_posts_required: "在一个主题中启用“优秀”模式所要求的最小帖子数量"
+    best_of_likes_required: "在一个主题中启用“优秀”模式所要求的最小赞数量"
+    best_of_percent_filter: "当用户点击“优秀”，显示前 % 几的帖子"
     enable_private_messages: "用户创建私信和私下交流要达到的用户级别"
 
     enable_long_polling: "启用消息总线使通知功能可以使用长轮询（long polling）"
@@ -360,6 +409,7 @@ zh_CN:
     email_domains_blacklist: "将一列竖线分隔的邮箱域名放入黑名单，例如：mailinator.com|trashmail.net"
     email_domains_whitelist: "竖线 | 分隔的电子邮箱域名，用户只能使用这些邮箱域名注册。注意：用户使用不包含在这个列表里的邮箱域名，将无法成功注册。"
     version_checks: "访问 Discourse Hub 来检查版本更新，并在管理面板 /admin 显示版本信息"
+    version_checks: "Ping the Discourse Hub for version updates and show version messages on the /admin dashboard"
 
     port: "使用此 HTTP 端口而不是80端口。留空为不使用，主要用于开发调试"
     force_hostname: "指定 URL 里的主机名。留空为不使用，主要用于开发调试"
@@ -385,21 +435,12 @@ zh_CN:
 
     enable_persona_logins: "启用基于电子邮箱的 Mozilla Persona 帐号验证登录"
 
-    enable_sina_logins: "启用新浪帐号验证登录，需要 sina_app_id 和 sina_app_secret"
-    sina_app_id: "新浪帐号验证的应用帐号（App id），到 http://open.weibo.com/connect 来注册获取"
-    sina_app_secret: "新浪帐号验证的应用密码（App secret），到 http://open.weibo.com/connect 来注册获取"
-
-    enable_qq_logins: "启用腾讯QQ帐号验证登录，需要 qq_app_id 和 qq_app_secret"
-    qq_app_id: "腾讯QQ帐号验证的应用帐号（App id），到 http://connect.qq.com/intro/login/ 来注册获取"
-    qq_app_secret: "腾讯QQ帐号验证的应用密码（App secret），到 http://connect.qq.com/intro/login/ 来注册获取"
-
     allow_import: "允许导入数据，这将替换全站数据。除非你计划导入数据，否则请保持设置为false"
 
     active_user_rate_limit_secs: "更新“最后一次见到”数据的频率，单位为秒"
     previous_visit_timeout_hours: "系统判断一次访问之后多少小时后为“上一次”访问"
 
     uncategorized_name: "在分类 /categories 页面，没有分类的主题的缺省分类"
-    max_mentions_per_post: "在一个帖子中你能使用的 @name 提及到的最多人数"
 
     rate_limit_create_topic: "在创建一个主题之后间隔多少秒你才能创建另一个主题"
     rate_limit_create_post: "在创建一个帖子之后间隔多少秒你才能创建另一个帖子"
@@ -424,6 +465,19 @@ zh_CN:
     basic_requires_read_posts: "新用户升级到初级用户（1）所需要阅读的帖子数量"
     basic_requires_time_spent_mins: "新用户升级到初级用户（1）所需要阅读帖子耗费的分钟数"
 
+    regular_requires_topics_entered: "How many topics a basic user must enter before promotion to regular (2) trust level"
+    regular_requires_read_posts: "How many posts a basic user must read before promotion to regular (2) trust level"
+    regular_requires_time_spent_mins: "How many minutes a basic user must read posts before promotion to regular (2) trust level"
+    regular_requires_days_visited: "How many days a basic user must visit the site before promotion to regular (2) trust level"
+    regular_requires_likes_received: "How many likes a basic user must receive before promotion to regular (2) trust level"
+    regular_requires_likes_given: "How many likes a basic user must cast before promotion to regular (2) trust level"
+    regular_requires_topic_reply_count: "How many topics a basic user must reply to before promotion to regular (2) trust level"
+
+    visitor_max_links: "How many links a visitor can add to a post"
+    visitor_max_images: "How many images a visitor can add to a post"
+    visitor_max_mentions_per_post: "Maximum number of @name notifications a visitor can use in a post"
+    max_mentions_per_post: "Maximum number of @name notifications you can use in a post"
+
     auto_link_images_wider_than: "图片宽度超过此设定像素值的，将被自动附加一个链接并且使用灯箱（lightbox）来展示"
 
     email_time_window_mins: "等待多少分钟才给用户发送通知电子邮件，好让他们有机会自己来浏览"
@@ -431,6 +485,7 @@ zh_CN:
     max_word_length: "在主题的标题中，允许的词语长度的最大字符数"
     title_min_entropy: "在主题的标题中，允许的最低熵值（单个字符）"
     body_min_entropy: "在一个帖子内文中，允许的最低熵值（单个字符）"
+
     title_fancy_entities: "转换主题标题中的 HTML 实体"
 
     min_title_similar_length: "开始检查相似主题的帖子标题的最小长度"
@@ -441,7 +496,7 @@ zh_CN:
     max_similar_results: "当用户撰写新主题时，显示多少类似主题给用户"
 
   notification_types:
-    mentioned: "%{display_username} 在 %{link} 提及到了你"
+    mentioned: "%{display_username} 在 %{link} @到了你"
     liked: "%{display_username} 在 %{link} 赞了你的帖子 "
     replied: "%{display_username} 在 %{link} 回复了你的帖子"
     quoted: "%{display_username} 在 %{link} 引用了你的帖子"
@@ -610,7 +665,7 @@ zh_CN:
 
         ### 保持滚动
 
-        论道 - Discourse 没有所谓下一页按钮或者页码，要继续阅读帖子，只需要继续向下滚动页面，这样更多的内容会自动加载！
+        论坛 - Discourse 没有所谓下一页按钮或者页码，要继续阅读帖子，只需要继续向下滚动页面，这样更多的内容会自动加载！
 
         当新的回复进来时，它们会自动显示在主题的底部。你不需要刷新页面或者退出主题然后重新进入来查看新帖子。
 
@@ -816,3 +871,10 @@ zh_CN:
     see_more: "查看更多"
     search_title: "搜索该主题"
     search_google: "用谷歌（Google）搜索"
+
+  terms_of_service:
+    user_content_license: |
+      User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_short_name} has the right (though not the obligation) to, in %{company_short_name}’s sole discretion (i) refuse or remove any content that, in %{company_short_name}’s reasonable opinion, violates any %{company_short_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_short_name}’s sole discretion. %{company_short_name} will have no obligation to provide a refund of any amounts previously paid.
+
+      Without limiting any of those representations or warranties, %{company_short_name} has the right (though not the obligation) to, in %{company_short_name}’s sole discretion (i) refuse or remove any content that, in %{company_short_name}’s reasonable opinion, violates any %{company_short_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_short_name}’s sole discretion. %{company_short_name} will have no obligation to provide a refund of any amounts previously paid.
+    miscellaneous: "This Agreement constitutes the entire agreement between %{company_short_name} and you concerning the subject matter ereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_short_name}, or by the posting by %{company_short_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_short_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns."
