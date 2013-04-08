@@ -94,12 +94,6 @@ class PostCreator
       # Extract links
       TopicLink.extract_from(post)
 
-      # Enqueue a job to feature the users in the topic
-      Jobs.enqueue(:feature_topic_users, topic_id: topic.id)
-
-      # Trigger post processing
-      post.trigger_post_process
-
       # Store unique post key
       if SiteSetting.unique_posts_mins > 0
         $redis.setex(post.unique_post_key, SiteSetting.unique_posts_mins.minutes.to_i, "1")
@@ -114,7 +108,6 @@ class PostCreator
 
       # Track the topic
       TopicUser.auto_track(@user.id, topic.id, TopicUser.notification_reasons[:created_post])
-
 
       if @user.id != topic.user_id
         @user.update_topic_reply_count
@@ -137,8 +130,14 @@ class PostCreator
       post.save_reply_relationships
     end
 
+    # We need to enqueue jobs after the transaction. Otherwise they might begin before the data has
+    # been comitted.
+    Jobs.enqueue(:feature_topic_users, topic_id: topic.id)
+    post.trigger_post_process
+
     post
   end
+
 
   # Shortcut
   def self.create(user, opts)
