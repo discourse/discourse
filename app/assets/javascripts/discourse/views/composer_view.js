@@ -27,7 +27,7 @@ Discourse.ComposerView = Discourse.View.extend({
   }.property('content.composeState'),
 
   draftStatus: function() {
-    this.$('.saving-draft').text(this.get('content.draftStatus') || "");
+    this.$('.draft-status').text(this.get('content.draftStatus') || "");
   }.observes('content.draftStatus'),
 
   // Disable fields when we're loading
@@ -40,8 +40,7 @@ Discourse.ComposerView = Discourse.View.extend({
   }.observes('loading'),
 
   postMade: function() {
-    if (this.present('controller.createdPost')) return 'created-post';
-    return null;
+    return this.present('controller.createdPost') ? 'created-post' : null;
   }.property('content.createdPost'),
 
   observeReplyChanges: function() {
@@ -87,7 +86,7 @@ Discourse.ComposerView = Discourse.View.extend({
 
   focusIn: function() {
     var controller = this.get('controller');
-    if(controller) controller.resetDraftStatus();
+    if (controller) controller.updateDraftStatus();
   },
 
   resize: function() {
@@ -123,9 +122,9 @@ Discourse.ComposerView = Discourse.View.extend({
   },
 
   didInsertElement: function() {
-    var replyControl = $('#reply-control');
-    replyControl.DivResizer({ resize: this.resize, onDrag: this.movePanels });
-    Discourse.TransitionHelper.after(replyControl, this.resize);
+    var $replyControl = $('#reply-control');
+    $replyControl.DivResizer({ resize: this.resize, onDrag: this.movePanels });
+    Discourse.TransitionHelper.after($replyControl, this.resize);
   },
 
   click: function() {
@@ -260,9 +259,24 @@ Discourse.ComposerView = Discourse.View.extend({
       return true;
     });
 
-    $('#reply-title').keyup(function() {
+    var $replyTitle = $('#reply-title');
+
+    $replyTitle.keyup(function() {
       saveDraft();
+      // removes the red background once the requirements are met
+      if (_this.get('controller.content.missingTitleCharacters') <= 0) {
+        $replyTitle.removeClass("requirements-not-met");
+      }
       return true;
+    });
+
+    // when the title field loses the focus...
+    $replyTitle.blur(function(){
+      // ...and the requirements are not met (ie. the minimum number of characters)
+      if (_this.get('controller.content.missingTitleCharacters') > 0) {
+        // then, "redify" the background
+        $replyTitle.toggleClass("requirements-not-met", true);
+      }
     });
 
     // In case it's still bound somehow
@@ -329,6 +343,10 @@ Discourse.ComposerView = Discourse.View.extend({
           // 413 == entity too large, returned usually from nginx
           case 413:
             bootbox.alert(Em.String.i18n('post.errors.upload_too_large', {max_size_kb: Discourse.SiteSettings.max_upload_size_kb}));
+            return;
+          // 415 == media type not recognized (ie. not an image)
+          case 415:
+            bootbox.alert(Em.String.i18n('post.errors.only_images_are_supported'));
             return;
         }
       }

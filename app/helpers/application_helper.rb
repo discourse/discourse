@@ -54,6 +54,10 @@ module ApplicationHelper
     result
   end
 
+  def markdown_content(key, replacements=nil)
+    PrettyText.cook(SiteContent.content_for(key, replacements || {})).html_safe
+  end
+
   def faq_path
     return "#{Discourse::base_uri}/faq"
   end

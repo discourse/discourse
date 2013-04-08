@@ -65,7 +65,7 @@ class Post < ActiveRecord::Base
   # Stop us from posting the same thing too quickly
   def unique_post_validator
     return if SiteSetting.unique_posts_mins == 0
-    return if user.admin? || user.moderator?
+    return if acting_user.admin? || acting_user.moderator?
 
     # If the post is empty, default to the validates_presence_of
     return if raw.blank?
@@ -125,8 +125,19 @@ class Post < ActiveRecord::Base
     total
   end
 
+  # Sometimes the post is being edited by someone else, for example, a mod.
+  # If that's the case, they should not be bound by the original poster's
+  # restrictions, for example on not posting images.
+  def acting_user
+    @acting_user || user
+  end
+
+  def acting_user=(pu)
+    @acting_user = pu
+  end
+
   def max_mention_validator
-    if user.present? && user.has_trust_level?(:basic)
+    if acting_user.present? && acting_user.has_trust_level?(:basic)
       errors.add(:base, I18n.t(:too_many_mentions, count: SiteSetting.max_mentions_per_post)) if raw_mentions.size > SiteSetting.max_mentions_per_post
     else
       errors.add(:base, I18n.t(:too_many_mentions_visitor, count: SiteSetting.visitor_max_mentions_per_post)) if raw_mentions.size > SiteSetting.visitor_max_mentions_per_post
@@ -134,12 +145,12 @@ class Post < ActiveRecord::Base
   end
 
   def max_images_validator
-    return if user.present? && user.has_trust_level?(:basic)
+    return if acting_user.present? && acting_user.has_trust_level?(:basic)
     errors.add(:base, I18n.t(:too_many_images, count: SiteSetting.visitor_max_images)) if image_count > SiteSetting.visitor_max_images
   end
 
   def max_links_validator
-    return if user.present? && user.has_trust_level?(:basic)
+    return if acting_user.present? && acting_user.has_trust_level?(:basic)
     errors.add(:base, I18n.t(:too_many_links, count: SiteSetting.visitor_max_links)) if link_count > SiteSetting.visitor_max_links
   end
 

@@ -1,5 +1,3 @@
-require_dependency 'multisite_i18n'
-
 class SiteContentType
 
   attr_accessor :content_type, :format
@@ -20,7 +18,7 @@ class SiteContentType
 
   def default_content
     if @opts[:default_18n_key].present?
-      return MultisiteI18n.t(@opts[:default_18n_key])
+      return I18n.t(@opts[:default_18n_key])
     end
     ""
   end

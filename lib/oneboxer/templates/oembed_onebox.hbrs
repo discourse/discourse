@@ -2,7 +2,7 @@
   {{#host}}
     <div class="source">
       <div class="info">
-        <a href='{{original_url}}' class='source' target="_blank">
+        <a href='{{original_url}}' class='source track-link' target="_blank">
           {{#favicon}}<img class='favicon' src="{{favicon}}"> {{/favicon}}{{host}}
         </a>
       </div>

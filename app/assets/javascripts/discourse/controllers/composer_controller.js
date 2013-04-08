@@ -18,8 +18,8 @@ Discourse.ComposerController = Discourse.Controller.extend({
     this.get('content').importQuote();
   },
 
-  resetDraftStatus: function() {
-    this.get('content').resetDraftStatus();
+  updateDraftStatus: function() {
+    this.get('content').updateDraftStatus();
   },
 
   appendText: function(text) {

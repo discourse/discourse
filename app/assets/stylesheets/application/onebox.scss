@@ -13,7 +13,6 @@ a.loading-onebox {
 }
 
 .onebox-result {
-  @include border-radius-all(8px);
   font-size: 14px;
   > .source {
     margin-bottom: 10px;

@@ -38,6 +38,13 @@ module SiteSettingExtension
     @@client_settings
   end
 
+  def settings_hash
+    result = {}
+    @defaults.each do |s, v|
+      result[s] = send(s).to_s
+    end
+    result
+  end
 
   def client_settings_json
     Rails.cache.fetch(SiteSettingExtension.client_settings_cache_key, expires_in: 30.minutes) do

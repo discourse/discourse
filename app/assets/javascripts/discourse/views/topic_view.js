@@ -181,8 +181,6 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
       }
       if (!post.get('read')) {
         post.set('read', true);
-        screenTrack = this.get('screenTrack');
-        if (screenTrack) { screenTrack.guessedSeen(postNumber); }
       }
       return post.get('post_number');
     }

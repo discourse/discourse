@@ -28,12 +28,6 @@ Discourse.ScreenTrack = Ember.Object.extend({
     };
   },
 
-  guessedSeen: function(postNumber) {
-    if (postNumber > (this.highestSeen || 0)) {
-      this.highestSeen = postNumber;
-    }
-  },
-
   // Reset our timers
   reset: function() {
     this.lastTick = new Date().getTime();
@@ -93,16 +87,21 @@ Discourse.ScreenTrack = Ember.Object.extend({
       timing.time = 0;
     });
     topicId = this.get('topic_id');
+
+    var highestSeen = 0;
+    $.each(newTimings, function(postNumber){
+      highestSeen = Math.max(highestSeen, parseInt(postNumber, 10));
+    });
+
     highestSeenByTopic = Discourse.get('highestSeenByTopic');
-    if ((highestSeenByTopic[topicId] || 0) < this.highestSeen) {
-      highestSeenByTopic[topicId] = this.highestSeen;
+    if ((highestSeenByTopic[topicId] || 0) < highestSeen) {
+      highestSeenByTopic[topicId] = highestSeen;
     }
     if (!Object.isEmpty(newTimings)) {
       Discourse.ajax(Discourse.getURL('/topics/timings'), {
         data: {
           timings: newTimings,
           topic_time: this.topicTime,
-          highest_seen: this.highestSeen,
           topic_id: topicId
         },
         cache: false,

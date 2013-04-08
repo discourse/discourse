@@ -51,18 +51,7 @@ header {
 }
 
 body {
-  .nav-pills .active .dropdown-toggle .caret {
-    border-top-color: white;
-    border-bottom-color: white;
-  }
 
-  .caret {
-    opacity: 0.9;
-    filter: alpha(opacity = 90);
-  }
-  .dropdown .caret {
-    margin-left: 6px;
-  }
   button.ok {
     @include linear-gradient(lighten($green, 5%), $green);
     color: $white;

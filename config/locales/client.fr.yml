@@ -391,6 +391,7 @@ fr:
         category: "Il n'y a plus de discussion sur {{category}} à lire."
 
     rank_details:
+      toggle: "afficher/cacher le détail du classement des discussions"
       show: "afficher le détail du classement des discussions"
       title: "Détail du classement des discussions"
 
@@ -593,15 +594,82 @@ fr:
         clear_flags:
           one: "Annuler le signalement"
           other: "Annuler les signalements"
-        it_too: "{{alsoName}} aussi"
-        undo: "Annuler {{alsoName}}"
+        it_too:
+          off_topic: "Le signaler également"
+          spam: "Le signaler également"
+          inappropriate: "Le signaler également"
+          custom_flag: "Le signaler également"
+          bookmark: "L'ajouter également en favoris"
+          like: "L'aimer également"
+          vote: "Votez pour lui également"
+        undo:
+          off_topic: "Annuler le signalement"
+          spam: "Annuler le signalement"
+          inappropriate: "Annuler le signalement"
+          custom_flag: "Annuler le signalement"
+          bookmark: "L'enlever des favoris"
+          like: "Annuler j'aime"
+          vote: "Retirer votre vote"
+        people:
+          off_topic: "{{icons}} l'ont signalé comme étant hors-sujet"
+          spam: "{{icons}} l'ont signalé comme étant du spam"
+          inappropriate: "{{icons}} l'ont signalé comme inaproprié"
+          custom_flag: "{{icons}} l'ont signalé pour modération"
+          bookmark: "{{icons}} l'ont ajouté à leurs favoris"
+          like: "{{icons}} l'ont aimé"
+          vote: "{{icons}} ont voté pour"
+        by_you:
+          off_topic: "Vous l'avez signalé comme étant hors-sujet"
+          spam: "Vous l'avez signalé comme étant du spam"
+          inappropriate: "Vous l'avez signalé comme inaproprié"
+          custom_flag: "Vous l'avez signalé pour modération"
+          bookmark: "Vous l'avez ajouté à vos favoris"
+          like: "Vous l'avez aimé"
+          vote: "Vous avez voté pour"
         by_you_and_others:
-          zero: "Vous {{long_form}}"
-          one: "Vous et une autre personne {{long_form}}"
-          other: "Vous et {{count}} autres personnes {{long_form}}"
+          off_topic:
+            one: "Vous et 1 autre personne l'avez signalé comme étant hors-sujet"
+            other: "Vous et {{count}} autres personnes l'avez signalé comme étant hors-sujet"
+          spam:
+            one: "Vous et 1 autre personne l'avez signalé comme étant du spam"
+            other: "Vous et {{count}} autres personnes l'avez signalé comme étant du spam"
+          inappropriate:
+            one: "Vous et 1 autre personne l'avez signalé comme inaproprié"
+            other: "Vous et {{count}} autres personnes l'avez signalé comme inaproprié"
+          custom_flag:
+            one: "Vous et 1 autre personne l'avez signalé pour modération"
+            other: "Vous et {{count}} autres personnes l'avez signalé pour modération"
+          bookmark:
+            one: "Vous et 1 autre personne l'avez ajouté à vos favoris"
+            other: "Vous et {{count}} autres personnes l'avez ajouté à vos favoris"
+          like:
+            one: "Vous et 1 autre personne l'avez aimé"
+            other: "Vous et {{count}} autres personnes l'avez aimé"
+          vote:
+            one: "Vous et 1 autre personne avez voté pour"
+            other: "Vous et {{count}} autres personnes avez voté pour"
         by_others:
-          one: "Une personne {{long_form}}"
-          other: "{{count}} personnes {{long_form}}"
+          off_topic:
+            one: "1 personne l'a signalé comme étant hors-sujet"
+            other: "{{count}} personnes l'ont signalé comme étant hors-sujet"
+          spam:
+            one: "1 personne l'a signalé comme étant du spam"
+            other: "{{count}} personnes l'ont signalé comme étant du spam"
+          inappropriate:
+            one: "1 personne l'a signalé comme inaproprié"
+            other: "{{count}} personnes l'ont signalé comme inaproprié"
+          custom_flag:
+            one: "1 personne l'a signalé pour modération"
+            other: "{{count}} personnes l'ont signalé pour modération"
+          bookmark:
+            one: "1 personne l'a ajouté à vos favoris"
+            other: "{{count}} personnes l'ont ajouté à vos favoris"
+          like:
+            one: "1 personne l'a aimé"
+            other: "{{count}} personnes l'ont aimé"
+          vote:
+            one: "1 personne a voté pour"
+            other: "{{count}} personnes ont voté pour"
 
       edits:
         one: "une édition"
@@ -722,6 +790,7 @@ fr:
 
     admin:
       title: 'Administation Discourse'
+      moderator: 'Modérateur'
 
       dashboard:
         title: "Panel d'administration"
@@ -841,6 +910,11 @@ fr:
         approve: 'Approuver'
         approved_by: "approuvé par"
         time_read: "Temps de lecture"
+
+      site_content:
+        none: "Choisissez un type de contenu afin de commencer l'édition."
+        title: 'Contenu du site'
+        edit: "Modifier le contenu du site"
 
       site_settings:
         show_overriden: 'Ne montrer que ce qui a été changé'

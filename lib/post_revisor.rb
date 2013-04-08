@@ -10,6 +10,8 @@ class PostRevisor
   def revise!(user, new_raw, opts = {})
     @user, @new_raw, @opts = user, new_raw, opts
     return false if not should_revise?
+
+    @post.acting_user = @user
     revise_post
     update_category_description
     post_process_post

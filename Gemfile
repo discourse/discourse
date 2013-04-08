@@ -108,12 +108,12 @@ end
 # this is an optional gem, it provides a high performance replacement
 # to String#blank? a method that is called quite frequently in current
 # ActiveRecord, this may change in the future
-gem 'fast_blank', github: "SamSaffron/fast_blank"
+gem 'fast_blank' #, github: "SamSaffron/fast_blank"
 
 # IMPORTANT: mini profiler monkey patches, so it better be required last
 #  If you want to amend mini profiler to do the monkey patches in the railstie
 #  we are open to it.
-gem 'rack-mini-profiler', git: 'git://github.com/SamSaffron/MiniProfiler'
+gem 'rack-mini-profiler' #, git: 'git://github.com/SamSaffron/MiniProfiler'
 
 # perftools only works on 1.9 atm
 group :profile do

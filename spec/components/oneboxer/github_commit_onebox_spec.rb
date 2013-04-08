@@ -24,7 +24,7 @@ private
 <div class="onebox-result">
     <div class="source">
       <div class="info">
-        <a href="https://github.com/discourse/discourse/commit/ee76f1926defa8309b3a7ea64a25707519529a13" target="_blank">
+        <a href="https://github.com/discourse/discourse/commit/ee76f1926defa8309b3a7ea64a25707519529a13" class="track-link" target="_blank">
           <img class="favicon" src="/assets/favicons/github.png"> github.com
         </a>
       </div>

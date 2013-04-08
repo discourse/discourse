@@ -1,6 +1,15 @@
-class CategoryDetailedSerializer < CategorySerializer
+class CategoryDetailedSerializer < ApplicationSerializer
 
-  attributes :topic_count, :topics_week, :topics_month, :topics_year
+  attributes :id,
+             :name,
+             :color,
+             :text_color,
+             :slug,
+             :topic_count,
+             :topics_week,
+             :topics_month,
+             :topics_year,
+             :description
 
   has_many :featured_users, serializer: BasicUserSerializer
   has_many :featured_topics, serializer: CategoryTopicSerializer, embed: :objects, key: :topics

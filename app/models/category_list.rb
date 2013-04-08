@@ -7,7 +7,8 @@ class CategoryList
     @categories = Category
                     .includes(featured_topics: [:category])
                     .includes(:featured_users)
-                    .order('topics_week desc, topics_month desc, topics_year desc')
+                    .where('topics.visible' => true)
+                    .order('categories.topics_week desc, categories.topics_month desc, categories.topics_year desc')
                     .to_a
 
     # Support for uncategorized topics

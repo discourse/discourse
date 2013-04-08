@@ -52,7 +52,7 @@ describe CategoryList do
 
       it "returns empty categories for those who can create them" do
         Guardian.any_instance.expects(:can_create?).with(Category).returns(true)
-        category_list.categories.should be_present
+        category_list.categories.should be_blank
       end
 
 

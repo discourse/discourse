@@ -21,7 +21,7 @@ describe PostTiming do
 
       post.user.unread_notifications_by_type.should == { Notification.types[:liked] => 1 }
 
-      PostTiming.process_timings(post.user, post.topic_id, 1, 100, [[post.post_number, 100]])
+      PostTiming.process_timings(post.user, post.topic_id, 1, [[post.post_number, 100]])
 
       post.user.reload
       post.user.unread_notifications_by_type.should == {}

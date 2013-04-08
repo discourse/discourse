@@ -12,6 +12,7 @@ describe UserVisit do
     u.days_visited.should == 2
 
     u.days_visited = 1
+    u.save
     UserVisit.ensure_consistency!
 
     u.reload

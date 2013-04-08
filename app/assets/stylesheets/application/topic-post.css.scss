@@ -113,8 +113,6 @@
       }
       transition:opacity 1s linear;
       -webkit-transition:opacity 1s linear;
-      -moz-transition:opacity 1s linear;
-
       }
     .reply-new,
     .track-link {
@@ -599,6 +597,11 @@
   // this removes the topmost margin;
   // if we don't have this, all posts would have extra space at the top
   .cooked > *:first-child {
+    margin-top: 0px !important;
+  }
+
+  // ditto for blockquotes, no extra margin for first element inside please
+  .cooked > blockquote *:first-child {
     margin-top: 0px !important;
   }
 
