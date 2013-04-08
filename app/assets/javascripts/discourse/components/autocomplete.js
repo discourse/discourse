@@ -5,9 +5,7 @@
 **/
 $.fn.autocomplete = function(options) {
 
-  var addInputSelectedItem, autocompleteOptions, closeAutocomplete, completeEnd, completeStart, completeTerm, div, height;
-  var inputSelectedItems, isInput, markSelected, me, oldClose, renderAutocomplete, selectedOption, updateAutoComplete, vals;
-  var width, wrap, _this = this;
+  var autocompletePlugin = this;
 
   if (this.length === 0) return;
 
@@ -15,27 +13,40 @@ $.fn.autocomplete = function(options) {
     this.data("closeAutocomplete")();
     return this;
   }
+
   if (this.length !== 1) {
     alert("only supporting one matcher at the moment");
   }
-  autocompleteOptions = null;
-  selectedOption = null;
-  completeStart = null;
-  completeEnd = null;
-  me = this;
-  div = null;
+
+  var wrap = null;
+  var autocompleteOptions = null;
+  var selectedOption = null;
+  var completeStart = null;
+  var completeEnd = null;
+  var me = this;
+  var div = null;
 
   // input is handled differently
-  isInput = this[0].tagName === "INPUT";
-  inputSelectedItems = [];
+  var isInput = this[0].tagName === "INPUT";
+  var inputSelectedItems = [];
 
-  addInputSelectedItem = function(item) {
-    var d, prev, transformed;
+
+  var closeAutocomplete = function() {
+    if (div) {
+      div.hide().remove();
+    }
+    div = null;
+    completeStart = null;
+    autocompleteOptions = null;
+  };
+
+  var addInputSelectedItem = function(item) {
+    var transformed;
     if (options.transformComplete) {
       transformed = options.transformComplete(item);
     }
-    d = $("<div class='item'><span>" + (transformed || item) + "<a href='#'><i class='icon-remove'></i></a></span></div>");
-    prev = me.parent().find('.item:last');
+    var d = $("<div class='item'><span>" + (transformed || item) + "<a href='#'><i class='icon-remove'></i></a></span></div>");
+    var prev = me.parent().find('.item:last');
     if (prev.length === 0) {
       me.parent().prepend(d);
     } else {
@@ -55,14 +66,32 @@ $.fn.autocomplete = function(options) {
     });
   };
 
+  var completeTerm = function(term) {
+    if (term) {
+      if (isInput) {
+        me.val("");
+        addInputSelectedItem(term);
+      } else {
+        if (options.transformComplete) {
+          term = options.transformComplete(term);
+        }
+        var text = me.val();
+        text = text.substring(0, completeStart) + (options.key || "") + term + ' ' + text.substring(completeEnd + 1, text.length);
+        me.val(text);
+        Discourse.Utilities.setCaretPosition(me[0], completeStart + 1 + term.length);
+      }
+    }
+    closeAutocomplete();
+  };
+
   if (isInput) {
-    width = this.width();
-    height = this.height();
+    var width = this.width();
+    var height = this.height();
     wrap = this.wrap("<div class='ac-wrap clearfix'/>").parent();
     wrap.width(width);
     this.width(150);
     this.attr('name', this.attr('name') + "-renamed");
-    vals = this.val().split(",");
+    var vals = this.val().split(",");
     vals.each(function(x) {
       if (x !== "") {
         if (options.reverseTransform) {
@@ -74,19 +103,18 @@ $.fn.autocomplete = function(options) {
     this.val("");
     completeStart = 0;
     wrap.click(function() {
-      _this.focus();
+      autocompletePlugin.focus();
       return true;
     });
   }
 
-  markSelected = function() {
-    var links;
-    links = div.find('li a');
+  var markSelected = function() {
+    var links = div.find('li a');
     links.removeClass('selected');
     return $(links[selectedOption]).addClass('selected');
   };
 
-  renderAutocomplete = function() {
+  var renderAutocomplete = function() {
     var borderTop, mePos, pos, ul;
     if (div) {
       div.hide().remove();
@@ -130,7 +158,7 @@ $.fn.autocomplete = function(options) {
     });
   };
 
-  updateAutoComplete = function(r) {
+  var updateAutoComplete = function(r) {
     if (completeStart === null) return;
 
     autocompleteOptions = r;
@@ -141,17 +169,9 @@ $.fn.autocomplete = function(options) {
     }
   };
 
-  closeAutocomplete = function() {
-    if (div) {
-      div.hide().remove();
-    }
-    div = null;
-    completeStart = null;
-    autocompleteOptions = null;
-  };
 
   // chain to allow multiples
-  oldClose = me.data("closeAutocomplete");
+  var oldClose = me.data("closeAutocomplete");
   me.data("closeAutocomplete", function() {
     if (oldClose) {
       oldClose();
@@ -159,40 +179,17 @@ $.fn.autocomplete = function(options) {
     return closeAutocomplete();
   });
 
-  completeTerm = function(term) {
-    var text;
-    if (term) {
-      if (isInput) {
-        me.val("");
-        addInputSelectedItem(term);
-      } else {
-        if (options.transformComplete) {
-          term = options.transformComplete(term);
-        }
-        text = me.val();
-        text = text.substring(0, completeStart) + (options.key || "") + term + ' ' + text.substring(completeEnd + 1, text.length);
-        me.val(text);
-        Discourse.Utilities.setCaretPosition(me[0], completeStart + 1 + term.length);
-      }
-    }
-    return closeAutocomplete();
-  };
-
   $(this).keypress(function(e) {
-    var caretPosition, prevChar, term;
-    if (!options.key) {
-      return;
-    }
-    /* keep hunting backwards till you hit a
-    */
+    if (!options.key) return;
 
+    // keep hunting backwards till you hit a
     if (e.which === options.key.charCodeAt(0)) {
-      caretPosition = Discourse.Utilities.caretPosition(me[0]);
-      prevChar = me.val().charAt(caretPosition - 1);
+      var caretPosition = Discourse.Utilities.caretPosition(me[0]);
+      var prevChar = me.val().charAt(caretPosition - 1);
       if (!prevChar || /\s/.test(prevChar)) {
         completeStart = completeEnd = caretPosition;
-        term = "";
-        options.dataSource(term, updateAutoComplete);
+        var term = "";
+        options.dataSource(term).then(updateAutoComplete);
       }
     }
   });
@@ -202,9 +199,7 @@ $.fn.autocomplete = function(options) {
     if (!options.key) {
       completeStart = 0;
     }
-    if (e.which === 16) {
-      return;
-    }
+    if (e.which === 16) return;
     if ((completeStart === null) && e.which === 8 && options.key) {
       c = Discourse.Utilities.caretPosition(me[0]);
       next = me[0].value[c];
@@ -222,13 +217,15 @@ $.fn.autocomplete = function(options) {
             completeStart = c;
             caretPosition = completeEnd = initial;
             term = me[0].value.substring(c + 1, initial);
-            options.dataSource(term, updateAutoComplete);
+            options.dataSource(term).then(updateAutoComplete);
             return true;
           }
         }
         prevIsGood = /[a-zA-Z\.]/.test(prev);
       }
     }
+
+    // ESC
     if (e.which === 27) {
       if (completeStart !== null) {
         closeAutocomplete();
@@ -236,31 +233,26 @@ $.fn.autocomplete = function(options) {
       }
       return true;
     }
+
     if (completeStart !== null) {
       caretPosition = Discourse.Utilities.caretPosition(me[0]);
-      /* If we've backspaced past the beginning, cancel unless no key
-      */
 
+      // If we've backspaced past the beginning, cancel unless no key
       if (caretPosition <= completeStart && options.key) {
         closeAutocomplete();
         return false;
       }
-      /* Keyboard codes! So 80's.
-      */
 
+      // Keyboard codes! So 80's.
       switch (e.which) {
         case 13:
         case 39:
         case 9:
-          if (!autocompleteOptions) {
-            return true;
-          }
+          if (!autocompleteOptions) return true;
           if (selectedOption >= 0 && (userToComplete = autocompleteOptions[selectedOption])) {
             completeTerm(userToComplete);
           } else {
-            /* We're cancelling it, really.
-            */
-
+            // We're cancelling it, really.
             return true;
           }
           closeAutocomplete();
@@ -284,9 +276,7 @@ $.fn.autocomplete = function(options) {
           markSelected();
           return false;
         default:
-          /* otherwise they're typing - let's search for it!
-          */
-
+          // otherwise they're typing - let's search for it!
           completeEnd = caretPosition;
           if (e.which === 8) {
             caretPosition--;
@@ -309,7 +299,7 @@ $.fn.autocomplete = function(options) {
               term += ",";
             }
           }
-          options.dataSource(term, updateAutoComplete);
+          options.dataSource(term).then(updateAutoComplete);
           return true;
       }
     }

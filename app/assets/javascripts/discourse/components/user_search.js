@@ -9,40 +9,34 @@ var cache = {};
 var cacheTopicId = null;
 var cacheTime = null;
 
-var doSearch = function(term, topicId, success) {
+var debouncedSearch = Discourse.debouncePromise(function(term, topicId) {
   return Discourse.ajax({
     url: Discourse.getURL('/users/search/users'),
-    dataType: 'JSON',
     data: {
       term: term,
       topic_id: topicId
-    },
-    success: function(r) {
-      cache[term] = r;
-      cacheTime = new Date();
-      return success(r);
     }
+  }).then(function (r) {
+    cache[term] = r;
+    cacheTime = new Date();
+    return r;
   });
-};
-
-var debouncedSearch = Discourse.debounce(doSearch, 200);
+}, 200);
 
 Discourse.UserSearch = {
 
   search: function(options) {
     var term = options.term || "";
-    var callback = options.callback;
     var exclude = options.exclude || [];
     var topicId = options.topicId;
     var limit = options.limit || 5;
-    if (!callback) {
-      throw "missing callback";
-    }
+
+    var promise = Ember.Deferred.create();
 
     // TODO site setting for allowed regex in username
     if (term.match(/[^a-zA-Z0-9\_\.]/)) {
-      callback([]);
-      return true;
+      promise.resolve([]);
+      return promise;
     }
     if ((new Date() - cacheTime) > 30000) {
       cache = {};
@@ -60,15 +54,15 @@ Discourse.UserSearch = {
         if (result.length > limit) return false;
         return true;
       });
-      return callback(result);
+      promise.resolve(result);
     };
 
     if (cache[term]) {
       success(cache[term]);
     } else {
-      debouncedSearch(term, topicId, success);
+      debouncedSearch(term, topicId).then(success);
     }
-    return true;
+    return promise;
   }
 
 };

@@ -183,10 +183,9 @@ Discourse.ComposerView = Discourse.View.extend({
     $wmdInput.data('init', true);
     $wmdInput.autocomplete({
       template: template,
-      dataSource: function(term, callback) {
+      dataSource: function(term) {
         return Discourse.UserSearch.search({
           term: term,
-          callback: callback,
           topicId: _this.get('controller.controllers.topic.content.id')
         });
       },
@@ -198,13 +197,14 @@ Discourse.ComposerView = Discourse.View.extend({
     $('#private-message-users').val(this.get('content.targetUsernames')).autocomplete({
       template: template,
 
-      dataSource: function(term, callback) {
+      dataSource: function(term) {
         return Discourse.UserSearch.search({
           term: term,
-          callback: callback,
+          topicId: _this.get('controller.controllers.topic.content.id'),
           exclude: selected.concat([Discourse.get('currentUser.username')])
         });
       },
+
       onChangeItems: function(items) {
         items = $.map(items, function(i) {
           if (i.username) {
