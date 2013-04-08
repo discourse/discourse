@@ -5,15 +5,11 @@
   @namespace Discourse
   @module Discourse
 **/
-var cache, cacheTime, cacheTopicId, debouncedSearch, doSearch;
+var cache = {};
+var cacheTopicId = null;
+var cacheTime = null;
 
-cache = {};
-
-cacheTopicId = null;
-
-cacheTime = null;
-
-doSearch = function(term, topicId, success) {
+var doSearch = function(term, topicId, success) {
   return Discourse.ajax({
     url: Discourse.getURL('/users/search/users'),
     dataType: 'JSON',
@@ -29,16 +25,16 @@ doSearch = function(term, topicId, success) {
   });
 };
 
-debouncedSearch = Discourse.debounce(doSearch, 200);
+var debouncedSearch = Discourse.debounce(doSearch, 200);
 
 Discourse.UserSearch = {
+
   search: function(options) {
-    var callback, exclude, limit, success, term, topicId;
-    term = options.term || "";
-    callback = options.callback;
-    exclude = options.exclude || [];
-    topicId = options.topicId;
-    limit = options.limit || 5;
+    var term = options.term || "";
+    var callback = options.callback;
+    var exclude = options.exclude || [];
+    var topicId = options.topicId;
+    var limit = options.limit || 5;
     if (!callback) {
       throw "missing callback";
     }
@@ -55,20 +51,18 @@ Discourse.UserSearch = {
       cache = {};
     }
     cacheTopicId = topicId;
-    success = function(r) {
-      var result;
-      result = [];
+    var success = function(r) {
+      var result = [];
       r.users.each(function(u) {
         if (exclude.indexOf(u.username) === -1) {
           result.push(u);
         }
-        if (result.length > limit) {
-          return false;
-        }
+        if (result.length > limit) return false;
         return true;
       });
       return callback(result);
     };
+
     if (cache[term]) {
       success(cache[term]);
     } else {
@@ -76,6 +70,7 @@ Discourse.UserSearch = {
     }
     return true;
   }
+
 };
 
 
