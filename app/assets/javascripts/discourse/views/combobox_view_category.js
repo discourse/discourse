@@ -19,7 +19,7 @@ Discourse.ComboboxViewCategory = Discourse.ComboboxView.extend({
         templateData.text_color + ";'>" + templateData.name + "</span>";
     result += " <span class='topic-count'>&times; " + templateData.topic_count + "</span>";
     if (templateData.description && templateData.description !== 'null') {
-      result += '<div class="category-desc">' + Handlebars.Utils.escapeExpression(templateData.description) + '</div>';
+      result += '<div class="category-desc">' + Handlebars.Utils.escapeExpression(templateData.description.substr(0,200)) + (templateData.description.length > 200 ? '&hellip;' : '') + '</div>';
     }
     return result;
   }
