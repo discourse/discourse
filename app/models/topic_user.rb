@@ -117,6 +117,10 @@ class TopicUser < ActiveRecord::Base
         threshold: SiteSetting.auto_track_topics_after
       }
 
+      # In case anyone seens "seen_post_count" and gets confused, like I do.
+      # seen_post_count represents the highest_post_number of the topic when
+      # the user visited it. It may be out of alignement with last_read, meaning
+      # ... user visited the topic but did not read the posts
       rows = exec_sql("UPDATE topic_users
                                     SET
                                       last_read_post_number = greatest(:post_number, tu.last_read_post_number),
@@ -176,17 +180,16 @@ class TopicUser < ActiveRecord::Base
 UPDATE topic_users t
   SET
     last_read_post_number = last_read,
-    seen_post_count = post_count
+    seen_post_count = GREATEST(t.seen_post_count, last_read)
 FROM (
-  SELECT topic_id, user_id, COUNT(*) post_count, MAX(post_number) last_read
+  SELECT topic_id, user_id, MAX(post_number) last_read
   FROM post_timings
   GROUP BY topic_id, user_id
 ) as X
 WHERE X.topic_id = t.topic_id AND
       X.user_id = t.user_id AND
       (
-        last_read_post_number <> last_read OR
-        seen_post_count <> post_count
+        last_read_post_number <> last_read
       )
 SQL
   end
