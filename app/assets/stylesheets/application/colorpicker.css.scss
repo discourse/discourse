@@ -15,9 +15,10 @@
 
   .colors-container {
     display: inline-block;
-    vertical-align: bottom;
-    padding-bottom: 2px;
+    vertical-align: middle;
+    padding-top: 4px;
     padding-left: 15px;
+    max-width: 320px;
 
     .colorpicker {
       border: 1px solid $darkish_gray;
