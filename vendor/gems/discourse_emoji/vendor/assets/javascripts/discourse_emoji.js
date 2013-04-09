@@ -14,10 +14,10 @@
     }
 
     this.textResult = text.replace(/\:([a-z\_\+\-0-9]+)\:/g, function (m1, m2) {
-        return (emoji.indexOf(m2) !== -1) ?
-               '<img alt="' + m2 + '" title=":' + m2 + ':" src="/assets/emoji/' + m2 + '.png" ' + style + ' class="emoji"/>' :
-               m1;
-      });
+      return (emoji.indexOf(m2) !== -1) ?
+             '<img alt="' + m2 + '" title=":' + m2 + ':" src="/assets/emoji/' + m2 + '.png" ' + style + ' class="emoji"/>' :
+             m1;
+    });
   });
 
 
@@ -40,13 +40,14 @@
         template: template,
         key: ":",
         transformComplete: function(v){ return v + ":"; },
-        dataSource: function(term, callback){
+        dataSource: function(term){
 
           term = term.toLowerCase();
 
           if (term == "") {
-            callback(["smile", "smiley", "wink", "sunny", "blush"]);
-            return
+            return Ember.Deferred.promise(function (promise) {
+              promise.resolve(["smile", "smiley", "wink", "sunny", "blush"]);
+            });
           }
 
           var options = []
@@ -67,7 +68,9 @@
             }
           }
 
-          callback(options)
+          return Ember.Deferred.promise(function (promise) {
+            promise.resolve(options);
+          });
         }
       });
     });
