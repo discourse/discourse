@@ -19,7 +19,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   def complete
     # Make sure we support that provider
     provider = params[:provider]
-    raise Discourse::InvalidAccess.new unless self.class.types.include?(provider.to_sym)
+    raise Discourse::InvalidAccess.new unless self.class.types.keys.map(&:to_s).include?(provider)
 
     # Check if the provider is enabled
     raise Discourse::InvalidAccess.new("provider is not enabled") unless SiteSetting.send("enable_#{provider}_logins?")
