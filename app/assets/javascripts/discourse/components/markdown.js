@@ -99,10 +99,19 @@ Discourse.Markdown = {
     var converter = new Markdown.Converter();
     var mentionLookup = opts.mentionLookup || Discourse.Mention.lookupCache;
 
+    var quoteTemplate = null;
+
     // Before cooking callbacks
     converter.hooks.chain("preConversion", function(text) {
       Discourse.Markdown.trigger('beforeCook', { detail: text, opts: opts });
       return Discourse.Markdown.textResult || text;
+    });
+
+    // Extract quotes so their contents are not passed through markdown.
+    converter.hooks.chain("preConversion", function(text) {
+      var extracted = Discourse.BBCode.extractQuotes(text);
+      quoteTemplate = extracted.template;
+      return extracted.text;
     });
 
     // Support autolinking of www.something.com
@@ -168,6 +177,12 @@ Discourse.Markdown = {
     });
 
     converter.hooks.chain("postConversion", function(text) {
+
+      // reapply quotes
+      if (quoteTemplate) {
+        text = quoteTemplate(text);
+      }
+
       return Discourse.BBCode.format(text, opts);
     });
 

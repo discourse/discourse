@@ -24,7 +24,7 @@ describe("Discourse.Markdown", function() {
         lookupAvatar: function(name) { return "" + name; }
       });
       expect(cooked).toBe("<p>1</p><aside class='quote' data-post=\"1\" >\n  <div class='title'>\n    <div class='quote-controls'></div>\n" +
-                          "  bob\n  bob\n  said:\n  </div>\n  <blockquote>my quote</blockquote>\n</aside>\n<p>2</p>");
+                          "  bob\n  bob\n  said:\n  </div>\n  <blockquote>my quote</blockquote>\n</aside>\n<p> <br>\n2</p>");
     });
 
     it("includes no avatar if none is found", function() {
@@ -33,7 +33,7 @@ describe("Discourse.Markdown", function() {
         lookupAvatar: function(name) { return null; }
       });
       expect(cooked).toBe("<p>1</p><aside class='quote' data-post=\"1\" >\n  <div class='title'>\n    <div class='quote-controls'></div>\n" +
-                          "  \n  bob\n  said:\n  </div>\n  <blockquote>my quote</blockquote>\n</aside>\n<p>2</p>");
+                          "  \n  bob\n  said:\n  </div>\n  <blockquote>my quote</blockquote>\n</aside>\n<p> <br>\n2</p>");
     });
 
     describe("Links", function() {
