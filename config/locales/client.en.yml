@@ -48,35 +48,8 @@ en:
     saving: "Saving..."
     saved: "Saved!"
 
-    user_action:
-      user_posted_topic: "<u>{{user}}</u> posted <t>the topic</t>"
-      you_posted_topic: "<u>You</u> posted <t>the topic</t>"
-      user_replied_to_post: "<u>{{user}}</u> replied to <t>{{post_number}}</t>"
-      you_replied_to_post: "<u>You</u> replied to <t>{{post_number}}</t>"
-      user_replied_to_topic: "<u>{{user}}</u> replied to <t>the topic</t>"
-      you_replied_to_topic: "<u>You</u> replied to <t>the topic</t>"
-
-      user_mentioned_user: "<u1>{{user}}</u1> mentioned <u2>{{another_user}}</u2>"
-      user_mentioned_you: "<u1>{{user}}</u1> mentioned <u2>you</u2>"
-
-      posted_by_user: "Posted by <u>{{user}}</u>"
-      posted_by_you: "Posted by <u>you</u>"
-      sent_by_user: "Sent by <u>{{user}}</u>"
-      sent_by_you: "Sent by <u>you</u>"
-
-    user_action_groups:
-      "1": "Likes Given"
-      "2": "Likes Received"
-      "3": "Bookmarks"
-      "4": "Topics"
-      "5": "Posts"
+    user_action_descriptions:
       "6": "Responses"
-      "7": "Mentions"
-      "9": "Quotes"
-      "10": "Favorites"
-      "11": "Edits"
-      "12": "Sent Items"
-      "13": "Inbox"
 
     user:
       information: "User Information"
