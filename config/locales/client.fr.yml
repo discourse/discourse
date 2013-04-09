@@ -67,11 +67,16 @@ fr:
       activity_stream: "Activité"
       preferences: "Préférences"
       bio: "À propos de moi"
-      change_password: "changer"
       invited_by: "Invité par"
       trust_level: "Niveau de confiance"
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
       enable_quoting: "Active la citation automatique du texte surligné"
+
+      change_password:
+        action: "modifier"
+        success: "(email envoyé)"
+        in_progress: "(email en cours d'envoi)"
+        error: "(erreur)"
 
       change_username:
         action: "changer"
@@ -703,6 +708,7 @@ fr:
       no_description: "Il n'y a pas de description pour cette catégorie."
       change_in_category_topic: "visitez les discussions de cette catégorie pour en éditer la description"
       hotness: "Buzz"
+      already_used: "Cette couleur est déjà utilisée par une autre catégorie"
 
     flagging:
       title: 'Pourquoi voulez-vous signaler ce message ?'
