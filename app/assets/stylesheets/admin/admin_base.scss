@@ -588,6 +588,12 @@ table {
 .content-editor {
   min-height: 500px;
 
+  float: left;
+  width: 760px;
+  @include medium-width { width: 650px; }
+  @include small-width { width: 600px; }
+  margin-left: 20px;
+
   p.description {
     color: $dark_gray;
   }
