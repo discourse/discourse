@@ -1,4 +1,4 @@
-/*global waitsFor:true expect:true describe:true beforeEach:true it:true */
+/*global waitsFor:true expect:true describe:true beforeEach:true it:true md5:true */
 
 describe("Discourse.BBCode", function() {
 
