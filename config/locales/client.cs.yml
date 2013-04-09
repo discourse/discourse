@@ -63,11 +63,16 @@ cs:
       activity_stream: "Aktivita"
       preferences: "Nastavení"
       bio: "O mně"
-      change_password: "změnit heslo"
       invited_by: "Poznánka od"
       trust_level: "Věrohodnost"
       external_links_in_new_tab: "Otevírat všechny externí odkazy do nové záložky"
       enable_quoting: "Povolit odpověď s citací z označeného textu"
+
+      change_password:
+        action: "změnit"
+        success: "(email odeslán)"
+        in_progress: "(odesílám)"
+        error: "(chyba)"
 
       change_username:
         action: "změnit uživatelské jméno"
@@ -729,6 +734,7 @@ cs:
       no_description: "K této kategorii zatím není žádný popis."
       change_in_category_topic: "navštivte téma kategorie pro editaci jejího popisu"
       hotness: "Popularita"
+      already_used: 'Tato barva je již použita jinou kategorií'
 
     flagging:
       title: 'Proč chcete nahlásit tento příspěvek?'
