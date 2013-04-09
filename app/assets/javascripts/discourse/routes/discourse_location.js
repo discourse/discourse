@@ -174,6 +174,13 @@ Ember.DiscourseLocation = Ember.Object.extend({
       rootURL = rootURL.replace(/\/$/, '');
     }
 
+    // remove prefix from URL if it is already in url - i.e. /discourse/t/... -> /t/if rootURL is /discourse
+    // this sometimes happens when navigating to already visited location
+    if ((rootURL.length > 1) && (url.substring(0, rootURL.length + 1) === (rootURL + "/")))
+    {
+      url = url.substring(rootURL.length);
+    }
+
     return rootURL + url;
   },
 
