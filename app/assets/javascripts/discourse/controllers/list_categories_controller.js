@@ -5,7 +5,7 @@
   @extends Discourse.ObjectController
   @namespace Discourse
   @module Discourse
-**/ 
+**/
 Discourse.ListCategoriesController = Discourse.ObjectController.extend({
   needs: ['modal'],
 
@@ -37,7 +37,7 @@ Discourse.ListCategoriesController = Discourse.ObjectController.extend({
     u = Discourse.get('currentUser');
     return u && u.admin;
   }).property()
-  
+
 });
 
 

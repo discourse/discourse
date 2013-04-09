@@ -10,6 +10,10 @@
       <button class='btn btn-default' {{action createTopic target="controller"}}><i class='icon icon-plus'></i>{{view.createTopicText}}</button>
     {{/if}}
 
+    {{#if controller.canEditCategory}}
+      <button class='btn btn-default' {{action editCategory target="controller"}}>{{i18n category.edit_long}}</button>
+    {{/if}}
+
     {{#if controller.canCreateCategory}}
       <button class='btn btn-default' {{action createCategory target="controller"}}><i class='icon icon-plus'></i>{{i18n category.create}}</button>
     {{/if}}

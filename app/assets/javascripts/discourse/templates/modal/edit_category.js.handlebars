@@ -52,6 +52,9 @@
   </div>
   <div class="modal-footer">
     <button class='btn btn-primary' {{bindAttr disabled="view.disabled"}} {{action saveCategory target="view"}}>{{view.buttonTitle}}</button>
+    {{#if view.deleteVisible}}
+      <button class='btn btn-danger pull-right' {{bindAttr disabled="view.deleteDisabled"}} {{action deleteCategory target="view"}}><i class="icon icon-trash"></i>{{view.deleteButtonTitle}}</button>
+    {{/if}}
   </div>
 
 {{/with}}

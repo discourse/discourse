@@ -14,11 +14,19 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
   foregroundColors: ['FFFFFF', '000000'],
 
   disabled: function() {
-    if (this.get('saving')) return true;
+    if (this.get('saving') || this.get('deleting')) return true;
     if (!this.get('category.name')) return true;
     if (!this.get('category.color')) return true;
     return false;
-  }.property('category.name', 'category.color'),
+  }.property('category.name', 'category.color', 'deleting'),
+
+  deleteVisible: function() {
+    return (this.get('category.id') && this.get('category.topic_count') === 0);
+  }.property('category.id', 'category.topic_count'),
+
+  deleteDisabled: function() {
+    return (this.get('deleting') || this.get('saving') || false);
+  }.property('disabled', 'saving', 'deleting'),
 
   colorStyle: function() {
     return "background-color: #" + (this.get('category.color')) + "; color: #" + (this.get('category.text_color')) + ";";
@@ -52,6 +60,10 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
     return this.get('title');
   }.property('title', 'saving'),
 
+  deleteButtonTitle: function() {
+    return Em.String.i18n('category.delete');
+  }.property(),
+
   didInsertElement: function() {
     this._super();
 
@@ -80,6 +92,28 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
       if(errors.length === 0) errors.push(Em.String.i18n("category.creation_error"));
       categoryView.displayErrors(errors);
       categoryView.set('saving', false);
+    });
+  },
+
+  deleteCategory: function() {
+    var categoryView = this;
+    this.set('deleting', true);
+    $('#discourse-modal').modal('hide');
+    bootbox.confirm(Em.String.i18n("category.delete_confirm"), Em.String.i18n("no_value"), Em.String.i18n("yes_value"), function(result) {
+      if (result) {
+        categoryView.get('category').destroy().then(function(){
+          // success
+          window.location = Discourse.getURL("/categories");
+        }, function(jqXHR){
+          // error
+          $('#discourse-modal').modal('show');
+          categoryView.displayErrors([Em.String.i18n("category.delete_error")]);
+          categoryView.set('deleting', false);
+        });
+      } else {
+        $('#discourse-modal').modal('show');
+        categoryView.set('deleting', false);
+      }
     });
   }
 
