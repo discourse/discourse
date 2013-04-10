@@ -26,7 +26,7 @@ class Post < ActiveRecord::Base
   has_many :post_actions
 
   validates_presence_of :raw, :user_id, :topic_id
-  validates :raw, stripped_length: { in: SiteSetting.post_length }
+  validates :raw, stripped_length: { in: -> { SiteSetting.post_length } }
   validate :raw_quality
   validate :max_mention_validator
   validate :max_images_validator
@@ -40,8 +40,8 @@ class Post < ActiveRecord::Base
 
   scope :by_newest, order('created_at desc, id desc')
   scope :with_user, includes(:user)
-  scope :public_posts, lambda { joins(:topic).where('topics.archetype <> ?', [Archetype.private_message]) }
-  scope :private_posts, lambda { joins(:topic).where('topics.archetype = ?', Archetype.private_message) }
+  scope :public_posts, -> { joins(:topic).where('topics.archetype <> ?', Archetype.private_message) }
+  scope :private_posts, -> { joins(:topic).where('topics.archetype = ?', Archetype.private_message) }
 
   def self.hidden_reasons
     @hidden_reasons ||= Enum.new(:flag_threshold_reached, :flag_threshold_reached_again)
