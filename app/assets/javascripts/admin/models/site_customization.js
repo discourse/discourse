@@ -19,20 +19,30 @@ Discourse.SiteCustomization = Discourse.Model.extend({
   }.property('selected', 'name'),
 
   changed: function() {
+
     var _this = this;
-    if (!this.originals) return false;
-    return this.trackedProperties.any(function(p) {
+    if(!this.originals) return false;
+
+    var changed = this.trackedProperties.any(function(p) {
       return _this.originals[p] !== _this.get(p);
     });
+
+    if(changed){
+      this.set('savingStatus','');
+    }
+
+    return changed;
+
   }.property('override_default_style', 'enabled', 'name', 'stylesheet', 'header', 'originals'),
 
   startTrackingChanges: function() {
     var _this = this;
-    this.set('originals', {});
-    return this.trackedProperties.each(function(p) {
-      _this.originals[p] = _this.get(p);
+    var originals = {};
+    this.trackedProperties.each(function(p) {
+      originals[p] = _this.get(p);
       return true;
     });
+    this.set('originals', originals);
   },
 
   previewUrl: function() {
@@ -40,11 +50,14 @@ Discourse.SiteCustomization = Discourse.Model.extend({
   }.property('key'),
 
   disableSave: function() {
-    return !this.get('changed');
+    return !this.get('changed') || this.get('saving');
   }.property('changed'),
 
+
   save: function() {
-    this.startTrackingChanges();
+    var _this = this;
+    this.set('savingStatus', Em.String.i18n('saving'));
+    this.set('saving',true);
     var data = {
       name: this.name,
       enabled: this.enabled,
@@ -57,12 +70,18 @@ Discourse.SiteCustomization = Discourse.Model.extend({
       data: {
         site_customization: data
       },
-      type: this.id ? 'PUT' : 'POST'
+      type: this.id ? 'PUT' : 'POST',
+      success: function(data) {
+        if (!_this.id) { _this.set('id', data.id); }
+        _this.set('savingStatus', Em.String.i18n('saved'));
+        _this.set('saving',false);
+        _this.startTrackingChanges();
+      }
     });
   },
 
   destroy: function() {
-    if (!this.id) return;
+    if(!this.id) return;
     return Discourse.ajax({
       url: Discourse.getURL("/admin/site_customizations/") + this.id,
       type: 'DELETE'

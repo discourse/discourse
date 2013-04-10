@@ -1,15 +1,14 @@
 
-<div class='list'>
-  <div class='well'>
-  <ul class='nav nav-list'>
+<div class='content-list span6'>
+  <h3>{{i18n admin.customize.long_title}}</h3>
+  <ul>
     {{#each content}}
-    <li {{bindAttr class="this.selected:active"}}><a {{action selectStyle this target="controller"}}>{{this.description}}</a></li>
+    <li><a {{action selectStyle this target="controller"}} {{bindAttr class="this.selected:active"}}>{{this.description}}</a></li>
     {{/each}}
   </ul>
-  </div>
-
-  <button {{action newCustomization target="controller"}} class='btn btn-primary'>{{i18n admin.customize.new}}</button>
+  <button {{action newCustomization target="controller"}} class='btn'>{{i18n admin.customize.new}}</button>
 </div>
+
 
 {{#if content.selectedItem}}
 <div class='current-style'>
@@ -45,12 +44,14 @@
   </div>
 
   <div class='buttons'>
-    <button {{action save target="controller"}} {{bindAttr disabled="content.selectedItem.disableSave"}} class='btn btn-primary'>{{i18n admin.customize.save}}</button>
+    <button {{action save target="controller"}} {{bindAttr disabled="content.selectedItem.disableSave"}} class='btn'>{{i18n admin.customize.save}}</button>
+    <span class='saving'>{{content.selectedItem.savingStatus}}</span>
     <a {{action destroy target="controller"}} class='delete-link'>{{i18n admin.customize.delete}}</a>
-    <span class='saving'>{{content.savingStatus}}</span>
   </div>
 
 </div>
+{{else}}
+  <p class="about">{{i18n admin.customize.about}}</p>
 {{/if}}
 <div class='clearfix'></div>
 

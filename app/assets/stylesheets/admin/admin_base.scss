@@ -63,6 +63,7 @@
   .nav.nav-pills {
     li.active {
       a {
+        border-color: darken($dark_gray, 10%);
         background-color: $dark_gray;
         &:hover {
           background-color: $dark_gray;
@@ -194,27 +195,14 @@ table {
   .nav.nav-pills {
     margin-left: 10px;
   }
-  .well {
-    min-height: 20px;
-    padding: 4px;
-    margin-bottom: 20px;
-    background-color: whitesmoke;
-    border: 1px solid #e3e3e3;
-    border-radius: 4px;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-    height: 638px;
-    margin-bottom: 10px;
+  .content-list, .current-style {
+    float: left;
+  }
+  .content-list ul {
+    min-height: 700px;
   }
   a {
     cursor: pointer;
-  }
-  .list, .current-style {
-    float: left;
-  }
-  .list {
-    width: 20%;
-    margin-right: 20px;
-    margin-top: 65px;
   }
   .current-style {
     .delete-link {
@@ -224,7 +212,8 @@ table {
     .preview-link {
       margin-left: 30px;
     }
-    width: 75%;
+    padding-left: 10px;
+    width: 65%;
     .style-name {
       width: 600px;
       height: 25px;
@@ -250,8 +239,15 @@ table {
     }
     .buttons {
       float: left;
-      button, a {
+      width: 200px;
+      button, a , span{
         float: left;
+      }
+      .saving {
+        padding: 5px 0 0 0;
+        margin-left: 10px;
+        width: 80px;
+        color: $dark_gray;
       }
     }
   }
