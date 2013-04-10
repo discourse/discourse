@@ -89,11 +89,16 @@ module Search
 
   def self.current_locale_long
     case I18n.locale         # Currently-present in /conf/locales/* only, sorry :-( Add as needed
-      when :ru then 'russian'
+      when :da then 'danish'
+      when :de then 'german'
+      when :en then 'english'
+      when :es then 'spanish'
       when :fr then 'french'
+      when :it then 'italian'
       when :nl then 'dutch'
+      when :pt then 'portuguese'
       when :sv then 'swedish'
-      else 'english'
+      else 'simple' # use the 'simple' stemmer for other languages
     end
   end
 
