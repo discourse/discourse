@@ -7,7 +7,7 @@ describe PrettyText do
     it "should support github style code blocks" do
       PrettyText.cook("```
 test
-```").should == "<pre><code class=\"lang-auto\">test  \n</code></pre>"
+```").should match_html "<pre><code class=\"lang-auto\">test  \n</code></pre>"
     end
 
     it "should support quoting [] " do
@@ -15,64 +15,64 @@ test
     end
 
     it "produces a quote even with new lines in it" do
-      PrettyText.cook("[quote=\"EvilTrout, post:123, topic:456, full:true\"]ddd\n[/quote]").should == "<p></p><aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">\n    <div class=\"quote-controls\"></div>\n  <img width=\"20\" height=\"20\" src=\"/users/eviltrout/avatar/40?__ws=http%3A%2F%2Ftest.localhost\" class=\"avatar \" title=\"\">\n  EvilTrout\n  said:\n  </div>\n  <blockquote>ddd</blockquote>\n</aside><p>  </p>"
+      PrettyText.cook("[quote=\"EvilTrout, post:123, topic:456, full:true\"]ddd\n[/quote]").should match_html "<p></p><aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">\n    <div class=\"quote-controls\"></div>\n  <img width=\"20\" height=\"20\" src=\"/users/eviltrout/avatar/40?__ws=http%3A%2F%2Ftest.localhost\" class=\"avatar \" title=\"\">\n  EvilTrout\n  said:\n  </div>\n  <blockquote>ddd</blockquote>\n</aside><p>  </p>"
     end
 
     it "should produce a quote" do
-      PrettyText.cook("[quote=\"EvilTrout, post:123, topic:456, full:true\"]ddd[/quote]").should == "<p></p><aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">\n    <div class=\"quote-controls\"></div>\n  <img width=\"20\" height=\"20\" src=\"/users/eviltrout/avatar/40?__ws=http%3A%2F%2Ftest.localhost\" class=\"avatar \" title=\"\">\n  EvilTrout\n  said:\n  </div>\n  <blockquote>ddd</blockquote>\n</aside><p>  </p>"
+      PrettyText.cook("[quote=\"EvilTrout, post:123, topic:456, full:true\"]ddd[/quote]").should match_html "<p></p><aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">\n    <div class=\"quote-controls\"></div>\n  <img width=\"20\" height=\"20\" src=\"/users/eviltrout/avatar/40?__ws=http%3A%2F%2Ftest.localhost\" class=\"avatar \" title=\"\">\n  EvilTrout\n  said:\n  </div>\n  <blockquote>ddd</blockquote>\n</aside><p>  </p>"
     end
 
     it "trims spaces on quote params" do
-      PrettyText.cook("[quote=\"EvilTrout, post:555, topic: 666\"]ddd[/quote]").should == "<p></p><aside class=\"quote\" data-post=\"555\" data-topic=\"666\"><div class=\"title\">\n    <div class=\"quote-controls\"></div>\n  <img width=\"20\" height=\"20\" src=\"/users/eviltrout/avatar/40?__ws=http%3A%2F%2Ftest.localhost\" class=\"avatar \" title=\"\">\n  EvilTrout\n  said:\n  </div>\n  <blockquote>ddd</blockquote>\n</aside><p>  </p>"
+      PrettyText.cook("[quote=\"EvilTrout, post:555, topic: 666\"]ddd[/quote]").should match_html "<p></p><aside class=\"quote\" data-post=\"555\" data-topic=\"666\"><div class=\"title\">\n    <div class=\"quote-controls\"></div>\n  <img width=\"20\" height=\"20\" src=\"/users/eviltrout/avatar/40?__ws=http%3A%2F%2Ftest.localhost\" class=\"avatar \" title=\"\">\n  EvilTrout\n  said:\n  </div>\n  <blockquote>ddd</blockquote>\n</aside><p>  </p>"
     end
 
 
     it "should handle 3 mentions in a row" do
-      PrettyText.cook('@hello @hello @hello').should == "<p><span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span></p>"
+      PrettyText.cook('@hello @hello @hello').should match_html "<p><span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span></p>"
     end
 
     it "should not do weird @ mention stuff inside a pre block" do
 
       PrettyText.cook("```
 a @test
-```").should == "<pre><code class=\"lang-auto\">a @test  \n</code></pre>"
+```").should match_html "<pre><code class=\"lang-auto\">a @test  \n</code></pre>"
 
     end
 
     it "should sanitize the html" do
-      PrettyText.cook("<script>alert(42)</script>").should == "alert(42)"
+      PrettyText.cook("<script>alert(42)</script>").should match_html "alert(42)"
     end
 
     it "should escape html within the code block" do
 
       PrettyText.cook("```text
 <header>hello</header>
-```").should == "<pre><code class=\"text\">&lt;header&gt;hello&lt;/header&gt;  \n</code></pre>"
+```").should match_html "<pre><code class=\"text\">&lt;header&gt;hello&lt;/header&gt;  \n</code></pre>"
     end
 
     it "should support language choices" do
 
       PrettyText.cook("```ruby
 test
-```").should == "<pre><code class=\"ruby\">test  \n</code></pre>"
+```").should match_html "<pre><code class=\"ruby\">test  \n</code></pre>"
     end
 
     it 'should decorate @mentions' do
-      PrettyText.cook("Hello @eviltrout").should == "<p>Hello <span class=\"mention\">@eviltrout</span></p>"
+      PrettyText.cook("Hello @eviltrout").should match_html "<p>Hello <span class=\"mention\">@eviltrout</span></p>"
     end
 
     it 'should allow for @mentions to have punctuation' do
-      PrettyText.cook("hello @bob's @bob,@bob; @bob\"").should ==
-        "<p>hello <span class=\"mention\">@bob</span>'s <span class=\"mention\">@bob</span>,<span class=\"mention\">@bob</span>; <span class=\"mention\">@bob</span>\"</p>"
+      PrettyText.cook("hello @bob's @bob,@bob; @bob\"").should
+        match_html "<p>hello <span class=\"mention\">@bob</span>'s <span class=\"mention\">@bob</span>,<span class=\"mention\">@bob</span>; <span class=\"mention\">@bob</span>\"</p>"
     end
 
     it 'should add spoiler tags' do
-      PrettyText.cook("[spoiler]hello[/spoiler]").should == "<p><span class=\"spoiler\">hello</span></p>"
+      PrettyText.cook("[spoiler]hello[/spoiler]").should match_html "<p><span class=\"spoiler\">hello</span></p>"
     end
 
     it "should only detect ``` at the begining of lines" do
       PrettyText.cook("    ```\n    hello\n    ```")
-        .should == "<pre><code>```\nhello\n```\n</code></pre>"
+        .should match_html "<pre><code>```\nhello\n```\n</code></pre>"
     end
   end
 
