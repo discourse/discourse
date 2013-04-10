@@ -288,14 +288,13 @@ Discourse.Topic = Discourse.Model.extend({
     }).then(afterTopicLoaded, errorLoadingTopic);
   },
 
-  notificationReasonText: (function() {
-    var locale_string;
-    locale_string = "topic.notifications.reasons." + this.notification_level;
-    if (typeof this.notifications_reason_id === 'number') {
-      locale_string += "_" + this.notifications_reason_id;
+  notificationReasonText: function() {
+    var locale_string = "topic.notifications.reasons." + this.get('notification_level');
+    if (typeof this.get('notifications_reason_id') === 'number') {
+      locale_string += "_" + this.get('notifications_reason_id');
     }
     return Em.String.i18n(locale_string, { username: Discourse.currentUser.username.toLowerCase() });
-  }).property('notifications_reason_id'),
+  }.property('notification_level', 'notifications_reason_id'),
 
   updateNotifications: function(v) {
     this.set('notification_level', v);

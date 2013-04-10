@@ -100,14 +100,14 @@ Discourse.TopicFooterButtonsView = Ember.ContainerView.extend({
         helpKey: 'topic.reply.help',
         disabled: !this.get('controller.content.can_create_post'),
 
-        text: (function() {
+        text: function() {
           var archetype, customTitle;
           archetype = this.get('controller.content.archetype');
           if (customTitle = this.get("parentView.replyButtonText" + (archetype.capitalize()))) {
             return customTitle;
           }
           return Em.String.i18n("topic.reply.title");
-        }).property(),
+        }.property(),
 
         renderIcon: function(buffer) {
           buffer.push("<i class='icon icon-plus'></i>");
@@ -123,43 +123,33 @@ Discourse.TopicFooterButtonsView = Ember.ContainerView.extend({
           topic: topic,
           title: Em.String.i18n('topic.notifications.title'),
           longDescriptionBinding: 'topic.notificationReasonText',
-
-          text: (function() {
-            var icon, key;
-            key = (function() {
-              switch (this.get('topic.notification_level')) {
-                case Discourse.Topic.NotificationLevel.WATCHING:
-                  return 'watching';
-                case Discourse.Topic.NotificationLevel.TRACKING:
-                  return 'tracking';
-                case Discourse.Topic.NotificationLevel.REGULAR:
-                  return 'regular';
-                case Discourse.Topic.NotificationLevel.MUTE:
-                  return 'muted';
-              }
-            }).call(this);
-
-            icon = (function() {
-              switch (key) {
-                case 'watching':
-                  return '<i class="icon-circle heatmap-high"></i>&nbsp;';
-                case 'tracking':
-                  return '<i class="icon-circle heatmap-low"></i>&nbsp;';
-                case 'regular':
-                  return '';
-                case 'muted':
-                  return '<i class="icon-remove-sign"></i>&nbsp;';
-              }
-            })();
-            return icon + (Ember.String.i18n("topic.notifications." + key + ".title")) + "<span class='caret'></span>";
-          }).property('topic.notification_level'),
-
           dropDownContent: [
             [Discourse.Topic.NotificationLevel.WATCHING, 'topic.notifications.watching'],
             [Discourse.Topic.NotificationLevel.TRACKING, 'topic.notifications.tracking'],
             [Discourse.Topic.NotificationLevel.REGULAR, 'topic.notifications.regular'],
             [Discourse.Topic.NotificationLevel.MUTE, 'topic.notifications.muted']
           ],
+
+          text: function() {
+            var key = (function() {
+              switch (this.get('topic.notification_level')) {
+                case Discourse.Topic.NotificationLevel.WATCHING: return 'watching';
+                case Discourse.Topic.NotificationLevel.TRACKING: return 'tracking';
+                case Discourse.Topic.NotificationLevel.REGULAR: return 'regular';
+                case Discourse.Topic.NotificationLevel.MUTE: return 'muted';
+              }
+            }).call(this);
+
+            var icon = (function() {
+              switch (key) {
+                case 'watching': return '<i class="icon-circle heatmap-high"></i>&nbsp;';
+                case 'tracking': return '<i class="icon-circle heatmap-low"></i>&nbsp;';
+                case 'regular': return '';
+                case 'muted': return '<i class="icon-remove-sign"></i>&nbsp;';
+              }
+            })();
+            return icon + (Ember.String.i18n("topic.notifications." + key + ".title")) + "<span class='caret'></span>";
+          }.property('topic.notification_level'),
 
           clicked: function(id) {
             return this.get('topic').updateNotifications(id);
