@@ -872,6 +872,7 @@ cs:
         title: "API"
       customize:
         title: "Přizpůsobení"
+        long_title: "Přizpůsobení webu"
         header: "Hlavička"
         css: "Stylesheet"
         override_default: "Přetížit výchozí?"
@@ -883,6 +884,7 @@ cs:
         new_style: "Nový styl"
         delete: "Smazat"
         delete_confirm: "Smazat toto přizpůsobení?"
+        about: "Přizpůsobení webu vám umožní si nastavit vlastní CSS stylesheet a vlastní nadpisy na webu. Vyberte si z nabídky nebo vložte vlastní přizpůsobení a můžete začít editovat."
 
       email_logs:
         title: "Záznamy o emailech"
