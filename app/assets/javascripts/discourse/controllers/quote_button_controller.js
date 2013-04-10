@@ -35,8 +35,13 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
     // don't display the "quote-reply" button if we can't create a post
     if (!this.get('controllers.topic.content.can_create_post')) return;
 
+    var selection = window.getSelection();
+
+    // no selections
+    if (selection.type !== "Range") return;
+
     // retrieve the selected range
-    var range = window.getSelection().getRangeAt(0),
+    var range = selection.getRangeAt(0),
         cloned = range.cloneRange(),
         $ancestor = $(range.commonAncestorContainer);
 
