@@ -303,6 +303,7 @@ en:
       show_preview: 'show preview &raquo;'
       hide_preview: '&laquo; hide preview'
 
+      quote_post_title: "Quote whole post"
       bold_title: "Strong"
       bold_text: "strong text"
       italic_title: "Emphasis"
@@ -312,7 +313,7 @@ en:
       link_dialog_title: "Insert Hyperlink"
       link_optional_text: "optional title"
       quote_title: "Blockquote"
-      quote_text: "Quote whole post"
+      quote_text: "Blockquote"
       code_title: "Code Sample"
       code_text: "enter code here"
       image_title: "Image"
