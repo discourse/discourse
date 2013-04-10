@@ -57,8 +57,8 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
 
   buttonTitle: function() {
     if (this.get('saving')) return Em.String.i18n("saving");
-    return this.get('title');
-  }.property('title', 'saving'),
+    return (this.get('category.id') ? Em.String.i18n("category.save") : Em.String.i18n("category.create"));
+  }.property('saving', 'category.id'),
 
   deleteButtonTitle: function() {
     return Em.String.i18n('category.delete');
