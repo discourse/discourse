@@ -118,12 +118,7 @@ class PostAction < ActiveRecord::Base
   def message_quality
     return if message.blank?
     sentinel = TextSentinel.title_sentinel(message)
-    if sentinel.valid?
-      # It's possible the sentinel has cleaned up the title a bit
-      self.message = sentinel.text
-    else
-      errors.add(:message, I18n.t(:is_invalid)) unless sentinel.valid?
-    end
+    errors.add(:message, I18n.t(:is_invalid)) unless sentinel.valid?
   end
 
   before_create do

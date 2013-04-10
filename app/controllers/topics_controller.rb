@@ -56,7 +56,9 @@ class TopicsController < ApplicationController
       topic.change_category(params[:category])
     end
 
-    render nothing: true
+    # this is used to return the title to the client as it may have been
+    # changed by "TextCleaner"
+    render_serialized(topic, BasicTopicSerializer)
   end
 
   def similar_to

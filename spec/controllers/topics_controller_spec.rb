@@ -407,12 +407,13 @@ describe TopicsController do
         it 'succeeds' do
           xhr :put, :update, topic_id: @topic.id, slug: @topic.title
           response.should be_success
+          ::JSON.parse(response.body)['basic_topic'].should be_present
         end
 
         it 'allows a change of title' do
-          xhr :put, :update, topic_id: @topic.id, slug: @topic.title, title: 'this is a new title for the topic'
+          xhr :put, :update, topic_id: @topic.id, slug: @topic.title, title: 'This is a new title for the topic'
           @topic.reload
-          @topic.title.should == 'this is a new title for the topic'
+          @topic.title.should == 'This is a new title for the topic'
         end
 
         it 'triggers a change of category' do

@@ -3,6 +3,7 @@ require_dependency 'avatar_lookup'
 require_dependency 'topic_view'
 require_dependency 'rate_limiter'
 require_dependency 'text_sentinel'
+require_dependency 'text_cleaner'
 
 class Topic < ActiveRecord::Base
   include ActionView::Helpers
@@ -143,8 +144,8 @@ class Topic < ActiveRecord::Base
 
     sentinel = TextSentinel.title_sentinel(title)
     if sentinel.valid?
-      # It's possible the sentinel has cleaned up the title a bit
-      self.title = sentinel.text
+      # clean up the title
+      self.title = TextCleaner.clean_title(sentinel.text)
     else
       errors.add(:title, I18n.t(:is_invalid))
     end
