@@ -1,5 +1,7 @@
 # Discourse Developer Install Guide (Vagrant)
 
+## If you are on a Mac or PC, try our [Discourse Vagrant QuickStart](http://blog.discourse.org/2013/04/discourse-as-your-first-rails-app/) blog post first!
+
 **We require [Vagrant 1.1.2+](http://downloads.vagrantup.com/) for our Vagrant image to work. You may have to upgrade if you are running
 an earlier release.**
 
