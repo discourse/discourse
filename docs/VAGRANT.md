@@ -1,13 +1,8 @@
 # Discourse Developer Install Guide (Vagrant)
 
-## If you are on a Mac or PC, try our [Discourse Vagrant QuickStart](http://blog.discourse.org/2013/04/discourse-as-your-first-rails-app/) blog post first!
+### If you are on a Mac or PC, please try our [Discourse Developer QuickStart](http://blog.discourse.org/2013/04/discourse-as-your-first-rails-app/) blog post first!
 
-**We require [Vagrant 1.1.2+](http://downloads.vagrantup.com/) for our Vagrant image to work. You may have to upgrade if you are running
-an earlier release.**
-
-If you'd like to set up a development environment for Discourse, the easiest way is by using a virtual machine.
-If you have experience setting up Rails projects, you might want to take a look at our **[Discourse Advanced Developer Guide](https://github.com/discourse/discourse/blob/master/docs/DEVELOPER-ADVANCED.md)**.
-It also contains instructions on building your own Vagrant VM.
+(If you have experience setting up Rails projects, you might want to take a look at our **[Discourse Advanced Developer Guide](https://github.com/discourse/discourse/blob/master/docs/DEVELOPER-ADVANCED.md)**. It also contains instructions on building your own Vagrant VM.)
 
 The following instructions will automatically download and provision a virtual machine for you to begin hacking
 on Discourse with:
@@ -16,7 +11,7 @@ on Discourse with:
 
 1. Install Git: http://git-scm.com/downloads (or [GitHub for Windows](http://windows.github.com/) if you want a GUI)
 2. Install VirtualBox: https://www.virtualbox.org/wiki/Downloads
-3. Install Vagrant: http://www.vagrantup.com/
+3. Install Vagrant: http://www.vagrantup.com/ (We require Vagrant 1.1.2+ or later)
 4. Open a terminal
 5. Clone the project: `git clone git@github.com:discourse/discourse.git`
 6. Enter the project directory: `cd discourse`
