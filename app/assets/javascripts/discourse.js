@@ -69,6 +69,11 @@ Discourse = Ember.Application.createWithMixins({
         user.set('unread_notifications', data.unread_notifications);
         user.set('unread_private_messages', data.unread_private_messages);
       }), user.notification_channel_position);
+      bus.subscribe("/categories", function(data){
+        Discourse.get('site').set('categories', data.categories.map(function(c){
+          return Discourse.Category.create(c);
+        }));
+      });
     }
   }.observes('currentUser'),
 

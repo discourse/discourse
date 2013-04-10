@@ -20,7 +20,9 @@ class Category < ActiveRecord::Base
   before_validation :ensure_slug
   after_save :invalidate_site_cache
   after_create :create_category_definition
+  after_create :publish_categories_list
   after_destroy :invalidate_site_cache
+  after_destroy :publish_categories_list
 
   scope :latest, ->{ order('topic_count desc') }
 
@@ -53,6 +55,10 @@ class Category < ActiveRecord::Base
   # invalidated whenever the category changes.
   def invalidate_site_cache
     Site.invalidate_cache
+  end
+
+  def publish_categories_list
+    MessageBus.publish('/categories', {categories: ActiveModel::ArraySerializer.new(Category.latest.all).as_json})
   end
 
   def uncategorized_validator
