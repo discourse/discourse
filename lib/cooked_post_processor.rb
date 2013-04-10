@@ -10,7 +10,7 @@ class CookedPostProcessor
     @dirty = false
     @opts = opts
     @post = post
-    @doc = Nokogiri::HTML(post.cooked)
+    @doc = Nokogiri::HTML::fragment(post.cooked)
     @size_cache = {}
   end
 
@@ -23,13 +23,10 @@ class CookedPostProcessor
     args = {post_id: @post.id}
     args[:invalidate_oneboxes] = true if @opts[:invalidate_oneboxes]
 
-    Oneboxer.each_onebox_link(@doc) do |url, element|
-      onebox, preview = Oneboxer.onebox(url, args)
-      if onebox
-        element.swap onebox
-        @dirty = true
-      end
+    result = Oneboxer.apply(@doc) do |url, element|
+      Oneboxer.onebox(url, args)
     end
+    @dirty ||= result.changed?
   end
 
   # First let's consider the images
@@ -125,6 +122,10 @@ class CookedPostProcessor
 
   def html
     @doc.try(:to_html)
+  end
+
+  def doc
+    @doc
   end
 
   def get_size(url)

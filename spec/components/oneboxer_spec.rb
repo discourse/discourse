@@ -159,7 +159,7 @@ describe Oneboxer do
         element.is_a?(Nokogiri::XML::Element).should be_true
         url.should == 'http://discourse.org'
       end
-      result.kind_of?(Nokogiri::HTML::Document).should be_true
+      result.kind_of?(Nokogiri::HTML::DocumentFragment).should be_true
     end
 
     it 'yields each url and element when given a doc' do
@@ -172,5 +172,35 @@ describe Oneboxer do
 
   end
 
+  context "apply_onebox" do
+    it "is able to nuke wrapping p" do
+      doc = Oneboxer.apply "<p><a href='http://bla.com' class='onebox'>bla</p>" do |url, element|
+        "<div>foo</div>" if url == "http://bla.com"
+      end
+
+      doc.changed? == true
+      doc.to_html.should match_html "<div>foo</div>"
+    end
+
+    it "is able to do nothing if nil is returned" do
+      orig = "<p><a href='http://bla.com' class='onebox'>bla</p>"
+      doc = Oneboxer.apply orig do |url, element|
+        nil
+      end
+
+      doc.changed? == false
+      doc.to_html.should match_html orig
+    end
+
+    it "does not strip if there is a br in same node" do
+      doc = Oneboxer.apply "<p><br><a href='http://bla.com' class='onebox'>bla</p>" do |url, element|
+        "<div>foo</div>" if url == "http://bla.com"
+      end
+
+      doc.changed? == true
+      doc.to_html.should match_html "<p><br><div>foo</div></p>"
+    end
+
+  end
 
 end

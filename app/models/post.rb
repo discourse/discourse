@@ -243,15 +243,11 @@ class Post < ActiveRecord::Base
     # If we have any of the oneboxes in the cache, throw them in right away, don't
     # wait for the post processor.
     dirty = false
-    doc = Oneboxer.each_onebox_link(cooked) do |url, elem|
-      cached = Oneboxer.render_from_cache(url)
-      if cached.present?
-        elem.swap(cached)
-        dirty = true
-      end
+    result = Oneboxer.apply(cooked) do |url, elem|
+      Oneboxer.render_from_cache(url)
     end
 
-    cooked = doc.to_html if dirty
+    cooked = result.to_html if result.changed?
     cooked
   end
 

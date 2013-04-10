@@ -10,6 +10,16 @@ Dir["#{Rails.root}/lib/oneboxer/*_onebox.rb"].each {|f|
 module Oneboxer
   extend Oneboxer::Base
 
+  Result = Struct.new(:doc, :changed) do
+    def to_html
+      doc.to_html
+    end
+
+    def changed?
+      changed
+    end
+  end
+
   Dir["#{Rails.root}/lib/oneboxer/*_onebox.rb"].sort.each do |f|
     add_onebox "Oneboxer::#{Pathname.new(f).basename.to_s.gsub(/\.rb$/, '').classify}".constantize
   end
@@ -66,7 +76,7 @@ module Oneboxer
   # Parse URLs out of HTML, returning the document when finished.
   def self.each_onebox_link(string_or_doc)
     doc = string_or_doc
-    doc = Nokogiri::HTML(doc) if doc.is_a?(String)
+    doc = Nokogiri::HTML::fragment(doc) if doc.is_a?(String)
 
     onebox_links = doc.search("a.onebox")
     if onebox_links.present?
@@ -78,6 +88,32 @@ module Oneboxer
     end
 
     doc
+  end
+
+  def self.apply(string_or_doc)
+    doc = string_or_doc
+    doc = Nokogiri::HTML::fragment(doc) if doc.is_a?(String)
+    changed = false
+
+    Oneboxer.each_onebox_link(doc) do |url, element|
+      onebox, preview = yield(url,element)
+      if onebox
+        parsed_onebox = Nokogiri::HTML::fragment(onebox)
+        next unless parsed_onebox.children.count > 0 
+
+        # special logic to strip empty p elements
+        if  element.parent && 
+            element.parent.node_name.downcase == "p" && 
+            element.parent.children.count == 1 && 
+            parsed_onebox.children.first.name.downcase == "div"
+          element = element.parent 
+        end
+        changed = true
+        element.swap parsed_onebox.to_html
+      end
+    end
+
+    Result.new(doc, changed)
   end
 
   def self.cache_key_for(url)

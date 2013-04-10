@@ -5,7 +5,7 @@ Fabricator(:post) do
 end
 
 Fabricator(:post_with_youtube, from: :post) do
-  cooked '<a href="http://www.youtube.com/watch?v=9bZkp7q19f0" class="onebox" target="_blank">http://www.youtube.com/watch?v=9bZkp7q19f0</a>'
+  cooked '<p><a href="http://www.youtube.com/watch?v=9bZkp7q19f0" class="onebox" target="_blank">http://www.youtube.com/watch?v=9bZkp7q19f0</a></p>'
 end
 
 Fabricator(:old_post, from: :post) do
