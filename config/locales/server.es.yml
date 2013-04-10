@@ -407,7 +407,7 @@ es:
     max_word_length: "The maximum allowed word length, in characters, in a topic title"
     title_min_entropy: "The minimum allowed entropy (unique characters) required for a topic title"
     body_min_entropy: "The minimum allowed entropy (unique characters) required for a post body"
-    title_fancy_entities: "Convert fancy HTML entities in topic titles"
+    title_fancy_entities: "Convert common ASCII characters to fancy HTML entities in topic titles, ala SmartyPants http://daringfireball.net/projects/smartypants/"
 
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"
