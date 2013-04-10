@@ -43,31 +43,30 @@ describe UserAction do
         UserAction.stats(user.id, Guardian.new(user))
       end
 
-      it 'should include non private message events' do
+      it 'include correct events' do
         mystats.map{|r| r["action_type"].to_i}.should include(UserAction::NEW_TOPIC)
-      end
-
-      it 'should exclude private messages for non owners' do
         UserAction.stats(user.id,Guardian.new).map{|r| r["action_type"].to_i}.should_not include(UserAction::NEW_PRIVATE_MESSAGE)
-      end
-
-      it 'should not include got private messages for owners' do
         UserAction.stats(user.id,Guardian.new).map{|r| r["action_type"].to_i}.should_not include(UserAction::GOT_PRIVATE_MESSAGE)
-      end
-
-      it 'should include private messages for owners' do
         mystats.map{|r| r["action_type"].to_i}.should include(UserAction::NEW_PRIVATE_MESSAGE)
-      end
-
-      it 'should include got private messages for owners' do
         mystats.map{|r| r["action_type"].to_i}.should include(UserAction::GOT_PRIVATE_MESSAGE)
       end
+
+      it 'should not include new topic when topic is deleted' do
+        public_topic.destroy
+        mystats.map{|r| r["action_type"].to_i}.should_not include(UserAction::NEW_TOPIC)
+      end
+
     end
 
     describe 'stream' do
 
       it 'should have 1 item for non owners' do
         UserAction.stream(user_id: user.id, guardian: Guardian.new).count.should == 1
+      end
+
+      it 'should include no items for non owner when topic deleted' do
+        public_topic.destroy
+        UserAction.stream(user_id: user.id, guardian: Guardian.new).count.should == 0
       end
 
       it 'should have bookmarks and pms for owners' do
