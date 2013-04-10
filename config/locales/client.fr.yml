@@ -843,6 +843,7 @@ fr:
         title: "API"
       customize:
         title: "Personnaliser"
+        long_title: "Personnalisation du site"
         header: "En-tête"
         css: "Feuille de style"
         override_default: "Outrepasser les réglages par défaut ?"
@@ -854,6 +855,7 @@ fr:
         new_style: "Nouveau style"
         delete: "Supprimer"
         delete_confirm: "Supprimer cette personnalisation"
+        about: "Vous pouvez modifier les feuillets de styles et en-têtes de votre site. Choisissez ou ajouter un style pour commencer l'édition."
 
       email_logs:
         title: "Historique des mails"
