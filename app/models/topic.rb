@@ -27,7 +27,7 @@ class Topic < ActiveRecord::Base
 
   validate :title_quality
   validates_presence_of :title
-  validates :title, length: { in: SiteSetting.topic_title_length }
+  validate :title, -> { SiteSetting.topic_title_length.include? :length }
 
   serialize :meta_data, ActiveRecord::Coders::Hstore
 
