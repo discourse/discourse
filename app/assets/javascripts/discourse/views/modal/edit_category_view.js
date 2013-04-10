@@ -67,8 +67,17 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
   didInsertElement: function() {
     this._super();
 
-    if (this.get('category')) {
-      this.set('id', this.get('category.slug'));
+    if( this.get('category.id') ) {
+      this.set('loading', true);
+      var categoryView = this;
+
+      // We need the topic_count to be correct, so get the most up-to-date info about this category from the server.
+      Discourse.Category.findBySlug( this.get('category.slug') ).then( function(cat) {
+        categoryView.set('category', cat);
+        Discourse.get('site').updateCategory(cat);
+        categoryView.set('id', categoryView.get('category.slug'));
+        categoryView.set('loading', false);
+      });
     } else {
       this.set('category', Discourse.Category.create({ color: 'AB9364', text_color: 'FFFFFF', hotness: 5 }));
     }

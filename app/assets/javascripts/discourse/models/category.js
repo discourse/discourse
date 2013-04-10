@@ -43,4 +43,10 @@ Discourse.Category = Discourse.Model.extend({
 
 });
 
-
+Discourse.Category.reopenClass({
+  findBySlug: function(categorySlug) {
+    return Discourse.ajax({url: Discourse.getURL("/categories/") + categorySlug + ".json"}).then(function (result) {
+      return Discourse.Category.create(result.category);
+    });
+  }
+});

@@ -1,5 +1,6 @@
 {{#with view.category}}
 
+<div {{bindAttr class="view.loading:invisible"}}>
   <div class="modal-body">
     <form>
       <section class='field'>
@@ -56,5 +57,6 @@
       <button class='btn btn-danger pull-right' {{bindAttr disabled="view.deleteDisabled"}} {{action deleteCategory target="view"}}><i class="icon icon-trash"></i>{{view.deleteButtonTitle}}</button>
     {{/if}}
   </div>
+</div>
 
 {{/with}}
