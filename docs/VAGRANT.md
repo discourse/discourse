@@ -1,6 +1,6 @@
 # Discourse Developer Install Guide (Vagrant)
 
-### If you are on a Mac or PC, please try our [Discourse Developer QuickStart](http://blog.discourse.org/2013/04/discourse-as-your-first-rails-app/) blog post first!
+### If you are on a Mac or PC, please try our [Discourse as Your First Rails App](http://blog.discourse.org/2013/04/discourse-as-your-first-rails-app/) blog post first!
 
 (If you have experience setting up Rails projects, you might want to take a look at our **[Discourse Advanced Developer Guide](https://github.com/discourse/discourse/blob/master/docs/DEVELOPER-ADVANCED.md)**. It also contains instructions on building your own Vagrant VM.)
 
