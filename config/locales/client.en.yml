@@ -840,6 +840,7 @@ en:
         title: "API"
       customize:
         title: "Customize"
+        long_title: "Site Customizations"
         header: "Header"
         css: "Stylesheet"
         override_default: "Override default?"
@@ -851,6 +852,7 @@ en:
         new_style: "New Style"
         delete: "Delete"
         delete_confirm: "Delete this customization?"
+        about: "Site Customization allow you to modify stylesheets and headers on the site. Choose or add one to start editing."
 
       email_logs:
         title: "Email Logs"
