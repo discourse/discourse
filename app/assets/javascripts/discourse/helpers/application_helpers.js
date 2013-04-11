@@ -130,24 +130,28 @@ Handlebars.registerHelper('avatar', function(user, options) {
     user = Ember.Handlebars.get(this, user, options);
   }
 
-  var username = Em.get(user, 'username');
-  if (!username) username = Em.get(user, options.hash.usernamePath);
+  if( user ) {
+    var username = Em.get(user, 'username');
+    if (!username) username = Em.get(user, options.hash.usernamePath);
 
-  var avatarTemplate = Ember.get(user, 'avatar_template');
-  if (!avatarTemplate) avatarTemplate = Em.get(user, 'user.avatar_template');
+    var avatarTemplate = Ember.get(user, 'avatar_template');
+    if (!avatarTemplate) avatarTemplate = Em.get(user, 'user.avatar_template');
 
-  var title;
-  if (!options.hash.ignoreTitle) {
-    title = Em.get(user, 'title') || Em.get(user, 'description');
+    var title;
+    if (!options.hash.ignoreTitle) {
+      title = Em.get(user, 'title') || Em.get(user, 'description');
+    }
+
+    return new Handlebars.SafeString(Discourse.Utilities.avatarImg({
+      size: options.hash.imageSize,
+      extraClasses: Em.get(user, 'extras') || options.hash.extraClasses,
+      username: username,
+      title: title || username,
+      avatarTemplate: avatarTemplate
+    }));
+  } else {
+    return '';
   }
-
-  return new Handlebars.SafeString(Discourse.Utilities.avatarImg({
-    size: options.hash.imageSize,
-    extraClasses: Em.get(user, 'extras') || options.hash.extraClasses,
-    username: username,
-    title: title || username,
-    avatarTemplate: avatarTemplate
-  }));
 });
 
 /**

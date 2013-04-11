@@ -148,6 +148,13 @@ class Guardian
     true
   end
 
+  def can_delete_user?(user_to_delete)
+    return false unless @user.try(:admin?)
+    return false if user_to_delete.blank?
+    return false if user_to_delete.post_count > 0
+    true
+  end
+
   # Can we see who acted on a post in a particular way?
   def can_see_post_actors?(topic, post_action_type_id)
     return false unless topic.present?

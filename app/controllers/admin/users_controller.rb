@@ -1,3 +1,5 @@
+require_dependency 'user_destroyer'
+
 class Admin::UsersController < Admin::AdminController
 
   def index
@@ -96,5 +98,14 @@ class Admin::UsersController < Admin::AdminController
     render nothing: true
   end
 
-end
+  def destroy
+    user = User.where(id: params[:id]).first
+    guardian.ensure_can_delete_user!(user)
+    if UserDestroyer.new(current_user).destroy(user)
+      render json: {deleted: true}
+    else
+      render json: {deleted: false, user: AdminDetailedUserSerializer.new(user, root: false).as_json}
+    end
+  end
 
+end

@@ -550,12 +550,16 @@ class Topic < ActiveRecord::Base
       @posters_summary << al[last_post_user_id]
     end
     @posters_summary.map! do |p|
-      result = TopicPoster.new
-      result.user = p
-      result.description = descriptions[p.id].join(', ')
-      result.extras = "latest" if al[last_post_user_id] == p
-      result
-    end
+      if p
+        result = TopicPoster.new
+        result.user = p
+        result.description = descriptions[p.id].join(', ')
+        result.extras = "latest" if al[last_post_user_id] == p
+        result
+      else
+        nil
+      end
+    end.compact!
 
     @posters_summary
   end

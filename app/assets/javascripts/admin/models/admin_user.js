@@ -17,8 +17,11 @@ Discourse.AdminUser = Discourse.Model.extend({
 
 
   deleteAllPosts: function() {
+    var user = this;
     this.set('can_delete_all_posts', false);
-    Discourse.ajax(Discourse.getURL("/admin/users/") + (this.get('id')) + "/delete_all_posts", {type: 'PUT'});
+    Discourse.ajax(Discourse.getURL("/admin/users/") + (this.get('id')) + "/delete_all_posts", {type: 'PUT'}).then(function(result){
+      user.set('post_count', 0);
+    });
   },
 
   // Revoke the user's admin access
@@ -130,6 +133,41 @@ Discourse.AdminUser = Discourse.Model.extend({
         bootbox.alert(Em.String.i18n('admin.impersonate.invalid'));
       }
     });
+  },
+
+  deleteForbidden: function() {
+    return (this.get('post_count') > 0);
+  }.property('post_count'),
+
+  deleteButtonTitle: function() {
+    if (this.get('deleteForbidden')) {
+      return Em.String.i18n('admin.user.delete_forbidden');
+    } else {
+      return null;
+    }
+  }.property('deleteForbidden'),
+
+  destroy: function() {
+    var user = this;
+    bootbox.confirm(Em.String.i18n("admin.user.delete_confirm"), Em.String.i18n("no_value"), Em.String.i18n("yes_value"), function(result) {
+      if(result) {
+        Discourse.ajax(Discourse.getURL("/admin/users/") + user.get('id') + '.json', { type: 'DELETE' }).then(function(data) {
+          if (data.deleted) {
+            bootbox.alert(Em.String.i18n("admin.user.deleted"), function() {
+              document.location = "/admin/users/list/active";
+            });
+          } else {
+            bootbox.alert(Em.String.i18n("admin.user.delete_failed"));
+            if (data.user) {
+              user.mergeAttributes(data.user);
+            }
+          }
+        }, function(jqXHR, status, error) {
+          Discourse.AdminUser.find( user.get('username') ).then(function(u){ user.mergeAttributes(u); });
+          bootbox.alert(Em.String.i18n("admin.user.delete_failed"));
+        });
+      }
+    });
   }
 
 });
@@ -155,7 +193,7 @@ Discourse.AdminUser.reopenClass({
   find: function(username) {
     return Discourse.ajax({url: Discourse.getURL("/admin/users/") + username}).then(function (result) {
       return Discourse.AdminUser.create(result);
-    })
+    });
   },
 
   findAll: function(query, filter) {

@@ -4,13 +4,15 @@
 <hr/>
 
 <% @topic_view.posts.each do |post| %>
-  <div class='creator'>
-    #<%=post.post_number%> <%= t 'by'%>: <b><%= post.user.name %></b>, <%= post.created_at.to_formatted_s(:long_ordinal) %>
-  </div>
-  <div class='post'>
-    <%= post.cooked.html_safe %>
-  </div>
-  <hr/>
+  <% if post.user %>
+    <div class='creator'>
+      #<%=post.post_number%> <%= t 'by'%>: <b><%= post.user.name %></b>, <%= post.created_at.to_formatted_s(:long_ordinal) %>
+    </div>
+    <div class='post'>
+      <%= post.cooked.html_safe %>
+    </div>
+    <hr/>
+  <% end %>
 <% end %>
 
 <% if @topic_view.next_page %>

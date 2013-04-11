@@ -187,3 +187,11 @@
   </div>
 </section>
 
+<section>
+  <hr/>
+  <button class="btn pull-right" {{action destroy target="content"}} {{bindAttr disabled="deleteForbidden"}} {{bindAttr title="deleteButtonTitle"}}>
+    <i class="icon icon-trash"></i>
+    {{i18n admin.user.delete}}
+  </button>
+</section>
+<div class="clearfix"></div>

@@ -210,21 +210,23 @@ class TopicViewSerializer < ApplicationSerializer
     @highest_number_in_posts = 0
     if object.posts.present?
       object.posts.each_with_index do |p, idx|
-        @highest_number_in_posts = p.post_number if p.post_number > @highest_number_in_posts
-        ps = PostSerializer.new(p, scope: scope, root: false)
-        ps.topic_slug = object.topic.slug
-        ps.topic_view = object
-        p.topic = object.topic
+        if p.user
+          @highest_number_in_posts = p.post_number if p.post_number > @highest_number_in_posts
+          ps = PostSerializer.new(p, scope: scope, root: false)
+          ps.topic_slug = object.topic.slug
+          ps.topic_view = object
+          p.topic = object.topic
 
-        post_json = ps.as_json
+          post_json = ps.as_json
 
-        if object.index_reverse
-          post_json[:index] = object.index_offset - idx
-        else
-          post_json[:index] = object.index_offset + idx + 1
+          if object.index_reverse
+            post_json[:index] = object.index_offset - idx
+          else
+            post_json[:index] = object.index_offset + idx + 1
+          end
+
+          @posts << post_json
         end
-
-        @posts << post_json
       end
     end
     @posts

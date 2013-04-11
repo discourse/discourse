@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
   has_many :notifications
   has_many :topic_users
   has_many :topics
-  has_many :user_open_ids
+  has_many :user_open_ids, dependent: :destroy
   has_many :user_actions
   has_many :post_actions
   has_many :email_logs
@@ -21,8 +21,8 @@ class User < ActiveRecord::Base
   has_many :views
   has_many :user_visits
   has_many :invites
-  has_one :twitter_user_info
-  has_one :github_user_info
+  has_one :twitter_user_info, dependent: :destroy
+  has_one :github_user_info, dependent: :destroy
   belongs_to :approved_by, class_name: 'User'
 
   validates_presence_of :username
@@ -397,7 +397,9 @@ class User < ActiveRecord::Base
     posts.order("post_number desc").each do |p|
       if p.post_number == 1
         p.topic.destroy
+        # TODO: But the post is not destroyed. Why?
       else
+        # TODO: This should be using the PostDestroyer!
         p.destroy
       end
     end
