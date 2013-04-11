@@ -40,12 +40,12 @@ class PostsController < ApplicationController
     post.image_sizes = params[:image_sizes] if params[:image_sizes].present?
     guardian.ensure_can_edit!(post)
 
-    # to stay consistent with the create api, 
+    # to stay consistent with the create api,
     #  we should allow for title changes and category changes here
     # we should also move all of this to a post updater.
-    if post.post_number == 1 && (params[:title] || params[:post][:category]) 
+    if post.post_number == 1 && (params[:title] || params[:post][:category])
       post.topic.title = params[:title] if params[:title]
-      Topic.transaction do 
+      Topic.transaction do
         post.topic.change_category(params[:post][:category])
         post.topic.save
       end
