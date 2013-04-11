@@ -22,7 +22,9 @@ Before you get started, ensure you have the following minimum versions: [Ruby 1.
 
 ## Vision
 
-We think of Discourse as a **Civilized Discourse Construction Kit**, an 100% open-source discussion platform that acts as a flexible, fundamental building block of most online communities of any size, from tiny to huge. Discourse is always free for everyone to use and contribute to – forever. Discourse is: 
+We think of Discourse as a **Civilized Discourse Construction Kit**, an open-source discussion platform that acts as a free, flexible, fundamental building block for online communities of any size, tiny to huge.
+
+Discourse is: 
 
 - A **flattened, endlessly scrolling discussion**, which avoids the awkwardness of traditionally threaded and paginated discussion, while still allowing replies to be expanded in place for context.
 
@@ -32,7 +34,7 @@ We think of Discourse as a **Civilized Discourse Construction Kit**, an 100% ope
 
 - A **contemporary, robust technology stack**, free of legacy PHP and MySQL constraints.
 
-We wish to **foster an active community of contributors**, all of whom commit to free, simple, pleasant to use online discussion software that can thrive in an Internet age dominated by micro-blogging and diminishing attention spans. Civilized online discussion belongs to everyone, not just huge corporate websites.
+Our goal is to **foster an active community of contributors**, all of whom commit to free, simple, pleasant to use online discussion software that can thrive in an Internet age dominated by micro-blogging and diminishing attention spans. Internet discussion belongs to everyone, not just huge corporate websites.
 
 Discourse is built for the *next* 10 years of the Internet, so our requirements are high:
 
