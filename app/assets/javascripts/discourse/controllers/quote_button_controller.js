@@ -38,7 +38,7 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
     var selection = window.getSelection();
 
     // no selections
-    if (selection.type !== "Range") return;
+    if (selection.rangeCount === 0) return;
 
     // retrieve the selected range
     var range = selection.getRangeAt(0),
