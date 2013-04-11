@@ -13,14 +13,12 @@
 
         {{#if description}}
           {{description}}
-          {{#if topic_url}}
-            <a href="#" {{action showCategoryTopic target="view"}}>{{i18n category.change_in_category_topic}}</a>
-          {{/if}}
         {{else}}
           {{i18n category.no_description}}
-            {{#if topic_url}}
-            <a {{action showCategoryTopic target="view"}} href="#">{{i18n category.change_in_category_topic}}</a>
-            {{/if}}}
+        {{/if}}
+        {{#if topic_url}}
+          <br/>
+          <button class="btn btn-small" {{action showCategoryTopic target="view"}}>{{i18n category.change_in_category_topic}}</button>
         {{/if}}
       </section>
 
