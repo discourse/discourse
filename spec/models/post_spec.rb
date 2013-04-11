@@ -88,6 +88,8 @@ describe Post do
     let(:post_one_image) { Fabricate.build(:post, post_args.merge(raw: "![sherlock](http://bbc.co.uk/sherlock.jpg)", user: visitor)) }
     let(:post_two_images) { Fabricate.build(:post, post_args.merge(raw: "<img src='http://discourse.org/logo.png'> <img src='http://bbc.co.uk/sherlock.jpg'>", user: visitor)) }
     let(:post_with_avatars) { Fabricate.build(:post, post_args.merge(raw: '<img alt="smiley" title=":smiley:" src="/assets/emoji/smiley.png" class="avatar"> <img alt="wink" title=":wink:" src="/assets/emoji/wink.png" class="avatar">', user: visitor)) }
+    let(:post_with_favicon) { Fabricate.build(:post, post_args.merge(raw: '<img src="/assets/favicons/wikipedia.png" class="favicon">', user: visitor)) }
+    let(:post_with_thumbnail) { Fabricate.build(:post, post_args.merge(raw: '<img src="/assets/emoji/smiley.png" class="thumbnail">', user: visitor)) }
     let(:post_with_two_classy_images) { Fabricate.build(:post, post_args.merge(raw: "<img src='http://discourse.org/logo.png' class='classy'> <img src='http://bbc.co.uk/sherlock.jpg' class='classy'>", user: visitor)) }
 
     it "returns 0 images for an empty post" do
@@ -104,6 +106,14 @@ describe Post do
 
     it "doesn't count avatars as images" do
       post_with_avatars.image_count.should == 0
+    end
+
+    it "doesn't count favicons as images" do
+      post_with_favicon.image_count.should == 0
+    end
+
+    it "doesn't count thumbnails as images" do
+      post_with_thumbnail.image_count.should == 0
     end
 
     it "doesn't count whitelisted images" do

@@ -90,7 +90,7 @@ class Post < ActiveRecord::Base
   end
 
   def self.white_listed_image_classes
-    @white_listed_image_classes ||= ['avatar']
+    @white_listed_image_classes ||= ['avatar', 'favicon', 'thumbnail']
   end
 
   def image_count
