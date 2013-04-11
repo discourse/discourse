@@ -52,15 +52,9 @@ class Post < ActiveRecord::Base
   end
 
   def raw_quality
-    sentinel = TextSentinel.new(raw, min_entropy: SiteSetting.body_min_entropy)
-    if sentinel.valid?
-      # It's possible the sentinel has cleaned up the title a bit
-      self.raw = sentinel.text
-    else
-      errors.add(:raw, I18n.t(:is_invalid)) unless sentinel.valid?
-    end
+    sentinel = TextSentinel.body_sentinel(raw)
+    errors.add(:raw, I18n.t(:is_invalid)) unless sentinel.valid?
   end
-
 
   # Stop us from posting the same thing too quickly
   def unique_post_validator
