@@ -25,7 +25,7 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
 
   /**
     Save the currently selected text and displays the
-    "quote reply" buttong
+    "quote reply" button
 
     @method selectText
   **/
