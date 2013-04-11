@@ -15,7 +15,7 @@ task 'assets:prestage' => :environment do |t|
   
   # pre-stage css/js only for now
   assets = get_assets("locales/") + get_assets("")
-  puts "pre staging: #{a.join(' ')}"
+  puts "pre staging: #{assets.join(' ')}"
 
   # makes testing simpler leaving this here
   config = YAML::load(File.open("#{Rails.root}/config/cdn.yml"))
