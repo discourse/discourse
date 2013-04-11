@@ -52,6 +52,17 @@ Discourse is built for the *next* 10 years of the Internet, so our requirements 
   - iOS 5+
   - Android 4.0+
 
+## Built With
+
+Discourse is built from the following open source components:
+
+- [Ruby on Rails](https://github.com/rails/rails) - Our back end API is a Rails app. It responds to requests RESTfully and responds in JSON.
+- [Ember.js](https://github.com/emberjs/ember.js) - Our front end is an Ember.js app that communicates with the Rails API.
+- [PostgreSQL](http://www.postgresql.org/) - Our main data store is in Postgres.
+- [Redis](http://redis.io/) - We use Redis for our job queue, rate limiting, as a cache and for transient data.
+
+Plus *lots* of Ruby Gems, a complete list of which is at [**SOFTWARE.MD**](https://github.com/discourse/discourse/blob/master/docs/SOFTWARE.md).
+
 ## Contributing
 
 [![Build Status](https://travis-ci.org/discourse/discourse.png)](https://travis-ci.org/discourse/discourse)
@@ -75,17 +86,6 @@ We look forward to seeing your cool stuff!
 ## Having Problems getting set up?
 
 Before contacting us for help, please review our [Troubleshooting Guide](https://github.com/discourse/discourse/blob/master/docs/TROUBLESHOOTING.md).
-
-## Expertise
-
-Discourse is built from the following open source components:
-
-- [Ruby on Rails](https://github.com/rails/rails) - Our back end API is a Rails app. It responds to requests RESTfully and responds in JSON.
-- [Ember.js](https://github.com/emberjs/ember.js) - Our front end is an Ember.js app that communicates with the Rails API.
-- [PostgreSQL](http://www.postgresql.org/) - Our main data store is in Postgres.
-- [Redis](http://redis.io/) - We use Redis for our job queue, rate limiting, as a cache and for transient data.
-
-Plus *lots* of Ruby Gems, a complete list of which is at [**SOFTWARE.MD**](https://github.com/discourse/discourse/blob/master/docs/SOFTWARE.md).
 
 ## The Discourse Team
 
