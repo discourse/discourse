@@ -29,15 +29,15 @@ Discourse::Application.configure do
   config.watchable_dirs['lib'] = [:rb]
 
   config.sass.debug_info = false
-  config.ember.variant = :development
-  config.ember.handlebars_location = "#{Rails.root}/app/assets/javascripts/external/handlebars-1.0.rc.3.js"
-  config.ember.ember_location = "#{Rails.root}/app/assets/javascripts/external/ember.js"
   config.handlebars.precompile = false
 
+  # we recommend you use mailcatcher https://github.com/sj26/mailcatcher
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = { address: "localhost", port: 1025 }
   config.action_mailer.raise_delivery_errors = true
 
   BetterErrors::Middleware.allow_ip! ENV['TRUSTED_IP'] if ENV['TRUSTED_IP']
+
+  config.enable_mini_profiler = true
 end
 

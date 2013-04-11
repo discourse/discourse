@@ -6,6 +6,7 @@ class CategoriesController < ApplicationController
 
   def index
     list = CategoryList.new(current_user)
+    discourse_expires_in 1.minute
     render_serialized(list, CategoryListSerializer)
   end
 

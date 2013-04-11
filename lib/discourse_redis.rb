@@ -11,12 +11,21 @@ class DiscourseRedis
   end
 
   def self.config
-    YAML.load(ERB.new(File.new("#{Rails.root}/config/redis.yml").read).result)[Rails.env]
+    @config ||= YAML.load(ERB.new(File.new("#{Rails.root}/config/redis.yml").read).result)[Rails.env]
+  end
+
+  def self.url(config=nil)
+    config ||= self.config
+    "redis://#{(':' + config['password'] + '@') if config['password']}#{config['host']}:#{config['port']}/#{config['db']}"
   end
 
   def initialize
     @config = DiscourseRedis.config
     @redis = DiscourseRedis.raw_connection(@config)
+  end
+
+  def url
+    self.class.url(@config)
   end
 
   # prefix the key with the namespace
@@ -52,8 +61,5 @@ class DiscourseRedis
     redis_store
   end
 
-  def url
-    "redis://#{(':' + @config['password'] + '@') if @config['password']}#{@config['host']}:#{@config['port']}/#{@config['db']}"
-  end
 
 end

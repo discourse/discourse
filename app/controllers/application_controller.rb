@@ -140,7 +140,7 @@ class ApplicationController < ActionController::Base
 
   def can_cache_content?
     # Don't cache unless we're in production mode
-    return false unless Rails.env.production?
+    return false unless Rails.env.production? || Rails.env == "profile"
 
     # Don't cache logged in users
     return false if current_user.present?

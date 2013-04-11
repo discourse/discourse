@@ -1,12 +1,8 @@
-    <%- unless SiteCustomization.override_default_style(session[:preview_style]) %>
-      <%=stylesheet_link_tag "application"%>
-    <%- end %>
+<%- unless SiteCustomization.override_default_style(session[:preview_style]) %>
+  <%=stylesheet_link_tag "application"%>
+<%- end %>
 
-    <%- if mini_profiler_enabled? %>
-      <%- Rack::MiniProfiler.step "stylsheet" do%>
-        <%= stylesheet_link_tag "admin"%>
-      <%-end%>
-    <%- elsif admin? %>
-      <%= stylesheet_link_tag "admin"%>
-    <%-end%>
-    <%=SiteCustomization.custom_stylesheet(session[:preview_style])%>
+<%- if admin? %>
+  <%= stylesheet_link_tag "admin"%>
+<%-end%>
+<%=SiteCustomization.custom_stylesheet(session[:preview_style])%>

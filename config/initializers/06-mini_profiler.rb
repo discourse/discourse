@@ -1,4 +1,10 @@
 # If Mini Profiler is included via gem
+if Rails.configuration.respond_to?(:enable_mini_profiler) && Rails.configuration.enable_mini_profiler
+  require 'rack-mini-profiler'
+  # initialization is skipped so trigger it
+  Rack::MiniProfilerRails.initialize!(Rails.application)
+end
+
 if defined?(Rack::MiniProfiler)
 
   # note, we may want to add some extra security here that disables mini profiler in a multi hosted env unless user global admin

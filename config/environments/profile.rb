@@ -33,13 +33,15 @@ Discourse::Application.configure do
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
 
-  # I dunno ... perhaps the built-in minifier is using closure
-  #   regardless it is blowing up
-  config.ember.variant = :development
-  config.ember.ember_location = "#{Rails.root}/app/assets/javascripts/external_production/ember.js"
-  config.ember.handlebars_location = "#{Rails.root}/app/assets/javascripts/external/handlebars-1.0.rc.3.js"
+  # precompile handlebar assets
   config.handlebars.precompile = true
 
-  # config.middleware.use ::Rack::PerftoolsProfiler, default_printer: 'gif'
+  # this setting enable rack_cache so it caches various requests in redis
+  config.enable_rack_cache = false
 
+  # allows users to use mini profiler
+  config.enable_mini_profiler = false
+
+  # for profiling with perftools
+  # config.middleware.use ::Rack::PerftoolsProfiler, default_printer: 'gif'
 end

@@ -8,21 +8,9 @@
     <meta content="" name="author">
     <link rel="icon" type="image/png" href=<%=SiteSetting.favicon_url%>>
 
-    <%- if mini_profiler_enabled? %>
-      <%- Rack::MiniProfiler.step "stylsheet" do%>
-        <%=stylesheet_link_tag "application"%>
-      <%- end %>
-      <%- if current_user.try(:admin) %>
-        <%- Rack::MiniProfiler.step "stylsheet" do%>
-          <%= stylesheet_link_tag "admin"%>
-        <%-end%>
-      <%- end %>
-
-    <%- else %>
-      <%=stylesheet_link_tag "application"%>
-      <%- if current_user.try(:admin) %>
-        <%= stylesheet_link_tag "admin"%>
-      <%- end %>
+    <%=stylesheet_link_tag "application"%>
+    <%- if current_user.try(:admin) %>
+      <%= stylesheet_link_tag "admin"%>
     <%- end %>
 
     <%=csrf_meta_tags%>

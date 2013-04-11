@@ -27,17 +27,32 @@ Discourse::Application.configure do
   # the I18n.default_locale when a translation can not be found)
   config.i18n.fallbacks = true
 
+
+  # you may use other configuration here for mail eg: sendgrid
+
+  # config.action_mailer.delivery_method = :smtp
+  # config.action_mailer.smtp_settings = {
+  #   :address              => "smtp.sendgrid.net",
+  #   :port                 => 587,
+  #   :domain               => 'YOUR DOMAIN',
+  #   :user_name            => 'YOUR_USER',
+  #   :password             => 'YOUR_PASSWORD',
+  #   :authentication       => 'plain',
+  #   :enable_starttls_auto => true  }
+
   config.action_mailer.delivery_method = :sendmail
   config.action_mailer.sendmail_settings = {arguments: '-i'}
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
 
-  # I dunno ... perhaps the built-in minifier is using closure
-  #   regardless it is blowing up
-  config.ember.variant = :development
-  config.ember.ember_location = "#{Rails.root}/app/assets/javascripts/external_production/ember.js"
-  config.ember.handlebars_location = "#{Rails.root}/app/assets/javascripts/external/handlebars-1.0.rc.3.js"
+  # this will cause all handlebars templates to be pre-compiles, making your page faster
   config.handlebars.precompile = true
+
+  # this setting enables rack_cache so it caches various requests in redis
+  config.enable_rack_cache = true
+
+  # allows admins to use mini profiler
+  config.enable_mini_profiler = true
 
 end

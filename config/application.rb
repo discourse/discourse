@@ -92,8 +92,14 @@ module Discourse
     # Use redis for our cache
     config.cache_store = DiscourseRedis.new_redis_store
 
-    # Test with rack::cache disabled. Nginx does this for us
+    # we configure rack cache on demand in an initializer
+    # our setup does not use rack cache and instead defers to nginx
     config.action_dispatch.rack_cache =  nil
+
+    # ember stuff only used for asset precompliation, production variant plays up
+    config.ember.variant = :development
+    config.ember.ember_location = "#{Rails.root}/app/assets/javascripts/external_production/ember.js"
+    config.ember.handlebars_location = "#{Rails.root}/app/assets/javascripts/external/handlebars-1.0.rc.3.js"
 
     # So open id logs somewhere sane
     config.after_initialize do

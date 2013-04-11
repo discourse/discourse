@@ -1,5 +1,11 @@
 module CurrentUser
 
+  def self.has_auth_cookie?(env)
+    request = Rack::Request.new(env)
+    cookie = request.cookies["_t"]
+    !cookie.nil? && cookie.length == 32
+  end
+
   def self.lookup_from_env(env)
     request = Rack::Request.new(env)
     lookup_from_auth_token(request.cookies["_t"])
