@@ -14,8 +14,12 @@ Discourse.UserActivityRoute = Discourse.Route.extend({
 
   setupController: function(controller) {
     var userController = this.controllerFor('user');
-    userController.set('filter', null);
-    controller.set('content', userController.get('content'));
+    var user = userController.get('content');
+    controller.set('content', user);
+    user.set('filter', null);
+    if (user.get('streamFilter')) {
+      user.filterStream(null);
+    }
   }
 
 });

@@ -66,7 +66,8 @@ class UserSerializer < BasicUserSerializer
   end
 
   def stream
-    UserAction.stream(user_id: object.id, offset: 0, limit: 60, guardian: scope)
+    UserAction.stream(user_id: object.id, offset: 0, limit: 60, 
+                      guardian: scope, ignore_private_messages: true)
   end
 
   def can_edit

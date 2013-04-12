@@ -9,7 +9,7 @@
 Discourse.ActionSummary = Discourse.Model.extend({
 
   // Description for the action
-  description: (function() {
+  description: function() {
     var action = this.get('actionType.name_key');
     if (this.get('acted')) {
       if (this.get('count') <= 1) {
@@ -20,12 +20,12 @@ Discourse.ActionSummary = Discourse.Model.extend({
     } else {
       return Em.String.i18n('post.actions.by_others.' + action, { count: this.get('count') });
     }
-  }).property('count', 'acted', 'actionType'),
+  }.property('count', 'acted', 'actionType'),
 
-  canAlsoAction: (function() {
+  canAlsoAction: function() {
     if (this.get('hidden')) return false;
     return this.get('can_act');
-  }).property('can_act', 'hidden'),
+  }.property('can_act', 'hidden'),
 
   // Remove it
   removeAction: function() {
@@ -37,12 +37,13 @@ Discourse.ActionSummary = Discourse.Model.extend({
 
   // Perform this action
   act: function(opts) {
+    var action = this.get('actionType.name_key');
 
     // Mark it as acted
     this.set('acted', true);
     this.set('count', this.get('count') + 1);
     this.set('can_act', false);
-    this.set('can_undo', true);
+    this.set('can_undo', action != 'notify_moderators' && action != 'notify_user');
 
     // Add ourselves to the users who liked it if present
     if (this.present('users')) {
@@ -108,5 +109,4 @@ Discourse.ActionSummary = Discourse.Model.extend({
       });
     });
   }
-
 });

@@ -73,6 +73,29 @@ class PostAction < ActiveRecord::Base
 
   def self.act(user, post, post_action_type_id, message = nil)
     begin
+      title, target_usernames,body = nil
+      
+      if message
+        [:notify_moderators, :notify_user].each do |k|
+          if post_action_type_id == PostActionType.types[k]
+            target_usernames = target_moderators(user)         
+            title = I18n.t("post_action_types.#{k}.email_title", 
+                            title: post.topic.title) 
+            body = I18n.t("post_action_types.#{k}.email_body", 
+                          message: message, 
+                          link: "#{Discourse.base_url}#{post.url}")
+          end
+        end
+      end
+
+      if target_usernames.present?
+        PostCreator.new(user, 
+                              target_usernames: target_usernames, 
+                              archetype: Archetype.private_message,
+                              title: title,
+                              raw: body
+                       ).create
+      end
       create(post_id: post.id, user_id: user.id, post_action_type_id: post_action_type_id, message: message)
     rescue ActiveRecord::RecordNotUnique
       # can happen despite being .create
@@ -101,6 +124,10 @@ class PostAction < ActiveRecord::Base
     PostActionType.flag_types.values.include?(post_action_type_id)
   end
 
+  def is_private_message?
+    post_action_type_id == PostActionType.types[:notify_user] ||
+    post_action_type_id == PostActionType.types[:notify_moderators]
+  end
   # A custom rate limiter for this model
   def post_action_rate_limiter
     return unless is_flag? || is_bookmark? || is_like?
@@ -169,4 +196,16 @@ class PostAction < ActiveRecord::Base
       end
     end
   end
+
+  protected 
+
+  def self.target_moderators(me)
+    User
+      .where("moderator = 't' or admin = 't'")
+      .where('id <> ?', [me.id])
+      .select('username')
+      .map{|u| u.username}
+      .join(',')
+  end
+
 end

@@ -10,15 +10,15 @@ class PostActionType < ActiveRecord::Base
 
     def types
       @types ||= Enum.new(:bookmark, :like, :off_topic, :inappropriate, :vote,
-                          :custom_flag, :spam)
+                          :notify_user, :notify_moderators, :spam)
     end
 
     def auto_action_flag_types
-      @auto_action_flag_types ||= flag_types.except(:custom_flag)
+      @auto_action_flag_types ||= flag_types.except(:notify_user, :notify_moderators)
     end
 
     def flag_types
-      @flag_types ||= types.only(:off_topic, :spam, :inappropriate, :custom_flag)
+      @flag_types ||= types.only(:off_topic, :spam, :inappropriate, :notify_user, :notify_moderators)
     end
 
     def is_flag?(sym)

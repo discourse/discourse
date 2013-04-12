@@ -17,14 +17,14 @@ Discourse.Site = Discourse.Model.extend({
     return result;
   }).property('notification_types'),
 
-  flagTypes: (function() {
+  flagTypes: function() {
     var postActionTypes;
     postActionTypes = this.get('post_action_types');
     if (!postActionTypes) {
       return [];
     }
     return postActionTypes.filterProperty('is_flag', true);
-  }).property('post_action_types.@each'),
+  }.property('post_action_types.@each'),
 
   postActionTypeById: function(id) {
     return this.get("postActionByIdLookup.action" + id);
@@ -49,7 +49,7 @@ Discourse.Site.reopenClass({
         result.postActionByIdLookup = Em.Object.create();
         result.post_action_types = result.post_action_types.map(function(p) {
           var actionType;
-          actionType = Discourse.Model.create(p);
+          actionType = Discourse.PostActionType.create(p);
           result.postActionByIdLookup.set("action" + p.id, actionType);
           return actionType;
         });

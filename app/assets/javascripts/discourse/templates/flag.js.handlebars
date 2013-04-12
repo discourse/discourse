@@ -1,13 +1,13 @@
-  <div class="modal-body">    
+  <div class="modal-body flag-modal">    
     {{#if view.post.flagsAvailable}}
       <form>
-        {{#each view.post.flagsAvailable}}
+        {{#each view.boundFlags}}
           <div class='controls'>
             <label class='radio'>
-              <input type='radio' id="radio_{{unbound name_key}}" {{action changePostActionType this target="view"}} name='post_action_type_index'> <strong>{{name}}</strong>
+              <input type='radio' id="radio_{{unbound name_key}}" {{action changePostActionType this target="view"}} name='post_action_type_index'> <strong>{{formattedName}}</strong>
               {{#if is_custom_flag}}
-                {{#unless view.isCustomFlag}}
-                <div class='description'>{{{description}}}</div>
+                {{#unless selected}}
+                  <div class='description'>{{{description}}}</div>
                 {{/unless}}    
               {{else}}
                 {{#if description}}
@@ -16,9 +16,9 @@
               {{/if}}
             </label>
             {{#if is_custom_flag}}
-                {{#if view.isCustomFlag}} 
-                  {{view Ember.TextArea name="message" class="flag-message" placeholderBinding="view.customPlaceholder" valueBinding="view.customFlagMessage"}}
-                  <div {{bindAttr class="view.customMessageLengthClasses"}}>{{view.customMessageLength}}</div>
+                {{#if selected}} 
+                  {{view Ember.TextArea name="message" class="flag-message" placeholderBinding="customPlaceholder" valueBinding="message"}}
+                  <div {{bindAttr class="customMessageLengthClasses"}}>{{customMessageLength}}</div>
                 {{/if}}
             {{/if}}
           </div>

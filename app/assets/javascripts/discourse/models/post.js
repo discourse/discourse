@@ -112,9 +112,10 @@ Discourse.Post = Discourse.Model.extend({
 
   flagsAvailable: (function() {
     var _this = this;
-    return Discourse.get('site.flagTypes').filter(function(item) {
+    flags = Discourse.get('site.flagTypes').filter(function(item) {
       return _this.get("actionByName." + (item.get('name_key')) + ".can_act");
     });
+    return flags;
   }).property('Discourse.site.flagTypes', 'actions_summary.@each.can_act'),
 
   actionsHistory: (function() {

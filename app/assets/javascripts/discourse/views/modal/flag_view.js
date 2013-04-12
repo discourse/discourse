@@ -10,23 +10,47 @@ Discourse.FlagView = Discourse.ModalBodyView.extend({
   templateName: 'flag',
   title: Em.String.i18n('flagging.title'),
 
+  // trick to bind user / post to flag
+  boundFlags: function(){
+    var _this = this;
+    var original = this.get('post.flagsAvailable');
+    if(original){
+      return $.map(original, function(v){
+        var b = Discourse.BoundPostActionType.create(v);
+        b.set('post', _this.get('post'));
+        return b;
+      });
+    }
+  }.property('post.flagsAvailable'),
+
   changePostActionType: function(action) {
+
     if (this.get('postActionTypeId') === action.id) return false;
+
+    this.get('boundFlags').each(function(f){
+      f.set('selected', false);
+    });
+    action.set('selected', true);
+
     this.set('postActionTypeId', action.id);
     this.set('isCustomFlag', action.is_custom_flag);
+    this.set('selected', action);
     Em.run.next(function() {
-      $("#radio_" + action.name_key).prop('checked', 'true');
+      $('#radio_' + action.name_key).prop('checked', 'true');
     });
     return false;
   },
 
   createFlag: function() {
-    var actionType, _ref,
-      _this = this;
-    actionType = Discourse.get("site").postActionTypeById(this.get('postActionTypeId'));
-    if (_ref = this.get("post.actionByName." + (actionType.get('name_key')))) {
-      _ref.act({
-        message: this.get('customFlagMessage')
+    var _this = this;
+
+    var action = this.get('selected');
+    var postAction = this.get('post.actionByName.' + (action.get('name_key'))); 
+
+    actionType = Discourse.get('site').postActionTypeById(this.get('postActionTypeId'));
+    if (postAction) {
+      postAction.act({
+        message: action.get('message')
       }).then(function() {
         return $('#discourse-modal').modal('hide');
       }, function(errors) {
@@ -36,49 +60,24 @@ Discourse.FlagView = Discourse.ModalBodyView.extend({
     return false;
   },
 
-  customPlaceholder: (function() {
-    return Em.String.i18n("flagging.custom_placeholder");
-  }).property(),
-
   showSubmit: (function() {
     var m;
-    if (this.get("postActionTypeId")) {
-      if (this.get("isCustomFlag")) {
-        m = this.get("customFlagMessage");
+    if (this.get('postActionTypeId')) {
+      if (this.get('isCustomFlag')) {
+        m = this.get('selected.message');
         return m && m.length >= 10 && m.length <= 500;
       } else {
         return true;
       }
     }
     return false;
-  }).property("isCustomFlag", "customFlagMessage", "postActionTypeId"),
-
-  customFlagMessageChanged: (function() {
-    var len, message, minLen, _ref;
-    minLen = 10;
-    len = ((_ref = this.get('customFlagMessage')) ? _ref.length : void 0) || 0;
-    this.set("customMessageLengthClasses", "too-short custom-message-length");
-    if (len === 0) {
-      message = Em.String.i18n("flagging.custom_message.at_least", { n: minLen });
-    } else if (len < minLen) {
-      message = Em.String.i18n("flagging.custom_message.more", { n: minLen - len });
-    } else {
-      message = Em.String.i18n("flagging.custom_message.left", { n: 500 - len });
-      this.set("customMessageLengthClasses", "ok custom-message-length");
-    }
-    this.set("customMessageLength", message);
-  }).observes("customFlagMessage"),
+  }).property('isCustomFlag', 'selected.customMessageLength', 'postActionTypeId'),
 
   didInsertElement: function() {
-    var $flagModal;
-    this.customFlagMessageChanged();
     this.set('postActionTypeId', null);
-    $flagModal = $('#flag-modal');
 
     // Would be nice if there were an EmberJs radio button to do this for us. Oh well, one should be coming
     // in an upcoming release.
-    $("input[type='radio']", $flagModal).prop('checked', false);
+    this.$("input[type='radio']").prop('checked', false);
   }
 });
-
-
