@@ -78,7 +78,7 @@ class PostAction < ActiveRecord::Base
       if message
         [:notify_moderators, :notify_user].each do |k|
           if post_action_type_id == PostActionType.types[k]
-            target_usernames = target_moderators(user)         
+            target_usernames = k == :notify_moderators ? target_moderators(user) : post.user.username        
             title = I18n.t("post_action_types.#{k}.email_title", 
                             title: post.topic.title) 
             body = I18n.t("post_action_types.#{k}.email_body", 
