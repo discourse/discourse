@@ -296,6 +296,7 @@ fr:
       create_topic: "Créer une discussion"
       create_pm: "Créer un message privé."
 
+      quote_post_title: "Citer le message en entier"
       bold_title: "Gras"
       bold_text: "texte en gras"
       italic_title: "Italique"
@@ -693,6 +694,7 @@ fr:
       view: 'Voir les discussions dans cette catégorie'
       delete: 'Supprimer la catégorie'
       create: 'Créer la catégorie'
+      save: 'Enregistrer la catégorie'
       creation_error: "Il y a eu une erreur lors de la création de la catégorie."
       more_posts: "voir tous les {{posts}}..."
       name: "Nom de la catégorie"
@@ -704,6 +706,7 @@ fr:
       name_placeholder: "Devrait être concis."
       color_placeholder: "N'importe quelle couleur"
       delete_confirm: "Voulez-vous vraiment supprimer cette catégorie ?"
+      delete_error: "Il y a eu une erreur lors de la suppression."
       list: "Liste des categories"
       no_description: "Il n'y a pas de description pour cette catégorie."
       change_in_category_topic: "visitez les discussions de cette catégorie pour en éditer la description"
