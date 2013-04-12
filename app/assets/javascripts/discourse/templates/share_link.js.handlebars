@@ -1,1 +1,5 @@
-<a href="#" {{action sharePopup target href}} {{bindAttr title="title"}}><i {{bindAttr class=":icon iconClass"}}></i></a>
+{{#if openInPopup}}
+  <a href="#" {{action sharePopup target href}} {{bindAttr title="title"}}><i {{bindAttr class=":icon iconClass"}}></i></a>
+{{else}}
+  <a {{bindAttr href="href"}} {{bindAttr title="title"}} target="_blank"><i {{bindAttr class=":icon iconClass"}}></i></a>
+{{/if}}

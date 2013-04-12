@@ -11,6 +11,7 @@ en:
       twitter: 'share this link on Twitter'
       facebook: 'share this link on Facebook'
       google+: 'share this link on Google+'
+      email: 'send this link in an email'
 
     edit: 'edit the title and category of this topic'
     not_implemented: "That feature hasn't been implemented yet, sorry!"
