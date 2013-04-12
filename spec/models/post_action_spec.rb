@@ -27,7 +27,7 @@ describe PostAction do
       PostCreator.any_instance.expects(:create).returns(nil) 
       post = build(:post)
       post.user = build(:user)
-      PostAction.act(build(:user), build(:post), PostActionType.types[:notify_user], "this is my special message");
+      PostAction.act(build(:user), post, PostActionType.types[:notify_user], "this is my special message");
     end
   end
 
