@@ -22,7 +22,7 @@ Discourse.ShareLink = Discourse.Model.extend({
   }.property('target'),
 
   openInPopup: function() {
-    return( this.get('target') != 'email' );
+    return( this.get('target') !== 'email' );
   }.property('target')
 
 });
