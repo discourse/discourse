@@ -29,7 +29,7 @@ class UsersController < ApplicationController
   def update
     user = User.where(username_lower: params[:username].downcase).first
     guardian.ensure_can_edit!(user)
-    json_result(user) do |u|
+    json_result(user, serializer: UserSerializer) do |u|
 
       website = params[:website]
       if website
@@ -50,7 +50,11 @@ class UsersController < ApplicationController
         end
       end
 
-      u.save
+      if u.save
+        u
+      else
+        nil
+      end
     end
   end
 

@@ -195,7 +195,7 @@ class ApplicationController < ActionController::Base
 
         # If we were given a serializer, add the class to the json that comes back
         if opts[:serializer].present?
-          json[obj.class.name.underscore] = opts[:serializer].new(obj).serializable_hash
+          json[obj.class.name.underscore] = opts[:serializer].new(obj, scope: guardian).serializable_hash
         end
 
         render json: MultiJson.dump(json)

@@ -9,13 +9,22 @@
 Discourse.RestrictedUserRoute = Discourse.Route.extend({
 
   enter: function(router, context) {
-    var user = this.controllerFor('user').get('content');
-    this.allowed = user.can_edit;
-  },
+    var _this = this;
 
-  redirect: function() {
-    if (!this.allowed) {
-      return this.transitionTo('user.activity');
+    // a bit hacky, but we don't have a fully loaded user at this point
+    //  so we need to wait for it
+    var user = this.controllerFor('user').get('content');
+    
+    if(user.can_edit === undefined) {
+      user.onDetailsLoaded(function(){
+        if (this.get('can_edit') === false) {
+          _this.transitionTo('user.activity');
+        }
+      });
+    }
+    
+    if(user.can_edit === false) {
+      this.transitionTo('user.activity');
     }
   }
 

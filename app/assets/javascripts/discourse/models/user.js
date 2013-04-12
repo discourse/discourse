@@ -142,7 +142,10 @@ Discourse.User = Discourse.Model.extend({
                                'new_topic_duration_minutes',
                                'external_links_in_new_tab',
                                'enable_quoting'),
-      type: 'PUT'
+      type: 'PUT',
+      success: function(data) {
+        user.set('bio_excerpt',data.user.bio_excerpt);
+      }
     }).then(function() {
       Discourse.set('currentUser.enable_quoting', user.get('enable_quoting'));
       Discourse.set('currentUser.external_links_in_new_tab', user.get('external_links_in_new_tab'));
@@ -329,6 +332,20 @@ Discourse.User = Discourse.Model.extend({
     return r;
   }.property('stats.@each'),
 
+  onDetailsLoaded: function(callback){
+    var _this = this;
+
+    if(callback){
+      this.onDetailsLoadedCallbacks = this.onDetailsLoadedCallbacks || [];
+      this.onDetailsLoadedCallbacks.push(callback);
+    } else {
+      var callbacks = this.onDetailsLoadedCallbacks;
+      $.each(callbacks, function(){
+        this.apply(_this);
+      });
+    }
+  },
+
   /**
     Load extra details for the user
 
@@ -360,6 +377,7 @@ Discourse.User = Discourse.Model.extend({
 
       user.setProperties(json.user);
       user.set('totalItems', count);
+      user.onDetailsLoaded();
     });
   }
 
