@@ -3,6 +3,10 @@ require_dependency 'post_destroyer'
 
 describe PostAlertObserver do
 
+  before do
+    ImageSorcery.any_instance.stubs(:convert).returns(false)
+  end
+
   let!(:evil_trout) { Fabricate(:evil_trout) }
   let(:post) { Fabricate(:post) }
 
