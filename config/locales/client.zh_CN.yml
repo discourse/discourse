@@ -11,6 +11,7 @@ zh_CN:
       twitter: '分享这个链接到 Twitter'
       facebook: '分享这个链接到 Facebook'
       google+: '分享这个链接到 Google+'
+      email: '用电子邮件发送这个链接'
 
     edit: '编辑本主题的标题和分类'
     not_implemented: "非常抱歉，此功能暂时尚未实现！"
@@ -63,11 +64,16 @@ zh_CN:
       activity_stream: "活动"
       preferences: "设置"
       bio: "关于我"
-      change_password: "修改"
       invited_by: "邀请者为"
       trust_level: "用户级别"
       external_links_in_new_tab: "始终在新的标签页打开外部链接"
       enable_quoting: "在高亮选择文字时启用引用回复"
+
+      change_password:
+        action: "修改"
+        success: "（电子邮件已发送）"
+        in_progress: "（正在发送电子邮件）"
+        error: "（错误）"
 
       change_username:
         action: "修改"
@@ -266,12 +272,6 @@ zh_CN:
       persona:
         title: "使用 Persona 帐号登录"
         message: "使用 Mozilla Persona 帐号验证登录（请确保没有禁止浏览器弹出对话框）"
-      sina:
-        title: "使用新浪帐号登录"
-        message: "使用新浪帐号验证登录（请确保没有禁止浏览器弹出对话框）"
-      qq:
-        title: "使用腾讯QQ帐号登录"
-        message: "使用腾讯QQ帐号验证登录（请确保没有禁止浏览器弹出对话框）"
 
     composer:
       posting_not_on_topic: "你正在回复主题 \"{{title}}\"，但是当前你正在浏览的是另外一个主题。"
@@ -304,6 +304,7 @@ zh_CN:
       show_preview: '显示预览 &raquo;'
       hide_preview: '&laquo; 隐藏预览'
 
+      quote_post_title: "引用整个帖子"
       bold_title: "加粗"
       bold_text: "加粗文字"
       italic_title: "斜体"
@@ -392,6 +393,11 @@ zh_CN:
         favorited: "没有更多收藏主题可看了。"
         category: "没有更多 {{category}} 分类的主题了。"
 
+    rank_details:
+      toggle: 切换主题排名详细
+      show: 显示主题排名详细信息
+      title: 主题排名详细
+
     topic:
       create_in: '创建一个 {{categoryName}} 分类的主题'
       create: '创建主题'
@@ -413,6 +419,7 @@ zh_CN:
         description: "抱歉，无法找到此主题。有可能它被论坛版主删掉了？"
       unread_posts: "此主题中你有 {{unread}} 个帖子未阅"
       new_posts: "从你最近一次阅读此主题后，又有 {{new_posts}} 个新帖子发表"
+
       likes:
         one: "此主题得到了一个赞"
         other: "此主题得到了 {{count}} 个赞"
@@ -568,6 +575,7 @@ zh_CN:
         upload: "抱歉，在上传文件时发生了错误。请重试。"
         upload_too_large: "抱歉，你上传的文件太大了（最大不能超过 {{max_size_kb}}kb），请调整文件大小后重新上传。"
         upload_too_many_images: "抱歉, 你只能一次上传一张图片。"
+        only_images_are_supported: "抱歉，你只能上传图片。"
 
       abandon: "你确定要丢弃你的帖子吗？"
 
@@ -590,15 +598,89 @@ zh_CN:
         clear_flags:
           one: "清除投诉"
           other: "清除投诉"
-        it_too: "还有 {{alsoName}}"
-        undo: "撤销 {{alsoName}}"
+        it_too:
+          off_topic: "也投诉"
+          spam: "也投诉"
+          inappropriate: "也投诉"
+          custom_flag: "也投诉"
+          bookmark: "也做书签"
+          like: "也赞它"
+          vote: "也对它投票"
+        undo:
+          off_topic: "撤销投诉"
+          spam: "撤销投诉"
+          inappropriate: "撤销投诉"
+          bookmark: "撤销书签"
+          like: "撤销赞"
+          vote: "撤销投票"
+        people:
+          off_topic: "{{icons}} 投诉它偏离主题"
+          spam: "{{icons}} 投诉它为垃圾信息"
+          inappropriate: "{{icons}} 投诉它为不当内容"
+          notify_moderators: "{{icons}} 向版主投诉它"
+          notify_user: "{{icons}} 发起了一个私下交流"
+          bookmark: "{{icons}} 对它做了书签"
+          like: "{{icons}} 赞了它"
+          vote: "{{icons}} 对它投票"
+        by_you:
+          off_topic: "你投诉它偏离主题"
+          spam: "你投诉它为垃圾信息"
+          inappropriate: "你投诉它为不当内容"
+          notify_moderators: "你向版主投诉了它"
+          notify_user: "你对该用户发起了一个私下交流"
+          bookmark: "你对该帖做了书签"
+          like: "你赞了它"
+          vote: "你对该帖投了票"
         by_you_and_others:
-          zero: "你 {{long_form}}"
-          one: "你好另一个人 {{long_form}}"
-          other: "你和另 {{count}} 个人 {{long_form}}"
+          off_topic:
+            one: "你和另一个用户投诉它偏离主题"
+            other: "你和其他 {{count}} 个用户投诉它偏离主题"
+          spam:
+            one: "你和另一个用户投诉它为垃圾信息"
+            other: "你和其他 {{count}} 个用户投诉它为垃圾信息"
+          inappropriate:
+            one: "你和另一个用户投诉它为不当内容"
+            other: "你和其他 {{count}} 个用户投诉它为不当内容"
+          notify_moderators:
+            one: "你和另一个用户向版主投诉了它"
+            other: "你和其他 {{count}} 个用户向版主投诉了它"
+          notify_user:
+            one: "你和另一个用户对该用户发起了一个私下交流"
+            other: "你和其他 {{count}} 个用户对该用户发起了一个私下交流"
+          bookmark:
+            one: "你和另一个用户对该帖做了书签"
+            other: "你和其他 {{count}} 个用户对该帖做了书签"
+          like:
+            one: "你和另一个用户赞了它"
+            other: "你和其他 {{count}} 个用户赞了它"
+          vote:
+            one: "你和另一个用户对该帖投了票"
+            other: "你和其他 {{count}} 个用户对该帖投了票"
         by_others:
-          one: "一个人 {{long_form}}"
-          other: "{{count}} 个人 {{long_form}}"
+          off_topic:
+            one: "一个用户投诉它偏离主题"
+            other: "{{count}} 个用户投诉它偏离主题"
+          spam:
+            one: "一个用户投诉它为垃圾信息"
+            other: "{{count}} 个用户投诉它为垃圾信息"
+          inappropriate:
+            one: "一个用户投诉它为不当内容"
+            other: "{{count}} 个用户投诉它为不当内容"
+          notify_moderators:
+            one: "一个用户向版主投诉了它"
+            other: "{{count}} 个用户向版主投诉了它"
+          notify_user:
+            one: "一个用户对该用户发起了一个私下交流"
+            other: "{{count}} 个用户对该用户发起了一个私下交流"
+          bookmark:
+            one: "一个用户对该帖做了书签"
+            other: "{{count}} 个用户对该帖做了书签"
+          like:
+            one: "一个用户赞了它"
+            other: "{{count}} 个用户赞了它"
+          vote:
+            one: "一个用户对该帖投了票"
+            other: "{{count}} 个用户对该帖投了票"
 
       edits:
         one: 一次编辑
@@ -617,6 +699,7 @@ zh_CN:
       view: '浏览分类下的主题'
       delete: '删除分类'
       create: '创建分类'
+      save: '保存分类'
       creation_error: 创建此分类时发生了错误。
       more_posts: "浏览全部 {{posts}} ……"
       name: "分类名称"
@@ -628,15 +711,19 @@ zh_CN:
       name_placeholder: "应该简明扼要。"
       color_placeholder: "任何网络色彩"
       delete_confirm: "你确定要删除此分类吗？"
+      delete_error: "在删除此分类时发生了错误。"
       list: "列出分类"
       no_description: "本分类没有描述信息。"
       change_in_category_topic: "访问分类主题来编辑描述信息"
+      hotness: "热度"
+      already_used: '此色彩已经被另一个分类使用'
 
     flagging:
-      title: '你为何要给投诉本帖？'
+      title: '为何要给投诉本帖？'
       action: '投诉帖子'
       cant: "抱歉，当前你不能投诉本帖。"
-      custom_placeholder: "为何本帖需要论坛版主的关注？请告诉我们你的关注点，如果可能请一并提供相关链接。"
+      custom_placeholder_notify_user: "为何你要私下联系该用户？"
+      custom_placeholder_notify_moderators: "为何本帖需要论坛版主的关注？为何本帖需要论坛版主的关注？"
       custom_message:
         at_least: "输入至少 {{n}} 个字符"
         more: "还差 {{n}} 个……"
@@ -718,6 +805,7 @@ zh_CN:
 
     admin:
       title: '论道 管理'
+      moderator: '版主'
 
       dashboard:
         title: "管理面板"
@@ -761,9 +849,10 @@ zh_CN:
         error: "出错了"
 
       api:
-        title: "API"
+        title: "应用开发接口（API）"
       customize:
         title: "定制"
+        long_title: "站点定制"
         header: "头部"
         css: "层叠样式表（CSS）"
         override_default: "覆盖缺省值？"
@@ -775,6 +864,7 @@ zh_CN:
         new_style: "新样式"
         delete: "删除"
         delete_confirm: "删除本定制内容？"
+        about: "站点定制允许你修改样式表和站点头部。选择或者添加一个来开始编辑。"
 
       email_logs:
         title: "电子邮件日志"
@@ -837,6 +927,16 @@ zh_CN:
         approve: '批准'
         approved_by: "批准人"
         time_read: "阅读次数"
+        delete: "删除用户"
+        delete_forbidden: "此用户还无法删除，因为他/她还有帖子。请先删除该用户的所有帖子。"
+        delete_confirm: "你 确定 你要永久的从本站删除此用户？该操作无法撤销！"
+        deleted: "该用户已被删除。"
+        delete_failed: "在删除用户时发生了错误。请确保删除该用户前删除了该用户的所有帖子。"
+
+      site_content:
+        none: "选择内容类型以开始编辑。"
+        title: '站点内容'
+        edit: "编辑站点内容"
 
       site_settings:
         show_overriden: '只显示被覆盖了缺省值的'
