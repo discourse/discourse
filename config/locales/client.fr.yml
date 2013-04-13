@@ -15,6 +15,7 @@ fr:
       twitter: 'partager ce lien sur Twitter'
       facebook: 'partager ce lien sur Facebook'
       google+: 'partager ce lien sur Google+'
+      email: 'envoyer ce lien par email'
 
     edit: 'éditer le titre et la catégorie de cette discussion'
     not_implemented: "Cette fonctionnalité n'a pas encore été implémentée, désolé."
@@ -612,7 +613,6 @@ fr:
           off_topic: "Annuler le signalement"
           spam: "Annuler le signalement"
           inappropriate: "Annuler le signalement"
-          custom_flag: "Annuler le signalement"
           bookmark: "L'enlever des favoris"
           like: "Annuler j'aime"
           vote: "Retirer votre vote"
@@ -620,7 +620,8 @@ fr:
           off_topic: "{{icons}} l'ont signalé comme étant hors-sujet"
           spam: "{{icons}} l'ont signalé comme étant du spam"
           inappropriate: "{{icons}} l'ont signalé comme inaproprié"
-          custom_flag: "{{icons}} l'ont signalé pour modération"
+          notify_moderators: "{{icons}} l'ont signalé pour modération"
+          notify_user: "{{icons}} ont démarré une conversation privée"
           bookmark: "{{icons}} l'ont ajouté à leurs favoris"
           like: "{{icons}} l'ont aimé"
           vote: "{{icons}} ont voté pour"
@@ -628,7 +629,8 @@ fr:
           off_topic: "Vous l'avez signalé comme étant hors-sujet"
           spam: "Vous l'avez signalé comme étant du spam"
           inappropriate: "Vous l'avez signalé comme inaproprié"
-          custom_flag: "Vous l'avez signalé pour modération"
+          notify_moderators: "Vous l'avez signalé pour modération"
+          notify_user: "Vous avez démarré une conversation privée avec cet utilisateur"
           bookmark: "Vous l'avez ajouté à vos favoris"
           like: "Vous l'avez aimé"
           vote: "Vous avez voté pour"
@@ -642,9 +644,12 @@ fr:
           inappropriate:
             one: "Vous et 1 autre personne l'avez signalé comme inaproprié"
             other: "Vous et {{count}} autres personnes l'avez signalé comme inaproprié"
-          custom_flag:
+          notify_moderators:
             one: "Vous et 1 autre personne l'avez signalé pour modération"
             other: "Vous et {{count}} autres personnes l'avez signalé pour modération"
+          notify_user:
+            one: "Vous et 1 autre personne avez démarré une conversation privée avec cet utilisateur"
+            other: "Vous et {{count}} autres personnes avez démarré une conversation privée avec cet utilisateur"
           bookmark:
             one: "Vous et 1 autre personne l'avez ajouté à vos favoris"
             other: "Vous et {{count}} autres personnes l'avez ajouté à vos favoris"
@@ -664,9 +669,12 @@ fr:
           inappropriate:
             one: "1 personne l'a signalé comme inaproprié"
             other: "{{count}} personnes l'ont signalé comme inaproprié"
-          custom_flag:
+          notify_moderators:
             one: "1 personne l'a signalé pour modération"
             other: "{{count}} personnes l'ont signalé pour modération"
+          notify_user:
+            one: "1 personne a démarré une conversation privée avec cet utilisateur"
+            other: "{{count}} personnes ont démarré une conversation privée avec cet utilisateur"
           bookmark:
             one: "1 personne l'a ajouté à vos favoris"
             other: "{{count}} personnes l'ont ajouté à vos favoris"
@@ -717,7 +725,8 @@ fr:
       title: 'Pourquoi voulez-vous signaler ce message ?'
       action: "Signaler ce message"
       cant: "Désolé, vous ne pouvez pas signaler ce message pour le moment"
-      custom_placeholder: "Pourquoi ce message requiert-il l'attention des modérateur ? Dites-nous ce qui vous dérange spécifiquement, et fournissez des liens pertinents si possible."
+      custom_placeholder_notify_user: "Pour quelles raisons contactez-vous cet utilisateur par messagerie privée ?"
+      custom_placeholder_notify_moderators: "Pourquoi ce message requiert-il l'attention des modérateur ? Dites-nous ce qui vous dérange spécifiquement, et fournissez des liens pertinents si possible."
       custom_message:
         at_least: "saisissez au moins {{n}} caractères"
         more: "{{n}} restants..."
@@ -921,6 +930,11 @@ fr:
         approve: 'Approuver'
         approved_by: "approuvé par"
         time_read: "Temps de lecture"
+        delete: "Supprimer cet utilisateur"
+        delete_forbidden: "Cet utilisateur ne peut pas être supprimé car il y a des messages. Veuillez supprimmez tous ses messages."
+        delete_confirm: "Êtes-vous vraiment sûr de vouloir supprimmer définitivement cet utilisateur de votre site ? Cette action est permanente !"
+        deleted: "L'utilisateur a été supprimmé."
+        delete_failed: "Il y a eu une erreur lors de la suppression de l'utilisateur. Veuillez vous assurez que tous ses messages sont bien supprimmés."
 
       site_content:
         none: "Choisissez un type de contenu afin de commencer l'édition."
