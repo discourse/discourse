@@ -1,4 +1,6 @@
 # encoding: utf-8
+# This file contains content for the client portion of Discourse, sent out
+# to the Javascript app.
 #
 # Dutch translation for Discourse
 # contributed by Vincent Veldkamp (vincent@retroga.me) 2/14/13
@@ -215,11 +217,11 @@ nl:
       title: Best of
       enabled_description: "Je kijkt nu naar de 'Best of' van deze topic"
       description: "Er zijn <b>{{count}}</b> berichten in deze topic. Dat zijn een hoop! Zou je tijd willen besparen door alleen de berichten te zien met de meeste interactie en reacties?"
-      enable: "Schakel naar 'Best of'-weergave
+      enable: "Schakel naar 'Best of'-weergave"
       disable: "Schakel naar normale weergave"
 
     private_message_info:
-      title: Privé-conversatie
+      title: 'Privé-conversatie'
       invite: Nodig anderen uit...
 
     email: E-mail
@@ -232,7 +234,7 @@ nl:
       title: Maak een account
       action: Maak er direct een!
       invite: Heb je nog geen account?
-      failed: "Er ging iets mis, wellicht is het e-mailadres al geregistreerd. Probeer de 'Wachtwoord vergeten'-link".
+      failed: "Er ging iets mis, wellicht is het e-mailadres al geregistreerd. Probeer de 'Wachtwoord vergeten'-link."
 
     forgot_password:
       title: Wachtwoord vergeten
@@ -819,7 +821,7 @@ nl:
         installed_version: Geïnstalleerd
         latest_version: Recent
         update_often: Werk de software regelmatig bij alsjeblieft
-        problems_found: Er zijn een aantal problemen gevonden met je Discourse installatie:
+        problems_found: 'Er zijn een aantal problemen gevonden met je Discourse installatie:'
         moderators: "Moderators:"
         admins: "Admins:"
 
