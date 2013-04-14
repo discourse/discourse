@@ -9,8 +9,8 @@
 nl:
   js:
     share:
-      topic: deel een link naar deze topic
-      post: deel een link naar dit bericht
+      topic: Deel een link naar deze topic
+      post: Deel een link naar dit bericht
       close: sluit
       twitter: deel deze link op Twitter
       facebook: deel deze link op Facebook
@@ -47,7 +47,7 @@ nl:
     new_topics_inserted: "{{count}} nieuwe topics."
     show_new_topics: Klik om te bekijken.
     preview: voorbeeld
-    cancel: annuleer
+    cancel: Annuleer
 
     save: Bewaar wijzigingen
     saving: Wordt opgeslagen...
@@ -69,7 +69,7 @@ nl:
       preferences: Voorkeuren
       bio: Over mij
       invited_by: Uitgenodigd door
-      trust_level: Vertrouwenslevel
+      trust_level: Trustlevel
       external_links_in_new_tab: Open alle externe links in een nieuw tabblad
       enable_quoting: Activeer antwoord-met-citaat voor geselecteerde tekst
 
@@ -125,7 +125,7 @@ nl:
       last_posted: Laatste bericht
       last_emailed: Laatst gemailed
       last_seen: Laatst gezien
-      created: Gemaakt op
+      created: Lid sinds
       log_out: Log uit
       website: Website
       email_settings: E-mail
@@ -228,7 +228,7 @@ nl:
     username: Gebruikersnaam
     last_seen: Laatst gezien
     created: Gemaakt op
-    trust_level: Vertrouwensniveau
+    trust_level: Trustlevel
 
     create_account:
       title: Maak een account
@@ -278,7 +278,7 @@ nl:
         message: "Authenticatie met Mozilla Persona (zorg ervoor dat je popup blocker uit staat)"
 
     composer:
-      posting_not_on_topic: "Je schrijft een antwoord in de topic '{{title}}', maar je kijkt nu naar een ander topic."
+      posting_not_on_topic: "Je schrijft een antwoord in deze topic '{{title}}', maar je kijkt nu naar een ander topic."
       saving_draft_tip: wordt opgeslagen
       saved_draft_tip: opgeslagen
       saved_local_draft_tip: lokaal opgeslagen
@@ -286,10 +286,10 @@ nl:
       drafts_offline: concepten offline
 
       min_length:
-        need_more_for_title: "nog {{n}} tekens nodig voor de titel"
-        need_more_for_reply: "nog {{n}} tekens nodig voor het antwoord"
+        need_more_for_title: "Nog {{n}} tekens nodig voor de titel"
+        need_more_for_reply: "Nog {{n}} tekens nodig voor het antwoord"
 
-      save_edit: Bewaar wijziging
+      save_edit: Bewaar wijzigingen
       reply_original: Reageer op oorspronkelijke topic
       reply_here: Reageer hier
       reply: Reageer
@@ -338,7 +338,7 @@ nl:
 
     notifications:
       title: "notificaties van @naam vermeldingen, reacties op je berichten en topics, privé-berichten, etc."
-      none: "Je hebt momenteel geen notificaties."
+      none: "Er zijn nu geen notificaties."
       more: "bekijk oudere notificaties"
       mentioned: "<span title='genoemd' class='icon'>@</span> {{username}} {{link}}"
       quoted: "<i title='geciteerd' class='icon icon-quote-right'></i> {{username}} {{link}}"
@@ -374,8 +374,8 @@ nl:
     favorite:
       title: Favoriet
       help:
-        star: voeg deze topic toe aan je favorietenlijst
-        unstar: verwijder deze topic uit je favorietenlijst
+        star: Voeg deze topic toe aan je favorietenlijst
+        unstar: Verwijder deze topic uit je favorietenlijst
 
     topics:
       none:
@@ -414,13 +414,13 @@ nl:
       loading: Bezig met laden van topic...
       invalid_access:
         title: Topic is privé
-        description: 'Sorry, je hebt geen toegang tot dat topic.'
+        description: 'Sorry, je hebt geen toegang tot deze topic.'
       server_error:
         title: Topic laden mislukt
-        description: 'Sorry, we konden de topic niet laden, waarschijnlijk door een verbindingsprobleem. Probeer het later opnieuw. Als het probleem blijft, laat het ons dan weten.'
+        description: 'Sorry, we konden deze topic niet laden, waarschijnlijk door een verbindingsprobleem. Probeer het later opnieuw. Als het probleem blijft, laat het ons dan weten.'
       not_found:
         title: Topic niet gevonden
-        description: "Sorry, we konden dat topic niet vinden. Wellicht is het verwijderd door een moderator?"
+        description: "Sorry, we konden de opgevraagde topic niet vinden. Wellicht is het verwijderd door een moderator?"
       unread_posts: "je hebt {{unread}} ongelezen posts in deze topic"
       new_posts: "er zijn {{new_posts}} nieuwe posts in deze topic sinds je dit voor het laatst gelezen hebt"
 
@@ -452,12 +452,12 @@ nl:
       notifications:
         title: ''
         reasons:
-          "3_2": 'Je ontvangt een notificatie omdat je deze topic in de gaten houdt.'
-          "3_1": 'Je ontvangt een notificatie omdat je deze topic gemaakt hebt.'
-          "3": 'Je ontvangt een notificatie omdat je deze topic in de gaten houdt.'
-          "2_4": 'Je ontvangt een notificatie omdat je een reactie aan deze topic hebt geplaatst.'
-          "2_2": 'Je ontvangt een notificatie omdat je deze topic volgt.'
-          "2": 'Je ontvangt een notificatie omdat je <a href="/users/{{username}}/preferences">deze topic hebt gelezen</a>.'
+          "3_2": 'Je ontvangt notificaties omdat je deze topic in de gaten houdt.'
+          "3_1": 'Je ontvangt notificaties omdat je deze topic gemaakt hebt.'
+          "3": 'Je ontvangt notificaties omdat je deze topic in de gaten houdt.'
+          "2_4": 'Je ontvangt notificaties omdat je een reactie aan deze topic hebt geplaatst.'
+          "2_2": 'Je ontvangt notificaties omdat je deze topic volgt.'
+          "2": 'Je ontvangt notificaties omdat je <a href="/users/{{username}}/preferences">deze topic hebt gelezen</a>.'
           "1": 'Je krijgt alleen een notificatie als iemand je @naam noemt of reageert op je bericht.'
           "1_2": 'Je krijgt alleen een notificatie als iemand je @naam noemt of reageert op je bericht.'
           "0": 'Je negeert alle notificaties in deze topic.'
@@ -485,17 +485,17 @@ nl:
         archive: Archiveer topic
         invisible: Maak onzichtbaar
         visible: Maak zichtbaar
-        reset_read: Herstel leesdata
+        reset_read: Reset leesdata
         multi_select: Selecteer meerdere berichten
         convert_to_topic: Zet om naar normale topic
 
       reply:
         title: Reageer
-        help: begin met het schrijven van een reactie op deze topic
+        help: Schrijf een reactie op deze topic
 
       clear_pin:
         title: Verwijder pin
-        description: "Annuleer de gepinde status van deze topic, zodat het niet langer bovenaan je topiclijst verschijnt." 
+        help: "Annuleer de gepinde status van deze topic, zodat het niet langer bovenaan je topiclijst verschijnt." 
 
       share:
         title: Deel
@@ -587,10 +587,10 @@ nl:
         save: Bewaar instellingen
 
       controls:
-        reply: begin met het schrijven van een reactie op dit bericht"
+        reply: reageer op dit bericht
         like: vind dit bericht leuk
         edit: bewerk dit bericht
-        flag: markeer dit bericht voor moderatie
+        flag: meld dit bericht aan de moderators
         delete: verwijder dit bericht
         undelete: herstel dit bericht
         share: deel een link naar dit bericht
@@ -723,15 +723,15 @@ nl:
       already_used: Deze kleur is al in gebruik door een andere categorie
 
     flagging:
-      title: Waarom markeer je dit bericht voor moderatie?
-      action: Markeer bericht
-      cant: "Sorry, je kan dit bericht momenteel niet markeren."
-      custom_placeholder_notify_user: Waarom neem je privé contact op met deze gebruiker?
-      custom_placeholder_notify_moderators: "Waarom heeft dit bericht aandacht van een moderator nodig? Laat ons specifiek weten waar je je zorgen om maakt, en stuur relevante links mee waar mogelijk."
+      title: Waarom meld je dit bericht voor moderatie?
+      action: Meld bericht
+      cant: "Sorry, je kan dit bericht momenteel niet melden."
+      custom_placeholder_notify_user: Wat wil je de schrijver van dit bericht melden?
+      custom_placeholder_notify_moderators: "Waarom heeft dit bericht aandacht van een moderator nodig? Laat ons specifiek weten waar je je zorgen om maakt en stuur relevante links mee waar mogelijk."
       custom_message:
-        at_least: "gebruik minstens {{n}} tekens"
-        more: "{{n}} te gaan..."
-        left: "{{n}} resterend"
+        at_least: "Gebruik ten minste {{n}} tekens"
+        more: "Nog {{n}} te gaan..."
+        left: "Nog {{n}} resterend"
 
     topic_summary:
       title: "Topic samenvatting"
@@ -812,7 +812,7 @@ nl:
       moderator: Moderator
 
       dashboard:
-        title: Beheer Dashboard
+        title: Dashboard
         version: versie
         up_to_date: Je bent up to date!
         critical_available: Er is een belangrijke update beschikbaar
@@ -842,11 +842,11 @@ nl:
         by: door
 
       flags:
-        title: Markeringen
+        title: Meldingen
         old: Oud
         active: Actief
-        clear: Wis markeringen
-        clear_title: "verwijder alle markeringen van dit bericht (laat verborgen berichten weer zien)"
+        clear: Wis meldingen
+        clear_title: "verwijder alle meldingen over dit bericht (laat verborgen berichten weer zien)"
         delete: Verwijder bericht
         delete_title: "verwijder bericht (als het het eerste bericht is van een topic, verwijdert dit de topic)"
         flagged_by: Gemarkeerd door
@@ -893,7 +893,7 @@ nl:
         not_found: "Sorry, deze gebruikersnaam bestaat niet in ons systeem."
         new: Nieuw
         active: Actief
-        pending: In beoordeling
+        pending: Te beoordelen
         approved: Goedgekeurd?
         approved_selected:
           one: accepteer gebruiker
@@ -938,11 +938,11 @@ nl:
         delete_failed: Er ging iets mis bij het verwijderen van deze gebruiker. Zorg er voor dat alle berichten van deze gebruiker eerst verwijderd zijn.
 
       site_content:
-        none: Kies een soort Site Content om te kunnen bewerken
-        title: Site Content
-        edit: Bewerk Site Content
+        none: Selecteer een tekst om deze te bewerken
+        title: Teksten
+        edit: Bewerk teksten
 
       site_settings:
         show_overriden: Bekijk alleen bewerkte instellingen
-        title: Instellingen site
+        title: Instellingen
         reset: herstel naar standaardinstellingen
