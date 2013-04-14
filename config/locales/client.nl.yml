@@ -857,7 +857,7 @@ nl:
         long_title: Aanpassingen aan de site
         header: Header
         css: Stylesheet
-        override_default: Overschrijf de standaard?
+        override_default: Sluit de standaard stylesheet uit
         enabled: Ingeschakeld?
         preview: voorbeeld
         undo_preview: herstel voorbeeld
