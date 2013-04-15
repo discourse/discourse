@@ -398,10 +398,8 @@ class Topic < ActiveRecord::Base
   # Invite a user by email and return the invite. Return the previously existing invite
   # if already exists. Returns nil if the invite can't be created.
   def invite_by_email(invited_by, email)
-    lower_email = email.downcase
-
+    lower_email = Email.downcase(email)
     invite = Invite.with_deleted.where('invited_by_id = ? and email = ?', invited_by.id, lower_email).first
-
 
     if invite.blank?
       invite = Invite.create(invited_by: invited_by, email: lower_email)
