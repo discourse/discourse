@@ -11,13 +11,12 @@ class Invite < ActiveRecord::Base
 
   acts_as_paranoid
 
-
   before_create do
     self.invite_key ||= SecureRandom.hex
   end
 
   before_save do
-    self.email = email.downcase
+    self.email = Email.downcase(email)
   end
 
   validate :user_doesnt_already_exist
@@ -26,7 +25,7 @@ class Invite < ActiveRecord::Base
   def user_doesnt_already_exist
     @email_already_exists = false
     return if email.blank?
-    if User.where("lower(email) = ?", email.downcase).exists?
+    if User.where("email = ?", Email.downcase(email)).exists?
       @email_already_exists = true
       errors.add(:email)
     end

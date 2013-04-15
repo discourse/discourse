@@ -265,16 +265,17 @@ class UsersController < ApplicationController
     requires_parameter(:email)
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
+    lower_email = Email.downcase(params[:email])
 
     # Raise an error if the email is already in use
-    if User.where("lower(email) = ?", params[:email].downcase).exists?
+    if User.where("email = ?", lower_email).exists?
       raise Discourse::InvalidParameters.new(:email)
     end
 
-    email_token = user.email_tokens.create(email: params[:email])
+    email_token = user.email_tokens.create(email: lower_email)
     Jobs.enqueue(
       :user_email,
-      to_address: params[:email],
+      to_address: lower_email,
       type: :authorize_email,
       user_id: user.id,
       email_token: email_token.token
