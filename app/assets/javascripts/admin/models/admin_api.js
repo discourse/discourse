@@ -11,6 +11,10 @@ Discourse.AdminApi = Discourse.Model.extend({
     Discourse.ajax(Discourse.getURL('/admin/api/generate_key'),{type: 'POST'}).then(function (result) {
       adminApi.set('key', result.key);
     });
+  },
+
+  regenerateKey: function(){
+    alert(Em.String.i18n('not_implemented'));
   }
 });
 
