@@ -2,6 +2,11 @@ require 'spec_helper'
 require_dependency 'user_destroyer'
 
 describe UserDestroyer do
+
+  before do
+    RestClient.stubs(:delete).returns( {success: 'OK'}.to_json )
+  end
+
   describe 'new' do
     it 'raises an error when user is nil' do
       expect { UserDestroyer.new(nil) }.to raise_error(Discourse::InvalidParameters)
@@ -57,6 +62,11 @@ describe UserDestroyer do
         AdminLogger.any_instance.expects(:log_user_deletion).never
         destroy rescue nil
       end
+
+      it 'should not unregister the user at the discourse hub' do
+        DiscourseHub.expects(:unregister_nickname).never
+        destroy rescue nil
+      end
     end
 
     context 'user has no posts' do
@@ -75,6 +85,11 @@ describe UserDestroyer do
           AdminLogger.any_instance.expects(:log_user_deletion).with(@user).once
           destroy
         end
+
+        it 'should unregister the nickname as the discourse hub' do
+          DiscourseHub.expects(:unregister_nickname).with(@user.username)
+          destroy
+        end
       end
 
       context 'and destroy fails' do
@@ -89,6 +104,11 @@ describe UserDestroyer do
         it 'should not log the action' do
           AdminLogger.any_instance.expects(:log_user_deletion).never
           destroy
+        end
+
+        it 'should not unregister the user at the discourse hub' do
+          DiscourseHub.expects(:unregister_nickname).never
+          destroy rescue nil
         end
       end
     end

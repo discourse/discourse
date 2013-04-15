@@ -20,6 +20,7 @@ class UserDestroyer
       user.destroy.tap do |u|
         if u
           AdminLogger.new(@admin).log_user_deletion(user)
+          DiscourseHub.unregister_nickname(user.username)
           MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
         end
       end
