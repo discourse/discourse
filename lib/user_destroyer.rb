@@ -16,10 +16,12 @@ class UserDestroyer
   def destroy(user)
     raise Discourse::InvalidParameters.new('user is nil') unless user and user.is_a?(User)
     raise PostsExistError if user.post_count != 0
-    user.destroy.tap do |u|
-      if u
-        AdminLogger.new(@admin).log_user_deletion(user)
-        MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
+    User.transaction do
+      user.destroy.tap do |u|
+        if u
+          AdminLogger.new(@admin).log_user_deletion(user)
+          MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
+        end
       end
     end
   end
