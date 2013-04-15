@@ -193,7 +193,9 @@ class User < ActiveRecord::Base
   end
 
   def self.find_by_username_or_email(username_or_email)
-    where("username_lower = :user or lower(username) = :user or lower(email) = :user or lower(name) = :user", user: username_or_email.downcase)
+    lower_user = username_or_email.downcase
+    lower_email = Email.downcase(username_or_email)
+    where("username_lower = :user or lower(username) = :user or email = :email or lower(name) = :user", user: lower_user, email: lower_email)
   end
 
   # tricky, we need our bus to be subscribed from the right spot

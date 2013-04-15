@@ -3,13 +3,13 @@ class SessionController < ApplicationController
   def create
     requires_parameter(:login, :password)
 
-    login = params[:login].downcase
+    login = params[:login]
     login = login[1..-1] if login[0] == "@"
 
     if login =~ /@/
-      @user = User.where(email: login).first
+      @user = User.where(email: Email.downcase(login)).first
     else
-      @user = User.where(username_lower: login).first
+      @user = User.where(username_lower: login.downcase).first
     end
 
     if @user.present?
@@ -37,9 +37,9 @@ class SessionController < ApplicationController
   end
 
   def forgot_password
-    requires_parameter(:username)
+    requires_parameter(:login)
 
-    user = User.where('username_lower = :username or email = :username', username: params[:username].downcase).first
+    user = User.where('username_lower = :username or email = :email', username: params[:login].downcase, email: Email.downcase(params[:login])).first
     if user.present?
       email_token = user.email_tokens.create(email: user.email)
       Jobs.enqueue(:user_email, type: :forgot_password, user_id: user.id, email_token: email_token.token)

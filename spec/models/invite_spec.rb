@@ -36,7 +36,6 @@ describe Invite do
       end
     end
 
-
     context 'to a topic' do
       let!(:topic) { Fabricate(:topic) }
       let(:inviter) { topic.user }
@@ -97,8 +96,12 @@ describe Invite do
             topic.invite_by_email(inviter, 'iceking@adventuretime.ooo').should == @invite
           end
 
-          it 'matches case insensitively' do
-            topic.invite_by_email(inviter, 'ICEKING@adventuretime.ooo').should == @invite
+          it 'matches case insensitively for the domain part' do
+            topic.invite_by_email(inviter, 'iceking@ADVENTURETIME.ooo').should == @invite
+          end
+
+          it 'matches case sensitively for the local part' do
+            topic.invite_by_email(inviter, 'ICEKING@adventuretime.ooo').should_not == @invite
           end
         end
 
