@@ -16,7 +16,7 @@ Vagrant.configure("2") do |config|
   config.ssh.forward_agent = true
 
   config.vm.provider :virtualbox do |v|
-    # This setting gives the VM 1024MB of MEMORIES instead of the default 384.
+    # This setting gives the VM 1024MB of RAM instead of the default 384.
     v.customize ["modifyvm", :id, "--memory", [ENV['DISCOURSE_VM_MEM'].to_i, 1024].max]
 
     # This setting makes it so that network access from inside the vagrant guest
