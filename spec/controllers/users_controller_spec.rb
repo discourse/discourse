@@ -277,12 +277,14 @@ describe UsersController do
     context 'when creating a non active user (unconfirmed email)' do
       it 'should enqueue a signup email' do
         Jobs.expects(:enqueue).with(:user_email, has_entries(type: :signup))
-        xhr :post, :create, name: @user.name, username: @user.username, password: "strongpassword", email: @user.email
+        xhr :post, :create, name: @user.name, username: @user.username,
+                            password: "strongpassword", email: @user.email
       end
 
       it "doesn't send a welcome email" do
         User.any_instance.expects(:enqueue_welcome_message).with('welcome_user').never
-        xhr :post, :create, name: @user.name, username: @user.username, password: "strongpassword", email: @user.email
+        xhr :post, :create, name: @user.name, username: @user.username,
+                            password: "strongpassword", email: @user.email
       end
     end
 
@@ -294,7 +296,8 @@ describe UsersController do
 
       it 'should enqueue a signup email' do
         User.any_instance.expects(:enqueue_welcome_message).with('welcome_user')
-        xhr :post, :create, name: @user.name, username: @user.username, password: "strongpassword", email: @user.email
+        xhr :post, :create, name: @user.name, username: @user.username,
+                            password: "strongpassword", email: @user.email
       end
 
       it "should be logged in" do
@@ -309,6 +312,7 @@ describe UsersController do
         ::JSON.parse(response.body)['active'].should == true
       end
 
+
       context 'when approving of users is required' do
         before do
           SiteSetting.expects(:must_approve_users).returns(true)
@@ -322,14 +326,51 @@ describe UsersController do
         it "doesn't return active in the JSON" do
           ::JSON.parse(response.body)['active'].should == false
         end
-
       end
 
+      context 'authentication records for' do
+
+        before do
+          SiteSetting.expects(:must_approve_users).returns(true)
+        end
+
+        it 'should create twitter user info if none exists' do
+          twitter_auth = { twitter_user_id: 42, twitter_screen_name: "bruce" }
+          session[:authentication] = twitter_auth
+          TwitterUserInfo.expects(:find_by_twitter_user_id).returns(nil)
+          TwitterUserInfo.expects(:create)
+
+          xhr :post, :create, name: @user.name, username: @user.username,
+            password: "strongpassword", email: @user.email
+        end
+
+        it 'should create facebook user info if none exists' do
+          fb_auth = { facebook: { facebook_user_id: 42} }
+          session[:authentication] = fb_auth
+          FacebookUserInfo.expects(:find_by_facebook_user_id).returns(nil)
+          FacebookUserInfo.expects(:create!)
+
+          xhr :post, :create, name: @user.name, username: @user.username,
+                              password: "strongpassword", email: @user.email
+        end
+
+        it 'should create github user info if none exists' do
+          gh_auth = { github_user_id: 2, github_screen_name: "bruce" }
+          session[:authentication] = gh_auth
+          GithubUserInfo.expects(:find_by_github_user_id).returns(nil)
+          GithubUserInfo.expects(:create)
+
+          xhr :post, :create, name: @user.name, username: @user.username,
+                              password: "strongpassword", email: @user.email
+        end
+
+      end
     end
 
     context 'after success' do
       before do
-        xhr :post, :create, name: @user.name, username: @user.username, password: "strongpassword", email: @user.email
+        xhr :post, :create, name: @user.name, username: @user.username,
+                            password: "strongpassword", email: @user.email
       end
 
       it 'should succeed' do
@@ -403,13 +444,22 @@ describe UsersController do
       it_should_behave_like 'failed signup'
     end
 
-    context 'when InvalidStatement is raised' do
-      before do
-        User.any_instance.stubs(:save).raises(ActiveRecord::StatementInvalid)
+    context 'when an Exception is raised' do
+
+      [ ActiveRecord::StatementInvalid,
+        DiscourseHub::NicknameUnavailable,
+        RestClient::Forbidden ].each do |exception|
+        before { User.any_instance.stubs(:save).raises(exception) }
+
+        let(:create_params) {
+          { name: @user.name, username: @user.username,
+            password: "strongpassword", email: @user.email}
+        }
+
+        it_should_behave_like 'failed signup'
       end
-      let(:create_params) { {name: @user.name, username: @user.username, password: "strongpassword", email: @user.email} }
-      it_should_behave_like 'failed signup'
     end
+
   end
 
   context '.username' do
@@ -704,7 +754,9 @@ describe UsersController do
 
     context 'not logged in' do
       it 'raises an error when not logged in' do
-        lambda { xhr :put, :update, username: 'somename' }.should raise_error(Discourse::NotLoggedIn)
+        expect do
+          xhr :put, :update, username: 'somename'
+        end.to raise_error(Discourse::NotLoggedIn)
       end
     end
 
@@ -735,7 +787,6 @@ describe UsersController do
         end
       end
     end
-
   end
 
   describe "search_users" do
