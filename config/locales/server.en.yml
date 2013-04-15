@@ -229,7 +229,7 @@ en:
       long_form: 'flagged this as inappropriate'
     notify_user:
       title: 'Notify {{username}}'
-      description: 'This post contains something I want to talk to this user directly and privately about.'
+      description: 'This post contains something I want to talk to this person directly and privately about.'
       long_form: 'notified user'
       email_title: 'Regarding your post in "%{title}"'
       email_body: "%{link}\n\n%{message}"
