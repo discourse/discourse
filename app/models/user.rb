@@ -102,6 +102,15 @@ class User < ActiveRecord::Base
     find_available_username_based_on(name)
   end
 
+  def self.new_from_params(params)
+    user = User.new
+    user.name = params[:name]
+    user.email = params[:email]
+    user.password = params[:password]
+    user.username = params[:username]
+    user
+  end
+
   def self.create_for_email(email, opts={})
     username = suggest_username(email)
 
