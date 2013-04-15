@@ -45,7 +45,7 @@ Discourse.ActionSummary = Discourse.Model.extend({
     this.set('can_act', false);
     this.set('can_undo', true);
 
-    if(action === 'notify_moderators' || action=='notify_user') {
+    if(action === 'notify_moderators' || action === 'notify_user') {
       this.set('can_undo',false);
       this.set('can_clear_flags',false);
     }

@@ -45,7 +45,7 @@ Spork.prefork do
   load "#{Rails.root}/db/seeds.rb"
 
   RSpec.configure do |config|
-    
+
     config.fail_fast = ENV['RSPEC_FAIL_FAST'] == "1"
     config.include Helpers
     config.mock_framework = :mocha
