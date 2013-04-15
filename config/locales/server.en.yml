@@ -231,13 +231,13 @@ en:
       title: 'Notify {{username}}'
       description: 'This post contains something I want to talk to this user directly and privately about.'
       long_form: 'notified user'
-      email_title: 'Regarding "%{title}"'
+      email_title: 'Regarding your post in "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: 'Notify moderators'
       description: 'This post requires general moderator attention based on the <a href="/faq">FAQ</a>, <a href="/tos">TOS</a>, or for another reason not listed above.'
       long_form: 'notified moderators'
-      email_title: 'Regarding "%{title}"'
+      email_title: 'A post in "%{title}" requires moderator attention'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Bookmark'
