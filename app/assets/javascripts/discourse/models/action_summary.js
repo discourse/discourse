@@ -43,7 +43,12 @@ Discourse.ActionSummary = Discourse.Model.extend({
     this.set('acted', true);
     this.set('count', this.get('count') + 1);
     this.set('can_act', false);
-    this.set('can_undo', action !== 'notify_moderators' && action !== 'notify_user');
+    this.set('can_undo', true);
+
+    if(action === 'notify_moderators' || action=='notify_user') {
+      this.set('can_undo',false);
+      this.set('can_clear_flags',false);
+    }
 
     // Add ourselves to the users who liked it if present
     if (this.present('users')) {

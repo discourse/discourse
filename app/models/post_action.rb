@@ -20,7 +20,7 @@ class PostAction < ActiveRecord::Base
 
   def self.update_flagged_posts_count
     posts_flagged_count = PostAction.joins(post: :topic)
-                                    .where('post_actions.post_action_type_id' => PostActionType.flag_types.values,
+                                    .where('post_actions.post_action_type_id' => PostActionType.notify_flag_types.values,
                                            'posts.deleted_at' => nil,
                                            'topics.deleted_at' => nil).count('DISTINCT posts.id')
 
@@ -74,23 +74,23 @@ class PostAction < ActiveRecord::Base
   def self.act(user, post, post_action_type_id, message = nil)
     begin
       title, target_usernames,body = nil
-      
+
       if message
         [:notify_moderators, :notify_user].each do |k|
           if post_action_type_id == PostActionType.types[k]
-            target_usernames = k == :notify_moderators ? target_moderators(user) : post.user.username        
-            title = I18n.t("post_action_types.#{k}.email_title", 
-                            title: post.topic.title) 
-            body = I18n.t("post_action_types.#{k}.email_body", 
-                          message: message, 
+            target_usernames = k == :notify_moderators ? target_moderators(user) : post.user.username
+            title = I18n.t("post_action_types.#{k}.email_title",
+                            title: post.topic.title)
+            body = I18n.t("post_action_types.#{k}.email_body",
+                          message: message,
                           link: "#{Discourse.base_url}#{post.url}")
           end
         end
       end
 
       if target_usernames.present?
-        PostCreator.new(user, 
-                              target_usernames: target_usernames, 
+        PostCreator.new(user,
+                              target_usernames: target_usernames,
                               archetype: Archetype.private_message,
                               title: title,
                               raw: body
@@ -169,11 +169,11 @@ class PostAction < ActiveRecord::Base
     Topic.update_all ["#{column} = #{column} + ?", delta], id: post.topic_id
 
 
-    if PostActionType.flag_types.values.include?(post_action_type_id)
+    if PostActionType.notify_flag_types.values.include?(post_action_type_id)
       PostAction.update_flagged_posts_count
     end
 
-    if SiteSetting.flags_required_to_hide_post > 0
+    if PostActionType.auto_action_flag_types.include?(post_action_type) && SiteSetting.flags_required_to_hide_post > 0
       # automatic hiding of posts
       flag_counts = exec_sql("SELECT SUM(CASE WHEN deleted_at IS NULL THEN 1 ELSE 0 END) AS new_flags,
                                      SUM(CASE WHEN deleted_at IS NOT NULL THEN 1 ELSE 0 END) AS old_flags
@@ -197,7 +197,7 @@ class PostAction < ActiveRecord::Base
     end
   end
 
-  protected 
+  protected
 
   def self.target_moderators(me)
     User

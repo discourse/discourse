@@ -21,7 +21,7 @@ join (
 limit 100
 "
 
-    sql.where2 "post_action_type_id in (:flag_types)", flag_types: PostActionType.flag_types.values
+    sql.where2 "post_action_type_id in (:flag_types)", flag_types: PostActionType.notify_flag_types.values
 
 
     # it may make sense to add a view that shows flags on deleted posts,
@@ -62,7 +62,7 @@ limit 100
 from post_actions a
 /*where*/
 "
-    sql.where("post_action_type_id in (:flag_types)", flag_types: PostActionType.flag_types.values)
+    sql.where("post_action_type_id in (:flag_types)", flag_types: PostActionType.notify_flag_types.values)
     sql.where("post_id in (:posts)", posts: posts.map{|p| p["id"].to_i})
 
     if params[:filter] == 'old'
