@@ -26,6 +26,9 @@ gem 'hiredis'
 # note: for image_optim to correctly work you need
 # sudo apt-get install -y advancecomp gifsicle jpegoptim libjpeg-progs optipng pngcrush
 gem 'image_optim'
+# note: for image_sorcery to correctly work you need
+# sudo apt-get install -y imagemagick
+gem 'image_sorcery'
 gem 'jquery-rails'
 gem 'minitest'
 gem 'multi_json'

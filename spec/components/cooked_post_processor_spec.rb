@@ -41,6 +41,7 @@ describe CookedPostProcessor do
       before do
         @topic = Fabricate(:topic)
         @post = Fabricate.build(:post_with_image_url, topic: @topic, user: @topic.user)
+        ImageSorcery.any_instance.stubs(:convert).returns(false)
         @cpp = CookedPostProcessor.new(@post, image_sizes: {'http://www.forumwarz.com/images/header/logo.png' => {'width' => 111, 'height' => 222}})
         @cpp.expects(:get_size).returns([111,222])
       end
@@ -63,6 +64,7 @@ describe CookedPostProcessor do
 
       before do
         FastImage.stubs(:size).returns([123, 456])
+        ImageSorcery.any_instance.stubs(:convert).returns(false)
         CookedPostProcessor.any_instance.expects(:image_dimensions).returns([123, 456])
         creator = PostCreator.new(user, raw: Fabricate.build(:post_with_images).raw, topic_id: topic.id)
         @post = creator.create
@@ -70,7 +72,7 @@ describe CookedPostProcessor do
 
       it "adds a topic image if there's one in the post" do
         @post.topic.reload
-        @post.topic.image_url.should == "/path/to/img.jpg"
+        @post.topic.image_url.should == "http://test.localhost/path/to/img.jpg"
       end
 
       it "adds the height and width to images that don't have them" do

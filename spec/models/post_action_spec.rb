@@ -3,6 +3,10 @@ require_dependency 'post_destroyer'
 
 describe PostAction do
 
+  before do
+    ImageSorcery.any_instance.stubs(:convert).returns(false)
+  end
+
   it { should belong_to :user }
   it { should belong_to :post }
   it { should belong_to :post_action_type }

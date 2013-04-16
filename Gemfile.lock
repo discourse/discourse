@@ -219,6 +219,7 @@ GEM
       in_threads (~> 1.1.1)
       progress (~> 2.4.0)
     image_size (1.1.1)
+    image_sorcery (1.1.0)
     in_threads (1.1.1)
     ipaddress (0.8.0)
     jasminerice (0.0.10)

@@ -1,35 +1,22 @@
+#
 # This class is used to download and optimize images.
 #
-# I have not had a chance to implement me, and will not for about 3 weeks.
-# If you are looking for a small project this simple API would be a good stint.
-#
-# Implement the following methods. With tests, the tests are a HUGE PITA cause
-# network, disk and external dependencies are involved.
+
+require 'image_sorcery'
+require 'digest/sha1'
+require 'open-uri'
 
 class ImageOptimizer
-  attr_accessor :url, :root_dir
+  attr_accessor :url
+
   # url is a url of an image ex:
   # 'http://site.com/image.png'
   # '/uploads/site/image.png'
-  #
-  # root_dir is the path where we
-  # store optimized images
-  def initialize(opts = {})
-    @url = opts[:url]
-    @root_dir = opts[:root_dir]
-  end
-
-  # attempt to refresh the original image, if refreshed
-  #  remove old downsized copies
-  def refresh_local!
-  end
-
-  # clear all local copies of the images
-  def clear_local!
-  end
-
-  # yield a list of relative paths to local images cached
-  def each_local
+  def initialize(url)
+    @url = url
+    # make sure directories exists
+    FileUtils.mkdir_p downloads_dir
+    FileUtils.mkdir_p optimized_dir
   end
 
   # return the path of an optimized image,
@@ -42,7 +29,68 @@ class ImageOptimizer
   #  at the basic level it runs through image_optim https://github.com/toy/image_optim
   #  it also has a failsafe that converts jpg to png or the opposite. if jpg size is 1.5*
   #  as efficient as png it flips formats.
-  def optimized_image_path(width=nil, height=nil)
+  def optimized_image_url (width = nil, height = nil)
+    begin
+      unless has_been_uploaded?
+        return @url unless SiteSetting.crawl_images?
+        # download the file if it hasn't been cached yet
+        download! unless File.exists?(cached_path)
+      end
+
+      # resize the image using Image Magick
+      result = ImageSorcery.new(cached_path).convert(optimized_path, resize: "#{width}x#{height}")
+      return optimized_url if result
+      @url
+    rescue
+      @url
+    end
+  end
+
+private
+
+  def public_dir
+    @public_dir ||= "#{Rails.root}/public"
+  end
+
+  def downloads_dir
+    @downloads_dir ||= "#{public_dir}/downloads/#{RailsMultisite::ConnectionManagement.current_db}"
+  end
+
+  def optimized_dir
+    @optimized_dir ||= "#{public_dir}/images/#{RailsMultisite::ConnectionManagement.current_db}"
+  end
+
+  def has_been_uploaded?
+    @url.start_with?(Discourse.base_url_no_prefix)
+  end
+
+  def cached_path
+    @cached_path ||= if has_been_uploaded?
+      "#{public_dir}#{@url[Discourse.base_url_no_prefix.length..-1]}"
+    else
+      "#{downloads_dir}/#{file_name(@url)}"
+    end
+  end
+
+  def optimized_path
+    @optimized_path ||= "#{optimized_dir}/#{file_name(cached_path)}"
+  end
+
+  def file_name (uri)
+    image_info = FastImage.new(uri)
+    name = Digest::SHA1.hexdigest(uri)[0,16]
+    name << ".#{image_info.type}"
+    name
+  end
+
+  def download!
+    File.open(cached_path, "wb") do |f|
+      f.write open(@url, "rb", read_timeout: 20).read
+    end
+  end
+
+  def optimized_url
+    @optimized_url ||= Discourse::base_uri + "/images/#{RailsMultisite::ConnectionManagement.current_db}/#{file_name(cached_path)}"
   end
 
 end
