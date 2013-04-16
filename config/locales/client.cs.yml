@@ -836,7 +836,6 @@ cs:
         please_upgrade: "Prosím aktualizujte!"
         installed_version: "Nainstalováno"
         latest_version: "Poslední verze"
-        update_often: 'Prosím aktualizujte často!'
         problems_found: "Byly nalezeny problémy s vaší instalací systému Discourse:"
         moderators: 'Moderátoři:'
         admins: 'Administrátoři:'
@@ -854,7 +853,7 @@ cs:
           view_chart: "Zobrazit jako sloupcový graf"
 
       commits:
-        latest_changes: "Poslední změny."
+        latest_changes: "Poslední změny: prosím aktualizujte často!"
         by: "od"
 
       flags:

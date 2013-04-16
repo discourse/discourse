@@ -798,7 +798,6 @@ sv:
         please_upgrade: "Var god uppgradera!"
         installed_version: "Installerad"
         latest_version: "Senaste"
-        update_often: "Snälla uppdatera ofta!"
         problems_found: "Några problem har hittas med din installation av Discourse:"
         moderators: 'Moderatorer:'
         admins: 'Administratörer:'
@@ -816,7 +815,7 @@ sv:
         view_chart: "Visa som Stapeldiagram"
 
       commits:
-        latest_changes: "Senaste ändringarna."
+        latest_changes: "Senaste ändringarna: snälla uppdatera ofta!"
         by: "av"
 
       flags:

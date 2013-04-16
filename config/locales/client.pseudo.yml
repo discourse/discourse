@@ -729,7 +729,6 @@ pseudo:
         please_upgrade: '[[ Рłéášé ůƿǧřáďé! ]]'
         installed_version: '[[ Íɳšťáłłéď ]]'
         latest_version: '[[ Łáťéšť ]]'
-        update_often: '[[ Рłéášé ůƿďáťé óƒťéɳ! ]]'
         problems_found: '[[ Šóɱé ƿřóƀłéɱš ĥáνé ƀééɳ ƒóůɳď ŵíťĥ ýóůř íɳšťáłłáťíóɳ óƒ
           Ďíščóůřšé: ]]'
         moderators: '[[ Ϻóďéřáťóřš: ]]'
@@ -746,7 +745,7 @@ pseudo:
           view_table: '[[ Ѷíéŵ áš Ťáƀłé ]]'
           view_chart: '[[ Ѷíéŵ áš Ɓář Čĥářť ]]'
       commits:
-        latest_changes: '[[ Łáťéšť čĥáɳǧéš. ]]'
+        latest_changes: '[[ Łáťéšť čĥáɳǧéš: płéášé ůƿďáťé óƒťéɳ! ]]'
         by: '[[ ƀý ]]'
       flags:
         title: '[[ Ƒłáǧš ]]'

@@ -691,7 +691,6 @@ da:
         updates_available: "Updates are available."
         please_upgrade: "Please upgrade!"
         latest_version: "Latest version"
-        update_often: 'Please update often!'
         total_users: "Total Users"
         moderator_short: "mod"
 
@@ -705,7 +704,7 @@ da:
           30_days_ago: "30 Days Ago"
 
       commits:
-        latest_changes: "Latest changes"
+        latest_changes: "Latest changes: please update often!"
         by: "by"
 
       flags:

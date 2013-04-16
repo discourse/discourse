@@ -816,7 +816,6 @@ zh_TW:
         please_upgrade: "請升級！"
         installed_version: "已安裝"
         latest_version: "最新版本"
-        update_often: '請經常升級！'
         problems_found: "你安裝的論壇目前有以下問題："
         moderators: '版主：'
         admins: '管理員：'
@@ -834,7 +833,7 @@ zh_TW:
           view_chart: "以柱狀圖展示"
 
       commits:
-        latest_changes: "最後的改動"
+        latest_changes: "最後的改動: 請經常升級！"
         by: "來自"
 
       flags:

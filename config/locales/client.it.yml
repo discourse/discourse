@@ -700,7 +700,6 @@ it:
         please_upgrade: "Perfavore aggiorna!"
         installed_version: "Installato"
         latest_version: "Ultimi"
-        update_often: 'Perfavore aggiorna spesso!'
         problems_found: "Sono stati trovati alcuni problemi con la tua installazione di Discourse:"
         moderators: 'Moderatori:'
         admins: 'Amministratori:'
@@ -718,7 +717,7 @@ it:
           view_chart: "Vedi come Grafico a Barre"
 
       commits:
-        latest_changes: "Ultime modifiche."
+        latest_changes: "Ultime modifiche: perfavore aggiorna spesso!"
         by: "da"
 
       flags:

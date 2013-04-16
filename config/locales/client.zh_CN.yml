@@ -816,7 +816,6 @@ zh_CN:
         please_upgrade: "请升级！"
         installed_version: "已安装"
         latest_version: "最新版本"
-        update_often: '请经常升级！'
         problems_found: "你安装的论坛目前有以下问题："
         moderators: '版主：'
         admins: '管理员：'
@@ -834,7 +833,7 @@ zh_CN:
           view_chart: "以柱状图展示"
 
       commits:
-        latest_changes: "最后的改动"
+        latest_changes: "最后的改动: 请经常升级！"
         by: "来自"
 
       flags:

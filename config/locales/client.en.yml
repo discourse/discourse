@@ -817,7 +817,6 @@ en:
         please_upgrade: "Please upgrade!"
         installed_version: "Installed"
         latest_version: "Latest"
-        update_often: 'Please update often!'
         problems_found: "Some problems have been found with your installation of Discourse:"
         last_checked: "Last checked"
         refresh_problems: "Refresh"
@@ -840,7 +839,7 @@ en:
           view_chart: "View as Bar Chart"
 
       commits:
-        latest_changes: "Latest changes."
+        latest_changes: "Latest changes: please update often!"
         by: "by"
 
       flags:

@@ -819,7 +819,6 @@ fr:
         please_upgrade: "Veuillez mettre à jour !"
         installed_version: "Version installée"
         latest_version: "Dernière version"
-        update_often: "Merci de mettre à jour régulièrement !"
         problems_found: "Quelques problèmes ont été trouvés dans votre installation de Discourse :"
         moderators: "Modérateurs :"
         admins: "Administateurs :"
@@ -837,7 +836,7 @@ fr:
           view_chart: "Graphique à barre"
 
       commits:
-        latest_changes: "derniers changements"
+        latest_changes: "derniers changements: merci de mettre à jour régulièrement !"
         by: "par"
 
       flags:

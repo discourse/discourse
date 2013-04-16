@@ -820,7 +820,6 @@ nl:
         please_upgrade: Werk de software bij alsjeblieft
         installed_version: Geïnstalleerd
         latest_version: Recent
-        update_often: Werk de software regelmatig bij alsjeblieft
         problems_found: 'Er zijn een aantal problemen gevonden met je Discourse installatie:'
         moderators: "Moderators:"
         admins: "Admins:"
@@ -838,7 +837,7 @@ nl:
           view_chart: Bekijk als staafdiagram
 
       commits:
-        latest_changes: Laatste wijzigingen
+        latest_changes: 'Laatste wijzigingen: Werk de software regelmatig bij alsjeblieft'
         by: door
 
       flags:
