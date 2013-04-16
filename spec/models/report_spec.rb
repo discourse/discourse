@@ -61,7 +61,7 @@ describe Report do
   end
 
   describe 'private messages' do
-    let(:report) { Report.find('private_messages') }
+    let(:report) { Report.find('user_to_user_private_messages') }
 
     it 'topic report should not include private messages' do
       Fabricate(:private_message_topic, created_at: 1.hour.ago)

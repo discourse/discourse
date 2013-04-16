@@ -1,5 +1,6 @@
 # Handle sending a message to a user from the system.
 require_dependency 'post_creator'
+require_dependency 'topic_subtype'
 
 class SystemMessage
 
@@ -33,6 +34,7 @@ class SystemMessage
                        raw: raw_body,
                        title: title,
                        archetype: Archetype.private_message,
+                       subtype: TopicSubtype.system_message,
                        target_usernames: @recipient.username)
   end
 

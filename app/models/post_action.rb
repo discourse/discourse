@@ -73,7 +73,7 @@ class PostAction < ActiveRecord::Base
 
   def self.act(user, post, post_action_type_id, message = nil)
     begin
-      title, target_usernames,body = nil
+      title, target_usernames, subtype, body = nil
 
       if message
         [:notify_moderators, :notify_user].each do |k|
@@ -84,6 +84,7 @@ class PostAction < ActiveRecord::Base
             body = I18n.t("post_action_types.#{k}.email_body",
                           message: message,
                           link: "#{Discourse.base_url}#{post.url}")
+            subtype = k == :notify_moderators ? TopicSubtype.notify_moderators : TopicSubtype.notify_user
           end
         end
       end
@@ -92,6 +93,7 @@ class PostAction < ActiveRecord::Base
         PostCreator.new(user,
                               target_usernames: target_usernames,
                               archetype: Archetype.private_message,
+                              subtype: subtype,
                               title: title,
                               raw: body
                        ).create

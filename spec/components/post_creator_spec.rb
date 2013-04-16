@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'post_creator'
+require 'topic_subtype'
 
 describe PostCreator do
 
@@ -173,22 +174,28 @@ describe PostCreator do
   context 'private message' do
     let(:target_user1) { Fabricate(:coding_horror) }
     let(:target_user2) { Fabricate(:moderator) }
-    let(:post) do
-      PostCreator.create(user, title: 'hi there welcome to my topic',
-                               raw: 'this is my awesome message',
-                               archetype: Archetype.private_message,
-                               target_usernames: [target_user1.username, target_user2.username].join(','))
-    end
 
-    it 'has the right archetype' do
-      post.topic.archetype.should == Archetype.private_message
-    end
+    describe 'regular user to user' do
+      let(:post) do
+        PostCreator.create(user, title: 'hi there welcome to my topic',
+                                 raw: 'this is my awesome message',
+                                 archetype: Archetype.private_message,
+                                 target_usernames: [target_user1.username, target_user2.username].join(','))
+      end
 
-    it 'has the right count (me and 2 other users)' do
-      post.topic.topic_allowed_users.count.should == 3
+      it 'has the right archetype' do
+        post.topic.archetype.should == Archetype.private_message
+      end
+
+      it 'has the right count (me and 2 other users)' do
+        post.topic.topic_allowed_users.count.should == 3
+      end
+
+      it 'has the right subtype' do
+        post.topic.subtype.should == TopicSubtype.user_to_user
+      end
     end
   end
-
 
 end
 

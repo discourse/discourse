@@ -68,6 +68,7 @@ Fabricator(:private_message_post, from: :post) do
     Fabricate( :private_message_topic,
       user: attrs[:user],
       created_at: attrs[:created_at],
+      subtype: TopicSubtype.user_to_user,
       topic_allowed_users: [
         Fabricate.build(:topic_allowed_user, user_id: attrs[:user].id),
         Fabricate.build(:topic_allowed_user, user_id: Fabricate(:user).id)

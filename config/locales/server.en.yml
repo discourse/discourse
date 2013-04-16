@@ -305,8 +305,24 @@ en:
       title: "Emails Sent"
       xaxis: "Day"
       yaxis: "Number of Emails"
-    private_messages:
-      title: "Private Messages"
+    user_to_user_private_messages:
+      title: "User-to-User Messages"
+      xaxis: "Day"
+      yaxis: "Number of private messages"
+    system_private_messages:
+      title: "System Messages"
+      xaxis: "Day"
+      yaxis: "Number of private messages"
+    moderator_warning_private_messages:
+      title: "Moderator Warning Messages"
+      xaxis: "Day"
+      yaxis: "Number of private messages"
+    notify_moderators_private_messages:
+      title: "Notify Moderators Messages"
+      xaxis: "Day"
+      yaxis: "Number of private messages"
+    notify_user_private_messages:
+      title: "Nofity User Messages"
       xaxis: "Day"
       yaxis: "Number of private messages"
 

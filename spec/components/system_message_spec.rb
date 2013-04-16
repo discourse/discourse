@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'system_message'
+require 'topic_subtype'
 
 describe SystemMessage do
 
@@ -18,6 +19,10 @@ describe SystemMessage do
 
     it 'should be a private message' do
       topic.should be_private_message
+    end
+
+    it 'should have the correct topic subtype' do
+      topic.subtype.should == TopicSubtype.system_message
     end
 
     it 'should be visible by the user' do

@@ -42,6 +42,7 @@ class PostCreator
       if @opts[:topic_id].blank?
         topic_params = {title: @opts[:title], user_id: @user.id, last_post_user_id: @user.id}
         topic_params[:archetype] = @opts[:archetype] if @opts[:archetype].present?
+        topic_params[:subtype] = @opts[:subtype] if @opts[:subtype].present?
 
         guardian.ensure_can_create!(Topic)
 
@@ -52,6 +53,8 @@ class PostCreator
         topic = Topic.new(topic_params)
 
         if @opts[:archetype] == Archetype.private_message
+
+          topic.subtype = TopicSubtype.user_to_user unless topic.subtype
 
           usernames = @opts[:target_usernames].split(',')
           User.where(username: usernames).each do |u|

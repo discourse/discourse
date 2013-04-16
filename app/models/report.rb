@@ -1,3 +1,5 @@
+require_dependency 'topic_subtype'
+
 class Report
 
   attr_accessor :type, :data, :total, :prev30Days
@@ -51,12 +53,6 @@ class Report
     report.prev30Days = Post.public_posts.where('posts.created_at > ? and posts.created_at < ?', 60.days.ago, 30.days.ago).count
   end
 
-  def self.report_private_messages(report)
-    basic_report_about report, Post, :private_messages_count_per_day
-    report.total = Post.private_posts.count
-    report.prev30Days = Post.private_posts.where('posts.created_at > ? and posts.created_at < ?', 60.days.ago, 30.days.ago).count
-  end
-
   def self.report_emails(report)
     report_about report, EmailLog
   end
@@ -66,9 +62,9 @@ class Report
     add_counts(report, subject_class)
   end
 
-  def self.basic_report_about(report, subject_class, report_method)
+  def self.basic_report_about(report, subject_class, report_method, *args)
     report.data = []
-    subject_class.send(report_method, 30).each do |date, count|
+    subject_class.send(report_method, 30, *args).each do |date, count|
       report.data << {x: date, y: count}
     end
   end
@@ -108,5 +104,31 @@ class Report
     likesQuery = PostAction.where(post_action_type_id: PostActionType.types[:like])
     report.total = likesQuery.count
     report.prev30Days = likesQuery.where('created_at > ? and created_at < ?', 60.days.ago, 30.days.ago).count
+  end
+
+  def self.private_messages_report(report, topic_subtype)
+    basic_report_about report, Post, :private_messages_count_per_day, topic_subtype
+    report.total = Post.private_posts.with_topic_subtype(topic_subtype).count
+    report.prev30Days = Post.private_posts.with_topic_subtype(topic_subtype).where('posts.created_at > ? and posts.created_at < ?', 60.days.ago, 30.days.ago).count
+  end
+
+  def self.report_user_to_user_private_messages(report)
+    private_messages_report report, TopicSubtype.user_to_user
+  end
+
+  def self.report_system_private_messages(report)
+    private_messages_report report, TopicSubtype.system_message
+  end
+
+  def self.report_moderator_warning_private_messages(report)
+    private_messages_report report, TopicSubtype.moderator_warning
+  end
+
+  def self.report_notify_moderators_private_messages(report)
+    private_messages_report report, TopicSubtype.notify_moderators
+  end
+
+  def self.report_notify_user_private_messages(report)
+    private_messages_report report, TopicSubtype.notify_user
   end
 end

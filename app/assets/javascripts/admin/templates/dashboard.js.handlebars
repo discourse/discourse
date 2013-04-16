@@ -130,7 +130,28 @@
         {{ render 'admin_report_counts' likes }}
         {{ render 'admin_report_counts' flags }}
         {{ render 'admin_report_counts' emails }}
-        {{ render 'admin_report_counts' private_messages }}
+      {{/unless}}
+    </table>
+  </div>
+
+  <div class="dashboard-stats">
+    <table class="table table-condensed table-hover">
+      <thead>
+        <tr>
+          <th>&nbsp;</th>
+          <th>{{i18n admin.dashboard.reports.today}}</th>
+          <th>{{i18n admin.dashboard.reports.yesterday}}</th>
+          <th>{{i18n admin.dashboard.reports.last_7_days}}</th>
+          <th>{{i18n admin.dashboard.reports.last_30_days}}</th>
+          <th>{{i18n admin.dashboard.reports.all}}</th>
+        </tr>
+      </thead>
+      {{#unless loading}}
+        {{ render 'admin_report_counts' user_to_user_private_messages }}
+        {{ render 'admin_report_counts' system_private_messages }}
+        {{ render 'admin_report_counts' notify_moderators_private_messages }}
+        {{ render 'admin_report_counts' notify_user_private_messages }}
+        {{ render 'admin_report_counts' moderator_warning_private_messages }}
       {{/unless}}
     </table>
   </div>
