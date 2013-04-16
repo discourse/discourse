@@ -17,7 +17,6 @@
 <%# load the selected locale before any other scripts %>
 <%= javascript_include_tag "locales/#{I18n.locale}" %>
 <%= javascript_include_tag "application" %>
-<%= javascript_include_tag "admin"%>
 <%- if admin? %>
   <%= javascript_include_tag "admin"%>
 <%- end %>
