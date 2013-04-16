@@ -306,23 +306,23 @@ en:
       xaxis: "Day"
       yaxis: "Number of Emails"
     user_to_user_private_messages:
-      title: "User-to-User Messages"
+      title: "User-to-User"
       xaxis: "Day"
       yaxis: "Number of private messages"
     system_private_messages:
-      title: "System Messages"
+      title: "System"
       xaxis: "Day"
       yaxis: "Number of private messages"
     moderator_warning_private_messages:
-      title: "Moderator Warning Messages"
+      title: "Moderator Warning"
       xaxis: "Day"
       yaxis: "Number of private messages"
     notify_moderators_private_messages:
-      title: "Notify Moderators Messages"
+      title: "Notify Moderators"
       xaxis: "Day"
       yaxis: "Number of private messages"
     notify_user_private_messages:
-      title: "Nofity User Messages"
+      title: "Nofity User"
       xaxis: "Day"
       yaxis: "Number of private messages"
 

@@ -339,12 +339,24 @@ table {
   width: 460px;
   margin-left: 30px;
 
+  h4 {
+    font-weight: normal;
+    margin-bottom: 8px;
+  }
+
+  i.icon {
+    color: #444;
+  }
+
   table {
     width: 100%;
 
     th {
       font-weight: normal;
       text-align: center;
+    }
+    th.title {
+      text-align: left;
     }
     thead {
       tr:hover > td,

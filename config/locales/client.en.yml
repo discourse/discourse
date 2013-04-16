@@ -824,6 +824,8 @@ en:
         no_problems: "No problems were found."
         moderators: 'Moderators:'
         admins: 'Admins:'
+        private_messages_short: "PMs"
+        private_messages_title: "Private Messages"
 
         reports:
           today: "Today"

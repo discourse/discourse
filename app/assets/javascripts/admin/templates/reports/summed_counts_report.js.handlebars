@@ -1,5 +1,10 @@
 <tr>
-  <td class="title"><a {{bindAttr href="reportUrl"}}>{{title}}</a></td>
+  <td class="title">
+    {{#if icon}}
+      <i {{bindAttr class=":icon icon"}}></i>
+    {{/if}}
+    <a {{bindAttr href="reportUrl"}}>{{title}}</a>
+  </td>
   <td class="value">{{todayCount}}</td>
   <td {{bindAttr class=":value yesterdayTrend"}}>{{yesterdayCount}} <i class="icon up icon-caret-up"></i><i class="icon down icon-caret-down"></i></td>
   <td {{bindAttr class=":value sevenDayTrend"}}>{{lastSevenDaysCount}} <i class="icon up icon-caret-up"></i><i class="icon down icon-caret-down"></i></td>

@@ -87,7 +87,18 @@ Discourse.Report = Discourse.Model.extend({
       }
     }
     return 'no-change';
-  }.property('data', 'prev30Days')
+  }.property('data', 'prev30Days'),
+
+  icon: function() {
+    switch( this.get('type') ) {
+    case 'flags':
+      return 'icon-flag';
+    case 'likes':
+      return 'icon-heart';
+    default:
+      return null;
+    }
+  }.property('type')
 });
 
 Discourse.Report.reopenClass({
