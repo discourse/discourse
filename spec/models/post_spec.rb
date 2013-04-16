@@ -3,6 +3,10 @@ require_dependency 'post_destroyer'
 
 describe Post do
 
+  before do
+    ImageSorcery.any_instance.stubs(:convert).returns(false)
+  end
+
   it { should belong_to :user }
   it { should belong_to :topic }
   it { should validate_presence_of :raw }
