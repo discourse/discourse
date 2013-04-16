@@ -498,6 +498,7 @@ DEPENDENCIES
   has_ip_address
   hiredis
   image_optim
+  image_sorcery
   jasminerice
   jquery-rails
   jshint_on_rails
