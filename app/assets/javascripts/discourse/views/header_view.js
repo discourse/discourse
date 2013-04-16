@@ -54,7 +54,7 @@ Discourse.HeaderView = Discourse.View.extend({
   showNotifications: function() {
 
     var headerView = this;
-    Discourse.ajax('/notifications').then(function(result) {
+    Discourse.ajax(Discourse.getURL('/notifications')).then(function(result) {
       headerView.set('notifications', result.map(function(n) {
         return Discourse.Notification.create(n);
       }));
