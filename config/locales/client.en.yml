@@ -818,6 +818,9 @@ en:
         latest_version: "Latest"
         update_often: 'Please update often!'
         problems_found: "Some problems have been found with your installation of Discourse:"
+        last_checked: "Last checked"
+        refresh_problems: "Refresh"
+        no_problems: "No problems were found."
         moderators: 'Moderators:'
         admins: 'Admins:'
 

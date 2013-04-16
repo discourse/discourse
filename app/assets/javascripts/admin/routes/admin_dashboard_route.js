@@ -8,8 +8,6 @@
 **/
 Discourse.AdminDashboardRoute = Discourse.Route.extend({
 
-  problemsCheckInterval: '1 minute ago',
-
   setupController: function(c) {
     this.fetchDashboardData(c);
     this.fetchGithubCommits(c);
@@ -35,18 +33,9 @@ Discourse.AdminDashboardRoute = Discourse.Route.extend({
         c.set('problems', d.problems);
         c.set('loading', false);
       });
-    } else if( !c.get('problemsFetchedAt') || Date.create(this.problemsCheckInterval, 'en') > c.get('problemsFetchedAt') ) {
+    } else if( !c.get('problemsFetchedAt') || Date.create(c.problemsCheckInterval, 'en') > c.get('problemsFetchedAt') ) {
       c.set('problemsFetchedAt', new Date());
-      var _this = this;
-      Discourse.AdminDashboard.fetchProblems().then(function(d) {
-        c.set('problems', d.problems);
-        c.set('loading', false);
-        if( d.problems && d.problems.length > 0 ) {
-          _this.problemsCheckInterval = '1 minute ago';
-        } else {
-          _this.problemsCheckInterval = '10 minutes ago';
-        }
-      });
+      c.loadProblems();
     }
   },
 
