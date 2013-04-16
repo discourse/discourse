@@ -23,7 +23,7 @@ Discourse.InviteModalView = Discourse.ModalBodyView.extend({
 
   buttonTitle: (function() {
     if (this.get('saving')) return Em.String.i18n('topic.inviting');
-    return Em.String.i18n('topic.invite_reply.title');
+    return Em.String.i18n('topic.invite_reply.action');
   }).property('saving'),
 
   successMessage: (function() {
