@@ -11,7 +11,7 @@
 
   <%= form_tag do |f| %>
     <%= hidden_field_tag :return_path, @return_path %>
-    <%= text_field_tag :password, @password %>
+    <%= password_field_tag :password, @password %>
     <%= submit_tag t(:'request_access.enter'), class: 'btn' %>
   <% end %>
 </div>
