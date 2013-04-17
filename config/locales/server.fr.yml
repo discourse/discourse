@@ -26,7 +26,7 @@ fr:
     zero: "Désolé, vous ne pouvez pas mentionner d'utilisateur."
     one: "Désolé, vous ne pouvez mentionner qu'un seul utilisateur."
     other: "Désolé, vous ne pouvez mentionner que %{count} utilisateur."
-  too_many_mentions_visitor:
+  too_many_mentions_newuser:
     zero: "Désolé, les visiteurs ne peuvent pas mentionner d'utilisateur."
     one: "Désolé, les visiteurs ne peuvent mentionner qu'un seul utilisateur."
     other: "Désolé, les visiteurs ne peuvent mentionner que %{count} utilisateur."
@@ -107,7 +107,7 @@ fr:
     post_template: "%{replace_paragraph}\n\nUtilisez l'espace ci-dessous pour une plus longue description, voire pour établir des règles."
 
   trust_levels:
-    visitor:
+    newuser:
       title: "visiteur"
     basic:
       title: "utilisateur basique"
@@ -474,9 +474,9 @@ fr:
     previous_visit_timeout_hours: "Combien de temps dure une visite avant de la considérer comme la visite 'précédente', en heures."
 
     uncategorized_name: "Nom pour les discussions sans catégorie dans la liste des catégories"
-    visitor_max_links: "Nombre maximum de liens qu'un visiteur peut ajouter à un message"
-    visitor_max_images: "Nombre maximum d'images qu'un visiteur peut ajouter à un message"
-    visitor_max_mentions_per_post: "Nombre maximum de référence à un @utilisateur qu'un visiteur peut ajouter à un message"
+    newuser_max_links: "Nombre maximum de liens qu'un visiteur peut ajouter à un message"
+    newuser_max_images: "Nombre maximum d'images qu'un visiteur peut ajouter à un message"
+    newuser_max_mentions_per_post: "Nombre maximum de référence à un @utilisateur qu'un visiteur peut ajouter à un message"
     max_mentions_per_post: "Le nombre maximal de @mentions que vous pouvez ajouter à un message"
 
     rate_limit_create_topic: "Combien de secondes avant de pouvoir démarrer une nouvelle discussion"

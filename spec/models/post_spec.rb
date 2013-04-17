@@ -87,14 +87,14 @@ describe Post do
   end
 
   describe "maximum images" do
-    let(:visitor) { Fabricate(:user, trust_level: TrustLevel.levels[:visitor]) }
-    let(:post_no_images) { Fabricate.build(:post, post_args.merge(user: visitor)) }
-    let(:post_one_image) { Fabricate.build(:post, post_args.merge(raw: "![sherlock](http://bbc.co.uk/sherlock.jpg)", user: visitor)) }
-    let(:post_two_images) { Fabricate.build(:post, post_args.merge(raw: "<img src='http://discourse.org/logo.png'> <img src='http://bbc.co.uk/sherlock.jpg'>", user: visitor)) }
-    let(:post_with_avatars) { Fabricate.build(:post, post_args.merge(raw: '<img alt="smiley" title=":smiley:" src="/assets/emoji/smiley.png" class="avatar"> <img alt="wink" title=":wink:" src="/assets/emoji/wink.png" class="avatar">', user: visitor)) }
-    let(:post_with_favicon) { Fabricate.build(:post, post_args.merge(raw: '<img src="/assets/favicons/wikipedia.png" class="favicon">', user: visitor)) }
-    let(:post_with_thumbnail) { Fabricate.build(:post, post_args.merge(raw: '<img src="/assets/emoji/smiley.png" class="thumbnail">', user: visitor)) }
-    let(:post_with_two_classy_images) { Fabricate.build(:post, post_args.merge(raw: "<img src='http://discourse.org/logo.png' class='classy'> <img src='http://bbc.co.uk/sherlock.jpg' class='classy'>", user: visitor)) }
+    let(:newuser) { Fabricate(:user, trust_level: TrustLevel.levels[:newuser]) }
+    let(:post_no_images) { Fabricate.build(:post, post_args.merge(user: newuser)) }
+    let(:post_one_image) { Fabricate.build(:post, post_args.merge(raw: "![sherlock](http://bbc.co.uk/sherlock.jpg)", user: newuser)) }
+    let(:post_two_images) { Fabricate.build(:post, post_args.merge(raw: "<img src='http://discourse.org/logo.png'> <img src='http://bbc.co.uk/sherlock.jpg'>", user: newuser)) }
+    let(:post_with_avatars) { Fabricate.build(:post, post_args.merge(raw: '<img alt="smiley" title=":smiley:" src="/assets/emoji/smiley.png" class="avatar"> <img alt="wink" title=":wink:" src="/assets/emoji/wink.png" class="avatar">', user: newuser)) }
+    let(:post_with_favicon) { Fabricate.build(:post, post_args.merge(raw: '<img src="/assets/favicons/wikipedia.png" class="favicon">', user: newuser)) }
+    let(:post_with_thumbnail) { Fabricate.build(:post, post_args.merge(raw: '<img src="/assets/emoji/smiley.png" class="thumbnail">', user: newuser)) }
+    let(:post_with_two_classy_images) { Fabricate.build(:post, post_args.merge(raw: "<img src='http://discourse.org/logo.png' class='classy'> <img src='http://bbc.co.uk/sherlock.jpg' class='classy'>", user: newuser)) }
 
     it "returns 0 images for an empty post" do
       Fabricate.build(:post).image_count.should == 0
@@ -128,11 +128,11 @@ describe Post do
     context "validation" do
 
       before do
-        SiteSetting.stubs(:visitor_max_images).returns(1)
+        SiteSetting.stubs(:newuser_max_images).returns(1)
       end
 
-      context 'visitor' do
-        it "allows a visitor to post below the limit" do
+      context 'newuser' do
+        it "allows a new user to post below the limit" do
           post_one_image.should be_valid
         end
 
@@ -140,7 +140,7 @@ describe Post do
           post_two_images.should_not be_valid
         end
 
-        it "doesn't allow a visitor to edit their post to insert an image" do
+        it "doesn't allow a new user to edit their post to insert an image" do
           post_no_images.user.trust_level = TrustLevel.levels[:new]
           post_no_images.save
           -> {
@@ -150,7 +150,7 @@ describe Post do
         end
       end
 
-      it "allows more images from a non-visitor account" do
+      it "allows more images from a not-new account" do
         post_two_images.user.trust_level = TrustLevel.levels[:basic]
         post_two_images.should be_valid
       end
@@ -160,10 +160,10 @@ describe Post do
   end
 
   describe "maximum links" do
-    let(:visitor) { Fabricate(:user, trust_level: TrustLevel.levels[:visitor]) }
-    let(:post_one_link) { Fabricate.build(:post, post_args.merge(raw: "[sherlock](http://www.bbc.co.uk/programmes/b018ttws)", user: visitor)) }
-    let(:post_two_links) { Fabricate.build(:post, post_args.merge(raw: "<a href='http://discourse.org'>discourse</a> <a href='http://twitter.com'>twitter</a>", user: visitor)) }
-    let(:post_with_mentions) { Fabricate.build(:post, post_args.merge(raw: "hello @#{visitor.username} how are you doing?") )}
+    let(:newuser) { Fabricate(:user, trust_level: TrustLevel.levels[:newuser]) }
+    let(:post_one_link) { Fabricate.build(:post, post_args.merge(raw: "[sherlock](http://www.bbc.co.uk/programmes/b018ttws)", user: newuser)) }
+    let(:post_two_links) { Fabricate.build(:post, post_args.merge(raw: "<a href='http://discourse.org'>discourse</a> <a href='http://twitter.com'>twitter</a>", user: newuser)) }
+    let(:post_with_mentions) { Fabricate.build(:post, post_args.merge(raw: "hello @#{newuser.username} how are you doing?") )}
 
     it "returns 0 links for an empty post" do
       Fabricate.build(:post).link_count.should == 0
@@ -184,10 +184,10 @@ describe Post do
     context "validation" do
 
       before do
-        SiteSetting.stubs(:visitor_max_links).returns(1)
+        SiteSetting.stubs(:newuser_max_links).returns(1)
       end
 
-      context 'visitor' do
+      context 'newuser' do
         it "returns true when within the amount of links allowed" do
           post_one_link.should be_valid
         end
@@ -250,28 +250,28 @@ describe Post do
 
     context "max mentions" do
 
-      let(:visitor) { Fabricate(:user, trust_level: TrustLevel.levels[:visitor]) }
-      let(:post_with_one_mention) { Fabricate.build(:post, post_args.merge(raw: "@Jake is the person I'm mentioning", user: visitor)) }
-      let(:post_with_two_mentions) { Fabricate.build(:post, post_args.merge(raw: "@Jake @Finn are the people I'm mentioning", user: visitor)) }
+      let(:newuser) { Fabricate(:user, trust_level: TrustLevel.levels[:newuser]) }
+      let(:post_with_one_mention) { Fabricate.build(:post, post_args.merge(raw: "@Jake is the person I'm mentioning", user: newuser)) }
+      let(:post_with_two_mentions) { Fabricate.build(:post, post_args.merge(raw: "@Jake @Finn are the people I'm mentioning", user: newuser)) }
 
-      context 'visitor' do
+      context 'new user' do
         before do
-          SiteSetting.stubs(:visitor_max_mentions_per_post).returns(1)
+          SiteSetting.stubs(:newuser_max_mentions_per_post).returns(1)
           SiteSetting.stubs(:max_mentions_per_post).returns(5)
         end
 
-        it "allows a visitor to have visitor_max_mentions_per_post mentions" do
+        it "allows a new user to have newuser_max_mentions_per_post mentions" do
           post_with_one_mention.should be_valid
         end
 
-        it "doesn't allow a visitor to have more than visitor_max_mentions_per_post mentions" do
+        it "doesn't allow a new user to have more than newuser_max_mentions_per_post mentions" do
           post_with_two_mentions.should_not be_valid
         end
       end
 
-      context "non-visitor" do
+      context "not a new user" do
         before do
-          SiteSetting.stubs(:visitor_max_mentions_per_post).returns(0)
+          SiteSetting.stubs(:newuser_max_mentions_per_post).returns(0)
           SiteSetting.stubs(:max_mentions_per_post).returns(1)
         end
 

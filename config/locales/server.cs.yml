@@ -20,7 +20,7 @@ cs:
     one: "Bohužel, můžete zmínit jen jednoho uživatele v jednom příspěvku."
     few: "Bohužel, můžete zmínit jen %{count} uživatele v jednom příspěvku."
     other: "Bohužel, můžete zmínit jen %{count} uživatelů v jednom příspěvku."
-  too_many_mentions_visitor:
+  too_many_mentions_newuser:
     zero: "Bohužel, návštěvníci nemohou zmiňovat ostatní uživatele."
     one: "Bohužel, návštěvníci mohou zmínit jen jednoho uživatele v jednom příspěvku."
     few: "Bohužel, návštěvníci mohou zmínit jen %{count} uživatele v jednom příspěvku."
@@ -103,7 +103,7 @@ cs:
     post_template: "%{replace_paragraph}\n\nPoužijte toto místo níže pro delší popis a stanovení pravidel diskuze!"
 
   trust_levels:
-    visitor:
+    newuser:
       title: "návštěvník"
     basic:
       title: "základní uživatel"
@@ -503,9 +503,9 @@ cs:
     regular_requires_likes_given: "Kolik 'líbí se' musí základní uživatel rozdat, než může získat stálou (2) věrohodnost"
     regular_requires_topic_reply_count: "Do kolika témat musí základní uživatel odpovědět, než může získat stálou (2) věrohodnost"
 
-    visitor_max_links: "Kolik odkazů může návštěvník vložit do příspěvku"
-    visitor_max_images: "Kolik obrázků může návštěvník vložit do příspěvku"
-    visitor_max_mentions_per_post: "Kolik zmínek přes @name může návštěvník vložit do příspěvku"
+    newuser_max_links: "Kolik odkazů může návštěvník vložit do příspěvku"
+    newuser_max_images: "Kolik obrázků může návštěvník vložit do příspěvku"
+    newuser_max_mentions_per_post: "Kolik zmínek přes @name může návštěvník vložit do příspěvku"
     max_mentions_per_post: "Maximální počet zmínek přes @name, které mohou být použity v jednom příspěvku"
 
     auto_link_images_wider_than: "Obrázky širší než tato hodnota v pixelech budou odkazovány do lightboxu"

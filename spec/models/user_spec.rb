@@ -267,7 +267,7 @@ describe User do
   describe "trust levels" do
 
     # NOTE be sure to use build to avoid db calls 
-    let(:user) { Fabricate.build(:user, trust_level: TrustLevel.levels[:visitor]) }
+    let(:user) { Fabricate.build(:user, trust_level: TrustLevel.levels[:newuser]) }
 
     it "sets to the default trust level setting" do
       SiteSetting.expects(:default_trust_level).returns(TrustLevel.levels[:elder])
@@ -281,7 +281,7 @@ describe User do
       end
 
       it "is true for your basic level" do
-        user.has_trust_level?(:visitor).should be_true
+        user.has_trust_level?(:newuser).should be_true
       end
 
       it "is false for a higher level" do
@@ -290,7 +290,7 @@ describe User do
 
       it "is true if you exceed the level" do
         user.trust_level = TrustLevel.levels[:elder]
-        user.has_trust_level?(:visitor).should be_true
+        user.has_trust_level?(:newuser).should be_true
       end
 
       it "is true for an admin even with a low trust level" do

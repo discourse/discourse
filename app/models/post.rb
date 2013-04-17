@@ -135,18 +135,18 @@ class Post < ActiveRecord::Base
     if acting_user.present? && acting_user.has_trust_level?(:basic)
       errors.add(:base, I18n.t(:too_many_mentions, count: SiteSetting.max_mentions_per_post)) if raw_mentions.size > SiteSetting.max_mentions_per_post
     else
-      errors.add(:base, I18n.t(:too_many_mentions_visitor, count: SiteSetting.visitor_max_mentions_per_post)) if raw_mentions.size > SiteSetting.visitor_max_mentions_per_post
+      errors.add(:base, I18n.t(:too_many_mentions_newuser, count: SiteSetting.newuser_max_mentions_per_post)) if raw_mentions.size > SiteSetting.newuser_max_mentions_per_post
     end
   end
 
   def max_images_validator
     return if acting_user.present? && acting_user.has_trust_level?(:basic)
-    errors.add(:base, I18n.t(:too_many_images, count: SiteSetting.visitor_max_images)) if image_count > SiteSetting.visitor_max_images
+    errors.add(:base, I18n.t(:too_many_images, count: SiteSetting.newuser_max_images)) if image_count > SiteSetting.newuser_max_images
   end
 
   def max_links_validator
     return if acting_user.present? && acting_user.has_trust_level?(:basic)
-    errors.add(:base, I18n.t(:too_many_links, count: SiteSetting.visitor_max_links)) if link_count > SiteSetting.visitor_max_links
+    errors.add(:base, I18n.t(:too_many_links, count: SiteSetting.newuser_max_links)) if link_count > SiteSetting.newuser_max_links
   end
 
 
