@@ -277,10 +277,12 @@ table {
 .dashboard-left {
   float: left;
   width: 500px;
+  margin-top: 10px;
 }
 .dashboard-right {
   float: right;
   width: 500px;
+  margin-top: 10px;
   margin-right: 15px;
 
   @include medium-width {
@@ -335,7 +337,7 @@ table {
 }
 
 .dashboard-stats {
-  margin-top: 30px;
+  margin-bottom: 30px;
   width: 460px;
   margin-left: 30px;
 
@@ -439,12 +441,10 @@ table {
   }
 
   &.trust-levels {
-    margin-top: 0px;
-
+    margin-bottom: 0px;
     table {
       margin-bottom: 0px;
     }
-
     td.value {
       width: 45px;
     }
@@ -454,7 +454,6 @@ table {
 
 .commits-widget {
   border: solid 1px #ccc;
-  margin-top: 10px;
   width: 500px;
   height: 700px;
 
@@ -485,9 +484,7 @@ table {
     font-weight: bold;
     height: 30px;
     border-bottom: solid 1px #ccc;
-
-    background-color:#e1e1e1;
-    background-image:linear-gradient(center top, #f1f1f1 0%, #e1e1e1 100%);
+    @include linear-gradient(#f1f1f1, #e1e1e1);
     cursor: pointer;
 
     h1 {
@@ -503,7 +500,7 @@ table {
   }
 
   .commits-list {
-    height: 349px;
+    height: 669px;
     overflow-y:auto;
 
     li {
@@ -511,8 +508,7 @@ table {
       line-height: 1.0em;
       padding: 6px 8px;
       border-bottom: solid 1px #ccc;
-      background-color:#eee;
-      background-image:linear-gradient(center top, #fafafa 0%, #eee 100%);
+      @include linear-gradient(#f6f6f6, #eee);
 
       .left {
         float: left;
