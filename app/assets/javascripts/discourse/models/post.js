@@ -34,6 +34,10 @@ Discourse.Post = Discourse.Model.extend({
     return this.get('post_number') === 1;
   }).property('post_number'),
 
+  byTopicCreator: function() {
+    return this.get('topic.created_by.id') === this.get('user_id');
+  }.property('topic.created_by.id', 'user_id'),
+
   hasHistory: (function() {
     return this.get('version') > 1;
   }).property('version'),
