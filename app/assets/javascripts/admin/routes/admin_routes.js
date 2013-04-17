@@ -25,6 +25,8 @@ Discourse.Route.buildRoutes(function() {
       this.route('old', { path: '/old' });
     });
 
+    this.route('groups', {path: '/groups'});
+
     this.resource('adminUsers', { path: '/users' }, function() {
       this.resource('adminUser', { path: '/:username' });
       this.resource('adminUsersList', { path: '/list' }, function() {

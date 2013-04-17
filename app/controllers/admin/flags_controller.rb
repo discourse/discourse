@@ -1,5 +1,3 @@
-require_dependency 'sql_builder'
-
 class Admin::FlagsController < Admin::AdminController
   def index
 

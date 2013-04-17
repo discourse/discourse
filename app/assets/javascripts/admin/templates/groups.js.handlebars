@@ -1,0 +1,23 @@
+<div class='row'>
+  <div class='content-list span6'>
+    <h3>{{i18n admin.groups.edit}}</h3>
+    <ul>
+      {{#each group in controller}}
+        <li>
+        <a href="#" {{action "edit" group}} {{bindAttr class="group.active"}}>{{group.name}}</a>
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+
+  <div class='content-editor'>
+    {{#if content.active}}
+      {{#with content.active}}
+        {{name}}  
+        {{view Discourse.UserSelector id="private-message-users" class="span8" placeholderKey="admin.groups.selector_placeholder" tabindex="1" usernamesBinding="usernames"}}
+      {{/with}}
+    {{else}}
+      nothing here yet
+    {{/if}}
+  </div>
+</div>

@@ -28,7 +28,7 @@
           {{#if content.editTitle}}
             <div class='form-element clearfix'>
                 {{#if content.creatingPrivateMessage}}
-                  {{view Discourse.TextField id="private-message-users" class="span8" placeholderKey="composer.users_placeholder" tabindex="1"}}
+                  {{view Discourse.UserSelector topicIdBinding="controller.controllers.topic.content.id" excludeCurrentUser="true" id="private-message-users" class="span8" placeholderKey="composer.users_placeholder" tabindex="1" usernamesBinding="content.targetUsernames"}}
                 {{/if}}
                 {{view Discourse.TextField valueBinding="content.title" tabindex="2" id="reply-title" maxlength="255" class="span8" placeholderKey="composer.title_placeholder"}}
                 {{#unless content.creatingPrivateMessage}}
