@@ -587,7 +587,7 @@ en:
         reply: "begin composing a reply to this post"
         like: "like this post"
         edit: "edit this post"
-        flag: "flag this post for moderator attention"
+        flag: "flag this post for attention"
         delete: "delete this post"
         undelete: "undelete this post"
         share: "share a link to this post"
