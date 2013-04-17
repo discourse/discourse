@@ -314,8 +314,24 @@ fr:
       title: Emails envoyés
       xaxis: Jour
       yaxis: "Nombre d'emails"
-    private_messages:
-      title: Messages privés
+    user_to_user_private_messages:
+      title: Utilisateur à Utilisateur
+      xaxis: Jour
+      yaxis: Nombre de messages privés
+    system_private_messages:
+      title: Système
+      xaxis: Jour
+      yaxis: Nombre de messages privés
+    moderator_warning_private_messages:
+      title: Avertissements
+      xaxis: Jour
+      yaxis: Nombre de messages privés
+    notify_moderators_private_messages:
+      title: Notifications Modérateur
+      xaxis: Jour
+      yaxis: Nombre de messages privés
+    notify_user_private_messages:
+      title: Notifications Utilisateur
       xaxis: Jour
       yaxis: Nombre de messages privés
 

@@ -512,6 +512,7 @@ fr:
 
       invite_reply:
         title: 'Inviter des amis à répondre'
+        action: "Envoyer l'invitation"
         help: "envoyer des invitations à des amis pour qu'ils puissent participer à cette discussion en un simple clic"
         email: "Nous allons envoyer un mail à votre ami pour lui permettre de participer à cette conversation."
         email_placeholder: 'adresse email'
@@ -820,8 +821,13 @@ fr:
         installed_version: "Version installée"
         latest_version: "Dernière version"
         problems_found: "Quelques problèmes ont été trouvés dans votre installation de Discourse :"
+        last_checked: "Dernière vérification"
+        refresh_problems: "Rafraîchir"
+        no_problems: "Aucun problème n'à été trouvé."
         moderators: "Modérateurs :"
         admins: "Administateurs :"
+        private_messages_short: "MPs"
+        private_messages_title: "Messages Privés"
 
         reports:
           today: "Aujourd'hui"
