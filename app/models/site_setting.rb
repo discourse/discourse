@@ -79,7 +79,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:post_undo_action_window_mins, 10)
   setting(:system_username, '')
   setting(:max_mentions_per_post, 10)
-  setting(:visitor_max_mentions_per_post, 2)
+  setting(:newuser_max_mentions_per_post, 2)
 
   setting(:uncategorized_name, 'uncategorized')
 
@@ -168,8 +168,8 @@ class SiteSetting < ActiveRecord::Base
   setting(:body_min_entropy, 7)
   setting(:max_word_length, 30)
 
-  setting(:visitor_max_links, 2)
-  setting(:visitor_max_images, 0)
+  setting(:newuser_max_links, 2)
+  setting(:newuser_max_images, 0)
 
   setting(:title_fancy_entities, true)
 

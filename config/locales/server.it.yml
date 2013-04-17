@@ -80,7 +80,7 @@ it:
     post_template: "%{replace_paragraph}\n\nUsa lo spazio sottostante per una descrizione più estesa, ed anche per stabilire delle regole per la conversazione!"
 
   trust_levels:
-    visitor:
+    newuser:
       title: "visitatore"
     basic:
       title: "utente base"

@@ -19,7 +19,7 @@ zh_TW:
     zero: "抱歉, 你無法@用戶。"
     one: "抱歉, 你一次僅能@一個用戶。"
     other: "抱歉, 你一次僅能@ %{count} 個用戶。"
-  too_many_mentions_visitor:
+  too_many_mentions_newuser:
     zero: "抱歉, 遊客無法@用戶。"
     one: "抱歉, 遊客一次僅能@一個用戶。"
     other: "抱歉, 遊客一次僅能@ %{count} 個用戶。"
@@ -98,7 +98,7 @@ zh_TW:
     post_template: "%{replace_paragraph}\n\n使用下面的空間輸入分類的詳細描述信息，可包括在此分類下討論的規則、內容導向等等。"
 
   trust_levels:
-    visitor:
+    newuser:
       title: "訪客"
     basic:
       title: "初級用戶"
@@ -481,9 +481,9 @@ zh_TW:
     regular_requires_likes_given: "一個初級用戶升級到常規用戶（2）所需要投出的贊數"
     regular_requires_topic_reply_count: "一個初級用戶升級到常規用戶（2）所需要回複的主題數量"
 
-    visitor_max_links: "一個訪問者可以添加到一個帖子裏的鏈接數量"
-    visitor_max_images: "一個訪問者可以加入到一個帖子裏的圖片數量"
-    visitor_max_mentions_per_post: "一個訪問者可以在一個帖子裏使用 @name 提及的最大數量"
+    newuser_max_links: "一個訪問者可以添加到一個帖子裏的鏈接數量"
+    newuser_max_images: "一個訪問者可以加入到一個帖子裏的圖片數量"
+    newuser_max_mentions_per_post: "一個訪問者可以在一個帖子裏使用 @name 提及的最大數量"
     max_mentions_per_post: "你可以在一個帖子裏使用 @name 提及的最大數量"
 
     auto_link_images_wider_than: "圖片寬度超過此設定像素值的，將被自動附加一個鏈接並且使用燈箱（lightbox）來展示"

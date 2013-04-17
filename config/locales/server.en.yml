@@ -19,18 +19,18 @@ en:
     zero: "Sorry, you can't mention other users."
     one: "Sorry, you can only mention one other user in a post."
     other: "Sorry, you can only mention %{count} users in a post."
-  too_many_mentions_visitor:
-    zero: "Sorry, visitors can't mention other users."
-    one: "Sorry, visitors can only mention one other user in a post."
-    other: "Sorry, visitors can only mention %{count} users in a post."
+  too_many_mentions_newuser:
+    zero: "Sorry, new users can't mention other users."
+    one: "Sorry, new users can only mention one other user in a post."
+    other: "Sorry, new users can only mention %{count} users in a post."
   too_many_images:
-    zero: "Sorry, visitors can't put images in posts."
-    one: "Sorry, visitors can only put one image in a post."
-    other: "Sorry, visitors can only put %{count} images in a post."
+    zero: "Sorry, new users can't put images in posts."
+    one: "Sorry, new users can only put one image in a post."
+    other: "Sorry, new users can only put %{count} images in a post."
   too_many_links:
-    zero: "Sorry, visitors can't put links in posts."
-    one: "Sorry, visitors can only put one link in a post."
-    other: "Sorry, visitors can only put %{count} links in a post."
+    zero: "Sorry, new users can't put links in posts."
+    one: "Sorry, new users can only put one link in a post."
+    other: "Sorry, new users can only put %{count} links in a post."
 
   just_posted_that: "is too similar to what you recently posted"
   has_already_been_used: "has already been used"
@@ -98,8 +98,8 @@ en:
     post_template: "%{replace_paragraph}\n\nUse this space for a longer description, as well as to establish any category guidelines or rules.\n\nSome things to consider in any discussion replies below:\n\n- What is this category for? Why should people select this category for their topic?\n\n- How is this different than the other categories we already have?\n\n- Do we need this category?\n\n- Should we merge this with another category, or split it into more categories?\n"
 
   trust_levels:
-    visitor:
-      title: "visitor"
+    newuser:
+      title: "new user"
     basic:
       title: "basic user"
     regular:
@@ -497,9 +497,9 @@ en:
     regular_requires_likes_given: "How many likes a basic user must cast before promotion to regular (2) trust level"
     regular_requires_topic_reply_count: "How many topics a basic user must reply to before promotion to regular (2) trust level"
 
-    visitor_max_links: "How many links a visitor can add to a post"
-    visitor_max_images: "How many images a visitor can add to a post"
-    visitor_max_mentions_per_post: "Maximum number of @name notifications a visitor can use in a post"
+    newuser_max_links: "How many links a new user can add to a post"
+    newuser_max_images: "How many images a new user can add to a post"
+    newuser_max_mentions_per_post: "Maximum number of @name notifications a new user can use in a post"
     max_mentions_per_post: "Maximum number of @name notifications you can use in a post"
 
     auto_link_images_wider_than: "Images wider than this, in pixels, will get auto link and lightbox treatment"

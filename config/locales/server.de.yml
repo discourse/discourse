@@ -91,7 +91,7 @@ de:
     post_template: "%{replace_paragraph}\n\nBenutze den folgenden Platz für eine ausführliche Beschreibung sowie für Regeln und zur Diskussion!"
 
   trust_levels:
-    visitor:
+    newuser:
       title: "Gast"
     basic:
       title: "Anfänger"
@@ -427,9 +427,9 @@ de:
     basic_requires_topics_entered: "Zahl der Themen, die ein neuer Nutzer erstellen muss, bevor er zum sporadischen Nutzer (Vertrauenswürdigkeit 1) aufsteigt."
     basic_requires_read_posts: "Zahl der Beiträge, die ein neuer Nutzer lesen muss, bevor bevor er zum sporadischen Nutzer (Vertrauenswürdigkeit 1) aufsteigt."
     basic_requires_time_spent_mins: "Minuten, die ein neuer Nutzer Beiträge lesen muss, bevor er zum sporadischen Nutzer (Vertrauenswürdigkeit 1) aufsteigt."
-    visitor_max_links: "Maximale Zahl der Links, die Gäste Beiträgen hinzufügen dürfen."
-    visitor_max_images: "Maximale Zahl der Bilder, die Gäste Beiträgen hinzufügen dürfen."
-    visitor_max_mentions_per_post: "Maximale Zahl der @Namens-Erwähnungen, die Gäste in Beiträgen nutzen dürfen."
+    newuser_max_links: "Maximale Zahl der Links, die Gäste Beiträgen hinzufügen dürfen."
+    newuser_max_images: "Maximale Zahl der Bilder, die Gäste Beiträgen hinzufügen dürfen."
+    newuser_max_mentions_per_post: "Maximale Zahl der @Namens-Erwähnungen, die Gäste in Beiträgen nutzen dürfen."
     max_mentions_per_post: "Maximale Zahl der @Namens-Erwähnungen, die man in einem Beitrag nutzen kann."
 
     auto_link_images_wider_than: "Pixelbreite, ab der Bilder automatisch verlinkt und verkleinert in einer Lightbox dargestellt werden."

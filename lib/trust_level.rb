@@ -6,7 +6,7 @@ class TrustLevel
   class << self
     def levels
       @levels ||= Enum.new(
-        :visitor, :basic, :regular, :leader, :elder, start: 0
+        :newuser, :basic, :regular, :leader, :elder, start: 0
       )
     end
 
@@ -21,7 +21,7 @@ class TrustLevel
     end
 
     def compare(current_level, level)
-      (current_level || levels[:visitor]) >= levels[level] rescue binding.pry
+      (current_level || levels[:newuser]) >= levels[level] rescue binding.pry
     end
   end
 
