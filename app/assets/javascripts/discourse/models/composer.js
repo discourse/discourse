@@ -343,6 +343,7 @@ Discourse.Composer = Discourse.Model.extend({
         reply_count: 0,
         display_username: currentUser.get('name'),
         username: currentUser.get('username'),
+        user_id: currentUser.get('id'),
         metaData: this.get('metaData'),
         archetype: this.get('archetypeId'),
         post_type: Discourse.get('site.post_types.regular'),
