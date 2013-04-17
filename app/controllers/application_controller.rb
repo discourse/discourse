@@ -66,7 +66,7 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Discourse::NotFound do
-    if request.format.html?
+    if !request.format || request.format.html?
       # for now do a simple remap, we may look at cleaner ways of doing the render
       raise ActiveRecord::RecordNotFound
     else
