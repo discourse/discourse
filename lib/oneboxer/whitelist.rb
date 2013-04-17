@@ -45,7 +45,6 @@ module Oneboxer
        Entry.new(/^https?:\/\/(?:www\.)?samsung\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?mashable\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?forbes\.com\/.+/),
-       Entry.new(/^https?:\/\/(?:www\.)?soundcloud\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?thefreedictionary\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?groupon\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?ikea\.com\/.+/),
