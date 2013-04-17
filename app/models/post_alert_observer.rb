@@ -15,6 +15,8 @@ class PostAlertObserver < ActiveRecord::Observer
 
   # We need to consider new people to mention / quote when a post is edited
   def after_save_post(post)
+    return if post.topic.private_message?
+
     mentioned_users = extract_mentioned_users(post)
     quoted_users = extract_quoted_users(post)
 
