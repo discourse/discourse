@@ -317,7 +317,14 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
         categoryName: newCategoryName
       });
       // save the modifications
-      topic.save();
+      topic.save().then(function(result){
+        // update the title if it has been changed (cleaned up) server-side
+        var title = result.basic_topic.fancy_title;
+        topic.setProperties({
+          title: title,
+          fancy_title: title
+        });
+      });
       // close editing mode
       this.set('editingTopic', false);
     }
