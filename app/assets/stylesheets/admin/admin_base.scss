@@ -346,12 +346,14 @@ table {
     margin-bottom: 8px;
   }
 
-  i.icon {
-    color: #444;
-  }
-
   table {
     width: 100%;
+
+    .title {
+      i.icon {
+        color: #444;
+      }
+    }
 
     th {
       font-weight: normal;
