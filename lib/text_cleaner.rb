@@ -10,7 +10,7 @@ class TextCleaner
       deduplicate_question_marks: SiteSetting.title_prettify,
       replace_all_upper_case: SiteSetting.title_prettify,
       capitalize_first_letter: SiteSetting.title_prettify,
-      remove_unnecessary_period: SiteSetting.title_prettify,
+      remove_all_periods_from_the_end: SiteSetting.title_prettify,
       remove_extraneous_space: SiteSetting.title_prettify && SiteSetting.default_locale == "en",
       fixes_interior_spaces: true,
       strip_whitespaces: true
@@ -30,8 +30,8 @@ class TextCleaner
     text.tr!('A-Z', 'a-z') if opts[:replace_all_upper_case] && (text =~ /[A-Z]+/) && (text == text.upcase)
     # Capitalize first letter
     text.sub!(/\A([a-z])/) { |first| first.capitalize } if opts[:capitalize_first_letter]
-    # Remove unnecessary period at the end
-    text.sub!(/([^.])\.(\s*)\z/, '\1\2') if opts[:remove_unnecessary_period]
+    # Remove unnecessary periods at the end
+    text.sub!(/([^.])\.+(\s*)\z/, '\1\2') if opts[:remove_all_periods_from_the_end]
     # Remove extraneous space before the end punctuation
     text.sub!(/\s+([!?]\s*)\z/, '\1') if opts[:remove_extraneous_space]
     # Fixes interior spaces

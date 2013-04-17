@@ -70,26 +70,24 @@ describe TextCleaner do
 
   end
 
-  context "period at the end" do
+  context "periods at the end" do
 
-    let(:with_period) { "oops." }
-    let(:with_periods) { "oops..." }
+    let(:with_one_period) { "oops." }
+    let(:with_several_periods) { "oops..." }
     let(:without_period) { "oops" }
 
-    it "ignores unnecessary period at the end by default" do
-      TextCleaner.clean(with_period).should == with_period
+    it "ignores unnecessary periods at the end by default" do
+      TextCleaner.clean(with_one_period).should == with_one_period
+      TextCleaner.clean(with_several_periods).should == with_several_periods
     end
 
-    it "removes unnecessary period at the end when enabled" do
-      TextCleaner.clean(with_period, remove_unnecessary_period: true).should == without_period
-    end
-
-    it "keeps ellipsis when enabled" do
-      TextCleaner.clean(with_periods, remove_unnecessary_period: true).should == with_periods
+    it "removes unnecessary periods at the end when enabled" do
+      TextCleaner.clean(with_one_period, remove_all_periods_from_the_end: true).should == without_period
+      TextCleaner.clean(with_several_periods, remove_all_periods_from_the_end: true).should == without_period
     end
 
     it "keeps trailing whitespaces when enabled" do
-      TextCleaner.clean(with_periods + " ", remove_unnecessary_period: true).should == with_periods + " "
+      TextCleaner.clean(with_several_periods + " ", remove_all_periods_from_the_end: true).should == without_period + " "
     end
 
   end
