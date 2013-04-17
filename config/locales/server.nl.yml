@@ -241,7 +241,7 @@ nl:
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Licht moderatoren in"
-      description: "Dit bericht moet door een moderator bekeken worden. Dit vanwege de <a href="/faq">FAQ</a>, <a href="/tos">TOS</a> of een andere reden hier nog niet genoemd."
+      description: "Dit bericht moet door een moderator bekeken worden. Dit vanwege de <a href='/faq'>FAQ</a>, <a href='/tos'>TOS</a> of een andere reden hier nog niet genoemd."
       long_form: moderatoren ingelicht
       email_title: "Graag aandacht voor een bericht in '%{title}'"
       email_body: "%{link}\n\n%{message}"
@@ -505,7 +505,7 @@ nl:
 
     visitor_max_links: Hoeveel links een bezoeker in een bericht kan plaatsen
     visitor_max_images: Hoeveel afbeeldingen een bezoeker in een bericht kan plaatsen
-    visitor_max_mentions_per_post: "Maximum aantal @naam notificaties dat een bezoeker in een bericht kan gebruiken
+    visitor_max_mentions_per_post: "Maximum aantal @naam notificaties dat een bezoeker in een bericht kan gebruiken"
     max_mentions_per_post: "Maximum aantal @naam notificaties dat je in een bericht kan gebruiken"
 
     auto_link_images_wider_than: "Afbeeldingen breder dan dit, in pixels, krijgen automatisch een link naar een lightbox"
@@ -789,7 +789,7 @@ nl:
         [prefs]: %{user_preferences_url}
 
     export_succeeded:
-      subject_template: "xport succesvol uitgevoerd
+      subject_template: Export succesvol uitgevoerd
       text_body_template: De export was succesvol uitgevoerd.
 
     import_succeeded:
