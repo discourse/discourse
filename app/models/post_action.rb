@@ -50,8 +50,8 @@ class PostAction < ActiveRecord::Base
     user_actions
   end
 
-  def self.count_likes_per_day(sinceDaysAgo = 30)
-    where(post_action_type_id: PostActionType.types[:like]).where('created_at > ?', sinceDaysAgo.days.ago).group('date(created_at)').order('date(created_at)').count
+  def self.count_per_day_for_type(sinceDaysAgo = 30, post_action_type)
+    where(post_action_type_id: post_action_type).where('created_at > ?', sinceDaysAgo.days.ago).group('date(created_at)').order('date(created_at)').count
   end
 
   def self.clear_flags!(post, moderator_id, action_type_id = nil)

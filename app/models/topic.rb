@@ -583,6 +583,10 @@ class Topic < ActiveRecord::Base
     end
   end
 
+  def self.starred_counts_per_day(sinceDaysAgo=30)
+    TopicUser.where('starred_at > ?', sinceDaysAgo.days.ago).group('date(starred_at)').order('date(starred_at)').count
+  end
+
   # Enable/disable the mute on the topic
   def toggle_mute(user, muted)
     TopicUser.change(user, self.id, notification_level: muted?(user) ? TopicUser.notification_levels[:regular] : TopicUser.notification_levels[:muted] )

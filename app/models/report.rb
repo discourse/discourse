@@ -74,6 +74,22 @@ class Report
     report.prev30Days = subject_class.where('created_at > ? and created_at < ?', 60.days.ago, 30.days.ago).count
   end
 
+  def self.report_users_by_trust_level(report)
+    report.data = []
+    User.counts_by_trust_level.each do |level, count|
+      report.data << {x: level.to_i, y: count}
+    end
+  end
+
+  def self.report_favorites(report)
+    basic_report_about report, Topic, :starred_counts_per_day
+    query = TopicUser.where(starred: true)
+    report.total = query.count
+    report.prev30Days = query.where('starred_at > ? and starred_at < ?', 60.days.ago, 30.days.ago).count
+  end
+
+  # Post action counts:
+
   def self.report_flags(report)
     report.data = []
     (0..30).to_a.reverse.each do |i|
@@ -89,22 +105,25 @@ class Report
     report.prev30Days = flagsQuery.where('created_at > ? and created_at < ?', 60.days.ago, 30.days.ago).count
   end
 
-  def self.report_users_by_trust_level(report)
-    report.data = []
-    User.counts_by_trust_level.each do |level, count|
-      report.data << {x: level.to_i, y: count}
-    end
+  def self.report_likes(report)
+    post_action_report report, PostActionType.types[:like]
   end
 
-  def self.report_likes(report)
+  def self.report_bookmarks(report)
+    post_action_report report, PostActionType.types[:bookmark]
+  end
+
+  def self.post_action_report(report, post_action_type)
     report.data = []
-    PostAction.count_likes_per_day(30).each do |date, count|
+    PostAction.count_per_day_for_type(30, post_action_type).each do |date, count|
       report.data << {x: date, y: count}
     end
-    likesQuery = PostAction.where(post_action_type_id: PostActionType.types[:like])
-    report.total = likesQuery.count
-    report.prev30Days = likesQuery.where('created_at > ? and created_at < ?', 60.days.ago, 30.days.ago).count
+    query = PostAction.where(post_action_type_id: post_action_type)
+    report.total = query.count
+    report.prev30Days = query.where('created_at > ? and created_at < ?', 60.days.ago, 30.days.ago).count
   end
+
+  # Private messages counts:
 
   def self.private_messages_report(report, topic_subtype)
     basic_report_about report, Post, :private_messages_count_per_day, topic_subtype

@@ -298,6 +298,14 @@ en:
       title: "Flags"
       xaxis: "Day"
       yaxis: "Number of flags"
+    bookmarks:
+      title: "Bookmarks"
+      xaxis: "Day"
+      yaxis: "Number of new bookmarks"
+    favorites:
+      title: "Favorites"
+      xaxis: "Day"
+      yaxis: "Number of new favorites"
     users_by_trust_level:
       title: "Users per Trust Level"
       xaxis: "Trust Level"
