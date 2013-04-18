@@ -1,5 +1,6 @@
 module Middleware
-  # this class cheats and bypasses rails altogether if the client attme
+  # this class cheats and bypasses rails altogether if the client attempts
+  # to download a static asset
   class TurboDev
     def initialize(app, settings={})
       @app = app
