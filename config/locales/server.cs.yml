@@ -257,10 +257,18 @@ cs:
       title: 'Nevhodný'
       description: 'Obsah tohoto příspěvku lze objektivně považovat za útočný, urážlivý, hanlivý nebo nezákonný.'
       long_form: 'označil příspěvek jako nevhodný'
-    custom_flag:
-      title: 'Ostatní'
+    notify_user:
+      title: 'Informovat uživatele {{username}}'
+      description: 'Tento příspěvek obsahuje něco, kvůli čemu chci s tímto člověkem mluvím přímo a soukromě.'
+      long_form: 'informoval uživatele'
+      email_title: 'Ohledně vašeho příspěvku v tématu "%{title}"'
+      email_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      title: 'Upozornit moderátory'
       description: 'Příspěvek by měl vidět moderátor kvůli porušení <a href="/faq">FAQ</a>, <a href="/tos">Podmínek používání</a> nebo kvůli jinému důvodu.'
       long_form: 'označil příspěvek pro moderátora'
+      email_title: 'Příspěvek v tématu "%{title}" vyžaduje pozornost moderátora'
+      email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Záložka'
       description: 'Přidat záložku k tomuto příspěvku'
@@ -327,8 +335,24 @@ cs:
       title: "Odesláno emailů"
       xaxis: "Den"
       yaxis: "Počet emailů"
-    private_messages:
-      title: "Soukromé zprávy"
+    user_to_user_private_messages:
+      title: "Uživatelské soukromé zprávy"
+      xaxis: "Den"
+      yaxis: "Počet soukromých zpráv"
+    system_private_messages:
+      title: "Systémové soukromé zprávy"
+      xaxis: "Den"
+      yaxis: "Počet soukromých zpráv"
+    moderator_warning_private_messages:
+      title: "Moderátorská varování"
+      xaxis: "Den"
+      yaxis: "Počet soukromých zpráv"
+    notify_moderators_private_messages:
+      title: "Moderátorská upozornění"
+      xaxis: "Den"
+      yaxis: "Počet soukromých zpráv"
+    notify_user_private_messages:
+      title: "Uživatelská upozornění"
       xaxis: "Den"
       yaxis: "Počet soukromých zpráv"
 
@@ -524,6 +548,8 @@ cs:
     category_colors: "Seznam hexadecimálních barev oddělený svislítkem (|) pro barvy kategorií"
     max_upload_size_kb: "Maximální povolená velikost nahrávaných souborů v kb - nezapomeňte tento limit změnit v nginx (client_max_body_size) / apache a na proxy serverech."
     max_similar_results: "Kolik podobných témat se má zobrazovat uživateli, když vytváří nové téma"
+
+    title_prettify: "Zabrání běžným překlepům a chybám v názvu tématu, včetně psaní velkými písmeny, malé písmeno na začátku, vícenásobné vykřičníky a otazníky, atd."
 
   notification_types:
     mentioned: "%{display_username} vás zmínil v %{link}"
@@ -908,3 +934,5 @@ cs:
       Uživatelské příspěvky jsou licencovány pod licencí [Creative Commons Uveďte autora-Nevyužívejte dílo komerčně-Zachovejte licenci 3.0 Unported](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.cs). Aniž by tím byly tyto vyjádření nebo záruky dotčeny, má %{company_short_name} právo z vlastního úsudku (i) odmítnout nebo odstranit libovolný obsah, který podle rozumného názoru porušuje zásady tohoto webu nebo je jinak škodlivý nebo závadný, nebo (ii) ukončit nebo odepřít přístup k používání webu jakémukoliv jednotlivci nebo subjektu z jakéhokoliv důvodu. %{company_short_name} nemá žádnou povinnost poskytnout náhradu nebo vrátit jakoukoliv již zaplacenou částku.
 
     miscellaneous: "Toto ujednání tvoří celou dohodu mezi %{company_short_name} a vámi ohledně zmiňované věci a smí být změněno pouze písemným dodatkem podepsaným pověřeným jednatelem společnosti %{company_short_name}, nebo zveřejněním revidované verze tohoto dokumentu. Provoz tohoto webu, jeho používání a jakýkoliv přístup na něj se řídí platnými zákony České republiky. Jakékoliv spory v souvislosti v tímto webem budou řešeny u soudů v České republice a používáním této služby souhlasíte se soudní pravomocí těchto soudů."
+
+  deleted: 'smazáno'
