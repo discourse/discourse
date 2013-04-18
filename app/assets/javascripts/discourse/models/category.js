@@ -38,14 +38,14 @@ Discourse.Category = Discourse.Model.extend({
   },
 
   destroy: function(callback) {
-    return Discourse.ajax(Discourse.getURL("/categories/") + (this.get('slug')), { type: 'DELETE' });
+    return Discourse.ajax(Discourse.getURL("/categories/") + (this.get('slug') || this.get('id')), { type: 'DELETE' });
   }
 
 });
 
 Discourse.Category.reopenClass({
-  findBySlug: function(categorySlug) {
-    return Discourse.ajax({url: Discourse.getURL("/categories/") + categorySlug + ".json"}).then(function (result) {
+  findBySlugOrId: function(slugOrId) {
+    return Discourse.ajax({url: Discourse.getURL("/categories/") + slugOrId + ".json"}).then(function (result) {
       return Discourse.Category.create(result.category);
     });
   }

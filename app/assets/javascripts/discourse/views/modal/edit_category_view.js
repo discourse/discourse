@@ -72,7 +72,7 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
       var categoryView = this;
 
       // We need the topic_count to be correct, so get the most up-to-date info about this category from the server.
-      Discourse.Category.findBySlug( this.get('category.slug') ).then( function(cat) {
+      Discourse.Category.findBySlugOrId( this.get('category.slug') || this.get('category.id') ).then( function(cat) {
         categoryView.set('category', cat);
         Discourse.get('site').updateCategory(cat);
         categoryView.set('id', categoryView.get('category.slug'));
