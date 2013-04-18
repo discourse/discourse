@@ -130,8 +130,17 @@ class CookedPostProcessor
   end
 
   def get_size(url)
-    return nil unless SiteSetting.crawl_images? || url.start_with?(Discourse.base_url)
-    @size_cache[url] ||= FastImage.size(url)
+    # we need to find out whether it's an external image or an uploaded one
+    # an external image would be: http://google.com/logo.png
+    # an uploaded image would be: http://my.discourse.com/uploads/default/12345.png or http://my.cdn.com/uploads/default/12345.png
+    uri = url
+    # this will transform `http://my.discourse.com/uploads/default/12345.png` into a local uri
+    uri = "#{Rails.root}/public#{url[Discourse.base_url.length..-1]}" if url.start_with?(Discourse.base_url)
+    # this will do the same but when CDN has been defined in the configuration
+    uri = "#{Rails.root}/public#{url[ActionController::Base.asset_host.length..-1]}" if ActionController::Base.asset_host && url.start_with?(ActionController::Base.asset_host)
+    # return nil when it's an external image *and* crawling is disabled
+    return nil unless SiteSetting.crawl_images? || uri[0] == "/"
+    @size_cache[uri] ||= FastImage.size(uri)
   end
 
   def get_image_uri(url)
