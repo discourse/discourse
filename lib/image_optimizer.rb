@@ -90,7 +90,7 @@ private
   end
 
   def optimized_url
-    @optimized_url ||= Discourse::base_uri + "/images/#{RailsMultisite::ConnectionManagement.current_db}/#{file_name(cached_path)}"
+    @optimized_url ||= Discourse.base_url_no_prefix + "/images/#{RailsMultisite::ConnectionManagement.current_db}/#{file_name(cached_path)}"
   end
 
 end
