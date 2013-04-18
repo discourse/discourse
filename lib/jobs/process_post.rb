@@ -7,7 +7,8 @@ module Jobs
 
     def execute(args)
       post = Post.where(id: args[:post_id]).first
-      return unless post.present?
+      # two levels of deletion
+      return unless post.present? && post.topic.present?
 
       if args[:cook].present?
         post.update_column(:cooked, post.cook(post.raw, topic_id: post.topic_id))
