@@ -71,6 +71,26 @@ class CookedPostProcessor
 
   def optimize_image(img)
     src = img["src"]
+    return src
+
+    # implementation notes: Sam
+    #
+    # I have disabled this for now, would like the following addressed.
+    #
+    # 1. We need a db record pointing the files on the file system to the post they are on,
+    #   if we do not do that we have no way of purging any local optimised copies
+    #
+    # 2. We should be storing images in /uploads/site-name/_optimised ... it simplifies configuration
+    #
+    # 3. I don't want to have a folder with 10 million images, let split it so /uploads/site-name/_optimised/ABC/DEF/AAAAAAAA.jpg
+    #
+    # 4. We shoul confirm that that we test both saving as jpg and png and pick the more efficient format ... tricky to get right
+    #
+    # 5. All images should also be optimised using image_optim, it ensures that best compression is used
+    #
+    # 6. Admin screen should alert users of any missing dependencies (image magick, etc, and explain what it is for)
+    #
+    # 7. Optimise images should be a seperate site setting.
 
     # supports only local uploads
     return src if SiteSetting.enable_imgur? || SiteSetting.enable_s3_uploads?
