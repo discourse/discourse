@@ -860,10 +860,11 @@ en:
         delete_title: "delete post (if its the first post delete topic)"
         flagged_by: "Flagged by"
         error: "Something went wrong"
-      
+
       groups:
         title: "Groups"
         edit: "Edit Groups"
+        selector_placeholder: "add users"
 
       api:
         title: "API"
