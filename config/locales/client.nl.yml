@@ -3,8 +3,8 @@
 # to the Javascript app.
 #
 # Dutch translation for Discourse
-# contributed by Vincent Veldkamp (vincent@retroga.me) 2/14/13
-# and Sander Datema (info@sanderdatema.nl) 4/14/13
+# contributed by Vincent Veldkamp (vincent@retroga.me)
+# and Sander Datema (info@sanderdatema.nl)
 
 nl:
   js:
@@ -346,7 +346,7 @@ nl:
       posted: "<i title='beantwoord' class='icon icon-reply'></i> {{username}} {{link}}"
       edited: "<i title='gewijzigd' class='icon icon-pencil'></i> {{username}} {{link}}"
       liked: "<i title='leuk gevonden' class='icon icon-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='icon icon-envelope-alt' title='privé-bericht'></i> {{username}} heeft je een privé-bericht gestuurd: {{link}}"
+      private_message: "<i class='icon icon-envelope-alt' title='privé-bericht'></i> {{username}} {{link}}"
       invited_to_private_message: "{{username}} heeft je uitgenodigd voor een privé-conversatie: {{link}}"
       invitee_accepted: "<i title='heeft je uitnodiging geaccepteerd' class='icon icon-signin'></i> {{username}} heeft je uitnodiging geaccepteerd en heeft zich ingeschreven om deel te nemen."
       moved_post: "<i title='bericht verplaatst' class='icon icon-arrow-right'></i> {{username}} heeft je post verplaast naar {{link}}"
@@ -513,6 +513,7 @@ nl:
 
       invite_reply:
         title: Nodig vrienden uit om te reageren
+        action: Mail uitnodiging
         help: verstuur uitnodigingen naar vrienden zodat zij met één klik kunnen reageren op deze topic
         email: We zullen je vrienden een korte e-mail sturen waardoor zij op deze topic kunnen reageren door op een link te klikken.
         email_placeholder: e-mailadres
@@ -718,7 +719,7 @@ nl:
       delete_error: Er ging iets mis bij het verwijderen van deze categorie
       list: Lijst van categorieën
       no_description: Er is geen omschrijving voor deze categorie
-      change_in_category_topic: ga naar de categorie-topic om de omschrijving te bewerken
+      change_in_category_topic: Wijzig omschrijving
       hotness: Populariteit
       already_used: Deze kleur is al in gebruik door een andere categorie
 
@@ -726,7 +727,7 @@ nl:
       title: Waarom meld je dit bericht voor moderatie?
       action: Meld bericht
       cant: "Sorry, je kan dit bericht momenteel niet melden."
-      custom_placeholder_notify_user: Wat wil je de schrijver van dit bericht melden?
+      custom_placeholder_notify_user: "Wat maakt dat je de schrijver persoonlijk iets wil melden? Wees specifiek, constructief en altijd aardig."
       custom_placeholder_notify_moderators: "Waarom heeft dit bericht aandacht van een moderator nodig? Laat ons specifiek weten waar je je zorgen om maakt en stuur relevante links mee waar mogelijk."
       custom_message:
         at_least: "Gebruik ten minste {{n}} tekens"
@@ -821,8 +822,13 @@ nl:
         installed_version: Geïnstalleerd
         latest_version: Recent
         problems_found: 'Er zijn een aantal problemen gevonden met je Discourse installatie:'
+        last_checked: Laatste check
+        refresh_problems: Laad opnieuw
+        no_problems: Er zijn geen problemen gevonden
         moderators: "Moderators:"
         admins: "Admins:"
+        private_messages_short: PBs
+        private_messages_title: Privé-berichten
 
         reports:
           today: Vandaag
@@ -837,7 +843,7 @@ nl:
           view_chart: Bekijk als staafdiagram
 
       commits:
-        latest_changes: 'Laatste wijzigingen: Werk de software regelmatig bij alsjeblieft'
+        latest_changes: "Laatste wijzigingen: werk regelmatig bij!"
         by: door
 
       flags:
