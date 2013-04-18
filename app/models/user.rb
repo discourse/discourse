@@ -1,3 +1,4 @@
+require_dependency 'email'
 require_dependency 'email_token'
 require_dependency 'trust_level'
 require_dependency 'pbkdf2'
