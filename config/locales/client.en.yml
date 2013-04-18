@@ -347,13 +347,16 @@ en:
       invited_to_private_message: "{{username}} invited you to a private conversation: {{link}}"
       invitee_accepted: "<i title='accepted your invitation' class='icon icon-signin'></i> {{username}} accepted your invitation"
       moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} moved post to {{link}}"
+      total_flagged: "total flagged posts"
 
     image_selector:
       title: "Insert Image"
       from_my_computer: "From My Device"
       from_the_web: "From The Web"
       add_image: "Add Image"
+      remote_title: "remote image"
       remote_tip: "enter address of an image in the form http://example.com/image.jpg"
+      local_title: "local image"
       local_tip: "click to select an image from your device."
       upload: "Upload"
       uploading_image: "Uploading image"
@@ -566,6 +569,7 @@ en:
       continue_discussion: "Continuing the discussion from {{postLink}}:"
       follow_quote: "go to the quoted post"
       deleted_by_author: "(post removed by author)"
+      expand_collapse: "expand/collapse"
 
       has_replies:
         one: "Reply"
@@ -734,6 +738,8 @@ en:
     topic_summary:
       title: "Topic Summary"
       links_shown: "show all {{totalLinks}} links..."
+      clicks: "clicks"
+      topic_link: "topic link"
 
     topic_statuses:
       locked:
