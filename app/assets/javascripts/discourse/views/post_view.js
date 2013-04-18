@@ -141,7 +141,7 @@ Discourse.PostView = Discourse.View.extend({
     // Only add the expand/contract control if it's not a full post
     var expandContract = "";
     if (!$aside.data('full')) {
-      expandContract = "<i class='icon-" + desc + "' title='expand/collapse'></i>";
+      expandContract = "<i class='icon-" + desc + "' title='" + Em.String.i18n("post.expand_collapse") + "'></i>";
       $aside.css('cursor', 'pointer');
     }
     $('.quote-controls', $aside).html("" + expandContract + navLink);
@@ -186,7 +186,7 @@ Discourse.PostView = Discourse.View.extend({
           postView.$(".cooked a[href]").each(function() {
             var link = $(this);
             if (link.attr('href') === lc.url) {
-              return link.append("<span class='badge badge-notification clicks' title='clicks'>" + lc.clicks + "</span>");
+              return link.append("<span class='badge badge-notification clicks' title='" + Em.String.i18n("topic_summary.clicks") + "'>" + lc.clicks + "</span>");
             }
           });
         }

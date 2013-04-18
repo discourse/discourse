@@ -34,7 +34,7 @@
         <li class='categories dropdown'>
           <a class='icon' data-dropdown="site-map-dropdown" href="#" title='{{i18n site_map}}'><i class='icon-reorder'></i></a>
           {{#if view.currentUser.site_flagged_posts_count}}
-            <a href='/admin/flags/active' title='total flagged posts' class='badge-notification flagged-posts'>{{view.currentUser.site_flagged_posts_count}}</a>
+            <a href='/admin/flags/active' title='{{i18n notifications.total_flagged}}' class='badge-notification flagged-posts'>{{view.currentUser.site_flagged_posts_count}}</a>
           {{/if}}
         </li>
         <li class='current-user'>
