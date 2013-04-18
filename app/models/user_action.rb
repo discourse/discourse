@@ -36,7 +36,7 @@ class UserAction < ActiveRecord::Base
   ].each_with_index.to_a.flatten]
 
   def self.stats(user_id, guardian)
-    results = UserAction.select("action_type, COUNT(*) count, '' AS description")
+    results = UserAction.select("action_type, COUNT(*) count")
       .joins(:target_topic)
       .where(user_id: user_id)
       .group('action_type')
@@ -57,9 +57,6 @@ class UserAction < ActiveRecord::Base
     results = results.to_a
 
     results.sort! { |a,b| ORDER[a.action_type] <=> ORDER[b.action_type] }
-    results.each do |row|
-      row.description = self.description(row.action_type, detailed: true)
-    end
 
     results
   end
@@ -83,6 +80,7 @@ class UserAction < ActiveRecord::Base
     builder = SqlBuilder.new("
 SELECT
   t.title, a.action_type, a.created_at, t.id topic_id,
+  a.user_id AS target_user_id, au.name AS target_name, au.username AS target_username,
   coalesce(p.post_number, 1) post_number,
   p.reply_to_post_number,
   pu.email ,pu.username, pu.name, pu.id user_id,
@@ -94,6 +92,7 @@ LEFT JOIN posts p on p.id = a.target_post_id
 JOIN posts p2 on p2.topic_id = a.target_topic_id and p2.post_number = 1
 JOIN users u on u.id = a.acting_user_id
 JOIN users pu on pu.id = COALESCE(p.user_id, t.user_id)
+JOIN users au on au.id = a.user_id
 /*where*/
 /*order_by*/
 /*offset*/
@@ -126,7 +125,6 @@ JOIN users pu on pu.id = COALESCE(p.user_id, t.user_id)
 
     data.each do |row|
       row["action_type"] = row["action_type"].to_i
-      row["description"] = self.description(row["action_type"])
       row["created_at"] = DateTime.parse(row["created_at"])
       # we should probably cache the excerpts in the db at some point
       row["excerpt"] = PrettyText.excerpt(row["cooked"],300) if row["cooked"]
@@ -139,60 +137,6 @@ JOIN users pu on pu.id = COALESCE(p.user_id, t.user_id)
     end
 
     data
-  end
-
-  def self.description(row, opts = {})
-    t = I18n.t('user_action_descriptions')
-    if opts[:detailed]
-      # will localize as soon as we stablize the names here
-      desc = case row.to_i
-      when BOOKMARK
-        t[:bookmarks]
-      when NEW_TOPIC
-        t[:topics]
-      when WAS_LIKED
-        t[:likes_received]
-      when LIKE
-        t[:likes_given]
-      when RESPONSE
-        t[:responses]
-      when POST
-        t[:posts]
-      when MENTION
-        t[:mentions]
-      when QUOTE
-        t[:quotes]
-      when EDIT
-        t[:edits]
-      when STAR
-        t[:favorites]
-      when NEW_PRIVATE_MESSAGE
-        t[:sent_items]
-      when GOT_PRIVATE_MESSAGE
-        t[:inbox]
-      end
-    else
-      desc =
-      case row.to_i
-      when NEW_TOPIC
-        then t[:posted]
-      when LIKE,WAS_LIKED
-        then t[:liked]
-      when RESPONSE,POST
-        then t[:responded_to]
-      when BOOKMARK
-        then t[:bookmarked]
-      when MENTION
-        then t[:mentioned]
-      when QUOTE
-        then t[:quoted]
-      when STAR
-        then t[:favorited]
-      when EDIT
-        then t[:edited]
-      end
-    end
-    desc
   end
 
   def self.log_action!(hash)
