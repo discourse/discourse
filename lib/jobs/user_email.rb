@@ -27,6 +27,9 @@ module Jobs
         post = Post.where(id: args[:post_id]).first
         return unless post.present?
 
+        # Topic may be deleted
+        return unless post.topic
+
         # Don't email posts that were deleted
         return if post.user_deleted?
 
