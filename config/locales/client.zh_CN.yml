@@ -331,6 +331,7 @@ zh_CN:
       undo_title: "撤销"
       redo_title: "重做"
       help: "Markdown 编辑帮助"
+      toggler: "隐藏或显示编辑面板"
 
     notifications:
       title: "使用 @name 提及到你，回复你的帖子和主题，私信等等的通知消息"
