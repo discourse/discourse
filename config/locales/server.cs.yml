@@ -6,6 +6,7 @@ cs:
 
   title: "Discourse"
   topics: "Témata"
+  posts: "příspěvky"
   loading: "Nahrávám"
   powered_by_html: 'Systém běží na <a href="http://www.discourse.org">Discourse</a>, nejlepší zážitek je se zapnutým JavaScriptem'
 
@@ -327,6 +328,14 @@ cs:
       title: "Nahlášení"
       xaxis: "Den"
       yaxis: "Počet nahlášení"
+    bookmarks:
+      title: "Záložky"
+      xaxis: "Den"
+      yaxis: "Počet nových záložek"
+    favorites:
+      title: "Oblíbené"
+      xaxis: "Den"
+      yaxis: "Počet nových oblíbených témat"
     users_by_trust_level:
       title: "Uživatelé podle věrohodnosti"
       xaxis: "Věrohodnost"
