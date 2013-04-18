@@ -1,8 +1,8 @@
 <ul class="nav nav-pills image-options">
-  <li title="local image" {{bindAttr class="view.localSelected:active"}}>
+  <li title="{{i18n image_selector.local_title}}" {{bindAttr class="view.localSelected:active"}}>
   <a href="#" {{action selectLocal target="view"}}>{{i18n image_selector.from_my_computer}}</a>
   </li>
-  <li title="remote image" {{bindAttr class="view.remoteSelected:active"}}>
+  <li title="{{i18n image_selector.remote_title}}" {{bindAttr class="view.remoteSelected:active"}}>
   <a href="#" {{action selectRemote target="view"}}>{{i18n image_selector.from_the_web}}</a>
   </li>
 </ul>
