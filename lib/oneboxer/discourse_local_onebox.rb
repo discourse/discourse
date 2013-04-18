@@ -19,6 +19,8 @@ module Oneboxer
       case route[:controller]
       when 'users'
         user = User.where(username_lower: route[:username].downcase).first
+        return nil unless user  
+
         Guardian.new.ensure_can_see!(user)
 
         args.merge! avatar: PrettyText.avatar_img(user.username, 'tiny'), username: user.username
@@ -29,6 +31,8 @@ module Oneboxer
         if route[:post_number].present? && route[:post_number].to_i > 1
           # Post Link
           post = Post.where(topic_id: route[:topic_id], post_number: route[:post_number].to_i).first
+          return nil unless post
+
           Guardian.new.ensure_can_see!(post)
 
           topic = post.topic
@@ -46,8 +50,10 @@ module Oneboxer
         else
           # Topic Link
           topic = Topic.where(id: route[:topic_id].to_i).includes(:user).first
+          return nil unless topic
+
+          Guardian.new.ensure_can_see!(topic)
           post = topic.posts.first
-          Guardian.new(nil).ensure_can_see!(topic)
 
           posters = topic.posters_summary.map do |p|
             {username: p[:user][:username],
