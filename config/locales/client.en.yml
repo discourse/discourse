@@ -331,6 +331,7 @@ en:
       undo_title: "Undo"
       redo_title: "Redo"
       help: "Markdown Editing Help"
+      toggler: "hide or show the composer panel"
 
     notifications:
       title: "notifications of @name mentions, replies to your posts and topics, private messages, etc"
