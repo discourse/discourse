@@ -11,6 +11,7 @@ cs:
       twitter: 'sdílet odkaz na Twitteru'
       facebook: 'sdílet odkaz na Facebooku'
       google+: 'sdílet odkaz na Google+'
+      email: 'odeslat odkaz emailem'
 
     edit: 'upravit název a kategorii příspěvku'
     not_implemented: "Tato fičura ještě není implementovaná"
@@ -307,6 +308,7 @@ cs:
       show_preview: 'zobrazit náhled &raquo;'
       hide_preview: '&laquo; skrýt náhled'
 
+      quote_post_title: "Citovat celý příspěvek"
       bold_title: "Tučně"
       bold_text: "tučný text"
       italic_title: "Kurzíva"
@@ -333,6 +335,7 @@ cs:
       undo_title: "Zpět"
       redo_title: "Opakovat"
       help: "Nápověda pro Markdown"
+      toggler: "zobrazit nebo skrýt editor příspěvku"
 
     notifications:
       title: "oznámení o zmínkách pomocí @name, odpovědi na vaše příspěvky a témata, soukromé zprávy, atd."
@@ -512,6 +515,7 @@ cs:
 
       invite_reply:
         title: 'Pozvat přátele k odpovědi'
+        action: 'Odeslat pozvánku'
         help: 'odeslat pozvánku přátelům, aby mohli na toto téma odpovědět jedním kliknutím'
         email: "Odešleme vašemu příteli krátký email s odkazem na možnost přímo odpovědět na toto téma."
         email_placeholder: 'emailová adresa'
@@ -621,7 +625,6 @@ cs:
           off_topic: "Zrušit nahlášení"
           spam: "Zrušit nahlášení"
           inappropriate: "Zrušit nahlášení"
-          custom_flag: "Zrušit nahlášení"
           bookmark: "Odebrat ze záložek"
           like: "Už se mi to nelíbí"
           vote: "Zrušit hlas"
@@ -629,7 +632,8 @@ cs:
           off_topic: "{{icons}} označili tento příspěvek jako off-topic"
           spam: "{{icons}} označili tento příspěvek jako spam"
           inappropriate: "{{icons}} označili tento příspěvek jako nevhodný"
-          custom_flag: "{{icons}} nahlásili tento příspěvek"
+          notify_moderators: "{{icons}} nahlásili tento příspěvek"
+          notify_user: "{{icons}} zahájili soukromou konverzaci"
           bookmark: "{{icons}} si přidali příspěvek do záložek"
           like: "{{icons}} se líbí tento příspěvek"
           vote: "{{icons}} hlasovali pro tento příspěvek"
@@ -637,7 +641,8 @@ cs:
           off_topic: "Označili jste tento příspěvek jako off-topic"
           spam: "Označili jste tento příspěvek jako spam"
           inappropriate: "Označili jste tento příspěvek jako nevhodný"
-          custom_flag: "Nahlásili jste tento příspěvek"
+          notify_moderators: "Nahlásili jste tento příspěvek"
+          notify_user: "Zahájili jste soukromou konverzaci s tímto uživatelem"
           bookmark: "Přidali jste si tento příspěvek do záložek"
           like: "Toto se vám líbí"
           vote: "Hlasovali jste pro tento příspěvek"
@@ -654,10 +659,14 @@ cs:
             one: "Vy a 1 další člověk jste označili tento příspěvek jako nevhodný"
             few: "Vy a {{count}} další lidé jste označili tento příspěvek jako nevhodný"
             other: "Vy a {{count}} dalších lidí jste označili tento příspěvek jako nevhodný"
-          custom_flag:
+          notify_moderators:
             one: "Vy a 1 další člověk jste nahlásili tento příspěvek"
             few: "Vy a {{count}} další lidé jste nahlásili tento příspěvek"
             other: "Vy a {{count}} dalších lidí jste nahlásili tento příspěvek"
+          notify_user:
+            one: "Vy a 1 další člověk jste zahájili soukromou konverzaci s tímto uživatelem"
+            few: "Vy a {{count}} další lidé jste zahájili soukromou konverzaci s tímto uživatelem"
+            other: "Vy a {{count}} dalších lidí jste zahájili soukromou konverzaci s tímto uživatelem"
           bookmark:
             one: "Vy a 1 další člověk jste si přidali tento příspěvek do záložek"
             few: "Vy a {{count}} další lidé jste si přidali tento příspěvek do záložek"
@@ -683,10 +692,14 @@ cs:
             one: "1 člověk označil tento příspěvek jako nevhodný"
             few: "{{count}} lidé označili tento příspěvek jako nevhodný"
             other: "{{count}} lidí označilo tento příspěvek jako nevhodný"
-          custom_flag:
+          notify_moderators:
             one: "1 člověk nahlásil tento příspěvek"
             few: "{{count}} lidé nahlásili tento příspěvek"
             other: "{{count}} lidí nahlásilo tento příspěvek"
+          notify_user:
+            one: "1 člověk zahájil soukromou konverzaci s tímto uživatelem"
+            few: "{{count}} lidé zahájili soukromou konverzaci s tímto uživatelem"
+            other: "{{count}} lidí zahájilo soukromou konverzaci s tímto uživatelem"
           bookmark:
             one: "1 člověk si přidal tento příspěvek do záložek"
             few: "{{count}} lidé si přidali tento příspěvek do záložek"
@@ -719,6 +732,7 @@ cs:
       view: 'Zobrazit témata v kategorii'
       delete: 'Smazat kategorii'
       create: 'Nová kategorie'
+      save: 'Uložit kategorii'
       creation_error: Během vytváření nové kategorie nastala chyba.
       more_posts: "zobrazit všechny {{posts}}..."
       name: "Název kategorie"
@@ -730,6 +744,7 @@ cs:
       name_placeholder: "Měl by být krátký a výstižný."
       color_placeholder: "Jakákoliv webová barva"
       delete_confirm: "Opravdu chcete odstranit tuto kategorii?"
+      delete_error: "Nastala chyba při odstraňování kategorie."
       list: "Seznam kategorií"
       no_description: "K této kategorii zatím není žádný popis."
       change_in_category_topic: "navštivte téma kategorie pro editaci jejího popisu"
@@ -740,7 +755,8 @@ cs:
       title: 'Proč chcete nahlásit tento příspěvek?'
       action: 'Nahlásit příspěvek'
       cant: "Bohužel nyní nemůžete tento příspěvek nahlásit."
-      custom_placeholder: "Proč příspěvek vyžaduje pozornost moderátora? Dejte nám vědět, co konkrétně vás znepokojuje, a poskytněte relevantní odkazy, je-li to možné."
+      custom_placeholder_notify_user: "Proč chcete s tímto uživatele mluvit přímo a soukromě? Buďte konstruktivní, konkrétní a hlavně vstřícní."
+      custom_placeholder_notify_moderators: "Proč příspěvek vyžaduje pozornost moderátora? Dejte nám vědět, co konkrétně vás znepokojuje, a poskytněte relevantní odkazy, je-li to možné."
       custom_message:
         at_least: "zadejte alespoň {{n}} znaků"
         more: "ještě {{n}}..."
@@ -837,8 +853,13 @@ cs:
         installed_version: "Nainstalováno"
         latest_version: "Poslední verze"
         problems_found: "Byly nalezeny problémy s vaší instalací systému Discourse:"
+        last_checked: "Naposledy zkontrolováno"
+        refresh_problems: "Obnovit"
+        no_problems: "Nenalezeny žádné problémy."
         moderators: 'Moderátoři:'
         admins: 'Administrátoři:'
+        private_messages_short: "SZ"
+        private_messages_title: "Soukromé zprávy"
 
         reports:
           today: "Dnes"
@@ -947,6 +968,11 @@ cs:
         approve: 'Schválit'
         approved_by: "schválil"
         time_read: "Čas čtení"
+        delete: "Smazat uživatele"
+        delete_forbidden: "Uživatele nelze odstranit, protože má na fóru zveřejněné příspěvky. Nejprve smažte všechny jeho příspěvky."
+        delete_confirm: "Jste si jistí, že chce permanentně smazat tohoto uživatele z fóra? Tato akce je nevratná!"
+        deleted: "Uživatel byl smazán."
+        delete_failed: "Nastala chyba při odstraňování uživatele. Ujistěte se, že jsou všechny příspěvky tohoto uživatele smazané, než budete uživatele mazat."
 
       site_content:
         none: "Zvolte typ obsahu a můžete začít editovat."
