@@ -22,9 +22,10 @@ Discourse::Application.configure do
   # Do not compress assets
   config.assets.compress = false
 
-  # Concatenate all assets, even in development mode. This appears to be considerably
-  # faster for reloading in development mode.
-  config.assets.debug = ENV['DEBUG_ASSETS'] == "1"
+  # Don't Digest assets, makes debugging uglier
+  config.assets.digest = false
+
+  config.assets.debug = true
 
   config.watchable_dirs['lib'] = [:rb]
 
@@ -39,5 +40,8 @@ Discourse::Application.configure do
   BetterErrors::Middleware.allow_ip! ENV['TRUSTED_IP'] if ENV['TRUSTED_IP']
 
   config.enable_mini_profiler = true
+
+  require 'middleware/turbo_dev'
+  config.middleware.insert 0, Middleware::TurboDev
 end
 
