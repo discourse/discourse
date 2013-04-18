@@ -351,13 +351,16 @@ cs:
       invited_to_private_message: "{{username}} vás pozval do soukromé konverzace: {{link}}"
       invitee_accepted: "<i title='přijetí pozvánky' class='icon icon-signin'></i> {{username}} přijal vaši pozvánku"
       moved_post: "<i title='přesunutý příspěvek' class='icon icon-arrow-right'></i> {{username}} přesunul příspěvek do {{link}}"
+      total_flagged: "celkem nahlášeno příspěvků"
 
     image_selector:
       title: "Vložit obrázek"
       from_my_computer: "Z mého zařízení"
       from_the_web: "Z webu"
       add_image: "Přidat obrázek"
+      remote_title: "obrázek ze vzdáleného úložistě"
       remote_tip: "zadejte adresu obrázku ve formátu http://example.com/image.jpg"
+      local_title: "obrázek z lokálního úložiště"
       local_tip: "klikněte sem pro výběr obrázku z vašeho zařízení"
       upload: "Nahrát"
       uploading_image: "Nahrávám obrázek"
@@ -577,6 +580,7 @@ cs:
       continue_discussion: "Pokračující diskuze z {{postLink}}:"
       follow_quote: "přejít na citovaný příspěvek"
       deleted_by_author: "(příspěvek odstraněn autorem)"
+      expand_collapse: "rozbalit/sbalit"
 
       has_replies:
         one: "Odpověď"
@@ -765,6 +769,8 @@ cs:
     topic_summary:
       title: "Souhrn tématu"
       links_shown: "zobrazit všech {{totalLinks}} odkazů..."
+      clicks: "počet kliknutí"
+      topic_link: "odkaz na téma"
 
     topic_statuses:
       locked:
