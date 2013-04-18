@@ -108,6 +108,11 @@ group :development do
   gem 'pry-rails'
 end
 
+# we are using a custom sprockets repo to work around: https://github.com/rails/rails/issues/8099#issuecomment-16137638
+# REVIEW EVERY RELEASE
+gem "sprockets", :git => "git://github.com/SamSaffron/sprockets.git", :branch => "rails-compat"
+
+
 # this is an optional gem, it provides a high performance replacement
 # to String#blank? a method that is called quite frequently in current
 # ActiveRecord, this may change in the future
