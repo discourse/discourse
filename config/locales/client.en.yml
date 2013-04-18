@@ -295,7 +295,7 @@ en:
 
       users_placeholder: "Add a user"
       title_placeholder: "Type your title here. What is this discussion about in one brief sentence?"
-      reply_placeholder: "Type your reply here. Use Markdown or BBCode to format. Drag or paste an image here to upload it."
+      reply_placeholder: "Type here. Use Markdown or BBCode to format. Drag or paste an image to upload it."
       view_new_post: "View your new post."
       saving: "Saving..."
       saved: "Saved!"
