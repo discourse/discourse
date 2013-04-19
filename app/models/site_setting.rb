@@ -48,7 +48,7 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:max_upload_size_kb, 1024)
 
   # settings only available server side
-  setting(:auto_track_topics_after, 300000)
+  setting(:auto_track_topics_after, 240000)
   setting(:new_topic_duration_minutes, 60 * 48)
   setting(:long_polling_interval, 15000)
   setting(:flags_required_to_hide_post, 3)
