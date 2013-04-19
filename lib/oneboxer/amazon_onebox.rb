@@ -32,7 +32,7 @@ module Oneboxer
       result[:image] = image['src'] if image
 
       result[:by_info] = html_doc.at("#by-line")
-      result[:by_info] = BaseOnebox.remove_whitespace(result[:by_info].inner_html) if result[:by_info].present?
+      result[:by_info] = BaseOnebox.remove_whitespace(BaseOnebox.replace_tags_with_spaces(result[:by_info].inner_html)) if result[:by_info].present?
 
       summary = html_doc.at("#description-and-details-content")
       result[:text] = summary.inner_html if summary.present?
