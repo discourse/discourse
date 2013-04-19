@@ -73,6 +73,15 @@ Discourse.FlagView = Discourse.ModalBodyView.extend({
     return false;
   }).property('isCustomFlag', 'selected.customMessageLength', 'postActionTypeId'),
 
+  submitText: function(){
+    var action = this.get('selected');
+    if (this.get('selected.is_custom_flag')) {
+      return Em.String.i18n("flagging.notify_action");
+    } else {
+      return Em.String.i18n("flagging.action");
+    }
+  }.property('selected'),
+
   didInsertElement: function() {
     this.set('postActionTypeId', null);
 
