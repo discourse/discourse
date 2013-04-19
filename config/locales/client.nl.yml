@@ -57,7 +57,6 @@ nl:
       "6": 'reacties'
 
     user:
-      information: Gebruikersinformatie
       profile: Profiel
       title: Gebruiker
       mute: Negeer

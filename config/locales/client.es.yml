@@ -51,7 +51,6 @@ es:
       "6": "Respuestas"
 
     user:
-      information: "Información de Usuario"
       profile: Perfil
       title: "Usuario"
       mute: Silenciar

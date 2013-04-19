@@ -53,7 +53,6 @@ en:
       "6": "Responses"
 
     user:
-      information: "User Information"
       profile: Profile
       title: "User"
       mute: Mute

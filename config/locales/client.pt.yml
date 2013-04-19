@@ -47,7 +47,6 @@ pt:
       "6": "Respostas"
 
     user:
-      information: "Informação do Utilizador"
       profile: Perfil
       title: "Utilizador"
       mute: Silenciar
