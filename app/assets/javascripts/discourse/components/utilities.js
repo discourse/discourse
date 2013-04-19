@@ -75,6 +75,8 @@ Discourse.Utilities = {
     url = Discourse.getURL("/t/");
     if (slug) {
       url += slug + "/";
+    } else {
+      url += 'topic/';
     }
     url += topicId;
     if (postNumber > 1) {

@@ -14,10 +14,8 @@ Discourse.Notification = Discourse.Model.extend({
   }).property('read'),
 
   url: (function() {
-    var slug;
     if (this.blank('data.topic_title')) return "";
-    slug = this.get('slug');
-    return Discourse.getURL("/t/") + slug + "/" + (this.get('topic_id')) + "/" + (this.get('post_number'));
+    return Discourse.Utilities.postUrl(this.get('slug'), this.get('topic_id'), this.get('post_number'));
   }).property(),
 
   rendered: (function() {
