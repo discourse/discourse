@@ -9,7 +9,8 @@
 **/
 Discourse.MessageBus = (function() {
   // http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
-  var callbacks, clientId, failCount, interval, isHidden, queue, responseCallbacks, uniqueId;
+  var callbacks, clientId, failCount, interval, shouldLongPoll, queue, responseCallbacks, uniqueId;
+  var me;
 
   uniqueId = function() {
     return 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -27,7 +28,7 @@ Discourse.MessageBus = (function() {
   interval = null;
   failCount = 0;
 
-  isHidden = function() {
+  var isHidden = function() {
     if (document.hidden !== void 0) {
       return document.hidden;
     } else if (document.webkitHidden !== void 0) {
@@ -42,13 +43,17 @@ Discourse.MessageBus = (function() {
     }
   };
 
-  return {
+  shouldLongPoll = function() {
+    return me.alwaysLongPoll || !isHidden();
+  };
+
+  me = {
     enableLongPolling: true,
     callbackInterval: 60000,
     maxPollInterval: 3 * 60 * 1000,
     callbacks: callbacks,
     clientId: clientId,
-
+    alwaysLongPoll: false,
     stop: false,
 
     // Start polling
@@ -68,7 +73,7 @@ Discourse.MessageBus = (function() {
           data[c.channel] = c.last_id === void 0 ? -1 : c.last_id;
         });
         gotData = false;
-        _this.longPoll = Discourse.ajax(Discourse.getURL("/message-bus/") + clientId + "/poll?" + (isHidden() || !_this.enableLongPolling ? "dlp=t" : ""), {
+        _this.longPoll = Discourse.ajax(Discourse.getURL("/message-bus/") + clientId + "/poll?" + (!shouldLongPoll() || !_this.enableLongPolling ? "dlp=t" : ""), {
           data: data,
           cache: false,
           dataType: 'json',
@@ -101,7 +106,7 @@ Discourse.MessageBus = (function() {
               interval = _this.callbackInterval;
               if (failCount > 2) {
                 interval = interval * failCount;
-              } else if (isHidden()) {
+              } else if (!shouldLongPoll()) {
                 // slowning down stuff a lot when hidden
                 // we will need to add a lot of fine tuning here
                 interval = interval * 4;
@@ -150,4 +155,6 @@ Discourse.MessageBus = (function() {
       }
     }
   };
+
+  return me;
 })();

@@ -165,7 +165,7 @@ GEM
     em-redis (0.3.0)
       eventmachine
     erubis (2.7.0)
-    eventmachine (1.0.1)
+    eventmachine (1.0.3)
     excon (0.16.10)
     execjs (1.4.0)
       multi_json (~> 1.0)
@@ -452,7 +452,7 @@ GEM
     therubyracer (0.11.4)
       libv8 (~> 3.11.8.12)
       ref
-    thin (1.5.0)
+    thin (1.5.1)
       daemons (>= 1.0.9)
       eventmachine (>= 0.12.6)
       rack (>= 1.0.0)

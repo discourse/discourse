@@ -1,3 +1,4 @@
+<!-- work in progress, please ignore -->
 <div class='row'>
   <div class='content-list span6'>
     <h3>{{i18n admin.groups.edit}}</h3>
@@ -13,8 +14,10 @@
   <div class='content-editor'>
     {{#if content.active}}
       {{#with content.active}}
-        {{name}}  
+      <h3>{{name}}</h3> 
         {{view Discourse.UserSelector id="private-message-users" class="span8" placeholderKey="admin.groups.selector_placeholder" tabindex="1" usernamesBinding="usernames"}}
+        <button>Save</button>
+
       {{/with}}
     {{else}}
       nothing here yet

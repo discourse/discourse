@@ -205,6 +205,7 @@ Discourse = Ember.Application.createWithMixins({
   start: function() {
     Discourse.bindDOMEvents();
     Discourse.SiteSettings = PreloadStore.get('siteSettings');
+    Discourse.MessageBus.alwaysLongPoll = Discourse.Environment === "development";
     Discourse.MessageBus.start();
     Discourse.KeyValueStore.init("discourse_", Discourse.MessageBus);
     // Make sure we delete preloaded data
