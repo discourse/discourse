@@ -757,6 +757,7 @@ cs:
     flagging:
       title: 'Proč chcete nahlásit tento příspěvek?'
       action: 'Nahlásit příspěvek'
+      notify_action: 'Oznámit'
       cant: "Bohužel nyní nemůžete tento příspěvek nahlásit."
       custom_placeholder_notify_user: "Proč chcete s tímto uživatele mluvit přímo a soukromě? Buďte konstruktivní, konkrétní a hlavně vstřícní."
       custom_placeholder_notify_moderators: "Proč příspěvek vyžaduje pozornost moderátora? Dejte nám vědět, co konkrétně vás znepokojuje, a poskytněte relevantní odkazy, je-li to možné."
@@ -892,6 +893,11 @@ cs:
         delete_title: "odstranit příspěvek (smaže celé téma, je-li to první příspěvek v tématu)"
         flagged_by: "Nahlásil"
         error: "Něco se pokazilo"
+
+      groups:
+        title: "Skupiny"
+        edit: "Editovat Skupiny"
+        selector_placeholder: "přidat uživatele"
 
       api:
         title: "API"
