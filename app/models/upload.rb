@@ -57,7 +57,7 @@ class Upload < ActiveRecord::Base
                                   public: true,
                                   content_type: file.content_type)
     upload.width, upload.height = ImageSizer.resize(*image_info.size)
-    upload.url = "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com#{path}/#{remote_filename}"
+    upload.url = "//#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com#{path}/#{remote_filename}"
 
     upload.save
 
