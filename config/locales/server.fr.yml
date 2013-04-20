@@ -13,6 +13,7 @@ fr:
 
   title: "Discourse"
   topics: "Discussions"
+  posts: "messages"
   loading: "Chargement"
   powered_by_html: 'Propulsé par <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
 
@@ -249,9 +250,9 @@ fr:
       email_title: 'A propos de "%{title}"'
       email_body: "%{link}\n\n%{message}"
     bookmark:
-      title: 'Favoris'
-      description: 'Ajouter aux favoris'
-      long_form: 'ajouté aux favoris'
+      title: 'Signets'
+      description: 'Ajouter aux signets'
+      long_form: 'ajouté aux signets'
     like:
       title: "J'aime"
       description: 'Aimer ce message'
@@ -306,6 +307,14 @@ fr:
       title: Nouveaux Signalements
       xaxis: Jour
       yaxis: Nombre de signalements
+    bookmarks:
+      title: Signets
+      xaxis: Jour
+      yaxis: Nombre de nouveaux signets
+    favorites:
+      title: Favoris
+      xaxis: Jour
+      yaxis: Nombre de nouveaux favoris
     users_by_trust_level:
       title: Utilisateurs par niveau de confiance
       xaxis: Niveau de confiance
@@ -484,9 +493,9 @@ fr:
 
     max_likes_per_day: "Quantité maximale  de J'aime qu'un utilisateur peut effectuer en un jour"
     max_flags_per_day: "Quantité maximale de signalements qu'un utilisateur peut effectuer en un jour"
-    max_bookmarks_per_day: "Quantité maximale de favoris qu'un utilisateur peut ajouter en un jour"
+    max_bookmarks_per_day: "Quantité maximale de signets qu'un utilisateur peut ajouter en un jour"
     max_edits_per_day: "Quantité maximale de modifications qu'un utilisateur peut effectuer en un jour"
-    max_favorites_per_day: "Quantité maximale de disscussions  pouvant être mises en favoris en un jour"
+    max_favorites_per_day: "Quantité maximale de disscussions pouvant être mises en favoris en un jour"
     max_topics_per_day: "Quantité maximale de discussions que vous pouvez créer en un jour"
     max_private_messages_per_day: "Quantité maximale de messages privés que vous pouvez envoyer en un jour"
 
@@ -552,7 +561,7 @@ fr:
   frequent_poster: "Auteur frequent"
 
   user_action_descriptions:
-    bookmarks: "Bookmarks"
+    bookmarks: "Signets"
     topics: "Discussions"
     likes_received: "J'aime reçus"
     likes_given: "J'aime donnés"
@@ -568,7 +577,7 @@ fr:
 
     was_liked: "a été aimé"
     liked: "aimé"
-    bookmarked: "bookmarké"
+    bookmarked: "ajouté aux signets"
     posted: "posté"
     responded_to: "réponse_à"
     mentioned: "mentionné"
