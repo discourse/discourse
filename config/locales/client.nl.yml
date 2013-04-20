@@ -921,7 +921,6 @@ nl:
         grant_admin: Geef Beheerdersrechten
         revoke_moderation: Ontneem modereerrechten
         grant_moderation: Geef modereerrechten
-        basics: Algemeen
         reputation: Reputatie
         permissions: Toestemmingen
         activity: Activiteit

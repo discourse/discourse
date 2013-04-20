@@ -791,7 +791,6 @@ it:
         grant_admin: 'Garantisci Amministratore'
         revoke_moderation: 'Revoca Moderatore'
         grant_moderation: 'Garantisci Moderatore'
-        basics: Basics (wtf?)
         reputation: Reputazione
         permissions: Permessi
         activity: Attività

@@ -959,7 +959,6 @@ cs:
         grant_admin: 'Udělit administrátorská práva'
         revoke_moderation: 'Odebrat moderátorská práva'
         grant_moderation: 'Udělit moderátorská práva'
-        basics: Základní informace
         reputation: Reputace
         permissions: Povolení
         activity: Aktivita

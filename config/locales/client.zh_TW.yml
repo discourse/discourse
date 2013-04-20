@@ -912,7 +912,6 @@ zh_TW:
         grant_admin: '賦予管理員資格'
         revoke_moderation: '吊銷論壇版主資格'
         grant_moderation: '賦予論壇版主資格'
-        basics: 基礎
         reputation: 聲譽
         permissions: 權限
         activity: 活動

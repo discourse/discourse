@@ -930,7 +930,6 @@ en:
         grant_admin: 'Grant Admin'
         revoke_moderation: 'Revoke Moderation'
         grant_moderation: 'Grant Moderation'
-        basics: Basics
         reputation: Reputation
         permissions: Permissions
         activity: Activity

@@ -802,7 +802,6 @@ de:
         grant_admin: 'Administrationsrechte vergeben'
         revoke_moderation: 'Moderationsrechte entziehen'
         grant_moderation: 'Moderationsrechte vergeben'
-        basics: Grundlagen
         reputation: Reputation
         permissions: Rechte
         activity: Aktivität

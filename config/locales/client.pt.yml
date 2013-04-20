@@ -667,7 +667,6 @@ pt:
         grant_admin: 'Conceder Admin'
         revoke_moderation: 'Revogar Moderação'
         grant_moderation: 'Conceder Moderação'
-        basics: Básicos
         reputation: Reputação
         permissions: Permissões
         activity: Atividade

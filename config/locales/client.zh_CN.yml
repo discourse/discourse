@@ -912,7 +912,6 @@ zh_CN:
         grant_admin: '赋予管理员资格'
         revoke_moderation: '吊销论坛版主资格'
         grant_moderation: '赋予论坛版主资格'
-        basics: 基础
         reputation: 声誉
         permissions: 权限
         activity: 活动

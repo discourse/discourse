@@ -1,5 +1,4 @@
 <section class='details'>
-  <h1>{{i18n admin.user.basics}}</h1>
 
   <div class='display-row'>
     <div class='field'>{{i18n user.username.title}}</div>
@@ -17,14 +16,17 @@
       {{/if}}
     </div>
   </div>
+
   <div class='display-row'>
     <div class='field'>{{i18n user.email.title}}</div>
     <div class='value'><a href="mailto:{{unbound content.email}}">{{content.email}}</a></div>
   </div>
+
   <div class='display-row' style='height: 50px'>
     <div class='field'>{{i18n user.avatar.title}}</div>
     <div class='value'>{{avatar content imageSize="large"}}</div>
   </div>
+
   <div class='display-row' style='height: 50px'>
     <div class='field'>{{i18n user.ip_address.title}}</div>
     <div class='value'>{{content.ip_address}}</div>
@@ -34,6 +36,7 @@
       </button>
     </div>
   </div>
+
 </section>
 
 

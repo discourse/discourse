@@ -920,7 +920,6 @@ fr:
         grant_admin: "Accorder les droits d'admin"
         revoke_moderation: 'Révoquer les droits de modération'
         grant_moderation: 'Accorder les droits de modération'
-        basics: "bases"
         reputation: "Réputation"
         permissions: "permissions"
         activity: "activité"
