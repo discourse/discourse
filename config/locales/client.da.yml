@@ -683,7 +683,7 @@ da:
       title: 'Discourse Admin'
 
       dashboard:
-        title: "Admin Dashboard"
+        title: "Dashboard"
         version: "Installed version"
         up_to_date: "You are running the latest version of Discourse."
         critical_available: "A critical update is available."

@@ -816,7 +816,7 @@ en:
       moderator: 'Moderator'
 
       dashboard:
-        title: "Admin Dashboard"
+        title: "Dashboard"
         version: "Version"
         up_to_date: "You're up to date!"
         critical_available: "A critical update is available."

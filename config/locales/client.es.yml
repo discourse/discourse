@@ -683,7 +683,7 @@ es:
       title: 'Discourse Admin'
 
       dashboard:
-        title: "Admin Dashboard"
+        title: "Dashboard"
         welcome: "Welcome to the admin section."
         version: "Installed version"
         up_to_date: "You are running the latest version of Discourse."

@@ -691,7 +691,7 @@ it:
       title: 'Amministrazione Discourse'
 
       dashboard:
-        title: "Dashboard Amministratore"
+        title: "Dashboard"
         version: "Versione"
         up_to_date: "Sei aggiornato!"
         critical_available: "Un aggiornamento critico è disponibile."

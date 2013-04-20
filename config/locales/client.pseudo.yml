@@ -720,7 +720,7 @@ pseudo:
     admin:
       title: '[[ Ďíščóůřšé Áďɱíɳ ]]'
       dashboard:
-        title: '[[ Áďɱíɳ Ďášĥƀóářď ]]'
+        title: '[[ Ďášĥƀóářď ]]'
         version: '[[ Ѷéřšíóɳ ]]'
         up_to_date: '[[ Ýóů''řé ůƿ ťó ďáťé! ]]'
         critical_available: '[[ Á čříťíčáł ůƿďáťé íš áνáíłáƀłé. ]]'
