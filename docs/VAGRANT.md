@@ -41,6 +41,8 @@ specific to the linux distro you're using for more information on how to
 do this.
 ```
 
+For example, on Ubuntu, you can install NFS support by installing nfs-kernel-server with `apt-get install`.
+
 Once the machine has booted up, you can shell into it by typing:
 
 ```
