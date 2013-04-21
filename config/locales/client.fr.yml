@@ -39,9 +39,9 @@ fr:
       title: "discussions proposées"
 
     bookmarks:
-      not_logged_in: "Désolé vous devez être connecté pour placer ce message dans vos favoris."
-      created: "Vous avez placé ce message dans vos favoris."
-      not_bookmarked: "Vous avez lu ce message; Cliquez pour le placer dans vos favoris."
+      not_logged_in: "Désolé vous devez être connecté pour placer ce message dans vos signets."
+      created: "Vous avez placé ce message dans vos signets."
+      not_bookmarked: "Vous avez lu ce message; Cliquez pour le placer dans vos signets."
       last_read: "Voici le dernier message que vous avez lu."
 
     new_topics_inserted: "{{count}} nouvelles discussions."
@@ -323,6 +323,7 @@ fr:
       undo_title: "Annuler"
       redo_title: "Refaire"
       help: "Aide Markdown"
+      toggler: "Afficher ou cacher le composer"
 
       users_placeholder: "Ajouter un utilisateur"
       title_placeholder: "Choisissez un titre ici. Sur quoi porte cette discussion en quelques mots ?"
@@ -349,14 +350,17 @@ fr:
       invited_to_private_message: "{{username}} vous a invité à une discussion privée: {{link}}"
       invitee_accepted: "<i title='a accepté votre invitation' class='icon icon-signin'></i> {{username}} a accepté votre invitation"
       moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} a déplacé le message vers {{link}}"
+      total_flagged: "Nombre total de messages signalés"
 
     image_selector:
       title: "Insérer une image"
       from_my_computer: "Local"
       from_the_web: "Depuis internet"
       add_image: "Ajouter une image"
+      remote_title: "Image distante"
       remote_tip: "saisissez l'url de l'image"
-      local_tip: "Cliquez pour sélectionner une image depuis votre terminal."
+      local_title: "Image locale"
+      local_tip: "Cliquez pour sélectionner une image depuis votre ordinateur."
       upload: "Envoyer"
       uploading_image: "Image en cours d'envoi"
 
@@ -567,6 +571,7 @@ fr:
       continue_discussion: "Continuer la discussion suivante {{postLink}}:"
       follow_quote: "Voir le message cité"
       deleted_by_author: "(message supprimé par son auteur)"
+      expand_collapse: "étendre/réduire"
 
       has_replies:
         one: "Réponse"
@@ -724,6 +729,7 @@ fr:
     flagging:
       title: 'Pourquoi voulez-vous signaler ce message ?'
       action: "Signaler ce message"
+      notify_action: "Notifier"
       cant: "Désolé, vous ne pouvez pas signaler ce message pour le moment"
       custom_placeholder_notify_user: "Pour quelles raisons contactez-vous cet utilisateur par messagerie privée ?"
       custom_placeholder_notify_moderators: "Pourquoi ce message requiert-il l'attention des modérateur ? Dites-nous ce qui vous dérange spécifiquement, et fournissez des liens pertinents si possible."
@@ -735,6 +741,8 @@ fr:
     topic_summary:
       title: "Résumé de la discussion"
       links_shown: "montrer les {{totalLinks}} liens..."
+      clicks: "clics"
+      topic_link: "lien de la discussion"
 
     topic_statuses:
       locked:
@@ -854,6 +862,11 @@ fr:
         delete_title: "supprimer le message (va supprimer la discussion si c'est le premier message)"
         flagged_by: "Signalé par"
         error: "Quelque chose s'est mal passé"
+
+      groups:
+        title: "Groupes"
+        edit: "Editer les groupes"
+        selector_placeholder: "ajouter des utilisateurs"
 
       api:
         title: "API"
