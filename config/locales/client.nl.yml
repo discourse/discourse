@@ -321,7 +321,7 @@ nl:
       code_title: Code voorbeeld
       code_text: hier de code
       image_title: Afbeelding
-      image_description: geef een omschrijving voor het afbeelding op
+      image_description: geef een omschrijving voor de afbeelding op
       image_dialog_title: Voeg afbeelding toe
       image_optional_text: optionele titel
       image_hosting_hint: "Heb je een <a href='http://www.google.com/search?q=free+image+hosting' target='_blank'>een gratis stek voor je afbeelding</a> nodig?"
@@ -333,7 +333,8 @@ nl:
       hr_title: Horizontale lijn
       undo_title: Herstel
       redo_title: Opnieuw
-      help: "Hulp over Markdown"
+      help: Hulp over Markdown
+      toggler: verberg of toon de editor
 
     notifications:
       title: "notificaties van @naam vermeldingen, reacties op je berichten en topics, privé-berichten, etc."
@@ -349,13 +350,16 @@ nl:
       invited_to_private_message: "{{username}} heeft je uitgenodigd voor een privé-conversatie: {{link}}"
       invitee_accepted: "<i title='heeft je uitnodiging geaccepteerd' class='icon icon-signin'></i> {{username}} heeft je uitnodiging geaccepteerd en heeft zich ingeschreven om deel te nemen."
       moved_post: "<i title='bericht verplaatst' class='icon icon-arrow-right'></i> {{username}} heeft je post verplaast naar {{link}}"
+      total_flagged: aantal gemarkeerde berichten
 
     image_selector:
       title: Voeg afbeelding toe
       from_my_computer: Vanaf mijn apparaat
       from_the_web: Vanaf het web
       add_image: Voeg afbeelding toe
+      remote_title: externe afbeelding
       remote_tip: "vul een internetadres in van een afbeelding in deze vorm: http://example.com/image.jpg"
+      local_title: lokale afbeelding
       local_tip: "klik om een afbeelding vanaf je apparaat te selecteren."
       upload: Uploaden
       uploading_image: Afbeelding uploaden
@@ -568,6 +572,7 @@ nl:
       continue_discussion: "Voortzetting van de discussie {{postLink}}:"
       follow_quote: ga naar het geciteerde bericht
       deleted_by_author: "(bericht verwijderd door de schrijver)"
+      expand_collapse: "uit-/invouwen"
 
       has_replies:
         one: Reactie
@@ -725,6 +730,7 @@ nl:
     flagging:
       title: Waarom meld je dit bericht voor moderatie?
       action: Meld bericht
+      notify_action: Meld
       cant: "Sorry, je kan dit bericht momenteel niet melden."
       custom_placeholder_notify_user: "Wat maakt dat je de schrijver persoonlijk iets wil melden? Wees specifiek, constructief en altijd aardig."
       custom_placeholder_notify_moderators: "Waarom heeft dit bericht aandacht van een moderator nodig? Laat ons specifiek weten waar je je zorgen om maakt en stuur relevante links mee waar mogelijk."
@@ -736,6 +742,8 @@ nl:
     topic_summary:
       title: "Topic samenvatting"
       links_shown: "laat alle {{totalLinks}} links zien..."
+      clicks: clicks
+      topic_link: link naar topic
 
     topic_statuses:
       locked:
@@ -855,6 +863,11 @@ nl:
         delete_title: "verwijder bericht (als het het eerste bericht is van een topic, verwijdert dit de topic)"
         flagged_by: Gemarkeerd door
         error: Er ging iets mis
+
+      groups:
+        title: Groepen
+        edit: Wijzig groepen
+        selector_placeholder: voeg gebruikers toe
 
       api:
         title: API

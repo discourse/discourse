@@ -12,6 +12,7 @@ nl:
 
   title: Discourse
   topics: Topics
+  posts: berichten
   loading: Laden
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, werkt het best JavaScript ingeschakeld'
 
@@ -25,18 +26,18 @@ nl:
     zero: "Sorry, je kan niet verwijzen naar andere gebruikers."
     one: "Sorry, je kan naar één andere gebruiker verwijzen in een bericht."
     other: "Sorry, je kan naar %{count} gebruikers verwijzen in een bericht."
-  too_many_mentions_visitor:
-    zero: "Sorry, bezoekers kunnen niet verwijzen naar andere gebruikers."
-    one: "Sorry, bezoekers kunnen naar één andere gebruiker verwijzen in een bericht."
-    other: "Sorry, bezoekers kunnen naar %{count} gebruikers verwijzen in een bericht."
+  too_many_mentions_newuser:
+    zero: "Sorry, nieuwe gebruikers kunnen niet verwijzen naar andere gebruikers."
+    one: "Sorry, nieuwe gebruikers kunnen naar één andere gebruiker verwijzen in een bericht."
+    other: "Sorry, nieuwe gebruikers kunnen naar %{count} gebruikers verwijzen in een bericht."
   too_many_images:
-    zero: "Sorry, bezoekers kunnen geen afbeeldingen in een bericht opnemen."
-    one: "Sorry, bezoekers kunnen één afbeelding in een bericht opnemen."
-    other: "Sorry, bezoekers kunnen %{count} afbeeldingen in een bericht opnemen."
+    zero: "Sorry, nieuwe gebruikers kunnen geen afbeeldingen in een bericht opnemen."
+    one: "Sorry, nieuwe gebruikers kunnen één afbeelding in een bericht opnemen."
+    other: "Sorry, nieuwe gebruikers kunnen %{count} afbeeldingen in een bericht opnemen."
   too_many_links:
-    zero: "Sorry, bezoekers kunnen geen links in een bericht opnemen."
-    one: "Sorry, bezoekers kunnen één links in een bericht opnemen."
-    other: "Sorry, bezoekers kunnen %{count} links in een bericht opnemen."
+    zero: "Sorry, nieuwe gebruikers kunnen geen links in een bericht opnemen."
+    one: "Sorry, nieuwe gebruikers kunnen één links in een bericht opnemen."
+    other: "Sorry, nieuwe gebruikers kunnen %{count} links in een bericht opnemen."
 
   just_posted_that: lijkt teveel op het bericht dat je net geschreven hebt
   has_already_been_used: is al eens gebruikt
@@ -59,11 +60,11 @@ nl:
 
       Houd het volgende in de gaten tijdens het opstellen van je topic:
 
-      - Geeft de titel een duidelijke beschrijving van het onderwerp, zodat iemand redelijkerwijs kan verwachten waar het over gaat?
+      - Is je titel interessant? Geeft de titel een duidelijke beschrijving van het onderwerp, zodat iemand redelijkerwijs kan verwachten waar het over gaat?
 
-      - Het eerste bericht bepaalt je topic: waar gaat het over? Wie zou er in geïnteresseerd zijn? Waarom is je topic van belang? Wat voor reacties verwacht je te krijgen?
+      - Waar gaat het over? Wie zou er in geïnteresseerd zijn? Waarom is je topic van belang? Wat voor reacties verwacht je te krijgen?
 
-      - Probeer de juiste woorden te kiezen zodat anderen je topic kunnen **vinden*. Als het in een categorie moet zijn, kies dan een toepasselijke categorie.
+      - Probeer de juiste (zoek)woorden te kiezen zodat anderen je topic kunnen **vinden*. Als het in een categorie moet zijn, kies dan een toepasselijke categorie.
 
       Voor meer informatie, [bekijk onze Veel Gestelde Vragen](/faq). Deze tekst zal alleen verschijnen bij je eerste %{education_posts_text}.
 
@@ -74,7 +75,7 @@ nl:
 
       - Geeft je reactie een nuttige bijdrage aan de conversatie, hoe klein dan ook?
 
-      - Behandel je mede site-leden met het zelfde respect dat je van hen verwacht.
+      - Wees aardig voor de andere gebruikers.
 
       - Je mag best kritisch zijn, maar onthoud dat je kritiek moet geven op *ideeën*, niet op mensen.
 
@@ -104,10 +105,10 @@ nl:
     post_template: "%{replace_paragraph}\n\nGebruik deze ruimte voor een lange omschrijving en om wat verwachtingen en regels van deze categorie uit te leggen.\n\nZaken waar je het over kan hebben in de reacties hieronder:\n\n- Waar is deze categorie voor? Waarom zouden mensen deze categorie moeten kiezen voor hun topic?\n\n- Waarin verschilt deze categorie van de andere categorien die we al hebben?\n\n- Hebben we deze categorie echt nodig?\n\n- Moeten we deze categorie samenvoegen met een andere categorie, of juist opsplitsen?\n"
 
   trust_levels:
-    new:
-      title: bezoeker
-    basic:
+    newuser:
       title: nieuwe gebruiker
+    basic:
+      title: gebruiker
     regular:
       title: reguliere gebruiker
     leader:
@@ -303,6 +304,14 @@ nl:
       title: Markeringen
       xaxis: Dag
       yaxis: Aantal markeringen
+    bookmarks:
+      title: Bladwijzers
+      xaxis: Dag
+      yaxis: Aantal nieuwe bladwijzers
+    favorites:
+      title: Favorieten
+      xaxis: Dag
+      yaxis: Aantal nieuwe favorieten
     users_by_trust_level:
       title: Gebruikers per trustlevel
       xaxis: Trustlevel
@@ -503,9 +512,9 @@ nl:
     regular_requires_likes_given: "Hoeveel keer een nieuwe gebruiker berichten leuk moet vinden voordat hij gepromoveerd wordt tot regulier gebruiker (trust level 2)"
     regular_requires_topic_reply_count: "Op hoeveel topics een nieuwe gebruiker moet reageren voordat hij gepromoveerd wordt tot regulier gebruiker (trust level 2)"
 
-    visitor_max_links: Hoeveel links een bezoeker in een bericht kan plaatsen
-    visitor_max_images: Hoeveel afbeeldingen een bezoeker in een bericht kan plaatsen
-    visitor_max_mentions_per_post: "Maximum aantal @naam notificaties dat een bezoeker in een bericht kan gebruiken"
+    newuser_max_links: Hoeveel links een nieuwe gebruiker in een bericht kan plaatsen
+    newuser_max_images: Hoeveel afbeeldingen een nieuwe gebruiker in een bericht kan plaatsen
+    newuser_max_mentions_per_post: "Maximum aantal @naam notificaties dat een nieuwe gebruiker in een bericht kan gebruiken"
     max_mentions_per_post: "Maximum aantal @naam notificaties dat je in een bericht kan gebruiken"
 
     auto_link_images_wider_than: "Afbeeldingen breder dan dit, in pixels, krijgen automatisch een link naar een lightbox"
@@ -554,7 +563,7 @@ nl:
     bookmarks: Bladwijzers
     topics: Topics
     likes_received: "'Vind ik leuk' ontvangen"
-    likes_given: Leuk gevonden
+    likes_given: Leuk
     responses: Reacties
     topic_responses: Topicreacties
     posts: Berichten
