@@ -346,13 +346,16 @@ zh_TW:
       invited_to_private_message: "{{username}} 邀請你進行私下交流：{{link}}"
       invitee_accepted: "<i title='已接受你的邀請' class='icon icon-signin'></i> {{username}} 已接受你的邀請"
       moved_post: "<i title='移動帖子' class='icon icon-arrow-right'></i> {{username}} 已將帖子移動到 {{link}}"
+      total_flagged: "被投诉帖子的总数"
 
     image_selector:
       title: "插入圖片"
       from_my_computer: "來自我的設備"
       from_the_web: "來自網絡"
       add_image: "添加圖片"
+      remote_title: "網絡圖片"
       remote_tip: "輸入圖片網絡，格式爲：http://example.com/image.jpg"
+      local_title: "本地圖片"
       local_tip: "點擊從你的設備中選擇一張圖片。"
       upload: "上傳"
       uploading_image: "上傳圖片中"
@@ -564,6 +567,7 @@ zh_TW:
       continue_discussion: "從 {{postLink}} 繼續討論："
       follow_quote: "跳轉至所引用的帖子"
       deleted_by_author: "（作者刪除了帖子）"
+      expand_collapse: "展開/收縮"
 
       has_replies:
         one: "回複"
@@ -732,6 +736,8 @@ zh_TW:
     topic_summary:
       title: "主題概要"
       links_shown: "顯示所有 {{totalLinks}} 個鏈接……"
+      clicks: "點擊"
+      topic_link: "主題鏈接"
 
     topic_statuses:
       locked:
@@ -817,8 +823,13 @@ zh_TW:
         installed_version: "已安裝"
         latest_version: "最新版本"
         problems_found: "你安裝的論壇目前有以下問題："
+        last_checked: "上次檢查"
+        refresh_problems: "刷新"
+        no_problems: "找不到問題."
         moderators: '版主：'
         admins: '管理員：'
+        private_messages_short: "私信"
+        private_messages_title: "私密信息"
 
         reports:
           today: "今天"
@@ -846,6 +857,11 @@ zh_TW:
         delete_title: "刪除帖子（如果它是主題第一帖，那麽將刪除主題）"
         flagged_by: "投訴者爲"
         error: "出錯了"
+
+      groups:
+        title: "群組"
+        edit: "編輯群組"
+        selector_placeholder: "添加用戶"
 
       api:
         title: "應用開發接口（API）"
