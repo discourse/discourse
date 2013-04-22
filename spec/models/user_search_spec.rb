@@ -21,63 +21,53 @@ describe UserSearch do
     Fabricate :post, user: user6, topic: topic
   end
 
-  context "all user search" do
-    it "searches the user's name" do
-      results = UserSearch.search user1.name.split(" ").first
-      results.size.should == 1
-      results.first.should == user1
-    end
+  # this is a seriously expensive integration test, re-creating this entire test db is too expensive
+  # reuse
+  it "operates correctly" do
+    # normal search
+    results = UserSearch.search user1.name.split(" ").first
+    results.size.should == 1
+    results.first.should == user1
 
-    it "searches the user's name case insensitive" do
-      results = UserSearch.search user1.name.split(" ").first.downcase
-      results.size.should == 1
-      results.first.should == user1
-    end
+    # lower case
+    results = UserSearch.search user1.name.split(" ").first.downcase
+    results.size.should == 1
+    results.first.should == user1
 
-    it "searches the user's username" do
-      results = UserSearch.search user4.username
-      results.size.should == 1
-      results.first.should == user4
-    end
+    #  username
+    results = UserSearch.search user4.username
+    results.size.should == 1
+    results.first.should == user4
 
-    it "searches the user's username case insensitive" do
-      results = UserSearch.search user4.username.upcase
-      results.size.should == 1
-      results.first.should == user4
-    end
+    # case insensitive
+    results = UserSearch.search user4.username.upcase
+    results.size.should == 1
+    results.first.should == user4
 
-    it "searches the user's username substring" do
-      results = UserSearch.search "mr"
-      results.size.should == 6
+    # substrings
+    results = UserSearch.search "mr"
+    results.size.should == 6
 
-      results = UserSearch.search "mrb"
-      results.size.should == 3
-    end
+    results = UserSearch.search "mrb"
+    results.size.should == 3
 
-    it "searches the user's username substring upper case" do
-      results = UserSearch.search "MR"
-      results.size.should == 6
 
-      results = UserSearch.search "MRB"
-      results.size.should == 3
-    end
-  end
+    results = UserSearch.search "MR"
+    results.size.should == 6
 
-  context "sort order respects users with posts on the topic" do
-    it "Mr. Blond is first when searching his topic" do
-      results = UserSearch.search "mrb", topic.id
-      results.first.should == user1
-    end
+    results = UserSearch.search "MRB"
+    results.size.should == 3
 
-    it "Mr. Blue is first when searching his topic" do
-      results = UserSearch.search "mrb", topic2.id
-      results.first.should == user2
-    end
+    # topic priority
+    results = UserSearch.search "mrb", topic.id
+    results.first.should == user1
 
-    it "Mr. Brown is first when searching his topic" do
-      results = UserSearch.search "mrb", topic3.id
-      results.first.should == user5
-    end
+
+    results = UserSearch.search "mrb", topic2.id
+    results.first.should == user2
+
+    results = UserSearch.search "mrb", topic3.id
+    results.first.should == user5
   end
 
 end
