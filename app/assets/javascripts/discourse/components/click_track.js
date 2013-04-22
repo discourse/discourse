@@ -22,10 +22,6 @@ Discourse.ClickTrack = {
     // We don't track clicks on quote back buttons
     if ($link.hasClass('back') || $link.hasClass('quote-other-topic')) return true;
 
-    // We don't track clicks in oneboxes
-    // except when we force it with the "track-link" class
-    if ($link.closest('.onebox-result').length > 0 && !$link.hasClass('track-link')) return true;
-
     // Remove the href, put it as a data attribute
     if (!$link.data('href')) {
       $link.addClass('no-href');
