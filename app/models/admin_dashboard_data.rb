@@ -40,7 +40,7 @@ class AdminDashboardData
   end
 
   def problems
-    [rails_env_check, host_names_check, gc_checks, sidekiq_check || clockwork_check, ram_check, facebook_config_check, twitter_config_check, github_config_check].compact
+    [rails_env_check, host_names_check, gc_checks, sidekiq_check || queue_size_check || clockwork_check, ram_check, facebook_config_check, twitter_config_check, github_config_check].compact
   end
 
   def rails_env_check
@@ -62,6 +62,11 @@ class AdminDashboardData
 
   def clockwork_check
     I18n.t('dashboard.clockwork_warning') unless Jobs::ClockworkHeartbeat.is_clockwork_running?
+  end
+
+  def queue_size_check
+    queue_size = Jobs.queued
+    I18n.t('dashboard.queue_size_warning', queue_size: queue_size) unless queue_size < 100
   end
 
   def ram_check
