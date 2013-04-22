@@ -653,41 +653,41 @@ sv:
       text_body_template: |
         This private message has a few quick tips to get you started:
 
-        ### Keep Scrolling
+        ### Keep scrolling
 
-        There is no next page button or page numbers -- to keep reading, just keep scrolling down, and more content will load!
+        There are no next page buttons or page numbers – to read more, just keep scrolling down, and more content will load!
 
         As new replies come in, they will appear automatically at the bottom of the topic. No need to refresh the page or re-enter the topic to see new posts.
 
-        ### How Do I Reply?
+        ### How do I reply?
 
         - To reply to a specific post, use the Reply button at the bottom of that post.
 
-        - If you want to reply to the overall *theme* of the topic, rather than any specific person in the topic, use the Reply button at the very bottom of the topic.
+        - If you want to reply to the overall *theme* of the topic, rather than any specific post in the topic, use the Reply button at the very bottom of the topic.
 
         - If you want to take the conversation in a different direction, but keep them linked together, use Reply as New Topic to the right of the post.
 
-        ### Who is Talking to Me?
+        ### Who is talking to me?
 
-        When someone replies to your post, quotes you, or mentions your @username, a notification will appear at the top of the page. Click or tap the notification number to see who's talking to you, and where. Join the conversation!
+        When someone replies to your post, quotes you, or mentions your @username, a notification ➀ will appear at the top of the page. Click or tap that notification number to see who's talking to you, and where. Join the conversation!
 
         - To mention someone's name, start typing `@` and an autocompleter will pop up.
 
+        - To quote just a section of a post, select it, then click the Reply button that appears over the highlight.
+
         - To quote an entire post, use the Import Quote button on the composer toolbar.
 
-        - To quote just a section of a post, highlight it, then click the Reply button that appears over the highlight.
+        ### Look at that post!
 
-        ### Look at That Post!
-
-        To let someone know that you enjoyed their post, click the like button at the bottom of the post. If you see a problem with a post, don't hesitate to click the flag button and let the moderators -- and your fellow community members -- know about it.
+        To let someone know that you enjoyed their post, click the like ♥ button at the bottom of the post. If you see a problem with a post, don't hesitate to click the flag button and let the moderators – and your fellow community members – know about it.
 
         ### Where am I?
 
-        - To get back to the home page at any time, **click the icon at the upper left.**
+        - To get back to the home page at any time, **click the logo at the upper left** or use the back ← button on your browser.
 
-        - To search, visit your user page, or otherwise navigate, click on the icons at the upper right.
+        - For search, your user page, or the sitemap, click on the icons at the upper right.
 
-        - While reading a topic, you can move to the top by clicking its title at the top of the page. To reach the *bottom*, click the down arrow on the topic progress indicator at the bottom of the page, or click the last post field on the topic summary under the first post.
+        - While reading a topic, move to the top ↑ by clicking its title at the top of the page. To reach the *bottom* ↓, click the down arrow on the topic progress indicator at the bottom of the page, or click the last post field on the topic summary under the first post.
 
     welcome_approved:
       subject_template: "You've been approved on %{site_name}!"
@@ -705,8 +705,6 @@ sv:
     welcome_user:
       subject_template: "Welcome to %{site_name}!"
       text_body_template: |
-        Hi there!
-
         Thanks for joining %{site_name}, and welcome to our discussion forum!
 
         %{new_user_tips}
