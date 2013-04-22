@@ -57,7 +57,8 @@ Discourse.ActionSummary = Discourse.Model.extend({
 
     // Create our post action
     var actionSummary = this;
-    Discourse.ajax({
+
+    return Discourse.ajax({
       url: Discourse.getURL("/post_actions"),
       type: 'POST',
       data: {
