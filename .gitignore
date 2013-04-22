@@ -22,6 +22,7 @@ dump.rdb
 
 config/database.yml
 config/redis.yml
+config/discourse.pill
 
 # Ignore the default SQLite database and db dumps
 /db/*.sqlite3
