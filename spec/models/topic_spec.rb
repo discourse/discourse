@@ -95,7 +95,6 @@ describe Topic do
         new_topic.archetype = Archetype.private_message
         new_topic.should be_valid
       end
-
     end
 
     context "when duplicates are allowed" do
@@ -111,9 +110,17 @@ describe Topic do
   end
 
   context 'html in title' do
-    let(:topic_bold) { Fabricate(:topic, title: "Topic with <b>bold</b> text in its title" ) }
-    let(:topic_image) { Fabricate(:topic, title: "Topic with <img src='something'> image in its title" ) }
-    let(:topic_script) { Fabricate(:topic, title: "Topic with <script>alert('title')</script> script in its title" ) }
+
+    def build_topic_with_title(title)
+      t = build(:topic, title: title)
+      t.sanitize_title
+      t.title_quality
+      t
+    end
+
+    let(:topic_bold) { build_topic_with_title("Topic with <b>bold</b> text in its title" ) }
+    let(:topic_image) { build_topic_with_title("Topic with <img src='something'> image in its title" ) }
+    let(:topic_script) { build_topic_with_title("Topic with <script>alert('title')</script> script in its title" ) }
 
     it "escapes script contents" do
       topic_script.title.should == "Topic with script in its title"
@@ -130,7 +137,7 @@ describe Topic do
   end
 
   context 'fancy title' do
-    let(:topic) { Fabricate(:topic, title: "\"this topic\" -- has ``fancy stuff''" ) }
+    let(:topic) { Fabricate.build(:topic, title: "\"this topic\" -- has ``fancy stuff''" ) }
 
     context 'title_fancy_entities disabled' do
       before do
@@ -173,7 +180,6 @@ describe Topic do
 
   end
 
-
   context 'message bus' do
     it 'calls the message bus observer after create' do
       MessageBusObserver.any_instance.expects(:after_create_topic).with(instance_of(Topic))
@@ -189,10 +195,8 @@ describe Topic do
 
     it "returns the post numbers of the topic" do
       topic.post_numbers.should == [1, 2, 3]
-    end
-
-    it "skips deleted posts" do
       p2.destroy
+      topic.reload
       topic.post_numbers.should == [1, 3]
     end
 
@@ -248,99 +252,36 @@ describe Topic do
 
       let!(:new_topic) { topic.move_posts(user, "new testing topic name", [p2.id, p4.id]) }
 
-
-      it "updates the user's last_read_post_number" do
+      it "moved correctly" do
         TopicUser.where(user_id: user.id, topic_id: topic.id).first.last_read_post_number.should == p3.post_number
+
+        new_topic.should be_present
+        new_topic.featured_user1_id.should == another_user.id
+        new_topic.like_count.should == 1
+        new_topic.category.should == category
+        topic.featured_user1_id.should be_blank
+        new_topic.posts.should =~ [p2, p4]
+
+        new_topic.reload
+        new_topic.posts_count.should == 2
+        new_topic.highest_post_number.should == 2
+
+        p2.reload
+        p2.sort_order.should == 1
+        p2.post_number.should == 1
+
+        p4.reload
+        p4.post_number.should == 2
+        p4.sort_order.should == 2
+
+        topic.reload
+        topic.featured_user1_id.should be_blank
+        topic.like_count.should == 0
+        topic.posts_count.should == 2
+        topic.posts.should =~ [p1, p3]
+        topic.highest_post_number.should == p3.post_number
       end
-
-      context 'new topic' do
-        it "exists" do
-          new_topic.should be_present
-        end
-
-        it "has the featured user" do
-          new_topic.featured_user1_id.should == another_user.id
-        end
-
-        it "has the correct like_count" do
-          new_topic.like_count.should == 1
-        end
-
-        it "has the correct category" do
-          new_topic.category.should == category
-        end
-
-        it "has removed the second poster from the featured users, since they moved" do
-          topic.featured_user1_id.should be_blank
-        end
-
-        it "has two posts" do
-          new_topic.reload
-          new_topic.posts_count.should == 2
-        end
-
-        it "has the moved posts" do
-          new_topic.posts.should =~ [p2, p4]
-        end
-
-        it "has renumbered the first post" do
-          p2.reload
-          p2.post_number.should == 1
-        end
-
-        it "has changed the first post's sort order" do
-          p2.reload
-          p2.sort_order.should == 1
-        end
-
-        it "has renumbered the forth post" do
-          p4.reload
-          p4.post_number.should == 2
-        end
-
-        it "has changed the fourth post's sort order" do
-          p4.reload
-          p4.sort_order.should == 2
-        end
-
-        it "has the correct highest_post_number" do
-          new_topic.reload
-          new_topic.highest_post_number.should == 2
-        end
-      end
-
-      context "original topic" do
-        before do
-          topic.reload
-        end
-
-        it "has removed the second poster from the featured users, since they moved" do
-          topic.featured_user1_id.should be_blank
-        end
-
-        it "has the correct like_count" do
-          topic.like_count.should == 0
-        end
-
-        it "has 2 posts now" do
-          topic.posts_count.should == 2
-        end
-
-        it "contains the leftover posts" do
-          topic.posts.should =~ [p1, p3]
-        end
-
-        it "has the correct highest_post_number" do
-          topic.reload
-          topic.highest_post_number.should == p3.post_number
-        end
-
-      end
-
     end
-
-
-
   end
 
   context 'private message' do
@@ -348,30 +289,18 @@ describe Topic do
     let(:evil_trout) { Fabricate(:evil_trout) }
     let!(:topic) { Fabricate(:private_message_topic) }
 
-    it "should allow the allowed users to see the topic" do
+    it "should integrate correctly" do
       Guardian.new(topic.user).can_see?(topic).should be_true
-    end
-
-    it "should disallow anon to see the topic" do
       Guardian.new.can_see?(topic).should be_false
-    end
-
-    it "should disallow a different user to see the topic" do
       Guardian.new(evil_trout).can_see?(topic).should be_false
-    end
-
-    it "should allow the recipient user to see the topic" do
       Guardian.new(coding_horror).can_see?(topic).should be_true
-    end
-
-    it "should be excluded from the list view" do
       TopicQuery.new(evil_trout).list_latest.topics.should_not include(topic)
+
+      # invites
+      topic.invite(topic.user, 'duhhhhh').should be_false
     end
 
     context 'invite' do
-      it "returns false if the username doesn't exist" do
-        topic.invite(topic.user, 'duhhhhh').should be_false
-      end
 
       it "delegates to topic.invite_by_email when the user doesn't exist, but it's an email" do
         topic.expects(:invite_by_email).with(topic.user, 'jake@adventuretime.ooo')
@@ -418,17 +347,12 @@ describe Topic do
     context "user actions" do
       let(:actions) { topic.user.user_actions }
 
-      it "should not log a user action for the creation of the topic" do
+      it "should set up actions correctly" do
         actions.map{|a| a.action_type}.should_not include(UserAction::NEW_TOPIC)
-      end
-
-      it "should log a user action for the creation of a private message" do
         actions.map{|a| a.action_type}.should include(UserAction::NEW_PRIVATE_MESSAGE)
-      end
-
-      it "should log a user action for the recepient of the private message" do
         coding_horror.user_actions.map{|a| a.action_type}.should include(UserAction::GOT_PRIVATE_MESSAGE)
       end
+
     end
 
     context "other user" do
@@ -458,11 +382,9 @@ describe Topic do
       @topic = Fabricate(:topic, bumped_at: 1.year.ago)
     end
 
-    it 'has a bumped at value after creation' do
-      @topic.bumped_at.should be_present
-    end
 
     it 'updates the bumped_at field when a new post is made' do
+      @topic.bumped_at.should be_present
       lambda {
         Fabricate(:post, topic: @topic, user: @topic.user)
         @topic.reload
@@ -497,10 +419,7 @@ describe Topic do
           @topic.reload
         }.should_not change(@topic, :bumped_at)
       end
-
-
     end
-
   end
 
   context 'moderator posts' do
@@ -512,27 +431,12 @@ describe Topic do
 
     it 'creates a moderator post' do
       @mod_post.should be_present
-    end
-
-    it 'has the moderator action type' do
       @mod_post.post_type.should == Post.types[:moderator_action]
-    end
-
-    it 'increases the moderator_posts count' do
+      @mod_post.post_number.should == 999
+      @mod_post.sort_order.should == 999
+      @topic.topic_links.count.should == 1
       @topic.reload
       @topic.moderator_posts_count.should == 1
-    end
-
-    it "inserts the post at the number we provided" do
-      @mod_post.post_number.should == 999
-    end
-
-    it "has the custom sort order we specified" do
-      @mod_post.sort_order.should == 999
-    end
-
-    it 'creates a topic link' do
-      @topic.topic_links.count.should == 1
     end
   end
 
@@ -553,18 +457,11 @@ describe Topic do
           @topic.reload
         end
 
-        it 'should not be visible' do
+        it 'should not be visible and have correct counts' do
           @topic.should_not be_visible
-        end
-
-        it 'adds a moderator post' do
           @topic.moderator_posts_count.should == 1
-        end
-
-        it "doesn't bump the topic" do
           @topic.bumped_at.to_f.should == @original_bumped_at
         end
-
       end
 
       context 'enable' do
@@ -574,15 +471,9 @@ describe Topic do
           @topic.reload
         end
 
-        it 'should be visible' do
+        it 'should be visible with correct counts' do
           @topic.should be_visible
-        end
-
-        it 'adds a moderator post' do
           @topic.moderator_posts_count.should == 1
-        end
-
-        it "doesn't bump the topic" do
           @topic.bumped_at.to_f.should == @original_bumped_at
         end
       end
@@ -595,19 +486,9 @@ describe Topic do
           @topic.reload
         end
 
-        it "doesn't have a pinned_at" do
+        it "doesn't have a pinned_at but has correct dates" do
           @topic.pinned_at.should be_blank
-        end
-
-        it 'should not be pinned' do
-          @topic.pinned_at.should be_blank
-        end
-
-        it 'adds a moderator post' do
           @topic.moderator_posts_count.should == 1
-        end
-
-        it "doesn't bump the topic" do
           @topic.bumped_at.to_f.should == @original_bumped_at
         end
       end
@@ -619,17 +500,12 @@ describe Topic do
           @topic.reload
         end
 
-        it 'should be pinned' do
+        it 'should enable correctly' do
           @topic.pinned_at.should be_present
-        end
-
-        it 'adds a moderator post' do
+          @topic.bumped_at.to_f.should == @original_bumped_at
           @topic.moderator_posts_count.should == 1
         end
 
-        it "doesn't bump the topic" do
-          @topic.bumped_at.to_f.should == @original_bumped_at
-        end
       end
     end
 
@@ -640,16 +516,10 @@ describe Topic do
           @topic.reload
         end
 
-        it 'should not be archived' do
+        it 'should archive correctly' do
           @topic.should_not be_archived
-        end
-
-        it 'adds a moderator post' do
-          @topic.moderator_posts_count.should == 1
-        end
-
-        it "doesn't bump the topic" do
           @topic.bumped_at.to_f.should == @original_bumped_at
+          @topic.moderator_posts_count.should == 1
         end
       end
 
@@ -662,15 +532,10 @@ describe Topic do
 
         it 'should be archived' do
           @topic.should be_archived
-        end
-
-        it 'adds a moderator post' do
           @topic.moderator_posts_count.should == 1
-        end
-
-        it "doesn't bump the topic" do
           @topic.bumped_at.to_f.should == @original_bumped_at
         end
+
       end
     end
 
@@ -683,14 +548,7 @@ describe Topic do
 
         it 'should not be pinned' do
           @topic.should_not be_closed
-        end
-
-        it 'adds a moderator post' do
           @topic.moderator_posts_count.should == 1
-        end
-
-        # We bump the topic when a topic is re-opened
-        it "bumps the topic" do
           @topic.bumped_at.to_f.should_not == @original_bumped_at
         end
 
@@ -705,16 +563,9 @@ describe Topic do
 
         it 'should be closed' do
           @topic.should be_closed
-        end
-
-        it 'adds a moderator post' do
+          @topic.bumped_at.to_f.should == @original_bumped_at
           @topic.moderator_posts_count.should == 1
         end
-
-        it "doesn't bump the topic" do
-          @topic.bumped_at.to_f.should == @original_bumped_at
-        end
-
       end
     end
 
@@ -795,18 +646,12 @@ describe Topic do
 
       it 'updates the last_post_user_id to the second_user' do
         @topic.last_post_user_id.should == @second_user.id
-      end
-
-      it 'resets the last_posted_at back to the OP' do
         @topic.last_posted_at.to_i.should == @new_post.created_at.to_i
-      end
-
-      it 'has a posted flag set for the second user' do
         topic_user = @second_user.topic_users.where(topic_id: @topic.id).first
         topic_user.posted?.should be_true
       end
-    end
 
+    end
   end
 
   describe 'with category' do
@@ -849,9 +694,6 @@ describe Topic do
 
         it 'adds the new key' do
           topic.meta_data['city'].should == 'gotham'
-        end
-
-        it 'still has the old key' do
           topic.meta_data['hello'].should == 'world'
         end
 
@@ -868,41 +710,14 @@ describe Topic do
 
     it 'is a regular topic by default' do
       topic.archetype.should == Archetype.default
-    end
-
-    it 'is not a best_of' do
       topic.has_best_of.should be_false
-    end
-
-    it "is the 1.0 percent rank" do
       topic.percent_rank.should == 1.0
-    end
-
-    it 'is not invisible' do
       topic.should be_visible
-    end
-
-    it "has an empty pinned_at" do
       topic.pinned_at.should be_blank
-    end
-
-    it 'is not pinned' do
-      topic.pinned_at.should be_blank
-    end
-
-    it 'is not closed' do
       topic.should_not be_closed
-    end
-
-    it 'is not archived' do
       topic.should_not be_archived
-    end
-
-    it 'has no moderator posts' do
       topic.moderator_posts_count.should == 0
     end
-
-
 
     context 'post' do
       let(:post) { Fabricate(:post, topic: topic, user: topic.user) }
@@ -989,9 +804,6 @@ describe Topic do
 
         it 'changes the category' do
           @topic.category.should == @category
-        end
-
-        it 'increases the topic_count' do
           @category.topic_count.should == 1
         end
 
@@ -1051,9 +863,6 @@ describe Topic do
 
         it "resets the category" do
           @topic.category_id.should be_blank
-        end
-
-        it "lowers the forum topic count" do
           @category.topic_count.should == 0
         end
 

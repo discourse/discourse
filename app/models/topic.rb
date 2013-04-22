@@ -32,8 +32,8 @@ class Topic < ActiveRecord::Base
 
   serialize :meta_data, ActiveRecord::Coders::Hstore
 
+  before_validation :sanitize_title
   validate :unique_title
-
 
   belongs_to :category
   has_many :posts
@@ -75,13 +75,6 @@ class Topic < ActiveRecord::Base
   class FavoriteLimiter < RateLimiter
     def initialize(user)
       super(user, "favorited:#{Date.today.to_s}", SiteSetting.max_favorites_per_day, 1.day.to_i)
-    end
-  end
-
-  before_validation do
-    if title.present?
-      self.title = sanitize(title, tags: [], attributes: [])
-      self.title.strip!
     end
   end
 
@@ -151,6 +144,13 @@ class Topic < ActiveRecord::Base
     end
   end
 
+  def sanitize_title
+    if self.title.present?
+      self.title = sanitize(title, tags: [], attributes: [])
+      self.title.strip!
+    end
+  end
+
   def new_version_required?
     title_changed? || category_id_changed?
   end
@@ -170,6 +170,11 @@ class Topic < ActiveRecord::Base
   def update_meta_data(data)
     self.meta_data = (self.meta_data || {}).merge(data.stringify_keys)
     save
+  end
+
+  def reload(options=nil)
+    @post_numbers = nil
+    super(options)
   end
 
   def post_numbers
