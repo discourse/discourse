@@ -18,6 +18,23 @@ describe PostAction do
   let(:bookmark) { PostAction.new(user_id: post.user_id, post_action_type_id: PostActionType.types[:bookmark] , post_id: post.id) }
 
   describe "messaging" do
+
+    it "notify moderators integration test" do 
+      mod = moderator
+      action = PostAction.act(codinghorror, post, PostActionType.types[:notify_moderators], "this is my special long message");
+
+      posts = Post.
+                  joins(:topic).
+                  select('posts.id, topics.subtype').
+                  where('topics.archetype' => Archetype.private_message).
+                  to_a
+
+      posts.count.should == 1
+      action.related_post_id.should == posts[0].id.to_i
+      posts[0].subtype.should == TopicSubtype.notify_moderators
+
+    end
+
     describe 'notify_moderators' do
       before do
         PostAction.stubs(:create)
@@ -25,14 +42,8 @@ describe PostAction do
       end
 
       it "sends an email to all moderators if selected" do
-        PostCreator.any_instance.expects(:create).returns(nil)
-        PostAction.act(build(:user), build(:post), PostActionType.types[:notify_moderators], "this is my special message");
-      end
-
-      it "uses the correct topic subtype" do
-        PostCreator.expects(:new).with do |user, opts|
-          opts[:subtype] == TopicSubtype.notify_moderators
-        end.returns(stub_everything)
+        post = build(:post, id: 1000)
+        PostCreator.any_instance.expects(:create).returns(post)
         PostAction.act(build(:user), build(:post), PostActionType.types[:notify_moderators], "this is my special message");
       end
     end
@@ -45,14 +56,7 @@ describe PostAction do
       end
 
       it "sends an email to user if selected" do
-        PostCreator.any_instance.expects(:create).returns(nil)
-        PostAction.act(build(:user), post, PostActionType.types[:notify_user], "this is my special message");
-      end
-
-      it "uses the correct topic subtype" do
-        PostCreator.expects(:new).with do |user, opts|
-          opts[:subtype] == TopicSubtype.notify_user
-        end.returns(stub_everything)
+        PostCreator.any_instance.expects(:create).returns(build(:post))
         PostAction.act(build(:user), post, PostActionType.types[:notify_user], "this is my special message");
       end
     end
@@ -62,11 +66,10 @@ describe PostAction do
     before do
       PostAction.update_flagged_posts_count
     end
-    it "starts of with 0 flag counts" do
-      PostAction.flagged_posts_count.should == 0
-    end
 
     it "increments the numbers correctly" do
+      PostAction.flagged_posts_count.should == 0
+
       PostAction.act(codinghorror, post, PostActionType.types[:off_topic])
       PostAction.flagged_posts_count.should == 1
 
@@ -107,7 +110,6 @@ describe PostAction do
     end
 
   end
-
 
   describe 'when a user votes for something' do
     it 'should increase the vote counts when a user likes' do

@@ -27,10 +27,15 @@ Discourse.ActionsHistoryView = Discourse.View.extend({
       var actionString, iconsHtml;
       buffer.push("<div class='post-action'>");
 
+      // TODO multi line expansion for flags
+      var postUrl;
       if (c.get('users')) {
         iconsHtml = "";
         c.get('users').forEach(function(u) {
           iconsHtml += "<a href=\"" + Discourse.getURL("/users/") + (u.get('username_lower')) + "\">";
+          if (u.post_url) {
+            postUrl = postUrl || u.post_url;
+          }
           iconsHtml += Discourse.Utilities.avatarImg({
             size: 'small',
             username: u.get('username'),
@@ -38,12 +43,17 @@ Discourse.ActionsHistoryView = Discourse.View.extend({
           });
           iconsHtml += "</a>";
         });
-        buffer.push(" " + Em.String.i18n('post.actions.people.' + c.get('actionType.name_key'), { icons: iconsHtml }) + ".");
+
+        var key = 'post.actions.people.' + c.get('actionType.name_key');
+        if(postUrl) {
+          key = key + "_with_url";
+        }
+        buffer.push(" " + Em.String.i18n(key, { icons: iconsHtml, postUrl: postUrl}) + ".");
       } else {
         buffer.push("<a href='#' data-who-acted='" + (c.get('id')) + "'>" + (c.get('description')) + "</a>.");
       }
 
-      if (c.get('can_act')) {
+      if (c.get('can_act') && !c.get('actionType.is_custom_flag')) {
         actionString = Em.String.i18n("post.actions.it_too." + c.get('actionType.name_key'));
         buffer.push(" <a href='#' data-act='" + (c.get('id')) + "'>" + actionString + "</a>.");
       }

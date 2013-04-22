@@ -33,10 +33,17 @@ class PostActionsController < ApplicationController
     guardian.ensure_can_see_post_actors!(@post.topic, post_action_type_id)
 
     users = User.
+              select(['null as post_url','users.id', 'users.username', 'users.username_lower', 'users.email','post_actions.related_post_id']).
               joins(:post_actions).
-              where(["post_actions.post_id = ? and post_actions.post_action_type_id = ? and post_actions.deleted_at IS NULL", @post.id, post_action_type_id]).all
+              where(['post_actions.post_id = ? and post_actions.post_action_type_id = ? and post_actions.deleted_at IS NULL', @post.id, post_action_type_id]).all
 
-    render_serialized(users, BasicUserSerializer)
+
+    urls = Post.urls(users.map{|u| u.related_post_id})
+    users.each do |u|
+      u.post_url = urls[u.related_post_id.to_i]
+    end
+
+    render_serialized(users, PostActionUserSerializer)
   end
 
   def destroy

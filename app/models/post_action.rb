@@ -6,7 +6,7 @@ class PostAction < ActiveRecord::Base
 
   include RateLimiter::OnCreateRecord
 
-  attr_accessible :post_action_type_id, :post_id, :user_id, :post, :user, :post_action_type, :message
+  attr_accessible :post_action_type_id, :post_id, :user_id, :post, :user, :post_action_type, :message, :related_post_id
 
   belongs_to :post
   belongs_to :user
@@ -89,16 +89,21 @@ class PostAction < ActiveRecord::Base
         end
       end
 
+      related_post_id = nil
       if target_usernames.present?
-        PostCreator.new(user,
+        related_post_id = PostCreator.new(user,
                               target_usernames: target_usernames,
                               archetype: Archetype.private_message,
                               subtype: subtype,
                               title: title,
                               raw: body
-                       ).create
+                       ).create.id
       end
-      create(post_id: post.id, user_id: user.id, post_action_type_id: post_action_type_id, message: message)
+      create( post_id: post.id,
+              user_id: user.id,
+              post_action_type_id: post_action_type_id,
+              message: message,
+              related_post_id: related_post_id )
     rescue ActiveRecord::RecordNotUnique
       # can happen despite being .create
       # since already bookmarked

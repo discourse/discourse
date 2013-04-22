@@ -270,7 +270,26 @@ class Post < ActiveRecord::Base
   end
 
   def url
-    "/t/#{Slug.for(topic.title)}/#{topic.id}/#{post_number}"
+    Post.url(topic.title, topic.id, post_number)
+  end
+
+  def self.url(title, topic_id, post_number)
+    "/t/#{Slug.for(title)}/#{topic_id}/#{post_number}"
+  end
+
+  def self.urls(post_ids)
+    ids = post_ids.map{|u| u}
+    if ids.length > 0
+      urls = {}
+      Topic.joins(:posts).where('posts.id' => ids).
+        select(['posts.id as post_id','post_number', 'topics.title', 'topics.id']).
+      each do |t|
+        urls[t.post_id.to_i] = url(t.title, t.id, t.post_number)
+      end
+      urls
+    else 
+      {}
+    end
   end
 
   def author_readable

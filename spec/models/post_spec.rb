@@ -333,18 +333,12 @@ describe Post do
 
     it 'has one version in all_versions' do
       post.all_versions.size.should == 1
+      first_version_at.should be_present
+      post.revise(post.user, post.raw).should be_false
     end
 
-    it "has an initial last_version" do
-      first_version_at.should be_present
-    end
 
     describe 'with the same body' do
-
-      it 'returns false' do
-        post.revise(post.user, post.raw).should be_false
-      end
-
       it "doesn't change cached_version" do
         lambda { post.revise(post.user, post.raw); post.reload }.should_not change(post, :cached_version)
       end
@@ -383,13 +377,7 @@ describe Post do
 
       it 'updates the cached_version' do
         post.cached_version.should == 2
-      end
-
-      it 'creates a new version' do
         post.all_versions.size.should == 2
-      end
-
-      it "updates the last_version_at" do
         post.last_version_at.to_i.should == revised_at.to_i
       end
 
@@ -445,31 +433,13 @@ describe Post do
       let(:changed_by) { Fabricate(:coding_horror) }
       let!(:result) { post.revise(changed_by, 'updated body') }
 
-      it 'returns true' do
+      it 'acts correctly' do
         result.should be_true
-      end
-
-      it 'updates the body' do
         post.raw.should == 'updated body'
-      end
-
-      it 'sets the invalidate oneboxes attribute' do
         post.invalidate_oneboxes.should == true
-      end
-
-      it 'increased the cached_version' do
         post.cached_version.should == 2
-      end
-
-      it 'has the new version in all_versions' do
         post.all_versions.size.should == 2
-      end
-
-      it 'has versions' do
         post.versions.should be_present
-      end
-
-      it "saved the user who made the change in the version" do
         post.versions.first.user.should be_present
       end
 
@@ -482,9 +452,6 @@ describe Post do
 
         it 'is a ninja edit, because the second poster posted again quickly' do
           post.cached_version.should == 2
-        end
-
-        it 'is a ninja edit, because the second poster posted again quickly' do
           post.all_versions.size.should == 2
         end
 
@@ -544,39 +511,15 @@ describe Post do
 
     let(:post) { Fabricate(:post, post_args) }
 
-    it "defaults to not user_deleted" do
+    it "has correct info set" do
       post.user_deleted?.should be_false
-    end
-
-    it 'has a post nubmer' do
       post.post_number.should be_present
-    end
-
-    it 'has an excerpt' do
       post.excerpt.should be_present
-    end
-
-    it 'is of the regular post type' do
       post.post_type.should == Post.types[:regular]
-    end
-
-    it 'has no versions' do
       post.versions.should be_blank
-    end
-
-    it 'has cooked content' do
       post.cooked.should be_present
-    end
-
-    it 'has an external id' do
       post.external_id.should be_present
-    end
-
-    it 'has no quotes' do
       post.quote_count.should == 0
-    end
-
-    it 'has no replies' do
       post.replies.should be_blank
     end
 
@@ -584,19 +527,10 @@ describe Post do
 
       let(:topic_user) { post.user.topic_users.where(topic_id: topic.id).first }
 
-      it 'exists' do
+      it 'is set correctly' do
         topic_user.should be_present
-      end
-
-      it 'has the posted flag set' do
         topic_user.should be_posted
-      end
-
-      it 'recorded the latest post as read' do
         topic_user.last_read_post_number.should == post.post_number
-      end
-
-      it 'recorded the latest post as the last seen' do
         topic_user.seen_post_count.should == post.post_number
       end
 
@@ -670,18 +604,11 @@ describe Post do
           PostCreator.new(other_user, raw: raw, topic_id: topic.id, reply_to_post_number: post.post_number).create
         end
 
-        it 'has two quotes' do
+        it 'has the correct info set' do
           multi_reply.quote_count.should == 2
-        end
-
-        it 'is a child of the parent post' do
           post.replies.include?(multi_reply).should be_true
-        end
-
-        it 'is a child of the second post quoted' do
           reply.replies.include?(multi_reply).should be_true
         end
-
       end
 
     end
@@ -720,6 +647,19 @@ describe Post do
     it 'delegates to the associated user' do
       User.any_instance.expects(:readable_name)
       Fabricate(:post).author_readable
+    end
+  end
+
+  describe 'urls' do
+    it 'no-ops for empty list' do 
+      Post.urls([]).should == {}
+    end
+
+    # integration test -> should move to centralized integration test 
+    it 'finds urls for posts presented' do 
+      p1 = Fabricate(:post)
+      p2 = Fabricate(:post)
+      Post.urls([p1.id, p2.id]).should == {p1.id => p1.url, p2.id => p2.url}
     end
   end
 
