@@ -40,7 +40,15 @@ class AdminDashboardData
   end
 
   def problems
-    [rails_env_check, host_names_check, gc_checks, sidekiq_check || queue_size_check || clockwork_check, ram_check, facebook_config_check, twitter_config_check, github_config_check].compact
+    [ rails_env_check,
+      host_names_check,
+      gc_checks,
+      sidekiq_check || queue_size_check || clockwork_check,
+      ram_check,
+      facebook_config_check,
+      twitter_config_check,
+      github_config_check,
+      failing_emails_check ].compact
   end
 
   def rails_env_check
@@ -83,5 +91,10 @@ class AdminDashboardData
 
   def github_config_check
     I18n.t('dashboard.github_config_warning') if SiteSetting.enable_github_logins and (!SiteSetting.github_client_id.present? or !SiteSetting.github_client_secret.present?)
+  end
+
+  def failing_emails_check
+    num_failed_jobs = Jobs.num_email_retry_jobs
+    I18n.t('dashboard.failing_emails_warning', num_failed_jobs: num_failed_jobs) if num_failed_jobs > 0
   end
 end

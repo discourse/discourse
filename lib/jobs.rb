@@ -11,6 +11,10 @@ module Jobs
     end
   end
 
+  def self.num_email_retry_jobs
+    Sidekiq::RetrySet.new.select { |job| job.klass =~ /Email$/ }.size
+  end
+
   class Base
     include Sidekiq::Worker
 
