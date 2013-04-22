@@ -249,7 +249,7 @@ GEM
       chef (>= 0.10)
       highline
       thor (~> 0.15)
-    libv8 (3.11.8.13)
+    libv8 (3.11.8.17)
     listen (0.7.2)
     lumberjack (1.0.2)
     mail (2.4.4)
@@ -388,7 +388,7 @@ GEM
       redis-store (~> 1.1.0)
     redis-store (1.1.3)
       redis (>= 2.2.0)
-    ref (1.0.2)
+    ref (1.0.4)
     rest-client (1.6.7)
       mime-types (>= 1.16)
     rinku (1.7.2)
