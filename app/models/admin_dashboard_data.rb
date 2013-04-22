@@ -48,7 +48,8 @@ class AdminDashboardData
       facebook_config_check,
       twitter_config_check,
       github_config_check,
-      failing_emails_check ].compact
+      failing_emails_check,
+      default_logo_check ].compact
   end
 
   def rails_env_check
@@ -96,5 +97,13 @@ class AdminDashboardData
   def failing_emails_check
     num_failed_jobs = Jobs.num_email_retry_jobs
     I18n.t('dashboard.failing_emails_warning', num_failed_jobs: num_failed_jobs) if num_failed_jobs > 0
+  end
+
+  def default_logo_check
+    if SiteSetting.logo_url == SiteSetting.defaults[:logo_url] or
+        SiteSetting.logo_small_url == SiteSetting.defaults[:logo_small_url] or
+        SiteSetting.favicon_url == SiteSetting.defaults[:favicon_url]
+      I18n.t('dashboard.default_logo_warning')
+    end
   end
 end
