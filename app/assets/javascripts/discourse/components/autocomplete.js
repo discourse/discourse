@@ -294,6 +294,10 @@ $.fn.autocomplete = function(options) {
           term = me.val().substring(completeStart + (options.key ? 1 : 0), caretPosition);
           if (e.which >= 48 && e.which <= 90) {
             term += String.fromCharCode(e.which);
+          } else if (e.which === 187) {
+            term += "+";
+          } else if (e.which === 189) {
+            term += "-";
           } else {
             if (e.which !== 8) {
               term += ",";
