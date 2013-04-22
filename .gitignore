@@ -80,5 +80,8 @@ chef/tmp/*
 # exclude our git version file for now
 config/version.rb
 
-# ignore the Ruby Version manager (rvm) file
+# ignore the Ruby Version manager (rvm) file and other ruby managers
 .rvmrc
+.ruby-version
+.ruby-gemset
+.rbenv
