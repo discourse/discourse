@@ -51,7 +51,11 @@ module Jobs
         return if seen_recently
 
         # Load the post if present
-        email_args[:post] ||= notification.post if notification.post.present?
+        if notification.post.present?
+          # Don't email a user if the topic has been deleted
+          return unless notification.post.topic.present?
+          email_args[:post] ||= notification.post
+        end
         email_args[:notification] = notification
 
         # Don't send email if the notification this email is about has already been read
