@@ -362,9 +362,11 @@ table {
       text-align: left;
     }
     thead {
-      tr:hover > td,
-      tr:hover > th {
+      tr:hover > td {
         background-color: $white;
+      }
+      tr:hover > th {
+        background-color: #e4e4e4;
       }
     }
 
@@ -429,15 +431,12 @@ table {
   }
 
   &.totals {
-    width: 185px;
-    margin-top: 0px;
-
-    table td {
-      border-top: none;
-      &.value {
-        text-align: left;
-        width: 55px;
-      }
+    margin-top: 12px;
+    padding-left: 5px;
+    .value {
+      font-weight: bold;
+      margin-left: 8px;
+      margin-right: 30px;
     }
   }
 
