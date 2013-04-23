@@ -180,6 +180,11 @@ class SiteSetting < ActiveRecord::Base
 
   setting(:max_similar_results, 7)
 
+  # Settings for topic heat
+  client_setting(:topic_views_heat_low,    1000)
+  client_setting(:topic_views_heat_medium, 2000)
+  client_setting(:topic_views_heat_high,   5000)
+
   def self.generate_api_key!
     self.api_key = SecureRandom.hex(32)
   end

@@ -117,6 +117,14 @@ Discourse.Topic = Discourse.Model.extend({
     return null;
   }).property('age', 'created_at'),
 
+  viewsHeat: function() {
+    var v = this.get('views');
+    if( v >= Discourse.SiteSettings.topic_views_heat_high )   return 'heatmap-high';
+    if( v >= Discourse.SiteSettings.topic_views_heat_medium ) return 'heatmap-med';
+    if( v >= Discourse.SiteSettings.topic_views_heat_low )    return 'heatmap-low';
+    return null;
+  }.property('views'),
+
   archetypeObject: (function() {
     return Discourse.get('site.archetypes').findProperty('id', this.get('archetype'));
   }).property('archetype'),

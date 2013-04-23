@@ -533,6 +533,10 @@ en:
 
     title_prettify: "Prevent common title typos and errors, including all caps, lowercase first character, multiple ! and ?, extra . at end, etc."
 
+    topic_views_heat_low: "The number of views after which a topic's heat level is low."
+    topic_views_heat_medium: "The number of views after which a topic's heat level is medium."
+    topic_views_heat_high: "The number of views after which a topic's heat level is high."
+
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"
     liked: "%{display_username} liked your post in %{link}"
