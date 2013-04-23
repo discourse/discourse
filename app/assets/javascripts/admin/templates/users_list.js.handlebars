@@ -19,67 +19,74 @@
   </div>
 {{/if}}
 
-{{#if content.length}}
-  <table class='table'>
-    <tr>
-      {{#if showApproval}}
-        <th>{{view Ember.Checkbox checkedBinding="selectAll"}}</th>
-      {{/if}}
-      <th>&nbsp;</th>
-      <th>{{i18n username}}</th>
-      <th>{{i18n email}}</th>
-      <th>{{i18n admin.users.last_emailed}}</th>
-      <th>{{i18n last_seen}}</th>
-      <th>{{i18n admin.user.topics_entered}}</th>
-      <th>{{i18n admin.user.posts_read_count}}</th>
-      <th>{{i18n admin.user.time_read}}</th>
-      <th>{{i18n created}}</th>
-      {{#if showApproval}}
-        <th>{{i18n admin.users.approved}}</th>
-      {{/if}}
-      <th>&nbsp;</th>
+<h2>{{title}}</h2>
+<br/>
 
-    </tr>
+{{#if loading}}
+  <div class='admin-loading'>{{i18n loading}}</div>
+{{else}}
+  {{#if content.length}}
+    <table class='table'>
+      <tr>
+        {{#if showApproval}}
+          <th>{{view Ember.Checkbox checkedBinding="selectAll"}}</th>
+        {{/if}}
+        <th>&nbsp;</th>
+        <th>{{i18n username}}</th>
+        <th>{{i18n email}}</th>
+        <th>{{i18n admin.users.last_emailed}}</th>
+        <th>{{i18n last_seen}}</th>
+        <th>{{i18n admin.user.topics_entered}}</th>
+        <th>{{i18n admin.user.posts_read_count}}</th>
+        <th>{{i18n admin.user.time_read}}</th>
+        <th>{{i18n created}}</th>
+        {{#if showApproval}}
+          <th>{{i18n admin.users.approved}}</th>
+        {{/if}}
+        <th>&nbsp;</th>
 
-    {{#each content}}
-      <tr {{bindAttr class="selected"}}>
-        {{#if controller.showApproval}}
+      </tr>
+
+      {{#each content}}
+        <tr {{bindAttr class="selected"}}>
+          {{#if controller.showApproval}}
+            <td>
+              {{#if can_approve}}
+                {{view Ember.Checkbox checkedBinding="selected"}}
+              {{/if}}
+            </td>
+          {{/if}}
           <td>
-            {{#if can_approve}}
-              {{view Ember.Checkbox checkedBinding="selected"}}
+            <a href="{{unbound adminPath}}">{{avatar this imageSize="small"}}</a>
+          </td>
+          <td><a href="{{unbound adminPath}}">{{unbound username}}</a></td>
+          <td>{{shorten email}}</td>
+          <td>{{{unbound last_emailed_age}}}</td>
+          <td>{{{unbound last_seen_age}}}</td>
+          <td>{{{unbound topics_entered}}}</td>
+          <td>{{{unbound posts_read_count}}}</td>
+          <td>{{{unbound time_read}}}</td>
+
+          <td>{{{unbound created_at_age}}}</td>
+
+          {{#if controller.showApproval}}
+          <td>
+            {{#if approved}}
+              {{i18n yes_value}}
+            {{else}}
+              {{i18n no_value}}
             {{/if}}
           </td>
-        {{/if}}
-        <td>
-          <a href="{{unbound adminPath}}">{{avatar this imageSize="small"}}</a>
-        </td>
-        <td><a href="{{unbound adminPath}}">{{unbound username}}</a></td>
-        <td>{{shorten email}}</td>
-        <td>{{{unbound last_emailed_age}}}</td>
-        <td>{{{unbound last_seen_age}}}</td>
-        <td>{{{unbound topics_entered}}}</td>
-        <td>{{{unbound posts_read_count}}}</td>
-        <td>{{{unbound time_read}}}</td>
-
-        <td>{{{unbound created_at_age}}}</td>
-
-        {{#if controller.showApproval}}
-        <td>
-          {{#if approved}}
-            {{i18n yes_value}}
-          {{else}}
-            {{i18n no_value}}
           {{/if}}
-        </td>
-        {{/if}}
-        <td>
-          {{#if admin}}<i class="icon-trophy" title="{{i18n admin.title}}"></i>{{/if}}
-          {{#if moderator}}<i class="icon-magic" title="{{i18n admin.moderator}}"></i>{{/if}}
-        <td>
-      </tr>
-    {{/each}}
+          <td>
+            {{#if admin}}<i class="icon-trophy" title="{{i18n admin.title}}"></i>{{/if}}
+            {{#if moderator}}<i class="icon-magic" title="{{i18n admin.moderator}}"></i>{{/if}}
+          <td>
+        </tr>
+      {{/each}}
 
-  </table>
-{{else}}
-  <div class='admin-loading'>{{i18n loading}}</div>
+    </table>
+  {{else}}
+    <p>{{i18n search.no_results}}</p>
+  {{/if}}
 {{/if}}

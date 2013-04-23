@@ -33,6 +33,12 @@ Discourse.Route.buildRoutes(function() {
         this.route('active', { path: '/active' });
         this.route('new', { path: '/new' });
         this.route('pending', { path: '/pending' });
+        // Trust Levels:
+        this.route('newuser', { path: '/newuser' });
+        this.route('basic', { path: '/basic' });
+        this.route('regular', { path: '/regular' });
+        this.route('leaders', { path: '/leaders' });
+        this.route('elders', { path: '/elders' });
       });
     });
 

@@ -11,6 +11,7 @@ Discourse.AdminUsersListController = Ember.ArrayController.extend(Discourse.Pres
   query: null,
   selectAll: false,
   content: null,
+  loading: false,
 
   /**
     Triggered when the selectAll property is changed
@@ -41,6 +42,15 @@ Discourse.AdminUsersListController = Ember.ArrayController.extend(Discourse.Pres
   orderChanged: (function() {
     this.refreshUsers();
   }).observes('query'),
+
+  /**
+    The title of the user list, based on which query was performed.
+
+    @property title
+  **/
+  title: function() {
+    return Em.String.i18n('admin.users.titles.' + this.get('query'));
+  }.property('query'),
 
   /**
     Do we want to show the approval controls?
@@ -78,7 +88,9 @@ Discourse.AdminUsersListController = Ember.ArrayController.extend(Discourse.Pres
     @method refreshUsers
   **/
   refreshUsers: function() {
-    this.set('content', Discourse.AdminUser.findAll(this.get('query'), this.get('username')));
+    this.set('loading', true);
+    var _this = this;
+    this.set('content', Discourse.AdminUser.findAll(this.get('query'), this.get('username'), function() { _this.set('loading', false); }));
   },
 
 

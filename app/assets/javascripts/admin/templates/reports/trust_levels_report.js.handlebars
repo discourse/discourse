@@ -1,8 +1,8 @@
 <tr>
   <td class="title">{{title}}</td>
-  <td class="value">{{valueAtTrustLevel data 0}}</td>
-  <td class="value">{{valueAtTrustLevel data 1}}</td>
-  <td class="value">{{valueAtTrustLevel data 2}}</td>
-  <td class="value">{{valueAtTrustLevel data 3}}</td>
-  <td class="value">{{valueAtTrustLevel data 4}}</td>
+  <td class="value">{{#linkTo 'adminUsersList.newuser'}}{{valueAtTrustLevel data 0}}{{/linkTo}}</td>
+  <td class="value">{{#linkTo 'adminUsersList.basic'}}{{valueAtTrustLevel data 1}}{{/linkTo}}</td>
+  <td class="value">{{#linkTo 'adminUsersList.regular'}}{{valueAtTrustLevel data 2}}{{/linkTo}}</td>
+  <td class="value">{{#linkTo 'adminUsersList.leaders'}}{{valueAtTrustLevel data 3}}{{/linkTo}}</td>
+  <td class="value">{{#linkTo 'adminUsersList.elders'}}{{valueAtTrustLevel data 4}}{{/linkTo}}</td>
 </tr>

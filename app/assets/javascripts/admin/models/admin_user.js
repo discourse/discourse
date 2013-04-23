@@ -196,7 +196,7 @@ Discourse.AdminUser.reopenClass({
     });
   },
 
-  findAll: function(query, filter) {
+  findAll: function(query, filter, doneCallback) {
     var result = Em.A();
     Discourse.ajax({
       url: Discourse.getURL("/admin/users/list/") + query + ".json",
@@ -205,6 +205,7 @@ Discourse.AdminUser.reopenClass({
       users.each(function(u) {
         result.pushObject(Discourse.AdminUser.create(u));
       });
+      if( doneCallback ) { doneCallback(); }
     });
     return result;
   }

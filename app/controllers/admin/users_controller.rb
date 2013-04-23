@@ -10,6 +10,10 @@ class Admin::UsersController < Admin::AdminController
       @users = User.order("created_at DESC, username")
     end
 
+    if ['newuser', 'basic', 'regular', 'leader', 'elder'].include?(params[:query])
+      @users = @users.where('trust_level = ?', TrustLevel.levels[params[:query].to_sym])
+    end
+
     @users = @users.where('approved = false') if params[:query] == 'pending'
     @users = @users.where('username_lower like :filter or email like :filter', filter: "%#{params[:filter]}%") if params[:filter].present?
     @users = @users.take(100)
