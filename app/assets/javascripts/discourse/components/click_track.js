@@ -53,7 +53,10 @@ Discourse.ClickTrack = {
     if (!ownLink) {
       var $badge = $('span.badge', $link);
       if ($badge.length === 1) {
-        $badge.html(parseInt($badge.html(), 10) + 1);
+        // don't update counts in oneboxes (except when we force it)
+        if ($link.closest(".onebox-result").length === 0 || $link.hasClass("track-link")) {
+          $badge.html(parseInt($badge.html(), 10) + 1);
+        }
       }
     }
 
@@ -79,7 +82,7 @@ Discourse.ClickTrack = {
     }
 
     // If we're on the same site, use the router and track via AJAX
-    if (href.indexOf(window.location.origin) === 0) {
+    if (href.indexOf(Discourse.URL.origin()) === 0) {
       Discourse.ajax(Discourse.getURL("/clicks/track"), {
         data: {
           url: href,
@@ -97,7 +100,7 @@ Discourse.ClickTrack = {
       var win = window.open(trackingUrl, '_blank');
       win.focus();
     } else {
-      window.location = trackingUrl;
+      Discourse.URL.redirectTo(trackingUrl);
     }
 
     return false;

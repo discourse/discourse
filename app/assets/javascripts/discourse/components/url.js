@@ -21,7 +21,7 @@ Discourse.URL = {
 
     @method router
   **/
-  router: function(path) {
+  router: function() {
     return Discourse.__container__.lookup('router:main');
   },
 
@@ -105,6 +105,30 @@ Discourse.URL = {
     var router = this.router();
     router.router.updateURL(path);
     return router.handleURL(path);
+  },
+
+  /**
+    @private
+
+    Get the origin of the current location.
+    This has been extracted so it can be tested.
+
+    @method origin
+  **/
+  origin: function() {
+    return window.location.origin;
+  },
+
+  /**
+    @private
+
+    Redirect to a URL.
+    This has been extracted so it can be tested.
+
+    @method redirectTo
+  **/
+  redirectTo: function(url) {
+    window.location = url;
   }
 
 };

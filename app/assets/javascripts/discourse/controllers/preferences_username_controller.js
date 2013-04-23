@@ -55,12 +55,12 @@ Discourse.PreferencesUsernameController = Discourse.ObjectController.extend({
       if (result) {
         _this.set('saving', true);
         return _this.get('content').changeUsername(_this.get('newUsername')).then(function() {
-          window.location = Discourse.getURL("/users/") + (_this.get('newUsername').toLowerCase()) + "/preferences";
+          var url = Discourse.getURL("/users/") + _this.get('newUsername').toLowerCase() + "/preferences";
+          Discourse.URL.redirectTo(url);
         }, function() {
-          /* Error
-          */
+          // error
           _this.set('error', true);
-          return _this.set('saving', false);
+          _this.set('saving', false);
         });
       }
     });
