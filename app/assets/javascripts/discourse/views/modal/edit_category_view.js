@@ -95,7 +95,8 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
     this.get('category').save().then(function(result) {
       // success
       $('#discourse-modal').modal('hide');
-      window.location = Discourse.getURL("/category/") + (Discourse.Utilities.categoryUrlId(result.category));
+      var url = Discourse.getURL("/category/") + (Discourse.Utilities.categoryUrlId(result.category));
+      Discourse.URL.redirectTo(url);
     }, function(errors) {
       // errors
       if(errors.length === 0) errors.push(Em.String.i18n("category.creation_error"));
@@ -112,7 +113,7 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
       if (result) {
         categoryView.get('category').destroy().then(function(){
           // success
-          window.location = Discourse.getURL("/categories");
+          Discourse.URL.redirectTo(Discourse.getURL("/categories"));
         }, function(jqXHR){
           // error
           $('#discourse-modal').modal('show');

@@ -186,7 +186,10 @@ Discourse.PostView = Discourse.View.extend({
           postView.$(".cooked a[href]").each(function() {
             var link = $(this);
             if (link.attr('href') === lc.url) {
-              return link.append("<span class='badge badge-notification clicks' title='" + Em.String.i18n("topic_summary.clicks") + "'>" + lc.clicks + "</span>");
+              // don't display badge counts in oneboxes (except when we force it)
+              if (link.closest(".onebox-result").length === 0 || link.hasClass("track-link")) {
+                link.append("<span class='badge badge-notification clicks' title='" + Em.String.i18n("topic_summary.clicks") + "'>" + lc.clicks + "</span>");
+              }
             }
           });
         }
