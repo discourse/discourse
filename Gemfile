@@ -127,6 +127,8 @@ gem 'rack-mini-profiler', require: false  # require: false #, git: 'git://github
 gem 'redis-rack-cache', require: false
 gem 'rack-cache', require: false
 
+gem 'rack-cors', require: false
+
 # perftools only works on 1.9 atm
 group :profile do
   # travis refuses to install this, instead of fuffing, just avoid it for now
