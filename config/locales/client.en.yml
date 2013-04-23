@@ -922,6 +922,8 @@ en:
           regular: 'Users at Trust Level 2 (Regular User)'
           leader: 'Users at Trust Level 3 (Leader)'
           elder: 'Users at Trust Level 4 (Elder)'
+          admins: 'Admin Users'
+          moderators: 'Moderators'
 
       user:
         ban_failed: "Something went wrong banning this user {{error}}"

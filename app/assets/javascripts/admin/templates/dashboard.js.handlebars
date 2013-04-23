@@ -98,9 +98,9 @@
 
   <div class="dashboard-stats totals">
     <span class="title"><i class='icon icon-trophy'></i> {{i18n admin.dashboard.admins}}</span>
-    <span class="value">{{admins}}</span>
+    <span class="value">{{#linkTo 'adminUsersList.admins'}}{{admins}}{{/linkTo}}</span>
     <span class="title"><i class='icon icon-magic'></i> {{i18n admin.dashboard.moderators}}</span>
-    <span class="value">{{moderators}}</span>
+    <span class="value">{{#linkTo 'adminUsersList.moderators'}}{{moderators}}{{/linkTo}}</span>
   </div>
 
   <div class="dashboard-stats">
