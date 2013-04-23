@@ -161,6 +161,9 @@ class CookedPostProcessor
     # return nil when it's an external image *and* crawling is disabled
     return nil unless SiteSetting.crawl_images? || uri[0] == "/"
     @size_cache[uri] ||= FastImage.size(uri)
+  rescue Zlib::BufError
+    # FastImage.size raises BufError for some gifs
+    return nil
   end
 
   def get_image_uri(url)
