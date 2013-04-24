@@ -12,6 +12,7 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:title, "Discourse")
   client_setting(:logo_url, '/assets/d-logo-sketch.png')
   client_setting(:logo_small_url, '/assets/d-logo-sketch-small.png')
+  setting(:contact_email, '')
   setting(:company_full_name, 'My Unconfigured Forum Ltd.')
   setting(:company_short_name, 'Unconfigured Forum')
   setting(:company_domain, 'www.example.com')

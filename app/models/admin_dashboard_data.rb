@@ -49,7 +49,8 @@ class AdminDashboardData
       twitter_config_check,
       github_config_check,
       failing_emails_check,
-      default_logo_check ].compact
+      default_logo_check,
+      contact_email_check ].compact
   end
 
   def rails_env_check
@@ -105,5 +106,10 @@ class AdminDashboardData
         SiteSetting.favicon_url == SiteSetting.defaults[:favicon_url]
       I18n.t('dashboard.default_logo_warning')
     end
+  end
+
+  def contact_email_check
+    return I18n.t('dashboard.contact_email_missing') if !SiteSetting.contact_email.present?
+    return I18n.t('dashboard.contact_email_invalid') if !(SiteSetting.contact_email =~ User::EMAIL)
   end
 end
