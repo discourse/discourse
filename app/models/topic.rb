@@ -598,7 +598,24 @@ class Topic < ActiveRecord::Base
   end
 
   def slug
-    Slug.for(title).presence || "topic"
+    unless slug = read_attribute(:slug)
+      return '' unless title.present?
+      slug = Slug.for(title).presence || "topic"
+      if new_record?
+        write_attribute(:slug, slug)
+      else
+        update_column(:slug, slug)
+      end
+    end
+
+    slug
+  end
+
+  def title=(t)
+    slug = ""
+    slug = (Slug.for(t).presence || "topic") if t.present?
+    write_attribute(:slug, slug)
+    write_attribute(:title,t)
   end
 
   def last_post_url
