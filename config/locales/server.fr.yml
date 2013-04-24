@@ -350,10 +350,13 @@ fr:
     gc_warning: "Votre serveur utilise les paramètres par défaut de collection du GC de ruby, ce qui ne vous donneras pas les meilleures performances. Merci de lire cette discussion sur <a href=\"http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126\">l'optimisation des performances de Ruby et Rails pour Discourse [EN]</a>."
     clockwork_warning: "Clockwork n'est pas lancé. Assurez-vous qu'un processus clockwork soit toujours lancé afin que les tâches importantes soient planifiées. <a href=\"https://github.com/tomykaira/clockwork\">En savoir plus sur clockwork [EN]</a>."
     sidekiq_warning: "Sidekiq n'est pas lancé. De nombreuses tâches, comme l'envoie d'e-mails, sont executées de manière asynchrome par sidekiq. Assurez-vous d'avoir au moins un processus sidekiq de lancé. <a href=\"https://github.com/mperham/sidekiq\">En savoir plus sur sidekiq [EN]</a>."
+    queue_size_warning: "Il y a %{queue_size} tâches dans la file d'attente, ce qui est beaucoup. Cela peut provenir d'un problème avec les processus Sidekiq, ou à un manque de processus Sidekiq travailleurs."
     memory_warning: "Votre serveur dispose de moins de 1 Go de mémoire vive. Au moins 1 Go de RAM est recommandé."
     facebook_config_warning: "Le serveur est configuré pour permettre l'authentification par Facebook (enable_facebook_logins), mais les paramètres facebook_app_id et facebook_app_secret ne sont pas renseignés. Vous pouvez modifier ces paramètres dans <a href=\"/admin/site_settings\">l'interface d'administration</a>."
     twitter_config_warning: "Le serveur est configuré pour permettre l'authentification par Twitter (enable_twitter_logins), mais les paramètres twitter_consumer_key et twitter_consumer_secret ne sont pas renseignés. Vous pouvez modifier ces paramètres dans <a href=\"/admin/site_settings\">l'interface d'administration</a>."
     github_config_warning: "Le serveur est configuré pour permettre l'authentification par GitHub (enable_github_logins), mais les paramètres github_client_id et github_client_secret ne sont pas renseignés. Vous pouvez modifier ces paramètres dans <a href=\"/admin/site_settings\">l'interface d'administration</a>."
+    failing_emails_warning: "Il y a %{num_failed_jobs} tâches d'envois d'email en erreur. Vérifiez votre fichier config/production.rb et assurez-vous de la conformité des paramètres du config.action_mailer"
+    default_logo_warning: "Vous n'avez pas changé le logo de votre site. Merci de mettre à jour les <a href='/admin/site_settings'>paramètres du site</a> suivant : logo_url, logo_small_url et favicon_url."
 
   content_types:
     education_new_reply:
@@ -536,6 +539,10 @@ fr:
     max_similar_results: "Nombre de discussions similaires à afficher lorsqu'un utilisateur est en train de créer une nouvelle discussion"
 
     title_prettify: "Corrige les coquilles les plus communes dans les titres (intégralité du titre en majuscule, première lettre en minuscule, de multiples ! et ?, un . inutile à la fin, etc.)"
+
+    topic_views_heat_low: "Le nombre de vues à partir duquel le niveau d'intensité de la discussion est : faible."
+    topic_views_heat_medium: "Le nombre de vues à partir duquel le niveau d'intensité de la discussion est : moyen."
+    topic_views_heat_high: "Le nombre de vues à partir duquel le niveau d'intensité de la discussion est : élevé."
 
   notification_types:
     mentioned: "%{display_username} vous a mentionné dans %{link}"
