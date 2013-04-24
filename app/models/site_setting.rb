@@ -17,7 +17,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:company_domain, 'www.example.com')
   setting(:api_key, '')
   client_setting(:traditional_markdown_linebreaks, false)
-  client_setting(:top_menu, 'latest|hot|new|unread|favorited|categories')
+  client_setting(:top_menu, 'latest|new|unread|favorited|categories')
   client_setting(:post_menu, 'like|edit|flag|delete|share|bookmark|reply')
   client_setting(:share_links, 'twitter|facebook|google+|email')
   client_setting(:track_external_right_clicks, false)

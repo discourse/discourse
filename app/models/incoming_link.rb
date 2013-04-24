@@ -9,6 +9,20 @@ class IncomingLink < ActiveRecord::Base
   before_validation :extract_topic_and_post
   after_create :update_link_counts
 
+  def self.add(request, user_id = nil)
+    host, referer = nil
+
+    if request.referer.present?
+      host = URI.parse(request.referer).host
+      referer = request.referer[0..999]
+
+      if host != request.host
+        IncomingLink.create(url: request.url, referer: referer, user_id: user_id)
+      end
+    end
+
+  end
+
   # Internal: Extract the domain from link.
   def extract_domain
     if referer.present?

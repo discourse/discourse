@@ -62,7 +62,7 @@ Discourse.TopicFooterButtonsView = Ember.ContainerView.extend({
         this.addObject(Discourse.ButtonView.create({
           textKey: 'topic.share.title',
           helpKey: 'topic.share.help',
-          'data-share-url': topic.get('url'),
+          'data-share-url': topic.get('shareUrl'),
 
           renderIcon: function(buffer) {
             buffer.push("<i class='icon icon-share'></i>");

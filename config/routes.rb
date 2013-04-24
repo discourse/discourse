@@ -129,6 +129,9 @@ Discourse::Application.routes.draw do
     end
   end
 
+  get 'p/:post_id/:user_id' => 'posts#short_link'
+  get 'st/:topic_id/:user_id' => 'topics#short_link'
+
   resources :notifications
   resources :categories
 

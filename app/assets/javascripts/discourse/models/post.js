@@ -8,6 +8,10 @@
 **/
 Discourse.Post = Discourse.Model.extend({
 
+  shareUrl: function(){
+    var user = Discourse.get('currentUser');
+    return '/p/' + this.get('id') + (user ? '/' + user.get('id') : '');
+  }.property('id'),
 
   new_user:(function(){
     return this.get('trust_level') === 0;

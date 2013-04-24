@@ -3,6 +3,15 @@ require 'spec_helper'
 describe PostsController do
 
 
+  describe 'short_link' do
+    it 'logs the incoming link once' do
+      IncomingLink.expects(:add).once.returns(true)
+      p = Fabricate(:post)
+      get :short_link, post_id: p.id, user_id: 999
+      response.should be_redirect
+    end
+  end
+
   describe 'show' do
 
     let(:post) { Fabricate(:post, user: log_in) }

@@ -32,7 +32,7 @@
         <h3 {{bindAttr class="moderator new_user"}}><a href='{{unbound usernameUrl}}'>{{breakUp username}}</a></h3>
 
         <div class='post-info'>
-          <a href='#' class='post-date' {{bindAttr data-share-url="url"}}>{{date created_at}}</a>
+          <a href='#' class='post-date' {{bindAttr data-share-url="shareUrl"}}>{{date created_at}}</a>
         </div>
         {{#if hasHistory}}
           <div class='post-info'>

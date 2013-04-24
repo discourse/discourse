@@ -3,6 +3,10 @@
 @import "foundation/variables";
 @import "foundation/mixins";
 
+// hack, this needs to be done cleaner
+.private-message input.span8 {
+  width: 47%;
+}
 
 .composer-popup {
 

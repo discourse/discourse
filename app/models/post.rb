@@ -270,11 +270,11 @@ class Post < ActiveRecord::Base
   end
 
   def url
-    Post.url(topic.title, topic.id, post_number)
+    Post.url(topic.slug, topic.id, post_number)
   end
 
-  def self.url(title, topic_id, post_number)
-    "/t/#{Slug.for(title)}/#{topic_id}/#{post_number}"
+  def self.url(slug, topic_id, post_number)
+    "/t/#{slug}/#{topic_id}/#{post_number}"
   end
 
   def self.urls(post_ids)
@@ -282,12 +282,12 @@ class Post < ActiveRecord::Base
     if ids.length > 0
       urls = {}
       Topic.joins(:posts).where('posts.id' => ids).
-        select(['posts.id as post_id','post_number', 'topics.title', 'topics.id']).
+        select(['posts.id as post_id','post_number', 'topics.slug', 'topics.title', 'topics.id']).
       each do |t|
-        urls[t.post_id.to_i] = url(t.title, t.id, t.post_number)
+        urls[t.post_id.to_i] = url(t.slug, t.id, t.post_number)
       end
       urls
-    else 
+    else
       {}
     end
   end

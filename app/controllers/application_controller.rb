@@ -240,12 +240,7 @@ class ApplicationController < ActionController::Base
     alias :requires_parameter :requires_parameters
 
     def store_incoming_links
-      if request.referer.present?
-       parsed = URI.parse(request.referer)
-        if parsed.host != request.host
-          IncomingLink.create(url: request.url, referer: request.referer[0..999])
-        end
-      end
+      IncomingLink.add(request)
     end
 
     def check_xhr
