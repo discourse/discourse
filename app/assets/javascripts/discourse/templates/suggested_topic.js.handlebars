@@ -23,7 +23,7 @@
     {{/if}}
   </td>
 
-  <td class='num'>{{number views numberKey="views_long"}}</td>
+  <td {{bindAttr class=":num viewsHeat"}}>{{number views numberKey="views_long"}}</td>
 
   {{#if bumped}}
     <td class='num activity'>
