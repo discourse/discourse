@@ -44,7 +44,8 @@ module DiscourseHub
       installed_version: Discourse::VERSION::STRING,
       forum_title: SiteSetting.title,
       forum_domain: Discourse.current_hostname,
-      contact_email: SiteSetting.contact_email
+      contact_email: SiteSetting.contact_email,
+      topic_count: Topic.count
     })
   end
 
