@@ -251,6 +251,7 @@ GEM
       thor (~> 0.15)
     libv8 (3.11.8.17)
     listen (0.7.2)
+    lru_redux (0.0.6)
     lumberjack (1.0.2)
     mail (2.4.4)
       i18n (>= 0.4.0)
@@ -511,6 +512,7 @@ DEPENDENCIES
   jquery-rails
   jshint_on_rails
   librarian (>= 0.0.25)
+  lru_redux
   message_bus!
   minitest
   mocha
