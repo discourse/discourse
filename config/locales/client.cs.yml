@@ -636,7 +636,9 @@ cs:
           spam: "{{icons}} označili tento příspěvek jako spam"
           inappropriate: "{{icons}} označili tento příspěvek jako nevhodný"
           notify_moderators: "{{icons}} nahlásili tento příspěvek"
+          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>nahlásili tento příspěvek</a>"
           notify_user: "{{icons}} zahájili soukromou konverzaci"
+          notify_user_with_url: "{{icons}} zahájijli a <a href='{{postUrl}}'>soukromou konverzaci</a>"
           bookmark: "{{icons}} si přidali příspěvek do záložek"
           like: "{{icons}} se líbí tento příspěvek"
           vote: "{{icons}} hlasovali pro tento příspěvek"
@@ -946,6 +948,17 @@ cs:
           one: "schválit uživatele"
           few: "schválit uživatele ({{count}})"
           other: "schválit uživatele ({{count}})"
+        titles:
+          active: 'Aktivní uživatelé'
+          new: 'Noví uživatelé'
+          pending: 'Uživatelé čekající na schválení'
+          newuser: 'Uživatelé s věrohodností 0 (Nový uživatel)'
+          basic: 'Uživatelé s věrohodností 1 (Základní uživatel)'
+          regular: 'Uživatelé s věrohodností 2 (Pravidelný uživatel)'
+          leader: 'Uživatelé s věrohodností 3 (Vedoucí)'
+          elder: 'Uživatelé s věrohodností 4 (Starší)'
+          admins: 'Admininstrátoři'
+          moderators: 'Moderátoři'
 
       user:
         ban_failed: "Nastala chyba při zakazování uživatele {{error}}"
