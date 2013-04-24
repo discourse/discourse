@@ -626,7 +626,9 @@ fr:
           spam: "{{icons}} l'ont signalé comme étant du spam"
           inappropriate: "{{icons}} l'ont signalé comme inaproprié"
           notify_moderators: "{{icons}} l'ont signalé pour modération"
+          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>l'ont signalé pour modération</a>"
           notify_user: "{{icons}} ont démarré une conversation privée"
+          notify_user_with_url: "{{icons}} ont démarré une <a href='{{postUrl}}'>conversation privée</a>"
           bookmark: "{{icons}} l'ont ajouté à leurs favoris"
           like: "{{icons}} l'ont aimé"
           vote: "{{icons}} ont voté pour"
@@ -914,6 +916,17 @@ fr:
         approved_selected:
           one: "Approuver l'utilisateur"
           other: "Approuver les {{count}} utilisateurs"
+        titles:
+          active: 'Utilisateurs actifs'
+          new: 'Nouveaux utilisateurs'
+          pending: 'Utilisateur en attente'
+          newuser: 'Utilisateurs de niveau 0 (Nouveaux utilisateurs)'
+          basic: 'Utilisateurs de niveau 1 (Utilisateurs basiques)'
+          regular: 'Utilisateurs de niveau 2 (Utilisateurs réguliers)'
+          leader: 'Utilisateurs de niveau 3 (Utilisateurs expérimentés)'
+          elder: 'Utilisateurs de niveau 4 (Utilisateurs avancés)'
+          admins: 'Administrateurs'
+          moderators: 'Modérateurs'
 
       user:
         ban_failed: "Il y a eu un problème pendant le bannissement de cet utilisateur {{error}}"
