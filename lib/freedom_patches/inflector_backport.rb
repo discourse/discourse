@@ -27,7 +27,8 @@ module ActiveSupport
           unless found
             cache[args] = data = send(uncached, *args)
           end
-          data
+          # so cache is never corrupted
+          data.dup
         end
       end
     end
