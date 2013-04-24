@@ -1,7 +1,7 @@
 class Category < ActiveRecord::Base
   belongs_to :topic, dependent: :destroy
   belongs_to :topic_only_relative_url,
-    select: "id, title",
+    select: "id, title, slug",
     class_name: "Topic",
     foreign_key: "topic_id"
   belongs_to :user
