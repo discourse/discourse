@@ -128,7 +128,16 @@ For details on how to reduce the monthly cost of your application, see [Advanced
     u.save
 ```
 
-4. Provision the Heroku Scheduler.
+4. In Discourse admin settings, set `force_hostname` to your applications Heroku domain.
+
+    This step is required for Discourse to properly form links sent with account confirmation emails and password resets. The auto detected application url would point to an Amazon AWS instance.
+    
+    Since you can't log in yet, you can set `force_hostname` in the console.
+```ruby
+   SiteSetting.create(:name => 'force_hostname', :data_type =>1, :value=>'yourappnamehere.herokuapp.com')
+```
+
+5. Provision the Heroku Scheduler.
 
   This will allow Heroku Scheduler to cue up tasks rather than running a separate clock process.
   In the [Heroku dashboard](https://dashboard.heroku.com/apps), select your app, then click on **Heroku Scheduler Standard** under your Add-ons.
@@ -146,7 +155,7 @@ For details on how to reduce the monthly cost of your application, see [Advanced
 
         rake version_check          Daily                01:00
 
-5. Start Sidekiq.
+6. Start Sidekiq.
 
     In the [Heroku dashboard](https://dashboard.heroku.com/apps), select your app and you will see the separate processes that have been created for your application under Resources. You will only need to start the sidekiq process for your application to run properly. The clock process is covered by Heroku Scheduler, and you can even remove this from the Procfile before deploying if you so wish. The worker process has been generated as a Rails default and can be ignored. As you can see **the Sidekiq process costs $34 monthly** to run. If you want to reduce this cost, check out [Advanced Heroku deployment](#advanced-heroku-deployment).
 
@@ -212,10 +221,6 @@ Using Foreman to start the application allows you to mimic the way the applicati
     +     :authentication => :plain
     + }
     ```
-
-3. In Discourse admin settings, set `force_hostname` to your applications Heroku domain.
-
-    This step is required for Discourse to properly form links sent with account confirmation emails and password resets. The auto detected application url would point to an Amazon AWS instance.
     
 ## Advanced Heroku deployment
 
