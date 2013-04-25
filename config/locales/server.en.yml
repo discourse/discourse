@@ -564,31 +564,6 @@ en:
   most_recent_poster: "Most Recent Poster"
   frequent_poster: "Frequent Poster"
 
-  user_action_descriptions:
-    bookmarks: "Bookmarks"
-    topics: "Topics"
-    likes_received: "Likes Received"
-    likes_given: "Likes Given"
-    responses: "Responses"
-    topic_responses: "Topic Responses"
-    posts: "Posts"
-    mentions: "Mentions"
-    quotes: "Quotes"
-    edits: "Edits"
-    favorites: "Favorites"
-    sent_items: "Sent Items"
-    inbox: "Inbox"
-
-    was_liked: "was liked"
-    liked: "liked"
-    bookmarked: "bookmarked"
-    posted: "posted"
-    responded_to: "replied to"
-    mentioned: "mentioned"
-    quoted: "quoted"
-    favorited: "favorited"
-    edited: "edited"
-
   move_posts:
     moderator_post:
       one: "I moved a post to a new topic: %{topic_link}"
