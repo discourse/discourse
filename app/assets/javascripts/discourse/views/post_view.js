@@ -43,34 +43,19 @@ Discourse.PostView = Discourse.View.extend({
     this.set('context', this.get('content'));
   },
 
-  mouseDown: function(e) {
-    this.set('isMouseDown', true);
-  },
-
   mouseUp: function(e) {
     if (this.get('controller.multiSelect') && (e.metaKey || e.ctrlKey)) {
       this.toggleProperty('post.selected');
     }
-
-    if (!Discourse.get('currentUser.enable_quoting')) return;
-    if ($(e.target).closest('.topic-body').length === 0) return;
-
-    var qbc = this.get('controller.controllers.quoteButton');
-    if (qbc) {
-      e.context = this.get('post');
-      qbc.selectText(e);
-    }
-
-    this.set('isMouseDown', false);
   },
 
-  selectText: (function() {
+  selectText: function() {
     return this.get('post.selected') ? Em.String.i18n('topic.multi_select.selected', { count: this.get('controller.selectedCount') }) : Em.String.i18n('topic.multi_select.select');
-  }).property('post.selected', 'controller.selectedCount'),
+  }.property('post.selected', 'controller.selectedCount'),
 
-  repliesHidden: (function() {
+  repliesHidden: function() {
     return !this.get('repliesShown');
-  }).property('repliesShown'),
+  }.property('repliesShown'),
 
   // Click on the replies button
   showReplies: function() {
@@ -262,30 +247,5 @@ Discourse.PostView = Discourse.View.extend({
     if (controller && controller.postRendered) {
       controller.postRendered(post);
     }
-
-    // make the selection work under iOS
-    // "selectionchange" event is only supported in IE, Safari & Chrome
-    var postView = this;
-    $(document).on('selectionchange', function(e) {
-      // quoting as been disabled by the user
-      if (!Discourse.get('currentUser.enable_quoting')) return;
-      // there is no need to handle this event when the mouse is down
-      if (postView.get('isMouseDown')) return;
-      // find out whether we currently are selecting inside a post
-      var closestPosts = $(window.getSelection().anchorNode).closest('.topic-post');
-      if (closestPosts.length === 0) return;
-      // this event is bound for every posts in the topic, but is triggered on "document"
-      // we should therefore filter the event to only the right post
-      if (closestPosts[0].id !== postView.elementId) return;
-      var qbc = postView.get('controller.controllers.quoteButton');
-      if (qbc) {
-        e.context = postView.get('post');
-        qbc.selectText(e);
-      }
-    });
-  },
-
-  willDestroyElement: function() {
-    $(document).off('selectionchange');
   }
 });
