@@ -209,7 +209,7 @@ GEM
     guard-jshint-on-rails (0.0.2)
       guard (>= 1.0.0)
       jshint_on_rails (>= 1.0.2)
-    guard-rspec (2.4.0)
+    guard-rspec (2.5.1)
       guard (>= 1.1)
       rspec (~> 2.11)
     guard-spork (1.4.2)
