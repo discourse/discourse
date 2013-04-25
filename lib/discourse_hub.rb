@@ -45,7 +45,7 @@ module DiscourseHub
       forum_title: SiteSetting.title,
       forum_domain: Discourse.current_hostname,
       contact_email: SiteSetting.contact_email,
-      topic_count: Topic.count
+      topic_count: Topic.listable_topics.count
     })
   end
 
