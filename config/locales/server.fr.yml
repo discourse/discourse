@@ -357,6 +357,8 @@ fr:
     github_config_warning: "Le serveur est configuré pour permettre l'authentification par GitHub (enable_github_logins), mais les paramètres github_client_id et github_client_secret ne sont pas renseignés. Vous pouvez modifier ces paramètres dans <a href=\"/admin/site_settings\">l'interface d'administration</a>."
     failing_emails_warning: "Il y a %{num_failed_jobs} tâches d'envois d'email en erreur. Vérifiez votre fichier config/production.rb et assurez-vous de la conformité des paramètres du config.action_mailer"
     default_logo_warning: "Vous n'avez pas changé le logo de votre site. Merci de mettre à jour les <a href='/admin/site_settings'>paramètres du site</a> suivant : logo_url, logo_small_url et favicon_url."
+    contact_email_missing: "Vous n'avez pas renseigné d'email de contact pour votre site. Merci de mettre à jour le <a href='/admin/site_settings'>paramètre de site</a> : contact_email."
+    contact_email_invalid: "L'email de contact du site est invalide. Merci de mettre à jour le <a href='/admin/site_settings'>paramètre de site</a> : contact_email."
 
   content_types:
     education_new_reply:
@@ -394,6 +396,7 @@ fr:
     discourse_org_access_key: "La clé d'accès utilisée pour le registre de pseudos de discourse.org"
     educate_until_posts: "Afficher les aides à la saisie tant que l'utilisateur n'a pas posté ce nombre de messages"
     title: "titre de ce site internet"
+    contact_email: "L'adresse e-mail de la personne responsable techniquement du site. Les notifications importantes de Discourse.org concernant les mises à jour critiques seront envoyées à cette adresse."
     company_full_name: "Le nom complet de la société qui gère ce site (utilisé dans les documents légaux, tels que /tos)"
     company_short_name: "Le nom de la société qui gère ce site (utilisé dans les documents légaux, tels que /tos)"
     company_domain: "Le nom de domaine de la société qui gère ce site (utilisé dans les documents légaux, tels que /tos)"
