@@ -115,4 +115,4 @@ Discourse logo and “Discourse Forum” ®, Civilized Discourse Construction Ki
 Discourse is built with [love, Internet style.](http://www.youtube.com/watch?v=Xe1TZaElTAs)
 
 
-This line intentionally left blank for YOU.
+This line intentionally left blank. Deal with it.
