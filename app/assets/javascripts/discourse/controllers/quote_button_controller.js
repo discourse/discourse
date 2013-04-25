@@ -29,17 +29,15 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
 
     @method selectText
   **/
-  selectText: function(e) {
+  selectText: function(postId) {
     // anonymous users cannot "quote-reply"
     if (!Discourse.get('currentUser')) return;
     // don't display the "quote-reply" button if we can't create a post
     if (!this.get('controllers.topic.content.can_create_post')) return;
 
     var selection = window.getSelection();
-
     // no selections
     if (selection.rangeCount === 0) return;
-
     // retrieve the selected range
     var range = selection.getRangeAt(0),
         cloned = range.cloneRange(),
@@ -51,9 +49,17 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
 
     var selectedText = Discourse.Utilities.selectedText();
     if (this.get('buffer') === selectedText) return;
-    if (this.get('lastSelected') === selectedText) return;
 
-    this.set('post', e.context);
+    // we need to retrieve the post data from the posts collection in the topic controller
+    var posts = this.get('controllers.topic.posts'),
+        length = posts.length,
+        post;
+
+    for (var p = 0; p < length; p++) {
+      if (posts[p].id === postId) { post = posts[p]; break; }
+    }
+
+    this.set('post', post);
     this.set('buffer', selectedText);
 
     // collapse the range at the beginning of the selection
@@ -117,6 +123,18 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
     }
     this.set('buffer', '');
     return false;
+  },
+
+  /**
+    Deselect the currently selected text
+
+    @method deselectText
+  **/
+  deselectText: function() {
+    // clear selected text
+    window.getSelection().removeAllRanges();
+    // clean up the buffer
+    this.set('buffer', '');
   }
 
 });
