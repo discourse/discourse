@@ -13,7 +13,12 @@ module Oneboxer
 
     def parse(data)
       parsed = JSON.parse(data)
-      result = {files: [], title: parsed['description']}
+      desc = parsed['description']
+      if desc.length > 120
+        desc = desc[0..120]
+        desc << "..."
+      end
+      result = {files: [], title: desc}
       parsed['files'].each do |filename, attrs|
         result[:files] << {filename: filename}.merge!(attrs)
       end
