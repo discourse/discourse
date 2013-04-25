@@ -20,6 +20,21 @@ class AdminDashboardData
     'notify_user_private_messages'
   ]
 
+  def problems
+    [ rails_env_check,
+      host_names_check,
+      gc_checks,
+      sidekiq_check || queue_size_check || clockwork_check,
+      ram_check,
+      facebook_config_check,
+      twitter_config_check,
+      github_config_check,
+      failing_emails_check,
+      default_logo_check,
+      contact_email_check,
+      title_check ].compact
+  end
+
   def self.fetch_all
     AdminDashboardData.new
   end
@@ -37,20 +52,6 @@ class AdminDashboardData
     }.merge(
       SiteSetting.version_checks? ? {version_check: DiscourseUpdates.check_version} : {}
     )
-  end
-
-  def problems
-    [ rails_env_check,
-      host_names_check,
-      gc_checks,
-      sidekiq_check || queue_size_check || clockwork_check,
-      ram_check,
-      facebook_config_check,
-      twitter_config_check,
-      github_config_check,
-      failing_emails_check,
-      default_logo_check,
-      contact_email_check ].compact
   end
 
   def rails_env_check
@@ -111,5 +112,9 @@ class AdminDashboardData
   def contact_email_check
     return I18n.t('dashboard.contact_email_missing') if !SiteSetting.contact_email.present?
     return I18n.t('dashboard.contact_email_invalid') if !(SiteSetting.contact_email =~ User::EMAIL)
+  end
+
+  def title_check
+    I18n.t('dashboard.title_nag') if SiteSetting.title == SiteSetting.defaults[:title]
   end
 end
