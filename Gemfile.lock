@@ -556,3 +556,4 @@ DEPENDENCIES
   turbo-sprockets-rails3
   uglifier
   vestal_versions!
+  yajl-ruby
