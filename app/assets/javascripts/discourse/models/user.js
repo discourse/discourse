@@ -166,7 +166,7 @@ Discourse.User = Discourse.Model.extend({
     return Discourse.ajax(Discourse.getURL("/session/forgot_password"), {
       dataType: 'json',
       data: {
-        username: this.get('username')
+        login: this.get('username')
       },
       type: 'POST'
     });
