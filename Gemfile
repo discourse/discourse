@@ -1,7 +1,12 @@
 source 'https://rubygems.org'
 
 gem 'active_model_serializers', git: 'git://github.com/rails-api/active_model_serializers.git'
-gem 'ember-rails', git: 'git://github.com/emberjs/ember-rails.git' # so we get the pre version
+
+# we had issues with latest, stick to the rev till we figure this out
+# PR that makes it all hang together welcome
+gem 'ember-rails', git: 'git://github.com/emberjs/ember-rails.git', ref: '57bbe32'
+gem 'barber', '0.3.0'
+
 gem 'vestal_versions', git: 'git://github.com/zhangyuan/vestal_versions'
 
 gem 'message_bus', path: 'vendor/gems/message_bus'
@@ -29,8 +34,8 @@ gem 'image_optim'
 # note: for image_sorcery to correctly work you need
 # sudo apt-get install -y imagemagick
 gem 'image_sorcery'
+# it patches stuff, I think we need it in prd
 gem 'jquery-rails'
-gem 'minitest'
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
@@ -43,7 +48,9 @@ gem "omniauth-github"
 gem "omniauth-browserid", :git => "git://github.com/callahad/omniauth-browserid.git", :branch => "observer_api"
 gem 'oj'
 gem 'pg'
-gem 'rails'
+# we had pain with the 3.2.13 upgrade so monkey patch the security fix
+# next time around we hope to upgrade
+gem 'rails', '3.2.12'
 gem 'rake'
 gem 'redis'
 gem 'redis-rails'
@@ -80,7 +87,8 @@ group :assets do
 end
 
 group :test do
-  gem "fakeweb", "~> 1.3.0"
+  gem 'fakeweb', '~> 1.3.0'
+  gem 'minitest'
 end
 
 group :test, :development do
