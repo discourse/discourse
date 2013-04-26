@@ -63,11 +63,11 @@ module ApplicationHelper
   end
 
   def tos_path
-    return "#{Discourse::base_uri}/tos"
+    SiteSetting.tos_url.blank? ? "#{Discourse::base_uri}/tos" : SiteSetting.tos_url
   end
 
   def privacy_path
-    return "#{Discourse::base_uri}/privacy"
+    SiteSetting.privacy_policy_url.blank? ? "#{Discourse::base_uri}/privacy" : SiteSetting.privacy_policy_url
   end
 
   def login_path

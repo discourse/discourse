@@ -541,6 +541,9 @@ en:
     topic_views_heat_medium: "The number of views after which a topic's heat level is medium."
     topic_views_heat_high: "The number of views after which a topic's heat level is high."
 
+    tos_url: "If you have a Terms of Service document hosted elsewhere that you want to use, provide the full URL here."
+    privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
+
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"
     liked: "%{display_username} liked your post in %{link}"
