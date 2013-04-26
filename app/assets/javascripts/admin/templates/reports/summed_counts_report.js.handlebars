@@ -6,8 +6,8 @@
     <a {{bindAttr href="reportUrl"}}>{{title}}</a>
   </td>
   <td class="value">{{todayCount}}</td>
-  <td {{bindAttr class=":value yesterdayTrend"}}>{{yesterdayCount}} <i class="icon up icon-caret-up"></i><i class="icon down icon-caret-down"></i></td>
-  <td {{bindAttr class=":value sevenDayTrend"}}>{{lastSevenDaysCount}} <i class="icon up icon-caret-up"></i><i class="icon down icon-caret-down"></i></td>
-  <td {{bindAttr class=":value thirtyDayTrend"}}>{{lastThirtyDaysCount}} <i class="icon up icon-caret-up"></i><i class="icon down icon-caret-down"></i></td>
+  <td {{bindAttr class=":value yesterdayTrend"}} {{bindAttr title="yesterdayCountTitle"}}>{{yesterdayCount}} <i class="icon up icon-caret-up"></i><i class="icon down icon-caret-down"></i></td>
+  <td {{bindAttr class=":value sevenDayTrend"}} {{bindAttr title="sevenDayCountTitle"}}>{{lastSevenDaysCount}} <i class="icon up icon-caret-up"></i><i class="icon down icon-caret-down"></i></td>
+  <td {{bindAttr class=":value thirtyDayTrend"}} {{bindAttr title="thirtyDayCountTitle"}}>{{lastThirtyDaysCount}} <i class="icon up icon-caret-up"></i><i class="icon down icon-caret-down"></i></td>
   <td class="value">{{total}}</td>
 </tr>
