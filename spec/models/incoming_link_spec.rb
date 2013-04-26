@@ -5,9 +5,6 @@ describe IncomingLink do
   it { should belong_to :topic }
   it { should validate_presence_of :url }
 
-  it { should ensure_length_of(:referer).is_at_least(3).is_at_most(1000) }
-  it { should ensure_length_of(:domain).is_at_least(1).is_at_most(100) }
-
   let :post do
     Fabricate(:post)
   end
@@ -46,27 +43,35 @@ describe IncomingLink do
   end
 
   describe 'add' do
+    class TestRequest<Rack::Request
+      attr_accessor :remote_ip
+    end
+    def req(url, referer=nil)
+      env = Rack::MockRequest.env_for(url)
+      env['HTTP_REFERER'] = referer if referer
+      TestRequest.new(env)
+    end
+
     it "does nothing if referer is empty" do
-      env = Rack::MockRequest.env_for("http://somesite.com")
-      request = Rack::Request.new(env)
       IncomingLink.expects(:create).never
-      IncomingLink.add(request)
+      IncomingLink.add(req('http://somesite.com'))
     end
 
     it "does nothing if referer is same as host" do
-      env = Rack::MockRequest.env_for("http://somesite.com")
-      env['HTTP_REFERER'] = 'http://somesite.com'
-      request = Rack::Request.new(env)
       IncomingLink.expects(:create).never
-      IncomingLink.add(request)
+      IncomingLink.add(req('http://somesite.com', 'http://somesite.com'))
     end
 
     it "expects to be called with referer and user id" do
-      env = Rack::MockRequest.env_for("http://somesite.com")
-      env['HTTP_REFERER'] = 'http://some.other.site.com'
-      request = Rack::Request.new(env)
       IncomingLink.expects(:create).once.returns(true)
-      IncomingLink.add(request, 100)
+      IncomingLink.add(req('http://somesite.com', 'http://some.other.site.com'), build(:user))
+    end
+
+    it "is able to look up user_id and log it from the GET params" do
+      user = Fabricate(:user, username: "Bob")
+      IncomingLink.add(req('http://somesite.com?u=bob'))
+      first = IncomingLink.first
+      first.user_id.should == user.id
     end
   end
 

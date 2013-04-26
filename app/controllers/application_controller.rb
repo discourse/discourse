@@ -240,7 +240,7 @@ class ApplicationController < ActionController::Base
     alias :requires_parameter :requires_parameters
 
     def store_incoming_links
-      IncomingLink.add(request)
+      IncomingLink.add(request,current_user) unless request.xhr?
     end
 
     def check_xhr

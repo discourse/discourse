@@ -19,16 +19,8 @@ class TopicsController < ApplicationController
 
   before_filter :consider_user_for_promotion, only: :show
 
-  skip_before_filter :check_xhr, only: [:avatar, :show, :feed, :short_link]
-  skip_before_filter :store_incoming_links, only: [:short_link]
+  skip_before_filter :check_xhr, only: [:avatar, :show, :feed]
   caches_action :avatar, cache_path: Proc.new {|c| "#{c.params[:post_number]}-#{c.params[:topic_id]}" }
-
-  def short_link
-    topic = Topic.find(params[:topic_id].to_i)
-    user = User.select(:id).where(id: params[:user_id].to_i).first
-    IncomingLink.add(request, user ? user.id : nil)
-    redirect_to topic.relative_url
-  end
 
   def show
     create_topic_view

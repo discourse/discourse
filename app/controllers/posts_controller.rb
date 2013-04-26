@@ -11,8 +11,7 @@ class PostsController < ApplicationController
 
   def short_link
     post = Post.find(params[:post_id].to_i)
-    user = User.select(:id).where(id: params[:user_id].to_i).first
-    IncomingLink.add(request, user ? user.id : nil)
+    IncomingLink.add(request,current_user)
     redirect_to post.url
   end
 

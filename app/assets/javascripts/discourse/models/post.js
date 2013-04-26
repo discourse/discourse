@@ -10,20 +10,24 @@ Discourse.Post = Discourse.Model.extend({
 
   shareUrl: function(){
     var user = Discourse.get('currentUser');
-    return '/p/' + this.get('id') + (user ? '/' + user.get('id') : '');
-  }.property('id'),
+    if (this.get('postnumber') === 1){
+      return this.get('topic.url');
+    } else {
+      return this.get('url') + (user ? '?u=' + user.get('username_lower') : '');
+    }
+  }.property('url'),
 
   new_user:(function(){
     return this.get('trust_level') === 0;
   }).property('trust_level'),
 
-  url: (function() {
+  url: function() {
     return Discourse.Utilities.postUrl(this.get('topic.slug') || this.get('topic_slug'), this.get('topic_id'), this.get('post_number'));
-  }).property('post_number', 'topic_id', 'topic.slug'),
+  }.property('post_number', 'topic_id', 'topic.slug'),
 
-  originalPostUrl: (function() {
+  originalPostUrl: function() {
     return Discourse.getURL("/t/") + (this.get('topic_id')) + "/" + (this.get('reply_to_post_number'));
-  }).property('reply_to_post_number'),
+  }.property('reply_to_post_number'),
 
   usernameUrl: (function() {
     return Discourse.getURL("/users/" + this.get('username'));
