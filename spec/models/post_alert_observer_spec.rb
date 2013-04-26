@@ -97,7 +97,6 @@ describe PostAlertObserver do
     let(:user) { Fabricate(:user) }
     let(:mention_post) { Fabricate(:post, user: user, raw: 'Hello @eviltrout')}
     let(:topic) { mention_post.topic }
-    let(:post)
 
     it "won't notify someone who can't see the post" do
       lambda {
