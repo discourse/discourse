@@ -19,7 +19,7 @@ module I18n
         t = @cache[k] = translate_no_cache(*args)
       end
 
-      t
+      t.dup
     end
 
     alias_method :t, :translate
