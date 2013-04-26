@@ -1,5 +1,6 @@
 require "drb/drb"
 require "thread"
+require "fileutils"
 
 module Autospec; end
 
@@ -36,6 +37,7 @@ class Autospec::Runner
   end
 
   def run
+
     if already_running?(pid_file)
       puts "autospec appears to be running, it is possible the pid file is old"
       puts "if you are sure it is not running, delete #{pid_file}"
@@ -43,12 +45,20 @@ class Autospec::Runner
     end
     write_pid_file(pid_file, Process.pid)
 
+    # launching spork is forever going to take longer than this test
+    force_polling = true
+    Thread.new do
+      force_polling = force_polling?
+    end
+
     start_spork
     Signal.trap("HUP") {stop_spork; exit }
     Signal.trap("SIGINT") {stop_spork; exit }
 
+    puts "Forced polling (slower) - inotify does not work on network filesystems, use local filesystem to avoid" if force_polling
+
     Thread.start do
-      Listen.to('.', relative_paths: true) do |modified, added, removed|
+      Listen.to('.', force_polling: force_polling, filter: /^app|^spec|^lib/, relative_paths: true) do |modified, added, removed|
         process_change([modified, added].flatten.compact)
       end
     end
@@ -64,6 +74,48 @@ class Autospec::Runner
     puts e
     puts e.backtrace
     stop_spork
+  end
+
+  def wait_for(timeout_milliseconds)
+    timeout = (timeout_milliseconds + 0.0) / 1000
+    finish = Time.now + timeout
+    t = Thread.new do
+      while Time.now < finish && !yield
+        sleep(0.001)
+      end
+    end
+    t.join
+  end
+
+  def force_polling?
+    works = false
+
+    begin
+      require 'rb-inotify'
+      n = INotify::Notifier.new
+      FileUtils.touch('tmp/test_polling')
+
+      n.watch("./tmp/test_polling"){ works = true }
+      quit = false
+      Thread.new do
+        while !works && !quit
+          if IO.select([n.to_io], [], [], 0.1)
+            n.process
+          end
+        end
+      end
+
+      File.unlink('tmp/test_polling')
+
+      wait_for(100) { works }
+      n.stop
+      quit = true
+    rescue LoadError
+      #assume it works (mac)
+      works = true
+    end
+
+    works
   end
 
 
@@ -129,18 +181,28 @@ class Autospec::Runner
             else
               last_failed = true
               if result.to_i > 0
-                # focus
-                specs = failed_specs[0..10]
-                if current[0] == "focus"
-                  @queue.pop
-                end
-                @queue << ["focus", specs.join(" ")]
+                focus_on_failed_tests
+                ensure_all_specs_will_run
               end
             end
           end
           @signal.wait(@mutex) if @queue.length == 0 || last_failed
         end
       end
+    end
+  end
+
+  def focus_on_failed_tests
+    specs = failed_specs[0..10]
+    if current[0] == "focus"
+      @queue.pop
+    end
+    @queue << ["focus", specs.join(" ")]
+  end
+
+  def ensure_all_specs_will_run
+    unless @queue.any?{|s,t| t == 'spec'}
+      @queue.unshift(['spec','spec'])
     end
   end
 
