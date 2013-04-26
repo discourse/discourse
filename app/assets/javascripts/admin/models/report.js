@@ -16,8 +16,8 @@ Discourse.Report = Discourse.Model.extend({
 
   sumDays: function(startDaysAgo, endDaysAgo) {
     if (this.data) {
-      var earliestDate = Date.create(endDaysAgo + ' days ago', 'en');
-      var latestDate = Date.create(startDaysAgo + ' days ago', 'en');
+      var earliestDate = Date.create(endDaysAgo + ' days ago', 'en').beginningOfDay();
+      var latestDate = Date.create(startDaysAgo + ' days ago', 'en').beginningOfDay();
       var d, sum = 0;
       this.data.each(function(datum){
         d = Date.create(datum.x);

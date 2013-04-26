@@ -39,6 +39,7 @@
 //= require_tree ../../app/assets/javascripts/discourse/helpers
 //= require_tree ../../app/assets/javascripts/discourse/templates
 //= require_tree ../../app/assets/javascripts/discourse/routes
+//= require_tree ../../app/assets/javascripts/admin/models
 
 //= require_tree ../../app/assets/javascripts/defer
 
