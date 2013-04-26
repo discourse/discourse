@@ -42,7 +42,8 @@ Spork.prefork do
   # in spec/support/ and its subdirectories.
   Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
-  load "#{Rails.root}/db/seeds.rb"
+  # let's not run seed_fu every test
+  SeedFu.seed
 
   RSpec.configure do |config|
 
@@ -60,9 +61,9 @@ Spork.prefork do
     # rspec-rails.
     config.infer_base_class_for_anonymous_controllers = true
 
-    config.before(:suite) do
-      SeedFu.seed
-    end
+    # if we need stuff post fork, pre tests run here
+    # config.before(:suite) do
+    # end
 
     config.before(:all) do
       DiscoursePluginRegistry.clear
