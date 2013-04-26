@@ -13,22 +13,12 @@ describe SystemMessage do
     let(:post) { system_message.create(:welcome_invite) }
     let(:topic) { post.topic }
 
-    it 'should create a post' do
+    it 'should create a post correctly' do
       post.should be_present
-    end
-
-    it 'should be a private message' do
       topic.should be_private_message
-    end
-
-    it 'should have the correct topic subtype' do
       topic.subtype.should == TopicSubtype.system_message
-    end
-
-    it 'should be visible by the user' do
       topic.allowed_users.include?(user).should be_true
     end
-
   end
 
   context '#system_user' do

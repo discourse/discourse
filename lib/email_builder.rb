@@ -20,6 +20,7 @@ module EmailBuilder
       body: body
     }
     mail_args[:from] = params[:from] || SiteSetting.notification_email
+    mail_args[:charset] = 'UTF-8'
     mail(mail_args)
   end
 

@@ -19,7 +19,8 @@ class EmailSender
     return if @message.to.blank?
     return if @message.body.blank?
 
-    plain_body = @message.body.to_s
+    @message.charset = 'UTF-8'
+    plain_body = @message.body.to_s.force_encoding('UTF-8')
 
     @message.html_part = Mail::Part.new do
       content_type 'text/html; charset=UTF-8'
