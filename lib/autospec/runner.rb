@@ -95,7 +95,7 @@ class Autospec::Runner
       n = INotify::Notifier.new
       FileUtils.touch('tmp/test_polling')
 
-      n.watch("./tmp/test_polling"){ works = true }
+      n.watch("./tmp/test_polling"){works = true }
       quit = false
       Thread.new do
         while !works && !quit
@@ -104,7 +104,7 @@ class Autospec::Runner
           end
         end
       end
-
+      sleep 0.01
       File.unlink('tmp/test_polling')
 
       wait_for(100) { works }
@@ -115,16 +115,18 @@ class Autospec::Runner
       works = true
     end
 
-    works
+    !works
   end
 
 
   def process_change(files)
     return unless files.length > 0
     specs = []
+    hit = false
     files.each do |file|
       MATCHERS.each do |k,v|
         if m = k.match(file)
+          hit = true
           spec = v ? ( v.arity == 1 ? v.call(m) : v.call   ) : file
           if File.exists?(spec) || Dir.exists?(spec)
             specs << [file, spec]
@@ -132,7 +134,7 @@ class Autospec::Runner
         end
       end
     end
-    queue_specs(specs)
+    queue_specs(specs) if hit
   rescue => e
     p "failed in watcher"
     p e
@@ -157,7 +159,7 @@ class Autospec::Runner
         if @queue.last && @queue.last[0] == "focus"
           focus = @queue.pop
           @queue << [c,spec]
-          if focus[1].include? spec || c != spec
+          if focus[1].include?(spec) || c != spec
             @queue << focus
           end
         else
@@ -168,31 +170,41 @@ class Autospec::Runner
     end
   end
 
+  def thread_loop
+    @mutex.synchronize do
+      last_failed = false
+      current = @queue.last
+      if current
+        result = run_spec(current[1])
+        if result == 0
+          @queue.pop
+        else
+          last_failed = true
+          if result.to_i > 0
+            focus_on_failed_tests
+            ensure_all_specs_will_run
+          end
+        end
+      end
+      wait = @queue.length == 0 || last_failed
+      @signal.wait(@mutex) if wait
+    end
+  rescue => e
+    p "DISASTA PASTA"
+    puts e
+    puts e.backtrace
+  end
+
   def start_service_queue
     @worker ||= Thread.new do
       while true
-        @mutex.synchronize do
-          last_failed = false
-          current = @queue.last
-          if current
-            result = run_spec(current[1])
-            if result == 0
-              @queue.pop
-            else
-              last_failed = true
-              if result.to_i > 0
-                focus_on_failed_tests
-                ensure_all_specs_will_run
-              end
-            end
-          end
-          @signal.wait(@mutex) if @queue.length == 0 || last_failed
-        end
+        thread_loop
       end
     end
   end
 
   def focus_on_failed_tests
+    current = @queue.last
     specs = failed_specs[0..10]
     if current[0] == "focus"
       @queue.pop
