@@ -4,11 +4,15 @@ class CategoriesController < ApplicationController
 
   before_filter :ensure_logged_in, except: [:index, :show]
   before_filter :fetch_category, only: [:show, :update, :destroy]
+  skip_before_filter :check_xhr, only: [:index]
 
   def index
-    list = CategoryList.new(current_user)
+    @list = CategoryList.new(current_user)
     discourse_expires_in 1.minute
-    render_serialized(list, CategoryListSerializer)
+    respond_to do |format|
+      format.html { render }
+      format.json { render_serialized(@list, CategoryListSerializer) }
+    end
   end
 
   def show
