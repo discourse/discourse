@@ -2,9 +2,6 @@ module Export
 
   class SchemaArgumentsError < RuntimeError; end
 
-  # TODO: Use yajl-ruby for performance.
-  #       https://github.com/brianmario/yajl-ruby
-
   class JsonEncoder
 
     def initialize
@@ -58,7 +55,8 @@ module Export
 
     def finish
       @schema_data[:schema][:table_count] = @table_data.keys.count
-      json_output_stream.write( @schema_data.merge(@table_data).to_json )
+      json_output_stream.write( Oj.dump(@schema_data.merge(@table_data),
+                                        :mode => :compat) )
       json_output_stream.close
 
       @filenames = [File.join( tmp_directory, 'tables.json' )]
