@@ -40,7 +40,7 @@ class Upload < ActiveRecord::Base
                         filesize: File.size(tempfile),
                         original_filename: file.original_filename)
 
-    image_info = FastImage.new(tempfile)
+    image_info = FastImage.new(tempfile, raise_on_failure: true)
     blob = file.read
     sha1 = Digest::SHA1.hexdigest(blob)
 
@@ -75,7 +75,7 @@ class Upload < ActiveRecord::Base
 
     # populate the rest of the info
     clean_name = Digest::SHA1.hexdigest("#{Time.now.to_s}#{file.original_filename}")[0,16]
-    image_info = FastImage.new(file.tempfile)
+    image_info = FastImage.new(file.tempfile, raise_on_failure: true)
     clean_name += ".#{image_info.type}"
     url_root = "/uploads/#{RailsMultisite::ConnectionManagement.current_db}/#{upload.id}"
     path = "#{Rails.root}/public#{url_root}"
