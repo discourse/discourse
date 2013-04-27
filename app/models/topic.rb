@@ -58,7 +58,6 @@ class Topic < ActiveRecord::Base
   attr_accessor :posters  # TODO: can replace with posters_summary once we remove old list code
   attr_accessor :topic_list
 
-
   # The regular order
   scope :topic_list_order, lambda { order('topics.bumped_at desc') }
 

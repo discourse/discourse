@@ -306,6 +306,10 @@ Discourse.ComposerView = Discourse.View.extend({
           case 415:
             bootbox.alert(Em.String.i18n('post.errors.only_images_are_supported'));
             return;
+          // 422 == there has been an error on the server (mostly due to FastImage)
+          case 422:
+            bootbox.alert(data.jqXHR.responseText);
+            return;
         }
       }
       // otherwise, display a generic error message
