@@ -50,7 +50,7 @@
             </div>
             {{#if Discourse.currentUser}}
                <a href="#" {{action togglePreview target="controller"}} class='toggle-preview'>{{{content.toggleText}}}</a>
-               <div class='draft-status'></div>
+               <div id='draft-status'></div>
                {{#if view.loadingImage}}
                 <div id="image-uploading">
                   {{i18n image_selector.uploading_image}} {{view.uploadProgress}}% <a id="cancel-image-upload">{{i18n cancel}}</a>

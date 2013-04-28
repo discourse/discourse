@@ -96,7 +96,7 @@
   .requirements-not-met {
     background-color: rgba(255, 0, 0, 0.12);
   }
-  .toggle-preview, .draft-status, #image-uploading {
+  .toggle-preview, #draft-status, #image-uploading {
     position: absolute;
     bottom: -31px;
     margin-top: 0px;
@@ -110,9 +110,12 @@
     font-size: 12px;
     color: darken($gray, 40);
   }
-  .draft-status {
+  #draft-status {
     right: 51%;
     color: lighten($black, 60);
+    &.flash {
+      color: lighten($red, 20);
+    }
   }
   @include transition(height 0.4s ease);
   width: 100%;
@@ -219,7 +222,7 @@
     margin-right: auto;
     float: none;
   }
-  
+
   // When the post is new (new topic) the sizings are different
   &.edit-title {
     &.open {
