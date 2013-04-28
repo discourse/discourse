@@ -455,6 +455,7 @@ DEPENDENCIES
   binding_of_caller
   certified
   clockwork
+  daemons
   diffy
   discourse_emoji!
   discourse_plugin!

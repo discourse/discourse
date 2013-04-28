@@ -3,7 +3,7 @@ require 'rails/all'
 require 'redis-store' # HACK
 
 # Plugin related stuff
-require './lib/discourse_plugin_registry'
+require File.expand_path('../../lib/discourse_plugin_registry', __FILE__)
 
 if defined?(Bundler)
   # If you precompile assets before deploying to production, use this line
