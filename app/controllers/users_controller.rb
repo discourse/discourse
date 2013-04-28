@@ -265,7 +265,7 @@ class UsersController < ApplicationController
     requires_parameter(:email)
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
-    lower_email = Email.downcase(params[:email])
+    lower_email = Email.downcase(params[:email]).strip
 
     # Raise an error if the email is already in use
     if User.where("email = ?", lower_email).exists?
