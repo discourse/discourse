@@ -574,30 +574,34 @@ describe Topic do
 
   describe 'toggle_star' do
 
+    shared_examples_for "adding a star to a topic" do
+      it 'triggers a forum topic user change with true' do
+        # otherwise no chance the mock will work
+        freeze_time do
+          TopicUser.expects(:change).with(@user, @topic.id, starred: true, starred_at: DateTime.now, unstarred_at: nil)
+          @topic.toggle_star(@user, true)
+        end
+      end
+
+      it 'increases the star_count of the forum topic' do
+        lambda {
+          @topic.toggle_star(@user, true)
+          @topic.reload
+        }.should change(@topic, :star_count).by(1)
+      end
+
+      it 'triggers the rate limiter' do
+        Topic::FavoriteLimiter.any_instance.expects(:performed!)
+        @topic.toggle_star(@user, true)
+      end
+    end
+
     before do
       @topic = Fabricate(:topic)
       @user = @topic.user
     end
 
-    it 'triggers a forum topic user change with true' do
-      # otherwise no chance the mock will work
-      freeze_time do
-        TopicUser.expects(:change).with(@user, @topic.id, starred: true, starred_at: DateTime.now)
-        @topic.toggle_star(@user, true)
-      end
-    end
-
-    it 'increases the star_count of the forum topic' do
-      lambda {
-        @topic.toggle_star(@user, true)
-        @topic.reload
-      }.should change(@topic, :star_count).by(1)
-    end
-
-    it 'triggers the rate limiter' do
-      Topic::FavoriteLimiter.any_instance.expects(:performed!)
-      @topic.toggle_star(@user, true)
-    end
+    it_should_behave_like "adding a star to a topic"
 
     describe 'removing a star' do
       before do
@@ -611,8 +615,10 @@ describe Topic do
       end
 
       it 'triggers a forum topic user change with false' do
-        TopicUser.expects(:change).with(@user, @topic.id, starred: false, starred_at: nil)
-        @topic.toggle_star(@user, false)
+        freeze_time do
+          TopicUser.expects(:change).with(@user, @topic.id, starred: false, unstarred_at: DateTime.now)
+          @topic.toggle_star(@user, false)
+        end
       end
 
       it 'reduces the star_count' do
@@ -622,6 +628,13 @@ describe Topic do
         }.should change(@topic, :star_count).by(-1)
       end
 
+      describe 'and adding a star again' do
+        before do
+          @topic.toggle_star(@user, false)
+          @topic.reload
+        end
+        it_should_behave_like "adding a star to a topic"
+      end
     end
   end
 

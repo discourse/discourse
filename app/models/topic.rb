@@ -569,7 +569,7 @@ class Topic < ActiveRecord::Base
   # Enable/disable the star on the topic
   def toggle_star(user, starred)
     Topic.transaction do
-      TopicUser.change(user, id, starred: starred, starred_at: starred ? DateTime.now : nil)
+      TopicUser.change(user, id, {starred: starred}.merge( starred ? {starred_at: DateTime.now, unstarred_at: nil} : {unstarred_at: DateTime.now}))
 
       # Update the star count
       exec_sql "UPDATE topics
