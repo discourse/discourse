@@ -192,6 +192,10 @@ describe UsersController do
         it 'raises an error' do
           lambda { xhr :put, :change_email, username: user.username, email: other_user.email }.should raise_error(Discourse::InvalidParameters)
         end
+
+        it 'raises an error if there is whitespace too' do
+          lambda { xhr :put, :change_email, username: user.username, email: other_user.email + ' ' }.should raise_error(Discourse::InvalidParameters)
+        end
       end
 
       context 'success' do
