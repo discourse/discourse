@@ -27,7 +27,7 @@ Discourse.ComposerView = Discourse.View.extend({
   }.property('content.composeState'),
 
   draftStatus: function() {
-    this.$('.draft-status').text(this.get('content.draftStatus') || "");
+    $('#draft-status').text(this.get('content.draftStatus') || "");
   }.observes('content.draftStatus'),
 
   // Disable fields when we're loading
