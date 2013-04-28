@@ -459,6 +459,14 @@ Discourse.Composer = Discourse.Model.extend({
       });
   },
 
+  flashDraftStatusForNewUser: function() {
+    var $draftStatus = $('#draft-status');
+    if (Discourse.get('currentUser.trust_level') === 0) {
+      $draftStatus.toggleClass('flash', true);
+      setTimeout(function() { $draftStatus.removeClass('flash'); }, 250);
+    }
+  },
+
   updateDraftStatus: function() {
     var $title = $('#reply-title'),
         $reply = $('#wmd-input');
@@ -467,6 +475,7 @@ Discourse.Composer = Discourse.Model.extend({
     if ($title.is(':focus')) {
       var titleDiff = this.get('missingTitleCharacters');
       if (titleDiff > 0) {
+        this.flashDraftStatusForNewUser();
         return this.set('draftStatus', Em.String.i18n('composer.min_length.need_more_for_title', { n: titleDiff }));
       }
     // 'reply' is focused

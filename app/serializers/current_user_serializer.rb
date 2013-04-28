@@ -9,8 +9,9 @@ class CurrentUserSerializer < BasicUserSerializer
              :moderator?,
              :reply_count,
              :topic_count,
-             :enable_quoting, 
-             :external_links_in_new_tab
+             :enable_quoting,
+             :external_links_in_new_tab,
+             :trust_level
 
   # we probably want to move this into site, but that json is cached so hanging it off current user seems okish
 
