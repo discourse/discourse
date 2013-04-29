@@ -8,11 +8,11 @@ Anyone wishing to contribute to the **[Discourse/Discourse](https://github.com/d
 
 1. Always update to the most recent master release; the bug may already be resolved.
 
-2. Search for similar issues on the [Discourse meta forum](http://meta.discourse.org); it may already be an identified problem.
+2. Search for similar issues on the [Discourse meta forum][m]; it may already be an identified problem.
 
-4. If this is a bug or problem that **requires any kind of extended discussion -- open a topic on meta about it**. Do *not* open a bug on GitHub.
+4. If this is a bug or problem that **requires any kind of extended discussion -- open [a topic on meta][m] about it**. Do *not* open a bug on GitHub.
 
-5. If this is a bug or problem that is clear, simple, and does not require *any* discussion -- open an issue on GitHub with a reproduction of the bug including workflows, screenshots, or links to examples on jsfiddle.net. If possible, submit a Pull Request with a failing test. If you'd rather take matters into your own hands, fix the bug yourself (jump down to the "Contributing (Step-by-step)" section).
+5. If this is a bug or problem that is clear, simple, and is unlikely to requir *any* discussion -- open an [issue on GitHub](https://github.com/discourse/discourse/issues) with a reproduction of the bug including workflows, screenshots, or links to examples on jsfiddle.net. If possible, submit a Pull Request with a failing test. If you'd rather take matters into your own hands, fix the bug yourself (jump down to the "Contributing (Step-by-step)" section).
 
 6. When the bug is fixed, we will do our best to update the Discourse topic or GitHub issue with a resolution.
 
@@ -124,3 +124,5 @@ Anyone wishing to contribute to the **[Discourse/Discourse](https://github.com/d
 10. Responding to Feedback
 
   The Discourse team may recommend adjustments to your code, and this is perfectly normal. Part of interacting with a healthy open-source community requires you to be open to learning new techniques and strategies; *don't get discouraged!* Remember: if the Discourse team suggest changes to your code, **they care enough about your work that they want to include it**, and hope that you can assist by implementing those revisions on your own.
+  
+[m]: http://meta.discourse.org
