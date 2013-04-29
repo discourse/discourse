@@ -23,21 +23,21 @@ nl:
   operation_already_running: "Er draait al een %{operation}. Kan nu niet een nieuwe %{operation} starten."
 
   too_many_mentions:
-    zero: "Sorry, je kan niet verwijzen naar andere gebruikers."
-    one: "Sorry, je kan naar één andere gebruiker verwijzen in een bericht."
-    other: "Sorry, je kan naar %{count} gebruikers verwijzen in een bericht."
+    zero: "Sorry, je kan niet verwijzen naar andere leden."
+    one: "Sorry, je kan naar één ander lid verwijzen in een bericht."
+    other: "Sorry, je kan naar %{count} leden verwijzen in een bericht."
   too_many_mentions_newuser:
-    zero: "Sorry, nieuwe gebruikers kunnen niet verwijzen naar andere gebruikers."
-    one: "Sorry, nieuwe gebruikers kunnen naar één andere gebruiker verwijzen in een bericht."
-    other: "Sorry, nieuwe gebruikers kunnen naar %{count} gebruikers verwijzen in een bericht."
+    zero: "Sorry, nieuwe leden kunnen niet verwijzen naar andere leden."
+    one: "Sorry, nieuwe leden kunnen naar één andere lid verwijzen in een bericht."
+    other: "Sorry, nieuwe leden kunnen naar %{count} leden verwijzen in een bericht."
   too_many_images:
-    zero: "Sorry, nieuwe gebruikers kunnen geen afbeeldingen in een bericht opnemen."
-    one: "Sorry, nieuwe gebruikers kunnen één afbeelding in een bericht opnemen."
-    other: "Sorry, nieuwe gebruikers kunnen %{count} afbeeldingen in een bericht opnemen."
+    zero: "Sorry, nieuwe leden kunnen geen afbeeldingen in een bericht opnemen."
+    one: "Sorry, nieuwe leden kunnen één afbeelding in een bericht opnemen."
+    other: "Sorry, nieuwe leden kunnen %{count} afbeeldingen in een bericht opnemen."
   too_many_links:
-    zero: "Sorry, nieuwe gebruikers kunnen geen links in een bericht opnemen."
-    one: "Sorry, nieuwe gebruikers kunnen één links in een bericht opnemen."
-    other: "Sorry, nieuwe gebruikers kunnen %{count} links in een bericht opnemen."
+    zero: "Sorry, nieuwe leden kunnen geen links in een bericht opnemen."
+    one: "Sorry, nieuwe leden kunnen één links in een bericht opnemen."
+    other: "Sorry, nieuwe leden kunnen %{count} links in een bericht opnemen."
 
   just_posted_that: lijkt teveel op het bericht dat je net geschreven hebt
   has_already_been_used: is al eens gebruikt
@@ -60,7 +60,7 @@ nl:
 
       Houd het volgende in de gaten tijdens het opstellen van je topic:
 
-      - Is je titel interessant? Geeft de titel een duidelijke beschrijving van het onderwerp, zodat iemand redelijkerwijs kan verwachten waar het over gaat?
+      - Geeft de titel een duidelijke beschrijving van het onderwerp, klinkt het interessant?
 
       - Waar gaat het over? Wie zou er in geïnteresseerd zijn? Waarom is je topic van belang? Wat voor reacties verwacht je te krijgen?
 
@@ -75,7 +75,7 @@ nl:
 
       - Geeft je reactie een nuttige bijdrage aan de conversatie, hoe klein dan ook?
 
-      - Wees aardig voor de andere gebruikers.
+      - Wees aardig voor de andere leden.
 
       - Je mag best kritisch zijn, maar onthoud dat je kritiek moet geven op *ideeën*, niet op mensen.
 
@@ -93,7 +93,7 @@ nl:
         topic:
           attributes:
             archetype:
-              cant_send_pm: "Sorry, je kan geen privébericht sturen naar deze gebruiker."
+              cant_send_pm: "Sorry, je kan geen privébericht sturen naar deze persoon."
 
   user_profile:
     no_info_me: "<div class='missing-profile'>Het Over Mij-profielveld is nog leeg, <a href='/users/%{username_lower}/preferences'>zou je deze willen invullen?</a></div>"
@@ -106,15 +106,15 @@ nl:
 
   trust_levels:
     newuser:
-      title: nieuwe gebruiker
+      title: nieuw lid
     basic:
-      title: gebruiker
+      title: lid
     regular:
-      title: reguliere gebruiker
+      title: regulier lid
     leader:
       title: leider
     elder:
-      title: ouder
+      title: stamoudste
 
   rate_limiter:
     too_many_requests: "Je doet dat te vaak. Wacht %{time_left} voordat je dit opnieuw probeert."
@@ -228,7 +228,7 @@ nl:
       long_form: heeft dit als off-topic gemeld
     spam:
       title: Spam
-      description: 'Dit bericht is in principe een advertentie zonder dit écht duidelijk te maken aan de gebruikers. Het is niet relevant met betrekking tot de huidige discussie, maar is puur promotioneel in aard.'
+      description: 'Dit bericht is in principe een advertentie zonder dit écht duidelijk te maken aan de leden. Het is niet relevant met betrekking tot de huidige discussie, maar is puur promotioneel in aard.'
       long_form: heeft dit als spam gemeld
     inappropriate:
       title: Ongepast
@@ -237,7 +237,7 @@ nl:
     notify_user:
       title: "Licht {{username}} in"
       description: "Ik wil je graag over iets in je bericht spreken, privé"
-      long_form: gebruiker ingelicht
+      long_form: persoon ingelicht
       email_title: "Betreft je bericht in '%{title}'"
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -285,9 +285,9 @@ nl:
       xaxis: Dag
       yaxis: Aantal bezoeken
     signups:
-      title: Gebruikers
+      title: Leden
       xaxis: Dag
-      yaxis: Aantal gebruikers
+      yaxis: Aantal leden
     topics:
       title: Topics
       xaxis: Dag
@@ -313,15 +313,15 @@ nl:
       xaxis: Dag
       yaxis: Aantal nieuwe favorieten
     users_by_trust_level:
-      title: Gebruikers per trustlevel
+      title: Leden per trustlevel
       xaxis: Trustlevel
-      yaxis: Aantal gebruikers
+      yaxis: Aantal leden
     emails:
       title: E-mails verzonden
       xaxis: Dag
       yaxis: Aantal e-mails
     user_to_user_private_messages:
-      title: Gebruiker-naar-gebruiker
+      title: Lid-naar-lid
       xaxis: Dag
       yaxis: Aantal privé-berichten
     system_private_messages:
@@ -337,7 +337,7 @@ nl:
       xaxis: Dag
       yaxis: Aantal privé-berichten
     notify_user_private_messages:
-      title: Licht gebruiker in
+      title: Licht persoon in
       xaxis: Dag
       yaxis: Aantal privé-berichten
 
@@ -347,27 +347,33 @@ nl:
     gc_warning: 'Je server gebruikt de standaard ruby garbage collection instellingen, en daarmee krijg je niet de beste prestaties. Lees deze topic over instellingen voor prestaties: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>.'
     clockwork_warning: 'Clockwork draait niet. Zorg ervoor dat er altijd een clockwork process draait, zodat belanrijke taken kunnen worden gepland. <a href="https://github.com/tomykaira/clockwork">Hier is meer informatie over clockwork</a>.'
     sidekiq_warning: 'Sidekiq draait niet. Veel taken, zoals het versturen van e-mails, worden asynchroon uitgevoerd door sidekiq. Zorg ervoor dat er altijd een sidekiq process draait. <a href="https://github.com/mperham/sidekiq">Hier is meer informatie over sidekiq</a>.'
+    queue_size_warning: "Het aantal taken in de wachtrij (%{queue_size}_ is best hoog. Dit kan duiden op problemen met het Sidekiq proces. Of je moet meer Sidekiq workers toevoegen."
     memory_warning: 'Jouw server draait met minder dan 1 GB aan geheugen. Ten minste 1 GB geheugen is aanbevolen.'
     facebook_config_warning: 'De server is geconfigureerd om registratie en inloggen via Facebook mogelijk te maken (enable_facebook_logins), maar er zijn geen app id en app secret waarden opgegeven. Ga naar <a href="/admin/site_settings">de Instellingen</a> en vul de waarden in. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Zie deze uitleg voor meer informatie</a>.'
     twitter_config_warning: 'De server is geconfigureerd om registratie en inloggen via Twitter mogelijk te maken (enable_twitter_logins), maar er zijn geen key en secret waarden opgegeven. Ga naar <a href="/admin/site_settings">de Instellingen</a> en vul de waarden in. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Zie deze uitleg voor meer informatie</a>.'
     github_config_warning: 'De server is geconfigureerd om registratie en inloggen via Github mogelijk te maken (enable_github_logins), maar er zijn geen client id en secret waarden opgegeven. Ga naar <a href="/admin/site_settings">de Instellingen</a> en vul de waarden in. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Zie deze uitleg voor meer informatie</a>.'
+    failing_emails_warning: "Er zijn %{num_failed_jobs} mislukte emailtaken. Check of de instellingen voor config.action_mailer in het bestand config/production.rb kloppen."
+    default_logo_warning: "Je hebt nog niet een eigen logo ingesteld voor je site. Werk logo_url, logo_small_url, en favicon_url bij in de <a href='/admin/site_settings'>Instellingen</a>."
+    contact_email_missing: "Je hebt nog geen contactadres opgegeven voor je site. Werk contact_email bij in de <a href='/admin/site_settings'>Instellingen</a>."
+    contact_email_invalid: "Je hebt een ongeldig contactadres opgegeven voor je site. Werk contact_email bij in de <a href='/admin/site_settings'>Instellingen</a>."
+    title_nag: "Je hebt nog geen title ingesteld voor je site. Geef een titel voor je site op in de <a href='/admin/site_settings'>Instellingen</a>."
 
   content_types:
     education_new_reply:
-      title: "Uitleg voor nieuwe gebruiker: Eerste reacties"
-      description: Popup verschijnt automatisch als een nieuwe gebruiker zijn eerste twee reacties schrijft.
+      title: "Uitleg voor nieuw lid: Eerste reacties"
+      description: Popup verschijnt automatisch als een nieuw lid zijn eerste twee reacties schrijft.
     education_new_topic:
-      title: "Uitleg voor nieuwe gebruikers: Eerste topics"
-      description: Popup verschijnt automatisch als een nieuwe gebruiker zijn eerste twee topics schrijft.
+      title: "Uitleg voor nieuwe leden: Eerste topics"
+      description: Popup verschijnt automatisch als een nieuw lid zijn eerste twee topics schrijft.
     usage_tips:
-      title: Tips voor nieuwe gebruikers
-      description: "Algemene gebruikstips, essentiële informatie over het forum en uitleg voor nieuwe gebruikers."
+      title: Tips voor nieuwe leden
+      description: "Algemene gebruikstips, essentiële informatie over het forum en uitleg voor nieuwe leden."
     welcome_user:
-      title: "Welkom: Nieuwe gebruiker"
-      description: "Een privé-bericht dat automatisch naar alle nieuwe gebruikers wordt gestuurd als ze zich inschrijven."
+      title: "Welkom: Nieuw lid"
+      description: "Een privé-bericht dat automatisch naar alle nieuwe leden wordt gestuurd als ze zich inschrijven."
     welcome_invite:
-      title: "Welkom: Uitgenodigde gebruiker"
-      description: "Een privé-bericht dat automatisch naar alle nieuwe gebruikers wordt gestuurd als ze ingaan op de uitnodiging om aan het forum deel te nemen door een andere gebruiker."
+      title: "Welkom: Uitgenodigd lid"
+      description: "Een privé-bericht dat automatisch naar alle nieuwe leden wordt gestuurd als ze ingaan op de uitnodiging om aan het forum deel te nemen door een ander lid."
     tos_user_content_license:
       title: "Algemene voorwaarden: Inhoudslicensie"
       description: "De tekst van de Inhoudslicentie van de Algemene Voorwaarden."
@@ -383,11 +389,12 @@ nl:
     max_topic_title_length: maximum lengte van een topic-titel
     min_search_term_length: minimum lengte van een zoekterm in tekens
     allow_duplicate_topic_titles: Sta topics met dezelfde titels toe
-    unique_posts_mins: Hoeveel minuten een gebruiker moet wachten voordat deze een bericht met dezelfde inhoud mag plaatsen
+    unique_posts_mins: Hoeveel minuten iemand moet wachten voordat deze een bericht met dezelfde inhoud mag plaatsen
     enforce_global_nicknames: "Dwing globaal unieke nicknames af (N.B.: verander dit alleen bij het opzetten van je forum)."
     discourse_org_access_key: "De toegangscode voor het discourse.org nickname-register"
-    educate_until_posts: Laat een popup zien totdat de gebruiker dit aantal berichten geplaatst heeft
+    educate_until_posts: Laat een popup zien totdat een lid dit aantal berichten geplaatst heeft
     title: "Titel van deze website, wordt gebruikt in de paginatitel en elders"
+    contact_email: E-mailadres van een contactpersoon van deze site. Belangrijke updates van Discourse.org worden naar dit adres gestuurd.
     company_full_name: "De volledige naam van het bedrijf dat deze site draait. Wordt gebruikt in juridische delen van de site, zoals /tos"
     company_short_name: "De korte naam van het bedrijf dat deze site draait. Wordt gebruikt in juridische delen van de site, zoals /tos"
     company_domain: "De domeinnaam van het bedrijf dat deze site draait. Wordt gebruikt in juridische delen van de site, zoals /tos"
@@ -401,7 +408,7 @@ nl:
     imgur_endpoint: "End point voor het uploaden van imgur.com-afbeeldingen"
     max_image_width: Maximale breedte voor een afbeelding in een bericht
     category_featured_topics: Aantal topics dat wordt weergegeven in de categorielijst
-    add_rel_nofollow_to_user_content: "Voeg 'rel nofollow' toe aan alle gebruikers-content behalve voor interne links (inclusief parent domeinen). NB: Als je dit verandert, moet je ook alle 'baked markdown' updaten"
+    add_rel_nofollow_to_user_content: "Voeg 'rel nofollow' toe aan alle leden-content behalve voor interne links (inclusief parent domeinen). NB: Als je dit verandert, moet je ook alle 'baked markdown' updaten"
     exclude_rel_nofollow_domains: "Een kommagescheiden lijst van domeinen waar 'nofollow' niet is toegevoegd (voorbeelddomein.com zal automatisch sub.voorbeelddomein.com toestaan)."
 
     post_excerpt_maxlength: Maximale lengte in tekens van een uittreksel van een bericht
@@ -413,13 +420,13 @@ nl:
     logo_url: "Het logo van je site. Bijv: http://example.com/logo.png"
     logo_small_url: "Het kleine logo van je site (wordt weergegeven na scrollen op topic-pagina's). Bijv: http://example.com/logo-small.png"
     favicon_url: "Een favicon voor je site. Zie http://nl.wikipedia.org/wiki/Favicon"
-    notification_email: "Het afzenderadres dat wordt gebruikt voor mails waarmee gebruikers op de hoogte worden gesteld van verloren wachtwoorden, nieuwe accounts etc."
+    notification_email: "Het afzenderadres dat wordt gebruikt voor mails waarmee leden op de hoogte worden gesteld van verloren wachtwoorden, nieuwe accounts etc."
     use_ssl: "Moet de site toegankelijk zijn via SSL? (NOG NIET GEIMPLEMENTEERD, EXPERIMENTEEL)"
     best_of_score_threshold: "De minimumscore van bericht om inbegrepen te worden in 'Best of'"
     best_of_posts_required: "Minimum aantal berichten nodig in een topic voordat de 'Best of'-modus wordt aangezet."
     best_of_likes_required: "Minimum aantal 'vind ik leuk' nodig voordat de 'Best of'-modus wordt aangezet."
-    best_of_percent_filter: "Als een gebruiker op 'Best of' klikt, laat dan de top % van de berichten zien"
-    enable_private_messages: "Sta nieuwe gebruikers (trustlevel 1) toe privé-berichten te maken en er op te kunnen reageren"
+    best_of_percent_filter: "Als iemand op 'Best of' klikt, laat dan de top % van de berichten zien"
+    enable_private_messages: "Sta nieuwe leden (trustlevel 1) toe privé-berichten te maken en er op te kunnen reageren"
 
     enable_long_polling: "De 'message bus' die gebruikt wordt voor notificaties kan 'long polling' gebruiken."
     long_polling_interval: "Het interval in milliseconden voor dat een nieuwe 'long poll' wordt uitgestuurd"
@@ -430,11 +437,11 @@ nl:
     new_topic_duration_minutes: "Hoeveel minuten kan een topic als nieuw beschouwd worden (-1 voor altijd, -2 voor laatste bezoek)"
 
     flags_required_to_hide_post: "Berichten zullen automatisch worden verborgen zodra het aantal meldingen maximaal dit aantal is (0 voor nooit)"
-    cooldown_minutes_after_hiding_posts: "Hoeveel minuten moet een gebruiker wachten voordat zij hun bericht kunnen wijzigen nadat het is verborgen door meldingen"
+    cooldown_minutes_after_hiding_posts: "Hoeveel minuten moet iemand wachten voordat zij hun bericht kunnen wijzigen nadat het is verborgen door meldingen"
 
     traditional_markdown_linebreaks: "Gebruik traditionele regeleinden in Markdown, omloop is impliciet tenzij er 2 spaties aan vooraf gaan"
     post_undo_action_window_mins: "Het tijdsbestek waarin iemand een actie binnen een bericht kan terugdraaien (zoals 'vind ik leuk')"
-    must_approve_users: "De eigenaars van een forum moeten de gebruikers accepteren voordat zij toegang krijgen."
+    must_approve_users: "De eigenaars van een forum moeten de leden accepteren voordat zij toegang krijgen."
     ga_tracking_code: "Google analytics trackingcode, zie: http://google.com/analytics"
     top_menu: "De volgorde en selectie van items in het hoofdmenu. Bijvoorbeeld latest|hot|read|favorited|unread|new|posted|categories"
     post_menu: "De volgorde en selectie van items in het berichtmenu. Bijvoorbeeld like|edit|flag|delete|share|bookmark|reply"
@@ -443,7 +450,7 @@ nl:
     topics_per_page: "Hoeveel topics er standaard worden weergegeven in de topiclijst."
     posts_per_page: "Hoeveel berichten er worden weergeven op een topic-pagina"
     system_username: "Vanuit welke gebruikersnaam systeemberichten worden verstuurd"
-    send_welcome_message: "Krijgen nieuwe gebruikers een welkomst-privé-bericht?"
+    send_welcome_message: "Krijgen nieuwe leden een welkomst-privé-bericht?"
     supress_reply_directly_below: "Laat geen reactieknop zien onder een bericht waarbij de reactie direct onder het bericht zal worden gemaakt"
     allow_index_in_robots_txt: "De site zou geïndexeerd mogen worden door zoekmachines (update robots.txt)"
     email_domains_blacklist: "Een lijst met e-maildomeinen gescheiden door een |-teken van domeinen die niet worden toegestaan. Voorbeeld: mailinator.com|trashmail.net"
@@ -484,10 +491,10 @@ nl:
     rate_limit_create_topic: "Hoeveel seconden voordat je een ander topic kan aanmaken"
     rate_limit_create_post: "Hoeveel seconden voordat je een ander bericht kan aanmaken"
 
-    max_likes_per_day: Het maximaal aantal keren per dag dat een gebruiker berichten leuk kan vinden
-    max_flags_per_day: Het maximaal aantal moderatie-meldingen dat een gebruiker per dag kan geven
-    max_bookmarks_per_day: Het maximaal aantal favorieten dat een gebruiker per dag kan aanmaken
-    max_edits_per_day: Het maximaal aantal bewerkingen dat een gebruiker per dag kan maken
+    max_likes_per_day: Het maximaal aantal keren per dag dat een lid berichten leuk kan vinden
+    max_flags_per_day: Het maximaal aantal moderatie-meldingen dat een lid per dag kan geven
+    max_bookmarks_per_day: Het maximaal aantal favorieten dat een lid per dag kan aanmaken
+    max_edits_per_day: Het maximaal aantal bewerkingen dat een lid per dag kan maken
     max_favorites_per_day: Het maximaal aantal topics dat als favoriet ingesteld kan worden binnen een dag
     max_topics_per_day: Het maximaal aantal topics dat je kan aanmaken op een dag
     max_private_messages_per_day: Het maximaal aantal privé-berichten dat je per dag kan versturen
@@ -497,29 +504,29 @@ nl:
     enable_s3_uploads: Of we uploads op S3 willen zetten of niet
     s3_upload_bucket: "De 'bucket' waarin we onze uploads naar S3 willen zetten"
 
-    default_invitee_trust_level: "Het standaard trustlevel (0-4) voor uitgenodigde gebruikers"
-    default_trust_level: "Het standaard trustlevel (0-4) voor gebruikers"
+    default_invitee_trust_level: "Het standaard trustlevel (0-4) voor uitgenodigde leden"
+    default_trust_level: "Het standaard trustlevel (0-4) voor leden"
 
-    basic_requires_topics_entered: "Hoeveel topics een gebruiker moet aanmaken voordat deze naar het basisniveau gepromoveerd wordt."
-    basic_requires_read_posts: "Hoeveel posts een gebruiker gelezen moet hebben voordat deze naar het basisniveau gepromoveerd wordt"
-    basic_requires_time_spent_mins: "Hoeveel minuten een gebruiker heeft moeten doorbrengen met het lezen van berichten voordat deze naar het basisniveau gepromoveerd wordt"
+    basic_requires_topics_entered: "Hoeveel topics een lid moet aanmaken voordat deze naar het basisniveau gepromoveerd wordt."
+    basic_requires_read_posts: "Hoeveel posts een lid gelezen moet hebben voordat deze naar het basisniveau gepromoveerd wordt"
+    basic_requires_time_spent_mins: "Hoeveel minuten een lid heeft moeten doorbrengen met het lezen van berichten voordat deze naar het basisniveau gepromoveerd wordt"
 
-    regular_requires_topics_entered: "Hoeveel topics een nieuwe gebruiker moet plaatsen voordat hij gepromoveerd wordt tot regulier gebruiker (trust level 2)"
-    regular_requires_read_posts: "Hoeveel berichten een nieuwe gebruiker moet lezen voordat hij gepromoveerd wordt tot regulier gebruiker (trust level 2)"
-    regular_requires_time_spent_mins: "Hoeveel minuten een nieuwe gebruiker berichten moet lezen voordat hij gepromoveerd wordt tot regulier gebruiker (trust level 2)"
-    regular_requires_days_visited: "Hoeveel dagen een nieuwe gebruiker de site moet bezoeken voordat hij gepromoveerd wordt tot regulier gebruiker (trust level 2)"
-    regular_requires_likes_received: "Hoeveel keer een nieuwe gebruiker een 'vind ik leuk' moet ontvangen voordat hij gepromoveerd wordt tot regulier gebruiker (trust level 2)"
-    regular_requires_likes_given: "Hoeveel keer een nieuwe gebruiker berichten leuk moet vinden voordat hij gepromoveerd wordt tot regulier gebruiker (trust level 2)"
-    regular_requires_topic_reply_count: "Op hoeveel topics een nieuwe gebruiker moet reageren voordat hij gepromoveerd wordt tot regulier gebruiker (trust level 2)"
+    regular_requires_topics_entered: "Hoeveel topics een nieuw lid moet plaatsen voordat hij gepromoveerd wordt tot regulier lid (trust level 2)"
+    regular_requires_read_posts: "Hoeveel berichten een nieuw lid moet lezen voordat hij gepromoveerd wordt tot regulier lid (trust level 2)"
+    regular_requires_time_spent_mins: "Hoeveel minuten een nieuw lid berichten moet lezen voordat hij gepromoveerd wordt tot regulier lid (trust level 2)"
+    regular_requires_days_visited: "Hoeveel dagen een nieuw lid de site moet bezoeken voordat hij gepromoveerd wordt tot regulier lid (trust level 2)"
+    regular_requires_likes_received: "Hoeveel keer een nieuw lid een 'vind ik leuk' moet ontvangen voordat hij gepromoveerd wordt tot regulier lid (trust level 2)"
+    regular_requires_likes_given: "Hoeveel keer een nieuw lid berichten leuk moet vinden voordat hij gepromoveerd wordt tot regulier lid (trust level 2)"
+    regular_requires_topic_reply_count: "Op hoeveel topics een nieuw lid moet reageren voordat hij gepromoveerd wordt tot regulier lid (trust level 2)"
 
-    newuser_max_links: Hoeveel links een nieuwe gebruiker in een bericht kan plaatsen
-    newuser_max_images: Hoeveel afbeeldingen een nieuwe gebruiker in een bericht kan plaatsen
-    newuser_max_mentions_per_post: "Maximum aantal @naam notificaties dat een nieuwe gebruiker in een bericht kan gebruiken"
+    newuser_max_links: Hoeveel links een nieuw lid in een bericht kan plaatsen
+    newuser_max_images: Hoeveel afbeeldingen een nieuw lid in een bericht kan plaatsen
+    newuser_max_mentions_per_post: "Maximum aantal @naam notificaties dat een nieuw lid in een bericht kan gebruiken"
     max_mentions_per_post: "Maximum aantal @naam notificaties dat je in een bericht kan gebruiken"
 
     auto_link_images_wider_than: "Afbeeldingen breder dan dit, in pixels, krijgen automatisch een link naar een lightbox"
 
-    email_time_window_mins: "Hoeveel minuten we wachten met het sturen van een e-mail naar een gebruiker, om ze een kans te geven het eerst op de site te kunnen lezen."
+    email_time_window_mins: "Hoeveel minuten we wachten met het sturen van een e-mail naar een persoon, om ze een kans te geven het eerst op de site te kunnen lezen."
     flush_timings_secs: "Hoe vaak we timing-data naar de server sturen, in seconden."
     max_word_length: "De maximumlengte van een woord in een topictitel"
     title_min_entropy: "De minimale entropie die een topictitel moet bevatten"
@@ -535,6 +542,13 @@ nl:
     max_similar_results: "How many similar topics to show a user while they are composing a new topic"
 
     title_prettify: "Voorkom veel voorkomende fouten in titels (alles in hoofdletters, eerste woord zonder hoofdletter, meerdere ! en ?, een extra . aan het eind, etc."
+
+    topic_views_heat_low: "Het aantal keer dat een topic bekeken moet zijn om een laag 'heat' level te hebben."
+    topic_views_heat_medium: "Het aantal keer dat een topic bekeken moet zijn om een medium 'heat' level te hebben."
+    topic_views_heat_high: "Het aantal keer dat een topic bekeken moet zijn om een hoog 'heat' level te hebben."
+
+    tos_url: "Heb je je Algemene Voorwaarden ergens extern staan, geef hier dan de volledige url op."
+    privacy_policy_url: "Heb je je Privacy Voorwaarden ergens extern staan, geef hier dan de volledige url op."
 
   notification_types:
     mentioned: "%{display_username} heeft je genoemd in %{link}"
@@ -552,37 +566,12 @@ nl:
     types:
       category: Categorien
       topic: Topics
-      user: Gebruikers
+      user: Leden
 
   original_poster: Oorspronkelijk geplaatst door
   most_posts: Meer berichten
   most_recent_poster: Meest recente schrijver
   frequent_poster: Frequente schrijver
-
-  user_action_descriptions:
-    bookmarks: Bladwijzers
-    topics: Topics
-    likes_received: "'Vind ik leuk' ontvangen"
-    likes_given: Leuk
-    responses: Reacties
-    topic_responses: Topicreacties
-    posts: Berichten
-    mentions: Vermeldingen
-    quotes: Citaten
-    edits: Bewerkingen
-    favorites: "Favorieten"
-    sent_items: Verzonden items
-    inbox: Inbox
-
-    was_liked: was leuk gevonden
-    liked: vond leuk
-    bookmarked: voegde dit toe aan zijn bladwijzers
-    posted: plaatste
-    responded_to: reageerde op
-    mentioned: vermeldde
-    quoted: citeerde
-    favorited: voegde dit toe aan zijn favorieten
-    edited: bewerkte
 
   move_posts:
     moderator_post:
@@ -632,7 +621,7 @@ nl:
 
       [Bezoek %{site_name}][1]
 
-      Je bent uitgenodigd door een reguliere gebruiker, dus je kan direct een reactie achterlaten zonder in te hoeven loggen.
+      Je bent uitgenodigd door een regulier lid, dus je kan direct een reactie achterlaten zonder in te hoeven loggen.
 
       [1]: %{invite_link}
 
@@ -688,20 +677,15 @@ nl:
       text_body_template: |
         Hallo,
 
-        Dit is een geautomatiseerd bericht van %{site_name} om je te laten weten dat het volgende bericht is verborgen naar aanleiding van meldingen uit de community.
+        Dit is een geautomatiseerd bericht van %{site_name} om je te laten weten dat het bericht...
 
         %{base_url}%{url}
 
-        Je bericht is verborgen omdat het door de community is aangemeld als ongepast.
+        is verborgen omdat het door de community is aangemeld als ongepast.
 
-        Houd er rekening mee dat meerdere leden van de community dit bericht hebben aangemeld voordat deze is verborgen.
-        Denk er daarom goed over na hoe je je bericht aan zal passen om hun feedback zo goed mogelijk in acht te nemen.
+        Houd er rekening mee dat meerdere leden van de community dit bericht hebben aangemeld voordat deze is verborgen. Denk er daarom goed over na hoe je je bericht aan zal passen om hun feedback zo goed mogelijk in acht te nemen. Je kan je bericht na %{edit_delay} minuten bewerken en het zal automatisch weer zichtbaar worden. Dit zal uiteindelijk je trustlevel verhogen.
 
-        Je kan je bericht na %{edit_delay} minuten bewerken en het zal automatisch weer zichtbaar worden. Dit zal uiteindelijk je trustlevel verhogen.
-
-        Echter, als het bericht een tweede keer wordt verborgen door de community, wordt er een moderator ingelicht.
-
-        Zij kunnen verdere actie ondernemen, waaronder een mogelijke schorsing van je account.
+        Echter, als het bericht een tweede keer wordt verborgen door de community, wordt er een moderator ingelicht. Zij kunnen verdere actie ondernemen, waaronder een mogelijke schorsing van je account.
 
         Voor extra duiding verwijzen wij je graag door naar onze [Veel gestelde Vragen](%{base_url}/faq).
 
@@ -711,29 +695,27 @@ nl:
 
         ### Blijf scrollen
 
-        Er is geen "volgende pagina"-knop of paginanummers -- om te blijven lezen moet je gewoon naar beneden blijven scrollen. Nieuwe inhoud zal automatisch geladen worden!
+        Er zijn geen "volgende pagina"-knoppen of paginanummers - om verder te lezen moet je gewoon naar beneden blijven scrollen. Nieuwe inhoud zal automatisch geladen worden!
 
-        Zodra er nieuwe reacties binnenkomen zullen die automatisch aan de onderkant van de topic komen te staan. Je hoeft je pagina niet te verversen om de nieuwe berichten te zien.
-
-        Ook hoef je niet telkens in en uit een topic te gaan om deze te updaten!
+        Zodra er nieuwe reacties binnenkomen zullen die automatisch aan de onderkant van de topic komen te staan. Je hoeft je pagina niet te verversen om de nieuwe berichten te zien. Ook hoef je niet telkens in en uit een topic te gaan om deze te updaten!
 
         ### Hoe reageer ik?
 
         - Om op een specifiek bericht te reageren, gebruik je de "Reageer"-knop aan de onderkant van dat bericht.
 
-        - Mocht je op het algehele "thema" van dat topic willen reageren, in plaats van een specifiek persoon of bericht, gebruik dan de "Reageer"-knop aan de onderkant van de topic.
+        - Mocht je op het algehele "thema" van dat topic willen reageren, in plaats van op een specifiek bericht in de topic, gebruik dan de "Reageer"-knop aan de onderkant van de topic.
 
         - Mocht je het gesprek een andere richting op willen brengen, maar ze wel aan elkaar willen verbinden, gebruik dan "Reageer als nieuw topic" aan de rechterkant van het bericht van waaruit je de nieuwe conversatie wil starten.
 
-        ### Wie praat er tegen me?
+        ### Wie praat er tegen mij?
 
-        Wanneer iemand op je bericht reageert, je citeert of je @gebruikersnaam vermeldt, krijg je een notificatie te zien bovenaan de pagina. Klik op druk op het notificatienummer om te zien wie er met je aan het praten is, en waar. Duik in het gesprek!
+        Wanneer iemand op je bericht reageert, je citeert of je @gebruikersnaam vermeldt, krijg je een notificatie (bijv. ➀) te zien bovenaan de pagina. Klik of druk op dat nummer om te zien wie er met je aan het praten is, en waar. Duik in het gesprek!
 
         - Om iemands naam te vermelden, typ een @ en een handig venstertje opent zich waarin de naam automatisch kan worden aangevuld.
 
-        - Om een heel bericht te citeren klik je op de "Importeer citaat"-knop op de toolbar van het bericht dat je aan het schrijven bent.
+        - Om alleen maar een gedeelte van een bericht te citeren selecteer je dat gedeelte en klik je op de "Reageer"-knop die boven de selectie verschijnt.
 
-        - Om alleen maar een gedeelte van een bericht te citeren selecteer je dat gedeelte en klik je vervolgens op de "Reageer"-knop die boven de selectie verschijnt.
+        - Om een heel bericht te citeren klik je op de "Importeer citaat"-knop op de toolbar van het bericht dat je aan het schrijven bent.
 
         ### Moet je dat bericht zien!
 
@@ -741,12 +723,11 @@ nl:
 
         ### Waar ben ik?
 
-        - Om terug te gaan naar de homepage kan je op elk moment **op het icoontje in de linker bovenhoek klikken**.
+        - Om terug te gaan naar de homepage kan je op elk moment **op het logo in de linker bovenhoek klikken**.
 
         - Mocht je iets willen opzoeken, naar je gebruikerspagina gaan, of ergens anders naar toe willen navigeren, klik dan op de icoontjes in de rechter bovenhoek.
-        - Wanneer je een topic leest, kan je naar boven scrollen door op de topictitel bovenaan de pagina te klikken.
-          Om de *onderkant* te bereiken klik je op de pijl naar beneden aan de onderkant van de pagina
-          of je klikt op het Laatste Post-veld in de topicsamenvatting onder het eerste bericht.
+
+        - Wanneer je een topic leest, kan je naar boven scrollen (↑) door op de topictitel bovenaan de pagina te klikken. Om de *onderkant* (↓) te bereiken klik je op de pijl naar beneden aan de onderkant van de pagina of je klikt op het Laatste Post-veld in de topicsamenvatting onder het eerste bericht.
 
     welcome_approved:
       subject_template: "Je aanmelding voor %{site_name} is goedgekeurd!"
@@ -764,8 +745,6 @@ nl:
     welcome_user:
       subject_template: "Welkom bij %{site_name}!"
       text_body_template: |
-        Hallo daar!
-
         Fijn dat je lid bent geworden van %{site_name} en welkom op ons discussieforum!
 
         %{new_user_tips}
@@ -927,3 +906,9 @@ nl:
     miscellaneous: "This Agreement constitutes the entire agreement between %{company_short_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_short_name}, or by the posting by %{company_short_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_short_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns."
 
   deleted: 'verwijderd'
+
+  upload:
+    image:
+      fetch_failure: "Er ging iets mis bij het opvragen van de afbeelding."
+      unknown_image_type: "Het bestand dat je wil uploaden is geen afbeelding."
+      size_not_found: "Het is niet gelukt de afmetingen van de afbeelding te bepalen. Misschien is het bestand corrupt?"
