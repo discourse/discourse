@@ -3,12 +3,37 @@ require 'topic_view'
 
 describe TopicQuery do
 
-  let!(:user) { Fabricate(:coding_horror) }
+  let(:user) { Fabricate(:coding_horror) }
   let(:creator) { Fabricate(:user) }
   let(:topic_query) { TopicQuery.new(user) }
 
   let(:moderator) { Fabricate(:moderator) }
   let(:admin) { Fabricate(:moderator) }
+
+
+  context 'secure category' do
+    it "filters categories out correctly" do
+      category = Fabricate(:category)
+      category.deny(:all)
+      group = Fabricate(:group)
+      category.allow(group)
+      category.save
+
+      topic = Fabricate(:topic, category: category)
+
+      TopicQuery.new(nil).list_latest.topics.count.should == 0
+      TopicQuery.new(user).list_latest.topics.count.should == 0
+
+      # mods can see every group
+      TopicQuery.new(moderator).list_latest.topics.count.should == 2
+
+      group.add(user)
+      group.save
+
+      TopicQuery.new(user).list_latest.topics.count.should == 2
+    end
+
+  end
 
   context 'a bunch of topics' do
     let!(:regular_topic) { Fabricate(:topic, title: 'this is a regular topic', user: creator, bumped_at: 15.minutes.ago) }
@@ -90,17 +115,11 @@ describe TopicQuery do
 
     context 'with no data' do
 
-      it "has no read topics" do
-        topic_query.list_unread.topics.should be_blank
-      end
-
       it "has no unread topics" do
         topic_query.list_unread.topics.should be_blank
-      end
-
-      it "has an unread count of 0" do
         topic_query.unread_count.should == 0
       end
+
     end
 
     context 'with read data' do
@@ -115,9 +134,6 @@ describe TopicQuery do
       context 'list_unread' do
         it 'contains no topics' do
           topic_query.list_unread.topics.should == []
-        end
-
-        it "returns 0 as the unread count" do
           topic_query.unread_count.should == 0
         end
       end

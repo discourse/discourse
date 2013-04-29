@@ -26,6 +26,10 @@ class User < ActiveRecord::Base
   has_one :github_user_info, dependent: :destroy
   belongs_to :approved_by, class_name: 'User'
 
+  has_many :group_users
+  has_many :groups, through: :group_users
+  has_many :secure_categories, through: :groups, source: :categories
+
   validates_presence_of :username
   validates_presence_of :email
   validates_uniqueness_of :email
@@ -150,16 +154,31 @@ class User < ActiveRecord::Base
     u.errors[:username].blank?
   end
 
-  def enqueue_welcome_message(message_type)
-    return unless SiteSetting.send_welcome_message?
-    Jobs.enqueue(:send_system_message, user_id: id, message_type: message_type)
-  end
 
   def self.suggest_name(email)
     return "" unless email
     name = email.split(/[@\+]/)[0]
     name = name.gsub(".", " ")
     name.titleize
+  end
+
+  # Find a user by temporary key, nil if not found or key is invalid
+  def self.find_by_temporary_key(key)
+    user_id = $redis.get("temporary_key:#{key}")
+    if user_id.present?
+      where(id: user_id.to_i).first
+    end
+  end
+
+  def self.find_by_username_or_email(username_or_email)
+    lower_user = username_or_email.downcase
+    lower_email = Email.downcase(username_or_email)
+    where("username_lower = :user or lower(username) = :user or email = :email or lower(name) = :user", user: lower_user, email: lower_email)
+  end
+
+  def enqueue_welcome_message(message_type)
+    return unless SiteSetting.send_welcome_message?
+    Jobs.enqueue(:send_system_message, user_id: id, message_type: message_type)
   end
 
   def change_username(new_username)
@@ -185,19 +204,6 @@ class User < ActiveRecord::Base
     key
   end
 
-  # Find a user by temporary key, nil if not found or key is invalid
-  def self.find_by_temporary_key(key)
-    user_id = $redis.get("temporary_key:#{key}")
-    if user_id.present?
-      where(id: user_id.to_i).first
-    end
-  end
-
-  def self.find_by_username_or_email(username_or_email)
-    lower_user = username_or_email.downcase
-    lower_email = Email.downcase(username_or_email)
-    where("username_lower = :user or lower(username) = :user or email = :email or lower(name) = :user", user: lower_user, email: lower_email)
-  end
 
   # tricky, we need our bus to be subscribed from the right spot
   def sync_notification_channel_position
@@ -510,6 +516,11 @@ class User < ActiveRecord::Base
         .count
   end
 
+  def secure_category_ids
+    cats = self.moderator? ? Category.select(:id).where(:secure, true) : secure_categories.select('categories.id')
+    cats.map{|c| c.id}
+  end
+
   protected
 
     def cook
@@ -590,5 +601,6 @@ class User < ActiveRecord::Base
         errors.add(:password, "must be 6 letters or longer")
       end
     end
+
 
 end

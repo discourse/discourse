@@ -37,41 +37,52 @@ describe UserAction do
       log_test_action(action_type: UserAction::BOOKMARK)
     end
 
-    describe 'stats' do
-
-      let :mystats do
-        UserAction.stats(user.id, Guardian.new(user))
-      end
-
-      it 'include correct events' do
-        mystats.map{|r| r["action_type"].to_i}.should include(UserAction::NEW_TOPIC)
-        UserAction.stats(user.id,Guardian.new).map{|r| r["action_type"].to_i}.should_not include(UserAction::NEW_PRIVATE_MESSAGE)
-        UserAction.stats(user.id,Guardian.new).map{|r| r["action_type"].to_i}.should_not include(UserAction::GOT_PRIVATE_MESSAGE)
-        mystats.map{|r| r["action_type"].to_i}.should include(UserAction::NEW_PRIVATE_MESSAGE)
-        mystats.map{|r| r["action_type"].to_i}.should include(UserAction::GOT_PRIVATE_MESSAGE)
-      end
-
-      it 'should not include new topic when topic is deleted' do
-        public_topic.destroy
-        mystats.map{|r| r["action_type"].to_i}.should_not include(UserAction::NEW_TOPIC)
-      end
-
+    def stats_for_user(viewer=nil)
+      UserAction.stats(user.id, Guardian.new(viewer)).map{|r| r["action_type"].to_i}.sort
     end
 
-    describe 'stream' do
+    def stream_count(viewer=nil)
+      UserAction.stream(user_id: user.id, guardian: Guardian.new(viewer)).count
+    end
 
-      it 'should have 1 item for non owners' do
-        UserAction.stream(user_id: user.id, guardian: Guardian.new).count.should == 1
-      end
+    it 'includes the events correctly' do
 
-      it 'should include no items for non owner when topic deleted' do
-        public_topic.destroy
-        UserAction.stream(user_id: user.id, guardian: Guardian.new).count.should == 0
-      end
+      mystats = stats_for_user(user)
+      expecting = [UserAction::NEW_TOPIC, UserAction::NEW_PRIVATE_MESSAGE, UserAction::GOT_PRIVATE_MESSAGE, UserAction::BOOKMARK].sort
+      mystats.should == expecting
+      stream_count(user).should == 4
 
-      it 'should have bookmarks and pms for owners' do
-        UserAction.stream(user_id: user.id, guardian: user.guardian).count.should == 4
-      end
+      other_stats = stats_for_user
+      expecting = [UserAction::NEW_TOPIC]
+      stream_count.should == 1
+
+      other_stats.should == expecting
+
+      public_topic.destroy
+      stats_for_user.should == []
+      stream_count.should == 0
+
+      # groups
+
+      category = Fabricate(:category, secure: true)
+
+      public_topic.recover
+      public_topic.category = category
+      public_topic.save
+
+      stats_for_user.should == []
+      stream_count.should == 0
+
+      group = Fabricate(:group)
+      u = Fabricate(:coding_horror)
+      group.add(u)
+      group.save
+
+      category.allow(group)
+      category.save
+
+      stats_for_user(u).should == [UserAction::NEW_TOPIC]
+      stream_count(u).should == 1
 
     end
   end
@@ -146,8 +157,6 @@ describe UserAction do
       end
       it 'should exist' do
         @action.should_not be_nil
-      end
-      it 'shoule have the correct date' do
         @action.created_at.should be_within(1).of(@post.topic.created_at)
       end
     end
@@ -164,16 +173,11 @@ describe UserAction do
         @response = Fabricate(:post, reply_to_post_number: 1, topic: @post.topic, user: @other_user, raw: "perhaps @#{@mentioned.username} knows how this works?")
       end
 
-      it 'should log a post action for the poster' do
+      it 'should log user actions correctly' do
         @response.user.user_actions.where(action_type: UserAction::POST).first.should_not be_nil
-      end
-
-      it 'should log a post action for the original poster' do
         @post.user.user_actions.where(action_type: UserAction::RESPONSE).first.should_not be_nil
-      end
-
-      it 'should log a mention for the mentioned' do
         @mentioned.user_actions.where(action_type: UserAction::MENTION).first.should_not be_nil
+        @post.user.user_actions.joins(:target_post).where('posts.post_number = 2').count.should == 1
       end
 
       it 'should not log a double notification for a post edit' do
@@ -182,12 +186,7 @@ describe UserAction do
         @response.user.user_actions.where(action_type: UserAction::POST).count.should == 1
       end
 
-      it 'should not log topic reply and reply for a single post' do
-        @post.user.user_actions.joins(:target_post).where('posts.post_number = 2').count.should == 1
-      end
-
     end
-
   end
 
   describe 'when user bookmarks' do
@@ -198,19 +197,12 @@ describe UserAction do
       @action = @user.user_actions.where(action_type: UserAction::BOOKMARK).first
     end
 
-    it 'should create a bookmark action' do
+    it 'should create a bookmark action correctly' do
       @action.action_type.should == UserAction::BOOKMARK
-    end
-    it 'should point to the correct post' do
       @action.target_post_id.should == @post.id
-    end
-    it 'should have the right acting_user' do
       @action.acting_user_id.should == @user.id
-    end
-    it 'should target the correct user' do
       @action.user_id.should == @user.id
-    end
-    it 'should nuke the action when unbookmarked' do
+
       PostAction.remove_act(@user, @post, PostActionType.types[:bookmark])
       @user.user_actions.where(action_type: UserAction::BOOKMARK).first.should be_nil
     end

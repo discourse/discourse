@@ -12,7 +12,11 @@ class Guardian
   end
 
   def is_admin?
-    !@user.nil? && @user.admin?
+    @user && @user.admin?
+  end
+
+  def is_moderator?
+    @user && @user.moderator?
   end
 
   # Can the user see the object?
@@ -329,12 +333,37 @@ class Guardian
   end
 
   def can_see_topic?(topic)
+    return false unless topic
+
+    return true if @user && @user.moderator?
+    return false if topic.deleted_at.present?
+
+    if topic.category && topic.category.secure
+      return false unless @user && can_see_category?(topic.category)
+    end
+
     if topic.private_message?
       return false if @user.blank?
       return true if topic.allowed_users.include?(@user)
       return is_admin?
     end
     true
+  end
+
+  def can_see_post?(post)
+    return false unless post
+
+    return true if @user && @user.moderator?
+    return false if post.deleted_at.present?
+
+    can_see_topic?(post.topic)
+  end
+
+  def can_see_category?(category)
+    return true unless category.secure
+    return false unless @user
+
+    @user.secure_category_ids.include?(category.id)
   end
 
   def can_vote?(post, opts={})
@@ -371,4 +400,7 @@ class Guardian
     return true
   end
 
+  def secure_category_ids
+    @user ? @user.secure_category_ids : []
+  end
 end

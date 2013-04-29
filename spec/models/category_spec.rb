@@ -18,6 +18,34 @@ describe Category do
   it { should have_many :category_featured_topics }
   it { should have_many :featured_topics }
 
+  describe "security" do
+    it "secures categories correctly" do
+      category = Fabricate(:category)
+
+      category.secure?.should be_false
+
+      category.deny(:all)
+      category.secure?.should be_true
+
+      category.allow(:all)
+      category.secure?.should be_false
+
+      user = Fabricate(:user)
+      user.secure_categories.to_a.should == []
+
+      group = Fabricate(:group)
+      group.add(user)
+      group.save
+
+      category.allow(group)
+      category.save
+
+      user.reload
+      user.secure_categories.to_a.should == [category]
+
+    end
+  end
+
   describe "uncategorized name" do
     let(:category) { Fabricate.build(:category, name: SiteSetting.uncategorized_name) }
 
@@ -71,47 +99,27 @@ describe Category do
       @topic = @category.topic
     end
 
-    it 'creates a slug' do
+    it 'is created correctly' do
       @category.slug.should == 'amazing-category'
-    end
 
-    it "has a hotness of 5.0 by default" do
       @category.hotness.should == 5.0
-    end
 
-    it 'has a default description' do
       @category.description.should be_blank
-    end
 
-    it 'has one topic' do
       Topic.where(category_id: @category).count.should == 1
-    end
 
-    it 'creates a topic post' do
       @topic.should be_present
-    end
 
-    it 'points back to itself' do
       @topic.category.should == @category
-    end
 
-    it 'is a visible topic' do
       @topic.should be_visible
-    end
 
-    it 'is pinned' do
       @topic.pinned_at.should be_present
-    end
 
-    it 'is an undeletable topic' do
       Guardian.new(@category.user).can_delete?(@topic).should be_false
-    end
 
-    it 'should have one post' do
       @topic.posts.count.should == 1
-    end
 
-    it 'should have a topic url' do
       @category.topic_url.should be_present
     end
 
@@ -129,17 +137,12 @@ describe Category do
         @category.reload
       end
 
-      it 'still has 0 forum topics' do
+      it 'does not cause changes' do
         @category.topic_count.should == 0
-      end
-
-      it "didn't change the category" do
         @topic.category.should == @category
-      end
-
-      it "didn't change the category's forum topic" do
         @category.topic.should == @topic
       end
+
     end
   end
 
@@ -151,11 +154,8 @@ describe Category do
       @category.destroy
     end
 
-    it 'deletes the category' do
+    it 'is deleted correctly' do
       Category.exists?(id: @category_id).should be_false
-    end
-
-    it 'deletes the forum topic' do
       Topic.exists?(id: @topic_id).should be_false
     end
   end
@@ -172,21 +172,13 @@ describe Category do
         @category.reload
       end
 
-      it 'updates topics_week' do
+      it 'updates topic stats' do
         @category.topics_week.should == 1
-      end
-
-      it 'updates topics_month' do
         @category.topics_month.should == 1
-      end
-
-      it 'updates topics_year' do
         @category.topics_year.should == 1
-      end
-
-      it 'updates topic_count' do
         @category.topic_count.should == 1
       end
+
     end
 
     context 'with deleted topics' do
@@ -197,21 +189,13 @@ describe Category do
         @category.reload
       end
 
-      it 'does not count deleted topics for topics_week' do
+      it 'does not count deleted topics' do
         @category.topics_week.should == 0
-      end
-
-      it 'does not count deleted topics for topics_month' do
+        @category.topic_count.should == 0
         @category.topics_month.should == 0
-      end
-
-      it 'does not count deleted topics for topics_year' do
         @category.topics_year.should == 0
       end
 
-      it 'does not count deleted topics for topic_count' do
-        @category.topic_count.should == 0
-      end
     end
   end
 end

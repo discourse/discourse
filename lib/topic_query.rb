@@ -207,13 +207,13 @@ class TopicQuery
       # Start with a list of all topics
       result = Topic
 
-      if @user_id.present?
+      if @user_id
         result = result.joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{@user_id})")
       end
 
       unless query_opts[:unordered]
         # If we're logged in, we have to pay attention to our pinned settings
-        if @user_id.present?
+        if @user
           result = result.order(TopicQuery.order_nocategory_with_pinned_sql)
         else
           result = result.order(TopicQuery.order_nocategory_basic_bumped)
@@ -227,6 +227,16 @@ class TopicQuery
       result = result.visible if @user.blank? or @user.regular?
       result = result.where('topics.id <> ?', query_opts[:except_topic_id]) if query_opts[:except_topic_id].present?
       result = result.offset(query_opts[:page].to_i * page_size) if query_opts[:page].present?
+
+      unless @user && @user.moderator?
+        category_ids = @user.secure_category_ids if @user
+        if category_ids.present?
+          result = result.where('categories.secure IS NULL OR categories.secure = ? OR categories.id IN (?)', false, category_ids)
+        else
+          result = result.where('categories.secure IS NULL OR categories.secure = ?', false)
+        end
+      end
+
       result
     end
 

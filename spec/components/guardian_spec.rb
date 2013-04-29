@@ -144,28 +144,14 @@ describe Guardian do
 
     let(:topic) { Fabricate(:topic, user: coding_horror)}
 
-    it 'returns false when the post is nil' do
-      Guardian.new(user).can_see_post_actors?(nil, PostActionType.types[:like]).should be_false
-    end
-
-    it 'returns true for likes' do
-      Guardian.new(user).can_see_post_actors?(topic, PostActionType.types[:like]).should be_true
-    end
-
-    it 'returns false for bookmarks' do
-      Guardian.new(user).can_see_post_actors?(topic, PostActionType.types[:bookmark]).should be_false
-    end
-
-    it 'returns false for off-topic flags' do
-      Guardian.new(user).can_see_post_actors?(topic, PostActionType.types[:off_topic]).should be_false
-    end
-
-    it 'returns false for spam flags' do
-      Guardian.new(user).can_see_post_actors?(topic, PostActionType.types[:spam]).should be_false
-    end
-
-    it 'returns true for public votes' do
-      Guardian.new(user).can_see_post_actors?(topic, PostActionType.types[:vote]).should be_true
+    it 'displays visibility correctly' do
+      guardian = Guardian.new(user)
+      guardian.can_see_post_actors?(nil, PostActionType.types[:like]).should be_false
+      guardian.can_see_post_actors?(topic, PostActionType.types[:like]).should be_true
+      guardian.can_see_post_actors?(topic, PostActionType.types[:bookmark]).should be_false
+      guardian.can_see_post_actors?(topic, PostActionType.types[:off_topic]).should be_false
+      guardian.can_see_post_actors?(topic, PostActionType.types[:spam]).should be_false
+      guardian.can_see_post_actors?(topic, PostActionType.types[:vote]).should be_true
     end
 
     it 'returns false for private votes' do
@@ -176,34 +162,15 @@ describe Guardian do
   end
 
   describe 'can_impersonate?' do
-    it 'returns false when the target is nil' do
+    it 'allows impersonation correctly' do
       Guardian.new(admin).can_impersonate?(nil).should be_false
-    end
-
-    it 'returns false when the user is nil' do
       Guardian.new.can_impersonate?(user).should be_false
-    end
-
-    it "doesn't allow a non-admin to impersonate someone" do
       Guardian.new(coding_horror).can_impersonate?(user).should be_false
-    end
-
-    it "doesn't allow an admin to impersonate themselves" do
       Guardian.new(admin).can_impersonate?(admin).should be_false
-    end
-
-    it "doesn't allow an admin to impersonate another admin" do
       Guardian.new(admin).can_impersonate?(another_admin).should be_false
-    end
-
-    it "allows an admin to impersonate a regular user" do
       Guardian.new(admin).can_impersonate?(user).should be_true
-    end
-
-    it "allows an admin to impersonate a moderator" do
       Guardian.new(admin).can_impersonate?(moderator).should be_true
     end
-
   end
 
   describe 'can_invite_to?' do
@@ -211,25 +178,16 @@ describe Guardian do
     let(:user) { topic.user }
     let(:moderator) { Fabricate(:moderator) }
 
-    it 'returns false with a nil user' do
+    it 'handles invitation correctly' do
       Guardian.new(nil).can_invite_to?(topic).should be_false
-    end
-
-    it 'returns false with a nil object' do
       Guardian.new(moderator).can_invite_to?(nil).should be_false
-    end
-
-    it 'returns true for a moderator to invite' do
       Guardian.new(moderator).can_invite_to?(topic).should be_true
+      Guardian.new(user).can_invite_to?(topic).should be_false
     end
 
     it 'returns false when the site requires approving users' do
       SiteSetting.expects(:must_approve_users?).returns(true)
       Guardian.new(moderator).can_invite_to?(topic).should be_false
-    end
-
-    it 'returns false for a regular user to invite' do
-      Guardian.new(user).can_invite_to?(topic).should be_false
     end
 
   end
@@ -244,6 +202,40 @@ describe Guardian do
       it 'allows non logged in users to view topics' do
         Guardian.new.can_see?(topic).should be_true
       end
+
+      it 'correctly handles groups' do
+        group = Fabricate(:group)
+        category = Fabricate(:category, secure: true)
+        category.allow(group)
+
+        topic = Fabricate(:topic, category: category)
+
+        Guardian.new(user).can_see?(topic).should be_false
+        group.add(user)
+        group.save
+
+        Guardian.new(user).can_see?(topic).should be_true
+      end
+    end
+
+    describe 'a Post' do
+      it 'correctly handles post visibility' do
+        Guardian.new(user).can_see?(post).should be_true
+
+        post.destroy
+        post.reload
+        Guardian.new(user).can_see?(post).should be_false
+        Guardian.new(admin).can_see?(post).should be_true
+
+        post.recover
+        post.reload
+        topic.destroy
+        topic.reload
+        Guardian.new(user).can_see?(post).should be_false
+        Guardian.new(admin).can_see?(post).should be_true
+      end
+
+
     end
   end
 
