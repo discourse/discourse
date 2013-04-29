@@ -33,7 +33,7 @@ module Discourse
 
     # Precompile all defer
     Dir.glob("#{config.root}/app/assets/javascripts/defer/*.js").each do |file|
-      config.assets.precompile << "defer/#{file.match(/([a-z_A-Z]+\.js)$/)[1]}"
+      config.assets.precompile << "defer/#{File.basename(file)}"
     end
 
     # Precompile all available locales
