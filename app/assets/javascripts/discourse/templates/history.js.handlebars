@@ -1,7 +1,7 @@
-<div class="modal-body">    
+<div class="modal-body">
 
   {{#if view.loading}}
-    Loading...
+    {{i18n loading}}
   {{else}}
     <div class='span8'>
 
@@ -25,19 +25,18 @@
       {{view Ember.Select
         contentBinding="view.versions"
         optionLabelPath="content.description"
-        optionValuePath="content.number"          
+        optionValuePath="content.number"
         selectionBinding="view.versionRight"}}
 
       <div class='contents'>
-        {{#if view.postRight}}
-          {{{view.postRight.cooked}}}
+        {{#if view.diff}}
+          {{{view.diff}}}
         {{else}}
           <div class='history-loading'>{{i18n loading}}</div>
         {{/if}}
       </div>
 
-    </div>        
+    </div>
   {{/if}}
 
 </div>
-
