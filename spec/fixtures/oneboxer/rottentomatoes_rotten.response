@@ -1,0 +1,609 @@
+HTTP/1.0 200 OK
+Date: Sun, 28 Apr 2013 18:17:44 GMT
+Expires: Sat, 6 May 1995 12:00:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+Pragma: no-cache
+Set-Cookie: ServerID=1231; Path=/
+Set-Cookie: JSESSIONID=F1555163A809558BB2A3A9EE3408FEF6.localhost; Path=/
+Content-Type: text/html;charset=ISO-8859-1
+Content-Language: en-US
+Vary: User-Agent,Accept-Encoding
+Connection: close
+ 
+<!DOCTYPE html>
+	
+ 
+<head>
+	<title>RottenTomatoes Mobile</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0" />
+	
+	
+	
+		
+			
+			
+			
+			
+			
+			<link rel="stylesheet" href="//images.rottentomatoescdn.com/styles/mobile/mobile.css?v=prod20130426a" type="text/css"/>
+		
+	
+	
+	
+	
+		
+			
+			
+			
+				<script type="text/javascript" src="//images.rottentomatoescdn.com/files/inc_beta/rt.js" ></script> 
+			
+			
+		
+	
+	
+	
+	
+		
+			
+			
+			
+				<script type="text/javascript" src="//images.rottentomatoescdn.com/js/jquery/jquery-1.6.1.min.js" ></script> 
+			
+			
+		
+	
+	
+	
+	<script type='text/javascript'>
+	(function() {
+	var useSSL = 'https:' == document.location.protocol;
+	var src = (useSSL ? 'https:' : 'http:') +
+	'//www.googletagservices.com/tag/js/gpt_mobile.js';
+	document.write('<scr' + 'ipt src="' + src + '"></scr' + 'ipt>');
+	})();
+	</script>	
+		
+	
+	<script>
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-2265251-1']);
+	//_gaq.push(['_setDomainName', 'www.rottentomatoes.com']);
+	
+	
+	_gaq.push(['_setCustomVar', 2, 'Standalone Webapp', (window.navigator.standalone ? 'True' : 'False'), 1]);
+	</script>
+	
+	
+	
+	
+<script type="text/javascript">
+function getCookie(c) {
+	var d = document.cookie.indexOf(c + "=");
+	var a = d + c.length + 1;
+	if ((!d) && (c != document.cookie.substring(0, c.length))) {
+		return null
+	}
+	if (d == -1) {
+		return null
+	}
+	var b = document.cookie.indexOf(";", a);
+	if (b == -1) {
+		b = document.cookie.length
+	}
+	return unescape(document.cookie.substring(a, b))
+}
+var qcsegments = getCookie("qcs");
+</script>
+	
+	
+		
+	
+	
+		
+			
+			
+			
+				<script type="text/javascript" src="//images.rottentomatoescdn.com/js/jquery/plugins/jquery.rt_showMoreLink.js" ></script> 
+			
+			
+		
+	
+	
+</head>	
+	
+	
+<style>
+	.greenBackground {
+		background-color: #3D8404;
+	}
+</style>
+<body>
+	<div id="fb-root"></div>
+	<script>
+		var fb_connected=$.Deferred();
+		
+		(function() {
+		  var e = document.createElement('script'); e.async = true;
+		      e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+		      document.getElementById('fb-root').appendChild(e);
+		      }());
+			window.fbAsyncInit = function() {
+			FB.init({
+				appId: '326803741017', 
+				status: true, 
+				cookie: true, 
+				xfbml: true,
+				oauth: true,
+				channelUrl : '//http://www.rottentomatoes.com/facebook/channel.html' // Channel File for x-domain communication
+			});		
+			
+			FB.Event.subscribe("auth.authResponseChange", handleResponseChange);			
+		};
+		
+		function handleResponseChange(response) {
+			fb_connected.resolve();
+			_gaq.push(['_trackEvent', "RT Mobile", "Facebook IP", response.status]);	 
+		}
+	</script>
+	
+		<gpt:mobile />
+		
+		
+<div id="mobile_header">
+	<div id="topBar">
+		<a href="http://www.rottentomatoes.com/mobile/">
+			<img id="logo" src="http://images.rottentomatoescdn.com/images/mobile/header-logo.png?v=20130214" width="96px" />
+		</a>
+		
+		<div id="searchBar">
+			
+			
+			<form id="searchForm" method="get" action="/mobile/search/">
+				<input type="text" id="queryinput" name="q" value="Search Movies, Actors..." onclick="this.value='';"/>
+				
+			</form>
+		</div>
+		
+	</div>
+	<div id="navBar">
+		<a href="/mobile/" id="boxoffice" class="tab ">
+			<span>Box Office</span>
+		</a>
+		<a href="/mobile/showtimes/" id="theaters" class="tab ">
+			<span>Theaters</span>
+		</a>
+		<a href="/mobile/upcoming/" id="upcoming" class="tab ">
+			<span>Upcoming</span>
+		</a>
+		<a href="/mobile/dvd/?subnav=new_releases" id="dvd" class="tab ">
+			<span>DVD</span>
+		</a>
+	</div>
+</div>
+		
+		
+		
+		<div id="movie" class="pageBody">
+			<div class="basics media">
+				<h1>The Big Wedding</h1>
+				<div class="poster img">
+					
+ 
+ 
+ 
+    
+    
+        
+	    
+    	
+	    
+        
+    
+<img src="http://content8.flixster.com/movie/11/16/87/11168754_pro.jpg" width="120" height="178" alt="" title=""  />
+				</div>
+				<div class="bd">
+					<div class="rtscores">					
+						
+															
+								<div class="rating media">
+									<i class="splat img"></i>
+									<div class="bd">
+										<p class="percentage"><span class="bold">6%</span> of critics liked it</p>
+									</div>
+								</div>
+								<div class="rating media">
+									<i class="popcorn img"></i>
+									<div class="bd">
+										<p class="percentage"><span class="bold">80%</span>&nbsp;of users liked it</p>
+									</div>
+								</div>
+							
+							
+						
+					</div>
+			
+					<div class="summary">
+						<div class="actors">
+<a href="/mobile/celebrity/robert_de_niro/" class="" >Robert De Niro</a>, 
+<a href="/mobile/celebrity/diane_keaton/" class="" >Diane Keaton</a></div>
+						<div class="release">In theaters&nbsp;Apr 26, 2013</div>
+						<div class="meta">R, 1 hr. 29 min.</div>
+						
+						
+						
+						
+						
+						
+							
+							
+							
+							
+						
+						
+			
+						
+						
+							<a href="http://www.videodetective.net/player.aspx?PublishedId=619956&CustomerId=300120&e=1367345864662&cmd=6&fmt=4&VideoKbrate=212&h=7db6d00a4bb156811b521abc195ab10b" class="trailerbutton" onclick="Tracker.trackPageview('trailer'); Tracker.trackEvent('trailer', 'HiRes');"></a>
+						
+						
+					</div>
+				</div>
+			</div>
+	
+			<div class="detail clearfix">
+				
+				
+				<div id="showtimes" class="detailSection">
+					<h2>Showtimes</h2>
+					<form method="get" class="info" action="/mobile/movies-showtimes/the_big_wedding_2013">
+						Get Showtimes: <input id="postalCodeInput" class="text" type="text" name="postal" value="" />
+						
+<select name="date" <flixster:attributes attributes="{name=date, class=dropdown}"/>>
+	
+	<option value="20130428" >Today, 4/28</option>
+	
+	
+	
+	
+	<option value="20130429" >Monday, 4/29</option>
+	
+	
+	
+	<option value="20130430" >Tuesday, 4/30</option>
+	
+	
+	
+	<option value="20130501" >Wednesday, 5/1</option>
+	
+	
+	
+	<option value="20130502" >Thursday, 5/2</option>
+	
+	
+	
+	<option value="20130503" >Friday, 5/3</option>
+	
+	
+	
+	<option value="20130504" >Saturday, 5/4</option>
+	
+</select>
+						<input class="button" type="submit" name="submit" value="Go" /> 
+					</form>				
+				</div>
+						
+				
+				<div id="movieInfo" class="detailSection">
+					<h2>Movie Info</h2>
+				
+					<div class="info">
+					<span class="label">Cast:</span> 
+<a href="/mobile/celebrity/robert_de_niro/" class="" >Robert De Niro</a>, 
+<a href="/mobile/celebrity/diane_keaton/" class="" >Diane Keaton</a>, 
+<a href="/mobile/celebrity/susan_sarandon/" class="" >Susan Sarandon</a>, 
+<a href="/mobile/celebrity/katherine_heigl/" class="" >Katherine Heigl</a>, 
+<a href="/mobile/celebrity/amanda_seyfried/" class="" >Amanda Seyfried</a>, 
+<a href="/mobile/celebrity/robin_williams/" class="" >Robin Williams</a>, 
+<a href="/mobile/celebrity/ben_barnes/" class="" >Ben Barnes</a>, 
+<a href="/mobile/celebrity/topher_grace/" class="" >Topher Grace</a>, 
+<a href="/mobile/celebrity/christine_ebersole/" class="" >Christine Ebersole</a>, 
+<a href="/mobile/celebrity/david_rasche/" class="" >David Rasche</a>
+					</div>
+				
+					<div class="info">
+					<span class="label">Director:</span> Justin Zackham
+					</div>
+				
+					<div class="info">
+					<span class="label">Rated:</span> R
+					</div>
+				
+					<div class="info">
+					<span class="label">Running Time:</span> 1 hr. 29 min.
+					</div>
+					
+					<div class="info">
+					<span class="label">Genre:</span> Comedy
+					</div>
+					
+					<div class="info">
+					<span class="label">Theater Release:</span> Apr 26, 2013
+					</div>
+			
+					
+					
+				
+					
+					
+					
+					
+					<div class="info">
+						<span class="label">Synopsis:</span> 
+						<span id="movieSynopsis">With an all-star cast led by Robert De Niro, Katherine Heigl, Diane Keaton, Amanda Seyfried, Topher Grace, with Susan Sarandon and Robin Williams, THE BIG WEDDING is an uproarious romantic comedy about a charmingly modern family trying to survive a weekend wedding celebration that has the potential to become a full blown family fiasco. To the amusement of their adult children and friends, long divorced couple Don and Ellie Griffin (De Niro and Keaton) are once again forced to play the happy
+						
+							<span id="movieSynopsisRemaining" style="display:none;"> couple for the sake of their adopted son's wedding after his ultra conservative biological mother unexpectedly decides to fly halfway across the world to attend. With all of the wedding guests looking on, the Griffins are hilariously forced to confront their past, present and future - and hopefully avoid killing each other in the process. Screenplay by Justin Zackham. Directed by Justin Zackham. (c) Lionsgate</span>
+							<a href="javascript:void(0);" id="showMoreSynopsis" onmousedown="_gaq.push(['_trackEvent', 'RT Mobile', 'MOB Page', 'Show More']);"></a>
+							
+							<script>
+								$(function(){
+									$('#movieSynopsis').rt_showMoreLink({moreText:'... More', lessText:'', moreItemsSelector:'#movieSynopsisRemaining', moreLinkSelector:'#showMoreSynopsis'});
+								});
+							</script>
+							
+						
+						</span>
+					</div>
+				</div>
+			
+				<div id="ratings" class="detailSection">
+					<h2>Critic Reviews</h2>
+					
+					
+					
+						<ul>
+							
+							<li>
+								<div class="critic media rating">
+									<i class="splat img"></i>
+	
+									<div class="bd">
+										<div class="byline">James Berardinelli, ReelViews</div>
+										It's tired and dated with too few laughs to justify the stultifying attempts at drama and the impossible-to-swallow plot contortions.
+										<a href="http://www.reelviews.net/php_review_template.php?identifier=2614&utm_source=feedly" target="_blank">More...</a>
+									</div>
+							</li>
+							
+							<li>
+								<div class="critic media rating">
+									<i class="splat img"></i>
+	
+									<div class="bd">
+										<div class="byline">Richard Roeper, Richard Roeper.com</div>
+										Looks great, some terrific ingredients, but when you slice it up, what a disappointment.
+										<a href="http://www.richardroeper.com/reviews/thebigwedding.aspx" target="_blank">More...</a>
+									</div>
+							</li>
+							
+							<li>
+								<div class="critic media rating">
+									<i class="tomato img"></i>
+	
+									<div class="bd">
+										<div class="byline">Alonso Duralde, The Wrap</div>
+										Sarandon, Keaton and De Niro mesh beautifully, fully convincing as a trio of old friends and carting in lots of characterization that would be otherwise lacking in Zackham's rote screenplay.
+										<a href="http://www.thewrap.com/movies/column-post/big-wedding-review-ho-hum-ceremony-lively-all-star-guest-list-88036" target="_blank">More...</a>
+									</div>
+							</li>
+							
+							<li>
+								<div class="critic media rating">
+									<i class="splat img"></i>
+	
+									<div class="bd">
+										<div class="byline">Rene Rodriguez, Miami Herald</div>
+										The Big Wedding is a would-be screwball comedy that forgets to throw in the screws.
+										<a href="http://www.miami.com/039the-big-wedding039-r-article" target="_blank">More...</a>
+									</div>
+							</li>
+							
+							<li>
+								<div class="critic media rating">
+									<i class="splat img"></i>
+	
+									<div class="bd">
+										<div class="byline">Calum Marsh, Village Voice</div>
+										Many Hollywood films are founded on privilege, but few are as open and nasty about their racism, misogyny, and homophobia. It's a feel-good movie for people who only comfortable around people who look and act just like them.
+										<a href="http://www.villagevoice.com/2013-04-24/film/the-big-wedding-review/?utm_source=feedly" target="_blank">More...</a>
+									</div>
+							</li>
+							
+							<li>
+								<div class="critic media rating">
+									<i class="splat img"></i>
+	
+									<div class="bd">
+										<div class="byline">Linda Barnard, Toronto Star</div>
+										The Big Wedding aims low and achieves every aspiration.
+										<a href="http://www.thestar.com/entertainment/movies/2013/04/26/the_big_wedding_a_huge_yawn_review.html?utm_source=feedly" target="_blank">More...</a>
+									</div>
+							</li>
+							
+							<li>
+								<div class="critic media rating">
+									<i class="splat img"></i>
+	
+									<div class="bd">
+										<div class="byline">Stephen Whitty, Newark Star-Ledger</div>
+										I suppose it's always nice to get an invitation but please, this "Wedding"? Send back your regrets.
+										<a href="http://www.nj.com/entertainment/index.ssf/2013/04/the_big_wedding_review_borrowe.html?utm_source=feedly" target="_blank">More...</a>
+									</div>
+							</li>
+							
+							<li>
+								<div class="critic media rating">
+									<i class="splat img"></i>
+	
+									<div class="bd">
+										<div class="byline">Rick Groen, Globe and Mail</div>
+										A shining example of a dull studio comedy.
+										<a href="http://www.theglobeandmail.com/arts/film/film-reviews/the-big-wedding-a-case-study-in-dull-filmmaking/article11553924/" target="_blank">More...</a>
+									</div>
+							</li>
+							
+							<li>
+								<div class="critic media rating">
+									<i class="splat img"></i>
+	
+									<div class="bd">
+										<div class="byline">Adam Graham, Detroit News</div>
+										It never feels real, and its only saving grace is that it clocks in at a mercifully short 90 minutes, which is just about the amount of time you need to realize you never want to see these characters ever again.
+										<a href="http://www.detroitnews.com/article/20130426/ENT02/304260320/1034/ENT02/Review-Big-Wedding-toast-hate-bad-taste" target="_blank">More...</a>
+									</div>
+							</li>
+							
+							<li>
+								<div class="critic media rating">
+									<i class="splat img"></i>
+	
+									<div class="bd">
+										<div class="byline">Stephanie Merry, Washington Post</div>
+										Sadly, superior talent can propel a movie only so far. Bad scripts beget bad movies, even when four Academy Award winners are involved.
+										<a href="http://www.washingtonpost.com/gog/movies/the-big-wedding,1211743/critic-review.html" target="_blank">More...</a>
+									</div>
+							</li>
+													
+						</ul>
+					
+					
+				</div>
+			
+			</div>
+		</div>
+		
+		
+		
+		<style>
+			div#fbLikePopup {
+				z-index: 9998;
+				position: fixed;
+				width: 320px;
+				height: 100px;
+				/*height:200px;*/
+				background: rgba(0, 0, 0, 0.8);
+				bottom: 0px;
+				left: 50%;
+				margin-left: -160px;
+			}
+			#fbLikePopup .instructions {
+				width: 150px;
+				color: white;
+				font-size: 13px;
+				background: transparent url('http://images.rottentomatoescdn.com/images/icons/tomatolike.png') no-repeat 10px 0px;
+				height: 60px;
+				padding-left: 65px;
+				font-weight: bold;
+				margin-top:35px;
+				overflow:hidden;
+			}
+						
+			#fbLikePopup .close {
+				width: 50px;
+				height: 50px;
+				background: transparent url('http://images.rottentomatoescdn.com/images/chrome/close.png') no-repeat center;
+				-webkit-tap-highlight-color: rgba(0,0,0,0);
+				margin-left: -10px;
+				margin-top: -23px;
+				float:left;
+			}				
+			
+			#fbLikePopup .fb-like {		
+				margin:40px 0px;	
+				width: 100px; 
+				float:right;
+				overflow:hidden;
+			}
+		</style>
+	
+		<div id="fbLikePopup" style="display:none;"><div class="close"></div><div class="fb-like" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-href="http://www.rottentomatoes.com"></div><div class="instructions">Like Rotten Tomatoes on Facebook!</div></div>		
+		<script>		
+		fb_connected.done(function(){	
+			$("#fbLikePopup").show();
+			_gaq.push(['_trackEvent', 'RT Mobile', 'Like Popup', 'Shown']);
+			
+			$("#fbLikePopup .close").click(function(){
+				$("#fbLikePopup").hide();
+				_gaq.push(['_trackEvent', 'RT Mobile', 'Like Popup', 'Dismissed']);
+			});
+			
+			FB.Event.subscribe('edge.create', function(href, widget) { 
+				_gaq.push(['_trackEvent', 'RT Mobile', 'Like Popup', 'Like Clicked']); 
+			});
+			
+		});
+		</script>
+		
+	
+	
+	
+	
+	
+	
+	
+	<div id="footer">
+		<div id="grass"></div>
+		<div id="footer_text">
+			
+			
+			<a class="button" href="http://www.rottentomatoes.com/?fullsite=true">View Full Site</a>
+			<a class="button" href="">Get Mobile App</a>
+			
+			
+			<div>Copyright&nbsp;&#169;&nbsp;Flixster, Inc. All rights reserved.</div>
+			<div>
+				<a href="http://www.rottentomatoes.com/terms">Terms of Service</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="http://www.rottentomatoes.com/privacy">Privacy Policy</a>
+			</div>
+		</div>
+	</div>
+<script>
+	
+	
+	_gaq.push(['_trackPageview', '/mobile/MOB']);
+	
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+<script type="text/javascript"> 
+//<![CDATA[
+<!-- Begin comScore Tag -->
+if (typeof COMSCORE == "undefined") { var COMSCORE={}}COMSCORE.beacon=function(d){if(!d){return}var a=1.6,e=document,g=e.location,c=function(h){if(h==null){return""}return(encodeURIComponent||escape)(h)},f=[(g.protocol=="https:"?"https://sb":"http://b"),".scorecardresearch.com/b?","c1=",c(d.c1),"&c2=",c(d.c2),"&rn=",Math.random(),"&c7=",c(g.href),"&c3=",c(d.c3),"&c4=",c(d.c4),"&c5=",c(d.c5),"&c6=",c(d.c6),"&c15=",c(d.c15),"&c16=",c(d.c16),"&c8=",c(e.title),"&c9=",c(e.referrer),"&cv=",a].join("");f=f.length>1500?f.substr(0,1495)+"&ct=1":f;var b=new Image();b.onload=function(){};b.src=f;return f };
+COMSCORE.beacon({ c1:2, c2:"3000068", c3:"", c4:"http://www.rottentomatoes.com", c5:"", c6:"", c15:"" });
+<!-- End comScore Tag -->
+//]]-->
+</script>
+</body>
+	<script>
+		$(document).ready(function() { 
+			if($('#postalCodeInput').val() == "" && navigator.geolocation) {			
+				navigator.geolocation.getCurrentPosition(function(position) {
+					var coords = position.coords;
+					
+					var url = "http://www.rottentomatoes.com/api/private/v1.0/zipcode/?latitude="+ coords.latitude +"&longitude="+ coords.longitude;
+									
+					$.ajax({
+						url: url				  
+					}).done(function(response) {
+						var responseJson = JSON.parse(response);
+						if (responseJson[0] && responseJson[0].zipcode) {
+							var zipcode = responseJson[0].zipcode;													
+							$('#postalCodeInput').val(zipcode);						
+						}
+					});
+					
+				});
+			};
+		});
+	</script>

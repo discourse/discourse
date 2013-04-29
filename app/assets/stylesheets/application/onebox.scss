@@ -69,3 +69,18 @@ a.loading-onebox {
     }
   }
 }
+
+// RottenTomatoes Onebox
+.onebox-result {
+  .onebox-result-body {
+    img.verdict { 
+      float: none; 
+      margin-right: 7px;
+    }
+    img.popcorn {
+      float: none;
+      margin-left: 20px;
+      margin-right: 5px;
+    }
+  }
+}
