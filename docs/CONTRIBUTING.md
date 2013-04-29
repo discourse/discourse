@@ -6,17 +6,15 @@ Anyone wishing to contribute to the **[Discourse/Discourse](https://github.com/d
 
 ## Reporting Bugs
 
-1. Update to the most recent master release; the bug may already be resolved.
+1. Always update to the most recent master release; the bug may already be resolved.
 
-2. Search for similar issues on the Discourse development forums; it may already be an identified bug.
+2. Search for similar issues on the [Discourse meta forum](http://meta.discourse.org); it may already be an identified problem.
 
-3. On GitHub, provide the details of the issue, with any included workflows, screenshots, or links to examples on jsfiddle.net. If possible, submit a Pull Request with a failing test. If you'd rather take matters into your own hands, fix the bug yourself (jump down to the "Contributing (Step-by-step)" section).
+4. If this is a bug or problem that **requires any kind of extended discussion -- open a topic on meta about it**. Do *not* open a bug on GitHub.
 
-4. The Discourse team will work with you until your issue can be verified. Once verified, a team member will flag the issue appropriately, lock it, and create a new topic discussing the bug on the Discourse forums.
+5. If this is a bug or problem that is clear, simple, and does not require *any* discussion -- open an issue on GitHub with a reproduction of the bug including workflows, screenshots, or links to examples on jsfiddle.net. If possible, submit a Pull Request with a failing test. If you'd rather take matters into your own hands, fix the bug yourself (jump down to the "Contributing (Step-by-step)" section).
 
-5. Continue to monitor the progress/discussion surrounding the bug by reading the topic assigned to your bug on the Discourse forums.
-
-6. When the bug is fixed, the Discourse topic will be frozen, and the bug will be marked as fixed in the repo, with the appropriate commit assigned to the fix for tracking purposes.
+6. When the bug is fixed, we will do our best to update the Discourse topic or GitHub issue with a resolution.
 
 ## Requesting New Features
 
@@ -62,6 +60,8 @@ Anyone wishing to contribute to the **[Discourse/Discourse](https://github.com/d
  * prefer `class << self; def method; end` over `def class.method` for class methods
  * prefer `{ ... }` over `do ... end` for single-line blocks, avoid using `{ ... }` for multi-line blocks
  * avoid `return` when not required
+
+  However, please note that **pull requests consisting entirely of style changes are not welcome on this project**. Style changes in the context of pull requests that also refactor code, fix bugs, improve functionality *are* welcome.
 
 5. Commit
 
