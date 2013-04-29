@@ -3,6 +3,7 @@ module Oneboxer
   module Whitelist
     def self.entries
       [
+       Entry.new(/^https?:\/\/(?:www\.)?rottentomatoes\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?cnn\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?washingtonpost\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?funnyordie\.com\/.+/),

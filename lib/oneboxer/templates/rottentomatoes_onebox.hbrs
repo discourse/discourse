@@ -1,0 +1,25 @@
+<div class='onebox-result'>
+  {{#host}}
+    <div class='source'>
+      <div class='info'>
+        <a href='{{original_url}}' class="track-link" target="_blank">
+          {{#favicon}}<img class='favicon' src="{{favicon}}"> {{/favicon}}{{host}}
+        </a>
+      </div>
+    </div>
+  {{/host}}
+  <div class='onebox-result-body'>
+    {{#poster}}<img src="{{poster}}" class="thumbnail">{{/poster}}
+    <h3><a href="{{original_url}}" target="_blank">{{title}}</a></h3>
+
+    {{#verdict_image}}<img class="verdict" src={{verdict_image}}><b>{{verdict_percentage}}</b> of critics liked it.{{/verdict_image}}
+    {{#user_percentage}}<img class="popcorn" src={{popcorn_image}}><b>{{user_percentage}}</b> of users liked it.<br />{{/user_percentage}}
+    {{#cast}}<b>Cast:</b> {{cast}}<br />{{/cast}}
+    {{#director}}<b>Director:</b> {{director}}<br />{{/director}}
+    {{#release_type}}<b>{{release_type}} Release:</b> {{release_date}}<br />{{/release_type}}
+    {{#running_time}}<b>Running Time:</b> {{running_time}}<br />{{/running_time}}
+    {{#rated}}<b>Rated: </b> {{rated}}<br />{{/rated}}
+    {{synopsis}}
+  </div>
+  <div class='clearfix'></div>
+</div>

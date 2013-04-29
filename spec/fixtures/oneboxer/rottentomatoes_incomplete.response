@@ -1,0 +1,462 @@
+HTTP/1.0 200 OK
+Date: Sun, 28 Apr 2013 18:19:31 GMT
+Expires: Sat, 6 May 1995 12:00:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+Pragma: no-cache
+Set-Cookie: ServerID=1210; Path=/
+Set-Cookie: JSESSIONID=968C19E80C72CF48C6EE1927ADBD369E.localhost; Path=/
+Content-Type: text/html;charset=ISO-8859-1
+Content-Language: en-US
+Vary: User-Agent,Accept-Encoding
+Connection: close
+ 
+<!DOCTYPE html>
+	
+ 
+<head>
+	<title>RottenTomatoes Mobile</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0" />
+	
+	
+	
+		
+			
+			
+			
+			
+			
+			<link rel="stylesheet" href="//images.rottentomatoescdn.com/styles/mobile/mobile.css?v=prod20130426a" type="text/css"/>
+		
+	
+	
+	
+	
+		
+			
+			
+			
+				<script type="text/javascript" src="//images.rottentomatoescdn.com/files/inc_beta/rt.js" ></script> 
+			
+			
+		
+	
+	
+	
+	
+		
+			
+			
+			
+				<script type="text/javascript" src="//images.rottentomatoescdn.com/js/jquery/jquery-1.6.1.min.js" ></script> 
+			
+			
+		
+	
+	
+	
+	<script type='text/javascript'>
+	(function() {
+	var useSSL = 'https:' == document.location.protocol;
+	var src = (useSSL ? 'https:' : 'http:') +
+	'//www.googletagservices.com/tag/js/gpt_mobile.js';
+	document.write('<scr' + 'ipt src="' + src + '"></scr' + 'ipt>');
+	})();
+	</script>	
+		
+	
+	<script>
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-2265251-1']);
+	//_gaq.push(['_setDomainName', 'www.rottentomatoes.com']);
+	
+	
+	_gaq.push(['_setCustomVar', 2, 'Standalone Webapp', (window.navigator.standalone ? 'True' : 'False'), 1]);
+	</script>
+	
+	
+	
+	
+<script type="text/javascript">
+function getCookie(c) {
+	var d = document.cookie.indexOf(c + "=");
+	var a = d + c.length + 1;
+	if ((!d) && (c != document.cookie.substring(0, c.length))) {
+		return null
+	}
+	if (d == -1) {
+		return null
+	}
+	var b = document.cookie.indexOf(";", a);
+	if (b == -1) {
+		b = document.cookie.length
+	}
+	return unescape(document.cookie.substring(a, b))
+}
+var qcsegments = getCookie("qcs");
+</script>
+	
+	
+		
+	
+	
+		
+			
+			
+			
+				<script type="text/javascript" src="//images.rottentomatoescdn.com/js/jquery/plugins/jquery.rt_showMoreLink.js" ></script> 
+			
+			
+		
+	
+	
+</head>	
+	
+	
+<style>
+	.greenBackground {
+		background-color: #3D8404;
+	}
+</style>
+<body>
+	<div id="fb-root"></div>
+	<script>
+		var fb_connected=$.Deferred();
+		
+		(function() {
+		  var e = document.createElement('script'); e.async = true;
+		      e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+		      document.getElementById('fb-root').appendChild(e);
+		      }());
+			window.fbAsyncInit = function() {
+			FB.init({
+				appId: '326803741017', 
+				status: true, 
+				cookie: true, 
+				xfbml: true,
+				oauth: true,
+				channelUrl : '//http://www.rottentomatoes.com/facebook/channel.html' // Channel File for x-domain communication
+			});		
+			
+			FB.Event.subscribe("auth.authResponseChange", handleResponseChange);			
+		};
+		
+		function handleResponseChange(response) {
+			fb_connected.resolve();
+			_gaq.push(['_trackEvent', "RT Mobile", "Facebook IP", response.status]);	 
+		}
+	</script>
+	
+		<gpt:mobile />
+		
+		
+<div id="mobile_header">
+	<div id="topBar">
+		<a href="http://www.rottentomatoes.com/mobile/">
+			<img id="logo" src="http://images.rottentomatoescdn.com/images/mobile/header-logo.png?v=20130214" width="96px" />
+		</a>
+		
+		<div id="searchBar">
+			
+			
+			<form id="searchForm" method="get" action="/mobile/search/">
+				<input type="text" id="queryinput" name="q" value="Search Movies, Actors..." onclick="this.value='';"/>
+				
+			</form>
+		</div>
+		
+	</div>
+	<div id="navBar">
+		<a href="/mobile/" id="boxoffice" class="tab ">
+			<span>Box Office</span>
+		</a>
+		<a href="/mobile/showtimes/" id="theaters" class="tab ">
+			<span>Theaters</span>
+		</a>
+		<a href="/mobile/upcoming/" id="upcoming" class="tab ">
+			<span>Upcoming</span>
+		</a>
+		<a href="/mobile/dvd/?subnav=new_releases" id="dvd" class="tab ">
+			<span>DVD</span>
+		</a>
+	</div>
+</div>
+		
+		
+		
+		<div id="movie" class="pageBody">
+			<div class="basics media">
+				<h1>Gunde Jaari Gallanthayyinde</h1>
+				<div class="poster img">
+					
+ 
+ 
+ 
+    
+    
+        
+	    
+    	
+	    
+        
+    
+<img src="http://images.rottentomatoescdn.com/images/redesign/poster_default.gif" width="120" height="180" alt="" title=""  />
+				</div>
+				<div class="bd">
+					<div class="rtscores">					
+						
+							
+							
+								
+							
+						
+					</div>
+			
+					<div class="summary">
+						<div class="actors">
+<a href="/mobile/celebrity/nithin/" class="" >Nithin</a>, 
+<a href="/mobile/celebrity/nithya_menon/" class="" >Nithya Menon</a></div>
+						<div class="release">In theaters&nbsp;Apr 19, 2013</div>
+						<div class="meta">Unrated, 2 hr. 35 min.</div>
+						
+						
+						
+						
+						
+						
+						
+			
+						
+						
+						
+					</div>
+				</div>
+			</div>
+	
+			<div class="detail clearfix">
+				
+				
+				<div id="showtimes" class="detailSection">
+					<h2>Showtimes</h2>
+					<form method="get" class="info" action="/mobile/movies-showtimes/gunde_jaari_gallanthayyinde">
+						Get Showtimes: <input id="postalCodeInput" class="text" type="text" name="postal" value="" />
+						
+<select name="date" <flixster:attributes attributes="{name=date, class=dropdown}"/>>
+	
+	<option value="20130428" >Today, 4/28</option>
+	
+	
+	
+	
+	<option value="20130429" >Monday, 4/29</option>
+	
+	
+	
+	<option value="20130430" >Tuesday, 4/30</option>
+	
+	
+	
+	<option value="20130501" >Wednesday, 5/1</option>
+	
+	
+	
+	<option value="20130502" >Thursday, 5/2</option>
+	
+	
+	
+	<option value="20130503" >Friday, 5/3</option>
+	
+	
+	
+	<option value="20130504" >Saturday, 5/4</option>
+	
+</select>
+						<input class="button" type="submit" name="submit" value="Go" /> 
+					</form>				
+				</div>
+						
+				
+				<div id="movieInfo" class="detailSection">
+					<h2>Movie Info</h2>
+				
+					<div class="info">
+					<span class="label">Cast:</span> 
+<a href="/mobile/celebrity/nithin/" class="" >Nithin</a>, 
+<a href="/mobile/celebrity/nithya_menon/" class="" >Nithya Menon</a>, 
+<a href="/mobile/celebrity/jwala_gutta/" class="" >Jwala Gutta</a>
+					</div>
+				
+					<div class="info">
+					<span class="label">Director:</span> Vijay Kumar Konda
+					</div>
+				
+					<div class="info">
+					<span class="label">Rated:</span> Unrated
+					</div>
+				
+					<div class="info">
+					<span class="label">Running Time:</span> 2 hr. 35 min.
+					</div>
+					
+					<div class="info">
+					<span class="label">Genre:</span> Special Interest, Romance
+					</div>
+					
+					<div class="info">
+					<span class="label">Theater Release:</span> Apr 19, 2013
+					</div>
+			
+					
+					
+				
+					
+					
+					
+					
+					<div class="info">
+						<span class="label">Synopsis:</span> 
+						<span id="movieSynopsis">Software engineer Karthik thinks he is the smartest guy on the earth, but he turns out be the biggest fool at the end.
+						
+						</span>
+					</div>
+				</div>
+			
+				<div id="ratings" class="detailSection">
+					<h2>Critic Reviews</h2>
+					
+					
+						<p class="empty">No recent ratings.</p>
+					
+					
+					
+				</div>
+			
+			</div>
+		</div>
+		
+		
+		
+		<style>
+			div#fbLikePopup {
+				z-index: 9998;
+				position: fixed;
+				width: 320px;
+				height: 100px;
+				/*height:200px;*/
+				background: rgba(0, 0, 0, 0.8);
+				bottom: 0px;
+				left: 50%;
+				margin-left: -160px;
+			}
+			#fbLikePopup .instructions {
+				width: 150px;
+				color: white;
+				font-size: 13px;
+				background: transparent url('http://images.rottentomatoescdn.com/images/icons/tomatolike.png') no-repeat 10px 0px;
+				height: 60px;
+				padding-left: 65px;
+				font-weight: bold;
+				margin-top:35px;
+				overflow:hidden;
+			}
+						
+			#fbLikePopup .close {
+				width: 50px;
+				height: 50px;
+				background: transparent url('http://images.rottentomatoescdn.com/images/chrome/close.png') no-repeat center;
+				-webkit-tap-highlight-color: rgba(0,0,0,0);
+				margin-left: -10px;
+				margin-top: -23px;
+				float:left;
+			}				
+			
+			#fbLikePopup .fb-like {		
+				margin:40px 0px;	
+				width: 100px; 
+				float:right;
+				overflow:hidden;
+			}
+		</style>
+	
+		<div id="fbLikePopup" style="display:none;"><div class="close"></div><div class="fb-like" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-href="http://www.rottentomatoes.com"></div><div class="instructions">Like Rotten Tomatoes on Facebook!</div></div>		
+		<script>		
+		fb_connected.done(function(){	
+			$("#fbLikePopup").show();
+			_gaq.push(['_trackEvent', 'RT Mobile', 'Like Popup', 'Shown']);
+			
+			$("#fbLikePopup .close").click(function(){
+				$("#fbLikePopup").hide();
+				_gaq.push(['_trackEvent', 'RT Mobile', 'Like Popup', 'Dismissed']);
+			});
+			
+			FB.Event.subscribe('edge.create', function(href, widget) { 
+				_gaq.push(['_trackEvent', 'RT Mobile', 'Like Popup', 'Like Clicked']); 
+			});
+			
+		});
+		</script>
+		
+	
+	
+	
+	
+	
+	
+	
+	<div id="footer">
+		<div id="grass"></div>
+		<div id="footer_text">
+			
+			
+			<a class="button" href="http://www.rottentomatoes.com/?fullsite=true">View Full Site</a>
+			<a class="button" href="">Get Mobile App</a>
+			
+			
+			<div>Copyright&nbsp;&#169;&nbsp;Flixster, Inc. All rights reserved.</div>
+			<div>
+				<a href="http://www.rottentomatoes.com/terms">Terms of Service</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="http://www.rottentomatoes.com/privacy">Privacy Policy</a>
+			</div>
+		</div>
+	</div>
+<script>
+	
+	
+	_gaq.push(['_trackPageview', '/mobile/MOB']);
+	
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+<script type="text/javascript"> 
+//<![CDATA[
+<!-- Begin comScore Tag -->
+if (typeof COMSCORE == "undefined") { var COMSCORE={}}COMSCORE.beacon=function(d){if(!d){return}var a=1.6,e=document,g=e.location,c=function(h){if(h==null){return""}return(encodeURIComponent||escape)(h)},f=[(g.protocol=="https:"?"https://sb":"http://b"),".scorecardresearch.com/b?","c1=",c(d.c1),"&c2=",c(d.c2),"&rn=",Math.random(),"&c7=",c(g.href),"&c3=",c(d.c3),"&c4=",c(d.c4),"&c5=",c(d.c5),"&c6=",c(d.c6),"&c15=",c(d.c15),"&c16=",c(d.c16),"&c8=",c(e.title),"&c9=",c(e.referrer),"&cv=",a].join("");f=f.length>1500?f.substr(0,1495)+"&ct=1":f;var b=new Image();b.onload=function(){};b.src=f;return f };
+COMSCORE.beacon({ c1:2, c2:"3000068", c3:"", c4:"http://www.rottentomatoes.com", c5:"", c6:"", c15:"" });
+<!-- End comScore Tag -->
+//]]-->
+</script>
+</body>
+	<script>
+		$(document).ready(function() { 
+			if($('#postalCodeInput').val() == "" && navigator.geolocation) {			
+				navigator.geolocation.getCurrentPosition(function(position) {
+					var coords = position.coords;
+					
+					var url = "http://www.rottentomatoes.com/api/private/v1.0/zipcode/?latitude="+ coords.latitude +"&longitude="+ coords.longitude;
+									
+					$.ajax({
+						url: url				  
+					}).done(function(response) {
+						var responseJson = JSON.parse(response);
+						if (responseJson[0] && responseJson[0].zipcode) {
+							var zipcode = responseJson[0].zipcode;													
+							$('#postalCodeInput').val(zipcode);						
+						}
+					});
+					
+				});
+			};
+		});
+	</script>
