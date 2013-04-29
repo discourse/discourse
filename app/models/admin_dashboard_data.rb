@@ -1,7 +1,6 @@
 require_dependency 'mem_info'
 
 class AdminDashboardData
-
   REPORTS = [
     'visits',
     'signups',
@@ -20,6 +19,16 @@ class AdminDashboardData
     'notify_user_private_messages'
   ]
 
+  class << self
+    def fetch_all
+      new
+    end
+
+    def fetch_problems
+      new.problems
+    end
+  end
+
   def problems
     [ rails_env_check,
       host_names_check,
@@ -35,13 +44,6 @@ class AdminDashboardData
       title_check ].compact
   end
 
-  def self.fetch_all
-    AdminDashboardData.new
-  end
-
-  def self.fetch_problems
-    AdminDashboardData.new.problems
-  end
 
   def as_json
     @json ||= {
@@ -50,12 +52,12 @@ class AdminDashboardData
       admins: User.admins.count,
       moderators: User.moderators.count
     }.merge(
-      SiteSetting.version_checks? ? {version_check: DiscourseUpdates.check_version} : {}
+      SiteSetting.version_checks? ? { version_check: DiscourseUpdates.check_version } : {}
     )
   end
 
   def rails_env_check
-    I18n.t("dashboard.rails_env_warning", env: Rails.env) unless Rails.env == 'production'
+    I18n.t("dashboard.rails_env_warning", env: Rails.env) unless Rails.env.production?
   end
 
   def host_names_check
@@ -68,7 +70,7 @@ class AdminDashboardData
 
   def sidekiq_check
     last_job_performed_at = Jobs.last_job_performed_at
-    I18n.t('dashboard.sidekiq_warning') if Jobs.queued > 0 and (last_job_performed_at.nil? or last_job_performed_at < 2.minutes.ago)
+    I18n.t('dashboard.sidekiq_warning') if Jobs.queued > 0 && (last_job_performed_at.nil? || last_job_performed_at < 2.minutes.ago)
   end
 
   def clockwork_check
@@ -81,19 +83,19 @@ class AdminDashboardData
   end
 
   def ram_check
-    I18n.t('dashboard.memory_warning') if MemInfo.new.mem_total and MemInfo.new.mem_total < 1_000_000
+    I18n.t('dashboard.memory_warning') if MemInfo.new.mem_total && MemInfo.new.mem_total < 1_000_000
   end
 
   def facebook_config_check
-    I18n.t('dashboard.facebook_config_warning') if SiteSetting.enable_facebook_logins and (!SiteSetting.facebook_app_id.present? or !SiteSetting.facebook_app_secret.present?)
+    I18n.t('dashboard.facebook_config_warning') if SiteSetting.enable_facebook_logins && (SiteSetting.facebook_app_id.blank? || SiteSetting.facebook_app_secret.blank?)
   end
 
   def twitter_config_check
-    I18n.t('dashboard.twitter_config_warning') if SiteSetting.enable_twitter_logins and (!SiteSetting.twitter_consumer_key.present? or !SiteSetting.twitter_consumer_secret.present?)
+    I18n.t('dashboard.twitter_config_warning') if SiteSetting.enable_twitter_logins && (SiteSetting.twitter_consumer_key.blank? || SiteSetting.twitter_consumer_secret.blank?)
   end
 
   def github_config_check
-    I18n.t('dashboard.github_config_warning') if SiteSetting.enable_github_logins and (!SiteSetting.github_client_id.present? or !SiteSetting.github_client_secret.present?)
+    I18n.t('dashboard.github_config_warning') if SiteSetting.enable_github_logins && (SiteSetting.github_client_id.blank? || SiteSetting.github_client_secret.blank?)
   end
 
   def failing_emails_check
@@ -110,8 +112,8 @@ class AdminDashboardData
   end
 
   def contact_email_check
-    return I18n.t('dashboard.contact_email_missing') if !SiteSetting.contact_email.present?
-    return I18n.t('dashboard.contact_email_invalid') if !(SiteSetting.contact_email =~ User::EMAIL)
+    return I18n.t('dashboard.contact_email_missing') if SiteSetting.contact_email.blank?
+    return I18n.t('dashboard.contact_email_invalid') unless SiteSetting.contact_email =~ User::EMAIL
   end
 
   def title_check
