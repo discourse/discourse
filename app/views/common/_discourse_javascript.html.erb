@@ -3,7 +3,8 @@
 
     // TODO: automate this to grab from the manifest, Rails voodoo should be able to get it
     var map = {
-      'defer/html-sanitizer-bundle': <%= asset_path('defer/html-sanitizer-bundle.js').inspect.html_safe %>
+      'defer/html-sanitizer-bundle': <%= asset_path('defer/html-sanitizer-bundle.js').inspect.html_safe %>,
+      'defer/google_diff_match_patch': <%= asset_path('defer/google_diff_match_patch.js').inspect.html_safe %>
     };
 
     var assetPath = function(asset){

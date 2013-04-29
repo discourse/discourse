@@ -1,3 +1,6 @@
+/*jshint newcap:false*/
+/*global diff_match_patch:true assetPath:true*/
+
 /**
   This view handles rendering of the history of a post
 
@@ -10,6 +13,16 @@ Discourse.HistoryView = Discourse.View.extend({
   templateName: 'history',
   title: Em.String.i18n('history'),
   modalClass: 'history-modal',
+  diffLibraryLoaded: false,
+  diff: null,
+
+  init: function(){
+    this._super();
+    var historyView = this;
+    $LAB.script(assetPath('defer/google_diff_match_patch')).wait(function(){
+      historyView.set('diffLibraryLoaded', true);
+    });
+  },
 
   loadSide: function(side) {
     if (this.get("version" + side)) {
@@ -34,10 +47,23 @@ Discourse.HistoryView = Discourse.View.extend({
     this.loadSide("Right");
   }.observes('versionRight'),
 
+  loadedPosts: function() {
+    if (this.get('diffLibraryLoaded') && this.get('postLeft') && this.get('postRight')) {
+      var dmp = new diff_match_patch(),
+          before = this.get("postLeft.cooked"),
+          after = this.get("postRight.cooked"),
+          diff = dmp.diff_main(before, after);
+      dmp.diff_cleanupSemantic(diff);
+      this.set('diff', dmp.diff_prettyHtml(diff));
+    }
+  }.observes('diffLibraryLoaded', 'postLeft', 'postRight'),
+
   didInsertElement: function() {
-    this.set('loading', true);
-    this.set('postLeft', null);
-    this.set('postRight', null);
+    this.setProperties({
+      loading: true,
+      postLeft: null,
+      postRight: null
+    });
 
     var historyView = this;
     this.get('originalPost').loadVersions().then(function(result) {
@@ -46,12 +72,12 @@ Discourse.HistoryView = Discourse.View.extend({
           Em.String.i18n("changed_by", { author: item.display_username });
       });
 
-      historyView.set('loading', false);
-      historyView.set('versionLeft', result.first());
-      historyView.set('versionRight', result.last());
-      historyView.set('versions', result);
+      historyView.setProperties({
+        loading: false,
+        versionLeft: result.first(),
+        versionRight: result.last(),
+        versions: result
+      });
     });
   }
 });
-
-
