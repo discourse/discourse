@@ -30,6 +30,7 @@ en:
     you: "You"
     or: "or"
     now: "just now"
+    read_more: 'read more'
 
     suggested_topics:
       title: "Suggested Topics"

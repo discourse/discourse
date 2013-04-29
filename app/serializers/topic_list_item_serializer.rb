@@ -11,7 +11,8 @@ class TopicListItemSerializer < ListableTopicSerializer
              :starred,
              :has_best_of,
              :archetype,
-             :rank_details
+             :rank_details,
+             :excerpt
 
   has_one :category
   has_many :posters, serializer: TopicPosterSerializer, embed: :objects
@@ -54,5 +55,12 @@ class TopicListItemSerializer < ListableTopicSerializer
     PinnedCheck.new(object, object.user_data).pinned?
   end
 
+  def include_excerpt?
+    pinned
+  end
+
+  def excerpt
+    object.posts.first.try(:excerpt,200) || nil
+  end
 
 end

@@ -368,7 +368,12 @@ Discourse.Topic = Discourse.Model.extend({
     // If the post directly below's reply_to_post_number is our post number, it's
     // considered directly below.
     return (postBelow ? postBelow.get('reply_to_post_number') : void 0) === post.get('post_number');
-  }
+  },
+
+  excerptTruncated: function() {
+    var e = this.get('excerpt');
+    return( e && e.substr(e.length - 8,8) == '&hellip;' );
+  }.property('excerpt')
 });
 
 Discourse.Topic.reopenClass({
