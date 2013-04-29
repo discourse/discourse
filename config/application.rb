@@ -29,10 +29,12 @@ module Discourse
 
     config.assets.paths += %W(#{config.root}/config/locales)
 
-    config.assets.precompile += [
-      'admin.js', 'admin.css', 'shiny/shiny.css', 'preload_store.js',
-      'jquery.js', 'defer/html-sanitizer-bundle.js'
-    ]
+    config.assets.precompile += ['admin.js', 'admin.css', 'shiny/shiny.css', 'preload_store.js', 'jquery.js']
+
+    # Precompile all defer
+    Dir.glob("app/assets/javascripts/defer/*.js").each do |file|
+      config.assets.precompile << file
+    end
 
     # Precompile all available locales
     Dir.glob("app/assets/javascripts/locales/*.js.erb").each do |file|
