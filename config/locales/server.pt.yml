@@ -280,7 +280,7 @@ pt:
     flags_required_to_hide_post: "Os post vão ser escondidos automaticamente quando o númereo de sinalizações atingir este número (0 para nunca)"
     cooldown_minutes_after_hiding_posts: "How many minutes must a user wait till they can edit their post after it is hidden due to flagging"
 
-    traditional_markdown_linebreaks: "Use traditional linebreaks in markdown, wrapping is implicit unless postfixed with 2 spaces"
+    traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak"
     post_undo_action_window_mins: "The window in which someone can reverse an action on a post (such as liking)"
     must_approve_users: "The owners of the forum must approve users before they gain access."
     ga_tracking_code: "Google analytics tracking code, see: http://google.com/analytics"
