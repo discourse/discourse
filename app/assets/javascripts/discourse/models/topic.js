@@ -372,7 +372,7 @@ Discourse.Topic = Discourse.Model.extend({
 
   excerptTruncated: function() {
     var e = this.get('excerpt');
-    return( e && e.substr(e.length - 8,8) == '&hellip;' );
+    return( e && e.substr(e.length - 8,8) === '&hellip;' );
   }.property('excerpt')
 });
 
