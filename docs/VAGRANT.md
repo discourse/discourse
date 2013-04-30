@@ -27,9 +27,13 @@ Vagrant will prompt you for your admin password. This is so it can mount your lo
 
 (The first time you do this, it will take a while as it downloads the VM image and installs it. Go grab a coffee.)
 
-If you are having **trouble** downloading the VM:
-- Download this file: http://www.discourse.org/vms/discourse-0.8.4.box using your favorite web browser/download tool.
+If you would like to download a smaller VM (574MB instead of 935MB), or if you are having **trouble** downloading the VM:
+- Download this file: http://www.discourse.org/vms/discourse-0.8.4.box.7z using your favorite web browser/download tool.
+- If you don't have 7z available, you can still get the larger image from http://www.discourse.org/vms/discourse-0.8.4.box
+- Extract it using 7z: `7z e discourse-0.8.4.box.7z`
 - Add it to vagrant: `vagrant box add discourse-0.8.4 /path/to/the/downloaded/discourse-0.8.4.box virtualbox`.
+
+**Note to Linux users**: Your Discourse directory cannot be on an ecryptfs mount or you will receive an error: `exportfs: /home/your/path/to/discourse does not support NFS export`
 
 **Note to OSX/Linux users**: Vagrant will mount your local files via an NFS share. Therefore, make sure that NFS is installed or else you'll receive the error message:
 
@@ -143,7 +147,7 @@ Mailcatcher is used to avoid the whole issue of actually sending emails: https:/
 To start mailcatcher, run the following command in the vagrant image:
 
 ```
-mailcatcher --http-ip 0.0.0.0
+gem install mailcatcher && mailcatcher --http-ip 0.0.0.0
 ```
 
 Then in a browser, go to [http://localhost:4080](http://localhost:4080)
@@ -152,7 +156,7 @@ Sent emails will be received by mailcatcher and shown in its web ui.
 
 ### Shutting down the VM
 
-When you're done working on Discourse, you can shut down Vagrant like so:
+When you're done working on Discourse, you can shut down Vagrant with:
 
 ```
 vagrant halt
