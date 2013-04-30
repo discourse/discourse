@@ -352,17 +352,12 @@ describe Post do
         post.reload
       end
 
-      it 'does not update cached_version' do
+      it 'causes no update' do
         post.cached_version.should == 1
-      end
-
-      it 'does not create a new version' do
         post.all_versions.size.should == 1
-      end
-
-      it "doesn't change the last_version_at" do
         post.last_version_at.should == first_version_at
       end
+
     end
 
     describe 'revision much later' do

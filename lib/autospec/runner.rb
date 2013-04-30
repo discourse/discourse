@@ -94,9 +94,9 @@ class Autospec::Runner
     begin
       require 'rb-inotify'
       n = INotify::Notifier.new
-      FileUtils.touch('tmp/test_polling')
+      FileUtils.touch('./tmp/test_polling')
 
-      n.watch("./tmp/test_polling"){works = true }
+      n.watch("./tmp", :delete){ works = true }
       quit = false
       Thread.new do
         while !works && !quit
@@ -106,7 +106,7 @@ class Autospec::Runner
         end
       end
       sleep 0.01
-      File.unlink('tmp/test_polling')
+      File.unlink('./tmp/test_polling')
 
       wait_for(100) { works }
       n.stop
