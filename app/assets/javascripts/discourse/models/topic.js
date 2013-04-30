@@ -370,6 +370,10 @@ Discourse.Topic = Discourse.Model.extend({
     return (postBelow ? postBelow.get('reply_to_post_number') : void 0) === post.get('post_number');
   },
 
+  hasExcerpt: function() {
+    return this.get('excerpt') && this.get('excerpt').length > 0;
+  }.property('excerpt'),
+
   excerptTruncated: function() {
     var e = this.get('excerpt');
     return( e && e.substr(e.length - 8,8) === '&hellip;' );

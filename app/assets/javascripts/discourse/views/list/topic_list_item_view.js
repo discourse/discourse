@@ -9,7 +9,7 @@
 Discourse.TopicListItemView = Discourse.View.extend({
   tagName: 'tr',
   templateName: 'list/topic_list_item',
-  classNameBindings: ['content.archived', ':topic-list-item'],
+  classNameBindings: ['content.archived', ':topic-list-item', 'content.hasExcerpt:has-excerpt'],
   attributeBindings: ['data-topic-id'],
 
   'data-topic-id': (function() {

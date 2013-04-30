@@ -50,6 +50,10 @@
     &.archived a {
       opacity: 0.6;
     }
+    &.has-excerpt .star {
+      vertical-align: top;
+      margin-top: 2px;
+    }
   }
   th,
   td {
