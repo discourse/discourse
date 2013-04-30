@@ -28,9 +28,9 @@ Discourse.ListTopicsController = Discourse.ObjectController.extend({
     var filterMode = this.get('controllers.list.filterMode');
     if (!filterMode) return;
 
-    var lsitTopicsController = this;
+    var listTopicsController = this;
     Discourse.MessageBus.subscribe("/" + filterMode, function(data) {
-      return lsitTopicsController.get('content').insert(data);
+      return listTopicsController.get('content').insert(data);
     });
     this.set('previousChannel', filterMode);
 
