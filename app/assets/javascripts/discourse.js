@@ -129,7 +129,7 @@ Discourse = Ember.Application.createWithMixins({
     });
 
     $('#main').on('click.discourse', 'a', function(e) {
-      if (e.isDefaultPrevented() || e.metaKey || e.ctrlKey) return;
+      if (e.isDefaultPrevented() || e.shiftKey || e.metaKey || e.ctrlKey) return;
 
       var $currentTarget = $(e.currentTarget);
       var href = $currentTarget.attr('href');

@@ -152,25 +152,30 @@ describe("Discourse.ClickTrack", function() {
       spyOn(window, 'open');
     });
 
-    it("opens in a new tab when pressing alt", function() {
-      clickEvent.metaKey = true;
+    var expectItOpensInANewTab = function() {
       expect(track(clickEvent)).toBe(false);
       expect(Discourse.ajax).toHaveBeenCalled();
       expect(window.open).toHaveBeenCalledWith('http://www.google.com', '_blank');
+    };
+
+    it("opens in a new tab when pressing shift", function() {
+      clickEvent.shiftKey = true;
+      expectItOpensInANewTab();
+    });
+
+    it("opens in a new tab when pressing meta", function() {
+      clickEvent.metaKey = true;
+      expectItOpensInANewTab();
     });
 
     it("opens in a new tab when pressing ctrl", function() {
       clickEvent.ctrlKey = true;
-      expect(track(clickEvent)).toBe(false);
-      expect(Discourse.ajax).toHaveBeenCalled();
-      expect(window.open).toHaveBeenCalledWith('http://www.google.com', '_blank');
+      expectItOpensInANewTab();
     });
 
     it("opens in a new tab when middle clicking", function() {
       clickEvent.which = 2;
-      expect(track(clickEvent)).toBe(false);
-      expect(Discourse.ajax).toHaveBeenCalled();
-      expect(window.open).toHaveBeenCalledWith('http://www.google.com', '_blank');
+      expectItOpensInANewTab();
     });
 
   });
