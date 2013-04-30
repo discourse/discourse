@@ -108,7 +108,7 @@ Discourse.SiteCustomization.reopenClass({
     }).then(function (data) {
       if (data) {
         data.site_customizations.each(function(c) {
-          customizations.pushObject(Discourse.SiteCustomization.create(c));
+          customizations.pushObject(Discourse.SiteCustomization.create(c.site_customizations));
         });
       }
       customizations.set('loading', false);
