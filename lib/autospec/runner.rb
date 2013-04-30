@@ -56,7 +56,7 @@ class Autospec::Runner
     Signal.trap("SIGINT") {stop_spork; exit }
 
     puts "Forced polling (slower) - inotify does not work on network filesystems, use local filesystem to avoid" if force_polling
-
+    
     Thread.start do
       Listen.to('.', force_polling: force_polling, filter: /^app|^spec|^lib/, relative_paths: true) do |modified, added, removed|
         process_change([modified, added].flatten.compact)
@@ -68,7 +68,8 @@ class Autospec::Runner
       @signal.signal
     end
 
-    Process.wait
+    Process.wait(@spork_pid)
+    puts "Spork has been terminated, exiting"
 
   rescue => e
     puts e
@@ -84,7 +85,7 @@ class Autospec::Runner
         sleep(0.001)
       end
     end
-    t.join
+    t.join rescue nil
   end
 
   def force_polling?
@@ -293,7 +294,7 @@ class Autospec::Runner
       sleep 1
     end
 
-    @spork_pid = Process.spawn("RAILS_ENV=test bundle exec spork")
+    @spork_pid = Process.spawn({'RAILS_ENV' => 'test'}, "bundle exec spork")
     write_pid_file(spork_pid_file, @spork_pid)
 
     running = false

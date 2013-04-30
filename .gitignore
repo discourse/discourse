@@ -20,6 +20,8 @@ dump.rdb
 /cache
 /coverage/*
 
+/public/assets/*
+
 config/database.yml
 config/redis.yml
 config/discourse.pill

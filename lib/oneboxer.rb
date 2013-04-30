@@ -10,13 +10,16 @@ Dir["#{Rails.root}/lib/oneboxer/*_onebox.rb"].each {|f|
 module Oneboxer
   extend Oneboxer::Base
 
-  Result = Struct.new(:doc, :changed) do
-    def to_html
-      doc.to_html
-    end
+  # keep reloaders happy
+  unless defined? Oneboxer::Result
+    Result = Struct.new(:doc, :changed) do
+      def to_html
+        doc.to_html
+      end
 
-    def changed?
-      changed
+      def changed?
+        changed
+      end
     end
   end
 

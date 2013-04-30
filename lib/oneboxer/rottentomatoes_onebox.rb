@@ -3,10 +3,13 @@ require_dependency 'oneboxer/handlebars_onebox'
 module Oneboxer
   class RottentomatoesOnebox < HandlebarsOnebox
 
-    SYNOPSIS_MAX_TEXT = 370
-    ROTTEN_IMG = 'http://images.rottentomatoescdn.com/images/icons/rt.rotten.med.png'
-    FRESH_IMG = 'http://images.rottentomatoescdn.com/images/icons/rt.fresh.med.png'
-    POPCORN_IMG = 'http://images.rottentomatoescdn.com/images/icons/popcorn_27x31.png' 
+    # keep reloaders happy
+    unless defined? SYNOPSIS_MAX_TEXT
+      SYNOPSIS_MAX_TEXT = 370
+      ROTTEN_IMG = 'http://images.rottentomatoescdn.com/images/icons/rt.rotten.med.png'
+      FRESH_IMG = 'http://images.rottentomatoescdn.com/images/icons/rt.fresh.med.png'
+      POPCORN_IMG = 'http://images.rottentomatoescdn.com/images/icons/popcorn_27x31.png' 
+    end
 
     matcher /^http:\/\/(?:www\.)?rottentomatoes\.com(\/mobile)?\/m\/.*$/
     favicon 'rottentomatoes.png'
