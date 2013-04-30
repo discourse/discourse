@@ -16,7 +16,7 @@ module Oneboxer
        Entry.new(/^https?:\/\/(?:www\.)?ebay\.(com|ca|co\.uk)\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?nytimes\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?pinterest\.com\/.+/),
-       Entry.new(/^https?:\/\/(?:www\.)?imdb\.com\/.+/),
+       # Entry.new(/^https?:\/\/(?:www\.)?imdb\.com\/.+/),  # For legal reasons, we cannot include IMDB onebox support
        Entry.new(/^https?:\/\/(?:www\.)?bbc\.co\.uk\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?ask\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?huffingtonpost\.com\/.+/),
