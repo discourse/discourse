@@ -68,7 +68,7 @@ Discourse.ClickTrack = {
     }
 
     // if they want to open in a new tab, do an AJAX request
-    if (e.metaKey || e.ctrlKey || e.which === 2) {
+    if (e.shiftKey || e.metaKey || e.ctrlKey || e.which === 2) {
       Discourse.ajax(Discourse.getURL("/clicks/track"), {
         data: {
           url: href,
