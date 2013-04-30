@@ -45,7 +45,10 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
 
     // don't display the "quote reply" button if you select text spanning two posts
     // note: the ".contents" is here to prevent selection of the topic summary
-    if ($ancestor.closest('.topic-body > .contents').length === 0) return;
+    if ($ancestor.closest('.topic-body > .contents').length === 0) {
+      this.set('buffer', '');
+      return;
+    }
 
     var selectedText = Discourse.Utilities.selectedText();
     if (this.get('buffer') === selectedText) return;
