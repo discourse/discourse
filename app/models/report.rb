@@ -118,7 +118,7 @@ class Report
     PostAction.count_per_day_for_type(30, post_action_type).each do |date, count|
       report.data << {x: date, y: count}
     end
-    query = PostAction.where(post_action_type_id: post_action_type)
+    query = PostAction.unscoped.where(post_action_type_id: post_action_type)
     report.total = query.count
     report.prev30Days = query.where('created_at > ? and created_at < ?', 60.days.ago, 30.days.ago).count
   end

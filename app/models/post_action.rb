@@ -51,7 +51,7 @@ class PostAction < ActiveRecord::Base
   end
 
   def self.count_per_day_for_type(sinceDaysAgo = 30, post_action_type)
-    where(post_action_type_id: post_action_type).where('created_at > ?', sinceDaysAgo.days.ago).group('date(created_at)').order('date(created_at)').count
+    unscoped.where(post_action_type_id: post_action_type).where('created_at > ?', sinceDaysAgo.days.ago).group('date(created_at)').order('date(created_at)').count
   end
 
   def self.clear_flags!(post, moderator_id, action_type_id = nil)
@@ -62,7 +62,7 @@ class PostAction < ActiveRecord::Base
       moderator_id == -1 ? PostActionType.auto_action_flag_types.values : PostActionType.flag_types.values
     end
 
-    PostAction.update_all({ deleted_at: Time.now, deleted_by: moderator_id }, { post_id: post.id, post_action_type_id: actions })
+    PostAction.update_all({ deleted_at: Time.zone.now, deleted_by: moderator_id }, { post_id: post.id, post_action_type_id: actions })
 
     f = actions.map{|t| ["#{PostActionType.types[t]}_count", 0]}
 
@@ -114,7 +114,7 @@ class PostAction < ActiveRecord::Base
   def self.remove_act(user, post, post_action_type_id)
     if action = where(post_id: post.id, user_id: user.id, post_action_type_id: post_action_type_id).first
       action.destroy
-      action.deleted_at = Time.now
+      action.deleted_at = Time.zone.now
       action.run_callbacks(:save)
     end
   end
