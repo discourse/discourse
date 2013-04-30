@@ -198,7 +198,7 @@ id:
       button: 'Switch to "Best Of" view'
 
     private_message_info:
-      title: "Private Conversation"
+      title: "Private Message"
       invite: "Invite Others..."
 
     email: 'Email'
@@ -290,7 +290,7 @@ id:
       edited: "<i title='edited' class='icon icon-pencil'></i> {{username}} {{link}}"
       liked: "<i title='liked' class='icon icon-heart'></i> {{username}} {{link}}"
       private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} {{link}}"
-      invited_to_private_message: "{{username}} invited you to a private conversation: {{link}}"
+      invited_to_private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} {{link}}"
       invitee_accepted: "<i title='accepted your invitation' class='icon icon-signin'></i> {{username}} accepted your invitation"
       moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} moved post to {{link}}"
 
@@ -340,7 +340,7 @@ id:
       create_in: 'Create {{categoryName}} Topic'
       create: 'Create Topic'
       create_long: 'Create a new Topic'
-      private_message: 'Start a private conversation'
+      private_message: 'Start a private message'
       list: 'Topics'
       new: 'new topic'
       title: 'Topic'
@@ -432,11 +432,11 @@ id:
       inviting: "Inviting..."
 
       invite_private:
-        title: 'Invite to Private Conversation'
+        title: 'Invite to Private Message'
         email_or_username: "Invitee's Email or Username"
         email_or_username_placeholder: "email address or username"
         action: "Invite"
-        success: "Thanks! We've invited that user to participate in this private conversation."
+        success: "Thanks! We've invited that user to participate in this private message."
         error: "Sorry there was an error inviting that user."
 
       invite_reply:

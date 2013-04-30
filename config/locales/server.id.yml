@@ -331,7 +331,7 @@ id:
     best_of_posts_required: "Minimum posts in a topic before 'best of' mode is enabled"
     best_of_likes_required: "Minimum likes in a topic before the 'best of' mode will be enabled"
     best_of_percent_filter: "When a user clicks best of, show the top % of posts"
-    enable_private_messages: "Allow basic (1) trust level users to create private messages and reply to private conversations"
+    enable_private_messages: "Allow basic (1) trust level users to create private messages and reply to private messages"
 
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_interval: "Interval before a new long poll is issued in milliseconds "
@@ -698,9 +698,9 @@ id:
       description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
 
     user_invited_to_private_message:
-      subject_template: "[%{site_name}] %{username} invited you to a private conversation '%{topic_title}'"
+      subject_template: "[%{site_name}] %{username} invited you to a private message '%{topic_title}'"
       text_body_template: |
-        %{username} invited you to a private conversation '%{topic_title}' on %{site_name}:
+        %{username} invited you to a private message '%{topic_title}' on %{site_name}:
 
         Please visit this link to view the topic: %{base_url}%{url}
 

@@ -35,7 +35,7 @@ Discourse.InvitePrivateModalView = Discourse.ModalBodyView.extend({
     var _this = this;
     this.set('saving', true);
     this.set('error', false);
-    // Invite the user to the private conversation
+    // Invite the user to the private message
     this.get('topic').inviteUser(this.get('emailOrUsername')).then(function() {
       // Success
       _this.set('saving', false);

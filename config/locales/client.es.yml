@@ -478,11 +478,11 @@ es:
       inviting: "Inviting..."
 
       invite_private:
-        title: 'Invite to Private Conversation'
+        title: 'Invite to Private Message'
         email_or_username: "Invitee's Email or Username"
         email_or_username_placeholder: "email address or username"
         action: "Invite"
-        success: "Thanks! We've invited that user to participate in this private conversation."
+        success: "Thanks! We've invited that user to participate in this private message."
         error: "Sorry there was an error inviting that user."
 
       invite_reply:
