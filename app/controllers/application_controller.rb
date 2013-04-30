@@ -38,7 +38,6 @@ class ApplicationController < ActionController::Base
 
   # Some exceptions
   class RenderEmpty < Exception; end
-  class NotLoggedIn < Exception; end
 
   # Render nothing unless we are an xhr request
   rescue_from RenderEmpty do
@@ -246,10 +245,7 @@ class ApplicationController < ActionController::Base
     def check_xhr
       unless (controller_name == 'forums' || controller_name == 'user_open_ids')
         # bypass xhr check on PUT / POST / DELETE provided api key is there, otherwise calling api is annoying
-        if !request.get? && request["api_key"]
-          return
-        end
-
+        return if !request.get? && request["api_key"] && SiteSetting.api_key_valid?(request["api_key"])
         raise RenderEmpty.new unless ((request.format && request.format.json?) || request.xhr?)
       end
     end
