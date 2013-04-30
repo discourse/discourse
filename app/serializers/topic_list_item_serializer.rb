@@ -60,7 +60,7 @@ class TopicListItemSerializer < ListableTopicSerializer
   end
 
   def excerpt
-    object.posts.first.try(:excerpt,200) || nil
+    object.posts.first.try(:excerpt,220, strip_links: true) || nil
   end
 
 end

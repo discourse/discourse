@@ -104,6 +104,11 @@ test
   end
 
   describe "Excerpt" do
+
+    it "should have an option to strip links" do
+      PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>",100, strip_links: true).should == "cnn"
+    end
+
     it "should preserve links" do
       PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>",100).should == "<a href='http://cnn.com'>cnn</a>"
     end

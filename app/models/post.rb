@@ -221,14 +221,14 @@ class Post < ActiveRecord::Base
                 user_id: user_id).first.try(:user)
   end
 
-  def self.excerpt(cooked, maxlength = nil)
+  def self.excerpt(cooked, maxlength = nil, options = {})
     maxlength ||= SiteSetting.post_excerpt_maxlength
-    PrettyText.excerpt(cooked, maxlength)
+    PrettyText.excerpt(cooked, maxlength, options)
   end
 
   # Strip out most of the markup
-  def excerpt(maxlength = nil)
-    Post.excerpt(cooked, maxlength)
+  def excerpt(maxlength = nil, options = {})
+    Post.excerpt(cooked, maxlength, options)
   end
 
   # What we use to cook posts

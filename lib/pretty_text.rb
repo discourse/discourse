@@ -239,14 +239,16 @@ module PrettyText
 
     attr_reader :excerpt
 
-    def initialize(length)
+    def initialize(length,options)
       @length = length
       @excerpt = ""
       @current_length = 0
+      @strip_links = options[:strip_links] == true
     end
 
-    def self.get_excerpt(html, length)
-      me = self.new(length)
+    def self.get_excerpt(html, length, options)
+
+      me = self.new(length,options)
       parser = Nokogiri::HTML::SAX::Parser.new(me)
       begin
         copy = "<div>"
@@ -271,11 +273,13 @@ module PrettyText
             characters("[image]")
           end
         when "a"
-          c = "<a "
-          c << attributes.map{|k,v| "#{k}='#{v}'"}.join(' ')
-          c << ">"
-          characters(c, false, false, false)
-          @in_a = true
+          unless @strip_links
+            c = "<a "
+            c << attributes.map{|k,v| "#{k}='#{v}'"}.join(' ')
+            c << ">"
+            characters(c, false, false, false)
+            @in_a = true
+          end
         when "aside"
           @in_quote = true
       end
@@ -284,8 +288,10 @@ module PrettyText
     def end_element(name)
       case name
       when "a"
-        characters("</a>",false, false, false)
-        @in_a = false
+        unless @strip_links
+          characters("</a>",false, false, false)
+          @in_a = false
+        end
       when "p", "br"
         characters(" ")
       when "aside"
@@ -307,8 +313,8 @@ module PrettyText
     end
   end
 
-  def self.excerpt(html, length)
-    ExcerptParser.get_excerpt(html, length)
+  def self.excerpt(html, max_length, options={})
+    ExcerptParser.get_excerpt(html, max_length, options)
   end
 
 end

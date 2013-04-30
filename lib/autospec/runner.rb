@@ -56,7 +56,7 @@ class Autospec::Runner
     Signal.trap("SIGINT") {stop_spork; exit }
 
     puts "Forced polling (slower) - inotify does not work on network filesystems, use local filesystem to avoid" if force_polling
-    
+
     Thread.start do
       Listen.to('.', force_polling: force_polling, filter: /^app|^spec|^lib/, relative_paths: true) do |modified, added, removed|
         process_change([modified, added].flatten.compact)
