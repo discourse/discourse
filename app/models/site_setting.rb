@@ -93,7 +93,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:rate_limit_create_post, 5)
   setting(:max_topics_per_day, 20)
   setting(:max_private_messages_per_day, 20)
-  setting(:max_likes_per_day, 30)
+  setting(:max_likes_per_day, 50)
   setting(:max_bookmarks_per_day, 20)
   setting(:max_flags_per_day, 20)
   setting(:max_edits_per_day, 30)
