@@ -49,7 +49,8 @@ Discourse.QuoteButtonView = Discourse.View.extend({
       view.set('isMouseDown', true);
       if ($(e.target).hasClass('quote-button') || $(e.target).hasClass('create')) return;
       // deselects only when the user left-click
-      if (e.which === 1) controller.deselectText();
+      // this also allow anyone to `extend` their selection using a shift+click
+      if (e.which === 1 && !e.shiftKey) controller.deselectText();
     })
     .on('mouseup.quote-button', function(e) {
       view.selectText(e.target, controller);
