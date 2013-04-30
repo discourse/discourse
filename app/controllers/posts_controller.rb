@@ -7,7 +7,16 @@ class PostsController < ApplicationController
   before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link]
 
   skip_before_filter :store_incoming_links, only: [:short_link]
-  skip_before_filter :check_xhr, only: [:short_link]
+  skip_before_filter :check_xhr, only: [:markdown,:short_link]
+
+  def markdown
+    post = Post.where(topic_id: params[:topic_id].to_i, post_number: (params[:post_number] || 1).to_i).first
+    if post && guardian.can_see?(post)
+      render text: post.raw, content_type: 'text/plain'
+    else
+      raise Discourse::NotFound
+    end
+  end
 
   def short_link
     post = Post.find(params[:post_id].to_i)

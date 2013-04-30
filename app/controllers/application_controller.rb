@@ -67,6 +67,8 @@ class ApplicationController < ActionController::Base
   rescue_from Discourse::NotFound do
     if !request.format || request.format.html?
       # for now do a simple remap, we may look at cleaner ways of doing the render
+      #
+      # Sam: I am confused about this, we need a comment that explains why this is conditional
       raise ActiveRecord::RecordNotFound
     else
       render file: 'public/404', formats: [:html], layout: false, status: 404
