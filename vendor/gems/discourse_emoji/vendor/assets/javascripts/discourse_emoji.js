@@ -14,8 +14,9 @@
     }
 
     this.textResult = text.replace(/\:([a-z\_\+\-0-9]+)\:/g, function (m1, m2) {
+      var url = Discourse.getURL('/assets/emoji/' + m2 + '.png');
       return (emoji.indexOf(m2) !== -1) ?
-             '<img alt="' + m2 + '" title=":' + m2 + ':" src="/assets/emoji/' + m2 + '.png" ' + style + ' class="emoji"/>' :
+             '<img alt="' + m2 + '" title=":' + m2 + ':" src="' + url + '" ' + style + ' class="emoji"/>' :
              m1;
     });
   });
@@ -24,12 +25,14 @@
   if (Discourse && Discourse.ComposerView) {
     Discourse.ComposerView.on("initWmdEditor", function(event){
 
+      var baseUrl = Discourse.getURL("/");
+
       template = Handlebars.compile("<div class='autocomplete'>" +
      "<ul>" +
         "{{#each options}}" +
             "<li>" +
               "<a href='#'>" +
-              "<img src='/assets/emoji/{{this}}.png' class='emoji'> " +
+              "<img src='" + baseUrl + "assets/emoji/{{this}}.png' class='emoji'> " +
               "{{this}}</a>" +
             "</li>" +
         "{{/each}}" +
@@ -44,7 +47,7 @@
 
           term = term.toLowerCase();
 
-          if (term == "") {
+          if (term === "") {
             return Ember.Deferred.promise(function (promise) {
               promise.resolve(["smile", "smiley", "wink", "sunny", "blush"]);
             });
@@ -53,7 +56,7 @@
           var options = []
           var i;
           for (i=0; i < emoji.length; i++) {
-            if (emoji[i].indexOf(term) == 0) {
+            if (emoji[i].indexOf(term) === 0) {
               options.push(emoji[i]);
               if(options.length > 4) { break; }
             }
