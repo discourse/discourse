@@ -34,6 +34,7 @@ fr:
     you: "vous"
     or: "ou"
     now: "à l'instant"
+    read_more: "lire la suite"
 
     suggested_topics:
       title: "discussions proposées"
@@ -46,15 +47,43 @@ fr:
 
     new_topics_inserted: "{{count}} nouvelles discussions."
     show_new_topics: "Cliquez pour afficher."
-    preview: "prévisualisation"
+    preview: "prévisualiser"
     cancel: "annuler"
 
     save: "Sauvegarder les changements"
     saving: "Sauvegarde en cours..."
     saved: "Sauvegardé !"
 
-    user_action_descriptions:
-      "6": "Réponses"
+    user_action:
+      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> à démarré <a href='{{topicUrl}}'>la discussion</a>"
+      you_posted_topic: "<a href='{{userUrl}}'>Vous</a> avez démarré <a href='{{topicUrl}}'>la discussion</a>"
+      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> à répondu à <a href='{{postUrl}}'>{{post_number}}</a>"
+      you_replied_to_post: "<a href='{{userUrl}}'>Vous</a> avez répondu à <a href='{{postUrl}}'>{{post_number}}</a>"
+      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> à participé à <a href='{{topicUrl}}'>la discussion</a>"
+      you_replied_to_topic: "<a href='{{userUrl}}'>Vous</a> avez participé à <a href='{{topicUrl}}'>la discussion</a>"
+
+      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> à mentionné <a href='{{user2Url}}'>{{another_user}}</a>"
+      user_mentioned_you: "<a href='{{user2Url}}'>Vous</a> avez été mentionné par <a href='{{user1Url}}'>{{user}}</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>Vous</a> avez mentionné <a href='{{user2Url}}'>{{user}}</a>"
+
+      posted_by_user: "Rédigé par <a href='{{userUrl}}'>{{user}}</a>"
+      posted_by_you: "Rédigé par <a href='{{userUrl}}'>vous</a>"
+      sent_by_user: "Envoyé par <a href='{{userUrl}}'>{{user}}</a>"
+      sent_by_you: "Envoyé par <a href='{{userUrl}}'>vous</a>"
+
+    user_action_groups:
+      "1": "J'aime donnés"
+      "2": "J'aime reçus"
+      "3": "Signets"
+      "4": "Discussions"
+      "5": "Réponses données"
+      "6": "Réponses reçues"
+      "7": "Mentions"
+      "9": "Citations"
+      "10": "Favoris"
+      "11": "Editions"
+      "12": "Eléments envoyés"
+      "13": "Eléments reçus"
 
     user:
       profile: "profil"
@@ -70,7 +99,7 @@ fr:
       invited_by: "Invité par"
       trust_level: "Niveau de confiance"
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
-      enable_quoting: "Active la citation automatique du texte surligné"
+      enable_quoting: "Activer la citation automatique du texte surligné"
 
       change_password:
         action: "modifier"
@@ -974,4 +1003,3 @@ fr:
         show_overriden: 'Ne montrer que ce qui a été changé'
         title: 'Paramètres du site'
         reset: 'rétablir par défaut'
-

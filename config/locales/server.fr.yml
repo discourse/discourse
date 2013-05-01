@@ -359,6 +359,7 @@ fr:
     default_logo_warning: "Vous n'avez pas changé le logo de votre site. Merci de mettre à jour les <a href='/admin/site_settings'>paramètres du site</a> suivant : logo_url, logo_small_url et favicon_url."
     contact_email_missing: "Vous n'avez pas renseigné d'email de contact pour votre site. Merci de mettre à jour le <a href='/admin/site_settings'>paramètre de site</a> : contact_email."
     contact_email_invalid: "L'email de contact du site est invalide. Merci de mettre à jour le <a href='/admin/site_settings'>paramètre de site</a> : contact_email."
+    title_nag: "Le titre de votre site est toujours à sa valeur par défaut. Merci de le modifier dans les <a href='/admin/site_settings'>paramètres du site</a>."
 
   content_types:
     education_new_reply:
@@ -547,6 +548,9 @@ fr:
     topic_views_heat_medium: "Le nombre de vues à partir duquel le niveau d'intensité de la discussion est : moyen."
     topic_views_heat_high: "Le nombre de vues à partir duquel le niveau d'intensité de la discussion est : élevé."
 
+    tos_url: "Si vous disposez déjà de CGV, vous pouvez renseigner leur URL ici."
+    privacy_policy_url: "Si vous disposez déjà d'une politique de confidentialité, vous pouvez renseigner son URL ici."
+
   notification_types:
     mentioned: "%{display_username} vous a mentionné dans %{link}"
     liked: "%{display_username} a aimé votre message dans %{link}"
@@ -569,31 +573,6 @@ fr:
   most_posts: "Le plus de messages"
   most_recent_poster: "Auteur le plus récent"
   frequent_poster: "Auteur frequent"
-
-  user_action_descriptions:
-    bookmarks: "Signets"
-    topics: "Discussions"
-    likes_received: "J'aime reçus"
-    likes_given: "J'aime donnés"
-    responses: "Réponses"
-    topic_responses: "Réponses à la discussion"
-    posts: "Messages"
-    mentions: "Mentions"
-    quotes: "Citations"
-    edits: "Modifications"
-    favorites: "Favoris"
-    sent_items: "Elements envoyés"
-    inbox: "Boîte de réception"
-
-    was_liked: "a été aimé"
-    liked: "aimé"
-    bookmarked: "ajouté aux signets"
-    posted: "posté"
-    responded_to: "réponse_à"
-    mentioned: "mentionné"
-    quoted: "cité"
-    favorited: "mis en favoris"
-    edited: "modifié"
 
   move_posts:
     moderator_post:
