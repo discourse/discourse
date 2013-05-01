@@ -3,10 +3,12 @@ require 'canonical_url'
 require_dependency 'guardian'
 require_dependency 'unread'
 require_dependency 'age_words'
+require_dependency 'configurable_urls'
 
 module ApplicationHelper
   include CurrentUser
   include CanonicalURL::Helpers
+  include ConfigurableUrls
 
   def with_format(format, &block)
     old_formats = formats
@@ -60,14 +62,6 @@ module ApplicationHelper
 
   def faq_path
     return "#{Discourse::base_uri}/faq"
-  end
-
-  def tos_path
-    SiteSetting.tos_url.blank? ? "#{Discourse::base_uri}/tos" : SiteSetting.tos_url
-  end
-
-  def privacy_path
-    SiteSetting.privacy_policy_url.blank? ? "#{Discourse::base_uri}/privacy" : SiteSetting.privacy_policy_url
   end
 
   def login_path

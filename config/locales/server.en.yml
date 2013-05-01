@@ -236,7 +236,7 @@ en:
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: 'Notify moderators'
-      description: 'This post requires general moderator attention based on the <a href="/faq">FAQ</a>, <a href="/tos">TOS</a>, or for another reason not listed above.'
+      description: 'This post requires general moderator attention based on the <a href="/faq">FAQ</a>, <a href="%{tos_url}">TOS</a>, or for another reason not listed above.'
       long_form: 'notified moderators'
       email_title: 'A post in "%{title}" requires moderator attention'
       email_body: "%{link}\n\n%{message}"

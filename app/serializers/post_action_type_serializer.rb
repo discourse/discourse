@@ -1,6 +1,10 @@
+require_dependency 'configurable_urls'
+
 class PostActionTypeSerializer < ApplicationSerializer
 
   attributes :name_key, :name, :description, :long_form, :is_flag, :icon, :id, :is_custom_flag
+
+  include ConfigurableUrls
 
   def is_custom_flag
     object.id == PostActionType.types[:notify_user] ||
@@ -16,13 +20,13 @@ class PostActionTypeSerializer < ApplicationSerializer
   end
 
   def description
-    i18n('description')
+    i18n('description', {tos_url: tos_path})
   end
 
   protected
 
-    def i18n(field)
-      I18n.t("post_action_types.#{object.name_key}.#{field}")
+    def i18n(field, vars={})
+      I18n.t("post_action_types.#{object.name_key}.#{field}", vars)
     end
 
 end
