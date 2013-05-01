@@ -37,7 +37,6 @@ class Autospec::Runner
   end
 
   def run
-
     if already_running?(pid_file)
       puts "autospec appears to be running, it is possible the pid file is old"
       puts "if you are sure it is not running, delete #{pid_file}"
@@ -57,8 +56,15 @@ class Autospec::Runner
 
     puts "Forced polling (slower) - inotify does not work on network filesystems, use local filesystem to avoid" if force_polling
 
+    options = {filter: /^app|^spec|^lib/, relative_paths: true}
+
+    if force_polling
+      options[:force_polling] = force_polling
+      options[:latency] = 3
+    end
+
     Thread.start do
-      Listen.to('.', force_polling: force_polling, filter: /^app|^spec|^lib/, relative_paths: true) do |modified, added, removed|
+      Listen.to('.', options ) do |modified, added, removed|
         process_change([modified, added].flatten.compact)
       end
     end
@@ -93,10 +99,11 @@ class Autospec::Runner
 
     begin
       require 'rb-inotify'
+      require 'fileutils'
       n = INotify::Notifier.new
       FileUtils.touch('./tmp/test_polling')
 
-      n.watch("./tmp", :delete){ works = true }
+      n.watch("./tmp", :modify, :attrib){ works = true }
       quit = false
       Thread.new do
         while !works && !quit
@@ -106,9 +113,10 @@ class Autospec::Runner
         end
       end
       sleep 0.01
-      File.unlink('./tmp/test_polling')
 
+      FileUtils.touch('./tmp/test_polling')
       wait_for(100) { works }
+      File.unlink('./tmp/test_polling')
       n.stop
       quit = true
     rescue LoadError
