@@ -25,8 +25,8 @@ class Autospec::Runner
   watch(%r{^app/views/(.+)/.*\.(erb|haml)$})          { |m| "spec/requests/#{m[1]}_spec.rb" }
 
 
-  def self.run
-    self.new.run
+  def self.run(opts={})
+    self.new.run(opts)
   end
 
   def initialize
@@ -36,7 +36,7 @@ class Autospec::Runner
     start_service_queue
   end
 
-  def run
+  def run(opts = {})
     if already_running?(pid_file)
       puts "autospec appears to be running, it is possible the pid file is old"
       puts "if you are sure it is not running, delete #{pid_file}"
@@ -44,23 +44,17 @@ class Autospec::Runner
     end
     write_pid_file(pid_file, Process.pid)
 
-    # launching spork is forever going to take longer than this test
-    force_polling = true
-    Thread.new do
-      force_polling = force_polling?
-    end
-
     start_spork
     Signal.trap("HUP") {stop_spork; exit }
     Signal.trap("SIGINT") {stop_spork; exit }
 
-    puts "Forced polling (slower) - inotify does not work on network filesystems, use local filesystem to avoid" if force_polling
+    puts "Forced polling (slower) - inotify does not work on network filesystems, use local filesystem to avoid" if opts[:force_polling]
 
     options = {filter: /^app|^spec|^lib/, relative_paths: true}
 
-    if force_polling
-      options[:force_polling] = force_polling
-      options[:latency] = 3
+    if opts[:force_polling]
+      options[:force_polling] = true
+      options[:latency] = opts[:latency] || 3
     end
 
     Thread.start do
