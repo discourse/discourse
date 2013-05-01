@@ -88,8 +88,8 @@ describe IncomingLinksReport do
     it 'with some IncomingLink records, it returns correct data' do
       topic1 = Fabricate.build(:topic, id: 123); topic2 = Fabricate.build(:topic, id: 234)
       IncomingLinksReport.stubs(:link_count_per_topic).returns({topic1.id => 8, topic2.id => 3})
-      Topic.stubs(:select).returns(Topic) # bypass the select method
-      Topic.stubs(:find).returns([topic1, topic2])
+      Topic.stubs(:select).returns(Topic); Topic.stubs(:where).returns(Topic) # bypass some activerecord methods
+      Topic.stubs(:all).returns([topic1, topic2])
       top_referred_topics[:data][0].should == {topic_id: topic1.id, topic_title: topic1.title, topic_slug: topic1.slug, num_visits: 8 }
       top_referred_topics[:data][1].should == {topic_id: topic2.id, topic_title: topic2.title, topic_slug: topic2.slug, num_visits: 3 }
     end

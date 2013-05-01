@@ -39,7 +39,7 @@ class IncomingLinksReport
     num_visits.keys.each do |username|
       report.data << {username: username, num_visits: num_visits[username], num_topics: num_topics[username]}
     end
-    report.data.sort_by! {|x| x[:num_visits]}.reverse![0,10]
+    report.data = report.data.sort_by {|x| x[:num_visits]}.reverse[0,10]
   end
 
   def self.per_user
@@ -68,7 +68,7 @@ class IncomingLinksReport
     num_visits.keys.each do |domain|
       report.data << {domain: domain, num_visits: num_visits[domain], num_topics: num_topics[domain], num_users: num_users[domain]}
     end
-    report.data.sort_by! {|x| x[:num_visits]}.reverse![0,10]
+    report.data = report.data.sort_by {|x| x[:num_visits]}.reverse[0,10]
   end
 
   def self.per_domain
@@ -93,12 +93,14 @@ class IncomingLinksReport
     num_visits  = link_count_per_topic
     num_visits = num_visits.to_a.sort_by {|x| x[1]}.last(10).reverse # take the top 10
     report.data = []
-    topics = Topic.select('id, slug, title').find(num_visits.map {|z| z[0]})
+    topics = Topic.select('id, slug, title').where('id in (?)', num_visits.map {|z| z[0]}).all
     num_visits.each do |topic_id, num_visits|
       topic = topics.find {|t| t.id == topic_id}
-      report.data << {topic_id: topic_id, topic_title: topic.title, topic_slug: topic.slug, num_visits: num_visits}
+      if topic
+        report.data << {topic_id: topic_id, topic_title: topic.title, topic_slug: topic.slug, num_visits: num_visits}
+      end
     end
-    report.data.sort_by! {|x| x[:num_visits]}.reverse![0,10]
+    report.data
   end
 
   def self.link_count_per_topic
