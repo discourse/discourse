@@ -8,16 +8,15 @@
     <meta content="" name="author">
     <link rel="icon" type="image/png" href=<%=SiteSetting.favicon_url%>>
 
-    <%=stylesheet_link_tag "application"%>
-    <%- if current_user.try(:admin) %>
-      <%= stylesheet_link_tag "admin"%>
-    <%- end %>
+    <%= render :partial => "common/special_font_face" %>
+    <%= render :partial => "common/discourse_stylesheet" %>
 
     <%=csrf_meta_tags%>
   </head>
 
   <body>
 
+    <%=SiteCustomization.custom_header(session[:preview_style])%>
     <section id='main'>
     <header class="d-header">
       <div class="container">
