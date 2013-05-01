@@ -8,7 +8,7 @@ task "autospec" => :environment do
   require 'autospec/runner'
 
   force_polling = ARGV.any?{|a| a == "p" || a == "polling"}
-  latency = (ARGV.find{|a| a =~ /l=|latency=/}.split("=")[1] || 3).to_i
+  latency = ((ARGV.find{|a| a =~ /l=|latency=/}||"").split("=")[1] || 3).to_i
 
   if force_polling
     puts "polling has been forced (slower) checking every #{latency} #{"second".pluralize(latency)}"
