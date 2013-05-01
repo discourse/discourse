@@ -289,6 +289,11 @@ table {
   @include small-width {
     width: 390px;
   }
+
+  .dashboard-stats {
+    width: 100%;
+    margin-left: 0;
+  }
 }
 
 .version-check {
@@ -455,7 +460,8 @@ table {
 .commits-widget {
   border: solid 1px #ccc;
   width: 500px;
-  height: 700px;
+  height: 300px;
+  margin-bottom: 36px;
 
   @include medium-width {
     width: 430px;
@@ -500,7 +506,7 @@ table {
   }
 
   .commits-list {
-    height: 669px;
+    height: 269px;
     overflow-y:auto;
 
     li {

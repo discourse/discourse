@@ -167,7 +167,77 @@
     </table>
   </div>
 </div>
+
 <div class="dashboard-right">
   {{ render admin_github_commits githubCommits }}
+
+  <div class="dashboard-stats">
+    <table class="table table-condensed table-hover">
+      <thead>
+        <tr>
+          <th class="title">{{top_referrers.title}}</th>
+          <th>{{top_referrers.ytitles.num_visits}}</th>
+          <th>{{top_referrers.ytitles.num_topics}}</th>
+        </tr>
+      </thead>
+      {{#unless loading}}
+        {{#each top_referrers.data}}
+          <tbody>
+            <tr>
+              <td class="title">{{#linkTo adminUser username}}{{username}}{{/linkTo}}</td>
+              <td class="value">{{num_visits}}</td>
+              <td class="value">{{num_topics}}</td>
+            </tr>
+          </tbody>
+        {{/each}}
+      {{/unless}}
+    </table>
+  </div>
+
+  <div class="dashboard-stats">
+    <table class="table table-condensed table-hover">
+      <thead>
+        <tr>
+          <th class="title">{{top_referred_topics.title}}</th>
+          <th>{{top_referred_topics.ytitles.num_visits}}</th>
+        </tr>
+      </thead>
+      {{#unless loading}}
+        {{#each data in top_referred_topics.data}}
+          <tbody>
+            <tr>
+              <td class="title"><a href="/t/{{unbound data.topic_slug}}/{{unbound data.topic_id}}">{{shorten data.topic_title}}</a></td>
+              <td class="value">{{data.num_visits}}</td>
+            </tr>
+          </tbody>
+        {{/each}}
+      {{/unless}}
+    </table>
+  </div>
+
+  <div class="dashboard-stats">
+    <table class="table table-condensed table-hover">
+      <thead>
+        <tr>
+          <th class="title">{{top_traffic_sources.title}}</th>
+          <th>{{top_traffic_sources.ytitles.num_visits}}</th>
+          <th>{{top_traffic_sources.ytitles.num_topics}}</th>
+          <th>{{top_traffic_sources.ytitles.num_users}}</th>
+        </tr>
+      </thead>
+      {{#unless loading}}
+        {{#each top_traffic_sources.data}}
+          <tbody>
+            <tr>
+              <td class="title">{{domain}}</td>
+              <td class="value">{{num_visits}}</td>
+              <td class="value">{{num_topics}}</td>
+              <td class="value">{{num_users}}</td>
+            </tr>
+          </tbody>
+        {{/each}}
+      {{/unless}}
+    </table>
+  </div>
 </div>
 <div class='clearfix'></div>

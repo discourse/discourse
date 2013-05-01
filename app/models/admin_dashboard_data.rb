@@ -48,7 +48,10 @@ class AdminDashboardData
       reports: REPORTS.map { |type| Report.find(type) },
       problems: problems,
       admins: User.admins.count,
-      moderators: User.moderators.count
+      moderators: User.moderators.count,
+      top_referrers: IncomingLinksReport.find('top_referrers'),
+      top_traffic_sources: IncomingLinksReport.find('top_traffic_sources'),
+      top_referred_topics: IncomingLinksReport.find('top_referred_topics')
     }.merge(
       SiteSetting.version_checks? ? {version_check: DiscourseUpdates.check_version} : {}
     )
@@ -117,4 +120,5 @@ class AdminDashboardData
   def title_check
     I18n.t('dashboard.title_nag') if SiteSetting.title == SiteSetting.defaults[:title]
   end
+
 end
