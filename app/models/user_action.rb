@@ -11,7 +11,7 @@ class UserAction < ActiveRecord::Base
   WAS_LIKED = 2
   BOOKMARK = 3
   NEW_TOPIC = 4
-  POST = 5
+  REPLY = 5
   RESPONSE= 6
   MENTION = 7
   QUOTE = 9
@@ -25,7 +25,7 @@ class UserAction < ActiveRecord::Base
     GOT_PRIVATE_MESSAGE,
     BOOKMARK,
     NEW_TOPIC,
-    POST,
+    REPLY,
     RESPONSE,
     LIKE,
     WAS_LIKED,

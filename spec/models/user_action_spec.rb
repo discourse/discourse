@@ -162,7 +162,7 @@ describe UserAction do
     end
 
     it 'should not log a post user action' do
-      @post.user.user_actions.where(action_type: UserAction::POST).first.should be_nil
+      @post.user.user_actions.where(action_type: UserAction::REPLY).first.should be_nil
     end
 
 
@@ -174,7 +174,7 @@ describe UserAction do
       end
 
       it 'should log user actions correctly' do
-        @response.user.user_actions.where(action_type: UserAction::POST).first.should_not be_nil
+        @response.user.user_actions.where(action_type: UserAction::REPLY).first.should_not be_nil
         @post.user.user_actions.where(action_type: UserAction::RESPONSE).first.should_not be_nil
         @mentioned.user_actions.where(action_type: UserAction::MENTION).first.should_not be_nil
         @post.user.user_actions.joins(:target_post).where('posts.post_number = 2').count.should == 1
@@ -183,7 +183,7 @@ describe UserAction do
       it 'should not log a double notification for a post edit' do
         @response.raw = "here it goes again"
         @response.save!
-        @response.user.user_actions.where(action_type: UserAction::POST).count.should == 1
+        @response.user.user_actions.where(action_type: UserAction::REPLY).count.should == 1
       end
 
     end
