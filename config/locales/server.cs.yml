@@ -378,6 +378,9 @@ cs:
     github_config_warning: 'Server je nakonfigurován, aby povoloval registraci a přihlášení přes GitHub (enable_github_logins), ale nejsou nastaveny hodnoty "client id" a "secret". Navštivte <a href="/admin/site_settings">nastevení webu</a> a opravte nastavení. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Pro více informací si přečtěte tento návod</a>.'
     failing_emails_warning: "%{num_failed_jobs} emailů se nepodařilo odeslat. Zkontrolujte soubor config/production.rb a ujistěte se, že máte správné nastavení config.action_mailer."
     default_logo_warning: "Nenastavili jste si vlastní logo pro váš web. Aktualizujte hodnoty logo_url, logo_small_url, a favicon_url v <a href='/admin/site_settings'>Nastavení webu</a>."
+    contact_email_missing: "Neposkytli jste kontaktní email pro váš web. Prosím, aktualizujte položku contact_email v <a href='/admin/site_settings'>Nastavení webu</a>."
+    contact_email_invalid: "Kontaktní email je neplatný. The site contact email is invalid. Prosím, aktualizujte položku contact_email v <a href='/admin/site_settings'>Nastavení webu</a>."
+    title_nag: "Název webu je nastaven na výchozí hodnotu. Prosím, změňte název webu na skutečný název v <a href='/admin/site_settings'>Nastavení webu</a>."
 
   content_types:
     education_new_reply:
@@ -415,6 +418,7 @@ cs:
     discourse_org_access_key: "Přístupový klíč pro používání registru uživatelským jmen na discourse.org"
     educate_until_posts: "Zobrazovat pop-up okno s nápovědou pro psaní příspěvků, dokud uživatel nezašle tolik příspěvků"
     title: "Název tohoto webu"
+    contact_email: "Emailová adresa někoho, kdo může být kontaktován ohledně tohoto webu. Důležitá upozornění z Discourse.org ohledně kritických aktualizací budou zasílána na tento email."
     company_full_name: "Plné jméno společnosti, která provozuje tento web, používá se v dokumentech jako je /tos"
     company_short_name: "Krátké jméno společnosti, která provozuje tento web, používá se v dokumentech jako je /tos"
     company_domain: "Doménové jméno vlastněné společností, která provozuje tento web, používá se v dokumentech jako je /tos"
@@ -567,6 +571,9 @@ cs:
     topic_views_heat_medium: "Počet zobrazení, po nichž bude popularita tématu střední."
     topic_views_heat_high: "Počet zobrazení, po nichž bude popularita tématu vysoká."
 
+    tos_url: "Pokud máte dokument 'Podmínky Používání' hostovaný samostatně, napište sem jeho plnou URL."
+    privacy_policy_url: "Pokud máte dokument 'Ochrana Soukromí' hostovaný samostatně, napište sem jeho plnou URL."
+
   notification_types:
     mentioned: "%{display_username} vás zmínil v %{link}"
     liked: "%{display_username} se líbí váš příspěvek v %{link}"
@@ -589,31 +596,6 @@ cs:
   most_posts: "Více příspěvků"
   most_recent_poster: "Poslední zasilatel"
   frequent_poster: "Častý zasilatel"
-
-  user_action_descriptions:
-    bookmarks: "Záložky"
-    topics: "Témata"
-    likes_received: "Obdržené 'líbí se mi'"
-    likes_given: "Rozdané 'líbí se mi'"
-    responses: "Odpovědi"
-    topic_responses: "Odpovědi v tématu"
-    posts: "Příspěvky"
-    mentions: "Zmínky"
-    quotes: "Citáty"
-    edits: "Úpravy"
-    favorites: "Oblíbené"
-    sent_items: "Odeslané položky"
-    inbox: "Příchozí zprávy"
-
-    was_liked: "se líbí"
-    liked: "se mu líbí"
-    bookmarked: "přidáno do záložek"
-    posted: "zaslal"
-    responded_to: "odpověděl na"
-    mentioned: "zmínil"
-    quoted: "citoval"
-    favorited: "přidal do oblíbených"
-    edited: "editoval"
 
   move_posts:
     moderator_post:
@@ -951,3 +933,9 @@ cs:
     miscellaneous: "Toto ujednání tvoří celou dohodu mezi %{company_short_name} a vámi ohledně zmiňované věci a smí být změněno pouze písemným dodatkem podepsaným pověřeným jednatelem společnosti %{company_short_name}, nebo zveřejněním revidované verze tohoto dokumentu. Provoz tohoto webu, jeho používání a jakýkoliv přístup na něj se řídí platnými zákony České republiky. Jakékoliv spory v souvislosti v tímto webem budou řešeny u soudů v České republice a používáním této služby souhlasíte se soudní pravomocí těchto soudů."
 
   deleted: 'smazáno'
+
+  upload:
+    image:
+      fetch_failure: "Bohužel, nastala chybí při získávání obrázku."
+      unknown_image_type: "Bohužel, soubor, který se snažíte nahrát, zřejmě není obrázek."
+      size_not_found: "Bohužel se nepodařilo zjistit velikost obrázku. Není soubor s obrázkem poškozený?"

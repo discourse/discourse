@@ -30,6 +30,7 @@ cs:
     you: "Vy"
     or: "nebo"
     now: "právě teď"
+    read_more: "číst dále"
 
     suggested_topics:
       title: "Doporučená témata"
@@ -49,8 +50,36 @@ cs:
     saving: "Ukládám..."
     saved: "Uloženo!"
 
-    user_action_descriptions:
+    user_action:
+      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> zaslal <a href='{{topicUrl}}'>téma</a>"
+      you_posted_topic: "<a href='{{userUrl}}'>Vy</a> jste zaslal <a href='{{topicUrl}}'>téma</a>"
+      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> odpověděl na příspěvek <a href='{{postUrl}}'>{{post_number}}</a>"
+      you_replied_to_post: "<a href='{{userUrl}}'>Vy</a> jste odpověděl na příspěvek <a href='{{postUrl}}'>{{post_number}}</a>"
+      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> přispěl do <a href='{{topicUrl}}'>tématu</a>"
+      you_replied_to_topic: "<a href='{{userUrl}}'>Vy</a> jste přispěl do <a href='{{topicUrl}}'>tématu</a>"
+
+      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> zmínil uživatele <a href='{{user2Url}}'>{{another_user}}</a>"
+      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> zmínil <a href='{{user2Url}}'>vás</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>Vy</a> jste znínil uživatele <a href='{{user2Url}}'>{{user}}</a>"
+
+      posted_by_user: "Odesláno uživatel <a href='{{userUrl}}'>{{user}}</a>"
+      posted_by_you: "Odesláno <a href='{{userUrl}}'>vámi</a>"
+      sent_by_user: "Posláno uživatelem <a href='{{userUrl}}'>{{user}}</a>"
+      sent_by_you: "Posláno <a href='{{userUrl}}'>vámi</a>"
+
+    user_action_groups:
+      "1": "Rozdaných 'líbí se'"
+      "2": "Obdržených 'líbí se'"
+      "3": "Záložky"
+      "4": "Témata"
+      "5": "Odpovědi"
       "6": "Odpovědi"
+      "7": "Zmíňky"
+      "9": "Citace"
+      "10": "Oblíbené"
+      "11": "Editace"
+      "12": "Odeslané zprávy"
+      "13": "Přijaté zprávy"
 
     user:
       profile: Profil
