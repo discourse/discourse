@@ -7,8 +7,12 @@ module Oneboxer
 
     MAX_TEXT = 500
 
-    def template_path(template_name)
+    def self.template_path(template_name)
       "#{Rails.root}/lib/oneboxer/templates/#{template_name}.hbrs"
+    end
+
+    def template_path(template_name)
+      HandlebarsOnebox.template_path(template_name)
     end
 
     def template
@@ -34,11 +38,15 @@ module Oneboxer
       args[:favicon] = ActionController::Base.helpers.image_path(self.class.favicon_file) if self.class.favicon_file.present?
       args[:host] = nice_host
 
-      Mustache.render(File.read(template), args)
+      HandlebarsOnebox.generate_onebox(template,args)
     rescue => ex
       # If there's an exception, just embed the link
       raise ex if Rails.env.development?
       default_url
+    end
+
+    def self.generate_onebox(template, args)
+      Mustache.render(File.read(template), args)
     end
 
   end

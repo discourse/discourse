@@ -4,7 +4,7 @@ module Oneboxer
     def parse_open_graph(doc)
       result = {}
 
-      %w(title type image url description).each do |prop|
+      %w(title type image url description image:width image:height).each do |prop|
         node = doc.at("/html/head/meta[@property='og:#{prop}']")
         result[prop] = (node['content'] || node['value']) if node
       end
@@ -22,6 +22,14 @@ module Oneboxer
       if result['description'].blank?
         node = doc.at("/html/head/meta[@name='Description']")
         result['description'] = node['content'] if node
+      end
+
+      %w(image:width image:height).each do |prop|
+        # Some sane max width
+        if result[prop] && result[prop].to_i < 100
+          result[prop.sub(":","_")] = result[prop]
+        end
+        result[prop] = nil
       end
 
       result

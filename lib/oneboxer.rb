@@ -51,6 +51,9 @@ module Oneboxer
     whitelist_entry = Whitelist.entry_for_url(url)
 
     if whitelist_entry.present?
+      # TODO - only download HEAD section
+      # TODO - sane timeout
+      # TODO - FAIL if for any reason you are downloading more that 5000 bytes
       page_html = open(url).read
       if page_html.present?
         doc = Nokogiri::HTML(page_html)
@@ -102,14 +105,14 @@ module Oneboxer
       onebox, preview = yield(url,element)
       if onebox
         parsed_onebox = Nokogiri::HTML::fragment(onebox)
-        next unless parsed_onebox.children.count > 0 
+        next unless parsed_onebox.children.count > 0
 
         # special logic to strip empty p elements
-        if  element.parent && 
-            element.parent.node_name.downcase == "p" && 
-            element.parent.children.count == 1 && 
+        if  element.parent &&
+            element.parent.node_name.downcase == "p" &&
+            element.parent.children.count == 1 &&
             parsed_onebox.children.first.name.downcase == "div"
-          element = element.parent 
+          element = element.parent
         end
         changed = true
         element.swap parsed_onebox.to_html

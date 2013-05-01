@@ -351,8 +351,9 @@ class User < ActiveRecord::Base
   end
 
   # Don't pass this up to the client - it's meant for server side use
+  # The only spot this is now used is for self oneboxes in open graph data
   def small_avatar_url
-    "https://www.gravatar.com/avatar/#{email_hash}.png?s=200&r=pg&d=identicon"
+    "https://www.gravatar.com/avatar/#{email_hash}.png?s=60&r=pg&d=identicon"
   end
 
   # return null for local avatars, a template for gravatar
