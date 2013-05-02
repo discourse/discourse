@@ -371,13 +371,17 @@ Discourse.Topic = Discourse.Model.extend({
   },
 
   hasExcerpt: function() {
-    return this.get('excerpt') && this.get('excerpt').length > 0;
-  }.property('excerpt'),
+    return this.get('pinned') && this.get('excerpt') && this.get('excerpt').length > 0;
+  }.property('pinned', 'excerpt'),
 
   excerptTruncated: function() {
     var e = this.get('excerpt');
     return( e && e.substr(e.length - 8,8) === '&hellip;' );
-  }.property('excerpt')
+  }.property('excerpt'),
+
+  canClearPin: function() {
+    return this.get('pinned') && (this.get('last_read_post_number') === this.get('highest_post_number'));
+  }.property('pinned', 'last_read_post_number', 'highest_post_number')
 });
 
 Discourse.Topic.reopenClass({

@@ -53,6 +53,11 @@ Discourse.ListTopicsController = Discourse.ObjectController.extend({
     topic.toggleStar();
   },
 
+  // clear a pinned topic
+  clearPin: function(topic) {
+    topic.clearPin();
+  },
+
   toggleRankDetails: function() {
     this.toggleProperty('rankDetailsVisible');
   },
