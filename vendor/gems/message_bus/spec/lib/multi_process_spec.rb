@@ -30,7 +30,7 @@ describe MessageBus::ReliablePubSub do
 
   it 'gets every response from child processes' do
     pid = nil
-    Redis.new(:db => 10).flushall
+    Redis.new(:db => 10).flushdb
     begin
       pids = (1..10).map{spawn_child}
       responses = []
