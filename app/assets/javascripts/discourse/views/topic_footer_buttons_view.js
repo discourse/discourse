@@ -24,9 +24,14 @@ Discourse.TopicFooterButtonsView = Ember.ContainerView.extend({
 
         // We hide some controls from private messages
         if (this.get('topic.can_invite_to')) {
-          this.addObject(Discourse.ButtonView.create({
+          this.addObject(Discourse.ButtonView.createWithMixins({
             textKey: 'topic.invite_reply.title',
             helpKey: 'topic.invite_reply.help',
+            attributeBindings: ['disabled'],
+
+            disabled: function(){
+              return this.get('controller.content.archived') || this.get('controller.content.closed');
+            }.property('controller.content.archived', 'controller.content.closed'),
 
             renderIcon: function(buffer) {
               buffer.push("<i class='icon icon-group'></i>");
