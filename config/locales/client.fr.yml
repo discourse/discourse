@@ -101,6 +101,9 @@ fr:
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
       enable_quoting: "Activer la citation automatique du texte surligné"
 
+      moderator: "{{user}} est un modérateur"
+      admin: "{{user}} est un administrateur"
+
       change_password:
         action: "modifier"
         success: "(email envoyé)"
