@@ -97,6 +97,9 @@ en:
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
 
+      moderator: "{{user}} is a moderator"
+      admin: "{{user}} is an admin"
+
       change_password:
         action: "change"
         success: "(email sent)"

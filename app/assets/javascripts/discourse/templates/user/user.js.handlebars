@@ -1,14 +1,14 @@
-{{#unless content.loading}}
+{{#unless model.loading}}
 <div class="user-heading">
   <div class="container">
     <div class="full-width" id='user-menu'>
-      <h1>{{content.name}}<span>{{unbound content.username}}</span></h1>
+      <h1>{{model.name}}<span>{{unbound model.username}}{{{unbound model.statusIcon}}}</span></h1>
 
       {{#if viewingSelf}}
         <button {{action "logout" target="Discourse"}} class='btn'>{{i18n user.log_out}}</button>
       {{/if}}
       {{#if Discourse.currentUser.staff}}
-        <a href="{{unbound content.adminPath}}" class='btn'><i class="icon-wrench"></i>&nbsp;{{i18n admin.user.show_admin_profile}}</a>
+        <a href="{{unbound model.adminPath}}" class='btn'><i class="icon-wrench"></i>&nbsp;{{i18n admin.user.show_admin_profile}}</a>
       {{/if}}
       <ul class="nav nav-pills">
         <li>
@@ -22,7 +22,7 @@
         <li>
           {{#linkTo 'user.invited'}}{{i18n user.invited.title}}{{/linkTo}}
         </li>
-        {{#if content.can_edit}}
+        {{#if model.can_edit}}
           <li>
             {{#linkTo 'preferences'}}{{i18n user.preferences}}{{/linkTo}}
           </li>
@@ -37,7 +37,7 @@
 <div class="container">
   <div class='user-info clearfix'>
      <div class='about-me'>
-       {{{content.bio_excerpt}}}
+       {{{model.bio_excerpt}}}
       </div>
   </div>
 </div>

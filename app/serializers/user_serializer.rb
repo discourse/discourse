@@ -14,7 +14,9 @@ class UserSerializer < BasicUserSerializer
              :can_send_private_message_to_user,
              :bio_excerpt,
              :invited_by,
-             :trust_level
+             :trust_level,
+             :moderator,
+             :admin
 
 
   def self.private_attributes(*attrs)
