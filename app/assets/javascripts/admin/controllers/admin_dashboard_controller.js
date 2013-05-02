@@ -12,10 +12,11 @@ Discourse.AdminDashboardController = Ember.Controller.extend({
   problemsCheckInterval: '1 minute ago',
 
   foundProblems: function() {
-    return(this.get('problems') && this.get('problems').length > 0);
+    return(Discourse.currentUser.admin && this.get('problems') && this.get('problems').length > 0);
   }.property('problems'),
 
   thereWereProblems: function() {
+    if(!Discourse.currentUser.admin) { return false }
     if( this.get('foundProblems') ) {
       this.set('hadProblems', true);
       return true;

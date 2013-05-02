@@ -56,17 +56,14 @@ class PostCreator
 
           topic.subtype = TopicSubtype.user_to_user unless topic.subtype
 
-          usernames = @opts[:target_usernames].split(',')
-          User.where(username: usernames).each do |u|
-
-            unless guardian.can_send_private_message?(u)
-              topic.errors.add(:archetype, :cant_send_pm)
-              @errors = topic.errors
-              raise ActiveRecord::Rollback.new
-            end
-
-            topic.topic_allowed_users.build(user_id: u.id)
+          unless @opts[:target_usernames].present? || @opts[:target_group_names].present?
+            topic.errors.add(:archetype, :cant_send_pm)
+            @errors = topic.errors
+            raise ActiveRecord::Rollback.new
           end
+
+          add_users(topic,@opts[:target_usernames])
+          add_groups(topic,@opts[:target_group_names])
           topic.topic_allowed_users.build(user_id: @user.id)
         end
 
@@ -148,4 +145,35 @@ class PostCreator
     PostCreator.new(user, opts).create
   end
 
+  protected
+
+  def add_users(topic, usernames)
+    return unless usernames
+    usernames = usernames.split(',')
+    User.where(username: usernames).each do |u|
+
+      unless guardian.can_send_private_message?(u)
+        topic.errors.add(:archetype, :cant_send_pm)
+        @errors = topic.errors
+        raise ActiveRecord::Rollback.new
+      end
+
+      topic.topic_allowed_users.build(user_id: u.id)
+    end
+  end
+
+  def add_groups(topic, groups)
+    return unless groups
+    groups = groups.split(',')
+    Group.where(name: groups).each do |g|
+
+      unless guardian.can_send_private_message?(g)
+        topic.errors.add(:archetype, :cant_send_pm)
+        @errors = topic.errors
+        raise ActiveRecord::Rollback.new
+      end
+
+      topic.topic_allowed_groups.build(group_id: g.id)
+    end
+  end
 end

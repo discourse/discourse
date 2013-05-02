@@ -60,7 +60,7 @@ Discourse = Ember.Application.createWithMixins({
     if (user) {
       bus.callbackInterval = Discourse.SiteSettings.polling_interval;
       bus.enableLongPolling = true;
-      if (user.admin) {
+      if (user.admin || user.moderator) {
         bus.subscribe("/flagged_counts", function(data) {
           user.set('site_flagged_posts_count', data.total);
         });

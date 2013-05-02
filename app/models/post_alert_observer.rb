@@ -60,8 +60,8 @@ class PostAlertObserver < ActiveRecord::Observer
   def after_create_post(post)
     if post.topic.private_message?
       # If it's a private message, notify the topic_allowed_users
-      post.topic.topic_allowed_users.reject{ |a| a.user_id == post.user_id }.each do |a|
-        create_notification(a.user, Notification.types[:private_message], post)
+      post.topic.all_allowed_users.reject{ |a| a.id == post.user_id }.each do |a|
+        create_notification(a, Notification.types[:private_message], post)
       end
     else
       # If it's not a private message, notify the users

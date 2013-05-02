@@ -65,7 +65,7 @@
 
       <section class='d-dropdown' id='site-map-dropdown'>
       <ul>
-        {{#if Discourse.currentUser.admin}}
+        {{#if Discourse.currentUser.moderator}}
           <li><a href="/admin"><i class='icon-cog'></i>{{i18n admin_title}}</a></li>
           <li><a href="/admin/flags/active"><i class='icon-flag'></i>{{i18n flags_title}}</a></li>
         {{/if}}

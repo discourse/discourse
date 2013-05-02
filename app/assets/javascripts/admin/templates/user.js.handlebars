@@ -31,9 +31,11 @@
     <div class='field'>{{i18n user.ip_address.title}}</div>
     <div class='value'>{{content.ip_address}}</div>
     <div class='controls'>
+      {{#if Discourse.currentUser.admin}}
       <button class='btn' {{action refreshBrowsers target="content"}}>
         {{i18n admin.user.refresh_browsers}}
       </button>
+      {{/if}}
     </div>
   </div>
 

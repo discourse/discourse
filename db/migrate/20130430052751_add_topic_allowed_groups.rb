@@ -1,6 +1,7 @@
 class AddTopicAllowedGroups < ActiveRecord::Migration
   def change
     create_table :topic_allowed_groups do |t|
+      # oops
       t.integer :group_id, :integer, null: false
       t.integer :topic_id, :integer, null: false
     end

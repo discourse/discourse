@@ -38,6 +38,10 @@ class Topic < ActiveRecord::Base
   belongs_to :category
   has_many :posts
   has_many :topic_allowed_users
+  has_many :topic_allowed_groups
+
+  has_many :allowed_group_users, through: :allowed_groups, source: :users
+  has_many :allowed_groups, through: :topic_allowed_groups, source: :group
   has_many :allowed_users, through: :topic_allowed_users, source: :user
 
   has_one :hot_topic
@@ -92,6 +96,12 @@ class Topic < ActiveRecord::Base
     else
       DraftSequence.next!(user, Draft::NEW_TOPIC)
     end
+  end
+
+  # all users (in groups or directly targetted) that are going to get the pm
+  def all_allowed_users
+    # TODO we should probably change this from 3 queries to 1
+    User.where('id in (?)', allowed_users.select('users.id').to_a + allowed_group_users.select('users.id').to_a)
   end
 
   # Additional rate limits on topics: per day and private messages per day

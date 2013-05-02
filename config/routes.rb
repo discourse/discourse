@@ -1,6 +1,7 @@
 require 'sidekiq/web'
 
 require_dependency 'admin_constraint'
+require_dependency 'moderator_constraint'
 require_dependency 'homepage_constraint'
 
 # This used to be User#username_format, but that causes a preload of the User object
@@ -21,13 +22,14 @@ Discourse::Application.routes.draw do
   end
   get 'srv/status' => 'forums#status'
 
-  namespace :admin, constraints: AdminConstraint.new do
+  namespace :admin, constraints: ModeratorConstraint.new do
     get '' => 'admin#index'
 
-    resources :site_settings
+    resources :site_settings, constraints: AdminConstraint.new
+
     get 'reports/:type' => 'reports#show'
 
-    resources :groups
+    resources :groups, constraints: AdminConstraint.new
     resources :users, id: USERNAME_ROUTE_FORMAT do
       collection do
         get 'list/:query' => 'users#index'
@@ -36,35 +38,35 @@ Discourse::Application.routes.draw do
       put 'ban'
       put 'delete_all_posts'
       put 'unban'
-      put 'revoke_admin'
-      put 'grant_admin'
-      put 'revoke_moderation'
-      put 'grant_moderation'
+      put 'revoke_admin', constraints: AdminConstraint.new
+      put 'grant_admin', constraints: AdminConstraint.new
+      put 'revoke_moderation', constraints: AdminConstraint.new
+      put 'grant_moderation', constraints: AdminConstraint.new
       put 'approve'
-      post 'refresh_browsers'
+      post 'refresh_browsers', constraints: AdminConstraint.new
     end
 
-    resources :impersonate
+    resources :impersonate, constraints: AdminConstraint.new
     resources :email_logs do
       collection do
         post 'test'
       end
     end
-    get 'customize' => 'site_customizations#index'
+    get 'customize' => 'site_customizations#index', constraints: AdminConstraint.new
     get 'flags' => 'flags#index'
     get 'flags/:filter' => 'flags#index'
     post 'flags/clear/:id' => 'flags#clear'
-    resources :site_customizations
-    resources :site_contents
-    resources :site_content_types
-    resources :export
+    resources :site_customizations, constraints: AdminConstraint.new
+    resources :site_contents, constraints: AdminConstraint.new
+    resources :site_content_types, constraints: AdminConstraint.new
+    resources :export, constraints: AdminConstraint.new
     get 'version_check' => 'versions#show'
     resources :dashboard, only: [:index] do
       collection do
         get 'problems'
       end
     end
-    resources :api, only: [:index] do
+    resources :api, only: [:index], constraints: AdminConstraint.new do
       collection do
         post 'generate_key'
       end

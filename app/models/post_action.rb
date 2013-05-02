@@ -25,8 +25,8 @@ class PostAction < ActiveRecord::Base
                                            'topics.deleted_at' => nil).count('DISTINCT posts.id')
 
     $redis.set('posts_flagged_count', posts_flagged_count)
-    admins = User.admins.select(:id).map {|u| u.id}
-    MessageBus.publish('/flagged_counts', { total: posts_flagged_count }, { user_ids: admins })
+    user_ids = User.where("admin = 't' or moderator = 't'").select(:id).map {|u| u.id}
+    MessageBus.publish('/flagged_counts', { total: posts_flagged_count }, { user_ids: user_ids })
   end
 
   def self.flagged_posts_count

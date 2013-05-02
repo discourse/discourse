@@ -207,7 +207,7 @@ class Guardian
   end
 
   def can_see_private_messages?(user_id)
-    return true if is_admin?
+    return true if is_moderator?
     return false if @user.blank?
     @user.id == user_id
   end
@@ -263,7 +263,7 @@ class Guardian
 
   def can_edit_user?(user)
     return true if user == @user
-    @user.admin?
+    @user.moderator?
   end
 
   def can_edit_topic?(topic)
@@ -311,12 +311,12 @@ class Guardian
     return post_action.created_at > SiteSetting.post_undo_action_window_mins.minutes.ago
   end
 
-  def can_send_private_message?(target_user)
-    return false unless User === target_user
+  def can_send_private_message?(target)
+    return false unless User === target || Group === target
     return false if @user.blank?
 
     # Can't send message to yourself
-    return false if @user.id == target_user.id
+    return false if User === target && @user.id == target.id
 
     # Have to be a basic level at least
     return false unless @user.has_trust_level?(:basic)
@@ -336,15 +336,15 @@ class Guardian
     return false unless topic
 
     return true if @user && @user.moderator?
-    return false if topic.deleted_at.present?
+    return false if topic.deleted_at
 
     if topic.category && topic.category.secure
       return false unless @user && can_see_category?(topic.category)
     end
 
     if topic.private_message?
-      return false if @user.blank?
-      return true if topic.allowed_users.include?(@user)
+      return false unless @user
+      return true if topic.all_allowed_users.where(id: @user.id).exists?
       return is_admin?
     end
     true
@@ -375,11 +375,11 @@ class Guardian
   def post_can_act?(post, action_key, opts={})
     return false if @user.blank?
     return false if post.blank?
-    return false if post.topic.archived?
 
     taken = opts[:taken_actions]
     taken = taken.keys if taken
 
+    # we always allow flagging
     if PostActionType.is_flag?(action_key)
       return false unless @user.has_trust_level?(:basic)
 
@@ -389,6 +389,9 @@ class Guardian
     else
       return false if taken && taken.include?(PostActionType.types[action_key])
     end
+
+    # nothing else on archived posts
+    return false if post.topic.archived?
 
     case action_key
     when :like

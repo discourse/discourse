@@ -485,8 +485,8 @@ describe Guardian do
         Guardian.new(user).can_edit?(user).should be_true
       end
 
-      it 'returns false as a moderator' do
-        Guardian.new(moderator).can_edit?(user).should be_false
+      it 'returns true as a moderator' do
+        Guardian.new(moderator).can_edit?(user).should be_true
       end
 
       it 'returns true as an admin' do

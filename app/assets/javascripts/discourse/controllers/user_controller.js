@@ -13,7 +13,7 @@ Discourse.UserController = Discourse.ObjectController.extend({
   }).property('content.username', 'Discourse.currentUser.username'),
 
   canSeePrivateMessages: (function() {
-    return this.get('viewingSelf') || Discourse.get('currentUser.admin');
+    return this.get('viewingSelf') || Discourse.get('currentUser.moderator');
   }).property('viewingSelf', 'Discourse.currentUser')
 
 });

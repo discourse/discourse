@@ -190,5 +190,35 @@ describe PostCreator do
     end
   end
 
+  context 'private message to group' do
+    let(:target_user1) { Fabricate(:coding_horror) }
+    let(:target_user2) { Fabricate(:moderator) }
+    let(:group) do
+      g = Fabricate.build(:group)
+      g.add(target_user1)
+      g.add(target_user2)
+      g.save
+      g
+    end
+    let(:unrelated) { Fabricate(:user) }
+    let(:post) do
+      PostCreator.create(user, title: 'hi there welcome to my topic',
+                               raw: "this is my awesome message @#{unrelated.username_lower}",
+                               archetype: Archetype.private_message,
+                               target_group_names: group.name)
+    end
+
+    it 'acts correctly' do
+      post.topic.archetype.should == Archetype.private_message
+      post.topic.topic_allowed_users.count.should == 1
+      post.topic.topic_allowed_groups.count.should == 1
+
+      # does not notify an unrelated user
+      unrelated.notifications.count.should == 0
+      post.topic.subtype.should == TopicSubtype.user_to_user
+      target_user1.notifications.count.should == 1
+      target_user2.notifications.count.should == 1
+    end
+  end
 end
 

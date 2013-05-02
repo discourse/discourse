@@ -34,6 +34,10 @@ module ApplicationHelper
     current_user.try(:admin?)
   end
 
+  def moderator?
+    current_user.try(:moderator?)
+  end
+
   # Creates open graph and twitter card meta data
   def crawlable_meta_data(opts=nil)
 

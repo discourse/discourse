@@ -51,8 +51,8 @@ class TopicList
 
   def has_rank_details?
 
-    # Only admins can see rank details
-    return false unless @current_user.try(:admin?)
+    # Only moderators can see rank details
+    return false unless @current_user.try(:moderator?)
 
     # Only show them on 'Hot'
     return @filter == :hot

@@ -15,8 +15,15 @@ class CurrentUserSerializer < BasicUserSerializer
 
   # we probably want to move this into site, but that json is cached so hanging it off current user seems okish
 
+  def moderator
+    # TODO we probably want better terminology
+    #
+    # we have admins / moderators and users who are either moderators or admins denoted by moderator?
+    object.moderator?
+  end
+
   def include_site_flagged_posts_count?
-    object.admin
+    object.moderator?
   end
 
   def topic_count
