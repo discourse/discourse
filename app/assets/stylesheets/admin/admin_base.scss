@@ -460,7 +460,7 @@ table {
 .commits-widget {
   border: solid 1px #ccc;
   width: 500px;
-  height: 300px;
+  height: 180px;
   margin-bottom: 36px;
 
   @include medium-width {
@@ -506,7 +506,7 @@ table {
   }
 
   .commits-list {
-    height: 269px;
+    height: 149px;
     overflow-y:auto;
 
     li {
