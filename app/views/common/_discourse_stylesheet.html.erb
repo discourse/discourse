@@ -2,7 +2,7 @@
   <%=stylesheet_link_tag "application"%>
 <%- end %>
 
-<%- if moderator? %>
+<%- if staff? %>
   <%= stylesheet_link_tag "admin"%>
 <%-end%>
 <%=SiteCustomization.custom_stylesheet(session[:preview_style])%>

@@ -1,6 +1,6 @@
 require_dependency 'current_user'
 
-class ModeratorConstraint
+class StaffConstraint
 
   def matches?(request)
     return false unless request.session[:current_user_id].present?

@@ -311,9 +311,9 @@ describe User do
         user.has_trust_level?(:elder).should be_true
       end
 
-      it "is a moderator if the user is an admin" do
+      it "is staff if the user is an admin" do
         user.admin = true
-        user.moderator?.should be_true
+        user.staff?.should be_true
       end
 
     end

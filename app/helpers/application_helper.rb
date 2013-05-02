@@ -38,6 +38,10 @@ module ApplicationHelper
     current_user.try(:moderator?)
   end
 
+  def staff?
+    current_user.try(:staff?)
+  end
+
   # Creates open graph and twitter card meta data
   def crawlable_meta_data(opts=nil)
 

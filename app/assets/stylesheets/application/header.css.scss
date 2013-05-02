@@ -129,9 +129,9 @@
       left: -4px;
       background-color: #00953A;
     }
-    .flagged-posts {
-      background-color: #E53B2E;
-    }
+  }
+  .flagged-posts {
+    background-color: #E53B2E;
   }
 }
 
@@ -170,6 +170,9 @@
     padding: 5px;
     font-size: 13px;
     line-height: 16px;
+    .icon {
+      margin-right: 3px;
+    }
   }
   .heading {
     border-top: 1px solid #c5c5c5;

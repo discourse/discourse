@@ -88,7 +88,7 @@ class PostSerializer < ApplicationSerializer
   end
 
   def cooked
-    if object.hidden && !scope.is_moderator?
+    if object.hidden && !scope.is_staff?
       if scope.current_user && object.user_id == scope.current_user.id
         I18n.t('flagging.you_must_edit')
       else
@@ -154,7 +154,7 @@ class PostSerializer < ApplicationSerializer
 
       # The following only applies if you're logged in
       if action_summary[:can_act] && scope.current_user.present?
-        action_summary[:can_clear_flags] = scope.is_moderator? && PostActionType.flag_types.values.include?(id)
+        action_summary[:can_clear_flags] = scope.is_staff? && PostActionType.flag_types.values.include?(id)
       end
 
       if post_actions.present? && post_actions.has_key?(id)
@@ -163,7 +163,7 @@ class PostSerializer < ApplicationSerializer
       end
 
       # anonymize flags
-      if !scope.is_moderator? && PostActionType.flag_types.values.include?(id)
+      if !scope.is_staff? && PostActionType.flag_types.values.include?(id)
         action_summary[:count] = action_summary[:acted] ? 1 : 0
       end
 

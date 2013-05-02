@@ -18,7 +18,7 @@
 <%# load the selected locale before any other scripts %>
 <%= javascript_include_tag "locales/#{I18n.locale}" %>
 <%= javascript_include_tag "application" %>
-<%- if moderator? %>
+<%- if staff? %>
   <%= javascript_include_tag "admin"%>
 <%- end %>
 

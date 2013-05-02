@@ -1,7 +1,7 @@
 require 'sidekiq/web'
 
 require_dependency 'admin_constraint'
-require_dependency 'moderator_constraint'
+require_dependency 'staff_constraint'
 require_dependency 'homepage_constraint'
 
 # This used to be User#username_format, but that causes a preload of the User object
@@ -22,7 +22,7 @@ Discourse::Application.routes.draw do
   end
   get 'srv/status' => 'forums#status'
 
-  namespace :admin, constraints: ModeratorConstraint.new do
+  namespace :admin, constraints: StaffConstraint.new do
     get '' => 'admin#index'
 
     resources :site_settings, constraints: AdminConstraint.new

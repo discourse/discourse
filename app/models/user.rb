@@ -54,6 +54,7 @@ class User < ActiveRecord::Base
 
   scope :admins, ->{ where(admin: true) }
   scope :moderators, ->{ where(moderator: true) }
+  scope :staff, ->{ where("moderator = 't' or admin = 't'") }
 
   module NewTopicDuration
     ALWAYS = -1
@@ -267,10 +268,8 @@ class User < ActiveRecord::Base
     User.select(:username).order('last_posted_at desc').limit(20)
   end
 
-  def moderator?
-    # this saves us from checking both, admins are always moderators
-    #
-    # in future we may split this out
+  # any user that is either a moderator or an admin
+  def staff?
     admin || moderator
   end
 

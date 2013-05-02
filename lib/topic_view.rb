@@ -23,7 +23,7 @@ class TopicView
     @limit = options[:limit] || SiteSetting.posts_per_page;
 
     @filtered_posts = @topic.posts
-    @filtered_posts = @filtered_posts.with_deleted if user.try(:admin?)
+    @filtered_posts = @filtered_posts.with_deleted if user.try(:staff?)
     @filtered_posts = @filtered_posts.best_of if options[:best_of].present?
 
     if options[:username_filters].present?
@@ -299,7 +299,7 @@ class TopicView
                  .includes(:user)
                  .includes(:reply_to_user)
                  .order('sort_order')
-    @posts = @posts.with_deleted if @user.try(:admin?)
+    @posts = @posts.with_deleted if @user.try(:staff?)
 
     @posts
   end

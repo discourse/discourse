@@ -190,7 +190,7 @@ LEFT JOIN categories c on c.id = t.category_id
       builder.where("t.archetype != :archetype", archetype: Archetype::private_message)
     end
 
-    unless guardian.is_moderator?
+    unless guardian.is_staff?
       allowed = guardian.secure_category_ids
       if allowed.present?
         builder.where("( c.secure IS NULL OR

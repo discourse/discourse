@@ -65,26 +65,18 @@
 
       <section class='d-dropdown' id='site-map-dropdown'>
       <ul>
-        {{#if Discourse.currentUser.moderator}}
-          <li><a href="/admin"><i class='icon-cog'></i>{{i18n admin_title}}</a></li>
-          <li><a href="/admin/flags/active"><i class='icon-flag'></i>{{i18n flags_title}}</a></li>
+        {{#if Discourse.currentUser.staff}}
+          <li><a href="/admin"><i class='icon icon-cog'></i>{{i18n admin_title}}</a></li>
+          <li><a href="/admin/flags/active"><i class='icon icon-flag'></i>{{i18n flags_title}}</a>
+          {{#if view.currentUser.site_flagged_posts_count}}
+            <a href='/admin/flags/active' title='{{i18n notifications.total_flagged}}' class='badge-notification flagged-posts'>{{view.currentUser.site_flagged_posts_count}}</a>
+          {{/if}}
+          </li>
         {{/if}}
         <li>
           {{#titledLinkTo "list.latest" titleKey="filters.latest.help"}}{{i18n filters.latest.title}}{{/titledLinkTo}}
         </li>
         <li>{{#linkTo 'faq'}}{{i18n faq}}{{/linkTo}}</li>
-        {{#if Discourse.currentUser.admin}}
-          <li title="{{i18n filters.favorited.help}}">
-            {{#linkTo "list.favorited"}}
-              <i class='icon-star'></i>{{i18n filters.favorited.title}}
-            {{/linkTo}}
-          </li>
-          <li title="{{i18n filters.read.help}}">
-            {{#linkTo "list.read"}}
-              <i class='icon-bookmark'></i>{{i18n filters.read.title}}
-            {{/linkTo}}
-          </li>
-        {{/if}}
         {{#if view.categories}}
           <li class='heading' title="{{i18n filters.categories.help}}">
             {{#linkTo "list.categories"}}{{i18n filters.categories.title}}{{/linkTo}}

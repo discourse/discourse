@@ -22,7 +22,7 @@ class RateLimiter
 
   def can_perform?
     return true if RateLimiter.disabled?
-    return true if @user.moderator?
+    return true if @user.staff?
 
     result = $redis.get(@key)
     return true if result.blank?
@@ -32,7 +32,7 @@ class RateLimiter
 
   def performed!
     return if RateLimiter.disabled?
-    return if @user.moderator?
+    return if @user.staff?
 
     result = $redis.incr(@key).to_i
     $redis.expire(@key, @secs) if result == 1
