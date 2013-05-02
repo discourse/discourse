@@ -364,6 +364,21 @@ cs:
       title: "Uživatelská upozornění"
       xaxis: "Den"
       yaxis: "Počet soukromých zpráv"
+    top_referrers:
+      title: "Odkazovatelé"
+      xaxis: "Uživatel"
+      num_visits: "Návštěvy"
+      num_topics: "Témata"
+    top_traffic_sources:
+      title: "Zdroje provozu"
+      xaxis: "Doména"
+      num_visits: "Návštěvy"
+      num_topics: "Témata"
+      num_users: "Uživatelé"
+    top_referred_topics:
+      title: "Odkazovaná témata"
+      xaxis: "Témata"
+      num_visits: "Návštěvy"
 
   dashboard:
     rails_env_warning: "Váš server běží v módu %{env}."
@@ -428,7 +443,8 @@ cs:
     crawl_images: "Povolit získávání obrázků z webů třetích stran"
     ninja_edit_window: "Jak rychle smíte udělat změnu, aniž by se uložila jako nová verze"
     enable_imgur: "Používat imgur pro ukládání obrázků, nehostovat obrázky lokálně"
-    imgur_api_key: "Api klíč pro imgur.com - vyžadováno pro upload obrázků"
+    imgur_client_id: "Přístupový klíč 'client ID' pro imgur.com - vyžadováno pro upload obrázků"
+    imgur_client_secret: "Přístupový klíč 'client secret' pro imgur.com - vyžadováno pro upload obrázků"
     imgur_endpoint: "Koncový bod pro upload obrázků na imgur.com"
     max_image_width: "Maximální šířka obrázku v příspěvku"
     category_featured_topics: "Počet témat zobrazených v seznamu kategorií"

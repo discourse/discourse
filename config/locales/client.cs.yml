@@ -97,6 +97,9 @@ cs:
       external_links_in_new_tab: "Otevírat všechny externí odkazy do nové záložky"
       enable_quoting: "Povolit odpověď s citací z označeného textu"
 
+      moderator: "{{user}} je moderátor"
+      admin: "{{user}} je administrátor"
+
       change_password:
         action: "změnit"
         success: "(email odeslán)"
