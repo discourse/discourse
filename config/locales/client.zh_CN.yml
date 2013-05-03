@@ -30,6 +30,7 @@ zh_CN:
     you: "你"
     or: "或"
     now: "刚刚"
+    read_more: '阅读更多'
 
     suggested_topics:
       title: "推荐主题"
@@ -49,8 +50,36 @@ zh_CN:
     saving: "保存中……"
     saved: "已保存！"
 
-    user_action_descriptions:
-      "6": "回复"
+    user_action:
+      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> 发起 <a href='{{topicUrl}}'>本主题</a>"
+      you_posted_topic: "<a href='{{userUrl}}'>你</a> 发起 <a href='{{topicUrl}}'>本主题</a>"
+      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> 回复 <a href='{{postUrl}}'>{{post_number}}</a>"
+      you_replied_to_post: "<a href='{{userUrl}}'>你</a> 回复 <a href='{{postUrl}}'>{{post_number}}</a>"
+      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> 回复 <a href='{{topicUrl}}'>本主题</a>"
+      you_replied_to_topic: "<a href='{{userUrl}}'>你</a> 回复 <a href='{{topicUrl}}'>本主题</a>"
+
+      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> 提到 <a href='{{user2Url}}'>{{another_user}}</a>"
+      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> 提到 <a href='{{user2Url}}'>你</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>你</a> 提到 <a href='{{user2Url}}'>{{user}}</a>"
+
+      posted_by_user: "发起人 <a href='{{userUrl}}'>{{user}}</a>"
+      posted_by_you: "发起人 <a href='{{userUrl}}'>你</a>"
+      sent_by_user: "发送人 <a href='{{userUrl}}'>{{user}}</a>"
+      sent_by_you: "发送人 <a href='{{userUrl}}'>你</a>"
+
+    user_action_groups:
+      "1": "给出的赞"
+      "2": "收到的赞"
+      "3": "书签"
+      "4": "主题"
+      "5": "回复"
+      "6": "回应"
+      "7": "提到"
+      "9": "引用"
+      "10": "喜爱"
+      "11": "编辑"
+      "12": "发送条目"
+      "13": "收件箱"
 
     user:
       profile: 介绍信息
@@ -67,6 +96,9 @@ zh_CN:
       trust_level: "用户级别"
       external_links_in_new_tab: "始终在新的标签页打开外部链接"
       enable_quoting: "在高亮选择文字时启用引用回复"
+
+      moderator: "{{user}} 是版主"
+      admin: "{{user}} 是管理员"
 
       change_password:
         action: "修改"
@@ -512,6 +544,7 @@ zh_CN:
 
       invite_reply:
         title: '邀请朋友来回复'
+        action: '邮件邀请'
         help: '向你的朋友发送邀请，他们只需要一个点击就能回复这个主题'
         email: "我们会给你的朋友发送一封邮件，他们只需要点击其中的一个链接就可以回复这个主题了。"
         email_placeholder: '电子邮箱地址'
@@ -622,7 +655,9 @@ zh_CN:
           spam: "{{icons}} 投诉它为垃圾信息"
           inappropriate: "{{icons}} 投诉它为不当内容"
           notify_moderators: "{{icons}} 向版主投诉它"
+          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>通知了版主</a>"
           notify_user: "{{icons}} 发起了一个私下交流"
+          notify_user_with_url: "{{icons}} 发送了一条<a href='{{postUrl}}'>私有消息</a>"
           bookmark: "{{icons}} 对它做了书签"
           like: "{{icons}} 赞了它"
           vote: "{{icons}} 对它投票"
@@ -725,6 +760,7 @@ zh_CN:
     flagging:
       title: '为何要给投诉本帖？'
       action: '投诉帖子'
+      notify_action: '通知'
       cant: "抱歉，当前你不能投诉本帖。"
       custom_placeholder_notify_user: "为何你要私下联系该用户？"
       custom_placeholder_notify_moderators: "为何本帖需要论坛版主的关注？为何本帖需要论坛版主的关注？"
@@ -909,6 +945,17 @@ zh_CN:
         approved_selected:
           one: "批准用户"
           other: "批准用户（{{count}}）"
+        titles:
+          active: '活动用户'
+          new: '新用户'
+          pending: '等待审核用户'
+          newuser: '信用等级为0的用户（新用户）'
+          basic: '信用等级为1的用户（基本用户）'
+          regular: '信用等级为2的用户（常访问用户）'
+          leader: '信用等级为3的用户（高级用户）'
+          elder: '信用等级为4的用户（骨灰用户）'
+          admins: '管理员'
+          moderators: '版主'
 
       user:
         ban_failed: "禁止此用户时发生了错误 {{error}}"
