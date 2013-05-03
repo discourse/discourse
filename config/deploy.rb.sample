@@ -2,6 +2,9 @@
 # One of the recipes (deploy:symlink_nginx) assumes you have an nginx configuration
 # file at config/nginx.conf. You can make this easily from the provided sample
 # nginx configuration file.
+#
+# For help deploying via Capistrano, see this thread:
+# http://meta.discourse.org/t/deploy-discourse-to-an-ubuntu-vps-using-capistrano/6353
 
 require 'bundler/capistrano'
 require 'sidekiq/capistrano'
