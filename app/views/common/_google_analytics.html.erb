@@ -2,6 +2,11 @@
 
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', '<%= SiteSetting.ga_tracking_code %>']);
+
+  <% if SiteSetting.ga_domain_name.present? %>
+    _gaq.push(['_setDomainName', '<%= SiteSetting.ga_domain_name %>']);
+  <% end %>
+
   _gaq.push(['_setCustomVar', 1, 'Anonymous', <%= !current_user %>, 2]);
   _gaq.push(['_trackPageview']);
 
