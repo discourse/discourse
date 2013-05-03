@@ -98,6 +98,13 @@ Discourse.SiteSetting.reopenClass({
       result.set('diags', settings.diags);
     });
     return result;
+  },
+
+  update: function(key, value) {
+    return Discourse.ajax(Discourse.getURL("/admin/site_settings/") + key, {
+      type: 'PUT',
+      data: { value: value }
+    });
   }
 });
 

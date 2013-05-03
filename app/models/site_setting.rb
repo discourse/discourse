@@ -86,6 +86,8 @@ class SiteSetting < ActiveRecord::Base
   setting(:newuser_max_mentions_per_post, 2)
 
   setting(:uncategorized_name, 'uncategorized')
+  setting(:uncategorized_color, 'AB9364');
+  setting(:uncategorized_text_color, 'FFFFFF');
 
   setting(:unique_posts_mins, Rails.env.test? ? 0 : 5)
 

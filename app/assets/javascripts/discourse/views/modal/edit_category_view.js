@@ -47,6 +47,7 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
 
   title: function() {
     if (this.get('category.id')) return Em.String.i18n("category.edit_long");
+    if (this.get('category.isUncategorized')) return Em.String.i18n("category.edit_uncategorized");
     return Em.String.i18n("category.create");
   }.property('category.id'),
 
@@ -57,6 +58,7 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
 
   buttonTitle: function() {
     if (this.get('saving')) return Em.String.i18n("saving");
+    if (this.get('category.isUncategorized')) return Em.String.i18n("save");
     return (this.get('category.id') ? Em.String.i18n("category.save") : Em.String.i18n("category.create"));
   }.property('saving', 'category.id'),
 
@@ -78,6 +80,8 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
         categoryView.set('id', categoryView.get('category.slug'));
         categoryView.set('loading', false);
       });
+    } else if( this.get('category.isUncategorized') ) {
+      this.set('category', this.get('category'));
     } else {
       this.set('category', Discourse.Category.create({ color: 'AB9364', text_color: 'FFFFFF', hotness: 5 }));
     }
@@ -92,17 +96,35 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
   saveCategory: function() {
     var categoryView = this;
     this.set('saving', true);
-    this.get('category').save().then(function(result) {
-      // success
-      $('#discourse-modal').modal('hide');
-      var url = Discourse.getURL("/category/") + (Discourse.Utilities.categoryUrlId(result.category));
-      Discourse.URL.redirectTo(url);
-    }, function(errors) {
-      // errors
-      if(errors.length === 0) errors.push(Em.String.i18n("category.creation_error"));
-      categoryView.displayErrors(errors);
-      categoryView.set('saving', false);
-    });
+    if( this.get('category.isUncategorized') ) {
+      $.when(
+        Discourse.SiteSetting.update('uncategorized_color', this.get('category.color')),
+        Discourse.SiteSetting.update('uncategorized_text_color', this.get('category.text_color')),
+        Discourse.SiteSetting.update('uncategorized_name', this.get('category.name'))
+      ).then(function() {
+        // success
+        $('#discourse-modal').modal('hide');
+        var url = Discourse.getURL("/category/") + categoryView.get('category.name');
+        Discourse.URL.redirectTo(url);
+      }, function(errors) {
+        // errors
+        if(errors.length === 0) errors.push(Em.String.i18n("category.save_error"));
+        categoryView.displayErrors(errors);
+        categoryView.set('saving', false);
+      });
+    } else {
+      this.get('category').save().then(function(result) {
+        // success
+        $('#discourse-modal').modal('hide');
+        var url = Discourse.getURL("/category/") + (Discourse.Utilities.categoryUrlId(result.category));
+        Discourse.URL.redirectTo(url);
+      }, function(errors) {
+        // errors
+        if(errors.length === 0) errors.push(Em.String.i18n("category.creation_error"));
+        categoryView.displayErrors(errors);
+        categoryView.set('saving', false);
+      });
+    }
   },
 
   deleteCategory: function() {
