@@ -8,7 +8,7 @@
         {{view Discourse.TextField valueBinding="name" placeholderKey="category.name_placeholder" maxlength="50"}}
       </section>
 
-      {{#unless isUncategorized}}
+      {{#unless is_uncategorized}}
         <section class='field'>
           <label>{{i18n category.description}}</label>
 

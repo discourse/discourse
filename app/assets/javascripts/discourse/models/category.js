@@ -8,6 +8,11 @@
 **/
 Discourse.Category = Discourse.Model.extend({
 
+  init: function() {
+    this._super();
+    if (!this.get('id') && this.get('name')) this.set('is_uncategorized', true);
+  },
+
   url: function() {
     return Discourse.getURL("/category/") + (this.get('slug'));
   }.property('name'),
@@ -19,10 +24,6 @@ Discourse.Category = Discourse.Model.extend({
   moreTopics: function() {
     return this.get('topic_count') > Discourse.SiteSettings.category_featured_topics;
   }.property('topic_count'),
-
-  isUncategorized: function() {
-    return (!this.get('id') && this.get('name'));
-  }.property('id', 'name'),
 
   save: function(args) {
     var url = Discourse.getURL("/categories");
