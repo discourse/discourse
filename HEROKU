@@ -1,0 +1,40 @@
+### Download source
+
+1. git clone git://github.com/rwdaigle/discourse.git
+1. cd discourse
+
+### Create app
+
+1. heroku create
+1. heroku addons:add openredis:micro
+1. heroku addons:add heroku-postgresql:crane --version 9.2
+1. heroku addons:add sendgrid:starter
+1. heroku config:set REDIS_URL=`heroku config:get OPENREDIS_URL`
+1. heroku labs:enable user-env-compile
+1. heroku labs:enable log-runtime-metrics
+1. heroku config:set SECRET_TOKEN=`openssl rand -base64 32`
+1. heroku config:set RAILS_ENV=production
+1. heroku config:set RUBY_GC_MALLOC_LIMIT=90000000
+
+### Deploy
+
+1. git push heroku master
+1. heroku run rake db:migrate
+1. heroku run rake db:seed_fu
+```
+
+### Run
+
+1. heroku ps:scale sidekiq=1 clockwork=1
+1. heroku open
+1. Login/register as initial user
+
+### Configure
+
+```console
+$ heroku run console
+> u = User.first
+> u.admin = true
+> u.approved = true
+> u.save
+> SiteSetting.create(:name => 'force_hostname', :data_type =>1, :value=>'discourse-test.herokuapp.com')

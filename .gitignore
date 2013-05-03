@@ -23,7 +23,7 @@ dump.rdb
 /public/assets/*
 
 config/database.yml
-config/redis.yml
+# config/redis.yml
 config/discourse.pill
 config/environments/production.rb
 

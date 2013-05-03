@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+ruby '2.0.0'
+
 # monkey patching to support dual booting
 module Bundler::SharedHelpers
   def default_lockfile=(path)
@@ -192,6 +194,9 @@ gem 'rack-mini-profiler',  git: 'https://github.com/MiniProfiler/rack-mini-profi
 gem 'rack-cors', require: false
 gem 'unicorn', require: false
 gem 'puma', require: false
+gem 'unicorn-worker-killer'
+gem 'newrelic_rpm'
+gem 'honeybadger'
 
 # perftools only works on 1.9 atm
 group :profile do
