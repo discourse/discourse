@@ -15,7 +15,7 @@
     <%= render :partial => "common/special_font_face" %>
     <%= render :partial => "common/discourse_stylesheet" %>
 
-    <%= csrf_meta_tags %>
+    <%= discourse_csrf_tags %>
 
     <%= yield :head %>
   </head>
