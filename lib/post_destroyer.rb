@@ -9,8 +9,8 @@ class PostDestroyer
   end
 
   def destroy
-    if @user.moderator?
-      moderator_destroyed
+    if @user.staff?
+      staff_destroyed
     elsif @user.id == @post.user_id
       user_destroyed
     end
@@ -18,7 +18,7 @@ class PostDestroyer
 
   # When a post is properly deleted. Well, it's still soft deleted, but it will no longer
   # show up in the topic
-  def moderator_destroyed
+  def staff_destroyed
     Post.transaction do
 
       # Update the last post id to the previous post if it exists

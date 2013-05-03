@@ -210,7 +210,7 @@ class Guardian
   end
 
   def can_delete_all_posts?(user)
-    return false unless is_admin?
+    return false unless is_staff?
     return false if user.created_at < 7.days.ago
 
     true

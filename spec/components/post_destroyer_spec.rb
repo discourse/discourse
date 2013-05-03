@@ -9,6 +9,7 @@ describe PostDestroyer do
   describe 'basic destroying' do
 
     let(:moderator) { Fabricate(:moderator) }
+    let(:admin) { Fabricate(:admin) }
 
     context "as the creator of the post" do
       before do
@@ -32,6 +33,16 @@ describe PostDestroyer do
     context "as a moderator" do
       before do
         PostDestroyer.new(moderator, post).destroy
+      end
+
+      it "deletes the post" do
+        post.deleted_at.should be_present
+      end
+    end
+    
+    context "as an admin" do
+      before do
+        PostDestroyer.new(admin, post).destroy
       end
 
       it "deletes the post" do
