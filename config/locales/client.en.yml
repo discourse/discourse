@@ -36,7 +36,7 @@ en:
       title: "Suggested Topics"
 
     bookmarks:
-      not_logged_in: "Sorry you must be logged in to bookmark posts."
+      not_logged_in: "Sorry, you must be logged in to bookmark posts."
       created: "You've bookmarked this post."
       not_bookmarked: "You've read this post; click to bookmark it."
       last_read: "This is the last post you've read."
@@ -110,13 +110,13 @@ en:
         action: "change"
         title: "Change Username"
         confirm: "There could be consequences to changing your username. Are you absolutely sure you want to?"
-        taken: "Sorry that username is taken."
+        taken: "Sorry, that username is taken."
         error: "There was an error changing your username."
         invalid: "That username is invalid. It must only include numbers and letters"
       change_email:
         action: 'change'
         title: "Change Email"
-        taken: "Sorry that email is not available."
+        taken: "Sorry, that email is not available."
         error: "There was an error changing your email. Perhaps that address is already in use?"
         success: "We've sent an email to that address. Please follow the confirmation instructions."
 
@@ -540,7 +540,7 @@ en:
         email_or_username_placeholder: "email address or username"
         action: "Invite"
         success: "Thanks! We've invited that user to participate in this private message."
-        error: "Sorry there was an error inviting that user."
+        error: "Sorry, there was an error inviting that user."
 
       invite_reply:
         title: 'Invite Friends to Reply'
@@ -549,7 +549,7 @@ en:
         email: "We'll send your friend a brief email allowing them to reply to this topic by clicking a link."
         email_placeholder: 'email address'
         success: "Thanks! We mailed out an invitation to <b>{{email}}</b>. We'll let you know when they redeem your invitation. Check the invitations tab on your user page to keep track of who you've invited."
-        error: "Sorry we couldn't invite that person. Perhaps they are already a user?"
+        error: "Sorry, we couldn't invite that person. Perhaps they are already a user?"
 
       login_reply: 'Log In to Reply'
 
@@ -937,7 +937,7 @@ en:
         title: 'Users'
         create: 'Add Admin User'
         last_emailed: "Last Emailed"
-        not_found: "Sorry that username doesn't exist in our system."
+        not_found: "Sorry, that username doesn't exist in our system."
         new: "New"
         active: "Active"
         pending: "Pending"
