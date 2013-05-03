@@ -85,14 +85,15 @@ describe PostAction do
 
   end
 
-  it "increases the post's bookmark count when saved" do
-    lambda { bookmark.save; post.reload }.should change(post, :bookmark_count).by(1)
-  end
+  describe "when a user bookmark something" do
+    it "increases the post's bookmark count when saved" do
+      lambda { bookmark.save; post.reload }.should change(post, :bookmark_count).by(1)
+    end
 
-  it "increases the forum topic's bookmark count when saved" do
-    lambda { bookmark.save; post.topic.reload }.should change(post.topic, :bookmark_count).by(1)
+    it "increases the forum topic's bookmark count when saved" do
+      lambda { bookmark.save; post.topic.reload }.should change(post.topic, :bookmark_count).by(1)
+    end
   end
-
 
   describe 'when a user likes something' do
     it 'should increase the post counts when a user likes' do
@@ -109,10 +110,17 @@ describe PostAction do
       }.should change(post.topic, :like_count).by(1)
     end
 
+    it 'should not allow users to like more than once' do
+      lambda {
+        PostAction.act(codinghorror, post, PostActionType.types[:like])
+        PostAction.act(codinghorror, post, PostActionType.types[:like])
+      }.should raise_error(PostAction::AlreadyLiked)
+    end
+
   end
 
   describe 'when a user votes for something' do
-    it 'should increase the vote counts when a user likes' do
+    it 'should increase the vote counts when a user votes' do
       lambda {
         PostAction.act(codinghorror, post, PostActionType.types[:vote])
         post.reload
