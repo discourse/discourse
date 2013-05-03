@@ -280,7 +280,7 @@ Discourse.CreateAccountView = Discourse.ModalBodyView.extend({
     // but only when the submit button is enabled
     var _this = this;
     return Em.run.next(function() {
-      return $("input[type='text']").keydown(function(e) {
+      return $("input[type='text'], input[type='password']").keydown(function(e) {
         if (_this.get('submitDisabled') === false && e.keyCode === 13) {
           return _this.createAccount();
         }
