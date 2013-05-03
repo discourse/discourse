@@ -135,12 +135,19 @@ Discourse.TopicController = Discourse.ObjectController.extend({
 
   // Topic related
   reply: function() {
-    this.get('controllers.composer').open({
-      topic: this.get('content'),
-      action: Discourse.Composer.REPLY,
-      draftKey: this.get('content.draft_key'),
-      draftSequence: this.get('content.draft_sequence')
-    });
+    var composerController = this.get('controllers.composer');
+    if (composerController.get('content.topic.id') === this.get('content.id') &&
+        composerController.get('content.action') === Discourse.Composer.REPLY) {
+      composerController.set('content.post', null);
+      composerController.set('content.composeState', Discourse.Composer.OPEN);
+    } else {
+      composerController.open({
+        topic: this.get('content'),
+        action: Discourse.Composer.REPLY,
+        draftKey: this.get('content.draft_key'),
+        draftSequence: this.get('content.draft_sequence')
+      });
+    }
   },
 
   toggleParticipant: function(user) {
