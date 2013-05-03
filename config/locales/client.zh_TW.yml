@@ -30,6 +30,7 @@ zh_TW:
     you: "你"
     or: "或"
     now: "剛剛"
+    read_more: '閱讀更多'
 
     suggested_topics:
       title: "推薦主題"
@@ -49,8 +50,36 @@ zh_TW:
     saving: "保存中……"
     saved: "已保存！"
 
-    user_action_descriptions:
-      "6": "回複"
+    user_action:
+      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> 發起 <a href='{{topicUrl}}'>本主題</a>"
+      you_posted_topic: "<a href='{{userUrl}}'>你</a> 發起 <a href='{{topicUrl}}'>本主題</a>"
+      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> 回複 <a href='{{postUrl}}'>{{post_number}}</a>"
+      you_replied_to_post: "<a href='{{userUrl}}'>你</a> 回複 <a href='{{postUrl}}'>{{post_number}}</a>"
+      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> 回複 <a href='{{topicUrl}}'>本主題</a>"
+      you_replied_to_topic: "<a href='{{userUrl}}'>你</a> 回複 <a href='{{topicUrl}}'>本主題</a>"
+
+      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> 提到 <a href='{{user2Url}}'>{{another_user}}</a>"
+      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> 提到<a href='{{user2Url}}'>你</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>你</a> 提到 <a href='{{user2Url}}'>{{user}}</a>"
+
+      posted_by_user: "发起人 <a href='{{userUrl}}'>{{user}}</a>"
+      posted_by_you: "发起人 <a href='{{userUrl}}'>你</a>"
+      sent_by_user: "发送人 <a href='{{userUrl}}'>{{user}}</a>"
+      sent_by_you: "发送人 <a href='{{userUrl}}'>你</a>"
+
+    user_action_groups:
+      "1": "給出的贊"
+      "2": "收到的贊"
+      "3": "書籤"
+      "4": "主題"
+      "5": "回複"
+      "6": "迴應"
+      "7": "提到"
+      "9": "引用"
+      "10": "喜愛"
+      "11": "編輯"
+      "12": "發送條目"
+      "13": "收件箱"
 
     user:
       profile: 介紹信息
@@ -67,6 +96,9 @@ zh_TW:
       trust_level: "用戶級別"
       external_links_in_new_tab: "始終在新的標簽頁打開外部鏈接"
       enable_quoting: "在高亮選擇文字時啓用引用回複"
+
+      moderator: "{{user}} 是版主"
+      admin: "{{user}} 是管理員"
 
       change_password:
         action: "修改"
@@ -512,6 +544,7 @@ zh_TW:
 
       invite_reply:
         title: '邀請朋友來回複'
+        action: '郵件邀請'
         help: '向你的朋友發送邀請，他們只需要一個點擊就能回複這個主題'
         email: "我們會給你的朋友發送一封郵件，他們只需要點擊其中的一個鏈接就可以回複這個主題了。"
         email_placeholder: '電子郵箱地址'
@@ -622,7 +655,9 @@ zh_TW:
           spam: "{{icons}} 投訴它爲垃圾信息"
           inappropriate: "{{icons}} 投訴它爲不當內容"
           notify_moderators: "{{icons}} 向版主投訴它"
+          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>通知了版主</a>"
           notify_user: "{{icons}} 發起了一個私下交流"
+          notify_user_with_url: "{{icons}} 發送了一條<a href='{{postUrl}}'>私有消息</a>"
           bookmark: "{{icons}} 對它做了書簽"
           like: "{{icons}} 贊了它"
           vote: "{{icons}} 對它投票"
@@ -725,6 +760,7 @@ zh_TW:
     flagging:
       title: '爲何要給投訴本帖？'
       action: '投訴帖子'
+      notify_action: '通知'
       cant: "抱歉，當前你不能投訴本帖。"
       custom_placeholder_notify_user: "爲何你要私下聯系該用戶？"
       custom_placeholder_notify_moderators: "爲何本帖需要論壇版主的關注？爲何本帖需要論壇版主的關注？"
@@ -909,6 +945,17 @@ zh_TW:
         approved_selected:
           one: "批准用戶"
           other: "批准用戶（{{count}}）"
+        titles:
+          active: '活動用戶'
+          new: '新用戶'
+          pending: '等待審覈用戶'
+          newuser: '信用等級為0的用戶（新用戶）'
+          basic: '信用等級為1的用戶（基本用戶）'
+          regular: '信用等級為2的用戶（常訪問用戶）'
+          leader: '信用等級為3的用戶（高級用戶）'
+          elder: '信用等級為4的用戶（骨灰用戶）'
+          admins: '管理員'
+          moderators: '版主'
 
       user:
         ban_failed: "禁止此用戶時發生了錯誤 {{error}}"

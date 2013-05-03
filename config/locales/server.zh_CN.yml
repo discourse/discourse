@@ -5,7 +5,8 @@ zh_CN:
       short: "%Y-%m-%d"
 
   title: "论坛"
-  topics: "主题"
+  topics: "贴"
+  posts: "posts"
   loading: "载入中"
   powered_by_html: '源自<a href="http://www.discourse.org">论坛 - Discourse</a>，请开启JavaScript支持以获得最佳效果'
 
@@ -297,6 +298,14 @@ zh_CN:
       title: "投诉"
       xaxis: "天"
       yaxis: "投诉数"
+    bookmarks:
+      title: "书签"
+      xaxis: "天"
+      yaxis: "新书签数"
+    favorites:
+      title: "喜爱"
+      xaxis: "天"
+      yaxis: "新喜爱数"
     users_by_trust_level:
       title: "按用户等级的用户统计"
       xaxis: "用户等级"
@@ -305,10 +314,41 @@ zh_CN:
       title: "已发送邮件"
       xaxis: "天"
       yaxis: "邮件数"
-    private_messages:
-      title: "私信"
+    user_to_user_private_messages:
+      title: "用户至用户"
       xaxis: "天"
       yaxis: "私信数"
+    system_private_messages:
+      title: "系统"
+      xaxis: "天"
+      yaxis: "私信数"
+    moderator_warning_private_messages:
+      title: "版主警告"
+      xaxis: "天"
+      yaxis: "私信数"
+    notify_moderators_private_messages:
+      title: "版主通知"
+      xaxis: "天"
+      yaxis: "私信数"
+    notify_user_private_messages:
+      title: "用户通知"
+      xaxis: "天"
+      yaxis: "私信数"
+    top_referrers:
+      title: "最高引用"
+      xaxis: "用户"
+      num_visits: "访问数"
+      num_topics: "主题数"
+    top_traffic_sources:
+      title: "最高流量来源"
+      xaxis: "域名"
+      num_visits: "访问数"
+      num_topics: "主题数"
+      num_users: "用户数"
+    top_referred_topics:
+      title: "最高引用主题"
+      xaxis: "主题"
+      num_visits: "访问数"
 
   dashboard:
     rails_env_warning: "你的服务器运行在 %{env} 模式。"
@@ -316,10 +356,16 @@ zh_CN:
     gc_warning: '你的服务器使用的是缺省的 ruby 垃圾回收参数，这个配置无法提供最高性能。请阅读此性能调优文档：<a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>。'
     clockwork_warning: '发条装置（Clockwork）并未运行。请确保运行一个 clockwork 进程，这样一些重要的工作能够被安排执行。<a href="https://github.com/tomykaira/clockwork">了解发条装置（clockwork）</a>。'
     sidekiq_warning: 'Sidekiq 不在运行。很多任务，例如发送电子邮件，是异步的被 sidekiq 调度执行的。请确保至少运行一个 sidekiq 进程。<a href="https://github.com/mperham/sidekiq">了解 Sidekiq</a>。'
+    queue_size_warning: '队列中的任务数为%{queue_size}，任务较多。这可能因为Sidekiq进程出问题导致，或者需要更多的Sidekiq进程。'
     memory_warning: '你的服务器环境内存少于 1GB，我们建议至少要有 1GB 内存'
     facebook_config_warning: '服务器允许使用脸书账号登陆 (enable_facebook_logins), 但是 app id 和 app secret values 没有被设定。 到 <a href="/admin/site_settings">站点设置</a> 更新此设定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">参考设定指南</a>。'
     twitter_config_warning: '服务器允许使用推特账号登陆 (enable_twitter_logins), 但是 key 和 secret values 没有被设定。 到 <a href="/admin/site_settings">站点设置</a> 更新此设定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">参考设定指南</a>。'
     github_config_warning: '服务器允许使用GitHub账号登陆  (enable_github_logins), 但是 client id 和 secret values 没有被设定。 到 <a href="/admin/site_settings">站点设置</a> 更新此设定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">参考设定指南</a>。'
+    failing_emails_warning: "%{num_failed_jobs}个email任务失败。请检查config/production.rb文件是否正确配置了config.action_mailer。"
+    default_logo_warning: "你没有自定义你的站点logo。请在<a href='/admin/site_settings'>站点设置</a>中配置logo_url、logo_small_url和favicon_url。"
+    contact_email_missing: "你没有为站点指定一个联系邮箱。请在<a href='/admin/site_settings'>站点设置</a>配置contact_email。"
+    contact_email_invalid: "站点联系邮箱不正确。请在<a href='/admin/site_settings'>站点设置</a>修改。"
+    title_nag: "站点标题在站点设置中仍为缺省值。请在<a href='/admin/site_settings'>站点设置</a>中将其设置为你的标题。"
 
   content_types:
     education_new_reply:
@@ -357,6 +403,7 @@ zh_CN:
     discourse_org_access_key: "访问 discourse.org 上的 Discourse Hub 昵称注册表的访问密匙（access key）"
     educate_until_posts: "显示弹出指导面板直到用户发表了这么多数量的帖子"
     title: "本站点标题，用于 HTML 标题标签（title）和其它地方"
+    contact_email: "可以与本站联系的email地址。Discourse.org将会把重要更新的通知消息发送到该邮箱。"
     company_full_name: "运行本站点的公司全称，用于法律文档，例如服务条款 /tos"
     company_short_name: "运行本站点的公司短名，用于法律文档，例如服务条款 /tos"
     company_domain: "运行本站点的公司域名，用于法律文档，例如服务条款 /tos"
@@ -366,7 +413,8 @@ zh_CN:
     crawl_images: "允许从第三方获取图片来插入宽、高数值"
     ninja_edit_window: "在多少秒钟之内，对帖子的多次编辑不生成新版本"
     enable_imgur: "启用 Imgur API 来上传文件，不在本地（站点服务器）保存文件"
-    imgur_api_key: "你的 imgur.com API 密匙，上传文件到 Imgur 必须"
+    imgur_client_id: "你的imgur.com的客户端ID，以便图片上传能正常工作。"
+    imgur_client_secret: "你的imgur.com的客户端secret。 目前图片上传功能并不需要这项信息，但是将来的某天可能需要。"
     imgur_endpoint: "上传图片到 imgur.com 的终点"
     max_image_width: "帖子中图片允许的最大宽度"
     category_featured_topics: "在分类 /categories 页面每个分类显示的主题数目"
@@ -505,6 +553,13 @@ zh_CN:
 
     title_prettify: "防止常见标题里的错别字和错误，包括全部大写，第一个字符小写，多个！和？，结尾多余的. 等等。"
 
+    topic_views_heat_low: "多少浏览量后主题的热度变为低。"
+    topic_views_heat_medium: "多少浏览量后主题的热度变为中。"
+    topic_views_heat_high: "多少浏览量后主题的热度变为高。"
+
+    tos_url: "如果你想要使用一个部署在某个地方的服务条款文档，那么请在此填写其完整URL地址。"
+    privacy_policy_url: "如果你想要使用一个部署在某个地方的隐私政策文档，那么请在此填写其完整URL地址。"
+
   notification_types:
     mentioned: "%{display_username} 在 %{link} @到了你"
     liked: "%{display_username} 在 %{link} 赞了你的帖子 "
@@ -527,31 +582,6 @@ zh_CN:
   most_posts: "大部分帖子"
   most_recent_poster: "当前大部分帖子作者"
   frequent_poster: "频繁发帖者"
-
-  user_action_descriptions:
-    bookmarks: "书签"
-    topics: "主题"
-    likes_received: "收到的赞"
-    likes_given: "送出的赞"
-    responses: "回复"
-    topic_responses: "主题回复"
-    posts: "帖子"
-    mentions: "提及"
-    quotes: "引用"
-    edits: "编辑"
-    favorites: "收藏"
-    sent_items: "已发送条目"
-    inbox: "收件箱"
-
-    was_liked: "曾被赞过"
-    liked: "赞过"
-    bookmarked: "标过书签"
-    posted: "发表过"
-    responded_to: "回复给"
-    mentioned: "提及过"
-    quoted: "引用过"
-    favorited: "收藏过"
-    edited: "编辑过"
 
   move_posts:
     moderator_post:
@@ -888,3 +918,9 @@ zh_CN:
     miscellaneous: "This Agreement constitutes the entire agreement between %{company_short_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_short_name}, or by the posting by %{company_short_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_short_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns."
 
   deleted: '已删除'
+
+  upload:
+    image:
+      fetch_failure: "抱歉，获取图片時发生错误。"
+      unknown_image_type: "抱歉，你上传的文件似乎不是一张图片。"
+      size_not_found: "抱歉，我们无法获取图片大小，请检查你的图片是否已损坏。"
