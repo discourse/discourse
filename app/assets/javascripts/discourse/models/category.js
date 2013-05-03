@@ -20,6 +20,10 @@ Discourse.Category = Discourse.Model.extend({
     return this.get('topic_count') > Discourse.SiteSettings.category_featured_topics;
   }.property('topic_count'),
 
+  isUncategorized: function() {
+    return (!this.get('id') && this.get('name'));
+  }.property('id', 'name'),
+
   save: function(args) {
     var url = Discourse.getURL("/categories");
     if (this.get('id')) {
