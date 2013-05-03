@@ -26,6 +26,7 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:track_external_right_clicks, false)
   client_setting(:must_approve_users, false)
   client_setting(:ga_tracking_code, "")
+  client_setting(:ga_domain_name, "")
   client_setting(:new_topics_rollup, 1)
   client_setting(:enable_long_polling, true)
   client_setting(:polling_interval, 3000)
