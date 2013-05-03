@@ -343,6 +343,21 @@ fr:
       title: Notifications Utilisateur
       xaxis: Jour
       yaxis: Nombre de messages privés
+    top_referrers:
+      title: Meilleurs référants
+      xaxis: Utilisateurs
+      num_visits: Visites
+      num_topics: Discussions
+    top_traffic_sources:
+      title: Meilleures sources de traffic
+      xaxis: Domaine
+      num_visits: Visites
+      num_topics: Discussions
+      num_users: Utilisateurs
+    top_referred_topics:
+      title: Discussions les plus référencées
+      xaxis: Discussion
+      num_visits: Visites
 
   dashboard:
     rails_env_warning: "Votre serveur fonctionne dans l'environnement de %{env}."
@@ -407,7 +422,8 @@ fr:
     crawl_images: "permettre la récupération des images provenant de sources tierces"
     ninja_edit_window: "temps d'édition avant de sauvegarder une nouvelle version, en secondes."
     enable_imgur: "utiliser l'envoi des images avec l'API imgur, ne pas stocker les fichiers localement"
-    imgur_api_key: "clé de l'API imgur.com - requis pour l'envoi d'images"
+    imgur_client_id: "Votre ID client imgur.com. Requis pour que l'envoi d'images fonctionne."
+    imgur_client_secret: "Votre secret imgur.com. Pas nécessaire pour que l'envoi d'image fonctionne, mais pourrais le devenir."
     imgur_endpoint: "point d'arrêt pour le chargement d'images sur imgur.com"
     max_image_width: "largeur maximale des images d'un message"
     category_featured_topics: "nombre de discussions affichées dans la liste par catégories"
