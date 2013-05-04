@@ -39,19 +39,19 @@ GIT
       railties (>= 3.1)
 
 GIT
-  remote: git://github.com/rails-api/active_model_serializers.git
-  revision: 329a38a7ddee4350f96d657256a5f6a277865291
-  specs:
-    active_model_serializers (0.7.0)
-      activemodel (>= 3.0)
-
-GIT
   remote: git://github.com/zhangyuan/vestal_versions
   revision: 0ea75ec4e269b5a9e609639919ade0f36381a446
   specs:
     vestal_versions (1.2.2)
       activerecord (>= 3.0.0)
       activesupport (>= 3.0.0)
+
+GIT
+  remote: https://github.com/rails-api/active_model_serializers.git
+  revision: 7a39966e7ea47eb2f58962b6f0060ff3cbef4e65
+  specs:
+    active_model_serializers (0.7.0)
+      activemodel (>= 3.0)
 
 PATH
   remote: vendor/gems/discourse_emoji
