@@ -738,11 +738,13 @@ fr:
       none: '(pas de catégorie)'
       edit: 'éditer'
       edit_long: "Editer la catégorie"
+      edit_uncategorized: "Editer les non catégoriser"
       view: 'Voir les discussions dans cette catégorie'
       delete: 'Supprimer la catégorie'
       create: 'Créer la catégorie'
       save: 'Enregistrer la catégorie'
       creation_error: "Il y a eu une erreur lors de la création de la catégorie."
+      save_error: "Il y a eu une erreur lors de la sauvegarde de la catégorie."
       more_posts: "voir tous les {{posts}}..."
       name: "Nom de la catégorie"
       description: "Description"
