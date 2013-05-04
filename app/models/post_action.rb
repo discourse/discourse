@@ -3,6 +3,7 @@ require_dependency 'system_message'
 
 class PostAction < ActiveRecord::Base
   class AlreadyFlagged < StandardError; end
+  class AlreadyLiked < StandardError; end
 
   include RateLimiter::OnCreateRecord
 
@@ -156,6 +157,10 @@ class PostAction < ActiveRecord::Base
   end
 
   before_create do
+    raise AlreadyLiked if is_like? && PostAction.where(user_id: user_id,
+                                                       post_id: post_id,
+                                                       post_action_type_id: PostActionType.types[:like]).exists?
+    
     raise AlreadyFlagged if is_flag? && PostAction.where(user_id: user_id,
                                                          post_id: post_id,
                                                          post_action_type_id: PostActionType.flag_types.values).exists?
