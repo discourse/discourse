@@ -139,7 +139,18 @@ Handlebars.registerHelper('avatar', function(user, options) {
 
     var title;
     if (!options.hash.ignoreTitle) {
-      title = Em.get(user, 'title') || Em.get(user, 'description');
+      // first try to get a title
+      title = Em.get(user, 'title');
+      // if there was no title provided
+      if (!title) {
+        // try to retrieve a description
+        var description = Em.get(user, 'description');
+        // if a description has been provided
+        if (description && description.length > 0) {
+          // preprend the username before the description
+          title = username + " - " + description;
+        }
+      }
     }
 
     return new Handlebars.SafeString(Discourse.Utilities.avatarImg({
