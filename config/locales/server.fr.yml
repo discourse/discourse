@@ -507,6 +507,9 @@ fr:
     previous_visit_timeout_hours: "Combien de temps dure une visite avant de la considérer comme la visite 'précédente', en heures."
 
     uncategorized_name: "Nom pour les discussions sans catégorie dans la liste des catégories"
+    uncategorized_color: "La couleur du badge de la catégorie des discussions qui ne sont dans aucune catégorie"
+    uncategorized_text_color: "La couleur du text du badge de la catégorie des discussions qui ne sont dans aucune catégorie"
+
     newuser_max_links: "Nombre maximum de liens qu'un visiteur peut ajouter à un message"
     newuser_max_images: "Nombre maximum d'images qu'un visiteur peut ajouter à un message"
     newuser_max_mentions_per_post: "Nombre maximum de référence à un @utilisateur qu'un visiteur peut ajouter à un message"
