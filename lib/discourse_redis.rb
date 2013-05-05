@@ -46,7 +46,7 @@ class DiscourseRedis
        zrange zrangebyscore zrank zrem zremrangebyrank zremrangebyscore zrevrange zrevrangebyscore zrevrank zrangebyscore).each do |m|
     define_method m do |*args|
       args[0] = "#{DiscourseRedis.namespace}:#{args[0]}"
-      @redis.send(__method__, *args)
+      @redis.send(m, *args)
     end
   end
 
