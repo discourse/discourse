@@ -43,7 +43,8 @@ class DiscourseRedis
        lindex linsert llen lpop lpush lpushx lrange lrem lset ltrim mget move mset msetnx persist pexpire pexpireat psetex
        pttl rename renamenx rpop rpoplpush rpush rpushx sadd scard sdiff set setbit setex setnx setrange sinter
        sismember smembers sort spop srandmember srem strlen sunion ttl type watch zadd zcard zcount zincrby
-       zrange zrangebyscore zrank zrem zremrangebyrank zremrangebyscore zrevrange zrevrangebyscore zrevrank zrangebyscore).each do |m|
+       zrange zrangebyscore zrank zrem zremrangebyrank zremrangebyscore zrevrange zrevrangebyscore zrevrank zrangebyscore
+  ).map(&:to_sym).each do |m|
     define_method m do |*args|
       args[0] = "#{DiscourseRedis.namespace}:#{args[0]}"
       @redis.send(m, *args)
