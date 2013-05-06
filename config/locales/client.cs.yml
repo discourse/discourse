@@ -73,7 +73,7 @@ cs:
       "3": "Záložky"
       "4": "Témata"
       "5": "Odpovědi"
-      "6": "Odpovědi"
+      "6": "Odezvy ostatních"
       "7": "Zmíňky"
       "9": "Citace"
       "10": "Oblíbené"
@@ -766,11 +766,13 @@ cs:
       none: '(bez kategorie)'
       edit: 'upravit'
       edit_long: "Upravit kategorii"
+      edit_uncategorized: "Upravit nekategorizované"
       view: 'Zobrazit témata v kategorii'
       delete: 'Smazat kategorii'
       create: 'Nová kategorie'
       save: 'Uložit kategorii'
       creation_error: Během vytváření nové kategorie nastala chyba.
+      save_error: Během ukládání kategorie nastala chyba.
       more_posts: "zobrazit všechny {{posts}}..."
       name: "Název kategorie"
       description: "Popis"
