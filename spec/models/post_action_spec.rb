@@ -19,15 +19,14 @@ describe PostAction do
 
   describe "messaging" do
 
-    it "notify moderators integration test" do 
+    it "notify moderators integration test" do
       mod = moderator
       action = PostAction.act(codinghorror, post, PostActionType.types[:notify_moderators], "this is my special long message");
 
-      posts = Post.
-                  joins(:topic).
-                  select('posts.id, topics.subtype').
-                  where('topics.archetype' => Archetype.private_message).
-                  to_a
+      posts = Post.joins(:topic)
+                  .select('posts.id, topics.subtype')
+                  .where('topics.archetype' => Archetype.private_message)
+                  .to_a
 
       posts.count.should == 1
       action.related_post_id.should == posts[0].id.to_i
@@ -85,14 +84,35 @@ describe PostAction do
 
   end
 
-  it "increases the post's bookmark count when saved" do
-    lambda { bookmark.save; post.reload }.should change(post, :bookmark_count).by(1)
-  end
+  describe "when a user bookmarks something" do
+    it "increases the post's bookmark count when saved" do
+      lambda { bookmark.save; post.reload }.should change(post, :bookmark_count).by(1)
+    end
 
-  it "increases the forum topic's bookmark count when saved" do
-    lambda { bookmark.save; post.topic.reload }.should change(post.topic, :bookmark_count).by(1)
-  end
+    it "increases the forum topic's bookmark count when saved" do
+      lambda { bookmark.save; post.topic.reload }.should change(post.topic, :bookmark_count).by(1)
+    end
 
+    describe 'when deleted' do
+
+      before do
+        bookmark.save
+        post.reload
+        @topic = post.topic
+        @topic.reload
+        bookmark.deleted_at = DateTime.now
+        bookmark.save
+      end
+
+      it 'reduces the bookmark count of the post' do
+        lambda { post.reload }.should change(post, :bookmark_count).by(-1)
+      end
+
+      it 'reduces the bookmark count of the forum topic' do
+        lambda { @topic.reload }.should change(post.topic, :bookmark_count).by(-1)
+      end
+    end
+  end
 
   describe 'when a user likes something' do
     it 'should increase the post counts when a user likes' do
@@ -108,11 +128,10 @@ describe PostAction do
         post.topic.reload
       }.should change(post.topic, :like_count).by(1)
     end
-
   end
 
   describe 'when a user votes for something' do
-    it 'should increase the vote counts when a user likes' do
+    it 'should increase the vote counts when a user votes' do
       lambda {
         PostAction.act(codinghorror, post, PostActionType.types[:vote])
         post.reload
@@ -127,37 +146,21 @@ describe PostAction do
     end
   end
 
-
-  describe 'when deleted' do
-    before do
-      bookmark.save
-      post.reload
-      @topic = post.topic
-      @topic.reload
-      bookmark.deleted_at = DateTime.now
-      bookmark.save
-    end
-
-    it 'reduces the bookmark count of the post' do
-      lambda {
-        post.reload
-      }.should change(post, :bookmark_count).by(-1)
-    end
-
-    it 'reduces the bookmark count of the forum topic' do
-      lambda {
-        @topic.reload
-      }.should change(post.topic, :bookmark_count).by(-1)
-    end
-  end
-
   describe 'flagging' do
 
     it 'does not allow you to flag stuff with 2 reasons' do
       post = Fabricate(:post)
       u1 = Fabricate(:evil_trout)
       PostAction.act(u1, post, PostActionType.types[:spam])
-      lambda { PostAction.act(u1, post, PostActionType.types[:off_topic]) }.should raise_error(PostAction::AlreadyFlagged)
+      lambda { PostAction.act(u1, post, PostActionType.types[:off_topic]) }.should raise_error(PostAction::AlreadyActed)
+    end
+
+    it 'allows you to flag stuff with another reason' do
+      post = Fabricate(:post)
+      u1 = Fabricate(:evil_trout)
+      PostAction.act(u1, post, PostActionType.types[:spam])
+      PostAction.remove_act(u1, post, PostActionType.types[:spam])
+      lambda { PostAction.act(u1, post, PostActionType.types[:off_topic]) }.should_not raise_error(PostAction::AlreadyActed)
     end
 
     it 'should update counts when you clear flags' do
@@ -175,13 +178,10 @@ describe PostAction do
     end
 
     it 'should follow the rules for automatic hiding workflow' do
-
       post = Fabricate(:post)
       u1 = Fabricate(:evil_trout)
       u2 = Fabricate(:walter_white)
-
-      # we need an admin for the messages
-      admin = Fabricate(:admin)
+      admin = Fabricate(:admin) # we need an admin for the messages
 
       SiteSetting.flags_required_to_hide_post = 2
 
@@ -215,6 +215,20 @@ describe PostAction do
 
       post.hidden.should be_true
       post.hidden_reason_id.should == Post.hidden_reasons[:flag_threshold_reached_again]
+    end
+  end
+
+  it "prevents user to act twice at the same time" do
+    post = Fabricate(:post)
+    user = Fabricate(:evil_trout)
+
+    # flags are already being tested
+    all_types_except_flags = PostActionType.types.except(PostActionType.flag_types)
+    all_types_except_flags.values.each do |action|
+      lambda do
+        PostAction.act(user, post, action)
+        PostAction.act(user, post, action)
+      end.should raise_error(PostAction::AlreadyActed)
     end
   end
 
