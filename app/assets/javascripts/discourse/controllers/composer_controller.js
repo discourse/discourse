@@ -182,11 +182,9 @@ Discourse.ComposerController = Discourse.Controller.extend({
       @param {String} [opts.quote] If we're opening a reply from a quote, the quote we're making
   **/
   open: function(opts) {
-    var composer, promise, view,
-      _this = this;
     if (!opts) opts = {};
-
-    opts.promise = promise = opts.promise || Ember.Deferred.create();
+    var promise = opts.promise || Ember.Deferred.create();
+    opts.promise = promise;
     this.set('typedReply', false);
     this.set('similarTopics', null);
     this.set('similarClosed', false);
@@ -197,7 +195,8 @@ Discourse.ComposerController = Discourse.Controller.extend({
     }
 
     // ensure we have a view now, without it transitions are going to be messed
-    view = this.get('view');
+    var view = this.get('view');
+    var composerController = this;
     if (!view) {
       view = Discourse.ComposerView.create({ controller: this });
       view.appendTo($('#main'));
@@ -205,14 +204,14 @@ Discourse.ComposerController = Discourse.Controller.extend({
       // the next runloop is too soon, need to get the control rendered and then
       //  we need to change stuff, otherwise css animations don't kick in
       Em.run.next(function() {
-        return Em.run.next(function() {
-          return _this.open(opts);
+        Em.run.next(function() {
+          composerController.open(opts);
         });
       });
       return promise;
     }
 
-    composer = this.get('content');
+    var composer = this.get('content');
     if (composer && opts.draftKey !== composer.draftKey && composer.composeState === Discourse.Composer.DRAFT) {
       this.close();
       composer = null;
@@ -226,11 +225,8 @@ Discourse.ComposerController = Discourse.Controller.extend({
       } else {
         opts.tested = true;
         if (!opts.ignoreIfChanged) {
-          this.cancel((function() {
-            return _this.open(opts);
-          }), (function() {
-            return promise.reject();
-          }));
+          this.cancel().then(function() { composerController.open(opts); },
+                             function() { return promise.reject(); });
         }
         return promise;
       }
@@ -241,7 +237,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
       Discourse.Draft.get(opts.draftKey).then(function(data) {
         opts.draftSequence = data.draft_sequence;
         opts.draft = data.draft;
-        return _this.open(opts);
+        return composerController.open(opts);
       });
       return promise;
     }
@@ -279,30 +275,27 @@ Discourse.ComposerController = Discourse.Controller.extend({
     }
   },
 
-  cancel: function(success, fail) {
-    var _this = this;
-    if (this.get('content.hasMetaData') || ((this.get('content.reply') || "") !== (this.get('content.originalText') || ""))) {
-      bootbox.confirm(Em.String.i18n("post.abandon"), Em.String.i18n("no_value"), Em.String.i18n("yes_value"), function(result) {
-        if (result) {
-          _this.destroyDraft();
-          _this.close();
-          if (typeof success === "function") {
-            return success();
+  cancel: function() {
+    var composerController = this;
+    return Ember.Deferred.promise(function (promise) {
+      if (composerController.get('content.hasMetaData') ||
+          ((composerController.get('content.reply') || "") !== (composerController.get('content.originalText') || ""))) {
+        bootbox.confirm(Em.String.i18n("post.abandon"), Em.String.i18n("no_value"), Em.String.i18n("yes_value"), function(result) {
+          if (result) {
+            composerController.destroyDraft();
+            composerController.close();
+            promise.resolve();
+          } else {
+            promise.reject();
           }
-        } else {
-          if (typeof fail === "function") {
-            return fail();
-          }
-        }
-      });
-    } else {
-      // it is possible there is some sort of crazy draft with no body ... just give up on it
-      this.destroyDraft();
-      this.close();
-      if (typeof success === "function") {
-        success();
+        });
+      } else {
+        // it is possible there is some sort of crazy draft with no body ... just give up on it
+        composerController.destroyDraft();
+        composerController.close();
+        promise.resolve();
       }
-    }
+    });
   },
 
   openIfDraft: function() {

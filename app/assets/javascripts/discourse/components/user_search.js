@@ -45,7 +45,8 @@ Discourse.UserSearch = {
       cache = {};
     }
     cacheTopicId = topicId;
-    var success = function(r) {
+
+    var organizeResults = function(r) {
       var result = [];
       r.users.each(function(u) {
         if (exclude.indexOf(u.username) === -1) {
@@ -58,9 +59,9 @@ Discourse.UserSearch = {
     };
 
     if (cache[term]) {
-      success(cache[term]);
+      organizeResults(cache[term]);
     } else {
-      debouncedSearch(term, topicId).then(success);
+      debouncedSearch(term, topicId).then(organizeResults);
     }
     return promise;
   }
