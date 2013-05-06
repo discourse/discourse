@@ -151,14 +151,16 @@ Discourse.Post = Discourse.Model.extend({
         data: {
           post: { raw: this.get('raw') },
           image_sizes: this.get('imageSizes')
-        },
-        success: function(result) {
-          // If we received a category update, update it
-          if (result.category) Discourse.get('site').updateCategory(result.category);
-          return typeof complete === "function" ? complete(Discourse.Post.create(result.post)) : void 0;
-        },
-        error: function(result) { return typeof error === "function" ? error(result) : void 0; }
+        }
+      }).then(function(result) {
+        // If we received a category update, update it
+        if (result.category) Discourse.get('site').updateCategory(result.category);
+        if (complete) complete(Discourse.Post.create(result.post));
+      }, function(result) {
+        // Post failed to update
+        if (error) error(result);
       });
+
     } else {
 
       // We're saving a post
@@ -178,13 +180,13 @@ Discourse.Post = Discourse.Model.extend({
       return Discourse.ajax({
         type: 'POST',
         url: Discourse.getURL("/posts"),
-        data: data,
-        success: function(result) {
-          return typeof complete === "function" ? complete(Discourse.Post.create(result)) : void 0;
-        },
-        error: function(result) {
-          return typeof error === "function" ? error(result) : void 0;
-        }
+        data: data
+      }).then(function(result) {
+        // Post created
+        if (complete) complete(Discourse.Post.create(result));
+      }, function(result) {
+        // Failed to create a post
+        if (error) error(result);
       });
     }
   },
