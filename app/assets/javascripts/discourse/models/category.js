@@ -10,7 +10,11 @@ Discourse.Category = Discourse.Model.extend({
 
   init: function() {
     this._super();
-    if (!this.get('id') && this.get('name')) this.set('is_uncategorized', true);
+    if (!this.get('id') && this.get('name')) {
+      this.set('is_uncategorized', true);
+      if (!this.get('color'))      this.set('color',      Discourse.SiteSettings.uncategorized_color);
+      if (!this.get('text_color')) this.set('text_color', Discourse.SiteSettings.uncategorized_text_color);
+    }
   },
 
   url: function() {
