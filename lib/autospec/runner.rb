@@ -68,7 +68,36 @@ class Autospec::Runner
       @signal.signal
     end
 
-    Process.wait(@spork_pid)
+    spork_running = true
+    Thread.new do
+      Process.wait(@spork_pid)
+      spork_running = false
+    end
+
+    while spork_running
+
+      STDIN.gets
+
+      if @queue.length == 0
+        @queue << ['spec', 'spec']
+        @signal.signal
+      else
+        specs = failed_specs(:delete => false)
+        puts
+        puts
+        if specs.length == 0
+          puts "No specs have failed yet!"
+          puts
+        else
+          puts "The following specs have failed: "
+          specs.each do |s|
+            puts s
+          end
+          puts
+        end
+      end
+    end
+
     puts "Spork has been terminated, exiting"
 
   rescue => e
@@ -221,12 +250,12 @@ class Autospec::Runner
     end
   end
 
-  def failed_specs
+  def failed_specs(opts={:delete => true})
     specs = []
     path = './tmp/rspec_result'
     if File.exist?(path)
       specs = File.open(path) { |file| file.read.split("\n") }
-      File.delete(path)
+      File.delete(path) if opts[:delete]
     end
 
     specs
