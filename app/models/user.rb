@@ -177,6 +177,34 @@ class User < ActiveRecord::Base
     where("username_lower = :user or lower(username) = :user or email = :email or lower(name) = :user", user: lower_user, email: lower_email)
   end
 
+
+  def save_and_refresh_staff_groups!
+    transaction do
+      self.save!
+      Group.refresh_automatic_groups!(:admins,:moderators,:staff)
+    end
+  end
+
+  def grant_moderation!
+    self.moderator = true
+    save_and_refresh_staff_groups!
+  end
+
+  def revoke_moderation!
+    self.moderator = false
+    save_and_refresh_staff_groups!
+  end
+
+  def grant_admin!
+    self.admin = true
+    save_and_refresh_staff_groups!
+  end
+
+  def revoke_admin!
+    self.admin = false
+    save_and_refresh_staff_groups!
+  end
+
   def enqueue_welcome_message(message_type)
     return unless SiteSetting.send_welcome_message?
     Jobs.enqueue(:send_system_message, user_id: id, message_type: message_type)
@@ -439,9 +467,13 @@ class User < ActiveRecord::Base
     admin
   end
 
-  def change_trust_level(level)
+  def change_trust_level!(level)
     raise "Invalid trust level #{level}" unless TrustLevel.valid_level?(level)
     self.trust_level = TrustLevel.levels[level]
+    transaction do
+      self.save!
+      Group.user_trust_level_change!(self.id, self.trust_level)
+    end
   end
 
   def guardian
