@@ -310,11 +310,14 @@ Discourse.Composer = Discourse.Model.extend({
           composer.set('topic.draft_sequence', savedPost.draft_sequence);
         }
       }, function(error) {
-        var errors;
-        errors = $.parseJSON(error.responseText).errors;
-        promise.reject(errors[0]);
+        var response = $.parseJSON(error.responseText);
+        if (response && response.errors) {
+          promise.reject(errors[0]);
+        } else {
+          promise.reject(Em.String.i18n('generic_error'));
+        }
         post.set('cooked', oldCooked);
-        return composer.set('composeState', OPEN);
+        composer.set('composeState', OPEN);
       });
     });
   },
