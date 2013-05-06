@@ -5,7 +5,9 @@ module Oneboxer
 
   class HandlebarsOnebox < BaseOnebox
 
-    MAX_TEXT = 500
+    unless defined? MAX_TEXT
+     MAX_TEXT = 500
+    end
 
     def self.template_path(template_name)
       "#{Rails.root}/lib/oneboxer/templates/#{template_name}.hbrs"
