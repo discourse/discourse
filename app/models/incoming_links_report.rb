@@ -30,16 +30,16 @@ class IncomingLinksReport
 
   # Return top 10 users who brought traffic to the site within the last 30 days
   def self.report_top_referrers(report)
-    report.y_titles[:num_visits]  = I18n.t("reports.#{report.type}.num_visits")
+    report.y_titles[:num_clicks]  = I18n.t("reports.#{report.type}.num_clicks")
     report.y_titles[:num_topics] = I18n.t("reports.#{report.type}.num_topics")
 
-    num_visits  = link_count_per_user
+    num_clicks  = link_count_per_user
     num_topics = topic_count_per_user
     report.data = []
-    num_visits.keys.each do |username|
-      report.data << {username: username, num_visits: num_visits[username], num_topics: num_topics[username]}
+    num_clicks.keys.each do |username|
+      report.data << {username: username, num_clicks: num_clicks[username], num_topics: num_topics[username]}
     end
-    report.data = report.data.sort_by {|x| x[:num_visits]}.reverse[0,10]
+    report.data = report.data.sort_by {|x| x[:num_clicks]}.reverse[0,10]
   end
 
   def self.per_user
@@ -57,18 +57,18 @@ class IncomingLinksReport
 
   # Return top 10 domains that brought traffic to the site within the last 30 days
   def self.report_top_traffic_sources(report)
-    report.y_titles[:num_visits]  = I18n.t("reports.#{report.type}.num_visits")
+    report.y_titles[:num_clicks]  = I18n.t("reports.#{report.type}.num_clicks")
     report.y_titles[:num_topics] = I18n.t("reports.#{report.type}.num_topics")
     report.y_titles[:num_users] = I18n.t("reports.#{report.type}.num_users")
 
-    num_visits  = link_count_per_domain
+    num_clicks  = link_count_per_domain
     num_topics = topic_count_per_domain
     num_users  = user_count_per_domain
     report.data = []
-    num_visits.keys.each do |domain|
-      report.data << {domain: domain, num_visits: num_visits[domain], num_topics: num_topics[domain], num_users: num_users[domain]}
+    num_clicks.keys.each do |domain|
+      report.data << {domain: domain, num_clicks: num_clicks[domain], num_topics: num_topics[domain], num_users: num_users[domain]}
     end
-    report.data = report.data.sort_by {|x| x[:num_visits]}.reverse[0,10]
+    report.data = report.data.sort_by {|x| x[:num_clicks]}.reverse[0,10]
   end
 
   def self.per_domain
@@ -89,15 +89,15 @@ class IncomingLinksReport
 
 
   def self.report_top_referred_topics(report)
-    report.y_titles[:num_visits]  = I18n.t("reports.#{report.type}.num_visits")
-    num_visits  = link_count_per_topic
-    num_visits = num_visits.to_a.sort_by {|x| x[1]}.last(10).reverse # take the top 10
+    report.y_titles[:num_clicks]  = I18n.t("reports.#{report.type}.num_clicks")
+    num_clicks  = link_count_per_topic
+    num_clicks = num_clicks.to_a.sort_by {|x| x[1]}.last(10).reverse # take the top 10
     report.data = []
-    topics = Topic.select('id, slug, title').where('id in (?)', num_visits.map {|z| z[0]}).all
-    num_visits.each do |topic_id, num_visits|
+    topics = Topic.select('id, slug, title').where('id in (?)', num_clicks.map {|z| z[0]}).all
+    num_clicks.each do |topic_id, num_clicks|
       topic = topics.find {|t| t.id == topic_id}
       if topic
-        report.data << {topic_id: topic_id, topic_title: topic.title, topic_slug: topic.slug, num_visits: num_visits}
+        report.data << {topic_id: topic_id, topic_title: topic.title, topic_slug: topic.slug, num_clicks: num_clicks}
       end
     end
     report.data

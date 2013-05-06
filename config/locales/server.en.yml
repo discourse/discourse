@@ -337,18 +337,18 @@ en:
     top_referrers:
       title: "Top Referrers"
       xaxis: "User"
-      num_visits: "Visits"
+      num_clicks: "Clicks"
       num_topics: "Topics"
     top_traffic_sources:
       title: "Top Traffic Sources"
       xaxis: "Domain"
-      num_visits: "Visits"
+      num_clicks: "Clicks"
       num_topics: "Topics"
       num_users: "Users"
     top_referred_topics:
       title: "Top Referred Topics"
       xaxis: "Topic"
-      num_visits: "Visits"
+      num_clicks: "Clicks"
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
