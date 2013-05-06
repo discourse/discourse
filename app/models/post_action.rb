@@ -2,7 +2,7 @@ require_dependency 'rate_limiter'
 require_dependency 'system_message'
 
 class PostAction < ActiveRecord::Base
-  class AlreadyFlagged < StandardError; end
+  class AlreadyActed < StandardError; end
 
   include RateLimiter::OnCreateRecord
 
@@ -22,7 +22,8 @@ class PostAction < ActiveRecord::Base
     posts_flagged_count = PostAction.joins(post: :topic)
                                     .where('post_actions.post_action_type_id' => PostActionType.notify_flag_types.values,
                                            'posts.deleted_at' => nil,
-                                           'topics.deleted_at' => nil).count('DISTINCT posts.id')
+                                           'topics.deleted_at' => nil)
+                                    .count('DISTINCT posts.id')
 
     $redis.set('posts_flagged_count', posts_flagged_count)
     user_ids = User.staff.select(:id).map {|u| u.id}
@@ -156,9 +157,12 @@ class PostAction < ActiveRecord::Base
   end
 
   before_create do
-    raise AlreadyFlagged if is_flag? && PostAction.where(user_id: user_id,
-                                                         post_id: post_id,
-                                                         post_action_type_id: PostActionType.flag_types.values).exists?
+    post_action_type_ids = is_flag? ? PostActionType.flag_types.values : post_action_type_id
+    raise AlreadyActed if PostAction.where(user_id: user_id,
+                                           post_id: post_id,
+                                           post_action_type_id: post_action_type_ids,
+                                           deleted_at: nil)
+                                    .exists?
   end
 
   after_save do
