@@ -1,5 +1,5 @@
 Fabricator(:category) do
-  name 'Amazing Category'
+  name { sequence(:name) { |n| "Amazing Category #{n}" } }
   user
 end
 
