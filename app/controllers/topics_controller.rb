@@ -100,7 +100,7 @@ class TopicsController < ApplicationController
   def destroy
     topic = Topic.where(id: params[:id]).first
     guardian.ensure_can_delete!(topic)
-    topic.destroy
+    topic.trash!
     render nothing: true
   end
 

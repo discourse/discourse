@@ -37,8 +37,7 @@ class PostDestroyer
       # Feature users in the topic
       Jobs.enqueue(:feature_topic_users, topic_id: @post.topic_id, except_post_id: @post.id)
 
-      # Actually soft-delete the post :)
-      @post.destroy
+      @post.trash!
 
       Topic.reset_highest(@post.topic_id)
       @post.update_flagged_posts_count

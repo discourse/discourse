@@ -1,18 +1,18 @@
 require_dependency 'rate_limiter'
 require_dependency 'system_message'
+require_dependency 'trashable'
 
 class PostAction < ActiveRecord::Base
   class AlreadyActed < StandardError; end
 
   include RateLimiter::OnCreateRecord
+  include Trashable
 
   attr_accessible :post_action_type_id, :post_id, :user_id, :post, :user, :post_action_type, :message, :related_post_id
 
   belongs_to :post
   belongs_to :user
   belongs_to :post_action_type
-
-  acts_as_paranoid
 
   rate_limit :post_action_rate_limiter
 
@@ -114,8 +114,7 @@ class PostAction < ActiveRecord::Base
 
   def self.remove_act(user, post, post_action_type_id)
     if action = where(post_id: post.id, user_id: user.id, post_action_type_id: post_action_type_id).first
-      action.destroy
-      action.deleted_at = Time.zone.now
+      action.trash!
       action.run_callbacks(:save)
     end
   end
