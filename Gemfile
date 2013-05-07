@@ -136,7 +136,7 @@ gem 'rack-mini-profiler', require: false  # require: false #, git: 'git://github
 # used for caching, optional
 # redis-rack-cache is missing a sane expiry policy, it hogs redis
 # https://github.com/jodosha/redis-store/pull/183
-gem 'redis-rack-cache', :git => 'git@github.com:SamSaffron/redis-rack-cache.git', require: false
+gem 'redis-rack-cache', :git => 'git://github.com/SamSaffron/redis-rack-cache.git', require: false
 gem 'rack-cache', require: false
 
 gem 'rack-cors', require: false
