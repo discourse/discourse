@@ -168,7 +168,8 @@ Discourse.Post = Discourse.Model.extend({
         archetype: this.get('archetype'),
         title: this.get('title'),
         image_sizes: this.get('imageSizes'),
-        target_usernames: this.get('target_usernames')
+        target_usernames: this.get('target_usernames'),
+        auto_close_days: this.get('auto_close_days')
       };
 
       // Put the metaData into the request

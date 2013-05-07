@@ -8,6 +8,7 @@
 **/
 Discourse.TopicAdminMenuController = Discourse.ObjectController.extend({
   visible: false,
+  needs: ['modal'],
 
   show: function() {
     this.set('visible', true);
@@ -15,6 +16,15 @@ Discourse.TopicAdminMenuController = Discourse.ObjectController.extend({
 
   hide: function() {
     this.set('visible', false);
+  },
+
+  autoClose: function() {
+    var modalController = this.get('controllers.modal');
+    if (modalController) {
+      var v = Discourse.EditTopicAutoCloseView.create();
+      v.set('topic', this.get('content'));
+      modalController.show(v);
+    }
   }
 
 });

@@ -32,6 +32,19 @@ en:
     now: "just now"
     read_more: 'read more'
 
+    in_n_seconds:
+      one: "in 1 second"
+      other: "in {{count}} seconds"
+    in_n_minutes:
+      one: "in 1 minute"
+      other: "in {{count}} minutes"
+    in_n_hours:
+      one: "in 1 hour"
+      other: "in {{count}} hours"
+    in_n_days:
+      one: "in 1 day"
+      other: "in {{count}} days"
+
     suggested_topics:
       title: "Suggested Topics"
 
@@ -370,6 +383,9 @@ en:
       help: "Markdown Editing Help"
       toggler: "hide or show the composer panel"
 
+      auto_close_label: "Auto-close topic after:"
+      auto_close_units: "days"
+
     notifications:
       title: "notifications of @name mentions, replies to your posts and topics, private messages, etc"
       none: "You have no notifications right now."
@@ -479,6 +495,12 @@ en:
       jump_reply_down: jump to later reply
       deleted: "The topic has been deleted"
 
+      auto_close_notice: "This topic will close %{timeLeft}"
+      auto_close_title: 'Auto-Close Settings'
+      auto_close_save: "Save"
+      auto_close_cancel: "Cancel"
+      auto_close_remove: "Don't Auto-Close This Topic"
+
       progress:
         title: topic progress
         jump_top: jump to first post
@@ -516,6 +538,7 @@ en:
         delete: "Delete Topic"
         open: "Open Topic"
         close: "Close Topic"
+        auto_close: "Auto Close"
         unpin: "Un-Pin Topic"
         pin: "Pin Topic"
         unarchive: "Unarchive Topic"

@@ -107,6 +107,7 @@ group :test, :development do
   gem 'shoulda', require: false
   gem 'simplecov', require: false
   gem 'terminal-notifier-guard', require: false
+  gem 'timecop'
 end
 
 group :development do

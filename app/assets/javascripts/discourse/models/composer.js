@@ -65,6 +65,11 @@ Discourse.Composer = Discourse.Model.extend({
     return false;
   }.property('editingPost', 'creatingTopic', 'post.post_number'),
 
+  showAdminOptions: function() {
+    if (this.get('creatingTopic') && Discourse.get('currentUser.staff')) return true;
+    return false;
+  }.property('editTitle'),
+
   togglePreview: function() {
     this.toggleProperty('showPreview');
     Discourse.KeyValueStore.set({ key: 'composer.showPreview', value: this.get('showPreview') });
@@ -354,7 +359,8 @@ Discourse.Composer = Discourse.Model.extend({
         actions_summary: Em.A(),
         moderator: currentUser.get('moderator'),
         yours: true,
-        newPost: true
+        newPost: true,
+        auto_close_days: this.get('auto_close_days')
       });
 
     // If we're in a topic, we can append the post instantly.
@@ -532,7 +538,13 @@ Discourse.Composer = Discourse.Model.extend({
     var reply = this.get('reply') || "";
     while (Discourse.BBCode.QUOTE_REGEXP.test(reply)) { reply = reply.replace(Discourse.BBCode.QUOTE_REGEXP, ""); }
     return reply.replace(/\s+/img, " ").trim().length;
-  }.property('reply')
+  }.property('reply'),
+
+  autoCloseChanged: function() {
+    if( this.get('auto_close_days') && this.get('auto_close_days').length > 0 ) {
+      this.set('auto_close_days', this.get('auto_close_days').replace(/[^\d]/g, '') )
+    }
+  }.observes('auto_close_days')
 
 });
 

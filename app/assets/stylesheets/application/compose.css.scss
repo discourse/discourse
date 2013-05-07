@@ -234,6 +234,7 @@
         margin: 6px 10px 3px 0;
       }
       .wmd-controls {
+        @include transition(top 0.3s ease);
         top: 100px;
       }
     }
@@ -365,6 +366,7 @@ div.ac-wrap {
 
 #reply-control.edit-title.private-message {
   .wmd-controls {
+    @include transition(top 0.3s ease);
     top: 140px;
   }
 }
@@ -463,6 +465,32 @@ div.ac-wrap {
       width: 1450px;
       left: auto;
       right: auto;
+    }
+  }
+}
+
+.admin-options-form {
+  margin-top: 8px;
+  display: none;
+}
+
+.auto-close-fields {
+  input {
+    width: 50px;
+  }
+}
+
+.edit-auto-close-modal {
+  form {
+    margin: 0;
+  }
+  .auto-close-fields {
+    i.icon-time {
+      font-size: 16px;
+      line-height: 8px;
+    }
+    input {
+      margin: 0;
     }
   }
 }

@@ -72,6 +72,9 @@
             {{/unless}}
           {{else}}
             {{#if view.fullyLoaded}}
+
+              {{view Discourse.TopicClosingView topicBinding="controller.content"}}
+
               {{view Discourse.TopicFooterButtonsView topicBinding="controller.content"}}
 
               {{#if controller.content.suggested_topics.length}}

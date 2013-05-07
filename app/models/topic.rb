@@ -61,6 +61,7 @@ class Topic < ActiveRecord::Base
   belongs_to :featured_user2, class_name: 'User', foreign_key: :featured_user2_id
   belongs_to :featured_user3, class_name: 'User', foreign_key: :featured_user3_id
   belongs_to :featured_user4, class_name: 'User', foreign_key: :featured_user4_id
+  belongs_to :auto_close_user, class_name: 'User', foreign_key: :auto_close_user_id
 
   has_many :topic_users
   has_many :topic_links
@@ -105,6 +106,18 @@ class Topic < ActiveRecord::Base
       DraftSequence.next!(user, Draft::NEW_PRIVATE_MESSAGE)
     else
       DraftSequence.next!(user, Draft::NEW_TOPIC)
+    end
+  end
+
+  before_save do
+    if (auto_close_at_changed? and !auto_close_at_was.nil?) or (auto_close_user_id_changed? and auto_close_at)
+      Jobs.cancel_scheduled_job(:close_topic, {topic_id: id})
+    end
+  end
+
+  after_save do
+    if auto_close_at and (auto_close_at_changed? or auto_close_user_id_changed?)
+      Jobs.enqueue_at(auto_close_at, :close_topic, {topic_id: id, user_id: auto_close_user_id || user_id})
     end
   end
 
@@ -264,7 +277,7 @@ class Topic < ActiveRecord::Base
         update_pinned(status)
       else
         # otherwise update the column
-        update_column(property, status)
+        update_column(property == 'autoclosed' ? 'closed' : property, status)
       end
 
       key = "topic_statuses.#{property}_"
@@ -273,9 +286,11 @@ class Topic < ActiveRecord::Base
       opts = {}
 
       # We don't bump moderator posts except for the re-open post.
-      opts[:bump] = true if property == 'closed' and (!status)
+      opts[:bump] = true if (property == 'closed' or property == 'autoclosed') and (!status)
 
-      add_moderator_post(user, I18n.t(key), opts)
+      message = property != 'autoclosed' ? I18n.t(key) : I18n.t(key, count: (((self.auto_close_at||Time.zone.now) - self.created_at) / 86_400).round )
+
+      add_moderator_post(user, message, opts)
     end
   end
 
@@ -712,4 +727,9 @@ class Topic < ActiveRecord::Base
   def notify_muted!(user)
     TopicUser.change(user, id, notification_level: TopicUser.notification_levels[:muted])
   end
+
+  def auto_close_days=(num_days)
+    self.auto_close_at = (num_days and num_days.to_i > 0.0 ? num_days.to_i.days.from_now : nil)
+  end
+
 end
