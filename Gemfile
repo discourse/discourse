@@ -134,7 +134,9 @@ gem 'lru_redux'
 gem 'rack-mini-profiler', require: false  # require: false #, git: 'git://github.com/SamSaffron/MiniProfiler'
 
 # used for caching, optional
-gem 'redis-rack-cache', require: false
+# redis-rack-cache is missing a sane expiry policy, it hogs redis
+# https://github.com/jodosha/redis-store/pull/183
+gem 'redis-rack-cache', :git => 'git@github.com:SamSaffron/redis-rack-cache.git', require: false
 gem 'rack-cache', require: false
 
 gem 'rack-cors', require: false

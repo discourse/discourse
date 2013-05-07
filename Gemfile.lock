@@ -47,6 +47,14 @@ GIT
       activesupport (>= 3.0.0)
 
 GIT
+  remote: git@github.com:SamSaffron/redis-rack-cache.git
+  revision: 379ef30e31d4e185cb1d7f8badca0cc06403eba2
+  specs:
+    redis-rack-cache (1.2.1)
+      rack-cache (~> 1.2)
+      redis-store (~> 1.1.0)
+
+GIT
   remote: https://github.com/rails-api/active_model_serializers.git
   revision: fe84e0ad5268f1439123fd9a1f9fd12e25a54cd3
   specs:
@@ -350,9 +358,6 @@ GEM
     redis-rack (1.4.2)
       rack (~> 1.4.1)
       redis-store (~> 1.1.0)
-    redis-rack-cache (1.2.1)
-      rack-cache (~> 1.2)
-      redis-store (~> 1.1.0)
     redis-rails (3.2.3)
       redis-actionpack (~> 3.2.3)
       redis-activesupport (~> 3.2.3)
@@ -504,7 +509,7 @@ DEPENDENCIES
   rb-inotify (~> 0.9)
   redcarpet
   redis
-  redis-rack-cache
+  redis-rack-cache!
   redis-rails
   rest-client
   rinku
