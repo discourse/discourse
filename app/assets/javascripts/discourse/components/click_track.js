@@ -53,9 +53,12 @@ Discourse.ClickTrack = {
     if (!ownLink) {
       var $badge = $('span.badge', $link);
       if ($badge.length === 1) {
-        // don't update counts in oneboxes (except when we force it)
-        if ($link.closest(".onebox-result").length === 0 || $link.hasClass("track-link")) {
-          $badge.html(parseInt($badge.html(), 10) + 1);
+        // don't update counts in category badge
+        if ($link.closest('.badge-category').length === 0) {
+          // nor in oneboxes (except when we force it)
+          if ($link.closest(".onebox-result").length === 0 || $link.hasClass("track-link")) {
+            $badge.html(parseInt($badge.html(), 10) + 1);
+          }
         }
       }
     }
