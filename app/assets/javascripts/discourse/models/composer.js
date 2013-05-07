@@ -312,7 +312,7 @@ Discourse.Composer = Discourse.Model.extend({
       }, function(error) {
         var response = $.parseJSON(error.responseText);
         if (response && response.errors) {
-          promise.reject(errors[0]);
+          promise.reject(response.errors[0]);
         } else {
           promise.reject(Em.String.i18n('generic_error'));
         }
