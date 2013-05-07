@@ -25,6 +25,12 @@ module Trashable
   end
 
   def trash!
+    # note, an argument could be made that the column should probably called trashed_at
+    # however, deleted_at is the terminology used in the UI
+    #
+    # we could hijack use a delete! and delete - redirecting the originals elsewhere, but that is
+    # confusing as well. So for now, we go with trash!
+    #
     update_column(:deleted_at, DateTime.now)
   end
 
