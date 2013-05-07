@@ -191,22 +191,18 @@ Discourse.AdminUser.reopenClass({
   },
 
   find: function(username) {
-    return Discourse.ajax({url: Discourse.getURL("/admin/users/") + username}).then(function (result) {
+    return Discourse.ajax(Discourse.getURL("/admin/users/") + username).then(function (result) {
       return Discourse.AdminUser.create(result);
     });
   },
 
-  findAll: function(query, filter, doneCallback) {
-    var result = Em.A();
-    Discourse.ajax({
-      url: Discourse.getURL("/admin/users/list/") + query + ".json",
+  findAll: function(query, filter) {
+    return Discourse.ajax(Discourse.getURL("/admin/users/list/") + query + ".json", {
       data: { filter: filter }
     }).then(function(users) {
-      users.each(function(u) {
-        result.pushObject(Discourse.AdminUser.create(u));
+      return users.map(function(u) {
+        return Discourse.AdminUser.create(u);
       });
-      if( doneCallback ) { doneCallback(); }
     });
-    return result;
   }
 });

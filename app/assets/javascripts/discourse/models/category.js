@@ -54,7 +54,7 @@ Discourse.Category = Discourse.Model.extend({
 
 Discourse.Category.reopenClass({
   findBySlugOrId: function(slugOrId) {
-    return Discourse.ajax({url: Discourse.getURL("/categories/") + slugOrId + ".json"}).then(function (result) {
+    return Discourse.ajax(Discourse.getURL("/categories/") + slugOrId + ".json").then(function (result) {
       return Discourse.Category.create(result.category);
     });
   }

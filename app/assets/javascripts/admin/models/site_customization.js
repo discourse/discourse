@@ -66,8 +66,7 @@ Discourse.SiteCustomization = Discourse.Model.extend({
     };
 
     var siteCustomization = this;
-    return Discourse.ajax({
-      url: Discourse.getURL("/admin/site_customizations") + (this.id ? '/' + this.id : ''),
+    return Discourse.ajax(Discourse.getURL("/admin/site_customizations") + (this.id ? '/' + this.id : ''), {
       data: { site_customization: data },
       type: this.id ? 'PUT' : 'POST'
     }).then(function (result) {
@@ -81,8 +80,7 @@ Discourse.SiteCustomization = Discourse.Model.extend({
 
   destroy: function() {
     if(!this.id) return;
-    return Discourse.ajax({
-      url: Discourse.getURL("/admin/site_customizations/") + this.id,
+    return Discourse.ajax(Discourse.getURL("/admin/site_customizations/") + this.id, {
       type: 'DELETE'
     });
   }
@@ -101,10 +99,7 @@ var SiteCustomizations = Ember.ArrayProxy.extend({
 Discourse.SiteCustomization.reopenClass({
   findAll: function() {
     var customizations = SiteCustomizations.create({ content: [], loading: true });
-    Discourse.ajax({
-      url: Discourse.getURL("/admin/site_customizations"),
-      dataType: "json"
-    }).then(function (data) {
+    Discourse.ajax(Discourse.getURL("/admin/site_customizations")).then(function (data) {
       if (data) {
         data.site_customizations.each(function(c) {
           customizations.pushObject(Discourse.SiteCustomization.create(c.site_customizations));

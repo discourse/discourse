@@ -58,8 +58,7 @@ Discourse.ActionSummary = Discourse.Model.extend({
     // Create our post action
     var actionSummary = this;
 
-    return Discourse.ajax({
-      url: Discourse.getURL("/post_actions"),
+    return Discourse.ajax(Discourse.getURL("/post_actions"), {
       type: 'POST',
       data: {
         id: this.get('post.id'),
@@ -78,8 +77,7 @@ Discourse.ActionSummary = Discourse.Model.extend({
     this.removeAction();
 
     // Remove our post action
-    return Discourse.ajax({
-      url: Discourse.getURL("/post_actions/") + (this.get('post.id')),
+    return Discourse.ajax(Discourse.getURL("/post_actions/") + (this.get('post.id')), {
       type: 'DELETE',
       data: {
         post_action_type_id: this.get('id')
