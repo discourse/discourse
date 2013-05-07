@@ -73,7 +73,7 @@ Discourse.MessageBus = (function() {
           data[c.channel] = c.last_id === void 0 ? -1 : c.last_id;
         });
         gotData = false;
-        _this.longPoll = Discourse.ajax(Discourse.getURL("/message-bus/") + clientId + "/poll?" + (!shouldLongPoll() || !_this.enableLongPolling ? "dlp=t" : ""), {
+        _this.longPoll = $.ajax(Discourse.getURL("/message-bus/") + clientId + "/poll?" + (!shouldLongPoll() || !_this.enableLongPolling ? "dlp=t" : ""), {
           data: data,
           cache: false,
           dataType: 'json',

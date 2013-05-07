@@ -160,11 +160,14 @@ Discourse.Topic = Discourse.Model.extend({
     return Discourse.ajax({
       url: "" + (this.get('url')) + "/star",
       type: 'PUT',
-      data: { starred: topic.get('starred') ? true : false },
-      error: function(error) {
-        topic.toggleProperty('starred');
-        var errors = $.parseJSON(error.responseText).errors;
-        return bootbox.alert(errors[0]);
+      data: { starred: topic.get('starred') ? true : false }
+    }).fail(function (error) {
+      topic.toggleProperty('starred');
+
+      if (error && error.responseText) {
+        bootbox.alert($.parseJSON(error.responseText).errors);
+      } else {
+        bootbox.alert(Em.String.i18n('generic_error'));
       }
     });
   },
@@ -349,11 +352,10 @@ Discourse.Topic = Discourse.Model.extend({
     topic.set('pinned', false);
 
     Discourse.ajax(Discourse.getURL("/t/") + this.get('id') + "/clear-pin", {
-      type: 'PUT',
-      error: function() {
-        // On error, put the pin back
-        topic.set('pinned', true);
-      }
+      type: 'PUT'
+    }).fail(function() {
+      // On error, put the pin back
+      topic.set('pinned', true);
     });
   },
 

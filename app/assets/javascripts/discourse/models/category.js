@@ -35,7 +35,7 @@ Discourse.Category = Discourse.Model.extend({
       url = Discourse.getURL("/categories/") + (this.get('id'));
     }
 
-    return this.ajax(url, {
+    return Discourse.ajax(url, {
       data: {
         name: this.get('name'),
         color: this.get('color'),
