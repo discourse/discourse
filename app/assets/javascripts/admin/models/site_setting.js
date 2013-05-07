@@ -72,7 +72,7 @@ Discourse.SiteSetting = Discourse.Model.extend({
   save: function() {
     // Update the setting
     var setting = this;
-    return Discourse.ajax(Discourse.getURL("/admin/site_settings/") + (this.get('setting')), {
+    return Discourse.ajax("/admin/site_settings/" + (this.get('setting')), {
       data: { value: this.get('value') },
       type: 'PUT'
     }).then(function() {
@@ -90,7 +90,7 @@ Discourse.SiteSetting.reopenClass({
   **/
   findAll: function() {
     var result = Em.A();
-    Discourse.ajax(Discourse.getURL("/admin/site_settings")).then(function (settings) {
+    Discourse.ajax("/admin/site_settings").then(function (settings) {
       settings.site_settings.each(function(s) {
         s.originalValue = s.value;
         result.pushObject(Discourse.SiteSetting.create(s));
@@ -101,7 +101,7 @@ Discourse.SiteSetting.reopenClass({
   },
 
   update: function(key, value) {
-    return Discourse.ajax(Discourse.getURL("/admin/site_settings/") + key, {
+    return Discourse.ajax("/admin/site_settings/" + key, {
       type: 'PUT',
       data: { value: value }
     });

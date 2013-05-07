@@ -128,7 +128,7 @@ Discourse.URL = {
     @method redirectTo
   **/
   redirectTo: function(url) {
-    window.location = url;
+    window.location = Discourse.getURL(url);
   }
 
 };

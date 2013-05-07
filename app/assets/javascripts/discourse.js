@@ -23,6 +23,10 @@ Discourse = Ember.Application.createWithMixins({
   highestSeenByTopic: {},
 
   getURL: function(url) {
+
+    // If it's a non relative URL, return it.
+    if (url.indexOf('http') === 0) return url;
+
     var u = (Discourse.BaseUri === undefined ? "/" : Discourse.BaseUri);
     if (u[u.length-1] === '/') {
       u = u.substring(0, u.length-1);
@@ -173,7 +177,7 @@ Discourse = Ember.Application.createWithMixins({
   **/
   logout: function() {
     Discourse.KeyValueStore.abandonLocal();
-    Discourse.ajax(Discourse.getURL("/session/") + this.get('currentUser.username'), {
+    Discourse.ajax("/session/" + this.get('currentUser.username'), {
       type: 'DELETE'
     }).then(function() {
       // Reloading will refresh unbound properties
@@ -189,7 +193,8 @@ Discourse = Ember.Application.createWithMixins({
 
   /**
     Our own $.ajax method. Makes sure the .then method executes in an Ember runloop
-    for performance reasons.
+    for performance reasons. Also automatically adjusts the URL to support installs
+    in subfolders.
 
     @method ajax
   **/
@@ -211,13 +216,27 @@ Discourse = Ember.Application.createWithMixins({
     }
 
     if (args.success) {
-      console.log("DEPRECATION: Discourse.ajax should use promises, received 'success' callback");
+      console.warning("DEPRECATION: Discourse.ajax should use promises, received 'success' callback");
     }
     if (args.error) {
-      console.log("DEPRECATION: Discourse.ajax should use promises, received 'error' callback");
+      console.warning("DEPRECATION: Discourse.ajax should use promises, received 'error' callback");
     }
 
-    return $.ajax(url, args);
+    return Ember.Deferred.promise(function (promise) {
+      var oldSuccess = args.success;
+      args.success = function(xhr) {
+        Ember.run(promise, promise.resolve, xhr);
+        if (oldSuccess) oldSuccess(xhr);
+      }
+
+      var oldError = args.error;
+      args.error = function(xhr) {
+        promise.reject(xhr);
+        if (oldError) oldError(xhr);
+      }
+
+      $.ajax(Discourse.getURL(url), args);
+    });
   },
 
   /**

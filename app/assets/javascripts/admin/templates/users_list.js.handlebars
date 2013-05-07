@@ -56,10 +56,8 @@
               {{/if}}
             </td>
           {{/if}}
-          <td>
-            <a href="{{unbound adminPath}}">{{avatar this imageSize="small"}}</a>
-          </td>
-          <td><a href="{{unbound adminPath}}">{{unbound username}}</a></td>
+          <td>{{#linkTo 'adminUser' this}}{{avatar this imageSize="small"}}{{/linkTo}}</td>
+          <td>{{#linkTo 'adminUser' this}}{{unbound username}}{{/linkTo}}</td>
           <td>{{shorten email}}</td>
           <td>{{{unbound last_emailed_age}}}</td>
           <td>{{{unbound last_seen_age}}}</td>

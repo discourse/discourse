@@ -8,7 +8,7 @@
 **/
 Discourse.Post = Discourse.Model.extend({
 
-  shareUrl: function(){
+  shareUrl: function() {
     var user = Discourse.get('currentUser');
     if (this.get('postnumber') === 1){
       return this.get('topic.url');
@@ -17,9 +17,9 @@ Discourse.Post = Discourse.Model.extend({
     }
   }.property('url'),
 
-  new_user:(function(){
+  new_user: function() {
     return this.get('trust_level') === 0;
-  }).property('trust_level'),
+  }.property('trust_level'),
 
   url: function() {
     return Discourse.Utilities.postUrl(this.get('topic.slug') || this.get('topic_slug'), this.get('topic_id'), this.get('post_number'));
@@ -29,34 +29,34 @@ Discourse.Post = Discourse.Model.extend({
     return Discourse.getURL("/t/") + (this.get('topic_id')) + "/" + (this.get('reply_to_post_number'));
   }.property('reply_to_post_number'),
 
-  usernameUrl: (function() {
+  usernameUrl: function() {
     return Discourse.getURL("/users/" + this.get('username'));
-  }).property('username'),
+  }.property('username'),
 
-  showUserReplyTab: (function() {
+  showUserReplyTab: function() {
     return this.get('reply_to_user') && (this.get('reply_to_post_number') < (this.get('post_number') - 1));
-  }).property('reply_to_user', 'reply_to_post_number', 'post_number'),
+  }.property('reply_to_user', 'reply_to_post_number', 'post_number'),
 
-  firstPost: (function() {
+  firstPost: function() {
     if (this.get('bestOfFirst') === true) return true;
     return this.get('post_number') === 1;
-  }).property('post_number'),
+  }.property('post_number'),
 
   byTopicCreator: function() {
     return this.get('topic.created_by.id') === this.get('user_id');
   }.property('topic.created_by.id', 'user_id'),
 
-  hasHistory: (function() {
+  hasHistory: function() {
     return this.get('version') > 1;
-  }).property('version'),
+  }.property('version'),
 
-  postElementId: (function() {
+  postElementId: function() {
     return "post_" + (this.get('post_number'));
-  }).property(),
+  }.property(),
 
   // The class for the read icon of the post. It starts with read-icon then adds 'seen' or
   // 'last-read' if the post has been seen or is the highest post number seen so far respectively.
-  bookmarkClass: (function() {
+  bookmarkClass: function() {
     var result, topic;
     result = 'read-icon';
     if (this.get('bookmarked')) return result + ' bookmarked';
@@ -69,7 +69,7 @@ Discourse.Post = Discourse.Model.extend({
       }
     }
     return result;
-  }).property('read', 'topic.last_read_post_number', 'bookmarked'),
+  }.property('read', 'topic.last_read_post_number', 'bookmarked'),
 
   // Custom tooltips for the bookmark icons
   bookmarkTooltip: (function() {
@@ -85,13 +85,12 @@ Discourse.Post = Discourse.Model.extend({
 
   bookmarkedChanged: function() {
     var post = this;
-    Discourse.ajax({
-      url: Discourse.getURL("/posts/") + (this.get('id')) + "/bookmark",
+    Discourse.ajax("/posts/" + (this.get('id')) + "/bookmark", {
       type: 'PUT',
       data: {
         bookmarked: this.get('bookmarked') ? true : false
       }
-    }).fail(function (error) {
+    }).then(null, function (error) {
       if (error && error.responseText) {
         bootbox.alert($.parseJSON(error.responseText).errors[0]);
       } else {
@@ -101,17 +100,17 @@ Discourse.Post = Discourse.Model.extend({
 
   }.observes('bookmarked'),
 
-  internalLinks: (function() {
+  internalLinks: function() {
     if (this.blank('link_counts')) return null;
     return this.get('link_counts').filterProperty('internal').filterProperty('title');
-  }).property('link_counts.@each.internal'),
+  }.property('link_counts.@each.internal'),
 
   // Edits are the version - 1, so version 2 = 1 edit
-  editCount: (function() {
+  editCount: function() {
     return this.get('version') - 1;
-  }).property('version'),
+  }.property('version'),
 
-  historyHeat: (function() {
+  historyHeat: function() {
     var rightNow, updatedAt, updatedAtDate;
     if (!(updatedAt = this.get('updated_at'))) return;
     rightNow = new Date().getTime();
@@ -121,17 +120,17 @@ Discourse.Post = Discourse.Model.extend({
     if (updatedAtDate > (rightNow - 60 * 60 * 1000 * 12)) return 'heatmap-high';
     if (updatedAtDate > (rightNow - 60 * 60 * 1000 * 24)) return 'heatmap-med';
     if (updatedAtDate > (rightNow - 60 * 60 * 1000 * 48)) return 'heatmap-low';
-  }).property('updated_at'),
+  }.property('updated_at'),
 
-  flagsAvailable: (function() {
+  flagsAvailable: function() {
     var _this = this;
     var flags = Discourse.get('site.flagTypes').filter(function(item) {
       return _this.get("actionByName." + (item.get('name_key')) + ".can_act");
     });
     return flags;
-  }).property('Discourse.site.flagTypes', 'actions_summary.@each.can_act'),
+  }.property('Discourse.site.flagTypes', 'actions_summary.@each.can_act'),
 
-  actionsHistory: (function() {
+  actionsHistory: function() {
     if (!this.present('actions_summary')) return null;
 
     return this.get('actions_summary').filter(function(i) {
@@ -139,15 +138,14 @@ Discourse.Post = Discourse.Model.extend({
       if (i.get('users') && i.get('users').length > 0) return true;
       return !i.get('hidden');
     });
-  }).property('actions_summary.@each.users', 'actions_summary.@each.count'),
+  }.property('actions_summary.@each.users', 'actions_summary.@each.count'),
 
   // Save a post and call the callback when done.
   save: function(complete, error) {
     var data, metaData;
     if (!this.get('newPost')) {
       // We're updating a post
-      return Discourse.ajax({
-        url: Discourse.getURL("/posts/") + (this.get('id')),
+      return Discourse.ajax("/posts/" + (this.get('id')), {
         type: 'PUT',
         data: {
           post: { raw: this.get('raw') },
@@ -178,9 +176,8 @@ Discourse.Post = Discourse.Model.extend({
         data.meta_data = {};
         Ember.keys(metaData).forEach(function(key) { data.meta_data[key] = metaData.get(key); });
       }
-      return Discourse.ajax({
+      return Discourse.ajax("/posts", {
         type: 'POST',
-        url: Discourse.getURL("/posts"),
         data: data
       }).then(function(result) {
         // Post created
@@ -193,11 +190,11 @@ Discourse.Post = Discourse.Model.extend({
   },
 
   recover: function() {
-    return Discourse.ajax(Discourse.getURL("/posts/") + (this.get('id')) + "/recover", { type: 'PUT', cache: false });
+    return Discourse.ajax("/posts/" + (this.get('id')) + "/recover", { type: 'PUT', cache: false });
   },
 
   destroy: function(complete) {
-    return Discourse.ajax(Discourse.getURL("/posts/") + (this.get('id')), { type: 'DELETE' });
+    return Discourse.ajax("/posts/" + (this.get('id')), { type: 'DELETE' });
   },
 
   // Update the properties of this post from an obj, ignoring cooked as we should already
@@ -237,7 +234,7 @@ Discourse.Post = Discourse.Model.extend({
     this.set('replies', []);
 
     var parent = this;
-    return Discourse.ajax({url: Discourse.getURL("/posts/") + (this.get('id')) + "/replies"}).then(function(loaded) {
+    return Discourse.ajax("/posts/" + (this.get('id')) + "/replies").then(function(loaded) {
       var replies = parent.get('replies');
       loaded.each(function(reply) {
         var post = Discourse.Post.create(reply);
@@ -249,7 +246,7 @@ Discourse.Post = Discourse.Model.extend({
   },
 
   loadVersions: function() {
-    return Discourse.ajax(Discourse.getURL("/posts/") + (this.get('id')) + "/versions.json");
+    return Discourse.ajax("/posts/" + (this.get('id')) + "/versions.json");
   },
 
   // Whether to show replies directly below
@@ -303,7 +300,7 @@ Discourse.Post.reopenClass({
   },
 
   deleteMany: function(posts) {
-    return Discourse.ajax(Discourse.getURL("/posts/destroy_many"), {
+    return Discourse.ajax("/posts/destroy_many", {
       type: 'DELETE',
       data: {
         post_ids: posts.map(function(p) { return p.get('id'); })
@@ -312,26 +309,26 @@ Discourse.Post.reopenClass({
   },
 
   loadVersion: function(postId, version, callback) {
-    return Discourse.ajax({url: Discourse.getURL("/posts/") + postId + ".json?version=" + version}).then(function(result) {
+    return Discourse.ajax("/posts/" + postId + ".json?version=" + version).then(function(result) {
       return Discourse.Post.create(result);
     });
   },
 
   loadByPostNumber: function(topicId, postId) {
-    return Discourse.ajax({url: Discourse.getURL("/posts/by_number/") + topicId + "/" + postId + ".json"}).then(function (result) {
+    return Discourse.ajax("/posts/by_number/" + topicId + "/" + postId + ".json").then(function (result) {
       return Discourse.Post.create(result);
     });
   },
 
   loadQuote: function(postId) {
-    return Discourse.ajax({url: Discourse.getURL("/posts/") + postId + ".json"}).then(function(result) {
+    return Discourse.ajax("/posts/" + postId + ".json").then(function(result) {
       var post = Discourse.Post.create(result);
       return Discourse.BBCode.buildQuoteBBCode(post, post.get('raw'));
     });
   },
 
   load: function(postId) {
-    return Discourse.ajax({url: Discourse.getURL("/posts/") + postId + ".json"}).then(function (result) {
+    return Discourse.ajax("/posts/" + postId + ".json").then(function (result) {
       return Discourse.Post.create(result);
     });
   }

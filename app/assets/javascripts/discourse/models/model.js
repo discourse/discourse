@@ -40,17 +40,6 @@ Discourse.Model = Ember.Object.extend(Discourse.Presence, {
 Discourse.Model.reopenClass({
 
   /**
-   $.get shortcut that uses Discourse.Url and returns a promise
-   **/
-  getModelAjax: function(url) {
-    var modelClass = this;
-    return Discourse.ajax(url, { cache: false }).then(function (result) {
-      return modelClass.create(result);
-    });
-  },
-
-
-  /**
     Given an array of values, return them in a hash
 
     @method extractByKey

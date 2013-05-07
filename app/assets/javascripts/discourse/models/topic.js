@@ -161,7 +161,7 @@ Discourse.Topic = Discourse.Model.extend({
       url: "" + (this.get('url')) + "/star",
       type: 'PUT',
       data: { starred: topic.get('starred') ? true : false }
-    }).fail(function (error) {
+    }).then(null, function (error) {
       topic.toggleProperty('starred');
 
       if (error && error.responseText) {
@@ -185,25 +185,22 @@ Discourse.Topic = Discourse.Model.extend({
 
   // Reset our read data for this topic
   resetRead: function() {
-    return Discourse.ajax(Discourse.getURL("/t/") + (this.get('id')) + "/timings", {
+    return Discourse.ajax("/t/" + (this.get('id')) + "/timings", {
       type: 'DELETE'
     });
   },
 
   // Invite a user to this topic
   inviteUser: function(user) {
-    return Discourse.ajax({
+    return Discourse.ajax("/t/" + (this.get('id')) + "/invite", {
       type: 'POST',
-      url: Discourse.getURL("/t/") + (this.get('id')) + "/invite",
-      data: {
-        user: user
-      }
+      data: { user: user }
     });
   },
 
   // Delete this topic
   destroy: function() {
-    return Discourse.ajax(Discourse.getURL("/t/") + (this.get('id')), { type: 'DELETE' });
+    return Discourse.ajax("/t/" + (this.get('id')), { type: 'DELETE' });
   },
 
   // Load the posts for this topic
@@ -315,12 +312,9 @@ Discourse.Topic = Discourse.Model.extend({
   updateNotifications: function(v) {
     this.set('notification_level', v);
     this.set('notifications_reason_id', null);
-    return Discourse.ajax({
-      url: Discourse.getURL("/t/") + (this.get('id')) + "/notifications",
+    return Discourse.ajax("/t/" + (this.get('id')) + "/notifications", {
       type: 'POST',
-      data: {
-        notification_level: v
-      }
+      data: { notification_level: v }
     });
   },
 
@@ -351,9 +345,9 @@ Discourse.Topic = Discourse.Model.extend({
     // Clear the pin optimistically from the object
     topic.set('pinned', false);
 
-    Discourse.ajax(Discourse.getURL("/t/") + this.get('id') + "/clear-pin", {
+    Discourse.ajax("/t/" + this.get('id') + "/clear-pin", {
       type: 'PUT'
-    }).fail(function() {
+    }).then(null, function() {
       // On error, put the pin back
       topic.set('pinned', true);
     });
@@ -403,7 +397,7 @@ Discourse.Topic.reopenClass({
     @returns A promise that will resolve to the topics
   **/
   findSimilarTo: function(title, body) {
-    return Discourse.ajax({url: Discourse.getURL("/topics/similar_to"), data: {title: title, raw: body} }).then(function (results) {
+    return Discourse.ajax("/topics/similar_to", { data: {title: title, raw: body} }).then(function (results) {
       return results.map(function(topic) { return Discourse.Topic.create(topic) });
     });
   },
@@ -457,7 +451,7 @@ Discourse.Topic.reopenClass({
 
   // Create a topic from posts
   movePosts: function(topicId, title, postIds) {
-    return Discourse.ajax(Discourse.getURL(Discourse.getURL("/t/")) + topicId + "/move-posts", {
+    return Discourse.ajax("/t/" + topicId + "/move-posts", {
       type: 'POST',
       data: { title: title, post_ids: postIds }
     });

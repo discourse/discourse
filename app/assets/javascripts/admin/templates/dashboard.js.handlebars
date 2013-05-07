@@ -230,7 +230,7 @@
         {{#each top_referrers.data}}
           <tbody>
             <tr>
-              <td class="title"><a href="{{unbound adminUserPath username}}">{{unbound username}}</a></td>
+              <td class="title">{{#linkTo 'adminUser' this}}{{unbound username}}{{/linkTo}}</td>
               <td class="value">{{num_clicks}}</td>
               <td class="value">{{num_topics}}</td>
             </tr>

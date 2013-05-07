@@ -44,15 +44,10 @@ Discourse.Utilities = {
   },
 
   avatarUrl: function(username, size, template) {
-    var rawSize;
-    if (!username) {
-      return "";
-    }
+    if (!username) return "";
     size = Discourse.Utilities.translateSize(size);
-    rawSize = (size * (window.devicePixelRatio || 1)).toFixed();
-    if (template) {
-      return template.replace(/\{size\}/g, rawSize);
-    }
+    var rawSize = (size * (window.devicePixelRatio || 1)).toFixed();
+    if (template) return template.replace(/\{size\}/g, rawSize);
     return Discourse.getURL("/users/") + (username.toLowerCase()) + "/avatar/" + rawSize + "?__ws=" + (encodeURIComponent(Discourse.BaseUrl || ""));
   },
 
@@ -71,8 +66,7 @@ Discourse.Utilities = {
   },
 
   postUrl: function(slug, topicId, postNumber) {
-    var url;
-    url = Discourse.getURL("/t/");
+    var url = Discourse.getURL("/t/");
     if (slug) {
       url += slug + "/";
     } else {
