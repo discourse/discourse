@@ -11,9 +11,8 @@ Discourse.Draft = Discourse.Model.extend({});
 Discourse.Draft.reopenClass({
 
   clear: function(key, sequence) {
-    return Discourse.ajax({
+    return Discourse.ajax(Discourse.getURL("/draft"), {
       type: 'DELETE',
-      url: Discourse.getURL("/draft"),
       data: {
         draft_key: key,
         sequence: sequence
@@ -22,8 +21,7 @@ Discourse.Draft.reopenClass({
   },
 
   get: function(key) {
-    return Discourse.ajax({
-      url: Discourse.getURL('/draft'),
+    return Discourse.ajax(Discourse.getURL('/draft'), {
       data: { draft_key: key },
       dataType: 'json'
     });
@@ -36,9 +34,8 @@ Discourse.Draft.reopenClass({
 
   save: function(key, sequence, data) {
     data = typeof data === "string" ? data : JSON.stringify(data);
-    return Discourse.ajax({
+    return Discourse.ajax(Discourse.getURL("/draft"), {
       type: 'POST',
-      url: Discourse.getURL("/draft"),
       data: {
         draft_key: key,
         data: data,

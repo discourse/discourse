@@ -20,6 +20,6 @@ Discourse.AdminApi = Discourse.Model.extend({
 
 Discourse.AdminApi.reopenClass({
   find: function() {
-    return this.getModelAjax('/admin/api');
+    return this.getModelAjax(Discourse.getURL('/admin/api'));
   }
 });

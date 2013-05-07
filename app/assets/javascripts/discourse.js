@@ -194,7 +194,30 @@ Discourse = Ember.Application.createWithMixins({
     @method ajax
   **/
   ajax: function() {
-    return $.ajax.apply(this, arguments);
+
+    var url, args;
+    if (arguments.length === 1) {
+      if (typeof arguments[0] === "string") {
+        url = arguments[0];
+        args = {};
+      } else {
+        args = arguments[0];
+        url = args.url;
+        delete args.url;
+      }
+    } else if (arguments.length === 2) {
+      url = arguments[0];
+      args = arguments[1];
+    }
+
+    if (args.success) {
+      console.log("DEPRECATION: Discourse.ajax should use promises, received 'success' callback");
+    }
+    if (args.error) {
+      console.log("DEPRECATION: Discourse.ajax should use promises, received 'error' callback");
+    }
+
+    return $.ajax(url, args);
   },
 
   /**

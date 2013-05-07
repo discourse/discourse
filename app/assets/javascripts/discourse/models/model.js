@@ -44,7 +44,7 @@ Discourse.Model.reopenClass({
    **/
   getModelAjax: function(url) {
     var modelClass = this;
-    return Discourse.ajax({ url: url, cache: false, dataType: 'json' }).then(function (result) {
+    return Discourse.ajax(url, { cache: false }).then(function (result) {
       return modelClass.create(result);
     });
   },

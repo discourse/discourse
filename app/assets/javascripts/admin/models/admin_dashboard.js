@@ -19,10 +19,7 @@ Discourse.AdminDashboard.reopenClass({
     @return {jqXHR} a jQuery Promise object
   **/
   find: function() {
-    return Discourse.ajax(Discourse.getURL("/admin/dashboard"), {
-      type: 'GET',
-      dataType: 'json'
-    }).then(function(json) {
+    return Discourse.ajax(Discourse.getURL("/admin/dashboard")).then(function(json) {
       var model = Discourse.AdminDashboard.create(json);
       model.set('loaded', true);
       return model;

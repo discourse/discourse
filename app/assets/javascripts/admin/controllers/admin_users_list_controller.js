@@ -1,11 +1,11 @@
 /**
   This controller supports the interface for listing users in the admin section.
 
-  @class AdminUsersListController    
+  @class AdminUsersListController
   @extends Ember.ArrayController
   @namespace Discourse
   @module Discourse
-**/  
+**/
 Discourse.AdminUsersListController = Ember.ArrayController.extend(Discourse.Presence, {
   username: null,
   query: null,
@@ -88,9 +88,13 @@ Discourse.AdminUsersListController = Ember.ArrayController.extend(Discourse.Pres
     @method refreshUsers
   **/
   refreshUsers: function() {
-    this.set('loading', true);
-    var _this = this;
-    this.set('content', Discourse.AdminUser.findAll(this.get('query'), this.get('username'), function() { _this.set('loading', false); }));
+    var adminUsersListController = this;
+    adminUsersListController.set('loading', true);
+
+    Discourse.AdminUser.findAll(this.get('query'), this.get('username')).then(function (result) {
+      adminUsersListController.set('content', result);
+      adminUsersListController.set('loading', false);
+    })
   },
 
 
@@ -115,5 +119,5 @@ Discourse.AdminUsersListController = Ember.ArrayController.extend(Discourse.Pres
   approveUsers: function() {
     Discourse.AdminUser.bulkApprove(this.get('content').filterProperty('selected'));
   }
-  
+
 });
