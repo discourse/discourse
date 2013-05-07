@@ -95,7 +95,7 @@ describe Category do
 
   describe 'after create' do
     before do
-      @category = Fabricate(:category)
+      @category = Fabricate(:category, name: 'Amazing Category')
       @topic = @category.topic
     end
 
