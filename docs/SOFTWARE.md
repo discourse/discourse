@@ -14,7 +14,6 @@ The following Ruby Gems are used in Discourse:
 * [rack-mini-profiler](https://rubygems.org/gems/rack-mini-profiler)
 * [sass](https://rubygems.org/gems/sass)
 * [rest-client](https://rubygems.org/gems/rest-client)
-* [rails3_acts_as_paranoid](https://rubygems.org/gems/rails3_acts_as_paranoid)
 * [activerecord-postgres-hstore](https://rubygems.org/gems/activerecord-postgres-hstore)
 * [fastimage](https://rubygems.org/gems/fastimage)
 * [seed-fu](https://rubygems.org/gems/seed-fu)

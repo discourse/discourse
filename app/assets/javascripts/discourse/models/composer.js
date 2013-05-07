@@ -67,7 +67,7 @@ Discourse.Composer = Discourse.Model.extend({
 
   togglePreview: function() {
     this.toggleProperty('showPreview');
-    Discourse.KeyValueStore.set({ key: 'showPreview', value: this.get('showPreview') });
+    Discourse.KeyValueStore.set({ key: 'composer.showPreview', value: this.get('showPreview') });
   },
 
   // Import a quote from the post

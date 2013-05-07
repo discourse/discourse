@@ -2,6 +2,10 @@ if Rails.configuration.respond_to?(:enable_rack_cache) && Rails.configuration.en
   require 'rack-cache'
   require 'redis-rack-cache'
 
+  # by default we will cache up to 3 minutes in redis, if you want to cut down on redis usage
+  #  cut down this number
+  RedisRackCache.max_cache_seconds = 60 * 3
+
   url = DiscourseRedis.url
 
   class Rack::Cache::Discourse < Rack::Cache::Context

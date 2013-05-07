@@ -4,10 +4,12 @@ require_dependency 'topic_view'
 require_dependency 'rate_limiter'
 require_dependency 'text_sentinel'
 require_dependency 'text_cleaner'
+require_dependency 'trashable'
 
 class Topic < ActiveRecord::Base
   include ActionView::Helpers
   include RateLimiter::OnCreateRecord
+  include Trashable
 
   def self.max_sort_order
     2**31 - 1
@@ -18,9 +20,17 @@ class Topic < ActiveRecord::Base
   end
 
   versioned if: :new_version_required?
-  acts_as_paranoid
-  after_recover :update_flagged_posts_count
-  after_destroy :update_flagged_posts_count
+
+
+  def trash!
+    super
+    update_flagged_posts_count
+  end
+
+  def recover!
+    super
+    update_flagged_posts_count
+  end
 
   rate_limit :default_rate_limiter
   rate_limit :limit_topics_per_day

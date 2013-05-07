@@ -7,6 +7,14 @@ GIT
       rake-compiler
 
 GIT
+  remote: git://github.com/SamSaffron/redis-rack-cache.git
+  revision: 379ef30e31d4e185cb1d7f8badca0cc06403eba2
+  specs:
+    redis-rack-cache (1.2.1)
+      rack-cache (~> 1.2)
+      redis-store (~> 1.1.0)
+
+GIT
   remote: git://github.com/SamSaffron/sprockets.git
   revision: bacf2ec4d4d10cd8d1ab25a6360740314c512237
   branch: rails-compat
@@ -120,8 +128,6 @@ GEM
     activesupport (3.2.12)
       i18n (~> 0.6)
       multi_json (~> 1.0)
-    acts_as_paranoid (0.4.1)
-      activerecord (~> 3.2)
     airbrake (3.1.2)
       activesupport
       builder
@@ -352,9 +358,6 @@ GEM
     redis-rack (1.4.2)
       rack (~> 1.4.1)
       redis-store (~> 1.1.0)
-    redis-rack-cache (1.2.1)
-      rack-cache (~> 1.2)
-      redis-store (~> 1.1.0)
     redis-rails (3.2.3)
       redis-actionpack (~> 3.2.3)
       redis-activesupport (~> 3.2.3)
@@ -448,7 +451,6 @@ DEPENDENCIES
   active_attr
   active_model_serializers!
   activerecord-postgres-hstore
-  acts_as_paranoid
   airbrake (= 3.1.2)
   barber (= 0.3.0)
   better_errors
@@ -507,7 +509,7 @@ DEPENDENCIES
   rb-inotify (~> 0.9)
   redcarpet
   redis
-  redis-rack-cache
+  redis-rack-cache!
   redis-rails
   rest-client
   rinku

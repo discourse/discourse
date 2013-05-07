@@ -78,7 +78,7 @@ describe PostAction do
 
     it "should reset counts when a topic is deleted" do
       PostAction.act(codinghorror, post, PostActionType.types[:off_topic])
-      post.topic.destroy
+      post.topic.trash!
       PostAction.flagged_posts_count.should == 0
     end
 

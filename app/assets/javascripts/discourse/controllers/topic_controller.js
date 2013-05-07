@@ -432,7 +432,7 @@ Discourse.TopicController = Discourse.ObjectController.extend({
 
   deletePost: function(post) {
     // Moderators can delete posts. Regular users can only create a deleted at message.
-    if (Discourse.get('currentUser.moderator')) {
+    if (Discourse.get('currentUser.staff')) {
       post.set('deleted_at', new Date());
     } else {
       post.set('cooked', Discourse.Markdown.cook(Em.String.i18n("post.deleted_by_author")));

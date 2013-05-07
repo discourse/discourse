@@ -21,11 +21,11 @@ class ListableTopicSerializer < BasicTopicSerializer
   def age
     AgeWords.age_words(Time.now - (object.created_at || Time.now))
   end
-  
+
   def bumped
     object.created_at < object.bumped_at
   end
-  
+
   def bumped_age
     return nil if object.bumped_at.blank?
     AgeWords.age_words(Time.now - object.bumped_at)

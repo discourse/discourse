@@ -1,4 +1,7 @@
+require_dependency 'trashable'
+
 class Invite < ActiveRecord::Base
+  include Trashable
 
   belongs_to :user
   belongs_to :topic
@@ -8,8 +11,6 @@ class Invite < ActiveRecord::Base
   has_many :topics, through: :topic_invites, source: :topic
   validates_presence_of :email
   validates_presence_of :invited_by_id
-
-  acts_as_paranoid
 
   before_create do
     self.invite_key ||= SecureRandom.hex

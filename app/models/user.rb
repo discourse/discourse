@@ -442,11 +442,11 @@ class User < ActiveRecord::Base
 
     posts.order("post_number desc").each do |p|
       if p.post_number == 1
-        p.topic.destroy
+        p.topic.trash!
         # TODO: But the post is not destroyed. Why?
       else
         # TODO: This should be using the PostDestroyer!
-        p.destroy
+        p.trash!
       end
     end
   end
