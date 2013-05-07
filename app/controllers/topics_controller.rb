@@ -1,5 +1,6 @@
 require_dependency 'topic_view'
 require_dependency 'promotion'
+require 'actionpack/action_caching'
 
 class TopicsController < ApplicationController
 

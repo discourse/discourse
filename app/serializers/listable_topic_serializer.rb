@@ -5,7 +5,6 @@ class ListableTopicSerializer < BasicTopicSerializer
   attributes :reply_count,
              :posts_count,
              :highest_post_number,
-             :image_url,
              :created_at,
              :last_posted_at,
              :bumped,

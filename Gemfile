@@ -49,21 +49,25 @@ gem 'oj'
 gem 'pg'
 # we had pain with the 3.2.13 upgrade so monkey patch the security fix
 # next time around we hope to upgrade
-gem 'rails', '3.2.12'
+# gem 'rails', '3.2.12'
+gem 'rails', '4.0.0.rc1'
 gem 'rake'
 gem 'redis'
-gem 'redis-rails'
+gem 'redis-rails', :git => 'git://github.com/SamSaffron/redis-store.git'
 gem 'rest-client'
 gem 'rinku'
 gem 'sanitize'
 gem 'sass'
-gem 'seed-fu'
+gem 'seed-fu', :git => 'git://github.com/SamSaffron/seed-fu.git'
 gem 'sidekiq'
 gem 'sinatra', require: nil
 gem 'slim'  # required for sidekiq-web
 gem 'therubyracer', require: 'v8'
 gem 'thin'
 gem 'diffy'
+gem 'rails-observers'
+gem 'protected_attributes'
+gem 'actionpack-action_caching'
 
 # Gem that enables support for plugins. It is required.
 gem 'discourse_plugin', path: 'vendor/gems/discourse_plugin'
@@ -80,7 +84,7 @@ gem 'discourse_emoji', path: 'vendor/gems/discourse_emoji'
 # allow everywhere for now cause we are allowing asset debugging in prd
 group :assets do
   gem 'sass'
-  gem 'sass-rails'
+  gem 'sass-rails', :git => 'git://github.com/rails/sass-rails.git'
   gem 'turbo-sprockets-rails3'
   gem 'uglifier'
 end
@@ -98,7 +102,7 @@ group :test, :development do
   gem 'guard-jasmine'
   gem 'guard-rspec'
   gem 'guard-spork'
-  gem 'jasminerice'
+  gem 'jasminerice', :git => 'git://github.com/bradphelan/jasminerice.git'
   gem 'mocha', require: false
   gem 'rb-fsevent'
   gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM.include?('linux') && 'rb-inotify'
@@ -117,7 +121,7 @@ end
 
 # we are using a custom sprockets repo to work around: https://github.com/rails/rails/issues/8099#issuecomment-16137638
 # REVIEW EVERY RELEASE
-gem "sprockets", :git => "git://github.com/SamSaffron/sprockets.git", :branch => "rails-compat"
+# gem "sprockets", :git => "git://github.com/SamSaffron/sprockets.git", :branch => "rails-compat"
 
 
 # this is an optional gem, it provides a high performance replacement

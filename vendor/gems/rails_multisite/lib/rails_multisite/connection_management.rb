@@ -90,32 +90,7 @@ module RailsMultisite
       ActiveRecord::Base.configurations[Rails.env]["host_names"].each do |host|
         @@host_spec_cache[host] = @@default_spec
       end
-
-      # inject our connection_handler pool
-      # WARNING MONKEY PATCH
-      #
-      # see: https://github.com/rails/rails/issues/8344#issuecomment-10800848
-      #
-      @@default_connection_handler = ActiveRecord::Base.connection_handler
-      ActiveRecord::Base.send :include, NewConnectionHandler
-      ActiveRecord::Base.connection_handler = @@default_connection_handler
-      @@connection_handlers = {}
     end
-
-    module NewConnectionHandler
-      def self.included(klass)
-        klass.class_eval do
-          define_singleton_method :connection_handler do
-            Thread.current[:connection_handler] || @connection_handler
-          end
-          define_singleton_method :connection_handler= do |handler|
-            @connection_handler ||= handler
-            Thread.current[:connection_handler] = handler
-          end
-        end
-      end
-    end
-
 
     def initialize(app, config = nil)
       @app = app

@@ -10,8 +10,8 @@ Gem::Specification.new do |s|
   s.summary     = %q{Basic Mustache Support for Rails}
   s.description = %q{Adds the Mustache plugin and a corresponding Sprockets engine to the asset pipeline in Rails applications.}
 
-  s.add_development_dependency "rails", ["~> 3.1"]
-  s.add_dependency 'rails', ['~> 3.1']
+  s.add_development_dependency "rails", ["> 3.1"]
+  s.add_dependency 'rails', ['> 3.1']
 
   s.files = Dir["lib/**/*"]
   s.require_paths = ["lib"]
