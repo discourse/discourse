@@ -47,14 +47,14 @@ Discourse.FlaggedPost = Discourse.Post.extend({
 
   deletePost: function() {
     if (this.get('post_number') === "1") {
-      return Discourse.ajax(Discourse.getURL("/t/") + this.topic_id, { type: 'DELETE', cache: false });
+      return Discourse.ajax("/t/" + this.topic_id, { type: 'DELETE', cache: false });
     } else {
-      return Discourse.ajax(Discourse.getURL("/posts/") + this.id, { type: 'DELETE', cache: false });
+      return Discourse.ajax("/posts/" + this.id, { type: 'DELETE', cache: false });
     }
   },
 
   clearFlags: function() {
-    return Discourse.ajax(Discourse.getURL("/admin/flags/clear/") + this.id, { type: 'POST', cache: false });
+    return Discourse.ajax("/admin/flags/clear/" + this.id, { type: 'POST', cache: false });
   },
 
   hiddenClass: function() {
@@ -65,7 +65,7 @@ Discourse.FlaggedPost = Discourse.Post.extend({
 Discourse.FlaggedPost.reopenClass({
   findAll: function(filter) {
     var result = Em.A();
-    Discourse.ajax(Discourse.getURL("/admin/flags/") + filter + ".json").then(function(data) {
+    Discourse.ajax("/admin/flags/" + filter + ".json").then(function(data) {
       var userLookup = {};
       data.users.each(function(u) {
         userLookup[u.id] = Discourse.User.create(u);

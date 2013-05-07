@@ -138,7 +138,7 @@ Discourse.Report = Discourse.Model.extend({
 Discourse.Report.reopenClass({
   find: function(type) {
     var model = Discourse.Report.create({type: type});
-    Discourse.ajax(Discourse.getURL("/admin/reports/") + type).then(function (json) {
+    Discourse.ajax("/admin/reports/" + type).then(function (json) {
       // Add a percent field to each tuple
       var maxY = 0;
       json.report.data.forEach(function (row) {

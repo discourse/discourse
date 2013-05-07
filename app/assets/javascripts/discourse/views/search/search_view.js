@@ -90,7 +90,7 @@ Discourse.SearchView = Discourse.View.extend({
 
   searchTerm: Discourse.debouncePromise(function(term, typeFilter) {
     var searchView = this;
-    return Discourse.ajax(Discourse.getURL('/search'), {
+    return Discourse.ajax('/search', {
       data: {
         term: term,
         type_filter: typeFilter

@@ -72,7 +72,7 @@ Discourse.ClickTrack = {
 
     // if they want to open in a new tab, do an AJAX request
     if (e.shiftKey || e.metaKey || e.ctrlKey || e.which === 2) {
-      Discourse.ajax(Discourse.getURL("/clicks/track"), {
+      Discourse.ajax("/clicks/track", {
         data: {
           url: href,
           post_id: postId,
@@ -86,7 +86,7 @@ Discourse.ClickTrack = {
 
     // If we're on the same site, use the router and track via AJAX
     if (href.indexOf(Discourse.URL.origin()) === 0) {
-      Discourse.ajax(Discourse.getURL("/clicks/track"), {
+      Discourse.ajax("/clicks/track", {
         data: {
           url: href,
           post_id: postId,

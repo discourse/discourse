@@ -30,9 +30,9 @@ Discourse.Category = Discourse.Model.extend({
   }.property('topic_count'),
 
   save: function(args) {
-    var url = Discourse.getURL("/categories");
+    var url = "/categories";
     if (this.get('id')) {
-      url = Discourse.getURL("/categories/") + (this.get('id'));
+      url = "/categories/" + (this.get('id'));
     }
 
     return Discourse.ajax(url, {
@@ -47,14 +47,14 @@ Discourse.Category = Discourse.Model.extend({
   },
 
   destroy: function(callback) {
-    return Discourse.ajax(Discourse.getURL("/categories/") + (this.get('slug') || this.get('id')), { type: 'DELETE' });
+    return Discourse.ajax("/categories/" + (this.get('slug') || this.get('id')), { type: 'DELETE' });
   }
 
 });
 
 Discourse.Category.reopenClass({
   findBySlugOrId: function(slugOrId) {
-    return Discourse.ajax(Discourse.getURL("/categories/") + slugOrId + ".json").then(function (result) {
+    return Discourse.ajax("/categories/" + slugOrId + ".json").then(function (result) {
       return Discourse.Category.create(result.category);
     });
   }

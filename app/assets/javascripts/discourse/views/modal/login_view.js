@@ -49,7 +49,7 @@ Discourse.LoginView = Discourse.ModalBodyView.extend({
     this.set('loggingIn', true);
 
     var loginView = this;
-    Discourse.ajax(Discourse.getURL("/session"), {
+    Discourse.ajax("/session", {
       data: { login: this.get('loginName'), password: this.get('loginPassword') },
       type: 'POST'
     }).then(function (result) {

@@ -4,7 +4,7 @@
       <li>{{#linkTo adminFlags.active}}{{i18n admin.flags.active}}{{/linkTo}}</li>
       <li>{{#linkTo adminFlags.old}}{{i18n admin.flags.old}}{{/linkTo}}</li>
     </ul>
-  </div>  
+  </div>
 </div>
 
 
@@ -21,12 +21,12 @@
   <tbody>
     {{#each content}}
     <tr {{bindAttr class="hiddenClass"}}>
-      <td class='user'><a href="/admin{{unbound user.path}}">{{avatar user imageSize="small"}}</a></td>
+      <td class='user'>{{#linkTo 'adminUser' user}}{{avatar user imageSize="small"}}{{/linkTo}}</td>
       <td class='excerpt'>{{#if topicHidden}}<i title='{{i18n topic_statuses.invisible.help}}' class='icon icon-eye-close'></i> {{/if}}<h3><a href='{{unbound url}}'>{{title}}</a></h3><br>{{{excerpt}}}
       </td>
-      <td class='flaggers'>{{#each flaggers}}<a href="/admin{{unbound path}}">{{avatar this imageSize="small"}}</a>{{/each}}</td>
+      <td class='flaggers'>{{#each flaggers}}{{#linkTo 'adminUser' this}}{{avatar this imageSize="small"}} {{/linkTo}}{{/each}}</td>
       <td class='last-flagged'>{{date lastFlagged}}</td>
-      <td class='action'> 
+      <td class='action'>
         {{#if controller.adminActiveFlagsView}}
         <button title='{{i18n admin.flags.clear_title}}' class='btn' {{action clearFlags this}}>{{i18n admin.flags.clear}}</button>
         <button title='{{i18n admin.flags.delete_title}}' class='btn' {{action deletePost this}}>{{i18n admin.flags.delete}}</button>
@@ -38,7 +38,7 @@
         <tr>
           <td></td>
           <td class='message'>
-            <div><a href="/admin{{unbound user.path}}">{{avatar user imageSize="small"}}</a> {{message}}</div>
+            <div>{{#linkTo 'adminUser' user}}{{avatar user imageSize="small"}}{{/linkTo}} {{message}}</div>
           </td>
           <td></td>
           <td></td>
