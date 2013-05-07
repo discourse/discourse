@@ -53,7 +53,11 @@ class CategoryList
       @categories.delete_if { |c| c.featured_topics.blank? }
     else
       # Show all categories to people who have the ability to edit and delete categories
-      @categories.insert(@categories.size, *Category.where('id not in (?)', @categories.map(&:id).compact).to_a)
+      if @categories.size > 0
+        @categories.insert(@categories.size, *Category.where('id not in (?)', @categories.map(&:id).compact).to_a)
+      else
+        @categories = Category.all.to_a
+      end
     end
 
     # Get forum topic user records if appropriate
