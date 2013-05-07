@@ -15,7 +15,8 @@ class TopicsController < ApplicationController
                                           :unmute,
                                           :set_notifications,
                                           :move_posts,
-                                          :clear_pin]
+                                          :clear_pin,
+                                          :autoclose]
 
   before_filter :consider_user_for_promotion, only: :show
 
@@ -95,6 +96,16 @@ class TopicsController < ApplicationController
 
   def unmute
     toggle_mute(false)
+  end
+
+  def autoclose
+    requires_parameter(:auto_close_days)
+    @topic = Topic.where(id: params[:topic_id].to_i).first
+    guardian.ensure_can_moderate!(@topic)
+    @topic.auto_close_days = params[:auto_close_days]
+    @topic.auto_close_user = current_user
+    @topic.save
+    render nothing: true
   end
 
   def destroy

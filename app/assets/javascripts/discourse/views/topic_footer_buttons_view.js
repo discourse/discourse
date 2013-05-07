@@ -2,7 +2,7 @@
   This view is used for rendering the buttons at the footer of the topic
 
   @class TopicFooterButtonsView
-  @extends Discourse.View
+  @extends Ember.ContainerView
   @namespace Discourse
   @module Discourse
 **/

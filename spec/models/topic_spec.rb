@@ -584,10 +584,10 @@ describe Topic do
       end
     end
 
-    context 'closed' do
+    shared_examples_for 'a status that closes a topic' do
       context 'disable' do
         before do
-          @topic.update_status('closed', false, @user)
+          @topic.update_status(status, false, @user)
           @topic.reload
         end
 
@@ -602,7 +602,7 @@ describe Topic do
       context 'enable' do
         before do
           @topic.update_attribute :closed, false
-          @topic.update_status('closed', true, @user)
+          @topic.update_status(status, true, @user)
           @topic.reload
         end
 
@@ -612,6 +612,16 @@ describe Topic do
           @topic.moderator_posts_count.should == 1
         end
       end
+    end
+
+    context 'closed' do
+      let(:status) { 'closed' }
+      it_should_behave_like 'a status that closes a topic'
+    end
+
+    context 'autoclosed' do
+      let(:status) { 'autoclosed' }
+      it_should_behave_like 'a status that closes a topic'
     end
 
 
@@ -939,6 +949,116 @@ describe Topic do
         c = Fabricate(:topic, created_at: now)
         d = Fabricate(:topic, created_at: now - 2.minutes)
         Topic.by_newest.should == [c,b,d,a]
+      end
+    end
+  end
+
+  describe 'auto-close' do
+    context 'a new topic' do
+      it 'when auto_close_at is not present, it does not queue a job to close the topic' do
+        Jobs.expects(:enqueue_at).never
+        Fabricate(:topic)
+      end
+
+      context 'auto_close_at is set' do
+        it 'queues a job to close the topic' do
+          Timecop.freeze(Time.zone.now) do
+            Jobs.expects(:enqueue_at).with(7.days.from_now, :close_topic, all_of( has_key(:topic_id), has_key(:user_id) ))
+            Fabricate(:topic, auto_close_at: 7.days.from_now, user: Fabricate(:admin))
+          end
+        end
+
+        it 'when auto_close_user_id is nil, it will use the topic creator as the topic closer' do
+          topic_creator = Fabricate(:admin)
+          Jobs.expects(:enqueue_at).with do |datetime, job_name, job_args|
+            job_args[:user_id] == topic_creator.id
+          end
+          Fabricate(:topic, auto_close_at: 7.days.from_now, user: topic_creator)
+        end
+
+        it 'when auto_close_user_id is set, it will use it as the topic closer' do
+          topic_creator = Fabricate(:admin)
+          topic_closer = Fabricate(:user, admin: true)
+          Jobs.expects(:enqueue_at).with do |datetime, job_name, job_args|
+            job_args[:user_id] == topic_closer.id
+          end
+          Fabricate(:topic, auto_close_at: 7.days.from_now, auto_close_user: topic_closer, user: topic_creator)
+        end
+      end
+    end
+
+    context 'an existing topic' do
+      it 'when auto_close_at is set, it queues a job to close the topic' do
+        Timecop.freeze(Time.zone.now) do
+          topic = Fabricate(:topic)
+          Jobs.expects(:enqueue_at).with(12.hours.from_now, :close_topic, has_entries(topic_id: topic.id, user_id: topic.user_id))
+          topic.auto_close_at = 12.hours.from_now
+          topic.save.should be_true
+        end
+      end
+
+      it 'when auto_close_at and auto_closer_user_id are set, it queues a job to close the topic' do
+        Timecop.freeze(Time.zone.now) do
+          topic  = Fabricate(:topic)
+          closer = Fabricate(:admin)
+          Jobs.expects(:enqueue_at).with(12.hours.from_now, :close_topic, has_entries(topic_id: topic.id, user_id: closer.id))
+          topic.auto_close_at = 12.hours.from_now
+          topic.auto_close_user = closer
+          topic.save.should be_true
+        end
+      end
+
+      it 'when auto_close_at is removed, it cancels the job to close the topic' do
+        Jobs.stubs(:enqueue_at).returns(true)
+        topic = Fabricate(:topic, auto_close_at: 1.day.from_now)
+        Jobs.expects(:cancel_scheduled_job).with(:close_topic, {topic_id: topic.id})
+        topic.auto_close_at = nil
+        topic.save.should be_true
+        topic.auto_close_user.should be_nil
+      end
+
+      it 'when auto_close_user is removed, it updates the job' do
+        Timecop.freeze(Time.zone.now) do
+          Jobs.stubs(:enqueue_at).with(1.day.from_now, :close_topic, anything).returns(true)
+          topic = Fabricate(:topic, auto_close_at: 1.day.from_now, auto_close_user: Fabricate(:admin))
+          Jobs.expects(:cancel_scheduled_job).with(:close_topic, {topic_id: topic.id})
+          Jobs.expects(:enqueue_at).with(1.day.from_now, :close_topic, has_entries(topic_id: topic.id, user_id: topic.user_id))
+          topic.auto_close_user = nil
+          topic.save.should be_true
+        end
+      end
+
+      it 'when auto_close_at value is changed, it reschedules the job' do
+        Timecop.freeze(Time.zone.now) do
+          Jobs.stubs(:enqueue_at).returns(true)
+          topic = Fabricate(:topic, auto_close_at: 1.day.from_now)
+          Jobs.expects(:cancel_scheduled_job).with(:close_topic, {topic_id: topic.id})
+          Jobs.expects(:enqueue_at).with(3.days.from_now, :close_topic, has_entry(topic_id: topic.id))
+          topic.auto_close_at = 3.days.from_now
+          topic.save.should be_true
+        end
+      end
+
+      it 'when auto_close_user_id is changed, it updates the job' do
+        Timecop.freeze(Time.zone.now) do
+          admin = Fabricate(:admin)
+          Jobs.stubs(:enqueue_at).returns(true)
+          topic = Fabricate(:topic, auto_close_at: 1.day.from_now)
+          Jobs.expects(:cancel_scheduled_job).with(:close_topic, {topic_id: topic.id})
+          Jobs.expects(:enqueue_at).with(1.day.from_now, :close_topic, has_entries(topic_id: topic.id, user_id: admin.id))
+          topic.auto_close_user = admin
+          topic.save.should be_true
+        end
+      end
+
+      it 'when auto_close_at and auto_close_user_id are not changed, it should not schedule another CloseTopic job' do
+        Timecop.freeze(Time.zone.now) do
+          Jobs.expects(:enqueue_at).with(1.day.from_now, :close_topic, has_key(:topic_id)).once.returns(true)
+          Jobs.expects(:cancel_scheduled_job).never
+          topic = Fabricate(:topic, auto_close_at: 1.day.from_now)
+          topic.title = 'A new title that is long enough'
+          topic.save.should be_true
+        end
       end
     end
   end

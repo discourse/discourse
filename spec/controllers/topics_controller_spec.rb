@@ -516,4 +516,40 @@ describe TopicsController do
 
   end
 
+  describe 'autoclose' do
+
+    it 'needs you to be logged in' do
+      lambda { xhr :put, :autoclose, topic_id: 99, auto_close_days: 3}.should raise_error(Discourse::NotLoggedIn)
+    end
+
+    it 'needs you to be an admin or mod' do
+      user = log_in
+      xhr :put, :autoclose, topic_id: 99, auto_close_days: 3
+      response.should be_forbidden
+    end
+
+    describe 'when logged in' do
+      before do
+        @admin = log_in(:admin)
+        @topic = Fabricate(:topic, user: @admin)
+      end
+
+      it "can set a topic's auto close time" do
+        Topic.any_instance.expects(:auto_close_days=).with { |arg| arg.to_i == 3 }
+        xhr :put, :autoclose, topic_id: @topic.id, auto_close_days: 3
+      end
+
+      it "can remove a topic's auto close time" do
+        Topic.any_instance.expects(:auto_close_days=).with(nil)
+        xhr :put, :autoclose, topic_id: @topic.id, auto_close_days: nil
+      end
+
+      it "sets the topic closer to the current user" do
+        Topic.any_instance.expects(:auto_close_user=).with(@admin)
+        xhr :put, :autoclose, topic_id: @topic.id, auto_close_days: nil
+      end
+    end
+
+  end
+
 end

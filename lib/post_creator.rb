@@ -53,6 +53,11 @@ class PostCreator
 
         topic = Topic.new(topic_params)
 
+        if @opts[:auto_close_days]
+          guardian.ensure_can_moderate!(topic)
+          topic.auto_close_days = @opts[:auto_close_days]
+        end
+
         if @opts[:archetype] == Archetype.private_message
 
           topic.subtype = TopicSubtype.user_to_user unless topic.subtype

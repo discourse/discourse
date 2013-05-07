@@ -354,6 +354,19 @@ Discourse.ComposerView = Discourse.View.extend({
 
   childDidInsertElement: function(e) {
     return this.initEditor();
+  },
+
+  toggleAdminOptions: function() {
+    var $adminOpts = $('.admin-options-form'),
+        $wmd = $('.wmd-controls'),
+        wmdTop = parseInt($wmd.css('top'),10);
+    if( $adminOpts.is(':visible') ) {
+      $wmd.css('top', wmdTop - parseInt($adminOpts.css('height'),10) + 'px' );
+      $adminOpts.hide();
+    } else {
+      $adminOpts.show();
+      $wmd.css('top', wmdTop + parseInt($adminOpts.css('height'),10) + 'px' );
+    }
   }
 });
 

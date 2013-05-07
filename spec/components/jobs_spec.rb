@@ -75,5 +75,41 @@ describe Jobs do
 
   end
 
+  describe 'cancel_scheduled_job' do
+    it 'deletes the matching job' do
+      job_to_delete = stub_everything(klass: 'Sidekiq::Extensions::DelayedClass', args: [YAML.dump(['Jobs::DrinkBeer', :delayed_perform, [{beer_id: 42}]])])
+      job_to_delete.expects(:delete)
+      job_to_keep1 = stub_everything(klass: 'Sidekiq::Extensions::DelayedClass', args: [YAML.dump(['Jobs::DrinkBeer', :delayed_perform, [{beer_id: 43}]])])
+      job_to_keep1.expects(:delete).never
+      job_to_keep2 = stub_everything(klass: 'Sidekiq::Extensions::DelayedClass', args: [YAML.dump(['Jobs::DrinkBeer', :delayed_perform, [{beer_id: 44}]])])
+      job_to_keep2.expects(:delete).never
+      Sidekiq::ScheduledSet.stubs(:new).returns( [job_to_keep1, job_to_delete, job_to_keep2] )
+      Jobs.cancel_scheduled_job(:drink_beer, {beer_id: 42}).should be_true
+    end
+
+    it 'returns false when no matching job is scheduled' do
+      job_to_keep = stub_everything(klass: 'Sidekiq::Extensions::DelayedClass', args: [YAML.dump(['Jobs::DrinkBeer', :delayed_perform, [{beer_id: 43}]])])
+      job_to_keep.expects(:delete).never
+      Sidekiq::ScheduledSet.stubs(:new).returns( [job_to_keep] )
+      Jobs.cancel_scheduled_job(:drink_beer, {beer_id: 42}).should be_false
+    end
+  end
+
+  describe 'enqueue_at' do
+    it 'calls enqueue_in for you' do
+      Timecop.freeze(Time.zone.now) do
+        Jobs.expects(:enqueue_in).with(3 * 60 * 60, :eat_lunch, {}).returns(true)
+        Jobs.enqueue_at(3.hours.from_now, :eat_lunch, {})
+      end
+    end
+
+    it 'handles datetimes that are in the past' do
+      Timecop.freeze(Time.zone.now) do
+        Jobs.expects(:enqueue_in).with(0, :eat_lunch, {}).returns(true)
+        Jobs.enqueue_at(3.hours.ago, :eat_lunch, {})
+      end
+    end
+  end
+
 end
 
