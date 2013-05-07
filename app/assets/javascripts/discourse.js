@@ -231,9 +231,18 @@ Discourse = Ember.Application.createWithMixins({
 
       var oldError = args.error;
       args.error = function(xhr) {
+
+        // If it's a parseerror, don't reject
+        if (xhr.status === 200) return args.success(xhr);
+
         promise.reject(xhr);
         if (oldError) oldError(xhr);
       }
+
+      // We default to JSON on GET. If we don't, sometimes if the server doesn't return the proper header
+      // it will not be parsed as an object.
+      if (!args.type) args.type = 'GET';
+      if ((!args.dataType) && (args.type === 'GET')) args.dataType = 'json';
 
       $.ajax(Discourse.getURL(url), args);
     });
