@@ -34,6 +34,7 @@ nl:
     you: Jij
     or: of
     now: zonet
+    read_more: lees verder
 
     suggested_topics:
       title: Aanbevolen topics
@@ -75,8 +76,8 @@ nl:
       "2": "Likes ontvangen"
       "3": "Bladwijzers"
       "4": "Topics"
-      "5": "Berichten"
-      "6": "Responses"
+      "5": "Antwoorden"
+      "6": "Reacties"
       "7": "Genoemd"
       "9": "Citaten"
       "10": "Favorieten"
@@ -99,6 +100,9 @@ nl:
       trust_level: Trustlevel
       external_links_in_new_tab: Open alle externe links in een nieuw tabblad
       enable_quoting: Activeer antwoord-met-citaat voor geselecteerde tekst
+
+      moderator: "{{user}} is een moderator"
+      admin: "{{user}} is een admin"
 
       change_password:
         action: wijzig
@@ -248,7 +252,7 @@ nl:
       disable: "Schakel naar normale weergave"
 
     private_message_info:
-      title: 'Privé-conversatie'
+      title: 'Privé-bericht'
       invite: Nodig anderen uit...
 
     email: E-mail
@@ -375,9 +379,9 @@ nl:
       edited: "<i title='gewijzigd' class='icon icon-pencil'></i> {{username}} {{link}}"
       liked: "<i title='leuk gevonden' class='icon icon-heart'></i> {{username}} {{link}}"
       private_message: "<i class='icon icon-envelope-alt' title='privé-bericht'></i> {{username}} {{link}}"
-      invited_to_private_message: "{{username}} heeft je uitgenodigd voor een privé-conversatie: {{link}}"
+      invited_to_private_message: "<i class='icon icon-envelope-alt' title='privé-bericht'></i> {{username}} {{link}}"
       invitee_accepted: "<i title='heeft je uitnodiging geaccepteerd' class='icon icon-signin'></i> {{username}} heeft je uitnodiging geaccepteerd en heeft zich ingeschreven om deel te nemen."
-      moved_post: "<i title='bericht verplaatst' class='icon icon-arrow-right'></i> {{username}} heeft je post verplaast naar {{link}}"
+      moved_post: "<i title='bericht verplaatst' class='icon icon-arrow-right'></i> {{username}} verplaatst naar {{link}}"
       total_flagged: aantal gemarkeerde berichten
 
     image_selector:
@@ -437,7 +441,7 @@ nl:
       create_in: "Maak een {{categoryName}} topic"
       create: Maak topic
       create_long: Maak een nieuw topic
-      private_message: Start een privé-gesprek
+      private_message: Stuur een privé-bericht
       list: Topics
       new: nieuw topic
       title: Topic
@@ -535,11 +539,11 @@ nl:
       inviting: Uitnodigen...
 
       invite_private:
-        title: Nodig uit voor privé-conversatie
+        title: Stuur een privé-bericht
         email_or_username: E-mail of gebruikersnaam van genodigde
         email_or_username_placeholder: e-mailadres of gebruikersnaam
         action: Uitnodigen
-        success: "Bedankt! We hebben deze persoon uitgenodigd om deel te nemen aan deze privé-conversatie."
+        success: "Bedankt! We hebben deze persoon dit privé-bericht gestuurd."
         error: "Sorry, er is iets misgegaan bij het uitnodigen van deze persoon"
 
       invite_reply:
@@ -656,8 +660,8 @@ nl:
           inappropriate: "{{icons}} markeerden dit als ongepast"
           notify_moderators: "{{icons}} lichtte moderators in"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>lichtte moderators in</a>" 
-          notify_user: "{{icons}} begonnen een privé-conversatie"
-          notify_user_with_url: "{{icons}} begonnen een <a href='{{postUrl}}'>privé-conversatie</a>" 
+          notify_user: "{{icons}} verstuurde een privé-bericht"
+          notify_user_with_url: "{{icons}} verstuurde een <a href='{{postUrl}}'>privé-bericht</a>" 
           bookmark: "{{icons}} voegden dit toe aan hun favorieten"
           like: "{{icons}} vinden dit leuk"
           vote: "{{icons}} hebben hier op gestemd"
@@ -666,7 +670,7 @@ nl:
           spam: Jij markeerde dit als spam
           inappropriate: Jij markeerde dit als ongepast
           notify_moderators: Jij markeerde dit voor moderatie
-          notify_user: Jij begon een privé-conversatie met deze persoon
+          notify_user: Jij stuurde een privé-bericht naar deze persoon
           bookmark: Jij voegde dit bericht toe aan je favorieten
           like: Jij vindt dit leuk
           vote: Jij hebt op dit bericht gestemd
@@ -684,8 +688,8 @@ nl:
             one: "Jij en iemand anders markeerden dit voor moderatie"
             other: "Jij en {{count}} anderen markeerden dit voor moderatie"
           notify_user:
-            one: "Jij en iemand anders begonnen een privé-conversatie met deze persoon"
-            other: "Jij en {{count}} anderen begonnen een privé-conversatie met deze persoon"
+            one: "Jij en iemand anders stuurden een privé-bericht naar deze persoon"
+            other: "Jij en {{count}} anderen stuurden een privé-bericht naar deze persoon"
           bookmark:
             one: "Jij en iemand anders voegden dit bericht toe aan de favorieten"
             other: "Jij en {{count}} anderen voegden dit bericht toe aan de favorieten"
@@ -709,8 +713,8 @@ nl:
             one: "Iemand heeft dit bericht gemarkeerd voor moderatie"
             other: "{{count}} Mensen hebben dit bericht gemarkeerd voor moderatie"
           notify_user:
-            one: "Iemand is een privé-conversatie begonnen met deze persoon"
-            other: "{{count}} Mensen zijn een privé-conversatie begonnen met deze persoon"
+            one: "Iemand stuurde een privé-bericht naar deze persoon"
+            other: "{{count}} Mensen stuurden een privé-bericht naar deze persoon"
           bookmark:
             one: "Iemand heeft dit bericht toegevoegd aan zijn favorieten"
             other: "{{count}} Mensen hebben dit bericht toegevoegd aan hun favorieten"
@@ -735,11 +739,13 @@ nl:
       none: (geen categorie)
       edit: bewerk
       edit_long: Bewerk categorie
+      edit_uncategorized: "Wijzig ongecategoriseerd"
       view: Bekijk topics in categorie
       delete: Verwijder categorie
       create: Maak categorie
       save: Bewaar categorie
       creation_error: Er ging bij het maken van de categorie iets mis.
+      save_error: Er ging iets mis bij het opslaan van de categorie.
       more_posts: "bekijk alle {{posts}}..."
       name: Naam categorie
       description: Omschrijving
