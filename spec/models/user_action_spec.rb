@@ -58,7 +58,7 @@ describe UserAction do
 
       other_stats.should == expecting
 
-      public_topic.destroy
+      public_topic.trash!
       stats_for_user.should == []
       stream_count.should == 0
 
@@ -66,7 +66,7 @@ describe UserAction do
 
       category = Fabricate(:category, secure: true)
 
-      public_topic.recover
+      public_topic.recover!
       public_topic.category = category
       public_topic.save
 

@@ -120,8 +120,6 @@ GEM
     activesupport (3.2.12)
       i18n (~> 0.6)
       multi_json (~> 1.0)
-    acts_as_paranoid (0.4.1)
-      activerecord (~> 3.2)
     airbrake (3.1.2)
       activesupport
       builder
@@ -448,7 +446,6 @@ DEPENDENCIES
   active_attr
   active_model_serializers!
   activerecord-postgres-hstore
-  acts_as_paranoid
   airbrake (= 3.1.2)
   barber (= 0.3.0)
   better_errors

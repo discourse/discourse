@@ -29,7 +29,7 @@ describe InvitesController do
       end
 
       it "destroys the invite" do
-        Invite.any_instance.expects(:destroy)
+        Invite.any_instance.expects(:trash!)
         delete :destroy, email: invite.email
       end
 

@@ -30,7 +30,7 @@ describe PostsController do
     context "deleted post" do
 
       before do
-        post.destroy
+        post.trash!
       end
 
       it "can't find deleted posts as an anonymous user" do
@@ -121,7 +121,7 @@ describe PostsController do
       end
 
       it "calls recover" do
-        Post.any_instance.expects(:recover)
+        Post.any_instance.expects(:recover!)
         xhr :put, :recover, post_id: post.id
       end
 

@@ -3,19 +3,19 @@ require_dependency 'pretty_text'
 require_dependency 'rate_limiter'
 require_dependency 'post_revisor'
 require_dependency 'enum'
+require_dependency 'trashable'
 
 require 'archetype'
 require 'digest/sha1'
 
 class Post < ActiveRecord::Base
   include RateLimiter::OnCreateRecord
+  include Trashable
 
   versioned if: :raw_changed?
 
   rate_limit
-  acts_as_paranoid
 
-  after_recover :update_flagged_posts_count
 
   belongs_to :user
   belongs_to :topic, counter_cache: :posts_count
@@ -50,6 +50,11 @@ class Post < ActiveRecord::Base
 
   def self.types
     @types ||= Enum.new(:regular, :moderator_action)
+  end
+
+  def recover!
+    super
+    update_flagged_posts_count
   end
 
   def raw_quality
