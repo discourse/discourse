@@ -83,22 +83,23 @@ Discourse.Post = Discourse.Model.extend({
     return Em.String.i18n('bookmarks.not_bookmarked');
   }).property('read', 'topic.last_read_post_number', 'bookmarked'),
 
-  bookmarkedChanged: (function() {
-    var _this = this;
-    return Discourse.ajax({
+  bookmarkedChanged: function() {
+    var post = this;
+    Discourse.ajax({
       url: Discourse.getURL("/posts/") + (this.get('id')) + "/bookmark",
       type: 'PUT',
       data: {
         bookmarked: this.get('bookmarked') ? true : false
-      },
-      error: function(error) {
-        var errors;
-        errors = $.parseJSON(error.responseText).errors;
-        bootbox.alert(errors[0]);
-        return _this.toggleProperty('bookmarked');
+      }
+    }).fail(function (error) {
+      if (error && error.responseText) {
+        bootbox.alert($.parseJSON(error.responseText).errors[0]);
+      } else {
+        bootbox.alert(Em.String.i18n('generic_error'));
       }
     });
-  }).observes('bookmarked'),
+
+  }.observes('bookmarked'),
 
   internalLinks: (function() {
     if (this.blank('link_counts')) return null;
