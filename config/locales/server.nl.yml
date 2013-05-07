@@ -242,7 +242,7 @@ nl:
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Licht moderatoren in"
-      description: "Dit bericht moet door een moderator bekeken worden. Dit vanwege de <a href='/faq'>FAQ</a>, <a href='/tos'>TOS</a> of een andere reden hier nog niet genoemd."
+      description: "Dit bericht moet door een moderator bekeken worden. Dit vanwege de <a href='/faq'>FAQ</a>, <a href='%{tos_url}'>TOS</a> of een andere reden hier nog niet genoemd."
       long_form: moderatoren ingelicht
       email_title: "Graag aandacht voor een bericht in '%{title}'"
       email_body: "%{link}\n\n%{message}"
@@ -340,6 +340,21 @@ nl:
       title: Licht persoon in
       xaxis: Dag
       yaxis: Aantal privé-berichten
+    top_referrers:
+      title: Top verwijzingen
+      xaxis: Lid
+      num_clicks: Clicks
+      num_topics: Topics
+    top_traffic_sources:
+      title: Top trafficbronnen
+      xaxis: Domein
+      num_clicks: Clicks
+      num_topics: Topics
+      num_users: Leden
+    top_referred_topics:
+      title: Top doorverwezen topics
+      xaxis: Topic
+      num_clicks: Clicks
 
   dashboard:
     rails_env_warning: "Je server draait in %{env} modus."
@@ -400,11 +415,12 @@ nl:
     company_domain: "De domeinnaam van het bedrijf dat deze site draait. Wordt gebruikt in juridische delen van de site, zoals /tos"
     api_key: "De beveiligde API-sleutel wordt gebruikt om topics te maken en bij te werken. Gebruik /admin/api om deze in te stellen"
     access_password: "Wanneer beperkte toegang aan staat, moet dit wachtwoord worden opgegeven."
-    queue_jobs: "Zet verschillende taken in een queue binnen sidekiq, als ongeldige queues zich op dezelfde lijn bevinden"
+    queue_jobs: "Zet verschillende taken in een queue binnen sidekiq, bij 'false' worden taken ineens uitgevoerd"
     crawl_images: Zet het ophalen van afbeeldingen van externe bronnen aan
     ninja_edit_window: "Hoe snel je een aanpassing kan maken zonder dat er een nieuwe versie wordt opgeslagen, in seconden."
     enable_imgur: "Gebruik de imgur API voor uploads en sla afbeeldingen niet lokaal op"
-    imgur_api_key: "imgur.com API-sleutel - nodig om afbeeldingen te kunnen uploaden naar imgur"
+    imgur_client_id: "Je imgur.com client ID, nodig om afbeeldingen te kunnen uploaden naar imgur" 
+    imgur_client_secret: "Je imgur.com client secret. Is nog niet nodig voor het uploaden van afbeeldingen, maar dat zou in de toekomst kunnen veranderen." 
     imgur_endpoint: "End point voor het uploaden van imgur.com-afbeeldingen"
     max_image_width: Maximale breedte voor een afbeelding in een bericht
     category_featured_topics: Aantal topics dat wordt weergegeven in de categorielijst
@@ -439,10 +455,11 @@ nl:
     flags_required_to_hide_post: "Berichten zullen automatisch worden verborgen zodra het aantal meldingen maximaal dit aantal is (0 voor nooit)"
     cooldown_minutes_after_hiding_posts: "Hoeveel minuten moet iemand wachten voordat zij hun bericht kunnen wijzigen nadat het is verborgen door meldingen"
 
-    traditional_markdown_linebreaks: "Gebruik traditionele regeleinden in Markdown, omloop is impliciet tenzij er 2 spaties aan vooraf gaan"
+    traditional_markdown_linebreaks: "Gebruik traditionele regeleinden in Markdown, gebruik 2 spaties voor een nieuw regeleinde"
     post_undo_action_window_mins: "Het tijdsbestek waarin iemand een actie binnen een bericht kan terugdraaien (zoals 'vind ik leuk')"
     must_approve_users: "De eigenaars van een forum moeten de leden accepteren voordat zij toegang krijgen."
     ga_tracking_code: "Google analytics trackingcode, zie: http://google.com/analytics"
+    ga_domain_name: "Google analytics domeinnaam, bijv. mijnsite.nl; zie http://google.com/analytics"
     top_menu: "De volgorde en selectie van items in het hoofdmenu. Bijvoorbeeld latest|hot|read|favorited|unread|new|posted|categories"
     post_menu: "De volgorde en selectie van items in het berichtmenu. Bijvoorbeeld like|edit|flag|delete|share|bookmark|reply"
     share_links: "De volgorde en selectie van items in het deelmenu. Bijvoorbeeld twitter|facebook|google+"
@@ -475,7 +492,7 @@ nl:
     facebook_app_id: "app_id (registreer op https://developers.facebook.com/apps)"
     facebook_app_secret: "app_secret (registreer op https://developers.facebook.com/apps)"
 
-    enable_github_logins: Zet inloggen met Facebook aan. Hiervoor heb je een facebook_app_id en facebook_app_secret nodig.
+    enable_github_logins: Zet inloggen met Github aan. Hiervoor heb je een github_client_id en github_client_secret nodig.
     github_client_id: "github_client_id (registreer op https://github.com/settings/applications)"
     github_client_secret: "github_client_secret (registreer op https://github.com/settings/applications)"
 
@@ -487,9 +504,11 @@ nl:
     previous_visit_timeout_hours: "Hoe lang een bezoek duurt voordat we het als het 'vorige' bezoek beschouwen, in uren."
 
     uncategorized_name: De naam voor ongecategoriseerde topics in de categorielijst
+    uncategorized_color: De achtergrondkleur van de badge voor de categorie met topics zonder categorie
+    uncategorized_text_color: De tekstkleur van de badge voor de categorie met topics zonder categorie
 
-    rate_limit_create_topic: "Hoeveel seconden voordat je een ander topic kan aanmaken"
-    rate_limit_create_post: "Hoeveel seconden voordat je een ander bericht kan aanmaken"
+    rate_limit_create_topic: Hoeveel seconden voordat je een ander topic kan aanmaken
+    rate_limit_create_post: Hoeveel seconden voordat je een ander bericht kan aanmaken
 
     max_likes_per_day: Het maximaal aantal keren per dag dat een lid berichten leuk kan vinden
     max_flags_per_day: Het maximaal aantal moderatie-meldingen dat een lid per dag kan geven
@@ -583,7 +602,7 @@ nl:
     archived_disabled: "Deze topic is niet langer gearchiveerd en kan weer veranderd worden."
     closed_enabled: "Deze topic is nu gesloten. Nieuwe reacties worden niet langer geaccepteerd."
     closed_disabled: "Deze topic is nu geopend. Nieuwe reacties worden weer geaccepteerd."
-    pinned_enabled: "Deze topic is nu gepind en zal bovenaan de lijst van topics in zijn categorie staan."
+    pinned_enabled: "Deze topic is nu gepind en zal bovenaan de lijst van topics in zijn categorie staan. Wanneer iemand op 'Verwijder pin' drukt, zal de topic voor diegene niet meer bovenaan staan."
     pinned_disabled: "Deze topic is niet langer gepind en zal niet meer bovenaan de lijst van topics in zijn categorie staan."
     visible_enabled: "Deze topic is nu zichtbaar en zal weer worden weergegeven in topiclijsten."
     visible_disabled: "Deze topic is nu onzichtbaar en zal niet worden weergegeven in topiclijsten, en kan alleen via een directe link worden bezocht."
@@ -613,9 +632,9 @@ nl:
       not_allowed: "is niet toegestaan vanaf die e-mailprovider. Gebruik een ander e-mailadres."
 
   invite_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} heeft je uitgenodigd om aan een discussie deel te nemen op %{site_name}"
+    subject_template: "[%{site_name}] %{invitee_name} heeft je uitgenodigd om op een privé-bericht te reageren op %{site_name}"
     text_body_template: |
-      %{invitee_name} heeft je uitgenodigd voor deze topic: "%{topic_title}" op %{site_name}.
+      %{invitee_name} heeft je uitgenodigd voor dit bericht: "%{topic_title}" op %{site_name}.
 
       Mocht je geïnteresseerd zijn, klik dan op de link hieronder om naar de discussie te gaan:
 
