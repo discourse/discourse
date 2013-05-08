@@ -482,7 +482,7 @@ sv:
     min_body_similar_length: "The minimum length of a post's body before it will be checked for similar topics"
 
     category_colors: "A pipe (|) separated list of hexadecimal color values allowed for categories"
-    max_upload_size_kb: "The maximum size of files we allow users to upload in kb - be sure to configure the limit in nginx (client_max_body_size) / apache or proxy as well."
+    max_upload_size_kb: "The maximum size of files we allow users to upload in kB - be sure to configure the limit in nginx (client_max_body_size) / apache or proxy as well."
     max_similar_results: "How many similar topics to show a user while they are composing a new topic"
 
   notification_types:
