@@ -76,8 +76,8 @@ class Group < ActiveRecord::Base
     GroupUser.where(group_id: trust_group_ids, user_id: user_id).delete_all
 
     if group = Group[name]
-      group_users.build(user_id: user_id)
-      group_users.save!
+      group.group_users.build(user_id: user_id)
+      group.save!
     else
       refresh_automatic_group!(name)
     end

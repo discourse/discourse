@@ -47,6 +47,11 @@ describe Group do
 
     Group[:trust_level_1].user_ids.should == []
     Group[:trust_level_2].user_ids.should == [user.id]
+
+    user2 = Fabricate(:coding_horror)
+    user2.change_trust_level!(:regular)
+
+    Group[:trust_level_2].user_ids.sort.should == [user.id, user2.id].sort
   end
 
 end
