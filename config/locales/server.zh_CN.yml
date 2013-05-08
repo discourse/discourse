@@ -453,6 +453,7 @@ zh_CN:
     post_undo_action_window_mins: "允许用户在帖子上进行撤销操作（赞、投诉等）所需等待的间隔秒数"
     must_approve_users: "用户必须获得管理员批准方能访问"
     ga_tracking_code: "谷歌分析追踪代码，例如：UA-12345678-9。参考 http://google.com/analytics"
+    ga_domain_name: "谷歌分析域名，例如：mysite.com；参考 http://google.com/analytics"
     top_menu: "确定在主页导航条包含哪些条目，以及排列顺序。例如：latest|hot|read|favorited|unread|new|posted|categories"
     post_menu: "确定在帖子菜单条包含哪些条目，以及排列顺序。例如：like|edit|flag|delete|share|bookmark|reply"
     share_links: "确定在分享对话框里显示哪些条目、以什么顺序显示。例如 twitter|facebook|google+"
