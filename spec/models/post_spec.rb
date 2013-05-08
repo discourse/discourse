@@ -50,7 +50,7 @@ describe Post do
     let(:post) { Fabricate(:post, post_args) }
 
     before do
-      post.destroy
+      post.trash!
       post.reload
     end
 
@@ -60,7 +60,7 @@ describe Post do
 
     describe "recovery" do
       before do
-        post.recover
+        post.recover!
         post.reload
       end
 

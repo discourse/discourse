@@ -48,9 +48,16 @@ class CategoryList
       @categories.insert(insert_at || @categories.size, uncategorized)
     end
 
-    # Remove categories with no featured topics unless we have the ability to edit one
     unless Guardian.new(current_user).can_create?(Category)
+      # Remove categories with no featured topics unless we have the ability to edit one
       @categories.delete_if { |c| c.featured_topics.blank? }
+    else
+      # Show all categories to people who have the ability to edit and delete categories
+      if @categories.size > 0
+        @categories.insert(@categories.size, *Category.where('id not in (?)', @categories.map(&:id).compact).to_a)
+      else
+        @categories = Category.all.to_a
+      end
     end
 
     # Get forum topic user records if appropriate

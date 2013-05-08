@@ -10,21 +10,6 @@
 Discourse.Model = Ember.Object.extend(Discourse.Presence, {
 
   /**
-    Our own AJAX handler that handles erronous responses
-
-    @method ajax
-    @param {String} url The url to contact
-    @param {Object} args The arguments to pass to $.ajax
-  **/
-  ajax: function(url, args) {
-    var oldError = args.error;
-    args.error = function(xhr) {
-      return oldError($.parseJSON(xhr.responseText).errors);
-    };
-    return Discourse.ajax(url, args);
-  },
-
-  /**
     Update our object from another object
 
     @method mergeAttributes
@@ -53,17 +38,6 @@ Discourse.Model = Ember.Object.extend(Discourse.Presence, {
 });
 
 Discourse.Model.reopenClass({
-
-  /**
-   $.get shortcut that uses Discourse.Url and returns a promise
-   **/
-  getModelAjax: function(url) {
-    var modelClass = this;
-    return Discourse.ajax({ url: url, cache: false, dataType: 'json' }).then(function (result) {
-      return modelClass.create(result);
-    });
-  },
-
 
   /**
     Given an array of values, return them in a hash

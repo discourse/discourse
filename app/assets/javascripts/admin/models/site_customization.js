@@ -11,7 +11,7 @@ Discourse.SiteCustomization = Discourse.Model.extend({
 
   init: function() {
     this._super();
-    return this.startTrackingChanges();
+    this.startTrackingChanges();
   },
 
   description: function() {
@@ -55,7 +55,6 @@ Discourse.SiteCustomization = Discourse.Model.extend({
 
 
   save: function() {
-    var _this = this;
     this.set('savingStatus', Em.String.i18n('saving'));
     this.set('saving',true);
     var data = {
@@ -65,25 +64,23 @@ Discourse.SiteCustomization = Discourse.Model.extend({
       header: this.header,
       override_default_style: this.override_default_style
     };
-    return Discourse.ajax({
-      url: Discourse.getURL("/admin/site_customizations") + (this.id ? '/' + this.id : ''),
-      data: {
-        site_customization: data
-      },
-      type: this.id ? 'PUT' : 'POST',
-      success: function(data) {
-        if (!_this.id) { _this.set('id', data.id); }
-        _this.set('savingStatus', Em.String.i18n('saved'));
-        _this.set('saving',false);
-        _this.startTrackingChanges();
-      }
+
+    var siteCustomization = this;
+    return Discourse.ajax("/admin/site_customizations" + (this.id ? '/' + this.id : ''), {
+      data: { site_customization: data },
+      type: this.id ? 'PUT' : 'POST'
+    }).then(function (result) {
+      if (!siteCustomization.id) { siteCustomization.set('id', result.id); }
+      siteCustomization.set('savingStatus', Em.String.i18n('saved'));
+      siteCustomization.set('saving',false);
+      siteCustomization.startTrackingChanges();
     });
+
   },
 
   destroy: function() {
     if(!this.id) return;
-    return Discourse.ajax({
-      url: Discourse.getURL("/admin/site_customizations/") + this.id,
+    return Discourse.ajax("/admin/site_customizations/" + this.id, {
       type: 'DELETE'
     });
   }
@@ -102,10 +99,7 @@ var SiteCustomizations = Ember.ArrayProxy.extend({
 Discourse.SiteCustomization.reopenClass({
   findAll: function() {
     var customizations = SiteCustomizations.create({ content: [], loading: true });
-    Discourse.ajax({
-      url: Discourse.getURL("/admin/site_customizations"),
-      dataType: "json"
-    }).then(function (data) {
+    Discourse.ajax("/admin/site_customizations").then(function (data) {
       if (data) {
         data.site_customizations.each(function(c) {
           customizations.pushObject(Discourse.SiteCustomization.create(c.site_customizations));

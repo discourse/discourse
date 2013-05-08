@@ -177,6 +177,34 @@ class User < ActiveRecord::Base
     where("username_lower = :user or lower(username) = :user or email = :email or lower(name) = :user", user: lower_user, email: lower_email)
   end
 
+
+  def save_and_refresh_staff_groups!
+    transaction do
+      self.save!
+      Group.refresh_automatic_groups!(:admins,:moderators,:staff)
+    end
+  end
+
+  def grant_moderation!
+    self.moderator = true
+    save_and_refresh_staff_groups!
+  end
+
+  def revoke_moderation!
+    self.moderator = false
+    save_and_refresh_staff_groups!
+  end
+
+  def grant_admin!
+    self.admin = true
+    save_and_refresh_staff_groups!
+  end
+
+  def revoke_admin!
+    self.admin = false
+    save_and_refresh_staff_groups!
+  end
+
   def enqueue_welcome_message(message_type)
     return unless SiteSetting.send_welcome_message?
     Jobs.enqueue(:send_system_message, user_id: id, message_type: message_type)
@@ -414,11 +442,11 @@ class User < ActiveRecord::Base
 
     posts.order("post_number desc").each do |p|
       if p.post_number == 1
-        p.topic.destroy
+        p.topic.trash!
         # TODO: But the post is not destroyed. Why?
       else
         # TODO: This should be using the PostDestroyer!
-        p.destroy
+        p.trash!
       end
     end
   end
@@ -439,9 +467,13 @@ class User < ActiveRecord::Base
     admin
   end
 
-  def change_trust_level(level)
+  def change_trust_level!(level)
     raise "Invalid trust level #{level}" unless TrustLevel.valid_level?(level)
     self.trust_level = TrustLevel.levels[level]
+    transaction do
+      self.save!
+      Group.user_trust_level_change!(self.id, self.trust_level)
+    end
   end
 
   def guardian
@@ -457,6 +489,21 @@ class User < ActiveRecord::Base
 
   def email_confirmed?
     email_tokens.where(email: email, confirmed: true).present? || email_tokens.empty?
+  end
+
+  def activate
+    email_token = self.email_tokens.active.first
+    if email_token
+      EmailToken.confirm(email_token.token)
+    else
+      self.active = true
+      save
+    end
+  end
+
+  def deactivate
+    self.active = false
+    save
   end
 
   def treat_as_new_topic_start_date

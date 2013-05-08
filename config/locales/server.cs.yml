@@ -48,6 +48,17 @@ cs:
   rss_topics_in_category: "RSS feed témat z kategorie '%{category}'"
   author_wrote: "%{author} napsal:"
 
+  groups:
+    default_names:
+      admins: "administrátoři"
+      moderators: "moderátoři"
+      staff: "personál"
+      trust_level_1: "věrohodnost_1"
+      trust_level_2: "věrohodnost_2"
+      trust_level_3: "věrohodnost_3"
+      trust_level_4: "věrohodnost_4"
+      trust_level_5: "věrohodnost_5"
+
   education:
     until_posts:
       one: "příspěvek"
@@ -105,7 +116,7 @@ cs:
 
   trust_levels:
     newuser:
-      title: "návštěvník"
+      title: "nový uživatel"
     basic:
       title: "základní uživatel"
     regular:
@@ -367,18 +378,18 @@ cs:
     top_referrers:
       title: "Odkazovatelé"
       xaxis: "Uživatel"
-      num_visits: "Návštěvy"
+      num_clicks: "Kliknutí"
       num_topics: "Témata"
     top_traffic_sources:
       title: "Zdroje provozu"
       xaxis: "Doména"
-      num_visits: "Návštěvy"
+      num_clicks: "Kliknutí"
       num_topics: "Témata"
       num_users: "Uživatelé"
     top_referred_topics:
       title: "Odkazovaná témata"
       xaxis: "Témata"
-      num_visits: "Návštěvy"
+      num_clicks: "Kliknutí"
 
   dashboard:
     rails_env_warning: "Váš server běží v módu %{env}."
@@ -483,6 +494,7 @@ cs:
     post_undo_action_window_mins: "Počet sekund, během kterých smí uživatelé vrátit akce na příspěvcích (líbí se, nahlášení, atd.)"
     must_approve_users: "Administrátoři musí schválit všechny uživatele, než získají přístup"
     ga_tracking_code: "Kód pro sledování přes 'Google analytics', např. UA-12345678-9; viz http://google.com/analytics"
+    ga_domain_name: "Doménové jméno pro Google analytics, např. mysite.com; viz http://google.com/analytics"
     top_menu: "Určuje, které položky se zobrazí v navigaci na hlavní stránce a v jakém pořadí. Příklad: latest|hot|read|favorited|unread|new|posted|categories"
     post_menu: "Určuje, které položky se zobrazí v menu u příspěvku a v jakém pořadí. Příklad: like|edit|flag|delete|share|bookmark|reply"
     share_links: "Určuje, které položky se zobrazí ve sdílecím dialogu a v jakém pořadí. Příklad: twitter|facebook|google+"
@@ -526,7 +538,9 @@ cs:
     active_user_rate_limit_secs: "Jak často aktualizujeme informaci o poslední návštěvě uživatelů, v sekundách"
     previous_visit_timeout_hours: "Kolik času musí uplynout v hodinách, než je návštěva uživatele považována za uplynulou"
 
-    uncategorized_name: "Výchozí kategorie pro témata, která nemají nastavou kategorii"
+    uncategorized_name: "Výchozí kategorie pro témata, která nemají nastavenou kategorii"
+    uncategorized_color: "Barva pozadí štítku kategorie pro témata, která nemají nastavenou kategorii"
+    uncategorized_text_color: "Barva textu na štítku kategorie pro témata, která nemají nastavenou kategorii"
 
     rate_limit_create_topic: "Počet sekund, které je nutné počkat od vytvoření tématu, než smí uživatel vytvořit další"
     rate_limit_create_post: "Počet sekund, které je nutné počkat od zaslání příspěvku, než smí uživatel zaslat další"
@@ -572,13 +586,13 @@ cs:
     title_min_entropy: "Minimální entropie (unikátní znaky) požadovaná v názvu tématu"
     body_min_entropy: "Minimální entropie (unikátní znaky) požadovaná v obsahu příspěvku"
 
-    title_fancy_entities: "Převádět HTML entity v názvech témat"
+    title_fancy_entities: "Převádět běžné ASCII znaky na HTML entity v názvech témat, ve stylu SmartyPants http://daringfireball.net/projects/smartypants/"
 
     min_title_similar_length: "Minimální délka názvu tématu, než budou hledána podobná témata"
     min_body_similar_length: "Minimální délka těla příspěvku, než budou hledána podobná témata"
 
     category_colors: "Seznam hexadecimálních barev oddělený svislítkem (|) pro barvy kategorií"
-    max_upload_size_kb: "Maximální povolená velikost nahrávaných souborů v kb - nezapomeňte tento limit změnit v nginx (client_max_body_size) / apache a na proxy serverech."
+    max_upload_size_kb: "Maximální povolená velikost nahrávaných souborů v kB - nezapomeňte tento limit změnit v nginx (client_max_body_size) / apache a na proxy serverech."
     max_similar_results: "Kolik podobných témat se má zobrazovat uživateli, když vytváří nové téma"
 
     title_prettify: "Zabrání běžným překlepům a chybám v názvu tématu, včetně psaní velkými písmeny, malé písmeno na začátku, vícenásobné vykřičníky a otazníky, atd."

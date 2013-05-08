@@ -51,7 +51,27 @@ reaching out to the community for help:
 
    If links in emails have localhost in them, then you are still using the default host_names
    value in database.yml.  Update it to use your site's host name(s).
+   
+9. Are you having problems bundling:
 
+```
+ArgumentError: invalid byte sequence in US-ASCII
+An error occurred while installing active_model_serializers (0.7.0), and Bundler cannot continue.
+Make sure that `gem install active_model_serializers -v '0.7.0'` succeeds before bundling.
+```
 
+   Try this in console:
 
+```
+$ export LANG="en_US.UTF-8"
+$ export LC_ALL="en_US.UTF-8"
+```
 
+   And/or this in top of `Gemfile`:
+
+```
+if RUBY_VERSION =~ /1.9/
+Encoding.default_external = Encoding::UTF_8
+Encoding.default_internal = Encoding::UTF_8
+end
+```

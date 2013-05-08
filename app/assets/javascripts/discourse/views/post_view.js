@@ -146,7 +146,7 @@ Discourse.PostView = Discourse.View.extend({
       if ($aside.data('topic')) {
         topic_id = $aside.data('topic');
       }
-      Discourse.ajax(Discourse.getURL("/posts/by_number/") + topic_id + "/" + ($aside.data('post'))).then(function (result) {
+      Discourse.ajax("/posts/by_number/" + topic_id + "/" + ($aside.data('post'))).then(function (result) {
         var parsed = $(result.cooked);
         parsed.replaceText(originalText, "<span class='highlighted'>" + originalText + "</span>");
         $blockQuote.showHtml(parsed);
@@ -171,9 +171,12 @@ Discourse.PostView = Discourse.View.extend({
           postView.$(".cooked a[href]").each(function() {
             var link = $(this);
             if (link.attr('href') === lc.url) {
-              // don't display badge counts in oneboxes (except when we force it)
-              if (link.closest(".onebox-result").length === 0 || link.hasClass("track-link")) {
-                link.append("<span class='badge badge-notification clicks' title='" + Em.String.i18n("topic_summary.clicks") + "'>" + lc.clicks + "</span>");
+              // don't display badge counts on category badge
+              if (link.closest('.badge-category').length === 0) {
+                // nor in oneboxes (except when we force it)
+                if (link.closest(".onebox-result").length === 0 || link.hasClass("track-link")) {
+                  link.append("<span class='badge badge-notification clicks' title='" + Em.String.i18n("topic_summary.clicks") + "'>" + lc.clicks + "</span>");
+                }
               }
             }
           });

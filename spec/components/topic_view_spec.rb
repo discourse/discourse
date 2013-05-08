@@ -196,7 +196,7 @@ describe TopicView do
 
     describe "filter_posts_after" do
       it "returns undeleted posts after a post" do
-        topic_view.filter_posts_after(p1.post_number).should == [p2, p3, p5]
+        topic_view.filter_posts_after(p1.post_number).map(&:id).should == [p2.id, p3.id, p5.id]
         topic_view.should_not be_initial_load
         topic_view.index_offset.should == 1
         topic_view.index_reverse.should be_false

@@ -21,7 +21,10 @@ class AdminUserSerializer < BasicUserSerializer
              :banned_at,
              :banned_till,
              :is_banned,
-             :ip_address
+             :ip_address,
+             :can_send_activation_email,
+             :can_activate,
+             :can_deactivate
 
   def is_banned
     object.is_banned?
@@ -60,6 +63,18 @@ class AdminUserSerializer < BasicUserSerializer
 
   def include_approved?
     SiteSetting.must_approve_users
+  end
+
+  def can_send_activation_email
+    scope.can_send_activation_email?(object)
+  end
+
+  def can_activate
+    scope.can_activate?(object)
+  end
+
+  def can_deactivate
+    scope.can_deactivate?(object)
   end
 
 end

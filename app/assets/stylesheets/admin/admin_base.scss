@@ -3,6 +3,17 @@
 @import "foundation/mixins";
 @import "foundation/helpers";
 
+
+.content-list li a span.count {
+  font-size: 12px;
+  float: right;
+  margin-right: 10px;
+  background-color: #eee;
+  padding: 2px 5px;
+  border-radius: 5px;
+  color: #555;
+}
+
 .admin-content {
   margin-bottom: 50px;
   .admin-contents {

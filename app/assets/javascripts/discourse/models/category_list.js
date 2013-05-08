@@ -33,7 +33,7 @@ Discourse.CategoryList.reopenClass({
   list: function(filter) {
     var route = this;
 
-    return Discourse.ajax(Discourse.getURL("/") + filter + ".json").then(function(result) {
+    return Discourse.ajax("/" + filter + ".json").then(function(result) {
       var categoryList = Discourse.TopicList.create();
       categoryList.set('can_create_category', result.category_list.can_create_category);
       categoryList.set('categories', route.categoriesFrom(result));

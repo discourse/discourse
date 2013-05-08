@@ -22,7 +22,7 @@ Discourse.Mention = (function() {
       callback(cached);
       return false;
     } else {
-      Discourse.ajax(Discourse.getURL("/users/is_local_username"), { data: { username: name } }).then(function(r) {
+      Discourse.ajax("/users/is_local_username", { data: { username: name } }).then(function(r) {
         cache(name, r.valid);
         callback(r.valid);
       });

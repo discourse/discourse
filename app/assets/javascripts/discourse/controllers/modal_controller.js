@@ -1,7 +1,7 @@
 /**
   This controller supports actions related to showing modals
 
-  @class ModalController 
+  @class ModalController
   @extends Discourse.Controller
   @namespace Discourse
   @module Discourse

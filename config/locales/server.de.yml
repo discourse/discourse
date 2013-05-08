@@ -446,7 +446,7 @@ de:
     min_body_similar_length: "Minimale Länge eines Beitragstextes, bevor nach ähnlichen Themen gesucht wird."
 
     category_colors: "Eine durch senkrechte Striche getrennte Liste hexadezimaler Farbwerte, die als Kategoriefarben erlaubt sind."
-    max_upload_size_kb: "Maximale Größe in Kilobytes (KB), die von Benutzer hochgeladene Bilder groß sein dürfen. Stelle sicher, dass dieser Wert auch in nginx (client_max_body_size) / apache und Proxies konfiguriert ist."
+    max_upload_size_kb: "Maximale Größe in Kilobytes (kB), die von Benutzer hochgeladene Bilder groß sein dürfen. Stelle sicher, dass dieser Wert auch in nginx (client_max_body_size) / apache und Proxies konfiguriert ist."
     max_similar_results: "Zahl der Themen, die ein Nutzer sieht während sei ein neues Thema erstellen."
 
   notification_types:

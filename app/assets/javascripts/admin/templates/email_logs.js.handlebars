@@ -22,8 +22,8 @@
           <td>{{date view.content.created_at}}</td>
           <td>
             {{#if view.content.user}}
-              <a href="{{unbound view.content.user.adminPath}}">{{avatar view.content.user imageSize="tiny"}}</a>
-              <a href="{{unbound view.content.user.adminPath}}">{{view.content.user.username}}</a>
+              {{#linkTo 'adminUser' view.content.user}}{{avatar view.content.user imageSize="tiny"}}{{/linkTo}}
+              {{#linkTo 'adminUser' view.content.user}}{{view.content.user.username}}{{/linkTo}}
             {{else}}
               &mdash;
             {{/if}}

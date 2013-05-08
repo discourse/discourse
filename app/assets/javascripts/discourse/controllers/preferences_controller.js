@@ -60,7 +60,7 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
     // Cook the bio for preview
     var model = this.get('content');
     return model.save().then(function() {
-      // success
+      // model was saved
       preferencesController.set('saving', false);
       if (Discourse.currentUser.id === model.get('id')) {
         Discourse.currentUser.set('name', model.get('name'));
@@ -70,7 +70,7 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
                                 Discourse.Markdown.cook(preferencesController.get('content.bio_raw')));
       preferencesController.set('saved', true);
     }, function() {
-      // failed to update
+      // model failed to save
       preferencesController.set('saving', false);
       alert(Em.String.i18n('generic_error'));
     });
@@ -86,12 +86,13 @@ Discourse.PreferencesController = Discourse.ObjectController.extend({
     if (!this.get('passwordProgress')) {
       this.set('passwordProgress', Em.String.i18n("user.change_password.in_progress"));
       return this.get('content').changePassword().then(function() {
-        // success
+        // password changed
         preferencesController.setProperties({
           changePasswordProgress: false,
           passwordProgress: Em.String.i18n("user.change_password.success")
         });
       }, function() {
+        // password failed to change
         preferencesController.setProperties({
           changePasswordProgress: false,
           passwordProgress: Em.String.i18n("user.change_password.error")

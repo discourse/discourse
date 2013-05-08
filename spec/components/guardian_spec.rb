@@ -222,14 +222,14 @@ describe Guardian do
       it 'correctly handles post visibility' do
         Guardian.new(user).can_see?(post).should be_true
 
-        post.destroy
+        post.trash!
         post.reload
         Guardian.new(user).can_see?(post).should be_false
         Guardian.new(admin).can_see?(post).should be_true
 
-        post.recover
+        post.recover!
         post.reload
-        topic.destroy
+        topic.trash!
         topic.reload
         Guardian.new(user).can_see?(post).should be_false
         Guardian.new(admin).can_see?(post).should be_true

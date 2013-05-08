@@ -104,8 +104,7 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
       ).then(function() {
         // success
         $('#discourse-modal').modal('hide');
-        var url = Discourse.getURL("/category/") + categoryView.get('category.name');
-        Discourse.URL.redirectTo(url);
+        Discourse.URL.redirectTo("/category/" + categoryView.get('category.name'));
       }, function(errors) {
         // errors
         if(errors.length === 0) errors.push(Em.String.i18n("category.save_error"));
@@ -116,8 +115,7 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
       this.get('category').save().then(function(result) {
         // success
         $('#discourse-modal').modal('hide');
-        var url = Discourse.getURL("/category/") + (Discourse.Utilities.categoryUrlId(result.category));
-        Discourse.URL.redirectTo(url);
+        Discourse.URL.redirectTo("/category/" + Discourse.Utilities.categoryUrlId(result.category));
       }, function(errors) {
         // errors
         if(errors.length === 0) errors.push(Em.String.i18n("category.creation_error"));
@@ -135,7 +133,7 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
       if (result) {
         categoryView.get('category').destroy().then(function(){
           // success
-          Discourse.URL.redirectTo(Discourse.getURL("/categories"));
+          Discourse.URL.redirectTo("/categories");
         }, function(jqXHR){
           // error
           $('#discourse-modal').modal('show');

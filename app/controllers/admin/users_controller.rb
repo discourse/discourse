@@ -63,30 +63,28 @@ class Admin::UsersController < Admin::AdminController
   def revoke_admin
     @admin = User.where(id: params[:user_id]).first
     guardian.ensure_can_revoke_admin!(@admin)
-    @admin.update_column(:admin, false)
+    @admin.revoke_admin!
     render nothing: true
   end
 
   def grant_admin
     @user = User.where(id: params[:user_id]).first
     guardian.ensure_can_grant_admin!(@user)
-    @user.update_column(:admin, true)
+    @user.grant_admin!
     render_serialized(@user, AdminUserSerializer)
   end
 
   def revoke_moderation
     @moderator = User.where(id: params[:user_id]).first
     guardian.ensure_can_revoke_moderation!(@moderator)
-    @moderator.moderator = false
-    @moderator.save
+    @moderator.revoke_moderation!
     render nothing: true
   end
 
   def grant_moderation
     @user = User.where(id: params[:user_id]).first
     guardian.ensure_can_grant_moderation!(@user)
-    @user.moderator = true
-    @user.save
+    @user.grant_moderation!
     render_serialized(@user, AdminUserSerializer)
   end
 
@@ -101,6 +99,20 @@ class Admin::UsersController < Admin::AdminController
     User.where(id: params[:users]).each do |u|
       u.approve(current_user) if guardian.can_approve?(u)
     end
+    render nothing: true
+  end
+
+  def activate
+    @user = User.where(id: params[:user_id]).first
+    guardian.ensure_can_activate!(@user)
+    @user.activate
+    render nothing: true
+  end
+
+  def deactivate
+    @user = User.where(id: params[:user_id]).first
+    guardian.ensure_can_deactivate!(@user)
+    @user.deactivate
     render nothing: true
   end
 

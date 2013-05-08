@@ -44,6 +44,17 @@ en:
   rss_topics_in_category: "RSS feed of topics in the '%{category}' category"
   author_wrote: "%{author} wrote:"
 
+  groups:
+    default_names:
+      admins: "admins"
+      moderators: "moderators"
+      staff: "staff"
+      trust_level_1: "trust_level_1"
+      trust_level_2: "trust_level_2"
+      trust_level_3: "trust_level_3"
+      trust_level_4: "trust_level_4"
+      trust_level_5: "trust_level_5"
+
   education:
     until_posts:
       one: "post"
@@ -337,18 +348,18 @@ en:
     top_referrers:
       title: "Top Referrers"
       xaxis: "User"
-      num_visits: "Visits"
+      num_clicks: "Clicks"
       num_topics: "Topics"
     top_traffic_sources:
       title: "Top Traffic Sources"
       xaxis: "Domain"
-      num_visits: "Visits"
+      num_clicks: "Clicks"
       num_topics: "Topics"
       num_users: "Users"
     top_referred_topics:
       title: "Top Referred Topics"
       xaxis: "Topic"
-      num_visits: "Visits"
+      num_clicks: "Clicks"
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
@@ -551,7 +562,7 @@ en:
     min_body_similar_length: "The minimum length of a post's body before it will be checked for similar topics"
 
     category_colors: "A pipe (|) separated list of hexadecimal color values allowed for categories"
-    max_upload_size_kb: "The maximum size of files we allow users to upload in kb - be sure to configure the limit in nginx (client_max_body_size) / apache or proxy as well."
+    max_upload_size_kb: "The maximum size of files we allow users to upload in kB - be sure to configure the limit in nginx (client_max_body_size) / apache or proxy as well."
     max_similar_results: "How many similar topics to show a user while they are composing a new topic"
 
     title_prettify: "Prevent common title typos and errors, including all caps, lowercase first character, multiple ! and ?, extra . at end, etc."
