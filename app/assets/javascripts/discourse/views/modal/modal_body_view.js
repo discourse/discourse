@@ -10,10 +10,8 @@ Discourse.ModalBodyView = Discourse.View.extend({
 
   // Focus on first element
   didInsertElement: function() {
-    var _this = this;
-    Em.run.next(function() {
-      _this.$('form input:first').focus();
-    });
+    var modalBodyView = this;
+    Em.run.next(function() { modalBodyView.$('form input:first').focus(); });
   },
 
   // Pass the errors to our errors view
@@ -25,9 +23,8 @@ Discourse.ModalBodyView = Discourse.View.extend({
   // Just use jQuery to show an alert. We don't need anythign fancier for now
   // like an actual ember view
   flash: function(msg, flashClass) {
-    var $alert;
     if (!flashClass) flashClass = "success";
-    $alert = $('#modal-alert').hide().removeClass('alert-error', 'alert-success');
+    var $alert = $('#modal-alert').hide().removeClass('alert-error', 'alert-success');
     $alert.addClass("alert alert-" + flashClass).html(msg);
     $alert.fadeIn();
   }

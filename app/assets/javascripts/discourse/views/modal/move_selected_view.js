@@ -11,41 +11,36 @@ Discourse.MoveSelectedView = Discourse.ModalBodyView.extend({
   title: Em.String.i18n('topic.move_selected.title'),
   saving: false,
 
-  selectedCount: (function() {
+  selectedCount: function() {
     if (!this.get('selectedPosts')) return 0;
     return this.get('selectedPosts').length;
-  }).property('selectedPosts'),
+  }.property('selectedPosts'),
 
-  buttonDisabled: (function() {
+  buttonDisabled: function() {
     if (this.get('saving')) return true;
     return this.blank('topicName');
-  }).property('saving', 'topicName'),
+  }.property('saving', 'topicName'),
 
-  buttonTitle: (function() {
+  buttonTitle: function() {
     if (this.get('saving')) return Em.String.i18n('saving');
     return Em.String.i18n('topic.move_selected.title');
-  }).property('saving'),
+  }.property('saving'),
 
   movePosts: function() {
-    var postIds,
-      _this = this;
     this.set('saving', true);
-    postIds = this.get('selectedPosts').map(function(p) {
-      return p.get('id');
-    });
+
+    var postIds = this.get('selectedPosts').map(function(p) { return p.get('id'); });
+    var moveSelectedView = this;
+
     Discourse.Topic.movePosts(this.get('topic.id'), this.get('topicName'), postIds).then(function(result) {
-      if (result.success) {
-        $('#discourse-modal').modal('hide');
-        Em.run.next(function() {
-          Discourse.URL.routeTo(result.url);
-        });
-      } else {
-        _this.flash(Em.String.i18n('topic.move_selected.error'));
-        return _this.set('saving', false);
-      }
+      // Posts moved
+      $('#discourse-modal').modal('hide');
+      moveSelectedView.get('topicController').toggleMultiSelect();
+      Em.run.next(function() { Discourse.URL.routeTo(result.url); });
     }, function() {
-      _this.flash(Em.String.i18n('topic.move_selected.error'));
-      return _this.set('saving', false);
+      // Error moving posts
+      moveSelectedView.flash(Em.String.i18n('topic.move_selected.error'));
+      moveSelectedView.set('saving', false);
     });
     return false;
   }
