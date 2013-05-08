@@ -44,6 +44,17 @@ en:
   rss_topics_in_category: "RSS feed of topics in the '%{category}' category"
   author_wrote: "%{author} wrote:"
 
+  groups:
+    default_names:
+      admins: "admins"
+      moderators: "moderators"
+      staff: "staff"
+      trust_level_1: "trust_level_1"
+      trust_level_2: "trust_level_2"
+      trust_level_3: "trust_level_3"
+      trust_level_4: "trust_level_4"
+      trust_level_5: "trust_level_5"
+
   education:
     until_posts:
       one: "post"

@@ -3,20 +3,23 @@
   <div class='content-list span6'>
     <h3>{{i18n admin.groups.edit}}</h3>
     <ul>
-      {{#each group in controller}}
+      {{#each group in model}}
         <li>
-        <a href="#" {{action "edit" group}} {{bindAttr class="group.active"}}>{{group.name}}</a>
+        <a href="#" {{action "edit" group}} {{bindAttr class="group.active"}}>{{group.name}} <span class="count">{{group.userCountDisplay}}</span></a>
         </li>
       {{/each}}
     </ul>
+    <div>
+      <button {{bindAttr disabled="refreshingAutoGroups"}} {{action "refreshAutoGroups"}}>Refresh Automatic Groups</button>
+    </div>
   </div>
 
   <div class='content-editor'>
-    {{#if content.active}}
-      {{#with content.active}}
-      <h3>{{name}}</h3> 
+    {{#if model.active}}
+      {{#with model.active}}
+      <h3>{{name}}</h3>
         {{view Discourse.UserSelector id="private-message-users" class="span8" placeholderKey="admin.groups.selector_placeholder" tabindex="1" usernamesBinding="usernames"}}
-        <button>Save</button>
+        <button {{bindAttr disabled="allowSave"}}>Save</button>
 
       {{/with}}
     {{else}}

@@ -29,7 +29,13 @@ Discourse::Application.routes.draw do
 
     get 'reports/:type' => 'reports#show'
 
-    resources :groups, constraints: AdminConstraint.new
+    resources :groups, constraints: AdminConstraint.new do
+      collection do
+        post 'refresh_automatic_groups' => 'groups#refresh_automatic_groups'
+      end
+      get 'users'
+    end
+
     resources :users, id: USERNAME_ROUTE_FORMAT do
       collection do
         get 'list/:query' => 'users#index'

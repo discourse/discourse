@@ -1,6 +1,9 @@
 // this allows you to track the selected item in an array, ghetto for now
 Discourse.SelectableArray = Em.ArrayProxy.extend({
-  content: [],
+  init: function() {
+    this.content = [];
+    this._super();
+  },
   selectIndex: function(index){
     this.select(this[index]);
   },
