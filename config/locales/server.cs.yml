@@ -48,6 +48,17 @@ cs:
   rss_topics_in_category: "RSS feed témat z kategorie '%{category}'"
   author_wrote: "%{author} napsal:"
 
+  groups:
+    default_names:
+      admins: "administrátoři"
+      moderators: "moderátoři"
+      staff: "personál"
+      trust_level_1: "věrohodnost_1"
+      trust_level_2: "věrohodnost_2"
+      trust_level_3: "věrohodnost_3"
+      trust_level_4: "věrohodnost_4"
+      trust_level_5: "věrohodnost_5"
+
   education:
     until_posts:
       one: "příspěvek"
@@ -367,18 +378,18 @@ cs:
     top_referrers:
       title: "Odkazovatelé"
       xaxis: "Uživatel"
-      num_visits: "Návštěvy"
+      num_clicks: "Kliknutí"
       num_topics: "Témata"
     top_traffic_sources:
       title: "Zdroje provozu"
       xaxis: "Doména"
-      num_visits: "Návštěvy"
+      num_clicks: "Kliknutí"
       num_topics: "Témata"
       num_users: "Uživatelé"
     top_referred_topics:
       title: "Odkazovaná témata"
       xaxis: "Témata"
-      num_visits: "Návštěvy"
+      num_clicks: "Kliknutí"
 
   dashboard:
     rails_env_warning: "Váš server běží v módu %{env}."
@@ -575,7 +586,7 @@ cs:
     title_min_entropy: "Minimální entropie (unikátní znaky) požadovaná v názvu tématu"
     body_min_entropy: "Minimální entropie (unikátní znaky) požadovaná v obsahu příspěvku"
 
-    title_fancy_entities: "Převádět HTML entity v názvech témat"
+    title_fancy_entities: "Převádět běžné ASCII znaky na HTML entity v názvech témat, ve stylu SmartyPants http://daringfireball.net/projects/smartypants/"
 
     min_title_similar_length: "Minimální délka názvu tématu, než budou hledána podobná témata"
     min_body_similar_length: "Minimální délka těla příspěvku, než budou hledána podobná témata"
