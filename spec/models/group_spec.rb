@@ -54,4 +54,30 @@ describe Group do
     Group[:trust_level_2].user_ids.sort.should == [user.id, user2.id].sort
   end
 
+  it "Correctly updates all automatic groups upon request" do
+    admin = Fabricate(:admin)
+    user = Fabricate(:user)
+    user.change_trust_level!(:regular)
+
+    Group.exec_sql("update groups set user_count=0 where id = #{Group::AUTO_GROUPS[:trust_level_2]}")
+
+    Group.refresh_automatic_groups!
+
+    groups = Group.includes(:users).to_a
+    groups.count.should == Group::AUTO_GROUPS.count
+
+    g = groups.find{|g| g.id == Group::AUTO_GROUPS[:admins]}
+    g.users.count.should == 1
+    g.user_count.should == 1
+
+    g = groups.find{|g| g.id == Group::AUTO_GROUPS[:staff]}
+    g.users.count.should == 1
+    g.user_count.should == 1
+
+    g = groups.find{|g| g.id == Group::AUTO_GROUPS[:trust_level_2]}
+    g.users.count.should == 1
+    g.user_count.should == 1
+
+  end
+
 end
