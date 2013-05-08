@@ -50,6 +50,8 @@ Discourse::Application.routes.draw do
       put 'grant_moderation', constraints: AdminConstraint.new
       put 'approve'
       post 'refresh_browsers', constraints: AdminConstraint.new
+      put 'activate'
+      put 'deactivate'
     end
 
     resources :impersonate, constraints: AdminConstraint.new

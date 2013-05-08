@@ -102,6 +102,20 @@ class Admin::UsersController < Admin::AdminController
     render nothing: true
   end
 
+  def activate
+    @user = User.where(id: params[:user_id]).first
+    guardian.ensure_can_activate!(@user)
+    @user.activate
+    render nothing: true
+  end
+
+  def deactivate
+    @user = User.where(id: params[:user_id]).first
+    guardian.ensure_can_deactivate!(@user)
+    @user.deactivate
+    render nothing: true
+  end
+
   def destroy
     user = User.where(id: params[:id]).first
     guardian.ensure_can_delete_user!(user)

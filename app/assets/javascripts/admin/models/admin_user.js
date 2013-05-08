@@ -127,6 +127,39 @@ Discourse.AdminUser = Discourse.User.extend({
     });
   },
 
+  activate: function() {
+    Discourse.ajax('/admin/users/' + this.id + '/activate', {type: 'PUT'}).then(function() {
+      // succeeded
+      window.location.reload();
+    }, function(e) {
+      // failed
+      var error = Em.String.i18n('admin.user.activate_failed', { error: "http: " + e.status + " - " + e.body });
+      bootbox.alert(error);
+    });
+  },
+
+  deactivate: function() {
+    Discourse.ajax('/admin/users/' + this.id + '/deactivate', {type: 'PUT'}).then(function() {
+      // succeeded
+      window.location.reload();
+    }, function(e) {
+      // failed
+      var error = Em.String.i18n('admin.user.deactivate_failed', { error: "http: " + e.status + " - " + e.body });
+      bootbox.alert(error);
+    });
+  },
+
+  sendActivationEmail: function() {
+    Discourse.ajax('/users/' + this.get('username') + '/send_activation_email').then(function() {
+      // succeeded
+      bootbox.alert( Em.String.i18n('admin.user.activation_email_sent') );
+    }, function(e) {
+      // failed
+      var error = Em.String.i18n('admin.user.send_activation_email_failed', { error: "http: " + e.status + " - " + e.body });
+      bootbox.alert(error);
+    });
+  },
+
   deleteForbidden: function() {
     return (this.get('post_count') > 0);
   }.property('post_count'),
