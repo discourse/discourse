@@ -50,6 +50,12 @@ en:
     saving: "Saving..."
     saved: "Saved!"
 
+    choose_topic:
+      none_found: "No topics found."
+      title:
+        search: "Search for a Topic:"
+        placeholder: "type the topic title here"
+
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> posted <a href='{{topicUrl}}'>the topic</a>"
       you_posted_topic: "<a href='{{userUrl}}'>You</a> posted <a href='{{topicUrl}}'>the topic</a>"
@@ -573,11 +579,23 @@ en:
 
       move_selected:
         title: "Move Selected Posts"
-        topic_name: "New Topic Name:"
         error: "Sorry, there was an error moving those posts."
         instructions:
-          one: "You are about to create a new topic and populate it with the post you've selected."
-          other: "You are about to create a new topic and populate it with the <b>{{count}}</b> posts you've selected."
+          one: "How would you like to move this post?"
+          other: "How would you like to move the <b>{{count}}</b> posts you've created?"
+
+        new_topic:
+          title: "Move Selected Posts to a New Topic"
+          topic_name: "New Topic Name:"
+          instructions:
+            one: "You are about to create a new topic and populate it with the post you've selected."
+            other: "You are about to create a new topic and populate it with the <b>{{count}}</b> posts you've selected."
+
+        existing_topic:
+          title: "Move Selected Posts to an Existing Topic"
+          instructions:
+            one: "Please choose the topic you'd like to move that post to."
+            other: "Please choose the topic you'd like to move those <b>{{count}}</b> posts to."
 
       multi_select:
         select: 'select'

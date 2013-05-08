@@ -171,7 +171,6 @@ module Search
       end
 
       # Remove attributes when we know they don't matter
-      row.delete('id')
       if type == 'user'
         row['avatar_template'] = User.avatar_template(row['email'])
       end

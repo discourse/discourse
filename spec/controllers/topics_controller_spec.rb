@@ -7,14 +7,10 @@ describe TopicsController do
       lambda { xhr :post, :move_posts, topic_id: 111, title: 'blah', post_ids: [1,2,3] }.should raise_error(Discourse::NotLoggedIn)
     end
 
-    describe 'when logged in' do
+    describe 'moving to a new topic' do
       let!(:user) { log_in(:moderator) }
       let(:p1) { Fabricate(:post, user: user) }
       let(:topic) { p1.topic }
-
-      it "raises an error without a title" do
-        lambda { xhr :post, :move_posts, topic_id: topic.id, post_ids: [1,2,3] }.should raise_error(Discourse::InvalidParameters)
-      end
 
       it "raises an error without postIds" do
         lambda { xhr :post, :move_posts, topic_id: topic.id, title: 'blah' }.should raise_error(Discourse::InvalidParameters)
@@ -30,20 +26,15 @@ describe TopicsController do
         let(:p2) { Fabricate(:post, user: user) }
 
         before do
-          Topic.any_instance.expects(:move_posts).with(user, 'blah', [p2.id]).returns(topic)
+          Topic.any_instance.expects(:move_posts).with(user, [p2.id], title: 'blah').returns(topic)
           xhr :post, :move_posts, topic_id: topic.id, title: 'blah', post_ids: [p2.id]
         end
 
         it "returns success" do
           response.should be_success
-        end
-
-        it "has a JSON response" do
-          ::JSON.parse(response.body)['success'].should be_true
-        end
-
-        it "has a url" do
-          ::JSON.parse(response.body)['url'].should be_present
+          result = ::JSON.parse(response.body)
+          result['success'].should be_true
+          result['url'].should be_present
         end
       end
 
@@ -51,24 +42,56 @@ describe TopicsController do
         let(:p2) { Fabricate(:post, user: user) }
 
         before do
-          Topic.any_instance.expects(:move_posts).with(user, 'blah', [p2.id]).returns(nil)
+          Topic.any_instance.expects(:move_posts).with(user, [p2.id], title: 'blah').returns(nil)
           xhr :post, :move_posts, topic_id: topic.id, title: 'blah', post_ids: [p2.id]
+        end
+
+        it "returns JSON with a false success" do
+          response.should be_success
+          result = ::JSON.parse(response.body)
+          result['success'].should be_false
+          result['url'].should be_blank
+        end
+      end
+    end
+
+    describe 'moving to an existing topic' do
+      let!(:user) { log_in(:moderator) }
+      let(:p1) { Fabricate(:post, user: user) }
+      let(:topic) { p1.topic }
+      let(:dest_topic) { Fabricate(:topic) }
+
+      context 'success' do
+        let(:p2) { Fabricate(:post, user: user) }
+
+        before do
+          Topic.any_instance.expects(:move_posts).with(user, [p2.id], destination_topic_id: dest_topic.id).returns(topic)
+          xhr :post, :move_posts, topic_id: topic.id, post_ids: [p2.id], destination_topic_id: dest_topic.id
         end
 
         it "returns success" do
           response.should be_success
+          result = ::JSON.parse(response.body)
+          result['success'].should be_true
+          result['url'].should be_present
         end
-
-        it "has success in the JSON" do
-          ::JSON.parse(response.body)['success'].should be_false
-        end
-
-        it "has a url" do
-          ::JSON.parse(response.body)['url'].should be_blank
-        end
-
       end
 
+      context 'failure' do
+        let(:p2) { Fabricate(:post, user: user) }
+
+        before do
+          Topic.any_instance.expects(:move_posts).with(user, [p2.id], destination_topic_id: dest_topic.id).returns(nil)
+          xhr :post, :move_posts, topic_id: topic.id, destination_topic_id: dest_topic.id, post_ids: [p2.id]
+        end
+
+        it "returns JSON with a false success" do
+          response.should be_success
+          result = ::JSON.parse(response.body)
+          result['success'].should be_false
+          result['url'].should be_blank
+        end
+      end
     end
   end
 
