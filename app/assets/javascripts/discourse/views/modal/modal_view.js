@@ -16,26 +16,19 @@ Discourse.ModalView = Ember.ContainerView.extend({
     templateName: 'modal/modal_header',
     titleBinding: 'controller.currentView.title'
   }),
+  modalBodyView: Ember.ContainerView.create({ currentViewBinding: 'controller.currentView' }),
+  modalErrorsView: Ember.View.create({ templateName: 'modal/modal_errors' }),
 
-  modalBodyView: Ember.ContainerView.create({
-    currentViewBinding: 'controller.currentView'
-  }),
-
-  modalErrorsView: Ember.View.create({
-    templateName: 'modal/modal_errors'
-  }),
-
-  viewChanged: (function() {
-    var view,
-      _this = this;
+  viewChanged: function() {
     this.set('modalErrorsView.errors', null);
-    if (view = this.get('controller.currentView')) {
+
+    var view = this.get('controller.currentView');
+    var modalView = this;
+    if (view) {
       $('#modal-alert').hide();
-      return Em.run.next(function() {
-        return _this.$().modal('show');
-      });
+      Em.run.next(function() { modalView.$().modal('show'); });
     }
-  }).observes('controller.currentView')
+  }.observes('controller.currentView')
 
 });
 

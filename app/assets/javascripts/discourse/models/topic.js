@@ -451,10 +451,15 @@ Discourse.Topic.reopenClass({
 
   // Create a topic from posts
   movePosts: function(topicId, title, postIds) {
-    return Discourse.ajax("/t/" + topicId + "/move-posts", {
+
+    var promise = Discourse.ajax("/t/" + topicId + "/move-posts", {
       type: 'POST',
       data: { title: title, post_ids: postIds }
+    }).then(function (result) {
+      if (result.success) return result;
+      promise.reject();
     });
+    return promise;
   },
 
   create: function(obj, topicView) {
