@@ -85,7 +85,7 @@ Discourse.TopicController = Discourse.ObjectController.extend({
     modalController.show(Discourse.MoveSelectedView.create({
       topicController: this,
       topic: this.get('content'),
-      selectedPosts: this.get('selectedPosts'),
+      selectedPosts: this.get('selectedPosts')
     }));
   },
 
