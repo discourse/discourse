@@ -69,6 +69,37 @@
   </div>
 
   <div class='display-row'>
+    <div class='field'>{{i18n admin.users.active}}</div>
+    <div class='value'>
+      {{#if content.active}}
+        {{i18n yes_value}}
+      {{else}}
+        {{i18n no_value}}
+      {{/if}}
+    </div>
+    <div class='controls'>
+      {{#if content.active}}
+        {{#if content.can_deactivate}}
+          <button class='btn' {{action deactivate target="content"}}>{{i18n admin.user.deactivate_account}}</button>
+        {{/if}}
+      {{else}}
+        {{#if content.can_send_activation_email}}
+          <button class='btn' {{action sendActivationEmail target="content"}}>
+            <i class='icon icon-envelope-alt'></i>
+            {{i18n admin.user.send_activation_email}}
+          </button>
+        {{/if}}
+        {{#if content.can_activate}}
+          <button class='btn' {{action activate target="content"}}>
+            <i class='icon icon-ok'></i>
+            {{i18n admin.user.activate}}
+          </button>
+        {{/if}}
+      {{/if}}
+    </div>
+  </div>
+
+  <div class='display-row'>
     <div class='field'>{{i18n admin.user.admin}}</div>
     <div class='value'>{{content.admin}}</div>
     <div class='controls'>
