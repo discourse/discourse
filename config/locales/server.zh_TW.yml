@@ -548,7 +548,7 @@ zh_TW:
     min_body_similar_length: "開始檢查相似主題的帖子內容的最小長度"
 
     category_colors: "設置分類顔色的用'|'分隔的十六進制色彩值列表"
-    max_upload_size_kb: "允許用戶上傳的最大文件大小(以kb爲單位) - 確保在nginx(client_max_body_size), apache或代理服務中進行限制文件大小的配置."
+    max_upload_size_kb: "允許用戶上傳的最大文件大小(以kB爲單位) - 確保在nginx(client_max_body_size), apache或代理服務中進行限制文件大小的配置."
     max_similar_results: "當用戶撰寫新主題時，顯示多少類似主題給用戶"
 
     title_prettify: "防止常見標題裏的錯別字和錯誤，包括全部大寫，第一個字符小寫，多個！和？，結尾多余的. 等等。"
