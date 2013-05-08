@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.TopicController = Discourse.ObjectController.extend({
+Discourse.TopicController = Discourse.ObjectController.extend(Discourse.SelectedPostsCount, {
   userFilters: new Em.Set(),
   multiSelect: false,
   bestOf: false,
@@ -21,11 +21,6 @@ Discourse.TopicController = Discourse.ObjectController.extend({
     if (!posts) return null;
     return posts.filterProperty('selected');
   }.property('content.posts.@each.selected'),
-
-  selectedCount: function() {
-    if (!this.get('selectedPosts')) return 0;
-    return this.get('selectedPosts').length;
-  }.property('selectedPosts'),
 
   canMoveSelected: function() {
     if (!this.get('content.can_move_posts')) return false;
@@ -91,7 +86,7 @@ Discourse.TopicController = Discourse.ObjectController.extend({
 
   deleteSelected: function() {
     var topicController = this;
-    return bootbox.confirm(Em.String.i18n("post.delete.confirm", { count: this.get('selectedCount')}), function(result) {
+    return bootbox.confirm(Em.String.i18n("post.delete.confirm", { count: this.get('selectedPostsCount')}), function(result) {
       if (result) {
         var selectedPosts = topicController.get('selectedPosts');
         Discourse.Post.deleteMany(selectedPosts);

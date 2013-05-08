@@ -1,0 +1,15 @@
+<div id='move-selected' class="modal-body">
+  {{#if view.error}}
+    <div class="alert alert-error">
+      <button class="close" data-dismiss="alert">×</button>
+    </div>
+  {{/if}}
+
+  <p>{{{i18n topic.move_selected.existing_topic.instructions count="view.selectedPostsCount"}}}</p>
+
+  {{view Discourse.ChooseTopicView selectedTopicIdBinding="view.selectedTopicId"}}
+</div>
+
+<div class="modal-footer">
+  <button class='btn btn-primary' {{bindAttr disabled="view.buttonDisabled"}} {{action movePostsToExistingTopic target="view"}}>{{view.buttonTitle}}</button>
+</div>

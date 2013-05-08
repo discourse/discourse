@@ -57,6 +57,26 @@ Handlebars.registerHelper('categoryLink', function(property, options) {
 });
 
 /**
+  Inserts a Discourse.TextField to allow the user to enter information.
+
+  @method textField
+  @for Handlebars
+**/
+Ember.Handlebars.registerHelper('textField', function(options) {
+  var hash = options.hash,
+      types = options.hashTypes;
+
+  for (var prop in hash) {
+    if (types[prop] === 'ID') {
+      hash[prop + 'Binding'] = hash[prop];
+      delete hash[prop];
+    }
+  }
+
+  return Ember.Handlebars.helpers.view.call(this, Discourse.TextField, options);
+});
+
+/**
   Produces a bound link to a category
 
   @method boundCategoryLink

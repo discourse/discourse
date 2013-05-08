@@ -1,0 +1,19 @@
+<div id='move-selected' class="modal-body">
+  {{#if view.error}}
+    <div class="alert alert-error">
+      <button class="close" data-dismiss="alert">×</button>
+    </div>
+  {{/if}}
+
+  {{{i18n topic.move_selected.new_topic.instructions count="view.selectedPostsCount"}}}
+
+  <form>
+    <label>{{i18n topic.move_selected.new_topic.topic_name}}</label>
+    {{view Discourse.TextField valueBinding="view.topicName" placeholderKey="composer.title_placeholder"}}
+  </form>
+
+</div>
+
+<div class="modal-footer">
+  <button class='btn btn-primary' {{bindAttr disabled="view.buttonDisabled"}} {{action movePostsToNewTopic target="view"}}>{{view.buttonTitle}}</button>
+</div>

@@ -222,12 +222,12 @@ describe Topic do
       it "enqueues a job to notify users" do
         topic.stubs(:add_moderator_post)
         Jobs.expects(:enqueue).with(:notify_moved_posts, post_ids: [p1.id, p4.id], moved_by_id: user.id)
-        topic.move_posts(user, "new testing topic name", [p1.id, p4.id])
+        topic.move_posts(user, [p1.id, p4.id], title: "new testing topic name")
       end
 
       it "adds a moderator post at the location of the first moved post" do
         topic.expects(:add_moderator_post).with(user, instance_of(String), has_entries(post_number: 2))
-        topic.move_posts(user, "new testing topic name", [p2.id, p4.id])
+        topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name")
       end
 
     end
@@ -235,52 +235,97 @@ describe Topic do
     context "errors" do
 
       it "raises an error when one of the posts doesn't exist" do
-        lambda { topic.move_posts(user, "new testing topic name", [1003]) }.should raise_error(Discourse::InvalidParameters)
+        lambda { topic.move_posts(user, [1003], title: "new testing topic name") }.should raise_error(Discourse::InvalidParameters)
       end
 
       it "raises an error if no posts were moved" do
-        lambda { topic.move_posts(user, "new testing topic name", []) }.should raise_error(Discourse::InvalidParameters)
+        lambda { topic.move_posts(user, [], title: "new testing topic name") }.should raise_error(Discourse::InvalidParameters)
       end
 
     end
 
-    context "afterwards" do
+    context "successfully moved" do
       before do
         topic.expects(:add_moderator_post)
         TopicUser.update_last_read(user, topic.id, p4.post_number, 0)
       end
 
-      let!(:new_topic) { topic.move_posts(user, "new testing topic name", [p2.id, p4.id]) }
+      context "to a new topic" do
+        let!(:new_topic) { topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name") }
 
-      it "moved correctly" do
-        TopicUser.where(user_id: user.id, topic_id: topic.id).first.last_read_post_number.should == p3.post_number
+        it "moved correctly" do
+          TopicUser.where(user_id: user.id, topic_id: topic.id).first.last_read_post_number.should == p3.post_number
 
-        new_topic.should be_present
-        new_topic.featured_user1_id.should == another_user.id
-        new_topic.like_count.should == 1
-        new_topic.category.should == category
-        topic.featured_user1_id.should be_blank
-        new_topic.posts.should =~ [p2, p4]
+          new_topic.should be_present
+          new_topic.featured_user1_id.should == another_user.id
+          new_topic.like_count.should == 1
+          new_topic.category.should == category
+          topic.featured_user1_id.should be_blank
+          new_topic.posts.should =~ [p2, p4]
 
-        new_topic.reload
-        new_topic.posts_count.should == 2
-        new_topic.highest_post_number.should == 2
+          new_topic.reload
+          new_topic.posts_count.should == 2
+          new_topic.highest_post_number.should == 2
 
-        p2.reload
-        p2.sort_order.should == 1
-        p2.post_number.should == 1
+          p2.reload
+          p2.sort_order.should == 1
+          p2.post_number.should == 1
 
-        p4.reload
-        p4.post_number.should == 2
-        p4.sort_order.should == 2
+          p4.reload
+          p4.post_number.should == 2
+          p4.sort_order.should == 2
 
-        topic.reload
-        topic.featured_user1_id.should be_blank
-        topic.like_count.should == 0
-        topic.posts_count.should == 2
-        topic.posts.should =~ [p1, p3]
-        topic.highest_post_number.should == p3.post_number
+          topic.reload
+          topic.featured_user1_id.should be_blank
+          topic.like_count.should == 0
+          topic.posts_count.should == 2
+          topic.posts.should =~ [p1, p3]
+          topic.highest_post_number.should == p3.post_number
+        end
       end
+
+      context "to an existing topic" do
+
+        let!(:destination_topic) { Fabricate(:topic, user: user ) }
+        let!(:destination_op) { Fabricate(:post, topic: destination_topic, user: user) }
+        let!(:moved_to) { topic.move_posts(user, [p2.id, p4.id], destination_topic_id: destination_topic.id )}
+
+        it "moved correctly" do
+          moved_to.should == destination_topic
+
+          # Check out new topic
+          moved_to.reload
+          moved_to.posts_count.should == 3
+          moved_to.highest_post_number.should == 3
+          moved_to.featured_user1_id.should == another_user.id
+          moved_to.like_count.should == 1
+          moved_to.category.should be_blank
+
+          # Posts should be re-ordered
+          p2.reload
+          p2.sort_order.should == 2
+          p2.post_number.should == 2
+
+          p4.reload
+          p4.post_number.should == 3
+          p4.sort_order.should == 3
+
+          # Check out the original topic
+          topic.reload
+          topic.posts_count.should == 2
+          topic.highest_post_number.should == 3
+          topic.featured_user1_id.should be_blank
+          topic.like_count.should == 0
+          topic.posts_count.should == 2
+          topic.posts.should =~ [p1, p3]
+          topic.highest_post_number.should == p3.post_number
+
+          # Should update last reads
+          TopicUser.where(user_id: user.id, topic_id: topic.id).first.last_read_post_number.should == p3.post_number
+        end
+
+      end
+
     end
   end
 

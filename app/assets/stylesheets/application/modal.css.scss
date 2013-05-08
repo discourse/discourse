@@ -157,6 +157,20 @@
 }
 
 #move-selected {
+  p {
+    margin-top: 0;
+  }
+
+  input[type=radio] {
+    margin-right: 10px;
+  }
+
+  button {
+    margin-top: 10px;
+    display: block;
+    width: 300px;
+  }
+
   form {
     margin-top: 20px;
     input[type=text] {

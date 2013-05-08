@@ -50,8 +50,8 @@ Discourse.PostView = Discourse.View.extend({
   },
 
   selectText: function() {
-    return this.get('post.selected') ? Em.String.i18n('topic.multi_select.selected', { count: this.get('controller.selectedCount') }) : Em.String.i18n('topic.multi_select.select');
-  }.property('post.selected', 'controller.selectedCount'),
+    return this.get('post.selected') ? Em.String.i18n('topic.multi_select.selected', { count: this.get('controller.selectedPostsCount') }) : Em.String.i18n('topic.multi_select.select');
+  }.property('post.selected', 'controller.selectedPostsCount'),
 
   repliesHidden: function() {
     return !this.get('repliesShown');

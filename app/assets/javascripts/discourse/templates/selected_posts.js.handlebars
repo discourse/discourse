@@ -1,4 +1,4 @@
-<p>{{countI18n topic.multi_select.description countBinding="controller.selectedCount"}}</p>
+<p>{{countI18n topic.multi_select.description countBinding="controller.selectedPostsCount"}}</p>
 
 {{#if canDeleteSelected}}
   <button class='btn' {{action deleteSelected}}><i class='icon icon-trash'></i> {{i18n topic.multi_select.delete}}</button>
@@ -6,6 +6,6 @@
 
 {{#if canMoveSelected}}
   <button class='btn' {{action moveSelected}}><i class='icon icon-move'></i> {{i18n topic.multi_select.move}}</button>
-{{/if}}  
+{{/if}}
 
 <p class='cancel'><a href='#' {{action toggleMultiSelect}}>{{i18n topic.multi_select.cancel}}</a></p>
