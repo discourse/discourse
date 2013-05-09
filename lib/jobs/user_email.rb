@@ -13,7 +13,7 @@ module Jobs
 
       # Find the user
       user = User.where(id: args[:user_id]).first
-      return unless user.present?
+      return if !user || user.is_banned?
 
       seen_recently = (user.last_seen_at.present? && user.last_seen_at > SiteSetting.email_time_window_mins.minutes.ago)
 
