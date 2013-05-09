@@ -898,14 +898,23 @@ fr:
         delete_title: "supprimer le message (va supprimer la discussion si c'est le premier message)"
         flagged_by: "Signalé par"
         error: "Quelque chose s'est mal passé"
+        view_message: "Voir le message"
 
       groups:
         title: "Groupes"
         edit: "Editer les groupes"
         selector_placeholder: "ajouter des utilisateurs"
+        name_placeholder: "Nom du groupe, sans espace, mêmes règles que pour les noms d'utilisateurs"
 
       api:
         title: "API"
+        long_title: "Informations sur l'API"
+        key: "Clé"
+        generate: "Générer une clé pour l'API"
+        regenerate: "Regénérer une clé pour l'API"
+        info_html: "Cette clé vous permettra de créer et mettre à jour des discussions à l'aide d'appels JSON."
+        note_html: "Gardez cette clé <strong>secrête</strong> ! Tous les personnes qui la possède peuvent créer des messages sur ce forum au nom de n'import quel utilisateur."
+
       customize:
         title: "Personnaliser"
         long_title: "Personnalisation du site"
@@ -998,6 +1007,13 @@ fr:
         delete_confirm: "Êtes-vous vraiment sûr de vouloir supprimmer définitivement cet utilisateur de votre site ? Cette action est permanente !"
         deleted: "L'utilisateur a été supprimmé."
         delete_failed: "Il y a eu une erreur lors de la suppression de l'utilisateur. Veuillez vous assurez que tous ses messages sont bien supprimmés."
+        send_activation_email: "Envoyer le mail d'activation"
+        activation_email_sent: "Un email d'activation a été envoyé."
+        send_activation_email_failed: "Il y a eu un problème lors de l'envoie du mail d'activation."
+        activate: "Activer le compte"
+        activate_failed: "Il y a eu un problème lors de l'activation du compte."
+        deactivate_account: "Désactive le compte"
+        deactivate_failed: "Il y a eu un problème lors de la désactivation du compte."
 
       site_content:
         none: "Choisissez un type de contenu afin de commencer l'édition."
