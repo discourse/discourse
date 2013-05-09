@@ -56,20 +56,23 @@ limit 100
       map[p["id"]] = p
     }
 
-    sql = SqlBuilder.new "select a.id, a.user_id, post_action_type_id, a.created_at, post_id, a.message
+    sql = SqlBuilder.new "select a.id, a.user_id, post_action_type_id, a.created_at, post_id, a.message, p.topic_id, t.slug
 from post_actions a
+left join posts p on p.id = related_post_id
+left join topics t on t.id = p.topic_id
 /*where*/
 "
     sql.where("post_action_type_id in (:flag_types)", flag_types: PostActionType.notify_flag_types.values)
     sql.where("post_id in (:posts)", posts: posts.map{|p| p["id"].to_i})
 
     if params[:filter] == 'old'
-      sql.where('deleted_at is not null')
+      sql.where('a.deleted_at is not null')
     else
-      sql.where('deleted_at is null')
+      sql.where('a.deleted_at is null')
     end
 
     sql.exec.each do |action|
+      action["permalink"] = Topic.url(action["topic_id"],action["slug"]) if action["slug"].present?
       p = map[action["post_id"]]
       p[:post_actions] ||= []
       p[:post_actions] << action

@@ -1,5 +1,5 @@
 Discourse.UserSelector = Discourse.TextField.extend({
-  
+
   didInsertElement: function(){
     var _this = this;
     var selected = [];
@@ -40,7 +40,7 @@ Discourse.UserSelector = Discourse.TextField.extend({
       }
 
     });
-    
+
   }
 
 });
@@ -48,7 +48,7 @@ Discourse.UserSelector = Discourse.TextField.extend({
 
 Discourse.UserSelector.reopenClass({
   // I really want to move this into a template file, but I need a handlebars template here, not an ember one
-  templateFunction: function(){ 
+  templateFunction: function(){
       this.compiled = this.compiled || Handlebars.compile("<div class='autocomplete'>" +
                                     "<ul>" +
                                     "{{#each options}}" +

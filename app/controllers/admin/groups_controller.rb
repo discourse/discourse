@@ -1,7 +1,7 @@
 class Admin::GroupsController < Admin::AdminController
   def index
     groups = Group.order(:name).all
-    render_serialized(groups, AdminGroupSerializer)
+    render_serialized(groups, BasicGroupSerializer)
   end
 
   def refresh_automatic_groups
@@ -11,7 +11,7 @@ class Admin::GroupsController < Admin::AdminController
 
   def users
     group = Group.find(params[:group_id].to_i)
-    render_serialized(group.users, BasicUserSerializer)
+    render_serialized(group.users.limit(100).to_a, BasicUserSerializer)
   end
 
   def update
@@ -28,7 +28,7 @@ class Admin::GroupsController < Admin::AdminController
     group.name = params[:group][:name]
     group.usernames = params[:group][:usernames] if params[:group][:usernames]
     group.save!
-    render_serialized(group, AdminGroupSerializer)
+    render_serialized(group, BasicGroupSerializer)
   end
 
   def destroy

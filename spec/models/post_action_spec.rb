@@ -37,7 +37,7 @@ describe PostAction do
     describe 'notify_moderators' do
       before do
         PostAction.stubs(:create)
-        PostAction.expects(:target_moderators).returns("bob")
+        PostAction.expects(:target_moderators).returns("moderators")
       end
 
       it "sends an email to all moderators if selected" do

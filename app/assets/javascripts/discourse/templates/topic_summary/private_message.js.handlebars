@@ -1,5 +1,10 @@
 <h3><i class='icon icon-envelope-alt'></i> {{i18n private_message_info.title}}</h3>
 <div class='participants clearfix'>
+  {{#each content.allowed_groups}}
+  <div class='user group'>
+    #{{unbound name}}
+  </div>
+  {{/each}}
   {{#each content.allowed_users}}
   <div class='user'>
     <a href='/users/{{lower username}}'>

@@ -451,7 +451,12 @@ kbd {
 .private_message .participants .user {
   float: left;
   display: block;
+  line-height: 35px;
   margin-right: 15px;
+  margin-top: 8px;
+  &.group {
+    color: black;
+  }
 }
 
 .posts-wrapper .spinner {
