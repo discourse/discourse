@@ -80,4 +80,38 @@ describe Group do
 
   end
 
+  it "can set members via usernames helper" do
+    g = Fabricate(:group)
+    u1 = Fabricate(:user)
+    u2 = Fabricate(:user)
+    u3 = Fabricate(:user)
+
+    g.add(u1)
+    g.save!
+
+    usernames = "#{u2.username},#{u3.username}"
+
+    # no side effects please
+    g.usernames = usernames
+    g.reload
+    g.users.count.should == 1
+
+    g.usernames = usernames
+    g.save!
+
+    g.usernames.split(",").sort.should == usernames.split(",").sort
+  end
+
+  it "correctly destroys groups" do
+    g = Fabricate(:group)
+    u1 = Fabricate(:user)
+    g.add(u1)
+    g.save!
+
+    g.destroy
+
+    User.where(id: u1.id).count.should == 1
+    GroupUser.count.should == 0
+  end
+
 end

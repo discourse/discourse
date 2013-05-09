@@ -1,9 +1,11 @@
 class Group < ActiveRecord::Base
   has_many :category_groups
-  has_many :group_users
+  has_many :group_users, dependent: :destroy
 
   has_many :categories, through: :category_groups
   has_many :users, through: :group_users
+
+  after_save :destroy_deletions
 
   AUTO_GROUPS = {
     :admins => 1,
@@ -90,15 +92,56 @@ class Group < ActiveRecord::Base
     end
   end
 
-  def user_ids
-    users.select('users.id').map(&:id)
-  end
-
   def self.builtin
     Enum.new(:moderators, :admins, :trust_level_1, :trust_level_2)
+  end
+
+  def usernames=(val)
+    current = usernames.split(",")
+    expected = val.split(",")
+
+    additions = expected - current
+    deletions = current - expected
+
+    map = Hash[*User.where(username: additions+deletions)
+                 .select('id,username')
+                 .map{|u| [u.username,u.id]}.flatten]
+
+    deletions = Set.new(deletions.map{|d| map[d]})
+
+    @deletions = []
+    group_users.delete_if do |gu|
+      @deletions << gu if deletions.include?(gu.user_id)
+    end
+
+    additions.each do |a|
+      group_users.build(user_id: map[a])
+    end
+
+  end
+
+  def usernames
+    users.select("username").map(&:username).join(",")
+  end
+
+  def user_ids
+    users.select('users.id').map(&:id)
   end
 
   def add(user)
     self.users.push(user)
   end
+
+  protected
+
+  # hack around AR
+  def destroy_deletions
+    if @deletions
+      @deletions.each do |gu|
+        gu.destroy
+      end
+    end
+    @deletions = nil
+  end
+
 end
