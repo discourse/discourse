@@ -1,5 +1,5 @@
 <!-- work in progress, please ignore -->
-<div class='row'>
+<div class='row groups'>
   <div class='content-list span6'>
     <h3>{{i18n admin.groups.edit}}</h3>
     <ul>
@@ -9,19 +9,35 @@
         </li>
       {{/each}}
     </ul>
-    <div>
-      <button {{bindAttr disabled="refreshingAutoGroups"}} {{action "refreshAutoGroups"}}>Refresh Automatic Groups</button>
+    <div class='controls'>
+      <button class='btn' {{bindAttr disabled="refreshingAutoGroups"}} {{action "refreshAutoGroups"}}>Refresh</button>
+      <button class='btn' {{action newGroup}}>New</button>
     </div>
   </div>
 
   <div class='content-editor'>
     {{#if model.active}}
-      {{#with model.active}}
-      <h3>{{name}}</h3>
-        {{view Discourse.UserSelector id="private-message-users" class="span8" placeholderKey="admin.groups.selector_placeholder" tabindex="1" usernamesBinding="usernames"}}
-        <button {{bindAttr disabled="allowSave"}}>Save</button>
+      {{#if model.active.loaded}}
+        {{#with model.active}}
+          {{#if automatic}}
+            <h3>{{name}}</h3>
+          {{else}}
+            {{view Discourse.TextField valueBinding="name" placeholderKey="admin.groups.name_placeholder"}}
+          {{/if}}
 
-      {{/with}}
+          {{view Discourse.UserSelector id="group-users" placeholderKey="admin.groups.selector_placeholder" tabindex="1" usernamesBinding="usernames"}}
+          <div class='controls'>
+            <button {{action save this}} {{bindAttr disabled="disableSave"}} class='btn'>{{i18n admin.customize.save}}</button>
+            {{#unless automatic}}
+              {{#if id}}
+                <a {{action destroy this}} class='delete-link'>{{i18n admin.customize.delete}}</a>
+              {{/if}}
+            {{/unless}}
+          </div>
+        {{/with}}
+      {{else}}
+        <div class='spinner'>{{i18n loading}}</div>
+      {{/if}}
     {{else}}
       nothing here yet
     {{/if}}

@@ -18,5 +18,13 @@ Discourse.SelectableArray = Em.ArrayProxy.extend({
       }
     });
     this.set("active", selected);
+  },
+  removeObject: function(object) {
+    if(object === this.get("active")){
+      this.set("active", null);
+      Em.set(object, "active", false);
+    }
+
+    this._super(object);
   }
 });

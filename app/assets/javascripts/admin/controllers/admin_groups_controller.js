@@ -1,9 +1,9 @@
-Discourse.AdminGroupsController = Ember.ArrayController.extend({
+Discourse.AdminGroupsController = Ember.Controller.extend({
   itemController: 'adminGroup',
 
   edit: function(group){
     this.get('model').select(group);
-    group.loadUsers();
+    group.load();
   },
 
   refreshAutoGroups: function(){
@@ -14,9 +14,31 @@ Discourse.AdminGroupsController = Ember.ArrayController.extend({
       controller.set('model', Discourse.Group.findAll());
       controller.set('refreshingAutoGroups',false);
     });
+  },
+
+  newGroup: function(){
+    var group = Discourse.Group.create();
+    group.set("loaded", true);
+    var model = this.get("model");
+    model.addObject(group);
+    model.select(group);
+  },
+
+  save: function(group){
+    if(!group.get("id")){
+      group.create();
+    } else {
+      group.save();
+    }
+  },
+
+  destroy: function(group){
+    var list = this.get("model");
+    if(group.get("id")){
+      group.destroy().then(function(){
+        list.removeObject(group);
+      });
+    }
   }
 });
 
-Discourse.AdminGroupController = Ember.Controller.extend({
-
-});

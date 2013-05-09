@@ -1,4 +1,6 @@
 Discourse.Group = Discourse.Model.extend({
+  loaded: false,
+
   userCountDisplay: function(){
     var c = this.get('user_count');
     // don't display zero its ugly
@@ -7,16 +9,19 @@ Discourse.Group = Discourse.Model.extend({
     }
   }.property('user_count'),
 
-  loadUsers: function() {
-    var group = this;
-
-    Discourse.ajax('/admin/groups/' + this.get('id') + '/users').then(function(payload){
-      var users = Em.A()
-      payload.each(function(user){
-        users.addObject(Discourse.User.create(user));
+  load: function() {
+    var id = this.get('id');
+    if(id && !this.get('loaded')) {
+      var group = this;
+      Discourse.ajax('/admin/groups/' + this.get('id') + '/users').then(function(payload){
+        var users = Em.A()
+        payload.each(function(user){
+          users.addObject(Discourse.User.create(user));
+        });
+        group.set('users', users)
+        group.set('loaded', true)
       });
-      group.set('users', users)
-    });
+    }
   },
 
   usernames: function() {
@@ -28,7 +33,32 @@ Discourse.Group = Discourse.Model.extend({
       }).join(',')
     }
     return usernames;
-  }.property('users')
+  }.property('users'),
+
+  destroy: function(){
+    var group = this;
+    group.set('disableSave', true);
+
+    return Discourse.ajax("/admin/groups/" + this.get("id"), {type: "DELETE"})
+      .then(function(){
+        group.set('disableSave', false);
+      });
+  },
+
+  create: function(){
+    var group = this;
+    group.set('disableSave', true);
+
+    return Discourse.ajax("/admin/groups", {type: "POST", data: {
+      group: {
+        name: this.get('name'),
+        usernames: this.get('usernames')
+      }
+    }}).then(function(r){
+      group.set('disableSave', false);
+      group.set('id', r.id);
+    });
+  }
 
 });
 

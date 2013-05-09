@@ -7,6 +7,8 @@ class Group < ActiveRecord::Base
 
   after_save :destroy_deletions
 
+  validate :name_format_validator
+
   AUTO_GROUPS = {
     :admins => 1,
     :moderators => 2,
@@ -26,8 +28,8 @@ class Group < ActiveRecord::Base
 
     id = AUTO_GROUPS[name]
 
-    unless group = self[name]
-      group = Group.new(name: "", automatic: true)
+    unless group = self.lookup_group(name)
+      group = Group.new(name: name.to_s, automatic: true)
       group.id = id
       group.save!
     end
@@ -61,6 +63,8 @@ class Group < ActiveRecord::Base
 
     # we want to ensure consistency
     Group.reset_counters(group.id, :group_users)
+
+    group
   end
 
   def self.refresh_automatic_groups!(*args)
@@ -73,9 +77,15 @@ class Group < ActiveRecord::Base
   end
 
   def self.[](name)
-    raise ArgumentError, "unknown group" unless id = AUTO_GROUPS[name]
+    unless g = lookup_group(name)
+      g = refresh_automatic_group!(name)
+    end
+    g
+  end
 
-    Group.where(id: id).first
+  def self.lookup_group(name)
+    raise ArgumentError, "unknown group" unless id = AUTO_GROUPS[name]
+    g = Group.where(id: id).first
   end
 
 
@@ -84,13 +94,14 @@ class Group < ActiveRecord::Base
 
     GroupUser.where(group_id: trust_group_ids, user_id: user_id).delete_all
 
-    if group = Group[name]
+    if group = lookup_group(name)
       group.group_users.build(user_id: user_id)
       group.save!
     else
       refresh_automatic_group!(name)
     end
   end
+
 
   def self.builtin
     Enum.new(:moderators, :admins, :trust_level_1, :trust_level_2)
@@ -131,8 +142,14 @@ class Group < ActiveRecord::Base
   def add(user)
     self.users.push(user)
   end
-
   protected
+
+  def name_format_validator
+    validator = UsernameValidator.new(name)
+    unless validator.valid_format?
+      validator.errors.each { |e| errors.add(:name, e) }
+    end
+  end
 
   # hack around AR
   def destroy_deletions

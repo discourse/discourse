@@ -2,7 +2,22 @@ require 'spec_helper'
 
 describe Group do
 
+  describe "validation" do
+    let(:group) { build(:group) }
+
+    it "is invalid for blank" do
+      group.name = ""
+      group.valid?.should be_false
+    end
+
+    it "is valid for a longer name" do
+      group.name = "this_is_a_name"
+      group.valid?.should be_true
+    end
+  end
+
   it "Can update moderator/staff/admin groups correctly" do
+
     admin = Fabricate(:admin)
     moderator = Fabricate(:moderator)
 

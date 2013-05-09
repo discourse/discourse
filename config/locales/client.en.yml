@@ -895,11 +895,13 @@ en:
         delete_title: "delete post (if its the first post delete topic)"
         flagged_by: "Flagged by"
         error: "Something went wrong"
+        view_message: "view message"
 
       groups:
         title: "Groups"
         edit: "Edit Groups"
         selector_placeholder: "add users"
+        name_placeholder: "Group name, no spaces, same as username rule"
 
       api:
         title: "API"
