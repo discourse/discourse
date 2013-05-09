@@ -4,10 +4,10 @@ gem 'active_model_serializers', git: 'https://github.com/rails-api/active_model_
 
 # we had issues with latest, stick to the rev till we figure this out
 # PR that makes it all hang together welcome
-gem 'ember-rails', git: 'git://github.com/emberjs/ember-rails.git', ref: '57bbe32'
+gem 'ember-rails', git: 'https://github.com/emberjs/ember-rails.git', ref: '57bbe32'
 gem 'barber', '0.3.0'
 
-gem 'vestal_versions', git: 'git://github.com/zhangyuan/vestal_versions'
+gem 'vestal_versions', git: 'https://github.com/zhangyuan/vestal_versions'
 
 gem 'message_bus', path: 'vendor/gems/message_bus'
 gem 'rails_multisite', path: 'vendor/gems/rails_multisite'
@@ -44,7 +44,7 @@ gem "openid-redis-store"
 gem "omniauth-facebook"
 gem "omniauth-twitter"
 gem "omniauth-github"
-gem "omniauth-browserid", :git => "git://github.com/callahad/omniauth-browserid.git", :branch => "observer_api"
+gem "omniauth-browserid", :git => "https://github.com/callahad/omniauth-browserid.git", :branch => "observer_api"
 gem 'oj'
 gem 'pg'
 # we had pain with the 3.2.13 upgrade so monkey patch the security fix
@@ -117,7 +117,7 @@ end
 
 # we are using a custom sprockets repo to work around: https://github.com/rails/rails/issues/8099#issuecomment-16137638
 # REVIEW EVERY RELEASE
-gem "sprockets", :git => "git://github.com/SamSaffron/sprockets.git", :branch => "rails-compat"
+gem "sprockets", :git => "https://github.com/SamSaffron/sprockets.git", :branch => "rails-compat"
 
 
 # this is an optional gem, it provides a high performance replacement
@@ -136,7 +136,7 @@ gem 'rack-mini-profiler', require: false  # require: false #, git: 'git://github
 # used for caching, optional
 # redis-rack-cache is missing a sane expiry policy, it hogs redis
 # https://github.com/jodosha/redis-store/pull/183
-gem 'redis-rack-cache', :git => 'git://github.com/SamSaffron/redis-rack-cache.git', require: false
+gem 'redis-rack-cache', :git => 'https://github.com/SamSaffron/redis-rack-cache.git', require: false
 gem 'rack-cache', require: false
 
 gem 'rack-cors', require: false
