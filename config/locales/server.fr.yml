@@ -53,6 +53,17 @@ fr:
   rss_topics_in_category: "Flux RSS des discussions de la catégorie '%{category}'"
   author_wrote: "%{author} a écrit :"
 
+  groups:
+    default_names:
+      admins: "admins"
+      moderators: "moderateurs"
+      staff: "staff"
+      trust_level_1: "trust_level_1"
+      trust_level_2: "trust_level_2"
+      trust_level_3: "trust_level_3"
+      trust_level_4: "trust_level_4"
+      trust_level_5: "trust_level_5"
+
   education:
     until_posts:
       one: "message"
@@ -346,18 +357,18 @@ fr:
     top_referrers:
       title: Meilleurs référants
       xaxis: Utilisateurs
-      num_visits: Visites
+      num_clicks: Clics
       num_topics: Discussions
     top_traffic_sources:
       title: Meilleures sources de traffic
       xaxis: Domaine
-      num_visits: Visites
+      num_clicks: Clics
       num_topics: Discussions
       num_users: Utilisateurs
     top_referred_topics:
       title: Discussions les plus référencées
       xaxis: Discussion
-      num_visits: Visites
+      num_clicks: Clics
 
   dashboard:
     rails_env_warning: "Votre serveur fonctionne dans l'environnement de %{env}."
