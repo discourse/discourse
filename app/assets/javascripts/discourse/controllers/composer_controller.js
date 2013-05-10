@@ -133,7 +133,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
     var educationKey = this.get('content.creatingTopic') ? 'new-topic' : 'new-reply';
     var composerController = this;
     Discourse.ajax("/education/" + educationKey).then(function(result) {
-      composerController.set('educationContents', result);
+      composerController.set('educationContents', result.responseText);
     });
   }.observes('typedReply', 'content.creatingTopic', 'Discourse.currentUser.reply_count'),
 
