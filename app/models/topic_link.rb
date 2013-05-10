@@ -68,12 +68,12 @@ class TopicLink < ActiveRecord::Base
 
           added_urls << url
           TopicLink.create(post_id: post.id,
-                                 user_id: post.user_id,
-                                 topic_id: post.topic_id,
-                                 url: url,
-                                 domain: parsed.host || Discourse.current_hostname,
-                                 internal: internal,
-                                 link_topic_id: topic_id)
+                           user_id: post.user_id,
+                           topic_id: post.topic_id,
+                           url: url,
+                           domain: parsed.host || Discourse.current_hostname,
+                           internal: internal,
+                           link_topic_id: topic_id)
 
           # Create the reflection if we can
           if topic_id.present?

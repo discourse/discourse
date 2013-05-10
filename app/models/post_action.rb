@@ -64,11 +64,8 @@ class PostAction < ActiveRecord::Base
     end
 
     PostAction.update_all({ deleted_at: Time.zone.now, deleted_by: moderator_id }, { post_id: post.id, post_action_type_id: actions })
-
     f = actions.map{|t| ["#{PostActionType.types[t]}_count", 0]}
-
     Post.with_deleted.update_all(Hash[*f.flatten], id: post.id)
-
     update_flagged_posts_count
   end
 
@@ -145,6 +142,7 @@ class PostAction < ActiveRecord::Base
     post_action_type_id == PostActionType.types[:notify_user] ||
     post_action_type_id == PostActionType.types[:notify_moderators]
   end
+
   # A custom rate limiter for this model
   def post_action_rate_limiter
     return unless is_flag? || is_bookmark? || is_like?
@@ -174,6 +172,30 @@ class PostAction < ActiveRecord::Base
                                     .exists?
   end
 
+  # Returns the flag counts for a post, taking into account that some users
+  # can weigh flags differently.
+  def self.flag_counts_for(post_id)
+    flag_counts = exec_sql("SELECT SUM(CASE
+                                         WHEN pa.deleted_at IS NULL AND u.admin THEN :flags_required_to_hide_post
+                                         WHEN pa.deleted_at IS NULL AND (NOT u.admin) THEN 1
+                                         ELSE 0
+                                       END) AS new_flags,
+                                   SUM(CASE
+                                         WHEN pa.deleted_at IS NOT NULL AND u.admin THEN :flags_required_to_hide_post
+                                         WHEN pa.deleted_at IS NOT NULL AND (NOT u.admin) THEN 1
+                                         ELSE 0
+                                       END) AS old_flags
+                            FROM post_actions AS pa
+                              INNER JOIN users AS u ON u.id = pa.user_id
+                            WHERE pa.post_id = :post_id AND
+                              pa.post_action_type_id IN (:post_action_types)",
+                            post_id: post_id,
+                            post_action_types: PostActionType.auto_action_flag_types.values,
+                            flags_required_to_hide_post: SiteSetting.flags_required_to_hide_post).first
+
+    [flag_counts['old_flags'].to_i, flag_counts['new_flags'].to_i]
+  end
+
   after_save do
     # Update denormalized counts
     post_action_type = PostActionType.types[post_action_type_id]
@@ -195,11 +217,7 @@ class PostAction < ActiveRecord::Base
 
     if PostActionType.auto_action_flag_types.include?(post_action_type) && SiteSetting.flags_required_to_hide_post > 0
       # automatic hiding of posts
-      flag_counts = exec_sql("SELECT SUM(CASE WHEN deleted_at IS NULL THEN 1 ELSE 0 END) AS new_flags,
-                                     SUM(CASE WHEN deleted_at IS NOT NULL THEN 1 ELSE 0 END) AS old_flags
-                              FROM post_actions
-                              WHERE post_id = ? AND post_action_type_id IN (?)", post.id, PostActionType.auto_action_flag_types.values).first
-      old_flags, new_flags = flag_counts['old_flags'].to_i, flag_counts['new_flags'].to_i
+      old_flags, new_flags = PostAction.flag_counts_for(post.id)
 
       if new_flags >= SiteSetting.flags_required_to_hide_post
         reason = old_flags > 0 ? Post.hidden_reasons[:flag_threshold_reached_again] : Post.hidden_reasons[:flag_threshold_reached]

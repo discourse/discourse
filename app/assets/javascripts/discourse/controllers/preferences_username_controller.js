@@ -12,20 +12,20 @@ Discourse.PreferencesUsernameController = Discourse.ObjectController.extend({
   error: false,
   errorMessage: null,
 
-  saveDisabled: (function() {
+  saveDisabled: function() {
     if (this.get('saving')) return true;
     if (this.blank('newUsername')) return true;
     if (this.get('taken')) return true;
     if (this.get('unchanged')) return true;
     if (this.get('errorMessage')) return true;
     return false;
-  }).property('newUsername', 'taken', 'errorMessage', 'unchanged', 'saving'),
+  }.property('newUsername', 'taken', 'errorMessage', 'unchanged', 'saving'),
 
-  unchanged: (function() {
+  unchanged: function() {
     return this.get('newUsername') === this.get('content.username');
-  }).property('newUsername', 'content.username'),
+  }.property('newUsername', 'content.username'),
 
-  checkTaken: (function() {
+  checkTaken: function() {
     if( this.get('newUsername') && this.get('newUsername').length < 3 ) {
       this.set('errorMessage', Em.String.i18n('user.name.too_short'));
     } else {
@@ -42,12 +42,12 @@ Discourse.PreferencesUsernameController = Discourse.ObjectController.extend({
         }
       });
     }
-  }).observes('newUsername'),
+  }.observes('newUsername'),
 
-  saveButtonText: (function() {
+  saveButtonText: function() {
     if (this.get('saving')) return Em.String.i18n("saving");
     return Em.String.i18n("user.change_username.action");
-  }).property('saving'),
+  }.property('saving'),
 
   changeUsername: function() {
     var preferencesUsernameController = this;

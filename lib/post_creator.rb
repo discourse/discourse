@@ -31,7 +31,14 @@ class PostCreator
     # If we don't do this we introduce a rather risky dependency
     @user = user
     @opts = opts
+    @spam = false
+
     raise Discourse::InvalidParameters.new(:raw) if @opts[:raw].blank?
+  end
+
+  # True if the post was considered spam
+  def spam?
+    @spam
   end
 
   def guardian
@@ -63,6 +70,16 @@ class PostCreator
 
       post.image_sizes = @opts[:image_sizes] if @opts[:image_sizes].present?
       post.invalidate_oneboxes = @opts[:invalidate_oneboxes] if @opts[:invalidate_oneboxes].present?
+
+
+      # If the post has host spam, roll it back.
+      if post.has_host_spam?
+        post.errors.add(:base, I18n.t(:spamming_host))
+        @errors = post.errors
+        @spam = true
+        raise ActiveRecord::Rollback.new
+      end
+
       unless post.save
         @errors = post.errors
         raise ActiveRecord::Rollback.new

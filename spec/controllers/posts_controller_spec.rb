@@ -273,6 +273,31 @@ describe PostsController do
         ::JSON.parse(response.body).should be_present
       end
 
+      context "errors" do
+
+        let(:post_with_errors) { Fabricate.build(:post, user: user)}
+
+        before do
+          post_with_errors.errors.add(:base, I18n.t(:spamming_host))
+          PostCreator.any_instance.stubs(:errors).returns(post_with_errors.errors)
+          PostCreator.any_instance.expects(:create).returns(post_with_errors)
+        end
+
+        it "does not succeed" do
+          xhr :post, :create, post: {raw: 'test'}
+          User.any_instance.expects(:flag_linked_posts_as_spam).never
+          response.should_not be_success
+        end
+
+        it "it triggers flag_linked_posts_as_spam when the post creator returns spam" do
+          PostCreator.any_instance.expects(:spam?).returns(true)
+          User.any_instance.expects(:flag_linked_posts_as_spam)
+          xhr :post, :create, post: {raw: 'test'}
+        end
+
+      end
+
+
       context "parameters" do
 
         let(:post_creator) { mock }

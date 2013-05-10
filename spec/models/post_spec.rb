@@ -7,6 +7,13 @@ describe Post do
     ImageSorcery.any_instance.stubs(:convert).returns(false)
   end
 
+  # Help us build a post with a raw body
+  def post_with_body(body, user=nil)
+    args = post_args.merge(raw: body)
+    args[:user] = user if user.present?
+    Fabricate.build(:post, args)
+  end
+
   it { should belong_to :user }
   it { should belong_to :topic }
   it { should validate_presence_of :raw }
@@ -89,12 +96,12 @@ describe Post do
   describe "maximum images" do
     let(:newuser) { Fabricate(:user, trust_level: TrustLevel.levels[:newuser]) }
     let(:post_no_images) { Fabricate.build(:post, post_args.merge(user: newuser)) }
-    let(:post_one_image) { Fabricate.build(:post, post_args.merge(raw: "![sherlock](http://bbc.co.uk/sherlock.jpg)", user: newuser)) }
-    let(:post_two_images) { Fabricate.build(:post, post_args.merge(raw: "<img src='http://discourse.org/logo.png'> <img src='http://bbc.co.uk/sherlock.jpg'>", user: newuser)) }
-    let(:post_with_avatars) { Fabricate.build(:post, post_args.merge(raw: '<img alt="smiley" title=":smiley:" src="/assets/emoji/smiley.png" class="avatar"> <img alt="wink" title=":wink:" src="/assets/emoji/wink.png" class="avatar">', user: newuser)) }
-    let(:post_with_favicon) { Fabricate.build(:post, post_args.merge(raw: '<img src="/assets/favicons/wikipedia.png" class="favicon">', user: newuser)) }
-    let(:post_with_thumbnail) { Fabricate.build(:post, post_args.merge(raw: '<img src="/assets/emoji/smiley.png" class="thumbnail">', user: newuser)) }
-    let(:post_with_two_classy_images) { Fabricate.build(:post, post_args.merge(raw: "<img src='http://discourse.org/logo.png' class='classy'> <img src='http://bbc.co.uk/sherlock.jpg' class='classy'>", user: newuser)) }
+    let(:post_one_image) { post_with_body("![sherlock](http://bbc.co.uk/sherlock.jpg)", newuser) }
+    let(:post_two_images) { post_with_body("<img src='http://discourse.org/logo.png'> <img src='http://bbc.co.uk/sherlock.jpg'>", newuser) }
+    let(:post_with_avatars) { post_with_body('<img alt="smiley" title=":smiley:" src="/assets/emoji/smiley.png" class="avatar"> <img alt="wink" title=":wink:" src="/assets/emoji/wink.png" class="avatar">', newuser) }
+    let(:post_with_favicon) { post_with_body('<img src="/assets/favicons/wikipedia.png" class="favicon">', newuser) }
+    let(:post_with_thumbnail) { post_with_body('<img src="/assets/emoji/smiley.png" class="thumbnail">', newuser) }
+    let(:post_with_two_classy_images) { post_with_body("<img src='http://discourse.org/logo.png' class='classy'> <img src='http://bbc.co.uk/sherlock.jpg' class='classy'>", newuser) }
 
     it "returns 0 images for an empty post" do
       Fabricate.build(:post).image_count.should == 0
@@ -159,11 +166,78 @@ describe Post do
 
   end
 
+  context "links" do
+    let(:newuser) { Fabricate(:user, trust_level: TrustLevel.levels[:newuser]) }
+    let(:no_links) { post_with_body("hello world my name is evil trout", newuser) }
+    let(:one_link) { post_with_body("[jlawr](http://www.imdb.com/name/nm2225369)", newuser) }
+    let(:two_links) { post_with_body("<a href='http://disneyland.disney.go.com/'>disney</a> <a href='http://reddit.com'>reddit</a>", newuser)}
+    let(:three_links) { post_with_body("http://discourse.org and http://discourse.org/another_url and http://www.imdb.com/name/nm2225369", newuser)}
+
+    describe "raw_links" do
+      it "returns a blank collection for a post with no links" do
+        no_links.raw_links.should be_blank
+      end
+
+      it "finds a link within markdown" do
+        one_link.raw_links.should == ["http://www.imdb.com/name/nm2225369"]
+      end
+
+      it "can find two links from html" do
+        two_links.raw_links.should == ["http://disneyland.disney.go.com/", "http://reddit.com"]
+      end
+
+      it "can find three links without markup" do
+        three_links.raw_links.should == ["http://discourse.org", "http://discourse.org/another_url", "http://www.imdb.com/name/nm2225369"]
+      end
+    end
+
+    describe "linked_hosts" do
+      it "returns blank with no links" do
+        no_links.linked_hosts.should be_blank
+      end
+
+      it "returns the host and a count for links" do
+        two_links.linked_hosts.should == {"disneyland.disney.go.com" => 1, "reddit.com" => 1}
+      end
+
+      it "it counts properly with more than one link on the same host" do
+        three_links.linked_hosts.should == {"discourse.org" => 2, "www.imdb.com" => 1}
+      end
+    end
+
+    describe "total host usage" do
+
+      it "has none for a regular post" do
+        no_links.total_hosts_usage.should be_blank
+      end
+
+      context "with a previous host" do
+
+        let(:user) { old_post.newuser }
+        let(:another_disney_link) { post_with_body("[radiator springs](http://disneyland.disney.go.com/disney-california-adventure/radiator-springs-racers/)", newuser) }
+
+        before do
+          another_disney_link.save
+          TopicLink.extract_from(another_disney_link)
+        end
+
+        it "contains the new post's links, PLUS the previous one" do
+          two_links.total_hosts_usage.should == {'disneyland.disney.go.com' => 2, 'reddit.com' => 1}
+        end
+
+      end
+
+    end
+
+
+  end
+
+
   describe "maximum links" do
     let(:newuser) { Fabricate(:user, trust_level: TrustLevel.levels[:newuser]) }
-    let(:post_one_link) { Fabricate.build(:post, post_args.merge(raw: "[sherlock](http://www.bbc.co.uk/programmes/b018ttws)", user: newuser)) }
-    let(:post_two_links) { Fabricate.build(:post, post_args.merge(raw: "<a href='http://discourse.org'>discourse</a> <a href='http://twitter.com'>twitter</a>", user: newuser)) }
-    let(:post_with_mentions) { Fabricate.build(:post, post_args.merge(raw: "hello @#{newuser.username} how are you doing?") )}
+    let(:post_one_link) { post_with_body("[sherlock](http://www.bbc.co.uk/programmes/b018ttws)", newuser) }
+    let(:post_two_links) { post_with_body("<a href='http://discourse.org'>discourse</a> <a href='http://twitter.com'>twitter</a>", newuser) }
+    let(:post_with_mentions) { post_with_body("hello @#{newuser.username} how are you doing?", newuser) }
 
     it "returns 0 links for an empty post" do
       Fabricate.build(:post).link_count.should == 0
@@ -251,8 +325,8 @@ describe Post do
     context "max mentions" do
 
       let(:newuser) { Fabricate(:user, trust_level: TrustLevel.levels[:newuser]) }
-      let(:post_with_one_mention) { Fabricate.build(:post, post_args.merge(raw: "@Jake is the person I'm mentioning", user: newuser)) }
-      let(:post_with_two_mentions) { Fabricate.build(:post, post_args.merge(raw: "@Jake @Finn are the people I'm mentioning", user: newuser)) }
+      let(:post_with_one_mention) { post_with_body("@Jake is the person I'm mentioning", newuser) }
+      let(:post_with_two_mentions) { post_with_body("@Jake @Finn are the people I'm mentioning", newuser) }
 
       context 'new user' do
         before do
@@ -298,7 +372,7 @@ describe Post do
   context "raw_hash" do
 
     let(:raw) { "this is our test post body"}
-    let(:post) { Fabricate.build(:post, raw: raw) }
+    let(:post) { post_with_body(raw) }
 
     it "returns a value" do
       post.raw_hash.should be_present
@@ -310,19 +384,19 @@ describe Post do
     end
 
     it "returns the same value for the same raw" do
-      post.raw_hash.should == Fabricate.build(:post, raw: raw).raw_hash
+      post.raw_hash.should == post_with_body(raw).raw_hash
     end
 
     it "returns a different value for a different raw" do
-      post.raw_hash.should_not == Fabricate.build(:post, raw: "something else").raw_hash
+      post.raw_hash.should_not == post_with_body("something else").raw_hash
     end
 
     it "returns the same hash even with different white space" do
-      post.raw_hash.should == Fabricate.build(:post, raw: " thisis ourt est postbody").raw_hash
+      post.raw_hash.should == post_with_body(" thisis ourt est postbody").raw_hash
     end
 
     it "returns the same hash even with different text case" do
-      post.raw_hash.should == Fabricate.build(:post, raw: "THIS is OUR TEST post BODy").raw_hash
+      post.raw_hash.should == post_with_body("THIS is OUR TEST post BODy").raw_hash
     end
   end
 
@@ -600,12 +674,12 @@ describe Post do
   end
 
   describe 'urls' do
-    it 'no-ops for empty list' do 
+    it 'no-ops for empty list' do
       Post.urls([]).should == {}
     end
 
-    # integration test -> should move to centralized integration test 
-    it 'finds urls for posts presented' do 
+    # integration test -> should move to centralized integration test
+    it 'finds urls for posts presented' do
       p1 = Fabricate(:post)
       p2 = Fabricate(:post)
       Post.urls([p1.id, p2.id]).should == {p1.id => p1.url, p2.id => p2.url}

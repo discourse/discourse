@@ -266,7 +266,7 @@ describe User do
 
   describe "trust levels" do
 
-    # NOTE be sure to use build to avoid db calls 
+    # NOTE be sure to use build to avoid db calls
     let(:user) { Fabricate.build(:user, trust_level: TrustLevel.levels[:newuser]) }
 
     it "sets to the default trust level setting" do
@@ -770,6 +770,31 @@ describe User do
     end
   end
 
+  describe "flag_linked_posts_as_spam" do
+    let(:user) { Fabricate(:user) }
+    let!(:admin) { Fabricate(:admin) }
+    let!(:post) { PostCreator.new(user, title: "this topic contains spam", raw: "this post has a link: http://discourse.org").create }
+    let!(:another_post) { PostCreator.new(user, title: "this topic also contains spam", raw: "this post has a link: http://discourse.org/asdfa").create }
+    let!(:post_without_link) { PostCreator.new(user, title: "this topic shouldn't be spam", raw: "this post has no links in it.").create }
+
+    it "has flagged all the user's posts as spam" do
+      user.flag_linked_posts_as_spam
+
+      post.reload
+      post.spam_count.should == 1
+
+      another_post.reload
+      another_post.spam_count.should == 1
+
+      post_without_link.reload
+      post_without_link.spam_count.should == 0
+
+      # It doesn't raise an exception if called again
+      user.flag_linked_posts_as_spam
+
+    end
+
+  end
 
   describe 'update_time_read!' do
     let(:user) { Fabricate(:user) }

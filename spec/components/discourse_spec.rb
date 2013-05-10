@@ -16,7 +16,6 @@ describe Discourse do
   end
 
   context 'base_url' do
-
     context 'when ssl is off' do
       before do
         SiteSetting.expects(:use_ssl?).returns(false)
@@ -45,12 +44,26 @@ describe Discourse do
       it "returns the non standart port in the base url" do
         Discourse.base_url.should == "http://foo.com:3000"
       end
-
     end
-
-
   end
 
+
+  context '#system_user' do
+
+    let!(:admin) { Fabricate(:admin) }
+    let!(:another_admin) { Fabricate(:another_admin) }
+
+    it 'returns the user specified by the site setting system_username' do
+      SiteSetting.stubs(:system_username).returns(another_admin.username)
+      Discourse.system_user.should == another_admin
+    end
+
+    it 'returns the first admin user otherwise' do
+      SiteSetting.stubs(:system_username).returns(nil)
+      Discourse.system_user.should == admin
+    end
+
+  end
 
 end
 

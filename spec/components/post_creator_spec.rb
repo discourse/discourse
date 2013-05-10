@@ -32,6 +32,11 @@ describe PostCreator do
 
     context 'success' do
 
+      it "doesn't return true for spam" do
+        creator.create
+        creator.spam?.should be_false
+      end
+
       it 'generates the correct messages for a secure topic' do
 
         admin = Fabricate(:admin)
@@ -60,7 +65,6 @@ describe PostCreator do
                                                    ].sort
         admin_ids = [Group[:admins].id]
         messages.any?{|m| m.group_ids != admin_ids}.should be_false
-
       end
 
       it 'generates the correct messages for a normal topic' do
@@ -183,6 +187,25 @@ describe PostCreator do
         new_post_creator.create
         new_post_creator.errors.should be_blank
       end
+    end
+
+  end
+
+
+  context "host spam" do
+
+    let!(:topic) { Fabricate(:topic, user: user) }
+    let(:basic_topic_params) { { raw: 'test reply', topic_id: topic.id, reply_to_post_number: 4} }
+    let(:creator) { PostCreator.new(user, basic_topic_params) }
+
+    before do
+      Post.any_instance.expects(:has_host_spam?).returns(true)
+    end
+
+    it "does not create the post" do
+      creator.create
+      creator.errors.should be_present
+      creator.spam?.should be_true
     end
 
   end
