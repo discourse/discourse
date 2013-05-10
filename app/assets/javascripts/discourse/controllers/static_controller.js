@@ -21,7 +21,7 @@ Discourse.StaticController = Discourse.Controller.extend({
       this.set('content', text);
     } else {
       return Discourse.ajax(path + ".json").then(function (result) {
-        staticController.set('content', result);
+        staticController.set('content', result.responseText);
       });
     }
   }
