@@ -131,6 +131,7 @@ test
 
     it "should truncate stuff properly" do
       PrettyText.excerpt("hello world",5).should == "hello&hellip;"
+      PrettyText.excerpt("<p>hello</p><p>world</p>",6).should == "hello w&hellip;"
     end
 
     it "should insert a space between to Ps" do
@@ -168,6 +169,7 @@ test
     it "should handle nil" do
       PrettyText.excerpt(nil,100).should == ''
     end
+
   end
 
 
