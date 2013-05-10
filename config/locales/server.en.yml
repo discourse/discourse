@@ -32,6 +32,7 @@ en:
     zero: "Sorry, new users can't put links in posts."
     one: "Sorry, new users can only put one link in a post."
     other: "Sorry, new users can only put %{count} links in a post."
+  spamming_host: "Sorry you cannot post a link to that host."
 
   just_posted_that: "is too similar to what you recently posted"
   has_already_been_used: "has already been used"
@@ -573,6 +574,8 @@ en:
 
     tos_url: "If you have a Terms of Service document hosted elsewhere that you want to use, provide the full URL here."
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
+
+    newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_posts` posts before being considered spam."
 
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"

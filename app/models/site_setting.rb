@@ -178,6 +178,8 @@ class SiteSetting < ActiveRecord::Base
   setting(:newuser_max_links, 2)
   setting(:newuser_max_images, 0)
 
+  setting(:newuser_spam_host_threshold, 3)
+
   setting(:title_fancy_entities, true)
 
   # The default locale for the site

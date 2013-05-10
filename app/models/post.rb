@@ -99,6 +99,7 @@ class Post < ActiveRecord::Base
     @white_listed_image_classes ||= ['avatar', 'favicon', 'thumbnail']
   end
 
+  # How many images are present in the post
   def image_count
     return 0 unless raw.present?
 
@@ -110,19 +111,28 @@ class Post < ActiveRecord::Base
     end.count
   end
 
-  def link_count
-    return 0 unless raw.present?
+  # Returns an array of all links in a post
+  def raw_links
+    return [] unless raw.present?
+
+    return @raw_links if @raw_links.present?
 
     # Don't include @mentions in the link count
-    total = 0
+    @raw_links = []
     cooked_document.search("a[href]").each do |l|
       html_class = l.attributes['class']
+      url = l.attributes['href'].to_s
       if html_class.present?
         next if html_class.to_s == 'mention' && l.attributes['href'].to_s =~ /^\/users\//
       end
-      total +=1
+      @raw_links << url
     end
-    total
+    @raw_links
+  end
+
+  # How many links are present in the post
+  def link_count
+    raw_links.size
   end
 
   # Sometimes the post is being edited by someone else, for example, a mod.
@@ -136,6 +146,7 @@ class Post < ActiveRecord::Base
     @acting_user = pu
   end
 
+  # Ensure maximum amount of mentions in a post
   def max_mention_validator
     if acting_user.present? && acting_user.has_trust_level?(:basic)
       errors.add(:base, I18n.t(:too_many_mentions, count: SiteSetting.max_mentions_per_post)) if raw_mentions.size > SiteSetting.max_mentions_per_post
@@ -144,14 +155,54 @@ class Post < ActiveRecord::Base
     end
   end
 
+  # Ensure new users can not put too many images in a post
   def max_images_validator
     return if acting_user.present? && acting_user.has_trust_level?(:basic)
     errors.add(:base, I18n.t(:too_many_images, count: SiteSetting.newuser_max_images)) if image_count > SiteSetting.newuser_max_images
   end
 
+  # Ensure new users can not put too many links in a post
   def max_links_validator
     return if acting_user.present? && acting_user.has_trust_level?(:basic)
     errors.add(:base, I18n.t(:too_many_links, count: SiteSetting.newuser_max_links)) if link_count > SiteSetting.newuser_max_links
+  end
+
+
+  # Count how many hosts are linked in the post
+  def linked_hosts
+    return {} if raw_links.blank?
+
+    return @linked_hosts if @linked_hosts.present?
+
+    @linked_hosts = {}
+    raw_links.each do |u|
+      uri = URI.parse(u)
+      host = uri.host
+      @linked_hosts[host] = (@linked_hosts[host] || 0) + 1
+    end
+    @linked_hosts
+  end
+
+  def total_hosts_usage
+    hosts = linked_hosts.clone
+
+    # Count hosts in previous posts the user has made, PLUS these new ones
+    TopicLink.where(domain: hosts.keys, user_id: acting_user.id).each do |tl|
+      hosts[tl.domain] = (hosts[tl.domain] || 0) + 1
+    end
+
+    hosts
+  end
+
+  # Prevent new users from posting the same hosts too many times.
+  def has_host_spam?
+    return false if acting_user.present? && acting_user.has_trust_level?(:basic)
+
+    total_hosts_usage.each do |host, count|
+      return true if count >= SiteSetting.newuser_spam_host_threshold
+    end
+
+    false
   end
 
 

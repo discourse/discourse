@@ -155,6 +155,29 @@ describe PostAction do
 
   describe 'flagging' do
 
+    context "flag_counts_for" do
+      it "returns the correct flag counts" do
+        post = Fabricate(:post)
+
+        SiteSetting.stubs(:flags_required_to_hide_post).returns(7)
+
+        # A post with no flags has 0 for flag counts
+        PostAction.flag_counts_for(post.id).should == [0, 0]
+
+        flag = PostAction.act(Fabricate(:evil_trout), post, PostActionType.types[:spam])
+        PostAction.flag_counts_for(post.id).should == [0, 1]
+
+        # If an admin flags the post, it is counted higher
+        admin = Fabricate(:admin)
+        PostAction.act(admin, post, PostActionType.types[:spam])
+        PostAction.flag_counts_for(post.id).should == [0, 8]
+
+        # If a flag is dismissed
+        PostAction.clear_flags!(post, admin)
+        PostAction.flag_counts_for(post.id).should == [8, 0]
+      end
+    end
+
     it 'does not allow you to flag stuff with 2 reasons' do
       post = Fabricate(:post)
       u1 = Fabricate(:evil_trout)
