@@ -761,6 +761,11 @@ fr:
       change_in_category_topic: "visitez les discussions de cette catégorie pour en éditer la description"
       hotness: "Buzz"
       already_used: "Cette couleur est déjà utilisée par une autre catégorie"
+      is_secure: "Catégorie sécurisée ?"
+      add_group: "Ajouter un groupe"
+      security: "Sécurité"
+      allowed_groups: "Groupes permis :"
+      
 
     flagging:
       title: 'Pourquoi voulez-vous signaler ce message ?'
