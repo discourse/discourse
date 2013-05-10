@@ -789,6 +789,11 @@ cs:
       change_in_category_topic: "navštivte téma kategorie pro editaci jejího popisu"
       hotness: "Popularita"
       already_used: 'Tato barva je již použita jinou kategorií'
+      is_secure: "Zabezpečená kategorie?"
+      add_group: "Přidat skupinu"
+      security: "Bezpečnost"
+      allowed_groups: "Povolené skupiny:"
+
 
     flagging:
       title: 'Proč chcete nahlásit tento příspěvek?'
@@ -929,14 +934,23 @@ cs:
         delete_title: "odstranit příspěvek (smaže celé téma, je-li to první příspěvek v tématu)"
         flagged_by: "Nahlásil"
         error: "Něco se pokazilo"
+        view_message: "zobrazit zprávu"
 
       groups:
         title: "Skupiny"
         edit: "Editovat Skupiny"
         selector_placeholder: "přidat uživatele"
+        name_placeholder: "Název skupiny, bez mezer, stejná pravidla jako pro uživatelská jména"
 
       api:
         title: "API"
+        long_title: "API Informace"
+        key: "Klíč"
+        generate: "Vygenerovat API klíč"
+        regenerate: "Znovu-vygenerovat API klíč"
+        info_html: "Váš API klíč umožní vytvářet a aktualizovat témata pomocí JSONových volání."
+        note_html: "Uchovejte tento klíč <strong>v bezpečí</strong>, každý, kdo má tento klíč, může libovolně vytvářet příspěvky na fóru i za ostatní uživatele."
+
       customize:
         title: "Přizpůsobení"
         long_title: "Přizpůsobení webu"
@@ -1030,6 +1044,13 @@ cs:
         delete_confirm: "Jste si jistí, že chce permanentně smazat tohoto uživatele z fóra? Tato akce je nevratná!"
         deleted: "Uživatel byl smazán."
         delete_failed: "Nastala chyba při odstraňování uživatele. Ujistěte se, že jsou všechny příspěvky tohoto uživatele smazané, než budete uživatele mazat."
+        send_activation_email: "Odeslat aktivační email"
+        activation_email_sent: "Aktivační email byl odeslán."
+        send_activation_email_failed: "Nastal problém při odesílání aktivačního emailu."
+        activate: "Aktivovat účet"
+        activate_failed: "Nasstal problém při aktivování tohoto uživatele."
+        deactivate_account: "Deaktivovat účet"
+        deactivate_failed: "Nastal problém při deaktivování tohoto uživatele."
 
       site_content:
         none: "Zvolte typ obsahu a můžete začít editovat."
