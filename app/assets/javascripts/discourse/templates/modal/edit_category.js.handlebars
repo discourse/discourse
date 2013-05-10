@@ -24,9 +24,29 @@
         </section>
 
         <section class='field'>
+          <label>{{i18n category.security}}</label>
+          <label>
+          {{view Ember.Checkbox checkedBinding="secure"}}
+          {{i18n category.is_secure}}
+          </label>
+          {{#if secure}}
+            <div>
+              {{i18n category.allowed_groups}}
+              {{#each groups}}
+                {{this}} <a {{action removeGroup this target="view"}}>x</a>
+              {{/each}}
+            </div>
+            {{view Ember.Select contentBinding="availableGroups" valueBinding="view.selectedGroup"}}
+            <button {{action addGroup target="view"}}>{{i18n category.add_group}}</button>
+          {{/if}}
+        </section>
+
+        <!-- Sam, disabled for now
+        <section class='field'>
           <label>{{i18n category.hotness}}</label>
           {{view Discourse.HotnessView hotnessBinding="hotness"}}
         </section>
+        -->
       {{/unless}}
 
       <section class='field'>

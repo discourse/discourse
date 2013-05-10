@@ -93,6 +93,16 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
     return false;
   },
 
+  addGroup: function(){
+    this.get("category").addGroup(this.get("selectedGroup"));
+  },
+
+  removeGroup: function(group){
+    // OBVIOUS, Ember treats this as Ember.String, we need a real string here
+    group = group + "";
+    this.get("category").removeGroup(group);
+  },
+
   saveCategory: function() {
     var categoryView = this;
     this.set('saving', true);

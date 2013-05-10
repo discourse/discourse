@@ -9,7 +9,15 @@ class CategoryList
                     .includes(:featured_users)
                     .where('topics.visible' => true)
                     .order('categories.topics_week desc, categories.topics_month desc, categories.topics_year desc')
-                    .to_a
+
+    allowed_ids = current_user ? current_user.secure_category_ids : nil
+    if allowed_ids.present?
+      @categories = @categories.where("categories.secure = 'f' OR categories.id in (?)", allowed_ids)
+    else
+      @categories = @categories.where("categories.secure = 'f'")
+    end
+
+    @categories = @categories.to_a
 
     # Support for uncategorized topics
     uncategorized_topics = Topic

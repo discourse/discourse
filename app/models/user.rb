@@ -564,7 +564,7 @@ class User < ActiveRecord::Base
   end
 
   def secure_category_ids
-    cats = self.moderator? ? Category.select(:id).where(:secure, true) : secure_categories.select('categories.id')
+    cats = self.staff? ? Category.select(:id).where(secure: true) : secure_categories.select('categories.id')
     cats.map{|c| c.id}
   end
 

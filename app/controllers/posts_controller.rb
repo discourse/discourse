@@ -92,7 +92,7 @@ class PostsController < ApplicationController
 
     result = {post: post_serializer.as_json}
     if revisor.category_changed.present?
-      result[:category] = CategorySerializer.new(revisor.category_changed, scope: guardian, root: false).as_json
+      result[:category] = BasicCategorySerializer.new(revisor.category_changed, scope: guardian, root: false).as_json
     end
 
     render_json_dump(result)
