@@ -132,8 +132,8 @@ Discourse.ComposerController = Discourse.Controller.extend({
     // If visible update the text
     var educationKey = this.get('content.creatingTopic') ? 'new-topic' : 'new-reply';
     var composerController = this;
-    Discourse.ajax("/education/" + educationKey).then(function(result) {
-      composerController.set('educationContents', result.responseText);
+    Discourse.ajax("/education/" + educationKey, {dataType: 'html'}).then(function(result) {
+      composerController.set('educationContents', result);
     });
   }.observes('typedReply', 'content.creatingTopic', 'Discourse.currentUser.reply_count'),
 
