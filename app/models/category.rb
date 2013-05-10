@@ -99,6 +99,15 @@ class Category < ActiveRecord::Base
     self.secure
   end
 
+  def group_names=(names)
+    # this line bothers me, destroying in AR can not seem to be queued, thinking of extending it
+    category_groups.destroy_all unless new_record?
+    ids = Group.where(name: names.split(",")).select(:id).map(&:id)
+    ids.each do |id|
+      category_groups.build(group_id: id)
+    end
+  end
+
   def deny(group)
     if group == :all
       self.secure = true
@@ -108,7 +117,8 @@ class Category < ActiveRecord::Base
   def allow(group)
     if group == :all
       self.secure = false
-      category_groups.clear
+      # this is kind of annoying, there should be a clean way of queuing this stuff
+      category_groups.destroy_all unless new_record?
     else
       groups.push(group)
     end

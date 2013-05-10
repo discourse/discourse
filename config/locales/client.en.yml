@@ -758,6 +758,11 @@ en:
       change_in_category_topic: "Edit Description"
       hotness: "Hotness"
       already_used: 'This color has been used by another category'
+      is_secure: "Secure category?"
+      add_group: "Add Group"
+      security: "Security"
+      allowed_groups: "Allowed Groups:"
+
 
     flagging:
       title: 'Why are you flagging this post?'
