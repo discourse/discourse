@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/CodeMonkeySteve/fast_xor.git
+  remote: https://github.com/CodeMonkeySteve/fast_xor.git
   revision: 85b79ec6d116f9680f23bd2c5c8c2c2039d477d8
   specs:
     fast_xor (1.1.2)
@@ -7,7 +7,7 @@ GIT
       rake-compiler
 
 GIT
-  remote: git://github.com/SamSaffron/redis-rack-cache.git
+  remote: https://github.com/SamSaffron/redis-rack-cache.git
   revision: 379ef30e31d4e185cb1d7f8badca0cc06403eba2
   specs:
     redis-rack-cache (1.2.1)
@@ -15,7 +15,7 @@ GIT
       redis-store (~> 1.1.0)
 
 GIT
-  remote: git://github.com/SamSaffron/sprockets.git
+  remote: https://github.com/SamSaffron/sprockets.git
   revision: bacf2ec4d4d10cd8d1ab25a6360740314c512237
   branch: rails-compat
   specs:
@@ -26,7 +26,7 @@ GIT
       tilt (~> 1.1, != 1.3.0)
 
 GIT
-  remote: git://github.com/callahad/omniauth-browserid.git
+  remote: https://github.com/callahad/omniauth-browserid.git
   revision: af62d667626c1622de6fe13b60849c3640765ab1
   branch: observer_api
   specs:
@@ -36,7 +36,7 @@ GIT
       omniauth (~> 1.0)
 
 GIT
-  remote: git://github.com/emberjs/ember-rails.git
+  remote: https://github.com/emberjs/ember-rails.git
   revision: 57bbe3202725e55a8e4eaccba83d663b26bcf024
   ref: 57bbe32
   specs:
@@ -47,19 +47,19 @@ GIT
       railties (>= 3.1)
 
 GIT
-  remote: git://github.com/zhangyuan/vestal_versions
-  revision: 0ea75ec4e269b5a9e609639919ade0f36381a446
-  specs:
-    vestal_versions (1.2.2)
-      activerecord (>= 3.0.0)
-      activesupport (>= 3.0.0)
-
-GIT
   remote: https://github.com/rails-api/active_model_serializers.git
   revision: fe84e0ad5268f1439123fd9a1f9fd12e25a54cd3
   specs:
     active_model_serializers (0.8.1)
       activemodel (>= 3.0)
+
+GIT
+  remote: https://github.com/zhangyuan/vestal_versions
+  revision: 0ea75ec4e269b5a9e609639919ade0f36381a446
+  specs:
+    vestal_versions (1.2.2)
+      activerecord (>= 3.0.0)
+      activesupport (>= 3.0.0)
 
 PATH
   remote: vendor/gems/discourse_emoji
