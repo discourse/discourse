@@ -1,0 +1,17 @@
+#!/bin/bash
+# Everything in this bootstrap script
+# is idempotent. It is OK to run again
+# on an existing project if you are
+# uncertain whether it is set up.
+
+git submodule update --init
+bundle
+if [[ -e `which ep` ]] ; then ep copy-config discourse ; fi
+bundle exec rake db:create
+bundle exec rake db:migrate
+bundle exec rake spec
+powder link
+
+echo ""
+echo "If this is the first time you've cloned discourse"
+echo "You might want to run \`bundle exec rake db:seed_fu\`"
