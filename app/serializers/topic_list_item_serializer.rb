@@ -14,7 +14,7 @@ class TopicListItemSerializer < ListableTopicSerializer
              :rank_details,
              :excerpt
 
-  has_one :category
+  has_one :category, serializer: BasicCategorySerializer
   has_many :posters, serializer: TopicPosterSerializer, embed: :objects
 
   def starred
