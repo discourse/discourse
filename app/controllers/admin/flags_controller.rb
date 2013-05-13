@@ -1,6 +1,9 @@
 class Admin::FlagsController < Admin::AdminController
   def index
 
+    # we may get out of sync, fix it here
+    PostAction.update_flagged_posts_count
+
     sql = SqlBuilder.new "select p.id, t.title, p.cooked, p.user_id, p.topic_id, p.post_number, p.hidden, t.visible topic_visible
 from posts p
 join topics t on t.id = topic_id
