@@ -565,8 +565,9 @@ class User < ActiveRecord::Base
 
   def secure_category_ids
     cats = self.staff? ? Category.select(:id).where(secure: true) : secure_categories.select('categories.id')
-    cats.map{|c| c.id}
+    cats.map{|c| c.id}.sort
   end
+
 
   protected
 

@@ -24,7 +24,7 @@ module Search
     "
   end
 
-  def self.post_query(current_user, type, args)
+  def self.post_query(guardian, type, args)
     builder = SqlBuilder.new <<SQL
     /*select*/
     FROM topics AS ft
@@ -64,20 +64,25 @@ s.search_data @@ TO_TSQUERY(:locale, :query)
       AND ft.archetype <> '#{Archetype.private_message}'
 SQL
 
+    add_allowed_categories(builder, guardian)
+
+    builder.exec(args)
+  end
+
+  def self.add_allowed_categories(builder, guardian)
     allowed_categories = nil
-    allowed_categories = current_user.secure_category_ids if current_user
+    allowed_categories = guardian.secure_category_ids
     if allowed_categories.present?
       builder.where("(c.id IS NULL OR c.secure = 'f' OR c.id in (:category_ids))", category_ids: allowed_categories)
     else
       builder.where("(c.id IS NULL OR c.secure = 'f')")
     end
-
-    builder.exec(args)
   end
 
 
-  def self.category_query_sql
-    "SELECT 'category' AS type,
+  def self.category_query(guardian, args)
+    builder = SqlBuilder.new <<SQL
+    SELECT 'category' AS type,
             c.name AS id,
             '/category/' || c.slug AS url,
             c.name AS title,
@@ -86,10 +91,16 @@ SQL
             c.text_color
     FROM categories AS c
     JOIN categories_search s on s.id = c.id
-    WHERE s.search_data @@ TO_TSQUERY(:locale, :query)
+    /*where*/
     ORDER BY topics_month desc
     LIMIT :limit
-    "
+SQL
+
+    builder.where "s.search_data @@ TO_TSQUERY(:locale, :query)"
+    add_allowed_categories(builder,guardian)
+
+    builder.exec(args)
+
   end
 
   def self.current_locale_long
@@ -108,7 +119,9 @@ SQL
   end
 
   # needs current user for secure categories
-  def self.query(term, current_user, type_filter=nil, min_search_term_length=3)
+  def self.query(term, guardian, type_filter=nil, min_search_term_length=3)
+
+    guardian ||= Guardian.new(nil)
 
     return nil if term.blank?
 
@@ -125,15 +138,17 @@ SQL
 
     if type_filter.present?
       raise Discourse::InvalidAccess.new("invalid type filter") unless Search.facets.include?(type_filter)
-      sql = Search.send("#{type_filter}_query_sql")
 
       a = args.merge(limit: Search.per_facet * Search.facets.size)
 
       if type_filter.to_s == "post"
-        db_result = post_query(current_user, :post, a)
+        db_result = post_query(guardian, :post, a)
       elsif type_filter.to_s == "topic"
-        db_result = post_query(current_user, :topic, a)
+        db_result = post_query(guardian, :topic, a)
+      elsif type_filter.to_s == "category"
+        db_result = category_query(guardian, a)
       else
+        sql = Search.send("#{type_filter}_query_sql")
         db_result = ActiveRecord::Base.exec_sql(sql , a)
       end
 
@@ -141,11 +156,10 @@ SQL
 
       db_result = []
 
-      [user_query_sql, category_query_sql].each do |sql|
-        db_result += ActiveRecord::Base.exec_sql(sql , args.merge(limit: (Search.per_facet + 1))).to_a
-      end
-
-      db_result += post_query(current_user, :topic, args.merge(limit: (Search.per_facet + 1))).to_a
+      a = args.merge(limit: (Search.per_facet + 1))
+      db_result += ActiveRecord::Base.exec_sql(user_query_sql, a).to_a
+      db_result += category_query(guardian, a).to_a
+      db_result += post_query(guardian, :topic, a).to_a
     end
 
     db_result = db_result.to_a
@@ -161,7 +175,7 @@ SQL
     end
 
     if expected_topics > 0
-      tmp = post_query(current_user, :post, args.merge(limit: expected_topics * 3))
+      tmp = post_query(guardian, :post, args.merge(limit: expected_topics * 3))
 
       topic_ids = Set.new db_result.map{|r| r["id"]}
 

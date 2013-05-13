@@ -4,7 +4,7 @@ require 'category_list'
 describe CategoryList do
 
   let(:user) { Fabricate(:user) }
-  let(:category_list) { CategoryList.new(user) }
+  let(:category_list) { CategoryList.new(Guardian.new user) }
 
   context "with no categories" do
 
@@ -39,9 +39,9 @@ describe CategoryList do
       cat.allow(Group[:admins])
       cat.save
 
-      CategoryList.new(admin).categories.count.should == 1
-      CategoryList.new(user).categories.count.should == 0
-      CategoryList.new(nil).categories.count.should == 0
+      CategoryList.new(Guardian.new admin).categories.count.should == 1
+      CategoryList.new(Guardian.new user).categories.count.should == 0
+      CategoryList.new(Guardian.new nil).categories.count.should == 0
     end
   end
 

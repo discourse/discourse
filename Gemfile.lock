@@ -482,6 +482,7 @@ DEPENDENCIES
   jquery-rails
   jshint_on_rails
   librarian (>= 0.0.25)
+  listen
   lru_redux
   message_bus!
   minitest

@@ -364,7 +364,7 @@ class Guardian
     return true unless category.secure
     return false unless @user
 
-    @user.secure_category_ids.include?(category.id)
+    secure_category_ids.include?(category.id)
   end
 
   def can_vote?(post, opts={})
@@ -405,6 +405,6 @@ class Guardian
   end
 
   def secure_category_ids
-    @user ? @user.secure_category_ids : []
+    @secure_category_ids ||= @user ? @user.secure_category_ids : []
   end
 end
