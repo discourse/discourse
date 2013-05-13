@@ -105,6 +105,8 @@ class PostCreator
         topic.allowed_users.where(["users.email_private_messages = true and users.id != ?", @user.id]).each do |u|
           Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes, :user_email, type: :private_message, user_id: u.id, post_id: post.id)
         end
+
+        clear_possible_flags(topic) if post.post_number > 1 && topic.user_id != post.user_id
       end
 
       # Track the topic
@@ -147,6 +149,25 @@ class PostCreator
   end
 
   protected
+
+  def clear_possible_flags(topic)
+    # at this point we know the topic is a PM and has been replied to ... check if we need to clear any flags
+    #
+    first_post = Post.select(:id).where(topic_id: topic.id).where('post_number = 1').first
+    post_action = nil
+
+    if first_post
+      post_action = PostAction.where(
+        related_post_id: first_post.id,
+        deleted_at: nil,
+        post_action_type_id: PostActionType.types[:notify_moderators]
+      ).first
+    end
+
+    if post_action
+      post_action.remove_act!(@user)
+    end
+  end
 
   def add_users(topic, usernames)
     return unless usernames
