@@ -54,6 +54,12 @@ nl:
     saving: Wordt opgeslagen...
     saved: Opgeslagen!
 
+    choose_topic:
+      none_found: Geen topics gevonden.
+      title:
+        search: "Zoek naar een topic:"
+        placeholder: typ hier de titel van de topic
+
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> plaatste <a href='{{topicUrl}}'>deze topic</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Jij</a> plaatste <a href='{{topicUrl}}'>deze topic</a>"
@@ -377,7 +383,7 @@ nl:
       replied: "<i title='beantwoord' class='icon icon-reply'></i> {{username}} {{link}}"
       posted: "<i title='beantwoord' class='icon icon-reply'></i> {{username}} {{link}}"
       edited: "<i title='gewijzigd' class='icon icon-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='leuk gevonden' class='icon icon-heart'></i> {{username}} {{link}}"
+      liked: "<i title='leuk' class='icon icon-heart'></i> {{username}} {{link}}"
       private_message: "<i class='icon icon-envelope-alt' title='privé-bericht'></i> {{username}} {{link}}"
       invited_to_private_message: "<i class='icon icon-envelope-alt' title='privé-bericht'></i> {{username}} {{link}}"
       invitee_accepted: "<i title='heeft je uitnodiging geaccepteerd' class='icon icon-signin'></i> {{username}} heeft je uitnodiging geaccepteerd en heeft zich ingeschreven om deel te nemen."
@@ -471,7 +477,7 @@ nl:
       browse_all_categories: Bekijk alle categorieën
 
       view_latest_topics: bekijk populaire topics
-      suggest_create_topic: Waarom niet een nieuwe topic aanmaken?
+      suggest_create_topic: Wil je een nieuwe topic schrijven?
       read_position_reset: Je leespositie is gereset.
       jump_reply_up: spring naar een eerdere reactie
       jump_reply_down: spring naar een latere reactie
@@ -488,7 +494,7 @@ nl:
         title: ''
         reasons:
           "3_2": 'Je ontvangt notificaties omdat je deze topic in de gaten houdt.'
-          "3_1": 'Je ontvangt notificaties omdat je deze topic gemaakt hebt.'
+          "3_1": 'Je ontvangt notificaties omdat jij deze topic gemaakt hebt.'
           "3": 'Je ontvangt notificaties omdat je deze topic in de gaten houdt.'
           "2_4": 'Je ontvangt notificaties omdat je een reactie aan deze topic hebt geplaatst.'
           "2_2": 'Je ontvangt notificaties omdat je deze topic volgt.'
@@ -577,11 +583,22 @@ nl:
 
       move_selected:
         title: Verplaats geslecteerde berichten
-        topic_name: "Nieuwe topicnaam:"
         error: "Sorry, er is iets misgegaan bij het verplaatsen van dit bericht."
         instructions:
-          one: "Je staat op het punt een nieuwe topic aan te maken en het te vullen met het bericht dat je geselecteerd hebt."
-          other: "Je staat op het punt een nieuwe topic aan te maken en het te vullen met de <b>{{count}}</b> berichten die je geselecteerd hebt."
+          one: "Hoe wil je dit bericht verplaatsen?"
+          other: "Hoe wil je de <b>{{count}}</b> berichten die je gemaakt hebt verplaatsen?"
+        new_topic:
+          title: "Verplaatst geselecteerde berichten naar een nieuwe topic"
+          topic_name: "Nieuwe topicnaam:"
+          instructions:
+            one: "Je staat op het punt een nieuwe topic aan te maken en het te vullen met het bericht dat je geselecteerd hebt."
+            other: "Je staat op het punt een nieuwe topic aan te maken en het te vullen met de <b>{{count}}</b> berichten die je geselecteerd hebt."
+
+        existing_topic:
+          title: "Verplaats geselecteerde berichten naar een bestaande topic"
+          instructions:
+            one: "Selecteer de topic waarnaar je het bericht wil verplaatsen."
+            other: "Selecteer de topic waarnaar je de <b>{{count}}</b> berichten wil verplaatsen."
 
       multi_select:
         select: selecteer
@@ -762,6 +779,10 @@ nl:
       change_in_category_topic: Wijzig omschrijving
       hotness: Populariteit
       already_used: Deze kleur is al in gebruik door een andere categorie
+      is_secure: "Categorie beveiligen?"
+      add_group: "Voeg groep toe"
+      security: "Beveiliging"
+      allowed_groups: "Toegestane groepen:"
 
     flagging:
       title: Waarom meld je dit bericht voor moderatie?
@@ -798,7 +819,7 @@ nl:
     replies: Reacties
     views_long: "deze topic is {{number}} keer bekeken"
     activity: Activiteit
-    likes: Leuk gevonden
+    likes: Leuk
     top_contributors: Deelnemers
     category_title: Categorie
     history: Geschiedenis
@@ -899,14 +920,23 @@ nl:
         delete_title: "verwijder bericht (als het het eerste bericht is van een topic, verwijdert dit de topic)"
         flagged_by: Gemarkeerd door
         error: Er ging iets mis
+        view_message: bekijk bericht
 
       groups:
         title: Groepen
         edit: Wijzig groepen
         selector_placeholder: voeg leden toe
+        name_placeholder: "Groepsnaam, geen spaties, zelfde regels als bij een gebruikersnaam"
 
       api:
         title: API
+          long_title: "API informatie"
+          key: "Key"
+          generate: "Genereer API Key"
+          regenerate: "Genereer API Key opnieuw"
+          info_html: "Met deze API key kun je met behulp van JSON calls topics maken en bewerken."
+          note_html: "Houd deze key <strong>geheim</strong>, gebruikers die deze key hebben kunnen zich als elke andere gebruiker voordoen op het forum en topics aanmaken."
+
       customize:
         title: Aanpassingen
         long_title: Aanpassingen aan de site
@@ -999,6 +1029,13 @@ nl:
         delete_confirm: Weet je zeker dat je deze gebruiker definitief wil verwijderen? Deze handeling is permanant!
         deleted: De gebruiker is verwijderd.
         delete_failed: Er ging iets mis bij het verwijderen van deze gebruiker. Zorg er voor dat alle berichten van deze gebruiker eerst verwijderd zijn.
+        send_activation_email: "Verstuur activatiemail"
+        activation_email_sent: "Een activatiemail is verstuurd."
+        send_activation_email_failed: "Er ging iets mis bij het versturen van de activatiemail."
+        activate: "Activeer account"
+        activate_failed: "Er ging iets mis bij het activeren van deze gebruiker."
+        deactivate_account: "Deactiveer account"
+        deactivate_failed: "Er ging iets mis bij het deactiveren van deze gebruiker."
 
       site_content:
         none: Selecteer een tekst om deze te bewerken
