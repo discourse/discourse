@@ -24,13 +24,20 @@ describe PostAction do
       action = PostAction.act(codinghorror, post, PostActionType.types[:notify_moderators], "this is my special long message");
 
       posts = Post.joins(:topic)
-                  .select('posts.id, topics.subtype')
+                  .select('posts.id, topics.subtype, posts.topic_id')
                   .where('topics.archetype' => Archetype.private_message)
                   .to_a
 
       posts.count.should == 1
       action.related_post_id.should == posts[0].id.to_i
       posts[0].subtype.should == TopicSubtype.notify_moderators
+
+      # reply to PM should clear flag
+      p = PostCreator.new(mod, topic_id: posts[0].topic_id, raw: "This is my test reply to the user, it should clear flags")
+      p.create
+
+      action.reload
+      action.deleted_at.should_not be_nil
 
     end
 

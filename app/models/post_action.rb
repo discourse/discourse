@@ -124,6 +124,11 @@ class PostAction < ActiveRecord::Base
     end
   end
 
+  def remove_act!(user)
+    trash!
+    run_callbacks(:save)
+  end
+
   def is_bookmark?
     post_action_type_id == PostActionType.types[:bookmark]
   end
