@@ -7,7 +7,7 @@ class CategoriesController < ApplicationController
   skip_before_filter :check_xhr, only: [:index]
 
   def index
-    @list = CategoryList.new(current_user)
+    @list = CategoryList.new(guardian)
     discourse_expires_in 1.minute
     respond_to do |format|
       format.html { render }
