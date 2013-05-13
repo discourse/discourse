@@ -495,7 +495,7 @@ en:
       jump_reply_down: jump to later reply
       deleted: "The topic has been deleted"
 
-      auto_close_notice: "This topic will close %{timeLeft}"
+      auto_close_notice: "This topic will automatically close %{timeLeft}"
       auto_close_title: 'Auto-Close Settings'
       auto_close_save: "Save"
       auto_close_cancel: "Cancel"
