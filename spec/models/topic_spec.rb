@@ -221,8 +221,8 @@ describe Topic do
 
       it "enqueues a job to notify users" do
         topic.stubs(:add_moderator_post)
-        Jobs.expects(:enqueue).with(:notify_moved_posts, post_ids: [p1.id, p4.id], moved_by_id: user.id)
-        topic.move_posts(user, [p1.id, p4.id], title: "new testing topic name")
+        Jobs.expects(:enqueue).with(:notify_moved_posts, post_ids: [p2.id, p4.id], moved_by_id: user.id)
+        topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name")
       end
 
       it "adds a moderator post at the location of the first moved post" do
@@ -253,7 +253,7 @@ describe Topic do
       context "to a new topic" do
         let!(:new_topic) { topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name") }
 
-        it "moved correctly" do
+        it "works correctly" do
           TopicUser.where(user_id: user.id, topic_id: topic.id).first.last_read_post_number.should == p3.post_number
 
           new_topic.should be_present
@@ -290,7 +290,7 @@ describe Topic do
         let!(:destination_op) { Fabricate(:post, topic: destination_topic, user: user) }
         let!(:moved_to) { topic.move_posts(user, [p2.id, p4.id], destination_topic_id: destination_topic.id )}
 
-        it "moved correctly" do
+        it "works correctly" do
           moved_to.should == destination_topic
 
           # Check out new topic
@@ -305,10 +305,12 @@ describe Topic do
           p2.reload
           p2.sort_order.should == 2
           p2.post_number.should == 2
+          p2.topic_id.should == moved_to.id
 
           p4.reload
           p4.post_number.should == 3
           p4.sort_order.should == 3
+          p4.topic_id.should == moved_to.id
 
           # Check out the original topic
           topic.reload
@@ -323,8 +325,39 @@ describe Topic do
           # Should update last reads
           TopicUser.where(user_id: user.id, topic_id: topic.id).first.last_read_post_number.should == p3.post_number
         end
+      end
+
+      context "moving the first post" do
+
+        let!(:new_topic) { topic.move_posts(user, [p1.id, p2.id], title: "new testing topic name") }
+
+        it "copies the OP, doesn't delete it" do
+          new_topic.should be_present
+          new_topic.posts.first.raw.should == p1.raw
+
+          new_topic.reload
+          new_topic.posts_count.should == 2
+          new_topic.highest_post_number.should == 2
+
+          # First post didn't move
+          p1.reload
+          p1.sort_order.should == 1
+          p1.post_number.should == 1
+          p1.topic_id == topic.id
+
+          # Second post is in a new topic
+          p2.reload
+          p2.post_number.should == 2
+          p2.sort_order.should == 2
+          p2.topic_id == new_topic.id
+
+          topic.reload
+          topic.posts.should =~ [p1, p3, p4]
+          topic.highest_post_number.should == p4.post_number
+        end
 
       end
+
 
     end
   end

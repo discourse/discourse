@@ -11,6 +11,9 @@ class PostCreator
   #   raw                     - raw text of post
   #   image_sizes             - We can pass a list of the sizes of images in the post as a shortcut.
   #   invalidate_oneboxes     - Whether to force invalidation of oneboxes in this post
+  #   acting_user             - The user performing the action might be different than the user
+  #                             who is the post "author." For example when copying posts to a new
+  #                             topic.
   #
   #   When replying to a topic:
   #     topic_id              - topic we're replying to
@@ -89,6 +92,7 @@ class PostCreator
       post.post_type = @opts[:post_type] if @opts[:post_type].present?
       post.no_bump = @opts[:no_bump] if @opts[:no_bump].present?
       post.extract_quoted_post_numbers
+      post.acting_user = @opts[:acting_user] if @opts[:acting_user].present?
 
       post.image_sizes = @opts[:image_sizes] if @opts[:image_sizes].present?
       post.invalidate_oneboxes = @opts[:invalidate_oneboxes] if @opts[:invalidate_oneboxes].present?
