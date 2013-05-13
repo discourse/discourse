@@ -110,7 +110,6 @@ describe Search do
     let(:topic) { Fabricate(:topic) }
 
     context 'searching the OP' do
-
       let!(:post) { Fabricate(:post, topic: topic, user: topic.user) }
       let(:result) { first_of_type(Search.query('hello', nil), 'topic') }
 
@@ -119,7 +118,26 @@ describe Search do
         result['title'].should == topic.title
         result['url'].should == topic.relative_url
       end
+    end
 
+    context "search for a topic by id" do
+      let(:result) { first_of_type(Search.query(topic.id, nil, 'topic'), 'topic') }
+
+      it 'returns the topic' do
+        result.should be_present
+        result['title'].should == topic.title
+        result['url'].should == topic.relative_url
+      end
+    end
+
+    context "search for a topic by url" do
+      let(:result) { first_of_type(Search.query(topic.relative_url, nil, 'topic'), 'topic') }
+
+      it 'returns the topic' do
+        result.should be_present
+        result['title'].should == topic.title
+        result['url'].should == topic.relative_url
+      end
     end
 
     context 'security' do
