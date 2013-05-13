@@ -118,48 +118,72 @@ SQL
     end
   end
 
-  # needs current user for secure categories
-  def self.query(term, guardian, type_filter=nil, min_search_term_length=3)
+  # If we're searching for a single topic
+  def self.single_topic(id, guardian)
+    topic = Topic.where(id: id).first
+    return nil unless guardian.can_see?(topic)
 
-    guardian ||= Guardian.new(nil)
+    results = [{'type' => 'topic',
+                'id' => topic.id,
+                'url' => topic.relative_url,
+                'title' => topic.title }]
+    group_db_result(results, 'topic')
+  end
+
+  # Query a term
+  def self.query(term, guardian, type_filter=nil, min_search_term_length=3)
 
     return nil if term.blank?
 
+    # If no guardian supplied, assume anonymous
+    guardian ||= Guardian.new(nil)
+
+    term = term.to_s
+
+    # If the term is a number or url to a topic, just include that topic
+    if type_filter == 'topic'
+
+      begin
+        route = Rails.application.routes.recognize_path(term)
+        return single_topic(route[:topic_id], guardian) if route[:topic_id].present?
+      rescue ActionController::RoutingError
+      end
+
+      return single_topic(term.to_i, guardian) if term =~ /^\d+$/
+    end
+
     # We are stripping only symbols taking place in FTS and simply sanitizing the rest.
     sanitized_term = PG::Connection.escape_string(term.gsub(/[:()&!]/,''))
+    query_string(sanitized_term, guardian, type_filter, min_search_term_length)
+  end
+
+  # Search for a string term
+  def self.query_string(term, guardian, type_filter, min_search_term_length)
 
     # really short terms are totally pointless
-    return nil if sanitized_term.blank? || sanitized_term.length < min_search_term_length
+    return nil if term.length < min_search_term_length
 
-    terms = sanitized_term.split
-    terms.map! {|t| "#{t}:*"}
-
-    args = {orig: sanitized_term, query: terms.join(" & "), locale: current_locale_long}
+    args = {orig: term,
+            query: term.split.map {|t| "#{t}:*"}.join(" & "),
+            locale: current_locale_long}
 
     if type_filter.present?
       raise Discourse::InvalidAccess.new("invalid type filter") unless Search.facets.include?(type_filter)
-
-      a = args.merge(limit: Search.per_facet * Search.facets.size)
-
-      if type_filter.to_s == "post"
-        db_result = post_query(guardian, :post, a)
-      elsif type_filter.to_s == "topic"
-        db_result = post_query(guardian, :topic, a)
-      elsif type_filter.to_s == "category"
-        db_result = category_query(guardian, a)
-      else
-        sql = Search.send("#{type_filter}_query_sql")
-        db_result = ActiveRecord::Base.exec_sql(sql , a)
-      end
-
+      args.merge!(limit: Search.per_facet * Search.facets.size)
+      db_result = case type_filter.to_s
+                  when 'topic'
+                    post_query(guardian, type_filter.to_sym, args)
+                  when 'category'
+                    category_query(guardian, args)
+                  else
+                    ActiveRecord::Base.exec_sql(Search.send("#{type_filter}_query_sql"), args)
+                  end
     else
-
+      args.merge!(limit: (Search.per_facet + 1))
       db_result = []
-
-      a = args.merge(limit: (Search.per_facet + 1))
-      db_result += ActiveRecord::Base.exec_sql(user_query_sql, a).to_a
-      db_result += category_query(guardian, a).to_a
-      db_result += post_query(guardian, :topic, a).to_a
+      db_result += ActiveRecord::Base.exec_sql(user_query_sql, args).to_a
+      db_result += category_query(guardian, args).to_a
+      db_result += post_query(guardian, :topic, args).to_a
     end
 
     db_result = db_result.to_a
@@ -175,24 +199,29 @@ SQL
     end
 
     if expected_topics > 0
-      tmp = post_query(guardian, :post, args.merge(limit: expected_topics * 3))
+      tmp = post_query(guardian, :post, args.merge(limit: expected_topics * 3)).to_a
 
       topic_ids = Set.new db_result.map{|r| r["id"]}
 
-      tmp = tmp.to_a
-      tmp = tmp.reject{ |i|
-        if topic_ids.include? i["id"]
+      tmp.reject! do |i|
+        if topic_ids.include?(i["id"])
           true
         else
           topic_ids << i["id"]
           false
         end
-      }
+      end
 
       db_result += tmp[0..expected_topics-1]
     end
 
-    # Group the results by type
+    group_db_result(db_result, type_filter)
+  end
+
+  private
+
+  # Group the results by type
+  def self.group_db_result(db_result, type_filter)
     grouped = {}
     db_result.each do |row|
       type = row.delete('type')
@@ -204,10 +233,10 @@ SQL
         row['url'].gsub!('slug', new_slug)
       end
 
+      # Add avatars for users
+      row['avatar_template'] = User.avatar_template(row['email']) if type == 'user'
+
       # Remove attributes when we know they don't matter
-      if type == 'user'
-        row['avatar_template'] = User.avatar_template(row['email'])
-      end
       row.delete('email')
       row.delete('color') unless type == 'category'
       row.delete('text_color') unless type == 'category'
@@ -216,7 +245,7 @@ SQL
       grouped[type] << row
     end
 
-    result = grouped.map do |type, results|
+    grouped.map do |type, results|
       more = type_filter.blank? && (results.size > Search.per_facet)
       results = results[0..([results.length, Search.per_facet].min - 1)] if type_filter.blank?
       {
@@ -226,8 +255,6 @@ SQL
         results: results
       }
     end
-
-    result
   end
 
 end
