@@ -10,6 +10,7 @@
 Discourse.TopicClosingView = Discourse.View.extend({
   elementId: 'topic-closing-info',
   templateName: 'topic_closing',
+  delayedRerender: null,
 
   contentChanged: function() {
     this.rerender();
@@ -46,6 +47,12 @@ Discourse.TopicClosingView = Discourse.View.extend({
     buffer.push( Em.String.i18n('topic.auto_close_notice', {timeLeft: timeLeftString}) );
     buffer.push('</h3>');
 
-    this.rerender.bind(this).delay(reRenderDelay);
+    this.delayedRerender = this.rerender.bind(this).delay(reRenderDelay);
+  },
+
+  willDestroyElement: function() {
+    if( this.delayedRerender ) {
+      this.delayedRerender.cancel();
+    }
   }
 });
