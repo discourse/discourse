@@ -29,13 +29,14 @@ Discourse.EditTopicAutoCloseView = Discourse.ModalBodyView.extend({
   },
 
   setAutoClose: function(days) {
+    var view = this;
     Discourse.ajax({
       url: "/t/" + this.get('topic.id') + "/autoclose",
       type: 'PUT',
       dataType: 'json',
       data: { auto_close_days: days > 0 ? days : null }
     }).then(function(){
-      window.location.reload();
+      view.get('topic').set('auto_close_at', Date.create(days + ' days from now').toJSON());
     }, function (error) {
       bootbox.alert(Em.String.i18n('generic_error'));
     });
