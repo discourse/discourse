@@ -536,7 +536,7 @@ nl:
 
       clear_pin:
         title: Verwijder pin
-        help: "Annuleer de gepinde status van deze topic, zodat het niet langer bovenaan je topiclijst verschijnt." 
+        help: "Annuleer de gepinde status van deze topic, zodat het niet langer bovenaan je topiclijst verschijnt."
 
       share:
         title: Deel
@@ -676,9 +676,9 @@ nl:
           spam: "{{icons}} markeerden dit als spam"
           inappropriate: "{{icons}} markeerden dit als ongepast"
           notify_moderators: "{{icons}} lichtte moderators in"
-          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>lichtte moderators in</a>" 
+          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>lichtte moderators in</a>"
           notify_user: "{{icons}} verstuurde een privé-bericht"
-          notify_user_with_url: "{{icons}} verstuurde een <a href='{{postUrl}}'>privé-bericht</a>" 
+          notify_user_with_url: "{{icons}} verstuurde een <a href='{{postUrl}}'>privé-bericht</a>"
           bookmark: "{{icons}} voegden dit toe aan hun favorieten"
           like: "{{icons}} vinden dit leuk"
           vote: "{{icons}} hebben hier op gestemd"
@@ -930,12 +930,12 @@ nl:
 
       api:
         title: API
-          long_title: "API informatie"
-          key: "Key"
-          generate: "Genereer API Key"
-          regenerate: "Genereer API Key opnieuw"
-          info_html: "Met deze API key kun je met behulp van JSON calls topics maken en bewerken."
-          note_html: "Houd deze key <strong>geheim</strong>, gebruikers die deze key hebben kunnen zich als elke andere gebruiker voordoen op het forum en topics aanmaken."
+        long_title: "API informatie"
+        key: "Key"
+        generate: "Genereer API Key"
+        regenerate: "Genereer API Key opnieuw"
+        info_html: "Met deze API key kun je met behulp van JSON calls topics maken en bewerken."
+        note_html: "Houd deze key <strong>geheim</strong>, gebruikers die deze key hebben kunnen zich als elke andere gebruiker voordoen op het forum en topics aanmaken."
 
       customize:
         title: Aanpassingen
