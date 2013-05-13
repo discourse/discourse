@@ -383,6 +383,7 @@ en:
       help: "Markdown Editing Help"
       toggler: "hide or show the composer panel"
 
+      admin_options_title: "Optional staff settings for this topic"
       auto_close_label: "Auto-close topic after:"
       auto_close_units: "days"
 
