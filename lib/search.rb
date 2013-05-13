@@ -24,52 +24,57 @@ module Search
     "
   end
 
-  def self.topic_query_sql
-    "SELECT 'topic' AS type,
-            CAST(ft.id AS VARCHAR),
-            '/t/slug/' || ft.id AS url,
-            ft.title,
-            NULL AS email,
-            NULL AS color,
-            NULL AS text_color
+  def self.post_query(current_user, type, args)
+    builder = SqlBuilder.new <<SQL
+    /*select*/
     FROM topics AS ft
-      JOIN posts AS p ON p.topic_id = ft.id AND p.post_number = 1
+    /*join*/
       JOIN posts_search s on s.id = p.id
-    WHERE s.search_data @@ TO_TSQUERY(:locale, :query)
+      LEFT JOIN categories c ON c.id = ft.category_id
+    /*where*/
+    ORDER BY
+            TS_RANK_CD(TO_TSVECTOR(:locale, ft.title), TO_TSQUERY(:locale, :query)) desc,
+            TS_RANK_CD(search_data, TO_TSQUERY(:locale, :query)) desc,
+            bumped_at desc
+    LIMIT :limit
+SQL
+
+    builder.select "'topic' AS type"
+    builder.select("CAST(ft.id AS VARCHAR)")
+
+    if type == :topic
+      builder.select "'/t/slug/' || ft.id AS url"
+    else
+      builder.select "'/t/slug/' || ft.id || '/' || p.post_number AS url"
+    end
+
+    builder.select "ft.title, NULL AS email, NULL AS color, NULL AS text_color"
+
+  if type == :topic
+    builder.join "posts AS p ON p.topic_id = ft.id AND p.post_number = 1"
+  else
+    builder.join "posts AS p ON p.topic_id = ft.id AND p.post_number > 1"
+  end
+
+    builder.where <<SQL
+s.search_data @@ TO_TSQUERY(:locale, :query)
       AND ft.deleted_at IS NULL
+      AND p.deleted_at IS NULL
       AND ft.visible
       AND ft.archetype <> '#{Archetype.private_message}'
-    ORDER BY
-            TS_RANK_CD(TO_TSVECTOR(:locale, ft.title), TO_TSQUERY(:locale, :query)) desc,
-            TS_RANK_CD(search_data, TO_TSQUERY(:locale, :query)) desc,
-            bumped_at desc
-    LIMIT :limit
-    "
+SQL
+
+    allowed_categories = nil
+    allowed_categories = current_user.secure_category_ids if current_user
+    if allowed_categories.present?
+      builder.where("(c.id IS NULL OR c.secure = 'f' OR c.id in (:category_ids))", category_ids: allowed_categories)
+    else
+      builder.where("(c.id IS NULL OR c.secure = 'f')")
+    end
+
+    builder.exec(args)
   end
 
-
-  def self.post_query_sql
-    "SELECT cast('topic' as varchar) AS type,
-            CAST(ft.id AS VARCHAR),
-            '/t/slug/' || ft.id || '/' || p.post_number AS url,
-            ft.title,
-            NULL AS email,
-            NULL AS color,
-            NULL AS text_color
-    FROM topics AS ft
-      JOIN posts AS p ON p.topic_id = ft.id AND p.post_number <> 1
-      JOIN posts_search s on s.id = p.id
-    WHERE s.search_data @@ TO_TSQUERY(:locale, :query)
-      AND ft.deleted_at IS NULL and p.deleted_at IS NULL
-      AND ft.visible
-      AND ft.archetype <> '#{Archetype.private_message}'
-    ORDER BY
-            TS_RANK_CD(TO_TSVECTOR(:locale, ft.title), TO_TSQUERY(:locale, :query)) desc,
-            TS_RANK_CD(search_data, TO_TSQUERY(:locale, :query)) desc,
-            bumped_at desc
-    LIMIT :limit
-    "
-  end
 
   def self.category_query_sql
     "SELECT 'category' AS type,
@@ -102,7 +107,8 @@ module Search
     end
   end
 
-  def self.query(term, type_filter=nil, min_search_term_length=3)
+  # needs current user for secure categories
+  def self.query(term, current_user, type_filter=nil, min_search_term_length=3)
 
     return nil if term.blank?
 
@@ -115,16 +121,31 @@ module Search
     terms = sanitized_term.split
     terms.map! {|t| "#{t}:*"}
 
+    args = {orig: sanitized_term, query: terms.join(" & "), locale: current_locale_long}
+
     if type_filter.present?
       raise Discourse::InvalidAccess.new("invalid type filter") unless Search.facets.include?(type_filter)
       sql = Search.send("#{type_filter}_query_sql")
-      db_result = ActiveRecord::Base.exec_sql(sql , orig: sanitized_term, query: terms.join(" & "), locale: current_locale_long, limit: Search.per_facet * Search.facets.size)
+
+      a = args.merge(limit: Search.per_facet * Search.facets.size)
+
+      if type_filter.to_s == "post"
+        db_result = post_query(current_user, :post, a)
+      elsif type_filter.to_s == "topic"
+        db_result = post_query(current_user, :topic, a)
+      else
+        db_result = ActiveRecord::Base.exec_sql(sql , a)
+      end
+
     else
 
       db_result = []
-      [user_query_sql, category_query_sql, topic_query_sql].each do |sql|
-        db_result += ActiveRecord::Base.exec_sql(sql , orig: sanitized_term, query: terms.join(" & "), locale: current_locale_long, limit: (Search.per_facet + 1)).to_a
+
+      [user_query_sql, category_query_sql].each do |sql|
+        db_result += ActiveRecord::Base.exec_sql(sql , args.merge(limit: (Search.per_facet + 1))).to_a
       end
+
+      db_result += post_query(current_user, :topic, args.merge(limit: (Search.per_facet + 1))).to_a
     end
 
     db_result = db_result.to_a
@@ -140,8 +161,7 @@ module Search
     end
 
     if expected_topics > 0
-      tmp = ActiveRecord::Base.exec_sql post_query_sql,
-        orig: sanitized_term, query: terms.join(" & "), locale: current_locale_long, limit: expected_topics * 3
+      tmp = post_query(current_user, :post, args.merge(limit: expected_topics * 3))
 
       topic_ids = Set.new db_result.map{|r| r["id"]}
 
