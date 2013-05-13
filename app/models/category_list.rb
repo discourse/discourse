@@ -4,6 +4,8 @@ class CategoryList
   attr_accessor :categories, :topic_users, :uncategorized
 
   def initialize(guardian)
+    guardian ||= Guardian.new
+
     @categories = Category
                     .includes(featured_topics: [:category])
                     .includes(:featured_users)
