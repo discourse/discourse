@@ -11,6 +11,10 @@ Discourse.TopicClosingView = Discourse.View.extend({
   elementId: 'topic-closing-info',
   templateName: 'topic_closing',
 
+  contentChanged: function() {
+    this.rerender();
+  }.observes('topic.auto_close_at'),
+
   render: function(buffer) {
     if (!this.present('topic.auto_close_at')) return;
     
