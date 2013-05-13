@@ -24,13 +24,12 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
 
   canMoveSelected: function() {
     if (!this.get('content.can_move_posts')) return false;
-    // For now, we can move it if we can delete it since the posts need to be deleted.
-    return this.get('canDeleteSelected');
+    return (this.get('selectedPostsCount') > 0);
   }.property('canDeleteSelected'),
 
   canDeleteSelected: function() {
     var selectedPosts = this.get('selectedPosts');
-    if (!(selectedPosts && selectedPosts.length > 0)) return false;
+    if (this.get('selectedPostsCount') === 0) return false;
 
     var canDelete = true;
     selectedPosts.each(function(p) {

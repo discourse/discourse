@@ -462,7 +462,7 @@ class Topic < ActiveRecord::Base
     invite
   end
 
-  def move_posts_to_topic(post_ids, destination_topic)
+  def move_posts_to_topic(moved_by, post_ids, destination_topic)
     to_move = posts.where(id: post_ids).order(:created_at)
     raise Discourse::InvalidParameters.new(:post_ids) if to_move.blank?
 
@@ -472,11 +472,18 @@ class Topic < ActiveRecord::Base
       max_post_number = destination_topic.posts.maximum(:post_number) || 0
 
       to_move.each_with_index do |post, i|
-        first_post_number ||= post.post_number
-        row_count = Post.update_all ["post_number = :post_number, topic_id = :topic_id, sort_order = :post_number", post_number: max_post_number+i+1, topic_id: destination_topic.id], id: post.id, topic_id: id
-
-        # We raise an error if any of the posts can't be moved
-        raise Discourse::InvalidParameters.new(:post_ids) if row_count == 0
+        if post.post_number == 1
+          # We have a special case for the OP, we copy it instead of deleting it.
+          result = PostCreator.new(post.user,
+                                  raw: post.raw,
+                                  topic_id: destination_topic.id,
+                                  acting_user: moved_by).create
+        else
+          first_post_number ||= post.post_number
+          # Move the post and raise an error if it couldn't be moved
+          row_count = Post.update_all ["post_number = :post_number, topic_id = :topic_id, sort_order = :post_number", post_number: max_post_number+i+1, topic_id: destination_topic.id], id: post.id, topic_id: id
+          raise Discourse::InvalidParameters.new(:post_ids) if row_count == 0
+        end
       end
     end
 
@@ -493,7 +500,7 @@ class Topic < ActiveRecord::Base
       # If we're moving to a new topic...
       Topic.transaction do
         topic = Topic.create(user: moved_by, title: opts[:title], category: category)
-        first_post_number = move_posts_to_topic(post_ids, topic)
+        first_post_number = move_posts_to_topic(moved_by, post_ids, topic)
       end
 
     elsif opts[:destination_topic_id].present?
@@ -501,7 +508,7 @@ class Topic < ActiveRecord::Base
 
       topic = Topic.where(id: opts[:destination_topic_id]).first
       Guardian.new(moved_by).ensure_can_see!(topic)
-      first_post_number = move_posts_to_topic(post_ids, topic)
+      first_post_number = move_posts_to_topic(moved_by, post_ids, topic)
 
     end
 
