@@ -164,12 +164,20 @@ describe Search do
   context 'categories' do
 
     let!(:category) { Fabricate(:category) }
-    let(:result) { first_of_type(Search.query('amazing', nil), 'category') }
+    def result
+      first_of_type(Search.query('amazing', nil), 'category')
+    end
 
     it 'returns the correct result' do
-      result.should be_present
-      result['title'].should == category.name
-      result['url'].should == "/category/#{category.slug}"
+      r = result
+      r.should be_present
+      r['title'].should == category.name
+      r['url'].should == "/category/#{category.slug}"
+
+      category.deny(:all)
+      category.save
+
+      result.should_not be_present
     end
 
   end

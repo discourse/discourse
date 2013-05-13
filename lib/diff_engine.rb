@@ -1,3 +1,4 @@
+require 'diffy'
 # This class is used to generate diffs, it will be consumed by the UI on
 # on the client the displays diffs.
 #

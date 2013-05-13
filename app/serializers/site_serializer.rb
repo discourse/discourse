@@ -4,7 +4,7 @@ class SiteSerializer < ApplicationSerializer
              :notification_types,
              :post_types
 
-  has_many :categories, embed: :objects
+  has_many :categories, serializer: BasicCategorySerializer, embed: :objects
   has_many :post_action_types, embed: :objects
   has_many :trust_levels, embed: :objects
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer

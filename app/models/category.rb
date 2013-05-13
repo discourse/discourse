@@ -29,6 +29,16 @@ class Category < ActiveRecord::Base
 
   scope :latest, ->{ order('topic_count desc') }
 
+  scope :secured, lambda { |guardian|
+    ids = nil
+    ids = guardian.secure_category_ids if guardian
+    if ids.present?
+      where("categories.secure ='f' or categories.id = :cats ", cats: ids)
+    else
+      where("categories.secure ='f'")
+    end
+  }
+
   delegate :post_template, to: 'self.class'
 
   # Internal: Update category stats: # of topics in past year, month, week for
