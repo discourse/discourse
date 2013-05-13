@@ -119,6 +119,9 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
       if (href.indexOf("mailto:") === 0) { return; }
       if (href.match(/^http[s]?:\/\//i) && !href.match(new RegExp("^http:\\/\\/" + window.location.hostname, "i"))) { return; }
 
+      // Fall back to [slow!] non-AJAXy navigation for IE9
+      if($.browser.msie && +$.browser.version < 10) return;
+      
       e.preventDefault();
       Discourse.URL.routeTo(href);
       return false;
