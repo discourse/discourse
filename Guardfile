@@ -1,4 +1,3 @@
-require 'rb-inotify' if RUBY_PLATFORM.include?('linux')
 require 'terminal-notifier-guard' if RUBY_PLATFORM.include?('darwin')
 
 phantom_path = File.expand_path('~/phantomjs/bin/phantomjs')
