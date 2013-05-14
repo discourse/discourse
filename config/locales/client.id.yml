@@ -418,7 +418,7 @@ id:
         invisible: "Make Invisible"
         visible: "Make Visible"
         reset_read: "Reset Read Data"
-        multi_select: "Toggle Multi-Select"
+        multi_select: "Select Posts to Merge/Split"
         convert_to_topic: "Convert to Regular Topic"
 
       reply:
