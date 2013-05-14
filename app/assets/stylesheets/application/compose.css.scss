@@ -8,6 +8,12 @@
   width: 47%;
 }
 
+.composer-popup-container {
+  max-width: 1500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .composer-popup {
 
   @include box-shadow(3px 3px 3px rgba($black, 0.14));
@@ -51,6 +57,11 @@
 
   a[href] {
     color: #000;
+  }
+
+  .posts-count {
+    color: darken(#b5e8fd, 50%);
+    font-size: 12px;
   }
 }
 

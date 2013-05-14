@@ -2,20 +2,22 @@
 
 <div class='contents'>
 
-  <div id='new-user-education' class='composer-popup' style='display: none'>
-    <a href='#' {{action closeEducation}} class='close'><i class='icon icon-remove-sign'></i></a>
-    {{{controller.educationContents}}}
-  </div>
+  <div class='composer-popup-container'>
+    <div id='new-user-education' class='composer-popup' style='display: none'>
+      <a href='#' {{action closeEducation}} class='close'><i class='icon icon-remove-sign'></i></a>
+      {{{controller.educationContents}}}
+    </div>
 
-  <div id='similar-topics' class='composer-popup' style='display: none'>
-    <a href='#' {{action closeSimilar}} class='close'><i class='icon icon-remove-sign'></i></a>
-    <h3>{{i18n composer.similar_topics}}<h3>
+    <div id='similar-topics' class='composer-popup' style='display: none'>
+      <a href='#' {{action closeSimilar}} class='close'><i class='icon icon-remove-sign'></i></a>
+      <h3>{{i18n composer.similar_topics}}<h3>
 
-    <ul class='topics'>
-      {{#each controller.similarTopics}}
-        <li>{{{topicLink this}}}</li>
-      {{/each}}
-    </ul>
+      <ul class='topics'>
+        {{#each controller.similarTopics}}
+          <li>{{{topicLink this}}} <span class='posts-count'>({{{i18n topic.filters.n_posts count="posts_count"}}})</span></li>
+        {{/each}}
+      </ul>
+    </div>
   </div>
 
   <div class='control'>
