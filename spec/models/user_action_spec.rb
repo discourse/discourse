@@ -2,6 +2,10 @@ require 'spec_helper'
 
 describe UserAction do
 
+  before do
+    ActiveRecord::Base.observers.enable :all
+  end
+
   it { should validate_presence_of :action_type }
   it { should validate_presence_of :user_id }
 

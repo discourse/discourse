@@ -5,6 +5,10 @@ require 'search'
 
 describe Search do
 
+  before do
+    ActiveRecord::Base.observers.enable :search_observer
+  end
+
   def first_of_type(results, type)
     return nil if results.blank?
     results.each do |r|
