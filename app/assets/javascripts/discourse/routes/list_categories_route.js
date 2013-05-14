@@ -25,6 +25,7 @@ Discourse.ListCategoriesRoute = Discourse.Route.extend({
         controller: 'listCategories'
       });
       listController.set('canCreateCategory', categoryList.get('can_create_category'));
+      listController.set('canCreateTopic', categoryList.get('can_create_topic'));
       listController.set('category', null);
       _this.controllerFor('listCategories').set('content', categoryList);
     });
