@@ -1,6 +1,9 @@
 require 'spec_helper'
 
 describe Notification do
+  before do
+    ActiveRecord::Base.observers.enable :all
+  end
 
   it { should validate_presence_of :notification_type }
   it { should validate_presence_of :data }
@@ -8,6 +11,56 @@ describe Notification do
   it { should belong_to :user }
   it { should belong_to :topic }
 
+  describe 'post' do
+    let(:topic) { Fabricate(:topic) }
+    let(:post_args) do
+      {user: topic.user, topic: topic}
+    end
+
+    let(:coding_horror) { Fabricate(:coding_horror) }
+
+    describe 'replies' do
+
+      let(:post) { Fabricate(:post, post_args.merge(raw: "Hello @CodingHorror")) }
+
+      it 'notifies the poster on reply' do
+        lambda {
+          @reply = Fabricate(:basic_reply, user: coding_horror, topic: post.topic)
+        }.should change(post.user.notifications, :count).by(1)
+      end
+
+      it "doesn't notify the poster when they reply to their own post" do
+        lambda {
+          @reply = Fabricate(:basic_reply, user: post.user, topic: post.topic)
+        }.should_not change(post.user.notifications, :count).by(1)
+      end
+    end
+
+    describe 'watching' do
+      it "does notify watching users of new posts" do
+        post = Fabricate(:post, post_args)
+        user2 = Fabricate(:coding_horror)
+        post_args[:topic].notify_watch!(user2)
+        lambda {
+          Fabricate(:post, user: post.user, topic: post.topic)
+        }.should change(user2.notifications, :count).by(1)
+      end
+    end
+
+    describe 'muting' do
+      it "does not notify users of new posts" do
+        post = Fabricate(:post, post_args)
+        user = post_args[:user]
+        user2 = Fabricate(:coding_horror)
+
+        post_args[:topic].notify_muted!(user)
+        lambda {
+          Fabricate(:post, user: user2, topic: post.topic, raw: 'hello @' + user.username)
+        }.should change(user.notifications, :count).by(0)
+      end
+    end
+
+  end
   describe 'unread counts' do
 
     let(:user) { Fabricate(:user) }

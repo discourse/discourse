@@ -182,6 +182,7 @@ describe Topic do
 
   context 'message bus' do
     it 'calls the message bus observer after create' do
+      ActiveRecord::Base.observers.enable :all
       MessageBusObserver.any_instance.expects(:after_create_topic).with(instance_of(Topic))
       Fabricate(:topic)
     end
@@ -365,7 +366,7 @@ describe Topic do
   context 'private message' do
     let(:coding_horror) { User.where(username: 'CodingHorror').first }
     let(:evil_trout) { Fabricate(:evil_trout) }
-    let!(:topic) { Fabricate(:private_message_topic) }
+    let(:topic) { Fabricate(:private_message_topic) }
 
     it "should integrate correctly" do
       Guardian.new(topic.user).can_see?(topic).should be_true
@@ -389,12 +390,9 @@ describe Topic do
         let(:walter) { Fabricate(:walter_white) }
 
         context 'by username' do
-          it 'returns true' do
-            topic.invite(topic.user, walter.username).should be_true
-          end
 
           it 'adds walter to the allowed users' do
-            topic.invite(topic.user, walter.username)
+            topic.invite(topic.user, walter.username).should be_true
             topic.allowed_users.include?(walter).should be_true
           end
 
@@ -426,6 +424,8 @@ describe Topic do
       let(:actions) { topic.user.user_actions }
 
       it "should set up actions correctly" do
+        ActiveRecord::Base.observers.enable :all
+
         actions.map{|a| a.action_type}.should_not include(UserAction::NEW_TOPIC)
         actions.map{|a| a.action_type}.should include(UserAction::NEW_PRIVATE_MESSAGE)
         coding_horror.user_actions.map{|a| a.action_type}.should include(UserAction::GOT_PRIVATE_MESSAGE)
@@ -434,6 +434,11 @@ describe Topic do
     end
 
     context "other user" do
+
+      before do
+        # let! is weird, this test need a refactor
+        t = topic
+      end
 
       let(:creator) { PostCreator.new(topic.user, raw: Fabricate.build(:post).raw, topic_id: topic.id )}
 

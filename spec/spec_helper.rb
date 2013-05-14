@@ -48,6 +48,8 @@ Spork.prefork do
   # in spec/support/ and its subdirectories.
   Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
+
+
   # let's not run seed_fu every test
   SeedFu.seed
 
@@ -70,6 +72,11 @@ Spork.prefork do
     # if we need stuff post fork, pre tests run here
     # config.before(:suite) do
     # end
+
+    config.before do
+      # disable all observers, enable as needed during specs
+      ActiveRecord::Base.observers.disable :all
+    end
 
     config.before(:all) do
       DiscoursePluginRegistry.clear

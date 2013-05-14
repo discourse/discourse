@@ -153,6 +153,8 @@ describe Jobs::Exporter do
           end
 
           it "should send a notification to the user who started the export" do
+
+            ActiveRecord::Base.observers.enable :all
             expect {
               Jobs::Exporter.new.execute( @exporter_args.merge( user_id: @user.id ) )
             }.to change { Notification.count }.by(1)

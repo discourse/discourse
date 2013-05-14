@@ -3,6 +3,10 @@ require 'post_destroyer'
 
 describe PostDestroyer do
 
+  before do
+    ActiveRecord::Base.observers.enable :all
+  end
+
   let(:moderator) { Fabricate(:moderator) }
   let(:post) { Fabricate(:post) }
 
@@ -19,13 +23,7 @@ describe PostDestroyer do
 
       it "doesn't delete the post" do
         post.deleted_at.should be_blank
-      end
-
-      it "updates the text of the post" do
         post.raw.should == I18n.t('js.post.deleted_by_author')
-      end
-
-      it "creates a new version" do
         post.version.should == 2
       end
     end
@@ -39,7 +37,7 @@ describe PostDestroyer do
         post.deleted_at.should be_present
       end
     end
-    
+
     context "as an admin" do
       before do
         PostDestroyer.new(admin, post).destroy
