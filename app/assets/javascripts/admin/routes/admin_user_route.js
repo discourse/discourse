@@ -19,6 +19,6 @@ Discourse.AdminUserRoute = Discourse.Route.extend({
     Discourse.AdminUser.find(Em.get(model, 'username').toLowerCase()).then(function (u) {
       controller.set('content', u);
     });
-  },
+  }
 
 });
