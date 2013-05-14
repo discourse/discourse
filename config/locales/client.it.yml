@@ -463,7 +463,7 @@ it:
         invisible: "Rendi Invisibile"
         visible: "Rendi Visibile"
         reset_read: "Reset Read Data"
-        multi_select: "Toggle Multi-Select (wtf?)"
+        multi_select: "Select Posts to Merge/Split"
         convert_to_topic: "Converti in un Topic Normale"
 
       reply:
