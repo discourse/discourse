@@ -9,7 +9,6 @@
 **/
 Discourse.TopicClosingView = Discourse.View.extend({
   elementId: 'topic-closing-info',
-  templateName: 'topic_closing',
   delayedRerender: null,
 
   contentChanged: function() {
