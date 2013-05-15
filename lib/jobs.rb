@@ -103,15 +103,19 @@ module Jobs
     enqueue_in( [(datetime - Time.zone.now).to_i, 0].max, job_name, opts )
   end
 
-  # TODO: should take job_name like enqueue methods
   def self.cancel_scheduled_job(job_name, params={})
+    jobs = scheduled_for(job_name, params)
+    return false if jobs.empty?
+    jobs.each { |job| job.delete }
+    true
+  end
+
+  def self.scheduled_for(job_name, params={})
     job_class = "Jobs::#{job_name.to_s.camelcase}"
-    matched = true
-    Sidekiq::ScheduledSet.new.each do |scheduled_job|
+    Sidekiq::ScheduledSet.new.select do |scheduled_job|
       if scheduled_job.klass == 'Sidekiq::Extensions::DelayedClass'
         job_args = YAML.load(scheduled_job.args[0])
-        if job_args[0] == job_class
-          next unless job_args[2] and job_args[2][0]
+        if job_args[0].to_s == job_class and job_args[2] and job_args[2][0]
           matched = true
           params.each do |key, value|
             unless job_args[2][0][key] == value
@@ -119,13 +123,14 @@ module Jobs
               break
             end
           end
-          next unless matched
+          matched
+        else
+          false
         end
-        scheduled_job.delete
-        break
+      else
+        false
       end
     end
-    matched
   end
 end
 

@@ -1,11 +1,6 @@
 <div class="modal-body">
   <form>
-    <div class="auto-close-fields">
-      <i class="icon icon-time"></i>
-      {{i18n composer.auto_close_label}}
-      {{view Discourse.TextField valueBinding="view.auto_close_days" maxlength="5"}}
-      {{i18n composer.auto_close_units}}
-    </div>
+    {{view Discourse.AutoCloseFormView autoCloseDaysBinding="view.auto_close_days"}}
   </form>
 </div>
 <div class="modal-footer">

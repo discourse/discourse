@@ -108,6 +108,7 @@ group :test, :development do
   gem 'simplecov', require: false
   gem 'terminal-notifier-guard', require: false
   gem 'timecop'
+  gem 'rspec-given'
 end
 
 group :development do

@@ -775,6 +775,8 @@ en:
       edit_long: "Edit Category"
       edit_uncategorized: "Edit Uncategorized"
       view: 'View Topics in Category'
+      general: 'General'
+      settings: 'Settings'
       delete: 'Delete Category'
       create: 'Create Category'
       save: 'Save Category'
@@ -800,6 +802,7 @@ en:
       add_group: "Add Group"
       security: "Security"
       allowed_groups: "Allowed Groups:"
+      auto_close_label: "Auto-close topics after:"
 
 
     flagging:

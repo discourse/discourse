@@ -45,7 +45,8 @@ Discourse.Category = Discourse.Model.extend({
         text_color: this.get('text_color'),
         hotness: this.get('hotness'),
         secure: this.get('secure'),
-        group_names: this.get('groups').join(",")
+        group_names: this.get('groups').join(","),
+        auto_close_days: this.get('auto_close_days')
       },
       type: this.get('id') ? 'PUT' : 'POST'
     });

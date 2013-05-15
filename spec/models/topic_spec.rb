@@ -985,11 +985,6 @@ describe Topic do
 
   describe 'auto-close' do
     context 'a new topic' do
-      it 'when auto_close_at is not present, it does not queue a job to close the topic' do
-        Jobs.expects(:enqueue_at).never
-        Fabricate(:topic)
-      end
-
       context 'auto_close_at is set' do
         it 'queues a job to close the topic' do
           Timecop.freeze(Time.zone.now) do
@@ -1013,6 +1008,13 @@ describe Topic do
             job_args[:user_id] == topic_closer.id
           end
           Fabricate(:topic, auto_close_at: 7.days.from_now, auto_close_user: topic_closer, user: topic_creator)
+        end
+
+        it "ignores the category's default auto-close" do
+          Timecop.freeze(Time.zone.now) do
+            Jobs.expects(:enqueue_at).with(7.days.from_now, :close_topic, all_of( has_key(:topic_id), has_key(:user_id) ))
+            Fabricate(:topic, auto_close_at: 7.days.from_now, user: Fabricate(:admin), category: Fabricate(:category, auto_close_days: 2))
+          end
         end
       end
     end
@@ -1087,6 +1089,15 @@ describe Topic do
           Jobs.expects(:cancel_scheduled_job).never
           topic = Fabricate(:topic, auto_close_at: 1.day.from_now)
           topic.title = 'A new title that is long enough'
+          topic.save.should be_true
+        end
+      end
+
+      it "ignores the category's default auto-close" do
+        Timecop.freeze(Time.zone.now) do
+          topic = Fabricate(:topic, category: Fabricate(:category, auto_close_days: 14))
+          Jobs.expects(:enqueue_at).with(12.hours.from_now, :close_topic, has_entries(topic_id: topic.id, user_id: topic.user_id))
+          topic.auto_close_at = 12.hours.from_now
           topic.save.should be_true
         end
       end

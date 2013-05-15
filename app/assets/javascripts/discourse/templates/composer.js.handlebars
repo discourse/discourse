@@ -45,12 +45,7 @@
           </div>
 
           <div class="admin-options-form">
-            <div class="auto-close-fields">
-              <i class="icon icon-time"></i>
-              {{i18n composer.auto_close_label}}
-              {{view Discourse.TextField valueBinding="content.auto_close_days" maxlength="5"}}
-              {{i18n composer.auto_close_units}}
-            </div>
+            {{view Discourse.AutoCloseFormView autoCloseDaysBinding="content.auto_close_days"}}
           </div>
         {{/if}}
 
