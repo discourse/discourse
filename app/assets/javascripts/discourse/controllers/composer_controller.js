@@ -116,6 +116,10 @@ Discourse.ComposerController = Discourse.Controller.extend({
   }.property('content.composeState', 'content.reply', 'educationClosed', 'educationContents'),
 
   fetchNewUserEducation: function() {
+
+    // We don't show education when editing a post.
+    if (this.get('content.editingPost')) return;
+
     // If creating a topic, use topic_count, otherwise post_count
     var count = this.get('content.creatingTopic') ? Discourse.get('currentUser.topic_count') : Discourse.get('currentUser.reply_count');
     if (count >= Discourse.SiteSettings.educate_until_posts) {

@@ -121,6 +121,7 @@ class PostCreator
       # Track the topic
       TopicUser.auto_track(@user.id, topic.id, TopicUser.notification_reasons[:created_post])
 
+      # We don't count replies to your own topics
       if @user.id != topic.user_id
         @user.update_topic_reply_count
       end
