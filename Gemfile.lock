@@ -72,15 +72,6 @@ PATH
     discourse_plugin (0.0.1)
 
 PATH
-  remote: vendor/gems/message_bus
-  specs:
-    message_bus (0.0.1)
-      eventmachine
-      rack (>= 1.1.3)
-      redis
-      thin
-
-PATH
   remote: vendor/gems/rails_multisite
   specs:
     rails_multisite (0.0.1)
@@ -251,6 +242,11 @@ GEM
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    message_bus (0.0.2)
+      eventmachine
+      rack (>= 1.1.3)
+      redis
+      thin
     metaclass (0.0.1)
     method_source (0.8.1)
     mime-types (1.23)
@@ -485,7 +481,7 @@ DEPENDENCIES
   librarian (>= 0.0.25)
   listen
   lru_redux
-  message_bus!
+  message_bus
   minitest
   mocha
   multi_json
