@@ -615,6 +615,11 @@ fr:
     archived_disabled: "Cette discussion est maintenant désarchivée. Elle n'est plus gelée, et peut être modifiée."
     closed_enabled: "Cette discussion est maintenant fermée. Les nouvelles réponses ne sont plus autorisées."
     closed_disabled: "Cette discussion est maintenant ouverte. Les nouvelles réponses sont autorisées."
+    autoclosed_enabled:
+      zero: "Cette discussion a été automatiquement fermé après 1 jour. Aucune réponse n'est permise dorénavant."
+      one: "Cette discussion a été automatiquement fermé après 1 jour. Aucune réponse n'est permise dorénavant."
+      other: "Cette discussion a été automatiquement fermé après %{count} jours. Aucune réponse n'est permise dorénavant."
+    autoclosed_disabled: "Cette discussion est maintenant ouverte. Vous pouvez y participer."
     pinned_enabled: "Cette discussion est maintenant épinglée. Elle apparaîtra en haut de sa catégorie jusqu'à ce qu'elle soit désépinglée par un modérateur, ou par chaque utilisateur utilisant le bouton Désépingler."
     pinned_disabled: "Cette discussion est maintenant désépinglée. Elle n'apparaîtra plus en haut de sa categorie."
     visible_enabled: "Cette discussion est maintenant visible. Elle sera affichée dans la liste des discussions."
