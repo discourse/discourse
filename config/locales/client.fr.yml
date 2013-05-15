@@ -36,6 +36,19 @@ fr:
     now: "à l'instant"
     read_more: "lire la suite"
 
+    in_n_seconds:
+      one: "dans 1 seconde"
+      other: "dans {{count}} secondes"
+    in_n_minutes:
+      one: "dans 1 minute"
+      other: "dans {{count}} minutes"
+    in_n_hours:
+      one: "dans 1 heure"
+      other: "dans {{count}} heures"
+    in_n_days:
+      one: "dans 1 jour"
+      other: "dans {{count}} jours"
+
     suggested_topics:
       title: "discussions proposées"
 
@@ -53,6 +66,12 @@ fr:
     save: "Sauvegarder les changements"
     saving: "Sauvegarde en cours..."
     saved: "Sauvegardé !"
+
+    choose_topic:
+      none_found: "Aucune discussion trouvée."
+      title:
+        search: "Rechechez une discussion par son nom, url ou id :"
+        placeholder: "renseignez ici le titre de la discussion"
 
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> à démarré <a href='{{topicUrl}}'>la discussion</a>"
@@ -357,6 +376,10 @@ fr:
       help: "Aide Markdown"
       toggler: "Afficher ou cacher le composer"
 
+      admin_options_title: "Paramètres optionels pour cette discussion"
+      auto_close_label: "Fermer automatiquement cette discussion après :"
+      auto_close_units: "jours"
+
       users_placeholder: "Ajouter un utilisateur"
       title_placeholder: "Choisissez un titre ici. Sur quoi porte cette discussion en quelques mots ?"
       reply_placeholder: "Saisissez votre réponse ici. Utilisez le Markdown ou le BBCode pour le formatage. Vous pouvez déposer ou coller une image ici."
@@ -476,6 +499,12 @@ fr:
       jump_reply_down: "allez à des réponses ultérieures"
       deleted: "cette discussion à été supprimée"
 
+      auto_close_notice: "Cette discussion sera automatiquement fermée %{timeLeft}."
+      auto_close_title: 'Paramètres de fermeture automatique'
+      auto_close_save: "Sauvegarder"
+      auto_close_cancel: "Annuler"
+      auto_close_remove: "Ne pas fermer automatiquement cette discussion"
+
       progress:
         title: "progession dans la discussion"
         jump_top: "aller au premier message"
@@ -513,6 +542,7 @@ fr:
         delete: "Supprimer la discussion"
         open: "Ouvrir la discussion"
         close: "Fermer la discussion"
+        auto_close: "Fermeture automatique"
         unpin: "Dé-épingler la discussion"
         pin: "Épingler la discussion"
         unarchive: "Dé-archiver la discussion"
@@ -576,11 +606,23 @@ fr:
 
       move_selected:
         title: "Déplacer les messages sélectionnés"
-        topic_name: "Nom de la nouvelle conversation"
-        error: "Désolé, nous n'avons pas réussi à déplacer ces messages."
+        error: "Désolés, une erreur s'est produite lors du déplacement des messages."
         instructions:
-          one: "Vous êtes sur le point de créer une nouvelle discussion à partir du message sélectionné."
-          other: "Vous êtes sur le point de créer une nouvelle discussion à partir des <b>{{count}}</b> messages sélectionnés."
+          one: "Comment souhaitez-vous déplacer le message que vous avez sélectionné ?"
+          other: "Comment souhaitez-vous déplacer les <b>{{count}}</b> messages que vous avez sélectionné ?"
+
+        new_topic:
+          title: "Déplacer les messages sélectionnés dans une nouvelle discussion"
+          topic_name: "Nom de la nouvelle discussion :"
+          instructions:
+            one: "Vous êtes sur le point de créer une nouvelle discussion avec le message que vous avez sélectionné."
+            other: "Vous êtes sur le point de créer une nouvelle discussion avec les <b>{{count}}</b> messages que vous avez sélectionné."
+
+        existing_topic:
+          title: "Déplacer les messages sélectionnés dans une discussion existante"
+          instructions:
+            one: "Merci de sélectionner la discussion dans laquelle vous souhaitez déplacer le message que vous avez sélectionné."
+            other: "Merci de sélectionner la discussion dans laquelle vous souhaitez déplacer ces <b>{{count}}</b> messages que vous avez sélectionné."
 
       multi_select:
         select: 'sélectioner'
