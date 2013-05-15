@@ -19,9 +19,12 @@ describe Category do
   it { should have_many :featured_topics }
 
   describe "security" do
-    it "secures categories correctly" do
-      category = Fabricate(:category)
+    let(:category) { Fabricate(:category) }
+    let(:category_2) { Fabricate(:category) }
+    let(:user) { Fabricate(:user) }
+    let(:group) { Fabricate(:group) }
 
+    it "secures categories correctly" do
       category.secure?.should be_false
 
       category.deny(:all)
@@ -30,10 +33,8 @@ describe Category do
       category.allow(:all)
       category.secure?.should be_false
 
-      user = Fabricate(:user)
-      user.secure_categories.to_a.should == []
+      user.secure_categories.should be_empty
 
-      group = Fabricate(:group)
       group.add(user)
       group.save
 
@@ -41,8 +42,18 @@ describe Category do
       category.save
 
       user.reload
-      user.secure_categories.to_a.should == [category]
+      user.secure_categories.should == [category]
+    end
 
+    it "lists all secured categories correctly" do
+      group.add(user)
+      category.allow(group)
+
+      Category.secured.should == [category]
+
+      category_2.allow(group)
+
+      Category.secured.should =~ [category, category_2]
     end
   end
 
