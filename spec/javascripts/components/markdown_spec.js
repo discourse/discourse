@@ -92,6 +92,14 @@ describe("Discourse.Markdown", function() {
         expect(cook("@EvilTrout yo")).toBe("<p><span class='mention'>@EvilTrout</span> yo</p>");
       });
 
+      it("doesn't do @username mentions inside <pre> or <code> blocks", function() {
+        expect(cook("`@EvilTrout yo`")).toBe("<p><code>&#64;EvilTrout yo</code></p>");
+      });
+
+      it("deals correctly with multiple <code> blocks", function() {
+        expect(cook("`evil` @EvilTrout `trout`")).toBe("<p><code>evil</code> <span class='mention'>@EvilTrout</span> <code>trout</code></p>");
+      });
+
     });
 
     describe("Oneboxing", function() {
