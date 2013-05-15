@@ -192,3 +192,17 @@
   margin-left: 20px;
   width: 95% !important;
 }
+
+.edit-category-modal {
+  .modal-body {
+    position: relative;
+    height: 350px;
+  }
+  &.small .modal-body {
+    height: 280px;
+  }
+}
+
+.modal-tab {
+  position: absolute;
+}

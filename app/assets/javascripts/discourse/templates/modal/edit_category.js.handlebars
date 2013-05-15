@@ -1,28 +1,66 @@
 {{#with view.category}}
 
 <div {{bindAttr class="view.loading:invisible"}}>
+  <ul class="nav nav-pills">
+    <li {{bindAttr class="view.generalSelected:active"}}>
+      <a href="#" {{action selectGeneral target="view"}}>{{i18n category.general}}</a>
+    </li>
+    {{#unless is_uncategorized}}
+      <li {{bindAttr class="view.securitySelected:active"}}>
+        <a href="#" {{action selectSecurity target="view"}}>{{i18n category.security}}</a>
+      </li>
+      <li {{bindAttr class="view.settingsSelected:active"}}>
+        <a href="#" {{action selectSettings target="view"}}>{{i18n category.settings}}</a>
+      </li>
+    {{/unless}}
+  </ul>
+
   <div class="modal-body">
-    <form>
-      <section class='field'>
-        <label>{{i18n category.name}}</label>
-        {{view Discourse.TextField valueBinding="name" placeholderKey="category.name_placeholder" maxlength="50"}}
-      </section>
-
-      {{#unless is_uncategorized}}
+    <div {{bindAttr class=":modal-tab :general-tab view.generalSelected::invisible"}}>
+      <form>
         <section class='field'>
-          <label>{{i18n category.description}}</label>
-
-          {{#if description}}
-            {{description}}
-          {{else}}
-            {{i18n category.no_description}}
-          {{/if}}
-          {{#if topic_url}}
-            <br/>
-            <button class="btn btn-small" {{action showCategoryTopic target="view"}}>{{i18n category.change_in_category_topic}}</button>
-          {{/if}}
+          <label>{{i18n category.name}}</label>
+          {{view Discourse.TextField valueBinding="name" placeholderKey="category.name_placeholder" maxlength="50"}}
         </section>
 
+        {{#unless is_uncategorized}}
+          <section class='field'>
+            <label>{{i18n category.description}}</label>
+
+            {{#if description}}
+              {{description}}
+            {{else}}
+              {{i18n category.no_description}}
+            {{/if}}
+            {{#if topic_url}}
+              <br/>
+              <button class="btn btn-small" {{action showCategoryTopic target="view"}}>{{i18n category.change_in_category_topic}}</button>
+            {{/if}}
+          </section>
+        {{/unless}}
+
+        <section class='field'>
+          <label>{{i18n category.badge_colors}}</label>
+          <div class="category-color-editor">
+            <span class='badge-category' {{bindAttr style="view.colorStyle"}}>{{view.categoryName}}</span>
+
+            <div class='input-prepend input-append' style="margin-top: 10px;">
+              <span class='color-title'>{{i18n category.background_color}}:</span>
+              <span class='add-on'>#</span>{{view Discourse.TextField valueBinding="color" placeholderKey="category.color_placeholder" maxlength="6"}}
+              {{view Discourse.ColorsView colorsBinding="view.backgroundColors" usedColorsBinding="view.usedBackgroundColors" valueBinding="color"}}
+            </div>
+
+            <div class='input-prepend input-append'>
+              <span class='color-title'>{{i18n category.foreground_color}}:</span>
+              <span class='add-on'>#</span>{{view Discourse.TextField valueBinding="text_color" placeholderKey="category.color_placeholder" maxlength="6"}}
+              {{view Discourse.ColorsView colorsBinding="view.foregroundColors" valueBinding="text_color"}}
+            </div>
+          </div>
+        </section>
+      </form>
+    </div>
+    {{#unless is_uncategorized}}
+      <div {{bindAttr class=":modal-tab :options-tab view.securitySelected::invisible"}}>
         <section class='field'>
           <label>{{i18n category.security}}</label>
           <label>
@@ -40,35 +78,18 @@
             <button {{action addGroup target="view"}}>{{i18n category.add_group}}</button>
           {{/if}}
         </section>
+      </div>
+      <div {{bindAttr class=":modal-tab :options-tab view.settingsSelected::invisible"}}>
+        <section class='field'>
+          {{view Discourse.AutoCloseFormView autoCloseDaysBinding="auto_close_days" labelKey="category.auto_close_label"}}
+        </section>
 
-        <!-- Sam, disabled for now
         <section class='field'>
           <label>{{i18n category.hotness}}</label>
           {{view Discourse.HotnessView hotnessBinding="hotness"}}
         </section>
-        -->
-      {{/unless}}
-
-      <section class='field'>
-        <label>{{i18n category.badge_colors}}</label>
-        <div class="category-color-editor">
-          <span class='badge-category' {{bindAttr style="view.colorStyle"}}>{{view.categoryName}}</span>
-
-          <div class='input-prepend input-append' style="margin-top: 10px;">
-            <span class='color-title'>{{i18n category.background_color}}:</span>
-            <span class='add-on'>#</span>{{view Discourse.TextField valueBinding="color" placeholderKey="category.color_placeholder" maxlength="6"}}
-            {{view Discourse.ColorsView colorsBinding="view.backgroundColors" usedColorsBinding="view.usedBackgroundColors" valueBinding="color"}}
-          </div>
-
-          <div class='input-prepend input-append'>
-            <span class='color-title'>{{i18n category.foreground_color}}:</span>
-            <span class='add-on'>#</span>{{view Discourse.TextField valueBinding="text_color" placeholderKey="category.color_placeholder" maxlength="6"}}
-            {{view Discourse.ColorsView colorsBinding="view.foregroundColors" valueBinding="text_color"}}
-          </div>
-        </div>
-      </section>
-
-    </form>
+      </div>
+    {{/unless}}
   </div>
   <div class="modal-footer">
     <button class='btn btn-primary' {{bindAttr disabled="view.disabled"}} {{action saveCategory target="view"}}>{{view.buttonTitle}}</button>

@@ -538,13 +538,7 @@ Discourse.Composer = Discourse.Model.extend({
     var reply = this.get('reply') || "";
     while (Discourse.BBCode.QUOTE_REGEXP.test(reply)) { reply = reply.replace(Discourse.BBCode.QUOTE_REGEXP, ""); }
     return reply.replace(/\s+/img, " ").trim().length;
-  }.property('reply'),
-
-  autoCloseChanged: function() {
-    if( this.get('auto_close_days') && this.get('auto_close_days').length > 0 ) {
-      this.set('auto_close_days', this.get('auto_close_days').replace(/[^\d]/g, '') )
-    }
-  }.observes('auto_close_days')
+  }.property('reply')
 
 });
 

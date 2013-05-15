@@ -95,6 +95,10 @@ class Topic < ActiveRecord::Base
   before_create do
     self.bumped_at ||= Time.now
     self.last_post_user_id ||= user_id
+    if !@ignore_category_auto_close and self.category and self.category.auto_close_days and self.auto_close_at.nil?
+      self.auto_close_at = self.category.auto_close_days.days.from_now
+      self.auto_close_user = (self.user.staff? ? self.user : Discourse.system_user)
+    end
   end
 
   after_create do
@@ -112,6 +116,7 @@ class Topic < ActiveRecord::Base
   before_save do
     if (auto_close_at_changed? and !auto_close_at_was.nil?) or (auto_close_user_id_changed? and auto_close_at)
       Jobs.cancel_scheduled_job(:close_topic, {topic_id: id})
+      true
     end
   end
 
@@ -736,6 +741,7 @@ class Topic < ActiveRecord::Base
   end
 
   def auto_close_days=(num_days)
+    @ignore_category_auto_close = true
     self.auto_close_at = (num_days and num_days.to_i > 0.0 ? num_days.to_i.days.from_now : nil)
   end
 
