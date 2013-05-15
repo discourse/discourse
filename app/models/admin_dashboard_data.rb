@@ -46,7 +46,6 @@ class AdminDashboardData
   def as_json
     @json ||= {
       reports: REPORTS.map { |type| Report.find(type).as_json },
-      problems: problems,
       admins: User.admins.count,
       moderators: User.moderators.count,
       top_referrers: IncomingLinksReport.find('top_referrers').as_json,
