@@ -9,8 +9,7 @@
 **/
 Discourse.ListTopicsView = Discourse.View.extend(Discourse.Scrolling, {
   templateName: 'list/topics',
-  categoryBinding: 'Discourse.router.listController.category',
-  filterModeBinding: 'Discourse.router.listController.filterMode',
+  categoryBinding: 'controller.controllers.list.category',
   canCreateTopicBinding: 'controller.controllers.list.canCreateTopic',
   loadedMore: false,
   currentTopicId: null,
@@ -89,23 +88,28 @@ Discourse.ListTopicsView = Discourse.View.extend(Discourse.Scrolling, {
     return (_ref = this.get('eyeline')) ? _ref.update() : void 0;
   },
 
-  footerMessage: (function() {
+  footerMessage: function() {
     var content, split;
     if (!this.get('allLoaded')) {
       return;
     }
-    content = this.get('controller.content');
-    split = content.get('filter').split('/');
-    if (content.get('topics.length') === 0) {
-      return Em.String.i18n("topics.none." + split[0], {
-        category: split[1]
-      });
+    content = this.get('category');
+    if( content ) {
+      return Em.String.i18n('topics.bottom.category', {category: content.get('name')});
     } else {
-      return Em.String.i18n("topics.bottom." + split[0], {
-        category: split[1]
-      });
+      content = this.get('controller.content');
+      split = content.get('filter').split('/');
+      if (content.get('topics.length') === 0) {
+        return Em.String.i18n("topics.none." + split[0], {
+          category: split[1]
+        });
+      } else {
+        return Em.String.i18n("topics.bottom." + split[0], {
+          category: split[1]
+        });
+      }
     }
-  }).property('allLoaded', 'controller.content.topics.length')
+  }.property('allLoaded', 'controller.content.topics.length')
 
 });
 
