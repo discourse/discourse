@@ -14,6 +14,7 @@ class ActionView::Helpers::AssetTagHelper::AssetIncludeTag
 private
 
   # pluralization is fairly expensive, and pluralizing the word javascript 400 times is pointless
+  # this is fixed in Rails 4
 
   def path_to_asset(source, options = {})
     asset_paths.compute_public_path(source, pluralize_asset_name(asset_name), options.merge(:ext => extension))
