@@ -13,6 +13,17 @@ class Notification < ActiveRecord::Base
   after_save :refresh_notification_count
   after_destroy :refresh_notification_count
 
+  def self.ensure_consistency!
+    Notification.exec_sql("
+    DELETE FROM Notifications n WHERE notification_type = :id AND
+    NOT EXISTS(
+      SELECT 1 FROM posts p
+      JOIN topics t ON t.id = p.topic_id
+      WHERE p.deleted_at is null AND t.deleted_at IS NULL
+        AND p.post_number = n.post_number AND t.id = n.topic_id
+    )" , id: Notification.types[:private_message])
+  end
+
   def self.types
     @types ||= Enum.new(
       :mentioned, :replied, :quoted, :edited, :liked, :private_message,

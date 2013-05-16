@@ -5,6 +5,7 @@ module Jobs
       TopicUser.ensure_consistency!
       UserVisit.ensure_consistency!
       Group.refresh_automatic_groups!
+      Notification.ensure_consistency!
     end
   end
 end

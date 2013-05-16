@@ -201,4 +201,27 @@ describe Notification do
     end
   end
 
+  describe 'ensure consistency' do
+    it 'deletes notifications if post is missing or deleted' do
+
+      ActiveRecord::Base.observers.disable :all
+      p = Fabricate(:post)
+      p2 = Fabricate(:post)
+
+      Notification.create!(read: false, user_id: p.user_id, topic_id: p.topic_id, post_number: p.post_number, data: '[]',
+                           notification_type: Notification.types[:private_message])
+      Notification.create!(read: false, user_id: p2.user_id, topic_id: p2.topic_id, post_number: p2.post_number, data: '[]',
+                           notification_type: Notification.types[:private_message])
+
+      Notification.create!(read: false, user_id: p2.user_id, topic_id: p2.topic_id, post_number: p2.post_number, data: '[]',
+                           notification_type: Notification.types[:liked])
+      p2.trash!
+
+      # we may want to make notification "trashable" but for now we nuke pm notifications from deleted topics/posts
+      Notification.ensure_consistency!
+
+      Notification.count.should == 2
+    end
+  end
+
 end
