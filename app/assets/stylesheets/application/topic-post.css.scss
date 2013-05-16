@@ -789,3 +789,17 @@
     content: "\f0e0";
   }
 }
+
+
+.secure_category .gutter {
+  position: relative;
+  &:before {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: rgba($black, 0.05);
+    font: 90px/1 FontAwesome;
+    content: "\f0c0";
+  }
+}
