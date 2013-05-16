@@ -31,16 +31,15 @@ fr:
     zero: "Désolé, les visiteurs ne peuvent pas mentionner d'utilisateur."
     one: "Désolé, les visiteurs ne peuvent mentionner qu'un seul utilisateur."
     other: "Désolé, les visiteurs ne peuvent mentionner que %{count} utilisateur."
-
   too_many_images:
     zero: "Désolé, les visiteurs ne peuvent pas ajouter d'image."
     one: "Désolé, les visiteurs ne peuvent ajouter qu'une seule image."
     other: "Désolé, les visiteurs ne peuvent ajouter que %{count} images."
-
   too_many_links:
     zero: "Désolé, les visiteurs ne peuvent pas insérer de liens."
     one: "Désolé, les visiteurs ne peuvent insérer qu'un seul lien."
     other: "Désolé, les visiteurs ne peuvent insérer que %{count} liens."
+  spamming_host: "Désolé, vous ne pouvez pas insérer de lien vers ce host."
 
   just_posted_that: "est trop similaire à ce que vous avez récemment posté"
   has_already_been_used: "a déjà été utilisé"
@@ -581,6 +580,8 @@ fr:
 
     tos_url: "Si vous disposez déjà de CGV, vous pouvez renseigner leur URL ici."
     privacy_policy_url: "Si vous disposez déjà d'une politique de confidentialité, vous pouvez renseigner son URL ici."
+
+    newuser_spam_host_threshold: "Limite du nombre de liens vers un même host qu'un nouvel utilisateur peut insérer dans un message avant d'être considérer comme un SPAM."
 
   notification_types:
     mentioned: "%{display_username} vous a mentionné dans %{link}"
