@@ -180,14 +180,6 @@ describe Topic do
 
   end
 
-  context 'message bus' do
-    it 'calls the message bus observer after create' do
-      ActiveRecord::Base.observers.enable :all
-      MessageBusObserver.any_instance.expects(:after_create_topic).with(instance_of(Topic))
-      Fabricate(:topic)
-    end
-  end
-
   context 'post_numbers' do
     let!(:topic) { Fabricate(:topic) }
     let!(:p1) { Fabricate(:post, topic: topic, user: topic.user) }

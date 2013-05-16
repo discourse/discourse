@@ -91,11 +91,6 @@ describe UserAction do
     end
   end
 
-  it 'calls the message bus observer' do
-    MessageBusObserver.any_instance.expects(:after_create_user_action).with(instance_of(UserAction))
-    Fabricate(:user_action)
-  end
-
   describe 'when user likes' do
 
     let!(:post) { Fabricate(:post) }

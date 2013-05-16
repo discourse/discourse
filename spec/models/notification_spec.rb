@@ -90,7 +90,7 @@ describe Notification do
   describe 'message bus' do
 
     it 'updates the notification count on create' do
-      MessageBusObserver.any_instance.expects(:refresh_notification_count).with(instance_of(Notification))
+      Notification.any_instance.expects(:refresh_notification_count).returns(nil)
       Fabricate(:notification)
     end
 
@@ -99,7 +99,7 @@ describe Notification do
       let!(:notification) { Fabricate(:notification) }
 
       it 'updates the notification count on destroy' do
-        MessageBusObserver.any_instance.expects(:refresh_notification_count).with(instance_of(Notification))
+        Notification.any_instance.expects(:refresh_notification_count).returns(nil)
         notification.destroy
       end
 

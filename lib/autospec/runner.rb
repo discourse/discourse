@@ -12,7 +12,6 @@ class Autospec::Runner
 
   watch(%r{^spec/.+_spec\.rb$})
   watch(%r{^lib/(.+)\.rb$})     { |m| "spec/components/#{m[1]}_spec.rb" }
-  watch('spec/spec_helper.rb')  { "spec" }
 
   # Rails example
   watch(%r{^app/(.+)\.rb$})                           { |m| "spec/#{m[1]}_spec.rb" }
@@ -23,6 +22,14 @@ class Autospec::Runner
 
   # Capybara request specs
   watch(%r{^app/views/(.+)/.*\.(erb|haml)$})          { |m| "spec/requests/#{m[1]}_spec.rb" }
+
+  RELOAD_MATCHERS = Set.new
+  def self.watch_reload(pattern)
+    RELOAD_MATCHERS << pattern
+  end
+
+  watch_reload('spec/spec_helper.rb')
+  watch_reload('config/(.*).rb')
 
 
   def self.run(opts={})
@@ -156,6 +163,15 @@ class Autospec::Runner
     specs = []
     hit = false
     files.each do |file|
+      RELOAD_MATCHERS.each do |k|
+        if k.match(file)
+          spork_service.abort
+          stop_spork
+          sleep 1
+          start_spork
+          return
+        end
+      end
       MATCHERS.each do |k,v|
         if m = k.match(file)
           hit = true

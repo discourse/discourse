@@ -150,6 +150,19 @@ LEFT JOIN categories c on c.id = t.category_id
           User.update_all('likes_received = likes_received + 1', id: user_id)
         end
 
+        topic = Topic.includes(:category).where(id: hash[:target_topic_id]).first
+
+        # move into Topic perhaps
+        group_ids = nil
+        if topic && topic.category && topic.category.secure
+          group_ids = topic.category.groups.select("groups.id").map{|g| g.id}
+        end
+
+        MessageBus.publish("/users/#{action.user.username.downcase}",
+                              action.id,
+                              user_ids: [user_id],
+                              group_ids: group_ids )
+
       rescue ActiveRecord::RecordNotUnique
         # can happen, don't care already logged
         raise ActiveRecord::Rollback
