@@ -235,8 +235,6 @@ module PrettyText
 
   class ExcerptParser < Nokogiri::XML::SAX::Document
 
-    class DoneException < StandardError; end
-
     attr_reader :excerpt
 
     def initialize(length,options)
@@ -249,10 +247,8 @@ module PrettyText
     def self.get_excerpt(html, length, options)
       me = self.new(length,options)
       parser = Nokogiri::HTML::SAX::Parser.new(me)
-      begin
+      catch(:done) do
         parser.parse(html) unless html.nil?
-      rescue DoneException
-        # we are done
       end
       me.excerpt
     end
@@ -303,7 +299,7 @@ module PrettyText
         @excerpt << encode.call(string[0..length]) if truncate
         @excerpt << "&hellip;"
         @excerpt << "</a>" if @in_a
-        raise DoneException.new
+        throw :done
       end
       @excerpt << encode.call(string)
       @current_length += string.length if count_it
