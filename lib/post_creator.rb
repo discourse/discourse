@@ -41,45 +41,12 @@ class PostCreator
   def create
     topic = nil
     post = nil
+    new_topic = false
 
     Post.transaction do
       if @opts[:topic_id].blank?
-        topic_params = {title: @opts[:title], user_id: @user.id, last_post_user_id: @user.id}
-        topic_params[:archetype] = @opts[:archetype] if @opts[:archetype].present?
-        topic_params[:subtype] = @opts[:subtype] if @opts[:subtype].present?
-
-        guardian.ensure_can_create!(Topic)
-
-        category = Category.where(name: @opts[:category]).first
-        topic_params[:category_id] = category.id if category.present?
-        topic_params[:meta_data] = @opts[:meta_data] if @opts[:meta_data].present?
-
-        topic = Topic.new(topic_params)
-
-        if @opts[:auto_close_days]
-          guardian.ensure_can_moderate!(topic)
-          topic.auto_close_days = @opts[:auto_close_days]
-        end
-
-        if @opts[:archetype] == Archetype.private_message
-
-          topic.subtype = TopicSubtype.user_to_user unless topic.subtype
-
-          unless @opts[:target_usernames].present? || @opts[:target_group_names].present?
-            topic.errors.add(:archetype, :cant_send_pm)
-            @errors = topic.errors
-            raise ActiveRecord::Rollback.new
-          end
-
-          add_users(topic,@opts[:target_usernames])
-          add_groups(topic,@opts[:target_group_names])
-          topic.topic_allowed_users.build(user_id: @user.id)
-        end
-
-        unless topic.save
-          @errors = topic.errors
-          raise ActiveRecord::Rollback.new
-        end
+        topic = create_topic
+        new_topic = true
       else
         topic = Topic.where(id: @opts[:topic_id]).first
         guardian.ensure_can_create!(Post, topic)
@@ -112,7 +79,12 @@ class PostCreator
       # send a mail to notify users in case of a private message
       if topic.private_message?
         topic.allowed_users.where(["users.email_private_messages = true and users.id != ?", @user.id]).each do |u|
-          Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes, :user_email, type: :private_message, user_id: u.id, post_id: post.id)
+          Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes,
+                            :user_email,
+                            type: :private_message,
+                            user_id: u.id,
+                            post_id: post.id
+                         )
         end
 
         clear_possible_flags(topic) if post.post_number > 1 && topic.user_id != post.user_id
@@ -129,12 +101,16 @@ class PostCreator
       @user.last_posted_at = post.created_at
       @user.save!
 
-      # Publish the post in the message bus
-      MessageBus.publish("/topic/#{post.topic_id}",
-                    id: post.id,
-                    created_at: post.created_at,
-                    user: BasicUserSerializer.new(post.user).as_json(root: false),
-                    post_number: post.post_number)
+      if post.post_number > 1
+        MessageBus.publish("/topic/#{post.topic_id}",{
+                        id: post.id,
+                        created_at: post.created_at,
+                        user: BasicUserSerializer.new(post.user).as_json(root: false),
+                        post_number: post.post_number
+                      },
+                      group_ids: secure_group_ids(topic)
+        )
+      end
 
       # Advance the draft sequence
       post.advance_draft_sequence
@@ -147,7 +123,10 @@ class PostCreator
     # been comitted.
     topic_id = @opts[:topic_id] || topic.try(:id)
     Jobs.enqueue(:feature_topic_users, topic_id: topic.id) if topic_id.present?
-    post.trigger_post_process if post.present?
+    if post
+      post.trigger_post_process
+      after_topic_create(topic) if new_topic
+    end
 
     post
   end
@@ -159,6 +138,74 @@ class PostCreator
   end
 
   protected
+
+  def secure_group_ids(topic)
+    @secure_group_ids ||= if topic.category && topic.category.secure?
+      topic.category.groups.select("groups.id").map{|g| g.id}
+    end
+  end
+
+  def after_topic_create(topic)
+
+    # Don't publish invisible topics
+    return unless topic.visible?
+
+    return if topic.private_message?
+
+    topic.posters = topic.posters_summary
+    topic.posts_count = 1
+    topic_json = TopicListItemSerializer.new(topic).as_json
+
+    group_ids = secure_group_ids(topic)
+
+    MessageBus.publish("/latest", topic_json, group_ids: group_ids)
+
+    # If it has a category, add it to the category views too
+    if topic.category
+      MessageBus.publish("/category/#{topic.category.slug}", topic_json, group_ids: group_ids)
+    end
+  end
+
+  def create_topic
+    topic_params = {title: @opts[:title], user_id: @user.id, last_post_user_id: @user.id}
+    topic_params[:archetype] = @opts[:archetype] if @opts[:archetype].present?
+    topic_params[:subtype] = @opts[:subtype] if @opts[:subtype].present?
+
+    guardian.ensure_can_create!(Topic)
+
+    category = Category.where(name: @opts[:category]).first
+    topic_params[:category_id] = category.id if category.present?
+    topic_params[:meta_data] = @opts[:meta_data] if @opts[:meta_data].present?
+
+    topic = Topic.new(topic_params)
+
+    if @opts[:auto_close_days]
+      guardian.ensure_can_moderate!(topic)
+      topic.auto_close_days = @opts[:auto_close_days]
+    end
+
+    if @opts[:archetype] == Archetype.private_message
+
+      topic.subtype = TopicSubtype.user_to_user unless topic.subtype
+
+      unless @opts[:target_usernames].present? || @opts[:target_group_names].present?
+        topic.errors.add(:archetype, :cant_send_pm)
+        @errors = topic.errors
+        raise ActiveRecord::Rollback.new
+      end
+
+      add_users(topic,@opts[:target_usernames])
+      add_groups(topic,@opts[:target_group_names])
+      topic.topic_allowed_users.build(user_id: @user.id)
+    end
+
+    unless topic.save
+      @errors = topic.errors
+      raise ActiveRecord::Rollback.new
+    end
+
+    topic
+  end
 
   def clear_possible_flags(topic)
     # at this point we know the topic is a PM and has been replied to ... check if we need to clear any flags
