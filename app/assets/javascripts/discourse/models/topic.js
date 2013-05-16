@@ -449,6 +449,17 @@ Discourse.Topic.reopenClass({
     });
   },
 
+  mergeTopic: function(topicId, destinationTopicId) {
+    var promise = Discourse.ajax("/t/" + topicId + "/merge-topic", {
+      type: 'POST',
+      data: {destination_topic_id: destinationTopicId}
+    }).then(function (result) {
+      if (result.success) return result;
+      promise.reject();
+    });
+    return promise;
+  },
+
   movePosts: function(topicId, opts) {
     var promise = Discourse.ajax("/t/" + topicId + "/move-posts", {
       type: 'POST',

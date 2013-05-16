@@ -23,13 +23,20 @@ Discourse.MergeTopicView = Discourse.ModalBodyView.extend(Discourse.SelectedPost
   movePostsToExistingTopic: function() {
     this.set('saving', true);
 
-    var postIds = this.get('selectedPosts').map(function(p) { return p.get('id'); });
     var moveSelectedView = this;
 
-    Discourse.Topic.movePosts(this.get('topic.id'), {
-      destination_topic_id: this.get('selectedTopicId'),
-      post_ids: postIds
-    }).then(function(result) {
+    var promise = null;
+    if (this.get('allPostsSelected')) {
+      promise = Discourse.Topic.mergeTopic(this.get('topic.id'), this.get('selectedTopicId'));
+    } else {
+      var postIds = this.get('selectedPosts').map(function(p) { return p.get('id'); });
+      promise = Discourse.Topic.movePosts(this.get('topic.id'), {
+        destination_topic_id: this.get('selectedTopicId'),
+        post_ids: postIds
+      });
+    }
+
+    promise.then(function(result) {
       // Posts moved
       $('#discourse-modal').modal('hide');
       moveSelectedView.get('topicController').toggleMultiSelect();

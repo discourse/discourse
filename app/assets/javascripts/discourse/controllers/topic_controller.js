@@ -15,41 +15,48 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   loadingBelow: false,
   loadingAbove: false,
   needs: ['header', 'modal', 'composer', 'quoteButton'],
+  allPostsSelected: false,
+  selectedPosts: new Em.Set(),
 
-  selectedPosts: function() {
-    var posts = this.get('content.posts');
-    if (!posts) return null;
-    return posts.filterProperty('selected');
-  }.property('content.posts.@each.selected'),
-
-  canMoveSelected: function() {
-    if (!this.get('content.can_move_posts')) return false;
+  canMergeTopic: function() {
+    if (!this.get('can_move_posts')) return false;
     return (this.get('selectedPostsCount') > 0);
-  }.property('canDeleteSelected'),
+  }.property('selectedPostsCount'),
+
+  canSplitTopic: function() {
+    if (!this.get('can_move_posts')) return false;
+    if (this.get('allPostsSelected')) return false;
+    return (this.get('selectedPostsCount') > 0);
+  }.property('selectedPostsCount'),
+
+
+  canSelectAll: Em.computed.not('allPostsSelected'),
+
+  canDeselectAll: function () {
+    if (this.get('selectedPostsCount') > 0) return true;
+    if (this.get('allPostsSelected')) return true;
+  }.property('selectedPostsCount', 'allPostsSelected'),
 
   canDeleteSelected: function() {
     var selectedPosts = this.get('selectedPosts');
+
+    if (this.get('allPostsSelected')) return true;
     if (this.get('selectedPostsCount') === 0) return false;
 
     var canDelete = true;
-    selectedPosts.each(function(p) {
+    selectedPosts.forEach(function(p) {
       if (!p.get('can_delete')) {
         canDelete = false;
         return false;
       }
     });
     return canDelete;
-  }.property('selectedPosts'),
+  }.property('selectedPostsCount'),
 
   multiSelectChanged: function() {
     // Deselect all posts when multi select is turned off
     if (!this.get('multiSelect')) {
-      var posts = this.get('content.posts');
-      if (posts) {
-        posts.forEach(function(p) {
-          p.set('selected', false);
-        });
-      }
+      this.deselectAll();
     }
   }.observes('multiSelect'),
 
@@ -61,7 +68,32 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   }.property('content.loaded', 'currentPost', 'content.filtered_posts_count'),
 
   selectPost: function(post) {
-    post.toggleProperty('selected');
+    var selectedPosts = this.get('selectedPosts');
+    if (selectedPosts.contains(post)) {
+      selectedPosts.removeObject(post);
+      this.set('allPostsSelected', false);
+    } else {
+      selectedPosts.addObject(post);
+
+      // If the user manually selects all posts, all posts are selected
+      if (selectedPosts.length === this.get('posts_count')) {
+        this.set('allPostsSelected');
+      }
+    }
+  },
+
+  selectAll: function() {
+   var posts = this.get('posts');
+    var selectedPosts = this.get('selectedPosts');
+    if (posts) {
+      selectedPosts.addObjects(posts);
+    }
+    this.set('allPostsSelected', true);
+  },
+
+  deselectAll: function() {
+    this.get('selectedPosts').clear();
+    this.set('allPostsSelected', false);
   },
 
   toggleMultiSelect: function() {
@@ -90,14 +122,21 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     modalController.show(Discourse.MergeTopicView.create({
       topicController: this,
       topic: this.get('content'),
+      allPostsSelected: this.get('allPostsSelected'),
       selectedPosts: this.get('selectedPosts')
     }));
   },
 
   deleteSelected: function() {
     var topicController = this;
-    return bootbox.confirm(Em.String.i18n("post.delete.confirm", { count: this.get('selectedPostsCount')}), function(result) {
+    bootbox.confirm(Em.String.i18n("post.delete.confirm", { count: this.get('selectedPostsCount')}), function(result) {
       if (result) {
+
+        // If all posts are selected, it's the same thing as deleting the topic
+        if (topicController.get('allPostsSelected')) {
+          return topicController.deleteTopic();
+        }
+
         var selectedPosts = topicController.get('selectedPosts');
         Discourse.Post.deleteMany(selectedPosts);
         topicController.get('content.posts').removeObjects(selectedPosts);
@@ -245,7 +284,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     });
   }.observes('postFilters'),
 
-  deleteTopic: function(e) {
+  deleteTopic: function() {
     var topicController = this;
     this.unsubscribe();
     this.get('content').destroy().then(function() {
