@@ -143,8 +143,8 @@ Discourse.Markdown = {
       if (!text) return "";
 
       // don't do @username mentions inside <pre> or <code> blocks
-      text = text.replace(/<(pre|code)>([\s\S]*?@[\s\S]*?)<\/(pre|code)>/gi, function(wholeMatch, m1, m2, m3) {
-        return "<" + m1 + ">" + (m2.replace(/@/g, '&#64;')) + "</" + m3 + ">";
+      text = text.replace(/<(pre|code)>([\s\S](?!<(pre|code)>))*?@([\s\S](?!<(pre|code)>))*?<\/(pre|code)>/gi, function(m) {
+        return m.replace(/@/g, '&#64;');
       });
 
       // add @username mentions, if valid; must be bounded on left and right by non-word characters
