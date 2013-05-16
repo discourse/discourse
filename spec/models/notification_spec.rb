@@ -161,6 +161,33 @@ describe Notification do
     end
   end
 
+  describe 'saw_regular_notification_id' do
+    it 'correctly updates the read state' do
+      user = Fabricate(:user)
+
+      pm = Notification.create!(read: false,
+                           user_id: user.id,
+                           topic_id: 2,
+                           post_number: 1,
+                           data: '[]',
+                           notification_type: Notification.types[:private_message])
+
+      other = Notification.create!(read: false,
+                           user_id: user.id,
+                           topic_id: 2,
+                           post_number: 1,
+                           data: '[]',
+                           notification_type: Notification.types[:mentioned])
+
+
+      user.saw_notification_id(other.id)
+      user.reload
+
+      user.unread_notifications.should == 0
+      user.unread_private_messages.should == 1
+    end
+  end
+
   describe 'mark_posts_read' do
     it "marks multiple posts as read if needed" do
       user = Fabricate(:user)

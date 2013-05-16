@@ -267,12 +267,13 @@ class User < ActiveRecord::Base
 
   def reload
     @unread_notifications_by_type = nil
+    @unread_pms = nil
     super
   end
 
 
   def unread_private_messages
-    unread_notifications_by_type[Notification.types[:private_message]] || 0
+    @unread_pms ||= notifications.where("read = false AND notification_type = ?", Notification.types[:private_message]).count
   end
 
   def unread_notifications
@@ -280,7 +281,8 @@ class User < ActiveRecord::Base
   end
 
   def saw_notification_id(notification_id)
-    User.update_all ["seen_notification_id = ?", notification_id], ["seen_notification_id < ?", notification_id]
+    User.update_all ["seen_notification_id = ?", notification_id],
+      ["seen_notification_id < ?", notification_id]
   end
 
   def publish_notifications_state

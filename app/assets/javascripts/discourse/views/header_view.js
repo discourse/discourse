@@ -61,7 +61,6 @@ Discourse.HeaderView = Discourse.View.extend({
 
       // We've seen all the notifications now
       headerView.set('currentUser.unread_notifications', 0);
-      headerView.set('currentUser.unread_private_messages', 0);
       headerView.showDropdown($('#user-notifications'));
     });
     return false;
