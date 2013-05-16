@@ -604,32 +604,28 @@ fr:
           other: "les plus populaires"
         cancel: "Ré-afficher l'ensemble des messages de cette discussion."
 
-      move_selected:
-        title: "Déplacer les messages sélectionnés"
-        error: "Désolés, une erreur s'est produite lors du déplacement des messages."
+      split_topic:
+        title: "Scinder la discussion"
+        action: "scinder la discussion"
+        topic_name: "Nom de la nouvelle discussion :"
+        error: "Il y a eu une erreur lors du scindage de la discussion."
         instructions:
-          one: "Comment souhaitez-vous déplacer le message que vous avez sélectionné ?"
-          other: "Comment souhaitez-vous déplacer les <b>{{count}}</b> messages que vous avez sélectionné ?"
+          one: "Vous êtes sur le point de créer une nouvelle discussion avec le message que vous avez sélectionné."
+          other: "Vous êtes sur le point de créer une nouvelle discussion avec les <b>{{count}}</b> messages que vous avez sélectionné."
 
-        new_topic:
-          title: "Déplacer les messages sélectionnés dans une nouvelle discussion"
-          topic_name: "Nom de la nouvelle discussion :"
-          instructions:
-            one: "Vous êtes sur le point de créer une nouvelle discussion avec le message que vous avez sélectionné."
-            other: "Vous êtes sur le point de créer une nouvelle discussion avec les <b>{{count}}</b> messages que vous avez sélectionné."
-
-        existing_topic:
-          title: "Déplacer les messages sélectionnés dans une discussion existante"
-          instructions:
-            one: "Merci de sélectionner la discussion dans laquelle vous souhaitez déplacer le message que vous avez sélectionné."
-            other: "Merci de sélectionner la discussion dans laquelle vous souhaitez déplacer ces <b>{{count}}</b> messages que vous avez sélectionné."
+      merge_topic:
+        title: "Fusionner la discussion"
+        action: "fusionner la discussion"
+        error: "Il y a eu une erreur lors de la fusion."
+        instructions:
+          one: "Merci de sélectionner la discussion dans laquelle vous souhaitez déplacer le message que vous avez sélectionné."
+          other: "Merci de sélectionner la discussion dans laquelle vous souhaitez déplacer les <b>{{count}}</b> messages que vous avez sélectionné."
 
       multi_select:
         select: 'sélectioner'
         selected: '({{count}}) sélectionés'
         delete: "supprimer la sélection"
         cancel: "annuler la sélection"
-        move: "déplacer la sélection"
         description:
           one: "vous avez sélectionné <b>1</b> message."
           other: "Vous avez sélectionné <b>{{count}}</b> messages."
