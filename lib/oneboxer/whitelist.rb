@@ -56,7 +56,7 @@ module Oneboxer
        Entry.new(/^https?:\/\/(?:www\.)?bloomberg\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?ign\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?twitpic\.com\/.+/),
-       Entry.new(/^https?:\/\/(?:www\.)?techcrunch\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?techcrunch\.com\/.+/, false),
        Entry.new(/^https?:\/\/(?:www\.)?usatoday\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?go\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?businessinsider\.com\/.+/),
