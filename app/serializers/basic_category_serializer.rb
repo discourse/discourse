@@ -8,6 +8,7 @@ class BasicCategorySerializer < ApplicationSerializer
              :topic_count,
              :description,
              :topic_url,
-             :hotness
+             :hotness,
+             :secure
 
 end

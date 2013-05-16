@@ -128,6 +128,7 @@ class TopicViewSerializer < ApplicationSerializer
   def categoryName
     object.topic.category.name
   end
+
   def include_categoryName?
     object.topic.category.present?
   end
