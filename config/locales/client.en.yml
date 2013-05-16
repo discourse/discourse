@@ -601,32 +601,28 @@ en:
           other: "of {{count}} in the topic"
         cancel: "Show all posts in this topic again."
 
-      move_selected:
-        title: "Move Selected Posts"
-        error: "Sorry, there was an error moving those posts."
+      split_topic:
+        title: "Split Topic"
+        action: "split topic"
+        topic_name: "New Topic Name:"
+        error: "There was an error splitting that topic."
         instructions:
-          one: "How would you like to move this post?"
-          other: "How would you like to move the <b>{{count}}</b> posts you've selected?"
+          one: "You are about to create a new topic and populate it with the post you've selected."
+          other: "You are about to create a new topic and populate it with the <b>{{count}}</b> posts you've selected."
 
-        new_topic:
-          title: "Move Selected Posts to a New Topic"
-          topic_name: "New Topic Name:"
-          instructions:
-            one: "You are about to create a new topic and populate it with the post you've selected."
-            other: "You are about to create a new topic and populate it with the <b>{{count}}</b> posts you've selected."
-
-        existing_topic:
-          title: "Move Selected Posts to an Existing Topic"
-          instructions:
-            one: "Please choose the topic you'd like to move that post to."
-            other: "Please choose the topic you'd like to move those <b>{{count}}</b> posts to."
+      merge_topic:
+        title: "Merge Topic"
+        action: "merge topic"
+        error: "There was an error merging that topic."
+        instructions:
+          one: "Please choose the topic you'd like to move that post to."
+          other: "Please choose the topic you'd like to move those <b>{{count}}</b> posts to."
 
       multi_select:
         select: 'select'
         selected: 'selected ({{count}})'
         delete: delete selected
         cancel: cancel selecting
-        move: move selected
         description:
           one: You have selected <b>1</b> post.
           other: "You have selected <b>{{count}}</b> posts."
