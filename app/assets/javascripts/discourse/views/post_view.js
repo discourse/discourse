@@ -11,14 +11,14 @@ Discourse.PostView = Discourse.View.extend({
   templateName: 'post',
   classNameBindings: ['post.lastPost',
                       'postTypeClass',
-                      'post.selected',
+                      'selected',
                       'post.hidden:hidden',
                       'post.deleted_at:deleted',
                       'parentPost:replies-above'],
   postBinding: 'content',
 
   // TODO really we should do something cleaner here... this makes it work in debug but feels really messy
-  screenTrack: (function() {
+  screenTrack: function() {
     var parentView = this.get('parentView');
     var screenTrack = null;
     while (parentView && !screenTrack) {
@@ -26,17 +26,17 @@ Discourse.PostView = Discourse.View.extend({
       parentView = parentView.get('parentView');
     }
     return screenTrack;
-  }).property('parentView'),
+  }.property('parentView'),
 
-  postTypeClass: (function() {
+  postTypeClass: function() {
     return this.get('post.post_type') === Discourse.get('site.post_types.moderator_action') ? 'moderator' : 'regular';
-  }).property('post.post_type'),
+  }.property('post.post_type'),
 
   // If the cooked content changed, add the quote controls
-  cookedChanged: (function() {
+  cookedChanged: function() {
     var postView = this;
     Em.run.next(function() { postView.insertQuoteControls(); });
-  }).observes('post.cooked'),
+  }.observes('post.cooked'),
 
   init: function() {
     this._super();
@@ -45,13 +45,19 @@ Discourse.PostView = Discourse.View.extend({
 
   mouseUp: function(e) {
     if (this.get('controller.multiSelect') && (e.metaKey || e.ctrlKey)) {
-      this.toggleProperty('post.selected');
+      this.get('controller').selectPost(this.get('post'));
     }
   },
 
+  selected: function() {
+    var selectedPosts = this.get('controller.selectedPosts');
+    if (!selectedPosts) return false;
+    return selectedPosts.contains(this.get('post'));
+  }.property('controller.selectedPostsCount'),
+
   selectText: function() {
-    return this.get('post.selected') ? Em.String.i18n('topic.multi_select.selected', { count: this.get('controller.selectedPostsCount') }) : Em.String.i18n('topic.multi_select.select');
-  }.property('post.selected', 'controller.selectedPostsCount'),
+    return this.get('selected') ? Em.String.i18n('topic.multi_select.selected', { count: this.get('controller.selectedPostsCount') }) : Em.String.i18n('topic.multi_select.select');
+  }.property('selected', 'controller.selectedPostsCount'),
 
   repliesHidden: function() {
     return !this.get('repliesShown');

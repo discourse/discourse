@@ -10,8 +10,11 @@ Discourse.SelectedPostsCount = Em.Mixin.create({
 
   selectedPostsCount: function() {
     if (!this.get('selectedPosts')) return 0;
-    return this.get('selectedPosts').length;
-  }.property('selectedPosts')
+
+    if (this.get('allPostsSelected')) return this.get('posts_count') || this.get('topic.posts_count');
+
+    return this.get('selectedPosts.length');
+  }.property('selectedPosts.length', 'allPostsSelected')
 
 });
 

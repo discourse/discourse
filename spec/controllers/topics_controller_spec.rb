@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe TopicsController do
 
+
+
   context 'move_posts' do
     it 'needs you to be logged in' do
       lambda { xhr :post, :move_posts, topic_id: 111, title: 'blah', post_ids: [1,2,3] }.should raise_error(Discourse::NotLoggedIn)
@@ -93,6 +95,49 @@ describe TopicsController do
         end
       end
     end
+  end
+
+  context "merge_topic" do
+    it 'needs you to be logged in' do
+      lambda { xhr :post, :merge_topic, topic_id: 111, destination_topic_id: 345 }.should raise_error(Discourse::NotLoggedIn)
+    end
+
+    describe 'moving to a new topic' do
+      let!(:user) { log_in(:moderator) }
+      let(:p1) { Fabricate(:post, user: user) }
+      let(:topic) { p1.topic }
+
+      it "raises an error without destination_topic_id" do
+        lambda { xhr :post, :merge_topic, topic_id: topic.id }.should raise_error(Discourse::InvalidParameters)
+      end
+
+      it "raises an error when the user doesn't have permission to merge" do
+        Guardian.any_instance.expects(:can_move_posts?).returns(false)
+        xhr :post, :merge_topic, topic_id: 111, destination_topic_id: 345
+        response.should be_forbidden
+      end
+
+      let(:dest_topic) { Fabricate(:topic) }
+
+      context 'moves all the posts to the destination topic' do
+        let(:p2) { Fabricate(:post, user: user) }
+
+        before do
+          Topic.any_instance.expects(:move_posts).with(user, [p1.id], destination_topic_id: dest_topic.id).returns(topic)
+          xhr :post, :merge_topic, topic_id: topic.id, destination_topic_id: dest_topic.id
+        end
+
+        it "returns success" do
+          response.should be_success
+          result = ::JSON.parse(response.body)
+          result['success'].should be_true
+          result['url'].should be_present
+        end
+      end
+
+
+    end
+
   end
 
   context 'similar_to' do

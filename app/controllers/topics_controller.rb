@@ -15,6 +15,7 @@ class TopicsController < ApplicationController
                                           :unmute,
                                           :set_notifications,
                                           :move_posts,
+                                          :merge_topic,
                                           :clear_pin,
                                           :autoclose]
 
@@ -137,6 +138,20 @@ class TopicsController < ApplicationController
     render json: success_json
   end
 
+  def merge_topic
+    requires_parameters(:destination_topic_id)
+
+    topic = Topic.where(id: params[:topic_id]).first
+    guardian.ensure_can_move_posts!(topic)
+
+    dest_topic = topic.move_posts(current_user, topic.posts.pluck(:id), destination_topic_id: params[:destination_topic_id].to_i)
+    if dest_topic.present?
+      render json: {success: true, url: dest_topic.relative_url}
+    else
+      render json: {success: false}
+    end
+  end
+
   def move_posts
     requires_parameters(:post_ids)
 
@@ -153,7 +168,6 @@ class TopicsController < ApplicationController
     else
       render json: {success: false}
     end
-
   end
 
   def clear_pin
