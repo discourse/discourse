@@ -606,7 +606,7 @@ en:
         error: "Sorry, there was an error moving those posts."
         instructions:
           one: "How would you like to move this post?"
-          other: "How would you like to move the <b>{{count}}</b> posts you've created?"
+          other: "How would you like to move the <b>{{count}}</b> posts you've selected?"
 
         new_topic:
           title: "Move Selected Posts to a New Topic"
