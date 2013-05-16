@@ -72,11 +72,22 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     this.toggleProperty('summaryCollapsed');
   },
 
-  moveSelected: function() {
+  splitTopic: function() {
     var modalController = this.get('controllers.modal');
     if (!modalController) return;
 
-    modalController.show(Discourse.MoveSelectedView.create({
+    modalController.show(Discourse.SplitTopicView.create({
+      topicController: this,
+      topic: this.get('content'),
+      selectedPosts: this.get('selectedPosts')
+    }));
+  },
+
+  mergeTopic: function() {
+    var modalController = this.get('controllers.modal');
+    if (!modalController) return;
+
+    modalController.show(Discourse.MergeTopicView.create({
       topicController: this,
       topic: this.get('content'),
       selectedPosts: this.get('selectedPosts')

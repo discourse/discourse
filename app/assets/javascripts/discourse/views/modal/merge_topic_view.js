@@ -1,34 +1,33 @@
 /**
-  A modal view for handling moving of posts to a new topic
+  A modal view for handling moving of posts to an existing topic
 
-  @class MoveSelectedNewTopicView
+  @class MergeTopicView
   @extends Discourse.ModalBodyView
   @namespace Discourse
   @module Discourse
 **/
-Discourse.MoveSelectedNewTopicView = Discourse.ModalBodyView.extend(Discourse.SelectedPostsCount, {
-  templateName: 'modal/move_selected_new_topic',
-  title: Em.String.i18n('topic.move_selected.new_topic.title'),
-  saving: false,
+Discourse.MergeTopicView = Discourse.ModalBodyView.extend(Discourse.SelectedPostsCount, {
+  templateName: 'modal/merge_topic',
+  title: Em.String.i18n('topic.merge_topic.title'),
 
   buttonDisabled: function() {
     if (this.get('saving')) return true;
-    return this.blank('topicName');
-  }.property('saving', 'topicName'),
+    return this.blank('selectedTopicId');
+  }.property('selectedTopicId', 'saving'),
 
   buttonTitle: function() {
     if (this.get('saving')) return Em.String.i18n('saving');
-    return Em.String.i18n('topic.move_selected.title');
+    return Em.String.i18n('topic.merge_topic.title');
   }.property('saving'),
 
-  movePostsToNewTopic: function() {
+  movePostsToExistingTopic: function() {
     this.set('saving', true);
 
     var postIds = this.get('selectedPosts').map(function(p) { return p.get('id'); });
     var moveSelectedView = this;
 
     Discourse.Topic.movePosts(this.get('topic.id'), {
-      title: this.get('topicName'),
+      destination_topic_id: this.get('selectedTopicId'),
       post_ids: postIds
     }).then(function(result) {
       // Posts moved
@@ -37,11 +36,12 @@ Discourse.MoveSelectedNewTopicView = Discourse.ModalBodyView.extend(Discourse.Se
       Em.run.next(function() { Discourse.URL.routeTo(result.url); });
     }, function() {
       // Error moving posts
-      moveSelectedView.flash(Em.String.i18n('topic.move_selected.error'));
+      moveSelectedView.flash(Em.String.i18n('topic.merge_topic.error'));
       moveSelectedView.set('saving', false);
     });
     return false;
   }
+
 });
 
 
