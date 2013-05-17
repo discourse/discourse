@@ -1,3 +1,9 @@
+# encoding: utf-8
+# This file contains content for the server portion of Discourse used by Ruby
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
+
 da:
   time:
     formats:
