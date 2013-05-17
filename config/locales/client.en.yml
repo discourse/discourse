@@ -972,7 +972,7 @@ en:
         about: "Site Customization allow you to modify stylesheets and headers on the site. Choose or add one to start editing."
 
       email_logs:
-        title: "Email Logs"
+        title: "Email"
         sent_at: "Sent At"
         email_type: "Email Type"
         to_address: "To Address"
