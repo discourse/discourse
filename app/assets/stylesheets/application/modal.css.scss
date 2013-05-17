@@ -201,6 +201,22 @@
   &.small .modal-body {
     height: 290px;
   }
+  .secure-category-options {
+    margin: 10px 0 0 16px;
+    .badge-list {
+      margin: 10px 0;
+      li {
+        margin: 0 4px 8px 0;
+        a {
+          color: #888;
+          cursor: pointer;
+        }
+        a:hover {
+          color: $black;
+        }
+      }
+    }
+  }
 }
 
 .modal-tab {

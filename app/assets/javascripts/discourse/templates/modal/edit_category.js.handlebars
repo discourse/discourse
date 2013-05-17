@@ -62,20 +62,24 @@
     {{#unless is_uncategorized}}
       <div {{bindAttr class=":modal-tab :options-tab view.securitySelected::invisible"}}>
         <section class='field'>
-          <label>{{i18n category.security}}</label>
           <label>
-          {{view Ember.Checkbox checkedBinding="secure"}}
-          {{i18n category.is_secure}}
+            {{view Ember.Checkbox checkedBinding="secure"}}
+            {{i18n category.is_secure}}
           </label>
           {{#if secure}}
-            <div>
-              {{i18n category.allowed_groups}}
-              {{#each groups}}
-                {{this}} <a {{action removeGroup this target="view"}}>x</a>
-              {{/each}}
+            <div class="secure-category-options">
+              <label>{{i18n category.allowed_groups}}</label>
+              <ul class="badge-list">
+                {{#each groups}}
+                  <li class="badge-group">
+                    {{this}}
+                    <a {{action removeGroup this target="view"}}><i class="icon icon-remove-sign"></i></a>
+                  </li>
+                {{/each}}
+              </ul>
+              {{view Ember.Select contentBinding="availableGroups" valueBinding="view.selectedGroup"}}
+              <button {{action addGroup target="view"}} class="btn btn-small">{{i18n category.add_group}}</button>
             </div>
-            {{view Ember.Select contentBinding="availableGroups" valueBinding="view.selectedGroup"}}
-            <button {{action addGroup target="view"}}>{{i18n category.add_group}}</button>
           {{/if}}
         </section>
       </div>
