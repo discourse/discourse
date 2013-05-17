@@ -724,7 +724,7 @@ es:
         delete_confirm: "Delete this customization?"
 
       email_logs:
-        title: "Email Logs"
+        title: "Email"
         sent_at: "Sent At"
         email_type: "Email Type"
         to_address: "To Address"
