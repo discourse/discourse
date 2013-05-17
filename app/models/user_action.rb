@@ -21,8 +21,8 @@ class UserAction < ActiveRecord::Base
   GOT_PRIVATE_MESSAGE = 13
 
   ORDER = Hash[*[
-    NEW_PRIVATE_MESSAGE,
     GOT_PRIVATE_MESSAGE,
+    NEW_PRIVATE_MESSAGE,
     BOOKMARK,
     NEW_TOPIC,
     REPLY,
