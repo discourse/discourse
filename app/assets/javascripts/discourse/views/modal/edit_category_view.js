@@ -8,7 +8,7 @@
 **/
 Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
   templateName: 'modal/edit_category',
-  generalSelected:   Ember.computed.equal('selectedTab', 'general'),
+  generalSelected:  Ember.computed.equal('selectedTab', 'general'),
   securitySelected: Ember.computed.equal('selectedTab', 'security'),
   settingsSelected: Ember.computed.equal('selectedTab', 'settings'),
   foregroundColors: ['FFFFFF', '000000'],
@@ -20,7 +20,7 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
 
   modalClass: function() {
     return "edit-category-modal " + (this.present('category.description') ? 'full' : 'small');
-  }.property(),
+  }.property('category.description'),
 
   selectGeneral: function() {
     this.set('selectedTab', 'general');
