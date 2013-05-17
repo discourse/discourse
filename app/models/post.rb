@@ -148,23 +148,21 @@ class Post < ActiveRecord::Base
 
   # Ensure maximum amount of mentions in a post
   def max_mention_validator
-    if acting_user.present? && acting_user.has_trust_level?(:basic)
-      errors.add(:base, I18n.t(:too_many_mentions, count: SiteSetting.max_mentions_per_post)) if raw_mentions.size > SiteSetting.max_mentions_per_post
+    if acting_user_is_trusted?
+      add_error_if_count_exceeded(:too_many_mentions, raw_mentions.size, SiteSetting.max_mentions_per_post)
     else
-      errors.add(:base, I18n.t(:too_many_mentions_newuser, count: SiteSetting.newuser_max_mentions_per_post)) if raw_mentions.size > SiteSetting.newuser_max_mentions_per_post
+      add_error_if_count_exceeded(:too_many_mentions_newuser, raw_mentions.size, SiteSetting.newuser_max_mentions_per_post)
     end
   end
 
   # Ensure new users can not put too many images in a post
   def max_images_validator
-    return if acting_user.present? && acting_user.has_trust_level?(:basic)
-    errors.add(:base, I18n.t(:too_many_images, count: SiteSetting.newuser_max_images)) if image_count > SiteSetting.newuser_max_images
+    add_error_if_count_exceeded(:too_many_images, image_count, SiteSetting.newuser_max_images) unless acting_user_is_trusted?
   end
 
   # Ensure new users can not put too many links in a post
   def max_links_validator
-    return if acting_user.present? && acting_user.has_trust_level?(:basic)
-    errors.add(:base, I18n.t(:too_many_links, count: SiteSetting.newuser_max_links)) if link_count > SiteSetting.newuser_max_links
+    add_error_if_count_exceeded(:too_many_links, link_count, SiteSetting.newuser_max_links) unless acting_user_is_trusted?
   end
 
 
@@ -475,5 +473,15 @@ class Post < ActiveRecord::Base
 
   def self.private_messages_count_per_day(since_days_ago, topic_subtype)
     private_posts.with_topic_subtype(topic_subtype).where('posts.created_at > ?', since_days_ago.days.ago).group('date(posts.created_at)').order('date(posts.created_at)').count
+  end
+
+  private
+
+  def acting_user_is_trusted?
+    acting_user.present? && acting_user.has_trust_level?(:basic)
+  end
+
+  def add_error_if_count_exceeded(key_for_translation, current_count, max_count)
+    errors.add(:base, I18n.t(key_for_translation, count: max_count)) if current_count > max_count
   end
 end
