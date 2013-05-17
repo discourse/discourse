@@ -111,7 +111,7 @@ class Category < ActiveRecord::Base
   def group_names=(names)
     # this line bothers me, destroying in AR can not seem to be queued, thinking of extending it
     category_groups.destroy_all unless new_record?
-    ids = Group.where(name: names.split(",")).select(:id).map(&:id)
+    ids = Group.where(name: names.split(",")).pluck(:id)
     ids.each do |id|
       category_groups.build(group_id: id)
     end
