@@ -77,10 +77,7 @@ class Group < ActiveRecord::Base
   end
 
   def self.[](name)
-    unless g = lookup_group(name)
-      g = refresh_automatic_group!(name)
-    end
-    g
+    lookup_group(name) || refresh_automatic_group!(name)
   end
 
   def self.lookup_group(name)
