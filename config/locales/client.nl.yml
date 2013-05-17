@@ -36,6 +36,19 @@ nl:
     now: zonet
     read_more: lees verder
 
+    in_n_seconds:
+      one: "over 1 seconde"
+      other: "over {{count}} secondes"
+    in_n_minutes:
+      one: "over 1 minuut"
+      other: "over {{count}} minuten"
+    in_n_hours:
+      one: "over 1 uur"
+      other: "over {{count}} uren"
+    in_n_days:
+      one: "over 1 dag"
+      other: "over {{count}} dagen"
+
     suggested_topics:
       title: Aanbevolen topics
 
@@ -57,7 +70,7 @@ nl:
     choose_topic:
       none_found: Geen topics gevonden.
       title:
-        search: "Zoek naar een topic:"
+        search: "Zoek naar een topic op naam, url of id:"
         placeholder: typ hier de titel van de topic
 
     user_action:
@@ -374,6 +387,10 @@ nl:
       help: Hulp over Markdown
       toggler: verberg of toon de editor
 
+      admin_options_title: "Optionele stafinstellingen voor deze topic"
+      auto_close_label: "Sluit topic automatisch na:"
+      auto_close_units: "dagen"
+
     notifications:
       title: "notificaties van @naam vermeldingen, reacties op je berichten en topics, privé-berichten, etc."
       none: "Er zijn nu geen notificaties."
@@ -483,6 +500,12 @@ nl:
       jump_reply_down: spring naar een latere reactie
       deleted: Deze topic is verwijderd
 
+      auto_close_notice: "Deze topic zal automatisch %{timeLeft} gesloten worden."
+      auto_close_title: 'Instellingen voor automatisch sluiten'
+      auto_close_save: Opslaan
+      auto_close_cancel: Annuleren
+      auto_close_remove: Sluit deze topic niet automatisch
+
       progress:
         title: topic voortgang
         jump_top: spring naar eerste bericht
@@ -520,6 +543,7 @@ nl:
         delete: Verwijder topic
         open: Open topic
         close: Sluit topic
+        auto_close: "Automatisch sluiten"
         unpin: Ontpin topic
         pin: Pin topic
         unarchive: De-archiveer topic
@@ -527,7 +551,7 @@ nl:
         invisible: Maak onzichtbaar
         visible: Maak zichtbaar
         reset_read: Reset leesdata
-        multi_select: Selecteer meerdere berichten
+        multi_select: Selecteer berichten voor samenvoegen/splitsen
         convert_to_topic: Zet om naar normale topic
 
       reply:
@@ -581,31 +605,28 @@ nl:
           other: "van {{count}} in deze topic."
         cancel: Laat alle posts in deze topic zien.
 
-      move_selected:
-        title: Verplaats geslecteerde berichten
-        error: "Sorry, er is iets misgegaan bij het verplaatsen van dit bericht."
+      split_topic:
+        title: Splits topic
+        action: splits topic
+        topic_name: "Naam nieuwe topic:"
+        error: "Er ging iets mis bij het splitsen van die topic."
         instructions:
-          one: "Hoe wil je dit bericht verplaatsen?"
-          other: "Hoe wil je de <b>{{count}}</b> berichten die je gemaakt hebt verplaatsen?"
-        new_topic:
-          title: "Verplaatst geselecteerde berichten naar een nieuwe topic"
-          topic_name: "Nieuwe topicnaam:"
-          instructions:
-            one: "Je staat op het punt een nieuwe topic aan te maken en het te vullen met het bericht dat je geselecteerd hebt."
-            other: "Je staat op het punt een nieuwe topic aan te maken en het te vullen met de <b>{{count}}</b> berichten die je geselecteerd hebt."
+          one: "Je staat op het punt een nieuwe topic aan te maken en het te vullen met het bericht dat je geselecteerd hebt."
+          other: "Je staat op het punt een nieuwe topic aan te maken en het te vullen met de <b>{{count}}</b> berichten die je geselecteerd hebt."
 
-        existing_topic:
-          title: "Verplaats geselecteerde berichten naar een bestaande topic"
-          instructions:
-            one: "Selecteer de topic waarnaar je het bericht wil verplaatsen."
-            other: "Selecteer de topic waarnaar je de <b>{{count}}</b> berichten wil verplaatsen."
+      merge_topic:
+        title: Voeg topic samen
+        action: voeg topic samen
+        error: "There was an error merging that topic."
+        instructions:
+          one: "Selecteer de topic waarnaar je het bericht wil verplaatsen."
+          other: "Selecteer de topic waarnaar je de <b>{{count}}</b> berichten wil verplaatsen."
 
       multi_select:
         select: selecteer
         selected: "geselecteerd ({{count}})"
         delete: verwijder geselecteerde
         cancel: annuleer selectie
-        move: verplaats geselecteerde
         description:
           one: Je hebt <b>één</b> bericht geselecteerd.
           other: "Je hebt <b>{{count}}</b> berichten geselecteerd."
@@ -954,7 +975,7 @@ nl:
         about: Met aanpassingen aan de site kun je stylesheets en headers wijzigen. Kies of voeg een toe om te beginnen.
 
       email_logs:
-        title: E-mail logs
+        title: E-mail
         sent_at: Verzonden op
         email_type: E-mailtype
         to_address: "Ontvangeradres"
