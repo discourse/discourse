@@ -67,6 +67,7 @@ class PostCreator
       post.no_bump = @opts[:no_bump] if @opts[:no_bump].present?
       post.extract_quoted_post_numbers
       post.acting_user = @opts[:acting_user] if @opts[:acting_user].present?
+      post.created_at = Time.zone.parse(@opts[:created_at].to_s) if @opts[:created_at].present?
 
       post.image_sizes = @opts[:image_sizes] if @opts[:image_sizes].present?
       post.invalidate_oneboxes = @opts[:invalidate_oneboxes] if @opts[:invalidate_oneboxes].present?
@@ -193,6 +194,7 @@ class PostCreator
     category = Category.where(name: @opts[:category]).first
     topic_params[:category_id] = category.id if category.present?
     topic_params[:meta_data] = @opts[:meta_data] if @opts[:meta_data].present?
+    topic_params[:created_at] = Time.zone.parse(@opts[:created_at].to_s) if @opts[:created_at].present?
 
     topic = Topic.new(topic_params)
 
