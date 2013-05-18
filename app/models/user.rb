@@ -307,7 +307,7 @@ class User < ActiveRecord::Base
   end
 
   def regular?
-    !(admin? || moderator?)
+    !staff?
   end
 
   def password=(password)
