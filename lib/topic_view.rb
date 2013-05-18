@@ -283,14 +283,10 @@ class TopicView
   private
 
   def filter_posts_in_range(min, max)
-    max_index = (filtered_post_ids.length - 1)
+    post_count = (filtered_post_ids.length - 1)
 
-    # If we're off the charts, return nil
-    return nil if min > max_index
-
-    # Pin max to the last post
-    max = max_index if max > max_index
-    min = 0 if min < 0
+    max = [max, post_count].min
+    min = [[min, max].min, 0].max
 
     @index_offset = min
 
