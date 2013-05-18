@@ -325,10 +325,6 @@ class User < ActiveRecord::Base
     self.password_hash == hash_password(password, salt)
   end
 
-  def seen?(date)
-    last_seen_at.to_date >= date if last_seen_at.present?
-  end
-
   def seen_before?
     last_seen_at.present?
   end
@@ -338,14 +334,9 @@ class User < ActiveRecord::Base
   end
 
   def update_visit_record!(date)
-    unless seen_before?
+    unless has_visit_record?(date)
+      update_column(:days_visited, days_visited + 1)
       user_visits.create!(visited_at: date)
-      update_column(:days_visited, 1)
-    end
-
-    unless seen?(date) || has_visit_record?(date)
-      user_visits.create!(visited_at: date)
-      User.update_all('days_visited = days_visited + 1', id: self.id)
     end
   end
 
