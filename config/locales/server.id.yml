@@ -208,7 +208,7 @@ id:
       long_form: 'flagged this as off-topic'
     spam:
       title: 'Spam'
-      description: 'This post is effectively an advertisement with no disclosure. It is not useful or relevant to the current conversation, but promotional in nature.'
+      description: 'This post is an advertisement. It is not useful or relevant to the current conversation, but promotional in nature.'
       long_form: 'flagged this as spam'
     inappropriate:
       title: 'Inappropriate'
