@@ -244,7 +244,7 @@ describe TopicView do
       end
     end
 
-    describe "fitler_posts_before" do
+    describe "filter_posts_before" do
       it "returns undeleted posts before a post" do
         topic_view.filter_posts_before(p5.post_number).should == [p3, p2, p1]
         topic_view.should_not be_initial_load
