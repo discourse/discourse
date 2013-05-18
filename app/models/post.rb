@@ -39,6 +39,7 @@ class Post < ActiveRecord::Base
   SHORT_POST_CHARS = 1200
 
   scope :by_newest, order('created_at desc, id desc')
+  scope :by_post_number, order('post_number ASC')
   scope :with_user, includes(:user)
   scope :public_posts, -> { joins(:topic).where('topics.archetype <> ?', Archetype.private_message) }
   scope :private_posts, -> { joins(:topic).where('topics.archetype = ?', Archetype.private_message) }
