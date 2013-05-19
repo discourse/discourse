@@ -224,7 +224,27 @@ describe TopicView do
       end
     end
 
-    describe "fitler_posts_before" do
+    describe '#filter_posts_paged' do
+      before { SiteSetting.stubs(:posts_per_page).returns(1) }
+
+      it 'returns correct posts for first page' do
+        topic_view.filter_posts_paged(1).should == [p1, p2]
+      end
+
+      it 'returns correct posts for requested page number' do
+        topic_view.filter_posts_paged(2).should == [p2, p3]
+      end
+
+      it 'returns correct posts for last page' do
+        topic_view.filter_posts_paged(4).should == [p5]
+      end
+
+      it 'returns posts for last page when page is out of range' do
+        topic_view.filter_posts_paged(100).should == [p5]
+      end
+    end
+
+    describe "filter_posts_before" do
       it "returns undeleted posts before a post" do
         topic_view.filter_posts_before(p5.post_number).should == [p3, p2, p1]
         topic_view.should_not be_initial_load
@@ -289,9 +309,18 @@ describe TopicView do
         near_view.index_offset.should == 1
         near_view.index_reverse.should be_false
       end
+
+      context "when 'posts per page' exceeds the number of posts" do
+        before { SiteSetting.stubs(:posts_per_page).returns(100) }
+
+        it 'returns all the posts' do
+          near_view = topic_view_near(p5)
+          near_view.posts.should == [p1, p2, p3, p5]
+          near_view.index_offset.should == 0
+          near_view.index_reverse.should be_false
+        end
+      end
     end
-
   end
-
 end
 
