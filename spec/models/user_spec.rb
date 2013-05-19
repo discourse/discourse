@@ -321,6 +321,46 @@ describe User do
 
   end
 
+  describe 'staff and regular users' do
+    let(:user) { Fabricate.build(:user) }
+
+    describe '#staff?' do
+      subject { user.staff? }
+
+      it { should be_false }
+
+      context 'for a moderator user' do
+        before { user.moderator = true }
+
+        it { should be_true }
+      end
+
+      context 'for an admin user' do
+        before { user.admin = true }
+
+        it { should be_true }
+      end
+    end
+
+    describe '#regular?' do
+      subject { user.regular? }
+
+      it { should be_true }
+
+      context 'for a moderator user' do
+        before { user.moderator = true }
+
+        it { should be_false }
+      end
+
+      context 'for an admin user' do
+        before { user.admin = true }
+
+        it { should be_false }
+      end
+    end
+  end
+
   describe 'temporary_key' do
 
     let(:user) { Fabricate(:user) }
