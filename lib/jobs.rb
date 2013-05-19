@@ -66,7 +66,11 @@ module Jobs
           ActiveRecord::Base.connection_handler.clear_active_connections!
         end
       end
+
+    ensure
+      ActiveRecord::Base.connection_handler.clear_active_connections!
     end
+
   end
 
   def self.enqueue(job_name, opts={})
