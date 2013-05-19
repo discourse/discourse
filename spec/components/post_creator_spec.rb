@@ -284,5 +284,27 @@ describe PostCreator do
       target_user2.notifications.count.should == 1
     end
   end
+
+  context 'setting created_at' do
+    created_at = 1.week.ago
+    let(:topic) do
+      PostCreator.create(user,
+                         raw: 'This is very interesting test post content',
+                         title: 'This is a very interesting test post title',
+                         created_at: created_at)
+    end
+
+    let(:post) do
+      PostCreator.create(user,
+                         raw: 'This is very interesting test post content',
+                         topic_id: Topic.last,
+                         created_at: created_at)
+    end
+
+    it 'acts correctly' do
+      topic.created_at.should be_within(10.seconds).of(created_at)
+      post.created_at.should be_within(10.seconds).of(created_at)
+    end
+  end
 end
 
