@@ -1,11 +1,11 @@
 <h3><i class='icon icon-envelope-alt'></i> {{i18n private_message_info.title}}</h3>
 <div class='participants clearfix'>
-  {{#each content.allowed_groups}}
+  {{#each allowed_groups}}
   <div class='user group'>
     #{{unbound name}}
   </div>
   {{/each}}
-  {{#each content.allowed_users}}
+  {{#each allowed_users}}
   <div class='user'>
     <a href='/users/{{lower username}}'>
       {{avatar this imageSize="small"}}
@@ -16,8 +16,8 @@
   </div>
   {{/each}}
 </div>
-{{#if controller.content.can_invite_to}}
+{{#if can_invite_to}}
   <div class='controls'>
-    <button class='btn' {{action showPrivateInviteModal target="controller"}}>{{i18n private_message_info.invite}}</button>
+    <button class='btn' {{action showPrivateInviteModal}}>{{i18n private_message_info.invite}}</button>
   </div>
 {{/if}}

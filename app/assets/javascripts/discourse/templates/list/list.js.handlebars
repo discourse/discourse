@@ -1,20 +1,20 @@
 <div id='list-controls'>
   <div class="container">
     <ul class="nav nav-pills" id='category-filter'>
-      {{#each controller.availableNavItems}}
+      {{#each availableNavItems}}
         {{view Discourse.NavItemView contentBinding="this"}}
       {{/each}}
     </ul>
 
-    {{#if controller.canCreateTopic}}
+    {{#if canCreateTopic}}
       <button class='btn btn-default' {{action createTopic target="controller"}}><i class='icon icon-plus'></i>{{view.createTopicText}}</button>
     {{/if}}
 
-    {{#if controller.canEditCategory}}
+    {{#if canEditCategory}}
       <button class='btn btn-default' {{action editCategory target="controller"}}>{{i18n category.edit_long}}</button>
     {{/if}}
 
-    {{#if controller.canCreateCategory}}
+    {{#if canCreateCategory}}
       <button class='btn btn-default' {{action createCategory target="controller"}}><i class='icon icon-plus'></i>{{i18n category.create}}</button>
     {{/if}}
 
@@ -26,7 +26,7 @@
 
     <div class="full-width">
       <div id='list-area'>
-        {{#if controller.loading}}
+        {{#if loading}}
           <div class='contents loading'>
             <table id='topic-list'>
               <tr>

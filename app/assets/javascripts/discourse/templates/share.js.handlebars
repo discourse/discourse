@@ -1,10 +1,10 @@
 <h3>{{view.title}}</h3>
 <div><input type='text' /></div>
 
-{{#each controller.shareLinks}}
+{{#each shareLinks}}
   {{view Discourse.ShareLinkView contentBinding="this"}}
 {{/each}}
 
 <div class='link'>
-  <a href='#' {{action close target="controller"}} title='{{i18n share.close}}'><i class="icon icon-remove-sign"></i></a>
+  <a href='#' {{action close}} title='{{i18n share.close}}'><i class="icon icon-remove-sign"></i></a>
 </div>
