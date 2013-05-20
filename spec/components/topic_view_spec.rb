@@ -227,20 +227,11 @@ describe TopicView do
     describe '#filter_posts_paged' do
       before { SiteSetting.stubs(:posts_per_page).returns(1) }
 
-      it 'returns correct posts for first page' do
+      it 'returns correct posts for all pages' do
         topic_view.filter_posts_paged(1).should == [p1, p2]
-      end
-
-      it 'returns correct posts for requested page number' do
         topic_view.filter_posts_paged(2).should == [p2, p3]
-      end
-
-      it 'returns correct posts for last page' do
         topic_view.filter_posts_paged(4).should == [p5]
-      end
-
-      it 'returns posts for last page when page is out of range' do
-        topic_view.filter_posts_paged(100).should == [p5]
+        topic_view.filter_posts_paged(100).should == []
       end
     end
 

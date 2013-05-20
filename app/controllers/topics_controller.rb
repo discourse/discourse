@@ -25,7 +25,10 @@ class TopicsController < ApplicationController
   caches_action :avatar, cache_path: Proc.new {|c| "#{c.params[:post_number]}-#{c.params[:topic_id]}" }
 
   def show
-    create_topic_view
+    opts = params.slice(:username_filters, :best_of, :page, :post_number, :posts_before, :posts_after, :best)
+    @topic_view = TopicView.new(params[:id] || params[:topic_id], current_user, opts)
+
+    raise Discourse::NotFound unless @topic_view.posts.present?
 
     anonymous_etag(@topic_view.topic) do
       redirect_to_correct_topic && return if slugs_do_not_match
@@ -195,11 +198,6 @@ class TopicsController < ApplicationController
   end
 
   private
-
-  def create_topic_view
-    opts = params.slice(:username_filters, :best_of, :page, :post_number, :posts_before, :posts_after, :best)
-    @topic_view = TopicView.new(params[:id] || params[:topic_id], current_user, opts)
-  end
 
   def toggle_mute(v)
     @topic = Topic.where(id: params[:topic_id].to_i).first

@@ -65,14 +65,13 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Discourse::NotFound do
-    if !request.format || request.format.html?
-      # for now do a simple remap, we may look at cleaner ways of doing the render
-      #
-      # Sam: I am confused about this, we need a comment that explains why this is conditional
-      raise ActiveRecord::RecordNotFound
-    else
-      render file: 'public/404', formats: [:html], layout: false, status: 404
-    end
+
+    f = Topic.where(deleted_at: nil, archetype: "regular")
+    @latest = f.order('views desc').take(10)
+    @recent = f.order('created_at desc').take(10)
+    @slug =  params[:slug].class == String ? params[:slug] : ''
+    @slug.gsub!('-',' ')
+    render status: 404, layout: 'no_js', template: '/exceptions/not_found'
   end
 
   rescue_from Discourse::InvalidAccess do
