@@ -1,4 +1,4 @@
-{{view Ember.TextField valueBinding="view.term" placeholderBinding="view.searchPlaceholder"}}
+{{textField value=view.term placeholderBinding="view.searchPlaceholder"}}
 {{#with view}}
   {{#unless loading}}
     {{#unless noResults}}
@@ -15,12 +15,12 @@
             {{/if}}
           </li>
           {{view Discourse.SearchResultsTypeView typeBinding="type" contentBinding="results"}}
-        </ul>    
+        </ul>
       {{/each}}
     {{else}}
       <div class='no-results'>
         {{i18n search.no_results}}
-      </div>  
+      </div>
     {{/unless}}
   {{else}}
   <div class='searching'><i class='icon-spinner icon-spin'></i></div>
