@@ -901,6 +901,13 @@ zh_CN:
 
       api:
         title: "应用开发接口（API）"
+        long_title: "API信息"
+        key: "密钥"
+        generate: "生成API密钥"
+        regenerate: "重新生成API密钥"
+        info_html: "API密钥可以用来通过JSON调用创建和更新主题。"
+        note_html: "请<strong>安全的</strong>保管好本密钥，任何拥有该密钥的用户可以使用它以论坛任何用户的名义来发帖。"
+
       customize:
         title: "定制"
         long_title: "站点定制"

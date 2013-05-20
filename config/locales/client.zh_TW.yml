@@ -901,6 +901,13 @@ zh_TW:
 
       api:
         title: "應用開發接口（API）"
+        long_title: "API訊息"
+        key: "密鈅"
+        generate: "生成API密鈅"
+        regenerate: "重新生成API密鈅"
+        info_html: "API密鈅可以用來通過JSON調用創建和更新主題。"
+        note_html: "請<strong>安全的</strong>保管好密鈅，任何擁有該密鈅的用戶，可以使用它以論壇任何用戶的身份發帖。"
+
       customize:
         title: "定制"
         long_title: "站點定制"
