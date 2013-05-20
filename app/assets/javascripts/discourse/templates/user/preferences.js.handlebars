@@ -14,7 +14,7 @@
   <div class="control-group">
     <label class="control-label">{{i18n user.name.title}}</label>
     <div class="controls">
-      {{view Ember.TextField valueBinding="content.name" classNames="input-xxlarge"}}
+      {{textField value=name classNames="input-xxlarge"}}
     </div>
     <div class='instructions'>
       {{i18n user.name.instructions}}
@@ -59,7 +59,7 @@
   <div class="control-group">
     <label class="control-label">{{i18n user.website}}</label>
     <div class="controls">
-      {{view Ember.TextField valueBinding="content.website" classNames="input-xxlarge"}}
+      {{textField value=website classNames="input-xxlarge"}}
     </div>
   </div>
 

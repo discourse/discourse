@@ -17,10 +17,10 @@
   <div class="control-group">
     <label class="control-label">{{i18n user.username.title}}</label>
     <div class="controls">
-      {{view Ember.TextField valueBinding="controller.newUsername" elementId="change_username" classNames="input-xxlarge" maxlength="15"}}
+      {{textField value=newUsername id="change_username" classNames="input-xxlarge" maxlength="15"}}
     </div>
     <div class='instructions'>
-      {{#if controller.taken}}
+      {{#if taken}}
         {{i18n user.change_username.taken}}
       {{/if}}
       <span>{{ errorMessage }}</span>
@@ -29,7 +29,7 @@
 
   <div class="control-group">
     <div class="controls">
-        <button {{action changeUsername target="controller"}} {{bindAttr disabled="controller.saveDisabled"}} class="btn btn-primary">{{controller.saveButtonText}}</button>
+        <button {{action changeUsername}} {{bindAttr disabled="saveDisabled"}} class="btn btn-primary">{{saveButtonText}}</button>
         {{#if saved}}{{i18n saved}}{{/if}}
     </div>
   </div>
