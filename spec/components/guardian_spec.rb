@@ -38,6 +38,13 @@ describe Guardian do
       Guardian.new(user).post_can_act?(post, :like).should be_false
     end
 
+    # A COMMENT IN THE GUARDIAN CLASS IMPLIED THIS TEST SHOULD PASS, BUT IT WON'T
+    it "always allows flagging" do
+      pending "need clarification of intended behavior, is flagging of archived topic posts allowed?"
+      post.topic.archived = true
+      Guardian.new(user).post_can_act?(post, :spam).should be_true
+    end
+
     it "returns false when liking yourself" do
       Guardian.new(post.user).post_can_act?(post, :like).should be_false
     end
@@ -760,7 +767,7 @@ describe Guardian do
       Guardian.new.can_grant_moderation?(user).should be_false
     end
 
-    it "wont allow a regular user to revoke an modearator's access" do
+    it "wont allow a regular user to revoke an moderator's access" do
       Guardian.new(user).can_grant_moderation?(moderator).should be_false
     end
 
