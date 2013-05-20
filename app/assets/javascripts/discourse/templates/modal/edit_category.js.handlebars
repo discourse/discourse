@@ -20,7 +20,7 @@
       <form>
         <section class='field'>
           <label>{{i18n category.name}}</label>
-          {{view Discourse.TextField valueBinding="name" placeholderKey="category.name_placeholder" maxlength="50"}}
+          {{textField value=name placeholderKey="category.name_placeholder" maxlength="50"}}
         </section>
 
         {{#unless is_uncategorized}}
@@ -46,13 +46,13 @@
 
             <div class='input-prepend input-append' style="margin-top: 10px;">
               <span class='color-title'>{{i18n category.background_color}}:</span>
-              <span class='add-on'>#</span>{{view Discourse.TextField valueBinding="color" placeholderKey="category.color_placeholder" maxlength="6"}}
+              <span class='add-on'>#</span>{{textField value=color placeholderKey="category.color_placeholder" maxlength="6"}}
               {{view Discourse.ColorsView colorsBinding="view.backgroundColors" usedColorsBinding="view.usedBackgroundColors" valueBinding="color"}}
             </div>
 
             <div class='input-prepend input-append'>
               <span class='color-title'>{{i18n category.foreground_color}}:</span>
-              <span class='add-on'>#</span>{{view Discourse.TextField valueBinding="text_color" placeholderKey="category.color_placeholder" maxlength="6"}}
+              <span class='add-on'>#</span>{{textField value=text_color placeholderKey="category.color_placeholder" maxlength="6"}}
               {{view Discourse.ColorsView colorsBinding="view.foregroundColors" valueBinding="text_color"}}
             </div>
           </div>
@@ -63,7 +63,7 @@
       <div {{bindAttr class=":modal-tab :options-tab view.securitySelected::invisible"}}>
         <section class='field'>
           <label>
-            {{view Ember.Checkbox checkedBinding="secure"}}
+            {{input type="checkbox" checked=secure}}
             {{i18n category.is_secure}}
           </label>
           {{#if secure}}

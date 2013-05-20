@@ -9,13 +9,13 @@
     </ul>
   </div>
   <div class='span5 username controls'>
-    {{view Discourse.TextField valueBinding="controller.username" placeholderKey="username"}}
+    {{textField value=username placeholderKey="username"}}
   </div>
 </div>
 
 {{#if hasSelection}}
   <div id='selected-controls'>
-    <button {{action approveUsers target="controller"}} class='btn'>{{countI18n admin.users.approved_selected countBinding="selectedCount"}}</button>
+    <button {{action approveUsers}} class='btn'>{{countI18n admin.users.approved_selected countBinding="selectedCount"}}</button>
   </div>
 {{/if}}
 
@@ -49,7 +49,7 @@
 
       {{#each content}}
         <tr {{bindAttr class="selected"}}>
-          {{#if controller.showApproval}}
+          {{#if showApproval}}
             <td>
               {{#if can_approve}}
                 {{view Ember.Checkbox checkedBinding="selected"}}
@@ -67,7 +67,7 @@
 
           <td>{{{unbound created_at_age}}}</td>
 
-          {{#if controller.showApproval}}
+          {{#if showApproval}}
           <td>
             {{#if approved}}
               {{i18n yes_value}}
