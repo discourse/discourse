@@ -52,7 +52,7 @@ Discourse.Post = Discourse.Model.extend({
 
   postElementId: function() {
     return "post_" + (this.get('post_number'));
-  }.property(),
+  }.property('post_number'),
 
   // The class for the read icon of the post. It starts with read-icon then adds 'seen' or
   // 'last-read' if the post has been seen or is the highest post number seen so far respectively.
