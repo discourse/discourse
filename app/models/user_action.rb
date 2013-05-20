@@ -131,6 +131,56 @@ LEFT JOIN categories c on c.id = t.category_id
     data
   end
 
+  # slightly different to standard stream, it collapses replies
+  def self.private_message_stream(action_type, opts)
+
+    user_id = opts[:user_id]
+    return [] unless opts[:guardian].can_see_private_messages?(user_id)
+
+    builder = SqlBuilder.new("
+SELECT
+  t.title, :action_type action_type, p.created_at, t.id topic_id,
+  :user_id AS target_user_id, au.name AS target_name, au.username AS target_username,
+  coalesce(p.post_number, 1) post_number,
+  p.reply_to_post_number,
+  pu.email ,pu.username, pu.name, pu.id user_id,
+  pu.email acting_email, pu.username acting_username, pu.name acting_name, pu.id acting_user_id,
+  p.cooked
+
+FROM topics t
+JOIN posts p ON p.topic_id =  t.id and p.post_number = t.highest_post_number
+JOIN users pu ON pu.id = p.user_id
+JOIN users au ON au.id = :user_id
+WHERE archetype = 'private_message' and EXISTS (
+   select 1 from user_actions a where a.user_id = :user_id and a.target_topic_id = t.id and action_type = :action_type)
+ORDER BY p.created_at desc
+
+/*offset*/
+/*limit*/
+")
+
+    builder.offset((opts[:offset] || 0).to_i)
+    builder.limit((opts[:limit] || 60).to_i)
+
+    data = builder.exec(user_id: user_id, action_type: action_type).to_a
+
+    data.each do |row|
+      row["action_type"] = row["action_type"].to_i
+      row["created_at"] = DateTime.parse(row["created_at"])
+      # we should probably cache the excerpts in the db at some point
+      row["excerpt"] = PrettyText.excerpt(row["cooked"],300) if row["cooked"]
+      row["cooked"] = nil
+      row["avatar_template"] = User.avatar_template(row["email"])
+      row["acting_avatar_template"] = User.avatar_template(row["acting_email"])
+      row.delete("email")
+      row.delete("acting_email")
+      row["slug"] = Slug.for(row["title"])
+    end
+
+    data
+
+  end
+
   def self.log_action!(hash)
     require_parameters(hash, :action_type, :user_id, :acting_user_id, :target_topic_id, :target_post_id)
     transaction(requires_new: true) do

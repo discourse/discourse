@@ -6,6 +6,10 @@ class PostCreator
 
   attr_reader :errors, :opts
 
+  def self.create(user,opts)
+    self.new(user,opts).create
+  end
+
   # Acceptable options:
   #
   #   raw                     - raw text of post
@@ -14,6 +18,7 @@ class PostCreator
   #   acting_user             - The user performing the action might be different than the user
   #                             who is the post "author." For example when copying posts to a new
   #                             topic.
+  #   created_at              - Post creation time (optional)
   #
   #   When replying to a topic:
   #     topic_id              - topic we're replying to
