@@ -11,19 +11,19 @@ Discourse.ButtonView = Discourse.View.extend({
   classNameBindings: [':btn', ':standard', 'dropDownToggle'],
   attributeBindings: ['data-not-implemented', 'title', 'data-toggle', 'data-share-url'],
 
-  title: (function() {
+  title: function() {
     return Em.String.i18n(this.get('helpKey') || this.get('textKey'));
-  }).property('helpKey'),
+  }.property('helpKey'),
 
-  text: (function() {
+  text: function() {
     return Em.String.i18n(this.get('textKey'));
-  }).property('textKey'),
+  }.property('textKey'),
 
   render: function(buffer) {
     if (this.renderIcon) {
       this.renderIcon(buffer);
     }
-    return buffer.push(this.get('text'));
+    buffer.push(this.get('text'));
   }
 
 });

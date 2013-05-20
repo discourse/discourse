@@ -30,7 +30,7 @@
         <label for='login-account-name'>{{i18n login.username}}&nbsp;</label>
       </td>
       <td>
-        {{view Discourse.TextField valueBinding="view.loginName" placeholderKey="login.email_placeholder" elementId="login-account-name" autocorrect="off" autocapitalize="off" autofocus="autofocus"}}
+        {{textField value=view.loginName placeholderKey="login.email_placeholder" elementId="login-account-name" autocorrect="off" autocapitalize="off" autofocus="autofocus"}}
       </td>
       <tr>
       <td>

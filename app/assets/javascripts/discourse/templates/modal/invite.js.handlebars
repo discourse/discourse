@@ -1,4 +1,4 @@
-<div class="modal-body">    
+<div class="modal-body">
   {{#if view.error}}
     <div class="alert alert-error">
       <button class="close" data-dismiss="alert">×</button>
@@ -11,7 +11,7 @@
   {{else}}
     <form>
       <label>{{i18n topic.invite_reply.email}}</label>
-      {{view Discourse.TextField valueBinding="view.email" placeholderKey="topic.invite_reply.email_placeholder"}}
+      {{textField value=view.email placeholderKey="topic.invite_reply.email_placeholder"}}
     </form>
   {{/if}}
 </div>
@@ -21,5 +21,5 @@
   {{else}}
     <button class='btn btn-primary' {{bindAttr disabled="view.disabled"}} {{action createInvite target="view"}}>{{view.buttonTitle}}</button>
   {{/if}}
-  
-</div>  
+
+</div>
