@@ -66,12 +66,17 @@ class ApplicationController < ActionController::Base
 
   rescue_from Discourse::NotFound do
 
-    f = Topic.where(deleted_at: nil, archetype: "regular")
-    @latest = f.order('views desc').take(10)
-    @recent = f.order('created_at desc').take(10)
-    @slug =  params[:slug].class == String ? params[:slug] : ''
-    @slug.gsub!('-',' ')
-    render status: 404, layout: 'no_js', template: '/exceptions/not_found'
+    if request.format && request.format.json?
+      render status: 404, layout: false, text: "[error: 'not found']"
+    else
+      f = Topic.where(deleted_at: nil, archetype: "regular")
+      @latest = f.order('views desc').take(10)
+      @recent = f.order('created_at desc').take(10)
+      @slug =  params[:slug].class == String ? params[:slug] : ''
+      @slug.gsub!('-',' ')
+      render status: 404, layout: 'no_js', template: '/exceptions/not_found'
+    end
+
   end
 
   rescue_from Discourse::InvalidAccess do
