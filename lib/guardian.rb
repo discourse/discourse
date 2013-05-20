@@ -319,20 +319,22 @@ class Guardian
     already_taken_this_action = taken.any? && taken.include?(PostActionType.types[action_key])
     already_did_flagging      = taken.any? && (taken & PostActionType.flag_types.values).any?
 
-    have_both?(@user, post) &&
-    # we always allow flagging - NOTE: this does not seem true, see specs. (MVH)
-    (
+    if  have_both?(@user, post)
+      # we always allow flagging - NOTE: this does not seem true, see specs. (MVH)
       (is_flag && @user.has_trust_level?(:basic) && not(already_did_flagging)) ||
-      not(is_flag || already_taken_this_action)
-    ) &&
 
-    # nothing else on archived posts
-    not(post.topic.archived?) &&
+      # not a flagging action, and haven't done it already
+      not(is_flag || already_taken_this_action) &&
 
-    not(action_key == :like && is_my_own?(post)) &&
+      # nothing except flagging on archived posts
+      not(post.topic.archived?) &&
 
-    not(action_key == :vote && opts[:voted_in_topic] && post.topic.has_meta_data_boolean?(:single_vote))
+      # don't like your own stuff
+      not(action_key == :like && is_my_own?(post)) &&
 
+      # no voting more than once on single vote topics
+      not(action_key == :vote && opts[:voted_in_topic] && post.topic.has_meta_data_boolean?(:single_vote))
+    end
   end
 
   def secure_category_ids
