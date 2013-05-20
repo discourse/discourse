@@ -22,10 +22,6 @@ module Jobs
       self.new.perform(opts)
     end
 
-    def self.mutex
-      @mutex ||= Mutex.new
-    end
-
     def execute(opts={})
       raise "Overwrite me!"
     end
@@ -57,11 +53,9 @@ module Jobs
 
       dbs.each do |db|
         begin
-          Jobs::Base.mutex.synchronize do
-            RailsMultisite::ConnectionManagement.establish_connection(db: db)
-            I18n.locale = SiteSetting.default_locale
-            execute(opts)
-          end
+          RailsMultisite::ConnectionManagement.establish_connection(db: db)
+          I18n.locale = SiteSetting.default_locale
+          execute(opts)
         ensure
           ActiveRecord::Base.connection_handler.clear_active_connections!
         end
