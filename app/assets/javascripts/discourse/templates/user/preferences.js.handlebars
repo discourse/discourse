@@ -35,7 +35,7 @@
   <div class="control-group">
     <label class="control-label">{{i18n user.password.title}}</label>
     <div class="controls">
-      <a href="#" {{action changePassword target="controller"}} class='btn'>{{i18n user.change_password.action}}</a> {{passwordProgress}}
+      <a href="#" {{action changePassword}} class='btn'>{{i18n user.change_password.action}}</a> {{passwordProgress}}
     </div>
   </div>
 
@@ -106,7 +106,7 @@
 
   <div class="control-group">
     <div class="controls">
-        <button {{action save target="controller"}} {{bindAttr disabled="saveDisabled"}} class="btn btn-primary">{{saveButtonText}}</button>
+        <button {{action save}} {{bindAttr disabled="saveDisabled"}} class="btn btn-primary">{{saveButtonText}}</button>
         {{#if saved}}{{i18n saved}}{{/if}}
     </div>
   </div>
