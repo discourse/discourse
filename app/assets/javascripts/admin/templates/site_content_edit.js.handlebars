@@ -7,7 +7,7 @@
   {{/if}}
 
   {{#if plainText}}
-    {{view Ember.TextArea valueBinding="content.content" class="plain"}}
+    {{textarea value=content.content class="plain"}}
   {{/if}}
 
   {{#if html}}
