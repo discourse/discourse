@@ -22,7 +22,7 @@
           {{#if automatic}}
             <h3>{{name}}</h3>
           {{else}}
-            {{view Discourse.TextField valueBinding="name" placeholderKey="admin.groups.name_placeholder"}}
+            {{textField value=name placeholderKey="admin.groups.name_placeholder"}}
           {{/if}}
 
           {{view Discourse.UserSelector id="group-users" placeholderKey="admin.groups.selector_placeholder" tabindex="1" usernamesBinding="usernames"}}

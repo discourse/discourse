@@ -1,4 +1,16 @@
 /**
+  Allows us to supply bindings without "binding" to a helper.
+**/
+function normalizeHash(hash, hashTypes) {
+  for (var prop in hash) {
+    if (hashTypes[prop] === 'ID') {
+      hash[prop + 'Binding'] = hash[prop];
+      delete hash[prop];
+    }
+  }
+}
+
+/**
   Breaks up a long string
 
   @method breakUp
@@ -66,15 +78,26 @@ Ember.Handlebars.registerHelper('textField', function(options) {
   var hash = options.hash,
       types = options.hashTypes;
 
-  for (var prop in hash) {
-    if (types[prop] === 'ID') {
-      hash[prop + 'Binding'] = hash[prop];
-      delete hash[prop];
-    }
-  }
+  normalizeHash(hash, types);
 
   return Ember.Handlebars.helpers.view.call(this, Discourse.TextField, options);
 });
+
+/**
+  Inserts a Discourse.InputTipView
+
+  @method inputTip
+  @for Handlebars
+**/
+Ember.Handlebars.registerHelper('inputTip', function(options) {
+  var hash = options.hash,
+      types = options.hashTypes;
+
+  normalizeHash(hash, types);
+
+  return Ember.Handlebars.helpers.view.call(this, Discourse.InputTipView, options);
+});
+
 
 /**
   Produces a bound link to a category
