@@ -8,18 +8,21 @@
 **/
 Discourse.UserPrivateMessagesRoute = Discourse.RestrictedUserRoute.extend({
 
+  model: function() {
+    return this.modelFor('user');
+  },
+
   renderTemplate: function() {
     this.render({ into: 'user', outlet: 'userOutlet' });
   },
 
   setupController: function(controller, user) {
-    var _this = this;
-    user = this.controllerFor('user').get('content');
-    controller.set('content', user);
     user.filterStream(Discourse.UserAction.GOT_PRIVATE_MESSAGE);
+
+    var composerController = this.controllerFor('composer');
     Discourse.Draft.get('new_private_message').then(function(data) {
       if (data.draft) {
-        _this.controllerFor('composer').open({
+        composerController.open({
           draft: data.draft,
           draftKey: 'new_private_message',
           ignoreIfChanged: true,

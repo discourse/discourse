@@ -187,6 +187,7 @@ Discourse.User = Discourse.Model.extend({
     if (Discourse.UserAction.statGroups[filter]) {
       filter = Discourse.UserAction.statGroups[filter].join(",");
     }
+
     this.set('streamFilter', filter);
     this.set('stream', Em.A());
     this.set('totalItems', 0);
@@ -254,17 +255,12 @@ Discourse.User = Discourse.Model.extend({
     @property statsCountNonPM
     @type {Integer}
   **/
-  statsCountNonPM: (function() {
-    var stats, total;
-    total = 0;
-    if (!(stats = this.get('stats'))) return 0;
-    this.get('stats').each(function(s) {
-      if (!s.get("isPM")) {
-        total += parseInt(s.count, 10);
-      }
+  statsCountNonPM: function() {
+    if (this.blank('statsExcludingPms')) return 0;
+    return this.get('statsExcludingPms').getEach('count').reduce(function (accum, val) {
+      return accum + val;
     });
-    return total;
-  }).property('stats.@each'),
+  }.property('statsExcludingPms.@each.count'),
 
   /**
   The user's stats, excluding PMs.
@@ -272,17 +268,10 @@ Discourse.User = Discourse.Model.extend({
     @property statsExcludingPms
     @type {Array}
   **/
-  statsExcludingPms: (function() {
-    var r;
-    r = [];
-    if (this.blank('stats')) return r;
-    this.get('stats').each(function(s) {
-      if (!s.get('isPM')) {
-        return r.push(s);
-      }
-    });
-    return r;
-  }).property('stats.@each'),
+  statsExcludingPms: function() {
+    if (this.blank('stats')) return [];
+    return this.get('stats').rejectProperty('isPM');
+  }.property('stats.@each.isPM'),
 
   /**
   This user's stats, only including PMs.
@@ -290,66 +279,10 @@ Discourse.User = Discourse.Model.extend({
     @property statsPmsOnly
     @type {Array}
   **/
-  statsPmsOnly: (function() {
-    var r;
-    r = [];
-    if (this.blank('stats')) return r;
-    this.get('stats').each(function(s) {
-      if (s.get('isPM')) return r.push(s);
-    });
-    return r;
-  }).property('stats.@each'),
-
-  /**
-  Number of items in this user's inbox.
-
-    @property inboxCount
-    @type {Integer}
-  **/
-  inboxCount: (function() {
-    var r;
-    r = 0;
-    this.get('stats').each(function(s) {
-      if (s.action_type === Discourse.UserAction.GOT_PRIVATE_MESSAGE) {
-        r = s.count;
-        return false;
-      }
-    });
-    return r;
-  }).property('stats.@each'),
-
-  /**
-    Number of items this user has sent.
-
-    @property sentItemsCount
-    @type {Integer}
-  **/
-  sentItemsCount: function() {
-    var r;
-    r = 0;
-    this.get('stats').each(function(s) {
-      if (s.action_type === Discourse.UserAction.NEW_PRIVATE_MESSAGE) {
-        r = s.count;
-        return false;
-      }
-    });
-    return r;
-  }.property('stats.@each'),
-
-  onDetailsLoaded: function(callback){
-    var _this = this;
-    this.set("loading",false);
-
-    if(callback){
-      this.onDetailsLoadedCallbacks = this.onDetailsLoadedCallbacks || [];
-      this.onDetailsLoadedCallbacks.push(callback);
-    } else {
-      var callbacks = this.onDetailsLoadedCallbacks;
-      $.each(callbacks, function(){
-        this.apply(_this);
-      });
-    }
-  },
+  statsPmsOnly: function() {
+    if (this.blank('stats')) return [];
+    return this.get('stats').filterProperty('isPM');
+  }.property('stats.@each.isPM'),
 
   /**
     Load extra details for the user
@@ -358,33 +291,25 @@ Discourse.User = Discourse.Model.extend({
   **/
   loadDetails: function() {
 
-    this.set("loading",true);
+    this.set('loading', true);
+
     // Check the preload store first
     var user = this;
-    var username = this.get('username');
-    PreloadStore.getAndRemove("user_" + username, function() {
+    var username = user.get('username');
+
+    return PreloadStore.getAndRemove("user_" + username, function() {
       return Discourse.ajax("/users/" + username + '.json');
     }).then(function (json) {
+
       // Create a user from the resulting JSON
       json.user.stats = Discourse.User.groupStats(json.user.stats.map(function(s) {
-        var stat = Em.Object.create(s);
-        stat.set('isPM', stat.get('action_type') === Discourse.UserAction.NEW_PRIVATE_MESSAGE ||
-                         stat.get('action_type') === Discourse.UserAction.GOT_PRIVATE_MESSAGE);
-        stat.set('description', Em.String.i18n('user_action_groups.' + stat.get('action_type')));
-        return stat;
+        if (s.count) s.count = parseInt(s.count, 10);
+        return Discourse.UserActionStat.create(s);
       }));
 
-      var count = 0;
-      if (json.user.stream) {
-        count = json.user.stream.length;
-        json.user.stream = Discourse.UserAction.collapseStream(json.user.stream.map(function(ua) {
-          return Discourse.UserAction.create(ua);
-        }));
-      }
-
       user.setProperties(json.user);
-      user.set('totalItems', count);
-      user.onDetailsLoaded();
+      user.set('loading', false);
+      return user;
     });
   }
 
@@ -412,41 +337,19 @@ Discourse.User.reopenClass({
     @returns {Object}
   **/
   groupStats: function(stats) {
-    var g,
-      _this = this;
-    g = {};
-    stats.each(function(s) {
-      var c, found, k, v, _ref;
-      found = false;
-      _ref = Discourse.UserAction.statGroups;
-      for (k in _ref) {
-        v = _ref[k];
-        if (v.contains(s.action_type)) {
-          found = true;
-          if (!g[k]) {
-            g[k] = Em.Object.create({
-              description: Em.String.i18n("user_action_groups." + k),
-              count: 0,
-              action_type: parseInt(k, 10)
-            });
-          }
-          g[k].count += parseInt(s.count, 10);
-          c = g[k].count;
-          if (s.action_type === k) {
-            g[k] = s;
-            s.count = c;
-          }
-        }
-      }
-      if (!found) {
-        g[s.action_type] = s;
-      }
+    var responses = Discourse.UserActionStat.create({
+      count: 0,
+      action_type: Discourse.UserAction.RESPONSE
     });
-    return stats.map(function(s) {
-      return g[s.action_type];
-    }).exclude(function(s) {
-      return !s;
+
+    stats.filterProperty('isResponse').forEach(function (stat) {
+      responses.set('count', responses.get('count') + stat.get('count'));
     });
+
+    var result = Em.A();
+    result.pushObject(responses);
+    result.pushObjects(stats.rejectProperty('isResponse'));
+    return(result);
   },
 
   /**
