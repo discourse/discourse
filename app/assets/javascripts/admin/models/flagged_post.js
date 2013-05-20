@@ -8,7 +8,7 @@
 **/
 Discourse.FlaggedPost = Discourse.Post.extend({
 
-  flaggers: (function() {
+  flaggers: function() {
     var r,
       _this = this;
     r = [];
@@ -16,9 +16,9 @@ Discourse.FlaggedPost = Discourse.Post.extend({
       return r.push(_this.userLookup[a.user_id]);
     });
     return r;
-  }).property(),
+  }.property(),
 
-  messages: (function() {
+  messages: function() {
     var r,
       _this = this;
     r = [];
@@ -32,7 +32,7 @@ Discourse.FlaggedPost = Discourse.Post.extend({
       }
     });
     return r;
-  }).property(),
+  }.property(),
 
   lastFlagged: function() {
     return this.post_actions[0].created_at;

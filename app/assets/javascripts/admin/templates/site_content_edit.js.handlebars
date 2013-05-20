@@ -3,19 +3,19 @@
   <p class='description'>{{description}}</p>
 
   {{#if markdown}}
-    {{view Discourse.PagedownEditor valueBinding="content.content"}}
+    {{view Discourse.PagedownEditor valueBinding="model.content"}}
   {{/if}}
 
   {{#if plainText}}
-    {{textarea value=content.content class="plain"}}
+    {{textarea value=model.content class="plain"}}
   {{/if}}
 
   {{#if html}}
-    {{view Discourse.AceEditorView contentBinding="content.content" mode="html"}}
+    {{view Discourse.AceEditorView contentBinding="model.content" mode="html"}}
   {{/if}}
 
   {{#if css}}
-    {{view Discourse.AceEditorView contentBinding="content.content" mode="css"}}
+    {{view Discourse.AceEditorView contentBinding="model.content" mode="css"}}
   {{/if}}
 
 

@@ -1,9 +1,9 @@
 <h3>{{i18n admin.api.long_title}}</h3>
-{{#if content.keyExists}}
-  <strong>{{i18n admin.api.key}}:</strong> {{content.key}}
-  <button {{action regenerateKey target="content"}}>{{i18n admin.api.regenerate}}</button>
+{{#if keyExists}}
+  <strong>{{i18n admin.api.key}}:</strong> {{key}}
+  <button {{action regenerateKey target="model"}}>{{i18n admin.api.regenerate}}</button>
   <p>{{{i18n admin.api.note_html}}}</p>
 {{else}}
   <p>{{{i18n admin.api.info_html}}}</p>
-  <button {{action generateKey target="content"}}>{{i18n admin.api.generate}}</button>
+  <button {{action generateKey target="model"}}>{{i18n admin.api.generate}}</button>
 {{/if}}

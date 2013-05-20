@@ -19,17 +19,17 @@
   {{#if model.length}}
     {{#group}}
       {{#collection contentBinding="model" tagName="tbody" itemTagName="tr"}}
-          <td>{{date view.content.created_at}}</td>
+          <td>{{date created_at}}</td>
           <td>
-            {{#if view.content.user}}
-              {{#linkTo 'adminUser' view.content.user}}{{avatar view.content.user imageSize="tiny"}}{{/linkTo}}
-              {{#linkTo 'adminUser' view.content.user}}{{view.content.user.username}}{{/linkTo}}
+            {{#if user}}
+              {{#linkTo 'adminUser' user}}{{avatar user imageSize="tiny"}}{{/linkTo}}
+              {{#linkTo 'adminUser' user}}{{user.username}}{{/linkTo}}
             {{else}}
               &mdash;
             {{/if}}
           </td>
-          <td><a href='mailto:{{unbound view.content.to_address}}'>{{view.content.to_address}}</a></td>
-          <td>{{view.content.email_type}}</td>
+          <td><a href='mailto:{{unbound to_address}}'>{{to_address}}</a></td>
+          <td>{{email_type}}</td>
       {{/collection}}
     {{/group}}
   {{/if}}

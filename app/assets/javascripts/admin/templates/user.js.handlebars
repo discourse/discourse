@@ -2,13 +2,13 @@
 
   <div class='display-row'>
     <div class='field'>{{i18n user.username.title}}</div>
-    <div class='value'>{{content.username}}</div>
+    <div class='value'>{{username}}</div>
     <div class='controls'>
       {{#linkTo 'user.activity' content class="btn"}}
         <i class='icon icon-user'></i>
         {{i18n admin.user.show_public_profile}}
       {{/linkTo}}
-      {{#if content.can_impersonate}}
+      {{#if can_impersonate}}
           <button class='btn' {{action impersonate target="content"}}>
             <i class='icon icon-screenshot'></i>
             {{i18n admin.user.impersonate}}
@@ -19,7 +19,7 @@
 
   <div class='display-row'>
     <div class='field'>{{i18n user.email.title}}</div>
-    <div class='value'><a href="mailto:{{unbound content.email}}">{{content.email}}</a></div>
+    <div class='value'><a href="mailto:{{unbound email}}">{{email}}</a></div>
   </div>
 
   <div class='display-row' style='height: 50px'>
@@ -29,7 +29,7 @@
 
   <div class='display-row' style='height: 50px'>
     <div class='field'>{{i18n user.ip_address.title}}</div>
-    <div class='value'>{{content.ip_address}}</div>
+    <div class='value'>{{ip_address}}</div>
     <div class='controls'>
       {{#if Discourse.currentUser.admin}}
       <button class='btn' {{action refreshBrowsers target="content"}}>
@@ -48,18 +48,18 @@
   <div class='display-row'>
     <div class='field'>{{i18n admin.users.approved}}</div>
     <div class='value'>
-      {{#if content.approved}}
+      {{#if approved}}
         {{i18n admin.user.approved_by}}
 
-        {{#linkTo 'adminUser' content.approved_by}}{{avatar approved_by imageSize="small"}}{{/linkTo}}
-        {{#linkTo 'adminUser' content.approved_by}}{{content.approved_by.username}}{{/linkTo}}
+        {{#linkTo 'adminUser' approved_by}}{{avatar approved_by imageSize="small"}}{{/linkTo}}
+        {{#linkTo 'adminUser' approved_by}}{{approved_by.username}}{{/linkTo}}
       {{else}}
         {{i18n no_value}}
       {{/if}}
 
     </div>
     <div class='controls'>
-      {{#if content.can_approve}}
+      {{#if can_approve}}
         <button class='btn' {{action approve target="content"}}>
           <i class='icon icon-ok'></i>
           {{i18n admin.user.approve}}
@@ -71,25 +71,25 @@
   <div class='display-row'>
     <div class='field'>{{i18n admin.users.active}}</div>
     <div class='value'>
-      {{#if content.active}}
+      {{#if active}}
         {{i18n yes_value}}
       {{else}}
         {{i18n no_value}}
       {{/if}}
     </div>
     <div class='controls'>
-      {{#if content.active}}
-        {{#if content.can_deactivate}}
+      {{#if active}}
+        {{#if can_deactivate}}
           <button class='btn' {{action deactivate target="content"}}>{{i18n admin.user.deactivate_account}}</button>
         {{/if}}
       {{else}}
-        {{#if content.can_send_activation_email}}
+        {{#if can_send_activation_email}}
           <button class='btn' {{action sendActivationEmail target="content"}}>
             <i class='icon icon-envelope-alt'></i>
             {{i18n admin.user.send_activation_email}}
           </button>
         {{/if}}
-        {{#if content.can_activate}}
+        {{#if can_activate}}
           <button class='btn' {{action activate target="content"}}>
             <i class='icon icon-ok'></i>
             {{i18n admin.user.activate}}
@@ -101,15 +101,15 @@
 
   <div class='display-row'>
     <div class='field'>{{i18n admin.user.admin}}</div>
-    <div class='value'>{{content.admin}}</div>
+    <div class='value'>{{admin}}</div>
     <div class='controls'>
-      {{#if content.can_revoke_admin}}
+      {{#if can_revoke_admin}}
         <button class='btn' {{action revokeAdmin target="content"}}>
           <i class='icon icon-trophy'></i>
           {{i18n admin.user.revoke_admin}}
         </button>
       {{/if}}
-      {{#if content.can_grant_admin}}
+      {{#if can_grant_admin}}
         <button class='btn' {{action grantAdmin target="content"}}>
           <i class='icon icon-trophy'></i>
           {{i18n admin.user.grant_admin}}
@@ -120,15 +120,15 @@
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n admin.user.moderator}}</div>
-    <div class='value'>{{content.moderator}}</div>
+    <div class='value'>{{moderator}}</div>
     <div class='controls'>
-      {{#if content.can_revoke_moderation}}
+      {{#if can_revoke_moderation}}
         <button class='btn' {{action revokeModeration target="content"}}>
           <i class='icon icon-magic'></i>
           {{i18n admin.user.revoke_moderation}}
         </button>
       {{/if}}
-      {{#if content.can_grant_moderation}}
+      {{#if can_grant_moderation}}
         <button class='btn' {{action grantModeration target="content"}}>
           <i class='icon icon-magic'></i>
           {{i18n admin.user.grant_moderation}}
@@ -139,20 +139,20 @@
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n trust_level}}</div>
-    <div class='value'>{{content.trustLevel.name}}</div>
+    <div class='value'>{{trustLevel.name}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n admin.user.banned}}</div>
-    <div class='value'>{{content.isBanned}}</div>
+    <div class='value'>{{isBanned}}</div>
     <div class='controls'>
-    {{#if content.isBanned}}
+    {{#if isBanned}}
       <button class='btn btn-danger' {{action unban target="content"}}>
         <i class='icon icon-ban-circle'></i>
         {{i18n admin.user.unban}}
       </button>
-      {{content.banDuration}}
+      {{banDuration}}
     {{else}}
-      {{#if content.canBan}}
+      {{#if canBan}}
         <button class='btn btn-danger' {{action ban target="content"}}>
           <i class='icon icon-ban-circle'></i>
           {{i18n admin.user.ban}}
@@ -168,29 +168,29 @@
 
   <div class='display-row'>
     <div class='field'>{{i18n created}}</div>
-    <div class='value'>{{{content.created_at_age}}}</div>
+    <div class='value'>{{{created_at_age}}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n admin.users.last_emailed}}</div>
-    <div class='value'>{{{content.last_emailed_age}}}</div>
+    <div class='value'>{{{last_emailed_age}}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n last_seen}}</div>
-    <div class='value'>{{{content.last_seen_age}}}</div>
+    <div class='value'>{{{last_seen_age}}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n admin.user.like_count}}</div>
-    <div class='value'>{{content.like_count}}</div>
+    <div class='value'>{{like_count}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n admin.user.topics_entered}}</div>
-    <div class='value'>{{content.topics_entered}}</div>
+    <div class='value'>{{topics_entered}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n admin.user.post_count}}</div>
-    <div class='value'>{{content.post_count}}</div>
+    <div class='value'>{{post_count}}</div>
     <div class='controls'>
-      {{#if content.can_delete_all_posts}}
+      {{#if can_delete_all_posts}}
         <button class='btn btn-danger' {{action deleteAllPosts target="content"}}>
           <i class='icon icon-trash'></i>
           {{i18n admin.user.delete_all_posts}}
@@ -200,27 +200,27 @@
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n admin.user.posts_read_count}}</div>
-    <div class='value'>{{content.posts_read_count}}</div>
+    <div class='value'>{{posts_read_count}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n admin.user.flags_given_count}}</div>
-    <div class='value'>{{content.flags_given_count}}</div>
+    <div class='value'>{{flags_given_count}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n admin.user.flags_received_count}}</div>
-    <div class='value'>{{content.flags_received_count}}</div>
+    <div class='value'>{{flags_received_count}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n admin.user.private_topics_count}}</div>
-    <div class='value'>{{content.private_topics_count}}</div>
+    <div class='value'>{{private_topics_count}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n admin.user.time_read}}</div>
-    <div class='value'>{{{content.time_read}}}</div>
+    <div class='value'>{{{time_read}}}</div>
   </div>
   <div class='display-row'>
     <div class='field'>{{i18n user.invited.days_visited}}</div>
-    <div class='value'>{{{content.days_visited}}}</div>
+    <div class='value'>{{{days_visited}}}</div>
   </div>
 </section>
 
