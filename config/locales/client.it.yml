@@ -960,7 +960,7 @@ it:
         key: "Key"
         generate: "Genera API Key"
         regenerate: "Rigenera API Key"
-        info_html: "La API Key ti permetterà di creare e aggiornare topic usando chiamando JSON."
+        info_html: "La API Key ti permetterà di creare e aggiornare topic usando chiamate JSON."
         note_html: "Conserva <strong>in modo sicuro</strong> questa chiave. Tutti gli utenti con questa chiave possono creare arbitrariamente post."
 
       customize:

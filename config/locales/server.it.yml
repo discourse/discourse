@@ -10,43 +10,74 @@ it:
       short: "%d-%m-%Y"
 
   title: "Discourse"
-  topics: "Topics"
+  topics: "Topic"
+  posts: "post"
   loading: "Caricamento"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, è consigliato abilitare javascript'
 
   via: "%{username} via %{site_name}"
-  is_reserved: "is reserved"
-  too_many_mentions: "has too many users mentioned"
-  too_many_images: "has too many images"
-  too_many_links: "has too many links"
-  just_posted_that: "is too similar to what you recently posted"
-  has_already_been_used: "has already been used"
-  invalid_characters: "contains invalid characters"
-  is_invalid: "is invalid; try to be a little more descriptive"
+  is_reserved: "è riservato"
+
+  site_under_maintenance: 'Il sito è momentaneamente in manutenzione.'
+  operation_already_running: "Una %{operation} è in esecuzione. Non è possibile avviare una nuova %{operation} adesso."
+
+  too_many_mentions:
+    zero: "Spiacente, non puoi menzionare altri utenti."
+    one: "Spiacente, puoi menzionare un solo altro utente nei post."
+    other: "Spiacente, puoi menzionare %{count} utenti nei post."
+  too_many_mentions_newuser:
+    zero: "Spiacente, i nuovi utenti non possono menzionare altri utenti nei post."
+    one: "Spiacente, i nuovi utenti possono menzionare un solo altro utente nei post."
+    other: "Spiacente, i nuovi utenti possono menzionare %{count} utenti nei post."
+  too_many_images:
+    zero: "Spiacente, i nuovi utenti non possono inserire immagini nei post."
+    one: "Spiacente, i nuovi utenti possono inserire solo un'immagine nei post."
+    other: "Spiacente, i nuovi utenti possono inserire %{count} immagini nei post."
+  too_many_links:
+    zero: "Spiacente, i nuovi utenti non possono inserire link nei post."
+    one: "Spiacente, i nuovi utenti possono inserire solo un link nei post."
+    other: "Spiacente, i nuovi utenti possono inserire %{count} link nei post."
+  spamming_host: "Spiacente, non puoi inserire un link verso questo dominio."
+
+  just_posted_that: "è troppo simile a ciò che hai appena pubblicato"
+  has_already_been_used: "è già stato usato"
+  invalid_characters: "contiene caratteri non validi"
+  is_invalid: "non è valido; prova ad essere un po' più descrittivo"
   next_page: "successivo →"
   by: "Da"
-  topics_in_category: "Topics nella categoria '%{category}'"
+  topics_in_category: "Topic nella categoria '%{category}'"
   rss_posts_in_topic: "RSS feed per '%{topic}'"
-  rss_topics_in_category: "RSS feed dei topics nella categoria '%{category}'"
+  rss_topics_in_category: "RSS feed dei topic nella categoria '%{category}'"
   author_wrote: "%{author} ha scritto:"
+
+  groups:
+    default_names:
+      admins: "amministratori"
+      moderators: "moderatori"
+      staff: "staff"
+      trust_level_1: "trust_level_1"
+      trust_level_2: "trust_level_2"
+      trust_level_3: "trust_level_3"
+      trust_level_4: "trust_level_4"
+      trust_level_5: "trust_level_5"
 
   education:
     until_posts:
       one: "post"
-      other: "%{count} posts"
+      other: "%{count} post"
 
     'new-topic': |
       Benvenuto in %{site_name} &mdash; **grazie per aver iniziato la conversazione!**
 
       Cose da tenere a mente mentre scrivi il topic:
 
-      - Il titolo descrive adeguatamente quello che ci si può ragionevolmente aspettare di trovare aprendo il topic?
+      - Il titolo descrive adeguatamente quello che ci si può ragionevolmente nel contenuto?
 
-      - Il primo post definisce il topic: Di cosa si sta parlando? Chi potrebbe essere interessato? Perchè è importante? Che tipo di risposte ti piacerebbe ricevere dalla community?
+      - Il primo post definisce il topic: Di cosa si sta parlando? Chi potrebbe essere interessato? Perché è importante? Che tipo di risposte ti piacerebbe ricevere dalla community?
 
       - Cerca di scegliere le parole adatte in modo che altri possano *trovare* il tuo topic. Se disponibile, scegli una categoria appropriata.
 
-      Per ulteriori informazioni, [guarda le FAQ](/faq). Questo pannello apparirà solo per il tuo primo %{education_posts_text}.
+      Per ulteriori informazioni, [guarda le FAQ](/faq). Questo pannello apparirà solo per i tuoi primi %{education_posts_text}.
 
     'new-reply': |
       Benvenuto in %{site_name} &mdash; **grazie per aver contribuito alla conversazione!**
@@ -86,7 +117,7 @@ it:
 
   trust_levels:
     newuser:
-      title: "visitatore"
+      title: "nuovo utente"
     basic:
       title: "utente base"
     regular:
@@ -97,7 +128,7 @@ it:
       title: "anziano"
 
   rate_limiter:
-    too_many_requests: "Lo stai facendo troppo spesso (lolwut?). Perfavore aspetta %{time_left} prima di farlo di nuovo."
+    too_many_requests: "Stai facendo troppo richieste. Per favore attendi %{time_left} prima di riprovare."
     hours:
       one: "1 ora"
       other: "%{count} ore"
@@ -146,10 +177,10 @@ it:
         other: "%{count}y"
 
     distance_in_words_verbose:
-      half_a_minute: "proprio ora"
+      half_a_minute: "adesso"
       less_than_x_seconds:
-        one:   "proprio ora"
-        other: "proprio ora"
+        one:   "adesso"
+        other: "adesso"
       x_seconds:
         one:   "1 secondo fa"
         other: "%{count} secondi fa"
@@ -183,7 +214,7 @@ it:
 
   password_reset:
     no_token: "Spiacenti, il tuo token è scaduto. Prova a resettare la password di nuovo."
-    choose_new: "Perfavore scegli una nuova password."
+    choose_new: "Per favore scegli una nuova password."
     update: 'aggiorna password'
     title: 'reset password'
     success: "La tua password è stata cambiata con successo e sei stato loggato."
@@ -192,7 +223,7 @@ it:
 
   change_email:
     confirmed: "La tua email è stata aggiornata."
-    please_continue: "Perfavore continua qui %{link}"
+    please_continue: "Per favore continua qui %{link}"
     error: "Si è verificato un errore modificando il tuo indirizzo email. Forse l'indirizzo è già in uso?"
 
   activation:
@@ -205,34 +236,42 @@ it:
     off_topic:
       title: 'Off-Topic'
       description: 'Questo post è totalmente fuori luogo nella conversazione attuale, e dovrebbe essere spostato in un altro topic. Se si tratta di un topic, probabilmente non ha senso che stia qui.'
-      long_form: 'ha segnalato come off-topic'
+      long_form: 'segnalato come off-topic'
     spam:
       title: 'Spam'
       description: 'Questo post è chiaramente un messaggio pubblicitario. Non è utile nè rilevante per la conversazione, ma soltanto promozionale.'
-      long_form: 'ha segnalato come spam'
+      long_form: 'segnalato come spam'
     inappropriate:
       title: 'Inappropriato'
       description: 'Questo post ha dei contenuti che una persona ragionevole considererebbe offensivi.'
-      long_form: 'ha segnalato come inappropriato'
-    custom_flag:
-      title: 'Altro'
-      description: "Questo post richiede l'attenzione di un moderatore in base alle <a href=\"/faq\">FAQ</a>, <a href=\"/tos\">TOS</a>, o per altre ragioni non menzionate sopra."
-      long_form: 'ha segnalato per la moderazione'
+      long_form: 'segnalato come inappropriato'
+    notify_user:
+      title: 'Notifica {{username}}'
+      description: 'Il post contiene qualcosa su cui vorrei discutere direttamente e privatamente con questa persona.'
+      long_form: 'utente nofiticato'
+      email_title: 'Riguarda il tuo post "%{title}"'
+      email_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      title: 'Notifica moderatori'
+      description: "Il post richiede l'attenzione generale dei moderatori, in base alle <a href=\"/faq\">FAQ</a>, <a href=\"%{tos_url}\">TOS</a>, o per altra motivazione indicata qui sotto."
+      long_form: 'moderatori notificati'
+      email_title: "Un post \"%{title}\" richiede l'attenzione dei moderatori"
+      email_body: "%{link}\n\n%{message}"
     bookmark:
-      title: 'Bookmark'
-      description: 'Bookmark this post'
-      long_form: 'bookmarked this post'
+      title: 'Segnalibri'
+      description: 'mettilo nei segnalibri'
+      long_form: 'post inserito nei segnalibri'
     like:
       title: 'Like'
-      description: 'Like this post'
-      long_form: 'liked this'
+      description: 'Metti Like a questo post'
+      long_form: 'hai messo Like'
     vote:
-      title: 'Vote'
-      description: 'Vote for this post'
-      long_form: 'voted for this post'
+      title: 'Vota'
+      description: 'Vota questo post'
+      long_form: 'hai votato questo post'
 
   flagging:
-    you_must_edit: '<p>Il tuo post ha raggiunto la soglia per la segnalazione. Perfavore controlla i tuoi messaggi privati.</p>'
+    you_must_edit: '<p>Il tuo post ha raggiunto la soglia per la segnalazione. Per favore controlla i tuoi messaggi privati.</p>'
     user_must_edit: '<p>Contenuto segnalato nascosto.</p>'
 
   archetypes:
@@ -261,37 +300,112 @@ it:
       xaxis: "Giorno"
       yaxis: "Numero di nuovi utenti"
     topics:
-      title: "Topics"
+      title: "Topic"
       xaxis: "Giorno"
-      yaxis: "Numero di nuovi topics"
+      yaxis: "Numero di nuovi topic"
     posts:
-      title: "Posts"
+      title: "Post"
       xaxis: "Giorno"
-      yaxis: "Numero di nuovi posts"
+      yaxis: "Numero di nuovi post"
     likes:
-      title: "Likes"
+      title: "Like"
       xaxis: "Giorno"
-      yaxis: "Numero di nuovi likes"
+      yaxis: "Numero di nuovi like"
     flags:
       title: "Segnalazioni"
       xaxis: "Giorno"
       yaxis: "Numero di segnalazioni"
+    bookmarks:
+      title: "Segnalibri"
+      xaxis: "Giorno"
+      yaxis: "Numero di nuovi segnalibri"
+    favorites:
+      title: "Favoriti"
+      xaxis: "Giorno"
+      yaxis: "Numero di nuovi favoriti"
     users_by_trust_level:
       title: "Utenti per Trust Level"
       xaxis: "Trust Level"
       yaxis: "Numero Utenti"
     emails:
-      title: "Emails Spedite"
+      title: "Email Inviate"
       xaxis: "Giorno"
-      yaxis: "Numero di Emails"
+      yaxis: "Numero di Email"
+    user_to_user_private_messages:
+      title: "Utente-a-Utente"
+      xaxis: "Giorno"
+      yaxis: "Numero di messaggi privati"
+    system_private_messages:
+      title: "Sistema"
+      xaxis: "Giorno"
+      yaxis: "Numero di messaggi privati"
+    moderator_warning_private_messages:
+      title: "Segnalazione Moderatore"
+      xaxis: "Giorno"
+      yaxis: "Numero di messaggi privati"
+    notify_moderators_private_messages:
+      title: "Notifica Moderatori"
+      xaxis: "Giorno"
+      yaxis: "Numero di messaggi privati"
+    notify_user_private_messages:
+      title: "Nofitica Utente"
+      xaxis: "Giorno"
+      yaxis: "Numero di messaggi privati"
+    top_referrers:
+      title: "Referenti Migliori"
+      xaxis: "Utente"
+      num_clicks: "Click"
+      num_topics: "Topic"
+    top_traffic_sources:
+      title: "Migliori Sorgenti di Traffico"
+      xaxis: "Dominio"
+      num_clicks: "Click"
+      num_topics: "Topic"
+      num_users: "Utenti"
+    top_referred_topics:
+      title: "Migliori Topic Referenziati"
+      xaxis: "Topic"
+      num_clicks: "Click"
 
   dashboard:
-    rails_env_warning: "Il tuo server è in %{env} mode."
+    rails_env_warning: "Il tuo server è in modalità %{env}."
     host_names_warning: "Il tuo file config/database.yml sta usando l'hostname localhost di default. Aggiornalo con l'hostname del tuo sito."
     gc_warning: 'Il tuo server sta usando i parametri di garbage collection di default di ruby, che potrebbero non garantirti le migliori performance. Leggi questo topic sul tuning delle performance: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>.'
-    clockwork_warning: 'Clockwork non è in esecuzione. Assicurati che un processo clockwork sia sempre in esecuzione per far sì che task importanti possano essere messe in coda. <a href="https://github.com/tomykaira/clockwork">Leggi di più su clockwork qui</a>.'
+    clockwork_warning: 'Clockwork non è in esecuzione. Assicurati che un processo clockwork sia sempre in esecuzione per far sì che task importanti possano essere messi in coda. <a href="https://github.com/tomykaira/clockwork">Leggi di più su clockwork qui</a>.'
     sidekiq_warning: "Sidekiq non è in esecuzione. Molti task, come l'invio di email, sono eseguiti in maniera asincrona da sidekiq. Perfavore assicurati che almeno un processo sidekiq sia in esecuzione. <a href=\"https://github.com/mperham/sidekiq\">Leggi di più su sidekiq qui</a>."
+    queue_size_warning: 'Il numero di job in coda è %{queue_size}, che è alto. Questo indica un problema con i processi Sidekiq, oppure dovresti aggiungere altri Sidekiq worker.'
     memory_warning: 'Il tuo server ha meno di 1 GB di memoria. È raccomandato avere a disposizione almeno 1 GB di memoria.'
+    facebook_config_warning: "Il server è configurato per consentire la registrazione e il login via Facebook (enable_facebook_logins), ma l'app id e i valori app secret non sono impostati. Vai su <a href=\"/admin/site_settings\">Impostazioni Sito</a> e aggiorna le impostazioni. <a href=\"https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins\" target=\"_blank\">Leggi questa guida per saperne di più</a>."
+    twitter_config_warning: "Il server è configurato per consentire la registrazione e il login via Twitter (enable_twitter_logins), ma la chiave e il secret non sono impostati. Vai su <a href=\"/admin/site_settings\">Impostazioni Sito</a> e aggiorna le impostazioni. <a href=\"https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins\" target=\"_blank\">Leggi questa guida per saperne di più</a>."
+    github_config_warning: "Il server è configurato per consentire la registrazione e il login via GitHub (enable_github_logins), ma il client id e i valori secret non sono impostati. Vai su <a href=\"/admin/site_settings\">Impostazioni Sito</a> e aggiorna le impostazioni. <a href=\"https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide\" target=\"_blank\">Leggi questa guida per saperne di più</a>."
+    failing_emails_warning: 'Ci sono %{num_failed_jobs} job di email falliti. Controlla il tuo file config/environments/production.rb e accertati che le impostazioni config.action_mailer siano corrette. <a href="/sidekiq/retries" target="_blank">Guarda i job falliti in Sidekiq</a>.'
+    default_logo_warning: "Non hai personalizzato le immagini dei logo per il tuo sito. Aggiorna logo_url, logo_small_url, e favicon_url nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
+    contact_email_missing: "Non hai fornito una email di contatto per il tuo sito. Per favore aggiorna contact_email nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
+    contact_email_invalid: "Il contatto email non è valido. Per favore aggiorna contact_email nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
+    title_nag: "Il titolo del sito è ancora impostato al valore di default. Per favore aggiornalo con il titolo del tuo sito, dalle <a href='/admin/site_settings'>Impostazioni Sito</a>."
+
+  content_types:
+    education_new_reply:
+      title: "Educazione Nuovi Utenti: Prime Risposte"
+      description: "Per le prime due risposte dei nuovi utenti, durante la composizione del messaggio una pop-up verrà automaticamente visualizzata per mostrare dei consigli."
+    education_new_topic:
+      title: "Educatione Nuovi Utenti: Primi Topic"
+      description: "Per i primi due topic dei nuovi utenti, durante la composizione del messaggio una pop-up verrà automaticamente visualizzata per mostrare dei consigli."
+    usage_tips:
+      title: "Suggerimenti per i Nuovi Utenti"
+      description: "Suggerimenti per l'uso comune, informazioni essenziali del forum e linee guida per i nuovi utenti."
+    welcome_user:
+      title: "Benvenuto: Nuovo Utente"
+      description: "Un messaggio privato verrà automaticamente inviato a tutti i nuovi utenti dopo la registrazione."
+    welcome_invite:
+      title: "Benvenuto: Utente Invitato"
+      description: "Un messaggio privato verrà automaticamente inviato a tutti gli utenti invitati dopo che loro accettano l'invito."
+    tos_user_content_license:
+      title: "Termini di Servizio: Licenza del Contenuto"
+      description: "Il testo della sezione Licenza del Contenuto dei Termini di Servizio."
+    tos_miscellaneous:
+      title: "Termini di Servizio: Varie"
+      description: "Il testo della sezione Varie dei Termini di Servizio."
 
   site_settings:
     default_locale: "Il linguaggio di default di questa installazione Discourse (ISO 639-1 Code)"
@@ -306,19 +420,22 @@ it:
     discourse_org_access_key: "La chiave d'accesso usata per accedere al Discourse Hub nickname registry at discourse.org"
     educate_until_posts: "Mostra il popup informativo quando un utente compone un messaggio fino a che non ha raggiunto questo numero di post"
     title: "Titolo di questo sito, usato nel tag title ed in altri posti"
+    contact_email: "Indirizzo email di qualcuno che può essere contattato riguardo al sito. Notifiche importanti da Discourse.org riguardanti aggiornamenti critici verranno inviati a questo indirizzo."
     company_full_name: "Il nome completo di chi gestisce il sito, usato in documenti legali come /tos"
     company_short_name: "Il nome abbreviato di chi gestisce il sito, usato in documenti legali come /tos"
     company_domain: "Il dominio di chi gestisce il sito, usato in documenti legali come /tos"
+    api_key: "La chiave API segreta usata per creare e aggiornare topic, usa la sezione /admin/api per impostarla"
     access_password: "Quando è attivo l'accesso limitato, questa password dev'essere inserita"
-    queue_jobs: "Queue various jobs in sidekiq, if false queues are inline"
-    crawl_images: "Enable retrieving images from third party sources to insert width and height dimensions (wtf??)"
-    ninja_edit_window: "Numero di secondi dopo aver postato per non considerare una modifica del posto una nuova versione"
+    queue_jobs: "Metti in coda diversi job in sidekiq, se false le code sono inline"
+    crawl_images: "Abilita la ricezione di immagini da sorgenti terze parti"
+    ninja_edit_window: "Numero di secondi trascorsi affinché una modifica del post appena inviato, non venga considerata come nuova revisione"
     enable_imgur: "Utilizza le api imgur per l'upload, non salvare file in locale"
-    imgur_api_key: "La tua api key img.ur, necessaria per l'upload di immagini"
+    imgur_client_id: "Your imgur.com client ID, required for image upload to function"
+    imgur_client_secret: "Your imgur.com client secret. Not currently required for image upload to function, but may be at some point."
     imgur_endpoint: "End point per l'upload di immagini su img.ur"
     max_image_width: "Larghezza massima delle immagini in un post"
-    category_featured_topics: "Numero di topics mostrati per categoira nella pagina /categories"
-    add_rel_nofollow_to_user_content: "Aggiungi l'attribute rel nofollow a tutti i contenuti degli utenti, tranne per i link interni (compresi i domini di livello superiore). Modificare questa opzione comporta l'aggiornamento di tutto il contenuto markdown salvato"
+    category_featured_topics: "Numero di topic mostrati per categoira nella pagina /categories"
+    add_rel_nofollow_to_user_content: "Aggiungi l'attributo rel nofollow a tutti i contenuti degli utenti, tranne per i link interni (compresi i domini di livello superiore). Modificare questa opzione comporta l'aggiornamento di tutto il contenuto markdown salvato"
     exclude_rel_nofollow_domains: "Lista di domini separati da virgola per i quali nofollow non è aggiunto (dominio.com abilita automaticamente anche sub.dominio.com)"
 
     post_excerpt_maxlength: "Lunghezza massima dell'estratto di un post (caratteri)"
@@ -332,7 +449,7 @@ it:
     favicon_url: "La favicon del tuo sito, per informazioni http://en.wikipedia.org/wiki/Favicon"
     notification_email: "L'indirizzo email usato quando vengono inviate email di sistema come la notifica agli utenti di recupero password o nuovo account"
     use_ssl: "Il sito è accessibile tramite SSL?"
-    best_of_score_threshold: "Lo score minimo di un post per essere inserito nei 'best of'"
+    best_of_score_threshold: "Il punteggio  minimo di un post per essere inserito nei 'best of'"
     best_of_posts_required: "Numero di post in un topic prima che la modalità 'best of' venga attivata"
     best_of_likes_required: "Numero minimo di likes in un topic prima che la modalità 'best of' venga attivata"
     best_of_percent_filter: "Quando un utente clicca best of, mostra i primi % post"
@@ -346,23 +463,25 @@ it:
     auto_track_topics_after: "Valore globale in millisecondi prima dei quali un topic venga automaticamente tracciato, modificabile dagli utenti (0 sempre, -1 mai)"
     new_topic_duration_minutes: "Valore globale in minuti per i quali un topic è considerato come nuovo, modificabile dagli utenti (-1 sempre, -2 ultima visita)"
 
-    flags_required_to_hide_post: "Numero di segnalazioni che rendono un topic automaticamente nascosto. L'utente riceve un PM (0 mai)"
+    flags_required_to_hide_post: "Numero di segnalazioni che rendono un topic automaticamente nascosto. L'utente riceve un messaggio privato. (0 mai)"
     cooldown_minutes_after_hiding_posts: "Numero di minuti che l'utente deve attendere prima di modificare un post nascosto per segnalazione"
 
     traditional_markdown_linebreaks: "Usa linebreak tradizionali in Markdown, piuttosto che richiedere l'inserimento di due spazi al termine di una riga per avere un linebreak"
     post_undo_action_window_mins: "Numero di secondi durante i quali gli utenti sono autorizzati ad annullare le loro azioni su un post (segnalazioni, like, etc)"
     must_approve_users: "Gli amministratori devono autorizzare ogni utente prima che esso abbia accesso"
     ga_tracking_code: "Codice Google Analytics per il tracking, es: UA-12345678-9; per informazioni http://google.com/analytics"
+    ga_domain_name: "Nome del Dominio Google analytics, esempio: miosito.com; see http://google.com/analytics"
     top_menu: "Determina quali elementi vengono mostrati nella navigazione in homepage, ed in quale ordine. Esempio latest|hot|read|favorited|unread|new|posted|categories"
     post_menu: "Determina quali elementi vengono mostrati nel menù del post, ed in quale ordine. Esempio like|edit|flag|delete|share|bookmark|reply"
-    track_external_right_clicks: "Traccia i link esterni sui quali viene fatto click destro (es: apri in una nuova tab). Disabilitato di default perchè viene fatto il rewrite delle URL"
+    share_links: "Determina quali elementi vengono mostrati nella dialog di condivisione e in quale ordine. Esempio twitter|facebook|google+"
+    track_external_right_clicks: "Traccia i link esterni sui quali viene fatto click destro (es: apri in una nuova tab). Disabilitato di default perché viene fatto il rewrite delle URL"
     topics_per_page: "Quanti topic vengono caricati di default nella pagina di lista topic"
     posts_per_page: "Quanti post vengono restituiti in una pagina di un topic"
     system_username: "Username dell'autore dei messaggi privati automatizzati spediti dal forum"
     send_welcome_message: "I nuovi utenti ricevono un messaggio di benvenuto?"
     supress_reply_directly_below: "Non mostrare il numero di risposte ad un post quando c'è una singola risposta appena sotto"
     allow_index_in_robots_txt: "Il sito è indicizzabile dai motori di ricerta (aggiorna robots.txt)"
-    email_domains_blacklist: Lista di domini separati da pipe (\"|\"). Gli indirizzi email appartenenti a questi domini non saranno autorizzate. Esempio mailinator.com|trashmail.net"
+    email_domains_blacklist: Lista di domini separati da pipe (\"|\"). Gli indirizzi email appartenenti a questi domini non saranno autorizzati. Esempio mailinator.com|trashmail.net"
     email_domains_whitelist: "Lista di domini separati da pipe (\"|\"). Gli utenti saranno autorizzati a registrarsi SOLO con questi domini. ATTENZIONE: Utenti con indirizzi email diversi da quelli listati non saranno accettati."
     version_checks: "Pinga il Discourse Hub per aggiornamenti di versione e mostra i relativi messaggi sulla dashboard in /admin"
 
@@ -388,7 +507,7 @@ it:
     github_client_id: "Client id per autenticazione Github, ottenibile da https://github.com/settings/applications"
     github_client_secret: "Client secret per autenticazione Github, ottenibile da https://github.com/settings/applications"
 
-    enable_persona_logins: "Abilita autenticazione con Mozilla Persona"
+    enable_persona_logins: "Abilita autenticazione email con Mozilla Persona"
 
     allow_import: "Abilita l'importazione, che può sostituire TUTTI i dati presenti nel sito; non modificare se non hai intenzione di importare dati"
 
@@ -396,14 +515,15 @@ it:
     previous_visit_timeout_hours: "Durata di una visita prima che venga considerata la visita 'precedente', in ore"
 
     uncategorized_name: "La categoria di default per i topic non categorizzati nella pagina /categories"
-    max_mentions_per_post: "Numero massimo di menzioni @name utilizzabili in un singolo post"
+    uncategorized_color: "Il colore di sfondo del badge per la categoria con i topic privi di categoria"
+    uncategorized_text_color: "Il colore del testo del badge per la categoria con i topic privi di categoria"
 
     rate_limit_create_topic: "Quanti secondi, dopo aver creato un topic, per poter creare un nuovo topic"
     rate_limit_create_post: "Quanti secondi, dopo aver creato un post, per poter creare un nuovo post"
 
-    max_likes_per_day: "Numero massimo di likes che un utente può fare in un giorno"
+    max_likes_per_day: "Numero massimo di like che un utente può fare in un giorno"
     max_flags_per_day: "Numero massimo di segnalazioni che un utente può fare in un giorno"
-    max_bookmarks_per_day: "Maximum number of bookmarks per user per day"
+    max_bookmarks_per_day: "Numero massimo di segnalibri che un utente può fare in un giorno"
     max_edits_per_day: "Numero massimo di modifiche in un giorno"
     max_favorites_per_day: "Numero massimo topic preferiti da un utente in un giorno"
     max_topics_per_day: "Numero massimo di topic che un utente può creare in un giorno"
@@ -411,24 +531,38 @@ it:
 
     suggested_topics: "Numero di topic suggeriti in fondo ad un topic"
 
-    enable_s3_uploads: "Carica gli uploads su Amazon S3"
-    s3_upload_bucket: "Nome del bucket di Amazon S3 nel quale verranno caricati i files"
+    enable_s3_uploads: "Carica gli upload su Amazon S3"
+    s3_upload_bucket: "Nome del bucket di Amazon S3 nel quale verranno caricati i file"
 
     default_invitee_trust_level: "Trust level (0-4) di default per utenti invitati"
     default_trust_level: "Trust level (0-4) di default per gli utenti"
 
     basic_requires_topics_entered: "Numero di topic che un utente deve creare per essere promosso a trust level basic (1)"
     basic_requires_read_posts: "Numero di post che un utente deve leggere per essere promosso a trust level basic (1)"
-    basic_requires_time_spent_mins: "Numero di minuti che un utente deve impiegare leggendo post per essere promosso a trust level basic (1)"
+    basic_requires_time_spent_mins: "Numero di minuti che un utente deve spendere leggendo post per essere promosso a trust level basic (1)"
 
-    auto_link_images_wider_than: "Immagini più larghe di questo valore, in pixel, genereranno un autolink e verranno visualizzate tramite lightbox"
+    regular_requires_topics_entered: "Numero di topic che un utente basic deve creare prima di essere promosso a regular (2)"
+    regular_requires_read_posts: "Numero di post che un utente basic deve creare prima di essere promosso a regular (2)"
+    regular_requires_time_spent_mins: "Numero di minuti che un utente basic deve spendere leggendo post prima di essere promosso a regular (2)"
+    regular_requires_days_visited: "Numero di giorni che un utente basic deve visitare il sito prima di essere promosso a regular (2)"
+    regular_requires_likes_received: "Numero di like che un utente basic deve ricevere prima di essere promosso a regular (2)"
+    regular_requires_likes_given: "Numero di like che un utente basic deve assegnare prima di essere promosso a regular (2)"
+    regular_requires_topic_reply_count: "Numero di topic a cui un utente basic deve rispondere prima di essere promosso a regular (2)"
+
+    newuser_max_links: "Numero di link che un nuovo utente può aggiungere in un post"
+    newuser_max_images: "Numero di immagini che un nuovo utente può aggiungere in un post"
+    newuser_max_mentions_per_post: "Numero massimo di menzioni @name che un nuovo utente può fare in un post"
+    max_mentions_per_post: "Numero massimo di menzioni @name che un utente può fare in un post"
+
+    auto_link_images_wider_than: "Immagini più larghe di questo valore (in pixel) verranno visualizzate tramite lightbox"
 
     email_time_window_mins: "Quanti minuti prima che una email venga mandata all'utente, per dare la possibilità di controllarla"
     flush_timings_secs: "Frequenza di aggiornamento dati temporali (su server), in secondi"
     max_word_length: "Numero massimo di caratteri che compongono una parola del titolo di un topic"
     title_min_entropy: "Entropia (caratteri unici) richiesta per il titolo di un topic"
     body_min_entropy: "Entropia (caratteri unici) richiesta per il contenuto di un post"
-    title_fancy_entities: "Converti caratteri HTML strani nei titoli dei topic"
+
+    title_fancy_entities: "Converti comuni caratteri ASCII in entità HTML nei titoli del topic, SmartyPants http://daringfireball.net/projects/smartypants/"
 
     min_title_similar_length: "Lunghezza minima di un titolo per attivare il controllo su topic simili"
     min_body_similar_length: "Lunghezza minima del contenuto di un post perattivare il controllo su topic simili"
@@ -437,6 +571,17 @@ it:
     max_upload_size_kb: "Dimensione massima in kB per gli upload degli utenti - assicurati di configurare il limite in nginx (client_max_body_size) o apache."
     max_similar_results: "Numero di topic simili da mostrare all'utente durante la creazione di un nuovo topic"
 
+    title_prettify: "Previeni typo e errori comuni nei titoli, inclusi tutto maiuscola, primo carattere minuscolo, ! e ? ripetuti, . aggiuntivi alla fine, etc etc."
+
+    topic_views_heat_low: "Il numero di visite affinché il livello di heat di un topic è basso."
+    topic_views_heat_medium: "Il numero di visite affinché il livello di heat di un topic è medio."
+    topic_views_heat_high: "Il numero di visite affinché il livello di heat di un topic è alto."
+
+    tos_url: "Se hai un documento dei Termini di Servizio ospitato da qualche altra parte che vuoi usare, fornisci l'URL qui."
+    privacy_policy_url: "Se hai un documento sulle Politiche di Privacy ospitato da qualche altra parte che vuoi usare, fornisci l'URL qui."
+
+    newuser_spam_host_threshold: "Il numero delle volte che un nuovo utente può postare un link verso lo stesso host compreso nel `newuser_spam_host_posts` post prima che venga considerato spam."
+
   notification_types:
     mentioned: "%{display_username} ti ha menzionato in %{link}"
     liked: "a %{display_username} è piaciuto il tuo post in %{link}"
@@ -444,7 +589,7 @@ it:
     quoted: "%{display_username} ha quotato il tuo post in %{link}"
     edited: "%{display_username} ha modificato il tuo post in %{link}"
     posted: "%{display_username} ha postato in %{link}"
-    moved_post: "%{display_username} ha spostato il tuo post to %{link}"
+    moved_post: "%{display_username} ha spostato il tuo post in %{link}"
     private_message: "%{display_username} ti ha mandato un messaggio privato: %{link}"
     invited_to_private_message: "%{display_username} ti ha invitato in un messaggio privato: %{link}"
     invitee_accepted: "%{display_username} ha accettato il tuo invito"
@@ -460,31 +605,6 @@ it:
   most_recent_poster: "Utenti più recenti"
   frequent_poster: "Utenti più frequenti"
 
-  user_action_descriptions:
-    bookmarks: "Bookmarks"
-    topics: "Topic"
-    likes_received: "Likes Ricevuti"
-    likes_given: "Likes Dati"
-    responses: "Risposte"
-    topic_responses: "Risposte ai Topic"
-    posts: "Post"
-    mentions: "Menzioni"
-    quotes: "Citazioni"
-    edits: "Modifiche"
-    favorites: "Preferiti"
-    sent_items: "Sent Items (wtf?)"
-    inbox: "Inbox"
-
-    was_liked: "è piaciuto"
-    liked: "ha apprezzato"
-    bookmarked: "bookmarked"
-    posted: "ha postato"
-    responded_to: "ha risposto a"
-    mentioned: "ha menzionato"
-    quoted: "ha quotato"
-    favorited: "ha messo nei preferiti"
-    edited: "ha modificato"
-
   move_posts:
     moderator_post:
       one: "Ho spostato un post in un nuovo topic: %{topic_link}"
@@ -495,6 +615,11 @@ it:
     archived_disabled: "Questo topic non è più archiviato. Non è più congelato e può essere modificato."
     closed_enabled: "Questo topic è stato chiuso. Non è più possibile postare."
     closed_disabled: "Questo topic è stato aperto. È di nuovo possibile postare."
+    autoclosed_enabled:
+      zero: "Questo topic è stato chiuso automaticamente dopo 1 giorno. Non sono permesse nuove risposte."
+      one: "Questo topic è stato chiuso automaticamente dopo 1 giorno. Non sono permesse nuove risposte."
+      other: "Questo topic è stato chiuso automaticamente dopo %{count} giorni. Non sono permesse nuove risposte."
+    autoclosed_disabled: "Questo topic è ora aperto. Sono permesse nuove risposte."
     pinned_enabled: "Questo topic è stato pinned. Sarà mostrato in cima alla sua categoria. Può essere rimosso da un moderatore, o dagli utenti cliccando sul tasto %{clear_pin}."
     pinned_disabled: "Questo topic è stato unpinned. Non sarà più mostrato in cima alla sua categoria."
     visible_enabled: "Questo topic è stato reso visibile. Sarà mostrato nella lista dei topic."
@@ -522,7 +647,7 @@ it:
       blank: "dev'essere presente"
       must_begin_with_alphanumeric: "deve iniziare con una lettera o un numero"
     email:
-      not_allowed: "non è permesso da quel provider email. Perfavore usa un altro indirizzo email."
+      not_allowed: "non è permesso da quel provider email. Per favore usa un altro indirizzo email."
 
   invite_mailer:
     subject_template: "[%{site_name}] %{invitee_name} ti ha invitato ad unirti alla conversazione su %{site_name}"
@@ -657,8 +782,6 @@ it:
     welcome_user:
       subject_template: "Benvenuto su %{site_name}!"
       text_body_template: |
-        Ciao!
-
         Grazie per esserti unito a %{site_name}, benvenuto nel nostro forum!
 
         %{new_user_tips}
@@ -710,7 +833,7 @@ it:
       text_body_template: |
         %{username} ti ha invitato ad una conversazione privata '%{topic_title}' su %{site_name}:
 
-        Perfavore visita questo link per leggere il topic: %{base_url}%{url}
+        Per favore visita questo link per leggere il topic: %{base_url}%{url}
 
     user_replied:
       subject_template: "[%{site_name}] %{username} ha risposto ad un tuo post in '%{topic_title}'"
@@ -721,18 +844,18 @@ it:
         %{message}
 
         ---
-        Perfavore visita questo link per rispondere: %{base_url}%{url}
+        Per favore visita questo link per rispondere: %{base_url}%{url}
 
     user_quoted:
-      subject_template: "[%{site_name}] %{username} ti ha quotato in '%{topic_title}'"
+      subject_template: "[%{site_name}] %{username} ti ha citato in '%{topic_title}'"
       text_body_template: |
-        %{username} ti ha quotato in '%{topic_title}' su %{site_name}:
+        %{username} ti ha citato in '%{topic_title}' su %{site_name}:
 
         ---
         %{message}
 
         ---
-        Perfavore visita questo link per rispondere: %{base_url}%{url}
+        Per favore visita questo link per rispondere: %{base_url}%{url}
 
     user_mentioned:
       subject_template: "[%{site_name}] %{username} ti ha menzionato in '%{topic_title}'"
@@ -757,18 +880,18 @@ it:
         Perfavore visita questo link per rispondere: %{base_url}%{url}
 
     digest:
-      why: "Questo è un breve sommario di ciò che è accaduto su %{site_link} da quando ti abbiamo visto l'ultima volta il %{last_seen_at}."
+      why: "Questo è un breve riassunto di ciò che è successo su %{site_link} da quando ti abbiamo visto l'ultima volta il %{last_seen_at}."
       subject_template: "[%{site_name}] Attività del forum del %{date}"
       new_activity: "Nuove attività nei tuoi topic e post:"
       new_topics: "Nuovi topic:"
-      unsubscribe: "Questa email di riepilogo è stata spedita come cortesia da %{site_link} perchè non ti abbiamo visto da un pò.\nSe vuoi disabilitare l'invio o cambiare le preferenze email, %{unsubscribe_link}."
+      unsubscribe: "Questa email di riepilogo è stata inviata da %{site_link} perché non ti abbiamo visto da un pò.\nSe vuoi disabilitare l'invio o cambiare le preferenze email, %{unsubscribe_link}."
       click_here: "clicca qui"
       from: "%{site_name} riepilogo"
 
     private_message:
       subject_template: "[%{site_name}] %{subject_prefix}%{topic_title}"
       text_body_template: |
-        %{private_message_from} ti ha appena mandato un messaggio privato
+        %{private_message_from} ti ha appena inviato un messaggio privato
 
         ---
         %{message}
@@ -804,7 +927,7 @@ it:
         Se il link non è cliccabile, copialo ed incollalo manualmente nella barra degli indirizzi del browser.
 
   discourse_hub:
-    access_token_problem: "Dillo ad un admin: Perfavore aggiorna i settaggi del sito per includere la corretta chiave discourse_org_access_key."
+    access_token_problem: "Dillo ad un admin: Per favore aggiorna le impostazioni del sito ed inserisci la chiave discourse_org_access_key corretta."
 
   page_not_found:
     title: "La pagina richiesta non esiste in questo forum. Forse possiamo aiutarti a trovarla, o un topic simile:"
@@ -813,3 +936,16 @@ it:
     see_more: "Di più"
     search_title: "Cerca per questo topic"
     search_google: "Cerca in Google"
+
+    terms_of_service:
+    user_content_license: |
+      User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_short_name} has the right (though not the obligation) to, in %{company_short_name}’s sole discretion (i) refuse or remove any content that, in %{company_short_name}’s reasonable opinion, violates any %{company_short_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_short_name}’s sole discretion. %{company_short_name} will have no obligation to provide a refund of any amounts previously paid.
+    miscellaneous: "This Agreement constitutes the entire agreement between %{company_short_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_short_name}, or by the posting by %{company_short_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_short_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns."
+
+  deleted: 'cancellato'
+
+  upload:
+    image:
+      fetch_failure: "Spiacente, si è verificato un errore nel recupero dell'immagine."
+      unknown_image_type: "Spiacente, ma il file che hai provato a caricare non sembra un'immagine."
+      size_not_found: "Spiacente, ma non riusciamo a determinare la dimensione dell'immagine. Probabilmente l'immagine è corrotta?"
