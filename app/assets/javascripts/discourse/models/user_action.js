@@ -69,7 +69,7 @@ Discourse.UserAction = Discourse.Model.extend({
         }
       }
     } else {
-      Ember.debug("Invalid user action: " + action);
+      return "";
     }
 
     return new Handlebars.SafeString(icon + " " + sentence);
@@ -87,20 +87,19 @@ Discourse.UserAction = Discourse.Model.extend({
     return Discourse.Utilities.postUrl(this.get('slug'), this.get('topic_id'), this.get('post_number'));
   }).property(),
 
-  replyUrl: (function() {
+  replyUrl: function() {
     return Discourse.Utilities.postUrl(this.get('slug'), this.get('topic_id'), this.get('reply_to_post_number'));
-  }).property(),
+  }.property(),
 
-  isPM: (function() {
+  isPM: function() {
     var a = this.get('action_type');
     return a === Discourse.UserAction.NEW_PRIVATE_MESSAGE || a === Discourse.UserAction.GOT_PRIVATE_MESSAGE;
-  }).property(),
+  }.property(),
 
-  isPostAction: (function() {
-    var a;
-    a = this.get('action_type');
+  isPostAction: function() {
+    var a = this.get('action_type');
     return a === Discourse.UserAction.RESPONSE || a === Discourse.UserAction.POST || a === Discourse.UserAction.NEW_TOPIC;
-  }).property(),
+  }.property(),
 
   addChild: function(action) {
     var bucket, current, groups, ua;
@@ -215,8 +214,7 @@ Discourse.UserAction.reopenClass({
 
 Discourse.UserAction.reopenClass({
   statGroups: (function() {
-    var g;
-    g = {};
+    var g = {};
     g[Discourse.UserAction.RESPONSE] = [Discourse.UserAction.RESPONSE, Discourse.UserAction.MENTION, Discourse.UserAction.QUOTE];
     return g;
   })()

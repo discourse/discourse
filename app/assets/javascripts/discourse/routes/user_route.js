@@ -7,16 +7,13 @@
   @module Discourse
 **/
 Discourse.UserRoute = Discourse.Route.extend({
+
   model: function(params) {
-    return Discourse.User.create({username: params.username});
+    return Discourse.User.create({username: params.username}).loadDetails();
   },
 
   serialize: function(params) {
     return { username: Em.get(params, 'username').toLowerCase() };
-  },
-
-  setupController: function(controller, model) {
-    model.loadDetails();
   }
 
 });
