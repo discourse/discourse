@@ -40,7 +40,7 @@ Discourse.ChooseTopicView = Discourse.View.extend({
     var topicId = Em.get(topic, 'id');
     this.set('selectedTopicId', topicId);
 
-    Em.run.next(function() {
+    Em.run.schedule('afterRender', function () {
       $('#choose-topic-' + topicId).prop('checked', 'true');
     });
 

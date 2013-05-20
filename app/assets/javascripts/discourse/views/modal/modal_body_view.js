@@ -11,7 +11,9 @@ Discourse.ModalBodyView = Discourse.View.extend({
   // Focus on first element
   didInsertElement: function() {
     var modalBodyView = this;
-    Em.run.next(function() { modalBodyView.$('form input:first').focus(); });
+    Em.run.schedule('afterRender', function() {
+      modalBodyView.$('form input:first').focus();
+    });
   },
 
   // Pass the errors to our errors view

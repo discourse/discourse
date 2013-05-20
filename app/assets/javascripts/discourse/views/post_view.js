@@ -35,7 +35,9 @@ Discourse.PostView = Discourse.View.extend({
   // If the cooked content changed, add the quote controls
   cookedChanged: function() {
     var postView = this;
-    Em.run.next(function() { postView.insertQuoteControls(); });
+    Em.run.schedule('afterRender', function() {
+      postView.insertQuoteControls();
+    });
   }.observes('post.cooked'),
 
   init: function() {

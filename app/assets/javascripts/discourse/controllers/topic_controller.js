@@ -246,7 +246,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   loadPosts: function(opts) {
     var topicController = this;
     this.get('content').loadPosts(opts).then(function () {
-      Em.run.next(function () { topicController.updateBottomBar(); });
+      Em.run.scheduleOnce('afterRender', topicController, 'updateBottomBar');
     });
   },
 
@@ -276,7 +276,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
         posts.pushObject(Discourse.Post.create(p, topic));
       });
 
-      Em.run.next(function () { topicController.updateBottomBar(); });
+      Em.run.scheduleOnce('afterRender', topicController, 'updateBottomBar');
 
       topicController.set('filtered_posts_count', result.filtered_posts_count);
       topicController.set('loadingBelow', false);
