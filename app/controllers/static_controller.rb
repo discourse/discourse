@@ -21,7 +21,7 @@ class StaticController < ApplicationController
       return
     end
 
-    render file: 'public/404', layout: false, status: 404
+    raise Discourse::NotFound
   end
 
   # This method just redirects to a given url.
