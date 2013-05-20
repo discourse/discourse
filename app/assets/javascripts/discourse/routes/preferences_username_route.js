@@ -8,6 +8,10 @@
 **/
 Discourse.PreferencesUsernameRoute = Discourse.RestrictedUserRoute.extend({
 
+  model: function() {
+    return this.modelFor('user');
+  },
+
   renderTemplate: function() {
     return this.render({ into: 'user', outlet: 'userOutlet' });
   },
@@ -22,10 +26,8 @@ Discourse.PreferencesUsernameRoute = Discourse.RestrictedUserRoute.extend({
     });
   },
 
-  setupController: function(controller) {
-    var user = this.controllerFor('user').get('content');
-    controller.set('content', user);
-    return controller.set('newUsername', user.get('username'));
+  setupController: function(controller, user) {
+    controller.set('newUsername', user.get('username'));
   }
 
 });

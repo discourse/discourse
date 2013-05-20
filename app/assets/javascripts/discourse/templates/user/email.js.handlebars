@@ -27,7 +27,7 @@
         {{textField value=newEmail elementId="change_email" classNames="input-xxlarge"}}
       </div>
       <div class='instructions'>
-        {{#if controller.taken}}
+        {{#if taken}}
           {{i18n user.change_email.taken}}
         {{else}}
           {{i18n user.email.instructions}}
@@ -38,7 +38,7 @@
 
     <div class="control-group">
       <div class="controls">
-          <button {{action changeEmail target="controller"}} {{bindAttr disabled="controller.saveDisabled"}} class="btn btn-primary">{{controller.saveButtonText}}</button>
+          <button {{action changeEmail}} {{bindAttr disabled="saveDisabled"}} class="btn btn-primary">{{saveButtonText}}</button>
       </div>
     </div>
   {{/if}}
