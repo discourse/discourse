@@ -38,6 +38,11 @@ describe Guardian do
       Guardian.new(user).post_can_act?(post, :like).should be_false
     end
 
+    it "always allows flagging" do
+      post.topic.archived = true
+      Guardian.new(user).post_can_act?(post, :spam).should be_true
+    end
+
     it "returns false when liking yourself" do
       Guardian.new(post.user).post_can_act?(post, :like).should be_false
     end
@@ -694,7 +699,7 @@ describe Guardian do
         user.id = 1
         post.id = 1
 
-        a = PostAction.new(user_id: user.id, post_id: post.id, post_action_type_id: 1)
+        a = PostAction.new(user: user, post: post, post_action_type_id: 1)
         a.created_at = 1.minute.ago
         a
       }
@@ -794,7 +799,7 @@ describe Guardian do
       Guardian.new.can_grant_moderation?(user).should be_false
     end
 
-    it "wont allow a regular user to revoke an modearator's access" do
+    it "wont allow a regular user to revoke an moderator's access" do
       Guardian.new(user).can_grant_moderation?(moderator).should be_false
     end
 
