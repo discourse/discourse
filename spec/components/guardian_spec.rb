@@ -38,9 +38,7 @@ describe Guardian do
       Guardian.new(user).post_can_act?(post, :like).should be_false
     end
 
-    # A COMMENT IN THE GUARDIAN CLASS IMPLIED THIS TEST SHOULD PASS, BUT IT WON'T
     it "always allows flagging" do
-      pending "need clarification of intended behavior, is flagging of archived topic posts allowed?"
       post.topic.archived = true
       Guardian.new(user).post_can_act?(post, :spam).should be_true
     end
