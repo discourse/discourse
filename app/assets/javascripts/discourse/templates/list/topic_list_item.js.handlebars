@@ -36,7 +36,7 @@
           {{#unless canClearPin}}<a href="{{lastReadUrl}}">{{i18n read_more}}</a>{{/unless}}
         {{/if}}
         {{#if canClearPin}}
-          <a href="#" {{action clearPin this target="controller"}} title="{{unbound i18n topic.clear_pin.help}}">{{i18n topic.clear_pin.title}}</a>
+          <a href="#" {{action clearPin this}} title="{{unbound i18n topic.clear_pin.help}}">{{i18n topic.clear_pin.title}}</a>
         {{/if}}
       </div>
     {{/if}}

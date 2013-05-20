@@ -3,10 +3,10 @@
   <h3>{{i18n admin.customize.long_title}}</h3>
   <ul>
     {{#each content}}
-    <li><a {{action selectStyle this target="controller"}} {{bindAttr class="this.selected:active"}}>{{this.description}}</a></li>
+    <li><a {{action selectStyle this}} {{bindAttr class="this.selected:active"}}>{{this.description}}</a></li>
     {{/each}}
   </ul>
-  <button {{action newCustomization target="controller"}} class='btn'>{{i18n admin.customize.new}}</button>
+  <button {{action newCustomization}} class='btn'>{{i18n admin.customize.new}}</button>
 </div>
 
 
@@ -44,9 +44,9 @@
   </div>
 
   <div class='buttons'>
-    <button {{action save target="controller"}} {{bindAttr disabled="content.selectedItem.disableSave"}} class='btn'>{{i18n admin.customize.save}}</button>
+    <button {{action save}} {{bindAttr disabled="content.selectedItem.disableSave"}} class='btn'>{{i18n admin.customize.save}}</button>
     <span class='saving'>{{content.selectedItem.savingStatus}}</span>
-    <a {{action destroy target="controller"}} class='delete-link'>{{i18n admin.customize.delete}}</a>
+    <a {{action destroy}} class='delete-link'>{{i18n admin.customize.delete}}</a>
   </div>
 
 </div>

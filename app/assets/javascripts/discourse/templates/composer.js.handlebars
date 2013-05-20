@@ -36,7 +36,7 @@
             {{#unless content.creatingPrivateMessage}}
               {{view Discourse.ComboboxViewCategory valueAttribute="name" contentBinding="Discourse.site.categories" valueBinding="content.categoryName"}}
               {{#if content.archetype.hasOptions}}
-                <button class='btn' {{action showOptions target="controller"}}>{{i18n topic.options}}</button>
+                <button class='btn' {{action showOptions}}>{{i18n topic.options}}</button>
               {{/if}}
               {{#if content.showAdminOptions}}
                 <button {{action toggleAdminOptions target="view"}} class="btn no-text" title='{{i18n composer.admin_options_title}}'><i class="icon icon-wrench"></i></button>
@@ -58,7 +58,7 @@
             <div id='wmd-preview' {{bindAttr class="hidePreview:hidden"}}></div>
           </div>
           {{#if Discourse.currentUser}}
-            <a href="#" {{action togglePreview target="controller"}} class='toggle-preview'>{{{content.toggleText}}}</a>
+            <a href="#" {{action togglePreview}} class='toggle-preview'>{{{content.toggleText}}}</a>
             <div id='draft-status'></div>
             {{#if view.loadingImage}}
               <div id="image-uploading">
@@ -70,8 +70,8 @@
 
         {{#if Discourse.currentUser}}
           <div class='submit-panel'>
-            <button {{action save target="controller"}} tabindex="4" {{bindAttr disabled="content.cantSubmitPost"}} class='btn btn-primary create'>{{view.content.saveText}}</button>
-            <a href='#' {{action cancel target="controller"}} class='cancel' tabindex="4">{{i18n cancel}}</a>
+            <button {{action save}} tabindex="4" {{bindAttr disabled="content.cantSubmitPost"}} class='btn btn-primary create'>{{view.content.saveText}}</button>
+            <a href='#' {{action cancel}} class='cancel' tabindex="4">{{i18n cancel}}</a>
           </div>
         {{/if}}
 
@@ -81,7 +81,7 @@
         <div class='span24'>
           <div class='saving-text'>
             {{#if content.createdPost}}
-              {{i18n composer.saved}} <a class='permalink' href="{{unbound createdPost.url}}" {{action viewNewReply target="controller"}}>{{i18n composer.view_new_post}}</a>
+              {{i18n composer.saved}} <a class='permalink' href="{{unbound createdPost.url}}" {{action viewNewReply}}>{{i18n composer.view_new_post}}</a>
             {{else}}
               {{i18n composer.saving}}
             {{/if}}

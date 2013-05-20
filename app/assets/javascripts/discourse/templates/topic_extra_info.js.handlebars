@@ -1,5 +1,5 @@
 {{#if view.showFavoriteButton}}
-  <a {{bindAttr class=":star view.topic.starred:starred"}} {{action toggleStar target="controller"}} href='#' {{bindAttr title="view.topic.favoriteTooltip"}}></a>
+  <a {{bindAttr class=":star view.topic.starred:starred"}} {{action toggleStar}} href='#' {{bindAttr title="view.topic.favoriteTooltip"}}></a>
 {{/if}}
 
 <h1>
