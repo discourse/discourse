@@ -286,6 +286,9 @@ class TopicView
     post_count = (filtered_post_ids.length - 1)
 
     max = [max, post_count].min
+
+    return @posts = [] if min > max
+
     min = [[min, max].min, 0].max
 
     @index_offset = min
