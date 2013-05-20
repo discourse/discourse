@@ -91,7 +91,7 @@ Discourse.ComposerView = Discourse.View.extend({
 
   resize: function() {
     // this still needs to wait on animations, need a clean way to do that
-    return Em.run.next(null, function() {
+    return Em.run.schedule('afterRender', function() {
       var replyControl = $('#reply-control');
       var h = replyControl.height() || 0;
       var sizePx = "" + h + "px";
@@ -263,7 +263,7 @@ Discourse.ComposerView = Discourse.View.extend({
       // cf. https://github.com/blueimp/jQuery-File-Upload/wiki/API#how-to-cancel-an-upload
       var jqXHR = data.xhr();
       // need to wait for the link to show up in the DOM
-      Em.run.next(function() {
+      Em.run.schedule('afterRender', function() {
         // bind on the click event on the cancel link
         $('#cancel-image-upload').on('click', function() {
           // cancel the upload
@@ -334,9 +334,11 @@ Discourse.ComposerView = Discourse.View.extend({
         caretPosition = Discourse.Utilities.caretPosition(ctrl),
         current = this.get('content.reply');
     this.set('content.reply', current.substring(0, caretPosition) + text + current.substring(caretPosition, current.length));
-    return Em.run.next(function() {
-      return Discourse.Utilities.setCaretPosition(ctrl, caretPosition + text.length);
+
+    Em.run.schedule('afterRender', function() {
+      Discourse.Utilities.setCaretPosition(ctrl, caretPosition + text.length);
     });
+
   },
 
   // Uses javascript to get the image sizes from the preview, if present

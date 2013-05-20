@@ -128,9 +128,9 @@ Discourse.Development = {
               if (this.get('templateName') === templateName) {
                 this.set('templateName', 'empty');
                 this.rerender();
-                return Em.run.next(function() {
+                Em.run.schedule('afterRender', function() {
                   _this.set('templateName', templateName);
-                  return _this.rerender();
+                  _this.rerender();
                 });
               }
             });

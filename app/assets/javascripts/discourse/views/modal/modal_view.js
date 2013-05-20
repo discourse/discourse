@@ -26,7 +26,7 @@ Discourse.ModalView = Ember.ContainerView.extend({
     var modalView = this;
     if (view) {
       $('#modal-alert').hide();
-      Em.run.next(function() { modalView.$().modal('show'); });
+      Em.run.schedule('afterRender', function() { modalView.$().modal('show'); });
     }
   }.observes('controller.currentView')
 

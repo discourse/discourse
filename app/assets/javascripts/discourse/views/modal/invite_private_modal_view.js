@@ -25,9 +25,9 @@ Discourse.InvitePrivateModalView = Discourse.ModalBodyView.extend({
   }).property('saving'),
 
   didInsertElement: function() {
-    var _this = this;
-    return Em.run.next(function() {
-      return _this.$('input').focus();
+    var invitePrivateModalView = this;
+    Em.run.schedule('afterRender', function() {
+      invitePrivateModalView.$('input').focus();
     });
   },
 
@@ -39,11 +39,11 @@ Discourse.InvitePrivateModalView = Discourse.ModalBodyView.extend({
     this.get('topic').inviteUser(this.get('emailOrUsername')).then(function() {
       // Success
       _this.set('saving', false);
-      return _this.set('finished', true);
+      _this.set('finished', true);
     }, function() {
       // Failure
       _this.set('error', true);
-      return _this.set('saving', false);
+      _this.set('saving', false);
     });
     return false;
   }
