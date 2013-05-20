@@ -20,7 +20,7 @@ Discourse.ApplicationController = Discourse.Controller.extend({
     if (window._gaq === undefined) { return; }
 
     if(this.afterFirstHit) {
-      Em.run.next(function(){
+      Em.run.schedule('afterRender', function() {
         _gaq.push(['_trackPageview']);
       });
     } else {

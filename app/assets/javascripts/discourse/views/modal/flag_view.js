@@ -35,7 +35,7 @@ Discourse.FlagView = Discourse.ModalBodyView.extend({
     this.set('postActionTypeId', action.id);
     this.set('isCustomFlag', action.is_custom_flag);
     this.set('selected', action);
-    Em.run.next(function() {
+    Em.run.schedule('afterRender', function() {
       $('#radio_' + action.name_key).prop('checked', 'true');
     });
     return false;
@@ -45,7 +45,7 @@ Discourse.FlagView = Discourse.ModalBodyView.extend({
     var _this = this;
 
     var action = this.get('selected');
-    var postAction = this.get('post.actionByName.' + (action.get('name_key'))); 
+    var postAction = this.get('post.actionByName.' + (action.get('name_key')));
 
     var actionType = Discourse.get('site').postActionTypeById(this.get('postActionTypeId'));
     if (postAction) {
