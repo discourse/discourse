@@ -1,10 +1,10 @@
 <div id='user-info'>
   <nav class='buttons'>
-    {{#if content.can_edit}}
+    {{#if can_edit}}
       {{#linkTo "preferences" class="btn"}}{{i18n user.edit}}{{/linkTo}}
     {{/if}}
     <br/>
-    {{#if content.can_send_private_message_to_user}}
+    {{#if can_send_private_message_to_user}}
     <button class='btn create' {{action composePrivateMessage}}>
       <i class='icon icon-plus'></i>
       {{i18n user.private_message}}
@@ -14,7 +14,7 @@
   <div class='clearfix'></div>
 
   <ul class='action-list nav-stacked side-nav'>
-    {{#each content.statsPmsOnly}}
+    {{#each statsPmsOnly}}
       {{view Discourse.ActivityFilterView contentBinding="this"}}
     {{/each}}
   </ul>

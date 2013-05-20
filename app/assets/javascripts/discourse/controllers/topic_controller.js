@@ -462,6 +462,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
 
   showHistory: function(post) {
     var modalController = this.get('controllers.modal');
+
     if (modalController) {
       modalController.show(Discourse.HistoryView.create({
         originalPost: post

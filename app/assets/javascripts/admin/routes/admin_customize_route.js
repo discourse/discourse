@@ -8,12 +8,12 @@
 **/
 Discourse.AdminCustomizeRoute = Discourse.Route.extend({
 
-  renderTemplate: function() {
-    this.render({into: 'admin/templates/admin'});
+  model: function() {
+    return Discourse.SiteCustomization.findAll();
   },
 
-  setupController: function(controller, model) {
-    // in case you are wondering, model never gets called for link_to
-    controller.set('content',Discourse.SiteCustomization.findAll());
+  renderTemplate: function() {
+    this.render({into: 'admin/templates/admin'});
   }
+
 });

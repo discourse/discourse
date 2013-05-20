@@ -3,40 +3,42 @@
   {{#if view.loading}}
     {{i18n loading}}
   {{else}}
-    <div class='span8'>
+    {{#if view.versions}}
+      <div class='span8'>
 
-      {{view Ember.Select
-        contentBinding="view.versions"
-        optionLabelPath="content.description"
-        optionValuePath="content.number"
-        selectionBinding="view.versionLeft"}}
+        {{view Ember.Select
+          contentBinding="view.versions"
+          optionLabelPath="content.description"
+          optionValuePath="content.number"
+          selectionBinding="view.versionLeft"}}
 
-      <div class='contents'>
-        {{#if view.postLeft}}
-          {{{view.postLeft.cooked}}}
-        {{else}}
-          <div class='history-loading'>{{i18n loading}}</div>
-        {{/if}}
+        <div class='contents'>
+          {{#if view.postLeft}}
+            {{{view.postLeft.cooked}}}
+          {{else}}
+            <div class='history-loading'>{{i18n loading}}</div>
+          {{/if}}
+        </div>
+
       </div>
 
-    </div>
+      <div class='span8 offset1'>
+        {{view Ember.Select
+          contentBinding="view.versions"
+          optionLabelPath="content.description"
+          optionValuePath="content.number"
+          selectionBinding="view.versionRight"}}
 
-    <div class='span8 offset1'>
-      {{view Ember.Select
-        contentBinding="view.versions"
-        optionLabelPath="content.description"
-        optionValuePath="content.number"
-        selectionBinding="view.versionRight"}}
+        <div class='contents'>
+          {{#if view.diff}}
+            {{{view.diff}}}
+          {{else}}
+            <div class='history-loading'>{{i18n loading}}</div>
+          {{/if}}
+        </div>
 
-      <div class='contents'>
-        {{#if view.diff}}
-          {{{view.diff}}}
-        {{else}}
-          <div class='history-loading'>{{i18n loading}}</div>
-        {{/if}}
       </div>
-
-    </div>
+    {{/if}}
   {{/if}}
 
 </div>

@@ -7,14 +7,13 @@
   @module Discourse
 **/
 Discourse.AdminApiRoute = Discourse.Route.extend({
-  renderTemplate: function() {
-    this.render({into: 'admin/templates/admin'});
+
+  model: function() {
+    return Discourse.AdminApi.find();
   },
 
-  setupController: function(controller, model) {
-    // in case you are wondering, model never gets called for link_to
-    Discourse.AdminApi.find().then(function(result){
-      controller.set('content', result);
-    });
+  renderTemplate: function() {
+    this.render({into: 'admin/templates/admin'});
   }
+
 });

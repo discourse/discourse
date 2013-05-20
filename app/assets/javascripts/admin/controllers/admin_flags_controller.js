@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.AdminFlagsController = Ember.Controller.extend({
+Discourse.AdminFlagsController = Ember.ArrayController.extend({
 
   /**
     Clear all flags on a post
@@ -17,10 +17,10 @@ Discourse.AdminFlagsController = Ember.Controller.extend({
   clearFlags: function(item) {
     var _this = this;
     item.clearFlags().then((function() {
-      _this.content.removeObject(item);
-    }), (function() {
+      _this.removeObject(item);
+    }), function() {
       bootbox.alert(Em.String.i18n("admin.flags.error"));
-    }));
+    });
   },
 
   /**
@@ -32,10 +32,10 @@ Discourse.AdminFlagsController = Ember.Controller.extend({
   deletePost: function(item) {
     var _this = this;
     item.deletePost().then((function() {
-      _this.content.removeObject(item);
-    }), (function() {
+      _this.removeObject(item);
+    }), function() {
       bootbox.alert(Em.String.i18n("admin.flags.error"));
-    }));
+    });
   },
 
   /**
