@@ -5,6 +5,9 @@
 # Pour toute question contactez
 # <Maxime QUANDALLE> "maxime@quandalle.com"
 #
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
+
 
 fr:
   js:
@@ -36,6 +39,19 @@ fr:
     now: "à l'instant"
     read_more: "lire la suite"
 
+    in_n_seconds:
+      one: "dans 1 seconde"
+      other: "dans {{count}} secondes"
+    in_n_minutes:
+      one: "dans 1 minute"
+      other: "dans {{count}} minutes"
+    in_n_hours:
+      one: "dans 1 heure"
+      other: "dans {{count}} heures"
+    in_n_days:
+      one: "dans 1 jour"
+      other: "dans {{count}} jours"
+
     suggested_topics:
       title: "discussions proposées"
 
@@ -53,6 +69,12 @@ fr:
     save: "Sauvegarder les changements"
     saving: "Sauvegarde en cours..."
     saved: "Sauvegardé !"
+
+    choose_topic:
+      none_found: "Aucune discussion trouvée."
+      title:
+        search: "Rechechez une discussion par son nom, url ou id :"
+        placeholder: "renseignez ici le titre de la discussion"
 
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> à démarré <a href='{{topicUrl}}'>la discussion</a>"
@@ -357,6 +379,10 @@ fr:
       help: "Aide Markdown"
       toggler: "Afficher ou cacher le composer"
 
+      admin_options_title: "Paramètres optionels pour cette discussion"
+      auto_close_label: "Fermer automatiquement cette discussion après :"
+      auto_close_units: "jours"
+
       users_placeholder: "Ajouter un utilisateur"
       title_placeholder: "Choisissez un titre ici. Sur quoi porte cette discussion en quelques mots ?"
       reply_placeholder: "Saisissez votre réponse ici. Utilisez le Markdown ou le BBCode pour le formatage. Vous pouvez déposer ou coller une image ici."
@@ -476,6 +502,12 @@ fr:
       jump_reply_down: "allez à des réponses ultérieures"
       deleted: "cette discussion à été supprimée"
 
+      auto_close_notice: "Cette discussion sera automatiquement fermée %{timeLeft}."
+      auto_close_title: 'Paramètres de fermeture automatique'
+      auto_close_save: "Sauvegarder"
+      auto_close_cancel: "Annuler"
+      auto_close_remove: "Ne pas fermer automatiquement cette discussion"
+
       progress:
         title: "progession dans la discussion"
         jump_top: "aller au premier message"
@@ -513,6 +545,7 @@ fr:
         delete: "Supprimer la discussion"
         open: "Ouvrir la discussion"
         close: "Fermer la discussion"
+        auto_close: "Fermeture automatique"
         unpin: "Dé-épingler la discussion"
         pin: "Épingler la discussion"
         unarchive: "Dé-archiver la discussion"
@@ -574,20 +607,28 @@ fr:
           other: "les plus populaires"
         cancel: "Ré-afficher l'ensemble des messages de cette discussion."
 
-      move_selected:
-        title: "Déplacer les messages sélectionnés"
-        topic_name: "Nom de la nouvelle conversation"
-        error: "Désolé, nous n'avons pas réussi à déplacer ces messages."
+      split_topic:
+        title: "Scinder la discussion"
+        action: "scinder la discussion"
+        topic_name: "Nom de la nouvelle discussion :"
+        error: "Il y a eu une erreur lors du scindage de la discussion."
         instructions:
-          one: "Vous êtes sur le point de créer une nouvelle discussion à partir du message sélectionné."
-          other: "Vous êtes sur le point de créer une nouvelle discussion à partir des <b>{{count}}</b> messages sélectionnés."
+          one: "Vous êtes sur le point de créer une nouvelle discussion avec le message que vous avez sélectionné."
+          other: "Vous êtes sur le point de créer une nouvelle discussion avec les <b>{{count}}</b> messages que vous avez sélectionné."
+
+      merge_topic:
+        title: "Fusionner la discussion"
+        action: "fusionner la discussion"
+        error: "Il y a eu une erreur lors de la fusion."
+        instructions:
+          one: "Merci de sélectionner la discussion dans laquelle vous souhaitez déplacer le message que vous avez sélectionné."
+          other: "Merci de sélectionner la discussion dans laquelle vous souhaitez déplacer les <b>{{count}}</b> messages que vous avez sélectionné."
 
       multi_select:
         select: 'sélectioner'
         selected: '({{count}}) sélectionés'
         delete: "supprimer la sélection"
         cancel: "annuler la sélection"
-        move: "déplacer la sélection"
         description:
           one: "vous avez sélectionné <b>1</b> message."
           other: "Vous avez sélectionné <b>{{count}}</b> messages."
@@ -761,6 +802,11 @@ fr:
       change_in_category_topic: "visitez les discussions de cette catégorie pour en éditer la description"
       hotness: "Buzz"
       already_used: "Cette couleur est déjà utilisée par une autre catégorie"
+      is_secure: "Catégorie sécurisée ?"
+      add_group: "Ajouter un groupe"
+      security: "Sécurité"
+      allowed_groups: "Groupes permis :"
+      
 
     flagging:
       title: 'Pourquoi voulez-vous signaler ce message ?'
@@ -898,14 +944,23 @@ fr:
         delete_title: "supprimer le message (va supprimer la discussion si c'est le premier message)"
         flagged_by: "Signalé par"
         error: "Quelque chose s'est mal passé"
+        view_message: "Voir le message"
 
       groups:
         title: "Groupes"
         edit: "Editer les groupes"
         selector_placeholder: "ajouter des utilisateurs"
+        name_placeholder: "Nom du groupe, sans espace, mêmes règles que pour les noms d'utilisateurs"
 
       api:
         title: "API"
+        long_title: "Informations sur l'API"
+        key: "Clé"
+        generate: "Générer une clé pour l'API"
+        regenerate: "Regénérer une clé pour l'API"
+        info_html: "Cette clé vous permettra de créer et mettre à jour des discussions à l'aide d'appels JSON."
+        note_html: "Gardez cette clé <strong>secrête</strong> ! Tous les personnes qui la possède peuvent créer des messages sur ce forum au nom de n'import quel utilisateur."
+
       customize:
         title: "Personnaliser"
         long_title: "Personnalisation du site"
@@ -998,6 +1053,13 @@ fr:
         delete_confirm: "Êtes-vous vraiment sûr de vouloir supprimmer définitivement cet utilisateur de votre site ? Cette action est permanente !"
         deleted: "L'utilisateur a été supprimmé."
         delete_failed: "Il y a eu une erreur lors de la suppression de l'utilisateur. Veuillez vous assurez que tous ses messages sont bien supprimmés."
+        send_activation_email: "Envoyer le mail d'activation"
+        activation_email_sent: "Un email d'activation a été envoyé."
+        send_activation_email_failed: "Il y a eu un problème lors de l'envoie du mail d'activation."
+        activate: "Activer le compte"
+        activate_failed: "Il y a eu un problème lors de l'activation du compte."
+        deactivate_account: "Désactive le compte"
+        deactivate_failed: "Il y a eu un problème lors de la désactivation du compte."
 
       site_content:
         none: "Choisissez un type de contenu afin de commencer l'édition."

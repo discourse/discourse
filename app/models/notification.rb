@@ -10,6 +10,20 @@ class Notification < ActiveRecord::Base
   scope :unread, lambda { where(read: false) }
   scope :recent, lambda { order('created_at desc').limit(10) }
 
+  after_save :refresh_notification_count
+  after_destroy :refresh_notification_count
+
+  def self.ensure_consistency!
+    Notification.exec_sql("
+    DELETE FROM Notifications n WHERE notification_type = :id AND
+    NOT EXISTS(
+      SELECT 1 FROM posts p
+      JOIN topics t ON t.id = p.topic_id
+      WHERE p.deleted_at is null AND t.deleted_at IS NULL
+        AND p.post_number = n.post_number AND t.id = n.topic_id
+    )" , id: Notification.types[:private_message])
+  end
+
   def self.types
     @types ||= Enum.new(
       :mentioned, :replied, :quoted, :edited, :liked, :private_message,
@@ -74,5 +88,18 @@ class Notification < ActiveRecord::Base
 
     Post.where(topic_id: topic_id, post_number: post_number).first
   end
+
+
+  protected
+
+  def refresh_notification_count
+    user_id = user.id
+    MessageBus.publish("/notification/#{user_id}",
+      {unread_notifications: user.unread_notifications,
+       unread_private_messages: user.unread_private_messages},
+      user_ids: [user_id] # only publish the notification to this user
+    )
+  end
+
 end
 

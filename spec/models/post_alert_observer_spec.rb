@@ -4,6 +4,7 @@ require_dependency 'post_destroyer'
 describe PostAlertObserver do
 
   before do
+    ActiveRecord::Base.observers.enable :post_alert_observer
     ImageSorcery.any_instance.stubs(:convert).returns(false)
   end
 

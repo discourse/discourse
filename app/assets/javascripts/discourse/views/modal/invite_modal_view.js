@@ -33,9 +33,9 @@ Discourse.InviteModalView = Discourse.ModalBodyView.extend({
   }).property('email'),
 
   didInsertElement: function() {
-    var _this = this;
-    Em.run.next(function() {
-      _this.$('input').focus();
+    var inviteModalView = this;
+    Em.run.schedule('afterRender', function() {
+      inviteModalView.$('input').focus();
     });
   },
 

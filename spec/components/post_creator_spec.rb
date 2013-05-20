@@ -4,6 +4,10 @@ require 'topic_subtype'
 
 describe PostCreator do
 
+  before do
+    ActiveRecord::Base.observers.enable :all
+  end
+
   let(:user) { Fabricate(:user) }
 
   it 'raises an error without a raw value' do
@@ -27,12 +31,57 @@ describe PostCreator do
     end
 
     context 'success' do
-      it 'creates a topic' do
-        lambda { creator.create }.should change(Topic, :count).by(1)
+
+      it "doesn't return true for spam" do
+        creator.create
+        creator.spam?.should be_false
       end
 
-      it 'returns a post' do
-        creator.create.is_a?(Post).should be_true
+      it 'generates the correct messages for a secure topic' do
+
+        admin = Fabricate(:admin)
+
+        cat = Fabricate(:category)
+        cat.deny(:all)
+        cat.allow(Group[:admins])
+        cat.save
+
+        created_post = nil
+        reply = nil
+
+        messages = MessageBus.track_publish do
+          created_post = PostCreator.new(admin, basic_topic_params.merge(category: cat.name)).create
+          reply = PostCreator.new(admin, raw: 'this is my test reply 123 testing', topic_id: created_post.topic_id).create
+        end
+
+        topic_id = created_post.topic_id
+
+
+        messages.map{|m| m.channel}.sort.should == [ "/latest",
+                                                     "/users/#{admin.username}",
+                                                     "/users/#{admin.username}",
+                                                     "/topic/#{created_post.topic_id}",
+                                                     "/category/#{cat.slug}"
+                                                   ].sort
+        admin_ids = [Group[:admins].id]
+        messages.any?{|m| m.group_ids != admin_ids}.should be_false
+      end
+
+      it 'generates the correct messages for a normal topic' do
+
+        p = nil
+        messages = MessageBus.track_publish do
+          p = creator.create
+          topic_id = p.topic_id
+        end
+
+        latest = messages.find{|m| m.channel == "/latest"}
+        latest.should_not be_nil
+
+        user_action = messages.find{|m| m.channel == "/users/#{p.user.username}"}
+        user_action.should_not be_nil
+
+        messages.length.should == 2
       end
 
       it 'extracts links from the post' do
@@ -40,20 +89,8 @@ describe PostCreator do
         creator.create
       end
 
-      it 'enqueues the post on the message bus' do
-        MessageBus.stubs(:publish).with("/users/#{user.username}", anything)
-        MessageBus.expects(:publish).with("/topic/#{topic.id}", instance_of(Hash))
-        PostCreator.new(user, raw: basic_topic_params[:raw], topic_id: topic.id)
-      end
-
-      it 'features topic users' do
-        Jobs.stubs(:enqueue).with(:process_post, anything)
-        Jobs.expects(:enqueue).with(:feature_topic_users, has_key(:topic_id))
-        creator.create
-      end
-
       it 'queues up post processing job when saved' do
-        Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
+        Jobs.expects(:enqueue).with(:feature_topic_users, has_key(:topic_id))
         Jobs.expects(:enqueue).with(:process_post, has_key(:post_id))
         creator.create
       end
@@ -98,6 +135,14 @@ describe PostCreator do
       end
     end
 
+    context 'when auto-close param is given' do
+      it 'ensures the user can auto-close the topic' do
+        Guardian.any_instance.stubs(:can_moderate?).returns(false)
+        expect {
+          PostCreator.new(user, basic_topic_params.merge(auto_close_days: 2)).create
+        }.to raise_error(Discourse::InvalidAccess)
+      end
+    end
   end
 
   context 'uniqueness' do
@@ -142,6 +187,25 @@ describe PostCreator do
         new_post_creator.create
         new_post_creator.errors.should be_blank
       end
+    end
+
+  end
+
+
+  context "host spam" do
+
+    let!(:topic) { Fabricate(:topic, user: user) }
+    let(:basic_topic_params) { { raw: 'test reply', topic_id: topic.id, reply_to_post_number: 4} }
+    let(:creator) { PostCreator.new(user, basic_topic_params) }
+
+    before do
+      Post.any_instance.expects(:has_host_spam?).returns(true)
+    end
+
+    it "does not create the post" do
+      creator.create
+      creator.errors.should be_present
+      creator.spam?.should be_true
     end
 
   end
@@ -218,6 +282,28 @@ describe PostCreator do
       post.topic.subtype.should == TopicSubtype.user_to_user
       target_user1.notifications.count.should == 1
       target_user2.notifications.count.should == 1
+    end
+  end
+
+  context 'setting created_at' do
+    created_at = 1.week.ago
+    let(:topic) do
+      PostCreator.create(user,
+                         raw: 'This is very interesting test post content',
+                         title: 'This is a very interesting test post title',
+                         created_at: created_at)
+    end
+
+    let(:post) do
+      PostCreator.create(user,
+                         raw: 'This is very interesting test post content',
+                         topic_id: Topic.last,
+                         created_at: created_at)
+    end
+
+    it 'acts correctly' do
+      topic.created_at.should be_within(10.seconds).of(created_at)
+      post.created_at.should be_within(10.seconds).of(created_at)
     end
   end
 end

@@ -8,6 +8,10 @@
 **/
 Discourse.PreferencesEmailRoute = Discourse.RestrictedUserRoute.extend({
 
+  model: function() {
+    return this.modelFor('user');
+  },
+
   renderTemplate: function() {
     this.render({ into: 'user', outlet: 'userOutlet' });
   },
@@ -20,10 +24,6 @@ Discourse.PreferencesEmailRoute = Discourse.RestrictedUserRoute.extend({
       outlet: 'userOutlet',
       controller: 'preferences'
     });
-  },
-
-  setupController: function(controller) {
-    controller.set('content', this.controllerFor('user').get('content'));
   }
 
 });

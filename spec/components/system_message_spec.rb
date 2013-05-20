@@ -21,18 +21,5 @@ describe SystemMessage do
     end
   end
 
-  context '#system_user' do
-
-    it 'returns the user specified by the site setting system_username' do
-      SiteSetting.stubs(:system_username).returns(admin.username)
-      SystemMessage.system_user.should == admin
-    end
-
-    it 'returns the first admin user otherwise' do
-      SiteSetting.stubs(:system_username).returns(nil)
-      SystemMessage.system_user.should == admin
-    end
-
-  end
 
 end

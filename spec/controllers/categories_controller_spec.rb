@@ -134,22 +134,21 @@ describe CategoriesController do
 
       describe 'success' do
         before do
-          xhr :put, :update, id: @category.id, name: 'science', color: '000', text_color: '0ff'
+          # might as well test this as well
+          @category.allow(Group[:admins])
+          @category.save
+
+          xhr :put, :update, id: @category.id, name: 'science', color: '000', text_color: '0ff', group_names: Group[:staff].name, secure: 'true'
           @category.reload
         end
 
-        it 'updates the name' do
+        it 'updates the group correctly' do
           @category.name.should == 'science'
-        end
-
-        it 'updates the color' do
           @category.color.should == '000'
-        end
-
-        it 'updates the text color' do
           @category.text_color.should == '0ff'
+          @category.secure?.should be_true
+          @category.groups.count.should == 1
         end
-
       end
     end
 

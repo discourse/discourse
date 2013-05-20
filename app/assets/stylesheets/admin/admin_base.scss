@@ -654,3 +654,12 @@ table {
   }
 
 }
+
+.row.groups {
+  input[type='text'] {
+    width: 500px;
+  }
+  input#group-users {
+    width: 600px;
+  }
+}

@@ -1,6 +1,10 @@
 # encoding: utf-8
 # This file contains content for the client portion of Discourse, sent out
 # to the Javascript app.
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
+
 
 id:
   js:
@@ -418,7 +422,7 @@ id:
         invisible: "Make Invisible"
         visible: "Make Visible"
         reset_read: "Reset Read Data"
-        multi_select: "Toggle Multi-Select"
+        multi_select: "Select Posts to Merge/Split"
         convert_to_topic: "Convert to Regular Topic"
 
       reply:
@@ -665,7 +669,7 @@ id:
         delete_confirm: "Delete this customization?"
 
       email_logs:
-        title: "Email Logs"
+        title: "Email"
         sent_at: "Sent At"
         email_type: "Email Type"
         to_address: "To Address"
@@ -727,5 +731,5 @@ id:
 
       site_settings:
         show_overriden: 'Only show overridden'
-        title: 'Site Settings'
+        title: 'Settings'
         reset: 'reset to default'

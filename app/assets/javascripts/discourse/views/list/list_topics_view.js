@@ -9,8 +9,7 @@
 **/
 Discourse.ListTopicsView = Discourse.View.extend(Discourse.Scrolling, {
   templateName: 'list/topics',
-  categoryBinding: 'Discourse.router.listController.category',
-  filterModeBinding: 'Discourse.router.listController.filterMode',
+  categoryBinding: 'controller.controllers.list.category',
   canCreateTopicBinding: 'controller.controllers.list.canCreateTopic',
   loadedMore: false,
   currentTopicId: null,
@@ -18,9 +17,7 @@ Discourse.ListTopicsView = Discourse.View.extend(Discourse.Scrolling, {
   insertedCount: (function() {
     var inserted;
     inserted = this.get('controller.inserted');
-    if (!inserted) {
-      return 0;
-    }
+    if (!inserted) return 0;
     return inserted.length;
   }).property('controller.inserted.@each'),
 
@@ -37,24 +34,26 @@ Discourse.ListTopicsView = Discourse.View.extend(Discourse.Scrolling, {
   }).property('loading', 'controller.content.more_topics_url'),
 
   didInsertElement: function() {
-    var eyeline, scrollPos,
-      _this = this;
     this.bindScrolling();
-    eyeline = new Discourse.Eyeline('.topic-list-item');
+    var eyeline = new Discourse.Eyeline('.topic-list-item');
+
+    var listTopicsView = this;
     eyeline.on('sawBottom', function() {
-      return _this.loadMore();
+      listTopicsView.loadMore();
     });
-    if (scrollPos = Discourse.get('transient.topicListScrollPos')) {
-      Em.run.next(function() {
-        return $('html, body').scrollTop(scrollPos);
+
+    var scrollPos = Discourse.get('transient.topicListScrollPos');
+    if (scrollPos) {
+      Em.run.schedule('afterRender', function() {
+        $('html, body').scrollTop(scrollPos);
       });
     } else {
-      Em.run.next(function() {
-        return $('html, body').scrollTop(0);
+      Em.run.schedule('afterRender', function() {
+        $('html, body').scrollTop(0);
       });
     }
     this.set('eyeline', eyeline);
-    return this.set('currentTopicId', null);
+    this.set('currentTopicId', null);
   },
 
   loadMore: function() {
@@ -67,7 +66,9 @@ Discourse.ListTopicsView = Discourse.View.extend(Discourse.Scrolling, {
       promise.then(function(hasMoreResults) {
         listTopicsView.set('loadedMore', true);
         listTopicsView.set('loading', false);
-        Em.run.next(function() { listTopicsView.saveScrollPos(); });
+        Em.run.schedule('afterRender', function() {
+          listTopicsView.saveScrollPos();
+        });
         if (!hasMoreResults) {
           listTopicsView.get('eyeline').flushRest();
         }
@@ -89,23 +90,28 @@ Discourse.ListTopicsView = Discourse.View.extend(Discourse.Scrolling, {
     return (_ref = this.get('eyeline')) ? _ref.update() : void 0;
   },
 
-  footerMessage: (function() {
+  footerMessage: function() {
     var content, split;
     if (!this.get('allLoaded')) {
       return;
     }
-    content = this.get('controller.content');
-    split = content.get('filter').split('/');
-    if (content.get('topics.length') === 0) {
-      return Em.String.i18n("topics.none." + split[0], {
-        category: split[1]
-      });
+    content = this.get('category');
+    if( content ) {
+      return Em.String.i18n('topics.bottom.category', {category: content.get('name')});
     } else {
-      return Em.String.i18n("topics.bottom." + split[0], {
-        category: split[1]
-      });
+      content = this.get('controller.content');
+      split = content.get('filter').split('/');
+      if (content.get('topics.length') === 0) {
+        return Em.String.i18n("topics.none." + split[0], {
+          category: split[1]
+        });
+      } else {
+        return Em.String.i18n("topics.bottom." + split[0], {
+          category: split[1]
+        });
+      }
     }
-  }).property('allLoaded', 'controller.content.topics.length')
+  }.property('allLoaded', 'controller.content.topics.length')
 
 });
 

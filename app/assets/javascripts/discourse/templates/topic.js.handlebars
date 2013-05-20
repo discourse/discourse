@@ -72,9 +72,12 @@
             {{/unless}}
           {{else}}
             {{#if view.fullyLoaded}}
-              {{view Discourse.TopicFooterButtonsView topicBinding="controller.content"}}
 
-              {{#if controller.content.suggested_topics.length}}
+              {{view Discourse.TopicClosingView topicBinding="model"}}
+
+              {{view Discourse.TopicFooterButtonsView topicBinding="model"}}
+
+              {{#if suggested_topics.length}}
                 <div id='suggested-topics'>
 
                   <h3>{{i18n suggested_topics.title}}</h3>
@@ -92,7 +95,7 @@
                         <th class='num activity' colspan='2'>{{i18n activity}}</th>
                       </tr>
 
-                    {{each controller.content.suggested_topics itemTagName="tr" itemViewClass="Discourse.SuggestedTopicView"}}
+                    {{each suggested_topics itemTagName="tr" itemViewClass="Discourse.SuggestedTopicView"}}
                     </table>
                   </div>
                   <br/>

@@ -61,6 +61,7 @@ class Topic < ActiveRecord::Base
   belongs_to :featured_user2, class_name: 'User', foreign_key: :featured_user2_id
   belongs_to :featured_user3, class_name: 'User', foreign_key: :featured_user3_id
   belongs_to :featured_user4, class_name: 'User', foreign_key: :featured_user4_id
+  belongs_to :auto_close_user, class_name: 'User', foreign_key: :auto_close_user_id
 
   has_many :topic_users
   has_many :topic_links
@@ -94,6 +95,10 @@ class Topic < ActiveRecord::Base
   before_create do
     self.bumped_at ||= Time.now
     self.last_post_user_id ||= user_id
+    if !@ignore_category_auto_close and self.category and self.category.auto_close_days and self.auto_close_at.nil?
+      self.auto_close_at = self.category.auto_close_days.days.from_now
+      self.auto_close_user = (self.user.staff? ? self.user : Discourse.system_user)
+    end
   end
 
   after_create do
@@ -105,6 +110,19 @@ class Topic < ActiveRecord::Base
       DraftSequence.next!(user, Draft::NEW_PRIVATE_MESSAGE)
     else
       DraftSequence.next!(user, Draft::NEW_TOPIC)
+    end
+  end
+
+  before_save do
+    if (auto_close_at_changed? and !auto_close_at_was.nil?) or (auto_close_user_id_changed? and auto_close_at)
+      Jobs.cancel_scheduled_job(:close_topic, {topic_id: id})
+      true
+    end
+  end
+
+  after_save do
+    if auto_close_at and (auto_close_at_changed? or auto_close_user_id_changed?)
+      Jobs.enqueue_at(auto_close_at, :close_topic, {topic_id: id, user_id: auto_close_user_id || user_id})
     end
   end
 
@@ -264,7 +282,7 @@ class Topic < ActiveRecord::Base
         update_pinned(status)
       else
         # otherwise update the column
-        update_column(property, status)
+        update_column(property == 'autoclosed' ? 'closed' : property, status)
       end
 
       key = "topic_statuses.#{property}_"
@@ -273,9 +291,11 @@ class Topic < ActiveRecord::Base
       opts = {}
 
       # We don't bump moderator posts except for the re-open post.
-      opts[:bump] = true if property == 'closed' and (!status)
+      opts[:bump] = true if (property == 'closed' or property == 'autoclosed') and (!status)
 
-      add_moderator_post(user, I18n.t(key), opts)
+      message = property != 'autoclosed' ? I18n.t(key) : I18n.t(key, count: (((self.auto_close_at||Time.zone.now) - self.created_at) / 86_400).round )
+
+      add_moderator_post(user, message, opts)
     end
   end
 
@@ -447,30 +467,60 @@ class Topic < ActiveRecord::Base
     invite
   end
 
-  def move_posts(moved_by, new_title, post_ids)
-    topic = nil
+  def move_posts_to_topic(moved_by, post_ids, destination_topic)
+    to_move = posts.where(id: post_ids).order(:created_at)
+    raise Discourse::InvalidParameters.new(:post_ids) if to_move.blank?
+
     first_post_number = nil
     Topic.transaction do
-      topic = Topic.create(user: moved_by, title: new_title, category: category)
-
-      to_move = posts.where(id: post_ids).order(:created_at)
-      raise Discourse::InvalidParameters.new(:post_ids) if to_move.blank?
+      # Find the max post number in the topic
+      max_post_number = destination_topic.posts.maximum(:post_number) || 0
 
       to_move.each_with_index do |post, i|
-        first_post_number ||= post.post_number
-        row_count = Post.update_all ["post_number = :post_number, topic_id = :topic_id, sort_order = :post_number", post_number: i+1, topic_id: topic.id], id: post.id, topic_id: id
+        if post.post_number == 1
+          # We have a special case for the OP, we copy it instead of deleting it.
+          result = PostCreator.new(post.user,
+                                  raw: post.raw,
+                                  topic_id: destination_topic.id,
+                                  acting_user: moved_by).create
+        else
+          first_post_number ||= post.post_number
+          # Move the post and raise an error if it couldn't be moved
+          row_count = Post.update_all ["post_number = :post_number, topic_id = :topic_id, sort_order = :post_number", post_number: max_post_number+i+1, topic_id: destination_topic.id], id: post.id, topic_id: id
+          raise Discourse::InvalidParameters.new(:post_ids) if row_count == 0
+        end
+      end
+    end
 
-        # We raise an error if any of the posts can't be moved
-        raise Discourse::InvalidParameters.new(:post_ids) if row_count == 0
+
+    first_post_number
+  end
+
+  def move_posts(moved_by, post_ids, opts)
+
+    topic = nil
+    first_post_number = nil
+
+    if opts[:title].present?
+      # If we're moving to a new topic...
+      Topic.transaction do
+        topic = Topic.create(user: moved_by, title: opts[:title], category: category)
+        first_post_number = move_posts_to_topic(moved_by, post_ids, topic)
       end
 
-      # Update denormalized values since we've manually moved stuff
+    elsif opts[:destination_topic_id].present?
+      # If we're moving to an existing topic...
+
+      topic = Topic.where(id: opts[:destination_topic_id]).first
+      Guardian.new(moved_by).ensure_can_see!(topic)
+      first_post_number = move_posts_to_topic(moved_by, post_ids, topic)
+
     end
 
     # Add a moderator post explaining that the post was moved
     if topic.present?
       topic_url = "#{Discourse.base_url}#{topic.relative_url}"
-      topic_link = "[#{new_title}](#{topic_url})"
+      topic_link = "[#{topic.title}](#{topic_url})"
 
       add_moderator_post(moved_by, I18n.t("move_posts.moderator_post", count: post_ids.size, topic_link: topic_link), post_number: first_post_number)
       Jobs.enqueue(:notify_moved_posts, post_ids: post_ids, moved_by_id: moved_by.id)
@@ -641,9 +691,16 @@ class Topic < ActiveRecord::Base
     "/t/#{slug}/#{id}/#{posts_count}"
   end
 
+
+  def self.url(id, slug, post_number=nil)
+    url = "#{Discourse.base_url}/t/#{slug}/#{id}"
+    url << "/#{post_number}" if post_number.to_i > 1
+    url
+  end
+
   def relative_url(post_number=nil)
     url = "/t/#{slug}/#{id}"
-    url << "/#{post_number}" if post_number.present? && post_number.to_i > 1
+    url << "/#{post_number}" if post_number.to_i > 1
     url
   end
 
@@ -682,4 +739,10 @@ class Topic < ActiveRecord::Base
   def notify_muted!(user)
     TopicUser.change(user, id, notification_level: TopicUser.notification_levels[:muted])
   end
+
+  def auto_close_days=(num_days)
+    @ignore_category_auto_close = true
+    self.auto_close_at = (num_days and num_days.to_i > 0.0 ? num_days.to_i.days.from_now : nil)
+  end
+
 end

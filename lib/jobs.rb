@@ -22,10 +22,6 @@ module Jobs
       self.new.perform(opts)
     end
 
-    def self.mutex
-      @mutex ||= Mutex.new
-    end
-
     def execute(opts={})
       raise "Overwrite me!"
     end
@@ -57,16 +53,18 @@ module Jobs
 
       dbs.each do |db|
         begin
-          Jobs::Base.mutex.synchronize do
-            RailsMultisite::ConnectionManagement.establish_connection(db: db)
-            I18n.locale = SiteSetting.default_locale
-            execute(opts)
-          end
+          RailsMultisite::ConnectionManagement.establish_connection(db: db)
+          I18n.locale = SiteSetting.default_locale
+          execute(opts)
         ensure
           ActiveRecord::Base.connection_handler.clear_active_connections!
         end
       end
+
+    ensure
+      ActiveRecord::Base.connection_handler.clear_active_connections!
     end
+
   end
 
   def self.enqueue(job_name, opts={})
@@ -99,6 +97,39 @@ module Jobs
     enqueue(job_name, opts.merge!(delay_for: secs))
   end
 
+  def self.enqueue_at(datetime, job_name, opts={})
+    enqueue_in( [(datetime - Time.zone.now).to_i, 0].max, job_name, opts )
+  end
+
+  def self.cancel_scheduled_job(job_name, params={})
+    jobs = scheduled_for(job_name, params)
+    return false if jobs.empty?
+    jobs.each { |job| job.delete }
+    true
+  end
+
+  def self.scheduled_for(job_name, params={})
+    job_class = "Jobs::#{job_name.to_s.camelcase}"
+    Sidekiq::ScheduledSet.new.select do |scheduled_job|
+      if scheduled_job.klass == 'Sidekiq::Extensions::DelayedClass'
+        job_args = YAML.load(scheduled_job.args[0])
+        if job_args[0].to_s == job_class and job_args[2] and job_args[2][0]
+          matched = true
+          params.each do |key, value|
+            unless job_args[2][0][key] == value
+              matched = false
+              break
+            end
+          end
+          matched
+        else
+          false
+        end
+      else
+        false
+      end
+    end
+  end
 end
 
 # Require all jobs

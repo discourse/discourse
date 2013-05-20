@@ -1,3 +1,5 @@
+require 'cache'
+
 module Discourse
 
   # When they try to do something they should be logged in for
@@ -12,6 +14,9 @@ module Discourse
   # When something they want is not found
   class NotFound < Exception; end
 
+  def self.cache
+    @cache ||= Cache.new
+  end
 
   # Get the current base URL for the current site
   def self.current_hostname
@@ -20,7 +25,7 @@ module Discourse
 
   def self.base_uri default_value=""
     if !ActionController::Base.config.relative_url_root.blank?
-      return ActionController::Base.config.relative_url_root 
+      return ActionController::Base.config.relative_url_root
     else
       return default_value
     end
@@ -68,6 +73,12 @@ module Discourse
     end
   end
 
+  # Either returns the system_username user or the first admin.
+  def self.system_user
+    user = User.where(username_lower: SiteSetting.system_username).first if SiteSetting.system_username.present?
+    user = User.admins.order(:id).first if user.blank?
+    user
+  end
 
 private
 

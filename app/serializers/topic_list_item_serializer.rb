@@ -14,7 +14,7 @@ class TopicListItemSerializer < ListableTopicSerializer
              :rank_details,
              :excerpt
 
-  has_one :category
+  has_one :category, serializer: BasicCategorySerializer
   has_many :posters, serializer: TopicPosterSerializer, embed: :objects
 
   def starred
@@ -60,7 +60,7 @@ class TopicListItemSerializer < ListableTopicSerializer
   end
 
   def excerpt
-    object.posts.first.try(:excerpt,220, strip_links: true) || nil
+    object.posts.by_post_number.first.try(:excerpt, 220, strip_links: true) || nil
   end
 
 end

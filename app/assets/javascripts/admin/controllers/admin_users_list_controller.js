@@ -18,12 +18,12 @@ Discourse.AdminUsersListController = Ember.ArrayController.extend(Discourse.Pres
 
     @event selectAll
   **/
-  selectAllChanged: (function() {
+  selectAllChanged: function() {
     var _this = this;
     this.get('content').each(function(user) {
       user.set('selected', _this.get('selectAll'));
     });
-  }).observes('selectAll'),
+  }.observes('selectAll'),
 
   /**
     Triggered when the username filter is changed
@@ -39,9 +39,9 @@ Discourse.AdminUsersListController = Ember.ArrayController.extend(Discourse.Pres
 
     @event orderChanged
   **/
-  orderChanged: (function() {
+  orderChanged: function() {
     this.refreshUsers();
-  }).observes('query'),
+  }.observes('query'),
 
   /**
     The title of the user list, based on which query was performed.
@@ -57,30 +57,30 @@ Discourse.AdminUsersListController = Ember.ArrayController.extend(Discourse.Pres
 
     @property showApproval
   **/
-  showApproval: (function() {
+  showApproval: function() {
     if (!Discourse.SiteSettings.must_approve_users) return false;
     if (this.get('query') === 'new') return true;
     if (this.get('query') === 'pending') return true;
-  }).property('query'),
+  }.property('query'),
 
   /**
     How many users are currently selected
 
     @property selectedCount
   **/
-  selectedCount: (function() {
+  selectedCount: function() {
     if (this.blank('content')) return 0;
     return this.get('content').filterProperty('selected').length;
-  }).property('content.@each.selected'),
+  }.property('content.@each.selected'),
 
   /**
     Do we have any selected users?
 
     @property hasSelection
   **/
-  hasSelection: (function() {
+  hasSelection: function() {
     return this.get('selectedCount') > 0;
-  }).property('selectedCount'),
+  }.property('selectedCount'),
 
   /**
     Refresh the current list of users.

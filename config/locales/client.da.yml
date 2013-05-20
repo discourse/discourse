@@ -1,5 +1,8 @@
 # This file contains content for the client portion of Discourse, sent out
 # to the Javascript app.
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
 
 da:
   js:
@@ -458,7 +461,7 @@ da:
         invisible: "Gør usynlig"
         visible: "Gør synlig"
         reset_read: "Glem hvilke emner jeg har læst"
-        multi_select: "Toggle Multi-Select"
+        multi_select: "Select Posts to Merge/Split"
         convert_to_topic: "Konvertér til normalt emne"
 
       reply:
@@ -732,7 +735,7 @@ da:
         delete_confirm: "Delete this customization?"
 
       email_logs:
-        title: "Email Logs"
+        title: "Email"
         sent_at: "Sent At"
         email_type: "Email Type"
         to_address: "To Address"
@@ -794,5 +797,5 @@ da:
 
       site_settings:
         show_overriden: 'Only show overridden'
-        title: 'Site Settings'
+        title: 'Settings'
         reset: 'reset to default'

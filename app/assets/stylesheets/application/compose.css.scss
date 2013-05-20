@@ -8,6 +8,12 @@
   width: 47%;
 }
 
+.composer-popup-container {
+  max-width: 1500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .composer-popup {
 
   @include box-shadow(3px 3px 3px rgba($black, 0.14));
@@ -51,6 +57,11 @@
 
   a[href] {
     color: #000;
+  }
+
+  .posts-count {
+    color: darken(#b5e8fd, 50%);
+    font-size: 12px;
   }
 }
 
@@ -234,6 +245,7 @@
         margin: 6px 10px 3px 0;
       }
       .wmd-controls {
+        @include transition(top 0.3s ease);
         top: 100px;
       }
     }
@@ -365,6 +377,7 @@ div.ac-wrap {
 
 #reply-control.edit-title.private-message {
   .wmd-controls {
+    @include transition(top 0.3s ease);
     top: 140px;
   }
 }
@@ -463,6 +476,32 @@ div.ac-wrap {
       width: 1450px;
       left: auto;
       right: auto;
+    }
+  }
+}
+
+.admin-options-form {
+  margin-top: 8px;
+  display: none;
+}
+
+.auto-close-fields {
+  input {
+    width: 50px;
+  }
+}
+
+.edit-auto-close-modal {
+  form {
+    margin: 0;
+  }
+  .auto-close-fields {
+    i.icon-time {
+      font-size: 16px;
+      line-height: 8px;
+    }
+    input {
+      margin: 0;
     }
   }
 }

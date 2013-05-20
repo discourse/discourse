@@ -84,7 +84,8 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
     var markerOffset = $(markerElement).offset(),
         $quoteButton = $('.quote-button');
 
-    Em.run.next(function(){
+
+    Em.run.schedule('afterRender', function() {
       $quoteButton.offset({
         top: markerOffset.top - $quoteButton.outerHeight() - 5,
         left: markerOffset.left

@@ -1,4 +1,8 @@
-# Updated with client.en.yml from commit 21b5183d6ab8c41ede8371d00e834865d3b35299
+# encoding: utf-8
+# This file contains content for the server portion of Discourse used by Ruby
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
 
 es:
   time:
@@ -205,7 +209,7 @@ es:
       long_form: 'flagged this as off-topic'
     spam:
       title: 'Spam'
-      description: 'This post is effectively an advertisement with no disclosure. It is not useful or relevant to the current conversation, but promotional in nature.'
+      description: 'This post is an advertisement. It is not useful or relevant to the current conversation, but promotional in nature.'
       long_form: 'flagged this as spam'
     inappropriate:
       title: 'Inappropriate'

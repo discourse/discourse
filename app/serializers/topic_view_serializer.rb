@@ -18,7 +18,8 @@ class TopicViewSerializer < ApplicationSerializer
      :moderator_posts_count,
      :has_best_of,
      :archetype,
-     :slug]
+     :slug,
+     :auto_close_at]
   end
 
   def self.guardian_attributes
@@ -50,6 +51,7 @@ class TopicViewSerializer < ApplicationSerializer
   has_one :created_by, serializer: BasicUserSerializer, embed: :objects
   has_one :last_poster, serializer: BasicUserSerializer, embed: :objects
   has_many :allowed_users, serializer: BasicUserSerializer, embed: :objects
+  has_many :allowed_groups, serializer: BasicGroupSerializer, embed: :objects
 
   has_many :links, serializer: TopicLinkSerializer, embed: :objects
   has_many :participants, serializer: TopicPostCountSerializer, embed: :objects
@@ -126,6 +128,7 @@ class TopicViewSerializer < ApplicationSerializer
   def categoryName
     object.topic.category.name
   end
+
   def include_categoryName?
     object.topic.category.present?
   end
@@ -170,6 +173,10 @@ class TopicViewSerializer < ApplicationSerializer
 
   def allowed_users
     object.topic.allowed_users
+  end
+
+  def allowed_groups
+    object.topic.allowed_groups
   end
 
   def include_links?

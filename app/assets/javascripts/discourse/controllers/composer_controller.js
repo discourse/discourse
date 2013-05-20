@@ -116,6 +116,10 @@ Discourse.ComposerController = Discourse.Controller.extend({
   }.property('content.composeState', 'content.reply', 'educationClosed', 'educationContents'),
 
   fetchNewUserEducation: function() {
+
+    // We don't show education when editing a post.
+    if (this.get('content.editingPost')) return;
+
     // If creating a topic, use topic_count, otherwise post_count
     var count = this.get('content.creatingTopic') ? Discourse.get('currentUser.topic_count') : Discourse.get('currentUser.reply_count');
     if (count >= Discourse.SiteSettings.educate_until_posts) {
@@ -132,7 +136,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
     // If visible update the text
     var educationKey = this.get('content.creatingTopic') ? 'new-topic' : 'new-reply';
     var composerController = this;
-    Discourse.ajax("/education/" + educationKey).then(function(result) {
+    Discourse.ajax("/education/" + educationKey, {dataType: 'html'}).then(function(result) {
       composerController.set('educationContents', result);
     });
   }.observes('typedReply', 'content.creatingTopic', 'Discourse.currentUser.reply_count'),

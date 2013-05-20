@@ -4,12 +4,12 @@ gem 'active_model_serializers', git: 'https://github.com/rails-api/active_model_
 
 # we had issues with latest, stick to the rev till we figure this out
 # PR that makes it all hang together welcome
-gem 'ember-rails', git: 'git://github.com/emberjs/ember-rails.git', ref: '57bbe32'
+gem 'ember-rails', git: 'https://github.com/emberjs/ember-rails.git', ref: '57bbe32'
 gem 'barber', '0.3.0'
 
-gem 'vestal_versions', git: 'git://github.com/zhangyuan/vestal_versions'
+gem 'vestal_versions', git: 'https://github.com/zhangyuan/vestal_versions'
 
-gem 'message_bus', path: 'vendor/gems/message_bus'
+gem 'message_bus'
 gem 'rails_multisite', path: 'vendor/gems/rails_multisite'
 gem 'simple_handlebars_rails', path: 'vendor/gems/simple_handlebars_rails'
 
@@ -21,7 +21,7 @@ gem 'clockwork', require: false
 gem 'em-redis'
 gem 'eventmachine'
 gem 'fast_xs'
-gem 'fast_xor', git: 'git://github.com/CodeMonkeySteve/fast_xor.git'
+gem 'fast_xor', git: 'https://github.com/CodeMonkeySteve/fast_xor.git'
 gem 'fastimage'
 gem 'fog', require: false
 gem 'has_ip_address'
@@ -38,13 +38,13 @@ gem 'jquery-rails'
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
-gem "omniauth"
-gem "omniauth-openid"
-gem "openid-redis-store"
-gem "omniauth-facebook"
-gem "omniauth-twitter"
-gem "omniauth-github"
-gem "omniauth-browserid", :git => "git://github.com/callahad/omniauth-browserid.git", :branch => "observer_api"
+gem 'omniauth'
+gem 'omniauth-openid'
+gem 'openid-redis-store'
+gem 'omniauth-facebook'
+gem 'omniauth-twitter'
+gem 'omniauth-github'
+gem 'omniauth-browserid', git: 'https://github.com/callahad/omniauth-browserid.git', branch: 'observer_api'
 gem 'oj'
 gem 'pg'
 # we had pain with the 3.2.13 upgrade so monkey patch the security fix
@@ -63,7 +63,7 @@ gem 'sinatra', require: nil
 gem 'slim'  # required for sidekiq-web
 gem 'therubyracer', require: 'v8'
 gem 'thin'
-gem 'diffy'
+gem 'diffy', require: false
 
 # Gem that enables support for plugins. It is required.
 gem 'discourse_plugin', path: 'vendor/gems/discourse_plugin'
@@ -86,26 +86,29 @@ group :assets do
 end
 
 group :test do
-  gem 'fakeweb', '~> 1.3.0'
-  gem 'minitest'
+  gem 'fakeweb', '~> 1.3.0', require: false
+  gem 'minitest', require: false
 end
 
 group :test, :development do
   gem 'jshint_on_rails'
-  gem 'guard-jshint-on-rails'
-  gem 'certified'
-  gem 'fabrication'
-  gem 'guard-jasmine'
-  gem 'guard-rspec'
-  gem 'guard-spork'
+  gem 'listen', require: false
+  gem 'guard-jshint-on-rails', require: false
+  gem 'certified', require: false
+  gem 'fabrication', require: false
+  gem 'guard-jasmine', require: false
+  gem 'guard-rspec', require: false
+  gem 'guard-spork', require: false
   gem 'jasminerice'
   gem 'mocha', require: false
-  gem 'rb-fsevent'
-  gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM.include?('linux') && 'rb-inotify'
-  gem 'rspec-rails'
-  gem 'shoulda'
+  gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
+  gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
+  gem 'rspec-rails', require: false
+  gem 'shoulda', require: false
   gem 'simplecov', require: false
-  gem 'terminal-notifier-guard', require: RUBY_PLATFORM.include?('darwin') && 'terminal-notifier-guard'
+  gem 'terminal-notifier-guard', require: false
+  gem 'timecop'
+  gem 'rspec-given'
 end
 
 group :development do
@@ -117,7 +120,7 @@ end
 
 # we are using a custom sprockets repo to work around: https://github.com/rails/rails/issues/8099#issuecomment-16137638
 # REVIEW EVERY RELEASE
-gem "sprockets", :git => "git://github.com/SamSaffron/sprockets.git", :branch => "rails-compat"
+gem 'sprockets', git: 'https://github.com/SamSaffron/sprockets.git', branch: 'rails-compat'
 
 
 # this is an optional gem, it provides a high performance replacement
@@ -136,7 +139,7 @@ gem 'rack-mini-profiler', require: false  # require: false #, git: 'git://github
 # used for caching, optional
 # redis-rack-cache is missing a sane expiry policy, it hogs redis
 # https://github.com/jodosha/redis-store/pull/183
-gem 'redis-rack-cache', :git => 'git://github.com/SamSaffron/redis-rack-cache.git', require: false
+gem 'redis-rack-cache', git: 'https://github.com/SamSaffron/redis-rack-cache.git', require: false
 gem 'rack-cache', require: false
 
 gem 'rack-cors', require: false

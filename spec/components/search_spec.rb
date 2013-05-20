@@ -5,6 +5,10 @@ require 'search'
 
 describe Search do
 
+  before do
+    ActiveRecord::Base.observers.enable :search_observer
+  end
+
   def first_of_type(results, type)
     return nil if results.blank?
     results.each do |r|
@@ -68,25 +72,25 @@ describe Search do
 
   it 'returns something blank on a nil search' do
     ActiveRecord::Base.expects(:exec_sql).never
-    Search.query(nil).should be_blank
+    Search.query(nil,nil).should be_blank
   end
 
   it 'does not search when the search term is too small' do
     ActiveRecord::Base.expects(:exec_sql).never
-    Search.query('evil', nil, 5).should be_blank
+    Search.query('evil', nil,  nil, 5).should be_blank
   end
 
   it 'escapes non alphanumeric characters' do
-    Search.query('foo :!$);}]>@\#\"\'').should be_blank # There are at least three levels of sanitation for Search.query!
+    Search.query('foo :!$);}]>@\#\"\'', nil).should be_blank # There are at least three levels of sanitation for Search.query!
   end
 
   it 'works when given two terms with spaces' do
-    lambda { Search.query('evil trout') }.should_not raise_error
+    lambda { Search.query('evil trout', nil) }.should_not raise_error
   end
 
   context 'users' do
     let!(:user) { Fabricate(:user) }
-    let(:result) { first_of_type(Search.query('bruce'), 'user') }
+    let(:result) { first_of_type(Search.query('bruce', nil), 'user') }
 
     it 'returns a result' do
       result.should be_present
@@ -107,23 +111,59 @@ describe Search do
   end
 
   context 'topics' do
-    let!(:topic) { Fabricate(:topic) }
+    let(:topic) { Fabricate(:topic) }
 
     context 'searching the OP' do
-
       let!(:post) { Fabricate(:post, topic: topic, user: topic.user) }
-      let(:result) { first_of_type(Search.query('hello'), 'topic') }
+      let(:result) { first_of_type(Search.query('hello', nil), 'topic') }
 
-      it 'returns a result' do
+      it 'returns a result correctly' do
         result.should be_present
-      end
-
-      it 'has the topic title' do
         result['title'].should == topic.title
+        result['url'].should == topic.relative_url
+      end
+    end
+
+    context "search for a topic by id" do
+      let(:result) { first_of_type(Search.query(topic.id, nil, 'topic'), 'topic') }
+
+      it 'returns the topic' do
+        result.should be_present
+        result['title'].should == topic.title
+        result['url'].should == topic.relative_url
+      end
+    end
+
+    context "search for a topic by url" do
+      let(:result) { first_of_type(Search.query(topic.relative_url, nil, 'topic'), 'topic') }
+
+      it 'returns the topic' do
+        result.should be_present
+        result['title'].should == topic.title
+        result['url'].should == topic.relative_url
+      end
+    end
+
+    context 'security' do
+      let!(:post) { Fabricate(:post, topic: topic, user: topic.user) }
+      def result(current_user)
+        first_of_type(Search.query('hello', current_user), 'topic')
       end
 
-      it 'has a url for the post' do
-        result['url'].should == topic.relative_url
+      it 'secures results correctly' do
+        category = Fabricate(:category)
+
+        topic.category_id = category.id
+        topic.save
+
+        category.deny(:all)
+        category.allow(Group[:staff])
+        category.save
+
+        result(nil).should_not be_present
+        result(Fabricate(:user)).should_not be_present
+        result(Fabricate(:admin)).should be_present
+
       end
     end
 
@@ -136,7 +176,7 @@ describe Search do
                                               end
     }
     let!(:post) {Fabricate(:post, topic: cyrillic_topic, user: cyrillic_topic.user)}
-    let(:result) { first_of_type(Search.query('запись'), 'topic') }
+    let(:result) { first_of_type(Search.query('запись',nil), 'topic') }
 
     it 'finds something when given cyrillic query' do
       result.should be_present
@@ -146,18 +186,20 @@ describe Search do
   context 'categories' do
 
     let!(:category) { Fabricate(:category) }
-    let(:result) { first_of_type(Search.query('amazing'), 'category') }
-
-    it 'returns a result' do
-      result.should be_present
+    def result
+      first_of_type(Search.query('amazing', nil), 'category')
     end
 
-    it 'has the category name' do
-      result['title'].should == category.name
-    end
+    it 'returns the correct result' do
+      r = result
+      r.should be_present
+      r['title'].should == category.name
+      r['url'].should == "/category/#{category.slug}"
 
-    it 'has a url for the topic' do
-      result['url'].should == "/category/#{category.slug}"
+      category.deny(:all)
+      category.save
+
+      result.should_not be_present
     end
 
   end
@@ -170,26 +212,20 @@ describe Search do
 
 
     context 'user filter' do
-      let(:results) { Search.query('amazing', 'user') }
+      let(:results) { Search.query('amazing', nil, 'user') }
 
       it "returns a user result" do
         results.detect {|r| r[:type] == 'user'}.should be_present
-      end
-
-      it "returns no category results" do
         results.detect {|r| r[:type] == 'category'}.should be_blank
       end
 
     end
 
     context 'category filter' do
-      let(:results) { Search.query('amazing', 'category') }
+      let(:results) { Search.query('amazing', nil, 'category') }
 
       it "returns a user result" do
         results.detect {|r| r[:type] == 'user'}.should be_blank
-      end
-
-      it "returns no category results" do
         results.detect {|r| r[:type] == 'category'}.should be_present
       end
 

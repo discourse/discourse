@@ -45,13 +45,12 @@ class AdminDashboardData
 
   def as_json
     @json ||= {
-      reports: REPORTS.map { |type| Report.find(type) },
-      problems: problems,
+      reports: REPORTS.map { |type| Report.find(type).as_json },
       admins: User.admins.count,
       moderators: User.moderators.count,
-      top_referrers: IncomingLinksReport.find('top_referrers'),
-      top_traffic_sources: IncomingLinksReport.find('top_traffic_sources'),
-      top_referred_topics: IncomingLinksReport.find('top_referred_topics')
+      top_referrers: IncomingLinksReport.find('top_referrers').as_json,
+      top_traffic_sources: IncomingLinksReport.find('top_traffic_sources').as_json,
+      top_referred_topics: IncomingLinksReport.find('top_referred_topics').as_json
     }.merge(
       SiteSetting.version_checks? ? {version_check: DiscourseUpdates.check_version} : {}
     )

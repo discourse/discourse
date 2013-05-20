@@ -1,6 +1,10 @@
 # encoding: utf-8
 # This file contains content for the client portion of Discourse, sent out
 # to the Javascript app.
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
+
 
 pt:
   js:
@@ -621,7 +625,7 @@ pt:
         delete_confirm: "Apagar esta personalização?"
 
       email_logs:
-        title: "Email Logs"
+        title: "Email"
         sent_at: "Enviado a"
         email_type: "Tipo de Email"
         to_address: "Para (endereço)"

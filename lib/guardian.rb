@@ -141,15 +141,16 @@ class Guardian
   def can_revoke_moderation?(moderator)
     return false unless is_admin?
     return false if moderator.blank?
-    return false if @user.id == moderator.id
+    return false if @user.id == moderator.id && !is_admin?
+    return false unless moderator.moderator?
     true
   end
 
   def can_grant_moderation?(user)
-    return false unless is_admin? 
-    return false if user.blank?
-    return false if @user.id == user.id
-    return false if user.staff?
+    return false unless is_admin?
+    return false unless user
+    return false if @user.id == user.id && !is_admin?
+    return false if user.moderator?
     true
   end
 
@@ -363,7 +364,7 @@ class Guardian
     return true unless category.secure
     return false unless @user
 
-    @user.secure_category_ids.include?(category.id)
+    secure_category_ids.include?(category.id)
   end
 
   def can_vote?(post, opts={})
@@ -404,6 +405,6 @@ class Guardian
   end
 
   def secure_category_ids
-    @user ? @user.secure_category_ids : []
+    @secure_category_ids ||= @user ? @user.secure_category_ids : []
   end
 end

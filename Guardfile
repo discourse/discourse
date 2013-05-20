@@ -1,3 +1,5 @@
+require 'terminal-notifier-guard' if RUBY_PLATFORM.include?('darwin')
+
 phantom_path = File.expand_path('~/phantomjs/bin/phantomjs')
 phantom_path = nil unless File.exists?(phantom_path)
 
@@ -27,6 +29,7 @@ guard 'jshint-on-rails', config_path: 'config/jshint.yml' do
 end
 
 unless ENV["USING_AUTOSPEC"]
+
   puts "Sam strongly recommends you Run: `bundle exec rake autospec` in favor of guard for specs, set USING_AUTOSPEC in .rvmrc to disable from Guard"
   guard :spork, wait: 120 do
     watch('config/application.rb')

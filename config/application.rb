@@ -20,6 +20,16 @@ module Discourse
 
     require 'discourse'
 
+    # mocha hates us, active_support/testing/mochaing.rb line 2 is requiring the wrong
+    #  require, patched in source, on upgrade remove this
+    if Rails.env.test? || Rails.env.development?
+      require "mocha/version"
+      require "mocha/deprecation"
+      if Mocha::VERSION == "0.13.3" && Rails::VERSION::STRING == "3.2.12"
+        Mocha::Deprecation.mode = :disabled
+      end
+    end
+
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths += %W(#{config.root}/app/serializers)
 
@@ -45,7 +55,6 @@ module Discourse
     config.active_record.observers = [
         :user_email_observer,
         :user_action_observer,
-        :message_bus_observer,
         :post_alert_observer,
         :search_observer
     ]

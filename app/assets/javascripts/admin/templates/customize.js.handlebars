@@ -24,7 +24,7 @@
   </div>
 
   {{#with content.selectedItem}}
-    {{view Ember.TextField class="style-name" valueBinding="name"}}
+    {{textField class="style-name" value=name}}
     {{#if view.headerActive}}
       {{view Discourse.AceEditorView contentBinding="header" mode="html"}}
     {{/if}}

@@ -36,10 +36,14 @@ class PostsController < ApplicationController
                                    target_usernames: params[:target_usernames],
                                    reply_to_post_number: params[:post][:reply_to_post_number],
                                    image_sizes: params[:image_sizes],
-                                   meta_data: params[:meta_data])
+                                   meta_data: params[:meta_data],
+                                   auto_close_days: params[:auto_close_days])
     post = post_creator.create
-
     if post_creator.errors.present?
+
+      # If the post was spam, flag all the user's posts as spam
+      current_user.flag_linked_posts_as_spam if post_creator.spam?
+
       render_json_error(post_creator)
     else
       post_serializer = PostSerializer.new(post, scope: guardian, root: false)
@@ -92,7 +96,7 @@ class PostsController < ApplicationController
 
     result = {post: post_serializer.as_json}
     if revisor.category_changed.present?
-      result[:category] = CategorySerializer.new(revisor.category_changed, scope: guardian, root: false).as_json
+      result[:category] = BasicCategorySerializer.new(revisor.category_changed, scope: guardian, root: false).as_json
     end
 
     render_json_dump(result)

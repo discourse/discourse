@@ -1,7 +1,7 @@
 
   {{#if Discourse.currentUser.id}}
     <td class='star'>
-      <a {{bindAttr class=":star :icon-star starred:starred"}} {{action toggleStar this target="controller"}} href='#' {{bindAttr title="favoriteTooltip"}}></a>
+      <a {{bindAttr class=":star :icon-star starred:starred"}} {{action toggleStar this}} href='#' {{bindAttr title="favoriteTooltip"}}></a>
     </td>
   {{/if}}
 
@@ -18,7 +18,7 @@
     {{/if}}
 
     {{view Discourse.TopicStatusView topicBinding="this"}}
-    {{{topicLink this showTagIfPresent="controller.category"}}}
+    {{{topicLink this}}}
     {{#if unread}}
       <a href="{{lastReadUrl}}" class='badge unread badge-notification' title='{{i18n topic.unread_posts unread="unread"}}'>{{unread}}</a>
     {{/if}}

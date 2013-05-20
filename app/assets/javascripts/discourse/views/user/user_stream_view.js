@@ -29,9 +29,9 @@ Discourse.UserStreamView = Discourse.View.extend(Discourse.Scrolling, {
       this.set('loading', true);
 
       var userStreamView = this;
-      return this.get('controller.content').loadMoreUserActions().then(function() {
+      this.get('controller.content').loadMoreUserActions().then(function() {
         userStreamView.set('loading', false);
-        Em.run.next(function() {
+        Em.run.schedule('afterRender', function() {
           $userStreamBottom.data('loading', null);
         });
       });

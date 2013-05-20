@@ -46,6 +46,13 @@ Discourse.SearchView = Discourse.View.extend({
     return this.set('selectedIndex', 0);
   }.observes('term', 'typeFilter'),
 
+  searchTerm: Discourse.debouncePromise(function(term, typeFilter) {
+    var searchView = this;
+    return Discourse.Search.forTerm(term, typeFilter).then(function(results) {
+      searchView.set('results', results);
+    });
+  }, 300),
+
   showCancelFilter: function() {
     if (this.get('loading')) return false;
     return this.present('typeFilter');
@@ -56,7 +63,7 @@ Discourse.SearchView = Discourse.View.extend({
   }.observes('term'),
 
   // We can re-order them based on the context
-  content: (function() {
+  content: function() {
     var index, order, path, results, results_hashed;
     if (results = this.get('results')) {
       // Make it easy to find the results by type
@@ -78,29 +85,17 @@ Discourse.SearchView = Discourse.View.extend({
       });
     }
     return results;
-  }).property('results'),
+  }.property('results'),
 
-  updateProgress: (function() {
+  updateProgress: function() {
     var results;
     if (results = this.get('results')) {
       this.set('noResults', results.length === 0);
     }
     return this.set('loading', false);
-  }).observes('results'),
+  }.observes('results'),
 
-  searchTerm: Discourse.debouncePromise(function(term, typeFilter) {
-    var searchView = this;
-    return Discourse.ajax('/search', {
-      data: {
-        term: term,
-        type_filter: typeFilter
-      }
-    }).then(function(results) {
-      searchView.set('results', results);
-    });
-  }, 300),
-
-  resultCount: (function() {
+  resultCount: function() {
     var count;
     if (this.blank('content')) return 0;
     count = 0;
@@ -108,7 +103,7 @@ Discourse.SearchView = Discourse.View.extend({
       count += result.results.length;
     });
     return count;
-  }).property('content'),
+  }.property('content'),
 
   moreOfType: function(type) {
     this.set('typeFilter', type);

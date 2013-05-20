@@ -7,7 +7,7 @@ class SqlBuilder
     @klass = klass
   end
 
-  [:set, :where2,:where,:order_by,:limit,:left_join,:join,:offset].each do |k|
+  [:set, :where2,:where,:order_by,:limit,:left_join,:join,:offset, :select].each do |k|
     define_method k do |data, args = {}|
       @args.merge!(args)
       @sections[k] ||= []
@@ -16,13 +16,14 @@ class SqlBuilder
     end
   end
 
-  def exec(args = {})
+  def to_sql
     sql = @sql.dup
-    @args.merge!(args)
 
     @sections.each do |k,v|
       joined = nil
       case k
+      when :select
+        joined = "SELECT " << v.join(" , ")
       when :where, :where2
         joined = "WHERE " << v.join(" AND ")
       when :join
@@ -41,7 +42,13 @@ class SqlBuilder
 
       sql.sub!("/*#{k}*/", joined)
     end
+    sql
+  end
 
+  def exec(args = {})
+    @args.merge!(args)
+
+    sql = to_sql
     if @klass
       @klass.find_by_sql(ActiveRecord::Base.send(:sanitize_sql_array, [sql, @args]))
     else

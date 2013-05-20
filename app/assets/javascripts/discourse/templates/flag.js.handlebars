@@ -1,4 +1,4 @@
-  <div class="modal-body flag-modal">    
+  <div class="modal-body flag-modal">
     {{#if view.post.flagsAvailable}}
       <form>
         {{#each view.boundFlags}}
@@ -8,7 +8,7 @@
               {{#if is_custom_flag}}
                 {{#unless selected}}
                   <div class='description'>{{{description}}}</div>
-                {{/unless}}    
+                {{/unless}}
               {{else}}
                 {{#if description}}
                   <div class='description'>{{{description}}}</div>
@@ -16,8 +16,8 @@
               {{/if}}
             </label>
             {{#if is_custom_flag}}
-                {{#if selected}} 
-                  {{view Ember.TextArea name="message" class="flag-message" placeholderBinding="customPlaceholder" valueBinding="message"}}
+                {{#if selected}}
+                  {{textarea name="message" class="flag-message" placeholder=customPlaceholder value=message}}
                   <div {{bindAttr class="customMessageLengthClasses"}}>{{customMessageLength}}</div>
                 {{/if}}
             {{/if}}

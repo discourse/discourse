@@ -3,6 +3,7 @@ require_dependency 'email_token'
 require_dependency 'trust_level'
 require_dependency 'pbkdf2'
 require_dependency 'summarize'
+require_dependency 'discourse'
 
 class User < ActiveRecord::Base
   attr_accessible :name, :username, :password, :email, :bio_raw, :website
@@ -22,6 +23,8 @@ class User < ActiveRecord::Base
   has_many :views
   has_many :user_visits
   has_many :invites
+  has_many :topic_links
+
   has_one :twitter_user_info, dependent: :destroy
   has_one :github_user_info, dependent: :destroy
   belongs_to :approved_by, class_name: 'User'
@@ -267,12 +270,13 @@ class User < ActiveRecord::Base
 
   def reload
     @unread_notifications_by_type = nil
+    @unread_pms = nil
     super
   end
 
 
   def unread_private_messages
-    unread_notifications_by_type[Notification.types[:private_message]] || 0
+    @unread_pms ||= notifications.where("read = false AND notification_type = ?", Notification.types[:private_message]).count
   end
 
   def unread_notifications
@@ -280,7 +284,8 @@ class User < ActiveRecord::Base
   end
 
   def saw_notification_id(notification_id)
-    User.update_all ["seen_notification_id = ?", notification_id], ["seen_notification_id < ?", notification_id]
+    User.update_all ["seen_notification_id = ?", notification_id],
+      ["seen_notification_id < ?", notification_id]
   end
 
   def publish_notifications_state
@@ -302,7 +307,7 @@ class User < ActiveRecord::Base
   end
 
   def regular?
-    !(admin? || moderator?)
+    !staff?
   end
 
   def password=(password)
@@ -320,10 +325,6 @@ class User < ActiveRecord::Base
     self.password_hash == hash_password(password, salt)
   end
 
-  def seen?(date)
-    last_seen_at.to_date >= date if last_seen_at.present?
-  end
-
   def seen_before?
     last_seen_at.present?
   end
@@ -333,14 +334,9 @@ class User < ActiveRecord::Base
   end
 
   def update_visit_record!(date)
-    unless seen_before?
+    unless has_visit_record?(date)
+      update_column(:days_visited, days_visited + 1)
       user_visits.create!(visited_at: date)
-      update_column(:days_visited, 1)
-    end
-
-    unless seen?(date) || has_visit_record?(date)
-      user_visits.create!(visited_at: date)
-      User.update_all('days_visited = days_visited + 1', id: self.id)
     end
   end
 
@@ -564,8 +560,20 @@ class User < ActiveRecord::Base
   end
 
   def secure_category_ids
-    cats = self.moderator? ? Category.select(:id).where(:secure, true) : secure_categories.select('categories.id')
-    cats.map{|c| c.id}
+    cats = self.staff? ? Category.select(:id).where(secure: true) : secure_categories.select('categories.id')
+    cats.map{|c| c.id}.sort
+  end
+
+  # Flag all posts from a user as spam
+  def flag_linked_posts_as_spam
+    admin = Discourse.system_user
+    topic_links.includes(:post).each do |tl|
+      begin
+        PostAction.act(admin, tl.post, PostActionType.types[:spam])
+      rescue PostAction::AlreadyActed
+        # If the user has already acted, just ignore it
+      end
+    end
   end
 
   protected

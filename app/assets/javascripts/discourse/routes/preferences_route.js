@@ -8,16 +8,16 @@
 **/
 Discourse.PreferencesRoute = Discourse.RestrictedUserRoute.extend({
 
+  model: function() {
+    return this.modelFor('user');
+  },
+
   renderTemplate: function() {
     this.render('preferences', {
       into: 'user',
       outlet: 'userOutlet',
       controller: 'preferences'
     });
-  },
-
-  setupController: function(controller) {
-    controller.set('content', this.controllerFor('user').get('content'));
   }
 
 });

@@ -30,14 +30,14 @@
         <label for='login-account-name'>{{i18n login.username}}&nbsp;</label>
       </td>
       <td>
-        {{view Discourse.TextField valueBinding="view.loginName" placeholderKey="login.email_placeholder" elementId="login-account-name" autocorrect="off" autocapitalize="off" autofocus="autofocus"}}
+        {{textField value=view.loginName placeholderKey="login.email_placeholder" elementId="login-account-name" autocorrect="off" autocapitalize="off" autofocus="autofocus"}}
       </td>
       <tr>
       <td>
           <label for='login-account-password'>{{i18n login.password}}&nbsp;</label>
       </td>
       <td>
-          {{view Ember.TextField valueBinding="view.loginPassword" type="password" id="login-account-password"}} &nbsp;
+          {{textField value=view.loginPassword type="password" id="login-account-password"}} &nbsp;
           <a id="forgot-password-link" {{action forgotPassword target="view"}}>{{i18n forgot_password.action}}</a>
       </td>
       </tr>

@@ -65,14 +65,18 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Discourse::NotFound do
-    if !request.format || request.format.html?
-      # for now do a simple remap, we may look at cleaner ways of doing the render
-      #
-      # Sam: I am confused about this, we need a comment that explains why this is conditional
-      raise ActiveRecord::RecordNotFound
+
+    if request.format && request.format.json?
+      render status: 404, layout: false, text: "[error: 'not found']"
     else
-      render file: 'public/404', formats: [:html], layout: false, status: 404
+      f = Topic.where(deleted_at: nil, archetype: "regular")
+      @latest = f.order('views desc').take(10)
+      @recent = f.order('created_at desc').take(10)
+      @slug =  params[:slug].class == String ? params[:slug] : ''
+      @slug.gsub!('-',' ')
+      render status: 404, layout: 'no_js', template: '/exceptions/not_found'
     end
+
   end
 
   rescue_from Discourse::InvalidAccess do
@@ -99,7 +103,7 @@ class ApplicationController < ActionController::Base
         guardian.current_user.sync_notification_channel_position
       end
 
-      store_preloaded("site", Site.cached_json)
+      store_preloaded("site", Site.cached_json(current_user))
 
       if current_user.present?
         store_preloaded("currentUser", MultiJson.dump(CurrentUserSerializer.new(current_user, root: false)))

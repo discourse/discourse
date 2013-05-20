@@ -4,7 +4,7 @@ require 'category_list'
 describe CategoryList do
 
   let(:user) { Fabricate(:user) }
-  let(:category_list) { CategoryList.new(user) }
+  let(:category_list) { CategoryList.new(Guardian.new user) }
 
   context "with no categories" do
 
@@ -16,28 +16,33 @@ describe CategoryList do
       let!(:topic) { Fabricate(:topic)}
       let(:category) { category_list.categories.first }
 
-      it "has a category" do
+      it "has the right category" do
         category.should be_present
-      end
-
-      it "has the uncategorized label" do
         category.name.should == SiteSetting.uncategorized_name
-      end
-
-      it "has the uncategorized slug" do
         category.slug.should == SiteSetting.uncategorized_name
-      end
-
-      it "has one topic this week" do
         category.topics_week.should == 1
-      end
-
-      it "contains the topic in featured_topics" do
         category.featured_topics.should == [topic]
       end
 
     end
 
+  end
+
+  context "security" do
+    it "properly hide secure categories" do
+      admin = Fabricate(:admin)
+      user = Fabricate(:user)
+
+      cat = Fabricate(:category)
+      topic = Fabricate(:topic, category: cat)
+      cat.deny(:all)
+      cat.allow(Group[:admins])
+      cat.save
+
+      CategoryList.new(Guardian.new admin).categories.count.should == 1
+      CategoryList.new(Guardian.new user).categories.count.should == 0
+      CategoryList.new(Guardian.new nil).categories.count.should == 0
+    end
   end
 
   context "with a category" do

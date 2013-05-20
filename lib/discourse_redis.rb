@@ -57,6 +57,12 @@ class DiscourseRedis
 
   def self.new_redis_store
     redis_config = YAML.load(ERB.new(File.new("#{Rails.root}/config/redis.yml").read).result)[Rails.env]
+    unless redis_config
+      puts '', "Redis config for environment '#{Rails.env}' was not found in #{Rails.root}/config/redis.yml."
+      puts "Did you forget to do RAILS_ENV=production?"
+      puts "Check your redis.yml and make sure it has configuration for the environment you're trying to use.", ''
+      raise 'Redis config not found'
+    end
     redis_store = ActiveSupport::Cache::RedisStore.new "redis://#{(':' + redis_config['password'] + '@') if redis_config['password']}#{redis_config['host']}:#{redis_config['port']}/#{redis_config['cache_db']}"
     redis_store.options[:namespace] = -> { DiscourseRedis.namespace }
     redis_store
