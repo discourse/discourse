@@ -5,7 +5,7 @@
     {{view Discourse.TopicExtraInfoView}}
 
     <div class='panel clearfix'>
-      {{#unless controller.showExtraInfo}}
+      {{#unless showExtraInfo}}
         <div class='current-username'>
           {{#if view.currentUser}}
           <span class='username'><a {{bindAttr href="view.currentUser.path"}}>{{view.currentUser.name}}</a></span>

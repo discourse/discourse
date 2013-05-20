@@ -1,47 +1,47 @@
-{{#unless model.loading}}
-<div class="user-heading">
-  <div class="container">
-    <div class="full-width" id='user-menu'>
-      <h1>{{model.name}}<span>{{unbound model.username}}{{{unbound model.statusIcon}}}</span></h1>
+{{#unless loading}}
+  <div class="user-heading">
+    <div class="container">
+      <div class="full-width" id='user-menu'>
+        <h1>{{name}}<span>{{unbound username}}{{{unbound statusIcon}}}</span></h1>
 
-      {{#if viewingSelf}}
-        <button {{action "logout" target="Discourse"}} class='btn'>{{i18n user.log_out}}</button>
-      {{/if}}
-      {{#if Discourse.currentUser.staff}}
-        <a href="{{unbound model.adminPath}}" class='btn'><i class="icon-wrench"></i>&nbsp;{{i18n admin.user.show_admin_profile}}</a>
-      {{/if}}
-      <ul class="nav nav-pills">
-        <li>
-          {{#linkTo 'user.activity'}}{{i18n user.activity_stream}}{{/linkTo}}
-        </li>
-        {{#if controller.canSeePrivateMessages}}
-          <li>
-            {{#linkTo "user.privateMessages"}}{{i18n user.private_messages}}{{/linkTo}}
-          </li>
+        {{#if viewingSelf}}
+          <button {{action "logout" target="Discourse"}} class='btn'>{{i18n user.log_out}}</button>
         {{/if}}
-        <li>
-          {{#linkTo 'user.invited'}}{{i18n user.invited.title}}{{/linkTo}}
-        </li>
-        {{#if model.can_edit}}
-          <li>
-            {{#linkTo 'preferences'}}{{i18n user.preferences}}{{/linkTo}}
-          </li>
+        {{#if Discourse.currentUser.staff}}
+          <a href="{{unbound adminPath}}" class='btn'><i class="icon-wrench"></i>&nbsp;{{i18n admin.user.show_admin_profile}}</a>
         {{/if}}
-      </ul>
-      <div class='avatar-wrapper'>
-        {{avatar content imageSize="120"}}
+        <ul class="nav nav-pills">
+          <li>
+            {{#linkTo 'user.activity'}}{{i18n user.activity_stream}}{{/linkTo}}
+          </li>
+          {{#if canSeePrivateMessages}}
+            <li>
+              {{#linkTo "user.privateMessages"}}{{i18n user.private_messages}}{{/linkTo}}
+            </li>
+          {{/if}}
+          <li>
+            {{#linkTo 'user.invited'}}{{i18n user.invited.title}}{{/linkTo}}
+          </li>
+          {{#if can_edit}}
+            <li>
+              {{#linkTo 'preferences'}}{{i18n user.preferences}}{{/linkTo}}
+            </li>
+          {{/if}}
+        </ul>
+        <div class='avatar-wrapper'>
+          {{avatar model imageSize="120"}}
+        </div>
       </div>
     </div>
   </div>
-</div>
-<div class="container">
-  <div class='user-info clearfix'>
-     <div class='about-me'>
-       {{{model.bio_excerpt}}}
-      </div>
+  <div class="container">
+    <div class='user-info clearfix'>
+       <div class='about-me'>
+         {{{bio_excerpt}}}
+        </div>
+    </div>
   </div>
-</div>
-<div class="container">
-  {{outlet userOutlet}}
-</div>
+  <div class="container">
+    {{outlet userOutlet}}
+  </div>
 {{/unless}}

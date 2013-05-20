@@ -1,4 +1,4 @@
-{{#unless controller.loading}}
+{{#unless loading}}
   {{#if loaded}}
     <div class='contents'>
       {{#if topics.length}}
@@ -10,7 +10,7 @@
         </button>
       {{/if}}
 
-      <table id='topic-list' {{bindAttr class="controller.category:filter-category"}}>
+      <table id='topic-list'>
         <thead>
         <tr>
           {{#if Discourse.currentUser}}
@@ -62,7 +62,8 @@
     <h3>
       {{view.footerMessage}}
       {{#if view.allLoaded}}
-        {{#if controller.latest}}
+
+        {{#if latest}}
           {{#if view.canCreateTopic}}
             <a href='#' {{action createTopic}}>{{i18n topic.suggest_create_topic}}</a>
           {{/if}}

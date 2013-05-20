@@ -7,7 +7,6 @@
   </div>
 </div>
 
-
 <table class='admin-flags'>
   <thead>
     <tr>
@@ -27,7 +26,7 @@
       <td class='flaggers'>{{#each flaggers}}{{#linkTo 'adminUser' this}}{{avatar this imageSize="small"}} {{/linkTo}}{{/each}}</td>
       <td class='last-flagged'>{{date lastFlagged}}</td>
       <td class='action'>
-        {{#if controller.adminActiveFlagsView}}
+        {{#if adminActiveFlagsView}}
         <button title='{{i18n admin.flags.clear_title}}' class='btn' {{action clearFlags this}}>{{i18n admin.flags.clear}}</button>
         <button title='{{i18n admin.flags.delete_title}}' class='btn' {{action deletePost this}}>{{i18n admin.flags.delete}}</button>
         {{/if}}

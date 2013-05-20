@@ -1,5 +1,5 @@
 <nav class='buttons'>
-  {{#if controller.summaryCollapsed}}
+  {{#if summaryCollapsed}}
   <button class='btn collapsed' {{action toggleSummary}} title="{{i18n topic.toggle_information}}">
     <i class='icon icon-chevron-down'></i>
   </button>
@@ -11,7 +11,7 @@
 </nav>
 
 
-{{#if controller.summaryCollapsed}}
+{{#if summaryCollapsed}}
   <section class='summary collapsed'>
     <ul class="clearfix">
       <li>
