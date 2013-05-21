@@ -1,7 +1,7 @@
 # The guardian is responsible for confirming access to various site resources and operations
 class Guardian
 
-  class NullUser
+  class GuestUser
     def blank?; true; end
     def admin?; false; end
     def staff?; false; end
@@ -11,13 +11,21 @@ class Guardian
   end
 
   def initialize(user=nil)
-    @user = user.presence || NullUser.new
+    @user = user.presence || GuestUser.new
   end
 
   def user
     @user.presence
   end
   alias :current_user :user
+
+  def anonymous?
+    !authenticated?
+  end
+
+  def authenticated?
+    @user.present?
+  end
 
   def is_admin?
     @user.admin?
@@ -29,36 +37,30 @@ class Guardian
 
   # Can the user see the object?
   def can_see?(obj)
-    return false if obj.blank?
-
-    see_method = :"can_see_#{obj.class.name.underscore}?"
-    return send(see_method, obj) if respond_to?(see_method)
-
-    return true
+    if obj
+      see_method = method_name_for :see, obj
+      return (see_method ? send(see_method, obj) : true)
+    end
   end
 
   # Can the user edit the obj
   def can_edit?(obj)
-    return false unless have_both?(obj, @user)
-
-    edit_method = :"can_edit_#{obj.class.name.underscore}?"
-    return send(edit_method, obj) if respond_to?(edit_method)
-
-    true
+    if obj && authenticated?
+      edit_method = method_name_for :edit, obj
+      return (edit_method ? send(edit_method, obj) : true)
+    end
   end
 
   # Can we delete the object
   def can_delete?(obj)
-    return false unless have_both?(obj, @user)
-
-    delete_method = :"can_delete_#{obj.class.name.underscore}?"
-    return send(delete_method, obj) if respond_to?(delete_method)
-
-    true
+    if obj && authenticated?
+      delete_method = method_name_for :delete, obj
+      return (delete_method ? send(delete_method, obj) : true)
+    end
   end
 
   def can_moderate?(obj)
-    have_both?(obj, @user) && is_staff?
+    obj && is_staff?
   end
   alias :can_move_posts? :can_moderate?
   alias :can_see_flags? :can_moderate?
@@ -66,7 +68,7 @@ class Guardian
 
   # Can the user create a topic in the forum
   def can_create?(klass, parent=nil)
-    return false unless have_both?(klass, @user)
+    return false unless authenticated? && klass
 
     # If no parent is provided, we look for a can_i_create_klass?
     # custom method.
@@ -87,10 +89,10 @@ class Guardian
 
   # Can we impersonate this user?
   def can_impersonate?(target)
-    have_both?(target, @user) &&
+    target &&
 
     # You must be an admin to impersonate
-    is_admin?  &&
+    is_admin? &&
 
     # You may not impersonate other admins
     not(target.admin?)
@@ -102,7 +104,7 @@ class Guardian
 
   # Can we approve it?
   def can_approve?(target)
-    have_both?(target, @user) && not(target.approved?) && is_staff?
+    is_staff? && target && not(target.approved?)
   end
   alias :can_activate? :can_approve?
 
@@ -112,7 +114,7 @@ class Guardian
   alias :can_deactivate? :can_ban?
 
   def can_clear_flags?(post)
-    have_both?(@user, post) && is_staff?
+    is_staff? && post
   end
 
   def can_revoke_admin?(admin)
@@ -163,12 +165,12 @@ class Guardian
   end
 
   def can_see_pending_invites_from?(user)
-    have_both?(user, @user) && is_me?(user)
+    is_me?(user)
   end
 
   # For now, can_invite_to is basically can_see?
   def can_invite_to?(object)
-    @user.present? && can_see?(object) &&
+    authenticated? && can_see?(object) &&
     not(SiteSetting.must_approve_users?) &&
     (@user.has_trust_level?(:regular) || is_staff?)
   end
@@ -178,7 +180,7 @@ class Guardian
   end
 
   def can_see_private_messages?(user_id)
-    is_staff? || (@user.present? && @user.id == user_id)
+    is_staff? || (authenticated? && @user.id == user_id)
   end
 
   def can_delete_all_posts?(user)
@@ -265,7 +267,7 @@ class Guardian
 
   def can_send_private_message?(target)
     (User === target || Group === target) &&
-    @user.present? &&
+    authenticated? &&
 
     # Can't send message to yourself
     is_not_me?(target) &&
@@ -277,25 +279,21 @@ class Guardian
   end
 
   def can_reply_as_new_topic?(topic)
-    have_both?(@user, topic) && not(topic.private_message?) && @user.has_trust_level?(:basic)
+    authenticated? && topic && not(topic.private_message?) && @user.has_trust_level?(:basic)
   end
 
   def can_see_topic?(topic)
-    return false unless topic
+    if topic
+      is_staff? ||
 
-    return true if is_staff?
-    return false if topic.deleted_at
+      topic.deleted_at.nil? &&
 
-    if topic.category && topic.category.secure
-      return false unless can_see_category?(topic.category)
+      # not secure, or I can see it
+      (not(topic.secure_category?) || can_see_category?(topic.category)) &&
+
+      # not private, or I am allowed (or an admin)
+      (not(topic.private_message?) || authenticated? && (topic.all_allowed_users.where(id: @user.id).exists? || is_admin?))
     end
-
-    if topic.private_message?
-      return false unless @user.present?
-      return true if topic.all_allowed_users.where(id: @user.id).exists?
-      return is_admin?
-    end
-    true
   end
 
   def can_see_post?(post)
@@ -319,7 +317,7 @@ class Guardian
     already_taken_this_action = taken.any? && taken.include?(PostActionType.types[action_key])
     already_did_flagging      = taken.any? && (taken & PostActionType.flag_types.values).any?
 
-    if  have_both?(@user, post)
+    if  authenticated? && post
       # we always allow flagging - NOTE: this does not seem true, see specs. (MVH)
       (is_flag && @user.has_trust_level?(:basic) && not(already_did_flagging)) ||
 
@@ -351,17 +349,12 @@ class Guardian
   end
 
   def is_me?(other)
-    @user.present? && User === other && (@user == other || @user.id == other.id)
+    other && authenticated? && User === other && (@user == other || @user.id == other.id)
   end
 
   def is_not_me?(other)
     @user.blank? || !is_me?(other)
   end
-
-  def have_all?(*objs)
-    objs.all?{ |obj| obj.present? }
-  end
-  alias :have_both? :have_all?
 
   def can_administer?(obj)
     is_admin? && obj.present?
@@ -369,6 +362,11 @@ class Guardian
 
   def can_administer_user?(other_user)
     can_administer?(other_user) && is_not_me?(other_user)
+  end
+
+  def method_name_for(action, obj)
+    method_name = :"can_#{action}_#{obj.class.name.underscore}?"
+    return method_name if respond_to?(method_name)
   end
 
 end
