@@ -224,7 +224,7 @@ describe Search do
     context 'category filter' do
       let(:results) { Search.query('amazing', nil, 'category') }
 
-      it "returns a user result" do
+      it "returns a category result" do
         results.detect {|r| r[:type] == 'user'}.should be_blank
         results.detect {|r| r[:type] == 'category'}.should be_present
       end
