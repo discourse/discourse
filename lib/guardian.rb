@@ -1,22 +1,30 @@
 # The guardian is responsible for confirming access to various site resources and operations
 class Guardian
 
-  attr_reader :user
+  class NullUser
+    def blank?; true; end
+    def admin?; false; end
+    def staff?; false; end
+    def approved?; false; end
+    def secure_category_ids; []; end
+    def has_trust_level?(level); false; end
+  end
 
   def initialize(user=nil)
-    @user = user
+    @user = user.presence || NullUser.new
   end
 
-  def current_user
-    @user
+  def user
+    @user.presence
   end
+  alias :current_user :user
 
   def is_admin?
-    @user && @user.admin?
+    @user.admin?
   end
 
   def is_staff?
-    @user && @user.staff?
+    @user.staff?
   end
 
   # Can the user see the object?
@@ -31,8 +39,7 @@ class Guardian
 
   # Can the user edit the obj
   def can_edit?(obj)
-    return false if obj.blank?
-    return false if @user.blank?
+    return false unless have_both?(obj, @user)
 
     edit_method = :"can_edit_#{obj.class.name.underscore}?"
     return send(edit_method, obj) if respond_to?(edit_method)
@@ -42,8 +49,7 @@ class Guardian
 
   # Can we delete the object
   def can_delete?(obj)
-    return false if obj.blank?
-    return false if @user.blank?
+    return false unless have_both?(obj, @user)
 
     delete_method = :"can_delete_#{obj.class.name.underscore}?"
     return send(delete_method, obj) if respond_to?(delete_method)
@@ -52,9 +58,7 @@ class Guardian
   end
 
   def can_moderate?(obj)
-    return false if obj.blank?
-    return false if @user.blank?
-    @user.staff?
+    have_both?(obj, @user) && is_staff?
   end
   alias :can_move_posts? :can_moderate?
   alias :can_see_flags? :can_moderate?
@@ -62,8 +66,7 @@ class Guardian
 
   # Can the user create a topic in the forum
   def can_create?(klass, parent=nil)
-    return false if klass.blank?
-    return false if @user.blank?
+    return false unless have_both?(klass, @user)
 
     # If no parent is provided, we look for a can_i_create_klass?
     # custom method.
@@ -84,81 +87,52 @@ class Guardian
 
   # Can we impersonate this user?
   def can_impersonate?(target)
-    return false if target.blank?
-    return false if @user.blank?
+    have_both?(target, @user) &&
 
     # You must be an admin to impersonate
-    return false unless @user.admin?
+    is_admin?  &&
 
     # You may not impersonate other admins
-    return false if target.admin?
+    not(target.admin?)
 
-    # You may not impersonate yourself
-    return false if @user == target
-
-    true
+    # Additionally, you may not impersonate yourself;
+    # but the two tests for different admin statuses
+    # make it impossible to be the same user.
   end
 
   # Can we approve it?
   def can_approve?(target)
-    return false if target.blank?
-    return false if @user.blank?
-    return false if target.approved?
-    @user.staff?
+    have_both?(target, @user) && not(target.approved?) && is_staff?
   end
   alias :can_activate? :can_approve?
 
   def can_ban?(user)
-    return false if user.blank?
-    return false unless @user.try(:admin?)
-    return false if user.admin?
-    true
+    user.present? && is_admin? && not(user.admin?)
   end
   alias :can_deactivate? :can_ban?
 
   def can_clear_flags?(post)
-    return false if @user.blank?
-    return false if post.blank?
-    @user.staff?
+    have_both?(@user, post) && is_staff?
   end
 
   def can_revoke_admin?(admin)
-    return false unless @user.try(:admin?)
-    return false if admin.blank?
-    return false if @user.id == admin.id
-    return false unless admin.admin?
-    true
+    can_administer_user?(admin) && admin.admin?
   end
 
   def can_grant_admin?(user)
-    return false unless @user.try(:admin?)
-    return false if user.blank?
-    return false if @user.id == user.id
-    return false if user.admin?
-    true
+    can_administer_user?(user) && not(user.admin?)
   end
 
   def can_revoke_moderation?(moderator)
-    return false unless is_admin?
-    return false if moderator.blank?
-    return false if @user.id == moderator.id && !is_admin?
-    return false unless moderator.moderator?
-    true
+    can_administer?(moderator) && moderator.moderator?
   end
 
   def can_grant_moderation?(user)
-    return false unless is_admin?
-    return false unless user
-    return false if @user.id == user.id && !is_admin?
-    return false if user.moderator?
-    true
+    can_administer?(user) && not(user.moderator?)
   end
 
   def can_delete_user?(user_to_delete)
-    return false unless is_admin?
-    return false unless user_to_delete
-    return false if user_to_delete.post_count > 0
-    true
+    can_administer?(user_to_delete) && user_to_delete.post_count <= 0
   end
 
   # Can we see who acted on a post in a particular way?
@@ -189,35 +163,26 @@ class Guardian
   end
 
   def can_see_pending_invites_from?(user)
-    return false unless user && @user
-    return user == @user
+    have_both?(user, @user) && is_me?(user)
   end
 
   # For now, can_invite_to is basically can_see?
   def can_invite_to?(object)
-    return false unless @user
-    return false unless can_see?(object)
-    return false if SiteSetting.must_approve_users?
-    @user.has_trust_level?(:regular) || @user.staff?
+    @user.present? && can_see?(object) &&
+    not(SiteSetting.must_approve_users?) &&
+    (@user.has_trust_level?(:regular) || is_staff?)
   end
 
-
   def can_see_deleted_posts?
-    return true if is_staff?
-    false
+    is_staff?
   end
 
   def can_see_private_messages?(user_id)
-    return true if is_staff?
-    return false unless @user
-    @user.id == user_id
+    is_staff? || (@user.present? && @user.id == user_id)
   end
 
   def can_delete_all_posts?(user)
-    return false unless is_staff?
-    return false if user.created_at < 7.days.ago
-
-    true
+    is_staff? && user.created_at >= 7.days.ago
   end
 
   # Support for ensure_{blah}! methods.
@@ -245,10 +210,7 @@ class Guardian
   end
 
   def can_create_post_on_topic?(topic)
-    return true if is_staff?
-    return false if topic.closed?
-    return false if topic.archived?
-    true
+    is_staff? || not(topic.closed? || topic.archived?)
   end
 
   # Editing Methods
@@ -257,20 +219,15 @@ class Guardian
   end
 
   def can_edit_post?(post)
-    return true if is_staff?
-    return false if post.topic.archived?
-    (post.user == @user)
+    is_staff? || (not(post.topic.archived?) && is_my_own?(post))
   end
 
   def can_edit_user?(user)
-    return true if user == @user
-    is_staff?
+    is_me?(user) || is_staff?
   end
 
   def can_edit_topic?(topic)
-    return true if is_staff?
-    return true if topic.user == @user
-    false
+    is_staff? || is_my_own?(topic)
   end
 
   # Deleting Methods
@@ -279,72 +236,62 @@ class Guardian
     return false if post.post_number == 1
 
     # You can delete your own posts
-    return !post.user_deleted? if post.user == @user
+    return !post.user_deleted? if is_my_own?(post)
 
     is_staff?
   end
 
   # Recovery Method
   def can_recover_post?(post)
-    return false unless @user
     is_staff?
   end
 
   def can_delete_category?(category)
-    return false unless is_staff?
-    return category.topic_count == 0
+    is_staff? && category.topic_count == 0
   end
 
   def can_delete_topic?(topic)
-    return false unless is_staff?
-    return false if Category.exists?(topic_id: topic.id)
-    true
+    is_staff? && not(Category.exists?(topic_id: topic.id))
   end
 
   def can_delete_post_action?(post_action)
 
     # You can only undo your own actions
-    return false unless @user
-    return false unless post_action.user_id == @user.id
-    return false if post_action.is_private_message?
+    is_my_own?(post_action) && not(post_action.is_private_message?) &&
 
     # Make sure they want to delete it within the window
-    return post_action.created_at > SiteSetting.post_undo_action_window_mins.minutes.ago
+    post_action.created_at > SiteSetting.post_undo_action_window_mins.minutes.ago
   end
 
   def can_send_private_message?(target)
-    return false unless User === target || Group === target
-    return false unless @user
+    (User === target || Group === target) &&
+    @user.present? &&
 
     # Can't send message to yourself
-    return false if User === target && @user.id == target.id
+    is_not_me?(target) &&
 
     # Have to be a basic level at least
-    return false unless @user.has_trust_level?(:basic)
+    @user.has_trust_level?(:basic) &&
 
     SiteSetting.enable_private_messages
   end
 
   def can_reply_as_new_topic?(topic)
-    return false unless @user
-    return false unless topic
-    return false if topic.private_message?
-
-    @user.has_trust_level?(:basic)
+    have_both?(@user, topic) && not(topic.private_message?) && @user.has_trust_level?(:basic)
   end
 
   def can_see_topic?(topic)
     return false unless topic
 
-    return true if @user && is_staff?
+    return true if is_staff?
     return false if topic.deleted_at
 
     if topic.category && topic.category.secure
-      return false unless @user && can_see_category?(topic.category)
+      return false unless can_see_category?(topic.category)
     end
 
     if topic.private_message?
-      return false unless @user
+      return false unless @user.present?
       return true if topic.all_allowed_users.where(id: @user.id).exists?
       return is_admin?
     end
@@ -352,19 +299,11 @@ class Guardian
   end
 
   def can_see_post?(post)
-    return false unless post
-
-    return true if @user && is_staff?
-    return false if post.deleted_at.present?
-
-    can_see_topic?(post.topic)
+    post.present? && (is_staff? || (!post.deleted_at.present? && can_see_topic?(post.topic)))
   end
 
   def can_see_category?(category)
-    return true unless category.secure
-    return false unless @user
-
-    secure_category_ids.include?(category.id)
+    not(category.secure) || secure_category_ids.include?(category.id)
   end
 
   def can_vote?(post, opts={})
@@ -374,37 +313,62 @@ class Guardian
   # Can the user act on the post in a particular way.
   #  taken_actions = the list of actions the user has already taken
   def post_can_act?(post, action_key, opts={})
-    return false if @user.blank?
-    return false if post.blank?
 
-    taken = opts[:taken_actions]
-    taken = taken.keys if taken
+    taken = opts[:taken_actions].try(:keys).to_a
+    is_flag = PostActionType.is_flag?(action_key)
+    already_taken_this_action = taken.any? && taken.include?(PostActionType.types[action_key])
+    already_did_flagging      = taken.any? && (taken & PostActionType.flag_types.values).any?
 
-    # we always allow flagging
-    if PostActionType.is_flag?(action_key)
-      return false unless @user.has_trust_level?(:basic)
+    if  have_both?(@user, post)
+      # we always allow flagging - NOTE: this does not seem true, see specs. (MVH)
+      (is_flag && @user.has_trust_level?(:basic) && not(already_did_flagging)) ||
 
-      if taken
-        return false unless (taken & PostActionType.flag_types.values).empty?
-      end
-    else
-      return false if taken && taken.include?(PostActionType.types[action_key])
+      # not a flagging action, and haven't done it already
+      not(is_flag || already_taken_this_action) &&
+
+      # nothing except flagging on archived posts
+      not(post.topic.archived?) &&
+
+      # don't like your own stuff
+      not(action_key == :like && is_my_own?(post)) &&
+
+      # no voting more than once on single vote topics
+      not(action_key == :vote && opts[:voted_in_topic] && post.topic.has_meta_data_boolean?(:single_vote))
     end
-
-    # nothing else on archived posts
-    return false if post.topic.archived?
-
-    case action_key
-    when :like
-      return false if post.user == @user
-    when :vote then
-      return false if opts[:voted_in_topic] && post.topic.has_meta_data_boolean?(:single_vote)
-    end
-
-    return true
   end
 
   def secure_category_ids
-    @secure_category_ids ||= @user ? @user.secure_category_ids : []
+    @secure_category_ids ||= @user.secure_category_ids
   end
+
+  private
+
+  def is_my_own?(obj)
+    @user.present? && begin
+      (obj.user == @user if obj.respond_to? :user) ||
+      (obj.user_id == @user.id if obj.respond_to? :user_id)
+    end
+  end
+
+  def is_me?(other)
+    @user.present? && User === other && (@user == other || @user.id == other.id)
+  end
+
+  def is_not_me?(other)
+    @user.blank? || !is_me?(other)
+  end
+
+  def have_all?(*objs)
+    objs.all?{ |obj| obj.present? }
+  end
+  alias :have_both? :have_all?
+
+  def can_administer?(obj)
+    is_admin? && obj.present?
+  end
+
+  def can_administer_user?(other_user)
+    can_administer?(other_user) && is_not_me?(other_user)
+  end
+
 end
