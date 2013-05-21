@@ -1,3 +1,5 @@
-require 'rspec/core/rake_task'
+if Rails.env.development? || Rails.env.test?
+  require 'rspec/core/rake_task'
 
-RSpec::Core::RakeTask.new(:spec)
+  RSpec::Core::RakeTask.new(:spec)
+end
