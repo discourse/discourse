@@ -107,6 +107,10 @@ class SiteSetting < ActiveRecord::Base
 
   setting(:send_welcome_message, true)
 
+  client_setting(:enable_cas_logins, true)
+  setting(:cas_hostname, '')
+  setting(:cas_domainname, '')
+
   client_setting(:enable_google_logins, true)
   client_setting(:enable_yahoo_logins, true)
 

@@ -87,6 +87,13 @@ Discourse.LoginView = Discourse.ModalBodyView.extend({
     top = this.get('lastY') - 200;
     return window.open("/auth/facebook", "_blank", "menubar=no,status=no,height=400,width=800,left=" + left + ",top=" + top);
   },
+  casLogin: function() {
+    var left, top;
+    this.set('authenticate', 'facebook');
+    left = this.get('lastX') - 400;
+    top = this.get('lastY') - 200;
+    return window.open("/auth/cas", "_blank", "menubar=no,status=no,height=400,width=800,left=" + left + ",top=" + top);
+  },
 
   openidLogin: function(provider) {
     var left, top;

@@ -37,6 +37,7 @@ gem "omniauth-facebook"
 gem "omniauth-twitter"
 gem "omniauth-github"
 gem "omniauth-browserid", :git => "git://github.com/callahad/omniauth-browserid.git", :branch => "observer_api"
+gem 'omniauth-cas'
 gem 'oj'
 gem 'pg'
 gem 'rails'
