@@ -51,7 +51,7 @@ Taken from http://rvm.io/, the commands below installs RVM and users in the 'rvm
     rvm requirements
 
     # Build and install ruby
-    rvm install 2.0.0-p0
+    rvm install 2.0.0
     gem install bundler
 
 
@@ -79,13 +79,14 @@ Change to the 'discourse' user:
 
     # Install necessary gems
     cd discourse
-    bundle install
+    bundle install --deployment
+
+_If you have errors building the native extensions, ensure you have sufficient free system memory. 1GB with no swap won't cut it._
 
 Configure discourse:
 
     # Run these commands as the discourse user
-    sudo su - discourse
-    cd discourse/config
+    cd ~/discourse/config
     for i in {database,redis}.yml discourse.pill; do cp $i.sample $i; done
     cp environments/production.sample.rb environments/production.rb
 
@@ -93,6 +94,8 @@ Edit discourse/config/database.yml
 
 - remove profile and development
 - leave in production and perhaps test
+- change production db name to: `discourse_prod`
+- Change `host_names` to the name you'll use to access the discourse site
 
 Edit discourse/config/redis.yml
 
@@ -119,7 +122,7 @@ Initialize the database:
     # Run these commands as the discourse user
     # The database name here should match the production one in database.yml
     createdb discourse_prod
-    RUBY_GC_MALLOC_LIMIT=900000000 RAILS_ENV=production rake db:migrate
+    RUBY_GC_MALLOC_LIMIT=900000000 RAILS_ENV=production bundle exec rake db:migrate
     RUBY_GC_MALLOC_LIMIT=900000000 RAILS_ENV=production bundle exec rake assets:precompile
 
 ## nginx setup
@@ -140,9 +143,8 @@ Configure bluepill:
     # Run these commands as the discourse user
     gem install bluepill
     echo 'alias bluepill="bluepill --no-privileged -c ~/.bluepill"' >> ~/.bash_aliases
-    LATESTENVIRON=$(ls /usr/local/rvm/environments/ | grep -Ev '(default|@global)' | tail -n1)
-    rvm wrapper $LATESTENVIRON bootup bluepill
-    rvm wrapper $LATESTENVIRON bootup bundle
+    rvm wrapper $(rvm current) bootup bluepill
+    rvm wrapper $(rvm current) bootup bundle
 
 Start Discourse:
 
