@@ -130,11 +130,7 @@ class Group < ActiveRecord::Base
   end
 
   def usernames
-    users.select("username").map(&:username).join(",")
-  end
-
-  def user_ids
-    users.select('users.id').map(&:id)
+    users.pluck(:username).join(",")
   end
 
   def add(user)

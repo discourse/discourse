@@ -43,7 +43,7 @@ class PostDestroyer
       @post.update_flagged_posts_count
 
       # Remove any reply records that point to deleted posts
-      post_ids = PostReply.select(:post_id).where(reply_id: @post.id).map(&:post_id)
+      post_ids = PostReply.where(reply_id: @post.id).pluck(:post_id)
       PostReply.delete_all reply_id: @post.id
 
       if post_ids.present?
