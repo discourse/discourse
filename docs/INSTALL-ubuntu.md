@@ -105,13 +105,15 @@ Edit discourse/config/discourse.pill
 
 - change application name from 'your_app' to however you want to distinguish this ('discourse')
 - Add option to Bluepill.application: `":base_dir => ENV["HOME"] + '/.bluepill'"`
-- comment out debug instance
+- Should end up looking something like: `Bluepill.application("discourse", :base_dir => ENV["HOME"] + '/.bluepill') do |app|`
+- comment out debug instance (from `app.process("thin-debug")` through to nearest `end`)
 - search for "host to run on" and change to current hostname
 - note: clockwork should run on only one host
 
 Edit discourse/config/initializers/secret_token.rb
 - uncomment secret_token line
 - replace SET_SECRET_HERE with secret output from 'rake secret' command in discourse directory
+- delete the lines below as per instructions in the file
 
 Edit discourse/config/environments/production.rb
 - check settings, modify smtp settings if necessary
@@ -124,6 +126,9 @@ Initialize the database:
     createdb discourse_prod
     RUBY_GC_MALLOC_LIMIT=900000000 RAILS_ENV=production bundle exec rake db:migrate
     RUBY_GC_MALLOC_LIMIT=900000000 RAILS_ENV=production bundle exec rake assets:precompile
+
+    # TEMPORARY BUG WORKAROUND:
+    mkdir -p ~/discourse/tmp/sockets
 
 ## nginx setup
 
