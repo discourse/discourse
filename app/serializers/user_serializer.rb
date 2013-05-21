@@ -12,11 +12,11 @@ class UserSerializer < BasicUserSerializer
              :stats,
              :can_send_private_message_to_user,
              :bio_excerpt,
-             :invited_by,
              :trust_level,
              :moderator,
              :admin
 
+  has_one :invited_by, embed: :object, serializer: BasicUserSerializer
 
   def self.private_attributes(*attrs)
     attributes *attrs
