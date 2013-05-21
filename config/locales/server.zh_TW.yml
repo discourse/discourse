@@ -227,7 +227,7 @@ zh_TW:
       long_form: '投訴爲題外話'
     spam:
       title: '垃圾'
-      description: '此帖爲明顯的廣告，它不包含任何對當前討論有幫助的內容，只有促銷信息。'
+      description: '此帖爲廣告，它不包含任何對當前討論有幫助的內容，只有促銷信息。'
       long_form: '投訴爲垃圾'
     inappropriate:
       title: '不當內容'
@@ -366,7 +366,7 @@ zh_TW:
     facebook_config_warning: '服務器允許使用臉書賬號登陸 (enable_facebook_logins), 但是 app id 和 app secret values 沒有被設定。 到 <a href="/admin/site_settings">站點設置</a> 更新此設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">參考設定指南</a>。'
     twitter_config_warning: '服務器允許使用推特賬號登陸 (enable_twitter_logins), 但是 key 和 secret values 沒有被設定。 到 <a href="/admin/site_settings">站點設置</a> 更新此設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">參考設定指南</a>。'
     github_config_warning: '服務器允許使用GitHub賬號登陸  (enable_github_logins), 但是 client id 和 secret values 沒有被設定。 到 <a href="/admin/site_settings">站點設置</a> 更新此設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">參考設定指南</a>。'
-    failing_emails_warning: "%{num_failed_jobs}個email任務失敗。請檢查config/production.rb文件是否正確配置了config.action_mailer。"
+    failing_emails_warning: "%{num_failed_jobs}個email任務失敗。請檢查config/environments/production.rb文件是否正確配置了config.action_mailer。<a href='/sidekiq/retries' target='_blank'>在Sidekiq中查看失敗的任務</a>。"
     default_logo_warning: "你沒有設定你的站點logo。請在<a href='/admin/site_settings'>站點設置</a>中配置logo_url、logo_small_url和favicon_url。"
     contact_email_missing: "你沒有為站點設定一個聯繫郵箱。請在<a href='/admin/site_settings'>站點設置</a>配置contact_email。"
     contact_email_invalid: "站點聯繫郵箱不正確。請在<a href='/admin/site_settings'>站點設置</a>修改。"
@@ -458,6 +458,7 @@ zh_TW:
     post_undo_action_window_mins: "允許用戶在帖子上進行撤銷操作（贊、投訴等）所需等待的間隔秒數"
     must_approve_users: "用戶必須獲得管理員批准方能訪問"
     ga_tracking_code: "谷歌分析追蹤代碼，例如：UA-12345678-9。參考 http://google.com/analytics"
+    ga_domain_name: "谷歌分析域名，例如：mysite.com；參考 http://google.com/analytics"
     top_menu: "確定在主頁導航條包含哪些條目，以及排列順序。例如：latest|hot|read|favorited|unread|new|posted|categories"
     post_menu: "確定在帖子菜單條包含哪些條目，以及排列順序。例如：like|edit|flag|delete|share|bookmark|reply"
     share_links: "確定在分享對話框裏顯示哪些條目、以什麽順序顯示。例如 twitter|facebook|google+"
@@ -565,6 +566,8 @@ zh_TW:
     tos_url: "如果你想要使用一個部署在某個地方的服務條款文檔，那麼請在此填寫其完整URL地址。"
     privacy_policy_url: "如果你想要使用一個部署在某個地方的隱私政策文檔，那麼請在此填寫其完整URL地址。"
 
+    newuser_spam_host_threshold: "用戶在一篇帖子中能添加多少指向同一主機的鏈接，取決於之前該用戶有`newuser_spam_host_threshold`篇帖子被認為是垃圾帖。"
+
   notification_types:
     mentioned: "%{display_username} 在 %{link} @到了你"
     liked: "%{display_username} 在 %{link} 贊了你的帖子 "
@@ -598,6 +601,11 @@ zh_TW:
     archived_disabled: "本主題已被解除歸檔，即不再凍結，可以修改。"
     closed_enabled: "本主題已關閉，不再接受新的回複。"
     closed_disabled: "本主題已開放，可以發表新的回複。"
+    autoclosed_enabled:
+      zero: "本主題為創建一天後自動關閉。不允許添加新的回複。"
+      one: "本主題為創建一天後自動關閉。不允許添加新的回複。"
+      other: "本主題為創建后{{count}}天自動關閉。不允許添加新的回複。"
+    autoclosed_disabled: "本主題是開放的，可以添加新的回複。"
     pinned_enabled: "本主題已置頂，它將始終顯示在它所屬分類的頂部。"
     pinned_disabled: "本主題已被解除置頂，它將不再顯示在它所屬分類的頂部。"
     visible_enabled: "本主題可見，它將顯示在主題列表中。"
