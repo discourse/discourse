@@ -781,6 +781,8 @@ fr:
       edit_long: "Editer la catégorie"
       edit_uncategorized: "Editer les non catégoriser"
       view: 'Voir les discussions dans cette catégorie'
+      general: 'Général'
+      settings: 'Paramètres'
       delete: 'Supprimer la catégorie'
       create: 'Créer la catégorie'
       save: 'Enregistrer la catégorie'
@@ -806,7 +808,7 @@ fr:
       add_group: "Ajouter un groupe"
       security: "Sécurité"
       allowed_groups: "Groupes permis :"
-      
+      auto_close_label: "Fermer automatiquement après :"
 
     flagging:
       title: 'Pourquoi voulez-vous signaler ce message ?'
