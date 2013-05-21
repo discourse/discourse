@@ -25,7 +25,7 @@ For details on how to reduce the monthly cost of your application, see [Advanced
 
     *.gitignore*
 
-    ```ruby
+    ```diff
     - config/redis.yml
     + # config/redis.yml
     ```
