@@ -11,32 +11,25 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
   templateName: 'topic',
   topicBinding: 'controller.content',
   userFiltersBinding: 'controller.userFilters',
-  classNameBindings: ['controller.multiSelect:multi-select', 'topic.archetype'],
+  classNameBindings: ['controller.multiSelect:multi-select', 'topic.archetype', 'topic.category.secure:secure_category'],
   siteBinding: 'Discourse.site',
   progressPosition: 1,
   menuVisible: true,
   SHORT_POST: 1200,
 
   // Update the progress bar using sweet animations
-  updateBar: (function() {
+  updateBar: function() {
     var $topicProgress, bg, currentWidth, progressWidth, ratio, totalWidth;
     if (!this.get('topic.loaded')) return;
     $topicProgress = $('#topic-progress');
     if (!$topicProgress.length) return;
 
-    // Don't show progress when there is only one post
-    if (this.get('topic.highest_post_number') === 1) {
-      $topicProgress.hide();
-    } else {
-      $topicProgress.show();
-    }
-
-    ratio = this.get('progressPosition') / this.get('topic.highest_post_number');
+    ratio = this.get('progressPosition') / this.get('topic.filtered_posts_count');
     totalWidth = $topicProgress.width();
     progressWidth = ratio * totalWidth;
     bg = $topicProgress.find('.bg');
     bg.stop(true, true);
-    currentWidth = bg.width()
+    currentWidth = bg.width();
 
     if (currentWidth === totalWidth) {
       bg.width(currentWidth - 1);
@@ -53,22 +46,15 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     } else {
       bg.animate({ width: progressWidth }, 400);
     }
-  }).observes('progressPosition', 'topic.highest_post_number', 'topic.loaded'),
+  }.observes('progressPosition', 'topic.filtered_posts_count', 'topic.loaded'),
 
-  updateTitle: (function() {
+  updateTitle: function() {
     var title;
     title = this.get('topic.title');
     if (title) return Discourse.set('title', title);
-  }).observes('topic.loaded', 'topic.title'),
+  }.observes('topic.loaded', 'topic.title'),
 
-  newPostsPresent: (function() {
-    if (this.get('topic.highest_post_number')) {
-      this.updateBar();
-      this.examineRead();
-    }
-  }).observes('topic.highest_post_number'),
-
-  currentPostChanged: (function() {
+  currentPostChanged: function() {
     var current = this.get('controller.currentPost');
 
     var topic = this.get('topic');
@@ -100,100 +86,106 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     } else {
       $('#jump-bottom').attr('disabled', false);
     }
-  }).observes('controller.currentPost', 'controller.bestOf', 'topic.highest_post_number'),
+  }.observes('controller.currentPost', 'controller.bestOf', 'topic.highest_post_number'),
 
-  composeChanged: (function() {
+  composeChanged: function() {
     var composerController = Discourse.get('router.composerController');
     composerController.clearState();
-    return composerController.set('topic', this.get('topic'));
-  }).observes('composer'),
+    composerController.set('topic', this.get('topic'));
+  }.observes('composer'),
 
   // This view is being removed. Shut down operations
   willDestroyElement: function() {
-    var _ref;
+    var screenTrack, controller;
     this.unbindScrolling();
-    this.get('controller').unsubscribe();
-    if (_ref = this.get('screenTrack')) {
-      _ref.stop();
-    }
-    this.set('screenTrack', null);
-    $(window).unbind('scroll.discourse-on-scroll');
-    $(document).unbind('touchmove.discourse-on-scroll');
     $(window).unbind('resize.discourse-on-scroll');
-    return this.resetExamineDockCache();
+
+    controller = this.get('controller');
+    controller.unsubscribe();
+    controller.set('onPostRendered', null);
+
+    screenTrack = this.get('screenTrack');
+    if (screenTrack) {
+      screenTrack.stop();
+    }
+
+    this.set('screenTrack', null);
+    this.resetExamineDockCache();
+
+    // this happens after route exit, stuff could have trickled in
+    this.set('controller.controllers.header.showExtraInfo', false)
   },
 
   didInsertElement: function(e) {
-    var eyeline, onScroll, screenTrack,
-      _this = this;
-    onScroll = Discourse.debounce((function() {
-      return _this.onScroll();
-    }), 10);
-    $(window).bind('scroll.discourse-on-scroll', onScroll);
-    $(document).bind('touchmove.discourse-on-scroll', onScroll);
-    $(window).bind('resize.discourse-on-scroll', onScroll);
-    this.bindScrolling();
-    this.get('controller').subscribe();
+    var topicView = this;
+    this.bindScrolling({debounce: 0});
+    $(window).bind('resize.discourse-on-scroll', function() { topicView.updatePosition(false); });
+
+    var controller = this.get('controller');
+    controller.subscribe();
+    controller.set('onPostRendered', function(){
+      topicView.postsRendered.apply(topicView);
+    });
 
     // Insert our screen tracker
-    screenTrack = Discourse.ScreenTrack.create({ topic_id: this.get('topic.id') });
+    var screenTrack = Discourse.ScreenTrack.create({ topic_id: this.get('topic.id') });
     screenTrack.start();
     this.set('screenTrack', screenTrack);
 
-    // Track the user's eyeline
-    eyeline = new Discourse.Eyeline('.topic-post');
-    eyeline.on('saw', function(e) { return _this.postSeen(e.detail); });
-    eyeline.on('sawBottom', function(e) { _this.nextPage(e.detail); });
-    eyeline.on('sawTop', function(e) { _this.prevPage(e.detail); });
-    this.set('eyeline', eyeline);
     this.$().on('mouseup.discourse-redirect', '.cooked a, a.track-link', function(e) {
       return Discourse.ClickTrack.trackClick(e);
     });
 
-    return this.onScroll();
+    this.updatePosition(true);
   },
 
-  // Triggered from the post view all posts are rendered
-  postsRendered: function(postDiv, post) {
-    var $lastPost, $window,
-      _this = this;
-    $window = $(window);
-    $lastPost = $('.row:last');
-    // we consider stuff at the end of the list as read, right away (if it is visible)
-    if ($window.height() + $window.scrollTop() >= $lastPost.offset().top + $lastPost.height()) {
-      this.examineRead();
-    } else {
-      // last is not in view, so only examine in 2 seconds
-      Em.run.later(function() { _this.examineRead(); }, 2000);
-    }
-  },
+  // Triggered whenever any posts are rendered, debounced to save over calling
+  postsRendered: Discourse.debounce(function() {
+    this.set('renderedPosts', $('.topic-post'));
+    this.updatePosition(false);
+  }, 50),
 
   resetRead: function(e) {
-    var _this = this;
     this.get('screenTrack').cancel();
     this.set('screenTrack', null);
     this.get('controller').unsubscribe();
-    this.get('topic').resetRead(function() {
-      _this.set('controller.message', Em.String.i18n("topic.read_position_reset"));
-      _this.set('controller.loaded', false);
+
+    var topicView = this;
+    this.get('topic').resetRead().then(function() {
+      topicView.set('controller.message', Em.String.i18n("topic.read_position_reset"));
+      topicView.set('controller.loaded', false);
     });
   },
 
-  // Called for every post seen
-  postSeen: function($post) {
-    var post, postView, _ref;
-    this.set('postNumberSeen', null);
+  gotFocus: function(){
+    if (Discourse.get('hasFocus')){
+      this.scrolled();
+    }
+  }.observes("Discourse.hasFocus"),
+
+  getPost: function($post){
+    var post, postView;
     postView = Ember.View.views[$post.prop('id')];
     if (postView) {
-      post = postView.get('post');
-      this.set('postNumberSeen', post.get('post_number'));
-      if (post.get('post_number') > (this.get('topic.last_read_post_number') || 0)) {
-        this.set('topic.last_read_post_number', post.get('post_number'));
+      return postView.get('post');
+    }
+    return null;
+  },
+
+  // Called for every post seen, returns the post number
+  postSeen: function($post) {
+    var post, postNumber, screenTrack;
+    post = this.getPost($post);
+
+    if (post) {
+      postNumber = post.get('post_number');
+      if (postNumber > (this.get('topic.last_read_post_number') || 0)) {
+        this.set('topic.last_read_post_number', postNumber);
       }
       if (!post.get('read')) {
         post.set('read', true);
-        return (_ref = this.get('screenTrack')) ? _ref.guessedSeen(post.get('post_number')) : void 0;
       }
+      return post.get('post_number');
     }
   },
 
@@ -218,11 +210,10 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
   // Load previous posts if there are some
   prevPage: function($post) {
-    var opts, post, postView,
-      _this = this;
-    postView = Ember.View.views[$post.prop('id')];
+    var postView = Ember.View.views[$post.prop('id')];
     if (!postView) return;
-    post = postView.get('post');
+
+    var post = postView.get('post');
     if (!post) return;
 
     // We don't load upwards from the first page
@@ -232,22 +223,21 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     if (this.topic && this.topic.posts && this.topic.posts.length > 0 && this.topic.posts.first().post_number !== post.post_number) return;
 
     // half mutex
-    if (this.loading) return;
-    this.set('loading', true);
-    this.set('loadingAbove', true);
-    opts = jQuery.extend({
-      postsBefore: post.get('post_number')
-    }, this.get('controller.postFilters'));
+    if (this.get('controller.loading')) return;
+    this.set('controller.loading', true);
+    this.set('controller.loadingAbove', true);
+    var opts = $.extend({ postsBefore: post.get('post_number') }, this.get('controller.postFilters'));
 
+    var topicView = this;
     return Discourse.Topic.find(this.get('topic.id'), opts).then(function(result) {
       var lastPostNum, posts;
-      posts = _this.get('topic.posts');
+      posts = topicView.get('topic.posts');
 
       // Add a scrollTo record to the last post inserted to the DOM
       lastPostNum = result.posts.first().post_number;
       result.posts.each(function(p) {
         var newPost;
-        newPost = Discourse.Post.create(p, _this.get('topic'));
+        newPost = Discourse.Post.create(p, topicView.get('topic'));
         if (p.post_number === lastPostNum) {
           newPost.set('scrollTo', {
             top: $(window).scrollTop(),
@@ -256,114 +246,96 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
         }
         return posts.unshiftObject(newPost);
       });
-      _this.set('loading', false);
-      return _this.set('loadingAbove', false);
+      topicView.set('controller.loading', false);
+      return topicView.set('controller.loadingAbove', false);
     });
   },
 
   fullyLoaded: (function() {
-    return this.seenBottom || this.topic.at_bottom;
-  }).property('topic.at_bottom', 'seenBottom'),
+    return this.get('controller.seenBottom') || this.get('topic.at_bottom');
+  }).property('topic.at_bottom', 'controller.seenBottom'),
 
   // Load new posts if there are some
   nextPage: function($post) {
-    var post, postView;
-    if (this.loading || this.seenBottom) return;
-    postView = Ember.View.views[$post.prop('id')];
-    if (!postView) return;
-    post = postView.get('post');
-    return this.loadMore(post);
+    if (this.get('controller.loading') || this.get('controller.seenBottom')) return;
+    return this.loadMore(this.getPost($post));
   },
 
-  postCountChanged: (function() {
-    this.set('seenBottom', false);
-    var eyeline = this.get('eyeline');
-    if (eyeline) eyeline.update()
-  }).observes('topic.highest_post_number'),
+  postCountChanged: function() {
+    this.set('controller.seenBottom', false);
+  }.observes('topic.highest_post_number'),
 
   loadMore: function(post) {
-    var opts, postNumberSeen, _ref,
-      _this = this;
-    if (this.loading || this.seenBottom) return;
+    if (!post) return;
+    if (this.get('controller.loading')) return;
 
     // Don't load if we know we're at the bottom
-    if (this.get('topic.highest_post_number') === post.get('post_number')) {
-      if (_ref = this.get('eyeline')) {
-        _ref.flushRest();
-      }
+    if (this.get('topic.highest_post_number') === post.get('post_number')) return;
 
-      // Update our current post to the last number we saw
-      if (postNumberSeen = this.get('postNumberSeen')) {
-        this.set('controller.currentPost', postNumberSeen);
-      }
-      return;
-    }
+    if (this.get('controller.seenBottom')) return;
 
     // Don't double load ever
     if (this.topic.posts.last().post_number !== post.post_number) return;
-    this.set('loadingBelow', true);
-    this.set('loading', true);
-    opts = jQuery.extend({
-      postsAfter: post.get('post_number')
-    }, this.get('controller.postFilters'));
-    return Discourse.Topic.find(this.get('topic.id'), opts).then(function(result) {
-      var suggested;
+    this.set('controller.loadingBelow', true);
+    this.set('controller.loading', true);
+    var opts = $.extend({ postsAfter: post.get('post_number') }, this.get('controller.postFilters'));
+
+    var topicView = this;
+    var topic = this.get('controller.content');
+    return Discourse.Topic.find(topic.get('id'), opts).then(function(result) {
       if (result.at_bottom || result.posts.length === 0) {
-        _this.set('seenBottom', 'true');
+        topicView.set('controller.seenBottom', 'true');
       }
-      _this.get('topic').pushPosts(result.posts.map(function(p) {
-        return Discourse.Post.create(p, _this.get('topic'));
+      topic.pushPosts(result.posts.map(function(p) {
+        return Discourse.Post.create(p, topic);
       }));
       if (result.suggested_topics) {
-        suggested = Em.A();
+        var suggested = Em.A();
         result.suggested_topics.each(function(st) {
-          return suggested.pushObject(Discourse.Topic.create(st));
+          suggested.pushObject(Discourse.Topic.create(st));
         });
-        _this.set('topic.suggested_topics', suggested);
+        topicView.set('topic.suggested_topics', suggested);
       }
-      _this.set('loadingBelow', false);
-      return _this.set('loading', false);
+      topicView.set('controller.loadingBelow', false);
+      return topicView.set('controller.loading', false);
     });
   },
 
-  // Examine which posts are on the screen and mark them as read. Also figure out if we
-  // need to load more posts.
-  examineRead: function() {
-    // Track posts time on screen
-    var postNumberSeen, _ref, _ref1;
-    if (_ref = this.get('screenTrack')) {
-      _ref.scrolled();
-    }
-
-    // Update what we can see
-    if (_ref1 = this.get('eyeline')) {
-      _ref1.update();
-    }
-
-    // Update our current post to the last number we saw
-    if (postNumberSeen = this.get('postNumberSeen')) {
-      this.set('controller.currentPost', postNumberSeen);
-    }
-  },
-
   cancelEdit: function() {
+    // close editing mode
     this.set('editingTopic', false);
   },
 
   finishedEdit: function() {
-    var new_val, topic;
     if (this.get('editingTopic')) {
-      topic = this.get('topic');
-      new_val = $('#edit-title').val();
-      topic.set('title', new_val);
-      topic.set('fancy_title', new_val);
-      topic.save();
+      var topic = this.get('topic');
+      // retrieve the title from the text field
+      var newTitle = $('#edit-title').val();
+      // retrieve the category from the combox box
+      var newCategoryName = $('#topic-title select option:selected').val();
+      // manually update the titles & category
+      topic.setProperties({
+        title: newTitle,
+        fancy_title: newTitle,
+        categoryName: newCategoryName
+      });
+      // save the modifications
+      topic.save().then(function(result){
+        // update the title if it has been changed (cleaned up) server-side
+        var title = result.basic_topic.fancy_title;
+        topic.setProperties({
+          title: title,
+          fancy_title: title
+        });
+      });
+      // close editing mode
       this.set('editingTopic', false);
     }
   },
 
   editTopic: function() {
     if (!this.get('topic.can_edit')) return false;
+    // enable editing mode
     this.set('editingTopic', true);
     return false;
   },
@@ -378,63 +350,63 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     this.dockedCounter = false;
   },
 
-  detectDockPosition: function() {
-    var current, goingUp, i, increment, offset, post, postView, rows, winHeight, winOffset;
-    rows = $(".topic-post");
-    if (rows.length === 0) return;
-    i = parseInt(rows.length / 2, 10);
-    increment = parseInt(rows.length / 4, 10);
-    goingUp = undefined;
-    winOffset = window.pageYOffset || $('html').scrollTop();
-    winHeight = window.innerHeight || $(window).height();
-    while (true) {
-      if (i === 0 || (i >= rows.length - 1)) {
-        break;
-      }
-      current = $(rows[i]);
-      offset = current.offset();
-      if (offset.top - winHeight < winOffset) {
-        if (offset.top + current.outerHeight() - window.innerHeight > winOffset) {
-          break;
-        } else {
-          i = i + increment;
-          if (goingUp !== undefined && increment === 1 && !goingUp) {
-            break;
-          }
-          goingUp = true;
-        }
-      } else {
-        i = i - increment;
-        if (goingUp !== undefined && increment === 1 && goingUp) {
-          break;
-        }
-        goingUp = false;
-      }
-      if (increment > 1) {
-        increment = parseInt(increment / 2, 10);
-        goingUp = undefined;
-      }
-      if (increment === 0) {
-        increment = 1;
-        goingUp = undefined;
-      }
-    }
-    postView = Ember.View.views[rows[i].id];
+  updateDock: function(postView) {
     if (!postView) return;
-    post = postView.get('post');
+    var post = postView.get('post');
     if (!post) return;
-    this.set('progressPosition', post.get('post_number'));
+    this.set('progressPosition', post.get('index'));
   },
 
-  ensureDockIsTestedOnChange: (function() {
-    // this is subtle, firstPostLoaded will trigger ember to render the view containing #topic-title
-    //  onScroll needs do know about it to be able to make a decision about the dock
-    Em.run.next(this, this.onScroll);
-  }).observes('firstPostLoaded'),
+  nonUrgentPositionUpdate: Discourse.debounce(function(opts){
+    var screenTrack = this.get('screenTrack');
+    if(opts.userActive && screenTrack) {
+      screenTrack.scrolled();
+    }
+    this.set('controller.currentPost', opts.currentPost);
+  },500),
 
-  onScroll: function() {
-    var $lastPost, firstLoaded, lastPostOffset, offset, title;
-    this.detectDockPosition();
+  scrolled: function(){
+    this.updatePosition(true);
+  },
+
+  updatePosition: function(userActive) {
+    var $lastPost, firstLoaded, lastPostOffset, offset,
+        title, info, rows, screenTrack, _this, currentPost;
+
+    _this = this;
+    rows = this.get('renderedPosts');
+
+    if (!rows || rows.length === 0) { return; }
+    info = Discourse.Eyeline.analyze(rows);
+
+    // if we have no rows
+    if(!info) { return; }
+
+    // top on screen
+    if(info.top === 0 || info.onScreen[0] === 0 || info.bottom === 0) {
+      this.prevPage($(rows[0]));
+    }
+
+    // bottom of screen
+    if(info.bottom === rows.length-1) {
+      currentPost = _this.postSeen($(rows[info.bottom]));
+      this.nextPage($(rows[info.bottom]));
+    }
+
+    // update dock
+    this.updateDock(Ember.View.views[rows[info.bottom].id]);
+
+    // mark everything on screen read
+    $.each(info.onScreen,function(){
+      var seen = _this.postSeen($(rows[this]));
+      currentPost = currentPost || seen;
+    });
+
+    this.nonUrgentPositionUpdate({
+        userActive: userActive,
+        currentPost: currentPost || this.getPost($(rows[info.bottom])).get('post_number')
+    });
+
     offset = window.pageYOffset || $('html').scrollTop();
     firstLoaded = this.get('firstPostLoaded');
     if (!this.docAt) {
@@ -471,22 +443,19 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
   browseMoreMessage: (function() {
     var category, opts;
+
     opts = {
-      popularLink: "<a href=\"/\">" + (Em.String.i18n("topic.view_popular_topics")) + "</a>"
+      latestLink: "<a href=\"/\">" + (Em.String.i18n("topic.view_latest_topics")) + "</a>"
     };
     if (category = this.get('controller.content.category')) {
       opts.catLink = Discourse.Utilities.categoryLink(category);
       return Ember.String.i18n("topic.read_more_in_category", opts);
     } else {
-      opts.catLink = "<a href=\"/categories\">" + (Em.String.i18n("topic.browse_all_categories")) + "</a>";
+      opts.catLink = "<a href=\"" + Discourse.getURL("/categories") + "\">" + (Em.String.i18n("topic.browse_all_categories")) + "</a>";
       return Ember.String.i18n("topic.read_more", opts);
     }
-  }).property(),
+  }).property()
 
-  // The window has been scrolled
-  scrolled: function(e) {
-    return this.examineRead();
-  }
 });
 
 Discourse.TopicView.reopenClass({

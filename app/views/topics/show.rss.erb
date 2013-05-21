@@ -6,17 +6,19 @@
     <description><%= @topic_view.posts.first.raw %></description>
     <atom:link href="<%= Discourse.base_url %><%= @topic_view.relative_url %>.rss" rel="self" type="application/rss+xml" />
     <% @topic_view.recent_posts.each do |post| %>
-      <item>
-        <title><%= @topic_view.title %> at <%= post.created_at %></title>
-        <description><![CDATA[
-          <p><%= post.author_readable %> wrote:</p>
-          <%= post.cooked.html_safe %>
-        ]]></description>
-        <link><%= Discourse.base_url %><%= post.url %></link>
-        <pubDate><%= post.created_at.rfc2822 %></pubDate>
-        <guid><%= Discourse.base_url %><%= post.url %></guid>
-        <source url="<%= Discourse.base_url %><%= @topic_view.relative_url %>.rss"><%= @topic_view.title %></source>
-      </item>
+      <% if post.user %>
+        <item>
+          <title><%= @topic_view.title %> at <%= post.created_at %></title>
+          <description><![CDATA[
+            <p><%= post.author_readable %> wrote:</p>
+            <%= post.cooked.html_safe %>
+          ]]></description>
+          <link><%= Discourse.base_url %><%= post.url %></link>
+          <pubDate><%= post.created_at.rfc2822 %></pubDate>
+          <guid><%= Discourse.base_url %><%= post.url %></guid>
+          <source url="<%= Discourse.base_url %><%= @topic_view.relative_url %>.rss"><%= @topic_view.title %></source>
+        </item>
+      <% end %>
     <% end %>
   </channel>
 </rss>

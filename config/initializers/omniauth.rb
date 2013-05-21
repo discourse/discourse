@@ -18,18 +18,29 @@ Rails.application.config.middleware.use OmniAuth::Builder do
            :identifier => 'https://me.yahoo.com',
            :require => 'omniauth-openid'
 
+  # lambda is required for proper multisite support, 
+  #  without it subdomains will not function correctly 
   provider :facebook,
-           SiteSetting.facebook_app_id,
-           SiteSetting.facebook_app_secret,
+           :setup => lambda { |env|
+              strategy = env['omniauth.strategy']
+              strategy.options[:client_id] = SiteSetting.facebook_app_id
+              strategy.options[:client_secret] = SiteSetting.facebook_app_secret
+           },
            :scope => "email"
 
   provider :twitter,
-           SiteSetting.twitter_consumer_key,
-           SiteSetting.twitter_consumer_secret
+           :setup => lambda { |env|
+              strategy = env['omniauth.strategy']
+              strategy.options[:consumer_key] = SiteSetting.twitter_consumer_key
+              strategy.options[:consumer_secret] = SiteSetting.twitter_consumer_secret
+           }
 
   provider :github,
-           SiteSetting.github_client_id,
-           SiteSetting.github_client_secret
+           :setup => lambda { |env|
+              strategy = env['omniauth.strategy']
+              strategy.options[:client_id] = SiteSetting.github_client_id
+              strategy.options[:client_secret] = SiteSetting.github_client_secret
+           }
 
   provider :browser_id,
            :name => 'persona'

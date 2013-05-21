@@ -1,3 +1,6 @@
+/*jshint newcap:false*/
+/*global diff_match_patch:true assetPath:true*/
+
 /**
   This view handles rendering of the history of a post
 
@@ -10,43 +13,71 @@ Discourse.HistoryView = Discourse.View.extend({
   templateName: 'history',
   title: Em.String.i18n('history'),
   modalClass: 'history-modal',
+  diffLibraryLoaded: false,
+  diff: null,
+
+  init: function(){
+    this._super();
+    var historyView = this;
+    $LAB.script(assetPath('defer/google_diff_match_patch')).wait(function(){
+      historyView.set('diffLibraryLoaded', true);
+    });
+  },
 
   loadSide: function(side) {
-    var orig, version,
-      _this = this;
     if (this.get("version" + side)) {
-      orig = this.get('originalPost');
-      version = this.get("version" + side + ".number");
+      var orig = this.get('originalPost');
+      var version = this.get("version" + side + ".number");
       if (version === orig.get('version')) {
-        return this.set("post" + side, orig);
+        this.set("post" + side, orig);
       } else {
-        return Discourse.Post.loadVersion(orig.get('id'), version, function(post) {
-          return _this.set("post" + side, post);
+        var historyView = this;
+        Discourse.Post.loadVersion(orig.get('id'), version).then(function(post) {
+          historyView.set("post" + side, post);
         });
       }
     }
   },
 
-  changedLeftVersion: (function() {
-    return this.loadSide("Left");
-  }).observes('versionLeft'),
+  changedLeftVersion: function() {
+    this.loadSide("Left");
+  }.observes('versionLeft'),
 
-  changedRightVersion: (function() {
-    return this.loadSide("Right");
-  }).observes('versionRight'),
+  changedRightVersion: function() {
+    this.loadSide("Right");
+  }.observes('versionRight'),
+
+  loadedPosts: function() {
+    if (this.get('diffLibraryLoaded') && this.get('postLeft') && this.get('postRight')) {
+      var dmp = new diff_match_patch(),
+          before = this.get("postLeft.cooked"),
+          after = this.get("postRight.cooked"),
+          diff = dmp.diff_main(before, after);
+      dmp.diff_cleanupSemantic(diff);
+      this.set('diff', dmp.diff_prettyHtml(diff));
+    }
+  }.observes('diffLibraryLoaded', 'postLeft', 'postRight'),
 
   didInsertElement: function() {
-    var _this = this;
-    this.set('loading', true);
-    this.set('postLeft', null);
-    this.set('postRight', null);
-    return this.get('originalPost').loadVersions(function(result) {
-      _this.set('loading', false);
-      _this.set('versionLeft', result.first());
-      _this.set('versionRight', result.last());
-      return _this.set('versions', result);
+    this.setProperties({
+      loading: true,
+      postLeft: null,
+      postRight: null
+    });
+
+    var historyView = this;
+    this.get('originalPost').loadVersions().then(function(result) {
+      result.each(function(item) {
+        item.description = "v" + item.number + " - " + Date.create(item.created_at).relative() + " - " +
+          Em.String.i18n("changed_by", { author: item.display_username });
+      });
+
+      historyView.setProperties({
+        loading: false,
+        versionLeft: result.first(),
+        versionRight: result.last(),
+        versions: result
+      });
     });
   }
 });
-
-

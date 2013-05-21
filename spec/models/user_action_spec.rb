@@ -2,6 +2,10 @@ require 'spec_helper'
 
 describe UserAction do
 
+  before do
+    ActiveRecord::Base.observers.enable :all
+  end
+
   it { should validate_presence_of :action_type }
   it { should validate_presence_of :user_id }
 
@@ -37,49 +41,54 @@ describe UserAction do
       log_test_action(action_type: UserAction::BOOKMARK)
     end
 
-    describe 'stats' do
-
-      let :mystats do
-        UserAction.stats(user.id, Guardian.new(user))
-      end
-
-      it 'should include non private message events' do
-        mystats.map{|r| r["action_type"].to_i}.should include(UserAction::NEW_TOPIC)
-      end
-
-      it 'should exclude private messages for non owners' do
-        UserAction.stats(user.id,Guardian.new).map{|r| r["action_type"].to_i}.should_not include(UserAction::NEW_PRIVATE_MESSAGE)
-      end
-
-      it 'should not include got private messages for owners' do
-        UserAction.stats(user.id,Guardian.new).map{|r| r["action_type"].to_i}.should_not include(UserAction::GOT_PRIVATE_MESSAGE)
-      end
-
-      it 'should include private messages for owners' do
-        mystats.map{|r| r["action_type"].to_i}.should include(UserAction::NEW_PRIVATE_MESSAGE)
-      end
-
-      it 'should include got private messages for owners' do
-        mystats.map{|r| r["action_type"].to_i}.should include(UserAction::GOT_PRIVATE_MESSAGE)
-      end
+    def stats_for_user(viewer=nil)
+      UserAction.stats(user.id, Guardian.new(viewer)).map{|r| r["action_type"].to_i}.sort
     end
 
-    describe 'stream' do
+    def stream_count(viewer=nil)
+      UserAction.stream(user_id: user.id, guardian: Guardian.new(viewer)).count
+    end
 
-      it 'should have 1 item for non owners' do
-        UserAction.stream(user_id: user.id, guardian: Guardian.new).count.should == 1
-      end
+    it 'includes the events correctly' do
 
-      it 'should have bookmarks and pms for owners' do
-        UserAction.stream(user_id: user.id, guardian: user.guardian).count.should == 4
-      end
+      mystats = stats_for_user(user)
+      expecting = [UserAction::NEW_TOPIC, UserAction::NEW_PRIVATE_MESSAGE, UserAction::GOT_PRIVATE_MESSAGE, UserAction::BOOKMARK].sort
+      mystats.should == expecting
+      stream_count(user).should == 4
+
+      other_stats = stats_for_user
+      expecting = [UserAction::NEW_TOPIC]
+      stream_count.should == 1
+
+      other_stats.should == expecting
+
+      public_topic.trash!
+      stats_for_user.should == []
+      stream_count.should == 0
+
+      # groups
+
+      category = Fabricate(:category, secure: true)
+
+      public_topic.recover!
+      public_topic.category = category
+      public_topic.save
+
+      stats_for_user.should == []
+      stream_count.should == 0
+
+      group = Fabricate(:group)
+      u = Fabricate(:coding_horror)
+      group.add(u)
+      group.save
+
+      category.allow(group)
+      category.save
+
+      stats_for_user(u).should == [UserAction::NEW_TOPIC]
+      stream_count(u).should == 1
 
     end
-  end
-
-  it 'calls the message bus observer' do
-    MessageBusObserver.any_instance.expects(:after_create_user_action).with(instance_of(UserAction))
-    Fabricate(:user_action)
   end
 
   describe 'when user likes' do
@@ -108,13 +117,17 @@ describe UserAction do
         @likee_action = likee.user_actions.where(action_type: UserAction::WAS_LIKED).first
       end
 
-      it 'should create a like action on the liker' do
+      it 'should result in correct data assignment' do
         @liker_action.should_not be_nil
+        @likee_action.should_not be_nil
+        likee.reload.likes_received.should == 1
+        liker.reload.likes_given.should == 1
+
+        PostAction.remove_act(liker, post, PostActionType.types[:like])
+        likee.reload.likes_received.should == 0
+        liker.reload.likes_given.should == 0
       end
 
-      it 'should create a like action on the likee' do
-        @likee_action.should_not be_nil
-      end
     end
 
     context "liking a private message" do
@@ -143,14 +156,12 @@ describe UserAction do
       end
       it 'should exist' do
         @action.should_not be_nil
-      end
-      it 'shoule have the correct date' do
         @action.created_at.should be_within(1).of(@post.topic.created_at)
       end
     end
 
     it 'should not log a post user action' do
-      @post.user.user_actions.where(action_type: UserAction::POST).first.should be_nil
+      @post.user.user_actions.where(action_type: UserAction::REPLY).first.should be_nil
     end
 
 
@@ -161,30 +172,20 @@ describe UserAction do
         @response = Fabricate(:post, reply_to_post_number: 1, topic: @post.topic, user: @other_user, raw: "perhaps @#{@mentioned.username} knows how this works?")
       end
 
-      it 'should log a post action for the poster' do
-        @response.user.user_actions.where(action_type: UserAction::POST).first.should_not be_nil
-      end
-
-      it 'should log a post action for the original poster' do
+      it 'should log user actions correctly' do
+        @response.user.user_actions.where(action_type: UserAction::REPLY).first.should_not be_nil
         @post.user.user_actions.where(action_type: UserAction::RESPONSE).first.should_not be_nil
-      end
-
-      it 'should log a mention for the mentioned' do
         @mentioned.user_actions.where(action_type: UserAction::MENTION).first.should_not be_nil
+        @post.user.user_actions.joins(:target_post).where('posts.post_number = 2').count.should == 1
       end
 
       it 'should not log a double notification for a post edit' do
         @response.raw = "here it goes again"
         @response.save!
-        @response.user.user_actions.where(action_type: UserAction::POST).count.should == 1
-      end
-
-      it 'should not log topic reply and reply for a single post' do
-        @post.user.user_actions.joins(:target_post).where('posts.post_number = 2').count.should == 1
+        @response.user.user_actions.where(action_type: UserAction::REPLY).count.should == 1
       end
 
     end
-
   end
 
   describe 'when user bookmarks' do
@@ -195,21 +196,65 @@ describe UserAction do
       @action = @user.user_actions.where(action_type: UserAction::BOOKMARK).first
     end
 
-    it 'should create a bookmark action' do
+    it 'should create a bookmark action correctly' do
       @action.action_type.should == UserAction::BOOKMARK
-    end
-    it 'should point to the correct post' do
       @action.target_post_id.should == @post.id
-    end
-    it 'should have the right acting_user' do
       @action.acting_user_id.should == @user.id
-    end
-    it 'should target the correct user' do
       @action.user_id.should == @user.id
-    end
-    it 'should nuke the action when unbookmarked' do
+
       PostAction.remove_act(@user, @post, PostActionType.types[:bookmark])
       @user.user_actions.where(action_type: UserAction::BOOKMARK).first.should be_nil
+    end
+  end
+
+
+  describe 'private messages' do
+
+    let(:user) do
+      Fabricate(:user)
+    end
+
+    let(:target_user) do
+      Fabricate(:user)
+    end
+
+    let(:private_message) do
+      PostCreator.create( user,
+                          raw: 'this is a private message',
+                          title: 'this is the pm title',
+                          target_usernames: target_user.username,
+                          archetype: Archetype::private_message
+                        )
+    end
+
+    let!(:response) do
+      PostCreator.create(user, raw: 'oops I forgot to mention this', topic_id: private_message.topic_id)
+    end
+
+    let!(:private_message2) do
+      PostCreator.create( target_user,
+                          raw: 'this is a private message',
+                          title: 'this is the pm title',
+                          target_usernames: user.username,
+                          archetype: Archetype::private_message
+                        )
+    end
+
+    it 'should collapse the inbox correctly' do
+
+      stream = UserAction.private_message_stream(UserAction::GOT_PRIVATE_MESSAGE, user_id: target_user.id, guardian: Guardian.new(target_user))
+      # inbox should collapse this initial and reply message into one item
+      stream.count.should == 1
+
+
+      # outbox should also collapse
+      stream = UserAction.private_message_stream(UserAction::NEW_PRIVATE_MESSAGE, user_id: user.id, guardian: Guardian.new(user))
+      stream.count.should == 1
+
+      # anon should see nothing
+      stream = UserAction.private_message_stream(UserAction::NEW_PRIVATE_MESSAGE, user_id: user.id, guardian: Guardian.new(nil))
+      stream.count.should == 0
+
     end
   end
 end

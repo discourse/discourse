@@ -1,7 +1,12 @@
+# encoding: utf-8
 # This file contains content for the client portion of Discourse, sent out
 # to the Javascript app.
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
 
-en:
+
+id:
   js:
     share:
       topic: "Bagikan tautan ke topik ini"
@@ -47,7 +52,6 @@ en:
       "6": "Jawaban-jawaban"
 
     user:
-      information: "Informasi pengguna"
       profile: "Profil"
       title: "Pengguna"
       mute: "Diamkan"
@@ -85,39 +89,39 @@ en:
         frequency: "Kami hanya akan meng-email anda jika kami tidak melihat anda akhir-akhir ini dan anda belum melihat apa yang kami email."
 
       name:
-        title: "Name"
-        instructions: "The longer version of your name; does not need to be unique. Used for alternate @name matching and shown only on your user page."
-        too_short: "Your name is too short."
-        ok: "Your name looks good."
+        title: "Nama"
+        instructions: "Nama lengkap anda; tidak harus unik. Digunakan sebagai cara alternatif untuk mencocokkan @nama dan hanya akan ditampilkan di halaman pengguna anda."
+        too_short: "Nama anda terlalu pendek."
+        ok: "Nama anda kelihatannya ok."
       username:
-        title: "Username"
-        instructions: "People can mention you as @{{username}}."
-        available: "Your username is available."
-        global_match: "Email matches the registered username."
-        global_mismatch: "Already registered. Try {{suggestion}}?"
-        not_available: "Not available. Try {{suggestion}}?"
-        too_short: "Your username is too short."
-        too_long: "Your username is too long."
-        checking: "Checking username availability..."
-        enter_email: 'Username found. Enter matching email.'
+        title: "Nama Pengguna"
+        instructions: "Orang-orang dapat menyebut anda sebagai @{{username}}."
+        available: "Nama pengguna anda tersedia."
+        global_match: "Email cocok dengan nama pengguna yang terregistrasi."
+        global_mismatch: "Telah diregistrasi. Coba {{suggestion}}?"
+        not_available: "Tidak tersedia. Coba {{suggestion}}?"
+        too_short: "Nama pengguna anda terlalu pendek."
+        too_long: "Nama pengguna anda terlalu panjang."
+        checking: "Memeriksa apakah nama pengguna anda tersedia..."
+        enter_email: "Nama pengguna ditemukan. Masukkan email yang cocok."
 
-      last_posted: "Last Post"
-      last_emailed: "Last Emailed"
-      last_seen: "Last Seen"
-      created: "Created At"
+      last_posted: "Muatan Terakhir"
+      last_emailed: "Terakhir kali diemail"
+      last_seen: "Terakhir kali dilihat"
+      created: "Dibuat"
       log_out: "Log Out"
-      website: "Web Site"
+      website: "Situs Web"
       email_settings: "Email"
       email_digests:
-        title: "When I don't visit the site, send me an email digest of what's new"
-        daily: "daily"
-        weekly: "weekly"
-        bi_weekly: "every two weeks"
+        title: "Kalau saya tidak mengunjungi situs ini, kirimi saya arsip email tentang apa saja yang baru"
+        daily: "harian"
+        weekly: "mingguan"
+        bi_weekly: "dua minggu sekali"
 
       email_direct: "Receive an email when someone quotes you, replies to your post, or mentions your @username"
       email_private_messages: "Receive an email when someone sends you a private message"
 
-      other_settings: "Other"
+      other_settings: "Lain-lain"
 
       new_topic_duration:
         label: "Consider topics new when"
@@ -198,7 +202,7 @@ en:
       button: 'Switch to "Best Of" view'
 
     private_message_info:
-      title: "Private Conversation"
+      title: "Private Message"
       invite: "Invite Others..."
 
     email: 'Email'
@@ -236,23 +240,23 @@ en:
       resend_activation_email: "Click here to send the activation email again."
       sent_activation_email_again: "We sent another activation email to you at <b>{{currentEmail}}</b>. It might take a few minutes for it to arrive; be sure to check your spam folder."
       google:
-        title: "Log In with Google"
+        title: "with Google"
         message: "Authenticating with Google (make sure pop up blockers are not enabled)"
       twitter:
-        title: "Log In with Twitter"
+        title: "with Twitter"
         message: "Authenticating with Twitter (make sure pop up blockers are not enabled)"
       facebook:
-        title: "Log In with Facebook"
+        title: "with Facebook"
         message: "Authenticating with Facebook (make sure pop up blockers are not enabled)"
       yahoo:
-        title: "Log In with Yahoo"
+        title: "with Yahoo"
         message: "Authenticating with Yahoo (make sure pop up blockers are not enabled)"
       github:
-        title: "Log In with Github"
-        message: "Authenticating with Github (make sure pop up blockers are not enabled)"
+        title: "with GitHub"
+        message: "Authenticating with GitHub (make sure pop up blockers are not enabled)"
       persona:
-        title: "Log In with Mozilla Persona"
-        message: "Authenticating with Persona (make sure pop up blockers are not enabled)"
+        title: "with Persona"
+        message: "Authenticating with Mozilla Persona (make sure pop up blockers are not enabled)"
 
     composer:
       saving_draft_tip: "saving"
@@ -289,8 +293,8 @@ en:
       posted: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
       edited: "<i title='edited' class='icon icon-pencil'></i> {{username}} {{link}}"
       liked: "<i title='liked' class='icon icon-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='icon icon-lock' title='private message'></i> {{username}} sent you a private message: {{link}}"
-      invited_to_private_message: "{{username}} invited you to a private conversation: {{link}}"
+      private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} {{link}}"
+      invited_to_private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} {{link}}"
       invitee_accepted: "<i title='accepted your invitation' class='icon icon-signin'></i> {{username}} accepted your invitation"
       moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} moved post to {{link}}"
 
@@ -325,10 +329,10 @@ en:
         new: "You have no new topics to read."
         read: "You haven't read any topics yet."
         posted: "You haven't posted in any topics yet."
-        popular: "There are no popular topics. That's sad."
+        latest: "There are no latest topics. That's sad."
         category: "There are no {{category}} topics."
       bottom:
-        popular: "There are no more popular topics to read."
+        latest: "There are no more latest topics to read."
         posted: "There are no more posted topics to read."
         read: "There are no more read topics to read."
         new: "There are no more new topics to read."
@@ -340,7 +344,7 @@ en:
       create_in: 'Create {{categoryName}} Topic'
       create: 'Create Topic'
       create_long: 'Create a new Topic'
-      private_message: 'Start a private conversation'
+      private_message: 'Start a private message'
       list: 'Topics'
       new: 'new topic'
       title: 'Topic'
@@ -364,10 +368,11 @@ en:
       options: "Topic Options"
       show_links: "show links within this topic"
       toggle_information: "toggle topic details"
-      read_more_in_category: "Want to read more? Browse other topics in {{catLink}} or {{popularLink}}."
-      read_more: "Want to read more? {{catLink}} or {{popularLink}}."
+      read_more_in_category: "Want to read more? Browse other topics in {{catLink}} or {{latestLink}}."
+      read_more: "Want to read more? {{catLink}} or {{latestLink}}."
       browse_all_categories: Browse all categories
-      view_popular_topics: view popular topics
+
+      view_latest_topics: view latest topics
       suggest_create_topic: Why not create a topic?
       read_position_reset: "Your read position has been reset."
       jump_reply_up: jump to earlier reply
@@ -417,7 +422,7 @@ en:
         invisible: "Make Invisible"
         visible: "Make Visible"
         reset_read: "Reset Read Data"
-        multi_select: "Toggle Multi-Select"
+        multi_select: "Select for Merge/Split"
         convert_to_topic: "Convert to Regular Topic"
 
       reply:
@@ -431,15 +436,16 @@ en:
       inviting: "Inviting..."
 
       invite_private:
-        title: 'Invite to Private Conversation'
+        title: 'Invite to Private Message'
         email_or_username: "Invitee's Email or Username"
         email_or_username_placeholder: "email address or username"
         action: "Invite"
-        success: "Thanks! We've invited that user to participate in this private conversation."
+        success: "Thanks! We've invited that user to participate in this private message."
         error: "Sorry there was an error inviting that user."
 
       invite_reply:
         title: 'Invite Friends to Reply'
+        action: 'Email Invite'
         help: 'send invitations to friends so they can reply to this topic with a single click'
         email: "We'll send your friend a brief email allowing them to reply to this topic by clicking a link."
         email_placeholder: 'email address'
@@ -499,7 +505,7 @@ en:
         reply: "begin composing a reply to this post"
         like: "like this post"
         edit: "edit this post"
-        flag: "flag this post for moderator attention"
+        flag: "flag this post or send a notification about this post"
         delete: "delete this post"
         undelete: "undelete this post"
         share: "share a link to this post"
@@ -548,7 +554,7 @@ en:
       delete_confirm: "Are you sure you want to delete that category?"
       list: "List Categories"
       no_description: "There is no description for this category."
-      change_in_category_topic: "visit category topic to edit the description"
+      change_in_category_topic: "Edit Description"
 
     flagging:
       title: 'Why are you flagging this post?'
@@ -589,15 +595,15 @@ en:
     categories_list: "Categories List"
 
     filters:
-      popular:
-        title: "Popular"
-        help: "the most popular recent topics"
+      latest:
+        title: "Latest"
+        help: "the latest topics"
       favorited:
         title: "Favorited"
         help: "topics you marked as favorites"
       read:
         title: "Read"
-        help: "topics you've read"
+        help: "topics you've read, in the order that you last read them"
       categories:
         title: "Categories"
         title_in: "Category - {{categoryName}}"
@@ -613,7 +619,7 @@ en:
           zero: "New"
           one: "New (1)"
           other: "New ({{count}})"
-        help: "new topics since your last visit, and tracked topics with new posts"
+        help: "new topics since your last visit"
       posted:
         title: "My Posts"
         help: "topics you have posted in"
@@ -622,7 +628,7 @@ en:
           zero: "{{categoryName}}"
           one: "{{categoryName}} (1)"
           other: "{{categoryName}} ({{count}})"
-        help: "popular topics in the {{categoryName}} category"
+        help: "latest topics in the {{categoryName}} category"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
@@ -632,14 +638,13 @@ en:
       title: 'Discourse Admin'
 
       dashboard:
-        title: "Admin Dashboard"
+        title: "Dashboard"
         version: "Installed version"
         up_to_date: "You are running the latest version of Discourse."
         critical_available: "A critical update is available."
         updates_available: "Updates are available."
         please_upgrade: "Please upgrade!"
         latest_version: "Latest version"
-        update_often: 'Please update often!'
 
       flags:
         title: "Flags"
@@ -655,7 +660,7 @@ en:
         title: "Customize"
         header: "Header"
         css: "Stylesheet"
-        override_default: "Override default?"
+        override_default: "Do not include standard style sheet"
         enabled: "Enabled?"
         preview: "preview"
         undo_preview: "undo preview"
@@ -664,7 +669,7 @@ en:
         delete_confirm: "Delete this customization?"
 
       email_logs:
-        title: "Email Logs"
+        title: "Email"
         sent_at: "Sent At"
         email_type: "Email Type"
         to_address: "To Address"
@@ -710,7 +715,6 @@ en:
         grant_admin: 'Grant Admin'
         revoke_moderation: 'Revoke Moderation'
         grant_moderation: 'Grant Moderation'
-        basics: Basics
         reputation: Reputation
         permissions: Permissions
         activity: Activity
@@ -727,5 +731,5 @@ en:
 
       site_settings:
         show_overriden: 'Only show overridden'
-        title: 'Site Settings'
+        title: 'Settings'
         reset: 'reset to default'

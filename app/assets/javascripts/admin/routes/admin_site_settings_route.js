@@ -1,7 +1,7 @@
 /**
   Handles routes related to viewing and editing site settings.
 
-  @class AdminSiteSettingsRoute    
+  @class AdminSiteSettingsRoute
   @extends Discourse.Route
   @namespace Discourse
   @module Discourse
@@ -13,5 +13,5 @@ Discourse.AdminSiteSettingsRoute = Discourse.Route.extend({
 
   renderTemplate: function() {
     this.render('admin/templates/site_settings', {into: 'admin/templates/admin'});
-  }    
+  }
 });

@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe "users/omniauth_callbacks/complete.html.erb" do
   it "renders facebook data " do
-    assign(:data, {:username =>"username", :auth_provider=> "Facebook", :awaiting_activation=>true})
+    assign(:data, {username: "username", :auth_provider=> "Facebook", :awaiting_activation=>true})
 
     render
 
@@ -14,7 +14,7 @@ describe "users/omniauth_callbacks/complete.html.erb" do
   end
 
   it "renders twitter data " do
-    assign(:data, {:username =>"username", :auth_provider=>"Twitter", :awaiting_activation=>true})
+    assign(:data, {username: "username", :auth_provider=>"Twitter", :awaiting_activation=>true})
 
     render
 
@@ -27,7 +27,7 @@ describe "users/omniauth_callbacks/complete.html.erb" do
 
 
   it "renders openid data " do
-    assign(:data, {:username =>"username", :auth_provider=>"OpenId", :awaiting_activation=>true})
+    assign(:data, {username: "username", :auth_provider=>"OpenId", :awaiting_activation=>true})
 
     render
 
@@ -39,7 +39,7 @@ describe "users/omniauth_callbacks/complete.html.erb" do
   end
 
   it "renders github data " do
-    assign(:data, {:username =>"username", :auth_provider=>"Github", :awaiting_activation=>true})
+    assign(:data, {username: "username", :auth_provider=>"Github", :awaiting_activation=>true})
 
     render
 

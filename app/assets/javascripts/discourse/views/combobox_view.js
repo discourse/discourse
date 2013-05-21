@@ -12,7 +12,7 @@ Discourse.ComboboxView = Discourse.View.extend({
   valueAttribute: 'id',
 
   render: function(buffer) {
-    var selected, _ref,
+    var _ref,
       _this = this;
 
     // Add none option if required
@@ -20,7 +20,8 @@ Discourse.ComboboxView = Discourse.View.extend({
       buffer.push("<option value=\"\">" + (Ember.String.i18n(this.get('none'))) + "</option>");
     }
 
-    selected = (_ref = this.get('value')) ? _ref.toString() : void 0;
+    var selected = (_ref = this.get('value')) ? _ref.toString() : void 0;
+
     if (this.get('content')) {
       return this.get('content').each(function(o) {
         var data, selectedText, val, _ref1;
@@ -37,11 +38,36 @@ Discourse.ComboboxView = Discourse.View.extend({
     }
   },
 
+  valueChanged: function() {
+    var $combo = this.$();
+    var val = this.get('value');
+    if (val) {
+      $combo.val(this.get('value').toString());
+    } else {
+      $combo.val(null);
+    }
+    $combo.trigger("liszt:updated")
+  }.observes('value'),
+
   didInsertElement: function() {
     var $elem,
       _this = this;
     $elem = this.$();
     $elem.chosen({ template: this.template, disable_search_threshold: 5 });
+    if (this.overrideWidths) {
+      // The Chosen plugin hard-codes the widths in style attrs. :<
+      var $chznContainer = $elem.chosen().next();
+      $chznContainer.removeAttr("style");
+      $chznContainer.find('.chzn-drop').removeAttr("style");
+      $chznContainer.find('.chzn-search input').removeAttr("style");
+    }
+    if (this.classNames && this.classNames.length > 0) {
+      // Apply the classes to Chosen's dropdown div too:
+      this.classNames.each( function(c) {
+        $elem.chosen().next().addClass(c);
+      });
+    }
+
     $elem.change(function(e) {
       _this.set('value', $(e.target).val());
     });

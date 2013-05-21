@@ -1,6 +1,6 @@
 <div class="topic-list">
 <% @list.topics.each do |t| %>
-<a href="<%= t.relative_url %>"><%= t.title %></a> <span title='posts'>(<%= t.posts_count %>)</span><br/>
+<a href="<%= t.relative_url %>"><%= t.title %></a> <span title='<%= t 'posts' %>'>(<%= t.posts_count %>)</span><br/>
 <% end %>
 </div>
 
@@ -8,7 +8,7 @@
 <p><a href="<%= @list.more_topics_url.sub('.json?','?') %>"><%= t 'next_page'%></a></p>
 <% end %>
 
-<p><%= t 'powered_by' %></p>
+<p><%= t 'powered_by_html' %></p>
 
 <% if @category %>
   <% content_for :head do %>

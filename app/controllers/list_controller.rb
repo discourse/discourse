@@ -1,12 +1,11 @@
 class ListController < ApplicationController
 
-  before_filter :ensure_logged_in, except: [:index, :category, :category_feed]
+  before_filter :ensure_logged_in, except: [:latest, :hot, :category, :category_feed]
   skip_before_filter :check_xhr
 
   # Create our filters
-  [:popular, :favorited, :read, :posted, :unread, :new].each do |filter|
+  [:latest, :hot, :favorited, :read, :posted, :unread, :new].each do |filter|
     define_method(filter) do
-
       list_opts = {page: params[:page]}
 
       # html format means we need to farm exclude from the site options
@@ -14,7 +13,7 @@ class ListController < ApplicationController
         #TODO objectify this stuff
         SiteSetting.top_menu.split('|').each do |f|
           s = f.split(",")
-          if s[0] == action_name || (action_name == "index" && s[0] == "popular")
+          if s[0] == action_name || (action_name == "index" && s[0] == SiteSetting.homepage)
             list_opts[:exclude_category] = s[1][1..-1] if s.length == 2
           end
         end
@@ -27,15 +26,13 @@ class ListController < ApplicationController
       respond(list)
     end
   end
-  alias_method :index, :popular
 
   def category
-
     query = TopicQuery.new(current_user, page: params[:page])
     list = nil
 
     # If they choose uncategorized, return topics NOT in a category
-    if params[:category] == Slug.for(SiteSetting.uncategorized_name) || params[:category] == SiteSetting.uncategorized_name
+    if params[:category] == Slug.for(SiteSetting.uncategorized_name) or params[:category] == SiteSetting.uncategorized_name or params[:category] == 'null-category'
       list = query.list_uncategorized
     else
       @category = Category.where("slug = ? or id = ?", params[:category], params[:category].to_i).includes(:featured_users).first
@@ -58,6 +55,12 @@ class ListController < ApplicationController
       @topic_list = TopicQuery.new.list_new_in_category(@category)
       render 'list', formats: [:rss]
     end
+  end
+
+  def popular_redirect
+    # We've renamed popular to latest. Use a redirect until we're sure we can
+    # safely remove this.
+    redirect_to latest_path, :status => 301
   end
 
   protected

@@ -24,32 +24,43 @@ Discourse.ActionsHistoryView = Discourse.View.extend({
 
     if (!this.present('content')) return;
     return this.get('content').forEach(function(c) {
-      var alsoName;
+      var actionString, iconsHtml;
       buffer.push("<div class='post-action'>");
 
+      // TODO multi line expansion for flags
+      var postUrl;
       if (c.get('users')) {
+        iconsHtml = "";
         c.get('users').forEach(function(u) {
-          buffer.push("<a href=\"/users/" + (u.get('username_lower')) + "\">");
-          buffer.push(Discourse.Utilities.avatarImg({
+          iconsHtml += "<a href=\"" + Discourse.getURL("/users/") + (u.get('username_lower')) + "\">";
+          if (u.post_url) {
+            postUrl = postUrl || u.post_url;
+          }
+          iconsHtml += Discourse.Utilities.avatarImg({
             size: 'small',
             username: u.get('username'),
             avatarTemplate: u.get('avatar_template')
-          }));
-          return buffer.push("</a>");
+          });
+          iconsHtml += "</a>";
         });
-        buffer.push(" " + (c.get('actionType.long_form')) + ".");
+
+        var key = 'post.actions.people.' + c.get('actionType.name_key');
+        if(postUrl) {
+          key = key + "_with_url";
+        }
+        buffer.push(" " + Em.String.i18n(key, { icons: iconsHtml, postUrl: postUrl}) + ".");
       } else {
         buffer.push("<a href='#' data-who-acted='" + (c.get('id')) + "'>" + (c.get('description')) + "</a>.");
       }
 
-      if (c.get('can_act')) {
-        alsoName = Em.String.i18n("post.actions.it_too", { alsoName: c.get('actionType.alsoName') });
-        buffer.push(" <a href='#' data-act='" + (c.get('id')) + "'>" + alsoName + "</a>.");
+      if (c.get('can_act') && !c.get('actionType.is_custom_flag')) {
+        actionString = Em.String.i18n("post.actions.it_too." + c.get('actionType.name_key'));
+        buffer.push(" <a href='#' data-act='" + (c.get('id')) + "'>" + actionString + "</a>.");
       }
 
       if (c.get('can_undo')) {
-        alsoName = Em.String.i18n("post.actions.undo", { alsoName: c.get('actionType.alsoNameLower') });
-        buffer.push(" <a href='#' data-undo='" + (c.get('id')) + "'>" + alsoName + "</a>.");
+        actionString = Em.String.i18n("post.actions.undo." + c.get('actionType.name_key') );
+        buffer.push(" <a href='#' data-undo='" + (c.get('id')) + "'>" + actionString + "</a>.");
       }
 
       if (c.get('can_clear_flags')) {

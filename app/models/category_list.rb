@@ -3,12 +3,18 @@ class CategoryList
 
   attr_accessor :categories, :topic_users, :uncategorized
 
-  def initialize(current_user)
+  def initialize(guardian)
+    guardian ||= Guardian.new
+
     @categories = Category
-                    .includes(:featured_topics => [:category])
+                    .includes(featured_topics: [:category])
                     .includes(:featured_users)
-                    .order('topics_week desc, topics_month desc, topics_year desc')
-                    .to_a
+                    .where('topics.visible' => true)
+                    .secured(guardian)
+                    .order('categories.topics_week desc, categories.topics_month desc, categories.topics_year desc')
+
+
+    @categories = @categories.to_a
 
     # Support for uncategorized topics
     uncategorized_topics = Topic
@@ -31,6 +37,8 @@ class CategoryList
 
       uncategorized = Category.new({name: SiteSetting.uncategorized_name,
                                    slug: Slug.for(SiteSetting.uncategorized_name),
+                                   color: SiteSetting.uncategorized_color,
+                                   text_color: SiteSetting.uncategorized_text_color,
                                    featured_topics: uncategorized_topics}.merge(totals))
 
       # Find the appropriate place to insert it:
@@ -45,13 +53,20 @@ class CategoryList
       @categories.insert(insert_at || @categories.size, uncategorized)
     end
 
-    # Remove categories with no featured topics unless we have the ability to edit one
-    unless Guardian.new(current_user).can_create?(Category)
+    unless guardian.can_create?(Category)
+      # Remove categories with no featured topics unless we have the ability to edit one
       @categories.delete_if { |c| c.featured_topics.blank? }
+    else
+      # Show all categories to people who have the ability to edit and delete categories
+      if @categories.size > 0
+        @categories.insert(@categories.size, *Category.where('id not in (?)', @categories.map(&:id).compact).to_a)
+      else
+        @categories = Category.all.to_a
+      end
     end
 
     # Get forum topic user records if appropriate
-    if current_user.present?
+    if guardian.current_user
       topics = []
       @categories.each { |c| topics << c.featured_topics }
       topics << @uncategorized
@@ -59,7 +74,7 @@ class CategoryList
       topics.flatten! if topics.present?
       topics.compact! if topics.present?
 
-      topic_lookup = TopicUser.lookup_for(current_user, topics)
+      topic_lookup = TopicUser.lookup_for(guardian.current_user, topics)
 
       # Attach some data for serialization to each topic
       topics.each { |ft| ft.user_data = topic_lookup[ft.id] }

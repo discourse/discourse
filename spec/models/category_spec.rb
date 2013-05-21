@@ -3,7 +3,6 @@
 require 'spec_helper'
 
 describe Category do
-
   it { should validate_presence_of :user_id }
   it { should validate_presence_of :name }
 
@@ -19,14 +18,51 @@ describe Category do
   it { should have_many :category_featured_topics }
   it { should have_many :featured_topics }
 
-  describe "uncategorized name" do
+  describe "security" do
+    let(:category) { Fabricate(:category) }
+    let(:category_2) { Fabricate(:category) }
+    let(:user) { Fabricate(:user) }
+    let(:group) { Fabricate(:group) }
 
+    it "secures categories correctly" do
+      category.secure?.should be_false
+
+      category.deny(:all)
+      category.secure?.should be_true
+
+      category.allow(:all)
+      category.secure?.should be_false
+
+      user.secure_categories.should be_empty
+
+      group.add(user)
+      group.save
+
+      category.allow(group)
+      category.save
+
+      user.reload
+      user.secure_categories.should == [category]
+    end
+
+    it "lists all secured categories correctly" do
+      group.add(user)
+      category.allow(group)
+
+      Category.secured.should == [category]
+
+      category_2.allow(group)
+
+      Category.secured.should =~ [category, category_2]
+    end
+  end
+
+  describe "uncategorized name" do
     let(:category) { Fabricate.build(:category, name: SiteSetting.uncategorized_name) }
 
     it "is invalid to create a category with the reserved name" do
       category.should_not be_valid
     end
-
   end
 
   describe "short name" do
@@ -39,11 +75,9 @@ describe Category do
     it 'has one topic' do
       Topic.where(category_id: category.id).count.should == 1
     end
-
   end
 
   describe 'caching' do
-
     it "invalidates the site cache on creation" do
       Site.expects(:invalidate_cache).once
       Fabricate(:category)
@@ -63,62 +97,50 @@ describe Category do
   end
 
   describe 'non-english characters' do
-
     let(:category) { Fabricate(:category, name: "電車男") }
 
     it "creates a blank slug, this is OK." do
       category.slug.should be_blank
     end
-
   end
 
   describe 'after create' do
-
     before do
-      @category = Fabricate(:category)
+      @category = Fabricate(:category, name: 'Amazing Category')
       @topic = @category.topic
     end
 
-    it 'creates a slug' do
+    it 'is created correctly' do
       @category.slug.should == 'amazing-category'
-    end
 
-    it 'has a default description' do
+      @category.hotness.should == 5.0
+
       @category.description.should be_blank
-    end
 
-    it 'has one topic' do
       Topic.where(category_id: @category).count.should == 1
-    end
 
-    it 'creates a topic post' do
       @topic.should be_present
-    end
 
-    it 'points back to itself' do
       @topic.category.should == @category
-    end
 
-    it 'is an invisible topic' do
-      @topic.should_not be_visible
-    end
+      @topic.should be_visible
 
-    it 'is an undeletable topic' do
+      @topic.pinned_at.should be_present
+
       Guardian.new(@category.user).can_delete?(@topic).should be_false
-    end
 
-    it 'should have one post' do
       @topic.posts.count.should == 1
-    end
 
-    it 'should have a topic url' do
       @category.topic_url.should be_present
     end
 
-
+    describe "creating a new category with the same slug" do
+      it "should have a blank slug" do
+        Fabricate(:category, name: "Amazing Categóry").slug.should be_blank
+      end
+    end
 
     describe "trying to change the category topic's category" do
-
       before do
         @new_cat = Fabricate(:category, name: '2nd Category', user: @category.user)
         @topic.change_category(@new_cat.name)
@@ -126,22 +148,16 @@ describe Category do
         @category.reload
       end
 
-      it 'still has 0 forum topics' do
+      it 'does not cause changes' do
         @category.topic_count.should == 0
-      end
-
-      it "didn't change the category" do
         @topic.category.should == @category
-      end
-
-      it "didn't change the category's forum topic" do
         @category.topic.should == @topic
       end
+
     end
   end
 
   describe 'destroy' do
-
     before do
       @category = Fabricate(:category)
       @category_id = @category.id
@@ -149,46 +165,34 @@ describe Category do
       @category.destroy
     end
 
-    it 'deletes the category' do
+    it 'is deleted correctly' do
       Category.exists?(id: @category_id).should be_false
-    end
-
-    it 'deletes the forum topic' do
       Topic.exists?(id: @topic_id).should be_false
     end
-
   end
 
   describe 'update_stats' do
-
     before do
       @category = Fabricate(:category)
     end
 
     context 'with regular topics' do
-
       before do
         @category.topics << Fabricate(:topic, user: @category.user)
         Category.update_stats
         @category.reload
       end
 
-      it 'updates topics_week' do
+      it 'updates topic stats' do
         @category.topics_week.should == 1
-      end
-
-      it 'updates topics_month' do
         @category.topics_month.should == 1
-      end
-
-      it 'updates topics_year' do
         @category.topics_year.should == 1
+        @category.topic_count.should == 1
       end
 
     end
 
     context 'with deleted topics' do
-
       before do
         @category.topics << Fabricate(:deleted_topic,
                                       user: @category.user)
@@ -196,20 +200,13 @@ describe Category do
         @category.reload
       end
 
-      it 'does not count deleted topics for topics_week' do
+      it 'does not count deleted topics' do
         @category.topics_week.should == 0
-      end
-
-      it 'does not count deleted topics for topics_month' do
+        @category.topic_count.should == 0
         @category.topics_month.should == 0
-      end
-
-      it 'does not count deleted topics for topics_year' do
         @category.topics_year.should == 0
       end
 
     end
-
   end
-
 end

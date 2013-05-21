@@ -79,7 +79,7 @@ class UserActionObserver < ActiveRecord::Observer
     return if model.post_number == 1
 
     row = {
-        action_type: UserAction::POST,
+        action_type: UserAction::REPLY,
         user_id: model.user_id,
         acting_user_id: model.user_id,
         target_post_id: model.id,

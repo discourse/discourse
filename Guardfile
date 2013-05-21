@@ -1,17 +1,9 @@
-guard :spork, wait: 120 do
-  watch('config/application.rb')
-  watch('config/environment.rb')
-  watch(%r{^config/environments/.*\.rb$})
-  watch(%r{^config/initializers/.*\.rb$})
-  watch('Gemfile')
-  watch('Gemfile.lock')
-  watch('spec/spec_helper.rb') { :rspec }
-end
+require 'terminal-notifier-guard' if RUBY_PLATFORM.include?('darwin')
 
 phantom_path = File.expand_path('~/phantomjs/bin/phantomjs')
 phantom_path = nil unless File.exists?(phantom_path)
 
-jasmine_options = {:phantomjs_bin => phantom_path}
+jasmine_options = {:phantomjs_bin => phantom_path, :server_env => :test}
 
 if ENV['JASMINE_URL']
   jasmine_options[:jasmine_url] = ENV['JASMINE_URL']
@@ -36,23 +28,35 @@ guard 'jshint-on-rails', config_path: 'config/jshint.yml' do
   watch(%r{^spec/javascripts/.*\.js$})
 end
 
-guard 'rspec', :focus_on_failed => true, :cli => "--drb" do
-  watch(%r{^spec/.+_spec\.rb$})
-  watch(%r{^lib/(.+)\.rb$})     { |m| "spec/components/#{m[1]}_spec.rb" }
-  watch('spec/spec_helper.rb')  { "spec" }
+unless ENV["USING_AUTOSPEC"]
 
-  # Rails example
-  watch(%r{^app/(.+)\.rb$})                           { |m| "spec/#{m[1]}_spec.rb" }
-  watch(%r{^app/(.*)(\.erb|\.haml)$})                 { |m| "spec/#{m[1]}#{m[2]}_spec.rb" }
-  watch(%r{^app/controllers/(.+)_(controller)\.rb$})  { |m| "spec/#{m[2]}s/#{m[1]}_#{m[2]}_spec.rb" }
-  watch(%r{^spec/support/(.+)\.rb$})                  { "spec" }
-  watch('app/controllers/application_controller.rb')  { "spec/controllers" }
+  puts "Sam strongly recommends you Run: `bundle exec rake autospec` in favor of guard for specs, set USING_AUTOSPEC in .rvmrc to disable from Guard"
+  guard :spork, wait: 120 do
+    watch('config/application.rb')
+    watch('config/environment.rb')
+    watch(%r{^config/environments/.*\.rb$})
+    watch(%r{^config/initializers/.*\.rb$})
+    watch('Gemfile')
+    watch('Gemfile.lock')
+    watch('spec/spec_helper.rb') { :rspec }
+  end
 
-  # Capybara request specs
-  watch(%r{^app/views/(.+)/.*\.(erb|haml)$})          { |m| "spec/requests/#{m[1]}_spec.rb" }
+  guard 'rspec', :focus_on_failed => true, :cli => "--drb" do
+    watch(%r{^spec/.+_spec\.rb$})
+    watch(%r{^lib/(.+)\.rb$})     { |m| "spec/components/#{m[1]}_spec.rb" }
+    watch('spec/spec_helper.rb')  { "spec" }
 
+    # Rails example
+    watch(%r{^app/(.+)\.rb$})                           { |m| "spec/#{m[1]}_spec.rb" }
+    watch(%r{^app/(.*)(\.erb|\.haml)$})                 { |m| "spec/#{m[1]}#{m[2]}_spec.rb" }
+    watch(%r{^app/controllers/(.+)_(controller)\.rb$})  { |m| "spec/#{m[2]}s/#{m[1]}_#{m[2]}_spec.rb" }
+    watch(%r{^spec/support/(.+)\.rb$})                  { "spec" }
+    watch('app/controllers/application_controller.rb')  { "spec/controllers" }
+
+    # Capybara request specs
+    watch(%r{^app/views/(.+)/.*\.(erb|haml)$})          { |m| "spec/requests/#{m[1]}_spec.rb" }
+  end
 end
-
 
 module ::Guard
   class AutoReload < ::Guard::Guard

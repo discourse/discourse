@@ -3,6 +3,15 @@ require 'spec_helper'
 describe PostsController do
 
 
+  describe 'short_link' do
+    it 'logs the incoming link once' do
+      IncomingLink.expects(:add).once.returns(true)
+      p = Fabricate(:post)
+      get :short_link, post_id: p.id, user_id: 999
+      response.should be_redirect
+    end
+  end
+
   describe 'show' do
 
     let(:post) { Fabricate(:post, user: log_in) }
@@ -21,7 +30,7 @@ describe PostsController do
     context "deleted post" do
 
       before do
-        post.destroy
+        post.trash!
       end
 
       it "can't find deleted posts as an anonymous user" do
@@ -85,8 +94,10 @@ describe PostsController do
         response.should be_forbidden
       end
 
-      it "calls delete_by" do
-        Post.any_instance.expects(:delete_by).with(user)
+      it "uses a PostDestroyer" do
+        destroyer = mock
+        PostDestroyer.expects(:new).with(user, post).returns(destroyer)
+        destroyer.expects(:destroy)
         xhr :delete, :destroy, id: post.id
       end
 
@@ -110,7 +121,7 @@ describe PostsController do
       end
 
       it "calls recover" do
-        Post.any_instance.expects(:recover)
+        Post.any_instance.expects(:recover!)
         xhr :put, :recover, post_id: post.id
       end
 
@@ -261,6 +272,31 @@ describe PostsController do
         xhr :post, :create, post: {raw: 'test'}
         ::JSON.parse(response.body).should be_present
       end
+
+      context "errors" do
+
+        let(:post_with_errors) { Fabricate.build(:post, user: user)}
+
+        before do
+          post_with_errors.errors.add(:base, I18n.t(:spamming_host))
+          PostCreator.any_instance.stubs(:errors).returns(post_with_errors.errors)
+          PostCreator.any_instance.expects(:create).returns(post_with_errors)
+        end
+
+        it "does not succeed" do
+          xhr :post, :create, post: {raw: 'test'}
+          User.any_instance.expects(:flag_linked_posts_as_spam).never
+          response.should_not be_success
+        end
+
+        it "it triggers flag_linked_posts_as_spam when the post creator returns spam" do
+          PostCreator.any_instance.expects(:spam?).returns(true)
+          User.any_instance.expects(:flag_linked_posts_as_spam)
+          xhr :post, :create, post: {raw: 'test'}
+        end
+
+      end
+
 
       context "parameters" do
 

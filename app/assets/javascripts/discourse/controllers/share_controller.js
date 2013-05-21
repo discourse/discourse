@@ -8,6 +8,8 @@
 **/
 Discourse.ShareController = Discourse.Controller.extend({
 
+  needs: ['topic'],
+
   // When the user clicks the post number, we pop up a share box
   shareLink: function(e, url) {
     var x;
@@ -27,7 +29,21 @@ Discourse.ShareController = Discourse.Controller.extend({
   close: function() {
     this.set('link', '');
     return false;
+  },
+
+  shareLinks: function() {
+    return Discourse.SiteSettings.share_links.split('|').map(function(i) {
+      if( Discourse.ShareLink.supportedTargets.indexOf(i) >= 0 ) {
+        return Discourse.ShareLink.create({target: i, link: this.get('link'), topicTitle: this.get('controllers.topic.title')});
+      } else {
+        return null;
+      }
+    }, this).compact();
+  }.property('link'),
+
+  sharePopup: function(target, url) {
+    window.open(url, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=600,height=' + Discourse.ShareLink.popupHeight(target));
+    return false;
   }
+
 });
-
-

@@ -1,4 +1,14 @@
-/*global humaneDate:true */
+/**
+  Allows us to supply bindings without "binding" to a helper.
+**/
+function normalizeHash(hash, hashTypes) {
+  for (var prop in hash) {
+    if (hashTypes[prop] === 'ID') {
+      hash[prop + 'Binding'] = hash[prop];
+      delete hash[prop];
+    }
+  }
+}
 
 /**
   Breaks up a long string
@@ -59,6 +69,37 @@ Handlebars.registerHelper('categoryLink', function(property, options) {
 });
 
 /**
+  Inserts a Discourse.TextField to allow the user to enter information.
+
+  @method textField
+  @for Handlebars
+**/
+Ember.Handlebars.registerHelper('textField', function(options) {
+  var hash = options.hash,
+      types = options.hashTypes;
+
+  normalizeHash(hash, types);
+
+  return Ember.Handlebars.helpers.view.call(this, Discourse.TextField, options);
+});
+
+/**
+  Inserts a Discourse.InputTipView
+
+  @method inputTip
+  @for Handlebars
+**/
+Ember.Handlebars.registerHelper('inputTip', function(options) {
+  var hash = options.hash,
+      types = options.hashTypes;
+
+  normalizeHash(hash, types);
+
+  return Ember.Handlebars.helpers.view.call(this, Discourse.InputTipView, options);
+});
+
+
+/**
   Produces a bound link to a category
 
   @method boundCategoryLink
@@ -75,8 +116,7 @@ Ember.Handlebars.registerBoundHelper('boundCategoryLink', function(category) {
   @for Handlebars
 **/
 Handlebars.registerHelper('titledLinkTo', function(name, object) {
-  var options;
-  options = [].slice.call(arguments, -1)[0];
+  var options = [].slice.call(arguments, -1)[0];
   if (options.hash.titleKey) {
     options.hash.title = Em.String.i18n(options.hash.titleKey);
   }
@@ -133,24 +173,39 @@ Handlebars.registerHelper('avatar', function(user, options) {
     user = Ember.Handlebars.get(this, user, options);
   }
 
-  var username = Em.get(user, 'username');
-  if (!username) username = Em.get(user, options.hash.usernamePath);
+  if( user ) {
+    var username = Em.get(user, 'username');
+    if (!username) username = Em.get(user, options.hash.usernamePath);
 
-  var avatarTemplate = Ember.get(user, 'avatar_template');
-  if (!avatarTemplate) avatarTemplate = Em.get(user, 'user.avatar_template');
+    var avatarTemplate = Ember.get(user, 'avatar_template');
+    if (!avatarTemplate) avatarTemplate = Em.get(user, 'user.avatar_template');
 
-  var title;
-  if (!options.hash.ignoreTitle) {
-    title = Em.get(user, 'title') || Em.get(user, 'description');
+    var title;
+    if (!options.hash.ignoreTitle) {
+      // first try to get a title
+      title = Em.get(user, 'title');
+      // if there was no title provided
+      if (!title) {
+        // try to retrieve a description
+        var description = Em.get(user, 'description');
+        // if a description has been provided
+        if (description && description.length > 0) {
+          // preprend the username before the description
+          title = username + " - " + description;
+        }
+      }
+    }
+
+    return new Handlebars.SafeString(Discourse.Utilities.avatarImg({
+      size: options.hash.imageSize,
+      extraClasses: Em.get(user, 'extras') || options.hash.extraClasses,
+      username: username,
+      title: title || username,
+      avatarTemplate: avatarTemplate
+    }));
+  } else {
+    return '';
   }
-
-  return new Handlebars.SafeString(Discourse.Utilities.avatarImg({
-    size: options.hash.imageSize,
-    extraClasses: Em.get(user, 'extras') || options.hash.extraClasses,
-    username: username,
-    title: title || username,
-    avatarTemplate: avatarTemplate
-  }));
 });
 
 /**
@@ -162,7 +217,7 @@ Handlebars.registerHelper('avatar', function(user, options) {
 Handlebars.registerHelper('unboundDate', function(property, options) {
   var dt;
   dt = new Date(Ember.Handlebars.get(this, property, options));
-  return dt.format("{d} {Mon}, {yyyy} {hh}:{mm}");
+  return dt.format("long");
 });
 
 /**
@@ -176,10 +231,34 @@ Handlebars.registerHelper('editDate', function(property, options) {
   dt = Date.create(Ember.Handlebars.get(this, property, options));
   yesterday = new Date() - (60 * 60 * 24 * 1000);
   if (yesterday > dt.getTime()) {
-    return dt.format("{d} {Mon}, {yyyy} {hh}:{mm}");
+    return dt.format("long");
   } else {
-    return humaneDate(dt);
+    return dt.relative();
   }
+});
+
+/**
+  Displays a percentile based on a `percent_rank` field
+
+  @method percentile
+  @for Ember.Handlebars
+**/
+Ember.Handlebars.registerHelper('percentile', function(property, options) {
+  var percentile = Ember.Handlebars.get(this, property, options);
+  return Math.round((1.0 - percentile) * 100)
+});
+
+/**
+  Displays a float nicely
+
+  @method float
+  @for Ember.Handlebars
+**/
+Ember.Handlebars.registerHelper('float', function(property, options) {
+  var x = Ember.Handlebars.get(this, property, options);
+  if (!x) return "0";
+  if (Math.round(x) === x) return x;
+  return x.toFixed(3)
 });
 
 /**
@@ -215,7 +294,7 @@ Handlebars.registerHelper('number', function(property, options) {
   @for Handlebars
 **/
 Handlebars.registerHelper('date', function(property, options) {
-  var displayDate, dt, fiveDaysAgo, fullReadable, humanized, leaveAgo, val;
+  var displayDate, dt, fiveDaysAgo, oneMinuteAgo, fullReadable, humanized, leaveAgo, val;
   if (property.hash) {
     if (property.hash.leaveAgo) {
       leaveAgo = property.hash.leaveAgo === "true";
@@ -229,23 +308,26 @@ Handlebars.registerHelper('date', function(property, options) {
     return new Handlebars.SafeString("&mdash;");
   }
   dt = new Date(val);
-  fullReadable = dt.format("{d} {Mon}, {yyyy} {hh}:{mm}");
+  fullReadable = dt.format("long");
   displayDate = "";
   fiveDaysAgo = (new Date()) - 432000000;
-  if (fiveDaysAgo > (dt.getTime())) {
+  oneMinuteAgo = (new Date()) - 60000;
+  if (oneMinuteAgo <= dt.getTime() && dt.getTime() <= (new Date())) {
+    displayDate = Em.String.i18n("now");
+  } else if (fiveDaysAgo > (dt.getTime())) {
     if ((new Date()).getFullYear() !== dt.getFullYear()) {
-      displayDate = dt.format("{d} {Mon} '{yy}");
+      displayDate = dt.format("short");
     } else {
-      displayDate = dt.format("{d} {Mon}");
+      displayDate = dt.format("short_no_year");
     }
   } else {
-    humanized = humaneDate(dt);
+    humanized = dt.relative();
     if (!humanized) {
       return "";
     }
     displayDate = humanized;
     if (!leaveAgo) {
-      displayDate = displayDate.replace(' ago', '');
+        displayDate = (dt.millisecondsAgo()).duration();
     }
   }
   return new Handlebars.SafeString("<span class='date' title='" + fullReadable + "'>" + displayDate + "</span>");
@@ -268,5 +350,3 @@ Handlebars.registerHelper('personalizedName', function(property, options) {
   }
   return Em.String.i18n('you');
 });
-
-

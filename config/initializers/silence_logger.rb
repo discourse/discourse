@@ -24,4 +24,4 @@ class SilenceLogger < Rails::Rack::Logger
 end
 
 silenced = ["/mini-profiler-resources/results", "/mini-profiler-resources/includes.js", "/mini-profiler-resources/includes.css", "/mini-profiler-resources/jquery.tmpl.js"]
-Rails.configuration.middleware.swap Rails::Rack::Logger, SilenceLogger, :silenced => silenced
+Rails.configuration.middleware.swap Rails::Rack::Logger, SilenceLogger, silenced: silenced

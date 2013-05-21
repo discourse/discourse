@@ -14,15 +14,21 @@ class TopicsController < ApplicationController
                                           :mute,
                                           :unmute,
                                           :set_notifications,
-                                          :move_posts]
+                                          :move_posts,
+                                          :merge_topic,
+                                          :clear_pin,
+                                          :autoclose]
+
   before_filter :consider_user_for_promotion, only: :show
 
   skip_before_filter :check_xhr, only: [:avatar, :show, :feed]
-  caches_action :avatar, :cache_path => Proc.new {|c| "#{c.params[:post_number]}-#{c.params[:topic_id]}" }
-
+  caches_action :avatar, cache_path: Proc.new {|c| "#{c.params[:post_number]}-#{c.params[:topic_id]}" }
 
   def show
-    create_topic_view
+    opts = params.slice(:username_filters, :best_of, :page, :post_number, :posts_before, :posts_after, :best)
+    @topic_view = TopicView.new(params[:id] || params[:topic_id], current_user, opts)
+
+    raise Discourse::NotFound unless @topic_view.posts.present? || (request.format && request.format.json?)
 
     anonymous_etag(@topic_view.topic) do
       redirect_to_correct_topic && return if slugs_do_not_match
@@ -54,7 +60,20 @@ class TopicsController < ApplicationController
       topic.change_category(params[:category])
     end
 
-    render nothing: true
+    # this is used to return the title to the client as it may have been
+    # changed by "TextCleaner"
+    render_serialized(topic, BasicTopicSerializer)
+  end
+
+  def similar_to
+    requires_parameters(:title, :raw)
+    title, raw = params[:title], params[:raw]
+
+    raise Discourse::InvalidParameters.new(:title) if title.length < SiteSetting.min_title_similar_length
+    raise Discourse::InvalidParameters.new(:raw) if raw.length < SiteSetting.min_body_similar_length
+
+    topics = Topic.similar_to(title, raw)
+    render_serialized(topics, BasicTopicSerializer)
   end
 
   def status
@@ -83,10 +102,20 @@ class TopicsController < ApplicationController
     toggle_mute(false)
   end
 
+  def autoclose
+    requires_parameter(:auto_close_days)
+    @topic = Topic.where(id: params[:topic_id].to_i).first
+    guardian.ensure_can_moderate!(@topic)
+    @topic.auto_close_days = params[:auto_close_days]
+    @topic.auto_close_user = current_user
+    @topic.save
+    render nothing: true
+  end
+
   def destroy
     topic = Topic.where(id: params[:id]).first
     guardian.ensure_can_delete!(topic)
-    topic.destroy
+    topic.trash!
     render nothing: true
   end
 
@@ -112,31 +141,52 @@ class TopicsController < ApplicationController
     render json: success_json
   end
 
-  def move_posts
-    requires_parameters(:title, :post_ids)
+  def merge_topic
+    requires_parameters(:destination_topic_id)
+
     topic = Topic.where(id: params[:topic_id]).first
     guardian.ensure_can_move_posts!(topic)
 
-    # Move the posts
-    new_topic = topic.move_posts(current_user, params[:title], params[:post_ids].map {|p| p.to_i})
-
-    if new_topic.present?
-      render json: {success: true, url: new_topic.relative_url}
+    dest_topic = topic.move_posts(current_user, topic.posts.pluck(:id), destination_topic_id: params[:destination_topic_id].to_i)
+    if dest_topic.present?
+      render json: {success: true, url: dest_topic.relative_url}
     else
       render json: {success: false}
     end
   end
 
+  def move_posts
+    requires_parameters(:post_ids)
+
+    topic = Topic.where(id: params[:topic_id]).first
+    guardian.ensure_can_move_posts!(topic)
+
+    args = {}
+    args[:title] = params[:title] if params[:title].present?
+    args[:destination_topic_id] = params[:destination_topic_id].to_i if params[:destination_topic_id].present?
+
+    dest_topic = topic.move_posts(current_user, params[:post_ids].map {|p| p.to_i}, args)
+    if dest_topic.present?
+      render json: {success: true, url: dest_topic.relative_url}
+    else
+      render json: {success: false}
+    end
+  end
+
+  def clear_pin
+    topic = Topic.where(id: params[:topic_id].to_i).first
+    guardian.ensure_can_see!(topic)
+    topic.clear_pin_for(current_user)
+    render nothing: true
+  end
+
   def timings
-
     PostTiming.process_timings(
-        current_user,
-        params[:topic_id].to_i,
-        params[:highest_seen].to_i,
-        params[:topic_time].to_i,
-        (params[:timings] || []).map{|post_number, t| [post_number.to_i, t.to_i]}
+      current_user,
+      params[:topic_id].to_i,
+      params[:topic_time].to_i,
+      (params[:timings] || []).map{|post_number, t| [post_number.to_i, t.to_i]}
     )
-
     render nothing: true
   end
 
@@ -148,11 +198,6 @@ class TopicsController < ApplicationController
   end
 
   private
-
-  def create_topic_view
-    opts = params.slice(:username_filters, :best_of, :page, :post_number, :posts_before, :posts_after)
-    @topic_view = TopicView.new(params[:id] || params[:topic_id], current_user, opts)
-  end
 
   def toggle_mute(v)
     @topic = Topic.where(id: params[:topic_id].to_i).first

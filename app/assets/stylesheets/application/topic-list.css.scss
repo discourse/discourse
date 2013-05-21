@@ -15,6 +15,7 @@
   }
   .btn {
     float: right;
+    margin-left: 8px;
   }
 }
 
@@ -46,8 +47,12 @@
     &:nth-child(even) {
       background-color: darken($white, 2%);
     }
-    &.archived {
+    &.archived a {
       opacity: 0.6;
+    }
+    &.has-excerpt .star {
+      vertical-align: top;
+      margin-top: 2px;
     }
   }
   th,
@@ -97,7 +102,31 @@
   .main-link {
     width: 515px;
     font-size: 16px;
+
+    i.score {
+      color: green;
+      cursor: pointer;
+    }
   }
+
+  .topic-excerpt {
+    font-size: 14px;
+    margin-top: 8px;
+    color: $dark_gray;
+  }
+
+  .rank-details {
+    background-color: #eee;
+    padding: 6px;
+    margin-bottom: 5px;
+
+    p {
+      font-size: 12px;
+      margin: 0;
+      line-height: 14px;
+    }
+  }
+
   @include medium-width {
     .main-link {
       width: 400px;

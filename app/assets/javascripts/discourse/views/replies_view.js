@@ -13,14 +13,13 @@ Discourse.RepliesView = Ember.CollectionView.extend({
   itemViewClass: Discourse.EmbeddedPostView,
 
   repliesShown: (function() {
-    var $this;
-    $this = this.$();
+    var $this = this.$();
     if (this.get('parentView.repliesShown')) {
-      Em.run.next(function() {
+      Em.run.schedule('afterRender', function() {
         $this.slideDown();
       });
     } else {
-      Em.run.next(function() {
+      Em.run.schedule('afterRender', function() {
         $this.slideUp();
       });
     }

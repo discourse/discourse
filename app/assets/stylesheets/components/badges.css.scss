@@ -76,3 +76,17 @@
     color: $badge-posts-color;
   }
 }
+
+// Group badge
+// --------------------------------------------------
+
+.badge-group {
+  @extend %badge;
+  padding: 3px 2px 3px 8px;
+  color: $black;
+  text-shadow: 0 1px 0 rgba($white, 0.2);
+  background-color: #ddd;
+  border-color: #aaa;
+  font-size: 12px;
+  @include box-shadow(inset 0 1px 0 rgba($white, 0.52));
+}

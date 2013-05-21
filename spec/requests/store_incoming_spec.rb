@@ -30,13 +30,7 @@ describe "Stores incoming links" do
     before do
       get topic.relative_url + "/1", nil, {'HTTP_REFERER' => "http://google.com/search"}
       @last_link = IncomingLink.last
-    end
-
-    it 'should have the proper topic_id' do
       @last_link.topic_id.should == topic.id
-    end
-
-    it 'should have the proper topic_id' do
       @last_link.post_number.should == 1
     end
 

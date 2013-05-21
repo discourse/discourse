@@ -42,9 +42,15 @@ PostActionType.seed do |s|
 end
 
 PostActionType.seed do |s|
-  s.id = PostActionType.types[:custom_flag]
-  s.name_key = 'custom_flag'
+  s.id = PostActionType.types[:notify_user]
+  s.name_key = 'notify_user'
   s.is_flag = true
   s.position = 7
 end
 
+PostActionType.seed do |s|
+  s.id = PostActionType.types[:notify_moderators]
+  s.name_key = 'notify_moderators'
+  s.is_flag = true
+  s.position = 8
+end

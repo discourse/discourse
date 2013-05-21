@@ -28,7 +28,7 @@
   .star {
     height: 40px;
     font-size: 20px !important;
-    line-height: 40px !important;
+    line-height: 36px !important;
     vertical-align: top;
   }
   .topic-statuses {
@@ -48,7 +48,7 @@
       vertical-align: top;
     }
   }
-  .badge-category {
+  h1 > .badge-category {
     margin-top: 5px;
     vertical-align: top;
   }
@@ -71,6 +71,16 @@
   .chzn-container {
     margin: 6px 0;
   }
+  .category-combobox {
+    width: 330px;
+    .chzn-drop {
+      left: -9000px;
+      width: 328px;
+    }
+    .chzn-search input {
+      width: 278px;
+    }
+  }
   button {
     margin: 8px 0;
     vertical-align: top;
@@ -84,6 +94,9 @@
 
 #topic-title {
   margin-bottom: 14px;
+  #edit-title {
+    width: 350px;
+  }
 }
 
 // App header
@@ -111,6 +124,7 @@
   position: fixed;
   width: 100%;
   font-size: 15px;
+  z-index: 495
 }
 
 #main {
@@ -234,12 +248,11 @@
     color: $white;
     font-weight: bold;
     font-size: 14px;
-    padding: 2px 9px 5px 9px;
+    padding: 5px 9px 5px 9px;
     text-decoration: none;
     border: 5px solid rgba(0, 0, 0, 0.75);
     top: 10px;
     left: 10px;
-    z-index: 99999;
     position: absolute;
     display: none;
     @include border-radius-all(4px);
@@ -289,7 +302,6 @@
         font-weight: normal;
         float: left;
         display: inline;
-        margin-right: 10px;
       }
     }
     ul.dropdown-menu {
@@ -316,6 +328,10 @@
         margin-right: 5px;
       }
     }
+  }
+
+  #topic-closing-info {
+    margin-left: 103px;
   }
 }
 
@@ -362,6 +378,7 @@ kbd {
 #topic-progress-wrapper.docked {
   #topic-progress {
     border-bottom: 1px solid $gray;
+    margin-left: 6px;
   }
   position: absolute;
 }
@@ -438,7 +455,12 @@ kbd {
 .private_message .participants .user {
   float: left;
   display: block;
+  line-height: 35px;
   margin-right: 15px;
+  margin-top: 8px;
+  &.group {
+    color: black;
+  }
 }
 
 .posts-wrapper .spinner {

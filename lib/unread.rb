@@ -27,7 +27,7 @@ class Unread
   protected
 
   def do_not_notify?(notification_level)
-    [TopicUser::NotificationLevel::MUTED, TopicUser::NotificationLevel::REGULAR].include?(notification_level)
+    [TopicUser.notification_levels[:muted], TopicUser.notification_levels[:regular]].include?(notification_level)
   end
 
 end

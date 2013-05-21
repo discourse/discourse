@@ -1,3 +1,5 @@
+require_dependency 'user_destroyer'
+
 class Admin::UsersController < Admin::AdminController
 
   def index
@@ -8,7 +10,13 @@ class Admin::UsersController < Admin::AdminController
       @users = User.order("created_at DESC, username")
     end
 
-    @users = @users.where('approved = false') if params[:query] == 'pending'
+    if ['newuser', 'basic', 'regular', 'leader', 'elder'].include?(params[:query])
+      @users = @users.where('trust_level = ?', TrustLevel.levels[params[:query].to_sym])
+    end
+
+    @users = @users.where('admin = ?', true)      if params[:query] == 'admins'
+    @users = @users.where('moderator = ?', true)  if params[:query] == 'moderators'
+    @users = @users.where('approved = false')     if params[:query] == 'pending'
     @users = @users.where('username_lower like :filter or email like :filter', filter: "%#{params[:filter]}%") if params[:filter].present?
     @users = @users.take(100)
     render_serialized(@users, AdminUserSerializer)
@@ -25,6 +33,7 @@ class Admin::UsersController < Admin::AdminController
     @user.delete_all_posts!(guardian)
     render nothing: true
   end
+
   def ban
     @user = User.where(id: params[:user_id]).first
     guardian.ensure_can_ban!(@user)
@@ -48,35 +57,34 @@ class Admin::UsersController < Admin::AdminController
   def refresh_browsers
     @user = User.where(id: params[:user_id]).first
     MessageBus.publish "/file-change", ["refresh"], user_ids: [@user.id]
+    render nothing: true
   end
 
   def revoke_admin
     @admin = User.where(id: params[:user_id]).first
     guardian.ensure_can_revoke_admin!(@admin)
-    @admin.update_column(:admin, false)
+    @admin.revoke_admin!
     render nothing: true
   end
 
   def grant_admin
     @user = User.where(id: params[:user_id]).first
     guardian.ensure_can_grant_admin!(@user)
-    @user.update_column(:admin, true)
+    @user.grant_admin!
     render_serialized(@user, AdminUserSerializer)
   end
 
   def revoke_moderation
     @moderator = User.where(id: params[:user_id]).first
     guardian.ensure_can_revoke_moderation!(@moderator)
-    @moderator.change_trust_level(:advanced)
-    @moderator.save
+    @moderator.revoke_moderation!
     render nothing: true
   end
 
   def grant_moderation
     @user = User.where(id: params[:user_id]).first
     guardian.ensure_can_grant_moderation!(@user)
-    @user.change_trust_level(:moderator)
-    @user.save
+    @user.grant_moderation!
     render_serialized(@user, AdminUserSerializer)
   end
 
@@ -94,5 +102,28 @@ class Admin::UsersController < Admin::AdminController
     render nothing: true
   end
 
-end
+  def activate
+    @user = User.where(id: params[:user_id]).first
+    guardian.ensure_can_activate!(@user)
+    @user.activate
+    render nothing: true
+  end
 
+  def deactivate
+    @user = User.where(id: params[:user_id]).first
+    guardian.ensure_can_deactivate!(@user)
+    @user.deactivate
+    render nothing: true
+  end
+
+  def destroy
+    user = User.where(id: params[:id]).first
+    guardian.ensure_can_delete_user!(user)
+    if UserDestroyer.new(current_user).destroy(user)
+      render json: {deleted: true}
+    else
+      render json: {deleted: false, user: AdminDetailedUserSerializer.new(user, root: false).as_json}
+    end
+  end
+
+end

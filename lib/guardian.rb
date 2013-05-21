@@ -12,7 +12,11 @@ class Guardian
   end
 
   def is_admin?
-    !@user.nil? && @user.admin?
+    @user && @user.admin?
+  end
+
+  def is_staff?
+    @user && @user.staff?
   end
 
   # Can the user see the object?
@@ -50,10 +54,11 @@ class Guardian
   def can_moderate?(obj)
     return false if obj.blank?
     return false if @user.blank?
-    @user.has_trust_level?(:moderator)
+    @user.staff?
   end
   alias :can_move_posts? :can_moderate?
   alias :can_see_flags? :can_moderate?
+  alias :can_send_activation_email? :can_moderate?
 
   # Can the user create a topic in the forum
   def can_create?(klass, parent=nil)
@@ -99,20 +104,20 @@ class Guardian
     return false if target.blank?
     return false if @user.blank?
     return false if target.approved?
-    @user.has_trust_level?(:moderator)
+    @user.staff?
   end
+  alias :can_activate? :can_approve?
 
   def can_ban?(user)
-    return false if user.blank?
-    return false unless @user.try(:admin?)
-    return false if user.admin?
-    true
+    is_staff? && user && !user.staff?
   end
+
+  alias :can_deactivate? :can_ban?
 
   def can_clear_flags?(post)
     return false if @user.blank?
     return false if post.blank?
-    @user.has_trust_level?(:moderator)
+    @user.staff?
   end
 
   def can_revoke_admin?(admin)
@@ -132,25 +137,31 @@ class Guardian
   end
 
   def can_revoke_moderation?(moderator)
-    return false unless @user.try(:admin?)
+    return false unless is_admin?
     return false if moderator.blank?
-    return false if @user.id == moderator.id
-    return false unless moderator.trust_level == TrustLevel.levels[:moderator]
+    return false if @user.id == moderator.id && !is_admin?
+    return false unless moderator.moderator?
     true
   end
 
   def can_grant_moderation?(user)
-    return false unless @user.try(:admin?)
-    return false if user.blank?
-    return false if @user.id == user.id
-    return false if user.admin?
-    return false if user.has_trust_level?(:moderator)
+    return false unless is_admin?
+    return false unless user
+    return false if @user.id == user.id && !is_admin?
+    return false if user.moderator?
+    true
+  end
+
+  def can_delete_user?(user_to_delete)
+    return false unless is_admin?
+    return false unless user_to_delete
+    return false if user_to_delete.post_count > 0
     true
   end
 
   # Can we see who acted on a post in a particular way?
   def can_see_post_actors?(topic, post_action_type_id)
-    return false unless topic.present?
+    return false unless topic
 
     type_symbol = PostActionType.types[post_action_type_id]
     return false if type_symbol == :bookmark
@@ -164,34 +175,44 @@ class Guardian
     true
   end
 
+  # Support sites that have to approve users
+  def can_access_forum?
+    return true unless SiteSetting.must_approve_users?
+    return false unless @user
+
+    # Staff can't lock themselves out of a site
+    return true if is_staff?
+
+    @user.approved?
+  end
+
   def can_see_pending_invites_from?(user)
-    return false if user.blank?
-    return false if @user.blank?
+    return false unless user && @user
     return user == @user
   end
 
   # For now, can_invite_to is basically can_see?
   def can_invite_to?(object)
-    return false if @user.blank?
+    return false unless @user
     return false unless can_see?(object)
     return false if SiteSetting.must_approve_users?
-    @user.has_trust_level?(:moderator)
+    @user.has_trust_level?(:regular) || @user.staff?
   end
 
 
   def can_see_deleted_posts?
-    return true if is_admin?
+    return true if is_staff?
     false
   end
 
   def can_see_private_messages?(user_id)
-    return true if is_admin?
-    return false if @user.blank?
+    return true if is_staff?
+    return false unless @user
     @user.id == user_id
   end
 
   def can_delete_all_posts?(user)
-    return false unless is_admin?
+    return false unless is_staff?
     return false if user.created_at < 7.days.ago
 
     true
@@ -218,11 +239,11 @@ class Guardian
 
   # Creating Methods
   def can_create_category?(parent)
-    @user.has_trust_level?(:moderator)
+    is_staff?
   end
 
   def can_create_post_on_topic?(topic)
-    return true if @user.has_trust_level?(:moderator)
+    return true if is_staff?
     return false if topic.closed?
     return false if topic.archived?
     true
@@ -230,22 +251,22 @@ class Guardian
 
   # Editing Methods
   def can_edit_category?(category)
-    @user.has_trust_level?(:moderator)
+    is_staff?
   end
 
   def can_edit_post?(post)
-    return true if @user.has_trust_level?(:moderator)
+    return true if is_staff?
     return false if post.topic.archived?
     (post.user == @user)
   end
 
   def can_edit_user?(user)
     return true if user == @user
-    @user.admin?
+    is_staff?
   end
 
   def can_edit_topic?(topic)
-    return true if @user.has_trust_level?(:moderator)
+    return true if is_staff?
     return true if topic.user == @user
     false
   end
@@ -258,22 +279,22 @@ class Guardian
     # You can delete your own posts
     return !post.user_deleted? if post.user == @user
 
-    @user.has_trust_level?(:moderator)
+    is_staff?
   end
 
   # Recovery Method
   def can_recover_post?(post)
-    return false if @user.blank?
-    @user.has_trust_level?(:moderator)
+    return false unless @user
+    is_staff?
   end
 
   def can_delete_category?(category)
-    return false unless @user.has_trust_level?(:moderator)
+    return false unless is_staff?
     return category.topic_count == 0
   end
 
   def can_delete_topic?(topic)
-    return false unless @user.has_trust_level?(:moderator)
+    return false unless is_staff?
     return false if Category.exists?(topic_id: topic.id)
     true
   end
@@ -281,18 +302,20 @@ class Guardian
   def can_delete_post_action?(post_action)
 
     # You can only undo your own actions
-    return false unless post_action.user == @user
+    return false unless @user
+    return false unless post_action.user_id == @user.id
+    return false if post_action.is_private_message?
 
     # Make sure they want to delete it within the window
     return post_action.created_at > SiteSetting.post_undo_action_window_mins.minutes.ago
   end
 
-  def can_send_private_message?(target_user)
-    return false unless User === target_user
-    return false if @user.blank?
+  def can_send_private_message?(target)
+    return false unless User === target || Group === target
+    return false unless @user
 
     # Can't send message to yourself
-    return false if @user.id == target_user.id
+    return false if User === target && @user.id == target.id
 
     # Have to be a basic level at least
     return false unless @user.has_trust_level?(:basic)
@@ -301,20 +324,45 @@ class Guardian
   end
 
   def can_reply_as_new_topic?(topic)
-    return false if @user.blank?
-    return false if topic.blank?
+    return false unless @user
+    return false unless topic
     return false if topic.private_message?
 
     @user.has_trust_level?(:basic)
   end
 
   def can_see_topic?(topic)
+    return false unless topic
+
+    return true if @user && is_staff?
+    return false if topic.deleted_at
+
+    if topic.category && topic.category.secure
+      return false unless @user && can_see_category?(topic.category)
+    end
+
     if topic.private_message?
-      return false if @user.blank?
-      return true if topic.allowed_users.include?(@user)
+      return false unless @user
+      return true if topic.all_allowed_users.where(id: @user.id).exists?
       return is_admin?
     end
     true
+  end
+
+  def can_see_post?(post)
+    return false unless post
+
+    return true if @user && is_staff?
+    return false if post.deleted_at.present?
+
+    can_see_topic?(post.topic)
+  end
+
+  def can_see_category?(category)
+    return true unless category.secure
+    return false unless @user
+
+    secure_category_ids.include?(category.id)
   end
 
   def can_vote?(post, opts={})
@@ -326,11 +374,11 @@ class Guardian
   def post_can_act?(post, action_key, opts={})
     return false if @user.blank?
     return false if post.blank?
-    return false if post.topic.archived?
 
     taken = opts[:taken_actions]
     taken = taken.keys if taken
 
+    # we always allow flagging
     if PostActionType.is_flag?(action_key)
       return false unless @user.has_trust_level?(:basic)
 
@@ -340,6 +388,9 @@ class Guardian
     else
       return false if taken && taken.include?(PostActionType.types[action_key])
     end
+
+    # nothing else on archived posts
+    return false if post.topic.archived?
 
     case action_key
     when :like
@@ -351,4 +402,7 @@ class Guardian
     return true
   end
 
+  def secure_category_ids
+    @secure_category_ids ||= @user ? @user.secure_category_ids : []
+  end
 end

@@ -7,8 +7,8 @@ describe Unread do
   before do
     @topic = Fabricate(:topic, posts_count: 13, highest_post_number: 13)
     @topic_user = TopicUser.get(@topic, @topic.user)
-    @topic_user.stubs(:notification_level).returns(TopicUser::NotificationLevel::TRACKING)
-    @topic_user.notification_level = TopicUser::NotificationLevel::TRACKING
+    @topic_user.stubs(:notification_level).returns(TopicUser.notification_levels[:tracking])
+    @topic_user.notification_level = TopicUser.notification_levels[:tracking]
     @unread = Unread.new(@topic, @topic_user)
   end
 
@@ -51,7 +51,7 @@ describe Unread do
 
     it 'has 0 new posts if the user has read 10 posts but is not tracking' do
       @topic_user.stubs(:seen_post_count).returns(10)
-      @topic_user.stubs(:notification_level).returns(TopicUser::NotificationLevel::REGULAR)
+      @topic_user.stubs(:notification_level).returns(TopicUser.notification_levels[:regular])
       @unread.new_posts.should == 0
     end
 

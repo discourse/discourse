@@ -8,30 +8,74 @@
 **/
 Discourse.ComposerController = Discourse.Controller.extend({
   needs: ['modal', 'topic'],
-  hasReply: false,
 
   togglePreview: function() {
-    return this.get('content').togglePreview();
+    this.get('content').togglePreview();
   },
 
   // Import a quote from the post
   importQuote: function() {
-    return this.get('content').importQuote();
+    this.get('content').importQuote();
+  },
+
+  updateDraftStatus: function() {
+    this.get('content').updateDraftStatus();
   },
 
   appendText: function(text) {
-    var c;
-    c = this.get('content');
-    if (c) {
-      return c.appendText(text);
-    }
+    var c = this.get('content');
+    if (c) return c.appendText(text);
   },
 
-  save: function() {
+  save: function(force) {
     var composer,
-      _this = this;
+      _this = this,
+      topic,
+      message,
+      buttons;
+
     composer = this.get('content');
     composer.set('disableDrafts', true);
+
+    // for now handle a very narrow use case
+    // if we are replying to a topic AND not on the topic pop the window up
+
+    if(!force && composer.get('replyingToTopic')) {
+      topic = this.get('topic');
+      if (!topic || topic.get('id') !== composer.get('topic.id'))
+      {
+        message = Em.String.i18n("composer.posting_not_on_topic", {title: this.get('content.topic.title')});
+
+        buttons = [{
+          "label": Em.String.i18n("composer.cancel"),
+          "class": "btn"
+        }];
+
+        buttons.push({
+          "label": Em.String.i18n("composer.reply_original"),
+          "class": "btn-primary",
+          "callback": function(){
+            _this.save(true);
+          }
+        });
+
+        if(topic) {
+          buttons.push({
+            "label": Em.String.i18n("composer.reply_here"),
+            "class": "btn-primary",
+            "callback": function(){
+              composer.set('topic', topic);
+              composer.set('post', null);
+              _this.save(true);
+            }
+          });
+        }
+
+        bootbox.dialog(message, buttons);
+        return;
+      }
+    }
+
     return composer.save({
       imageSizes: this.get('view').imageSizes()
     }).then(function(opts) {
@@ -49,17 +93,85 @@ Discourse.ComposerController = Discourse.Controller.extend({
     });
   },
 
-  checkReplyLength: function() {
-    if (this.present('content.reply')) {
-      this.set('hasReply', true);
-    } else {
-      this.set('hasReply', false);
+  closeEducation: function() {
+    this.set('educationClosed', true);
+  },
+
+  closeSimilar: function() {
+    this.set('similarClosed', true);
+  },
+
+  similarVisible: function() {
+    if (this.get('similarClosed')) return false;
+    if (this.get('content.composeState') !== Discourse.Composer.OPEN) return false;
+    return (this.get('similarTopics.length') || 0) > 0;
+  }.property('similarTopics.length', 'similarClosed', 'content.composeState'),
+
+  newUserEducationVisible: function() {
+    if (!this.get('educationContents')) return false;
+    if (this.get('content.composeState') !== Discourse.Composer.OPEN) return false;
+    if (!this.present('content.reply')) return false;
+    if (this.get('educationClosed')) return false;
+    return true;
+  }.property('content.composeState', 'content.reply', 'educationClosed', 'educationContents'),
+
+  fetchNewUserEducation: function() {
+
+    // We don't show education when editing a post.
+    if (this.get('content.editingPost')) return;
+
+    // If creating a topic, use topic_count, otherwise post_count
+    var count = this.get('content.creatingTopic') ? Discourse.get('currentUser.topic_count') : Discourse.get('currentUser.reply_count');
+    if (count >= Discourse.SiteSettings.educate_until_posts) {
+      this.set('educationClosed', true);
+      this.set('educationContents', '');
+      return;
     }
+
+    // The user must have typed a reply
+    if (!this.get('typedReply')) return;
+
+    this.set('educationClosed', false);
+
+    // If visible update the text
+    var educationKey = this.get('content.creatingTopic') ? 'new-topic' : 'new-reply';
+    var composerController = this;
+    Discourse.ajax("/education/" + educationKey, {dataType: 'html'}).then(function(result) {
+      composerController.set('educationContents', result);
+    });
+  }.observes('typedReply', 'content.creatingTopic', 'Discourse.currentUser.reply_count'),
+
+  checkReplyLength: function() {
+    this.set('typedReply', this.present('content.reply'));
+  },
+
+  /**
+    Fired after a user stops typing. Considers whether to check for similar
+    topics based on the current composer state.
+
+    @method findSimilarTopics
+  **/
+  findSimilarTopics: function() {
+
+    // We don't care about similar topics unless creating a topic
+    if (!this.get('content.creatingTopic')) return;
+
+    var body = this.get('content.reply');
+    var title = this.get('content.title');
+
+    // Ensure the fields are of the minimum length
+    if (body.length < Discourse.SiteSettings.min_body_similar_length) return;
+    if (title.length < Discourse.SiteSettings.min_title_similar_length) return;
+
+    var composerController = this;
+    Discourse.Topic.findSimilarTo(title, body).then(function (topics) {
+      composerController.set('similarTopics', topics);
+    });
+
   },
 
   saveDraft: function() {
-    var model;
-    model = this.get('content');
+    var model = this.get('content');
     if (model) model.saveDraft();
   },
 
@@ -74,36 +186,36 @@ Discourse.ComposerController = Discourse.Controller.extend({
       @param {String} [opts.quote] If we're opening a reply from a quote, the quote we're making
   **/
   open: function(opts) {
-    var composer, promise, view,
-      _this = this;
     if (!opts) opts = {};
+    var promise = opts.promise || Ember.Deferred.create();
+    opts.promise = promise;
+    this.set('typedReply', false);
+    this.set('similarTopics', null);
+    this.set('similarClosed', false);
 
-    opts.promise = promise = opts.promise || new RSVP.Promise();
-    this.set('hasReply', false);
     if (!opts.draftKey) {
       alert("composer was opened without a draft key");
       throw "composer opened without a proper draft key";
     }
 
     // ensure we have a view now, without it transitions are going to be messed
-    view = this.get('view');
+    var view = this.get('view');
+    var composerController = this;
     if (!view) {
-      view = Discourse.ComposerView.create({
-        controller: this
-      });
+      view = Discourse.ComposerView.create({ controller: this });
       view.appendTo($('#main'));
       this.set('view', view);
       // the next runloop is too soon, need to get the control rendered and then
       //  we need to change stuff, otherwise css animations don't kick in
       Em.run.next(function() {
-        return Em.run.next(function() {
-          return _this.open(opts);
+        Em.run.next(function() {
+          composerController.open(opts);
         });
       });
       return promise;
     }
 
-    composer = this.get('content');
+    var composer = this.get('content');
     if (composer && opts.draftKey !== composer.draftKey && composer.composeState === Discourse.Composer.DRAFT) {
       this.close();
       composer = null;
@@ -117,11 +229,8 @@ Discourse.ComposerController = Discourse.Controller.extend({
       } else {
         opts.tested = true;
         if (!opts.ignoreIfChanged) {
-          this.cancel((function() {
-            return _this.open(opts);
-          }), (function() {
-            return promise.reject();
-          }));
+          this.cancel().then(function() { composerController.open(opts); },
+                             function() { return promise.reject(); });
         }
         return promise;
       }
@@ -132,7 +241,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
       Discourse.Draft.get(opts.draftKey).then(function(data) {
         opts.draftSequence = data.draft_sequence;
         opts.draft = data.draft;
-        return _this.open(opts);
+        return composerController.open(opts);
       });
       return promise;
     }
@@ -152,8 +261,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
   },
 
   wouldLoseChanges: function() {
-    var composer;
-    composer = this.get('content');
+    var composer = this.get('content');
     return composer && composer.wouldLoseChanges();
   },
 
@@ -165,50 +273,46 @@ Discourse.ComposerController = Discourse.Controller.extend({
   },
 
   destroyDraft: function() {
-    var key;
-    key = this.get('content.draftKey');
+    var key = this.get('content.draftKey');
     if (key) {
-      return Discourse.Draft.clear(key, this.get('content.draftSequence'));
+      Discourse.Draft.clear(key, this.get('content.draftSequence'));
     }
   },
 
-  cancel: function(success, fail) {
-    var _this = this;
-    if (this.get('content.hasMetaData') || ((this.get('content.reply') || "") !== (this.get('content.originalText') || ""))) {
-      bootbox.confirm(Em.String.i18n("post.abandon"), Em.String.i18n("no_value"), Em.String.i18n("yes_value"), function(result) {
-        if (result) {
-          _this.destroyDraft();
-          _this.close();
-          if (typeof success === "function") {
-            return success();
+  cancel: function() {
+    var composerController = this;
+    return Ember.Deferred.promise(function (promise) {
+      if (composerController.get('content.hasMetaData') ||
+          ((composerController.get('content.reply') || "") !== (composerController.get('content.originalText') || ""))) {
+        bootbox.confirm(Em.String.i18n("post.abandon"), Em.String.i18n("no_value"), Em.String.i18n("yes_value"), function(result) {
+          if (result) {
+            composerController.destroyDraft();
+            composerController.close();
+            promise.resolve();
+          } else {
+            promise.reject();
           }
-        } else {
-          if (typeof fail === "function") {
-            return fail();
-          }
-        }
-      });
-    } else {
-      // it is possible there is some sort of crazy draft with no body ... just give up on it
-      this.destroyDraft();
-      this.close();
-      if (typeof success === "function") {
-        success();
+        });
+      } else {
+        // it is possible there is some sort of crazy draft with no body ... just give up on it
+        composerController.destroyDraft();
+        composerController.close();
+        promise.resolve();
       }
-    }
+    });
   },
 
-  click: function() {
+  openIfDraft: function() {
     if (this.get('content.composeState') === Discourse.Composer.DRAFT) {
-      return this.set('content.composeState', Discourse.Composer.OPEN);
+      this.set('content.composeState', Discourse.Composer.OPEN);
     }
   },
 
   shrink: function() {
     if (this.get('content.reply') === this.get('content.originalText')) {
-      return this.close();
+      this.close();
     } else {
-      return this.collapse();
+      this.collapse();
     }
   },
 

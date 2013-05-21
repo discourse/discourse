@@ -1,14 +1,14 @@
-<script src="https://login.persona.org/include.js"></script>
+<!-- TODO, move this into login UI, don't deliver with page -->
 <script>
+  $LAB.script("https://login.persona.org/include.js").wait(function(){
   (function() {
     var readyCalled = false;
     navigator.id.watch({
       onlogin: function(assertion) {
         if (readyCalled) {
 
-          $.ajax({
+          Discourse.ajax('/auth/persona/callback', {
             type: 'POST',
-            url: '/auth/persona/callback',
             data: { 'assertion': assertion },
             success: function(data, textStatus, jqXHR) {
               Discourse.authenticationComplete(data);
@@ -27,4 +27,5 @@
       }
     });
   }());
+  });
 </script>

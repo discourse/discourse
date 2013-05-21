@@ -36,14 +36,6 @@ Ember.DiscourseLocation = Ember.Object.extend({
   },
 
   /**
-    Will be pre-pended to path upon state change
-
-    @property rootURL
-    @default '/'
-  */
-  rootURL: '/',
-
-  /**
     @private
 
     Returns the current `location.pathname` without rootURL
@@ -51,7 +43,7 @@ Ember.DiscourseLocation = Ember.Object.extend({
     @method getURL
   */
   getURL: function() {
-    var rootURL = get(this, 'rootURL'),
+    var rootURL = (Discourse.BaseUri === undefined ? "/" : Discourse.BaseUri),
         url = get(this, 'location').pathname;
 
     rootURL = rootURL.replace(/\/$/, '');
@@ -70,7 +62,6 @@ Ember.DiscourseLocation = Ember.Object.extend({
   */
   setURL: function(path) {
     path = this.formatURL(path);
-
     if (this.getState() && this.getState().path !== path) {
       popstateReady = true;
       this.pushState(path);
@@ -154,7 +145,12 @@ Ember.DiscourseLocation = Ember.Object.extend({
       if (e.state) {
         var currentState = self.get('currentState');
         if (currentState) {
-          callback(e.state.path);
+          var url = e.state.path,
+              rootURL = (Discourse.BaseUri === undefined ? "/" : Discourse.BaseUri);
+
+          rootURL = rootURL.replace(/\/$/, '');
+          url = url.replace(rootURL, '');
+          callback(url);
         } else {
           this.set('currentState', e.state);
         }
@@ -172,10 +168,17 @@ Ember.DiscourseLocation = Ember.Object.extend({
     @param url {String}
   */
   formatURL: function(url) {
-    var rootURL = get(this, 'rootURL');
+    var rootURL = (Discourse.BaseUri === undefined ? "/" : Discourse.BaseUri);
 
     if (url !== '') {
       rootURL = rootURL.replace(/\/$/, '');
+    }
+
+    // remove prefix from URL if it is already in url - i.e. /discourse/t/... -> /t/if rootURL is /discourse
+    // this sometimes happens when navigating to already visited location
+    if ((rootURL.length > 1) && (url.substring(0, rootURL.length + 1) === (rootURL + "/")))
+    {
+      url = url.substring(rootURL.length);
     }
 
     return rootURL + url;

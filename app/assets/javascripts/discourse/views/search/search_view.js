@@ -29,33 +29,41 @@ Discourse.SearchView = Discourse.View.extend({
     });
   },
 
-  searchPlaceholder: (function() {
+  searchPlaceholder: function() {
     return Em.String.i18n("search.placeholder");
-  }).property(),
+  }.property(),
 
   // If we need to perform another search
-  newSearchNeeded: (function() {
+  newSearchNeeded: function() {
     this.set('noResults', false);
-    if (this.present('term')) {
+    var term = this.get('term');
+    if (term && term.length >= Discourse.SiteSettings.min_search_term_length) {
       this.set('loading', true);
-      this.searchTerm(this.get('term'), this.get('typeFilter'));
+      this.searchTerm(term, this.get('typeFilter'));
     } else {
       this.set('results', null);
     }
     return this.set('selectedIndex', 0);
-  }).observes('term', 'typeFilter'),
+  }.observes('term', 'typeFilter'),
 
-  showCancelFilter: (function() {
+  searchTerm: Discourse.debouncePromise(function(term, typeFilter) {
+    var searchView = this;
+    return Discourse.Search.forTerm(term, typeFilter).then(function(results) {
+      searchView.set('results', results);
+    });
+  }, 300),
+
+  showCancelFilter: function() {
     if (this.get('loading')) return false;
     return this.present('typeFilter');
-  }).property('typeFilter', 'loading'),
+  }.property('typeFilter', 'loading'),
 
-  termChanged: (function() {
+  termChanged: function() {
     return this.cancelType();
-  }).observes('term'),
+  }.observes('term'),
 
   // We can re-order them based on the context
-  content: (function() {
+  content: function() {
     var index, order, path, results, results_hashed;
     if (results = this.get('results')) {
       // Make it easy to find the results by type
@@ -77,38 +85,17 @@ Discourse.SearchView = Discourse.View.extend({
       });
     }
     return results;
-  }).property('results'),
+  }.property('results'),
 
-  updateProgress: (function() {
+  updateProgress: function() {
     var results;
     if (results = this.get('results')) {
       this.set('noResults', results.length === 0);
     }
     return this.set('loading', false);
-  }).observes('results'),
+  }.observes('results'),
 
-  searchTerm: function(term, typeFilter) {
-    var _this = this;
-    if (this.currentSearch) {
-      this.currentSearch.abort();
-      this.currentSearch = null;
-    }
-    this.searcher = this.searcher || Discourse.debounce(function(term, typeFilter) {
-      _this.currentSearch = $.ajax({
-        url: '/search',
-        data: {
-          term: term,
-          type_filter: typeFilter
-        },
-        success: function(results) {
-          return _this.set('results', results);
-        }
-      });
-    }, 300);
-    return this.searcher(term, typeFilter);
-  },
-
-  resultCount: (function() {
+  resultCount: function() {
     var count;
     if (this.blank('content')) return 0;
     count = 0;
@@ -116,7 +103,7 @@ Discourse.SearchView = Discourse.View.extend({
       count += result.results.length;
     });
     return count;
-  }).property('content'),
+  }.property('content'),
 
   moreOfType: function(type) {
     this.set('typeFilter', type);

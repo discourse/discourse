@@ -7,7 +7,7 @@ require 'oneboxer/android_app_store_onebox'
 describe Oneboxer::AndroidAppStoreOnebox do
   before(:each) do
     @o = Oneboxer::AndroidAppStoreOnebox.new("https://play.google.com/store/apps/details?id=com.moosoft.parrot")
-    FakeWeb.register_uri(:get, @o.translate_url, :response => fixture_file('oneboxer/android.response'))
+    FakeWeb.register_uri(:get, @o.translate_url, response: fixture_file('oneboxer/android.response'))
   end
 
   it "generates the expected onebox for Android App Store" do
@@ -20,7 +20,7 @@ private
 <div class='onebox-result'>
     <div class='source'>
       <div class='info'>
-        <a href='https://play.google.com/store/apps/details?id=com.moosoft.parrot' target="_blank">
+        <a href='https://play.google.com/store/apps/details?id=com.moosoft.parrot' class="track-link" target="_blank">
           <img class='favicon' src="/assets/favicons/google_play.png"> play.google.com
         </a>
       </div>

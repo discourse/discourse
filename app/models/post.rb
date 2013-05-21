@@ -2,34 +2,31 @@ require_dependency 'jobs'
 require_dependency 'pretty_text'
 require_dependency 'rate_limiter'
 require_dependency 'post_revisor'
+require_dependency 'enum'
+require_dependency 'trashable'
 
 require 'archetype'
 require 'digest/sha1'
 
 class Post < ActiveRecord::Base
   include RateLimiter::OnCreateRecord
+  include Trashable
 
-  module HiddenReason
-    FLAG_THRESHOLD_REACHED = 1
-    FLAG_THRESHOLD_REACHED_AGAIN = 2
-  end
+  versioned if: :raw_changed?
 
-  versioned
   rate_limit
-  acts_as_paranoid
 
-  after_recover :update_flagged_posts_count
-  after_destroy :update_flagged_posts_count
 
   belongs_to :user
   belongs_to :topic, counter_cache: :posts_count
+  belongs_to :reply_to_user, class_name: "User"
 
   has_many :post_replies
   has_many :replies, through: :post_replies
   has_many :post_actions
 
   validates_presence_of :raw, :user_id, :topic_id
-  validates :raw, stripped_length: { in: SiteSetting.post_length }
+  validates :raw, stripped_length: { in: -> { SiteSetting.post_length } }
   validate :raw_quality
   validate :max_mention_validator
   validate :max_images_validator
@@ -41,40 +38,35 @@ class Post < ActiveRecord::Base
 
   SHORT_POST_CHARS = 1200
 
-  # Post Types
-  REGULAR = 1
-  MODERATOR_ACTION = 2
+  scope :by_newest, order('created_at desc, id desc')
+  scope :by_post_number, order('post_number ASC')
+  scope :with_user, includes(:user)
+  scope :public_posts, -> { joins(:topic).where('topics.archetype <> ?', Archetype.private_message) }
+  scope :private_posts, -> { joins(:topic).where('topics.archetype = ?', Archetype.private_message) }
+  scope :with_topic_subtype, ->(subtype) { joins(:topic).where('topics.subtype = ?', subtype) }
 
-  before_save :extract_quoted_post_numbers
-  after_commit :feature_topic_users, on: :create
-  after_commit :trigger_post_process, on: :create
-  after_commit :email_private_message, on: :create
-
-  # Related to unique post tracking
-  after_commit :store_unique_post_key, on: :create
-
-  after_create do
-    TopicUser.auto_track(user_id, topic_id, TopicUser::NotificationReasons::CREATED_POST)
+  def self.hidden_reasons
+    @hidden_reasons ||= Enum.new(:flag_threshold_reached, :flag_threshold_reached_again)
   end
 
-  scope :by_newest, order('created_at desc, id desc')
-  scope :with_user, includes(:user)
+  def self.types
+    @types ||= Enum.new(:regular, :moderator_action)
+  end
+
+  def recover!
+    super
+    update_flagged_posts_count
+  end
 
   def raw_quality
-    sentinel = TextSentinel.new(raw, min_entropy: SiteSetting.body_min_entropy)
-    if sentinel.valid?
-      # It's possible the sentinel has cleaned up the title a bit
-      self.raw = sentinel.text
-    else
-      errors.add(:raw, I18n.t(:is_invalid)) unless sentinel.valid?
-    end
+    sentinel = TextSentinel.body_sentinel(raw)
+    errors.add(:raw, I18n.t(:is_invalid)) unless sentinel.valid?
   end
-
 
   # Stop us from posting the same thing too quickly
   def unique_post_validator
     return if SiteSetting.unique_posts_mins == 0
-    return if user.admin? || user.moderator?
+    return if acting_user.admin? || acting_user.moderator?
 
     # If the post is empty, default to the validates_presence_of
     return if raw.blank?
@@ -84,13 +76,7 @@ class Post < ActiveRecord::Base
     end
   end
 
-  # On successful post, store a hash key to prevent the same post from happening again
-  def store_unique_post_key
-    return if SiteSetting.unique_posts_mins == 0
-    $redis.setex(unique_post_key, SiteSetting.unique_posts_mins.minutes.to_i, "1")
-  end
-
-  # The key we use in reddit to ensure unique posts
+  # The key we use in redis to ensure unique posts
   def unique_post_key
     "post-#{user_id}:#{raw_hash}"
   end
@@ -111,9 +97,10 @@ class Post < ActiveRecord::Base
   end
 
   def self.white_listed_image_classes
-    @white_listed_image_classes ||= ['avatar']
+    @white_listed_image_classes ||= ['avatar', 'favicon', 'thumbnail']
   end
 
+  # How many images are present in the post
   def image_count
     return 0 unless raw.present?
 
@@ -125,23 +112,96 @@ class Post < ActiveRecord::Base
     end.count
   end
 
+  # Returns an array of all links in a post
+  def raw_links
+    return [] unless raw.present?
+
+    return @raw_links if @raw_links.present?
+
+    # Don't include @mentions in the link count
+    @raw_links = []
+    cooked_document.search("a[href]").each do |l|
+      html_class = l.attributes['class']
+      url = l.attributes['href'].to_s
+      if html_class.present?
+        next if html_class.to_s == 'mention' && l.attributes['href'].to_s =~ /^\/users\//
+      end
+      @raw_links << url
+    end
+    @raw_links
+  end
+
+  # How many links are present in the post
   def link_count
-    return 0 unless raw.present?
-    cooked_document.search("a[href]").count
+    raw_links.size
   end
 
+  # Sometimes the post is being edited by someone else, for example, a mod.
+  # If that's the case, they should not be bound by the original poster's
+  # restrictions, for example on not posting images.
+  def acting_user
+    @acting_user || user
+  end
+
+  def acting_user=(pu)
+    @acting_user = pu
+  end
+
+  # Ensure maximum amount of mentions in a post
   def max_mention_validator
-    errors.add(:raw, I18n.t(:too_many_mentions)) if raw_mentions.size > SiteSetting.max_mentions_per_post
+    if acting_user_is_trusted?
+      add_error_if_count_exceeded(:too_many_mentions, raw_mentions.size, SiteSetting.max_mentions_per_post)
+    else
+      add_error_if_count_exceeded(:too_many_mentions_newuser, raw_mentions.size, SiteSetting.newuser_max_mentions_per_post)
+    end
   end
 
+  # Ensure new users can not put too many images in a post
   def max_images_validator
-    return if user.present? && user.has_trust_level?(:basic)
-    errors.add(:raw, I18n.t(:too_many_images)) if image_count > 0
+    add_error_if_count_exceeded(:too_many_images, image_count, SiteSetting.newuser_max_images) unless acting_user_is_trusted?
   end
 
+  # Ensure new users can not put too many links in a post
   def max_links_validator
-    return if user.present? && user.has_trust_level?(:basic)
-    errors.add(:raw, I18n.t(:too_many_links)) if link_count > 1
+    add_error_if_count_exceeded(:too_many_links, link_count, SiteSetting.newuser_max_links) unless acting_user_is_trusted?
+  end
+
+
+  # Count how many hosts are linked in the post
+  def linked_hosts
+    return {} if raw_links.blank?
+
+    return @linked_hosts if @linked_hosts.present?
+
+    @linked_hosts = {}
+    raw_links.each do |u|
+      uri = URI.parse(u)
+      host = uri.host
+      @linked_hosts[host] = (@linked_hosts[host] || 0) + 1
+    end
+    @linked_hosts
+  end
+
+  def total_hosts_usage
+    hosts = linked_hosts.clone
+
+    # Count hosts in previous posts the user has made, PLUS these new ones
+    TopicLink.where(domain: hosts.keys, user_id: acting_user.id).each do |tl|
+      hosts[tl.domain] = (hosts[tl.domain] || 0) + 1
+    end
+
+    hosts
+  end
+
+  # Prevent new users from posting the same hosts too many times.
+  def has_host_spam?
+    return false if acting_user.present? && acting_user.has_trust_level?(:basic)
+
+    total_hosts_usage.each do |host, count|
+      return true if count >= SiteSetting.newuser_spam_host_threshold
+    end
+
+    false
   end
 
 
@@ -161,23 +221,6 @@ class Post < ActiveRecord::Base
     @raw_mentions = results.uniq.map { |un| un.first.downcase.gsub!(/^@/, '') }
   end
 
-  # The rules for deletion change depending on who is doing it.
-  def delete_by(deleted_by)
-    if deleted_by.moderator?
-      # As a moderator, delete the post.
-      Post.transaction do
-        self.destroy
-        Topic.reset_highest(topic_id)
-      end
-    elsif deleted_by.id == user_id
-      # As the poster, make a revision that says deleted.
-      Post.transaction do
-        revise(deleted_by, I18n.t('js.post.deleted_by_author'), force_new_version: true)
-        update_column(:user_deleted, true)
-      end
-    end
-  end
-
   def archetype
     topic.archetype
   end
@@ -191,7 +234,7 @@ class Post < ActiveRecord::Base
   end
 
   def self.best_of
-    where("(post_number = 1) or (score >= ?)", SiteSetting.best_of_score_threshold)
+    where(["(post_number = 1) or (percent_rank <= ?)", SiteSetting.best_of_percent_filter.to_f / 100.0])
   end
 
   def update_flagged_posts_count
@@ -225,12 +268,6 @@ class Post < ActiveRecord::Base
     (quote_count == 0) && (reply_to_post_number.present?)
   end
 
-  # Get the post that we reply to.
-  def reply_to_user
-    return if reply_to_post_number.blank?
-    Post.where(topic_id: topic_id, post_number: reply_to_post_number).first.try(:user)
-  end
-
   def reply_notification_target
     return if reply_to_post_number.blank?
     Post.where("topic_id = :topic_id AND post_number = :post_number AND user_id <> :user_id",
@@ -239,14 +276,14 @@ class Post < ActiveRecord::Base
                 user_id: user_id).first.try(:user)
   end
 
-  def self.excerpt(cooked, maxlength = nil)
+  def self.excerpt(cooked, maxlength = nil, options = {})
     maxlength ||= SiteSetting.post_excerpt_maxlength
-    PrettyText.excerpt(cooked, maxlength)
+    PrettyText.excerpt(cooked, maxlength, options)
   end
 
   # Strip out most of the markup
-  def excerpt(maxlength = nil)
-    Post.excerpt(cooked, maxlength)
+  def excerpt(maxlength = nil, options = {})
+    Post.excerpt(cooked, maxlength, options)
   end
 
   # What we use to cook posts
@@ -256,24 +293,22 @@ class Post < ActiveRecord::Base
     # If we have any of the oneboxes in the cache, throw them in right away, don't
     # wait for the post processor.
     dirty = false
-    doc = Oneboxer.each_onebox_link(cooked) do |url, elem|
-      cached = Oneboxer.render_from_cache(url)
-      if cached.present?
-        elem.swap(cached.cooked)
-        dirty = true
-      end
+    result = Oneboxer.apply(cooked) do |url, elem|
+      Oneboxer.render_from_cache(url)
     end
 
-    cooked = doc.to_html if dirty
+    cooked = result.to_html if result.changed?
     cooked
   end
 
   # A list of versions including the initial version
   def all_versions
     result = []
-    result << { number: 1, display_username: user.name, created_at: created_at }
+    result << { number: 1, display_username: user.username, created_at: created_at }
     versions.order(:number).includes(:user).each do |v|
-      result << { number: v.number, display_username: v.user.name, created_at: v.created_at }
+      if v.user.present?
+        result << { number: v.number, display_username: v.user.username, created_at: v.created_at }
+      end
     end
     result
   end
@@ -290,7 +325,26 @@ class Post < ActiveRecord::Base
   end
 
   def url
-    "/t/#{Slug.for(topic.title)}/#{topic.id}/#{post_number}"
+    Post.url(topic.slug, topic.id, post_number)
+  end
+
+  def self.url(slug, topic_id, post_number)
+    "/t/#{slug}/#{topic_id}/#{post_number}"
+  end
+
+  def self.urls(post_ids)
+    ids = post_ids.map{|u| u}
+    if ids.length > 0
+      urls = {}
+      Topic.joins(:posts).where('posts.id' => ids).
+        select(['posts.id as post_id','post_number', 'topics.slug', 'topics.title', 'topics.id']).
+      each do |t|
+        urls[t.post_id.to_i] = url(t.slug, t.id, t.post_number)
+      end
+      urls
+    else
+      {}
+    end
   end
 
   def author_readable
@@ -301,8 +355,14 @@ class Post < ActiveRecord::Base
     PostRevisor.new(self).revise!(updated_by, new_raw, opts)
   end
 
+
+  # TODO: move into PostCreator
   # Various callbacks
   before_create do
+    if reply_to_post_number.present?
+      self.reply_to_user_id ||= Post.select(:user_id).where(topic_id: topic_id, post_number: reply_to_post_number).first.try(:user_id)
+    end
+
     self.post_number ||= Topic.next_post_number(topic_id, reply_to_post_number.present?)
     self.cooked ||= cook(raw, topic_id: topic_id)
     self.sort_order = post_number
@@ -311,14 +371,12 @@ class Post < ActiveRecord::Base
   end
 
   # TODO: Move some of this into an asynchronous job?
+  # TODO: Move into PostCreator
   after_create do
     # Update attributes on the topic - featured users and last posted.
     attrs = {last_posted_at: created_at, last_post_user_id: user_id}
     attrs[:bumped_at] = created_at unless no_bump
     topic.update_attributes(attrs)
-
-    # Update the user's last posted at date
-    user.update_column(:last_posted_at, created_at)
 
     # Update topic user data
     TopicUser.change(user,
@@ -326,19 +384,6 @@ class Post < ActiveRecord::Base
                      posted: true,
                      last_read_post_number: post_number,
                      seen_post_count: post_number)
-  end
-
-  def email_private_message
-    # send a mail to notify users in case of a private message
-    if topic.private_message?
-      topic.allowed_users.where(["users.email_private_messages = true and users.id != ?", self.user_id]).each do |u|
-        Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes, :user_email, type: :private_message, user_id: u.id, post_id: self.id)
-      end
-    end
-  end
-
-  def feature_topic_users
-    Jobs.enqueue(:feature_topic_users, topic_id: self.topic_id)
   end
 
   # This calculates the geometric mean of the post timings and stores it along with
@@ -366,58 +411,12 @@ class Post < ActiveRecord::Base
     self.cooked = cook(raw, topic_id: topic_id) unless new_record?
   end
 
-  before_destroy do
-
-    # Update the last post id to the previous post if it exists
-    last_post = Post.where("topic_id = ? and id <> ?", topic_id, id).order('created_at desc').limit(1).first
-    if last_post.present?
-      topic.update_attributes(last_posted_at: last_post.created_at,
-                              last_post_user_id: last_post.user_id,
-                              highest_post_number: last_post.post_number)
-
-      # If the poster doesn't have any other posts in the topic, clear their posted flag
-      unless Post.exists?(["topic_id = ? and user_id = ? and id <> ?", topic_id, user_id, id])
-        TopicUser.update_all 'posted = false', topic_id: topic_id, user_id: user_id
-      end
-    end
-
-    # Feature users in the topic
-    Jobs.enqueue(:feature_topic_users, topic_id: topic_id, except_post_id: id)
-
+  def advance_draft_sequence
+    return if topic.blank? # could be deleted
+    DraftSequence.next!(last_editor_id, topic.draft_key)
   end
 
-  after_destroy do
-    # Remove any reply records that point to deleted posts
-    post_ids = PostReply.select(:post_id).where(reply_id: id).map(&:post_id)
-    PostReply.delete_all reply_id: id
-
-    if post_ids.present?
-      Post.where(id: post_ids).each { |p| p.update_column :reply_count, p.replies.count }
-    end
-
-    # Remove any notifications that point to this deleted post
-    Notification.delete_all topic_id: topic_id, post_number: post_number
-  end
-
-  after_save do
-    DraftSequence.next! last_editor_id, topic.draft_key if topic # could be deleted
-
-    quoted_post_numbers << reply_to_post_number if reply_to_post_number.present?
-
-    # Create a reply relationship between quoted posts and this new post
-    if quoted_post_numbers.present?
-      quoted_post_numbers.map(&:to_i).uniq.each do |p|
-        post = Post.where(topic_id: topic_id, post_number: p).first
-        if post.present?
-          post_reply = post.post_replies.new(reply_id: id)
-          if post_reply.save
-            Post.update_all ['reply_count = reply_count + 1'], id: post.id
-          end
-        end
-      end
-    end
-  end
-
+  # Determine what posts are quoted by this post
   def extract_quoted_post_numbers
     self.quoted_post_numbers = []
 
@@ -443,11 +442,47 @@ class Post < ActiveRecord::Base
     self.quote_count = quoted_post_numbers.size
   end
 
-  # Process this post after committing it
+  def save_reply_relationships
+    self.quoted_post_numbers ||= []
+    self.quoted_post_numbers << reply_to_post_number if reply_to_post_number.present?
+
+    # Create a reply relationship between quoted posts and this new post
+    if self.quoted_post_numbers.present?
+      self.quoted_post_numbers.map(&:to_i).uniq.each do |p|
+        post = Post.where(topic_id: topic_id, post_number: p).first
+        if post.present?
+          post_reply = post.post_replies.new(reply_id: id)
+          if post_reply.save
+            Post.update_all ['reply_count = reply_count + 1'], id: post.id
+          end
+        end
+      end
+    end
+  end
+
+  # Enqueue post processing for this post
   def trigger_post_process
     args = { post_id: id }
     args[:image_sizes] = image_sizes if image_sizes.present?
     args[:invalidate_oneboxes] = true if invalidate_oneboxes.present?
     Jobs.enqueue(:process_post, args)
+  end
+
+  def self.public_posts_count_per_day(since_days_ago=30)
+    public_posts.where('posts.created_at > ?', since_days_ago.days.ago).group('date(posts.created_at)').order('date(posts.created_at)').count
+  end
+
+  def self.private_messages_count_per_day(since_days_ago, topic_subtype)
+    private_posts.with_topic_subtype(topic_subtype).where('posts.created_at > ?', since_days_ago.days.ago).group('date(posts.created_at)').order('date(posts.created_at)').count
+  end
+
+  private
+
+  def acting_user_is_trusted?
+    acting_user.present? && acting_user.has_trust_level?(:basic)
+  end
+
+  def add_error_if_count_exceeded(key_for_translation, current_count, max_count)
+    errors.add(:base, I18n.t(key_for_translation, count: max_count)) if current_count > max_count
   end
 end

@@ -1,41 +1,43 @@
 /**
   This controller supports actions when listing topics or categories
 
-  @class ListTopicsController 
+  @class ListTopicsController
   @extends Discourse.ObjectController
   @namespace Discourse
   @module Discourse
 **/
 Discourse.ListTopicsController = Discourse.ObjectController.extend({
-  needs: ['list', 'composer'],
+  needs: ['list', 'composer', 'modal'],
+
+  rankDetailsVisible: false,
+
   // If we're changing our channel
   previousChannel: null,
 
-  popular: (function() {
-    return this.get('content.filter') === 'popular';
-  }).property('content.filter'),
+  latest: Ember.computed.equal('content.filter', 'latest'),
 
-  filterModeChanged: (function() {
+  filterModeChanged: function() {
+
     // Unsubscribe from a previous channel if necessary
-    var channel, filterMode, previousChannel,
-      _this = this;
-    if (previousChannel = this.get('previousChannel')) {
+    var previousChannel = this.get('previousChannel');
+    if (previousChannel) {
       Discourse.MessageBus.unsubscribe("/" + previousChannel);
       this.set('previousChannel', null);
     }
-    filterMode = this.get('controllers.list.filterMode');
-    if (!filterMode) {
-      return;
-    }
-    channel = filterMode;
-    Discourse.MessageBus.subscribe("/" + channel, function(data) {
-      return _this.get('content').insert(data);
+
+    var filterMode = this.get('controllers.list.filterMode');
+    if (!filterMode) return;
+
+    var listTopicsController = this;
+    Discourse.MessageBus.subscribe("/" + filterMode, function(data) {
+      return listTopicsController.get('content').insert(data);
     });
-    return this.set('previousChannel', channel);
-  }).observes('controllers.list.filterMode'),
-  draftLoaded: (function() {
-    var draft;
-    draft = this.get('content.draft');
+    this.set('previousChannel', filterMode);
+
+  }.observes('controllers.list.filterMode'),
+
+  draftLoaded: function() {
+    var draft = this.get('content.draft');
     if (draft) {
       return this.get('controllers.composer').open({
         draft: draft,
@@ -44,20 +46,33 @@ Discourse.ListTopicsController = Discourse.ObjectController.extend({
         ignoreIfChanged: true
       });
     }
-  }).observes('content.draft'),
+  }.observes('content.draft'),
 
   // Star a topic
   toggleStar: function(topic) {
     topic.toggleStar();
   },
 
+  // clear a pinned topic
+  clearPin: function(topic) {
+    topic.clearPin();
+  },
+
+  toggleRankDetails: function() {
+    this.toggleProperty('rankDetailsVisible');
+  },
+
+  // Show rank details
+  showRankDetails: function(topic) {
+    var modalController = this.get('controllers.modal');
+    if (modalController) {
+      modalController.show(Discourse.TopicRankDetailsView.create({ topic: topic }));
+    }
+  },
+
   createTopic: function() {
     this.get('controllers.list').createTopic();
   },
-
-  observer: (function() {
-    return this.set('filterMode', this.get('controllser.list.filterMode'));
-  }).observes('controller.list.filterMode'),
 
   // Show newly inserted topics
   showInserted: function(e) {

@@ -33,19 +33,29 @@ Spork.prefork do
   # Loading more in this block will cause your tests to run faster. However,
   # if you change any configuration or code from libraries loaded here, you'll
   # need to restart spork for it take effect.
+  require 'fabrication'
+  require 'mocha/api'
+  require 'fakeweb'
+  require 'certified'
+
   ENV["RAILS_ENV"] ||= 'test'
   require File.expand_path("../../config/environment", __FILE__)
   require 'rspec/rails'
   require 'rspec/autorun'
+  require 'shoulda'
 
   # Requires supporting ruby files with custom matchers and macros, etc,
   # in spec/support/ and its subdirectories.
   Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
-  load "#{Rails.root}/db/seeds.rb"
+
+
+  # let's not run seed_fu every test
+  SeedFu.seed
 
   RSpec.configure do |config|
 
+    config.fail_fast = ENV['RSPEC_FAIL_FAST'] == "1"
     config.include Helpers
     config.mock_framework = :mocha
 
@@ -59,8 +69,13 @@ Spork.prefork do
     # rspec-rails.
     config.infer_base_class_for_anonymous_controllers = true
 
-    config.before(:suite) do
-      SeedFu.seed
+    # if we need stuff post fork, pre tests run here
+    # config.before(:suite) do
+    # end
+
+    config.before do
+      # disable all observers, enable as needed during specs
+      ActiveRecord::Base.observers.disable :all
     end
 
     config.before(:all) do
@@ -98,6 +113,34 @@ Spork.each_run do
   $redis.client.reconnect
   MessageBus.reliable_pub_sub.pub_redis.client.reconnect
   Rails.cache.reconnect
+end
+
+def build(*args)
+  Fabricate.build(*args)
+end
+
+module MessageBus::DiagnosticsHelper
+  def publish(channel, data, opts = nil)
+    id = super(channel, data, opts)
+    if @tracking
+      m = MessageBus::Message.new(-1, id, channel, data)
+      m.user_ids = opts[:user_ids] if opts
+      m.group_ids = opts[:group_ids] if opts
+      @tracking << m
+    end
+    id
+  end
+
+  def track_publish
+    @tracking = tracking =  []
+    yield
+    @tracking = nil
+    tracking
+  end
+end
+
+module MessageBus
+  extend MessageBus::DiagnosticsHelper
 end
 
 # --- Instructions ---

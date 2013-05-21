@@ -19,7 +19,7 @@ class InvitesController < ApplicationController
 
         topic = invite.topics.first
         if topic.present?
-          redirect_to topic.relative_url
+          redirect_to "#{Discourse.base_uri}#{topic.relative_url}"
           return
         end
       end
@@ -33,7 +33,7 @@ class InvitesController < ApplicationController
 
     invite = Invite.where(invited_by_id: current_user.id, email: params[:email]).first
     raise Discourse::InvalidParameters.new(:email) if invite.blank?
-    invite.destroy
+    invite.trash!
 
     render nothing: true
   end

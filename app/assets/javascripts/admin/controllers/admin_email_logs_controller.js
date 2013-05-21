@@ -13,9 +13,9 @@ Discourse.AdminEmailLogsController = Ember.ArrayController.extend(Discourse.Pres
 
     @property sendTestEmailDisabled
   **/
-  sendTestEmailDisabled: (function() {
+  sendTestEmailDisabled: function() {
     return this.blank('testEmailAddress');
-  }).property('testEmailAddress'),
+  }.property('testEmailAddress'),
 
   /**
     Sends a test email to the currently entered email address
@@ -23,17 +23,16 @@ Discourse.AdminEmailLogsController = Ember.ArrayController.extend(Discourse.Pres
     @method sendTestEmail
   **/
   sendTestEmail: function() {
-    var _this = this;
-    _this.set('sentTestEmail', false);
-    $.ajax({
-      url: '/admin/email_logs/test',
+    this.set('sentTestEmail', false);
+
+    var adminEmailLogsController = this;
+    Discourse.ajax("/admin/email_logs/test", {
       type: 'POST',
-      data: { email_address: this.get('testEmailAddress') },
-      success: function() {
-        return _this.set('sentTestEmail', true);
-      }
+      data: { email_address: this.get('testEmailAddress') }
+    }).then(function () {
+      adminEmailLogsController.set('sentTestEmail', true);
     });
-    return false;
+
   }
 
 });

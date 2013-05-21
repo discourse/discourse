@@ -10,9 +10,9 @@
   @include border-radius-all(3px);
   @include box-shadow(1px 1px 5px $darkish_gray);
   background-color: $light_gray;
-  padding: 3px 7px 3px 7px;
+  padding: 3px 7px 6px 7px;
   width: 300px;
-  @include fades-in(0.25s);
+  @include fades-in(0.15s);
   &.visible {
     @include visible;
   }
@@ -22,9 +22,18 @@
   h3 {
     font-size: 13px;
   }
+  .social-link {
+    margin-left: 2px;
+    margin-right: 8px;
+    float: left;
+    font-size: 22px;
+  }
   .link {
-    display: block;
     margin-right: 2px;
-    text-align: right;
+    float: right;
+    font-size: 20px;
+    a {
+      color: $black;
+    }
   }
 }

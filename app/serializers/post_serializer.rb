@@ -37,22 +37,18 @@ class PostSerializer < ApplicationSerializer
              :bookmarked,
              :raw,
              :actions_summary,
-             :new_user?,
              :moderator?,
              :avatar_template,
              :user_id,
              :draft_sequence,
              :hidden,
              :hidden_reason_id,
-             :deleted_at
+             :deleted_at, 
+             :trust_level
 
-
-  def new_user?
-    object.user.created_at > SiteSetting.new_user_period_days.days.ago
-  end
 
   def moderator?
-    object.user.has_trust_level?(:moderator)
+    object.user.moderator?
   end
 
   def avatar_template
@@ -92,7 +88,7 @@ class PostSerializer < ApplicationSerializer
   end
 
   def cooked
-    if object.hidden && !scope.is_admin?
+    if object.hidden && !scope.is_staff?
       if scope.current_user && object.user_id == scope.current_user.id
         I18n.t('flagging.you_must_edit')
       else
@@ -127,6 +123,10 @@ class PostSerializer < ApplicationSerializer
     object.user.name
   end
 
+  def trust_level
+    object.user.trust_level
+  end
+
   def reply_to_user
     {
       username: object.reply_to_user.username,
@@ -154,16 +154,16 @@ class PostSerializer < ApplicationSerializer
 
       # The following only applies if you're logged in
       if action_summary[:can_act] && scope.current_user.present?
-        action_summary[:can_clear_flags] = scope.is_admin? && PostActionType.flag_types.values.include?(id)
+        action_summary[:can_clear_flags] = scope.is_staff? && PostActionType.flag_types.values.include?(id)
+      end
 
-        if post_actions.present? && post_actions.has_key?(id)
-          action_summary[:acted] = true
-          action_summary[:can_undo] = scope.can_delete?(post_actions[id])
-        end
+      if post_actions.present? && post_actions.has_key?(id)
+        action_summary[:acted] = true
+        action_summary[:can_undo] = scope.can_delete?(post_actions[id])
       end
 
       # anonymize flags
-      if !scope.is_admin? && PostActionType.flag_types.values.include?(id)
+      if !scope.is_staff? && PostActionType.flag_types.values.include?(id)
         action_summary[:count] = action_summary[:acted] ? 1 : 0
       end
 

@@ -22,6 +22,18 @@ Discourse = Ember.Application.createWithMixins({
   // The highest seen post number by topic
   highestSeenByTopic: {},
 
+  getURL: function(url) {
+
+    // If it's a non relative URL, return it.
+    if (url.indexOf('http') === 0) return url;
+
+    var u = (Discourse.BaseUri === undefined ? "/" : Discourse.BaseUri);
+    if (u[u.length-1] === '/') {
+      u = u.substring(0, u.length-1);
+    }
+    return u + url;
+  },
+
   titleChanged: function() {
     var title;
     title = "";
@@ -52,7 +64,7 @@ Discourse = Ember.Application.createWithMixins({
     if (user) {
       bus.callbackInterval = Discourse.SiteSettings.polling_interval;
       bus.enableLongPolling = true;
-      if (user.admin) {
+      if (user.admin || user.moderator) {
         bus.subscribe("/flagged_counts", function(data) {
           user.set('site_flagged_posts_count', data.total);
         });
@@ -61,6 +73,11 @@ Discourse = Ember.Application.createWithMixins({
         user.set('unread_notifications', data.unread_notifications);
         user.set('unread_private_messages', data.unread_private_messages);
       }), user.notification_channel_position);
+      bus.subscribe("/categories", function(data){
+        Discourse.get('site').set('categories', data.categories.map(function(c){
+          return Discourse.Category.create(c);
+        }));
+      });
     }
   }.observes('currentUser'),
 
@@ -116,7 +133,7 @@ Discourse = Ember.Application.createWithMixins({
     });
 
     $('#main').on('click.discourse', 'a', function(e) {
-      if (e.isDefaultPrevented() || e.metaKey || e.ctrlKey) return;
+      if (e.isDefaultPrevented() || e.shiftKey || e.metaKey || e.ctrlKey) return;
 
       var $currentTarget = $(e.currentTarget);
       var href = $currentTarget.attr('href');
@@ -124,6 +141,10 @@ Discourse = Ember.Application.createWithMixins({
       if (href === '#') return;
       if ($currentTarget.attr('target')) return;
       if ($currentTarget.data('auto-route')) return;
+
+      // If it's an ember #linkTo skip it
+      if ($currentTarget.hasClass('ember-view')) return;
+
       if ($currentTarget.hasClass('lightbox')) return;
       if (href.indexOf("mailto:") === 0) return;
       if (href.match(/^http[s]?:\/\//i) && !href.match(new RegExp("^http:\\/\\/" + window.location.hostname, "i"))) return;
@@ -156,28 +177,90 @@ Discourse = Ember.Application.createWithMixins({
   **/
   logout: function() {
     Discourse.KeyValueStore.abandonLocal();
-    return $.ajax("/session/" + this.get('currentUser.username'), {
-      type: 'DELETE',
-      success: function(result) {
-        // To keep lots of our variables unbound, we can handle a redirect on logging out.
-         window.location.reload();
-      }
+    Discourse.ajax("/session/" + this.get('currentUser.username'), {
+      type: 'DELETE'
+    }).then(function() {
+      // Reloading will refresh unbound properties
+      window.location.reload();
     });
   },
 
   authenticationComplete: function(options) {
     // TODO, how to dispatch this to the view without the container?
-    var loginView;
-    loginView = Discourse.__container__.lookup('controller:modal').get('currentView');
+    var loginView = Discourse.__container__.lookup('controller:modal').get('currentView');
     return loginView.authenticationComplete(options);
   },
 
+  /**
+    Our own $.ajax method. Makes sure the .then method executes in an Ember runloop
+    for performance reasons. Also automatically adjusts the URL to support installs
+    in subfolders.
+
+    @method ajax
+  **/
+  ajax: function() {
+
+    var url, args;
+    if (arguments.length === 1) {
+      if (typeof arguments[0] === "string") {
+        url = arguments[0];
+        args = {};
+      } else {
+        args = arguments[0];
+        url = args.url;
+        delete args.url;
+      }
+    } else if (arguments.length === 2) {
+      url = arguments[0];
+      args = arguments[1];
+    }
+
+    if (args.success) {
+      console.warning("DEPRECATION: Discourse.ajax should use promises, received 'success' callback");
+    }
+    if (args.error) {
+      console.warning("DEPRECATION: Discourse.ajax should use promises, received 'error' callback");
+    }
+
+    return Ember.Deferred.promise(function (promise) {
+      var oldSuccess = args.success;
+      args.success = function(xhr) {
+        Ember.run(promise, promise.resolve, xhr);
+        if (oldSuccess) oldSuccess(xhr);
+      }
+
+      var oldError = args.error;
+      args.error = function(xhr) {
+
+        // If it's a parseerror, don't reject
+        if (xhr.status === 200) return args.success(xhr);
+
+        promise.reject(xhr);
+        if (oldError) oldError(xhr);
+      }
+
+      // We default to JSON on GET. If we don't, sometimes if the server doesn't return the proper header
+      // it will not be parsed as an object.
+      if (!args.type) args.type = 'GET';
+      if ((!args.dataType) && (args.type === 'GET')) args.dataType = 'json';
+
+      $.ajax(Discourse.getURL(url), args);
+    });
+  },
+
+  /**
+    Start up the Discourse application.
+
+    @method start
+  **/
   start: function() {
     Discourse.bindDOMEvents();
-    Discourse.SiteSettings = PreloadStore.getStatic('siteSettings');
+    Discourse.SiteSettings = PreloadStore.get('siteSettings');
+    Discourse.MessageBus.alwaysLongPoll = Discourse.Environment === "development";
     Discourse.MessageBus.start();
     Discourse.KeyValueStore.init("discourse_", Discourse.MessageBus);
-
+    // Make sure we delete preloaded data
+    PreloadStore.remove('siteSettings');
     // Developer specific functions
     Discourse.Development.setupProbes();
     Discourse.Development.observeLiveChanges();

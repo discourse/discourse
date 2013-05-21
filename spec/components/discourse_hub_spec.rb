@@ -55,6 +55,18 @@ describe DiscourseHub do
     end
   end
 
+  describe '#unregister_nickname' do
+    it 'should return true when unregister succeeds' do
+      RestClient.stubs(:delete).returns( {success: 'OK'}.to_json )
+      DiscourseHub.unregister_nickname('byebye').should be_true
+    end
+
+    it 'should return false when unregister fails' do
+      RestClient.stubs(:delete).returns( {failed: -20}.to_json )
+      DiscourseHub.unregister_nickname('byebye').should be_false
+    end
+  end
+
   describe '#discourse_version_check' do
     it 'should return just return the json that the hub returns' do
       hub_response = {'success' => 'OK', 'latest_version' => '0.8.1', 'critical_updates' => false}

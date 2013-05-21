@@ -1,11 +1,11 @@
 /**
   This controller supports actions when listing topics or categories
 
-  @class ListController 
+  @class ListController
   @extends Discourse.Controller
   @namespace Discourse
   @module Discourse
-**/ 
+**/
 Discourse.ListController = Discourse.Controller.extend({
   currentUserBinding: 'Discourse.currentUser',
   categoriesBinding: 'Discourse.site.categories',
@@ -14,7 +14,7 @@ Discourse.ListController = Discourse.Controller.extend({
   canCreateTopic: false,
   needs: ['composer', 'modal', 'listTopics'],
 
-  availableNavItems: (function() {
+  availableNavItems: function() {
     var hasCategories, loggedOn, summary;
     summary = this.get('filterSummary');
     loggedOn = !!Discourse.get('currentUser');
@@ -28,62 +28,58 @@ Discourse.ListController = Discourse.Controller.extend({
     }).filter(function(i) {
       return i !== null;
     });
-  }).property('filterSummary'),
+  }.property('filterSummary'),
 
+  /**
+    Load a list based on a filter
+
+    @method load
+    @param {String} filterMode the filter we want to load
+    @returns {Ember.Deferred} the promise that will resolve to the list of items.
+  **/
   load: function(filterMode) {
-    var current,
-      _this = this;
+    var listController = this;
     this.set('loading', true);
+
     if (filterMode === 'categories') {
-      return Ember.Deferred.promise(function(deferred) {
-        return Discourse.CategoryList.list(filterMode).then(function(items) {
-          _this.set('loading', false);
-          _this.set('filterMode', filterMode);
-          _this.set('categoryMode', true);
-          return deferred.resolve(items);
-        });
-      });
-    } else {
-      current = (this.get('availableNavItems').filter(function(f) {
-        return f.name === filterMode;
-      }))[0];
-      if (!current) {
-        current = Discourse.NavItem.create({
-          name: filterMode
-        });
-      }
-      return Ember.Deferred.promise(function(deferred) {
-        return Discourse.TopicList.list(current).then(function(items) {
-          _this.set('filterSummary', items.filter_summary);
-          _this.set('filterMode', filterMode);
-          _this.set('loading', false);
-          return deferred.resolve(items);
-        });
+      return Discourse.CategoryList.list(filterMode).then(function(items) {
+        listController.set('loading', false);
+        listController.set('filterMode', filterMode);
+        listController.set('categoryMode', true);
+        return items;
       });
     }
+
+    var current = (this.get('availableNavItems').filter(function(f) { return f.name === filterMode; }))[0];
+    if (!current) {
+      current = Discourse.NavItem.create({ name: filterMode });
+    }
+    return Discourse.TopicList.list(current).then(function(items) {
+      listController.set('filterSummary', items.filter_summary);
+      listController.set('filterMode', filterMode);
+      listController.set('loading', false);
+      return items;
+    });
   },
 
   // Put in the appropriate page title based on our view
-  updateTitle: (function() {
+  updateTitle: function() {
     if (this.get('filterMode') === 'categories') {
       return Discourse.set('title', Em.String.i18n('categories_list'));
     } else {
       if (this.present('category')) {
-        return Discourse.set('title', "" + (this.get('category.name').capitalize()) + " " + (Em.String.i18n('topic.list')));
+        return Discourse.set('title', this.get('category.name').capitalize() + " " + Em.String.i18n('topic.list'));
       } else {
         return Discourse.set('title', Em.String.i18n('topic.list'));
       }
     }
-  }).observes('filterMode', 'category'),
+  }.observes('filterMode', 'category'),
 
   // Create topic button
   createTopic: function() {
-    var topicList;
-    topicList = this.get('controllers.listTopics.content');
-    if (!topicList) {
-      return;
-    }
-    return this.get('controllers.composer').open({
+    var topicList = this.get('controllers.listTopics.content');
+    if (!topicList) return;
+    this.get('controllers.composer').open({
       categoryName: this.get('category.name'),
       action: Discourse.Composer.CREATE_TOPIC,
       draftKey: topicList.get('draft_key'),
@@ -94,12 +90,24 @@ Discourse.ListController = Discourse.Controller.extend({
   createCategory: function() {
     var _ref;
     return (_ref = this.get('controllers.modal')) ? _ref.show(Discourse.EditCategoryView.create()) : void 0;
+  },
+
+  canEditCategory: function() {
+    if( this.present('category') ) {
+      var u = Discourse.get('currentUser');
+      return u && u.admin;
+    } else {
+      return false;
+    }
+  }.property('category'),
+
+  editCategory: function() {
+    this.get('controllers.modal').show(Discourse.EditCategoryView.create({ category: this.get('category') }));
+    return false;
   }
 
 });
 
 Discourse.ListController.reopenClass({
-  filters: ['popular', 'favorited', 'read', 'unread', 'new', 'posted']
+  filters: ['latest', 'hot', 'favorited', 'read', 'unread', 'new', 'posted']
 });
-
-

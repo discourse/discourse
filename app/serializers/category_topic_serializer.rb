@@ -1,11 +1,11 @@
-class CategoryTopicSerializer < BasicTopicSerializer
+require_dependency 'pinned_check'
 
-  attributes :slug,
-             :visible,
-             :pinned,
-             :closed,
-             :archived
+class CategoryTopicSerializer < ListableTopicSerializer
 
-  has_one :category
+  attributes :visible, :closed, :archived, :pinned
+
+  def pinned
+    PinnedCheck.new(object, object.user_data).pinned?
+  end
 
 end

@@ -4,7 +4,7 @@ module RailsMultisite
 
     def self.establish_connection(opts)
       if opts[:db] == "default" && (!defined?(@@default_spec) || !@@default_spec)
-        ActiveRecord::Base.establish_connection
+        # don't do anything .. handled implicitly
       else
         spec = connection_spec(opts) || @@default_spec
         handler = nil
@@ -56,7 +56,8 @@ module RailsMultisite
     end
 
     def self.current_hostname
-      ActiveRecord::Base.connection_pool.spec.config[:host_names].first
+      config = ActiveRecord::Base.connection_pool.spec.config
+      config[:host_names].nil? ? config[:host] : config[:host_names].first
     end
 
 

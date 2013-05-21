@@ -2,16 +2,28 @@ require_dependency 'discourse_hub'
 
 class UsersController < ApplicationController
 
-  skip_before_filter :check_xhr, only: [:password_reset, :update, :activate_account, :avatar, :authorize_email, :user_preferences_redirect]
+  skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :activate_account, :avatar, :authorize_email, :user_preferences_redirect]
   skip_before_filter :authorize_mini_profiler, only: [:avatar]
   skip_before_filter :check_restricted_access, only: [:avatar]
 
   before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect]
 
+  # we need to allow account creation with bad CSRF tokens, if people are caching, the CSRF token on the 
+  #  page is going to be empty, this means that server will see an invalid CSRF and blow the session
+  #  once that happens you can't log in with social
+  skip_before_filter :verify_authenticity_token, only: [:create]
+
   def show
     @user = fetch_user_from_params
-    anonymous_etag(@user) do
-      render_serialized(@user, UserSerializer)
+    user_serializer = UserSerializer.new(@user, scope: guardian, root: 'user')
+    respond_to do |format|
+      format.html do
+        store_preloaded("user_#{@user.username}", MultiJson.dump(user_serializer))
+      end
+
+      format.json do
+        render_json_dump(user_serializer)
+      end
     end
   end
 
@@ -20,9 +32,9 @@ class UsersController < ApplicationController
   end
 
   def update
-    user = User.where(:username_lower => params[:username].downcase).first
+    user = User.where(username_lower: params[:username].downcase).first
     guardian.ensure_can_edit!(user)
-    json_result(user) do |u|
+    json_result(user, serializer: UserSerializer) do |u|
 
       website = params[:website]
       if website
@@ -36,13 +48,18 @@ class UsersController < ApplicationController
       u.auto_track_topics_after_msecs = params[:auto_track_topics_after_msecs].to_i if params[:auto_track_topics_after_msecs]
       u.new_topic_duration_minutes = params[:new_topic_duration_minutes].to_i if params[:new_topic_duration_minutes]
 
-      [:email_digests, :email_direct, :email_private_messages].each do |i|
+      [:email_digests, :email_direct, :email_private_messages,
+       :external_links_in_new_tab, :enable_quoting].each do |i|
         if params[i].present?
           u.send("#{i.to_s}=", params[i] == 'true')
         end
       end
 
-      u.save
+      if u.save
+        u
+      else
+        nil
+      end
     end
   end
 
@@ -128,80 +145,82 @@ class UsersController < ApplicationController
 
   def create
 
-    if params[:password_confirmation] != honeypot_value || params[:challenge] != challenge_value.try(:reverse)
+    if honeypot_or_challenge_fails?(params)
       # Don't give any indication that we caught you in the honeypot
-      return render(:json => {success: true, active: false, message: I18n.t("login.activate_email", email: params[:email]) })
+      honey_pot_response = {
+        success: true,
+        active: false,
+        message: I18n.t("login.activate_email", email: params[:email])
+      }
+      return render(json: honey_pot_response)
     end
 
-    user = User.new
-    user.name = params[:name]
-    user.email = params[:email]
-    user.password = params[:password]
-    user.username = params[:username]
+    user = User.new_from_params(params)
 
     auth = session[:authentication]
-    if auth && auth[:email] == params[:email] && auth[:email_valid]
+    if valid_session_authentication?(auth, params[:email])
       user.active = true
     end
     user.password_required! unless auth
 
-    DiscourseHub.register_nickname( user.username, user.email ) if user.valid? && SiteSetting.call_discourse_hub?
+    if user.valid? && SiteSetting.call_discourse_hub?
+      DiscourseHub.register_nickname(user.username, user.email)
+    end
 
     if user.save
-
       msg = nil
-      active_result = user.active?
-      if active_result
+      active_user = user.active?
 
+      if active_user
         # If the user is active (remote authorized email)
         if SiteSetting.must_approve_users?
           msg = I18n.t("login.wait_approval")
-          active_result = false
+          active_user = false
         else
           log_on_user(user)
           user.enqueue_welcome_message('welcome_user')
           msg = I18n.t("login.active")
         end
-
       else
         msg = I18n.t("login.activate_email", email: user.email)
-        Jobs.enqueue(:user_email, type: :signup, user_id: user.id, email_token: user.email_tokens.first.token)
+        Jobs.enqueue(
+          :user_email, type: :signup, user_id: user.id,
+          email_token: user.email_tokens.first.token
+        )
       end
 
-      # Create auth records
-      if auth.present?
-        if auth[:twitter_user_id] && auth[:twitter_screen_name] && TwitterUserInfo.find_by_twitter_user_id(auth[:twitter_user_id]).nil?
-          TwitterUserInfo.create(:user_id => user.id, :screen_name => auth[:twitter_screen_name], :twitter_user_id => auth[:twitter_user_id])
-        end
-
-        if auth[:facebook].present? && FacebookUserInfo.find_by_facebook_user_id(auth[:facebook][:facebook_user_id]).nil?
-          FacebookUserInfo.create!(auth[:facebook].merge(user_id: user.id))
-        end
-
-        if auth[:github_user_id] && auth[:github_screen_name] && GithubUserInfo.find_by_github_user_id(auth[:github_user_id]).nil?
-          GithubUserInfo.create(:user_id => user.id, :screen_name => auth[:github_screen_name], :github_user_id => auth[:github_user_id])
-        end
-      end
-
+      # Create 3rd party auth records (Twitter, Facebook, GitHub)
+      create_third_party_auth_records(user, auth) if auth.present?
 
       # Clear authentication session.
       session[:authentication] = nil
 
       # JSON result
-      render :json => {success: true, active: active_result, message: msg }
+      render json: { success: true, active: active_user, message: msg }
     else
-      render :json => {success: false, message: I18n.t("login.errors", errors: user.errors.full_messages.join("\n"))}
+      render json: {
+        success: false,
+        message: I18n.t("login.errors", errors: user.errors.full_messages.join("\n"))
+      }
     end
+  rescue ActiveRecord::StatementInvalid
+    render json: { success: false, message: I18n.t("login.something_already_taken") }
   rescue DiscourseHub::NicknameUnavailable
-    render :json => {success: false, message: I18n.t("login.errors", errors:I18n.t("login.not_available", suggestion: User.suggest_username(params[:username])) )}
+    render json: { success: false,
+      message: I18n.t(
+        "login.errors",
+        errors:I18n.t(
+          "login.not_available", suggestion: User.suggest_username(params[:username])
+        )
+      )
+    }
   rescue RestClient::Forbidden
-    render json: {errors: [I18n.t("discourse_hub.access_token_problem")]}
+    render json: { errors: [I18n.t("discourse_hub.access_token_problem")] }
   end
 
   def get_honeypot_value
     render json: {value: honeypot_value, challenge: challenge_value}
   end
-
 
   # all avatars are funneled through here
   def avatar
@@ -209,14 +228,11 @@ class UsersController < ApplicationController
     # TEMP to catch all missing spots
     # raise ActiveRecord::RecordNotFound
 
-    user = User.select(:email).where(:username_lower => params[:username].downcase).first
-    if user
-      # for now we only support gravatar in square (redirect cached for a day), later we can use x-sendfile and/or a cdn to serve local
-      size = params[:size].to_i
-      size = 64 if size == 0
-      size = 10 if size < 10
-      size = 128 if size > 128
-
+    user = User.select(:email).where(username_lower: params[:username].downcase).first
+    if user.present?
+      # for now we only support gravatar in square (redirect cached for a day),
+      # later we can use x-sendfile and/or a cdn to serve local
+      size = determine_avatar_size(params[:size])
       url = user.avatar_template.gsub("{size}", size.to_s)
       expires_in 1.day
       redirect_to url
@@ -236,34 +252,39 @@ class UsersController < ApplicationController
         @user.password = params[:password]
         if @user.save
 
-          if SiteSetting.must_approve_users? && !@user.approved?
-            @requires_approval = true
-            flash[:success] = I18n.t('password_reset.success_unapproved')
-          else
+          if Guardian.new(@user).can_access_forum?
             # Log in the user
             log_on_user(@user)
             flash[:success] = I18n.t('password_reset.success')
+          else
+            @requires_approval = true
+            flash[:success] = I18n.t('password_reset.success_unapproved')
           end
         end
       end
     end
-    render :layout => 'no_js'
+    render layout: 'no_js'
   end
 
   def change_email
     requires_parameter(:email)
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
+    lower_email = Email.downcase(params[:email]).strip
 
     # Raise an error if the email is already in use
-    raise Discourse::InvalidParameters.new(:email) if User.where("lower(email) = ?", params[:email].downcase).exists?
+    if User.where("email = ?", lower_email).exists?
+      raise Discourse::InvalidParameters.new(:email)
+    end
 
-    email_token = user.email_tokens.create(email: params[:email])
-    Jobs.enqueue(:user_email,
-                 to_address: params[:email],
-                 type: :authorize_email,
-                 user_id: user.id,
-                 email_token: email_token.token)
+    email_token = user.email_tokens.create(email: lower_email)
+    Jobs.enqueue(
+      :user_email,
+      to_address: lower_email,
+      type: :authorize_email,
+      user_id: user.id,
+      email_token: email_token.token
+    )
 
     render nothing: true
   end
@@ -275,7 +296,7 @@ class UsersController < ApplicationController
     else
       flash[:error] = I18n.t('change_email.error')
     end
-    render :layout => 'no_js'
+    render layout: 'no_js'
   end
 
   def activate_account
@@ -283,17 +304,17 @@ class UsersController < ApplicationController
     if @user = EmailToken.confirm(params[:token])
 
       # Log in the user unless they need to be approved
-      if SiteSetting.must_approve_users?
-        @needs_approval = true
-      else
+      if Guardian.new(@user).can_access_forum?
         @user.enqueue_welcome_message('welcome_user') if @user.send_welcome_message
         log_on_user(@user)
+      else
+        @needs_approval = true
       end
 
     else
       flash[:error] = I18n.t('activation.already_done')
     end
-    render :layout => 'no_js'
+    render layout: 'no_js'
   end
 
   def send_activation_email
@@ -313,8 +334,8 @@ class UsersController < ApplicationController
 
     results = UserSearch.search term, topic_id
 
-    render json: { users: results.as_json( only:    [ :username, :name ],
-                                           methods: :avatar_template ) }
+    render json: { users: results.as_json(only: [ :username, :name ],
+                                          methods: :avatar_template) }
   end
 
   private
@@ -336,5 +357,59 @@ class UsersController < ApplicationController
 
       guardian.ensure_can_see!(user)
       user
+    end
+
+    def honeypot_or_challenge_fails?(params)
+      params[:password_confirmation] != honeypot_value ||
+      params[:challenge] != challenge_value.try(:reverse)
+    end
+
+    def valid_session_authentication?(auth, email)
+      auth && auth[:email] == email && auth[:email_valid]
+    end
+
+    def create_third_party_auth_records(user, auth)
+      if twitter_auth?(auth)
+        TwitterUserInfo.create(
+          user_id: user.id,
+          screen_name: auth[:twitter_screen_name],
+          twitter_user_id: auth[:twitter_user_id]
+        )
+      end
+
+      if facebook_auth?(auth)
+        FacebookUserInfo.create!(auth[:facebook].merge(user_id: user.id))
+      end
+
+      if github_auth?(auth)
+        GithubUserInfo.create(
+          user_id: user.id,
+          screen_name: auth[:github_screen_name],
+          github_user_id: auth[:github_user_id]
+        )
+      end
+    end
+
+    def twitter_auth?(auth)
+      auth[:twitter_user_id] && auth[:twitter_screen_name] &&
+      TwitterUserInfo.find_by_twitter_user_id(auth[:twitter_user_id]).nil?
+    end
+
+    def facebook_auth?(auth)
+      auth[:facebook].present? &&
+      FacebookUserInfo.find_by_facebook_user_id(auth[:facebook][:facebook_user_id]).nil?
+    end
+
+    def github_auth?(auth)
+      auth[:github_user_id] && auth[:github_screen_name] &&
+      GithubUserInfo.find_by_github_user_id(auth[:github_user_id]).nil?
+    end
+
+    def determine_avatar_size(size)
+      size = size.to_i
+      size = 64 if size == 0
+      size = 10 if size < 10
+      size = 128 if size > 128
+      size
     end
 end

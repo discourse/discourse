@@ -8,24 +8,98 @@
 **/
 Discourse.UserAction = Discourse.Model.extend({
 
+  descriptionHtml: (function() {
+    var action = this.get('action_type');
+    var ua = Discourse.UserAction;
+    var actions = [ua.LIKE, ua.WAS_LIKED, ua.STAR, ua.EDIT, ua.BOOKMARK, ua.GOT_PRIVATE_MESSAGE, ua.NEW_PRIVATE_MESSAGE];
+    var icon = "";
+    var sentence = "";
+    var sameUser = (this.get('username') === Discourse.get('currentUser.username'));
+
+    if (action === null || actions.indexOf(action) >= 0) {
+      if (this.get('isPM')) {
+        icon = '<i class="icon icon-envelope-alt" title="{{i18n user.stream.private_message}}"></i>';
+        if (sameUser) {
+          sentence = Em.String.i18n('user_action.sent_by_you', { userUrl: this.get('userUrl') });
+        } else {
+          sentence = Em.String.i18n('user_action.sent_by_user', { user: this.get('name'), userUrl: this.get('userUrl') });
+        }
+      } else {
+        if (sameUser) {
+          sentence = Em.String.i18n('user_action.posted_by_you', { userUrl: this.get('userUrl') });
+        } else {
+          sentence = Em.String.i18n('user_action.posted_by_user', { user: this.get('name'), userUrl: this.get('userUrl') });
+        }
+      }
+    } else if (action === ua.NEW_TOPIC) {
+      if (sameUser) {
+        sentence = Em.String.i18n('user_action.you_posted_topic', { userUrl: this.get('userUrl'), topicUrl: this.get('replyUrl') });
+      } else {
+        sentence = Em.String.i18n('user_action.user_posted_topic', { user: this.get('name'), userUrl: this.get('userUrl'), topicUrl: this.get('replyUrl') });
+      }
+    } else if (action === ua.POST || action === ua.RESPONSE) {
+      if (this.get('reply_to_post_number')) {
+        if (sameUser) {
+          sentence = Em.String.i18n('user_action.you_replied_to_post', { post_number: '#' + this.get('reply_to_post_number'),
+              userUrl: this.get('userUrl'), postUrl: this.get('postUrl') });
+        } else {
+          sentence = Em.String.i18n('user_action.user_replied_to_post', { user: this.get('name'),
+              post_number: '#' + this.get('reply_to_post_number'), userUrl: this.get('userUrl'), postUrl: this.get('postUrl') });
+        }
+      } else {
+        if (sameUser) {
+          sentence = Em.String.i18n('user_action.you_replied_to_topic', { userUrl: this.get('userUrl'),
+              topicUrl: this.get('replyUrl') });
+        } else {
+          sentence = Em.String.i18n('user_action.user_replied_to_topic', { user: this.get('name'),
+              userUrl: this.get('userUrl'), topicUrl: this.get('replyUrl') });
+        }
+      }
+    } else if (action === ua.MENTION) {
+      if (sameUser) {
+        sentence = Em.String.i18n('user_action.you_mentioned_user', { user: this.get('target_name'),
+            user1Url: this.get('userUrl'), user2Url: this.get('targetUserUrl') });
+      } else {
+        if (this.get('target_username') === Discourse.get('currentUser.username')) {
+          sentence = Em.String.i18n('user_action.user_mentioned_you', { user: this.get('name'),
+              user1Url: this.get('userUrl'), user2Url: this.get('targetUserUrl') });
+        } else {
+          sentence = Em.String.i18n('user_action.user_mentioned_user', { user: this.get('name'),
+              another_user: this.get('target_name'), user1Url: this.get('userUrl'), user2Url: this.get('targetUserUrl') });
+        }
+      }
+    } else {
+      return "";
+    }
+
+    return new Handlebars.SafeString(icon + " " + sentence);
+  }).property(),
+
+  targetUserUrl: (function() {
+    return Discourse.Utilities.userUrl(this.get('target_username'));
+  }).property(),
+
+  userUrl: (function() {
+    return Discourse.Utilities.userUrl(this.get('username'));
+  }).property(),
+
   postUrl: (function() {
     return Discourse.Utilities.postUrl(this.get('slug'), this.get('topic_id'), this.get('post_number'));
   }).property(),
 
-  replyUrl: (function() {
+  replyUrl: function() {
     return Discourse.Utilities.postUrl(this.get('slug'), this.get('topic_id'), this.get('reply_to_post_number'));
-  }).property(),
+  }.property(),
 
-  isPM: (function() {
+  isPM: function() {
     var a = this.get('action_type');
     return a === Discourse.UserAction.NEW_PRIVATE_MESSAGE || a === Discourse.UserAction.GOT_PRIVATE_MESSAGE;
-  }).property(),
+  }.property(),
 
-  isPostAction: (function() {
-    var a;
-    a = this.get('action_type');
+  isPostAction: function() {
+    var a = this.get('action_type');
     return a === Discourse.UserAction.RESPONSE || a === Discourse.UserAction.POST || a === Discourse.UserAction.NEW_TOPIC;
-  }).property(),
+  }.property(),
 
   addChild: function(action) {
     var bucket, current, groups, ua;
@@ -140,8 +214,7 @@ Discourse.UserAction.reopenClass({
 
 Discourse.UserAction.reopenClass({
   statGroups: (function() {
-    var g;
-    g = {};
+    var g = {};
     g[Discourse.UserAction.RESPONSE] = [Discourse.UserAction.RESPONSE, Discourse.UserAction.MENTION, Discourse.UserAction.QUOTE];
     return g;
   })()

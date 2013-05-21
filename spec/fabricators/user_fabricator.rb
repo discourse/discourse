@@ -32,7 +32,7 @@ Fabricator(:moderator, from: :user) do
   name 'A. Moderator'
   username 'moderator'
   email 'moderator@discourse.org'
-  trust_level TrustLevel.levels[:moderator]
+  moderator true
 end
 
 Fabricator(:admin, from: :user) do
@@ -49,3 +49,9 @@ Fabricator(:another_admin, from: :user) do
   admin true
 end
 
+Fabricator(:newuser, from: :user) do
+  name 'Newbie Newperson'
+  username 'newbie'
+  email 'newbie@new.com'
+  trust_level TrustLevel.levels[:newuser]
+end

@@ -38,7 +38,6 @@ class ApplicationController < ActionController::Base
 
   # Some exceptions
   class RenderEmpty < Exception; end
-  class NotLoggedIn < Exception; end
 
   # Render nothing unless we are an xhr request
   rescue_from RenderEmpty do
@@ -66,12 +65,18 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Discourse::NotFound do
-    if request.format.html?
-      # for now do a simple remap, we may look at cleaner ways of doing the render
-      raise ActiveRecord::RecordNotFound
+
+    if request.format && request.format.json?
+      render status: 404, layout: false, text: "[error: 'not found']"
     else
-      render file: 'public/404', formats: [:html], layout: false, status: 404
+      f = Topic.where(deleted_at: nil, archetype: "regular")
+      @latest = f.order('views desc').take(10)
+      @recent = f.order('created_at desc').take(10)
+      @slug =  params[:slug].class == String ? params[:slug] : ''
+      @slug.gsub!('-',' ')
+      render status: 404, layout: 'no_js', template: '/exceptions/not_found'
     end
+
   end
 
   rescue_from Discourse::InvalidAccess do
@@ -93,12 +98,12 @@ class ApplicationController < ActionController::Base
 
   # If we are rendering HTML, preload the session data
   def preload_json
-    if request.format.html?
+    if request.format && request.format.html?
       if guardian.current_user
         guardian.current_user.sync_notification_channel_position
       end
 
-      store_preloaded("site", Site.cached_json)
+      store_preloaded("site", Site.cached_json(current_user))
 
       if current_user.present?
         store_preloaded("currentUser", MultiJson.dump(CurrentUserSerializer.new(current_user, root: false)))
@@ -140,7 +145,7 @@ class ApplicationController < ActionController::Base
 
   def can_cache_content?
     # Don't cache unless we're in production mode
-    return false unless Rails.env.production?
+    return false unless Rails.env.production? || Rails.env == "profile"
 
     # Don't cache logged in users
     return false if current_user.present?
@@ -195,7 +200,7 @@ class ApplicationController < ActionController::Base
 
         # If we were given a serializer, add the class to the json that comes back
         if opts[:serializer].present?
-          json[obj.class.name.underscore] = opts[:serializer].new(obj).serializable_hash
+          json[obj.class.name.underscore] = opts[:serializer].new(obj, scope: guardian).serializable_hash
         end
 
         render json: MultiJson.dump(json)
@@ -207,7 +212,7 @@ class ApplicationController < ActionController::Base
     def block_if_maintenance_mode
       if Discourse.maintenance_mode?
         if request.format.json?
-          render status: 503, json: failed_json.merge( message: 'Site is currently undergoing maintenance.' )
+          render status: 503, json: failed_json.merge(message: I18n.t('site_under_maintenance'))
         else
           render status: 503, file: File.join( Rails.root, 'public', '503.html' ), layout: false
         end
@@ -217,7 +222,7 @@ class ApplicationController < ActionController::Base
     def check_restricted_access
       # note current_user is defined in the CurrentUser mixin
       if SiteSetting.access_password.present? && cookies[:_access] != SiteSetting.access_password
-        redirect_to request_access_path(:return_path => request.fullpath)
+        redirect_to request_access_path(return_path: request.fullpath)
         return false
       end
     end
@@ -240,16 +245,13 @@ class ApplicationController < ActionController::Base
     alias :requires_parameter :requires_parameters
 
     def store_incoming_links
-      if request.referer.present?
-       parsed = URI.parse(request.referer)
-        if parsed.host != request.host
-          IncomingLink.create(url: request.url, referer: request.referer[0..999])
-        end
-      end
+      IncomingLink.add(request,current_user) unless request.xhr?
     end
 
     def check_xhr
       unless (controller_name == 'forums' || controller_name == 'user_open_ids')
+        # bypass xhr check on PUT / POST / DELETE provided api key is there, otherwise calling api is annoying
+        return if !request.get? && request["api_key"] && SiteSetting.api_key_valid?(request["api_key"])
         raise RenderEmpty.new unless ((request.format && request.format.json?) || request.xhr?)
       end
     end

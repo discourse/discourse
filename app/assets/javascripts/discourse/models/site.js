@@ -17,14 +17,14 @@ Discourse.Site = Discourse.Model.extend({
     return result;
   }).property('notification_types'),
 
-  flagTypes: (function() {
+  flagTypes: function() {
     var postActionTypes;
     postActionTypes = this.get('post_action_types');
     if (!postActionTypes) {
       return [];
     }
     return postActionTypes.filterProperty('is_flag', true);
-  }).property('post_action_types.@each'),
+  }.property('post_action_types.@each'),
 
   postActionTypeById: function(id) {
     return this.get("postActionByIdLookup.action" + id);

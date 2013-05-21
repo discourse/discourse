@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title><%=t :title%></title>
+    <title><%= content_for?(:title) ? yield(:title) + ' - ' + SiteSetting.title : SiteSetting.title %></title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="description">
     <meta content="" name="author">
@@ -12,21 +12,19 @@
     <link rel="icon" type="image/png" href=<%=SiteSetting.favicon_url%>>
     <%= javascript_include_tag "preload_store" %>
 
-
-
     <%= render :partial => "common/special_font_face" %>
     <%= render :partial => "common/discourse_stylesheet" %>
 
-
-    <%=csrf_meta_tags%>
+    <%= discourse_csrf_tags %>
 
     <%= yield :head %>
   </head>
 
   <body>
+    <!--[if IE 9]><script type="text/javascript">ie = "new";</script><![endif]-->
+
     <%=SiteCustomization.custom_header(session[:preview_style])%>
     <section id='main'>
-      <section id='loading-message' style='display:none'><%= t :loading %>...</section>
       <noscript data-path="<%= request.env['PATH_INFO'] %>">
         <header class="d-header">
           <div class="container">
@@ -47,10 +45,20 @@
       </noscript>
     </section>
 
+    <% unless current_user %>
+      <form id='hidden-login-form' method="post" action="<%=login_path%>" style="display: none;">
+        <input name="username" type="text"     id="signin_username">
+        <input name="password" type="password" id="signin_password">
+        <input name="redirect" type="hidden">
+        <input name="authenticity_token" type="hidden" />
+        <input type="submit" id="signin-button" value="Log In">
+      </form>
+    <% end %>
+
     <%- if @preloaded.present? %>
       <script>
       <%- @preloaded.each do |key, json| %>
-        PreloadStore.store("<%= key %>", <%= raw json %>)
+        PreloadStore.store("<%= key %>",<%= raw json %>);
       <% end %>
       </script>
     <%- end %>
@@ -60,7 +68,7 @@
     <footer id='bottom'></footer>
 
     <%= render :partial => "common/discourse_javascript" %>
-    <%= render :partial => "common/persona_javascript" if SiteSetting.enable_persona_logins %>
+    <%= render :partial => "common/persona_javascript" if !current_user && SiteSetting.enable_persona_logins %>
     <%= render_google_analytics_code %>
 
     <!-- Discourse Version: <%= Discourse::VERSION::STRING %> -->

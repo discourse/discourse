@@ -6,19 +6,22 @@ module Imgur
   def self.upload_file(file)
 
     blob = file.read
-    response = RestClient.post(SiteSetting.imgur_endpoint, key: SiteSetting.imgur_api_key, image: Base64.encode64(blob))
+    response = RestClient.post(SiteSetting.imgur_endpoint, { image: Base64.encode64(blob) }, { 'Authorization' => "Client-ID #{SiteSetting.imgur_client_id}" })
 
-    json = JSON.parse(response.body)['upload'] rescue nil
+    json = JSON.parse(response.body)['data'] rescue nil
 
     return nil if json.blank?
 
     # Resize the image
-    json['image']['width'], json['image']['height'] = ImageSizer.resize(json['image']['width'], json['image']['height'])
+    image_info = FastImage.new(file, raise_on_failure: true)
+    width, height = ImageSizer.resize(*image_info.size)
 
-    {url: json['links']['original'],
-     filesize: json['image']['size'],
-     width: json['image']['width'],
-     height: json['image']['height']}
+    {
+      url: json['link'],
+      filesize: File.size(file),
+      width: width,
+      height: height
+    }
   end
 
 end

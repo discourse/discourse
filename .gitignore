@@ -13,19 +13,24 @@ dump.rdb
 .sass-cache/*
 
 # Ignore bundler config
+/bin
 /.bundle
 /.vagrant
 /.vagrantfile
 /cache
 /coverage/*
 
+/public/assets/*
+
 config/database.yml
 config/redis.yml
+config/discourse.pill
 
 # Ignore the default SQLite database and db dumps
 /db/*.sqlite3
 /dbs/*.sql
 /dbs/*.sql.gz
+/db/structure.sql
 
 # Ignore all logfiles and tempfiles.
 /log/*.log
@@ -50,7 +55,7 @@ sublime-project.sublime-workspace
 *.swp
 *.swo
 
-# don't check in multisite config 
+# don't check in multisite config
 config/multisite.yml
 # don't check in my renamed multisite config as well :)
 config/multisite1.yml
@@ -58,8 +63,10 @@ config/fog_credentials.yml
 
 /public/uploads
 /public/stylesheet-cache/*
+/public/downloads
+/public/images
 
-# Scripts used for downloading/refshing db
+# Scripts used for downloading/refreshing db
 script/download_db
 script/refresh_db
 
@@ -69,5 +76,14 @@ chef/tmp/*
 # .procfile
 .procfile
 
-# exclude our git version file for now 
+# .env, local environment variables for use with foreman
+.env
+
+# exclude our git version file for now
 config/version.rb
+
+# ignore the Ruby Version manager (rvm)
+.rvmrc
+.ruby-version
+.ruby-gemset
+.rbenv

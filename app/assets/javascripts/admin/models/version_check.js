@@ -8,8 +8,8 @@
 **/
 Discourse.VersionCheck = Discourse.Model.extend({
   upToDate: function() {
-    return this.get('latest_version') === this.get('installed_version');
-  }.property('latest_version', 'installed_version'),
+    return this.get('missing_versions_count') === 0 || this.get('missing_versions_count') === null;
+  }.property('missing_versions_count'),
 
   behindByOneVersion: function() {
     return this.get('missing_versions_count') === 1;
@@ -26,14 +26,8 @@ Discourse.VersionCheck = Discourse.Model.extend({
 
 Discourse.VersionCheck.reopenClass({
   find: function() {
-    var promise = new RSVP.Promise();
-    $.ajax({
-      url: '/admin/version_check',
-      dataType: 'json',
-      success: function(json) {
-        promise.resolve(Discourse.VersionCheck.create(json));
-      }
+    return Discourse.ajax('/admin/version_check').then(function(json) {
+      return Discourse.VersionCheck.create(json);
     });
-    return promise;
   }
 });

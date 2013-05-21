@@ -5,7 +5,7 @@ Fabricator(:post) do
 end
 
 Fabricator(:post_with_youtube, from: :post) do
-  cooked '<a href="http://www.youtube.com/watch?v=9bZkp7q19f0" class="onebox" target="_blank">http://www.youtube.com/watch?v=9bZkp7q19f0</a>'
+  cooked '<p><a href="http://www.youtube.com/watch?v=9bZkp7q19f0" class="onebox" target="_blank">http://www.youtube.com/watch?v=9bZkp7q19f0</a></p>'
 end
 
 Fabricator(:old_post, from: :post) do
@@ -16,7 +16,7 @@ end
 Fabricator(:moderator_post, from: :post) do
   user
   topic {|attrs| Fabricate(:topic, user: attrs[:user] ) }
-  post_type Post::MODERATOR_ACTION
+  post_type Post.types[:moderator_action]
   raw "Hello world"
 end
 
@@ -51,17 +51,6 @@ Fabricator(:reply, from: :post) do
   '
 end
 
-Fabricator(:multi_quote_reply, from: :post) do
-  user(:coding_horror)
-  topic
-  raw '
-    [quote="Evil Trout, post:1"]post1 quote[/quote]
-    Aha!
-    [quote="Evil Trout, post:2"]post2 quote[/quote]
-    Neat-o
-  '
-end
-
 Fabricator(:post_with_external_links, from: :post) do
   user
   topic
@@ -71,4 +60,20 @@ And a link to google: http://google.com
 And a markdown link: [forumwarz](http://forumwarz.com)
 And a markdown link with a period after it [codinghorror](http://www.codinghorror.com/blog).
   "
+end
+
+Fabricator(:private_message_post, from: :post) do
+  user
+  topic do |attrs|
+    Fabricate( :private_message_topic,
+      user: attrs[:user],
+      created_at: attrs[:created_at],
+      subtype: TopicSubtype.user_to_user,
+      topic_allowed_users: [
+        Fabricate.build(:topic_allowed_user, user_id: attrs[:user].id),
+        Fabricate.build(:topic_allowed_user, user_id: Fabricate(:user).id)
+      ]
+    )
+  end
+  raw "Ssshh! This is our secret conversation!"
 end

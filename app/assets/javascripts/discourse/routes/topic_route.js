@@ -27,6 +27,8 @@ Discourse.TopicRoute = Discourse.Route.extend({
     topicController = this.controllerFor('topic');
     topicController.cancelFilter();
     topicController.set('multiSelect', false);
+    this.controllerFor('composer').set('topic', null);
+
     if (headerController = this.controllerFor('header')) {
       headerController.set('topic', null);
       headerController.set('showExtraInfo', false);
@@ -35,6 +37,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
 
   setupController: function(controller, model) {
     this.controllerFor('header').set('topic', model);
+    this.controllerFor('composer').set('topic', model);
   }
 
 });

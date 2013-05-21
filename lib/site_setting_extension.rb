@@ -38,6 +38,13 @@ module SiteSettingExtension
     @@client_settings
   end
 
+  def settings_hash
+    result = {}
+    @defaults.each do |s, v|
+      result[s] = send(s).to_s
+    end
+    result
+  end
 
   def client_settings_json
     Rails.cache.fetch(SiteSettingExtension.client_settings_cache_key, expires_in: 30.minutes) do
@@ -115,6 +122,7 @@ module SiteSettingExtension
         message = msg.data
         if message["process"] != pid
           begin
+            @last_message_processed = msg.global_id
             # picks a db
             MessageBus.on_connect.call(msg.site_id)
             SiteSetting.refresh!
@@ -127,19 +135,25 @@ module SiteSettingExtension
     end
   end
 
+  def diags
+    {
+      last_message_processed: @last_message_processed
+    }
+  end
+
   def process_id
     @@process_id ||= SecureRandom.uuid
   end
 
   def remove_override!(name)
     return unless table_exists?
-    SiteSetting.where(:name => name).destroy_all
+    SiteSetting.where(name: name).destroy_all
   end
 
   def add_override!(name,val)
     return unless table_exists?
 
-    setting = SiteSetting.where(:name => name).first
+    setting = SiteSetting.where(name: name).first
     type = get_data_type(defaults[name])
 
     if type == types[:bool] && val != true && val != false
@@ -159,10 +173,10 @@ module SiteSettingExtension
       setting.data_type = type
       setting.save
     else
-      SiteSetting.create!(:name => name, :value => val, :data_type => type)
+      SiteSetting.create!(name: name, value: val, data_type: type)
     end
 
-    MessageBus.publish('/site_settings', {process: process_id})
+    @last_message_sent = MessageBus.publish('/site_settings', {process: process_id})
   end
 
 

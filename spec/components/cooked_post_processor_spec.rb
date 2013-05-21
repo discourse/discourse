@@ -3,19 +3,19 @@ require 'spec_helper'
 require 'cooked_post_processor'
 
 describe CookedPostProcessor do
-  let :cpp do
+
+  def cpp(cooked = nil, options = {})
     post = Fabricate.build(:post_with_youtube)
+    post.cooked = cooked if cooked
     post.id = 123
-    CookedPostProcessor.new(post)
+    CookedPostProcessor.new(post, options)
   end
 
   context 'process_onebox' do
 
     before do
-      post = Fabricate.build(:post_with_youtube)
-      post.id = 123
-      @cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
-      Oneboxer.expects(:onebox).with("http://www.youtube.com/watch?v=9bZkp7q19f0", post_id: 123, invalidate_oneboxes: true).returns('GANGNAM STYLE')
+      @cpp = cpp(nil, invalidate_oneboxes: true)
+      Oneboxer.expects(:onebox).with("http://www.youtube.com/watch?v=9bZkp7q19f0", post_id: 123, invalidate_oneboxes: true).returns('<div>GANGNAM STYLE</div>')
       @cpp.post_process_oneboxes
     end
 
@@ -23,14 +23,12 @@ describe CookedPostProcessor do
       @cpp.should be_dirty
     end
 
-    it 'inserts the onebox' do
-      @cpp.html.should == <<EXPECTED
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html><body>GANGNAM STYLE</body></html>
-EXPECTED
+    it 'inserts the onebox without wrapping p' do
+      @cpp.html.should match_html "<div>GANGNAM STYLE</div>"
     end
 
   end
+
 
   context 'process_images' do
 
@@ -43,7 +41,8 @@ EXPECTED
       before do
         @topic = Fabricate(:topic)
         @post = Fabricate.build(:post_with_image_url, topic: @topic, user: @topic.user)
-        @cpp = CookedPostProcessor.new(@post, :image_sizes => {'http://www.forumwarz.com/images/header/logo.png' => {'width' => 111, 'height' => 222}})
+        ImageSorcery.any_instance.stubs(:convert).returns(false)
+        @cpp = CookedPostProcessor.new(@post, image_sizes: {'http://www.forumwarz.com/images/header/logo.png' => {'width' => 111, 'height' => 222}})
         @cpp.expects(:get_size).returns([111,222])
       end
 
@@ -60,15 +59,20 @@ EXPECTED
     end
 
     context 'with unsized images in the post' do
+      let(:user) { Fabricate(:user) }
+      let(:topic) { Fabricate(:topic, user: user) }
+
       before do
         FastImage.stubs(:size).returns([123, 456])
+        ImageSorcery.any_instance.stubs(:convert).returns(false)
         CookedPostProcessor.any_instance.expects(:image_dimensions).returns([123, 456])
-        @post = Fabricate(:post_with_images)
+        creator = PostCreator.new(user, raw: Fabricate.build(:post_with_images).raw, topic_id: topic.id)
+        @post = creator.create
       end
 
       it "adds a topic image if there's one in the post" do
         @post.topic.reload
-        @post.topic.image_url.should == "/path/to/img.jpg"
+        @post.topic.image_url.should == "http://test.localhost/path/to/img.jpg"
       end
 
       it "adds the height and width to images that don't have them" do

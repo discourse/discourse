@@ -1,31 +1,72 @@
+# encoding: utf-8
+# This file contains content for the server portion of Discourse used by Ruby
 #
 # French translation - Traduction française
 #
 # Pour toute question contactez
 # <Maxime QUANDALLE> "maxime@quandalle.com"
 #
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
+# encoding: utf-8
+#
 
 fr:
+  time:
+    formats:
+      short: "%d-%m-%Y"
+
   title: "Discourse"
   topics: "Discussions"
+  posts: "messages"
   loading: "Chargement"
-  powered_by: 'Propulsé par <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
+  powered_by_html: 'Propulsé par <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
 
   via: "%{username} via %{site_name}"
   is_reserved: "est réservé"
-  too_many_mentions: "possède trop de mentions utilisateurs"
-  too_many_images: "possède trop d'images"
-  too_many_links: "possède trop de liens"
+
+  site_under_maintenance: 'Le site est en cours de maintenance.'
+  operation_already_running: "Un %{operation} est en train de tourner. Impossible d'en démarrer un autre."
+
+  too_many_mentions:
+    zero: "Désolé, vous ne pouvez pas mentionner d'utilisateur."
+    one: "Désolé, vous ne pouvez mentionner qu'un seul utilisateur."
+    other: "Désolé, vous ne pouvez mentionner que %{count} utilisateur."
+  too_many_mentions_newuser:
+    zero: "Désolé, les visiteurs ne peuvent pas mentionner d'utilisateur."
+    one: "Désolé, les visiteurs ne peuvent mentionner qu'un seul utilisateur."
+    other: "Désolé, les visiteurs ne peuvent mentionner que %{count} utilisateur."
+  too_many_images:
+    zero: "Désolé, les visiteurs ne peuvent pas ajouter d'image."
+    one: "Désolé, les visiteurs ne peuvent ajouter qu'une seule image."
+    other: "Désolé, les visiteurs ne peuvent ajouter que %{count} images."
+  too_many_links:
+    zero: "Désolé, les visiteurs ne peuvent pas insérer de liens."
+    one: "Désolé, les visiteurs ne peuvent insérer qu'un seul lien."
+    other: "Désolé, les visiteurs ne peuvent insérer que %{count} liens."
+  spamming_host: "Désolé, vous ne pouvez pas insérer de lien vers ce host."
+
   just_posted_that: "est trop similaire à ce que vous avez récemment posté"
   has_already_been_used: "a déjà été utilisé"
   invalid_characters: "contient des caractères invalides"
   is_invalid: "est invalide; essayez d'être plus précis"
-  next_page: "page suivante &rarr;"
+  next_page: "page suivante →"
   by: "Par"
   topics_in_category: "Discussions dans la catégorie '%{category}'"
   rss_posts_in_topic: "Flux RSS de '%{topic}'"
   rss_topics_in_category: "Flux RSS des discussions de la catégorie '%{category}'"
   author_wrote: "%{author} a écrit :"
+
+  groups:
+    default_names:
+      admins: "admins"
+      moderators: "moderateurs"
+      staff: "staff"
+      trust_level_1: "trust_level_1"
+      trust_level_2: "trust_level_2"
+      trust_level_3: "trust_level_3"
+      trust_level_4: "trust_level_4"
+      trust_level_5: "trust_level_5"
 
   education:
     until_posts:
@@ -82,18 +123,16 @@ fr:
     post_template: "%{replace_paragraph}\n\nUtilisez l'espace ci-dessous pour une plus longue description, voire pour établir des règles."
 
   trust_levels:
-    new:
-      title: "nouvel utilisateur"
+    newuser:
+      title: "visiteur"
     basic:
       title: "utilisateur basique"
     regular:
       title: "utilisateur régulier"
-    experienced:
+    leader:
       title: "utilisateur experimenté"
-    advanced:
+    elder:
       title: "utilisateur avancé"
-    moderator:
-      title: "modérateur"
 
   rate_limiter:
     too_many_requests: "Vous avez fait ceci trop souvent. Veuillez attendre %{time_left} avant de réessayer."
@@ -187,6 +226,7 @@ fr:
     title: 'réinitialiser le mot de passe'
     success: "Vous avez modifié votre mot de passe avec succès et vous êtes maintenant connecté."
     success_unapproved: "Vous avez modifié votre mot de passe avec succès."
+    continue: "Continuez vers %{site_name}"
 
   change_email:
     confirmed: "Votre adresse email a été mise à jour."
@@ -212,14 +252,22 @@ fr:
       title: 'Inapproprié'
       description: "Ce message contient des propos qu'une personne peut raisonablement considérer comme abusifs, offensants ou haineux."
       long_form: 'signalé comme inapproprié'
-    custom_flag:
-      title: 'Autre'
+    notify_user:
+      title: 'Avertir {{username}}'
+      description: 'Je souhaite discuter en privé avec cet utilisateur au sujet de ce message.'
+      long_form: 'utilisateur avertis'
+      email_title: 'A propos de "%{title}"'
+      email_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      title: 'Avertir un modérateur'
       description: "Ce message requiert l'attention de la modération d'après la <a href='/faq'>FAQ</a>, <a href='/tos'>TOS</a>, ou pour une autre raison indeterminée."
       long_form: 'signalé pour modération'
+      email_title: 'A propos de "%{title}"'
+      email_body: "%{link}\n\n%{message}"
     bookmark:
-      title: 'Favoris'
-      description: 'Ajouter aux favoris'
-      long_form: 'ajouté aux favoris'
+      title: 'Signets'
+      description: 'Ajouter aux signets'
+      long_form: 'ajouté aux signets'
     like:
       title: "J'aime"
       description: 'Aimer ce message'
@@ -251,9 +299,120 @@ fr:
 
   reports:
     visits:
-      title: "Visites utilisateur par jour"
-      xaxis: "Jour"
-      yaxis: "Visites"
+      title: Visites utilisateur par jour
+      xaxis: Jour
+      yaxis: Nombre de visites
+    signups:
+      title: Nouveaux utilisateurs
+      xaxis: Jour
+      yaxis: "Nombre d'utilisateurs"
+    topics:
+      title: Nouvelles discussions
+      xaxis: Jour
+      yaxis: Nombre de discussions
+    posts:
+      title: Nouveaux messages
+      xaxis: Jour
+      yaxis: Nombre de messages
+    likes:
+      title: Nouveau Likes
+      xaxis: Jour
+      yaxis: Nombre de Likes
+    flags:
+      title: Nouveaux Signalements
+      xaxis: Jour
+      yaxis: Nombre de signalements
+    bookmarks:
+      title: Signets
+      xaxis: Jour
+      yaxis: Nombre de nouveaux signets
+    favorites:
+      title: Favoris
+      xaxis: Jour
+      yaxis: Nombre de nouveaux favoris
+    users_by_trust_level:
+      title: Utilisateurs par niveau de confiance
+      xaxis: Niveau de confiance
+      yaxis: "Nombre d'utilisateurs"
+    emails:
+      title: Emails envoyés
+      xaxis: Jour
+      yaxis: "Nombre d'emails"
+    user_to_user_private_messages:
+      title: Utilisateur à Utilisateur
+      xaxis: Jour
+      yaxis: Nombre de messages privés
+    system_private_messages:
+      title: Système
+      xaxis: Jour
+      yaxis: Nombre de messages privés
+    moderator_warning_private_messages:
+      title: Avertissements
+      xaxis: Jour
+      yaxis: Nombre de messages privés
+    notify_moderators_private_messages:
+      title: Notifications Modérateur
+      xaxis: Jour
+      yaxis: Nombre de messages privés
+    notify_user_private_messages:
+      title: Notifications Utilisateur
+      xaxis: Jour
+      yaxis: Nombre de messages privés
+    top_referrers:
+      title: Meilleurs référants
+      xaxis: Utilisateurs
+      num_clicks: Clics
+      num_topics: Discussions
+    top_traffic_sources:
+      title: Meilleures sources de traffic
+      xaxis: Domaine
+      num_clicks: Clics
+      num_topics: Discussions
+      num_users: Utilisateurs
+    top_referred_topics:
+      title: Discussions les plus référencées
+      xaxis: Discussion
+      num_clicks: Clics
+
+  dashboard:
+    rails_env_warning: "Votre serveur fonctionne dans l'environnement de %{env}."
+    host_names_warning: "Le fichier config/database.yml utilise le nom d'hôte par défaut. Veuillez renseigner votre nom d'hôte."
+    gc_warning: "Votre serveur utilise les paramètres par défaut de collection du GC de ruby, ce qui ne vous donneras pas les meilleures performances. Merci de lire cette discussion sur <a href=\"http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126\">l'optimisation des performances de Ruby et Rails pour Discourse [EN]</a>."
+    clockwork_warning: "Clockwork n'est pas lancé. Assurez-vous qu'un processus clockwork soit toujours lancé afin que les tâches importantes soient planifiées. <a href=\"https://github.com/tomykaira/clockwork\">En savoir plus sur clockwork [EN]</a>."
+    sidekiq_warning: "Sidekiq n'est pas lancé. De nombreuses tâches, comme l'envoie d'e-mails, sont executées de manière asynchrome par sidekiq. Assurez-vous d'avoir au moins un processus sidekiq de lancé. <a href=\"https://github.com/mperham/sidekiq\">En savoir plus sur sidekiq [EN]</a>."
+    queue_size_warning: "Il y a %{queue_size} tâches dans la file d'attente, ce qui est beaucoup. Cela peut provenir d'un problème avec les processus Sidekiq, ou à un manque de processus Sidekiq travailleurs."
+    memory_warning: "Votre serveur dispose de moins de 1 Go de mémoire vive. Au moins 1 Go de RAM est recommandé."
+    facebook_config_warning: "Le serveur est configuré pour permettre l'authentification par Facebook (enable_facebook_logins), mais les paramètres facebook_app_id et facebook_app_secret ne sont pas renseignés. Vous pouvez modifier ces paramètres dans <a href=\"/admin/site_settings\">l'interface d'administration</a>."
+    twitter_config_warning: "Le serveur est configuré pour permettre l'authentification par Twitter (enable_twitter_logins), mais les paramètres twitter_consumer_key et twitter_consumer_secret ne sont pas renseignés. Vous pouvez modifier ces paramètres dans <a href=\"/admin/site_settings\">l'interface d'administration</a>."
+    github_config_warning: "Le serveur est configuré pour permettre l'authentification par GitHub (enable_github_logins), mais les paramètres github_client_id et github_client_secret ne sont pas renseignés. Vous pouvez modifier ces paramètres dans <a href=\"/admin/site_settings\">l'interface d'administration</a>."
+    failing_emails_warning: "Il y a %{num_failed_jobs} tâches d'envois d'email en erreur. Vérifiez votre fichier config/production.rb et assurez-vous de la conformité des paramètres du config.action_mailer"
+    default_logo_warning: "Vous n'avez pas changé le logo de votre site. Merci de mettre à jour les <a href='/admin/site_settings'>paramètres du site</a> suivant : logo_url, logo_small_url et favicon_url."
+    contact_email_missing: "Vous n'avez pas renseigné d'email de contact pour votre site. Merci de mettre à jour le <a href='/admin/site_settings'>paramètre de site</a> : contact_email."
+    contact_email_invalid: "L'email de contact du site est invalide. Merci de mettre à jour le <a href='/admin/site_settings'>paramètre de site</a> : contact_email."
+    title_nag: "Le titre de votre site est toujours à sa valeur par défaut. Merci de le modifier dans les <a href='/admin/site_settings'>paramètres du site</a>."
+
+  content_types:
+    education_new_reply:
+      title: "Education du nouveau : premières réponses"
+      description: "Pop up affichée au dessus de la zone de saisie lorsqu'un nouvel utilisateur rédige ses 2 premières réponses."
+    education_new_topic:
+      title: "Education du nouveau : premières discussions"
+      description: "Pop up affichée au dessus de la zone de saisie lorsqu'un nouvel utilisateur rédige ses 2 premières discussions."
+    usage_tips:
+      title: "Astuce pour les nouveaux"
+      description: "Astuces, conseils et informations essentielles du forum destinés aux nouveaux utilisateurs."
+    welcome_user:
+      title: "Bienvenue : nouvel utilisateur"
+      description: "Un message privé envoyé automatiquement à tous les nouveaux utilisateurs lorsqu'ils s'enregistrent."
+    welcome_invite:
+      title: "Bienvenue : utilisateur invité"
+      description: "Un message privé envoyé automatiquement à tous les utilisateurs invités lorsqu'ils acceptent l'invitation d'un membre à participer au forum."
+    tos_user_content_license:
+      title: "CGU: license"
+      description: "Le texte de la section 'license' des CGUs."
+    tos_miscellaneous:
+      title: "CGU: divers"
+      description: "Le texte de la section 'divers' des CGUs."
 
   site_settings:
     default_locale: "Le langage par défaut de cette instance de Discourse (code ISO 639-1)"
@@ -261,21 +420,25 @@ fr:
     max_post_length: "longueur maximale des messages"
     min_topic_title_length: "longueur minimale des titres de discussion"
     max_topic_title_length: "longueur maximale des titres de discussion"
+    min_search_term_length: "longueur mimimale du texte saisie avant de lancer une recherche"
     allow_duplicate_topic_titles: "deux utilisateurs peuvent-ils créer des discussions avec le même titre"
     unique_posts_mins: "Combien de temps avant qu'un utilisateur puisse poster le même contenu à nouveau"
     enforce_global_nicknames: "Imposer un pseudo global. Note: fonctionne uniquement pendant la phase initiale de paramétrage."
     discourse_org_access_key: "La clé d'accès utilisée pour le registre de pseudos de discourse.org"
     educate_until_posts: "Afficher les aides à la saisie tant que l'utilisateur n'a pas posté ce nombre de messages"
     title: "titre de ce site internet"
+    contact_email: "L'adresse e-mail de la personne responsable techniquement du site. Les notifications importantes de Discourse.org concernant les mises à jour critiques seront envoyées à cette adresse."
     company_full_name: "Le nom complet de la société qui gère ce site (utilisé dans les documents légaux, tels que /tos)"
     company_short_name: "Le nom de la société qui gère ce site (utilisé dans les documents légaux, tels que /tos)"
     company_domain: "Le nom de domaine de la société qui gère ce site (utilisé dans les documents légaux, tels que /tos)"
+    api_key: "La clé API sécurisé à utiliser pour créer et mettre à jour des discussions. Utilisez la section /admin/api pour la configurer."
     access_password: "Si l'accès restreint est activé, assurez-vous que le mot de passe soit saisi ici."
     queue_jobs: "mettre les différents jobs en attente sur différentes queues, si false les queues sont en file"
     crawl_images: "permettre la récupération des images provenant de sources tierces"
     ninja_edit_window: "temps d'édition avant de sauvegarder une nouvelle version, en secondes."
     enable_imgur: "utiliser l'envoi des images avec l'API imgur, ne pas stocker les fichiers localement"
-    imgur_api_key: "clé de l'API imgur.com - requis pour l'envoi d'images"
+    imgur_client_id: "Votre ID client imgur.com. Requis pour que l'envoi d'images fonctionne."
+    imgur_client_secret: "Votre secret imgur.com. Pas nécessaire pour que l'envoi d'image fonctionne, mais pourrais le devenir."
     imgur_endpoint: "point d'arrêt pour le chargement d'images sur imgur.com"
     max_image_width: "largeur maximale des images d'un message"
     category_featured_topics: "nombre de discussions affichées dans la liste par catégories"
@@ -288,14 +451,15 @@ fr:
     category_post_template: "Le modèle de message de définition d'une catégorie utilisé lorsque vous créez une nouvelle catégorie"
     onebox_max_chars: "Nombre maximal de caractères qu'une boîte peut importer en blob de texte."
 
-    logo_url: "Le logo de votre site, par exemple: http://xyz.com/x.png"
-    logo_small_url: "La version minifiée du logo de votre site (affichée sur les pages de discussions) ex: http://xyz.com/x-min.png"
+    logo_url: "Le logo de votre site, par exemple : http://example.com/logo.png"
+    logo_small_url: "La version minifiée du logo de votre site (affichée sur les pages de discussions) ex : http://example.com/logo-small.png"
     favicon_url: "Le favicon de votre site"
     notification_email: "L'adresse email utilisée pour notifier les utilisateurs de mots de passe perdus, d'activation de compte, etc."
     use_ssl: "Le site doit-il être accessible via SSL?"
     best_of_score_threshold: "Le score minimum pour qu'un message soit inclus dans les 'messages populaires'"
     best_of_posts_required: "Une discussion nécessite ce nombre de messages avant d'activer le mode 'discussions populaires'"
     best_of_likes_required: "Une discussion nécessite ce nombre de J'aime avant d'activer le mode 'discussions populaires'."
+    best_of_percent_filter: "% des meilleurs messages à afficher lorsqu'un utilisateur active le mode 'discussions populaires'."
     enable_private_messages: "Autoriser les membres à créer des messages et conversations privés."
 
     enable_long_polling: "Utiliser les requêtes longues pour le flux de notifications."
@@ -312,9 +476,11 @@ fr:
     traditional_markdown_linebreaks: "Utiliser le retour à la ligne traditionnel dans markdown, le wrapping est implicite sauf si suivi de 2 espaces"
     post_undo_action_window_mins: "La fenêtre dans laquelle chacun peut annuler une action sur un message (comme signaler)"
     must_approve_users: "Les propriétaires du forum doivent approuver les utilisateurs avant qu'il y aient accès."
-    ga_tracking_code: "Code de suivi de Google Analytics, voir: http://google.com/analytics"
+    ga_tracking_code: "Code de suivi de Google Analytics, par exemple : UA-12345678-9, voir: http://google.com/analytics"
+    ga_domain_name: "Domaine de suivi de Google Analytics, par exemple : monsite.com, voir: http://google.com/analytics"
     top_menu: "L'ordre des éléments dans le menu du haut. Exemple populaire|lus|favoris|non lus|nouveaux|posté|categories"
     post_menu: "L'ordre des éléments dans le menu de rédaction"
+    share_links: "Liste ordonnée des boutons de partage. Exemple : twitter|facebook|google+"
     track_external_right_clicks: "Suivi des clics sur les liens externes (ex: ouverture dans un nouvel onglet) désactivé par défaut car nécessite une ré-écrite de toutes les urls et nuit à l'accessibilité"
     topics_per_page: "Nombre de discussions à afficher sur la page de liste des discussions."
     posts_per_page: "Nombre de messages retournés sur une page de discussion"
@@ -322,7 +488,8 @@ fr:
     send_welcome_message: "Les nouveaux utilisateurs reçoivent-ils un message privé de bienvenue ?"
     supress_reply_directly_below: "Ne pas afficher les boutons de réponse sous un message lorsque la réponse est juste en dessous"
     allow_index_in_robots_txt: "Le site doit-être indexé par les moteurs de recherche (met à jour le fichier robots.txt)"
-    email_domains_blacklist: "Une liste de domaines d'email interdits, délimités par un pipe. Exemple: mailinator.com|trashmail.net"
+    email_domains_blacklist: "Liste des domaines d'email interdits, délimités par un pipe. Exemple: mailinator.com|trashmail.net"
+    email_domains_whitelist: "Liste des domaines d'email autorisés, délimités par un pipe. ATTENTION : les utilisateurs ayant un email sur un autre domaine ne pourrons pas s'enregistrer."
     version_checks: "Ping les serveurs de Discourse afin d'obtenir les mises à jours et affiche les messages d'information dans le tableau de board /admin"
 
     port: "Voulez-vous spécifier un port dans l'URL ? Utile en mode de dévelopement . Sinon, laisser vide."
@@ -355,6 +522,12 @@ fr:
     previous_visit_timeout_hours: "Combien de temps dure une visite avant de la considérer comme la visite 'précédente', en heures."
 
     uncategorized_name: "Nom pour les discussions sans catégorie dans la liste des catégories"
+    uncategorized_color: "La couleur du badge de la catégorie des discussions qui ne sont dans aucune catégorie"
+    uncategorized_text_color: "La couleur du text du badge de la catégorie des discussions qui ne sont dans aucune catégorie"
+
+    newuser_max_links: "Nombre maximum de liens qu'un visiteur peut ajouter à un message"
+    newuser_max_images: "Nombre maximum d'images qu'un visiteur peut ajouter à un message"
+    newuser_max_mentions_per_post: "Nombre maximum de référence à un @utilisateur qu'un visiteur peut ajouter à un message"
     max_mentions_per_post: "Le nombre maximal de @mentions que vous pouvez ajouter à un message"
 
     rate_limit_create_topic: "Combien de secondes avant de pouvoir démarrer une nouvelle discussion"
@@ -362,9 +535,9 @@ fr:
 
     max_likes_per_day: "Quantité maximale  de J'aime qu'un utilisateur peut effectuer en un jour"
     max_flags_per_day: "Quantité maximale de signalements qu'un utilisateur peut effectuer en un jour"
-    max_bookmarks_per_day: "Quantité maximale de favoris qu'un utilisateur peut ajouter en un jour"
+    max_bookmarks_per_day: "Quantité maximale de signets qu'un utilisateur peut ajouter en un jour"
     max_edits_per_day: "Quantité maximale de modifications qu'un utilisateur peut effectuer en un jour"
-    max_favorites_per_day: "Quantité maximale de disscussions  pouvant être mises en favoris en un jour"
+    max_favorites_per_day: "Quantité maximale de disscussions pouvant être mises en favoris en un jour"
     max_topics_per_day: "Quantité maximale de discussions que vous pouvez créer en un jour"
     max_private_messages_per_day: "Quantité maximale de messages privés que vous pouvez envoyer en un jour"
 
@@ -376,9 +549,17 @@ fr:
     default_invitee_trust_level: "Le niveau de confiance par défaut des utilisateurs invités"
     default_trust_level: "Le niveau de confiance par défaut des utilisateurs"
 
-    basic_requires_topics_entered: "A combien de discussions un utilisateur doit avoir participé pour être promu au rang de niveau basique"
-    basic_requires_read_posts: "Combien de discussions un utilisateur doit avoir lues pour être promu au rang de niveau basique"
-    basic_requires_time_spent_mins: "Combien de minutes un utilisateur doit avoir passées à lire des messages pour être promu au rang de niveau basique"
+    basic_requires_topics_entered: "A combien de discussions un utilisateur doit avoir participé pour être promu au niveau basique (1)"
+    basic_requires_read_posts: "Combien de discussions un utilisateur doit avoir lues pour être promu au niveau basique (1)"
+    basic_requires_time_spent_mins: "Combien de minutes un utilisateur doit avoir passées à lire des messages pour être promu au niveau basique (1)"
+
+    regular_requires_topics_entered: "A combien de discussions un utilisateur doit avoir participé pour être promu au niveau régulier (2)"
+    regular_requires_read_posts: "Combien de discussions un utilisateur doit avoir lues pour être promu au niveau régulier (2)"
+    regular_requires_time_spent_mins: "Combien de minutes un utilisateur doit avoir passées à lire des messages pour être promu au niveau régulier (2)"
+    regular_requires_days_visited: "Combien de jours un utilisateur doit visiter le site pour être promu au niveau régulier (2)"
+    regular_requires_likes_received: "Combien de j'aime un utilisateur doit reçevoir pour être promu au niveau régulier (2)"
+    regular_requires_likes_given: "Combien de j'aime un utilisateur doit donner pour être promu au niveau régulier (2)"
+    regular_requires_topic_reply_count: "Combien de réponses un utilisateur doit donner pour être promu au niveau régulier (2)"
 
     auto_link_images_wider_than: ""
 
@@ -387,8 +568,25 @@ fr:
     max_word_length: "Le nombre maximum de mots dans un titre de discussion"
     title_min_entropy: "L'entropie minimale (ie. nombre de caractères) d'un titre de discussion"
     body_min_entropy: "L'entropie minimale (ie. nombre de caractères) du contenu d'un message"
-    new_user_period_days: "Combien de temps en jours, un utilisateur est-il consideré comme nouveau."
     title_fancy_entities: "Convertir les entitées HTML dans les titres des discussion"
+
+    min_title_similar_length: "La taille minimale du titre avant que l'on vérifie l'existence de discussions identiques"
+    min_body_similar_length: "La taille minimale du message avant que l'on vérifie l'existence de discussions identiques"
+
+    category_colors: "Une liste de couleurs autorisées pour les catégories (au format hexadécimal, séparés par un |)"
+    max_upload_size_kb: "La taille maximum des fichiers que les utilisateurs peuvent envoyer en kB - assurez-vous de configurer également cette limite dans nginx (client_max_body_size) / apache ou votre proxy."
+    max_similar_results: "Nombre de discussions similaires à afficher lorsqu'un utilisateur est en train de créer une nouvelle discussion"
+
+    title_prettify: "Corrige les coquilles les plus communes dans les titres (intégralité du titre en majuscule, première lettre en minuscule, de multiples ! et ?, un . inutile à la fin, etc.)"
+
+    topic_views_heat_low: "Le nombre de vues à partir duquel le niveau d'intensité de la discussion est : faible."
+    topic_views_heat_medium: "Le nombre de vues à partir duquel le niveau d'intensité de la discussion est : moyen."
+    topic_views_heat_high: "Le nombre de vues à partir duquel le niveau d'intensité de la discussion est : élevé."
+
+    tos_url: "Si vous disposez déjà de CGV, vous pouvez renseigner leur URL ici."
+    privacy_policy_url: "Si vous disposez déjà d'une politique de confidentialité, vous pouvez renseigner son URL ici."
+
+    newuser_spam_host_threshold: "Limite du nombre de liens vers un même host qu'un nouvel utilisateur peut insérer dans un message avant d'être considérer comme un SPAM."
 
   notification_types:
     mentioned: "%{display_username} vous a mentionné dans %{link}"
@@ -408,36 +606,10 @@ fr:
       topic: 'Discussions'
       user: 'Utilisateurs'
 
-  youve_posted: "Vous avez posté"
   original_poster: "Auteur originel"
   most_posts: "Le plus de messages"
   most_recent_poster: "Auteur le plus récent"
   frequent_poster: "Auteur frequent"
-
-  user_action_descriptions:
-    bookmarks: "Bookmarks"
-    topics: "Discussions"
-    likes_received: "J'aime reçus"
-    likes_given: "J'aime donnés"
-    responses: "Réponses"
-    topic_responses: "Réponses à la discussion"
-    posts: "Messages"
-    mentions: "Mentions"
-    quotes: "Citations"
-    edits: "Modifications"
-    favorites: "Favoris"
-    sent_items: "Elements envoyés"
-    inbox: "Boîte de réception"
-
-    was_liked: "a été aimé"
-    liked: "aimé"
-    bookmarked: "bookmarké"
-    posted: "posté"
-    responded_to: "réponse_à"
-    mentioned: "mentionné"
-    quoted: "cité"
-    favorited: "mis en favoris"
-    edited: "modifié"
 
   move_posts:
     moderator_post:
@@ -446,11 +618,16 @@ fr:
 
   topic_statuses:
     archived_enabled: "Cette discussion est maintenant archivée. Elle est gelée et ne peut plus être modifiée."
-    archived_disabled: "Cette discussion est maintenant  désarchivée. Elle n'est plus gelée, et peut être modifiée."
-    closed_enabled: "Cette discussion est maintenant  fermée. Les nouvelles réponses ne sont plus autorisées."
-    closed_disabled: "Cette discussion est maintenant  ouverte. Les nouvelles réponses sont autorisées."
-    pinned_enabled: "Cette discussion est maintenant  épinglée. Elle apparaîtra en haut de sa catégorie."
-    pinned_disabled: "Cette discussion est maintenant  désépinglée. Elle n'apparaîtra plus en haut de sa categorie."
+    archived_disabled: "Cette discussion est maintenant désarchivée. Elle n'est plus gelée, et peut être modifiée."
+    closed_enabled: "Cette discussion est maintenant fermée. Les nouvelles réponses ne sont plus autorisées."
+    closed_disabled: "Cette discussion est maintenant ouverte. Les nouvelles réponses sont autorisées."
+    autoclosed_enabled:
+      zero: "Cette discussion a été automatiquement fermé après 1 jour. Aucune réponse n'est permise dorénavant."
+      one: "Cette discussion a été automatiquement fermé après 1 jour. Aucune réponse n'est permise dorénavant."
+      other: "Cette discussion a été automatiquement fermé après %{count} jours. Aucune réponse n'est permise dorénavant."
+    autoclosed_disabled: "Cette discussion est maintenant ouverte. Vous pouvez y participer."
+    pinned_enabled: "Cette discussion est maintenant épinglée. Elle apparaîtra en haut de sa catégorie jusqu'à ce qu'elle soit désépinglée par un modérateur, ou par chaque utilisateur utilisant le bouton Désépingler."
+    pinned_disabled: "Cette discussion est maintenant désépinglée. Elle n'apparaîtra plus en haut de sa categorie."
     visible_enabled: "Cette discussion est maintenant visible. Elle sera affichée dans la liste des discussions."
     visible_disabled: "Cette discussion est maintenant invisible. Elle ne sera plus affichée dans la liste des discussions. Le seul moyen d'y accéder est par lien direct."
 
@@ -463,6 +640,7 @@ fr:
     not_activated: "Vous ne pouvez pas vous connecter pour le moment. Nous vous avons envoyé un mail d'activation. Merci de suivre les instructions qui y sont contenues pour activer votre compte."
     errors: "%{errors}"
     not_available: "Pas disponible. Essayez %{suggestion}?"
+    something_already_taken: "Quelque chose s'est mal passé. Peut-être que votre nom d'utilisateur ou adresse email est déjà enregistré ? Essayez le lien : j'ai oublié mon mot de passe.."
     omniauth_error: "Désolé, il y a eu une erreur lors de l'autorisation de votre compte %{strategy}. Vous n'avez peut-être pas approuvé l'autorisation ?"
     omniauth_error_unknown: "Quelque chose s'est mal passé lors de votre connexion, merci de réessayer."
 
@@ -491,27 +669,27 @@ fr:
       [1]: %{invite_link}
 
   test_mailer:
-    subject_template: "[%{site_name}] Test de livrabilité d'email"
+    subject_template: "[%{site_name}] Test de délivrabilité d'email"
     text_body_template: |
-      Ceci est un mail de test envoyé pour le forum %{site_name}. Vous pouvez accéder à ce forum avec votre navigateur à l'adresse suivante :
+      Ceci est un mail de test envoyé depuis le forum %{site_name} disponible à l'adresse suivante :
 
-      [*%{base_url}*][0]
+      [**%{base_url}**][0]
 
-      La livrabilité d'email peut être complexe, mais voici quelques aspects que vous pouvez vérifier immédiatement :
+      La délivrabilité d'email est complexe. Voici les points importants que vous devez vérifier immédiatement :
 
       - Soyez sûr de savoir comment voir la *source brute de l'email* dans votre client mail, afin que vous puissiez examiner l'entête de l'email contenant des indices importants.
 
-      - **IMPORTANT** : Votre FAI a-t-elle effectué un enregistrement reverse DNS pour associer le nom de domaine depuis lequel vous envoyez les mails avec les IPs que vous utilisez pour emailer ? Vous pouvez [tester votre enregistrement Reverse PTR][2] ici. Si l'enregistrement du reverse DNS pointer approprié n'est pas effectué par votre FAI, il est peu probable que vos mails soient délivrés.
+      - **IMPORTANT** : Votre FAI a-t-elle effectué un enregistrement reverse DNS pour associer le nom de domaine depuis lequel vous envoyez les mails avec les IPs que vous utilisez pour emailer ? [Testez votre enregistrement Reverse PTR][2] ici. Si l'enregistrement du reverse DNS pointer approprié n'est pas effectué par votre FAI, il est peu probable que vos mails soient délivrés.
 
-      - L'enregistrement SPF de votre domaine est-il correct ? Vous pouvez [tester votre enregistrement SPF][1] ici.
+      - L'enregistrement SPF de votre domaine est-il correct ? [Testez votre enregistrement SPF][1] ici.
 
-      - Avez-vous configuré [DKIM email key signing][3] dans votre client mail, et ajouté la clé publique DKIM dans vos enregistrements DNS ?
+      - Assurez-vous que les IPs du serveur d'où proviennent les mails [ne sont sur aucune liste noire d'emails][4].
 
-      - Avez-vous vérifié que les IPs du serveur d'où proviennent les mails [ne sont sur aucune liste noire d'emails][4] ?
+      - Vérifiez que votre serveur de messagerie envoi *vraiment* un nom d'hôte pleinement qualifié présent dans le message HELO lors d'une résolution DNS. Si ce n'est pas le cas, cela augmentera les chances que votre adresse email soit rejetée par de nombreux services de messagerie.
 
-      - Avez-vous vérifié que votre serveur de messagerie envoi *vraiment* un nom d'hôte pleinement qualifié présent dans le message HELO lors d'une résolution DNS ? Si ce n'est pas le cas, cela augmentera les chances que votre adresse email soit rejetée par de nombreux services de messagerie.
+      - Configurez la [signature de clé DKIM][3] dans votre client mail, et ajoutez la clé publique DKIM dans vos enregistrements DNS. Ce n'est pas obligatoire, mais augmentera grandement votre délivrabilité.
 
-      Nous esperons que vous avez correctement reçu ce mail de test de livrabilité !
+      Nous esperons que vous avez correctement reçu ce mail de test de délivrabilité !
 
       Bonne chance,
 
@@ -763,8 +941,23 @@ fr:
 
   page_not_found:
     title: "La page que vous avez demandée n'existe pas dans ce forum de discussion.Peut-être nous pouvons vous aider à la trouver, ou une autre discussion similaire :"
-    popular_topics: "Discussions populaires"
+    latest_topics: "Discussions populaires"
     recent_topics: "Discussions récentes"
     see_more: "Voir plus"
     search_title: "Rechercher pour cette discussion"
     search_google: "Rechercher avec Google"
+
+  terms_of_service:
+    user_content_license: |
+      User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_short_name} has the right (though not the obligation) to, in %{company_short_name}’s sole discretion (i) refuse or remove any content that, in %{company_short_name}’s reasonable opinion, violates any %{company_short_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_short_name}’s sole discretion. %{company_short_name} will have no obligation to provide a refund of any amounts previously paid.
+
+      Without limiting any of those representations or warranties, %{company_short_name} has the right (though not the obligation) to, in %{company_short_name}’s sole discretion (i) refuse or remove any content that, in %{company_short_name}’s reasonable opinion, violates any %{company_short_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_short_name}’s sole discretion. %{company_short_name} will have no obligation to provide a refund of any amounts previously paid.
+    miscellaneous: "This Agreement constitutes the entire agreement between %{company_short_name} and you concerning the subject matter ereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_short_name}, or by the posting by %{company_short_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_short_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns."
+
+  deleted: 'supprimmé'
+
+  upload:
+    image:
+      fetch_failure: "Désolé, une erreur s'est produite lorsque nous avons essayé de récupérer l'image."
+      unknown_image_type: "Désolé, mais le fichier que vous essayez d'envoyer ne semble pas être une image."
+      size_not_found: "Désolé, mais nous n'avons pas réussit à déterminer la taille de l'image. Peut-être que l'image est corrompue ?"

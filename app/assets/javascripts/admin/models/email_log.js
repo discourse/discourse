@@ -17,16 +17,13 @@ Discourse.EmailLog.reopenClass({
   },
 
   findAll: function(filter) {
-    var result;
-    result = Em.A();
-    $.ajax({
-      url: "/admin/email_logs.json",
-      data: { filter: filter },
-      success: function(logs) {
-        logs.each(function(log) {
-          result.pushObject(Discourse.EmailLog.create(log));
-        });
-      }
+    var result = Em.A();
+    Discourse.ajax("/admin/email_logs.json", {
+      data: { filter: filter }
+    }).then(function(logs) {
+      logs.each(function(log) {
+        result.pushObject(Discourse.EmailLog.create(log));
+      });
     });
     return result;
   }

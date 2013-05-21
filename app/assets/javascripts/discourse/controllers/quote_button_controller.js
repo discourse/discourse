@@ -1,3 +1,5 @@
+/*global assetPath:true */
+
 /**
   This controller supports the pop up quote button
 
@@ -8,71 +10,114 @@
 **/
 Discourse.QuoteButtonController = Discourse.Controller.extend({
   needs: ['topic', 'composer'],
-  started: null,
 
-  // If the buffer is cleared, clear out other state (post)
-  bufferChanged: (function() {
-    if (this.blank('buffer')) {
-      return this.set('post', null);
-    }
-  }).observes('buffer'),
-
-  mouseDown: function(e) {
-    this.started = [e.pageX, e.pageY];
+  init: function() {
+    this._super();
+    $LAB.script(assetPath('defer/html-sanitizer-bundle'));
   },
 
-  mouseUp: function(e) {
-    if (this.started[1] > e.pageY) {
-      this.started = [e.pageX, e.pageY];
-    }
-  },
+  /**
+    If the buffer is cleared, clear out other state (post)
+  **/
+  bufferChanged: function() {
+    if (this.blank('buffer')) this.set('post', null);
+  }.observes('buffer'),
 
-  selectText: function(e) {
-    var $quoteButton, left, selectedText, top;
+  /**
+    Save the currently selected text and displays the
+    "quote reply" button
+
+    @method selectText
+  **/
+  selectText: function(postId) {
+    // anonymous users cannot "quote-reply"
     if (!Discourse.get('currentUser')) return;
+    // don't display the "quote-reply" button if we can't create a post
     if (!this.get('controllers.topic.content.can_create_post')) return;
 
-    selectedText = Discourse.Utilities.selectedText();
-    if (this.get('buffer') === selectedText) return;
-    if (this.get('lastSelected') === selectedText) return;
-    this.set('post', e.context);
-    this.set('buffer', selectedText);
-    top = e.pageY + 5;
-    left = e.pageX + 5;
-    $quoteButton = $('.quote-button');
-    if (this.started) {
-      top = this.started[1] - 50;
-      left = ((left - this.started[0]) / 2) + this.started[0] - ($quoteButton.width() / 2);
+    var selection = window.getSelection();
+    // no selections
+    if (selection.rangeCount === 0) return;
+    // retrieve the selected range
+    var range = selection.getRangeAt(0),
+        cloned = range.cloneRange(),
+        $ancestor = $(range.commonAncestorContainer);
+
+    // don't display the "quote reply" button if you select text spanning two posts
+    // note: the ".contents" is here to prevent selection of the topic summary
+    if ($ancestor.closest('.topic-body > .contents').length === 0) {
+      this.set('buffer', '');
+      return;
     }
-    $quoteButton.css({
-      top: top,
-      left: left
+
+    var selectedText = Discourse.Utilities.selectedText();
+    if (this.get('buffer') === selectedText) return;
+
+    // we need to retrieve the post data from the posts collection in the topic controller
+    var posts = this.get('controllers.topic.posts'),
+        length = posts.length,
+        post;
+
+    for (var p = 0; p < length; p++) {
+      if (posts[p].id === postId) { post = posts[p]; break; }
+    }
+
+    this.set('post', post);
+    this.set('buffer', selectedText);
+
+    // collapse the range at the beginning of the selection
+    // (ie. moves the end point to the start point)
+    range.collapse(true);
+
+    // create a marker element containing a single invisible character
+    var markerElement = document.createElement("span");
+    markerElement.appendChild(document.createTextNode("\ufeff"));
+    // insert it at the beginning of our range
+    range.insertNode(markerElement);
+
+    // work around chrome that would sometimes lose the selection
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(cloned);
+
+    // move the quote button at the beginning of the selection
+    var markerOffset = $(markerElement).offset(),
+        $quoteButton = $('.quote-button');
+
+
+    Em.run.schedule('afterRender', function() {
+      $quoteButton.offset({
+        top: markerOffset.top - $quoteButton.outerHeight() - 5,
+        left: markerOffset.left
+      });
     });
-    this.started = null;
-    return false;
+
+    // remove the marker
+    markerElement.parentNode.removeChild(markerElement);
   },
 
-  quoteText: function(e) {
-    var buffer, composerController, composerOpts, composerPost, post, quotedText,
-      _this = this;
-    e.stopPropagation();
-    post = this.get('post');
-    composerController = this.get('controllers.composer');
-    composerOpts = {
+  /**
+    Quote the currently selected text
+
+    @method quoteText
+  **/
+  quoteText: function() {
+    var post = this.get('post');
+    var composerController = this.get('controllers.composer');
+    var composerOpts = {
       post: post,
       action: Discourse.Composer.REPLY,
       draftKey: this.get('post.topic.draft_key')
     };
 
     // If the composer is associated with a different post, we don't change it.
-    if (composerPost = composerController.get('content.post')) {
-      if (composerPost.get('id') !== this.get('post.id')) {
-        composerOpts.post = composerPost;
-      }
+    var composerPost = composerController.get('content.post');
+    if (composerPost && (composerPost.get('id') !== this.get('post.id'))) {
+      composerOpts.post = composerPost;
     }
-    buffer = this.get('buffer');
-    quotedText = Discourse.BBCode.buildQuoteBBCode(post, buffer);
 
+    var buffer = this.get('buffer');
+    var quotedText = Discourse.BBCode.buildQuoteBBCode(post, buffer);
     if (composerController.wouldLoseChanges()) {
       composerController.appendText(quotedText);
     } else {
@@ -82,5 +127,18 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
     }
     this.set('buffer', '');
     return false;
+  },
+
+  /**
+    Deselect the currently selected text
+
+    @method deselectText
+  **/
+  deselectText: function() {
+    // clear selected text
+    window.getSelection().removeAllRanges();
+    // clean up the buffer
+    this.set('buffer', '');
   }
+
 });

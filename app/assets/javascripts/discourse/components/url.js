@@ -21,7 +21,7 @@ Discourse.URL = {
 
     @method router
   **/
-  router: function(path) {
+  router: function() {
     return Discourse.__container__.lookup('router:main');
   },
 
@@ -61,6 +61,14 @@ Discourse.URL = {
   routeTo: function(path) {
     var oldPath = window.location.pathname;
     path = path.replace(/https?\:\/\/[^\/]+/, '');
+    /*
+      If the URL is absolute, remove rootURL
+     */
+    if (path.match(/^\//)) {
+      var rootURL = (Discourse.BaseUri === undefined ? "/" : Discourse.BaseUri);
+      rootURL = rootURL.replace(/\/$/, '');
+      path = path.replace(rootURL, '');
+    }
 
     /*
       If the URL is in the topic form, /t/something/:topic_id/:post_number
@@ -79,7 +87,8 @@ Discourse.URL = {
         var topicController = Discourse.__container__.lookup('controller:topic');
         var opts = { trackVisit: false };
         if (newMatches[3]) opts.nearPost = newMatches[3];
-        topicController.get('content').loadPosts(opts);
+        topicController.cancelFilter();
+        topicController.loadPosts(opts);
 
         // Abort routing, we have replaced our state.
         return;
@@ -96,6 +105,30 @@ Discourse.URL = {
     var router = this.router();
     router.router.updateURL(path);
     return router.handleURL(path);
+  },
+
+  /**
+    @private
+
+    Get the origin of the current location.
+    This has been extracted so it can be tested.
+
+    @method origin
+  **/
+  origin: function() {
+    return window.location.origin;
+  },
+
+  /**
+    @private
+
+    Redirect to a URL.
+    This has been extracted so it can be tested.
+
+    @method redirectTo
+  **/
+  redirectTo: function(url) {
+    window.location = Discourse.getURL(url);
   }
 
 };

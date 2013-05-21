@@ -8,57 +8,140 @@
 **/
 Discourse.User = Discourse.Model.extend({
 
+  /**
+    Large version of this user's avatar.
+
+    @property avatarLarge
+    @type {String}
+  **/
   avatarLarge: (function() {
     return Discourse.Utilities.avatarUrl(this.get('username'), 'large', this.get('avatar_template'));
   }).property('username'),
 
+  /**
+    Small version of this user's avatar.
+
+    @property avatarSmall
+    @type {String}
+  **/
   avatarSmall: (function() {
     return Discourse.Utilities.avatarUrl(this.get('username'), 'small', this.get('avatar_template'));
   }).property('username'),
 
-  websiteName: (function() {
+  /**
+    This user's website.
+
+    @property websiteName
+    @type {String}
+  **/
+  websiteName: function() {
     return this.get('website').split("/")[2];
-  }).property('website'),
+  }.property('website'),
 
-  path: (function() {
-    return "/users/" + (this.get('username_lower'));
-  }).property('username'),
+  hasWebsite: function() {
+    return this.present('website');
+  }.property('website'),
 
-  username_lower: (function() {
+  statusIcon: function() {
+    var desc;
+    if(this.get('admin')) {
+      desc = Em.String.i18n('user.admin', {user: this.get("name")});
+      return '<i class="icon icon-trophy" title="' + desc +  '" alt="' + desc + '"></i>';
+    }
+    if(this.get('moderator')){
+      desc = Em.String.i18n('user.moderator', {user: this.get("name")});
+      return '<i class="icon icon-magic" title="' + desc +  '" alt="' + desc + '"></i>';
+    }
+    return null;
+  }.property('admin','moderator'),
+
+  /**
+    Path to this user.
+
+    @property path
+    @type {String}
+  **/
+  path: function() {
+    return Discourse.getURL("/users/") + (this.get('username_lower'));
+  }.property('username'),
+
+  /**
+    Path to this user's administration
+
+    @property adminPath
+    @type {String}
+  **/
+  adminPath: function() {
+    return Discourse.getURL("/admin/users/") + (this.get('username_lower'));
+  }.property('username'),
+
+  /**
+    This user's username in lowercase.
+
+    @property username_lower
+    @type {String}
+  **/
+  username_lower: function() {
     return this.get('username').toLowerCase();
-  }).property('username'),
+  }.property('username'),
 
-  trustLevel: (function() {
+  /**
+    This user's trust level.
+
+    @property trustLevel
+    @type {Integer}
+  **/
+  trustLevel: function() {
     return Discourse.get('site.trust_levels').findProperty('id', this.get('trust_level'));
-  }).property('trust_level'),
+  }.property('trust_level'),
 
+  /**
+    Changes this user's username.
+
+    @method changeUsername
+    @param {String} newUsername The user's new username
+    @returns Result of ajax call
+  **/
   changeUsername: function(newUsername) {
-    return $.ajax({
-      url: "/users/" + (this.get('username_lower')) + "/preferences/username",
+    return Discourse.ajax("/users/" + (this.get('username_lower')) + "/preferences/username", {
       type: 'PUT',
-      data: {
-        new_username: newUsername
-      }
+      data: { new_username: newUsername }
     });
   },
 
+  /**
+    Changes this user's email address.
+
+    @method changeEmail
+    @param {String} email The user's new email address\
+    @returns Result of ajax call
+  **/
   changeEmail: function(email) {
-    return $.ajax({
-      url: "/users/" + (this.get('username_lower')) + "/preferences/email",
+    return Discourse.ajax("/users/" + (this.get('username_lower')) + "/preferences/email", {
       type: 'PUT',
-      data: {
-        email: email
-      }
+      data: { email: email }
     });
   },
 
-  copy: function(deep) {
+  /**
+    Returns a copy of this user.
+
+    @method copy
+    @returns {User}
+  **/
+  copy: function() {
     return Discourse.User.create(this.getProperties(Ember.keys(this)));
   },
 
-  save: function(finished) {
-    var _this = this;
-    return $.ajax("/users/" + this.get('username').toLowerCase(), {
+  /**
+    Save's this user's properties over AJAX via a PUT request.
+
+    @method save
+    @returns {Promise} the result of the operation
+  **/
+  save: function() {
+    var user = this;
+    return Discourse.ajax("/users/" + this.get('username').toLowerCase(), {
       data: this.getProperties('auto_track_topics_after_msecs',
                                'bio_raw',
                                'website',
@@ -67,247 +150,221 @@ Discourse.User = Discourse.Model.extend({
                                'email_direct',
                                'email_private_messages',
                                'digest_after_days',
-                               'new_topic_duration_minutes'),
-      type: 'PUT',
-      success: function() { return finished(true); },
-      error: function() { return finished(false); }
+                               'new_topic_duration_minutes',
+                               'external_links_in_new_tab',
+                               'enable_quoting'),
+      type: 'PUT'
+    }).then(function(data) {
+      user.set('bio_excerpt',data.user.bio_excerpt);
+      Discourse.set('currentUser.enable_quoting', user.get('enable_quoting'));
+      Discourse.set('currentUser.external_links_in_new_tab', user.get('external_links_in_new_tab'));
     });
   },
 
-  changePassword: function(callback) {
-    var good;
-    good = false;
-    return $.ajax({
-      url: '/session/forgot_password',
+  /**
+    Changes the password and calls the callback function on AJAX.complete.
+
+    @method changePassword
+    @returns {Promise} the result of the change password operation
+  **/
+  changePassword: function() {
+    return Discourse.ajax("/session/forgot_password", {
       dataType: 'json',
       data: {
-        username: this.get('username')
+        login: this.get('username')
       },
-      type: 'POST',
-      success: function() { good = true; },
-      complete: function() {
-        var message;
-        message = "error";
-        if (good) {
-          message = "email sent";
-        }
-        return callback(message);
-      }
+      type: 'POST'
     });
   },
 
+  /**
+    Filters out this user's stream of user actions by a given filter
+
+    @method filterStream
+    @param {String} filter
+  **/
   filterStream: function(filter) {
     if (Discourse.UserAction.statGroups[filter]) {
       filter = Discourse.UserAction.statGroups[filter].join(",");
     }
+
     this.set('streamFilter', filter);
     this.set('stream', Em.A());
+    this.set('totalItems', 0);
     return this.loadMoreUserActions();
   },
 
+  /**
+    Loads a single user action by id.
+
+    @method loadUserAction
+    @param {Integer} id The id of the user action being loaded
+    @returns A stream of the user's actions containing the action of id
+  **/
   loadUserAction: function(id) {
-    var stream,
-      _this = this;
-    stream = this.get('stream');
-    return $.ajax({
-      url: "/user_actions/" + id + ".json",
-      dataType: 'json',
-      cache: 'false',
-      success: function(result) {
-        if (result) {
-          var action;
+    var user = this;
+    var stream = this.get('stream');
+    return Discourse.ajax("/user_actions/" + id + ".json", { cache: 'false' }).then(function(result) {
+      if (result) {
+        if ((user.get('streamFilter') || result.action_type) !== result.action_type) return;
 
-          if ((_this.get('streamFilter') || result.action_type) !== result.action_type) {
-            return;
-          }
+        var action = Em.A();
+        action.pushObject(Discourse.UserAction.create(result));
+        action = Discourse.UserAction.collapseStream(action);
 
-          action = Em.A();
-          action.pushObject(Discourse.UserAction.create(result));
-          action = Discourse.UserAction.collapseStream(action);
+        user.set('totalItems', user.get('totalItems') + 1);
 
-          return stream.insertAt(0, action[0]);
-        }
+        return stream.insertAt(0, action[0]);
       }
     });
   },
 
-  loadMoreUserActions: function(callback) {
-    var stream, url,
-      _this = this;
-    stream = this.get('stream');
+  /**
+    Loads more user actions, and then calls a callback if defined.
+
+    @method loadMoreUserActions
+    @returns {Promise} the content of the user actions
+  **/
+  loadMoreUserActions: function() {
+    var user = this;
+    var stream = user.get('stream');
     if (!stream) return;
 
-    url = "/user_actions?offset=" + stream.length + "&user_id=" + (this.get("id"));
+    var url = Discourse.getURL("/user_actions?offset=") + this.get('totalItems') + "&user_id=" + (this.get("id"));
     if (this.get('streamFilter')) {
       url += "&filter=" + (this.get('streamFilter'));
     }
 
-    return $.ajax({
-      url: url,
-      dataType: 'json',
-      cache: 'false',
-      success: function(result) {
-        var copy;
-        if (result && result.user_actions && result.user_actions.each) {
-          copy = Em.A();
-          result.user_actions.each(function(i) {
-            return copy.pushObject(Discourse.UserAction.create(i));
-          });
-          copy = Discourse.UserAction.collapseStream(copy);
-          stream.pushObjects(copy);
-          _this.set('stream', stream);
-        }
-        if (callback) {
-          return callback();
-        }
+    return Discourse.ajax(url, { cache: 'false' }).then( function(result) {
+      if (result && result.user_actions && result.user_actions.each) {
+        var copy = Em.A();
+        result.user_actions.each(function(i) {
+          return copy.pushObject(Discourse.UserAction.create(i));
+        });
+        copy = Discourse.UserAction.collapseStream(copy);
+        stream.pushObjects(copy);
+        user.set('stream', stream);
+        user.set('totalItems', user.get('totalItems') + result.user_actions.length);
       }
     });
   },
 
-  statsCountNonPM: (function() {
-    var stats, total;
-    total = 0;
-    if (!(stats = this.get('stats'))) return 0;
-    this.get('stats').each(function(s) {
-      if (!s.get("isPM")) {
-        total += parseInt(s.count, 10);
-      }
-    });
-    return total;
-  }).property('stats.@each'),
+  /**
+  The user's stat count, excluding PMs.
 
-  statsExcludingPms: (function() {
-    var r;
-    r = [];
-    if (this.blank('stats')) return r;
-    this.get('stats').each(function(s) {
-      if (!s.get('isPM')) {
-        return r.push(s);
-      }
+    @property statsCountNonPM
+    @type {Integer}
+  **/
+  statsCountNonPM: function() {
+    if (this.blank('statsExcludingPms')) return 0;
+    return this.get('statsExcludingPms').getEach('count').reduce(function (accum, val) {
+      return accum + val;
     });
-    return r;
-  }).property('stats.@each'),
+  }.property('statsExcludingPms.@each.count'),
 
-  statsPmsOnly: (function() {
-    var r;
-    r = [];
-    if (this.blank('stats')) return r;
-    this.get('stats').each(function(s) {
-      if (s.get('isPM')) return r.push(s);
-    });
-    return r;
-  }).property('stats.@each'),
+  /**
+  The user's stats, excluding PMs.
 
-  inboxCount: (function() {
-    var r;
-    r = 0;
-    this.get('stats').each(function(s) {
-      if (s.action_type === Discourse.UserAction.GOT_PRIVATE_MESSAGE) {
-        r = s.count;
-        return false;
-      }
-    });
-    return r;
-  }).property('stats.@each'),
+    @property statsExcludingPms
+    @type {Array}
+  **/
+  statsExcludingPms: function() {
+    if (this.blank('stats')) return [];
+    return this.get('stats').rejectProperty('isPM');
+  }.property('stats.@each.isPM'),
 
-  sentItemsCount: (function() {
-    var r;
-    r = 0;
-    this.get('stats').each(function(s) {
-      if (s.action_type === Discourse.UserAction.NEW_PRIVATE_MESSAGE) {
-        r = s.count;
-        return false;
-      }
+  /**
+  This user's stats, only including PMs.
+
+    @property statsPmsOnly
+    @type {Array}
+  **/
+  statsPmsOnly: function() {
+    if (this.blank('stats')) return [];
+    return this.get('stats').filterProperty('isPM');
+  }.property('stats.@each.isPM'),
+
+  /**
+    Load extra details for the user
+
+    @method loadDetails
+  **/
+  loadDetails: function() {
+
+    this.set('loading', true);
+
+    // Check the preload store first
+    var user = this;
+    var username = user.get('username');
+
+    return PreloadStore.getAndRemove("user_" + username, function() {
+      return Discourse.ajax("/users/" + username + '.json');
+    }).then(function (json) {
+
+      // Create a user from the resulting JSON
+      json.user.stats = Discourse.User.groupStats(json.user.stats.map(function(s) {
+        if (s.count) s.count = parseInt(s.count, 10);
+        return Discourse.UserActionStat.create(s);
+      }));
+
+      user.setProperties(json.user);
+      user.set('loading', false);
+      return user;
     });
-    return r;
-  }).property('stats.@each')
+  }
+
 });
 
 Discourse.User.reopenClass({
+  /**
+    Checks if given username is valid for this email address
 
+    @method checkUsername
+    @param {String} username A username to check
+    @param {String} email An email address to check
+  **/
   checkUsername: function(username, email) {
-    return $.ajax({
-      url: '/users/check_username',
-      type: 'GET',
-      data: {
-        username: username,
-        email: email
-      }
+    return Discourse.ajax('/users/check_username', {
+      data: { username: username, email: email }
     });
   },
 
+  /**
+    Groups the user's statistics
+
+    @method groupStats
+    @param {Array} Given stats
+    @returns {Object}
+  **/
   groupStats: function(stats) {
-    var g,
-      _this = this;
-    g = {};
-    stats.each(function(s) {
-      var c, found, k, v, _ref;
-      found = false;
-      _ref = Discourse.UserAction.statGroups;
-      for (k in _ref) {
-        v = _ref[k];
-        if (v.contains(s.action_type)) {
-          found = true;
-          if (!g[k]) {
-            g[k] = Em.Object.create({
-              description: Em.String.i18n("user_action_descriptions." + k),
-              count: 0,
-              action_type: parseInt(k, 10)
-            });
-          }
-          g[k].count += parseInt(s.count, 10);
-          c = g[k].count;
-          if (s.action_type === k) {
-            g[k] = s;
-            s.count = c;
-          }
-        }
-      }
-      if (!found) {
-        g[s.action_type] = s;
-      }
+    var responses = Discourse.UserActionStat.create({
+      count: 0,
+      action_type: Discourse.UserAction.RESPONSE
     });
-    return stats.map(function(s) {
-      return g[s.action_type];
-    }).exclude(function(s) {
-      return !s;
+
+    stats.filterProperty('isResponse').forEach(function (stat) {
+      responses.set('count', responses.get('count') + stat.get('count'));
     });
+
+    var result = Em.A();
+    result.pushObject(responses);
+    result.pushObjects(stats.rejectProperty('isResponse'));
+    return(result);
   },
 
-  find: function(username) {
-    var promise,
-      _this = this;
-    promise = new RSVP.Promise();
-    $.ajax({
-      url: "/users/" + username + '.json',
-      success: function(json) {
-        // todo: decompose to object
-        var user;
-        json.user.stats = _this.groupStats(json.user.stats.map(function(s) {
-          var obj;
-          obj = Em.Object.create(s);
-          obj.isPM = obj.action_type === Discourse.UserAction.NEW_PRIVATE_MESSAGE || obj.action_type === Discourse.UserAction.GOT_PRIVATE_MESSAGE;
-          return obj;
-        }));
-        if (json.user.stream) {
-          json.user.stream = Discourse.UserAction.collapseStream(json.user.stream.map(function(ua) {
-            return Discourse.UserAction.create(ua);
-          }));
-        }
-        user = Discourse.User.create(json.user);
-        return promise.resolve(user);
-      },
-      error: function(xhr) {
-        return promise.reject(xhr);
-      }
-    });
-    return promise;
-  },
+  /**
+  Creates a new account over POST
 
+    @method createAccount
+    @param {String} name This user's name
+    @param {String} email This user's email
+    @param {String} password This user's password
+    @param {String} passwordConfirm This user's confirmed password
+    @param {String} challenge
+    @returns Result of ajax call
+  **/
   createAccount: function(name, email, password, username, passwordConfirm, challenge) {
-    return $.ajax({
-      url: '/users',
-      dataType: 'json',
+    return Discourse.ajax("/users", {
       data: {
         name: name,
         email: email,

@@ -8,14 +8,26 @@
 **/
 Discourse.PreferencesUsernameRoute = Discourse.RestrictedUserRoute.extend({
 
+  model: function() {
+    return this.modelFor('user');
+  },
+
   renderTemplate: function() {
     return this.render({ into: 'user', outlet: 'userOutlet' });
   },
 
-  setupController: function(controller) {
-    var user = this.controllerFor('user').get('content');
-    controller.set('content', user);
-    return controller.set('newUsername', user.get('username'));
+  // A bit odd, but if we leave to /preferences we need to re-render that outlet
+  exit: function() {
+    this._super();
+    this.render('preferences', {
+      into: 'user',
+      outlet: 'userOutlet',
+      controller: 'preferences'
+    });
+  },
+
+  setupController: function(controller, user) {
+    controller.set('newUsername', user.get('username'));
   }
 
 });

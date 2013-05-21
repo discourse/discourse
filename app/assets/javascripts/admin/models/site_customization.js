@@ -11,64 +11,76 @@ Discourse.SiteCustomization = Discourse.Model.extend({
 
   init: function() {
     this._super();
-    return this.startTrackingChanges();
+    this.startTrackingChanges();
   },
 
-  description: (function() {
+  description: function() {
     return "" + this.name + (this.enabled ? ' (*)' : '');
-  }).property('selected', 'name'),
+  }.property('selected', 'name'),
 
-  changed: (function() {
+  changed: function() {
+
     var _this = this;
-    if (!this.originals) {
-      return false;
-    }
-    return this.trackedProperties.any(function(p) {
+    if(!this.originals) return false;
+
+    var changed = this.trackedProperties.any(function(p) {
       return _this.originals[p] !== _this.get(p);
     });
-  }).property('override_default_style', 'enabled', 'name', 'stylesheet', 'header', 'originals'),
+
+    if(changed){
+      this.set('savingStatus','');
+    }
+
+    return changed;
+
+  }.property('override_default_style', 'enabled', 'name', 'stylesheet', 'header', 'originals'),
 
   startTrackingChanges: function() {
     var _this = this;
-    this.set('originals', {});
-    return this.trackedProperties.each(function(p) {
-      _this.originals[p] = _this.get(p);
+    var originals = {};
+    this.trackedProperties.each(function(p) {
+      originals[p] = _this.get(p);
       return true;
     });
+    this.set('originals', originals);
   },
 
-  previewUrl: (function() {
+  previewUrl: function() {
     return "/?preview-style=" + (this.get('key'));
-  }).property('key'),
+  }.property('key'),
 
-  disableSave: (function() {
-    return !this.get('changed');
-  }).property('changed'),
+  disableSave: function() {
+    return !this.get('changed') || this.get('saving');
+  }.property('changed'),
+
 
   save: function() {
-    var data;
-    this.startTrackingChanges();
-    data = {
+    this.set('savingStatus', Em.String.i18n('saving'));
+    this.set('saving',true);
+    var data = {
       name: this.name,
       enabled: this.enabled,
       stylesheet: this.stylesheet,
       header: this.header,
       override_default_style: this.override_default_style
     };
-    return $.ajax({
-      url: "/admin/site_customizations" + (this.id ? '/' + this.id : ''),
-      data: {
-        site_customization: data
-      },
+
+    var siteCustomization = this;
+    return Discourse.ajax("/admin/site_customizations" + (this.id ? '/' + this.id : ''), {
+      data: { site_customization: data },
       type: this.id ? 'PUT' : 'POST'
+    }).then(function (result) {
+      if (!siteCustomization.id) { siteCustomization.set('id', result.id); }
+      siteCustomization.set('savingStatus', Em.String.i18n('saved'));
+      siteCustomization.set('saving',false);
+      siteCustomization.startTrackingChanges();
     });
+
   },
 
-  "delete": function() {
-    if (!this.id) return;
-
-    return $.ajax({
-      url: "/admin/site_customizations/" + this.id,
+  destroy: function() {
+    if(!this.id) return;
+    return Discourse.ajax("/admin/site_customizations/" + this.id, {
       type: 'DELETE'
     });
   }
@@ -76,37 +88,25 @@ Discourse.SiteCustomization = Discourse.Model.extend({
 });
 
 var SiteCustomizations = Ember.ArrayProxy.extend({
-  selectedItemChanged: (function() {
-    var selected;
-    selected = this.get('selectedItem');
+  selectedItemChanged: function() {
+    var selected = this.get('selectedItem');
     return this.get('content').each(function(i) {
       return i.set('selected', selected === i);
     });
-  }).observes('selectedItem')
+  }.observes('selectedItem')
 });
 
 Discourse.SiteCustomization.reopenClass({
   findAll: function() {
-    var content,
-      _this = this;
-    content = SiteCustomizations.create({
-      content: [],
-      loading: true
-    });
-    $.ajax({
-      url: "/admin/site_customizations",
-      dataType: "json",
-      success: function(data) {
-        if (data) {
-          data.site_customizations.each(function(c) {
-            var item;
-            item = Discourse.SiteCustomization.create(c);
-            return content.pushObject(item);
-          });
-        }
-        return content.set('loading', false);
+    var customizations = SiteCustomizations.create({ content: [], loading: true });
+    Discourse.ajax("/admin/site_customizations").then(function (data) {
+      if (data) {
+        data.site_customizations.each(function(c) {
+          customizations.pushObject(Discourse.SiteCustomization.create(c.site_customizations));
+        });
       }
+      customizations.set('loading', false);
     });
-    return content;
+    return customizations;
   }
 });

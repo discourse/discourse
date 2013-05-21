@@ -1,12 +1,12 @@
 /**
   This controller supports interface for creating custom CSS skins in Discourse.
 
-  @class AdminCustomizeController    
+  @class AdminCustomizeController
   @extends Ember.Controller
   @namespace Discourse
   @module Discourse
-**/ 
-Discourse.AdminCustomizeController = Ember.Controller.extend({
+**/
+Discourse.AdminCustomizeController = Ember.ArrayController.extend({
 
   /**
     Create a new customization style
@@ -14,9 +14,9 @@ Discourse.AdminCustomizeController = Ember.Controller.extend({
     @method newCustomization
   **/
   newCustomization: function() {
-    var item = Discourse.SiteCustomization.create({name: 'New Style'});
-    this.get('content').pushObject(item);
-    this.set('content.selectedItem', item);
+    var item = Discourse.SiteCustomization.create({name: Em.String.i18n("admin.customize.new_style")});
+    this.pushObject(item);
+    this.set('selectedItem', item);
   },
 
   /**
@@ -26,7 +26,7 @@ Discourse.AdminCustomizeController = Ember.Controller.extend({
     @param {Discourse.SiteCustomization} style The style we are selecting
   **/
   selectStyle: function(style) {
-    this.set('content.selectedItem', style);
+    this.set('selectedItem', style);
   },
 
   /**
@@ -35,7 +35,7 @@ Discourse.AdminCustomizeController = Ember.Controller.extend({
     @method save
   **/
   save: function() {
-    this.get('content.selectedItem').save();
+    this.get('selectedItem').save();
   },
 
   /**
@@ -48,10 +48,10 @@ Discourse.AdminCustomizeController = Ember.Controller.extend({
     return bootbox.confirm(Em.String.i18n("admin.customize.delete_confirm"), Em.String.i18n("no_value"), Em.String.i18n("yes_value"), function(result) {
       var selected;
       if (result) {
-        selected = _this.get('content.selectedItem');
-        selected["delete"]();
-        _this.set('content.selectedItem', null);
-        return _this.get('content').removeObject(selected);
+        selected = _this.get('selectedItem');
+        selected.destroy();
+        _this.set('selectedItem', null);
+        return _this.removeObject(selected);
       }
     });
   }

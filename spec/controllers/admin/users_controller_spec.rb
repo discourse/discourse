@@ -134,7 +134,7 @@ describe Admin::UsersController do
       it 'updates the moderator flag' do
         xhr :put, :revoke_moderation, user_id: @moderator.id
         @moderator.reload
-        @moderator.has_trust_level?(:moderator).should_not be_true
+        @moderator.moderator.should_not be_true
       end
     end
 
@@ -157,7 +157,35 @@ describe Admin::UsersController do
       it 'updates the moderator flag' do
         xhr :put, :grant_moderation, user_id: @another_user.id
         @another_user.reload
-        @another_user.has_trust_level?(:moderator).should be_true
+        @another_user.moderator.should be_true
+      end
+    end
+
+    context '.destroy' do
+      before do
+        @delete_me = Fabricate(:user)
+      end
+
+      it "raises an error when the user doesn't have permission" do
+        Guardian.any_instance.expects(:can_delete_user?).with(@delete_me).returns(false)
+        xhr :delete, :destroy, id: @delete_me.id
+        response.should be_forbidden
+      end
+
+      it "returns a 403 if the user doesn't exist" do
+        xhr :delete, :destroy, id: 123123
+        response.should be_forbidden
+      end
+
+      it "returns an error if the user has posts" do
+        Fabricate(:post, user: @delete_me)
+        xhr :delete, :destroy, id: @delete_me.id
+        response.should be_forbidden
+      end
+
+      it "deletes the user record" do
+        UserDestroyer.any_instance.expects(:destroy).returns(true)
+        xhr :delete, :destroy, id: @delete_me.id
       end
     end
 

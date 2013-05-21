@@ -99,10 +99,19 @@ Discourse.Markdown = {
     var converter = new Markdown.Converter();
     var mentionLookup = opts.mentionLookup || Discourse.Mention.lookupCache;
 
+    var quoteTemplate = null;
+
     // Before cooking callbacks
     converter.hooks.chain("preConversion", function(text) {
       Discourse.Markdown.trigger('beforeCook', { detail: text, opts: opts });
       return Discourse.Markdown.textResult || text;
+    });
+
+    // Extract quotes so their contents are not passed through markdown.
+    converter.hooks.chain("preConversion", function(text) {
+      var extracted = Discourse.BBCode.extractQuotes(text);
+      quoteTemplate = extracted.template;
+      return extracted.text;
     });
 
     // Support autolinking of www.something.com
@@ -133,15 +142,15 @@ Discourse.Markdown = {
     converter.hooks.chain("postConversion", function(text) {
       if (!text) return "";
 
-      // don't to mention voodoo in pres
-      text = text.replace(/<pre>([\s\S]*@[\s\S]*)<\/pre>/gi, function(wholeMatch, inner) {
-        return "<pre>" + (inner.replace(/@/g, '&#64;')) + "</pre>";
+      // don't do @username mentions inside <pre> or <code> blocks
+      text = text.replace(/<(pre|code)>([\s\S](?!<(pre|code)>))*?@([\s\S](?!<(pre|code)>))*?<\/(pre|code)>/gi, function(m) {
+        return m.replace(/@/g, '&#64;');
       });
 
-      // Add @mentions of names
-      text = text.replace(/([\s\t>,:'|";\]])(@[A-Za-z0-9_-|\.]*[A-Za-z0-9_-|]+)(?=[\s\t<\!:|;',"\?\.])/g, function(x, pre, name) {
+      // add @username mentions, if valid; must be bounded on left and right by non-word characters
+      text = text.replace(/(\W)(@[A-Za-z0-9][A-Za-z0-9_]{2,14})(?=\W)/g, function(x, pre, name) {
         if (mentionLookup(name.substr(1))) {
-          return pre + "<a href='/users/" + (name.substr(1).toLowerCase()) + "' class='mention'>" + name + "</a>";
+          return pre + "<a href='" + Discourse.getURL("/users/") + (name.substr(1).toLowerCase()) + "' class='mention'>" + name + "</a>";
         } else {
           return pre + "<span class='mention'>" + name + "</span>";
         }
@@ -168,6 +177,12 @@ Discourse.Markdown = {
     });
 
     converter.hooks.chain("postConversion", function(text) {
+
+      // reapply quotes
+      if (quoteTemplate) {
+        text = quoteTemplate(text);
+      }
+
       return Discourse.BBCode.format(text, opts);
     });
 

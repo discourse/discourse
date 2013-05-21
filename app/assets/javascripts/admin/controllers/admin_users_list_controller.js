@@ -1,28 +1,29 @@
 /**
   This controller supports the interface for listing users in the admin section.
 
-  @class AdminUsersListController    
+  @class AdminUsersListController
   @extends Ember.ArrayController
   @namespace Discourse
   @module Discourse
-**/  
+**/
 Discourse.AdminUsersListController = Ember.ArrayController.extend(Discourse.Presence, {
   username: null,
   query: null,
   selectAll: false,
   content: null,
+  loading: false,
 
   /**
     Triggered when the selectAll property is changed
 
     @event selectAll
   **/
-  selectAllChanged: (function() {
+  selectAllChanged: function() {
     var _this = this;
     this.get('content').each(function(user) {
       user.set('selected', _this.get('selectAll'));
     });
-  }).observes('selectAll'),
+  }.observes('selectAll'),
 
   /**
     Triggered when the username filter is changed
@@ -38,39 +39,48 @@ Discourse.AdminUsersListController = Ember.ArrayController.extend(Discourse.Pres
 
     @event orderChanged
   **/
-  orderChanged: (function() {
+  orderChanged: function() {
     this.refreshUsers();
-  }).observes('query'),
+  }.observes('query'),
+
+  /**
+    The title of the user list, based on which query was performed.
+
+    @property title
+  **/
+  title: function() {
+    return Em.String.i18n('admin.users.titles.' + this.get('query'));
+  }.property('query'),
 
   /**
     Do we want to show the approval controls?
 
     @property showApproval
   **/
-  showApproval: (function() {
+  showApproval: function() {
     if (!Discourse.SiteSettings.must_approve_users) return false;
     if (this.get('query') === 'new') return true;
     if (this.get('query') === 'pending') return true;
-  }).property('query'),
+  }.property('query'),
 
   /**
     How many users are currently selected
 
     @property selectedCount
   **/
-  selectedCount: (function() {
+  selectedCount: function() {
     if (this.blank('content')) return 0;
     return this.get('content').filterProperty('selected').length;
-  }).property('content.@each.selected'),
+  }.property('content.@each.selected'),
 
   /**
     Do we have any selected users?
 
     @property hasSelection
   **/
-  hasSelection: (function() {
+  hasSelection: function() {
     return this.get('selectedCount') > 0;
-  }).property('selectedCount'),
+  }.property('selectedCount'),
 
   /**
     Refresh the current list of users.
@@ -78,7 +88,13 @@ Discourse.AdminUsersListController = Ember.ArrayController.extend(Discourse.Pres
     @method refreshUsers
   **/
   refreshUsers: function() {
-    this.set('content', Discourse.AdminUser.findAll(this.get('query'), this.get('username')));
+    var adminUsersListController = this;
+    adminUsersListController.set('loading', true);
+
+    Discourse.AdminUser.findAll(this.get('query'), this.get('username')).then(function (result) {
+      adminUsersListController.set('content', result);
+      adminUsersListController.set('loading', false);
+    })
   },
 
 
@@ -103,5 +119,5 @@ Discourse.AdminUsersListController = Ember.ArrayController.extend(Discourse.Pres
   approveUsers: function() {
     Discourse.AdminUser.bulkApprove(this.get('content').filterProperty('selected'));
   }
-  
+
 });

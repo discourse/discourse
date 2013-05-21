@@ -1,18 +1,18 @@
 require_dependency 'rate_limiter'
 require_dependency 'system_message'
+require_dependency 'trashable'
 
 class PostAction < ActiveRecord::Base
-  class AlreadyFlagged < StandardError; end
+  class AlreadyActed < StandardError; end
 
   include RateLimiter::OnCreateRecord
+  include Trashable
 
-  attr_accessible :post_action_type_id, :post_id, :user_id, :post, :user, :post_action_type, :message
+  attr_accessible :post_action_type_id, :post_id, :user_id, :post, :user, :post_action_type, :message, :related_post_id
 
   belongs_to :post
   belongs_to :user
   belongs_to :post_action_type
-
-  acts_as_paranoid
 
   rate_limit :post_action_rate_limiter
 
@@ -20,13 +20,14 @@ class PostAction < ActiveRecord::Base
 
   def self.update_flagged_posts_count
     posts_flagged_count = PostAction.joins(post: :topic)
-                                    .where('post_actions.post_action_type_id' => PostActionType.flag_types.values,
+                                    .where('post_actions.post_action_type_id' => PostActionType.notify_flag_types.values,
                                            'posts.deleted_at' => nil,
-                                           'topics.deleted_at' => nil).count('DISTINCT posts.id')
+                                           'topics.deleted_at' => nil)
+                                    .count('DISTINCT posts.id')
 
     $redis.set('posts_flagged_count', posts_flagged_count)
-    admins = User.where(admin: true).select(:id).map {|u| u.id}
-    MessageBus.publish('/flagged_counts', { total: posts_flagged_count }, { user_ids: admins })
+    user_ids = User.staff.pluck(:id)
+    MessageBus.publish('/flagged_counts', { total: posts_flagged_count }, { user_ids: user_ids })
   end
 
   def self.flagged_posts_count
@@ -50,6 +51,10 @@ class PostAction < ActiveRecord::Base
     user_actions
   end
 
+  def self.count_per_day_for_type(sinceDaysAgo = 30, post_action_type)
+    unscoped.where(post_action_type_id: post_action_type).where('created_at > ?', sinceDaysAgo.days.ago).group('date(created_at)').order('date(created_at)').count
+  end
+
   def self.clear_flags!(post, moderator_id, action_type_id = nil)
     # -1 is the automatic system cleary
     actions = if action_type_id
@@ -58,18 +63,50 @@ class PostAction < ActiveRecord::Base
       moderator_id == -1 ? PostActionType.auto_action_flag_types.values : PostActionType.flag_types.values
     end
 
-    PostAction.update_all({ deleted_at: Time.now, deleted_by: moderator_id }, { post_id: post.id, post_action_type_id: actions })
-
+    PostAction.update_all({ deleted_at: Time.zone.now, deleted_by: moderator_id }, { post_id: post.id, post_action_type_id: actions })
     f = actions.map{|t| ["#{PostActionType.types[t]}_count", 0]}
-
     Post.with_deleted.update_all(Hash[*f.flatten], id: post.id)
-
     update_flagged_posts_count
   end
 
   def self.act(user, post, post_action_type_id, message = nil)
     begin
-      create(post_id: post.id, user_id: user.id, post_action_type_id: post_action_type_id, message: message)
+      title, target_usernames, target_group_names, subtype, body = nil
+
+      if message
+        [:notify_moderators, :notify_user].each do |k|
+          if post_action_type_id == PostActionType.types[k]
+            if k == :notify_moderators
+              target_group_names = target_moderators
+            else
+              target_usernames = post.user.username
+            end
+            title = I18n.t("post_action_types.#{k}.email_title",
+                            title: post.topic.title)
+            body = I18n.t("post_action_types.#{k}.email_body",
+                          message: message,
+                          link: "#{Discourse.base_url}#{post.url}")
+            subtype = k == :notify_moderators ? TopicSubtype.notify_moderators : TopicSubtype.notify_user
+          end
+        end
+      end
+
+      related_post_id = nil
+      if target_usernames.present? || target_group_names.present?
+        related_post_id = PostCreator.new(user,
+                              target_usernames: target_usernames,
+                              target_group_names: target_group_names,
+                              archetype: Archetype.private_message,
+                              subtype: subtype,
+                              title: title,
+                              raw: body
+                       ).create.id
+      end
+      create( post_id: post.id,
+              user_id: user.id,
+              post_action_type_id: post_action_type_id,
+              message: message,
+              related_post_id: related_post_id )
     rescue ActiveRecord::RecordNotUnique
       # can happen despite being .create
       # since already bookmarked
@@ -79,10 +116,14 @@ class PostAction < ActiveRecord::Base
 
   def self.remove_act(user, post, post_action_type_id)
     if action = where(post_id: post.id, user_id: user.id, post_action_type_id: post_action_type_id).first
-      action.destroy
-      action.deleted_at = Time.now
+      action.trash!
       action.run_callbacks(:save)
     end
+  end
+
+  def remove_act!(user)
+    trash!
+    run_callbacks(:save)
   end
 
   def is_bookmark?
@@ -95,6 +136,11 @@ class PostAction < ActiveRecord::Base
 
   def is_flag?
     PostActionType.flag_types.values.include?(post_action_type_id)
+  end
+
+  def is_private_message?
+    post_action_type_id == PostActionType.types[:notify_user] ||
+    post_action_type_id == PostActionType.types[:notify_moderators]
   end
 
   # A custom rate limiter for this model
@@ -114,18 +160,40 @@ class PostAction < ActiveRecord::Base
   def message_quality
     return if message.blank?
     sentinel = TextSentinel.title_sentinel(message)
-    if sentinel.valid?
-      # It's possible the sentinel has cleaned up the title a bit
-      self.message = sentinel.text
-    else
-      errors.add(:message, I18n.t(:is_invalid)) unless sentinel.valid?
-    end
+    errors.add(:message, I18n.t(:is_invalid)) unless sentinel.valid?
   end
 
   before_create do
-    raise AlreadyFlagged if is_flag? && PostAction.where(user_id: user_id,
-                                                         post_id: post_id,
-                                                         post_action_type_id: PostActionType.flag_types.values).exists?
+    post_action_type_ids = is_flag? ? PostActionType.flag_types.values : post_action_type_id
+    raise AlreadyActed if PostAction.where(user_id: user_id,
+                                           post_id: post_id,
+                                           post_action_type_id: post_action_type_ids,
+                                           deleted_at: nil)
+                                    .exists?
+  end
+
+  # Returns the flag counts for a post, taking into account that some users
+  # can weigh flags differently.
+  def self.flag_counts_for(post_id)
+    flag_counts = exec_sql("SELECT SUM(CASE
+                                         WHEN pa.deleted_at IS NULL AND u.admin THEN :flags_required_to_hide_post
+                                         WHEN pa.deleted_at IS NULL AND (NOT u.admin) THEN 1
+                                         ELSE 0
+                                       END) AS new_flags,
+                                   SUM(CASE
+                                         WHEN pa.deleted_at IS NOT NULL AND u.admin THEN :flags_required_to_hide_post
+                                         WHEN pa.deleted_at IS NOT NULL AND (NOT u.admin) THEN 1
+                                         ELSE 0
+                                       END) AS old_flags
+                            FROM post_actions AS pa
+                              INNER JOIN users AS u ON u.id = pa.user_id
+                            WHERE pa.post_id = :post_id AND
+                              pa.post_action_type_id IN (:post_action_types)",
+                            post_id: post_id,
+                            post_action_types: PostActionType.auto_action_flag_types.values,
+                            flags_required_to_hide_post: SiteSetting.flags_required_to_hide_post).first
+
+    [flag_counts['old_flags'].to_i, flag_counts['new_flags'].to_i]
   end
 
   after_save do
@@ -136,27 +204,23 @@ class PostAction < ActiveRecord::Base
 
     # Voting also changes the sort_order
     if post_action_type == :vote
-      Post.update_all ["vote_count = vote_count + :delta, sort_order = :max - (vote_count + :delta)", delta: delta, max: Topic::MAX_SORT_ORDER], id: post_id
+      Post.update_all ["vote_count = vote_count + :delta, sort_order = :max - (vote_count + :delta)", delta: delta, max: Topic.max_sort_order], id: post_id
     else
       Post.update_all ["#{column} = #{column} + ?", delta], id: post_id
     end
     Topic.update_all ["#{column} = #{column} + ?", delta], id: post.topic_id
 
 
-    if PostActionType.flag_types.values.include?(post_action_type_id)
+    if PostActionType.notify_flag_types.values.include?(post_action_type_id)
       PostAction.update_flagged_posts_count
     end
 
-    if SiteSetting.flags_required_to_hide_post > 0
+    if PostActionType.auto_action_flag_types.include?(post_action_type) && SiteSetting.flags_required_to_hide_post > 0
       # automatic hiding of posts
-      flag_counts = exec_sql("SELECT SUM(CASE WHEN deleted_at IS NULL THEN 1 ELSE 0 END) AS new_flags,
-                                     SUM(CASE WHEN deleted_at IS NOT NULL THEN 1 ELSE 0 END) AS old_flags
-                              FROM post_actions
-                              WHERE post_id = ? AND post_action_type_id IN (?)", post.id, PostActionType.auto_action_flag_types.values).first
-      old_flags, new_flags = flag_counts['old_flags'].to_i, flag_counts['new_flags'].to_i
+      old_flags, new_flags = PostAction.flag_counts_for(post.id)
 
       if new_flags >= SiteSetting.flags_required_to_hide_post
-        reason = old_flags > 0 ? Post::HiddenReason::FLAG_THRESHOLD_REACHED_AGAIN : Post::HiddenReason::FLAG_THRESHOLD_REACHED
+        reason = old_flags > 0 ? Post.hidden_reasons[:flag_threshold_reached_again] : Post.hidden_reasons[:flag_threshold_reached]
         Post.update_all(["hidden = true, hidden_reason_id = COALESCE(hidden_reason_id, ?)", reason], id: post_id)
         Topic.update_all({ visible: false },
                          ["id = :topic_id AND NOT EXISTS(SELECT 1 FROM POSTS WHERE topic_id = :topic_id AND NOT hidden)", topic_id: post.topic_id])
@@ -170,4 +234,11 @@ class PostAction < ActiveRecord::Base
       end
     end
   end
+
+  protected
+
+  def self.target_moderators
+    Group[:moderators].name
+  end
+
 end

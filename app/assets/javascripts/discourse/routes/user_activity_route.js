@@ -8,14 +8,16 @@
 **/
 Discourse.UserActivityRoute = Discourse.Route.extend({
 
+  model: function() {
+    return this.modelFor('user');
+  },
+
   renderTemplate: function() {
     this.render({ into: 'user', outlet: 'userOutlet' });
   },
 
-  setupController: function(controller) {
-    var userController = this.controllerFor('user');
-    userController.set('filter', null);
-    controller.set('content', userController.get('content'));
+  setupController: function(controller, user) {
+    user.filterStream(null);
   }
 
 });

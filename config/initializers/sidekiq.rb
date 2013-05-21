@@ -1,16 +1,4 @@
-require "#{Rails.root}/lib/discourse_redis"
+sidekiq_redis = { url: $redis.url, namespace: 'sidekiq' }
 
-$redis = DiscourseRedis.new
-
-if Rails.env.development? && !ENV['DO_NOT_FLUSH_REDIS']
-  puts "Flushing redis (development mode)"
-  $redis.flushall
-end
-
-Sidekiq.configure_server do |config|
-  config.redis = { :url => $redis.url, :namespace => 'sidekiq' }
-end
-
-Sidekiq.configure_client do |config|
-  config.redis = { :url => $redis.url, :namespace => 'sidekiq' }
-end
+Sidekiq.configure_server { |config| config.redis = sidekiq_redis }
+Sidekiq.configure_client { |config| config.redis = sidekiq_redis }

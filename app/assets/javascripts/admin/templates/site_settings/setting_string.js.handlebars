@@ -3,7 +3,7 @@
      <h3>{{unbound setting}}</h3>
   </div>
   <div class="span11">
-    {{view Ember.TextField valueBinding="value" classNames="input-xxlarge"}}
+    {{textField value=value classNames="input-xxlarge"}}
     <div class='desc'>{{unbound description}}</div>
   </div>
   {{#if dirty}}

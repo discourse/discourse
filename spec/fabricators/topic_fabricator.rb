@@ -1,6 +1,6 @@
 Fabricator(:topic) do
   user
-  title { sequence(:title) { |i| "Test topic #{i}" } }
+  title { sequence(:title) { |i| "This is a test topic #{i}" } }
 end
 
 Fabricator(:deleted_topic, from: :topic) do
@@ -12,7 +12,7 @@ end
 
 Fabricator(:private_message_topic, from: :topic) do
   user
-  title { sequence(:title) { |i| "Private Message #{i}" } }
+  title { sequence(:title) { |i| "This is a private message #{i}" } }
   archetype "private_message"
   topic_allowed_users{|t| [
     Fabricate.build(:topic_allowed_user, user_id: t[:user].id),

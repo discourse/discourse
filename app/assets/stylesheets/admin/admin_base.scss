@@ -1,11 +1,48 @@
 // these are the styles associated with the Discourse admin section
 @import "foundation/variables";
 @import "foundation/mixins";
+@import "foundation/helpers";
+
+
+.content-list li a span.count {
+  font-size: 12px;
+  float: right;
+  margin-right: 10px;
+  background-color: #eee;
+  padding: 2px 5px;
+  border-radius: 5px;
+  color: #555;
+}
 
 .admin-content {
   margin-bottom: 50px;
   .admin-contents {
     padding: 8px;
+  }
+
+  table.report {
+    tr {
+      th:nth-of-type(1) {
+        width: 20%;
+      }
+    }
+
+    .bar-container {
+      float: left;
+      width: 300px;
+      margin-right: 15px;
+      margin-bottom: 5px;
+      display: inline-block;
+
+      .bar {
+        margin-top: 5px;
+        background-color: $blue;
+        display: inline-block;
+        text-align: right;
+        padding-right: 8px;
+        color: $white;
+      }
+    }
   }
 }
 
@@ -37,6 +74,7 @@
   .nav.nav-pills {
     li.active {
       a {
+        border-color: darken($dark_gray, 10%);
         background-color: $dark_gray;
         &:hover {
           background-color: $dark_gray;
@@ -75,54 +113,6 @@
   }
 }
 
-.version-check {
-  float: left;
-  width: 500px;
-}
-.version-check-right {
-  float:right;
-  width: 500px;
-  margin-right: 15px;
-}
-
-.version-check {
-  .version-number {
-    font-size: 18px;
-    font-weight: bold
-  }
-
-  .version-notes .icon {
-    margin-left: 20px;
-  }
-
-  &.critical .version-notes .normal-note {
-    display: none;
-  }
-  &.normal .version-notes .critical-note {
-    display: none;
-  }
-
-  .icon {
-    font-size: 26px;
-  }
-
-  .update-to-date {
-    color: green;
-  }
-  .updates-available {
-    color: #FF9500;
-  }
-  .critical-updates-available {
-    color: red;
-  }
-}
-
-.update-nag {
-  i.icon {
-    font-size: 20px;
-  }
-}
-
 .settings {
   .setting {
     padding-bottom: 20px;
@@ -152,10 +142,8 @@ section.details {
   h1 {
     font-size: 15px;
     background-color: $gray;
-    box-shadow: 1px 1px 3px $darkish_gray;
-    color: $darkish_gray;
+    color: $white;
     padding: 0 10px;
-    line-height: 25px;
     margin: 0px 0 5px 0;
   }
 }
@@ -216,31 +204,14 @@ table {
   .nav.nav-pills {
     margin-left: 10px;
   }
-  .well {
-    min-height: 20px;
-    padding: 4px;
-    margin-bottom: 20px;
-    background-color: whitesmoke;
-    border: 1px solid #e3e3e3;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-    height: 638px;
-    margin-bottom: 10px;
+  .content-list, .current-style {
+    float: left;
+  }
+  .content-list ul {
+    min-height: 700px;
   }
   a {
     cursor: pointer;
-  }
-  .list, .current-style {
-    float: left;
-  }
-  .list {
-    width: 20%;
-    margin-right: 20px;
-    margin-top: 65px;
   }
   .current-style {
     .delete-link {
@@ -250,7 +221,8 @@ table {
     .preview-link {
       margin-left: 30px;
     }
-    width: 75%;
+    padding-left: 10px;
+    width: 65%;
     .style-name {
       width: 600px;
       height: 25px;
@@ -276,8 +248,15 @@ table {
     }
     .buttons {
       float: left;
-      button, a {
+      width: 200px;
+      button, a , span{
         float: left;
+      }
+      .saving {
+        padding: 5px 0 0 0;
+        margin-left: 10px;
+        width: 80px;
+        color: $dark_gray;
       }
     }
   }
@@ -300,4 +279,387 @@ table {
   }
   .flaggers { padding: 0 10px; }
   .last-flagged { padding: 0 10px; }
+}
+
+/* Dashboard */
+
+.dashboard-left {
+  float: left;
+  width: 500px;
+  margin-top: 10px;
+}
+.dashboard-right {
+  float: right;
+  width: 500px;
+  margin-top: 10px;
+  margin-right: 15px;
+
+  @include medium-width {
+    width: 430px;
+  }
+  @include small-width {
+    width: 390px;
+  }
+
+  .dashboard-stats {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+.version-check {
+  .version-number {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .face {
+    width: 20px;
+  }
+
+  .version-notes .icon {
+    vertical-align: bottom;
+  }
+
+  &.critical .version-notes .normal-note {
+    display: none;
+  }
+  &.normal .version-notes .critical-note {
+    display: none;
+  }
+
+  .icon {
+    font-size: 26px;
+  }
+
+  .update-to-date {
+    color: green;
+  }
+  .updates-available {
+    color: #FF9500;
+  }
+  .critical-updates-available {
+    color: red;
+  }
+}
+
+.update-nag {
+  i.icon {
+    font-size: 20px;
+  }
+}
+
+.dashboard-stats {
+  margin-bottom: 30px;
+  width: 460px;
+  margin-left: 30px;
+
+  h4 {
+    font-weight: normal;
+    margin-bottom: 8px;
+  }
+
+  table {
+    width: 100%;
+
+    .title {
+      i.icon {
+        color: #444;
+      }
+    }
+
+    th {
+      font-weight: normal;
+      text-align: center;
+      background-color: #e4e4e4;
+    }
+    th.title {
+      text-align: left;
+    }
+    thead {
+      tr:hover > td {
+        background-color: $white;
+      }
+      tr:hover > th {
+        background-color: #e4e4e4;
+      }
+    }
+
+    td.value {
+      font-weight: bold;
+      text-align: center;
+
+      i {
+        display: none;
+      }
+
+      &.trending-up {
+        color: green;
+        i.up {
+          display: inline;
+        }
+      }
+      &.trending-down {
+        color: red;
+        i.down {
+          display: inline;
+        }
+      }
+      &.no-change {
+        i.down {
+          display: inline;
+          visibility: hidden;
+        }
+      }
+    }
+  }
+
+  &.detected-problems {
+    @include border-radius-all(5px);
+    background-color: #eee;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    box-shadow: inset 0 0 10px #bbb;
+
+    .look-here {
+      float: left;
+      margin: 20px 20px 0 20px;
+
+      .icon {
+        font-size: 32px;
+        vertical-align: middle;
+        color: $darkish_gray;
+      }
+    }
+
+    .problem-messages {
+      float: left;
+      width: 355px;
+      a {
+        text-decoration: underline;
+      }
+      .actions {
+        text-align: right;
+      }
+    }
+  }
+
+  &.totals {
+    margin-top: 12px;
+    padding-left: 5px;
+    .value {
+      font-weight: bold;
+      margin-left: 8px;
+      margin-right: 30px;
+    }
+  }
+
+  &.trust-levels {
+    margin-bottom: 0px;
+    table {
+      margin-bottom: 0px;
+    }
+    td.value {
+      width: 45px;
+    }
+  }
+}
+
+
+.commits-widget {
+  border: solid 1px #ccc;
+  width: 500px;
+  height: 180px;
+  margin-bottom: 36px;
+
+  @include medium-width {
+    width: 430px;
+  }
+  @include small-width {
+    width: 390px;
+  }
+
+  ul, li {
+    margin: 0;
+    padding: 0;
+  }
+  ul {
+    list-style: none;
+  }
+  a {
+    color: #222;
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .header {
+    color: #222;
+    font-weight: bold;
+    height: 30px;
+    border-bottom: solid 1px #ccc;
+    @include linear-gradient(#f1f1f1, #e1e1e1);
+    cursor: pointer;
+
+    h1 {
+      font-size: 18px;
+      margin: 5px 0 0 8px;
+      display: inline-block;
+      line-height: 1.0em;
+    }
+  }
+
+  .header:hover h1 {
+    color: $link-color-hover;
+  }
+
+  .commits-list {
+    height: 149px;
+    overflow-y:auto;
+
+    li {
+      @extend .clearfix;
+      line-height: 1.0em;
+      padding: 6px 8px;
+      border-bottom: solid 1px #ccc;
+      @include linear-gradient(#f6f6f6, #eee);
+
+      .left {
+        float: left;
+      }
+      .right {
+        margin-left: 52px;
+      }
+
+      img {
+        margin-top: 2px;
+        border: solid 1px #ccc;
+        padding: 2px;
+        background-color: white;
+      }
+
+      .commit-message {
+        color: #222;
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      .commit-meta {
+        color: #555;
+        font-size: 12px;
+      }
+
+      .committer-name {
+        font-weight: bold;
+        color: #333;
+      }
+    }
+    li:last-child {
+      border: none;
+    }
+  }
+
+  // Always show the scrollbar:
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #d1d1d1;
+    -webkit-border-radius: 3px;
+  }
+  ::-webkit-scrollbar-track {
+    border-left: solid 1px #ddd;
+  }
+}
+
+.content-list {
+
+  h3 {
+    color: $darkish_gray;
+    font-size: 15px;
+    padding-left: 5px;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+
+    li {
+      border-bottom: 1px solid #ddd;
+    }
+
+    li a {
+      display: block;
+      padding: 10px;
+      color: $dark_gray;
+
+      &:hover {
+        background-color: #eee;
+        color: $dark_gray;
+      }
+
+      &.active {
+        font-weight: bold;
+        color: $black;
+      }
+    }
+  }
+}
+
+.content-editor {
+  min-height: 500px;
+
+  float: left;
+  width: 760px;
+  @include medium-width { width: 650px; }
+  @include small-width { width: 600px; }
+  margin-left: 20px;
+
+  p.description {
+    color: $dark_gray;
+  }
+
+  .controls {
+    margin-top: 10px;
+  }
+
+  #pagedown-editor {
+    width: 98%;
+  }
+
+  textarea.plain {
+    width: 98%;
+    height: 200px;
+  }
+
+  #wmd-input {
+    width: 98%;
+    height: 200px;
+  }
+
+  .ace-wrapper {
+    position: relative;
+    height: 600px;
+    width: 100%;
+  }
+  .ace_editor {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
+
+}
+
+.row.groups {
+  input[type='text'] {
+    width: 500px;
+  }
+  input#group-users {
+    width: 600px;
+  }
 }

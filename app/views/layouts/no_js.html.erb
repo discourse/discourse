@@ -2,34 +2,21 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title><%=t :title%></title>
+    <title><%=SiteSetting.title%></title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="description">
     <meta content="" name="author">
     <link rel="icon" type="image/png" href=<%=SiteSetting.favicon_url%>>
 
-    <%- if mini_profiler_enabled? %>
-      <%- Rack::MiniProfiler.step "stylsheet" do%>
-        <%=stylesheet_link_tag "application"%>
-      <%- end %>
-      <%- if current_user.try(:admin) %>
-        <%- Rack::MiniProfiler.step "stylsheet" do%>
-          <%= stylesheet_link_tag "admin"%>
-        <%-end%>
-      <%- end %>
+    <%= render :partial => "common/special_font_face" %>
+    <%= render :partial => "common/discourse_stylesheet" %>
 
-    <%- else %>
-      <%=stylesheet_link_tag "application"%>
-      <%- if current_user.try(:admin) %>
-        <%= stylesheet_link_tag "admin"%>
-      <%- end %>
-    <%- end %>
-
-    <%=csrf_meta_tags%>
+    <%= discourse_csrf_tags %>
   </head>
 
   <body>
 
+    <%=SiteCustomization.custom_header(session[:preview_style])%>
     <section id='main'>
     <header class="d-header">
       <div class="container">

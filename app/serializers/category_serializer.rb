@@ -1,11 +1,13 @@
-class CategorySerializer < ApplicationSerializer
+class CategorySerializer < BasicCategorySerializer
 
-  attributes :id,
-             :name,
-             :color,
-             :slug,
-             :topic_count,
-             :description,
-             :topic_url
+  attributes :secure, :groups, :available_groups, :auto_close_days
+
+  def groups
+    @groups ||= object.groups.order("name").all.map(&:name)
+  end
+
+  def available_groups
+    Group.order("name").map(&:name) - groups
+  end
 
 end

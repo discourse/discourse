@@ -53,18 +53,11 @@
   /* IE6-7 */
 
   @include border-radius-all (6px);
-  -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
   box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
-  -webkit-background-clip: padding-box;
-  -moz-background-clip: padding-box;
   background-clip: padding-box;
 }
 .modal.fade {
   -webkit-transition: opacity .3s linear, top .3s ease-out;
-  -moz-transition: opacity .3s linear, top .3s ease-out;
-  -ms-transition: opacity .3s linear, top .3s ease-out;
-  -o-transition: opacity .3s linear, top .3s ease-out;
   transition: opacity .3s linear, top .3s ease-out;
   top: -25%;
 }
@@ -151,17 +144,81 @@
     .archetype-option {
       margin-bottom: 20px;
     }
+
+
   }
   .password-confirmation {
     display: none;
   }
+
+  section.field {
+    margin-bottom: 20px;
+  }
 }
 
 #move-selected {
+  p {
+    margin-top: 0;
+  }
+
+  input[type=radio] {
+    margin-right: 10px;
+  }
+
+  button {
+    margin-top: 10px;
+    display: block;
+    width: 300px;
+  }
+
   form {
     margin-top: 20px;
     input[type=text] {
       width: 500px;
     }
   }
+}
+
+.flag-modal {
+  max-height: 450px;
+}
+
+.custom-message-length {
+  margin-bottom: 10px;
+  margin-left: 20px;
+}
+
+.flag-message {
+  margin-left: 20px;
+  width: 95% !important;
+}
+
+.edit-category-modal {
+  .modal-body {
+    position: relative;
+    height: 350px;
+  }
+  &.small .modal-body {
+    height: 290px;
+  }
+  .secure-category-options {
+    margin: 10px 0 0 16px;
+    .badge-list {
+      margin: 10px 0;
+      li {
+        margin: 0 4px 8px 0;
+        a {
+          color: #888;
+          cursor: pointer;
+        }
+        a:hover {
+          color: $black;
+        }
+      }
+    }
+  }
+}
+
+.modal-tab {
+  position: absolute;
 }

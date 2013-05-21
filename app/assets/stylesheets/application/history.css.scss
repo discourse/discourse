@@ -8,6 +8,12 @@
   width: 960px;
   margin-left: -460px;
   min-height: 500px;
+  ins {
+    background: #e6ffe6;
+  }
+  del {
+    background: #ffe6e6;
+  }
   .modal-header {
     height: 42px;
   }
@@ -22,5 +28,9 @@
       size: 25px 25px;
       position: 0 4px;
     };
+  }
+  select {
+    height: auto;
+	width: auto;
   }
 }

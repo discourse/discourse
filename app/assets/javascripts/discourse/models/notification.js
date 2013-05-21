@@ -13,21 +13,19 @@ Discourse.Notification = Discourse.Model.extend({
     return '';
   }).property('read'),
 
-  url: (function() {
-    var slug;
+  url: function() {
     if (this.blank('data.topic_title')) return "";
-    slug = this.get('slug');
-    return "/t/" + slug + "/" + (this.get('topic_id')) + "/" + (this.get('post_number'));
-  }).property(),
+    return Discourse.Utilities.postUrl(this.get('slug'), this.get('topic_id'), this.get('post_number'));
+  }.property(),
 
-  rendered: (function() {
+  rendered: function() {
     var notificationName;
     notificationName = Discourse.get('site.notificationLookup')[this.notification_type];
     return Em.String.i18n("notifications." + notificationName, {
       username: this.data.display_username,
       link: "<a href='" + (this.get('url')) + "'>" + this.data.topic_title + "</a>"
     });
-  }).property()
+  }.property()
 
 });
 

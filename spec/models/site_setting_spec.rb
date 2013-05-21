@@ -146,19 +146,14 @@ describe SiteSetting do
 
   describe 'topic_title_length' do
     it 'returns a range of min/max topic title length' do
-      SiteSetting.min_topic_title_length = 1
-      SiteSetting.max_topic_title_length = 2
-
-      SiteSetting.topic_title_length.should == (1..2)
+      SiteSetting.topic_title_length.should == 
+        (SiteSetting.defaults[:min_topic_title_length]..SiteSetting.defaults[:max_topic_title_length])
     end
   end
 
   describe 'post_length' do
     it 'returns a range of min/max post length' do
-      SiteSetting.min_post_length = 1
-      SiteSetting.max_post_length = 2
-
-      SiteSetting.post_length.should == (1..2)
+      SiteSetting.post_length.should == (SiteSetting.defaults[:min_post_length]..SiteSetting.defaults[:max_post_length])
     end
   end
 end

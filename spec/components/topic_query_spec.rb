@@ -3,40 +3,76 @@ require 'topic_view'
 
 describe TopicQuery do
 
-  let!(:user) { Fabricate(:coding_horror) }
+  let(:user) { Fabricate(:coding_horror) }
   let(:creator) { Fabricate(:user) }
   let(:topic_query) { TopicQuery.new(user) }
 
   let(:moderator) { Fabricate(:moderator) }
   let(:admin) { Fabricate(:moderator) }
 
+
+  context 'secure category' do
+    it "filters categories out correctly" do
+      category = Fabricate(:category)
+      category.deny(:all)
+      group = Fabricate(:group)
+      category.allow(group)
+      category.save
+
+      topic = Fabricate(:topic, category: category)
+
+      TopicQuery.new(nil).list_latest.topics.count.should == 0
+      TopicQuery.new(user).list_latest.topics.count.should == 0
+
+      # mods can see every group
+      TopicQuery.new(moderator).list_latest.topics.count.should == 2
+
+      group.add(user)
+      group.save
+
+      TopicQuery.new(user).list_latest.topics.count.should == 2
+    end
+
+  end
+
   context 'a bunch of topics' do
     let!(:regular_topic) { Fabricate(:topic, title: 'this is a regular topic', user: creator, bumped_at: 15.minutes.ago) }
-    let!(:pinned_topic) { Fabricate(:topic, title: 'this is a pinned topic', user: creator, pinned: true, bumped_at: 10.minutes.ago) }
+    let!(:pinned_topic) { Fabricate(:topic, title: 'this is a pinned topic', user: creator, pinned_at: 10.minutes.ago, bumped_at: 10.minutes.ago) }
     let!(:archived_topic) { Fabricate(:topic, title: 'this is an archived topic', user: creator, archived: true, bumped_at: 6.minutes.ago) }
     let!(:invisible_topic) { Fabricate(:topic, title: 'this is an invisible topic', user: creator, visible: false, bumped_at: 5.minutes.ago) }
     let!(:closed_topic) { Fabricate(:topic, title: 'this is a closed topic', user: creator, closed: true, bumped_at: 1.minute.ago) }
+    let(:topics) { topic_query.list_latest.topics }
 
-    context 'list_popular' do
-      let(:topics) { topic_query.list_popular.topics }
-
+    context 'list_latest' do
       it "returns the topics in the correct order" do
         topics.should == [pinned_topic, closed_topic, archived_topic, regular_topic]
       end
 
       it "includes the invisible topic if you're a moderator" do
-        TopicQuery.new(moderator).list_popular.topics.include?(invisible_topic).should be_true
+        TopicQuery.new(moderator).list_latest.topics.include?(invisible_topic).should be_true
       end
 
       it "includes the invisible topic if you're an admin" do
-        TopicQuery.new(admin).list_popular.topics.include?(invisible_topic).should be_true
+        TopicQuery.new(admin).list_latest.topics.include?(invisible_topic).should be_true
       end
+    end
+
+    context 'after clearring a pinned topic' do
+      before do
+        pinned_topic.clear_pin_for(user)
+      end
+
+      it "no longer shows the pinned topic at the top" do
+        topics.should == [closed_topic, archived_topic, pinned_topic, regular_topic]
+      end
+
     end
 
   end
 
   context 'categorized' do
     let(:category) { Fabricate(:category) }
+    let(:topic_category) { category.topic }
     let!(:topic_no_cat) { Fabricate(:topic) }
     let!(:topic_in_cat) { Fabricate(:topic, category: category) }
 
@@ -45,35 +81,45 @@ describe TopicQuery do
     end
 
     it "returns the topic with a category when filtering by category" do
-      topic_query.list_category(category).topics.should == [topic_in_cat]
+      topic_query.list_category(category).topics.should == [topic_category, topic_in_cat]
     end
 
-    it "returns nothing when filtering by another category" do
-      topic_query.list_category(Fabricate(:category, name: 'new cat')).topics.should be_blank
+    it "returns only the topic category when filtering by another category" do
+      another_category = Fabricate(:category, name: 'new cat')
+      topic_query.list_category(another_category).topics.should == [another_category.topic]
     end
 
     describe '#list_new_in_category' do
-      it 'returns only the categorized topic' do
-        topic_query.list_new_in_category(category).topics.should == [topic_in_cat]
+      it 'returns the topic category and the categorized topic' do
+        topic_query.list_new_in_category(category).topics.should == [topic_in_cat, topic_category]
       end
     end
+  end
+
+  pending 'hot' do
+    let(:cold_category) { Fabricate(:category, name: 'brrrrrr', hotness: 5) }
+    let(:hot_category) { Fabricate(:category, name: 'yeeouch', hotness: 10) }
+
+    let!(:t1) { Fabricate(:topic, category: cold_category)}
+    let!(:t2) { Fabricate(:topic, category: hot_category)}
+    let!(:t3) { Fabricate(:topic, category: hot_category)}
+    let!(:t4) { Fabricate(:topic, category: cold_category)}
+
+    it "returns the hot categories first" do
+      topic_query.list_hot.topics.should == [t3, t2, t4, t1]
+    end
+
   end
 
   context 'unread / read topics' do
 
     context 'with no data' do
 
-      it "has no read topics" do
-        topic_query.list_unread.topics.should be_blank
-      end
-
       it "has no unread topics" do
         topic_query.list_unread.topics.should be_blank
-      end
-
-      it "has an unread count of 0" do
         topic_query.unread_count.should == 0
       end
+
     end
 
     context 'with read data' do
@@ -88,9 +134,6 @@ describe TopicQuery do
       context 'list_unread' do
         it 'contains no topics' do
           topic_query.list_unread.topics.should == []
-        end
-
-        it "returns 0 as the unread count" do
           topic_query.unread_count.should == 0
         end
       end

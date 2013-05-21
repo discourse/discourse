@@ -7,7 +7,7 @@ require 'oneboxer/amazon_onebox'
 describe Oneboxer::AmazonOnebox do
   before(:each) do
     @o = Oneboxer::AmazonOnebox.new("http://www.amazon.com/Ruby-Programming-Language-David-Flanagan/dp/0596516177")
-    FakeWeb.register_uri(:get, @o.translate_url, :response => fixture_file('oneboxer/amazon.response'))
+    FakeWeb.register_uri(:get, @o.translate_url, response: fixture_file('oneboxer/amazon.response'))
   end
 
   it "translates the URL" do
@@ -24,7 +24,7 @@ private
 <div class='onebox-result'>
     <div class='source'>
       <div class='info'>
-        <a href='http://www.amazon.com/Ruby-Programming-Language-David-Flanagan/dp/0596516177' target="_blank">
+        <a href='http://www.amazon.com/Ruby-Programming-Language-David-Flanagan/dp/0596516177' class="track-link" target="_blank">
           <img class='favicon' src="/assets/favicons/amazon.png"> amazon.com
         </a>
       </div>

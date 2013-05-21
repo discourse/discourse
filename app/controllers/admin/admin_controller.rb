@@ -1,7 +1,7 @@
 class Admin::AdminController < ApplicationController
 
   before_filter :ensure_logged_in
-  before_filter :ensure_is_admin
+  before_filter :ensure_staff
 
   def index
     render nothing: true
@@ -9,8 +9,9 @@ class Admin::AdminController < ApplicationController
 
   protected
 
-    def ensure_is_admin
-      raise Discourse::InvalidAccess.new unless current_user.admin?
-    end
+  # this is not really necessary cause the routes are secure
+  def ensure_staff
+    raise Discourse::InvalidAccess.new unless current_user.staff?
+  end
 
 end

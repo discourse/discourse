@@ -1,0 +1,12 @@
+<% @list.categories.each do |c| %>
+  <div class="category">
+    <h2><a href="/category/<%= c.slug.blank? ? c.id : c.slug %>"><%= c.name %></a></h2>
+    <div class="topic-list">
+      <% c.topics.limit(6).each do |t| %>
+        <a href="<%= t.relative_url %>"><%= t.title %></a> <span title='<%= t 'posts' %>'>(<%= t.posts_count %>)</span><br/>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<p><%= t 'powered_by_html' %></p>

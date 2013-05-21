@@ -4,7 +4,7 @@ module Oneboxer
     def parse_open_graph(doc)
       result = {}
 
-      %w(title type image url description).each do |prop|
+      %w(title type image url description image:width image:height).each do |prop|
         node = doc.at("/html/head/meta[@property='og:#{prop}']")
         result[prop] = (node['content'] || node['value']) if node
       end
@@ -24,26 +24,35 @@ module Oneboxer
         result['description'] = node['content'] if node
       end
 
+      %w(image:width image:height).each do |prop|
+        # Some sane max width
+        if result[prop] && result[prop].to_i < 100
+          result[prop.sub(":","_")] = result[prop]
+        end
+        result[prop] = nil
+      end
+
       result
     end
   end
 
-  module Base
+  class Matcher
+    attr_reader :regexp, :klass
 
-    def matchers
-      @matchers ||= {}
-      @matchers
+    def initialize(klass)
+      @klass = klass
+      @regexp = klass.regexp
     end
+  end
 
-    # Add a matcher
-    def add_matcher(regexp, klass)
-      matchers[regexp] = klass
+  module Base
+    def matchers
+      @matchers ||= []
     end
 
     def add_onebox(klass)
-      matchers[klass.regexp] = klass
+      matchers << Matcher.new(klass)
     end
-
   end
 
 end

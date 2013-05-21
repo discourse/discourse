@@ -6,47 +6,39 @@ describe("PreloadStore", function() {
     PreloadStore.store('bane', 'evil');
   });
 
-  describe("contains", function() {
-
-    it("returns false for a key that doesn't exist", function() {
-      expect(PreloadStore.contains('joker')).toBe(false);
-    });
-
-    it("returns true for a stored key", function() {
-      expect(PreloadStore.contains('bane')).toBe(true);
-    });
-
-  });
-
-  describe('getStatic', function() {
-
-    it("returns undefined if the key doesn't exist", function() {
-      expect(PreloadStore.getStatic('joker')).toBe(void 0);
-    });
-
-    it("returns the the key if it exists", function() {
-      expect(PreloadStore.getStatic('bane')).toBe('evil');
-    });
-
-    it("removes the key after being called", function() {
-      PreloadStore.getStatic('bane');
-      expect(PreloadStore.getStatic('bane')).toBe(void 0);
-    });
-
-  });
-
   describe('get', function() {
 
-    it("returns a promise that resolves to undefined", function() {
+    it("returns undefined if the key doesn't exist", function() {
+      expect(PreloadStore.get('joker')).toBe(undefined);
+    });
+
+    it("returns the value if the key exists", function() {
+      expect(PreloadStore.get('bane')).toBe('evil');
+    });
+
+  });
+
+  describe('remove', function() {
+
+    it("removes the value if the key exists", function() {
+      PreloadStore.remove('bane');
+      expect(PreloadStore.get('bane')).toBe(undefined);
+    });
+
+  });  
+
+  describe('getAndRemove', function() {
+
+    it("returns a promise that resolves to null", function() {
       var done, storeResult;
       done = storeResult = null;
-      PreloadStore.get('joker').then(function(result) {
+      PreloadStore.getAndRemove('joker').then(function(result) {
         done = true;
         storeResult = result;
       });
       waitsFor((function() { return done; }), "Promise never resolved", 1000);
       runs(function() {
-        expect(storeResult).toBe(void 0);
+        expect(storeResult).toBe(null);
       });
     });
 
@@ -54,7 +46,7 @@ describe("PreloadStore", function() {
       var done, finder, storeResult;
       done = storeResult = null;
       finder = function() { return 'evil'; };
-      PreloadStore.get('joker', finder).then(function(result) {
+      PreloadStore.getAndRemove('joker', finder).then(function(result) {
         done = true;
         storeResult = result;
       });
@@ -68,11 +60,9 @@ describe("PreloadStore", function() {
       var done, finder, storeResult;
       done = storeResult = null;
       finder = function() {
-        var promise = new RSVP.Promise();
-        promise.resolve('evil');
-        return promise;
+        return Ember.Deferred.promise(function(promise) { promise.resolve('evil'); });
       };
-      PreloadStore.get('joker', finder).then(function(result) {
+      PreloadStore.getAndRemove('joker', finder).then(function(result) {
         done = true;
         storeResult = result;
       });
@@ -86,11 +76,9 @@ describe("PreloadStore", function() {
       var done, finder, storeResult;
       done = storeResult = null;
       finder = function() {
-        var promise = new RSVP.Promise();
-        promise.reject('evil');
-        return promise;
+        return Ember.Deferred.promise(function(promise) { promise.reject('evil'); });
       };
-      PreloadStore.get('joker', finder).then(null, function(rejectedResult) {
+      PreloadStore.getAndRemove('joker', finder).then(null, function(rejectedResult) {
         done = true;
         storeResult = rejectedResult;
       });
@@ -103,7 +91,7 @@ describe("PreloadStore", function() {
     it("returns a promise that resolves to 'evil'", function() {
       var done, storeResult;
       done = storeResult = null;
-      PreloadStore.get('bane').then(function(result) {
+      PreloadStore.getAndRemove('bane').then(function(result) {
         done = true;
         storeResult = result;
       });

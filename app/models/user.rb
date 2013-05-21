@@ -1,6 +1,9 @@
+require_dependency 'email'
 require_dependency 'email_token'
 require_dependency 'trust_level'
 require_dependency 'pbkdf2'
+require_dependency 'summarize'
+require_dependency 'discourse'
 
 class User < ActiveRecord::Base
   attr_accessible :name, :username, :password, :email, :bio_raw, :website
@@ -9,7 +12,7 @@ class User < ActiveRecord::Base
   has_many :notifications
   has_many :topic_users
   has_many :topics
-  has_many :user_open_ids
+  has_many :user_open_ids, dependent: :destroy
   has_many :user_actions
   has_many :post_actions
   has_many :email_logs
@@ -20,10 +23,17 @@ class User < ActiveRecord::Base
   has_many :views
   has_many :user_visits
   has_many :invites
-  has_one :twitter_user_info
-  has_one :github_user_info
-  has_one :cas_user_info
+
+  has_many :topic_links
+
+  has_one :twitter_user_info, dependent: :destroy
+  has_one :github_user_info, dependent: :destroy
+  has_one :cas_user_info, dependent: :destroy
   belongs_to :approved_by, class_name: 'User'
+
+  has_many :group_users
+  has_many :groups, through: :group_users
+  has_many :secure_categories, through: :groups, source: :categories
 
   validates_presence_of :username
   validates_presence_of :email
@@ -47,6 +57,10 @@ class User < ActiveRecord::Base
   # This is just used to pass some information into the serializer
   attr_accessor :notification_channel_position
 
+  scope :admins, ->{ where(admin: true) }
+  scope :moderators, ->{ where(moderator: true) }
+  scope :staff, ->{ where("moderator = 't' or admin = 't'") }
+
   module NewTopicDuration
     ALWAYS = -1
     LAST_VISIT = -2
@@ -56,37 +70,53 @@ class User < ActiveRecord::Base
     3..15
   end
 
-  def self.suggest_username(name)
-    return unless name.present?
+  def self.sanitize_username!(name)
+    name.gsub!(/^[^[:alnum:]]+|\W+$/, "")
+    name.gsub!(/\W+/, "_")
+  end
 
-    # If it's an email
-    if name =~ /([^@]+)@([^\.]+)/
-      name = Regexp.last_match[1]
 
-      # Special case, if it's "me" or "i" @ something, take the something.
-      name = Regexp.last_match[2] if ['i', 'me'].include?(name)
-    end
-
-    name.gsub!(/^[^A-Za-z0-9]+/, "")
-    name.gsub!(/[^A-Za-z0-9_]+$/, "")
-    name.gsub!(/[^A-Za-z0-9_]+/, "_")
-
-    # Pad the length with 1s
-    missing_chars = User.username_length.begin - name.length
-    name << ('1' * missing_chars) if missing_chars > 0
-
-    # Trim extra length
-    name = name[0..User.username_length.end-1]
-
+  def self.find_available_username_based_on(name)
+    sanitize_username!(name)
+    name = rightsize_username(name)
     i = 1
     attempt = name
-    while !username_available?(attempt)
+    until username_available?(attempt)
       suffix = i.to_s
       max_length = User.username_length.end - suffix.length - 1
       attempt = "#{name[0..max_length]}#{suffix}"
       i += 1
     end
     attempt
+  end
+
+  EMAIL = %r{([^@]+)@([^\.]+)}
+
+  def self.suggest_username(name)
+    return unless name.present?
+
+    if name =~ EMAIL
+      # When 'walter@white.com' take 'walter'
+      name = Regexp.last_match[1]
+
+      # When 'me@eviltrout.com' take 'eviltrout'
+      name = Regexp.last_match[2] if ['i', 'me'].include?(name)
+    end
+
+    find_available_username_based_on(name)
+  end
+
+  def self.rightsize_username(name)
+    name.ljust(username_length.begin, '1')[0,username_length.end]
+  end
+
+  def self.new_from_params(params)
+    user = User.new
+    user.name = params[:name]
+    user.email = params[:email]
+    user.password = params[:password]
+    user.username = params[:username]
+    user
   end
 
   def self.create_for_email(email, opts={})
@@ -127,16 +157,59 @@ class User < ActiveRecord::Base
     u.errors[:username].blank?
   end
 
-  def enqueue_welcome_message(message_type)
-    return unless SiteSetting.send_welcome_message?
-    Jobs.enqueue(:send_system_message, user_id: id, message_type: message_type)
-  end
 
   def self.suggest_name(email)
     return "" unless email
     name = email.split(/[@\+]/)[0]
     name = name.gsub(".", " ")
     name.titleize
+  end
+
+  # Find a user by temporary key, nil if not found or key is invalid
+  def self.find_by_temporary_key(key)
+    user_id = $redis.get("temporary_key:#{key}")
+    if user_id.present?
+      where(id: user_id.to_i).first
+    end
+  end
+
+  def self.find_by_username_or_email(username_or_email)
+    lower_user = username_or_email.downcase
+    lower_email = Email.downcase(username_or_email)
+    where("username_lower = :user or lower(username) = :user or email = :email or lower(name) = :user", user: lower_user, email: lower_email)
+  end
+
+
+  def save_and_refresh_staff_groups!
+    transaction do
+      self.save!
+      Group.refresh_automatic_groups!(:admins,:moderators,:staff)
+    end
+  end
+
+  def grant_moderation!
+    self.moderator = true
+    save_and_refresh_staff_groups!
+  end
+
+  def revoke_moderation!
+    self.moderator = false
+    save_and_refresh_staff_groups!
+  end
+
+  def grant_admin!
+    self.admin = true
+    save_and_refresh_staff_groups!
+  end
+
+  def revoke_admin!
+    self.admin = false
+    save_and_refresh_staff_groups!
+  end
+
+  def enqueue_welcome_message(message_type)
+    return unless SiteSetting.send_welcome_message?
+    Jobs.enqueue(:send_system_message, user_id: id, message_type: message_type)
   end
 
   def change_username(new_username)
@@ -162,17 +235,6 @@ class User < ActiveRecord::Base
     key
   end
 
-  # Find a user by temporary key, nil if not found or key is invalid
-  def self.find_by_temporary_key(key)
-    user_id = $redis.get("temporary_key:#{key}")
-    if user_id.present?
-      where(id: user_id.to_i).first
-    end
-  end
-
-  def self.find_by_username_or_email(username_or_email)
-    where("username_lower = :user or lower(username) = :user or lower(email) = :user or lower(name) = :user", user: username_or_email.downcase)
-  end
 
   # tricky, we need our bus to be subscribed from the right spot
   def sync_notification_channel_position
@@ -207,12 +269,13 @@ class User < ActiveRecord::Base
 
   def reload
     @unread_notifications_by_type = nil
+    @unread_pms = nil
     super
   end
 
 
   def unread_private_messages
-    unread_notifications_by_type[Notification.types[:private_message]] || 0
+    @unread_pms ||= notifications.where("read = false AND notification_type = ?", Notification.types[:private_message]).count
   end
 
   def unread_notifications
@@ -220,7 +283,8 @@ class User < ActiveRecord::Base
   end
 
   def saw_notification_id(notification_id)
-    User.update_all ["seen_notification_id = ?", notification_id], ["seen_notification_id < ?", notification_id]
+    User.update_all ["seen_notification_id = ?", notification_id],
+      ["seen_notification_id < ?", notification_id]
   end
 
   def publish_notifications_state
@@ -236,12 +300,13 @@ class User < ActiveRecord::Base
     User.select(:username).order('last_posted_at desc').limit(20)
   end
 
-  def moderator?
-    has_trust_level?(:moderator)
+  # any user that is either a moderator or an admin
+  def staff?
+    admin || moderator
   end
 
   def regular?
-    !(admin? || moderator?)
+    !staff?
   end
 
   def password=(password)
@@ -259,10 +324,6 @@ class User < ActiveRecord::Base
     self.password_hash == hash_password(password, salt)
   end
 
-  def seen?(date)
-    last_seen_at.to_date >= date if last_seen_at.present?
-  end
-
   def seen_before?
     last_seen_at.present?
   end
@@ -271,24 +332,15 @@ class User < ActiveRecord::Base
     user_visits.where(visited_at: date).first
   end
 
-  def adding_visit_record(date)
-    user_visits.create!(visited_at: date)
-  end
-
   def update_visit_record!(date)
-    unless seen_before?
-      adding_visit_record(date)
-      update_column(:days_visited, 1)
-    end
-
-    unless seen?(date) || has_visit_record?(date)
-      adding_visit_record(date)
-      User.increment_counter(:days_visited, 1)
+    unless has_visit_record?(date)
+      update_column(:days_visited, days_visited + 1)
+      user_visits.create!(visited_at: date)
     end
   end
 
   def update_ip_address!(new_ip_address)
-    unless ip_address == new_ip_address && new_ip_address.blank?
+    unless ip_address == new_ip_address || new_ip_address.blank?
       update_column(:ip_address, new_ip_address)
     end
   end
@@ -318,6 +370,12 @@ class User < ActiveRecord::Base
     # robohash was possibly causing caching issues
     # robohash = CGI.escape("http://robohash.org/size_") << "{size}x{size}" << CGI.escape("/#{email_hash}.png")
     "https://www.gravatar.com/avatar/#{email_hash}.png?s={size}&r=pg&d=identicon"
+  end
+
+  # Don't pass this up to the client - it's meant for server side use
+  # The only spot this is now used is for self oneboxes in open graph data
+  def small_avatar_url
+    "https://www.gravatar.com/avatar/#{email_hash}.png?s=60&r=pg&d=identicon"
   end
 
   # return null for local avatars, a template for gravatar
@@ -379,9 +437,11 @@ class User < ActiveRecord::Base
 
     posts.order("post_number desc").each do |p|
       if p.post_number == 1
-        p.topic.destroy
+        p.topic.trash!
+        # TODO: But the post is not destroyed. Why?
       else
-        p.destroy
+        # TODO: This should be using the PostDestroyer!
+        p.trash!
       end
     end
   end
@@ -394,12 +454,21 @@ class User < ActiveRecord::Base
   # Takes into account admin, etc.
   def has_trust_level?(level)
     raise "Invalid trust level #{level}" unless TrustLevel.valid_level?(level)
-    admin? || TrustLevel.compare(trust_level, level)
+    admin? || moderator? || TrustLevel.compare(trust_level, level)
   end
 
-  def change_trust_level(level)
+  # a touch faster than automatic
+  def admin?
+    admin
+  end
+
+  def change_trust_level!(level)
     raise "Invalid trust level #{level}" unless TrustLevel.valid_level?(level)
     self.trust_level = TrustLevel.levels[level]
+    transaction do
+      self.save!
+      Group.user_trust_level_change!(self.id, self.trust_level)
+    end
   end
 
   def guardian
@@ -415,6 +484,21 @@ class User < ActiveRecord::Base
 
   def email_confirmed?
     email_tokens.where(email: email, confirmed: true).present? || email_tokens.empty?
+  end
+
+  def activate
+    email_token = self.email_tokens.active.first
+    if email_token
+      EmailToken.confirm(email_token.token)
+    else
+      self.active = true
+      save
+    end
+  end
+
+  def deactivate
+    self.active = false
+    save
   end
 
   def treat_as_new_topic_start_date
@@ -444,10 +528,50 @@ class User < ActiveRecord::Base
   end
 
   def readable_name
-    if name.present? && name != username
-      "#{name} (#{username})"
-    else
-      username
+    return "#{name} (#{username})" if name.present? && name != username
+    username
+  end
+
+  def bio_summary
+    return nil unless bio_cooked.present?
+    Summarize.new(bio_cooked).summary
+  end
+
+  def self.count_by_signup_date(sinceDaysAgo=30)
+    where('created_at > ?', sinceDaysAgo.days.ago).group('date(created_at)').order('date(created_at)').count
+  end
+
+  def self.counts_by_trust_level
+    group('trust_level').count
+  end
+
+  def update_topic_reply_count
+    self.topic_reply_count =
+      Topic
+        .where(['id in (
+              SELECT topic_id FROM posts p
+              JOIN topics t2 ON t2.id = p.topic_id
+              WHERE p.deleted_at IS NULL AND
+                t2.user_id <> p.user_id AND
+                p.user_id = ?
+              )', self.id])
+        .count
+  end
+
+  def secure_category_ids
+    cats = self.staff? ? Category.select(:id).where(secure: true) : secure_categories.select('categories.id')
+    cats.map{|c| c.id}.sort
+  end
+
+  # Flag all posts from a user as spam
+  def flag_linked_posts_as_spam
+    admin = Discourse.system_user
+    topic_links.includes(:post).each do |tl|
+      begin
+        PostAction.act(admin, tl.post, PostActionType.types[:spam])
+      rescue PostAction::AlreadyActed
+        # If the user has already acted, just ignore it
+      end
     end
   end
 
@@ -462,25 +586,14 @@ class User < ActiveRecord::Base
     end
 
     def update_tracked_topics
-      if auto_track_topics_after_msecs_changed?
+      return unless auto_track_topics_after_msecs_changed?
 
-        if auto_track_topics_after_msecs < 0
-
-          User.exec_sql('update topic_users set notification_level = ?
-                         where notifications_reason_id is null and
-                           user_id = ?' , TopicUser::NotificationLevel::REGULAR , id)
-        else
-
-          User.exec_sql('update topic_users set notification_level = ?
-                         where notifications_reason_id is null and
-                           user_id = ? and
-                           total_msecs_viewed < ?' , TopicUser::NotificationLevel::REGULAR , id, auto_track_topics_after_msecs)
-
-          User.exec_sql('update topic_users set notification_level = ?
-                         where notifications_reason_id is null and
-                           user_id = ? and
-                           total_msecs_viewed >= ?' , TopicUser::NotificationLevel::TRACKING , id, auto_track_topics_after_msecs)
-        end
+      where_conditions = {notifications_reason_id: nil, user_id: id}
+      if auto_track_topics_after_msecs < 0
+        TopicUser.update_all({notification_level: TopicUser.notification_levels[:regular]}, where_conditions)
+      else
+        TopicUser.update_all(["notification_level = CASE WHEN total_msecs_viewed < ? THEN ? ELSE ? END",
+                              auto_track_topics_after_msecs, TopicUser.notification_levels[:regular], TopicUser.notification_levels[:tracking]], where_conditions)
       end
     end
 
@@ -501,9 +614,9 @@ class User < ActiveRecord::Base
     end
 
     def add_trust_level
+      # there is a possiblity we did not load trust level column, skip it
+      return unless has_attribute? :trust_level
       self.trust_level ||= SiteSetting.default_trust_level
-    rescue ActiveModel::MissingAttributeError
-      # Ignore it, safely - see http://www.tatvartha.com/2011/03/activerecordmissingattributeerror-missing-attribute-a-bug-or-a-features/
     end
 
     def update_username_lower
@@ -520,13 +633,21 @@ class User < ActiveRecord::Base
     end
 
     def email_validator
-      if (setting = SiteSetting.email_domains_blacklist).present?
-        domains = setting.gsub('.', '\.')
-        regexp = Regexp.new("@(#{domains})", true)
-        if self.email =~ regexp
+      if (setting = SiteSetting.email_domains_whitelist).present?
+        unless email_in_restriction_setting?(setting)
+          errors.add(:email, I18n.t(:'user.email.not_allowed'))
+        end
+      elsif (setting = SiteSetting.email_domains_blacklist).present?
+        if email_in_restriction_setting?(setting)
           errors.add(:email, I18n.t(:'user.email.not_allowed'))
         end
       end
+    end
+
+    def email_in_restriction_setting?(setting)
+      domains = setting.gsub('.', '\.')
+      regexp = Regexp.new("@(#{domains})", true)
+      self.email =~ regexp
     end
 
     def password_validator
@@ -534,4 +655,6 @@ class User < ActiveRecord::Base
         errors.add(:password, "must be 6 letters or longer")
       end
     end
+
+
 end

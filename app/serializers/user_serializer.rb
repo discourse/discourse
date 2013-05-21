@@ -9,13 +9,14 @@ class UserSerializer < BasicUserSerializer
              :created_at,
              :website,
              :can_edit,
-             :stream,
              :stats,
              :can_send_private_message_to_user,
              :bio_excerpt,
-             :invited_by,
-             :trust_level
+             :trust_level,
+             :moderator,
+             :admin
 
+  has_one :invited_by, embed: :object, serializer: BasicUserSerializer
 
   def self.private_attributes(*attrs)
     attributes *attrs
@@ -39,12 +40,15 @@ class UserSerializer < BasicUserSerializer
   end
 
   private_attributes :email,
-             :email_digests,
-             :email_private_messages,
-             :email_direct,
-             :digest_after_days,
-             :auto_track_topics_after_msecs,
-             :new_topic_duration_minutes
+                     :email_digests,
+                     :email_private_messages,
+                     :email_direct,
+                     :digest_after_days,
+                     :auto_track_topics_after_msecs,
+                     :new_topic_duration_minutes,
+                     :external_links_in_new_tab,
+                     :enable_quoting
+
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.auto_track_topics_after
@@ -60,10 +64,6 @@ class UserSerializer < BasicUserSerializer
 
   def stats
     UserAction.stats(object.id, scope)
-  end
-
-  def stream
-    UserAction.stream(user_id: object.id, offset: 0, limit: 60, guardian: scope)
   end
 
   def can_edit

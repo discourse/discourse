@@ -1,4 +1,4 @@
-/*global HANDLEBARS_TEMPLATES:true*/
+/*global HANDLEBARS_TEMPLATES:true md5:true*/
 
 /**
   Support for BBCode rendering
@@ -146,6 +146,44 @@ Discourse.BBCode = {
   },
 
   /**
+    We want to remove quotes from a string before applying markdown to avoid
+    weird stuff with newlines and such. This will return an object that
+    contains a new version of the text with the quotes replaced with
+    unique ids and `template()` function for reapplying them later.
+
+    @method extractQuotes
+    @param {String} text The text inside which we want to replace quotes
+    @returns {Object} object containing the new string and template function
+  **/
+  extractQuotes: function(text) {
+    var result = {text: "" + text, replacements: []};
+
+    var replacements = []
+
+    var matches;
+    while (matches = Discourse.BBCode.QUOTE_REGEXP.exec(result.text)) {
+      var key = md5(matches[0]);
+      replacements.push({
+        key: key,
+        value: matches[0],
+        content: matches[2].trim()
+      });
+      result.text = result.text.replace(matches[0], key + "\n");
+    }
+
+    result.template = function(input) {
+      replacements.each(function(r) {
+        var val = r.value.trim();
+        val = val.replace(r.content, r.content.replace(/\n/g, '<br>'));
+        input = input.replace(r.key, val);
+      });
+      return input;
+    }
+
+    return(result);
+  },
+
+  /**
     Replace quotes with appropriate markup
 
     @method formatQuote
@@ -171,13 +209,17 @@ Discourse.BBCode = {
       });
       username = paramsSplit[0];
 
+      // remove leading <br>s
+      var content = matches[2].trim();
+
       // Arguments for formatting
       args = {
         username: username,
         params: params,
-        quote: matches[2].trim(),
+        quote: content,
         avatarImg: opts.lookupAvatar ? opts.lookupAvatar(username) : void 0
       };
+
       // Name of the template
       templateName = 'quote';
       if (opts && opts.environment) templateName = "quote_" + opts.environment;

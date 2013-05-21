@@ -49,18 +49,3 @@
     clear: both;
   }
 }
-
-// Image replacement
-// --------------------------------------------------
-
-.hide-text {
-  border: 0;
-  background-color: transparent;
-  overflow: hidden;
-  &:before {
-    display: block;
-    width: 0;
-    height: 150%;
-    content: "";
-  }
-}

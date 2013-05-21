@@ -2,7 +2,7 @@
   {{#host}}
     <div class='source'>
       <div class='info'>
-        <a href='{{original_url}}' target="_blank">
+        <a href='{{original_url}}' class="track-link" target="_blank">
           {{#favicon}}<img class='favicon' src="{{favicon}}"> {{/favicon}}{{host}}
         </a>
       </div>
@@ -10,7 +10,7 @@
   {{/host}}
   <div class='onebox-result-body'>
     {{#image}}<img src="{{image}}" class="thumbnail">{{/image}}
-    <h3><a href="{{original_url}}" target="_blank">{{title}}</a></h3>
+    <h3><a href="{{original_url}}" target="_blank"{{#image_height}} height="{{image_height}}"{{/image_height}}{{#image_width}} width="{{image_width}}"{{/image_width}}>{{title}}</a></h3>
     {{#by_info}}<h4>{{by_info}}</h4>{{/by_info}}
     {{#unsafe}}
       {{text}}

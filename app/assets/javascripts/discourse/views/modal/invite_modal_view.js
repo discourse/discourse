@@ -23,7 +23,7 @@ Discourse.InviteModalView = Discourse.ModalBodyView.extend({
 
   buttonTitle: (function() {
     if (this.get('saving')) return Em.String.i18n('topic.inviting');
-    return Em.String.i18n('topic.invite_reply.title');
+    return Em.String.i18n('topic.invite_reply.action');
   }).property('saving'),
 
   successMessage: (function() {
@@ -33,9 +33,9 @@ Discourse.InviteModalView = Discourse.ModalBodyView.extend({
   }).property('email'),
 
   didInsertElement: function() {
-    var _this = this;
-    Em.run.next(function() {
-      _this.$('input').focus();
+    var inviteModalView = this;
+    Em.run.schedule('afterRender', function() {
+      inviteModalView.$('input').focus();
     });
   },
 

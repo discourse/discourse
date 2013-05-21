@@ -19,7 +19,7 @@ Discourse.Presence = Em.Mixin.create({
   */
   blank: function(name) {
     var prop;
-    prop = this.get(name);
+    prop = this[name] || this.get(name);
     if (!prop) return true;
 
     switch (typeof prop) {

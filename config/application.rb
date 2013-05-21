@@ -3,11 +3,11 @@ require 'rails/all'
 require 'redis-store' # HACK
 
 # Plugin related stuff
-require './lib/discourse_plugin_registry'
+require_relative '../lib/discourse_plugin_registry'
 
 if defined?(Bundler)
   # If you precompile assets before deploying to production, use this line
-  Bundler.require(*Rails.groups(:assets => %w(development test)))
+  Bundler.require(*Rails.groups(assets: %w(development test profile)))
   # If you want your assets lazily compiled in production, use this line
   # Bundler.require(:default, :assets, Rails.env)
 end
@@ -20,6 +20,16 @@ module Discourse
 
     require 'discourse'
 
+    # mocha hates us, active_support/testing/mochaing.rb line 2 is requiring the wrong
+    #  require, patched in source, on upgrade remove this
+    if Rails.env.test? || Rails.env.development?
+      require "mocha/version"
+      require "mocha/deprecation"
+      if Mocha::VERSION == "0.13.3" && Rails::VERSION::STRING == "3.2.12"
+        Mocha::Deprecation.mode = :disabled
+      end
+    end
+
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths += %W(#{config.root}/app/serializers)
 
@@ -29,21 +39,22 @@ module Discourse
 
     config.assets.paths += %W(#{config.root}/config/locales)
 
-    config.assets.precompile += [
-      'admin.js', 'admin.css', 'shiny/shiny.css', 'preload_store.js',
-      'jquery.js', 'defer/html-sanitizer-bundle.js'
-    ]
+    config.assets.precompile += ['admin.js', 'admin.css', 'shiny/shiny.css', 'preload_store.js', 'jquery.js']
+
+    # Precompile all defer
+    Dir.glob("#{config.root}/app/assets/javascripts/defer/*.js").each do |file|
+      config.assets.precompile << "defer/#{File.basename(file)}"
+    end
 
     # Precompile all available locales
-    Dir.glob("app/assets/javascripts/locales/*.js.erb").each do |file|
-      config.assets.precompile << "locales/#{file.match(/([a-z]+\.js)\.erb$/)[1]}"
+    Dir.glob("#{config.root}/app/assets/javascripts/locales/*.js.erb").each do |file|
+      config.assets.precompile << "locales/#{file.match(/([a-z_A-Z]+\.js)\.erb$/)[1]}"
     end
 
     # Activate observers that should always be running.
     config.active_record.observers = [
         :user_email_observer,
         :user_action_observer,
-        :message_bus_observer,
         :post_alert_observer,
         :search_observer
     ]
@@ -88,14 +99,18 @@ module Discourse
     # Our templates shouldn't start with 'discourse/templates'
     config.handlebars.templates_root = 'discourse/templates'
 
+    require 'discourse_redis'
     # Use redis for our cache
-    redis_config = YAML::load(File.open("#{Rails.root}/config/redis.yml"))[Rails.env]
-    redis_store = ActiveSupport::Cache::RedisStore.new "redis://#{redis_config['host']}:#{redis_config['port']}/#{redis_config['cache_db']}"
-    redis_store.options[:namespace] = -> { DiscourseRedis.namespace }
-    config.cache_store = redis_store
+    config.cache_store = DiscourseRedis.new_redis_store
 
-    # Test with rack::cache disabled. Nginx does this for us
+    # we configure rack cache on demand in an initializer
+    # our setup does not use rack cache and instead defers to nginx
     config.action_dispatch.rack_cache =  nil
+
+    # ember stuff only used for asset precompliation, production variant plays up
+    config.ember.variant = :development
+    config.ember.ember_location = "#{Rails.root}/app/assets/javascripts/external_production/ember.js"
+    config.ember.handlebars_location = "#{Rails.root}/app/assets/javascripts/external/handlebars-1.0.rc.3.js"
 
     # So open id logs somewhere sane
     config.after_initialize do

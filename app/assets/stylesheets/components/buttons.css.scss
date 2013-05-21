@@ -29,6 +29,12 @@
   .icon {
     margin-right: 7px;
   }
+  &.no-text {
+    .icon {
+      margin-right: 0;
+      line-height: 10px;
+    }
+  }
 }
 
 // Default button

@@ -37,15 +37,19 @@ class PostTiming < ActiveRecord::Base
   end
 
 
-  def self.process_timings(current_user, topic_id, highest_seen, topic_time, timings)
+  def self.process_timings(current_user, topic_id, topic_time, timings)
     current_user.update_time_read!
 
+    highest_seen = 1
     timings.each do |post_number, time|
       if post_number >= 0
         PostTiming.record_timing(topic_id: topic_id,
                                  post_number: post_number,
                                  user_id: current_user.id,
                                  msecs: time)
+
+        highest_seen = post_number.to_i > highest_seen ?
+                       post_number.to_i : highest_seen
       end
     end
 

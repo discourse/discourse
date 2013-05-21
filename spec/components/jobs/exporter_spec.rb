@@ -91,8 +91,11 @@ describe Jobs::Exporter do
             @post1 = Fabricate(:post, topic: @topic1, user: @user1)
             @post1 = Fabricate(:post, topic: @topic3, user: @user1)
             @reply1 = Fabricate(:basic_reply, user: @user2, topic: @topic3)
+            @reply1.save_reply_relationships
             @reply2 = Fabricate(:basic_reply, user: @user1, topic: @topic1)
+            @reply2.save_reply_relationships
             @reply3 = Fabricate(:basic_reply, user: @user1, topic: @topic3)
+            @reply3.save_reply_relationships
           end
 
           it "should export all rows from the topics table in ascending id order" do
@@ -150,6 +153,8 @@ describe Jobs::Exporter do
           end
 
           it "should send a notification to the user who started the export" do
+
+            ActiveRecord::Base.observers.enable :all
             expect {
               Jobs::Exporter.new.execute( @exporter_args.merge( user_id: @user.id ) )
             }.to change { Notification.count }.by(1)

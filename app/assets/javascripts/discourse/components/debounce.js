@@ -5,27 +5,23 @@
   @method debounce
   @module Discourse
   @param {function} func The function to debounce
-  @param {Numbers} wait how long to wait
-  @param {Boolean} trickle 
+  @param {Number} wait how long to wait
 **/
-Discourse.debounce = function(func, wait, trickle) {
-  var timeout;
+Discourse.debounce = function(func, wait) {
+  var timeout = null;
 
-  timeout = null;
   return function() {
-    var args, context, currentWait, later;
-    context = this;
-    args = arguments;
-    later = function() {
+    var context = this;
+    var args = arguments;
+
+    var later = function() {
       timeout = null;
       return func.apply(context, args);
     };
 
-    if (timeout && trickle) {
-      // already queued, let it through
-      return;
-    }
+    if (timeout) return;
 
+    var currentWait;
     if (typeof wait === "function") {
       currentWait = wait();
     } else {
@@ -40,3 +36,35 @@ Discourse.debounce = function(func, wait, trickle) {
     return timeout;
   };
 };
+
+/**
+  Debounce a javascript function that returns a promise. If it's called too soon it
+  will return a promise that is never resolved.
+
+  @method debouncePromise
+  @module Discourse
+  @param {function} func The function to debounce
+  @param {Number} wait how long to wait
+**/
+Discourse.debouncePromise = function(func, wait) {
+  var timeout = null;
+  var args = null;
+
+  return function() {
+    var context = this;
+    var promise = Ember.Deferred.create();
+    args = arguments;
+
+    if (!timeout) {
+      timeout = Em.run.later(function () {
+        timeout = null;
+        func.apply(context, args).then(function (y) {
+          promise.resolve(y)
+        });
+      }, wait);
+    }
+
+    return promise;
+  }
+};
+

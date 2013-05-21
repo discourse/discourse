@@ -198,8 +198,8 @@ module ActiveSupport
   #
   # To instrument an event you just need to do:
   #
-  #   ActiveSupport::Notifications.instrument("render", :extra => :information) do
-  #     render :text => "Foo"
+  #   ActiveSupport::Notifications.instrument("render", extra: :information) do
+  #     render text: "Foo"
   #   end
   #
   # That executes the block first and notifies all subscribers once done.
@@ -223,14 +223,14 @@ module ActiveSupport
   # That code returns right away, you are just subscribing to "render" events.
   # The block will be called asynchronously whenever someone instruments "render":
   #
-  #   ActiveSupport::Notifications.instrument("render", :extra => :information) do
-  #     render :text => "Foo"
+  #   ActiveSupport::Notifications.instrument("render", extra: :information) do
+  #     render text: "Foo"
   #   end
   #
   #   event = events.first
   #   event.name      # => "render"
   #   event.duration  # => 10 (in milliseconds)
-  #   event.payload   # => { :extra => :information }
+  #   event.payload   # => { extra: :information }
   #
   # The block in the <tt>subscribe</tt> call gets the name of the event, start
   # timestamp, end timestamp, a string with a unique identifier for that event

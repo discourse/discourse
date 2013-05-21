@@ -5,48 +5,37 @@
   @namespace Discourse
   @module Discourse
 **/
-var cache, cacheTime, cacheTopicId, debouncedSearch, doSearch;
+var cache = {};
+var cacheTopicId = null;
+var cacheTime = null;
 
-cache = {};
-
-cacheTopicId = null;
-
-cacheTime = null;
-
-doSearch = function(term, topicId, success) {
-  return $.ajax({
-    url: '/users/search/users',
-    dataType: 'JSON',
+var debouncedSearch = Discourse.debouncePromise(function(term, topicId) {
+  return Discourse.ajax('/users/search/users', {
     data: {
       term: term,
       topic_id: topicId
-    },
-    success: function(r) {
-      cache[term] = r;
-      cacheTime = new Date();
-      return success(r);
     }
+  }).then(function (r) {
+    cache[term] = r;
+    cacheTime = new Date();
+    return r;
   });
-};
-
-debouncedSearch = Discourse.debounce(doSearch, 200);
+}, 200);
 
 Discourse.UserSearch = {
+
   search: function(options) {
-    var callback, exclude, limit, success, term, topicId;
-    term = options.term || "";
-    callback = options.callback;
-    exclude = options.exclude || [];
-    topicId = options.topicId;
-    limit = options.limit || 5;
-    if (!callback) {
-      throw "missing callback";
-    }
+    var term = options.term || "";
+    var exclude = options.exclude || [];
+    var topicId = options.topicId;
+    var limit = options.limit || 5;
+
+    var promise = Ember.Deferred.create();
 
     // TODO site setting for allowed regex in username
     if (term.match(/[^a-zA-Z0-9\_\.]/)) {
-      callback([]);
-      return true;
+      promise.resolve([]);
+      return promise;
     }
     if ((new Date() - cacheTime) > 30000) {
       cache = {};
@@ -55,27 +44,27 @@ Discourse.UserSearch = {
       cache = {};
     }
     cacheTopicId = topicId;
-    success = function(r) {
-      var result;
-      result = [];
+
+    var organizeResults = function(r) {
+      var result = [];
       r.users.each(function(u) {
         if (exclude.indexOf(u.username) === -1) {
           result.push(u);
         }
-        if (result.length > limit) {
-          return false;
-        }
+        if (result.length > limit) return false;
         return true;
       });
-      return callback(result);
+      promise.resolve(result);
     };
+
     if (cache[term]) {
-      success(cache[term]);
+      organizeResults(cache[term]);
     } else {
-      debouncedSearch(term, topicId, success);
+      debouncedSearch(term, topicId).then(organizeResults);
     }
-    return true;
+    return promise;
   }
+
 };
 
 

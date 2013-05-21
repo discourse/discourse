@@ -2,15 +2,15 @@
 # example, inserting the onebox content, or image sizes.
 
 require_dependency 'oneboxer'
+require_dependency 'image_optimizer'
 
 class CookedPostProcessor
-  require 'open-uri'
 
   def initialize(post, opts={})
     @dirty = false
     @opts = opts
     @post = post
-    @doc = Nokogiri::HTML(post.cooked)
+    @doc = Nokogiri::HTML::fragment(post.cooked)
     @size_cache = {}
   end
 
@@ -23,13 +23,10 @@ class CookedPostProcessor
     args = {post_id: @post.id}
     args[:invalidate_oneboxes] = true if @opts[:invalidate_oneboxes]
 
-    Oneboxer.each_onebox_link(@doc) do |url, element|
-      onebox = Oneboxer.onebox(url, args)
-      if onebox
-        element.swap onebox
-        @dirty = true
-      end
+    result = Oneboxer.apply(@doc) do |url, element|
+      Oneboxer.onebox(url, args)
     end
+    @dirty ||= result.changed?
   end
 
   # First let's consider the images
@@ -37,58 +34,79 @@ class CookedPostProcessor
     images = @doc.search("img")
     return unless images.present?
 
+    images.each do |img|
+      src = img['src']
+      src = Discourse.base_url_no_prefix + src if src[0] == "/"
+
+      if src.present?
+
+        if img['width'].blank? || img['height'].blank?
+          w, h = get_size_from_image_sizes(src, @opts[:image_sizes]) || image_dimensions(src)
+
+          if w && h
+            img['width'] = w.to_s
+            img['height'] = h.to_s
+            @dirty = true
+          end
+        end
+
+        if src != img['src']
+          img['src'] = src
+          @dirty = true
+        end
+
+        convert_to_link!(img)
+        img['src'] = optimize_image(img)
+
+      end
+    end
+
     # Extract the first image from the first post and use it as the 'topic image'
     if @post.post_number == 1
       img = images.first
       @post.topic.update_column :image_url, img['src'] if img['src'].present?
     end
 
-    images.each do |img|
-      src = img['src']
-      src = Discourse.base_url + src if src[0] == "/"
-
-      if src.present? && (img['width'].blank? || img['height'].blank?)
-
-        w,h =
-          get_size_from_image_sizes(src, @opts[:image_sizes]) ||
-          image_dimensions(src)
-
-        if w && h
-          img['width'] = w.to_s
-          img['height'] = h.to_s
-          @dirty = true
-        end
-      end
-
-      if src.present?
-        if src != img['src']
-          img['src'] = src
-          @dirty = true
-        end
-        convert_to_link!(img)
-        img.set_attribute('src', optimize_image(src))
-      end
-
-    end
   end
 
-  def optimize_image(src)
-    # uri = get_image_uri(src)
-    # uri.open(read_timeout: 20) do |f|
-    #
-    # end
+  def optimize_image(img)
+    src = img["src"]
+    return src
 
-    src
+    # implementation notes: Sam
+    #
+    # I have disabled this for now, would like the following addressed.
+    #
+    # 1. We need a db record pointing the files on the file system to the post they are on,
+    #   if we do not do that we have no way of purging any local optimised copies
+    #
+    # 2. We should be storing images in /uploads/site-name/_optimised ... it simplifies configuration
+    #
+    # 3. I don't want to have a folder with 10 million images, let split it so /uploads/site-name/_optimised/ABC/DEF/AAAAAAAA.jpg
+    #
+    # 4. We shoul confirm that that we test both saving as jpg and png and pick the more efficient format ... tricky to get right
+    #
+    # 5. All images should also be optimised using image_optim, it ensures that best compression is used
+    #
+    # 6. Admin screen should alert users of any missing dependencies (image magick, etc, and explain what it is for)
+    #
+    # 7. Optimise images should be a seperate site setting.
+
+    # supports only local uploads
+    return src if SiteSetting.enable_imgur? || SiteSetting.enable_s3_uploads?
+
+    width, height = img["width"].to_i, img["height"].to_i
+
+    ImageOptimizer.new(src).optimized_image_url(width, height)
   end
 
   def convert_to_link!(img)
     src = img["src"]
-    width = img["width"].to_i
-    height = img["height"].to_i
+    width, height = img["width"].to_i, img["height"].to_i
 
     return unless src.present? && width > SiteSetting.auto_link_images_wider_than
 
-    original_width, original_height  = get_size(src)
+    original_width, original_height = get_size(src)
 
     return unless original_width.to_i > width && original_height.to_i > height
 
@@ -127,9 +145,25 @@ class CookedPostProcessor
     @doc.try(:to_html)
   end
 
+  def doc
+    @doc
+  end
+
   def get_size(url)
-    return nil unless SiteSetting.crawl_images? || url.start_with?(Discourse.base_url)
-    @size_cache[url] ||= FastImage.size(url)
+    # we need to find out whether it's an external image or an uploaded one
+    # an external image would be: http://google.com/logo.png
+    # an uploaded image would be: http://my.discourse.com/uploads/default/12345.png or http://my.cdn.com/uploads/default/12345.png
+    uri = url
+    # this will transform `http://my.discourse.com/uploads/default/12345.png` into a local uri
+    uri = "#{Rails.root}/public#{url[Discourse.base_url.length..-1]}" if url.start_with?(Discourse.base_url)
+    # this will do the same but when CDN has been defined in the configuration
+    uri = "#{Rails.root}/public#{url[ActionController::Base.asset_host.length..-1]}" if ActionController::Base.asset_host && url.start_with?(ActionController::Base.asset_host)
+    # return nil when it's an external image *and* crawling is disabled
+    return nil unless SiteSetting.crawl_images? || uri[0] == "/"
+    @size_cache[uri] ||= FastImage.size(uri)
+  rescue Zlib::BufError
+    # FastImage.size raises BufError for some gifs
+    return nil
   end
 
   def get_image_uri(url)

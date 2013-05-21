@@ -2,19 +2,17 @@ require 'spec_helper'
 
 describe TopicsController do
 
+
+
   context 'move_posts' do
     it 'needs you to be logged in' do
       lambda { xhr :post, :move_posts, topic_id: 111, title: 'blah', post_ids: [1,2,3] }.should raise_error(Discourse::NotLoggedIn)
     end
 
-    describe 'when logged in' do
+    describe 'moving to a new topic' do
       let!(:user) { log_in(:moderator) }
       let(:p1) { Fabricate(:post, user: user) }
       let(:topic) { p1.topic }
-
-      it "raises an error without a title" do
-        lambda { xhr :post, :move_posts, topic_id: topic.id, post_ids: [1,2,3] }.should raise_error(Discourse::InvalidParameters)
-      end
 
       it "raises an error without postIds" do
         lambda { xhr :post, :move_posts, topic_id: topic.id, title: 'blah' }.should raise_error(Discourse::InvalidParameters)
@@ -30,20 +28,15 @@ describe TopicsController do
         let(:p2) { Fabricate(:post, user: user) }
 
         before do
-          Topic.any_instance.expects(:move_posts).with(user, 'blah', [p2.id]).returns(topic)
+          Topic.any_instance.expects(:move_posts).with(user, [p2.id], title: 'blah').returns(topic)
           xhr :post, :move_posts, topic_id: topic.id, title: 'blah', post_ids: [p2.id]
         end
 
         it "returns success" do
           response.should be_success
-        end
-
-        it "has a JSON response" do
-          ::JSON.parse(response.body)['success'].should be_true
-        end
-
-        it "has a url" do
-          ::JSON.parse(response.body)['url'].should be_present
+          result = ::JSON.parse(response.body)
+          result['success'].should be_true
+          result['url'].should be_present
         end
       end
 
@@ -51,26 +44,161 @@ describe TopicsController do
         let(:p2) { Fabricate(:post, user: user) }
 
         before do
-          Topic.any_instance.expects(:move_posts).with(user, 'blah', [p2.id]).returns(nil)
+          Topic.any_instance.expects(:move_posts).with(user, [p2.id], title: 'blah').returns(nil)
           xhr :post, :move_posts, topic_id: topic.id, title: 'blah', post_ids: [p2.id]
+        end
+
+        it "returns JSON with a false success" do
+          response.should be_success
+          result = ::JSON.parse(response.body)
+          result['success'].should be_false
+          result['url'].should be_blank
+        end
+      end
+    end
+
+    describe 'moving to an existing topic' do
+      let!(:user) { log_in(:moderator) }
+      let(:p1) { Fabricate(:post, user: user) }
+      let(:topic) { p1.topic }
+      let(:dest_topic) { Fabricate(:topic) }
+
+      context 'success' do
+        let(:p2) { Fabricate(:post, user: user) }
+
+        before do
+          Topic.any_instance.expects(:move_posts).with(user, [p2.id], destination_topic_id: dest_topic.id).returns(topic)
+          xhr :post, :move_posts, topic_id: topic.id, post_ids: [p2.id], destination_topic_id: dest_topic.id
         end
 
         it "returns success" do
           response.should be_success
+          result = ::JSON.parse(response.body)
+          result['success'].should be_true
+          result['url'].should be_present
         end
-
-        it "has success in the JSON" do
-          ::JSON.parse(response.body)['success'].should be_false
-        end
-
-        it "has a url" do
-          ::JSON.parse(response.body)['url'].should be_blank
-        end
-
       end
+
+      context 'failure' do
+        let(:p2) { Fabricate(:post, user: user) }
+
+        before do
+          Topic.any_instance.expects(:move_posts).with(user, [p2.id], destination_topic_id: dest_topic.id).returns(nil)
+          xhr :post, :move_posts, topic_id: topic.id, destination_topic_id: dest_topic.id, post_ids: [p2.id]
+        end
+
+        it "returns JSON with a false success" do
+          response.should be_success
+          result = ::JSON.parse(response.body)
+          result['success'].should be_false
+          result['url'].should be_blank
+        end
+      end
+    end
+  end
+
+  context "merge_topic" do
+    it 'needs you to be logged in' do
+      lambda { xhr :post, :merge_topic, topic_id: 111, destination_topic_id: 345 }.should raise_error(Discourse::NotLoggedIn)
+    end
+
+    describe 'moving to a new topic' do
+      let!(:user) { log_in(:moderator) }
+      let(:p1) { Fabricate(:post, user: user) }
+      let(:topic) { p1.topic }
+
+      it "raises an error without destination_topic_id" do
+        lambda { xhr :post, :merge_topic, topic_id: topic.id }.should raise_error(Discourse::InvalidParameters)
+      end
+
+      it "raises an error when the user doesn't have permission to merge" do
+        Guardian.any_instance.expects(:can_move_posts?).returns(false)
+        xhr :post, :merge_topic, topic_id: 111, destination_topic_id: 345
+        response.should be_forbidden
+      end
+
+      let(:dest_topic) { Fabricate(:topic) }
+
+      context 'moves all the posts to the destination topic' do
+        let(:p2) { Fabricate(:post, user: user) }
+
+        before do
+          Topic.any_instance.expects(:move_posts).with(user, [p1.id], destination_topic_id: dest_topic.id).returns(topic)
+          xhr :post, :merge_topic, topic_id: topic.id, destination_topic_id: dest_topic.id
+        end
+
+        it "returns success" do
+          response.should be_success
+          result = ::JSON.parse(response.body)
+          result['success'].should be_true
+          result['url'].should be_present
+        end
+      end
+
 
     end
 
+  end
+
+  context 'similar_to' do
+
+    let(:title) { 'this title is long enough to search for' }
+    let(:raw) { 'this body is long enough to search for' }
+
+    it "requires a title" do
+      -> { xhr :get, :similar_to, raw: raw }.should raise_error(Discourse::InvalidParameters)
+    end
+
+    it "requires a raw body" do
+      -> { xhr :get, :similar_to, title: title }.should raise_error(Discourse::InvalidParameters)
+    end
+
+    it "raises an error if the title length is below the minimum" do
+      SiteSetting.stubs(:min_title_similar_length).returns(100)
+      -> { xhr :get, :similar_to, title: title, raw: raw }.should raise_error(Discourse::InvalidParameters)
+    end
+
+    it "raises an error if the body length is below the minimum" do
+      SiteSetting.stubs(:min_body_similar_length).returns(100)
+      -> { xhr :get, :similar_to, title: title, raw: raw }.should raise_error(Discourse::InvalidParameters)
+    end
+
+    it "delegates to Topic.similar_to" do
+      Topic.expects(:similar_to).with(title, raw).returns([Fabricate(:topic)])
+      xhr :get, :similar_to, title: title, raw: raw
+    end
+
+  end
+
+
+  context 'clear_pin' do
+    it 'needs you to be logged in' do
+      lambda { xhr :put, :clear_pin, topic_id: 1 }.should raise_error(Discourse::NotLoggedIn)
+    end
+
+    context 'when logged in' do
+      let(:topic) { Fabricate(:topic) }
+      let!(:user) { log_in }
+
+      it "fails when the user can't see the topic" do
+        Guardian.any_instance.expects(:can_see?).with(topic).returns(false)
+        xhr :put, :clear_pin, topic_id: topic.id
+        response.should_not be_success
+      end
+
+      describe 'when the user can see the topic' do
+        it "calls clear_pin_for if the user can see the topic" do
+          Topic.any_instance.expects(:clear_pin_for).with(user).once
+          xhr :put, :clear_pin, topic_id: topic.id
+        end
+
+        it "succeeds" do
+          xhr :put, :clear_pin, topic_id: topic.id
+          response.should be_success
+        end
+      end
+
+    end
 
   end
 
@@ -266,7 +394,7 @@ describe TopicsController do
       end
 
       it "reviews the user for a promotion if they're new" do
-        user.update_column(:trust_level, TrustLevel.levels[:new])
+        user.update_column(:trust_level, TrustLevel.levels[:newuser])
         Promotion.any_instance.expects(:review)
         get :show, id: topic.id
       end
@@ -274,10 +402,22 @@ describe TopicsController do
 
     context 'filters' do
 
-
-      it 'grabs first page when no post number is selected' do
-        TopicView.any_instance.expects(:filter_posts_paged).with(0)
+      it 'grabs first page when no filter is provided' do
+        SiteSetting.stubs(:posts_per_page).returns(20)
+        TopicView.any_instance.expects(:filter_posts_in_range).with(0, 20)
         xhr :get, :show, id: topic.id
+      end
+
+      it 'grabs first page when first page is provided' do
+        SiteSetting.stubs(:posts_per_page).returns(20)
+        TopicView.any_instance.expects(:filter_posts_in_range).with(0, 20)
+        xhr :get, :show, id: topic.id, page: 1
+      end
+
+      it 'grabs correct range when a page number is provided' do
+        SiteSetting.stubs(:posts_per_page).returns(20)
+        TopicView.any_instance.expects(:filter_posts_in_range).with(20, 40)
+        xhr :get, :show, id: topic.id, page: 2
       end
 
       it 'delegates a post_number param to TopicView#filter_posts_near' do
@@ -335,12 +475,13 @@ describe TopicsController do
         it 'succeeds' do
           xhr :put, :update, topic_id: @topic.id, slug: @topic.title
           response.should be_success
+          ::JSON.parse(response.body)['basic_topic'].should be_present
         end
 
         it 'allows a change of title' do
-          xhr :put, :update, topic_id: @topic.id, slug: @topic.title, title: 'this is a new title for the topic'
+          xhr :put, :update, topic_id: @topic.id, slug: @topic.title, title: 'This is a new title for the topic'
           @topic.reload
-          @topic.title.should == 'this is a new title for the topic'
+          @topic.title.should == 'This is a new title for the topic'
         end
 
         it 'triggers a change of category' do
@@ -416,6 +557,42 @@ describe TopicsController do
 
 
 
+    end
+
+  end
+
+  describe 'autoclose' do
+
+    it 'needs you to be logged in' do
+      lambda { xhr :put, :autoclose, topic_id: 99, auto_close_days: 3}.should raise_error(Discourse::NotLoggedIn)
+    end
+
+    it 'needs you to be an admin or mod' do
+      user = log_in
+      xhr :put, :autoclose, topic_id: 99, auto_close_days: 3
+      response.should be_forbidden
+    end
+
+    describe 'when logged in' do
+      before do
+        @admin = log_in(:admin)
+        @topic = Fabricate(:topic, user: @admin)
+      end
+
+      it "can set a topic's auto close time" do
+        Topic.any_instance.expects(:auto_close_days=).with { |arg| arg.to_i == 3 }
+        xhr :put, :autoclose, topic_id: @topic.id, auto_close_days: 3
+      end
+
+      it "can remove a topic's auto close time" do
+        Topic.any_instance.expects(:auto_close_days=).with(nil)
+        xhr :put, :autoclose, topic_id: @topic.id, auto_close_days: nil
+      end
+
+      it "sets the topic closer to the current user" do
+        Topic.any_instance.expects(:auto_close_user=).with(@admin)
+        xhr :put, :autoclose, topic_id: @topic.id, auto_close_days: nil
+      end
     end
 
   end

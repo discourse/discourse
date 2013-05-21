@@ -51,18 +51,7 @@ header {
 }
 
 body {
-  .nav-pills .active .dropdown-toggle .caret {
-    border-top-color: white;
-    border-bottom-color: white;
-  }
 
-  .caret {
-    opacity: 0.9;
-    filter: alpha(opacity = 90);
-  }
-  .dropdown .caret {
-    margin-left: 6px;
-  }
   button.ok {
     @include linear-gradient(lighten($green, 5%), $green);
     color: $white;
@@ -123,7 +112,7 @@ body {
   }
   #main {
     .icon-star.starred {
-      color: #e8d81f;
+      color: #fe1;
     }
     a.star {
       display: inline-block;
@@ -135,7 +124,8 @@ body {
         content: "\f005";
       }
       &.starred {
-        color: #e8d81f;
+        color: #fe1;
+        text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5);
         @include hover {
           opacity: 1;
           &:before {

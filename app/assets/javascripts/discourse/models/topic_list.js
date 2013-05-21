@@ -10,47 +10,47 @@
 Discourse.TopicList = Discourse.Model.extend({
 
   loadMoreTopics: function() {
-    var moreUrl, promise,
-      _this = this;
-    promise = new RSVP.Promise();
+    var moreUrl, _this = this;
+
     if (moreUrl = this.get('more_topics_url')) {
-      Discourse.URL.replaceState("/" + (this.get('filter')) + "/more");
-      $.ajax(moreUrl, {
-        success: function(result) {
-          var newTopics, topicIds, topics;
-          if (result) {
-            newTopics = Discourse.TopicList.topicsFrom(result);
-            topics = _this.get('topics');
-            topicIds = [];
-            topics.each(function(t) {
-              topicIds[t.get('id')] = true;
-            });
-            newTopics.each(function(t) {
-              if (!topicIds[t.get('id')]) {
-                return topics.pushObject(t);
-              }
-            });
-            _this.set('more_topics_url', result.topic_list.more_topics_url);
-            Discourse.set('transient.topicsList', _this);
-          }
-          return promise.resolve(result.topic_list.more_topics_url ? true : false);
+      Discourse.URL.replaceState(Discourse.getURL("/") + (this.get('filter')) + "/more");
+      return Discourse.ajax({url: moreUrl}).then(function (result) {
+        var newTopics, topicIds, topics, topicsAdded = 0;
+        if (result) {
+          // the new topics loaded from the server
+          newTopics = Discourse.TopicList.topicsFrom(result);
+          // the current topics
+          topics = _this.get('topics');
+          // keeps track of the ids of the current topics
+          topicIds = [];
+          topics.each(function(t) {
+            topicIds[t.get('id')] = true;
+          });
+          // add new topics to the list of current topics if not already present
+          newTopics.each(function(t) {
+            if (!topicIds[t.get('id')]) {
+              // highlight the first of the new topics so we can get a visual feedback
+              t.set('highlight', topicsAdded++ === 0);
+              return topics.pushObject(t);
+            }
+          });
+          _this.set('more_topics_url', result.topic_list.more_topics_url);
+          Discourse.set('transient.topicsList', _this);
         }
+        return result.topic_list.more_topics_url;
       });
     } else {
-      promise.resolve(false);
+      return null;
     }
-    return promise;
   },
 
   insert: function(json) {
-    var newTopic;
-    newTopic = Discourse.TopicList.decodeTopic(json);
-    /* New Topics are always unseen
-    */
-
-    newTopic.set('unseen', true);
-    newTopic.set('highlightAfterInsert', true);
-    return this.get('inserted').unshiftObject(newTopic);
+    var newTopic  = Discourse.TopicList.decodeTopic(json);
+    newTopic.setProperties({
+      unseen: true,
+      highlight: true
+    });
+    this.get('inserted').unshiftObject(newTopic);
   }
 
 });
@@ -86,44 +86,48 @@ Discourse.TopicList.reopenClass({
   },
 
   list: function(menuItem) {
-    var filter, found, list, promise, topic_list, url;
-    filter = menuItem.name;
-    topic_list = Discourse.TopicList.create();
-    topic_list.set('inserted', Em.A());
-    topic_list.set('filter', filter);
-    url = "/" + filter + ".json";
+    var filter = menuItem.name;
+
+    var topicList = Discourse.TopicList.create({
+      inserted: Em.A(),
+      filter: filter
+    });
+
+    var url = Discourse.getURL("/") + filter + ".json";
     if (menuItem.filters && menuItem.filters.length > 0) {
       url += "?exclude_category=" + menuItem.filters[0].substring(1);
     }
-    if (list = Discourse.get('transient.topicsList')) {
+
+    var list = Discourse.get('transient.topicsList');
+    if (list) {
       if ((list.get('filter') === filter) && window.location.pathname.indexOf('more') > 0) {
-        promise = new RSVP.Promise();
         list.set('loaded', true);
-        promise.resolve(list);
-        return promise;
+        return Ember.Deferred.promise(function(promise) {
+          promise.resolve(list);
+        });
       }
     }
     Discourse.set('transient.topicsList', null);
     Discourse.set('transient.topicListScrollPos', null);
-    promise = new RSVP.Promise();
-    found = PreloadStore.contains('topic_list');
-    PreloadStore.get("topic_list", function() {
-      return $.getJSON(url);
-    }).then(function(result) {
-      topic_list.set('topics', Discourse.TopicList.topicsFrom(result));
-      topic_list.set('can_create_topic', result.topic_list.can_create_topic);
-      topic_list.set('more_topics_url', result.topic_list.more_topics_url);
-      topic_list.set('filter_summary', result.topic_list.filter_summary);
-      topic_list.set('draft_key', result.topic_list.draft_key);
-      topic_list.set('draft_sequence', result.topic_list.draft_sequence);
-      topic_list.set('draft', result.topic_list.draft);
+
+    return PreloadStore.getAndRemove("topic_list", function() { return Discourse.ajax(url) }).then(function(result) {
+      topicList.setProperties({
+        topics: Discourse.TopicList.topicsFrom(result),
+        can_create_topic: result.topic_list.can_create_topic,
+        more_topics_url: result.topic_list.more_topics_url,
+        filter_summary: result.topic_list.filter_summary,
+        draft_key: result.topic_list.draft_key,
+        draft_sequence: result.topic_list.draft_sequence,
+        draft: result.topic_list.draft,
+        canViewRankDetails: result.topic_list.can_view_rank_details,
+        loaded: true
+      });
+
       if (result.topic_list.filtered_category) {
-        topic_list.set('category', Discourse.Category.create(result.topic_list.filtered_category));
+        topicList.set('category', Discourse.Category.create(result.topic_list.filtered_category));
       }
-      topic_list.set('loaded', true);
-      return promise.resolve(topic_list);
+      return topicList;
     });
-    return promise;
   }
 });
 

@@ -1,6 +1,18 @@
 require 'spec_helper'
+require_dependency 'post_destroyer'
 
 describe Post do
+
+  before do
+    ImageSorcery.any_instance.stubs(:convert).returns(false)
+  end
+
+  # Help us build a post with a raw body
+  def post_with_body(body, user=nil)
+    args = post_args.merge(raw: body)
+    args[:user] = user if user.present?
+    Fabricate.build(:post, args)
+  end
 
   it { should belong_to :user }
   it { should belong_to :topic }
@@ -41,37 +53,26 @@ describe Post do
 
   end
 
-  describe 'post uniqueness' do
+  describe "versions and deleting/recovery" do
+    let(:post) { Fabricate(:post, post_args) }
 
-    context "disabled" do
-      before do
-        SiteSetting.stubs(:unique_posts_mins).returns(0)
-        Fabricate(:post, post_args)
-      end
-
-      it "returns true for another post with the same content" do
-        Fabricate.build(:post, post_args).should be_valid
-      end
+    before do
+      post.trash!
+      post.reload
     end
 
-    context 'enabled' do
+    it "doesn't create a new version when deleted" do
+      post.versions.count.should == 0
+    end
+
+    describe "recovery" do
       before do
-        SiteSetting.stubs(:unique_posts_mins).returns(10)
-        Fabricate(:post, post_args)
+        post.recover!
+        post.reload
       end
 
-      it "returns false for another post with the same content" do
-        Fabricate.build(:post, post_args).should_not be_valid
-      end
-
-      it "returns true for admins" do
-        topic.user.admin = true
-        Fabricate.build(:post, post_args).should be_valid
-      end
-
-      it "returns true for moderators" do
-        topic.user.trust_level = TrustLevel.levels[:moderator]
-        Fabricate.build(:post, post_args).should be_valid
+      it "doesn't create a new version when recovered" do
+        post.versions.count.should == 0
       end
     end
 
@@ -92,20 +93,15 @@ describe Post do
     end
   end
 
-  describe 'message bus' do
-    it 'enqueues the post on the message bus' do
-      topic = self.topic
-      MessageBus.expects(:publish).with("/topic/#{topic.id}", instance_of(Hash))
-      Fabricate(:post, post_args)
-    end
-  end
-
   describe "maximum images" do
-    let(:post_no_images) { Fabricate.build(:post, post_args) }
-    let(:post_one_image) { Fabricate.build(:post, post_args.merge(raw: "![sherlock](http://bbc.co.uk/sherlock.jpg)")) }
-    let(:post_two_images) { Fabricate.build(:post, post_args.merge(raw: "<img src='http://discourse.org/logo.png'> <img src='http://bbc.co.uk/sherlock.jpg'>")) }
-    let(:post_with_avatars) { Fabricate.build(:post, post_args.merge(raw: '<img alt="smiley" title=":smiley:" src="/assets/emoji/smiley.png" class="avatar"> <img alt="wink" title=":wink:" src="/assets/emoji/wink.png" class="avatar">')) }
-    let(:post_with_two_classy_images) { Fabricate.build(:post, post_args.merge(raw: "<img src='http://discourse.org/logo.png' class='classy'> <img src='http://bbc.co.uk/sherlock.jpg' class='classy'>")) }
+    let(:newuser) { Fabricate(:user, trust_level: TrustLevel.levels[:newuser]) }
+    let(:post_no_images) { Fabricate.build(:post, post_args.merge(user: newuser)) }
+    let(:post_one_image) { post_with_body("![sherlock](http://bbc.co.uk/sherlock.jpg)", newuser) }
+    let(:post_two_images) { post_with_body("<img src='http://discourse.org/logo.png'> <img src='http://bbc.co.uk/sherlock.jpg'>", newuser) }
+    let(:post_with_avatars) { post_with_body('<img alt="smiley" title=":smiley:" src="/assets/emoji/smiley.png" class="avatar"> <img alt="wink" title=":wink:" src="/assets/emoji/wink.png" class="avatar">', newuser) }
+    let(:post_with_favicon) { post_with_body('<img src="/assets/favicons/wikipedia.png" class="favicon">', newuser) }
+    let(:post_with_thumbnail) { post_with_body('<img src="/assets/emoji/smiley.png" class="thumbnail">', newuser) }
+    let(:post_with_two_classy_images) { post_with_body("<img src='http://discourse.org/logo.png' class='classy'> <img src='http://bbc.co.uk/sherlock.jpg' class='classy'>", newuser) }
 
     it "returns 0 images for an empty post" do
       Fabricate.build(:post).image_count.should == 0
@@ -123,84 +119,169 @@ describe Post do
       post_with_avatars.image_count.should == 0
     end
 
+    it "doesn't count favicons as images" do
+      post_with_favicon.image_count.should == 0
+    end
+
+    it "doesn't count thumbnails as images" do
+      post_with_thumbnail.image_count.should == 0
+    end
+
     it "doesn't count whitelisted images" do
       Post.stubs(:white_listed_image_classes).returns(["classy"])
       post_with_two_classy_images.image_count.should == 0
     end
 
     context "validation" do
-      it "allows a new user to make a post with one image" do
-        post_no_images.user.trust_level = TrustLevel.levels[:new]
-        post_no_images.should be_valid
+
+      before do
+        SiteSetting.stubs(:newuser_max_images).returns(1)
       end
 
-      it "doesn't allow multiple images for new accounts" do
-        post_one_image.user.trust_level = TrustLevel.levels[:new]
-        post_one_image.should_not be_valid
+      context 'newuser' do
+        it "allows a new user to post below the limit" do
+          post_one_image.should be_valid
+        end
+
+        it "doesn't allow more than the maximum" do
+          post_two_images.should_not be_valid
+        end
+
+        it "doesn't allow a new user to edit their post to insert an image" do
+          post_no_images.user.trust_level = TrustLevel.levels[:new]
+          post_no_images.save
+          -> {
+            post_no_images.revise(post_no_images.user, post_two_images.raw)
+            post_no_images.reload
+          }.should_not change(post_no_images, :raw)
+        end
       end
 
-      it "allows multiple images for basic accounts" do
-        post_one_image.user.trust_level = TrustLevel.levels[:basic]
-        post_one_image.should be_valid
-      end
-
-      it "doesn't allow a new user to edit their post to insert an image" do
-        post_no_images.user.trust_level = TrustLevel.levels[:new]
-        post_no_images.save
-        -> {
-          post_no_images.revise(post_no_images.user, post_two_images.raw)
-          post_no_images.reload
-        }.should_not change(post_no_images, :raw)
-
+      it "allows more images from a not-new account" do
+        post_two_images.user.trust_level = TrustLevel.levels[:basic]
+        post_two_images.should be_valid
       end
 
     end
 
   end
 
-  describe "maximum links" do
-    let(:post_one_link) { Fabricate.build(:post, post_args.merge(raw: "[sherlock](http://www.bbc.co.uk/programmes/b018ttws)")) }
-    let(:post_two_links) { Fabricate.build(:post, post_args.merge(raw: "<a href='http://discourse.org'>discourse</a> <a href='http://twitter.com'>twitter</a>")) }
+  context "links" do
+    let(:newuser) { Fabricate(:user, trust_level: TrustLevel.levels[:newuser]) }
+    let(:no_links) { post_with_body("hello world my name is evil trout", newuser) }
+    let(:one_link) { post_with_body("[jlawr](http://www.imdb.com/name/nm2225369)", newuser) }
+    let(:two_links) { post_with_body("<a href='http://disneyland.disney.go.com/'>disney</a> <a href='http://reddit.com'>reddit</a>", newuser)}
+    let(:three_links) { post_with_body("http://discourse.org and http://discourse.org/another_url and http://www.imdb.com/name/nm2225369", newuser)}
 
-    it "returns 0 images for an empty post" do
+    describe "raw_links" do
+      it "returns a blank collection for a post with no links" do
+        no_links.raw_links.should be_blank
+      end
+
+      it "finds a link within markdown" do
+        one_link.raw_links.should == ["http://www.imdb.com/name/nm2225369"]
+      end
+
+      it "can find two links from html" do
+        two_links.raw_links.should == ["http://disneyland.disney.go.com/", "http://reddit.com"]
+      end
+
+      it "can find three links without markup" do
+        three_links.raw_links.should == ["http://discourse.org", "http://discourse.org/another_url", "http://www.imdb.com/name/nm2225369"]
+      end
+    end
+
+    describe "linked_hosts" do
+      it "returns blank with no links" do
+        no_links.linked_hosts.should be_blank
+      end
+
+      it "returns the host and a count for links" do
+        two_links.linked_hosts.should == {"disneyland.disney.go.com" => 1, "reddit.com" => 1}
+      end
+
+      it "it counts properly with more than one link on the same host" do
+        three_links.linked_hosts.should == {"discourse.org" => 2, "www.imdb.com" => 1}
+      end
+    end
+
+    describe "total host usage" do
+
+      it "has none for a regular post" do
+        no_links.total_hosts_usage.should be_blank
+      end
+
+      context "with a previous host" do
+
+        let(:user) { old_post.newuser }
+        let(:another_disney_link) { post_with_body("[radiator springs](http://disneyland.disney.go.com/disney-california-adventure/radiator-springs-racers/)", newuser) }
+
+        before do
+          another_disney_link.save
+          TopicLink.extract_from(another_disney_link)
+        end
+
+        it "contains the new post's links, PLUS the previous one" do
+          two_links.total_hosts_usage.should == {'disneyland.disney.go.com' => 2, 'reddit.com' => 1}
+        end
+
+      end
+
+    end
+
+
+  end
+
+
+  describe "maximum links" do
+    let(:newuser) { Fabricate(:user, trust_level: TrustLevel.levels[:newuser]) }
+    let(:post_one_link) { post_with_body("[sherlock](http://www.bbc.co.uk/programmes/b018ttws)", newuser) }
+    let(:post_two_links) { post_with_body("<a href='http://discourse.org'>discourse</a> <a href='http://twitter.com'>twitter</a>", newuser) }
+    let(:post_with_mentions) { post_with_body("hello @#{newuser.username} how are you doing?", newuser) }
+
+    it "returns 0 links for an empty post" do
       Fabricate.build(:post).link_count.should == 0
     end
 
-    it "finds images from markdown" do
+    it "returns 0 links for a post with mentions" do
+      post_with_mentions.link_count.should == 0
+    end
+
+    it "finds links from markdown" do
       post_one_link.link_count.should == 1
     end
 
-    it "finds images from HTML" do
+    it "finds links from HTML" do
       post_two_links.link_count.should == 2
     end
 
     context "validation" do
-      it "allows a new user to make a post with one image" do
-        post_one_link.user.trust_level = TrustLevel.levels[:new]
-        post_one_link.should be_valid
+
+      before do
+        SiteSetting.stubs(:newuser_max_links).returns(1)
       end
 
-      it "doesn't allow multiple images for new accounts" do
-        post_two_links.user.trust_level = TrustLevel.levels[:new]
-        post_two_links.should_not be_valid
+      context 'newuser' do
+        it "returns true when within the amount of links allowed" do
+          post_one_link.should be_valid
+        end
+
+        it "doesn't allow more links than allowed" do
+          post_two_links.should_not be_valid
+        end
       end
 
       it "allows multiple images for basic accounts" do
         post_two_links.user.trust_level = TrustLevel.levels[:basic]
         post_two_links.should be_valid
       end
+
     end
 
   end
 
 
-  describe "maximum @mentions" do
-
-    let(:post) { Fabricate.build(:post, post_args.merge(raw: "@Jake @Finn")) }
-
-    it "will accept a post with 2 @mentions as valid" do
-      post.should be_valid
-    end
+  describe "@mentions" do
 
     context 'raw_mentions' do
 
@@ -234,16 +315,52 @@ describe Post do
         post.raw_mentions.should == ['finn']
       end
 
+      it "handles underscore in username" do
+        post = Fabricate.build(:post, post_args.merge(raw: "@Jake @Finn @Jake_Old"))
+        post.raw_mentions.should == ['jake', 'finn', 'jake_old']
+      end
+
     end
 
-    context "With a @mention limit of 1" do
-      before do
-        SiteSetting.stubs(:max_mentions_per_post).returns(1)
+    context "max mentions" do
+
+      let(:newuser) { Fabricate(:user, trust_level: TrustLevel.levels[:newuser]) }
+      let(:post_with_one_mention) { post_with_body("@Jake is the person I'm mentioning", newuser) }
+      let(:post_with_two_mentions) { post_with_body("@Jake @Finn are the people I'm mentioning", newuser) }
+
+      context 'new user' do
+        before do
+          SiteSetting.stubs(:newuser_max_mentions_per_post).returns(1)
+          SiteSetting.stubs(:max_mentions_per_post).returns(5)
+        end
+
+        it "allows a new user to have newuser_max_mentions_per_post mentions" do
+          post_with_one_mention.should be_valid
+        end
+
+        it "doesn't allow a new user to have more than newuser_max_mentions_per_post mentions" do
+          post_with_two_mentions.should_not be_valid
+        end
       end
 
-      it "wont accept the post as valid because there are too many mentions" do
-        post.should_not be_valid
+      context "not a new user" do
+        before do
+          SiteSetting.stubs(:newuser_max_mentions_per_post).returns(0)
+          SiteSetting.stubs(:max_mentions_per_post).returns(1)
+        end
+
+        it "allows vmax_mentions_per_post mentions" do
+          post_with_one_mention.user.trust_level = TrustLevel.levels[:basic]
+          post_with_one_mention.should be_valid
+        end
+
+        it "doesn't allow to have more than max_mentions_per_post mentions" do
+          post_with_two_mentions.user.trust_level = TrustLevel.levels[:basic]
+          post_with_two_mentions.should_not be_valid
+        end
       end
+
+
     end
 
   end
@@ -255,7 +372,7 @@ describe Post do
   context "raw_hash" do
 
     let(:raw) { "this is our test post body"}
-    let(:post) { Fabricate.build(:post, raw: raw) }
+    let(:post) { post_with_body(raw) }
 
     it "returns a value" do
       post.raw_hash.should be_present
@@ -267,19 +384,19 @@ describe Post do
     end
 
     it "returns the same value for the same raw" do
-      post.raw_hash.should == Fabricate.build(:post, raw: raw).raw_hash
+      post.raw_hash.should == post_with_body(raw).raw_hash
     end
 
     it "returns a different value for a different raw" do
-      post.raw_hash.should_not == Fabricate.build(:post, raw: "something else").raw_hash
+      post.raw_hash.should_not == post_with_body("something else").raw_hash
     end
 
     it "returns the same hash even with different white space" do
-      post.raw_hash.should == Fabricate.build(:post, raw: " thisis ourt est postbody").raw_hash
+      post.raw_hash.should == post_with_body(" thisis ourt est postbody").raw_hash
     end
 
     it "returns the same hash even with different text case" do
-      post.raw_hash.should == Fabricate.build(:post, raw: "THIS is OUR TEST post BODy").raw_hash
+      post.raw_hash.should == post_with_body("THIS is OUR TEST post BODy").raw_hash
     end
   end
 
@@ -290,18 +407,12 @@ describe Post do
 
     it 'has one version in all_versions' do
       post.all_versions.size.should == 1
+      first_version_at.should be_present
+      post.revise(post.user, post.raw).should be_false
     end
 
-    it "has an initial last_version" do
-      first_version_at.should be_present
-    end
 
     describe 'with the same body' do
-
-      it 'returns false' do
-        post.revise(post.user, post.raw).should be_false
-      end
-
       it "doesn't change cached_version" do
         lambda { post.revise(post.user, post.raw); post.reload }.should_not change(post, :cached_version)
       end
@@ -315,17 +426,12 @@ describe Post do
         post.reload
       end
 
-      it 'does not update cached_version' do
+      it 'causes no update' do
         post.cached_version.should == 1
-      end
-
-      it 'does not create a new version' do
         post.all_versions.size.should == 1
-      end
-
-      it "doesn't change the last_version_at" do
         post.last_version_at.should == first_version_at
       end
+
     end
 
     describe 'revision much later' do
@@ -340,13 +446,7 @@ describe Post do
 
       it 'updates the cached_version' do
         post.cached_version.should == 2
-      end
-
-      it 'creates a new version' do
         post.all_versions.size.should == 2
-      end
-
-      it "updates the last_version_at" do
         post.last_version_at.to_i.should == revised_at.to_i
       end
 
@@ -402,31 +502,13 @@ describe Post do
       let(:changed_by) { Fabricate(:coding_horror) }
       let!(:result) { post.revise(changed_by, 'updated body') }
 
-      it 'returns true' do
+      it 'acts correctly' do
         result.should be_true
-      end
-
-      it 'updates the body' do
         post.raw.should == 'updated body'
-      end
-
-      it 'sets the invalidate oneboxes attribute' do
         post.invalidate_oneboxes.should == true
-      end
-
-      it 'increased the cached_version' do
         post.cached_version.should == 2
-      end
-
-      it 'has the new version in all_versions' do
         post.all_versions.size.should == 2
-      end
-
-      it 'has versions' do
         post.versions.should be_present
-      end
-
-      it "saved the user who made the change in the version" do
         post.versions.first.user.should be_present
       end
 
@@ -439,9 +521,6 @@ describe Post do
 
         it 'is a ninja edit, because the second poster posted again quickly' do
           post.cached_version.should == 2
-        end
-
-        it 'is a ninja edit, because the second poster posted again quickly' do
           post.all_versions.size.should == 2
         end
 
@@ -450,201 +529,20 @@ describe Post do
     end
   end
 
-  it 'should feature users after create' do
-    Jobs.stubs(:enqueue).with(:process_post, anything)
-    Jobs.expects(:enqueue).with(:feature_topic_users, has_key(:topic_id))
-    Fabricate(:post, post_args)
-  end
-
-  it 'should queue up a post processing job when saved' do
-    Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
-    Jobs.expects(:enqueue).with(:process_post, has_key(:post_id))
-    Fabricate(:post, post_args)
-  end
-
-  it 'passes the invalidate_oneboxes along to the job if present' do
-    Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
-    Jobs.expects(:enqueue).with(:process_post, has_key(:invalidate_oneboxes))
-    post = Fabricate.build(:post, post_args)
-    post.invalidate_oneboxes = true
-    post.save
-  end
-
-  it 'passes the image_sizes along to the job if present' do
-    Jobs.stubs(:enqueue).with(:feature_topic_users, has_key(:topic_id))
-    Jobs.expects(:enqueue).with(:process_post, has_key(:image_sizes))
-    post = Fabricate.build(:post, post_args)
-    post.image_sizes = {'http://an.image.host/image.jpg' => {'width' => 17, 'height' => 31}}
-    post.save
-  end
-
-  describe 'notifications' do
-
-    let(:coding_horror) { Fabricate(:coding_horror) }
-
-    describe 'replies' do
-
-      let(:post) { Fabricate(:post, post_args.merge(raw: "Hello @CodingHorror")) }
-
-      it 'notifies the poster on reply' do
-        lambda {
-          @reply = Fabricate(:basic_reply, user: coding_horror, topic: post.topic)
-        }.should change(post.user.notifications, :count).by(1)
-      end
-
-      it "doesn't notify the poster when they reply to their own post" do
-        lambda {
-          @reply = Fabricate(:basic_reply, user: post.user, topic: post.topic)
-        }.should_not change(post.user.notifications, :count).by(1)
-      end
-    end
-
-    describe 'watching' do
-      it "does notify watching users of new posts" do
-        post = Fabricate(:post, post_args)
-        user2 = Fabricate(:coding_horror)
-        post_args[:topic].notify_watch!(user2)
-        lambda {
-          Fabricate(:post, user: post.user, topic: post.topic)
-        }.should change(user2.notifications, :count).by(1)
-      end
-    end
-
-    describe 'muting' do
-      it "does not notify users of new posts" do
-        post = Fabricate(:post, post_args)
-        user = post_args[:user]
-        user2 = Fabricate(:coding_horror)
-
-        post_args[:topic].notify_muted!(user)
-        lambda {
-          Fabricate(:post, user: user2, topic: post.topic, raw: 'hello @' + user.username)
-        }.should change(user.notifications, :count).by(0)
-      end
-    end
-
-  end
-
-  describe 'delete_by' do
-
-    let(:moderator) { Fabricate(:moderator) }
-    let(:post) { Fabricate(:post) }
-
-    context "as the creator of the post" do
-
-      before do
-        post.delete_by(post.user)
-        post.reload
-      end
-
-      it "doesn't delete the post" do
-        post.deleted_at.should be_blank
-      end
-
-      it "updates the text of the post" do
-        post.raw.should == I18n.t('js.post.deleted_by_author')
-      end
-
-
-      it "creates a new version" do
-        post.version.should == 2
-      end
-
-    end
-
-    context "as a moderator" do
-
-      before do
-        post.delete_by(post.user)
-        post.reload
-      end
-
-      it "deletes the post" do
-        post.deleted_at.should be_blank
-      end
-
-    end
-
-  end
-
-  describe 'after delete' do
-
-    let!(:coding_horror) { Fabricate(:coding_horror) }
-    let!(:post) { Fabricate(:post, post_args.merge(raw: "Hello @CodingHorror")) }
-
-    it "should feature the users again (in case they've changed)" do
-      Jobs.expects(:enqueue).with(:feature_topic_users, has_entries(topic_id: post.topic_id, except_post_id: post.id))
-      post.destroy
-    end
-
-    describe 'with a reply' do
-
-      let!(:reply) { Fabricate(:basic_reply, user: coding_horror, topic: post.topic) }
-
-      it 'changes the post count of the topic' do
-        post.reload
-        lambda {
-          reply.destroy
-          post.topic.reload
-        }.should change(post.topic, :posts_count).by(-1)
-      end
-
-      it 'lowers the reply_count when the reply is deleted' do
-        lambda {
-          reply.destroy
-          post.reload
-        }.should change(post.post_replies, :count).by(-1)
-      end
-
-      it 'should increase the post_number when there are deletion gaps' do
-        reply.destroy
-        p = Fabricate(:post, user: post.user, topic: post.topic)
-        p.post_number.should == 3
-      end
-
-    end
-
-  end
-
-
 
   describe 'after save' do
 
     let(:post) { Fabricate(:post, post_args) }
 
-    it "defaults to not user_deleted" do
+    it "has correct info set" do
       post.user_deleted?.should be_false
-    end
-
-    it 'has a post nubmer' do
       post.post_number.should be_present
-    end
-
-    it 'has an excerpt' do
       post.excerpt.should be_present
-    end
-
-    it 'is of the regular post type' do
-      post.post_type.should == Post::REGULAR
-    end
-
-    it 'has no versions' do
+      post.post_type.should == Post.types[:regular]
       post.versions.should be_blank
-    end
-
-    it 'has cooked content' do
       post.cooked.should be_present
-    end
-
-    it 'has an external id' do
       post.external_id.should be_present
-    end
-
-    it 'has no quotes' do
       post.quote_count.should == 0
-    end
-
-    it 'has no replies' do
       post.replies.should be_blank
     end
 
@@ -652,25 +550,16 @@ describe Post do
 
       let(:topic_user) { post.user.topic_users.where(topic_id: topic.id).first }
 
-      it 'exists' do
+      it 'is set correctly' do
         topic_user.should be_present
-      end
-
-      it 'has the posted flag set' do
         topic_user.should be_posted
-      end
-
-      it 'recorded the latest post as read' do
         topic_user.last_read_post_number.should == post.post_number
-      end
-
-      it 'recorded the latest post as the last seen' do
         topic_user.seen_post_count.should == post.post_number
       end
 
     end
 
-    describe 'quote counts' do
+    describe 'extract_quoted_post_numbers' do
 
       let!(:post) { Fabricate(:post, post_args) }
       let(:reply) { Fabricate.build(:post, post_args) }
@@ -691,8 +580,11 @@ describe Post do
 
     describe 'a new reply' do
 
-      let!(:post) { Fabricate(:post, post_args) }
-      let!(:reply) { Fabricate(:reply, post_args.merge(reply_to_post_number: post.post_number)) }
+      let(:topic) { Fabricate(:topic) }
+      let(:other_user) { Fabricate(:coding_horror) }
+      let(:reply_text) { "[quote=\"Evil Trout, post:1\"]\nhello\n[/quote]\nHmmm!"}
+      let!(:post) { PostCreator.new(topic.user, raw: Fabricate.build(:post).raw, topic_id: topic.id).create }
+      let!(:reply) { PostCreator.new(other_user, raw: reply_text, topic_id: topic.id, reply_to_post_number: post.post_number ).create }
 
       it 'has a quote' do
         reply.quote_count.should == 1
@@ -730,20 +622,16 @@ describe Post do
 
       context 'a multi-quote reply' do
 
-        let!(:multi_reply) { Fabricate(:multi_quote_reply, post_args.merge(reply_to_post_number: post.post_number)) }
+        let!(:multi_reply) do
+          raw = "[quote=\"Evil Trout, post:1\"]post1 quote[/quote]\nAha!\n[quote=\"Evil Trout, post:2\"]post2 quote[/quote]\nNeat-o"
+          PostCreator.new(other_user, raw: raw, topic_id: topic.id, reply_to_post_number: post.post_number).create
+        end
 
-        it 'has two quotes' do
+        it 'has the correct info set' do
           multi_reply.quote_count.should == 2
-        end
-
-        it 'is a child of the parent post' do
           post.replies.include?(multi_reply).should be_true
-        end
-
-        it 'is a child of the second post quoted' do
           reply.replies.include?(multi_reply).should be_true
         end
-
       end
 
     end
@@ -751,12 +639,12 @@ describe Post do
   end
 
   context 'best_of' do
-    let!(:p1) { Fabricate(:post, post_args.merge(score: 4)) }
-    let!(:p2) { Fabricate(:post, post_args.merge(score: 10)) }
-    let!(:p3) { Fabricate(:post, post_args.merge(score: 5)) }
+    let!(:p1) { Fabricate(:post, post_args.merge(score: 4, percent_rank: 0.33)) }
+    let!(:p2) { Fabricate(:post, post_args.merge(score: 10, percent_rank: 0.66)) }
+    let!(:p3) { Fabricate(:post, post_args.merge(score: 5, percent_rank: 0.99)) }
 
     it "returns the OP and posts above the threshold in best of mode" do
-      SiteSetting.stubs(:best_of_score_threshold).returns(10)
+      SiteSetting.stubs(:best_of_percent_filter).returns(66)
       Post.best_of.order(:post_number).should == [p1, p2]
     end
 
@@ -782,6 +670,19 @@ describe Post do
     it 'delegates to the associated user' do
       User.any_instance.expects(:readable_name)
       Fabricate(:post).author_readable
+    end
+  end
+
+  describe 'urls' do
+    it 'no-ops for empty list' do
+      Post.urls([]).should == {}
+    end
+
+    # integration test -> should move to centralized integration test
+    it 'finds urls for posts presented' do
+      p1 = Fabricate(:post)
+      p2 = Fabricate(:post)
+      Post.urls([p1.id, p2.id]).should == {p1.id => p1.url, p2.id => p2.url}
     end
   end
 
