@@ -9,7 +9,7 @@ gem 'barber', '0.3.0'
 
 gem 'vestal_versions', git: 'https://github.com/zhangyuan/vestal_versions'
 
-gem 'message_bus'
+gem 'message_bus', git: 'https://github.com/SamSaffron/message_bus'
 gem 'rails_multisite', path: 'vendor/gems/rails_multisite'
 gem 'simple_handlebars_rails', path: 'vendor/gems/simple_handlebars_rails'
 
