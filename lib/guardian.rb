@@ -109,11 +109,9 @@ class Guardian
   alias :can_activate? :can_approve?
 
   def can_ban?(user)
-    return false if user.blank?
-    return false unless @user.try(:admin?)
-    return false if user.admin?
-    true
+    is_staff? && user && !user.staff?
   end
+
   alias :can_deactivate? :can_ban?
 
   def can_clear_flags?(post)
