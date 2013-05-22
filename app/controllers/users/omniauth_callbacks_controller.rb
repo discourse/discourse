@@ -7,7 +7,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   layout false
 
   def self.types
-    @types ||= Enum.new(:facebook, :twitter, :google, :yahoo, :github, :persona)
+    @types ||= Enum.new(:facebook, :twitter, :google, :yahoo, :github, :persona, :cas)
   end
 
   # need to be able to call this
@@ -131,6 +131,73 @@ class Users::OmniauthCallbacksController < ApplicationController
       user = User.where(email: email).first
       if user
         FacebookUserInfo.create!(session[:authentication][:facebook].merge(user_id: user.id))
+        unless user.active
+          user.active = true
+          user.save
+        end
+        log_on_user(user)
+        @data[:authenticated] = true
+      end
+    end
+
+  end
+
+  def create_or_sign_on_user_using_cas(auth_token)
+    logger.info "------------------>#{auth_token}"
+    logger.info "info------------------>#{auth_token[:info]}"
+    logger.info "info.provider------------------>#{auth_token[:info]["provider"]}"
+    logger.info "info.uid------------------>#{auth_token[:info]["uid"]}"
+    logger.info "extra------------------>#{auth_token[:extra]}"
+    logger.info "extra.user------------------>#{auth_token[:extra][:user]}"
+    data = auth_token[:info]
+    raw_info = auth_token["extra"]
+
+    email = "#{auth_token[:extra][:user]}@#{SiteSetting.cas_domainname}"
+    username = auth_token[:extra][:user]
+    name = auth_token[:extra][:user]
+    cas_user_id = auth_token[:extra][:user]
+
+
+    username = User.suggest_username(name)
+
+    session[:authentication] = {
+      cas: {
+        cas_user_id: cas_user_id ,
+        username: username,
+        first_name: name,
+        last_name: name,
+        email: email,
+        gender: nil,
+        name: name
+      },
+      email: email,
+      email_valid: true
+    }
+
+    user_info = CasUserInfo.where(:cas_user_id => cas_user_id ).first
+
+    @data = {
+      username: username,
+      name: name,
+      email: email,
+      auth_provider: "CAS",
+      email_valid: true
+    }
+
+    if user_info
+      user = user_info.user
+      if user
+        unless user.active
+          user.active = true
+          user.save
+        end
+        log_on_user(user)
+        @data[:authenticated] = true
+      end
+    else
+      user = User.where(email: email).first
+      if user
+        CasUserInfo.create!(session[:authentication][:cas].merge(user_id: user.id))
         unless user.active
           user.active = true
           user.save

@@ -34,6 +34,7 @@ Discourse.LoginView = Discourse.ModalBodyView.extend({
            Discourse.SiteSettings.enable_twitter_logins ||
            Discourse.SiteSettings.enable_yahoo_logins ||
            Discourse.SiteSettings.enable_github_logins ||
+           Discourse.SiteSettings.enable_cas_logins ||
            Discourse.SiteSettings.enable_persona_logins;
   }.property(),
 
@@ -100,6 +101,13 @@ Discourse.LoginView = Discourse.ModalBodyView.extend({
     var left = this.get('lastX') - 400;
     var top = this.get('lastY') - 200;
     return window.open(Discourse.getURL("/auth/facebook"), "_blank", "menubar=no,status=no,height=400,width=800,left=" + left + ",top=" + top);
+  },
+  casLogin: function() {
+    var left, top;
+    this.set('authenticate', 'facebook');
+    left = this.get('lastX') - 400;
+    top = this.get('lastY') - 200;
+    return window.open("/auth/cas", "_blank", "menubar=no,status=no,height=400,width=800,left=" + left + ",top=" + top);
   },
 
   openidLogin: function(provider) {

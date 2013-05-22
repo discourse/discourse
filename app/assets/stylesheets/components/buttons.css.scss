@@ -156,6 +156,12 @@
       content: "f";
     }
   }
+  &.cas {
+    background: $cas;
+    &:before {
+      content: "f";
+    }
+  }
   &.twitter {
     background: $twitter;
     &:before {
