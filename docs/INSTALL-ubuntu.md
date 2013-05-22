@@ -74,8 +74,9 @@ Change to the 'discourse' user:
     # Run this command as your normal login (e.g. "michael"), further commands should be run as 'discourse'
     sudo su - discourse
 
-    # Pull down the latest code
+    # Pull down the latest release
     git clone git://github.com/discourse/discourse.git
+    git checkout latest-release
 
     # Install necessary gems
     cd discourse
