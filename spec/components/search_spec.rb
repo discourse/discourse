@@ -72,25 +72,25 @@ describe Search do
 
   it 'returns something blank on a nil search' do
     ActiveRecord::Base.expects(:exec_sql).never
-    Search.query(nil,nil).should be_blank
+    Search.new(nil).execute.should be_blank
   end
 
   it 'does not search when the search term is too small' do
     ActiveRecord::Base.expects(:exec_sql).never
-    Search.query('evil', nil,  nil, 5).should be_blank
+    Search.new('evil', min_search_term_length: 5).execute.should be_blank
   end
 
   it 'escapes non alphanumeric characters' do
-    Search.query('foo :!$);}]>@\#\"\'', nil).should be_blank # There are at least three levels of sanitation for Search.query!
+    Search.new('foo :!$);}]>@\#\"\'').execute.should be_blank # There are at least three levels of sanitation for Search.query!
   end
 
   it 'works when given two terms with spaces' do
-    lambda { Search.query('evil trout', nil) }.should_not raise_error
+    lambda { Search.new('evil trout').execute }.should_not raise_error
   end
 
   context 'users' do
     let!(:user) { Fabricate(:user) }
-    let(:result) { first_of_type(Search.query('bruce', nil), 'user') }
+    let(:result) { first_of_type( Search.new('bruce', type_filter: 'user').execute, 'user') }
 
     it 'returns a result' do
       result.should be_present
@@ -115,7 +115,7 @@ describe Search do
 
     context 'searching the OP' do
       let!(:post) { Fabricate(:post, topic: topic, user: topic.user) }
-      let(:result) { first_of_type(Search.query('hello', nil), 'topic') }
+      let(:result) { first_of_type(Search.new('hello', type_filter: 'topic').execute, 'topic') }
 
       it 'returns a result correctly' do
         result.should be_present
@@ -125,7 +125,7 @@ describe Search do
     end
 
     context "search for a topic by id" do
-      let(:result) { first_of_type(Search.query(topic.id, nil, 'topic'), 'topic') }
+      let(:result) { first_of_type(Search.new(topic.id, type_filter: 'topic').execute, 'topic') }
 
       it 'returns the topic' do
         result.should be_present
@@ -135,7 +135,7 @@ describe Search do
     end
 
     context "search for a topic by url" do
-      let(:result) { first_of_type(Search.query(topic.relative_url, nil, 'topic'), 'topic') }
+      let(:result) { first_of_type(Search.new(topic.relative_url, type_filter: 'topic').execute, 'topic') }
 
       it 'returns the topic' do
         result.should be_present
@@ -147,7 +147,7 @@ describe Search do
     context 'security' do
       let!(:post) { Fabricate(:post, topic: topic, user: topic.user) }
       def result(current_user)
-        first_of_type(Search.query('hello', current_user), 'topic')
+        first_of_type(Search.new('hello', guardian: current_user).execute, 'topic')
       end
 
       it 'secures results correctly' do
@@ -176,7 +176,7 @@ describe Search do
                                               end
     }
     let!(:post) {Fabricate(:post, topic: cyrillic_topic, user: cyrillic_topic.user)}
-    let(:result) { first_of_type(Search.query('запись',nil), 'topic') }
+    let(:result) { first_of_type(Search.new('запись').execute, 'topic') }
 
     it 'finds something when given cyrillic query' do
       result.should be_present
@@ -187,7 +187,7 @@ describe Search do
 
     let!(:category) { Fabricate(:category) }
     def result
-      first_of_type(Search.query('amazing', nil), 'category')
+      first_of_type(Search.new('amazing').execute, 'category')
     end
 
     it 'returns the correct result' do
@@ -212,7 +212,7 @@ describe Search do
 
 
     context 'user filter' do
-      let(:results) { Search.query('amazing', nil, 'user') }
+      let(:results) { Search.new('amazing', type_filter: 'user').execute }
 
       it "returns a user result" do
         results.detect {|r| r[:type] == 'user'}.should be_present
@@ -222,7 +222,7 @@ describe Search do
     end
 
     context 'category filter' do
-      let(:results) { Search.query('amazing', nil, 'category') }
+      let(:results) { Search.new('amazing', type_filter: 'category').execute }
 
       it "returns a category result" do
         results.detect {|r| r[:type] == 'user'}.should be_blank
