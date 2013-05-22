@@ -107,6 +107,10 @@ describe TopicUser do
       topic_user.last_visited_at.to_i.should == today.to_i
     end
 
+    it 'triggers the observer callbacks when updating' do
+      UserActionObserver.instance.expects(:after_save).twice
+      2.times { TopicUser.track_visit!(topic, user) }
+    end
   end
 
   describe 'read tracking' do
@@ -184,6 +188,11 @@ describe TopicUser do
         TopicUser.change(user, topic.id, starred: false)
         TopicUser.change(user, topic.id, starred: true)
       }.should change(TopicUser, :count).by(1)
+    end
+
+    it 'triggers the observer callbacks when updating' do
+      UserActionObserver.instance.expects(:after_save).twice
+      3.times { TopicUser.change(user, topic.id, starred: true) }
     end
 
     describe 'after creating a row' do
