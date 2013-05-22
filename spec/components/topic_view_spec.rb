@@ -23,11 +23,19 @@ describe TopicView do
     let!(:p2) { Fabricate(:post, topic: topic, user: coding_horror, percent_rank: 0.5 )}
     let!(:p3) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 0 )}
 
-    it "it can the best 2 responses" do
+    it "it can find the best responses" do
       best2 = TopicView.new(topic.id, nil, best: 2)
       best2.posts.count.should == 2
       best2.posts[0].id.should == p2.id
       best2.posts[1].id.should == p3.id
+
+      topic.update_status('closed', true, Fabricate(:admin))
+      topic.posts.count.should == 4
+
+      # should not get the status post
+      best = TopicView.new(topic.id, nil, best: 99)
+      best.posts.count.should == 2
+
     end
 
 

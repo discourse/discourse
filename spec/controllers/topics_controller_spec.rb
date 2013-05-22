@@ -2,8 +2,6 @@ require 'spec_helper'
 
 describe TopicsController do
 
-
-
   context 'move_posts' do
     it 'needs you to be logged in' do
       lambda { xhr :post, :move_posts, topic_id: 111, title: 'blah', post_ids: [1,2,3] }.should raise_error(Discourse::NotLoggedIn)

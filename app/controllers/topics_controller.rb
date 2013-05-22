@@ -28,7 +28,7 @@ class TopicsController < ApplicationController
     opts = params.slice(:username_filters, :best_of, :page, :post_number, :posts_before, :posts_after, :best)
     @topic_view = TopicView.new(params[:id] || params[:topic_id], current_user, opts)
 
-    raise Discourse::NotFound unless @topic_view.posts.present? || (request.format && request.format.json?)
+    raise Discourse::NotFound if @topic_view.posts.blank? && !(opts[:best].to_i > 0)
 
     anonymous_etag(@topic_view.topic) do
       redirect_to_correct_topic && return if slugs_do_not_match
