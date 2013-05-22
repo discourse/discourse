@@ -421,12 +421,6 @@ class Post < ActiveRecord::Base
     self.quoted_post_numbers = []
 
     # Create relationships for the quotes
-    raw.scan(/\[quote=\"([^"]+)"\]/).each do |m|
-      if m.present?
-        args = {}
-        m.first.scan(/([a-z]+)\:(\d+)/).each do |arg|
-          args[arg[0].to_sym] = arg[1].to_i
-        end
 
         if args[:topic].present?
           # If the topic attribute is present, ensure it's the same topic
@@ -436,6 +430,8 @@ class Post < ActiveRecord::Base
         end
 
       end
+    raw.scan(/\[quote=\"([^"]+)"\]/).each do |quote|
+      args = parse_quote_into_arguments(quote)
     end
 
     self.quoted_post_numbers.uniq!
@@ -484,5 +480,13 @@ class Post < ActiveRecord::Base
 
   def add_error_if_count_exceeded(key_for_translation, current_count, max_count)
     errors.add(:base, I18n.t(key_for_translation, count: max_count)) if current_count > max_count
+  end
+  def parse_quote_into_arguments(quote)
+    return {} unless quote.present?
+    args = {}
+    quote.first.scan(/([a-z]+)\:(\d+)/).each do |arg|
+      args[arg[0].to_sym] = arg[1].to_i
+    end
+    args
   end
 end
