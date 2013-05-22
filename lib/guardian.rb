@@ -257,7 +257,6 @@ class Guardian
   end
 
   def can_delete_post_action?(post_action)
-
     # You can only undo your own actions
     is_my_own?(post_action) && not(post_action.is_private_message?) &&
 
@@ -342,14 +341,14 @@ class Guardian
   private
 
   def is_my_own?(obj)
-    @user.present? && begin
-      (obj.user == @user if obj.respond_to? :user) ||
-      (obj.user_id == @user.id if obj.respond_to? :user_id)
-    end
+    @user.present? &&
+    (obj.respond_to?(:user) || obj.respond_to?(:user_id)) &&
+    (obj.respond_to?(:user) ? obj.user == @user : true) &&
+    (obj.respond_to?(:user_id) ? (obj.user_id == @user.id) : true)
   end
 
   def is_me?(other)
-    other && authenticated? && User === other && (@user == other || @user.id == other.id)
+    other && authenticated? && User === other && @user == other
   end
 
   def is_not_me?(other)
