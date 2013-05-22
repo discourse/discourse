@@ -102,6 +102,19 @@ For details on how to reduce the monthly cost of your application, see [Advanced
             # Unset var
             unset SECRET_TOKEN
 
+        When precompiling locally make sure to alter the .gitignore file to allow the public/assets folder into version control.
+        
+        *.gitignore*
+
+        ```diff
+        - public/assets
+        + # public/assets
+        ```
+
+        Also, you'll need to add a commit to get the precompiled assets onto Heroku.
+            git add public/assets        
+            git push heroku heroku:master
+
 8. Push your heroku branch to Heroku.
 
         git push heroku heroku:master
