@@ -36,6 +36,19 @@ zh_CN:
     now: "刚刚"
     read_more: '阅读更多'
 
+    in_n_seconds:
+      one: "一秒内"
+      other: "{{count}}秒内"
+    in_n_minutes:
+      one: "一分钟内"
+      other: "{{count}}分钟内"
+    in_n_hours:
+      one: "一小时内"
+      other: "{{count}}小时内"
+    in_n_days:
+      one: "一天内"
+      other: "{{count}}天内"
+
     suggested_topics:
       title: "推荐主题"
 
@@ -53,6 +66,12 @@ zh_CN:
     save: "保存修改"
     saving: "保存中……"
     saved: "已保存！"
+
+    choose_topic:
+      none_found: "没有找到主题"
+      title:
+        search: "通过名称、url或者id，搜索主题："
+        placeholder: "在此输入主题标题"
 
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> 发起 <a href='{{topicUrl}}'>本主题</a>"
@@ -368,6 +387,10 @@ zh_CN:
       help: "Markdown 编辑帮助"
       toggler: "隐藏或显示编辑面板"
 
+      admin_options_title: "本主题可选设置"
+      auto_close_label: "自动关闭主题，过："
+      auto_close_units: "天"
+
     notifications:
       title: "使用 @name 提及到你，回复你的帖子和主题，私信等等的通知消息"
       none: "你当前没有任何通知。"
@@ -477,6 +500,12 @@ zh_CN:
       jump_reply_down: 跳转至更晚的回复
       deleted: "此主题已被删除"
 
+      auto_close_notice: "本主题将在%{timeLeft}后自动关闭"
+      auto_close_title: '自动关闭设置'
+      auto_close_save: "保存"
+      auto_close_cancel: "取消"
+      auto_close_remove: "不自动关闭该主题"
+
       progress:
         title: 主题进度
         jump_top: 跳转到第一帖
@@ -514,6 +543,7 @@ zh_CN:
         delete: "删除主题"
         open: "打开主题"
         close: "关闭主题"
+        auto_close: "自动关闭"
         unpin: "解除主题置顶"
         pin: "置顶主题"
         unarchive: "解除主题存档"
@@ -521,7 +551,7 @@ zh_CN:
         invisible: "使不可见"
         visible: "使可见"
         reset_read: "重置阅读数据"
-        multi_select: "切换多选"
+        multi_select: "选择将被合并/拆分的帖子"
         convert_to_topic: "转换到常规主题"
 
       reply:
@@ -575,20 +605,28 @@ zh_CN:
           other: "{{count}} 个帖子中的"
         cancel: "再次显示本主题下的所有帖子。"
 
-      move_selected:
-        title: "移动所选帖子"
-        topic_name: "新主题名称："
-        error: "抱歉，在移动这些帖子时发生了错误。"
+      split_topic:
+        title: "拆分主题"
+        action: "拆分主题"
+        topic_name: "新主题名："
+        error: "拆分主题时发生错误。"
         instructions:
-          one: "你将依据你所选的帖子创建一个新主题。"
-          other: "你将依据你所选择的<b>{{count}}</b>个帖子创建一个新主题。"
+          one: "你想如何移动该帖？"
+          other: "你想如何移动你所选择的这{{count}}篇帖子？"
+
+      merge_topic:
+        title: "合并主题"
+        action: "合并主题"
+        error: "合并主题时发生错误。"
+        instructions:
+          one: "请选择你想将那篇帖子移至其下的主题。"
+          other: "请选择你想将那{{count}}篇帖子移至其下的主题。"
 
       multi_select:
         select: '选择'
         selected: '已选择（{{count}}）'
         delete: 删除所选
         cancel: 取消选择
-        move: 移动所选
         description:
           one: 你已选择了<b>一个</b>帖子。
           other: "你已选择了<b>{{count}}</b>个帖子。"
@@ -740,6 +778,8 @@ zh_CN:
       edit: '编辑'
       edit_long: "编辑分类"
       view: '浏览分类下的主题'
+      general: '通常'
+      settings: '设置'
       delete: '删除分类'
       create: '创建分类'
       save: '保存分类'
@@ -760,6 +800,11 @@ zh_CN:
       change_in_category_topic: "访问分类主题来编辑描述信息"
       hotness: "热度"
       already_used: '此色彩已经被另一个分类使用'
+      is_secure: "安全类型？"
+      add_group: "添加分组"
+      security: "安全"
+      allowed_groups: "授权的分组："
+      auto_close_label: "自动关闭主题，过："
 
     flagging:
       title: '为何要给投诉本帖？'
@@ -897,14 +942,23 @@ zh_CN:
         delete_title: "删除帖子（如果它是主题第一帖，那么将删除主题）"
         flagged_by: "投诉者为"
         error: "出错了"
+        view_message: "查看消息"
 
       groups:
         title: "群组"
         edit: "编辑群组"
         selector_placeholder: "添加用户"
+        name_placeholder: "组名，不能含有空格，与用户名规则一致"
 
       api:
         title: "应用开发接口（API）"
+        long_title: "API信息"
+        key: "密钥"
+        generate: "生成API密钥"
+        regenerate: "重新生成API密钥"
+        info_html: "API密钥可以用来通过JSON调用创建和更新主题。"
+        note_html: "请<strong>安全的</strong>保管好本密钥，任何拥有该密钥的用户可以使用它以论坛任何用户的名义来发帖。"
+
       customize:
         title: "定制"
         long_title: "站点定制"
@@ -922,7 +976,7 @@ zh_CN:
         about: "站点定制允许你修改样式表和站点头部。选择或者添加一个来开始编辑。"
 
       email_logs:
-        title: "电子邮件日志"
+        title: "电子邮件"
         sent_at: "发送时间"
         email_type: "邮件类型"
         to_address: "目的地址"
@@ -1000,10 +1054,10 @@ zh_CN:
 
       site_content:
         none: "选择内容类型以开始编辑。"
-        title: '站点内容'
+        title: '内容'
         edit: "编辑站点内容"
 
       site_settings:
         show_overriden: '只显示被覆盖了缺省值的'
-        title: '站点设置'
+        title: '设置'
         reset: '重置为缺省值'
