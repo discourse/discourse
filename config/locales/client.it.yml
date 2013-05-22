@@ -5,7 +5,6 @@
 # To validate this YAML file after you change it, please paste it into
 # http://yamllint.com/
 
-
 it:
   js:
     share:
@@ -605,32 +604,28 @@ it:
           other: "di {{count}} nel topic"
         cancel: "Mostra nuovamente tutti i post di questo topic."
 
-      move_selected:
-        title: "Sposta i post selezionati"
-        error: "Spiacenti, si è verificato un errore nello spostamento dei post."
+      split_topic:
+        title: "Dividi Topic"
+        action: "dividi topic"
+        topic_name: "Nuovo nome topic:"
+        error: "Si è verificato un errore nella divisione del topic"
         instructions:
-          one: "Come desideri spostare questo post?"
-          other: "Come ti piacerebbe spostare i <b>{{count}}</b> post che hai creato?"
+          one: "Stai per creare un nuovo topic per popolarlo con i post che hai selezionato"
+          other: "Stai per creare un nuovo topic per popolarlo con i <b>{{count}}</b> post che hai selezionato"
 
-        new_topic:
-          title: "Sposta i post selezionati su un Nuovo Topic"
-          topic_name: "Titolo nuovo topic:"
-          instructions:
-            one: "Stai per creare un nuovo topic popolandolo con il post che hai selezionato."
-            other: "Stai per creare un nuovo topic popolandolo con i <b>{{count}}</b> post che hai selezionato."
-
-        existing_topic:
-          title: "Sposta i post selezionati su un Topic Esistente"
-          instructions:
-            one: "Scegli il topic in cui desideri spostare questo post."
-            other: "Scegli il topic in cui desideri spostare questi <b>{{count}}</b> post."
+      merge_topic:
+        title: "Unisci Topic"
+        action: "unisci topic"
+        error: "Si è verificato un errore unendo questo topic."
+        instructions:
+          one: "Seleziona il topic in cui desideri spostare questo post."
+          other: "Seleziona il topic in cui desideri spostare questi <b>{{count}}</b> post."
 
       multi_select:
         select: 'seleziona'
         selected: 'selezionati ({{count}})'
         delete: elimina selezionati
         cancel: annulla selezione
-        move: sposta selezionati
         description:
           one: Hai selezionato <b>1</b> post.
           other: "Hai selezionato <b>{{count}}</b> post."
@@ -783,6 +778,8 @@ it:
       edit_long: "Modifica Categoria"
       edit_uncategorized: "Modifica Non categorizzata"
       view: 'Mostra Topic nella Categoria'
+      general: 'Generale'
+      settings: 'Impostazioni'
       delete: 'Elimina Categoria'
       create: 'Crea Categoria'
       save: 'Salva Categoria'
@@ -808,6 +805,7 @@ it:
       add_group: "Aggiungi Gruppo"
       security: "Protezione"
       allowed_groups: "Gruppi Ammessi:"
+      auto_close_label: "Auto-chiusura topic dopo:"
 
 
     flagging:
@@ -919,7 +917,7 @@ it:
         admins: 'Amministratori:'
         private_messages_short: "PMs"
         private_messages_title: "Messaggi Privati"
-        
+
         reports:
           today: "Oggi"
           yesterday: "Ieri"
