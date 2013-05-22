@@ -46,6 +46,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
            :name => 'persona'
 
   provider :cas,
-           :url => SiteSetting.cas_url
+           :url => SiteSetting.cas_url,
+           :host => SiteSetting.cas_hostname
 
 end
