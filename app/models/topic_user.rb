@@ -100,6 +100,8 @@ class TopicUser < ActiveRecord::Base
       rows = TopicUser.update_all({last_visited_at: now}, {topic_id: topic.id, user_id: user.id})
       if rows == 0
         TopicUser.create(topic_id: topic.id, user_id: user.id, last_visited_at: now, first_visited_at: now)
+      else
+        observe_after_save_callbacks_for topic.id, user.id
       end
     end
 
