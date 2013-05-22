@@ -27,6 +27,8 @@ class Category < ActiveRecord::Base
   after_destroy :invalidate_site_cache
   after_destroy :publish_categories_list
 
+  has_one :category_search_data
+
   scope :latest, ->{ order('topic_count desc') }
 
   scope :secured, ->(guardian = nil) {

@@ -33,6 +33,8 @@ class User < ActiveRecord::Base
   has_many :groups, through: :group_users
   has_many :secure_categories, through: :groups, source: :categories
 
+  has_one :user_search_data
+
   validates_presence_of :username
   validates_presence_of :email
   validates_uniqueness_of :email

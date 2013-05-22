@@ -22,7 +22,7 @@ describe Search do
       @category = Fabricate(:category, name: 'america')
       @topic = Fabricate(:topic, title: 'sam saffron test topic', category: @category)
       @post = Fabricate(:post, topic: @topic, raw: 'this <b>fun test</b> <img src="bla" title="my image">')
-      @indexed = Topic.exec_sql("select search_data from posts_search where id = #{@post.id}").first["search_data"]
+      @indexed = @post.post_search_data.search_data
     end
     it "should include body in index" do
       @indexed.should =~ /fun/
@@ -37,7 +37,9 @@ describe Search do
     it "should pick up on title updates" do
       @topic.title = "harpi is the new title"
       @topic.save!
-      @indexed = Topic.exec_sql("select search_data from posts_search where id = #{@post.id}").first["search_data"]
+      @post.post_search_data.reload
+
+      @indexed = @post.post_search_data.search_data
 
       @indexed.should =~ /harpi/
     end
@@ -46,7 +48,7 @@ describe Search do
   context 'user indexing observer' do
     before do
       @user = Fabricate(:user, username: 'fred', name: 'bob jones')
-      @indexed = User.exec_sql("select search_data from users_search where id = #{@user.id}").first["search_data"]
+      @indexed = @user.user_search_data.search_data
     end
 
     it "should pick up on username" do
@@ -61,7 +63,7 @@ describe Search do
   context 'category indexing observer' do
     before do
       @category = Fabricate(:category, name: 'america')
-      @indexed = Topic.exec_sql("select search_data from categories_search where id = #{@category.id}").first["search_data"]
+      @indexed = @category.category_search_data.search_data
     end
 
     it "should pick up on name" do

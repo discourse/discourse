@@ -25,6 +25,8 @@ class Post < ActiveRecord::Base
   has_many :replies, through: :post_replies
   has_many :post_actions
 
+  has_one :post_search_data
+
   validates_presence_of :raw, :user_id, :topic_id
   validates :raw, stripped_length: { in: -> { SiteSetting.post_length } }
   validate :raw_quality

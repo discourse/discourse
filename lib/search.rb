@@ -150,7 +150,7 @@ class Search
             c.color,
             c.text_color
     FROM categories AS c
-    JOIN categories_search s on s.id = c.id
+    JOIN category_search_data s on s.category_id = c.id
     /*where*/
     ORDER BY topics_month desc
     LIMIT :limit
@@ -171,7 +171,7 @@ SQL
                     NULL AS color,
                     NULL AS text_color
             FROM users AS u
-            JOIN users_search s on s.id = u.id
+            JOIN user_search_data s on s.user_id = u.id
             WHERE s.search_data @@ TO_TSQUERY(:locale, :query)
             ORDER BY CASE WHEN u.username_lower = lower(:orig) then 0 else 1 end,  last_posted_at desc
             LIMIT :limit"
@@ -183,7 +183,7 @@ SQL
       /*select*/
       FROM topics AS ft
       /*join*/
-        JOIN posts_search s on s.id = p.id
+        JOIN post_search_data s on s.post_id = p.id
         LEFT JOIN categories c ON c.id = ft.category_id
       /*where*/
       ORDER BY
@@ -234,18 +234,18 @@ SQL
           new_slug = Slug.for(row['title'])
           new_slug = "topic" if new_slug.blank?
           row['url'].gsub!('slug', new_slug)
+        elsif type == 'user'
+          row['avatar_template'] = User.avatar_template(row['email'])
         end
-
-        # Add avatars for users
-        row['avatar_template'] = User.avatar_template(row['email']) if type == 'user'
 
         # Remove attributes when we know they don't matter
         row.delete('email')
-        row.delete('color') unless type == 'category'
-        row.delete('text_color') unless type == 'category'
+        unless type == 'category'
+          row.delete('color')
+          row.delete('text_color')
+        end
 
-        grouped[type] ||= []
-        grouped[type] << row
+        grouped[type] = (grouped[type] || []) << row
       end
 
       grouped.map do |type, results|
