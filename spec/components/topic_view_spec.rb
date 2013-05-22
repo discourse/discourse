@@ -35,6 +35,7 @@ describe TopicView do
       # should not get the status post
       best = TopicView.new(topic.id, nil, best: 99)
       best.posts.count.should == 2
+      best.filtered_posts_count.should == 3
 
     end
 

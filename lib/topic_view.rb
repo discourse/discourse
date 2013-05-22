@@ -25,6 +25,7 @@ class TopicView
     @filtered_posts = @topic.posts
     @filtered_posts = @filtered_posts.with_deleted if user.try(:staff?)
     @filtered_posts = @filtered_posts.best_of if options[:best_of].present?
+    @filtered_posts = @filtered_posts.where('posts.post_type <> ?', Post.types[:moderator_action]) if options[:best].present?
 
     if options[:username_filters].present?
       usernames = options[:username_filters].map{|u| u.downcase}
@@ -177,7 +178,6 @@ class TopicView
     @index_offset = 0
     @posts = @filtered_posts.order('percent_rank asc, sort_order asc').where("post_number > 1")
     @posts = @posts.includes(:reply_to_user).includes(:topic).joins(:user).limit(max)
-    @posts = @posts.where('posts.post_type <> ?', Post.types[:moderator_action])
     @posts = @posts.to_a
     @posts.sort!{|a,b| a.post_number <=> b.post_number}
     @posts
