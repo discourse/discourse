@@ -1,7 +1,7 @@
 # The guardian is responsible for confirming access to various site resources and operations
 class Guardian
 
-  class GuestUser
+  class AnonymousUser
     def blank?; true; end
     def admin?; false; end
     def staff?; false; end
@@ -11,7 +11,7 @@ class Guardian
   end
 
   def initialize(user=nil)
-    @user = user.presence || GuestUser.new
+    @user = user.presence || AnonymousUser.new
   end
 
   def user
