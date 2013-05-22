@@ -745,4 +745,7 @@ class Topic < ActiveRecord::Base
     self.auto_close_at = (num_days and num_days.to_i > 0.0 ? num_days.to_i.days.from_now : nil)
   end
 
+  def secure_category?
+    category && category.secure
+  end
 end
