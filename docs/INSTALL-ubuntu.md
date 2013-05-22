@@ -79,7 +79,7 @@ In the case you want Apache2 INSTEAD nginx to serve your static pages:
     sudo vim /etc/apache2/mods-available/passenger.conf
     
     # Inside, paste (change the user accodingly)
-    PassengerRoot /home/rafael/.rvm/gems/ruby-2.0.0-p0/gems/passenger-4.0.2
+    PassengerRoot /home/YOUR-USER/.rvm/gems/ruby-2.0.0-p0/gems/passenger-4.0.2
     PassengerDefaultRuby /home/YOUR-USER/.rvm/wrappers/ruby-2.0.0-p0/ruby
     
     # Now activate them all
@@ -89,6 +89,7 @@ In the case you want Apache2 INSTEAD nginx to serve your static pages:
     sudo service apache2 reload
     sudo service apache2 restart
 
+If you get any errors starting or reloading apache, please check the paths above - Ruby 2.0 should be there if you are using RVM, but it could get tricky.
 
 ## Install rvm and ruby environment
 
