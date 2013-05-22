@@ -37,6 +37,7 @@ zh_CN:
     zero: "抱歉, 游客无法贴链接。"
     one: "抱歉, 游客一次仅能贴一条链接。"
     other: "抱歉, 游客一次仅能贴 %{count} 条链接。"
+  spamming_host: "抱歉，你不能添加一个链接到那台主机的链接。"
 
   just_posted_that: "与你最近发表的内容太过相似"
   has_already_been_used: "已经被使用"
@@ -227,7 +228,7 @@ zh_CN:
       long_form: '投诉为题外话'
     spam:
       title: '垃圾'
-      description: '此帖为明显的广告，它不包含任何对当前讨论有帮助的内容，只有促销信息。'
+      description: '此帖为广告，它不包含任何对当前讨论有帮助的内容，只有促销信息。'
       long_form: '投诉为垃圾'
     inappropriate:
       title: '不当内容'
@@ -366,7 +367,7 @@ zh_CN:
     facebook_config_warning: '服务器允许使用脸书账号登陆 (enable_facebook_logins), 但是 app id 和 app secret values 没有被设定。 到 <a href="/admin/site_settings">站点设置</a> 更新此设定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">参考设定指南</a>。'
     twitter_config_warning: '服务器允许使用推特账号登陆 (enable_twitter_logins), 但是 key 和 secret values 没有被设定。 到 <a href="/admin/site_settings">站点设置</a> 更新此设定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">参考设定指南</a>。'
     github_config_warning: '服务器允许使用GitHub账号登陆  (enable_github_logins), 但是 client id 和 secret values 没有被设定。 到 <a href="/admin/site_settings">站点设置</a> 更新此设定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">参考设定指南</a>。'
-    failing_emails_warning: "%{num_failed_jobs}个email任务失败。请检查config/production.rb文件是否正确配置了config.action_mailer。"
+    failing_emails_warning: "%{num_failed_jobs}个email任务失败。请检查config/environments/production.rb文件是否正确配置了config.action_mailer。<a href='/sidekiq/retries' target='_blank'>在Sidekiq中查看失败的任务</a>。"
     default_logo_warning: "你没有自定义你的站点logo。请在<a href='/admin/site_settings'>站点设置</a>中配置logo_url、logo_small_url和favicon_url。"
     contact_email_missing: "你没有为站点指定一个联系邮箱。请在<a href='/admin/site_settings'>站点设置</a>配置contact_email。"
     contact_email_invalid: "站点联系邮箱不正确。请在<a href='/admin/site_settings'>站点设置</a>修改。"
@@ -458,6 +459,7 @@ zh_CN:
     post_undo_action_window_mins: "允许用户在帖子上进行撤销操作（赞、投诉等）所需等待的间隔秒数"
     must_approve_users: "用户必须获得管理员批准方能访问"
     ga_tracking_code: "谷歌分析追踪代码，例如：UA-12345678-9。参考 http://google.com/analytics"
+    ga_domain_name: "谷歌分析域名，例如：mysite.com；参考 http://google.com/analytics"
     top_menu: "确定在主页导航条包含哪些条目，以及排列顺序。例如：latest|hot|read|favorited|unread|new|posted|categories"
     post_menu: "确定在帖子菜单条包含哪些条目，以及排列顺序。例如：like|edit|flag|delete|share|bookmark|reply"
     share_links: "确定在分享对话框里显示哪些条目、以什么顺序显示。例如 twitter|facebook|google+"
@@ -565,6 +567,8 @@ zh_CN:
     tos_url: "如果你想要使用一个部署在某个地方的服务条款文档，那么请在此填写其完整URL地址。"
     privacy_policy_url: "如果你想要使用一个部署在某个地方的隐私政策文档，那么请在此填写其完整URL地址。"
 
+    newuser_spam_host_threshold: "用户在一篇帖子中能添加多少此指向同一主机的链接，取决于之前该用户有`newuser_spam_host_threshold`篇帖子被认为是垃圾帖。"
+
   notification_types:
     mentioned: "%{display_username} 在 %{link} @到了你"
     liked: "%{display_username} 在 %{link} 赞了你的帖子 "
@@ -598,6 +602,11 @@ zh_CN:
     archived_disabled: "本主题已被解除归档，即不再冻结，可以修改。"
     closed_enabled: "本主题已关闭，不再接受新的回复。"
     closed_disabled: "本主题已开放，可以发表新的回复。"
+    autoclosed_enabled:
+      zero: "本主题为创建一天后自动关闭，不允许添加新的回复。"
+      one: "本主题为创建一天后自动关闭，不允许添加新的回复。"
+      other: "本主题为创建{{count}}天自动关闭。不允许添加新回复。"
+    autoclosed_disabled: "本主题是开放的，可以添加新的回复。"
     pinned_enabled: "本主题已置顶，它将始终显示在它所属分类的顶部。"
     pinned_disabled: "本主题已被解除置顶，它将不再显示在它所属分类的顶部。"
     visible_enabled: "本主题可见，它将显示在主题列表中。"
