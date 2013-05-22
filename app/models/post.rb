@@ -416,26 +416,21 @@ class Post < ActiveRecord::Base
     DraftSequence.next!(last_editor_id, topic.draft_key)
   end
 
+
   # Determine what posts are quoted by this post
   def extract_quoted_post_numbers
-    self.quoted_post_numbers = []
+    temp_collector = []
 
     # Create relationships for the quotes
-
-        if args[:topic].present?
-          # If the topic attribute is present, ensure it's the same topic
-          self.quoted_post_numbers << args[:post] if topic_id == args[:topic]
-        else
-          self.quoted_post_numbers << args[:post]
-        end
-
-      end
     raw.scan(/\[quote=\"([^"]+)"\]/).each do |quote|
       args = parse_quote_into_arguments(quote)
+      # If the topic attribute is present, ensure it's the same topic
+      temp_collector << args[:post] unless (args[:topic].present? && topic_id != args[:topic])
     end
 
-    self.quoted_post_numbers.uniq!
-    self.quote_count = quoted_post_numbers.size
+    temp_collector.uniq!
+    self.quoted_post_numbers = temp_collector
+    self.quote_count = temp_collector.size
   end
 
   def save_reply_relationships
@@ -481,6 +476,7 @@ class Post < ActiveRecord::Base
   def add_error_if_count_exceeded(key_for_translation, current_count, max_count)
     errors.add(:base, I18n.t(key_for_translation, count: max_count)) if current_count > max_count
   end
+
   def parse_quote_into_arguments(quote)
     return {} unless quote.present?
     args = {}
@@ -489,4 +485,5 @@ class Post < ActiveRecord::Base
     end
     args
   end
+
 end
