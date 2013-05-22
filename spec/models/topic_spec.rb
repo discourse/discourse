@@ -1104,4 +1104,21 @@ describe Topic do
     end
   end
 
+  describe '#secure_category?' do
+    let(:category){ Category.new }
+
+    it "is true if the category is secure" do
+      category.stubs(:secure).returns(true)
+      Topic.new(:category => category).should be_secure_category
+    end
+
+    it "is false if the category is not secure" do
+      category.stubs(:secure).returns(false)
+      Topic.new(:category => category).should_not be_secure_category
+    end
+
+    it "is false if there is no category" do
+      Topic.new(:category => nil).should_not be_secure_category
+    end
+  end
 end
