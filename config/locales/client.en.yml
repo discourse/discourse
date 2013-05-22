@@ -265,7 +265,7 @@ en:
     best_of:
       title: "Best Of"
       enabled_description: You are currently viewing the "Best Of" view of this topic.
-      description: "There are <b>{{count}}</b> posts in this topic. That's a lot! Would you like to save time by switching your view to show only the posts with the most interactions and responses?"
+      description: "There are <b>{{count}}</b> posts in this topic. That's a lot! Would you like to save time by showing only the best posts?"
       enable: 'Switch to "Best Of" view'
       disable: 'Cancel "Best Of"'
 
