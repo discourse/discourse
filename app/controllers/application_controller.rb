@@ -175,6 +175,19 @@ class ApplicationController < ActionController::Base
     end
   end
 
+
+  def fetch_user_from_params
+    username_lower = params[:username].downcase
+    username_lower.gsub!(/\.json$/, '')
+
+    user = User.where(username_lower: username_lower).first
+    raise Discourse::NotFound.new if user.blank?
+
+    guardian.ensure_can_see!(user)
+    user
+  end
+
+
   private
 
     def render_json_error(obj)

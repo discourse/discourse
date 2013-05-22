@@ -62,12 +62,12 @@ class UserSerializer < BasicUserSerializer
     scope.can_send_private_message?(object)
   end
 
-  def stats
-    UserAction.stats(object.id, scope)
-  end
-
   def can_edit
     scope.can_edit?(object)
+  end
+
+  def stats
+    UserAction.stats(object.id, scope)
   end
 
 end

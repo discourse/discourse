@@ -9,16 +9,14 @@
 Discourse.UserPrivateMessagesRoute = Discourse.RestrictedUserRoute.extend({
 
   model: function() {
-    return this.modelFor('user');
+    return this.modelFor('user').findStream(Discourse.UserAction.GOT_PRIVATE_MESSAGE);
   },
 
   renderTemplate: function() {
     this.render({ into: 'user', outlet: 'userOutlet' });
   },
 
-  setupController: function(controller, user) {
-    user.filterStream(Discourse.UserAction.GOT_PRIVATE_MESSAGE);
-
+  setupController: function(controller, stream) {
     var composerController = this.controllerFor('composer');
     Discourse.Draft.get('new_private_message').then(function(data) {
       if (data.draft) {
@@ -31,6 +29,7 @@ Discourse.UserPrivateMessagesRoute = Discourse.RestrictedUserRoute.extend({
       }
     });
   }
+
 
 });
 

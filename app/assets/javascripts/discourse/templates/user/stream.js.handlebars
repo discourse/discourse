@@ -1,6 +1,6 @@
 <div id='user-stream'>
-  {{#collection contentBinding="stream" itemClass="item"}}
-    {{#with view.content}}
+  {{#each view.stream.content}}
+    <div class='item'>
       <div class='clearfix info'>
         <a href="{{unbound userUrl}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar this imageSize="large" extraClasses="actor" ignoreTitle="true"}}</div></a>
         <span class='time'>{{date path="created_at" leaveAgo="true"}}</span>
@@ -20,7 +20,8 @@
         {{/each}}
         </div>
       {{/each}}
-    {{/with}}
-  {{/collection}}
+    </div>
+  {{/each}}
+
 </div>
 <div id="user-stream-bottom"></div>

@@ -1,0 +1,39 @@
+/**
+  Represents a user's stream
+
+  @class UserStream
+  @extends Discourse.Model
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.UserStream = Discourse.Model.extend({
+
+  filterChanged: function() {
+    this.setProperties({
+      content: Em.A(),
+      itemsLoaded: 0
+    });
+    this.findItems();
+  }.observes('filter'),
+
+  findItems: function() {
+    var url = Discourse.getURL("/user_actions?offset=") + this.get('itemsLoaded') + "&username=" + (this.get('user.username_lower'));
+    if (this.get('filter')) {
+      url += "&filter=" + (this.get('filter'));
+    }
+
+    var stream = this;
+    return Discourse.ajax(url, {cache: 'false'}).then( function(result) {
+      if (result && result.user_actions && result.user_actions.each) {
+        var copy = Em.A();
+        result.user_actions.each(function(i) {
+          return copy.pushObject(Discourse.UserAction.create(i));
+        });
+        copy = Discourse.UserAction.collapseStream(copy);
+        stream.get('content').pushObjects(copy);
+        stream.set('itemsLoaded', stream.get('itemsLoaded') + result.user_actions.length);
+      }
+    });
+  }
+
+});

@@ -9,8 +9,6 @@
 **/
 Discourse.UserStreamView = Discourse.View.extend(Discourse.Scrolling, {
   templateName: 'user/stream',
-  currentUserBinding: 'Discourse.currentUser',
-  userBinding: 'controller.content',
 
   scrolled: function(e) {
 
@@ -23,13 +21,16 @@ Discourse.UserStreamView = Discourse.View.extend(Discourse.Scrolling, {
     var docViewTop = $(window).scrollTop();
     var windowHeight = $(window).height();
     var docViewBottom = docViewTop + windowHeight;
-    this.set('loading', true);
+
     if (position.top < docViewBottom) {
       $userStreamBottom.data('loading', true);
       this.set('loading', true);
 
       var userStreamView = this;
-      this.get('controller.content').loadMoreUserActions().then(function() {
+      var user = this.get('stream.user');
+      var stream = this.get('stream');
+
+      stream.findItems().then(function() {
         userStreamView.set('loading', false);
         Em.run.schedule('afterRender', function() {
           $userStreamBottom.data('loading', null);
@@ -39,15 +40,10 @@ Discourse.UserStreamView = Discourse.View.extend(Discourse.Scrolling, {
   },
 
   willDestroyElement: function() {
-    Discourse.MessageBus.unsubscribe("/users/" + (this.get('user.username').toLowerCase()));
     this.unbindScrolling();
   },
 
   didInsertElement: function() {
-    var userSteamView = this;
-    Discourse.MessageBus.subscribe("/users/" + (this.get('user.username').toLowerCase()), function(data) {
-      userSteamView.get('user').loadUserAction(data);
-    });
     this.bindScrolling();
   }
 

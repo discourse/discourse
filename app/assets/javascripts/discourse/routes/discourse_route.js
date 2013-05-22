@@ -11,9 +11,11 @@ Discourse.Route = Em.Route.extend({
   /**
     Called every time we enter a route on Discourse.
 
-    @method enter
+    @method activate
   **/
-  enter: function(router, context) {
+  activate: function(router, context) {
+    this._super();
+
     // Close mini profiler
     $('.profiler-results .profiler-result').remove();
 

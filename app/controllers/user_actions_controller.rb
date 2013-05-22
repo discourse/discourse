@@ -1,11 +1,13 @@
 class UserActionsController < ApplicationController
   def index
-    requires_parameters(:user_id)
+    requires_parameters(:username)
     per_chunk = 60
 
+    user = fetch_user_from_params
+
     opts = {
-      user_id: params[:user_id].to_i,
-      offset: params[:offset],
+      user_id: user.id,
+      offset: params[:offset].to_i,
       limit: per_chunk,
       action_types: (params[:filter] || "").split(",").map(&:to_i),
       guardian: guardian,
@@ -28,5 +30,6 @@ class UserActionsController < ApplicationController
   def private_messages
     # todo
   end
+
 
 end

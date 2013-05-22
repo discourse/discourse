@@ -8,7 +8,7 @@ class UsersController < ApplicationController
 
   before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect]
 
-  # we need to allow account creation with bad CSRF tokens, if people are caching, the CSRF token on the 
+  # we need to allow account creation with bad CSRF tokens, if people are caching, the CSRF token on the
   #  page is going to be empty, this means that server will see an invalid CSRF and blow the session
   #  once that happens you can't log in with social
   skip_before_filter :verify_authenticity_token, only: [:create]
@@ -346,17 +346,6 @@ class UsersController < ApplicationController
 
     def challenge_value
       '3019774c067cc2b'
-    end
-
-    def fetch_user_from_params
-      username_lower = params[:username].downcase
-      username_lower.gsub!(/\.json$/, '')
-
-      user = User.where(username_lower: username_lower).first
-      raise Discourse::NotFound.new if user.blank?
-
-      guardian.ensure_can_see!(user)
-      user
     end
 
     def honeypot_or_challenge_fails?(params)

@@ -178,23 +178,6 @@ Discourse.User = Discourse.Model.extend({
   },
 
   /**
-    Filters out this user's stream of user actions by a given filter
-
-    @method filterStream
-    @param {String} filter
-  **/
-  filterStream: function(filter) {
-    if (Discourse.UserAction.statGroups[filter]) {
-      filter = Discourse.UserAction.statGroups[filter].join(",");
-    }
-
-    this.set('streamFilter', filter);
-    this.set('stream', Em.A());
-    this.set('totalItems', 0);
-    return this.loadMoreUserActions();
-  },
-
-  /**
     Loads a single user action by id.
 
     @method loadUserAction
@@ -207,44 +190,9 @@ Discourse.User = Discourse.Model.extend({
     return Discourse.ajax("/user_actions/" + id + ".json", { cache: 'false' }).then(function(result) {
       if (result) {
         if ((user.get('streamFilter') || result.action_type) !== result.action_type) return;
-
-        var action = Em.A();
-        action.pushObject(Discourse.UserAction.create(result));
-        action = Discourse.UserAction.collapseStream(action);
-
-        user.set('totalItems', user.get('totalItems') + 1);
-
-        return stream.insertAt(0, action[0]);
-      }
-    });
-  },
-
-  /**
-    Loads more user actions, and then calls a callback if defined.
-
-    @method loadMoreUserActions
-    @returns {Promise} the content of the user actions
-  **/
-  loadMoreUserActions: function() {
-    var user = this;
-    var stream = user.get('stream');
-    if (!stream) return;
-
-    var url = Discourse.getURL("/user_actions?offset=") + this.get('totalItems') + "&user_id=" + (this.get("id"));
-    if (this.get('streamFilter')) {
-      url += "&filter=" + (this.get('streamFilter'));
-    }
-
-    return Discourse.ajax(url, { cache: 'false' }).then( function(result) {
-      if (result && result.user_actions && result.user_actions.each) {
-        var copy = Em.A();
-        result.user_actions.each(function(i) {
-          return copy.pushObject(Discourse.UserAction.create(i));
-        });
-        copy = Discourse.UserAction.collapseStream(copy);
-        stream.pushObjects(copy);
-        user.set('stream', stream);
-        user.set('totalItems', user.get('totalItems') + result.user_actions.length);
+        var action = Discourse.UserAction.collapseStream([Discourse.UserAction.create(result)]);
+        stream.set('itemsLoaded', user.get('itemsLoaded') + 1);
+        stream.insertAt(0, action[0]);
       }
     });
   },
@@ -284,33 +232,36 @@ Discourse.User = Discourse.Model.extend({
     return this.get('stats').filterProperty('isPM');
   }.property('stats.@each.isPM'),
 
-  /**
-    Load extra details for the user
 
-    @method loadDetails
-  **/
-  loadDetails: function() {
-
-    this.set('loading', true);
-
-    // Check the preload store first
+  findDetails: function() {
     var user = this;
-    var username = user.get('username');
-
-    return PreloadStore.getAndRemove("user_" + username, function() {
-      return Discourse.ajax("/users/" + username + '.json');
+    return PreloadStore.getAndRemove("user_" + user.get('username'), function() {
+      return Discourse.ajax("/users/" + user.get('username') + '.json');
     }).then(function (json) {
-
-      // Create a user from the resulting JSON
       json.user.stats = Discourse.User.groupStats(json.user.stats.map(function(s) {
         if (s.count) s.count = parseInt(s.count, 10);
         return Discourse.UserActionStat.create(s);
       }));
 
       user.setProperties(json.user);
-      user.set('loading', false);
       return user;
     });
+  },
+
+  findStream: function(filter) {
+    if (Discourse.UserAction.statGroups[filter]) {
+      filter = Discourse.UserAction.statGroups[filter].join(",");
+    }
+
+    var stream = Discourse.UserStream.create({
+      totalItems: 0,
+      content: [],
+      filter: filter,
+      user: this
+    });
+
+    stream.findItems();
+    return stream;
   }
 
 });
