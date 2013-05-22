@@ -186,6 +186,11 @@ describe TopicUser do
       }.should change(TopicUser, :count).by(1)
     end
 
+    it 'triggers the observer callbacks when updating' do
+      UserActionObserver.instance.expects(:after_save).twice
+      3.times { TopicUser.change(user, topic.id, starred: true) }
+    end
+
     describe 'after creating a row' do
       before do
         TopicUser.change(user, topic.id, starred: true)
