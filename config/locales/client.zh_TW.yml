@@ -36,6 +36,19 @@ zh_TW:
     now: "剛剛"
     read_more: '閱讀更多'
 
+    in_n_seconds:
+      one: "一秒內"
+      other: "{{count}}秒內"
+    in_n_minutes:
+      one: "一分鐘內"
+      other: "{{count}}分鐘內"
+    in_n_hours:
+      one: "一小時內"
+      other: "{{count}}小時內"
+    in_n_days:
+      one: "一天內"
+      other: "{{count}}天內"
+
     suggested_topics:
       title: "推薦主題"
 
@@ -53,6 +66,12 @@ zh_TW:
     save: "保存修改"
     saving: "保存中……"
     saved: "已保存！"
+
+    choose_topic:
+      none_found: "沒有找到主題"
+      title:
+        search: "通過名稱、url或者id，搜索主題："
+        placeholder: "在此輸入主題標題"
 
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> 發起 <a href='{{topicUrl}}'>本主題</a>"
@@ -368,6 +387,10 @@ zh_TW:
       help: "Markdown 編輯幫助"
       toggler: "隐藏或显示编辑面板"
 
+      admin_options_title: "本主題可選設置"
+      auto_close_label: "自動關閉主題，過："
+      auto_close_units: "天"
+
     notifications:
       title: "使用 @name 提及到你，回複你的帖子和主題，私信等等的通知消息"
       none: "你當前沒有任何通知。"
@@ -477,6 +500,12 @@ zh_TW:
       jump_reply_down: 跳轉至更晚的回複
       deleted: "此主題已被刪除"
 
+      auto_close_notice: "本主題將在%{timeLeft}后自動關閉"
+      auto_close_title: '自動關閉設置'
+      auto_close_save: "保存"
+      auto_close_cancel: "取消"
+      auto_close_remove: "不自動關閉該主題"
+
       progress:
         title: 主題進度
         jump_top: 跳轉到第一帖
@@ -514,6 +543,7 @@ zh_TW:
         delete: "刪除主題"
         open: "打開主題"
         close: "關閉主題"
+        auto_close: "自動關閉"
         unpin: "解除主題置頂"
         pin: "置頂主題"
         unarchive: "解除主題存檔"
@@ -521,7 +551,7 @@ zh_TW:
         invisible: "使不可見"
         visible: "使可見"
         reset_read: "重置閱讀數據"
-        multi_select: "切換多選"
+        multi_select: "選擇將被合併和拆分的帖子"
         convert_to_topic: "轉換到常規主題"
 
       reply:
@@ -575,20 +605,28 @@ zh_TW:
           other: "{{count}} 個帖子中的"
         cancel: "再次顯示本主題下的所有帖子。"
 
-      move_selected:
-        title: "移動所選帖子"
-        topic_name: "新主題名稱："
-        error: "抱歉，在移動這些帖子時發生了錯誤。"
+      split_topic:
+        title: "拆分主題"
+        action: "拆分主題"
+        topic_name: "新主題名："
+        error: "拆分主題時發生錯誤。"
         instructions:
-          one: "你將依據你所選的帖子創建一個新主題。"
-          other: "你將依據你所選擇的<b>{{count}}</b>個帖子創建一個新主題。"
+          one: "你將使用你選擇的帖子來創建一個新主題。"
+          other: "你將使用你選擇的{{count}}篇帖子來創建一個新主題。"
+
+      merge_topic:
+        title: "合併主題"
+        action: "合併主題"
+        error: "合併主題時發生錯誤。"
+        instructions:
+          one: "請選擇你想將那篇帖移至其下的主題。"
+          other: "請選擇你想將那{{count}}篇帖子移至其下的主題。"
 
       multi_select:
         select: '選擇'
         selected: '已選擇（{{count}}）'
         delete: 刪除所選
         cancel: 取消選擇
-        move: 移動所選
         description:
           one: 你已選擇了<b>一個</b>帖子。
           other: "你已選擇了<b>{{count}}</b>個帖子。"
@@ -740,6 +778,8 @@ zh_TW:
       edit: '編輯'
       edit_long: "編輯分類"
       view: '浏覽分類下的主題'
+      general: '通常'
+      settings: '設置'
       delete: '刪除分類'
       create: '創建分類'
       save: '保存分類'
@@ -760,6 +800,11 @@ zh_TW:
       change_in_category_topic: "訪問分類主題來編輯描述信息"
       hotness: "熱度"
       already_used: '此色彩已經被另一個分類使用'
+      is_secure: "安全類型？"
+      add_group: "添加分組"
+      security: "安全"
+      allowed_groups: "授權的分組："
+      auto_close_label: "自動關閉主題，過："
 
     flagging:
       title: '爲何要給投訴本帖？'
@@ -897,14 +942,23 @@ zh_TW:
         delete_title: "刪除帖子（如果它是主題第一帖，那麽將刪除主題）"
         flagged_by: "投訴者爲"
         error: "出錯了"
+        view_message: "查看消息"
 
       groups:
         title: "群組"
         edit: "編輯群組"
         selector_placeholder: "添加用戶"
+        name_placeholder: "組名，不能含有空格，與用戶名規則一致"
 
       api:
         title: "應用開發接口（API）"
+        long_title: "API訊息"
+        key: "密鈅"
+        generate: "生成API密鈅"
+        regenerate: "重新生成API密鈅"
+        info_html: "API密鈅可以用來通過JSON調用創建和更新主題。"
+        note_html: "請<strong>安全的</strong>保管好密鈅，任何擁有該密鈅的用戶，可以使用它以論壇任何用戶的身份發帖。"
+
       customize:
         title: "定制"
         long_title: "站點定制"
@@ -1000,10 +1054,10 @@ zh_TW:
 
       site_content:
         none: "選擇內容類型以開始編輯。"
-        title: '站點內容'
+        title: '內容'
         edit: "編輯站點內容"
 
       site_settings:
         show_overriden: '只顯示被覆蓋了缺省值的'
-        title: '站點設置'
+        title: '設置'
         reset: '重置爲缺省值'
