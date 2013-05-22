@@ -87,6 +87,8 @@ class TopicUser < ActiveRecord::Base
           end
 
           TopicUser.create(attrs.merge!(user_id: user_id, topic_id: topic_id.to_i, first_visited_at: now ,last_visited_at: now))
+        else
+          observe_after_save_callbacks_for topic_id, user_id
         end
       end
     rescue ActiveRecord::RecordNotUnique
@@ -173,6 +175,11 @@ class TopicUser < ActiveRecord::Base
       end
     end
 
+    def observe_after_save_callbacks_for(topic_id, user_id)
+      TopicUser.where(topic_id: topic_id, user_id: user_id).each do |topic_user|
+        UserActionObserver.instance.after_save topic_user
+      end
+    end
   end
 
   def self.ensure_consistency!
