@@ -34,6 +34,7 @@ Discourse.LoginView = Discourse.ModalBodyView.extend({
            Discourse.SiteSettings.enable_twitter_logins ||
            Discourse.SiteSettings.enable_yahoo_logins ||
            Discourse.SiteSettings.enable_github_logins ||
+           Discourse.SiteSettings.enable_cas_logins ||
            Discourse.SiteSettings.enable_persona_logins;
   }.property(),
 

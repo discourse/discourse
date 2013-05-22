@@ -130,6 +130,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:send_welcome_message, true)
 
   client_setting(:enable_cas_logins, true)
+  setting(:cas_url, '')
   setting(:cas_hostname, '')
   setting(:cas_domainname, '')
 

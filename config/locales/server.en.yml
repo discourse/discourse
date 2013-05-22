@@ -492,6 +492,7 @@ en:
 
     # TODO: perhaps we need a way of protecting these settings for hosted solution, global settings ...
     enable_cas_logins: "Enable CAS authentication"
+    cas_url: "url for cas server"
     cas_hostname: "Hostname for cas server"
     cas_domainname: "Domain name generated email addresses for cas server"
 
