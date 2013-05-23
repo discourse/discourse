@@ -488,4 +488,9 @@ class Post < ActiveRecord::Base
     args
   end
 
+  def add_to_quoted_post_numbers(num)
+    return unless num.present?
+    self.quoted_post_numbers ||= []
+    self.quoted_post_numbers << num
+  end
 end
