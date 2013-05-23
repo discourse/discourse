@@ -7,6 +7,9 @@
       {{#if Discourse.SiteSettings.enable_facebook_logins}}
         <button class="btn btn-social facebook" title="{{i18n login.facebook.title}}" {{action "facebookLogin" target="view"}}>{{i18n login.facebook.title}}</button>
       {{/if}}
+      {{#if Discourse.SiteSettings.enable_cas_logins}}
+        <button class="btn btn-social cas" title="{{i18n login.cas.title}}" {{action "casLogin" target="view"}}>{{i18n login.cas.title}}</button>
+      {{/if}}
       {{#if Discourse.SiteSettings.enable_twitter_logins}}
         <button class="btn btn-social twitter" title="{{i18n login.twitter.title}}" {{action "twitterLogin" target="view"}}>{{i18n login.twitter.title}}</button>
       {{/if}}

@@ -7,7 +7,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   layout false
 
   def self.types
-    @types ||= Enum.new(:facebook, :twitter, :google, :yahoo, :github, :persona)
+    @types ||= Enum.new(:facebook, :twitter, :google, :yahoo, :github, :persona, :cas)
   end
 
   # need to be able to call this
@@ -141,6 +141,58 @@ class Users::OmniauthCallbacksController < ApplicationController
     end
 
   end
+
+  def create_or_sign_on_user_using_cas(auth_token)
+    logger.error "authtoken #{auth_token}"
+    email = "#{auth_token[:extra][:user]}@evergreen.edu"
+    username = auth_token[:extra][:user]
+    name = auth_token["uid"]
+    cas_user_id = auth_token["uid"]
+
+    session[:authentication] = {
+        cas: {
+            cas_user_id: cas_user_id ,
+            username: username
+        },
+        email: email,
+        email_valid: true
+    }
+
+    user_info = CasUserInfo.where(:cas_user_id => cas_user_id ).first
+
+    @data = {
+        username: username,
+        name: name,
+        email: email,
+        auth_provider: "CAS",
+        email_valid: true
+    }
+
+    if user_info
+      user = user_info.user
+      if user
+        unless user.active
+          user.active = true
+          user.save
+        end
+        log_on_user(user)
+        @data[:authenticated] = true
+      end
+    else
+      user = User.where(email: email).first
+      if user
+        CasUserInfo.create!(session[:authentication][:cas].merge(user_id: user.id))
+        unless user.active
+          user.active = true
+          user.save
+        end
+        log_on_user(user)
+        @data[:authenticated] = true
+      end
+    end
+
+  end
+
 
   def create_or_sign_on_user_using_openid(auth_token)
 

@@ -156,6 +156,9 @@
       content: "f";
     }
   }
+  &.cas {
+    background: $cas;
+  }
   &.twitter {
     background: $twitter;
     &:before {

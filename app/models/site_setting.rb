@@ -140,6 +140,11 @@ class SiteSetting < ActiveRecord::Base
   setting(:facebook_app_id, '')
   setting(:facebook_app_secret, '')
 
+  client_setting(:enable_cas_logins, false)
+  setting(:cas_url, '')
+  setting(:cas_hostname, '')
+  setting(:cas_domainname, '')
+
   client_setting(:enable_github_logins, false)
   setting(:github_client_id, '')
   setting(:github_client_secret, '')
