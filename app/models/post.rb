@@ -493,4 +493,12 @@ class Post < ActiveRecord::Base
     self.quoted_post_numbers ||= []
     self.quoted_post_numbers << num
   end
+
+  def create_reply_relationship_with(post)
+    return if post.nil?
+    post_reply = post.post_replies.new(reply_id: id)
+    if post_reply.save
+      Post.update_all ['reply_count = reply_count + 1'], id: post.id
+    end
+  end
 end
