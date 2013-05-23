@@ -216,11 +216,13 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.homepage
-    top_menu.split('|')[0]
+    # TODO objectify this
+    x = top_menu.split('|')[0].split(',')[0]
   end
 
   def self.anonymous_homepage
-    top_menu.split('|').select{ |f| ['latest', 'hot', 'categories', 'category'].include? f }[0]
+    # TODO objectify this
+    top_menu.split('|').map{|f| f.split(',')[0] }.select{ |f| ['latest', 'hot', 'categories', 'category'].include? f}[0]
   end
 
 end

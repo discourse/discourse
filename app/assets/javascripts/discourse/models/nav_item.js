@@ -18,7 +18,7 @@ Discourse.NavItem = Discourse.Model.extend({
   // href from this item
   href: function() {
     var name = this.get('name'),
-        href = Discourse.getURL("/") + name;
+        href = Discourse.getURL("/") + name.replace(' ', '-');
     if (name === 'category') href += "/" + this.get('categoryName');
     return href;
   }.property('name')
