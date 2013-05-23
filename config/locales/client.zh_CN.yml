@@ -5,7 +5,6 @@
 # To validate this YAML file after you change it, please paste it into
 # http://yamllint.com/
 
-
 zh_CN:
   js:
     share:
@@ -777,6 +776,7 @@ zh_CN:
       none: '（未分类）'
       edit: '编辑'
       edit_long: "编辑分类"
+      edit_uncategorized: "编辑未分类的"
       view: '浏览分类下的主题'
       general: '通常'
       settings: '设置'
@@ -784,6 +784,7 @@ zh_CN:
       create: '创建分类'
       save: '保存分类'
       creation_error: 创建此分类时发生了错误。
+      save_error: 在保存此分类时发生了错误。
       more_posts: "浏览全部 {{posts}} ……"
       name: "分类名称"
       description: "描述"
@@ -805,6 +806,7 @@ zh_CN:
       security: "安全"
       allowed_groups: "授权的分组："
       auto_close_label: "自动关闭主题，过："
+
 
     flagging:
       title: '为何要给投诉本帖？'
@@ -1051,6 +1053,13 @@ zh_CN:
         delete_confirm: "你 确定 你要永久的从本站删除此用户？该操作无法撤销！"
         deleted: "该用户已被删除。"
         delete_failed: "在删除用户时发生了错误。请确保删除该用户前删除了该用户的所有帖子。"
+        send_activation_email: "发送激活邮件"
+        activation_email_sent: "激活邮件已发送。"
+        send_activation_email_failed: "在发送激活邮件时发生了错误。"
+        activate: "激活帐号"
+        activate_failed: "在激活用户帐号时发生了错误。"
+        deactivate_account: "停用帐号"
+        deactivate_failed: "在停用用户帐号时发生了错误。"
 
       site_content:
         none: "选择内容类型以开始编辑。"
