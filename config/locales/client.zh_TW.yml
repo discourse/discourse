@@ -5,7 +5,6 @@
 # To validate this YAML file after you change it, please paste it into
 # http://yamllint.com/
 
-
 zh_TW:
   js:
     share:
@@ -40,8 +39,8 @@ zh_TW:
       one: "一秒內"
       other: "{{count}}秒內"
     in_n_minutes:
-      one: "一分鐘內"
-      other: "{{count}}分鐘內"
+      one: "一分鍾內"
+      other: "{{count}}分鍾內"
     in_n_hours:
       one: "一小時內"
       other: "{{count}}小時內"
@@ -82,21 +81,21 @@ zh_TW:
       you_replied_to_topic: "<a href='{{userUrl}}'>你</a> 回複 <a href='{{topicUrl}}'>本主題</a>"
 
       user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> 提到 <a href='{{user2Url}}'>{{another_user}}</a>"
-      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> 提到<a href='{{user2Url}}'>你</a>"
+      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> 提到 <a href='{{user2Url}}'>你</a>"
       you_mentioned_user: "<a href='{{user1Url}}'>你</a> 提到 <a href='{{user2Url}}'>{{user}}</a>"
 
-      posted_by_user: "发起人 <a href='{{userUrl}}'>{{user}}</a>"
-      posted_by_you: "发起人 <a href='{{userUrl}}'>你</a>"
-      sent_by_user: "发送人 <a href='{{userUrl}}'>{{user}}</a>"
-      sent_by_you: "发送人 <a href='{{userUrl}}'>你</a>"
+      posted_by_user: "發起人 <a href='{{userUrl}}'>{{user}}</a>"
+      posted_by_you: "發起人 <a href='{{userUrl}}'>你</a>"
+      sent_by_user: "發送人 <a href='{{userUrl}}'>{{user}}</a>"
+      sent_by_you: "發送人 <a href='{{userUrl}}'>你</a>"
 
     user_action_groups:
       "1": "給出的贊"
       "2": "收到的贊"
-      "3": "書籤"
+      "3": "書簽"
       "4": "主題"
       "5": "回複"
-      "6": "迴應"
+      "6": "回應"
       "7": "提到"
       "9": "引用"
       "10": "喜愛"
@@ -385,7 +384,7 @@ zh_TW:
       undo_title: "撤銷"
       redo_title: "重做"
       help: "Markdown 編輯幫助"
-      toggler: "隐藏或显示编辑面板"
+      toggler: "隱藏或顯示編輯面板"
 
       admin_options_title: "本主題可選設置"
       auto_close_label: "自動關閉主題，過："
@@ -405,7 +404,7 @@ zh_TW:
       invited_to_private_message: "{{username}} 邀請你進行私下交流：{{link}}"
       invitee_accepted: "<i title='已接受你的邀請' class='icon icon-signin'></i> {{username}} 已接受你的邀請"
       moved_post: "<i title='移動帖子' class='icon icon-arrow-right'></i> {{username}} 已將帖子移動到 {{link}}"
-      total_flagged: "被投诉帖子的总数"
+      total_flagged: "被投訴帖子的總數"
 
     image_selector:
       title: "插入圖片"
@@ -500,7 +499,7 @@ zh_TW:
       jump_reply_down: 跳轉至更晚的回複
       deleted: "此主題已被刪除"
 
-      auto_close_notice: "本主題將在%{timeLeft}后自動關閉"
+      auto_close_notice: "本主題將在%{timeLeft}後自動關閉"
       auto_close_title: '自動關閉設置'
       auto_close_save: "保存"
       auto_close_cancel: "取消"
@@ -551,7 +550,7 @@ zh_TW:
         invisible: "使不可見"
         visible: "使可見"
         reset_read: "重置閱讀數據"
-        multi_select: "選擇將被合併和拆分的帖子"
+        multi_select: "選擇將被合並/拆分的帖子"
         convert_to_topic: "轉換到常規主題"
 
       reply:
@@ -611,15 +610,15 @@ zh_TW:
         topic_name: "新主題名："
         error: "拆分主題時發生錯誤。"
         instructions:
-          one: "你將使用你選擇的帖子來創建一個新主題。"
-          other: "你將使用你選擇的{{count}}篇帖子來創建一個新主題。"
+          one: "你想如何移動該帖？"
+          other: "你想如何移動你所選擇的這{{count}}篇帖子？"
 
       merge_topic:
-        title: "合併主題"
-        action: "合併主題"
-        error: "合併主題時發生錯誤。"
+        title: "合並主題"
+        action: "合並主題"
+        error: "合並主題時發生錯誤。"
         instructions:
-          one: "請選擇你想將那篇帖移至其下的主題。"
+          one: "請選擇你想將那篇帖子移至其下的主題。"
           other: "請選擇你想將那{{count}}篇帖子移至其下的主題。"
 
       multi_select:
@@ -777,6 +776,7 @@ zh_TW:
       none: '（未分類）'
       edit: '編輯'
       edit_long: "編輯分類"
+      edit_uncategorized: "編輯未分類的"
       view: '浏覽分類下的主題'
       general: '通常'
       settings: '設置'
@@ -784,6 +784,7 @@ zh_TW:
       create: '創建分類'
       save: '保存分類'
       creation_error: 創建此分類時發生了錯誤。
+      save_error: 在保存此分類時發生了錯誤。
       more_posts: "浏覽全部 {{posts}} ……"
       name: "分類名稱"
       description: "描述"
@@ -805,6 +806,7 @@ zh_TW:
       security: "安全"
       allowed_groups: "授權的分組："
       auto_close_label: "自動關閉主題，過："
+
 
     flagging:
       title: '爲何要給投訴本帖？'
@@ -952,12 +954,12 @@ zh_TW:
 
       api:
         title: "應用開發接口（API）"
-        long_title: "API訊息"
-        key: "密鈅"
-        generate: "生成API密鈅"
-        regenerate: "重新生成API密鈅"
-        info_html: "API密鈅可以用來通過JSON調用創建和更新主題。"
-        note_html: "請<strong>安全的</strong>保管好密鈅，任何擁有該密鈅的用戶，可以使用它以論壇任何用戶的身份發帖。"
+        long_title: "API信息"
+        key: "密鑰"
+        generate: "生成API密鑰"
+        regenerate: "重新生成API密鑰"
+        info_html: "API密鑰可以用來通過JSON調用創建和更新主題。"
+        note_html: "請<strong>安全的</strong>保管好本密鑰，任何擁有該密鑰的用戶可以使用它以論壇任何用戶的名義來發帖。"
 
       customize:
         title: "定制"
@@ -976,7 +978,7 @@ zh_TW:
         about: "站點定制允許你修改樣式表和站點頭部。選擇或者添加一個來開始編輯。"
 
       email_logs:
-        title: "電子郵件日志"
+        title: "電子郵件"
         sent_at: "發送時間"
         email_type: "郵件類型"
         to_address: "目的地址"
@@ -1006,12 +1008,12 @@ zh_TW:
         titles:
           active: '活動用戶'
           new: '新用戶'
-          pending: '等待審覈用戶'
-          newuser: '信用等級為0的用戶（新用戶）'
-          basic: '信用等級為1的用戶（基本用戶）'
-          regular: '信用等級為2的用戶（常訪問用戶）'
-          leader: '信用等級為3的用戶（高級用戶）'
-          elder: '信用等級為4的用戶（骨灰用戶）'
+          pending: '等待審核用戶'
+          newuser: '信用等級爲0的用戶（新用戶）'
+          basic: '信用等級爲1的用戶（基本用戶）'
+          regular: '信用等級爲2的用戶（常訪問用戶）'
+          leader: '信用等級爲3的用戶（高級用戶）'
+          elder: '信用等級爲4的用戶（骨灰用戶）'
           admins: '管理員'
           moderators: '版主'
 
@@ -1051,6 +1053,13 @@ zh_TW:
         delete_confirm: "你 確定 你要永久的從本站刪除此用戶？該操作無法撤銷！"
         deleted: "該用戶已被刪除。"
         delete_failed: "在刪除用戶時發生了錯誤。請確保刪除該用戶前刪除了該用戶的所有帖子。"
+        send_activation_email: "發送激活郵件"
+        activation_email_sent: "激活郵件已發送。"
+        send_activation_email_failed: "在發送激活郵件時發生了錯誤。"
+        activate: "激活帳號"
+        activate_failed: "在激活用戶帳號時發生了錯誤。"
+        deactivate_account: "停用帳號"
+        deactivate_failed: "在停用用戶帳號時發生了錯誤。"
 
       site_content:
         none: "選擇內容類型以開始編輯。"
