@@ -99,15 +99,15 @@ describe Search do
     end
 
     it 'has the display name as the title' do
-      result['title'].should == user.username
+      result[:title].should == user.username
     end
 
     it 'has the avatar_template is there so it can hand it to the client' do
-      result['avatar_template'].should_not be_nil
+      result[:avatar_template].should_not be_nil
     end
 
     it 'has a url for the record' do
-      result['url'].should == "/users/#{user.username_lower}"
+      result[:url].should == "/users/#{user.username_lower}"
     end
 
   end
@@ -121,8 +121,8 @@ describe Search do
 
       it 'returns a result correctly' do
         result.should be_present
-        result['title'].should == topic.title
-        result['url'].should == topic.relative_url
+        result[:title].should == topic.title
+        result[:url].should == topic.relative_url
       end
     end
 
@@ -131,8 +131,8 @@ describe Search do
 
       it 'returns the topic' do
         result.should be_present
-        result['title'].should == topic.title
-        result['url'].should == topic.relative_url
+        result[:title].should == topic.title
+        result[:url].should == topic.relative_url
       end
     end
 
@@ -141,8 +141,8 @@ describe Search do
 
       it 'returns the topic' do
         result.should be_present
-        result['title'].should == topic.title
-        result['url'].should == topic.relative_url
+        result[:title].should == topic.title
+        result[:url].should == topic.relative_url
       end
     end
 
@@ -195,8 +195,8 @@ describe Search do
     it 'returns the correct result' do
       r = result
       r.should be_present
-      r['title'].should == category.name
-      r['url'].should == "/category/#{category.slug}"
+      r[:title].should == category.name
+      r[:url].should == "/category/#{category.slug}"
 
       category.deny(:all)
       category.save
