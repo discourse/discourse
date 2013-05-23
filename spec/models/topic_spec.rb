@@ -26,30 +26,6 @@ describe Topic do
 
   it_behaves_like "a versioned model"
 
-  context '.title_quality' do
-
-    it "strips a title when identifying length" do
-      Fabricate.build(:topic, title: (" " * SiteSetting.min_topic_title_length) + "x").should_not be_valid
-    end
-
-    it "doesn't allow a long title" do
-      Fabricate.build(:topic, title: "x" * (SiteSetting.max_topic_title_length + 1)).should_not be_valid
-    end
-
-    it "doesn't allow a short title" do
-      Fabricate.build(:topic, title: "x" * (SiteSetting.min_topic_title_length + 1)).should_not be_valid
-    end
-
-    it "allows a regular title with a few ascii characters" do
-      Fabricate.build(:topic, title: "hello this is my cool topic! welcome: all;").should be_valid
-    end
-
-    it "allows non ascii" do
-      Fabricate.build(:topic, title: "Iñtërnâtiônàlizætiøn").should be_valid
-    end
-
-  end
-
   context 'slug' do
 
     let(:title) { "hello world topic" }
@@ -102,7 +78,7 @@ describe Topic do
         SiteSetting.expects(:allow_duplicate_topic_titles?).returns(true)
       end
 
-      it "won't allow another topic to be created with the same name" do
+      it "will allow another topic to be created with the same name" do
         new_topic.should be_valid
       end
     end
@@ -112,10 +88,7 @@ describe Topic do
   context 'html in title' do
 
     def build_topic_with_title(title)
-      t = build(:topic, title: title)
-      t.sanitize_title
-      t.title_quality
-      t
+      build(:topic, title: title).tap{ |t| t.valid? }
     end
 
     let(:topic_bold) { build_topic_with_title("Topic with <b>bold</b> text in its title" ) }
