@@ -80,9 +80,6 @@ de:
       post:
         raw: "Hauptteil"
     errors:
-      messages:
-        has_already_been_used: "wurde schon benutzt"
-        is_invalid: "ist ungültig; bitte ein wenig anschaulicher"
       models:
         topic:
           attributes:

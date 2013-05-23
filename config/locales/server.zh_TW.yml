@@ -88,9 +88,6 @@ zh_TW:
       post:
         raw: "內容"
     errors:
-      messages:
-        has_already_been_used: "已經被使用"
-        is_invalid: "無效，請描述得更清楚一點"
       models:
         topic:
           attributes:

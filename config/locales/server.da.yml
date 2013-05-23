@@ -69,9 +69,6 @@ da:
       post:
         raw: "Brødtekst"
     errors:
-      messages:
-        has_already_been_used: "er allerede i brug"
-        is_invalid: "er ugyldig; prøv at være mere beskrivende"
       models:
         topic:
           attributes:

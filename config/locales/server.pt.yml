@@ -56,9 +56,6 @@ pt:
       post:
         raw: "Corpo"
     errors:
-      messages:
-        has_already_been_used: "já foi usado"
-        is_invalid: "é inválido; tenta ser um bocado mais descritivo"
       models:
         topic:
           attributes:

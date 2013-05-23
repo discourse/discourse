@@ -83,10 +83,6 @@ pseudo:
       post:
         raw: '[[ Ɓóďý ]]'
     errors:
-      messages:
-        has_already_been_used: '[[ ĥáš áłřéáďý ƀééɳ ůšéď ]]'
-        is_invalid: '[[ íš íɳνáłíď; ťřý ťó ƀé á łíťťłé ɱóřé ďéščříƿťíνé ]]'
-
       models:
         topic:
           attributes:

@@ -104,9 +104,6 @@ cs:
       post:
         raw: "Tělo"
     errors:
-      messages:
-        has_already_been_used: "již bylo použito"
-        is_invalid: "je neplatné; zkuste se vyjádřit více popisně"
       models:
         topic:
           attributes:
