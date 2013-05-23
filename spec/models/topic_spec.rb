@@ -102,7 +102,7 @@ describe Topic do
         SiteSetting.expects(:allow_duplicate_topic_titles?).returns(true)
       end
 
-      it "won't allow another topic to be created with the same name" do
+      it "will allow another topic to be created with the same name" do
         new_topic.should be_valid
       end
     end
@@ -112,10 +112,7 @@ describe Topic do
   context 'html in title' do
 
     def build_topic_with_title(title)
-      t = build(:topic, title: title)
-      t.sanitize_title
-      t.title_quality
-      t
+      build(:topic, title: title).tap{ |t| t.valid? }
     end
 
     let(:topic_bold) { build_topic_with_title("Topic with <b>bold</b> text in its title" ) }

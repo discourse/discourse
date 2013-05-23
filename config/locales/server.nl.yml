@@ -103,6 +103,9 @@ nl:
       post:
         raw: Inhoud
     errors:
+      messages:
+        has_already_been_used: is al eens gebruikt
+        is_invalid: "is niet geldig; probeer het iets beter te omschrijven"
       models:
         topic:
           attributes:
@@ -433,8 +436,8 @@ nl:
     crawl_images: Zet het ophalen van afbeeldingen van externe bronnen aan
     ninja_edit_window: "Hoe snel je een aanpassing kan maken zonder dat er een nieuwe versie wordt opgeslagen, in seconden."
     enable_imgur: "Gebruik de imgur API voor uploads en sla afbeeldingen niet lokaal op"
-    imgur_client_id: "Je imgur.com client ID, nodig om afbeeldingen te kunnen uploaden naar imgur" 
-    imgur_client_secret: "Je imgur.com client secret. Is nog niet nodig voor het uploaden van afbeeldingen, maar dat zou in de toekomst kunnen veranderen." 
+    imgur_client_id: "Je imgur.com client ID, nodig om afbeeldingen te kunnen uploaden naar imgur"
+    imgur_client_secret: "Je imgur.com client secret. Is nog niet nodig voor het uploaden van afbeeldingen, maar dat zou in de toekomst kunnen veranderen."
     imgur_endpoint: "End point voor het uploaden van imgur.com-afbeeldingen"
     max_image_width: Maximale breedte voor een afbeelding in een bericht
     category_featured_topics: Aantal topics dat wordt weergegeven in de categorielijst

@@ -107,6 +107,9 @@ fr:
       post:
         raw: "Corps"
     errors:
+      messages:
+        has_already_been_used: "a déjà été utilisé"
+        is_invalid: "est invalide; essayez d'être plus précis"
       models:
         topic:
           attributes:

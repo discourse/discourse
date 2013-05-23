@@ -69,6 +69,9 @@ id:
       post:
         raw: "Body"
     errors:
+      messages:
+        has_already_been_used: "has already been used"
+        is_invalid: "is invalid; try to be a little more descriptive"
       models:
         topic:
           attributes:

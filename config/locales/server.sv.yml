@@ -83,6 +83,9 @@ sv:
       post:
         raw: "Inlägg"
     errors:
+      messages:
+        has_already_been_used: "har redan använts"
+        is_invalid: "är otillåtet; försök att vara lite mer beskrivande"
       models:
         topic:
           attributes:

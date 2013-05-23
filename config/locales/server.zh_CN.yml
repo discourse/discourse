@@ -89,6 +89,9 @@ zh_CN:
       post:
         raw: "内容"
     errors:
+      messages:
+        has_already_been_used: "已经被使用"
+        is_invalid: "无效，请描述得更清楚一点"
       models:
         topic:
           attributes:

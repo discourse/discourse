@@ -100,6 +100,9 @@ it:
       post:
         raw: "Contenuto"
     errors:
+      messages:
+        has_already_been_used: "è già stato usato"
+        is_invalid: "non è valido; prova ad essere un po' più descrittivo"
       models:
         topic:
           attributes:
