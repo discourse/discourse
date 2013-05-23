@@ -26,11 +26,17 @@ Discourse.UserRoute = Discourse.Route.extend({
     Discourse.MessageBus.subscribe("/users/" + user.get('username_lower'), function(data) {
       user.loadUserAction(data);
     });
+
+    // Add a search context
+    this.controllerFor('search').set('searchContext', user);
   },
 
   deactivate: function() {
     this._super();
     Discourse.MessageBus.unsubscribe("/users/" + this.modelFor('user').get('username_lower'));
+
+    // Remove the search context
+    this.controllerFor('search').set('searchContext', null);
   }
 
 

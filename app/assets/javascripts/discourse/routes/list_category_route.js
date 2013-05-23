@@ -38,7 +38,22 @@ Discourse.ListCategoryRoute = Discourse.FilteredListRoute.extend({
       listController.set('category', category);
       router.controllerFor('listTopics').set('content', topicList);
     });
+  },
+
+  activate: function() {
+    this._super();
+
+    // Add a search context
+    this.controllerFor('search').set('searchContext', this.modelFor('listCategory'));
+  },
+
+  deactivate: function() {
+    this._super();
+
+    // Clear the search context
+    this.controllerFor('search').set('searchContext', null);
   }
+
 
 });
 

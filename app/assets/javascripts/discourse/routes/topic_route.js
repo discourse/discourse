@@ -18,11 +18,22 @@ Discourse.TopicRoute = Discourse.Route.extend({
     return Discourse.Topic.create(params);
   },
 
-  enter: function() {
-    Discourse.set('transient.lastTopicIdViewed', parseInt(this.modelFor('topic').get('id'), 10));
+  activate: function() {
+    this._super();
+
+    var topic = this.modelFor('topic');
+    Discourse.set('transient.lastTopicIdViewed', parseInt(topic.get('id'), 10));
+
+    // Set the search context
+    this.controllerFor('search').set('searchContext', topic);
   },
 
-  exit: function() {
+  deactivate: function() {
+    this._super();
+
+    // Clear the search context
+    this.controllerFor('search').set('searchContext', null);
+
     var headerController, topicController;
     topicController = this.controllerFor('topic');
     topicController.cancelFilter();
