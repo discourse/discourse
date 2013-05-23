@@ -149,7 +149,6 @@ Edit discourse/config/database.yml
 
 - remove profile and development
 - leave in production and perhaps test
-- change production db name to: `discourse_prod`
 - Change `host_names` to the name you'll use to access the discourse site
 
 Edit discourse/config/redis.yml
@@ -159,13 +158,11 @@ Edit discourse/config/redis.yml
 Edit discourse/config/discourse.pill
 
 - change application name from 'your_app' to however you want to distinguish this ('discourse')
-- Add option to Bluepill.application: `":base_dir => ENV["HOME"] + '/.bluepill'"`
-- Should end up looking something like: `Bluepill.application("discourse", :base_dir => ENV["HOME"] + '/.bluepill') do |app|`
-- comment out debug instance (from `app.process("thin-debug")` through to nearest `end`)
 - search for "host to run on" and change to current hostname
 - note: clockwork should run on only one host
 
 Edit discourse/config/initializers/secret_token.rb
+
 - uncomment secret_token line
 - replace SET_SECRET_HERE with secret output from 'rake secret' command in discourse directory
 - delete the lines below as per instructions in the file
