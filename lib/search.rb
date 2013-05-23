@@ -28,7 +28,6 @@ class Search
   end
 
   def initialize(term, opts=nil)
-
     if term.present?
       @term = term.to_s
       @original_term = PG::Connection.escape_string(@term)
