@@ -50,6 +50,17 @@ zh_CN:
   rss_topics_in_category: "分类'%{category}'中主题的RSS内容聚合"
   author_wrote: "%{author}写道："
 
+  groups:
+    default_names:
+      admins: "管理员"
+      moderators: "版主"
+      staff: "员工"
+      trust_level_1: "trust_level_1"
+      trust_level_2: "trust_level_2"
+      trust_level_3: "trust_level_3"
+      trust_level_4: "trust_level_4"
+      trust_level_5: "trust_level_5"
+
   education:
     until_posts:
       one: "帖子"
