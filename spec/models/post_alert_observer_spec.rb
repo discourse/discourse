@@ -108,4 +108,16 @@ describe PostAlertObserver do
 
   end
 
+  context 'moderator action post' do
+    let(:user) { Fabricate(:user) }
+    let(:first_post) { Fabricate(:post, user: user, raw: 'A useless post for you.')}
+    let(:topic) { first_post.topic }
+
+    it 'should not notify anyone' do
+      expect {
+        Fabricate(:post, topic: topic, raw: 'This topic is CLOSED', post_type: Post.types[:moderator_action])
+      }.to_not change { Notification.count }
+    end
+  end
+
 end
