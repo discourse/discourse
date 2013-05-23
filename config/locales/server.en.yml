@@ -493,6 +493,8 @@ en:
 
     # TODO: perhaps we need a way of protecting these settings for hosted solution, global settings ...
 
+    enable_local_logins: "Enable local authentication"
+    enable_local_account_create: "Enable local account creation"
     enable_google_logins: "Enable Google authentication"
     enable_yahoo_logins: "Enable Yahoo authentication"
 
