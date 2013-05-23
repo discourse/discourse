@@ -100,6 +100,9 @@ en:
       post:
         raw: "Body"
     errors:
+      messages:
+        is_invalid: "is invalid; try to be a little more descriptive"
+        has_already_been_used: "has already been used"
       models:
         topic:
           attributes:
