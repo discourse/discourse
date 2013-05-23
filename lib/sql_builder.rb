@@ -25,7 +25,7 @@ class SqlBuilder
       when :select
         joined = "SELECT " << v.join(" , ")
       when :where, :where2
-        joined = "WHERE " << v.join(" AND ")
+        joined = "WHERE " << v.map{|c| "(" << c << ")" }.join(" AND ")
       when :join
         joined = v.map{|v| "JOIN " << v }.join("\n")
       when :left_join
@@ -55,6 +55,35 @@ class SqlBuilder
       ActiveRecord::Base.exec_sql(sql,@args)
     end
   end
+
+  #weird AS reloading
+  unless defined? FTYPE_MAP
+    FTYPE_MAP = {
+      23 => :value_to_integer,
+      1114 => :string_to_time
+    }
+  end
+
+  def map_exec(klass, args = {})
+    results = exec(args)
+
+    setters = results.fields.each_with_index.map do |f, index|
+      [(f.dup << "=").to_sym, FTYPE_MAP[results.ftype(index)]]
+    end
+    values = results.values
+    values.map! do |row|
+      mapped = klass.new
+      setters.each_with_index do |mapper, index|
+        translated = row[index]
+        if mapper[1] && !translated.nil?
+          translated = ActiveRecord::ConnectionAdapters::Column.send mapper[1], translated
+        end
+        mapped.send mapper[0], translated
+      end
+      mapped
+    end
+  end
+
 end
 
 class ActiveRecord::Base

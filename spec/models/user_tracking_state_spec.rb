@@ -10,25 +10,40 @@ describe UserTrackingState do
     Fabricate(:post)
   end
 
-  let(:state) do
-    UserTrackingState.new(user)
-  end
-
-  it "correctly gets the list of new topics" do
-    state.new_list.should == []
-    state.unread_list.should == []
+  it "correctly gets the tracking state" do
+    report = UserTrackingState.report([user.id])
+    report.length.should == 0
 
     new_post = post
 
-    new_list = state.new_list
+    report = UserTrackingState.report([user.id])
 
-    new_list.length.should == 1
-    new_list[0][0].should == post.topic.id
-    new_list[0][1].should be_within(1.second).of(post.topic.created_at)
+    report.length.should == 1
+    row = report[0]
 
-    state.unread_list.should == []
+    row.topic_id.should == post.topic_id
+    row.highest_post_number.should == 1
+    row.last_read_post_number.should be_nil
+    row.user_id.should == user.id
 
-    # read it
+    # lets not leak out random users
+    UserTrackingState.report([post.user_id]).should be_empty
+
+    # lets not return anything if we scope on non-existing topic
+    UserTrackingState.report([user.id], post.topic_id + 1).should be_empty
+
+    # when we reply the poster should have an unread row
+    Fabricate(:post, user: user, topic: post.topic)
+
+    report = UserTrackingState.report([post.user_id, user.id])
+    report.length.should == 1
+
+    row = report[0]
+
+    row.topic_id.should == post.topic_id
+    row.highest_post_number.should == 2
+    row.last_read_post_number.should == 1
+    row.user_id.should == post.user_id
 
   end
 end
