@@ -80,14 +80,14 @@ class TopicsController < ApplicationController
     requires_parameters(:status, :enabled)
 
     raise Discourse::InvalidParameters.new(:status) unless %w(visible closed pinned archived).include?(params[:status])
-    @topic = Topic.where(id: params[:topic_id].to_i).first
+    @topic = Topic.where(id: params[:topic_id]).first
     guardian.ensure_can_moderate!(@topic)
     @topic.update_status(params[:status], (params[:enabled] == 'true'), current_user)
     render nothing: true
   end
 
   def star
-    @topic = Topic.where(id: params[:topic_id].to_i).first
+    @topic = Topic.where(id: params[:topic_id]).first
     guardian.ensure_can_see!(@topic)
 
     @topic.toggle_star(current_user, params[:starred] == 'true')
@@ -104,7 +104,7 @@ class TopicsController < ApplicationController
 
   def autoclose
     requires_parameter(:auto_close_days)
-    @topic = Topic.where(id: params[:topic_id].to_i).first
+    @topic = Topic.where(id: params[:topic_id]).first
     guardian.ensure_can_moderate!(@topic)
     @topic.auto_close_days = params[:auto_close_days]
     @topic.auto_close_user = current_user
@@ -136,7 +136,7 @@ class TopicsController < ApplicationController
   end
 
   def set_notifications
-    topic = Topic.find(params[:topic_id].to_i)
+    topic = Topic.find(params[:topic_id])
     TopicUser.change(current_user, topic.id, notification_level: params[:notification_level].to_i)
     render json: success_json
   end
@@ -165,7 +165,7 @@ class TopicsController < ApplicationController
     args[:title] = params[:title] if params[:title].present?
     args[:destination_topic_id] = params[:destination_topic_id].to_i if params[:destination_topic_id].present?
 
-    dest_topic = topic.move_posts(current_user, params[:post_ids].map {|p| p.to_i}, args)
+    dest_topic = topic.move_posts(current_user, params[:post_ids].map(&:to_i), args)
     if dest_topic.present?
       render json: {success: true, url: dest_topic.relative_url}
     else
@@ -174,7 +174,7 @@ class TopicsController < ApplicationController
   end
 
   def clear_pin
-    topic = Topic.where(id: params[:topic_id].to_i).first
+    topic = Topic.where(id: params[:topic_id]).first
     guardian.ensure_can_see!(topic)
     topic.clear_pin_for(current_user)
     render nothing: true
@@ -200,7 +200,7 @@ class TopicsController < ApplicationController
   private
 
   def toggle_mute(v)
-    @topic = Topic.where(id: params[:topic_id].to_i).first
+    @topic = Topic.where(id: params[:topic_id]).first
     guardian.ensure_can_see!(@topic)
 
     @topic.toggle_mute(current_user, v)

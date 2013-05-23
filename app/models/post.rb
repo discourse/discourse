@@ -335,7 +335,7 @@ class Post < ActiveRecord::Base
   end
 
   def self.urls(post_ids)
-    ids = post_ids.map{|u| u}
+    ids = post_ids
     if ids.length > 0
       urls = {}
       Topic.joins(:posts).where('posts.id' => ids).
@@ -450,7 +450,7 @@ class Post < ActiveRecord::Base
 
     # Create a reply relationship between quoted posts and this new post
     if self.quoted_post_numbers.present?
-      self.quoted_post_numbers.map(&:to_i).uniq.each do |p|
+      self.quoted_post_numbers.uniq.each do |p|
         post = Post.where(topic_id: topic_id, post_number: p).first
         if post.present?
           post_reply = post.post_replies.new(reply_id: id)
