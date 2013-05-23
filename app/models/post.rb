@@ -435,21 +435,15 @@ class Post < ActiveRecord::Base
     self.quote_count = temp_collector.size
   end
 
+
   def save_reply_relationships
-    self.quoted_post_numbers ||= []
-    self.quoted_post_numbers << reply_to_post_number if reply_to_post_number.present?
+    add_to_quoted_post_numbers(reply_to_post_number)
+    return if self.quoted_post_numbers.blank?
 
     # Create a reply relationship between quoted posts and this new post
-    if self.quoted_post_numbers.present?
-      self.quoted_post_numbers.map(&:to_i).uniq.each do |p|
-        post = Post.where(topic_id: topic_id, post_number: p).first
-        if post.present?
-          post_reply = post.post_replies.new(reply_id: id)
-          if post_reply.save
-            Post.update_all ['reply_count = reply_count + 1'], id: post.id
-          end
-        end
-      end
+    self.quoted_post_numbers.each do |p|
+      post = Post.where(topic_id: topic_id, post_number: p).first
+      create_reply_relationship_with(post)
     end
   end
 
