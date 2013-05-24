@@ -322,14 +322,19 @@
       bottom: 8px;
     }
   }
-  .title-input {
+  .title-input, .category-input {
     position: relative;
     display: inline;
-    .popup-tip {
-      width: 300px;
-      left: -8px;
-      margin-top: 8px;
-    }
+  }
+  .title-input .popup-tip {
+    width: 300px;
+    left: -8px;
+    margin-top: 8px;
+  }
+  .category-input .popup-tip {
+    width: 240px;
+    left: 432px;
+    top: -7px;
   }
 }
 

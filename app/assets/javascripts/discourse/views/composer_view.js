@@ -384,6 +384,12 @@ Discourse.ComposerView = Discourse.View.extend({
     }
   }.property('content.title'),
 
+  categoryValidation: function() {
+    if( !Discourse.SiteSettings.allow_uncategorized_topics && !this.get('content.categoryName')) {
+      return Discourse.InputValidation.create({ failed: true, reason: Em.String.i18n('composer.error.category_missing') });
+    }
+  }.property('content.categoryName'),
+
   replyValidation: function() {
     var reply = this.get('content.reply'), reason;
     if( !reply || reply.length < 1 ){

@@ -7,11 +7,14 @@
   @module Discourse
 **/
 Discourse.ComboboxViewCategory = Discourse.ComboboxView.extend({
-  none: 'category.none',
   classNames: ['combobox category-combobox'],
   overrideWidths: true,
   dataAttributes: ['name', 'color', 'text_color', 'description', 'topic_count'],
   valueBinding: Ember.Binding.oneWay('source'),
+
+  none: function() {
+    if (Discourse.SiteSettings.allow_uncategorized_topics || this.get('showUncategorized')) return 'category.none';
+  }.property('showUncategorized'),
 
   template: function(text, templateData) {
     if (!templateData.color) return text;

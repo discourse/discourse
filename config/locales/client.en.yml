@@ -343,6 +343,7 @@ en:
         title_length: "Title needs between {{min}} and {{max}} characters."
         post_missing: "Post can't be empty."
         post_length: "Post must be at least {{min}} characters long."
+        category_missing: "You must choose a category."
 
       save_edit: "Save Edit"
       reply_original: "Reply on Original Topic"

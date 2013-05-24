@@ -39,7 +39,10 @@
             </div>
 
             {{#unless content.creatingPrivateMessage}}
-              {{view Discourse.ComboboxViewCategory valueAttribute="name" contentBinding="categories" valueBinding="content.categoryName"}}
+              <div class="category-input">
+                {{view Discourse.ComboboxViewCategory valueAttribute="name" contentBinding="categories" valueBinding="content.categoryName" showUncategorized="true"}}
+                {{popupInputTip validation=view.categoryValidation show=view.showCategoryTip}}
+              </div>
               {{#if content.archetype.hasOptions}}
                 <button class='btn' {{action showOptions}}>{{i18n topic.options}}</button>
               {{/if}}
