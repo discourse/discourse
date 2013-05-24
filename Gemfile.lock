@@ -16,7 +16,7 @@ GIT
 
 GIT
   remote: https://github.com/SamSaffron/message_bus
-  revision: 031a107bbe6e468caa67ff540485d70230d1c362
+  revision: f55b41653d0c149938ebb803a97d946e5ae80439
   specs:
     message_bus (0.0.2)
       eventmachine

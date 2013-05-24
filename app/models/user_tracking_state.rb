@@ -5,9 +5,11 @@
 
 class UserTrackingState
 
+  include ActiveModel::SerializerSupport
+
   CHANNEL = "/user-tracking"
 
-  attr_accessor :user_id, :topic_id, :highest_post_number, :last_read_post_number, :created_at
+  attr_accessor :user_id, :topic_id, :highest_post_number, :last_read_post_number, :created_at, :category_name
 
   MessageBus.client_filter(CHANNEL) do |user_id, message|
     if user_id
@@ -50,11 +52,11 @@ class UserTrackingState
     new = TopicQuery.new_filter(Topic, "xxx").where_values.join(" AND ").gsub!("'xxx'", treat_as_new_topic_clause)
 
     sql = <<SQL
-    SELECT u.id AS user_id, topics.id AS topic_id, topics.created_at, highest_post_number, last_read_post_number
+    SELECT u.id AS user_id, topics.id AS topic_id, topics.created_at, highest_post_number, last_read_post_number, c.name AS category_name
     FROM users u
     FULL OUTER JOIN topics ON 1=1
     LEFT JOIN topic_users tu ON tu.topic_id = topics.id AND tu.user_id = u.id
-    LEFT JOIN categories c ON c.id = topics.id
+    LEFT JOIN categories c ON c.id = topics.category_id
     WHERE u.id IN (:user_ids) AND
           topics.archetype <> 'private_message' AND
           ((#{unread}) OR (#{new})) AND
