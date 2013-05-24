@@ -179,7 +179,7 @@ class Post < ActiveRecord::Base
     raw_links.each do |u|
       uri = URI.parse(u)
       host = uri.host
-      @linked_hosts[host] = (@linked_hosts[host] || 0) + 1
+      @linked_hosts[host] ||= 1
     end
     @linked_hosts
   end
@@ -187,9 +187,11 @@ class Post < ActiveRecord::Base
   def total_hosts_usage
     hosts = linked_hosts.clone
 
-    # Count hosts in previous posts the user has made, PLUS these new ones
-    TopicLink.where(domain: hosts.keys, user_id: acting_user.id).each do |tl|
-      hosts[tl.domain] = (hosts[tl.domain] || 0) + 1
+    TopicLink.where(domain: hosts.keys, user_id: acting_user.id)
+             .group(:domain, :post_id)
+             .count.keys.each do |tuple|
+      domain = tuple[0]
+      hosts[domain] = (hosts[domain] || 0) + 1
     end
 
     hosts

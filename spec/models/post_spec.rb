@@ -201,7 +201,7 @@ describe Post do
       end
 
       it "it counts properly with more than one link on the same host" do
-        three_links.linked_hosts.should == {"discourse.org" => 2, "www.imdb.com" => 1}
+        three_links.linked_hosts.should == {"discourse.org" => 1, "www.imdb.com" => 1}
       end
     end
 
