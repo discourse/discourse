@@ -1,3 +1,24 @@
+# == Schema Information
+#
+# Table name: incoming_links
+#
+#  id              :integer          not null, primary key
+#  url             :string(1000)     not null
+#  referer         :string(1000)
+#  domain          :string(100)
+#  topic_id        :integer
+#  post_number     :integer
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  user_id         :integer
+#  ip_address      :string
+#  current_user_id :integer
+#
+# Indexes
+#
+#  incoming_index  (topic_id,post_number)
+#
+
 class IncomingLink < ActiveRecord::Base
   belongs_to :topic
   belongs_to :user

@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: admin_logs
+#
+#  id             :integer          not null, primary key
+#  action         :integer          not null
+#  admin_id       :integer          not null
+#  target_user_id :integer
+#  details        :text
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#
+
 # AdminLog stores information about actions that admins and moderators have taken,
 # like deleting users, changing site settings, etc.
 # Use the AdminLogger class to log records to this table.

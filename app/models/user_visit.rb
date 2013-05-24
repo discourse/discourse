@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: user_visits
+#
+#  id         :integer          not null, primary key
+#  user_id    :integer          not null
+#  visited_at :date             not null
+#
+# Indexes
+#
+#  index_user_visits_on_user_id_and_visited_at  (user_id,visited_at) UNIQUE
+#
+
 class UserVisit < ActiveRecord::Base
   attr_accessible :visited_at, :user_id
 

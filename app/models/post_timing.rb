@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: post_timings
+#
+#  topic_id    :integer          not null
+#  post_number :integer          not null
+#  user_id     :integer          not null
+#  msecs       :integer          not null
+#
+# Indexes
+#
+#  post_timings_summary  (topic_id,post_number)
+#  post_timings_unique   (topic_id,post_number,user_id) UNIQUE
+#
+
 class PostTiming < ActiveRecord::Base
   belongs_to :topic
   belongs_to :user

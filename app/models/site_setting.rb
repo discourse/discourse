@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: site_settings
+#
+#  id         :integer          not null, primary key
+#  name       :string(255)      not null
+#  data_type  :integer          not null
+#  value      :text
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
 require 'site_setting_extension'
 
 class SiteSetting < ActiveRecord::Base

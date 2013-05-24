@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: post_search_data
+#
+#  post_id     :integer          not null, primary key
+#  search_data :tsvector
+#
+# Indexes
+#
+#  idx_search_post  (search_data)
+#
+
 class PostSearchData < ActiveRecord::Base
   belongs_to :post
 

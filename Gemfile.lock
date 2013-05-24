@@ -72,6 +72,13 @@ GIT
       activesupport (>= 3.0.0)
 
 PATH
+  remote: /home/sam/Source/annotate_models
+  specs:
+    annotate (2.6.0.beta1)
+      activerecord (>= 2.3.0)
+      rake (>= 0.8.7)
+
+PATH
   remote: vendor/gems/discourse_emoji
   specs:
     discourse_emoji (0.0.1)
@@ -458,6 +465,7 @@ DEPENDENCIES
   active_model_serializers!
   activerecord-postgres-hstore
   airbrake (= 3.1.2)
+  annotate!
   barber (= 0.3.0)
   better_errors
   binding_of_caller

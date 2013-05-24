@@ -1,3 +1,24 @@
+# == Schema Information
+#
+# Table name: user_actions
+#
+#  id              :integer          not null, primary key
+#  action_type     :integer          not null
+#  user_id         :integer          not null
+#  target_topic_id :integer
+#  target_post_id  :integer
+#  target_user_id  :integer
+#  acting_user_id  :integer
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#
+# Indexes
+#
+#  idx_unique_rows                           (action_type,user_id,target_topic_id,target_post_id,acting_user_id) UNIQUE
+#  index_actions_on_acting_user_id           (acting_user_id)
+#  index_actions_on_user_id_and_action_type  (user_id,action_type)
+#
+
 class UserAction < ActiveRecord::Base
   belongs_to :user
   belongs_to :target_post, class_name: "Post"

@@ -1,3 +1,28 @@
+# == Schema Information
+#
+# Table name: topic_users
+#
+#  user_id                  :integer          not null
+#  topic_id                 :integer          not null
+#  starred                  :boolean          default(FALSE), not null
+#  posted                   :boolean          default(FALSE), not null
+#  last_read_post_number    :integer
+#  seen_post_count          :integer
+#  starred_at               :datetime
+#  last_visited_at          :datetime
+#  first_visited_at         :datetime
+#  notification_level       :integer          default(1), not null
+#  notifications_changed_at :datetime
+#  notifications_reason_id  :integer
+#  total_msecs_viewed       :integer          default(0), not null
+#  cleared_pinned_at        :datetime
+#  unstarred_at             :datetime
+#
+# Indexes
+#
+#  index_forum_thread_users_on_forum_thread_id_and_user_id  (topic_id,user_id) UNIQUE
+#
+
 class TopicUser < ActiveRecord::Base
   belongs_to :user
   belongs_to :topic

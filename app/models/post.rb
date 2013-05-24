@@ -1,3 +1,50 @@
+# == Schema Information
+#
+# Table name: posts
+#
+#  id                      :integer          not null, primary key
+#  user_id                 :integer          not null
+#  topic_id                :integer          not null
+#  post_number             :integer          not null
+#  raw                     :text             not null
+#  cooked                  :text             not null
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+#  reply_to_post_number    :integer
+#  cached_version          :integer          default(1), not null
+#  reply_count             :integer          default(0), not null
+#  quote_count             :integer          default(0), not null
+#  deleted_at              :datetime
+#  off_topic_count         :integer          default(0), not null
+#  like_count              :integer          default(0), not null
+#  incoming_link_count     :integer          default(0), not null
+#  bookmark_count          :integer          default(0), not null
+#  avg_time                :integer
+#  score                   :float
+#  reads                   :integer          default(0), not null
+#  post_type               :integer          default(1), not null
+#  vote_count              :integer          default(0), not null
+#  sort_order              :integer
+#  last_editor_id          :integer
+#  hidden                  :boolean          default(FALSE), not null
+#  hidden_reason_id        :integer
+#  notify_moderators_count :integer          default(0), not null
+#  spam_count              :integer          default(0), not null
+#  illegal_count           :integer          default(0), not null
+#  inappropriate_count     :integer          default(0), not null
+#  last_version_at         :datetime         not null
+#  user_deleted            :boolean          default(FALSE), not null
+#  reply_to_user_id        :integer
+#  percent_rank            :float            default(1.0)
+#  notify_user_count       :integer          default(0), not null
+#
+# Indexes
+#
+#  idx_posts_user_id_deleted_at             (user_id)
+#  index_posts_on_reply_to_post_number      (reply_to_post_number)
+#  index_posts_on_topic_id_and_post_number  (topic_id,post_number) UNIQUE
+#
+
 require_dependency 'jobs'
 require_dependency 'pretty_text'
 require_dependency 'rate_limiter'

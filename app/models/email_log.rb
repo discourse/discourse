@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: email_logs
+#
+#  id         :integer          not null, primary key
+#  to_address :string(255)      not null
+#  email_type :string(255)      not null
+#  user_id    :integer
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+# Indexes
+#
+#  index_email_logs_on_created_at              (created_at)
+#  index_email_logs_on_user_id_and_created_at  (user_id,created_at)
+#
+
 class EmailLog < ActiveRecord::Base
   belongs_to :user
   validates_presence_of :email_type

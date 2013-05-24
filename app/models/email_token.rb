@@ -1,3 +1,21 @@
+# == Schema Information
+#
+# Table name: email_tokens
+#
+#  id         :integer          not null, primary key
+#  user_id    :integer          not null
+#  email      :string(255)      not null
+#  token      :string(255)      not null
+#  confirmed  :boolean          default(FALSE), not null
+#  expired    :boolean          default(FALSE), not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+# Indexes
+#
+#  index_email_tokens_on_token  (token) UNIQUE
+#
+
 class EmailToken < ActiveRecord::Base
   belongs_to :user
 

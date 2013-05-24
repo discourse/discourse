@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: post_action_types
+#
+#  name_key   :string(50)       not null
+#  is_flag    :boolean          default(FALSE), not null
+#  icon       :string(20)
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  id         :integer          not null, primary key
+#  position   :integer          default(0), not null
+#
+
 require_dependency 'enum'
 
 class PostActionType < ActiveRecord::Base

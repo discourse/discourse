@@ -1,3 +1,23 @@
+# == Schema Information
+#
+# Table name: invites
+#
+#  id            :integer          not null, primary key
+#  invite_key    :string(32)       not null
+#  email         :string(255)      not null
+#  invited_by_id :integer          not null
+#  user_id       :integer
+#  redeemed_at   :datetime
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  deleted_at    :datetime
+#
+# Indexes
+#
+#  index_invites_on_email_and_invited_by_id  (email,invited_by_id) UNIQUE
+#  index_invites_on_invite_key               (invite_key) UNIQUE
+#
+
 require_dependency 'trashable'
 
 class Invite < ActiveRecord::Base

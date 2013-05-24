@@ -116,6 +116,8 @@ group :development do
   gem 'binding_of_caller'
   gem 'librarian', '>= 0.0.25', require: false
   gem 'pry-rails'
+  # https://github.com/ctran/annotate_models/pull/106
+  gem 'annotate', :git => 'https://github.com/SamSaffron/annotate_models.git'
 end
 
 # we are using a custom sprockets repo to work around: https://github.com/rails/rails/issues/8099#issuecomment-16137638

@@ -1,3 +1,63 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id                            :integer          not null, primary key
+#  username                      :string(20)       not null
+#  created_at                    :datetime         not null
+#  updated_at                    :datetime         not null
+#  name                          :string(255)
+#  bio_raw                       :text
+#  seen_notification_id          :integer          default(0), not null
+#  last_posted_at                :datetime
+#  email                         :string(256)      not null
+#  password_hash                 :string(64)
+#  salt                          :string(32)
+#  active                        :boolean
+#  username_lower                :string(20)       not null
+#  auth_token                    :string(32)
+#  last_seen_at                  :datetime
+#  website                       :string(255)
+#  admin                         :boolean          default(FALSE), not null
+#  last_emailed_at               :datetime
+#  email_digests                 :boolean          default(TRUE), not null
+#  trust_level                   :integer          not null
+#  bio_cooked                    :text
+#  email_private_messages        :boolean          default(TRUE)
+#  email_direct                  :boolean          default(TRUE), not null
+#  approved                      :boolean          default(FALSE), not null
+#  approved_by_id                :integer
+#  approved_at                   :datetime
+#  topics_entered                :integer          default(0), not null
+#  posts_read_count              :integer          default(0), not null
+#  digest_after_days             :integer          default(7), not null
+#  previous_visit_at             :datetime
+#  banned_at                     :datetime
+#  banned_till                   :datetime
+#  date_of_birth                 :date
+#  auto_track_topics_after_msecs :integer
+#  views                         :integer          default(0), not null
+#  flag_level                    :integer          default(0), not null
+#  time_read                     :integer          default(0), not null
+#  days_visited                  :integer          default(0), not null
+#  ip_address                    :string
+#  new_topic_duration_minutes    :integer
+#  external_links_in_new_tab     :boolean          default(FALSE), not null
+#  enable_quoting                :boolean          default(TRUE), not null
+#  moderator                     :boolean          default(FALSE)
+#  likes_given                   :integer          default(0), not null
+#  likes_received                :integer          default(0), not null
+#  topic_reply_count             :integer          default(0), not null
+#
+# Indexes
+#
+#  index_users_on_auth_token      (auth_token)
+#  index_users_on_email           (email) UNIQUE
+#  index_users_on_last_posted_at  (last_posted_at)
+#  index_users_on_username        (username) UNIQUE
+#  index_users_on_username_lower  (username_lower) UNIQUE
+#
+
 require_dependency 'email'
 require_dependency 'email_token'
 require_dependency 'trust_level'

@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: drafts
+#
+#  id         :integer          not null, primary key
+#  user_id    :integer          not null
+#  draft_key  :string(255)      not null
+#  data       :text             not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  sequence   :integer          default(0), not null
+#
+# Indexes
+#
+#  index_drafts_on_user_id_and_draft_key  (user_id,draft_key)
+#
+
 class Draft < ActiveRecord::Base
   NEW_TOPIC = 'new_topic'
   NEW_PRIVATE_MESSAGE = 'new_private_message'

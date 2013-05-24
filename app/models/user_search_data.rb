@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: user_search_data
+#
+#  user_id     :integer          not null, primary key
+#  search_data :tsvector
+#
+# Indexes
+#
+#  idx_search_user  (search_data)
+#
+
 class UserSearchData < ActiveRecord::Base
   belongs_to :user
   validates_presence_of :search_data
