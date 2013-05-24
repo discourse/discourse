@@ -112,9 +112,7 @@ class Topic < ActiveRecord::Base
 
   after_create do
     changed_to_category(category)
-    TopicUser.change(user_id, id,
-                     notification_level: TopicUser.notification_levels[:watching],
-                     notifications_reason_id: TopicUser.notification_reasons[:created_topic])
+    notifier.created_topic! user_id
     if archetype == Archetype.private_message
       DraftSequence.next!(user, Draft::NEW_PRIVATE_MESSAGE)
     else
@@ -162,10 +160,7 @@ class Topic < ActiveRecord::Base
   end
 
   def sanitize_title
-    if self.title.present?
-      self.title = sanitize(title, tags: [], attributes: [])
-      self.title.strip!
-    end
+    self.title = sanitize(title.to_s, tags: [], attributes: []).strip.presence
   end
 
   def new_version_required?
@@ -641,11 +636,6 @@ class Topic < ActiveRecord::Base
     TopicUser.where('starred_at > ?', sinceDaysAgo.days.ago).group('date(starred_at)').order('date(starred_at)').count
   end
 
-  # Enable/disable the mute on the topic
-  def toggle_mute(user, muted)
-    TopicUser.change(user, self.id, notification_level: muted?(user) ? TopicUser.notification_levels[:regular] : TopicUser.notification_levels[:muted] )
-  end
-
   def slug
     unless slug = read_attribute(:slug)
       return '' unless title.present?
@@ -661,16 +651,16 @@ class Topic < ActiveRecord::Base
   end
 
   def title=(t)
-    slug = ""
-    slug = (Slug.for(t).presence || "topic") if t.present?
+    slug = (Slug.for(t.to_s).presence || "topic")
     write_attribute(:slug, slug)
     write_attribute(:title,t)
   end
 
+  # NOTE: These are probably better off somewhere else.
+  #       Having a model know about URLs seems a bit strange.
   def last_post_url
     "/t/#{slug}/#{id}/#{posts_count}"
   end
-
 
   def self.url(id, slug, post_number=nil)
     url = "#{Discourse.base_url}/t/#{slug}/#{id}"
@@ -682,12 +672,6 @@ class Topic < ActiveRecord::Base
     url = "/t/#{slug}/#{id}"
     url << "/#{post_number}" if post_number.to_i > 1
     url
-  end
-
-  def muted?(user)
-    return false unless user && user.id
-    tu = topic_users.where(user_id: user.id).first
-    tu && tu.notification_level == TopicUser.notification_levels[:muted]
   end
 
   def clear_pin_for(user)
@@ -703,21 +687,36 @@ class Topic < ActiveRecord::Base
     "#{Draft::EXISTING_TOPIC}#{id}"
   end
 
+  def notifier
+    @topic_notifier ||= TopicNotifier.new(self)
+  end
+
   # notification stuff
   def notify_watch!(user)
-    TopicUser.change(user, id, notification_level: TopicUser.notification_levels[:watching])
+    notifier.watch! user
   end
 
   def notify_tracking!(user)
-    TopicUser.change(user, id, notification_level: TopicUser.notification_levels[:tracking])
+    notifier.tracking! user
   end
 
   def notify_regular!(user)
-    TopicUser.change(user, id, notification_level: TopicUser.notification_levels[:regular])
+    notifier.regular! user
   end
 
   def notify_muted!(user)
-    TopicUser.change(user, id, notification_level: TopicUser.notification_levels[:muted])
+    notifier.muted! user
+  end
+
+  def muted?(user)
+    if user && user.id
+      notifier.muted?(user.id)
+    end
+  end
+
+  # Enable/disable the mute on the topic
+  def toggle_mute(user_id)
+    notifier.toggle_mute user_id
   end
 
   def auto_close_days=(num_days)
