@@ -1,3 +1,11 @@
+class TopicAllowedUser < ActiveRecord::Base
+  belongs_to :topic
+  belongs_to :user
+  attr_accessible :topic_id, :user_id
+
+  validates_uniqueness_of :topic_id, scope: :user_id
+end
+
 # == Schema Information
 #
 # Table name: topic_allowed_users
@@ -14,10 +22,3 @@
 #  index_topic_allowed_users_on_user_id_and_topic_id  (user_id,topic_id) UNIQUE
 #
 
-class TopicAllowedUser < ActiveRecord::Base
-  belongs_to :topic
-  belongs_to :user
-  attr_accessible :topic_id, :user_id
-
-  validates_uniqueness_of :topic_id, scope: :user_id
-end

@@ -7,6 +7,14 @@ GIT
       rake-compiler
 
 GIT
+  remote: https://github.com/SamSaffron/annotate_models.git
+  revision: ebe4ba7e3f6ceeb43e4e40078da2b261a1bb71b2
+  specs:
+    annotate (2.6.0.beta1)
+      activerecord (>= 2.3.0)
+      rake (>= 0.8.7)
+
+GIT
   remote: https://github.com/SamSaffron/message_bus
   revision: 031a107bbe6e468caa67ff540485d70230d1c362
   specs:
@@ -70,13 +78,6 @@ GIT
     vestal_versions (1.2.2)
       activerecord (>= 3.0.0)
       activesupport (>= 3.0.0)
-
-PATH
-  remote: /home/sam/Source/annotate_models
-  specs:
-    annotate (2.6.0.beta1)
-      activerecord (>= 2.3.0)
-      rake (>= 0.8.7)
 
 PATH
   remote: vendor/gems/discourse_emoji

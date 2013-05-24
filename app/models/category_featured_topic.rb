@@ -1,17 +1,3 @@
-# == Schema Information
-#
-# Table name: category_featured_topics
-#
-#  category_id :integer          not null
-#  topic_id    :integer          not null
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#
-# Indexes
-#
-#  cat_featured_threads  (category_id,topic_id) UNIQUE
-#
-
 class CategoryFeaturedTopic < ActiveRecord::Base
   belongs_to :category
   belongs_to :topic
@@ -50,3 +36,18 @@ class CategoryFeaturedTopic < ActiveRecord::Base
   end
 
 end
+
+# == Schema Information
+#
+# Table name: category_featured_topics
+#
+#  category_id :integer          not null
+#  topic_id    :integer          not null
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#
+# Indexes
+#
+#  cat_featured_threads  (category_id,topic_id) UNIQUE
+#
+

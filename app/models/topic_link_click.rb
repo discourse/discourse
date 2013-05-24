@@ -1,19 +1,3 @@
-# == Schema Information
-#
-# Table name: topic_link_clicks
-#
-#  id            :integer          not null, primary key
-#  topic_link_id :integer          not null
-#  user_id       :integer
-#  ip            :integer          not null
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#
-# Indexes
-#
-#  index_forum_thread_link_clicks_on_forum_thread_link_id  (topic_link_id)
-#
-
 require_dependency 'discourse'
 require 'ipaddr'
 
@@ -70,3 +54,20 @@ class TopicLinkClick < ActiveRecord::Base
     result
   end
 end
+
+# == Schema Information
+#
+# Table name: topic_link_clicks
+#
+#  id            :integer          not null, primary key
+#  topic_link_id :integer          not null
+#  user_id       :integer
+#  ip            :integer          not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#
+# Indexes
+#
+#  index_forum_thread_link_clicks_on_forum_thread_link_id  (topic_link_id)
+#
+

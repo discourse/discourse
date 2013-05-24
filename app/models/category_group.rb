@@ -1,3 +1,8 @@
+class CategoryGroup < ActiveRecord::Base
+  belongs_to :category
+  belongs_to :group
+end
+
 # == Schema Information
 #
 # Table name: category_groups
@@ -9,7 +14,3 @@
 #  updated_at  :datetime         not null
 #
 
-class CategoryGroup < ActiveRecord::Base
-  belongs_to :category
-  belongs_to :group
-end

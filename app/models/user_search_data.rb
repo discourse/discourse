@@ -1,3 +1,8 @@
+class UserSearchData < ActiveRecord::Base
+  belongs_to :user
+  validates_presence_of :search_data
+end
+
 # == Schema Information
 #
 # Table name: user_search_data
@@ -10,7 +15,3 @@
 #  idx_search_user  (search_data)
 #
 
-class UserSearchData < ActiveRecord::Base
-  belongs_to :user
-  validates_presence_of :search_data
-end

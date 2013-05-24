@@ -1,3 +1,7 @@
+class TwitterUserInfo < ActiveRecord::Base
+  belongs_to :user
+end
+
 # == Schema Information
 #
 # Table name: twitter_user_infos
@@ -15,6 +19,3 @@
 #  index_twitter_user_infos_on_user_id          (user_id) UNIQUE
 #
 
-class TwitterUserInfo < ActiveRecord::Base
-  belongs_to :user
-end

@@ -1,24 +1,3 @@
-# == Schema Information
-#
-# Table name: uploads
-#
-#  id                :integer          not null, primary key
-#  user_id           :integer          not null
-#  topic_id          :integer          not null
-#  original_filename :string(255)      not null
-#  filesize          :integer          not null
-#  width             :integer
-#  height            :integer
-#  url               :string(255)      not null
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#
-# Indexes
-#
-#  index_uploads_on_forum_thread_id  (topic_id)
-#  index_uploads_on_user_id          (user_id)
-#
-
 require 'digest/sha1'
 
 class Upload < ActiveRecord::Base
@@ -114,3 +93,25 @@ class Upload < ActiveRecord::Base
   end
 
 end
+
+# == Schema Information
+#
+# Table name: uploads
+#
+#  id                :integer          not null, primary key
+#  user_id           :integer          not null
+#  topic_id          :integer          not null
+#  original_filename :string(255)      not null
+#  filesize          :integer          not null
+#  width             :integer
+#  height            :integer
+#  url               :string(255)      not null
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#
+# Indexes
+#
+#  index_uploads_on_forum_thread_id  (topic_id)
+#  index_uploads_on_user_id          (user_id)
+#
+

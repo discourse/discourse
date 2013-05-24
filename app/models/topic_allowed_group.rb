@@ -1,3 +1,11 @@
+class TopicAllowedGroup < ActiveRecord::Base
+  belongs_to :topic
+  belongs_to :group
+  attr_accessible :group_id, :user_id
+
+  validates_uniqueness_of :topic_id, scope: :group_id
+end
+
 # == Schema Information
 #
 # Table name: topic_allowed_groups
@@ -12,10 +20,3 @@
 #  index_topic_allowed_groups_on_topic_id_and_group_id  (topic_id,group_id) UNIQUE
 #
 
-class TopicAllowedGroup < ActiveRecord::Base
-  belongs_to :topic
-  belongs_to :group
-  attr_accessible :group_id, :user_id
-
-  validates_uniqueness_of :topic_id, scope: :group_id
-end

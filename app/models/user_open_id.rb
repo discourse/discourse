@@ -1,3 +1,11 @@
+class UserOpenId < ActiveRecord::Base
+  belongs_to :user
+  attr_accessible :email, :url, :user_id, :active
+
+  validates_presence_of :email
+  validates_presence_of :url
+end
+
 # == Schema Information
 #
 # Table name: user_open_ids
@@ -15,10 +23,3 @@
 #  index_user_open_ids_on_url  (url)
 #
 
-class UserOpenId < ActiveRecord::Base
-  belongs_to :user
-  attr_accessible :email, :url, :user_id, :active
-
-  validates_presence_of :email
-  validates_presence_of :url
-end

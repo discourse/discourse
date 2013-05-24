@@ -1,27 +1,3 @@
-# == Schema Information
-#
-# Table name: topic_links
-#
-#  id            :integer          not null, primary key
-#  topic_id      :integer          not null
-#  post_id       :integer
-#  user_id       :integer          not null
-#  url           :string(500)      not null
-#  domain        :string(100)      not null
-#  internal      :boolean          default(FALSE), not null
-#  link_topic_id :integer
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  reflection    :boolean          default(FALSE)
-#  clicks        :integer          default(0), not null
-#  link_post_id  :integer
-#
-# Indexes
-#
-#  index_forum_thread_links_on_forum_thread_id                      (topic_id)
-#  index_forum_thread_links_on_forum_thread_id_and_post_id_and_url  (topic_id,post_id,url) UNIQUE
-#
-
 require 'uri'
 require_dependency 'slug'
 
@@ -144,3 +120,28 @@ class TopicLink < ActiveRecord::Base
     end
   end
 end
+
+# == Schema Information
+#
+# Table name: topic_links
+#
+#  id            :integer          not null, primary key
+#  topic_id      :integer          not null
+#  post_id       :integer
+#  user_id       :integer          not null
+#  url           :string(500)      not null
+#  domain        :string(100)      not null
+#  internal      :boolean          default(FALSE), not null
+#  link_topic_id :integer
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  reflection    :boolean          default(FALSE)
+#  clicks        :integer          default(0), not null
+#  link_post_id  :integer
+#
+# Indexes
+#
+#  index_forum_thread_links_on_forum_thread_id                      (topic_id)
+#  index_forum_thread_links_on_forum_thread_id_and_post_id_and_url  (topic_id,post_id,url) UNIQUE
+#
+
