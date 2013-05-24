@@ -215,7 +215,7 @@ class Topic < ActiveRecord::Base
   end
 
   def private_message?
-    self.archetype == Archetype.private_message
+    archetype == Archetype.private_message
   end
 
   def links_grouped
@@ -532,10 +532,8 @@ class Topic < ActiveRecord::Base
   def feature_topic_users(args={})
     reload
 
-    to_feature = posts
-
     # Don't include the OP or the last poster
-    to_feature = to_feature.where('user_id NOT IN (?, ?)', user_id, last_post_user_id)
+    to_feature = posts.where('user_id NOT IN (?, ?)', user_id, last_post_user_id)
 
     # Exclude a given post if supplied (in the case of deletes)
     to_feature = to_feature.where("id <> ?", args[:except_post_id]) if args[:except_post_id].present?
@@ -633,7 +631,7 @@ class Topic < ActiveRecord::Base
   end
 
   def self.starred_counts_per_day(sinceDaysAgo=30)
-    TopicUser.where('starred_at > ?', sinceDaysAgo.days.ago).group('date(starred_at)').order('date(starred_at)').count
+    TopicUser.starred_since(sinceDaysAgo).by_date_starred.count
   end
 
   def slug
@@ -721,7 +719,8 @@ class Topic < ActiveRecord::Base
 
   def auto_close_days=(num_days)
     @ignore_category_auto_close = true
-    self.auto_close_at = (num_days and num_days.to_i > 0.0 ? num_days.to_i.days.from_now : nil)
+    num_days = num_days.to_i
+    self.auto_close_at = (num_days > 0 ? num_days.days.from_now : nil)
   end
 
   def secure_category?

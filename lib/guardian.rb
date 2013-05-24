@@ -109,7 +109,7 @@ class Guardian
   alias :can_activate? :can_approve?
 
   def can_ban?(user)
-    user && is_staff? && not(user.staff?)
+    user && is_staff? && user.regular?
   end
   alias :can_deactivate? :can_ban?
 
