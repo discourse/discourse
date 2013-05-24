@@ -28,6 +28,10 @@ Discourse.User = Discourse.Model.extend({
     return Discourse.Utilities.avatarUrl(this.get('username'), 'small', this.get('avatar_template'));
   }).property('username'),
 
+  searchContext: function() {
+    return ({ type: 'user', id: this.get('username_lower') });
+  }.property('username_lower'),
+
   /**
     This user's website.
 

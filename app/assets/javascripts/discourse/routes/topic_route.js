@@ -25,7 +25,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
     Discourse.set('transient.lastTopicIdViewed', parseInt(topic.get('id'), 10));
 
     // Set the search context
-    this.controllerFor('search').set('searchContext', topic);
+    this.controllerFor('search').set('searchContext', topic.get('searchContext'));
   },
 
   deactivate: function() {

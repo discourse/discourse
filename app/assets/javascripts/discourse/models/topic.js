@@ -13,10 +13,10 @@ Discourse.Topic = Discourse.Model.extend({
     return this.get('participants').slice(0, 3);
   }.property('participants'),
 
-  canConvertToRegular: (function() {
+  canConvertToRegular: function() {
     var a = this.get('archetype');
     return a !== 'regular' && a !== 'private_message';
-  }).property('archetype'),
+  }.property('archetype'),
 
   convertArchetype: function(archetype) {
     var a = this.get('archetype');
@@ -28,6 +28,10 @@ Discourse.Topic = Discourse.Model.extend({
       });
     }
   },
+
+  searchContext: function() {
+    return ({ type: 'topic', id: this.get('id') });
+  }.property('id'),
 
   category: function() {
     return Discourse.Category.list().findProperty('name', this.get('categoryName'));

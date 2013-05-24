@@ -55,6 +55,7 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
 
   // background colors are available as a pipe-separated string
   backgroundColors: function() {
+    var categories = Discourse.Category.list();
     return Discourse.SiteSettings.category_colors.split("|").map(function(i) { return i.toUpperCase(); }).concat(
                 categories.map(function(c) { return c.color.toUpperCase(); }) ).uniq();
   }.property('Discourse.SiteSettings.category_colors'),
