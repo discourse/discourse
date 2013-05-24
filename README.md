@@ -75,7 +75,7 @@ Before contributing to Discourse, please:
 
 1. Review the [**VISION**](#vision) statement, to confirm that you understand the focus of the project,
 2. Read and sign the [**Electronic Discourse Forums Contribution License Agreement**](http://discourse.org/cla), to confirm you've read and acknowledged the legal aspects of your contributions, and
-3. Dig into [**CONTRIBUTING.MD**](https://github.com/discourse/discourse/blob/master/docs/CONTRIBUTING.md), which houses all of the necessary info to:
+3. Dig into [**CONTRIBUTING.MD**](https://github.com/discourse/discourse/blob/master/CONTRIBUTING.md), which houses all of the necessary info to:
    - submit bugs,
    - request new features, and
    - step you through the entire process of preparing your code for a Pull Request.
