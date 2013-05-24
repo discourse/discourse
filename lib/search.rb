@@ -157,9 +157,6 @@ class Search
                    .order("TS_RANK_CD(post_search_data.search_data, #{ts_query}) DESC")
                    .order("topics.bumped_at DESC")
 
-
-
-
       if secure_category_ids.present?
         posts = posts.where("(categories.id IS NULL) OR (NOT categories.secure) OR (categories.id IN (?))", secure_category_ids)
       else
@@ -181,7 +178,15 @@ class Search
     end
 
     def topic_search
-      posts_query(@limit).where(post_number: 1).each do |p|
+
+      # If we have a user filter, search all posts by default with a higher limit
+      posts = if @search_context.present? and @search_context.is_a?(User)
+        posts_query(@limit * 3)
+      else
+        posts_query(@limit).where(post_number: 1)
+      end
+
+      posts.each do |p|
         @results.add_result(SearchResult.from_post(p))
       end
     end
