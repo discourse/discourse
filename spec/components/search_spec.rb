@@ -233,6 +233,30 @@ describe Search do
 
     end
 
+  end
+
+  context 'search_context' do
+
+    context 'user as a search context' do
+      let(:search_user) { Search.new('hello', search_context: post.user).execute }
+      let(:search_coding_horror) { Search.new('hello', search_context: Fabricate(:coding_horror)).execute }
+
+      Given!(:post) { Fabricate(:post) }
+      Then          { first_of_type(search_user, 'topic')['id'] == post.topic_id }
+      And           { first_of_type(search_coding_horror, 'topic').should be_blank }
+    end
+
+    context 'category as a search context' do
+      let(:category) { Fabricate(:category) }
+      let(:search_cat) { Search.new('hello', search_context: category).execute }
+      let(:search_other_cat) { Search.new('hello', search_context: Fabricate(:category) ).execute }
+      let(:topic) { Fabricate(:topic, category: category) }
+
+      Given!(:post) { Fabricate(:post, topic: topic, user: topic.user ) }
+      Then          { first_of_type(search_cat, 'topic')['id'] == post.topic_id }
+      Then          { first_of_type(search_other_cat, 'topic').should be_blank }
+
+    end
 
   end
 
