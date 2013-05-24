@@ -21,18 +21,11 @@ class RateLimiter
   end
 
   def can_perform?
-    return true if RateLimiter.disabled?
-    return true if @user.staff?
-
-    result = $redis.get(@key)
-    return true if result.blank?
-    return true if result.to_i < @max
-    false
+    rate_unlimited? || is_under_limit?
   end
 
   def performed!
-    return if RateLimiter.disabled?
-    return if @user.staff?
+    return if rate_unlimited?
 
     result = $redis.incr(@key).to_i
     $redis.expire(@key, @secs) if result == 1
@@ -50,4 +43,13 @@ class RateLimiter
     $redis.decr(@key)
   end
 
+  private
+
+  def is_under_limit?
+    $redis.get(@key).to_i < @max
+  end
+
+  def rate_unlimited?
+    !!(RateLimiter.disabled? || @user.staff?)
+  end
 end
