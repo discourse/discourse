@@ -106,10 +106,6 @@ class Category < ActiveRecord::Base
     errors.add(:slug, I18n.t(:is_reserved)) if slug == SiteSetting.uncategorized_name
   end
 
-  def secure?
-    self.secure
-  end
-
   def group_names=(names)
     # this line bothers me, destroying in AR can not seem to be queued, thinking of extending it
     category_groups.destroy_all unless new_record?
