@@ -13,9 +13,9 @@ Discourse.Archetype = Discourse.Model.extend({
     return this.get('options').length > 0;
   }).property('options.@each'),
 
-  isDefault: (function() {
-    return this.get('id') === Discourse.get('site.default_archetype');
-  }).property('id')
+  isDefault: function() {
+    return this.get('id') === Discourse.Site.instance().get('default_archetype');
+  }.property('id')
 
 });
 

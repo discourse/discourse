@@ -124,7 +124,7 @@ Discourse.Post = Discourse.Model.extend({
 
   flagsAvailable: function() {
     var _this = this;
-    var flags = Discourse.get('site.flagTypes').filter(function(item) {
+    var flags = Discourse.Site.instance().get('flagTypes').filter(function(item) {
       return _this.get("actionByName." + (item.get('name_key')) + ".can_act");
     });
     return flags;
@@ -153,7 +153,7 @@ Discourse.Post = Discourse.Model.extend({
         }
       }).then(function(result) {
         // If we received a category update, update it
-        if (result.category) Discourse.get('site').updateCategory(result.category);
+        if (result.category) Discourse.Site.instance().updateCategory(result.category);
         if (complete) complete(Discourse.Post.create(result.post));
       }, function(result) {
         // Post failed to update

@@ -70,6 +70,11 @@ Discourse.Category = Discourse.Model.extend({
 });
 
 Discourse.Category.reopenClass({
+
+  list: function() {
+    return Discourse.Site.instance().get('categories');
+  },
+
   findBySlugOrId: function(slugOrId) {
     return Discourse.ajax("/categories/" + slugOrId + ".json").then(function (result) {
       return Discourse.Category.create(result.category);
