@@ -45,5 +45,12 @@ describe UserTrackingState do
     row.last_read_post_number.should == 1
     row.user_id.should == post.user_id
 
+    # when we have no permission to see a category, don't show its stats
+    category = Fabricate(:category, secure: true)
+
+    post.topic.category_id = category.id
+    post.topic.save
+
+    UserTrackingState.report([post.user_id, user.id]).count.should == 0
   end
 end
