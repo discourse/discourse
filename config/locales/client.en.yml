@@ -340,7 +340,8 @@ en:
 
       error:
         title_missing: "Title is required."
-        title_length: "Title needs between {{min}} and {{max}} characters."
+        title_too_short: "Title must be at least {{min}} characters long."
+        title_too_long: "Title must be less than {{max}} characters long."
         post_missing: "Post can't be empty."
         post_length: "Post must be at least {{min}} characters long."
         category_missing: "You must choose a category."

@@ -164,7 +164,9 @@ Discourse.Composer = Discourse.Model.extend({
     //    - creating a new topic
     //    - editing the 1st post
     //    - creating a private message
-    if (this.get('editTitle') && this.get('titleLength') < Discourse.SiteSettings.min_topic_title_length) return true;
+    if (this.get('editTitle') &&
+          (this.get('titleLength') < Discourse.SiteSettings.min_topic_title_length ||
+            this.get('titleLength') > Discourse.SiteSettings.max_topic_title_length) ) return true;
 
     // Need at least one user when sending a private message
     if (this.get('creatingPrivateMessage') && (this.get('targetUsernames').trim() + ',').indexOf(',') === 0) return true;
