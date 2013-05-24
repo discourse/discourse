@@ -369,7 +369,33 @@ Discourse.ComposerView = Discourse.View.extend({
       $adminOpts.show();
       $wmd.css('top', wmdTop + parseInt($adminOpts.css('height'),10) + 'px' );
     }
-  }
+  },
+
+  titleValidation: function() {
+    var title = this.get('content.title'), reason;
+    if( !title || title.length < 1 ){
+      reason = Em.String.i18n('composer.error.title_missing');
+    } else if( title.length < Discourse.SiteSettings.min_topic_title_length || title.length > Discourse.SiteSettings.max_topic_title_length ) {
+      reason = Em.String.i18n('composer.error.title_length', {min: Discourse.SiteSettings.min_topic_title_length, max: Discourse.SiteSettings.max_topic_title_length})
+    }
+
+    if( reason ) {
+      return Discourse.InputValidation.create({ failed: true, reason: reason });
+    }
+  }.property('content.title'),
+
+  replyValidation: function() {
+    var reply = this.get('content.reply'), reason;
+    if( !reply || reply.length < 1 ){
+      reason = Em.String.i18n('composer.error.post_missing');
+    } else if( reply.length < Discourse.SiteSettings.min_post_length ) {
+      reason = Em.String.i18n('composer.error.post_length', {min: Discourse.SiteSettings.min_post_length})
+    }
+
+    if( reason ) {
+      return Discourse.InputValidation.create({ failed: true, reason: reason });
+    }
+  }.property('content.reply')
 });
 
 // not sure if this is the right way, keeping here for now, we could use a mixin perhaps

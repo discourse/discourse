@@ -276,7 +276,9 @@ Discourse.Composer = Discourse.Model.extend({
   },
 
   save: function(opts) {
-    return this.get('editingPost') ? this.editPost(opts) : this.createPost(opts);
+    if( !this.get('cantSubmitPost') ) {
+      return this.get('editingPost') ? this.editPost(opts) : this.createPost(opts);
+    }
   },
 
   // When you edit a post

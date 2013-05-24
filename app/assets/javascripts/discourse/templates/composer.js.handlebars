@@ -32,7 +32,12 @@
             {{#if content.creatingPrivateMessage}}
               {{view Discourse.UserSelector topicIdBinding="controller.controllers.topic.content.id" excludeCurrentUser="true" id="private-message-users" class="span8" placeholderKey="composer.users_placeholder" tabindex="1" usernamesBinding="content.targetUsernames"}}
             {{/if}}
-            {{textField value=content.title tabindex="2" id="reply-title" maxlength="255" class="span8" placeholderKey="composer.title_placeholder"}}
+
+            <div class="title-input">
+              {{textField value=content.title tabindex="2" id="reply-title" maxlength="255" class="span8" placeholderKey="composer.title_placeholder"}}
+              {{popupInputTip validation=view.titleValidation show=view.showTitleTip}}
+            </div>
+
             {{#unless content.creatingPrivateMessage}}
               {{view Discourse.ComboboxViewCategory valueAttribute="name" contentBinding="categories" valueBinding="content.categoryName"}}
               {{#if content.archetype.hasOptions}}
@@ -53,6 +58,7 @@
           <div class='textarea-wrapper'>
             <div class='wmd-button-bar' id='wmd-button-bar'></div>
             {{view Discourse.NotifyingTextArea parentBinding="view" tabindex="3" valueBinding="content.reply" id="wmd-input" placeholderKey="composer.reply_placeholder"}}
+            {{popupInputTip validation=view.replyValidation show=view.showReplyTip}}
           </div>
           <div class='preview-wrapper'>
             <div id='wmd-preview' {{bindAttr class="hidePreview:hidden"}}></div>
@@ -70,7 +76,7 @@
 
         {{#if Discourse.currentUser}}
           <div class='submit-panel'>
-            <button {{action save}} tabindex="4" {{bindAttr disabled="content.cantSubmitPost"}} class='btn btn-primary create'>{{view.content.saveText}}</button>
+            <button {{action save}} tabindex="4" {{bindAttr class=":btn :btn-primary :create content.cantSubmitPost:disabled"}}>{{view.content.saveText}}</button>
             <a href='#' {{action cancel}} class='cancel' tabindex="4">{{i18n cancel}}</a>
           </div>
         {{/if}}

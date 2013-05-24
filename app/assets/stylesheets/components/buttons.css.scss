@@ -22,7 +22,7 @@
   &:active {
     text-shadow: none;
   }
-  &[disabled] {
+  &[disabled], &.disabled {
     cursor: default;
     opacity: 0.4;
   }
