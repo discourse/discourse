@@ -1,6 +1,6 @@
 # Developing under OS X Without Vagrant
 
-These instructions assume you have read and understood the **[Discourse Advanced Developer Install Guide](https://github.com/discourse/discourse/blob/master/docs/DEVELOPER-ADVANCED.md)**. 
+These instructions assume you have read and understood the **[Discourse Advanced Developer Install Guide](DEVELOPER-ADVANCED.md)**.
 
 OS X has become a popular platform for developing Ruby on Rails applications; as such, if you run OS X, you might find it more congenial to work on **[Discourse](http://discourse.org)** in your native environment. These instructions should get you there.
 

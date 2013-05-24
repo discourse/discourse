@@ -1,4 +1,4 @@
-<a href="http://www.discourse.org/">![Logo](https://raw.github.com/discourse/discourse/master/images/discourse.png)</a>
+<a href="http://www.discourse.org/">![Logo](images/discourse.png)</a>
 
 Discourse is the 100% open source, next-generation discussion platform built for the next decade of the Internet.
 
@@ -14,11 +14,11 @@ Whenever you need ...
 
 1. If you're **brand new to Ruby and Rails**, please see [**Discourse as Your First Rails App**](http://blog.discourse.org/2013/04/discourse-as-your-first-rails-app/) or our [**Discourse Vagrant Developer Guide**](https://github.com/discourse/discourse/blob/master/docs/VAGRANT.md), which includes instructions to get up and running in a development environment using a virtual machine. This beginner's guide is also adequate for developers ready to sink their teeth quickly; it's the easiest way to hack on Discourse!
 
-2. Once you have Discourse up and running, be sure to load [the appropriate seed data](https://github.com/discourse/discourse/tree/master/pg_dumps) on your forum, either the **developer** seed data, which is the same data you'll see on [try.discourse.org](http://try.discourse.org), or the **production** seed data which includes the [Discourse Admin Quick Start Guide](https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide) and meta guidance.
+2. Once you have Discourse up and running, be sure to load [the appropriate seed data](pg_dumps) on your forum, either the **developer** seed data, which is the same data you'll see on [try.discourse.org](http://try.discourse.org), or the **production** seed data which includes the [Discourse Admin Quick Start Guide](https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide) and meta guidance.
 
-3. If you're familiar with how Rails works and are comfortable setting up your own environment, use our [**Discourse Advanced Developer Guide**](https://github.com/discourse/discourse/blob/master/docs/DEVELOPER-ADVANCED.md).
+3. If you're familiar with how Rails works and are comfortable setting up your own environment, use our [**Discourse Advanced Developer Guide**](docs/DEVELOPER-ADVANCED.md).
 
-Before you get started, ensure you have the following minimum versions: [Ruby 1.9.3+](http://www.ruby-lang.org/en/downloads/), [PostgreSQL 9.1+](http://www.postgresql.org/download/), [Redis 2.6+](http://redis.io/download). And if you're having trouble, please see our [**TROUBLESHOOTING GUIDE**](https://github.com/discourse/discourse/blob/master/docs/TROUBLESHOOTING.md) first!
+Before you get started, ensure you have the following minimum versions: [Ruby 1.9.3+](http://www.ruby-lang.org/en/downloads/), [PostgreSQL 9.1+](http://www.postgresql.org/download/), [Redis 2.6+](http://redis.io/download). And if you're having trouble, please see our [**TROUBLESHOOTING GUIDE**](docs/TROUBLESHOOTING.md) first!
 
 ## Vision
 
@@ -61,7 +61,7 @@ Discourse is built from the following open source components:
 - [PostgreSQL](http://www.postgresql.org/) - Our main data store is in Postgres.
 - [Redis](http://redis.io/) - We use Redis for our job queue, rate limiting, as a cache and for transient data.
 
-Plus *lots* of Ruby Gems, a complete list of which is at [**SOFTWARE.MD**](https://github.com/discourse/discourse/blob/master/docs/SOFTWARE.md).
+Plus *lots* of Ruby Gems, a complete list of which is at [**SOFTWARE.MD**](docs/SOFTWARE.md).
 
 ## Contributing
 
@@ -75,7 +75,7 @@ Before contributing to Discourse, please:
 
 1. Review the [**VISION**](#vision) statement, to confirm that you understand the focus of the project,
 2. Read and sign the [**Electronic Discourse Forums Contribution License Agreement**](http://discourse.org/cla), to confirm you've read and acknowledged the legal aspects of your contributions, and
-3. Dig into [**CONTRIBUTING.MD**](https://github.com/discourse/discourse/blob/master/CONTRIBUTING.md), which houses all of the necessary info to:
+3. Dig into [**CONTRIBUTING.MD**](CONTRIBUTING.md), which houses all of the necessary info to:
    - submit bugs,
    - request new features, and
    - step you through the entire process of preparing your code for a Pull Request.
@@ -85,11 +85,11 @@ We look forward to seeing your cool stuff!
 
 ## Having Problems getting set up?
 
-Before contacting us for help, please review our [Troubleshooting Guide](https://github.com/discourse/discourse/blob/master/docs/TROUBLESHOOTING.md).
+Before contacting us for help, please review our [Troubleshooting Guide](docs/TROUBLESHOOTING.md).
 
 ## The Discourse Team
 
-The original Discourse code contributors can be found in [**AUTHORS.MD**](https://github.com/discourse/discourse/blob/master/docs/AUTHORS.md). For a complete list of the many individuals that contributed to the design and implementation of Discourse, please refer to [the official Discourse blog](http://blog.discourse.org/2013/02/the-discourse-team/) and [GitHub's list of contributors](https://github.com/discourse/discourse/contributors).
+The original Discourse code contributors can be found in [**AUTHORS.MD**](docs/AUTHORS.md). For a complete list of the many individuals that contributed to the design and implementation of Discourse, please refer to [the official Discourse blog](http://blog.discourse.org/2013/02/the-discourse-team/) and [GitHub's list of contributors](https://github.com/discourse/discourse/contributors).
 
 
 ## Copyright / License
