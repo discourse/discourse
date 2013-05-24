@@ -338,6 +338,12 @@ en:
         need_more_for_title: "{{n}} to go for the title"
         need_more_for_reply: "{{n}} to go for the reply"
 
+      error:
+        title_missing: "Title is required."
+        title_length: "Title needs between {{min}} and {{max}} characters."
+        post_missing: "Post can't be empty."
+        post_length: "Post must be at least {{min}} characters long."
+
       save_edit: "Save Edit"
       reply_original: "Reply on Original Topic"
       reply_here: "Reply Here"

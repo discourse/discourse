@@ -98,6 +98,21 @@ Ember.Handlebars.registerHelper('inputTip', function(options) {
   return Ember.Handlebars.helpers.view.call(this, Discourse.InputTipView, options);
 });
 
+/**
+  Inserts a Discourse.PopupInputTipView
+
+  @method popupInputTip
+  @for Handlebars
+**/
+Ember.Handlebars.registerHelper('popupInputTip', function(options) {
+  var hash = options.hash,
+      types = options.hashTypes;
+
+  normalizeHash(hash, types);
+
+  return Ember.Handlebars.helpers.view.call(this, Discourse.PopupInputTipView, options);
+});
+
 
 /**
   Produces a bound link to a category

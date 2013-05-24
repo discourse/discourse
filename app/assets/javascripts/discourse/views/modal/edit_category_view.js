@@ -55,16 +55,18 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
 
   // background colors are available as a pipe-separated string
   backgroundColors: function() {
+    var categories = Discourse.Category.list();
     return Discourse.SiteSettings.category_colors.split("|").map(function(i) { return i.toUpperCase(); }).concat(
-                Discourse.site.categories.map(function(c) { return c.color.toUpperCase(); }) ).uniq();
+                categories.map(function(c) { return c.color.toUpperCase(); }) ).uniq();
   }.property('Discourse.SiteSettings.category_colors'),
 
   usedBackgroundColors: function() {
-    return Discourse.site.categories.map(function(c) {
+    var categories = Discourse.Category.list();
+    return categories.map(function(c) {
       // If editing a category, don't include its color:
       return (this.get('category.id') && this.get('category.color').toUpperCase() === c.color.toUpperCase()) ? null : c.color.toUpperCase();
     }, this).compact();
-  }.property('Discourse.site.categories', 'category.id', 'category.color'),
+  }.property('category.id', 'category.color'),
 
   title: function() {
     if (this.get('category.id')) return Em.String.i18n("category.edit_long");

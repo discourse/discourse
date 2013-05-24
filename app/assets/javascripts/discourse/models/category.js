@@ -20,6 +20,10 @@ Discourse.Category = Discourse.Model.extend({
     this.set("groups", Em.A(this.groups));
   },
 
+  searchContext: function() {
+    return ({ type: 'category', id: this.get('id') });
+  }.property('id'),
+
   url: function() {
     return Discourse.getURL("/category/") + (this.get('slug'));
   }.property('name'),

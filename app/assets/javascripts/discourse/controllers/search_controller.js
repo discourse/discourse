@@ -25,7 +25,12 @@ Discourse.SearchController = Em.ArrayController.extend(Discourse.Presence, {
     var searchController = this;
     this.set('count', 0);
 
-    return Discourse.Search.forTerm(term, typeFilter).then(function(results) {
+    var searcher = Discourse.Search.forTerm(term, {
+      typeFilter: typeFilter,
+      searchContext: searchController.get('searchContext')
+    });
+
+    return searcher.then(function(results) {
       searchController.set('results', results);
       if (results) {
         searchController.set('noResults', results.length === 0);

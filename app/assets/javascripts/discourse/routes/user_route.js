@@ -28,7 +28,7 @@ Discourse.UserRoute = Discourse.Route.extend({
     });
 
     // Add a search context
-    this.controllerFor('search').set('searchContext', user);
+    this.controllerFor('search').set('searchContext', user.get('searchContext'));
   },
 
   deactivate: function() {

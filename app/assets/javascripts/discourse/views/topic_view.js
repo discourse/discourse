@@ -12,7 +12,6 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
   topicBinding: 'controller.content',
   userFiltersBinding: 'controller.userFilters',
   classNameBindings: ['controller.multiSelect:multi-select', 'topic.archetype', 'topic.category.secure:secure_category'],
-  siteBinding: 'Discourse.site',
   progressPosition: 1,
   menuVisible: true,
   SHORT_POST: 1200,
