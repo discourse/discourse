@@ -41,6 +41,7 @@ cs:
     one: "Bohužel, návštěvníci mohou do jednoho příspěvku vložit jen jeden odkaz."
     few: "Bohužel, návštěvníci mohou do jednoho příspěvku vložit maximálně %{count} odkazy."
     other: "Bohužel, návštěvníci mohou do jednoho příspěvku vložit maximálně %{count} odkazů."
+  spamming_host: "Bohužel, na tento server nemůžete odkazovat."
 
   just_posted_that: "je příliš podobný vašemu příspěvku z poslední doby"
   has_already_been_used: "již bylo použito"
@@ -104,6 +105,9 @@ cs:
       post:
         raw: "Tělo"
     errors:
+      messages:
+        is_invalid: "je neplatné; zkuste se vyjádřit více popisně"
+        has_already_been_used: "je již použito"
       models:
         topic:
           attributes:
@@ -609,6 +613,8 @@ cs:
     tos_url: "Pokud máte dokument 'Podmínky Používání' hostovaný samostatně, napište sem jeho plnou URL."
     privacy_policy_url: "Pokud máte dokument 'Ochrana Soukromí' hostovaný samostatně, napište sem jeho plnou URL."
 
+    newuser_spam_host_threshold: "Kolikrát smí uživatel zaslat odkaz na stejný server v rámci příspěvků z nastavení 'newuser_spam_host_posts', než budou příspěvky považovány za spam."
+
   notification_types:
     mentioned: "%{display_username} vás zmínil v %{link}"
     liked: "%{display_username} se líbí váš příspěvek v %{link}"
@@ -643,6 +649,12 @@ cs:
     archived_disabled: "Toto téma je vráceno z archivu. Již není zmraženo a může být měněno."
     closed_enabled: "Toto téma je uzavřeno. Nové odpovědi nebudou přijímány."
     closed_disabled: "Toto téma je otevřeno. Nové odpovědi jsou povoleny."
+    autoclosed_enabled:
+      zero: "Toto téma bylo automaticky uzavřeno po 1 dni. Nové odpovědi nebudou přijímány."
+      one: "Toto téma bylo automaticky uzavřeno po 1 dni. Nové odpovědi nebudou přijímány."
+      few: "Toto téma bylo automaticky uzavřeno po %{count} dnech. Nové odpovědi nebudou přijímány."
+      other: "Toto téma bylo automaticky uzavřeno po %{count} dnech. Nové odpovědi nebudou přijímány."
+    autoclosed_disabled: "Toto téma je otevřeno. Nové odpovědi jsou povoleny."
     pinned_enabled: "Toto téma je připevněno. Bude se zobrazovat na vrcholu seznamu témat v kategorii."
     pinned_disabled: "Toto téma již není připevněno. Nebude se zobrazovat na vrcholu seznamu témat v kategorii."
     visible_enabled: "Toto téma je viditelné. Bude se zobrazovat v seznamu témat."
