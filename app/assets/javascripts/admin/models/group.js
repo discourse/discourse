@@ -58,6 +58,21 @@ Discourse.Group = Discourse.Model.extend({
       group.set('disableSave', false);
       group.set('id', r.id);
     });
+  },
+
+
+  save: function(){
+    var group = this;
+    group.set('disableSave', true);
+
+    return Discourse.ajax("/admin/groups/" + this.get('id'), {type: "PUT", data: {
+      group: {
+        name: this.get('name'),
+        usernames: this.get('usernames')
+      }
+    }}).then(function(r){
+      group.set('disableSave', false);
+    });
   }
 
 });
