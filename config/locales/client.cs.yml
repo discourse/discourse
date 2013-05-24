@@ -35,6 +35,23 @@ cs:
     now: "právě teď"
     read_more: "číst dále"
 
+    in_n_seconds:
+      one: "za 1 sekundu"
+      few: "za {{count}} sekundy"
+      other: "za {{count}} sekund"
+    in_n_minutes:
+      one: "za 1 minutu"
+      few: "za {{count}} minuty"
+      other: "za {{count}} minut"
+    in_n_hours:
+      one: "za 1 hodinu"
+      few: "za {{count}} hodiny"
+      other: "za {{count}} hodin"
+    in_n_days:
+      one: "za 1 den"
+      few: "za {{count}} dny"
+      other: "za {{count}} dní"
+
     suggested_topics:
       title: "Doporučená témata"
 
@@ -52,6 +69,12 @@ cs:
     save: "Uložit změny"
     saving: "Ukládám..."
     saved: "Uloženo!"
+
+    choose_topic:
+      none_found: "Žádná témata nenalezena."
+      title:
+        search: "Hledat téma podle názvu, URL nebo ID:"
+        placeholder: "sem napište název tématu"
 
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> zaslal <a href='{{topicUrl}}'>téma</a>"
@@ -371,6 +394,10 @@ cs:
       help: "Nápověda pro Markdown"
       toggler: "zobrazit nebo skrýt editor příspěvku"
 
+      admin_options_title: "Volitelné administrační nastavení tématu"
+      auto_close_label: "Automaticky zavřít téma za:"
+      auto_close_units: "dní"
+
     notifications:
       title: "oznámení o zmínkách pomocí @name, odpovědi na vaše příspěvky a témata, soukromé zprávy, atd."
       none: "V tuto chvíli nemáte žádná oznámení."
@@ -481,6 +508,12 @@ cs:
       jump_reply_down: přejít na následující odpověď
       deleted: "Téma bylo smazáno"
 
+      auto_close_notice: "Toto téma se automaticky zavře %{timeLeft}."
+      auto_close_title: 'Nastavení automatického zavírání'
+      auto_close_save: "Uložit"
+      auto_close_cancel: "Zrušit"
+      auto_close_remove: "Nezavírat téma automaticky"
+
       progress:
         title: pozice v tématu
         jump_top: přejít na první příspěvek
@@ -518,6 +551,7 @@ cs:
         delete: "Odstranit téma"
         open: "Otevřít téma"
         close: "Zavřít téma"
+        auto_close: "Automaticky zavřít"
         unpin: "Odstranit připevnění"
         pin: "Připevnit téma"
         unarchive: "Navrátit z archivu"
@@ -583,21 +617,30 @@ cs:
           other: "z celkem {{count}} příspěvků v tématu"
         cancel: "Zobrazí znovu všechny příspěvky v tomto tématu."
 
-      move_selected:
-        title: "Přesunout označené příspěvky"
+      split_topic:
+        title: "Rozdělit téma"
+        action: "rozdělit téma"
         topic_name: "Název nového tématu:"
-        error: "Bohužel nastala chyba při přesouvání příspěvků."
+        error: "Bohužel nastala chyba při rozdělování tématu."
         instructions:
           one: "Chystáte se vytvořit nové téma a naplnit ho příspěvkem, který jste označili."
           few: "Chystate se vytvořit noté téma a naplnit ho <b>{{count}}</b> příspěvky, které jste označili."
           other: "Chystate se vytvořit noté téma a naplnit ho <b>{{count}}</b> příspěvky, které jste označili."
+
+      merge_topic:
+        title: "Sloučit téma"
+        action: "sloučit téma"
+        error: "Bohužel nastala chyba při slučování tématu."
+        instructions:
+          one: "Prosím, vyberte téma, do kterého chcete příspěvek přesunout."
+          few: "Prosím, vyberte téma, do kterého chcete tyto <b>{{count}}</b> příspěvky přesunout."
+          other: "Prosím, vyberte téma, do kterého chcete těchto <b>{{count}}</b> příspěvků přesunout."
 
       multi_select:
         select: 'označit'
         selected: 'označeno ({{count}})'
         delete: odstranit označené
         cancel: zrušit označování
-        move: přesunout označené
         description:
           one: Máte označen <b>1</b> příspěvek.
           few: "Máte označeny <b>{{count}}</b> příspěvky."
@@ -771,6 +814,8 @@ cs:
       edit_long: "Upravit kategorii"
       edit_uncategorized: "Upravit nekategorizované"
       view: 'Zobrazit témata v kategorii'
+      general: 'Obecné'
+      settings: 'Nastavení'
       delete: 'Smazat kategorii'
       create: 'Nová kategorie'
       save: 'Uložit kategorii'
@@ -796,6 +841,7 @@ cs:
       add_group: "Přidat skupinu"
       security: "Bezpečnost"
       allowed_groups: "Povolené skupiny:"
+      auto_close_label: "Automaticky zavírat témata po:"
 
 
     flagging:
