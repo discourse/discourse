@@ -38,17 +38,22 @@ class PostSerializer < ApplicationSerializer
              :raw,
              :actions_summary,
              :moderator?,
+             :staff?,
              :avatar_template,
              :user_id,
              :draft_sequence,
              :hidden,
              :hidden_reason_id,
-             :deleted_at, 
+             :deleted_at,
              :trust_level
 
 
   def moderator?
     object.user.moderator?
+  end
+
+  def staff?
+    object.user.staff?
   end
 
   def avatar_template
