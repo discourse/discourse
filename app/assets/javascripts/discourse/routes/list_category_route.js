@@ -9,11 +9,11 @@
 Discourse.ListCategoryRoute = Discourse.FilteredListRoute.extend({
 
   model: function(params) {
-    var categories = Discourse.Site.find().get('categories');
+    var categories = Discourse.Site.instance().get('categories');
 
     var slug = Em.get(params, 'slug');
 
-    category = categories.findProperty('slug', Em.get(params, 'slug'))
+    var category = categories.findProperty('slug', Em.get(params, 'slug'))
 
     // In case the slug didn't work, try to find it by id instead.
     if (!category) {

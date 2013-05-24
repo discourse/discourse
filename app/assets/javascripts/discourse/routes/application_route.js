@@ -8,7 +8,7 @@
 **/
 Discourse.ApplicationRoute = Discourse.Route.extend({
   setupController: function(controller) {
-    Discourse.set('site', Discourse.Site.find());
+    Discourse.set('site', Discourse.Site.instance());
 
     var currentUser = PreloadStore.get('currentUser');
     if (currentUser) {
