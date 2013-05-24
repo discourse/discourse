@@ -8,17 +8,22 @@
 **/
 Discourse.ListCategoryRoute = Discourse.FilteredListRoute.extend({
 
-  setupController: function(controller, model) {
-    var slug = Em.get(model, 'slug');
-    var category = Discourse.get('site.categories').findProperty('slug', slug);
+  model: function(params) {
+    var categories = Discourse.Site.find().get('categories');
 
+    var slug = Em.get(params, 'slug');
+
+    category = categories.findProperty('slug', Em.get(params, 'slug'))
+
+    // In case the slug didn't work, try to find it by id instead.
     if (!category) {
-      category = Discourse.get('site.categories').findProperty('id', parseInt(slug, 10));
-    }
-    if (!category) {
-      category = Discourse.Category.create({ name: slug, slug: slug });
+      category = categories.findProperty('id', parseInt(slug, 10));
     }
 
+    return category;
+  },
+
+  setupController: function(controller, category) {
     var listTopicsController = this.controllerFor('listTopics');
     if (listTopicsController) {
       var listContent = listTopicsController.get('content');
@@ -26,7 +31,6 @@ Discourse.ListCategoryRoute = Discourse.FilteredListRoute.extend({
         listContent.set('loaded', false);
       }
     }
-
 
     var listController = this.controllerFor('list');
     var urlId = Discourse.Utilities.categoryUrlId(category);
