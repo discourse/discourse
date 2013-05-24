@@ -239,11 +239,14 @@ describe Search do
 
     context 'user as a search context' do
       let(:search_user) { Search.new('hello', search_context: post.user).execute }
-      let(:search_coding_horror) { Search.new('hello', search_context: Fabricate(:coding_horror)).execute }
+      let(:coding_horror) { Fabricate(:coding_horror) }
+      let(:search_coding_horror) { Search.new('hello', search_context: coding_horror).execute }
 
       Given!(:post) { Fabricate(:post) }
+      Given!(:coding_horror_post) { Fabricate(:post, user: coding_horror )}
+
       Then          { first_of_type(search_user, 'topic')['id'] == post.topic_id }
-      And           { first_of_type(search_coding_horror, 'topic').should be_blank }
+      And           { first_of_type(search_user, 'topic')['id'] == coding_horror_post.topic_id }
     end
 
     context 'category as a search context' do
@@ -251,10 +254,11 @@ describe Search do
       let(:search_cat) { Search.new('hello', search_context: category).execute }
       let(:search_other_cat) { Search.new('hello', search_context: Fabricate(:category) ).execute }
       let(:topic) { Fabricate(:topic, category: category) }
+      let(:topic_no_cat) { Fabricate(:topic) }
 
       Given!(:post) { Fabricate(:post, topic: topic, user: topic.user ) }
-      Then          { first_of_type(search_cat, 'topic')['id'] == post.topic_id }
-      Then          { first_of_type(search_other_cat, 'topic').should be_blank }
+      Then          { first_of_type(search_cat, 'topic')['id'] == topic.id }
+      Then          { first_of_type(search_cat, 'topic')['id'] == topic_no_cat.id }
 
     end
 

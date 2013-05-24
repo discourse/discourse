@@ -138,30 +138,34 @@ class Search
                   .where("topics.deleted_at" => nil)
                   .where("topics.visible")
                   .where("topics.archetype <> ?", Archetype.private_message)
-                  .order("TS_RANK_CD(TO_TSVECTOR(#{query_locale}, topics.title), #{ts_query}) DESC")
-                  .order("TS_RANK_CD(post_search_data.search_data, #{ts_query}) DESC")
-                  .order("topics.bumped_at DESC")
-                  .limit(limit)
 
-      # Search context post results
+
+      # If we have a search context, prioritize those posts first
       if @search_context.present?
 
         if @search_context.is_a?(User)
-          # If the context is a user, restrict posts to that user
-          posts = posts.where(user_id: @search_context.id)
+          # If the context is a user, prioritize that user's posts
+          posts = posts.order("CASE WHEN posts.user_id = #{@search_context.id} THEN 0 ELSE 1 END")
         elsif @search_context.is_a?(Category)
           # If the context is a category, restrict posts to that category
-          posts = posts.where('topics.category_id' => @search_context.id)
+          posts = posts.order("CASE WHEN topics.category_id = #{@search_context.id} THEN 0 ELSE 1 END")
         end
 
       end
+
+      posts = posts.order("TS_RANK_CD(TO_TSVECTOR(#{query_locale}, topics.title), #{ts_query}) DESC")
+                   .order("TS_RANK_CD(post_search_data.search_data, #{ts_query}) DESC")
+                   .order("topics.bumped_at DESC")
+
+
+
 
       if secure_category_ids.present?
         posts = posts.where("(categories.id IS NULL) OR (NOT categories.secure) OR (categories.id IN (?))", secure_category_ids)
       else
         posts = posts.where("(categories.id IS NULL) OR (NOT categories.secure)")
       end
-      posts
+      posts.limit(limit)
     end
 
     def query_locale
