@@ -7,12 +7,11 @@
   @module Discourse
 **/
 Discourse.Topic = Discourse.Model.extend({
-  categoriesBinding: 'Discourse.site.categories',
 
-  fewParticipants: (function() {
+  fewParticipants: function() {
     if (!this.present('participants')) return null;
     return this.get('participants').slice(0, 3);
-  }).property('participants'),
+  }.property('participants'),
 
   canConvertToRegular: (function() {
     var a = this.get('archetype');
@@ -31,10 +30,8 @@ Discourse.Topic = Discourse.Model.extend({
   },
 
   category: function() {
-    if (this.get('categories')) {
-      return this.get('categories').findProperty('name', this.get('categoryName'));
-    }
-  }.property('categoryName', 'categories'),
+    return Discourse.Category.list().findProperty('name', this.get('categoryName'));
+  }.property('categoryName'),
 
   shareUrl: function(){
     var user = Discourse.get('currentUser');
@@ -130,9 +127,9 @@ Discourse.Topic = Discourse.Model.extend({
     return null;
   }.property('views'),
 
-  archetypeObject: (function() {
-    return Discourse.get('site.archetypes').findProperty('id', this.get('archetype'));
-  }).property('archetype'),
+  archetypeObject: function() {
+    return Discourse.Site.instance().get('archetypes').findProperty('id', this.get('archetype'));
+  }.property('archetype'),
 
   isPrivateMessage: (function() {
     return this.get('archetype') === 'private_message';
@@ -220,6 +217,7 @@ Discourse.Topic = Discourse.Model.extend({
 
     // If loading the topic succeeded...
     var afterTopicLoaded = function(result) {
+
       var closestPostNumber, lastPost, postDiff;
 
       // Update the slug if different
@@ -246,6 +244,7 @@ Discourse.Topic = Discourse.Model.extend({
       if (result.suggested_topics) {
         topic.set('suggested_topics', Em.A());
       }
+
       topic.mergeAttributes(result, { suggested_topics: Discourse.Topic });
       topic.set('posts', Em.A());
       if (opts.trackVisit && result.draft && result.draft.length > 0) {
@@ -261,17 +260,18 @@ Discourse.Topic = Discourse.Model.extend({
       // Okay this is weird, but let's store the length of the next post when there
       lastPost = null;
       result.posts.each(function(p) {
-        var post;
         p.scrollToAfterInsert = opts.nearPost;
-        post = Discourse.Post.create(p);
+        var post = Discourse.Post.create(p);
         post.set('topic', topic);
         topic.get('posts').pushObject(post);
         lastPost = post;
       });
+
       topic.set('loaded', true);
     }
 
     var errorLoadingTopic = function(result) {
+
       topic.set('errorLoading', true);
 
       // If the result was 404 the post is not found

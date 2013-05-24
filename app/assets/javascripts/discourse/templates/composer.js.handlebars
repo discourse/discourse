@@ -34,7 +34,7 @@
             {{/if}}
             {{textField value=content.title tabindex="2" id="reply-title" maxlength="255" class="span8" placeholderKey="composer.title_placeholder"}}
             {{#unless content.creatingPrivateMessage}}
-              {{view Discourse.ComboboxViewCategory valueAttribute="name" contentBinding="Discourse.site.categories" valueBinding="content.categoryName"}}
+              {{view Discourse.ComboboxViewCategory valueAttribute="name" contentBinding="categories" valueBinding="content.categoryName"}}
               {{#if content.archetype.hasOptions}}
                 <button class='btn' {{action showOptions}}>{{i18n topic.options}}</button>
               {{/if}}

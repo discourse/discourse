@@ -77,12 +77,12 @@
           {{#titledLinkTo "list.latest" titleKey="filters.latest.help"}}{{i18n filters.latest.title}}{{/titledLinkTo}}
         </li>
         <li>{{#linkTo 'faq'}}{{i18n faq}}{{/linkTo}}</li>
-        {{#if view.categories}}
+        {{#if categories}}
           <li class='heading' title="{{i18n filters.categories.help}}">
             {{#linkTo "list.categories"}}{{i18n filters.categories.title}}{{/linkTo}}
           </li>
 
-          {{#each view.categories}}
+          {{#each categories}}
             <li class='category'>
               {{categoryLink this}}
               <b>{{unbound topic_count}}</b></a>

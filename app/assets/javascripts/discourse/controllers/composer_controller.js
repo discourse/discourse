@@ -27,6 +27,10 @@ Discourse.ComposerController = Discourse.Controller.extend({
     if (c) return c.appendText(text);
   },
 
+  categories: function() {
+    return Discourse.Category.list();
+  }.property(),
+
   save: function(force) {
     var composer,
       _this = this,

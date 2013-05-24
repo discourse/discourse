@@ -29,7 +29,7 @@ Discourse.PostView = Discourse.View.extend({
   }.property('parentView'),
 
   postTypeClass: function() {
-    return this.get('post.post_type') === Discourse.get('site.post_types.moderator_action') ? 'moderator' : 'regular';
+    return this.get('post.post_type') === Discourse.Site.instance().get('post_types.moderator_action') ? 'moderator' : 'regular';
   }.property('post.post_type'),
 
   // If the cooked content changed, add the quote controls

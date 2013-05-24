@@ -8,21 +8,17 @@
 **/
 Discourse.ListController = Discourse.Controller.extend({
   currentUserBinding: 'Discourse.currentUser',
-  categoriesBinding: 'Discourse.site.categories',
   categoryBinding: 'topicList.category',
   canCreateCategory: false,
   canCreateTopic: false,
   needs: ['composer', 'modal', 'listTopics'],
 
   availableNavItems: function() {
-    var hasCategories, loggedOn, summary;
-    summary = this.get('filterSummary');
-    loggedOn = !!Discourse.get('currentUser');
-    hasCategories = !!this.get('categories');
+    var summary = this.get('filterSummary');
+    var loggedOn = !!Discourse.get('currentUser');
     return Discourse.SiteSettings.top_menu.split("|").map(function(i) {
       return Discourse.NavItem.fromText(i, {
         loggedOn: loggedOn,
-        hasCategories: hasCategories,
         countSummary: summary
       });
     }).filter(function(i) {

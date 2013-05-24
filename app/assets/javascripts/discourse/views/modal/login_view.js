@@ -8,10 +8,14 @@
 **/
 Discourse.LoginView = Discourse.ModalBodyView.extend({
   templateName: 'modal/login',
-  siteBinding: 'Discourse.site',
   title: Em.String.i18n('login.title'),
   authenticate: null,
   loggingIn: false,
+
+
+  site: function() {
+    return Discourse.Site.instance();
+  }.property(),
 
   showView: function(view) {
     return this.get('controller').show(view);

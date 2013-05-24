@@ -22,14 +22,17 @@ EDIT = 'edit';
 REPLY_AS_NEW_TOPIC_KEY = "reply_as_new_topic";
 
 Discourse.Composer = Discourse.Model.extend({
-  archetypesBinding: 'Discourse.site.archetypes',
 
   init: function() {
     this._super();
     var val = Discourse.KeyValueStore.get('composer.showPreview') || 'true';
     this.set('showPreview', val === 'true');
-    this.set('archetypeId', Discourse.get('site.default_archetype'));
+    this.set('archetypeId', Discourse.Site.instance().get('default_archetype'));
   },
+
+  archetypes: function() {
+    return Discourse.Site.instance().get('archetypes');
+  }.property(),
 
   creatingTopic: function() {
     return this.get('action') === CREATE_TOPIC;
@@ -238,7 +241,7 @@ Discourse.Composer = Discourse.Model.extend({
     }
 
     this.set('categoryName', opts.categoryName || this.get('topic.category.name'));
-    this.set('archetypeId', opts.archetypeId || Discourse.get('site.default_archetype'));
+    this.set('archetypeId', opts.archetypeId || Discourse.Site.instance().get('default_archetype'));
     this.set('metaData', opts.metaData ? Em.Object.create(opts.metaData) : null);
     this.set('reply', opts.reply || this.get("reply") || "");
     if (opts.postId) {
@@ -354,7 +357,7 @@ Discourse.Composer = Discourse.Model.extend({
         user_id: currentUser.get('id'),
         metaData: this.get('metaData'),
         archetype: this.get('archetypeId'),
-        post_type: Discourse.get('site.post_types.regular'),
+        post_type: Discourse.Site.instance().get('post_types.regular'),
         target_usernames: this.get('targetUsernames'),
         actions_summary: Em.A(),
         moderator: currentUser.get('moderator'),

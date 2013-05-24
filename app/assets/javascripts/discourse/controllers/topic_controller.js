@@ -29,6 +29,9 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     return (this.get('selectedPostsCount') > 0);
   }.property('selectedPostsCount'),
 
+  categories: function() {
+    return Discourse.Category.list();
+  }.property(),
 
   canSelectAll: Em.computed.not('allPostsSelected'),
 

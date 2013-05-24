@@ -11,9 +11,7 @@ Discourse.HeaderView = Discourse.View.extend({
   classNames: ['d-header', 'clearfix'],
   classNameBindings: ['editingTopic'],
   templateName: 'header',
-  siteBinding: 'Discourse.site',
   currentUserBinding: 'Discourse.currentUser',
-  categoriesBinding: 'site.categories',
   topicBinding: 'Discourse.router.topicController.content',
 
   showDropdown: function($target) {

@@ -92,7 +92,7 @@ Discourse.User = Discourse.Model.extend({
     @type {Integer}
   **/
   trustLevel: function() {
-    return Discourse.get('site.trust_levels').findProperty('id', this.get('trust_level'));
+    return Discourse.Site.instance().get('trust_levels').findProperty('id', this.get('trust_level'));
   }.property('trust_level'),
 
   /**
