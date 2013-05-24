@@ -100,9 +100,8 @@ where id in (?)"
   def clear
     p = Post.find(params[:id])
     PostAction.clear_flags!(p, current_user.id)
-    p.hidden = false
-    p.hidden_reason_id = nil
-    p.save
+    p.reload
+    p.unhide!
     render nothing: true
   end
 end

@@ -18,17 +18,17 @@
     </tr>
   </thead>
   <tbody>
-    {{#each content}}
+    {{#each flag in content}}
     <tr {{bindAttr class="hiddenClass"}}>
-      <td class='user'>{{#linkTo 'adminUser' user}}{{avatar user imageSize="small"}}{{/linkTo}}</td>
-      <td class='excerpt'>{{#if topicHidden}}<i title='{{i18n topic_statuses.invisible.help}}' class='icon icon-eye-close'></i> {{/if}}<h3><a href='{{unbound url}}'>{{title}}</a></h3><br>{{{excerpt}}}
+      <td class='user'>{{#linkTo 'adminUser' flag.user}}{{avatar flag.user imageSize="small"}}{{/linkTo}}</td>
+      <td class='excerpt'>{{#if flag.topicHidden}}<i title='{{i18n topic_statuses.invisible.help}}' class='icon icon-eye-close'></i> {{/if}}<h3><a href='{{unbound flag.url}}'>{{flag.title}}</a></h3><br>{{{flag.excerpt}}}
       </td>
-      <td class='flaggers'>{{#each flaggers}}{{#linkTo 'adminUser' this}}{{avatar this imageSize="small"}} {{/linkTo}}{{/each}}</td>
-      <td class='last-flagged'>{{date lastFlagged}}</td>
+      <td class='flaggers'>{{#each flag.flaggers}}{{#linkTo 'adminUser' this}}{{avatar this imageSize="small"}} {{/linkTo}}{{/each}}</td>
+      <td class='last-flagged'>{{date flag.lastFlagged}}</td>
       <td class='action'>
         {{#if adminActiveFlagsView}}
-          <button title='{{i18n admin.flags.clear_title}}' class='btn' {{action clearFlags this}}>{{i18n admin.flags.clear}}</button>
-          <button title='{{i18n admin.flags.delete_title}}' class='btn' {{action deletePost this}}>{{i18n admin.flags.delete}}</button>
+          <button title='{{i18n admin.flags.clear_title}}' class='btn' {{action clearFlags flag}}>{{i18n admin.flags.clear}}</button>
+          <button title='{{i18n admin.flags.delete_title}}' class='btn' {{action deletePost flag}}>{{i18n admin.flags.delete}}</button>
         {{/if}}
       </td>
     </tr>
