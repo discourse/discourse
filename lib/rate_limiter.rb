@@ -27,26 +27,36 @@ class RateLimiter
   def performed!
     return if rate_unlimited?
 
-    result = $redis.incr(@key).to_i
-    $redis.expire(@key, @secs) if result == 1
-    if result > @max
-
-      # In case we go over, clamp it to the maximum
-      $redis.decr(@key)
-
-      raise LimitExceeded.new($redis.ttl(@key))
+    if is_under_limit?
+      # simple ring buffer.
+      $redis.lpush(@key, Time.now.to_i)
+      $redis.ltrim(@key, 0, @max - 1)
+    else
+      raise LimitExceeded.new(seconds_to_wait)
     end
   end
 
   def rollback!
     return if RateLimiter.disabled?
-    $redis.decr(@key)
+    $redis.lpop(@key)
   end
 
   private
 
+  def seconds_to_wait
+    @secs - age_of_oldest
+  end
+
+  def age_of_oldest
+    # age of oldest event in buffer, in seconds
+    Time.now.to_i - $redis.lrange(@key, -1, -1).first.to_i
+  end
+
   def is_under_limit?
-    $redis.get(@key).to_i < @max
+      # number of events in buffer less than max allowed? OR
+      ($redis.llen(@key) < @max) ||
+      # age bigger than silding window size?
+      (age_of_oldest > @secs)
   end
 
   def rate_unlimited?
