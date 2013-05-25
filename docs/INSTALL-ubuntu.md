@@ -16,9 +16,10 @@ Install necessary packages:
     # Run these commands as your normal login (e.g. "michael")
     sudo apt-get -y install build-essential libssl-dev libyaml-dev git libtool libxslt-dev libxml2-dev redis-server libpq-dev gawk curl pngcrush
 
-## Install nginx
+## Web Server Option: nginx
 
-At Discourse, we recommend the latest version of nginx. To install on Ubuntu:
+At Discourse, we recommend the latest version of nginx (we like the new and
+shiny). To install on Ubuntu:
 
     # Run these commands as your normal login (e.g. "michael")
     # Remove any existing versions of nginx
@@ -36,9 +37,10 @@ At Discourse, we recommend the latest version of nginx. To install on Ubuntu:
 
     # install nginx
     sudo apt-get update && sudo apt-get -y install nginx
-    
-## You could use Apache2
-In the case you want Apache2 INSTEAD nginx to serve your static pages:
+
+## Web Server Option: apache2
+
+If you instead want to use apache2 to serve the static pages:
     
     # Run these commands as your normal login (e.g. "michael")
     # If you don't have apache2 yet
@@ -93,7 +95,7 @@ If you get any errors starting or reloading apache, please check the paths above
 
 ## Install rvm and ruby environment
 
-### Systemwide installation
+### RVM Option: Systemwide installation
 
 Taken from http://rvm.io/, the commands below installs RVM and users in the 'rvm' group have access to modify state:
 
@@ -108,6 +110,11 @@ Taken from http://rvm.io/, the commands below installs RVM and users in the 'rvm
     rvm install 2.0.0
     gem install bundler
 
+### RVM Option: Single-user installation
+
+Another sensible option (especially if only one Ruby app is on the machine) is
+to install RVM isolated to a user's environment. Further instructions are
+below.
 
 ## Discourse setup
 
@@ -115,6 +122,8 @@ Create discourse user:
 
     # Run these commands as your normal login (e.g. "michael")
     sudo adduser --shell /bin/bash discourse
+    # If this fails, it's because you're doing the RVM single-user install.
+    # In that case, you could just not run it if errors make you squirrely
     sudo adduser discourse rvm
 
 Give postgres DB rights to the `discourse` user:
@@ -128,12 +137,32 @@ Change to the 'discourse' user:
     # Run this command as your normal login (e.g. "michael"), further commands should be run as 'discourse'
     sudo su - discourse
 
+Install RVM if doing a single-user RVM installation:
+
+    # Install RVM
+    \curl -s -S -L https://get.rvm.io | bash -s stable
+    . ~/.profile
+
+    # Install necessary packages for building ruby
+    rvm requirements
+
+    # If discourse does not have sudo permissions (likely the case), run:
+    rvm --autolibs=read-fail requirements
+    # and rvm will tell you which packages you (or your sysadmin) need
+    # to install before it can proceed. Do that and then resume next:
+
+Continue with discourse installation
+
+    # Build and install ruby
+    rvm install 2.0.0
+    gem install bundler
+
     # Pull down the latest release
     git clone git://github.com/discourse/discourse.git
+    cd discourse
     git checkout latest-release
 
     # Install necessary gems
-    cd discourse
     bundle install --deployment
 
 _If you have errors building the native extensions, ensure you have sufficient free system memory. 1GB with no swap won't cut it._
@@ -142,15 +171,17 @@ Configure discourse:
 
     # Run these commands as the discourse user
     cd ~/discourse/config
-    for i in {database,redis}.yml discourse.pill; do cp $i.sample $i; done
-    cp environments/production.sample.rb environments/production.rb
+    cp database.yml.production-sample database.yml
+    cp redis.yml.sample redis.yml
+    cp discourse.pill.sample discourse.pill
+    cp environments/production.rb.sample environments/production.rb
 
 Edit discourse/config/database.yml
 
-- remove profile and development
-- leave in production and perhaps test
 - change production db name to: `discourse_prod`
-- Change `host_names` to the name you'll use to access the discourse site
+- change username/password if appropriate
+- set db_id if using multisite
+- change `host_names` to the name you'll use to access the discourse site
 
 Edit discourse/config/redis.yml
 
@@ -181,9 +212,6 @@ Initialize the database:
     createdb discourse_prod
     RUBY_GC_MALLOC_LIMIT=900000000 RAILS_ENV=production bundle exec rake db:migrate
     RUBY_GC_MALLOC_LIMIT=900000000 RAILS_ENV=production bundle exec rake assets:precompile
-
-    # TEMPORARY BUG WORKAROUND:
-    mkdir -p ~/discourse/tmp/sockets
 
 ## nginx setup
 
@@ -221,56 +249,3 @@ Add the following line:
     @reboot RUBY_GC_MALLOC_LIMIT=900000000 RAILS_ROOT=~/discourse RAILS_ENV=production NUM_WEBS=4 bluepill --no-privileged -c ~/.bluepill load ~/discourse/config/discourse.pill
 
 Congratulations! You've got Discourse installed and running!
-
-<!--
-Now you have to deliver the service to your users.
-
-<strong>CDN</strong>
-
-<h3>haproxy</h3>
-<pre>listen http-in
-        bind 64.71.148.2:80
-        acl is_bare hdr(host) -i discourse.org
-        acl is_home hdr(host) -i www.discourse.org
-        acl is_blog hdr(host) -i blog.discourse.org
-        # Discourse
-        acl is_app hdr(host) -i meta.discourse.org
-        acl is_app hdr(host) -i try.discourse.org
-        # How-To-Geek
-        acl is_app hdr(host) -i discuss.howtogeek.com
-
-        # Redirect to www
-        redirect prefix http://www.discourse.org if is_bare
-        use_backend home if is_home
-        use_backend blog if is_blog
-        use_backend app if is_app
-        default_backend app
-
-backend app
-        mode http
-        balance roundrobin
-        option http-server-close
-        option forwardfor # This sets X-Forwarded-For
-        option httpchk GET /srv/status HTTP/1.1\r\nHost:\ meta.discourse.org
-        server  app2_00 10.0.0.2:9100 check
-        server  app2_01 10.0.0.2:9101 check
-        server  app3_00 10.0.0.3:9100 check
-        server  app3_01 10.0.0.3:9101 check
-        server  app4_00 10.0.0.4:9100 check
-        server  app4_01 10.0.0.4:9101 check
-        server  app5_00 10.0.0.5:9100 check
-        server  app5_01 10.0.0.5:9101 check
-
-backend home
-        mode http
-        balance roundrobin
-        option http-server-close
-        option forwardfor # This sets X-Forwarded-For
-        server  home_app1_1 10.0.0.2:80
-
-backend blog
-        mode http
-        balance roundrobin
-        server  app1_1 10.0.0.40:80
-</pre>
--->

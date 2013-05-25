@@ -140,7 +140,7 @@ Homebrew loves you.
 
 ## Now, test it out!
 
-Copy `config/database.yml.sample` and `config/redis.yml.sample` to `config/database.yml` and `config/redis.yml` and input the correct values to point to your postgres and redis instances. If you stuck to all the defaults above, chances are the samples will work out of the box!
+Copy `config/database.yml.development-sample` and `config/redis.yml.sample` to `config/database.yml` and `config/redis.yml` and input the correct values to point to your postgres and redis instances. If you stuck to all the defaults above, chances are the samples will work out of the box!
 
     bundle install # Yes, this DOES take a while. No, it's not really cloning all of rubygems :-)
     rake db:migrate
