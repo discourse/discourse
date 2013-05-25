@@ -258,7 +258,7 @@ Discourse.User = Discourse.Model.extend({
     }
 
     var stream = Discourse.UserStream.create({
-      totalItems: 0,
+      itemsLoaded: 0,
       content: [],
       filter: filter,
       user: this
