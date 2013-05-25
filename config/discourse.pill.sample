@@ -28,9 +28,11 @@ Bluepill.application("your_app") do |app|
   app.uid = user
 
   app.working_dir = rails_root
+  sockdir = "#{rails_root}/tmp/sockets"
+  File.directory? sockdir or Dir.mkdir sockdir
   num_webs.times do |i|
     app.process("thin-#{i}") do |process|
-      process.start_command  = "bundle exec thin start -e production -t 0 --socket #{rails_root}/tmp/sockets/thin.#{i}.sock -P #{rails_root}/tmp/pids/thin#{i}.pid -d"
+      process.start_command  = "bundle exec thin start -e production -t 0 --socket #{sockdir}/thin.#{i}.sock -P #{rails_root}/tmp/pids/thin#{i}.pid -d"
 
       # Alternatively, you can start with a port number instead of a socket. If you do that, then you MUST update
       # the upstream section in the nginx config to match.
