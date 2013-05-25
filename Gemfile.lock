@@ -66,7 +66,7 @@ GIT
 
 GIT
   remote: https://github.com/rails-api/active_model_serializers.git
-  revision: fd8cb67b85b48e0105a302a51fccea67f9166304
+  revision: fe84e0ad5268f1439123fd9a1f9fd12e25a54cd3
   specs:
     active_model_serializers (0.8.1)
       activemodel (>= 3.0)
@@ -266,7 +266,7 @@ GEM
     minitest (4.7.3)
     mocha (0.13.3)
       metaclass (~> 0.0.1)
-    multi_json (1.7.3)
+    multi_json (1.7.2)
     multipart-post (1.2.0)
     mustache (0.99.4)
     net-scp (1.1.0)
