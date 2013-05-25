@@ -109,13 +109,14 @@ group :test, :development do
   gem 'terminal-notifier-guard', require: false
   gem 'timecop'
   gem 'rspec-given'
+  gem 'pry-rails'
+  gem 'pry-nav'
 end
 
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'librarian', '>= 0.0.25', require: false
-  gem 'pry-rails'
   # https://github.com/ctran/annotate_models/pull/106
   gem 'annotate', :git => 'https://github.com/SamSaffron/annotate_models.git'
 end

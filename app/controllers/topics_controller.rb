@@ -203,7 +203,7 @@ class TopicsController < ApplicationController
     @topic = Topic.where(id: params[:topic_id].to_i).first
     guardian.ensure_can_see!(@topic)
 
-    @topic.toggle_mute(current_user, v)
+    @topic.toggle_mute(current_user)
     render nothing: true
   end
 
