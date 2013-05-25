@@ -1,0 +1,26 @@
+mlp: 
+   adapter: postgresql
+   database: discourse_mlp
+   username: discourse_mlp
+   password: applejack
+   host: dbhost
+   pool: 5
+   timeout: 5000
+   db_id: 1	# ensure db_id is unique for each site
+   host_names:
+     - discourse.equestria.com
+     - discourse.equestria.internal
+
+drwho:
+   adapter: postgresql
+   database: discourse_who
+   username: discourse_who
+   password: "Up the time stream without a TARDIS"
+   host: dbhost
+   pool: 5
+   timeout: 5000
+   db_id: 	# ensure db_id is unique for each site
+   host_names:
+     - discuss.tardis.gallifrey
+
+

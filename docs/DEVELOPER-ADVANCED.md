@@ -10,7 +10,7 @@ to rails, you are likely much better off with our **[Discourse Vagrant Developer
 3. Install Ruby 1.9.3 and Bundler.
 3. Clone the project.
 4. Create development and test databases in postgres.
-5. Copy `config/database.yml.sample` and `config/redis.yml.sample` to `config/database.yml` and `config/redis.yml` and input the correct values to point to your postgres and redis instances.
+5. Copy `config/database.yml.development-sample` and `config/redis.yml.sample` to `config/database.yml` and `config/redis.yml` and input the correct values to point to your postgres and redis instances.
 6. Install the seed data to set up an admin account and meta topic: `psql DATABASE_NAME < pg_dumps/production-image.sql`
 
 
