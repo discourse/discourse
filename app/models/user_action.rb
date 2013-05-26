@@ -114,21 +114,7 @@ LEFT JOIN categories c on c.id = t.category_id
       builder.limit(limit.to_i)
       data = builder.exec.to_a
     end
-
-    data.each do |row|
-      row["action_type"] = row["action_type"].to_i
-      row["created_at"] = DateTime.parse(row["created_at"])
-      # we should probably cache the excerpts in the db at some point
-      row["excerpt"] = PrettyText.excerpt(row["cooked"],300) if row["cooked"]
-      row["cooked"] = nil
-      row["avatar_template"] = User.avatar_template(row["email"])
-      row["acting_avatar_template"] = User.avatar_template(row["acting_email"])
-      row.delete("email")
-      row.delete("acting_email")
-      row["slug"] = Slug.for(row["title"])
-    end
-
-    data
+    normalize_builder_data(data)
   end
 
   # slightly different to standard stream, it collapses replies
@@ -164,21 +150,7 @@ ORDER BY p.created_at desc
 
     data = builder.exec(user_id: user_id, action_type: action_type).to_a
 
-    data.each do |row|
-      row["action_type"] = row["action_type"].to_i
-      row["created_at"] = DateTime.parse(row["created_at"])
-      # we should probably cache the excerpts in the db at some point
-      row["excerpt"] = PrettyText.excerpt(row["cooked"],300) if row["cooked"]
-      row["cooked"] = nil
-      row["avatar_template"] = User.avatar_template(row["email"])
-      row["acting_avatar_template"] = User.avatar_template(row["acting_email"])
-      row.delete("email")
-      row.delete("acting_email")
-      row["slug"] = Slug.for(row["title"])
-    end
-
-    data
-
+    normalize_builder_data(data)  
   end
 
   def self.log_action!(hash)
@@ -237,6 +209,21 @@ ORDER BY p.created_at desc
   end
 
   protected
+  
+  def self.normalize_builder_data(data)  
+    data.each do |row|
+      row["action_type"] = row["action_type"].to_i
+      row["created_at"] = DateTime.parse(row["created_at"])
+      # we should probably cache the excerpts in the db at some point
+      row["excerpt"] = PrettyText.excerpt(row["cooked"],300) if row["cooked"]
+      row["cooked"] = nil
+      row["avatar_template"] = User.avatar_template(row["email"])
+      row["acting_avatar_template"] = User.avatar_template(row["acting_email"])
+      row.delete("email")
+      row.delete("acting_email")
+      row["slug"] = Slug.for(row["title"])
+    end
+  end
 
   def self.apply_common_filters(builder,user_id,guardian,ignore_private_messages=false)
 
