@@ -682,6 +682,10 @@ class Topic < ActiveRecord::Base
     url
   end
 
+  def url(post_number = nil)
+    self.class.url id, slug, post_number
+  end
+
   def relative_url(post_number=nil)
     url = "/t/#{slug}/#{id}"
     url << "/#{post_number}" if post_number.to_i > 1
