@@ -41,7 +41,7 @@ class TextSentinel
     (@text.gsub(TextSentinel.non_symbols_regexp, '').size > 0) &&
 
     # Don't allow super long words if there is a word length maximum
-    (@opts[:max_word_length].blank? || @text.split(/\W/).map(&:size).max <= @opts[:max_word_length] ) &&
+    (@opts[:max_word_length].blank? || @text.split(/\s/).map(&:size).max <= @opts[:max_word_length] ) &&
 
     # We don't allow all upper case content in english
     not((@text =~ /[A-Z]+/) && (@text == @text.upcase)) &&
