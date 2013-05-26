@@ -476,6 +476,10 @@ class Topic < ActiveRecord::Base
     first_post_number
   end
 
+  def max_post_number
+    posts.maximum(:post_number).to_i
+  end
+
   def move_posts(moved_by, post_ids, opts)
 
     topic = nil
