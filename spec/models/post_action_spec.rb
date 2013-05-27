@@ -122,18 +122,30 @@ describe PostAction do
   end
 
   describe 'when a user likes something' do
-    it 'should increase the post counts when a user likes' do
-      lambda {
-        PostAction.act(codinghorror, post, PostActionType.types[:like])
-        post.reload
-      }.should change(post, :like_count).by(1)
-    end
+    it 'should increase the `like_count` and `like_score` when a user likes something' do
+      PostAction.act(codinghorror, post, PostActionType.types[:like])
+      post.reload
+      post.like_count.should == 1
+      post.like_score.should == 1
+      post.topic.reload
+      post.topic.like_count.should == 1
 
-    it 'should increase the forum topic like count when a user likes' do
-      lambda {
-        PostAction.act(codinghorror, post, PostActionType.types[:like])
-        post.topic.reload
-      }.should change(post.topic, :like_count).by(1)
+      # When a staff member likes it
+      PostAction.act(moderator, post, PostActionType.types[:like])
+      post.reload
+      post.like_count.should == 2
+      post.like_score.should == 4
+
+      # Removing likes
+      PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
+      post.reload
+      post.like_count.should == 1
+      post.like_score.should == 3
+
+      PostAction.remove_act(moderator, post, PostActionType.types[:like])
+      post.reload
+      post.like_count.should == 0
+      post.like_score.should == 0
     end
   end
 

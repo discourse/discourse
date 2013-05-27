@@ -202,12 +202,22 @@ class PostAction < ActiveRecord::Base
     column = "#{post_action_type.to_s}_count"
     delta = deleted_at.nil? ? 1 : -1
 
-    # Voting also changes the sort_order
-    if post_action_type == :vote
-      Post.update_all ["vote_count = vote_count + :delta, sort_order = :max - (vote_count + :delta)", delta: delta, max: Topic.max_sort_order], id: post_id
+    # We probably want to refactor this method to something cleaner.
+    case post_action_type
+    when :vote
+      # Voting also changes the sort_order
+      Post.update_all ["vote_count = vote_count + :delta, sort_order = :max - (vote_count + :delta)",
+                        delta: delta,
+                        max: Topic.max_sort_order], id: post_id
+    when :like
+      # `like_score` is weighted higher for staff accounts
+      Post.update_all ["like_count = like_count + :delta, like_score = like_score + :score_delta",
+                        delta: delta,
+                        score_delta: user.staff? ? delta * SiteSetting.staff_like_weight : delta], id: post_id
     else
       Post.update_all ["#{column} = #{column} + ?", delta], id: post_id
     end
+
     Topic.update_all ["#{column} = #{column} + ?", delta], id: post.topic_id
 
 

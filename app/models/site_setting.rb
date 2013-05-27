@@ -114,6 +114,8 @@ class SiteSetting < ActiveRecord::Base
 
   setting(:allow_duplicate_topic_titles, false)
 
+  setting(:staff_like_weight, 3)
+
   setting(:add_rel_nofollow_to_user_content, true)
   setting(:exclude_rel_nofollow_domains, '')
   setting(:post_excerpt_maxlength, 300)

@@ -585,6 +585,7 @@ en:
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
 
     newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_posts` posts before being considered spam."
+    staff_like_weight: "Extra weighting factor given to likes when performed by staff."
 
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"
