@@ -317,6 +317,10 @@ class Post < ActiveRecord::Base
     result
   end
 
+  def is_first_post?
+    post_number == 1
+  end
+
   def is_flagged?
     post_actions.where(post_action_type_id: PostActionType.flag_types.values, deleted_at: nil).count != 0
   end

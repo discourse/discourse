@@ -204,10 +204,15 @@ describe Topic do
         lambda { topic.move_posts(user, [1003], title: "new testing topic name") }.should raise_error(Discourse::InvalidParameters)
       end
 
-      it "raises an error if no posts were moved" do
-        lambda { topic.move_posts(user, [], title: "new testing topic name") }.should raise_error(Discourse::InvalidParameters)
-      end
+      it "raises an error and does not create a topic if no posts were moved" do
+        Topic.count.tap do |original_topic_count|
+          lambda {
+            topic.move_posts(user, [], title: "new testing topic name")
+          }.should raise_error(Discourse::InvalidParameters)
 
+          expect(Topic.count).to eq original_topic_count
+        end
+      end
     end
 
     context "successfully moved" do
