@@ -107,6 +107,9 @@ fr:
       post:
         raw: "Corps"
     errors:
+      messages:
+        is_invalid: "n'est pas valide; merci d'être plus descriptif"
+        has_already_been_used: "est déjà utilisé"
       models:
         topic:
           attributes:
@@ -421,6 +424,7 @@ fr:
     min_topic_title_length: "longueur minimale des titres de discussion"
     max_topic_title_length: "longueur maximale des titres de discussion"
     min_search_term_length: "longueur mimimale du texte saisie avant de lancer une recherche"
+    allow_uncategorized_topics: "Autorise la création de discussions sans catégorie"
     allow_duplicate_topic_titles: "deux utilisateurs peuvent-ils créer des discussions avec le même titre"
     unique_posts_mins: "Combien de temps avant qu'un utilisateur puisse poster le même contenu à nouveau"
     enforce_global_nicknames: "Imposer un pseudo global. Note: fonctionne uniquement pendant la phase initiale de paramétrage."
@@ -587,6 +591,7 @@ fr:
     privacy_policy_url: "Si vous disposez déjà d'une politique de confidentialité, vous pouvez renseigner son URL ici."
 
     newuser_spam_host_threshold: "Limite du nombre de liens vers un même host qu'un nouvel utilisateur peut insérer dans un message avant d'être considérer comme un SPAM."
+    staff_like_weight: "Poids supplémentaire donné aux Likes du staff lors d'une recherche."
 
   notification_types:
     mentioned: "%{display_username} vous a mentionné dans %{link}"
