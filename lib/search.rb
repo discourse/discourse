@@ -8,6 +8,12 @@ class Search
     5
   end
 
+  # Sometimes we want more topics than are returned due to exclusion of dupes. This is the
+  # factor of extra results we'll ask for.
+  def self.burst_factor
+    3
+  end
+
   def self.facets
     %w(topic category user)
   end
@@ -83,13 +89,9 @@ class Search
       expected_topics = Search.per_facet * Search.facets.size if @results.type_filter == 'topic'
       expected_topics -= @results.topic_count
       if expected_topics > 0
-        topic_ids = @results.topic_ids
-        posts_query(expected_topics * 3).where("post_number > 1").each do |p|
-          if (expected_topics > 0) && (!topic_ids.include?(p.topic_id))
-            @results.add_result(SearchResult.from_post(p))
-            topic_ids << p.topic_id
-            expected_topics -= 1
-          end
+        extra_posts = posts_query(expected_topics * Search.burst_factor).where("posts.topic_id NOT in (?)", @results.topic_ids)
+        extra_posts.each do |p|
+          @results.add_result(SearchResult.from_post(p))
         end
       end
     end
@@ -139,7 +141,6 @@ class Search
                   .where("topics.visible")
                   .where("topics.archetype <> ?", Archetype.private_message)
 
-
       # If we have a search context, prioritize those posts first
       if @search_context.present?
 
@@ -181,7 +182,7 @@ class Search
 
       # If we have a user filter, search all posts by default with a higher limit
       posts = if @search_context.present? and @search_context.is_a?(User)
-        posts_query(@limit * 3)
+        posts_query(@limit * Search.burst_factor)
       else
         posts_query(@limit).where(post_number: 1)
       end

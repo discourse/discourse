@@ -1,11 +1,12 @@
 class Search
 
   class SearchResultType
-    attr_accessor :more, :results
+    attr_accessor :more, :results, :result_ids
 
     def initialize(type)
       @type = type
       @results = []
+      @result_ids = Set.new
       @more = false
     end
 
@@ -14,7 +15,9 @@ class Search
     end
 
     def add(result)
+      return if @result_ids.include?(result.id)
       @results << result
+      @result_ids << result.id
     end
 
     def as_json
