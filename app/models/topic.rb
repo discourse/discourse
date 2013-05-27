@@ -447,70 +447,18 @@ class Topic < ActiveRecord::Base
     invite
   end
 
-  def move_posts_to_topic(moved_by, post_ids, destination_topic)
-    to_move = posts.where(id: post_ids).order(:created_at)
-    raise Discourse::InvalidParameters.new(:post_ids) if to_move.blank?
-
-    first_post_number = nil
-    Topic.transaction do
-      # Find the max post number in the topic
-      max_post_number = destination_topic.posts.maximum(:post_number) || 0
-
-      to_move.each_with_index do |post, i|
-        if post.post_number == 1
-          # We have a special case for the OP, we copy it instead of deleting it.
-          result = PostCreator.new(post.user,
-                                  raw: post.raw,
-                                  topic_id: destination_topic.id,
-                                  acting_user: moved_by).create
-        else
-          first_post_number ||= post.post_number
-          # Move the post and raise an error if it couldn't be moved
-          row_count = Post.update_all ["post_number = :post_number, topic_id = :topic_id, sort_order = :post_number", post_number: max_post_number+i+1, topic_id: destination_topic.id], id: post.id, topic_id: id
-          raise Discourse::InvalidParameters.new(:post_ids) if row_count == 0
-        end
-      end
-    end
-
-
-    first_post_number
+  def max_post_number
+    posts.maximum(:post_number).to_i
   end
 
   def move_posts(moved_by, post_ids, opts)
+    post_mover = PostMover.new(self, moved_by, post_ids)
 
-    topic = nil
-    first_post_number = nil
-
-    if opts[:title].present?
-      # If we're moving to a new topic...
-      Topic.transaction do
-        topic = Topic.create(user: moved_by, title: opts[:title], category: category)
-        first_post_number = move_posts_to_topic(moved_by, post_ids, topic)
-      end
-
-    elsif opts[:destination_topic_id].present?
-      # If we're moving to an existing topic...
-
-      topic = Topic.where(id: opts[:destination_topic_id]).first
-      Guardian.new(moved_by).ensure_can_see!(topic)
-      first_post_number = move_posts_to_topic(moved_by, post_ids, topic)
-
+    if opts[:destination_topic_id]
+      post_mover.to_topic opts[:destination_topic_id]
+    elsif opts[:title]
+      post_mover.to_new_topic opts[:title]
     end
-
-    # Add a moderator post explaining that the post was moved
-    if topic.present?
-      topic_url = "#{Discourse.base_url}#{topic.relative_url}"
-      topic_link = "[#{topic.title}](#{topic_url})"
-
-      add_moderator_post(moved_by, I18n.t("move_posts.moderator_post", count: post_ids.size, topic_link: topic_link), post_number: first_post_number)
-      Jobs.enqueue(:notify_moved_posts, post_ids: post_ids, moved_by_id: moved_by.id)
-
-      topic.update_statistics
-      update_statistics
-    end
-
-
-    topic
   end
 
   # Updates the denormalized statistics of a topic including featured posters. They shouldn't
@@ -676,6 +624,10 @@ class Topic < ActiveRecord::Base
     url = "#{Discourse.base_url}/t/#{slug}/#{id}"
     url << "/#{post_number}" if post_number.to_i > 1
     url
+  end
+
+  def url(post_number = nil)
+    self.class.url id, slug, post_number
   end
 
   def relative_url(post_number=nil)
