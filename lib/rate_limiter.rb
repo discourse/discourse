@@ -11,7 +11,7 @@ class RateLimiter
 
   def initialize(user, key, max, secs)
     @user = user
-    @key = "rate-limit:#{@user.id}:#{key}"
+    @key = "l-rate-limit:#{@user.id}:#{key}"
     @max = max
     @secs = secs
   end
@@ -31,6 +31,9 @@ class RateLimiter
       # simple ring buffer.
       $redis.lpush(@key, Time.now.to_i)
       $redis.ltrim(@key, 0, @max - 1)
+
+      # let's ensure we expire this key at some point, otherwise we have leaks
+      $redis.expire(@key, @secs * 2)
     else
       raise LimitExceeded.new(seconds_to_wait)
     end
