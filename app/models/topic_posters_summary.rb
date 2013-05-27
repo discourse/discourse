@@ -7,7 +7,7 @@ class TopicPostersSummary
   end
 
   def summary
-    sorted_top_posters.map { |user| new_topic_poster_for user }
+    sorted_top_posters.map { |user| user ? new_topic_poster_for(user) : nil }.compact
   end
 
   private
