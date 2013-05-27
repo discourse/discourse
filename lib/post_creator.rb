@@ -252,31 +252,25 @@ class PostCreator
 
   def add_users(topic, usernames)
     return unless usernames
-    usernames = usernames.split(',')
-    User.where(username: usernames).each do |u|
-
-      unless guardian.can_send_private_message?(u)
-        topic.errors.add(:archetype, :cant_send_pm)
-        @errors = topic.errors
-        raise ActiveRecord::Rollback.new
-      end
-
-      topic.topic_allowed_users.build(user_id: u.id)
+    User.where(username: usernames.split(',')).each do |user|
+      check_can_send_permission!(topic,user)
+      topic.topic_allowed_users.build(user_id: user.id)
     end
   end
 
   def add_groups(topic, groups)
     return unless groups
-    groups = groups.split(',')
-    Group.where(name: groups).each do |g|
+    Group.where(name: groups.split(',')).each do |group|
+      check_can_send_permission!(topic,group)
+      topic.topic_allowed_groups.build(group_id: group.id)
+    end
+  end
 
-      unless guardian.can_send_private_message?(g)
-        topic.errors.add(:archetype, :cant_send_pm)
-        @errors = topic.errors
-        raise ActiveRecord::Rollback.new
-      end
-
-      topic.topic_allowed_groups.build(group_id: g.id)
+  def check_can_send_permission!(topic,item)
+    unless guardian.can_send_private_message?(item)
+      topic.errors.add(:archetype, :cant_send_pm)
+      @errors = topic.errors
+      raise ActiveRecord::Rollback.new
     end
   end
 end

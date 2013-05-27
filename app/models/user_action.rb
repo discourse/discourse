@@ -162,20 +162,15 @@ ORDER BY p.created_at desc
         end
         action.save!
 
-        action_type = hash[:action_type]
         user_id = hash[:user_id]
-        if action_type == LIKE
-          User.update_all('likes_given = likes_given + 1', id: user_id)
-        elsif action_type == WAS_LIKED
-          User.update_all('likes_received = likes_received + 1', id: user_id)
-        end
+        update_like_count(user_id, hash[:action_type], 1)
 
         topic = Topic.includes(:category).where(id: hash[:target_topic_id]).first
 
         # move into Topic perhaps
         group_ids = nil
         if topic && topic.category && topic.category.secure
-          group_ids = topic.category.groups.select("groups.id").map{|g| g.id}
+          group_ids = topic.category.groups.pluck("groups.id")
         end
 
         MessageBus.publish("/users/#{action.user.username.downcase}",
@@ -197,16 +192,18 @@ ORDER BY p.created_at desc
       MessageBus.publish("/user/#{hash[:user_id]}", {user_action_id: action.id, remove: true})
     end
 
-    action_type = hash[:action_type]
-    user_id = hash[:user_id]
-    if action_type == LIKE
-      User.update_all('likes_given = likes_given - 1', id: user_id)
-    elsif action_type == WAS_LIKED
-      User.update_all('likes_received = likes_received - 1', id: user_id)
-    end
+    update_like_count(hash[:user_id], hash[:action_type], -1)
   end
 
   protected
+
+  def self.update_like_count(user_id, action_type, delta)
+    if action_type == LIKE
+      User.update_all("likes_given = likes_given + #{delta.to_i}", id: user_id)
+    elsif action_type == WAS_LIKED
+      User.update_all("likes_received = likes_received + #{delta.to_i}", id: user_id)
+    end
+  end
 
   def self.apply_common_filters(builder,user_id,guardian,ignore_private_messages=false)
 
