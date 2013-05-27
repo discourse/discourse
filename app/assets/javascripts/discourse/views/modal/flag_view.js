@@ -35,7 +35,7 @@ Discourse.FlagView = Discourse.ModalBodyView.extend({
     this.set('postActionTypeId', action.id);
     this.set('isCustomFlag', action.is_custom_flag);
     this.set('selected', action);
-    Em.run.schedule('afterRender', function() {
+    Em.run.next(function() {
       $('#radio_' + action.name_key).prop('checked', 'true');
     });
     return false;
