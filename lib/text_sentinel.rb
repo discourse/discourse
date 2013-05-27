@@ -10,10 +10,6 @@ class TextSentinel
     @text = text.to_s.encode('UTF-8', invalid: :replace, undef: :replace, replace: '')
   end
 
-  def self.non_symbols_regexp
-    /[\ -\/\[-\`\:-\@\{-\~]/m
-  end
-
   def self.body_sentinel(text)
     TextSentinel.new(text, min_entropy: SiteSetting.body_min_entropy)
   end
@@ -30,23 +26,40 @@ class TextSentinel
   end
 
   def valid?
-    # Blank strings are not valid
     @text.present? &&
+    seems_meaningful? &&
+    seems_pronounceable? &&
+    seems_unpretentious? &&
+    seems_quiet? &&
+    true
+  end
 
+  private
+
+  def symbols_regex
+    /[\ -\/\[-\`\:-\@\{-\~]/m
+  end
+
+  def seems_meaningful?
     # Minimum entropy if entropy check required
-    (@opts[:min_entropy].blank? || (entropy >= @opts[:min_entropy])) &&
+    @opts[:min_entropy].blank? || (entropy >= @opts[:min_entropy])
+  end
 
+  def seems_pronounceable?
     # At least some non-symbol characters
     # (We don't have a comprehensive list of symbols, but this will eliminate some noise)
-    (@text.gsub(TextSentinel.non_symbols_regexp, '').size > 0) &&
+    @text.gsub(symbols_regex, '').size > 0
+  end
 
+  def seems_unpretentious?
     # Don't allow super long words if there is a word length maximum
-    (@opts[:max_word_length].blank? || @text.split(/\s/).map(&:size).max <= @opts[:max_word_length] ) &&
+    @opts[:max_word_length].blank? || (@text.split(/\W/).map(&:size).max <= @opts[:max_word_length])
+  end
 
+
+  def seems_quiet?
     # We don't allow all upper case content in english
-    not((@text =~ /[A-Z]+/) && (@text == @text.upcase)) &&
-
-    true
+    not((@text =~ /[A-Z]+/) && (@text == @text.upcase))
   end
 
 end

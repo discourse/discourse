@@ -2,6 +2,9 @@ class TopicUser < ActiveRecord::Base
   belongs_to :user
   belongs_to :topic
 
+  scope :starred_since, lambda { |sinceDaysAgo| where('starred_at > ?', sinceDaysAgo.days.ago) }
+  scope :by_date_starred, group('date(starred_at)').order('date(starred_at)')
+
   # Class methods
   class << self
 
