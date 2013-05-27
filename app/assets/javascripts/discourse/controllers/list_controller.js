@@ -18,12 +18,12 @@ Discourse.ListController = Discourse.Controller.extend({
     return Discourse.SiteSettings.top_menu.split("|").map(function(i) {
       return Discourse.NavItem.fromText(i, {
         loggedOn: loggedOn,
-        countSummary: summary
+        hasCategories: hasCategories
       });
     }).filter(function(i) {
       return i !== null;
     });
-  }.property('filterSummary'),
+  }.property(),
 
   /**
     Load a list based on a filter

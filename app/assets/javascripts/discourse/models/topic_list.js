@@ -118,7 +118,6 @@ Discourse.TopicList.reopenClass({
         topics: Discourse.TopicList.topicsFrom(result),
         can_create_topic: result.topic_list.can_create_topic,
         more_topics_url: result.topic_list.more_topics_url,
-        filter_summary: result.topic_list.filter_summary,
         draft_key: result.topic_list.draft_key,
         draft_sequence: result.topic_list.draft_sequence,
         draft: result.topic_list.draft,

@@ -10,12 +10,12 @@ Discourse.NavItemView = Discourse.View.extend({
   tagName: 'li',
   classNameBindings: ['isActive', 'content.hasIcon:has-icon'],
   attributeBindings: ['title'],
+  countBinding: Ember.Binding.oneWay('content.count'),
 
   title: function() {
-    var name = this.get('content.name');
-    var categoryName = this.get('content.categoryName');
-
-    var extra;
+    var categoryName, extra, name;
+    name = this.get('content.name');
+    categoryName = this.get('content.categoryName');
     if (categoryName) {
       extra = { categoryName: categoryName };
       name = "category";
@@ -30,10 +30,17 @@ Discourse.NavItemView = Discourse.View.extend({
 
   hidden: Em.computed.not('content.visible'),
 
+  countChanged: function(){
+    this.rerender();
+  }.observes('count'),
+
   name: function() {
-    var name = this.get('content.name');
-    var categoryName = this.get('content.categoryName');
-    var extra = { count: this.get('content.count') || 0 };
+    var categoryName, extra, name;
+    name = this.get('content.name');
+    categoryName = this.get('content.categoryName');
+    extra = {
+      count: this.get('content.count') || 0
+    };
     if (categoryName) {
       name = 'category';
       extra.categoryName = categoryName.titleize();

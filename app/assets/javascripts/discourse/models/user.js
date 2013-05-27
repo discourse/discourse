@@ -314,6 +314,7 @@ Discourse.User.reopenClass({
     });
   },
 
+
   /**
     Checks if given username is valid for this email address
 

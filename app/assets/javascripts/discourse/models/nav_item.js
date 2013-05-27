@@ -10,6 +10,7 @@ var validNavNames = ['latest', 'hot', 'categories', 'category', 'favorited', 'un
 var validAnon     = ['latest', 'hot', 'categories', 'category'];
 
 Discourse.NavItem = Discourse.Model.extend({
+  userTrackingStateBinding: Ember.Binding.oneWay('Discourse.currentUser.userTrackingState.messageCount'),
   categoryName: function() {
     var split = this.get('name').split('/');
     return split[0] === 'category' ? split[1] : null;
@@ -21,7 +22,14 @@ Discourse.NavItem = Discourse.Model.extend({
         href = Discourse.getURL("/") + name.replace(' ', '-');
     if (name === 'category') href += "/" + this.get('categoryName');
     return href;
-  }.property('name')
+  }.property('name'),
+
+  count: function() {
+    var state = Discourse.get('currentUser.userTrackingState');
+    if (state) {
+      return state.lookupCount(this.get('name'));
+    }
+  }.property('userTrackingState')
 });
 
 Discourse.NavItem.reopenClass({
@@ -43,7 +51,7 @@ Discourse.NavItem.reopenClass({
       filters: split.splice(1)
     };
 
-    if (countSummary && countSummary[name]) opts.count = countSummary[name];
+    // if (countSummary && countSummary[name]) opts.count = countSummary[name];
 
     return Discourse.NavItem.create(opts);
   }
