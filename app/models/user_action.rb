@@ -78,7 +78,7 @@ SQL
     # The weird thing is that target_post_id can be null, so it makes everything
     #  ever so more complex. Should we allow this, not sure.
 
-    builder = SqlBuilder.new("
+    builder = UserAction.sql_builder("
 SELECT
   t.title, a.action_type, a.created_at, t.id topic_id,
   a.user_id AS target_user_id, au.name AS target_name, au.username AS target_username,
@@ -105,16 +105,16 @@ LEFT JOIN categories c on c.id = t.category_id
 
     if action_id
       builder.where("a.id = :id", id: action_id.to_i)
-      data = builder.exec.to_a
     else
       builder.where("a.user_id = :user_id", user_id: user_id.to_i)
       builder.where("a.action_type in (:action_types)", action_types: action_types) if action_types && action_types.length > 0
-      builder.order_by("a.created_at desc")
-      builder.offset(offset.to_i)
-      builder.limit(limit.to_i)
-      data = builder.exec.to_a
+      builder
+        .order_by("a.created_at desc")
+        .offset(offset.to_i)
+        .limit(limit.to_i)
     end
-    normalize_builder_data(data)
+
+    builder.exec.to_a
   end
 
   # slightly different to standard stream, it collapses replies
@@ -123,7 +123,7 @@ LEFT JOIN categories c on c.id = t.category_id
     user_id = opts[:user_id]
     return [] unless opts[:guardian].can_see_private_messages?(user_id)
 
-    builder = SqlBuilder.new("
+    builder = UserAction.sql_builder("
 SELECT
   t.title, :action_type action_type, p.created_at, t.id topic_id,
   :user_id AS target_user_id, au.name AS target_name, au.username AS target_username,
@@ -145,12 +145,10 @@ ORDER BY p.created_at desc
 /*limit*/
 ")
 
-    builder.offset((opts[:offset] || 0).to_i)
-    builder.limit((opts[:limit] || 60).to_i)
-
-    data = builder.exec(user_id: user_id, action_type: action_type).to_a
-
-    normalize_builder_data(data)  
+    builder
+      .offset((opts[:offset] || 0).to_i)
+      .limit((opts[:limit] || 60).to_i)
+      .exec(user_id: user_id, action_type: action_type).to_a
   end
 
   def self.log_action!(hash)
@@ -209,24 +207,8 @@ ORDER BY p.created_at desc
   end
 
   protected
-  
-  def self.normalize_builder_data(data)  
-    data.each do |row|
-      row["action_type"] = row["action_type"].to_i
-      row["created_at"] = DateTime.parse(row["created_at"])
-      # we should probably cache the excerpts in the db at some point
-      row["excerpt"] = PrettyText.excerpt(row["cooked"],300) if row["cooked"]
-      row["cooked"] = nil
-      row["avatar_template"] = User.avatar_template(row["email"])
-      row["acting_avatar_template"] = User.avatar_template(row["acting_email"])
-      row.delete("email")
-      row.delete("acting_email")
-      row["slug"] = Slug.for(row["title"])
-    end
-  end
 
   def self.apply_common_filters(builder,user_id,guardian,ignore_private_messages=false)
-
 
     unless guardian.can_see_deleted_posts?
       builder.where("p.deleted_at is null and p2.deleted_at is null and t.deleted_at is null")
