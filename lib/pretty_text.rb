@@ -1,5 +1,6 @@
 require 'v8'
 require 'nokogiri'
+require_dependency 'excerpt_parser'
 
 module PrettyText
 
@@ -79,21 +80,20 @@ module PrettyText
 
     @ctx["helpers"] = Helpers.new
 
-    @ctx.load(app_root + "app/assets/javascripts/external/md5.js")
-    @ctx.load(app_root + "app/assets/javascripts/external/Markdown.Converter.js")
-    @ctx.load(app_root + "app/assets/javascripts/external/twitter-text-1.5.0.js")
-    @ctx.load(app_root + "lib/headless-ember.js")
-    @ctx.load(app_root + "app/assets/javascripts/external/rsvp.js")
-    @ctx.load(Rails.configuration.ember.handlebars_location)
-    #@ctx.load(Rails.configuration.ember.ember_location)
+    ctx_load( "app/assets/javascripts/external/md5.js",
+              "app/assets/javascripts/external/Markdown.Converter.js",
+              "app/assets/javascripts/external/twitter-text-1.5.0.js",
+              "lib/headless-ember.js",
+              "app/assets/javascripts/external/rsvp.js",
+              Rails.configuration.ember.handlebars_location,
+              "app/assets/javascripts/external_production/sugar-1.3.5.js")
 
-    @ctx.load(app_root + "app/assets/javascripts/external_production/sugar-1.3.5.js")
     @ctx.eval("var Discourse = {}; Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
     @ctx.eval("var window = {}; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
 
-    @ctx.load(app_root + "app/assets/javascripts/discourse/components/bbcode.js")
-    @ctx.load(app_root + "app/assets/javascripts/discourse/components/utilities.js")
-    @ctx.load(app_root + "app/assets/javascripts/discourse/components/markdown.js")
+    ctx_load( "app/assets/javascripts/discourse/components/bbcode.js",
+              "app/assets/javascripts/discourse/components/utilities.js",
+              "app/assets/javascripts/discourse/components/markdown.js")
 
     # Load server side javascripts
     if DiscoursePluginRegistry.server_side_javascripts.present?
@@ -233,81 +233,17 @@ module PrettyText
     links
   end
 
-  class ExcerptParser < Nokogiri::XML::SAX::Document
-
-    attr_reader :excerpt
-
-    def initialize(length,options)
-      @length = length
-      @excerpt = ""
-      @current_length = 0
-      @strip_links = options[:strip_links] == true
-    end
-
-    def self.get_excerpt(html, length, options)
-      me = self.new(length,options)
-      parser = Nokogiri::HTML::SAX::Parser.new(me)
-      catch(:done) do
-        parser.parse(html) unless html.nil?
-      end
-      me.excerpt
-    end
-
-    def start_element(name, attributes=[])
-      case name
-        when "img"
-          attributes = Hash[*attributes.flatten]
-          if attributes["alt"]
-            characters("[#{attributes["alt"]}]")
-          elsif attributes["title"]
-            characters("[#{attributes["title"]}]")
-          else
-            characters("[image]")
-          end
-        when "a"
-          unless @strip_links
-            c = "<a "
-            c << attributes.map{|k,v| "#{k}='#{v}'"}.join(' ')
-            c << ">"
-            characters(c, false, false, false)
-            @in_a = true
-          end
-        when "aside"
-          @in_quote = true
-      end
-    end
-
-    def end_element(name)
-      case name
-      when "a"
-        unless @strip_links
-          characters("</a>",false, false, false)
-          @in_a = false
-        end
-      when "p", "br"
-        characters(" ")
-      when "aside"
-        @in_quote = false
-      end
-    end
-
-    def characters(string, truncate = true, count_it = true, encode = true)
-      return if @in_quote
-      encode = encode ? lambda{|s| ERB::Util.html_escape(s)} : lambda {|s| s}
-      if count_it && @current_length + string.length > @length
-        length = [0, @length - @current_length - 1].max
-        @excerpt << encode.call(string[0..length]) if truncate
-        @excerpt << "&hellip;"
-        @excerpt << "</a>" if @in_a
-        throw :done
-      end
-      @excerpt << encode.call(string)
-      @current_length += string.length if count_it
-    end
-  end
 
   def self.excerpt(html, max_length, options={})
     ExcerptParser.get_excerpt(html, max_length, options)
+  end
+
+  protected
+
+  def self.ctx_load(*files)
+    files.each do |file|
+      @ctx.load(app_root + file)
+    end
   end
 
 end
