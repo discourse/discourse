@@ -41,6 +41,7 @@ Discourse.Site.reopenClass({
   create: function(obj) {
     var _this = this;
     return Object.tap(this._super(obj), function(result) {
+
       if (result.categories) {
         result.categories = result.categories.map(function(c) {
           return Discourse.Category.create(c);

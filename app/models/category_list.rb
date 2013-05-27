@@ -36,10 +36,10 @@ class CategoryList
 
 
       uncategorized = Category.new({name: SiteSetting.uncategorized_name,
-                                   slug: Slug.for(SiteSetting.uncategorized_name),
-                                   color: SiteSetting.uncategorized_color,
-                                   text_color: SiteSetting.uncategorized_text_color,
-                                   featured_topics: uncategorized_topics}.merge(totals))
+                                    slug: Slug.for(SiteSetting.uncategorized_name),
+                                    color: SiteSetting.uncategorized_color,
+                                    text_color: SiteSetting.uncategorized_text_color,
+                                    featured_topics: uncategorized_topics}.merge(totals))
 
       # Find the appropriate place to insert it:
       insert_at = nil

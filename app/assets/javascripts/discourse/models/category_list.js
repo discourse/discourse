@@ -11,9 +11,10 @@ Discourse.CategoryList = Discourse.Model.extend({});
 Discourse.CategoryList.reopenClass({
 
   categoriesFrom: function(result) {
-    var categories, users;
-    categories = Em.A();
-    users = this.extractByKey(result.featured_users, Discourse.User);
+    var categories = Em.A();
+    var users = this.extractByKey(result.featured_users, Discourse.User);
+
+
     result.category_list.categories.each(function(c) {
       if (c.featured_user_ids) {
         c.featured_users = c.featured_user_ids.map(function(u) {
@@ -25,7 +26,17 @@ Discourse.CategoryList.reopenClass({
           return Discourse.Topic.create(t);
         });
       }
-      return categories.pushObject(Discourse.Category.create(c));
+
+      if (c.is_uncategorized) {
+        var uncategorized = Discourse.Category.uncategorizedInstance();
+        uncategorized.setProperties({
+          topics: c.topics,
+          featured_users: c.featured_users
+        });
+        categories.pushObject(uncategorized);
+      } else {
+        categories.pushObject(Discourse.Category.create(c));
+      }
     });
     return categories;
   },

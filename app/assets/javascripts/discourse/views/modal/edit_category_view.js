@@ -70,7 +70,7 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
 
   title: function() {
     if (this.get('category.id')) return Em.String.i18n("category.edit_long");
-    if (this.get('category.is_uncategorized')) return Em.String.i18n("category.edit_uncategorized");
+    if (this.get('category.isUncategorized')) return Em.String.i18n("category.edit_uncategorized");
     return Em.String.i18n("category.create");
   }.property('category.id'),
 
@@ -81,7 +81,7 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
 
   buttonTitle: function() {
     if (this.get('saving')) return Em.String.i18n("saving");
-    if (this.get('category.is_uncategorized')) return Em.String.i18n("save");
+    if (this.get('category.isUncategorized')) return Em.String.i18n("save");
     return (this.get('category.id') ? Em.String.i18n("category.save") : Em.String.i18n("category.create"));
   }.property('saving', 'category.id'),
 
@@ -92,7 +92,7 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
   didInsertElement: function() {
     this._super();
 
-    if( this.get('category.id') ) {
+    if (this.get('category.id')) {
       this.set('loading', true);
       var categoryView = this;
 
@@ -103,8 +103,8 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
         categoryView.set('id', categoryView.get('category.slug'));
         categoryView.set('loading', false);
       });
-    } else if( this.get('category.is_uncategorized') ) {
-      this.set('category', this.get('category'));
+    } else if( this.get('category.isUncategorized') ) {
+      this.set('category', Discourse.Category.uncategorizedInstance());
     } else {
       this.set('category', Discourse.Category.create({ color: 'AB9364', text_color: 'FFFFFF', hotness: 5 }));
     }
@@ -129,15 +129,19 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
   saveCategory: function() {
     var categoryView = this;
     this.set('saving', true);
-    if( this.get('category.is_uncategorized') ) {
+
+
+    if( this.get('category.isUncategorized') ) {
       $.when(
         Discourse.SiteSetting.update('uncategorized_color', this.get('category.color')),
         Discourse.SiteSetting.update('uncategorized_text_color', this.get('category.text_color')),
         Discourse.SiteSetting.update('uncategorized_name', this.get('category.name'))
-      ).then(function() {
+      ).then(function(result) {
         // success
         $('#discourse-modal').modal('hide');
-        Discourse.URL.redirectTo("/category/" + categoryView.get('category.name'));
+        // We can't redirect to the uncategorized category on save because the slug
+        // might have changed.
+        Discourse.URL.redirectTo("/categories");
       }, function(errors) {
         // errors
         if(errors.length === 0) errors.push(Em.String.i18n("category.save_error"));

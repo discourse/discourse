@@ -5,7 +5,7 @@
     <li {{bindAttr class="view.generalSelected:active"}}>
       <a href="#" {{action selectGeneral target="view"}}>{{i18n category.general}}</a>
     </li>
-    {{#unless is_uncategorized}}
+    {{#unless isUncategorized}}
       <li {{bindAttr class="view.securitySelected:active"}}>
         <a href="#" {{action selectSecurity target="view"}}>{{i18n category.security}}</a>
       </li>
@@ -23,7 +23,7 @@
           {{textField value=name placeholderKey="category.name_placeholder" maxlength="50"}}
         </section>
 
-        {{#unless is_uncategorized}}
+        {{#unless isUncategorized}}
           <section class='field'>
             <label>{{i18n category.description}}</label>
 
@@ -59,7 +59,7 @@
         </section>
       </form>
     </div>
-    {{#unless is_uncategorized}}
+    {{#unless isUncategorized}}
       <div {{bindAttr class=":modal-tab :options-tab view.securitySelected::invisible"}}>
         <section class='field'>
           <label>

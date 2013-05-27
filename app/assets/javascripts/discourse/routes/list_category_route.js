@@ -12,6 +12,10 @@ Discourse.ListCategoryRoute = Discourse.FilteredListRoute.extend({
     var categories = Discourse.Category.list();
 
     var slug = Em.get(params, 'slug');
+
+    var uncategorized = Discourse.Category.uncategorizedInstance();
+    if (slug === uncategorized.get('slug')) return uncategorized;
+
     var category = categories.findProperty('slug', Em.get(params, 'slug'))
 
     // In case the slug didn't work, try to find it by id instead.
