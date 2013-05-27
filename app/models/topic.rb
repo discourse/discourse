@@ -508,60 +508,8 @@ class Topic < ActiveRecord::Base
     save
   end
 
-  # Create the summary of the interesting posters in a topic. Cheats to avoid
-  # many queries.
-  def posters_summary(topic_user = nil, current_user = nil, opts={})
-    return @posters_summary if @posters_summary.present?
-    descriptions = {}
-
-    # Use an avatar lookup object if we have it, otherwise create one just for this forum topic
-    al = opts[:avatar_lookup]
-    if al.blank?
-      al = AvatarLookup.new([user_id, last_post_user_id, featured_user1_id, featured_user2_id, featured_user3_id])
-    end
-
-    # Helps us add a description to a poster
-    add_description = lambda do |u, desc|
-      if u.present?
-        descriptions[u.id] ||= []
-        descriptions[u.id] << I18n.t(desc)
-      end
-    end
-
-    add_description.call(al[user_id], :original_poster)
-    add_description.call(al[featured_user1_id], :most_posts)
-    add_description.call(al[featured_user2_id], :frequent_poster)
-    add_description.call(al[featured_user3_id], :frequent_poster)
-    add_description.call(al[featured_user4_id], :frequent_poster)
-    add_description.call(al[last_post_user_id], :most_recent_poster)
-
-
-    @posters_summary = [al[user_id],
-                        al[last_post_user_id],
-                        al[featured_user1_id],
-                        al[featured_user2_id],
-                        al[featured_user3_id],
-                        al[featured_user4_id]
-                        ].compact.uniq[0..4]
-
-    unless @posters_summary[0] == al[last_post_user_id]
-      # shuffle last_poster to back
-      @posters_summary.reject!{|u| u == al[last_post_user_id]}
-      @posters_summary << al[last_post_user_id]
-    end
-    @posters_summary.map! do |p|
-      if p
-        result = TopicPoster.new
-        result.user = p
-        result.description = descriptions[p.id].join(', ')
-        result.extras = "latest" if al[last_post_user_id] == p
-        result
-      else
-        nil
-      end
-    end.compact!
-
-    @posters_summary
+  def posters_summary(options = {})
+    @posters_summary ||= TopicPostersSummary.new(self, options).summary
   end
 
   # Enable/disable the star on the topic
