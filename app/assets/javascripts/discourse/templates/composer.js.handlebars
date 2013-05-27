@@ -35,13 +35,13 @@
 
             <div class="title-input">
               {{textField value=content.title tabindex="2" id="reply-title" maxlength="255" class="span8" placeholderKey="composer.title_placeholder"}}
-              {{popupInputTip validation=view.titleValidation show=view.showTitleTip}}
+              {{popupInputTip validation=view.titleValidation shownAt=view.showTitleTip}}
             </div>
 
             {{#unless content.creatingPrivateMessage}}
               <div class="category-input">
                 {{view Discourse.ComboboxViewCategory valueAttribute="name" contentBinding="categories" valueBinding="content.categoryName" showUncategorized="true"}}
-                {{popupInputTip validation=view.categoryValidation show=view.showCategoryTip}}
+                {{popupInputTip validation=view.categoryValidation shownAt=view.showCategoryTip}}
               </div>
               {{#if content.archetype.hasOptions}}
                 <button class='btn' {{action showOptions}}>{{i18n topic.options}}</button>
@@ -61,7 +61,7 @@
           <div class='textarea-wrapper'>
             <div class='wmd-button-bar' id='wmd-button-bar'></div>
             {{view Discourse.NotifyingTextArea parentBinding="view" tabindex="3" valueBinding="content.reply" id="wmd-input" placeholderKey="composer.reply_placeholder"}}
-            {{popupInputTip validation=view.replyValidation show=view.showReplyTip}}
+            {{popupInputTip validation=view.replyValidation shownAt=view.showReplyTip}}
           </div>
           <div class='preview-wrapper'>
             <div id='wmd-preview' {{bindAttr class="hidePreview:hidden"}}></div>

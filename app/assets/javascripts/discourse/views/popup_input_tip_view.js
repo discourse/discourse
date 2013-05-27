@@ -12,7 +12,7 @@
 **/
 Discourse.PopupInputTipView = Discourse.View.extend({
   templateName: 'popup_input_tip',
-  classNameBindings: [':popup-tip', 'good', 'bad', 'show::hide'],
+  classNameBindings: [':popup-tip', 'good', 'bad', 'shownAt::hide'],
   animateAttribute: null,
   bouncePixels: 6,
   bounceDelay: 100,
@@ -26,20 +26,22 @@ Discourse.PopupInputTipView = Discourse.View.extend({
   }.property('validation'),
 
   hide: function() {
-    this.set('show', false);
+    this.set('shownAt', false);
   },
 
   bounce: function() {
-    var $elem = this.$()
-    if( !this.animateAttribute ) {
-      this.animateAttribute = $elem.css('left') === 'auto' ? 'right' : 'left';
+    if( this.get('shownAt') ) {
+      var $elem = this.$()
+      if( !this.animateAttribute ) {
+        this.animateAttribute = $elem.css('left') === 'auto' ? 'right' : 'left';
+      }
+      if( this.animateAttribute === 'left' ) {
+        this.bounceLeft($elem);
+      } else {
+        this.bounceRight($elem);
+      }
     }
-    if( this.animateAttribute === 'left' ) {
-      this.bounceLeft($elem);
-    } else {
-      this.bounceRight($elem);
-    }
-  }.observes('show'),
+  }.observes('shownAt'),
 
   bounceLeft: function($elem) {
     for( var i = 0; i < 5; i++ ) {

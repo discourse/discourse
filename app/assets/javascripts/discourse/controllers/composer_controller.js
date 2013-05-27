@@ -41,9 +41,9 @@ Discourse.ComposerController = Discourse.Controller.extend({
     composer = this.get('content');
 
     if( composer.get('cantSubmitPost') ) {
-      this.set('view.showTitleTip', true);
-      this.set('view.showCategoryTip', true);
-      this.set('view.showReplyTip', true);
+      this.set('view.showTitleTip', Date.now());
+      this.set('view.showCategoryTip', Date.now());
+      this.set('view.showReplyTip', Date.now());
       return;
     }
 
