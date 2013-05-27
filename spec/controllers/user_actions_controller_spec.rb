@@ -3,6 +3,10 @@ require 'spec_helper'
 describe UserActionsController do
   context 'index' do
 
+    it 'fails if username is not specified' do
+      expect { xhr :get, :index }.to raise_error
+    end
+
     it 'renders list correctly' do
       ActiveRecord::Base.observers.enable :all
       post = Fabricate(:post)

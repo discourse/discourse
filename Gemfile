@@ -61,6 +61,7 @@ gem 'seed-fu'
 gem 'sidekiq'
 gem 'sinatra', require: nil
 gem 'slim'  # required for sidekiq-web
+gem 'strong_parameters' # remove when we upgrade to Rails 4
 gem 'therubyracer', require: 'v8'
 gem 'thin'
 gem 'diffy', require: false

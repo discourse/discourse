@@ -434,6 +434,10 @@ GEM
     slop (3.4.4)
     sorcerer (0.3.10)
     spork (0.9.2)
+    strong_parameters (0.2.1)
+      actionpack (~> 3.0)
+      activemodel (~> 3.0)
+      railties (~> 3.0)
     temple (0.6.4)
     terminal-notifier-guard (1.5.3)
     therubyracer (0.11.4)
@@ -542,6 +546,7 @@ DEPENDENCIES
   sinatra
   slim
   sprockets!
+  strong_parameters
   terminal-notifier-guard
   therubyracer
   thin

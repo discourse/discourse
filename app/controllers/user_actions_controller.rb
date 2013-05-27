@@ -1,6 +1,8 @@
 class UserActionsController < ApplicationController
   def index
-    requires_parameters(:username)
+    params.require(:username)
+    params.permit(:filter, :offset)
+
     per_chunk = 60
 
     user = fetch_user_from_params
@@ -26,7 +28,7 @@ class UserActionsController < ApplicationController
   end
 
   def show
-    requires_parameters(:id)
+    params.require(:id)
     render json: UserAction.stream_item(params[:id], guardian)
   end
 
