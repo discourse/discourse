@@ -247,6 +247,10 @@ Discourse.User = Discourse.Model.extend({
         return Discourse.UserActionStat.create(s);
       }));
 
+      if (json.user.invited_by) {
+        json.user.invited_by = Discourse.User.create(json.user.invited_by);
+      }
+
       user.setProperties(json.user);
       return user;
     });
