@@ -342,6 +342,14 @@ fr:
         need_more_for_title: "{{n}} caractères restant pour le titre"
         need_more_for_reply: "{{n}} caractères restant pour le message"
 
+      error:
+        title_missing: "Le titre est obligatoire."
+        title_too_short: "Le titre doit avoir au moins {{min}} caractères."
+        title_too_long: "Le titre ne doit pas dépasser les {{max}} caractères."
+        post_missing: "Le message ne peut être vide."
+        post_length: "Le mesasge doit avoir au moins {{min}} caractères."
+        category_missing: "Vous devez choisir une catégorie."
+
       save_edit: "Sauvegarder la modification"
       reply_original: "Répondre à la discussion initiale"
       reply_here: "Répondre ici"
