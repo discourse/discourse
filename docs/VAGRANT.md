@@ -2,7 +2,7 @@
 
 ### If you are on a Mac or PC, please try our [Discourse as Your First Rails App](http://blog.discourse.org/2013/04/discourse-as-your-first-rails-app/) blog post first!
 
-(If you have experience setting up Rails projects, you might want to take a look at our **[Discourse Advanced Developer Guide](https://github.com/discourse/discourse/blob/master/docs/DEVELOPER-ADVANCED.md)**. It also contains instructions on building your own Vagrant VM.)
+(If you have experience setting up Rails projects, you might want to take a look at our **[Discourse Advanced Developer Guide](DEVELOPER-ADVANCED.md)**. It also contains instructions on building your own Vagrant VM.)
 
 The following instructions will automatically download and provision a virtual machine for you to begin hacking
 on Discourse with:
