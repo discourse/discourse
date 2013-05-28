@@ -441,7 +441,6 @@ it:
     post_excerpt_maxlength: "Lunghezza massima dell'estratto di un post (caratteri)"
     post_onebox_maxlength: "Lunghezza massima di un post oneboxed (caratteri)"
     category_post_template: "Il template utilizzato durante la creazione di una nuova categoria"
-    new_topics_rollup: "Quanti nuovi topic possono essere inseriti nella lista dei topic prima di essere raggruppati in un counter"
     onebox_max_chars: "Massimo numero di caratteri che un onebox importa da un sito esterno all'interno di un post"
 
     logo_url: "Il logo del tuo sito es: http://example.com/logo.png"

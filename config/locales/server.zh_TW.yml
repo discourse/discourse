@@ -441,7 +441,6 @@ zh_TW:
     post_excerpt_maxlength: "帖子摘要的最大字符長度"
     post_onebox_maxlength: "一個 論壇 - Discourse 單廂帖（Onebox post）的最大字符長度"
     category_post_template: "當你創建新分類時，分類的定義帖模板（創建新分類時會自動生成一個屬于該分類的新帖子）"
-    new_topics_rollup: "主題列表卷起顯示爲主題數量前，可以往主題列表中插入多少新主題"
     onebox_max_chars: "從外部網站導入到一個單廂帖（Onebox post）的最大字符數"
 
     logo_url: "你的站點標志圖片，例如：http://example.com/logo.png"

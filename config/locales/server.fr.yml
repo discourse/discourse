@@ -451,7 +451,6 @@ fr:
 
     post_excerpt_maxlength: "Longueur maximale d'un extrait de message."
     post_onebox_maxlength: "Longueur maximale d'un message emboîté."
-    new_topics_rollup: "Combien de discussions peuvent être insérées dans la liste des discussions avant de remonter."
     category_post_template: "Le modèle de message de définition d'une catégorie utilisé lorsque vous créez une nouvelle catégorie"
     onebox_max_chars: "Nombre maximal de caractères qu'une boîte peut importer en blob de texte."
 

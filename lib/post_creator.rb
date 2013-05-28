@@ -179,14 +179,19 @@ class PostCreator
     topic.posts_count = 1
     topic_json = TopicListItemSerializer.new(topic).as_json
 
+    message = {
+      topic_id: topic.id,
+      message_type: "new_topic",
+      payload: {
+        last_read_post_number: nil,
+        topic_id: topic.id
+      }
+    }
+
     group_ids = secure_group_ids(topic)
+    MessageBus.publish("/new", message.as_json, group_ids: group_ids)
 
-    MessageBus.publish("/latest", topic_json, group_ids: group_ids)
-
-    # If it has a category, add it to the category views too
-    if topic.category
-      MessageBus.publish("/category/#{topic.category.slug}", topic_json, group_ids: group_ids)
-    end
+    # TODO post creator should get an unread
   end
 
   def create_topic

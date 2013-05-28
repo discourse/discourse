@@ -9,6 +9,11 @@
 **/
 Discourse.ListTopicsView = Discourse.View.extend(Discourse.Scrolling, {
   templateName: 'list/topics',
+  categoryBinding: 'controller.controllers.list.category',
+  canCreateTopicBinding: 'controller.controllers.list.canCreateTopic',
+  listBinding: 'controller.model',
+  loadedMore: false,
+  currentTopicId: null,
 
   willDestroyElement: function() {
     this.unbindScrolling();
@@ -35,6 +40,10 @@ Discourse.ListTopicsView = Discourse.View.extend(Discourse.Scrolling, {
     }
     this.set('eyeline', eyeline);
   },
+
+  showTable: function() {
+    return this.get('list.topics').length > 0 || Discourse.get('currentUser.userTrackingState.hasIncoming');
+  }.property('list.topics','Discourse.currentUser.userTrackingState.hasIncoming'),
 
   loadMore: function() {
     var listTopicsView = this;

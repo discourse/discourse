@@ -1,7 +1,7 @@
 {{#unless loading}}
   {{#if loaded}}
     <div class='contents'>
-      {{#if topics.length}}
+      {{#if view.showTable}}
 
       {{#if canViewRankDetails}}
         <button class='btn' {{action toggleRankDetails}} style='margin-bottom: 10px'>
@@ -28,21 +28,17 @@
         </tr>
         </thead>
 
-        {{#if rollUp}}
+        {{#if Discourse.currentUser.userTrackingState.hasIncoming}}
           <tbody>
             <tr>
               <td colspan="9">
                 <div class='alert alert-info'>
-                  {{countI18n new_topics_inserted countBinding="insertedCount"}}
+                  {{countI18n new_topics_inserted countBinding="Discourse.currentUser.userTrackingState.incomingCount"}}
                   <a href='#' {{action showInserted}}>{{i18n show_new_topics}}</a>
                 </div>
               </td>
             </tr>
           </tbody>
-        {{else}}
-          {{#group}}
-            {{collection contentBinding="inserted" tagName="tbody" itemViewClass="Discourse.TopicListItemView"}}
-          {{/group}}
         {{/if}}
 
         {{#group}}

@@ -474,7 +474,6 @@ cs:
     post_excerpt_maxlength: "Maximální délka zkrácené verze příspěvku ve znacích"
     post_onebox_maxlength: "Maximální délka příspěvku v 'oneboxu'"
     category_post_template: "Šablona definice kategorie, která se použije při vytváření nové kategorie"
-    new_topics_rollup: "Kolik nových témat může být vloženo do seznamu než budou tato témata shrnuta do číselné hodnoty"
     onebox_max_chars: "Maximální počet znaků, které může 'onebox' naimportovat z externího webu"
 
     logo_url: "Logo vašeho webu, např. http://example.com/logo.png"

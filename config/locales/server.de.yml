@@ -445,7 +445,6 @@ de:
     post_excerpt_maxlength: "Maximale Länge des Exzerpts eines Beitrags in Zeichen."
     post_onebox_maxlength: "Maximale Länge eines Onebox-Discourse-Beitrags."
     category_post_template: "Die Beitragsvorlage zur Kategoriedefinition beim erstellen einer neuen Kategorie."
-    new_topics_rollup: "Zahl der Themen, die vor dem Aufrollen der Themenliste hinzugefügt werden."
     onebox_max_chars: "Maximale Zahl der Zeichen, die eine Onebox von einer externen Webseite in einen Beitrag lädt."
 
     logo_url: "Das Logo deiner Seite, zum Beispiel: http://example.com/logo.png"

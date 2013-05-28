@@ -212,7 +212,12 @@ class TopicQuery
   protected
 
     def create_list(filter, list_opts={})
-      topics = default_list(list_opts)
+      opts = list_opts
+      if @opts[:topic_ids]
+        opts = opts.dup
+        opts[:topic_ids] = @opts[:topic_ids]
+      end
+      topics = default_list(opts)
       topics = yield(topics) if block_given?
       TopicList.new(filter, @user, topics)
     end
@@ -247,6 +252,10 @@ class TopicQuery
       result = result.visible if @user.blank? or @user.regular?
       result = result.where('topics.id <> ?', query_opts[:except_topic_id]) if query_opts[:except_topic_id].present?
       result = result.offset(query_opts[:page].to_i * page_size) if query_opts[:page].present?
+
+      if list_opts[:topic_ids]
+        result = result.where('topics.id in (?)', list_opts[:topic_ids])
+      end
 
       unless @user && @user.moderator?
         category_ids = @user.secure_category_ids if @user

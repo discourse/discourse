@@ -6,7 +6,13 @@ class ListController < ApplicationController
   # Create our filters
   [:latest, :hot, :favorited, :read, :posted, :unread, :new].each do |filter|
     define_method(filter) do
-      list_opts = {page: params[:page]}
+      list_opts = {
+        page: params[:page]
+      }
+
+      if params[:topic_ids]
+        list_opts[:topic_ids] = params[:topic_ids].split(",").map(&:to_i)
+      end
 
       # html format means we need to farm exclude from the site options
       if params[:format].blank? || params[:format] == "html"

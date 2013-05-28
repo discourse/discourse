@@ -261,7 +261,6 @@ pt:
     post_excerpt_maxlength: "Tamanho máximo em caracteres para um post."
     post_onebox_maxlength: "Tamanho máximo para um oneboxed discourse post."
     category_post_template: "O template para um post que aparece quando crias uma categoria."
-    new_topics_rollup: "Quantos tópicos podem ser inseridos na lista de tópicos antes de serem puxados."
     onebox_max_chars: "Máximo número de caracteres que um onebox vai importar num único pedaço."
     logo_url: "O logo para o teu site eg: http://example.com/logo.png"
     logo_small_url: "O logo em pequeno para o teu site (aparece nas páginas dos tópicos) eg: http://example.com/logo-small.png"

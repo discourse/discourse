@@ -36,6 +36,8 @@ Discourse.ListController = Discourse.Controller.extend({
     var listController = this;
     this.set('loading', true);
 
+    var trackingState = Discourse.get('currentUser.userTrackingState');
+
     if (filterMode === 'categories') {
       return Discourse.CategoryList.list(filterMode).then(function(items) {
         listController.setProperties({
@@ -46,6 +48,10 @@ Discourse.ListController = Discourse.Controller.extend({
           draft_key: items.draft_key,
           draft_sequence: items.draft_sequence
         });
+		if(trackingState) {
+          trackingState.sync(items, filterMode);
+          trackingState.trackIncoming(filterMode);
+        }
         return items;
       });
     }
@@ -63,7 +69,11 @@ Discourse.ListController = Discourse.Controller.extend({
         draft: items.draft,
         draft_key: items.draft_key,
         draft_sequence: items.draft_sequence
-      })
+      });
+      if(trackingState) {
+        trackingState.sync(items, filterMode);
+        trackingState.trackIncoming(filterMode);
+      }
       return items;
     });
   },

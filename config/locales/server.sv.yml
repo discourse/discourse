@@ -363,7 +363,6 @@ sv:
     post_excerpt_maxlength: "Maxlängd på ett inläggs utdrag i tecken"
     post_onebox_maxlength: "Maxlängd på ett onebox:at Discourse-inlägg"
     category_post_template: "Inläggsmallen för kategoridefinitioner när du skapar en ny kategori"
-    new_topics_rollup: "Hur många nya trådar kan infogas i trådlistan innan den övergår till en siffra"
     onebox_max_chars: "Max antal tecken en onebox importerar från en extern sida i ett inlägg"
 
     logo_url: "Logotypen för din webbplats t.ex.: http://xyz.com/x.png"

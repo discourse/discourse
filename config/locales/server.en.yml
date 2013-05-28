@@ -447,7 +447,6 @@ en:
     post_excerpt_maxlength: "Maximum length in chars of a post's excerpt"
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post"
     category_post_template: "The category definition post template used when you create a new category"
-    new_topics_rollup: "How many new topics can be inserted on the topic list before rolling up into a count"
     onebox_max_chars: "Maximum characters a onebox will import from an external website into the post"
 
     logo_url: "The logo for your site eg: http://example.com/logo.png"

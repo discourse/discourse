@@ -444,7 +444,6 @@ nl:
     post_excerpt_maxlength: Maximale lengte in tekens van een uittreksel van een bericht
     post_onebox_maxlength: "Maximale lengte van een 'oneboxed' bericht."
     category_post_template: De template voor de categorieomschrijving die gebruikt wordt als je een nieuwe categorie aanmaakt
-    new_topics_rollup: "Hoeveel topics er aan een topic-lijst kunnen worden toegevoegd voordat de lijst oprolt."
     onebox_max_chars: "Het maximaal aantal tekens dat een 'onebox' zal importeren van een externe website in het bericht."
 
     logo_url: "Het logo van je site. Bijv: http://example.com/logo.png"
