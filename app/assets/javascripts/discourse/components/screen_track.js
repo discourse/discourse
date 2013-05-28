@@ -72,9 +72,8 @@ Discourse.ScreenTrack = Ember.Object.extend({
       return;
     }
     // We don't log anything unless we're logged in
-    if (!Discourse.get('currentUser')) {
-      return;
-    }
+    if (!Discourse.User.current()) return;
+
     newTimings = {};
     Object.values(this.timings, function(timing) {
       if (!_this.totalTimings[timing.postNumber])

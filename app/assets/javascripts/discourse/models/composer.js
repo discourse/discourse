@@ -69,7 +69,7 @@ Discourse.Composer = Discourse.Model.extend({
   }.property('editingPost', 'creatingTopic', 'post.post_number'),
 
   showAdminOptions: function() {
-    if (this.get('creatingTopic') && Discourse.get('currentUser.staff')) return true;
+    if (this.get('creatingTopic') && Discourse.User.current('staff')) return true;
     return false;
   }.property('editTitle'),
 
@@ -340,7 +340,7 @@ Discourse.Composer = Discourse.Model.extend({
   createPost: function(opts) {
     var post = this.get('post'),
         topic = this.get('topic'),
-        currentUser = Discourse.get('currentUser'),
+        currentUser = Discourse.User.current(),
         addedToStream = false;
 
     // The post number we'll probably get from the server
@@ -384,7 +384,7 @@ Discourse.Composer = Discourse.Model.extend({
       // Update last post
       topic.set('last_posted_at', new Date());
       topic.set('highest_post_number', createdPost.get('post_number'));
-      topic.set('last_poster', Discourse.get('currentUser'));
+      topic.set('last_poster', Discourse.User.current());
       topic.set('filtered_posts_count', topic.get('filtered_posts_count') + 1);
 
       // Set the topic view for the new post
@@ -479,7 +479,7 @@ Discourse.Composer = Discourse.Model.extend({
 
   flashDraftStatusForNewUser: function() {
     var $draftStatus = $('#draft-status');
-    if (Discourse.get('currentUser.trust_level') === 0) {
+    if (Discourse.User.current('trust_level') === 0) {
       $draftStatus.toggleClass('flash', true);
       setTimeout(function() { $draftStatus.removeClass('flash'); }, 250);
     }

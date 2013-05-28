@@ -38,7 +38,7 @@ Discourse.Topic = Discourse.Model.extend({
   }.property('categoryName'),
 
   shareUrl: function(){
-    var user = Discourse.get('currentUser');
+    var user = Discourse.User.current();
     return this.get('url') + (user ? '?u=' + user.get('username_lower') : '');
   }.property('url'),
 
@@ -310,7 +310,7 @@ Discourse.Topic = Discourse.Model.extend({
     if (typeof this.get('notifications_reason_id') === 'number') {
       locale_string += "_" + this.get('notifications_reason_id');
     }
-    return Em.String.i18n(locale_string, { username: Discourse.currentUser.username.toLowerCase() });
+    return Em.String.i18n(locale_string, { username: Discourse.User.current('username_lower') });
   }.property('notification_level', 'notifications_reason_id'),
 
   updateNotifications: function(v) {

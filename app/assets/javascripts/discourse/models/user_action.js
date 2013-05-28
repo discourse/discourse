@@ -14,7 +14,7 @@ Discourse.UserAction = Discourse.Model.extend({
     var actions = [ua.LIKE, ua.WAS_LIKED, ua.STAR, ua.EDIT, ua.BOOKMARK, ua.GOT_PRIVATE_MESSAGE, ua.NEW_PRIVATE_MESSAGE];
     var icon = "";
     var sentence = "";
-    var sameUser = (this.get('username') === Discourse.get('currentUser.username'));
+    var sameUser = (this.get('username') === Discourse.User.current('username'));
 
     if (action === null || actions.indexOf(action) >= 0) {
       if (this.get('isPM')) {
@@ -60,7 +60,7 @@ Discourse.UserAction = Discourse.Model.extend({
         sentence = Em.String.i18n('user_action.you_mentioned_user', { user: this.get('target_name'),
             user1Url: this.get('userUrl'), user2Url: this.get('targetUserUrl') });
       } else {
-        if (this.get('target_username') === Discourse.get('currentUser.username')) {
+        if (this.get('target_username') === Discourse.User.current('username')) {
           sentence = Em.String.i18n('user_action.user_mentioned_you', { user: this.get('name'),
               user1Url: this.get('userUrl'), user2Url: this.get('targetUserUrl') });
         } else {

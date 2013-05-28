@@ -8,13 +8,13 @@
 **/
 Discourse.UserController = Discourse.ObjectController.extend({
 
-  viewingSelf: (function() {
-    return this.get('content.username') === Discourse.get('currentUser.username');
-  }).property('content.username', 'Discourse.currentUser.username'),
+  viewingSelf: function() {
+    return this.get('content.username') === Discourse.User.current('username');
+  }.property('content.username'),
 
-  canSeePrivateMessages: (function() {
-    return this.get('viewingSelf') || Discourse.get('currentUser.staff');
-  }).property('viewingSelf', 'Discourse.currentUser')
+  canSeePrivateMessages: function() {
+    return this.get('viewingSelf') || Discourse.User.current('staff');
+  }.property('viewingSelf')
 
 });
 

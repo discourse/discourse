@@ -12,8 +12,10 @@ Discourse.ApplicationController = Discourse.Controller.extend({
   needs: ['modal'],
 
   showLogin: function() {
-    var _ref;
-    return (_ref = this.get('controllers.modal')) ? _ref.show(Discourse.LoginView.create()) : void 0;
+    var modalController = this.get('controllers.modal');
+    if (modalController) {
+      modalController.show(Discourse.LoginView.create())
+    }
   },
 
   routeChanged: function(){

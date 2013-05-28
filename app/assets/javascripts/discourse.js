@@ -52,38 +52,6 @@ Discourse = Ember.Application.createWithMixins({
     }, 200);
   }.observes('title', 'hasFocus', 'notify'),
 
-  currentUserChanged: function() {
-
-    // We don't want to receive any previous user notifications
-    var bus = Discourse.MessageBus;
-    bus.unsubscribe("/notification/*");
-    bus.callbackInterval = Discourse.SiteSettings.anon_polling_interval;
-    bus.enableLongPolling = false;
-
-    var user = this.get('currentUser');
-    if (user) {
-      bus.callbackInterval = Discourse.SiteSettings.polling_interval;
-      bus.enableLongPolling = true;
-      if (user.admin || user.moderator) {
-        bus.subscribe("/flagged_counts", function(data) {
-          user.set('site_flagged_posts_count', data.total);
-        });
-      }
-      bus.subscribe("/notification/" + user.id, (function(data) {
-        user.set('unread_notifications', data.unread_notifications);
-        user.set('unread_private_messages', data.unread_private_messages);
-      }), user.notification_channel_position);
-
-      bus.subscribe("/categories", function(data){
-        var site = Discourse.Site.instance();
-        data.categories.each(function(c){
-          site.updateCategory(c)
-        });
-      });
-
-    }
-  }.observes('currentUser'),
-
   // The classes of buttons to show on a post
   postButtons: function() {
     return Discourse.SiteSettings.post_menu.split("|").map(function(i) {
@@ -179,13 +147,11 @@ Discourse = Ember.Application.createWithMixins({
     @method logout
   **/
   logout: function() {
-    Discourse.KeyValueStore.abandonLocal();
-    Discourse.ajax("/session/" + this.get('currentUser.username'), {
-      type: 'DELETE'
-    }).then(function() {
+    Discourse.User.logout().then(function() {
       // Reloading will refresh unbound properties
+      Discourse.KeyValueStore.abandonLocal();
       window.location.reload();
-    });
+    })
   },
 
   authenticationComplete: function(options) {

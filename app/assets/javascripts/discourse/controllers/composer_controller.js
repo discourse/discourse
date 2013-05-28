@@ -94,9 +94,9 @@ Discourse.ComposerController = Discourse.Controller.extend({
       opts = opts || {};
       _this.close();
       if (composer.get('creatingTopic')) {
-        Discourse.set('currentUser.topic_count', Discourse.get('currentUser.topic_count') + 1);
+        Discourse.set('currentUser.topic_count', Discourse.User.current('topic_count') + 1);
       } else {
-        Discourse.set('currentUser.reply_count', Discourse.get('currentUser.reply_count') + 1);
+        Discourse.set('currentUser.reply_count', Discourse.User.current('reply_count') + 1);
       }
       Discourse.URL.routeTo(opts.post.get('url'));
     }, function(error) {
@@ -133,7 +133,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
     if (this.get('content.editingPost')) return;
 
     // If creating a topic, use topic_count, otherwise post_count
-    var count = this.get('content.creatingTopic') ? Discourse.get('currentUser.topic_count') : Discourse.get('currentUser.reply_count');
+    var count = this.get('content.creatingTopic') ? Discourse.User.current('topic_count') : Discourse.User.current('reply_count');
     if (count >= Discourse.SiteSettings.educate_until_posts) {
       this.set('educationClosed', true);
       this.set('educationContents', '');

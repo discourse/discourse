@@ -54,7 +54,7 @@ Discourse.AdminUser = Discourse.User.extend({
   approve: function() {
     this.set('can_approve', false);
     this.set('approved', true);
-    this.set('approved_by', Discourse.get('currentUser'));
+    this.set('approved_by', Discourse.User.current());
     Discourse.ajax("/admin/users/" + (this.get('id')) + "/approve", {type: 'PUT'});
   },
 

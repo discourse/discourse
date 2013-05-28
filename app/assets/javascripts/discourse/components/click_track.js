@@ -38,7 +38,7 @@ Discourse.ClickTrack = {
         userId = $link.data('user-id');
 
     if (!userId) userId = $article.data('user-id');
-    var ownLink = userId && (userId === Discourse.get('currentUser.id'));
+    var ownLink = userId && (userId === Discourse.User.current('id'));
 
     // Build a Redirect URL
     var trackingUrl = Discourse.getURL("/clicks/track?url=" + encodeURIComponent(href));
@@ -99,7 +99,7 @@ Discourse.ClickTrack = {
     }
 
     // Otherwise, use a custom URL with a redirect
-    if (Discourse.get('currentUser.external_links_in_new_tab')) {
+    if (Discourse.User.current('external_links_in_new_tab')) {
       var win = window.open(trackingUrl, '_blank');
       win.focus();
     } else {

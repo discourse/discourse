@@ -72,7 +72,7 @@ Discourse.QuoteButtonView = Discourse.View.extend({
   selectText: function(target, controller) {
     var $target = $(target);
     // quoting as been disabled by the user
-    if (!Discourse.get('currentUser.enable_quoting')) return;
+    if (!Discourse.User.current('enable_quoting')) return;
     // retrieve the post id from the DOM
     var postId = $target.closest('.boxed').data('post-id');
     // select the text

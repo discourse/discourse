@@ -52,7 +52,7 @@ Discourse.ActionSummary = Discourse.Model.extend({
 
     // Add ourselves to the users who liked it if present
     if (this.present('users')) {
-      this.users.pushObject(Discourse.get('currentUser'));
+      this.users.pushObject(Discourse.User.current());
     }
 
     // Create our post action

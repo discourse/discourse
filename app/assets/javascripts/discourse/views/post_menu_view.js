@@ -150,7 +150,7 @@ Discourse.PostMenuView = Discourse.View.extend({
 
   // Bookmark button
   renderBookmark: function(post, buffer) {
-    if (!Discourse.get('currentUser')) return;
+    if (!Discourse.User.current()) return;
 
     var icon = 'bookmark';
     if (!this.get('post.bookmarked')) {

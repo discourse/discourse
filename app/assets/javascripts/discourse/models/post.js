@@ -9,12 +9,10 @@
 Discourse.Post = Discourse.Model.extend({
 
   shareUrl: function() {
-    var user = Discourse.get('currentUser');
-    if (this.get('postnumber') === 1){
-      return this.get('topic.url');
-    } else {
-      return this.get('url') + (user ? '?u=' + user.get('username_lower') : '');
-    }
+    if (this.get('postnumber') === 1) return this.get('topic.url');
+
+    var user = Discourse.User.current();
+    return this.get('url') + (user ? '?u=' + user.get('username_lower') : '');
   }.property('url'),
 
   new_user: function() {

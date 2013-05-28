@@ -12,7 +12,7 @@ Discourse.UserSelector = Discourse.TextField.extend({
       dataSource: function(term) {
         var exclude = selected;
         if (_this.get('excludeCurrentUser')){
-          exclude = exclude.concat([Discourse.get('currentUser.username')]);
+          exclude = exclude.concat([Discourse.User.current('username')]);
         }
         return Discourse.UserSearch.search({
           term: term,
