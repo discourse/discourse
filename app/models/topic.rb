@@ -193,6 +193,10 @@ class Topic < ActiveRecord::Base
     @post_numbers ||= posts.order(:post_number).pluck(:post_number)
   end
 
+  def age_in_days
+    ((Time.zone.now - created_at) / 1.day).round
+  end
+
   def has_meta_data_boolean?(key)
     meta_data_string(key) == 'true'
   end
