@@ -132,6 +132,9 @@ class SiteSetting < ActiveRecord::Base
 
   setting(:send_welcome_message, true)
 
+  client_setting(:enable_local_logins, true)
+  client_setting(:enable_local_account_create, true)
+
   client_setting(:enable_google_logins, true)
   client_setting(:enable_yahoo_logins, true)
 
@@ -142,6 +145,10 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:enable_facebook_logins, true)
   setting(:facebook_app_id, '')
   setting(:facebook_app_secret, '')
+
+  client_setting(:enable_cas_logins, false)
+  setting(:cas_hostname, '')
+  setting(:cas_domainname, '')
 
   client_setting(:enable_github_logins, false)
   setting(:github_client_id, '')

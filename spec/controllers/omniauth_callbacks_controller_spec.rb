@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Users::OmniauthCallbacksController do
 
   let(:auth) { {info: {email: 'eviltrout@made.up.email', name: 'Robin Ward', uid: 123456789}, "extra" => {"raw_info" => {} } } }
-
+  let(:cas_auth) {{ uid: "caluser2", extra: {user: "caluser2"}  }  }
   describe 'invalid provider' do
 
     it "fails" do
@@ -49,6 +49,26 @@ describe Users::OmniauthCallbacksController do
     it "succeeds when facebook logins are enabled" do
       SiteSetting.stubs(:enable_facebook_logins?).returns(true)
       get :complete, provider: 'facebook'
+      response.should be_success
+    end
+
+  end
+
+  describe 'cas' do
+
+    before do
+      request.env["omniauth.auth"] = cas_auth
+    end
+
+    it "fails when cas logins are disabled" do
+      SiteSetting.stubs(:enable_cas_logins?).returns(false)
+      get :complete, provider: 'cas'
+      response.should_not be_success
+    end
+
+    it "succeeds when cas logins are enabled" do
+      SiteSetting.stubs(:enable_cas_logins?).returns(true)
+      get :complete, provider: 'cas'
       response.should be_success
     end
 

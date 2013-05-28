@@ -7,6 +7,9 @@
       {{#if Discourse.SiteSettings.enable_facebook_logins}}
         <button class="btn btn-social facebook" title="{{i18n login.facebook.title}}" {{action "facebookLogin" target="view"}}>{{i18n login.facebook.title}}</button>
       {{/if}}
+      {{#if Discourse.SiteSettings.enable_cas_logins}}
+        <button class="btn btn-social cas" title="{{i18n login.cas.title}}" {{action "casLogin" target="view"}}>{{i18n login.cas.title}}</button>
+      {{/if}}
       {{#if Discourse.SiteSettings.enable_twitter_logins}}
         <button class="btn btn-social twitter" title="{{i18n login.twitter.title}}" {{action "twitterLogin" target="view"}}>{{i18n login.twitter.title}}</button>
       {{/if}}
@@ -20,30 +23,34 @@
         <button class="btn btn-social persona" title="{{i18n login.persona.title}}" {{action "personaLogin" target="view"}}>{{i18n login.persona.title}}</button>
       {{/if}}
     </div>
-    <h3 style="text-align:center; margin-bottom:10px;">{{i18n login.or}}</h3>
   {{/if}}
-  <form id='login-form'>
-    <div>
-      <table>
-      <tr>
-      <td>
-        <label for='login-account-name'>{{i18n login.username}}&nbsp;</label>
-      </td>
-      <td>
-        {{textField value=view.loginName placeholderKey="login.email_placeholder" id="login-account-name" autocorrect="off" autocapitalize="off" autofocus="autofocus"}}
-      </td>
-      <tr>
-      <td>
-          <label for='login-account-password'>{{i18n login.password}}&nbsp;</label>
-      </td>
-      <td>
-          {{textField value=view.loginPassword type="password" id="login-account-password"}} &nbsp;
-          <a id="forgot-password-link" {{action forgotPassword target="view"}}>{{i18n forgot_password.action}}</a>
-      </td>
-      </tr>
-      </table>
-    </div>
-  </form>
+  {{#if Discourse.SiteSettings.enable_local_logins}}
+    {{#if view.hasAtLeastOneLoginButton}}
+      <h3 style="text-align:center; margin-bottom:10px;">{{i18n login.or}}</h3>
+    {{/if}}
+    <form id='login-form'>
+      <div>
+        <table>
+        <tr>
+        <td>
+          <label for='login-account-name'>{{i18n login.username}}&nbsp;</label>
+        </td>
+        <td>
+          {{textField value=view.loginName placeholderKey="login.email_placeholder" id="login-account-name" autocorrect="off" autocapitalize="off" autofocus="autofocus"}}
+        </td>
+        <tr>
+        <td>
+            <label for='login-account-password'>{{i18n login.password}}&nbsp;</label>
+        </td>
+        <td>
+            {{textField value=view.loginPassword type="password" id="login-account-password"}} &nbsp;
+            <a id="forgot-password-link" {{action forgotPassword target="view"}}>{{i18n forgot_password.action}}</a>
+        </td>
+        </tr>
+        </table>
+      </div>
+    </form>
+  {{/if}}
   {{view.authMessage}}
   <div id='login-alert' {{bindAttr class="view.alertClass"}}>{{view.alert}}</div>
 </div>
@@ -51,7 +58,9 @@
   {{#if view.authenticate}}
     {{i18n login.authenticating}}
   {{/if}}
+  {{#if Discourse.SiteSettings.enable_local_logins}}
   <button class='btn btn-large btn-primary' {{bindAttr disabled="view.loginDisabled"}} {{action login target="view"}}><i class="icon-unlock"></i>&nbsp;{{view.loginButtonText}}</button>
   &nbsp;
   {{i18n create_account.invite}} <a id="new-account-link" {{action newAccount target="view"}}>{{i18n create_account.action}}</a>
+  {{/if}}
 </div>

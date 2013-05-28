@@ -316,6 +316,9 @@ en:
       facebook:
         title: "with Facebook"
         message: "Authenticating with Facebook (make sure pop up blockers are not enabled)"
+      cas:
+        title: "Log In with CAS"
+        message: "Authenticating with CAS (make sure pop up blockers are not enabled)"
       yahoo:
         title: "with Yahoo"
         message: "Authenticating with Yahoo (make sure pop up blockers are not enabled)"
