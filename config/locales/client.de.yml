@@ -612,7 +612,7 @@ de:
           other: "von {{count}} Themen"
         cancel: "Zeige wieder alle Beiträge zu diesem Thema."
 
-      move_selected:
+      split_topic:
         title: "Ausgewählte Beiträge verschieben"
         action: "Thema aufteilen"
         topic_name: "Neues Thema:"
