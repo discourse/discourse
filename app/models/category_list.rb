@@ -8,6 +8,8 @@ class CategoryList
 
     find_relevant_topics
     find_categories
+
+    prune_empty
     add_uncategorized
     find_user_data
   end
@@ -93,7 +95,7 @@ class CategoryList
         @categories.insert(insert_at || @categories.size, uncategorized)
       end
 
-      if @all_topics.present?
+      if @all_topics.present? && uncategorized.present?
         uncategorized.displayable_topics = uncategorized_topics
         @all_topics << uncategorized_topics
         @all_topics.flatten!
