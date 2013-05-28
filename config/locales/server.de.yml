@@ -624,6 +624,7 @@ de:
       zero: "Dieses Thema wurde automatisch nach einem Tag geschlossen. Es werden keine neuen Beiträge mehr angenommen."
       one: "Dieses Thema wurde automatisch nach einem Tag geschlossen. Es werden keine neuen Beiträge mehr angenommen."
       other: "Dieses Thema wurde automatisch nach %{count} Tagen geschlossen. Es werden keine neuen Beiträge mehr angenommen."
+    autoclosed_disabled: "Dieses Thema ist nun offen. Neue Beiträge werden angenommen."
     pinned_enabled: "Dieses Thema ist nun angepinnt. In seiner Kategorie wird es nun oben aufgelistet, solange der Pin nicht von einem Moderator gelöst wird, oder nicht jeder Nutzer auf 'Pin lösen' klickt."
     pinned_disabled: "Dieses Thema ist nun nicht mehr angepinnt. In seiner Kategorie wird es nicht länger oben aufgelistet."
     visible_enabled: "Dieses Thema ist nun sichtbar. Es wird in Themenlisten aufgeführt."
