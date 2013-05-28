@@ -68,13 +68,12 @@ Discourse.TopicList = Discourse.Model.extend({
           return newTopics.find(function(t){ return t.id === id; });
         });
 
-        var topicsAdded = 0;
         var topics = _this.get("topics");
 
         // add new topics to the list of current topics if not already present
         _this.forEachNew(mapped, function(t) {
           // highlight the first of the new topics so we can get a visual feedback
-          t.set('highlight', topicsAdded++ === 0);
+          t.set('highlight', true);
           topics.insertAt(0,t);
         });
         Discourse.set('transient.topicsList', _this);
