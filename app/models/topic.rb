@@ -193,6 +193,10 @@ class Topic < ActiveRecord::Base
     @post_numbers ||= posts.order(:post_number).pluck(:post_number)
   end
 
+  def age_in_days
+    ((Time.zone.now - created_at) / 1.day).round
+  end
+
   def has_meta_data_boolean?(key)
     meta_data_string(key) == 'true'
   end
@@ -249,29 +253,8 @@ class Topic < ActiveRecord::Base
          .all
   end
 
-  def update_status(property, status, user)
-    Topic.transaction do
-
-      # Special case: if it's pinned, update that
-      if property.to_sym == :pinned
-        update_pinned(status)
-      else
-        # otherwise update the column
-        update_column(property == 'autoclosed' ? 'closed' : property, status)
-      end
-
-      key = "topic_statuses.#{property}_"
-      key << (status ? 'enabled' : 'disabled')
-
-      opts = {}
-
-      # We don't bump moderator posts except for the re-open post.
-      opts[:bump] = true if (property == 'closed' or property == 'autoclosed') and (!status)
-
-      message = property != 'autoclosed' ? I18n.t(key) : I18n.t(key, count: (((self.auto_close_at||Time.zone.now) - self.created_at) / 86_400).round )
-
-      add_moderator_post(user, message, opts)
-    end
+  def update_status(status, enabled, user)
+    TopicStatusUpdate.new(self, user).update! status, enabled
   end
 
   # Atomically creates the next post number

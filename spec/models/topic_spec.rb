@@ -630,6 +630,13 @@ describe Topic do
     context 'autoclosed' do
       let(:status) { 'autoclosed' }
       it_should_behave_like 'a status that closes a topic'
+
+      it 'puts the autoclose duration in the moderator post' do
+        @topic.created_at = 3.days.ago
+        @topic.update_status(status, true, @user)
+
+        expect(@topic.posts.last.raw).to include "closed after 3 days"
+      end
     end
 
 
