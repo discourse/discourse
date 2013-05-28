@@ -249,3 +249,20 @@ Add the following line:
     @reboot RUBY_GC_MALLOC_LIMIT=900000000 RAILS_ROOT=~/discourse RAILS_ENV=production NUM_WEBS=4 bluepill --no-privileged -c ~/.bluepill load ~/discourse/config/discourse.pill
 
 Congratulations! You've got Discourse installed and running!
+
+## Updating Discourse
+
+    # Run these commands as the discourse user
+    bluepill stop
+    # Pull down the latest release
+    cd discourse
+    git checkout master
+    git pull
+    git fetch --tags
+    # To run on the latest version instead of bleeding-edge:
+    #git checkout latest-release
+    bundle install --deployment
+    RUBY_GC_MALLOC_LIMIT=900000000 RAILS_ENV=production bundle exec rake db:migrate
+    RUBY_GC_MALLOC_LIMIT=900000000 RAILS_ENV=production bundle exec rake assets:precompile
+    cd
+    bluepill start
