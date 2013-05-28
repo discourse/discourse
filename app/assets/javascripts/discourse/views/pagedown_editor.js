@@ -13,8 +13,16 @@ Discourse.PagedownEditor = Ember.ContainerView.extend({
 
   init: function() {
     this._super();
-
-    $LAB.script(assetPath('defer/html-sanitizer-bundle'));
+    var _this = this;
+    $LAB.script(assetPath('defer/html-sanitizer-bundle')).wait(function(){
+      var editor = _this.get('editor');
+      if(editor){
+        //Call refresh preview on sanitizer script load because
+        //if it wasn't loaded before editor.run() was called then the
+        //preview is likely blank
+        editor.refreshPreview();
+      }
+    });
 
     // Add a button bar
     this.pushObject(Em.View.create({ elementId: 'wmd-button-bar' }));
@@ -30,10 +38,10 @@ Discourse.PagedownEditor = Ember.ContainerView.extend({
   },
 
   didInsertElement: function() {
-    var $wmdInput = $('#wmd-input');
-    $wmdInput.data('init', true);
-    this.set('editor', Discourse.Markdown.createEditor());
-    return this.get('editor').run();
+    $('#wmd-input').data('init', true);
+    var editor = Discourse.Markdown.createEditor();
+    this.set('editor', editor);
+    return editor.run();
   },
 
   observeValue: (function() {
@@ -43,5 +51,3 @@ Discourse.PagedownEditor = Ember.ContainerView.extend({
   }).observes('value')
 
 });
-
-
