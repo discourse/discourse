@@ -11,24 +11,33 @@ de:
 
   title: "Discourse"
   topics: "Themen"
+  posts: "Beiträge"
   loading: "Lädt"
   powered_by_html: 'Basiert auf <a href="http://www.discourse.org">Discourse</a>, funktioniert am besten mit aktiviertem JavaScript'
 
   via: "%{username} via %{site_name}"
   is_reserved: "ist reserviert"
 
+  site_under_maintenance: 'Die Seite wird momentan gewartet.'
+  operation_already_running: " %{operation} läuft gerade. Kann desshalb keine weitere %{operation} Aktion starten."
+
   too_many_mentions:
-    zero: "Entschuldige, Gäste können andere Nutzer nicht erwähnen."
-    one: "Entschuldige, Gäste können nur einen anderen Nutzer in einem Beitrag erwähnen."
-    other: "Entschuldige, Gäste können nur %{count} Nutzer in einem Beitrag erwähnen."
+    zero: "Entschuldige, du kannst andere Nutzer nicht erwähnen."
+    one: "Entschuldige, du kannst nur einen anderen Nutzer in einem Beitrag erwähnen."
+    other: "Entschuldige, du kannst nur %{count} Nutzer in einem Beitrag erwähnen."
+  too_many_mentions_newuser:
+    zero: "Entschuldige, neue Benutzer können andere Nutzer nicht erwähnen."
+    one: "Entschuldige, neue Benutzer können nur einen anderen Nutzer in einem Beitrag erwähnen."
+    other: "Entschuldige, neue Benutzer können nur %{count} Nutzer in einem Beitrag erwähnen."
   too_many_images:
-    zero: "Entschuldige, Gäste können Beiträge keine Bilder hinzufügen."
-    one: "Entschuldige, Gäste können Beiträgen nur ein Bild hinzufügen."
-    other: "Entschuldige, Gäste können Beiträge nur %{count} Bilde hinzufügen."
+    zero: "Entschuldige, neue Benutzer können Beiträge keine Bilder hinzufügen."
+    one: "Entschuldige, neue Benutzer können Beiträgen nur ein Bild hinzufügen."
+    other: "Entschuldige, neue Benutzer können Beiträge nur %{count} Bilde hinzufügen."
   too_many_links:
-    zero: "Entschuldige, Gäste können Beiträgen keine Links hinzufügen."
-    one: "Entschuldige, Gäste können Beiträgen nur einen Link hinzufügen."
-    other: "Entschuldige, Gäste können Beiträge nur %{count} Links hinzufügen."
+    zero: "Entschuldige, neue Benutzer können Beiträgen keine Links hinzufügen."
+    one: "Entschuldige, neue Benutzer können Beiträgen nur einen Link hinzufügen."
+    other: "Entschuldige, neue Benutzer können Beiträge nur %{count} Links hinzufügen."
+  spamming_host: "Entschuldige, du kannst diese Seite nicht verlinken."
 
   just_posted_that: "ist zu ähnlich dem, was Du kürzlich gepostet hast"
   has_already_been_used: "wurde schon benutzt"
@@ -40,6 +49,17 @@ de:
   rss_posts_in_topic: "RSS-Feed von '%{topic}'"
   rss_topics_in_category: "RSS-Feed von Themen in der Kategorie '%{category}'"
   author_wrote: "%{author} schrieb:"
+
+  groups:
+    default_names:
+      admins: "admins"
+      moderators: "moderatoren"
+      staff: "mitarbeiter"
+      trust_level_1: "vertrauensstufe_1"
+      trust_level_2: "vertrauensstufe_2"
+      trust_level_3: "vertrauensstufe_3"
+      trust_level_4: "vertrauensstufe_4"
+      trust_level_5: "vertrauensstufe_5"
 
   education:
     until_posts:
@@ -80,6 +100,9 @@ de:
       post:
         raw: "Hauptteil"
     errors:
+      messages:
+        is_invalid: "ist ungültig; versuche ein wenig mehr zu erklären"
+        has_already_been_used: "wird bereits verwendet"
       models:
         topic:
           attributes:
@@ -97,7 +120,7 @@ de:
 
   trust_levels:
     newuser:
-      title: "Gast"
+      title: "Frischling"
     basic:
       title: "Anfänger"
     regular:
@@ -214,29 +237,37 @@ de:
 
   post_action_types:
     off_topic:
-      title: 'Off-Topic'
+      title: 'Am Thema vorbei'
       description: 'Dieser Beitrag geht komplett am Thema des aktuellen Gesprächs vorbei und sollte möglicherweise in ein anderes Thema verschoben werden.'
-      long_form: 'dies als Off-topic gemeldet'
+      long_form: 'dies als am Thema vorbei gemeldet'
     spam:
-      title: 'Spam'
+      title: 'Werbung'
       description: 'Dieser Beitrag besteht effektiv nur aus Werbung, die nicht als solche ausgewiesen ist. Er trägt nichts zum aktuellen Gespräch bei.'
       long_form: 'dies als Spam gemeldet'
     inappropriate:
       title: 'Unangemessen'
       description: 'Dieser Beitrag enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder Hassrede auffassen würde.'
       long_form: 'dies als unangemessen gemeldet'
-    custom_flag:
-      title: 'Sonstiges'
+    notify_user:
+      title: '{{username}} benachrichtigen'
+      description: 'Dieser Beitrag enthält etwas über das ich mit dieser Person direkt und privat sprechen möchte.'
+      long_form: 'dies dem Benutzer gemeldet'
+      email_title: Bezüglich deinem Beitrag "%{title}"'
+      email_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      title: 'Moderatoren benachrichtigen'
       description: 'Dieser Beitrag muss von einem Moderator begutachtet werden, da er entweder nicht mit den <a href="/faq">FAQ</a> oder den <a href="/tos">Nutzungsbedingungen</a> in Einklang zu bringen ist, oder aus sonstigen oben nicht genannten Gründen.'
-      long_form: 'dies zur Moderierung gemeldet'
+      long_form: 'dies den Moderatoren gemeldet'
+      email_title: 'Der Beitrag "%{title}" sollte von einem Moderator begutachtet werden'
+      email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Lesezeichen'
       description: 'Lesezeichen auf diesen Beitrag setzen'
       long_form: 'ein Lesezeichen auf diesen Beitrag gesetzt'
     like:
-      title: 'Like'
-      description: 'Diesen Beitrag liken'
-      long_form: 'dies geliket'
+      title: 'Gefällt mir'
+      description: 'Dieser Beitrag gefällt mit'
+      long_form: 'dies gefällt mit'
     vote:
       title: 'Wahl'
       description: 'Stimme für diesen Beitrag'
@@ -274,27 +305,70 @@ de:
     topics:
       title: "Themen"
       xaxis: "Day"
-      yaxis: "Zahl neuer ThemenNumber of new topics"
+      yaxis: "Zahl neuer Themen"
     posts:
       title: "Beiträge"
       xaxis: "Tag"
       yaxis: "Zahl neuer Beiträge"
     likes:
-      title: "Likes"
+      title: "„Gefällt mir“"
       xaxis: "Tag"
-      yaxis: "Zahl neuer Likes"
+      yaxis: "Zahl neuer „Gefällt mir“"
     flags:
       title: "Meldungen"
       xaxis: "Tag"
       yaxis: "Zahl der Meldungen"
+    bookmarks:
+      title: "Lesezeichen"
+      xaxis: "Tag"
+      yaxis: "Zahl der Lesezeichen"
+    favorites:
+      title: "Favoriten"
+      xaxis: "Tag"
+      yaxis: "Zahl der Favoriten"
     users_by_trust_level:
-      title: "Benutzer nach Vertrauenswürdigkeit"
-      xaxis: "Vertrauenswürdigkeit"
+      title: "Benutzer nach Stufe"
+      xaxis: "Stufe"
       yaxis: "Zahl der Nutzer"
     emails:
       title: "Gesendete Mails"
       xaxis: "Tag"
       yaxis: "Zahl der Mails"
+    user_to_user_private_messages:
+      title: "Beutzer-zu-Benutzer"
+      xaxis: "Tag"
+      yaxis: "Zahl der privaten Nachrichten"
+    system_private_messages:
+      title: "System"
+      xaxis: "Tag"
+      yaxis: "Zahl der privaten Nachrichten"
+    moderator_warning_private_messages:
+      title: "Moderatorenwarnungen"
+      xaxis: "Tag"
+      yaxis: "Zahl der privaten Nachrichten"
+    notify_moderators_private_messages:
+      title: "Moderatorenmeldungen"
+      xaxis: "Tag"
+      yaxis: "Zahl der privaten Nachrichten"
+    notify_user_private_messages:
+      title: "Benutzermeldungen"
+      xaxis: "Tag"
+      yaxis: "Zahl der privaten Nachrichten"
+    top_referrers:
+      title: "Top Referrers"
+      xaxis: "Benutzer"
+      num_clicks: "Klicks"
+      num_topics: "Themen"
+    top_traffic_sources:
+      title: "Top Traffic Sources"
+      xaxis: "Domäne"
+      num_clicks: "Klicks"
+      num_topics: "Themen"
+      num_users: "Benutzer"
+    top_referred_topics:
+      title: "Top Referred Topics"
+      xaxis: "Themen"
+      num_clicks: "Klicks"
 
   dashboard:
     rails_env_warning: "Dein Server läuft im %{env}-Modus."
@@ -302,7 +376,39 @@ de:
     gc_warning: 'Dein Server verwendet die Standardparameter für Rubys Garbage-Collector, die nicht optimal sind. Lese dieses Thema über Performanzeinstellungen (en): <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>.'
     clockwork_warning: 'Clockwork läuft nicht. Stelle sicher, dass immer ein Clockwork-Prozess läuft, so dass wichtige Jobs eingeplant werden können. <a href="https://github.com/tomykaira/clockwork">Mehr über Clockwork erfährst du hier (en)</a>.'
     sidekiq_warning: 'Sidekiq läuft nicht. Viele Aufgaben, wie zum Beispiel das Versenden von Mails, werden asynchron durch Sidekiq ausgeführt. Stelle sicher, dass mindestens eine Sidekiq-Prozess läuft. <a href="https://github.com/mperham/sidekiq">Mehr über Sidekiq erfährst du hier (en)</a>.'
+    queue_size_warning: 'Die Anzahl der Aktionen in der Warteschlange ist mit %{queue_size} ziemlich hoch. Das könnte auf ein Problem mit dem Sidekiq Prozess(en) hinweisen, oder du musst mehr Sidekiq Arbeiter hinzufügen.'
     memory_warning: 'Dein Server läuft mit weniger als 1 GB Hauptspeicher. Mindestens 1 GB Hauptspeicher werden empfohlen.'
+    facebook_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook (enable_facebook_logins), aber die App ID und der Geheimcode sind nicht gesetzt. Besuche <a href="/admin/site_settings">die Seiteneinstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
+    twitter_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook Twitter (enable_twitter_logins), aber der Schlüssel und der Geheimcode sind nicht gesetzt. Besuche <a href="/admin/site_settings">die Seiteneinstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
+    github_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook GitHub (enable_github_logins), aber die Kunden ID und der Geheimcode sind nicht gesetzt. Besuche <a href="/admin/site_settings">die Seiteneinstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
+    failing_emails_warning: 'Es konnten insgesamt %{num_failed_jobs} Emails nicht versendet werden. Bitte überprüfe die Einstellungen in config/environments/production.rb und stelle die Richtigkeit der config.action_mailer Einstellungen. <a href="/sidekiq/retries" target="_blank">Zu den Fehlern in Sidekiq</a>.'
+    default_logo_warning: "Der Logo der Seite wurde noch nicht angepasst. Bitte bearbeite dieses in den <a href='/admin/site_settings'>Seiteneinstellungen</a> (logo_url, logo_small_url und favicon_url)."
+    contact_email_missing: "Du hast noch keine Kontaktmail für die Seite hinterlegt. Bitte hinterlege diese in den <a href='/admin/site_settings'>Seiteneinstellungen</a> (contact_email)."
+    contact_email_invalid: "Die Kontaktmail der Seite ist ungültig. Bitte bearbeite diese in den <a href='/admin/site_settings'>Seiteneinstellungen</a> (contact_email)."
+    title_nag: "Der Titel der Seite wurde noch nicht angepasst. Bitte bearbeite diesen in den <a href='/admin/site_settings'>Seiteneinstellungen</a>."
+
+  content_types:
+    education_new_reply:
+      title: "New User Education: First Replies"
+      description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new replies."
+    education_new_topic:
+      title: "New User Education: First Topics"
+      description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new topics."
+    usage_tips:
+      title: "New User Tips"
+      description: "Common usage tips, essential forum information, and key guidance intended for new users."
+    welcome_user:
+      title: "Welcome: New User"
+      description: "A private message automatically sent to all new users when they sign up."
+    welcome_invite:
+      title: "Welcome: Invited User"
+      description: "A private message automatically sent to all new invited users when they accept the invitation from another user to participate."
+    tos_user_content_license:
+      title: "Terms of Service: Content License"
+      description: "The text for the Content License section of the Terms of Service."
+    tos_miscellaneous:
+      title: "Terms of Service: Miscellaneous"
+      description: "The text for the Miscellaneous section of the Terms of Service."
 
   site_settings:
     default_locale: "Die Standardsprache dieser Discourse-Instanz (kodiert in ISO 639-1)."
@@ -311,12 +417,14 @@ de:
     min_topic_title_length: "Minimale Titellänge von Themen in Zeichen."
     max_topic_title_length: "Maximale Titellänge von Themen in Zeichen."
     min_search_term_length: "Minimale Suchwortlänge in Zeichen."
+    allow_uncategorized_topics: "Erlaube Themen ohne Kategorie"
     allow_duplicate_topic_titles: "Erlaube Themen mit identischen Titeln."
     unique_posts_mins: "Minuten, nach denen ein Nutzer denselben Inhalt noch einmal posten kann."
     enforce_global_nicknames: "Erzwinge global eindeutige Benutzernamen (WARNUNG: Ändere dies nur während des initialen Setups)."
     discourse_org_access_key: "Der Zugangscode für das Discourse Hub Benutzernamensregister auf discourse.org"
     educate_until_posts: "Zahl der Beiträge, die ein Nutzer verfassen muss, damit kein Hilfetext beim Erstellen von Themen und Beiträgen eingeblendet wird."
     title: "Seitentitel, der im Title-Tag und an anderen Stellen verwendet wird."
+    contact_email: "Die Email von jemandem der für die Seite zuständig ist. Wichtige Nachrichten von Discourse.org betreffend kritischen Sicherheitsupdates werden an diese Adresse gesendet."
     company_full_name: "Voller Name des Unternehmens, das diese Seite betreibt. Wird in rechtlich relevanten Dokumenten wie den Nutzungsbestimmungen (/tos) verwendet."
     company_short_name: "Kurzname des Unternehmens, das diese Seite betreibt. Wird in rechtlich relevanten Dokumenten wie den Nutzungsbestimmungen (/tos) verwendet."
     company_domain: "Domainname des Unternehmens, das diese Seite betreibt. Wird in rechtlich relevanten Dokumenten wie den Nutzungsbestimmungen (/tos) verwendet."
@@ -326,7 +434,8 @@ de:
     crawl_images: "Lade Bilder von Dritten herunter, um ihre Höhe und Breite zu bestimmen."
     ninja_edit_window: "Sekunden nach Empfang eines Beitrag, in denen Bearbeitungen nicht als neue Version gelten."
     enable_imgur: "Aktiviere die Imgur API zum Hochladen, so dass Dateien nicht lokal gehostet werden."
-    imgur_api_key: "Dein imgur.com API-Schlüssel. Wird benötigt, um Bilder hochzuladen."
+    imgur_client_id: "Deine imgur.com Client-ID. Wird benötigt, um Bilder hochzuladen."
+    imgur_client_secret: "Dein imgur.com Geheimniss. Wird zur Zeit für das Hichladen der Bilder nicht benötigt, könnte aber in Zukunft benötigt werden."
     imgur_endpoint: "Endknoten für das Hochladen von imgur.com-Bildern."
     max_image_width: "Maximalbreite von Bildern in einem Beitrag."
     category_featured_topics: "Zahl der angezeigten Themen je Kategorie auf der Kategorieseite /categories."
@@ -348,7 +457,7 @@ de:
     best_of_posts_required: "Minimale Zahl der Beiträge zu einem Thema bevor der Modus 'Top Beiträge' aktiviert wird."
     best_of_likes_required: "Minimale Zahl der Likes in einem Thema, bevor der Modus 'Top Beiträge' aktiviert wird."
     best_of_percent_filter: "Prozentzahl der Top Beiträge, die gezeigt werden, wenn eine Nutzer in diese Ansicht wechselt."
-    enable_private_messages: "Erlaube Nutzern mit Vertrauenswürdigkeit 1, private Nachrichten zu Gespräche."
+    enable_private_messages: "Erlaube Nutzern mit Stufe 1, private Nachrichten zu Gespräche."
 
     enable_long_polling: "Nachrichtenbus für Benachrichtigungen kann Long-Polling nutzen."
     long_polling_interval: "Intervall in Millisekunden bevor ein neues Long-Poll initiiert wird."
@@ -365,6 +474,7 @@ de:
     post_undo_action_window_mins: "Sekunden, die ein Nutzer hat, um Aktionen auf Beiträgen rückgängig zu machen (Like, Meldung, etc.)."
     must_approve_users: "Administratoren müssen Nutzer freischalten, bevor sie Zugriff erlangen."
     ga_tracking_code: "Google Analytics Trackingcode, zum Beispiel: UA-12345678-9; siehe http://google.com/analytics"
+    ga_domain_name: "Google Analytics Domänenname, zum Beispiel: mysite.com; siehe http://google.com/analytics"
     top_menu: "Bestimme, welche Navigationselemente in welcher Reihenfolge auftauchen. Beispiel: latest|hot|read|favorited|unread|new|posted|categories"
     post_menu: "Bestimme, welche Funktionen in welcher Reihenfolge im Beitragsmenü auftauchen. Beispiel: like|edit|flag|delete|share|bookmark|reply"
     share_links: "Bestimme, welche Dienste in welcher Reihenfolge im Teilen-Dialog auftauchen. Beispiel: twitter|facebook|google+"
@@ -409,6 +519,8 @@ de:
     previous_visit_timeout_hours: "Stunden, die ein Besuch dauert bevor er als 'früherer' Besuch gezählt wird."
 
     uncategorized_name: "Name der Standardkategorie für Themen, die keiner Kategorie zugeordnet wurden in der Kategorieübersicht /categories."
+    uncategorized_color: "Die Hintergrundfarbe der Plakette für die Kategorie der Themen welche keine Kategorie haben"
+    uncategorized_text_color: "Die Textfarbe der Plakette für die Kategorie der Themen welche keine Kategorie haben"
 
     rate_limit_create_topic: "Sekunden Wartezeit nach Erstellung eines Themas, bevor man ein neues Thema erstellen kann."
     rate_limit_create_post: "Sekunden Wartezeit nach Erstellung eines Beitrags, bevor man einen neuen Beitrag erstellen kann."
@@ -426,15 +538,24 @@ de:
     enable_s3_uploads: "Speichere hochgeladene Dateien auf Amazon S3."
     s3_upload_bucket: "Der Amazon S3 Bucketname in den hochgeladene Dateien abgelegt werden."
 
-    default_invitee_trust_level: "Standardwert für die Vertrauenswürdigkeit eines eingeladenen Nutzers (0-4)."
-    default_trust_level: "Standardwert für die Vertrauenswürdigkeit von Nutzern (0-4)."
+    default_invitee_trust_level: "Standardwert für die Stufe eines eingeladenen Nutzers (0-4)."
+    default_trust_level: "Standardwert für die Stufe von Nutzern (0-4)."
 
-    basic_requires_topics_entered: "Zahl der Themen, die ein neuer Nutzer erstellen muss, bevor er zum sporadischen Nutzer (Vertrauenswürdigkeit 1) aufsteigt."
-    basic_requires_read_posts: "Zahl der Beiträge, die ein neuer Nutzer lesen muss, bevor bevor er zum sporadischen Nutzer (Vertrauenswürdigkeit 1) aufsteigt."
-    basic_requires_time_spent_mins: "Minuten, die ein neuer Nutzer Beiträge lesen muss, bevor er zum sporadischen Nutzer (Vertrauenswürdigkeit 1) aufsteigt."
-    newuser_max_links: "Maximale Zahl der Links, die Gäste Beiträgen hinzufügen dürfen."
-    newuser_max_images: "Maximale Zahl der Bilder, die Gäste Beiträgen hinzufügen dürfen."
-    newuser_max_mentions_per_post: "Maximale Zahl der @Namens-Erwähnungen, die Gäste in Beiträgen nutzen dürfen."
+    basic_requires_topics_entered: "Zahl der Themen die ein Frischling erstellen muss bevor er zum Anfänger (Stufe 1) aufsteigt."
+    basic_requires_read_posts: "Zahl der Beiträge die ein Frischling lesen muss bevor bevor er zum Anfänger (Stufe 1) aufsteigt."
+    basic_requires_time_spent_mins: "Zahl der Minuten die ein Frischling Beiträge lesen muss bevor er zum Anfänger (Stufe 1) aufsteigt."
+
+    regular_requires_topics_entered: "Zahl der Themen an denen ein Anfänger anschauen muss bevor er zum Stammnutzer (Stufe 2) aufsteigt"
+    regular_requires_read_posts: "Zahl der Beiträge die ein Anfänger lesen muss bevor er zum Stammnutzer (Stufe 2) aufsteigt"
+    regular_requires_time_spent_mins: "Zahl der Minuten die ein Anfänger Beiträge lesen muss bevor er zum Stammnutzer (Stufe 2) aufsteigt"
+    regular_requires_days_visited: "Zahl der Tage die ein Anfänger die Seite besuchen muss bevor er zum Stammnutzer (Stufe 2) aufsteigt"
+    regular_requires_likes_received: "Zahl der „Gefällt mir“ die ein Anfänger die Seite erhalten muss bevor er zum Stammnutzer (Stufe 2) aufsteigt"
+    regular_requires_likes_given: "Zahl der „Gefällt mir“ die ein Anfänger die Seite verteilen muss bevor er zum Stammnutzer (Stufe 2) aufsteigt"
+    regular_requires_topic_reply_count: "Zahl der Themen an denen ein Anfänger teilnehmen muss bevor er zum Stammnutzer (Stufe 2) aufsteigt"
+
+    newuser_max_links: "Maximale Zahl der Links, die neue Benutzer Beiträgen hinzufügen dürfen."
+    newuser_max_images: "Maximale Zahl der Bilder, die neue Benutzer Beiträgen hinzufügen dürfen."
+    newuser_max_mentions_per_post: "Maximale Zahl der @Namens-Erwähnungen, die neue Benutzer in Beiträgen nutzen dürfen."
     max_mentions_per_post: "Maximale Zahl der @Namens-Erwähnungen, die man in einem Beitrag nutzen kann."
 
     auto_link_images_wider_than: "Pixelbreite, ab der Bilder automatisch verlinkt und verkleinert in einer Lightbox dargestellt werden."
@@ -454,17 +575,29 @@ de:
     max_upload_size_kb: "Maximale Größe in Kilobytes (kB), die von Benutzer hochgeladene Bilder groß sein dürfen. Stelle sicher, dass dieser Wert auch in nginx (client_max_body_size) / apache und Proxies konfiguriert ist."
     max_similar_results: "Zahl der Themen, die ein Nutzer sieht während sei ein neues Thema erstellen."
 
+    title_prettify: "Verhindert gängige Fehler im Titel, wie reine Grossschreibung, Kleinbuchstaben am Anfang, mehrere ! und ?, überflüssiger . am Ende, etc."
+
+    topic_views_heat_low: "Die Anzahl der Aufrufe bis die Popularität des Themas niedrig ist."
+    topic_views_heat_medium: "Die Anzahl der Aufrufe bis die Popularität des Themas mittel ist."
+    topic_views_heat_high: "Die Anzahl der Aufrufe bis die Popularität des Themas hoch ist."
+
+    tos_url: "URL zu einer externen Dienstleistungsbedingung welche Du gerne verwenden möchtest."
+    privacy_policy_url: "URL zu einer externen Datenschutzrichtlinie welche Du gerne verwenden möchtest."
+
+    newuser_spam_host_threshold: "Die Anzahl welche ein Frischling Beiträge mit Links auf die gleiche Seite innerhalb ihrer `newuser_spam_host_posts` veröffentlichen , bevor der Beitrag als Spam klassifiziert wird."
+    staff_like_weight: "Zusätzlicher Gewichtungsfaktor wenn Mitglieder „Gefällt mir“ verteilen."
+
   notification_types:
     mentioned: "%{display_username} hat Dich in %{link} erwähnt."
-    liked: "%{display_username} hat Deinen Beitrag in %{link} geliket."
-    replied: "%{display_username} hat auf Deinen Beitrag in %{link} geantwortet."
-    quoted: "%{display_username} hat Deinen Beitrag in %{link} zitiert."
-    edited: "%{display_username} hat Deinen Beitrag in %{link} bearbeitet."
+    liked: "%{display_username} hat deinen Beitrag in %{link} geliket."
+    replied: "%{display_username} hat auf deinen Beitrag in %{link} geantwortet."
+    quoted: "%{display_username} hat deinen Beitrag in %{link} zitiert."
+    edited: "%{display_username} hat deinen Beitrag in %{link} bearbeitet."
     posted: "%{display_username} hat in %{link} gepostet."
-    moved_post: "%{display_username} hat Deinen Beitrag nach %{link} verschoben."
+    moved_post: "%{display_username} hat deinen Beitrag nach %{link} verschoben."
     private_message: "%{display_username} hat Dir eine private Nachricht geschickt: %{link}"
     invited_to_private_message: "%{display_username} hat Dich zu einem privaten Gespräch eingeladen: %{link}"
-    invitee_accepted: "%{display_username} hat Deine Einladung akzeptiert."
+    invitee_accepted: "%{display_username} hat deine Einladung akzeptiert."
 
   search:
     types:
@@ -477,31 +610,6 @@ de:
   most_recent_poster: "Autor des jüngsten Beitrags"
   frequent_poster: "Autor regelmäßiger Beiträge"
 
-  user_action_descriptions:
-    bookmarks: "Lesezeichen"
-    topics: "Themen"
-    likes_received: "Erhaltene Likes"
-    likes_given: "Vergebene Likes"
-    responses: "Antworten"
-    topic_responses: "Antworten auf Themen"
-    posts: "Beiträge"
-    mentions: "Erwähnungen"
-    quotes: "Zitate"
-    edits: "Bearbeitungen"
-    favorites: "Favoriten"
-    sent_items: "Gesendet"
-    inbox: "Posteingang"
-
-    was_liked: "wurde geliket"
-    liked: "likest"
-    bookmarked: "markierst"
-    posted: "postest"
-    responded_to: "antwortest auf"
-    mentioned: "erwähntest"
-    quoted: "zitierst"
-    favorited: "favorisierst"
-    edited: "bearbeitest"
-
   move_posts:
     moderator_post:
       one: "Ich habe einen Beitrag in ein neues Thema verschoben: %{topic_link}"
@@ -512,6 +620,10 @@ de:
     archived_disabled: "Dieses Thema wurde aus dem Archiv geholt. Es ist nicht länger eingefroren und kann verändert werden."
     closed_enabled: "Dieses Thema ist nun geschlossen. Es ist nicht länger möglich, auf dieses Thema zu antworten."
     closed_disabled: "Dieses Thema ist nun geöffnet. Es ist wieder möglich, auf dieses Thema zu antworten."
+    autoclosed_enabled:
+      zero: "Dieses Thema wurde automatisch nach einem Tag geschlossen. Es werden keine neuen Beiträge mehr angenommen."
+      one: "Dieses Thema wurde automatisch nach einem Tag geschlossen. Es werden keine neuen Beiträge mehr angenommen."
+      other: "Dieses Thema wurde automatisch nach %{count} Tagen geschlossen. Es werden keine neuen Beiträge mehr angenommen."
     pinned_enabled: "Dieses Thema ist nun angepinnt. In seiner Kategorie wird es nun oben aufgelistet, solange der Pin nicht von einem Moderator gelöst wird, oder nicht jeder Nutzer auf 'Pin lösen' klickt."
     pinned_disabled: "Dieses Thema ist nun nicht mehr angepinnt. In seiner Kategorie wird es nicht länger oben aufgelistet."
     visible_enabled: "Dieses Thema ist nun sichtbar. Es wird in Themenlisten aufgeführt."
@@ -612,7 +724,7 @@ de:
 
         wegen Meldungen aus der Community versteckt wurde.
 
-        Beachte, dass mehrere Mitglieder der Community diesen Beitrag gemeldet haben, bevor er versteckt wurde. **Überlege Dir daher, wie Du Deinen Beitrag unter Berücksichtigung dieses Feedbacks überarbeiten könntest.** Du kannst Deinen Beitrag nach %{edit_delay} Minuten überarbeiten. Anschließend wird er automatisch wieder sichtbar und Deine Vertrauenswürdigkeit erhöht sich.
+        Beachte, dass mehrere Mitglieder der Community diesen Beitrag gemeldet haben, bevor er versteckt wurde. **Überlege Dir daher, wie Du Deinen Beitrag unter Berücksichtigung dieses Feedbacks überarbeiten könntest.** Du kannst Deinen Beitrag nach %{edit_delay} Minuten überarbeiten. Anschließend wird er automatisch wieder sichtbar und Deine Stufe erhöht sich.
 
         Wenn dieser Beitrag ein zweites Mal von der Community versteckt wird, werden die Moderatoren darauf aufmerksam gemacht. Dass kann weitere Konsequenzen haben, unter anderem auch eine Sperrung Deines Kontos.
 
@@ -674,8 +786,6 @@ de:
     welcome_user:
       subject_template: "Willkommen auf %{site_name}!"
       text_body_template: |
-        Hallo!
-
         Danke fürs Anmelden auf %{site_name}, willkommen in unserem Forum!
 
         %{new_user_tips}
@@ -830,3 +940,16 @@ de:
     see_more: "Mehr ansehen"
     search_title: "Suche nach diesem Thema"
     search_google: "Suche auf Google"
+
+  terms_of_service:
+    user_content_license: |
+      User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_short_name} has the right (though not the obligation) to, in %{company_short_name}’s sole discretion (i) refuse or remove any content that, in %{company_short_name}’s reasonable opinion, violates any %{company_short_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_short_name}’s sole discretion. %{company_short_name} will have no obligation to provide a refund of any amounts previously paid.
+    miscellaneous: "This Agreement constitutes the entire agreement between %{company_short_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_short_name}, or by the posting by %{company_short_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_short_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns."
+
+  deleted: 'gelöscht'
+
+  upload:
+    image:
+      fetch_failure: "Entschuldige, beim Laden des Bildes ist ein Fehler aufgetreten."
+      unknown_image_type: "Entschuldige, aber die Datei die Du hochladen möchtest schein kein Bild zu sein."
+      size_not_found: "Entschuldige, aber wir konnten die Grösse des Bildes nicht feststellen. Vielleicht ist das Bild defekt?"
