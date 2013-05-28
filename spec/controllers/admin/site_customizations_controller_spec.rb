@@ -13,6 +13,7 @@ describe Admin::SiteCustomizationsController do
 
     context ' .index' do
       it 'returns success' do
+        SiteCustomization.create!(name: 'my name', user_id: Fabricate(:user).id, header: "my awesome header", stylesheet: "my awesome css")
         xhr :get, :index
         response.should be_success
       end
