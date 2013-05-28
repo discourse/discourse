@@ -217,6 +217,38 @@ Discourse = Ember.Application.createWithMixins({
     });
   },
 
+
+  /**
+    Subscribes the current user to receive message bus notifications
+  **/
+  subscribeUserToNotifications: function() {
+    var user = Discourse.User.current();
+    if (user) {
+      var bus = Discourse.MessageBus;
+      bus.callbackInterval = Discourse.SiteSettings.polling_interval;
+      bus.enableLongPolling = true;
+      if (user.admin || user.moderator) {
+        bus.subscribe("/flagged_counts", function(data) {
+          user.set('site_flagged_posts_count', data.total);
+        });
+      }
+      bus.subscribe("/notification/" + user.get('id'), (function(data) {
+        user.set('unread_notifications', data.unread_notifications);
+        user.set('unread_private_messages', data.unread_private_messages);
+      }), user.notification_channel_position);
+
+      bus.subscribe("/categories", function(data){
+        var site = Discourse.Site.instance();
+        data.categories.each(function(c){
+          site.updateCategory(c)
+        });
+      });
+
+    }
+  },
+
+
+
   /**
     Start up the Discourse application.
 
@@ -233,6 +265,7 @@ Discourse = Ember.Application.createWithMixins({
     // Developer specific functions
     Discourse.Development.setupProbes();
     Discourse.Development.observeLiveChanges();
+    Discourse.subscribeUserToNotifications();
   }
 
 });
