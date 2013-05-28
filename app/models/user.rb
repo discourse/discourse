@@ -27,6 +27,7 @@ class User < ActiveRecord::Base
 
   has_one :twitter_user_info, dependent: :destroy
   has_one :github_user_info, dependent: :destroy
+  has_one :cas_user_info, dependent: :destroy
   belongs_to :approved_by, class_name: 'User'
 
   has_many :group_users

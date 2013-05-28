@@ -379,6 +379,7 @@ en:
     queue_size_warning: 'The number of queued jobs is %{queue_size}, which is high. This could indicate a problem with the Sidekiq process(es), or you may need to add more Sidekiq workers.'
     memory_warning: 'Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended.'
     facebook_config_warning: 'The server is configured to allow signup and log in with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">See this guide to learn more</a>.'
+    cas_config_warning: 'The server is configured to allow signup and log in with CAS (enable_cas_logins), but the hostname and domain name values are not set.'
     twitter_config_warning: 'The server is configured to allow signup and log in with Twitter (enable_twitter_logins), but the key and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">See this guide to learn more</a>.'
     github_config_warning: 'The server is configured to allow signup and log in with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">See this guide to learn more</a>.'
     failing_emails_warning: 'There are %{num_failed_jobs} email jobs that failed. Check your config/environments/production.rb file and ensure that the config.action_mailer settings are correct. <a href="/sidekiq/retries" target="_blank">See the failed jobs in Sidekiq</a>.'
@@ -496,6 +497,8 @@ en:
 
     # TODO: perhaps we need a way of protecting these settings for hosted solution, global settings ...
 
+    enable_local_logins: "Enable local authentication"
+    enable_local_account_create: "Enable local account creation"
     enable_google_logins: "Enable Google authentication"
     enable_yahoo_logins: "Enable Yahoo authentication"
 
@@ -506,6 +509,10 @@ en:
     enable_facebook_logins: "Enable Facebook authentication, requires facebook_app_id and facebook_app_secret"
     facebook_app_id: "App id for Facebook authentication, registered at https://developers.facebook.com/apps"
     facebook_app_secret: "App secret for Facebook authentication, registered at https://developers.facebook.com/apps"
+
+    enable_cas_logins: "Enable CAS authentication"
+    cas_hostname: "Hostname for cas server"
+    cas_domainname: "Domain name generated email addresses for cas server"
 
     enable_github_logins: "Enable Github authentication, requires github_client_id and github_client_secret"
     github_client_id: "Client id for Github authentication, registered at https://github.com/settings/applications"
