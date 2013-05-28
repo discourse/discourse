@@ -107,7 +107,6 @@
   }
 
   .gutter {
-    @include unselectable;
     .reply-new{
       .discourse-no-touch & {
         opacity: 0;
