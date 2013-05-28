@@ -334,7 +334,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   },
 
   /**
-    Clears the pin from a topic for the currentUser
+    Clears the pin from a topic for the currently logged in user
 
     @method clearPin
   **/

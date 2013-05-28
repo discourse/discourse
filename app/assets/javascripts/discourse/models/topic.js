@@ -338,7 +338,7 @@ Discourse.Topic = Discourse.Model.extend({
   },
 
   /**
-    Clears the pin from a topic for the currentUser
+    Clears the pin from a topic for the currently logged in user
 
     @method clearPin
   **/

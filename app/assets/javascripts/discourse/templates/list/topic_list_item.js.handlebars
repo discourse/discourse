@@ -1,5 +1,4 @@
-
-  {{#if Discourse.currentUser.id}}
+  {{#if controller.currentUser.id}}
     <td class='star'>
       <a {{bindAttr class=":star :icon-star starred:starred"}} {{action toggleStar this}} href='#' {{bindAttr title="favoriteTooltip"}}></a>
     </td>

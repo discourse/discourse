@@ -11,7 +11,6 @@ Discourse.HeaderView = Discourse.View.extend({
   classNames: ['d-header', 'clearfix'],
   classNameBindings: ['editingTopic'],
   templateName: 'header',
-  currentUserBinding: 'Discourse.currentUser',
   topicBinding: 'Discourse.router.topicController.content',
 
   showDropdown: function($target) {
@@ -58,7 +57,7 @@ Discourse.HeaderView = Discourse.View.extend({
       }));
 
       // We've seen all the notifications now
-      headerView.set('currentUser.unread_notifications', 0);
+      Discourse.User.current.set('unread_notifications', 0);
       headerView.showDropdown($('#user-notifications'));
     });
     return false;

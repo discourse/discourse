@@ -93,10 +93,12 @@ Discourse.ComposerController = Discourse.Controller.extend({
     }).then(function(opts) {
       opts = opts || {};
       _this.close();
+
+      var currentUser = Discourse.User.current();
       if (composer.get('creatingTopic')) {
-        Discourse.set('currentUser.topic_count', Discourse.User.current('topic_count') + 1);
+        currentUser.set('topic_count', currentUser.get('topic_count') + 1);
       } else {
-        Discourse.set('currentUser.reply_count', Discourse.User.current('reply_count') + 1);
+        currentUser.set('reply_count', currentUser.get('reply_count') + 1);
       }
       Discourse.URL.routeTo(opts.post.get('url'));
     }, function(error) {
@@ -151,7 +153,8 @@ Discourse.ComposerController = Discourse.Controller.extend({
     Discourse.ajax("/education/" + educationKey, {dataType: 'html'}).then(function(result) {
       composerController.set('educationContents', result);
     });
-  }.observes('typedReply', 'content.creatingTopic', 'Discourse.currentUser.reply_count'),
+
+  }.observes('typedReply', 'content.creatingTopic', 'currentUser.reply_count'),
 
   checkReplyLength: function() {
     this.set('typedReply', this.present('content.reply'));

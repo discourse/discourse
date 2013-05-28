@@ -7,7 +7,6 @@
   @module Discourse
 **/
 Discourse.ListController = Discourse.Controller.extend({
-  currentUserBinding: 'Discourse.currentUser',
   categoryBinding: 'topicList.category',
   canCreateCategory: false,
   canCreateTopic: false,

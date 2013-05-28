@@ -7,8 +7,8 @@
     <div class='panel clearfix'>
       {{#unless showExtraInfo}}
         <div class='current-username'>
-          {{#if view.currentUser}}
-          <span class='username'><a {{bindAttr href="view.currentUser.path"}}>{{view.currentUser.name}}</a></span>
+          {{#if currentUser}}
+          <span class='username'><a {{bindAttr href="currentUser.path"}}>{{currentUser.name}}</a></span>
           {{else}}
             <button {{action showLogin}} class='btn btn-primary btn-small'>{{i18n log_in}}</button>
           {{/if}}
@@ -16,13 +16,13 @@
       {{/unless}}
       <ul class='icons clearfix'>
         <li class='notifications'>
-          {{#if view.currentUser}}
+          {{#if currentUser}}
             <a class='icon' href="#" {{action showNotifications target="view"}} data-notifications="notifications-dropdown" id='user-notifications' title='{{i18n notifications.title}}'><i class='icon-comment'></i></a>
-            {{#if view.currentUser.unread_notifications}}
-              <a href='#' class='badge-notification unread-notifications'>{{view.currentUser.unread_notifications}}</a>
+            {{#if currentUser.unread_notifications}}
+              <a href='#' class='badge-notification unread-notifications'>{{currentUser.unread_notifications}}</a>
             {{/if}}
-            {{#if view.currentUser.unread_private_messages}}
-              <a href='#' class='badge-notification unread-private-messages'>{{view.currentUser.unread_private_messages}}</a>
+            {{#if currentUser.unread_private_messages}}
+              <a href='#' class='badge-notification unread-private-messages'>{{currentUser.unread_private_messages}}</a>
             {{/if}}
           {{else}}
             <a class='icon' href="#" {{action showLogin}} title='{{i18n notifications.title}}'><i class='icon-comment'></i></a>
@@ -33,13 +33,13 @@
         </li>
         <li class='categories dropdown'>
           <a class='icon' data-dropdown="site-map-dropdown" href="#" title='{{i18n site_map}}'><i class='icon-reorder'></i></a>
-          {{#if view.currentUser.site_flagged_posts_count}}
-            <a href='/admin/flags/active' title='{{i18n notifications.total_flagged}}' class='badge-notification flagged-posts'>{{view.currentUser.site_flagged_posts_count}}</a>
+          {{#if currentUser.site_flagged_posts_count}}
+            <a href='/admin/flags/active' title='{{i18n notifications.total_flagged}}' class='badge-notification flagged-posts'>{{currentUser.site_flagged_posts_count}}</a>
           {{/if}}
         </li>
         <li class='current-user'>
-          {{#if view.currentUser}}
-            {{#titledLinkTo user.activity view.currentUser titleKey="current_user" class="icon"}}{{avatar Discourse.currentUser imageSize="medium" }}{{/titledLinkTo}}
+          {{#if currentUser}}
+            {{#titledLinkTo user.activity currentUser titleKey="current_user" class="icon"}}{{avatar currentUser imageSize="medium" }}{{/titledLinkTo}}
           {{else}}
             <div class="icon not-logged-in-avatar" {{action showLogin}}><i class='icon-user'></i></div>
           {{/if}}
@@ -55,7 +55,7 @@
             <li class="{{unbound readClass}}">{{{unbound rendered}}}</li>
             {{/each}}
             <li class='read last'>
-              <a {{bindAttr href="view.currentUser.path"}}>{{i18n notifications.more}} &hellip;</a>
+              <a {{bindAttr href="currentUser.path"}}>{{i18n notifications.more}} &hellip;</a>
             </li>
           </ul>
         {{else}}
@@ -65,11 +65,11 @@
 
       <section class='d-dropdown' id='site-map-dropdown'>
       <ul>
-        {{#if Discourse.currentUser.staff}}
+        {{#if currentUser.staff}}
           <li><a href="/admin"><i class='icon icon-cog'></i>{{i18n admin_title}}</a></li>
           <li><a href="/admin/flags/active"><i class='icon icon-flag'></i>{{i18n flags_title}}</a>
-          {{#if view.currentUser.site_flagged_posts_count}}
-            <a href='/admin/flags/active' title='{{i18n notifications.total_flagged}}' class='badge-notification flagged-posts'>{{view.currentUser.site_flagged_posts_count}}</a>
+          {{#if currentUser.site_flagged_posts_count}}
+            <a href='/admin/flags/active' title='{{i18n notifications.total_flagged}}' class='badge-notification flagged-posts'>{{currentUser.site_flagged_posts_count}}</a>
           {{/if}}
           </li>
         {{/if}}

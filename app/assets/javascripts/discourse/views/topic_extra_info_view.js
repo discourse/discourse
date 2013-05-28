@@ -14,9 +14,9 @@ Discourse.TopicExtraInfoView = Ember.ContainerView.extend({
     templateName: 'topic_extra_info',
     classNames: ['extra-info'],
     topicBinding: 'controller.topic',
-    showFavoriteButton: (function() {
-      return Discourse.currentUser && !this.get('topic.isPrivateMessage');
-    }).property('topic.isPrivateMessage')
+    showFavoriteButton: function() {
+      return Discourse.User.current() && !this.get('topic.isPrivateMessage');
+    }.property('topic.isPrivateMessage')
   })
 
 });

@@ -339,9 +339,9 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     return false;
   },
 
-  showFavoriteButton: (function() {
-    return Discourse.currentUser && !this.get('topic.isPrivateMessage');
-  }).property('topic.isPrivateMessage'),
+  showFavoriteButton: function() {
+    return Discourse.User.current() && !this.get('topic.isPrivateMessage');
+  }.property('topic.isPrivateMessage'),
 
   resetExamineDockCache: function() {
     this.docAt = null;
