@@ -1,11 +1,24 @@
 class UserActionSerializer < ApplicationSerializer
 
-  attributes :action_type, :created_at, :excerpt,
-             :avatar_template, :acting_avatar_template,
-             :slug, :topic_id, :target_user_id, :target_name,
-             :target_username, :post_number, :reply_to_post_number,
-             :username, :name, :user_id, :acting_username,
-             :acting_name, :acting_user_id
+  attributes :action_type,
+             :created_at,
+             :excerpt,
+             :avatar_template,
+             :acting_avatar_template,
+             :slug,
+             :topic_id,
+             :target_user_id,
+             :target_name,
+             :target_username,
+             :post_number,
+             :reply_to_post_number,
+             :username,
+             :name,
+             :user_id,
+             :acting_username,
+             :acting_name,
+             :acting_user_id,
+             :title
 
 
   def excerpt

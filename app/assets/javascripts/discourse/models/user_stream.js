@@ -27,6 +27,7 @@ Discourse.UserStream = Discourse.Model.extend({
       if (result && result.user_actions && result.user_actions.each) {
         var copy = Em.A();
         result.user_actions.each(function(i) {
+          console.log(i);
           return copy.pushObject(Discourse.UserAction.create(i));
         });
         copy = Discourse.UserAction.collapseStream(copy);
