@@ -59,6 +59,7 @@ gem 'sanitize'
 gem 'sass'
 gem 'seed-fu'
 gem 'sidekiq'
+gem 'sidekiq-failures'
 gem 'sinatra', require: nil
 gem 'slim'  # required for sidekiq-web
 gem 'strong_parameters' # remove when we upgrade to Rails 4
