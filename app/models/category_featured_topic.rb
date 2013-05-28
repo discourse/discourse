@@ -16,22 +16,14 @@ class CategoryFeaturedTopic < ActiveRecord::Base
     return if c.blank?
 
     CategoryFeaturedTopic.transaction do
-      exec_sql "DELETE FROM category_featured_topics WHERE category_id = :category_id", category_id: c.id
-      exec_sql "INSERT INTO category_featured_topics (category_id, topic_id, created_at, updated_at)
-                SELECT :category_id,
-                       ft.id,
-                       CURRENT_TIMESTAMP,
-                       CURRENT_TIMESTAMP
-                FROM topics AS ft
-                WHERE ft.category_id = :category_id
-                  AND ft.visible
-                  AND ft.deleted_at IS NULL
-                  AND ft.archetype <> :private_message
-                ORDER BY ft.bumped_at DESC
-                LIMIT :featured_limit",
-                category_id: c.id,
-                private_message: Archetype.private_message,
-                featured_limit: SiteSetting.category_featured_topics
+      CategoryFeaturedTopic.delete_all(category_id: c.id)
+      query = TopicQuery.new(nil, per_page: SiteSetting.category_featured_topics)
+      results = query.list_category(c)
+      if results.present?
+        results.topic_ids.each_with_index do |topic_id, idx|
+          c.category_featured_topics.create(topic_id: topic_id, rank: idx)
+        end
+      end
     end
   end
 

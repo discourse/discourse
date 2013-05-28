@@ -13,7 +13,7 @@ class CategoryDetailedSerializer < ApplicationSerializer
              :is_uncategorized
 
   has_many :featured_users, serializer: BasicUserSerializer
-  has_many :featured_topics, serializer: CategoryTopicSerializer, embed: :objects, key: :topics
+  has_many :displayable_topics, serializer: CategoryTopicSerializer, embed: :objects, key: :topics
 
   def topics_week
     object.topics_week || 0
@@ -33,6 +33,10 @@ class CategoryDetailedSerializer < ApplicationSerializer
 
   def include_is_uncategorized?
     is_uncategorized
+  end
+
+  def include_displayable_topics?
+    return displayable_topics.present?
   end
 
 end

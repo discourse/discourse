@@ -9,6 +9,8 @@ class CategoriesController < ApplicationController
   def index
     @list = CategoryList.new(guardian)
     discourse_expires_in 1.minute
+
+    store_preloaded("categories_list", MultiJson.dump(CategoryListSerializer.new(@list, scope: guardian)))
     respond_to do |format|
       format.html { render }
       format.json { render_serialized(@list, CategoryListSerializer) }

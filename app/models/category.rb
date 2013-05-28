@@ -62,6 +62,8 @@ class Category < ActiveRecord::Base
                          topics_week = (#{topics_week})")
   end
 
+  attr_accessor :displayable_topics
+
   # Internal: Generate the text of post prompting to enter category
   # description.
   def self.post_template

@@ -3,81 +3,118 @@ class CategoryList
 
   attr_accessor :categories, :topic_users, :uncategorized
 
-  def initialize(guardian)
-    guardian ||= Guardian.new
+  def initialize(guardian=nil)
+    @guardian = guardian || Guardian.new
 
-    @categories = Category
-                    .includes(featured_topics: [:category])
-                    .includes(:featured_users)
-                    .where('topics.visible' => true)
-                    .secured(guardian)
-                    .order('categories.topics_week desc, categories.topics_month desc, categories.topics_year desc')
+    find_relevant_topics
+    find_categories
+    add_uncategorized
+    find_user_data
+  end
 
+  private
 
-    @categories = @categories.to_a
+    # Retrieve a list of all the topics we'll need
+    def find_relevant_topics
+      @topics_by_category_id = {}
+      category_featured_topics = CategoryFeaturedTopic.select([:category_id, :topic_id]).order(:rank)
+      @topics_by_id = {}
 
-    # Support for uncategorized topics
-    uncategorized_topics = Topic
-                      .listable_topics
-                      .where(category_id: nil)
-                      .topic_list_order
-                      .limit(SiteSetting.category_featured_topics)
-    if uncategorized_topics.present?
-
-      totals = Topic.exec_sql("SELECT SUM(CASE WHEN created_at >= (CURRENT_TIMESTAMP - INTERVAL '1 WEEK') THEN 1 ELSE 0 END) as topics_week,
-                                      SUM(CASE WHEN created_at >= (CURRENT_TIMESTAMP - INTERVAL '1 MONTH') THEN 1 ELSE 0 END) as topics_month,
-                                      SUM(CASE WHEN created_at >= (CURRENT_TIMESTAMP - INTERVAL '1 YEAR') THEN 1 ELSE 0 END) as topics_year,
-                                      COUNT(*) AS topic_count
-                               FROM topics
-                               WHERE topics.visible
-                                AND topics.deleted_at IS NULL
-                                AND topics.category_id IS NULL
-                                AND topics.archetype <> '#{Archetype.private_message}'").first
-
-
-      uncategorized = Category.new({name: SiteSetting.uncategorized_name,
-                                    slug: Slug.for(SiteSetting.uncategorized_name),
-                                    color: SiteSetting.uncategorized_color,
-                                    text_color: SiteSetting.uncategorized_text_color,
-                                    featured_topics: uncategorized_topics}.merge(totals))
-
-      # Find the appropriate place to insert it:
-      insert_at = nil
-      @categories.each_with_index do |c, idx|
-        if totals['topics_week'].to_i > (c.topics_week || 0)
-          insert_at = idx
-          break
-        end
+      @all_topics = Topic.where(id: category_featured_topics.map(&:topic_id))
+      @all_topics.each do |t|
+        @topics_by_id[t.id] = t
       end
 
-      @categories.insert(insert_at || @categories.size, uncategorized)
+      category_featured_topics.each do |cft|
+        @topics_by_category_id[cft.category_id] ||= []
+        @topics_by_category_id[cft.category_id] << cft.topic_id
+      end
     end
 
-    unless guardian.can_create?(Category)
-      # Remove categories with no featured topics unless we have the ability to edit one
-      @categories.delete_if { |c| c.featured_topics.blank? }
-    else
-      # Show all categories to people who have the ability to edit and delete categories
-      if @categories.size > 0
-        @categories.insert(@categories.size, *Category.where('id not in (?)', @categories.map(&:id).compact).to_a)
-      else
-        @categories = Category.all.to_a
+    # Find a list of all categories to associate the topics with
+    def find_categories
+      @categories = Category
+                      .includes(:featured_users)
+                      .secured(@guardian)
+                      .order('COALESCE(categories.topics_week, 0) DESC')
+                      .order('COALESCE(categories.topics_month, 0) DESC')
+                      .order('COALESCE(categories.topics_year, 0) DESC')
+
+      @categories = @categories.to_a
+      @categories.each do |c|
+        topics_in_cat = @topics_by_category_id[c.id]
+        if topics_in_cat.present?
+          c.displayable_topics = []
+          topics_in_cat.each do |topic_id|
+            topic = @topics_by_id[topic_id]
+            topic.category = c
+            c.displayable_topics << topic
+          end
+        end
+      end
+    end
+
+    # Add the uncategorized "magic" category
+    def add_uncategorized
+      # Support for uncategorized topics
+      uncategorized_topics = Topic
+                        .listable_topics
+                        .where(category_id: nil)
+                        .topic_list_order
+                        .limit(SiteSetting.category_featured_topics)
+      if uncategorized_topics.present?
+
+        totals = Topic.exec_sql("SELECT SUM(CASE WHEN created_at >= (CURRENT_TIMESTAMP - INTERVAL '1 WEEK') THEN 1 ELSE 0 END) as topics_week,
+                                        SUM(CASE WHEN created_at >= (CURRENT_TIMESTAMP - INTERVAL '1 MONTH') THEN 1 ELSE 0 END) as topics_month,
+                                        SUM(CASE WHEN created_at >= (CURRENT_TIMESTAMP - INTERVAL '1 YEAR') THEN 1 ELSE 0 END) as topics_year,
+                                        COUNT(*) AS topic_count
+                                 FROM topics
+                                 WHERE topics.visible
+                                  AND topics.deleted_at IS NULL
+                                  AND topics.category_id IS NULL
+                                  AND topics.archetype <> '#{Archetype.private_message}'").first
+
+
+        uncategorized = Category.new({name: SiteSetting.uncategorized_name,
+                                      slug: Slug.for(SiteSetting.uncategorized_name),
+                                      color: SiteSetting.uncategorized_color,
+                                      text_color: SiteSetting.uncategorized_text_color,
+                                      featured_topics: uncategorized_topics}.merge(totals))
+
+        # Find the appropriate place to insert it:
+        insert_at = nil
+        @categories.each_with_index do |c, idx|
+          if uncategorized.topics_week > (c.topics_week || 0)
+            insert_at = idx
+            break
+          end
+        end
+
+        @categories.insert(insert_at || @categories.size, uncategorized)
+      end
+
+      if @all_topics.present?
+        uncategorized.displayable_topics = uncategorized_topics
+        @all_topics << uncategorized_topics
+        @all_topics.flatten!
+      end
+    end
+
+    # Remove any empty topics unless we can create them (so we can see the controls)
+    def prune_empty
+      unless @guardian.can_create?(Category)
+        # Remove categories with no featured topics unless we have the ability to edit one
+        @categories.delete_if { |c| c.displayable_topics.blank? }
       end
     end
 
     # Get forum topic user records if appropriate
-    if guardian.current_user
-      topics = []
-      @categories.each { |c| topics << c.featured_topics }
-      topics << @uncategorized
+    def find_user_data
+      if @guardian.current_user && @all_topics.present?
+        topic_lookup = TopicUser.lookup_for(@guardian.current_user, @all_topics)
 
-      topics.flatten! if topics.present?
-      topics.compact! if topics.present?
-
-      topic_lookup = TopicUser.lookup_for(guardian.current_user, topics)
-
-      # Attach some data for serialization to each topic
-      topics.each { |ft| ft.user_data = topic_lookup[ft.id] }
+        # Attach some data for serialization to each topic
+        @all_topics.each { |ft| ft.user_data = topic_lookup[ft.id] }
+      end
     end
-  end
 end

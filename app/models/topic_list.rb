@@ -41,6 +41,11 @@ class TopicList
     return @topics
   end
 
+  def topic_ids
+    return [] if @topics_input.blank?
+    @topics_input.map {|t| t.id}
+  end
+
   def filter_summary
     @filter_summary ||= get_summary
   end
