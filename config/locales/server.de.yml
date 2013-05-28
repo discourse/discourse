@@ -360,13 +360,13 @@ de:
       num_clicks: "Klicks"
       num_topics: "Themen"
     top_traffic_sources:
-      title: "Top Traffic Sources"
+      title: "Top Benutzerquellen"
       xaxis: "Domäne"
       num_clicks: "Klicks"
       num_topics: "Themen"
       num_users: "Benutzer"
     top_referred_topics:
-      title: "Top Referred Topics"
+      title: "Top verwiesene Themen"
       xaxis: "Themen"
       num_clicks: "Klicks"
 
@@ -382,7 +382,7 @@ de:
     twitter_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook Twitter (enable_twitter_logins), aber der Schlüssel und der Geheimcode sind nicht gesetzt. Besuche <a href="/admin/site_settings">die Seiteneinstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
     github_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook GitHub (enable_github_logins), aber die Kunden ID und der Geheimcode sind nicht gesetzt. Besuche <a href="/admin/site_settings">die Seiteneinstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
     failing_emails_warning: 'Es konnten insgesamt %{num_failed_jobs} Emails nicht versendet werden. Bitte überprüfe die Einstellungen in config/environments/production.rb und stelle die Richtigkeit der config.action_mailer Einstellungen. <a href="/sidekiq/retries" target="_blank">Zu den Fehlern in Sidekiq</a>.'
-    default_logo_warning: "Der Logo der Seite wurde noch nicht angepasst. Bitte bearbeite dieses in den <a href='/admin/site_settings'>Seiteneinstellungen</a> (logo_url, logo_small_url und favicon_url)."
+    default_logo_warning: "Das Logo der Seite wurde noch nicht angepasst. Bitte bearbeite dieses in den <a href='/admin/site_settings'>Seiteneinstellungen</a> (logo_url, logo_small_url und favicon_url)."
     contact_email_missing: "Du hast noch keine Kontaktmail für die Seite hinterlegt. Bitte hinterlege diese in den <a href='/admin/site_settings'>Seiteneinstellungen</a> (contact_email)."
     contact_email_invalid: "Die Kontaktmail der Seite ist ungültig. Bitte bearbeite diese in den <a href='/admin/site_settings'>Seiteneinstellungen</a> (contact_email)."
     title_nag: "Der Titel der Seite wurde noch nicht angepasst. Bitte bearbeite diesen in den <a href='/admin/site_settings'>Seiteneinstellungen</a>."
@@ -624,6 +624,7 @@ de:
       zero: "Dieses Thema wurde automatisch nach einem Tag geschlossen. Es werden keine neuen Beiträge mehr angenommen."
       one: "Dieses Thema wurde automatisch nach einem Tag geschlossen. Es werden keine neuen Beiträge mehr angenommen."
       other: "Dieses Thema wurde automatisch nach %{count} Tagen geschlossen. Es werden keine neuen Beiträge mehr angenommen."
+    autoclosed_disabled: "Dieses Thema ist nun offen. Neue Beiträge werden angenommen."
     pinned_enabled: "Dieses Thema ist nun angepinnt. In seiner Kategorie wird es nun oben aufgelistet, solange der Pin nicht von einem Moderator gelöst wird, oder nicht jeder Nutzer auf 'Pin lösen' klickt."
     pinned_disabled: "Dieses Thema ist nun nicht mehr angepinnt. In seiner Kategorie wird es nicht länger oben aufgelistet."
     visible_enabled: "Dieses Thema ist nun sichtbar. Es wird in Themenlisten aufgeführt."

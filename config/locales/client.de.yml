@@ -612,7 +612,7 @@ de:
           other: "von {{count}} Themen"
         cancel: "Zeige wieder alle Beiträge zu diesem Thema."
 
-      move_selected:
+      split_topic:
         title: "Ausgewählte Beiträge verschieben"
         action: "Thema aufteilen"
         topic_name: "Neues Thema:"
@@ -670,7 +670,7 @@ de:
 
       controls:
         reply: "Fange eine Antwort auf diesen Beitrag an"
-        like: "Diesen Beitrag liken"
+        like: "Dieser Beitrag gefällt mir"
         edit: "Diesen Beitrag bearbeiten"
         flag: "Diesen Beitrag den Moderatoren melden"
         delete: "Diesen Beitrag löschen"
