@@ -4,6 +4,7 @@ require_dependency 'rate_limiter'
 require_dependency 'post_revisor'
 require_dependency 'enum'
 require_dependency 'trashable'
+require_dependency 'post_analyser'
 
 require 'archetype'
 require 'digest/sha1'
@@ -11,6 +12,7 @@ require 'digest/sha1'
 class Post < ActiveRecord::Base
   include RateLimiter::OnCreateRecord
   include Trashable
+  include PostAnalyser
 
   versioned if: :raw_changed?
 
@@ -114,29 +116,6 @@ class Post < ActiveRecord::Base
     end.count
   end
 
-  # Returns an array of all links in a post
-  def raw_links
-    return [] unless raw.present?
-
-    return @raw_links if @raw_links.present?
-
-    # Don't include @mentions in the link count
-    @raw_links = []
-    cooked_document.search("a[href]").each do |l|
-      html_class = l.attributes['class']
-      url = l.attributes['href'].to_s
-      if html_class.present?
-        next if html_class.to_s == 'mention' && l.attributes['href'].to_s =~ /^\/users\//
-      end
-      @raw_links << url
-    end
-    @raw_links
-  end
-
-  # How many links are present in the post
-  def link_count
-    raw_links.size
-  end
 
   # Sometimes the post is being edited by someone else, for example, a mod.
   # If that's the case, they should not be bound by the original poster's
@@ -168,22 +147,6 @@ class Post < ActiveRecord::Base
     add_error_if_count_exceeded(:too_many_links, link_count, SiteSetting.newuser_max_links) unless acting_user_is_trusted?
   end
 
-
-  # Count how many hosts are linked in the post
-  def linked_hosts
-    return {} if raw_links.blank?
-
-    return @linked_hosts if @linked_hosts.present?
-
-    @linked_hosts = {}
-    raw_links.each do |u|
-      uri = URI.parse(u)
-      host = uri.host
-      @linked_hosts[host] ||= 1
-    end
-    @linked_hosts
-  end
-
   def total_hosts_usage
     hosts = linked_hosts.clone
 
@@ -206,23 +169,6 @@ class Post < ActiveRecord::Base
     end
 
     false
-  end
-
-
-  def raw_mentions
-    return [] if raw.blank?
-
-    # We don't count mentions in quotes
-    return @raw_mentions if @raw_mentions.present?
-    raw_stripped = raw.gsub(/\[quote=(.*)\]([^\[]*?)\[\/quote\]/im, '')
-
-    # Strip pre and code tags
-    doc = Nokogiri::HTML.fragment(raw_stripped)
-    doc.search("pre").remove
-    doc.search("code").remove
-
-    results = doc.to_html.scan(PrettyText.mention_matcher)
-    @raw_mentions = results.uniq.map { |un| un.first.downcase.gsub!(/^@/, '') }
   end
 
   def archetype
