@@ -174,7 +174,7 @@ Discourse.Composer = Discourse.Model.extend({
     // reply is always required
     if (this.get('replyLength') < Discourse.SiteSettings.min_post_length) return true;
 
-    if (!Discourse.SiteSettings.allow_uncategorized_topics && !this.get('categoryName')) return true;
+    if (this.get('editTitle') && !Discourse.SiteSettings.allow_uncategorized_topics && !this.get('categoryName')) return true;
 
     return false;
   }.property('loading', 'editTitle', 'titleLength', 'targetUsernames', 'replyLength', 'categoryName'),
