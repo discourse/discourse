@@ -670,7 +670,7 @@ de:
 
       controls:
         reply: "Fange eine Antwort auf diesen Beitrag an"
-        like: "Diesen Beitrag liken"
+        like: "Dieser Beitrag gefällt mir"
         edit: "Diesen Beitrag bearbeiten"
         flag: "Diesen Beitrag den Moderatoren melden"
         delete: "Diesen Beitrag löschen"
