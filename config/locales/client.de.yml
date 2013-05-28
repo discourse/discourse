@@ -963,11 +963,11 @@ de:
       api:
         title: "API"
         long_title: "API Information"
-        key: "Key"
-        generate: "Generate API Key"
-        regenerate: "Regenerate API Key"
-        info_html: "Your API key will allow you to create and update topics using JSON calls."
-        note_html: "Keep this key <strong>secret</strong>, all users that have it may create arbitrary posts on the forum as any user."
+        key: "Schlüssel"
+        generate: "API Schlüssel generieren"
+        regenerate: "API Schlüssel neu generieren"
+        info_html: "Dein API Schlüssel erlaubt Dir das Erstellen und Bearbeiten von Themen via JSON aufrufen."
+        note_html: "Behalte deinen <strong>Schlüssel</strong> geheim, jeder Benutzer mit diesem Schlüssel kann beliebige Beiträge unter jedem Benutzer im Forum erstellen."
 
       customize:
         title: "Personalisieren"
