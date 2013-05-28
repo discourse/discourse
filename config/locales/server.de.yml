@@ -360,13 +360,13 @@ de:
       num_clicks: "Klicks"
       num_topics: "Themen"
     top_traffic_sources:
-      title: "Top Traffic Sources"
+      title: "Top Benutzerquellen"
       xaxis: "Domäne"
       num_clicks: "Klicks"
       num_topics: "Themen"
       num_users: "Benutzer"
     top_referred_topics:
-      title: "Top Referred Topics"
+      title: "Top verwiesene Themen"
       xaxis: "Themen"
       num_clicks: "Klicks"
 
