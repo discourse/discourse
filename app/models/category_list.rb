@@ -1,7 +1,12 @@
 class CategoryList
   include ActiveModel::Serialization
 
-  attr_accessor :categories, :topic_users, :uncategorized
+  attr_accessor :categories,
+                :topic_users,
+                :uncategorized,
+                :draft,
+                :draft_key,
+                :draft_sequence
 
   def initialize(guardian=nil)
     @guardian = guardian || Guardian.new

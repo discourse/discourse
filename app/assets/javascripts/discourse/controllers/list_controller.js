@@ -38,9 +38,14 @@ Discourse.ListController = Discourse.Controller.extend({
 
     if (filterMode === 'categories') {
       return Discourse.CategoryList.list(filterMode).then(function(items) {
-        listController.set('loading', false);
-        listController.set('filterMode', filterMode);
-        listController.set('categoryMode', true);
+        listController.setProperties({
+          loading: false,
+          filterMode: filterMode,
+          categoryMode: true,
+          draft: items.draft,
+          draft_key: items.draft_key,
+          draft_sequence: items.draft_sequence
+        });
         return items;
       });
     }
@@ -49,10 +54,16 @@ Discourse.ListController = Discourse.Controller.extend({
     if (!current) {
       current = Discourse.NavItem.create({ name: filterMode });
     }
+
     return Discourse.TopicList.list(current).then(function(items) {
-      listController.set('filterSummary', items.filter_summary);
-      listController.set('filterMode', filterMode);
-      listController.set('loading', false);
+      listController.setProperties({
+        loading: false,
+        filterSummary: items.filter_summary,
+        filterMode: filterMode,
+        draft: items.draft,
+        draft_key: items.draft_key,
+        draft_sequence: items.draft_sequence
+      })
       return items;
     });
   },
@@ -72,13 +83,12 @@ Discourse.ListController = Discourse.Controller.extend({
 
   // Create topic button
   createTopic: function() {
-    var topicList = this.get('controllers.listTopics.content');
-    if (!topicList) return;
     this.get('controllers.composer').open({
       categoryName: this.get('category.name'),
       action: Discourse.Composer.CREATE_TOPIC,
-      draftKey: topicList.get('draft_key'),
-      draftSequence: topicList.get('draft_sequence')
+      draft: this.get('draft'),
+      draftKey: this.get('draft_key'),
+      draftSequence: this.get('draft_sequence')
     });
   },
 

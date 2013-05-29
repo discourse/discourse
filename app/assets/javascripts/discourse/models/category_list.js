@@ -57,10 +57,13 @@ Discourse.CategoryList.reopenClass({
 
     return finder.then(function(result) {
       var categoryList = Discourse.TopicList.create();
-      categoryList.set('can_create_category', result.category_list.can_create_category);
-      categoryList.set('can_create_topic', result.category_list.can_create_topic);
-      categoryList.set('categories', route.categoriesFrom(result));
-      categoryList.set('loaded', true);
+      categoryList.setProperties({
+        can_create_category: result.category_list.can_create_category,
+        can_create_topic: result.category_list.can_create_topic,
+        categories: route.categoriesFrom(result),
+        draft_key: result.category_list.draft_key,
+        draft_sequence: result.category_list.draft_sequence
+      })
       return categoryList;
     });
   }
