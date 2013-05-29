@@ -62,36 +62,27 @@ describe EmailSender do
 
     end
 
-    context 'html' do
-      before do
-        email_sender.send
-      end
+    context 'email parts' do
+      before { email_sender.send }
 
       it 'makes the message multipart' do
         message.should be_multipart
       end
 
-      it 'has a html part' do
-        message.parts.detect {|p| p.content_type == "text/html; charset=UTF-8"}.should be_true
+      it 'sets the correct content type for the plain text part' do
+        expect(message.text_part.content_type).to eq 'text/plain; charset=UTF-8'
       end
 
-      context 'html part' do
-        let(:html_part) { message.parts.detect {|p| p.content_type == "text/html; charset=UTF-8"} }
-
-        it 'has a html part' do
-          html_part.should be_present
-        end
-
-        it 'has run markdown on the body' do
-          html_part.body.to_s.should == "<p><strong>hello</strong></p>"
-        end
-
+      it 'sets the correct content type for the html part' do
+        expect(message.html_part.content_type).to eq 'text/html; charset=UTF-8'
       end
 
-
+      it 'converts the html part to html' do
+        expect(message.html_part.body.to_s).to eq(
+          "<p><strong>hello</strong></p>"
+        )
+      end
     end
-
-
   end
 
   context 'with a user' do
