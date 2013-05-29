@@ -27,6 +27,8 @@ class EmailSender
       body PrettyText.cook(plain_body, environment: 'email')
     end
 
+    @message.text_part.content_type = 'text/plain; charset=UTF-8'
+
     @message.deliver
 
     to_address = @message.to
