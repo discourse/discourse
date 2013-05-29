@@ -56,51 +56,6 @@ Handlebars.registerHelper('categoryLink', function(property, options) {
   return new Handlebars.SafeString(Discourse.Utilities.categoryLink(category));
 });
 
-/**
-  Inserts a Discourse.TextField to allow the user to enter information.
-
-  @method textField
-  @for Handlebars
-**/
-Ember.Handlebars.registerHelper('textField', function(options) {
-  var hash = options.hash,
-      types = options.hashTypes;
-
-  Discourse.Utilities.normalizeHash(hash, types);
-
-  return Ember.Handlebars.helpers.view.call(this, Discourse.TextField, options);
-});
-
-/**
-  Inserts a Discourse.InputTipView
-
-  @method inputTip
-  @for Handlebars
-**/
-Ember.Handlebars.registerHelper('inputTip', function(options) {
-  var hash = options.hash,
-      types = options.hashTypes;
-
-  Discourse.Utilities.normalizeHash(hash, types);
-
-  return Ember.Handlebars.helpers.view.call(this, Discourse.InputTipView, options);
-});
-
-/**
-  Inserts a Discourse.PopupInputTipView
-
-  @method popupInputTip
-  @for Handlebars
-**/
-Ember.Handlebars.registerHelper('popupInputTip', function(options) {
-  var hash = options.hash,
-      types = options.hashTypes;
-
-  Discourse.Utilities.normalizeHash(hash, types);
-
-  return Ember.Handlebars.helpers.view.call(this, Discourse.PopupInputTipView, options);
-});
-
 
 /**
   Produces a bound link to a category

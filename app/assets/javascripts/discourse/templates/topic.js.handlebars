@@ -16,7 +16,7 @@
           {{else}}
             <h1>
               {{#if view.topic.fancy_title}}
-                {{view Discourse.TopicStatusView topicBinding="view.topic"}}
+                {{topicStatus topic=view.topic}}
                 <a href='{{unbound view.topic.url}}'>{{{view.topic.fancy_title}}}</a>
               {{else}}
                 {{#if view.topic.errorLoading}}

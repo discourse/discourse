@@ -55,3 +55,5 @@ Discourse.PopupInputTipView = Discourse.View.extend({
     }
   }
 });
+
+Discourse.Utilities.registerViewHelper('popupInputTip', Discourse.PopupInputTipView);

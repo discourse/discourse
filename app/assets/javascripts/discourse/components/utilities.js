@@ -29,6 +29,19 @@ Discourse.Utilities = {
     }
   },
 
+  /*
+    Register a view class as a helper
+  */
+  registerViewHelper: function(helperName, helperClass) {
+    Ember.Handlebars.registerHelper(helperName, function(options) {
+      var hash = options.hash,
+          types = options.hashTypes;
+
+      Discourse.Utilities.normalizeHash(hash, types);
+      return Ember.Handlebars.helpers.view.call(this, helperClass, options);
+    });
+  },
+
   // Create a badge like category link
   categoryLink: function(category) {
     if (!category) return "";
