@@ -1,4 +1,4 @@
-{{textField value=term placeholderKey="search.placeholder"}}
+{{view Discourse.SearchTextField valueBinding="term" searchContextBinding="searchContext"}}
 {{#unless loading}}
   {{#unless noResults}}
     {{#each resultType in content}}

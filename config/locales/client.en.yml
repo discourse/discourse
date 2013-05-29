@@ -435,6 +435,10 @@ en:
       no_results: "No results found."
       searching: "Searching ..."
 
+      prefer:
+        user: "search will prefer results by @{{username}}"
+        category: "search will prefer results in {{category}}"
+
     site_map: "go to another topic list or category"
     go_back: 'go back'
     current_user: 'go to your user page'

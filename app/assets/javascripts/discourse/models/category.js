@@ -15,7 +15,7 @@ Discourse.Category = Discourse.Model.extend({
   },
 
   searchContext: function() {
-    return ({ type: 'category', id: this.get('id') });
+    return ({ type: 'category', id: this.get('id'), category: this });
   }.property('id'),
 
   url: function() {
