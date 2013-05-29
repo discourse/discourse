@@ -42,7 +42,7 @@
       </li>
       {{#if view.topic.fewParticipants}}
       <li class='avatars'>
-        {{#each view.topic.fewParticipants}}{{view Discourse.ParticipantView participantBinding="this"}}{{/each}}
+        {{#each view.topic.fewParticipants}}{{participant participant=this}}{{/each}}
       </li>
       {{/if}}
     </ul>
@@ -74,7 +74,7 @@
 
   {{#if view.topic.participants}}
     <section class='avatars clearfix'>
-      {{#each view.topic.participants}}{{view Discourse.ParticipantView participantBinding="this"}}{{/each}}
+      {{#each view.topic.participants}}{{participant participant=this}}{{/each}}
     </section>
   {{/if}}
 

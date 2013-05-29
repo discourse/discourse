@@ -16,9 +16,10 @@
 
     <ul class='action-list nav-stacked side-nav'>
       {{#each statsPmsOnly}}
-        {{view Discourse.ActivityFilterView contentBinding="this"}}
+        {{activityFilter content=this}}
       {{/each}}
     </ul>
   {{/with}}
 </div>
-{{view Discourse.UserStreamView streamBinding="model"}}
+{{userStream stream=model}}
+

@@ -50,3 +50,4 @@ Discourse.UserStreamView = Discourse.View.extend(Discourse.Scrolling, {
 });
 
 
+Discourse.View.registerHelper('userStream', Discourse.UserStreamView);

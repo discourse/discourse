@@ -34,4 +34,4 @@ Discourse.CategoryChooserView = Discourse.ComboboxView.extend({
 
 });
 
-Discourse.Utilities.registerViewHelper('categoryChooser', Discourse.CategoryChooserView);
+Discourse.View.registerHelper('categoryChooser', Discourse.CategoryChooserView);

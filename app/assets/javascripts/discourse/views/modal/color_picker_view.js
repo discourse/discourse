@@ -36,4 +36,4 @@ Discourse.ColorPickerView = Ember.ContainerView.extend({
   }
 });
 
-Discourse.Utilities.registerViewHelper('colorPicker', Discourse.ColorPickerView);
+Discourse.View.registerHelper('colorPicker', Discourse.ColorPickerView);

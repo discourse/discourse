@@ -75,4 +75,4 @@ Discourse.ComboboxView = Discourse.View.extend({
 
 });
 
-
+Discourse.View.registerHelper('combobox', Discourse.ComboboxView);
