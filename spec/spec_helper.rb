@@ -51,6 +51,7 @@ Spork.prefork do
 
 
   # let's not run seed_fu every test
+  SeedFu.quiet = true
   SeedFu.seed
 
   RSpec.configure do |config|
