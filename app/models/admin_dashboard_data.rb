@@ -32,6 +32,7 @@ class AdminDashboardData
       failing_emails_check,
       default_logo_check,
       contact_email_check,
+      send_email_with_gmail_check,
       title_check ].compact
   end
 
@@ -118,6 +119,10 @@ class AdminDashboardData
 
   def title_check
     I18n.t('dashboard.title_nag') if SiteSetting.title == SiteSetting.defaults[:title]
+  end
+
+  def send_email_with_gmail_check
+    I18n.t('dashboard.gmail_for_email_warning') if Rails.env == 'production' and ActionMailer::Base.smtp_settings[:address] =~ /gmail\.com/
   end
 
 end
