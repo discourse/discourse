@@ -17,8 +17,7 @@ Discourse.ListController = Discourse.Controller.extend({
     var loggedOn = !!Discourse.User.current();
     return Discourse.SiteSettings.top_menu.split("|").map(function(i) {
       return Discourse.NavItem.fromText(i, {
-        loggedOn: loggedOn,
-        hasCategories: hasCategories
+        loggedOn: loggedOn
       });
     }).filter(function(i) {
       return i !== null;
