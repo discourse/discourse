@@ -116,9 +116,13 @@ Discourse.ComposerView = Discourse.View.extend({
       // Search for similar topics if the user pauses typing
       controller.findSimilarTopics();
     }, 1000);
+  },
 
+  keyDown: function(e) {
     // If the user hit ESC
-    if (e.which === 27) controller.hitEsc();
+    if (e.which === 27) {
+      this.get('controller').hitEsc();
+    }
   },
 
   didInsertElement: function() {
