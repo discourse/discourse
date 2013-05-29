@@ -60,7 +60,7 @@ class User < ActiveRecord::Base
 
   scope :admins, ->{ where(admin: true) }
   scope :moderators, ->{ where(moderator: true) }
-  scope :staff, ->{ where("moderator = 't' or admin = 't'") }
+  scope :staff, ->{ where("moderator or admin ") }
 
   module NewTopicDuration
     ALWAYS = -1
