@@ -5,6 +5,12 @@ class TopicUser < ActiveRecord::Base
   scope :starred_since, lambda { |sinceDaysAgo| where('starred_at > ?', sinceDaysAgo.days.ago) }
   scope :by_date_starred, group('date(starred_at)').order('date(starred_at)')
 
+  scope :tracking, lambda { |topic_id|
+    where(topic_id: topic_id)
+        .where("COALESCE(topic_users.notification_level, :regular) >= :tracking",
+                regular: TopicUser.notification_levels[:regular], tracking: TopicUser.notification_levels[:tracking])
+  }
+
   # Class methods
   class << self
 

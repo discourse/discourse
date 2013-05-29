@@ -28,12 +28,12 @@
         </tr>
         </thead>
 
-        {{#if Discourse.currentUser.userTrackingState.hasIncoming}}
+        {{#if view.topicTrackingState.hasIncoming}}
           <tbody>
             <tr>
               <td colspan="9">
                 <div class='alert alert-info'>
-                  {{countI18n new_topics_inserted countBinding="Discourse.currentUser.userTrackingState.incomingCount"}}
+                  {{countI18n new_topics_inserted countBinding="view.topicTrackingState.incomingCount"}}
                   <a href='#' {{action showInserted}}>{{i18n show_new_topics}}</a>
                 </div>
               </td>

@@ -133,6 +133,12 @@ class Category < ActiveRecord::Base
     end
   end
 
+  def secure_group_ids
+    if self.secure
+      groups.pluck("groups.id")
+    end
+  end
+
 end
 
 # == Schema Information

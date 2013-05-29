@@ -1,4 +1,4 @@
-Discourse.UserTrackingState = Discourse.Model.extend({
+Discourse.TopicTrackingState = Discourse.Model.extend({
   messageCount: 0,
 
   init: function(){
@@ -17,7 +17,7 @@ Discourse.UserTrackingState = Discourse.Model.extend({
         tracker.removeTopic(data.topic_id);
       }
 
-      if (data.message_type === "new_topic") {
+      if (data.message_type === "new_topic" || data.message_type === "unread") {
         tracker.states["t" + data.topic_id] = data.payload;
         tracker.notify(data);
       }
@@ -26,7 +26,10 @@ Discourse.UserTrackingState = Discourse.Model.extend({
     };
 
     Discourse.MessageBus.subscribe("/new", process);
-    Discourse.MessageBus.subscribe("/unread/" + Discourse.currentUser.id, process);
+    var currentUser = Discourse.User.current();
+    if(currentUser) {
+      Discourse.MessageBus.subscribe("/unread/" + currentUser.id, process);
+    }
   },
 
   notify: function(data){
@@ -62,6 +65,8 @@ Discourse.UserTrackingState = Discourse.Model.extend({
   sync: function(list, filter){
     var tracker = this;
 
+    if(!list || !list.topics || !list.topics.length) { return; }
+
     if(filter === "new" && !list.more_topics_url){
       // scrub all new rows and reload from list
       $.each(this.states, function(){
@@ -88,8 +93,10 @@ Discourse.UserTrackingState = Discourse.Model.extend({
       if(topic.unseen) {
         row.last_read_post_number = null;
       } else {
-        row.last_read_post_number = topic.last_read_post_number;
+        // subtle issue here
+        row.last_read_post_number = topic.last_read_post_number || topic.highest_post_number;
       }
+
       row.highest_post_number = topic.highest_post_number;
       if (topic.category) {
         row.category_name = topic.category.name;
@@ -97,6 +104,8 @@ Discourse.UserTrackingState = Discourse.Model.extend({
 
       if (row.last_read_post_number === null || row.highest_post_number > row.last_read_post_number) {
         tracker.states["t" + topic.id] = row;
+      } else {
+        delete tracker.states["t" + topic.id];
       }
     });
 
@@ -151,18 +160,28 @@ Discourse.UserTrackingState = Discourse.Model.extend({
     // not exposed
     var states = this.states;
 
-    data.each(function(row){
-      states["t" + row.topic_id] = row;
-    });
+    if(data) {
+      data.each(function(row){
+        states["t" + row.topic_id] = row;
+      });
+    }
   }
 });
 
 
-Discourse.UserTrackingState.reopenClass({
+Discourse.TopicTrackingState.reopenClass({
   createFromStates: function(data){
-    var instance = Discourse.UserTrackingState.create();
+    var instance = Discourse.TopicTrackingState.create();
     instance.loadStates(data);
     instance.establishChannels();
     return instance;
+  },
+  current: function(){
+    if (!this.tracker) {
+      var data = PreloadStore.get('topicTrackingStates');
+      this.tracker = this.createFromStates(data);
+      PreloadStore.remove('topicTrackingStates');
+    }
+    return this.tracker;
   }
 });

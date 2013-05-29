@@ -123,7 +123,6 @@ class PostCreator
 
       @user.last_posted_at = post.created_at
       @user.save!
-
       if post.post_number > 1
         MessageBus.publish("/topic/#{post.topic_id}",{
                         id: post.id,
@@ -142,12 +141,14 @@ class PostCreator
       post.save_reply_relationships
     end
 
-    # We need to enqueue jobs after the transaction. Otherwise they might begin before the data has
-    # been comitted.
-    topic_id = @opts[:topic_id] || topic.try(:id)
-    Jobs.enqueue(:feature_topic_users, topic_id: topic.id) if topic_id.present?
-    if post
+    if post && !post.errors.present?
+
+      # We need to enqueue jobs after the transaction. Otherwise they might begin before the data has
+      # been comitted.
+      topic_id = @opts[:topic_id] || topic.try(:id)
+      Jobs.enqueue(:feature_topic_users, topic_id: topic.id) if topic_id.present?
       post.trigger_post_process
+      after_post_create(post)
       after_topic_create(topic) if new_topic
     end
 
@@ -164,7 +165,13 @@ class PostCreator
 
   def secure_group_ids(topic)
     @secure_group_ids ||= if topic.category && topic.category.secure?
-      topic.category.groups.select("groups.id").map{|g| g.id}
+      topic.category.secure_group_ids
+    end
+  end
+
+  def after_post_create(post)
+    if post.post_number > 1
+      TopicTrackingState.publish_unread(post)
     end
   end
 
@@ -177,21 +184,8 @@ class PostCreator
 
     topic.posters = topic.posters_summary
     topic.posts_count = 1
-    topic_json = TopicListItemSerializer.new(topic).as_json
 
-    message = {
-      topic_id: topic.id,
-      message_type: "new_topic",
-      payload: {
-        last_read_post_number: nil,
-        topic_id: topic.id
-      }
-    }
-
-    group_ids = secure_group_ids(topic)
-    MessageBus.publish("/new", message.as_json, group_ids: group_ids)
-
-    # TODO post creator should get an unread
+    TopicTrackingState.publish_new(topic)
   end
 
   def create_topic

@@ -10,7 +10,10 @@ var validNavNames = ['latest', 'hot', 'categories', 'category', 'favorited', 'un
 var validAnon     = ['latest', 'hot', 'categories', 'category'];
 
 Discourse.NavItem = Discourse.Model.extend({
-  userTrackingStateBinding: Ember.Binding.oneWay('Discourse.currentUser.userTrackingState.messageCount'),
+  topicTrackingState: function(){
+    return Discourse.TopicTrackingState.current();
+  }.property(),
+
   categoryName: function() {
     var split = this.get('name').split('/');
     return split[0] === 'category' ? split[1] : null;
@@ -25,11 +28,11 @@ Discourse.NavItem = Discourse.Model.extend({
   }.property('name'),
 
   count: function() {
-    var state = Discourse.get('currentUser.userTrackingState');
+    var state = this.get('topicTrackingState');
     if (state) {
       return state.lookupCount(this.get('name'));
     }
-  }.property('userTrackingState')
+  }.property('topicTrackingState.messageCount')
 });
 
 Discourse.NavItem.reopenClass({

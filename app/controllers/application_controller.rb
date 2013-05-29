@@ -107,6 +107,9 @@ class ApplicationController < ActionController::Base
 
       if current_user.present?
         store_preloaded("currentUser", MultiJson.dump(CurrentUserSerializer.new(current_user, root: false)))
+
+        serializer = ActiveModel::ArraySerializer.new(TopicTrackingState.report([current_user.id]), each_serializer: TopicTrackingStateSerializer)
+        store_preloaded("topicTrackingStates", MultiJson.dump(serializer))
       end
       store_preloaded("siteSettings", SiteSetting.client_settings_json)
     end

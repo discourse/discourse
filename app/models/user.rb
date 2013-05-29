@@ -576,9 +576,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def user_tracking_states
-    UserTrackingState.report([self.id])
-  end
 
   protected
 

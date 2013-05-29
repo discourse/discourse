@@ -14,6 +14,9 @@ Discourse.ListTopicsView = Discourse.View.extend(Discourse.Scrolling, {
   listBinding: 'controller.model',
   loadedMore: false,
   currentTopicId: null,
+  topicTrackingState: function() {
+    return Discourse.TopicTrackingState.current();
+  }.property(),
 
   willDestroyElement: function() {
     this.unbindScrolling();
@@ -42,8 +45,11 @@ Discourse.ListTopicsView = Discourse.View.extend(Discourse.Scrolling, {
   },
 
   showTable: function() {
-    return this.get('list.topics').length > 0 || Discourse.get('currentUser.userTrackingState.hasIncoming');
-  }.property('list.topics','Discourse.currentUser.userTrackingState.hasIncoming'),
+    var topics = this.get('list.topics');
+    if(topics) {
+      return this.get('list.topics').length > 0 || this.get('topicTrackingState.hasIncoming');
+    }
+  }.property('list.topics','topicTrackingState.hasIncoming'),
 
   loadMore: function() {
     var listTopicsView = this;
