@@ -320,6 +320,9 @@ fr:
       facebook:
         title: "via Facebook"
         message: "Authentification via Facebook (assurez-vous que les popups ne soient pas bloquées)"
+      cas:
+        title: "via CAS"
+        message: "Authentification via CAS (assurez-vous que les popups ne soient pas bloquées)"
       yahoo:
         title: "via Yahoo"
         message: "Authentification via Yahoo (assurez-vous que les popups ne soient pas bloquées)"
@@ -435,6 +438,10 @@ fr:
       placeholder: "saisir votre requête ici"
       no_results: "Aucun résultat."
       searching: "Recherche en cours ..."
+
+      prefer:
+        user: "La recherche priorisera les résultats de @{{username}}"
+        category: "La recherche priorisera les résultats de la catégorie : {{category}}"
 
     site_map: "voir une autre liste des discussions ou une catégorie"
     go_back: 'retour'

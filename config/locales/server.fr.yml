@@ -386,6 +386,7 @@ fr:
     queue_size_warning: "Il y a %{queue_size} tâches dans la file d'attente, ce qui est beaucoup. Cela peut provenir d'un problème avec les processus Sidekiq, ou à un manque de processus Sidekiq travailleurs."
     memory_warning: "Votre serveur dispose de moins de 1 Go de mémoire vive. Au moins 1 Go de RAM est recommandé."
     facebook_config_warning: "Le serveur est configuré pour permettre l'authentification par Facebook (enable_facebook_logins), mais les paramètres facebook_app_id et facebook_app_secret ne sont pas renseignés. Vous pouvez modifier ces paramètres dans <a href=\"/admin/site_settings\">l'interface d'administration</a>."
+    cas_config_warning: "Le serveur est configuré pour permettre l'authentification via CAS (enable_cas_logins), mais les paramètres cas_hostname et cas_domainname ne sont pas renseignés. Vous pouvez modifier ces paramètres dans <a href=\"/admin/site_settings\">l'interface d'administration</a>."
     twitter_config_warning: "Le serveur est configuré pour permettre l'authentification par Twitter (enable_twitter_logins), mais les paramètres twitter_consumer_key et twitter_consumer_secret ne sont pas renseignés. Vous pouvez modifier ces paramètres dans <a href=\"/admin/site_settings\">l'interface d'administration</a>."
     github_config_warning: "Le serveur est configuré pour permettre l'authentification par GitHub (enable_github_logins), mais les paramètres github_client_id et github_client_secret ne sont pas renseignés. Vous pouvez modifier ces paramètres dans <a href=\"/admin/site_settings\">l'interface d'administration</a>."
     failing_emails_warning: "Il y a %{num_failed_jobs} tâches d'envois d'email en erreur. Vérifiez votre fichier config/production.rb et assurez-vous de la conformité des paramètres du config.action_mailer"
@@ -393,6 +394,7 @@ fr:
     contact_email_missing: "Vous n'avez pas renseigné d'email de contact pour votre site. Merci de mettre à jour le <a href='/admin/site_settings'>paramètre de site</a> : contact_email."
     contact_email_invalid: "L'email de contact du site est invalide. Merci de mettre à jour le <a href='/admin/site_settings'>paramètre de site</a> : contact_email."
     title_nag: "Le titre de votre site est toujours à sa valeur par défaut. Merci de le modifier dans les <a href='/admin/site_settings'>paramètres du site</a>."
+    gmail_for_email_warning: "Votre site est configuré pour envoyer les emails en utilisant Gmail. <a href='http://support.google.com/a/bin/answer.py?hl=fr&answer=166852' target='_blank'>Gmail limite le nombre d'emails que vous pouvez envoyer</a>. Nous vous conseillons d'utiliser un autre service d'envoi d'emails afin d'assurer une meilleure délivrabilité."
 
   content_types:
     education_new_reply:
@@ -503,6 +505,8 @@ fr:
 
     # TODO: perhaps we need a way of protecting these settings for hosted solution, global settings ...
 
+    enable_local_logins: "Active l'authentification locale"
+    enable_local_account_create: "Active la création de compte locale"
     enable_google_logins: "Active l'authentification Google"
     enable_yahoo_logins: "Active l'authentification Yahoo"
 
@@ -513,6 +517,9 @@ fr:
     enable_facebook_logins: "Active l'authentification Facebook (nécessite facebook_app_id et facebook_app_secret)"
     facebook_app_id: "identifiant de l'application, enregistré sur https://developers.facebook.com/apps (utilisé pour l'authentification facebook)"
     facebook_app_secret: "secret de l'application, enregistré sur https://developers.facebook.com/apps (utilisé pour l'authentification facebook)"
+
+    enable_cas_logins: "Active l'authentification CAS"
+    cas_hostname: "Nom d'hôte du serveur CAS"
 
     enable_github_logins: "Active l'authentification GitHub (nécessite github_client_id et github_client_secret)"
     github_client_id: "id client, enregistré sur https://github.com/settings/applications"
