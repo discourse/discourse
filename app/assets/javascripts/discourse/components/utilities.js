@@ -17,6 +17,18 @@ Discourse.Utilities = {
     return size;
   },
 
+  /**
+    Allows us to supply bindings without "binding" to a helper.
+  **/
+  normalizeHash: function(hash, hashTypes) {
+    for (var prop in hash) {
+      if (hashTypes[prop] === 'ID') {
+        hash[prop + 'Binding'] = hash[prop];
+        delete hash[prop];
+      }
+    }
+  },
+
   categoryUrlId: function(category) {
     if (!category) return "";
     var id = Em.get(category, 'id');

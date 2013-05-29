@@ -11,11 +11,11 @@
   {{/if}}
 
   {{#if html}}
-    {{view Discourse.AceEditorView contentBinding="model.content" mode="html"}}
+    {{aceEditor content=model.content mode="html"}}
   {{/if}}
 
   {{#if css}}
-    {{view Discourse.AceEditorView contentBinding="model.content" mode="css"}}
+    {{aceEditor content=model.content mode="css"}}
   {{/if}}
 
 

@@ -34,31 +34,25 @@ Discourse.AceEditorView = Discourse.View.extend({
   },
 
   didInsertElement: function() {
-    var initAce,
-      _this = this;
 
-    initAce = function() {
-      _this.editor = ace.edit(_this.$('.ace')[0]);
-      _this.editor.setTheme("ace/theme/chrome");
-      _this.editor.setShowPrintMargin(false);
-      _this.editor.getSession().setMode("ace/mode/" + (_this.get('mode')));
-      return _this.editor.on("change", function(e) {
-        /* amending stuff as you type seems a bit out of scope for now - can revisit after launch
-           changes = @get('changes')
-           unless changes
-             changes = []
-             @set('changes', changes)
-           changes.push e.data
-        */
-        _this.skipContentChangeEvent = true;
-        _this.set('content', _this.editor.getSession().getValue());
-        _this.skipContentChangeEvent = false;
+    var aceEditorView = this;
+
+    var initAce = function() {
+      aceEditorView.editor = ace.edit(aceEditorView.$('.ace')[0]);
+      aceEditorView.editor.setTheme("ace/theme/chrome");
+      aceEditorView.editor.setShowPrintMargin(false);
+      aceEditorView.editor.getSession().setMode("ace/mode/" + (aceEditorView.get('mode')));
+      aceEditorView.editor.on("change", function(e) {
+        aceEditorView.skipContentChangeEvent = true;
+        aceEditorView.set('content', aceEditorView.editor.getSession().getValue());
+        aceEditorView.skipContentChangeEvent = false;
       });
     };
+
     if (window.ace) {
-      return initAce();
+      initAce();
     } else {
-      return $LAB.script('http://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js').wait(initAce);
+      $LAB.script('http://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js').wait(initAce);
     }
   }
 });
