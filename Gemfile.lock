@@ -137,6 +137,7 @@ GEM
     activesupport (3.2.12)
       i18n (~> 0.6)
       multi_json (~> 1.0)
+    addressable (2.3.4)
     airbrake (3.1.2)
       activesupport
       builder
@@ -284,6 +285,10 @@ GEM
     omniauth (1.1.4)
       hashie (>= 1.2, < 3)
       rack
+    omniauth-cas (1.0.1)
+      addressable (~> 2.3)
+      nokogiri (~> 1.5)
+      omniauth (~> 1.1.0)
     omniauth-facebook (1.4.1)
       omniauth-oauth2 (~> 1.1.0)
     omniauth-github (1.1.0)
@@ -519,6 +524,7 @@ DEPENDENCIES
   oj
   omniauth
   omniauth-browserid!
+  omniauth-cas
   omniauth-facebook
   omniauth-github
   omniauth-openid
