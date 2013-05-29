@@ -47,13 +47,13 @@
             <div class='input-prepend input-append' style="margin-top: 10px;">
               <span class='color-title'>{{i18n category.background_color}}:</span>
               <span class='add-on'>#</span>{{textField value=color placeholderKey="category.color_placeholder" maxlength="6"}}
-              {{view Discourse.ColorsView colorsBinding="view.backgroundColors" usedColorsBinding="view.usedBackgroundColors" valueBinding="color"}}
+              {{colorPicker colors=view.backgroundColors usedColors=view.usedBackgroundColors value=color}}
             </div>
 
             <div class='input-prepend input-append'>
               <span class='color-title'>{{i18n category.foreground_color}}:</span>
               <span class='add-on'>#</span>{{textField value=text_color placeholderKey="category.color_placeholder" maxlength="6"}}
-              {{view Discourse.ColorsView colorsBinding="view.foregroundColors" valueBinding="text_color"}}
+              {{colorPicker colors=view.foregroundColors value=text_color}}
             </div>
           </div>
         </section>
@@ -85,7 +85,7 @@
       </div>
       <div {{bindAttr class=":modal-tab :options-tab view.settingsSelected::invisible"}}>
         <section class='field'>
-          {{view Discourse.AutoCloseFormView autoCloseDaysBinding="auto_close_days" labelKey="category.auto_close_label"}}
+          {{autoCloseForm autoCloseDays=auto_close_days labelKey="category.auto_close_label"}}
         </section>
 
         <section class='field'>

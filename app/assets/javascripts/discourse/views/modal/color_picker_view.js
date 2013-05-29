@@ -1,12 +1,12 @@
 /**
  This view shows an array of buttons for selection of a color from a predefined set.
 
- @class ColorsView
+ @class ColorPickerView
  @extends Ember.ContainerView
  @namespace Discourse
  @module Discourse
  **/
-Discourse.ColorsView = Ember.ContainerView.extend({
+Discourse.ColorPickerView = Ember.ContainerView.extend({
   classNames: 'colors-container',
 
   init: function() {
@@ -35,3 +35,5 @@ Discourse.ColorsView = Ember.ContainerView.extend({
     });
   }
 });
+
+Discourse.Utilities.registerViewHelper('colorPicker', Discourse.ColorPickerView);

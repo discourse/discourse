@@ -30,7 +30,13 @@
         {{#if content.editTitle}}
           <div class='form-element clearfix'>
             {{#if content.creatingPrivateMessage}}
-              {{view Discourse.UserSelector topicIdBinding="controller.controllers.topic.content.id" excludeCurrentUser="true" id="private-message-users" class="span8" placeholderKey="composer.users_placeholder" tabindex="1" usernamesBinding="content.targetUsernames"}}
+              {{userSelector topicId=controller.controllers.topic.content.id
+                             excludeCurrentUser="true"
+                             id="private-message-users"
+                             class="span8"
+                             placeholderKey="composer.users_placeholder"
+                             tabindex="1"
+                             usernames=content.targetUsernames}}
             {{/if}}
 
             <div class="title-input">
@@ -40,7 +46,7 @@
 
             {{#unless content.creatingPrivateMessage}}
               <div class="category-input">
-                {{view Discourse.ComboboxViewCategory valueAttribute="name" contentBinding="categories" valueBinding="content.categoryName" showUncategorized="true"}}
+                {{categoryChooser valueAttribute="name" value=content.categoryName showUncategorized="true"}}
                 {{popupInputTip validation=view.categoryValidation shownAt=view.showCategoryTip}}
               </div>
               {{#if content.archetype.hasOptions}}
@@ -53,7 +59,7 @@
           </div>
 
           <div class="admin-options-form">
-            {{view Discourse.AutoCloseFormView autoCloseDaysBinding="content.auto_close_days"}}
+            {{autoCloseForm autoCloseDays=content.auto_close_days}}
           </div>
         {{/if}}
 

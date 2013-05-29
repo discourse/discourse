@@ -25,7 +25,7 @@
             {{textField value=name placeholderKey="admin.groups.name_placeholder"}}
           {{/if}}
 
-          {{view Discourse.UserSelector id="group-users" placeholderKey="admin.groups.selector_placeholder" tabindex="1" usernamesBinding="usernames"}}
+          {{userSelector usernames=usernames id="group-users" placeholderKey="admin.groups.selector_placeholder" tabindex="1"}}
           <div class='controls'>
             <button {{action save this}} {{bindAttr disabled="disableSave"}} class='btn'>{{i18n admin.customize.save}}</button>
             {{#unless automatic}}

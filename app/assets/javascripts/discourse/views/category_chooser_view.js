@@ -1,16 +1,21 @@
 /**
   This view handles rendering of a combobox that can view a category
 
-  @class ComboboxViewCategory
+  @class CategoryChooserView
   @extends Discourse.ComboboxView
   @namespace Discourse
   @module Discourse
 **/
-Discourse.ComboboxViewCategory = Discourse.ComboboxView.extend({
+Discourse.CategoryChooserView = Discourse.ComboboxView.extend({
   classNames: ['combobox category-combobox'],
   overrideWidths: true,
   dataAttributes: ['name', 'color', 'text_color', 'description', 'topic_count'],
   valueBinding: Ember.Binding.oneWay('source'),
+
+  init: function() {
+    this._super();
+    this.set('content', Discourse.Category.list());
+  },
 
   none: function() {
     if (Discourse.SiteSettings.allow_uncategorized_topics || this.get('showUncategorized')) return 'category.none';
@@ -29,4 +34,4 @@ Discourse.ComboboxViewCategory = Discourse.ComboboxView.extend({
 
 });
 
-
+Discourse.Utilities.registerViewHelper('categoryChooser', Discourse.CategoryChooserView);

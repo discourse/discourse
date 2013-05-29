@@ -57,4 +57,5 @@ Discourse.AceEditorView = Discourse.View.extend({
   }
 });
 
+
 Discourse.Utilities.registerViewHelper('aceEditor', Discourse.AceEditorView);

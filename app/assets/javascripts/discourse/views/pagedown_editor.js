@@ -44,4 +44,4 @@ Discourse.PagedownEditor = Ember.ContainerView.extend({
 
 });
 
-
+Discourse.Utilities.registerViewHelper('pagedown', Discourse.PagedownEditor);

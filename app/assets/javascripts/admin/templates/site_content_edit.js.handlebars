@@ -3,7 +3,7 @@
   <p class='description'>{{description}}</p>
 
   {{#if markdown}}
-    {{view Discourse.PagedownEditor valueBinding="model.content"}}
+    {{pagedown value=model.content}}
   {{/if}}
 
   {{#if plainText}}
