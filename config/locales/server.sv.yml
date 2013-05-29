@@ -406,8 +406,8 @@ sv:
     email_domains_whitelist: "A pipe-delimited list of email domains that users may register with. WARNING: Users with email domains other than those listed will not be allowed."
     version_checks: "Ping the Discourse Hub for version updates and show version messages on the /admin dashboard"
 
-    port: "Use this HTTP port rather than the default of port 80. Leave blank for none, mainly useful for development"
-    force_hostname: "Specify a hostname in the URL. Leave blank for none, mainly useful for development"
+    port: "DEVELOPER ONLY! WARNING! Use this HTTP port rather than the default of port 80. Leave blank for default of 80."
+    force_hostname: "DEVELOPER ONLY! WARNING! Specify a hostname in the URL. Leave blank for default."
 
     invite_expiry_days: "How long user invitation keys are valid, in days"
 
