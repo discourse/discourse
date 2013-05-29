@@ -89,7 +89,8 @@ class Search
       expected_topics = Search.per_facet * Search.facets.size if @results.type_filter == 'topic'
       expected_topics -= @results.topic_count
       if expected_topics > 0
-        extra_posts = posts_query(expected_topics * Search.burst_factor).where("posts.topic_id NOT in (?)", @results.topic_ids)
+        extra_posts = posts_query(expected_topics * Search.burst_factor)
+        extra_posts = extra_posts.where("posts.topic_id NOT in (?)", @results.topic_ids) if @results.topic_ids.present?
         extra_posts.each do |p|
           @results.add_result(SearchResult.from_post(p))
         end
