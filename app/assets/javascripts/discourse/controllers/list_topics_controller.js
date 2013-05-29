@@ -81,7 +81,53 @@ Discourse.ListTopicsController = Discourse.ObjectController.extend({
     // Clear inserted
     this.set('content.inserted', Em.A());
     return false;
-  }
+  },
+
+  allLoaded: function() {
+    return !this.get('loading') && !this.get('more_topics_url');
+  }.property('loading', 'more_topics_url'),
+
+  canCreateTopic: Em.computed.alias('controllers.list.canCreateTopic'),
+
+  footerMessage: function() {
+    if (!this.get('allLoaded')) return;
+    var content = this.get('category');
+    if( content ) {
+      return Em.String.i18n('topics.bottom.category', {category: content.get('name')});
+    } else {
+      var split = this.get('filter').split('/');
+      if (this.get('topics.length') === 0) {
+        return Em.String.i18n("topics.none." + split[0], {
+          category: split[1]
+        });
+      } else {
+        return Em.String.i18n("topics.bottom." + split[0], {
+          category: split[1]
+        });
+      }
+    }
+  }.property('allLoaded', 'topics.length'),
+
+  insertedCount: function() {
+    var insertedLength = this.get('inserted.length');
+    if (!insertedLength) return 0;
+    return insertedLength;
+  }.property('inserted.length'),
+
+  rollUp: function() {
+    return this.get('insertedCount') > Discourse.SiteSettings.new_topics_rollup;
+  }.property('insertedCount'),
+
+  loadMore: function() {
+    this.set('loadingMore', true);
+    var listTopicsController = this;
+    return this.get('model').loadMoreTopics().then(function(hasMoreTopics) {
+      listTopicsController.set('loadingMore', false);
+      return hasMoreTopics;
+    });
+  },
+
+
 });
 
 

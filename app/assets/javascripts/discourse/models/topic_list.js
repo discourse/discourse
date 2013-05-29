@@ -40,7 +40,10 @@ Discourse.TopicList = Discourse.Model.extend({
         return result.topic_list.more_topics_url;
       });
     } else {
-      return null;
+      // Return a promise indicating no more results
+      return Ember.Deferred.promise(function (p) {
+        p.resolve(false);
+      });
     }
   },
 

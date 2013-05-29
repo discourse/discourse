@@ -28,12 +28,12 @@
         </tr>
         </thead>
 
-        {{#if view.rollUp}}
+        {{#if rollUp}}
           <tbody>
             <tr>
               <td colspan="9">
                 <div class='alert alert-info'>
-                  {{countI18n new_topics_inserted countBinding="view.insertedCount"}}
+                  {{countI18n new_topics_inserted countBinding="insertedCount"}}
                   <a href='#' {{action showInserted}}>{{i18n show_new_topics}}</a>
                 </div>
               </td>
@@ -54,17 +54,16 @@
     </div>
 
     <footer id='topic-list-bottom'>
-      {{#if view.loading}}
+      {{#if loadingMore}}
         <div class='topics-loading'>{{i18n topic.loading_more}}</div>
       {{/if}}
     </footer>
 
     <h3>
-      {{view.footerMessage}}
-      {{#if view.allLoaded}}
-
+      {{footerMessage}}
+      {{#if allLoaded}}
         {{#if latest}}
-          {{#if view.canCreateTopic}}
+          {{#if canCreateTopic}}
             <a href='#' {{action createTopic}}>{{i18n topic.suggest_create_topic}}</a>
           {{/if}}
         {{else}}
