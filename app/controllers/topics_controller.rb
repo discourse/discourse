@@ -21,8 +21,15 @@ class TopicsController < ApplicationController
 
   before_filter :consider_user_for_promotion, only: :show
 
-  skip_before_filter :check_xhr, only: [:avatar, :show, :feed]
+  skip_before_filter :check_xhr, only: [:avatar, :show, :feed, :redirect_to_show]
   caches_action :avatar, cache_path: Proc.new {|c| "#{c.params[:post_number]}-#{c.params[:topic_id]}" }
+
+  def redirect_to_show
+    topic_query = ((num = params[:id].to_i) > 0 and num.to_s == params[:id].to_s) ? Topic.where(id: num) : Topic.where(slug: params[:id])
+    topic = topic_query.includes(:category).first
+    raise Discourse::NotFound unless topic
+    redirect_to topic.relative_url
+  end
 
   def show
     opts = params.slice(:username_filters, :best_of, :page, :post_number, :posts_before, :posts_after, :best)
