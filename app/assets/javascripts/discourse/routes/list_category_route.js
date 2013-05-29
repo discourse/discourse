@@ -36,7 +36,7 @@ Discourse.ListCategoryRoute = Discourse.FilteredListRoute.extend({
     }
 
     var listController = this.controllerFor('list');
-    var urlId = Discourse.Utilities.categoryUrlId(category);
+    var urlId = Discourse.Category.slugFor(category);
     listController.set('filterMode', "category/" + urlId);
 
     var router = this;

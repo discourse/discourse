@@ -82,6 +82,14 @@ Discourse.Category.reopenClass({
     return this.uncategorized;
   },
 
+  slugFor: function(category) {
+    if (!category) return "";
+    var id = Em.get(category, 'id');
+    var slug = Em.get(category, 'slug');
+    if ((!slug) || slug.isBlank()) return "" + id + "-category";
+    return slug;
+  },
+
   list: function() {
     return Discourse.Site.instance().get('categories');
   },

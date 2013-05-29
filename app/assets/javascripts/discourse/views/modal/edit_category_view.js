@@ -152,7 +152,7 @@ Discourse.EditCategoryView = Discourse.ModalBodyView.extend({
       this.get('category').save().then(function(result) {
         // success
         $('#discourse-modal').modal('hide');
-        Discourse.URL.redirectTo("/category/" + Discourse.Utilities.categoryUrlId(result.category));
+        Discourse.URL.redirectTo("/category/" + Discourse.Category.slugFor(result.category));
       }, function(errors) {
         // errors
         if(errors.length === 0) errors.push(Em.String.i18n("category.creation_error"));
