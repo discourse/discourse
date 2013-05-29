@@ -19,7 +19,7 @@ de:
   is_reserved: "ist reserviert"
 
   site_under_maintenance: 'Die Seite wird momentan gewartet.'
-  operation_already_running: " %{operation} läuft gerade. Kann desshalb keine weitere %{operation} Aktion starten."
+  operation_already_running: " %{operation} läuft gerade. Kann deshalb keine weitere %{operation} Aktion starten."
 
   too_many_mentions:
     zero: "Entschuldige, du kannst andere Nutzer nicht erwähnen."
@@ -39,7 +39,7 @@ de:
     other: "Entschuldige, neue Benutzer können Beiträge nur %{count} Links hinzufügen."
   spamming_host: "Entschuldige, du kannst diese Seite nicht verlinken."
 
-  just_posted_that: "ist zu ähnlich dem, was Du kürzlich gepostet hast"
+  just_posted_that: "ist zu ähnlich mit dem, was Du kürzlich geantwortet hast"
   has_already_been_used: "wurde schon benutzt"
   invalid_characters: "enthält ungültige Zeichen"
   is_invalid: "ist ungültig; bitte ein wenig anschaulicher"
@@ -77,7 +77,7 @@ de:
 
       - Versuche, die richtigen Worte zu verwenden, so dass andere Dein Thema *finden* können. Wenn möglich, wähle eine angemessene Kategorie für Dein Thema.
 
-      Weitere Hilfe findest Du [in unseren FAQ](/faq). Dieser Hilfetext wird nur bei Deinen ersten %{education_posts_text} Beiträgen angezeigt.
+      Weitere Hilfe findest Du [in unseren FAQ](/faq). Dieser Hilfetext wird nur bei deinen ersten %{education_posts_text} Beiträgen angezeigt.
 
     'new-reply': |
       Willkommen auf %{site_name} &mdash; **Danke für deinen Beitrag zum Thema!**
@@ -86,11 +86,11 @@ de:
 
       - Fügt dein Beitrag dem Gespräch etwas Neues hinzu, und sei es auch wenig?
 
-      - Behandle Deine Gesprächspartner mit demselben Respekt, den Du von ihnen erwartest.
+      - Behandle deine Gesprächspartner mit demselben Respekt, den Du von ihnen erwartest.
 
       - Kritk ist in Ordnung, aber bitte kritisiere nur *Ideen*, nicht Menschen.
 
-      Weitere Hilfe findest Du [in unseren FAQ](/faq). Dieser Hilfetext wird nur bei Deinen ersten %{education_posts_text} Beiträgen angezeigt.
+      Weitere Hilfe findest Du [in unseren FAQ](/faq). Dieser Hilfetext wird nur bei deinen ersten %{education_posts_text} Beiträgen angezeigt.
 
 
   activerecord:
@@ -110,12 +110,12 @@ de:
               cant_send_pm: "Entschuldige, du kannst keine private Nachricht an diesen Nutzer schicken."
 
   user_profile:
-    no_info_me: "<div class='missing-profile'>Das 'Über mich'-Feld Deines Profils ist aktuell leer, <a href='/users/%{username_lower}/preferences'>möchtest Du es ausfüllen?</a></div>"
+    no_info_me: "<div class='missing-profile'>Das 'Über mich'-Feld deines Profils ist aktuell leer, <a href='/users/%{username_lower}/preferences'>möchtest Du es ausfüllen?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} hat noch nichts in das 'Über mich'-Feld des Nutzerprofils eingetragen</div>"
 
   category:
     topic_prefix: "Definition der Kategorie %{category}"
-    replace_paragraph: "[Ersetze den ersten Absatz mit einer kurzen Beschreibung Deiner neuen Kategorie. Bitte benutze weniger als 200 Zeichen.]"
+    replace_paragraph: "[Ersetze den ersten Absatz mit einer kurzen Beschreibung deiner neuen Kategorie. Bitte benutze weniger als 200 Zeichen.]"
     post_template: "%{replace_paragraph}\n\nBenutze den folgenden Platz für eine ausführliche Beschreibung sowie für Regeln und zur Diskussion!"
 
   trust_levels:
@@ -185,34 +185,34 @@ de:
         one:   "gerade eben"
         other: "gerade eben"
       x_seconds:
-        one:   "vor 1 Sekunde"
+        one:   "vor einer Sekunde"
         other: "vor %{count} Sekunden"
       less_than_x_minutes:
         one:   "vor weniger als 1 Minute"
         other: "vor weniger als %{count} Minuten"
       x_minutes:
-        one:   "vor 1 Minute"
+        one:   "vor einer Minute"
         other: "vor %{count} Minuten"
       about_x_hours:
-        one:   "vor 1 Stunde"
+        one:   "vor einer Stunde"
         other: "vor %{count} Stunden"
       x_days:
-        one:   "vor 1 Tag"
+        one:   "vor einem Tag"
         other: "vor %{count} Tagen"
       about_x_months:
         one:   "vor etwa 1 Monat"
         other: "vor etwa %{count} Monaten"
       x_months:
-        one:   "vor 1 Monat"
+        one:   "vor einem Monat"
         other: "vor %{count} Monaten"
       about_x_years:
-        one:   "vor etwa 1 Jahr"
+        one:   "vor etwa einem Jahr"
         other: "vor etwa %{count} Jahren"
       over_x_years:
-        one:   "vor über 1 Jahr"
+        one:   "vor über einem Jahr"
         other: "vor über %{count} Jahren"
       almost_x_years:
-        one:   "vor fast 1 Jahr"
+        one:   "vor fast einem Jahr"
         other: "vor fast %{count} Jahren"
 
   password_reset:
@@ -230,7 +230,7 @@ de:
     error: "Es gab einen Fehler beim Ändern deiner Mailadresse. Wird diese Adresse bereits genutzt?"
 
   activation:
-    already_done: "Entschuldige, dieser Kontoaktivierungslink ist nicht länger gültig. Ist Dein Konto schon aktiviert?"
+    already_done: "Entschuldige, dieser Link zur Aktivierung des Benutzerkontos ist nicht länger gültig. Ist Dein Konto schon aktiviert?"
     please_continue: "Dein neues Konto ist aktiviert und Du bist jetzt angemeldet. Fahre fort auf %{link}"
     welcome_to: "Willkommen auf %{site_name}!"
     approval_required: "Ein Moderator muss Dein neues Konto manuell freigeben bevor Du auf das Forum zugreifen kannst. Du erhältst eine Mail, wenn dein Konto freigegeben wurde!"
@@ -274,7 +274,7 @@ de:
       long_form: 'für diesen Beitrag gestimmt'
 
   flagging:
-    you_must_edit: '<p>Dein Beitrag wurde zu häufig gemeldet. Bitte beachte Deine privaten Nachrichten.</p>'
+    you_must_edit: '<p>Dein Beitrag wurde zu häufig gemeldet. Bitte beachte deine privaten Nachrichten.</p>'
     user_must_edit: '<p>Gemeldete Inhalte versteckt.</p>'
 
   archetypes:
@@ -286,7 +286,7 @@ de:
     description: "Dein Abo wurde abbestellt. Wir werden Dich nicht wieder kontaktieren!"
     oops: "Falls Du das nicht wolltest, klicke unten."
     not_found: "Fehler bei Abbestellen des Abos"
-    not_found_description: "Entschuldige, wir konnten Dein Abo nicht abbestellen. Möglicherweise ist der Link aus Deiner Mail veraltet."
+    not_found_description: "Entschuldige, wir konnten Dein Abo nicht abbestellen. Möglicherweise ist der Link aus deiner Mail veraltet."
 
   resubscribe:
     action: "Abo wieder aufnehmen"
@@ -343,15 +343,15 @@ de:
       xaxis: "Tag"
       yaxis: "Zahl der privaten Nachrichten"
     moderator_warning_private_messages:
-      title: "Moderatorenwarnungen"
+      title: "Warnungen von Moderatoren"
       xaxis: "Tag"
       yaxis: "Zahl der privaten Nachrichten"
     notify_moderators_private_messages:
-      title: "Moderatorenmeldungen"
+      title: "Meldungen an Moderatoren"
       xaxis: "Tag"
       yaxis: "Zahl der privaten Nachrichten"
     notify_user_private_messages:
-      title: "Benutzermeldungen"
+      title: "Meldungen an Benutzer"
       xaxis: "Tag"
       yaxis: "Zahl der privaten Nachrichten"
     top_referrers:
@@ -372,43 +372,43 @@ de:
 
   dashboard:
     rails_env_warning: "Dein Server läuft im %{env}-Modus."
-    host_names_warning: "Deine config/database.yml-Datei verwendet localhost als Hostname. Trage hier den Hostnamen Deiner Webseite ein."
+    host_names_warning: "Deine config/database.yml-Datei verwendet localhost als Hostname. Trage hier den Hostnamen deiner Webseite ein."
     gc_warning: 'Dein Server verwendet die Standardparameter für Rubys Garbage-Collector, die nicht optimal sind. Lese dieses Thema über Performanzeinstellungen (en): <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>.'
     clockwork_warning: 'Clockwork läuft nicht. Stelle sicher, dass immer ein Clockwork-Prozess läuft, so dass wichtige Jobs eingeplant werden können. <a href="https://github.com/tomykaira/clockwork">Mehr über Clockwork erfährst du hier (en)</a>.'
     sidekiq_warning: 'Sidekiq läuft nicht. Viele Aufgaben, wie zum Beispiel das Versenden von Mails, werden asynchron durch Sidekiq ausgeführt. Stelle sicher, dass mindestens eine Sidekiq-Prozess läuft. <a href="https://github.com/mperham/sidekiq">Mehr über Sidekiq erfährst du hier (en)</a>.'
     queue_size_warning: 'Die Anzahl der Aktionen in der Warteschlange ist mit %{queue_size} ziemlich hoch. Das könnte auf ein Problem mit dem Sidekiq Prozess(en) hinweisen, oder du musst mehr Sidekiq Arbeiter hinzufügen.'
     memory_warning: 'Dein Server läuft mit weniger als 1 GB Hauptspeicher. Mindestens 1 GB Hauptspeicher werden empfohlen.'
-    facebook_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook (enable_facebook_logins), aber die App ID und der Geheimcode sind nicht gesetzt. Besuche <a href="/admin/site_settings">die Seiteneinstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
-    twitter_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook Twitter (enable_twitter_logins), aber der Schlüssel und der Geheimcode sind nicht gesetzt. Besuche <a href="/admin/site_settings">die Seiteneinstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
-    github_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook GitHub (enable_github_logins), aber die Kunden ID und der Geheimcode sind nicht gesetzt. Besuche <a href="/admin/site_settings">die Seiteneinstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
-    failing_emails_warning: 'Es konnten insgesamt %{num_failed_jobs} Emails nicht versendet werden. Bitte überprüfe die Einstellungen in config/environments/production.rb und stelle die Richtigkeit der config.action_mailer Einstellungen. <a href="/sidekiq/retries" target="_blank">Zu den Fehlern in Sidekiq</a>.'
-    default_logo_warning: "Das Logo der Seite wurde noch nicht angepasst. Bitte bearbeite dieses in den <a href='/admin/site_settings'>Seiteneinstellungen</a> (logo_url, logo_small_url und favicon_url)."
-    contact_email_missing: "Du hast noch keine Kontaktmail für die Seite hinterlegt. Bitte hinterlege diese in den <a href='/admin/site_settings'>Seiteneinstellungen</a> (contact_email)."
-    contact_email_invalid: "Die Kontaktmail der Seite ist ungültig. Bitte bearbeite diese in den <a href='/admin/site_settings'>Seiteneinstellungen</a> (contact_email)."
-    title_nag: "Der Titel der Seite wurde noch nicht angepasst. Bitte bearbeite diesen in den <a href='/admin/site_settings'>Seiteneinstellungen</a>."
+    facebook_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook (enable_facebook_logins), aber die App ID und der Geheimcode sind nicht gesetzt. Besuche <a href="/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
+    twitter_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook Twitter (enable_twitter_logins), aber der Schlüssel und der Geheimcode sind nicht gesetzt. Besuche <a href="/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
+    github_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook GitHub (enable_github_logins), aber die Kunden ID und der Geheimcode sind nicht gesetzt. Besuche <a href="/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
+    failing_emails_warning: 'Es konnten insgesamt %{num_failed_jobs} Mails nicht versendet werden. Bitte überprüfe die Einstellungen in config/environments/production.rb und stelle die Richtigkeit der config.action_mailer Einstellungen. <a href="/sidekiq/retries" target="_blank">Zu den Fehlern in Sidekiq</a>.'
+    default_logo_warning: "Das Logo der Seite wurde noch nicht angepasst. Bitte bearbeite dieses in den <a href='/admin/site_settings'>Einstellungen</a> (siehe logo_url, logo_small_url und favicon_url)."
+    contact_email_missing: "Du hast noch keine Kontaktmail für die Seite hinterlegt. Bitte hinterlege diese in den <a href='/admin/site_settings'>Einstellungen</a> (siehe contact_email)."
+    contact_email_invalid: "Die Kontaktmail der Seite ist ungültig. Bitte bearbeite diese in den <a href='/admin/site_settings'>Einstellungen</a> (siehe contact_email)."
+    title_nag: "Der Titel der Seite wurde noch nicht angepasst. Bitte bearbeite diesen in den <a href='/admin/site_settings'>Einstellungen</a>."
 
   content_types:
     education_new_reply:
-      title: "New User Education: First Replies"
-      description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new replies."
+      title: "Hilfe: Erste Beiträge"
+      description: "Die Hilfe wird automatisch überhalb des Editors eingeblendet, wenn neue Benutzer ihre ersten zwei Beiträge veröffentlichen."
     education_new_topic:
-      title: "New User Education: First Topics"
-      description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new topics."
+      title: "Hilfe: Erste Themen"
+      description: "Die Hilfe wird automatisch überhalb des Editors eingeblendet, wenn neue Benutzer ihre ersten zwei Themen veröffentlichen."
     usage_tips:
-      title: "New User Tips"
-      description: "Common usage tips, essential forum information, and key guidance intended for new users."
+      title: "Hilfe: Allgemeine Tips"
+      description: "Gängige Tips, essenzielle Informationen und wichtige Anleitungen für neue Benutzer."
     welcome_user:
-      title: "Welcome: New User"
-      description: "A private message automatically sent to all new users when they sign up."
+      title: "Willkommen: Neuer Benutzer"
+      description: "Eine private Nachricht welche automatisch an alle Benutzer gesendet wird welche sich anmelden."
     welcome_invite:
-      title: "Welcome: Invited User"
-      description: "A private message automatically sent to all new invited users when they accept the invitation from another user to participate."
+      title: "Willkommen: Eingeladener Benutzer"
+      description: "Eine private Nachricht welche automatisch an alle eingeladenen Benutzer gesendet wird, wenn diese die Einladung annehmen."
     tos_user_content_license:
-      title: "Terms of Service: Content License"
-      description: "The text for the Content License section of the Terms of Service."
+      title: "Nutzungsbedingungen: Lizenz"
+      description: "Der Text für die Lizenz-Sektion in den Nutzungsbedingungen."
     tos_miscellaneous:
-      title: "Terms of Service: Miscellaneous"
-      description: "The text for the Miscellaneous section of the Terms of Service."
+      title: "Nutzungsbedingungen: Verschiedenes"
+      description: "Der Text für die Verschiedene-Sektion in den Nutzungsbedingungen."
 
   site_settings:
     default_locale: "Die Standardsprache dieser Discourse-Instanz (kodiert in ISO 639-1)."
@@ -416,7 +416,7 @@ de:
     max_post_length: "Maximale Beitragslänge in Zeichen."
     min_topic_title_length: "Minimale Titellänge von Themen in Zeichen."
     max_topic_title_length: "Maximale Titellänge von Themen in Zeichen."
-    min_search_term_length: "Minimale Suchwortlänge in Zeichen."
+    min_search_term_length: "Minimale Länge der Suche in Zeichen."
     allow_uncategorized_topics: "Erlaube Themen ohne Kategorie"
     allow_duplicate_topic_titles: "Erlaube Themen mit identischen Titeln."
     unique_posts_mins: "Minuten, nach denen ein Nutzer denselben Inhalt noch einmal posten kann."
@@ -424,18 +424,18 @@ de:
     discourse_org_access_key: "Der Zugangscode für das Discourse Hub Benutzernamensregister auf discourse.org"
     educate_until_posts: "Zahl der Beiträge, die ein Nutzer verfassen muss, damit kein Hilfetext beim Erstellen von Themen und Beiträgen eingeblendet wird."
     title: "Seitentitel, der im Title-Tag und an anderen Stellen verwendet wird."
-    contact_email: "Die Email von jemandem der für die Seite zuständig ist. Wichtige Nachrichten von Discourse.org betreffend kritischen Sicherheitsupdates werden an diese Adresse gesendet."
+    contact_email: "Die Mail von jemandem der für die Seite zuständig ist. Wichtige Nachrichten von Discourse.org betreffend kritischen Sicherheitsupdates werden an diese Adresse gesendet."
     company_full_name: "Voller Name des Unternehmens, das diese Seite betreibt. Wird in rechtlich relevanten Dokumenten wie den Nutzungsbestimmungen (/tos) verwendet."
     company_short_name: "Kurzname des Unternehmens, das diese Seite betreibt. Wird in rechtlich relevanten Dokumenten wie den Nutzungsbestimmungen (/tos) verwendet."
     company_domain: "Domainname des Unternehmens, das diese Seite betreibt. Wird in rechtlich relevanten Dokumenten wie den Nutzungsbestimmungen (/tos) verwendet."
     api_key: "Sicherer API-Schlüssel, um Themen zu erstellen und zu aktualisieren. Benutze /admin/api, um ihn einzurichten."
     access_password: "Passwort, dass eingegeben werden muss, wenn diese Seite zugangsbeschränkt ist."
-    queue_jobs: "Benutze die sidekiq-Queue, falls falsche Queues inline sind."
+    queue_jobs: "Benutze die Sidekiq-Queue, falls falsche Queues inline sind."
     crawl_images: "Lade Bilder von Dritten herunter, um ihre Höhe und Breite zu bestimmen."
     ninja_edit_window: "Sekunden nach Empfang eines Beitrag, in denen Bearbeitungen nicht als neue Version gelten."
     enable_imgur: "Aktiviere die Imgur API zum Hochladen, so dass Dateien nicht lokal gehostet werden."
     imgur_client_id: "Deine imgur.com Client-ID. Wird benötigt, um Bilder hochzuladen."
-    imgur_client_secret: "Dein imgur.com Geheimniss. Wird zur Zeit für das Hichladen der Bilder nicht benötigt, könnte aber in Zukunft benötigt werden."
+    imgur_client_secret: "Dein imgur.com Geheimniss. Wird zur Zeit für das Hochladen der Bilder nicht benötigt, könnte aber in Zukunft benötigt werden."
     imgur_endpoint: "Endknoten für das Hochladen von imgur.com-Bildern."
     max_image_width: "Maximalbreite von Bildern in einem Beitrag."
     category_featured_topics: "Zahl der angezeigten Themen je Kategorie auf der Kategorieseite /categories."
@@ -448,14 +448,14 @@ de:
     new_topics_rollup: "Zahl der Themen, die vor dem Aufrollen der Themenliste hinzugefügt werden."
     onebox_max_chars: "Maximale Zahl der Zeichen, die eine Onebox von einer externen Webseite in einen Beitrag lädt."
 
-    logo_url: "Das Logo Deiner Seite, zum Beispiel: http://example.com/logo.png"
-    logo_small_url: "Kleines Logo Deiner Seite, das beim Herunterscrollen in einem Thema gezeigt wird, zum Beispiel: http://example.com/logo-small.png"
-    favicon_url: "Das Favicon Deiner Seite, siehe http://de.wikipedia.org/wiki/Favicon"
+    logo_url: "Das Logo deiner Seite, zum Beispiel: http://example.com/logo.png"
+    logo_small_url: "Kleines Logo deiner Seite, das beim Herunterscrollen in einem Thema gezeigt wird, zum Beispiel: http://example.com/logo-small.png"
+    favicon_url: "Das Favicon deiner Seite, siehe http://de.wikipedia.org/wiki/Favicon"
     notification_email: "Die Antwortadresse, die in Systemmails (zum Beispiel zur Passwortwiederherstellung, neuen Konten, etc.) eingetragen wird."
     use_ssl: "Soll die Seite via SSL nutzbar sein?"
     best_of_score_threshold: "Der Minimalscore eines Beitrags, um zu den Top Beiträgen zu zählen."
     best_of_posts_required: "Minimale Zahl der Beiträge zu einem Thema bevor der Modus 'Top Beiträge' aktiviert wird."
-    best_of_likes_required: "Minimale Zahl der Likes in einem Thema, bevor der Modus 'Top Beiträge' aktiviert wird."
+    best_of_likes_required: "Minimale Zahl der „Gefällt mir“ in einem Thema, bevor der Modus 'Top Beiträge' aktiviert wird."
     best_of_percent_filter: "Prozentzahl der Top Beiträge, die gezeigt werden, wenn eine Nutzer in diese Ansicht wechselt."
     enable_private_messages: "Erlaube Nutzern mit Stufe 1, private Nachrichten zu Gespräche."
 
@@ -481,7 +481,7 @@ de:
     track_external_right_clicks: "Verfolge, welche externen Links per Rechtsklick geöffnet werden (zum Beispiel in einem neuen Browser-Tab). Standardmäßig deaktiviert, da dies URL-Rewrites erfordert."
     topics_per_page: "Zahl der Themen, die standardmäßig auf die Themenübersichtsseite geladen werden."
     posts_per_page: "Zahl der Beiträge, die auf einer Themenseite gezeigt werden."
-    system_username: "Benutzername des Autors für autmatisch vom Forum versendete private Nachrichten."
+    system_username: "Benutzername des Autors für automatisch vom Forum versendete private Nachrichten."
     send_welcome_message: "Bekommen neue Nutzer eine Willkommensnachricht?"
     supress_reply_directly_below: "Zeige die Zahl der Antworten auf einen Beitrag nicht, falls die einzige Antwort direkt darauf folgt."
     allow_index_in_robots_txt: "Diese Seite soll durch Suchmaschinen indiziert werden (aktualisiert robots.txt)."
@@ -525,7 +525,7 @@ de:
     rate_limit_create_topic: "Sekunden Wartezeit nach Erstellung eines Themas, bevor man ein neues Thema erstellen kann."
     rate_limit_create_post: "Sekunden Wartezeit nach Erstellung eines Beitrags, bevor man einen neuen Beitrag erstellen kann."
 
-    max_likes_per_day: "Maximale Zahl der Likes pro Nutzer pro Tag."
+    max_likes_per_day: "Maximale Zahl der „Gefällt mir“ pro Nutzer pro Tag."
     max_flags_per_day: "Maximale Zahl der Meldungen pro Nutzer pro Tag."
     max_bookmarks_per_day: "Maximale Zahl der Lesezeichen pro Nutzer pro Tag."
     max_edits_per_day: "Maximale Zahl der Bearbeitungen pro Nutzer pro Tag."
@@ -589,11 +589,11 @@ de:
 
   notification_types:
     mentioned: "%{display_username} hat Dich in %{link} erwähnt."
-    liked: "%{display_username} hat deinen Beitrag in %{link} geliket."
+    liked: "%{display_username} gefällt deinen Beitrag in %{link}."
     replied: "%{display_username} hat auf deinen Beitrag in %{link} geantwortet."
     quoted: "%{display_username} hat deinen Beitrag in %{link} zitiert."
     edited: "%{display_username} hat deinen Beitrag in %{link} bearbeitet."
-    posted: "%{display_username} hat in %{link} gepostet."
+    posted: "%{display_username} hat einen Beitrag in %{link} erstellt."
     moved_post: "%{display_username} hat deinen Beitrag nach %{link} verschoben."
     private_message: "%{display_username} hat Dir eine private Nachricht geschickt: %{link}"
     invited_to_private_message: "%{display_username} hat Dich zu einem privaten Gespräch eingeladen: %{link}"
@@ -613,7 +613,7 @@ de:
   move_posts:
     moderator_post:
       one: "Ich habe einen Beitrag in ein neues Thema verschoben: %{topic_link}"
-      other: "I habe %{count} Beiträge in ein neues Thema verschoben: %{topic_link}"
+      other: "Ich habe %{count} Beiträge in ein neues Thema verschoben: %{topic_link}"
 
   topic_statuses:
     archived_enabled: "Dieses Thema ist nun archiviert. Es ist eingefroren und kann in keiner Weise mehr verändert werden."
@@ -640,7 +640,7 @@ de:
     errors: "%{errors}"
     not_available: " Nicht verfügbar. Versuche %{suggestion}?"
     something_already_taken: "Etwas ist schief gelaufen. Möglicherweise ist der Benutzername bereits registriert. Probiere den 'Passwort vergessen'-Link."
-    omniauth_error: "Entschuldige, es gab einen Fehler bei der Autorisierung Deines %{strategy} Kontos. Hast Du möglicherweise die Autorisierung abgelehnt?"
+    omniauth_error: "Entschuldige, es gab einen Fehler bei der Autorisierung deines %{strategy} Kontos. Hast Du möglicherweise die Autorisierung abgelehnt?"
     omniauth_error_unknown: "Während des Anmeldens ist etwas schief gelaufen, bitte versuche es noch einmal."
 
   user:
@@ -680,13 +680,13 @@ de:
 
       - **WICHTIG:** Hat Dein Internetprovider einen Reverse-DNS-Eintrag eingetragen, um den Domainnamen, die Du als Absender angibst, mit den IPs von denen die Mails verschickt werden zu verknüpfen? Du kannst [den Reverse-PTR-Eintrag hier testen][2]. Wenn Dein Internetprovider keinen passenden Reverse-DNS-Eintrag eingetragen hat, ist sehr unwahrscheinlich, dass Mails tatsächlich versendet werden.
 
-      - Ist der SPF-Eintrag Deiner Domain korrekt? Du kannst [den SPF-Eintrag hier testen][1].
+      - Ist der SPF-Eintrag deiner Domain korrekt? Du kannst [den SPF-Eintrag hier testen][1].
 
-      - Hast Du [DKIM-Mailsignierung][3] in deiner Mailsoftware konfiguriert und den öffentlichen DKIM-Schlüssel Deinen DNS-Einträge hinzugefügt?
+      - Hast Du [DKIM-Mailsignierung][3] in deiner Mailsoftware konfiguriert und den öffentlichen DKIM-Schlüssel deinen DNS-Einträge hinzugefügt?
 
       - Hast Du sichergestellt, dass die IPs der Server von denen Mails verschickt werden [nicht auf einer schwarzen Liste stehen][4]?
 
-      - Hast Du sichergestellt, dass Deine Mailserver *definitiv* einen voll qualifizierten Hostnamen in ihre HELO-Nachrichten angeben, der per DNS aufgelöst werden kann? Falls das nicht der Fall ist, werden Deine Mails von vielen Mailprovidern abgelehnt.
+      - Hast Du sichergestellt, dass dein Mailserver *definitiv* einen voll qualifizierten Hostnamen in ihre HELO-Nachrichten angeben, der per DNS aufgelöst werden kann? Falls das nicht der Fall ist, werden Deine Mails von vielen Mailprovidern abgelehnt.
 
       Wir hoffen, dass Du diesen Zustellbarkeitstest problemlos erhalten hast!
 
@@ -725,9 +725,9 @@ de:
 
         wegen Meldungen aus der Community versteckt wurde.
 
-        Beachte, dass mehrere Mitglieder der Community diesen Beitrag gemeldet haben, bevor er versteckt wurde. **Überlege Dir daher, wie Du Deinen Beitrag unter Berücksichtigung dieses Feedbacks überarbeiten könntest.** Du kannst Deinen Beitrag nach %{edit_delay} Minuten überarbeiten. Anschließend wird er automatisch wieder sichtbar und Deine Stufe erhöht sich.
+        Beachte, dass mehrere Mitglieder der Community diesen Beitrag gemeldet haben, bevor er versteckt wurde. **Überlege Dir daher, wie Du deinen Beitrag unter Berücksichtigung dieses Feedbacks überarbeiten könntest.** Du kannst deinen Beitrag nach %{edit_delay} Minuten überarbeiten. Anschließend wird er automatisch wieder sichtbar und deine Stufe erhöht sich.
 
-        Wenn dieser Beitrag ein zweites Mal von der Community versteckt wird, werden die Moderatoren darauf aufmerksam gemacht. Dass kann weitere Konsequenzen haben, unter anderem auch eine Sperrung Deines Kontos.
+        Wenn dieser Beitrag ein zweites Mal von der Community versteckt wird, werden die Moderatoren darauf aufmerksam gemacht. Dass kann weitere Konsequenzen haben, unter anderem auch eine Sperrung deines Kontos.
 
         Weitere Hilfestellung findest Du in unseren [FAQ](%{base_url}/faq).
 
@@ -751,7 +751,7 @@ de:
 
         ### Wer spricht mit mir?
 
-        Wenn jemand auf Deine Beiträge antwortet, Dich zitiert oder Deinen @Namen erwähnt, erhältst du eine Benachrichtigung oben auf der Seite. Klicke oder berühre die Benachrichtigungszahl, um zu erfahren, wer mit Dir spricht und wo. Nimm am Gespräch teil!
+        Wenn jemand auf deine Beiträge antwortet, Dich zitiert oder deinen @Namen erwähnt, erhältst du eine Benachrichtigung oben auf der Seite. Klicke oder berühre die Benachrichtigungszahl, um zu erfahren, wer mit Dir spricht und wo. Nimm am Gespräch teil!
 
         - Um jemanden zu erwähnen, tippe `@` und eine Autovervollständigung erscheint.
 
@@ -761,7 +761,7 @@ de:
 
         ### Bewerte Beiträge
 
-        Um jemandem mitzuteilen, dass Dir sein Beitrag gefällt, benutze den Like-Button unter dem Beitrag. Wenn Du ein Problem mit einem Beitrag hast, scheue Dich nicht, diesen Beitrag den Moderatoren und der Community zu melden indem Du auf den entsprechenden Button klickst.
+        Um jemandem mitzuteilen, dass Dir sein Beitrag gefällt, benutze den „Gefällt mir“-Knopf unter dem Beitrag. Wenn Du ein Problem mit einem Beitrag hast, scheue Dich nicht, diesen Beitrag den Moderatoren und der Community zu melden indem Du auf den entsprechenden Button klickst.
 
         ### Wo bin ich?
 
@@ -800,13 +800,13 @@ de:
       text_body_template: |
         Danke fürs Akzeptieren der Einladung zu %{site_name}, willkommen in unserem Forum!
 
-        Wir haben automatisch einen Benutzernamen für dich erzeugt: **%{username}**, aber Du kannst ihn jederzeit in [Deinem Benutzerprofil][prefs] ändern.
+        Wir haben automatisch einen Benutzernamen für dich erzeugt: **%{username}**, aber Du kannst ihn jederzeit in [deinem Benutzerprofil][prefs] ändern.
 
         Um Dich anzumelden, hast du folgende Optionen:
 
         1. Verwende Facebook, Google, Twitter oder andere unterstütze Anbieter. Achte aber darauf, dass bei diesem Anbieter **dieselbe Mailadresse** über die Du die Einladung erhalten hast hinterlegt ist. Andernfalls können nicht feststellen, dass Du es bist!
 
-        2. Erstelle ein eigenes Passwort auf %{site_name} in [Deinem Benutzerprofil][prefs], um dich damit anzumelden.
+        2. Erstelle ein eigenes Passwort auf %{site_name} in [deinem Benutzerprofil][prefs], um dich damit anzumelden.
 
         %{site_password}
 
@@ -826,7 +826,7 @@ de:
       subject_template: "Import erfolgreich abgeschlossen"
       text_body_template: "Der Import war erfolgreich."
 
-  unsubscribe_link: "Wenn Du diese Mails nicht mehr erhalten möchtest, verändere Deine [Benutzereinstellungen](%{user_preferences_url})."
+  unsubscribe_link: "Wenn Du diese Mails nicht mehr erhalten möchtest, verändere deine [Benutzereinstellungen](%{user_preferences_url})."
 
   user_notifications:
     unsubscribe:
@@ -841,9 +841,9 @@ de:
         Rufe den folgenden Link auf, um das Thema zu betrachten: %{base_url}%{url}
 
     user_replied:
-      subject_template: "[%{site_name}] %{username} hat auf Deinen Beitrag zu '%{topic_title}' geantwortet"
+      subject_template: "[%{site_name}] %{username} hat auf deinen Beitrag '%{topic_title}' geantwortet"
       text_body_template: |
-        %{username} hat auf Deinen Beitrag zu '%{topic_title}' auf %{site_name} geantwortet:
+        %{username} hat auf deinen Beitrag '%{topic_title}' auf %{site_name} geantwortet:
 
         ---
         %{message}
@@ -874,9 +874,9 @@ de:
         Um zu antworten, besuche den folgenden Link: %{base_url}%{url}
 
     user_posted:
-      subject_template: "[%{site_name}] %{username} hat in '%{topic_title}' gepostet"
+      subject_template: "[%{site_name}] %{username} hat auf '%{topic_title}' geantwortet"
       text_body_template: |
-        %{username} hat in '%{topic_title}' auf %{site_name} gepostet:
+        %{username} hat in '%{topic_title}' auf %{site_name} geantwortet:
 
         ---
         %{message}
@@ -887,9 +887,9 @@ de:
     digest:
       why: "Hier eine kurze Zusammenfassung, was auf %{site_link} passiert ist, seit Du das letzte Mal am %{last_seen_at} da warst."
       subject_template: "[%{site_name}] Forenaktivität für den %{date}"
-      new_activity: "Neues in Deinen Themen und Beiträgen:"
+      new_activity: "Neues in deinen Themen und Beiträgen:"
       new_topics: "Neue Themen:"
-      unsubscribe: "Diese Zusammenfassung wurde Dir von %{site_link} geschickt, damit Du auf dem Laufenden bleibst, und weil wir nicht eine Weile nicht begrüßen durften.\nWenn Du diese Benachrichtigungen nicht mehr erhalten möchtest, kannst Du sie in Deinen Maileinstellungen abschalten: %{unsubscribe_link}."
+      unsubscribe: "Diese Zusammenfassung wurde Dir von %{site_link} geschickt, damit Du auf dem Laufenden bleibst, und weil wir nicht eine Weile nicht begrüßen durften.\nWenn Du diese Benachrichtigungen nicht mehr erhalten möchtest, kannst Du sie in deinen Maileinstellungen abschalten: %{unsubscribe_link}."
       click_here: "klicke hier"
       from: "%{site_name} Übersicht"
 
@@ -915,29 +915,29 @@ de:
         %{base_url}/users/password-reset/%{email_token}
 
     authorize_email:
-      subject_template: "[%{site_name}] Bestätige Deine neue Mailadresse"
+      subject_template: "[%{site_name}] Bestätige deine neue Mailadresse"
       text_body_template: |
         Um deine Mailadresse auf %{site_name} zu bestätigen, klicke auf den folgenden Link:
 
         %{base_url}/users/authorize-email/%{email_token}
 
     signup:
-      subject_template: "[%{site_name}] Aktiviere Deinen neues Konto"
+      subject_template: "[%{site_name}] Aktiviere deinen neues Konto"
       text_body_template: |
         Willkommen auf %{site_name}!
 
         Um dein Konto zu aktivieren, klicke auf den folgenden Link:
         %{base_url}/users/activate-account/%{email_token}
 
-        Wenn dieser Link nicht klickbar ist, kopiere ihn in die Adresszeile Deines Web-Browsers.
+        Wenn dieser Link nicht klickbar ist, kopiere ihn in die Adresszeile deines Web-Browsers.
 
   discourse_hub:
-    access_token_problem: "Gib das hier an einen Administrator weiter: Bitte aktualisiere die Seiteneinstellungen mit dem korrekten discourse_org_access_key."
+    access_token_problem: "Gib das hier an einen Administrator weiter: Bitte aktualisiere die Einstellungen mit dem korrekten discourse_org_access_key."
 
   page_not_found:
     title: "Die angefragte Seite, gibt es in diesem Forum nicht. Vielleicht können wir aber dabei behilflich sein, sie oder ein ähnliches Thema zu finden:"
-    latest_topics: "Zuletzt gepostete Themen"
-    recent_topics: "Kürzliche Themen"
+    latest_topics: "Zuletzt aktualisierte Themen"
+    recent_topics: "Aktuelle Themen"
     see_more: "Mehr ansehen"
     search_title: "Suche nach diesem Thema"
     search_google: "Suche auf Google"
