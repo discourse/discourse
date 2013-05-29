@@ -169,7 +169,11 @@ Discourse.Composer = Discourse.Model.extend({
             this.get('titleLength') > Discourse.SiteSettings.max_topic_title_length) ) return true;
 
     // Need at least one user when sending a private message
-    if (this.get('creatingPrivateMessage') && (this.get('targetUsernames').trim() + ',').indexOf(',') === 0) return true;
+    if ( this.get('creatingPrivateMessage') &&
+         this.get('targetUsernames') &&
+        (this.get('targetUsernames').trim() + ',').indexOf(',') === 0) {
+      return true;
+    }
 
     // reply is always required
     if (this.get('replyLength') < Discourse.SiteSettings.min_post_length) return true;
