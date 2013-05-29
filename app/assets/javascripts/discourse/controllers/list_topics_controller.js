@@ -17,7 +17,6 @@ Discourse.ListTopicsController = Discourse.ObjectController.extend({
   latest: Ember.computed.equal('content.filter', 'latest'),
 
   filterModeChanged: function() {
-
     // Unsubscribe from a previous channel if necessary
     var previousChannel = this.get('previousChannel');
     if (previousChannel) {
