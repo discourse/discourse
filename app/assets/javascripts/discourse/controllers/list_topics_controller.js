@@ -14,7 +14,7 @@ Discourse.ListTopicsController = Discourse.ObjectController.extend({
   // If we're changing our channel
   previousChannel: null,
 
-  latest: Ember.computed.equal('content.filter', 'latest'),
+  latest: Ember.computed.equal('filter', 'latest'),
 
   filterModeChanged: function() {
     // Unsubscribe from a previous channel if necessary
@@ -76,10 +76,10 @@ Discourse.ListTopicsController = Discourse.ObjectController.extend({
   // Show newly inserted topics
   showInserted: function(e) {
     // Move inserted into topics
-    this.get('content.topics').unshiftObjects(this.get('content.inserted'));
+    this.get('topics').unshiftObjects(this.get('inserted'));
 
     // Clear inserted
-    this.set('content.inserted', Em.A());
+    this.set('inserted', Em.A());
     return false;
   },
 
@@ -91,9 +91,9 @@ Discourse.ListTopicsController = Discourse.ObjectController.extend({
 
   footerMessage: function() {
     if (!this.get('allLoaded')) return;
-    var content = this.get('category');
-    if( content ) {
-      return Em.String.i18n('topics.bottom.category', {category: content.get('name')});
+    var category = this.get('category');
+    if( category ) {
+      return Em.String.i18n('topics.bottom.category', {category: category.get('name')});
     } else {
       var split = this.get('filter').split('/');
       if (this.get('topics.length') === 0) {
