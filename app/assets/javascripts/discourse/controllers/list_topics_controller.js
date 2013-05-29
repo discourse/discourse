@@ -125,8 +125,7 @@ Discourse.ListTopicsController = Discourse.ObjectController.extend({
       listTopicsController.set('loadingMore', false);
       return hasMoreTopics;
     });
-  },
-
+  }
 
 });
 
