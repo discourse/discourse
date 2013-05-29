@@ -13,6 +13,7 @@ class PostAction < ActiveRecord::Base
   belongs_to :post
   belongs_to :user
   belongs_to :post_action_type
+  belongs_to :related_post, class_name: 'Post'
 
   rate_limit :post_action_rate_limiter
 
@@ -20,7 +21,7 @@ class PostAction < ActiveRecord::Base
 
   def self.update_flagged_posts_count
     posts_flagged_count = PostAction.joins(post: :topic)
-                                    .where('post_actions.post_action_type_id' => PostActionType.notify_flag_types.values,
+                                    .where('post_actions.post_action_type_id' => PostActionType.notify_flag_type_ids,
                                            'posts.deleted_at' => nil,
                                            'topics.deleted_at' => nil)
                                     .count('DISTINCT posts.id')
@@ -221,7 +222,7 @@ class PostAction < ActiveRecord::Base
     Topic.update_all ["#{column} = #{column} + ?", delta], id: post.topic_id
 
 
-    if PostActionType.notify_flag_types.values.include?(post_action_type_id)
+    if PostActionType.notify_flag_type_ids.include?(post_action_type_id)
       PostAction.update_flagged_posts_count
     end
 
@@ -245,7 +246,76 @@ class PostAction < ActiveRecord::Base
     end
   end
 
+  def self.flagged_posts_report(filter)
+    posts = flagged_posts(filter)
+    return nil if posts.blank?
+
+    post_lookup = {}
+    users = Set.new
+
+    posts.each do |p|
+      users << p["user_id"]
+      p["excerpt"] = Post.excerpt(p.delete("cooked"))
+      p[:topic_slug] = Slug.for(p["title"])
+      post_lookup[p["id"].to_i] = p
+    end
+
+    post_actions = PostAction.includes({:related_post => :topic})
+                              .where(post_action_type_id: PostActionType.notify_flag_type_ids)
+                              .where(post_id: post_lookup.keys)
+    post_actions = post_actions.with_deleted if filter == 'old'
+
+    post_actions.each do |pa|
+      post = post_lookup[pa.post_id]
+      post[:post_actions] ||= []
+      action = pa.attributes.slice('id', 'user_id', 'post_action_type_id', 'created_at', 'post_id', 'message')
+      if (pa.related_post && pa.related_post.topic)
+        action.merge!(topic_id: pa.related_post.topic_id,
+                     slug: pa.related_post.topic.slug,
+                     permalink: pa.related_post.topic.url)
+      end
+      post[:post_actions] << action
+      users << pa.user_id
+    end
+
+    [posts, User.select([:id, :username, :email]).where(id: users.to_a).all]
+  end
+
   protected
+
+  def self.flagged_posts(filter)
+    sql = SqlBuilder.new "select p.id, t.title, p.cooked, p.user_id, p.topic_id, p.post_number, p.hidden, t.visible topic_visible
+                          from posts p
+                          join topics t on t.id = topic_id
+                          join (
+                            select
+                              post_id,
+                              count(*) as cnt,
+                              max(created_at) max
+                              from post_actions
+                              /*where2*/
+                              group by post_id
+                          ) as a on a.post_id = p.id
+                          /*where*/
+                          /*order_by*/
+                          limit 100"
+
+    sql.where2 "post_action_type_id in (:flag_types)", flag_types: PostActionType.notify_flag_type_ids
+
+    # it may make sense to add a view that shows flags on deleted posts,
+    # we don't clear the flags on post deletion, just supress counts
+    #   they may have deleted_at on the action not set
+    if filter == 'old'
+      sql.where2 "deleted_at is not null"
+      sql.order_by "max desc"
+    else
+      sql.where "p.deleted_at is null and t.deleted_at is null"
+      sql.where2 "deleted_at is null"
+      sql.order_by "cnt desc, max asc"
+    end
+
+    sql.exec.to_a
+  end
 
   def self.target_moderators
     Group[:moderators].name
