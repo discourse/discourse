@@ -32,7 +32,7 @@ class ListController < ApplicationController
     list = nil
 
     # If they choose uncategorized, return topics NOT in a category
-    if params[:category] == Slug.for(SiteSetting.uncategorized_name) or params[:category] == SiteSetting.uncategorized_name or params[:category] == 'null-category'
+    if params[:category] == 'uncategorized'
       list = query.list_uncategorized
     else
       @category = Category.where("slug = ? or id = ?", params[:category], params[:category].to_i).includes(:featured_users).first
