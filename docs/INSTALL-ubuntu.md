@@ -178,7 +178,7 @@ Configure discourse:
 
 Edit discourse/config/database.yml
 
-- change production db name to: `discourse_prod`
+- change production db name if appropriate
 - change username/password if appropriate
 - set db_id if using multisite
 - change `host_names` to the name you'll use to access the discourse site
@@ -189,14 +189,13 @@ Edit discourse/config/redis.yml
 
 Edit discourse/config/discourse.pill
 
-- change application name from 'your_app' to however you want to distinguish this ('discourse')
-- Add option to Bluepill.application: `":base_dir => ENV["HOME"] + '/.bluepill'"`
-- Should end up looking something like: `Bluepill.application("discourse", :base_dir => ENV["HOME"] + '/.bluepill') do |app|`
-- comment out debug instance (from `app.process("thin-debug")` through to nearest `end`)
+- change application name from 'discourse' if necessary
+- Ensure appropriate Bluepill.application line is uncommented
 - search for "host to run on" and change to current hostname
 - note: clockwork should run on only one host
 
 Edit discourse/config/initializers/secret_token.rb
+
 - uncomment secret_token line
 - replace SET_SECRET_HERE with secret output from 'rake secret' command in discourse directory
 - delete the lines below as per instructions in the file
@@ -220,9 +219,9 @@ Initialize the database:
 
 Edit /etc/nginx/conf.d/discourse.conf
 
-- change socket paths to: "unix:/home/discourse/discourse/tmp/sockets/thin.0.sock;"
-- edit `server_name`. Example: "server_name cain.discourse.org test.cain.discourse.org;"
-- modify root location to match installed location: "root /home/discourse/discourse/public;"
+- edit `server_name`. Example: `server_name cain.discourse.org test.cain.discourse.org;`
+- change socket paths if discourse is installed to a different location
+- modify root location if discourse is installed to a different location
 
 ## Bluepill setup
 
