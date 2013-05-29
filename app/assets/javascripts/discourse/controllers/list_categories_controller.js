@@ -32,7 +32,12 @@ Discourse.ListCategoriesController = Discourse.ObjectController.extend({
   canEdit: function() {
     var u = Discourse.User.current();
     return u && u.admin;
-  }.property()
+  }.property(),
+
+  // clear a pinned topic
+  clearPin: function(topic) {
+    topic.clearPin();
+  }
 
 });
 

@@ -1,18 +1,11 @@
-require_dependency 'pinned_check'
-
 class TopicListItemSerializer < ListableTopicSerializer
 
   attributes :views,
              :like_count,
-             :visible,
-             :pinned,
-             :closed,
-             :archived,
              :starred,
              :has_best_of,
              :archetype,
-             :rank_details,
-             :excerpt
+             :rank_details
 
   has_one :category, serializer: BasicCategorySerializer
   has_many :posters, serializer: TopicPosterSerializer, embed: :objects
@@ -49,18 +42,6 @@ class TopicListItemSerializer < ListableTopicSerializer
 
   def posters
     object.posters || []
-  end
-
-  def pinned
-    PinnedCheck.new(object, object.user_data).pinned?
-  end
-
-  def include_excerpt?
-    pinned
-  end
-
-  def excerpt
-    object.posts.by_post_number.first.try(:excerpt, 220, strip_links: true) || nil
   end
 
 end

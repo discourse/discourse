@@ -13,7 +13,7 @@ class CategoryDetailedSerializer < ApplicationSerializer
              :is_uncategorized
 
   has_many :featured_users, serializer: BasicUserSerializer
-  has_many :displayable_topics, serializer: CategoryTopicSerializer, embed: :objects, key: :topics
+  has_many :displayable_topics, serializer: ListableTopicSerializer, embed: :objects, key: :topics
 
   def topics_week
     object.topics_week || 0
