@@ -316,6 +316,9 @@ de:
       facebook:
         title: "Mit Facebook"
         message: "Authentisierung via Facebook (stelle sicher, dass der Popup-Blocker deaktiviert ist)"
+      cas:
+        title: "Mit CAS"
+        message: "Authentisierung via CAS (stelle sicher, dass der Popup-Blocker deaktiviert ist)"
       yahoo:
         title: "Mit Yahoo"
         message: "Authentisierung via Yahoo (stelle sicher, dass der Popup-Blocker deaktiviert ist)"
@@ -432,6 +435,10 @@ de:
       no_results: "Nichts gefunden."
       searching: "Suche ..."
 
+      prefer:
+        user: "Die Suche bevorzugt Resultate von @{{username}}"
+        category: "Die Suche bevorzugt Resultate in der Kategorie {{category}}"
+
     site_map: "Gehe zu einer anderen Themenübersicht oder Kategorie"
     go_back: 'Zurück'
     current_user: 'Gehe zu deinem Nutzerprofil'
@@ -498,6 +505,11 @@ de:
       toggle_information: "Themendetails ein-/ausblenden"
       read_more_in_category: "Möchtest Du mehr lesen? Finde andere Themen in {{catLink}} oder {{latestLink}}."
       read_more: "Möchtest Du mehr lesen? {{catLink}} oder {{latestLink}}."
+
+      # keys ending with _MF use message format, see /spec/components/js_local_helper_spec.rb for samples
+      read_more_in_category_MF: "Du {UNREAD, plural, one {hast <a href='/unread'>eine ungelesene</a>} other {hast <a href='/unread'># ungelesene</a>}} und {NEW, plural, one {<a href='/new'>ein neues</a> Thema} other {<a href='/new'># neue</a> Themen}} übrig, oder entdecke neue Themen in {catLink}"
+      read_more_MF: "Du {UNREAD, plural, one {hast <a href='/unread'>eine ungelesene</a>} other {hast <a href='/unread'># ungelesene</a>}} und {NEW, plural, one {<a href='/new'>ein neues</a> Thema} other {<a href='/new'># neue</a> Themen}} übrig, oder {latestLink}"
+
       browse_all_categories: Zeige alle Kategorien
 
       view_latest_topics: zeige aktuelle Themen
@@ -851,7 +863,7 @@ de:
     replies: "Antworten"
     views_long: "Dieses Thema wurde {{number}} aufgerufen"
     activity: "Aktivität"
-    likes: "Gefällt&nbsp;mir"
+    likes: "Gefällt mir"
     top_contributors: "Teilnehmer"
     category_title: "Kategorie"
     history: "Verlauf"
@@ -909,8 +921,8 @@ de:
       moderator: 'Moderator'
 
       dashboard:
-        title: "Administratorkonsole"
-        version: "Installierte Version"
+        title: "Übersicht"
+        version: "Version"
         up_to_date: "Discourse ist aktuell."
         critical_available: "Ein kritisches Update ist verfügbar."
         updates_available: "Updates sind verfügbar."
