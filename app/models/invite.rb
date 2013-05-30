@@ -41,47 +41,7 @@ class Invite < ActiveRecord::Base
   end
 
   def redeem
-    result = nil
-    Invite.transaction do
-      # Avoid a race condition
-      row_count = Invite.update_all('redeemed_at = CURRENT_TIMESTAMP',
-                                    ['id = ? AND redeemed_at IS NULL AND created_at >= ?', id, SiteSetting.invite_expiry_days.days.ago])
-
-      if row_count == 1
-
-        # Create the user if we are redeeming the invite and the user doesn't exist
-        result = User.where(email: email).first
-        result ||= User.create_for_email(email, trust_level: SiteSetting.default_invitee_trust_level)
-        result.send_welcome_message = false
-
-        # If there are topic invites for private topics
-        topics.private_messages.each do |t|
-          t.topic_allowed_users.create(user_id: result.id)
-        end
-
-        # Check for other invites by the same email. Don't redeem them, but approve their
-        # topics.
-        Invite.where('invites.email = ? and invites.id != ?', email, id).includes(:topics).where(topics: { archetype: Archetype::private_message }).each do |i|
-          i.topics.each do |t|
-            t.topic_allowed_users.create(user_id: result.id)
-          end
-        end
-
-        if Invite.update_all(['user_id = ?', result.id], ['email = ?', email]) == 1
-          result.send_welcome_message = true
-        end
-
-          # Notify the invitee
-          invited_by.notifications.create(notification_type: Notification.types[:invitee_accepted],
-                                          data: { display_username: result.username }.to_json)
-
-      else
-        # Otherwise return the existing user
-        result = User.where(email: email).first
-      end
-    end
-
-    result
+    InviteRedeemer.new(self).redeem unless expired? || destroyed?
   end
 
 end
