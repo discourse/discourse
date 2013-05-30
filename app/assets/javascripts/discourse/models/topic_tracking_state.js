@@ -17,9 +17,9 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
         tracker.removeTopic(data.topic_id);
       }
 
-      if (data.message_type === "new_topic" || data.message_type === "unread" || data.message_type == "read") {
-        tracker.states["t" + data.topic_id] = data.payload;
+      if (data.message_type === "new_topic" || data.message_type === "unread" || data.message_type === "read") {
         tracker.notify(data);
+        tracker.states["t" + data.topic_id] = data.payload;
       }
 
       tracker.incrementMessageCount();
@@ -37,6 +37,12 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
 
     if ((this.filter === "latest" || this.filter === "new") && data.message_type === "new_topic" ) {
       this.newIncoming.push(data.topic_id);
+    }
+    if (this.filter === "unread" && data.message_type === "unread") {
+      var old = this.states["t" + data.topic_id];
+      if(!old) {
+        this.newIncoming.push(data.topic_id);
+      }
     }
     this.set("incomingCount", this.newIncoming.length);
   },

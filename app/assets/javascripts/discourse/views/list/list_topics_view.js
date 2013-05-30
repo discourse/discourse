@@ -49,7 +49,7 @@ Discourse.ListTopicsView = Discourse.View.extend(Discourse.Scrolling, {
     if(topics) {
       return this.get('list.topics').length > 0 || this.get('topicTrackingState.hasIncoming');
     }
-  }.property('list.topics','topicTrackingState.hasIncoming'),
+  }.property('list.topics.@each','topicTrackingState.hasIncoming'),
 
   loadMore: function() {
     var listTopicsView = this;

@@ -47,7 +47,7 @@ Discourse.ListController = Discourse.Controller.extend({
           draft_key: items.draft_key,
           draft_sequence: items.draft_sequence
         });
-		if(trackingState) {
+        if(trackingState) {
           trackingState.sync(items, filterMode);
           trackingState.trackIncoming(filterMode);
         }
