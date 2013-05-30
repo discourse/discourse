@@ -81,6 +81,23 @@ describe CookedPostProcessor do
       end
 
     end
+
+    context 'with an absolute image path without protocol' do
+      let(:user) { Fabricate(:user) }
+      let(:topic) { Fabricate(:topic, user: user) }
+      let(:post) { Fabricate.build(:post_with_s3_image_url, topic: topic, user: user) }
+      let(:processor) { CookedPostProcessor.new(post) }
+
+      before do
+        ImageSorcery.any_instance.stubs(:convert).returns(false)
+        processor.post_process_images
+      end
+
+      it "doesn't change the protocol" do
+        processor.html.should =~ /src="\/\/bucket\.s3\.amazonaws\.com\/uploads\/6\/4\/123\.png"/
+      end
+    end
+
   end
 
   context 'link convertor' do
