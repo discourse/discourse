@@ -4,7 +4,7 @@ require_dependency 'rate_limiter'
 require_dependency 'post_revisor'
 require_dependency 'enum'
 require_dependency 'trashable'
-require_dependency 'post_analyser'
+require_dependency 'post_analyzer'
 
 require 'archetype'
 require 'digest/sha1'
@@ -12,7 +12,6 @@ require 'digest/sha1'
 class Post < ActiveRecord::Base
   include RateLimiter::OnCreateRecord
   include Trashable
-  include PostAnalyser
 
   versioned if: :raw_changed?
 
@@ -90,11 +89,6 @@ class Post < ActiveRecord::Base
     Digest::SHA1.hexdigest(raw.gsub(/\s+/, "").downcase)
   end
 
-  def cooked_document
-    self.cooked ||= cook(raw, topic_id: topic_id)
-    @cooked_document ||= Nokogiri::HTML.fragment(cooked)
-  end
-
   def reset_cooked
     @cooked_document = nil
     self.cooked = nil
@@ -104,16 +98,18 @@ class Post < ActiveRecord::Base
     @white_listed_image_classes ||= ['avatar', 'favicon', 'thumbnail']
   end
 
-  # How many images are present in the post
-  def image_count
-    return 0 unless raw.present?
+  def post_analyzer
+    @post_analyzer = PostAnalyzer.new(raw, topic_id)
+  end
 
-    cooked_document.search("img").reject do |t|
-      dom_class = t["class"]
-      if dom_class
-        (Post.white_listed_image_classes & dom_class.split(" ")).count > 0
-      end
-    end.count
+  %w{raw_mentions linked_hosts image_count link_count raw_links}.each do |attr|
+    define_method(attr) do
+      PostAnalyzer.new(raw, topic_id).send(attr)
+    end
+  end
+
+  def cook(*args)
+    PostAnalyzer.new(raw, topic_id).cook(*args)
   end
 
 
@@ -236,20 +232,6 @@ class Post < ActiveRecord::Base
     Post.excerpt(cooked, maxlength, options)
   end
 
-  # What we use to cook posts
-  def cook(*args)
-    cooked = PrettyText.cook(*args)
-
-    # If we have any of the oneboxes in the cache, throw them in right away, don't
-    # wait for the post processor.
-    dirty = false
-    result = Oneboxer.apply(cooked) do |url, elem|
-      Oneboxer.render_from_cache(url)
-    end
-
-    cooked = result.to_html if result.changed?
-    cooked
-  end
 
   # A list of versions including the initial version
   def all_versions
