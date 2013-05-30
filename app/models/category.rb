@@ -85,6 +85,8 @@ class Category < ActiveRecord::Base
     if name.present?
       self.slug = Slug.for(name)
 
+      return if self.slug.blank?
+
       # If a category with that slug already exists, set the slug to nil so the category can be found
       # another way.
       category = Category.where(slug: self.slug)

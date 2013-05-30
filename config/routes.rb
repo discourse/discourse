@@ -182,7 +182,7 @@ Discourse::Application.routes.draw do
   get 'search' => 'search#query'
 
   # Topics resource
-  get 't/:id' => 'topics#show'
+  get 't/:id' => 'topics#redirect_to_show'
   delete 't/:id' => 'topics#destroy'
   put 't/:id' => 'topics#update'
   post 't' => 'topics#create'

@@ -43,5 +43,13 @@ describe Slug do
     Slug.for("o_o_o").should == "o-o-o"
   end
 
+  it "doesn't generate slugs that are just numbers" do
+    Slug.for('123').should be_blank
+  end
+
+  it "doesn't generate slugs that are just numbers" do
+    Slug.for('電車男 2').should be_blank
+  end
+
 end
 

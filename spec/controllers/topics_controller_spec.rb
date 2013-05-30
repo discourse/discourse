@@ -369,18 +369,18 @@ describe TopicsController do
     let!(:p2) { Fabricate(:post, user: topic.user) }
 
     it 'shows a topic correctly' do
-      xhr :get, :show, id: topic.id
+      xhr :get, :show, topic_id: topic.id, slug: topic.slug
       response.should be_success
     end
 
     it 'records a view' do
-      lambda { xhr :get, :show, id: topic.id }.should change(View, :count).by(1)
+      lambda { xhr :get, :show, topic_id: topic.id, slug: topic.slug }.should change(View, :count).by(1)
     end
 
     it 'tracks a visit for all html requests' do
       current_user = log_in(:coding_horror)
       TopicUser.expects(:track_visit!).with(topic, current_user)
-      get :show, id: topic.id
+      get :show, topic_id: topic.id, slug: topic.slug
     end
 
     context 'consider for a promotion' do
@@ -394,7 +394,7 @@ describe TopicsController do
       it "reviews the user for a promotion if they're new" do
         user.update_column(:trust_level, TrustLevel.levels[:newuser])
         Promotion.any_instance.expects(:review)
-        get :show, id: topic.id
+        get :show, topic_id: topic.id, slug: topic.slug
       end
     end
 
@@ -403,38 +403,57 @@ describe TopicsController do
       it 'grabs first page when no filter is provided' do
         SiteSetting.stubs(:posts_per_page).returns(20)
         TopicView.any_instance.expects(:filter_posts_in_range).with(0, 20)
-        xhr :get, :show, id: topic.id
+        xhr :get, :show, topic_id: topic.id, slug: topic.slug
       end
 
       it 'grabs first page when first page is provided' do
         SiteSetting.stubs(:posts_per_page).returns(20)
         TopicView.any_instance.expects(:filter_posts_in_range).with(0, 20)
-        xhr :get, :show, id: topic.id, page: 1
+        xhr :get, :show, topic_id: topic.id, slug: topic.slug, page: 1
       end
 
       it 'grabs correct range when a page number is provided' do
         SiteSetting.stubs(:posts_per_page).returns(20)
         TopicView.any_instance.expects(:filter_posts_in_range).with(20, 40)
-        xhr :get, :show, id: topic.id, page: 2
+        xhr :get, :show, topic_id: topic.id, slug: topic.slug, page: 2
       end
 
       it 'delegates a post_number param to TopicView#filter_posts_near' do
         TopicView.any_instance.expects(:filter_posts_near).with(p2.post_number)
-        xhr :get, :show, id: topic.id, post_number: p2.post_number
+        xhr :get, :show, topic_id: topic.id, slug: topic.slug, post_number: p2.post_number
       end
 
       it 'delegates a posts_after param to TopicView#filter_posts_after' do
         TopicView.any_instance.expects(:filter_posts_after).with(p1.post_number)
-        xhr :get, :show, id: topic.id, posts_after: p1.post_number
+        xhr :get, :show, topic_id: topic.id, slug: topic.slug, posts_after: p1.post_number
       end
 
       it 'delegates a posts_before param to TopicView#filter_posts_before' do
         TopicView.any_instance.expects(:filter_posts_before).with(p2.post_number)
-        xhr :get, :show, id: topic.id, posts_before: p2.post_number
+        xhr :get, :show, topic_id: topic.id, slug: topic.slug, posts_before: p2.post_number
       end
 
     end
 
+  end
+
+  describe 'redirect_to_show' do
+    let(:topic) { Fabricate(:topic) }
+
+    it 'raises an error if topic is not found' do
+      get :redirect_to_show, id: 121212121212
+      expect(response.status).to eq(404)
+    end
+
+    it 'redirects to the correct topic when given its id' do
+      get :redirect_to_show, id: topic.id
+      expect(response).to redirect_to(topic.relative_url)
+    end
+
+    it 'redirects to the correct topic when given its slug' do
+      get :redirect_to_show, id: topic.slug
+      expect(response).to redirect_to(topic.relative_url)
+    end
   end
 
   describe '#feed' do
