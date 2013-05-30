@@ -71,7 +71,7 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
   sync: function(list, filter){
     var tracker = this;
 
-    if(!list || !list.topics || !list.topics.length) { return; }
+    if(!list || !list.topics) { return; }
 
     if(filter === "new" && !list.more_topics_url){
       // scrub all new rows and reload from list
@@ -98,9 +98,12 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
       row.topic_id = topic.id;
       if(topic.unseen) {
         row.last_read_post_number = null;
-      } else {
+      } else if (topic.unread || topic.new_posts){
         // subtle issue here
-        row.last_read_post_number = topic.last_read_post_number || topic.highest_post_number;
+        row.last_read_post_number = topic.highest_post_number - ((topic.unread||0) + (topic.new_posts||0));
+      } else {
+        delete tracker.states["t" + topic.id];
+        return;
       }
 
       row.highest_post_number = topic.highest_post_number;
@@ -108,11 +111,8 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
         row.category_name = topic.category.name;
       }
 
-      if (row.last_read_post_number === null || row.highest_post_number > row.last_read_post_number) {
-        tracker.states["t" + topic.id] = row;
-      } else {
-        delete tracker.states["t" + topic.id];
-      }
+      tracker.states["t" + topic.id] = row;
+
     });
 
     this.incrementMessageCount();
