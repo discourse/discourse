@@ -69,18 +69,17 @@ class ApplicationController < ActionController::Base
     if request.format && request.format.json?
       render status: 404, layout: false, text: "[error: 'not found']"
     else
-      f = Topic.where(deleted_at: nil, archetype: "regular")
-      @latest = f.order('views desc').take(10)
-      @recent = f.order('created_at desc').take(10)
-      @slug =  params[:slug].class == String ? params[:slug] : ''
-      @slug.gsub!('-',' ')
-      render status: 404, layout: 'no_js', template: '/exceptions/not_found'
+      render_not_found_page(404)
     end
 
   end
 
   rescue_from Discourse::InvalidAccess do
-    render file: 'public/403', formats: [:html], layout: false, status: 403
+    if request.format && request.format.json?
+      render status: 403, layout: false, text: "[error: 'invalid access']"
+    else
+      render_not_found_page(403)
+    end
   end
 
 
@@ -277,6 +276,15 @@ class ApplicationController < ActionController::Base
 
     def ensure_logged_in
       raise Discourse::NotLoggedIn.new unless current_user.present?
+    end
+
+    def render_not_found_page(status=404)
+      f = Topic.where(deleted_at: nil, archetype: "regular")
+      @latest = f.order('views desc').take(10)
+      @recent = f.order('created_at desc').take(10)
+      @slug =  params[:slug].class == String ? params[:slug] : ''
+      @slug.gsub!('-',' ')
+      render status: status, layout: 'no_js', template: '/exceptions/not_found'
     end
 
 end
