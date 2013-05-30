@@ -16,15 +16,6 @@ Discourse.TopicAdminMenuController = Discourse.ObjectController.extend({
 
   hide: function() {
     this.set('visible', false);
-  },
-
-  autoClose: function() {
-    var modalController = this.get('controllers.modal');
-    if (modalController) {
-      var v = Discourse.EditTopicAutoCloseView.create();
-      v.set('topic', this.get('content'));
-      modalController.show(v);
-    }
   }
 
 });

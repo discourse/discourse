@@ -19,6 +19,8 @@ Discourse.ColorPickerView = Ember.ContainerView.extend({
     var _this = this;
     var isUsed, usedColors = this.get('usedColors') || [];
 
+    if (!colors) return;
+
     colors.each(function(color) {
       isUsed = usedColors.indexOf(color.toUpperCase()) >= 0;
       _this.addObject(Discourse.View.create({

@@ -1,22 +1,20 @@
-{{#with view.category}}
-
-<div {{bindAttr class="view.loading:invisible"}}>
+<div {{bindAttr class="loading:invisible"}}>
   <ul class="nav nav-pills">
-    <li {{bindAttr class="view.generalSelected:active"}}>
-      <a href="#" {{action selectGeneral target="view"}}>{{i18n category.general}}</a>
+    <li {{bindAttr class="generalSelected:active"}}>
+      <a href="#" {{action selectGeneral}}>{{i18n category.general}}</a>
     </li>
     {{#unless isUncategorized}}
-      <li {{bindAttr class="view.securitySelected:active"}}>
-        <a href="#" {{action selectSecurity target="view"}}>{{i18n category.security}}</a>
+      <li {{bindAttr class="securitySelected:active"}}>
+        <a href="#" {{action selectSecurity}}>{{i18n category.security}}</a>
       </li>
-      <li {{bindAttr class="view.settingsSelected:active"}}>
-        <a href="#" {{action selectSettings target="view"}}>{{i18n category.settings}}</a>
+      <li {{bindAttr class="settingsSelected:active"}}>
+        <a href="#" {{action selectSettings}}>{{i18n category.settings}}</a>
       </li>
     {{/unless}}
   </ul>
 
   <div class="modal-body">
-    <div {{bindAttr class=":modal-tab :general-tab view.generalSelected::invisible"}}>
+    <div {{bindAttr class=":modal-tab :general-tab generalSelected::invisible"}}>
       <form>
         <section class='field'>
           <label>{{i18n category.name}}</label>
@@ -34,7 +32,7 @@
             {{/if}}
             {{#if topic_url}}
               <br/>
-              <button class="btn btn-small" {{action showCategoryTopic target="view"}}>{{i18n category.change_in_category_topic}}</button>
+              <button class="btn btn-small" {{action showCategoryTopic}}>{{i18n category.change_in_category_topic}}</button>
             {{/if}}
           </section>
         {{/unless}}
@@ -42,25 +40,25 @@
         <section class='field'>
           <label>{{i18n category.badge_colors}}</label>
           <div class="category-color-editor">
-            <span class='badge-category' {{bindAttr style="view.colorStyle"}}>{{view.categoryName}}</span>
+            <span class='badge-category' {{bindAttr style="colorStyle"}}>{{categoryName}}</span>
 
             <div class='input-prepend input-append' style="margin-top: 10px;">
               <span class='color-title'>{{i18n category.background_color}}:</span>
               <span class='add-on'>#</span>{{textField value=color placeholderKey="category.color_placeholder" maxlength="6"}}
-              {{colorPicker colors=view.backgroundColors usedColors=view.usedBackgroundColors value=color}}
+              {{colorPicker colors=backgroundColors usedColors=usedBackgroundColors value=color}}
             </div>
 
             <div class='input-prepend input-append'>
               <span class='color-title'>{{i18n category.foreground_color}}:</span>
               <span class='add-on'>#</span>{{textField value=text_color placeholderKey="category.color_placeholder" maxlength="6"}}
-              {{colorPicker colors=view.foregroundColors value=text_color}}
+              {{colorPicker colors=foregroundColors value=text_color}}
             </div>
           </div>
         </section>
       </form>
     </div>
     {{#unless isUncategorized}}
-      <div {{bindAttr class=":modal-tab :options-tab view.securitySelected::invisible"}}>
+      <div {{bindAttr class=":modal-tab :options-tab securitySelected::invisible"}}>
         <section class='field'>
           <label>
             {{input type="checkbox" checked=secure}}
@@ -73,17 +71,17 @@
                 {{#each groups}}
                   <li class="badge-group">
                     {{this}}
-                    <a {{action removeGroup this target="view"}}><i class="icon icon-remove-sign"></i></a>
+                    <a {{action removeGroup this}}><i class="icon icon-remove-sign"></i></a>
                   </li>
                 {{/each}}
               </ul>
-              {{view Ember.Select contentBinding="availableGroups" valueBinding="view.selectedGroup"}}
-              <button {{action addGroup target="view"}} class="btn btn-small">{{i18n category.add_group}}</button>
+              {{view Ember.Select contentBinding="availableGroups" valueBinding="selectedGroup"}}
+              <button {{action addGroup}} class="btn btn-small">{{i18n category.add_group}}</button>
             </div>
           {{/if}}
         </section>
       </div>
-      <div {{bindAttr class=":modal-tab :options-tab view.settingsSelected::invisible"}}>
+      <div {{bindAttr class=":modal-tab :options-tab settingsSelected::invisible"}}>
         <section class='field'>
           {{autoCloseForm autoCloseDays=auto_close_days labelKey="category.auto_close_label"}}
         </section>
@@ -96,11 +94,9 @@
     {{/unless}}
   </div>
   <div class="modal-footer">
-    <button class='btn btn-primary' {{bindAttr disabled="view.disabled"}} {{action saveCategory target="view"}}>{{view.buttonTitle}}</button>
-    {{#if view.deleteVisible}}
-      <button class='btn btn-danger pull-right' {{bindAttr disabled="view.deleteDisabled"}} {{action deleteCategory target="view"}}><i class="icon icon-trash"></i>{{view.deleteButtonTitle}}</button>
+    <button class='btn btn-primary' {{bindAttr disabled="disabled"}} {{action saveCategory}}>{{buttonTitle}}</button>
+    {{#if deleteVisible}}
+      <button class='btn btn-danger pull-right' {{bindAttr disabled="deleteDisabled"}} {{action deleteCategory}}><i class="icon icon-trash"></i>{{deleteButtonTitle}}</button>
     {{/if}}
   </div>
 </div>
-
-{{/with}}

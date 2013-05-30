@@ -113,7 +113,7 @@ Discourse.PostMenuView = Discourse.View.extend({
   },
 
   clickFlag: function() {
-    this.get('controller').showFlags(this.get('post'));
+    this.get('controller').send('showFlags', this.get('post'));
   },
 
   // Edit button

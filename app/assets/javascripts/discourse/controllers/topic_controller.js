@@ -107,29 +107,6 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     this.toggleProperty('summaryCollapsed');
   },
 
-  splitTopic: function() {
-    var modalController = this.get('controllers.modal');
-    if (!modalController) return;
-
-    modalController.show(Discourse.SplitTopicView.create({
-      topicController: this,
-      topic: this.get('content'),
-      selectedPosts: this.get('selectedPosts')
-    }));
-  },
-
-  mergeTopic: function() {
-    var modalController = this.get('controllers.modal');
-    if (!modalController) return;
-
-    modalController.show(Discourse.MergeTopicView.create({
-      topicController: this,
-      topic: this.get('content'),
-      allPostsSelected: this.get('allPostsSelected'),
-      selectedPosts: this.get('selectedPosts')
-    }));
-  },
-
   deleteSelected: function() {
     var topicController = this;
     bootbox.confirm(Em.String.i18n("post.delete.confirm", { count: this.get('selectedPostsCount')}), function(result) {
@@ -430,47 +407,6 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   // Who acted on a particular post / action type
   whoActed: function(actionType) {
     actionType.loadUsers();
-  },
-
-  showPrivateInviteModal: function() {
-    var modal = Discourse.InvitePrivateModalView.create({
-      topic: this.get('content')
-    });
-
-    var modalController = this.get('controllers.modal');
-    if (modalController) {
-      modalController.show(modal);
-    }
-  },
-
-  showInviteModal: function() {
-    var modalController = this.get('controllers.modal');
-    if (modalController) {
-      modalController.show(Discourse.InviteModalView.create({
-        topic: this.get('content')
-      }));
-    }
-  },
-
-  // Clicked the flag button
-  showFlags: function(post) {
-    var modalController = this.get('controllers.modal');
-    if (modalController) {
-      modalController.show(Discourse.FlagView.create({
-        post: post,
-        controller: this
-      }));
-    }
-  },
-
-  showHistory: function(post) {
-    var modalController = this.get('controllers.modal');
-
-    if (modalController) {
-      modalController.show(Discourse.HistoryView.create({
-        originalPost: post
-      }));
-    }
   },
 
   recoverPost: function(post) {

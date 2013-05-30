@@ -8,6 +8,57 @@
 **/
 Discourse.TopicRoute = Discourse.Route.extend({
 
+  events: {
+    // Modals that can pop up within a topic
+
+    showFlags: function(post) {
+      Discourse.Route.showModal(this, 'flag', post);
+      this.controllerFor('flag').setProperties({
+        postActionTypeId: null
+      });
+    },
+
+    showAutoClose: function() {
+      Discourse.Route.showModal(this, 'editTopicAutoClose', this.modelFor('topic'));
+      this.controllerFor('modal').set('modalClass', 'edit-auto-close-modal');
+    },
+
+    showInvite: function() {
+      Discourse.Route.showModal(this, 'invite', this.modelFor('topic'));
+      this.controllerFor('invite').setProperties({
+        email: null,
+        error: false,
+        saving: false,
+        finished: false
+      });
+    },
+
+    showPrivateInvite: function() {
+      Discourse.Route.showModal(this, 'invitePrivate', this.modelFor('topic'))
+      this.controllerFor('invitePrivate').setProperties({
+        email: null,
+        error: false,
+        saving: false,
+        finished: false
+      });
+    },
+
+    showHistory: function(post) {
+      Discourse.Route.showModal(this, 'history', post);
+      this.controllerFor('history').refresh();
+      this.controllerFor('modal').set('modalClass', 'history-modal')
+    },
+
+    mergeTopic: function() {
+      Discourse.Route.showModal(this, 'mergeTopic', this.modelFor('topic'));
+    },
+
+    splitTopic: function() {
+      Discourse.Route.showModal(this, 'splitTopic', this.modelFor('topic'));
+    }
+
+  },
+
   model: function(params) {
     var currentModel, _ref;
     if (currentModel = (_ref = this.controllerFor('topic')) ? _ref.get('content') : void 0) {

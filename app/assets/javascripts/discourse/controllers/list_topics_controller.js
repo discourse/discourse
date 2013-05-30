@@ -41,14 +41,6 @@ Discourse.ListTopicsController = Discourse.ObjectController.extend({
     this.toggleProperty('rankDetailsVisible');
   },
 
-  // Show rank details
-  showRankDetails: function(topic) {
-    var modalController = this.get('controllers.modal');
-    if (modalController) {
-      modalController.show(Discourse.TopicRankDetailsView.create({ topic: topic }));
-    }
-  },
-
   createTopic: function() {
     this.get('controllers.list').createTopic();
   },

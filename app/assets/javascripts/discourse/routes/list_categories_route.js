@@ -8,6 +8,15 @@
 **/
 Discourse.ListCategoriesRoute = Discourse.Route.extend({
 
+  events: {
+
+    createCategory: function() {
+      Discourse.Route.showModal(this, 'editCategory', Discourse.Category.create());
+      this.controllerFor('editCategory').set('selectedTab', 'general');
+    }
+
+  },
+
   model: function() {
     var listTopicsController = this.controllerFor('listTopics');
     if (listTopicsController) listTopicsController.set('content', null);

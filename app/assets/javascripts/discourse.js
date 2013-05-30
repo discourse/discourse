@@ -155,9 +155,9 @@ Discourse = Ember.Application.createWithMixins({
   },
 
   authenticationComplete: function(options) {
-    // TODO, how to dispatch this to the view without the container?
-    var loginView = Discourse.__container__.lookup('controller:modal').get('currentView');
-    return loginView.authenticationComplete(options);
+    // TODO, how to dispatch this to the controller without the container?
+    var loginController = Discourse.__container__.lookup('controller:login');
+    return loginController.authenticationComplete(options);
   },
 
   /**

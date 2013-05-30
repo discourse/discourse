@@ -101,11 +101,6 @@ Discourse.ListController = Discourse.Controller.extend({
     });
   },
 
-  createCategory: function() {
-    var _ref;
-    return (_ref = this.get('controllers.modal')) ? _ref.show(Discourse.EditCategoryView.create()) : void 0;
-  },
-
   canEditCategory: function() {
     if( this.present('category') ) {
       var u = Discourse.User.current();
@@ -113,12 +108,7 @@ Discourse.ListController = Discourse.Controller.extend({
     } else {
       return false;
     }
-  }.property('category'),
-
-  editCategory: function() {
-    this.get('controllers.modal').show(Discourse.EditCategoryView.create({ category: this.get('category') }));
-    return false;
-  }
+  }.property('category')
 
 });
 

@@ -1,19 +1,19 @@
 <div id='move-selected' class="modal-body">
-  {{#if view.error}}
+  {{#if error}}
     <div class="alert alert-error">
       <button class="close" data-dismiss="alert">×</button>
     </div>
   {{/if}}
 
-  {{{i18n topic.split_topic.instructions count="view.selectedPostsCount"}}}
+  {{{i18n topic.split_topic.instructions count="selectedPostsCount"}}}
 
   <form>
     <label>{{i18n topic.split_topic.topic_name}}</label>
-    {{textField value=view.topicName placeholderKey="composer.title_placeholder"}}
+    {{textField value=topicName placeholderKey="composer.title_placeholder"}}
   </form>
 
 </div>
 
 <div class="modal-footer">
-  <button class='btn btn-primary' {{bindAttr disabled="view.buttonDisabled"}} {{action movePostsToNewTopic target="view"}}>{{view.buttonTitle}}</button>
+  <button class='btn btn-primary' {{bindAttr disabled="buttonDisabled"}} {{action movePostsToNewTopic}}>{{buttonTitle}}</button>
 </div>
