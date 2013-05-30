@@ -156,7 +156,7 @@ class TopicUser < ActiveRecord::Base
                                        tu.topic_id = :topic_id AND
                                        tu.user_id = :user_id
                                   RETURNING
-                                    topic_users.notification_level, tu.notification_level old_level
+                                    topic_users.notification_level, tu.notification_level old_level, tu.last_read_post_number
                                 ",
                                 args).values
 
@@ -164,12 +164,20 @@ class TopicUser < ActiveRecord::Base
         before = rows[0][1].to_i
         after = rows[0][0].to_i
 
+        before_last_read = rows[0][2].to_i
+
+        if before_last_read < post_number
+          TopicTrackingState.publish_read(topic_id, post_number, user.id)
+        end
+
         if before != after
           MessageBus.publish("/topic/#{topic_id}", {notification_level_change: after}, user_ids: [user.id])
         end
       end
 
       if rows.length == 0
+        TopicTrackingState.publish_read(topic_id, post_number, user.id)
+
         args[:tracking] = notification_levels[:tracking]
         args[:regular] = notification_levels[:regular]
         args[:site_setting] = SiteSetting.auto_track_topics_after

@@ -17,7 +17,7 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
         tracker.removeTopic(data.topic_id);
       }
 
-      if (data.message_type === "new_topic" || data.message_type === "unread") {
+      if (data.message_type === "new_topic" || data.message_type === "unread" || data.message_type == "read") {
         tracker.states["t" + data.topic_id] = data.payload;
         tracker.notify(data);
       }
