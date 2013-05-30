@@ -23,7 +23,13 @@ Discourse.Search = {
     // Only include the data we have
     var data = { term: term }
     if (opts.typeFilter) data.type_filter = opts.typeFilter;
-    if (opts.searchContext) data.search_context = opts.searchContext;
+
+    if (opts.searchContext) {
+      data.search_context = {
+        type: opts.searchContext.type,
+        id: opts.searchContext.id
+      };
+    }
 
     return Discourse.ajax('/search', { data: data });
   }
