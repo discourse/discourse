@@ -85,6 +85,11 @@ class Category < ActiveRecord::Base
     if name.present?
       self.slug = Slug.for(name)
 
+      # Reject slugs that only contain numbers, because that's indistinguishable from an id.
+      self.slug = '' unless self.slug =~ /[^\d]/
+
+      return if self.slug.blank?
+
       # If a category with that slug already exists, set the slug to nil so the category can be found
       # another way.
       category = Category.where(slug: self.slug)

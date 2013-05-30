@@ -104,6 +104,14 @@ describe Category do
     end
   end
 
+  describe 'slug would be a number' do
+    let(:category) { Fabricate(:category, name: "電車男 2") }
+
+    it 'creates a blank slug' do
+      category.slug.should be_blank
+    end
+  end
+
   describe 'after create' do
     before do
       @category = Fabricate(:category, name: 'Amazing Category')
