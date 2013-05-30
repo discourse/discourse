@@ -505,6 +505,11 @@ en:
       toggle_information: "toggle topic details"
       read_more_in_category: "Want to read more? Browse other topics in {{catLink}} or {{latestLink}}."
       read_more: "Want to read more? {{catLink}} or {{latestLink}}."
+
+      # keys ending with _MF use message format, see /spec/components/js_local_helper_spec.rb for samples
+      read_more_in_category_MF: "There {UNREAD, plural, one {is <a href='/unread'>1 unread</a>} other {are <a href='/unread'># unread</a>}} and {NEW, plural, one {<a href='/new'>1 new</a> topic} other {<a href='/new'># new</a> topics}} remaining, or browse other topics in {catLink}"
+      read_more_MF: "There {UNREAD, plural, one {is <a href='/unread'>1 unread</a>} other {are <a href='/unread'># unread</a>}} and {NEW, plural, one {<a href='/new'>1 new</a> topic} other {<a href='/new'># new</a> topics}} remaining, or {latestLink}"
+
       browse_all_categories: Browse all categories
 
       view_latest_topics: view latest topics
