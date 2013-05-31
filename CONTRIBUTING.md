@@ -42,8 +42,9 @@ Anyone wishing to contribute to the **[Discourse/Discourse](https://github.com/d
 3. Code
 
   Make some magic happen! Remember to:
+  
   * Adhere to conventions.
-  * Update CHANGELOG with a description of your work.
+  * Update CHANGELOG with a detailed description of your work.
   * Include tests, and ensure they pass.
   * Remember to check to see if your new functionality has an impact on our Documentation, and include updates as appropriate.
   
@@ -51,7 +52,8 @@ Anyone wishing to contribute to the **[Discourse/Discourse](https://github.com/d
 
 4. Follow the Coding Conventions
 
- Discourse follows those code style conventions:
+ Discourse follows these general code style conventions:
+ 
  * two spaces, no tabs
  * no trailing whitespaces, blank lines should have no spaces
  * use spaces around operators, after commas, colons, semicolons, around `{` and before `}`
@@ -119,10 +121,10 @@ Anyone wishing to contribute to the **[Discourse/Discourse](https://github.com/d
   * Fill in some details about your potential patch including a meaningful title.
   * Click "Send pull request".
   
-  Once these steps are done, you will soon receive feedback from The Discourse team!
+  Thanks for that -- we'll get to your pull request ASAP, we love pull requests!
 
 10. Responding to Feedback
 
-  The Discourse team may recommend adjustments to your code, and this is perfectly normal. Part of interacting with a healthy open-source community requires you to be open to learning new techniques and strategies; *don't get discouraged!* Remember: if the Discourse team suggest changes to your code, **they care enough about your work that they want to include it**, and hope that you can assist by implementing those revisions on your own.
+  The Discourse team may recommend adjustments to your code. Part of interacting with a healthy open-source community requires you to be open to learning new techniques and strategies; *don't get discouraged!* Remember: if the Discourse team suggest changes to your code, **they care enough about your work that they want to include it**, and hope that you can assist by implementing those revisions on your own.
   
 [m]: http://meta.discourse.org
