@@ -49,7 +49,7 @@ Discourse is built for the *next* 10 years of the Internet, so our requirements 
   - Windows 8
 3. Modern small screen mobile/smartphones *as soon as possible*:
   - Windows Phone 8
-  - iOS 5+
+  - iOS 6+
   - Android 4.0+
 
 ## Built With
