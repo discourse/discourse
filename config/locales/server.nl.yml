@@ -103,6 +103,9 @@ nl:
       post:
         raw: Inhoud
     errors:
+      messages:
+        is_invalid: "is ongeldig; probeer wat uitgebreider te zijn"
+        has_already_been_used: is al gebruikt
       models:
         topic:
           attributes:
@@ -379,6 +382,7 @@ nl:
     queue_size_warning: "Het aantal taken in de wachtrij (%{queue_size}_ is best hoog. Dit kan duiden op problemen met het Sidekiq proces. Of je moet meer Sidekiq workers toevoegen."
     memory_warning: 'Jouw server draait met minder dan 1 GB aan geheugen. Ten minste 1 GB geheugen is aanbevolen.'
     facebook_config_warning: 'De server is geconfigureerd om registratie en inloggen via Facebook mogelijk te maken (enable_facebook_logins), maar er zijn geen app id en app secret waarden opgegeven. Ga naar <a href="/admin/site_settings">de Instellingen</a> en vul de waarden in. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Zie deze uitleg voor meer informatie</a>.'
+    cas_config_warning: 'De server is geconfigureerd om registratie en inloggen via CAS (enable_cas_logins) mogelijk te maken, maar de hostname en domainnaam zijn niet opgegeven.'
     twitter_config_warning: 'De server is geconfigureerd om registratie en inloggen via Twitter mogelijk te maken (enable_twitter_logins), maar er zijn geen key en secret waarden opgegeven. Ga naar <a href="/admin/site_settings">de Instellingen</a> en vul de waarden in. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Zie deze uitleg voor meer informatie</a>.'
     github_config_warning: 'De server is geconfigureerd om registratie en inloggen via Github mogelijk te maken (enable_github_logins), maar er zijn geen client id en secret waarden opgegeven. Ga naar <a href="/admin/site_settings">de Instellingen</a> en vul de waarden in. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Zie deze uitleg voor meer informatie</a>.'
     failing_emails_warning: 'Er zijn %{num_failed_jobs} mislukte emailtaken. Check of de instellingen voor config.action_mailer in het bestand config/environments/production.rb kloppen. <a href="/sidekiq/retries" target="_blank">Bekijk alle mislukte Sidekiq jobs</a>.'
@@ -386,6 +390,7 @@ nl:
     contact_email_missing: "Je hebt nog geen contactadres opgegeven voor je site. Werk contact_email bij in de <a href='/admin/site_settings'>Instellingen</a>."
     contact_email_invalid: "Je hebt een ongeldig contactadres opgegeven voor je site. Werk contact_email bij in de <a href='/admin/site_settings'>Instellingen</a>."
     title_nag: "Je hebt nog geen title ingesteld voor je site. Geef een titel voor je site op in de <a href='/admin/site_settings'>Instellingen</a>."
+    gmail_for_email_warning: "Je site is ingesteld om Gmail te gebruiken voor het versturen van mails. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail heeft limieten voor het aantal mails dat je kan versturen</a>. Overweeg om een andere e-mailprovider te gebruiken om er zeker van te zijn dat mails aankomen."
 
   content_types:
     education_new_reply:
@@ -417,6 +422,7 @@ nl:
     min_topic_title_length: minimum lengte van een topic-titel
     max_topic_title_length: maximum lengte van een topic-titel
     min_search_term_length: minimum lengte van een zoekterm in tekens
+    allow_uncategorized_topics: Sta topics zonder categorie toe
     allow_duplicate_topic_titles: Sta topics met dezelfde titels toe
     unique_posts_mins: Hoeveel minuten iemand moet wachten voordat deze een bericht met dezelfde inhoud mag plaatsen
     enforce_global_nicknames: "Dwing globaal unieke nicknames af (N.B.: verander dit alleen bij het opzetten van je forum)."
@@ -494,6 +500,8 @@ nl:
 
     # TODO: perhaps we need a way of protecting these settings for hosted solution, global settings ...
 
+    enable_local_logins: Zet lokaal inloggen aan
+    enable_local_account_create: Zet lokaal account aanmaken aan
     enable_google_logins: Zet inloggen met Google aan
     enable_yahoo_logins: "Zet inloggen met Yahoo! aan"
 
@@ -504,6 +512,10 @@ nl:
     enable_facebook_logins: Zet inloggen met Facebook aan. Hiervoor heb je een facebook_app_id en facebook_app_secret nodig.
     facebook_app_id: "app_id (registreer op https://developers.facebook.com/apps)"
     facebook_app_secret: "app_secret (registreer op https://developers.facebook.com/apps)"
+
+    enable_cas_logins: Zet inloggen met CAS aan
+    cas_hostname: Hostname voor CAS server
+    cas_domainname: Domeinnaam voor voor gegenereerde e-mailadressen voor de CAS server
 
     enable_github_logins: Zet inloggen met Github aan. Hiervoor heb je een github_client_id en github_client_secret nodig.
     github_client_id: "github_client_id (registreer op https://github.com/settings/applications)"
@@ -583,6 +595,7 @@ nl:
     privacy_policy_url: "Heb je je Privacy Voorwaarden ergens extern staan, geef hier dan de volledige url op."
 
     newuser_spam_host_threshold: "Hoe vaak kan een gebruiker linken naar dezelfde host in hun `newuser_spam_host_posts` berichten voordat deze links als spam gezien worden."
+    staff_like_weight: "Extra weegfactor voor likes gegeven door de staf."
 
   notification_types:
     mentioned: "%{display_username} heeft je genoemd in %{link}"
