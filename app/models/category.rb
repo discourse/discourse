@@ -34,9 +34,9 @@ class Category < ActiveRecord::Base
   scope :secured, ->(guardian = nil) {
     ids = guardian.secure_category_ids if guardian
     if ids.present?
-      where("categories.secure ='f' or categories.id in (:cats)", cats: ids)
+      where("NOT categories.secure or categories.id in (:cats)", cats: ids)
     else
-      where("categories.secure ='f'")
+      where("NOT categories.secure")
     end
   }
 
