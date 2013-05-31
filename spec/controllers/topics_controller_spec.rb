@@ -437,25 +437,6 @@ describe TopicsController do
 
   end
 
-  describe 'redirect_to_show' do
-    let(:topic) { Fabricate(:topic) }
-
-    it 'raises an error if topic is not found' do
-      get :redirect_to_show, id: 121212121212
-      expect(response.status).to eq(404)
-    end
-
-    it 'redirects to the correct topic when given its id' do
-      get :redirect_to_show, id: topic.id
-      expect(response).to redirect_to(topic.relative_url)
-    end
-
-    it 'redirects to the correct topic when given its slug' do
-      get :redirect_to_show, id: topic.slug
-      expect(response).to redirect_to(topic.relative_url)
-    end
-  end
-
   describe '#feed' do
     let(:topic) { Fabricate(:post).topic }
 
