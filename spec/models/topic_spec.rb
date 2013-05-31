@@ -966,6 +966,33 @@ describe Topic do
         Topic.by_newest.should == [c,b,d,a]
       end
     end
+
+    describe '#created_since' do
+      it 'returns topics created after some date' do
+        now = Time.now
+        a = Fabricate(:topic, created_at: now - 2.minutes)
+        b = Fabricate(:topic, created_at: now - 1.minute)
+        c = Fabricate(:topic, created_at: now)
+        d = Fabricate(:topic, created_at: now + 1.minute)
+        e = Fabricate(:topic, created_at: now + 2.minutes)
+        Topic.created_since(now).should_not include a
+        Topic.created_since(now).should_not include b
+        Topic.created_since(now).should_not include c
+        Topic.created_since(now).should include d
+        Topic.created_since(now).should include e
+      end
+    end
+
+    describe '#visible' do
+      it 'returns topics set as visible' do
+        a = Fabricate(:topic, visible: false)
+        b = Fabricate(:topic, visible: true)
+        c = Fabricate(:topic, visible: true)
+        Topic.visible.should_not include a
+        Topic.visible.should include b
+        Topic.visible.should include c
+      end
+    end
   end
 
   describe 'auto-close' do
