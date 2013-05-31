@@ -8,6 +8,16 @@
 **/
 Discourse.ModalController = Discourse.Controller.extend({
 
+  /**
+    Close the modal.
+
+    @method closeModal
+  **/
+  closeModal: function() {
+    // Currently uses jQuery to hide it.
+    $('#discourse-modal').modal('hide');
+  }
+
 });
 
 

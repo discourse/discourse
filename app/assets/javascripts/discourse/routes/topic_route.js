@@ -13,9 +13,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
 
     showFlags: function(post) {
       Discourse.Route.showModal(this, 'flag', post);
-      this.controllerFor('flag').setProperties({
-        postActionTypeId: null
-      });
+      this.controllerFor('flag').setProperties({ selected: null });
     },
 
     showAutoClose: function() {

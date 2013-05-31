@@ -9,7 +9,11 @@ class PostActionsController < ApplicationController
   def create
     guardian.ensure_post_can_act!(@post, PostActionType.types[@post_action_type_id])
 
-    post_action = PostAction.act(current_user, @post, @post_action_type_id, params[:message])
+    args = {}
+    args[:message] = params[:message] if params[:message].present?
+    args[:take_action] = true if guardian.is_staff? and params[:take_action] == 'true'
+
+    post_action = PostAction.act(current_user, @post, @post_action_type_id, args)
 
     if post_action.blank? || post_action.errors.present?
       render_json_error(post_action)

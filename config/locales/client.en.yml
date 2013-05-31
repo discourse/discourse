@@ -831,6 +831,7 @@ en:
     flagging:
       title: 'Why are you flagging this post?'
       action: 'Flag Post'
+      take_action: "Take Action"
       notify_action: 'Notify'
       cant: "Sorry, you can't flag this post at this time."
       custom_placeholder_notify_user: "Why does this post require you to speak to this user directly and privately? Be specific, be constructive, and always be kind."

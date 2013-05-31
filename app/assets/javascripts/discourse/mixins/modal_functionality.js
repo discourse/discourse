@@ -21,6 +21,16 @@ Discourse.ModalFunctionality = Em.Mixin.create({
       message: message,
       messageClass: messageClass
     }));
+  },
+
+  /**
+    Close the modal.
+
+    @method closeModal
+  **/
+  closeModal: function() {
+    // Currently uses jQuery to hide it.
+    this.get('controllers.modal').closeModal();
   }
 
 });

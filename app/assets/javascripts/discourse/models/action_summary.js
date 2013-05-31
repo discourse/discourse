@@ -37,6 +37,8 @@ Discourse.ActionSummary = Discourse.Model.extend({
 
   // Perform this action
   act: function(opts) {
+    if (!opts) opts = {};
+
     var action = this.get('actionType.name_key');
 
     // Mark it as acted
@@ -63,7 +65,8 @@ Discourse.ActionSummary = Discourse.Model.extend({
       data: {
         id: this.get('post.id'),
         post_action_type_id: this.get('id'),
-        message: (opts ? opts.message : void 0) || ""
+        message: opts.message,
+        take_action: opts.takeAction
       }
     }).then(null, function (error) {
       actionSummary.removeAction();
