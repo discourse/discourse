@@ -34,6 +34,11 @@ Fabricator(:post_with_image_url, from: :post) do
   "
 end
 
+Fabricator(:post_with_s3_image_url, from: :post) do
+  cooked "
+<img src=\"//bucket.s3.amazonaws.com/uploads/6/4/123.png\">
+  "
+end
 
 Fabricator(:basic_reply, from: :post) do
   user(:coding_horror)
