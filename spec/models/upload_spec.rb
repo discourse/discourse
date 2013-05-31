@@ -102,17 +102,14 @@ describe Upload do
 
       let(:upload) do
         # The Time needs to be frozen as it is used to generate a clean & unique name
-        Timecop.freeze(Time.new(2013, 2, 17, 0, 0, 0)) do
-          Upload.create_locally(user_id, logo, topic_id)
-        end
+        Time.stubs(:now).returns(Time.utc(2013, 2, 17, 12, 0, 0, 0))
+        Upload.create_locally(user_id, logo, topic_id)
       end
 
       it_behaves_like "upload"
 
       it "works" do
-        pending "zogstrip can you have a look at this, hash is different" do
-          upload.url.should match /\/uploads\/default\/[\d]+\/efaf7c3915fdfd3b.png/
-        end
+        upload.url.should match /\/uploads\/default\/[\d]+\/253dc8edf9d4ada1.png/
       end
 
     end
