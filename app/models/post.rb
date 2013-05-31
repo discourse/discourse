@@ -327,6 +327,8 @@ class Post < ActiveRecord::Base
   # TODO: Move some of this into an asynchronous job?
   # TODO: Move into PostCreator
   after_create do
+
+    Rails.logger.info (">" * 30) + "#{no_bump} #{created_at}"
     # Update attributes on the topic - featured users and last posted.
     attrs = {last_posted_at: created_at, last_post_user_id: user_id}
     attrs[:bumped_at] = created_at unless no_bump

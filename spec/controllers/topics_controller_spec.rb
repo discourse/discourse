@@ -487,6 +487,11 @@ describe TopicsController do
           xhr :put, :update, topic_id: @topic.id, slug: @topic.title, category: 'incredible'
         end
 
+        it "returns errors with invalid titles" do
+          xhr :put, :update, topic_id: @topic.id, slug: @topic.title, title: 'asdf'
+          expect(response).not_to be_success
+        end
+
       end
     end
   end
