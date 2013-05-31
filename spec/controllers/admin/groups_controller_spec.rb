@@ -63,7 +63,7 @@ describe Admin::GroupsController do
     group = Fabricate(:group)
     log_in(:admin)
 
-    xhr :put, :update, id: group.id, name: 'fred', group: {
+    xhr :put, :update, id: group.id, group: {
         name: 'fred',
         usernames: "#{user1.username},#{user2.username}"
     }
