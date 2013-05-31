@@ -94,6 +94,10 @@ class Topic < ActiveRecord::Base
 
   scope :by_newest, order('topics.created_at desc, topics.id desc')
 
+  scope :visible, where(visible: true)
+
+  scope :created_since, lambda { |time_ago| where('created_at > ?', time_ago) }
+
   # Helps us limit how many favorites can be made in a day
   class FavoriteLimiter < RateLimiter
     def initialize(user)
@@ -206,13 +210,7 @@ class Topic < ActiveRecord::Base
     meta_data[key.to_s]
   end
 
-  def self.visible
-    where(visible: true)
-  end
 
-  def self.created_since(time_ago)
-    where("created_at > ?", time_ago)
-  end
 
   def self.listable_count_per_day(sinceDaysAgo=30)
     listable_topics.where('created_at > ?', sinceDaysAgo.days.ago).group('date(created_at)').order('date(created_at)').count
