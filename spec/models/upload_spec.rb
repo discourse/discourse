@@ -1,4 +1,6 @@
 require 'spec_helper'
+require 'fog'
+require 'imgur'
 
 describe Upload do
 
@@ -38,21 +40,78 @@ describe Upload do
       Upload.create_for(user_id, logo, topic_id)
     end
 
+    shared_examples_for "upload" do
+      it "is valid" do
+        upload.original_filename.should == logo.original_filename
+        upload.filesize.should == logo.size
+        upload.width.should == 244
+        upload.height.should == 66
+      end
+    end
+
     context 'imgur' do
 
-      # TODO
+      before(:each) do
+        # Stub out Imgur entirely as it already is tested.
+        Imgur.stubs(:upload_file).returns({
+          url: "imgurlink",
+          filesize: logo.size,
+          width: 244,
+          height: 66
+        })
+      end
+
+      let(:upload) { Upload.create_on_imgur(user_id, logo, topic_id) }
+
+      it_behaves_like "upload"
+
+      it "works" do
+        upload.url.should == "imgurlink"
+      end
 
     end
 
     context 's3' do
 
-      # TODO
+      before(:each) do 
+        SiteSetting.stubs(:s3_upload_bucket).returns("bucket")
+        Fog.mock!
+      end
+
+      let(:upload) { Upload.create_on_s3(user_id, logo, topic_id) }
+
+      it_behaves_like "upload"
+
+      it "works" do
+        upload.url.should == "//bucket.s3-us-west-1.amazonaws.com/e8b1353813a7d091231f9a27f03566f123463fc1.png"
+      end
+
+      after(:each) do
+        Fog.unmock!
+      end
 
     end
 
     context 'local' do
 
-      # TODO
+      before(:each) do
+        # prevent the tests from creating directories & files...
+        FileUtils.stubs(:mkdir_p)
+        File.stubs(:open)
+      end
+
+      let(:upload) do
+        # The Time needs to be frozen as it is used to generate a clean & unique name
+        Timecop.freeze(Time.new(2013, 2, 17, 0, 0, 0)) do
+          Upload.create_locally(user_id, logo, topic_id)
+        end        
+      end
+
+      it_behaves_like "upload"
+
+      it "works" do
+        upload.url.should match /\/uploads\/default\/[\d]+\/efaf7c3915fdfd3b.png/
+      end
 
     end
 
