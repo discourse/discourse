@@ -150,6 +150,28 @@ Discourse.AdminUser = Discourse.User.extend({
     });
   },
 
+  unblock: function() {
+    Discourse.ajax('/admin/users/' + this.id + '/unblock', {type: 'PUT'}).then(function() {
+      // succeeded
+      window.location.reload();
+    }, function(e) {
+      // failed
+      var error = Em.String.i18n('admin.user.unblock_failed', { error: "http: " + e.status + " - " + e.body });
+      bootbox.alert(error);
+    });
+  },
+
+  block: function() {
+    Discourse.ajax('/admin/users/' + this.id + '/block', {type: 'PUT'}).then(function() {
+      // succeeded
+      window.location.reload();
+    }, function(e) {
+      // failed
+      var error = Em.String.i18n('admin.user.block_failed', { error: "http: " + e.status + " - " + e.body });
+      bootbox.alert(error);
+    });
+  },
+
   sendActivationEmail: function() {
     Discourse.ajax('/users/' + this.get('username') + '/send_activation_email').then(function() {
       // succeeded

@@ -58,6 +58,9 @@ class SiteSetting < ActiveRecord::Base
   setting(:flags_required_to_hide_post, 3)
   setting(:cooldown_minutes_after_hiding_posts, 10)
 
+  setting(:num_flags_to_block_new_user, 3)
+  setting(:num_users_to_block_new_user, 3)
+
   # used mainly for dev, force hostname for Discourse.base_url
   # You would usually use multisite for this
   setting(:force_hostname, '')

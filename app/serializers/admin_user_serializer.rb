@@ -24,7 +24,8 @@ class AdminUserSerializer < BasicUserSerializer
              :ip_address,
              :can_send_activation_email,
              :can_activate,
-             :can_deactivate
+             :can_deactivate,
+             :blocked
 
   def is_banned
     object.is_banned?

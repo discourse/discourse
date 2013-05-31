@@ -470,6 +470,9 @@ en:
 
     flags_required_to_hide_post: "Number of flags that cause a post to be automatically hidden and PM sent to the user (0 for never)"
     cooldown_minutes_after_hiding_posts: "Number of minutes a user must wait before they can edit the post that was hidden due to flagging"
+    num_flags_to_block_new_user: "If a new user's posts get this many spam flags from (n) different users, hide all their posts and prevent future posting. 0 disables this feature."
+    num_users_to_block_new_user: "If a new user's posts get (x) spam flags from this many different users, hide all their posts and prevent future posting. 0 disables this feature."
+
 
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak"
     post_undo_action_window_mins: "Number of seconds users are allowed to reverse actions on a post (like, flag, etc)"
@@ -835,6 +838,26 @@ en:
     import_succeeded:
       subject_template: "Import completed successfully"
       text_body_template: "The import was successful."
+
+    too_many_spam_flags:
+      subject_template: "Posts hidden due to community flagging"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to inform you that your posts have been hidden as spam due to community flagging.
+
+        You will not be able to create any more posts unless a staff member determines that your posts are not spam.
+
+        For additional guidance, please refer to our [FAQ](%{base_url}/faq).
+
+    unblocked:
+      subject_template: "Account unblocked"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to inform you that we have removed the blocked status of your account after the community flagged your post(s) as spam.
+
+        You can start posting again.
 
   unsubscribe_link: "If you'd like to unsubscribe from these emails, visit your [user preferences](%{user_preferences_url})."
 

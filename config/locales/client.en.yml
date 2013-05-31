@@ -1048,6 +1048,7 @@ en:
         banned: "Banned?"
         moderator: "Moderator?"
         admin: "Admin?"
+        blocked: "Blocked?"
         show_admin_profile: "Admin"
         refresh_browsers: "Force browser refresh"
         show_public_profile: "Show Public Profile"
@@ -1056,6 +1057,8 @@ en:
         grant_admin: 'Grant Admin'
         revoke_moderation: 'Revoke Moderation'
         grant_moderation: 'Grant Moderation'
+        unblock: 'Unblock'
+        block: 'Block'
         reputation: Reputation
         permissions: Permissions
         activity: Activity
@@ -1081,6 +1084,10 @@ en:
         activate_failed: "There was a problem activating the user."
         deactivate_account: "Deactivate Account"
         deactivate_failed: "There was a problem deactivating the user."
+        unblock_failed: 'There was a problem unblocking the user.'
+        block_failed: 'There was a problem blocking the user.'
+        block_explanation: "A blocked user can't post or start topics."
+
 
       site_content:
         none: "Choose a type of content to begin editing."

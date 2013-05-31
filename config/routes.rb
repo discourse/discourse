@@ -52,6 +52,8 @@ Discourse::Application.routes.draw do
       post 'refresh_browsers', constraints: AdminConstraint.new
       put 'activate'
       put 'deactivate'
+      put 'block'
+      put 'unblock'
     end
 
     resources :impersonate, constraints: AdminConstraint.new
