@@ -36,10 +36,18 @@ Discourse.ApplicationRoute = Em.Route.extend({
 
     editCategory: function(category) {
       var router = this;
-      Discourse.Category.findBySlugOrId(category.get('slug')).then(function (c) {
-        Discourse.Route.showModal(router, 'editCategory', c);
+
+      if (category.get('isUncategorized')) {
+        Discourse.Route.showModal(router, 'editCategory', category);
         router.controllerFor('editCategory').set('selectedTab', 'general');
-      })
+      } else {
+        Discourse.Category.findBySlugOrId(category.get('slug')).then(function (c) {
+          Discourse.Site.instance().updateCategory(c);
+          Discourse.Route.showModal(router, 'editCategory', c);
+          router.controllerFor('editCategory').set('selectedTab', 'general');
+        });
+      }
+
     }
 
   }

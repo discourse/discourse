@@ -95,27 +95,6 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
     return Em.String.i18n('category.delete');
   }.property(),
 
-  didInsertElement: function() {
-    this._super();
-
-    if (this.get('id')) {
-      this.set('loading', true);
-      var categoryController = this;
-
-      // We need the topic_count to be correct, so get the most up-to-date info about this category from the server.
-      Discourse.Category.findBySlugOrId( this.get('slug') || this.get('id') ).then( function(cat) {
-        categoryController.set('category', cat);
-        Discourse.Site.instance().updateCategory(cat);
-        categoryController.set('id', categoryController.get('slug'));
-        categoryController.set('loading', false);
-      });
-    } else if( this.get('isUncategorized') ) {
-      this.set('category', Discourse.Category.uncategorizedInstance());
-    } else {
-      this.set('category', Discourse.Category.create({ color: 'AB9364', text_color: 'FFFFFF', hotness: 5 }));
-    }
-  },
-
   showCategoryTopic: function() {
     $('#discourse-modal').modal('hide');
     Discourse.URL.routeTo(this.get('topic_url'));
