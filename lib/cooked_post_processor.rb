@@ -36,7 +36,7 @@ class CookedPostProcessor
 
     images.each do |img|
       src = img['src']
-      src = Discourse.base_url_no_prefix + src if src[0] == "/"
+      src = Discourse.base_url_no_prefix + src if src =~ /^\/[^\/]/
 
       if src.present?
 
