@@ -110,9 +110,7 @@ describe Upload do
       it_behaves_like "upload"
 
       it "works" do
-        pending "zogstrip can you have a look at this, hash is different" do
-          upload.url.should match /\/uploads\/default\/[\d]+\/efaf7c3915fdfd3b.png/
-        end
+        upload.url.should match /\/uploads\/default\/[\d]+\/98e89fa34e16fdaa.png/
       end
 
     end
