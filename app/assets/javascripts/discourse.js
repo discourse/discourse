@@ -260,8 +260,11 @@ Discourse = Ember.Application.createWithMixins({
     Discourse.MessageBus.alwaysLongPoll = Discourse.Environment === "development";
     Discourse.MessageBus.start();
     Discourse.KeyValueStore.init("discourse_", Discourse.MessageBus);
-    // Make sure we delete preloaded data
-    PreloadStore.remove('siteSettings');
+
+    // Don't remove site settings for now. It seems on some browsers the route
+    // tries to use it after it has been removed
+    // PreloadStore.remove('siteSettings');
+
     // Developer specific functions
     Discourse.Development.setupProbes();
     Discourse.Development.observeLiveChanges();
