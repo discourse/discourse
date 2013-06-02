@@ -306,6 +306,11 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
   },
 
   finishedEdit: function() {
+
+    // TODO: This should be in a controller and use proper text fields
+
+    var topicView = this;
+
     if (this.get('editingTopic')) {
       var topic = this.get('topic');
       // retrieve the title from the text field
@@ -326,9 +331,17 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
           title: title,
           fancy_title: title
         });
+
+      }, function(error) {
+        topicView.set('editingTopic', true);
+        if (error && error.responseText) {
+          bootbox.alert($.parseJSON(error.responseText).errors[0]);
+        } else {
+          bootbox.alert(Em.String.i18n('generic_error'));
+        }
       });
       // close editing mode
-      this.set('editingTopic', false);
+      topicView.set('editingTopic', false);
     }
   },
 

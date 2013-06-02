@@ -62,14 +62,19 @@ class TopicsController < ApplicationController
       topic.archetype = "regular" if params[:archetype] == 'regular'
     end
 
+    success = false
     Topic.transaction do
-      topic.save
-      topic.change_category(params[:category])
+      success = topic.save
+      topic.change_category(params[:category]) if success
     end
 
     # this is used to return the title to the client as it may have been
     # changed by "TextCleaner"
-    render_serialized(topic, BasicTopicSerializer)
+    if success
+      render_serialized(topic, BasicTopicSerializer)
+    else
+      render_json_error(topic)
+    end
   end
 
   def similar_to

@@ -38,11 +38,11 @@ class Group < ActiveRecord::Base
 
     real_ids = case name
                when :admins
-                 "SELECT u.id FROM users u WHERE u.admin = 't'"
+                 "SELECT u.id FROM users u WHERE u.admin"
                when :moderators
-                 "SELECT u.id FROM users u WHERE u.moderator = 't'"
+                 "SELECT u.id FROM users u WHERE u.moderator"
                when :staff
-                 "SELECT u.id FROM users u WHERE u.moderator = 't' OR u.admin = 't'"
+                 "SELECT u.id FROM users u WHERE u.moderator OR u.admin"
                when :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4, :trust_level_5
                  "SELECT u.id FROM users u WHERE u.trust_level = #{id-10}"
                end

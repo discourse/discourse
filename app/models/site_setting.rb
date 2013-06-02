@@ -157,7 +157,11 @@ class SiteSetting < ActiveRecord::Base
 
   setting(:enforce_global_nicknames, true)
   setting(:discourse_org_access_key, '')
+  
   setting(:enable_s3_uploads, false)
+  setting(:s3_access_key_id, '')
+  setting(:s3_secret_access_key, '')
+  setting(:s3_region, 'us-west-1')
   setting(:s3_upload_bucket, '')
 
   setting(:default_trust_level, 0)

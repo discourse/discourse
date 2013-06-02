@@ -7,9 +7,17 @@
   @module Discourse
 **/
 Discourse.ModalController = Discourse.Controller.extend({
-  show: function(view) {
-    this.set('currentView', view);
+
+  /**
+    Close the modal.
+
+    @method closeModal
+  **/
+  closeModal: function() {
+    // Currently uses jQuery to hide it.
+    $('#discourse-modal').modal('hide');
   }
+
 });
 
 

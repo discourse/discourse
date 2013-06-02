@@ -43,6 +43,15 @@ describe Topic do
 
   end
 
+  context "updating a title to be shorter" do
+    let!(:topic) { Fabricate(:topic) }
+
+    it "doesn't update it to be shorter due to cleaning using TextCleaner" do
+      topic.title = 'unread    glitch'
+      topic.save.should be_false
+    end
+  end
+
   context 'topic title uniqueness' do
 
     let!(:topic) { Fabricate(:topic) }

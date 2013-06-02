@@ -38,7 +38,7 @@ Discourse.TopicFooterButtonsView = Ember.ContainerView.extend({
             },
 
             click: function() {
-              return this.get('controller').showInviteModal();
+              return this.get('controller').send('showInvite');
             }
           }));
         }
@@ -170,8 +170,7 @@ Discourse.TopicFooterButtonsView = Ember.ContainerView.extend({
         textKey: 'topic.login_reply',
         classNames: ['btn', 'btn-primary', 'create'],
         click: function() {
-          var _ref;
-          return (_ref = this.get('controller.controllers.modal')) ? _ref.show(Discourse.LoginView.create()) : void 0;
+          this.get('controller').send('showLogin');
         }
       }));
     }

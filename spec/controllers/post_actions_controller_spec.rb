@@ -9,7 +9,7 @@ describe PostActionsController do
 
     describe 'logged in' do
       before do
-        @user = log_in
+        @user = log_in(:moderator)
         @post = Fabricate(:post, user: Fabricate(:coding_horror))
       end
 
@@ -34,9 +34,26 @@ describe PostActionsController do
       end
 
       it 'allows us to create an post action on a post' do
-        PostAction.expects(:act).once.with(@user, @post, PostActionType.types[:like], nil)
+        PostAction.expects(:act).once.with(@user, @post, PostActionType.types[:like], {})
         xhr :post, :create, id: @post.id, post_action_type_id: PostActionType.types[:like]
       end
+
+      it 'passes the message through' do
+        PostAction.expects(:act).once.with(@user, @post, PostActionType.types[:like], {message: 'action message goes here'})
+        xhr :post, :create, id: @post.id, post_action_type_id: PostActionType.types[:like], message: 'action message goes here'
+      end
+
+      it 'passes take_action through' do
+        PostAction.expects(:act).once.with(@user, @post, PostActionType.types[:like], {take_action: true})
+        xhr :post, :create, id: @post.id, post_action_type_id: PostActionType.types[:like], take_action: 'true'
+      end
+
+      it "doesn't pass take_action through if the user isn't staff" do
+        Guardian.any_instance.stubs(:is_staff?).returns(false)
+        PostAction.expects(:act).once.with(@user, @post, PostActionType.types[:like], {})
+        xhr :post, :create, id: @post.id, post_action_type_id: PostActionType.types[:like], take_action: 'true'
+      end
+
     end
 
   end

@@ -18,7 +18,7 @@
           <button {{action toggleClosed}} class='btn btn-admin'><i class='icon-unlock'></i> {{i18n topic.actions.open}}</button>
         {{else}}
           <button {{action toggleClosed}} class='btn btn-admin'><i class='icon-lock'></i> {{i18n topic.actions.close}}</button>
-          <button {{action autoClose}} class='btn btn-admin'><i class='icon-time'></i> {{i18n topic.actions.auto_close}}</button>
+          <button {{action showAutoClose}} class='btn btn-admin'><i class='icon-time'></i> {{i18n topic.actions.auto_close}}</button>
         {{/if}}
       </li>
 

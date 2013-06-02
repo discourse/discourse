@@ -54,8 +54,10 @@ class CategoryList
           c.displayable_topics = []
           topics_in_cat.each do |topic_id|
             topic = @topics_by_id[topic_id]
-            topic.category = c
-            c.displayable_topics << topic
+            if topic.present?
+              topic.category = c
+              c.displayable_topics << topic
+            end
           end
         end
       end
@@ -91,7 +93,7 @@ class CategoryList
         # Find the appropriate place to insert it:
         insert_at = nil
         @categories.each_with_index do |c, idx|
-          if uncategorized.topics_week > (c.topics_week || 0)
+          if (uncategorized.topics_week || 0) > (c.topics_week || 0)
             insert_at = idx
             break
           end

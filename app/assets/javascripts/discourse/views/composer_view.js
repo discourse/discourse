@@ -197,10 +197,7 @@ Discourse.ComposerView = Discourse.View.extend({
     $uploadTarget = $('#reply-control');
     this.editor.hooks.insertImageDialog = function(callback) {
       callback(null);
-      _this.get('controller.controllers.modal').show(Discourse.ImageSelectorView.create({
-        composer: _this,
-        uploadTarget: $uploadTarget
-      }));
+      _this.get('controller').send('showImageSelector', _this);
       return true;
     };
 
@@ -342,7 +339,6 @@ Discourse.ComposerView = Discourse.View.extend({
     Em.run.schedule('afterRender', function() {
       Discourse.Utilities.setCaretPosition(ctrl, caretPosition + text.length);
     });
-
   },
 
   // Uses javascript to get the image sizes from the preview, if present

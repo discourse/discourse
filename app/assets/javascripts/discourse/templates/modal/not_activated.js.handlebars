@@ -1,11 +1,11 @@
 <div class="modal-body">
-  {{#if view.emailSent}}
-    {{{i18n login.sent_activation_email_again currentEmail="view.currentEmail"}}}
+  {{#if emailSent}}
+    {{{i18n login.sent_activation_email_again currentEmail="currentEmail"}}}
   {{else}}
-    {{{i18n login.not_activated sentTo="view.sentTo"}}}
-    <a href="#" {{action "sendActivationEmail" target="view"}}>{{i18n login.resend_activation_email}}</a>
+    {{{i18n login.not_activated sentTo="sentTo"}}}
+    <a href="#" {{action "sendActivationEmail"}}>{{i18n login.resend_activation_email}}</a>
   {{/if}}
 </div>
 <div class="modal-footer">
-  <button class='btn btn-primary' data-dismiss="modal">{{i18n close}}</button>
+  <button class='btn btn-primary' {{action closeModal}}>{{i18n close}}</button>
 </div>

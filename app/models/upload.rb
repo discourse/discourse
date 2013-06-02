@@ -1,8 +1,6 @@
 require 'digest/sha1'
 
 class Upload < ActiveRecord::Base
-  # attr_accessible :title, :body
-
   belongs_to :user
   belongs_to :topic
 
@@ -43,21 +41,26 @@ class Upload < ActiveRecord::Base
     image_info = FastImage.new(tempfile, raise_on_failure: true)
     blob = file.read
     sha1 = Digest::SHA1.hexdigest(blob)
+    remote_filename = "#{sha1}.#{image_info.type}"
 
-    Fog.credentials_path = "#{Rails.root}/config/fog_credentials.yml"
-    fog = Fog::Storage.new(provider: 'AWS')
+    fog = Fog::Storage.new(
+      aws_access_key_id: SiteSetting.s3_access_key_id,
+      aws_secret_access_key: SiteSetting.s3_secret_access_key,
+      region: SiteSetting.s3_region,
+      provider: 'AWS'
+    )
 
-    remote_filename = "#{sha1[2..-1]}.#{image_info.type}"
-    path = "/uploads/#{sha1[0]}/#{sha1[1]}"
-    location = "#{SiteSetting.s3_upload_bucket}#{path}"
-    directory = fog.directories.create(key: location)
+    directory = fog.directories.create(key: SiteSetting.s3_upload_bucket)
 
-    file = directory.files.create(key: remote_filename,
-                                  body: tempfile,
-                                  public: true,
-                                  content_type: file.content_type)
+    file = directory.files.create(
+      key: remote_filename,
+      body: tempfile,
+      public: true,
+      content_type: file.content_type
+    )
+    
     upload.width, upload.height = ImageSizer.resize(*image_info.size)
-    upload.url = "//#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com#{path}/#{remote_filename}"
+    upload.url = "//#{SiteSetting.s3_upload_bucket}.s3-#{SiteSetting.s3_region}.amazonaws.com/#{remote_filename}"
 
     upload.save
 
@@ -79,12 +82,14 @@ class Upload < ActiveRecord::Base
     clean_name += ".#{image_info.type}"
     url_root = "/uploads/#{RailsMultisite::ConnectionManagement.current_db}/#{upload.id}"
     path = "#{Rails.root}/public#{url_root}"
-    upload.width, upload.height = ImageSizer.resize(*image_info.size)
+
     FileUtils.mkdir_p path
     # not using cause mv, cause permissions are no good on move
     File.open("#{path}/#{clean_name}", "wb") do |f|
       f.write File.read(file.tempfile)
     end
+
+    upload.width, upload.height = ImageSizer.resize(*image_info.size)
     upload.url = Discourse::base_uri + "#{url_root}/#{clean_name}"
 
     upload.save

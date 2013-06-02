@@ -1,15 +1,15 @@
 <div id='move-selected' class="modal-body">
-  {{#if view.error}}
+  {{#if error}}
     <div class="alert alert-error">
       <button class="close" data-dismiss="alert">×</button>
     </div>
   {{/if}}
 
-  <p>{{{i18n topic.merge_topic.instructions count="view.selectedPostsCount"}}}</p>
+  <p>{{{i18n topic.merge_topic.instructions count="selectedPostsCount"}}}</p>
 
-  {{view Discourse.ChooseTopicView selectedTopicIdBinding="view.selectedTopicId"}}
+  {{chooseTopic selectedTopicId=selectedTopicId}}
 </div>
 
 <div class="modal-footer">
-  <button class='btn btn-primary' {{bindAttr disabled="view.buttonDisabled"}} {{action movePostsToExistingTopic target="view"}}>{{view.buttonTitle}}</button>
+  <button class='btn btn-primary' {{bindAttr disabled="buttonDisabled"}} {{action movePostsToExistingTopic}}>{{buttonTitle}}</button>
 </div>

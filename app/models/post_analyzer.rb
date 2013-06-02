@@ -1,12 +1,50 @@
-module PostAnalyser
+class PostAnalyzer
 
+  attr_accessor :cooked, :raw
+
+  def initialize(raw, topic_id)
+    @raw  = raw
+    @topic_id = topic_id
+  end
+
+  def cooked_document
+    @cooked = cook(@raw, topic_id: @topic_id)
+    @cooked_document = Nokogiri::HTML.fragment(@cooked)
+  end
+
+  # What we use to cook posts
+  def cook(*args)
+    cooked = PrettyText.cook(*args)
+
+    # If we have any of the oneboxes in the cache, throw them in right away, don't
+    # wait for the post processor.
+    dirty = false
+    result = Oneboxer.apply(cooked) do |url, elem|
+      Oneboxer.render_from_cache(url)
+    end
+
+    cooked = result.to_html if result.changed?
+    cooked
+  end
+
+  # How many images are present in the post
+  def image_count
+    return 0 unless @raw.present?
+
+    cooked_document.search("img").reject do |t|
+      dom_class = t["class"]
+      if dom_class
+        (Post.white_listed_image_classes & dom_class.split(" ")).count > 0
+      end
+    end.count
+  end
 
   def raw_mentions
-    return [] if raw.blank?
+    return [] if @raw.blank?
 
     # We don't count mentions in quotes
     return @raw_mentions if @raw_mentions.present?
-    raw_stripped = raw.gsub(/\[quote=(.*)\]([^\[]*?)\[\/quote\]/im, '')
+    raw_stripped = @raw.gsub(/\[quote=(.*)\]([^\[]*?)\[\/quote\]/im, '')
 
     # Strip pre and code tags
     doc = Nokogiri::HTML.fragment(raw_stripped)
@@ -34,7 +72,7 @@ module PostAnalyser
 
   # Returns an array of all links in a post excluding mentions
   def raw_links
-    return [] unless raw.present?
+    return [] unless @raw.present?
 
     return @raw_links if @raw_links.present?
 

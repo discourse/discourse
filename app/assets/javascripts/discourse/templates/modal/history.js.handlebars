@@ -1,20 +1,20 @@
 <div class="modal-body">
 
-  {{#if view.loading}}
+  {{#if loading}}
     {{i18n loading}}
   {{else}}
-    {{#if view.versions}}
+    {{#if versions}}
       <div class='span8'>
 
         {{view Ember.Select
-          contentBinding="view.versions"
+          contentBinding="versions"
           optionLabelPath="content.description"
           optionValuePath="content.number"
-          selectionBinding="view.versionLeft"}}
+          selectionBinding="versionLeft"}}
 
         <div class='contents'>
-          {{#if view.postLeft}}
-            {{{view.postLeft.cooked}}}
+          {{#if postLeft}}
+            {{{postLeft.cooked}}}
           {{else}}
             <div class='history-loading'>{{i18n loading}}</div>
           {{/if}}
@@ -24,14 +24,14 @@
 
       <div class='span8 offset1'>
         {{view Ember.Select
-          contentBinding="view.versions"
+          contentBinding="versions"
           optionLabelPath="content.description"
           optionValuePath="content.number"
-          selectionBinding="view.versionRight"}}
+          selectionBinding="versionRight"}}
 
         <div class='contents'>
-          {{#if view.diff}}
-            {{{view.diff}}}
+          {{#if diff}}
+            {{{diff}}}
           {{else}}
             <div class='history-loading'>{{i18n loading}}</div>
           {{/if}}

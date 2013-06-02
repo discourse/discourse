@@ -18,9 +18,9 @@
 <footer class='button-row'>
   {{#if view.can_delete}}
     <a href='#' {{action deleteCategory target="view"}} class='btn btn-small'>{{i18n category.delete}}</a>
-  {{/if}}    
+  {{/if}}
   {{#if view.can_edit}}
-    <a href='#' {{action editCategory target="view"}} class='btn btn-small'>{{i18n category.edit}}</a>
+    <a href='#' {{action editCategory view}} class='btn btn-small'>{{i18n category.edit}}</a>
   {{/if}}
   <a href="/category/{{unbound view.slug}}" class='btn btn-small'>{{i18n category.view}}</a>
 </footer>

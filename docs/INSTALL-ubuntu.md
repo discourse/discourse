@@ -223,6 +223,11 @@ Edit /etc/nginx/conf.d/discourse.conf
 - change socket paths if discourse is installed to a different location
 - modify root location if discourse is installed to a different location
 
+Reload nginx by running
+
+    # Run as your normal login (e.g. "michael")
+    sudo /etc/init.d/nginx reload
+
 ## Bluepill setup
 
 Configure bluepill:
