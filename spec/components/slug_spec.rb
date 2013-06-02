@@ -51,5 +51,9 @@ describe Slug do
     Slug.for('電車男 2').should be_blank
   end
 
+  it "doesn't keep single quotes within word" do
+    Slug.for("Jeff hate's this").should == "jeff-hates-this"
+  end
+
 end
 
