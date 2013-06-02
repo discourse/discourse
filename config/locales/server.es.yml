@@ -11,24 +11,24 @@ es:
 
   title: "Discourse"
   topics: "Topics"
-  loading: "Loading"
-  powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
+  loading: "Cargando"
+  powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, visualizado mejor con JavaScript activado'
 
   via: "%{username} via %{site_name}"
-  is_reserved: "is reserved"
-  too_many_mentions: "has too many users mentioned"
-  too_many_images: "has too many images"
-  too_many_links: "has too many links"
-  just_posted_that: "is too similar to what you recently posted"
-  has_already_been_used: "has already been used"
-  invalid_characters: "contains invalid characters"
-  is_invalid: "is invalid; try to be a little more descriptive"
-  next_page: "next page →"
-  by: "By"
-  topics_in_category: "Topics in the '%{category}' category"
-  rss_posts_in_topic: "RSS feed of '%{topic}'"
-  rss_topics_in_category: "RSS feed of topics in the '%{category}' category"
-  author_wrote: "%{author} wrote:"
+  is_reserved: "está reservado"
+  too_many_mentions: "tiene demasiados usuarios mencionados"
+  too_many_images: "tiene demasiadas imágenes"
+  too_many_links: "tiene demasiados enlaces"
+  just_posted_that: "es demasiado parecido a lo que has posteado recientemente"
+  has_already_been_used: "ya ha sido usado"
+  invalid_characters: "contiene caracteres inválidos"
+  is_invalid: "es invalido, intenta ser un poco más descriptivo"
+  next_page: "página siguiente →"
+  by: "Por"
+  topics_in_category: "Topics en la categoría '%{category}'"
+  rss_posts_in_topic: "Feed RSS de '%{topic}'"
+  rss_topics_in_category: "Feed RSS the topics en la categoría '%{category}'"
+  author_wrote: "%{author} escribió:"
 
   education:
     until_posts:
@@ -36,36 +36,36 @@ es:
       other: "%{count} posts"
 
     'new-topic': |
-      Welcome to %{site_name} &mdash; **thanks for starting a new conversation!**
+      Bienvenido a %{site_name} &mdash; **¡Gracias por comenzar un nuevo topic!**
 
-      Keep in mind as you compose your topic:
+      Ten en cuenta cuando escribas tu topic:
 
-      - Is your title interesting? Does it accurately describe what will be in your topic?
+      - ¿Es tu título interesante? Describe de un modo preciso lo que estará en tu topic?
 
-      - What is this about? Who would be interested in it? Why does it matter? What kind of responses are you hoping for from the community?
+      - ¿Sobre qué es? ¿Quién estará interesado en él? ¿Por qué importa? ¿Qué tipo de respuestas esperas de la comunidad?
 
-      - Include good search words in your topic so others can *find* it. To group your topic with related topics, select a category.
+      - Incluye buenos términos de búsqueda en tu topic para que otros puedan *encontrarlo*. Para agrupar tu topic con otros topics relacionados, selecciona una categoría.
 
-      For more guidance, [see our FAQ](/faq). This panel will only appear for your first %{education_posts_text}.
+      Para más consejos, [visita nuestro FAQ](/faq). Este panel solo aparecerá para tus primeros %{education_posts_text}.
 
     'new-reply': |
-      Welcome to %{site_name} &mdash; **thanks for contributing to the conversation!**
+      Bienvenido a %{site_name} &mdash; **¡Gracias por contribuir a la conversación!**
 
-      Keep in mind as you compose your reply:
+      Ten en cuanto cuando escribas tu topic:
 
-      - Does your reply improve the conversation in some way, however small?
+      - ¿Mejora tu respuesta la conversación de algún modo, ¿Aunque sea un poco?
 
-      - Be kind to your fellow community members.
+      - Se amable con tus compañeros miembros de la comunidad.
 
-      - Constructive criticism is welcome, but remember to criticize *ideas*, not people.
+      - Las críticas constructivas son bienvenidas, pero recuerda criticar las *ideas*, no las personas.
 
-      For more guidance, [see our FAQ](/faq). This panel will only appear for your first %{education_posts_text}.
+      Para más consejos, [visita nuestro FAQ](/faq). Este panel solo aparecerá para tus primeros %{education_posts_text}.
 
 
   activerecord:
     attributes:
       category:
-        name: "Category Name"
+        name: "Nombre de la categoría"
       post:
         raw: "Body"
     errors:
@@ -73,42 +73,42 @@ es:
         topic:
           attributes:
             archetype:
-              cant_send_pm: "Sorry, you cannot send a private message to that user."
+              cant_send_pm: "Lo sentimos, no puedes enviar un mensaje privado a este usuario."
 
   user_profile:
-    no_info_me: "<div class='missing-profile'>the About Me field of your profile is currently blank, <a href='/users/%{username_lower}/preferences'>would you like to fill it out?</a></div>"
-    no_info_other: "<div class='missing-profile'>%{name} hasn't entered anything in the About Me field of their profile yet</div>"
+    no_info_me: "<div class='missing-profile'>El campo 'Sobre mí' de tu perfil está actualmente en blanco, <a href='/users/%{username_lower}/preferences'>¿Te gustaría rellenarlo?</a></div>"
+    no_info_other: "<div class='missing-profile'>%{name} no ha introducido nada aún en el campo 'Sobre mí' de su perfil</div>"
 
   category:
-    topic_prefix: "Category definition for %{category}"
-    replace_paragraph: "[Replace this first paragraph with a short description of your new category. This guidance will appear in the category selection area, so try to keep it below 200 characters.]"
+    topic_prefix: "Defeinición de categoría para %{category}"
+    replace_paragraph: "[Reemplaza el primer párrafo con una descripción corta de tu nueva categoría. Esta guía aparecerá en el área de selección de categoría, por lo que trata de mantenerla por debajo de los 200 caracteres.]"
     post_template: "%{replace_paragraph}\n\nUse this space for a longer description, as well as to establish any category guidelines or rules.\n\nSome things to consider in any discussion replies below:\n\n- What is this category for? Why should people select this category for their topic?\n\n- How is this different than the other categories we already have?\n\n- Do we need this category?\n\n- Should we merge this with another category, or split it into more categories?\n"
 
   trust_levels:
     new:
-      title: "new user"
+      title: "nuevo usuario"
     basic:
-      title: "basic user"
+      title: "usuario básico"
     regular:
-      title: "regular user"
+      title: "usuario regular"
     experienced:
-      title: "experienced user"
+      title: "usuario con experiencia"
     advanced:
-      title: "advanced user"
+      title: "usuario avanzado"
     moderator:
-      title: "moderator"
+      title: "moderador"
 
   rate_limiter:
-    too_many_requests: "You're doing that too often. Please wait %{time_left} before trying again."
+    too_many_requests: "Estas haciendo eso demasiado a menudo. Por favor espera %{time_left} antes de intentarlo de nuevo."
     hours:
-      one: "1 hour"
-      other: "%{count} hours"
+      one: "1 hora"
+      other: "%{count} horas"
     minutes:
-      one: "1 minute"
-      other: "%{count} minutes"
+      one: "1 minuto"
+      other: "%{count} minutos"
     seconds:
-      one: "1 second"
-      other: "%{count} seconds"
+      one: "1 segundo"
+      other: "%{count} segundos"
 
   datetime:
     distance_in_words:
@@ -148,219 +148,219 @@ es:
         other: "%{count}y"
 
     distance_in_words_verbose:
-      half_a_minute: "just now"
+      half_a_minute: "ahora mismo"
       less_than_x_seconds:
-        one:   "just now"
-        other: "just now"
+        one:   "ahora mismo"
+        other: "ahora mismo"
       x_seconds:
-        one:   "1 second ago"
-        other: "%{count} seconds ago"
+        one:   "hace 1 segundo"
+        other: "hace %{count} segundos"
       less_than_x_minutes:
-        one:   "less than 1 minute ago"
-        other: "less than %{count} minutes ago"
+        one:   "hace menos de 1 minuto"
+        other: "hace menos de %{count} minutos"
       x_minutes:
-        one:   "1 minute ago"
-        other: "%{count} minutes ago"
+        one:   "hace 1 minuto"
+        other: "hace %{count} minutos"
       about_x_hours:
-        one:   "1 hour ago"
-        other: "%{count} hours ago"
+        one:   "hace 1 hora"
+        other: "hace %{count} horas"
       x_days:
-        one:   "1 day ago"
-        other: "%{count} days ago"
+        one:   "hace 1 día"
+        other: "hace %{count} días"
       about_x_months:
-        one:   "about 1 month ago"
-        other: "about %{count} months ago"
+        one:   "hace sobre 1 mes"
+        other: "hace sobre %{count} meses"
       x_months:
-        one:   "1 month ago"
-        other: "%{count} months ago"
+        one:   "hace 1 mes"
+        other: "hace %{count} meses"
       about_x_years:
-        one:   "about 1 year ago"
-        other: "about %{count} years ago"
+        one:   "hace sobre 1 año"
+        other: "hace sobre %{count} años"
       over_x_years:
-        one:   "over 1 year ago"
-        other: "over %{count} years ago"
+        one:   "hace más de 1 año"
+        other: "hace más de %{count} años"
       almost_x_years:
-        one:   "almost 1 year ago"
-        other: "almost %{count} years ago"
+        one:   "hace casi 1 año"
+        other: "hace casi %{count} años"
 
   password_reset:
-    no_token: "Sorry, your token has expired. Please try resetting your password again."
-    choose_new: "Please choose a new password"
+    no_token: "Lo sentimos, tu token ha expirado. Por favor prueba reseteando tu password de nuevo."
+    choose_new: "Por favor elige un nuevo password"
     update: 'update password'
     title: 'reset password'
-    success: "You successfully changed your password and are now logged in."
-    success_unapproved: "You successfully changed your password."
+    success: "Has cambiado tu password correctamente y ahora estás logueado."
+    success_unapproved: "Has cambiado tu password correctamente."
 
   change_email:
-    confirmed: "Your email has been updated."
-    please_continue: "Please continue to %{link}"
-    error: "There was an error changing your email address. Perhaps the address is already in use?"
+    confirmed: "Tu email ha sido actualizado."
+    please_continue: "Por favor continua a %{link}"
+    error: "Hubo un problema cambiando tu dirección de email. ¿Quizás la dirección ya está en uso?"
 
   activation:
-    already_done: "Sorry, this account confirmation link is no longer valid. Perhaps your account is already active?"
-    please_continue: "Your new account is confirmed, and you are now logged in. Continue to %{link}"
-    welcome_to: "Welcome to %{site_name}!"
-    approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
+    already_done: "Lo sentimos, este link de confirmación de cuenta ya no es válido. ¿Quizás tu cuenta ya está activa?"
+    please_continue: "Tu nueva cuenta está confirmada y ahora estás logueado. Continúa a %{link}"
+    welcome_to: "Bienvenido a %{site_name}!"
+    approval_required: "Un moderador debe aprovar manualmente tu nueva cuenta antes de que puedas acceder a este foro. ¡Recibirás un email cuando tu cuenta sea aprovada!"
 
   post_action_types:
     off_topic:
       title: 'Off-Topic'
-      description: 'This post is radically off-topic in the current conversation, and should probably be moved to a different topic. If this is a topic, perhaps it does not belong here.'
-      long_form: 'flagged this as off-topic'
+      description: 'Este post es radicalmente un off-topic en la conversación actual, y debería ser probablemente movido a un topic distinto. If this is a topic, perhaps it does not belong here.'
+      long_form: 'Marcado como off-topic'
     spam:
       title: 'Spam'
-      description: 'This post is an advertisement. It is not useful or relevant to the current conversation, but promotional in nature.'
-      long_form: 'flagged this as spam'
+      description: 'Este post es un anuncio. No es útil o relevante en la conversación actual, pero promocional en naturaleza.'
+      long_form: 'Marcado como spam'
     inappropriate:
-      title: 'Inappropriate'
-      description: 'This post contains content that a reasonable person would consider offensive, abusive, or hate speech.'
-      long_form: 'flagged this as inappropriate'
+      title: 'Inapropiado'
+      description: 'Este post contiene contenido que una persona razonable podría considerar ofensivo, abusivo o insultante.'
+      long_form: 'Marcado como inapropiado'
     custom_flag:
-      title: 'Other'
-      description: 'This post requires general moderator attention based on the <a href="/faq">FAQ</a>, <a href="/tos">TOS</a>, or for another reason not listed above.'
-      long_form: 'flagged this for moderation'
+      title: 'Otros'
+      description: 'Este post requiere atención del moderador basándose en el <a href="/faq">FAQ</a>, <a href="/tos">TOS</a>, o por otra razón no listada anteriormente.'
+      long_form: 'Marcado para moderación'
     bookmark:
-      title: 'Bookmark'
-      description: 'Bookmark this post'
-      long_form: 'bookmarked this post'
+      title: 'Marcador'
+      description: 'Marca este post'
+      long_form: 'Post marcado'
     like:
       title: 'Like'
-      description: 'Like this post'
-      long_form: 'liked this'
+      description: 'Te gusta este post'
+      long_form: 'Te gusta esto'
     vote:
-      title: 'Vote'
-      description: 'Vote for this post'
-      long_form: 'voted for this post'
+      title: 'Vota'
+      description: 'Vota por este post'
+      long_form: 'Votado para este post'
 
   flagging:
-    you_must_edit: '<p>Your post was flagged by the community. Please see your private messages.</p>'
-    user_must_edit: '<p>Flagged content hidden.</p>'
+    you_must_edit: '<p>Tu post ha sido marcado por la comunidad. Por favor revisa tus mensajes privados.</p>'
+    user_must_edit: '<p>Marcado, contenido oculto.</p>'
 
   archetypes:
     regular:
       title: "Regular Topic"
 
   unsubscribed:
-    title: 'Unsubscribed'
-    description: "You have been unsubscribed. We won't contact you again!"
-    oops: "In case you didn't mean to do this, click below."
-    not_found: "Error Unsubscribing"
-    not_found_description: "Sorry, we couldn't unsubscribe you. It's possible the link in your email has expired."
+    title: 'Dado de bajada'
+    description: "Has sido dado de baja. ¡No te contactaremos de nuevo!"
+    oops: "En caso de que no pretendieras hacer esto, haz click abajo."
+    not_found: "Error dandose de baja"
+    not_found_description: "Lo sentimos, no hemos podido darte de baja. Es posible que el link en tu mail haya expirado."
 
   resubscribe:
-    action: "Re-Subscribe"
-    title: "Re-Subscribed!"
-    description: "You have been re-subscribed."
+    action: "Volver a suscribirse"
+    title: "¡Resuscrito!"
+    description: "Has vuelto a suscribirte."
 
   reports:
     visits:
-      title: "User Visits"
-      xaxis: "Day"
-      yaxis: "Number of visits"
+      title: "Visitas del usuario"
+      xaxis: "Día"
+      yaxis: "Número de visistas"
     signups:
-      title: "New Users"
-      xaxis: "Day"
-      yaxis: "Number of new users"
+      title: "Nuevos usuarios"
+      xaxis: "Día"
+      yaxis: "Número de nuevos usuarios"
     topics:
-      title: "New Topics"
-      xaxis: "Day"
-      yaxis: "Number of new topics"
+      title: "Nuevos topcis"
+      xaxis: "Día"
+      yaxis: "Número de nuevos topics"
     posts:
-      title: "New Posts"
-      xaxis: "Day"
-      yaxis: "Number of new posts"
+      title: "Nuevos posts"
+      xaxis: "día"
+      yaxis: "Número de nuevos posts"
     total_users:
-      title: "Total Users"
-      xaxis: "Day"
-      yaxis: "Total number of users"
+      title: "Usuarios totales"
+      xaxis: "Día"
+      yaxis: "Número total de usuarios"
     flags:
-      title: "Flags"
-      xaxis: "Day"
-      yaxis: "Number of flags"
+      title: "Marcados"
+      xaxis: "Día"
+      yaxis: "Número de marcados"
 
   site_settings:
-    default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"
-    min_post_length: "Minimum post length in characters"
-    max_post_length: "Maximum post length in characters"
-    min_topic_title_length: "Minimum topic title length in characters"
-    max_topic_title_length: "Maximum topic title length in characters"
-    min_search_term_length: "Minimum search term length in characters"
-    allow_duplicate_topic_titles: "Allow topics with identical titles"
-    unique_posts_mins: "How many minutes before a user can make a post with the same content again"
-    enforce_global_nicknames: "Enforce global nickname uniqueness (WARNING: only change this during initial setup)"
-    discourse_org_access_key: "The access key used to access the Discourse Hub nickname registry at discourse.org"
-    educate_until_posts: "Show pop-up composer education panel until the user has made this many posts"
-    title: "Title of this site, will be used in the title tag and elsewhere"
-    company_full_name: "The full name of the company that runs this site, used in legal documents like the /tos"
-    company_short_name: "The short name of the company that runs this site, used in legal documents like the /tos"
-    company_domain: "The domain name owned by the company that runs this site, used in legal documents like the /tos"
-    access_password: "When restricted access is enabled, this password must be entered"
-    queue_jobs: "Queue various jobs in sidekiq, if false queues are inline"
-    crawl_images: "Enable retrieving images from third party sources to insert width and height dimensions"
-    ninja_edit_window: "Number of seconds after posting where edits do not create a new version"
-    enable_imgur: "Enable imgur api for uploading, don't host files locally"
-    imgur_api_key: "Your imgur.com api key, required for image upload to function"
-    imgur_endpoint: "End point for uploading imgur.com images"
-    max_image_width: "Maximum allowed width of images in a post"
-    category_featured_topics: "Number of topics displayed per category in the /categories page"
-    add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains) changing this requires you update all your baked markdown"
-    exclude_rel_nofollow_domains: "A comma delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
+    default_locale: "El lenguaje por defecto de la instancia de Discourse (ISO 639-1 Code)"
+    min_post_length: "Mínimo número de caracteres para un post"
+    max_post_length: "Máxima longitud de caracteres en un post"
+    min_topic_title_length: "Mínimo número de caracteres en la longitud de un título"
+    max_topic_title_length: "Máxima número de caracteres en la longitud de un título"
+    min_search_term_length: "Mínima longitud de un término de búsqueda"
+    allow_duplicate_topic_titles: "Permitir topics con identico título"
+    unique_posts_mins: "Cuantos minutos antes de que un usuario pueda hacer un post con el mismo contenido de nuevo"
+    enforce_global_nicknames: "Obligar unicidad en los nicknames (ADVERTENCIA: cambia solo esto en el setup inicial)"
+    discourse_org_access_key: "La clave de acceso utilizada para acceder al 'Discourse Hub nickname registry' en discourse.org"
+    educate_until_posts: "Mostrar el pop-up con el panel de educación hasta que el usuario haya hecho este número de posts"
+    title: "Título de este sitio, será usado en el tag de título y en cualquier lado"
+    company_full_name: "Nombre completo de la compañía que maneja el sitio, usado en documetnso legales como el /tos"
+    company_short_name: "El nombre corto de la compañía que maneja el sitio, usado en documentos legales como el /tos"
+    company_domain: "Dominio poseido por la compañía que maneja el sitio, usado en documentos legales como el /tos"
+    access_password: "Cuando el acceso restringido sea activado, habrá que introducir esta contraseña"
+    queue_jobs: "Encolar varios trabajos en sidekiq, si es falso las colas serán en linea"
+    crawl_images: "Activar obtener imágenes de origines third party para insertar las dimensiones de ancho y alto"
+    ninja_edit_window: "Número de segundos after postear donde las ediciones no causan una nueva versión"
+    enable_imgur: "Activar imgur api para subidas, no almacenes ficheros localmente"
+    imgur_api_key: "Tu imgur.com api key, requerida para la función de subida de imágenes"
+    imgur_endpoint: "End point para la subida de imagenes de imgur.com"
+    max_image_width: "Máximo ancho permitido en las imágenes de un post"
+    category_featured_topics: "Número de topics mostrados por categoría en la página /categories"
+    add_rel_nofollow_to_user_content: "Añadir rel nofollow a todo el contenido subido por usuarios, exceptuando los links internos (incluyendo dominios padres) changing this requires you update all your baked markdown"
+    exclude_rel_nofollow_domains: "Una lista separada por comas de dominios donde nofollow no es añadido (tld.com permitirá automáticamente sub.tld.com también)"
 
     post_excerpt_maxlength: "Maximum length in chars of a post's excerpt"
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post"
     category_post_template: "The category definition post template used when you create a new category"
     onebox_max_chars: "Maximum characters a onebox will import from an external website into the post"
 
-    logo_url: "The logo for your site eg: http://example.com/logo.png"
-    logo_small_url: "The small logo for your site used when scrolling down on topics eg: http://example.com/logo-small.png"
-    favicon_url: "A favicon for your site, see http://en.wikipedia.org/wiki/Favicon"
-    notification_email: "The return email address used when sending system emails such as notifying users of lost passwords, new accounts etc"
-    use_ssl: "Should the site be accessible via SSL? (NOT IMPLEMENTED, EXPERIMENTAL)"
-    best_of_score_threshold: "The minimum score of a post to be included in the 'best of'"
-    best_of_posts_required: "Minimum posts in a topic before 'best of' mode is enabled"
-    best_of_likes_required: "Minimum likes in a topic before the 'best of' mode will be enabled"
-    enable_private_messages: "Allow basic (1) trust level users to create private messages and reply to private messages"
+    logo_url: "El logo para tu sitio ej: http://example.com/logo.png"
+    logo_small_url: "El pequeño logo para tu sitio utilizado cuando se hace scroll en un topic ej: http://example.com/logo-small.png"
+    favicon_url: "Un favicon para tu sitio, ve http://en.wikipedia.org/wiki/Favicon"
+    notification_email: "La dirección de emaul de respuesta utilizada cuando se envían emails del sistema tales como notificar a los usuarios de recuperación de contraseña, nuevas cuentas etc"
+    use_ssl: "¿Debería ser el sitio accesible por SSL? (NO IMPLEMENTADO, EXPERIMENTAL)"
+    best_of_score_threshold: "La mínima puntuación de un post para ser incluido en los 'best of'"
+    best_of_posts_required: "Mínimo número de posts en un topic antes de que el modo 'best of' sea activado "
+    best_of_likes_required: "Mínimo número de me gustas en un topic antes de que el modo 'best of" sea activado"
+    enable_private_messages: "Permitir el nivel básico de confianza en los usuarios (1) para crear mensajes privados y contestart a mensajes privados"
 
-    enable_long_polling: "Message bus used for notification can use long polling"
-    long_polling_interval: "Interval before a new long poll is issued in milliseconds "
-    polling_interval: "How often should logged in user clients poll in milliseconds"
-    anon_polling_interval: "How often should anonymous clients poll in milliseconds"
+    enable_long_polling: "Los mensajes usados para notificaciones pueden usar el long polling"
+    long_polling_interval: "Frecuencia del 'long polling' en milisegundos"
+    polling_interval: "¿Qué a menusdo deben hacer poll los usuarios logados en milisegundos"
+    anon_polling_interval: "¿Qué a menudo deben hacer poll los usuarios anónimos en milisegundos"
 
-    auto_track_topics_after: "Global default milliseconds before a topic is automatically tracked, users can override (0 for always, -1 for never)"
-    new_topic_duration_minutes: "Global default number of minutes a topic is considered new, users can override (-1 for always, -2 for last visit)"
+    auto_track_topics_after: "Milisegundos globales por defecto antes de que un topic sea automaticamente trackeado, los usuarios pueden sobreescribirlo (0 para siempre, -1 para nunca)"
+    new_topic_duration_minutes: "Minutos globales por defecto en los que un topic es considerado nuevo, los usuarios pueden sobreescribirlo (-1 para siempre, -2 para la última visita)"
 
-    flags_required_to_hide_post: "Number of flags that cause a post to be automatically hidden and PM sent to the user (0 for never)"
-    cooldown_minutes_after_hiding_posts: "Number of minutes a user must wait before they can edit the post that was hidden due to flagging"
+    flags_required_to_hide_post: "Número de flags que causan que un post se oculte auomática un MP sea enviado al usuario (0 para nunca)"
+    cooldown_minutes_after_hiding_posts: "Número de minutos que un usuario debe esperar antes de poder editar el post que ha sido oculto debido al marcado"
 
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak"
-    post_undo_action_window_mins: "Number of seconds users are allowed to reverse actions on a post (like, flag, etc)"
-    must_approve_users: "Admins must approve all users before they gain access"
-    ga_tracking_code: "Google analytics tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
-    top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|hot|read|favorited|unread|new|posted|categories"
-    post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
+    post_undo_action_window_mins: "Número de segundos en los que a los usuarios se les permite revertir la acción en un post (like, flag, etc)"
+    must_approve_users: "Los administradores deben aprovar a todos los usuarios antes de tener acceso"
+    ga_tracking_code: "Código de Google Analytics, ej: UA-12345678-9; visita http://google.com/analytics"
+    top_menu: "Determinar que items aparecen en la navegación de la home y en qué orden. Ejemplo latest|hot|read|favorited|unread|new|posted|categories"
+    post_menu: "Determinar que items aparecen en el menú de post y en qué orden. Ejemplo like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
-    topics_per_page: "How many topics are loaded by default on the topics list page"
-    posts_per_page: "How many posts are returned on a topic page"
-    system_username: "Username for the author of automated private messages sent by the forum"
-    send_welcome_message: "Do new users get a welcome private message?"
-    supress_reply_directly_below: "Don't show reply count on a post when there is a single reply directly below"
-    allow_index_in_robots_txt: "Site should be indexed by search engines (update robots.txt)"
-    email_domains_blacklist: "A pipe-delimited list of email domains that are not allowed. Example: mailinator.com|trashmail.net"
-    version_checks: "Ping the Discourse Hub for version updates and show version messages on the /admin dashboard"
+    topics_per_page: "Cuantos topics son cargados por defecto en la página de lista de topics"
+    posts_per_page: "Cuantos posts son devueltos en una página de topic"
+    system_username: "Nombre de usuario para el autor de mensajes privados enviados por el foro"
+    send_welcome_message: "¿Reciben los nuevos usuarios un mensaje privado de bienvenida?"
+    supress_reply_directly_below: "No mostrar el contador de respuestas en un pot cuando una única respuesta directamente debajo"
+    allow_index_in_robots_txt: "Permitir que el sitio sea indexado por motores de búsqueda (sobreescribe robots.txt)"
+    email_domains_blacklist: "Una lista delimitada por pipes (|) de dominios de mails que nos son permitirdos, pej:mailinator.com|trashmail.net"
+    version_checks: "Ping el 'Discourse Hub' para actualizaciones de versión y mostrar mensajes del número de versión en el dashboard /admin"
 
-    port: "DEVELOPER ONLY! WARNING! Use this HTTP port rather than the default of port 80. Leave blank for default of 80."
-    force_hostname: "DEVELOPER ONLY! WARNING! Specify a hostname in the URL. Leave blank for default."
+    port: "SOLO DESARROLLADORES! ADVERTENCIA! Usa este puerto HTTP en vez del puerto 80 por defecto. Dejar blanco para por defecto el 80"
+    force_hostname: "SOLO DESARROLLADORES! ADVERTENCIA! Especificar un hostname en la URL, dejar blanco para por defecto"
 
-    invite_expiry_days: "How long user invitation keys are valid, in days"
+    invite_expiry_days: "Cuanto tiempo son válidas las claves de invitación de usuarios, en días"
 
     # TODO: perhaps we need a way of protecting these settings for hosted solution, global settings ...
 
-    enable_google_logins: "Enable Google authentication"
-    enable_yahoo_logins: "Enable Yahoo authentication"
+    enable_google_logins: "Activar autenticación por Google"
+    enable_yahoo_logins: "Activar autenticación por Yahoo"
 
-    enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret"
-    twitter_consumer_key: "Consumer key for Twitter authentication, registered at http://dev.twitter.com"
-    twitter_consumer_secret: "Consumer secret for Twitter authentication, registered at http://dev.twitter.com"
+    enable_twitter_logins: "Activar autenticación por Twitter, requiere una twitter_consumer_key y un twitter_consumer_secret"
+    twitter_consumer_key: "Comsumer key para autenticación por Twitter, registrado en http://dev.twitter.com"
+    twitter_consumer_secret: "Comsumer secret para autenticación por Twitter, registrado en http://dev.twitter.com"
 
     enable_facebook_logins: "Enable Facebook authentication, requires facebook_app_id and facebook_app_secret"
     facebook_app_id: "App id for Facebook authentication, registered at https://developers.facebook.com/apps"
@@ -413,67 +413,67 @@ es:
     title_fancy_entities: "Convert common ASCII characters to fancy HTML entities in topic titles, ala SmartyPants http://daringfireball.net/projects/smartypants/"
 
   notification_types:
-    mentioned: "%{display_username} mentioned you in %{link}"
-    liked: "%{display_username} liked your post in %{link}"
-    replied: "%{display_username} replied to your post in %{link}"
-    quoted: "%{display_username} quoted your post in %{link}"
-    edited: "%{display_username} edited your post in %{link}"
-    posted: "%{display_username} posted in %{link}"
-    moved_post: "%{display_username} moved your post to %{link}"
-    private_message: "%{display_username} sent you a private message: %{link}"
-    invited_to_private_message: "%{display_username} invited you to a private message: %{link}"
-    invitee_accepted: "%{display_username} accepted your invitation"
+    mentioned: "%{display_username} te ha mencionado en %{link}"
+    liked: "%{display_username} le ha gustado tu post en %{link}"
+    replied: "%{display_username} ha contestado tu post en %{link}"
+    quoted: "%{display_username} ha citado tu post en %{link}"
+    edited: "%{display_username} ha editado tu post en %{link}"
+    posted: "%{display_username} ha posteado en %{link}"
+    moved_post: "%{display_username} ha movido tu post a %{link}"
+    private_message: "%{display_username} te ha enviado un mensaje privado: %{link}"
+    invited_to_private_message: "%{display_username} te ha invitado a un mensaje privado: %{link}"
+    invitee_accepted: "%{display_username} ha aceptado tu invitación"
 
   search:
     types:
-      category: 'Categories'
+      category: 'Categorías'
       topic: 'Topics'
-      user: 'Users'
+      user: 'Usuarios'
 
-  original_poster: "Original Poster"
-  most_posts: "Most Posts"
-  most_recent_poster: "Most Recent Poster"
-  frequent_poster: "Frequent Poster"
+  original_poster: "Posteador original"
+  most_posts: "Con más posts"
+  most_recent_poster: "Posteador más reciente"
+  frequent_poster: "Posteador frecuente"
 
   user_action_descriptions:
     bookmarks: "Bookmarks"
     topics: "Topics"
-    likes_received: "Likes Received"
-    likes_given: "Likes Given"
-    responses: "Responses"
-    topic_responses: "Topic Responses"
+    likes_received: "Me gusta recibidos"
+    likes_given: "Me gusta dados"
+    responses: "Respuestas"
+    topic_responses: "Respuestas al topic"
     posts: "Posts"
-    mentions: "Mentions"
-    quotes: "Quotes"
-    edits: "Edits"
-    favorites: "Favorites"
-    sent_items: "Sent Items"
+    mentions: "Menciones"
+    quotes: "Citas"
+    edits: "Ediciones"
+    favorites: "Favoritos"
+    sent_items: "Items enviados"
     inbox: "Inbox"
 
-    was_liked: "was liked"
-    liked: "liked"
+    was_liked: "le gustó"
+    liked: "gustado"
     bookmarked: "bookmarked"
     posted: "posted"
-    responded_to: "replied to"
-    mentioned: "mentioned"
-    quoted: "quoted"
+    responded_to: "respondido a"
+    mentioned: "mecionado"
+    quoted: "citado"
     favorited: "favorited"
-    edited: "edited"
+    edited: "editado"
 
   move_posts:
     moderator_post:
-      one: "I moved a post to a new topic: %{topic_link}"
-      other: "I moved %{count} posts to a new topic: %{topic_link}"
+      one: "He movido un post a un nuevo topic: %{topic_link}"
+      other: "He movido %{count} posts a nuevos topics: %{topic_link}"
 
   topic_statuses:
-    archived_enabled: "This topic is now archived. It is frozen and cannot be changed in any way."
-    archived_disabled: "This topic is now unarchived. It is no longer frozen, and can be changed."
-    closed_enabled: "This topic is now closed. New replies are no longer allowed."
-    closed_disabled: "This topic is now opened. New replies are allowed."
-    pinned_enabled: "This topic is now pinned. It will appear at the top of its category until it is either unpinned by a moderator, or cleared by each user using the Clear Pin button."
+    archived_enabled: "Este topic está ahora archivado. Está congelado y no puede ser cambiado en ningún modo."
+    archived_disabled: "Este topic se ha desarchivado. Ya no está congelado y puede ser cambiad."
+    closed_enabled: "Este topic está ahora cerrado. No se admiten nuevas respuestas"
+    closed_disabled: "Este topic está abierto. Se adminten nuevas respuestas"
+    pinned_enabled: "Este topic está ahora pinned. Aparecerá encima de su categoría hasta que sea unpinned por un moderador, o restaurado por un ususario con el botón 'Clear Pin' "
     pinned_disabled: "This topic is now unpinned. It will no longer appear at the top of its category."
-    visible_enabled: "This topic is now visible. It will be displayed in topic lists."
-    visible_disabled: "This topic is now invisible. It will no longer be displayed in any topic lists. The only way to access this topic is via direct link."
+    visible_enabled: "Este topic está ahora visible. Será mostrado en la lista de topics."
+    visible_disabled: "Este topic es ahora invisible. No será mostrado en ninguna lista de topics. El único modo de acceder a este topic es con un enlace directo."
 
   login:
     not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
