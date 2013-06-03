@@ -141,6 +141,15 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     this.get('topicTrackingState').trackIncoming("all");
   },
 
+  debounceLoadSuggested: Discourse.debounce(function(lookup){
+    var suggested = this.get('topic.suggested_topics');
+
+    Discourse.TopicList.loadTopics(lookup, "").then(function(topics){
+      suggested.clear();
+      suggested.pushObjects(topics);
+    });
+  }, 1000),
+
   hasNewSuggested: function(){
     var incoming = this.get('topicTrackingState.newIncoming');
     var suggested = this.get('topic.suggested_topics');
@@ -157,10 +166,10 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
         });
       }
 
-      Discourse.TopicList.loadTopics(lookup, "").then(function(topics){
-        suggested.clear();
-        suggested.pushObjects(topics);
-      });
+      var topicId = this.get('topic.id');
+      lookup = lookup.exclude(function(id){ return id === topicId; });
+
+      this.debounceLoadSuggested(lookup);
     }
   }.observes('topicTrackingState.incomingCount'),
 

@@ -56,10 +56,11 @@ Discourse.TopicList = Discourse.Model.extend({
   // loads topics with these ids "before" the current topics
   loadBefore: function(topic_ids){
     var _this = this;
-    Discourse.TopicList.loadTopics(topic_ids, this.get('filter'))
-      .then(function(topics){
+    var topics = this.get('topics');
 
-        _this.forEachNew(topics, function(t) {
+    Discourse.TopicList.loadTopics(topic_ids, this.get('filter'))
+      .then(function(newTopics){
+        _this.forEachNew(newTopics, function(t) {
           // highlight the first of the new topics so we can get a visual feedback
           t.set('highlight', true);
           topics.insertAt(0,t);
