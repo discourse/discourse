@@ -58,6 +58,15 @@ unless ENV["USING_AUTOSPEC"]
   end
 end
 
+def message_bus
+  MessageBus::Instance.new.tap do |bus|
+    bus.site_id_lookup do
+      # this is going to be dev the majority of the time, if you have multisite configured in dev stuff may be different
+      "default"
+    end
+  end
+end
+
 module ::Guard
   class AutoReload < ::Guard::Guard
 
@@ -73,8 +82,7 @@ module ::Guard
         p = p.sub /^app\/assets\/stylesheets/, "assets"
         {name: p, hash: hash}
       end
-      # target dev
-      MessageBus::Instance.new.publish "/file-change", paths
+      message_bus.publish "/file-change", paths
     end
 
     def run_all
@@ -85,7 +93,7 @@ end
 Thread.new do
   Listen.to('tmp/') do |modified,added,removed|
     modified.each do |m|
-      MessageBus::Instance.new.publish "/file-change", ["refresh"] if m =~ /refresh_browser/
+      message_bus.publish "/file-change", ["refresh"] if m =~ /refresh_browser/
     end
   end
 end
