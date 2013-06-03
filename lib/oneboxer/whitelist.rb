@@ -1,8 +1,19 @@
-module Oneboxer
+#******************************************************************************#
+#                                                                              #
+# Oneboxer already supports most sites using OpenGraph via the OpenGraphOnebox #
+# class. If the site you want to create a onebox for supports OpenGraph,       # 
+# please try adding the site to the whitelist below before creating a custom   #
+# parser or template.                                                          #
+#                                                                              #
+#******************************************************************************#
 
+module Oneboxer
+  
   module Whitelist
     def self.entries
       [
+       Entry.new(/^https?:\/\/(?:www\.)?findery\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?zappos\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?slideshare\.net\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?rottentomatoes\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?cnn\.com\/.+/),
