@@ -31,7 +31,7 @@ describe UserNotifications do
 
     context "with new topics" do
       before do
-        Topic.expects(:new_topics).returns([Fabricate(:topic, user: Fabricate(:coding_horror))])
+        Topic.expects(:for_digest).returns([Fabricate(:topic, user: Fabricate(:coding_horror))])
       end
 
       its(:to) { should == [user.email] }

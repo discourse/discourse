@@ -57,11 +57,15 @@ Discourse::Application.routes.draw do
     end
 
     resources :impersonate, constraints: AdminConstraint.new
-    resources :email_logs do
+
+    resources :email do
       collection do
         post 'test'
+        get 'logs'
+        get 'preview-digest' => 'email#preview_digest'
       end
     end
+
     get 'customize' => 'site_customizations#index', constraints: AdminConstraint.new
     get 'flags' => 'flags#index'
     get 'flags/:filter' => 'flags#index'

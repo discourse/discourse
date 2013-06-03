@@ -1,0 +1,23 @@
+<table class="table">
+  <tr>
+    <th>{{i18n admin.email.delivery_method}}</th>
+    <td>{{model.delivery_method}}</td>
+  </tr>
+
+  {{#each model.settings}}
+    <tr>
+      <th style='width: 25%'>{{name}}</th>
+      <td>{{value}}</td>
+    </tr>
+  {{/each}}
+</table>
+
+<div class='admin-controls'>
+  <div class='span5 controls'>
+    {{textField value=testEmailAddress placeholderKey="admin.email.test_email_address"}}
+  </div>
+  <div class='span10 controls'>
+    <button class='btn' {{action sendTestEmail}} {{bindAttr disabled="sendTestEmailDisabled"}}>{{i18n admin.email.send_test}}</button>
+    {{#if sentTestEmail}}<span class='result-message'>{{i18n admin.email.sent_test}}</span>{{/if}}
+  </div>
+</div>

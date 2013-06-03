@@ -848,7 +848,7 @@ sv:
         delete: "Radera"
         delete_confirm: "Radera denna anpassning?"
 
-      email_logs:
+      email:
         title: "E-postloggar"
         sent_at: "Skickat"
         email_type: "E-posttyp"

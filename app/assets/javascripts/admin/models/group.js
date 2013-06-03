@@ -81,7 +81,7 @@ Discourse.Group.reopenClass({
   findAll: function(){
     var list = Discourse.SelectableArray.create();
 
-    Discourse.ajax("/admin/groups").then(function(groups){
+    Discourse.ajax("/admin/groups.json").then(function(groups){
       groups.each(function(group){
         list.addObject(Discourse.Group.create(group));
       });

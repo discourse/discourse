@@ -1,9 +1,13 @@
+/**
+  Handles routes for admin reports
+
+  @class AdminReportsRoute
+  @extends Discourse.Route
+  @namespace Discourse
+  @module Discourse
+**/
 Discourse.AdminReportsRoute = Discourse.Route.extend({
   model: function(params) {
-    return(Discourse.Report.find(params.type));
-  },
-
-  renderTemplate: function() {
-    this.render('admin/templates/reports', {into: 'admin/templates/admin'});
+    return Discourse.Report.find(params.type);
   }
 });

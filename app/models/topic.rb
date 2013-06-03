@@ -21,7 +21,6 @@ class Topic < ActiveRecord::Base
 
   versioned if: :new_version_required?
 
-
   def trash!
     super
     update_flagged_posts_count
@@ -136,6 +135,10 @@ class Topic < ActiveRecord::Base
     end
   end
 
+  def best_post
+    posts.order('score desc').limit(1).first
+  end
+
   # all users (in groups or directly targetted) that are going to get the pm
   def all_allowed_users
     # TODO we should probably change this from 3 queries to 1
@@ -170,15 +173,14 @@ class Topic < ActiveRecord::Base
     title_changed? || category_id_changed?
   end
 
-  # Returns new topics since a date for display in email digest.
-  def self.new_topics(since)
+  # Returns hot topics since a date for display in email digest.
+  def self.for_digest(user, since)
     Topic
       .visible
       .where(closed: false, archived: false)
       .created_since(since)
       .listable_topics
-      .topic_list_order
-      .includes(:user)
+      .order(:percent_rank)
       .limit(5)
   end
 

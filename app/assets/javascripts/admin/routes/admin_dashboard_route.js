@@ -13,10 +13,6 @@ Discourse.AdminDashboardRoute = Discourse.Route.extend({
     this.fetchGithubCommits(c);
   },
 
-  renderTemplate: function() {
-    this.render({into: 'admin/templates/admin'});
-  },
-
   fetchDashboardData: function(c) {
     if( !c.get('dashboardFetchedAt') || Date.create('1 hour ago', 'en') > c.get('dashboardFetchedAt') ) {
       c.set('dashboardFetchedAt', new Date());

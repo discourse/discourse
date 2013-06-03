@@ -1,21 +1,29 @@
 /**
-  This controller supports the interface for reviewing email logs.
+  This controller supports email functionality.
 
-  @class AdminEmailLogsController
-  @extends Ember.ArrayController
+  @class AdminEmailIndexController
+  @extends Discourse.Controller
   @namespace Discourse
   @module Discourse
 **/
-Discourse.AdminEmailLogsController = Ember.ArrayController.extend(Discourse.Presence, {
+Discourse.AdminEmailIndexController = Discourse.Controller.extend(Discourse.Presence, {
 
   /**
     Is the "send test email" button disabled?
 
     @property sendTestEmailDisabled
   **/
-  sendTestEmailDisabled: function() {
-    return this.blank('testEmailAddress');
-  }.property('testEmailAddress'),
+  sendTestEmailDisabled: Em.computed.empty('testEmailAddress'),
+
+  /**
+    Clears the 'sentTestEmail' property on successful send.
+
+    @method testEmailAddressChanged
+  **/
+  testEmailAddressChanged: function() {
+    this.set('sentTestEmail', false);
+  }.observes('testEmailAddress'),
+
 
   /**
     Sends a test email to the currently entered email address
@@ -26,7 +34,7 @@ Discourse.AdminEmailLogsController = Ember.ArrayController.extend(Discourse.Pres
     this.set('sentTestEmail', false);
 
     var adminEmailLogsController = this;
-    Discourse.ajax("/admin/email_logs/test", {
+    Discourse.ajax("/admin/email/test", {
       type: 'POST',
       data: { email_address: this.get('testEmailAddress') }
     }).then(function () {

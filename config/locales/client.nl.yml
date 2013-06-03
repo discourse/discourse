@@ -1051,7 +1051,7 @@ nl:
         delete_confirm: Verwijder deze aanpassing?
         about: Met aanpassingen aan de site kun je stylesheets en headers wijzigen. Kies of voeg een toe om te beginnen.
 
-      email_logs:
+      email:
         title: E-mail
         sent_at: Verzonden op
         email_type: E-mailtype

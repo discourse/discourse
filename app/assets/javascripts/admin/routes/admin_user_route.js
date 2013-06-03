@@ -17,7 +17,7 @@ Discourse.AdminUserRoute = Discourse.Route.extend({
   },
 
   renderTemplate: function() {
-    this.render('admin/templates/user', {into: 'admin/templates/admin'});
+    this.render({into: 'admin/templates/admin'});
   }
 
 });

@@ -2,11 +2,13 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
 
   attr_reader :excerpt
 
-  def initialize(length,options)
+  def initialize(length, options=nil)
     @length = length
     @excerpt = ""
     @current_length = 0
+    options || {}
     @strip_links = options[:strip_links] == true
+    @text_entities = options[:text_entities] == true
   end
 
   def self.get_excerpt(html, length, options)
@@ -63,7 +65,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     if count_it && @current_length + string.length > @length
       length = [0, @length - @current_length - 1].max
       @excerpt << encode.call(string[0..length]) if truncate
-      @excerpt << "&hellip;"
+      @excerpt << (@text_entities ? "..." : "&hellip;")
       @excerpt << "</a>" if @in_a
       throw :done
     end

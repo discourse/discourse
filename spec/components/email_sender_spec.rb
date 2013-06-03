@@ -78,9 +78,7 @@ describe EmailSender do
       end
 
       it 'converts the html part to html' do
-        expect(message.html_part.body.to_s).to eq(
-          "<p><strong>hello</strong></p>"
-        )
+        expect(message.html_part.body.to_s).to match("<p><strong>hello</strong></p>")
       end
     end
   end

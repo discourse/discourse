@@ -4,8 +4,10 @@
 # reason. For example, emailing a user too frequently. A nil to address is also considered
 # "do nothing"
 #
-# It also adds an HTML part for the plain text body using markdown
+# It also adds an HTML part for the plain text body
 #
+require_dependency 'email_renderer'
+
 class EmailSender
 
   def initialize(message, email_type, user=nil)
@@ -20,15 +22,13 @@ class EmailSender
     return if @message.body.blank?
 
     @message.charset = 'UTF-8'
-    plain_body = @message.body.to_s.force_encoding('UTF-8')
-
+    renderer = EmailRenderer.new(@message)
     @message.html_part = Mail::Part.new do
       content_type 'text/html; charset=UTF-8'
-      body PrettyText.cook(plain_body, environment: 'email')
+      body renderer.html
     end
 
     @message.text_part.content_type = 'text/plain; charset=UTF-8'
-
     @message.deliver
 
     to_address = @message.to

@@ -1016,7 +1016,7 @@ cs:
         delete_confirm: "Smazat toto přizpůsobení?"
         about: "Přizpůsobení webu vám umožní si nastavit vlastní CSS stylesheet a vlastní nadpisy na webu. Vyberte si z nabídky nebo vložte vlastní přizpůsobení a můžete začít editovat."
 
-      email_logs:
+      email:
         title: "Záznamy o emailech"
         sent_at: "Odesláno"
         email_type: "Typ emailu"

@@ -14,7 +14,11 @@ Discourse.Route.buildRoutes(function() {
       this.resource('adminSiteContentEdit', {path: '/:content_type'});
     });
 
-    this.route('email_logs', { path: '/email_logs' });
+    this.resource('adminEmail', { path: '/email'}, function() {
+      this.route('logs', { path: '/logs' });
+      this.route('previewDigest', { path: '/preview-digest' });
+    });
+
     this.route('customize', { path: '/customize' });
     this.route('api', {path: '/api'});
 

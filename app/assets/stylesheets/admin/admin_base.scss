@@ -111,6 +111,18 @@
       margin-top: 5px;
     }
   }
+  .toggle {
+    margin-top: 8px;
+    float: right;
+
+    span {
+      font-weight: bold;
+    }
+  }
+  label {
+    display: inline-block;
+    margin-right: 5px;
+  }
 }
 
 .settings {

@@ -1,19 +1,9 @@
-<div class='admin-controls'>
-  <div class='span5 controls'>
-    {{textField value=testEmailAddress placeholderKey="admin.email_logs.test_email_address"}}
-  </div>
-  <div class='span10 controls'>
-    <button class='btn' {{action sendTestEmail}} {{bindAttr disabled="sendTestEmailDisabled"}}>{{i18n admin.email_logs.send_test}}</button>
-    {{#if sentTestEmail}}<span class='result-message'>{{i18n admin.email_logs.sent_test}}</span>{{/if}}
-  </div>
-</div>
-
 <table class='table'>
   <tr>
-    <th>{{i18n admin.email_logs.sent_at}}</th>
+    <th>{{i18n admin.email.sent_at}}</th>
     <th>{{i18n user.title}}</th>
-    <th>{{i18n admin.email_logs.to_address}}</th>
-    <th>{{i18n admin.email_logs.email_type}}</th>
+    <th>{{i18n admin.email.to_address}}</th>
+    <th>{{i18n admin.email.email_type}}</th>
   </tr>
 
   {{#if model.length}}

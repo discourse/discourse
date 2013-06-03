@@ -977,7 +977,7 @@ zh_CN:
         delete_confirm: "删除本定制内容？"
         about: "站点定制允许你修改样式表和站点头部。选择或者添加一个来开始编辑。"
 
-      email_logs:
+      email:
         title: "电子邮件"
         sent_at: "发送时间"
         email_type: "邮件类型"

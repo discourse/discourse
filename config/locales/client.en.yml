@@ -1048,14 +1048,23 @@ en:
         delete_confirm: "Delete this customization?"
         about: "Site Customization allow you to modify stylesheets and headers on the site. Choose or add one to start editing."
 
-      email_logs:
+      email:
         title: "Email"
+        settings: "Settings"
+        logs: "Logs"
         sent_at: "Sent At"
         email_type: "Email Type"
         to_address: "To Address"
         test_email_address: "email address to test"
         send_test: "send test email"
         sent_test: "sent!"
+        delivery_method: "Delivery Method"
+        preview_digest: "Preview Digest"
+        refresh: "Refresh"
+        format: "Format"
+        html: "html"
+        text: "text"
+        last_seen_user: "Last Seen User:"
 
       impersonate:
         title: "Impersonate User"

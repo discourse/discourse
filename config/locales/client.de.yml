@@ -997,7 +997,7 @@ de:
         delete_confirm: "Diese Anpassung löschen?"
         about: "Seite personalisieren erlaubt dir das Anpassen der Stilvorlagen und des Kopfbereich der Seite. Wähle oder füge eine Anpassung hinzu um mit dem Editieren zu beginnen."
 
-      email_logs:
+      email:
         title: "Mailprotokoll"
         sent_at: "Gesendet am"
         email_type: "Mailtyp"

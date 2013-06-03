@@ -624,7 +624,7 @@ pt:
         delete: "Apagar"
         delete_confirm: "Apagar esta personalização?"
 
-      email_logs:
+      email:
         title: "Email"
         sent_at: "Enviado a"
         email_type: "Tipo de Email"

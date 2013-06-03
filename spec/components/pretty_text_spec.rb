@@ -146,6 +146,10 @@ test
       PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>",3).should == "<a href='http://cnn.com'>cnn</a>"
     end
 
+    it "uses an ellipsis instead of html entities if provided with the option" do
+      PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>", 2, text_entities: true).should == "<a href='http://cnn.com'>cn...</a>"
+    end
+
     it "should truncate links" do
       PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>",2).should == "<a href='http://cnn.com'>cn&hellip;</a>"
     end

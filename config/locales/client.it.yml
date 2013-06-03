@@ -977,7 +977,7 @@ it:
         delete_confirm: "Elimina questa personalizzazione?"
         about: "La Personalizzazione del Sito di permette di modificare i fogli di stile e le testate del sito."
 
-      email_logs:
+      email:
         title: "Log Email"
         sent_at: "Visto il"
         email_type: "Tipo Email"

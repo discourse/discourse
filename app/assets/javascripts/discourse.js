@@ -34,6 +34,30 @@ Discourse = Ember.Application.createWithMixins({
     return u + url;
   },
 
+  /**
+    This custom resolver allows us to find admin templates without calling .render
+    even though our path formats are slightly different than what ember prefers.
+  */
+  resolver: Ember.DefaultResolver.extend({
+    resolveTemplate: function(parsedName) {
+      var resolvedTemplate = this._super(parsedName);
+      if (resolvedTemplate) { return resolvedTemplate; }
+
+      // If we can't find a template, check to see if it's similar to how discourse
+      // lays out templates like: adminEmail => admin/templates/email
+      if (parsedName.fullNameWithoutType.indexOf('admin') === 0) {
+        var decamelized = parsedName.fullNameWithoutType.decamelize();
+        decamelized = decamelized.replace(/^admin\_/, 'admin/templates/');
+        decamelized = decamelized.replace(/^admin\./, 'admin/templates/');
+        decamelized = decamelized.replace(/\./, '_');
+
+        resolvedTemplate = Ember.TEMPLATES[decamelized];
+        if (resolvedTemplate) { return resolvedTemplate; }
+      }
+      return Ember.TEMPLATES.not_found;
+    }
+  }),
+
   titleChanged: function() {
     var title;
     title = "";
