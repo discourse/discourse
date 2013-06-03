@@ -347,7 +347,6 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
       topic.set('highest_post_number', data.post_number);
       topic.set('last_poster', data.user);
       topic.set('last_posted_at', data.created_at);
-      Discourse.notifyTitle();
     });
   },
 

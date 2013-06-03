@@ -51,8 +51,13 @@ Discourse.ListTopicsView = Discourse.View.extend(Discourse.Scrolling, {
     }
   }.property('list.topics.@each','topicTrackingState.hasIncoming'),
 
+  updateTitle: function(){
+    Discourse.notifyTitle(this.get('topicTrackingState.incomingCount'));
+  }.observes('topicTrackingState.incomingCount'),
+
   loadMore: function() {
     var listTopicsView = this;
+    Discourse.notifyTitle(0);
     listTopicsView.get('controller').loadMore().then(function (hasMoreResults) {
       Em.run.schedule('afterRender', function() {
         listTopicsView.saveScrollPos();

@@ -42,15 +42,17 @@ Discourse = Ember.Application.createWithMixins({
     }
     title += Discourse.SiteSettings.title;
     $('title').text(title);
-    if (!this.get('hasFocus') && this.get('notify')) {
-      title = "(*) " + title;
+
+    var notifyCount = this.get('notifyCount');
+    if (notifyCount > 0) {
+      title = "(" + notifyCount + ") " + title;
     }
     // chrome bug workaround see: http://stackoverflow.com/questions/2952384/changing-the-window-title-when-focussing-the-window-doesnt-work-in-chrome
     window.setTimeout(function() {
       document.title = ".";
       document.title = title;
     }, 200);
-  }.observes('title', 'hasFocus', 'notify'),
+  }.observes('title', 'hasFocus', 'notifyCount'),
 
   // The classes of buttons to show on a post
   postButtons: function() {
@@ -59,8 +61,8 @@ Discourse = Ember.Application.createWithMixins({
     });
   }.property('Discourse.SiteSettings.post_menu'),
 
-  notifyTitle: function() {
-    this.set('notify', true);
+  notifyTitle: function(count) {
+    this.set('notifyCount', count);
   },
 
   openComposer: function(opts) {

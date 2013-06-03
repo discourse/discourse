@@ -80,16 +80,6 @@ Discourse.ListTopicsController = Discourse.ObjectController.extend({
     }
   }.property('allLoaded', 'topics.length'),
 
-  insertedCount: function() {
-    var insertedLength = this.get('inserted.length');
-    if (!insertedLength) return 0;
-    return insertedLength;
-  }.property('inserted.length'),
-
-  rollUp: function() {
-    return this.get('insertedCount') > Discourse.SiteSettings.new_topics_rollup;
-  }.property('insertedCount'),
-
   loadMore: function() {
     this.set('loadingMore', true);
     var listTopicsController = this;
