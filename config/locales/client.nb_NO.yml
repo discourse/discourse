@@ -8,213 +8,213 @@
 en:
   js:
     share:
-      topic: 'share a link to this topic'
-      post: 'share a link to this post'
-      close: 'close'
-      twitter: 'share this link on Twitter'
-      facebook: 'share this link on Facebook'
-      google+: 'share this link on Google+'
-      email: 'send this link in an email'
+      topic: 'del en link til dette emnet'
+      post: 'del en link til dette innlegget'
+      close: 'lukk'
+      twitter: 'del denne linken på Twitter'
+      facebook: 'del denne linken på Facebook'
+      google+: 'del denne linken på Google+'
+      email: 'del denne linken i en email'
 
-    edit: 'edit the title and category of this topic'
-    not_implemented: "That feature hasn't been implemented yet, sorry!"
-    no_value: "No"
-    yes_value: "Yes"
-    of_value: "of"
-    generic_error: "Sorry, an error has occurred."
-    log_in: "Log In"
-    age: "Age"
-    last_post: "Last Post"
+    edit: 'rediget tittelen og kategorien til dette emnet'
+    not_implemented: "Den egenskapen har ikkje blitt implementert enda, beklager!"
+    no_value: "Nei"
+    yes_value: "Ja"
+    of_value: "av"
+    generic_error: "Beklager, det har oppstått en feil."
+    log_in: "Logg Inn"
+    age: "Alder"
+    last_post: "Siste Innlegg"
     admin_title: "Admin"
-    flags_title: "Flags"
-    show_more: "show more"
+    flags_title: "Flagg"
+    show_more: "vis mer"
     links: Links
     faq: "FAQ"
-    you: "You"
-    or: "or"
-    now: "just now"
-    read_more: 'read more'
+    you: "du"
+    or: "eller"
+    now: "akkurat nå"
+    read_more: 'les mer'
 
     in_n_seconds:
-      one: "in 1 second"
-      other: "in {{count}} seconds"
+      one: "på 1 sekund"
+      other: "på {{count}} sekunder"
     in_n_minutes:
-      one: "in 1 minute"
-      other: "in {{count}} minutes"
+      one: "på 1 minutt"
+      other: "om {{count}} minutter"
     in_n_hours:
-      one: "in 1 hour"
-      other: "in {{count}} hours"
+      one: "på 1 time"
+      other: "på {{count}} timer"
     in_n_days:
-      one: "in 1 day"
-      other: "in {{count}} days"
+      one: "på 1 dag"
+      other: "på {{count}} dager"
 
     suggested_topics:
-      title: "Suggested Topics"
+      title: "Anbefalte Emner"
 
     bookmarks:
-      not_logged_in: "Sorry, you must be logged in to bookmark posts."
-      created: "You've bookmarked this post."
-      not_bookmarked: "You've read this post; click to bookmark it."
-      last_read: "This is the last post you've read."
+      not_logged_in: "Beklager, du må være innlogget for å bokmerke innlegg."
+      created: "Du har bokmerket dette innlegget."
+      not_bookmarked: "Du har lest dette innlegget; klikk for å bokmerke det"
+      last_read: "Dette er det siste innlegget du har lest."
 
-    new_topics_inserted: "{{count}} new topics."
-    show_new_topics: "Click to show."
-    preview: "preview"
-    cancel: "cancel"
+    new_topics_inserted: "{{count}} nye innlegg."
+    show_new_topics: "Klikk for å vise."
+    preview: "forhåndsvisning"
+    cancel: "avbryt"
 
-    save: "Save Changes"
-    saving: "Saving..."
-    saved: "Saved!"
+    save: "Lagre Endringer"
+    saving: "Lagrer..."
+    saved: "Lagret!"
 
     choose_topic:
-      none_found: "No topics found."
+      none_found: "Ingen emner funnet."
       title:
-        search: "Search for a Topic by name, url or id:"
-        placeholder: "type the topic title here"
+        search: "Søk etter et emne ved navn, url eller id:"
+        placeholder: "skriv emnetittelen her"
 
     user_action:
-      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> posted <a href='{{topicUrl}}'>the topic</a>"
-      you_posted_topic: "<a href='{{userUrl}}'>You</a> posted <a href='{{topicUrl}}'>the topic</a>"
-      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> replied to <a href='{{postUrl}}'>{{post_number}}</a>"
-      you_replied_to_post: "<a href='{{userUrl}}'>You</a> replied to <a href='{{postUrl}}'>{{post_number}}</a>"
-      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> replied to <a href='{{topicUrl}}'>the topic</a>"
-      you_replied_to_topic: "<a href='{{userUrl}}'>You</a> replied to <a href='{{topicUrl}}'>the topic</a>"
+      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> postet <a href='{{topicUrl}}'>emnet</a>"
+      you_posted_topic: "<a href='{{userUrl}}'>Du</a> postet <a href='{{topicUrl}}'>emnet</a>"
+      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> besvarte <a href='{{postUrl}}'>{{post_number}}</a>"
+      you_replied_to_post: "<a href='{{userUrl}}'>Du</a> besvarte <a href='{{postUrl}}'>{{post_number}}</a>"
+      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> besvarte <a href='{{topicUrl}}'>emnet</a>"
+      you_replied_to_topic: "<a href='{{userUrl}}'>Du</a> besvarte <a href='{{topicUrl}}'>emnet</a>"
 
-      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> mentioned <a href='{{user2Url}}'>{{another_user}}</a>"
-      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> mentioned <a href='{{user2Url}}'>you</a>"
-      you_mentioned_user: "<a href='{{user1Url}}'>You</a> mentioned <a href='{{user2Url}}'>{{user}}</a>"
+      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> nevnte <a href='{{user2Url}}'>{{another_user}}</a>"
+      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> nevnte <a href='{{user2Url}}'>deg</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>Du</a> nevnte <a href='{{user2Url}}'>{{user}}</a>"
 
-      posted_by_user: "Posted by <a href='{{userUrl}}'>{{user}}</a>"
-      posted_by_you: "Posted by <a href='{{userUrl}}'>you</a>"
-      sent_by_user: "Sent by <a href='{{userUrl}}'>{{user}}</a>"
-      sent_by_you: "Sent by <a href='{{userUrl}}'>you</a>"
+      posted_by_user: "Postet av <a href='{{userUrl}}'>{{user}}</a>"
+      posted_by_you: "Postet av <a href='{{userUrl}}'>deg</a>"
+      sent_by_user: "Sendt av <a href='{{userUrl}}'>{{user}}</a>"
+      sent_by_you: "Sendt av <a href='{{userUrl}}'>deg</a>"
 
     user_action_groups:
-      "1": "Likes Given"
-      "2": "Likes Received"
-      "3": "Bookmarks"
-      "4": "Topics"
-      "5": "Replies"
-      "6": "Responses"
-      "7": "Mentions"
-      "9": "Quotes"
-      "10": "Favorites"
-      "11": "Edits"
-      "12": "Sent Items"
-      "13": "Inbox"
+      "1": "Likes Gitt"
+      "2": "Likes Mottatt"
+      "3": "Bokmerker"
+      "4": "Emner"
+      "5": "Svar"
+      "6": "Responser"
+      "7": "Omtalelser"
+      "9": "Sitater"
+      "10": "Favoritter"
+      "11": "Redigeringer"
+      "12": "Sendte Elementer"
+      "13": "Innboks"
 
     user:
       profile: Profile
-      title: "User"
+      title: "Bruker"
       mute: Mute
       edit: Edit Preferences
-      download_archive: "download archive of my posts"
-      private_message: "Private Message"
-      private_messages: "Messages"
-      activity_stream: "Activity"
-      preferences: "Preferences"
-      bio: "About me"
-      invited_by: "Invited By"
-      trust_level: "Trust Level"
-      external_links_in_new_tab: "Open all external links in a new tab"
-      enable_quoting: "Enable quote reply for highlighted text"
+      download_archive: "last ned arkiv av mine innlegg"
+      private_message: "Private Meldinger"
+      private_messages: "Meldinger"
+      activity_stream: "Aktivitet"
+      preferences: "Preferanser"
+      bio: "Om meg"
+      invited_by: "Invitert Av"
+      trust_level: "Tillitsnivå"
+      external_links_in_new_tab: "Åpne alle eksterne linker i ny fane"
+      enable_quoting: "Aktiver siter svar for uthevet tekst"
 
-      moderator: "{{user}} is a moderator"
-      admin: "{{user}} is an admin"
+      moderator: "{{user}} er en moderator"
+      admin: "{{user}} er en admin"
 
       change_password:
-        action: "change"
-        success: "(email sent)"
-        in_progress: "(sending email)"
-        error: "(error)"
+        action: "endre"
+        success: "(email sendt)"
+        in_progress: "(sender email)"
+        error: "(feil)"
 
       change_username:
-        action: "change"
-        title: "Change Username"
-        confirm: "There could be consequences to changing your username. Are you absolutely sure you want to?"
-        taken: "Sorry, that username is taken."
-        error: "There was an error changing your username."
-        invalid: "That username is invalid. It must only include numbers and letters"
+        action: "endre"
+        title: "Endre Brukernavn"
+        confirm: "Det kan være kosekvenser ved å endre ditt brukernavn. Er du sikker på at du vil gjøre det?"
+        taken: "Beklager, det brukernavnet er tatt."
+        error: "Det skjedde en feil ved endring av ditt brukernavn."
+        invalid: "Det brukernavnet er ugyldig. Det kan bare inneholde nummer og bokstaver."
       change_email:
-        action: 'change'
-        title: "Change Email"
-        taken: "Sorry, that email is not available."
-        error: "There was an error changing your email. Perhaps that address is already in use?"
-        success: "We've sent an email to that address. Please follow the confirmation instructions."
+        action: 'endre'
+        title: "Endre Email"
+        taken: "Beklager, den emailen er ikke tilgjengelig."
+        error: "Det skjedde en feil ved endring av din email. Kanskje den addressen allerede er i bruk?"
+        success: "Vi har sent en email til den addressen. Vennligst følg meldingens instruksjoner for bekreftelse."
 
       email:
         title: "Email"
-        instructions: "Your email will never be shown to the public."
-        ok: "Looks good. We will email you to confirm."
-        invalid: "Please enter a valid email address."
-        authenticated: "Your email has been authenticated by {{provider}}."
-        frequency: "We'll only email you if we haven't seen you recently and you haven't already seen the thing we're emailing you about."
+        instructions: "Din email vil aldri bli vist til offentligheten."
+        ok: "Ser bra ut. Vi sender deg en email for å bekrefte."
+        invalid: "Vennligst skriv inn en gyldig emailaddresse."
+        authenticated: "Din email har blitt autentisert av {{provider}}."
+        frequency: "Vi sender deg bare en email om vi ikke har sett deg nylig og du har ikke allerede sett tingen vi varslet deg om."
 
       name:
-        title: "Name"
-        instructions: "The longer version of your name; does not need to be unique. Used for alternate @name matching and shown only on your user page."
-        too_short: "Your name is too short."
-        ok: "Your name looks good."
+        title: "Naavn"
+        instructions: "Den lange versjonen av ditt navn;  trenger ikke å være unik. Brukt for alternativ @brukernavn matching og vist bare på brukersiden din."
+        too_short: "Navnet ditt er for kort."
+        ok: "Navnet ditt ser bra ut."
       username:
-        title: "Username"
-        instructions: "Must be unique, no spaces. People can mention you as @username."
-        short_instructions: "People can mention you as @{{username}}."
-        available: "Your username is available."
-        global_match: "Email matches the registered username."
-        global_mismatch: "Already registered. Try {{suggestion}}?"
-        not_available: "Not available. Try {{suggestion}}?"
-        too_short: "Your username is too short."
-        too_long: "Your username is too long."
-        checking: "Checking username availability..."
-        enter_email: 'Username found. Enter matching email.'
+        title: "Brukernavn"
+        instructions: "Må være unikt, uten mellomrom. Folk kan nevne deg som @brukernavn."
+        short_instructions: "Folk kan nevne deg som @{{username}}."
+        available: "Ditt brukernavn er tilgjengelig."
+        global_match: "Email matcher det registrerte brukernavnet."
+        global_mismatch: "Allerede registrert. Prøv {{suggestion}}?"
+        not_available: "Ikke tilgjengelig. Prøv {{suggestion}}?"
+        too_short: "Ditt brukernavn er for kort."
+        too_long: "Ditt brukernavn er for langt."
+        checking: "Sjekker brukernavns tilgjengelighet..."
+        enter_email: 'Brukernavn funnet. Skriv inn matchende email.'
 
       password_confirmation:
-        title: "Password Again"
+        title: "Passord Igjen"
 
-      last_posted: "Last Post"
-      last_emailed: "Last Emailed"
-      last_seen: "Last Seen"
-      created: "Created At"
-      log_out: "Log Out"
-      website: "Web Site"
+      last_posted: "Siste Innlegg"
+      last_emailed: "Sist Kontaktet"
+      last_seen: "Sist Sett"
+      created: "Laget Ved"
+      log_out: "Logg Ut"
+      website: "Webside"
       email_settings: "Email"
       email_digests:
-        title: "When I don't visit the site, send me an email digest of what's new"
-        daily: "daily"
-        weekly: "weekly"
-        bi_weekly: "every two weeks"
+        title: "Når jeg ikke besøker siden, send meg ett sammendrag på email om siste nytt"
+        daily: "daglig"
+        weekly: "ukentlig"
+        bi_weekly: "hver andre uke"
 
-      email_direct: "Receive an email when someone quotes you, replies to your post, or mentions your @username"
-      email_private_messages: "Receive an email when someone sends you a private message"
+      email_direct: "Motta en email når noen siterer deg, svarer på ditt innlegg, eller nevner ditt @brukernavn"
+      email_private_messages: "Notta en email når noen sender deg en privat melding"
 
-      other_settings: "Other"
+      other_settings: "Annet"
 
       new_topic_duration:
-        label: "Consider topics new when"
-        not_viewed: "I haven't viewed them yet"
-        last_here: "they were posted since I was here last"
+        label: "Anse emner som nye når"
+        not_viewed: "Jeg har ikke sett dem ennå"
+        last_here: "de var postet siden jeg var her sist"
         after_n_days:
-          one: "they were posted in the last day"
-          other: "they were posted in the last {{count}} days"
+          one: "de var postet i løpet av dagen"
+          other: "de var postet i de siste {{count}} dagene"
         after_n_weeks:
-          one: "they were posted in the last week"
-          other: "they were posted in the last {{count}} week"
+          one: "de var postet i løpet av uken"
+          other: "de vart postet i det siste {{count}} ukene"
 
-      auto_track_topics: "Automatically track topics I enter"
+      auto_track_topics: "Følg automatisk emner jeg åpner"
       auto_track_options:
-        never: "never"
-        always: "always"
+        never: "aldri"
+        always: "alltid"
         after_n_seconds:
-          one: "after 1 second"
-          other: "after {{count}} seconds"
+          one: "etter 1 sekund"
+          other: "etter {{count}} sekunder"
         after_n_minutes:
-          one: "after 1 minute"
-          other: "after {{count}} minutes"
+          one: "etter 1 minutt"
+          other: "etter {{count}} minutter"
 
       invited:
-        title: "Invites"
-        user: "Invited User"
-        none: "{{username}} hasn't invited any users to the site."
+        title: "invitasjoner"
+        user: "Invitert Bruker"
+        none: "{{username}} har ikke invitert noen brukere til siden."
         redeemed: "Redeemed Invites"
         redeemed_at: "Redeemed At"
         pending: "Pending Invites"
