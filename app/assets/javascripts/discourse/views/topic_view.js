@@ -136,7 +136,33 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     });
 
     this.updatePosition(true);
+
+    // Watch all incoming topic changes
+    this.get('topicTrackingState').trackIncoming("all");
   },
+
+  hasNewSuggested: function(){
+    var incoming = this.get('topicTrackingState.newIncoming');
+    var suggested = this.get('topic.suggested_topics');
+
+    if(suggested) {
+      var lookup = incoming.slice(-5).reverse().unique();
+      if(lookup.length < 5) {
+        suggested.each(function(topic){
+          if (topic) {
+            lookup.push(topic.get('id'));
+            lookup = lookup.unique();
+            return lookup.length < 5;
+          }
+        });
+      }
+
+      Discourse.TopicList.loadTopics(lookup, "").then(function(topics){
+        suggested.clear();
+        suggested.pushObjects(topics);
+      });
+    }
+  }.observes('topicTrackingState.incomingCount'),
 
   // Triggered whenever any posts are rendered, debounced to save over calling
   postsRendered: Discourse.debounce(function() {

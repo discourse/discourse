@@ -55,45 +55,41 @@ Discourse.TopicList = Discourse.Model.extend({
 
   // loads topics with these ids "before" the current topics
   loadBefore: function(topic_ids){
-    // filter out any existing topics
-
     var _this = this;
-    var url = Discourse.getURL("/") + (this.get('filter')) + "?topic_ids=" + topic_ids.join(",");
-    return Discourse.ajax({url: url}).then(function (result) {
-      if (result) {
-        // the new topics loaded from the server
-        var newTopics = Discourse.TopicList.topicsFrom(result);
+    Discourse.TopicList.loadTopics(topic_ids, this.get('filter'))
+      .then(function(topics){
 
-        var mapped = topic_ids.map(function(id){
-          return newTopics.find(function(t){ return t.id === id; });
-        });
-
-        var topics = _this.get("topics");
-
-        // add new topics to the list of current topics if not already present
-        _this.forEachNew(mapped, function(t) {
+        _this.forEachNew(topics, function(t) {
           // highlight the first of the new topics so we can get a visual feedback
           t.set('highlight', true);
           topics.insertAt(0,t);
         });
         Discourse.set('transient.topicsList', _this);
-      }
-    });
+
+      });
   }
 });
 
 Discourse.TopicList.reopenClass({
 
-  decodeTopic: function(result) {
-    var categories, topic, users;
-    categories = this.extractByKey(result.categories, Discourse.Category);
-    users = this.extractByKey(result.users, Discourse.User);
-    topic = result.topic_list_item;
-    topic.category = categories[topic.category];
-    topic.posters.each(function(p) {
-      p.user = users[p.user_id] || users[p.user];
-    });
-    return Discourse.Topic.create(topic);
+  loadTopics: function(topic_ids, filter) {
+    var defer = new Ember.Deferred();
+
+    var url = Discourse.getURL("/") + filter + "?topic_ids=" + topic_ids.join(",");
+    Discourse.ajax({url: url}).then(function (result) {
+      if (result) {
+        // the new topics loaded from the server
+        var newTopics = Discourse.TopicList.topicsFrom(result);
+
+        defer.resolve(topic_ids.map(function(id){
+          return newTopics.find(function(t){ return t.id === id; });
+        }));
+      } else {
+        defer.reject();
+      }
+    }).then(null, function(){ defer.reject(); });
+
+    return defer;
   },
 
   topicsFrom: function(result) {

@@ -35,10 +35,10 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
   notify: function(data){
     if (!this.newIncoming) { return; }
 
-    if ((this.filter === "latest" || this.filter === "new") && data.message_type === "new_topic" ) {
+    if ((this.filter === "all" ||this.filter === "latest" || this.filter === "new") && data.message_type === "new_topic" ) {
       this.newIncoming.push(data.topic_id);
     }
-    if (this.filter === "unread" && data.message_type === "unread") {
+    if ((this.filter === "all" || this.filter === "unread") && data.message_type === "unread") {
       var old = this.states["t" + data.topic_id];
       if(!old) {
         this.newIncoming.push(data.topic_id);
