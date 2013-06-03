@@ -1,0 +1,480 @@
+HTTP/1.1 200 OK
+Age: 0
+Cache-Control: max-age=300, public
+Content-Type: text/html; charset=utf-8
+Date: Mon, 03 Jun 2013 01:46:13 GMT
+ETag: "f8dbd8f6a9d7571efc49f6004c97e969"
+Server: nginx/1.0.13
+Status: 200 OK
+Vary: User-Agent
+Via: 1.1 varnish
+X-Cache: MISS
+X-Frame-Options: DENY
+X-Node: www02
+X-Request-Id: a63cfe96000f8d7bd6e96c18784a1a54
+X-Runtime: 0.209883
+X-UA-Compatible: IE=Edge,chrome=1
+X-UA-Device: desktop
+X-Varnish: 1832599910
+transfer-encoding: chunked
+Connection: keep-alive
+
+<!doctype html>
+<!--[if IE 9]>         <html class="ie ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en"> <!--<![endif]-->
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# findery: http://ogp.me/ns/fb/findery#">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=IE8"><!-- has to come first for IE9 apparently -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <meta content="authenticity_token" name="csrf-param" />
+<meta content="yOVMAdq9mJbPtr93fs6oSZsihq2CkWmThxyodSGBao0=" name="csrf-token" />
+
+  <title>Folsom St Grounds by Burrito Justice • Findery</title>
+
+
+  <meta name="description" content="1899? Gone by 1903. Now a Muni Yard.
+
+ Not sure if it was the home to professional baseball, but football games were played there. It was the site of the...">
+  <meta property="og:app_id" content="227110600733766">
+  <meta property="og:type" content="findery:note">
+  <meta property="og:site_name" content="Findery">
+  <meta property="og:url" content="https://findery.com/burritojustice/notes/folsom-st-grounds">
+  <meta property="og:image" content="http://images1.findery.com/863289496013/7749939/488xN">
+  <meta property="og:title" content="Folsom St Grounds">
+  <meta property="og:description" content="1899? Gone by 1903. Now a Muni Yard.
+
+ Not sure if it was the home to professional baseball, but football games were played there. It was the site of the...">
+  <meta property="place:location:latitude" content="37.76561666">
+  <meta property="place:location:longitude" content="-122.41501362">
+
+  <link href="//d3dupjkkwlat3o.cloudfront.net/assets/desktop-78754c1457e7acc7877eb75564a29449.css" media="screen" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">var NREUMQ=NREUMQ||[];NREUMQ.push(["mark","firstbyte",new Date().getTime()]);</script></head>
+<body>
+
+  <div class="view MastheadView" data-view_name="MastheadView" data-state="prerendered"><header id="header" class="masthead js-masthead" role="banner">
+  <div class="container js-attach-masthead-nav">
+
+    <h1 class="masthead__branding"><a href="/" class="ps">Findery</a></h1>
+    <div class="masthead__geocoder js-attach-geocoder"></div>
+
+    <nav id="nav" class="masthead__nav" role="navigation">
+
+      <h1>Navigation</h1>
+
+      <ul class="masthead__navlist js-attach-leave-note-link">
+
+
+	<li class="masthead__nav-item">
+	  <a href="/map" class="ps">
+	    <span class="masthead__label">Map</span>
+	    <i aria-hidden="true" class="masthead__icon icon-map"></i>
+	  </a>
+	</li>
+
+
+	<li class="masthead__nav-item masthead__search js-drawer-group">
+	  <a href="#" class="js-show-drawer">
+	    <span class="masthead__label">Search</span>
+	    <i aria-hidden="true" class="masthead__icon icon-search"></i>
+	  </a>
+
+	  <div class="masthead__drawer masthead__search-drawer js-drawer">
+	    <div class="view SearchView" data-view_name="SearchView" data-state="prerendered"> <form class="search" action="/search" method="get">
+
+  <input class="search__input" type="search" placeholder="Search for people, places, things or ideas" />
+  <button aria-label="Search" class="flatbtn flatbtn-primary search__submit js-submit-search"><i aria-hidden="true" class="icon-search"></i></button>
+
+</form></div>
+	  </div>
+
+	</li>
+
+
+	<li class="masthead__nav-item masthead__auth-link js-drawer-group">
+	  <a href="/login" class="masthead__signin js-show-drawer">Sign in</a>
+
+	  <div class="masthead__drawer masthead__login-drawer js-drawer">
+	    <div class="view SignInMiniView" data-view_name="SignInMiniView" data-state="prerendered"><form id="login" action="/login" method="post" class="auth-form__mini">
+
+  <div class="form-error"></div>
+
+  <label for="signin_username" class="visuallyhidden">Username</label>
+  <input type="text" name="email" id="signin_username" autocapitalize="off" autocorrect="off" placeholder="Username" />
+
+  <label for="signin_password" class="visuallyhidden">Password</label>
+  <input type="password" name="password" id="signin_password" class=" password" placeholder="Password"/>
+
+  <button class="flatbtn flatbtn-primary">Sign Me In!</button>
+
+</form></div>
+	  </div>
+	</li>
+
+
+	<li class="masthead__nav-item masthead__auth-link">
+	  <a href="/signup" class="masthead__signup flatbtn flatbtn-primary ps">Sign Up!</a>
+	</li>
+
+      </ul>
+
+
+      <div class="masthead__user-controls js-attach-user-controls"></div>
+
+    </nav>
+  </div>
+</header></div>
+
+  <div id="map" class="js-map"></div>
+
+  <div id="content">
+    <div id="page" class="container">
+      <div class="view NotePage" data-view_name="NotePage" id="main" data-model_id="863289496013" role="main" data-state="prerendered"><article class="">
+
+  <div class="page-primary">
+    <div class="view NoteView" data-view_name="NoteView" data-model_id="863289496013" data-state="prerendered"><div class="note">
+
+  <a href="https://findery.com/burritojustice" class="ps" rel="author"><img src="http://avatars1.findery.com/330713553027/48x48?af3a438794267d74e4e0953feceaf238" class="avatar note-avatar" alt="burritojustice" title="burritojustice"/></a>
+
+  <div class="note-box">
+
+
+      <div class="note__map">
+	<div class="location__smallmap smallmap js-map"></div>
+	<div class="note__map-location">
+	  <i aria-hidden="true" class="icon-marker"></i>
+
+
+
+
+
+	    <span class="location__address">Folsom St &amp; 16th St, San Francisco, CA 94103, USA</span>
+
+
+	  <div class="note__map-drag-handle"></div>
+
+	</div>
+
+      </div>
+
+
+    <header class="note-header">
+      <h1 class="note-heading"><a href="https://findery.com/burritojustice/notes/folsom-st-grounds" class="ps" rel="permalink">Folsom St Grounds</a></h1>
+    </header>
+
+    <div class="note-contents">
+
+      <div class="note-message ">
+	<p>1899? Gone by 1903. Now a Muni Yard.
+</p> <p>Not sure if it was the home to professional baseball, but football games were played there. It was the site of the 1900 Stanford&#x2F;Cal Big Game tragedy -- people watching the game on the roof on top of the steel mill across 17th St fell to their deaths.
+</p> <p><a href="http://www.sfweekly.com/2012-08-15/news/football-san-francisco-and-pacific-glass-works-history-sports-tragedy/">http:&#x2F;&#x2F;www.sfweekly.com&#x2F;2012-08-15&#x2F;news&#x2F;football-san-francisco-and-pacific-glass-works-history-sports-tragedy&#x2F;</a>
+</p> <p>More references on it: (It was sometimes called Rec Grounds.)
+<br/><a href="http://www.outsidelands.org/richmond-grounds.php">http:&#x2F;&#x2F;www.outsidelands.org&#x2F;richmond-grounds.php</a>
+<br/><a href="http://www.la84foundation.org/SportsLibrary/CFHSN/CFHSNv15/CFHSNv15n2c.pdf">http:&#x2F;&#x2F;www.la84foundation.org&#x2F;SportsLibrary&#x2F;CFHSN&#x2F;CFHSNv15&#x2F;CFHSNv15n2c.pdf</a></p>
+      </div>
+
+      <div class="note-media">
+	<div class="note-media-object">
+
+	    <figure>
+	      <a href="http://images1.findery.com/863289496013/7749939/900xN?1346377479" class="image lightbox"><img src="http://images1.findery.com/863289496013/7749939/488xN?1346377479" class="" alt="Folsom St Grounds"/></a>
+	    </figure>
+
+
+	</div>
+      </div>
+
+    </div>
+
+    <footer class="note-footer">
+
+
+
+
+
+      <div class="created">
+
+  <a href="https://findery.com/burritojustice" class="ps created-avatar" rel="author"><img src="http://avatars1.findery.com/330713553027/48x48?af3a438794267d74e4e0953feceaf238" class="avatar " alt="burritojustice" title="burritojustice"/></a>
+
+  <div class="created-byline">
+    <a href="https://findery.com/burritojustice" class="ps username capitalize" rel="author">burritojustice</a> left this note <time datetime="2012-08-31T01:39:05.000Z" title="August 31, 2012 at 1:39am" pubdate class="server_date">on August 31, 2012</time>
+  </div>
+
+  <div class="created-visibility public">Findable by anyone</div>
+
+
+
+</div>
+
+
+	<div class="note-sets">
+	  <h3 class="note-sets-heading">Sets</h3>
+	  In sets:
+	  <ul class="util__comma-and-list">
+	    <li><a href="https://findery.com/burritojustice/sets/history" class="ps">history</a></li><li><a href="https://findery.com/burritojustice/sets/home-plate" class="ps">home plate</a></li>
+	  </ul>
+	</div>
+
+
+      <div class="view NoteMetaView" data-view_name="NoteMetaView" data-model_id="863289496013" data-state="prerendered"><div class="note__meta">
+
+  <div class="view FindersView" data-view_name="FindersView" data-model_id="863289496013" data-state="prerendered"><div class="finders">
+
+    <div class="finders__view-count"><span class="count">25</span> views</div>
+
+    <h2 class="finders__heading">Found by</h2>
+
+    <ul class="finders__avatars avatars">
+      <li><a href="https://findery.com/iancmyers" class="ps"><img src="http://avatars1.findery.com/743030428577/32x32?ab89e969debb850f69d0eb4427fbc556" class="avatar " alt="iancmyers" title="iancmyers" width="32" height="32"/></a></li><li><a href="https://findery.com/ResidentImprints" class="ps"><img src="http://avatars1.findery.com/390843089855/32x32?8d5fc74e0097fe1fb3a6d5c35bbeb722" class="avatar " alt="ResidentImprints" title="ResidentImprints" width="32" height="32"/></a></li><li><a href="https://findery.com/oscarfalcon" class="ps"><img src="http://avatars1.findery.com/1000728438892/32x32?f097421c82f30f0ea6791219ffd00a44" class="avatar " alt="oscarfalcon" title="oscarfalcon" width="32" height="32"/></a></li><li><a href="https://findery.com/dr_loplop" class="ps"><img src="http://avatars1.findery.com/184684700291/32x32?a45aba1f8100871804b1015e3f2f55b9" class="avatar " alt="dr_loplop" title="dr_loplop" width="32" height="32"/></a></li><li><a href="https://findery.com/maggie" class="ps"><img src="http://avatars1.findery.com/605591468065/32x32?9782a48c787c511f131ccc67069cf576" class="avatar " alt="maggie" title="maggie" width="32" height="32"/></a></li><li><a href="https://findery.com/jessica" class="ps"><img src="http://avatars1.findery.com/408022948055/32x32?3469805dee75ea014003c3af10e65ac6" class="avatar " alt="jessica" title="jessica" width="32" height="32"/></a></li><li><a href="https://findery.com/johnfox" class="ps"><img src="http://avatars1.findery.com/751620325603/32x32?98355471c22a3155782e0b07c9d3108f" class="avatar " alt="johnfox" title="johnfox" width="32" height="32"/></a></li><li><a href="https://findery.com/kpopjam" class="ps"><img src="http://avatars1.findery.com/730145522186/32x32?248333aafc4a555ad76e4f5e12f045ec" class="avatar " alt="kpopjam" title="kpopjam" width="32" height="32"/></a></li><li><a href="https://findery.com/InTheNews" class="ps"><img src="http://avatars1.findery.com/124555121463/32x32?bb893509e04525c64d11de0b875b2974" class="avatar " alt="InTheNews" title="InTheNews" width="32" height="32"/></a></li><li><a href="https://findery.com/_mike" class="ps"><img src="http://avatars1.findery.com/1095217763322/32x32?6cf0703b87db4b5f5f40614553c43458" class="avatar " alt="_mike" title="_mike" width="32" height="32"/></a></li><li><a href="https://findery.com/bradvertising" class="ps"><img src="http://avatars1.findery.com/266289038290/32x32?25b2366164adee57bf294b965be17296" class="avatar " alt="bradvertising" title="bradvertising" width="32" height="32"/></a></li><li><a href="https://findery.com/arlen" class="ps"><img src="http://avatars1.findery.com/default/32x32" class="avatar " alt="arlen" title="arlen" width="32" height="32"/></a></li><li><a href="https://findery.com/dlim" class="ps"><img src="http://avatars1.findery.com/default/32x32" class="avatar " alt="dlim" title="dlim" width="32" height="32"/></a></li><li><a href="https://findery.com/KayOwen" class="ps"><img src="http://avatars1.findery.com/601296495268/32x32?6590f8ee152ead4ce698986206c50064" class="avatar " alt="KayOwen" title="KayOwen" width="32" height="32"/></a></li><li><a href="https://findery.com/cass" class="ps"><img src="http://avatars1.findery.com/47245691081/32x32?0a871c2dd5be1abbe4df06c14d8fae3b" class="avatar " alt="cass" title="cass" width="32" height="32"/></a></li><li><a href="https://findery.com/juandelreal" class="ps"><img src="http://avatars1.findery.com/default/32x32" class="avatar " alt="juandelreal" title="juandelreal" width="32" height="32"/></a></li><li><a href="https://findery.com/RoyalPineapple" class="ps"><img src="http://avatars1.findery.com/default/32x32" class="avatar " alt="RoyalPineapple" title="RoyalPineapple" width="32" height="32"/></a></li><li><a href="https://findery.com/heather" class="ps"><img src="http://avatars1.findery.com/64425580684/32x32?06839fc862811c81dbeb6fc35fb1d95d" class="avatar " alt="heather" title="heather" width="32" height="32"/></a></li><li><a href="https://findery.com/amber" class="ps"><img src="http://avatars1.findery.com/880469375111/32x32?d559b1f69683aaff5ad77e333b9f0815" class="avatar " alt="amber" title="amber" width="32" height="32"/></a></li><li><a href="https://findery.com/redterror" class="ps"><img src="http://avatars1.findery.com/193274603685/32x32?cb54a6566ce60091e31f5736cfd883bc" class="avatar " alt="redterror" title="redterror" width="32" height="32"/></a></li><li><a href="https://findery.com/ECWC" class="ps"><img src="http://avatars1.findery.com/322123603781/32x32?0d97a6b42790f5f12f67a6448a10a5c4" class="avatar " alt="ECWC" title="ECWC" width="32" height="32"/></a></li><li><a href="https://findery.com/jcator" class="ps"><img src="http://avatars1.findery.com/743030409835/32x32?a9f9f5ed070f4673aa214fcceecee10b" class="avatar " alt="jcator" title="jcator" width="32" height="32"/></a></li><li><a href="https://findery.com/gogo" class="ps"><img src="http://avatars1.findery.com/55835623814/32x32?0b3756b7ca56304775b72ce886738e52" class="avatar " alt="gogo" title="gogo" width="32" height="32"/></a></li><li><a href="https://findery.com/Hathaway" class="ps"><img src="http://avatars1.findery.com/820339802128/32x32?80c3815275a57d34809bac9e99a9b19e" class="avatar " alt="Hathaway" title="Hathaway" width="32" height="32"/></a></li><li><a href="https://findery.com/TelstarLogistics" class="ps"><img src="http://avatars1.findery.com/536871991385/32x32?9a21d7db263b0b941fe1d5fa5a90395b" class="avatar " alt="TelstarLogistics" title="TelstarLogistics" width="32" height="32"/></a></li><li><a href="https://findery.com/caterina" class="ps"><img src="http://avatars1.findery.com/957778802844/32x32?6bbfb5cd43348c9f5ff6a23d46243bd7" class="avatar " alt="caterina" title="caterina" width="32" height="32"/></a></li>
+    </ul>
+
+</div></div>
+
+  <div class="view FavoritersView" data-view_name="FavoritersView" data-attribute="favoriters" data-state="prerendered"></div>
+
+  <div class="note__meta-tools"><div class="view NoteToolsView" data-view_name="NoteToolsView" data-model_id="863289496013" data-state="prerendered"><div class="note-tools ">
+
+  <div class="note-tools__group note-tools__place-actions">
+    <a href="/notes/leave?at=37.76561666,-122.41501362,17" class="note-tools__item note-tools__leave-note">
+      <i aria-hidden="true" class="icon-pencil"></i>
+      <span>Leave a Note Here</span>
+    </a>
+    <button class="note-tools__item note-tools__wishlist">
+      <i aria-hidden="true" class="icon-star"></i>
+      <span>I Want To Go Here</span>
+    </button>
+    <button class="note-tools__item note-tools__beenhere">
+      <i aria-hidden="true" class="icon-check"></i>
+      <span>I've Been Here</span>
+    </button>
+  </div>
+
+  <div class="note-tools__group note-tools__note-actions">
+    <a href="https://findery.com/burritojustice/notes/folsom-st-grounds#comments" class="ps note-tools__item note-tools__comment-count">
+      <span>0</span> <i>comments</i>
+    </a>
+
+  </div>
+</div></div></div>
+
+  <div id="comments" class="js-note-comments">
+    <div class="view CommentsView" data-view_name="CommentsView" data-attribute="comments" data-state="prerendered"><div class="comments">
+
+  <h2 class="comments__heading">Comments</h2>
+
+  <div class="comments__box js-attach-form">
+
+
+
+  </div>
+
+</div>
+</div>
+  </div>
+
+</div></div>
+
+    </footer>
+
+  </div>
+
+</div>
+</div>
+  </div>
+
+  <aside class="page-secondary">
+
+    <div class="sidebar-section sidebar-section-location">
+      <div class="location">
+
+
+
+
+
+
+	    <div class="location__address">Folsom St &amp; 16th St, San Francisco, CA 94103, USA</div>
+
+
+
+
+
+	      <div class="coordinates geo">
+		<span class="coordinates__latitude latitude">37.76561666</span>,
+		<span class="coordinates__longitude longitude">-122.41501362</span>
+	      </div>
+
+
+	    <a href="/notes/leave?at=37.76561666,-122.41501362,17" class="btn ps location__leave-note js-leave-note-here">Leave a Note Here</a>
+
+
+
+
+
+      </div>
+    </div>
+
+    <div class="sidebar-section sidebar-section-created has-divider">
+      <div class="created">
+
+  <a href="https://findery.com/burritojustice" class="ps created-avatar" rel="author"><img src="http://avatars1.findery.com/330713553027/48x48?af3a438794267d74e4e0953feceaf238" class="avatar " alt="burritojustice" title="burritojustice"/></a>
+
+  <div class="created-byline">
+    <a href="https://findery.com/burritojustice" class="ps username capitalize" rel="author">burritojustice</a> left this note <time datetime="2012-08-31T01:39:05.000Z" title="August 31, 2012 at 1:39am" pubdate class="server_date">on August 31, 2012</time>
+  </div>
+
+  <div class="created-visibility public">Findable by anyone</div>
+
+
+
+</div>
+    </div>
+
+
+
+
+
+  </aside>
+
+</article>
+
+<style type="text/css">
+  #map { display: block; }
+</style>
+</div><script type="text/javascript">window.BOOTSTRAP = {"\/notes\/863289496013":{"data":{"title":"Folsom St Grounds","message":"1899? Gone by 1903. Now a Muni Yard.\r\n \r\nNot sure if it was the home to professional baseball, but football games were played there. It was the site of the 1900 Stanford\/Cal Big Game tragedy -- people watching the game on the roof on top of the steel mill across 17th St fell to their deaths.\r\n\r\n<a href=\"http:\/\/www.sfweekly.com\/2012-08-15\/news\/football-san-francisco-and-pacific-glass-works-history-sports-tragedy\/\">http:\/\/www.sfweekly.com\/2012-08-15\/news\/football-san-francisco-and-pacific-glass-works-history-sports-tragedy\/<\/a>\r\n\r\nMore references on it: (It was sometimes called Rec Grounds.) \r\n<a href=\"http:\/\/www.outsidelands.org\/richmond-grounds.php\">http:\/\/www.outsidelands.org\/richmond-grounds.php<\/a>\r\n<a href=\"http:\/\/www.la84foundation.org\/SportsLibrary\/CFHSN\/CFHSNv15\/CFHSNv15n2c.pdf\">http:\/\/www.la84foundation.org\/SportsLibrary\/CFHSN\/CFHSNv15\/CFHSNv15n2c.pdf<\/a>","location":{"latitude":37.76561666,"longitude":-122.41501362,"zoom_level":17},"link":"https:\/\/findery.com\/burritojustice\/notes\/folsom-st-grounds","visibility":"public","public_views_count":25,"updated_at":1346377479,"created_at":1346377145,"depiction":null,"comments_count":0,"sets_count":2,"favoriters_count":0,"finders_count":26,"id":863289496013,"display_address":"Folsom St & 16th St, San Francisco, CA 94103, USA","author":{"avatar":{"has_avatar":true,"url_root":"http:\/\/avatars1.findery.com\/330713553027\/","hash":"af3a438794267d74e4e0953feceaf238"},"link":"https:\/\/findery.com\/burritojustice","name":"Burrito Justice","username":"burritojustice","id":330713553027},"image":{"url_root":"http:\/\/images1.findery.com\/863289496013\/7749939\/","original_width":1000,"original_height":876},"place":null,"comments":[],"sets":[{"link":"https:\/\/findery.com\/burritojustice\/sets\/history","name":"history","public_notes_count":17,"last_note_added_at":1369284327,"id":335008561317,"author":{"avatar":{"has_avatar":true,"url_root":"http:\/\/avatars1.findery.com\/330713553027\/","hash":"af3a438794267d74e4e0953feceaf238"},"link":"https:\/\/findery.com\/burritojustice","name":"Burrito Justice","username":"burritojustice","id":330713553027}},{"link":"https:\/\/findery.com\/burritojustice\/sets\/home-plate","name":"home plate","public_notes_count":5,"last_note_added_at":1346377145,"id":1086627801176,"author":{"avatar":{"has_avatar":true,"url_root":"http:\/\/avatars1.findery.com\/330713553027\/","hash":"af3a438794267d74e4e0953feceaf238"},"link":"https:\/\/findery.com\/burritojustice","name":"Burrito Justice","username":"burritojustice","id":330713553027}}],"finders":[{"avatar":{"has_avatar":true,"url_root":"http:\/\/avatars1.findery.com\/743030428577\/","hash":"ab89e969debb850f69d0eb4427fbc556"},"link":"https:\/\/findery.com\/iancmyers","name":"Ian Christian Myers","username":"iancmyers","id":743030428577},{"avatar":{"has_avatar":true,"url_root":"http:\/\/avatars1.findery.com\/390843089855\/","hash":"8d5fc74e0097fe1fb3a6d5c35bbeb722"},"link":"https:\/\/findery.com\/ResidentImprints","name":"","username":"ResidentImprints","id":390843089855},{"avatar":{"has_avatar":true,"url_root":"http:\/\/avatars1.findery.com\/1000728438892\/","hash":"f097421c82f30f0ea6791219ffd00a44"},"link":"https:\/\/findery.com\/oscarfalcon","name":"Oscar Falc\u00f3n Lara","username":"oscarfalcon","id":1000728438892},{"avatar":{"has_avatar":true,"url_root":"http:\/\/avatars1.findery.com\/184684700291\/","hash":"a45aba1f8100871804b1015e3f2f55b9"},"link":"https:\/\/findery.com\/dr_loplop","name":null,"username":"dr_loplop","id":184684700291},{"avatar":{"has_avatar":true,"url_root":"http:\/\/avatars1.findery.com\/605591468065\/","hash":"9782a48c787c511f131ccc67069cf576"},"link":"https:\/\/findery.com\/maggie","name":"Maggie Nelson","username":"maggie","id":605591468065},{"avatar":{"has_avatar":true,"url_root":"http:\/\/avatars1.findery.com\/408022948055\/","hash":"3469805dee75ea014003c3af10e65ac6"},"link":"https:\/\/findery.com\/jessica","name":"Jessica Reid","username":"jessica","id":408022948055},{"avatar":{"has_avatar":true,"url_root":"http:\/\/avatars1.findery.com\/751620325603\/","hash":"98355471c22a3155782e0b07c9d3108f"},"link":"https:\/\/findery.com\/johnfox","name":"John C. Fox","username":"johnfox","id":751620325603},{"avatar":{"has_avatar":true,"url_root":"http:\/\/avatars1.findery.com\/730145522186\/","hash":"248333aafc4a555ad76e4f5e12f045ec"},"link":"https:\/\/findery.com\/kpopjam","name":"","username":"kpopjam","id":730145522186},{"avatar":{"has_avatar":true,"url_root":"http:\/\/avatars1.findery.com\/124555121463\/","hash":"bb893509e04525c64d11de0b875b2974"},"link":"https:\/\/findery.com\/InTheNews","name":"","username":"InTheNews","id":124555121463},{"avatar":{"has_avatar":true,"url_root":"http:\/\/avatars1.findery.com\/1095217763322\/","hash":"6cf0703b87db4b5f5f40614553c43458"},"link":"https:\/\/findery.com\/_mike","name":"Mike Fowler","username":"_mike","id":1095217763322},{"avatar":{"has_avatar":true,"url_root":"http:\/\/avatars1.findery.com\/266289038290\/","hash":"25b2366164adee57bf294b965be17296"},"link":"https:\/\/findery.com\/bradvertising","name":"Brad Thompson","username":"bradvertising","id":266289038290},{"avatar":{"has_avatar":false,"url_root":"http:\/\/avatars1.findery.com\/default\/","hash":"b9a88456056f3c853857d1740bf49cfe"},"link":"https:\/\/findery.com\/arlen","name":null,"username":"arlen","id":399433044789},{"avatar":{"has_avatar":false,"url_root":"http:\/\/avatars1.findery.com\/default\/","hash":"3431ba90fe3f388e51fa3ccb87c032c9"},"link":"https:\/\/findery.com\/dlim","name":null,"username":"dlim","id":1095217767216},{"avatar":{"has_avatar":true,"url_root":"http:\/\/avatars1.findery.com\/601296495268\/","hash":"6590f8ee152ead4ce698986206c50064"},"link":"https:\/\/findery.com\/KayOwen","name":"","username":"KayOwen","id":601296495268},{"avatar":{"has_avatar":true,"url_root":"http:\/\/avatars1.findery.com\/47245691081\/","hash":"0a871c2dd5be1abbe4df06c14d8fae3b"},"link":"https:\/\/findery.com\/cass","name":"Cass","username":"cass","id":47245691081},{"avatar":{"has_avatar":false,"url_root":"http:\/\/avatars1.findery.com\/default\/","hash":"8c6a47076bc8fbd9f5a72e99abb05030"},"link":"https:\/\/findery.com\/juandelreal","name":"Juan del Real","username":"juandelreal","id":1009318392420},{"avatar":{"has_avatar":false,"url_root":"http:\/\/avatars1.findery.com\/default\/","hash":"1a9bca9818091afd1ba2fdab387adde6"},"link":"https:\/\/findery.com\/RoyalPineapple","name":null,"username":"RoyalPineapple","id":261994099612},{"avatar":{"has_avatar":true,"url_root":"http:\/\/avatars1.findery.com\/64425580684\/","hash":"06839fc862811c81dbeb6fc35fb1d95d"},"link":"https:\/\/findery.com\/heather","name":"Heather Champ","username":"heather","id":64425580684},{"avatar":{"has_avatar":true,"url_root":"http:\/\/avatars1.findery.com\/880469375111\/","hash":"d559b1f69683aaff5ad77e333b9f0815"},"link":"https:\/\/findery.com\/amber","name":"Amber Costley","username":"amber","id":880469375111},{"avatar":{"has_avatar":true,"url_root":"http:\/\/avatars1.findery.com\/193274603685\/","hash":"cb54a6566ce60091e31f5736cfd883bc"},"link":"https:\/\/findery.com\/redterror","name":"Dave Steinberg","username":"redterror","id":193274603685},{"avatar":{"has_avatar":true,"url_root":"http:\/\/avatars1.findery.com\/322123603781\/","hash":"0d97a6b42790f5f12f67a6448a10a5c4"},"link":"https:\/\/findery.com\/ECWC","name":"Jennifer Jamieson","username":"ECWC","id":322123603781},{"avatar":{"has_avatar":true,"url_root":"http:\/\/avatars1.findery.com\/743030409835\/","hash":"a9f9f5ed070f4673aa214fcceecee10b"},"link":"https:\/\/findery.com\/jcator","name":"Joseph Cator","username":"jcator","id":743030409835},{"avatar":{"has_avatar":true,"url_root":"http:\/\/avatars1.findery.com\/55835623814\/","hash":"0b3756b7ca56304775b72ce886738e52"},"link":"https:\/\/findery.com\/gogo","name":"Jed Lau","username":"gogo","id":55835623814},{"avatar":{"has_avatar":true,"url_root":"http:\/\/avatars1.findery.com\/820339802128\/","hash":"80c3815275a57d34809bac9e99a9b19e"},"link":"https:\/\/findery.com\/Hathaway","name":"","username":"Hathaway","id":820339802128},{"avatar":{"has_avatar":true,"url_root":"http:\/\/avatars1.findery.com\/536871991385\/","hash":"9a21d7db263b0b941fe1d5fa5a90395b"},"link":"https:\/\/findery.com\/TelstarLogistics","name":"Todd Lappin","username":"TelstarLogistics","id":536871991385},{"avatar":{"has_avatar":true,"url_root":"http:\/\/avatars1.findery.com\/957778802844\/","hash":"6bbfb5cd43348c9f5ff6a23d46243bd7"},"link":"https:\/\/findery.com\/caterina","name":"Caterina Fake","username":"caterina","id":957778802844}],"favoriters":[],"tags":[],"era":null}}};</script>
+    </div>
+  </div>
+
+  <footer id="footer" role="contentinfo" class="footer">
+  <div class="container">
+
+    <div class="footer__favorite js-attach-footer-favorites">
+      <strong class="footer__nav-heading">Findery Favorite</strong>
+    </div>
+
+    <nav class="footer__nav" role="navigation">
+
+      <h1>Site Links</h1>
+
+      <ul class="footer__navlist-group">
+
+	<li class="footer__nav-column">
+	  <strong class="footer__nav-heading">Get Started</strong>
+	  <ul class="footer__navlist">
+	    <li class="footer__nav-item"><a href="/challenge" class="ps">Daily Challenge</a></li>
+	    <li class="footer__nav-item"><a href="/directory" class="ps">Findery Directory</a></li>
+	    <li class="footer__nav-item footer__run-in-link"><a href="/faq" class="ps">FAQs</a></li>
+	    <li class="footer__nav-item"><a href="/forums" class="ps">Forums</a></li>
+	    <li class="footer__nav-item"><a href="/help" class="ps">Help</a></li>
+	  </ul>
+	</li>
+
+	<li class="footer__nav-column">
+	  <strong class="footer__nav-heading">Company</strong>
+	  <ul class="footer__navlist">
+	    <li class="footer__nav-item footer__run-in-link"><a href="/about" class="ps">About</a></li>
+	    <li class="footer__nav-item"><a href="/press" class="ps">Press</a></li>
+	    <li class="footer__nav-item"><a href="http://blog.2bkco.com/">Blog</a></li>
+	    <li class="footer__nav-item"><a href="/jobs" class="ps">Jobs</a></li>
+	    <li class="footer__nav-item"><a href="mailto:help@findery.com">Contact Us</a></li>
+	  </ul>
+	</li>
+
+	<li class="footer__nav-column">
+	  <strong class="footer__nav-heading">Policies</strong>
+	  <ul class="footer__navlist">
+	    <li class="footer__nav-item"><a href="/community" class="ps">Community Guidelines</a></li>
+	    <li class="footer__nav-item"><a href="/terms" class="ps">Terms of Service</a></li>
+	    <li class="footer__nav-item"><a href="/privacy" class="ps">Privacy Policy</a></li>
+	    <li class="footer__nav-item"><a href="/copyright" class="ps">Copyright</a></li>
+	  </ul>
+	</li>
+
+	<li class="footer__nav-column js-attach-extras"></li>
+
+      </ul>
+    </nav>
+
+    <ul class="footer__social-links">
+
+      <li>
+	<a href="/findery" target="_blank" class="findery">
+	  <i aria-hidden="true" class="icon-findery-square"></i>
+	  <span>Findery's Notes</span>
+	</a>
+      </li>
+
+      <li>
+	<a href="http://twitter.com/findery" target="_blank" class="twitter">
+	  <i aria-hidden="true" class="icon-twitter-square"></i>
+	  <span>@Findery on Twitter</span>
+	</a>
+      </li>
+
+      <li>
+	<a href="http://www.facebook.com/finderyHQ" target="_blank" class="facebook">
+	  <i aria-hidden="true" class="icon-facebook-square"></i>
+	  <span>Findery on Facebook</span>
+	</a>
+      </li>
+
+      <li>
+	<a href="https://plus.google.com/+Findery" target="_blank" class="plus" rel="publisher">
+	  <i aria-hidden="true" class="icon-google-square"></i>
+	  <span>Findery on Google Plus</span>
+	</a>
+      </li>
+
+    </ul>
+
+    <p class="footer__colophon">&copy; 2012 - 2013 <a href="http://2bkco.com/">2bkco, Inc.</a><br />All community content copyright its respective owner.</p>
+
+  </div>
+</footer>
+
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+  <script src="//maps.google.com/maps/api/js?client=gme-2bkco&amp;libraries=places&amp;sensor=false"></script>
+  <script src="https://www.google.com/jsapi?key=AIzaSyBxsG9GRdks8fTgoYJf6UiWerQT8zLd_uE" type="text/javascript"></script>
+  <script type="text/javascript" src="//fast.fonts.com/jsapi/9d6dcc8f-86a3-4e30-b228-62c016fcade6.js"></script>
+
+  <script src="//d3dupjkkwlat3o.cloudfront.net/assets/common/dependencies-71e243e443326591fc4974ace3439754.js" type="text/javascript"></script>
+  <script src="//d3dupjkkwlat3o.cloudfront.net/assets/desktop-8225f8195ac59daece2a257654bdcf2a.js" type="text/javascript"></script>
+  <script src="//d3dupjkkwlat3o.cloudfront.net/assets/desktop/base-5051800ccd7d15878a17518d1f211cc4.js" type="text/javascript"></script>
+  <script src="//d3dupjkkwlat3o.cloudfront.net/assets/desktop/search-f05264ff476d1ea36a2bf0f59cc307d0.js" type="text/javascript"></script>
+  <script src="//d3dupjkkwlat3o.cloudfront.net/assets/desktop/note-aea7bd960f08eac442cfda6871e5f578.js" type="text/javascript"></script>
+  <script src="//d3dupjkkwlat3o.cloudfront.net/assets/desktop/maps-8684b9eb8a433a935d5bf00fb930cf75.js" type="text/javascript"></script>
+  <script src="//d3dupjkkwlat3o.cloudfront.net/assets/desktop/home-cc0a100281c4108b93a033ff2e3c3e18.js" type="text/javascript"></script>
+  <script src="//d3dupjkkwlat3o.cloudfront.net/assets/desktop/news-ecfe770fefe41a8c83e257438bc16e49.js" type="text/javascript"></script>
+
+  <script type="text/javascript">FinderyApp.initialize();</script>
+
+  <!--[if lt IE 9]>
+  <script type="text/javascript"  src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+  <script type="text/javascript">
+   $(function() {
+     $('body').html('<div id="header"><h1><a href="/"><img alt="Findery" src="//d3dupjkkwlat3o.cloudfront.net/assets/logo-1b915cbf2419d8cfa293373c1a12d7aa.png" /></a></h1></div><div id="main"><div class="application_error warning" style="position:static;margin:80px auto;"><h1>You need a browser add-on…</h1><p>Your browser is not supported by Findery unless you install Google’s free <a href="http://www.google.com/chromeframe">Chrome Frame</a> add-on first. See you inside!</div></div>');
+     mixpanel.track('chrome frame prompt');
+     _gaq.push(["_trackEvent", "Page", "Chrome frame prompt"])
+     CFInstall.check({
+       mode:'overlay',
+       destination:'http://www.findery.com/'
+     });
+   });
+  </script>
+  <![endif]-->
+
+
+<script type="text/javascript">if (!NREUMQ.f) { NREUMQ.f=function() {
+NREUMQ.push(["load",new Date().getTime()]);
+var e=document.createElement("script");
+e.type="text/javascript";
+e.src=(("http:"===document.location.protocol)?"http:":"https:") + "//" +
+  "d1ros97qkrwjf5.cloudfront.net/42/eum/rum.js";
+document.body.appendChild(e);
+if(NREUMQ.a)NREUMQ.a();
+};
+NREUMQ.a=window.onload;window.onload=NREUMQ.f;
+};
+NREUMQ.push(["nrfj","beacon-1.newrelic.com","1acc2a1454","235813","JlsNRURcWA9SSklaVgxaTF9ZR1E=",0,206,new Date().getTime(),"","","","",""]);</script></body>
+</html>
