@@ -29,6 +29,7 @@ Discourse.AdminDashboardRoute = Discourse.Route.extend({
         });
         c.set('admins', d.admins);
         c.set('moderators', d.moderators);
+        c.set('blocked', d.blocked);
         c.set('top_referrers', d.top_referrers);
         c.set('top_traffic_sources', d.top_traffic_sources);
         c.set('top_referred_topics', d.top_referred_topics);

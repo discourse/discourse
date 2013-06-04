@@ -936,6 +936,7 @@ en:
         no_problems: "No problems were found."
         moderators: 'Moderators:'
         admins: 'Admins:'
+        blocked: 'Blocked:'
         private_messages_short: "PMs"
         private_messages_title: "Private Messages"
 
@@ -1037,6 +1038,7 @@ en:
           elder: 'Users at Trust Level 4 (Elder)'
           admins: 'Admin Users'
           moderators: 'Moderators'
+          blocked: 'Blocked Users'
 
       user:
         ban_failed: "Something went wrong banning this user {{error}}"

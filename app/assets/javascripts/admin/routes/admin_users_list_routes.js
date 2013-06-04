@@ -81,3 +81,17 @@ Discourse.AdminUsersListModeratorsRoute = Discourse.Route.extend({
     return this.controllerFor('adminUsersList').show('moderators');
   }
 });
+
+/**
+  Handles the route that lists blocked users.
+
+  @class AdminUsersListBlockedRoute
+  @extends Discourse.Route
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.AdminUsersListBlockedRoute = Discourse.Route.extend({
+  setupController: function() {
+    return this.controllerFor('adminUsersList').show('blocked');
+  }
+});

@@ -61,6 +61,7 @@ class User < ActiveRecord::Base
   scope :admins, ->{ where(admin: true) }
   scope :moderators, ->{ where(moderator: true) }
   scope :staff, ->{ where("moderator or admin ") }
+  scope :blocked, ->{ where(blocked: true) } # no index
 
   module NewTopicDuration
     ALWAYS = -1

@@ -35,6 +35,7 @@ Discourse.Route.buildRoutes(function() {
         this.route('pending', { path: '/pending' });
         this.route('admins', { path: '/admins' });
         this.route('moderators', { path: '/moderators' });
+        this.route('blocked', { path: '/blocked' });
         // Trust Levels:
         this.route('newuser', { path: '/newuser' });
         this.route('basic', { path: '/basic' });
