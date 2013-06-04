@@ -52,6 +52,23 @@ describe Topic do
     end
   end
 
+  context 'private message title' do
+    before do
+      SiteSetting.stubs(:min_topic_title_length).returns(15)
+      SiteSetting.stubs(:min_private_message_title_length).returns(3)
+    end
+
+    it 'allows shorter titles' do
+      pm = Fabricate.build(:private_message_topic, title: 'a' * SiteSetting.min_private_message_title_length)
+      expect(pm).to be_valid
+    end
+
+    it 'but not too short' do
+      pm = Fabricate.build(:private_message_topic, title: 'a')
+      expect(pm).to_not be_valid
+    end
+  end
+
   context 'topic title uniqueness' do
 
     let!(:topic) { Fabricate(:topic) }

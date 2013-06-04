@@ -156,4 +156,11 @@ describe SiteSetting do
       SiteSetting.post_length.should == (SiteSetting.defaults[:min_post_length]..SiteSetting.defaults[:max_post_length])
     end
   end
+
+  describe 'private_message_title_length' do
+    it 'returns a range of min/max pm topic title length' do
+      expect(SiteSetting.private_message_title_length).to eq(SiteSetting.defaults[:min_private_message_title_length]..SiteSetting.defaults[:max_topic_title_length])
+    end
+  end
+
 end

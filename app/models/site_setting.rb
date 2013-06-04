@@ -34,6 +34,7 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:max_post_length, 16000)
   client_setting(:min_topic_title_length, 15)
   client_setting(:max_topic_title_length, 255)
+  client_setting(:min_private_message_title_length, 2)
   client_setting(:allow_uncategorized_topics, true)
   client_setting(:min_search_term_length, 3)
   client_setting(:flush_timings_secs, 5)
@@ -225,6 +226,10 @@ class SiteSetting < ActiveRecord::Base
 
   def self.topic_title_length
     min_topic_title_length..max_topic_title_length
+  end
+
+  def self.private_message_title_length
+    min_private_message_title_length..max_topic_title_length
   end
 
   def self.post_length

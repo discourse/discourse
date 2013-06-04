@@ -39,8 +39,7 @@ class Topic < ActiveRecord::Base
   before_validation :sanitize_title
 
   validates :title, :presence => true,
-                    :length => {  :in => SiteSetting.topic_title_length,
-                                  :allow_blank => true },
+                    :topic_title_length => true,
                     :quality_title => { :unless => :private_message? },
                     :unique_among  => { :unless => Proc.new { |t| (SiteSetting.allow_duplicate_topic_titles? || t.private_message?) },
                                         :message => :has_already_been_used,
