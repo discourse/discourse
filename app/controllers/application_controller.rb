@@ -22,6 +22,7 @@ class ApplicationController < ActionController::Base
   before_filter :preload_json
   before_filter :check_xhr
   before_filter :set_locale
+  before_filter :redirect_to_login_if_required
 
   rescue_from Exception do |exception|
     unless [ ActiveRecord::RecordNotFound, ActionController::RoutingError,
@@ -278,6 +279,10 @@ class ApplicationController < ActionController::Base
 
     def ensure_logged_in
       raise Discourse::NotLoggedIn.new unless current_user.present?
+    end
+
+    def redirect_to_login_if_required
+      redirect_to :login if SiteSetting.login_required? && !current_user
     end
 
     def render_not_found_page(status=404)
