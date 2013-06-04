@@ -22,6 +22,7 @@
 
 //= require ../../app/assets/javascripts/locales/i18n
 //= require ../../app/assets/javascripts/discourse/helpers/i18n_helpers
+//= require ../../app/assets/javascripts/locales/en
 //= require ../../app/assets/javascripts/discourse
 
 // Stuff we need to load first

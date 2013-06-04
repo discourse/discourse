@@ -173,9 +173,19 @@ Handlebars.registerHelper('avatar', function(user, options) {
   @for Handlebars
 **/
 Handlebars.registerHelper('unboundDate', function(property, options) {
-  var dt;
-  dt = new Date(Ember.Handlebars.get(this, property, options));
+  var dt = new Date(Ember.Handlebars.get(this, property, options));
   return dt.format("long");
+});
+
+/**
+  Live refreshing age helper
+
+  @method unboundDate
+  @for Handlebars
+**/
+Handlebars.registerHelper('unboundAge', function(property, options) {
+  var dt = new Date(Ember.Handlebars.get(this, property, options));
+  return new Handlebars.SafeString(Discourse.Formatter.autoUpdatingRelativeAge(dt));
 });
 
 /**
@@ -285,7 +295,7 @@ Handlebars.registerHelper('date', function(property, options) {
     }
     displayDate = humanized;
     if (!leaveAgo) {
-        displayDate = (dt.millisecondsAgo()).duration();
+      displayDate = (dt.millisecondsAgo()).duration();
     }
   }
   return new Handlebars.SafeString("<span class='date' title='" + fullReadable + "'>" + displayDate + "</span>");

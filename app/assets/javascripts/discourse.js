@@ -141,6 +141,10 @@ Discourse = Ember.Application.createWithMixins({
         xhr.setRequestHeader('X-CSRF-Token', csrfToken);
       }
     });
+
+    setInterval(function(){
+      Discourse.Formatter.updateRelativeAge($('.relative-date'));
+    },60 * 1000);
   },
 
   /**
