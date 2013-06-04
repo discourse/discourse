@@ -841,13 +841,13 @@ en:
       text_body_template: "The import was successful."
 
     too_many_spam_flags:
-      subject_template: "Posts hidden due to community flagging"
+      subject_template: "Account blocked"
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that your posts have been hidden due to community flagging.
+        This is an automated message from %{site_name} to inform you that your posts have been automatically hidden because they were flagged by the community.
 
-        You will not be able to create any more posts unless a staff member unblocks your account.
+        As a precautionary measure, your new account has been blocked from creating new replies or topics until a staff member can review your account.
 
         For additional guidance, please refer to our [FAQ](%{base_url}/faq).
 
@@ -856,9 +856,9 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that we have removed the blocked status of your account after the community flagged your post(s).
+        This is an automated message from %{site_name} to inform you that your account has been unblocked after staff review.
 
-        You can start posting again.
+        You can now create new replies and topics again.
 
   unsubscribe_link: "If you'd like to unsubscribe from these emails, visit your [user preferences](%{user_preferences_url})."
 
