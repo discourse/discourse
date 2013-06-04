@@ -215,47 +215,47 @@ en:
         title: "invitasjoner"
         user: "Invitert Bruker"
         none: "{{username}} har ikke invitert noen brukere til siden."
-        redeemed: "Redeemed Invites"
-        redeemed_at: "Redeemed At"
-        pending: "Pending Invites"
-        topics_entered: "Topics Entered"
-        posts_read_count: "Posts Read"
-        rescind: "Remove Invitation"
-        rescinded: "Invite removed"
-        time_read: "Read Time"
-        days_visited: "Days Visited"
-        account_age_days: "Account age in days"
+        redeemed: "Løs inn invitasjoner"
+        redeemed_at: "Løst inn ved"
+        pending: "Ventende Invitasjoner"
+        topics_entered: "Emner Lagt Inn"
+        posts_read_count: "Innlegg Lest"
+        rescind: "Fjern Invitasjon"
+        rescinded: "Invitasjon Fjernet"
+        time_read: "Lesetid"
+        days_visited: "Dager Besøkt"
+        account_age_days: "Kontoalder i dager"
 
       password:
-        title: "Password"
-        too_short: "Your password is too short."
-        ok: "Your password looks good."
+        title: "Passord"
+        too_short: "Passordet ditt er for kort"
+        ok: "Passordet ditt ser bra ut"
 
       ip_address:
-        title: "Last IP Address"
+        title: "Siste IP Addresse"
       avatar:
-        title: "Avatar"
-        instructions: "We use <a href='https://gravatar.com' target='_blank'>Gravatar</a> for avatars based on your email"
+        title: "Profilbilde"
+        instructions: "Vi bruker <a href='https://gravatar.com' target='_blank'>Gravatar</a> basert på din email for profilbilder."
 
       filters:
-        all: "All"
+        all: "Alle"
 
       stream:
-        posted_by: "Posted by"
-        sent_by: "Sent by"
-        private_message: "private message"
-        the_topic: "the topic"
+        posted_by: "Poste av"
+        sent_by: "Sent av"
+        private_message: "private meldinger"
+        the_topic: "emnet"
 
-    loading: "Loading..."
-    close: "Close"
-    learn_more: "learn more..."
+    loading: "Laster..."
+    close: "Lukk"
+    learn_more: "lær mer..."
 
-    year: 'year'
-    year_desc: 'topics posted in the last 365 days'
-    month: 'month'
-    month_desc: 'topics posted in the last 30 days'
-    week: 'week'
-    week_desc: 'topics posted in the last 7 days'
+    year: 'år'
+    year_desc: 'emner postet i de siste 365 dager'
+    month: 'måned'
+    month_desc: 'emner postet i de siste 30 dager'
+    week: 'uke'
+    week_desc: 'emner postet i de siste 7 dager'
 
     first_post: First post
     mute: Mute
@@ -263,79 +263,79 @@ en:
     last_post: Last post
 
     best_of:
-      title: "Best Of"
-      enabled_description: You are currently viewing the "Best Of" view of this topic.
-      description: "There are <b>{{count}}</b> posts in this topic. That's a lot! Would you like to save time by showing only the best posts?"
-      enable: 'Switch to "Best Of" view'
-      disable: 'Cancel "Best Of"'
+      title: "De Beste"
+      enabled_description: You are currently viewing the "De Beste" view of this topic.
+      description: "Det er <b>{{count}}</b> innlegg i dette emnet. Det er mange! Will du spare tid ved å vise bare de beste innleggene?"
+      enable: 'Bytt til "De Beste" modus'
+      disable: 'Avslutt "De Beste"'
 
     private_message_info:
-      title: "Private Message"
-      invite: "Invite Others..."
+      title: "Private Meldinger"
+      invite: "Inviter Andre..."
 
     email: 'Email'
-    username: 'Username'
-    last_seen: 'Last Seen'
-    created: 'Created'
-    trust_level: 'Trust Level'
+    username: 'Brukernavn'
+    last_seen: 'Sist Sett'
+    created: 'Laget'
+    trust_level: 'Tillitsnivå'
 
     create_account:
-      title: "Create Account"
-      action: "Create one now!"
-      invite: "Don't have an account yet?"
+      title: "Lag Konto"
+      action: "Lag en nå!"
+      invite: "Har du ikke en konto ennå?"
       failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
 
     forgot_password:
-      title: "Forgot Password"
-      action: "I forgot my password"
-      invite: "Enter your username or email address, and we'll send you a password reset email."
-      reset: "Reset Password"
-      complete: "You should receive an email with instructions on how to reset your password shortly."
+      title: "Glemt Passord"
+      action: "Jeg glemte mitt passord"
+      invite: "Skriv inn ditt brukernavn eller e-postaddresse, så sender vi deg en email for å tilbakestille ditt passord."
+      reset: "Tilbakestill Passord"
+      complete: "Du burde snart motta en email med instruksjoner om hvordan du kan tilbakestille ditt passord."
 
     login:
-      title: "Log In"
-      username: "Login"
-      password: "Password"
-      email_placeholder: "email address or username"
-      error: "Unknown error"
-      reset_password: 'Reset Password'
-      logging_in: "Logging In..."
-      or: "Or"
-      authenticating: "Authenticating..."
-      awaiting_confirmation: "Your account is awaiting activation, use the forgot password link to issue another activation email."
-      awaiting_approval: "Your account has not been approved by a moderator yet. You will receive an email when it is approved."
-      not_activated: "You can't log in yet. We previously sent an activation email to you at <b>{{sentTo}}</b>. Please follow the instructions in that email to activate your account."
-      resend_activation_email: "Click here to send the activation email again."
-      sent_activation_email_again: "We sent another activation email to you at <b>{{currentEmail}}</b>. It might take a few minutes for it to arrive; be sure to check your spam folder."
+      title: "Logg Inn"
+      username: "Brukernavn"
+      password: "Passord"
+      email_placeholder: "email addresse eller brukernavn"
+      error: "Ukjent feil"
+      reset_password: 'Tilbakestill Passord'
+      logging_in: "Logger Inn..."
+      or: "Eller"
+      authenticating: "Autentiserer..."
+      awaiting_confirmation: "Din konto avventer aktivering. Bruk 'Glemt Passord' linken for å sende en ny emailfor aktivering."
+      awaiting_approval: "Din kont har ikkje blitt godkjent av en moderator enda. Du vil motta en email når den er godkjent."
+      not_activated: "Du kan ikke logge inn enda. Vi sente en email for aktivering til deg <b>{{sentTo}}</b>.. Vennligst følg instruksjonene i den emailen for å aktivere din konto."
+      resend_activation_email: "Klikk her for å sende emailen for aktivering igjen."
+      sent_activation_email_again: "Vi sendte deg enda en email for aktivering til <b>{{currentEmail}}</b>. Det kan ta noen minutter før den kommer fram; sørg for at du sjekker spamfolderen din."
       google:
-        title: "with Google"
-        message: "Authenticating with Google (make sure pop up blockers are not enabled)"
+        title: "med Google"
+        message: "Autentiserer med Google (sørg for at du tillater pop-up vindu)"
       twitter:
-        title: "with Twitter"
-        message: "Authenticating with Twitter (make sure pop up blockers are not enabled)"
+        title: "med Twitter"
+        message: "Autentiserer med Twitter (sørg for at du tillater pop-up vindu)"
       facebook:
-        title: "with Facebook"
-        message: "Authenticating with Facebook (make sure pop up blockers are not enabled)"
+        title: "med Facebook"
+        message: "Autentiserer med Facebook (sørg for at du tillater pop-up vindu)"
       cas:
-        title: "Log In with CAS"
-        message: "Authenticating with CAS (make sure pop up blockers are not enabled)"
+        title: "Logg in med CAS"
+        message: "Autentiserer med CAS (sørg for at du tillater pop-up vindu)"
       yahoo:
-        title: "with Yahoo"
-        message: "Authenticating with Yahoo (make sure pop up blockers are not enabled)"
+        title: "med Yahoo"
+        message: "Autentiserer med Yahoo (sørg for at du tillater pop-up vindu)"
       github:
-        title: "with GitHub"
-        message: "Authenticating with GitHub (make sure pop up blockers are not enabled)"
+        title: "med GitHub"
+        message: "Autentiserer med GitHub (sørg for at du tillater pop-up vindu)"
       persona:
-        title: "with Persona"
-        message: "Authenticating with Mozilla Persona (make sure pop up blockers are not enabled)"
+        title: "med Persona"
+        message: "Autentiserer med Mozilla Persona (sørg for at du tillater pop-up vindu)"
 
     composer:
-      posting_not_on_topic: "You are replying to the topic \"{{title}}\", but you are currently viewing a different topic."
-      saving_draft_tip: "saving"
-      saved_draft_tip: "saved"
-      saved_local_draft_tip: "saved locally"
-      similar_topics: "Your topic is similar to..."
-      drafts_offline: "drafts offline"
+      posting_not_on_topic: "Du svarer på emnet \"{{title}}\", men for øyeblikket ser du på et annet emne."
+      saving_draft_tip: "lagrer"
+      saved_draft_tip: "lagret"
+      saved_local_draft_tip: "lagret lokalt"
+      similar_topics: "Emnet ditt har likheter med..."
+      drafts_offline: "utkast offline"
 
       min_length:
         need_more_for_title: "{{n}} to go for the title"
