@@ -17,7 +17,13 @@
     {{/if}}
 
     {{topicStatus topic=this}}
-    {{{topicLink this}}}
+
+    {{#if Discourse.loginRequired}}
+      <a href='#' {{action showLogin}}>{{title}}</a>
+    {{else}}
+      {{{topicLink this}}}
+    {{/if}}
+
     {{#if unread}}
       <a href="{{lastReadUrl}}" class='badge unread badge-notification' title='{{i18n topic.unread_posts unread="unread"}}'>{{unread}}</a>
     {{/if}}
