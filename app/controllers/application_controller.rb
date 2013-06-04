@@ -97,21 +97,23 @@ class ApplicationController < ActionController::Base
 
   # If we are rendering HTML, preload the session data
   def preload_json
-    if request.format && request.format.html?
-      if guardian.current_user
-        guardian.current_user.sync_notification_channel_position
-      end
 
-      store_preloaded("site", Site.cached_json(current_user))
+    # We don't preload JSON on xhr or JSON request
+    return if request.xhr?
 
-      if current_user.present?
-        store_preloaded("currentUser", MultiJson.dump(CurrentUserSerializer.new(current_user, root: false)))
-
-        serializer = ActiveModel::ArraySerializer.new(TopicTrackingState.report([current_user.id]), each_serializer: TopicTrackingStateSerializer)
-        store_preloaded("topicTrackingStates", MultiJson.dump(serializer))
-      end
-      store_preloaded("siteSettings", SiteSetting.client_settings_json)
+    if guardian.current_user
+      guardian.current_user.sync_notification_channel_position
     end
+
+    store_preloaded("site", Site.cached_json(current_user))
+
+    if current_user.present?
+      store_preloaded("currentUser", MultiJson.dump(CurrentUserSerializer.new(current_user, root: false)))
+
+      serializer = ActiveModel::ArraySerializer.new(TopicTrackingState.report([current_user.id]), each_serializer: TopicTrackingStateSerializer)
+      store_preloaded("topicTrackingStates", MultiJson.dump(serializer))
+    end
+    store_preloaded("siteSettings", SiteSetting.client_settings_json)
   end
 
 
