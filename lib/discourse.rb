@@ -14,6 +14,9 @@ module Discourse
   # When something they want is not found
   class NotFound < Exception; end
 
+  # When a setting is missing
+  class SiteSettingMissing < Exception; end
+
   def self.cache
     @cache ||= Cache.new
   end
