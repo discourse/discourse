@@ -844,9 +844,9 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that your posts have been hidden as spam due to community flagging.
+        This is an automated message from %{site_name} to inform you that your posts have been hidden due to community flagging.
 
-        You will not be able to create any more posts unless a staff member determines that your posts are not spam.
+        You will not be able to create any more posts unless a staff member unblocks your account.
 
         For additional guidance, please refer to our [FAQ](%{base_url}/faq).
 
@@ -855,7 +855,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that we have removed the blocked status of your account after the community flagged your post(s) as spam.
+        This is an automated message from %{site_name} to inform you that we have removed the blocked status of your account after the community flagged your post(s).
 
         You can start posting again.
 
