@@ -1,6 +1,12 @@
 {{#with view.content}}
-  <a href='{{unbound url}}'>   
-    {{unbound title}}
-  </a>
+  {{#if Discourse.loginRequired}}
+    <a href='#' {{action showLogin}}>
+      {{unbound title}}
+    </a>
+  {{else}}
+    <a href='{{unbound url}}'>
+      {{unbound title}}
+    </a>
+  {{/if}}
 {{/with}}
 

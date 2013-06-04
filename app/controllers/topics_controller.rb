@@ -3,7 +3,6 @@ require_dependency 'promotion'
 
 class TopicsController < ApplicationController
 
-  # Avatar is an image request, not XHR
   before_filter :ensure_logged_in, only: [:timings,
                                           :destroy_timings,
                                           :update,
@@ -19,8 +18,11 @@ class TopicsController < ApplicationController
                                           :clear_pin,
                                           :autoclose]
 
+  before_filter :ensure_logged_in_if_required, only: :show
+
   before_filter :consider_user_for_promotion, only: :show
 
+  # Avatar is an image request, not XHR
   skip_before_filter :check_xhr, only: [:avatar, :show, :feed, :redirect_to_show]
   caches_action :avatar, cache_path: Proc.new {|c| "#{c.params[:post_number]}-#{c.params[:topic_id]}" }
 
@@ -257,5 +259,9 @@ class TopicsController < ApplicationController
         render_json_dump(topic_view_serializer)
       end
     end
+  end
+
+  def ensure_logged_in_if_required
+    ensure_logged_in if SiteSetting.login_required?
   end
 end

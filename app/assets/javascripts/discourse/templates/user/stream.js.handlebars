@@ -10,7 +10,10 @@
         <span class="type">{{unbound descriptionHtml}}</span>
       </div>
       <p class='excerpt'>
-      {{{unbound excerpt}}}
+        {{#if Discourse.loginRequired}}
+        {{else}}
+          {{{unbound excerpt}}}
+        {{/if}}
       </p>
       {{#each children}}
         <div class='child-actions'>
