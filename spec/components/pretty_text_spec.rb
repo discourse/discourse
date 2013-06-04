@@ -135,7 +135,7 @@ test
     end
 
     it "should insert a space between to Ps" do
-      PrettyText.excerpt("<p>a</p><p>b</p>",5).should == "a b "
+      PrettyText.excerpt("<p>a</p><p>b</p>",5).should == "a b"
     end
 
     it "should strip quotes" do

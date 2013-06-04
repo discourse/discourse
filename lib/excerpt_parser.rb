@@ -15,6 +15,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     catch(:done) do
       parser.parse(html) unless html.nil?
     end
+    me.excerpt.strip!
     me.excerpt
   end
 
