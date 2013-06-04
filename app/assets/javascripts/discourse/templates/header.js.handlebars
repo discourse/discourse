@@ -29,10 +29,34 @@
           {{/if}}
         </li>
         <li>
-          <a class='icon expand' href='#' data-dropdown="search-dropdown" title='{{i18n search.title}}'><i class='icon-search'></i></a>
+          {{#if Discourse.loginRequired}}
+            <a class='icon expand' href='#' {{action showLogin}}>
+              <i class='icon-search'></i>
+            </a>
+          {{else}}
+            <a class='icon expand'
+               href='#'
+               data-dropdown="search-dropdown"
+               title='{{i18n search.title}}'>
+               <i class='icon-search'></i>
+            </a>
+          {{/if}}
         </li>
         <li class='categories dropdown'>
-          <a class='icon' data-dropdown="site-map-dropdown" href="#" title='{{i18n site_map}}'><i class='icon-reorder'></i></a>
+          {{#if Discourse.loginRequired}}
+            <a class='icon'
+               href="#"
+               {{action showLogin}}>
+               <i class='icon-reorder'></i>
+            </a>
+          {{else}}
+            <a class='icon'
+               data-dropdown="site-map-dropdown"
+               href="#"
+               title='{{i18n site_map}}'>
+               <i class='icon-reorder'></i>
+            </a>
+          {{/if}}
           {{#if currentUser.site_flagged_posts_count}}
             <a href='/admin/flags/active' title='{{i18n notifications.total_flagged}}' class='badge-notification flagged-posts'>{{currentUser.site_flagged_posts_count}}</a>
           {{/if}}
