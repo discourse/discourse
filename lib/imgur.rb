@@ -1,27 +1,25 @@
 require 'rest_client'
-require 'image_size'
 
 module Imgur
 
-  def self.upload_file(file)
+  def self.store_file(file, image_info, upload_id)
+    raise Discourse::SiteSettingMissing.new("imgur_endpoint")   if SiteSetting.imgur_endpoint.blank?
+    raise Discourse::SiteSettingMissing.new("imgur_client_id")  if SiteSetting.imgur_client_id.blank?
+
+    @imgur_loaded = require 'imgur' unless @imgur_loaded
 
     blob = file.read
-    response = RestClient.post(SiteSetting.imgur_endpoint, { image: Base64.encode64(blob) }, { 'Authorization' => "Client-ID #{SiteSetting.imgur_client_id}" })
+
+    response = RestClient.post(
+      SiteSetting.imgur_endpoint, 
+      { image: Base64.encode64(blob) }, 
+      { 'Authorization' => "Client-ID #{SiteSetting.imgur_client_id}" }
+    )
 
     json = JSON.parse(response.body)['data'] rescue nil
 
     return nil if json.blank?
-
-    # Resize the image
-    image_info = FastImage.new(file, raise_on_failure: true)
-    width, height = ImageSizer.resize(*image_info.size)
-
-    {
-      url: json['link'],
-      filesize: File.size(file),
-      width: width,
-      height: height
-    }
+    return json['link']
   end
 
 end

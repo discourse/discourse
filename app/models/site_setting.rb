@@ -73,8 +73,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:crawl_images, !Rails.env.test?)
   setting(:enable_imgur, false)
   setting(:imgur_client_id, '')
-  setting(:imgur_client_secret, '')
-  setting(:imgur_endpoint, "http://api.imgur.com/3/image.json")
+  setting(:imgur_endpoint, "https://api.imgur.com/3/image.json")
   setting(:max_image_width, 690)
   client_setting(:category_featured_topics, 6)
   setting(:topics_per_page, 30)
@@ -165,7 +164,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:enable_s3_uploads, false)
   setting(:s3_access_key_id, '')
   setting(:s3_secret_access_key, '')
-  setting(:s3_region, 'us-west-1')
+  setting(:s3_region, '')
   setting(:s3_upload_bucket, '')
 
   setting(:default_trust_level, 0)
