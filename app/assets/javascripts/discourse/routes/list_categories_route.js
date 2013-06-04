@@ -8,6 +8,8 @@
 **/
 Discourse.ListCategoriesRoute = Discourse.Route.extend({
 
+  redirect: function() { Discourse.redirectIfLoginRequired(this); },
+
   events: {
 
     createCategory: function() {

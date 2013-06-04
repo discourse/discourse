@@ -168,6 +168,10 @@ Discourse = Ember.Application.createWithMixins({
     );
   }.property(),
 
+  redirectIfLoginRequired: function(route) {
+    if(this.get('loginRequired')) { route.transitionTo('login'); }
+  },
+
   /**
     Our own $.ajax method. Makes sure the .then method executes in an Ember runloop
     for performance reasons. Also automatically adjusts the URL to support installs

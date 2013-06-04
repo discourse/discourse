@@ -8,6 +8,8 @@
 **/
 Discourse.FilteredListRoute = Discourse.Route.extend({
 
+  redirect: function() { Discourse.redirectIfLoginRequired(this); },
+
   exit: function() {
     this._super();
 
