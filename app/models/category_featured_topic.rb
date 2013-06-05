@@ -17,7 +17,13 @@ class CategoryFeaturedTopic < ActiveRecord::Base
 
     CategoryFeaturedTopic.transaction do
       CategoryFeaturedTopic.delete_all(category_id: c.id)
-      query = TopicQuery.new(nil, per_page: SiteSetting.category_featured_topics)
+
+      # fake an admin
+      admin = User.new
+      admin.admin = true
+      admin.id = -1
+
+      query = TopicQuery.new(admin, per_page: SiteSetting.category_featured_topics)
       results = query.list_category(c)
       if results.present?
         results.topic_ids.each_with_index do |topic_id, idx|
