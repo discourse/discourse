@@ -507,6 +507,8 @@ en:
 
     # TODO: perhaps we need a way of protecting these settings for hosted solution, global settings ...
 
+    invite_only: "Public registration is disabled, new users must be invited"
+
     login_required: "Require authentication to read posts"
 
     enable_local_logins: "Enable local authentication"

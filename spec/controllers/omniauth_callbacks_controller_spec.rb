@@ -32,6 +32,17 @@ describe Users::OmniauthCallbacksController do
       response.should be_success
     end
 
+    context "when 'invite only' site setting is enabled" do
+      before { SiteSetting.stubs(:invite_only?).returns(true) }
+
+      it 'informs the user they are awaiting approval' do
+        xhr :get, :complete, provider: 'twitter', format: :json
+
+        expect(
+          JSON.parse(response.body)['awaiting_approval']
+        ).to be_true
+      end
+    end
   end
 
   describe 'facebook' do
