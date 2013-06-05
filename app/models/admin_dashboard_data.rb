@@ -106,9 +106,9 @@ class AdminDashboardData
   end
 
   def default_logo_check
-    if SiteSetting.logo_url =~ /d-logo-sketch\.png/ or
-        SiteSetting.logo_small_url =~ /d-logo-sketch-small\.png/ or
-        SiteSetting.favicon_url =~ /default-favicon\.png/
+    if SiteSetting.logo_url =~ /#{SiteSetting.defaults[:logo_url].split('/').last}/ or
+        SiteSetting.logo_small_url =~ /#{SiteSetting.defaults[:logo_small_url].split('/').last}/ or
+        SiteSetting.favicon_url =~ /#{SiteSetting.defaults[:favicon_url].split('/').last}/
       I18n.t('dashboard.default_logo_warning')
     end
   end

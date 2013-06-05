@@ -157,8 +157,8 @@ describe AdminDashboardData do
         expect(subject).to_not be_nil
       end
 
-      it 'returns a string when favicon_url contains default-favicon.png' do
-        SiteSetting.stubs(:favicon_url).returns('/discourse/images/default-favicon.png')
+      it 'returns a string when favicon_url contains default filename' do
+        SiteSetting.stubs(:favicon_url).returns("/prefix#{SiteSetting.defaults[:favicon_url]}")
         expect(subject).to_not be_nil
       end
 
@@ -178,8 +178,8 @@ describe AdminDashboardData do
         expect(subject).to_not be_nil
       end
 
-      it 'returns a string when logo_url contains d-logo-sketch.png' do
-        SiteSetting.stubs(:logo_url).returns('/discourse/images/d-logo-sketch.png')
+      it 'returns a string when logo_url contains default filename' do
+        SiteSetting.stubs(:logo_url).returns("/prefix#{SiteSetting.defaults[:logo_url]}")
         expect(subject).to_not be_nil
       end
 
