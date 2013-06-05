@@ -11,7 +11,7 @@ class UsersController < ApplicationController
   # we need to allow account creation with bad CSRF tokens, if people are caching, the CSRF token on the
   #  page is going to be empty, this means that server will see an invalid CSRF and blow the session
   #  once that happens you can't log in with social
-  skip_before_filter :verify_authenticity_token, only: [:create]
+  skip_before_filter :verify_authenticity_token, only: [:create, :check_username]
 
   def show
     @user = fetch_user_from_params
