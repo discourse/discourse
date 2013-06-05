@@ -66,6 +66,7 @@ Discourse.FlaggedPost = Discourse.Post.extend({
 Discourse.FlaggedPost.reopenClass({
   findAll: function(filter) {
     var result = Em.A();
+    result.set('loading', true);
     Discourse.ajax("/admin/flags/" + filter + ".json").then(function(data) {
       var userLookup = {};
       data.users.each(function(u) {
@@ -76,6 +77,7 @@ Discourse.FlaggedPost.reopenClass({
         f.userLookup = userLookup;
         result.pushObject(f);
       });
+      result.set('loading', false);
     });
     return result;
   }

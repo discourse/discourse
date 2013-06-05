@@ -1015,6 +1015,7 @@ en:
         flagged_by: "Flagged by"
         error: "Something went wrong"
         view_message: "view message"
+        no_results: "There are no flags."
 
       groups:
         title: "Groups"

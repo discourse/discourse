@@ -7,43 +7,51 @@
   </div>
 </div>
 
-<table class='admin-flags'>
-  <thead>
-    <tr>
-      <th class='user'></th>
-      <th class='excerpt'></th>
-      <th class='flaggers'>{{i18n admin.flags.flagged_by}}</th>
-      <th class='last-flagged'></th>
-      <th class='action'></th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#each flag in content}}
-    <tr {{bindAttr class="hiddenClass"}}>
-      <td class='user'>{{#linkTo 'adminUser' flag.user}}{{avatar flag.user imageSize="small"}}{{/linkTo}}</td>
-      <td class='excerpt'>{{#if flag.topicHidden}}<i title='{{i18n topic_statuses.invisible.help}}' class='icon icon-eye-close'></i> {{/if}}<h3><a href='{{unbound flag.url}}'>{{flag.title}}</a></h3><br>{{{flag.excerpt}}}
-      </td>
-      <td class='flaggers'>{{#each flag.flaggers}}{{#linkTo 'adminUser' this}}{{avatar this imageSize="small"}} {{/linkTo}}{{/each}}</td>
-      <td class='last-flagged'>{{date flag.lastFlagged}}</td>
-      <td class='action'>
-        {{#if adminActiveFlagsView}}
-          <button title='{{i18n admin.flags.clear_title}}' class='btn' {{action clearFlags flag}}>{{i18n admin.flags.clear}}</button>
-          <button title='{{i18n admin.flags.delete_title}}' class='btn' {{action deletePost flag}}>{{i18n admin.flags.delete}}</button>
-        {{/if}}
-      </td>
-    </tr>
-
-      {{#each flag.messages}}
+{{#if model.loading}}
+  <div class='admin-loading'>{{i18n loading}}</div>
+{{else}}
+  {{#if model.length}}
+    <table class='admin-flags'>
+      <thead>
         <tr>
-          <td></td>
-          <td class='message'>
-            <div>{{#linkTo 'adminUser' user}}{{avatar user imageSize="small"}}{{/linkTo}} {{message}} <a href="{{unbound permalink}}">{{i18n admin.flags.view_message}}</a></div>
-          </td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <th class='user'></th>
+          <th class='excerpt'></th>
+          <th class='flaggers'>{{i18n admin.flags.flagged_by}}</th>
+          <th class='last-flagged'></th>
+          <th class='action'></th>
         </tr>
-      {{/each}}
-    {{/each}}
-  </tbody>
-</table>
+      </thead>
+      <tbody>
+        {{#each flag in content}}
+        <tr {{bindAttr class="hiddenClass"}}>
+          <td class='user'>{{#linkTo 'adminUser' flag.user}}{{avatar flag.user imageSize="small"}}{{/linkTo}}</td>
+          <td class='excerpt'>{{#if flag.topicHidden}}<i title='{{i18n topic_statuses.invisible.help}}' class='icon icon-eye-close'></i> {{/if}}<h3><a href='{{unbound flag.url}}'>{{flag.title}}</a></h3><br>{{{flag.excerpt}}}
+          </td>
+          <td class='flaggers'>{{#each flag.flaggers}}{{#linkTo 'adminUser' this}}{{avatar this imageSize="small"}} {{/linkTo}}{{/each}}</td>
+          <td class='last-flagged'>{{date flag.lastFlagged}}</td>
+          <td class='action'>
+            {{#if adminActiveFlagsView}}
+              <button title='{{i18n admin.flags.clear_title}}' class='btn' {{action clearFlags flag}}>{{i18n admin.flags.clear}}</button>
+              <button title='{{i18n admin.flags.delete_title}}' class='btn' {{action deletePost flag}}>{{i18n admin.flags.delete}}</button>
+            {{/if}}
+          </td>
+        </tr>
+
+          {{#each flag.messages}}
+            <tr>
+              <td></td>
+              <td class='message'>
+                <div>{{#linkTo 'adminUser' user}}{{avatar user imageSize="small"}}{{/linkTo}} {{message}} <a href="{{unbound permalink}}">{{i18n admin.flags.view_message}}</a></div>
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          {{/each}}
+        {{/each}}
+      </tbody>
+    </table>
+  {{else}}
+    <p>{{i18n admin.flags.no_results}}</p>
+  {{/if}}
+{{/if}}
