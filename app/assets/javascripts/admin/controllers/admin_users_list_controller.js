@@ -118,6 +118,7 @@ Discourse.AdminUsersListController = Ember.ArrayController.extend(Discourse.Pres
   **/
   approveUsers: function() {
     Discourse.AdminUser.bulkApprove(this.get('content').filterProperty('selected'));
+    this.refreshUsers();
   }
 
 });
