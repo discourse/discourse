@@ -28,6 +28,8 @@ class Users::OmniauthCallbacksController < ApplicationController
     # Call the appropriate logic
     send("create_or_sign_on_user_using_#{provider}", request.env["omniauth.auth"])
 
+    @data[:awaiting_approval] = true if invite_only?
+
     respond_to do |format|
       format.html
       format.json { render json: @data }
@@ -316,4 +318,9 @@ class Users::OmniauthCallbacksController < ApplicationController
 
   end
 
+  private
+
+  def invite_only?
+    SiteSetting.invite_only? && !@data[:authenticated]
+  end
 end
