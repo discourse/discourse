@@ -35,8 +35,7 @@ gem 'image_optim'
 # note: for image_sorcery to correctly work you need
 # sudo apt-get install -y imagemagick
 gem 'image_sorcery'
-# it patches stuff, I think we need it in prd
-gem 'jquery-rails'
+gem 'jquery-rails', '2.1.4' # includes jquery 1.8.3
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
