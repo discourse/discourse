@@ -38,6 +38,7 @@ strict:   false     # true if the ES5 "use strict"; pragma is required
 undef:    true      # true if variables must be declared before used
 white:    false     # true if strict whitespace rules apply (see also 'indent' option)
 eqnull:   false
+onecase:  true     # allow for one case switches, can be more elegant sometimes
 
 # "allow" type options (false means potentially more warnings)
 
