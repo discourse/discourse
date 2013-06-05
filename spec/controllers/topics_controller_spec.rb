@@ -435,6 +435,25 @@ describe TopicsController do
 
     end
 
+    context "when 'login required' site setting has been enabled" do
+      before { SiteSetting.stubs(:login_required?).returns(true) }
+
+      context 'and the user is logged in' do
+        before { log_in(:coding_horror) }
+
+        it 'shows the topic' do
+          get :show, topic_id: topic.id, slug: topic.slug
+          expect(response).to be_successful
+        end
+      end
+
+      context 'and the user is not logged in' do
+        it 'redirects to the login page' do
+          get :show, topic_id: topic.id, slug: topic.slug
+          expect(response).to redirect_to login_path
+        end
+      end
+    end
   end
 
   describe '#feed' do

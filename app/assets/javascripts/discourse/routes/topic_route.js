@@ -8,6 +8,8 @@
 **/
 Discourse.TopicRoute = Discourse.Route.extend({
 
+  redirect: function() { Discourse.redirectIfLoginRequired(this); },
+
   events: {
     // Modals that can pop up within a topic
 
