@@ -4,6 +4,7 @@ class SessionController < ApplicationController
   #  page is going to be empty, this means that server will see an invalid CSRF and blow the session
   #  once that happens you can't log in with social
   skip_before_filter :verify_authenticity_token, only: [:create]
+  skip_before_filter :redirect_to_login_if_required
 
   def create
     requires_parameter(:login, :password)

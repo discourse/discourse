@@ -24,4 +24,26 @@ describe StaticController do
     end
   end
 
+  describe '#enter' do
+    context 'without a redirect path' do
+      it 'redirects to the root url' do
+        xhr :post, :enter
+        expect(response).to redirect_to root_path
+      end
+    end
+
+    context 'with a redirect path' do
+      it 'redirects to the redirect path' do
+        xhr :post, :enter, redirect: '/foo'
+        expect(response).to redirect_to '/foo'
+      end
+    end
+
+    context 'when the redirect path is the login page' do
+      it 'redirects to the root url' do
+        xhr :post, :enter, redirect: login_path
+        expect(response).to redirect_to root_path
+      end
+    end
+  end
 end

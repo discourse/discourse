@@ -1,6 +1,6 @@
 class StaticController < ApplicationController
 
-  skip_before_filter :check_xhr
+  skip_before_filter :check_xhr, :redirect_to_login_if_required
 
   def show
 
@@ -30,8 +30,13 @@ class StaticController < ApplicationController
   def enter
     params.delete(:username)
     params.delete(:password)
-    redirect_to(params[:redirect] || '/')
+
+    redirect_to(
+      if params[:redirect].blank? || params[:redirect].match(login_path)
+        root_path
+      else
+        params[:redirect]
+      end
+    )
   end
-
-
 end
