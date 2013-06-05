@@ -140,14 +140,29 @@ describe PostDestroyer do
     end
   end
 
-  describe "flag counts" do
+  describe "post actions" do
     let(:codinghorror) { Fabricate(:coding_horror) }
     let(:bookmark) { PostAction.new(user_id: post.user_id, post_action_type_id: PostActionType.types[:bookmark] , post_id: post.id) }
+    let(:second_post) { Fabricate(:post, topic_id: post.topic_id) }
 
     it "should reset counts when a post is deleted" do
-      second_post = Fabricate(:post, topic_id: post.topic_id)
       PostAction.act(codinghorror, second_post, PostActionType.types[:off_topic])
-      -> { PostDestroyer.new(moderator, second_post).destroy }.should change(PostAction, :flagged_posts_count).by(-1)
+      expect { PostDestroyer.new(moderator, second_post).destroy }.to change(PostAction, :flagged_posts_count).by(-1)
+    end
+
+    it "should delete the post actions" do
+      flag = PostAction.act(codinghorror, second_post, PostActionType.types[:off_topic])
+      PostDestroyer.new(moderator, second_post).destroy
+      expect(PostAction.where(id: flag.id).first).to be_nil
+      expect(PostAction.where(id: bookmark.id).first).to be_nil
+    end
+
+    it 'should update flag counts on the post' do
+      PostAction.act(codinghorror, second_post, PostActionType.types[:off_topic])
+      PostDestroyer.new(moderator, second_post.reload).destroy
+      second_post.reload
+      expect(second_post.off_topic_count).to eq(0)
+      expect(second_post.bookmark_count).to eq(0)
     end
   end
 

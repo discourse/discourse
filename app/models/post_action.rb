@@ -71,7 +71,6 @@ class PostAction < ActiveRecord::Base
     f = actions.map{|t| ["#{PostActionType.types[t]}_count", 0]}
     Post.with_deleted.update_all(Hash[*f.flatten], id: post.id)
     update_flagged_posts_count
-    # TODO: SpamRulesEnforcer.enforce!(post.user)
   end
 
   def self.act(user, post, post_action_type_id, opts={})

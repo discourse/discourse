@@ -208,12 +208,10 @@ describe User do
 
     it 'allows moderator to delete all posts' do
       @user.delete_all_posts!(@guardian)
+      expect(Post.where(id: @posts.map(&:id)).all).to be_empty
       @posts.each do |p|
-        p.reload
-        if p
-          p.topic.should be_nil
-        else
-          p.should be_nil
+        if p.post_number == 1
+          expect(Topic.where(id: p.topic_id).first).to be_nil
         end
       end
     end

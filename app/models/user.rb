@@ -4,6 +4,7 @@ require_dependency 'trust_level'
 require_dependency 'pbkdf2'
 require_dependency 'summarize'
 require_dependency 'discourse'
+require_dependency 'post_destroyer'
 
 class User < ActiveRecord::Base
   attr_accessible :name, :username, :password, :email, :bio_raw, :website
@@ -445,13 +446,7 @@ class User < ActiveRecord::Base
     raise Discourse::InvalidAccess unless guardian.can_delete_all_posts? self
 
     posts.order("post_number desc").each do |p|
-      if p.post_number == 1
-        p.topic.trash!
-        # TODO: But the post is not destroyed. Why?
-      else
-        # TODO: This should be using the PostDestroyer!
-        p.trash!
-      end
+      PostDestroyer.new(guardian.user, p).destroy
     end
   end
 

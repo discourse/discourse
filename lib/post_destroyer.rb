@@ -37,9 +37,15 @@ class PostDestroyer
       # Feature users in the topic
       Jobs.enqueue(:feature_topic_users, topic_id: @post.topic_id, except_post_id: @post.id)
 
+      @post.post_actions.map(&:trash!)
+
+      f = PostActionType.types.map{|k,v| ["#{k}_count", 0]}
+      Post.with_deleted.update_all(Hash[*f.flatten], id: @post.id)
+
       @post.trash!
 
       Topic.reset_highest(@post.topic_id)
+
       @post.update_flagged_posts_count
 
       # Remove any reply records that point to deleted posts
@@ -52,6 +58,8 @@ class PostDestroyer
 
       # Remove any notifications that point to this deleted post
       Notification.delete_all topic_id: @post.topic_id, post_number: @post.post_number
+
+      @post.topic.trash! if @post.post_number == 1
     end
   end
 
