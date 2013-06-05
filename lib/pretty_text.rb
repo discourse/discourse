@@ -213,17 +213,18 @@ module PrettyText
   end
 
   def self.extract_links(html)
-    doc = Nokogiri::HTML.fragment(html)
     links = []
-    doc.css("a").each do |l|
-      links << l.attributes["href"].to_s
-    end
-
+    doc = Nokogiri::HTML.fragment(html)
+    # remove href inside quotes
+    doc.css("aside.quote a").each { |l| l["href"] = "" }
+    # extract all links from the post
+    doc.css("a").each { |l| links << l["href"] unless l["href"].empty? }
+    # extract links to quotes
     doc.css("aside.quote").each do |a|
-      topic_id = a.attributes['data-topic']
+      topic_id = a['data-topic']
 
       url = "/t/topic/#{topic_id}"
-      if post_number = a.attributes['data-post']
+      if post_number = a['data-post']
         url << "/#{post_number}"
       end
 

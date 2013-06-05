@@ -162,6 +162,17 @@ test
       PrettyText.extract_links("<aside class=\"quote\" data-topic=\"1234\" data-post=\"4567\">aside</aside>").to_a.should == ["/t/topic/1234/4567"]
     end
 
+    it "should not extract links inside quotes" do
+      PrettyText.extract_links("
+        <a href='http://body_only.com'>http://useless1.com</a>
+        <aside class=\"quote\" data-topic=\"1234\">
+          <a href='http://body_and_quote.com'>http://useless3.com</a>
+          <a href='http://quote_only.com'>http://useless4.com</a>
+        </aside>
+        <a href='http://body_and_quote.com'>http://useless2.com</a>
+        ").to_a.should == ["http://body_only.com", "http://body_and_quote.com", "/t/topic/1234"]
+    end
+
     it "should not preserve tags in code blocks" do
       PrettyText.excerpt("<pre><code class='handlebars'>&lt;h3&gt;Hours&lt;/h3&gt;</code></pre>",100).should == "&lt;h3&gt;Hours&lt;/h3&gt;"
     end
