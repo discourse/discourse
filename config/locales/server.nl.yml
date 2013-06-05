@@ -408,6 +408,11 @@ nl:
     welcome_invite:
       title: "Welkom: Uitgenodigd lid"
       description: "Een privé-bericht dat automatisch naar alle nieuwe leden wordt gestuurd als ze ingaan op de uitnodiging om aan het forum deel te nemen door een ander lid."
+
+    login_required_welcome_message:
+      title: "Inloggen vereist: Welkomstbericht"
+      description: "Welcomstbericht dat getoond wordt aan uitgelogde gebruikers als 'login required' is ingesteld."
+
     tos_user_content_license:
       title: "Algemene voorwaarden: Inhoudslicensie"
       description: "De tekst van de Inhoudslicentie van de Algemene Voorwaarden."
@@ -421,6 +426,7 @@ nl:
     max_post_length: maximum lengte van een bericht in tekens
     min_topic_title_length: minimum lengte van een topic-titel
     max_topic_title_length: maximum lengte van een topic-titel
+    min_private_message_title_length: minimum lengte van de titel van een privebericht in tekens
     min_search_term_length: minimum lengte van een zoekterm in tekens
     allow_uncategorized_topics: Sta topics zonder categorie toe
     allow_duplicate_topic_titles: Sta topics met dezelfde titels toe
@@ -473,6 +479,8 @@ nl:
 
     flags_required_to_hide_post: "Berichten zullen automatisch worden verborgen zodra het aantal meldingen maximaal dit aantal is (0 voor nooit)"
     cooldown_minutes_after_hiding_posts: "Hoeveel minuten moet iemand wachten voordat zij hun bericht kunnen wijzigen nadat het is verborgen door meldingen"
+    num_flags_to_block_new_user: "Als de berichten van een nieuwe gebruiker dit aantal spammarkeringen krijgen van (n) verschillende gebruikers, verberg dan alle berichten van deze gebruiker en houdt nieuwe berichten tegen. 0 om deze mogelijkheid uit te zetten."
+    num_users_to_block_new_user: "Als de berichten van een nieuwe gebruiker (x) spammarkeringen krijgen van andere gebruikers, verberg dan alle berichten van deze gebruiker en houdt nieuwe berichten tegen. 0 om deze mogelijkheid uit te zetten."
 
     traditional_markdown_linebreaks: "Gebruik traditionele regeleinden in Markdown, gebruik 2 spaties voor een nieuw regeleinde"
     post_undo_action_window_mins: "Het tijdsbestek waarin iemand een actie binnen een bericht kan terugdraaien (zoals 'vind ik leuk')"
@@ -499,6 +507,8 @@ nl:
     invite_expiry_days: "Hoe lang uitnodigingscodes geldig blijven (in dagen)."
 
     # TODO: perhaps we need a way of protecting these settings for hosted solution, global settings ...
+
+    login_required: Inloggen vereist om berichten te kunnen lezen
 
     enable_local_logins: Zet lokaal inloggen aan
     enable_local_account_create: Zet lokaal account aanmaken aan
@@ -836,6 +846,26 @@ nl:
       subject_template: Import succesvol uitgevoerd
       text_body_template: De import was succesvol uitgevoerd.
 
+    too_many_spam_flags:
+      subject_template: Account geblokkeerd
+      text_body_template: |
+        Hallo,
+
+        Dit is een automatisch bericht van %{site_name} om je te informeren dat je berichten verborgen zijn omdat ze gemarkeerd zijn door de community.
+
+        Uit voorzorg is je nieuwe account geblokkeerd waardoor je geen berichten meer kan plaatsen tot iemand van de staf je account opnieuw beoordeeld.
+
+        Kijk voor verdere uitleg in de [FAQ](%{base_url}/faq).
+
+    unblocked:
+      subject_template: Account gedeblokkeerd
+      text_body_template: |
+        HAllo,
+
+        Dit is een automatisch bericht van %{site_name} om je te informeren dat je account gedeblokkeerd is.
+
+        Je kunt weer berichten plaatsen
+
   unsubscribe_link: "Mocht je deze e-mails niet langer willen ontvangen, bezoek dan [je gebruikersinstellingen](%{user_preferences_url})."
 
   user_notifications:
@@ -951,6 +981,11 @@ nl:
     see_more: Meer
     search_title: Zoek deze topic
     search_google: Zoek met Google
+
+  login_required:
+    welcome_message: |
+      #[Welkom op het forum %{title}](#welcome)
+      Leuk dat je interesse hebt in %{title}. Maak een account of log in om verder te gaan.
 
   terms_of_service:
     user_content_license: |
