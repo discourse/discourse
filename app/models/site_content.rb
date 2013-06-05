@@ -17,6 +17,7 @@ class SiteContent < ActiveRecord::Base
   add_content_type :education_new_reply, default_18n_key: 'education.new-reply'
   add_content_type :tos_user_content_license, default_18n_key: 'terms_of_service.user_content_license'
   add_content_type :tos_miscellaneous, default_18n_key: 'terms_of_service.miscellaneous'
+  add_content_type :login_required_welcome_message, default_18n_key: 'login_required.welcome_message'
 
   def site_content_type
     @site_content_type ||= SiteContent.content_types.find {|t| t.content_type == content_type.to_sym}

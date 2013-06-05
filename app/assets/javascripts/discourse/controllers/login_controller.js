@@ -139,7 +139,11 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
     }
     // Reload the page if we're authenticated
     if (options.authenticated) {
-      window.location.reload();
+      if (window.location.pathname === '/login') {
+        window.location.pathname = '/';
+      } else {
+        window.location.reload();
+      }
       return;
     }
 
