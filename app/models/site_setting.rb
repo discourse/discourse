@@ -134,6 +134,8 @@ class SiteSetting < ActiveRecord::Base
 
   setting(:send_welcome_message, true)
 
+  client_setting(:invite_only, false)
+
   client_setting(:login_required, false)
 
   client_setting(:enable_local_logins, true)
