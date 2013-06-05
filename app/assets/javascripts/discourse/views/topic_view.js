@@ -511,11 +511,16 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     var newTopics = tracking.countNew();
 
     if (newTopics + unreadTopics > 0) {
-      if(category) {
-        return I18n.messageFormat("topic.read_more_in_category_MF", {"UNREAD": unreadTopics, "NEW": newTopics, catLink: opts.catLink})
-      } else {
-        return I18n.messageFormat("topic.read_more_MF", {"UNREAD": unreadTopics, "NEW": newTopics, latestLink: opts.latestLink})
-      }
+      var hasBoth = unreadTopics > 0 && newTopics > 0;
+
+      return I18n.messageFormat("topic.read_more_MF", {
+        "BOTH": hasBoth,
+        "UNREAD": unreadTopics,
+        "NEW": newTopics,
+        "CATEGORY": category ? true : false,
+        latestLink: opts.latestLink,
+        catLink: opts.catLink
+      });
     }
     else if (category) {
       return Ember.String.i18n("topic.read_more_in_category", opts);

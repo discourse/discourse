@@ -543,8 +543,20 @@ en:
       read_more: "Want to read more? {{catLink}} or {{latestLink}}."
 
       # keys ending with _MF use message format, see /spec/components/js_local_helper_spec.rb for samples
-      read_more_in_category_MF: "There {UNREAD, plural, one {is <a href='/unread'>1 unread</a>} other {are <a href='/unread'># unread</a>}} and {NEW, plural, one {<a href='/new'>1 new</a> topic} other {<a href='/new'># new</a> topics}} remaining, or browse other topics in {catLink}"
-      read_more_MF: "There {UNREAD, plural, one {is <a href='/unread'>1 unread</a>} other {are <a href='/unread'># unread</a>}} and {NEW, plural, one {<a href='/new'>1 new</a> topic} other {<a href='/new'># new</a> topics}} remaining, or {latestLink}"
+      read_more_MF: "There {
+        UNREAD, plural,
+        =0 {}
+        one {
+          is <a href='/unread'>1 unread</a>
+        } other {
+          are <a href='/unread'># unread</a>
+        }
+        } {
+          NEW, plural,
+            =0 {}
+            one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic}
+            other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics}
+        } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}} "
 
       browse_all_categories: Browse all categories
 
