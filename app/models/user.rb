@@ -433,13 +433,12 @@ class User < ActiveRecord::Base
   def bio_excerpt
     excerpt = PrettyText.excerpt(bio_cooked, 350)
     return excerpt if excerpt.blank? || has_trust_level?(:basic)
+    PrettyText.strip_links(excerpt)
+  end
 
-    # If the user is not basic, strip links from their bio
-    fragment = Nokogiri::HTML.fragment(excerpt)
-    fragment.css('a').each do |a|
-      a.replace(a.text)
-    end
-    fragment.to_html
+  def bio_processed
+    return bio_cooked if bio_cooked.blank? || has_trust_level?(:basic)
+    PrettyText.strip_links(bio_cooked)
   end
 
   def delete_all_posts!(guardian)

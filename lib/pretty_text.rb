@@ -239,6 +239,15 @@ module PrettyText
     ExcerptParser.get_excerpt(html, max_length, options)
   end
 
+  def self.strip_links(string)
+    return string if string.blank?
+
+    # If the user is not basic, strip links from their bio
+    fragment = Nokogiri::HTML.fragment(string)
+    fragment.css('a').each {|a| a.replace(a.text) }
+    fragment.to_html
+  end
+
   protected
 
   def self.ctx_load(*files)

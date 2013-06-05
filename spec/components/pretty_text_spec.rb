@@ -183,6 +183,19 @@ test
 
   end
 
+  describe "strip links" do
+    it "returns blank for blank input" do
+      expect(PrettyText.strip_links("")).to be_blank
+    end
+
+    it "does nothing to a string without links" do
+      expect(PrettyText.strip_links("I'm the <b>batman</b>")).to eq("I'm the <b>batman</b>")
+    end
+
+    it "strips links but leaves the text content" do
+      expect(PrettyText.strip_links("I'm the linked <a href='http://en.wikipedia.org/wiki/Batman'>batman</a>")).to eq("I'm the linked batman")
+    end
+  end
 
   describe "apply cdn" do
     it "should detect bare links to images and apply a CDN" do

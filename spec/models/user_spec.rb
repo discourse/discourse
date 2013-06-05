@@ -836,7 +836,7 @@ describe User do
 
   end
 
-  describe "bio_excerpt" do
+  describe "bio link stripping" do
 
     it "returns an empty string with no bio" do
       expect(Fabricate.build(:user).bio_excerpt).to be_blank
@@ -852,11 +852,13 @@ describe User do
 
       it "includes the link if the user is not new" do
         expect(user.bio_excerpt).to eq("im sissy and i love <a href='http://ponycorns.com' rel='nofollow'>http://ponycorns.com</a>")
+        expect(user.bio_processed).to eq("<p>im sissy and i love <a href=\"http://ponycorns.com\" rel=\"nofollow\">http://ponycorns.com</a></p>")
       end
 
       it "removes the link if the user is new" do
         user.trust_level = TrustLevel.levels[:newuser]
         expect(user.bio_excerpt).to eq("im sissy and i love http://ponycorns.com")
+        expect(user.bio_processed).to eq("<p>im sissy and i love http://ponycorns.com</p>")
       end
     end
 
