@@ -30,15 +30,14 @@ describe TopicLink do
       TopicLink.extract_from(@post)
     end
 
-    it 'has the forum topic links' do
+    it 'works' do
+      # has the forum topic links
       @topic.topic_links.count.should == 4
-    end
 
-    it 'works with markdown links' do
+      # works with markdown links
       @topic.topic_links.exists?(url: "http://forumwarz.com").should be_true
-    end
 
-    it 'works with markdown links followed by a period' do
+      #works with markdown links followed by a period
       @topic.topic_links.exists?(url: "http://www.codinghorror.com/blog").should be_true
     end
 
@@ -63,14 +62,12 @@ describe TopicLink do
         @link = @topic.topic_links.first
       end
 
-      it "should have a link" do
+      it 'works' do
+        # should have a link
         @link.should be_present
-      end
-
-      it "should be the canonical URL" do
+        # should be the canonical URL
         @link.url.should == @url
       end
-
 
     end
 
@@ -89,27 +86,23 @@ describe TopicLink do
         @link = @topic.topic_links.first
       end
 
-      it 'extracted the link' do
+      it 'works' do
+        # extracted the link
         @link.should be_present
-      end
 
-      it 'is set to internal' do
+        # is set to internal
         @link.should be_internal
-      end
 
-      it 'has the correct url' do
+        # has the correct url
         @link.url.should == @url
-      end
 
-      it 'has the extracted domain' do
+        # has the extracted domain
         @link.domain.should == test_uri.host
-      end
 
-      it 'should have the id of the linked forum' do
+        # should have the id of the linked forum
         @link.link_topic_id == @other_topic.id
-      end
 
-      it 'should not be the reflection' do
+        # should not be the reflection
         @link.should_not be_reflection
       end
 
@@ -119,35 +112,17 @@ describe TopicLink do
           @reflection = @other_topic.topic_links.first
         end
 
-        it 'exists' do
+        it 'works' do
+          # exists
           @reflection.should be_present
-        end
-
-        it 'is a reflection' do
           @reflection.should be_reflection
-        end
-
-        it 'has a post_id' do
           @reflection.post_id.should be_present
-        end
-
-        it 'has the correct host' do
           @reflection.domain.should == test_uri.host
-        end
-
-        it 'has the correct url' do
           @reflection.url.should == "http://#{test_uri.host}/t/unique-topic-name/#{@topic.id}/#{@post.post_number}"
-        end
-
-        it 'links to the original forum topic' do
           @reflection.link_topic_id.should == @topic.id
-        end
-
-        it 'links to the original post' do
           @reflection.link_post_id.should == @post.id
-        end
 
-        it 'has the user id of the original link' do
+          #has the user id of the original link
           @reflection.user_id.should == @link.user_id
         end
       end
@@ -161,14 +136,10 @@ describe TopicLink do
 
         it 'should remove the link' do
           @topic.topic_links.where(post_id: @post.id).should be_blank
-        end
-
-        it 'should remove the reflected link' do
+          # should remove the reflected link
           @reflection = @other_topic.topic_links.should be_blank
         end
-
       end
-
     end
 
     context "link to a user on discourse" do
