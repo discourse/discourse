@@ -1,4 +1,4 @@
-{{#if loaded}}
+
   <h3>{{model.title}}</h3>
   <p class='description'>{{model.description}}</p>
 
@@ -30,7 +30,3 @@
     </button>
     {{#if saved}}{{i18n saved}}{{/if}}
   </div>
-
-{{else}}
-  <div class='spinner'>{{i18n loading}}</div>
-{{/if}}
