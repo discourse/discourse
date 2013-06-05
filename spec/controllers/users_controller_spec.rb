@@ -298,7 +298,7 @@ describe UsersController do
         User.any_instance.stubs(:active?).returns(true)
       end
 
-      it 'should enqueue a signup email' do
+      it 'enqueues a welcome email' do
         User.any_instance.expects(:enqueue_welcome_message).with('welcome_user')
         xhr :post, :create, name: @user.name, username: @user.username,
                             password: "strongpassword", email: @user.email
