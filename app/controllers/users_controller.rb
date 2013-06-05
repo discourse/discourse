@@ -145,16 +145,7 @@ class UsersController < ApplicationController
   end
 
   def create
-
-    if honeypot_or_challenge_fails?(params)
-      # Don't give any indication that we caught you in the honeypot
-      honey_pot_response = {
-        success: true,
-        active: false,
-        message: I18n.t("login.activate_email", email: params[:email])
-      }
-      return render(json: honey_pot_response)
-    end
+    return fake_success_reponse if suspicious? params
 
     user = User.new_from_params(params)
 
@@ -347,6 +338,20 @@ class UsersController < ApplicationController
 
     def challenge_value
       '3019774c067cc2b'
+    end
+
+    def suspicious?(params)
+      honeypot_or_challenge_fails?(params) || SiteSetting.invite_only?
+    end
+
+    def fake_success_reponse
+      render(
+        json: {
+          success: true,
+          active: false,
+          message: I18n.t("login.activate_email", email: params[:email])
+        }
+      )
     end
 
     def honeypot_or_challenge_fails?(params)
