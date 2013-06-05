@@ -5,6 +5,7 @@ require_dependency 'trashable'
 class PostAction < ActiveRecord::Base
   class AlreadyActed < StandardError; end
 
+  include ActiveModel::ForbiddenAttributesProtection
   include RateLimiter::OnCreateRecord
   include Trashable
 

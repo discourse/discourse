@@ -14,11 +14,11 @@ describe PostActionsController do
       end
 
       it 'raises an error when the id is missing' do
-        lambda { xhr :post, :create, post_action_type_id: PostActionType.types[:like] }.should raise_error(Discourse::InvalidParameters)
+        lambda { xhr :post, :create, post_action_type_id: PostActionType.types[:like] }.should raise_error(ActionController::ParameterMissing)
       end
 
       it 'raises an error when the post_action_type_id index is missing' do
-        lambda { xhr :post, :create, id: @post.id }.should raise_error(Discourse::InvalidParameters)
+        lambda { xhr :post, :create, id: @post.id }.should raise_error(ActionController::ParameterMissing)
       end
 
       it "fails when the user doesn't have permission to see the post" do
@@ -70,7 +70,7 @@ describe PostActionsController do
       let!(:user) { log_in }
 
       it 'raises an error when the post_action_type_id is missing' do
-        lambda { xhr :delete, :destroy, id: post.id }.should raise_error(Discourse::InvalidParameters)
+        lambda { xhr :delete, :destroy, id: post.id }.should raise_error(ActionController::ParameterMissing)
       end
 
       it "returns 404 when the post action type doesn't exist for that user" do
@@ -116,7 +116,7 @@ describe PostActionsController do
       let!(:user) { log_in(:moderator) }
 
       it "raises an error without a post_action_type_id" do
-        -> { xhr :post, :clear_flags, id: flagged_post.id }.should raise_error(Discourse::InvalidParameters)
+        -> { xhr :post, :clear_flags, id: flagged_post.id }.should raise_error(ActionController::ParameterMissing)
       end
 
       it "raises an error when the user doesn't have access" do
@@ -160,13 +160,13 @@ describe PostActionsController do
     it 'raises an error without an id' do
       lambda {
         xhr :get, :users, post_action_type_id: PostActionType.types[:like]
-      }.should raise_error(Discourse::InvalidParameters)
+      }.should raise_error(ActionController::ParameterMissing)
     end
 
     it 'raises an error without a post action type' do
       lambda {
         xhr :get, :users, id: post.id
-      }.should raise_error(Discourse::InvalidParameters)
+      }.should raise_error(ActionController::ParameterMissing)
     end
 
     it "fails when the user doesn't have permission to see the post" do
