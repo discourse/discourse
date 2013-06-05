@@ -42,6 +42,8 @@ class Category < ActiveRecord::Base
 
   delegate :post_template, to: 'self.class'
 
+  attr_accessor :displayable_topics
+
   # Internal: Update category stats: # of topics in past year, month, week for
   # all categories.
   def self.update_stats
@@ -61,8 +63,6 @@ class Category < ActiveRecord::Base
                          topics_month = (#{topics_month}),
                          topics_week = (#{topics_week})")
   end
-
-  attr_accessor :displayable_topics
 
   # Internal: Generate the text of post prompting to enter category
   # description.

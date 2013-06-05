@@ -22,6 +22,66 @@ class TopicLink < ActiveRecord::Base
     errors.add(:base, "can't link to the same topic") if (topic_id == link_topic_id)
   end
 
+  def self.topic_summary(guardian, topic_id)
+
+    # Sam: complicated reports are really hard in AR
+    builder = SqlBuilder.new("SELECT ftl.url,
+                     ft.title,
+                     ftl.link_topic_id,
+                     ftl.reflection,
+                     ftl.internal,
+                     MIN(ftl.user_id) AS user_id,
+                     SUM(clicks) AS clicks
+              FROM topic_links AS ftl
+              LEFT JOIN topics AS ft ON ftl.link_topic_id = ft.id
+              LEFT JOIN categories AS c ON c.id = ft.category_id
+              /*where*/
+              GROUP BY ftl.url, ft.title, ftl.link_topic_id, ftl.reflection, ftl.internal
+              ORDER BY clicks DESC")
+
+    builder.where('ftl.topic_id = :topic_id', topic_id: topic_id)
+    builder.where('ft.deleted_at IS NULL')
+
+    builder.secure_category(guardian.secure_category_ids)
+
+    builder.exec.to_a
+
+  end
+
+  def self.counts_for(guardian,topic, posts)
+    return {} if posts.blank?
+
+    # Sam: I don't know how to write this cleanly in AR,
+    #   in particular the securing logic is tricky and would fallback to SQL anyway
+    builder = SqlBuilder.new("SELECT
+                      l.post_id,
+                      l.url,
+                      l.clicks,
+                      t.title,
+                      l.internal,
+                      l.reflection
+              FROM topic_links l
+              LEFT JOIN topics t ON t.id = l.link_topic_id
+              LEFT JOIN categories AS c ON c.id = t.category_id
+              /*where*/
+              ORDER BY reflection ASC, clicks DESC")
+
+    builder.where('t.deleted_at IS NULL')
+
+    # not certain if pluck is right, cause it may interfere with caching
+    builder.where('l.post_id IN (:post_ids)', post_ids: posts.map(&:id))
+    builder.secure_category(guardian.secure_category_ids)
+
+    builder.map_exec(OpenStruct).each_with_object({}) do |l,result|
+      result[l.post_id] ||= []
+      result[l.post_id] << {url: l.url,
+                            clicks: l.clicks,
+                            title: l.title,
+                            internal: l.internal,
+                            reflection: l.reflection}
+    end
+  end
+
   # Extract any urls in body
   def self.extract_from(post)
     return unless post.present?

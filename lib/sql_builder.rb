@@ -16,6 +16,15 @@ class SqlBuilder
     end
   end
 
+  def secure_category(secure_category_ids, category_alias = 'c')
+    if secure_category_ids.present?
+      where("NOT COALESCE(" << category_alias << ".secure, false) OR " << category_alias <<  ".id IN (:secure_category_ids)", secure_category_ids: secure_category_ids)
+    else
+      where("NOT COALESCE(" << category_alias << ".secure, false)")
+    end
+    self
+  end
+
   def to_sql
     sql = @sql.dup
 

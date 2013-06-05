@@ -216,4 +216,62 @@ describe TopicLink do
     end
   end
 
+  describe 'counts_for and topic_summary' do
+    it 'returns blank without posts' do
+      TopicLink.counts_for(Guardian.new, nil, nil).should be_blank
+    end
+
+    context 'with data' do
+
+      let(:post) do
+        topic = Fabricate(:topic)
+        Fabricate(:post_with_external_links, user: topic.user, topic: topic)
+      end
+
+      let(:counts_for) do
+        TopicLink.counts_for(Guardian.new, post.topic, [post])
+      end
+
+
+      it 'has the correct results' do
+        TopicLink.extract_from(post)
+        topic_link = post.topic.topic_links.first
+        TopicLinkClick.create(topic_link: topic_link, ip: '192.168.1.1')
+
+        counts_for[post.id].should be_present
+        counts_for[post.id].find {|l| l[:url] == 'http://google.com'}[:clicks].should == 0
+        counts_for[post.id].first[:clicks].should == 1
+
+        array = TopicLink.topic_summary(Guardian.new, post.topic_id)
+        array.length.should == 4
+        array[0]["clicks"].should == "1"
+      end
+
+      it 'secures internal links correctly' do
+        category = Fabricate(:category)
+        secret_topic = Fabricate(:topic, category: category)
+
+        url = "http://#{test_uri.host}/t/topic-slug/#{secret_topic.id}"
+        post = Fabricate(:post, raw: "hello test topic #{url}")
+        TopicLink.extract_from(post)
+
+        TopicLink.topic_summary(Guardian.new, post.topic_id).count.should == 1
+        TopicLink.counts_for(Guardian.new, post.topic, [post]).length.should == 1
+
+        category.deny(:all)
+        category.allow(Group[:staff])
+        category.save
+
+        admin = Fabricate(:admin)
+
+        TopicLink.topic_summary(Guardian.new, post.topic_id).count.should == 0
+        TopicLink.topic_summary(Guardian.new(admin), post.topic_id).count.should == 1
+
+        TopicLink.counts_for(Guardian.new, post.topic, [post]).length.should == 0
+        TopicLink.counts_for(Guardian.new(admin), post.topic, [post]).length.should == 1
+      end
+
+    end
+  end
+
 end

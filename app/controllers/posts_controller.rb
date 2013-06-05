@@ -90,7 +90,7 @@ class PostsController < ApplicationController
 
     post_serializer = PostSerializer.new(post, scope: guardian, root: false)
     post_serializer.draft_sequence = DraftSequence.current(current_user, post.topic.draft_key)
-    link_counts = TopicLinkClick.counts_for(post.topic, [post])
+    link_counts = TopicLink.counts_for(guardian,post.topic, [post])
     post_serializer.single_post_link_counts = link_counts[post.id] if link_counts.present?
     post_serializer.topic_slug = post.topic.slug if post.topic.present?
 

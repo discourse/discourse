@@ -209,30 +209,12 @@ class Topic < ActiveRecord::Base
     meta_data[key.to_s]
   end
 
-
-
   def self.listable_count_per_day(sinceDaysAgo=30)
     listable_topics.where('created_at > ?', sinceDaysAgo.days.ago).group('date(created_at)').order('date(created_at)').count
   end
 
   def private_message?
     archetype == Archetype.private_message
-  end
-
-  def links_grouped
-    exec_sql("SELECT ftl.url,
-                     ft.title,
-                     ftl.link_topic_id,
-                     ftl.reflection,
-                     ftl.internal,
-                     MIN(ftl.user_id) AS user_id,
-                     SUM(clicks) AS clicks
-              FROM topic_links AS ftl
-                LEFT OUTER JOIN topics AS ft ON ftl.link_topic_id = ft.id
-              WHERE ftl.topic_id = ?
-              GROUP BY ftl.url, ft.title, ftl.link_topic_id, ftl.reflection, ftl.internal
-              ORDER BY clicks DESC",
-              id).to_a
   end
 
   # Search for similar topics
