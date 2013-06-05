@@ -3,6 +3,7 @@ require_dependency 'email'
 require_dependency 'enum'
 
 class Users::OmniauthCallbacksController < ApplicationController
+  skip_before_filter :redirect_to_login_if_required
 
   layout false
 
