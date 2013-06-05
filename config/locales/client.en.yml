@@ -865,7 +865,7 @@ en:
       delete_confirm: "Are you sure you want to delete this category?"
       delete_error: "There was an error deleting the category."
       list: "List Categories"
-      no_description: "There is no description for this category."
+      no_description: "There is no description for this category, edit the topic definition."
       change_in_category_topic: "Edit Description"
       hotness: "Hotness"
       already_used: 'This color has been used by another category'
