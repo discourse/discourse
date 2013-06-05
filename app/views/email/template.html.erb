@@ -6,7 +6,8 @@
   <table style="width: 90%; max-width: 500px;">
   <tr>
     <td>
-      <a href="<%= Discourse.base_url %>"><img src="<%= Discourse.base_url %><%= SiteSetting.logo_url %>" style="height: 50px; margin-bottom: 15px;"></a>
+      <a href="<%= Discourse.base_url %>">
+      <%= image_tag(SiteSetting.logo_url, style: "height: 50px; margin-bottom: 15px; ") %>
     </td>
   </tr>
   <tr>
