@@ -144,6 +144,54 @@ describe AdminDashboardData do
     end
   end
 
+  describe 'default_logo_check' do
+    subject { AdminDashboardData.new.default_logo_check }
+
+    describe 'favicon_url check' do
+      before do
+        SiteSetting.stubs(:logo_url).returns('/assets/my-logo.jpg')
+        SiteSetting.stubs(:logo_small_url).returns('/assets/my-small-logo.jpg')
+      end
+
+      it 'returns a string when favicon_url is default' do
+        expect(subject).to_not be_nil
+      end
+
+      it 'returns a string when favicon_url contains default-favicon.png' do
+        SiteSetting.stubs(:favicon_url).returns('/discourse/images/default-favicon.png')
+        expect(subject).to_not be_nil
+      end
+
+      it 'returns nil when favicon_url does not match default-favicon.png' do
+        SiteSetting.stubs(:favicon_url).returns('/assets/my-favicon.png')
+        expect(subject).to be_nil
+      end
+    end
+
+    describe 'logo_url check' do
+      before do
+        SiteSetting.stubs(:favicon_url).returns('/assets/my-favicon.png')
+        SiteSetting.stubs(:logo_small_url).returns('/assets/my-small-logo.jpg')
+      end
+
+      it 'returns a string when logo_url is default' do
+        expect(subject).to_not be_nil
+      end
+
+      it 'returns a string when logo_url contains d-logo-sketch.png' do
+        SiteSetting.stubs(:logo_url).returns('/discourse/images/d-logo-sketch.png')
+        expect(subject).to_not be_nil
+      end
+
+      it 'returns nil when logo_url does not match d-logo-sketch.png' do
+        SiteSetting.stubs(:logo_url).returns('/assets/my-logo.png')
+        expect(subject).to be_nil
+      end
+    end
+
+    # etc.
+  end
+
   describe 'auth_config_checks' do
 
     shared_examples 'problem detection for login providers' do
