@@ -1,13 +1,1 @@
-<ul class="nav-pills">
-  <li><a class='active' href="<%=login_path%>">Welcome</a></li>
-  <li><a href="<%=faq_path%>">FAQ</a></li>
-  <li><a href="<%=tos_path%>">Terms of Service</a></li>
-  <li><a href="<%=privacy_path%>">Privacy</a></li>
-</ul>
-
-<h2><a href="#welcome">Welcome to <%= SiteSetting.title %></a></h2>
-
-<p>
-  We are excited to have you participate in <%= SiteSetting.title %>. Please
-  create an account or login to continue.
-</p>
+<%= markdown_content(:login_required_welcome_message) %>

@@ -405,6 +405,12 @@ en:
     welcome_invite:
       title: "Welcome: Invited User"
       description: "A private message automatically sent to all new invited users when they accept the invitation from another user to participate."
+
+    login_required_welcome_message:
+      title: "Login Required: Welcome Message"
+      description: "Welcome message that is displayed to logged out users when
+        the 'login required' setting is enabled."
+
     tos_user_content_license:
       title: "Terms of Service: Content License"
       description: "The text for the Content License section of the Terms of Service."
@@ -977,6 +983,11 @@ en:
     see_more: "See More"
     search_title: "Search for this topic"
     search_google: "Search Google"
+
+  login_required:
+    welcome_message: |
+      #[Welcome to %{title}](#welcome)
+      We are excited to have you participate in %{title}. Please create an account or login to continue.
 
   terms_of_service:
     user_content_license: |
