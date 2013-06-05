@@ -426,6 +426,19 @@ describe UsersController do
       it_should_behave_like 'honeypot fails'
     end
 
+    context "when 'invite only' setting is enabled" do
+      before { SiteSetting.expects(:invite_only?).returns(true) }
+
+      let(:create_params) {{
+        name: @user.name,
+        username: @user.username,
+        password: 'strongpassword',
+        email: @user.email
+      }}
+
+      it_should_behave_like 'honeypot fails'
+    end
+
     shared_examples_for 'failed signup' do
       it 'should not create a new User' do
         expect { xhr :post, :create, create_params }.to_not change { User.count }
