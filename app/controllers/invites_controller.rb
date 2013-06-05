@@ -29,7 +29,7 @@ class InvitesController < ApplicationController
   end
 
   def destroy
-    requires_parameter(:email)
+    params.require(:email)
 
     invite = Invite.where(invited_by_id: current_user.id, email: params[:email]).first
     raise Discourse::InvalidParameters.new(:email) if invite.blank?
