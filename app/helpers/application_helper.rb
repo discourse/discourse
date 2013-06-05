@@ -12,7 +12,7 @@ module ApplicationHelper
 
   def discourse_csrf_tags
     # anon can not have a CSRF token cause these are all pages
-    # that may be cached, causing a mismatch between session CSRF 
+    # that may be cached, causing a mismatch between session CSRF
     # and CSRF on page and horrible impossible to debug login issues
     if current_user
       csrf_meta_tags
