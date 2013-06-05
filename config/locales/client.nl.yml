@@ -12,6 +12,42 @@
 
 nl:
   js:
+    dates:
+      tiny:
+        half_a_minute: "< 1m"
+        less_than_x_seconds:
+          one:   "< 1s"
+          other: "< %{count}s"
+        x_seconds:
+          one:   "1s"
+          other: "%{count}s"
+        less_than_x_minutes:
+          one:   "< 1m"
+          other: "< %{count}m"
+        x_minutes:
+          one:   "1m"
+          other: "%{count}m"
+        about_x_hours:
+          one:   "1h"
+          other: "%{count}h"
+        x_days:
+          one:   "1d"
+          other: "%{count}d"
+        about_x_months:
+          one:   "1mon"
+          other: "%{count}mnd"
+        x_months:
+          one:   "1mnd"
+          other: "%{count}mon"
+        about_x_years:
+          one:   "1j"
+          other: "%{count}j"
+        over_x_years:
+          one:   "> 1j"
+          other: "> %{count}j"
+        almost_x_years:
+          one:   "1j"
+          other: "%{count}j"
     share:
       topic: Deel een link naar deze topic
       post: Deel een link naar dit bericht
@@ -512,8 +548,20 @@ nl:
       read_more: "Wil je meer lezen? {{catLink}} of {{latestLink}}."
 
       # keys ending with _MF use message format, see /spec/components/js_local_helper_spec.rb for samples
-      read_more_in_category_MF: "Er {UNREAD, plural, one {is <a href='/unread'>1 ongelezen</a>} other {zijn <a href='/unread'># ongelezen</a>}} en {NEW, plural, one {<a href='/new'>1 nieuwe</a> topic} other {<a href='/new'># nieuwe</a> topics}} resterend, of ga naar andere topics in {catLink}"
-      read_more_MF: "Er {UNREAD, plural, one {is <a href='/unread'>1 ongelezen</a>} other {zijn <a href='/unread'># ongelezen</a>}} en {NEW, plural, one {<a href='/new'>1 nieuwe</a> topic} other {<a href='/new'># nieuwe</a> topics}} resterend, of {latestLink}"
+      read_more_MF: "There {
+        UNREAD, plural,
+        =0 {}
+        one {
+          is <a href='/unread'>1 ongelezen</a>
+        } other {
+          zijn <a href='/unread'># ongelezen</a>
+        }
+        } {
+          NEW, plural,
+            =0 {}
+            one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 nieuwe</a> topic}
+            other { {BOTH, select, true{and } false {zijn } other{}} <a href='/new'># nieuwe</a> topics}
+        } over, of {CATEGORY, select, true {bekijk andere topics in {catLink}} false {{latestLink}} other {}} "
 
       browse_all_categories: Bekijk alle categorieën
 
@@ -940,6 +988,7 @@ nl:
         no_problems: Er zijn geen problemen gevonden
         moderators: "Moderators:"
         admins: "Admins:"
+        blocked: "Geblokkeerd:"
         private_messages_short: PBs
         private_messages_title: Privé-berichten
 
@@ -1021,7 +1070,7 @@ nl:
       users:
         title: Leden
         create: Voeg beheerder toe
-        last_emailed: laatste mail verstuurd naar
+        last_emailed: Laatste mail verstuurd
         not_found: "Sorry, deze gebruikersnaam bestaat niet in ons systeem."
         new: Nieuw
         active: Actief
@@ -1041,6 +1090,7 @@ nl:
           elder: 'Leden met Trust Level 4 (Stamoudste)'
           admins: Administrators
           moderators: Moderators
+          blocked: Geblokkeerde leden
 
       user:
         ban_failed: "Er ging iets fout met het blokkeren van deze gebruiker: {{error}}"
@@ -1060,6 +1110,8 @@ nl:
         grant_admin: Geef Beheerdersrechten
         revoke_moderation: Ontneem modereerrechten
         grant_moderation: Geef modereerrechten
+        unblock: Deblokkeer
+        block: Blokkeer
         reputation: Reputatie
         permissions: Toestemmingen
         activity: Activiteit
@@ -1078,13 +1130,16 @@ nl:
         delete_confirm: Weet je zeker dat je deze gebruiker definitief wil verwijderen? Deze handeling is permanant!
         deleted: De gebruiker is verwijderd.
         delete_failed: Er ging iets mis bij het verwijderen van deze gebruiker. Zorg er voor dat alle berichten van deze gebruiker eerst verwijderd zijn.
-        send_activation_email: "Verstuur activatiemail"
-        activation_email_sent: "Een activatiemail is verstuurd."
-        send_activation_email_failed: "Er ging iets mis bij het versturen van de activatiemail."
-        activate: "Activeer account"
-        activate_failed: "Er ging iets mis bij het activeren van deze gebruiker."
-        deactivate_account: "Deactiveer account"
-        deactivate_failed: "Er ging iets mis bij het deactiveren van deze gebruiker."
+        send_activation_email: Verstuur activatiemail
+        activation_email_sent: Een activatiemail is verstuurd.
+        send_activation_email_failed: Er ging iets mis bij het versturen van de activatiemail.
+        activate: Activeer account
+        activate_failed: Er ging iets mis bij het activeren van deze gebruiker.
+        deactivate_account: Deactiveer account
+        deactivate_failed: Er ging iets mis bij het deactiveren van deze gebruiker.
+        unblock_failed: Er ging iets mis bij het deblokkeren van deze gebruiker.
+        block_failed: Er ging iets mis bij het blokkeren van deze gebruiker.
+        block_explanation: Een geblokkeerde gebruiker kan geen topics maken of reageren op topics.
 
       site_content:
         none: Selecteer een tekst om deze te bewerken
