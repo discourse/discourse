@@ -16,7 +16,7 @@ describe UploadsController do
 
       context 'missing params' do
         it 'raises an error without the topic_id param' do
-          -> { xhr :post, :create }.should raise_error(Discourse::InvalidParameters)
+          -> { xhr :post, :create }.should raise_error(ActionController::ParameterMissing)
         end
       end
 

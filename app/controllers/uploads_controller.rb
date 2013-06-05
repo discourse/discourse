@@ -2,7 +2,7 @@ class UploadsController < ApplicationController
   before_filter :ensure_logged_in
 
   def create
-    requires_parameter(:topic_id)
+    params.require(:topic_id)
     file = params[:file] || params[:files].first
     
     # only supports images for now
