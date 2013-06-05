@@ -30,7 +30,7 @@ Discourse::Application.configure do
   config.watchable_dirs['lib'] = [:rb]
 
   config.sass.debug_info = false
-  config.handlebars.precompile = false
+  config.handlebars.precompile = true
 
   # we recommend you use mailcatcher https://github.com/sj26/mailcatcher
   config.action_mailer.delivery_method = :smtp
