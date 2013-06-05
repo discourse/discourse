@@ -2,7 +2,30 @@
   <div class='contents clearfix'>
 
     {{view.logoHTML}}
-    {{view Discourse.TopicExtraInfoView}}
+
+
+    {{#if showExtraInfo}}
+      <div class="extra-info-wrapper">
+        <div class="extra-info">
+          {{#if showFavoriteButton}}
+            <a {{bindAttr class=":star topic.starred:starred"}} {{action toggleStar}} href='#' {{bindAttr title="topic.favoriteTooltip"}}></a>
+          {{/if}}
+          <h1>
+          {{#if topic.fancy_title}}
+            {{topicStatus topic=topic}}
+            <a class='topic-link' href='{{unbound topic.url}}'>{{{topic.fancy_title}}}</a>
+          {{else}}
+            {{#if topic.errorLoading}}
+              {{topic.errorTitle}}
+            {{else}}
+              {{i18n topic.loading}}
+            {{/if}}
+          {{/if}}
+          {{categoryLink topic.category}}
+          </h1>
+        </div>
+      </div>
+    {{/if}}
 
     <div class='panel clearfix'>
       {{#unless showExtraInfo}}

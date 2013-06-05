@@ -12,35 +12,36 @@ Discourse.TopicSummaryView = Ember.ContainerView.extend(Discourse.Presence, {
   LINKS_SHOWN: 5,
   allLinksShown: false,
 
-  showAllLinksControls: (function() {
+  showAllLinksControls: function() {
     if (this.blank('topic.links')) return false;
     if (this.get('allLinksShown')) return false;
     if (this.get('topic.links.length') <= this.LINKS_SHOWN) return false;
     return true;
-  }).property('allLinksShown', 'topic.links'),
+  }.property('allLinksShown', 'topic.links'),
 
-  infoLinks: (function() {
+  infoLinks: function() {
     if (this.blank('topic.links')) return [];
 
     var allLinks = this.get('topic.links');
     if (this.get('allLinksShown')) return allLinks;
     return allLinks.slice(0, this.LINKS_SHOWN);
-  }).property('topic.links', 'allLinksShown'),
+  }.property('topic.links', 'allLinksShown'),
 
-  newPostCreated: (function() {
+  newPostCreated: function() {
     this.rerender();
-  }).observes('topic.posts_count'),
+  }.observes('topic.posts_count'),
 
-  hidden: (function() {
+  hidden: function() {
     if (this.get('post.post_number') !== 1) return true;
     if (this.get('controller.content.archetype') === 'private_message') return false;
     if (this.get('controller.content.archetype') !== 'regular') return true;
     return this.get('controller.content.posts_count') < 2;
-  }).property(),
+  }.property(),
 
   init: function() {
     this._super();
     if (this.get('hidden')) return;
+
     this.pushObject(Em.View.create({
       templateName: 'topic_summary/info',
       topic: this.get('topic'),

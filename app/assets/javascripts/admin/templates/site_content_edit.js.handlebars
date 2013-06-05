@@ -1,20 +1,20 @@
 {{#if loaded}}
-  <h3>{{title}}</h3>
-  <p class='description'>{{description}}</p>
+  <h3>{{model.title}}</h3>
+  <p class='description'>{{model.description}}</p>
 
-  {{#if markdown}}
+  {{#if model.markdown}}
     {{pagedown value=model.content}}
   {{/if}}
 
-  {{#if plainText}}
+  {{#if model.plainText}}
     {{textarea value=model.content class="plain"}}
   {{/if}}
 
-  {{#if html}}
+  {{#if model.html}}
     {{aceEditor content=model.content mode="html"}}
   {{/if}}
 
-  {{#if css}}
+  {{#if model.css}}
     {{aceEditor content=model.content mode="css"}}
   {{/if}}
 

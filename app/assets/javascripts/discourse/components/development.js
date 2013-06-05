@@ -72,7 +72,7 @@ Discourse.Development = {
       });
     };
 
-    Ember.View.prototype.renderToBuffer = window.probes.measure(Ember.View.prototype.renderToBuffer, "renderToBuffer");
+    //Ember.View.prototype.renderToBuffer = window.probes.measure(Ember.View.prototype.renderToBuffer, "renderToBuffer");
     Discourse.URL.routeTo = topLevel(Discourse.URL.routeTo, "Discourse.URL.routeTo");
     Ember.run.end = topLevel(Ember.run.end, "Ember.run.end");
   },

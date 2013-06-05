@@ -18,7 +18,11 @@ Discourse.HeaderController = Discourse.Controller.extend({
 
   categories: function() {
     return Discourse.Category.list();
-  }.property()
+  }.property(),
+
+  showFavoriteButton: function() {
+    return Discourse.User.current() && !this.get('topic.isPrivateMessage');
+  }.property('topic.isPrivateMessage')
 
 });
 

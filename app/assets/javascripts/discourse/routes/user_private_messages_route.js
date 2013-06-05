@@ -18,6 +18,7 @@ Discourse.UserPrivateMessagesRoute = Discourse.RestrictedUserRoute.extend({
 
   setupController: function(controller, stream) {
     var composerController = this.controllerFor('composer');
+    controller.set('model', stream);
     Discourse.Draft.get('new_private_message').then(function(data) {
       if (data.draft) {
         composerController.open({

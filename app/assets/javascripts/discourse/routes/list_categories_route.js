@@ -11,18 +11,15 @@ Discourse.ListCategoriesRoute = Discourse.Route.extend({
   redirect: function() { Discourse.redirectIfLoginRequired(this); },
 
   events: {
-
     createCategory: function() {
       Discourse.Route.showModal(this, 'editCategory', Discourse.Category.create({ color: 'AB9364', text_color: 'FFFFFF', hotness: 5 }));
       this.controllerFor('editCategory').set('selectedTab', 'general');
     }
-
   },
 
   model: function() {
     var listTopicsController = this.controllerFor('listTopics');
     if (listTopicsController) listTopicsController.set('content', null);
-
     return this.controllerFor('list').load('categories');
   },
 
@@ -33,6 +30,7 @@ Discourse.ListCategoriesRoute = Discourse.Route.extend({
 
   setupController: function(controller, categoryList) {
     this.render('listCategories', { into: 'list', outlet: 'listView' });
+    controller.set('model', categoryList);
 
     this.controllerFor('list').setProperties({
       canCreateCategory: categoryList.get('can_create_category'),

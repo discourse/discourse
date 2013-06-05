@@ -98,6 +98,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
   },
 
   setupController: function(controller, model) {
+    controller.set('model', model);
     this.controllerFor('header').set('topic', model);
     this.controllerFor('composer').set('topic', model);
   }
