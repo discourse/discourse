@@ -1,6 +1,7 @@
 require_dependency 'trashable'
 
 class Invite < ActiveRecord::Base
+  include ActiveModel::ForbiddenAttributesProtection
   include Trashable
 
   belongs_to :user

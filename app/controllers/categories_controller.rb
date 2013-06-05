@@ -27,7 +27,6 @@ class CategoriesController < ApplicationController
   end
 
   def create
-    requires_parameters(*required_param_keys)
     guardian.ensure_can_create!(Category)
 
     @category = Category.create(category_params.merge(user: current_user))
@@ -37,7 +36,6 @@ class CategoriesController < ApplicationController
   end
 
   def update
-    requires_parameters(*required_param_keys)
     guardian.ensure_can_edit!(@category)
     json_result(@category, serializer: CategorySerializer) { |cat| cat.update_attributes(category_params) }
   end
@@ -59,7 +57,11 @@ class CategoriesController < ApplicationController
     end
 
     def category_params
-      params.slice(*category_param_keys)
+      required_param_keys.each do |key|
+        params.require(key)
+      end
+
+      params.permit(*category_param_keys)
     end
 
     def fetch_category

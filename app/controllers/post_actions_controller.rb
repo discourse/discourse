@@ -70,7 +70,7 @@ class PostActionsController < ApplicationController
   private
 
     def fetch_post_from_params
-      requires_parameter(:id)
+      params.require(:id)
       finder = Post.where(id: params[:id])
 
       # Include deleted posts if the user is a moderator (to guardian ?)
@@ -81,7 +81,7 @@ class PostActionsController < ApplicationController
     end
 
     def fetch_post_action_type_id_from_params
-      requires_parameter(:post_action_type_id)
+      params.require(:post_action_type_id)
       @post_action_type_id = params[:post_action_type_id].to_i
     end
 end
