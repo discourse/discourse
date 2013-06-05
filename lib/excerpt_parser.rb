@@ -9,6 +9,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     options || {}
     @strip_links = options[:strip_links] == true
     @text_entities = options[:text_entities] == true
+    @markdown_images = options[:markdown_images] == true
   end
 
   def self.get_excerpt(html, length, options)
@@ -21,9 +22,17 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     me.excerpt
   end
 
+  def include_tag(name, attributes)
+    characters("<#{name} #{attributes.map{|k,v| "#{k}='#{v}'"}.join(' ')}>", false, false, false)
+  end
+
   def start_element(name, attributes=[])
     case name
       when "img"
+
+        # If include_images is set, include the image in markdown
+        characters("!") if @markdown_images
+
         attributes = Hash[*attributes.flatten]
         if attributes["alt"]
           characters("[#{attributes["alt"]}]")
@@ -32,12 +41,12 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
         else
           characters("[image]")
         end
+
+        characters("(#{attributes['src']})") if @markdown_images
+
       when "a"
         unless @strip_links
-          c = "<a "
-          c << attributes.map{|k,v| "#{k}='#{v}'"}.join(' ')
-          c << ">"
-          characters(c, false, false, false)
+          include_tag(name, attributes)
           @in_a = true
         end
       when "aside"

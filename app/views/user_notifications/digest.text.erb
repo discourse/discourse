@@ -12,7 +12,8 @@
 <%- if t.best_post.present? %>
 <%= raw(t.best_post.excerpt(1000,
                             strip_links: true,
-                            text_entities: true)) %>
+                            text_entities: true,
+                            markdown_images: true)) %>
 
 --------------------------------------------------------------------------------
 

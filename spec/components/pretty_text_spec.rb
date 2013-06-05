@@ -105,24 +105,31 @@ test
 
   describe "Excerpt" do
 
+    context "images" do
+      it "should dump images" do
+        PrettyText.excerpt("<img src='http://cnn.com/a.gif'>",100).should == "[image]"
+      end
+
+      it "should keep alt tags" do
+        PrettyText.excerpt("<img src='http://cnn.com/a.gif' alt='car' title='my big car'>",100).should == "[car]"
+      end
+
+      it "should keep title tags" do
+        PrettyText.excerpt("<img src='http://cnn.com/a.gif' title='car'>",100).should == "[car]"
+      end
+
+      it "should convert images to markdown if the option is set" do
+        PrettyText.excerpt("<img src='http://cnn.com/a.gif' title='car'>", 100, markdown_images: true).should == "![car](http://cnn.com/a.gif)"
+      end
+
+    end
+
     it "should have an option to strip links" do
       PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>",100, strip_links: true).should == "cnn"
     end
 
     it "should preserve links" do
       PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>",100).should == "<a href='http://cnn.com'>cnn</a>"
-    end
-
-    it "should dump images" do
-      PrettyText.excerpt("<img src='http://cnn.com/a.gif'>",100).should == "[image]"
-    end
-
-    it "should keep alt tags" do
-      PrettyText.excerpt("<img src='http://cnn.com/a.gif' alt='car' title='my big car'>",100).should == "[car]"
-    end
-
-    it "should keep title tags" do
-      PrettyText.excerpt("<img src='http://cnn.com/a.gif' title='car'>",100).should == "[car]"
     end
 
     it "should deal with special keys properly" do
