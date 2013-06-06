@@ -1,8 +1,6 @@
 require_dependency 'enum'
 
 class PostActionType < ActiveRecord::Base
-  attr_accessible :id, :is_flag, :name_key, :icon
-
   class << self
     def ordered
       order('position asc').all

@@ -114,6 +114,10 @@ module Discourse
     config.ember.ember_location = "#{Rails.root}/app/assets/javascripts/external_production/ember.js"
     config.ember.handlebars_location = "#{Rails.root}/app/assets/javascripts/external/handlebars-1.0.rc.3.js"
 
+    # Since we are using strong_parameters, we can disable and remove
+    # attr_accessible.
+    config.active_record.whitelist_attributes = false
+
     # So open id logs somewhere sane
     config.after_initialize do
       OpenID::Util.logger = Rails.logger

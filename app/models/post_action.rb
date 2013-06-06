@@ -5,11 +5,8 @@ require_dependency 'trashable'
 class PostAction < ActiveRecord::Base
   class AlreadyActed < StandardError; end
 
-  include ActiveModel::ForbiddenAttributesProtection
   include RateLimiter::OnCreateRecord
   include Trashable
-
-  attr_accessible :post_action_type_id, :post_id, :user_id, :post, :user, :post_action_type, :message, :related_post_id, :staff_took_action
 
   belongs_to :post
   belongs_to :user

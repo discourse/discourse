@@ -5,8 +5,6 @@ require 's3'
 require 'local_store'
 
 class Upload < ActiveRecord::Base
-  include ActiveModel::ForbiddenAttributesProtection
-
   belongs_to :user
   belongs_to :topic
 

@@ -141,7 +141,7 @@ describe PostsController do
       let!(:post2) { Fabricate(:post, topic_id: post1.topic_id, user: poster, post_number: 3) }
 
       it "raises invalid parameters no post_ids" do
-        lambda { xhr :delete, :destroy_many }.should raise_error(Discourse::InvalidParameters)
+	lambda { xhr :delete, :destroy_many }.should raise_error(ActionController::ParameterMissing)
       end
 
       it "raises invalid parameters with missing ids" do
@@ -193,7 +193,7 @@ describe PostsController do
         update_params.delete(:post)
         lambda {
           xhr :put, :update, update_params
-        }.should raise_error(Discourse::InvalidParameters)
+	}.should raise_error(ActionController::ParameterMissing)
       end
 
       it "raises an error when the user doesn't have permission to see the post" do
@@ -258,7 +258,7 @@ describe PostsController do
       let(:new_post) { Fabricate.build(:post, user: user) }
 
       it "raises an exception without a post parameter" do
-        lambda { xhr :post, :create }.should raise_error(Discourse::InvalidParameters)
+	lambda { xhr :post, :create }.should raise_error(ActionController::ParameterMissing)
       end
 
       it 'calls the post creator' do
