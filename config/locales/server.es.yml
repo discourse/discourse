@@ -51,7 +51,7 @@ es:
     'new-reply': |
       Bienvenido a %{site_name} &mdash; **¡Gracias por contribuir a la conversación!**
 
-      Ten en cuanto cuando escribas tu topic:
+      Ten en cuenta cuando escribas tu topic:
 
       - ¿Mejora tu respuesta la conversación de algún modo, ¿Aunque sea un poco?
 
@@ -318,8 +318,8 @@ es:
     use_ssl: "¿Debería ser el sitio accesible por SSL? (NO IMPLEMENTADO, EXPERIMENTAL)"
     best_of_score_threshold: "La mínima puntuación de un post para ser incluido en los 'best of'"
     best_of_posts_required: "Mínimo número de posts en un topic antes de que el modo 'best of' sea activado "
-    best_of_likes_required: "Mínimo número de me gustas en un topic antes de que el modo 'best of" sea activado"
-    enable_private_messages: "Permitir el nivel básico de confianza en los usuarios (1) para crear mensajes privados y contestart a mensajes privados"
+    best_of_likes_required: "Mínimo número de me gustas en un topic antes de que el modo 'best of' sea activado"
+    enable_private_messages: "Permitir el nivel básico de confianza en los usuarios (1) para crear mensajes privados y contestar a mensajes privados"
 
     enable_long_polling: "Los mensajes usados para notificaciones pueden usar el long polling"
     long_polling_interval: "Frecuencia del 'long polling' en milisegundos"
@@ -362,55 +362,55 @@ es:
     twitter_consumer_key: "Comsumer key para autenticación por Twitter, registrado en http://dev.twitter.com"
     twitter_consumer_secret: "Comsumer secret para autenticación por Twitter, registrado en http://dev.twitter.com"
 
-    enable_facebook_logins: "Enable Facebook authentication, requires facebook_app_id and facebook_app_secret"
-    facebook_app_id: "App id for Facebook authentication, registered at https://developers.facebook.com/apps"
-    facebook_app_secret: "App secret for Facebook authentication, registered at https://developers.facebook.com/apps"
+    enable_facebook_logins: "Activar autenticación por Facebook, requiere una facebook_app_id y un facebook_app_secret"
+    facebook_app_id: "App id para la autenticación por Facebook, registrado en https://developers.facebook.com/apps"
+    facebook_app_secret: "App secret para autenticación por Facebook, registrado en https://developers.facebook.com/apps"
 
-    enable_github_logins: "Enable Github authentication, requires github_client_id and github_client_secret"
-    github_client_id: "Client id for Github authentication, registered at https://github.com/settings/applications"
-    github_client_secret: "Client secret for Github authentication, registered at https://github.com/settings/applications"
+    enable_github_logins: "Activar autenticación por Github, requiere una github_client_id y un github_client_secret"
+    github_client_id: "Client id para la autenticación por Github, registrado en https://github.com/settings/applications"
+    github_client_secret: "Client secret para la autenticación por Github, registrado en https://github.com/settings/applications"
 
-    enable_persona_logins: "Enable email-based authentication with Mozilla Persona"
+    enable_persona_logins: "Activar autenticación basada en email con Mozilla Persona"
 
-    allow_import: "Allow import, which can replace ALL site data; leave false unless you plan to do data imports"
+    allow_import: "Permitir importación, la cual puede reemplazar TODOS los datos del sitio, déjalo a false hasta que planees ahcer importaciones de datos"
 
-    active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
-    previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"
+    active_user_rate_limit_secs: "Como de frecuentemente actualizaremos el campo 'last_seen_at', en segundos"
+    previous_visit_timeout_hours: "Cuanto tiempo debe pasar antes de que una visita sea considerada la 'visita previa', en horas"
 
-    uncategorized_name: "The default category for topics that have no category in the /categories page"
-    max_mentions_per_post: "Maximum number of @name notifications you can use in a single post"
+    uncategorized_name: "La categoría por defecto para los topics que no tienen categoría en la página /categories"
+    max_mentions_per_post: "Maximo número de notificaciones @name que se pueden usar en un post"
 
-    rate_limit_create_topic: "How many seconds, after creating a topic, before you can create another topic"
-    rate_limit_create_post: "How many seconds, after creating a post, before you can create another post"
+    rate_limit_create_topic: "Cuantos segundos, después de crear un topic, deben pasar antes de poder crear otro topic"
+    rate_limit_create_post: "Cuantos segundos, después de crear un post, deben pasar antes de poder crear otro post"
 
-    max_likes_per_day: "Maximum number of likes per user per day"
-    max_flags_per_day: "Maximum number of flags per user per day"
-    max_bookmarks_per_day: "Maximum number of bookmarks per user per day"
-    max_edits_per_day: "Maximum number of edits per user per day"
-    max_favorites_per_day: "Maximum number of topics that can be favorited per user per day"
-    max_topics_per_day: "Maximum number of topics a user can create per day"
-    max_private_messages_per_day: "The maximum amount of private messages users can create per day"
+    max_likes_per_day: "Máximo número de likes por usuario por día"
+    max_flags_per_day: "Máximo número de flags por usuario por día"
+    max_bookmarks_per_day: "Máximo número de bookmarks por usuario por día"
+    max_edits_per_day: "Máximo número de ediciones por usuario por día"
+    max_favorites_per_day: "Máximos número de topics que pueden marcarse como favoritos por usuario por día"
+    max_topics_per_day: "Máximo número de topics que un usuario puede crear por día"
+    max_private_messages_per_day: "Máximo número de mensajes privados que los usuarios pueden crear por día"
 
-    suggested_topics: "The number of suggested topics shown at the bottom of a topic"
+    suggested_topics: "El número de topics sugeridos mostrado al final de un topic"
 
-    enable_s3_uploads: "Place uploads on Amazon S3"
-    s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into"
+    enable_s3_uploads: "Activar uploads con Amazon S3"
+    s3_upload_bucket: "El nombre del contenedor Amazon S3 al que los archivos serán subidos"
 
-    default_invitee_trust_level: "Default trust level (0-4) for invited users"
-    default_trust_level: "Default trust level (0-4) for users"
+    default_invitee_trust_level: "Nivel de confianza por defecto (0-4) para usuarios invitados"
+    default_trust_level: "Nivel de confianza por defecto (0-4) para usuarios"
 
-    basic_requires_topics_entered: "How many a topics a new user must enter before promotion to basic (1) trust level"
-    basic_requires_read_posts: "How many posts a new user must read before promotion to basic (1) trust level"
-    basic_requires_time_spent_mins: "How many minutes a new user must read posts before promotion to basic (1) trust level"
+    basic_requires_topics_entered: "Cuantos topics debe introducir un usuario antes de ser promocionado al nivel básico (1) de confianza"
+    basic_requires_read_posts: "Cuantos post debe un usuario leer antes de ser promocionado al nivel básico (1) de confianza"
+    basic_requires_time_spent_mins: "Cuantos minutos un usuario debe leer posts antes de ser promocionado al nivel básico (1) de confianza"
 
-    auto_link_images_wider_than: "Images wider than this, in pixels, will get auto link and lightbox treatment"
+    auto_link_images_wider_than: "Imágenes más amplias que esto, en píxeles, tendrán un tratamiento de lightbox y auto link"
 
-    email_time_window_mins: "How many minutes we wait before sending a user mail, to give them a chance to see it first"
+    email_time_window_mins: "Cuantos minutos esperamos antes de enviar un mail a un usuario, para darles la oportunidad de verlo antes"
     flush_timings_secs: "How frequently we flush timing data to the server, in seconds"
-    max_word_length: "The maximum allowed word length, in characters, in a topic title"
-    title_min_entropy: "The minimum allowed entropy (unique characters) required for a topic title"
-    body_min_entropy: "The minimum allowed entropy (unique characters) required for a post body"
-    title_fancy_entities: "Convert common ASCII characters to fancy HTML entities in topic titles, ala SmartyPants http://daringfireball.net/projects/smartypants/"
+    max_word_length: "La máxima longitud de palabra permitida, en caracteres en el título de un topic"
+    title_min_entropy: "La mínima entropía permitida (caracteres únicos) requerida para el título de un topic"
+    body_min_entropy: "La mínima entropía permitida (caracteres únicos) requerida para el cuerpo de un post"
+    title_fancy_entities: "Convertir caracteres ASCII comunes en entidades HTML de adorno en el título de los topics, ala SmartyPants http://daringfireball.net/projects/smartypants/"
 
   notification_types:
     mentioned: "%{display_username} te ha mencionado en %{link}"
@@ -476,54 +476,54 @@ es:
     visible_disabled: "Este topic es ahora invisible. No será mostrado en ninguna lista de topics. El único modo de acceder a este topic es con un enlace directo."
 
   login:
-    not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
-    incorrect_username_email_or_password: "Incorrect username, email or password"
-    wait_approval: "Thanks for signing up. We will notify you when your account has been approved."
-    active: "Your account is active and ready."
-    activate_email: "You're almost done! We sent an activation email to <b>%{email}</b>. Please follow the instructions in the email to activate your account."
-    not_activated: "You can't log in yet. We sent an activation email to you. Please follow the instructions in the email to activate your account."
+    not_approved: "Tu cuenta aún no ha sido aprovada. Serás notificado por email cuando estés listo para hacer log in."
+    incorrect_username_email_or_password: "Nombre de usuario, email o password incorrectos"
+    wait_approval: "Gracias por registrarte. Te notificaremos cuando tu cuenta haya sido aprovada."
+    active: "Tu cuenta está activa y lista."
+    activate_email: "¡Casi estás listo! Te envíaremos un email de activación a <b>%{email}</b>. Por favor sigue las instrucciones del email para activar tu cuenta."
+    not_activated: "Aún no puedes hacer log in. Te hemos enviado un email de activación. Por favor sigue las instrucciones en el email para activar tu cuenta."
     errors: "%{errors}"
-    not_available: "Not available. Try %{suggestion}?"
-    something_already_taken: "Something went wrong, perhaps the username or email is already registered. Try the forgot password link."
-    omniauth_error: "Sorry, there was an error authorizing your %{strategy} account. Perhaps you did not approve authorization?"
-    omniauth_error_unknown: "Something went wrong processing your log in, please try again."
+    not_available: "No disponible. Prueba %{suggestion}?"
+    something_already_taken: "Algo ha salido mal, quizás el nombre de usuario o el email ya han sido registrados. Prueba el link de olvidé mi contraseña."
+    omniauth_error: "Lo sentimos, ha habido un error autorizando tu cuenta %{strategy}. ¿Quizás no has aprovado la autorización?"
+    omniauth_error_unknown: "Algo ha salido mal procesando tu log in, por favor vuelve a intentarlo."
 
   user:
     username:
-      short: "must be longer than %{min} characters"
-      long: "must be shorter than %{max} characters"
-      characters: "must only include numbers and letters"
-      unique: "must be unique"
-      blank: "must be present"
-      must_begin_with_alphanumeric: "must begin with a letter or number"
+      short: "debe tener más de %{min} caracteres"
+      long: "debe tener menos de %{max} caracteres"
+      characters: "solo debe incluir números y letras"
+      unique: "debe ser único"
+      blank: "debe estar presente"
+      must_begin_with_alphanumeric: "debe comenzar con una letra o número"
     email:
-      not_allowed: "is not allowed from that email provider. Please use another email address."
+      not_allowed: "No está permitido de este proveedor de email. Por favor utiliza otra dirección de email."
 
   invite_mailer:
-    subject_template: "[%{site_name}] %{invitee_name} invited you to join a discussion on %{site_name}"
+    subject_template: "[%{site_name}] %{invitee_name} te ha invitado a unirte a una discusión en %{site_name}"
     text_body_template: |
-      %{invitee_name} invited you to the topic "%{topic_title}" at %{site_name}.
+      %{invitee_name} te ha invitado al topic "%{topic_title}" en %{site_name}.
 
-      If you're interested, click the link below to visit the discussion:
+      Si estás interesado, clica el link debajo de esta discusión:
 
-      [Visit %{site_name}][1]
+      [Visita %{site_name}][1]
 
-      You were invited by a trusted user, so you'll be able to post a reply immediately, without needing to log in.
+      Has sido invitado por un usario de confianza, por lo que podrás contestar inmediatamente, sin necesidad de hacer log in.
 
       [1]: %{invite_link}
 
   test_mailer:
-    subject_template: "[%{site_name}] Email Deliverability Test"
+    subject_template: "[%{site_name}] Prueba de envío de email"
     text_body_template: |
-      This is a test email sent from your %{site_name} forum at:
+      Este es un email enviado de foro %{site_name} en:
 
       [**%{base_url}**][0]
 
-      Email deliverability is complicated. Here are a few important things you should check first:
+      El envío de email es complicado. Aquí te exponemos algunas cosas importantes que deberías comprobar primero:
 
-      - Know how to view the *raw source of the email* in your mail client, so you can examine the email headers for important clues. in Gmail, it is the "show original" option in the drop-down menu on each mail.
+      - Conoce como ver el *contenido raw del email* en tu cliente de correo, de modo que puedas examinar las cabeceras para importantes pistas. En Gmail, es la opción "show original" en el menú desplegable de cada email.
 
-      - **IMPORTANT:** Does your ISP have a reverse DNS record entered to associate the domain names and IP addresses you send mail from? [Test your Reverse PTR record][2] here. If your ISP does not enter the proper reverse DNS pointer record, it's very unlikely any of your email will be delivered.
+      - **IMPORTANTE:** tiene tu ISP un "reverse DNS record" para asociar los nombres de dominio y direcciones IP desde las que envías el mail [Test your Reverse PTR record][2] here. If your ISP does not enter the proper reverse DNS pointer record, it's very unlikely any of your email will be delivered.
 
       - Is your domain's SPF record correct? [Test your SPF record][1] here.
 
@@ -551,238 +551,238 @@ es:
       <small>There should be an unsubscribe footer on every email you send, so let's mock one up. This email was sent by Name of Company, 55 Main Street, Anytown, USA 12345. If you would like to opt out of future emails, [click here to unsubscribe][5].</small>
 
   request_access:
-    code: "Access Code"
-    instructions: "This site has restricted access, enter the access code below:"
-    enter: "Enter"
-    incorrect: "access code was incorrect"
+    code: "Código de acceso"
+    instructions: "Este sitio tiene acceso restringido, introduce el código de acceso debajo:"
+    enter: "Entrar"
+    incorrect: "el código de acceso es incorrecto"
 
   system_messages:
-    site_password: "Also, the site password is `%{access_password}` if you need it."
+    site_password: "También, el password del sitio es `%{access_password}` si lo necesitas."
 
     post_hidden:
-      subject_template: "%{site_name} Notice: Posting Hidden due to Community Flagging"
+      subject_template: "%{site_name} Advertencia: Posting oculto debido al Community Flagging"
       text_body_template: |
-        Hello,
+        Hola,
 
-        This is an automated message from %{site_name} to inform you that the following post was hidden as a result of community flagging.
+        Este es un mensaje automático de %{site_name} para informarte que el siguiente post ha sido oculto debeido al community flagging.
 
         %{base_url}%{url}
 
-        Your post was hidden because it was flagged by the community.
+        Tu post ha sido ocultado debido a que ha sido marcado por la comunidad.
 
-        Keep in mind that multiple community members flagged this post before it was hidden, so please consider how you might revise your post to reflect their feedback.
+        Ten en cuenta que multiples miembros de la comunidad han marcado este post antes de que haya sido ocultado, por tanto considera como podrías revisar el post para reflejar su feedback.
 
-        You can edit the post after %{edit_delay} minutes, and it will be automatically unhidden. This will increase your forum trust level.
+        Podrás editar el post después de %{edit_delay} minutos, y será automaticamente mostrado. Esto incrementara tu nivel de confianza en el foro.
 
-        However, if the post is hidden by the community a second time, the moderators will be notified -- and there may be further action, including the possible suspension of your account.
+        Sin embargo, si el post es ocultado por la comunidad una segunda vez, los moderadores serán notificados -- y habrá posibles consecuencias, como la posible suspensión de tu cuenta.
 
-        For additional guidance, please refer to our [FAQ](%{base_url}/faq).
+        Para más consejos, por favor revisa nuestro [FAQ](%{base_url}/faq).
 
     usage_tips:
       text_body_template: |
-        This private message has a few quick tips to get you started:
+        Este mensaje privado tiene unos pocos consejos para iniciarte:
 
-        ### Keep scrolling
+        ### Sigue haciendo scroll
 
-        There are no next page buttons or page numbers – to read more, just keep scrolling down, and more content will load!
+        No hay botones de siguiente página o números de página - para leer más, solo sigue haciendo scroll y ¡Más contenido será cargado!
 
-        As new replies come in, they will appear automatically at the bottom of the topic. No need to refresh the page or re-enter the topic to see new posts.
+        Conforme lleguen nuevas respuestas, estas aparecerán automaticamente al final del topic. No hay necesidad de refrescar la página o volver a entrar en el topic para ver nuevos posts.
 
-        ### How do I reply?
+        ### ¿Cómo contesto?
 
-        - To reply to a specific post, use the Reply button at the bottom of that post.
+        - Para contestar a un post específico, usa el botón Reply al final de ese post.
 
-        - If you want to reply to the overall *theme* of the topic, rather than any specific post in the topic, use the Reply button at the very bottom of the topic.
+        - Si quieres responder al *tema* global del topic, en vez de a algún post específico, usa el botón Reply al final del todo del topic.
 
-        - If you want to take the conversation in a different direction, but keep them linked together, use Reply as New Topic to the right of the post.
+        - Si quieres llevar la conversación en una dirección distinta, pero manteniendola junta, usa Reply as New Topic a la derecha del post.
 
-        ### Who is talking to me?
+        ### ¿Quién me está hablando?
 
-        When someone replies to your post, quotes you, or mentions your @username, a notification ➀ will appear at the top of the page. Click or tap that notification number to see who's talking to you, and where. Join the conversation!
+        Cuando alguien responde a tu post, te menciona, o menciona tu @username, una notificación ➀ aparecerá encima de la página. Haz click en el número de notificación para ver quien te está hablando y donde. ¡Únete a la conversación!
 
-        - To mention someone's name, start typing `@` and an autocompleter will pop up.
+        - Para mencionar el nombre de alguien, comienza escribiendo `@` y un pop up de autocompletado aparecerá
 
-        - To quote just a section of a post, select it, then click the Reply button that appears over the highlight.
+        - Para mencionar solo una sección de un post, seleccionala y luego haz click en el botón Reply que aparecerá sobre el resaltado.
 
-        - To quote an entire post, use the Import Quote button on the composer toolbar.
+        - Para mencionar un post entero, usa el botón Import Quote de la barra de la composer toolbar.
 
-        ### Look at that post!
+        ### ¡Mira ese post!
 
-        To let someone know that you enjoyed their post, click the like ♥ button at the bottom of the post. If you see a problem with a post, don't hesitate to click the flag button and let the moderators – and your fellow community members – know about it.
+        Para hacer saber a alguien que te gustó su post, clicka el botón like ♥ al final del post. Si ves algún problema con un post, no dudas en hacer click en el botón flag y dejar a los moderadores y a tus compañeros de la comunidad saber sobre ello.
 
-        ### Where am I?
+        ### ¿Dónde estoy?
 
-        - To get back to the home page at any time, **click the logo at the upper left** or use the back ← button on your browser.
+        - Para volver a la página de inicio en cualquier momento **haz click en el logo arriba a la izquierda** o usa el botón atrás ← de tu navegador.
 
-        - For search, your user page, or the sitemap, click on the icons at the upper right.
+        - Para búsquedas, ver tu página de usuario o el mapa del sitio, haz click en los iconos en la esquina superior derecha.
 
-        - While reading a topic, move to the top ↑ by clicking its title at the top of the page. To reach the *bottom* ↓, click the down arrow on the topic progress indicator at the bottom of the page, or click the last post field on the topic summary under the first post.
+        - Mientras lees un topic, vuelve a lo más alto ↑ haciendo click en su título arriba de la página. Para alcanzar el *final* ↓, haz click en la flecha hacia abajo del indicador de prograso del topic al final de la página, or click the last post field on the topic summary under the first post.
 
     welcome_approved:
-      subject_template: "You've been approved on %{site_name}!"
+      subject_template: "¡Has sido aprobado en %{site_name}!"
       text_body_template: |
-        Congratulations!
+        ¡Enhorabuena!
 
-        You're approved to join %{site_name}, welcome to our discussion forum!
+        Has sido aprobado para unirte a %{site_name}, ¡Bienvenido a nuestro foro de discusión!
 
         %{new_user_tips}
 
-        We believe in [civilized community behavior](%{base_url}/faq) at all times.
+        Creemos en [civilized community behavior](%{base_url}/faq) siempre.
 
-        Enjoy your stay!
+        ¡Disfruta tu estancia!
 
     welcome_user:
-      subject_template: "Welcome to %{site_name}!"
+      subject_template: "Bienvenido a %{site_name}!"
       text_body_template: |
-        Thanks for joining %{site_name}, and welcome to our discussion forum!
+        Gracias por unirte a %{site_name}, ¡Y bienvenido a nuestro foro de discusión!
 
         %{new_user_tips}
 
-        We believe in [civilized community behavior](%{base_url}/faq) at all times.
+        Creemos en [civilized community behavior](%{base_url}/faq) siempre.
 
-        Enjoy your stay!
+        ¡Disfruta tu estancia!
 
     welcome_invite:
-      subject_template: "Welcome to %{site_name}!"
+      subject_template: "Bienvenido a %{site_name}!"
       text_body_template: |
-        Thanks for accepting your invitation to %{site_name}, and welcome to our discussion forum!
+        Gracias por aceptar tu invitación a %{site_name}, ¡Y bienvenido a nuestro foro de discusión!
 
-        We've automatically generated a username for you: **%{username}**, but you can change that any time by visiting [your user profile][prefs].
+        Hemos generado automaticamente un nombre de usuario para ti: **%{username}**, pero puedes cambiarlo en cualquier momento visitando [your user profile][prefs].
 
-        To log in again, either:
+        Para volver a hacer log in, puedes:
 
-        1. Use Facebook, Google, Twitter, or many other supported credentials -- but that credential must resolve to the **same email address** that you received your original invitation email at. Otherwise we won't be able to tell it is you!
+        1. Utilizar Facebook, Google, Twitter, o muchos más proveedores de credenciales -- pero estos credenciales deben coincidir con la **misma dirección de email** con la que recibiste tu invitación original. ¡De otro modo no podremos saber que eres tú!
 
-        2. Create a unique password for %{site_name} on [your user profile][prefs], then log in with that.
+        2. Crear un password único para %{site_name} en [your user profile][prefs], luego hacer log in con él.
 
         %{site_password}
 
         %{new_user_tips}
 
-        We believe in [civilized community behavior](%{base_url}/faq) at all times.
+        Creemos en [civilized community behavior](%{base_url}/faq) siempre.
 
-        Enjoy your stay!
+        ¡Disfruta tu estancia!
 
         [prefs]: %{user_preferences_url}
 
     export_succeeded:
-      subject_template: "Export completed successfully"
-      text_body_template: "The export was successful."
+      subject_template: "La exportación ha finalizado satisfactoriamente"
+      text_body_template: "La exportación ha sido satisfactoria."
 
     import_succeeded:
-      subject_template: "Import completed successfully"
-      text_body_template: "The import was successful."
+      subject_template: "La importación ha finalizado satisfactoriamente"
+      text_body_template: "La importación ha sido satisfactoria."
 
-  unsubscribe_link: "If you'd like to unsubscribe from these emails, visit your [user preferences](%{user_preferences_url})."
+  unsubscribe_link: "Si quieres eliminar tu suscripción a estos emails, visita tu [user preferences](%{user_preferences_url})."
 
   user_notifications:
     unsubscribe:
-      title: "Unsubscribe"
-      description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
+      title: "Darse de baja"
+      description: "No estás interesado en recibir estos emails? ¡No hay problema! Haz click abajo para darte de baja instantaneamente:"
 
     user_invited_to_private_message:
-      subject_template: "[%{site_name}] %{username} invited you to a private message '%{topic_title}'"
+      subject_template: "[%{site_name}] %{username} te ha invitado a un mensaje privado '%{topic_title}'"
       text_body_template: |
-        %{username} invited you to a private message '%{topic_title}' on %{site_name}:
+        %{username} te ha invitado a un mensaje privado '%{topic_title}' en %{site_name}:
 
-        Please visit this link to view the topic: %{base_url}%{url}
+        Por favor visita este link para ver el topic: %{base_url}%{url}
 
     user_replied:
-      subject_template: "[%{site_name}] %{username} replied to your post in '%{topic_title}'"
+      subject_template: "[%{site_name}] %{username} ha contestado tu post en '%{topic_title}'"
       text_body_template: |
-        %{username} replied to your post in '%{topic_title}' on %{site_name}:
+        %{username} contestó a tu post '%{topic_title}' en %{site_name}:
 
         ---
         %{message}
 
         ---
-        Please visit this link to respond: %{base_url}%{url}
+        Por favor visita este link para contestar: %{base_url}%{url}
 
     user_quoted:
-      subject_template: "[%{site_name}] %{username} quoted you in '%{topic_title}'"
+      subject_template: "[%{site_name}] %{username} te mencionó en '%{topic_title}'"
       text_body_template: |
-        %{username} quoted you in '%{topic_title}' on %{site_name}:
+        %{username} te ha mencionado en '%{topic_title}' en %{site_name}:
 
         ---
         %{message}
 
         ---
-        Please visit this link to respond: %{base_url}%{url}
+        Por favor visita este link para contestar: %{base_url}%{url}
 
     user_mentioned:
-      subject_template: "[%{site_name}] %{username} mentioned you in '%{topic_title}'"
+      subject_template: "[%{site_name}] %{username} te ha mencionado en '%{topic_title}'"
       text_body_template: |
-        %{username} mentioned you in '%{topic_title}' on %{site_name}:
+        %{username} te mencionó en '%{topic_title}' en %{site_name}:
 
         ---
         %{message}
 
         ---
-        Please visit this link to respond: %{base_url}%{url}
+        Por favor visita este link para contestar: %{base_url}%{url}
 
     user_posted:
-      subject_template: "[%{site_name}] %{username} posted in '%{topic_title}'"
+      subject_template: "[%{site_name}] %{username} posteó en '%{topic_title}'"
       text_body_template: |
-        %{username} posted in '%{topic_title}' on %{site_name}:
+        %{username} posteó en '%{topic_title}' en %{site_name}:
 
         ---
         %{message}
 
         ---
-        Please visit this link to respond: %{base_url}%{url}
+        Por favor visita este link para contestar: %{base_url}%{url}
 
     digest:
-      why: "Here's a brief summary of what happened on %{site_link} since we last saw you on %{last_seen_at}."
-      subject_template: "[%{site_name}] Forum Activity for %{date}"
-      new_activity: "New activity on your topics and posts:"
-      new_topics: "New topics:"
-      unsubscribe: "This summary email is sent as a courtesy notification from %{site_link} when we haven't seen you in a while.\nIf you'd like to turn it off or change your email preferences, %{unsubscribe_link}."
-      click_here: "click here"
+      why: "Aquí hay un pequeño resument de que ocurrió en %{site_link} desde la última vez que lo viste en %{last_seen_at}."
+      subject_template: "[%{site_name}] Actividad en el foro para %{date}"
+      new_activity: "Actividad nueva en tus topics y posts:"
+      new_topics: "Nuevos topics:"
+      unsubscribe: "Este email de resumen es enviado como una notificación de cortesía desde %{site_link} ya que no te hemos visto en un tiempo.\nSi te gustaría desactivarlo o cambiar tus preferencias de emeail, %{unsubscribe_link}."
+      click_here: "click aquí"
       from: "%{site_name} digest"
 
     private_message:
       subject_template: "[%{site_name}] %{subject_prefix}%{topic_title}"
       text_body_template: |
-        %{private_message_from} just sent you a private message
+        %{private_message_from} te acaba de mandar un mensaje privado
 
         ---
         %{message}
 
         ---
-        Please visit this link to respond: %{base_url}%{url}
+        Por favor visita este link para contestar: %{base_url}%{url}
 
     forgot_password:
-      subject_template: "[%{site_name}] Password reset"
+      subject_template: "[%{site_name}] Resetear el password"
       text_body_template: |
-        Somebody asked to reset your password on [%{site_name}](%{base_url}).
+        Alguien ha pedido resetear tu password en [%{site_name}](%{base_url}).
 
-        If it was not you, you can safely ignore this email.
+        Si no fuiste tú, puedes de manera segura ignorar este email.
 
-        Click the following link to choose a new password:
+        Haz click en el siguiente link para cambiar tu password:
         %{base_url}/users/password-reset/%{email_token}
 
     authorize_email:
-      subject_template: "[%{site_name}] Confirm your new email address"
+      subject_template: "[%{site_name}] Confirma tu nueva dirección de email"
       text_body_template: |
-        Confirm your new email address for %{site_name} by clicking on the following link:
+        Confirma tu nueva dirección de email para %{site_name} haciendo click en el siguiente link:
 
         %{base_url}/users/authorize-email/%{email_token}
 
     signup:
-      subject_template: "[%{site_name}] Activate your new account"
+      subject_template: "[%{site_name}] Activa tu nueva cuenta"
       text_body_template: |
-        Welcome to %{site_name}!
+        ¡Bienvenido a %{site_name}!
 
-        Click the following link to confirm and activate your new account:
+        Haz click en el siguiente link para confirmar y activar tu nueva cuenta
         %{base_url}/users/activate-account/%{email_token}
 
-        If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
+        Si el link anterior no es clicable, prueba copiandolo y pegándolo en la barra de direcciones de tu navegador.
 
   discourse_hub:
-    access_token_problem: "Tell an admin: Please update the site settings to include the correct discourse_org_access_key."
+    access_token_problem: "Díselo a un administrador: Por favor actualiza la configuración del sitio para incluir la discourse_org_access_key correcta."
 
   page_not_found:
-    title: "The page you requested doesn't exist on this discussion forum. Perhaps we can help find it, or another topic like it:"
+    title: "La página que deseas ver no existe en este foro de discusión. Quizás podemos ayudarte a encontrara, u otro topic como ella:"
     latest_topics: "Temas populares"
     recent_topics: "Temas recientes"
     see_more: "Ver Más"
