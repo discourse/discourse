@@ -4,8 +4,10 @@ gem 'active_model_serializers', git: 'https://github.com/rails-api/active_model_
 
 # we had issues with latest, stick to the rev till we figure this out
 # PR that makes it all hang together welcome
-gem 'ember-rails', git: 'https://github.com/emberjs/ember-rails.git', ref: '57bbe32'
-gem 'barber', '0.3.0'
+gem 'ember-rails'
+gem 'ember-source', '1.0.0.rc5' # or the version you need
+gem 'handlebars-source', '1.0.0.rc4' # or the version you need
+gem 'barber'
 
 gem 'vestal_versions', git: 'https://github.com/zhangyuan/vestal_versions'
 

@@ -9,7 +9,7 @@
 //= require ../../app/assets/javascripts/external/jquery-1.9.1.js
 
 //= require ../../app/assets/javascripts/external/jquery.ui.widget.js
-//= require ../../app/assets/javascripts/external/handlebars-1.0.rc.3.js
+//= require ../../app/assets/javascripts/external/handlebars-1.0.rc.4.js
 //= require ../../app/assets/javascripts/external_production/ember.js
 //= require ../../app/assets/javascripts/external_production/sugar-1.3.5.js
 //= require ../../app/assets/javascripts/external_production/group-helper.js
