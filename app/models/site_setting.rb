@@ -6,8 +6,6 @@ class SiteSetting < ActiveRecord::Base
   validates_presence_of :name
   validates_presence_of :data_type
 
-  attr_accessible :description, :name, :value, :data_type
-
   # settings available in javascript under Discourse.SiteSettings
   client_setting(:title, "Discourse")
   client_setting(:logo_url, '/assets/d-logo-sketch.png')

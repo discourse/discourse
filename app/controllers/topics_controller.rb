@@ -78,7 +78,8 @@ class TopicsController < ApplicationController
   end
 
   def similar_to
-    requires_parameters(:title, :raw)
+    params.require(:title)
+    params.require(:raw)
     title, raw = params[:title], params[:raw]
 
     raise Discourse::InvalidParameters.new(:title) if title.length < SiteSetting.min_title_similar_length
@@ -89,7 +90,8 @@ class TopicsController < ApplicationController
   end
 
   def status
-    requires_parameters(:status, :enabled)
+    params.require(:status)
+    params.require(:enabled)
 
     raise Discourse::InvalidParameters.new(:status) unless %w(visible closed pinned archived).include?(params[:status])
     @topic = Topic.where(id: params[:topic_id].to_i).first
@@ -115,7 +117,7 @@ class TopicsController < ApplicationController
   end
 
   def autoclose
-    requires_parameter(:auto_close_days)
+    raise Discourse::InvalidParameters.new(:auto_close_days) unless params.has_key?(:auto_close_days)
     @topic = Topic.where(id: params[:topic_id].to_i).first
     guardian.ensure_can_moderate!(@topic)
     @topic.auto_close_days = params[:auto_close_days]
@@ -136,7 +138,7 @@ class TopicsController < ApplicationController
   end
 
   def invite
-    requires_parameter(:user)
+    params.require(:user)
     topic = Topic.where(id: params[:topic_id]).first
     guardian.ensure_can_invite_to!(topic)
 
@@ -154,7 +156,7 @@ class TopicsController < ApplicationController
   end
 
   def merge_topic
-    requires_parameters(:destination_topic_id)
+    params.require(:destination_topic_id)
 
     topic = Topic.where(id: params[:topic_id]).first
     guardian.ensure_can_move_posts!(topic)
@@ -168,7 +170,7 @@ class TopicsController < ApplicationController
   end
 
   def move_posts
-    requires_parameters(:post_ids)
+    params.require(:post_ids)
 
     topic = Topic.where(id: params[:topic_id]).first
     guardian.ensure_can_move_posts!(topic)

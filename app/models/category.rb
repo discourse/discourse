@@ -1,6 +1,4 @@
 class Category < ActiveRecord::Base
-  include ActiveModel::ForbiddenAttributesProtection
-
   belongs_to :topic, dependent: :destroy
   belongs_to :topic_only_relative_url,
     select: "id, title, slug",

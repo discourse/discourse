@@ -13,7 +13,7 @@ describe SessionController do
       end
 
       it "raises an error when the login isn't present" do
-        lambda { xhr :post, :create }.should raise_error(Discourse::InvalidParameters)
+	lambda { xhr :post, :create }.should raise_error(ActionController::ParameterMissing)
       end
 
       describe 'invalid password' do
@@ -114,7 +114,7 @@ describe SessionController do
   describe '.forgot_password' do
 
     it 'raises an error without a username parameter' do
-      lambda { xhr :post, :forgot_password }.should raise_error(Discourse::InvalidParameters)
+      lambda { xhr :post, :forgot_password }.should raise_error(ActionController::ParameterMissing)
     end
 
     context 'for a non existant username' do

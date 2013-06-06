@@ -178,7 +178,7 @@ describe UsersController do
       let!(:user) { log_in }
 
       it 'raises an error without an email parameter' do
-        lambda { xhr :put, :change_email, username: user.username }.should raise_error(Discourse::InvalidParameters)
+	lambda { xhr :put, :change_email, username: user.username }.should raise_error(ActionController::ParameterMissing)
       end
 
       it "raises an error if you can't edit the user" do
@@ -489,7 +489,7 @@ describe UsersController do
       let(:new_username) { "#{user.username}1234" }
 
       it 'raises an error without a new_username param' do
-        lambda { xhr :put, :username, username: user.username }.should raise_error(Discourse::InvalidParameters)
+	lambda { xhr :put, :username, username: user.username }.should raise_error(ActionController::ParameterMissing)
       end
 
       it 'raises an error when you don\'t have permission to change the user' do
@@ -518,7 +518,7 @@ describe UsersController do
     end
 
     it 'raises an error without a username parameter' do
-      lambda { xhr :get, :check_username }.should raise_error(Discourse::InvalidParameters)
+      lambda { xhr :get, :check_username }.should raise_error(ActionController::ParameterMissing)
     end
 
     shared_examples_for 'when username is unavailable locally' do

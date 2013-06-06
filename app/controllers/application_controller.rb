@@ -257,14 +257,6 @@ class ApplicationController < ActionController::Base
       Rack::MiniProfiler.authorize_request
     end
 
-    def requires_parameters(*required)
-      required.each do |p|
-        raise Discourse::InvalidParameters.new(p) unless params.has_key?(p)
-      end
-    end
-
-    alias :requires_parameter :requires_parameters
-
     def store_incoming_links
       IncomingLink.add(request,current_user) unless request.xhr?
     end

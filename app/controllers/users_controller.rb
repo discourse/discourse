@@ -65,7 +65,7 @@ class UsersController < ApplicationController
   end
 
   def username
-    requires_parameter(:new_username)
+    params.require(:new_username)
 
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
@@ -86,14 +86,14 @@ class UsersController < ApplicationController
   end
 
   def is_local_username
-    requires_parameter(:username)
+    params.require(:username)
     u = params[:username].downcase
     r = User.exec_sql('select 1 from users where username_lower = ?', u).values
     render json: {valid: r.length == 1}
   end
 
   def check_username
-    requires_parameter(:username)
+    params.require(:username)
 
     validator = UsernameValidator.new(params[:username])
     if !validator.valid_format?
@@ -259,7 +259,7 @@ class UsersController < ApplicationController
   end
 
   def change_email
-    requires_parameter(:email)
+    params.require(:email)
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
     lower_email = Email.downcase(params[:email]).strip

@@ -13,7 +13,7 @@ describe TopicsController do
       let(:topic) { p1.topic }
 
       it "raises an error without postIds" do
-        lambda { xhr :post, :move_posts, topic_id: topic.id, title: 'blah' }.should raise_error(Discourse::InvalidParameters)
+	lambda { xhr :post, :move_posts, topic_id: topic.id, title: 'blah' }.should raise_error(ActionController::ParameterMissing)
       end
 
       it "raises an error when the user doesn't have permission to move the posts" do
@@ -106,7 +106,7 @@ describe TopicsController do
       let(:topic) { p1.topic }
 
       it "raises an error without destination_topic_id" do
-        lambda { xhr :post, :merge_topic, topic_id: topic.id }.should raise_error(Discourse::InvalidParameters)
+	lambda { xhr :post, :merge_topic, topic_id: topic.id }.should raise_error(ActionController::ParameterMissing)
       end
 
       it "raises an error when the user doesn't have permission to merge" do
@@ -144,11 +144,11 @@ describe TopicsController do
     let(:raw) { 'this body is long enough to search for' }
 
     it "requires a title" do
-      -> { xhr :get, :similar_to, raw: raw }.should raise_error(Discourse::InvalidParameters)
+      -> { xhr :get, :similar_to, raw: raw }.should raise_error(ActionController::ParameterMissing)
     end
 
     it "requires a raw body" do
-      -> { xhr :get, :similar_to, title: title }.should raise_error(Discourse::InvalidParameters)
+      -> { xhr :get, :similar_to, title: title }.should raise_error(ActionController::ParameterMissing)
     end
 
     it "raises an error if the title length is below the minimum" do
@@ -218,11 +218,11 @@ describe TopicsController do
       end
 
       it 'requires the status parameter' do
-        lambda { xhr :put, :status, topic_id: @topic.id, enabled: true }.should raise_error(Discourse::InvalidParameters)
+	lambda { xhr :put, :status, topic_id: @topic.id, enabled: true }.should raise_error(ActionController::ParameterMissing)
       end
 
       it 'requires the enabled parameter' do
-        lambda { xhr :put, :status, topic_id: @topic.id, status: 'visible' }.should raise_error(Discourse::InvalidParameters)
+	lambda { xhr :put, :status, topic_id: @topic.id, status: 'visible' }.should raise_error(ActionController::ParameterMissing)
       end
 
       it 'raises an error with a status not in the whitelist' do
@@ -526,7 +526,7 @@ describe TopicsController do
       end
 
       it 'requires an email parameter' do
-        lambda { xhr :post, :invite, topic_id: @topic.id }.should raise_error(Discourse::InvalidParameters)
+	lambda { xhr :post, :invite, topic_id: @topic.id }.should raise_error(ActionController::ParameterMissing)
       end
 
       describe 'without permission' do

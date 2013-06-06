@@ -6,7 +6,8 @@ class SessionController < ApplicationController
   skip_before_filter :redirect_to_login_if_required
 
   def create
-    requires_parameter(:login, :password)
+    params.require(:login)
+    params.require(:password)
 
     login = params[:login]
     login = login[1..-1] if login[0] == "@"
@@ -47,7 +48,7 @@ class SessionController < ApplicationController
   end
 
   def forgot_password
-    requires_parameter(:login)
+    params.require(:login)
 
     user = User.where('username_lower = :username or email = :email', username: params[:login].downcase, email: Email.downcase(params[:login])).first
     if user.present?

@@ -2,7 +2,6 @@ class UserAction < ActiveRecord::Base
   belongs_to :user
   belongs_to :target_post, class_name: "Post"
   belongs_to :target_topic, class_name: "Topic"
-  attr_accessible :acting_user_id, :action_type, :target_topic_id, :target_post_id, :target_user_id, :user_id
 
   validates_presence_of :action_type
   validates_presence_of :user_id
