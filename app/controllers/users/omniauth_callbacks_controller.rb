@@ -1,6 +1,7 @@
 # -*- encoding : utf-8 -*-
 require_dependency 'email'
 require_dependency 'enum'
+require_dependency 'user_name_suggester'
 
 class Users::OmniauthCallbacksController < ApplicationController
   skip_before_filter :redirect_to_login_if_required
@@ -87,7 +88,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     fb_uid = auth_token["uid"]
 
 
-    username = User.suggest_username(name)
+    username = UserNameSuggester.suggest(name)
 
     session[:authentication] = {
       facebook: {
@@ -232,7 +233,7 @@ class Users::OmniauthCallbacksController < ApplicationController
       @data = {
         email: email,
         name: User.suggest_name(name),
-        username: User.suggest_username(username),
+        username: UserNameSuggester.suggest(username),
         email_valid: true ,
         auth_provider: data[:provider] || params[:provider].try(:capitalize)
       }
@@ -306,7 +307,7 @@ class Users::OmniauthCallbacksController < ApplicationController
         email: email,
         email_valid: true,
         name: User.suggest_name(email),
-        username: User.suggest_username(email),
+        username: UserNameSuggester.suggest(email),
         auth_provider: params[:provider].try(:capitalize)
       }
 

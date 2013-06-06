@@ -409,10 +409,6 @@ describe User do
   end
 
   describe 'name heuristics' do
-    it 'is able to guess a decent username from an email' do
-      User.suggest_username('bob@bob.com').should == 'bob'
-    end
-
     it 'is able to guess a decent name from an email' do
       User.suggest_name('sam.saffron@gmail.com').should == 'Sam Saffron'
     end
@@ -471,64 +467,6 @@ describe User do
 
     it 'returns false when a username is taken' do
       User.username_available?(Fabricate(:user).username).should be_false
-    end
-  end
-
-  describe '.suggest_username' do
-
-    it "doesn't raise an error on nil username" do
-      User.suggest_username(nil).should be_nil
-    end
-
-    it 'corrects weird characters' do
-      User.suggest_username("Darth%^Vader").should == "Darth_Vader"
-    end
-
-    it 'adds 1 to an existing username' do
-      user = Fabricate(:user)
-      User.suggest_username(user.username).should == "#{user.username}1"
-    end
-
-    it "adds numbers if it's too short" do
-      User.suggest_username('a').should == 'a11'
-    end
-
-    it "has a special case for me and i emails" do
-      User.suggest_username('me@eviltrout.com').should == 'eviltrout'
-      User.suggest_username('i@eviltrout.com').should == 'eviltrout'
-    end
-
-    it "shortens very long suggestions" do
-      User.suggest_username("myreallylongnameisrobinwardesquire").should == 'myreallylongnam'
-    end
-
-    it "makes room for the digit added if the username is too long" do
-      User.create(username: 'myreallylongnam', email: 'fake@discourse.org')
-      User.suggest_username("myreallylongnam").should == 'myreallylongna1'
-    end
-
-    it "removes leading character if it is not alphanumeric" do
-      User.suggest_username("_myname").should == 'myname'
-    end
-
-    it "removes trailing characters if they are invalid" do
-      User.suggest_username("myname!^$=").should == 'myname'
-    end
-
-    it "replace dots" do
-      User.suggest_username("my.name").should == 'my_name'
-    end
-
-    it "remove leading dots" do
-      User.suggest_username(".myname").should == 'myname'
-    end
-
-    it "remove trailing dots" do
-      User.suggest_username("myname.").should == 'myname'
-    end
-
-    it 'should handle typical facebook usernames' do
-      User.suggest_username('roger.nelson.3344913').should == 'roger_nelson_33'
     end
   end
 
