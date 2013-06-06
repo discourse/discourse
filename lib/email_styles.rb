@@ -12,7 +12,7 @@ class EmailStyles
     fragment = Nokogiri::HTML.fragment(@html)
 
     fragment.css('h3').each do |h3|
-      h3['style'] = 'margin-bottom: 20px; background-color: #eee; padding: 10px; border: 1px solid #ddd;'
+      h3['style'] = 'margin: 15px 0 20px 0; border-bottom: 1px solid #ddd;'
     end
 
     fragment.css('hr').each do |hr|
