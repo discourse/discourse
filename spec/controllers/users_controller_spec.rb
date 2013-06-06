@@ -278,17 +278,25 @@ describe UsersController do
       DiscourseHub.stubs(:register_nickname).returns([true, nil])
     end
 
+    def post_user
+      xhr :post, :create,
+        name: @user.name,
+        username: @user.username,
+        password: "strongpassword",
+        email: @user.email
+    end
+
     context 'when creating a non active user (unconfirmed email)' do
       it 'should enqueue a signup email' do
         Jobs.expects(:enqueue).with(:user_email, has_entries(type: :signup))
-        xhr :post, :create, name: @user.name, username: @user.username,
-                            password: "strongpassword", email: @user.email
+        post_user
       end
 
       it "doesn't send a welcome email" do
         User.any_instance.expects(:enqueue_welcome_message).with('welcome_user').never
-        xhr :post, :create, name: @user.name, username: @user.username,
-                            password: "strongpassword", email: @user.email
+        post_user
+      end
+
       end
     end
 
@@ -300,19 +308,24 @@ describe UsersController do
 
       it 'enqueues a welcome email' do
         User.any_instance.expects(:enqueue_welcome_message).with('welcome_user')
-        xhr :post, :create, name: @user.name, username: @user.username,
-                            password: "strongpassword", email: @user.email
+
+        post_user
+      end
       end
 
       it "should be logged in" do
         User.any_instance.expects(:enqueue_welcome_message)
-        xhr :post, :create, name: @user.name, username: @user.username, password: "strongpassword", email: @user.email
+
+        post_user
+
         session[:current_user_id].should be_present
       end
 
       it "returns true in the active part of the JSON" do
         User.any_instance.expects(:enqueue_welcome_message)
-        xhr :post, :create, name: @user.name, username: @user.username, password: "strongpassword", email: @user.email
+
+        post_user
+
         ::JSON.parse(response.body)['active'].should == true
       end
 
@@ -320,7 +333,7 @@ describe UsersController do
       context 'when approving of users is required' do
         before do
           SiteSetting.expects(:must_approve_users).returns(true)
-          xhr :post, :create, name: @user.name, username: @user.username, password: "strongpassword", email: @user.email
+          post_user
         end
 
         it "doesn't log in the user" do
@@ -344,8 +357,7 @@ describe UsersController do
           TwitterUserInfo.expects(:find_by_twitter_user_id).returns(nil)
           TwitterUserInfo.expects(:create)
 
-          xhr :post, :create, name: @user.name, username: @user.username,
-            password: "strongpassword", email: @user.email
+          post_user
         end
 
         it 'should create facebook user info if none exists' do
@@ -354,8 +366,7 @@ describe UsersController do
           FacebookUserInfo.expects(:find_by_facebook_user_id).returns(nil)
           FacebookUserInfo.expects(:create!)
 
-          xhr :post, :create, name: @user.name, username: @user.username,
-                              password: "strongpassword", email: @user.email
+          post_user
         end
 
         it 'should create github user info if none exists' do
@@ -364,18 +375,13 @@ describe UsersController do
           GithubUserInfo.expects(:find_by_github_user_id).returns(nil)
           GithubUserInfo.expects(:create)
 
-          xhr :post, :create, name: @user.name, username: @user.username,
-                              password: "strongpassword", email: @user.email
+          post_user
         end
-
       end
     end
 
     context 'after success' do
-      before do
-        xhr :post, :create, name: @user.name, username: @user.username,
-                            password: "strongpassword", email: @user.email
-      end
+      before { post_user }
 
       it 'should succeed' do
         should respond_with(:success)
