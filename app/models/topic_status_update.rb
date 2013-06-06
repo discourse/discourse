@@ -25,7 +25,12 @@ TopicStatusUpdate = Struct.new(:topic, :user) do
   end
 
   def message_for(status)
-    I18n.t status.locale_key, count: topic.age_in_days
+    if status.autoclosed?
+      num_days = topic.auto_close_started_at ? ((Time.zone.now - topic.auto_close_started_at) / 1.day).round : topic.age_in_days
+      I18n.t status.locale_key, count: num_days
+    else
+      I18n.t status.locale_key
+    end
   end
 
   def options_for(status)

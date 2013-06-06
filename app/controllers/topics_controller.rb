@@ -119,8 +119,7 @@ class TopicsController < ApplicationController
     raise Discourse::InvalidParameters.new(:auto_close_days) unless params.has_key?(:auto_close_days)
     @topic = Topic.where(id: params[:topic_id].to_i).first
     guardian.ensure_can_moderate!(@topic)
-    @topic.auto_close_days = params[:auto_close_days]
-    @topic.auto_close_user = current_user
+    @topic.set_auto_close(params[:auto_close_days], current_user)
     @topic.save
     render nothing: true
   end

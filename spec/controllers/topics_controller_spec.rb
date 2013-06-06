@@ -612,17 +612,12 @@ describe TopicsController do
       end
 
       it "can set a topic's auto close time" do
-        Topic.any_instance.expects(:auto_close_days=).with { |arg| arg.to_i == 3 }
+        Topic.any_instance.expects(:set_auto_close).with("3", @admin)
         xhr :put, :autoclose, topic_id: @topic.id, auto_close_days: 3
       end
 
       it "can remove a topic's auto close time" do
-        Topic.any_instance.expects(:auto_close_days=).with(nil)
-        xhr :put, :autoclose, topic_id: @topic.id, auto_close_days: nil
-      end
-
-      it "sets the topic closer to the current user" do
-        Topic.any_instance.expects(:auto_close_user=).with(@admin)
+        Topic.any_instance.expects(:set_auto_close).with(nil, anything)
         xhr :put, :autoclose, topic_id: @topic.id, auto_close_days: nil
       end
     end

@@ -107,8 +107,7 @@ class Topic < ActiveRecord::Base
     self.bumped_at ||= Time.now
     self.last_post_user_id ||= user_id
     if !@ignore_category_auto_close and self.category and self.category.auto_close_days and self.auto_close_at.nil?
-      self.auto_close_at = self.category.auto_close_days.days.from_now
-      self.auto_close_user = (self.user.staff? ? self.user : Discourse.system_user)
+      set_auto_close(self.category.auto_close_days)
     end
   end
 
@@ -124,6 +123,7 @@ class Topic < ActiveRecord::Base
 
   before_save do
     if (auto_close_at_changed? and !auto_close_at_was.nil?) or (auto_close_user_id_changed? and auto_close_at)
+      self.auto_close_started_at ||= Time.zone.now
       Jobs.cancel_scheduled_job(:close_topic, {topic_id: id})
       true
     end
@@ -583,8 +583,23 @@ class Topic < ActiveRecord::Base
 
   def auto_close_days=(num_days)
     @ignore_category_auto_close = true
+    set_auto_close(num_days)
+  end
+
+  def set_auto_close(num_days, by_user=nil)
     num_days = num_days.to_i
     self.auto_close_at = (num_days > 0 ? num_days.days.from_now : nil)
+    if num_days > 0
+      self.auto_close_started_at ||= Time.zone.now
+      if by_user and by_user.staff?
+        self.auto_close_user = by_user
+      else
+        self.auto_close_user ||= (self.user.staff? ? self.user : Discourse.system_user)
+      end
+    else
+      self.auto_close_started_at = nil
+    end
+    self
   end
 
   def secure_category?
@@ -641,6 +656,7 @@ end
 #  slug                    :string(255)
 #  auto_close_at           :datetime
 #  auto_close_user_id      :integer
+#  auto_close_started_at   :datetime
 #
 # Indexes
 #

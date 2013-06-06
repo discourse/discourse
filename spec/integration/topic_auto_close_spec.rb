@@ -52,6 +52,7 @@ describe Topic do
       context 'category has a default auto-close' do
         Given(:category) { Fabricate(:category, auto_close_days: 2.0) }
         Then { topic.auto_close_at.should == 2.days.from_now }
+        And { topic.auto_close_started_at.should == Time.zone.now }
         And { scheduled_jobs_for(:close_topic, {topic_id: topic.id}).should have(1).job }
         And { scheduled_jobs_for(:close_topic, {topic_id: category.topic.id}).should be_empty }
 
