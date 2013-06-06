@@ -161,35 +161,27 @@ class UsersController < ApplicationController
     end
 
     if user.save
-      msg = nil
-      active_user = user.active?
-
-      if active_user
-        # If the user is active (remote authorized email)
-        if SiteSetting.must_approve_users?
-          msg = I18n.t("login.wait_approval")
-          active_user = false
-        else
-          log_on_user(user)
-          user.enqueue_welcome_message('welcome_user')
-          msg = I18n.t("login.active")
-        end
-      else
-        msg = I18n.t("login.activate_email", email: user.email)
-        Jobs.enqueue(
-          :user_email, type: :signup, user_id: user.id,
+      if SiteSetting.must_approve_users?
+        message = I18n.t("login.wait_approval")
+      elsif !user.active?
+        message = I18n.t("login.activate_email", email: user.email)
+        Jobs.enqueue(:user_email,
+          type: :signup,
+          user_id: user.id,
           email_token: user.email_tokens.first.token
         )
+      else
+        message = I18n.t("login.active")
+        log_on_user(user)
+        user.enqueue_welcome_message('welcome_user')
       end
 
-      # Create 3rd party auth records (Twitter, Facebook, GitHub)
       create_third_party_auth_records(user, auth) if auth.present?
 
       # Clear authentication session.
       session[:authentication] = nil
 
-      # JSON result
-      render json: { success: true, active: active_user, message: msg }
+      render json: { success: true, active: user.active?, message: message }
     else
       render json: {
         success: false,
