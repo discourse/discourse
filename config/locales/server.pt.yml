@@ -555,19 +555,6 @@ pt:
 
         - Enquanto estiveres a ler um tópico, podes mover para o topo clicando no título no topo da página. Para chegar ao fundo clica na seta na barra de prograsso no fundo da página, ou clica no último campo sumário do tópico debaixo do primeiro post.
 
-    welcome_approved:
-      subject_template: "Foste aprovado no %{site_name}!"
-      text_body_template: |
-        Parabéns!
-
-        Estás aprovado para te juntares a %{site_name}, ben-vindo ao nosso foum!
-
-        %{new_user_tips}
-
-        Acreditamos num [comportamento civilizado na comunidade](%{base_url}/faq) a toda a hora.
-
-        Diverte-te durante a estadia!
-
     welcome_user:
       subject_template: "Welcome to %{site_name}!"
       text_body_template: |

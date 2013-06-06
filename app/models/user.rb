@@ -209,7 +209,8 @@ class User < ActiveRecord::Base
     self.approved = true
     self.approved_by = approved_by
     self.approved_at = Time.now
-    enqueue_welcome_message('welcome_approved') if save
+
+    send_approval_email if save
   end
 
   def self.email_hash(email)
@@ -615,7 +616,13 @@ class User < ActiveRecord::Base
     end
   end
 
-
+    def send_approval_email
+      Jobs.enqueue(:user_email,
+        type: :signup_after_approval,
+        user_id: id,
+        email_token: email_tokens.first.token
+      )
+    end
 end
 
 # == Schema Information

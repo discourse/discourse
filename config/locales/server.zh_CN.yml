@@ -763,19 +763,6 @@ zh_CN:
 
         - 当阅读一个主题时，你可以通过点击页面顶部的标题回到顶部；要去到 *底部*，点击页面底部的主题浏览进度指示器里的向下箭头，或者点击该主题第一帖下面的汇总信息里的最后一帖区域。
 
-    welcome_approved:
-      subject_template: "你已经获得了 %{site_name} 的批准！"
-      text_body_template: |
-        恭喜你！
-
-        你已经被批准加入 %{site_name}，欢迎来到我们论坛参与讨论！
-
-        %{new_user_tips}
-
-        我们始终相信 [文明的社会行为](%{base_url}/faq)。
-
-        好好享受你在论坛的时光吧！
-
     welcome_user:
       subject_template: "欢迎来到 %{site_name}！"
       text_body_template: |

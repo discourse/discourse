@@ -693,19 +693,6 @@ sv:
 
         - While reading a topic, move to the top ↑ by clicking its title at the top of the page. To reach the *bottom* ↓, click the down arrow on the topic progress indicator at the bottom of the page, or click the last post field on the topic summary under the first post.
 
-    welcome_approved:
-      subject_template: "You've been approved on %{site_name}!"
-      text_body_template: |
-        Congratulations!
-
-        You're approved to join %{site_name}, welcome to our discussion forum!
-
-        %{new_user_tips}
-
-        We believe in [civilized community behavior](%{base_url}/faq) at all times.
-
-        Enjoy your stay!
-
     welcome_user:
       subject_template: "Welcome to %{site_name}!"
       text_body_template: |

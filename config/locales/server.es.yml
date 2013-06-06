@@ -618,19 +618,6 @@ es:
 
         - Mientras lees un topic, vuelve a lo más alto ↑ haciendo click en su título arriba de la página. Para alcanzar el *final* ↓, haz click en la flecha hacia abajo del indicador de prograso del topic al final de la página, or click the last post field on the topic summary under the first post.
 
-    welcome_approved:
-      subject_template: "¡Has sido aprobado en %{site_name}!"
-      text_body_template: |
-        ¡Enhorabuena!
-
-        Has sido aprobado para unirte a %{site_name}, ¡Bienvenido a nuestro foro de discusión!
-
-        %{new_user_tips}
-
-        Creemos en [civilized community behavior](%{base_url}/faq) siempre.
-
-        ¡Disfruta tu estancia!
-
     welcome_user:
       subject_template: "Bienvenido a %{site_name}!"
       text_body_template: |
