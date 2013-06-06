@@ -1,5 +1,5 @@
 Discourse.Formatter = (function(){
-  var updateRelativeAge, autoUpdatingRelativeAge, relativeAge;
+  var updateRelativeAge, autoUpdatingRelativeAge, relativeAge, relativeAgeTiny, relativeAgeMedium;
 
   updateRelativeAge = function(elems) {
     elems.each(function(){
@@ -15,11 +15,9 @@ Discourse.Formatter = (function(){
     return "<span class='relative-date' data-time='" + date.getTime() + "' data-format='" + format +  "'>" + relativeAge(date, options)  + "</span>";
   };
 
-  // mostly lifted from rails with a few amendments
-  relativeAge = function(date, options) {
-    options = options || {};
-    var format = options.format || "tiny";
 
+  relativeAgeTiny = function(date, options){
+    var format = "tiny";
     var distance = Math.round((new Date() - date) / 1000);
     var distance_in_minutes = Math.round(distance / 60.0);
 
@@ -62,6 +60,55 @@ Discourse.Formatter = (function(){
     }
 
     return formatted;
+  };
+
+  relativeAgeMedium = function(date, options){
+    var displayDate, fiveDaysAgo, oneMinuteAgo, fullReadable, humanized, leaveAgo, val;
+
+    leaveAgo = options.leaveAgo;
+
+    if (!date) {
+      return "&mdash;";
+    }
+
+    fullReadable = date.format("long");
+    displayDate = "";
+    fiveDaysAgo = (new Date()) - 432000000;
+    oneMinuteAgo = (new Date()) - 60000;
+
+    if (oneMinuteAgo <= date.getTime() && date.getTime() <= (new Date())) {
+      displayDate = Em.String.i18n("now");
+    } else if (fiveDaysAgo > (date.getTime())) {
+      if ((new Date()).getFullYear() !== date.getFullYear()) {
+        displayDate = date.format("short");
+      } else {
+        displayDate = date.format("short_no_year");
+      }
+    } else {
+      humanized = date.relative();
+      if (!humanized) {
+        return "";
+      }
+      displayDate = humanized;
+      if (!leaveAgo) {
+        displayDate = (date.millisecondsAgo()).duration();
+      }
+    }
+    return "<span class='date' title='" + fullReadable + "'>" + displayDate + "</span>";
+  };
+
+  // mostly lifted from rails with a few amendments
+  relativeAge = function(date, options) {
+    options = options || {};
+    var format = options.format || "tiny";
+
+    if(format === "tiny") {
+      return relativeAgeTiny(date, options);
+    } else if (format === "medium") {
+      return relativeAgeMedium(date, options);
+    }
+
+    return "UNKNOWN FORMAT";
   };
 
   return {relativeAge: relativeAge, autoUpdatingRelativeAge: autoUpdatingRelativeAge, updateRelativeAge: updateRelativeAge};

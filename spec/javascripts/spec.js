@@ -21,6 +21,7 @@
 //= require_tree ../../app/assets/javascripts/external
 
 //= require ../../app/assets/javascripts/locales/i18n
+//= require ../../app/assets/javascripts/locales/date_locales.js
 //= require ../../app/assets/javascripts/discourse/helpers/i18n_helpers
 //= require ../../app/assets/javascripts/locales/en
 //= require ../../app/assets/javascripts/discourse
