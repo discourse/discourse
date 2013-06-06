@@ -22,7 +22,14 @@ class EmailSender
     return if @message.body.blank?
 
     @message.charset = 'UTF-8'
-    renderer = EmailRenderer.new(@message)
+
+    opts = {}
+
+    # Only use the html template on digest emails
+    opts[:html_template] = true if (@email_type == 'digest')
+
+    renderer = EmailRenderer.new(@message, opts)
+
     @message.html_part = Mail::Part.new do
       content_type 'text/html; charset=UTF-8'
       body renderer.html
