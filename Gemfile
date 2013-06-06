@@ -33,8 +33,6 @@ gem 'image_optim'
 # note: for image_sorcery to correctly work you need
 # sudo apt-get install -y imagemagick
 gem 'image_sorcery'
-# it patches stuff, I think we need it in prd
-gem 'jquery-rails'
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
