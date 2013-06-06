@@ -18,7 +18,7 @@ Discourse.ContainerView = Ember.ContainerView.extend(Discourse.Presence, {
     @return {Ember.View} the view we created
   **/
   attachViewWithArgs: function(viewArgs, viewClass) {
-    if (!viewClass) { viewClass = Ember.View.extend() };
+    if (!viewClass) { viewClass = Ember.View.extend(); }
     var view = this.createChildView(viewClass, viewArgs);
     this.pushObject(view);
     return view;
