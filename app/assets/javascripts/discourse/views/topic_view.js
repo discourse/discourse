@@ -175,7 +175,6 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
   // Triggered whenever any posts are rendered, debounced to save over calling
   postsRendered: Discourse.debounce(function() {
-    this.set('renderedPosts', $('.topic-post'));
     this.updatePosition(false);
   }, 50),
 
@@ -421,7 +420,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
         title, info, rows, screenTrack, _this, currentPost;
 
     _this = this;
-    rows = this.get('renderedPosts');
+    rows = $('.topic-post');
 
     if (!rows || rows.length === 0) { return; }
     info = Discourse.Eyeline.analyze(rows);
@@ -449,10 +448,20 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
       currentPost = currentPost || seen;
     });
 
-    this.nonUrgentPositionUpdate({
-      userActive: userActive,
-      currentPost: currentPost || this.getPost($(rows[info.bottom])).get('post_number')
-    });
+    var currentForPositionUpdate = currentPost;
+    if (!currentForPositionUpdate) {
+      var postView = this.getPost($(rows[info.bottom]));
+      if (postView) { currentForPositionUpdate = postView.get('post_number'); }
+    }
+
+    if (currentForPositionUpdate) {
+      this.nonUrgentPositionUpdate({
+        userActive: userActive,
+        currentPost: currentPost || currentForPositionUpdate
+      });
+    } else {
+      console.error("can't update position ");
+    }
 
     offset = window.pageYOffset || $('html').scrollTop();
     firstLoaded = this.get('firstPostLoaded');
