@@ -17,6 +17,8 @@
 //= require ./discourse/controllers/object_controller
 //= require ./discourse/views/modal/modal_body_view
 //= require ./discourse/views/combobox_view
+//= require ./discourse/views/buttons/button_view
+//= require ./discourse/views/buttons/dropdown_button_view
 //= require ./discourse/models/model
 //= require ./discourse/routes/discourse_route
 //= require ./discourse/routes/discourse_restricted_user_route

@@ -70,7 +70,6 @@ Discourse.HistoryController = Discourse.ObjectController.extend(Discourse.ModalF
           Em.String.i18n("changed_by", { author: item.display_username });
       });
 
-      console.log('wat');
       historyController.setProperties({
         loading: false,
         versionLeft: result.first(),

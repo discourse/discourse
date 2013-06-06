@@ -9,7 +9,6 @@
 **/
 Discourse.View = Ember.View.extend(Discourse.Presence, {});
 
-
 Discourse.View.reopenClass({
 
   /**

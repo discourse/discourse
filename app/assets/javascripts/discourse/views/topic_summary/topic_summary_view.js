@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.TopicSummaryView = Ember.ContainerView.extend(Discourse.Presence, {
+Discourse.TopicSummaryView = Discourse.ContainerView.extend({
   topicBinding: 'controller.content',
   classNameBindings: ['hidden', ':topic-summary'],
   LINKS_SHOWN: 5,
@@ -42,11 +42,12 @@ Discourse.TopicSummaryView = Ember.ContainerView.extend(Discourse.Presence, {
     this._super();
     if (this.get('hidden')) return;
 
-    this.pushObject(Em.View.create({
+    this.attachViewWithArgs({
       templateName: 'topic_summary/info',
       topic: this.get('topic'),
       summaryView: this
-    }));
+    })
+
     this.trigger('appendSummaryInformation', this);
   },
 
@@ -58,20 +59,20 @@ Discourse.TopicSummaryView = Ember.ContainerView.extend(Discourse.Presence, {
 
     // If we have a best of view
     if (this.get('controller.has_best_of')) {
-      container.pushObject(Em.View.create({
+      container.attachViewWithArgs({
         templateName: 'topic_summary/best_of_toggle',
         tagName: 'section',
         classNames: ['information']
-      }));
+      });
     }
 
     // If we have a private message
     if (this.get('topic.isPrivateMessage')) {
-      return container.pushObject(Em.View.create({
+      container.attachViewWithArgs({
         templateName: 'topic_summary/private_message',
         tagName: 'section',
         classNames: ['information']
-      }));
+      });
     }
   }
 });

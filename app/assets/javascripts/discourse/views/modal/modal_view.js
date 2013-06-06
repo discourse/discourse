@@ -2,7 +2,7 @@
   A base class for helping us display modal content
 
   @class ModalView
-  @extends Ember.ContainerView
+  @extends Discourse.View
   @namespace Discourse
   @module Discourse
 **/
