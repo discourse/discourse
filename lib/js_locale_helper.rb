@@ -62,7 +62,7 @@ module JsLocaleHelper
       hash.each do |k,v|
         if Hash === v
           rval.merge!(strip_out_message_formats!(v, prefix + (prefix.length > 0 ? "." : "") << k, rval))
-        elsif k.end_with?("_MF")
+        elsif k.to_s().end_with?("_MF")
           rval[prefix + (prefix.length > 0 ? "." : "") << k] = v
           hash.delete(k)
         end
