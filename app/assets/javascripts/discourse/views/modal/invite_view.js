@@ -10,13 +10,11 @@ Discourse.InviteView = Discourse.ModalBodyView.extend({
   templateName: 'modal/invite',
   title: Em.String.i18n('topic.invite_reply.title'),
 
-  didInsertElement: function() {
-    this._super();
 
-    var inviteModalView = this;
-    Em.run.schedule('afterRender', function() {
-      inviteModalView.$('input').focus();
-    });
+  keyUp: function(e) {
+    // Add the invitee if they hit enter
+    if (e.keyCode === 13) { this.get('controller').createInvite(); }
+    return false;
   }
 
 });

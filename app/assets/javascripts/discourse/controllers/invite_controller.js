@@ -26,6 +26,8 @@ Discourse.InviteController = Discourse.ObjectController.extend(Discourse.ModalFu
   }.property('email'),
 
   createInvite: function() {
+    if (this.get('disabled')) return;
+
     var inviteController = this;
     this.set('saving', true);
     this.set('error', false);

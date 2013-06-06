@@ -9,10 +9,8 @@
   {{#if finished}}
     {{i18n topic.invite_private.success}}
   {{else}}
-    <form>
-      <label>{{i18n topic.invite_private.email_or_username}}</label>
-      {{textField value=emailOrUsername placeholderKey="topic.invite_private.email_or_username_placeholder"}}
-    </form>
+    <label>{{i18n topic.invite_private.email_or_username}}</label>
+    {{textField value=emailOrUsername placeholderKey="topic.invite_private.email_or_username_placeholder"}}
   {{/if}}
 </div>
 <div class="modal-footer">

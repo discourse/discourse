@@ -15,7 +15,7 @@ Discourse.ModalBodyView = Discourse.View.extend({
 
     var modalBodyView = this;
     Em.run.schedule('afterRender', function() {
-      modalBodyView.$('form input:first').focus();
+      modalBodyView.$('input:first').focus();
     });
 
     var title = this.get('title');

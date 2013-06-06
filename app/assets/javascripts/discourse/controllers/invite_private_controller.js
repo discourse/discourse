@@ -20,6 +20,9 @@ Discourse.InvitePrivateController = Discourse.ObjectController.extend(Discourse.
   }.property('saving'),
 
   invite: function() {
+
+    if (this.get('disabled')) return;
+
     var invitePrivateController = this;
     this.set('saving', true);
     this.set('error', false);

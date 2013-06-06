@@ -9,10 +9,8 @@
   {{#if finished}}
     {{{successMessage}}}
   {{else}}
-    <form>
-      <label>{{i18n topic.invite_reply.email}}</label>
-      {{textField value=email placeholderKey="topic.invite_reply.email_placeholder"}}
-    </form>
+    <label>{{i18n topic.invite_reply.email}}</label>
+    {{textField value=email placeholderKey="topic.invite_reply.email_placeholder"}}
   {{/if}}
 </div>
 <div class="modal-footer">
