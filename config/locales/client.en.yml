@@ -1131,6 +1131,10 @@ en:
         flags_received_count: Flags Received
         approve: 'Approve'
         approved_by: "approved by"
+        approve_success: "User approved and email sent with activation
+          instructions."
+        approve_bulk_success: "Success! All selected users have been approved
+          and notified."
         time_read: "Read Time"
         delete: "Delete User"
         delete_forbidden: "This user can't be deleted because there are posts. Delete all this user's posts first."
