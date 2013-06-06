@@ -282,6 +282,7 @@ class ApplicationController < ActionController::Base
       @latest = f.order('views desc').take(10)
       @recent = f.order('created_at desc').take(10)
       @slug =  params[:slug].class == String ? params[:slug] : ''
+      @slug =  (params[:id].class == String ? params[:id] : '') if @slug.blank?
       @slug.gsub!('-',' ')
       render status: status, layout: 'no_js', template: '/exceptions/not_found'
     end

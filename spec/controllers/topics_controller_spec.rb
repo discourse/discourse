@@ -13,7 +13,7 @@ describe TopicsController do
       let(:topic) { p1.topic }
 
       it "raises an error without postIds" do
-	lambda { xhr :post, :move_posts, topic_id: topic.id, title: 'blah' }.should raise_error(ActionController::ParameterMissing)
+        lambda { xhr :post, :move_posts, topic_id: topic.id, title: 'blah' }.should raise_error(ActionController::ParameterMissing)
       end
 
       it "raises an error when the user doesn't have permission to move the posts" do
@@ -106,7 +106,7 @@ describe TopicsController do
       let(:topic) { p1.topic }
 
       it "raises an error without destination_topic_id" do
-	lambda { xhr :post, :merge_topic, topic_id: topic.id }.should raise_error(ActionController::ParameterMissing)
+        lambda { xhr :post, :merge_topic, topic_id: topic.id }.should raise_error(ActionController::ParameterMissing)
       end
 
       it "raises an error when the user doesn't have permission to merge" do
@@ -218,11 +218,11 @@ describe TopicsController do
       end
 
       it 'requires the status parameter' do
-	lambda { xhr :put, :status, topic_id: @topic.id, enabled: true }.should raise_error(ActionController::ParameterMissing)
+        lambda { xhr :put, :status, topic_id: @topic.id, enabled: true }.should raise_error(ActionController::ParameterMissing)
       end
 
       it 'requires the enabled parameter' do
-	lambda { xhr :put, :status, topic_id: @topic.id, status: 'visible' }.should raise_error(ActionController::ParameterMissing)
+        lambda { xhr :put, :status, topic_id: @topic.id, status: 'visible' }.should raise_error(ActionController::ParameterMissing)
       end
 
       it 'raises an error with a status not in the whitelist' do
@@ -371,6 +371,16 @@ describe TopicsController do
     it 'shows a topic correctly' do
       xhr :get, :show, topic_id: topic.id, slug: topic.slug
       response.should be_success
+    end
+
+    it 'can find a topic given a slug in the id param' do
+      xhr :get, :show, id: topic.slug
+      expect(response).to redirect_to(topic.relative_url)
+    end
+
+    it 'returns 404 when an invalid slug is given and no id' do
+      xhr :get, :show, id: 'nope-nope'
+      expect(response.status).to eq(404)
     end
 
     it 'records a view' do
@@ -526,7 +536,7 @@ describe TopicsController do
       end
 
       it 'requires an email parameter' do
-	lambda { xhr :post, :invite, topic_id: @topic.id }.should raise_error(ActionController::ParameterMissing)
+        lambda { xhr :post, :invite, topic_id: @topic.id }.should raise_error(ActionController::ParameterMissing)
       end
 
       describe 'without permission' do
