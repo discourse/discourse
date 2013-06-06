@@ -21,7 +21,7 @@ describe Admin::ImpersonateController do
     context 'create' do
 
       it 'requires a username_or_email parameter' do
-        lambda { xhr :put, :create }.should raise_error(Discourse::InvalidParameters)
+	lambda { xhr :put, :create }.should raise_error(ActionController::ParameterMissing)
       end
 
       it 'returns 404 when that user does not exist' do

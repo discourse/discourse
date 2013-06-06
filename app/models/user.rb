@@ -7,8 +7,6 @@ require_dependency 'discourse'
 require_dependency 'post_destroyer'
 
 class User < ActiveRecord::Base
-  attr_accessible :name, :username, :password, :email, :bio_raw, :website
-
   has_many :posts
   has_many :notifications
   has_many :topic_users

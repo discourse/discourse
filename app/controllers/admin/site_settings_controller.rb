@@ -7,7 +7,7 @@ class Admin::SiteSettingsController < Admin::AdminController
   end
 
   def update
-    requires_parameter(:value)
+    params.require(:value)
     SiteSetting.send("#{params[:id]}=", params[:value])
     render nothing: true
   end

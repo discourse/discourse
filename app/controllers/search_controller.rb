@@ -7,7 +7,7 @@ class SearchController < ApplicationController
   end
 
   def query
-    requires_parameter(:term)
+    params.require(:term)
 
     search_args = {guardian: guardian}
     search_args[:type_filter] = params[:type_filter] if params[:type_filter].present?
@@ -34,7 +34,5 @@ class SearchController < ApplicationController
     search = Search.new(params[:term], search_args.symbolize_keys)
     render_json_dump(search.execute.as_json)
   end
-
-
 
 end

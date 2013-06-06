@@ -25,7 +25,7 @@ class PostsController < ApplicationController
   end
 
   def create
-    requires_parameter(:post)
+    params.require(:post)
 
     post_creator = PostCreator.new(current_user,
                                    raw: params[:post][:raw],
@@ -55,7 +55,7 @@ class PostsController < ApplicationController
   end
 
   def update
-    requires_parameter(:post)
+    params.require(:post)
 
     post = Post.where(id: params[:id]).first
     post.image_sizes = params[:image_sizes] if params[:image_sizes].present?
@@ -138,7 +138,7 @@ class PostsController < ApplicationController
 
   def destroy_many
 
-    requires_parameters(:post_ids)
+    params.require(:post_ids)
 
     posts = Post.where(id: params[:post_ids])
     raise Discourse::InvalidParameters.new(:post_ids) if posts.blank?
