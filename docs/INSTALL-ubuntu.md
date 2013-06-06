@@ -237,13 +237,18 @@ Initialize the database:
     # Run these commands as the discourse user
     # The database name here should match the production one in database.yml
     createdb discourse_prod
-    RUBY_GC_MALLOC_LIMIT=900000000 RAILS_ENV=production rake db:migrate
-    RUBY_GC_MALLOC_LIMIT=900000000 RAILS_ENV=production rake assets:precompile
+    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production rake db:migrate
+    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production rake assets:precompile
 
 ## nginx setup
 
     # Run these commands as your normal login (e.g. "michael")
     sudo cp ~discourse/discourse/config/nginx.sample.conf /etc/nginx/conf.d/discourse.conf
+
+Edit /etc/nginx/nginx.conf:
+
+- add: `server_names_hash_bucket_size 64;` to the `http` section
+- uncomment: `gzip on;`
 
 Edit /etc/nginx/conf.d/discourse.conf
 
@@ -269,7 +274,7 @@ Configure bluepill:
 Start Discourse:
 
     # Run these commands as the discourse user
-    RUBY_GC_MALLOC_LIMIT=900000000 RAILS_ROOT=~/discourse RAILS_ENV=production NUM_WEBS=4 bluepill --no-privileged -c ~/.bluepill load ~/discourse/config/discourse.pill
+    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ROOT=~/discourse RAILS_ENV=production NUM_WEBS=4 bluepill --no-privileged -c ~/.bluepill load ~/discourse/config/discourse.pill
 
 Add the bluepill startup to crontab.
 
@@ -278,9 +283,21 @@ Add the bluepill startup to crontab.
 
 Add the following line:
 
-    @reboot RUBY_GC_MALLOC_LIMIT=900000000 RAILS_ROOT=~/discourse RAILS_ENV=production NUM_WEBS=4 bluepill --no-privileged -c ~/.bluepill load ~/discourse/config/discourse.pill
+    @reboot RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ROOT=~/discourse RAILS_ENV=production NUM_WEBS=4 /home/discourse/.rvm/bin/bootup_bluepill --no-privileged -c ~/.bluepill load ~/discourse/config/discourse.pill
 
 Congratulations! You've got Discourse installed and running!
+
+Now make yourself an administrator account. Browse to your discourse instance
+and create an account by logging in normally, then run the commands:
+
+    # Run these commands as the discourse user
+    cd ~/discourse
+    RAILS_ENV=production bundle exec rails c
+
+    # (in rails console)
+    > me = User.find_by_username_or_email('myemailaddress@me.com')[0]
+    > me.admin = true
+    > me.save
 
 ## Updating Discourse
 
@@ -294,6 +311,6 @@ Congratulations! You've got Discourse installed and running!
     # To run on the latest version instead of bleeding-edge:
     #git checkout latest-release
     bundle install --without test --deployment
-    RUBY_GC_MALLOC_LIMIT=900000000 RAILS_ENV=production rake db:migrate
-    RUBY_GC_MALLOC_LIMIT=900000000 RAILS_ENV=production rake assets:precompile
+    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production rake db:migrate
+    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production rake assets:precompile
     bluepill start
