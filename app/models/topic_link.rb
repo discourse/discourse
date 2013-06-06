@@ -139,7 +139,7 @@ class TopicLink < ActiveRecord::Base
           if topic_id.present?
             topic = Topic.where(id: topic_id).first
 
-            if topic && post.topic.archetype != 'private_message' && topic.archetype != 'private_message'
+            if topic && post.topic && post.topic.archetype != 'private_message' && topic.archetype != 'private_message'
 
               prefix = Discourse.base_url
 
