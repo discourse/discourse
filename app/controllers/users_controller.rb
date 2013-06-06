@@ -1,4 +1,5 @@
 require_dependency 'discourse_hub'
+require_dependency 'user_name_suggester'
 
 class UsersController < ApplicationController
 
@@ -102,7 +103,7 @@ class UsersController < ApplicationController
       if User.username_available?(params[:username])
         render json: {available: true}
       else
-        render json: {available: false, suggestion: User.suggest_username(params[:username])}
+        render json: {available: false, suggestion: UserNameSuggester.suggest(params[:username])}
       end
     else
 
@@ -133,7 +134,7 @@ class UsersController < ApplicationController
         end
       elsif available_globally && !available_locally
         # Already registered on this site with the matching nickname and email address. Why are you signing up again?
-        render json: {available: false, suggestion: User.suggest_username(params[:username])}
+        render json: {available: false, suggestion: UserNameSuggester.suggest(params[:username])}
       else
         # Not available anywhere.
         render json: {available: false, suggestion: suggestion_from_discourse_hub}
@@ -202,7 +203,7 @@ class UsersController < ApplicationController
       message: I18n.t(
         "login.errors",
         errors:I18n.t(
-          "login.not_available", suggestion: User.suggest_username(params[:username])
+          "login.not_available", suggestion: UserNameSuggester.suggest(params[:username])
         )
       )
     }
