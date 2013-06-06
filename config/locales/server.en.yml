@@ -861,6 +861,13 @@ en:
 
         For additional guidance, please refer to our [FAQ](%{base_url}/faq).
 
+    user_automatically_blocked:
+      subject_template: "User %{username} was automatically blocked"
+      text_body_template: |
+        This is an automated message to inform you that [%{username}](%{blocked_user_url}) has been automatically blocked because too many people submitted flags against %{username}'s post(s).
+
+        Please [review the flags](/admin/flags). If %{username} should not be blocked from posting, click the unblock button on [the admin user page](%{blocked_user_url}).
+
     unblocked:
       subject_template: "Account unblocked"
       text_body_template: |

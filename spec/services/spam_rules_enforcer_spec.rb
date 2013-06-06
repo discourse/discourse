@@ -117,8 +117,14 @@ describe SpamRulesEnforcer do
       expect(Guardian.new(user).can_create_post?(nil)).to be_false
     end
 
-    it 'sends a system message to the user' do
+    it 'sends private messages to the user and to moderators' do
       SystemMessage.expects(:create).with(user, anything, anything)
+      moderator = Fabricate(:moderator)
+      PostCreator.expects(:create).with do |from_user, opts|
+        from_user.id == admin.id &&
+          opts[:target_group_names] && opts[:target_group_names].include?(Group[:moderators].name) &&
+          opts[:archetype] == Archetype.private_message
+      end.returns(stub_everything)
       subject.punish_user
     end
 

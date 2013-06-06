@@ -10,9 +10,10 @@ describe PostAction do
     SiteSetting.num_users_to_block_new_user = 2
   end
 
-  Given!(:admin)   { Fabricate(:admin) } # needed to send a system message
-  Given(:user1)    { Fabricate(:user) }
-  Given(:user2)    { Fabricate(:user) }
+  Given!(:admin)     { Fabricate(:admin) } # needed to send a system message
+  Given!(:moderator) { Fabricate(:moderator) }
+  Given(:user1)      { Fabricate(:user) }
+  Given(:user2)      { Fabricate(:user) }
 
   context 'spammer is a new user' do
     Given(:spammer)  { Fabricate(:user, trust_level: TrustLevel.levels[:newuser]) }
@@ -33,6 +34,7 @@ describe PostAction do
       context 'one spam post is flagged enough times by enough users' do
         Given!(:another_topic)          { Fabricate(:topic) }
         Given!(:private_messages_count) { spammer.private_topics_count }
+        Given!(:mod_pm_count)           { moderator.private_topics_count }
 
         When { PostAction.act(user2, spam_post, PostActionType.types[:spam]) }
 
@@ -48,7 +50,7 @@ describe PostAction do
 
         # The following cases describe when a staff user takes some action, but the user
         # still won't be able to make posts.
-        # A staff user needs to clear the spam flag from the user record.
+        # A staff user needs to clear the blocked flag from the user record.
 
         context "a post's flags are cleared" do
           When { PostAction.clear_flags!(spam_post, admin); spammer.reload }

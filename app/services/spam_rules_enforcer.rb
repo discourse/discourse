@@ -2,6 +2,8 @@
 # receive, their trust level, etc.
 class SpamRulesEnforcer
 
+  include Rails.application.routes.url_helpers
+
   # The exclamation point means that this method may make big changes to posts and the user.
   def self.enforce!(user)
     SpamRulesEnforcer.new(user).enforce!
@@ -51,6 +53,7 @@ class SpamRulesEnforcer
   def punish_user
     Post.update_all(["hidden = true, hidden_reason_id = COALESCE(hidden_reason_id, ?)", Post.hidden_reasons[:new_user_spam_threshold_reached]], user_id: @user.id)
     SystemMessage.create(@user, :too_many_spam_flags)
+    notify_moderators
     @user.blocked = true
     @user.save
   end
@@ -60,5 +63,19 @@ class SpamRulesEnforcer
     @user.blocked = false
     @user.save
   end
+
+
+  private
+
+    def notify_moderators
+      title = I18n.t("system_messages.user_automatically_blocked.subject_template", {username: @user.username})
+      raw_body = I18n.t("system_messages.user_automatically_blocked.text_body_template", {username: @user.username, blocked_user_url: admin_user_path(@user.username)})
+      PostCreator.create( Discourse.system_user,
+                          target_group_names: [Group[:moderators].name],
+                          archetype: Archetype.private_message,
+                          subtype: TopicSubtype.system_message,
+                          title: title,
+                          raw: raw_body )
+    end
 
 end
