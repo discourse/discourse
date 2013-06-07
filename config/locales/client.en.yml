@@ -8,6 +8,9 @@
 en:
   js:
     dates:
+      short_date_no_year: "D MMM"
+      short_date: "D MMM, YYYY"
+      long_date: "MMMM D, YYYY h:mma"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -43,6 +46,26 @@ en:
         almost_x_years:
           one:   "1y"
           other: "%{count}y"
+      medium:
+        x_minutes:
+          one: "1 minute"
+          other: "%{count} minutes"
+        x_hours:
+          one: "1 hour"
+          other: "%{count} hours"
+        x_days:
+          one: "1 day"
+          other: "%{count} days"
+      medium_with_ago:
+        x_minutes:
+          one: "1 minute ago"
+          other: "%{count} minutes ago"
+        x_hours:
+          one: "1 hour ago"
+          other: "%{count} hours ago"
+        x_days:
+          one: "1 day ago"
+          other: "%{count} days ago"
     share:
       topic: 'share a link to this topic'
       post: 'share a link to this post'

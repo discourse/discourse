@@ -40,7 +40,7 @@ describe("Discourse.Formatter", function() {
       }
 
       leaveAgo = true;
-      expect(strip(formatMins(1.5))).toBe("1 minute ago");
+      expect(strip(formatMins(1.4))).toBe("1 minute ago");
       expect(strip(formatMins(2))).toBe("2 minutes ago");
       expect(strip(formatMins(56))).toBe("56 minutes ago");
       expect(strip(formatMins(57))).toBe("1 hour ago");
@@ -51,7 +51,7 @@ describe("Discourse.Formatter", function() {
 
       leaveAgo = false;
       expect(strip(formatMins(0))).toBe("just now");
-      expect(strip(formatMins(1.5))).toBe("1 minute");
+      expect(strip(formatMins(1.4))).toBe("1 minute");
       expect(strip(formatMins(2))).toBe("2 minutes");
       expect(strip(formatMins(56))).toBe("56 minutes");
       expect(strip(formatMins(57))).toBe("1 hour");
@@ -62,7 +62,7 @@ describe("Discourse.Formatter", function() {
 
       expect(strip(formatDays(6))).toBe(shortDate(6));
       expect(strip(formatDays(100))).toBe(shortDate(100)); // eg: 23 Jan
-      // expect(strip(formatDays(500))).toBe(shortDateYear(500)); # this is currently broken
+      expect(strip(formatDays(500))).toBe(shortDateYear(500));
 
       expect($(formatDays(0)).attr("title")).toBe(moment().format('MMMM D, YYYY h:mma'));
       expect($(formatDays(0)).attr("class")).toBe("date");

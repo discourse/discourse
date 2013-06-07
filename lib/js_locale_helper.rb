@@ -19,7 +19,15 @@ module JsLocaleHelper
 
     result << "I18n.translations = #{translations.to_json};\n"
     result << "I18n.locale = '#{locale_str}'\n"
+    result << moment_locale(locale_str)
     result
+  end
+
+  def self.moment_locale(locale_str)
+    filename = Rails.root + "lib/javascript/moment_locale/#{locale_str}.js"
+    if File.exists?(filename)
+      File.read(filename) << "\n"
+    end || ""
   end
 
   def self.generate_message_format(message_formats, locale_str)

@@ -1,5 +1,10 @@
 Discourse.Formatter = (function(){
-  var updateRelativeAge, autoUpdatingRelativeAge, relativeAge, relativeAgeTiny, relativeAgeMedium;
+
+  var updateRelativeAge, autoUpdatingRelativeAge, relativeAge, relativeAgeTiny, relativeAgeMedium, relativeAgeMediumSpan;
+
+  var shortDateNoYear = Ember.String.i18n("dates.short_date_no_year");
+  var longDate = Ember.String.i18n("dates.long_date");
+  var shortDate = Ember.String.i18n("dates.short_date");
 
   updateRelativeAge = function(elems) {
     elems.each(function(){
@@ -19,7 +24,7 @@ Discourse.Formatter = (function(){
   relativeAgeTiny = function(date, options){
     var format = "tiny";
     var distance = Math.round((new Date() - date) / 1000);
-    var distance_in_minutes = Math.round(distance / 60.0);
+    var distanceInMinutes = Math.round(distance / 60.0);
 
     var formatted;
     var t = function(key,opts){
@@ -28,29 +33,29 @@ Discourse.Formatter = (function(){
 
     switch(true){
 
-    case(distance_in_minutes < 1):
+    case(distanceInMinutes < 1):
       formatted = t("less_than_x_minutes", {count: 1});
       break;
-    case(distance_in_minutes >= 1 && distance_in_minutes <= 44):
-      formatted = t("x_minutes", {count: distance_in_minutes});
+    case(distanceInMinutes >= 1 && distanceInMinutes <= 44):
+      formatted = t("x_minutes", {count: distanceInMinutes});
       break;
-    case(distance_in_minutes >= 45 && distance_in_minutes <= 89):
+    case(distanceInMinutes >= 45 && distanceInMinutes <= 89):
       formatted = t("about_x_hours", {count: 1});
       break;
-    case(distance_in_minutes >= 90 && distance_in_minutes <= 1439):
-      formatted = t("about_x_hours", {count: Math.round(distance_in_minutes / 60.0)});
+    case(distanceInMinutes >= 90 && distanceInMinutes <= 1439):
+      formatted = t("about_x_hours", {count: Math.round(distanceInMinutes / 60.0)});
       break;
-    case(distance_in_minutes >= 1440 && distance_in_minutes <= 2519):
+    case(distanceInMinutes >= 1440 && distanceInMinutes <= 2519):
       formatted = t("x_days", {count: 1});
       break;
-    case(distance_in_minutes >= 2520 && distance_in_minutes <= 129599):
-      formatted = t("x_days", {count: Math.round(distance_in_minutes / 1440.0)});
+    case(distanceInMinutes >= 2520 && distanceInMinutes <= 129599):
+      formatted = t("x_days", {count: Math.round(distanceInMinutes / 1440.0)});
       break;
-    case(distance_in_minutes >= 129600 && distance_in_minutes <= 525599):
-      formatted = t("x_months", {count: Math.round(distance_in_minutes / 43200.0)});
+    case(distanceInMinutes >= 129600 && distanceInMinutes <= 525599):
+      formatted = t("x_months", {count: Math.round(distanceInMinutes / 43200.0)});
       break;
     default:
-      var months = Math.round(distance_in_minutes / 43200.0);
+      var months = Math.round(distanceInMinutes / 43200.0);
       if (months < 24) {
         formatted = t("x_months", {count: months});
       } else {
@@ -62,37 +67,61 @@ Discourse.Formatter = (function(){
     return formatted;
   };
 
+  relativeAgeMediumSpan = function(distance, leaveAgo) {
+    var formatted, distanceInMinutes;
+
+    distanceInMinutes = Math.round(distance / 60.0);
+
+    var t = function(key, opts){
+      return Ember.String.i18n("dates.medium" + (leaveAgo?"_with_ago":"") + "." + key, opts);
+    }
+
+    switch(true){
+    case(distanceInMinutes >= 1 && distanceInMinutes <= 56):
+      formatted = t("x_minutes", {count: distanceInMinutes});
+      break;
+    case(distanceInMinutes >= 56 && distanceInMinutes <= 89):
+      formatted = t("x_hours", {count: 1});
+      break;
+    case(distanceInMinutes >= 90 && distanceInMinutes <= 1379):
+      formatted = t("x_hours", {count: Math.round(distanceInMinutes / 60.0)});
+      break;
+    case(distanceInMinutes >= 1380 && distanceInMinutes <= 2159):
+      formatted = t("x_days", {count: 1});
+      break;
+    case(distanceInMinutes >= 2160):
+      formatted = t("x_days", {count: Math.round((distanceInMinutes - 720.0) / 1440.0)});
+      break;
+    }
+
+    return formatted;
+  };
+
   relativeAgeMedium = function(date, options){
-    var displayDate, fiveDaysAgo, oneMinuteAgo, fullReadable, humanized, leaveAgo, val;
+    var displayDate, fiveDaysAgo, oneMinuteAgo, fullReadable, leaveAgo, val;
 
     leaveAgo = options.leaveAgo;
+    var distance = Math.round((new Date() - date) / 1000);
 
     if (!date) {
       return "&mdash;";
     }
 
-    fullReadable = date.format("long");
+    fullReadable = moment(date).format(longDate);
     displayDate = "";
-    fiveDaysAgo = (new Date()) - 432000000;
-    oneMinuteAgo = (new Date()) - 60000;
+    fiveDaysAgo = 432000;
+    oneMinuteAgo = 60;
 
-    if (oneMinuteAgo <= date.getTime() && date.getTime() <= (new Date())) {
+    if (distance >= 0 && distance < oneMinuteAgo) {
       displayDate = Em.String.i18n("now");
-    } else if (fiveDaysAgo > (date.getTime())) {
+    } else if (distance > fiveDaysAgo) {
       if ((new Date()).getFullYear() !== date.getFullYear()) {
-        displayDate = date.format("short");
+        displayDate = moment(date).format(shortDate);
       } else {
-        displayDate = date.format("short_no_year");
+        displayDate = moment(date).format(shortDateNoYear);
       }
     } else {
-      humanized = date.relative();
-      if (!humanized) {
-        return "";
-      }
-      displayDate = humanized;
-      if (!leaveAgo) {
-        displayDate = (date.millisecondsAgo()).duration();
-      }
+      displayDate = relativeAgeMediumSpan(distance, leaveAgo);
     }
     return "<span class='date' title='" + fullReadable + "'>" + displayDate + "</span>";
   };
