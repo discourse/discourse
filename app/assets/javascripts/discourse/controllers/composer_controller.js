@@ -217,9 +217,14 @@ Discourse.ComposerController = Discourse.Controller.extend({
     var view = this.get('view');
     var composerController = this;
     if (!view) {
-      view = Discourse.ComposerView.create({ controller: this });
+
+      // TODO: We should refactor how composer is inserted. It should probably use a
+      // {{render}} and then the controller and view will be wired up automatically.
+      appView = Discourse.__container__.lookup('view:application');
+      view = appView.createChildView(Discourse.ComposerView, {controller: this});
       view.appendTo($('#main'));
       this.set('view', view);
+
       // the next runloop is too soon, need to get the control rendered and then
       //  we need to change stuff, otherwise css animations don't kick in
       Em.run.next(function() {
