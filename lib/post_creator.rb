@@ -38,8 +38,6 @@ class PostCreator
     @user = user
     @opts = opts
     @spam = false
-
-    raise Discourse::InvalidParameters.new(:raw) if @opts[:raw].blank?
   end
 
   # True if the post was considered spam

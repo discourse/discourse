@@ -10,10 +10,6 @@ describe PostCreator do
 
   let(:user) { Fabricate(:user) }
 
-  it 'raises an error without a raw value' do
-    lambda { PostCreator.new(user, {}) }.should raise_error(Discourse::InvalidParameters)
-  end
-
   context 'new topic' do
     let(:category) { Fabricate(:category, user: user) }
     let(:topic) { Fabricate(:topic, user: user) }
