@@ -24,7 +24,7 @@ Discourse.ComboboxView = Discourse.View.extend({
     if (this.get('content')) {
 
       var comboboxView = this;
-      return this.get('content').each(function(o) {
+      this.get('content').each(function(o) {
         var val = o[comboboxView.get('valueAttribute')];
         if (val) { val = val.toString(); }
 
@@ -44,12 +44,12 @@ Discourse.ComboboxView = Discourse.View.extend({
   valueChanged: function() {
     var $combo = this.$();
     var val = this.get('value');
-    if (val) {
+    if (val !== undefined && val !== null) {
       $combo.val(val.toString());
     } else {
       $combo.val(null);
     }
-    $combo.trigger("liszt:updated")
+    $combo.trigger("liszt:updated");
   }.observes('value'),
 
   didInsertElement: function() {
@@ -66,12 +66,12 @@ Discourse.ComboboxView = Discourse.View.extend({
     }
     if (this.classNames && this.classNames.length > 0) {
       // Apply the classes to Chosen's dropdown div too:
-      this.classNames.each( function(c) {
+      this.classNames.each(function(c) {
         $elem.chosen().next().addClass(c);
       });
     }
 
-    $elem.change(function(e) {
+    $elem.chosen().change(function(e) {
       comboboxView.set('value', $(e.target).val());
     });
   }
