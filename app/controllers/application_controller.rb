@@ -284,7 +284,7 @@ class ApplicationController < ActionController::Base
       @slug =  params[:slug].class == String ? params[:slug] : ''
       @slug =  (params[:id].class == String ? params[:id] : '') if @slug.blank?
       @slug.gsub!('-',' ')
-      render status: status, layout: 'no_js', template: '/exceptions/not_found'
+      render status: status, layout: 'no_js', formats: [:html], template: '/exceptions/not_found'
     end
 
 end
