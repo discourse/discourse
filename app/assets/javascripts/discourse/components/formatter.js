@@ -1,10 +1,14 @@
 Discourse.Formatter = (function(){
 
-  var updateRelativeAge, autoUpdatingRelativeAge, relativeAge, relativeAgeTiny, relativeAgeMedium, relativeAgeMediumSpan;
+  var updateRelativeAge, autoUpdatingRelativeAge, relativeAge, relativeAgeTiny, relativeAgeMedium, relativeAgeMediumSpan, longDate;
 
-  var shortDateNoYear = Ember.String.i18n("dates.short_date_no_year");
-  var longDate = Ember.String.i18n("dates.long_date");
-  var shortDate = Ember.String.i18n("dates.short_date");
+  var shortDateNoYearFormat = Ember.String.i18n("dates.short_date_no_year");
+  var longDateFormat = Ember.String.i18n("dates.long_date");
+  var shortDateFormat = Ember.String.i18n("dates.short_date");
+
+  longDate = function(dt) {
+    return moment(dt).format(longDateFormat);
+  };
 
   updateRelativeAge = function(elems) {
     elems.each(function(){
@@ -107,7 +111,7 @@ Discourse.Formatter = (function(){
       return "&mdash;";
     }
 
-    fullReadable = moment(date).format(longDate);
+    fullReadable = longDate(date);
     displayDate = "";
     fiveDaysAgo = 432000;
     oneMinuteAgo = 60;
@@ -116,9 +120,9 @@ Discourse.Formatter = (function(){
       displayDate = Em.String.i18n("now");
     } else if (distance > fiveDaysAgo) {
       if ((new Date()).getFullYear() !== date.getFullYear()) {
-        displayDate = moment(date).format(shortDate);
+        displayDate = moment(date).format(shortDateFormat);
       } else {
-        displayDate = moment(date).format(shortDateNoYear);
+        displayDate = moment(date).format(shortDateNoYearFormat);
       }
     } else {
       displayDate = relativeAgeMediumSpan(distance, leaveAgo);
@@ -140,5 +144,10 @@ Discourse.Formatter = (function(){
     return "UNKNOWN FORMAT";
   };
 
-  return {relativeAge: relativeAge, autoUpdatingRelativeAge: autoUpdatingRelativeAge, updateRelativeAge: updateRelativeAge};
+  return {
+    longDate: longDate,
+    relativeAge: relativeAge,
+    autoUpdatingRelativeAge: autoUpdatingRelativeAge,
+    updateRelativeAge: updateRelativeAge
+  };
 })();

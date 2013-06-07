@@ -174,7 +174,7 @@ Handlebars.registerHelper('avatar', function(user, options) {
 **/
 Handlebars.registerHelper('unboundDate', function(property, options) {
   var dt = new Date(Ember.Handlebars.get(this, property, options));
-  return dt.format("long");
+  return Discourse.Formatter.longDate(dt);
 });
 
 /**
