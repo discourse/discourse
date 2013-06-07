@@ -17,17 +17,6 @@ Discourse.PostView = Discourse.View.extend({
                       'parentPost:replies-above'],
   postBinding: 'content',
 
-  // TODO really we should do something cleaner here... this makes it work in debug but feels really messy
-  screenTrack: function() {
-    var parentView = this.get('parentView');
-    var screenTrack = null;
-    while (parentView && !screenTrack) {
-      screenTrack = parentView.get('screenTrack');
-      parentView = parentView.get('parentView');
-    }
-    return screenTrack;
-  }.property('parentView'),
-
   postTypeClass: function() {
     return this.get('post.post_type') === Discourse.Site.instance().get('post_types.moderator_action') ? 'moderator' : 'regular';
   }.property('post.post_type'),
@@ -213,7 +202,11 @@ Discourse.PostView = Discourse.View.extend({
     });
   },
 
-  didInsertElement: function(e) {
+  willDestroyElement: function() {
+    Discourse.ScreenTrack.instance().stopTracking(this.$().prop('id'));
+  },
+
+  didInsertElement: function() {
     var $post = this.$();
     var post = this.get('post');
     var postNumber = post.get('scrollToAfterInsert');
@@ -233,10 +226,8 @@ Discourse.PostView = Discourse.View.extend({
     }
     this.showLinkCounts();
 
-    var screenTrack = this.get('screenTrack');
-    if (screenTrack) {
-      screenTrack.track(this.$().prop('id'), this.get('post.post_number'));
-    }
+    // Track this post
+    Discourse.ScreenTrack.instance().track(this.$().prop('id'), this.get('post.post_number'));
 
     // Add syntax highlighting
     Discourse.SyntaxHighlighting.apply($post);

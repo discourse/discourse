@@ -293,18 +293,6 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     this.get('content').convertArchetype('regular');
   },
 
-  startTracking: function() {
-    var screenTrack = Discourse.ScreenTrack.create({ topic_id: this.get('content.id') });
-    screenTrack.start();
-    this.set('content.screenTrack', screenTrack);
-  },
-
-  stopTracking: function() {
-    var screenTrack = this.get('content.screenTrack');
-    if (screenTrack) screenTrack.stop();
-    this.set('content.screenTrack', null);
-  },
-
   // Toggle the star on the topic
   toggleStar: function(e) {
     this.get('content').toggleStar();

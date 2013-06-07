@@ -92,6 +92,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
 
     topicController.set('multiSelect', false);
     this.controllerFor('composer').set('topic', null);
+    Discourse.ScreenTrack.instance().stop();
 
     if (headerController = this.controllerFor('header')) {
       headerController.set('topic', null);
@@ -103,7 +104,11 @@ Discourse.TopicRoute = Discourse.Route.extend({
     controller.set('model', model);
     this.controllerFor('header').set('topic', model);
     this.controllerFor('composer').set('topic', model);
+    Discourse.TopicTrackingState.current().trackIncoming('all');
     controller.subscribe();
+
+    // We reset screen tracking every time a topic is entered
+    Discourse.ScreenTrack.instance().start(model.get('id'));
   }
 
 });
