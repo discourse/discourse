@@ -262,7 +262,7 @@ Handlebars.registerHelper('number', function(property, options) {
   @for Handlebars
 **/
 Handlebars.registerHelper('date', function(property, options) {
-  var displayDate, dt, fiveDaysAgo, oneMinuteAgo, fullReadable, humanized, leaveAgo, val;
+  var leaveAgo, val;
   if (property.hash) {
     if (property.hash.leaveAgo) {
       leaveAgo = property.hash.leaveAgo === "true";
@@ -272,32 +272,10 @@ Handlebars.registerHelper('date', function(property, options) {
     }
   }
   val = Ember.Handlebars.get(this, property, options);
-  if (!val) {
-    return new Handlebars.SafeString("&mdash;");
+  var date = null;
+  if (val) {
+    date = new Date(val);
   }
-  dt = new Date(val);
-  fullReadable = dt.format("long");
-  displayDate = "";
-  fiveDaysAgo = (new Date()) - 432000000;
-  oneMinuteAgo = (new Date()) - 60000;
-  if (oneMinuteAgo <= dt.getTime() && dt.getTime() <= (new Date())) {
-    displayDate = Em.String.i18n("now");
-  } else if (fiveDaysAgo > (dt.getTime())) {
-    if ((new Date()).getFullYear() !== dt.getFullYear()) {
-      displayDate = dt.format("short");
-    } else {
-      displayDate = dt.format("short_no_year");
-    }
-  } else {
-    humanized = dt.relative();
-    if (!humanized) {
-      return "";
-    }
-    displayDate = humanized;
-    if (!leaveAgo) {
-      displayDate = (dt.millisecondsAgo()).duration();
-    }
-  }
-  return new Handlebars.SafeString("<span class='date' title='" + fullReadable + "'>" + displayDate + "</span>");
+  return new Handlebars.SafeString(Discourse.Formatter.relativeAge(date, {format: 'medium', leaveAgo: leaveAgo}));
 });
 
