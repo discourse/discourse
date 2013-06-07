@@ -88,6 +88,8 @@ Discourse.TopicRoute = Discourse.Route.extend({
     var headerController, topicController;
     topicController = this.controllerFor('topic');
     topicController.cancelFilter();
+    topicController.unsubscribe();
+
     topicController.set('multiSelect', false);
     this.controllerFor('composer').set('topic', null);
 
@@ -101,6 +103,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
     controller.set('model', model);
     this.controllerFor('header').set('topic', model);
     this.controllerFor('composer').set('topic', model);
+    controller.subscribe();
   }
 
 });

@@ -100,7 +100,6 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     $(window).unbind('resize.discourse-on-scroll');
 
     controller = this.get('controller');
-    controller.unsubscribe();
     controller.set('onPostRendered', null);
 
     screenTrack = this.get('screenTrack');
@@ -121,7 +120,6 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     $(window).bind('resize.discourse-on-scroll', function() { topicView.updatePosition(false); });
 
     var controller = this.get('controller');
-    controller.subscribe();
     controller.set('onPostRendered', function(){
       topicView.postsRendered.apply(topicView);
     });

@@ -86,7 +86,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   },
 
   selectAll: function() {
-   var posts = this.get('posts');
+    var posts = this.get('posts');
     var selectedPosts = this.get('selectedPosts');
     if (posts) {
       selectedPosts.addObjects(posts);
@@ -321,14 +321,15 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
 
   // Receive notifications for this topic
   subscribe: function() {
+
+    // Unsubscribe before subscribing again
+    this.unsubscribe();
+
     var bus = Discourse.MessageBus;
 
-    // there is a condition where the view never calls unsubscribe, navigate to a topic from a topic
-    bus.unsubscribe('/topic/*');
-
     var topicController = this;
-    bus.subscribe("/topic/" + (this.get('content.id')), function(data) {
-      var topic = topicController.get('content');
+    bus.subscribe("/topic/" + (this.get('id')), function(data) {
+      var topic = topicController.get('model');
       if (data.notification_level_change) {
         topic.set('notification_level', data.notification_level_change);
         topic.set('notifications_reason_id', data.notifications_reason_id);
@@ -353,7 +354,9 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   unsubscribe: function() {
     var topicId = this.get('content.id');
     if (!topicId) return;
-    Discourse.MessageBus.unsubscribe("/topic/" + topicId);
+
+    // there is a condition where the view never calls unsubscribe, navigate to a topic from a topic
+    Discourse.MessageBus.unsubscribe('/topic/*');
   },
 
   // Post related methods
