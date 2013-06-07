@@ -27,14 +27,14 @@
 
   {{#if bumped}}
     <td class='num activity'>
-      <a href="{{url}}" {{{bindAttr class=":age ageCold"}}} title='{{i18n first_post}}: {{{unboundDate created_at}}}' >{{{age}}}</a>
+      <a href="{{url}}" {{{bindAttr class=":age ageCold"}}} title='{{i18n first_post}}: {{{unboundDate created_at}}}' >{{unboundAge created_at}}</a>
     </td>
     <td class='num activity last'>
-      <a href="{{lastPostUrl}}" class='age' title='{{i18n last_post}}: {{{unboundDate bumped_at}}}'>{{{bumped_age}}}</a>
+      <a href="{{lastPostUrl}}" class='age' title='{{i18n last_post}}: {{{unboundDate bumped_at}}}'>{{unboundAge bumped_at}}</a>
     </td>
   {{else}}
     <td class='num activity'>
-      <a href="{{url}}" class='age' title='{{i18n first_post}}: {{{unboundDate created_at}}}'>{{{age}}}</a>
+      <a href="{{url}}" class='age' title='{{i18n first_post}}: {{{unboundDate created_at}}}'>{{unboundAge created_at}}</a>
     </td>
     <td></td>
   {{/if}}
