@@ -131,8 +131,15 @@ class PostCreator
   def setup_topic
     if @opts[:topic_id].blank?
       topic_creator = TopicCreator.new(@user, guardian, @opts)
-      topic = topic_creator.create
-      @errors = topic_creator.errors
+
+      begin
+        topic = topic_creator.create
+        @errors = topic_creator.errors
+      rescue ActiveRecord::Rollback => ex
+        # In the event of a rollback, grab the errors from the topic
+        @errors = topic_creator.errors
+        raise ex
+      end
 
       @new_topic = true
     else

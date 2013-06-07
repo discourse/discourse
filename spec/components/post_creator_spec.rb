@@ -26,6 +26,18 @@ describe PostCreator do
       lambda { creator.create }.should raise_error(Discourse::InvalidAccess)
     end
 
+
+    context "invalid title" do
+
+      let(:creator_invalid_title) { PostCreator.new(user, basic_topic_params.merge(title: 'a')) }
+
+      it "has errors" do
+        creator_invalid_title.create
+        expect(creator_invalid_title.errors).to be_present
+      end
+
+    end
+
     context 'success' do
 
       it "doesn't return true for spam" do
