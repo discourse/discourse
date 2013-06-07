@@ -21,8 +21,10 @@ class TextSentinel
   end
 
   # Entropy is a number of how many unique characters the string needs.
+  # Non-ASCII characters are weighted heavier since they contain more "information"
   def entropy
-    @entropy ||= @text.to_s.strip.split('').uniq.size
+    chars = @text.to_s.strip.split('')
+    @entropy ||= chars.pack('M*'*chars.size).gsub("\n",'').split('=').uniq.size
   end
 
   def valid?
