@@ -25,19 +25,7 @@ class PostsController < ApplicationController
   end
 
   def create
-    params.require(:post)
-
-    post_creator = PostCreator.new(current_user,
-                                   raw: params[:post][:raw],
-                                   topic_id: params[:post][:topic_id],
-                                   title: params[:title],
-                                   archetype: params[:archetype],
-                                   category: params[:post][:category],
-                                   target_usernames: params[:target_usernames],
-                                   reply_to_post_number: params[:post][:reply_to_post_number],
-                                   image_sizes: params[:image_sizes],
-                                   meta_data: params[:meta_data],
-                                   auto_close_days: params[:auto_close_days])
+    post_creator = PostCreator.new(current_user, create_params)
     post = post_creator.create
     if post_creator.errors.present?
 
@@ -196,5 +184,24 @@ class PostsController < ApplicationController
       post = finder.first
       guardian.ensure_can_see!(post)
       post
+    end
+
+  private
+
+    def create_params
+      params.require(:raw)
+      params.permit(
+          :raw, 
+          :topic_id, 
+          :title, 
+          :archetype, 
+          :category, 
+          :target_usernames, 
+          :reply_to_post_number, 
+          :image_sizes, 
+          :auto_close_days
+        ).tap do |whitelisted|
+          whitelisted[:meta_data] = params[:meta_data]
+      end
     end
 end
