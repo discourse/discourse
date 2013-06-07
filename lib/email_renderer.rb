@@ -20,16 +20,16 @@ class EmailRenderer
   end
 
   def html
-    formatted_body = EmailStyles.new(PrettyText.cook(text, environment: 'email')).format
+    cooked = PrettyText.cook(text, environment: 'email')
 
     if @opts[:html_template]
       ActionView::Base.new(Rails.configuration.paths["app/views"]).render(
         template: 'email/template',
         format: :html,
-        locals: { html_body: formatted_body, logo_url: logo_url }
+        locals: { html_body: EmailStyles.new(cooked).format, logo_url: logo_url }
       )
     else
-      formatted_body
+      cooked
     end
   end
 
