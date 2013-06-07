@@ -243,10 +243,9 @@ Discourse.PostView = Discourse.View.extend({
     Discourse.Lightbox.apply($post);
 
     // If we're scrolling upwards, adjust the scroll position accordingly
-    var scrollTo;
-    if (scrollTo = this.get('post.scrollTo')) {
-      var newSize = ($(document).height() - scrollTo.height) + scrollTo.top;
-      $('body').scrollTop(newSize);
+    var scrollTo = this.get('post.scrollTo');
+    if (scrollTo) {
+      $('body').scrollTop(($(document).height() - scrollTo.height) + scrollTo.top);
       $('section.divider').addClass('fade');
     }
 

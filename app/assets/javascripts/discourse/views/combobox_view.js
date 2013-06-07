@@ -12,28 +12,31 @@ Discourse.ComboboxView = Discourse.View.extend({
   valueAttribute: 'id',
 
   render: function(buffer) {
-    var _ref,
-      _this = this;
 
     // Add none option if required
     if (this.get('none')) {
       buffer.push("<option value=\"\">" + (Ember.String.i18n(this.get('none'))) + "</option>");
     }
 
-    var selected = (_ref = this.get('value')) ? _ref.toString() : void 0;
+    var selected = this.get('value');
+    if (selected) { selected = selected.toString(); }
 
     if (this.get('content')) {
+
+      var comboboxView = this;
       return this.get('content').each(function(o) {
-        var data, selectedText, val, _ref1;
-        val = (_ref1 = o[_this.get('valueAttribute')]) ? _ref1.toString() : void 0;
-        selectedText = val === selected ? "selected" : "";
-        data = "";
-        if (_this.dataAttributes) {
-          _this.dataAttributes.forEach(function(a) {
+        var val = o[comboboxView.get('valueAttribute')];
+        if (val) { val = val.toString(); }
+
+        var selectedText = (val === selected) ? "selected" : "";
+
+        var data = "";
+        if (comboboxView.dataAttributes) {
+          comboboxView.dataAttributes.forEach(function(a) {
             data += "data-" + a + "=\"" + (o.get(a)) + "\" ";
           });
         }
-        return buffer.push("<option " + selectedText + " value=\"" + val + "\" " + data + ">" + o.name + "</option>");
+        buffer.push("<option " + selectedText + " value=\"" + val + "\" " + data + ">" + o.name + "</option>");
       });
     }
   },
@@ -42,7 +45,7 @@ Discourse.ComboboxView = Discourse.View.extend({
     var $combo = this.$();
     var val = this.get('value');
     if (val) {
-      $combo.val(this.get('value').toString());
+      $combo.val(val.toString());
     } else {
       $combo.val(null);
     }
@@ -50,9 +53,9 @@ Discourse.ComboboxView = Discourse.View.extend({
   }.observes('value'),
 
   didInsertElement: function() {
-    var $elem,
-      _this = this;
-    $elem = this.$();
+    var $elem = this.$();
+    var comboboxView = this;
+
     $elem.chosen({ template: this.template, disable_search_threshold: 5 });
     if (this.overrideWidths) {
       // The Chosen plugin hard-codes the widths in style attrs. :<
@@ -69,7 +72,7 @@ Discourse.ComboboxView = Discourse.View.extend({
     }
 
     $elem.change(function(e) {
-      _this.set('value', $(e.target).val());
+      comboboxView.set('value', $(e.target).val());
     });
   }
 

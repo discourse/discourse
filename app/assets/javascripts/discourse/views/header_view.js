@@ -108,38 +108,41 @@ Discourse.HeaderView = Discourse.View.extend({
 
   willDestroyElement: function() {
     $(window).unbind('scroll.discourse-dock');
-    return $(document).unbind('touchmove.discourse-dock');
+    $(document).unbind('touchmove.discourse-dock');
+    this.$('a.unread-private-messages, a.unread-notifications, a[data-notifications]').off('click.notifications');
+    this.$('a[data-dropdown]').off('click.dropdown');
   },
 
   didInsertElement: function() {
-    var _this = this;
-    this.$('a[data-dropdown]').on('click', function(e) {
-      return _this.showDropdown($(e.currentTarget));
+
+    var headerView = this;
+    this.$('a[data-dropdown]').on('click.dropdown', function(e) {
+      return headerView.showDropdown($(e.currentTarget));
     });
-    this.$('a.unread-private-messages, a.unread-notifications, a[data-notifications]').on('click', function(e) {
-      return _this.showNotifications(e);
+    this.$('a.unread-private-messages, a.unread-notifications, a[data-notifications]').on('click.notifications', function(e) {
+      return headerView.showNotifications(e);
     });
     $(window).bind('scroll.discourse-dock', function() {
-      return _this.examineDockHeader();
+      headerView.examineDockHeader();
     });
     $(document).bind('touchmove.discourse-dock', function() {
-      return _this.examineDockHeader();
+      headerView.examineDockHeader();
     });
     this.examineDockHeader();
 
     // Delegate ESC to the composer
-    return $('body').on('keydown.header', function(e) {
+    $('body').on('keydown.header', function(e) {
       // Hide dropdowns
       if (e.which === 27) {
-        _this.$('li').removeClass('active');
-        _this.$('.d-dropdown').fadeOut('fast');
+        headerView.$('li').removeClass('active');
+        headerView.$('.d-dropdown').fadeOut('fast');
       }
-      if (_this.get('editingTopic')) {
+      if (headerView.get('editingTopic')) {
         if (e.which === 13) {
-          _this.finishedEdit();
+          headerView.finishedEdit();
         }
         if (e.which === 27) {
-          return _this.cancelEdit();
+          return headerView.cancelEdit();
         }
       }
     });

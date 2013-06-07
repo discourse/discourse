@@ -39,14 +39,21 @@ Discourse = Ember.Application.createWithMixins({
     even though our path formats are slightly different than what ember prefers.
   */
   resolver: Ember.DefaultResolver.extend({
+
     resolveTemplate: function(parsedName) {
       var resolvedTemplate = this._super(parsedName);
+      if (resolvedTemplate) { return resolvedTemplate; }
+
+      var decamelized = parsedName.fullNameWithoutType.decamelize();
+
+      // See if we can find it with slashes instead of underscores
+      var slashed = decamelized.replace("_", "/");
+      resolvedTemplate = Ember.TEMPLATES[slashed];
       if (resolvedTemplate) { return resolvedTemplate; }
 
       // If we can't find a template, check to see if it's similar to how discourse
       // lays out templates like: adminEmail => admin/templates/email
       if (parsedName.fullNameWithoutType.indexOf('admin') === 0) {
-        var decamelized = parsedName.fullNameWithoutType.decamelize();
         decamelized = decamelized.replace(/^admin\_/, 'admin/templates/');
         decamelized = decamelized.replace(/^admin\./, 'admin/templates/');
         decamelized = decamelized.replace(/\./, '_');

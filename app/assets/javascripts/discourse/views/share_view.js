@@ -11,17 +11,17 @@ Discourse.ShareView = Discourse.View.extend({
   elementId: 'share-link',
   classNameBindings: ['hasLink'],
 
-  title: (function() {
+  title: function() {
     if (this.get('controller.type') === 'topic') return Em.String.i18n('share.topic');
     return Em.String.i18n('share.post');
-  }).property('controller.type'),
+  }.property('controller.type'),
 
-  hasLink: (function() {
+  hasLink: function() {
     if (this.present('controller.link')) return 'visible';
     return null;
-  }).property('controller.link'),
+  }.property('controller.link'),
 
-  linkChanged: (function() {
+  linkChanged: function() {
     if (this.present('controller.link')) {
       var $linkInput = $('#share-link input');
       $linkInput.val(this.get('controller.link'));
@@ -31,36 +31,35 @@ Discourse.ShareView = Discourse.View.extend({
         $linkInput.select().focus();
       }, 160);
     }
-  }).observes('controller.link'),
+  }.observes('controller.link'),
 
   didInsertElement: function() {
-    var _this = this;
+
+    var shareView = this;
     $('html').on('mousedown.outside-share-link', function(e) {
       // Use mousedown instead of click so this event is handled before routing occurs when a
       // link is clicked (which is a click event) while the share dialog is showing.
-      if (_this.$().has(e.target).length !== 0) {
-        return;
-      }
-      _this.get('controller').close();
+      if (shareView.$().has(e.target).length !== 0) { return; }
+      shareView.get('controller').close();
       return true;
     });
+
     $('html').on('click.discoure-share-link', '[data-share-url]', function(e) {
-      var $currentTarget, url;
       e.preventDefault();
-      $currentTarget = $(e.currentTarget);
-      url = $currentTarget.data('share-url');
-      /* Relative urls
-      */
+      var $currentTarget = $(e.currentTarget);
+      var url = $currentTarget.data('share-url');
+      // Relative urls
 
       if (url.indexOf("/") === 0) {
         url = window.location.protocol + "//" + window.location.host + url;
       }
-      _this.get('controller').shareLink(e, url);
+      shareView.get('controller').shareLink(e, url);
       return false;
     });
+
     $('html').on('keydown.share-view', function(e){
       if (e.keyCode === 27) {
-        _this.get('controller').close();
+        shareView.get('controller').close();
       }
     });
   },

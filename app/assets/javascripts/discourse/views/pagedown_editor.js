@@ -26,7 +26,7 @@ Discourse.PagedownEditor = Discourse.ContainerView.extend({
   didInsertElement: function() {
     $('#wmd-input').data('init', true);
     this.set('editor', Discourse.Markdown.createEditor());
-    return this.get('editor').run();
+    this.get('editor').run();
   },
 
   observeValue: function() {

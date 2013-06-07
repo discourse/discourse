@@ -14,6 +14,7 @@ Discourse.ListTopicsView = Discourse.View.extend(Discourse.Scrolling, {
   listBinding: 'controller.model',
   loadedMore: false,
   currentTopicId: null,
+
   topicTrackingState: function() {
     return Discourse.TopicTrackingState.current();
   }.property(),

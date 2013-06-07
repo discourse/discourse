@@ -12,7 +12,7 @@ Discourse.EmbeddedPostView = Discourse.View.extend({
 
   didInsertElement: function() {
     var postView = this.get('postView') || this.get('parentView.postView');
-    return postView.get('screenTrack').track(this.get('elementId'), this.get('post.post_number'));
+    postView.get('screenTrack').track(this.get('elementId'), this.get('post.post_number'));
   }
 
 });

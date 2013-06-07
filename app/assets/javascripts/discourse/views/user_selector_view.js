@@ -1,22 +1,21 @@
 Discourse.UserSelector = Discourse.TextField.extend({
 
   didInsertElement: function(){
-    var _this = this;
+    var userSelectorView = this;
     var selected = [];
     var transformTemplate = Handlebars.compile("{{avatar this imageSize=\"tiny\"}} {{this.username}}");
-    var template = Discourse.UserSelector.templateFunction();
 
     $(this.get('element')).val(this.get('usernames')).autocomplete({
-      template: template,
+      template: Discourse.UserSelector.templateFunction(),
 
       dataSource: function(term) {
         var exclude = selected;
-        if (_this.get('excludeCurrentUser')){
+        if (userSelectorView.get('excludeCurrentUser')){
           exclude = exclude.concat([Discourse.User.current('username')]);
         }
         return Discourse.UserSearch.search({
           term: term,
-          topicId: _this.get('topicId'),
+          topicId: userSelectorView.get('topicId'),
           exclude: exclude
         });
       },
@@ -29,7 +28,7 @@ Discourse.UserSelector = Discourse.TextField.extend({
             return i;
           }
         });
-        _this.set('usernames', items.join(","));
+        userSelectorView.set('usernames', items.join(","));
         selected = items;
       },
 
@@ -40,7 +39,6 @@ Discourse.UserSelector = Discourse.TextField.extend({
       }
 
     });
-
   }
 
 });

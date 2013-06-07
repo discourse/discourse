@@ -12,9 +12,9 @@ Discourse.TopicListItemView = Discourse.View.extend({
   classNameBindings: ['content.archived', ':topic-list-item', 'content.hasExcerpt:has-excerpt'],
   attributeBindings: ['data-topic-id'],
 
-  'data-topic-id': (function() {
+  'data-topic-id': function() {
     return this.get('content.id');
-  }).property('content.id'),
+  }.property('content.id'),
 
   init: function() {
     this._super();
@@ -22,10 +22,9 @@ Discourse.TopicListItemView = Discourse.View.extend({
   },
 
   highlight: function() {
-    var $topic, originalCol;
-    $topic = this.$();
-    originalCol = $topic.css('backgroundColor');
-    return $topic.css({
+    var $topic = this.$();
+    var originalCol = $topic.css('backgroundColor');
+    $topic.css({
       backgroundColor: "#ffffcc"
     }).animate({
       backgroundColor: originalCol
