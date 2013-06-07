@@ -3,6 +3,12 @@ require 'active_support/concern'
 module Roleable
   extend ActiveSupport::Concern
 
+  included do
+    scope :admins, -> { where(admin: true) }
+    scope :moderators, -> { where(moderator: true) }
+    scope :staff, -> { where("moderator or admin ") }
+  end
+
   # any user that is either a moderator or an admin
   def staff?
     admin || moderator
