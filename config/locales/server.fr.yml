@@ -785,19 +785,6 @@ fr:
 
         - Pendant que vous lisez une discussion, vous pouvez retourner au début en cliquant sur son titre situé en haut de l'écran. Pour atteindre la *fin*, cliquez sur la flèche vers le bas sur l'indiquateur de progression en bas de la page, ou cliquez sur le champ "dernier message" dans le résumé de la discussion, sous le premier message.
 
-    welcome_approved:
-      subject_template: "Vous avez été accepté sur %{site_name} !"
-      text_body_template: |
-        Félicitations !
-
-        Vous avez été accepté pour rejoindre %{site_name}, bienvenue sur notre forum de discussions.
-
-        %{new_user_tips}
-
-        Nous croyons au [comportement communautaire civilisé](%{base_url}/faq) en tous temps.
-
-        Amusez-vous bien !
-
     welcome_user:
       subject_template: "Bienvenue sur %{site_name} !"
       text_body_template: |

@@ -228,6 +228,9 @@ Discourse.AdminUser.reopenClass({
       user.set('can_approve', false);
       return user.set('selected', false);
     });
+
+    bootbox.alert(Em.String.i18n("admin.user.approve_bulk_success"));
+
     return Discourse.ajax("/admin/users/approve-bulk", {
       type: 'PUT',
       data: {

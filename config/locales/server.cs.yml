@@ -800,19 +800,6 @@ cs:
 
         - Během čtení nějakého tématu se můžete kliknutím na název tématu v horní části stránky vrátit na začátek tématu. Chcete-li naopak skočit na *konec* tématu, klikněte na šipku dolů v indikátoru pozice v dolní části stránky, nebo klikněte na odkaz 'poslední příspěvek' v souhrnu tématu u prvního příspěvku.
 
-    welcome_approved:
-      subject_template: "Byl jste schválen na %{site_name}!"
-      text_body_template: |
-        Gratulujeme!
-
-        Váš účet byl schválen a můžete se připojit na %{site_name}, vítejte na našem diskuzním fóru!
-
-        %{new_user_tips}
-
-        Věříme v [civilizované komunitní chování](%{base_url}/faq) za všech okolností.
-
-        Užijte si naše fórum!
-
     welcome_user:
       subject_template: "Vítejte na %{site_name}!"
       text_body_template: |

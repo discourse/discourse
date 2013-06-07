@@ -10,6 +10,15 @@ class UserNotifications < ActionMailer::Base
     build_email(user.email, "user_notifications.signup", email_token: opts[:email_token])
   end
 
+  def signup_after_approval(user, opts={})
+    build_email(
+      user.email,
+      'user_notifications.signup_after_approval',
+      email_token: opts[:email_token],
+      new_user_tips: SiteContent.content_for(:usage_tips)
+    )
+  end
+
   def authorize_email(user, opts={})
     build_email(user.email, "user_notifications.authorize_email", email_token: opts[:email_token])
   end

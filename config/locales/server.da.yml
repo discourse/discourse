@@ -636,19 +636,6 @@ da:
 
         - Mens du læser et emne, kan du altid springe til toppen ved at klikke på emnets titel øverst på siden. For at komme til *bunden*, klik på ned-pilen på status-viseren nederst på skærmen, eller klik på sidste indlæg-feltet på emne-opsummeringen under det første indlæg.
 
-    welcome_approved:
-      subject_template: "Du er blevet godkendt på %{site_name}!"
-      text_body_template: |
-        Tillykke!
-
-        Din brugerkonto på %{site_name} er blevet godkendt, velkommen til vores debatforum!
-
-        %{new_user_tips}
-
-        Vi går ind for [civiliseret debatkultur](%{base_url}/faq) til enhver tid.
-
-        Nyd dit ophold!
-
     welcome_user:
       subject_template: "Velkommen til %{site_name}!"
       text_body_template: |

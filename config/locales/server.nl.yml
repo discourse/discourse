@@ -791,19 +791,6 @@ nl:
 
         - Wanneer je een topic leest, kan je naar boven scrollen (↑) door op de topictitel bovenaan de pagina te klikken. Om de *onderkant* (↓) te bereiken klik je op de pijl naar beneden aan de onderkant van de pagina of je klikt op het Laatste Post-veld in de topicsamenvatting onder het eerste bericht.
 
-    welcome_approved:
-      subject_template: "Je aanmelding voor %{site_name} is goedgekeurd!"
-      text_body_template: |
-        Gefeliciteerd!
-
-        Je aanvraag om lid te worden van %{site_name} is goedgekeurd, welkom op ons discussieforum!
-
-        %{new_user_tips}
-
-        We geloven altijd in [beschaafd gemeenschappelijk gedrag](%{base_url}/faq).
-
-        Geniet van je verblijf!
-
     welcome_user:
       subject_template: "Welkom bij %{site_name}!"
       text_body_template: |
