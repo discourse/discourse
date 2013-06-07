@@ -61,9 +61,6 @@ class User < ActiveRecord::Base
   # This is just used to pass some information into the serializer
   attr_accessor :notification_channel_position
 
-  scope :admins, -> { where(admin: true) }
-  scope :moderators, -> { where(moderator: true) }
-  scope :staff, -> { where("moderator or admin ") }
   scope :blocked, -> { where(blocked: true) } # no index
 
   module NewTopicDuration
