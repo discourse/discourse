@@ -162,7 +162,10 @@ Discourse.Post = Discourse.Model.extend({
 
       // We're saving a post
       data = {
-        post: this.getProperties('raw', 'topic_id', 'reply_to_post_number', 'category'),
+        raw: this.get('raw'),
+        topic_id: this.get('topic_id'),
+        reply_to_post_number: this.get('reply_to_post_number'),
+        category: this.get('category'),
         archetype: this.get('archetype'),
         title: this.get('title'),
         image_sizes: this.get('imageSizes'),
