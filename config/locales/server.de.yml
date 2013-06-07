@@ -778,19 +778,6 @@ de:
 
         - Um an den Anfang eines Themas zu gelangen, klicke auf den Titel am oberen Rand der Seite. Um ans *Ende* zu springen, klicke auf den Abwärtspfeil in der Fortschrittsanzeige des Themas unten auf der Seite oder auf das Feld 'Letzter Beitrag' in der Zusammenfassung des Themas unter dem ersten Beitrag.
 
-    welcome_approved:
-      subject_template: "Du wurdest auf %{site_name} zugelassen!"
-      text_body_template: |
-        Glückwunsch!
-
-        Du wurdest auf %{site_name} zugelassen, willkommen in unserem Forum!
-
-        %{new_user_tips}
-
-        Wir stehen für [zivilisiertes Verhalten in Online-Communitys](%{base_url}/faq).
-
-        Viel Vergnügen!
-
     welcome_user:
       subject_template: "Willkommen auf %{site_name}!"
       text_body_template: |

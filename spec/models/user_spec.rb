@@ -94,8 +94,10 @@ describe User do
     let(:user) { Fabricate(:user) }
     let(:admin) { Fabricate(:admin) }
 
-    it "generates a welcome message" do
-      user.expects(:enqueue_welcome_message).with('welcome_approved')
+    it "enqueues a 'signup after approval' email" do
+      Jobs.expects(:enqueue).with(
+        :user_email, has_entries(type: :signup_after_approval)
+      )
       user.approve(admin)
     end
 

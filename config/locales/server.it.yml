@@ -765,19 +765,6 @@ it:
 
         - Mentre leggi un topic, puoi tornare in cima cliccando il titolo all'inizio della pagina. Per raggiungere il *fondo* invece, clicca la freccia in basso nella progress bar situata in fondo alla pagina, o clicca il campo ultimo post nel sommario presente nel primo post.
 
-    welcome_approved:
-      subject_template: "Il tuo account è stato approvato su %{site_name}!"
-      text_body_template: |
-        Congratulazioni!
-
-        Il tuo account è stato approvato per accedere su %{site_name}, benvenuto nel nostro forum!
-
-        %{new_user_tips}
-
-        Crediamo nel [comportamento civilizzato della community](%{base_url}/faq) in ogni momento.
-
-        Goditi la permanenza!
-
     welcome_user:
       subject_template: "Benvenuto su %{site_name}!"
       text_body_template: |

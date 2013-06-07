@@ -763,19 +763,6 @@ zh_TW:
 
         - 當閱讀一個主題時，你可以通過點擊頁面頂部的標題回到頂部；要去到 *底部*，點擊頁面底部的主題浏覽進度指示器裏的向下箭頭，或者點擊該主題第一帖下面的彙總信息裏的最後一帖區域。
 
-    welcome_approved:
-      subject_template: "你已經獲得了 %{site_name} 的批准！"
-      text_body_template: |
-        恭喜你！
-
-        你已經被批准加入 %{site_name}，歡迎來到我們論壇參與討論！
-
-        %{new_user_tips}
-
-        我們始終相信 [文明的社會行爲](%{base_url}/faq)。
-
-        好好享受你在論壇的時光吧！
-
     welcome_user:
       subject_template: "歡迎來到 %{site_name}！"
       text_body_template: |
