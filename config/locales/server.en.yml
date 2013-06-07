@@ -49,6 +49,7 @@ en:
   rss_posts_in_topic: "RSS feed of '%{topic}'"
   rss_topics_in_category: "RSS feed of topics in the '%{category}' category"
   author_wrote: "%{author} wrote:"
+  private_message_abbrev: "PM"
 
   groups:
     default_names:

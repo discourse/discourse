@@ -34,7 +34,7 @@ class UserNotifications < ActionMailer::Base
                 "user_notifications.private_message",
                 message: post.raw,
                 url: post.url,
-                subject_prefix: post.post_number != 1 ? "re: " : "",
+                subject_prefix: "[#{I18n.t('private_message_abbrev')}] #{post.post_number != 1 ? 're: ' : ''}",
                 topic_title: post.topic.title,
                 private_message_from: post.user.name,
                 from: "#{I18n.t(:via, username: post.user.name, site_name: SiteSetting.title)} <#{SiteSetting.notification_email}>",
