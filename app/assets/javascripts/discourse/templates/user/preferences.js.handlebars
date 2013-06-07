@@ -71,7 +71,7 @@
 
       {{#if email_digests}}
         <div class='control-indent'>
-          {{combobox valueAttribute="value" content=digestFrequencies value="digest_after_days"}}
+          {{combobox valueAttribute="value" content=digestFrequencies value=digest_after_days}}
         </div>
       {{/if}}
       <label>{{view Ember.Checkbox checkedBinding="email_private_messages"}}
@@ -88,12 +88,12 @@
     <label class="control-label">{{i18n user.other_settings}}</label>
     <div class="controls">
       <label>{{i18n user.auto_track_topics}}</label>
-      {{combobox valueAttribute="value" content=autoTrackDurations value="auto_track_topics_after_msecs"}}
+      {{combobox valueAttribute="value" content=autoTrackDurations value=auto_track_topics_after_msecs}}
     </div>
 
     <div class="controls">
       <label>{{i18n user.new_topic_duration.label}}</label>
-      {{combobox valueAttribute="value" content=considerNewTopicOptions value="new_topic_duration_minutes"}}
+      {{combobox valueAttribute="value" content=considerNewTopicOptions value=new_topic_duration_minutes}}
     </div>
 
     <div class="controls">
