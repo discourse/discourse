@@ -220,7 +220,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
 
       // TODO: We should refactor how composer is inserted. It should probably use a
       // {{render}} and then the controller and view will be wired up automatically.
-      appView = Discourse.__container__.lookup('view:application');
+      var appView = Discourse.__container__.lookup('view:application');
       view = appView.createChildView(Discourse.ComposerView, {controller: this});
       view.appendTo($('#main'));
       this.set('view', view);
