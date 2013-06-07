@@ -6,8 +6,11 @@ require_dependency 'summarize'
 require_dependency 'discourse'
 require_dependency 'post_destroyer'
 require_dependency 'user_name_suggester'
+require_dependency 'roleable'
 
 class User < ActiveRecord::Base
+  include Roleable
+
   has_many :posts
   has_many :notifications
   has_many :topic_users
@@ -136,34 +139,6 @@ class User < ActiveRecord::Base
     where("username_lower = :user or lower(username) = :user or email = :email or lower(name) = :user", user: lower_user, email: lower_email)
   end
 
-
-  def save_and_refresh_staff_groups!
-    transaction do
-      self.save!
-      Group.refresh_automatic_groups!(:admins, :moderators, :staff)
-    end
-  end
-
-  def grant_moderation!
-    self.moderator = true
-    save_and_refresh_staff_groups!
-  end
-
-  def revoke_moderation!
-    self.moderator = false
-    save_and_refresh_staff_groups!
-  end
-
-  def grant_admin!
-    self.admin = true
-    save_and_refresh_staff_groups!
-  end
-
-  def revoke_admin!
-    self.admin = false
-    save_and_refresh_staff_groups!
-  end
-
   def enqueue_welcome_message(message_type)
     return unless SiteSetting.send_welcome_message?
     Jobs.enqueue(:send_system_message, user_id: id, message_type: message_type)
@@ -231,7 +206,6 @@ class User < ActiveRecord::Base
     super
   end
 
-
   def unread_private_messages
     @unread_pms ||= notifications.where("read = false AND notification_type = ?", Notification.types[:private_message]).count
   end
@@ -256,15 +230,6 @@ class User < ActiveRecord::Base
   # A selection of people to autocomplete on @mention
   def self.mentionable_usernames
     User.select(:username).order('last_posted_at desc').limit(20)
-  end
-
-  # any user that is either a moderator or an admin
-  def staff?
-    admin || moderator
-  end
-
-  def regular?
-    !staff?
   end
 
   def password=(password)
