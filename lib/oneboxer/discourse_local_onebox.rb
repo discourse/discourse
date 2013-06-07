@@ -64,7 +64,7 @@ module Oneboxer
 
           category = topic.category
           if category
-            category = "<a href=\"/category/#{category.name}\" class=\"badge badge-category\" style=\"background-color: ##{category.color}\">#{category.name}</a>"
+            category = "<a href=\"/category/#{category.slug}\" class=\"badge badge-category\" style=\"background-color: ##{category.color}\">#{category.name}</a>"
           end
 
           quote = post.excerpt(SiteSetting.post_onebox_maxlength)
