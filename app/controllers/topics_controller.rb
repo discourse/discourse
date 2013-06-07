@@ -29,7 +29,7 @@ class TopicsController < ApplicationController
     begin
       @topic_view = TopicView.new(params[:id] || params[:topic_id], current_user, opts)
     rescue Discourse::NotFound
-      topic = Topic.where(slug: params[:id]).first
+      topic = Topic.where(slug: params[:id]).first if params[:id]
       raise Discourse::NotFound unless topic
       return redirect_to(topic.relative_url)
     end

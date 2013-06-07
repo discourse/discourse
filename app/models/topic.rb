@@ -494,6 +494,7 @@ class Topic < ActiveRecord::Base
     TopicUser.starred_since(sinceDaysAgo).by_date_starred.count
   end
 
+  # Even if the slug column in the database is null, topic.slug will return something:
   def slug
     unless slug = read_attribute(:slug)
       return '' unless title.present?

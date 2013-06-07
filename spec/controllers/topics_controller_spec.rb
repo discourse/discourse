@@ -383,6 +383,23 @@ describe TopicsController do
       expect(response.status).to eq(404)
     end
 
+    it 'returns a 404 when slug and topic id do not match a topic' do
+      xhr :get, :show, topic_id: 123123, slug: 'topic-that-is-made-up'
+      expect(response.status).to eq(404)
+    end
+
+    context 'a topic with nil slug exists' do
+      before do
+        @nil_slug_topic = Fabricate(:topic)
+        Topic.connection.execute("update topics set slug=null where id = #{@nil_slug_topic.id}") # can't find a way to set slug column to null using the model
+      end
+
+      it 'returns a 404 when slug and topic id do not match a topic' do
+        xhr :get, :show, topic_id: 123123, slug: 'topic-that-is-made-up'
+        expect(response.status).to eq(404)
+      end
+    end
+
     it 'records a view' do
       lambda { xhr :get, :show, topic_id: topic.id, slug: topic.slug }.should change(View, :count).by(1)
     end
