@@ -1229,6 +1229,7 @@ describe Topic do
       # for_digest
 
       Topic.for_digest(Fabricate(:user), 1.year.ago).count.should == 0
+      Topic.for_digest(Fabricate(:admin), 1.year.ago).count.should == 2
     end
   end
 
