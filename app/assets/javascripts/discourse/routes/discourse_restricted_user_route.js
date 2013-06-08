@@ -9,7 +9,7 @@
 Discourse.RestrictedUserRoute = Discourse.Route.extend({
 
   redirect: function(user) {
-    if (user.get('can_edit') === false) {
+    if (!user.get('can_edit')) {
       this.transitionTo('user.activity', user);
     }
   }
