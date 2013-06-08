@@ -85,6 +85,14 @@ Discourse = Ember.Application.createWithMixins({
     }, 200);
   }.observes('title', 'hasFocus', 'notifyCount'),
 
+  faviconChanged: function() {
+    if(Discourse.SiteSettings.dynamic_favicon) {
+      $.faviconNotify(
+        Discourse.SiteSettings.favicon_url, this.get('notifyCount')
+      );
+    }
+  }.observes('notifyCount'),
+
   // The classes of buttons to show on a post
   postButtons: function() {
     return Discourse.SiteSettings.post_menu.split("|").map(function(i) {
