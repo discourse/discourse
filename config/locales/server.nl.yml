@@ -52,6 +52,7 @@ nl:
   rss_posts_in_topic: "RSS feed van '%{topic}'"
   rss_topics_in_category: "RSS fees van topics in de categorie '%{category}'"
   author_wrote: "%{author} schreef:"
+  private_message_abbrev: PB
 
   groups:
     default_names:
@@ -583,8 +584,8 @@ nl:
     email_time_window_mins: "Hoeveel minuten we wachten met het sturen van een e-mail naar een persoon, om ze een kans te geven het eerst op de site te kunnen lezen."
     flush_timings_secs: "Hoe vaak we timing-data naar de server sturen, in seconden."
     max_word_length: "De maximumlengte van een woord in een topictitel"
-    title_min_entropy: "De minimale entropie die een topictitel moet bevatten"
-    body_min_entropy: "De minimale entropie die de inhoud van een post moet bevatten"
+    title_min_entropy: "De minimale entropie (unieke tekens) die een topictitel moet bevatten"
+    body_min_entropy: "De minimale entropie (unieke tekens) die de inhoud van een post moet bevatten"
 
     title_fancy_entities: "Converteer algemene ASCII-tekens naar fancy HTML in topictitels, zoals SmartyPants (http://daringfireball.net/projects/smartypants)"
 
