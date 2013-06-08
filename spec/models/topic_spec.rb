@@ -1218,6 +1218,20 @@ describe Topic do
     end
   end
 
+  describe 'secured' do
+    it 'can remove secure groups' do
+      category = Fabricate(:category, secure: true)
+      topic = Fabricate(:topic, category: category)
+
+      Topic.secured(Guardian.new(nil)).count.should == 0
+      Topic.secured(Guardian.new(Fabricate(:admin))).count.should == 2
+
+      # for_digest
+
+      Topic.for_digest(Fabricate(:user), 1.year.ago).count.should == 0
+    end
+  end
+
   describe '#secure_category?' do
     let(:category){ Category.new }
 

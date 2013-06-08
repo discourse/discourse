@@ -96,6 +96,19 @@ class Topic < ActiveRecord::Base
 
   scope :created_since, lambda { |time_ago| where('created_at > ?', time_ago) }
 
+  scope :secured, lambda {|guardian|
+    ids = guardian.secure_category_ids if guardian
+    condition =
+      if ids.present?
+        ["NOT c.secure or c.id in (:cats)", cats: ids]
+      else
+        ["NOT c.secure"]
+      end
+      where("category_id IS NULL OR category_id IN (
+                SELECT c.id FROM categories c
+                WHERE #{condition[0]})", condition[1])
+   }
+
   # Helps us limit how many favorites can be made in a day
   class FavoriteLimiter < RateLimiter
     def initialize(user)
@@ -177,6 +190,7 @@ class Topic < ActiveRecord::Base
   def self.for_digest(user, since)
     Topic
       .visible
+      .secured(Guardian.new(user))
       .where(closed: false, archived: false)
       .created_since(since)
       .listable_topics
