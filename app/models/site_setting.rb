@@ -79,7 +79,8 @@ class SiteSetting < ActiveRecord::Base
   setting(:invite_expiry_days, 14)
   setting(:active_user_rate_limit_secs, 60)
   setting(:previous_visit_timeout_hours, 1)
-  setting(:favicon_url, '/assets/default-favicon.png')
+  client_setting(:favicon_url, '/assets/default-favicon.ico')
+  client_setting(:dynamic_favicon, false)
   setting(:apple_touch_icon_url, '/assets/default-apple-touch-icon.png')
 
   setting(:ninja_edit_window, 5.minutes.to_i)
