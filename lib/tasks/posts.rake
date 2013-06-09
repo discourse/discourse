@@ -9,11 +9,11 @@ task "posts:rebake" => :environment do
       if cooked != p.cooked
         Post.exec_sql('update posts set cooked = ? where id = ?', cooked, p.id)
         p.cooked = cooked
-        TopicLink.extract_from(p)
         putc "#"
       else
         putc "."
       end
+      TopicLink.extract_from(p)
     end
     puts
     puts
