@@ -2,13 +2,13 @@
   <div class="user-heading">
     <div class="container">
       <div class="full-width" id='user-menu'>
-        <h1>{{name}}<span>{{unbound username}}{{{unbound statusIcon}}}</span></h1>
+        <h1>{{name}}<span>{{username}}{{{statusIcon}}}</span></h1>
 
         {{#if viewingSelf}}
           <button {{action "logout" target="Discourse"}} class='btn'>{{i18n user.log_out}}</button>
         {{/if}}
         {{#if currentUser.staff}}
-          <a href="{{unbound adminPath}}" class='btn'><i class="icon-wrench"></i>&nbsp;{{i18n admin.user.show_admin_profile}}</a>
+          <a {{bindAttr href="adminPath"}} class='btn'><i class="icon-wrench"></i>&nbsp;{{i18n admin.user.show_admin_profile}}</a>
         {{/if}}
         <ul class="nav nav-pills">
           <li>
@@ -29,7 +29,7 @@
           {{/if}}
         </ul>
         <div class='avatar-wrapper'>
-          {{avatar model imageSize="120"}}
+          {{boundAvatar model imageSize="120"}}
         </div>
       </div>
     </div>

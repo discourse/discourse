@@ -167,6 +167,21 @@ Handlebars.registerHelper('avatar', function(user, options) {
 });
 
 /**
+  Bound avatar helper.
+
+  @method boundAvatar
+  @for Handlebars
+**/
+Ember.Handlebars.registerBoundHelper('boundAvatar', function(user, options) {
+  var username = Em.get(user, 'username');
+  return new Handlebars.SafeString(Discourse.Utilities.avatarImg({
+    size: options.hash.imageSize,
+    username: username,
+    avatarTemplate: Ember.get(user, 'avatar_template')
+  }));
+});
+
+/**
   Nicely format a date without a binding since the date doesn't need to change.
 
   @method unboundDate
