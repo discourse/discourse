@@ -9,7 +9,7 @@
 Discourse.AdminDashboardController = Ember.Controller.extend({
   loading: true,
   versionCheck: null,
-  problemsCheckInterval: '1 minute ago',
+  problemsCheckMinutes: 1,
 
   foundProblems: function() {
     return(Discourse.User.current('admin') && this.get('problems') && this.get('problems').length > 0);
@@ -33,9 +33,9 @@ Discourse.AdminDashboardController = Ember.Controller.extend({
       c.set('problems', d.problems);
       c.set('loadingProblems', false);
       if( d.problems && d.problems.length > 0 ) {
-        c.problemsCheckInterval = '1 minute ago';
+        c.problemsCheckInterval = 1;
       } else {
-        c.problemsCheckInterval = '10 minutes ago';
+        c.problemsCheckInterval = 10;
       }
     });
   },

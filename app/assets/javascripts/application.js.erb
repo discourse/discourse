@@ -16,11 +16,9 @@
 <%
 if Rails.env.development?
   require_asset ("./external_development/ember.js")
-  require_asset ("./external_development/sugar-1.3.5.js")
   require_asset ("./external_development/group-helper.js")
 else
   require_asset ("./external_production/ember.js")
-  require_asset ("./external_production/sugar-1.3.5.js")
   require_asset ("./external_production/group-helper.js")
 end
 

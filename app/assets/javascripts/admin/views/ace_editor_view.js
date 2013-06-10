@@ -52,7 +52,7 @@ Discourse.AceEditorView = Discourse.View.extend({
     if (window.ace) {
       initAce();
     } else {
-      $LAB.script('http://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js').wait(initAce);
+      $LAB.script('/javascripts/ace/ace.js').wait(initAce);
     }
   }
 });

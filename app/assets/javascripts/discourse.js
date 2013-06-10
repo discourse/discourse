@@ -294,7 +294,7 @@ Discourse = Ember.Application.createWithMixins({
 
       bus.subscribe("/categories", function(data){
         var site = Discourse.Site.instance();
-        data.categories.each(function(c){
+        _.each(data.categories,function(c){
           site.updateCategory(c)
         });
       });

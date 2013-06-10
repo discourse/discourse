@@ -328,7 +328,7 @@ Discourse.Composer = Discourse.Model.extend({
         // perhaps our post came from elsewhere eg. draft
         var idx = -1;
         var postNumber = post.get('post_number');
-        posts.each(function(p, i) {
+        _.each(posts,function(p,i) {
           if (p.get('post_number') === postNumber) {
             idx = i;
           }
@@ -408,7 +408,7 @@ Discourse.Composer = Discourse.Model.extend({
       createdPost.set('created_at', new Date());
 
       // If we're near the end of the topic, load new posts
-      var lastPost = topic.posts.last();
+      var lastPost = topic.posts[topic.posts.length-1];
       if (lastPost) {
         var diff = topic.get('highest_post_number') - lastPost.get('post_number');
 

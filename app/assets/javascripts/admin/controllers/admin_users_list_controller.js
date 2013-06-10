@@ -20,7 +20,7 @@ Discourse.AdminUsersListController = Ember.ArrayController.extend(Discourse.Pres
   **/
   selectAllChanged: function() {
     var _this = this;
-    this.get('content').each(function(user) {
+    _.each(this.get('content'),function(user) {
       user.set('selected', _this.get('selectAll'));
     });
   }.observes('selectAll'),

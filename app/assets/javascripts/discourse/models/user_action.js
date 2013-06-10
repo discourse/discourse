@@ -158,7 +158,7 @@ Discourse.UserAction.reopenClass({
     uniq = {};
     collapsed = Em.A();
     pos = 0;
-    stream.each(function(item) {
+    _.each(stream, function(item) {
       var current, found, key;
       key = "" + item.topic_id + "-" + item.post_number;
       found = uniq[key];

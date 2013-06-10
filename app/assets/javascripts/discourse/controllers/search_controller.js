@@ -41,11 +41,11 @@ Discourse.SearchController = Em.ArrayController.extend(Discourse.Presence, {
 
         // Default order
         var order = ['topic', 'category', 'user'];
-        results = order.map(function(o) { return results_hashed[o] }).without(void 0);
+        results = _(order).map(function(o) { return results_hashed[o] }).without(void 0);
 
         var index = 0;
         results.forEach(function(r) {
-          r.results.each(function(item) {
+          _.each(r.results,function(item) {
             item.index = index++;
           });
         });

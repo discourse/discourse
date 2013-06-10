@@ -20,7 +20,7 @@ Discourse.GithubCommit = Discourse.Model.extend({
   }.property("sha"),
 
   timeAgo: function() {
-    return Date.create(this.get('commit.committer.date')).relative();
+    return Discourse.Formatter.relativeAge(new Date(this.get('commit.committer.date'), {format: 'medium', leaveAgo: true}));
   }.property("commit.committer.date")
 });
 
@@ -32,7 +32,7 @@ Discourse.GithubCommit.reopenClass({
       type: 'get',
       data: { per_page: 40 }
     }).then(function (response) {
-      response.data.each(function(commit) {
+      _.each(response.data,function(commit) {
         result.pushObject( Discourse.GithubCommit.create(commit) );
       });
     });

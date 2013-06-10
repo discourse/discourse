@@ -11,13 +11,13 @@ Discourse.TopicList = Discourse.Model.extend({
 
   forEachNew: function(topics, callback) {
     var topicIds = [];
-    this.get('topics').each(function(t) {
-      topicIds[t.get('id')] = true;
+    _.each(this.get('topics'),function(topic) {
+      topicIds[topic.get('id')] = true;
     });
 
-    topics.each(function(t) {
-      if(!topicIds[t.id]) {
-        callback(t);
+    _.each(topics,function(topic) {
+      if(!topicIds[topic.id]) {
+        callback(topic);
       }
     });
   },
@@ -99,12 +99,12 @@ Discourse.TopicList.reopenClass({
     categories = this.extractByKey(result.categories, Discourse.Category);
     users = this.extractByKey(result.users, Discourse.User);
     topics = Em.A();
-    result.topic_list.topics.each(function(ft) {
+    _.each(result.topic_list.topics,function(ft) {
       ft.category = categories[ft.category_id];
-      ft.posters.each(function(p) {
+      _.each(ft.posters,function(p) {
         p.user = users[p.user_id];
       });
-      return topics.pushObject(Discourse.Topic.create(ft));
+      topics.pushObject(Discourse.Topic.create(ft));
     });
     return topics;
   },

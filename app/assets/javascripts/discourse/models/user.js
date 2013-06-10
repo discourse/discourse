@@ -209,9 +209,11 @@ Discourse.User = Discourse.Model.extend({
   **/
   statsCountNonPM: function() {
     if (this.blank('statsExcludingPms')) return 0;
-    return this.get('statsExcludingPms').getEach('count').reduce(function (accum, val) {
-      return accum + val;
+    var count = 0;
+    _.each(this.get('statsExcludingPms'), function(val) {
+      count += val.count;
     });
+    return count;
   }.property('statsExcludingPms.@each.count'),
 
   /**
@@ -242,7 +244,7 @@ Discourse.User = Discourse.Model.extend({
     return PreloadStore.getAndRemove("user_" + user.get('username'), function() {
       return Discourse.ajax("/users/" + user.get('username') + '.json');
     }).then(function (json) {
-      json.user.stats = Discourse.User.groupStats(json.user.stats.map(function(s) {
+      json.user.stats = Discourse.User.groupStats(_.map(json.user.stats,function(s) {
         if (s.count) s.count = parseInt(s.count, 10);
         return Discourse.UserActionStat.create(s);
       }));

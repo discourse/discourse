@@ -166,7 +166,7 @@ Discourse.Markdown = {
         if (Discourse && Discourse.Onebox) {
           onebox = Discourse.Onebox.lookupCache(url);
         }
-        if (onebox && !onebox.isBlank()) {
+        if (onebox && onebox.trim().length > 0) {
           return arguments[2] + onebox;
         } else {
           return arguments[2] + arguments[4] + " class=\"onebox\" target=\"_blank\">" + arguments[6];

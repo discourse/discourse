@@ -13,7 +13,7 @@ Handlebars.registerHelper('breakUp', function(property, options) {
   if (tokens.length === 1) return prop;
 
   result = "";
-  tokens.each(function(token, index) {
+  _.each(tokens,function(token,index) {
     result += token;
     if (token.indexOf(' ') === -1 && (index < tokens.length - 1)) {
       result += "- ";
@@ -29,7 +29,7 @@ Handlebars.registerHelper('breakUp', function(property, options) {
   @for Handlebars
 **/
 Handlebars.registerHelper('shorten', function(property, options) {
-  return Ember.Handlebars.get(this, property, options).truncate(35);
+  return Ember.Handlebars.get(this, property, options).substring(0,35);
 });
 
 /**
@@ -100,7 +100,7 @@ Handlebars.registerHelper('shortenUrl', function(property, options) {
   }
   url = url.replace(/^https?:\/\//, '');
   url = url.replace(/^www\./, '');
-  return url.truncate(80);
+  return url.substring(0,80);
 });
 
 /**

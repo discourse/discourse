@@ -86,7 +86,7 @@ Discourse.Category.reopenClass({
     if (!category) return "";
     var id = Em.get(category, 'id');
     var slug = Em.get(category, 'slug');
-    if ((!slug) || slug.isBlank()) return "" + id + "-category";
+    if (!slug || slug.trim().length === 0) return "" + id + "-category";
     return slug;
   },
 

@@ -8,7 +8,7 @@ Discourse.SelectableArray = Em.ArrayProxy.extend({
     this.select(this[index]);
   },
   select: function(selected){
-    this.content.each(function(item){
+    _.each(this.content,function(item){
       if(item === selected){
         Em.set(item, "active", true)
       } else {

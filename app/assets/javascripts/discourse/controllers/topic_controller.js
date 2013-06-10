@@ -127,7 +127,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
 
   jumpTop: function() {
     if (this.get('bestOf')) {
-      Discourse.TopicView.scrollTo(this.get('id'), this.get('posts').first().get('post_number'));
+      Discourse.TopicView.scrollTo(this.get('id'), this.get('posts')[0].get('post_number'));
     } else {
       Discourse.URL.routeTo(this.get('url'));
     }
@@ -253,12 +253,12 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     var topicController = this;
     var postFilters = this.get('postFilters');
     return Discourse.Topic.find(this.get('id'), postFilters).then(function(result) {
-      var first = result.posts.first();
+      var first = result.posts[0];
       if (first) {
         topicController.set('currentPost', first.post_number);
       }
       $('#topic-progress .solid').data('progress', false);
-      result.posts.each(function(p) {
+      _.each(result.posts,function(p) {
         // Skip the first post
         if (p.post_number === 1) return;
         posts.pushObject(Discourse.Post.create(p, topic));

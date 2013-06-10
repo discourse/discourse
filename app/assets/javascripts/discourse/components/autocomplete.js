@@ -92,7 +92,7 @@ $.fn.autocomplete = function(options) {
     this.width(150);
     this.attr('name', this.attr('name') + "-renamed");
     var vals = this.val().split(",");
-    vals.each(function(x) {
+    _.each(vals,function(x) {
       if (x !== "") {
         if (options.reverseTransform) {
           x = options.reverseTransform(x);

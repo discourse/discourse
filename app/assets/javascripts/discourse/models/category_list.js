@@ -15,14 +15,14 @@ Discourse.CategoryList.reopenClass({
     var users = this.extractByKey(result.featured_users, Discourse.User);
 
 
-    result.category_list.categories.each(function(c) {
+    _.each(result.category_list.categories,function(c) {
       if (c.featured_user_ids) {
-        c.featured_users = c.featured_user_ids.map(function(u) {
+        c.featured_users = _.map(c.featured_user_ids,function(u) {
           return users[u];
         });
       }
       if (c.topics) {
-        c.topics = c.topics.map(function(t) {
+        c.topics = _.map(c.topics,function(t) {
           return Discourse.Topic.create(t);
         });
       }

@@ -11,12 +11,12 @@ Discourse.EditTopicAutoCloseController = Discourse.ObjectController.extend(Disco
 
   setDays: function() {
     if( this.get('auto_close_at') ) {
-      var closeTime = Date.create( this.get('auto_close_at') );
-      if (closeTime.isFuture()) {
+      var closeTime = new Date( this.get('auto_close_at') );
+      if (closeTime > new Date()) {
         this.set('auto_close_days', closeTime.daysSince());
       }
     } else {
-      this.set('auto_close_days', "");
+      this.set('auto_close_days', '');
     }
   }.observes('auto_close_at'),
 
@@ -31,12 +31,12 @@ Discourse.EditTopicAutoCloseController = Discourse.ObjectController.extend(Disco
   setAutoClose: function(days) {
     var editTopicAutoCloseController = this;
     Discourse.ajax({
-      url: "/t/" + this.get('id') + "/autoclose",
+      url: '/t/' + this.get('id') + '/autoclose',
       type: 'PUT',
       dataType: 'json',
       data: { auto_close_days: days > 0 ? days : null }
     }).then(function(){
-      editTopicAutoCloseController.set('auto_close_at', Date.create(days + ' days from now').toJSON());
+      editTopicAutoCloseController.set('auto_close_at', moment().add('days', days).format());
     }, function (error) {
       bootbox.alert(Em.String.i18n('generic_error'));
     });

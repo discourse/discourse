@@ -37,7 +37,7 @@ Discourse.DropdownButtonView = Discourse.View.extend({
     buffer.push("</button>");
     buffer.push("<ul class='dropdown-menu'>");
 
-    this.get('dropDownContent').each(function(row) {
+    _.each(this.get('dropDownContent'), function(row) {
       var id = row[0],
           textKey = row[1],
           title = Em.String.i18n(textKey + ".title"),

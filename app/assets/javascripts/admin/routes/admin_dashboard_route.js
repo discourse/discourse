@@ -14,13 +14,13 @@ Discourse.AdminDashboardRoute = Discourse.Route.extend({
   },
 
   fetchDashboardData: function(c) {
-    if( !c.get('dashboardFetchedAt') || Date.create('1 hour ago', 'en') > c.get('dashboardFetchedAt') ) {
+    if( !c.get('dashboardFetchedAt') || moment().subtract('hour', 1).toDate() > c.get('dashboardFetchedAt') ) {
       c.set('dashboardFetchedAt', new Date());
       Discourse.AdminDashboard.find().then(function(d) {
         if( Discourse.SiteSettings.version_checks ){
           c.set('versionCheck', Discourse.VersionCheck.create(d.version_check));
         }
-        d.reports.each(function(report){
+        _.each(d.reports,function(report){
           c.set(report.type, Discourse.Report.create(report));
         });
         c.set('admins', d.admins);
@@ -33,14 +33,14 @@ Discourse.AdminDashboardRoute = Discourse.Route.extend({
       });
     }
 
-    if( !c.get('problemsFetchedAt') || Date.create(c.problemsCheckInterval, 'en') > c.get('problemsFetchedAt') ) {
+    if( !c.get('problemsFetchedAt') || moment.subtract('minute',c.problemsCheckMinutes).toDate() > c.get('problemsFetchedAt') ) {
       c.set('problemsFetchedAt', new Date());
       c.loadProblems();
     }
   },
 
   fetchGithubCommits: function(c) {
-    if( !c.get('commitsCheckedAt') || Date.create('1 hour ago', 'en') > c.get('commitsCheckedAt') ) {
+    if( !c.get('commitsCheckedAt') || moment().subtract('hour',1).toDate() > c.get('commitsCheckedAt') ) {
       c.set('commitsCheckedAt', new Date());
       c.set('githubCommits', Discourse.GithubCommit.findAll());
     }

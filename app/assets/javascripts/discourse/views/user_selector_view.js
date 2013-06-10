@@ -21,7 +21,7 @@ Discourse.UserSelector = Discourse.TextField.extend({
       },
 
       onChangeItems: function(items) {
-        items = $.map(items, function(i) {
+        items = _.map(items, function(i) {
           if (i.username) {
             return i.username;
           } else {

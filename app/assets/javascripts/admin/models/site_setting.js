@@ -91,7 +91,7 @@ Discourse.SiteSetting.reopenClass({
   findAll: function() {
     var result = Em.A();
     Discourse.ajax("/admin/site_settings").then(function (settings) {
-      settings.site_settings.each(function(s) {
+      _.each(settings.site_settings,function(s) {
         s.originalValue = s.value;
         result.pushObject(Discourse.SiteSetting.create(s));
       });

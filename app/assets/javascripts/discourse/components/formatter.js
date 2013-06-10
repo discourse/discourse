@@ -1,16 +1,33 @@
 Discourse.Formatter = (function(){
 
-  var updateRelativeAge, autoUpdatingRelativeAge, relativeAge, relativeAgeTiny, relativeAgeMedium, relativeAgeMediumSpan, longDate;
+  var updateRelativeAge, autoUpdatingRelativeAge, relativeAge, relativeAgeTiny,
+      relativeAgeMedium, relativeAgeMediumSpan, longDate, toTitleCase,
+      shortDate;
 
   var shortDateNoYearFormat = Ember.String.i18n("dates.short_date_no_year");
   var longDateFormat = Ember.String.i18n("dates.long_date");
   var shortDateFormat = Ember.String.i18n("dates.short_date");
+
+  shortDate = function(date){
+    return moment(date).format(shortDateFormat);
+  };
+
+
+  // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
+  // TODO: locale support ?
+  toTitleCase = function toTitleCase(str)
+  {
+    return str.replace(/\w\S*/g, function(txt){
+      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+  }
 
   longDate = function(dt) {
     return moment(dt).format(longDateFormat);
   };
 
   updateRelativeAge = function(elems) {
+    // jQuery .each
     elems.each(function(){
       var $this = $(this);
       $this.html(relativeAge(new Date($this.data('time')), $this.data('format')));
@@ -97,7 +114,6 @@ Discourse.Formatter = (function(){
       formatted = t("x_days", {count: Math.round((distanceInMinutes - 720.0) / 1440.0)});
       break;
     }
-
     return formatted || '&mdash';
   };
 
@@ -121,7 +137,7 @@ Discourse.Formatter = (function(){
       displayDate = Em.String.i18n("now");
     } else if (distance > fiveDaysAgo) {
       if ((new Date()).getFullYear() !== date.getFullYear()) {
-        displayDate = moment(date).format(shortDateFormat);
+        displayDate = shortDate(date);
       } else {
         displayDate = moment(date).format(shortDateNoYearFormat);
       }
@@ -153,6 +169,8 @@ Discourse.Formatter = (function(){
     longDate: longDate,
     relativeAge: relativeAge,
     autoUpdatingRelativeAge: autoUpdatingRelativeAge,
-    updateRelativeAge: updateRelativeAge
+    updateRelativeAge: updateRelativeAge,
+    toTitleCase: toTitleCase,
+    shortDate: shortDate
   };
 })();

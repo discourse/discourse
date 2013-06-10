@@ -76,9 +76,9 @@ Discourse.AdminUser = Discourse.User.extend({
   }).property('admin', 'moderator'),
 
   banDuration: (function() {
-    var banned_at = Date.create(this.banned_at);
-    var banned_till = Date.create(this.banned_till);
-    return banned_at.short() + " - " + banned_till.short();
+    var banned_at = moment(this.banned_at);
+    var banned_till = moment(this.banned_till);
+    return banned_at.format('L') + " - " + banned_till.format('L');
   }).property('banned_till', 'banned_at'),
 
   ban: function() {

@@ -24,7 +24,7 @@ Discourse.ComboboxView = Discourse.View.extend({
     if (this.get('content')) {
 
       var comboboxView = this;
-      this.get('content').each(function(o) {
+      _.each(this.get('content'),function(o) {
         var val = o[comboboxView.get('valueAttribute')];
         if (val) { val = val.toString(); }
 
@@ -66,7 +66,7 @@ Discourse.ComboboxView = Discourse.View.extend({
     }
     if (this.classNames && this.classNames.length > 0) {
       // Apply the classes to Chosen's dropdown div too:
-      this.classNames.each(function(c) {
+      _.each(this.classNames,function(c) {
         $elem.chosen().next().addClass(c);
       });
     }

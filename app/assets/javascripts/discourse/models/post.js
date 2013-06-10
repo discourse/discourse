@@ -114,7 +114,7 @@ Discourse.Post = Discourse.Model.extend({
     rightNow = new Date().getTime();
 
     // Show heat on age
-    updatedAtDate = Date.create(updatedAt).getTime();
+    updatedAtDate = new Date(updatedAt).getTime();
     if (updatedAtDate > (rightNow - 60 * 60 * 1000 * 12)) return 'heatmap-high';
     if (updatedAtDate > (rightNow - 60 * 60 * 1000 * 24)) return 'heatmap-med';
     if (updatedAtDate > (rightNow - 60 * 60 * 1000 * 48)) return 'heatmap-low';
@@ -207,10 +207,11 @@ Discourse.Post = Discourse.Model.extend({
 
     // Update all the properties
     if (!obj) return;
-    Object.each(obj, function(key, val) {
-      if (key === 'actions_summary') return false;
-      if (val) {
-        post.set(key, val);
+    _.each(obj, function(val,key) {
+      if (key !== 'actions_summary'){
+        if (val) {
+          post.set(key, val);
+        }
       }
     });
 
@@ -218,7 +219,7 @@ Discourse.Post = Discourse.Model.extend({
     this.set('actions_summary', Em.A());
     if (obj.actions_summary) {
       var lookup = Em.Object.create();
-      obj.actions_summary.each(function(a) {
+      _.each(obj.actions_summary,function(a) {
         var actionSummary;
         a.post = post;
         a.actionType = Discourse.Site.instance().postActionTypeById(a.id);
@@ -238,7 +239,7 @@ Discourse.Post = Discourse.Model.extend({
     var parent = this;
     return Discourse.ajax("/posts/" + (this.get('id')) + "/replies").then(function(loaded) {
       var replies = parent.get('replies');
-      loaded.each(function(reply) {
+      _.each(loaded,function(reply) {
         var post = Discourse.Post.create(reply);
         post.set('topic', parent.get('topic'));
         replies.pushObject(post);

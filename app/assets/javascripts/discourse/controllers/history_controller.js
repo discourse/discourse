@@ -65,15 +65,15 @@ Discourse.HistoryController = Discourse.ObjectController.extend(Discourse.ModalF
 
     var historyController = this;
     this.get('model').loadVersions().then(function(result) {
-      result.each(function(item) {
-        item.description = "v" + item.number + " - " + Date.create(item.created_at).relative() + " - " +
+      _.each(result,function(item) {
+        item.description = "v" + item.number + " - " + Discourse.Formatter.relativeAge(new Date(item.created_at), {format: 'medium', leaveAgo: true}) + " - " +
           Em.String.i18n("changed_by", { author: item.display_username });
       });
 
       historyController.setProperties({
         loading: false,
-        versionLeft: result.first(),
-        versionRight: result.last(),
+        versionLeft: result[0],
+        versionRight: result[result.length-1],
         versions: result
       });
     });

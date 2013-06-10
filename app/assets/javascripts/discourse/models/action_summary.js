@@ -112,8 +112,8 @@ Discourse.ActionSummary = Discourse.Model.extend({
     }).then(function (result) {
       var users = Em.A();
       actionSummary.set('users', users);
-      result.each(function(u) {
-        users.pushObject(Discourse.User.create(u));
+      _.each(result,function(user) {
+        users.pushObject(Discourse.User.create(user));
       });
     });
   }

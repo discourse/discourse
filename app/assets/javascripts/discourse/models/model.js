@@ -18,7 +18,7 @@ Discourse.Model = Ember.Object.extend(Discourse.Presence, {
   **/
   mergeAttributes: function(attrs, builders) {
     var _this = this;
-    return Object.keys(attrs, function(k, v) {
+    _.each(attrs, function(v,k) {
       // If they're in a builder we use that
       var builder, col;
       if (typeof v === 'object' && builders && (builder = builders[k])) {
@@ -26,7 +26,7 @@ Discourse.Model = Ember.Object.extend(Discourse.Presence, {
           _this.set(k, Em.A());
         }
         col = _this.get(k);
-        return v.each(function(obj) {
+        _.each(v,function(obj) {
           col.pushObject(builder.create(obj));
         });
       } else {
@@ -49,7 +49,7 @@ Discourse.Model.reopenClass({
   extractByKey: function(collection, klass) {
     var retval = {};
     if (!collection) return retval;
-    collection.each(function(c) {
+    _.each(collection,function(c) {
       retval[c.id] = klass.create(c);
     });
     return retval;

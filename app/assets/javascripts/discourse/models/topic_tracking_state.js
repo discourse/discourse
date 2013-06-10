@@ -32,6 +32,14 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
     }
   },
 
+  updateSeen: function(topicId, highestSeen) {
+    var state = this.states["t" + topicId];
+    if(state && state.last_read_post_number < highestSeen) {
+      state.last_read_post_number = highestSeen;
+      this.incrementMessageCount();
+    }
+  },
+
   notify: function(data){
     if (!this.newIncoming) { return; }
 
@@ -75,25 +83,24 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
 
     if(filter === "new" && !list.more_topics_url){
       // scrub all new rows and reload from list
-      $.each(this.states, function(){
-        if(this.last_read_post_number === null) {
-          tracker.removeTopic(this.topic_id);
+      _.each(this.states, function(state){
+        if(state.last_read_post_number === null) {
+          tracker.removeTopic(state.topic_id);
         }
       });
     }
 
     if(filter === "unread" && !list.more_topics_url){
       // scrub all new rows and reload from list
-      $.each(this.states, function(){
-        if(this.last_read_post_number !== null) {
-          tracker.removeTopic(this.topic_id);
+      _.each(this.states, function(state){
+        if(state.last_read_post_number !== null) {
+          tracker.removeTopic(state.topic_id);
         }
       });
     }
 
-    $.each(list.topics, function(){
+    _.each(list.topics, function(topic){
       var row = {};
-      var topic = this;
 
       row.topic_id = topic.id;
       if(topic.unseen) {
@@ -123,28 +130,27 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
   },
 
   countNew: function(){
-    var count = 0;
-    $.each(this.states, function(){
-      count += this.last_read_post_number === null ? 1 : 0;
-    });
-    return count;
+    return _.chain(this.states)
+      .where({last_read_post_number: null})
+      .value()
+      .length;
   },
 
   countUnread: function(){
     var count = 0;
-    $.each(this.states, function(){
-      count += (this.last_read_post_number !== null &&
-                this.last_read_post_number < this.highest_post_number) ? 1 : 0;
+    _.each(this.states, function(topic){
+      count += (topic.last_read_post_number !== null &&
+                topic.last_read_post_number < topic.highest_post_number) ? 1 : 0;
     });
     return count;
   },
 
   countCategory: function(category) {
     var count = 0;
-    $.each(this.states, function(){
-      if (this.category_name === category) {
-        count += (this.last_read_post_number === null ||
-                  this.last_read_post_number < this.highest_post_number) ? 1 : 0;
+    _.each(this.states, function(topic){
+      if (topic.category_name === category) {
+        count += (topic.last_read_post_number === null ||
+                  topic.last_read_post_number < topic.highest_post_number) ? 1 : 0;
       }
     });
     return count;
@@ -167,8 +173,8 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
     var states = this.states;
 
     if(data) {
-      data.each(function(row){
-        states["t" + row.topic_id] = row;
+      _.each(data,function(topic){
+        states["t" + topic.topic_id] = topic;
       });
     }
   }

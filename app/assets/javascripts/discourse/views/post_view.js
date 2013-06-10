@@ -163,7 +163,7 @@ Discourse.PostView = Discourse.View.extend({
     var link_counts;
 
     if (link_counts = this.get('post.link_counts')) {
-      link_counts.each(function(lc) {
+      _.each(link_counts, function(lc) {
         if (lc.clicks > 0) {
           postView.$(".cooked a[href]").each(function() {
             var link = $(this);

@@ -43,7 +43,7 @@ Discourse.NavItemView = Discourse.View.extend({
     };
     if (categoryName) {
       name = 'category';
-      extra.categoryName = categoryName.titleize();
+      extra.categoryName = Discourse.Formatter.toTitleCase(categoryName);
     }
     return I18n.t("js.filters." + name + ".title", extra);
   }.property('count'),

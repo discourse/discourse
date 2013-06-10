@@ -77,7 +77,7 @@ Discourse.ScreenTrack = Ember.Object.extend({
 
     // Update our total timings
     var totalTimings = this.get('totalTimings');
-    Object.values(this.get('timings'), function(timing) {
+    _.each(this.get('timings'), function(timing,key) {
       if (!totalTimings[timing.postNumber])
         totalTimings[timing.postNumber] = 0;
 
@@ -90,15 +90,16 @@ Discourse.ScreenTrack = Ember.Object.extend({
 
     var topicId = parseInt(this.get('topicId'), 10);
     var highestSeen = 0;
-    Object.keys(newTimings, function(postNumber) {
+    _.each(newTimings, function(time,postNumber) {
       highestSeen = Math.max(highestSeen, parseInt(postNumber, 10));
     });
 
     var highestSeenByTopic = Discourse.get('highestSeenByTopic');
     if ((highestSeenByTopic[topicId] || 0) < highestSeen) {
       highestSeenByTopic[topicId] = highestSeen;
+      Discourse.TopicTrackingState.current().updateSeen(topicId, highestSeen);
     }
-    if (!Object.isEmpty(newTimings)) {
+    if (!$.isEmptyObject(newTimings)) {
 
       Discourse.ajax('/topics/timings', {
         data: {
@@ -144,8 +145,8 @@ Discourse.ScreenTrack = Ember.Object.extend({
     // TODO: Eyeline has a smarter more accurate function here. It's bad to do jQuery
     // in a model like component, so we should refactor this out later.
     var screenTrack = this;
-    return Object.keys(this.get('timings'), function(id) {
-      var $element, elemBottom, elemTop, timing;
+    _.each(this.get('timings'),function(timing,id) {
+      var $element, elemBottom, elemTop;
       $element = $(id);
       if ($element.length === 1) {
         elemTop = $element.offset().top;
@@ -153,7 +154,6 @@ Discourse.ScreenTrack = Ember.Object.extend({
 
         // If part of the element is on the screen, increase the counter
         if (((docViewTop <= elemTop && elemTop <= docViewBottom)) || ((docViewTop <= elemBottom && elemBottom <= docViewBottom))) {
-          timing = screenTrack.timings[id];
           timing.time = timing.time + diff;
         }
       }
