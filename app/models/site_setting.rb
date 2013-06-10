@@ -241,7 +241,7 @@ class SiteSetting < ActiveRecord::Base
 
   def self.homepage
     # TODO objectify this
-    x = top_menu.split('|')[0].split(',')[0]
+    top_menu.split('|')[0].split(',')[0]
   end
 
   def self.anonymous_homepage
