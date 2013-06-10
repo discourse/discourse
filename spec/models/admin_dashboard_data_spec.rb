@@ -121,8 +121,8 @@ describe AdminDashboardData do
     end
   end
 
-  describe 'send_email_with_gmail_check' do
-    subject { AdminDashboardData.new.send_email_with_gmail_check }
+  describe 'send_consumer_email_check' do
+    subject { AdminDashboardData.new.send_consumer_email_check }
 
     it 'returns nil if gmail.com is not in the smtp_settings address' do
       ActionMailer::Base.stubs(:smtp_settings).returns({address: 'mandrillapp.com'})

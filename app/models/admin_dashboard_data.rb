@@ -32,7 +32,7 @@ class AdminDashboardData
       failing_emails_check,
       default_logo_check,
       contact_email_check,
-      send_email_with_gmail_check,
+      send_consumer_email_check,
       title_check ].compact
   end
 
@@ -122,8 +122,8 @@ class AdminDashboardData
     I18n.t('dashboard.title_nag') if SiteSetting.title == SiteSetting.defaults[:title]
   end
 
-  def send_email_with_gmail_check
-    I18n.t('dashboard.gmail_for_email_warning') if Rails.env == 'production' and ActionMailer::Base.smtp_settings[:address] =~ /gmail\.com/
+  def send_consumer_email_check
+    I18n.t('dashboard.consumer_email_warning') if Rails.env == 'production' and ActionMailer::Base.smtp_settings[:address] =~ /gmail\.com|live\.com|yahoo\.com/
   end
 
 end
