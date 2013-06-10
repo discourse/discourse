@@ -503,6 +503,7 @@ DEPENDENCIES
   guard-rspec
   guard-spork
   has_ip_address
+  highline
   hiredis
   image_optim
   image_sorcery
