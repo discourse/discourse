@@ -716,6 +716,8 @@ en:
 
        - Configure [DKIM email key signing][3] in your email software, and place the public DKIM key in your DNS records. This is not required, but will significantly improve email deliverability.
 
+      (The *easy* way is to [sign up for Mandrill][6], which has a generous free mailing plan and will be fine for small forums. You'll still need to set up the SPF and DKIM records in your DNS, though!)
+
       We hope you received this email deliverability test OK!
 
       Good luck,
@@ -728,6 +730,7 @@ en:
       [3]: http://www.dkim.org/
       [4]: http://whatismyipaddress.com/blacklist-check
       [5]: %{base_url}/unsubscribe
+      [6]: http://mandrill.com
 
       ----
 
