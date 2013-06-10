@@ -70,7 +70,7 @@ class Group < ActiveRecord::Base
 
   def self.refresh_automatic_groups!(*args)
     if args.length == 0
-      args = AUTO_GROUPS.map{|k,v| k}
+      args = AUTO_GROUPS.keys
     end
     args.each do |group|
       refresh_automatic_group!(group)
