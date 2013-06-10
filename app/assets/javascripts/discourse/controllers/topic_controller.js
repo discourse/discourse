@@ -126,11 +126,19 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   },
 
   jumpTop: function() {
-    Discourse.URL.routeTo(this.get('content.url'));
+    if (this.get('bestOf')) {
+      Discourse.TopicView.scrollTo(this.get('id'), this.get('posts').first().get('post_number'));
+    } else {
+      Discourse.URL.routeTo(this.get('url'));
+    }
   },
 
   jumpBottom: function() {
-    Discourse.URL.routeTo(this.get('content.lastPostUrl'));
+    if (this.get('bestOf')) {
+      Discourse.TopicView.scrollTo(this.get('id'), this.get('posts').last().get('post_number'));
+    } else {
+      Discourse.URL.routeTo(this.get('lastPostUrl'));
+    }
   },
 
   cancelFilter: function() {
