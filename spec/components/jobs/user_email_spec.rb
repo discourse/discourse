@@ -80,17 +80,24 @@ describe Jobs::UserEmail do
 
 
     context 'notification' do
-      let!(:notification) { Fabricate(:notification, user: user)}
+      let(:post) { Fabricate(:post, user: user) }
+      let!(:notification) { Fabricate(:notification, user: user, topic: post.topic, post_number: post.post_number)}
 
       it 'passes a notification as an argument when a notification_id is present' do
         EmailSender.any_instance.expects(:send)
-        UserNotifications.expects(:user_mentioned).with(user, notification: notification).returns(mailer)
+        UserNotifications.expects(:user_mentioned).with(user, notification: notification, post: post).returns(mailer)
         Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id)
       end
 
       it "doesn't send the email if the notification has been seen" do
         EmailSender.any_instance.expects(:send).never
         notification.update_column(:read, true)
+        Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id)
+      end
+
+      it "doesn't send the email if the post has been user deleted" do
+        EmailSender.any_instance.expects(:send).never
+        post.update_column(:user_deleted, true)
         Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id)
       end
 
