@@ -120,11 +120,9 @@ describe SpamRulesEnforcer do
     it 'sends private messages to the user and to moderators' do
       SystemMessage.expects(:create).with(user, anything, anything)
       moderator = Fabricate(:moderator)
-      PostCreator.expects(:create).with do |from_user, opts|
-        from_user.id == admin.id &&
-          opts[:target_group_names] && opts[:target_group_names].include?(Group[:moderators].name) &&
-          opts[:archetype] == Archetype.private_message
-      end.returns(stub_everything)
+      GroupMessage.expects(:create).with do |group, msg_type, params|
+        group == Group[:moderators].name and msg_type == :user_automatically_blocked and params[:user].id == user.id
+      end
       subject.punish_user
     end
 

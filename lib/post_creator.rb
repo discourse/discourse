@@ -69,6 +69,10 @@ class PostCreator
       @post.save_reply_relationships
     end
 
+    if @spam
+      GroupMessage.create( Group[:moderators].name, :spam_post_blocked, {user: @user, limit_once_per: 24.hours} )
+    end
+
     enqueue_jobs
     @post
   end
@@ -261,7 +265,6 @@ class PostCreator
 
   def enqueue_jobs
     if @post && !@post.errors.present?
-
       # We need to enqueue jobs after the transaction. Otherwise they might begin before the data has
       # been comitted.
       topic_id = @opts[:topic_id] || @topic.try(:id)

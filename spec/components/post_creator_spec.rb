@@ -216,9 +216,17 @@ describe PostCreator do
     end
 
     it "does not create the post" do
+      GroupMessage.stubs(:create)
       creator.create
       creator.errors.should be_present
       creator.spam?.should be_true
+    end
+
+    it "sends a message to moderators" do
+      GroupMessage.expects(:create).with do |group_name, msg_type, params|
+        group_name == Group[:moderators].name and msg_type == :spam_post_blocked and params[:user].id == user.id
+      end
+      creator.create
     end
 
   end
