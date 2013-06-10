@@ -103,7 +103,7 @@ Discourse.Formatter = (function(){
 
   relativeAgeMedium = function(date, options){
     var displayDate, fiveDaysAgo, oneMinuteAgo, fullReadable, leaveAgo, val;
-    var wrapInSpan = options.wrapInSpan ? true : false;
+    var wrapInSpan = options.wrapInSpan === false ? false : true;
 
     leaveAgo = options.leaveAgo;
     var distance = Math.round((new Date() - date) / 1000);
