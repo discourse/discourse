@@ -22,7 +22,7 @@ describe UserNotifications do
     its(:body) { should be_present }
   end
 
-  describe '.daily_digest' do
+  describe '.digest' do
     subject { UserNotifications.digest(user) }
 
     context "without new topics" do

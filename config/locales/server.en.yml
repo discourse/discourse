@@ -612,6 +612,9 @@ en:
     newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_posts` posts before being considered spam."
     staff_like_weight: "Extra weighting factor given to likes when performed by staff."
 
+    reply_by_email_enabled: "Whether this forum supports reply by email"
+    reply_by_email_address: "Template for reply by email address in form, for example: %{reply_key}@reply.myforum.com"
+
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"
     liked: "%{display_username} liked your post in %{link}"

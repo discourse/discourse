@@ -1086,6 +1086,7 @@ en:
         html: "html"
         text: "text"
         last_seen_user: "Last Seen User:"
+        reply_key: "Reply Key"
 
       impersonate:
         title: "Impersonate User"

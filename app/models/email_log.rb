@@ -3,6 +3,13 @@ class EmailLog < ActiveRecord::Base
   validates_presence_of :email_type
   validates_presence_of :to_address
 
+  before_create do
+    # We only generate a reply
+    if SiteSetting.reply_by_email_enabled?
+      self.reply_key = SecureRandom.hex(16)
+    end
+  end
+
   after_create do
     # Update last_emailed_at if the user_id is present
     User.update_all("last_emailed_at = CURRENT_TIMESTAMP", id: user_id) if user_id.present?

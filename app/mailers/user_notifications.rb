@@ -1,44 +1,44 @@
 require_dependency 'markdown_linker'
-require_dependency 'email/builder'
+require_dependency 'email/message_builder'
 
 class UserNotifications < ActionMailer::Base
   default charset: 'UTF-8'
 
-  include Email::Builder
+  include Email::BuildEmailHelper
 
   def signup(user, opts={})
-    build_email(user.email, "user_notifications.signup", email_token: opts[:email_token])
+    build_email(user.email,
+                      template: "user_notifications.signup",
+                      email_token: opts[:email_token])
   end
 
   def signup_after_approval(user, opts={})
-    build_email(
-      user.email,
-      'user_notifications.signup_after_approval',
-      email_token: opts[:email_token],
-      new_user_tips: SiteContent.content_for(:usage_tips)
-    )
+    build_email(user.email,
+                      template: 'user_notifications.signup_after_approval',
+                      email_token: opts[:email_token],
+                      new_user_tips: SiteContent.content_for(:usage_tips))
   end
 
   def authorize_email(user, opts={})
-    build_email(user.email, "user_notifications.authorize_email", email_token: opts[:email_token])
+    build_email(user.email, template: "user_notifications.authorize_email", email_token: opts[:email_token])
   end
 
   def forgot_password(user, opts={})
-    build_email(user.email, "user_notifications.forgot_password", email_token: opts[:email_token])
+    build_email(user.email, template: "user_notifications.forgot_password", email_token: opts[:email_token])
   end
 
   def private_message(user, opts={})
     post = opts[:post]
 
     build_email user.email,
-                "user_notifications.private_message",
-                message: post.raw,
-                url: post.url,
-                subject_prefix: "[#{I18n.t('private_message_abbrev')}] #{post.post_number != 1 ? 're: ' : ''}",
-                topic_title: post.topic.title,
-                private_message_from: post.user.name,
-                from: "#{I18n.t(:via, username: post.user.name, site_name: SiteSetting.title)} <#{SiteSetting.notification_email}>",
-                add_unsubscribe_link: true
+                      template: "user_notifications.private_message",
+                      message: post.raw,
+                      url: post.url,
+                      subject_prefix: "[#{I18n.t('private_message_abbrev')}] #{post.post_number != 1 ? 're: ' : ''}",
+                      topic_title: post.topic.title,
+                      private_message_from: post.user.name,
+                      from_alias: I18n.t(:via, username: post.user.name, site_name: SiteSetting.title),
+                      add_unsubscribe_link: true
   end
 
   def digest(user, opts={})
@@ -57,11 +57,11 @@ class UserNotifications < ActionMailer::Base
 
     # Don't send email unless there is content in it
     if @new_topics.present?
-      mail to: user.email,
-           from: "#{I18n.t('user_notifications.digest.from', site_name: SiteSetting.title)} <#{SiteSetting.notification_email}>",
-           subject: I18n.t('user_notifications.digest.subject_template',
-                            site_name: @site_name,
-                            date: I18n.l(Time.now, format: :short))
+      build_email user.email,
+                        from_alias: I18n.t('user_notifications.digest.from', site_name: SiteSetting.title),
+                        subject: I18n.t('user_notifications.digest.subject_template',
+                                        site_name: @site_name,
+                                        date: I18n.l(Time.now, format: :short))
     end
   end
 
@@ -80,16 +80,16 @@ class UserNotifications < ActionMailer::Base
       message: @post.raw,
       url: @post.url,
       username: username,
-      add_unsubscribe_link: true
+      add_unsubscribe_link: true,
+      template: "user_notifications.user_#{notification_type}"
     }
 
     # If we have a display name, change the from address
     if username.present?
-      aliased = I18n.t(:via, username: username, site_name: SiteSetting.title)
-      email_opts[:from] = "#{aliased} <#{SiteSetting.notification_email}>"
+      email_opts[:from_alias] = I18n.t(:via, username: username, site_name: SiteSetting.title)
     end
 
-    email = build_email user.email, "user_notifications.user_#{notification_type}", email_opts
+    build_email(user.email, email_opts)
   end
 
   alias :user_invited_to_private_message :notification_template

@@ -188,6 +188,10 @@ class SiteSetting < ActiveRecord::Base
   setting(:regular_requires_likes_given, 1)
   setting(:regular_requires_topic_reply_count, 3)
 
+  # Reply by Email Settings
+  setting(:reply_by_email_enabled, false)
+  setting(:reply_by_email_address, nil)
+
   # Entropy checks
   setting(:title_min_entropy, 10)
   setting(:body_min_entropy, 7)
