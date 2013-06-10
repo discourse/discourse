@@ -153,7 +153,7 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
     $('#discourse-modal').modal('hide');
     bootbox.confirm(Em.String.i18n("category.delete_confirm"), Em.String.i18n("no_value"), Em.String.i18n("yes_value"), function(result) {
       if (result) {
-        categoryController.get('category').destroy().then(function(){
+        categoryController.get('model').destroy().then(function(){
           // success
           Discourse.URL.redirectTo("/categories");
         }, function(jqXHR){
