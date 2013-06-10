@@ -15,7 +15,7 @@ describe Jobs::InviteEmail do
       let (:invite) { Fabricate(:invite) }
 
       it 'delegates to the test mailer' do
-        EmailSender.any_instance.expects(:send)
+        Email::Sender.any_instance.expects(:send)
         InviteMailer.expects(:send_invite).with(invite).returns(mailer)
         Jobs::InviteEmail.new.execute(invite_id: invite.id)
       end

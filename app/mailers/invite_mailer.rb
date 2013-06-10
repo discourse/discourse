@@ -1,8 +1,8 @@
-require_dependency 'email_builder'
+require_dependency 'email/builder'
 
 class InviteMailer < ActionMailer::Base
   default charset: 'UTF-8'
-  include EmailBuilder
+  include Email::Builder
 
   def send_invite(invite)
 

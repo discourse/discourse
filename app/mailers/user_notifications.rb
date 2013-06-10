@@ -1,10 +1,10 @@
 require_dependency 'markdown_linker'
-require_dependency 'email_builder'
+require_dependency 'email/builder'
 
 class UserNotifications < ActionMailer::Base
   default charset: 'UTF-8'
 
-  include EmailBuilder
+  include Email::Builder
 
   def signup(user, opts={})
     build_email(user.email, "user_notifications.signup", email_token: opts[:email_token])

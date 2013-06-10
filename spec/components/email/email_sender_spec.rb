@@ -1,23 +1,23 @@
 require 'spec_helper'
-require 'email_sender'
+require 'email/sender'
 
-describe EmailSender do
+describe Email::Sender do
 
   it "doesn't deliver mail when the message is nil" do
     Mail::Message.any_instance.expects(:deliver).never
-    EmailSender.new(nil, :hello).send
+    Email::Sender.new(nil, :hello).send
   end
 
   it "doesn't deliver when the to address is nil" do
     message = Mail::Message.new(body: 'hello')
     message.expects(:deliver).never
-    EmailSender.new(message, :hello).send
+    Email::Sender.new(message, :hello).send
   end
 
   it "doesn't deliver when the body is nil" do
     message = Mail::Message.new(to: 'eviltrout@test.domain')
     message.expects(:deliver).never
-    EmailSender.new(message, :hello).send
+    Email::Sender.new(message, :hello).send
   end
 
   context 'with a valid message' do
@@ -29,7 +29,7 @@ describe EmailSender do
       message
     end
 
-    let(:email_sender) { EmailSender.new(message, :valid_type) }
+    let(:email_sender) { Email::Sender.new(message, :valid_type) }
 
     it 'calls deliver' do
       message.expects(:deliver).once
@@ -91,7 +91,7 @@ describe EmailSender do
     end
 
     let(:user) { Fabricate(:user) }
-    let(:email_sender) { EmailSender.new(message, :valid_type, user) }
+    let(:email_sender) { Email::Sender.new(message, :valid_type, user) }
 
     before do
       email_sender.send

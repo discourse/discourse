@@ -13,7 +13,7 @@ describe Jobs::TestEmail do
       let (:mailer) { Mail::Message.new(to: 'eviltrout@test.domain') }
 
       it 'delegates to the test mailer' do
-        EmailSender.any_instance.expects(:send)
+        Email::Sender.any_instance.expects(:send)
         TestMailer.expects(:send_test).with('eviltrout@test.domain').returns(mailer)
         Jobs::TestEmail.new.execute(to_address: 'eviltrout@test.domain')
       end

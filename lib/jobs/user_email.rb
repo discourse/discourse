@@ -1,4 +1,4 @@
-require_dependency 'email_sender'
+require_dependency 'email/sender'
 
 module Jobs
 
@@ -69,7 +69,7 @@ module Jobs
         message.to = [args[:to_address]]
       end
 
-      EmailSender.new(message, args[:type], user).send
+      Email::Sender.new(message, args[:type], user).send
 
     end
 

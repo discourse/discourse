@@ -1,16 +1,16 @@
 require 'spec_helper'
 require 'email'
 
-describe EmailStyles do
+describe Email::Styles do
 
   def style_exists(html, css_rule)
-    fragment = Nokogiri::HTML.fragment(EmailStyles.new(html).format)
+    fragment = Nokogiri::HTML.fragment(Email::Styles.new(html).format)
     element = fragment.at(css_rule)
     expect(element["style"]).not_to be_blank
   end
 
   it "returns blank from an empty string" do
-    EmailStyles.new("").format.should be_blank
+    Email::Styles.new("").format.should be_blank
   end
 
   it "attaches a style to h3 tags" do
@@ -34,7 +34,7 @@ describe EmailStyles do
   end
 
   it "removes pre tags but keeps their contents" do
-    expect(EmailStyles.new("<pre>hello</pre>").format).to eq("hello")
+    expect(Email::Styles.new("<pre>hello</pre>").format).to eq("hello")
   end
 
 end

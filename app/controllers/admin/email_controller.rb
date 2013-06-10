@@ -1,4 +1,4 @@
-require_dependency 'email_renderer'
+require_dependency 'email/renderer'
 
 class Admin::EmailController < Admin::AdminController
 
@@ -30,7 +30,7 @@ class Admin::EmailController < Admin::AdminController
 
   def preview_digest
     params.require(:last_seen_at)
-    renderer = EmailRenderer.new(UserNotifications.digest(current_user, since: params[:last_seen_at]), html_template: true)
+    renderer = Email::Renderer.new(UserNotifications.digest(current_user, since: params[:last_seen_at]), html_template: true)
     render json: MultiJson.dump(html_content: renderer.html, text_content: renderer.text)
   end
 
