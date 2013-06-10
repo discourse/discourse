@@ -98,11 +98,12 @@ Discourse.Formatter = (function(){
       break;
     }
 
-    return formatted;
+    return formatted || '&mdash';
   };
 
   relativeAgeMedium = function(date, options){
     var displayDate, fiveDaysAgo, oneMinuteAgo, fullReadable, leaveAgo, val;
+    var wrapInSpan = options.wrapInSpan ? true : false;
 
     leaveAgo = options.leaveAgo;
     var distance = Math.round((new Date() - date) / 1000);
@@ -116,7 +117,7 @@ Discourse.Formatter = (function(){
     fiveDaysAgo = 432000;
     oneMinuteAgo = 60;
 
-    if (distance >= 0 && distance < oneMinuteAgo) {
+    if (distance < oneMinuteAgo) {
       displayDate = Em.String.i18n("now");
     } else if (distance > fiveDaysAgo) {
       if ((new Date()).getFullYear() !== date.getFullYear()) {
@@ -127,7 +128,11 @@ Discourse.Formatter = (function(){
     } else {
       displayDate = relativeAgeMediumSpan(distance, leaveAgo);
     }
-    return "<span class='date' title='" + fullReadable + "'>" + displayDate + "</span>";
+    if(wrapInSpan) {
+      return "<span class='date' title='" + fullReadable + "'>" + displayDate + "</span>";
+    } else {
+      return displayDate;
+    }
   };
 
   // mostly lifted from rails with a few amendments

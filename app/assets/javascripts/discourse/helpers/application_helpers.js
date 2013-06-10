@@ -210,14 +210,9 @@ Handlebars.registerHelper('unboundAge', function(property, options) {
   @for Handlebars
 **/
 Handlebars.registerHelper('editDate', function(property, options) {
-  var dt, yesterday;
-  dt = Date.create(Ember.Handlebars.get(this, property, options));
-  yesterday = new Date() - (60 * 60 * 24 * 1000);
-  if (yesterday > dt.getTime()) {
-    return dt.format("long");
-  } else {
-    return dt.relative();
-  }
+  // autoupdating this is going to be painful
+  var date = new Date(Ember.Handlebars.get(this, property, options));
+  return new Handlebars.SafeString(Discourse.Formatter.relativeAge(date, {format: 'medium', leaveAgo: true, wrapInSpan: false}));
 });
 
 /**
