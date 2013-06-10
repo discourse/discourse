@@ -1,0 +1,38 @@
+<div class="onebox-result">
+  {{#host}}
+    <div class="source">
+      <div class="info">
+        <a href="{{link}}" class="track-link" target="_blank">
+          {{#favicon}}
+            <img class="favicon" src="{{favicon}}">
+          {{/favicon}}
+          {{host}}
+        </a>
+      </div>
+    </div>
+  {{/host}}
+
+  <div class="onebox-result-body">
+    {{#owner.profile_image}}
+      <a href="{{owner.link}}" target="_blank">
+        <img alt="{{owner.display_name}}" src="{{owner.profile_image}}">
+      </a>
+    {{/owner.profile_image}}
+
+    <h4>
+      <a href="{{link}}" target="_blank">{{{title}}}</a>
+    </h4>
+
+    <div class="date">
+      asked by <a href="{{owner.link}}" target="_blank">
+        {{owner.display_name}}
+      </a>
+      on <a href="{{link}}" target="_blank">{{creation_date}}</a>
+    </div>
+
+    <div>
+      <strong>{{tags}}</strong>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+</div>
