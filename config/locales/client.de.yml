@@ -7,6 +7,65 @@
 
 de:
   js:
+    dates:
+      short_date_no_year: "D MMM"
+      short_date: "D. MMM YYYY"
+      long_date: "D. MMMM YYYY, H:mm"
+      tiny:
+        half_a_minute: "< 1Min"
+        less_than_x_seconds:
+          one:   "< 1s"
+          other: "< %{count}s"
+        x_seconds:
+          one:   "1s"
+          other: "%{count}s"
+        less_than_x_minutes:
+          one:   "< 1Min"
+          other: "< %{count}Min"
+        x_minutes:
+          one:   "1Min"
+          other: "%{count}Min"
+        about_x_hours:
+          one:   "1Std"
+          other: "%{count}Std"
+        x_days:
+          one:   "1T"
+          other: "%{count}T"
+        about_x_months:
+          one:   "1Mon"
+          other: "%{count}Mon"
+        x_months:
+          one:   "1Mon"
+          other: "%{count}Mon"
+        about_x_years:
+          one:   "1J"
+          other: "%{count}J"
+        over_x_years:
+          one:   "> 1J"
+          other: "> %{count}J"
+        almost_x_years:
+          one:   "1J"
+          other: "%{count}J"
+      medium:
+        x_minutes:
+          one: "1 Minute"
+          other: "%{count} Minuten"
+        x_hours:
+          one: "1 Stunde"
+          other: "%{count} Stunden"
+        x_days:
+          one: "1 Tag"
+          other: "%{count} Tage"
+      medium_with_ago:
+        x_minutes:
+          one: "vor einer Minute"
+          other: "vor %{count} Minuten"
+        x_hours:
+          one: "vor eienr Stunde"
+          other: "vor %{count} Stunden"
+        x_days:
+          one: "vor einem Tag"
+          other: "vor %{count} Tagen"
     share:
       topic: 'Teile einen Link zu diesem Thema'
       post: 'Teile einen Link zu diesem Beitrag'
@@ -507,8 +566,20 @@ de:
       read_more: "Möchtest Du mehr lesen? {{catLink}} oder {{latestLink}}."
 
       # keys ending with _MF use message format, see /spec/components/js_local_helper_spec.rb for samples
-      read_more_in_category_MF: "Du {UNREAD, plural, one {hast <a href='/unread'>eine ungelesene</a>} other {hast <a href='/unread'># ungelesene</a>}} und {NEW, plural, one {<a href='/new'>ein neues</a> Thema} other {<a href='/new'># neue</a> Themen}} übrig, oder entdecke neue Themen in {catLink}"
-      read_more_MF: "Du {UNREAD, plural, one {hast <a href='/unread'>eine ungelesene</a>} other {hast <a href='/unread'># ungelesene</a>}} und {NEW, plural, one {<a href='/new'>ein neues</a> Thema} other {<a href='/new'># neue</a> Themen}} übrig, oder {latestLink}"
+      read_more_MF: "Du {
+        UNREAD, plural,
+        =0 {}
+        one {
+          hast <a href='/unread'>eine ungelesene</a>
+        } other {
+          hast <a href='/unread'># ungelesene</a>
+        }
+        } {
+          NEW, plural,
+            =0 {}
+            one { {BOTH, select, true{und } false {ist } other{}} <a href='/new'>ein neues</a> Thema}
+            other { {BOTH, select, true{und } false {sind } other{}} <a href='/new'># neue</a> Themen}
+        } übrig, oder {CATEGORY, select, true {entdecke andere Themen in {catLink}} false {{latestLink}} other {}} "
 
       browse_all_categories: Zeige alle Kategorien
 
@@ -831,6 +902,7 @@ de:
     flagging:
       title: 'Aus welchem Grund meldest Du diesen Beitrag?'
       action: 'Beitrag melden'
+      take_action: "Reagieren"
       notify_action: 'Melden'
       cant: "Entschuldige, Du kannst diesen Beitrag augenblicklich nicht melden."
       custom_placeholder_notify_user: "Weshalb erfordert der Beitrag, dass du den Benutzer direkt und privat kontaktieren möchtest? Sei spezifisch, konstruktiv und immer freundlich."
@@ -935,6 +1007,7 @@ de:
         no_problems: "Keine Probleme gefunden."
         moderators: 'Moderatoren:'
         admins: 'Administratoren:'
+        blocked: 'Gesperrt:'
         private_messages_short: "PNs"
         private_messages_title: "Private Nachrichten"
 
@@ -965,6 +1038,7 @@ de:
         flagged_by: "Gemeldet von"
         error: "Etwas ist schief gelaufen"
         view_message: "Nachricht zeigen"
+        no_results: "Es gibt keine Meldungen."
 
       groups:
         title: "Gruppen"
@@ -999,12 +1073,21 @@ de:
 
       email:
         title: "Mailprotokoll"
+        settings: "Einstellungen"
+        logs: "Protokolle"
         sent_at: "Gesendet am"
         email_type: "Mailtyp"
         to_address: "Empfänger"
         test_email_address: "Mailadresse zum Testen"
         send_test: "Testmail senden"
         sent_test: "Gesendet!"
+        delivery_method: "Versandmethode"
+        preview_digest: "Vorschau der Übersicht"
+        refresh: "Aktualisieren"
+        format: "Format"
+        html: "html"
+        text: "text"
+        last_seen_user: "Letzer Benutzer:"
 
       impersonate:
         title: "Aus Nutzersicht betrachten"
@@ -1036,6 +1119,7 @@ de:
           elder: 'Benutzer mit Vertrauensstufe 4 (Ältester)'
           admins: 'Admin Benutzer'
           moderators: 'Moderatoren'
+          blocked: 'Gesperrte Benutzer'
 
       user:
         ban_failed: "Beim Sperren dieses Benutzers ist etwas schief gegangen {{error}}"
@@ -1047,6 +1131,7 @@ de:
         banned: "Gesperrt?"
         moderator: "Moderator?"
         admin: "Administrator?"
+        blocked: "Gesperrt?"
         show_admin_profile: "Administration"
         refresh_browsers: "Erzwinge Browser-Refresh"
         show_public_profile: "Zeige öffentliches Profil"
@@ -1055,6 +1140,8 @@ de:
         grant_admin: 'Administrationsrechte vergeben'
         revoke_moderation: 'Moderationsrechte entziehen'
         grant_moderation: 'Moderationsrechte vergeben'
+        unblock: 'Entsperren'
+        block: 'Sperren'
         reputation: Reputation
         permissions: Rechte
         activity: Aktivität
@@ -1067,6 +1154,10 @@ de:
         flags_received_count: Erhaltene Meldungen
         approve: 'Genehmigen'
         approved_by: "genehmigt von"
+        approve_success: "Benutser freigeschalten und Mail mit den Anweisungen zur Aktivierung
+          gesendet."
+        approve_bulk_success: "Erfolg! Alle ausgewählten Benutzer wurden freigeschalten
+          und benachrichtigt."
         time_read: "Lesezeit"
         delete: Benutzer löschen
         delete_forbidden: "Der Benutzer kann nicht gelöscht werden, da er noch Beiträge hat. Lösche zuerst seine Beträge."
@@ -1080,6 +1171,10 @@ de:
         activate_failed: "Beim Aktivieren des Benutzers ist ein Fehler aufgetreten."
         deactivate_account: "Benutzer deaktivieren"
         deactivate_failed: "Beim Deaktivieren des Benutzers ist ein Fehler aufgetreten."
+        unblock_failed: 'Beim Entsperren des Benutzers ist ein Fehler aufgetreten.'
+        block_failed: 'Beim Sperren des Benutzers ist ein Fehler aufgetreten.'
+        block_explanation: "Ein gesperrter Benutzer kann keine Themen erstellen oder Beiträge veröffentlichen."
+
 
       site_content:
         none: "Wähle einen Inhaltstyp um mit dem Bearbeiten zu beginnen."

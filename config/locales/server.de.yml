@@ -49,6 +49,7 @@ de:
   rss_posts_in_topic: "RSS-Feed von '%{topic}'"
   rss_topics_in_category: "RSS-Feed von Themen in der Kategorie '%{category}'"
   author_wrote: "%{author} schrieb:"
+  private_message_abbrev: "PN"
 
   groups:
     default_names:
@@ -405,6 +406,12 @@ de:
     welcome_invite:
       title: "Willkommen: Eingeladener Benutzer"
       description: "Eine private Nachricht welche automatisch an alle eingeladenen Benutzer gesendet wird, wenn diese die Einladung annehmen."
+
+    login_required_welcome_message:
+      title: "Anmeldung erforderlich: Willkommensnachricht"
+      description: "Willkommensnachricht welche angezeigt wird wenn der Benutzer nicht angemeldet ist und die
+        Einstellung 'login required' aktiviert ist."
+
     tos_user_content_license:
       title: "Nutzungsbedingungen: Lizenz"
       description: "Der Text für die Lizenz-Sektion in den Nutzungsbedingungen."
@@ -418,6 +425,7 @@ de:
     max_post_length: "Maximale Beitragslänge in Zeichen."
     min_topic_title_length: "Minimale Titellänge von Themen in Zeichen."
     max_topic_title_length: "Maximale Titellänge von Themen in Zeichen."
+    min_private_message_title_length: "Minimale Länge von privaten Nachrichten in Zeichen."
     min_search_term_length: "Minimale Länge der Suche in Zeichen."
     allow_uncategorized_topics: "Erlaube Themen ohne Kategorie"
     allow_duplicate_topic_titles: "Erlaube Themen mit identischen Titeln."
@@ -452,6 +460,9 @@ de:
     logo_url: "Das Logo deiner Seite, zum Beispiel: http://example.com/logo.png"
     logo_small_url: "Kleines Logo deiner Seite, das beim Herunterscrollen in einem Thema gezeigt wird, zum Beispiel: http://example.com/logo-small.png"
     favicon_url: "Das Favicon deiner Seite, siehe http://de.wikipedia.org/wiki/Favicon"
+    dynamic_favicon: "Zeige eingehende Nachrichten im Favicon"
+    apple_touch_icon_url: "Icon für berührungsempfindliche Apple Geräte. Empfohlene Grösse ist 144px auf 144px."
+
     notification_email: "Die Antwortadresse, die in Systemmails (zum Beispiel zur Passwortwiederherstellung, neuen Konten, etc.) eingetragen wird."
     use_ssl: "Soll die Seite via SSL nutzbar sein?"
     best_of_score_threshold: "Der Minimalscore eines Beitrags, um zu den Top Beiträgen zu zählen."
@@ -470,6 +481,9 @@ de:
 
     flags_required_to_hide_post: "Zahl der Meldungen, die dazu führen, dass ein Beitrag automatisch versteckt und eine private Nachricht an den Nutzer verschickt wird (0 heißt niemals)."
     cooldown_minutes_after_hiding_posts: "Minuten, die ein Nutzer warten muss, bevor ein Beitrag, der wegen Meldungen versteckt wurde, bearbeitet werden kann."
+    num_flags_to_block_new_user: "Wenn ein Beitrag eines neuen Benutzers von (n) anderen Benutzern als Werbung gemeldet wird, verstecke alle Beiträge des Benutzers und erlaube keine neue Beiträge mehr. 0 stellt diese Funktion ab."
+    num_users_to_block_new_user: "Wenn ein Beitrag eines neuen Benutzers von nderen Benutzern (n) mal als Werbung gemeldet wird, verstecke alle Beiträge des Benutzers und erlaube keine neue Beiträge mehr. 0 stellt diese Funktion ab."
+
 
     traditional_markdown_linebreaks: "Traditionelle Zeilenumbrüche in Markdown, anstatt zwei nachfolgende Leerzeichen als Zeilenumbruch zu verwenden."
     post_undo_action_window_mins: "Sekunden, die ein Nutzer hat, um Aktionen auf Beiträgen rückgängig zu machen (Like, Meldung, etc.)."
@@ -496,6 +510,10 @@ de:
     invite_expiry_days: "Tage, die Nutzereinladungen gültig bleiben."
 
     # TODO: perhaps we need a way of protcting these settings for hosted solution, global settings ...
+
+    invite_only: "Die Registration ist deaktiviert und du kannst nur durch eine Einladung beitreten"
+
+    login_required: "Zum Lesen der Beiträge must du angemeldet sein"
 
     enable_local_logins: "Aktiviere lokale Authentisierung"
     enable_local_account_create: "Aktiviere lokale Kontoerstellung"
@@ -544,6 +562,9 @@ de:
 
     enable_s3_uploads: "Speichere hochgeladene Dateien auf Amazon S3."
     s3_upload_bucket: "Der Amazon S3 Bucketname in den hochgeladene Dateien abgelegt werden."
+    s3_access_key_id: "The Amazon S3 access key id that will be used to upload images"
+    s3_secret_access_key: "Der geheime Schlüssel von Amazon S3 welcher für das Hochladen verwendet wird"
+    s3_region: "Der Name der Amazon S3 Region welche für das Hochladen verwendet wird"
 
     default_invitee_trust_level: "Standardwert für die Stufe eines eingeladenen Nutzers (0-4)."
     default_trust_level: "Standardwert für die Stufe von Nutzern (0-4)."
@@ -695,7 +716,9 @@ de:
 
       - Hast Du sichergestellt, dass dein Mailserver *definitiv* einen voll qualifizierten Hostnamen in ihre HELO-Nachrichten angeben, der per DNS aufgelöst werden kann? Falls das nicht der Fall ist, werden Deine Mails von vielen Mailprovidern abgelehnt.
 
-      Wir hoffen, dass Du diesen Zustellbarkeitstest problemlos erhalten hast!
+      (Der *einfache* Weg ist [sich für Mandrill anmelden][6], welche ein grosszügiges Mail-Abo gratis anbieten, welche für kleine Foren ausreicht. Du musst allerdings trotzdem die SPF und DKIM Einträge in deinem DNS machen)
+
+      Wir hoffen, dass der Mail Zustelltest erfolgreich war!
 
       Viel Erfolg,
 
@@ -707,6 +730,7 @@ de:
       [3]: http://www.dkim.org/
       [4]: http://whatismyipaddress.com/blacklist-check
       [5]: %{base_url}/unsubscribe
+      [6]: http://mandrill.com
 
       ----
 
@@ -820,6 +844,33 @@ de:
       subject_template: "Import erfolgreich abgeschlossen"
       text_body_template: "Der Import war erfolgreich."
 
+    too_many_spam_flags:
+      subject_template: "Benutzerkonto gesperrt"
+      text_body_template: |
+        Hallo,
+
+        Dies ist eine automatische Nachricht von %{site_name} um dich zu informieren, dass deine Beiträge automatisch unsichtbar gemacht wurden, da diese von den Mitgliedern beanstandet wurden.
+
+        Als vorbeugende Massname wurde dein Benutzerkonto gesperrt bis ein Mitarbeiter dein Benutzerkonto überprüft hat.
+
+        Weitere Hilfe findest du in unserer [FAQ](%{base_url}/faq).
+
+    user_automatically_blocked:
+      subject_template: "Benutzer %{username} wurde automatisch gesperrt"
+      text_body_template: |
+        Dies ist eine automatische Nachricht um dich zu informieren, dass [%{username}](%{blocked_user_url}) automatisch gesperrt wurde, da zu viele Mitglieder %{username}'s Beiträge beanstanded haben.
+
+        Bitte [überprüfe die Beanstandungen](/admin/flags). Wenn %{username} nicht mehr gesperrt sein soll, schalte den Benutzer in der [Benuzeradministration](%{blocked_user_url}) wieder frei.
+
+    unblocked:
+      subject_template: "Benutzerkonto entsperrt"
+      text_body_template: |
+        Hallo,
+
+        Dies ist eine automatische Nachricht von %{site_name} um dich zu informieren, dass dein Benutzerkonto nach einer Überprüfung wieder freigeschalten wurde.
+
+        Du kannst nun wieder Themen erstellen und Beiträge veröffentlichen.
+
   unsubscribe_link: "Wenn Du diese Mails nicht mehr erhalten möchtest, verändere deine [Benutzereinstellungen](%{user_preferences_url})."
 
   user_notifications:
@@ -882,10 +933,11 @@ de:
       why: "Hier eine kurze Zusammenfassung, was auf %{site_link} passiert ist, seit Du das letzte Mal am %{last_seen_at} da warst."
       subject_template: "[%{site_name}] Forenaktivität für den %{date}"
       new_activity: "Neues in deinen Themen und Beiträgen:"
-      new_topics: "Neue Themen:"
+      top_topics: "Inhalte die dich vielleicht interessieren:"
       unsubscribe: "Diese Zusammenfassung wurde Dir von %{site_link} geschickt, damit Du auf dem Laufenden bleibst, und weil wir nicht eine Weile nicht begrüßen durften.\nWenn Du diese Benachrichtigungen nicht mehr erhalten möchtest, kannst Du sie in deinen Maileinstellungen abschalten: %{unsubscribe_link}."
       click_here: "klicke hier"
       from: "%{site_name} Übersicht"
+      read_more: "Weiterlesen"
 
     private_message:
       subject_template: "[%{site_name}] %{subject_prefix}%{topic_title}"
@@ -915,6 +967,24 @@ de:
 
         %{base_url}/users/authorize-email/%{email_token}
 
+    signup_after_approval:
+      subject_template: "You've been approved on %{site_name}!"
+      text_body_template: |
+        Willkommen auf %{site_name}!
+
+        Dein Beitritt zu %{site_name} wurde gutgeheissen, willkommen in unserem Diskussionsforum!
+
+        Klicke auf den folgenden Link als Bestätigung und aktiviere dein Benutzerkonto:
+        %{base_url}/users/activate-account/%{email_token}
+
+        Wenn dieser Link nicht klickbar ist, kopiere ihn in die Adresszeile deines Web-Browsers.
+
+        %{new_user_tips}
+
+        Wir stehen für [zivilisiertes Verhalten in Online-Communitys](%{base_url}/faq).
+
+        Geniesse deinen Aufenthalt!
+
     signup:
       subject_template: "[%{site_name}] Aktiviere deinen neues Konto"
       text_body_template: |
@@ -935,6 +1005,11 @@ de:
     see_more: "Mehr ansehen"
     search_title: "Suche nach diesem Thema"
     search_google: "Suche auf Google"
+
+  login_required:
+    welcome_message: |
+      #[Willkommen zu %{title}](#welcome)
+      Wir freuen uns, dass du dich in %{title} beteiligen möchtest. Bitte erstelle ein Benutzerkonto oder melde dich an.
 
   terms_of_service:
     user_content_license: |
