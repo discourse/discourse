@@ -8,6 +8,9 @@
 zh_CN:
   js:
     dates:
+      short_date_no_year: "D MMM"
+      short_date: "D MMM, YYYY"
+      long_date: "MMMM D, YYYY h:mma"
       tiny:
         half_a_minute: "刚刚"
         less_than_x_seconds:
@@ -43,6 +46,26 @@ zh_CN:
         almost_x_years:
           one:   "1年"
           other: "%{count}年"
+      medium:
+        x_minutes:
+          one: "1分钟"
+          other: "%{count}分钟"
+        x_hours:
+          one: "1小时"
+          other: "%{count}小时"
+        x_days:
+          one: "1天"
+          other: "%{count}天"
+      medium_with_ago:
+        x_minutes:
+          one: "1分钟前"
+          other: "%{count}分钟前"
+        x_hours:
+          one: "1小时之前"
+          other: "%{count}小时之前"
+        x_days:
+          one: "1天前"
+          other: "%{count}天前"
     share:
       topic: '分享一个到本主题的链接'
       post: '分享一个到本帖的链接'
