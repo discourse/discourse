@@ -1,5 +1,11 @@
 require 'rest_client'
 
+# /!\ WARNING /!\
+# This plugin has been extracted from the Discourse source code and has not been tested.
+# It really needs some love <3
+# /!\ WARNING /!\
+
+
 module Imgur
 
   def self.store_file(file, image_info, upload_id)
@@ -11,9 +17,9 @@ module Imgur
     blob = file.read
 
     response = RestClient.post(
-      SiteSetting.imgur_endpoint, 
-      { image: Base64.encode64(blob) }, 
-      { 'Authorization' => "Client-ID #{SiteSetting.imgur_client_id}" }
+      SiteSetting.imgur_endpoint,
+      { image: Base64.encode64(blob) },
+      { 'Authorization' => "ClientID #{SiteSetting.imgur_client_id}" }
     )
 
     json = JSON.parse(response.body)['data'] rescue nil

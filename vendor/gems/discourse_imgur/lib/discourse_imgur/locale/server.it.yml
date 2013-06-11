@@ -1,0 +1,5 @@
+it:
+	site_settings:
+    enable_imgur: "Utilizza le api imgur per l'upload, non salvare file in locale"
+    imgur_client_id: "Your imgur.com client ID, required for image upload to function"
+    imgur_client_secret: "Your imgur.com client secret. Not currently required for image upload to function, but may be at some point."

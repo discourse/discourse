@@ -445,10 +445,6 @@ nl:
     queue_jobs: "Zet verschillende taken in een queue binnen sidekiq, bij 'false' worden taken ineens uitgevoerd"
     crawl_images: Zet het ophalen van afbeeldingen van externe bronnen aan
     ninja_edit_window: "Hoe snel je een aanpassing kan maken zonder dat er een nieuwe versie wordt opgeslagen, in seconden."
-    enable_imgur: "Gebruik de imgur API voor uploads en sla afbeeldingen niet lokaal op"
-    imgur_client_id: "Je imgur.com client ID, nodig om afbeeldingen te kunnen uploaden naar imgur" 
-    imgur_client_secret: "Je imgur.com client secret. Is nog niet nodig voor het uploaden van afbeeldingen, maar dat zou in de toekomst kunnen veranderen." 
-    imgur_endpoint: "End point voor het uploaden van imgur.com-afbeeldingen"
     max_image_width: Maximale breedte voor een afbeelding in een bericht
     category_featured_topics: Aantal topics dat wordt weergegeven in de categorielijst
     add_rel_nofollow_to_user_content: "Voeg 'rel nofollow' toe aan alle leden-content behalve voor interne links (inclusief parent domeinen). NB: Als je dit verandert, moet je ook alle 'baked markdown' updaten"
