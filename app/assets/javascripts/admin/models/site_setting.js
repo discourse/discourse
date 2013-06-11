@@ -78,7 +78,16 @@ Discourse.SiteSetting = Discourse.Model.extend({
     }).then(function() {
       setting.set('originalValue', setting.get('value'));
     });
-  }
+  },
+
+  validValues: function() {
+    var vals;
+    vals = Em.A();
+    this.get("valid_values").each(function(v){
+      vals.addObject({ name: v, value: v });
+    });
+    return vals;
+  }.property('valid_values')
 });
 
 Discourse.SiteSetting.reopenClass({

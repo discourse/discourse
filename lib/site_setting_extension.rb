@@ -3,7 +3,7 @@ require_dependency 'enum'
 module SiteSettingExtension
 
   def types
-    @types ||= Enum.new(:string, :time, :fixnum, :float, :bool, :null)
+    @types ||= Enum.new(:string, :time, :fixnum, :float, :bool, :null, :enum)
   end
 
   def mutex
@@ -19,10 +19,15 @@ module SiteSettingExtension
     @defaults ||= {}
   end
 
-  def setting(name, default = nil)
+  def enums
+    @enums ||= {}
+  end
+
+  def setting(name, default = nil, opts = {})
     mutex.synchronize do
       self.defaults[name] = default
       current_value = current.has_key?(name) ? current[name] : default
+      enums[name] = opts[:enum] if opts[:enum]
       setup_methods(name, current_value)
     end
   end
@@ -56,11 +61,12 @@ module SiteSettingExtension
   def all_settings
     @defaults.map do |s, v|
       value = send(s)
+      type = types[get_data_type(s, value)]
       {setting: s,
        description: description(s),
        default: v,
-       type: types[get_data_type(value)].to_s,
-       value: value.to_s}
+       type: type.to_s,
+       value: value.to_s}.merge( type == :enum ? {valid_values: enum_class(s).all_values} : {})
     end
   end
 
@@ -154,7 +160,7 @@ module SiteSettingExtension
     return unless table_exists?
 
     setting = SiteSetting.where(name: name).first
-    type = get_data_type(defaults[name])
+    type = get_data_type(name, defaults[name])
 
     if type == types[:bool] && val != true && val != false
       val = (val == "t" || val == "true") ? 't' : 'f'
@@ -165,7 +171,11 @@ module SiteSettingExtension
     end
 
     if type == types[:null] && val != ''
-      type = get_data_type(val)
+      type = get_data_type(name, val)
+    end
+
+    if type == types[:enum]
+      raise Discourse::InvalidParameters.new(:value) unless enum_class(name).valid_value?(val)
     end
 
     if setting
@@ -182,10 +192,12 @@ module SiteSettingExtension
 
   protected
 
-  def get_data_type(val)
+  def get_data_type(name,val)
     return types[:null] if val.nil?
 
-    if String === val
+    if enums[name]
+      types[:enum]
+    elsif String === val
       types[:string]
     elsif Fixnum === val
       types[:fixnum]
@@ -200,7 +212,7 @@ module SiteSettingExtension
     case type
     when types[:fixnum]
       value.to_i
-    when types[:string]
+    when types[:string], types[:enum]
       value
     when types[:bool]
       value == "t"
@@ -242,6 +254,10 @@ module SiteSettingExtension
     super(method, *args, &block)
   end
 
+  def enum_class(name)
+    enums[name] = enums[name].constantize unless enums[name].is_a?(Class)
+    enums[name]
+  end
 
 end
 

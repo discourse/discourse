@@ -114,6 +114,35 @@ describe SiteSetting do
     end
   end
 
+  describe 'enum setting' do
+    before :all do
+      @enum_class = Class.new
+      SiteSetting.setting(:test_enum, 'en', enum: @enum_class)
+      SiteSetting.refresh!
+    end
+
+    it 'should have the correct default' do
+      expect(SiteSetting.test_enum).to eq('en')
+    end
+
+    context 'when overridden' do
+      after :each do
+        SiteSetting.remove_override!(:test_enum)
+      end
+
+      it 'stores valid values' do
+        @enum_class.expects(:valid_value?).with('fr').returns(true)
+        SiteSetting.test_enum = 'fr'
+        expect(SiteSetting.test_enum).to eq('fr')
+      end
+
+      it 'rejects invalid values' do
+        @enum_class.expects(:valid_value?).with('gg').returns(false)
+        expect { SiteSetting.test_enum = 'gg' }.to raise_error(Discourse::InvalidParameters)
+      end
+    end
+  end
+
   describe 'call_discourse_hub?' do
     it 'should be true when enforce_global_nicknames is true and discourse_org_access_key is set' do
       SiteSetting.enforce_global_nicknames = true

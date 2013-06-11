@@ -203,7 +203,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:title_fancy_entities, true)
 
   # The default locale for the site
-  setting(:default_locale, 'en')
+  setting(:default_locale, 'en', enum: 'LocaleSiteSetting')
 
   client_setting(:educate_until_posts, 2)
 
