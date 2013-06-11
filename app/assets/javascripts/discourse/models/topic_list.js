@@ -58,6 +58,11 @@ Discourse.TopicList = Discourse.Model.extend({
     var _this = this;
     var topics = this.get('topics');
 
+    // refresh dupes
+    topics.removeObjects(topics.filter(function(topic){
+      return topic_ids.indexOf(topic.get('id')) >= 0;
+    }));
+
     Discourse.TopicList.loadTopics(topic_ids, this.get('filter'))
       .then(function(newTopics){
         _this.forEachNew(newTopics, function(t) {
