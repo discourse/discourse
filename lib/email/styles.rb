@@ -20,6 +20,10 @@ module Email
         hr['style'] = 'background-color: #ddd; height: 1px; border: 1px;'
       end
 
+      fragment.css('img').each do |img|
+        img['style'] = "max-width: 694px;"
+      end
+
       fragment.css('a').each do |a|
         a['style'] = 'text-decoration: none; font-weight: bold; font-size: 15px; color: #006699;'
       end
