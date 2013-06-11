@@ -1,0 +1,5 @@
+sv:
+	site_settings:
+    enable_imgur: "Aktivera imgur.coms API för uppladdning, sparar inte filer lokalt"
+    imgur_api_key: "Din API-nyckel för imgur.com, krävs för att bilduppladdningen ska funka"
+    imgur_endpoint: "Ändpunkt för uppladdning av bilder till imgur.com"

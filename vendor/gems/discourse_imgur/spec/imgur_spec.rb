@@ -1,5 +1,10 @@
 require 'spec_helper'
-require 'imgur'
+require 'discourse_imgur/imgur'
+
+# /!\ WARNING /!\
+# This plugin has been extracted from the Discourse source code and has not been tested.
+# It really needs some love <3
+# /!\ WARNING /!\
 
 describe Imgur do
 
@@ -7,9 +12,9 @@ describe Imgur do
 
     let(:file) { Rails.root.join('app', 'assets', 'images', 'logo.png') }
     let(:image_info) { FastImage.new(file) }
-    let(:params) { [SiteSetting.imgur_endpoint, { image: Base64.encode64(file.read) }, { 'Authorization' => "Client-ID #{SiteSetting.imgur_client_id}" }] }
+    let(:params) { [SiteSetting.imgur_endpoint, { image: Base64.encode64(file.read) }, { 'Authorization' => "ClientID #{SiteSetting.imgur_client_id}" }] }
 
-    before(:each) do 
+    before(:each) do
       SiteSetting.stubs(:imgur_endpoint).returns("imgur_endpoint")
       SiteSetting.stubs(:imgur_client_id).returns("imgur_client_id")
     end

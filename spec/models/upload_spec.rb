@@ -37,16 +37,6 @@ describe Upload do
       end
     end
 
-    context "imgur" do
-      before(:each) do
-        SiteSetting.stubs(:enable_imgur?).returns(true)
-        Imgur.stubs(:store_file).returns(url)
-      end
-
-      it_behaves_like "upload"
-
-    end
-
     context "s3" do
       before(:each) do 
         SiteSetting.stubs(:enable_s3_uploads?).returns(true)
