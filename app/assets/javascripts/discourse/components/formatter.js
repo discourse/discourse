@@ -4,14 +4,9 @@ Discourse.Formatter = (function(){
       relativeAgeMedium, relativeAgeMediumSpan, longDate, toTitleCase,
       shortDate;
 
-  var shortDateNoYearFormat = Ember.String.i18n("dates.short_date_no_year");
-  var longDateFormat = Ember.String.i18n("dates.long_date");
-  var shortDateFormat = Ember.String.i18n("dates.short_date");
-
   shortDate = function(date){
-    return moment(date).format(shortDateFormat);
+    return moment(date).shortDate();
   };
-
 
   // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
   // TODO: locale support ?
@@ -23,14 +18,14 @@ Discourse.Formatter = (function(){
   }
 
   longDate = function(dt) {
-    return moment(dt).format(longDateFormat);
+    return moment(dt).longDate();
   };
 
   updateRelativeAge = function(elems) {
     // jQuery .each
     elems.each(function(){
       var $this = $(this);
-      $this.html(relativeAge(new Date($this.data('time')), $this.data('format')));
+      $this.html(relativeAge(new Date($this.data('time')), {format: $this.data('format'), wrapInSpan: false}));
     });
   };
 
@@ -38,7 +33,17 @@ Discourse.Formatter = (function(){
     options = options || {};
     var format = options.format || "tiny";
 
-    return "<span class='relative-date' data-time='" + date.getTime() + "' data-format='" + format +  "'>" + relativeAge(date, options)  + "</span>";
+    var append = "";
+
+    if(format === 'medium') {
+      append = " date' title='" + longDate(date);
+      if(options.leaveAgo) {
+        format = 'medium-with-ago';
+      }
+      options.wrapInSpan = false;
+    }
+
+    return "<span class='relative-date" + append + "' data-time='" + date.getTime() + "' data-format='" + format +  "'>" + relativeAge(date, options)  + "</span>";
   };
 
 
@@ -139,7 +144,7 @@ Discourse.Formatter = (function(){
       if ((new Date()).getFullYear() !== date.getFullYear()) {
         displayDate = shortDate(date);
       } else {
-        displayDate = moment(date).format(shortDateNoYearFormat);
+        displayDate = moment(date).shortDateNoYear();
       }
     } else {
       displayDate = relativeAgeMediumSpan(distance, leaveAgo);
@@ -160,6 +165,8 @@ Discourse.Formatter = (function(){
       return relativeAgeTiny(date, options);
     } else if (format === "medium") {
       return relativeAgeMedium(date, options);
+    } else if (format === 'medium-with-ago') {
+      return relativeAgeMedium(date, _.extend(options, {format: 'medium', leaveAgo: true}));
     }
 
     return "UNKNOWN FORMAT";

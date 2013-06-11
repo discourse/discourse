@@ -85,12 +85,22 @@ describe("Discourse.Formatter", function() {
 
   describe("autoUpdatingRelativeAge", function(){
     it("can format dates", function(){
-      var d = new Date();
+      var d = moment().subtract('days',1).toDate();
 
       var $elem = $(Discourse.Formatter.autoUpdatingRelativeAge(d));
-
       expect($elem.data('format')).toBe("tiny");
       expect($elem.data('time')).toBe(d.getTime());
+
+      $elem = $(Discourse.Formatter.autoUpdatingRelativeAge(d,{format: 'medium', leaveAgo: true}));
+      expect($elem.data('format')).toBe("medium-with-ago");
+      expect($elem.data('time')).toBe(d.getTime());
+      expect($elem.attr('title')).toBe(moment(d).longDate());
+      expect($elem.html()).toBe('1 day ago');
+
+      $elem = $(Discourse.Formatter.autoUpdatingRelativeAge(d,{format: 'medium'}));
+      expect($elem.data('format')).toBe("medium");
+      expect($elem.data('time')).toBe(d.getTime());
+      expect($elem.html()).toBe('1 day');
     });
   });
 
@@ -105,6 +115,14 @@ describe("Discourse.Formatter", function() {
 
       expect($elem.html()).toBe("2m");
 
+
+      d = new Date();
+      $elem = $(Discourse.Formatter.autoUpdatingRelativeAge(d, {format: 'medium', leaveAgo: true}));
+      $elem.data('time', d.getTime() - 2 * 60 * 1000);
+
+      Discourse.Formatter.updateRelativeAge($elem);
+
+      expect($elem.html()).toBe("2 minutes ago");
     });
   });
 });

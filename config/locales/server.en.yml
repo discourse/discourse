@@ -5,6 +5,10 @@
 # http://yamllint.com/
 
 en:
+  dates:
+    short_date_no_year: "D MMM"
+    short_date: "D MMM, YYYY"
+    long_date: "MMMM D, YYYY h:mma"
   time:
     formats:
       short: "%m-%d-%Y"

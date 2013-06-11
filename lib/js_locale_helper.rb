@@ -18,9 +18,24 @@ module JsLocaleHelper
     result = generate_message_format(message_formats, locale_str)
 
     result << "I18n.translations = #{translations.to_json};\n"
-    result << "I18n.locale = '#{locale_str}'\n"
+    result << "I18n.locale = '#{locale_str}';\n"
+    # loading moment here cause we must customize it
+    result << File.read("#{Rails.root}/lib/javascripts/moment.js")
     result << moment_locale(locale_str)
+    result << moment_formats
     result
+  end
+
+  def self.moment_formats
+    result = ""
+    result << moment_format_function('short_date_no_year')
+    result << moment_format_function('short_date')
+    result << moment_format_function('long_date')
+  end
+
+  def self.moment_format_function(name)
+    format = I18n.t("dates." << name)
+    result = "moment.fn.#{name.camelize(:lower)} = function(){ return this.format('#{format}'); };\n"
   end
 
   def self.moment_locale(locale_str)

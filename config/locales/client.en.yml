@@ -8,9 +8,6 @@
 en:
   js:
     dates:
-      short_date_no_year: "D MMM"
-      short_date: "D MMM, YYYY"
-      long_date: "MMMM D, YYYY h:mma"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:

@@ -212,7 +212,7 @@ Handlebars.registerHelper('unboundAge', function(property, options) {
 Handlebars.registerHelper('editDate', function(property, options) {
   // autoupdating this is going to be painful
   var date = new Date(Ember.Handlebars.get(this, property, options));
-  return new Handlebars.SafeString(Discourse.Formatter.relativeAge(date, {format: 'medium', leaveAgo: true, wrapInSpan: false}));
+  return new Handlebars.SafeString(Discourse.Formatter.autoUpdatingRelativeAge(date, {format: 'medium', leaveAgo: true, wrapInSpan: false}));
 });
 
 /**
@@ -286,6 +286,6 @@ Handlebars.registerHelper('date', function(property, options) {
   if (val) {
     date = new Date(val);
   }
-  return new Handlebars.SafeString(Discourse.Formatter.relativeAge(date, {format: 'medium', leaveAgo: leaveAgo}));
+  return new Handlebars.SafeString(Discourse.Formatter.autoUpdatingRelativeAge(date, {format: 'medium', leaveAgo: leaveAgo}));
 });
 
