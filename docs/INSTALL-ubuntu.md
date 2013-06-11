@@ -108,7 +108,7 @@ If you instead want to use apache2 to serve the static pages:
     
     # Now activate them all
     
-    sudo a2nsite your-domain.com
+    sudo a2ensite your-domain.com
     sudo a2enmod passenger
     sudo service apache2 reload
     sudo service apache2 restart
