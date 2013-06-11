@@ -10,11 +10,21 @@ describe Admin::EmailController do
 
   context '.index' do
     before do
+      subject.expects(:action_mailer_settings).returns({
+        username: 'username',
+        password: 'secret'
+      })
+
       xhr :get, :index
     end
 
-    subject { response }
-    it { should be_success }
+    it 'does not include the password in the response' do
+      mail_settings = JSON.parse(response.body)['settings']
+
+      expect(
+        mail_settings.select { |setting| setting['name'] == 'password' }
+      ).to be_empty
+    end
   end
 
   context '.logs' do

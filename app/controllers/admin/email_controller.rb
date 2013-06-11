@@ -3,18 +3,10 @@ require_dependency 'email/renderer'
 class Admin::EmailController < Admin::AdminController
 
   def index
-
-    # For now, just show the ActionMailer settings
-    mail_settings = { delivery_method: ActionMailer::Base.delivery_method }
-
-    mail_settings[:settings] = case mail_settings[:delivery_method]
-    when :smtp
-       ActionMailer::Base.smtp_settings.map {|k, v| {name: k, value: v}}
-    when :sendmail
-      ActionMailer::Base.sendmail_settings.map {|k, v| {name: k, value: v}}
-    end
-
-    render_json_dump(mail_settings)
+    render_json_dump({
+      delivery_method: delivery_method,
+      settings: delivery_settings
+    })
   end
 
   def test
@@ -34,4 +26,19 @@ class Admin::EmailController < Admin::AdminController
     render json: MultiJson.dump(html_content: renderer.html, text_content: renderer.text)
   end
 
+  private
+
+  def delivery_settings
+    action_mailer_settings
+      .reject { |k, v| k == :password }
+      .map    { |k, v| { name: k, value: v }}
+  end
+
+  def delivery_method
+    ActionMailer::Base.delivery_method
+  end
+
+  def action_mailer_settings
+    ActionMailer::Base.public_send "#{delivery_method}_settings"
+  end
 end
