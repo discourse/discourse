@@ -102,7 +102,10 @@ Discourse.TopicRoute = Discourse.Route.extend({
 
   setupController: function(controller, model) {
     controller.set('model', model);
-    this.controllerFor('header').set('topic', model);
+    this.controllerFor('header').setProperties({
+      topic: model,
+      showExtraInfo: false
+    });
     this.controllerFor('composer').set('topic', model);
     Discourse.TopicTrackingState.current().trackIncoming('all');
     controller.subscribe();
