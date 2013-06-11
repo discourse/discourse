@@ -33,7 +33,7 @@ Discourse.AdminDashboardRoute = Discourse.Route.extend({
       });
     }
 
-    if( !c.get('problemsFetchedAt') || moment.subtract('minute',c.problemsCheckMinutes).toDate() > c.get('problemsFetchedAt') ) {
+    if( !c.get('problemsFetchedAt') || moment().subtract('minute',c.problemsCheckMinutes).toDate() > c.get('problemsFetchedAt') ) {
       c.set('problemsFetchedAt', new Date());
       c.loadProblems();
     }
