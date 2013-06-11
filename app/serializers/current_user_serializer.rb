@@ -12,7 +12,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :topic_count,
              :enable_quoting,
              :external_links_in_new_tab,
-             :trust_level
+             :trust_level,
+             :can_edit
 
   def include_site_flagged_posts_count?
     object.staff?
@@ -28,6 +29,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def site_flagged_posts_count
     PostAction.flagged_posts_count
+  end
+
+  def can_edit
+    true
   end
 
 end

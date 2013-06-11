@@ -9,6 +9,14 @@
 Discourse.UserRoute = Discourse.Route.extend({
 
   model: function(params) {
+
+    // If we're viewing the currently logged in user, return that object
+    // instead.
+    var currentUser = Discourse.User.current();
+    if (params.username.toLowerCase() === currentUser.get('username_lower')) {
+      return currentUser;
+    }
+
     return Discourse.User.create({username: params.username});
   },
 
