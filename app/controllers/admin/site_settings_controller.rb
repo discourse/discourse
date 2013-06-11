@@ -7,7 +7,7 @@ class Admin::SiteSettingsController < Admin::AdminController
   end
 
   def update
-    params.require(:value)
+    raise ActionController::ParameterMissing.new(:value) unless params.has_key?(:value)
     SiteSetting.send("#{params[:id]}=", params[:value])
     render nothing: true
   end
