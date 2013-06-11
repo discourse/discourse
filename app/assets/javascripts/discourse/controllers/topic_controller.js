@@ -28,6 +28,18 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   jumpBottomDisabled: function() {
     return this.get('progressPosition') >= this.get('postStream.filteredPostsCount');
   }.property('postStream.filteredPostsCount', 'progressPosition'),
+  
+  availableNavItems: function() {
+    var summary = this.get('filterSummary');
+    var loggedOn = !!Discourse.User.current();
+    return Discourse.SiteSettings.top_menu.split("|").map(function(i) {
+      return Discourse.NavItem.fromText(i, {
+        loggedOn: loggedOn
+      });
+    }).filter(function(i) {
+      return i !== null;
+    });
+  }.property(),
 
   canMergeTopic: function() {
     if (!this.get('details.can_move_posts')) return false;

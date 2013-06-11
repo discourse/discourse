@@ -1,5 +1,12 @@
-{{#if postStream.loaded}}
+<div id='list-controls'>
+  <div class="container">
+    <ul class="nav nav-pills" id='category-filter'>
+      {{each availableNavItems itemViewClass="Discourse.NavItemView"}}
+    </ul>
+  </div>
+</div>
 
+{{#if postStream.loaded}}
   {{#if postStream.firstPostLoaded}}
     <div id='topic-title'>
       <div class='container'>
