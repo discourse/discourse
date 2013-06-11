@@ -36,6 +36,10 @@ module Email
         pre.replace(pre.text)
       end
 
+      fragment.css('div.digest-post').each do |div|
+        div['style'] = 'margin-left: 15px; margin-top: 20px; max-width: 694px;'
+      end
+
       fragment.to_html
     end
 

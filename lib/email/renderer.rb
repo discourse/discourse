@@ -21,7 +21,7 @@ module Email
     end
 
     def html
-      cooked = PrettyText.cook(text, environment: 'email')
+      cooked = PrettyText.cook(text)
 
       if @opts[:html_template]
         ActionView::Base.new(Rails.configuration.paths["app/views"]).render(

@@ -1080,6 +1080,7 @@ en:
         sent_test: "sent!"
         delivery_method: "Delivery Method"
         preview_digest: "Preview Digest"
+        preview_digest_desc: "This is a tool for previewing the content of the digest emails sent from your forum."
         refresh: "Refresh"
         format: "Format"
         html: "html"
