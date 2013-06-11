@@ -13,7 +13,7 @@ Discourse.UserRoute = Discourse.Route.extend({
     // If we're viewing the currently logged in user, return that object
     // instead.
     var currentUser = Discourse.User.current();
-    if (params.username.toLowerCase() === currentUser.get('username_lower')) {
+    if (currentUser && (params.username.toLowerCase() === currentUser.get('username_lower'))) {
       return currentUser;
     }
 
