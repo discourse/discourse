@@ -9,7 +9,7 @@ Ember.Handlebars.registerHelper('i18n', function(property, options) {
   var params,
     _this = this;
   params = options.hash;
-  Object.keys(params, function(key, value) {
+  _.each(params, function(value, key) {
     params[key] = Em.Handlebars.get(_this, value, options);
   });
   return Ember.String.i18n(property, params);
