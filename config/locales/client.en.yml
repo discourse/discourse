@@ -393,9 +393,9 @@ en:
 
     login:
       title: "Log In"
-      username: "Login"
+      username: "Username"
       password: "Password"
-      email_placeholder: "email address or username"
+      email_placeholder: "Your CPH username"
       error: "Unknown error"
       reset_password: 'Reset Password'
       logging_in: "Logging In..."

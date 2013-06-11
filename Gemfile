@@ -89,6 +89,7 @@ gem 'image_optim'
 gem 'image_sorcery'
 gem 'multi_json'
 gem 'mustache'
+gem 'net-ldap', require: 'net/ldap' # add the ability to log in via Active Directory
 gem 'nokogiri'
 gem 'omniauth'
 gem 'omniauth-openid'

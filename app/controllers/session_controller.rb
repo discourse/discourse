@@ -9,48 +9,35 @@ class SessionController < ApplicationController
   def create
     params.require(:login)
     params.require(:password)
-
-    login = params[:login].strip
-    login = login[1..-1] if login[0] == "@"
-
-    if login =~ /@/
-      @user = User.where(email: Email.downcase(login)).first
-    else
-      @user = User.where(username_lower: login.downcase).first
-    end
-
-    if @user.present?
-
-      # If the site requires user approval and the user is not approved yet
-      if SiteSetting.must_approve_users? && !@user.approved? && !@user.admin?
-        render json: {error: I18n.t("login.not_approved")}
-        return
+    
+    login = params[:login]
+    
+    ldap = Net::LDAP.new(
+      host: "10.5.3.100",
+      port: 636,
+      encryption: :simple_tls,
+      base: "dc=cph, dc=pri")
+    ldap.auth "#{login}@cph.pri", params[:password]
+    
+    # If their password is correct
+    if ldap.bind
+      
+      # Look up the user using their Active Directory email
+      entry = ldap.search(filter: Net::LDAP::Filter.eq("sAMAccountName", login)).first
+      email = Email.downcase(entry.mail.first)
+      @user = User.where(email: email).first
+      
+      # Create a Discourse user if the CPH user doesn't exist
+      unless @user
+        @user = User.create(email: email, username: login, name: entry.name.first)
       end
-
-      # If their password is correct
-      if @user.confirm_password?(params[:password])
-
-        if @user.is_banned?
-          render json: { error: I18n.t("login.banned", {date: I18n.l(@user.banned_till, format: :date_only)}) }
-          return
-        end
-
-        if @user.email_confirmed?
-          log_on_user(@user)
-          render_serialized(@user, UserSerializer)
-          return
-        else
-          render json: {
-            error: I18n.t("login.not_activated"),
-            reason: 'not_activated',
-            sent_to_email: @user.email_logs.where(email_type: 'signup').order('created_at DESC').first.try(:to_address) || @user.email,
-            current_email: @user.email
-          }
-          return
-        end
-      end
+      
+      # Log in
+      log_on_user(@user)
+      render_serialized(@user, UserSerializer)
+      return
     end
-
+    
     render json: {error: I18n.t("login.incorrect_username_email_or_password")}
   end
 

@@ -241,6 +241,7 @@ GEM
     multi_json (1.7.8)
     multipart-post (1.2.0)
     mustache (0.99.4)
+    net-ldap (0.3.1)
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
     net-ssh (2.6.8)
@@ -495,6 +496,7 @@ DEPENDENCIES
   mock_redis
   multi_json
   mustache
+  net-ldap
   nokogiri
   oj
   omniauth
