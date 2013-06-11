@@ -48,39 +48,41 @@
 							myGlyphs.push(glyphs[v]);
 						});
 					}
-					// Merge the glyphs together
-					var combined = [];
-					var glyphHeight = myGlyphs[0].length;
-					$.each(myGlyphs, function(k,v){
-						for(y=0; y<glyphHeight; y++){
-							// First pass?
-							if(combined[y] === undefined) {
-								combined[y] = v[y];
-							} else {
-								// Merge the glyph parts, careful of the boundaries
-								var l = combined[y].length;
-								if(combined[y][(l-1)] == ' '){
-									combined[y] = combined[y].substring(0, (l-1)) + v[y];
-								} else {
-									combined[y] += v[y].substring(1);
-								}
-							}
-						}
-					});
-					// Figure out our starting position
-					var glyphWidth = combined[0].length;
-					var x = (myPos.indexOf('l') != -1) ? 0 : (16 - glyphWidth);
-					var y = (myPos.indexOf('t') != -1) ? 0 : (16 - glyphHeight);
-					// Draw them pixels!
-					for(dX=0; dX<glyphWidth; dX++){
-						for(dY=0; dY<glyphHeight; dY++){
-							var pixel = combined[dY][dX];
-							if(pixel != ' '){
-								ctx.fillStyle = (pixel == '@') ? myFg : myBg;
-								ctx.fillRect((x+dX), (y+dY), 1, 1);
-							}
-						}
-					}
+          if(num>0) {
+            // Merge the glyphs together
+            var combined = [];
+            var glyphHeight = myGlyphs[0].length;
+            $.each(myGlyphs, function(k,v){
+              for(y=0; y<glyphHeight; y++){
+                // First pass?
+                if(combined[y] === undefined) {
+                  combined[y] = v[y];
+                } else {
+                  // Merge the glyph parts, careful of the boundaries
+                  var l = combined[y].length;
+                  if(combined[y][(l-1)] === ' '){
+                    combined[y] = combined[y].substring(0, (l-1)) + v[y];
+                  } else {
+                    combined[y] += v[y].substring(1);
+                  }
+                }
+              }
+            });
+            // Figure out our starting position
+            var glyphWidth = combined[0].length;
+            var x = (myPos.indexOf('l') !== -1) ? 0 : (16 - glyphWidth);
+            var y = (myPos.indexOf('t') !== -1) ? 0 : (16 - glyphHeight);
+            // Draw them pixels!
+            for(dX=0; dX<glyphWidth; dX++){
+              for(dY=0; dY<glyphHeight; dY++){
+                var pixel = combined[dY][dX];
+                if(pixel !== ' '){
+                  ctx.fillStyle = (pixel === '@') ? myFg : myBg;
+                  ctx.fillRect((x+dX), (y+dY), 1, 1);
+                }
+              }
+            }
+          }
 				}
 				// Update the favicon
 				$('link[rel$=icon]').remove();
