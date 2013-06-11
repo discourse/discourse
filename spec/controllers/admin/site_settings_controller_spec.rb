@@ -34,6 +34,10 @@ describe Admin::SiteSettingsController do
         xhr :put, :update, id: 'test_setting', value: 'hello'
       end
 
+      # it 'allows value to be a blank string' do
+      #   SiteSetting.expects(:'test_setting=').with('').once
+      #   xhr :put, :update, id: 'test_setting', value: ''
+      # end
     end
 
   end

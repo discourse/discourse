@@ -83,10 +83,14 @@ Discourse.SiteSetting = Discourse.Model.extend({
   validValues: function() {
     var vals;
     vals = Em.A();
-    this.get("valid_values").each(function(v){
-      vals.addObject({ name: v, value: v });
+    _.each(this.get('valid_values'), function(v) {
+      if(v.length > 0) vals.addObject({ name: v, value: v });
     });
     return vals;
+  }.property('valid_values'),
+
+  allowsNone: function() {
+    if ( _.indexOf(this.get('valid_values'), '') >= 0 ) return 'admin.site_settings.none';
   }.property('valid_values')
 });
 
