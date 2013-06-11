@@ -8,8 +8,7 @@
 **/
 
 var oneWeekAgo = function() {
-  // TODO localize date format?
-  return moment().subtract('days',7).format('yyyy-MM-dd');
+  return moment().subtract('days',7).format('YYYY-MM-DD');
 }
 
 Discourse.AdminEmailPreviewDigestRoute = Discourse.Route.extend(Discourse.ModelReady, {

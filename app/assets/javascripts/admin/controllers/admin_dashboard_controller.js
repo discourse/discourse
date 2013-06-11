@@ -41,6 +41,6 @@ Discourse.AdminDashboardController = Ember.Controller.extend({
   },
 
   problemsTimestamp: function() {
-    return this.get('problemsFetchedAt').long();
+    return moment(this.get('problemsFetchedAt')).format('LLL');
   }.property('problemsFetchedAt')
 });
