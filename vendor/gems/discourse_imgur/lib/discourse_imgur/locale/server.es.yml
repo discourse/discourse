@@ -1,0 +1,5 @@
+es:
+	site_settings:
+    enable_imgur: "Activar imgur api para subidas, no almacenes ficheros localmente"
+    imgur_api_key: "Tu imgur.com api key, requerida para la función de subida de imágenes"
+    imgur_endpoint: "End point para la subida de imagenes de imgur.com"

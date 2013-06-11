@@ -1,0 +1,5 @@
+fr:
+	site_settings:
+    enable_imgur: "utiliser l'envoi des images avec l'API imgur, ne pas stocker les fichiers localement"
+    imgur_client_id: "Votre ID client imgur.com. Requis pour que l'envoi d'images fonctionne."
+    imgur_client_secret: "Votre secret imgur.com. Pas nécessaire pour que l'envoi d'image fonctionne, mais pourrais le devenir."
