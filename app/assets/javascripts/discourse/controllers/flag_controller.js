@@ -55,7 +55,7 @@ Discourse.FlagController = Discourse.ObjectController.extend(Discourse.ModalFunc
     if (opts) params = $.extend(params, opts);
 
     postAction.act(params).then(function() {
-      flagController.closeModal();
+      flagController.send('closeModal');
     }, function(errors) {
       flagController.displayErrors(errors);
     });

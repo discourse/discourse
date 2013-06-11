@@ -96,7 +96,7 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
   }.property(),
 
   showCategoryTopic: function() {
-    $('#discourse-modal').modal('hide');
+    this.send('closeModal')
     Discourse.URL.routeTo(this.get('topic_url'));
     return false;
   },
@@ -123,7 +123,7 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
         Discourse.SiteSetting.update('uncategorized_name', this.get('name'))
       ).then(function(result) {
         // success
-        $('#discourse-modal').modal('hide');
+        categoryController.send('closeModal');
         // We can't redirect to the uncategorized category on save because the slug
         // might have changed.
         Discourse.URL.redirectTo("/categories");
@@ -136,7 +136,7 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
     } else {
       this.get('model').save().then(function(result) {
         // success
-        $('#discourse-modal').modal('hide');
+        categoryController.send('closeModal');
         Discourse.URL.redirectTo("/category/" + Discourse.Category.slugFor(result.category));
       }, function(errors) {
         // errors
@@ -150,11 +150,13 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
   deleteCategory: function() {
     var categoryController = this;
     this.set('deleting', true);
+
     $('#discourse-modal').modal('hide');
     bootbox.confirm(Em.String.i18n("category.delete_confirm"), Em.String.i18n("no_value"), Em.String.i18n("yes_value"), function(result) {
       if (result) {
         categoryController.get('model').destroy().then(function(){
           // success
+          categoryController.send('closeModal');
           Discourse.URL.redirectTo("/categories");
         }, function(jqXHR){
           // error

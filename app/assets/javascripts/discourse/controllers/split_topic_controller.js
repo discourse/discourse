@@ -28,20 +28,20 @@ Discourse.SplitTopicController = Discourse.ObjectController.extend(Discourse.Sel
     this.set('saving', true);
 
     var postIds = this.get('selectedPosts').map(function(p) { return p.get('id'); });
-    var moveSelectedView = this;
+    var splitTopicController = this;
 
     Discourse.Topic.movePosts(this.get('id'), {
       title: this.get('topicName'),
       post_ids: postIds
     }).then(function(result) {
       // Posts moved
-      $('#discourse-modal').modal('hide');
-      moveSelectedView.get('topicController').toggleMultiSelect();
+      splitTopicController.send('closeModal');
+      splitTopicController.get('topicController').toggleMultiSelect();
       Em.run.next(function() { Discourse.URL.routeTo(result.url); });
     }, function() {
       // Error moving posts
-      moveSelectedView.flash(Em.String.i18n('topic.split_topic.error'));
-      moveSelectedView.set('saving', false);
+      splitTopicController.flash(Em.String.i18n('topic.split_topic.error'));
+      splitTopicController.set('saving', false);
     });
     return false;
   }

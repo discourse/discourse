@@ -27,8 +27,6 @@ Discourse.MergeTopicController = Discourse.ObjectController.extend(Discourse.Sel
   movePostsToExistingTopic: function() {
     this.set('saving', true);
 
-    var moveSelectedView = this;
-
     var promise = null;
     if (this.get('allPostsSelected')) {
       promise = Discourse.Topic.mergeTopic(this.get('id'), this.get('selectedTopicId'));
@@ -40,15 +38,16 @@ Discourse.MergeTopicController = Discourse.ObjectController.extend(Discourse.Sel
       });
     }
 
+    var mergeTopicController = this;
     promise.then(function(result) {
       // Posts moved
-      $('#discourse-modal').modal('hide');
-      moveSelectedView.get('topicController').toggleMultiSelect();
+      mergeTopicController.send('closeModal');
+      mergeTopicController.get('topicController').toggleMultiSelect();
       Em.run.next(function() { Discourse.URL.routeTo(result.url); });
     }, function() {
       // Error moving posts
-      moveSelectedView.flash(Em.String.i18n('topic.merge_topic.error'));
-      moveSelectedView.set('saving', false);
+      mergeTopicController.flash(Em.String.i18n('topic.merge_topic.error'));
+      mergeTopicController.set('saving', false);
     });
     return false;
   }

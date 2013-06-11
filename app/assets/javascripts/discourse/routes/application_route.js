@@ -34,6 +34,16 @@ Discourse.ApplicationRoute = Em.Route.extend({
       });
     },
 
+
+    /**
+      Close the current modal.
+
+      @method closeModal
+    **/
+    closeModal: function() {
+      this.render('hide_modal', {into: 'modal', outlet: 'modalBody'});
+    },
+
     editCategory: function(category) {
       var router = this;
 

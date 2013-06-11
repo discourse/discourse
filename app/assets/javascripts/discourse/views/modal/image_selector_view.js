@@ -17,7 +17,7 @@ Discourse.ImageSelectorView = Discourse.ModalBodyView.extend({
 
   add: function() {
     this.get('controller.composerView').addMarkdown("![image](" + $('#fileurl-input').val() + ")");
-    $('#discourse-modal').modal('hide');
+    this.get('controller').send('closeModal');
   }
 
 });

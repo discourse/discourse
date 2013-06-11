@@ -11,6 +11,12 @@ Discourse.ModalBodyView = Discourse.View.extend({
   // Focus on first element
   didInsertElement: function() {
     $('#discourse-modal').modal('show');
+
+    var controller = this.get('controller');
+    $('#discourse-modal').on('hide.discourse', function() {
+      controller.send('closeModal');
+    });
+
     $('#modal-alert').hide();
 
     var modalBodyView = this;
@@ -22,6 +28,10 @@ Discourse.ModalBodyView = Discourse.View.extend({
     if (title) {
       this.set('controller.controllers.modal.title', title);
     }
+  },
+
+  willDestroyElement: function() {
+    $('#discourse-modal').off('hide.discourse');
   },
 
   // Pass the errors to our errors view
