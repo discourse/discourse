@@ -75,7 +75,7 @@ Discourse = Ember.Application.createWithMixins({
     $('title').text(title);
 
     var notifyCount = this.get('notifyCount');
-    if (notifyCount > 0) {
+    if (notifyCount > 0 && !Discourse.SiteSettings.dynamic_favicon) {
       title = "(" + notifyCount + ") " + title;
     }
     // chrome bug workaround see: http://stackoverflow.com/questions/2952384/changing-the-window-title-when-focussing-the-window-doesnt-work-in-chrome
