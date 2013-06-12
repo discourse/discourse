@@ -143,7 +143,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
     if(suggested) {
 
-      var existing = _(suggested).map(function(topic){
+      var existing = _.map(suggested, function(topic){
         return topic.get("id");
       });
 
