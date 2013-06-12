@@ -18,7 +18,9 @@ class UserActionSerializer < ApplicationSerializer
              :acting_username,
              :acting_name,
              :acting_user_id,
-             :title
+             :title,
+             :deleted,
+             :hidden
 
 
   def excerpt

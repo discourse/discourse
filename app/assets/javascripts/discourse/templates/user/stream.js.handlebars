@@ -1,6 +1,6 @@
 <div id='user-stream'>
   {{#each view.stream.content}}
-    <div class='item'>
+    <div {{bindAttr class=":item hidden:hidden deleted:deleted"}}>
       <div class='clearfix info'>
         <a href="{{unbound userUrl}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar this imageSize="large" extraClasses="actor" ignoreTitle="true"}}</div></a>
         <span class='time'>{{date path="created_at" leaveAgo="true"}}</span>
