@@ -17,7 +17,6 @@ class Post < ActiveRecord::Base
 
   rate_limit
 
-
   belongs_to :user
   belongs_to :topic, counter_cache: :posts_count
   belongs_to :reply_to_user, class_name: "User"
@@ -25,6 +24,8 @@ class Post < ActiveRecord::Base
   has_many :post_replies
   has_many :replies, through: :post_replies
   has_many :post_actions
+
+  has_and_belongs_to_many :upload
 
   has_one :post_search_data
 

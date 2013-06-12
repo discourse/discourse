@@ -26,6 +26,8 @@ describe Post do
   it { should have_many :post_replies }
   it { should have_many :replies }
 
+  it { should have_and_belong_to_many :upload }
+
   it { should rate_limit }
 
   let(:topic) { Fabricate(:topic) }
