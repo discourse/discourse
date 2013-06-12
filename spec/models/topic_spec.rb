@@ -175,6 +175,26 @@ describe Topic do
         Topic.similar_to("has evil trout made any topics?", "i am wondering has evil trout made any topics?").should == [topic]
       end
 
+      context "secure categories" do
+
+        let(:user) { Fabricate(:user) }
+        let(:category) { Fabricate(:category, secure: true) }
+
+        before do
+          topic.category = category
+          topic.save
+        end
+
+        it "doesn't return topics from private categories" do
+          expect(Topic.similar_to("has evil trout made any topics?", "i am wondering has evil trout made any topics?", user)).to be_blank
+        end
+
+        it "should return the cat since the user can see it" do
+          Guardian.any_instance.expects(:secure_category_ids).returns([category.id])
+          expect(Topic.similar_to("has evil trout made any topics?", "i am wondering has evil trout made any topics?", user)).to include(topic)
+        end
+      end
+
     end
 
   end

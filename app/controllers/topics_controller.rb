@@ -84,7 +84,7 @@ class TopicsController < ApplicationController
     raise Discourse::InvalidParameters.new(:title) if title.length < SiteSetting.min_title_similar_length
     raise Discourse::InvalidParameters.new(:raw) if raw.length < SiteSetting.min_body_similar_length
 
-    topics = Topic.similar_to(title, raw)
+    topics = Topic.similar_to(title, raw, current_user)
     render_serialized(topics, BasicTopicSerializer)
   end
 

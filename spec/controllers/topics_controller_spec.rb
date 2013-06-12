@@ -162,8 +162,17 @@ describe TopicsController do
     end
 
     it "delegates to Topic.similar_to" do
-      Topic.expects(:similar_to).with(title, raw).returns([Fabricate(:topic)])
+      Topic.expects(:similar_to).with(title, raw, nil).returns([Fabricate(:topic)])
       xhr :get, :similar_to, title: title, raw: raw
+    end
+
+    context "logged in" do
+      let(:user) { log_in }
+
+      it "passes a user throught if logged in" do
+        Topic.expects(:similar_to).with(title, raw, user).returns([Fabricate(:topic)])
+        xhr :get, :similar_to, title: title, raw: raw
+      end
     end
 
   end

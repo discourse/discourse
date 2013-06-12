@@ -98,16 +98,19 @@ class Topic < ActiveRecord::Base
 
   scope :secured, lambda {|guardian|
     ids = guardian.secure_category_ids if guardian
+
+    # Query conditions
     condition =
       if ids.present?
         ["NOT c.secure or c.id in (:cats)", cats: ids]
       else
         ["NOT c.secure"]
       end
-      where("category_id IS NULL OR category_id IN (
-                SELECT c.id FROM categories c
-                WHERE #{condition[0]})", condition[1])
-   }
+
+    where("category_id IS NULL OR category_id IN (
+           SELECT c.id FROM categories c
+           WHERE #{condition[0]})", condition[1])
+  }
 
   # Helps us limit how many favorites can be made in a day
   class FavoriteLimiter < RateLimiter
@@ -234,7 +237,7 @@ class Topic < ActiveRecord::Base
   end
 
   # Search for similar topics
-  def self.similar_to(title, raw)
+  def self.similar_to(title, raw, user=nil)
     return [] unless title.present?
     return [] unless raw.present?
 
@@ -242,6 +245,7 @@ class Topic < ActiveRecord::Base
     Topic.select(sanitize_sql_array(["topics.*, similarity(topics.title, :title) AS similarity", title: title]))
          .visible
          .where(closed: false, archived: false)
+         .secured(Guardian.new(user))
          .listable_topics
          .limit(SiteSetting.max_similar_results)
          .order('similarity desc')
