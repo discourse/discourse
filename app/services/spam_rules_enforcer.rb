@@ -51,11 +51,15 @@ class SpamRulesEnforcer
   end
 
   def punish_user
-    Post.update_all(["hidden = true, hidden_reason_id = COALESCE(hidden_reason_id, ?)", Post.hidden_reasons[:new_user_spam_threshold_reached]], user_id: @user.id)
-    SystemMessage.create(@user, :too_many_spam_flags)
-    GroupMessage.create(Group[:moderators].name, :user_automatically_blocked, {user: @user, limit_once_per: false})
-    @user.blocked = true
-    @user.save
+    Post.transaction do
+      Post.update_all(["hidden = true, hidden_reason_id = COALESCE(hidden_reason_id, ?)", Post.hidden_reasons[:new_user_spam_threshold_reached]], user_id: @user.id)
+      topic_ids = Post.where('user_id = ? and post_number = ?', @user.id, 1).pluck(:topic_id)
+      Topic.update_all({ visible: false }, id: topic_ids) unless topic_ids.empty?
+      SystemMessage.create(@user, :too_many_spam_flags)
+      GroupMessage.create(Group[:moderators].name, :user_automatically_blocked, {user: @user, limit_once_per: false})
+      @user.blocked = true
+      @user.save
+    end
   end
 
   def clear_user

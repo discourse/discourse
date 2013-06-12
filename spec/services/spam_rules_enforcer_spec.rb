@@ -112,6 +112,11 @@ describe SpamRulesEnforcer do
       expect(post.reload).to be_hidden
     end
 
+    it "hides the topic if the post was the first post" do
+      subject.punish_user
+      expect(post.topic.reload).to_not be_visible
+    end
+
     it 'prevents the user from making new posts' do
       subject.punish_user
       expect(Guardian.new(user).can_create_post?(nil)).to be_false
