@@ -40,7 +40,7 @@ Discourse.SearchController = Em.ArrayController.extend(Discourse.Presence, {
             .map(function(n){
               return _(results).where({type: n}).first()
             })
-            .without(undefined)
+            .compact()
             .each(function(list){
               _.each(list.results, function(item){
                 item.index = index++;

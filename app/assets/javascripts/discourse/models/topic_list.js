@@ -91,7 +91,7 @@ Discourse.TopicList.reopenClass({
           .map(function(id){
                   return newTopics.find(function(t){ return t.id === id; });
                 })
-          .without(undefined)
+          .compact()
           .value();
 
         defer.resolve(topics);
