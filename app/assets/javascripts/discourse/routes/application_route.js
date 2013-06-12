@@ -52,7 +52,6 @@ Discourse.ApplicationRoute = Em.Route.extend({
         router.controllerFor('editCategory').set('selectedTab', 'general');
       } else {
         Discourse.Category.findBySlugOrId(category.get('slug') || category.get('id')).then(function (c) {
-          console.log('ok show it now please');
           Discourse.Site.instance().updateCategory(c);
           Discourse.Route.showModal(router, 'editCategory', c);
           router.controllerFor('editCategory').set('selectedTab', 'general');
