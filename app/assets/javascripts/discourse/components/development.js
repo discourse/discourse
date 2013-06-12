@@ -74,9 +74,9 @@ Discourse.Development = {
       });
     };
 
-    //Ember.View.prototype.renderToBuffer = window.probes.measure(Ember.View.prototype.renderToBuffer, "renderToBuffer");
+    //Ember.CoreView.prototype._renderToBuffer = window.probes.measure(Ember.CoreView.prototype._renderToBuffer, "renderToBuffer");
     Discourse.URL.routeTo = topLevel(Discourse.URL.routeTo, "Discourse.URL.routeTo");
-    Ember.run.end = topLevel(Ember.run.end, "Ember.run.end");
+    Ember.run.backburner.end = topLevel(Ember.run.backburner.end, "Ember.run.backburner.end");
   },
 
   /**
