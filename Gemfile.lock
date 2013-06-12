@@ -317,6 +317,8 @@ GEM
       pry (~> 0.9.10)
     pry-rails (0.2.2)
       pry (>= 0.9.10)
+    qunit-rails (0.0.3)
+      railties (>= 3.2.3)
     rack (1.4.5)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -531,6 +533,7 @@ DEPENDENCIES
   pg
   pry-nav
   pry-rails
+  qunit-rails
   rack-cache
   rack-cors
   rack-mini-profiler

@@ -100,6 +100,7 @@ group :test, :development do
   gem 'guard-jshint-on-rails', require: false
   gem 'certified', require: false
   gem 'fabrication', require: false
+  gem 'qunit-rails'
   gem 'guard-jasmine', require: false
   gem 'guard-rspec', require: false
   gem 'guard-spork', require: false
