@@ -1526,6 +1526,14 @@
             buttons.image = makeButton("wmd-image-button", getString("image"), bindCommand(function (chunk, postProcessing) {
                 return this.doLinkOrImage(chunk, postProcessing, true);
             }));
+            buttons.image = makeButton("wmd-image-button", getString("image"), bindCommand(function (chunk, postProcessing) {
+                return ourfilepicktest(chunk, postProcessing);
+                //filepicker.pick(function (FPFile) {
+                //    console.log(FPFile.url);
+                //});
+                //return false;
+                //return this.doLinkOrImage(chunk, postProcessing, true);
+            }));
             makeSpacer(2);
             buttons.olist = makeButton("wmd-olist-button", getString("olist"), bindCommand(function (chunk, postProcessing) {
                 this.doList(chunk, postProcessing, true);
