@@ -53,20 +53,20 @@
       {{#if loadingMore}}
         <div class='topics-loading'>{{i18n topic.loading_more}}</div>
       {{/if}}
-    </footer>
 
-    <h3>
-      {{footerMessage}}
-      {{#if allLoaded}}
-        {{#if latest}}
-          {{#if canCreateTopic}}
-            <a href='#' {{action createTopic}}>{{i18n topic.suggest_create_topic}}</a>
+      <h3>
+        {{footerMessage}}
+        {{#if allLoaded}}
+          {{#if latest}}
+            {{#if canCreateTopic}}
+              <a href='#' {{action createTopic}}>{{i18n topic.suggest_create_topic}}</a>
+            {{/if}}
+          {{else}}
+            {{#linkTo list.categories}}{{i18n topic.browse_all_categories}}{{/linkTo}} {{i18n or}} {{#linkTo list.latest}}{{i18n topic.view_latest_topics}}{{/linkTo}}
           {{/if}}
-        {{else}}
-          {{#linkTo list.categories}}{{i18n topic.browse_all_categories}}{{/linkTo}} {{i18n or}} {{#linkTo list.latest}}{{i18n topic.view_latest_topics}}{{/linkTo}}
         {{/if}}
-      {{/if}}
-    </h3>
+      </h3>
+    </footer>
 
   {{/if}}
 {{/unless}}
