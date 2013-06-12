@@ -81,7 +81,7 @@ module PrettyText
     @ctx["helpers"] = Helpers.new
 
     ctx_load( "app/assets/javascripts/external/md5.js",
-              "app/assets/javascripts/external/underscore.js",
+              "app/assets/javascripts/external/lodash.js",
               "app/assets/javascripts/external/Markdown.Converter.js",
               "app/assets/javascripts/external/twitter-text-1.5.0.js",
               "lib/headless-ember.js",
