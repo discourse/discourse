@@ -8,15 +8,15 @@ class UserNotifications < ActionMailer::Base
 
   def signup(user, opts={})
     build_email(user.email,
-                      template: "user_notifications.signup",
-                      email_token: opts[:email_token])
+                template: "user_notifications.signup",
+                email_token: opts[:email_token])
   end
 
   def signup_after_approval(user, opts={})
     build_email(user.email,
-                      template: 'user_notifications.signup_after_approval',
-                      email_token: opts[:email_token],
-                      new_user_tips: SiteContent.content_for(:usage_tips))
+                template: 'user_notifications.signup_after_approval',
+                email_token: opts[:email_token],
+                new_user_tips: SiteContent.content_for(:usage_tips))
   end
 
   def authorize_email(user, opts={})
@@ -31,14 +31,14 @@ class UserNotifications < ActionMailer::Base
     post = opts[:post]
 
     build_email user.email,
-                      template: "user_notifications.private_message",
-                      message: post.raw,
-                      url: post.url,
-                      subject_prefix: "[#{I18n.t('private_message_abbrev')}] #{post.post_number != 1 ? 're: ' : ''}",
-                      topic_title: post.topic.title,
-                      private_message_from: post.user.name,
-                      from_alias: I18n.t(:via, username: post.user.name, site_name: SiteSetting.title),
-                      add_unsubscribe_link: true
+                template: "user_notifications.private_message",
+                message: post.raw,
+                url: post.url,
+                subject_prefix: "[#{I18n.t('private_message_abbrev')}] #{post.post_number != 1 ? 're: ' : ''}",
+                topic_title: post.topic.title,
+                private_message_from: post.user.name,
+                from_alias: I18n.t(:via, username: post.user.name, site_name: SiteSetting.title),
+                add_unsubscribe_link: true
   end
 
   def digest(user, opts={})
@@ -58,14 +58,40 @@ class UserNotifications < ActionMailer::Base
     # Don't send email unless there is content in it
     if @new_topics.present?
       build_email user.email,
-                        from_alias: I18n.t('user_notifications.digest.from', site_name: SiteSetting.title),
-                        subject: I18n.t('user_notifications.digest.subject_template',
-                                        site_name: @site_name,
-                                        date: I18n.l(Time.now, format: :short))
+                  from_alias: I18n.t('user_notifications.digest.from', site_name: SiteSetting.title),
+                  subject: I18n.t('user_notifications.digest.subject_template',
+                  site_name: @site_name,
+                  date: I18n.l(Time.now, format: :short))
     end
   end
 
-  def notification_template(user, opts)
+  def user_invited_to_private_message(user, opts)
+    notification_email(user, opts)
+  end
+
+  def user_replied(user, opts)
+    opts[:allow_reply_by_email] = true
+    notification_email(user, opts)
+  end
+
+  def user_quoted(user, opts)
+    opts[:allow_reply_by_email] = true
+    notification_email(user, opts)
+  end
+
+  def user_mentioned(user, opts)
+    opts[:allow_reply_by_email] = true
+    notification_email(user, opts)
+  end
+
+  def user_posted(user, opts)
+    opts[:allow_reply_by_email] = true
+    notification_email(user, opts)
+  end
+
+  protected
+
+  def notification_email(user, opts)
     @notification = opts[:notification]
     return unless @notification.present?
 
@@ -84,6 +110,10 @@ class UserNotifications < ActionMailer::Base
       template: "user_notifications.user_#{notification_type}"
     }
 
+    if opts[:allow_reply_by_email] && SiteSetting.reply_by_email_enabled?
+      email_opts[:allow_reply_by_email] = true
+    end
+
     # If we have a display name, change the from address
     if username.present?
       email_opts[:from_alias] = I18n.t(:via, username: username, site_name: SiteSetting.title)
@@ -92,10 +122,6 @@ class UserNotifications < ActionMailer::Base
     build_email(user.email, email_opts)
   end
 
-  alias :user_invited_to_private_message :notification_template
-  alias :user_replied :notification_template
-  alias :user_quoted :notification_template
-  alias :user_mentioned :notification_template
-  alias :user_posted :notification_template
+
 
 end
