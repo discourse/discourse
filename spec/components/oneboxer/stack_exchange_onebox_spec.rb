@@ -36,6 +36,27 @@ describe Oneboxer::StackExchangeOnebox do
       end
     end
 
+    context 'when the question is from Meta Stack Overflow' do
+      let(:site) { 'meta.stackoverflow' }
+
+      it 'returns the correct api url' do
+        onebox = described_class.new("http://meta.stackoverflow.com/q/#{question}")
+
+        expect(onebox.translate_url).to eq api_url
+      end
+    end
+
+    context 'when the question is from a Meta Stack Exchange subdomain' do
+      let(:site) { 'meta.gamedev' }
+
+      it 'returns the correct api url' do
+        onebox = described_class.new("http://meta.gamedev.stackexchange.com/q/#{question}")
+
+        expect(onebox.translate_url).to eq api_url
+      end
+
+    end
+
     context 'when the question is from a Stack Exchange subdomain' do
       let(:site) { 'gamedev' }
 

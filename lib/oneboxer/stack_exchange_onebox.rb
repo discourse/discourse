@@ -12,7 +12,7 @@ module Oneboxer
 
     # http://rubular.com/r/V3T0I1VTPn
     REGEX =
-      /^http:\/\/(?:(?<subdomain>\w*)\.)?(?<domain>#{DOMAINS.join('|')})\.com\/(?:questions|q)\/(?<question>\d*)/
+      /^http:\/\/(?:(?:(?<subsubdomain>\w*)\.)?(?<subdomain>\w*)\.)?(?<domain>#{DOMAINS.join('|')})\.com\/(?:questions|q)\/(?<question>\d*)/
 
     matcher REGEX
     favicon 'stackexchange.png'
@@ -20,9 +20,9 @@ module Oneboxer
     def translate_url
       @url.match(REGEX) do |match|
         site = if match[:domain] == 'stackexchange'
-          match[:subdomain]
+          [match[:subsubdomain],match[:subdomain]].compact.join('.')
         else
-          match[:domain]
+          [match[:subdomain],match[:domain]].compact.join('.')
         end
 
         ["http://api.stackexchange.com/2.1/",

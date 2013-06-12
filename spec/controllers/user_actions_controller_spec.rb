@@ -20,7 +20,7 @@ describe UserActionsController do
       action = actions[0]
       action["acting_name"].should == post.user.name
       action["email"].should be_nil
-      action["post_number"].should == "1"
+      action["post_number"].should == 1
     end
   end
 end
