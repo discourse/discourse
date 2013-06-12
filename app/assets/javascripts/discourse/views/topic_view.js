@@ -143,9 +143,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
     if(suggested) {
 
-      var existing = _.map(suggested, function(topic){
-        return topic.get("id");
-      });
+      var existing = _.invoke(suggested, 'get', 'id');
 
       var lookup = _.chain(incoming)
         .last(5)
