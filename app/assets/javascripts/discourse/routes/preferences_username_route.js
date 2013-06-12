@@ -27,6 +27,7 @@ Discourse.PreferencesUsernameRoute = Discourse.RestrictedUserRoute.extend({
   },
 
   setupController: function(controller, user) {
+    controller.set('model', user);
     controller.set('newUsername', user.get('username'));
   }
 
