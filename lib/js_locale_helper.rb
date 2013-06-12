@@ -31,6 +31,7 @@ module JsLocaleHelper
     result << moment_format_function('short_date_no_year')
     result << moment_format_function('short_date')
     result << moment_format_function('long_date')
+    result << "moment.fn.relativeAge = function(opts){ return Discourse.Formatter.relativeAge(this.toDate(), opts)};\n"
   end
 
   def self.moment_format_function(name)
