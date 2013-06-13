@@ -7,6 +7,8 @@ class Upload < ActiveRecord::Base
   belongs_to :user
   belongs_to :topic
 
+  has_and_belongs_to_many :post
+
   validates_presence_of :filesize
   validates_presence_of :original_filename
 
