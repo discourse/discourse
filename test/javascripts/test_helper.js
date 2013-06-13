@@ -1,3 +1,4 @@
+/*jshint maxlen:250 */
 /*global count:true find:true document:true */
 
 //= require env
