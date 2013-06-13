@@ -10,7 +10,8 @@ var validNavNames = ['latest', 'hot', 'categories', 'category', 'favorited', 'un
 var validAnon     = ['latest', 'hot', 'categories', 'category'];
 
 Discourse.NavItem = Discourse.Model.extend({
-  topicTrackingState: function(){
+
+  topicTrackingState: function() {
     return Discourse.TopicTrackingState.current();
   }.property(),
 
@@ -32,7 +33,15 @@ Discourse.NavItem = Discourse.Model.extend({
     if (state) {
       return state.lookupCount(this.get('name'));
     }
-  }.property('topicTrackingState.messageCount')
+  }.property('topicTrackingState.messageCount'),
+
+  excludeCategory: function() {
+    if (parseInt(this.get('filters.length'), 10) > 0) {
+      return this.get('filters')[0].substring(1);
+    }
+  }.property('filters.length')
+
+
 });
 
 Discourse.NavItem.reopenClass({

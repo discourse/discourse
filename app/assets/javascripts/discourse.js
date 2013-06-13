@@ -225,6 +225,7 @@ Discourse = Ember.Application.createWithMixins({
   ajax: function() {
 
     var url, args;
+
     if (arguments.length === 1) {
       if (typeof arguments[0] === "string") {
         url = arguments[0];
@@ -244,6 +245,14 @@ Discourse = Ember.Application.createWithMixins({
     }
     if (args.error) {
       console.warning("DEPRECATION: Discourse.ajax should use promises, received 'error' callback");
+    }
+
+    // If we have URL_FIXTURES, load from there instead (testing)
+    var fixture = Discourse.URL_FIXTURES && Discourse.URL_FIXTURES[url];
+    if (fixture) {
+      return Ember.Deferred.promise(function(promise) {
+        promise.resolve(fixture);
+      })
     }
 
     return Ember.Deferred.promise(function (promise) {
