@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.AdminUserRoute = Discourse.Route.extend({
+Discourse.AdminUserRoute = Discourse.Route.extend(Discourse.ModelReady, {
 
   serialize: function(params) {
     return { username: Em.get(params, 'username').toLowerCase() };
@@ -18,6 +18,11 @@ Discourse.AdminUserRoute = Discourse.Route.extend({
 
   renderTemplate: function() {
     this.render({into: 'admin/templates/admin'});
+  },
+
+  modelReady: function(controller, adminUser) {
+    adminUser.loadDetails();
+    controller.set('model', adminUser);
   }
 
 });
