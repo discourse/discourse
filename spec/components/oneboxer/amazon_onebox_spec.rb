@@ -15,7 +15,7 @@ describe Oneboxer::AmazonOnebox do
   end
 
   it "generates the expected onebox for Amazon" do
-    @o.onebox.should == expected_amazon_result
+    @o.onebox.should match_html expected_amazon_result
   end
 
 private
