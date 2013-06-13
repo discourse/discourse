@@ -33,7 +33,7 @@ Discourse.EditTopicAutoCloseController = Discourse.ObjectController.extend(Disco
     Discourse.ajax({
       url: '/t/' + this.get('id') + '/autoclose',
       type: 'PUT',
-      dataType: 'json',
+      dataType: 'html', // no custom errors, jquery 1.9 enforces json
       data: { auto_close_days: days > 0 ? days : null }
     }).then(function(){
       editTopicAutoCloseController.set('auto_close_at', moment().add('days', days).format());

@@ -18,40 +18,43 @@ Discourse.TopicClosingView = Discourse.View.extend({
   render: function(buffer) {
     if (!this.present('topic.auto_close_at')) return;
 
-    var autoCloseAt = new Date(this.get('topic.auto_close_at'));
+    var autoCloseAt = moment(this.get('topic.auto_close_at'));
 
-    if (autoCloseAt.isPast()) return;
+    if (autoCloseAt < new Date()) return;
 
-    var timeLeftString, reRenderDelay, minutesLeft = autoCloseAt.minutesSince();
+    var duration = moment.duration(autoCloseAt - moment());
 
-    if (minutesLeft > 1440) {
-      timeLeftString = Em.String.i18n('in_n_days', {count: autoCloseAt.daysSince()});
+    var timeLeftString, rerenderDelay, minutesLeft = duration.asMinutes();
+
+    if (minutesLeft > 1410) {
+      timeLeftString = Em.String.i18n('in_n_days', {count: Math.round(duration.asDays())});
       if( minutesLeft > 2160 ) {
-        reRenderDelay = 12 * 60 * 60000;
+        rerenderDelay = 12 * 60 * 60000;
       } else {
-        reRenderDelay = 60 * 60000;
+        rerenderDelay = 60 * 60000;
       }
     } else if (minutesLeft > 90) {
-      timeLeftString = Em.String.i18n('in_n_hours', {count: autoCloseAt.hoursSince()});
-      reRenderDelay = 30 * 60000;
+      timeLeftString = Em.String.i18n('in_n_hours', {count: Math.round(duration.asHours())});
+      rerenderDelay = 30 * 60000;
     } else if (minutesLeft > 2) {
-      timeLeftString = Em.String.i18n('in_n_minutes', {count: autoCloseAt.minutesSince()});
-      reRenderDelay = 60000;
+      timeLeftString = Em.String.i18n('in_n_minutes', {count: Math.round(duration.asMinutes())});
+      rerenderDelay = 60000;
     } else {
-      timeLeftString = Em.String.i18n('in_n_seconds', {count: autoCloseAt.secondsSince()});
-      reRenderDelay = 1000;
+      timeLeftString = Em.String.i18n('in_n_seconds', {count: Math.round(duration.asSeconds())});
+      rerenderDelay = 1000;
     }
 
     buffer.push('<h3><i class="icon icon-time"></i> ');
     buffer.push( Em.String.i18n('topic.auto_close_notice', {timeLeft: timeLeftString}) );
     buffer.push('</h3>');
 
-    this.delayedRerender = this.rerender.bind(this).delay(reRenderDelay);
+    // TODO Sam: concerned this can cause a heavy rerender loop
+    this.delayedRerender = Em.run.later(this, this.rerender, rerenderDelay);
   },
 
   willDestroyElement: function() {
     if( this.delayedRerender ) {
-      this.delayedRerender.cancel();
+      Em.run.cancel(this.delayedRerender)
     }
   }
 });
