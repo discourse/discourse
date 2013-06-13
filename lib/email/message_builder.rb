@@ -35,10 +35,6 @@ module Email
       body
     end
 
-    def allow_reply_by_email?
-      SiteSetting.reply_by_email_enabled? && @opts[:allow_reply_by_email]
-    end
-
     def template_args
       @template_args ||= { site_name: SiteSetting.title,
                            base_url: Discourse.base_url,
@@ -46,17 +42,11 @@ module Email
     end
 
     def build_args
-      mail_args = { to: @to,
-                    subject: subject,
-                    body: body,
-                    charset: 'UTF-8' }
-
-      mail_args[:from] = @opts[:from] || SiteSetting.notification_email
-
-      if @opts[:from_alias]
-        mail_args[:from] = "#{@opts[:from_alias]} <#{mail_args[:from]}>"
-      end
-      mail_args
+      { to: @to,
+        subject: subject,
+        body: body,
+        charset: 'UTF-8',
+        from: from_value }
     end
 
     def header_args
@@ -65,9 +55,50 @@ module Email
         result['List-Unsubscribe'] = "<#{template_args[:user_preferences_url]}>" if @opts[:add_unsubscribe_link]
       end
 
-      result['Discourse-Reply-Key'] = SecureRandom.hex(16) if allow_reply_by_email?
+      if allow_reply_by_email?
+        result['Discourse-Reply-Key'] = reply_key
+        result['Reply-To'] = reply_by_email_address
+      else
+        result['Reply-To'] = from_value
+      end
 
       result
+    end
+
+
+    protected
+
+    def reply_key
+      @reply_key ||= SecureRandom.hex(16)
+    end
+
+    def allow_reply_by_email?
+      SiteSetting.reply_by_email_enabled? &&
+      reply_by_email_address.present? &&
+      @opts[:allow_reply_by_email]
+    end
+
+    def from_value
+      return @from_value if @from_value
+      @from_value = @opts[:from] || SiteSetting.notification_email
+      @from_value = alias_email(@from_value)
+      @from_value
+    end
+
+    def reply_by_email_address
+      return @reply_by_email_address if @reply_by_email_address
+      return nil unless SiteSetting.reply_by_email_address.present?
+
+      @reply_by_email_address = SiteSetting.reply_by_email_address.dup
+      @reply_by_email_address.gsub!("%{reply_key}", reply_key)
+      @reply_by_email_address = alias_email(@reply_by_email_address)
+
+      @reply_by_email_address
+    end
+
+    def alias_email(source)
+      return source if @opts[:from_alias].blank?
+      "#{@opts[:from_alias]} <#{source}>"
     end
 
   end

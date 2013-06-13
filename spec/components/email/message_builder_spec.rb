@@ -8,6 +8,7 @@ describe Email::MessageBuilder do
   let(:body) { "oh my glob Jake, Tree Trunks just made the tastiest apple pie ever!"}
   let(:builder) { Email::MessageBuilder.new(to_address, subject: subject, body: body) }
   let(:build_args) { builder.build_args }
+  let(:header_args) { builder.header_args }
 
   it "has the correct to address" do
     expect(build_args[:to]).to eq(to_address)
@@ -29,7 +30,11 @@ describe Email::MessageBuilder do
 
     context "without allow_reply_by_email" do
       it "does not have a Discourse-Reply-Key" do
-        expect(builder.header_args['Discourse-Reply-Key']).to be_blank
+        expect(header_args['Discourse-Reply-Key']).to be_blank
+      end
+
+      it "returns a Reply-To header that's the same as From" do
+        expect(header_args['Reply-To']).to eq(build_args[:from])
       end
     end
 
@@ -39,22 +44,31 @@ describe Email::MessageBuilder do
 
       context "With the SiteSetting enabled" do
         before do
-          SiteSetting.expects(:reply_by_email_enabled?).returns(true)
+          SiteSetting.stubs(:reply_by_email_enabled?).returns(true)
+          SiteSetting.stubs(:reply_by_email_address).returns("r+%{reply_key}@reply.myforum.com")
         end
 
         it "has a Discourse-Reply-Key" do
           expect(reply_key).to be_present
           expect(reply_key.size).to eq(32)
         end
+
+        it "returns a Reply-To header with the reply key" do
+          expect(reply_by_email_builder.header_args['Reply-To']).to eq("r+#{reply_key}@reply.myforum.com")
+        end
       end
 
       context "With the SiteSetting disabled" do
         before do
-          SiteSetting.expects(:reply_by_email_enabled?).returns(false)
+          SiteSetting.stubs(:reply_by_email_enabled?).returns(false)
         end
 
         it "has no Discourse-Reply-Key" do
           expect(reply_key).to be_blank
+        end
+
+        it "returns a Reply-To header that's the same as From" do
+          expect(header_args['Reply-To']).to eq(build_args[:from])
         end
       end
     end

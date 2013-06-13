@@ -1,6 +1,6 @@
 class CreatePostUploadJoinTable < ActiveRecord::Migration
   def change
-  	create_table :posts_uploads, id: false do |t|
+  	create_table :posts_uploads, force: true, id: false do |t|
   		t.integer :post_id
   		t.integer :upload_id
   	end
