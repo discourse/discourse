@@ -107,12 +107,9 @@ class UserNotifications < ActionMailer::Base
       url: @post.url,
       username: username,
       add_unsubscribe_link: true,
+      allow_reply_by_email: opts[:allow_reply_by_email],
       template: "user_notifications.user_#{notification_type}"
     }
-
-    if opts[:allow_reply_by_email] && SiteSetting.reply_by_email_enabled?
-      email_opts[:allow_reply_by_email] = true
-    end
 
     # If we have a display name, change the from address
     if username.present?

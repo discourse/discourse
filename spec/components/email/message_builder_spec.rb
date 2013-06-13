@@ -25,6 +25,42 @@ describe Email::MessageBuilder do
     expect(builder.build_args[:charset]).to eq("UTF-8")
   end
 
+  context "reply by email" do
+
+    context "without allow_reply_by_email" do
+      it "does not have a Discourse-Reply-Key" do
+        expect(builder.header_args['Discourse-Reply-Key']).to be_blank
+      end
+    end
+
+    context "with allow_reply_by_email" do
+      let(:reply_by_email_builder) { Email::MessageBuilder.new(to_address, allow_reply_by_email: true) }
+      let(:reply_key) { reply_by_email_builder.header_args['Discourse-Reply-Key'] }
+
+      context "With the SiteSetting enabled" do
+        before do
+          SiteSetting.expects(:reply_by_email_enabled?).returns(true)
+        end
+
+        it "has a Discourse-Reply-Key" do
+          expect(reply_key).to be_present
+          expect(reply_key.size).to eq(32)
+        end
+      end
+
+      context "With the SiteSetting disabled" do
+        before do
+          SiteSetting.expects(:reply_by_email_enabled?).returns(false)
+        end
+
+        it "has no Discourse-Reply-Key" do
+          expect(reply_key).to be_blank
+        end
+      end
+    end
+
+  end
+
   context "unsubscribe link" do
 
     context "with add_unsubscribe_link false" do

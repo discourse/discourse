@@ -22,6 +22,8 @@ describe Email::Sender do
 
   context 'with a valid message' do
 
+    let(:reply_key) { "abcd" * 8 }
+
     let(:message) do
       message = Mail::Message.new to: 'eviltrout@test.domain',
                                   body: '**hello**'
@@ -37,49 +39,33 @@ describe Email::Sender do
     end
 
     context 'email logs' do
+      let(:email_log) { EmailLog.last }
 
-      before do
-        email_sender.send
-        @email_log = EmailLog.last
-      end
-
-      it 'creates an email log' do
-        @email_log.should be_present
-      end
-
-      it 'has the correct type' do
-        @email_log.email_type.should == 'valid_type'
-      end
-
-      it 'has the correct to_address' do
-        @email_log.to_address.should == 'eviltrout@test.domain'
-      end
-
-      it 'has no user_id' do
-        @email_log.user_id.should be_blank
-      end
-
-
+      When { email_sender.send }
+      Then { expect(email_log).to be_present }
+      Then { expect(email_log.email_type).to eq('valid_type') }
+      Then { expect(email_log.to_address).to eq('eviltrout@test.domain') }
+      Then { expect(email_log.reply_key).to be_blank }
+      Then { expect(email_log.user_id).to be_blank }
     end
 
+    context "email log with a reply key" do
+      before do
+        message.header['Discourse-Reply-Key'] = reply_key
+      end
+
+      let(:email_log) { EmailLog.last }
+      When { email_sender.send }
+      Then { expect(email_log.reply_key).to eq(reply_key) }
+    end
+
+
     context 'email parts' do
-      before { email_sender.send }
-
-      it 'makes the message multipart' do
-        message.should be_multipart
-      end
-
-      it 'sets the correct content type for the plain text part' do
-        expect(message.text_part.content_type).to eq 'text/plain; charset=UTF-8'
-      end
-
-      it 'sets the correct content type for the html part' do
-        expect(message.html_part.content_type).to eq 'text/html; charset=UTF-8'
-      end
-
-      it 'converts the html part to html' do
-        expect(message.html_part.body.to_s).to match("<p><strong>hello</strong></p>")
-      end
+      When { email_sender.send }
+      Then { expect(message).to be_multipart }
+      Then { expect(message.text_part.content_type).to eq('text/plain; charset=UTF-8') }
+      Then { expect(message.html_part.content_type).to eq('text/html; charset=UTF-8') }
+      Then { expect(message.html_part.body.to_s).to match("<p><strong>hello</strong></p>") }
     end
   end
 

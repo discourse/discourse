@@ -50,27 +50,14 @@ describe UserNotifications do
   shared_examples "supports reply by email" do
     context "reply_by_email" do
       it "should have allow_reply_by_email set when that feature is enabled" do
-        SiteSetting.stubs(:reply_by_email_enabled?).returns(true)
         expects_build_with(has_entry(:allow_reply_by_email, true))
-      end
-
-      it "should have not allow_reply_by_email set when that feature is disabled" do
-        SiteSetting.stubs(:reply_by_email_enabled?).returns(false)
-        expects_build_with(Not(has_entry(:allow_reply_by_email, true)))
       end
     end
   end
 
   shared_examples "no reply by email" do
     context "reply_by_email" do
-
-      it "doesn't support reply by email, even when that option is enabled" do
-        SiteSetting.stubs(:reply_by_email_enabled?).returns(true)
-        expects_build_with(Not(has_entry(:allow_reply_by_email, true)))
-      end
-
-      it "should have not allow_reply_by_email set when that feature is disabled" do
-        SiteSetting.stubs(:reply_by_email_enabled?).returns(false)
+      it "doesn't support reply by email" do
         expects_build_with(Not(has_entry(:allow_reply_by_email, true)))
       end
     end
@@ -130,7 +117,6 @@ describe UserNotifications do
       include_examples "supports reply by email"
     end
   end
-
 
   describe "user quoted" do
     include_examples "notification email building" do

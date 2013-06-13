@@ -42,7 +42,13 @@ module Email
       to_address = @message.to
       to_address = to_address.first if to_address.is_a?(Array)
 
-      EmailLog.create!(email_type: @email_type, to_address: to_address, user_id: @user.try(:id))
+      email_log = EmailLog.new(email_type: @email_type, to_address: to_address, user_id: @user.try(:id))
+
+      reply_key = @message.header['Discourse-Reply-Key'].to_s
+      email_log.reply_key = reply_key if reply_key.present?
+      email_log.save!
+      email_log
+
     end
 
   end

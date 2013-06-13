@@ -35,6 +35,10 @@ module Email
       body
     end
 
+    def allow_reply_by_email?
+      SiteSetting.reply_by_email_enabled? && @opts[:allow_reply_by_email]
+    end
+
     def template_args
       @template_args ||= { site_name: SiteSetting.title,
                            base_url: Discourse.base_url,
@@ -60,6 +64,9 @@ module Email
       if @opts[:add_unsubscribe_link]
         result['List-Unsubscribe'] = "<#{template_args[:user_preferences_url]}>" if @opts[:add_unsubscribe_link]
       end
+
+      result['Discourse-Reply-Key'] = SecureRandom.hex(16) if allow_reply_by_email?
+
       result
     end
 
