@@ -53,7 +53,7 @@ describe TopicTitleLengthValidator do
       validate
       expect(record.errors[:title]).to_not be_present
     end
-    
+
     include_examples "validating any topic title"
   end
 

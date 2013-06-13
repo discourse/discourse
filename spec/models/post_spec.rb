@@ -365,8 +365,14 @@ describe Post do
 
   end
 
-  it 'validates' do
-    Fabricate.build(:post, post_args).should be_valid
+  context 'validation' do
+    it 'validates our default post' do
+      Fabricate.build(:post, post_args).should be_valid
+    end
+
+    it 'treate blank posts as invalid' do
+      Fabricate.build(:post, raw: "").should_not be_valid
+    end
   end
 
   context "raw_hash" do

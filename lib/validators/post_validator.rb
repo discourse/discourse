@@ -1,5 +1,9 @@
-class PostValidator < ActiveModel::Validator
+require_dependency 'validators/stripped_length_validator'
+module Validators; end
+class Validators::PostValidator < ActiveModel::Validator
   def validate(record)
+    presence(record)
+    stripped_length(record)
     raw_quality(record)
     max_mention_validator(record)
     max_images_validator(record)
@@ -7,8 +11,19 @@ class PostValidator < ActiveModel::Validator
     unique_post_validator(record)
   end
 
+  def presence(post)
+    [:raw,:user_id,:topic_id].each do |attr_name|
+       post.errors.add(attr_name, :blank, options) if post.send(attr_name).blank?
+    end
+  end
+
+  def stripped_length(post)
+    range = post.topic.try(:private_message?) ? SiteSetting.private_message_post_length : SiteSetting.post_length
+    Validators::StrippedLengthValidator.validate(post, :raw, post.raw, range)
+  end
+
   def raw_quality(post)
-    sentinel = TextSentinel.body_sentinel(post.raw)
+    sentinel = TextSentinel.body_sentinel(post.raw, private_message: post.topic.try(:private_message?))
     post.errors.add(:raw, I18n.t(:is_invalid)) unless sentinel.valid?
   end
 

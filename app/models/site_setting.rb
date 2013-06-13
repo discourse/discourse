@@ -29,6 +29,7 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:polling_interval, 3000)
   client_setting(:anon_polling_interval, 30000)
   client_setting(:min_post_length, Rails.env.test? ? 5 : 20)
+  client_setting(:min_private_message_post_length, Rails.env.test? ? 5 : 10)
   client_setting(:max_post_length, 16000)
   client_setting(:min_topic_title_length, 15)
   client_setting(:max_topic_title_length, 255)
@@ -161,7 +162,7 @@ class SiteSetting < ActiveRecord::Base
 
   setting(:enforce_global_nicknames, true)
   setting(:discourse_org_access_key, '')
-  
+
   setting(:enable_s3_uploads, false)
   setting(:s3_access_key_id, '')
   setting(:s3_secret_access_key, '')
@@ -234,6 +235,10 @@ class SiteSetting < ActiveRecord::Base
 
   def self.post_length
     min_post_length..max_post_length
+  end
+
+  def self.private_message_post_length
+    min_private_message_post_length..max_post_length
   end
 
   def self.homepage

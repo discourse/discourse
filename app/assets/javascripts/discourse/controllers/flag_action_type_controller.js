@@ -27,12 +27,12 @@ Discourse.FlagActionTypeController = Discourse.ObjectController.extend({
   showDescription: Em.computed.not('showMessageInput'),
 
   customMessageLengthClasses: function() {
-    return (this.get('message.length') < Discourse.PostActionType.MIN_MESSAGE_LENGTH) ? "too-short" : "ok"
+    return (this.get('message.length') < Discourse.SiteSettings.min_private_message_post_length) ? "too-short" : "ok"
   }.property('message.length'),
 
   customMessageLength: function() {
     var len = this.get('message.length') || 0;
-    var minLen = Discourse.PostActionType.MIN_MESSAGE_LENGTH;
+    var minLen = Discourse.SiteSettings.min_private_message_post_length;
     if (len === 0) {
       return Em.String.i18n("flagging.custom_message.at_least", { n: minLen });
     } else if (len < minLen) {

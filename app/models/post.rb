@@ -5,6 +5,7 @@ require_dependency 'post_revisor'
 require_dependency 'enum'
 require_dependency 'trashable'
 require_dependency 'post_analyzer'
+require_dependency 'validators/post_validator'
 
 require 'archetype'
 require 'digest/sha1'
@@ -17,7 +18,6 @@ class Post < ActiveRecord::Base
 
   rate_limit
 
-
   belongs_to :user
   belongs_to :topic, counter_cache: :posts_count
   belongs_to :reply_to_user, class_name: "User"
@@ -28,9 +28,7 @@ class Post < ActiveRecord::Base
 
   has_one :post_search_data
 
-  validates_presence_of :raw, :user_id, :topic_id
-  validates :raw, stripped_length: { in: -> { SiteSetting.post_length } }
-  validates_with PostValidator
+  validates_with ::Validators::PostValidator
 
   # We can pass a hash of image sizes when saving to prevent crawling those images
   attr_accessor :image_sizes, :quoted_post_numbers, :no_bump, :invalidate_oneboxes

@@ -19,7 +19,7 @@ Discourse.FlagController = Discourse.ObjectController.extend(Discourse.ModalFunc
 
     if (selected.get('is_custom_flag')) {
       var len = this.get('message.length') || 0;
-      return len >= Discourse.PostActionType.MIN_MESSAGE_LENGTH &&
+      return len >= Discourse.SiteSettings.min_private_message_post_length &&
              len <= Discourse.PostActionType.MAX_MESSAGE_LENGTH;
     }
     return true;
