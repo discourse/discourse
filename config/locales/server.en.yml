@@ -74,8 +74,6 @@ en:
     'new-topic': |
       Welcome to %{site_name} &mdash; **thanks for starting a new conversation!**
 
-      Keep in mind as you compose your topic:
-
       - Does the title accurately describe your topic? Does it sound interesting?
 
       - What is this about? Who would be interested in it? Why does it matter? What kind of responses are you hoping for from the community?
@@ -86,8 +84,6 @@ en:
 
     'new-reply': |
       Welcome to %{site_name} &mdash; **thanks for contributing to the conversation!**
-
-      Keep in mind as you compose your reply:
 
       - Does your reply improve the conversation in some way, however small?
 
