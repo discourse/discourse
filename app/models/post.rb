@@ -26,6 +26,8 @@ class Post < ActiveRecord::Base
   has_many :replies, through: :post_replies
   has_many :post_actions
 
+  has_and_belongs_to_many :upload
+
   has_one :post_search_data
 
   validates_with ::Validators::PostValidator
