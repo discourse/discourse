@@ -44,6 +44,7 @@ Discourse.ListCategoryRoute = Discourse.FilteredListRoute.extend({
       listController.set('canCreateTopic', topicList.get('can_create_topic'));
       listController.set('category', category);
       router.controllerFor('listTopics').set('content', topicList);
+      router.controllerFor('listTopics').set('category', category);
     });
   },
 
