@@ -1,7 +1,7 @@
 language: ruby
 rvm:
   - 1.9.3
-  - 2.0.0-p195
+  - 2.0.0
 before_script:
   - cp config/database.yml.development-sample config/database.yml
   - cp config/redis.yml.sample config/redis.yml
