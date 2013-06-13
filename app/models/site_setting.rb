@@ -168,6 +168,11 @@ class SiteSetting < ActiveRecord::Base
   setting(:s3_region, '', enum: 'S3RegionSiteSetting')
   setting(:s3_upload_bucket, '')
 
+  setting(:enable_filepicker_uploads, false)
+  setting(:filepicker_api_key, '')
+  setting(:filepicker_allowed_extensions, '.png, .jpg, .jpeg, .gif')
+  setting(:filepicker_s3_path, 'discourse/attachments')
+
   setting(:default_trust_level, 0)
   setting(:default_invitee_trust_level, 1)
 

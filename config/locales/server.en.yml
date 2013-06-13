@@ -566,6 +566,11 @@ en:
     s3_secret_access_key: "The Amazon S3 secret access key that will be used to upload images"
     s3_region: "The Amazon S3 region name that will be used to upload images"
 
+    enable_filepicker_uploads: "Use Filepicker.io for file uploads"
+	filepicker_api_key: "Your Filepicker.io API key"
+    filepicker_allowed_extensions: "File extensions allowed for file uploads"
+    filepicker_s3_path: "Path prefix for all uploaded files"
+
     default_invitee_trust_level: "Default trust level (0-4) for invited users"
     default_trust_level: "Default trust level (0-4) for users"
 
