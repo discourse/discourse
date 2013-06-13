@@ -27,7 +27,8 @@ class Post < ActiveRecord::Base
   has_many :post_actions
   has_many :topic_links
 
-  has_and_belongs_to_many :upload
+  has_many :post_uploads
+  has_many :uploads, through: :post_uploads
 
   has_one :post_search_data
 

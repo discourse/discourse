@@ -26,7 +26,8 @@ describe Post do
   it { should have_many :post_replies }
   it { should have_many :replies }
 
-  it { should have_and_belong_to_many :upload }
+  it { should have_many :post_uploads }
+  it { should have_many :uploads }
 
   it { should rate_limit }
 
