@@ -42,13 +42,28 @@ module Email
       to_address = @message.to
       to_address = to_address.first if to_address.is_a?(Array)
 
-      email_log = EmailLog.new(email_type: @email_type, to_address: to_address, user_id: @user.try(:id))
+      email_log = EmailLog.new(email_type: @email_type,
+                               to_address: to_address,
+                               user_id: @user.try(:id))
 
-      reply_key = @message.header['Discourse-Reply-Key'].to_s
-      email_log.reply_key = reply_key if reply_key.present?
+      email_log.post_id = @messager
+      add_header_to_log('Discourse-Reply-Key', email_log, :reply_key)
+      add_header_to_log('Discourse-Post-Id', email_log, :post_id)
+      add_header_to_log('Discourse-Topic-Id', email_log, :topic_id)
+
       email_log.save!
       email_log
 
+    end
+
+    private
+
+    def add_header_to_log(name, email_log, email_log_field)
+      header = @message.header[name]
+      return unless header
+
+      val = header.value
+      email_log[email_log_field] = val if val.present?
     end
 
   end

@@ -105,6 +105,8 @@ class UserNotifications < ActionMailer::Base
       topic_title: @notification.data_hash[:topic_title],
       message: @post.raw,
       url: @post.url,
+      post_id: @post.id,
+      topic_id: @post.topic_id,
       username: username,
       add_unsubscribe_link: true,
       allow_reply_by_email: opts[:allow_reply_by_email],

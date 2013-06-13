@@ -75,6 +75,23 @@ describe Email::MessageBuilder do
 
   end
 
+  context "header args" do
+
+    let(:message_with_header_args) { Email::MessageBuilder.new(to_address,
+                                                               body: 'hello world',
+                                                               topic_id: 1234,
+                                                               post_id: 4567) }
+
+    it "passes through a post_id" do
+      expect(message_with_header_args.header_args['Discourse-Post-Id']).to eq('4567')
+    end
+
+    it "passes through a topic_id" do
+      expect(message_with_header_args.header_args['Discourse-Topic-Id']).to eq('1234')
+    end
+
+  end
+
   context "unsubscribe link" do
 
     context "with add_unsubscribe_link false" do

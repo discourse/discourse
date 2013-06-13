@@ -55,6 +55,9 @@ module Email
         result['List-Unsubscribe'] = "<#{template_args[:user_preferences_url]}>" if @opts[:add_unsubscribe_link]
       end
 
+      result['Discourse-Post-Id'] = @opts[:post_id].to_s if @opts[:post_id]
+      result['Discourse-Topic-Id'] = @opts[:topic_id].to_s if @opts[:topic_id]
+
       if allow_reply_by_email?
         result['Discourse-Reply-Key'] = reply_key
         result['Reply-To'] = reply_by_email_address

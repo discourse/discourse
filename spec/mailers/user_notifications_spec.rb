@@ -98,6 +98,14 @@ describe UserNotifications do
         expects_build_with(has_key(:add_unsubscribe_link))
       end
 
+      it "has an post_id" do
+        expects_build_with(has_key(:post_id))
+      end
+
+      it "has an topic_id" do
+        expects_build_with(has_key(:topic_id))
+      end
+
       it "has a from alias" do
         expects_build_with(has_entry(:from_alias, "#{username} via #{SiteSetting.title}"))
       end

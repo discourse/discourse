@@ -191,7 +191,13 @@ class SiteSetting < ActiveRecord::Base
 
   # Reply by Email Settings
   setting(:reply_by_email_enabled, false)
-  setting(:reply_by_email_address, nil)
+  setting(:reply_by_email_address, '')
+
+  setting(:pop3s_polling_enabled, false)
+  setting(:pop3s_polling_host, '')
+  setting(:pop3s_polling_port, 995)
+  setting(:pop3s_polling_username, '')
+  setting(:pop3s_polling_password, '')
 
   # Entropy checks
   setting(:title_min_entropy, 10)

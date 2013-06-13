@@ -618,6 +618,13 @@ en:
     reply_by_email_enabled: "Whether this forum supports reply by email"
     reply_by_email_address: "Template for reply by email address in form, for example: %{reply_key}@reply.myforum.com"
 
+    pop3s_polling_enabled: "Whether to poll via POP3S for reply by email"
+    pop3s_polling_port: "The port to poll a POP3S account on"
+    pop3s_polling_host: "The host to poll for email via POP3S"
+    pop3s_polling_username: "The username for the POP3S account to poll for email"
+    pop3s_polling_password: "The password for the POP3S account to poll for email"
+
+
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"
     liked: "%{display_username} liked your post in %{link}"
