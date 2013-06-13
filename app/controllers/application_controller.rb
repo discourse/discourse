@@ -278,9 +278,8 @@ class ApplicationController < ActionController::Base
     end
 
     def render_not_found_page(status=404)
-      f = Topic.where(deleted_at: nil, archetype: "regular")
-      @latest = f.order('views desc').take(10)
-      @recent = f.order('created_at desc').take(10)
+      @top_viewed = TopicQuery.top_viewed(10)
+      @recent = TopicQuery.recent(10)
       @slug =  params[:slug].class == String ? params[:slug] : ''
       @slug =  (params[:id].class == String ? params[:id] : '') if @slug.blank?
       @slug.gsub!('-',' ')

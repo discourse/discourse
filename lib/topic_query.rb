@@ -63,6 +63,14 @@ class TopicQuery
       "CASE WHEN (topics.pinned_at IS NOT NULL) THEN 0 ELSE 1 END, topics.bumped_at DESC"
     end
 
+    def top_viewed(max)
+      Topic.listable_topics.visible.secured.order('views desc').take(10)
+    end
+
+    def recent(max)
+      Topic.listable_topics.visible.secured.order('created_at desc').take(10)
+    end
+
   end
 
   def initialize(user=nil, opts={})
