@@ -166,5 +166,23 @@ describe PostDestroyer do
     end
   end
 
+  describe 'topic links' do
+    let!(:first_post)  { Fabricate(:post) }
+    let!(:topic)       { first_post.topic }
+    let!(:second_post) { Fabricate(:post_with_external_links, topic: topic) }
+
+    before { TopicLink.extract_from(second_post) }
+
+    it 'should destroy the topic links when moderator destroys the post' do
+      PostDestroyer.new(moderator, second_post.reload).destroy
+      expect(topic.topic_links.count).to eq(0)
+    end
+
+    it 'should destroy the topic links when the user destroys the post' do
+      PostDestroyer.new(second_post.user, second_post.reload).destroy
+      expect(topic.topic_links.count).to eq(0)
+    end
+  end
+
 end
 

@@ -25,6 +25,7 @@ class Post < ActiveRecord::Base
   has_many :post_replies
   has_many :replies, through: :post_replies
   has_many :post_actions
+  has_many :topic_links
 
   has_and_belongs_to_many :upload
 
@@ -52,9 +53,15 @@ class Post < ActiveRecord::Base
     @types ||= Enum.new(:regular, :moderator_action)
   end
 
+  def trash!
+    self.topic_links.each(&:destroy)
+    super
+  end
+
   def recover!
     super
     update_flagged_posts_count
+    TopicLink.extract_from(self)
   end
 
   # The key we use in redis to ensure unique posts

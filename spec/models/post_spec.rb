@@ -56,25 +56,43 @@ describe Post do
   end
 
   describe "versions and deleting/recovery" do
-    let(:post) { Fabricate(:post, post_args) }
 
-    before do
-      post.trash!
-      post.reload
-    end
+    context 'a post without links' do
+      let(:post) { Fabricate(:post, post_args) }
 
-    it "doesn't create a new version when deleted" do
-      post.versions.count.should == 0
-    end
-
-    describe "recovery" do
       before do
-        post.recover!
+        post.trash!
         post.reload
       end
 
-      it "doesn't create a new version when recovered" do
+      it "doesn't create a new version when deleted" do
         post.versions.count.should == 0
+      end
+
+      describe "recovery" do
+        before do
+          post.recover!
+          post.reload
+        end
+
+        it "doesn't create a new version when recovered" do
+          post.versions.count.should == 0
+        end
+      end
+    end
+
+    context 'a post with links' do
+      let(:post) { Fabricate(:post_with_external_links) }
+      before do
+        post.trash!
+        post.reload
+      end
+
+      describe 'recovery' do
+        it 'recreates the topic_link records' do
+          TopicLink.expects(:extract_from).with(post)
+          post.recover!
+        end
       end
     end
 

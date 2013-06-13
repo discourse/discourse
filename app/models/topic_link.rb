@@ -13,7 +13,7 @@ class TopicLink < ActiveRecord::Base
 
   validates_uniqueness_of :url, scope: [:topic_id, :post_id]
 
-  has_many :topic_link_clicks
+  has_many :topic_link_clicks, dependent: :destroy
 
   validate :link_to_self
 
