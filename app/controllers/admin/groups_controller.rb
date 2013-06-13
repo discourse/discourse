@@ -18,7 +18,7 @@ class Admin::GroupsController < Admin::AdminController
     group = Group.find(params[:id].to_i)
     render_json_error if group.automatic
     group.usernames = params[:group][:usernames]
-    group.name = params[:group][:name] if params[:name]
+    group.name = params[:group][:name]
     group.save!
     render json: "ok"
   end
