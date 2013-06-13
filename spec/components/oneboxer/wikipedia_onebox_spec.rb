@@ -10,7 +10,7 @@ describe Oneboxer::WikipediaOnebox do
     o = Oneboxer::WikipediaOnebox.new('http://en.wikipedia.org/wiki/Ruby')
     FakeWeb.register_uri(:get, o.translate_url, response: fixture_file('oneboxer/wikipedia.response'))
     FakeWeb.register_uri(:get, 'http://en.m.wikipedia.org/wiki/Ruby', response: fixture_file('oneboxer/wikipedia_redirected.response'))
-    o.onebox.should == expected_wikipedia_result
+    o.onebox.should match_html expected_wikipedia_result
   end
 
   it "accepts .com extention" do

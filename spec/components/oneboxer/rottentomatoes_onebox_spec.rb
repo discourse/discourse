@@ -13,19 +13,19 @@ describe Oneboxer::RottentomatoesOnebox do
   it 'generates the expected onebox for a fresh movie' do
     o = Oneboxer::RottentomatoesOnebox.new('http://www.rottentomatoes.com/m/mud_2012/')
     FakeWeb.register_uri(:get, o.translate_url, response: fixture_file('oneboxer/rottentomatoes_fresh.response'))
-    expect(o.onebox).to eq(expected_fresh_result)
+    o.onebox.should match_html expected_fresh_result
   end
 
   it 'generates the expected onebox for a rotten movie' do
     o = Oneboxer::RottentomatoesOnebox.new('http://www.rottentomatoes.com/m/the_big_wedding_2013/')
     FakeWeb.register_uri(:get, o.translate_url, response: fixture_file('oneboxer/rottentomatoes_rotten.response'))
-    expect(o.onebox).to eq(expected_rotten_result)
+    o.onebox.should match_html expected_rotten_result
   end
 
   it 'generates the expected onebox for a movie with an incomplete description' do
     o = Oneboxer::RottentomatoesOnebox.new('http://www.rottentomatoes.com/m/gunde_jaari_gallanthayyinde/')
     FakeWeb.register_uri(:get, o.translate_url, response: fixture_file('oneboxer/rottentomatoes_incomplete.response'))
-    expect(o.onebox).to eq(expected_incomplete_result)
+    o.onebox.should match_html expected_incomplete_result
   end
 
 private
