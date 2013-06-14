@@ -12,11 +12,11 @@ Discourse.PostMenuView = Discourse.View.extend({
 
   render: function(buffer) {
     var post = this.get('post');
-    this.renderReplies(post, buffer);
     buffer.push("<nav class='post-controls'>");
+    this.renderReplies(post, buffer);
 
     var postMenuView = this;
-    Discourse.get('postButtons').forEach(function(button) {
+    Discourse.get('postButtons').toArray().reverse().forEach(function(button) {
       var renderer = "render" + button;
       if(postMenuView[renderer]) postMenuView[renderer](post, buffer);
     });
