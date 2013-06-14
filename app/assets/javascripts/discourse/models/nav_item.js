@@ -20,12 +20,23 @@ Discourse.NavItem = Discourse.Model.extend({
     return split[0] === 'category' ? split[1] : null;
   }.property('name'),
 
+  categorySlug: function() {
+    var split = this.get('name').split('/');
+    if (split[0] === 'category' && split[1]) {
+      var cat = Discourse.Site.instance().categories.findProperty('name', split[1]);
+      return cat ? Discourse.Category.slugFor(cat) : null;
+    }
+    return null;
+  }.property('name'),
+
   // href from this item
   href: function() {
-    var name = this.get('name'),
-        href = Discourse.getURL("/") + name.replace(' ', '-');
-    if (name === 'category') href += "/" + this.get('categoryName');
-    return href;
+    var name = this.get('name');
+    if( name.split('/')[0] === 'category' ) {
+      return Discourse.getURL("/") + 'category/' + this.get('categorySlug');
+    } else {
+      return Discourse.getURL("/") + name.replace(' ', '-');
+    }
   }.property('name'),
 
   count: function() {
