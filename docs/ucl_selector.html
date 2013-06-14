@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+		<script>
+			var policies = [
+			{
+				policy: "USER CONTENT LICENSE:\r\n\r\nYou grant [FORUM] and its users a non-exclusive, royalty-free, worldwide limited license to use,\r\nstore, display, reproduce, modify, perform, and translate your Content solely for the purposes\r\nof operating, developing, providing, and using [FORUM]. This includes without limitation distributing\r\npart or all of [FORUM] in any media formats through any media channels, except Content not\r\nshared publicly (\"private\") will not be distributed outside [FORUM].\r\n\r\nFollowing termination or deactivation of your account, or if you remove any User Content from\r\n[FORUM], we may retain your User Content for a commercially reasonable period of time for\r\nbackup, archival, or audit purposes.",
+			
+				more: "This option is for sites that have users sharing content that has commercial value - such as photographers, artists, designers, etc. It provides the user the most rights and the site operator can only use the content in very limited ways related directly to the operation of the forum. This type of license is usually used with private or limited-access forums.",
+				
+				instructions: "Paste the contents of this box into section 3 of the TOS:"
+			},
+			{
+				policy: "If you submit anything via [FORUM] or to [FORUM] and/or its owner(s) by any method (such as a web post, email, file transfer protocol, etc.), you grant the owner(s) of [FORUM] a perpetual, nonexclusive, world-wide, royalty free, sub-licensable license to everything you submit, which includes without limitation the right for the owner(s) [FORUM] or any successor in interest or third party the owner(s) of [FORUM] designates, to use, copy, transmit, excerpt, publish, distribute, publicly display, publicly perform, create derivative works of, host, index, cache, tag, encode, modify and adapt (including without limitation the right to adapt to streaming, downloading, broadcast, mobile, digital, thumbnail, scanning or other technologies) in any form or media now known or hereinafter developed, anything submitted by you. You acknowledge that any submissions you make may be edited, removed, modified, published, transmitted, and displayed by [FORUM], its owner(s), successors and/or assigns and you waive any rights you may have in having the material altered or changed in a manner not agreeable to you.",
+				
+				more: "This is the most common forum license allows the site operator to do whatever it wants with the contributions. This provides the most flexibility and protection for the site operator in case they wish to use the information for things such as ad targeting (to generate revenue) or updating the software support future formats or in marketing materials.",
+				
+				instructions: "Paste the contents of this box into section 3 of the TOS:"
+			
+			},
+			{
+				policy: "User contributions are licensed under a [CC License Here].",
+				
+				more: "If you want to give people the right to share, use, and even build upon a work you've created; you should consider publishing it under a Creative Commons license. CC gives you flexibility (for example, you can choose to allow only non-commercial uses) and protects the people who use your work, so they don't have to worry about copyright infringement, as long as they abide by the conditions you have specified. -- CreativeCommons.org",
+				
+				instructions: "Visit <a href=\"http://creativecommons.org/choose/\">http://creativecommons.org/choose/</a> to select your desired options, and paste your CC License HTML snippet in the text box below, where [CC License Here] is; Then paste the entire contents of the box below in section 3 of the TOS:"
+			}];
+		
+			$(document).ready(function () {
+				$("#ucl textarea").hide();
+				$("#ucl .instructions").hide();
+				$("#ucl #more").hide();
+				
+				$("input:radio[name=r1]").click(function() {
+					var value = $('input:radio[name=r1]:checked').val();
+					$("#ucl textarea").slideDown();
+					$("#ucl textarea").val(policies[value].policy);
+					
+					$("#ucl #instructions").slideDown();
+					$("#ucl #instructions").html(policies[value].instructions);
+					
+				});
+				
+			});
+			
+			function showmore(number) {
+				$("#ucl #more").html(policies[number].more);
+				$("#ucl #more").slideDown();
+			}
+		</script>
+		<style>
+			#ucl {
+				margin: 0px auto;
+				width: 310px;
+			}
+			
+			#ucl textarea {
+				width: 300px;
+				height: 125px;
+				margin: 10px 0px;
+			}
+			
+			#ucl input {
+				float: left;
+				clear: left;
+			}
+			
+			#ucl label {
+				float: left;
+			}
+			
+			.more {
+				cursor: pointer;
+				text-decoration: underline;
+			}
+			
+			#more {
+				background-color: #EEE;
+				float: left;
+			}
+			
+			#instructions {
+				float: left;
+				font-weight: bold;
+			}
+		</style>
+	</head>
+	<body>
+		<form id="ucl">
+			<p>
+				Your users will always retain copyright on their posts, and will always grant the forum owner enough rights to include their content on the forum.
+				<br><br>
+				Who is allowed to republish the content posted on this forum?
+			</p>
+			<input type="radio" name="r1" value="0"> <label>Only the author (<span class="more" onclick="showmore(0)">more</span>)</label>
+			<input type="radio" name="r1" value="1"> <label>Author and the owner of this forum (<span class="more" onclick="showmore(1)">more</span>)</label>
+			<input type="radio" name="r1" value="2"> <label>Anybody (<span class="more" onclick="showmore(2)">more</span>)</label>
+			<br>
+			<p id="more"></p>
+			<p id="instructions"></p>
+			<textarea placeholder="Your policy..."></textarea>
+		</form>
+	</body>
+</html>
