@@ -62,7 +62,7 @@ Discourse.PostMenuView = Discourse.View.extend({
     if (post.get('post_number') === 1 && this.get('controller.content.can_delete')) {
       buffer.push("<button title=\"" +
                   (Em.String.i18n("topic.actions.delete")) +
-                  "\" data-action=\"deleteTopic\"><i class=\"icon-trash\"></i></button>");
+                  "\" data-action=\"deleteTopic\" class='delete'><i class=\"icon-trash\"></i></button>");
       return;
     }
     // Show the correct button (undo or delete)
@@ -109,7 +109,7 @@ Discourse.PostMenuView = Discourse.View.extend({
     if (!this.present('post.flagsAvailable')) return;
     buffer.push("<button title=\"" +
                 (Em.String.i18n("post.controls.flag")) +
-                "\" data-action=\"flag\"><i class=\"icon-flag\"></i></button>");
+                "\" data-action=\"flag\" class='flag'><i class=\"icon-flag\"></i></button>");
   },
 
   clickFlag: function() {
@@ -121,7 +121,7 @@ Discourse.PostMenuView = Discourse.View.extend({
     if (!post.get('can_edit')) return;
     buffer.push("<button title=\"" +
                  (Em.String.i18n("post.controls.edit")) +
-                 "\" data-action=\"edit\"><i class=\"icon-pencil\"></i></button>");
+                 "\" data-action=\"edit\" class='edit'><i class=\"icon-pencil\"></i></button>");
   },
 
   clickEdit: function() {
@@ -132,7 +132,7 @@ Discourse.PostMenuView = Discourse.View.extend({
   renderShare: function(post, buffer) {
     buffer.push("<button title=\"" +
                  (Em.String.i18n("post.controls.share")) +
-                 "\" data-share-url=\"" + (post.get('shareUrl')) + "\"><i class=\"icon-link\"></i></button>");
+                 "\" data-share-url=\"" + (post.get('shareUrl')) + "\" class='share'><i class=\"icon-link\"></i></button>");
   },
 
   // Reply button
@@ -158,7 +158,7 @@ Discourse.PostMenuView = Discourse.View.extend({
     }
     buffer.push("<button title=\"" +
                 (Em.String.i18n("post.controls.bookmark")) +
-                "\" data-action=\"bookmark\"><i class=\"icon-" + icon + "\"></i></button>");
+                "\" data-action=\"bookmark\" class='bookmark'><i class=\"icon-" + icon + "\"></i></button>");
   },
 
   clickBookmark: function() {
