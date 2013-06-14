@@ -73,6 +73,7 @@ module JsLocaleHelper
   def self.compile_message_format(locale, format)
     ctx = V8::Context.new
     ctx.load(Rails.root + 'lib/javascripts/messageformat.js')
+    ctx.load(Rails.root + "lib/javascripts/locale/#{locale}.js")
     ctx.eval("mf = new MessageFormat('#{locale}');")
     ctx.eval("mf.precompile(mf.parse(#{format.inspect}))")
 
