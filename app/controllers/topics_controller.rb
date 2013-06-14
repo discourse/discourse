@@ -108,11 +108,11 @@ class TopicsController < ApplicationController
   end
 
   def mute
-    toggle_mute(true)
+    toggle_mute
   end
 
   def unmute
-    toggle_mute(false)
+    toggle_mute
   end
 
   def autoclose
@@ -211,7 +211,7 @@ class TopicsController < ApplicationController
 
   private
 
-  def toggle_mute(v)
+  def toggle_mute
     @topic = Topic.where(id: params[:topic_id].to_i).first
     guardian.ensure_can_see!(@topic)
 
