@@ -38,6 +38,19 @@ describe Oneboxer::TwitterOnebox do
         ].join)
       end
     end
+
+    context 'when the text contains a hashtag' do
+      let(:text) { 'No secrets. #NSA' }
+
+      it 'wraps each hashtag in a link' do
+        expect(subject.parse(data)['text']).to eq([
+          "No secrets. ",
+          "<a href='https://twitter.com/search?q=%23NSA' target='_blank'>",
+            "#NSA",
+          "</a>"
+        ].join)
+      end
+    end
   end
 end
 

@@ -24,15 +24,15 @@ module Oneboxer
       result['created_at'] =
         Time.parse(result['created_at']).strftime("%I:%M%p - %d %b %y")
 
-      result['text'] = link_urls_and_handles_in result['text']
+      result['text'] = link_all_the_things_in result['text']
 
       result
     end
 
     private
 
-    def link_urls_and_handles_in(text)
-      link_handles_in link_urls_in(text)
+    def link_all_the_things_in(text)
+      link_hashtags_in link_handles_in link_urls_in(text)
     end
 
     def link_urls_in(text)
@@ -48,6 +48,19 @@ module Oneboxer
         text.gsub!("@#{handle}", [
           "<a href='https://twitter.com/#{handle}' target='_blank'>",
             "@#{handle}",
+          "</a>"
+        ].join)
+      end
+
+      text
+    end
+
+    def link_hashtags_in(text)
+      text.scan(/\s#(\w+)/).flatten.uniq.each do |hashtag|
+        text.gsub!("##{hashtag}", [
+          "<a href='https://twitter.com/search?q=%23#{hashtag}' ",
+          "target='_blank'>",
+            "##{hashtag}",
           "</a>"
         ].join)
       end
