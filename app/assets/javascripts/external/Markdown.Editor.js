@@ -1762,8 +1762,34 @@
         });
     }
 
-    commandProto.doLinkOrImage = function (chunk, postProcessing, isImage) {
+    commandProto.useFilePickerIo = function (chunk, linkEnteredCallback) {
+        //TODO: the following variables should be settings
+        var filepicker_key = "!!!FILEPICKERKEY!!!";
+        var filepicker_s3_path = "discourse/attachments/";
+        var filepicker_access_public = true;
+        var filepicker_extensions = ['.dwg', '.dxf', '.zip', '.7z', '.rar', '.igs', '.stp', '.step', '.rhp', '.gh', '.gha', '.ghx', '.py', '.rvb', '.rui', '.txt', '.pdf', '.png', '.jpg', '.jpeg', '.gif', '.rmtl', '.renv', '.3dm'];
 
+        var fpaccess = filepicker_access_public ? "public" : "private";
+        filepicker.setKey(filepicker_key);
+        filepicker.pickAndStore(
+            { extensions: filepicker_extensions },
+            { location: "S3", path: filepicker_s3_path, access: filepicker_access_public },
+            function (fpFiles) {
+                if (fpFiles[0].url && fpFiles[0].filename) {
+                    chunk.selection = fpFiles[0].filename;
+                    linkEnteredCallback(fpFiles[0].url);
+                }
+            },
+            function (fpError) {
+                // error handling
+                linkEnteredCallback(null);
+            });
+        return true;
+    };
+
+
+
+    commandProto.doLinkOrImage = function (chunk, postProcessing, isImage) {
         chunk.trimWhitespace();
         chunk.findTags(/\s*!?\[/, /\][ ]?(?:\n[ ]*)?(\[.*?\])?/);
         var background;
@@ -1818,7 +1844,13 @@
                     var linkDef = " [999]: " + properlyEncoded(link);
 
                     var num = that.addLinkDef(chunk, linkDef);
-                    chunk.startTag = isImage ? "![" : "[";
+                    var makeImageLink = isImage;
+                    if (isImage && that.useFilePickerIo && chunk.selection) {
+                        var filename = chunk.selection.toLowerCase();
+                        makeImageLink = /(jpg|gif|png|jpeg)$/.test(filename);
+                    }
+
+                    chunk.startTag = makeImageLink ? "![" : "[";
                     chunk.endTag = "][" + num + "]";
 
                     if (!chunk.selection) {
@@ -1836,6 +1868,9 @@
             background = ui.createBackground();
 
             if (isImage) {
+                if (that.useFilePickerIo )
+                    return that.useFilePickerIo(chunk, linkEnteredCallback);
+
                 if (!this.hooks.insertImageDialog(linkEnteredCallback))
                     ui.prompt(this.getString("imagedialog"), imageDefaultText, linkEnteredCallback);
             }

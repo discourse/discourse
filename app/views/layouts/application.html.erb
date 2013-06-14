@@ -11,31 +11,9 @@
 
     <link rel="icon" type="image/png" href="<%=SiteSetting.favicon_url%>">
     <link rel="apple-touch-icon" type="image/png" href="<%=SiteSetting.apple_touch_icon_url%>">
+
+	<!--FILEPICKER.IO TODO: figure out how to make this an optional setting-->
 	<script type="text/javascript" src="//api.filepicker.io/v1/filepicker.js"></script>
-
-	<script type="text/javascript">
-	function ourfilepicktest(chunk, postProcessing){
-	  filepicker.setKey('!!!REPLACE with our secret filepicker key!!!');
-
-	  filepicker.pickAndStore(
-	   {},
-	   {location:"S3", path:"discourse/attachments/", access:"public"}, 
-	   function(fpFiles){
-	     var url = fpFiles[0].url;
-		 var filename = fpFiles[0].filename;
-		 if( url && filename ){
-		   chunk.selection = "["+filename+"][1]";
-		   chunk.after += "[1]:"+url;
-		   postProcessing();
-		 }
-	   },
-	   function(fpError){
-         // error handling
-     });
-	 return true;
-	}
-
-	</script>
 
     <%= javascript_include_tag "preload_store" %>
 
