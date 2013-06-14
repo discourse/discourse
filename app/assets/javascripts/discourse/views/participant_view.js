@@ -16,3 +16,4 @@ Discourse.ParticipantView = Discourse.View.extend({
 });
 
 
+Discourse.View.registerHelper('participant', Discourse.ParticipantView);

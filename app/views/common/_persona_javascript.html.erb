@@ -6,14 +6,12 @@
     navigator.id.watch({
       onlogin: function(assertion) {
         if (readyCalled) {
-
           Discourse.ajax('/auth/persona/callback', {
             type: 'POST',
             data: { 'assertion': assertion },
-            success: function(data, textStatus, jqXHR) {
-              Discourse.authenticationComplete(data);
-            },
             dataType: 'json'
+          }).then(function(data) {
+            Discourse.authenticationComplete(data);
           });
         }
       },

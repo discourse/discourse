@@ -63,6 +63,14 @@ class TopicQuery
       "CASE WHEN (topics.pinned_at IS NOT NULL) THEN 0 ELSE 1 END, topics.bumped_at DESC"
     end
 
+    def top_viewed(max)
+      Topic.listable_topics.visible.secured.order('views desc').take(10)
+    end
+
+    def recent(max)
+      Topic.listable_topics.visible.secured.order('created_at desc').take(10)
+    end
+
   end
 
   def initialize(user=nil, opts={})
@@ -212,7 +220,12 @@ class TopicQuery
   protected
 
     def create_list(filter, list_opts={})
-      topics = default_list(list_opts)
+      opts = list_opts
+      if @opts[:topic_ids]
+        opts = opts.dup
+        opts[:topic_ids] = @opts[:topic_ids]
+      end
+      topics = default_list(opts)
       topics = yield(topics) if block_given?
       TopicList.new(filter, @user, topics)
     end
@@ -239,6 +252,7 @@ class TopicQuery
         end
       end
 
+
       result = result.listable_topics.includes(category: :topic_only_relative_url)
       result = result.where('categories.name is null or categories.name <> ?', query_opts[:exclude_category]) if query_opts[:exclude_category]
       result = result.where('categories.name = ?', query_opts[:only_category]) if query_opts[:only_category]
@@ -246,6 +260,10 @@ class TopicQuery
       result = result.visible if @user.blank? or @user.regular?
       result = result.where('topics.id <> ?', query_opts[:except_topic_id]) if query_opts[:except_topic_id].present?
       result = result.offset(query_opts[:page].to_i * page_size) if query_opts[:page].present?
+
+      if list_opts[:topic_ids]
+        result = result.where('topics.id in (?)', list_opts[:topic_ids])
+      end
 
       unless @user && @user.moderator?
         category_ids = @user.secure_category_ids if @user

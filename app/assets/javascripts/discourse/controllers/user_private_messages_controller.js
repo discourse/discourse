@@ -7,10 +7,10 @@
   @module Discourse
 **/
 Discourse.UserPrivateMessagesController = Discourse.ObjectController.extend({
+  needs: ['composer'],
 
   composePrivateMessage: function() {
-    var composerController = Discourse.get('router.composerController');
-    return composerController.open({
+    this.get('controllers.composer').open({
       action: Discourse.Composer.PRIVATE_MESSAGE,
       archetypeId: 'private_message',
       draftKey: 'new_private_message'

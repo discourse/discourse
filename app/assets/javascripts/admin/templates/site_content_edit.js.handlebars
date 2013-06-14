@@ -1,21 +1,21 @@
-{{#if loaded}}
-  <h3>{{title}}</h3>
-  <p class='description'>{{description}}</p>
 
-  {{#if markdown}}
-    {{view Discourse.PagedownEditor valueBinding="model.content"}}
+  <h3>{{model.title}}</h3>
+  <p class='description'>{{model.description}}</p>
+
+  {{#if model.markdown}}
+    {{pagedown value=model.content}}
   {{/if}}
 
-  {{#if plainText}}
+  {{#if model.plainText}}
     {{textarea value=model.content class="plain"}}
   {{/if}}
 
-  {{#if html}}
-    {{view Discourse.AceEditorView contentBinding="model.content" mode="html"}}
+  {{#if model.html}}
+    {{aceEditor content=model.content mode="html"}}
   {{/if}}
 
-  {{#if css}}
-    {{view Discourse.AceEditorView contentBinding="model.content" mode="css"}}
+  {{#if model.css}}
+    {{aceEditor content=model.content mode="css"}}
   {{/if}}
 
 
@@ -30,7 +30,3 @@
     </button>
     {{#if saved}}{{i18n saved}}{{/if}}
   </div>
-
-{{else}}
-  <div class='spinner'>{{i18n loading}}</div>
-{{/if}}

@@ -2,14 +2,14 @@
 
 describe("Discourse.Report", function() {
 
-  function dateString(arg) {
-    return Date.create(arg, 'en').format('{yyyy}-{MM}-{dd}');
+  function dateString(days) {
+    return moment().subtract("days", days).format('YYYY-MM-DD');
   }
 
   function reportWithData(data) {
     var arr = [];
-    data.each(function(val, index) {
-      arr.push({x: dateString(index + ' days ago'), y: val});
+    _.each(data,function(val,index) {
+      arr.push({x: dateString(index), y: val});
     });
     return Discourse.Report.create({ type: 'topics', data: arr });
   }

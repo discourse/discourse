@@ -38,11 +38,11 @@ class Group < ActiveRecord::Base
 
     real_ids = case name
                when :admins
-                 "SELECT u.id FROM users u WHERE u.admin = 't'"
+                 "SELECT u.id FROM users u WHERE u.admin"
                when :moderators
-                 "SELECT u.id FROM users u WHERE u.moderator = 't'"
+                 "SELECT u.id FROM users u WHERE u.moderator"
                when :staff
-                 "SELECT u.id FROM users u WHERE u.moderator = 't' OR u.admin = 't'"
+                 "SELECT u.id FROM users u WHERE u.moderator OR u.admin"
                when :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4, :trust_level_5
                  "SELECT u.id FROM users u WHERE u.trust_level = #{id-10}"
                end
@@ -70,7 +70,7 @@ class Group < ActiveRecord::Base
 
   def self.refresh_automatic_groups!(*args)
     if args.length == 0
-      args = AUTO_GROUPS.map{|k,v| k}
+      args = AUTO_GROUPS.keys
     end
     args.each do |group|
       refresh_automatic_group!(group)
@@ -156,3 +156,20 @@ class Group < ActiveRecord::Base
   end
 
 end
+
+# == Schema Information
+#
+# Table name: groups
+#
+#  id         :integer          not null, primary key
+#  name       :string(255)      not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  automatic  :boolean          default(FALSE), not null
+#  user_count :integer          default(0), not null
+#
+# Indexes
+#
+#  index_groups_on_name  (name) UNIQUE
+#
+

@@ -29,3 +29,19 @@ class CategoryFeaturedUser < ActiveRecord::Base
   end
 
 end
+
+# == Schema Information
+#
+# Table name: category_featured_users
+#
+#  id          :integer          not null, primary key
+#  category_id :integer
+#  user_id     :integer
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#
+# Indexes
+#
+#  index_category_featured_users_on_category_id_and_user_id  (category_id,user_id) UNIQUE
+#
+

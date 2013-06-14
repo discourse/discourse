@@ -27,7 +27,11 @@ Discourse.AdminSiteContentEditRoute = Discourse.Route.extend({
 
   setupController: function(controller, model) {
     controller.set('loaded', false);
-    controller.setProperties({saving: false, saved: false});
+    controller.setProperties({
+      model: model,
+      saving: false,
+      saved: false
+    });
 
     Discourse.SiteContent.find(Em.get(model, 'content_type')).then(function (sc) {
       controller.set('content', sc);

@@ -14,7 +14,8 @@
     { "path": "lib" },
     { "path": "script" },
     { "path": "cookbooks" },
-    { "path": "spec" }
+    { "path": "spec" },
+    { "path": "test" }
   ],
   "settings":
   {

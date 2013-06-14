@@ -19,3 +19,5 @@ Discourse.AutoCloseFormView = Ember.View.extend({
     }
   }.observes('autoCloseDays')
 });
+
+Discourse.View.registerHelper('autoCloseForm', Discourse.AutoCloseFormView);

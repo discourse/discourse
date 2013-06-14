@@ -1,4 +1,6 @@
 require 'spec_helper'
+require_dependency 'site_setting'
+require_dependency 'site_setting_extension'
 
 describe SiteSetting do
 
@@ -85,7 +87,7 @@ describe SiteSetting do
     end
 
     context "when overridden" do
-      after :each do 
+      after :each do
         SiteSetting.remove_override!(:test_hello?)
       end
 
@@ -110,6 +112,35 @@ describe SiteSetting do
         SiteSetting.setting(:test_hello?, false)
         SiteSetting.refresh!
         SiteSetting.test_hello?.should_not == false
+      end
+    end
+  end
+
+  describe 'enum setting' do
+    before :all do
+      @enum_class = Class.new
+      SiteSetting.setting(:test_enum, 'en', enum: @enum_class)
+      SiteSetting.refresh!
+    end
+
+    it 'should have the correct default' do
+      expect(SiteSetting.test_enum).to eq('en')
+    end
+
+    context 'when overridden' do
+      after :each do
+        SiteSetting.remove_override!(:test_enum)
+      end
+
+      it 'stores valid values' do
+        @enum_class.expects(:valid_value?).with('fr').returns(true)
+        SiteSetting.test_enum = 'fr'
+        expect(SiteSetting.test_enum).to eq('fr')
+      end
+
+      it 'rejects invalid values' do
+        @enum_class.expects(:valid_value?).with('gg').returns(false)
+        expect { SiteSetting.test_enum = 'gg' }.to raise_error(Discourse::InvalidParameters)
       end
     end
   end
@@ -146,7 +177,7 @@ describe SiteSetting do
 
   describe 'topic_title_length' do
     it 'returns a range of min/max topic title length' do
-      SiteSetting.topic_title_length.should == 
+      SiteSetting.topic_title_length.should ==
         (SiteSetting.defaults[:min_topic_title_length]..SiteSetting.defaults[:max_topic_title_length])
     end
   end
@@ -156,4 +187,11 @@ describe SiteSetting do
       SiteSetting.post_length.should == (SiteSetting.defaults[:min_post_length]..SiteSetting.defaults[:max_post_length])
     end
   end
+
+  describe 'private_message_title_length' do
+    it 'returns a range of min/max pm topic title length' do
+      expect(SiteSetting.private_message_title_length).to eq(SiteSetting.defaults[:min_private_message_title_length]..SiteSetting.defaults[:max_topic_title_length])
+    end
+  end
+
 end

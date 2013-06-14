@@ -91,7 +91,7 @@
         </tr>
       </thead>
       {{#unless loading}}
-        {{ render 'admin_report_trust_levels' users_by_trust_level }}
+        {{ render 'admin/templates/reports/trust_levels_report' users_by_trust_level tagName="tbody" }}
       {{/unless}}
     </table>
   </div>
@@ -101,6 +101,8 @@
     <span class="value">{{#linkTo 'adminUsersList.admins'}}{{admins}}{{/linkTo}}</span>
     <span class="title"><i class='icon icon-magic'></i> {{i18n admin.dashboard.moderators}}</span>
     <span class="value">{{#linkTo 'adminUsersList.moderators'}}{{moderators}}{{/linkTo}}</span>
+    <span class="title"><i class='icon icon-ban-circle'></i> {{i18n admin.dashboard.blocked}}</span>
+    <span class="value">{{#linkTo 'adminUsersList.blocked'}}{{blocked}}{{/linkTo}}</span>
   </div>
 
   <div class="dashboard-stats">
@@ -162,14 +164,14 @@
         </tr>
       </thead>
       {{#unless loading}}
-        {{ render 'admin_report_visits' visits }}
+        {{ render 'admin/templates/reports/per_day_counts_report' visits tagName="tbody"}}
       {{/unless}}
     </table>
   </div>
 </div>
 
 <div class="dashboard-right">
-  {{ render admin_github_commits githubCommits }}
+  {{ render 'admin/templates/commits' githubCommits }}
 
   <div class="dashboard-stats">
     <table class="table table-condensed table-hover">

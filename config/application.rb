@@ -19,6 +19,7 @@ module Discourse
     # -- all .rb files in that directory are automatically loaded.
 
     require 'discourse'
+    require 'js_locale_helper'
 
     # mocha hates us, active_support/testing/mochaing.rb line 2 is requiring the wrong
     #  require, patched in source, on upgrade remove this
@@ -111,7 +112,11 @@ module Discourse
     # ember stuff only used for asset precompliation, production variant plays up
     config.ember.variant = :development
     config.ember.ember_location = "#{Rails.root}/app/assets/javascripts/external_production/ember.js"
-    config.ember.handlebars_location = "#{Rails.root}/app/assets/javascripts/external/handlebars-1.0.rc.3.js"
+    config.ember.handlebars_location = "#{Rails.root}/app/assets/javascripts/external/handlebars-1.0.rc.4.js"
+
+    # Since we are using strong_parameters, we can disable and remove
+    # attr_accessible.
+    config.active_record.whitelist_attributes = false
 
     # So open id logs somewhere sane
     config.after_initialize do

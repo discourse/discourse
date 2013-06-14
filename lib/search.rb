@@ -8,6 +8,12 @@ class Search
     5
   end
 
+  # Sometimes we want more topics than are returned due to exclusion of dupes. This is the
+  # factor of extra results we'll ask for.
+  def self.burst_factor
+    3
+  end
+
   def self.facets
     %w(topic category user)
   end
@@ -28,7 +34,6 @@ class Search
   end
 
   def initialize(term, opts=nil)
-
     if term.present?
       @term = term.to_s
       @original_term = PG::Connection.escape_string(@term)
@@ -36,6 +41,7 @@ class Search
 
     @opts = opts || {}
     @guardian = @opts[:guardian] || Guardian.new
+    @search_context = @opts[:search_context]
     @limit = Search.per_facet * Search.facets.size
     @results = GroupedSearchResults.new(@opts[:type_filter])
   end
@@ -83,13 +89,10 @@ class Search
       expected_topics = Search.per_facet * Search.facets.size if @results.type_filter == 'topic'
       expected_topics -= @results.topic_count
       if expected_topics > 0
-        topic_ids = @results.topic_ids
-        posts_query(expected_topics * 3).where("post_number > 1").each do |p|
-          if (expected_topics > 0) && (!topic_ids.include?(p.topic_id))
-            @results.add_result(SearchResult.from_post(p))
-            topic_ids << p.topic_id
-            expected_topics -= 1
-          end
+        extra_posts = posts_query(expected_topics * Search.burst_factor)
+        extra_posts = extra_posts.where("posts.topic_id NOT in (?)", @results.topic_ids) if @results.topic_ids.present?
+        extra_posts.each do |p|
+          @results.add_result(SearchResult.from_post(p))
         end
       end
     end
@@ -138,17 +141,30 @@ class Search
                   .where("topics.deleted_at" => nil)
                   .where("topics.visible")
                   .where("topics.archetype <> ?", Archetype.private_message)
-                  .order("TS_RANK_CD(TO_TSVECTOR(#{query_locale}, topics.title), #{ts_query}) DESC")
-                  .order("TS_RANK_CD(post_search_data.search_data, #{ts_query}) DESC")
-                  .order("topics.bumped_at DESC")
-                  .limit(limit)
+
+      # If we have a search context, prioritize those posts first
+      if @search_context.present?
+
+        if @search_context.is_a?(User)
+          # If the context is a user, prioritize that user's posts
+          posts = posts.order("CASE WHEN posts.user_id = #{@search_context.id} THEN 0 ELSE 1 END")
+        elsif @search_context.is_a?(Category)
+          # If the context is a category, restrict posts to that category
+          posts = posts.order("CASE WHEN topics.category_id = #{@search_context.id} THEN 0 ELSE 1 END")
+        end
+
+      end
+
+      posts = posts.order("TS_RANK_CD(TO_TSVECTOR(#{query_locale}, topics.title), #{ts_query}) DESC")
+                   .order("TS_RANK_CD(post_search_data.search_data, #{ts_query}) DESC")
+                   .order("topics.bumped_at DESC")
 
       if secure_category_ids.present?
         posts = posts.where("(categories.id IS NULL) OR (NOT categories.secure) OR (categories.id IN (?))", secure_category_ids)
       else
         posts = posts.where("(categories.id IS NULL) OR (NOT categories.secure)")
       end
-      posts
+      posts.limit(limit)
     end
 
     def query_locale
@@ -164,7 +180,15 @@ class Search
     end
 
     def topic_search
-      posts_query(@limit).where(post_number: 1).each do |p|
+
+      # If we have a user filter, search all posts by default with a higher limit
+      posts = if @search_context.present? and @search_context.is_a?(User)
+        posts_query(@limit * Search.burst_factor)
+      else
+        posts_query(@limit).where(post_number: 1)
+      end
+
+      posts.each do |p|
         @results.add_result(SearchResult.from_post(p))
       end
     end

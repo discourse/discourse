@@ -49,6 +49,7 @@ zh_CN:
   rss_posts_in_topic: "'%{topic}'的RSS内容聚合"
   rss_topics_in_category: "分类'%{category}'中主题的RSS内容聚合"
   author_wrote: "%{author}写道："
+  private_message_abbrev: "私信"
 
   groups:
     default_names:
@@ -100,6 +101,9 @@ zh_CN:
       post:
         raw: "内容"
     errors:
+      messages:
+        is_invalid: "抱歉，您试试写的更明确一些吧"
+        has_already_been_used: "已经被使用"
       models:
         topic:
           attributes:
@@ -376,6 +380,7 @@ zh_CN:
     queue_size_warning: '队列中的任务数为%{queue_size}，任务较多。这可能因为Sidekiq进程出问题导致，或者需要更多的Sidekiq进程。'
     memory_warning: '你的服务器环境内存少于 1GB，我们建议至少要有 1GB 内存'
     facebook_config_warning: '服务器允许使用脸书账号登陆 (enable_facebook_logins), 但是 app id 和 app secret values 没有被设定。 到 <a href="/admin/site_settings">站点设置</a> 更新此设定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">参考设定指南</a>。'
+    cas_config_warning: '服务器允许使用CAS登录 (enable_cas_logins), 但是主机 hostname 和域名 domain name 信息没有被设定。'
     twitter_config_warning: '服务器允许使用推特账号登陆 (enable_twitter_logins), 但是 key 和 secret values 没有被设定。 到 <a href="/admin/site_settings">站点设置</a> 更新此设定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">参考设定指南</a>。'
     github_config_warning: '服务器允许使用GitHub账号登陆  (enable_github_logins), 但是 client id 和 secret values 没有被设定。 到 <a href="/admin/site_settings">站点设置</a> 更新此设定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">参考设定指南</a>。'
     failing_emails_warning: "%{num_failed_jobs}个email任务失败。请检查config/environments/production.rb文件是否正确配置了config.action_mailer。<a href='/sidekiq/retries' target='_blank'>在Sidekiq中查看失败的任务</a>。"
@@ -383,6 +388,7 @@ zh_CN:
     contact_email_missing: "你没有为站点指定一个联系邮箱。请在<a href='/admin/site_settings'>站点设置</a>配置contact_email。"
     contact_email_invalid: "站点联系邮箱不正确。请在<a href='/admin/site_settings'>站点设置</a>修改。"
     title_nag: "站点标题在站点设置中仍为缺省值。请在<a href='/admin/site_settings'>站点设置</a>中将其设置为你的标题。"
+    consumer_email_warning: "您的站点被设置为使用Gmail或者其他客户邮箱服务发送邮件。<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail限制每日邮件发送数量</a>. 请考虑使用其他email服务商来保证邮件的成功发送，例如 mandrill.com。"
 
   content_types:
     education_new_reply:
@@ -400,6 +406,12 @@ zh_CN:
     welcome_invite:
       title: "欢迎：受约用户"
       description: "当新用户通过接受用户邀请加入论坛后，自动发送给他们的欢迎私信。"
+
+    login_required_welcome_message:
+      title: "欢迎信息：请登录"
+      description: "欢迎信息只有'login required'设置项被启用后才会向登出的用户显示"
+
+
     tos_user_content_license:
       title: "服务条款：内容授权"
       description: "服务条款中关于论坛内容授权的相关条款。"
@@ -414,6 +426,8 @@ zh_CN:
     min_topic_title_length: "标题最少字符数"
     max_topic_title_length: "标题最大字符数"
     min_search_term_length: "搜索条件最少字符数"
+    min_private_message_title_length: "私信标题最少字符数"
+    allow_uncategorized_topics: "允许发表未分类的帖子"
     allow_duplicate_topic_titles: "允许主题有相同的标题"
     unique_posts_mins: "几分钟之后才允许一个用户再次发表包含相同内容的帖子"
     enforce_global_nicknames: "强制昵称必须唯一（警告：只在刚刚安装完成时修改此设置）"
@@ -429,10 +443,6 @@ zh_CN:
     queue_jobs: "如果失败队列在排队，使用 Sidekiq 消息引擎对不同的工作排队"
     crawl_images: "允许从第三方获取图片来插入宽、高数值"
     ninja_edit_window: "在多少秒钟之内，对帖子的多次编辑不生成新版本"
-    enable_imgur: "启用 Imgur API 来上传文件，不在本地（站点服务器）保存文件"
-    imgur_client_id: "你的imgur.com的客户端ID，以便图片上传能正常工作。"
-    imgur_client_secret: "你的imgur.com的客户端secret。 目前图片上传功能并不需要这项信息，但是将来的某天可能需要。"
-    imgur_endpoint: "上传图片到 imgur.com 的终点"
     max_image_width: "帖子中图片允许的最大宽度"
     category_featured_topics: "在分类 /categories 页面每个分类显示的主题数目"
     add_rel_nofollow_to_user_content: "添加 rel nofollow 标签到所有提交的用户信息（以防止搜索引擎搜集），除了内部链接（包括父域名）。修改此设置将要求你更新所有已有的 markdown 标签内容"
@@ -441,7 +451,6 @@ zh_CN:
     post_excerpt_maxlength: "帖子摘要的最大字符长度"
     post_onebox_maxlength: "一个 论坛 - Discourse 单厢帖（Onebox post）的最大字符长度"
     category_post_template: "当你创建新分类时，分类的定义帖模板（创建新分类时会自动生成一个属于该分类的新帖子）"
-    new_topics_rollup: "主题列表卷起显示为主题数量前，可以往主题列表中插入多少新主题"
     onebox_max_chars: "从外部网站导入到一个单厢帖（Onebox post）的最大字符数"
 
     logo_url: "你的站点标志图片，例如：http://example.com/logo.png"
@@ -763,19 +772,6 @@ zh_CN:
         - 要搜索，访问你的用户页面或者其他导航内容，点击右上角的那些图标。
 
         - 当阅读一个主题时，你可以通过点击页面顶部的标题回到顶部；要去到 *底部*，点击页面底部的主题浏览进度指示器里的向下箭头，或者点击该主题第一帖下面的汇总信息里的最后一帖区域。
-
-    welcome_approved:
-      subject_template: "你已经获得了 %{site_name} 的批准！"
-      text_body_template: |
-        恭喜你！
-
-        你已经被批准加入 %{site_name}，欢迎来到我们论坛参与讨论！
-
-        %{new_user_tips}
-
-        我们始终相信 [文明的社会行为](%{base_url}/faq)。
-
-        好好享受你在论坛的时光吧！
 
     welcome_user:
       subject_template: "欢迎来到 %{site_name}！"

@@ -26,10 +26,10 @@
   {{#with selectedItem}}
     {{textField class="style-name" value=name}}
     {{#if view.headerActive}}
-      {{view Discourse.AceEditorView contentBinding="header" mode="html"}}
+      {{aceEditor content=header mode="html"}}
     {{/if}}
     {{#if view.stylesheetActive}}
-      {{view Discourse.AceEditorView contentBinding="stylesheet" mode="css"}}
+      {{aceEditor content=stylesheet mode="css"}}
     {{/if}}
   {{/with}}
   <br>

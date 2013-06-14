@@ -1,6 +1,6 @@
 # Developing under OS X Without Vagrant
 
-These instructions assume you have read and understood the **[Discourse Advanced Developer Install Guide](https://github.com/discourse/discourse/blob/master/docs/DEVELOPER-ADVANCED.md)**. 
+These instructions assume you have read and understood the **[Discourse Advanced Developer Install Guide](DEVELOPER-ADVANCED.md)**.
 
 OS X has become a popular platform for developing Ruby on Rails applications; as such, if you run OS X, you might find it more congenial to work on **[Discourse](http://discourse.org)** in your native environment. These instructions should get you there.
 
@@ -140,7 +140,7 @@ Homebrew loves you.
 
 ## Now, test it out!
 
-Copy `config/database.yml.sample` and `config/redis.yml.sample` to `config/database.yml` and `config/redis.yml` and input the correct values to point to your postgres and redis instances. If you stuck to all the defaults above, chances are the samples will work out of the box!
+Copy `config/database.yml.development-sample` and `config/redis.yml.sample` to `config/database.yml` and `config/redis.yml` and input the correct values to point to your postgres and redis instances. If you stuck to all the defaults above, chances are the samples will work out of the box!
 
     bundle install # Yes, this DOES take a while. No, it's not really cloning all of rubygems :-)
     rake db:migrate

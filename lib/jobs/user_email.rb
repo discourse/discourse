@@ -1,4 +1,4 @@
-require_dependency 'email_sender'
+require_dependency 'email/sender'
 
 module Jobs
 
@@ -27,40 +27,27 @@ module Jobs
         post = Post.where(id: args[:post_id]).first
         return unless post.present?
 
-        # Topic may be deleted
-        return unless post.topic
-
-        # Don't email posts that were deleted
-        return if post.user_deleted?
-
-        # Don't send the email if the user has read the post
-        return if PostTiming.where(topic_id: post.topic_id, post_number: post.post_number, user_id: user.id).present?
-
         email_args[:post] = post
       end
 
       email_args[:email_token] = args[:email_token] if args[:email_token].present?
 
-
       notification = nil
       notification = Notification.where(id: args[:notification_id]).first if args[:notification_id].present?
-
       if notification.present?
 
         # Don't email a user about a post when we've seen them recently.
         return if seen_recently
 
         # Load the post if present
-        if notification.post.present?
-          # Don't email a user if the topic has been deleted
-          return unless notification.post.topic.present?
-          email_args[:post] ||= notification.post
-        end
+        email_args[:post] ||= notification.post
         email_args[:notification] = notification
 
         # Don't send email if the notification this email is about has already been read
         return if notification.read?
       end
+
+      return if skip_email_for_post(email_args[:post], user)
 
       # Make sure that mailer exists
       raise Discourse::InvalidParameters.new(:type) unless UserNotifications.respond_to?(args[:type])
@@ -72,8 +59,17 @@ module Jobs
         message.to = [args[:to_address]]
       end
 
-      EmailSender.new(message, args[:type], user).send
+      Email::Sender.new(message, args[:type], user).send
+    end
 
+    private
+
+    # If this email has a related post, don't send an email if it's been deleted or seen recently.
+    def skip_email_for_post(post, user)
+      post &&
+      (post.topic.blank? ||
+       post.user_deleted? ||
+       PostTiming.where(topic_id: post.topic_id, post_number: post.post_number, user_id: user.id).present?)
     end
 
   end

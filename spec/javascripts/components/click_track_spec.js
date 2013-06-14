@@ -79,14 +79,16 @@ describe("Discourse.ClickTrack", function() {
   describe("badges", function() {
 
     it("does not update badge clicks on my own link", function() {
+      spyOn(Discourse.User, 'current').andReturn(314);
       spyOn(Discourse, "get").andReturn(314);
+
       track(generateClickEventOn('#with-badge'));
       var $badge = $('span.badge', $('#with-badge').first());
       expect(parseInt($badge.html(), 10)).toEqual(1);
     });
 
     it("does not update badge clicks on links in my own post", function() {
-      spyOn(Discourse, "get").andReturn(3141);
+      spyOn(Discourse.User, 'current').andReturn(3141);
       track(generateClickEventOn('#with-badge-but-not-mine'));
       var $badge = $('span.badge', $('#with-badge-but-not-mine').first());
       expect(parseInt($badge.html(), 10)).toEqual(1);
@@ -200,12 +202,11 @@ describe("Discourse.ClickTrack", function() {
 
     it("in another window", function() {
       // spies
-      spyOn(Discourse, 'get').andReturn(true);
+      spyOn(Discourse.User, 'current').andReturn(true);
       spyOn(window, 'open').andCallFake(function() { return { focus: function() {} } });
       spyOn(window, 'focus');
       // test
       expect(track(clickEvent)).toBe(false);
-      expect(Discourse.get).toHaveBeenCalledWith('currentUser.external_links_in_new_tab');
       expect(window.open).toHaveBeenCalledWith('/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=42', '_blank');
     });
 

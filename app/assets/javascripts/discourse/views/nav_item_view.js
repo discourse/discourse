@@ -10,30 +10,31 @@ Discourse.NavItemView = Discourse.View.extend({
   tagName: 'li',
   classNameBindings: ['isActive', 'content.hasIcon:has-icon'],
   attributeBindings: ['title'],
+  countBinding: Ember.Binding.oneWay('content.count'),
 
-  title: (function() {
+  title: function() {
     var categoryName, extra, name;
     name = this.get('content.name');
     categoryName = this.get('content.categoryName');
     if (categoryName) {
-      extra = {
-        categoryName: categoryName
-      };
+      extra = { categoryName: categoryName };
       name = "category";
     }
     return Ember.String.i18n("filters." + name + ".help", extra);
-  }).property("content.filter"),
+  }.property("content.filter"),
 
-  isActive: (function() {
-    if (this.get("content.name") === this.get("controller.filterMode")) return "active";
+  isActive: function() {
+    if (this.get("content.name").replace(' ','-') === this.get("controller.filterMode")) return "active";
     return "";
-  }).property("content.name", "controller.filterMode"),
+  }.property("content.name", "controller.filterMode"),
 
-  hidden: (function() {
-    return !this.get('content.visible');
-  }).property('content.visible'),
+  hidden: Em.computed.not('content.visible'),
 
-  name: (function() {
+  countChanged: function(){
+    this.rerender();
+  }.observes('count'),
+
+  name: function() {
     var categoryName, extra, name;
     name = this.get('content.name');
     categoryName = this.get('content.categoryName');
@@ -42,20 +43,19 @@ Discourse.NavItemView = Discourse.View.extend({
     };
     if (categoryName) {
       name = 'category';
-      extra.categoryName = categoryName.capitalize();
+      extra.categoryName = Discourse.Formatter.toTitleCase(categoryName);
     }
     return I18n.t("js.filters." + name + ".title", extra);
-  }).property('count'),
+  }.property('count'),
 
   render: function(buffer) {
-    var content;
-    content = this.get('content');
-    buffer.push("<a href='" + (content.get('href')) + "'>");
+    var content = this.get('content');
+    buffer.push("<a href='" + content.get('href') + "'>");
     if (content.get('hasIcon')) {
-      buffer.push("<span class='" + (content.get('name')) + "'></span>");
+      buffer.push("<span class='" + content.get('name') + "'></span>");
     }
     buffer.push(this.get('name'));
-    return buffer.push("</a>");
+    buffer.push("</a>");
   }
 
 });

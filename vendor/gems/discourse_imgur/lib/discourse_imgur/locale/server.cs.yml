@@ -1,0 +1,5 @@
+cs:
+  site_settings:
+    enable_imgur: "Používat imgur pro ukládání obrázků, nehostovat obrázky lokálně"
+    imgur_client_id: "Přístupový klíč 'client ID' pro imgur.com - vyžadováno pro upload obrázků"
+    imgur_client_secret: "Přístupový klíč 'client secret' pro imgur.com - vyžadováno pro upload obrázků"

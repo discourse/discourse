@@ -28,6 +28,10 @@ Discourse.User = Discourse.Model.extend({
     return Discourse.Utilities.avatarUrl(this.get('username'), 'small', this.get('avatar_template'));
   }).property('username'),
 
+  searchContext: function() {
+    return ({ type: 'user', id: this.get('username_lower'), user: this });
+  }.property('username_lower'),
+
   /**
     This user's website.
 
@@ -92,7 +96,7 @@ Discourse.User = Discourse.Model.extend({
     @type {Integer}
   **/
   trustLevel: function() {
-    return Discourse.get('site.trust_levels').findProperty('id', this.get('trust_level'));
+    return Discourse.Site.instance().get('trust_levels').findProperty('id', this.get('trust_level'));
   }.property('trust_level'),
 
   /**
@@ -156,8 +160,8 @@ Discourse.User = Discourse.Model.extend({
       type: 'PUT'
     }).then(function(data) {
       user.set('bio_excerpt',data.user.bio_excerpt);
-      Discourse.set('currentUser.enable_quoting', user.get('enable_quoting'));
-      Discourse.set('currentUser.external_links_in_new_tab', user.get('external_links_in_new_tab'));
+      Discourse.User.current().set('enable_quoting', user.get('enable_quoting'));
+      Discourse.User.current().set('external_links_in_new_tab', user.get('external_links_in_new_tab'));
     });
   },
 
@@ -205,9 +209,11 @@ Discourse.User = Discourse.Model.extend({
   **/
   statsCountNonPM: function() {
     if (this.blank('statsExcludingPms')) return 0;
-    return this.get('statsExcludingPms').getEach('count').reduce(function (accum, val) {
-      return accum + val;
+    var count = 0;
+    _.each(this.get('statsExcludingPms'), function(val) {
+      count += val.count;
     });
+    return count;
   }.property('statsExcludingPms.@each.count'),
 
   /**
@@ -238,10 +244,14 @@ Discourse.User = Discourse.Model.extend({
     return PreloadStore.getAndRemove("user_" + user.get('username'), function() {
       return Discourse.ajax("/users/" + user.get('username') + '.json');
     }).then(function (json) {
-      json.user.stats = Discourse.User.groupStats(json.user.stats.map(function(s) {
+      json.user.stats = Discourse.User.groupStats(_.map(json.user.stats,function(s) {
         if (s.count) s.count = parseInt(s.count, 10);
         return Discourse.UserActionStat.create(s);
       }));
+
+      if (json.user.invited_by) {
+        json.user.invited_by = Discourse.User.create(json.user.invited_by);
+      }
 
       user.setProperties(json.user);
       return user;
@@ -254,7 +264,7 @@ Discourse.User = Discourse.Model.extend({
     }
 
     var stream = Discourse.UserStream.create({
-      totalItems: 0,
+      itemsLoaded: 0,
       content: [],
       filter: filter,
       user: this
@@ -267,6 +277,46 @@ Discourse.User = Discourse.Model.extend({
 });
 
 Discourse.User.reopenClass({
+
+  /**
+    Returns the currently logged in user
+
+    @method current
+    @param {String} optional property to return from the user if the user exists
+    @returns {Discourse.User} the logged in user
+  **/
+  current: function(property) {
+    if (!this.currentUser) {
+      var userJson = PreloadStore.get('currentUser');
+      if (userJson) {
+        this.currentUser = Discourse.User.create(userJson);
+      }
+    }
+
+    // If we found the current user
+    if (this.currentUser && property) {
+      return this.currentUser.get(property);
+    }
+
+    return this.currentUser;
+  },
+
+  /**
+    Logs out the currently logged in user
+
+    @method logout
+    @returns {Promise} resolved when the logout finishes
+  **/
+  logout: function() {
+    var discourseUserClass = this;
+    return Discourse.ajax("/session/" + Discourse.User.current('username'), {
+      type: 'DELETE'
+    }).then(function () {
+      discourseUserClass.currentUser = null;
+    });
+  },
+
+
   /**
     Checks if given username is valid for this email address
 

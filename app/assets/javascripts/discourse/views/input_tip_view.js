@@ -7,7 +7,6 @@
   @module Discourse
 **/
 Discourse.InputTipView = Discourse.View.extend({
-  templateName: 'input_tip',
   classNameBindings: [':tip', 'good', 'bad'],
 
   good: function() {
@@ -31,4 +30,4 @@ Discourse.InputTipView = Discourse.View.extend({
   }
 });
 
-
+Discourse.View.registerHelper('inputTip', Discourse.InputTipView);

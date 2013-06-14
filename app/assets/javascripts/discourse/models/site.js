@@ -8,21 +8,17 @@
 **/
 Discourse.Site = Discourse.Model.extend({
 
-  notificationLookup: (function() {
-    var result;
-    result = [];
-    Object.keys(this.get('notification_types'), function(k, v) {
+  notificationLookup: function() {
+    var result = [];
+    _.each(this.get('notification_types'), function(v,k) {
       result[v] = k;
     });
     return result;
-  }).property('notification_types'),
+  }.property('notification_types'),
 
   flagTypes: function() {
-    var postActionTypes;
-    postActionTypes = this.get('post_action_types');
-    if (!postActionTypes) {
-      return [];
-    }
+    var postActionTypes = this.get('post_action_types');
+    if (!postActionTypes) return [];
     return postActionTypes.filterProperty('is_flag', true);
   }.property('post_action_types.@each'),
 
@@ -37,29 +33,36 @@ Discourse.Site = Discourse.Model.extend({
 });
 
 Discourse.Site.reopenClass({
+
+  instance: function() {
+    return Discourse.Site.create(PreloadStore.get('site'));
+  },
+
   create: function(obj) {
     var _this = this;
-    return Object.tap(this._super(obj), function(result) {
-      if (result.categories) {
-        result.categories = result.categories.map(function(c) {
-          return Discourse.Category.create(c);
-        });
-      }
-      if (result.post_action_types) {
-        result.postActionByIdLookup = Em.Object.create();
-        result.post_action_types = result.post_action_types.map(function(p) {
-          var actionType;
-          actionType = Discourse.PostActionType.create(p);
-          result.postActionByIdLookup.set("action" + p.id, actionType);
-          return actionType;
-        });
-      }
-      if (result.archetypes) {
-        result.archetypes = result.archetypes.map(function(a) {
-          return Discourse.Archetype.create(a);
-        });
-      }
-    });
+    var result = this._super(obj);
+
+    if (result.categories) {
+      result.categories = _.map(result.categories, function(c) {
+        return Discourse.Category.create(c);
+      });
+    }
+    if (result.post_action_types) {
+      result.postActionByIdLookup = Em.Object.create();
+      result.post_action_types = _.map(result.post_action_types,function(p) {
+        var actionType;
+        actionType = Discourse.PostActionType.create(p);
+        result.postActionByIdLookup.set("action" + p.id, actionType);
+        return actionType;
+      });
+    }
+    if (result.archetypes) {
+      result.archetypes = _.map(result.archetypes,function(a) {
+        return Discourse.Archetype.create(a);
+      });
+    }
+
+    return result;
   }
 });
 

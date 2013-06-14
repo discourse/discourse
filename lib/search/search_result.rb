@@ -12,7 +12,7 @@ class Search
     def initialize(row)
       row.symbolize_keys!
       @type = row[:type].to_sym
-      @url, @id, @title = row[:url], row[:id].to_i, row[:title]
+      @url, @id, @title = row[:url], row[:id], row[:title]
     end
 
     def as_json

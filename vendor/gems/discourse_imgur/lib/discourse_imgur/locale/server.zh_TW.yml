@@ -1,0 +1,5 @@
+zh_TW:
+	site_settings:
+    enable_imgur: "啓用 Imgur API 來上傳文件，不在本地（站點服務器）保存文件"
+    imgur_client_id: "你的imgur.com的客戶端ID，以便圖片上傳能正常工作。"
+    imgur_client_secret: "你的imgur.com的客戶端secret。 目前圖片上傳功能並不需要這項信息，但是將來的某天可能需要。"

@@ -23,10 +23,10 @@ Discourse.Presence = Em.Mixin.create({
     if (!prop) return true;
 
     switch (typeof prop) {
-      case "string":
-        return prop.trim().isBlank();
-      case "object":
-        return Object.isEmpty(prop);
+    case "string":
+      return prop.trim().length === 0;
+    case "object":
+      return $.isEmptyObject(prop);
     }
     return false;
   },

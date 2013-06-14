@@ -3,7 +3,7 @@ rvm:
   - 1.9.3
   - 2.0.0
 before_script:
-  - cp config/database.yml.sample config/database.yml
+  - cp config/database.yml.development-sample config/database.yml
   - cp config/redis.yml.sample config/redis.yml
   - psql -c 'create database discourse_test;' -U postgres
   - rake db:migrate

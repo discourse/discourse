@@ -69,8 +69,8 @@ Discourse.MessageBus = (function() {
           return;
         }
         data = {};
-        callbacks.each(function(c) {
-          data[c.channel] = c.last_id === void 0 ? -1 : c.last_id;
+        _.each(callbacks, function(callback) {
+          data[callback.channel] = callback.last_id === void 0 ? -1 : callback.last_id;
         });
         gotData = false;
         _this.longPoll = $.ajax(Discourse.getURL("/message-bus/") + clientId + "/poll?" + (!shouldLongPoll() || !_this.enableLongPolling ? "dlp=t" : ""), {
@@ -83,9 +83,9 @@ Discourse.MessageBus = (function() {
           },
           success: function(messages) {
             failCount = 0;
-            return messages.each(function(message) {
+            _.each(messages,function(message) {
               gotData = true;
-              return callbacks.each(function(callback) {
+              _.each(callbacks, function(callback) {
                 if (callback.channel === message.channel) {
                   callback.last_id = message.message_id;
                   callback.func(message.data);
@@ -139,11 +139,11 @@ Discourse.MessageBus = (function() {
     unsubscribe: function(channel) {
       // TODO proper globbing
       var glob;
-      if (channel.endsWith("*")) {
+      if (channel.indexOf("*", channel.length - 1) !== -1) {
         channel = channel.substr(0, channel.length - 1);
         glob = true;
       }
-      callbacks = callbacks.filter(function(callback) {
+      callbacks = $.grep(callbacks,function(callback) {
         if (glob) {
           return callback.channel.substr(0, channel.length) !== channel;
         } else {

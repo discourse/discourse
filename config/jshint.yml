@@ -10,6 +10,7 @@ paths:
   - app/assets/javascripts/**/*.js
   - spec/javascripts/**/*.js
   - spec/phantom_js/**/*.js
+  - test/javascripts/**/*.js
 
 exclude_paths:
   - app/assets/javascripts/external/*
@@ -38,6 +39,7 @@ strict:   false     # true if the ES5 "use strict"; pragma is required
 undef:    true      # true if variables must be declared before used
 white:    false     # true if strict whitespace rules apply (see also 'indent' option)
 eqnull:   false
+onecase:  true     # allow for one case switches, can be more elegant sometimes
 
 # "allow" type options (false means potentially more warnings)
 
@@ -73,6 +75,8 @@ predef:
   - Handlebars
   - I18n
   - bootbox
+  - moment
+  - _
 
 browser:  true      # true if the standard browser globals should be predefined
 rhino:    false     # true if the Rhino environment globals should be predefined

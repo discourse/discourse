@@ -104,9 +104,6 @@
 }
 
 #reply-control {
-  .requirements-not-met {
-    background-color: rgba(255, 0, 0, 0.12);
-  }
   .toggle-preview, #draft-status, #image-uploading {
     position: absolute;
     bottom: -31px;
@@ -325,6 +322,20 @@
       bottom: 8px;
     }
   }
+  .title-input, .category-input {
+    position: relative;
+    display: inline;
+  }
+  .title-input .popup-tip {
+    width: 300px;
+    left: -8px;
+    margin-top: 8px;
+  }
+  .category-input .popup-tip {
+    width: 240px;
+    left: 432px;
+    top: -7px;
+  }
 }
 
 .reply-to {
@@ -450,6 +461,10 @@ div.ac-wrap {
     .textarea-wrapper {
       padding-right: 5px;
       float: left;
+      .popup-tip {
+        margin-top: 3px;
+        right: 4px;
+      }
     }
     .preview-wrapper {
       padding-left: 5px;

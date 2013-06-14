@@ -24,10 +24,10 @@ Discourse.UserStream = Discourse.Model.extend({
 
     var stream = this;
     return Discourse.ajax(url, {cache: 'false'}).then( function(result) {
-      if (result && result.user_actions && result.user_actions.each) {
+      if (result && result.user_actions) {
         var copy = Em.A();
-        result.user_actions.each(function(i) {
-          return copy.pushObject(Discourse.UserAction.create(i));
+        _.each(result.user_actions,function(action) {
+          copy.pushObject(Discourse.UserAction.create(action));
         });
         copy = Discourse.UserAction.collapseStream(copy);
         stream.get('content').pushObjects(copy);

@@ -4,9 +4,12 @@ require_dependency 'trust_level'
 require_dependency 'pbkdf2'
 require_dependency 'summarize'
 require_dependency 'discourse'
+require_dependency 'post_destroyer'
+require_dependency 'user_name_suggester'
+require_dependency 'roleable'
 
 class User < ActiveRecord::Base
-  attr_accessible :name, :username, :password, :email, :bio_raw, :website
+  include Roleable
 
   has_many :posts
   has_many :notifications
@@ -27,6 +30,7 @@ class User < ActiveRecord::Base
 
   has_one :twitter_user_info, dependent: :destroy
   has_one :github_user_info, dependent: :destroy
+  has_one :cas_user_info, dependent: :destroy
   belongs_to :approved_by, class_name: 'User'
 
   has_many :group_users
@@ -57,9 +61,7 @@ class User < ActiveRecord::Base
   # This is just used to pass some information into the serializer
   attr_accessor :notification_channel_position
 
-  scope :admins, ->{ where(admin: true) }
-  scope :moderators, ->{ where(moderator: true) }
-  scope :staff, ->{ where("moderator = 't' or admin = 't'") }
+  scope :blocked, -> { where(blocked: true) } # no index
 
   module NewTopicDuration
     ALWAYS = -1
@@ -70,45 +72,12 @@ class User < ActiveRecord::Base
     3..15
   end
 
-  def self.sanitize_username!(name)
-    name.gsub!(/^[^[:alnum:]]+|\W+$/, "")
-    name.gsub!(/\W+/, "_")
-  end
-
-
-  def self.find_available_username_based_on(name)
-    sanitize_username!(name)
-    name = rightsize_username(name)
-    i = 1
-    attempt = name
-    until username_available?(attempt)
-      suffix = i.to_s
-      max_length = User.username_length.end - suffix.length - 1
-      attempt = "#{name[0..max_length]}#{suffix}"
-      i += 1
-    end
-    attempt
+  def self.username_available?(username)
+    lower = username.downcase
+    User.where(username_lower: lower).blank?
   end
 
   EMAIL = %r{([^@]+)@([^\.]+)}
-
-  def self.suggest_username(name)
-    return unless name.present?
-
-    if name =~ EMAIL
-      # When 'walter@white.com' take 'walter'
-      name = Regexp.last_match[1]
-
-      # When 'me@eviltrout.com' take 'eviltrout'
-      name = Regexp.last_match[2] if ['i', 'me'].include?(name)
-    end
-
-    find_available_username_based_on(name)
-  end
-
-  def self.rightsize_username(name)
-    name.ljust(username_length.begin, '1')[0,username_length.end]
-  end
 
   def self.new_from_params(params)
     user = User.new
@@ -120,7 +89,7 @@ class User < ActiveRecord::Base
   end
 
   def self.create_for_email(email, opts={})
-    username = suggest_username(email)
+    username = UserNameSuggester.suggest(email)
 
     if SiteSetting.call_discourse_hub?
       begin
@@ -146,18 +115,6 @@ class User < ActiveRecord::Base
     user
   end
 
-  def self.username_available?(username)
-    lower = username.downcase
-    User.where(username_lower: lower).blank?
-  end
-
-  def self.username_valid?(username)
-    u = User.new(username: username)
-    u.username_format_validator
-    u.errors[:username].blank?
-  end
-
-
   def self.suggest_name(email)
     return "" unless email
     name = email.split(/[@\+]/)[0]
@@ -177,34 +134,6 @@ class User < ActiveRecord::Base
     lower_user = username_or_email.downcase
     lower_email = Email.downcase(username_or_email)
     where("username_lower = :user or lower(username) = :user or email = :email or lower(name) = :user", user: lower_user, email: lower_email)
-  end
-
-
-  def save_and_refresh_staff_groups!
-    transaction do
-      self.save!
-      Group.refresh_automatic_groups!(:admins,:moderators,:staff)
-    end
-  end
-
-  def grant_moderation!
-    self.moderator = true
-    save_and_refresh_staff_groups!
-  end
-
-  def revoke_moderation!
-    self.moderator = false
-    save_and_refresh_staff_groups!
-  end
-
-  def grant_admin!
-    self.admin = true
-    save_and_refresh_staff_groups!
-  end
-
-  def revoke_admin!
-    self.admin = false
-    save_and_refresh_staff_groups!
   end
 
   def enqueue_welcome_message(message_type)
@@ -252,7 +181,8 @@ class User < ActiveRecord::Base
     self.approved = true
     self.approved_by = approved_by
     self.approved_at = Time.now
-    enqueue_welcome_message('welcome_approved') if save
+
+    send_approval_email if save
   end
 
   def self.email_hash(email)
@@ -273,7 +203,6 @@ class User < ActiveRecord::Base
     super
   end
 
-
   def unread_private_messages
     @unread_pms ||= notifications.where("read = false AND notification_type = ?", Notification.types[:private_message]).count
   end
@@ -284,29 +213,20 @@ class User < ActiveRecord::Base
 
   def saw_notification_id(notification_id)
     User.update_all ["seen_notification_id = ?", notification_id],
-      ["seen_notification_id < ?", notification_id]
+                    ["seen_notification_id < ?", notification_id]
   end
 
   def publish_notifications_state
     MessageBus.publish("/notification/#{id}",
-        { unread_notifications: unread_notifications,
-          unread_private_messages: unread_private_messages },
-        user_ids: [id] # only publish the notification to this user
-      )
+                       {unread_notifications: unread_notifications,
+                        unread_private_messages: unread_private_messages},
+                       user_ids: [id] # only publish the notification to this user
+    )
   end
 
   # A selection of people to autocomplete on @mention
   def self.mentionable_usernames
     User.select(:username).order('last_posted_at desc').limit(20)
-  end
-
-  # any user that is either a moderator or an admin
-  def staff?
-    admin || moderator
-  end
-
-  def regular?
-    !staff?
   end
 
   def password=(password)
@@ -361,7 +281,7 @@ class User < ActiveRecord::Base
         previous_visit_at = last_seen_at
         update_column(:previous_visit_at, previous_visit_at)
       end
-      update_column(:last_seen_at,  now)
+      update_column(:last_seen_at, now)
     end
   end
 
@@ -429,20 +349,21 @@ class User < ActiveRecord::Base
   end
 
   def bio_excerpt
-    PrettyText.excerpt(bio_cooked, 350)
+    excerpt = PrettyText.excerpt(bio_cooked, 350)
+    return excerpt if excerpt.blank? || has_trust_level?(:basic)
+    PrettyText.strip_links(excerpt)
+  end
+
+  def bio_processed
+    return bio_cooked if bio_cooked.blank? || has_trust_level?(:basic)
+    PrettyText.strip_links(bio_cooked)
   end
 
   def delete_all_posts!(guardian)
     raise Discourse::InvalidAccess unless guardian.can_delete_all_posts? self
 
     posts.order("post_number desc").each do |p|
-      if p.post_number == 1
-        p.topic.trash!
-        # TODO: But the post is not destroyed. Why?
-      else
-        # TODO: This should be using the PostDestroyer!
-        p.trash!
-      end
+      PostDestroyer.new(guardian.user, p).destroy
     end
   end
 
@@ -504,12 +425,12 @@ class User < ActiveRecord::Base
   def treat_as_new_topic_start_date
     duration = new_topic_duration_minutes || SiteSetting.new_topic_duration_minutes
     case duration
-    when User::NewTopicDuration::ALWAYS
-      created_at
-    when User::NewTopicDuration::LAST_VISIT
-      previous_visit_at || created_at
-    else
-      duration.minutes.ago
+      when User::NewTopicDuration::ALWAYS
+        created_at
+      when User::NewTopicDuration::LAST_VISIT
+        previous_visit_at || created_at
+      else
+        duration.minutes.ago
     end
   end
 
@@ -547,7 +468,7 @@ class User < ActiveRecord::Base
 
   def update_topic_reply_count
     self.topic_reply_count =
-      Topic
+        Topic
         .where(['id in (
               SELECT topic_id FROM posts p
               JOIN topics t2 ON t2.id = p.topic_id
@@ -560,7 +481,7 @@ class User < ActiveRecord::Base
 
   def secure_category_ids
     cats = self.staff? ? Category.select(:id).where(secure: true) : secure_categories.select('categories.id')
-    cats.map{|c| c.id}.sort
+    cats.map { |c| c.id }.sort
   end
 
   # Flag all posts from a user as spam
@@ -575,86 +496,154 @@ class User < ActiveRecord::Base
     end
   end
 
+
   protected
 
-    def cook
-      if bio_raw.present?
-        self.bio_cooked = PrettyText.cook(bio_raw) if bio_raw_changed?
-      else
-        self.bio_cooked = nil
+  def cook
+    if bio_raw.present?
+      self.bio_cooked = PrettyText.cook(bio_raw) if bio_raw_changed?
+    else
+      self.bio_cooked = nil
+    end
+  end
+
+  def update_tracked_topics
+    return unless auto_track_topics_after_msecs_changed?
+
+    where_conditions = {notifications_reason_id: nil, user_id: id}
+    if auto_track_topics_after_msecs < 0
+      TopicUser.update_all({notification_level: TopicUser.notification_levels[:regular]}, where_conditions)
+    else
+      TopicUser.update_all(["notification_level = CASE WHEN total_msecs_viewed < ? THEN ? ELSE ? END",
+                            auto_track_topics_after_msecs, TopicUser.notification_levels[:regular], TopicUser.notification_levels[:tracking]], where_conditions)
+    end
+  end
+
+
+  def create_email_token
+    email_tokens.create(email: email)
+  end
+
+  def ensure_password_is_hashed
+    if @raw_password
+      self.salt = SecureRandom.hex(16)
+      self.password_hash = hash_password(@raw_password, salt)
+    end
+  end
+
+  def hash_password(password, salt)
+    Pbkdf2.hash_password(password, salt, Rails.configuration.pbkdf2_iterations)
+  end
+
+  def add_trust_level
+    # there is a possiblity we did not load trust level column, skip it
+    return unless has_attribute? :trust_level
+    self.trust_level ||= SiteSetting.default_trust_level
+  end
+
+  def update_username_lower
+    self.username_lower = username.downcase
+  end
+
+  def username_validator
+    username_format_validator || begin
+      lower = username.downcase
+      if username_changed? && User.where(username_lower: lower).exists?
+        errors.add(:username, I18n.t(:'user.username.unique'))
       end
     end
+  end
 
-    def update_tracked_topics
-      return unless auto_track_topics_after_msecs_changed?
-
-      where_conditions = {notifications_reason_id: nil, user_id: id}
-      if auto_track_topics_after_msecs < 0
-        TopicUser.update_all({notification_level: TopicUser.notification_levels[:regular]}, where_conditions)
-      else
-        TopicUser.update_all(["notification_level = CASE WHEN total_msecs_viewed < ? THEN ? ELSE ? END",
-                              auto_track_topics_after_msecs, TopicUser.notification_levels[:regular], TopicUser.notification_levels[:tracking]], where_conditions)
+  def email_validator
+    if (setting = SiteSetting.email_domains_whitelist).present?
+      unless email_in_restriction_setting?(setting)
+        errors.add(:email, I18n.t(:'user.email.not_allowed'))
+      end
+    elsif (setting = SiteSetting.email_domains_blacklist).present?
+      if email_in_restriction_setting?(setting)
+        errors.add(:email, I18n.t(:'user.email.not_allowed'))
       end
     end
+  end
 
+  def email_in_restriction_setting?(setting)
+    domains = setting.gsub('.', '\.')
+    regexp = Regexp.new("@(#{domains})", true)
+    self.email =~ regexp
+  end
 
-    def create_email_token
-      email_tokens.create(email: email)
+  def password_validator
+    if (@raw_password && @raw_password.length < 6) || (@password_required && !@raw_password)
+      errors.add(:password, "must be 6 letters or longer")
     end
+  end
 
-    def ensure_password_is_hashed
-      if @raw_password
-        self.salt = SecureRandom.hex(16)
-        self.password_hash = hash_password(@raw_password, salt)
-      end
+    def send_approval_email
+      Jobs.enqueue(:user_email,
+        type: :signup_after_approval,
+        user_id: id,
+        email_token: email_tokens.first.token
+      )
     end
-
-    def hash_password(password, salt)
-      Pbkdf2.hash_password(password, salt, Rails.configuration.pbkdf2_iterations)
-    end
-
-    def add_trust_level
-      # there is a possiblity we did not load trust level column, skip it
-      return unless has_attribute? :trust_level
-      self.trust_level ||= SiteSetting.default_trust_level
-    end
-
-    def update_username_lower
-      self.username_lower = username.downcase
-    end
-
-    def username_validator
-      username_format_validator || begin
-        lower = username.downcase
-        if username_changed? && User.where(username_lower: lower).exists?
-          errors.add(:username, I18n.t(:'user.username.unique'))
-        end
-      end
-    end
-
-    def email_validator
-      if (setting = SiteSetting.email_domains_whitelist).present?
-        unless email_in_restriction_setting?(setting)
-          errors.add(:email, I18n.t(:'user.email.not_allowed'))
-        end
-      elsif (setting = SiteSetting.email_domains_blacklist).present?
-        if email_in_restriction_setting?(setting)
-          errors.add(:email, I18n.t(:'user.email.not_allowed'))
-        end
-      end
-    end
-
-    def email_in_restriction_setting?(setting)
-      domains = setting.gsub('.', '\.')
-      regexp = Regexp.new("@(#{domains})", true)
-      self.email =~ regexp
-    end
-
-    def password_validator
-      if (@raw_password && @raw_password.length < 6) || (@password_required && !@raw_password)
-        errors.add(:password, "must be 6 letters or longer")
-      end
-    end
-
-
 end
+
+# == Schema Information
+#
+# Table name: users
+#
+#  id                            :integer          not null, primary key
+#  username                      :string(20)       not null
+#  created_at                    :datetime         not null
+#  updated_at                    :datetime         not null
+#  name                          :string(255)
+#  bio_raw                       :text
+#  seen_notification_id          :integer          default(0), not null
+#  last_posted_at                :datetime
+#  email                         :string(256)      not null
+#  password_hash                 :string(64)
+#  salt                          :string(32)
+#  active                        :boolean
+#  username_lower                :string(20)       not null
+#  auth_token                    :string(32)
+#  last_seen_at                  :datetime
+#  website                       :string(255)
+#  admin                         :boolean          default(FALSE), not null
+#  last_emailed_at               :datetime
+#  email_digests                 :boolean          default(TRUE), not null
+#  trust_level                   :integer          not null
+#  bio_cooked                    :text
+#  email_private_messages        :boolean          default(TRUE)
+#  email_direct                  :boolean          default(TRUE), not null
+#  approved                      :boolean          default(FALSE), not null
+#  approved_by_id                :integer
+#  approved_at                   :datetime
+#  topics_entered                :integer          default(0), not null
+#  posts_read_count              :integer          default(0), not null
+#  digest_after_days             :integer          default(7), not null
+#  previous_visit_at             :datetime
+#  banned_at                     :datetime
+#  banned_till                   :datetime
+#  date_of_birth                 :date
+#  auto_track_topics_after_msecs :integer
+#  views                         :integer          default(0), not null
+#  flag_level                    :integer          default(0), not null
+#  time_read                     :integer          default(0), not null
+#  days_visited                  :integer          default(0), not null
+#  ip_address                    :string
+#  new_topic_duration_minutes    :integer
+#  external_links_in_new_tab     :boolean          default(FALSE), not null
+#  enable_quoting                :boolean          default(TRUE), not null
+#  moderator                     :boolean          default(FALSE)
+#  likes_given                   :integer          default(0), not null
+#  likes_received                :integer          default(0), not null
+#  topic_reply_count             :integer          default(0), not null
+#
+# Indexes
+#
+#  index_users_on_auth_token      (auth_token)
+#  index_users_on_email           (email) UNIQUE
+#  index_users_on_last_posted_at  (last_posted_at)
+#  index_users_on_username        (username) UNIQUE
+#  index_users_on_username_lower  (username_lower) UNIQUE
+#
+

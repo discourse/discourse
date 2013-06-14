@@ -53,10 +53,12 @@ Discourse.Development = {
               if (n === name || v.time < 1) continue;
               ary.push({ k: n, v: v });
             }
-            ary.sortBy(function(item) {
-              if (item.v && item.v.time) return -item.v.time;
-              return 0;
-            }).each(function(item) {
+            ary.sort(function(x,y) {
+              x = x.v && x.v.time ? -x.v.time : 0;
+              y = y.v && y.v.time ? -y.v.time : 0;
+              return x > y;
+            });
+            _.each(ary, function(item,idx) {
               var output = f("" + item.k, item.v);
               if (output) {
                 console.log(output);
@@ -72,9 +74,9 @@ Discourse.Development = {
       });
     };
 
-    Ember.View.prototype.renderToBuffer = window.probes.measure(Ember.View.prototype.renderToBuffer, "renderToBuffer");
+    //Ember.CoreView.prototype._renderToBuffer = window.probes.measure(Ember.CoreView.prototype._renderToBuffer, "renderToBuffer");
     Discourse.URL.routeTo = topLevel(Discourse.URL.routeTo, "Discourse.URL.routeTo");
-    Ember.run.end = topLevel(Ember.run.end, "Ember.run.end");
+    Ember.run.backburner.end = topLevel(Ember.run.backburner.end, "Ember.run.backburner.end");
   },
 
   /**
@@ -114,7 +116,7 @@ Discourse.Development = {
     // Observe file changes
     return Discourse.MessageBus.subscribe("/file-change", function(data) {
       Ember.TEMPLATES.empty = Handlebars.compile("<div></div>");
-      return data.each(function(me) {
+      _.each(data,function(me,idx) {
         var js;
         if (me === "refresh") {
           return document.location.reload(true);
@@ -123,14 +125,13 @@ Discourse.Development = {
           return $LAB.script(js + "?hash=" + me.hash).wait(function() {
             var templateName;
             templateName = js.replace(".js", "").replace("/assets/", "");
-            return $.each(Ember.View.views, function() {
-              var _this = this;
-              if (this.get('templateName') === templateName) {
-                this.set('templateName', 'empty');
-                this.rerender();
+            return _.each(Ember.View.views, function(view) {
+              if (view.get('templateName') === templateName) {
+                view.set('templateName', 'empty');
+                view.rerender();
                 Em.run.schedule('afterRender', function() {
-                  _this.set('templateName', templateName);
-                  _this.rerender();
+                  view.set('templateName', templateName);
+                  view.rerender();
                 });
               }
             });

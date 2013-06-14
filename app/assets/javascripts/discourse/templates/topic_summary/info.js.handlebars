@@ -1,12 +1,12 @@
 <nav class='buttons'>
   {{#if summaryCollapsed}}
-  <button class='btn collapsed' {{action toggleSummary}} title="{{i18n topic.toggle_information}}">
-    <i class='icon icon-chevron-down'></i>
-  </button>
-  {{else}}
-  <button class='btn' {{action toggleSummary}} title="{{i18n topic.toggle_information}}">
-    <i class='icon icon-chevron-up'></i>
-  </button>
+    <button class='btn collapsed' {{action toggleSummary}} title="{{i18n topic.toggle_information}}">
+      <i class='icon icon-chevron-down'></i>
+    </button>
+    {{else}}
+    <button class='btn' {{action toggleSummary}} title="{{i18n topic.toggle_information}}">
+      <i class='icon icon-chevron-up'></i>
+    </button>
   {{/if}}
 </nav>
 
@@ -17,32 +17,32 @@
       <li>
         <a {{bindAttr href="url"}}>
         <h4>{{i18n created}}</h4>
-        {{avatar view.topic.created_by imageSize="tiny"}}
-        {{date view.topic.created_at}}
+        {{avatar created_by imageSize="tiny"}}
+        {{date created_at}}
         </a>
       </li>
       <li>
         <a {{bindAttr href="lastPostUrl"}}>
         <h4>{{i18n last_post}}</h4>
-        {{avatar view.topic.last_poster imageSize="tiny"}}
-        {{date view.topic.last_posted_at}}
+        {{avatar last_poster imageSize="tiny"}}
+        {{date last_posted_at}}
         </a>
       </li>
       <li>
         <h4>{{i18n posts}}</h4>
-        {{number view.topic.posts_count}}
+        {{number posts_count}}
       </li>
       <li>
         <h4>{{i18n views}}</h4>
-        {{number view.topic.views}}
+        {{number views}}
       </li>
       <li>
         <h4>{{i18n links}}</h4>
-        {{number view.topic.links.length}}
+        {{number links.length}}
       </li>
-      {{#if view.topic.fewParticipants}}
+      {{#if fewParticipants}}
       <li class='avatars'>
-        {{#each view.topic.fewParticipants}}{{view Discourse.ParticipantView participantBinding="this"}}{{/each}}
+        {{#each fewParticipants}}{{participant participant=this}}{{/each}}
       </li>
       {{/if}}
     </ul>
@@ -53,28 +53,28 @@
     <ul class="clearfix">
       <li>
         <h4>{{i18n created}}</h4>
-        {{avatar view.topic.created_by imageSize="tiny"}}
-        <a {{bindAttr href="view.topic.url"}}>{{date view.topic.created_at}}</a>
+        {{avatar created_by imageSize="tiny"}}
+        <a {{bindAttr href="url"}}>{{date created_at}}</a>
       </li>
       <li>
         <h4>{{i18n last_post}}</h4>
-        {{avatar view.topic.last_poster imageSize="tiny"}}
-        <a {{bindAttr href="view.topic.lastPostUrl"}}>{{date view.topic.last_posted_at}}</a>
+        {{avatar last_poster imageSize="tiny"}}
+        <a {{bindAttr href="lastPostUrl"}}>{{date last_posted_at}}</a>
       </li>
       <li>
         <h4>{{i18n posts}}</h4>
-        {{number view.topic.posts_count}}
+        {{number posts_count}}
       </li>
       <li>
         <h4>{{i18n views}}</h4>
-        {{number view.topic.views}}
+        {{number views}}
       </li>
     </ul>
   </section>
 
-  {{#if view.topic.participants}}
+  {{#if participants}}
     <section class='avatars clearfix'>
-      {{#each view.topic.participants}}{{view Discourse.ParticipantView participantBinding="this"}}{{/each}}
+      {{#each participants}}{{participant participant=this}}{{/each}}
     </section>
   {{/if}}
 
@@ -92,7 +92,7 @@
 
         {{#if view.parentView.showAllLinksControls}}
           <div class='link-summary'>
-            <a href='#' {{action showAllLinks target="view.parentView"}}>{{i18n topic_summary.links_shown totalLinks="view.topic.links.length"}}</a>
+            <a href='#' {{action showAllLinks target="view.parentView"}}>{{i18n topic_summary.links_shown totalLinks="links.length"}}</a>
           </div>
         {{/if}}
 

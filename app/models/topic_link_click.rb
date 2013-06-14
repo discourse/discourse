@@ -34,23 +34,21 @@ class TopicLinkClick < ActiveRecord::Base
     args[:url]
   end
 
-  def self.counts_for(topic, posts)
-    return {} if posts.blank?
-    links = TopicLink
-              .includes(:link_topic)
-              .where(topic_id: topic.id, post_id: posts.map(&:id))
-              .order('reflection asc, clicks desc')
-
-    result = {}
-    links.each do |l|
-      result[l.post_id] ||= []
-      result[l.post_id] << {url: l.url,
-                            clicks: l.clicks,
-                            title: l.link_topic.try(:title),
-                            internal: l.internal,
-                            reflection: l.reflection}
-    end
-
-    result
-  end
 end
+
+# == Schema Information
+#
+# Table name: topic_link_clicks
+#
+#  id            :integer          not null, primary key
+#  topic_link_id :integer          not null
+#  user_id       :integer
+#  ip            :integer          not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#
+# Indexes
+#
+#  index_forum_thread_link_clicks_on_forum_thread_link_id  (topic_link_id)
+#
+

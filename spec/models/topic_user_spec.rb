@@ -216,6 +216,14 @@ describe TopicUser do
 
   end
 
+  it "can scope by tracking" do
+    TopicUser.create!(user_id: 1, topic_id: 1, notification_level: TopicUser.notification_levels[:tracking])
+    TopicUser.create!(user_id: 2, topic_id: 1, notification_level: TopicUser.notification_levels[:watching])
+    TopicUser.create!(user_id: 3, topic_id: 1, notification_level: TopicUser.notification_levels[:regular])
+
+    TopicUser.tracking(1).count.should == 2
+    TopicUser.tracking(10).count.should == 0
+  end
 
   it "is able to self heal" do
     p1 = Fabricate(:post)

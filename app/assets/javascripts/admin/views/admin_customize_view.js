@@ -34,9 +34,9 @@ Discourse.AdminCustomizeView = Discourse.View.extend({
   },
 
   didInsertElement: function() {
-    var _this = this;
+    var controller = this.get('controller');
     return Mousetrap.bindGlobal(['meta+s', 'ctrl+s'], function() {
-      _this.get('controller').save();
+      controller.save();
       return false;
     });
   },

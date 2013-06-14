@@ -21,7 +21,7 @@ describe PostAction do
 
     it "notify moderators integration test" do
       mod = moderator
-      action = PostAction.act(codinghorror, post, PostActionType.types[:notify_moderators], "this is my special long message");
+      action = PostAction.act(codinghorror, post, PostActionType.types[:notify_moderators], message: "this is my special long message");
 
       posts = Post.joins(:topic)
                   .select('posts.id, topics.subtype, posts.topic_id')
@@ -50,7 +50,7 @@ describe PostAction do
       it "sends an email to all moderators if selected" do
         post = build(:post, id: 1000)
         PostCreator.any_instance.expects(:create).returns(post)
-        PostAction.act(build(:user), build(:post), PostActionType.types[:notify_moderators], "this is my special message");
+        PostAction.act(build(:user), build(:post), PostActionType.types[:notify_moderators], message: "this is my special message");
       end
     end
 
@@ -63,7 +63,7 @@ describe PostAction do
 
       it "sends an email to user if selected" do
         PostCreator.any_instance.expects(:create).returns(build(:post))
-        PostAction.act(build(:user), post, PostActionType.types[:notify_user], "this is my special message");
+        PostAction.act(build(:user), post, PostActionType.types[:notify_user], message: "this is my special message");
       end
     end
   end
@@ -122,18 +122,30 @@ describe PostAction do
   end
 
   describe 'when a user likes something' do
-    it 'should increase the post counts when a user likes' do
-      lambda {
-        PostAction.act(codinghorror, post, PostActionType.types[:like])
-        post.reload
-      }.should change(post, :like_count).by(1)
-    end
+    it 'should increase the `like_count` and `like_score` when a user likes something' do
+      PostAction.act(codinghorror, post, PostActionType.types[:like])
+      post.reload
+      post.like_count.should == 1
+      post.like_score.should == 1
+      post.topic.reload
+      post.topic.like_count.should == 1
 
-    it 'should increase the forum topic like count when a user likes' do
-      lambda {
-        PostAction.act(codinghorror, post, PostActionType.types[:like])
-        post.topic.reload
-      }.should change(post.topic, :like_count).by(1)
+      # When a staff member likes it
+      PostAction.act(moderator, post, PostActionType.types[:like])
+      post.reload
+      post.like_count.should == 2
+      post.like_score.should == 4
+
+      # Removing likes
+      PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
+      post.reload
+      post.like_count.should == 1
+      post.like_score.should == 3
+
+      PostAction.remove_act(moderator, post, PostActionType.types[:like])
+      post.reload
+      post.like_count.should == 0
+      post.like_score.should == 0
     end
   end
 
@@ -167,9 +179,9 @@ describe PostAction do
         flag = PostAction.act(Fabricate(:evil_trout), post, PostActionType.types[:spam])
         PostAction.flag_counts_for(post.id).should == [0, 1]
 
-        # If an admin flags the post, it is counted higher
+        # If staff takes action, it is ranked higher
         admin = Fabricate(:admin)
-        PostAction.act(admin, post, PostActionType.types[:spam])
+        pa = PostAction.act(admin, post, PostActionType.types[:spam], take_action: true)
         PostAction.flag_counts_for(post.id).should == [0, 8]
 
         # If a flag is dismissed

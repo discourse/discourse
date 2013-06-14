@@ -23,6 +23,14 @@ describe ListController do
       end
     end
 
+    it 'allows users to filter on a set of topic ids' do
+      p = Fabricate(:post)
+      xhr :get, :latest, format: :json, topic_ids: "#{p.topic_id}"
+      response.should be_success
+      parsed = JSON.parse(response.body)
+      parsed["topic_list"]["topics"].length.should == 1
+    end
+
   end
 
   context 'category' do

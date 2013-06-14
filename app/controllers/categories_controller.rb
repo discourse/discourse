@@ -8,7 +8,14 @@ class CategoriesController < ApplicationController
 
   def index
     @list = CategoryList.new(guardian)
+
+    @list.draft_key = Draft::NEW_TOPIC
+    @list.draft_sequence = DraftSequence.current(current_user, Draft::NEW_TOPIC)
+    @list.draft = Draft.get(current_user, @list.draft_key, @list.draft_sequence) if current_user
+
     discourse_expires_in 1.minute
+
+    store_preloaded("categories_list", MultiJson.dump(CategoryListSerializer.new(@list, scope: guardian)))
     respond_to do |format|
       format.html { render }
       format.json { render_serialized(@list, CategoryListSerializer) }
@@ -20,7 +27,6 @@ class CategoriesController < ApplicationController
   end
 
   def create
-    requires_parameters(*required_param_keys)
     guardian.ensure_can_create!(Category)
 
     @category = Category.create(category_params.merge(user: current_user))
@@ -30,7 +36,6 @@ class CategoriesController < ApplicationController
   end
 
   def update
-    requires_parameters(*required_param_keys)
     guardian.ensure_can_edit!(@category)
     json_result(@category, serializer: CategorySerializer) { |cat| cat.update_attributes(category_params) }
   end
@@ -52,7 +57,11 @@ class CategoriesController < ApplicationController
     end
 
     def category_params
-      params.slice(*category_param_keys)
+      required_param_keys.each do |key|
+        params.require(key)
+      end
+
+      params.permit(*category_param_keys)
     end
 
     def fetch_category

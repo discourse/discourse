@@ -52,14 +52,20 @@ Discourse::Application.routes.draw do
       post 'refresh_browsers', constraints: AdminConstraint.new
       put 'activate'
       put 'deactivate'
+      put 'block'
+      put 'unblock'
     end
 
     resources :impersonate, constraints: AdminConstraint.new
-    resources :email_logs do
+
+    resources :email do
       collection do
         post 'test'
+        get 'logs'
+        get 'preview-digest' => 'email#preview_digest'
       end
     end
+
     get 'customize' => 'site_customizations#index', constraints: AdminConstraint.new
     get 'flags' => 'flags#index'
     get 'flags/:filter' => 'flags#index'
@@ -101,6 +107,7 @@ Discourse::Application.routes.draw do
 
   resources :static
   post 'login' => 'static#enter'
+  get 'login' => 'static#show', id: 'login'
   get 'faq' => 'static#show', id: 'faq'
   get 'tos' => 'static#show', id: 'tos'
   get 'privacy' => 'static#show', id: 'privacy'

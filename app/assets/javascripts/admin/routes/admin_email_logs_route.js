@@ -1,7 +1,7 @@
 /**
   Handles routes related to viewing email logs.
 
-  @class AdminEmailLogsRoute    
+  @class AdminEmailLogsRoute
   @extends Discourse.Route
   @namespace Discourse
   @module Discourse
@@ -12,6 +12,6 @@ Discourse.AdminEmailLogsRoute = Discourse.Route.extend({
   },
 
   renderTemplate: function() {
-    this.render('admin/templates/email_logs');
+    this.render('admin/templates/email_logs', {into: 'adminEmail'});
   }
 });

@@ -103,3 +103,24 @@ class Notification < ActiveRecord::Base
 
 end
 
+# == Schema Information
+#
+# Table name: notifications
+#
+#  id                :integer          not null, primary key
+#  notification_type :integer          not null
+#  user_id           :integer          not null
+#  data              :string(1000)     not null
+#  read              :boolean          default(FALSE), not null
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  topic_id          :integer
+#  post_number       :integer
+#  post_action_id    :integer
+#
+# Indexes
+#
+#  index_notifications_on_post_action_id          (post_action_id)
+#  index_notifications_on_user_id_and_created_at  (user_id,created_at)
+#
+

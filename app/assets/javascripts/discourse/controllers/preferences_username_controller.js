@@ -11,6 +11,7 @@ Discourse.PreferencesUsernameController = Discourse.ObjectController.extend({
   saving: false,
   error: false,
   errorMessage: null,
+  newUsername: null,
 
   saveDisabled: function() {
     if (this.get('saving')) return true;

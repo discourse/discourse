@@ -47,7 +47,7 @@ Discourse.UserSearch = {
 
     var organizeResults = function(r) {
       var result = [];
-      r.users.each(function(u) {
+      _.each(r.users,function(u) {
         if (exclude.indexOf(u.username) === -1) {
           result.push(u);
         }

@@ -32,7 +32,15 @@ describe TextSentinel do
     end
 
     it "Works on foreign characters" do
-      TextSentinel.new("去年十社會警告").entropy.should == 7
+      TextSentinel.new("去年十社會警告").entropy.should == 19
+    end
+
+    it "generates enough entropy for short foreign strings" do
+      TextSentinel.new("又一个测").entropy.should == 11
+    end
+
+    it "handles repeated foreign characters" do
+      TextSentinel.new("又一个测试话题" * 3).entropy.should == 18
     end
 
   end

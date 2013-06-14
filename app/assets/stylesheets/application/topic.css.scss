@@ -102,12 +102,8 @@
 // App header
 
 .extra-info-wrapper {
-  display: none;
   float: left;
   margin-left: 10px;
-  &.show-extra-info {
-    display: block;
-  }
 }
 
 #multi-select-options {

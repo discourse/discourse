@@ -7,7 +7,7 @@ describe Guardian do
   let(:user) { build(:user) }
   let(:moderator) { build(:moderator) }
   let(:admin) { build(:admin) }
-  let(:another_admin) { build(:another_admin) }
+  let(:another_admin) { build(:admin) }
   let(:coding_horror) { build(:coding_horror) }
 
   let(:topic) { build(:topic, user: user) }

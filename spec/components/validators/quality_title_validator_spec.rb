@@ -33,6 +33,11 @@ describe "A record validated with QualityTitleValidator" do
     topic.should be_valid
   end
 
+  it 'allows Chinese characters' do
+    topic.title = '现在发现使用中文标题没法发帖子了'
+    topic.should be_valid
+  end
+
   it "allows anything in a private message" do
     topic.stubs(:private_message? => true)
     [short_title, long_title, xxxxx_title].each do |bad_title|

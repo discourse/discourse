@@ -109,7 +109,7 @@ class Guardian
   alias :can_activate? :can_approve?
 
   def can_ban?(user)
-    user && is_staff? && not(user.staff?)
+    user && is_staff? && user.regular?
   end
   alias :can_deactivate? :can_ban?
 
@@ -131,6 +131,14 @@ class Guardian
 
   def can_grant_moderation?(user)
     can_administer?(user) && not(user.moderator?)
+  end
+
+  def can_block_user?(user)
+    user && is_staff? && not(user.staff?)
+  end
+
+  def can_unblock_user?(user)
+    user && is_staff?
   end
 
   def can_delete_user?(user_to_delete)
@@ -211,8 +219,16 @@ class Guardian
     is_staff?
   end
 
+  def can_create_topic?(parent)
+    can_create_post?(parent)
+  end
+
+  def can_create_post?(parent)
+    !SpamRulesEnforcer.block?(@user)
+  end
+
   def can_create_post_on_topic?(topic)
-    is_staff? || not(topic.closed? || topic.archived?)
+    is_staff? || (not(topic.closed? || topic.archived?) && can_create_post?(topic))
   end
 
   # Editing Methods

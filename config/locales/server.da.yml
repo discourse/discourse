@@ -310,9 +310,6 @@ da:
     queue_jobs: "Queue various jobs in sidekiq, if false queues are inline"
     crawl_images: "Enable retrieving images from third party sources to insert width and height dimensions"
     ninja_edit_window: "Number of seconds after posting where edits do not create a new version"
-    enable_imgur: "Enable imgur api for uploading, don't host files locally"
-    imgur_api_key: "Your imgur.com api key, required for image upload to function"
-    imgur_endpoint: "End point for uploading imgur.com images"
     max_image_width: "Maximum allowed width of images in a post"
     category_featured_topics: "Number of topics displayed per category in the /categories page"
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains) changing this requires you update all your baked markdown"
@@ -321,7 +318,6 @@ da:
     post_excerpt_maxlength: "Maximum length in chars of a post's excerpt"
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post"
     category_post_template: "The category definition post template used when you create a new category"
-    new_topics_rollup: "How many new topics can be inserted on the topic list before rolling up into a count"
     onebox_max_chars: "Maximum characters a onebox will import from an external website into the post"
 
     logo_url: "The logo for your site eg: http://example.com/logo.png"
@@ -361,8 +357,8 @@ da:
     email_domains_blacklist: "A pipe-delimited list of email domains that are not allowed. Example: mailinator.com|trashmail.net"
     version_checks: "Ping the Discourse Hub for version updates and show version messages on the /admin dashboard"
 
-    port: "Use this HTTP port rather than the default of port 80. Leave blank for none, mainly useful for development"
-    force_hostname: "Specify a hostname in the URL. Leave blank for none, mainly useful for development"
+    port: "DEVELOPER ONLY! WARNING! Use this HTTP port rather than the default of port 80. Leave blank for default of 80."
+    force_hostname: "DEVELOPER ONLY! WARNING! Specify a hostname in the URL. Leave blank for default."
 
     invite_expiry_days: "How long user invitation keys are valid, in days"
 
@@ -636,19 +632,6 @@ da:
         - For at søge, klik på søgeikonet foroven.
 
         - Mens du læser et emne, kan du altid springe til toppen ved at klikke på emnets titel øverst på siden. For at komme til *bunden*, klik på ned-pilen på status-viseren nederst på skærmen, eller klik på sidste indlæg-feltet på emne-opsummeringen under det første indlæg.
-
-    welcome_approved:
-      subject_template: "Du er blevet godkendt på %{site_name}!"
-      text_body_template: |
-        Tillykke!
-
-        Din brugerkonto på %{site_name} er blevet godkendt, velkommen til vores debatforum!
-
-        %{new_user_tips}
-
-        Vi går ind for [civiliseret debatkultur](%{base_url}/faq) til enhver tid.
-
-        Nyd dit ophold!
 
     welcome_user:
       subject_template: "Velkommen til %{site_name}!"

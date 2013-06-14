@@ -553,7 +553,7 @@ id:
       color_placeholder: "Any web color"
       delete_confirm: "Are you sure you want to delete that category?"
       list: "List Categories"
-      no_description: "There is no description for this category."
+      no_description: "There is no description for this category, edit the topic definition."
       change_in_category_topic: "Edit Description"
 
     flagging:
@@ -668,7 +668,7 @@ id:
         delete: "Delete"
         delete_confirm: "Delete this customization?"
 
-      email_logs:
+      email:
         title: "Email"
         sent_at: "Sent At"
         email_type: "Email Type"

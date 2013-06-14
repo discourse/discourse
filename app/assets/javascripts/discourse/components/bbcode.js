@@ -91,15 +91,15 @@ Discourse.BBCode = {
 
     var result = {};
 
-    Object.keys(Discourse.BBCode.replacers, function(name, rules) {
+    _.each(Discourse.BBCode.replacers, function(rules, name) {
 
       var parsed = result[name] = [];
 
-      Object.keys(Object.merge(Discourse.BBCode.replacers.base.withoutArgs, rules.withoutArgs), function(tag, val) {
+      _.each(_.extend(Discourse.BBCode.replacers.base.withoutArgs, rules.withoutArgs), function(val, tag) {
         parsed.push({ regexp: new RegExp("\\[" + tag + "\\]([\\s\\S]*?)\\[\\/" + tag + "\\]", "igm"), fn: val });
       });
 
-      Object.keys(Object.merge(Discourse.BBCode.replacers.base.withArgs, rules.withArgs), function(tag, val) {
+      _.each(_.extend(Discourse.BBCode.replacers.base.withArgs, rules.withArgs), function(val, tag) {
         parsed.push({ regexp: new RegExp("\\[" + tag + "=?(.+?)\\]([\\s\\S]*?)\\[\\/" + tag + "\\]", "igm"), fn: val });
       });
 
@@ -172,7 +172,7 @@ Discourse.BBCode = {
     }
 
     result.template = function(input) {
-      replacements.each(function(r) {
+      _.each(replacements,function(r) {
         var val = r.value.trim();
         val = val.replace(r.content, r.content.replace(/\n/g, '<br>'));
         input = input.replace(r.key, val);
@@ -196,7 +196,7 @@ Discourse.BBCode = {
       paramsString = matches[1].replace(/\"/g, '');
       paramsSplit = paramsString.split(/\, */);
       params = [];
-      paramsSplit.each(function(p, i) {
+      _.each(paramsSplit,function(p,i) {
         if (i > 0) {
           var assignment = p.split(':');
           if (assignment[0] && assignment[1]) {

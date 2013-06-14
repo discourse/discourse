@@ -4,12 +4,14 @@ require_dependency 'summarize'
 
 class TopicView
 
-  attr_reader :topic, :posts, :index_offset, :index_reverse
+  attr_reader :topic, :posts, :index_offset, :index_reverse, :guardian
   attr_accessor :draft, :draft_key, :draft_sequence
 
   def initialize(topic_id, user=nil, options={})
     @topic = find_topic(topic_id)
     raise Discourse::NotFound if @topic.blank?
+
+    @guardian = Guardian.new(user)
 
     # Special case: If the topic is private and the user isn't logged in, ask them
     # to log in!
@@ -17,7 +19,7 @@ class TopicView
       raise Discourse::NotLoggedIn.new
     end
 
-    Guardian.new(user).ensure_can_see!(@topic)
+    guardian.ensure_can_see!(@topic)
     @post_number, @page  = options[:post_number], options[:page]
 
     @limit = options[:limit] || SiteSetting.posts_per_page;
@@ -225,18 +227,18 @@ class TopicView
     @post_action_visibility ||= begin
       result = []
       PostActionType.types.each do |k, v|
-        result << v if Guardian.new(@user).can_see_post_actors?(@topic, v)
+        result << v if guardian.can_see_post_actors?(@topic, v)
       end
       result
     end
   end
 
   def links
-    @links ||= @topic.links_grouped
+    @links ||= TopicLink.topic_summary(guardian, @topic.id)
   end
 
   def link_counts
-    @link_counts ||= TopicLinkClick.counts_for(@topic, posts)
+    @link_counts ||= TopicLink.counts_for(guardian,@topic, posts)
   end
 
   # Are we the initial page load? If so, we can return extra information like

@@ -12,7 +12,7 @@ class Search
     def topic_ids
       topic_results = @by_type[:topic]
       return Set.new if topic_results.blank?
-      Set.new(topic_results.results.map(&:id))
+      return topic_results.result_ids
     end
 
     def as_json

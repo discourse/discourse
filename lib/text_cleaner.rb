@@ -28,8 +28,8 @@ class TextCleaner
     text.gsub!(/\?+/, '?') if opts[:deduplicate_question_marks]
     # Replace all-caps text with regular case letters
     text.tr!('A-Z', 'a-z') if opts[:replace_all_upper_case] && (text =~ /[A-Z]+/) && (text == text.upcase)
-    # Capitalize first letter
-    text.sub!(/\A([a-z])/) { |first| first.capitalize } if opts[:capitalize_first_letter]
+    # Capitalize first letter, but only when entire first word is lowercase
+    text.sub!(/\A([a-z]*)\b/) { |first| first.capitalize } if opts[:capitalize_first_letter]
     # Remove unnecessary periods at the end
     text.sub!(/([^.])\.+(\s*)\z/, '\1\2') if opts[:remove_all_periods_from_the_end]
     # Remove extraneous space before the end punctuation

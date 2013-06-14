@@ -1,10 +1,10 @@
 <div class="modal-body">
   <form>
-    {{view Discourse.AutoCloseFormView autoCloseDaysBinding="view.auto_close_days"}}
+    {{autoCloseForm autoCloseDays=auto_close_days}}
   </form>
 </div>
 <div class="modal-footer">
-  <button class='btn btn-primary' {{action saveAutoClose target="view"}} data-dismiss="modal">{{i18n topic.auto_close_save}}</button>
+  <button class='btn btn-primary' {{action saveAutoClose}} data-dismiss="modal">{{i18n topic.auto_close_save}}</button>
   <button class='btn' data-dismiss="modal">{{i18n topic.auto_close_cancel}}</button>
-  <button class='btn pull-right' {{action removeAutoClose target="view"}} data-dismiss="modal">{{i18n topic.auto_close_remove}}</button>
+  <button class='btn pull-right' {{action removeAutoClose}} data-dismiss="modal">{{i18n topic.auto_close_remove}}</button>
 </div>

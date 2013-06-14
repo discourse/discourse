@@ -17,7 +17,7 @@ describe InvitesController do
 
 
       it 'raises an error when the email is missing' do
-        lambda { delete :destroy }.should raise_error(Discourse::InvalidParameters)
+        lambda { delete :destroy }.should raise_error(ActionController::ParameterMissing)
       end
 
       it "raises an error when the email cannot be found" do

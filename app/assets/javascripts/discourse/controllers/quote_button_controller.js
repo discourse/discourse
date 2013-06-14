@@ -31,7 +31,8 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
   **/
   selectText: function(postId) {
     // anonymous users cannot "quote-reply"
-    if (!Discourse.get('currentUser')) return;
+    if (!Discourse.User.current()) return;
+
     // don't display the "quote-reply" button if we can't create a post
     if (!this.get('controllers.topic.content.can_create_post')) return;
 

@@ -107,7 +107,6 @@
   }
 
   .gutter {
-    @include unselectable;
     .reply-new{
       .discourse-no-touch & {
         opacity: 0;
@@ -347,7 +346,7 @@
         line-height: 18px;
       }
 
-      h3.moderator a {
+      .staff a {
         background-color: #ffe;
         border: 1px solid #ffd;
       }

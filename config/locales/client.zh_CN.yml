@@ -7,6 +7,65 @@
 
 zh_CN:
   js:
+    dates:
+      short_date_no_year: "D MMM"
+      short_date: "D MMM, YYYY"
+      long_date: "MMMM D, YYYY h:mma"
+      tiny:
+        half_a_minute: "刚刚"
+        less_than_x_seconds:
+          one:   "< 1秒"
+          other: "< %{count}秒"
+        x_seconds:
+          one:   "1秒"
+          other: "%{count}秒"
+        less_than_x_minutes:
+          one:   "< 1分钟"
+          other: "< %{count}分钟"
+        x_minutes:
+          one:   "1分钟"
+          other: "%{count}分钟"
+        about_x_hours:
+          one:   "1小时"
+          other: "%{count}小时"
+        x_days:
+          one:   "1天"
+          other: "%{count}天"
+        about_x_months:
+          one:   "1个月"
+          other: "%{count}个月"
+        x_months:
+          one:   "1个月"
+          other: "%{count}个月"
+        about_x_years:
+          one:   "1年"
+          other: "%{count}年"
+        over_x_years:
+          one:   "> 1年"
+          other: "> %{count}年"
+        almost_x_years:
+          one:   "1年"
+          other: "%{count}年"
+      medium:
+        x_minutes:
+          one: "1分钟"
+          other: "%{count}分钟"
+        x_hours:
+          one: "1小时"
+          other: "%{count}小时"
+        x_days:
+          one: "1天"
+          other: "%{count}天"
+      medium_with_ago:
+        x_minutes:
+          one: "1分钟前"
+          other: "%{count}分钟前"
+        x_hours:
+          one: "1小时之前"
+          other: "%{count}小时之前"
+        x_days:
+          one: "1天前"
+          other: "%{count}天前"
     share:
       topic: '分享一个到本主题的链接'
       post: '分享一个到本帖的链接'
@@ -915,6 +974,7 @@ zh_CN:
         no_problems: "找不到问题."
         moderators: '版主：'
         admins: '管理员：'
+        blocked: '被封禁:'
         private_messages_short: "私信"
         private_messages_title: "私密信息"
 
@@ -945,6 +1005,7 @@ zh_CN:
         flagged_by: "投诉者为"
         error: "出错了"
         view_message: "查看消息"
+        no_results: "没有投诉"
 
       groups:
         title: "群组"
@@ -977,14 +1038,23 @@ zh_CN:
         delete_confirm: "删除本定制内容？"
         about: "站点定制允许你修改样式表和站点头部。选择或者添加一个来开始编辑。"
 
-      email_logs:
+      email:
         title: "电子邮件"
+        settings: "设置"
+        logs: "日志"
         sent_at: "发送时间"
         email_type: "邮件类型"
         to_address: "目的地址"
         test_email_address: "测试电子邮件地址"
         send_test: "发送测试电子邮件"
         sent_test: "已发送！"
+        delivery_method: "发送方式"
+        preview_digest: "预览"
+        refresh: "刷新"
+        format: "格式"
+        html: "html"
+        text: "text"
+        last_seen_user: "用户最后登录时间:"
 
       impersonate:
         title: "假冒用户"
@@ -1060,6 +1130,9 @@ zh_CN:
         activate_failed: "在激活用户帐号时发生了错误。"
         deactivate_account: "停用帐号"
         deactivate_failed: "在停用用户帐号时发生了错误。"
+        unblock_failed: "在解除用户帐号封禁时发生了错误。"
+        block_failed: "在封禁用户帐号时发生了错误。"
+        block_explanation: "被封禁的用户不能发表主题或者评论。"
 
       site_content:
         none: "选择内容类型以开始编辑。"

@@ -1,10 +1,16 @@
-Discourse.AdminGroupsRoute = Discourse.Route.extend({
-  renderTemplate: function() {
-    this.render('admin/templates/groups',{into: 'admin/templates/admin'});
-  },
+/**
+  Handles routes for admin groups
 
-  setupController: function(controller, model) {
-    controller.set('model', Discourse.Group.findAll());
+  @class AdminGroupsRoute
+  @extends Discourse.Route
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.AdminGroupsRoute = Discourse.Route.extend({
+
+  model: function() {
+    return Discourse.Group.findAll();
   }
+
 });
 

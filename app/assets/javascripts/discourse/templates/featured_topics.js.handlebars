@@ -17,8 +17,8 @@
     <tr {{bindAttr class="archived"}}>
       <td class='main-link'>
         <div class='topic-inset'>
-          {{view Discourse.TopicStatusView topicBinding="this"}}
-          {{{topicLink this}}
+          {{topicStatus topic=this}}
+          {{{topicLink this}}}
         {{#if unread}}
           <a href="{{unbound lastReadUrl}}" class='badge unread badge-notification' title='{{i18n topic.unread_posts unread="unread"}}'>{{unbound unread}}</a>
         {{/if}}
@@ -28,10 +28,23 @@
         {{#if unseen}}
           <a href="{{unbound lastReadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new}}'><i class='icon icon-asterisk'></i></a>
         {{/if}}
+
+        {{#if hasExcerpt}}
+          <div class="topic-excerpt">
+            {{{excerpt}}}
+            {{#if excerptTruncated}}
+              {{#unless canClearPin}}<a href="{{lastReadUrl}}">{{i18n read_more}}</a>{{/unless}}
+            {{/if}}
+            {{#if canClearPin}}
+              <a href="#" {{action clearPin this}} title="{{unbound i18n topic.clear_pin.help}}">{{i18n topic.clear_pin.title}}</a>
+            {{/if}}
+          </div>
+        {{/if}}
+
         </div>
       </td>
       <td class='num'><span class='badge-posts'>{{number posts_count}}</span></td>
-      <td class='num'><span {{bindAttr class=":age ageCold"}} title='{{unboundDate created_at}}'>{{{unbound age}}}</span></td>
+      <td class='num'><span {{bindAttr class=":age ageCold"}} title='{{unboundDate created_at}}'>{{{unboundAge created_at}}}</span></td>
     </tr>
   {{/each}}
 

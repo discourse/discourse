@@ -17,19 +17,8 @@ Discourse.PostView = Discourse.View.extend({
                       'parentPost:replies-above'],
   postBinding: 'content',
 
-  // TODO really we should do something cleaner here... this makes it work in debug but feels really messy
-  screenTrack: function() {
-    var parentView = this.get('parentView');
-    var screenTrack = null;
-    while (parentView && !screenTrack) {
-      screenTrack = parentView.get('screenTrack');
-      parentView = parentView.get('parentView');
-    }
-    return screenTrack;
-  }.property('parentView'),
-
   postTypeClass: function() {
-    return this.get('post.post_type') === Discourse.get('site.post_types.moderator_action') ? 'moderator' : 'regular';
+    return this.get('post.post_type') === Discourse.Site.instance().get('post_types.moderator_action') ? 'moderator' : 'regular';
   }.property('post.post_type'),
 
   // If the cooked content changed, add the quote controls
@@ -174,7 +163,7 @@ Discourse.PostView = Discourse.View.extend({
     var link_counts;
 
     if (link_counts = this.get('post.link_counts')) {
-      link_counts.each(function(lc) {
+      _.each(link_counts, function(lc) {
         if (lc.clicks > 0) {
           postView.$(".cooked a[href]").each(function() {
             var link = $(this);
@@ -213,7 +202,11 @@ Discourse.PostView = Discourse.View.extend({
     });
   },
 
-  didInsertElement: function(e) {
+  willDestroyElement: function() {
+    Discourse.ScreenTrack.instance().stopTracking(this.$().prop('id'));
+  },
+
+  didInsertElement: function() {
     var $post = this.$();
     var post = this.get('post');
     var postNumber = post.get('scrollToAfterInsert');
@@ -233,20 +226,17 @@ Discourse.PostView = Discourse.View.extend({
     }
     this.showLinkCounts();
 
-    var screenTrack = this.get('screenTrack');
-    if (screenTrack) {
-      screenTrack.track(this.$().prop('id'), this.get('post.post_number'));
-    }
+    // Track this post
+    Discourse.ScreenTrack.instance().track(this.$().prop('id'), this.get('post.post_number'));
 
     // Add syntax highlighting
     Discourse.SyntaxHighlighting.apply($post);
     Discourse.Lightbox.apply($post);
 
     // If we're scrolling upwards, adjust the scroll position accordingly
-    var scrollTo;
-    if (scrollTo = this.get('post.scrollTo')) {
-      var newSize = ($(document).height() - scrollTo.height) + scrollTo.top;
-      $('body').scrollTop(newSize);
+    var scrollTo = this.get('post.scrollTo');
+    if (scrollTo) {
+      $('body').scrollTop(($(document).height() - scrollTo.height) + scrollTo.top);
       $('section.divider').addClass('fade');
     }
 

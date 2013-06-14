@@ -1,16 +1,4 @@
 /**
-  Allows us to supply bindings without "binding" to a helper.
-**/
-function normalizeHash(hash, hashTypes) {
-  for (var prop in hash) {
-    if (hashTypes[prop] === 'ID') {
-      hash[prop + 'Binding'] = hash[prop];
-      delete hash[prop];
-    }
-  }
-}
-
-/**
   Breaks up a long string
 
   @method breakUp
@@ -25,7 +13,7 @@ Handlebars.registerHelper('breakUp', function(property, options) {
   if (tokens.length === 1) return prop;
 
   result = "";
-  tokens.each(function(token, index) {
+  _.each(tokens,function(token,index) {
     result += token;
     if (token.indexOf(' ') === -1 && (index < tokens.length - 1)) {
       result += "- ";
@@ -41,7 +29,7 @@ Handlebars.registerHelper('breakUp', function(property, options) {
   @for Handlebars
 **/
 Handlebars.registerHelper('shorten', function(property, options) {
-  return Ember.Handlebars.get(this, property, options).truncate(35);
+  return Ember.Handlebars.get(this, property, options).substring(0,35);
 });
 
 /**
@@ -66,36 +54,6 @@ Handlebars.registerHelper('topicLink', function(property, options) {
 Handlebars.registerHelper('categoryLink', function(property, options) {
   var category = Ember.Handlebars.get(this, property, options);
   return new Handlebars.SafeString(Discourse.Utilities.categoryLink(category));
-});
-
-/**
-  Inserts a Discourse.TextField to allow the user to enter information.
-
-  @method textField
-  @for Handlebars
-**/
-Ember.Handlebars.registerHelper('textField', function(options) {
-  var hash = options.hash,
-      types = options.hashTypes;
-
-  normalizeHash(hash, types);
-
-  return Ember.Handlebars.helpers.view.call(this, Discourse.TextField, options);
-});
-
-/**
-  Inserts a Discourse.InputTipView
-
-  @method inputTip
-  @for Handlebars
-**/
-Ember.Handlebars.registerHelper('inputTip', function(options) {
-  var hash = options.hash,
-      types = options.hashTypes;
-
-  normalizeHash(hash, types);
-
-  return Ember.Handlebars.helpers.view.call(this, Discourse.InputTipView, options);
 });
 
 
@@ -142,7 +100,7 @@ Handlebars.registerHelper('shortenUrl', function(property, options) {
   }
   url = url.replace(/^https?:\/\//, '');
   url = url.replace(/^www\./, '');
-  return url.truncate(80);
+  return url.substring(0,80);
 });
 
 /**
@@ -209,15 +167,40 @@ Handlebars.registerHelper('avatar', function(user, options) {
 });
 
 /**
+  Bound avatar helper.
+
+  @method boundAvatar
+  @for Handlebars
+**/
+Ember.Handlebars.registerBoundHelper('boundAvatar', function(user, options) {
+  var username = Em.get(user, 'username');
+  return new Handlebars.SafeString(Discourse.Utilities.avatarImg({
+    size: options.hash.imageSize,
+    username: username,
+    avatarTemplate: Ember.get(user, 'avatar_template')
+  }));
+});
+
+/**
   Nicely format a date without a binding since the date doesn't need to change.
 
   @method unboundDate
   @for Handlebars
 **/
 Handlebars.registerHelper('unboundDate', function(property, options) {
-  var dt;
-  dt = new Date(Ember.Handlebars.get(this, property, options));
-  return dt.format("long");
+  var dt = new Date(Ember.Handlebars.get(this, property, options));
+  return Discourse.Formatter.longDate(dt);
+});
+
+/**
+  Live refreshing age helper
+
+  @method unboundDate
+  @for Handlebars
+**/
+Handlebars.registerHelper('unboundAge', function(property, options) {
+  var dt = new Date(Ember.Handlebars.get(this, property, options));
+  return new Handlebars.SafeString(Discourse.Formatter.autoUpdatingRelativeAge(dt));
 });
 
 /**
@@ -227,14 +210,9 @@ Handlebars.registerHelper('unboundDate', function(property, options) {
   @for Handlebars
 **/
 Handlebars.registerHelper('editDate', function(property, options) {
-  var dt, yesterday;
-  dt = Date.create(Ember.Handlebars.get(this, property, options));
-  yesterday = new Date() - (60 * 60 * 24 * 1000);
-  if (yesterday > dt.getTime()) {
-    return dt.format("long");
-  } else {
-    return dt.relative();
-  }
+  // autoupdating this is going to be painful
+  var date = new Date(Ember.Handlebars.get(this, property, options));
+  return new Handlebars.SafeString(Discourse.Formatter.autoUpdatingRelativeAge(date, {format: 'medium', leaveAgo: true, wrapInSpan: false}));
 });
 
 /**
@@ -294,7 +272,7 @@ Handlebars.registerHelper('number', function(property, options) {
   @for Handlebars
 **/
 Handlebars.registerHelper('date', function(property, options) {
-  var displayDate, dt, fiveDaysAgo, oneMinuteAgo, fullReadable, humanized, leaveAgo, val;
+  var leaveAgo, val;
   if (property.hash) {
     if (property.hash.leaveAgo) {
       leaveAgo = property.hash.leaveAgo === "true";
@@ -304,49 +282,10 @@ Handlebars.registerHelper('date', function(property, options) {
     }
   }
   val = Ember.Handlebars.get(this, property, options);
-  if (!val) {
-    return new Handlebars.SafeString("&mdash;");
+  var date = null;
+  if (val) {
+    date = new Date(val);
   }
-  dt = new Date(val);
-  fullReadable = dt.format("long");
-  displayDate = "";
-  fiveDaysAgo = (new Date()) - 432000000;
-  oneMinuteAgo = (new Date()) - 60000;
-  if (oneMinuteAgo <= dt.getTime() && dt.getTime() <= (new Date())) {
-    displayDate = Em.String.i18n("now");
-  } else if (fiveDaysAgo > (dt.getTime())) {
-    if ((new Date()).getFullYear() !== dt.getFullYear()) {
-      displayDate = dt.format("short");
-    } else {
-      displayDate = dt.format("short_no_year");
-    }
-  } else {
-    humanized = dt.relative();
-    if (!humanized) {
-      return "";
-    }
-    displayDate = humanized;
-    if (!leaveAgo) {
-        displayDate = (dt.millisecondsAgo()).duration();
-    }
-  }
-  return new Handlebars.SafeString("<span class='date' title='" + fullReadable + "'>" + displayDate + "</span>");
+  return new Handlebars.SafeString(Discourse.Formatter.autoUpdatingRelativeAge(date, {format: 'medium', leaveAgo: leaveAgo}));
 });
 
-/**
-  A personalized name for display
-
-  @method personalizedName
-  @for Handlebars
-**/
-Handlebars.registerHelper('personalizedName', function(property, options) {
-  var name, username;
-  name = Ember.Handlebars.get(this, property, options);
-  if (options.hash.usernamePath) {
-    username = Ember.Handlebars.get(this, options.hash.usernamePath, options);
-  }
-  if (username !== Discourse.get('currentUser.username')) {
-    return name;
-  }
-  return Em.String.i18n('you');
-});

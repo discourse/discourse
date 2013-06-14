@@ -13,7 +13,7 @@ describe SessionController do
       end
 
       it "raises an error when the login isn't present" do
-        lambda { xhr :post, :create }.should raise_error(Discourse::InvalidParameters)
+	lambda { xhr :post, :create }.should raise_error(ActionController::ParameterMissing)
       end
 
       describe 'invalid password' do
@@ -76,21 +76,42 @@ describe SessionController do
           it "doesn't log in the user" do
             session[:current_user_id].should be_blank
           end
+
+          it "shows the 'not approved' error message" do
+            expect(JSON.parse(response.body)['error']).to eq(
+              I18n.t('login.not_approved')
+            )
+          end
         end
       end
     end
 
     context 'when email has not been confirmed' do
-      before do
+      def post_login
         xhr :post, :create, login: user.email, password: 'myawesomepassword'
       end
 
       it "doesn't log in the user" do
+        post_login
         session[:current_user_id].should be_blank
       end
 
-      it 'returns an error message' do
-        ::JSON.parse(response.body)['error'].should be_present
+      it "shows the 'not activated' error message" do
+        post_login
+        expect(JSON.parse(response.body)['error']).to eq(
+          I18n.t 'login.not_activated'
+        )
+      end
+
+      context "and the 'must approve users' site setting is enabled" do
+        before { SiteSetting.expects(:must_approve_users?).returns(true) }
+
+        it "shows the 'not approved' error message" do
+          post_login
+          expect(JSON.parse(response.body)['error']).to eq(
+            I18n.t 'login.not_approved'
+          )
+        end
       end
     end
   end
@@ -114,7 +135,7 @@ describe SessionController do
   describe '.forgot_password' do
 
     it 'raises an error without a username parameter' do
-      lambda { xhr :post, :forgot_password }.should raise_error(Discourse::InvalidParameters)
+      lambda { xhr :post, :forgot_password }.should raise_error(ActionController::ParameterMissing)
     end
 
     context 'for a non existant username' do

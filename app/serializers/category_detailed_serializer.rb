@@ -9,10 +9,11 @@ class CategoryDetailedSerializer < ApplicationSerializer
              :topics_week,
              :topics_month,
              :topics_year,
-             :description
+             :description,
+             :is_uncategorized
 
   has_many :featured_users, serializer: BasicUserSerializer
-  has_many :featured_topics, serializer: CategoryTopicSerializer, embed: :objects, key: :topics
+  has_many :displayable_topics, serializer: ListableTopicSerializer, embed: :objects, key: :topics
 
   def topics_week
     object.topics_week || 0
@@ -24,6 +25,18 @@ class CategoryDetailedSerializer < ApplicationSerializer
 
   def topics_year
     object.topics_year || 0
+  end
+
+  def is_uncategorized
+    name == SiteSetting.uncategorized_name
+  end
+
+  def include_is_uncategorized?
+    is_uncategorized
+  end
+
+  def include_displayable_topics?
+    return displayable_topics.present?
   end
 
 end

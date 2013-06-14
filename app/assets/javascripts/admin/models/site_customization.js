@@ -23,7 +23,7 @@ Discourse.SiteCustomization = Discourse.Model.extend({
     var _this = this;
     if(!this.originals) return false;
 
-    var changed = this.trackedProperties.any(function(p) {
+    var changed = _.some(this.trackedProperties,function(p) {
       return _this.originals[p] !== _this.get(p);
     });
 
@@ -38,8 +38,8 @@ Discourse.SiteCustomization = Discourse.Model.extend({
   startTrackingChanges: function() {
     var _this = this;
     var originals = {};
-    this.trackedProperties.each(function(p) {
-      originals[p] = _this.get(p);
+    _.each(this.trackedProperties,function(prop) {
+      originals[prop] = _this.get(prop);
       return true;
     });
     this.set('originals', originals);
@@ -90,7 +90,7 @@ Discourse.SiteCustomization = Discourse.Model.extend({
 var SiteCustomizations = Ember.ArrayProxy.extend({
   selectedItemChanged: function() {
     var selected = this.get('selectedItem');
-    return this.get('content').each(function(i) {
+    _.each(this.get('content'),function(i) {
       return i.set('selected', selected === i);
     });
   }.observes('selectedItem')
@@ -101,7 +101,7 @@ Discourse.SiteCustomization.reopenClass({
     var customizations = SiteCustomizations.create({ content: [], loading: true });
     Discourse.ajax("/admin/site_customizations").then(function (data) {
       if (data) {
-        data.site_customizations.each(function(c) {
+        _.each(data.site_customizations,function(c) {
           customizations.pushObject(Discourse.SiteCustomization.create(c.site_customizations));
         });
       }

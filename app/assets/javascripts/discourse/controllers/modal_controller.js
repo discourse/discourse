@@ -6,10 +6,6 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.ModalController = Discourse.Controller.extend({
-  show: function(view) {
-    this.set('currentView', view);
-  }
-});
+Discourse.ModalController = Discourse.Controller.extend({});
 
 

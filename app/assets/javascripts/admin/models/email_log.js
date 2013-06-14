@@ -18,10 +18,10 @@ Discourse.EmailLog.reopenClass({
 
   findAll: function(filter) {
     var result = Em.A();
-    Discourse.ajax("/admin/email_logs.json", {
+    Discourse.ajax("/admin/email/logs.json", {
       data: { filter: filter }
     }).then(function(logs) {
-      logs.each(function(log) {
+      _.each(logs,function(log) {
         result.pushObject(Discourse.EmailLog.create(log));
       });
     });

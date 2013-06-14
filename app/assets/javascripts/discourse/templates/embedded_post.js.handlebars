@@ -5,7 +5,7 @@
         <div>
           <a href='/users/{{unbound username}}'>{{avatar this imageSize="small"}}</a>
         </div>
-        <h5><a href='/users/{{unbound username}}'>{{username}}</a></h5>
+        <h5 {{bindAttr class="staff new_user"}}><a href='{{unbound usernameUrl}}'>{{breakUp username}}</a></h5>
         <span class='post-date'>{{date created_at}}</span>
       </div>
 

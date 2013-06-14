@@ -107,6 +107,9 @@ fr:
       post:
         raw: "Corps"
     errors:
+      messages:
+        is_invalid: "n'est pas valide; merci d'être plus descriptif"
+        has_already_been_used: "est déjà utilisé"
       models:
         topic:
           attributes:
@@ -383,6 +386,7 @@ fr:
     queue_size_warning: "Il y a %{queue_size} tâches dans la file d'attente, ce qui est beaucoup. Cela peut provenir d'un problème avec les processus Sidekiq, ou à un manque de processus Sidekiq travailleurs."
     memory_warning: "Votre serveur dispose de moins de 1 Go de mémoire vive. Au moins 1 Go de RAM est recommandé."
     facebook_config_warning: "Le serveur est configuré pour permettre l'authentification par Facebook (enable_facebook_logins), mais les paramètres facebook_app_id et facebook_app_secret ne sont pas renseignés. Vous pouvez modifier ces paramètres dans <a href=\"/admin/site_settings\">l'interface d'administration</a>."
+    cas_config_warning: "Le serveur est configuré pour permettre l'authentification via CAS (enable_cas_logins), mais les paramètres cas_hostname et cas_domainname ne sont pas renseignés. Vous pouvez modifier ces paramètres dans <a href=\"/admin/site_settings\">l'interface d'administration</a>."
     twitter_config_warning: "Le serveur est configuré pour permettre l'authentification par Twitter (enable_twitter_logins), mais les paramètres twitter_consumer_key et twitter_consumer_secret ne sont pas renseignés. Vous pouvez modifier ces paramètres dans <a href=\"/admin/site_settings\">l'interface d'administration</a>."
     github_config_warning: "Le serveur est configuré pour permettre l'authentification par GitHub (enable_github_logins), mais les paramètres github_client_id et github_client_secret ne sont pas renseignés. Vous pouvez modifier ces paramètres dans <a href=\"/admin/site_settings\">l'interface d'administration</a>."
     failing_emails_warning: "Il y a %{num_failed_jobs} tâches d'envois d'email en erreur. Vérifiez votre fichier config/production.rb et assurez-vous de la conformité des paramètres du config.action_mailer"
@@ -390,6 +394,7 @@ fr:
     contact_email_missing: "Vous n'avez pas renseigné d'email de contact pour votre site. Merci de mettre à jour le <a href='/admin/site_settings'>paramètre de site</a> : contact_email."
     contact_email_invalid: "L'email de contact du site est invalide. Merci de mettre à jour le <a href='/admin/site_settings'>paramètre de site</a> : contact_email."
     title_nag: "Le titre de votre site est toujours à sa valeur par défaut. Merci de le modifier dans les <a href='/admin/site_settings'>paramètres du site</a>."
+    consumer_email_warning: "Votre site est configuré pour envoyer les emails en utilisant Gmail. <a href='http://support.google.com/a/bin/answer.py?hl=fr&answer=166852' target='_blank'>Gmail limite le nombre d'emails que vous pouvez envoyer</a>. Nous vous conseillons d'utiliser un autre service d'envoi d'emails afin d'assurer une meilleure délivrabilité."
 
   content_types:
     education_new_reply:
@@ -421,6 +426,7 @@ fr:
     min_topic_title_length: "longueur minimale des titres de discussion"
     max_topic_title_length: "longueur maximale des titres de discussion"
     min_search_term_length: "longueur mimimale du texte saisie avant de lancer une recherche"
+    allow_uncategorized_topics: "Autorise la création de discussions sans catégorie"
     allow_duplicate_topic_titles: "deux utilisateurs peuvent-ils créer des discussions avec le même titre"
     unique_posts_mins: "Combien de temps avant qu'un utilisateur puisse poster le même contenu à nouveau"
     enforce_global_nicknames: "Imposer un pseudo global. Note: fonctionne uniquement pendant la phase initiale de paramétrage."
@@ -436,18 +442,13 @@ fr:
     queue_jobs: "mettre les différents jobs en attente sur différentes queues, si false les queues sont en file"
     crawl_images: "permettre la récupération des images provenant de sources tierces"
     ninja_edit_window: "temps d'édition avant de sauvegarder une nouvelle version, en secondes."
-    enable_imgur: "utiliser l'envoi des images avec l'API imgur, ne pas stocker les fichiers localement"
-    imgur_client_id: "Votre ID client imgur.com. Requis pour que l'envoi d'images fonctionne."
-    imgur_client_secret: "Votre secret imgur.com. Pas nécessaire pour que l'envoi d'image fonctionne, mais pourrais le devenir."
-    imgur_endpoint: "point d'arrêt pour le chargement d'images sur imgur.com"
     max_image_width: "largeur maximale des images d'un message"
     category_featured_topics: "nombre de discussions affichées dans la liste par catégories"
-    add_rel_nofollow_to_user_content: "Ajouter rel nofollow à tous les contenus des utilisateurs, sauf les liens internes (incluant les domaines parents) Modifier ceci requiert une mise à jour de tout votre markdown"
+    add_rel_nofollow_to_user_content: "Ajouter rel nofollow à tous les contenus des utilisateurs, sauf les liens internes (incluant les domaines parents) Modifier ceci requiert une mise à jour de tout votre markdown (<code>rake posts:rebake</code>)"
     exclude_rel_nofollow_domains: "Une liste séparée par des virgules contenant les noms de domaines de premier niveau pour lesquels il faut ajouter un attribut nofollow (exemple.com va automatiquement fonctionner aussi avec sous.domaine.exemple.com)"
 
     post_excerpt_maxlength: "Longueur maximale d'un extrait de message."
     post_onebox_maxlength: "Longueur maximale d'un message emboîté."
-    new_topics_rollup: "Combien de discussions peuvent être insérées dans la liste des discussions avant de remonter."
     category_post_template: "Le modèle de message de définition d'une catégorie utilisé lorsque vous créez une nouvelle catégorie"
     onebox_max_chars: "Nombre maximal de caractères qu'une boîte peut importer en blob de texte."
 
@@ -499,6 +500,8 @@ fr:
 
     # TODO: perhaps we need a way of protecting these settings for hosted solution, global settings ...
 
+    enable_local_logins: "Active l'authentification locale"
+    enable_local_account_create: "Active la création de compte locale"
     enable_google_logins: "Active l'authentification Google"
     enable_yahoo_logins: "Active l'authentification Yahoo"
 
@@ -509,6 +512,9 @@ fr:
     enable_facebook_logins: "Active l'authentification Facebook (nécessite facebook_app_id et facebook_app_secret)"
     facebook_app_id: "identifiant de l'application, enregistré sur https://developers.facebook.com/apps (utilisé pour l'authentification facebook)"
     facebook_app_secret: "secret de l'application, enregistré sur https://developers.facebook.com/apps (utilisé pour l'authentification facebook)"
+
+    enable_cas_logins: "Active l'authentification CAS"
+    cas_hostname: "Nom d'hôte du serveur CAS"
 
     enable_github_logins: "Active l'authentification GitHub (nécessite github_client_id et github_client_secret)"
     github_client_id: "id client, enregistré sur https://github.com/settings/applications"
@@ -587,6 +593,7 @@ fr:
     privacy_policy_url: "Si vous disposez déjà d'une politique de confidentialité, vous pouvez renseigner son URL ici."
 
     newuser_spam_host_threshold: "Limite du nombre de liens vers un même host qu'un nouvel utilisateur peut insérer dans un message avant d'être considérer comme un SPAM."
+    staff_like_weight: "Poids supplémentaire donné aux Likes du staff lors d'une recherche."
 
   notification_types:
     mentioned: "%{display_username} vous a mentionné dans %{link}"
@@ -773,19 +780,6 @@ fr:
         - Pour effectuer une recherche, visiter votre profil, ou naviguer, cliquez sur les icônes en haut à droite.
 
         - Pendant que vous lisez une discussion, vous pouvez retourner au début en cliquant sur son titre situé en haut de l'écran. Pour atteindre la *fin*, cliquez sur la flèche vers le bas sur l'indiquateur de progression en bas de la page, ou cliquez sur le champ "dernier message" dans le résumé de la discussion, sous le premier message.
-
-    welcome_approved:
-      subject_template: "Vous avez été accepté sur %{site_name} !"
-      text_body_template: |
-        Félicitations !
-
-        Vous avez été accepté pour rejoindre %{site_name}, bienvenue sur notre forum de discussions.
-
-        %{new_user_tips}
-
-        Nous croyons au [comportement communautaire civilisé](%{base_url}/faq) en tous temps.
-
-        Amusez-vous bien !
 
     welcome_user:
       subject_template: "Bienvenue sur %{site_name} !"

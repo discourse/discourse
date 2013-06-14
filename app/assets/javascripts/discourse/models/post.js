@@ -9,12 +9,10 @@
 Discourse.Post = Discourse.Model.extend({
 
   shareUrl: function() {
-    var user = Discourse.get('currentUser');
-    if (this.get('postnumber') === 1){
-      return this.get('topic.url');
-    } else {
-      return this.get('url') + (user ? '?u=' + user.get('username_lower') : '');
-    }
+    if (this.get('postnumber') === 1) return this.get('topic.url');
+
+    var user = Discourse.User.current();
+    return this.get('url') + (user ? '?u=' + user.get('username_lower') : '');
   }.property('url'),
 
   new_user: function() {
@@ -116,7 +114,7 @@ Discourse.Post = Discourse.Model.extend({
     rightNow = new Date().getTime();
 
     // Show heat on age
-    updatedAtDate = Date.create(updatedAt).getTime();
+    updatedAtDate = new Date(updatedAt).getTime();
     if (updatedAtDate > (rightNow - 60 * 60 * 1000 * 12)) return 'heatmap-high';
     if (updatedAtDate > (rightNow - 60 * 60 * 1000 * 24)) return 'heatmap-med';
     if (updatedAtDate > (rightNow - 60 * 60 * 1000 * 48)) return 'heatmap-low';
@@ -124,11 +122,11 @@ Discourse.Post = Discourse.Model.extend({
 
   flagsAvailable: function() {
     var _this = this;
-    var flags = Discourse.get('site.flagTypes').filter(function(item) {
+    var flags = Discourse.Site.instance().get('flagTypes').filter(function(item) {
       return _this.get("actionByName." + (item.get('name_key')) + ".can_act");
     });
     return flags;
-  }.property('Discourse.site.flagTypes', 'actions_summary.@each.can_act'),
+  }.property('actions_summary.@each.can_act'),
 
   actionsHistory: function() {
     if (!this.present('actions_summary')) return null;
@@ -153,7 +151,7 @@ Discourse.Post = Discourse.Model.extend({
         }
       }).then(function(result) {
         // If we received a category update, update it
-        if (result.category) Discourse.get('site').updateCategory(result.category);
+        if (result.category) Discourse.Site.instance().updateCategory(result.category);
         if (complete) complete(Discourse.Post.create(result.post));
       }, function(result) {
         // Post failed to update
@@ -164,7 +162,10 @@ Discourse.Post = Discourse.Model.extend({
 
       // We're saving a post
       data = {
-        post: this.getProperties('raw', 'topic_id', 'reply_to_post_number', 'category'),
+        raw: this.get('raw'),
+        topic_id: this.get('topic_id'),
+        reply_to_post_number: this.get('reply_to_post_number'),
+        category: this.get('category'),
         archetype: this.get('archetype'),
         title: this.get('title'),
         image_sizes: this.get('imageSizes'),
@@ -206,10 +207,11 @@ Discourse.Post = Discourse.Model.extend({
 
     // Update all the properties
     if (!obj) return;
-    Object.each(obj, function(key, val) {
-      if (key === 'actions_summary') return false;
-      if (val) {
-        post.set(key, val);
+    _.each(obj, function(val,key) {
+      if (key !== 'actions_summary'){
+        if (val) {
+          post.set(key, val);
+        }
       }
     });
 
@@ -217,10 +219,10 @@ Discourse.Post = Discourse.Model.extend({
     this.set('actions_summary', Em.A());
     if (obj.actions_summary) {
       var lookup = Em.Object.create();
-      obj.actions_summary.each(function(a) {
+      _.each(obj.actions_summary,function(a) {
         var actionSummary;
         a.post = post;
-        a.actionType = Discourse.get("site").postActionTypeById(a.id);
+        a.actionType = Discourse.Site.instance().postActionTypeById(a.id);
         actionSummary = Discourse.ActionSummary.create(a);
         post.get('actions_summary').pushObject(actionSummary);
         lookup.set(a.actionType.get('name_key'), actionSummary);
@@ -237,7 +239,7 @@ Discourse.Post = Discourse.Model.extend({
     var parent = this;
     return Discourse.ajax("/posts/" + (this.get('id')) + "/replies").then(function(loaded) {
       var replies = parent.get('replies');
-      loaded.each(function(reply) {
+      _.each(loaded,function(reply) {
         var post = Discourse.Post.create(reply);
         post.set('topic', parent.get('topic'));
         replies.pushObject(post);
@@ -278,10 +280,9 @@ Discourse.Post.reopenClass({
     if (result.actions_summary) {
       lookup = Em.Object.create();
       result.actions_summary = result.actions_summary.map(function(a) {
-        var actionSummary;
         a.post = result;
-        a.actionType = Discourse.get("site").postActionTypeById(a.id);
-        actionSummary = Discourse.ActionSummary.create(a);
+        a.actionType = Discourse.Site.instance().postActionTypeById(a.id);
+        var actionSummary = Discourse.ActionSummary.create(a);
         lookup.set(a.actionType.get('name_key'), actionSummary);
         return actionSummary;
       });
@@ -290,8 +291,7 @@ Discourse.Post.reopenClass({
   },
 
   create: function(obj, topic) {
-    var result;
-    result = this._super(obj);
+    var result = this._super(obj);
     this.createActionSummary(result);
     if (obj.reply_to_user) {
       result.set('reply_to_user', Discourse.User.create(obj.reply_to_user));

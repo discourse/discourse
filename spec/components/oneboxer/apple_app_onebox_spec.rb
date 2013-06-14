@@ -11,7 +11,7 @@ describe Oneboxer::AppleAppOnebox do
   end
 
   it "generates the expected onebox for Apple app" do
-    @o.onebox.should == expected_apple_app_result
+    @o.onebox.should match_html expected_apple_app_result
   end
 
 private

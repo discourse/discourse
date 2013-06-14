@@ -36,7 +36,7 @@ class CookedPostProcessor
 
     images.each do |img|
       src = img['src']
-      src = Discourse.base_url_no_prefix + src if src[0] == "/"
+      src = Discourse.base_url_no_prefix + src if src =~ /^\/[^\/]/
 
       if src.present?
 
@@ -93,7 +93,7 @@ class CookedPostProcessor
     # 7. Optimise images should be a seperate site setting.
 
     # supports only local uploads
-    return src if SiteSetting.enable_imgur? || SiteSetting.enable_s3_uploads?
+    return src if SiteSetting.enable_s3_uploads?
 
     width, height = img["width"].to_i, img["height"].to_i
 

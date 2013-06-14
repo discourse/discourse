@@ -31,7 +31,7 @@
     <div class='field'>{{i18n user.ip_address.title}}</div>
     <div class='value'>{{ip_address}}</div>
     <div class='controls'>
-      {{#if Discourse.currentUser.admin}}
+      {{#if currentUser.admin}}
       <button class='btn' {{action refreshBrowsers target="content"}}>
         {{i18n admin.user.refresh_browsers}}
       </button>
@@ -59,11 +59,15 @@
 
     </div>
     <div class='controls'>
-      {{#if can_approve}}
-        <button class='btn' {{action approve target="content"}}>
-          <i class='icon icon-ok'></i>
-          {{i18n admin.user.approve}}
-        </button>
+      {{#if approved}}
+        {{i18n admin.user.approve_success}}
+      {{else}}
+        {{#if can_approve}}
+          <button class='btn' {{action approve target="content"}}>
+            <i class='icon icon-ok'></i>
+            {{i18n admin.user.approve}}
+          </button>
+        {{/if}}
       {{/if}}
     </div>
   </div>
@@ -161,6 +165,24 @@
     {{/if}}
     </div>
   </div>
+  <div class='display-row'>
+    <div class='field'>{{i18n admin.user.blocked}}</div>
+    <div class='value'>{{blocked}}</div>
+    <div class='controls'>
+      {{#if blocked}}
+        <button class='btn' {{action unblock target="content"}}>
+          <i class='icon icon-thumbs-up'></i>
+          {{i18n admin.user.unblock}}
+        </button>
+      {{else}}
+        <button class='btn btn-danger' {{action block target="content"}}>
+          <i class='icon icon-ban-circle'></i>
+          {{i18n admin.user.block}}
+        </button>
+      {{/if}}
+      {{i18n admin.user.block_explanation}}
+    </div>
+  </div>
 </section>
 
 <section class='details'>
@@ -226,7 +248,7 @@
 
 <section>
   <hr/>
-  <button class="btn pull-right" {{action destroy target="content"}} {{bindAttr disabled="deleteForbidden"}} {{bindAttr title="deleteButtonTitle"}}>
+  <button class="btn btn-danger pull-right" {{action destroy target="content"}} {{bindAttr disabled="deleteForbidden"}} {{bindAttr title="deleteButtonTitle"}}>
     <i class="icon icon-trash"></i>
     {{i18n admin.user.delete}}
   </button>

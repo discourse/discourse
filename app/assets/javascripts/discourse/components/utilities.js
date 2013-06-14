@@ -17,12 +17,16 @@ Discourse.Utilities = {
     return size;
   },
 
-  categoryUrlId: function(category) {
-    if (!category) return "";
-    var id = Em.get(category, 'id');
-    var slug = Em.get(category, 'slug');
-    if ((!slug) || slug.isBlank()) return "" + id + "-category";
-    return slug;
+  /**
+    Allows us to supply bindings without "binding" to a helper.
+  **/
+  normalizeHash: function(hash, hashTypes) {
+    for (var prop in hash) {
+      if (hashTypes[prop] === 'ID') {
+        hash[prop + 'Binding'] = hash[prop];
+        delete hash[prop];
+      }
+    }
   },
 
   // Create a badge like category link
@@ -35,7 +39,7 @@ Discourse.Utilities = {
     var description = Em.get(category, 'description');
 
     // Build the HTML link
-    var result = "<a href=\"" + Discourse.getURL("/category/") + this.categoryUrlId(category) + "\" class=\"badge-category\" ";
+    var result = "<a href=\"" + Discourse.getURL("/category/") + Discourse.Category.slugFor(category) + "\" class=\"badge-category\" ";
 
     // Add description if we have it
     if (description) result += "title=\"" + Handlebars.Utils.escapeExpression(description) + "\" ";

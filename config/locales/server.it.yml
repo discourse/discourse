@@ -429,10 +429,6 @@ it:
     queue_jobs: "Metti in coda diversi job in sidekiq, se false le code sono inline"
     crawl_images: "Abilita la ricezione di immagini da sorgenti terze parti"
     ninja_edit_window: "Numero di secondi trascorsi affinché una modifica del post appena inviato, non venga considerata come nuova revisione"
-    enable_imgur: "Utilizza le api imgur per l'upload, non salvare file in locale"
-    imgur_client_id: "Your imgur.com client ID, required for image upload to function"
-    imgur_client_secret: "Your imgur.com client secret. Not currently required for image upload to function, but may be at some point."
-    imgur_endpoint: "End point per l'upload di immagini su img.ur"
     max_image_width: "Larghezza massima delle immagini in un post"
     category_featured_topics: "Numero di topic mostrati per categoira nella pagina /categories"
     add_rel_nofollow_to_user_content: "Aggiungi l'attributo rel nofollow a tutti i contenuti degli utenti, tranne per i link interni (compresi i domini di livello superiore). Modificare questa opzione comporta l'aggiornamento di tutto il contenuto markdown salvato"
@@ -441,7 +437,6 @@ it:
     post_excerpt_maxlength: "Lunghezza massima dell'estratto di un post (caratteri)"
     post_onebox_maxlength: "Lunghezza massima di un post oneboxed (caratteri)"
     category_post_template: "Il template utilizzato durante la creazione di una nuova categoria"
-    new_topics_rollup: "Quanti nuovi topic possono essere inseriti nella lista dei topic prima di essere raggruppati in un counter"
     onebox_max_chars: "Massimo numero di caratteri che un onebox importa da un sito esterno all'interno di un post"
 
     logo_url: "Il logo del tuo sito es: http://example.com/logo.png"
@@ -765,19 +760,6 @@ it:
         - Per cercare, vedere il tuo profilo e per altri contenuti, clicca le icone in alto a destra.
 
         - Mentre leggi un topic, puoi tornare in cima cliccando il titolo all'inizio della pagina. Per raggiungere il *fondo* invece, clicca la freccia in basso nella progress bar situata in fondo alla pagina, o clicca il campo ultimo post nel sommario presente nel primo post.
-
-    welcome_approved:
-      subject_template: "Il tuo account è stato approvato su %{site_name}!"
-      text_body_template: |
-        Congratulazioni!
-
-        Il tuo account è stato approvato per accedere su %{site_name}, benvenuto nel nostro forum!
-
-        %{new_user_tips}
-
-        Crediamo nel [comportamento civilizzato della community](%{base_url}/faq) in ogni momento.
-
-        Goditi la permanenza!
 
     welcome_user:
       subject_template: "Benvenuto su %{site_name}!"

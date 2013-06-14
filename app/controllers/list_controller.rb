@@ -6,7 +6,13 @@ class ListController < ApplicationController
   # Create our filters
   [:latest, :hot, :favorited, :read, :posted, :unread, :new].each do |filter|
     define_method(filter) do
-      list_opts = {page: params[:page]}
+      list_opts = {
+        page: params[:page]
+      }
+
+      if params[:topic_ids]
+        list_opts[:topic_ids] = params[:topic_ids].split(",").map(&:to_i)
+      end
 
       # html format means we need to farm exclude from the site options
       if params[:format].blank? || params[:format] == "html"
@@ -32,7 +38,7 @@ class ListController < ApplicationController
     list = nil
 
     # If they choose uncategorized, return topics NOT in a category
-    if params[:category] == Slug.for(SiteSetting.uncategorized_name) or params[:category] == SiteSetting.uncategorized_name or params[:category] == 'null-category'
+    if params[:category] == 'uncategorized'
       list = query.list_uncategorized
     else
       @category = Category.where("slug = ? or id = ?", params[:category], params[:category].to_i).includes(:featured_users).first

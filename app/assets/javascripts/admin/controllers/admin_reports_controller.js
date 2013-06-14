@@ -1,15 +1,8 @@
 Discourse.AdminReportsController = Ember.ObjectController.extend({
   viewMode: 'table',
 
-  // true if we're viewing the table mode
-  viewingTable: function() {
-    return this.get('viewMode') === 'table';
-  }.property('viewMode'),
-
-  // true if we're viewing the bar chart mode
-  viewingBarChart: function() {
-    return this.get('viewMode') === 'barChart';
-  }.property('viewMode'),
+  viewingTable: Em.computed.equal('viewMode', 'table'),
+  viewingBarChart: Em.computed.equal('viewMode', 'barChart'),
 
   // Changes the current view mode to 'table'
   viewAsTable: function() {

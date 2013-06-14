@@ -30,3 +30,19 @@ class View < ActiveRecord::Base
     end
   end
 end
+
+# == Schema Information
+#
+# Table name: views
+#
+#  parent_id   :integer          not null
+#  parent_type :string(50)       not null
+#  ip          :integer          not null
+#  viewed_at   :date             not null
+#  user_id     :integer
+#
+# Indexes
+#
+#  index_views_on_parent_id_and_parent_type  (parent_id,parent_type)
+#
+

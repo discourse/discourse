@@ -1,0 +1,5 @@
+de:
+	site_settings:
+    enable_imgur: "Aktiviere die Imgur API zum Hochladen, so dass Dateien nicht lokal gehostet werden."
+    imgur_client_id: "Deine imgur.com Client-ID. Wird benötigt, um Bilder hochzuladen."
+    imgur_client_secret: "Dein imgur.com Geheimniss. Wird zur Zeit für das Hochladen der Bilder nicht benötigt, könnte aber in Zukunft benötigt werden."

@@ -2,7 +2,6 @@ class UserAction < ActiveRecord::Base
   belongs_to :user
   belongs_to :target_post, class_name: "Post"
   belongs_to :target_topic, class_name: "Topic"
-  attr_accessible :acting_user_id, :action_type, :target_topic_id, :target_post_id, :target_user_id, :user_id
 
   validates_presence_of :action_type
   validates_presence_of :user_id
@@ -34,6 +33,13 @@ class UserAction < ActiveRecord::Base
     STAR,
     EDIT
   ].each_with_index.to_a.flatten]
+
+  # note, this is temporary until we upgrade to rails 4
+  #  in rails 4 types are mapped correctly so you dont end up
+  #  having strings where you would expect bools
+  class UserActionRow < OpenStruct
+    include ActiveModel::SerializerSupport
+  end
 
 
   def self.stats(user_id, guardian)
@@ -86,7 +92,9 @@ SELECT
   p.reply_to_post_number,
   pu.email ,pu.username, pu.name, pu.id user_id,
   u.email acting_email, u.username acting_username, u.name acting_name, u.id acting_user_id,
-  coalesce(p.cooked, p2.cooked) cooked
+  coalesce(p.cooked, p2.cooked) cooked,
+  CASE WHEN coalesce(p.deleted_at, p2.deleted_at, t.deleted_at) IS NULL THEN false ELSE true END deleted,
+  p.hidden
 FROM user_actions as a
 JOIN topics t on t.id = a.target_topic_id
 LEFT JOIN posts p on p.id = a.target_post_id
@@ -105,30 +113,16 @@ LEFT JOIN categories c on c.id = t.category_id
 
     if action_id
       builder.where("a.id = :id", id: action_id.to_i)
-      data = builder.exec.to_a
     else
       builder.where("a.user_id = :user_id", user_id: user_id.to_i)
       builder.where("a.action_type in (:action_types)", action_types: action_types) if action_types && action_types.length > 0
-      builder.order_by("a.created_at desc")
-      builder.offset(offset.to_i)
-      builder.limit(limit.to_i)
-      data = builder.exec.to_a
+      builder
+        .order_by("a.created_at desc")
+        .offset(offset.to_i)
+        .limit(limit.to_i)
     end
 
-    data.each do |row|
-      row["action_type"] = row["action_type"].to_i
-      row["created_at"] = DateTime.parse(row["created_at"])
-      # we should probably cache the excerpts in the db at some point
-      row["excerpt"] = PrettyText.excerpt(row["cooked"],300) if row["cooked"]
-      row["cooked"] = nil
-      row["avatar_template"] = User.avatar_template(row["email"])
-      row["acting_avatar_template"] = User.avatar_template(row["acting_email"])
-      row.delete("email")
-      row.delete("acting_email")
-      row["slug"] = Slug.for(row["title"])
-    end
-
-    data
+    builder.map_exec(UserActionRow)
   end
 
   # slightly different to standard stream, it collapses replies
@@ -145,7 +139,9 @@ SELECT
   p.reply_to_post_number,
   pu.email ,pu.username, pu.name, pu.id user_id,
   pu.email acting_email, pu.username acting_username, pu.name acting_name, pu.id acting_user_id,
-  p.cooked
+  p.cooked,
+  CASE WHEN coalesce(p.deleted_at, t.deleted_at) IS NULL THEN false ELSE true END deleted,
+  p.hidden
 
 FROM topics t
 JOIN posts p ON p.topic_id =  t.id and p.post_number = t.highest_post_number
@@ -159,26 +155,10 @@ ORDER BY p.created_at desc
 /*limit*/
 ")
 
-    builder.offset((opts[:offset] || 0).to_i)
-    builder.limit((opts[:limit] || 60).to_i)
-
-    data = builder.exec(user_id: user_id, action_type: action_type).to_a
-
-    data.each do |row|
-      row["action_type"] = row["action_type"].to_i
-      row["created_at"] = DateTime.parse(row["created_at"])
-      # we should probably cache the excerpts in the db at some point
-      row["excerpt"] = PrettyText.excerpt(row["cooked"],300) if row["cooked"]
-      row["cooked"] = nil
-      row["avatar_template"] = User.avatar_template(row["email"])
-      row["acting_avatar_template"] = User.avatar_template(row["acting_email"])
-      row.delete("email")
-      row.delete("acting_email")
-      row["slug"] = Slug.for(row["title"])
-    end
-
-    data
-
+    builder
+      .offset((opts[:offset] || 0).to_i)
+      .limit((opts[:limit] || 60).to_i)
+      .map_exec(UserActionRow, user_id: user_id, action_type: action_type)
   end
 
   def self.log_action!(hash)
@@ -192,20 +172,15 @@ ORDER BY p.created_at desc
         end
         action.save!
 
-        action_type = hash[:action_type]
         user_id = hash[:user_id]
-        if action_type == LIKE
-          User.update_all('likes_given = likes_given + 1', id: user_id)
-        elsif action_type == WAS_LIKED
-          User.update_all('likes_received = likes_received + 1', id: user_id)
-        end
+        update_like_count(user_id, hash[:action_type], 1)
 
         topic = Topic.includes(:category).where(id: hash[:target_topic_id]).first
 
         # move into Topic perhaps
         group_ids = nil
         if topic && topic.category && topic.category.secure
-          group_ids = topic.category.groups.select("groups.id").map{|g| g.id}
+          group_ids = topic.category.groups.pluck("groups.id")
         end
 
         MessageBus.publish("/users/#{action.user.username.downcase}",
@@ -227,19 +202,20 @@ ORDER BY p.created_at desc
       MessageBus.publish("/user/#{hash[:user_id]}", {user_action_id: action.id, remove: true})
     end
 
-    action_type = hash[:action_type]
-    user_id = hash[:user_id]
-    if action_type == LIKE
-      User.update_all('likes_given = likes_given - 1', id: user_id)
-    elsif action_type == WAS_LIKED
-      User.update_all('likes_received = likes_received - 1', id: user_id)
-    end
+    update_like_count(hash[:user_id], hash[:action_type], -1)
   end
 
   protected
 
-  def self.apply_common_filters(builder,user_id,guardian,ignore_private_messages=false)
+  def self.update_like_count(user_id, action_type, delta)
+    if action_type == LIKE
+      User.update_all("likes_given = likes_given + #{delta.to_i}", id: user_id)
+    elsif action_type == WAS_LIKED
+      User.update_all("likes_received = likes_received + #{delta.to_i}", id: user_id)
+    end
+  end
 
+  def self.apply_common_filters(builder,user_id,guardian,ignore_private_messages=false)
 
     unless guardian.can_see_deleted_posts?
       builder.where("p.deleted_at is null and p2.deleted_at is null and t.deleted_at is null")
@@ -271,3 +247,25 @@ ORDER BY p.created_at desc
     end
   end
 end
+
+# == Schema Information
+#
+# Table name: user_actions
+#
+#  id              :integer          not null, primary key
+#  action_type     :integer          not null
+#  user_id         :integer          not null
+#  target_topic_id :integer
+#  target_post_id  :integer
+#  target_user_id  :integer
+#  acting_user_id  :integer
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#
+# Indexes
+#
+#  idx_unique_rows                           (action_type,user_id,target_topic_id,target_post_id,acting_user_id) UNIQUE
+#  index_actions_on_acting_user_id           (acting_user_id)
+#  index_actions_on_user_id_and_action_type  (user_id,action_type)
+#
+

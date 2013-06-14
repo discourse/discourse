@@ -251,6 +251,14 @@
     word-wrap: break-word;
     color: lighten($black, 30%);
   }
+  .item.deleted {
+    opacity: 0.8;
+    background-color: #ffcece;
+  }
+  .item.hidden {
+    display: block;
+    opacity: 0.4;
+  }
   .item {
     padding: 10px 8px;
     background-color: white;

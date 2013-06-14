@@ -8,6 +8,42 @@
 
 es:
   js:
+    dates:
+      tiny:
+        half_a_minute: "< 1m"
+        less_than_x_seconds:
+          one:   "< 1s"
+          other: "< %{count}s"
+        x_seconds:
+          one:   "1s"
+          other: "%{count}s"
+        less_than_x_minutes:
+          one:   "< 1m"
+          other: "< %{count}m"
+        x_minutes:
+          one:   "1m"
+          other: "%{count}m"
+        about_x_hours:
+          one:   "1h"
+          other: "%{count}h"
+        x_days:
+          one:   "1d"
+          other: "%{count}d"
+        about_x_months:
+          one:   "1mes"
+          other: "%{count}meses"
+        x_months:
+          one:   "1mes"
+          other: "%{count}meses"
+        about_x_years:
+          one:   "1y"
+          other: "%{count}y"
+        over_x_years:
+          one:   "> 1y"
+          other: "> %{count}y"
+        almost_x_years:
+          one:   "1y"
+          other: "%{count}y"
     share:
       topic: 'comparte un enlace a este tema'
       post: 'comparte un enlace a esta publicación'
@@ -50,6 +86,37 @@ es:
     saving: "Guardando..."
     saved: "¡Guardado!"
 
+    user_action:
+      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> posteó <a href='{{topicUrl}}'>el tema</a>"
+      you_posted_topic: "<a href='{{userUrl}}'>Tú</a> posteaste <a href='{{topicUrl}}'>el tema</a>"
+      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> contestó a <a href='{{postUrl}}'>{{post_number}}</a>"
+      you_replied_to_post: "<a href='{{userUrl}}'>Tú</a> contestaste a <a href='{{postUrl}}'>{{post_number}}</a>"
+      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> contestó a <a href='{{topicUrl}}'>el tema</a>"
+      you_replied_to_topic: "<a href='{{userUrl}}'>Tú</a> contestaste <a href='{{topicUrl}}'>el tema</a>"
+
+      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> mencionó <a href='{{user2Url}}'>{{another_user}}</a>"
+      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> <a href='{{user2Url}}'>te</a> mencionó"
+      you_mentioned_user: "<a href='{{user1Url}}'>Tú</a> mencionaste a <a href='{{user2Url}}'>{{user}}</a>"
+
+      posted_by_user: "Posteado por <a href='{{userUrl}}'>{{user}}</a>"
+      posted_by_you: "Posteado por <a href='{{userUrl}}'>ti</a>"
+      sent_by_user: "Enviado por <a href='{{userUrl}}'>{{user}}</a>"
+      sent_by_you: "Enviado por <a href='{{userUrl}}'>ti</a>"
+
+    user_action_groups:
+      "1": "Likes Dados"
+      "2": "Likes Recibidos"
+      "3": "Bookmarks"
+      "4": "Temas"
+      "5": "Replies"
+      "6": "Respuestas"
+      "7": "Menciones"
+      "9": "Quotes"
+      "10": "Favoritos"
+      "11": "Ediciones"
+      "12": "Items enviados"
+      "13": "Inbox"
+
     user_action_descriptions:
       "6": "Respuestas"
 
@@ -69,6 +136,12 @@ es:
       trust_level: "Nivel de Confianza"
       external_links_in_new_tab: "Abrir todos los links externos en una nueva pestaña"
       enable_quoting: "Activar respuesta citando el texto resaltado"
+
+      change_password:
+        action: "cambiar"
+        success: "(email enviado)"
+        in_progress: "(enviando email)"
+        error: "(error)"
 
       change_username:
         action: "cambiar"
@@ -272,10 +345,12 @@ es:
       saving_draft_tip: "guardando"
       saved_draft_tip: "guardado"
       saved_local_draft_tip: "guardado localmente"
+      similar_topics: "Tu tema es similar a..."
+      drafts_offline: "borradores offline"
 
       min_length:
-        at_least: "ingresa al menos {{n}} caracteres"
-        more: "{{n}} para comenzar..."
+        need_more_for_title: "{{n}} para completar el título"
+        need_more_for_reply: "{{n}} para completar la respuesta"
 
       save_edit: "Guardar Edición"
       reply_original: "Responder en el Tema Original"
@@ -354,6 +429,10 @@ es:
       no_results: "No se encontraron resultados."
       searching: "Buscando ..."
 
+      prefer:
+        user: "la búsqueda preferirá resultados por @{{username}}"
+        category: "la búsqueda preferirá resultados en {{category}}"
+
     site_map: "ir a otra lista de temas o categoría"
     go_back: 'volver'
     current_user: 'ir a tu página de usuario'
@@ -429,28 +508,29 @@ es:
       notifications:
         title: ''
         reasons:
-          "3_2": 'You will receive notifications because you are watching this topic.'
-          "3_1": 'You will receive notifications because you created this topic.'
-          "3": 'You will receive notifications because you are watching this topic.'
-          "2_4": 'You will receive notifications because you posted a reply to this topic.'
-          "2_2": 'You will receive notifications because you are tracking this topic.'
-          "2": 'You will receive notifications because you <a href="/users/{{username}}/preferences">read this topic</a>.'
-          "1": 'You will be notified only if someone mentions your @name or replies to your post.'
-          "1_2": 'You will be notified only if someone mentions your @name or replies to your post.'
-          "0": 'You are ignoring all notifications on this topic.'
-          "0_2": 'You are ignoring all notifications on this topic.'
+          "3_2": 'Recibirás notificaciones porque estás viendo este tema.'
+          "3_1": 'Recibirás notificaciones porque creaste este tema.'
+          "3": 'Recibirás notificaciones porque estás viendo este tema.'
+          "2_4": 'Recibirás notificaciones porque has posteado una respuesta en este tema.'
+          "2_2": 'Recibirás notificaciones porque estás siguiendo este tema.'
+          "2": 'Recibirás notificaciones porque estás siguiendo este tema.'
+          #"2": 'Recibirás notificaciones porque tu <a href="/users/{{username}}/preferences">has leido este tema</a>.' #I think its wrong
+          "1": 'Serás notificado solo si alguien menciona tu @nombre o responde a tu post.'
+          "1_2": 'Serás notificado solo si alguien menciona tu @nombre o responde a tu post.'
+          "0": 'Estás ignorando todas las notificaciones en este tema.'
+          "0_2": 'Estás ignorando todas las notificaciones en este tema.'
         watching:
-          title: "Watching"
-          description: "same as Tracking, plus you will be notified of all new posts."
+          title: "Viendo"
+          description: "igual que Siguiendo, además serás notificado de todos los nuevos posts."
         tracking:
-          title: "Tracking"
-          description: "you will be notified of unread posts, @name mentions, and replies to your posts."
+          title: "Siguiendo"
+          description: "serás notificado de los posts sin leer, menciones a tu @nombre y respuestas a tus posts."
         regular:
           title: "Regular"
-          description: "you will be notified only if someone mentions your @name or replies to your post."
+          description: "serás notificado solo si alguien menciona tu @nombre o responde a tus posts."
         muted:
-          title: "Muted"
-          description: "you will not be notified of anything about this topic, and it will not appear on your unread tab."
+          title: "Silenciado"
+          description: "no serás notificado de nada en este tema, y no aparecerá en tu pestaña de no leidos."
 
       actions:
         delete: "Delete Topic"
@@ -467,18 +547,18 @@ es:
         convert_to_topic: "Convert to Regular Topic"
 
       reply:
-        title: 'Reply'
-        help: 'begin composing a reply to this topic'
+        title: 'Responder'
+        help: 'comienza a escribir una respuesta a este tema'
 
       clear_pin:
-        title: "Clear pin"
-        help: "Clear the pinned status of this topic so it no longer appears at the top of your topic list"
+        title: "Eliminar pin"
+        help: "Elimina el estado 'pinned' de este tema de manera que no aparezca más en lo alto de tu lista de temas"
 
       share:
-        title: 'Share'
-        help: 'share a link to this topic'
+        title: 'Compartir'
+        help: 'comparte un link a este tema'
 
-      inviting: "Inviting..."
+      inviting: "Invitando..."
 
       invite_private:
         title: 'Invite to Private Message'
@@ -500,9 +580,22 @@ es:
       login_reply: 'Log In to Reply'
 
       filters:
-        user: "You're viewing only posts by specific user(s)."
-        best_of: "You're viewing only the 'Best Of' posts."
-        cancel: "Show all posts in this topic again."
+        user: "Estás viendo solo {{n_posts}} {{by_n_users}}."
+        n_posts:
+          one: "1 post"
+          other: "{{count}} posts"
+        by_n_users:
+          one: "hechos por 1 usuario específico"
+          other: "hechos por {{count}} usuarios específicos"
+
+        best_of: "Estás viendo el {{n_best_posts}} {{of_n_posts}}."
+        n_best_posts:
+          one: "1 mejor post"
+          other: "{{count}} mejores posts"
+        of_n_posts:
+          one: "de 1 en el tema"
+          other: "de {{count}} en el tema"
+        cancel: "Mostrar todos los posts en el tema de nuevo."
 
       move_selected:
         title: "Move Selected Posts"
@@ -600,7 +693,7 @@ es:
       color_placeholder: "Any web color"
       delete_confirm: "Are you sure you want to delete that category?"
       list: "List Categories"
-      no_description: "There is no description for this category."
+      no_description: "There is no description for this category, edit the topic definition."
       change_in_category_topic: "Edit Description"
 
     flagging:
@@ -726,7 +819,7 @@ es:
         delete: "Delete"
         delete_confirm: "Delete this customization?"
 
-      email_logs:
+      email:
         title: "Email"
         sent_at: "Sent At"
         email_type: "Email Type"

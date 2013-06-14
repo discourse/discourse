@@ -54,7 +54,7 @@ Discourse.AdminUser = Discourse.User.extend({
   approve: function() {
     this.set('can_approve', false);
     this.set('approved', true);
-    this.set('approved_by', Discourse.get('currentUser'));
+    this.set('approved_by', Discourse.User.current());
     Discourse.ajax("/admin/users/" + (this.get('id')) + "/approve", {type: 'PUT'});
   },
 
@@ -62,9 +62,10 @@ Discourse.AdminUser = Discourse.User.extend({
     return this.get('username').toLowerCase();
   }).property('username'),
 
-  trustLevel: (function() {
-    return Discourse.get('site.trust_levels').findProperty('id', this.get('trust_level'));
-  }).property('trust_level'),
+  trustLevel: function() {
+    var site = Discourse.Site.instance();
+    return site.get('trust_levels').findProperty('id', this.get('trust_level'));
+  }.property('trust_level'),
 
   isBanned: (function() {
     return this.get('is_banned') === true;
@@ -75,9 +76,9 @@ Discourse.AdminUser = Discourse.User.extend({
   }).property('admin', 'moderator'),
 
   banDuration: (function() {
-    var banned_at = Date.create(this.banned_at);
-    var banned_till = Date.create(this.banned_till);
-    return banned_at.short() + " - " + banned_till.short();
+    var banned_at = moment(this.banned_at);
+    var banned_till = moment(this.banned_till);
+    return banned_at.format('L') + " - " + banned_till.format('L');
   }).property('banned_till', 'banned_at'),
 
   ban: function() {
@@ -149,6 +150,28 @@ Discourse.AdminUser = Discourse.User.extend({
     });
   },
 
+  unblock: function() {
+    Discourse.ajax('/admin/users/' + this.id + '/unblock', {type: 'PUT'}).then(function() {
+      // succeeded
+      window.location.reload();
+    }, function(e) {
+      // failed
+      var error = Em.String.i18n('admin.user.unblock_failed', { error: "http: " + e.status + " - " + e.body });
+      bootbox.alert(error);
+    });
+  },
+
+  block: function() {
+    Discourse.ajax('/admin/users/' + this.id + '/block', {type: 'PUT'}).then(function() {
+      // succeeded
+      window.location.reload();
+    }, function(e) {
+      // failed
+      var error = Em.String.i18n('admin.user.block_failed', { error: "http: " + e.status + " - " + e.body });
+      bootbox.alert(error);
+    });
+  },
+
   sendActivationEmail: function() {
     Discourse.ajax('/users/' + this.get('username') + '/send_activation_email').then(function() {
       // succeeded
@@ -193,6 +216,17 @@ Discourse.AdminUser = Discourse.User.extend({
         });
       }
     });
+  },
+
+  loadDetails: function() {
+    var model = this;
+    if (model.get('loadedDetails')) { return; }
+
+    Discourse.AdminUser.find(model.get('username_lower')).then(function (result) {
+      console.log("loaded details");
+      model.setProperties(result);
+      model.set('loadedDetails', true);
+    });
   }
 
 });
@@ -205,6 +239,9 @@ Discourse.AdminUser.reopenClass({
       user.set('can_approve', false);
       return user.set('selected', false);
     });
+
+    bootbox.alert(Em.String.i18n("admin.user.approve_bulk_success"));
+
     return Discourse.ajax("/admin/users/approve-bulk", {
       type: 'PUT',
       data: {
@@ -217,6 +254,7 @@ Discourse.AdminUser.reopenClass({
 
   find: function(username) {
     return Discourse.ajax("/admin/users/" + username).then(function (result) {
+      result.loadedDetails = true;
       return Discourse.AdminUser.create(result);
     });
   },

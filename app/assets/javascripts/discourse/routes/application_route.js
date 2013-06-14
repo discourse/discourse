@@ -1,20 +1,65 @@
 /**
-  The base Application route
+  Application route for Discourse
 
   @class ApplicationRoute
-  @extends Discourse.Route
+  @extends Ember.Route
   @namespace Discourse
   @module Discourse
 **/
-Discourse.ApplicationRoute = Discourse.Route.extend({
-  setupController: function(controller) {
-    Discourse.set('site', Discourse.Site.create(PreloadStore.get('site')));
-    var currentUser = PreloadStore.get('currentUser');
-    if (currentUser) {
-      Discourse.set('currentUser', Discourse.User.create(currentUser));
+Discourse.ApplicationRoute = Em.Route.extend({
+
+  events: {
+    showLogin: function() {
+      Discourse.Route.showModal(this, 'login');
+    },
+
+    showCreateAccount: function() {
+      Discourse.Route.showModal(this, 'createAccount');
+    },
+
+    showForgotPassword: function() {
+      Discourse.Route.showModal(this, 'forgotPassword');
+    },
+
+    showNotActivated: function(props) {
+      Discourse.Route.showModal(this, 'notActivated');
+      this.controllerFor('notActivated').setProperties(props);
+    },
+
+    showImageSelector: function(composerView) {
+      Discourse.Route.showModal(this, 'imageSelector');
+      this.controllerFor('imageSelector').setProperties({
+        localSelected: true,
+        composerView: composerView
+      });
+    },
+
+
+    /**
+      Close the current modal.
+
+      @method closeModal
+    **/
+    closeModal: function() {
+      this.render('hide_modal', {into: 'modal', outlet: 'modalBody'});
+    },
+
+    editCategory: function(category) {
+      var router = this;
+
+      if (category.get('isUncategorized')) {
+        Discourse.Route.showModal(router, 'editCategory', category);
+        router.controllerFor('editCategory').set('selectedTab', 'general');
+      } else {
+        Discourse.Category.findBySlugOrId(category.get('slug') || category.get('id')).then(function (c) {
+          Discourse.Site.instance().updateCategory(c);
+          Discourse.Route.showModal(router, 'editCategory', c);
+          router.controllerFor('editCategory').set('selectedTab', 'general');
+        });
+      }
+
     }
-    // make sure we delete preloaded data
-    PreloadStore.remove('site');
-    PreloadStore.remove('currentUser');
+
   }
+
 });

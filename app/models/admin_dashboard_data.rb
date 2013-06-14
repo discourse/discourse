@@ -32,6 +32,7 @@ class AdminDashboardData
       failing_emails_check,
       default_logo_check,
       contact_email_check,
+      send_consumer_email_check,
       title_check ].compact
   end
 
@@ -48,6 +49,7 @@ class AdminDashboardData
       reports: REPORTS.map { |type| Report.find(type).as_json },
       admins: User.admins.count,
       moderators: User.moderators.count,
+      blocked: User.blocked.count,
       top_referrers: IncomingLinksReport.find('top_referrers').as_json,
       top_traffic_sources: IncomingLinksReport.find('top_traffic_sources').as_json,
       top_referred_topics: IncomingLinksReport.find('top_referred_topics').as_json
@@ -104,9 +106,9 @@ class AdminDashboardData
   end
 
   def default_logo_check
-    if SiteSetting.logo_url == SiteSetting.defaults[:logo_url] or
-        SiteSetting.logo_small_url == SiteSetting.defaults[:logo_small_url] or
-        SiteSetting.favicon_url == SiteSetting.defaults[:favicon_url]
+    if SiteSetting.logo_url =~ /#{SiteSetting.defaults[:logo_url].split('/').last}/ or
+        SiteSetting.logo_small_url =~ /#{SiteSetting.defaults[:logo_small_url].split('/').last}/ or
+        SiteSetting.favicon_url =~ /#{SiteSetting.defaults[:favicon_url].split('/').last}/
       I18n.t('dashboard.default_logo_warning')
     end
   end
@@ -118,6 +120,10 @@ class AdminDashboardData
 
   def title_check
     I18n.t('dashboard.title_nag') if SiteSetting.title == SiteSetting.defaults[:title]
+  end
+
+  def send_consumer_email_check
+    I18n.t('dashboard.consumer_email_warning') if Rails.env == 'production' and ActionMailer::Base.smtp_settings[:address] =~ /gmail\.com|live\.com|yahoo\.com/
   end
 
 end

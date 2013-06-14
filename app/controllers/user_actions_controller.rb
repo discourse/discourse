@@ -1,6 +1,8 @@
 class UserActionsController < ApplicationController
   def index
-    requires_parameters(:username)
+    params.require(:username)
+    params.permit(:filter, :offset)
+
     per_chunk = 60
 
     user = fetch_user_from_params
@@ -14,16 +16,19 @@ class UserActionsController < ApplicationController
       ignore_private_messages: params[:filter] ? false : true
     }
 
-    if opts[:action_types] == [UserAction::GOT_PRIVATE_MESSAGE] ||
-       opts[:action_types] == [UserAction::NEW_PRIVATE_MESSAGE]
-      render json: UserAction.private_message_stream(opts[:action_types][0], opts)
-    else
-      render json: UserAction.stream(opts)
-    end
+    stream =
+      if opts[:action_types] == [UserAction::GOT_PRIVATE_MESSAGE] ||
+         opts[:action_types] == [UserAction::NEW_PRIVATE_MESSAGE]
+        UserAction.private_message_stream(opts[:action_types][0], opts)
+      else
+        UserAction.stream(opts)
+      end
+
+    render_serialized(stream, UserActionSerializer, root: "user_actions")
   end
 
   def show
-    requires_parameters(:id)
+    params.require(:id)
     render json: UserAction.stream_item(params[:id], guardian)
   end
 

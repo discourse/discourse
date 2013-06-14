@@ -51,7 +51,7 @@ describe Discourse do
   context '#system_user' do
 
     let!(:admin) { Fabricate(:admin) }
-    let!(:another_admin) { Fabricate(:another_admin) }
+    let!(:another_admin) { Fabricate(:admin) }
 
     it 'returns the user specified by the site setting system_username' do
       SiteSetting.stubs(:system_username).returns(another_admin.username)

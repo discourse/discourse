@@ -429,10 +429,6 @@ zh_TW:
     queue_jobs: "如果失敗隊列在排隊，使用 Sidekiq 消息引擎對不同的工作排隊"
     crawl_images: "允許從第三方獲取圖片來插入寬、高數值"
     ninja_edit_window: "在多少秒鍾之內，對帖子的多次編輯不生成新版本"
-    enable_imgur: "啓用 Imgur API 來上傳文件，不在本地（站點服務器）保存文件"
-    imgur_client_id: "你的imgur.com的客戶端ID，以便圖片上傳能正常工作。"
-    imgur_client_secret: "你的imgur.com的客戶端secret。 目前圖片上傳功能並不需要這項信息，但是將來的某天可能需要。"
-    imgur_endpoint: "上傳圖片到 imgur.com 的終點"
     max_image_width: "帖子中圖片允許的最大寬度"
     category_featured_topics: "在分類 /categories 頁面每個分類顯示的主題數目"
     add_rel_nofollow_to_user_content: "添加 rel nofollow 標簽到所有提交的用戶信息（以防止搜索引擎搜集），除了內部鏈接（包括父域名）。修改此設置將要求你更新所有已有的 markdown 標簽內容"
@@ -441,7 +437,6 @@ zh_TW:
     post_excerpt_maxlength: "帖子摘要的最大字符長度"
     post_onebox_maxlength: "一個 論壇 - Discourse 單廂帖（Onebox post）的最大字符長度"
     category_post_template: "當你創建新分類時，分類的定義帖模板（創建新分類時會自動生成一個屬于該分類的新帖子）"
-    new_topics_rollup: "主題列表卷起顯示爲主題數量前，可以往主題列表中插入多少新主題"
     onebox_max_chars: "從外部網站導入到一個單廂帖（Onebox post）的最大字符數"
 
     logo_url: "你的站點標志圖片，例如：http://example.com/logo.png"
@@ -763,19 +758,6 @@ zh_TW:
         - 要搜索，訪問你的用戶頁面或者其他導航內容，點擊右上角的那些圖標。
 
         - 當閱讀一個主題時，你可以通過點擊頁面頂部的標題回到頂部；要去到 *底部*，點擊頁面底部的主題浏覽進度指示器裏的向下箭頭，或者點擊該主題第一帖下面的彙總信息裏的最後一帖區域。
-
-    welcome_approved:
-      subject_template: "你已經獲得了 %{site_name} 的批准！"
-      text_body_template: |
-        恭喜你！
-
-        你已經被批准加入 %{site_name}，歡迎來到我們論壇參與討論！
-
-        %{new_user_tips}
-
-        我們始終相信 [文明的社會行爲](%{base_url}/faq)。
-
-        好好享受你在論壇的時光吧！
 
     welcome_user:
       subject_template: "歡迎來到 %{site_name}！"

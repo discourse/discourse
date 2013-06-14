@@ -53,8 +53,8 @@ Discourse.ComposerView = Discourse.View.extend({
         // if the caret is on the last line ensure preview scrolled to bottom
         caretPosition = Discourse.Utilities.caretPosition(_this.wmdInput[0]);
         if (!_this.wmdInput.val().substring(caretPosition).match(/\n/)) {
-          $wmdPreview = $('#wmd-preview:visible');
-          if ($wmdPreview.length > 0) {
+          $wmdPreview = $('#wmd-preview');
+          if ($wmdPreview.is(':visible')) {
             return $wmdPreview.scrollTop($wmdPreview[0].scrollHeight);
           }
         }
@@ -116,9 +116,13 @@ Discourse.ComposerView = Discourse.View.extend({
       // Search for similar topics if the user pauses typing
       controller.findSimilarTopics();
     }, 1000);
+  },
 
+  keyDown: function(e) {
     // If the user hit ESC
-    if (e.which === 27) controller.hitEsc();
+    if (e.which === 27) {
+      this.get('controller').hitEsc();
+    }
   },
 
   didInsertElement: function() {
@@ -193,10 +197,7 @@ Discourse.ComposerView = Discourse.View.extend({
     $uploadTarget = $('#reply-control');
     this.editor.hooks.insertImageDialog = function(callback) {
       callback(null);
-      _this.get('controller.controllers.modal').show(Discourse.ImageSelectorView.create({
-        composer: _this,
-        uploadTarget: $uploadTarget
-      }));
+      _this.get('controller').send('showImageSelector', _this);
       return true;
     };
 
@@ -259,7 +260,7 @@ Discourse.ComposerView = Discourse.View.extend({
     // send - this event is triggered when the upload request is about to start
     $uploadTarget.on('fileuploadsend', function (e, data) {
       // hide the "image selector" modal
-      $('#discourse-modal').modal('hide');
+      _this.get('controller').send('closeModal');
       // cf. https://github.com/blueimp/jQuery-File-Upload/wiki/API#how-to-cancel-an-upload
       var jqXHR = data.xhr();
       // need to wait for the link to show up in the DOM
@@ -338,7 +339,6 @@ Discourse.ComposerView = Discourse.View.extend({
     Em.run.schedule('afterRender', function() {
       Discourse.Utilities.setCaretPosition(ctrl, caretPosition + text.length);
     });
-
   },
 
   // Uses javascript to get the image sizes from the preview, if present
@@ -369,7 +369,42 @@ Discourse.ComposerView = Discourse.View.extend({
       $adminOpts.show();
       $wmd.css('top', wmdTop + parseInt($adminOpts.css('height'),10) + 'px' );
     }
-  }
+  },
+
+  titleValidation: function() {
+    var title = this.get('content.title'), reason;
+    var minLength = (this.get('content.creatingPrivateMessage') ? Discourse.SiteSettings.min_private_message_title_length : Discourse.SiteSettings.min_topic_title_length);
+    if( !title || title.length < 1 ){
+      reason = Em.String.i18n('composer.error.title_missing');
+    } else if( title.length < minLength ) {
+      reason = Em.String.i18n('composer.error.title_too_short', {min: minLength})
+    } else if( title.length > Discourse.SiteSettings.max_topic_title_length ) {
+      reason = Em.String.i18n('composer.error.title_too_long', {max: Discourse.SiteSettings.max_topic_title_length})
+    }
+
+    if( reason ) {
+      return Discourse.InputValidation.create({ failed: true, reason: reason });
+    }
+  }.property('content.title'),
+
+  categoryValidation: function() {
+    if( !Discourse.SiteSettings.allow_uncategorized_topics && !this.get('content.categoryName')) {
+      return Discourse.InputValidation.create({ failed: true, reason: Em.String.i18n('composer.error.category_missing') });
+    }
+  }.property('content.categoryName'),
+
+  replyValidation: function() {
+    var reply = this.get('content.reply'), reason;
+    if( !reply || reply.length < 1 ){
+      reason = Em.String.i18n('composer.error.post_missing');
+    } else if( reply.length < Discourse.SiteSettings.min_post_length ) {
+      reason = Em.String.i18n('composer.error.post_length', {min: Discourse.SiteSettings.min_post_length})
+    }
+
+    if( reason ) {
+      return Discourse.InputValidation.create({ failed: true, reason: reason });
+    }
+  }.property('content.reply')
 });
 
 // not sure if this is the right way, keeping here for now, we could use a mixin perhaps

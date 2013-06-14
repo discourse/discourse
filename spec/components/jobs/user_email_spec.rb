@@ -31,7 +31,7 @@ describe Jobs::UserEmail do
   context 'to_address' do
     it 'overwrites a to_address when present' do
       UserNotifications.expects(:authorize_email).returns(mailer)
-      EmailSender.any_instance.expects(:send)
+      Email::Sender.any_instance.expects(:send)
       Jobs::UserEmail.new.execute(type: :authorize_email, user_id: user.id, to_address: 'jake@adventuretime.ooo')
       mailer.to.should == ['jake@adventuretime.ooo']
     end
@@ -42,7 +42,7 @@ describe Jobs::UserEmail do
 
     it "doesn't send an email to a user that's been recently seen" do
       user.update_column(:last_seen_at, 9.minutes.ago)
-      EmailSender.any_instance.expects(:send).never
+      Email::Sender.any_instance.expects(:send).never
       Jobs::UserEmail.new.execute(type: :private_message, user_id: user.id, post_id: post.id)
     end
   end
@@ -51,7 +51,7 @@ describe Jobs::UserEmail do
 
     it 'passes a token as an argument when a token is present' do
       UserNotifications.expects(:forgot_password).with(user, {email_token: 'asdfasdf'}).returns(mailer)
-      EmailSender.any_instance.expects(:send)
+      Email::Sender.any_instance.expects(:send)
       Jobs::UserEmail.new.execute(type: :forgot_password, user_id: user.id, email_token: 'asdfasdf')
     end
 
@@ -60,18 +60,18 @@ describe Jobs::UserEmail do
 
       it 'passes a post as an argument when a post_id is present' do
         UserNotifications.expects(:private_message).with(user, {post: post}).returns(mailer)
-        EmailSender.any_instance.expects(:send)
+        Email::Sender.any_instance.expects(:send)
         Jobs::UserEmail.new.execute(type: :private_message, user_id: user.id, post_id: post.id)
       end
 
       it "doesn't send the email if you've seen the post" do
-        EmailSender.any_instance.expects(:send).never
+        Email::Sender.any_instance.expects(:send).never
         PostTiming.record_timing(topic_id: post.topic_id, user_id: user.id, post_number: post.post_number, msecs: 6666)
         Jobs::UserEmail.new.execute(type: :private_message, user_id: user.id, post_id: post.id)
       end
 
       it "doesn't send the email if the user deleted the post" do
-        EmailSender.any_instance.expects(:send).never
+        Email::Sender.any_instance.expects(:send).never
         post.update_column(:user_deleted, true)
         Jobs::UserEmail.new.execute(type: :private_message, user_id: user.id, post_id: post.id)
       end
@@ -80,17 +80,24 @@ describe Jobs::UserEmail do
 
 
     context 'notification' do
-      let!(:notification) { Fabricate(:notification, user: user)}
+      let(:post) { Fabricate(:post, user: user) }
+      let!(:notification) { Fabricate(:notification, user: user, topic: post.topic, post_number: post.post_number)}
 
       it 'passes a notification as an argument when a notification_id is present' do
-        EmailSender.any_instance.expects(:send)
-        UserNotifications.expects(:user_mentioned).with(user, notification: notification).returns(mailer)
+        Email::Sender.any_instance.expects(:send)
+        UserNotifications.expects(:user_mentioned).with(user, notification: notification, post: post).returns(mailer)
         Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id)
       end
 
       it "doesn't send the email if the notification has been seen" do
-        EmailSender.any_instance.expects(:send).never
+        Email::Sender.any_instance.expects(:send).never
         notification.update_column(:read, true)
+        Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id)
+      end
+
+      it "doesn't send the email if the post has been user deleted" do
+        Email::Sender.any_instance.expects(:send).never
+        post.update_column(:user_deleted, true)
         Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id)
       end
 

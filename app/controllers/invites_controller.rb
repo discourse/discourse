@@ -1,6 +1,8 @@
 class InvitesController < ApplicationController
 
   skip_before_filter :check_xhr, :check_restricted_access
+  skip_before_filter :redirect_to_login_if_required
+
   before_filter :ensure_logged_in, only: [:destroy]
 
   def show
@@ -29,7 +31,7 @@ class InvitesController < ApplicationController
   end
 
   def destroy
-    requires_parameter(:email)
+    params.require(:email)
 
     invite = Invite.where(invited_by_id: current_user.id, email: params[:email]).first
     raise Discourse::InvalidParameters.new(:email) if invite.blank?

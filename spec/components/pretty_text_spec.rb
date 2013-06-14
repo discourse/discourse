@@ -105,24 +105,31 @@ test
 
   describe "Excerpt" do
 
+    context "images" do
+      it "should dump images" do
+        PrettyText.excerpt("<img src='http://cnn.com/a.gif'>",100).should == "[image]"
+      end
+
+      it "should keep alt tags" do
+        PrettyText.excerpt("<img src='http://cnn.com/a.gif' alt='car' title='my big car'>",100).should == "[car]"
+      end
+
+      it "should keep title tags" do
+        PrettyText.excerpt("<img src='http://cnn.com/a.gif' title='car'>",100).should == "[car]"
+      end
+
+      it "should convert images to markdown if the option is set" do
+        PrettyText.excerpt("<img src='http://cnn.com/a.gif' title='car'>", 100, markdown_images: true).should == "![car](http://cnn.com/a.gif)"
+      end
+
+    end
+
     it "should have an option to strip links" do
       PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>",100, strip_links: true).should == "cnn"
     end
 
     it "should preserve links" do
       PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>",100).should == "<a href='http://cnn.com'>cnn</a>"
-    end
-
-    it "should dump images" do
-      PrettyText.excerpt("<img src='http://cnn.com/a.gif'>",100).should == "[image]"
-    end
-
-    it "should keep alt tags" do
-      PrettyText.excerpt("<img src='http://cnn.com/a.gif' alt='car' title='my big car'>",100).should == "[car]"
-    end
-
-    it "should keep title tags" do
-      PrettyText.excerpt("<img src='http://cnn.com/a.gif' title='car'>",100).should == "[car]"
     end
 
     it "should deal with special keys properly" do
@@ -135,7 +142,7 @@ test
     end
 
     it "should insert a space between to Ps" do
-      PrettyText.excerpt("<p>a</p><p>b</p>",5).should == "a b "
+      PrettyText.excerpt("<p>a</p><p>b</p>",5).should == "a b"
     end
 
     it "should strip quotes" do
@@ -144,6 +151,10 @@ test
 
     it "should not count the surrounds of a link" do
       PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>",3).should == "<a href='http://cnn.com'>cnn</a>"
+    end
+
+    it "uses an ellipsis instead of html entities if provided with the option" do
+      PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>", 2, text_entities: true).should == "<a href='http://cnn.com'>cn...</a>"
     end
 
     it "should truncate links" do
@@ -162,6 +173,17 @@ test
       PrettyText.extract_links("<aside class=\"quote\" data-topic=\"1234\" data-post=\"4567\">aside</aside>").to_a.should == ["/t/topic/1234/4567"]
     end
 
+    it "should not extract links inside quotes" do
+      PrettyText.extract_links("
+        <a href='http://body_only.com'>http://useless1.com</a>
+        <aside class=\"quote\" data-topic=\"1234\">
+          <a href='http://body_and_quote.com'>http://useless3.com</a>
+          <a href='http://quote_only.com'>http://useless4.com</a>
+        </aside>
+        <a href='http://body_and_quote.com'>http://useless2.com</a>
+        ").to_a.should == ["http://body_only.com", "http://body_and_quote.com", "/t/topic/1234"]
+    end
+
     it "should not preserve tags in code blocks" do
       PrettyText.excerpt("<pre><code class='handlebars'>&lt;h3&gt;Hours&lt;/h3&gt;</code></pre>",100).should == "&lt;h3&gt;Hours&lt;/h3&gt;"
     end
@@ -172,6 +194,19 @@ test
 
   end
 
+  describe "strip links" do
+    it "returns blank for blank input" do
+      expect(PrettyText.strip_links("")).to be_blank
+    end
+
+    it "does nothing to a string without links" do
+      expect(PrettyText.strip_links("I'm the <b>batman</b>")).to eq("I'm the <b>batman</b>")
+    end
+
+    it "strips links but leaves the text content" do
+      expect(PrettyText.strip_links("I'm the linked <a href='http://en.wikipedia.org/wiki/Batman'>batman</a>")).to eq("I'm the linked batman")
+    end
+  end
 
   describe "apply cdn" do
     it "should detect bare links to images and apply a CDN" do

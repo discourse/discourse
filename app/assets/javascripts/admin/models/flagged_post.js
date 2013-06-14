@@ -12,8 +12,8 @@ Discourse.FlaggedPost = Discourse.Post.extend({
     var r,
       _this = this;
     r = [];
-    this.post_actions.each(function(a) {
-      return r.push(_this.userLookup[a.user_id]);
+    _.each(this.post_actions, function(action) {
+      r.push(_this.userLookup[action.user_id]);
     });
     return r;
   }.property(),
@@ -22,12 +22,12 @@ Discourse.FlaggedPost = Discourse.Post.extend({
     var r,
       _this = this;
     r = [];
-    this.post_actions.each(function(a) {
-      if (a.message) {
-        return r.push({
-          user: _this.userLookup[a.user_id],
-          message: a.message,
-          permalink: a.permalink
+    _.each(this.post_actions,function(action) {
+      if (action.message) {
+        r.push({
+          user: _this.userLookup[action.user_id],
+          message: action.message,
+          permalink: action.permalink
         });
       }
     });
@@ -66,16 +66,18 @@ Discourse.FlaggedPost = Discourse.Post.extend({
 Discourse.FlaggedPost.reopenClass({
   findAll: function(filter) {
     var result = Em.A();
+    result.set('loading', true);
     Discourse.ajax("/admin/flags/" + filter + ".json").then(function(data) {
       var userLookup = {};
-      data.users.each(function(u) {
-        userLookup[u.id] = Discourse.User.create(u);
+      _.each(data.users,function(user) {
+        userLookup[user.id] = Discourse.User.create(user);
       });
-      data.posts.each(function(p) {
-        var f = Discourse.FlaggedPost.create(p);
+      _.each(data.posts,function(post) {
+        var f = Discourse.FlaggedPost.create(post);
         f.userLookup = userLookup;
         result.pushObject(f);
       });
+      result.set('loading', false);
     });
     return result;
   }

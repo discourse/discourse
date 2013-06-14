@@ -1,9 +1,7 @@
 <div id='list-controls'>
   <div class="container">
     <ul class="nav nav-pills" id='category-filter'>
-      {{#each availableNavItems}}
-        {{view Discourse.NavItemView contentBinding="this"}}
-      {{/each}}
+      {{each availableNavItems itemViewClass="Discourse.NavItemView"}}
     </ul>
 
     {{#if canCreateTopic}}
@@ -11,7 +9,7 @@
     {{/if}}
 
     {{#if canEditCategory}}
-      <button class='btn btn-default' {{action editCategory}}>{{i18n category.edit_long}}</button>
+      <button class='btn btn-default' {{action editCategory category}}>{{i18n category.edit_long}}</button>
     {{/if}}
 
     {{#if canCreateCategory}}

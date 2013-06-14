@@ -30,15 +30,14 @@ describe TopicLink do
       TopicLink.extract_from(@post)
     end
 
-    it 'has the forum topic links' do
+    it 'works' do
+      # has the forum topic links
       @topic.topic_links.count.should == 4
-    end
 
-    it 'works with markdown links' do
+      # works with markdown links
       @topic.topic_links.exists?(url: "http://forumwarz.com").should be_true
-    end
 
-    it 'works with markdown links followed by a period' do
+      #works with markdown links followed by a period
       @topic.topic_links.exists?(url: "http://www.codinghorror.com/blog").should be_true
     end
 
@@ -63,14 +62,12 @@ describe TopicLink do
         @link = @topic.topic_links.first
       end
 
-      it "should have a link" do
+      it 'works' do
+        # should have a link
         @link.should be_present
-      end
-
-      it "should be the canonical URL" do
+        # should be the canonical URL
         @link.url.should == @url
       end
-
 
     end
 
@@ -89,27 +86,23 @@ describe TopicLink do
         @link = @topic.topic_links.first
       end
 
-      it 'extracted the link' do
+      it 'works' do
+        # extracted the link
         @link.should be_present
-      end
 
-      it 'is set to internal' do
+        # is set to internal
         @link.should be_internal
-      end
 
-      it 'has the correct url' do
+        # has the correct url
         @link.url.should == @url
-      end
 
-      it 'has the extracted domain' do
+        # has the extracted domain
         @link.domain.should == test_uri.host
-      end
 
-      it 'should have the id of the linked forum' do
+        # should have the id of the linked forum
         @link.link_topic_id == @other_topic.id
-      end
 
-      it 'should not be the reflection' do
+        # should not be the reflection
         @link.should_not be_reflection
       end
 
@@ -119,35 +112,17 @@ describe TopicLink do
           @reflection = @other_topic.topic_links.first
         end
 
-        it 'exists' do
+        it 'works' do
+          # exists
           @reflection.should be_present
-        end
-
-        it 'is a reflection' do
           @reflection.should be_reflection
-        end
-
-        it 'has a post_id' do
           @reflection.post_id.should be_present
-        end
-
-        it 'has the correct host' do
           @reflection.domain.should == test_uri.host
-        end
-
-        it 'has the correct url' do
           @reflection.url.should == "http://#{test_uri.host}/t/unique-topic-name/#{@topic.id}/#{@post.post_number}"
-        end
-
-        it 'links to the original forum topic' do
           @reflection.link_topic_id.should == @topic.id
-        end
-
-        it 'links to the original post' do
           @reflection.link_post_id.should == @post.id
-        end
 
-        it 'has the user id of the original link' do
+          #has the user id of the original link
           @reflection.user_id.should == @link.user_id
         end
       end
@@ -161,14 +136,10 @@ describe TopicLink do
 
         it 'should remove the link' do
           @topic.topic_links.where(post_id: @post.id).should be_blank
-        end
-
-        it 'should remove the reflected link' do
+          # should remove the reflected link
           @reflection = @other_topic.topic_links.should be_blank
         end
-
       end
-
     end
 
     context "link to a user on discourse" do
@@ -242,6 +213,64 @@ describe TopicLink do
       TopicLink.extract_from(@post)
       @reflection = @other_topic.topic_links.first
       @reflection.url.should == "http://#{alternate_uri.host}:5678/t/unique-topic-name/#{@topic.id}"
+    end
+  end
+
+  describe 'counts_for and topic_summary' do
+    it 'returns blank without posts' do
+      TopicLink.counts_for(Guardian.new, nil, nil).should be_blank
+    end
+
+    context 'with data' do
+
+      let(:post) do
+        topic = Fabricate(:topic)
+        Fabricate(:post_with_external_links, user: topic.user, topic: topic)
+      end
+
+      let(:counts_for) do
+        TopicLink.counts_for(Guardian.new, post.topic, [post])
+      end
+
+
+      it 'has the correct results' do
+        TopicLink.extract_from(post)
+        topic_link = post.topic.topic_links.first
+        TopicLinkClick.create(topic_link: topic_link, ip: '192.168.1.1')
+
+        counts_for[post.id].should be_present
+        counts_for[post.id].find {|l| l[:url] == 'http://google.com'}[:clicks].should == 0
+        counts_for[post.id].first[:clicks].should == 1
+
+        array = TopicLink.topic_summary(Guardian.new, post.topic_id)
+        array.length.should == 4
+        array[0]["clicks"].should == "1"
+      end
+
+      it 'secures internal links correctly' do
+        category = Fabricate(:category)
+        secret_topic = Fabricate(:topic, category: category)
+
+        url = "http://#{test_uri.host}/t/topic-slug/#{secret_topic.id}"
+        post = Fabricate(:post, raw: "hello test topic #{url}")
+        TopicLink.extract_from(post)
+
+        TopicLink.topic_summary(Guardian.new, post.topic_id).count.should == 1
+        TopicLink.counts_for(Guardian.new, post.topic, [post]).length.should == 1
+
+        category.deny(:all)
+        category.allow(Group[:staff])
+        category.save
+
+        admin = Fabricate(:admin)
+
+        TopicLink.topic_summary(Guardian.new, post.topic_id).count.should == 0
+        TopicLink.topic_summary(Guardian.new(admin), post.topic_id).count.should == 1
+
+        TopicLink.counts_for(Guardian.new, post.topic, [post]).length.should == 0
+        TopicLink.counts_for(Guardian.new(admin), post.topic, [post]).length.should == 1
+      end
+
     end
   end
 

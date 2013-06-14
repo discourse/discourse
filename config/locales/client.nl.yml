@@ -12,6 +12,65 @@
 
 nl:
   js:
+    dates:
+      short_date_no_year: "D MMM"
+      short_date: "D MMM YYYY"
+      long_date: "D MMMM YYYY H:mm"
+      tiny:
+        half_a_minute: "< 1m"
+        less_than_x_seconds:
+          one:   "< 1s"
+          other: "< %{count}s"
+        x_seconds:
+          one:   1s
+          other: "%{count}s"
+        less_than_x_minutes:
+          one:   "< 1m"
+          other: "< %{count}m"
+        x_minutes:
+          one:   1m
+          other: "%{count}m"
+        about_x_hours:
+          one:   1h
+          other: "%{count}h"
+        x_days:
+          one:   1d
+          other: "%{count}d"
+        about_x_months:
+          one:   1mnd
+          other: "%{count}mnd"
+        x_months:
+          one:   mnd
+          other: "%{count}mon"
+        about_x_years:
+          one:   1j
+          other: "%{count}j"
+        over_x_years:
+          one:   "> 1j"
+          other: "> %{count}j"
+        almost_x_years:
+          one:   1j
+          other: "%{count}j"
+      medium:
+        x_minutes:
+          one: 1 minuut
+          other: "%{count} minuten"
+        x_hours:
+          one: 1 uur
+          other: "%{count} uren"
+        x_days:
+          one: 1 dag
+          other: "%{count} dagen"
+      medium_with_ago:
+        x_minutes:
+          one: 1 minuut geleden
+          other: "%{count} minuten geleden"
+        x_hours:
+          one: 1 uur geleden
+          other: "%{count} uren geleden"
+        x_days:
+          one: 1 day geleden
+          other: "%{count} dagen geleden"
     share:
       topic: Deel een link naar deze topic
       post: Deel een link naar dit bericht
@@ -321,6 +380,9 @@ nl:
       facebook:
         title: met Facebook
         message: "Authenticatie met Facebook (zorg ervoor dat je popup blocker uit staat)"
+      cas:
+        title: met CAS
+        message: "Authenticatie met CAS (zorg ervoor dat je popup blocker uit staat)"
       yahoo:
         title: met Yahoo
         message: "Authenticatie met Yahoo (zorg ervoor dat je popup blocker uit staat)"
@@ -336,12 +398,20 @@ nl:
       saving_draft_tip: wordt opgeslagen
       saved_draft_tip: opgeslagen
       saved_local_draft_tip: lokaal opgeslagen
-      similar_topica: Jouw topic heeft overeenkomsten met...
+      similar_topics: Jouw topic heeft overeenkomsten met...
       drafts_offline: concepten offline
 
       min_length:
         need_more_for_title: "Nog {{n}} tekens nodig voor de titel"
         need_more_for_reply: "Nog {{n}} tekens nodig voor het antwoord"
+
+      error:
+        title_missing: Je bent de titel vergeten.
+        title_too_short: "De titel moet tenminste {{min}} tekens bevatten."
+        title_too_long: "De titel mag maximaal {{max}} tekens bevatten."
+        post_missing: Berichten kunnen niet leeg zijn.
+        post_length: "Berichten moeten tenminste {{min}} tekens bevatten."
+        category_missing: Je hebt nog geen categorie gekozen.
 
       save_edit: Bewaar wijzigingen
       reply_original: Reageer op oorspronkelijke topic
@@ -429,6 +499,10 @@ nl:
       no_results: Geen resultaten gevonden.
       searching: Zoeken...
 
+      prefer:
+        user: "er wordt voornamelijk gezocht naar berichten van @{{username}}"
+        category: "er wordt voornamelijk gezocht naar berichten in categorie {{category}}"
+
     site_map: ga naar een andere topic-lijst of categorie
     go_back: ga terug
     current_user: ga naar je gebruikerspagina
@@ -495,6 +569,23 @@ nl:
       toggle_information: 'Zet topic details aan/uit'
       read_more_in_category: "Wil je meer lezen? Kijk dan voor andere topics in {{catLink}} of {{latestLink}}."
       read_more: "Wil je meer lezen? {{catLink}} of {{latestLink}}."
+
+      # keys ending with _MF use message format, see /spec/components/js_local_helper_spec.rb for samples
+      read_more_MF: "There {
+        UNREAD, plural,
+        =0 {}
+        one {
+          is <a href='/unread'>1 ongelezen</a>
+        } other {
+          zijn <a href='/unread'># ongelezen</a>
+        }
+        } {
+          NEW, plural,
+            =0 {}
+            one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 nieuwe</a> topic}
+            other { {BOTH, select, true{and } false {zijn } other{}} <a href='/new'># nieuwe</a> topics}
+        } over, of {CATEGORY, select, true {bekijk andere topics in {catLink}} false {{latestLink}} other {}} "
+
       browse_all_categories: Bekijk alle categorieën
 
       view_latest_topics: bekijk populaire topics
@@ -504,7 +595,7 @@ nl:
       jump_reply_down: spring naar een latere reactie
       deleted: Deze topic is verwijderd
 
-      auto_close_notice: "Deze topic zal automatisch %{timeLeft} gesloten worden."
+      auto_close_notice: "Deze topic wordt automatisch over %{timeLeft} gesloten."
       auto_close_title: 'Instellingen voor automatisch sluiten'
       auto_close_save: Opslaan
       auto_close_cancel: Annuleren
@@ -783,6 +874,8 @@ nl:
       edit_long: Bewerk categorie
       edit_uncategorized: "Wijzig ongecategoriseerd"
       view: Bekijk topics in categorie
+      general: Algemeen
+      settings: Instellingen
       delete: Verwijder categorie
       create: Maak categorie
       save: Bewaar categorie
@@ -808,6 +901,8 @@ nl:
       add_group: "Voeg groep toe"
       security: "Beveiliging"
       allowed_groups: "Toegestane groepen:"
+      auto_close_label: "Sluit topics automatisch na:"
+
 
     flagging:
       title: Waarom meld je dit bericht voor moderatie?
@@ -916,6 +1011,7 @@ nl:
         no_problems: Er zijn geen problemen gevonden
         moderators: "Moderators:"
         admins: "Admins:"
+        blocked: "Geblokkeerd:"
         private_messages_short: PBs
         private_messages_title: Privé-berichten
 
@@ -978,7 +1074,7 @@ nl:
         delete_confirm: Verwijder deze aanpassing?
         about: Met aanpassingen aan de site kun je stylesheets en headers wijzigen. Kies of voeg een toe om te beginnen.
 
-      email_logs:
+      email:
         title: E-mail
         sent_at: Verzonden op
         email_type: E-mailtype
@@ -997,7 +1093,7 @@ nl:
       users:
         title: Leden
         create: Voeg beheerder toe
-        last_emailed: laatste mail verstuurd naar
+        last_emailed: Laatste mail verstuurd
         not_found: "Sorry, deze gebruikersnaam bestaat niet in ons systeem."
         new: Nieuw
         active: Actief
@@ -1017,6 +1113,7 @@ nl:
           elder: 'Leden met Trust Level 4 (Stamoudste)'
           admins: Administrators
           moderators: Moderators
+          blocked: Geblokkeerde leden
 
       user:
         ban_failed: "Er ging iets fout met het blokkeren van deze gebruiker: {{error}}"
@@ -1036,6 +1133,8 @@ nl:
         grant_admin: Geef Beheerdersrechten
         revoke_moderation: Ontneem modereerrechten
         grant_moderation: Geef modereerrechten
+        unblock: Deblokkeer
+        block: Blokkeer
         reputation: Reputatie
         permissions: Toestemmingen
         activity: Activiteit
@@ -1054,13 +1153,16 @@ nl:
         delete_confirm: Weet je zeker dat je deze gebruiker definitief wil verwijderen? Deze handeling is permanant!
         deleted: De gebruiker is verwijderd.
         delete_failed: Er ging iets mis bij het verwijderen van deze gebruiker. Zorg er voor dat alle berichten van deze gebruiker eerst verwijderd zijn.
-        send_activation_email: "Verstuur activatiemail"
-        activation_email_sent: "Een activatiemail is verstuurd."
-        send_activation_email_failed: "Er ging iets mis bij het versturen van de activatiemail."
-        activate: "Activeer account"
-        activate_failed: "Er ging iets mis bij het activeren van deze gebruiker."
-        deactivate_account: "Deactiveer account"
-        deactivate_failed: "Er ging iets mis bij het deactiveren van deze gebruiker."
+        send_activation_email: Verstuur activatiemail
+        activation_email_sent: Een activatiemail is verstuurd.
+        send_activation_email_failed: Er ging iets mis bij het versturen van de activatiemail.
+        activate: Activeer account
+        activate_failed: Er ging iets mis bij het activeren van deze gebruiker.
+        deactivate_account: Deactiveer account
+        deactivate_failed: Er ging iets mis bij het deactiveren van deze gebruiker.
+        unblock_failed: Er ging iets mis bij het deblokkeren van deze gebruiker.
+        block_failed: Er ging iets mis bij het blokkeren van deze gebruiker.
+        block_explanation: Een geblokkeerde gebruiker kan geen topics maken of reageren op topics.
 
       site_content:
         none: Selecteer een tekst om deze te bewerken

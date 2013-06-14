@@ -15,9 +15,9 @@
     <div class='clearfix'></div>
 
     <ul class='action-list nav-stacked side-nav'>
-      {{view Discourse.ActivityFilterView countBinding="statsCountNonPM"}}
+      {{activityFilter count=statsCountNonPM}}
       {{#each statsExcludingPms}}
-        {{view Discourse.ActivityFilterView contentBinding="this"}}
+        {{activityFilter content=this}}
       {{/each}}
     </ul>
     <div class='show'>
@@ -25,7 +25,9 @@
       {{#if hasWebsite}}
         <dt>{{i18n user.website}}:</dt><dd><a {{bindAttr href="website"}} target="_blank">{{websiteName}}</a></dd>
       {{/if}}
-      <dt>{{i18n user.created}}:</dt><dd>{{date created_at}}</dd>
+      {{#if created_at}}
+        <dt>{{i18n user.created}}:</dt><dd>{{date created_at}}</dd>
+      {{/if}}
       {{#if last_posted_at}}
         <dt>{{i18n user.last_posted}}:</dt><dd>{{date last_posted_at}}</dd>
       {{/if}}
@@ -51,4 +53,4 @@
   </div>
 {{/with}}
 
-{{view Discourse.UserStreamView streamBinding="model"}}
+{{userStream stream=model}}

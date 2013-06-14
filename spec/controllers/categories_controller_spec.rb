@@ -19,15 +19,15 @@ describe CategoriesController do
       end
 
       it 'raises an exception when the name is missing' do
-        lambda { xhr :post, :create, color: 'ff0', text_color: 'fff' }.should raise_error(Discourse::InvalidParameters)
+        lambda { xhr :post, :create, color: 'ff0', text_color: 'fff' }.should raise_error(ActionController::ParameterMissing)
       end
 
       it 'raises an exception when the color is missing' do
-        lambda { xhr :post, :create, name: 'hello', text_color: 'fff' }.should raise_error(Discourse::InvalidParameters)
+        lambda { xhr :post, :create, name: 'hello', text_color: 'fff' }.should raise_error(ActionController::ParameterMissing)
       end
 
       it 'raises an exception when the text color is missing' do
-        lambda { xhr :post, :create, name: 'hello', color: 'ff0' }.should raise_error(Discourse::InvalidParameters)
+        lambda { xhr :post, :create, name: 'hello', color: 'ff0' }.should raise_error(ActionController::ParameterMissing)
       end
 
       describe 'failure' do
@@ -106,15 +106,15 @@ describe CategoriesController do
       end
 
       it "requires a name" do
-        lambda { xhr :put, :update, id: @category.slug, color: 'fff', text_color: '0ff' }.should raise_error(Discourse::InvalidParameters)
+        lambda { xhr :put, :update, id: @category.slug, color: 'fff', text_color: '0ff' }.should raise_error(ActionController::ParameterMissing)
       end
 
       it "requires a color" do
-        lambda { xhr :put, :update, id: @category.slug, name: 'asdf', text_color: '0ff' }.should raise_error(Discourse::InvalidParameters)
+        lambda { xhr :put, :update, id: @category.slug, name: 'asdf', text_color: '0ff' }.should raise_error(ActionController::ParameterMissing)
       end
 
       it "requires a text color" do
-        lambda { xhr :put, :update, id: @category.slug, name: 'asdf', color: 'fff' }.should raise_error(Discourse::InvalidParameters)
+        lambda { xhr :put, :update, id: @category.slug, name: 'asdf', color: 'fff' }.should raise_error(ActionController::ParameterMissing)
       end
 
       describe 'failure' do

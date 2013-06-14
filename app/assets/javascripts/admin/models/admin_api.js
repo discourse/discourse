@@ -20,8 +20,10 @@ Discourse.AdminApi = Discourse.Model.extend({
 
 Discourse.AdminApi.reopenClass({
   find: function() {
-    return Discourse.ajax("/admin/api").then(function(data) {
-      return Discourse.AdminApi.create(data);
+    var model = Discourse.AdminApi.create();
+    Discourse.ajax("/admin/api").then(function(data) {
+      model.setProperties(data);
     });
+    return model;
   }
 });

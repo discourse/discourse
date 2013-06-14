@@ -111,6 +111,18 @@
       margin-top: 5px;
     }
   }
+  .toggle {
+    margin-top: 8px;
+    float: right;
+
+    span {
+      font-weight: bold;
+    }
+  }
+  label {
+    display: inline-block;
+    margin-right: 5px;
+  }
 }
 
 .settings {
@@ -165,6 +177,8 @@ table {
 }
 
 .display-row {
+  height: 30px;
+  line-height: 30px;
   padding: 5px;
   &:nth-of-type(1) {
     border-top: 0;
@@ -178,8 +192,6 @@ table {
     clear: both;
   }
   .field {
-    height: 30px;
-    line-height: 30px;
     font-weight: bold;
     width: 196px;
     float: left;
@@ -187,8 +199,6 @@ table {
   }
   .value {
     width: 250px;
-    height: 30px;
-    line-height: 30px;
     float: left;
     margin-left: 12px;
   }

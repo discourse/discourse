@@ -7,17 +7,16 @@
   @module Discourse
 **/
 Discourse.Topic = Discourse.Model.extend({
-  categoriesBinding: 'Discourse.site.categories',
 
-  fewParticipants: (function() {
+  fewParticipants: function() {
     if (!this.present('participants')) return null;
     return this.get('participants').slice(0, 3);
-  }).property('participants'),
+  }.property('participants'),
 
-  canConvertToRegular: (function() {
+  canConvertToRegular: function() {
     var a = this.get('archetype');
     return a !== 'regular' && a !== 'private_message';
-  }).property('archetype'),
+  }.property('archetype'),
 
   convertArchetype: function(archetype) {
     var a = this.get('archetype');
@@ -30,20 +29,22 @@ Discourse.Topic = Discourse.Model.extend({
     }
   },
 
+  searchContext: function() {
+    return ({ type: 'topic', id: this.get('id') });
+  }.property('id'),
+
   category: function() {
-    if (this.get('categories')) {
-      return this.get('categories').findProperty('name', this.get('categoryName'));
-    }
-  }.property('categoryName', 'categories'),
+    return Discourse.Category.list().findProperty('name', this.get('categoryName'));
+  }.property('categoryName'),
 
   shareUrl: function(){
-    var user = Discourse.get('currentUser');
+    var user = Discourse.User.current();
     return this.get('url') + (user ? '?u=' + user.get('username_lower') : '');
   }.property('url'),
 
   url: function() {
     var slug = this.get('slug');
-    if (slug.isBlank()) {
+    if (slug.trim().length === 0) {
       slug = "topic";
     }
     return Discourse.getURL("/t/") + slug + "/" + (this.get('id'));
@@ -68,16 +69,19 @@ Discourse.Topic = Discourse.Model.extend({
 
   // The last post in the topic
   lastPost: function() {
-    return this.get('posts').last();
+    var posts = this.get('posts')
+    return posts[posts.length-1];
   },
 
   postsChanged: function() {
     var last, posts;
     posts = this.get('posts');
-    last = posts.last();
+    last = posts[posts.length - 1];
     if (!(last && last.set && !last.lastPost)) return;
-    posts.each(function(p) {
-      if (p.lastPost) return p.set('lastPost', false);
+    _.each(posts,function(p) {
+      if (p.lastPost) {
+        p.set('lastPost', false);
+      }
     });
     last.set('lastPost', true);
     return true;
@@ -130,9 +134,9 @@ Discourse.Topic = Discourse.Model.extend({
     return null;
   }.property('views'),
 
-  archetypeObject: (function() {
-    return Discourse.get('site.archetypes').findProperty('id', this.get('archetype'));
-  }).property('archetype'),
+  archetypeObject: function() {
+    return Discourse.Site.instance().get('archetypes').findProperty('id', this.get('archetype'));
+  }.property('archetype'),
 
   isPrivateMessage: (function() {
     return this.get('archetype') === 'private_message';
@@ -220,6 +224,7 @@ Discourse.Topic = Discourse.Model.extend({
 
     // If loading the topic succeeded...
     var afterTopicLoaded = function(result) {
+
       var closestPostNumber, lastPost, postDiff;
 
       // Update the slug if different
@@ -230,7 +235,7 @@ Discourse.Topic = Discourse.Model.extend({
       opts.nearPost = parseInt(opts.nearPost, 10);
       closestPostNumber = 0;
       postDiff = Number.MAX_VALUE;
-      result.posts.each(function(p) {
+      _.each(result.posts,function(p) {
         var diff = Math.abs(p.post_number - opts.nearPost);
         if (diff < postDiff) {
           postDiff = diff;
@@ -246,6 +251,7 @@ Discourse.Topic = Discourse.Model.extend({
       if (result.suggested_topics) {
         topic.set('suggested_topics', Em.A());
       }
+
       topic.mergeAttributes(result, { suggested_topics: Discourse.Topic });
       topic.set('posts', Em.A());
       if (opts.trackVisit && result.draft && result.draft.length > 0) {
@@ -260,18 +266,19 @@ Discourse.Topic = Discourse.Model.extend({
 
       // Okay this is weird, but let's store the length of the next post when there
       lastPost = null;
-      result.posts.each(function(p) {
-        var post;
+      _.each(result.posts,function(p) {
         p.scrollToAfterInsert = opts.nearPost;
-        post = Discourse.Post.create(p);
+        var post = Discourse.Post.create(p);
         post.set('topic', topic);
         topic.get('posts').pushObject(post);
         lastPost = post;
       });
+
       topic.set('loaded', true);
     }
 
     var errorLoadingTopic = function(result) {
+
       topic.set('errorLoading', true);
 
       // If the result was 404 the post is not found
@@ -306,7 +313,7 @@ Discourse.Topic = Discourse.Model.extend({
     if (typeof this.get('notifications_reason_id') === 'number') {
       locale_string += "_" + this.get('notifications_reason_id');
     }
-    return Em.String.i18n(locale_string, { username: Discourse.currentUser.username.toLowerCase() });
+    return Em.String.i18n(locale_string, { username: Discourse.User.current('username_lower') });
   }.property('notification_level', 'notifications_reason_id'),
 
   updateNotifications: function(v) {
@@ -323,18 +330,18 @@ Discourse.Topic = Discourse.Model.extend({
     var map, posts;
     map = {};
     posts = this.get('posts');
-    posts.each(function(p) {
-      map["" + p.post_number] = true;
+    _.each(posts,function(post) {
+      map["" + post.post_number] = true;
     });
-    return newPosts.each(function(p) {
-      if (!map[p.get('post_number')]) {
-        return posts.pushObject(p);
+    _.each(newPosts,function(post) {
+      if (!map[post.get('post_number')]) {
+        posts.pushObject(post);
       }
     });
   },
 
   /**
-    Clears the pin from a topic for the currentUser
+    Clears the pin from a topic for the currently logged in user
 
     @method clearPin
   **/
@@ -441,7 +448,7 @@ Discourse.Topic.reopenClass({
     return PreloadStore.getAndRemove("topic_" + topicId, function() {
       return Discourse.ajax(url + ".json", {data: data});
     }).then(function(result) {
-      var first = result.posts.first();
+      var first = result.posts[0];
       if (first && opts && opts.bestOf) {
         first.bestOfFirst = true;
       }
@@ -472,19 +479,21 @@ Discourse.Topic.reopenClass({
   },
 
   create: function(obj, topicView) {
-    return Object.tap(this._super(obj), function(result) {
-      if (result.participants) {
-        result.participants = result.participants.map(function(u) {
-          return Discourse.User.create(u);
-        });
-        result.fewParticipants = Em.A();
-        return result.participants.each(function(p) {
-          if (result.fewParticipants.length >= 8) return false;
-          result.fewParticipants.pushObject(p);
-          return true;
-        });
-      }
-    });
+    var result = this._super(obj);
+
+    if (result.participants) {
+      result.participants = _.map(result.participants,function(u) {
+        return Discourse.User.create(u);
+      });
+      result.fewParticipants = Em.A();
+      _.each(result.participants,function(p) {
+        // TODO should not be hardcoded
+        if (result.fewParticipants.length >= 8) return false;
+        result.fewParticipants.pushObject(p);
+      });
+    }
+
+    return result;
   }
 
 });

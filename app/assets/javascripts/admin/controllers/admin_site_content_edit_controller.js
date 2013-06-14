@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.AdminSiteContentEditController = Discourse.ObjectController.extend({
+Discourse.AdminSiteContentEditController = Discourse.Controller.extend({
 
   saveDisabled: function() {
     if (this.get('saving')) return true;

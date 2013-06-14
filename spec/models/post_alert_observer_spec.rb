@@ -105,7 +105,6 @@ describe PostAlertObserver do
         mention_post
       }.should_not change(evil_trout.notifications, :count)
     end
-
   end
 
   context 'moderator action post' do

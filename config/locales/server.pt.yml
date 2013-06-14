@@ -250,9 +250,6 @@ pt:
     queue_jobs: "'queue' vários 'jobs' no sidekiq, if false queues are inline"
     crawl_images: "permitir mostrar imagens de sites terceiros"
     ninja_edit_window: "quão rápido é possivél fazer uma alteração sem guardar uma nova versão, em segundos."
-    enable_imgur: "permitir imgur api para uploading, não guardar ficheiros localmente"
-    imgur_api_key: "chave para imgur.com api - necessária para image upload"
-    imgur_endpoint: "end point para uploading imgur.com images"
     max_image_width: "máxima largura para uma imagem num post"
     category_featured_topics: "numero de tópicos mostrados na lista de categorias"
     popup_delay: "Espaço de tempo em ms antes dos popus aparecer no ecrã"
@@ -261,7 +258,6 @@ pt:
     post_excerpt_maxlength: "Tamanho máximo em caracteres para um post."
     post_onebox_maxlength: "Tamanho máximo para um oneboxed discourse post."
     category_post_template: "O template para um post que aparece quando crias uma categoria."
-    new_topics_rollup: "Quantos tópicos podem ser inseridos na lista de tópicos antes de serem puxados."
     onebox_max_chars: "Máximo número de caracteres que um onebox vai importar num único pedaço."
     logo_url: "O logo para o teu site eg: http://example.com/logo.png"
     logo_small_url: "O logo em pequeno para o teu site (aparece nas páginas dos tópicos) eg: http://example.com/logo-small.png"
@@ -555,19 +551,6 @@ pt:
         - Para pesquisar, ir para a tua página de utilizador, ou então navegar, clica no icon no canto superior direito.
 
         - Enquanto estiveres a ler um tópico, podes mover para o topo clicando no título no topo da página. Para chegar ao fundo clica na seta na barra de prograsso no fundo da página, ou clica no último campo sumário do tópico debaixo do primeiro post.
-
-    welcome_approved:
-      subject_template: "Foste aprovado no %{site_name}!"
-      text_body_template: |
-        Parabéns!
-
-        Estás aprovado para te juntares a %{site_name}, ben-vindo ao nosso foum!
-
-        %{new_user_tips}
-
-        Acreditamos num [comportamento civilizado na comunidade](%{base_url}/faq) a toda a hora.
-
-        Diverte-te durante a estadia!
 
     welcome_user:
       subject_template: "Welcome to %{site_name}!"

@@ -16,6 +16,15 @@ class SqlBuilder
     end
   end
 
+  def secure_category(secure_category_ids, category_alias = 'c')
+    if secure_category_ids.present?
+      where("NOT COALESCE(" << category_alias << ".secure, false) OR " << category_alias <<  ".id IN (:secure_category_ids)", secure_category_ids: secure_category_ids)
+    else
+      where("NOT COALESCE(" << category_alias << ".secure, false)")
+    end
+    self
+  end
+
   def to_sql
     sql = @sql.dup
 
@@ -56,13 +65,13 @@ class SqlBuilder
     end
   end
 
-  #weird AS reloading
-  unless defined? FTYPE_MAP
-    FTYPE_MAP = {
-      23 => :value_to_integer,
-      1114 => :string_to_time
-    }
-  end
+  #AS reloads this on tests
+  remove_const :FTYPE_MAP if defined? FTYPE_MAP
+  FTYPE_MAP = {
+    23 => :value_to_integer,
+    1114 => :string_to_time,
+    16 => :value_to_boolean
+  }
 
   def map_exec(klass, args = {})
     results = exec(args)

@@ -169,3 +169,26 @@ footer:after{ content: '#{error}' }"
     @stylesheet_link_tag = "<link class=\"custom-css\" rel=\"stylesheet\" href=\"/#{CACHE_PATH}#{stylesheet_filename}?#{stylesheet_hash}\" type=\"text/css\" media=\"screen\">"
   end
 end
+
+# == Schema Information
+#
+# Table name: site_customizations
+#
+#  id                     :integer          not null, primary key
+#  name                   :string(255)      not null
+#  stylesheet             :text
+#  header                 :text
+#  position               :integer          not null
+#  user_id                :integer          not null
+#  enabled                :boolean          not null
+#  key                    :string(255)      not null
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  override_default_style :boolean          default(FALSE), not null
+#  stylesheet_baked       :text             default(""), not null
+#
+# Indexes
+#
+#  index_site_customizations_on_key  (key)
+#
+

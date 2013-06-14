@@ -8,13 +8,13 @@
 **/
 Discourse.UserAction = Discourse.Model.extend({
 
-  descriptionHtml: (function() {
+  descriptionHtml: function() {
     var action = this.get('action_type');
     var ua = Discourse.UserAction;
     var actions = [ua.LIKE, ua.WAS_LIKED, ua.STAR, ua.EDIT, ua.BOOKMARK, ua.GOT_PRIVATE_MESSAGE, ua.NEW_PRIVATE_MESSAGE];
     var icon = "";
     var sentence = "";
-    var sameUser = (this.get('username') === Discourse.get('currentUser.username'));
+    var sameUser = (this.get('username') === Discourse.User.current('username'));
 
     if (action === null || actions.indexOf(action) >= 0) {
       if (this.get('isPM')) {
@@ -60,7 +60,7 @@ Discourse.UserAction = Discourse.Model.extend({
         sentence = Em.String.i18n('user_action.you_mentioned_user', { user: this.get('target_name'),
             user1Url: this.get('userUrl'), user2Url: this.get('targetUserUrl') });
       } else {
-        if (this.get('target_username') === Discourse.get('currentUser.username')) {
+        if (this.get('target_username') === Discourse.User.current('username')) {
           sentence = Em.String.i18n('user_action.user_mentioned_you', { user: this.get('name'),
               user1Url: this.get('userUrl'), user2Url: this.get('targetUserUrl') });
         } else {
@@ -73,19 +73,19 @@ Discourse.UserAction = Discourse.Model.extend({
     }
 
     return new Handlebars.SafeString(icon + " " + sentence);
-  }).property(),
+  }.property(),
 
-  targetUserUrl: (function() {
+  targetUserUrl: function() {
     return Discourse.Utilities.userUrl(this.get('target_username'));
-  }).property(),
+  }.property(),
 
-  userUrl: (function() {
+  userUrl: function() {
     return Discourse.Utilities.userUrl(this.get('username'));
-  }).property(),
+  }.property(),
 
-  postUrl: (function() {
+  postUrl: function() {
     return Discourse.Utilities.postUrl(this.get('slug'), this.get('topic_id'), this.get('post_number'));
-  }).property(),
+  }.property(),
 
   replyUrl: function() {
     return Discourse.Utilities.postUrl(this.get('slug'), this.get('topic_id'), this.get('reply_to_post_number'));
@@ -102,27 +102,19 @@ Discourse.UserAction = Discourse.Model.extend({
   }.property(),
 
   addChild: function(action) {
-    var bucket, current, groups, ua;
-    groups = this.get("childGroups");
+    var groups = this.get("childGroups");
     if (!groups) {
       groups = {
-        likes: Discourse.UserActionGroup.create({
-          icon: "icon-heart"
-        }),
-        stars: Discourse.UserActionGroup.create({
-          icon: "icon-star"
-        }),
-        edits: Discourse.UserActionGroup.create({
-          icon: "icon-pencil"
-        }),
-        bookmarks: Discourse.UserActionGroup.create({
-          icon: "icon-bookmark"
-        })
+        likes: Discourse.UserActionGroup.create({ icon: "icon-heart" }),
+        stars: Discourse.UserActionGroup.create({ icon: "icon-star" }),
+        edits: Discourse.UserActionGroup.create({ icon: "icon-pencil" }),
+        bookmarks: Discourse.UserActionGroup.create({ icon: "icon-bookmark" })
       };
     }
     this.set("childGroups", groups);
-    ua = Discourse.UserAction;
-    bucket = (function() {
+
+    var ua = Discourse.UserAction;
+    var bucket = (function() {
       switch (action.action_type) {
         case ua.LIKE:
         case ua.WAS_LIKED:
@@ -135,23 +127,22 @@ Discourse.UserAction = Discourse.Model.extend({
           return "bookmarks";
       }
     })();
-    current = groups[bucket];
+    var current = groups[bucket];
     if (current) {
       current.push(action);
     }
   },
 
-  children: (function() {
-    var g, rval;
-    g = this.get("childGroups");
-    rval = [];
+  children: function() {
+    var g = this.get("childGroups");
+    var rval = [];
     if (g) {
       rval = [g.likes, g.stars, g.edits, g.bookmarks].filter(function(i) {
         return i.get("items") && i.get("items").length > 0;
       });
     }
     return rval;
-  }).property("childGroups"),
+  }.property("childGroups"),
 
   switchToActing: function() {
     this.set('username', this.get('acting_username'));
@@ -167,7 +158,7 @@ Discourse.UserAction.reopenClass({
     uniq = {};
     collapsed = Em.A();
     pos = 0;
-    stream.each(function(item) {
+    _.each(stream, function(item) {
       var current, found, key;
       key = "" + item.topic_id + "-" + item.post_number;
       found = uniq[key];

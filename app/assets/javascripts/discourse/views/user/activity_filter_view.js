@@ -47,4 +47,4 @@ Discourse.ActivityFilterView = Discourse.View.extend({
   }
 });
 
-
+Discourse.View.registerHelper('activityFilter', Discourse.ActivityFilterView);

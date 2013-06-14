@@ -10,10 +10,28 @@ Discourse.ModalBodyView = Discourse.View.extend({
 
   // Focus on first element
   didInsertElement: function() {
+    $('#discourse-modal').modal('show');
+
+    var controller = this.get('controller');
+    $('#discourse-modal').on('hide.discourse', function() {
+      controller.send('closeModal');
+    });
+
+    $('#modal-alert').hide();
+
     var modalBodyView = this;
     Em.run.schedule('afterRender', function() {
-      modalBodyView.$('form input:first').focus();
+      modalBodyView.$('input:first').focus();
     });
+
+    var title = this.get('title');
+    if (title) {
+      this.set('controller.controllers.modal.title', title);
+    }
+  },
+
+  willDestroyElement: function() {
+    $('#discourse-modal').off('hide.discourse');
   },
 
   // Pass the errors to our errors view
@@ -22,14 +40,16 @@ Discourse.ModalBodyView = Discourse.View.extend({
     if (typeof callback === "function") callback();
   },
 
-  // Just use jQuery to show an alert. We don't need anythign fancier for now
-  // like an actual ember view
-  flash: function(msg, flashClass) {
-    if (!flashClass) flashClass = "success";
-    var $alert = $('#modal-alert').hide().removeClass('alert-error', 'alert-success');
-    $alert.addClass("alert alert-" + flashClass).html(msg);
-    $alert.fadeIn();
-  }
+  flashMessageChanged: function() {
+    var flashMessage = this.get('controller.flashMessage');
+    if (flashMessage) {
+      var messageClass = flashMessage.get('messageClass') || 'success';
+      var $alert = $('#modal-alert').hide().removeClass('alert-error', 'alert-success');
+      $alert.addClass("alert alert-" + messageClass).html(flashMessage.get('message'));
+      $alert.fadeIn();
+    }
+  }.observes('controller.flashMessage')
+
 });
 
 
