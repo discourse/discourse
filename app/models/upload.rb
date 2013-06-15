@@ -13,17 +13,18 @@ class Upload < ActiveRecord::Base
   validates_presence_of :original_filename
 
   def self.create_for(user_id, file)
-    # retrieve image info
-    image_info = FastImage.new(file.tempfile, raise_on_failure: true)
-    # compute image aspect ratio
-    width, height = ImageSizer.resize(*image_info.size)
     # compute the sha
     sha = Digest::SHA1.file(file.tempfile).hexdigest
     # check if the file has already been uploaded
     upload = Upload.where(sha: sha).first
+
     # otherwise, create it
     if upload.blank?
-
+      # retrieve image info
+      image_info = FastImage.new(file.tempfile, raise_on_failure: true)
+      # compute image aspect ratio
+      width, height = ImageSizer.resize(*image_info.size)
+      # create a db record (so we can use the id)
       upload = Upload.create!({
         user_id: user_id,
         original_filename: file.original_filename,
@@ -33,23 +34,20 @@ class Upload < ActiveRecord::Base
         height: height,
         url: ""
       })
-
       # make sure we're at the beginning of the file (FastImage is moving the pointer)
       file.rewind
-
       # store the file and update its url
-      upload.url = Upload.store_file(file, image_info, upload.id)
-
+      upload.url = Upload.store_file(file, sha, image_info, upload.id)
+      # save the url
       upload.save
-
     end
-
+    # return the uploaded file
     upload
   end
 
-  def self.store_file(file, image_info, upload_id)
-    return S3.store_file(file, image_info, upload_id)    if SiteSetting.enable_s3_uploads?
-    return LocalStore.store_file(file, image_info, upload_id)
+  def self.store_file(file, sha, image_info, upload_id)
+    return S3.store_file(file, sha, image_info, upload_id)    if SiteSetting.enable_s3_uploads?
+    return LocalStore.store_file(file, sha, image_info, upload_id)
   end
 
 end

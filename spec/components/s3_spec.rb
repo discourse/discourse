@@ -16,7 +16,7 @@ describe S3 do
 
     let(:image_info) { FastImage.new(file) }
 
-    before(:each) do 
+    before(:each) do
       SiteSetting.stubs(:s3_upload_bucket).returns("s3_upload_bucket")
       SiteSetting.stubs(:s3_access_key_id).returns("s3_access_key_id")
       SiteSetting.stubs(:s3_secret_access_key).returns("s3_secret_access_key")
@@ -24,7 +24,7 @@ describe S3 do
     end
 
     it 'returns the url of the S3 upload if successful' do
-      S3.store_file(file, image_info, 1).should == '//s3_upload_bucket.s3.amazonaws.com/1e8b1353813a7d091231f9a27f03566f123463fc1.png'
+      S3.store_file(file, "SHA", image_info, 1).should == '//s3_upload_bucket.s3.amazonaws.com/1SHA.png'
     end
 
     after(:each) do
