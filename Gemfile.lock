@@ -165,6 +165,7 @@ GEM
     diffy (2.1.4)
     em-redis (0.3.0)
       eventmachine
+    email_reply_parser (0.5.3)
     ember-rails (0.10.0)
       active_model_serializers
       barber
@@ -490,6 +491,7 @@ DEPENDENCIES
   discourse_emoji!
   discourse_plugin!
   em-redis
+  email_reply_parser
   ember-rails
   ember-source (= 1.0.0.rc5)
   eventmachine

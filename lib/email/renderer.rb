@@ -21,16 +21,19 @@ module Email
     end
 
     def html
-      cooked = PrettyText.cook(text)
+      style = Email::Styles.new(PrettyText.cook(text))
+      style.format_basic
 
       if @opts[:html_template]
+        style.format_html
+
         ActionView::Base.new(Rails.configuration.paths["app/views"]).render(
           template: 'email/template',
           format: :html,
-          locals: { html_body: Email::Styles.new(cooked).format, logo_url: logo_url }
+          locals: { html_body: style.to_html, logo_url: logo_url }
         )
       else
-        cooked
+        style.to_html
       end
     end
 

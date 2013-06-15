@@ -47,17 +47,7 @@ module Jobs
         return if notification.read?
       end
 
-      # Check that the post has not been deleted or read
-      if email_args[:post]
-
-        post = email_args[:post]
-
-        # Don't email about deleted topics or user deleted posts
-        return if post.topic.blank? || post.user_deleted?
-
-        # Don't send the email if the user has read the post
-        return if PostTiming.where(topic_id: post.topic_id, post_number: post.post_number, user_id: user.id).present?
-      end
+      return if skip_email_for_post(email_args[:post], user)
 
       # Make sure that mailer exists
       raise Discourse::InvalidParameters.new(:type) unless UserNotifications.respond_to?(args[:type])
@@ -70,7 +60,16 @@ module Jobs
       end
 
       Email::Sender.new(message, args[:type], user).send
+    end
 
+    private
+
+    # If this email has a related post, don't send an email if it's been deleted or seen recently.
+    def skip_email_for_post(post, user)
+      post &&
+      (post.topic.blank? ||
+       post.user_deleted? ||
+       PostTiming.where(topic_id: post.topic_id, post_number: post.post_number, user_id: user.id).present?)
     end
 
   end

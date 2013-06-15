@@ -1,11 +1,12 @@
+/*global module:true test:true ok:true visit:true expect:true exists:true count:true */
+
 module("Header", {
+
   setup: function() {
     Ember.run(Discourse, Discourse.advanceReadiness);
   },
 
   teardown: function() {
-    $('#discourse-modal').modal('hide')
-    $('#discourse-modal').remove()
     Discourse.reset();
   }
 });

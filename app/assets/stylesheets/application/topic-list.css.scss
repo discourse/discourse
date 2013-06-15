@@ -54,6 +54,11 @@
       vertical-align: top;
       margin-top: 2px;
     }
+    &.category-description {
+      td {
+        color: lighten($topic-list-td-color, 5%);
+      }
+    }
   }
   th,
   td {

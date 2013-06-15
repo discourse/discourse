@@ -5,6 +5,7 @@ require_dependency 'post_revisor'
 require_dependency 'enum'
 require_dependency 'trashable'
 require_dependency 'post_analyzer'
+require_dependency 'validators/post_validator'
 
 require 'archetype'
 require 'digest/sha1'
@@ -17,7 +18,6 @@ class Post < ActiveRecord::Base
 
   rate_limit
 
-
   belongs_to :user
   belongs_to :topic, counter_cache: :posts_count
   belongs_to :reply_to_user, class_name: "User"
@@ -25,12 +25,13 @@ class Post < ActiveRecord::Base
   has_many :post_replies
   has_many :replies, through: :post_replies
   has_many :post_actions
+  has_many :topic_links
+
+  has_and_belongs_to_many :upload
 
   has_one :post_search_data
 
-  validates_presence_of :raw, :user_id, :topic_id
-  validates :raw, stripped_length: { in: -> { SiteSetting.post_length } }
-  validates_with PostValidator
+  validates_with ::Validators::PostValidator
 
   # We can pass a hash of image sizes when saving to prevent crawling those images
   attr_accessor :image_sizes, :quoted_post_numbers, :no_bump, :invalidate_oneboxes
@@ -52,9 +53,15 @@ class Post < ActiveRecord::Base
     @types ||= Enum.new(:regular, :moderator_action)
   end
 
+  def trash!
+    self.topic_links.each(&:destroy)
+    super
+  end
+
   def recover!
     super
     update_flagged_posts_count
+    TopicLink.extract_from(self)
   end
 
   # The key we use in redis to ensure unique posts

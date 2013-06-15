@@ -216,6 +216,17 @@ Discourse.AdminUser = Discourse.User.extend({
         });
       }
     });
+  },
+
+  loadDetails: function() {
+    var model = this;
+    if (model.get('loadedDetails')) { return; }
+
+    Discourse.AdminUser.find(model.get('username_lower')).then(function (result) {
+      console.log("loaded details");
+      model.setProperties(result);
+      model.set('loadedDetails', true);
+    });
   }
 
 });
@@ -243,6 +254,7 @@ Discourse.AdminUser.reopenClass({
 
   find: function(username) {
     return Discourse.ajax("/admin/users/" + username).then(function (result) {
+      result.loadedDetails = true;
       return Discourse.AdminUser.create(result);
     });
   },

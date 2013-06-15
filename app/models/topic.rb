@@ -96,7 +96,7 @@ class Topic < ActiveRecord::Base
 
   scope :created_since, lambda { |time_ago| where('created_at > ?', time_ago) }
 
-  scope :secured, lambda {|guardian|
+  scope :secured, lambda {|guardian=nil|
     ids = guardian.secure_category_ids if guardian
 
     # Query conditions

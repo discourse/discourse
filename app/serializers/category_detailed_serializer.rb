@@ -10,6 +10,7 @@ class CategoryDetailedSerializer < ApplicationSerializer
              :topics_month,
              :topics_year,
              :description,
+             :description_excerpt,
              :is_uncategorized
 
   has_many :featured_users, serializer: BasicUserSerializer
@@ -37,6 +38,10 @@ class CategoryDetailedSerializer < ApplicationSerializer
 
   def include_displayable_topics?
     return displayable_topics.present?
+  end
+
+  def description_excerpt
+    PrettyText.excerpt(description,300) if description
   end
 
 end

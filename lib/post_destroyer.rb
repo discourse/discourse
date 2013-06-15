@@ -69,6 +69,7 @@ class PostDestroyer
       @post.revise(@user, I18n.t('js.post.deleted_by_author'), force_new_version: true)
       @post.update_column(:user_deleted, true)
       @post.update_flagged_posts_count
+      @post.topic_links.each(&:destroy)
     end
   end
 

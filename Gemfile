@@ -29,6 +29,8 @@ gem 'fog', require: false
 gem 'has_ip_address'
 gem 'hiredis'
 
+gem 'email_reply_parser'
+
 # note: for image_optim to correctly work you need
 # sudo apt-get install -y advancecomp gifsicle jpegoptim libjpeg-progs optipng pngcrush
 gem 'image_optim'

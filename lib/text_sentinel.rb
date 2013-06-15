@@ -10,8 +10,13 @@ class TextSentinel
     @text = text.to_s.encode('UTF-8', invalid: :replace, undef: :replace, replace: '')
   end
 
-  def self.body_sentinel(text)
-    TextSentinel.new(text, min_entropy: SiteSetting.body_min_entropy)
+  def self.body_sentinel(text, opts={})
+    entropy = SiteSetting.body_min_entropy
+    if opts[:private_message]
+      scale_entropy = SiteSetting.min_private_message_post_length.to_f / SiteSetting.min_post_length.to_f
+      entropy = (entropy * scale_entropy).to_i
+    end
+    TextSentinel.new(text, min_entropy: entropy)
   end
 
   def self.title_sentinel(text)

@@ -7,16 +7,10 @@
     var text = event.detail;
     var opts = event.opts;
 
-    style = ""
-    if (opts && opts.environment === "email") {
-      // Hard code sizes for email view
-      style = 'width="20" height="20"';
-    }
-
     this.textResult = text.replace(/\:([a-z\_\+\-0-9]+)\:/g, function (m1, m2) {
       var url = Discourse.getURL('/assets/emoji/' + m2 + '.png');
       return (emoji.indexOf(m2) !== -1) ?
-             '<img alt="' + m2 + '" title=":' + m2 + ':" src="' + url + '" ' + style + ' class="emoji"/>' :
+             '<img alt="' + m2 + '" title=":' + m2 + ':" src="' + url + '" class="emoji"/>' :
              m1;
     });
   });

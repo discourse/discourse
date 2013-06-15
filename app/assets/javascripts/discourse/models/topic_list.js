@@ -120,17 +120,7 @@ Discourse.TopicList.reopenClass({
   },
 
   list: function(menuItem) {
-    var filter = menuItem.name;
-
-    var topicList = Discourse.TopicList.create({
-      inserted: Em.A(),
-      filter: filter
-    });
-
-    var url = Discourse.getURL("/") + filter + ".json";
-    if (menuItem.filters && menuItem.filters.length > 0) {
-      url += "?exclude_category=" + menuItem.filters[0].substring(1);
-    }
+    var filter = menuItem.get('name');
 
     var list = Discourse.get('transient.topicsList');
     if (list) {
@@ -144,8 +134,26 @@ Discourse.TopicList.reopenClass({
     Discourse.set('transient.topicsList', null);
     Discourse.set('transient.topicListScrollPos', null);
 
-    return PreloadStore.getAndRemove("topic_list", function() { return Discourse.ajax(url) }).then(function(result) {
-      topicList.setProperties({
+    return Discourse.TopicList.find(filter, menuItem.get('excludeCategory'));
+  }
+});
+
+
+Discourse.TopicList.reopenClass({
+
+  find: function(filter, excludeCategory) {
+
+    // How we find our topic list
+    var finder = function() {
+      var url = Discourse.getURL("/") + filter + ".json";
+      if (excludeCategory) { url += "?exclude_category=" + excludeCategory; }
+      return Discourse.ajax(url);
+    }
+
+    return PreloadStore.getAndRemove("topic_list", finder).then(function(result) {
+      var topicList = Discourse.TopicList.create({
+        inserted: Em.A(),
+        filter: filter,
         topics: Discourse.TopicList.topicsFrom(result),
         can_create_topic: result.topic_list.can_create_topic,
         more_topics_url: result.topic_list.more_topics_url,
@@ -162,6 +170,6 @@ Discourse.TopicList.reopenClass({
       return topicList;
     });
   }
-});
 
+});
 

@@ -10,6 +10,7 @@ paths:
   - app/assets/javascripts/**/*.js
   - spec/javascripts/**/*.js
   - spec/phantom_js/**/*.js
+  - test/javascripts/**/*.js
 
 exclude_paths:
   - app/assets/javascripts/external/*

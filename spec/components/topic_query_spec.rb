@@ -20,17 +20,22 @@ describe TopicQuery do
       category.save
 
       topic = Fabricate(:topic, category: category)
+      topic = Fabricate(:topic, visible: false)
 
       TopicQuery.new(nil).list_latest.topics.count.should == 0
       TopicQuery.new(user).list_latest.topics.count.should == 0
 
-      # mods can see every group
-      TopicQuery.new(moderator).list_latest.topics.count.should == 2
+      TopicQuery.top_viewed(10).count.should == 0
+      TopicQuery.recent(10).count.should == 0
+
+      # mods can see every group and hidden topics
+      TopicQuery.new(moderator).list_latest.topics.count.should == 3
 
       group.add(user)
       group.save
 
       TopicQuery.new(user).list_latest.topics.count.should == 2
+
     end
 
   end

@@ -285,6 +285,8 @@ Add the following line:
 
     @reboot RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ROOT=~/discourse RAILS_ENV=production NUM_WEBS=4 /home/discourse/.rvm/bin/bootup_bluepill --no-privileged -c ~/.bluepill load ~/discourse/config/discourse.pill
 
+Note: in case of RVM system-wide installation RVM will be located in `/usr/local/rvm` directory instead of `/home/discourse/.rvm`, so update the line above respectively.
+
 Congratulations! You've got Discourse installed and running!
 
 Now make yourself an administrator account. Browse to your discourse instance

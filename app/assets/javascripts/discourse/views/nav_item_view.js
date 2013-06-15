@@ -24,7 +24,7 @@ Discourse.NavItemView = Discourse.View.extend({
   }.property("content.filter"),
 
   isActive: function() {
-    if (this.get("content.name").replace(' ','-') === this.get("controller.filterMode")) return "active";
+    if (this.get("content.name").toLowerCase().replace(' ','-') === this.get("controller.filterMode")) return "active";
     return "";
   }.property("content.name", "controller.filterMode"),
 

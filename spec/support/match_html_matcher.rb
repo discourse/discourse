@@ -1,17 +1,17 @@
 require 'nokogiri/xml/parse_options'
 RSpec::Matchers.define :match_html do |expected|
   match do |actual|
-    a = make_canonical_html expected
-    b = make_canonical_html actual
-    a.to_html == b.to_html
+    a = make_canonical_html(expected).to_html.gsub("\r\n", "\n")
+    b = make_canonical_html(actual).to_html.gsub("\r\n", "\n")
+    a == b
   end
 
   failure_message_for_should do |actual|
-    "after sanitizing for extra white space and compactness, expected #{actual} to match #{expected}"
+    "after sanitizing for extra white space and compactness, expected:\n#{actual}\n to match:\n#{expected}"
   end
 
   failure_message_for_should_not do |actual|
-    "after sanitizing for extra white space and compactness, expected #{actual} not to match #{expected}"
+    "after sanitizing for extra white space and compactness, expected:\n#{actual}\n not to match:\n#{expected}"
   end
 
   def make_canonical_html(html)

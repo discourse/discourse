@@ -13,7 +13,7 @@
         </div>
         <div class="right">
           <span class="commit-message"><a {{bindAttr href="commitUrl"}} target="_blank">{{ commit.message }}</a></span><br/>
-          <span class="commit-meta">{{i18n admin.commits.by}} <span class="committer-name">{{ commit.author.name }}</span> - <span class="commit-time">{{ timeAgo }}</span></span>
+          <span class="commit-meta">{{i18n admin.commits.by}} <span class="committer-name">{{ commit.author.name }}</span> - <span class="commit-time">{{{ timeAgo }}}</span></span>
         </div>
       </li>
     {{/each}}

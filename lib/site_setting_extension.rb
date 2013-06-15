@@ -90,8 +90,6 @@ module SiteSettingExtension
     mutex.synchronize do
       ensure_listen_for_changes
       old = current
-      changes = []
-      deletions = []
 
       all_settings = SiteSetting.select([:name,:value,:data_type])
       new_hash =  Hash[*(all_settings.map{|s| [s.name.intern, convert(s.value,s.data_type)]}.to_a.flatten)]
@@ -99,13 +97,7 @@ module SiteSettingExtension
       # add defaults
       new_hash = defaults.merge(new_hash)
 
-      new_hash.each do |name, value|
-        changes << [name,value] if !old.has_key?(name) || old[name] != value
-      end
-
-      old.each do |name,value|
-        deletions << [name,value] unless new_hash.has_key?(name)
-      end
+      changes,deletions = diff_hash(new_hash, old)
 
       if deletions.length > 0 || changes.length > 0
         @current = new_hash
@@ -121,23 +113,26 @@ module SiteSettingExtension
     end
   end
 
+
   def ensure_listen_for_changes
     unless @subscribed
-      pid = process_id
-      MessageBus.subscribe("/site_settings") do |msg|
-        message = msg.data
-        if message["process"] != pid
-          begin
-            @last_message_processed = msg.global_id
-            # picks a db
-            MessageBus.on_connect.call(msg.site_id)
-            SiteSetting.refresh!
-          ensure
-            MessageBus.on_disconnect.call(msg.site_id)
-          end
-        end
+      MessageBus.subscribe("/site_settings") do |message|
+        process_message(message)
       end
       @subscribed = true
+    end
+  end
+
+  def process_message(message)
+    data = message.data
+    if data["process"] != process_id
+      begin
+        @last_message_processed = message.global_id
+        MessageBus.on_connect.call(message.site_id)
+        SiteSetting.refresh!
+      ensure
+        MessageBus.on_disconnect.call(message.site_id)
+      end
     end
   end
 
@@ -192,16 +187,31 @@ module SiteSettingExtension
 
   protected
 
+  def diff_hash(new_hash, old)
+    changes = []
+    deletions = []
+
+    new_hash.each do |name, value|
+      changes << [name,value] if !old.has_key?(name) || old[name] != value
+    end
+
+    old.each do |name,value|
+      deletions << [name,value] unless new_hash.has_key?(name)
+    end
+
+    [changes,deletions]
+  end
+
   def get_data_type(name,val)
     return types[:null] if val.nil?
+    return types[:enum] if enums[name]
 
-    if enums[name]
-      types[:enum]
-    elsif String === val
+    case val
+    when String
       types[:string]
-    elsif Fixnum === val
+    when Fixnum
       types[:fixnum]
-    elsif TrueClass === val || FalseClass === val
+    when TrueClass, FalseClass
       types[:bool]
     else
       raise ArgumentError.new :val

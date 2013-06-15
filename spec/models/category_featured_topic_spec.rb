@@ -16,7 +16,8 @@ describe CategoryFeaturedTopic do
     category.allow(Group[:trust_level_1])
     category.save
 
-    post = PostCreator.create(user, raw: "this is my new post 123 post", title: "hello world")
+    uncategorized_post = PostCreator.create(user, raw: "this is my new post 123 post", title: "hello world")
+    category_post = PostCreator.create(user, raw: "I put this post in the category", title: "categorize THIS", category: category.name)
 
     CategoryFeaturedTopic.feature_topics_for(category)
     CategoryFeaturedTopic.count.should == 1

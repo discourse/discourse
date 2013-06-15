@@ -1,15 +1,20 @@
-class StrippedLengthValidator < ActiveModel::EachValidator
-  def validate_each(record, attribute, value)
+module Validators; end
+class Validators::StrippedLengthValidator < ActiveModel::EachValidator
+  def self.validate(record, attribute, value, range)
     unless value.nil?
       stripped_length = value.strip.length
-      # the `in` parameter might be a lambda when the range is dynamic
-      range = options[:in].lambda? ? options[:in].call : options[:in]
-      record.errors.add attribute, (options[:message] || I18n.t('errors.messages.too_short', count: range.begin)) unless
+      record.errors.add attribute, (I18n.t('errors.messages.too_short', count: range.begin)) unless
           stripped_length >= range.begin
-      record.errors.add attribute, (options[:message] || I18n.t('errors.messages.too_long', count: range.end)) unless
+      record.errors.add attribute, (I18n.t('errors.messages.too_long', count: range.end)) unless
           stripped_length <= range.end
     else
-      record.errors.add attribute, (options[:message] || I18n.t('errors.messages.blank'))
+      record.errors.add attribute, (I18n.t('errors.messages.blank'))
     end
+  end
+
+  def validate_each(record, attribute, value)
+    # the `in` parameter might be a lambda when the range is dynamic
+    range = options[:in].lambda? ? options[:in].call : options[:in]
+    self.class.validate(record, attribute, value, range)
   end
 end

@@ -85,6 +85,7 @@
       {{#if active}}
         {{#if can_deactivate}}
           <button class='btn' {{action deactivate target="content"}}>{{i18n admin.user.deactivate_account}}</button>
+          {{i18n admin.user.deactivate_explanation}}
         {{/if}}
       {{else}}
         {{#if can_send_activation_email}}
@@ -163,6 +164,7 @@
         </button>
       {{/if}}
     {{/if}}
+    {{i18n admin.user.banned_explanation}}
     </div>
   </div>
   <div class='display-row'>

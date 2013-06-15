@@ -9,6 +9,5 @@
 Discourse.PostActionType = Discourse.Model.extend({});
 
 Discourse.PostActionType.reopenClass({
-  MIN_MESSAGE_LENGTH: 10,
   MAX_MESSAGE_LENGTH: 500
 })

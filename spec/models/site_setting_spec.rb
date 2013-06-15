@@ -1,4 +1,6 @@
 require 'spec_helper'
+require_dependency 'site_setting'
+require_dependency 'site_setting_extension'
 
 describe SiteSetting do
 
@@ -85,7 +87,7 @@ describe SiteSetting do
     end
 
     context "when overridden" do
-      after :each do 
+      after :each do
         SiteSetting.remove_override!(:test_hello?)
       end
 
@@ -175,7 +177,7 @@ describe SiteSetting do
 
   describe 'topic_title_length' do
     it 'returns a range of min/max topic title length' do
-      SiteSetting.topic_title_length.should == 
+      SiteSetting.topic_title_length.should ==
         (SiteSetting.defaults[:min_topic_title_length]..SiteSetting.defaults[:max_topic_title_length])
     end
   end

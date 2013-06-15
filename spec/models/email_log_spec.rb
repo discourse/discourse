@@ -8,15 +8,17 @@ describe EmailLog do
   it { should validate_presence_of :email_type }
 
 
-  context 'after_create with user' do
+  context 'after_create' do
 
-    let(:user) { Fabricate(:user) }
+    context 'with user' do
+      let(:user) { Fabricate(:user) }
 
-    it 'updates the last_emailed_at value for the user' do
-      lambda {
-        user.email_logs.create(email_type: 'blah', to_address: user.email)
-        user.reload
-      }.should change(user, :last_emailed_at)
+      it 'updates the last_emailed_at value for the user' do
+        lambda {
+          user.email_logs.create(email_type: 'blah', to_address: user.email)
+          user.reload
+        }.should change(user, :last_emailed_at)
+      end
     end
 
   end
