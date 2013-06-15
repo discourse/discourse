@@ -204,31 +204,31 @@ Configure discourse:
     cp discourse.pill.sample discourse.pill
     cp environments/production.rb.sample environments/production.rb
 
-Edit discourse/config/database.yml
+Edit ~/discourse/config/database.yml
 
 - change production db name if appropriate
 - change username/password if appropriate
 - set db_id if using multisite
 - change `host_names` to the name you'll use to access the discourse site
 
-Edit discourse/config/redis.yml
+Edit ~/discourse/config/redis.yml
 
 - no changes if this is the only application using redis, but have a look
 
-Edit discourse/config/discourse.pill
+Edit ~/discourse/config/discourse.pill
 
 - change application name from 'discourse' if necessary
 - Ensure appropriate Bluepill.application line is uncommented
 - search for "host to run on" and change to current hostname
 - note: clockwork should run on only one host
 
-Edit discourse/config/initializers/secret_token.rb
+Edit ~/discourse/config/initializers/secret_token.rb
 
 - uncomment secret_token line
-- replace SET_SECRET_HERE with secret output from 'rake secret' command in discourse directory
+- replace SET_SECRET_HERE with secret output from 'RAILS_ENV=production rake secret' command in discourse directory
 - delete the lines below as per instructions in the file
 
-Edit discourse/config/environments/production.rb
+Edit ~/discourse/config/environments/production.rb
 - check settings, modify smtp settings if necessary
 - See http://meta.discourse.org/t/all-of-my-internal-users-show-as-coming-from-127-0-0-1/6607 if this will serve "internal" users
 
@@ -281,9 +281,11 @@ Add the bluepill startup to crontab.
     # Run these commands as the discourse user
     crontab -e
 
-Add the following line:
+Add the following lines:
 
     @reboot RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ROOT=~/discourse RAILS_ENV=production NUM_WEBS=4 /home/discourse/.rvm/bin/bootup_bluepill --no-privileged -c ~/.bluepill load ~/discourse/config/discourse.pill
+    0 0 * * * /usr/sbin/logrotate ~/discourse/config/logrotate.conf
+
 
 Note: in case of RVM system-wide installation RVM will be located in `/usr/local/rvm` directory instead of `/home/discourse/.rvm`, so update the line above respectively.
 
