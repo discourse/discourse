@@ -161,9 +161,12 @@ Discourse.User = Discourse.Model.extend({
       type: 'PUT'
     }).then(function(data) {
       user.set('bio_excerpt',data.user.bio_excerpt);
-      Discourse.User.current().set('enable_quoting', user.get('enable_quoting'));
-      Discourse.User.current().set('external_links_in_new_tab', user.get('external_links_in_new_tab'));
-      Discourse.User.current().set('dynamic_favicon', user.get('dynamic_favicon'));
+
+      _.each([
+        'enable_quoting', 'external_links_in_new_tab', 'dynamic_favicon'
+      ], function(preference) {
+        Discourse.User.current().set(preference, user.get(preference));
+      });
     });
   },
 
