@@ -84,6 +84,16 @@
     </div>
   </div>
 
+  <div class="control-group">
+    <label class="control-label">{{i18n user.notifications}}</label>
+    <div class="controls">
+      <label>
+        {{view Ember.Checkbox checkedBinding="dynamic_favicon"}}
+        {{i18n user.dynamic_favicon}}
+      </label>
+    </div>
+  </div>
+
   <div class="control-group other">
     <label class="control-label">{{i18n user.other_settings}}</label>
     <div class="controls">
