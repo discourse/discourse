@@ -3,7 +3,6 @@ require 'spec_helper'
 describe Upload do
 
   it { should belong_to :user }
-  it { should belong_to :topic }
 
   it { should have_many :post_uploads }
   it { should have_many :posts }
@@ -14,7 +13,6 @@ describe Upload do
   context '.create_for' do
 
     let(:user_id) { 1 }
-    let(:topic_id) { 42 }
 
     let(:logo) do
       ActionDispatch::Http::UploadedFile.new({
@@ -24,14 +22,13 @@ describe Upload do
       })
     end
 
-    let(:upload) { Upload.create_for(user_id, logo, topic_id) }
+    let(:upload) { Upload.create_for(user_id, logo) }
 
     let(:url) { "http://domain.com" }
 
     shared_examples_for "upload" do
       it "is valid" do
         upload.user_id.should == user_id
-        upload.topic_id.should == topic_id
         upload.original_filename.should == logo.original_filename
         upload.filesize.should == File.size(logo.tempfile)
         upload.width.should == 244

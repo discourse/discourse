@@ -5,7 +5,6 @@ require 'local_store'
 
 class Upload < ActiveRecord::Base
   belongs_to :user
-  belongs_to :topic
 
   has_many :post_uploads
   has_many :posts, through: :post_uploads
@@ -13,7 +12,7 @@ class Upload < ActiveRecord::Base
   validates_presence_of :filesize
   validates_presence_of :original_filename
 
-  def self.create_for(user_id, file, topic_id)
+  def self.create_for(user_id, file)
     # retrieve image info
     image_info = FastImage.new(file.tempfile, raise_on_failure: true)
     # compute image aspect ratio
@@ -21,7 +20,6 @@ class Upload < ActiveRecord::Base
 
     upload = Upload.create!({
       user_id: user_id,
-      topic_id: topic_id,
       original_filename: file.original_filename,
       filesize: File.size(file.tempfile),
       width: width,
@@ -53,7 +51,6 @@ end
 #
 #  id                :integer          not null, primary key
 #  user_id           :integer          not null
-#  topic_id          :integer          not null
 #  original_filename :string(255)      not null
 #  filesize          :integer          not null
 #  width             :integer
