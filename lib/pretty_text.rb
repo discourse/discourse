@@ -151,20 +151,18 @@ module PrettyText
   def self.apply_cdn(html, url)
     return html unless url
 
-    image = /\.(jpg|jpeg|gif|png|tiff|tif)$/
+    image = /\.(jpg|jpeg|gif|png|tiff|tif|bmp)$/
 
     doc = Nokogiri::HTML.fragment(html)
+
     doc.css("a").each do |l|
-      href = l.attributes["href"].to_s
-      if href[0] == '/' && href =~ image
-        l["href"] = url + href
-      end
+      href = l["href"].to_s
+      l["href"] = url + href if href[0] == '/' && href =~ image
     end
+
     doc.css("img").each do |l|
-      src = l.attributes["src"].to_s
-      if src[0] == '/'
-        l["src"] = url + src
-      end
+      src = l["src"].to_s
+      l["src"] = url + src if src[0] == '/'
     end
 
     doc.to_s
