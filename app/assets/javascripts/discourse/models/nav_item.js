@@ -74,8 +74,6 @@ Discourse.NavItem.reopenClass({
       filters: split.splice(1)
     };
 
-    // if (countSummary && countSummary[name]) opts.count = countSummary[name];
-
     return Discourse.NavItem.create(opts);
   }
 
