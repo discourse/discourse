@@ -8,6 +8,8 @@ describe Upload do
   it { should have_many :post_uploads }
   it { should have_many :posts }
 
+  it { should have_many :optimized_images }
+
   it { should validate_presence_of :original_filename }
   it { should validate_presence_of :filesize }
 

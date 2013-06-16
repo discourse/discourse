@@ -9,6 +9,8 @@ class Upload < ActiveRecord::Base
   has_many :post_uploads
   has_many :posts, through: :post_uploads
 
+  has_many :optimized_images
+
   validates_presence_of :filesize
   validates_presence_of :original_filename
 
