@@ -7,6 +7,79 @@
 
 cs:
   js:
+    dates:
+      tiny:
+        half_a_minute: "< 1m"
+        less_than_x_seconds:
+          one:   "< 1s"
+          few:   "< %{count}s"
+          other: "< %{count}s"
+        x_seconds:
+          one:   "1s"
+          few:   "%{count}s"
+          other: "%{count}s"
+        less_than_x_minutes:
+          one:   "< 1m"
+          few:   "< %{count}m"
+          other: "< %{count}m"
+        x_minutes:
+          one:   "1m"
+          few:   "%{count}m"
+          other: "%{count}m"
+        about_x_hours:
+          one:   "1h"
+          few:   "%{count}h"
+          other: "%{count}h"
+        x_days:
+          one:   "1d"
+          few:   "%{count}d"
+          other: "%{count}d"
+        about_x_months:
+          one:   "1měs"
+          few:   "%{count}měs"
+          other: "%{count}měs"
+        x_months:
+          one:   "1měs"
+          few:   "%{count}měs"
+          other: "%{count}měs"
+        about_x_years:
+          one:   "1r"
+          few:   "%{count}r"
+          other: "%{count}let"
+        over_x_years:
+          one:   "> 1r"
+          few:   "> %{count}r"
+          other: "> %{count}let"
+        almost_x_years:
+          one:   "1r"
+          few:   "%{count}r"
+          other: "%{count}let"
+      medium:
+        x_minutes:
+          one: "1 minuta"
+          few: "%{count} minuty"
+          other: "%{count} minut"
+        x_hours:
+          one: "1 hodina"
+          few: "%{count} hodiny"
+          other: "%{count} hodin"
+        x_days:
+          one: "1 den"
+          few: "%{count} dny"
+          other: "%{count} dní"
+      medium_with_ago:
+        x_minutes:
+          one: "před 1 minutou"
+          few: "před %{count} minutami"
+          other: "před %{count} minutami"
+        x_hours:
+          one: "před 1 hodinou"
+          few: "před %{count} hodinami"
+          other: "před %{count} hodinami"
+        x_days:
+          one: "před 1 dnem"
+          few: "před %{count} dny"
+          other: "před %{count} dny"
     share:
       topic: 'sdílet odkaz na toto téma'
       post: 'sdílet odkaz na tento příspěvek'
@@ -324,6 +397,9 @@ cs:
       facebook:
         title: "přes Facebook"
         message: "Autorizuji přes Facebook (ujistěte se, že nemáte zablokovaná popup okna)"
+      cas:
+        title: "Přihlásit přes CAS"
+        message: "Autorizuji přes CAS (ujistěte se, že nemáte zablokovaná popup okna)"
       yahoo:
         title: "přes Yahoo"
         message: "Autorizuji přes Yahoo (ujistěte se, že nemáte zablokovaná popup okna)"
@@ -345,6 +421,14 @@ cs:
       min_length:
         need_more_for_title: "ještě {{n}} znaků nadpisu tématu"
         need_more_for_reply: "ještě {{n}} znaků textu odpovědi"
+
+      error:
+        title_missing: "Název musí být vyplněn."
+        title_too_short: "Název musí být alespoň {{min}} znaků dlouhý."
+        title_too_long: "Název musí být dlouhý maximálně {{min}} znaků."
+        post_missing: "Příspěvek nesmí být prázdný."
+        post_length: "Příspěvek musí být alespoň {{min}} znaků dlouhý."
+        category_missing: "Musíte vybrat kategorii."
 
       save_edit: "Uložit změnu"
       reply_original: "Odpovědět na původní téma"
@@ -432,6 +516,10 @@ cs:
       no_results: "Nenalezeny žádné výsledky."
       searching: "Hledám ..."
 
+      prefer:
+        user: "při hledání budou preferovány výsledky od @{{username}}"
+        category: "při hledání budou preferovány výsledky z kategorie {{category}}"
+
     site_map: "jít na jiný seznam témat nebo kategorii"
     go_back: 'jít zpět'
     current_user: 'jít na vaši uživatelskou stránku'
@@ -499,6 +587,22 @@ cs:
       toggle_information: "zobrazit/skrýt detaily tématu"
       read_more_in_category: "Chcete si přečíst další informace? Projděte si témata v {{catLink}} nebo {{latestLink}}."
       read_more: "Chcete si přečíst další informace? {{catLink}} nebo {{latestLink}}."
+
+      # keys ending with _MF use message format, see /spec/components/js_local_helper_spec.rb for samples
+      read_more_MF: "{
+        UNREAD, plural,
+        =0 {}
+        one { Je tu <a href='/unread'>1 nepřečtené</a> }
+        few { Jsou tu <a href='/unread'># nepřečtená</a> }
+        other { Je tu <a href='/unread'># nepřečtených</a> }
+        } {
+          NEW, plural,
+            =0 {}
+            one { {BOTH, select, true{a } false {Je tu } other{}} <a href='/new'>1 nové</a> téma}
+            few { {BOTH, select, true{a } false {Jsou tu } other{}} <a href='/new'># nová</a> témata}
+            other { {BOTH, select, true{a } false {Je tu } other{}} <a href='/new'># nových</a> témat}
+        }, nebo {CATEGORY, select, true {si projděte ostatní témata v kategorii {catLink}} false {{latestLink}} other {}} "
+
       browse_all_categories: Procházet všechny kategorie
 
       view_latest_topics: zobrazit populární témata
@@ -847,6 +951,7 @@ cs:
     flagging:
       title: 'Proč chcete nahlásit tento příspěvek?'
       action: 'Nahlásit příspěvek'
+      take_action: 'Zakročit'
       notify_action: 'Oznámit'
       cant: "Bohužel nyní nemůžete tento příspěvek nahlásit."
       custom_placeholder_notify_user: "Proč chcete s tímto uživatele mluvit přímo a soukromě? Buďte konstruktivní, konkrétní a hlavně vstřícní."
@@ -954,6 +1059,7 @@ cs:
         no_problems: "Nenalezeny žádné problémy."
         moderators: 'Moderátoři:'
         admins: 'Administrátoři:'
+        blocked: 'Blokováno:'
         private_messages_short: "SZ"
         private_messages_title: "Soukromé zprávy"
 
@@ -984,6 +1090,7 @@ cs:
         flagged_by: "Nahlásil"
         error: "Něco se pokazilo"
         view_message: "zobrazit zprávu"
+        no_results: "Nejsou zde žádná nahlášení."
 
       groups:
         title: "Skupiny"
@@ -1017,13 +1124,24 @@ cs:
         about: "Přizpůsobení webu vám umožní si nastavit vlastní CSS stylesheet a vlastní nadpisy na webu. Vyberte si z nabídky nebo vložte vlastní přizpůsobení a můžete začít editovat."
 
       email:
-        title: "Záznamy o emailech"
+        title: "Email"
+        settings: "Nastavení"
+        logs: "Záznamy"
         sent_at: "Odesláno"
         email_type: "Typ emailu"
         to_address: "Komu"
         test_email_address: "testovací emailová adresa"
         send_test: "odeslat testovací email"
         sent_test: "odesláno!"
+        delivery_method: "Způsob doručení"
+        preview_digest: "Náhled souhrnu"
+        preview_digest_desc: "Toto je nástroj pro zobrazení náhledu, jak bude vypadat obsah emailu se souhrnem, který se zasílá uživatelům."
+        refresh: "Obnovit"
+        format: "Formát"
+        html: "html"
+        text: "text"
+        last_seen_user: "Uživatel byl naposled přítomen:"
+        reply_key: "Klíč pro odpověď"
 
       impersonate:
         title: "Vydávat se za uživatele"
@@ -1056,6 +1174,7 @@ cs:
           elder: 'Uživatelé s věrohodností 4 (Starší)'
           admins: 'Admininstrátoři'
           moderators: 'Moderátoři'
+          blocked: 'Blokovaní uživatelé'
 
       user:
         ban_failed: "Nastala chyba při zakazování uživatele {{error}}"
@@ -1067,6 +1186,7 @@ cs:
         banned: "Zakázán?"
         moderator: "Moderátor?"
         admin: "Administrátor?"
+        blocked: "Zablokovaný?"
         show_admin_profile: "Administrace"
         refresh_browsers: "Vynutit obnovení prohlížeče"
         show_public_profile: "Zobrazit veřejný profil"
@@ -1075,6 +1195,8 @@ cs:
         grant_admin: 'Udělit administrátorská práva'
         revoke_moderation: 'Odebrat moderátorská práva'
         grant_moderation: 'Udělit moderátorská práva'
+        unblock: 'Odblokovat'
+        block: 'Zablokovat'
         reputation: Reputace
         permissions: Povolení
         activity: Aktivita
@@ -1087,6 +1209,8 @@ cs:
         flags_received_count: Přijato nahlášení
         approve: 'Schválit'
         approved_by: "schválil"
+        approve_success: "Uživatel bys schválen a byl mu zaslán aktivační email s instrukcemi."
+        approve_bulk_success: "Povedlo se! Všichni uživatelé byli schváleni a byly jim rozeslány notifikace."
         time_read: "Čas čtení"
         delete: "Smazat uživatele"
         delete_forbidden: "Uživatele nelze odstranit, protože má na fóru zveřejněné příspěvky. Nejprve smažte všechny jeho příspěvky."
@@ -1100,6 +1224,12 @@ cs:
         activate_failed: "Nasstal problém při aktivování tohoto uživatele."
         deactivate_account: "Deaktivovat účet"
         deactivate_failed: "Nastal problém při deaktivování tohoto uživatele."
+        unblock_failed: 'Nastal problém při odblokování uživatele.'
+        block_failed: 'Nastal problém při blokování uživatele.'
+        deactivate_explanation: "Deaktivovaný uživatel musí znovu validovat svoji emailovou adresu než se bude moci znovu přihlásit."
+        banned_explanation: "Zakázaný uživatel se nemůže přihlásit."
+        block_explanation: "Zablokovaný uživatel nemůže přispívat nebo vytvářet nová témata."
+
 
       site_content:
         none: "Zvolte typ obsahu a můžete začít editovat."
@@ -1110,3 +1240,4 @@ cs:
         show_overriden: 'Zobrazit pouze změněná nastavení'
         title: 'Nastavení webu'
         reset: 'vrátit do původního nastavení'
+        none: 'žádné'
