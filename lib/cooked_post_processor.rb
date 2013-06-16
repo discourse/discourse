@@ -2,7 +2,6 @@
 # example, inserting the onebox content, or image sizes.
 
 require_dependency 'oneboxer'
-require_dependency 'image_optimizer'
 
 class CookedPostProcessor
 
@@ -34,10 +33,18 @@ class CookedPostProcessor
       if src.present?
         # make sure the img has both width and height attributes
         update_dimensions!(img)
-        # optimize image
-        img['src'] = optimize_image(img)
-        # lightbox treatment
-        convert_to_link!(img)
+        # retrieve the associated upload, if any
+        upload = get_upload_from_url(img['src'])
+        if upload.present?
+          # create a thumbnail
+          upload.create_thumbnail!
+          # optimize image
+          img['src'] = optimize_image(img)
+          # lightbox treatment
+          convert_to_link!(img, upload.thumbnail_url)
+        else
+          convert_to_link!(img)
+        end
         # mark the post as dirty whenever the src has changed
         @dirty |= src != img['src']
       end
@@ -74,14 +81,19 @@ class CookedPostProcessor
     end
   end
 
+  def get_upload_from_url(url)
+    if Upload.has_been_uploaded?(url) && m = Upload.uploaded_regex.match(url)
+      Upload.where("id = ?", m[:upload_id]).first
+    end
+  end
+
   def optimize_image(img)
     return img["src"]
     # 1) optimize using image_optim
     # 2) .png vs. .jpg
-    # TODO: needs some <3
   end
 
-  def convert_to_link!(img)
+  def convert_to_link!(img, thumbnail=nil)
     src = img["src"]
     width, height = img["width"].to_i, img["height"].to_i
 
@@ -99,6 +111,7 @@ class CookedPostProcessor
     end
 
     # not a hyperlink so we can apply
+    img['src'] = thumbnail if thumbnail
     a = Nokogiri::XML::Node.new "a", @doc
     img.add_next_sibling(a)
     a["href"] = src

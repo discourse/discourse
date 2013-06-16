@@ -2,6 +2,8 @@ require 'digest/sha1'
 require 'image_sizer'
 require 's3'
 require 'local_store'
+require 'tempfile'
+require 'pathname'
 
 class Upload < ActiveRecord::Base
   belongs_to :user
@@ -13,6 +15,40 @@ class Upload < ActiveRecord::Base
 
   validates_presence_of :filesize
   validates_presence_of :original_filename
+
+  def thumbnail
+    @thumbnail ||= optimized_images.where(width: width, height: height).first
+  end
+
+  def thumbnail_url
+    thumbnail.url if has_thumbnail?
+  end
+
+  def has_thumbnail?
+    thumbnail.present?
+  end
+
+  def create_thumbnail!
+    return unless SiteSetting.create_thumbnails?
+    return unless width > SiteSetting.auto_link_images_wider_than
+    return if has_thumbnail?
+    @image_sorcery_loaded ||= require "image_sorcery"
+    original_path = "#{Rails.root}/public#{url}"
+    temp_file = Tempfile.new(["discourse", File.extname(original_path)])
+    if ImageSorcery.new(original_path).convert(temp_file.path, resize: "#{width}x#{height}")
+      thumbnail = OptimizedImage.create_for(id, temp_file.path)
+      optimized_images << thumbnail
+      # make sure the directory exists
+      FileUtils.mkdir_p Pathname.new(thumbnail.path).dirname
+      # move the temp file to the right location
+      File.open(thumbnail.path, "wb") do |f|
+        f.write temp_file.read
+      end
+    end
+    # close && remove temp file if it exists
+    temp_file.close
+    temp_file.unlink
+  end
 
   def self.create_for(user_id, file)
     # compute the sha
