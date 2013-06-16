@@ -1,0 +1,1093 @@
+# encoding: utf-8
+# This file contains content for the client portion of Discourse, sent out
+# to the Javascript app.
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
+
+en:
+  js:
+    share:
+      topic: 'del en link til dette emnet'
+      post: 'del en link til dette innlegget'
+      close: 'lukk'
+      twitter: 'del denne linken på Twitter'
+      facebook: 'del denne linken på Facebook'
+      google+: 'del denne linken på Google+'
+      email: 'del denne linken i en email'
+
+    edit: 'rediget tittelen og kategorien til dette emnet'
+    not_implemented: "Den egenskapen har ikkje blitt implementert enda, beklager!"
+    no_value: "Nei"
+    yes_value: "Ja"
+    of_value: "av"
+    generic_error: "Beklager, det har oppstått en feil."
+    log_in: "Logg Inn"
+    age: "Alder"
+    last_post: "Siste Innlegg"
+    admin_title: "Admin"
+    flags_title: "Flagg"
+    show_more: "vis mer"
+    links: Links
+    faq: "FAQ"
+    you: "du"
+    or: "eller"
+    now: "akkurat nå"
+    read_more: 'les mer'
+
+    in_n_seconds:
+      one: "på 1 sekund"
+      other: "på {{count}} sekunder"
+    in_n_minutes:
+      one: "på 1 minutt"
+      other: "om {{count}} minutter"
+    in_n_hours:
+      one: "på 1 time"
+      other: "på {{count}} timer"
+    in_n_days:
+      one: "på 1 dag"
+      other: "på {{count}} dager"
+
+    suggested_topics:
+      title: "Anbefalte Emner"
+
+    bookmarks:
+      not_logged_in: "Beklager, du må være innlogget for å bokmerke innlegg."
+      created: "Du har bokmerket dette innlegget."
+      not_bookmarked: "Du har lest dette innlegget; klikk for å bokmerke det"
+      last_read: "Dette er det siste innlegget du har lest."
+
+    new_topics_inserted: "{{count}} nye innlegg."
+    show_new_topics: "Klikk for å vise."
+    preview: "forhåndsvisning"
+    cancel: "avbryt"
+
+    save: "Lagre Endringer"
+    saving: "Lagrer..."
+    saved: "Lagret!"
+
+    choose_topic:
+      none_found: "Ingen emner funnet."
+      title:
+        search: "Søk etter et emne ved navn, url eller id:"
+        placeholder: "skriv emnetittelen her"
+
+    user_action:
+      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> postet <a href='{{topicUrl}}'>emnet</a>"
+      you_posted_topic: "<a href='{{userUrl}}'>Du</a> postet <a href='{{topicUrl}}'>emnet</a>"
+      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> besvarte <a href='{{postUrl}}'>{{post_number}}</a>"
+      you_replied_to_post: "<a href='{{userUrl}}'>Du</a> besvarte <a href='{{postUrl}}'>{{post_number}}</a>"
+      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> besvarte <a href='{{topicUrl}}'>emnet</a>"
+      you_replied_to_topic: "<a href='{{userUrl}}'>Du</a> besvarte <a href='{{topicUrl}}'>emnet</a>"
+
+      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> nevnte <a href='{{user2Url}}'>{{another_user}}</a>"
+      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> nevnte <a href='{{user2Url}}'>deg</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>Du</a> nevnte <a href='{{user2Url}}'>{{user}}</a>"
+
+      posted_by_user: "Postet av <a href='{{userUrl}}'>{{user}}</a>"
+      posted_by_you: "Postet av <a href='{{userUrl}}'>deg</a>"
+      sent_by_user: "Sendt av <a href='{{userUrl}}'>{{user}}</a>"
+      sent_by_you: "Sendt av <a href='{{userUrl}}'>deg</a>"
+
+    user_action_groups:
+      "1": "Likes Gitt"
+      "2": "Likes Mottatt"
+      "3": "Bokmerker"
+      "4": "Emner"
+      "5": "Svar gitt"
+      "6": "Svar mottatt"
+      "7": "Omtalelser"
+      "9": "Sitater"
+      "10": "Favoritter"
+      "11": "Redigeringer"
+      "12": "Sendte Elementer"
+      "13": "Innboks"
+
+    user:
+      profile: Profile
+      title: "Bruker"
+      mute: Mute
+      edit: Edit Preferences
+      download_archive: "last ned arkiv av mine innlegg"
+      private_message: "Private Meldinger"
+      private_messages: "Meldinger"
+      activity_stream: "Aktivitet"
+      preferences: "Preferanser"
+      bio: "Om meg"
+      invited_by: "Invitert Av"
+      trust_level: "Tillitsnivå"
+      external_links_in_new_tab: "Åpne alle eksterne linker i ny fane"
+      enable_quoting: "Aktiver siter svar for uthevet tekst"
+
+      moderator: "{{user}} er en moderator"
+      admin: "{{user}} er en admin"
+
+      change_password:
+        action: "endre"
+        success: "(email sendt)"
+        in_progress: "(sender email)"
+        error: "(feil)"
+
+      change_username:
+        action: "endre"
+        title: "Endre Brukernavn"
+        confirm: "Det kan være kosekvenser ved å endre ditt brukernavn. Er du sikker på at du vil gjøre det?"
+        taken: "Beklager, det brukernavnet er tatt."
+        error: "Det skjedde en feil ved endring av ditt brukernavn."
+        invalid: "Det brukernavnet er ugyldig. Det kan bare inneholde nummer og bokstaver."
+      change_email:
+        action: 'endre'
+        title: "Endre Email"
+        taken: "Beklager, den emailen er ikke tilgjengelig."
+        error: "Det skjedde en feil ved endring av din email. Kanskje den addressen allerede er i bruk?"
+        success: "Vi har sent en email til den addressen. Vennligst følg meldingens instruksjoner for bekreftelse."
+
+      email:
+        title: "Email"
+        instructions: "Din email vil aldri bli vist til offentligheten."
+        ok: "Ser bra ut. Vi sender deg en email for å bekrefte."
+        invalid: "Vennligst skriv inn en gyldig emailaddresse."
+        authenticated: "Din email har blitt autentisert av {{provider}}."
+        frequency: "Vi sender deg bare en email om vi ikke har sett deg nylig og du har ikke allerede sett tingen vi varslet deg om."
+
+      name:
+        title: "Naavn"
+        instructions: "Den lange versjonen av ditt navn;  trenger ikke å være unik. Brukt for alternativ @brukernavn matching og vist bare på brukersiden din."
+        too_short: "Navnet ditt er for kort."
+        ok: "Navnet ditt ser bra ut."
+      username:
+        title: "Brukernavn"
+        instructions: "Må være unikt, uten mellomrom. Folk kan nevne deg som @brukernavn."
+        short_instructions: "Folk kan nevne deg som @{{username}}."
+        available: "Ditt brukernavn er tilgjengelig."
+        global_match: "Email matcher det registrerte brukernavnet."
+        global_mismatch: "Allerede registrert. Prøv {{suggestion}}?"
+        not_available: "Ikke tilgjengelig. Prøv {{suggestion}}?"
+        too_short: "Ditt brukernavn er for kort."
+        too_long: "Ditt brukernavn er for langt."
+        checking: "Sjekker brukernavns tilgjengelighet..."
+        enter_email: 'Brukernavn funnet. Skriv inn matchende email.'
+
+      password_confirmation:
+        title: "Passord Igjen"
+
+      last_posted: "Siste Innlegg"
+      last_emailed: "Sist Kontaktet"
+      last_seen: "Sist Sett"
+      created: "Laget Ved"
+      log_out: "Logg Ut"
+      website: "Webside"
+      email_settings: "Email"
+      email_digests:
+        title: "Når jeg ikke besøker siden, send meg ett sammendrag på email om siste nytt"
+        daily: "daglig"
+        weekly: "ukentlig"
+        bi_weekly: "hver andre uke"
+
+      email_direct: "Motta en email når noen siterer deg, svarer på ditt innlegg, eller nevner ditt @brukernavn"
+      email_private_messages: "Notta en email når noen sender deg en privat melding"
+
+      other_settings: "Annet"
+
+      new_topic_duration:
+        label: "Anse emner som nye når"
+        not_viewed: "Jeg har ikke sett dem ennå"
+        last_here: "de var postet siden jeg var her sist"
+        after_n_days:
+          one: "de var postet i løpet av dagen"
+          other: "de var postet i de siste {{count}} dagene"
+        after_n_weeks:
+          one: "de var postet i løpet av uken"
+          other: "de vart postet i det siste {{count}} ukene"
+
+      auto_track_topics: "Følg automatisk emner jeg åpner"
+      auto_track_options:
+        never: "aldri"
+        always: "alltid"
+        after_n_seconds:
+          one: "etter 1 sekund"
+          other: "etter {{count}} sekunder"
+        after_n_minutes:
+          one: "etter 1 minutt"
+          other: "etter {{count}} minutter"
+
+      invited:
+        title: "invitasjoner"
+        user: "Invitert Bruker"
+        none: "{{username}} har ikke invitert noen brukere til siden."
+        redeemed: "Løs inn invitasjoner"
+        redeemed_at: "Løst inn ved"
+        pending: "Ventende Invitasjoner"
+        topics_entered: "Emner Lagt Inn"
+        posts_read_count: "Innlegg Lest"
+        rescind: "Fjern Invitasjon"
+        rescinded: "Invitasjon Fjernet"
+        time_read: "Lesetid"
+        days_visited: "Dager Besøkt"
+        account_age_days: "Kontoalder i dager"
+
+      password:
+        title: "Passord"
+        too_short: "Passordet ditt er for kort"
+        ok: "Passordet ditt ser bra ut"
+
+      ip_address:
+        title: "Siste IP Addresse"
+      avatar:
+        title: "Profilbilde"
+        instructions: "Vi bruker <a href='https://gravatar.com' target='_blank'>Gravatar</a> basert på din email for profilbilder."
+
+      filters:
+        all: "Alle"
+
+      stream:
+        posted_by: "Poste av"
+        sent_by: "Sent av"
+        private_message: "private meldinger"
+        the_topic: "emnet"
+
+    loading: "Laster..."
+    close: "Lukk"
+    learn_more: "lær mer..."
+
+    year: 'år'
+    year_desc: 'emner postet i de siste 365 dager'
+    month: 'måned'
+    month_desc: 'emner postet i de siste 30 dager'
+    week: 'uke'
+    week_desc: 'emner postet i de siste 7 dager'
+
+    first_post: First post
+    mute: Mute
+    unmute: Unmute
+    last_post: Last post
+
+    best_of:
+      title: "De Beste"
+      enabled_description: You are currently viewing the "De Beste" view of this topic.
+      description: "Det er <b>{{count}}</b> innlegg i dette emnet. Det er mange! Will du spare tid ved å vise bare de beste innleggene?"
+      enable: 'Bytt til "De Beste" modus'
+      disable: 'Avslutt "De Beste"'
+
+    private_message_info:
+      title: "Private Meldinger"
+      invite: "Inviter Andre..."
+
+    email: 'Email'
+    username: 'Brukernavn'
+    last_seen: 'Sist Sett'
+    created: 'Laget'
+    trust_level: 'Tillitsnivå'
+
+    create_account:
+      title: "Lag Konto"
+      action: "Lag en nå!"
+      invite: "Har du ikke en konto ennå?"
+      failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
+
+    forgot_password:
+      title: "Glemt Passord"
+      action: "Jeg glemte mitt passord"
+      invite: "Skriv inn ditt brukernavn eller e-postaddresse, så sender vi deg en email for å tilbakestille ditt passord."
+      reset: "Tilbakestill Passord"
+      complete: "Du burde snart motta en email med instruksjoner om hvordan du kan tilbakestille ditt passord."
+
+    login:
+      title: "Logg Inn"
+      username: "Brukernavn"
+      password: "Passord"
+      email_placeholder: "email addresse eller brukernavn"
+      error: "Ukjent feil"
+      reset_password: 'Tilbakestill Passord'
+      logging_in: "Logger Inn..."
+      or: "Eller"
+      authenticating: "Autentiserer..."
+      awaiting_confirmation: "Din konto avventer aktivering. Bruk 'Glemt Passord' linken for å sende en ny emailfor aktivering."
+      awaiting_approval: "Din kont har ikkje blitt godkjent av en moderator enda. Du vil motta en email når den er godkjent."
+      not_activated: "Du kan ikke logge inn enda. Vi sente en email for aktivering til deg <b>{{sentTo}}</b>.. Vennligst følg instruksjonene i den emailen for å aktivere din konto."
+      resend_activation_email: "Klikk her for å sende emailen for aktivering igjen."
+      sent_activation_email_again: "Vi sendte deg enda en email for aktivering til <b>{{currentEmail}}</b>. Det kan ta noen minutter før den kommer fram; sørg for at du sjekker spamfolderen din."
+      google:
+        title: "med Google"
+        message: "Autentiserer med Google (sørg for at du tillater pop-up vindu)"
+      twitter:
+        title: "med Twitter"
+        message: "Autentiserer med Twitter (sørg for at du tillater pop-up vindu)"
+      facebook:
+        title: "med Facebook"
+        message: "Autentiserer med Facebook (sørg for at du tillater pop-up vindu)"
+      cas:
+        title: "Logg in med CAS"
+        message: "Autentiserer med CAS (sørg for at du tillater pop-up vindu)"
+      yahoo:
+        title: "med Yahoo"
+        message: "Autentiserer med Yahoo (sørg for at du tillater pop-up vindu)"
+      github:
+        title: "med GitHub"
+        message: "Autentiserer med GitHub (sørg for at du tillater pop-up vindu)"
+      persona:
+        title: "med Persona"
+        message: "Autentiserer med Mozilla Persona (sørg for at du tillater pop-up vindu)"
+
+    composer:
+      posting_not_on_topic: "Du svarer på emnet \"{{title}}\", men for øyeblikket ser du på et annet emne."
+      saving_draft_tip: "lagrer"
+      saved_draft_tip: "lagret"
+      saved_local_draft_tip: "lagret lokalt"
+      similar_topics: "Emnet ditt har likheter med..."
+      drafts_offline: "utkast offline"
+
+      min_length:
+        need_more_for_title: "{{n}} igen for tittelen"
+        need_more_for_reply: "{{n}} igjen for svaret"
+
+      error:
+        title_missing: "Tittel er obligatorisk."
+        title_too_short: "Tittelen må være minst {{min}} tegn lang."
+        title_too_long: "Tittelen må være mindre enn {{max}} tegn lang."
+        post_missing: "Innlegget kan ikke være tomt."
+        post_length: "Innlegget må være minst {{min}} tegn langt."
+        category_missing: "Du må velge en kategory."
+
+      save_edit: "Lagre Endring"
+      reply_original: "Besvar det Originale Emnet"
+      reply_here: "Svar Her"
+      reply: "Svar"
+      cancel: "Avbryt"
+      create_topic: "Lag Emne"
+      create_pm: "Lag Privat Melding"
+
+      users_placeholder: "Legg til en bruker"
+      title_placeholder: "Skriv tittelen din her. I en kort setning, hva handler denne diskusjonen om?"
+      reply_placeholder: "Skriv her. Bruk Markdown eller BBCode for formatering. Dra eller lim inn et bilde for å laste det opp."
+      view_new_post: "Set ditt nye innlegg."
+      saving: "Lagrer..."
+      saved: "Lagret!"
+      saved_draft: "Du har et innleggsutlegg i utvikling. Klikk et sted i denne boksen for å gjenoppta redigering."
+      uploading: "Laster opp..."
+      show_preview: 'se forhånsvisning &raquo;'
+      hide_preview: '&laquo; skjul forhåndsvisning'
+
+      quote_post_title: "Siter hele innlegget"
+      bold_title: "Sterk"
+      bold_text: "sterk tekst"
+      italic_title: "Kursiv"
+      italic_text: "kursiv tekst"
+      link_title: "Hyperlink"
+      link_description: "beskriv linken her"
+      link_dialog_title: "Legg inn Hyperlink"
+      link_optional_text: "valgfri tittel"
+      quote_title: "Sitatramme"
+      quote_text: "Sitatramme"
+      code_title: "Kode Utsnitt"
+      code_text: "Legg inn kode her"
+      image_title: "Bilde"
+      image_description: "beskriv bildet her"
+      image_dialog_title: "Legg til Bildet"
+      image_optional_text: "valgfri title"
+      image_hosting_hint: "Trenger du <a href='http://www.google.com/search?q=free+image+hosting' target='_blank'>gratis bildelagring?</a>"
+      olist_title: "Nummerert Liste"
+      ulist_title: "Kulepunkt Liste"
+      list_item: "Listeelement"
+      heading_title: "Overskrift"
+      heading_text: "Overskrift"
+      hr_title: "Horisontalt Skille"
+      undo_title: "Angre"
+      redo_title: "Gjenta"
+      help: "Hjelp for redigering i Markdown"
+      toggler: "gjem eller vis redigeringspanelet"
+
+      admin_options_title: "Valgfrie emne-instillinger for ansatte"
+      auto_close_label: "Auto-lås emnet etter:"
+      auto_close_units: "dager"
+
+    notifications:
+      title: "notifikasjoner fra @brukernavn omtalelser, svar til dine innlegg og emner, private meldinger, osv"
+      none: "Du har ingen notifikasjoner akkurat nå."
+      more: "se gamle notifikasjoner"
+      mentioned: "<span title='omtalt' class='icon'>@</span> {{username}} {{link}}"
+      quoted: "<i title='sitert' class='icon icon-quote-right'></i> {{username}} {{link}}"
+      replied: "<i title='besvart' class='icon icon-reply'></i> {{username}} {{link}}"
+      posted: "<i title='innlegg' class='icon icon-reply'></i> {{username}} {{link}}"
+      edited: "<i title='redigert' class='icon icon-pencil'></i> {{username}} {{link}}"
+      liked: "<i title='likt' class='icon icon-heart'></i> {{username}} {{link}}"
+      private_message: "<i class='icon icon-envelope-alt' title='private melding'></i> {{username}} {{link}}"
+      invited_to_private_message: "<i class='icon icon-envelope-alt' title='invitert til private melding'></i> {{username}} {{link}}"
+      invitee_accepted: "<i title='accepted your invitation' class='icon icon-signin'></i> {{username}} aksepterte din invitasjon"
+      moved_post: "<i title='flyttet innlegg' class='icon icon-arrow-right'></i> {{username}} flyttet til {{link}}"
+      total_flagged: "totalt markerte innlegg"
+
+    image_selector:
+      title: "Legg til Bilde"
+      from_my_computer: "Fra Min Enhet"
+      from_the_web: "Fra Nettet"
+      add_image: "Legg til Bilde"
+      remote_title: "eksternt bilde"
+      remote_tip: "skriv inn addressen til et bilde, f.eks. http://example.com/image.jpg"
+      local_title: "lokalt bilde"
+      local_tip: "klikk for å velge et bilde fra din enhet."
+      upload: "Last opp"
+      uploading_image: "Laster opp bilde"
+
+    search:
+      title: "søk etter emner, innlegg, brukere eller kategorier"
+      placeholder: "skriv inn søkeordene dine her"
+      no_results: "Ingen resultater funnet."
+      searching: "Søker ..."
+
+      prefer:
+        user: "søket vil foretrekke resultater av @{{username}}"
+        category: "søket vil foretrekke resultater i {{category}}"
+
+    site_map: "gå til en annen emneliste eller kategori"
+    go_back: 'gå tilbake'
+    current_user: 'go til din brukerside'
+
+    favorite:
+      title: 'Favoritt'
+      help:
+        star: 'legg dette emnet til favorittlisten din'
+        unstar: 'fjern dette emnet fra favorittlisten din'
+
+    topics:
+      none:
+        favorited: "Du har ikke meket noen emner som favoritt enda. For å merke ett emne, klikk på stjernen ved siden av tittelen."
+        unread: "Du har ingen uleste emner å lese."
+        new: "Du har ingen nye emner å lese."
+        read: "Du har ikke lest noen emner enda."
+        posted: "Du har ikke postet i noen emner enda."
+        latest: "Det er ingen siste emner. Det er trist."
+        hot: "Det er ingen hotte emner."
+        category: "Det er ingen {{category}} emner."
+      bottom:
+        latest: "Det er ikke noen siste emner igjen å lese."
+        hot: "Det er ikke noen hotte emner igjen å lese."
+        posted: "Det er ikke noen postede emner igjen å lese."
+        read: "Det er ikke noen leste emner igjen å lese."
+        new: "Det er ikke noen nye emner igjen å lese."
+        unread: "Det er ikke noen uleste emner igjen å lese."
+        favorited: "Det er ikke noen favorittemner igjen å lese."
+        category: "Det er ikke noen {{category}} emner igjen."
+
+    rank_details:
+      toggle: toggle topic rank details
+      show: show topic rank details
+      title: Topic Rank Details
+
+    topic:
+      create_in: 'Lag {{categoryName}} Emne'
+      create: 'Lag Emne'
+      create_long: 'Lag ett nytt Emne'
+      private_message: 'Start enn private melding'
+      list: 'Emner'
+      new: 'nytt emne'
+      title: 'Emne'
+      loading_more: "Laster flere emner"
+      loading: 'Behandler emnet...'
+      invalid_access:
+        title: "Emnet er privat"
+        description: "Beklager, du har ikke tilgang til det emnet!"
+      server_error:
+        title: "Emnet kunne ikke bli behandlet"
+        description: "Beklager, vi kunne ikke behanldle det emnet, muligens på grunn av et tilkoblingsproblem. Vennligst prøv igjen. Om problemet vedvarer, fortell oss."
+      not_found:
+        title: "Emnet kunne ikke bli funnet"
+        description: "Beklager, vi kunne ikke finne det emnet. Kanskjer det ble fjernet av en moderator?"
+      unread_posts: "du har {{unread}} gamle uleste innlett i dette emnet"
+      new_posts: "det er {{new_posts}} nye innlegg i dette emnet siden du sist leste det"
+
+      likes:
+        one: "det er 1 like i dette emnet"
+        other: "det er {{count}} likes i dette emnet"
+      back_to_list: "Tilbake til Emnelisten"
+      options: "Valg for Emner"
+      show_links: "vis linker i dette emnet"
+      toggle_information: "vis/skjul emnedetaljer"
+      read_more_in_category: "Vil du lese mer? Bla gjennom andre emner i {{catLink}} eller {{latestLink}}."
+      read_more: "Vil du lese mer? {{catLink}} eller {{latestLink}}."
+
+      # keys ending with _MF use message format, see /spec/components/js_local_helper_spec.rb for samples
+      read_more_in_category_MF: "There {UNREAD, plural, one {is <a href='/unread'>1 unread</a>} other {are <a href='/unread'># unread</a>}} and {NEW, plural, one {<a href='/new'>1 new</a> topic} other {<a href='/new'># new</a> topics}} remaining, or browse other topics in {catLink}"
+      read_more_MF: "There {UNREAD, plural, one {is <a href='/unread'>1 unread</a>} other {are <a href='/unread'># unread</a>}} and {NEW, plural, one {<a href='/new'>1 new</a> topic} other {<a href='/new'># new</a> topics}} remaining, or {latestLink}"
+
+      browse_all_categories: Browse all categories
+
+      view_latest_topics: view latest topics
+      suggest_create_topic: Why not create a topic?
+      read_position_reset: "Your read position has been reset."
+      jump_reply_up: jump to earlier reply
+      jump_reply_down: jump to later reply
+      deleted: "The topic has been deleted"
+
+      auto_close_notice: "This topic will automatically close %{timeLeft}."
+      auto_close_title: 'Auto-Close Settings'
+      auto_close_save: "Save"
+      auto_close_cancel: "Cancel"
+      auto_close_remove: "Don't Auto-Close This Topic"
+
+      progress:
+        title: topic progress
+        jump_top: jump to first post
+        jump_bottom: jump to last post
+        total: total posts
+        current: current post
+
+      notifications:
+        title: ''
+        reasons:
+          "3_2": 'You will receive notifications because you are watching this topic.'
+          "3_1": 'You will receive notifications because you created this topic.'
+          "3": 'You will receive notifications because you are watching this topic.'
+          "2_4": 'You will receive notifications because you posted a reply to this topic.'
+          "2_2": 'You will receive notifications because you are tracking this topic.'
+          "2": 'You will receive notifications because you <a href="/users/{{username}}/preferences">read this topic</a>.'
+          "1": 'You will be notified only if someone mentions your @name or replies to your post.'
+          "1_2": 'You will be notified only if someone mentions your @name or replies to your post.'
+          "0": 'You are ignoring all notifications on this topic.'
+          "0_2": 'You are ignoring all notifications on this topic.'
+        watching:
+          title: "Watching"
+          description: "same as Tracking, plus you will be notified of all new posts."
+        tracking:
+          title: "Tracking"
+          description: "you will be notified of @name mentions and replies to your posts, plus you will see a count of unread and new posts."
+        regular:
+          title: "Regular"
+          description: "you will be notified only if someone mentions your @name or replies to your post."
+        muted:
+          title: "Muted"
+          description: "you will not be notified of anything about this topic, and it will not appear on your unread tab."
+
+      actions:
+        delete: "Delete Topic"
+        open: "Open Topic"
+        close: "Close Topic"
+        auto_close: "Auto Close"
+        unpin: "Un-Pin Topic"
+        pin: "Pin Topic"
+        unarchive: "Unarchive Topic"
+        archive: "Archive Topic"
+        invisible: "Make Invisible"
+        visible: "Make Visible"
+        reset_read: "Reset Read Data"
+        multi_select: "Select for Merge/Split"
+        convert_to_topic: "Convert to Regular Topic"
+
+      reply:
+        title: 'Reply'
+        help: 'begin composing a reply to this topic'
+
+      clear_pin:
+        title: "Clear pin"
+        help: "Clear the pinned status of this topic so it no longer appears at the top of your topic list"
+
+      share:
+        title: 'Share'
+        help: 'share a link to this topic'
+
+      inviting: "Inviting..."
+
+      invite_private:
+        title: 'Invite to Private Message'
+        email_or_username: "Invitee's Email or Username"
+        email_or_username_placeholder: "email address or username"
+        action: "Invite"
+        success: "Thanks! We've invited that user to participate in this private message."
+        error: "Sorry, there was an error inviting that user."
+
+      invite_reply:
+        title: 'Invite Friends to Reply'
+        action: 'Email Invite'
+        help: 'send invitations to friends so they can reply to this topic with a single click'
+        email: "We'll send your friend a brief email allowing them to reply to this topic by clicking a link."
+        email_placeholder: 'email address'
+        success: "Thanks! We mailed out an invitation to <b>{{email}}</b>. We'll let you know when they redeem your invitation. Check the invitations tab on your user page to keep track of who you've invited."
+        error: "Sorry, we couldn't invite that person. Perhaps they are already a user?"
+
+      login_reply: 'Log In to Reply'
+
+      filters:
+        user: "You're viewing only {{n_posts}} {{by_n_users}}."
+        n_posts:
+          one: "1 post"
+          other: "{{count}} posts"
+        by_n_users:
+          one: "made by 1 specific user"
+          other: "made by {{count}} specific users"
+
+        best_of: "You're viewing the {{n_best_posts}} {{of_n_posts}}."
+        n_best_posts:
+          one: "1 best post"
+          other: "{{count}} best posts"
+        of_n_posts:
+          one: "of 1 in the topic"
+          other: "of {{count}} in the topic"
+        cancel: "Show all posts in this topic again."
+
+      split_topic:
+        title: "Split Topic"
+        action: "split topic"
+        topic_name: "New Topic Name:"
+        error: "There was an error splitting that topic."
+        instructions:
+          one: "You are about to create a new topic and populate it with the post you've selected."
+          other: "You are about to create a new topic and populate it with the <b>{{count}}</b> posts you've selected."
+
+      merge_topic:
+        title: "Merge Topic"
+        action: "merge topic"
+        error: "There was an error merging that topic."
+        instructions:
+          one: "Please choose the topic you'd like to move that post to."
+          other: "Please choose the topic you'd like to move those <b>{{count}}</b> posts to."
+
+      multi_select:
+        select: 'select'
+        selected: 'selected ({{count}})'
+        delete: delete selected
+        cancel: cancel selecting
+        description:
+          one: You have selected <b>1</b> post.
+          other: "You have selected <b>{{count}}</b> posts."
+
+    post:
+      reply: "Replying to {{link}} by {{replyAvatar}} {{username}}"
+      reply_topic: "Reply to {{link}}"
+      quote_reply: "quote reply"
+      edit: "Editing {{link}} by {{replyAvatar}} {{username}}"
+      post_number: "post {{number}}"
+      in_reply_to: "in reply to"
+      reply_as_new_topic: "Reply as new Topic"
+      continue_discussion: "Continuing the discussion from {{postLink}}:"
+      follow_quote: "go to the quoted post"
+      deleted_by_author: "(post removed by author)"
+      expand_collapse: "expand/collapse"
+
+      has_replies:
+        one: "Reply"
+        other: "Replies"
+
+      errors:
+        create: "Sorry, there was an error creating your post. Please try again."
+        edit: "Sorry, there was an error editing your post. Please try again."
+        upload: "Sorry, there was an error uploading that file. Please try again."
+        upload_too_large: "Sorry, the file you are trying to upload is too big (maximum size is {{max_size_kb}}kb), please resize it and try again."
+        upload_too_many_images: "Sorry, you can only upload one image at a time."
+        only_images_are_supported: "Sorry, you can only upload images."
+
+      abandon: "Are you sure you want to abandon your post?"
+
+      archetypes:
+        save: 'Save Options'
+
+      controls:
+        reply: "begin composing a reply to this post"
+        like: "like this post"
+        edit: "edit this post"
+        flag: "flag this post for attention or send a notification about it"
+        delete: "delete this post"
+        undelete: "undelete this post"
+        share: "share a link to this post"
+        bookmark: "bookmark this post to your user page"
+        more: "More"
+
+      actions:
+        flag: 'Flag'
+        clear_flags:
+          one: "Clear flag"
+          other: "Clear flags"
+        it_too:
+          off_topic: "Flag it too"
+          spam: "Flag it too"
+          inappropriate: "Flag it too"
+          custom_flag: "Flag it too"
+          bookmark: "Bookmark it too"
+          like: "Like it too"
+          vote: "Vote for it too"
+        undo:
+          off_topic: "Undo flag"
+          spam: "Undo flag"
+          inappropriate: "Undo flag"
+          bookmark: "Undo bookmark"
+          like: "Undo like"
+          vote: "Undo vote"
+        people:
+          off_topic: "{{icons}} marked this as off-topic"
+          spam: "{{icons}} marked this as spam"
+          inappropriate: "{{icons}} marked this as inappropriate"
+          notify_moderators: "{{icons}} notified moderators"
+          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>notified moderators</a>"
+          notify_user: "{{icons}} sent a private message"
+          notify_user_with_url: "{{icons}} sent a <a href='{{postUrl}}'>private message</a>"
+          bookmark: "{{icons}} bookmarked this"
+          like: "{{icons}} liked this"
+          vote: "{{icons}} voted for this"
+        by_you:
+          off_topic: "You flagged this as off-topic"
+          spam: "You flagged this as spam"
+          inappropriate: "You flagged this as inappropriate"
+          notify_moderators: "You flagged this for moderation"
+          notify_user: "You sent a private message to this user"
+          bookmark: "You bookmarked this post"
+          like: "You liked this"
+          vote: "You voted for this post"
+        by_you_and_others:
+          off_topic:
+            one: "You and 1 other flagged this as off-topic"
+            other: "You and {{count}} other people flagged this as off-topic"
+          spam:
+            one: "You and 1 other flagged this as spam"
+            other: "You and {{count}} other people flagged this as spam"
+          inappropriate:
+            one: "You and 1 other flagged this as inappropriate"
+            other: "You and {{count}} other people flagged this as inappropriate"
+          notify_moderators:
+            one: "You and 1 other flagged this for moderation"
+            other: "You and {{count}} other people flagged this for moderation"
+          notify_user:
+            one: "You and 1 other sent a private message to this user"
+            other: "You and {{count}} other people sent a private message to this user"
+          bookmark:
+            one: "You and 1 other bookmarked this post"
+            other: "You and {{count}} other people bookmarked this post"
+          like:
+            one: "You and 1 other liked this"
+            other: "You and {{count}} other people liked this"
+          vote:
+            one: "You and 1 other voted for this post"
+            other: "You and {{count}} other people voted for this post"
+        by_others:
+          off_topic:
+            one: "1 person flagged this as off-topic"
+            other: "{{count}} people flagged this as off-topic"
+          spam:
+            one: "1 person flagged this as spam"
+            other: "{{count}} people flagged this as spam"
+          inappropriate:
+            one: "1 person flagged this as inappropriate"
+            other: "{{count}} people flagged this as inappropriate"
+          notify_moderators:
+            one: "1 person flagged this for moderation"
+            other: "{{count}} people flagged this for moderation"
+          notify_user:
+            one: "1 person sent a private message to this user"
+            other: "{{count}} sent a private message to this user"
+          bookmark:
+            one: "1 person bookmarked this post"
+            other: "{{count}} people bookmarked this post"
+          like:
+            one: "1 person liked this"
+            other: "{{count}} people liked this"
+          vote:
+            one: "1 person voted for this post"
+            other: "{{count}} people voted for this post"
+
+      edits:
+        one: 1 edit
+        other: "{{count}} edits"
+        zero: no edits
+
+      delete:
+        confirm:
+          one: "Are you sure you want to delete that post?"
+          other: "Are you sure you want to delete all those posts?"
+
+    category:
+      none: '(no category)'
+      edit: 'edit'
+      edit_long: "Edit Category"
+      edit_uncategorized: "Edit Uncategorized"
+      view: 'View Topics in Category'
+      general: 'General'
+      settings: 'Settings'
+      delete: 'Delete Category'
+      create: 'Create Category'
+      save: 'Save Category'
+      creation_error: There has been an error during the creation of the category.
+      save_error: There was an error saving the category.
+      more_posts: "view all {{posts}}..."
+      name: "Category Name"
+      description: "Description"
+      topic: "category topic"
+      badge_colors: "Badge colors"
+      background_color: "Background color"
+      foreground_color: "Foreground color"
+      name_placeholder: "Should be short and succinct."
+      color_placeholder: "Any web color"
+      delete_confirm: "Are you sure you want to delete this category?"
+      delete_error: "There was an error deleting the category."
+      list: "List Categories"
+      no_description: "There is no description for this category."
+      change_in_category_topic: "Edit Description"
+      hotness: "Hotness"
+      already_used: 'This color has been used by another category'
+      is_secure: "Secure category?"
+      add_group: "Add Group"
+      security: "Security"
+      allowed_groups: "Allowed Groups:"
+      auto_close_label: "Auto-close topics after:"
+
+
+    flagging:
+      title: 'Why are you flagging this post?'
+      action: 'Flag Post'
+      take_action: "Take Action"
+      notify_action: 'Notify'
+      cant: "Sorry, you can't flag this post at this time."
+      custom_placeholder_notify_user: "Why does this post require you to speak to this user directly and privately? Be specific, be constructive, and always be kind."
+      custom_placeholder_notify_moderators: "Why does this post require moderator attention? Let us know specifically what you are concerned about, and provide relevant links where possible."
+      custom_message:
+        at_least: "enter at least {{n}} characters"
+        more: "{{n}} to go..."
+        left: "{{n}} remaining"
+
+    topic_summary:
+      title: "Topic Summary"
+      links_shown: "show all {{totalLinks}} links..."
+      clicks: "clicks"
+      topic_link: "topic link"
+
+    topic_statuses:
+      locked:
+        help: "this topic is closed; it no longer accepts new replies"
+      pinned:
+        help: "this topic is pinned; it will display at the top of its category"
+      archived:
+        help: "this topic is archived; it is frozen and cannot be changed"
+      invisible:
+        help: "this topic is invisible; it will not be displayed in topic lists, and can only be accessed via a direct link"
+
+    posts: "Posts"
+    posts_long: "{{number}} posts in this topic"
+    original_post: "Original Post"
+    views: "Views"
+    replies: "Replies"
+    views_long: "this topic has been viewed {{number}} times"
+    activity: "Activity"
+    likes: "Likes"
+    top_contributors: "Participants"
+    category_title: "Category"
+    history: "History"
+    changed_by: "by {{author}}"
+
+    categories_list: "Categories List"
+
+    filters:
+      latest:
+        title: "Latest"
+        help: "the most recent topics"
+      hot:
+        title: "Hot"
+        help: "a selection of the hottest topics"
+      favorited:
+        title: "Favorited"
+        help: "topics you marked as favorites"
+      read:
+        title: "Read"
+        help: "topics you've read, in the order that you last read them"
+      categories:
+        title: "Categories"
+        title_in: "Category - {{categoryName}}"
+        help: "all topics grouped by category"
+      unread:
+        title:
+          zero: "Unread"
+          one: "Unread (1)"
+          other: "Unread ({{count}})"
+        help: "tracked topics with unread posts"
+      new:
+        title:
+          zero: "New"
+          one: "New (1)"
+          other: "New ({{count}})"
+        help: "new topics since your last visit"
+      posted:
+        title: "My Posts"
+        help: "topics you have posted in"
+      category:
+        title:
+          zero: "{{categoryName}}"
+          one: "{{categoryName}} (1)"
+          other: "{{categoryName}} ({{count}})"
+        help: "latest topics in the {{categoryName}} category"
+
+    browser_update: 'Unfortunately, <a href="http://www.discourse.org/faq/#browser">your browser is too old to work on this Discourse forum</a>. Please <a href="http://browsehappy.com">upgrade your browser</a>.'
+
+  # This section is exported to the javascript for i18n in the admin section
+  admin_js:
+    type_to_filter: "type to filter..."
+
+    admin:
+      title: 'Discourse Admin'
+      moderator: 'Moderator'
+
+      dashboard:
+        title: "Dashboard"
+        version: "Version"
+        up_to_date: "You're up to date!"
+        critical_available: "A critical update is available."
+        updates_available: "Updates are available."
+        please_upgrade: "Please upgrade!"
+        installed_version: "Installed"
+        latest_version: "Latest"
+        problems_found: "Some problems have been found with your installation of Discourse:"
+        last_checked: "Last checked"
+        refresh_problems: "Refresh"
+        no_problems: "No problems were found."
+        moderators: 'Moderators:'
+        admins: 'Admins:'
+        private_messages_short: "PMs"
+        private_messages_title: "Private Messages"
+
+        reports:
+          today: "Today"
+          yesterday: "Yesterday"
+          last_7_days: "Last 7 Days"
+          last_30_days: "Last 30 Days"
+          all_time: "All Time"
+          7_days_ago: "7 Days Ago"
+          30_days_ago: "30 Days Ago"
+          all: "All"
+          view_table: "View as Table"
+          view_chart: "View as Bar Chart"
+
+      commits:
+        latest_changes: "Latest changes: please update often!"
+        by: "by"
+
+      flags:
+        title: "Flags"
+        old: "Old"
+        active: "Active"
+        clear: "Clear Flags"
+        clear_title: "dismiss all flags on this post (will unhide hidden posts)"
+        delete: "Delete Post"
+        delete_title: "delete post (if its the first post delete topic)"
+        flagged_by: "Flagged by"
+        error: "Something went wrong"
+        view_message: "view message"
+
+      groups:
+        title: "Groups"
+        edit: "Edit Groups"
+        selector_placeholder: "add users"
+        name_placeholder: "Group name, no spaces, same as username rule"
+
+      api:
+        title: "API"
+        long_title: "API Information"
+        key: "Key"
+        generate: "Generate API Key"
+        regenerate: "Regenerate API Key"
+        info_html: "Your API key will allow you to create and update topics using JSON calls."
+        note_html: "Keep this key <strong>secret</strong>, all users that have it may create arbitrary posts on the forum as any user."
+
+      customize:
+        title: "Customize"
+        long_title: "Site Customizations"
+        header: "Header"
+        css: "Stylesheet"
+        override_default: "Do not include standard style sheet"
+        enabled: "Enabled?"
+        preview: "preview"
+        undo_preview: "undo preview"
+        save: "Save"
+        new: "New"
+        new_style: "New Style"
+        delete: "Delete"
+        delete_confirm: "Delete this customization?"
+        about: "Site Customization allow you to modify stylesheets and headers on the site. Choose or add one to start editing."
+
+      email_logs:
+        title: "Email"
+        sent_at: "Sent At"
+        email_type: "Email Type"
+        to_address: "To Address"
+        test_email_address: "email address to test"
+        send_test: "send test email"
+        sent_test: "sent!"
+
+      impersonate:
+        title: "Impersonate User"
+        username_or_email: "Username or Email of User"
+        help: "Use this tool to impersonate a user account for debugging purposes."
+        not_found: "That user can't be found."
+        invalid: "Sorry, you may not impersonate that user."
+
+      users:
+        title: 'Users'
+        create: 'Add Admin User'
+        last_emailed: "Last Emailed"
+        not_found: "Sorry, that username doesn't exist in our system."
+        new: "New"
+        active: "Active"
+        pending: "Pending"
+        approved: "Approved?"
+        approved_selected:
+          one: "approve user"
+          other: "approve users ({{count}})"
+        titles:
+          active: 'Active Users'
+          new: 'New Users'
+          pending: 'Users Pending Review'
+          newuser: 'Users at Trust Level 0 (New User)'
+          basic: 'Users at Trust Level 1 (Basic User)'
+          regular: 'Users at Trust Level 2 (Regular User)'
+          leader: 'Users at Trust Level 3 (Leader)'
+          elder: 'Users at Trust Level 4 (Elder)'
+          admins: 'Admin Users'
+          moderators: 'Moderators'
+
+      user:
+        ban_failed: "Something went wrong banning this user {{error}}"
+        unban_failed: "Something went wrong unbanning this user {{error}}"
+        ban_duration: "How long would you like to ban the user for? (days)"
+        delete_all_posts: "Delete all posts"
+        ban: "Ban"
+        unban: "Unban"
+        banned: "Banned?"
+        moderator: "Moderator?"
+        admin: "Admin?"
+        show_admin_profile: "Admin"
+        refresh_browsers: "Force browser refresh"
+        show_public_profile: "Show Public Profile"
+        impersonate: 'Impersonate'
+        revoke_admin: 'Revoke Admin'
+        grant_admin: 'Grant Admin'
+        revoke_moderation: 'Revoke Moderation'
+        grant_moderation: 'Grant Moderation'
+        reputation: Reputation
+        permissions: Permissions
+        activity: Activity
+        like_count: Likes Received
+        private_topics_count: Private Topics Count
+        posts_read_count: Posts Read
+        post_count: Posts Created
+        topics_entered: Topics Entered
+        flags_given_count: Flags Given
+        flags_received_count: Flags Received
+        approve: 'Approve'
+        approved_by: "approved by"
+        time_read: "Read Time"
+        delete: "Delete User"
+        delete_forbidden: "This user can't be deleted because there are posts. Delete all this user's posts first."
+        delete_confirm: "Are you SURE you want to permanently delete this user from the site? This action is permanent!"
+        deleted: "The user was deleted."
+        delete_failed: "There was an error deleting that user. Make sure all posts are deleted before trying to delete the user."
+        send_activation_email: "Send Activation Email"
+        activation_email_sent: "An activation email has been sent."
+        send_activation_email_failed: "There was a problem sending another activation email."
+        activate: "Activate Account"
+        activate_failed: "There was a problem activating the user."
+        deactivate_account: "Deactivate Account"
+        deactivate_failed: "There was a problem deactivating the user."
+
+      site_content:
+        none: "Choose a type of content to begin editing."
+        title: 'Content'
+        edit: "Edit Site Content"
+
+      site_settings:
+        show_overriden: 'Only show overridden'
+        title: 'Settings'
+        reset: 'reset to default'
