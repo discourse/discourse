@@ -5,7 +5,8 @@ describe Upload do
   it { should belong_to :user }
   it { should belong_to :topic }
 
-  it { should have_and_belong_to_many :post }
+  it { should have_many :post_uploads }
+  it { should have_many :posts }
 
   it { should validate_presence_of :original_filename }
   it { should validate_presence_of :filesize }

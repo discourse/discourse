@@ -20,12 +20,12 @@ task "images:reindex" => :environment do
 				src = img['src']
 				if src.present? && has_been_uploaded?(src) && m = uploaded_regex.match(src)
           begin
-  					Post.exec_sql("INSERT INTO posts_uploads (post_id, upload_id) VALUES (?, ?)", p.id, m[:upload_id])
+            PostUpload.create({ post_id: p.id, upload_id: m[:upload_id] })
           rescue ActiveRecord::RecordNotUnique
           end
 				end
 			end
-			putc "."
+      putc "."
 		end
   end
   puts "\ndone."
