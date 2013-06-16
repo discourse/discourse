@@ -35,7 +35,6 @@ class ListController < ApplicationController
 
   def category
     query = TopicQuery.new(current_user, page: params[:page])
-    list = nil
 
     # If they choose uncategorized, return topics NOT in a category
     if params[:category] == 'uncategorized'
