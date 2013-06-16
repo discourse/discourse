@@ -5,6 +5,10 @@
 # http://yamllint.com/
 
 cs:
+  dates:
+    short_date_no_year: "D. MMM"
+    short_date: "D. MMM, YYYY"
+    long_date: "D. MMMM YYYY h:mma"
   time:
     formats:
       short: "%d.%m.%Y"
@@ -53,17 +57,18 @@ cs:
   rss_posts_in_topic: "RSS feed tématu '%{topic}'"
   rss_topics_in_category: "RSS feed témat z kategorie '%{category}'"
   author_wrote: "%{author} napsal:"
+  private_message_abbrev: "SZ"
 
   groups:
     default_names:
-      admins: "administrátoři"
-      moderators: "moderátoři"
-      staff: "personál"
-      trust_level_1: "věrohodnost_1"
-      trust_level_2: "věrohodnost_2"
-      trust_level_3: "věrohodnost_3"
-      trust_level_4: "věrohodnost_4"
-      trust_level_5: "věrohodnost_5"
+      admins: "admins"
+      moderators: "moderators"
+      staff: "staff"
+      trust_level_1: "trust_level_1"
+      trust_level_2: "trust_level_2"
+      trust_level_3: "trust_level_3"
+      trust_level_4: "trust_level_4"
+      trust_level_5: "trust_level_5"
 
   education:
     until_posts:
@@ -73,8 +78,6 @@ cs:
 
     'new-topic': |
       Vítejte na %{site_name} &mdash; **děkujeme, že jste zahájili novou konverzaci!**
-
-      Během psaní příspěvku pamatujte na tyto věci:
 
       - Popisuje název vašeho tématu jeho obsah tak, aby v něm našli to, co objektivně očekávají?
 
@@ -86,8 +89,6 @@ cs:
 
     'new-reply': |
       Vítejte na %{site_name} &mdash; **děkujeme, že příspíváte do konverzace!**
-
-      Během psaní příspěvku pamatujte na tyto věci:
 
       - Zlepšuje (i třeba jen malou mírou) vaše odpověď celou konverzaci?
 
@@ -409,6 +410,7 @@ cs:
     queue_size_warning: 'Počet čekajících úloh je %{queue_size}, což je příliš mnoho. Mohlo by to indikovat problém se službou Sidekiq, nebo je zapotřebí spustit více Sidekiq worker procesů.'
     memory_warning: 'Váš server má méně než 1 GB paměti. Doporučená konfigurace je alespoň 1 GB paměti.'
     facebook_config_warning: 'Server je nakonfigurován, aby povoloval registraci a přihlášení přes Facebook (enable_facebook_logins), ale nejsou nastaveny hodnoty "app id" a "app secret". Navštivte <a href="/admin/site_settings">nastevení webu</a> a opravte nastavení. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Pro více informací si přečtěte tento návod</a>.'
+    cas_config_warning: 'Server je nakonfigurován, aby povoloval registraci a přihlášení přes CAS (enable_cas_logins), ale nejsou správně nastaveny hodnoty "hostname" a "domain name".'
     twitter_config_warning: 'Server je nakonfigurován, aby povoloval registraci a přihlášení přes Twitter (enable_twitter_logins), ale nejsou nastaveny hodnoty "key" a "secret". Navštivte <a href="/admin/site_settings">nastevení webu</a> a opravte nastavení. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Pro více informací si přečtěte tento návod</a>.'
     github_config_warning: 'Server je nakonfigurován, aby povoloval registraci a přihlášení přes GitHub (enable_github_logins), ale nejsou nastaveny hodnoty "client id" a "secret". Navštivte <a href="/admin/site_settings">nastevení webu</a> a opravte nastavení. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Pro více informací si přečtěte tento návod</a>.'
     failing_emails_warning: "%{num_failed_jobs} emailů se nepodařilo odeslat. Zkontrolujte soubor config/production.rb a ujistěte se, že máte správné nastavení config.action_mailer."
@@ -416,6 +418,7 @@ cs:
     contact_email_missing: "Neposkytli jste kontaktní email pro váš web. Prosím, aktualizujte položku contact_email v <a href='/admin/site_settings'>Nastavení webu</a>."
     contact_email_invalid: "Kontaktní email je neplatný. The site contact email is invalid. Prosím, aktualizujte položku contact_email v <a href='/admin/site_settings'>Nastavení webu</a>."
     title_nag: "Název webu je nastaven na výchozí hodnotu. Prosím, změňte název webu na skutečný název v <a href='/admin/site_settings'>Nastavení webu</a>."
+    consumer_email_warning: "Váš web je nastaven, aby používal Gmail (nebo jinou uživatelskou emailovou službu) k odesílání emailů. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limituje počet emailů, které můžete odeslat</a>. Zvažte použití jiného emailového poskytovatele, jako je třeba mandrill.com k zajištění doručitelnosti emailů."
 
   content_types:
     education_new_reply:
@@ -433,6 +436,11 @@ cs:
     welcome_invite:
       title: "Uvítání: Pozvaný uživatel"
       description: "Soukromá zpráva, která je automaticky zaslaná novým pozvaným uživatelům, když přijmou pozvánku."
+
+    login_required_welcome_message:
+      title: "Vyžadováno přihlášení: Uvítací zpráva"
+      description: "Uvítací zpráva, která je zobrazena nepřihlášeným uživatelům, je-li zapnuto nastavení 'vyžadovat přihlášení'."
+
     tos_user_content_license:
       title: "Podmínky používání: Licence obsahu"
       description: "Text sekce 'licence obsahu' z Podmínek používání."
@@ -443,10 +451,13 @@ cs:
   site_settings:
     default_locale: "Výchozí jazyk této Discourse instance (kód ve formátu ISO 639-1)"
     min_post_length: "Minimální délka příspěvku"
+    min_private_message_post_length: "Minimální délka příspěvku (ve znacích) soukromé zprávy"
     max_post_length: "Maximální délka příspěvku"
     min_topic_title_length: "Minimální délka názvu tématu"
     max_topic_title_length: "Maximální délka názvu tématu"
+    min_private_message_title_length: "Minimální délka názvu (ve znacích) soukromé zprávy"
     min_search_term_length: "Minimální délka hledaného výrazu ve znacích"
+    allow_uncategorized_topics: "Povolit vytváření tématů bez určení kategorie"
     allow_duplicate_topic_titles: "Mohou uživatelé vytvářet témata se stejnými názvy"
     unique_posts_mins: "Kolik minut musí uplynout, než může uživatel zaslat příspěvek se stejným obsahem"
     enforce_global_nicknames: "Vyžadovat globálně unikátní uživatelská jména. Poznámka: Měňte toto nastavení pouze při prvnotní konfiguraci."
@@ -475,8 +486,11 @@ cs:
     logo_url: "Logo vašeho webu, např. http://example.com/logo.png"
     logo_small_url: "Malé logo, které se použije pokud odskrolujete dolů v tématu, např. http://example.com/logo-small.png"
     favicon_url: "Favicona vašeho webu, viz http://en.wikipedia.org/wiki/Favicon"
+    dynamic_favicon: "Zobrazovat počet oznámení ve favikoně"
+    apple_touch_icon_url: "Ikona používaná pro doteková zařízení od firmy Apple. Doporučené rozměry jsou 144px krát 144px."
+
     notification_email: "Návratová emailová adresa, která se použije u systémových emailů, jako jsou notifikace o zapomenutém heslu, nových účtech, atd."
-    use_ssl: "Má být web přístupný přes SSL?"
+    use_ssl: "Má být web přístupný přes SSL? (NEPODPOROVÁNO, EXPERIMENTÁLNÍ FUNKCE)"
     best_of_score_threshold: "Minimální skóre příspěvku, aby byl zařazen mezi 'nejlepší'"
     best_of_posts_required: "Minimální počet příspěvků v tématu, aby byl povolen mód 'nejlepší příspěvky'"
     best_of_likes_required: "Minimální počet 'líbí se' v tématu, aby byl povolen mód 'nejlepší příspěvky'"
@@ -493,6 +507,9 @@ cs:
 
     flags_required_to_hide_post: "Počet nahlášení, po kterých je příspěvek automaticky skryt a uživateli je zaslána soukromá zpráva (0 znamená nikdy)"
     cooldown_minutes_after_hiding_posts: "Počet minut, které uživatel musí počkat, než smí editovat příspěvek, který byl skryt kvůli nahlášení"
+    num_flags_to_block_new_user: "Pokud nový uživatel obdrží tolik nahlášení jako spam od (n) různých uživatelů, schovají se všechny jeho příspěvky a bude mu znemožněno zasílání dalších příspěvků. 0 tuto funkci vypína."
+    num_users_to_block_new_user: "Pokud nový uživatel obdrží (x) nahlášení jako spam od tolika různých uživatelů, schovají se všechny jeho příspěvky a bude mu znemožněno zasílání dalších příspěvků. 0 tuto funkci vypína."
+
 
     traditional_markdown_linebreaks: "Používat tradiční zalamování řádků v Markdownu, jinak vyžaduje dvě mezery pro zalomení"
     post_undo_action_window_mins: "Počet sekund, během kterých smí uživatelé vrátit akce na příspěvcích (líbí se, nahlášení, atd.)"
@@ -520,6 +537,12 @@ cs:
 
     # TODO: perhaps we need a way of protecting these settings for hosted solution, global settings ...
 
+    invite_only: "Veřejné registrace jsou zakázány, noví uživatele musejí obdržet pozvánku"
+
+    login_required: "Požadovat autentizaci pro prohlížení příspěvků"
+
+    enable_local_logins: "Povolit lokální autentizaci"
+    enable_local_account_create: "Povolit lokální vytváření účtů"
     enable_google_logins: "Povolit přihlašování přes Google"
     enable_yahoo_logins: "Povolit přihlašování přes Yahoo"
 
@@ -530,6 +553,10 @@ cs:
     enable_facebook_logins: "Povolit přihlašování přes Facebook, vyžaduje správně nastavené 'facebook_app_id' a 'facebook_app_secret'"
     facebook_app_id: "'App id' pro přihlašování přes Facebook, registrace na https://developers.facebook.com/apps"
     facebook_app_secret: "'App secret' pro přihlašování přes Facebook, registrace na https://developers.facebook.com/apps"
+
+    enable_cas_logins: "Povolit autentizaci přes CAS"
+    cas_hostname: "Hostitelské jméno pro CAS server"
+    cas_domainname: "Doménové jméno generované emailové adresy pro CAS server"
 
     enable_github_logins: "Povolit přihlašování přes Github, vyžaduje správně nastavené 'github_client_id' a 'github_client_secret'"
     github_client_id: "'Client id' pro přihlašování přes Github, registrace na https://github.com/settings/applications"
@@ -561,6 +588,9 @@ cs:
 
     enable_s3_uploads: "Ukládat nahrané soubory na Amazon S3"
     s3_upload_bucket: "Název 'Amazon S3 bucketu', do kterého se mají soubory nahrávat"
+    s3_access_key_id: "Hodnota 'access key id' služby Amazon S3, která se použije pro nahrávání obrázku"
+    s3_secret_access_key: "Hodnota 'server access key' služby Amazon S3, která se použije pro nahrávání obrázku"
+    s3_region: "Hodnota 'region' služby Amazon S3, která se použije pro nahrávání obrázku"
 
     default_invitee_trust_level: "Výchozí věrohodnost pozvaných uživatelů (0-4)"
     default_trust_level: "Výchozí věrohodnost uživatelů (0-4)"
@@ -609,6 +639,10 @@ cs:
     privacy_policy_url: "Pokud máte dokument 'Ochrana Soukromí' hostovaný samostatně, napište sem jeho plnou URL."
 
     newuser_spam_host_threshold: "Kolikrát smí uživatel zaslat odkaz na stejný server v rámci příspěvků z nastavení 'newuser_spam_host_posts', než budou příspěvky považovány za spam."
+    staff_like_weight: "Extra hodnota pro 'líbí se' od uživatelů, kteří jsou součástí personálu webu."
+
+    reply_by_email_enabled: "Jestli toto fórum umožňuje odpovědi emailem"
+    reply_by_email_address: "Šablona emailé adresy pro odpověď emailem, např. %{reply_key}@reply.myforum.com"
 
   notification_types:
     mentioned: "%{display_username} vás zmínil v %{link}"
@@ -799,8 +833,6 @@ cs:
     welcome_user:
       subject_template: "Vítejte na %{site_name}!"
       text_body_template: |
-        Ahoj!
-
         Děkujeme, že jste se připojili na %{site_name} a vítáme vám na našem diskuzním fóru!
 
         %{new_user_tips}
@@ -839,6 +871,40 @@ cs:
     import_succeeded:
       subject_template: "Import úspěšně dokončen"
       text_body_template: "Import proběhl úspěšně."
+
+    too_many_spam_flags:
+      subject_template: "Účet zablokován"
+      text_body_template: |
+        Ahoj,
+
+        Toto je automatizovaná zpráva z %{site_name}, která vás má informovat o tom, že vaše příspěvky byly automaticky skryty, protože byly komunitou označeny jako spam.
+
+        Jako předběžné opatření byl váš účet zablokován a není s ním možné vytvářet další odpovědi nebo nová témata, dokud váš účet neshlédne moderátor.
+
+        Pro další informace se prosím obraťte na naše [FAQ](%{base_url}/faq).
+
+    user_automatically_blocked:
+      subject_template: "Uživatel %{username} byl automaticky zablokován"
+      text_body_template: |
+        Toto je automatická zpráva, která vás má informovat o tom, že uživatel [%{username}](%{user_url}) byl automaticky zablokován protože příliš mnoho lidí označilo příspěvky uživatele %{username} jako spam.
+
+        Prosím, [projděte si nahlášení](/admin/flags). Pokud by %{username} neměl být zablokován, klikněte na tlačítko 'odblokovat' na [administrátorské stránce uživatele](%{user_url}).
+
+    spam_post_blocked:
+      subject_template: "V příspěvku uživatele %{username} byl detekován spam"
+      text_body_template: |
+        Toto je automatizovaná zpráva, která vás má informovat o tom, že uživatel [%{username}](%{user_url}) se pokusil zasílat odkazy, které ale byly označeny jako spam kvůli nastavení 'newuser_spam_host_threshold'.
+
+        Prosím [zkontrolujte tohoto uživatele](%{user_url}).
+
+    unblocked:
+      subject_template: "Účet odblokován"
+      text_body_template: |
+        Ahoj,
+
+        Toto je automatizovaná zpráva z %{site_name}, která vás má informovat o tom, že váš účet byl odblokován na základě rozhodnutí moderátora.
+
+        Nyní můžete opět vytvářet nové odpovědi a témata.
 
   unsubscribe_link: "Pokud již od nás nechcete dostávat emaily, navšivte stránku s vašimi [uživatelskými preferencemi](%{user_preferences_url})."
 
@@ -902,10 +968,11 @@ cs:
       why: "Zde je krátký souhrn toho, co se událo na %{site_link} od vaší poslední návštěvy %{last_seen_at}."
       subject_template: "[%{site_name}] Aktivita na fóru %{date}"
       new_activity: "Nová aktivita ve vašich tématech a příspěvcích:"
-      new_topics: "Nová témata:"
+      top_topics: "Poslední příspěvky, které si komunita oblíbila:"
       unsubscribe: "Tento souhrnný email je zaslán jako oznámení od %{site_link}, pokud jste se nepřihlásili v poslední době.\nPokud nechcete tento souhrn dostávat, navštivte %{unsubscribe_link}."
       click_here: "klikněte zde"
       from: "souhrn z %{site_name}"
+      read_more: "Číst dále"
 
     private_message:
       subject_template: "[%{site_name}] %{subject_prefix}%{topic_title}"
@@ -935,6 +1002,24 @@ cs:
 
         %{base_url}/users/authorize-email/%{email_token}
 
+    signup_after_approval:
+      subject_template: "Byli jste schváleni na %{site_name}!"
+      text_body_template: |
+        Vítejte na %{site_name}!
+
+        Byli jste schváleni a smíte se připojit na %{site_name}, vítejte na našem diskuzním fóru!
+
+        Klikněte na následující odkaz pro potvrzení a aktivování vašeho účtu:
+        %{base_url}/users/activate-account/%{email_token}
+
+        Pokud tento odkaz nefunguje, zkuste ho zkopírovat a vložit přes schránku do adresního řádku vaše webového prohlížeče.
+
+        %{new_user_tips}
+
+        Věříme v [civilizované komunitní chování](%{base_url}/faq) za všech okolností.
+
+        Užijte si naše fórum!
+
     signup:
       subject_template: "[%{site_name}] Aktivujte svůj nový účet"
       text_body_template: |
@@ -950,11 +1035,16 @@ cs:
 
   page_not_found:
     title: "Stránka, kterou žádáte, na tomto diskuzním fóru neexistuje. Možná vám můžeme pomoci ji najít, nebo poradit jiné téma, které se vám může líbit:"
-    latest_topics: "Populární témata"
+    popular_topics: "Populární témata"
     recent_topics: "Témata z poslední doby"
     see_more: "Více"
     search_title: "Hledat toto téma"
     search_google: "Hledat Googlem"
+
+  login_required:
+    welcome_message: |
+      #[Vítejte na %{title}](#welcome)
+      Jsme rádi, že vás tu máme a že přispíváte do tématu %{title}. Prosím, vytvořte si účet nebo se přihlašte pro pokračování.
 
   terms_of_service:
     user_content_license: |
