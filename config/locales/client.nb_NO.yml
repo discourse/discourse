@@ -94,8 +94,8 @@ en:
       "2": "Likes Mottatt"
       "3": "Bokmerker"
       "4": "Emner"
-      "5": "Svar"
-      "6": "Responser"
+      "5": "Svar gitt"
+      "6": "Svar mottatt"
       "7": "Omtalelser"
       "9": "Sitater"
       "10": "Favoritter"
@@ -338,136 +338,136 @@ en:
       drafts_offline: "utkast offline"
 
       min_length:
-        need_more_for_title: "{{n}} to go for the title"
-        need_more_for_reply: "{{n}} to go for the reply"
+        need_more_for_title: "{{n}} igen for tittelen"
+        need_more_for_reply: "{{n}} igjen for svaret"
 
       error:
-        title_missing: "Title is required."
-        title_too_short: "Title must be at least {{min}} characters long."
-        title_too_long: "Title must be less than {{max}} characters long."
-        post_missing: "Post can't be empty."
-        post_length: "Post must be at least {{min}} characters long."
-        category_missing: "You must choose a category."
+        title_missing: "Tittel er obligatorisk."
+        title_too_short: "Tittelen må være minst {{min}} tegn lang."
+        title_too_long: "Tittelen må være mindre enn {{max}} tegn lang."
+        post_missing: "Innlegget kan ikke være tomt."
+        post_length: "Innlegget må være minst {{min}} tegn langt."
+        category_missing: "Du må velge en kategory."
 
-      save_edit: "Save Edit"
-      reply_original: "Reply on Original Topic"
-      reply_here: "Reply Here"
-      reply: "Reply"
-      cancel: "Cancel"
-      create_topic: "Create Topic"
-      create_pm: "Create Private Message"
+      save_edit: "Lagre Endring"
+      reply_original: "Besvar det Originale Emnet"
+      reply_here: "Svar Her"
+      reply: "Svar"
+      cancel: "Avbryt"
+      create_topic: "Lag Emne"
+      create_pm: "Lag Privat Melding"
 
-      users_placeholder: "Add a user"
-      title_placeholder: "Type your title here. What is this discussion about in one brief sentence?"
-      reply_placeholder: "Type here. Use Markdown or BBCode to format. Drag or paste an image to upload it."
-      view_new_post: "View your new post."
-      saving: "Saving..."
-      saved: "Saved!"
-      saved_draft: "You have a post draft in progress. Click anywhere in this box to resume editing."
-      uploading: "Uploading..."
-      show_preview: 'show preview &raquo;'
-      hide_preview: '&laquo; hide preview'
+      users_placeholder: "Legg til en bruker"
+      title_placeholder: "Skriv tittelen din her. I en kort setning, hva handler denne diskusjonen om?"
+      reply_placeholder: "Skriv her. Bruk Markdown eller BBCode for formatering. Dra eller lim inn et bilde for å laste det opp."
+      view_new_post: "Set ditt nye innlegg."
+      saving: "Lagrer..."
+      saved: "Lagret!"
+      saved_draft: "Du har et innleggsutlegg i utvikling. Klikk et sted i denne boksen for å gjenoppta redigering."
+      uploading: "Laster opp..."
+      show_preview: 'se forhånsvisning &raquo;'
+      hide_preview: '&laquo; skjul forhåndsvisning'
 
-      quote_post_title: "Quote whole post"
-      bold_title: "Strong"
-      bold_text: "strong text"
-      italic_title: "Emphasis"
-      italic_text: "emphasized text"
+      quote_post_title: "Siter hele innlegget"
+      bold_title: "Sterk"
+      bold_text: "sterk tekst"
+      italic_title: "Kursiv"
+      italic_text: "kursiv tekst"
       link_title: "Hyperlink"
-      link_description: "enter link description here"
-      link_dialog_title: "Insert Hyperlink"
-      link_optional_text: "optional title"
-      quote_title: "Blockquote"
-      quote_text: "Blockquote"
-      code_title: "Code Sample"
-      code_text: "enter code here"
-      image_title: "Image"
-      image_description: "enter image description here"
-      image_dialog_title: "Insert Image"
-      image_optional_text: "optional title"
-      image_hosting_hint: "Need <a href='http://www.google.com/search?q=free+image+hosting' target='_blank'>free image hosting?</a>"
-      olist_title: "Numbered List"
-      ulist_title: "Bulleted List"
-      list_item: "List item"
-      heading_title: "Heading"
-      heading_text: "Heading"
-      hr_title: "Horizontal Rule"
-      undo_title: "Undo"
-      redo_title: "Redo"
-      help: "Markdown Editing Help"
-      toggler: "hide or show the composer panel"
+      link_description: "beskriv linken her"
+      link_dialog_title: "Legg inn Hyperlink"
+      link_optional_text: "valgfri tittel"
+      quote_title: "Sitatramme"
+      quote_text: "Sitatramme"
+      code_title: "Kode Utsnitt"
+      code_text: "Legg inn kode her"
+      image_title: "Bilde"
+      image_description: "beskriv bildet her"
+      image_dialog_title: "Legg til Bildet"
+      image_optional_text: "valgfri title"
+      image_hosting_hint: "Trenger du <a href='http://www.google.com/search?q=free+image+hosting' target='_blank'>gratis bildelagring?</a>"
+      olist_title: "Nummerert Liste"
+      ulist_title: "Kulepunkt Liste"
+      list_item: "Listeelement"
+      heading_title: "Overskrift"
+      heading_text: "Overskrift"
+      hr_title: "Horisontalt Skille"
+      undo_title: "Angre"
+      redo_title: "Gjenta"
+      help: "Hjelp for redigering i Markdown"
+      toggler: "gjem eller vis redigeringspanelet"
 
-      admin_options_title: "Optional staff settings for this topic"
-      auto_close_label: "Auto-close topic after:"
-      auto_close_units: "days"
+      admin_options_title: "Valgfrie emne-instillinger for ansatte"
+      auto_close_label: "Auto-lås emnet etter:"
+      auto_close_units: "dager"
 
     notifications:
-      title: "notifications of @name mentions, replies to your posts and topics, private messages, etc"
-      none: "You have no notifications right now."
-      more: "view older notifications"
-      mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
-      quoted: "<i title='quoted' class='icon icon-quote-right'></i> {{username}} {{link}}"
-      replied: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
-      posted: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
-      edited: "<i title='edited' class='icon icon-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='liked' class='icon icon-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} {{link}}"
-      invited_to_private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} {{link}}"
-      invitee_accepted: "<i title='accepted your invitation' class='icon icon-signin'></i> {{username}} accepted your invitation"
-      moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} moved to {{link}}"
-      total_flagged: "total flagged posts"
+      title: "notifikasjoner fra @brukernavn omtalelser, svar til dine innlegg og emner, private meldinger, osv"
+      none: "Du har ingen notifikasjoner akkurat nå."
+      more: "se gamle notifikasjoner"
+      mentioned: "<span title='omtalt' class='icon'>@</span> {{username}} {{link}}"
+      quoted: "<i title='sitert' class='icon icon-quote-right'></i> {{username}} {{link}}"
+      replied: "<i title='besvart' class='icon icon-reply'></i> {{username}} {{link}}"
+      posted: "<i title='innlegg' class='icon icon-reply'></i> {{username}} {{link}}"
+      edited: "<i title='redigert' class='icon icon-pencil'></i> {{username}} {{link}}"
+      liked: "<i title='likt' class='icon icon-heart'></i> {{username}} {{link}}"
+      private_message: "<i class='icon icon-envelope-alt' title='private melding'></i> {{username}} {{link}}"
+      invited_to_private_message: "<i class='icon icon-envelope-alt' title='invitert til private melding'></i> {{username}} {{link}}"
+      invitee_accepted: "<i title='accepted your invitation' class='icon icon-signin'></i> {{username}} aksepterte din invitasjon"
+      moved_post: "<i title='flyttet innlegg' class='icon icon-arrow-right'></i> {{username}} flyttet til {{link}}"
+      total_flagged: "totalt markerte innlegg"
 
     image_selector:
-      title: "Insert Image"
-      from_my_computer: "From My Device"
-      from_the_web: "From The Web"
-      add_image: "Add Image"
-      remote_title: "remote image"
-      remote_tip: "enter address of an image in the form http://example.com/image.jpg"
-      local_title: "local image"
-      local_tip: "click to select an image from your device."
-      upload: "Upload"
-      uploading_image: "Uploading image"
+      title: "Legg til Bilde"
+      from_my_computer: "Fra Min Enhet"
+      from_the_web: "Fra Nettet"
+      add_image: "Legg til Bilde"
+      remote_title: "eksternt bilde"
+      remote_tip: "skriv inn addressen til et bilde, f.eks. http://example.com/image.jpg"
+      local_title: "lokalt bilde"
+      local_tip: "klikk for å velge et bilde fra din enhet."
+      upload: "Last opp"
+      uploading_image: "Laster opp bilde"
 
     search:
-      title: "search for topics, posts, users, or categories"
-      placeholder: "type your search terms here"
-      no_results: "No results found."
-      searching: "Searching ..."
+      title: "søk etter emner, innlegg, brukere eller kategorier"
+      placeholder: "skriv inn søkeordene dine her"
+      no_results: "Ingen resultater funnet."
+      searching: "Søker ..."
 
       prefer:
-        user: "search will prefer results by @{{username}}"
-        category: "search will prefer results in {{category}}"
+        user: "søket vil foretrekke resultater av @{{username}}"
+        category: "søket vil foretrekke resultater i {{category}}"
 
-    site_map: "go to another topic list or category"
-    go_back: 'go back'
-    current_user: 'go to your user page'
+    site_map: "gå til en annen emneliste eller kategori"
+    go_back: 'gå tilbake'
+    current_user: 'go til din brukerside'
 
     favorite:
-      title: 'Favorite'
+      title: 'Favoritt'
       help:
-        star: 'add this topic to your favorites list'
-        unstar: 'remove this topic from your favorites list'
+        star: 'legg dette emnet til favorittlisten din'
+        unstar: 'fjern dette emnet fra favorittlisten din'
 
     topics:
       none:
-        favorited: "You haven't favorited any topics yet. To favorite a topic, click or tap the star next to the title."
-        unread: "You have no unread topics to read."
-        new: "You have no new topics to read."
-        read: "You haven't read any topics yet."
-        posted: "You haven't posted in any topics yet."
-        latest: "There are no latest topics. That's sad."
-        hot: "There are no hot topics."
-        category: "There are no {{category}} topics."
+        favorited: "Du har ikke meket noen emner som favoritt enda. For å merke ett emne, klikk på stjernen ved siden av tittelen."
+        unread: "Du har ingen uleste emner å lese."
+        new: "Du har ingen nye emner å lese."
+        read: "Du har ikke lest noen emner enda."
+        posted: "Du har ikke postet i noen emner enda."
+        latest: "Det er ingen siste emner. Det er trist."
+        hot: "Det er ingen hotte emner."
+        category: "Det er ingen {{category}} emner."
       bottom:
-        latest: "There are no more latest topics to read."
-        hot: "There are no more hot topics to read."
-        posted: "There are no more posted topics to read."
-        read: "There are no more read topics to read."
-        new: "There are no more new topics to read."
-        unread: "There are no more unread topics to read."
-        favorited: "There are no more favorited topics to read."
-        category: "There are no more {{category}} topics."
+        latest: "Det er ikke noen siste emner igjen å lese."
+        hot: "Det er ikke noen hotte emner igjen å lese."
+        posted: "Det er ikke noen postede emner igjen å lese."
+        read: "Det er ikke noen leste emner igjen å lese."
+        new: "Det er ikke noen nye emner igjen å lese."
+        unread: "Det er ikke noen uleste emner igjen å lese."
+        favorited: "Det er ikke noen favorittemner igjen å lese."
+        category: "Det er ikke noen {{category}} emner igjen."
 
     rank_details:
       toggle: toggle topic rank details
@@ -475,36 +475,36 @@ en:
       title: Topic Rank Details
 
     topic:
-      create_in: 'Create {{categoryName}} Topic'
-      create: 'Create Topic'
-      create_long: 'Create a new Topic'
-      private_message: 'Start a private message'
-      list: 'Topics'
-      new: 'new topic'
-      title: 'Topic'
-      loading_more: "Loading more Topics..."
-      loading: 'Loading topic...'
+      create_in: 'Lag {{categoryName}} Emne'
+      create: 'Lag Emne'
+      create_long: 'Lag ett nytt Emne'
+      private_message: 'Start enn private melding'
+      list: 'Emner'
+      new: 'nytt emne'
+      title: 'Emne'
+      loading_more: "Laster flere emner"
+      loading: 'Behandler emnet...'
       invalid_access:
-        title: "Topic is private"
-        description: "Sorry, you don't have access to that topic!"
+        title: "Emnet er privat"
+        description: "Beklager, du har ikke tilgang til det emnet!"
       server_error:
-        title: "Topic failed to load"
-        description: "Sorry, we couldn't load that topic, possibly due to a connection problem. Please try again. If the problem persists, let us know."
+        title: "Emnet kunne ikke bli behandlet"
+        description: "Beklager, vi kunne ikke behanldle det emnet, muligens på grunn av et tilkoblingsproblem. Vennligst prøv igjen. Om problemet vedvarer, fortell oss."
       not_found:
-        title: "Topic not found"
-        description: "Sorry, we couldn't find that topic. Perhaps it was removed by a moderator?"
-      unread_posts: "you have {{unread}} unread old posts in this topic"
-      new_posts: "there are {{new_posts}} new posts in this topic since you last read it"
+        title: "Emnet kunne ikke bli funnet"
+        description: "Beklager, vi kunne ikke finne det emnet. Kanskjer det ble fjernet av en moderator?"
+      unread_posts: "du har {{unread}} gamle uleste innlett i dette emnet"
+      new_posts: "det er {{new_posts}} nye innlegg i dette emnet siden du sist leste det"
 
       likes:
-        one: "there is 1 like in this topic"
-        other: "there are {{count}} likes in this topic"
-      back_to_list: "Back to Topic List"
-      options: "Topic Options"
-      show_links: "show links within this topic"
-      toggle_information: "toggle topic details"
-      read_more_in_category: "Want to read more? Browse other topics in {{catLink}} or {{latestLink}}."
-      read_more: "Want to read more? {{catLink}} or {{latestLink}}."
+        one: "det er 1 like i dette emnet"
+        other: "det er {{count}} likes i dette emnet"
+      back_to_list: "Tilbake til Emnelisten"
+      options: "Valg for Emner"
+      show_links: "vis linker i dette emnet"
+      toggle_information: "vis/skjul emnedetaljer"
+      read_more_in_category: "Vil du lese mer? Bla gjennom andre emner i {{catLink}} eller {{latestLink}}."
+      read_more: "Vil du lese mer? {{catLink}} eller {{latestLink}}."
 
       # keys ending with _MF use message format, see /spec/components/js_local_helper_spec.rb for samples
       read_more_in_category_MF: "There {UNREAD, plural, one {is <a href='/unread'>1 unread</a>} other {are <a href='/unread'># unread</a>}} and {NEW, plural, one {<a href='/new'>1 new</a> topic} other {<a href='/new'># new</a> topics}} remaining, or browse other topics in {catLink}"
