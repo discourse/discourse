@@ -24,14 +24,49 @@ module Oneboxer
       result['created_at'] =
         Time.parse(result['created_at']).strftime("%I:%M%p - %d %b %y")
 
-      URI.extract(result['text'], %w(http https)).each do |url|
-        result['text'].gsub!(url, "<a href='#{url}' target='_blank'>#{url}</a>")
-      end
+      result['text'] = link_all_the_things_in result['text']
 
       result
     end
 
     private
+
+    def link_all_the_things_in(text)
+      link_hashtags_in link_handles_in link_urls_in(text)
+    end
+
+    def link_urls_in(text)
+      URI.extract(text, %w(http https)).each do |url|
+        text.gsub!(url, "<a href='#{url}' target='_blank'>#{url}</a>")
+      end
+
+      text
+    end
+
+    def link_handles_in(text)
+      text.scan(/\s@(\w+)/).flatten.uniq.each do |handle|
+        text.gsub!("@#{handle}", [
+          "<a href='https://twitter.com/#{handle}' target='_blank'>",
+            "@#{handle}",
+          "</a>"
+        ].join)
+      end
+
+      text
+    end
+
+    def link_hashtags_in(text)
+      text.scan(/\s#(\w+)/).flatten.uniq.each do |hashtag|
+        text.gsub!("##{hashtag}", [
+          "<a href='https://twitter.com/search?q=%23#{hashtag}' ",
+          "target='_blank'>",
+            "##{hashtag}",
+          "</a>"
+        ].join)
+      end
+
+      text
+    end
 
     def tweet_for(id)
       request = Net::HTTP::Get.new(tweet_uri_for id)
