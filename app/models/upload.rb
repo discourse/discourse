@@ -46,8 +46,24 @@ class Upload < ActiveRecord::Base
   end
 
   def self.store_file(file, sha, image_info, upload_id)
-    return S3.store_file(file, sha, image_info, upload_id)    if SiteSetting.enable_s3_uploads?
+    return S3.store_file(file, sha, image_info, upload_id) if SiteSetting.enable_s3_uploads?
     return LocalStore.store_file(file, sha, image_info, upload_id)
+  end
+
+  def self.uploaded_regex
+    /\/uploads\/#{RailsMultisite::ConnectionManagement.current_db}\/(?<upload_id>\d+)\/[0-9a-f]{16}\.(png|jpg|jpeg|gif|tif|tiff|bmp)/
+  end
+
+  def self.has_been_uploaded?(url)
+    (url =~ /^\/[^\/]/) == 0 || url.start_with?(base_url)
+  end
+
+  def self.base_url
+    asset_host.present? ? asset_host : Discourse.base_url_no_prefix
+  end
+
+  def self.asset_host
+    ActionController::Base.asset_host
   end
 
 end

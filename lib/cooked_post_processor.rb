@@ -26,13 +26,13 @@ class CookedPostProcessor
     return unless images.present?
 
     images.each do |img|
-      # keep track of the src
+      # keep track of the original src
       src = img['src']
       # make sure the src is absolute (when working with locally uploaded files)
       img['src'] = Discourse.base_url_no_prefix + img['src'] if img['src'] =~ /^\/[^\/]/
 
       if src.present?
-        # update img dimensions if at least one is missing
+        # make sure the img has both width and height attributes
         update_dimensions!(img)
         # optimize image
         img['src'] = optimize_image(img)
@@ -76,6 +76,8 @@ class CookedPostProcessor
 
   def optimize_image(img)
     return img["src"]
+    # 1) optimize using image_optim
+    # 2) .png vs. .jpg
     # TODO: needs some <3
   end
 
@@ -124,7 +126,7 @@ class CookedPostProcessor
 
   def get_size(url)
     # we can always crawl our own images
-    return unless SiteSetting.crawl_images? || has_been_uploaded?(url)
+    return unless SiteSetting.crawl_images? || Upload.has_been_uploaded?(url)
     @size_cache[url] ||= FastImage.size(url)
   rescue Zlib::BufError # FastImage.size raises BufError for some gifs
   end
@@ -132,18 +134,6 @@ class CookedPostProcessor
   def get_image_uri(url)
     uri = URI.parse(url)
     uri if %w(http https).include?(uri.scheme)
-  end
-
-  def has_been_uploaded?(url)
-    @has_been_uploaded_cache[url] ||= url.start_with?(base_url)
-  end
-
-  def base_url
-    asset_host.present? ? asset_host : Discourse.base_url_no_prefix
-  end
-
-  def asset_host
-    ActionController::Base.asset_host
   end
 
   def dirty?

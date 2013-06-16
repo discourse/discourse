@@ -161,22 +161,4 @@ describe CookedPostProcessor do
 
   end
 
-  context 'has_been_uploaded?' do
-
-    it "identifies internal urls" do
-      Discourse.expects(:base_url_no_prefix).returns("http://my.discourse.com")
-      cpp.has_been_uploaded?("http://my.discourse.com").should == true
-    end
-
-    it "identifies internal urls when using a CDN" do
-      ActionController::Base.expects(:asset_host).returns("http://my.cdn.com").twice
-      cpp.has_been_uploaded?("http://my.cdn.com").should == true
-    end
-
-    it "identifies external urls" do
-      cpp.has_been_uploaded?("http://domain.com").should == false
-    end
-
-  end
-
 end
