@@ -5,7 +5,7 @@
 # To validate this YAML file after you change it, please paste it into
 # http://yamllint.com/
 
-en:
+nb_NO:
   js:
     share:
       topic: 'del en link til dette emnet'
