@@ -1,10 +1,10 @@
 # Discourse Install Guide on Ubuntu
 
-## Install Ubuntu 12.04 with the package groups:
+## Install Ubuntu Server 12.04 LTS with the package groups:
 
 ![screenshot of package group selection screen](https://raw.github.com/discourse/discourse-docimages/master/install/ubuntu%20-%20install%20-%20software%20selection.png)
 
-* Basic ubuntu server
+* Basic Ubuntu server
 * OpenSSH server
 * Mail server
 * PostgreSQL database (9.1+)
@@ -115,7 +115,7 @@ If you instead want to use apache2 to serve the static pages:
 
 If you get any errors starting or reloading apache, please check the paths above - Ruby 2.0 should be there if you are using RVM, but it could get tricky.
 
-## Install rvm and ruby environment
+## Install Ruby with RVM
 
 ### RVM Option: Systemwide installation
 
@@ -140,7 +140,7 @@ below.
 
 ## Discourse setup
 
-Create discourse user:
+Create Discourse user:
 
     # Run these commands as your normal login (e.g. "michael")
     sudo adduser --shell /bin/bash discourse
@@ -148,7 +148,7 @@ Create discourse user:
     # In that case, you could just not run it if errors make you squirrely
     sudo adduser discourse rvm
 
-Give postgres DB rights to the `discourse` user:
+Give Postgres database rights to the `discourse` user:
 
     # Run these commands as your normal login (e.g. "michael")
     sudo -u postgres createuser -s discourse
@@ -179,7 +179,7 @@ Install RVM if doing a single-user RVM installation:
     # and rvm will tell you which packages you (or your sysadmin) need
     # to install before it can proceed. Do that and then resume next:
 
-Continue with discourse installation
+Continue with Discourse installation
 
     # Build and install ruby
     rvm install 2.0.0
@@ -195,7 +195,7 @@ Continue with discourse installation
 
 _If you have errors building the native extensions, ensure you have sufficient free system memory. 1GB with no swap isn't enough, we recommend having 2GB as a minimum._
 
-Configure discourse:
+Configure Discourse:
 
     # Run these commands as the discourse user
     cd ~/discourse/config
@@ -263,7 +263,7 @@ Reload nginx by running
 
 ## Bluepill setup
 
-Configure bluepill:
+Configure Bluepill:
 
     # Run these commands as the discourse user
     gem install bluepill
@@ -276,7 +276,7 @@ Start Discourse:
     # Run these commands as the discourse user
     RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ROOT=~/discourse RAILS_ENV=production NUM_WEBS=4 bluepill --no-privileged -c ~/.bluepill load ~/discourse/config/discourse.pill
 
-Add the bluepill startup to crontab.
+Add the Bluepill startup to crontab.
 
     # Run these commands as the discourse user
     crontab -e
