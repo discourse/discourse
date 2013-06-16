@@ -79,4 +79,9 @@ describe JsLocaleHelper do
     ctx.eval('I18n.messageFormat("simple_MF", {})').should =~ /COUNT/ # error
   end
 
+  it 'load pluralizations rules before precompile' do
+    message = JsLocaleHelper.compile_message_format('ru', 'format')
+    message.should_not match 'Plural Function not found'
+  end
+
 end
