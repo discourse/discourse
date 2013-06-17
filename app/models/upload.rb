@@ -32,22 +32,8 @@ class Upload < ActiveRecord::Base
     return unless SiteSetting.create_thumbnails?
     return unless width > SiteSetting.auto_link_images_wider_than
     return if has_thumbnail?
-    @image_sorcery_loaded ||= require "image_sorcery"
-    original_path = "#{Rails.root}/public#{url}"
-    temp_file = Tempfile.new(["discourse", File.extname(original_path)])
-    if ImageSorcery.new(original_path).convert(temp_file.path, resize: "#{width}x#{height}")
-      thumbnail = OptimizedImage.create_for(id, temp_file.path)
-      optimized_images << thumbnail
-      # make sure the directory exists
-      FileUtils.mkdir_p Pathname.new(thumbnail.path).dirname
-      # move the temp file to the right location
-      File.open(thumbnail.path, "wb") do |f|
-        f.write temp_file.read
-      end
-    end
-    # close && remove temp file if it exists
-    temp_file.close
-    temp_file.unlink
+    thumbnail = OptimizedImage.create_for(self, width, height)
+    optimized_images << thumbnail if thumbnail
   end
 
   def self.create_for(user_id, file)

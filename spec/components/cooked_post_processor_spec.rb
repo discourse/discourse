@@ -63,7 +63,6 @@ describe CookedPostProcessor do
 
       before do
         FastImage.stubs(:size).returns([123, 456])
-        ImageSorcery.any_instance.stubs(:convert).returns(false)
         creator = PostCreator.new(user, raw: Fabricate.build(:post_with_images).raw, topic_id: topic.id)
         @post = creator.create
       end
