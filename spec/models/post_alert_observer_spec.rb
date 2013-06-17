@@ -5,7 +5,6 @@ describe PostAlertObserver do
 
   before do
     ActiveRecord::Base.observers.enable :post_alert_observer
-    ImageSorcery.any_instance.stubs(:convert).returns(false)
   end
 
   let!(:evil_trout) { Fabricate(:evil_trout) }

@@ -342,6 +342,7 @@ end
 #  deleted_by          :integer
 #  message             :text
 #  related_post_id     :integer
+#  staff_took_action   :boolean          default(FALSE), not null
 #
 # Indexes
 #

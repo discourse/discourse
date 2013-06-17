@@ -44,15 +44,15 @@ Discourse.ComposerView = Discourse.View.extend({
   }.property('content.createdPost'),
 
   observeReplyChanges: function() {
-    var _this = this;
+    var composerView = this;
     if (this.get('content.hidePreview')) return;
     Ember.run.next(null, function() {
       var $wmdPreview, caretPosition;
-      if (_this.editor) {
-        _this.editor.refreshPreview();
+      if (composerView.editor) {
+        composerView.editor.refreshPreview();
         // if the caret is on the last line ensure preview scrolled to bottom
-        caretPosition = Discourse.Utilities.caretPosition(_this.wmdInput[0]);
-        if (!_this.wmdInput.val().substring(caretPosition).match(/\n/)) {
+        caretPosition = Discourse.Utilities.caretPosition(composerView.wmdInput[0]);
+        if (!composerView.wmdInput.val().substring(caretPosition).match(/\n/)) {
           $wmdPreview = $('#wmd-preview');
           if ($wmdPreview.is(':visible')) {
             return $wmdPreview.scrollTop($wmdPreview[0].scrollHeight);
@@ -164,53 +164,50 @@ Discourse.ComposerView = Discourse.View.extend({
   initEditor: function() {
     // not quite right, need a callback to pass in, meaning this gets called once,
     // but if you start replying to another topic it will get the avatars wrong
-    var $uploadTarget, $wmdInput, editor, saveDraft, selected, template, topic, transformTemplate,
-      _this = this;
+    var $wmdInput, editor, composerView = this;
     this.wmdInput = $wmdInput = $('#wmd-input');
     if ($wmdInput.length === 0 || $wmdInput.data('init') === true) return;
 
     $LAB.script(assetPath('defer/html-sanitizer-bundle'));
     Discourse.ComposerView.trigger("initWmdEditor");
-    template = Discourse.UserSelector.templateFunction();
+    var template = Discourse.UserSelector.templateFunction();
 
-    transformTemplate = Handlebars.compile("{{avatar this imageSize=\"tiny\"}} {{this.username}}");
     $wmdInput.data('init', true);
     $wmdInput.autocomplete({
       template: template,
       dataSource: function(term) {
         return Discourse.UserSearch.search({
           term: term,
-          topicId: _this.get('controller.controllers.topic.content.id')
+          topicId: composerView.get('controller.controllers.topic.content.id')
         });
       },
       key: "@",
       transformComplete: function(v) { return v.username; }
     });
 
-    topic = this.get('topic');
     this.editor = editor = Discourse.Markdown.createEditor({
       lookupAvatar: function(username) {
         return Discourse.Utilities.avatarImg({ username: username, size: 'tiny' });
       }
     });
 
-    $uploadTarget = $('#reply-control');
+    var $uploadTarget = $('#reply-control');
     this.editor.hooks.insertImageDialog = function(callback) {
       callback(null);
-      _this.get('controller').send('showImageSelector', _this);
+      composerView.get('controller').send('showImageSelector', composerView);
       return true;
     };
 
     this.editor.hooks.onPreviewRefresh = function() {
-      return _this.afterRender();
+      return composerView.afterRender();
     };
 
     this.editor.run();
     this.set('editor', this.editor);
     this.loadingChanged();
 
-    saveDraft = Discourse.debounce((function() {
-      return _this.get('controller').saveDraft();
+    var saveDraft = Discourse.debounce((function() {
+      return composerView.get('controller').saveDraft();
     }), 2000);
 
     $wmdInput.keyup(function() {
@@ -223,7 +220,7 @@ Discourse.ComposerView = Discourse.View.extend({
     $replyTitle.keyup(function() {
       saveDraft();
       // removes the red background once the requirements are met
-      if (_this.get('controller.content.missingTitleCharacters') <= 0) {
+      if (composerView.get('controller.content.missingTitleCharacters') <= 0) {
         $replyTitle.removeClass("requirements-not-met");
       }
       return true;
@@ -232,7 +229,7 @@ Discourse.ComposerView = Discourse.View.extend({
     // when the title field loses the focus...
     $replyTitle.blur(function(){
       // ...and the requirements are not met (ie. the minimum number of characters)
-      if (_this.get('controller.content.missingTitleCharacters') > 0) {
+      if (composerView.get('controller.content.missingTitleCharacters') > 0) {
         // then, "redify" the background
         $replyTitle.toggleClass("requirements-not-met", true);
       }
@@ -245,22 +242,21 @@ Discourse.ComposerView = Discourse.View.extend({
     $uploadTarget.fileupload({
         url: Discourse.getURL('/uploads'),
         dataType: 'json',
-        timeout: 20000,
-        formData: { topic_id: 1234 }
+        timeout: 20000
     });
 
     // submit - this event is triggered for each upload
     $uploadTarget.on('fileuploadsubmit', function (e, data) {
       var result = Discourse.Utilities.validateFilesForUpload(data.files);
       // reset upload status when everything is ok
-      if (result) _this.setProperties({ uploadProgress: 0, loadingImage: true });
+      if (result) composerView.setProperties({ uploadProgress: 0, loadingImage: true });
       return result;
     });
 
     // send - this event is triggered when the upload request is about to start
     $uploadTarget.on('fileuploadsend', function (e, data) {
       // hide the "image selector" modal
-      _this.get('controller').send('closeModal');
+      composerView.get('controller').send('closeModal');
       // cf. https://github.com/blueimp/jQuery-File-Upload/wiki/API#how-to-cancel-an-upload
       var jqXHR = data.xhr();
       // need to wait for the link to show up in the DOM
@@ -279,21 +275,21 @@ Discourse.ComposerView = Discourse.View.extend({
     // progress all
     $uploadTarget.on('fileuploadprogressall', function (e, data) {
       var progress = parseInt(data.loaded / data.total * 100, 10);
-      _this.set('uploadProgress', progress);
+      composerView.set('uploadProgress', progress);
     });
 
     // done
     $uploadTarget.on('fileuploaddone', function (e, data) {
       var upload = data.result;
       var html = "<img src=\"" + upload.url + "\" width=\"" + upload.width + "\" height=\"" + upload.height + "\">";
-      _this.addMarkdown(html);
-      _this.set('loadingImage', false);
+      composerView.addMarkdown(html);
+      composerView.set('loadingImage', false);
     });
 
     // fail
     $uploadTarget.on('fileuploadfail', function (e, data) {
       // hide upload status
-      _this.set('loadingImage', false);
+      composerView.set('loadingImage', false);
       // deal with meaningful errors first
       if (data.jqXHR) {
         switch (data.jqXHR.status) {
@@ -321,7 +317,7 @@ Discourse.ComposerView = Discourse.View.extend({
     // to finish.
     return Em.run.later(jQuery, (function() {
       var replyTitle = $('#reply-title');
-      _this.resize();
+      composerView.resize();
       if (replyTitle.length) {
         return replyTitle.putCursorAtEnd();
       } else {

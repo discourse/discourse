@@ -1,6 +1,6 @@
 module LocalStore
 
-  def self.store_file(file, image_info, upload_id)
+  def self.store_file(file, sha, image_info, upload_id)
     clean_name = Digest::SHA1.hexdigest("#{Time.now.to_s}#{file.original_filename}")[0,16] + ".#{image_info.type}"
     url_root = "/uploads/#{RailsMultisite::ConnectionManagement.current_db}/#{upload_id}"
     path = "#{Rails.root}/public#{url_root}"

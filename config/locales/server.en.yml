@@ -585,6 +585,7 @@ en:
     newuser_max_mentions_per_post: "Maximum number of @name notifications a new user can use in a post"
     max_mentions_per_post: "Maximum number of @name notifications you can use in a post"
 
+    create_thumbnails: "Create thumbnails for lightboxed images"
     auto_link_images_wider_than: "Images wider than this, in pixels, will get auto link and lightbox treatment"
 
     email_time_window_mins: "How many minutes we wait before sending a user mail, to give them a chance to see it first"
