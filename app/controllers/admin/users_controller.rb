@@ -20,7 +20,7 @@ class Admin::UsersController < Admin::AdminController
     @users = @users.where('moderator = ?', true)  if params[:query] == 'moderators'
     @users = @users.blocked                       if params[:query] == 'blocked'
     @users = @users.where('approved = false')     if params[:query] == 'pending'
-    @users = @users.where('username_lower like :filter or email like :filter', filter: "%#{params[:filter]}%") if params[:filter].present?
+    @users = @users.where('username_lower like :filter or email like :filter', filter: "%#{params[:filter].downcase}%") if params[:filter].present?
     @users = @users.take(100)
     render_serialized(@users, AdminUserSerializer)
   end
