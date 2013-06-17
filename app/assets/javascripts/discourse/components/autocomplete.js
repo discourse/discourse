@@ -18,6 +18,7 @@ $.fn.autocomplete = function(options) {
     alert("only supporting one matcher at the moment");
   }
 
+  var disabled = options && options.disabled;
   var wrap = null;
   var autocompleteOptions = null;
   var selectedOption = null;
@@ -87,7 +88,7 @@ $.fn.autocomplete = function(options) {
   if (isInput) {
     var width = this.width();
     var height = this.height();
-    wrap = this.wrap("<div class='ac-wrap clearfix'/>").parent();
+    wrap = this.wrap("<div class='ac-wrap clearfix" + (disabled ? " disabled": "") +  "'/>").parent();
     wrap.width(width);
     this.width(150);
     this.attr('name', this.attr('name') + "-renamed");

@@ -195,7 +195,6 @@ class ApplicationController < ActionController::Base
     user
   end
 
-
   private
 
     def render_json_error(obj)

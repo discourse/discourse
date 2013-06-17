@@ -16,11 +16,14 @@ class Admin::GroupsController < Admin::AdminController
 
   def update
     group = Group.find(params[:id].to_i)
-    render_json_error if group.automatic
-    group.usernames = params[:group][:usernames]
-    group.name = params[:group][:name] if params[:name]
-    group.save!
-    render json: "ok"
+    if group.automatic
+      can_not_modify_automatic
+    else
+      group.usernames = params[:group][:usernames]
+      group.name = params[:group][:name] if params[:name]
+      group.save!
+      render json: "ok"
+    end
   end
 
   def create
@@ -33,8 +36,17 @@ class Admin::GroupsController < Admin::AdminController
 
   def destroy
     group = Group.find(params[:id].to_i)
-    render_json_error if group.automatic
-    group.destroy
-    render json: "ok"
+    if group.automatic
+      can_not_modify_automatic
+    else
+      group.destroy
+      render json: "ok"
+    end
+  end
+
+  protected
+
+  def can_not_modify_automatic
+    render json: {errors: I18n.t('groups.errors.can_not_modify_automatic')}, status: 422
   end
 end

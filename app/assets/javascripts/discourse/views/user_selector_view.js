@@ -8,6 +8,8 @@ Discourse.UserSelector = Discourse.TextField.extend({
     $(this.get('element')).val(this.get('usernames')).autocomplete({
       template: Discourse.UserSelector.templateFunction(),
 
+      disabled: this.get('disabled'),
+
       dataSource: function(term) {
         var exclude = selected;
         if (userSelectorView.get('excludeCurrentUser')){

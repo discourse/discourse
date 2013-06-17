@@ -342,15 +342,24 @@
   margin-bottom: 10px;
 }
 
+div.ac-wrap.disabled {
+  input {
+    display:none;
+  }
+  .item a {
+    display:none;
+  }
+}
 
 div.ac-wrap {
   background-color: $white;
   border: 1px solid #cccccc;
-  padding: 4px 10px;
+  padding: 5px 10px 0;
   @include border-radius-all(3px);
   div.item {
     float: left;
     margin-right: 10px;
+    margin-bottom: 5px;
     span {
       padding-left: 5px;
       height: 22px;

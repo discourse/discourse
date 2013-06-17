@@ -1,4 +1,3 @@
-<!-- work in progress, please ignore -->
 <div class='row groups'>
   <div class='content-list span6'>
     <h3>{{i18n admin.groups.edit}}</h3>
@@ -25,7 +24,7 @@
             {{textField value=name placeholderKey="admin.groups.name_placeholder"}}
           {{/if}}
 
-          {{userSelector usernames=usernames id="group-users" placeholderKey="admin.groups.selector_placeholder" tabindex="1"}}
+          {{userSelector usernames=usernames id="group-users" placeholderKey="admin.groups.selector_placeholder" tabindex="1" disabledBinding="automatic"}}
           <div class='controls'>
             <button {{action save this}} {{bindAttr disabled="disableSave"}} class='btn'>{{i18n admin.customize.save}}</button>
             {{#unless automatic}}
