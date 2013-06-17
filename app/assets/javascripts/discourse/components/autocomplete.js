@@ -131,16 +131,22 @@ $.fn.autocomplete = function(options) {
       return false;
     });
     var pos = null;
+    var vOffset = 0;
+    var hOffset = 0;
     if (isInput) {
       pos = {
         left: 0,
         top: 0
       };
+      vOffset = -32;
+      hOffset = 0;
     } else {
       pos = me.caretPosition({
         pos: completeStart,
         key: options.key
       });
+      vOffset = div.height();
+      hOffset = 27;
     }
     div.css({
       left: "-1000px"
@@ -150,8 +156,8 @@ $.fn.autocomplete = function(options) {
     var borderTop = parseInt(me.css('border-top-width'), 10) || 0;
     div.css({
       position: 'absolute',
-      top: (mePos.top + pos.top - div.height() + borderTop) + 'px',
-      left: (mePos.left + pos.left + 27) + 'px'
+      top: (mePos.top + pos.top - vOffset + borderTop) + 'px',
+      left: (mePos.left + pos.left + hOffset) + 'px'
     });
   };
 
