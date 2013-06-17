@@ -18,7 +18,10 @@ class TopicListSerializer < ApplicationSerializer
   end
 
   def can_create_topic
-    scope.can_create?(Topic) && (object.filter == :category)
+    return false unless scope.can_create?(Topic) && (object.filter == :category)
+    return true if scope.is_admin? || scope.is_staff?
+    category = object.more_topics_url[/category\/([^\/]+)\//, 1]
+    !SiteSetting.restricted_categories.split('|').member?(category)
   end
 
   def include_more_topics_url?

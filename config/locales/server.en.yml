@@ -654,6 +654,8 @@ en:
 
     reply_by_email_enabled: "Enable replying to topics via email"
     reply_by_email_address: "Template for reply by email address in form, for example: %{reply_key}@reply.myforum.com"
+    
+    restricted_categories: "Categories that only the Innovation Team can create topics in. Example: ideas|products|suggestions"
 
     pop3s_polling_enabled: "Poll via POP3S for email replies"
     pop3s_polling_port: "The port to poll a POP3S account on"

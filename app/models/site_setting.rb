@@ -253,6 +253,9 @@ class SiteSetting < ActiveRecord::Base
 
   client_setting(:allow_uploaded_avatars, true)
   client_setting(:allow_animated_avatars, false)
+  
+  # Settings added by CPH
+  client_setting(:restricted_categories, '')
 
   def self.generate_api_key!
     self.api_key = SecureRandom.hex(32)
