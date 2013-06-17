@@ -146,13 +146,18 @@ $.fn.autocomplete = function(options) {
         pos: completeStart,
         key: options.key
       });
-      vOffset = div.height();
       hOffset = 27;
     }
     div.css({
       left: "-1000px"
     });
+
     me.parent().append(div);
+
+    if(!isInput){
+      vOffset = div.height();
+    }
+
     var mePos = me.position();
     var borderTop = parseInt(me.css('border-top-width'), 10) || 0;
     div.css({
