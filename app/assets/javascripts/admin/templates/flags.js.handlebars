@@ -27,7 +27,9 @@
           <td class='user'>{{#linkTo 'adminUser' flag.user}}{{avatar flag.user imageSize="small"}}{{/linkTo}}</td>
           <td class='excerpt'>{{#if flag.topicHidden}}<i title='{{i18n topic_statuses.invisible.help}}' class='icon icon-eye-close'></i> {{/if}}<h3><a href='{{unbound flag.url}}'>{{flag.title}}</a></h3><br>{{{flag.excerpt}}}
           </td>
-          <td class='flaggers'>{{#each flag.flaggers}}{{#linkTo 'adminUser' this}}{{avatar this imageSize="small"}} {{/linkTo}}{{/each}}</td>
+          <td class='flaggers'>{{#each flag.flaggers}}{{#linkTo 'adminUser' this}}{{avatar this imageSize="small"}} {{/linkTo}}{{/each}}
+            <p class='flag-summary'>{{flag.summary}}</p>
+          </td>
           <td class='last-flagged'>{{date flag.lastFlagged}}</td>
           <td class='action'>
             {{#if adminActiveFlagsView}}

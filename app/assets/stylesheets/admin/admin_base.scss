@@ -274,6 +274,7 @@ table {
 
 
 .admin-flags {
+
   tr.hidden-post td.excerpt { opacity: 0.4;  }
   td.message {
     padding: 4px 0;
@@ -289,6 +290,7 @@ table {
   }
   .flaggers { padding: 0 10px; }
   .last-flagged { padding: 0 10px; }
+  .flag-summary { font-size: 11px; }
 }
 
 /* Dashboard */

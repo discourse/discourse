@@ -8,6 +8,15 @@
 **/
 Discourse.FlaggedPost = Discourse.Post.extend({
 
+  summary: function(){
+    return _(this.post_actions)
+      .groupBy(function(a){ return a.post_action_type_id })
+      .map(function(v,k){
+        return Em.String.i18n("admin.flags.summary.action_type_" + k, {count: v.length});
+      })
+      .join(",")
+  }.property(),
+
   flaggers: function() {
     var r,
       _this = this;
