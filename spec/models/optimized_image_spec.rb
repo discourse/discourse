@@ -20,8 +20,8 @@ describe OptimizedImage do
     it "works" do
       Tempfile.any_instance.expects(:close).once
       Tempfile.any_instance.expects(:unlink).once
-      oi.sha.should == "da39a3ee5e6b4b0d3255bfef95601890afd80709"
-      oi.ext.should == ".jpg"
+      oi.sha1.should == "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+      oi.extension.should == ".jpg"
       oi.width.should == 244
       oi.height.should == 66
     end

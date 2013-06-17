@@ -16,8 +16,8 @@ class OptimizedImage < ActiveRecord::Base
       image_info = FastImage.new(temp_path)
       thumbnail = OptimizedImage.new({
         upload_id: upload.id,
-        sha: Digest::SHA1.file(temp_path).hexdigest,
-        ext: File.extname(temp_path),
+        sha1: Digest::SHA1.file(temp_path).hexdigest,
+        extension: File.extname(temp_path),
         width: image_info.size[0],
         height: image_info.size[1]
       })
@@ -49,11 +49,11 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def optimized_path
-    "uploads/#{RailsMultisite::ConnectionManagement.current_db}/_optimized/#{sha[0..2]}/#{sha[3..5]}"
+    "uploads/#{RailsMultisite::ConnectionManagement.current_db}/_optimized/#{sha1[0..2]}/#{sha1[3..5]}"
   end
 
   def filename
-    "#{sha[6..16]}_#{width}x#{height}#{ext}"
+    "#{sha1[6..16]}_#{width}x#{height}#{extension}"
   end
 
 end
@@ -63,8 +63,8 @@ end
 # Table name: optimized_images
 #
 #  id        :integer          not null, primary key
-#  sha       :string(255)      not null
-#  ext       :string(255)      not null
+#  sha1      :string(40)       not null
+#  extension :string(10)       not null
 #  width     :integer          not null
 #  height    :integer          not null
 #  upload_id :integer          not null
