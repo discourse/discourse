@@ -105,9 +105,11 @@ end
 #  url               :string(255)      not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  sha               :string(255)
 #
 # Indexes
 #
-#  index_uploads_on_forum_thread_id  (topic_id)
-#  index_uploads_on_user_id          (user_id)
+#  index_uploads_on_sha      (sha) UNIQUE
+#  index_uploads_on_user_id  (user_id)
 #
+

@@ -43,9 +43,11 @@ end
 #  topic_id    :integer          not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  rank        :integer          default(0), not null
 #
 # Indexes
 #
-#  cat_featured_threads  (category_id,topic_id) UNIQUE
+#  cat_featured_threads                                    (category_id,topic_id) UNIQUE
+#  index_category_featured_topics_on_category_id_and_rank  (category_id,rank)
 #
 

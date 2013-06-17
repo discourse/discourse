@@ -57,3 +57,21 @@ class OptimizedImage < ActiveRecord::Base
   end
 
 end
+
+# == Schema Information
+#
+# Table name: optimized_images
+#
+#  id        :integer          not null, primary key
+#  sha       :string(255)      not null
+#  ext       :string(255)      not null
+#  width     :integer          not null
+#  height    :integer          not null
+#  upload_id :integer          not null
+#
+# Indexes
+#
+#  index_optimized_images_on_upload_id                       (upload_id)
+#  index_optimized_images_on_upload_id_and_width_and_height  (upload_id,width,height) UNIQUE
+#
+
