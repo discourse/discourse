@@ -276,6 +276,7 @@ describe Topic do
           new_topic.should be_present
           new_topic.featured_user1_id.should == another_user.id
           new_topic.like_count.should == 1
+
           new_topic.category.should == category
           topic.featured_user1_id.should be_blank
           new_topic.posts.should =~ [p2, p4]
@@ -283,6 +284,7 @@ describe Topic do
           new_topic.reload
           new_topic.posts_count.should == 2
           new_topic.highest_post_number.should == 2
+          expect(new_topic.last_posted_at).to be_present
 
           p2.reload
           p2.sort_order.should == 1
@@ -298,6 +300,7 @@ describe Topic do
           topic.posts_count.should == 2
           topic.posts.should =~ [p1, p3]
           topic.highest_post_number.should == p3.post_number
+
         end
       end
 

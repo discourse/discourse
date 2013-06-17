@@ -272,7 +272,7 @@ Handlebars.registerHelper('number', function(property, options) {
   @for Handlebars
 **/
 Handlebars.registerHelper('date', function(property, options) {
-  var leaveAgo, val;
+  var leaveAgo;
   if (property.hash) {
     if (property.hash.leaveAgo) {
       leaveAgo = property.hash.leaveAgo === "true";
@@ -281,11 +281,11 @@ Handlebars.registerHelper('date', function(property, options) {
       property = property.hash.path;
     }
   }
-  val = Ember.Handlebars.get(this, property, options);
-  var date = null;
+  var val = Ember.Handlebars.get(this, property, options);
   if (val) {
-    date = new Date(val);
+    var date = new Date(val);
+    return new Handlebars.SafeString(Discourse.Formatter.autoUpdatingRelativeAge(date, {format: 'medium', leaveAgo: leaveAgo}));
   }
-  return new Handlebars.SafeString(Discourse.Formatter.autoUpdatingRelativeAge(date, {format: 'medium', leaveAgo: leaveAgo}));
+
 });
 

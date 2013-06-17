@@ -18,6 +18,8 @@ Discourse.Formatter = (function(){
   }
 
   longDate = function(dt) {
+    if (!dt) return;
+
     return moment(dt).longDate();
   };
 
@@ -30,6 +32,9 @@ Discourse.Formatter = (function(){
   };
 
   autoUpdatingRelativeAge = function(date,options) {
+
+    if (!date) return "";
+
     options = options || {};
     var format = options.format || "tiny";
 
