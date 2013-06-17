@@ -11,7 +11,6 @@ module("List Topics", {
 });
 
 test("/", function() {
-  expect(2);
 
   visit("/").then(function() {
     ok(exists("#topic-list"), "The list of topics was rendered");
