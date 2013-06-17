@@ -16,5 +16,6 @@ module Clockwork
   every(10.minutes, 'periodical_updates')
   every(1.day, 'version_check')
   every(1.minute, 'clockwork_heartbeat')
-  every(1.minute, 'email_poll'
+  every(1.minute, 'email_poll')
+
 end
