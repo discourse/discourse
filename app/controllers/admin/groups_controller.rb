@@ -11,7 +11,7 @@ class Admin::GroupsController < Admin::AdminController
 
   def users
     group = Group.find(params[:group_id].to_i)
-    render_serialized(group.users.limit(100).to_a, BasicUserSerializer)
+    render_serialized(group.users.order('username_lower asc').limit(200).to_a, BasicUserSerializer)
   end
 
   def update
