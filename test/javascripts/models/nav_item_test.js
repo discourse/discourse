@@ -15,8 +15,12 @@ module("Discourse.NavItem", {
 test('href', function(){
   expect(4);
 
-  equal(Discourse.NavItem.fromText('latest', {}).get('href'), '/latest', "latest");
-  equal(Discourse.NavItem.fromText('categories', {}).get('href'), '/categories', "categories");
-  equal(Discourse.NavItem.fromText('category/bug', {}).get('href'), '/category/bug', "English category name");
-  equal(Discourse.NavItem.fromText('category/确实是这样', {}).get('href'), '/category/343434-category', "Chinese category name");
+  function href(text, expected, label) {
+    equal(Discourse.NavItem.fromText(text, {}).get('href'), expected, label);
+  }
+
+  href('latest', '/latest', 'latest');
+  href('categories', '/categories', 'categories');
+  href('category/bug', '/category/bug', 'English category name');
+  href('category/确实是这样', '/category/343434-category', 'Chinese category name');
 });
