@@ -242,8 +242,10 @@ class ApplicationController < ActionController::Base
     def check_restricted_access
       # note current_user is defined in the CurrentUser mixin
       if SiteSetting.access_password.present? && cookies[:_access] != SiteSetting.access_password
-        redirect_to request_access_path(return_path: request.fullpath)
-        return false
+        unless api_key_valid?
+          redirect_to request_access_path(return_path: request.fullpath)
+          return false
+        end
       end
     end
 
@@ -263,7 +265,7 @@ class ApplicationController < ActionController::Base
     def check_xhr
       unless (controller_name == 'forums' || controller_name == 'user_open_ids')
         # bypass xhr check on PUT / POST / DELETE provided api key is there, otherwise calling api is annoying
-        return if !request.get? && request["api_key"] && SiteSetting.api_key_valid?(request["api_key"])
+        return if !request.get? && api_key_valid?
         raise RenderEmpty.new unless ((request.format && request.format.json?) || request.xhr?)
       end
     end
@@ -283,6 +285,12 @@ class ApplicationController < ActionController::Base
       @slug =  (params[:id].class == String ? params[:id] : '') if @slug.blank?
       @slug.gsub!('-',' ')
       render status: status, layout: 'no_js', formats: [:html], template: '/exceptions/not_found'
+    end
+
+    protected
+
+    def api_key_valid?
+      request["api_key"] && SiteSetting.api_key_valid?(request["api_key"])
     end
 
 end
