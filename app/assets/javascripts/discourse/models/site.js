@@ -35,7 +35,9 @@ Discourse.Site = Discourse.Model.extend({
 Discourse.Site.reopenClass({
 
   instance: function() {
-    return Discourse.Site.create(PreloadStore.get('site'));
+    if ( this._site ) return this._site;
+    this._site = Discourse.Site.create(PreloadStore.get('site'));
+    return this._site;
   },
 
   create: function(obj) {
