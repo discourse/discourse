@@ -45,6 +45,23 @@ describe TextSentinel do
 
   end
 
+  context 'body_sentinel' do
+    [ 'evil trout is evil',
+      "去年十社會警告",
+      "P.S. Пробирочка очень толковая и весьма умная, так что не обнимайтесь.",
+      "LOOK: 去年十社會警告"
+    ].each do |valid_body|
+      it "handles a valid body in a private message" do
+        expect(TextSentinel.body_sentinel(valid_body, private_message: true)).to be_valid
+      end
+
+      it "handles a valid body in a public post" do
+        expect(TextSentinel.body_sentinel(valid_body, private_message: false)).to be_valid
+      end
+    end
+
+  end
+
   context "validity" do
 
     let(:valid_string) { "This is a cool topic about Discourse" }
