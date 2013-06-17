@@ -18,12 +18,18 @@ Discourse.SearchView = Discourse.View.extend({
     return $('body').on('keydown.search', function(e) {
       if ($('#search-dropdown').is(':visible')) {
         switch (e.which) {
-          case 13:
-            return controller.select();
-          case 38:
-            return controller.moveUp();
-          case 40:
-            return controller.moveDown();
+        case 13:
+          controller.select();
+          e.preventDefault();
+          break;
+        case 38:
+          controller.moveUp();
+          e.preventDefault();
+          break;
+        case 40:
+          controller.moveDown();
+          e.preventDefault();
+          break;
         }
       }
     });
