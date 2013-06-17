@@ -13,7 +13,7 @@ class CategoryListSerializer < ApplicationSerializer
   end
 
   def can_create_topic
-    scope.can_create?(Topic)
+    false
   end
 
 end

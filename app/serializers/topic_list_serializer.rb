@@ -18,7 +18,7 @@ class TopicListSerializer < ApplicationSerializer
   end
 
   def can_create_topic
-    scope.can_create?(Topic)
+    scope.can_create?(Topic) && (object.filter == :category)
   end
 
   def include_more_topics_url?
