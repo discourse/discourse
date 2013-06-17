@@ -66,8 +66,13 @@ Discourse.HistoryController = Discourse.ObjectController.extend(Discourse.ModalF
     var historyController = this;
     this.get('model').loadVersions().then(function(result) {
       _.each(result,function(item) {
-        item.description = "v" + item.number + " - " + Discourse.Formatter.relativeAge(new Date(item.created_at), {format: 'medium', leaveAgo: true}) + " - " +
-          Em.String.i18n("changed_by", { author: item.display_username });
+
+        var age = Discourse.Formatter.relativeAge(new Date(item.created_at), {
+          format: 'medium',
+          leaveAgo: true,
+          wrapInSpan: false});
+
+        item.description = "v" + item.number + " - " + age + " - " + Em.String.i18n("changed_by", { author: item.display_username });
       });
 
       historyController.setProperties({
