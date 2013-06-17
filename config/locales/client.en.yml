@@ -549,8 +549,12 @@ en:
       not_found:
         title: "Topic not found"
         description: "Sorry, we couldn't find that topic. Perhaps it was removed by a moderator?"
-      unread_posts: "you have {{unread}} unread old posts in this topic"
-      new_posts: "there are {{new_posts}} new posts in this topic since you last read it"
+      unread_posts:
+        one: "you have 1 unread old post in this topic"
+        other: "you have {{count}} unread old posts in this topic"
+      new_posts:
+        one: "there is 1 new posts in this topic since you last read it"
+        other: "there are {{count}} new posts in this topic since you last read it"
 
       likes:
         one: "there is 1 like in this topic"
