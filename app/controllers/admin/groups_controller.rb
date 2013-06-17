@@ -20,9 +20,12 @@ class Admin::GroupsController < Admin::AdminController
       can_not_modify_automatic
     else
       group.usernames = params[:group][:usernames]
-      group.name = params[:group][:name] if params[:name]
-      group.save!
-      render json: "ok"
+      group.name = params[:group][:name] if params[:group][:name]
+      if group.save
+        render json: "ok"
+      else
+        render_json_error group
+      end
     end
   end
 

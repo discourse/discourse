@@ -14,6 +14,11 @@ describe Group do
       group.name = "this_is_a_name"
       group.valid?.should be_true
     end
+
+    it "is invalid for non names" do
+      group.name = "this is_a_name"
+      group.valid?.should be_false
+    end
   end
 
   it "Can update moderator/staff/admin groups correctly" do

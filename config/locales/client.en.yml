@@ -1042,6 +1042,8 @@ en:
         edit: "Edit Groups"
         selector_placeholder: "add users"
         name_placeholder: "Group name, no spaces, same as username rule"
+        about: "Edit your group membership and names here"
+        can_not_edit_automatic: "Automatic group membership is determined automatically, administer users to assign roles and trust levels"
 
       api:
         title: "API"

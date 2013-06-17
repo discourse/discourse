@@ -26,11 +26,13 @@
 
           {{userSelector usernames=usernames id="group-users" placeholderKey="admin.groups.selector_placeholder" tabindex="1" disabledBinding="automatic"}}
           <div class='controls'>
-            <button {{action save this}} {{bindAttr disabled="disableSave"}} class='btn'>{{i18n admin.customize.save}}</button>
             {{#unless automatic}}
+              <button {{action save this}} {{bindAttr disabled="disableSave"}} class='btn'>{{i18n admin.customize.save}}</button>
               {{#if id}}
                 <a {{action destroy this}} class='delete-link'>{{i18n admin.customize.delete}}</a>
               {{/if}}
+            {{else}}
+              {{i18n admin.groups.can_not_edit_automatic}}
             {{/unless}}
           </div>
         {{/with}}
@@ -38,7 +40,7 @@
         <div class='spinner'>{{i18n loading}}</div>
       {{/if}}
     {{else}}
-      nothing here yet
+      {{i18n admin.groups.about}}
     {{/if}}
   </div>
 </div>
