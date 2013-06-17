@@ -1,15 +1,13 @@
 module S3
 
-  def self.store_file(file, image_info, upload_id)
+  def self.store_file(file, sha, image_info, upload_id)
     raise Discourse::SiteSettingMissing.new("s3_upload_bucket")     if SiteSetting.s3_upload_bucket.blank?
     raise Discourse::SiteSettingMissing.new("s3_access_key_id")     if SiteSetting.s3_access_key_id.blank?
     raise Discourse::SiteSettingMissing.new("s3_secret_access_key") if SiteSetting.s3_secret_access_key.blank?
 
     @fog_loaded = require 'fog' unless @fog_loaded
 
-    blob = file.read
-    sha1 = Digest::SHA1.hexdigest(blob)
-    remote_filename = "#{upload_id}#{sha1}.#{image_info.type}"
+    remote_filename = "#{upload_id}#{sha}.#{image_info.type}"
 
     options = S3.generate_options
     directory = S3.get_or_create_directory(SiteSetting.s3_upload_bucket, options)

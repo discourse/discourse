@@ -410,6 +410,7 @@ end
 #  reply_to_user_id        :integer
 #  percent_rank            :float            default(1.0)
 #  notify_user_count       :integer          default(0), not null
+#  like_score              :integer          default(0), not null
 #
 # Indexes
 #

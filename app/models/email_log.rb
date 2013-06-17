@@ -23,10 +23,12 @@ end
 #  user_id    :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  reply_key  :string(32)
 #
 # Indexes
 #
 #  index_email_logs_on_created_at              (created_at)
+#  index_email_logs_on_reply_key               (reply_key)
 #  index_email_logs_on_user_id_and_created_at  (user_id,created_at)
 #
 
