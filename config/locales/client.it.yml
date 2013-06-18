@@ -668,7 +668,6 @@ it:
         delete: "elimina post"
         undelete: "annulla eliminazione post"
         share: "condividi questo post"
-        bookmark: "aggiungilo ai tuoi segnalibri"
         more: "Di più"
 
       actions:

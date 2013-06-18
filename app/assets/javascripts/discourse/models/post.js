@@ -64,13 +64,15 @@ Discourse.Post = Discourse.Model.extend({
     } else {
       if (this.get('read')) {
         result += ' seen';
+      } else {
+        result += ' unseen';
       }
     }
     return result;
   }.property('read', 'topic.last_read_post_number', 'bookmarked'),
 
   // Custom tooltips for the bookmark icons
-  bookmarkTooltip: (function() {
+  bookmarkTooltip: function() {
     var topic;
     if (this.get('bookmarked')) return Em.String.i18n('bookmarks.created');
     if (!this.get('read')) return "";
@@ -79,7 +81,7 @@ Discourse.Post = Discourse.Model.extend({
       return Em.String.i18n('bookmarks.last_read');
     }
     return Em.String.i18n('bookmarks.not_bookmarked');
-  }).property('read', 'topic.last_read_post_number', 'bookmarked'),
+  }.property('read', 'topic.last_read_post_number', 'bookmarked'),
 
   bookmarkedChanged: function() {
     var post = this;

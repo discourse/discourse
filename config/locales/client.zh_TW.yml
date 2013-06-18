@@ -668,7 +668,6 @@ zh_TW:
         delete: "刪除本帖"
         undelete: "恢複本帖"
         share: "分享一個到本帖的鏈接"
-        bookmark: "給本帖做書簽到你的用戶頁"
         more: "更多"
 
       actions:

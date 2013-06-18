@@ -762,7 +762,6 @@ en:
         delete: "delete this post"
         undelete: "undelete this post"
         share: "share a link to this post"
-        bookmark: "bookmark this post to your user page"
         more: "More"
 
       actions:

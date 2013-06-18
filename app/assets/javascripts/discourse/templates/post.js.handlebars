@@ -10,8 +10,6 @@
   <div class='row'>
     {{#if controller.multiSelect}}
       <button class='post-select' {{action selectPost this}}>{{view.selectText}}</button>
-    {{else}}
-      <div {{bindAttr class="bookmarkClass"}} {{bindAttr title="bookmarkTooltip"}} {{action toggleBookmark this}}></div>
     {{/if}}
 
     {{#if showUserReplyTab}}

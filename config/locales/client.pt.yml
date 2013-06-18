@@ -477,7 +477,6 @@ pt:
         delete: "apagar este post"
         undelete: "desapagar este post"
         share: "partilhar um link para este post"
-        bookmark: "marcar este post na tua página de utilizador"
         more: "Mais"
 
       actions:

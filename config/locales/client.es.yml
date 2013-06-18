@@ -649,7 +649,6 @@ es:
         delete: "elimina esta publicación"
         undelete: "deshace la eliminación de esta publicación"
         share: "comparte un enlace a esta publicación"
-        bookmark: "marca esta publicación como favorita en tu página de usuario"
         more: "Más"
 
       actions:

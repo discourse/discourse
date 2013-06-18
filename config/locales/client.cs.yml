@@ -789,7 +789,6 @@ cs:
         delete: "smazat příspěvek"
         undelete: "obnovit příspěvek"
         share: "sdílet odkaz na tento příspěvek"
-        bookmark: "přidat záložku na tento příspěvek na vaši uživatelskou stránku"
         more: "Více"
 
       actions:

@@ -38,7 +38,7 @@ Discourse.PostMenuView = Discourse.View.extend({
   // Trigger re-rendering
   needsToRender: function() {
     this.rerender();
-  }.observes('post.deleted_at', 'post.flagsAvailable.@each', 'post.url', 'post.bookmarked', 'post.reply_count', 'post.showRepliesBelow', 'post.can_delete'),
+  }.observes('post.deleted_at', 'post.flagsAvailable.@each', 'post.url', 'post.bookmarked', 'post.reply_count', 'post.showRepliesBelow', 'post.can_delete', 'post.read', 'post.topic.last_read_post_number'),
 
   // Replies Button
   renderReplies: function(post, buffer) {
@@ -152,13 +152,9 @@ Discourse.PostMenuView = Discourse.View.extend({
   renderBookmark: function(post, buffer) {
     if (!Discourse.User.current()) return;
 
-    var icon = 'bookmark';
-    if (!this.get('post.bookmarked')) {
-      icon += '-empty';
-    }
-    buffer.push("<button title=\"" +
-                (Em.String.i18n("post.controls.bookmark")) +
-                "\" data-action=\"bookmark\" class='bookmark'><i class=\"icon-" + icon + "\"></i></button>");
+    buffer.push("<button title=\"" + this.get('post.bookmarkTooltip') +
+                "\" data-action=\"bookmark\" class='bookmark'><div class='" + this.get('post.bookmarkClass') +
+                "'></div></button>");
   },
 
   clickBookmark: function() {

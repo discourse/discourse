@@ -74,11 +74,6 @@
     .gutter {
       width: 100px;
     }
-    article.boxed {
-      .read-icon {
-        left: 750px !important;
-      }
-    }
   }
 }
 
@@ -202,13 +197,6 @@
     }
   }
   @include hover {
-    .read-icon {
-      i {
-        &:before {
-          font-size: 25px;
-        }
-      }
-    }
     section.post-menu-area {
       display: block;
     }
@@ -281,6 +269,25 @@
         }
         &.like, &.edit, &.flag, &.delete, &.share, &.bookmark, &.create {
           float: right;
+        }
+        .read-icon {
+          &:before {
+            font-family: "FontAwesome";
+            content: "\f02e";
+          }
+          &.unseen {
+            &:before {
+              content: "\f097";
+            }
+          }
+          &.last-read {
+            color: $red;
+          }
+          &.bookmarked {
+            &:before {
+              color: $bookmarkColor;
+            }
+          }
         }
       }
       button.create {
@@ -484,11 +491,6 @@
     position: relative;
     font-size: 16px;
     line-height: 20px;
-    @include small-width {
-      .read-icon {
-        right: 365px !important;
-      }
-    }
     .post-select {
       @include border-radius-all(4px);
       background-color: $light_gray;
@@ -503,36 +505,6 @@
       font-size: 12px;
       padding: 2px 5px;
       z-index: 490;
-    }
-    .read-icon {
-      @include transition(opacity 1s);
-      opacity: 0;
-      position: absolute;
-      top: -3px;
-      left: 800px;
-      width: 16px;
-      height: 22px;
-      z-index: 490;
-      font-size: 20px;
-      cursor: pointer;
-      &:before {
-        font-family: "FontAwesome";
-        content: "\f02e";
-      }
-      &.seen {
-        color: $gray;
-        opacity: 1;
-      }
-      &.last-read {
-        color: $red;
-        opacity: 1;
-      }
-      &.bookmarked {
-        &:before {
-          color: $bookmarkColor;
-        }
-        opacity: 1;
-      }
     }
     img {
       max-width: 100%;

@@ -686,7 +686,6 @@ fr:
         delete: "Supprimer ce message"
         undelete: "Annuler la suppression de ce message"
         share: "Partager un lien vers ce message"
-        bookmark: "Ajouter ce message à ma page utilisateur"
         more: "Plus"
 
       actions:

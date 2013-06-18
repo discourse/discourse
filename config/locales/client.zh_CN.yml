@@ -727,7 +727,6 @@ zh_CN:
         delete: "删除本帖"
         undelete: "恢复本帖"
         share: "分享一个到本帖的链接"
-        bookmark: "给本帖做书签到你的用户页"
         more: "更多"
 
       actions:

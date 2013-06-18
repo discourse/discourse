@@ -586,7 +586,6 @@ sv:
         delete: "radera detta inlägg"
         undelete: "återställ detta inlägg"
         share: "dela en länk till detta inlägg"
-        bookmark: "bokmärk detta inlägg till din användarsida"
         more: "Mer"
 
       actions:

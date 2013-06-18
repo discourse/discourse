@@ -553,7 +553,6 @@ da:
         delete: "slet dette indlæg"
         undelete: "annulér sletning"
         share: "del et link til dette indlæg"
-        bookmark: "bogmærk dette indlæg til din brugerside"
         more: "Mere"
 
       actions:
