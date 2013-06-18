@@ -306,7 +306,9 @@ Add the following lines:
 Note: in case of RVM system-wide installation RVM will be located in `/usr/local/rvm` directory instead of `/home/discourse/.rvm`, so update the line above respectively.
 
 ## Log rotation setup
-    0 0 * * * /usr/sbin/logrotate ~/discourse/config/logrotate.conf
+
+    # Disabled for now - log rotation isn't *quite* complete
+    #0 0 * * * /usr/sbin/logrotate ~/discourse/config/logrotate.conf
 
 Congratulations! You've got Discourse installed and running!
 
