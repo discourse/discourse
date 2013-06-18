@@ -7,6 +7,7 @@ require_relative 'environment'
 
 def setup_log
   Clockwork.configure do |config|
+    config[:logger].close
     config[:logger] = Logger.new(ENV["CLOCK_LOG"])
   end if ENV["CLOCK_LOG"]
 end
