@@ -10,6 +10,20 @@
   <div class='row'>
     {{#if controller.multiSelect}}
       <button class='post-select' {{action selectPost this}}>{{view.selectText}}</button>
+    {{else}}
+      <div class='topic-meta-data-inside'>
+        <div class='post-info'>
+          <a href='#' class='post-date' {{bindAttr data-share-url="shareUrl"}}>{{date created_at}}</a>
+        </div>
+        {{#if hasHistory}}
+          <div class='post-info edits'>
+            <a href='#' class="{{unbound historyHeat}}" {{action showHistory this}} title="{{editDate updated_at}}">
+              {{editCount}}
+              <i class='icon-pencil'></i>
+            </a>
+          </div>
+        {{/if}}
+      </div>
     {{/if}}
 
     {{#if showUserReplyTab}}
@@ -28,18 +42,6 @@
       <div {{bindAttr class=":contents byTopicCreator:topic-creator"}}>
         <a href='{{unbound usernameUrl}}'>{{avatar this imageSize="large"}}</a>
         <h3 {{bindAttr class="staff new_user"}}><a href='{{unbound usernameUrl}}'>{{breakUp username}}</a></h3>
-
-        <div class='post-info'>
-          <a href='#' class='post-date' {{bindAttr data-share-url="shareUrl"}}>{{date created_at}}</a>
-        </div>
-        {{#if hasHistory}}
-          <div class='post-info'>
-            <a href='#' class="{{unbound historyHeat}}" {{action showHistory this}} title="{{editDate updated_at}}">
-              <i class='icon-pencil'></i>
-              {{editCount}}
-            </a>
-          </div>
-        {{/if}}
       </div>
     </div>
 

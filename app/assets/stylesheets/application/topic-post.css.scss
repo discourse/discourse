@@ -371,18 +371,6 @@
         font-size: 12px;
       }
     }
-    .post-info {
-      margin-top: -1px;
-      line-height: 12px;
-      a {
-        color: rgba(#323232, 0.9);
-        font-size: 10px;
-      }
-      .bar {
-        color: $muted-link-color;
-        font-size: 10px;
-      }
-    }
   }
   .reply-to-tab {
     z-index: 490;
@@ -506,6 +494,27 @@
       padding: 2px 5px;
       z-index: 490;
     }
+    .topic-meta-data-inside {
+      position: absolute;
+      top: 4px;
+      right: 316px;
+      z-index: 490;
+      .post-info {
+        font-size: 12px;
+        display: inline-block;
+        float: right;
+        margin-right: 12px;
+        &:first-child {
+          margin-right: 0;
+        }
+        &.edits {
+          opacity: 0.7;
+        }
+      }
+      .post-date {
+        color: #aaa;
+      }
+    }
     img {
       max-width: 100%;
     }
@@ -513,7 +522,7 @@
       position: relative;
       .contents {
         .cooked {
-          padding: 12px 10px 0;
+          padding: 25px 10px 0;
         }
         position: relative;
         border: 1px solid #b9b9b9;
@@ -540,6 +549,9 @@
       }
       .contents.avoid-tab {
         padding-top: 30px;
+        .cooked {
+          padding-top: 10px;
+        }
       }
       .post-actions {
         padding: 3px 0 0px 15px;

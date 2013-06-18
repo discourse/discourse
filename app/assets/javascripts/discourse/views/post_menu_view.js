@@ -38,7 +38,8 @@ Discourse.PostMenuView = Discourse.View.extend({
   // Trigger re-rendering
   needsToRender: function() {
     this.rerender();
-  }.observes('post.deleted_at', 'post.flagsAvailable.@each', 'post.url', 'post.bookmarked', 'post.reply_count', 'post.showRepliesBelow', 'post.can_delete', 'post.read', 'post.topic.last_read_post_number'),
+  }.observes('post.deleted_at', 'post.flagsAvailable.@each', 'post.url', 'post.bookmarked', 'post.reply_count',
+             'post.showRepliesBelow', 'post.can_delete', 'post.read', 'post.topic.last_read_post_number'),
 
   // Replies Button
   renderReplies: function(post, buffer) {
