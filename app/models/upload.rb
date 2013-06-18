@@ -38,9 +38,9 @@ class Upload < ActiveRecord::Base
 
   def self.create_for(user_id, file)
     # compute the sha
-    sha = Digest::SHA1.file(file.tempfile).hexdigest
+    sha1 = Digest::SHA1.file(file.tempfile).hexdigest
     # check if the file has already been uploaded
-    upload = Upload.where(sha: sha).first
+    upload = Upload.where(sha1: sha1).first
 
     # otherwise, create it
     if upload.blank?
@@ -53,7 +53,7 @@ class Upload < ActiveRecord::Base
         user_id: user_id,
         original_filename: file.original_filename,
         filesize: File.size(file.tempfile),
-        sha: sha,
+        sha1: sha1,
         width: width,
         height: height,
         url: ""
@@ -61,7 +61,7 @@ class Upload < ActiveRecord::Base
       # make sure we're at the beginning of the file (FastImage is moving the pointer)
       file.rewind
       # store the file and update its url
-      upload.url = Upload.store_file(file, sha, image_info, upload.id)
+    upload.url = Upload.store_file(file, sha1, image_info, upload.id)
       # save the url
       upload.save
     end
@@ -69,9 +69,9 @@ class Upload < ActiveRecord::Base
     upload
   end
 
-  def self.store_file(file, sha, image_info, upload_id)
-    return S3.store_file(file, sha, image_info, upload_id) if SiteSetting.enable_s3_uploads?
-    return LocalStore.store_file(file, sha, image_info, upload_id)
+  def self.store_file(file, sha1, image_info, upload_id)
+    return S3.store_file(file, sha1, image_info, upload_id) if SiteSetting.enable_s3_uploads?
+    return LocalStore.store_file(file, sha1, image_info, upload_id)
   end
 
   def self.uploaded_regex
@@ -105,11 +105,11 @@ end
 #  url               :string(255)      not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
-#  sha               :string(255)
+#  sha1              :string(40)
 #
 # Indexes
 #
-#  index_uploads_on_sha      (sha) UNIQUE
+#  index_uploads_on_sha1     (sha1) UNIQUE
 #  index_uploads_on_user_id  (user_id)
 #
 

@@ -64,8 +64,6 @@ config/fog_credentials.yml
 
 /public/uploads
 /public/stylesheet-cache/*
-/public/downloads
-/public/images
 
 # Scripts used for downloading/refreshing db
 script/download_db

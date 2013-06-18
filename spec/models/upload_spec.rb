@@ -34,7 +34,7 @@ describe Upload do
         upload.user_id.should == user_id
         upload.original_filename.should == logo.original_filename
         upload.filesize.should == File.size(logo.tempfile)
-        upload.sha.should == Digest::SHA1.file(logo.tempfile).hexdigest
+        upload.sha1.should == Digest::SHA1.file(logo.tempfile).hexdigest
         upload.width.should == 244
         upload.height.should == 66
         upload.url.should == url
