@@ -160,11 +160,7 @@ class TopicsController < ApplicationController
     guardian.ensure_can_move_posts!(topic)
 
     dest_topic = topic.move_posts(current_user, topic.posts.pluck(:id), destination_topic_id: params[:destination_topic_id].to_i)
-    if dest_topic.present?
-      render json: {success: true, url: dest_topic.relative_url}
-    else
-      render json: {success: false}
-    end
+    render_topic_changes(dest_topic)
   end
 
   def move_posts
@@ -173,16 +169,8 @@ class TopicsController < ApplicationController
     topic = Topic.where(id: params[:topic_id]).first
     guardian.ensure_can_move_posts!(topic)
 
-    args = {}
-    args[:title] = params[:title] if params[:title].present?
-    args[:destination_topic_id] = params[:destination_topic_id].to_i if params[:destination_topic_id].present?
-
-    dest_topic = topic.move_posts(current_user, params[:post_ids].map {|p| p.to_i}, args)
-    if dest_topic.present?
-      render json: {success: true, url: dest_topic.relative_url}
-    else
-      render json: {success: false}
-    end
+    dest_topic = move_post_to_destination(topic)
+    render_topic_changes(dest_topic)
   end
 
   def clear_pin
@@ -258,4 +246,23 @@ class TopicsController < ApplicationController
       end
     end
   end
+
+  def render_topic_changes(dest_topic)
+    if dest_topic.present?
+      render json: {success: true, url: dest_topic.relative_url}
+    else
+      render json: {success: false}
+    end
+  end
+
+  private
+
+  def move_post_to_destination(topic)
+    args = {}
+    args[:title] = params[:title] if params[:title].present?
+    args[:destination_topic_id] = params[:destination_topic_id].to_i if params[:destination_topic_id].present?
+
+    topic.move_posts(current_user, params[:post_ids].map {|p| p.to_i}, args)
+  end
+
 end
