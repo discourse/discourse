@@ -14,7 +14,7 @@
       {{unbound username}}
     </a>
     {{#if controller.model.can_remove_allowed_users}}
-      <a class='remove-invited' {{action removeAllowedUser username}}>x</a>
+    <a class='remove-invited' {{action removeAllowedUser username}}><i class="icon-remove"></i></a>
     {{/if}}
   </div>
   {{/each}}
