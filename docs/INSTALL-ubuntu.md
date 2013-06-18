@@ -208,7 +208,7 @@ Edit ~/discourse/config/database.yml
 
 - change production db name if appropriate
 - change username/password if appropriate
-- set db_id if using multisite
+- set `db_id` if using multisite
 - change `host_names` to the name you'll use to access the discourse site
 
 Edit ~/discourse/config/redis.yml
@@ -236,9 +236,21 @@ Initialize the database:
 
     # Run these commands as the discourse user
     # The database name here should match the production one in database.yml
+    cd ~/discourse
     createdb discourse_prod
     RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production rake db:migrate
     RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production rake assets:precompile
+
+Not english? Set the default language as appropriate:
+
+    # Run these commands as the discourse user
+    cd ~/discourse
+    RAILS_ENV=production bundle exec rails c
+    SiteSetting.default_locale = 'fr'
+
+    # Not sure if your locale is supported? Check at the rails console:
+    LocaleSiteSetting.all_values
+     => ["cs", "da", "de", "en", "es", "fr", "id", "it", "nb_NO", "nl", "pseudo", "pt", "ru", "sv", "zh_CN", "zh_TW"] 
 
 ## nginx setup
 
@@ -248,7 +260,12 @@ Initialize the database:
 Edit /etc/nginx/nginx.conf:
 
 - add: `server_names_hash_bucket_size 64;` to the `http` section
-- uncomment: `gzip on;`
+
+If discourse will be the only site served by nginx, disable the nginx default
+site:
+
+- `sudo mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.disabled`
+- Otherwise, only `server_name`s configured below in `discourse.conf` will be passed to Discourse.
 
 Edit /etc/nginx/conf.d/discourse.conf
 
@@ -284,10 +301,12 @@ Add the bluepill startup to crontab.
 Add the following lines:
 
     @reboot RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ROOT=~/discourse RAILS_ENV=production NUM_WEBS=4 /home/discourse/.rvm/bin/bootup_bluepill --no-privileged -c ~/.bluepill load ~/discourse/config/discourse.pill
-    0 0 * * * /usr/sbin/logrotate ~/discourse/config/logrotate.conf
 
 
 Note: in case of RVM system-wide installation RVM will be located in `/usr/local/rvm` directory instead of `/home/discourse/.rvm`, so update the line above respectively.
+
+## Log rotation setup
+    0 0 * * * /usr/sbin/logrotate ~/discourse/config/logrotate.conf
 
 Congratulations! You've got Discourse installed and running!
 

@@ -32,9 +32,10 @@ Bluepill.application("discourse", :base_dir => ENV["HOME"] + '/.bluepill') do |a
 
   if bootup_bundle
     app.environment = `env -i BUNDLE_GEMFILE=#{rails_root}/Gemfile #{bootup_bundle} exec env`.lines.inject({}) do |env_hash,l|
-     kv = l.chomp.split('=',2)
-     env_hash[kv[0]] = kv[1]
-     env_hash
+      kv = l.chomp.split('=',2)
+      env_hash[kv[0]] = kv[1]
+      env_hash
+    end
   end
 
   app.environment ||= {}
@@ -94,7 +95,10 @@ Bluepill.application("discourse", :base_dir => ENV["HOME"] + '/.bluepill') do |a
     process.daemonize = true
   end
 
-  if `hostname`.strip == "host to run on"
+  # Perhaps you want to run `hostname -f` here? It depends on your environment
+  # In any case, ensure the output is what you expect it to be on the system
+  # running clockwork!
+  if `hostname -s`.strip == "host to run on"
     app.process("clockwork") do |process|
       pidfile = "#{rails_root}/tmp/pids/clockwork.pid"
 
