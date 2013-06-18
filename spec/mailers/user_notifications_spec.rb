@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe UserNotifications do
 
-  let(:user) { Fabricate(:user) }
+  let(:user) { Fabricate(:admin) }
 
   describe ".signup" do
     subject { UserNotifications.signup(user) }

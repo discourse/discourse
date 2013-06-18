@@ -101,6 +101,9 @@ class UserNotifications < ActionMailer::Base
     username = @notification.data_hash[:display_username]
     notification_type = Notification.types[opts[:notification].notification_type].to_s
 
+    # For now only admins can reply by email
+    opts.delete(:allow_reply_by_email) unless user.admin?
+
     email_opts = {
       topic_title: @notification.data_hash[:topic_title],
       message: @post.raw,

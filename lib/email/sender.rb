@@ -47,9 +47,9 @@ module Email
                                user_id: @user.try(:id))
 
       email_log.post_id = @messager
-      add_header_to_log('Discourse-Reply-Key', email_log, :reply_key)
-      add_header_to_log('Discourse-Post-Id', email_log, :post_id)
-      add_header_to_log('Discourse-Topic-Id', email_log, :topic_id)
+      add_header_to_log('X-Discourse-Reply-Key', email_log, :reply_key)
+      add_header_to_log('X-Discourse-Post-Id', email_log, :post_id)
+      add_header_to_log('X-Discourse-Topic-Id', email_log, :topic_id)
 
       email_log.save!
       email_log

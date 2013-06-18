@@ -51,8 +51,8 @@ describe Email::Sender do
 
     context "email log with a post id and topic id" do
       before do
-        message.header['Discourse-Post-Id'] = 3344
-        message.header['Discourse-Topic-Id'] = 5577
+        message.header['X-Discourse-Post-Id'] = 3344
+        message.header['X-Discourse-Topic-Id'] = 5577
       end
 
       let(:email_log) { EmailLog.last }
@@ -63,7 +63,7 @@ describe Email::Sender do
 
     context "email log with a reply key" do
       before do
-        message.header['Discourse-Reply-Key'] = reply_key
+        message.header['X-Discourse-Reply-Key'] = reply_key
       end
 
       let(:email_log) { EmailLog.last }
