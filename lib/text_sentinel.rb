@@ -37,8 +37,7 @@ class TextSentinel
     seems_meaningful? &&
     seems_pronounceable? &&
     seems_unpretentious? &&
-    seems_quiet? &&
-    true
+    seems_quiet?
   end
 
   private
