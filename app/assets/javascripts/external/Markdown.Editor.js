@@ -1526,14 +1526,6 @@
             buttons.image = makeButton("wmd-image-button", getString("image"), bindCommand(function (chunk, postProcessing) {
                 return this.doLinkOrImage(chunk, postProcessing, true);
             }));
-            buttons.image = makeButton("wmd-image-button", getString("image"), bindCommand(function (chunk, postProcessing) {
-                return ourfilepicktest(chunk, postProcessing);
-                //filepicker.pick(function (FPFile) {
-                //    console.log(FPFile.url);
-                //});
-                //return false;
-                //return this.doLinkOrImage(chunk, postProcessing, true);
-            }));
             makeSpacer(2);
             buttons.olist = makeButton("wmd-olist-button", getString("olist"), bindCommand(function (chunk, postProcessing) {
                 this.doList(chunk, postProcessing, true);
@@ -1762,31 +1754,34 @@
         });
     }
 
-    commandProto.useFilePickerIo = function (chunk, linkEnteredCallback) {
-        //TODO: the following variables should be settings
-        var filepicker_key = "!!!FILEPICKERKEY!!!";
-        var filepicker_s3_path = "discourse/attachments/";
-        var filepicker_access_public = true;
-        var filepicker_extensions = ['.dwg', '.dxf', '.zip', '.7z', '.rar', '.igs', '.stp', '.step', '.rhp', '.gh', '.gha', '.ghx', '.py', '.rvb', '.rui', '.txt', '.pdf', '.png', '.jpg', '.jpeg', '.gif', '.rmtl', '.renv', '.3dm'];
+    // See https://www.filepicker.io/ for details
+    var filepicker_enabled = false;
+    if (filepicker_enabled) {
+        commandProto.useFilePickerIo = function (chunk, linkEnteredCallback) {
+            //TODO: the following variables should be settings
+            var filepicker_key = "!!!YOUR FILEPICKER.IO KEY!!!";
+            var filepicker_s3_path = "discourse/attachments/";
+            var filepicker_access_public = true;
+            var filepicker_extensions = ['.dwg', '.dxf', '.zip', '.7z', '.rar', '.igs', '.stp', '.step', '.rhp', '.gh', '.gha', '.ghx', '.py', '.rvb', '.rui', '.txt', '.pdf', '.png', '.jpg', '.jpeg', '.gif', '.rmtl', '.renv', '.3dm'];
 
-        var fpaccess = filepicker_access_public ? "public" : "private";
-        filepicker.setKey(filepicker_key);
-        filepicker.pickAndStore(
-            { extensions: filepicker_extensions },
-            { location: "S3", path: filepicker_s3_path, access: filepicker_access_public },
-            function (fpFiles) {
-                if (fpFiles[0].url && fpFiles[0].filename) {
-                    chunk.selection = fpFiles[0].filename;
-                    linkEnteredCallback(fpFiles[0].url);
-                }
-            },
-            function (fpError) {
-                // error handling
-                linkEnteredCallback(null);
-            });
-        return true;
-    };
-
+            var fpaccess = filepicker_access_public ? "public" : "private";
+            filepicker.setKey(filepicker_key);
+            filepicker.pickAndStore(
+                { extensions: filepicker_extensions },
+                { location: "S3", path: filepicker_s3_path, access: filepicker_access_public },
+                function (fpFiles) {
+                    if (fpFiles[0].url && fpFiles[0].filename) {
+                        chunk.selection = fpFiles[0].filename;
+                        linkEnteredCallback(fpFiles[0].url);
+                    }
+                },
+                function (fpError) {
+                    // error handling
+                    linkEnteredCallback(null);
+                });
+            return true;
+        };
+    }
 
 
     commandProto.doLinkOrImage = function (chunk, postProcessing, isImage) {
