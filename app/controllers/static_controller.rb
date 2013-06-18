@@ -6,6 +6,9 @@ class StaticController < ApplicationController
 
     page = params[:id]
 
+    return redirect_to(SiteSetting.tos_url) if page == 'tos' and !SiteSetting.tos_url.blank?
+    return redirect_to(SiteSetting.privacy_policy_url) if page == 'privacy' and !SiteSetting.privacy_policy_url.blank?
+
     # Don't allow paths like ".." or "/" or anything hacky like that
     page.gsub!(/[^a-z0-9\_\-]/, '')
 
