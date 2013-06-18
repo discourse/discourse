@@ -1,9 +1,9 @@
-/*global module:true test:true ok:true visit:true expect:true exists:true count:true equal:true */
+/*global module:true test:true ok:true visit:true expect:true exists:true count:true equal:true present:true md5:true */
 
 module("Discourse.BBCode");
 
 var format = function(input, expected, text) {
-  equal(Discourse.BBCode.format(input), expected, text);
+  equal(Discourse.BBCode.format(input, {lookupAvatar: false}), expected, text);
 }
 
 test('basic bbcode', function() {
@@ -37,3 +37,73 @@ test('tags with arguments', function() {
   format("[u][i]abc[/i][/u]", "<span class='bbcode-u'><span class='bbcode-i'>abc</span></span>", "can nest tags");
   format("[b]first[/b] [b]second[/b]", "<span class='bbcode-b'>first</span> <span class='bbcode-b'>second</span>", "can bold two things on the same line");
 });
+
+
+test("quotes", function() {
+
+  var post = Discourse.Post.create({
+    cooked: "<p><b>lorem</b> ipsum</p>",
+    username: "eviltrout",
+    post_number: 1,
+    topic_id: 2
+  });
+
+  var formatQuote = function(val, expected, text) {
+    equal(Discourse.BBCode.buildQuoteBBCode(post, val), expected, text);
+  }
+
+  formatQuote(undefined, "", "empty string for undefined content");
+  formatQuote(null, "", "empty string for null content");
+  formatQuote("", "", "empty string for empty string content");
+
+  formatQuote("lorem", "[quote=\"eviltrout, post:1, topic:2\"]\nlorem\n[/quote]\n\n", "correctly formats quotes");
+
+  formatQuote("  lorem \t  ",
+              "[quote=\"eviltrout, post:1, topic:2\"]\nlorem\n[/quote]\n\n",
+              "trims white spaces before & after the quoted contents");
+
+  formatQuote("lorem ipsum",
+              "[quote=\"eviltrout, post:1, topic:2, full:true\"]\nlorem ipsum\n[/quote]\n\n",
+              "marks quotes as full when the quote is the full message");
+
+  formatQuote("**lorem** ipsum",
+              "[quote=\"eviltrout, post:1, topic:2, full:true\"]\n**lorem** ipsum\n[/quote]\n\n",
+               "keeps BBCode formatting");
+
+});
+
+test("quote formatting", function() {
+
+  // TODO: This HTML matching is quite ugly.
+  format("[quote=\"eviltrout, post:1, topic:1\"]abc[/quote]",
+         "</p><aside class='quote' data-post=\"1\" data-topic=\"1\" >\n  <div class='title'>\n    " +
+         "<div class='quote-controls'></div>\n  \n  eviltrout\n  said:\n  </div>\n  <blockquote>abc</blockquote>\n</aside>\n<p>",
+         "renders quotes properly");
+
+  format("[quote=\"eviltrout, post:1, topic:1\"]abc[quote=\"eviltrout, post:2, topic:2\"]nested[/quote][/quote]",
+         "</p><aside class='quote' data-post=\"1\" data-topic=\"1\" >\n  <div class='title'>\n    <div " +
+         "class='quote-controls'></div>\n  \n  eviltrout\n  said:\n  </div>\n  <blockquote>abc</p><aside " +
+         "class='quote' data-post=\"2\" data-topic=\"2\" >\n  <div class='title'>\n    <div class='quote-" +
+         "controls'></div>\n  \n  eviltrout\n  said:\n  </div>\n  <blockquote>nested</blockquote>\n</aside>\n<p></blockquote>\n</aside>\n<p>",
+         "can nest quotes");
+
+  format("before[quote=\"eviltrout, post:1, topic:1\"]first[/quote]middle[quote=\"eviltrout, post:2, topic:2\"]second[/quote]after",
+         "before</p><aside class='quote' data-post=\"1\" data-topic=\"1\" >\n  <div class='title'>\n    <div class='quote-cont" +
+         "rols'></div>\n  \n  eviltrout\n  said:\n  </div>\n  <blockquote>first</blockquote>\n</aside>\n<p>middle</p><aside cla" +
+         "ss='quote' data-post=\"2\" data-topic=\"2\" >\n  <div class='title'>\n    <div class='quote-controls'></div>\n  \n  " +
+         "eviltrout\n  said:\n  </div>\n  <blockquote>second</blockquote>\n</aside>\n<p>after",
+         "can handle more than one quote");
+
+});
+
+
+test("extract quotes", function() {
+
+  var q = "[quote=\"eviltrout, post:1, topic:2\"]hello[/quote]";
+  var result = Discourse.BBCode.extractQuotes(q + " world");
+
+  equal(result.text, md5(q) + "\n world");
+  present(result.template);
+
+});
+

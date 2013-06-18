@@ -7,7 +7,7 @@ var testObj = Em.Object.createWithMixins(Discourse.Presence, {
   nonEmptyString: "Evil Trout",
   emptyArray: [],
   nonEmptyArray: [1, 2, 3],
-  age: 34,
+  age: 34
 });
 
 test("present", function() {
@@ -17,7 +17,6 @@ test("present", function() {
   ok(!testObj.present('emptyArray'), "Empty arrays are not present");
   ok(testObj.present('age'), "integers are present");
 });
-
 
 test("blank", function() {
   ok(testObj.blank('emptyString'), "Empty strings are blank");
