@@ -56,6 +56,9 @@ Discourse.Route.reopenClass({
       if (model) {
         controller.set('model', model);
       }
+      if(controller && controller.onShow) {
+        controller.onShow();
+      }
       controller.set('flashMessage', null);
     }
   }

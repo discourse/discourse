@@ -71,7 +71,7 @@
 
 
 .autocomplete {
-  z-index: 9999;
+  z-index: 999999;
   position: absolute;
   width: 200px;
   background-color: $white;
@@ -354,7 +354,7 @@ div.ac-wrap.disabled {
 div.ac-wrap {
   background-color: $white;
   border: 1px solid #cccccc;
-  padding: 5px 10px 0;
+  padding: 5px 10px;
   @include border-radius-all(3px);
   div.item {
     float: left;

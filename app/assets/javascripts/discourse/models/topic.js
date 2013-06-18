@@ -150,6 +150,17 @@ Discourse.Topic = Discourse.Model.extend({
     });
   },
 
+  removeAllowedUser: function(username) {
+    var allowedUsers = this.get('allowed_users');
+
+    return Discourse.ajax("/t/" + this.get('id') + "/remove-allowed-user", {
+      type: 'PUT',
+      data: { username: username }
+    }).then(function(){
+      allowedUsers.removeObject(allowedUsers.find(function(item){ return item.username === username; }));
+    });
+  },
+
   favoriteTooltipKey: (function() {
     return this.get('starred') ? 'favorite.help.unstar' : 'favorite.help.star';
   }).property('starred'),
@@ -274,6 +285,7 @@ Discourse.Topic = Discourse.Model.extend({
         lastPost = post;
       });
 
+      topic.set('allowed_users', Em.A(result.allowed_users));
       topic.set('loaded', true);
     }
 

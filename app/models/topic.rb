@@ -370,6 +370,13 @@ class Topic < ActiveRecord::Base
     [featured_user1_id, featured_user2_id, featured_user3_id, featured_user4_id].uniq.compact
   end
 
+  def remove_allowed_user(username)
+    user = User.where(username: username).first
+    if user
+      topic_allowed_users.where(user_id: user.id).first.destroy
+    end
+  end
+
   # Invite a user to the topic by username or email. Returns success/failure
   def invite(invited_by, username_or_email)
     if private_message?

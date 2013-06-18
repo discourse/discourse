@@ -13,6 +13,9 @@
     <a href='/users/{{lower username}}'>
       {{unbound username}}
     </a>
+    {{#if controller.model.can_remove_allowed_users}}
+      <a class='remove-invited' {{action removeAllowedUser username}}>x</a>
+    {{/if}}
   </div>
   {{/each}}
 </div>

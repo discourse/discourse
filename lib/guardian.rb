@@ -195,6 +195,10 @@ class Guardian
     is_staff? && user.created_at >= 7.days.ago
   end
 
+  def can_remove_allowed_users?(topic)
+    is_staff?
+  end
+
   # Support for ensure_{blah}! methods.
   def method_missing(method, *args, &block)
     if method.to_s =~ /^ensure_(.*)\!$/

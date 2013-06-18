@@ -410,9 +410,13 @@ describe Topic do
 
         context 'by username' do
 
-          it 'adds walter to the allowed users' do
+          it 'adds and removes walter to the allowed users' do
             topic.invite(topic.user, walter.username).should be_true
             topic.allowed_users.include?(walter).should be_true
+
+            topic.remove_allowed_user(walter.username).should be_true
+            topic.reload
+            topic.allowed_users.include?(walter).should be_false
           end
 
           it 'creates a notification' do

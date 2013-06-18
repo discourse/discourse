@@ -135,13 +135,30 @@ class TopicsController < ApplicationController
     render nothing: true
   end
 
+  def remove_allowed_user
+    params.require(:username)
+    topic = Topic.where(id: params[:topic_id]).first
+    guardian.ensure_can_remove_allowed_users!(topic)
+
+    if topic.remove_allowed_user(params[:username])
+      render json: success_json
+    else
+      render json: failed_json, status: 422
+    end
+  end
+
   def invite
     params.require(:user)
     topic = Topic.where(id: params[:topic_id]).first
     guardian.ensure_can_invite_to!(topic)
 
     if topic.invite(current_user, params[:user])
-      render json: success_json
+      user = User.find_by_username_or_email(params[:user]).first
+      if user
+        render_json_dump BasicUserSerializer.new(user, scope: guardian, root: 'user')
+      else
+        render json: success_json
+      end
     else
       render json: failed_json, status: 422
     end

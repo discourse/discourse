@@ -46,6 +46,10 @@ $.fn.autocomplete = function(options) {
     if (options.transformComplete) {
       transformed = options.transformComplete(item);
     }
+    if (options.single){
+      // dump what we have in single mode, just in case
+      inputSelectedItems = [];
+    }
     var d = $("<div class='item'><span>" + (transformed || item) + "<a href='#'><i class='icon-remove'></i></a></span></div>");
     var prev = me.parent().find('.item:last');
     if (prev.length === 0) {
@@ -57,12 +61,16 @@ $.fn.autocomplete = function(options) {
     if (options.onChangeItems) {
       options.onChangeItems(inputSelectedItems);
     }
-    return d.find('a').click(function() {
+
+    d.find('a').click(function() {
       closeAutocomplete();
       inputSelectedItems.splice($.inArray(item), 1);
       $(this).parent().parent().remove();
+      if (options.single) {
+        me.show();
+      }
       if (options.onChangeItems) {
-        return options.onChangeItems(inputSelectedItems);
+        options.onChangeItems(inputSelectedItems);
       }
     });
   };
@@ -71,6 +79,9 @@ $.fn.autocomplete = function(options) {
     if (term) {
       if (isInput) {
         me.val("");
+        if(options.single){
+          me.hide();
+        }
         addInputSelectedItem(term);
       } else {
         if (options.transformComplete) {
@@ -90,7 +101,11 @@ $.fn.autocomplete = function(options) {
     var height = this.height();
     wrap = this.wrap("<div class='ac-wrap clearfix" + (disabled ? " disabled": "") +  "'/>").parent();
     wrap.width(width);
-    this.width(150);
+    if(options.single) {
+      this.css("width","100%");
+    } else {
+      this.width(150);
+    }
     this.attr('name', this.attr('name') + "-renamed");
     var vals = this.val().split(",");
     _.each(vals,function(x) {
@@ -98,7 +113,7 @@ $.fn.autocomplete = function(options) {
         if (options.reverseTransform) {
           x = options.reverseTransform(x);
         }
-        return addInputSelectedItem(x);
+        addInputSelectedItem(x);
       }
     });
     this.val("");
@@ -185,10 +200,22 @@ $.fn.autocomplete = function(options) {
     if (oldClose) {
       oldClose();
     }
-    return closeAutocomplete();
+    closeAutocomplete();
   });
 
   $(this).keypress(function(e) {
+
+    if(options.allowAny){
+      if(inputSelectedItems.length === 0) {
+        inputSelectedItems.push("");
+      }
+      inputSelectedItems.pop();
+      inputSelectedItems.push(me.val());
+      if (options.onChangeItems) {
+        options.onChangeItems(inputSelectedItems);
+      }
+    }
+
     if (!options.key) return;
 
     // keep hunting backwards till you hit a
@@ -264,7 +291,7 @@ $.fn.autocomplete = function(options) {
             // We're cancelling it, really.
             return true;
           }
-          closeAutocomplete();
+          e.stopImmediatePropagation();
           return false;
         case 38:
           selectedOption = selectedOption - 1;

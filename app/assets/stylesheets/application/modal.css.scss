@@ -222,3 +222,10 @@
 .modal-tab {
   position: absolute;
 }
+
+.invite-modal {
+  overflow: visible;
+  .ember-text-field {
+    width: 550px;
+  }
+}

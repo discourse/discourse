@@ -211,6 +211,7 @@ Discourse::Application.routes.draw do
   put 't/:topic_id/mute' => 'topics#mute', constraints: {topic_id: /\d+/}
   put 't/:topic_id/unmute' => 'topics#unmute', constraints: {topic_id: /\d+/}
   put 't/:topic_id/autoclose' => 'topics#autoclose', constraints: {topic_id: /\d+/}
+  put 't/:topic_id/remove-allowed-user' => 'topics#remove_allowed_user', constraints: {topic_id: /\d+/}
 
   get 't/:topic_id/:post_number' => 'topics#show', constraints: {topic_id: /\d+/, post_number: /\d+/}
   get 't/:slug/:topic_id.rss' => 'topics#feed', format: :rss, constraints: {topic_id: /\d+/}

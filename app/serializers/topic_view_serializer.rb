@@ -23,7 +23,7 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def self.guardian_attributes
-    [:can_moderate, :can_edit, :can_delete, :can_invite_to, :can_move_posts]
+    [:can_moderate, :can_edit, :can_delete, :can_invite_to, :can_move_posts, :can_remove_allowed_users]
   end
 
   attributes *topic_attributes
