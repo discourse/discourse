@@ -48,6 +48,7 @@ class UserSerializer < BasicUserSerializer
                      :auto_track_topics_after_msecs,
                      :new_topic_duration_minutes,
                      :external_links_in_new_tab,
+                     :dynamic_favicon,
                      :enable_quoting
 
 

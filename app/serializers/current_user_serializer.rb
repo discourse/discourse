@@ -12,6 +12,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :topic_count,
              :enable_quoting,
              :external_links_in_new_tab,
+             :dynamic_favicon,
              :trust_level,
              :can_edit
 
