@@ -555,7 +555,7 @@ en:
         one: "you have 1 unread old post in this topic"
         other: "you have {{count}} unread old posts in this topic"
       new_posts:
-        one: "there is 1 new posts in this topic since you last read it"
+        one: "there is 1 new post in this topic since you last read it"
         other: "there are {{count}} new posts in this topic since you last read it"
 
       likes:
