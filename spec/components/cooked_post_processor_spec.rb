@@ -57,6 +57,23 @@ describe CookedPostProcessor do
 
     end
 
+    context 'with uploaded images in the post' do
+      before do
+        @topic = Fabricate(:topic)
+        @post = Fabricate(:post_with_uploads, topic: @topic, user: @topic.user)
+        @cpp = CookedPostProcessor.new(@post)
+        @cpp.expects(:get_upload_from_url).returns(Fabricate(:upload))
+        @cpp.expects(:get_size).returns([100,200])
+      end
+
+      it "keeps reverse index up to date" do
+        @cpp.post_process_images
+        @post.uploads.reload
+        @post.uploads.count.should == 1
+      end
+
+    end
+
     context 'with unsized images in the post' do
       let(:user) { Fabricate(:user) }
       let(:topic) { Fabricate(:topic, user: user) }

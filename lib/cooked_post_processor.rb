@@ -36,6 +36,8 @@ class CookedPostProcessor
         # retrieve the associated upload, if any
         upload = get_upload_from_url(img['src'])
         if upload.present?
+          # update reverse index
+          associate_to_post upload
           # create a thumbnail
           upload.create_thumbnail!
           # optimize image
@@ -85,6 +87,13 @@ class CookedPostProcessor
     if Upload.has_been_uploaded?(url) && m = Upload.uploaded_regex.match(url)
       Upload.where("id = ?", m[:upload_id]).first
     end
+  end
+
+  def associate_to_post(upload)
+    return if PostUpload.where(post_id: @post.id, upload_id: upload.id).count > 0
+    PostUpload.create({ post_id: @post.id, upload_id: upload.id })
+  rescue ActiveRecord::RecordNotUnique
+    # do not care if it's already associated
   end
 
   def optimize_image(img)
