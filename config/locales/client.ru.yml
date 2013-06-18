@@ -205,6 +205,7 @@ ru:
       bio: Обо мне
       invited_by: Приглашен пользователем
       trust_level: Уровень доверия
+      dynamic_favicon: Отображать события на favicon
       external_links_in_new_tab: Открывать все внешние ссылки в новой вкладке
       enable_quoting: Позволить отвечать с цитированием выделенного текста
       moderator: '{{user}} - модератор'

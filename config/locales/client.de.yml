@@ -175,6 +175,7 @@ de:
       bio: "Über mich"
       invited_by: "Eingeladen von"
       trust_level: "Stufe"
+      dynamic_favicon: "Zeige eingehende Nachrichten im Favicon"
       external_links_in_new_tab: "Öffne alle externen Links in neuen Tabs"
       enable_quoting: "Markierten Text bei Antwort zitieren"
 

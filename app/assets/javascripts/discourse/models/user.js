@@ -153,6 +153,7 @@ Discourse.User = Discourse.Model.extend({
                                'email_digests',
                                'email_direct',
                                'email_private_messages',
+                               'dynamic_favicon',
                                'digest_after_days',
                                'new_topic_duration_minutes',
                                'external_links_in_new_tab',
@@ -160,8 +161,12 @@ Discourse.User = Discourse.Model.extend({
       type: 'PUT'
     }).then(function(data) {
       user.set('bio_excerpt',data.user.bio_excerpt);
-      Discourse.User.current().set('enable_quoting', user.get('enable_quoting'));
-      Discourse.User.current().set('external_links_in_new_tab', user.get('external_links_in_new_tab'));
+
+      _.each([
+        'enable_quoting', 'external_links_in_new_tab', 'dynamic_favicon'
+      ], function(preference) {
+        Discourse.User.current().set(preference, user.get(preference));
+      });
     });
   },
 
