@@ -508,7 +508,9 @@
           margin-right: 0;
         }
         &.edits {
-          opacity: 0.7;
+          a, a:visited {
+            color: #aaa;
+          }
         }
       }
       .post-date {
