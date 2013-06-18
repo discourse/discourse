@@ -20,11 +20,23 @@ Bluepill.application("discourse", :base_dir => ENV["HOME"] + '/.bluepill') do |a
   # getting this to work was a nightmare
   # bundle exec spawns a process totally messing with the demonize option
   # so we suck the environment out and set it up first 
-  app.environment = `env -i BUNDLE_GEMFILE=#{rails_root}/Gemfile /usr/local/rvm/bin/bootup_bundle exec env`.lines.inject({}) do |env_hash,l|
-     kv = l.chomp.split('=',2)
-     env_hash[kv[0]] = kv[1]
-     env_hash
-  end if File.exist?("/usr/local/rvm/bin/rvm")
+  bootup_bundle = [ "#{ENV['HOME']}/.rvm/bin/rvm/bootup_bundle",
+                    "/usr/local/rvm/bin/rvm/bootup_bundle",
+                    `which bootup_bundle`.strip,
+                  ].each do |location|
+    if File.exist? location
+      break location
+    end
+  end
+  # XXX if none match, bootup_bundle is set to the array
+
+  if bootup_bundle
+    app.environment = `env -i BUNDLE_GEMFILE=#{rails_root}/Gemfile #{bootup_bundle} exec env`.lines.inject({}) do |env_hash,l|
+      kv = l.chomp.split('=',2)
+      env_hash[kv[0]] = kv[1]
+      env_hash
+    end
+  end
 
   app.environment ||= {}
   app.environment['RAILS_ENV'] = rails_env
@@ -37,7 +49,7 @@ Bluepill.application("discourse", :base_dir => ENV["HOME"] + '/.bluepill') do |a
   File.directory? sockdir or Dir.mkdir sockdir
   num_webs.times do |i|
     app.process("thin-#{i}") do |process|
-      process.start_command  = "bundle exec thin start -e production -t 0 --socket #{sockdir}/thin.#{i}.sock -P #{rails_root}/tmp/pids/thin#{i}.pid -d"
+      process.start_command  = "bundle exec thin start -e production -t 0 --socket #{sockdir}/thin.#{i}.sock --pid #{rails_root}/tmp/pids/thin#{i}.pid --log #{rails_root}/log/thin-#{i}.log --daemonize"
 
       # Alternatively, you can start with a port number instead of a socket. If you do that, then you MUST update
       # the upstream section in the nginx config to match.
@@ -58,7 +70,7 @@ Bluepill.application("discourse", :base_dir => ENV["HOME"] + '/.bluepill') do |a
 
 #debug instance 
 #    app.process("thin-debug") do |process|
-#      process.start_command  = "bundle exec thin start -e development -t 0 -p 10040 -P #{rails_root}/tmp/pids/thin-debug.pid -d"
+#      process.start_command  = "bundle exec thin start -e development -t 0 -p 10040 -P #{rails_root}/tmp/pids/thin-debug.pid -l #{rails_root}/log/thin-debug.log" -d"
 #      process.pid_file = "#{rails_root}/tmp/pids/thin-debug.pid"
 #      process.start_grace_time = 30.seconds
 #      process.stop_grace_time = 10.seconds
@@ -73,7 +85,7 @@ Bluepill.application("discourse", :base_dir => ENV["HOME"] + '/.bluepill') do |a
   app.process("sidekiq-worker") do |process|
     pidfile = "#{rails_root}/tmp/pids/sidekiq-worker.pid"
 
-    process.start_command  = "/usr/bin/env PIDFILE=#{pidfile} RAILS_ENV=#{rails_env} bundle exec sidekiq" 
+    process.start_command  = "/usr/bin/env PIDFILE=#{pidfile} RAILS_ENV=#{rails_env} bundle exec sidekiq -L #{rails_root}/log/sidekiq.log" 
     process.pid_file = pidfile
     process.start_grace_time = 30.seconds
     process.stop_grace_time = 10.seconds
@@ -83,11 +95,14 @@ Bluepill.application("discourse", :base_dir => ENV["HOME"] + '/.bluepill') do |a
     process.daemonize = true
   end
 
-  if `hostname`.strip == "host to run on"
+  # Perhaps you want to run `hostname -f` here? It depends on your environment
+  # In any case, ensure the output is what you expect it to be on the system
+  # running clockwork!
+  if `hostname -s`.strip == "host to run on"
     app.process("clockwork") do |process|
       pidfile = "#{rails_root}/tmp/pids/clockwork.pid"
 
-      process.start_command  = "/usr/bin/env RAILS_ENV=#{rails_env} bundle exec clockwork config/clock.rb" 
+      process.start_command  = "/usr/bin/env CLOCK_LOG=#{rails_root}/log/clockwork.log RAILS_ENV=#{rails_env} bundle exec clockwork config/clock.rb" 
       process.pid_file = pidfile
       process.start_grace_time = 30.seconds
       process.stop_grace_time = 10.seconds
