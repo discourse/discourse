@@ -1,5 +1,5 @@
 /*jshint maxlen:250 */
-/*global count:true find:true document:true equal:true */
+/*global count:true find:true document:true equal:true sinon:true */
 
 //= require env
 
@@ -19,7 +19,7 @@
 //= require ../../app/assets/javascripts/locales/date_locales.js
 //= require ../../app/assets/javascripts/discourse/helpers/i18n_helpers
 //= require ../../app/assets/javascripts/locales/en
-//
+
 // Pagedown customizations
 //= require ../../app/assets/javascripts/pagedown_custom.js
 
@@ -32,10 +32,23 @@
 //= require_tree ../../app/assets/javascripts/defer
 
 //= require main_include
+
+//= require sinon-1.7.1.js
+//= require sinon-qunit-1.0.0.js
+
 //= require_tree .
 //= require_self
 
 //= require_tree ./fixtures
+
+// sinon settings
+sinon.config = {
+    injectIntoThis: true,
+    injectInto: null,
+    properties: ["spy", "stub", "mock", "clock", "sandbox"],
+    useFakeTimers: false,
+    useFakeServer: false
+};
 
 // Trick JSHint into allow document.write
 var d = document;
@@ -50,6 +63,11 @@ Discourse.injectTestHelpers();
 Discourse.Router.map(function() {
   return Discourse.routeBuilder.call(this);
 });
+
+// Test helpers
+var resolvingPromise = Ember.Deferred.promise(function (p) {
+  p.resolve();
+})
 
 function exists(selector) {
   return !!count(selector);
