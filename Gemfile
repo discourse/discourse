@@ -118,7 +118,6 @@ group :test, :development do
   gem 'rspec-given'
   gem 'pry-rails'
   gem 'pry-nav'
-  gem 'webrick'
 end
 
 group :development do

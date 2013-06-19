@@ -3,7 +3,6 @@ desc "Runs the qunit test suite"
 task "qunit:test" => :environment do
 
   require "rack"
-  require "webrick"
 
   unless %x{which phantomjs > /dev/null 2>&1}
     abort "PhantomJS is not installed. Download from http://phantomjs.org"
@@ -12,7 +11,6 @@ task "qunit:test" => :environment do
   port = ENV['TEST_SERVER_PORT'] || 60099
   server = Thread.new do
     Rack::Server.start(:config => "config.ru",
-                       :Logger => WEBrick::Log.new("/dev/null"),
                        :AccessLog => [],
                        :Port => port)
   end
