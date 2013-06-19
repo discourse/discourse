@@ -496,15 +496,11 @@
     }
     .topic-meta-data-inside {
       float: right;
-      margin-right: 10px;
       z-index: 490;
       .post-info {
         font-size: 12px;
         display: inline-block;
         margin-right: 12px;
-        &:first-child {
-          margin-right: 0;
-        }
         &.edits {
           a, a:visited {
             color: #aaa;
