@@ -6,9 +6,16 @@ OS X has become a popular platform for developing Ruby on Rails applications; as
 
 Obviously, if you **already** develop Ruby on OS X, a lot of this will be redundant, because you'll have already done it, or something like it. If that's the case, you may well be able to just install Ruby 2.0 using RVM and get started! Discourse has enough dependencies, however (note: not a criticism!) that there's a good chance you'll find **something** else in this document that's useful for getting your Discourse development started!
 
-## Unicode
+## UTF-8
 
-OS X 10.8 uses Unicode by default. You can, of course, double-check this by examining LANG, which appears to be the only relevant environment variable.
+OS X 10.8 uses UTF-8 by default. You can, of course, double-check this by examining LANG, which appears to be the only relevant environment variable.
+
+You should see this:
+
+```sh
+$ echo $LANG
+en_US.UTF
+```
 
 ## OSX Development Tools
 
