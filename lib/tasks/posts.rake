@@ -1,25 +1,41 @@
-desc "walk all posts updating cooked with latest markdown"
-task "posts:rebake" => :environment do
+desc 'Update each post with latest markdown'
+task 'posts:rebake' => :environment do
+  rebake_posts
+end
+
+desc 'Update each post with latest markdown and refresh oneboxes'
+task 'posts:refresh_oneboxes' => :environment do
+  rebake_posts invalidate_oneboxes: true
+end
+
+def rebake_posts(opts = {})
   RailsMultisite::ConnectionManagement.each_connection do |db|
     puts "Re baking post markdown for #{db} , changes are denoted with # , no change with ."
-    i = 0
-    Post.select([:id, :user_id, :cooked, :raw, :topic_id, :post_number]).each do |p|
-      i += 1
-      cooked = p.cook(p.raw, topic_id: p.topic_id)
-      if cooked != p.cooked
-        Post.exec_sql('update posts set cooked = ? where id = ?', cooked, p.id)
-        p.cooked = cooked
+
+    total = Post.select([
+      :id, :user_id, :cooked, :raw, :topic_id, :post_number
+    ]).inject(0) do |total, post|
+      cooked = post.cook(
+        post.raw,
+        topic_id: post.topic_id,
+        invalidate_oneboxes: opts.fetch(:invalidate_oneboxes, false)
+      )
+
+      if cooked != post.cooked
+        Post.exec_sql(
+          'update posts set cooked = ? where id = ?', cooked, post.id
+        )
+        post.cooked = cooked
         putc "#"
       else
         putc "."
       end
-      TopicLink.extract_from(p)
-    end
-    puts
-    puts
-    puts "#{i} posts done!"
-    puts "-----------------------------------------------"
-    puts
 
+      TopicLink.extract_from post
+
+      total += 1
+    end
+
+    puts "\n\n#{total} posts done!\n#{'-' * 50}\n"
   end
 end
