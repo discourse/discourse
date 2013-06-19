@@ -36,9 +36,6 @@
         {{view Discourse.PrependPostView postBinding="this"}}
         {{#unless controller.multiSelect}}
           <div class='topic-meta-data-inside'>
-            <div class='post-info'>
-              <a href='#' class='post-date' {{bindAttr data-share-url="shareUrl"}}>{{date created_at}}</a>
-            </div>
             {{#if hasHistory}}
               <div class='post-info edits'>
                 <a href='#' class="{{unbound historyHeat}}" {{action showHistory this}} title="{{editDate updated_at}}">
@@ -47,6 +44,9 @@
                 </a>
               </div>
             {{/if}}
+            <div class='post-info'>
+              <a href='#' class='post-date' {{bindAttr data-share-url="shareUrl"}}>{{date created_at}}</a>
+            </div>
           </div>
         {{/unless}}
         {{view Discourse.RawDivView class="cooked" contentBinding="cooked"}}
