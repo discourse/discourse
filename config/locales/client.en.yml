@@ -45,8 +45,8 @@ en:
           other: "%{count}y"
       medium:
         x_minutes:
-          one: "1 minute"
-          other: "%{count} minutes"
+          one: "1 min"
+          other: "%{count} mins"
         x_hours:
           one: "1 hour"
           other: "%{count} hours"
@@ -55,8 +55,8 @@ en:
           other: "%{count} days"
       medium_with_ago:
         x_minutes:
-          one: "1 minute ago"
-          other: "%{count} minutes ago"
+          one: "1 min ago"
+          other: "%{count} mins ago"
         x_hours:
           one: "1 hour ago"
           other: "%{count} hours ago"
