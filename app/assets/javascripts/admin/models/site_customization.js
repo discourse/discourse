@@ -70,7 +70,10 @@ Discourse.SiteCustomization = Discourse.Model.extend({
       data: { site_customization: data },
       type: this.id ? 'PUT' : 'POST'
     }).then(function (result) {
-      if (!siteCustomization.id) { siteCustomization.set('id', result.id); }
+      if (!siteCustomization.id) {
+        siteCustomization.set('id', result.id);
+        siteCustomization.set('key', result.key);
+      }
       siteCustomization.set('savingStatus', Em.String.i18n('saved'));
       siteCustomization.set('saving',false);
       siteCustomization.startTrackingChanges();

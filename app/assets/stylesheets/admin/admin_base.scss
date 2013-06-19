@@ -218,10 +218,7 @@ table {
     float: left;
   }
   .content-list ul {
-    min-height: 700px;
-  }
-  a {
-    cursor: pointer;
+    margin-bottom: 10px;
   }
   .current-style {
     .delete-link {
@@ -240,7 +237,7 @@ table {
     }
     .ace-wrapper {
       position: relative;
-      height: 600px;
+      height: 400px;
       width: 100%;
     }
     .ace_editor {
@@ -252,6 +249,7 @@ table {
     }
     .status-actions {
       float: right;
+      margin-top: 7px;
       span {
         margin-right: 20px;
       }
@@ -259,9 +257,6 @@ table {
     .buttons {
       float: left;
       width: 200px;
-      button, a , span{
-        float: left;
-      }
       .saving {
         padding: 5px 0 0 0;
         margin-left: 10px;
