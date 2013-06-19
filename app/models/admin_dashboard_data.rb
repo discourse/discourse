@@ -29,6 +29,7 @@ class AdminDashboardData
       facebook_config_check,
       twitter_config_check,
       github_config_check,
+      s3_config_check,
       failing_emails_check,
       default_logo_check,
       contact_email_check,
@@ -89,15 +90,19 @@ class AdminDashboardData
   end
 
   def facebook_config_check
-    I18n.t('dashboard.facebook_config_warning') if SiteSetting.enable_facebook_logins and (!SiteSetting.facebook_app_id.present? or !SiteSetting.facebook_app_secret.present?)
+    I18n.t('dashboard.facebook_config_warning') if SiteSetting.enable_facebook_logins and (SiteSetting.facebook_app_id.blank? or SiteSetting.facebook_app_secret.blank?)
   end
 
   def twitter_config_check
-    I18n.t('dashboard.twitter_config_warning') if SiteSetting.enable_twitter_logins and (!SiteSetting.twitter_consumer_key.present? or !SiteSetting.twitter_consumer_secret.present?)
+    I18n.t('dashboard.twitter_config_warning') if SiteSetting.enable_twitter_logins and (SiteSetting.twitter_consumer_key.blank? or SiteSetting.twitter_consumer_secret.blank?)
   end
 
   def github_config_check
-    I18n.t('dashboard.github_config_warning') if SiteSetting.enable_github_logins and (!SiteSetting.github_client_id.present? or !SiteSetting.github_client_secret.present?)
+    I18n.t('dashboard.github_config_warning') if SiteSetting.enable_github_logins and (SiteSetting.github_client_id.blank? or SiteSetting.github_client_secret.blank?)
+  end
+
+  def s3_config_check
+    I18n.t('dashboard.s3_config_warning') if SiteSetting.enable_s3_uploads and (SiteSetting.s3_access_key_id.blank? or SiteSetting.s3_secret_access_key.blank? or SiteSetting.s3_upload_bucket.blank?)
   end
 
   def failing_emails_check
