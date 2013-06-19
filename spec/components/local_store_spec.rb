@@ -15,7 +15,7 @@ describe LocalStore do
 
     let(:image_info) { FastImage.new(file) }
 
-    it 'returns the url of the S3 upload if successful' do
+    it 'returns the url of the uploaded file if successful' do
       # prevent the tests from creating directories & files...
       FileUtils.stubs(:mkdir_p)
       File.stubs(:open)

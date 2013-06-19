@@ -62,17 +62,17 @@ describe Upload do
 
     it "identifies internal or relatives urls" do
       Discourse.expects(:base_url_no_prefix).returns("http://discuss.site.com")
-      Upload.has_been_uploaded?("http://discuss.site.com/upload/1234/42/ABCD.jpg").should == true
-      Upload.has_been_uploaded?("/upload/42/ABCD.jpg").should == true
+      Upload.has_been_uploaded?("http://discuss.site.com/upload/1234/42/0123456789ABCDEF.jpg").should == true
+      Upload.has_been_uploaded?("/upload/42/0123456789ABCDEF.jpg").should == true
     end
 
     it "identifies internal urls when using a CDN" do
       ActionController::Base.expects(:asset_host).returns("http://my.cdn.com").twice
-      Upload.has_been_uploaded?("http://my.cdn.com/upload/1234/42/ABCD.jpg").should == true
+      Upload.has_been_uploaded?("http://my.cdn.com/upload/1234/42/0123456789ABCDEF.jpg").should == true
     end
 
     it "identifies external urls" do
-      Upload.has_been_uploaded?("http://domain.com/upload/1234/42/ABCD.jpg").should == false
+      Upload.has_been_uploaded?("http://domain.com/upload/1234/42/0123456789ABCDEF.jpg").should == false
     end
 
   end
