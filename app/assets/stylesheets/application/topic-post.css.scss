@@ -495,14 +495,12 @@
       z-index: 490;
     }
     .topic-meta-data-inside {
-      position: absolute;
-      top: 4px;
-      right: 316px;
+      float: right;
+      margin-right: 10px;
       z-index: 490;
       .post-info {
         font-size: 12px;
         display: inline-block;
-        float: right;
         margin-right: 12px;
         &:first-child {
           margin-right: 0;
