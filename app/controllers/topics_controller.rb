@@ -56,12 +56,10 @@ class TopicsController < ApplicationController
     guardian.ensure_can_edit!(topic)
     topic.title = params[:title] if params[:title].present?
 
-
     # TODO: we may need smarter rules about converting archetypes
     if current_user.admin?
       topic.archetype = "regular" if params[:archetype] == 'regular'
     end
-
 
     # this is used to return the title to the client as it may have been
     # changed by "TextCleaner"
