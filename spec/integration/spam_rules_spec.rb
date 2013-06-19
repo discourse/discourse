@@ -5,9 +5,9 @@ require 'spec_helper'
 describe PostAction do
 
   before do
-    SiteSetting.flags_required_to_hide_post = 0 # never
-    SiteSetting.num_flags_to_block_new_user = 2
-    SiteSetting.num_users_to_block_new_user = 2
+    SiteSetting.stubs(:flags_required_to_hide_post).returns(0) # never
+    SiteSetting.stubs(:num_flags_to_block_new_user).returns(2)
+    SiteSetting.stubs(:num_users_to_block_new_user).returns(2)
   end
 
   Given!(:admin)     { Fabricate(:admin) } # needed to send a system message
