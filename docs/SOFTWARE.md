@@ -37,7 +37,6 @@ The following Ruby Gems are used in Discourse:
 * [rspec](https://rubygems.org/gems/rspec)
 * [shoulda](https://rubygems.org/gems/shoulda)
 * [turn](https://rubygems.org/gems/turn)
-* [jasminerice](https://rubygems.org/gems/jasminerice)
 * [fabrication](https://rubygems.org/gems/fabrication)
 * [mocha](https://rubygems.org/gems/mocha)
 * [simplecov](https://rubygems.org/gems/simplecov)

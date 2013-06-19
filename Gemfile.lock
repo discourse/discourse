@@ -151,13 +151,6 @@ GEM
     clockwork (0.5.0)
       tzinfo (~> 0.3.35)
     coderay (1.0.9)
-    coffee-rails (3.2.2)
-      coffee-script (>= 2.2.0)
-      railties (~> 3.2.0)
-    coffee-script (2.2.0)
-      coffee-script-source
-      execjs
-    coffee-script-source (1.6.2)
     connection_pool (1.0.0)
     daemons (1.1.9)
     debug_inspector (0.0.2)
@@ -206,11 +199,6 @@ GEM
       lumberjack (>= 1.0.2)
       pry (>= 0.9.10)
       thor (>= 0.14.6)
-    guard-jasmine (1.15.1)
-      childprocess
-      guard (>= 1.1.0)
-      multi_json
-      thor
     guard-jshint-on-rails (0.0.2)
       guard (>= 1.0.0)
       jshint_on_rails (>= 1.0.2)
@@ -221,8 +209,6 @@ GEM
       childprocess (>= 0.2.3)
       guard (>= 1.1)
       spork (>= 0.8.4)
-    haml (4.0.2)
-      tilt
     handlebars-source (1.0.0.rc4)
     has_ip_address (0.0.1)
     hashie (2.0.4)
@@ -239,9 +225,6 @@ GEM
     image_size (1.1.2)
     image_sorcery (1.1.0)
     in_threads (1.1.1)
-    jasminerice (0.0.10)
-      coffee-rails
-      haml
     journey (1.0.4)
     jshint_on_rails (1.0.2)
     json (1.7.7)
@@ -502,7 +485,6 @@ DEPENDENCIES
   fast_xs
   fastimage
   fog
-  guard-jasmine
   guard-jshint-on-rails
   guard-rspec
   guard-spork
@@ -512,7 +494,6 @@ DEPENDENCIES
   hiredis
   image_optim
   image_sorcery
-  jasminerice
   jshint_on_rails
   librarian (>= 0.0.25)
   listen

@@ -10,9 +10,6 @@ Discourse::Application.configure do
   # Configure static asset server for tests with Cache-Control for performance
   config.serve_static_assets = true
 
-  # Needed for jasmine specs to work
-  config.assets.debug = true
-
   # Log error messages when you accidentally call methods on nil
   config.whiny_nils = true
 

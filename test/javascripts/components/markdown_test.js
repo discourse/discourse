@@ -1,4 +1,4 @@
-/*global module:true test:true ok:true visit:true equal:true exists:true count:true equal:true present:true md5:true */
+/*global module:true test:true ok:true visit:true equal:true exists:true count:true equal:true present:true md5:true sanitizeHtml:true */
 
 module("Discourse.Markdown");
 
@@ -93,3 +93,9 @@ test("Oneboxing", function() {
 
 });
 
+test("SanitizeHTML", function() {
+
+  equal(sanitizeHtml("<div><script>alert('hi');</script></div>"), "<div></div>");
+  equal(sanitizeHtml("<div><p class=\"funky\" wrong='1'>hello</p></div>"), "<div><p class=\"funky\">hello</p></div>");
+
+});

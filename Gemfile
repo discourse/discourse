@@ -103,10 +103,8 @@ group :test, :development do
   gem 'certified', require: false
   gem 'fabrication', require: false
   gem 'qunit-rails'
-  gem 'guard-jasmine', require: false
   gem 'guard-rspec', require: false
   gem 'guard-spork', require: false
-  gem 'jasminerice'
   gem 'mocha', require: false
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
   gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
