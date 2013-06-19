@@ -15,16 +15,7 @@
     font-size: 22px;
     line-height: 28px;
   }
-  @include medium-width {
-    h1 {
-      max-width: 735px;
-    }
-  }
-  @include small-width {
-    h1 {
-      max-width: 690px;
-    }
-  }
+
   .star {
     height: 40px;
     font-size: 20px !important;
