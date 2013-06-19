@@ -30,6 +30,7 @@ class AdminDashboardData
       twitter_config_check,
       github_config_check,
       s3_config_check,
+      image_magick_check,
       failing_emails_check,
       default_logo_check,
       contact_email_check,
@@ -103,6 +104,10 @@ class AdminDashboardData
 
   def s3_config_check
     I18n.t('dashboard.s3_config_warning') if SiteSetting.enable_s3_uploads and (SiteSetting.s3_access_key_id.blank? or SiteSetting.s3_secret_access_key.blank? or SiteSetting.s3_upload_bucket.blank?)
+  end
+
+  def image_magick_check
+    I18n.t('dashboard.image_magick_warning') if SiteSetting.create_thumbnails and !system("which -s convert")
   end
 
   def failing_emails_check
