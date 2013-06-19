@@ -18,13 +18,12 @@ module Email
     def process
       return Email::Receiver.results[:unprocessable] if @raw.blank?
 
-      message = Mail::Message.new(@raw)
-      return Email::Receiver.results[:unprocessable] if message.body.blank?
+      @message = Mail::Message.new(@raw)
+      parse_body
 
-      @body = EmailReplyParser.read(message.body.to_s).visible_text
       return Email::Receiver.results[:unprocessable] if @body.blank?
 
-      @reply_key = message.to.first
+      @reply_key = @message.to.first
 
       # Extract the `reply_key` from the format the site has specified
       tokens = SiteSetting.reply_by_email_address.split("%{reply_key}")
@@ -43,6 +42,29 @@ module Email
 
     private
 
+    def parse_body
+      @body = @message.body.to_s.strip
+      return if @body.blank?
+
+      # I really hate to have to do this, but there seems to be a bug in Mail::Message
+      # with content boundaries in emails. Until it is fixed, this hack removes stuff
+      # we don't want from emails bodies
+      content_type = @message.header['Content-Type'].to_s
+      if content_type.present?
+        boundary_match = content_type.match(/boundary\=(.*)$/)
+        boundary = boundary_match[1] if boundary_match && boundary_match[1].present?
+        if boundary.present? and @body.present?
+
+          lines = @body.lines
+          lines = lines[1..-1] if lines.present? and lines[0] =~ /^--#{boundary}/
+          lines = lines[1..-1] if lines.present? and lines[0] =~ /^Content-Type/
+
+          @body = lines.join.strip!
+        end
+      end
+
+      @body = EmailReplyParser.read(@body).visible_text
+    end
 
     def create_reply
 
