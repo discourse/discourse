@@ -161,18 +161,40 @@ describe TopicsController do
       -> { xhr :get, :similar_to, title: title, raw: raw }.should raise_error(Discourse::InvalidParameters)
     end
 
-    it "delegates to Topic.similar_to" do
-      Topic.expects(:similar_to).with(title, raw, nil).returns([Fabricate(:topic)])
-      xhr :get, :similar_to, title: title, raw: raw
-    end
+    describe "minimum_topics_similar" do
 
-    context "logged in" do
-      let(:user) { log_in }
+      before do
+        SiteSetting.stubs(:minimum_topics_similar).returns(30)
+      end
 
-      it "passes a user throught if logged in" do
-        Topic.expects(:similar_to).with(title, raw, user).returns([Fabricate(:topic)])
+      after do
         xhr :get, :similar_to, title: title, raw: raw
       end
+
+      describe "With enough topics" do
+        before do
+          Topic.stubs(:count).returns(50)
+        end
+
+        it "deletes to Topic.similar_to if there are more topics than `minimum_topics_similar`" do
+          Topic.expects(:similar_to).with(title, raw, nil).returns([Fabricate(:topic)])
+        end
+
+        describe "with a logged in user" do
+          let(:user) { log_in }
+
+          it "passes a user through if logged in" do
+            Topic.expects(:similar_to).with(title, raw, user).returns([Fabricate(:topic)])
+          end
+        end
+
+      end
+
+      it "does not call Topic.similar_to if there are fewer topics than `minimum_topics_similar`" do
+        Topic.stubs(:count).returns(10)
+        Topic.expects(:similar_to).never
+      end
+
     end
 
   end
