@@ -153,7 +153,7 @@ class TopicsController < ApplicationController
     guardian.ensure_can_invite_to!(topic)
 
     if topic.invite(current_user, params[:user])
-      user = User.find_by_username_or_email(params[:user]).first
+      user = User.find_by_username_or_email(params[:user])
       if user
         render_json_dump BasicUserSerializer.new(user, scope: guardian, root: 'user')
       else

@@ -847,4 +847,19 @@ describe User do
     end
   end
 
+  describe '#find_by_username_or_email' do
+    it 'works correctly' do
+      bob = Fabricate(:user, username: 'bob', name: 'bobs', email: 'bob@bob.com')
+      bob2 = Fabricate(:user, username: 'bob2', name: 'bobs', email: 'bob2@bob.com')
+
+      expect(User.find_by_username_or_email('bob22@bob.com')).to eq(nil)
+      expect(User.find_by_username_or_email('bobs')).to eq(nil)
+
+      expect(User.find_by_username_or_email('bob2')).to eq(bob2)
+      expect(User.find_by_username_or_email('bob2@BOB.com')).to eq(bob2)
+
+      expect(User.find_by_username_or_email('bob')).to eq(bob)
+      expect(User.find_by_username_or_email('bob@BOB.com')).to eq(bob)
+    end
+  end
 end

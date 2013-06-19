@@ -52,11 +52,6 @@ describe Admin::ImpersonateController do
           session[:current_user_id].should == user.id
         end
 
-        it "also works with a name" do
-          xhr :post, :create, username_or_email: user.name
-          session[:current_user_id].should == user.id
-        end
-
       end
 
     end
