@@ -2,6 +2,8 @@ require 'spec_helper'
 require_dependency 'post_destroyer'
 
 describe Post do
+  before { Oneboxer.stubs :onebox }
+
   # Help us build a post with a raw body
   def post_with_body(body, user=nil)
     args = post_args.merge(raw: body)
