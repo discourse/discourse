@@ -31,13 +31,13 @@
 //= require admin
 //= require_tree ../../app/assets/javascripts/defer
 
-//= require main_include
 
 //= require sinon-1.7.1.js
 //= require sinon-qunit-1.0.0.js
 
 //= require helpers/qunit_helpers
 //= require helpers/assertions
+
 //= require_tree ./fixtures
 //= require_tree .
 //= require_self

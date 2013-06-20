@@ -158,10 +158,7 @@ Discourse.Utilities = {
     }
   },
 
-  /**
-  validateFilesForUpload
 
-  **/
   /**
     Validate a list of files to be uploaded
 
