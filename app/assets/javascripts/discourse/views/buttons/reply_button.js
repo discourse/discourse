@@ -10,7 +10,7 @@ Discourse.ReplyButton = Discourse.ButtonView.extend({
   classNames: ['btn', 'btn-primary', 'create'],
   attributeBindings: ['disabled'],
   helpKey: 'topic.reply.help',
-  disabled: Em.computed.not('controller.content.can_create_post'),
+  disabled: Em.computed.not('controller.model.details.can_create_post'),
 
   text: function() {
     var archetypeCapitalized = this.get('controller.content.archetype').capitalize();

@@ -4,7 +4,7 @@ require_dependency 'summarize'
 
 class TopicView
 
-  attr_reader :topic, :posts, :index_offset, :index_reverse, :guardian
+  attr_reader :topic, :posts, :guardian, :filtered_posts
   attr_accessor :draft, :draft_key, :draft_sequence
 
   def initialize(topic_id, user=nil, options={})
@@ -20,13 +20,14 @@ class TopicView
     end
 
     guardian.ensure_can_see!(@topic)
+
     @post_number, @page  = options[:post_number], options[:page]
 
     @limit = options[:limit] || SiteSetting.posts_per_page;
 
     @filtered_posts = @topic.posts
     @filtered_posts = @filtered_posts.with_deleted if user.try(:staff?)
-    @filtered_posts = @filtered_posts.best_of if options[:best_of].present?
+    @filtered_posts = @filtered_posts.best_of if options[:filter] == 'best_of'
     @filtered_posts = @filtered_posts.where('posts.post_type <> ?', Post.types[:moderator_action]) if options[:best].present?
 
     if options[:username_filters].present?
@@ -78,10 +79,6 @@ class TopicView
     @topic.title
   end
 
-  def filtered_posts_count
-    @filtered_posts_count ||= @filtered_posts.count
-  end
-
   def summary
     return nil if posts.blank?
     Summarize.new(posts.first.cooked).summary
@@ -94,11 +91,8 @@ class TopicView
 
   def filter_posts(opts = {})
     return filter_posts_near(opts[:post_number].to_i) if opts[:post_number].present?
-    return filter_posts_before(opts[:posts_before].to_i) if opts[:posts_before].present?
-    return filter_posts_after(opts[:posts_after].to_i) if opts[:posts_after].present?
-    if opts[:best].present?
-      return filter_best(opts[:best], opts)
-    end
+    return filter_posts_by_ids(opts[:post_ids]) if opts[:post_ids].present?
+    return filter_best(opts[:best], opts) if opts[:best].present?
 
     filter_posts_paged(opts[:page].to_i)
   end
@@ -152,36 +146,8 @@ class TopicView
     filter_posts_in_range(min, max)
   end
 
-  # Filter to all posts before a particular post number
-  def filter_posts_before(post_number)
-    @initial_load = false
-
-    sort_order = sort_order_for_post_number(post_number)
-    return nil unless sort_order
-
-    # Find posts before the `sort_order`
-    @posts = @filtered_posts.order('sort_order desc').where("sort_order < ?", sort_order)
-    @index_offset = @posts.count
-    @index_reverse = true
-
-    @posts = @posts.includes(:reply_to_user).includes(:topic).joins(:user).limit(@limit)
-  end
-
-  # Filter to all posts after a particular post number
-  def filter_posts_after(post_number)
-    @initial_load = false
-
-    sort_order = sort_order_for_post_number(post_number)
-    return nil unless sort_order
-
-    @index_offset = @filtered_posts.where("sort_order <= ?", sort_order).count
-    @posts = @filtered_posts.order('sort_order').where("sort_order > ?", sort_order)
-    @posts = @posts.includes(:reply_to_user).includes(:topic).joins(:user).limit(@limit)
-  end
 
   def filter_best(max, opts={})
-    @index_offset = 0
-
     if opts[:min_replies] && @topic.posts_count < opts[:min_replies] + 1
       @posts = []
       return
@@ -189,7 +155,9 @@ class TopicView
 
     @posts = @filtered_posts.order('percent_rank asc, sort_order asc')
       .where("post_number > 1")
+
     @posts = @posts.includes(:reply_to_user).includes(:topic).joins(:user).limit(max)
+
 
     min_trust_level = opts[:min_trust_level]
     if min_trust_level && min_trust_level > 0
@@ -231,27 +199,6 @@ class TopicView
 
   def all_post_actions
     @all_post_actions ||= PostAction.counts_for(posts, @user)
-  end
-
-  def voted_in_topic?
-    return false
-
-    # all post_actions is not the way to do this, cut down on the query, roll it up into topic if we need it
-
-    @voted_in_topic ||= begin
-      return false unless all_post_actions.present?
-      all_post_actions.values.flatten.map {|ac| ac.keys}.flatten.include?(PostActionType.types[:vote])
-    end
-  end
-
-  def post_action_visibility
-    @post_action_visibility ||= begin
-      result = []
-      PostActionType.types.each do |k, v|
-        result << v if guardian.can_see_post_actors?(@topic, v)
-      end
-      result
-    end
   end
 
   def links
@@ -315,6 +262,16 @@ class TopicView
 
   private
 
+  def filter_posts_by_ids(post_ids)
+    # TODO: Sort might be off
+    @posts = Post.where(id: post_ids)
+                 .includes(:user)
+                 .includes(:reply_to_user)
+                 .order('sort_order')
+    @posts = @posts.with_deleted if @user.try(:staff?)
+    @posts
+  end
+
   def filter_posts_in_range(min, max)
     post_count = (filtered_post_ids.length - 1)
 
@@ -324,15 +281,7 @@ class TopicView
 
     min = [[min, max].min, 0].max
 
-    @index_offset = min
-
-    # TODO: Sort might be off
-    @posts = Post.where(id: filtered_post_ids[min..max])
-                 .includes(:user)
-                 .includes(:reply_to_user)
-                 .order('sort_order')
-    @posts = @posts.with_deleted if @user.try(:staff?)
-
+    @posts = filter_posts_by_ids(filtered_post_ids[min..max])
     @posts
   end
 

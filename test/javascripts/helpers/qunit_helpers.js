@@ -13,3 +13,9 @@ function integration(name) {
     }
   });
 }
+
+function controllerFor(controller, model) {
+  var controller = Discourse.__container__.lookup('controller:' + controller);
+  if (model) { controller.set('model', model ); }
+  return controller;
+}

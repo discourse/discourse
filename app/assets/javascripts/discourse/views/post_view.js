@@ -98,9 +98,9 @@ Discourse.PostView = Discourse.View.extend({
   updateQuoteElements: function($aside, desc) {
     var navLink = "";
     var quoteTitle = Em.String.i18n("post.follow_quote");
-    var postNumber;
+    var postNumber = $aside.data('post');
 
-    if (postNumber = $aside.data('post')) {
+    if (postNumber) {
 
       // If we have a topic reference
       var topicId, topic;
@@ -209,21 +209,6 @@ Discourse.PostView = Discourse.View.extend({
   didInsertElement: function() {
     var $post = this.$();
     var post = this.get('post');
-    var postNumber = post.get('scrollToAfterInsert');
-
-    // Do we want to scroll to this post now that we've inserted it?
-    if (postNumber) {
-      Discourse.TopicView.scrollTo(this.get('post.topic_id'), postNumber);
-      if (postNumber === post.get('post_number')) {
-        var $contents = $('.topic-body .contents', $post);
-        var originalCol = $contents.css('backgroundColor');
-        $contents.css({
-          backgroundColor: "#ffffcc"
-        }).animate({
-          backgroundColor: originalCol
-        }, 2500);
-      }
-    }
     this.showLinkCounts();
 
     // Track this post
@@ -233,21 +218,9 @@ Discourse.PostView = Discourse.View.extend({
     Discourse.SyntaxHighlighting.apply($post);
     Discourse.Lightbox.apply($post);
 
-    // If we're scrolling upwards, adjust the scroll position accordingly
-    var scrollTo = this.get('post.scrollTo');
-    if (scrollTo) {
-      $('body').scrollTop(($(document).height() - scrollTo.height) + scrollTo.top);
-      $('section.divider').addClass('fade');
-    }
-
     // Find all the quotes
     this.insertQuoteControls();
 
     $post.addClass('ready');
-    // be sure that eyeline tracked it
-    var controller = this.get('controller');
-    if (controller && controller.postRendered) {
-      controller.postRendered(post);
-    }
   }
 });

@@ -22,7 +22,7 @@ Discourse.TopicFooterButtonsView = Discourse.ContainerView.extend({
       if (!topic.get('isPrivateMessage')) {
 
         // We hide some controls from private messages
-        if (this.get('topic.can_invite_to')) {
+        if (this.get('topic.details.can_invite_to')) {
           this.attachViewClass(Discourse.InviteReplyButton);
         }
         this.attachViewClass(Discourse.FavoriteButton);

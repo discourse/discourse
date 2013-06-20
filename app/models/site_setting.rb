@@ -74,7 +74,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:create_thumbnails, false)
   client_setting(:category_featured_topics, 6)
   setting(:topics_per_page, 30)
-  setting(:posts_per_page, 20)
+  client_setting(:posts_per_page, 20)
   setting(:invite_expiry_days, 14)
   setting(:active_user_rate_limit_secs, 60)
   setting(:previous_visit_timeout_hours, 1)

@@ -7,7 +7,7 @@
           <button {{action toggleMultiSelect}} class='btn btn-admin'><i class='icon-tasks'></i> {{i18n topic.actions.multi_select}}</button>
         </li>
 
-      {{#if can_delete}}
+      {{#if details.can_delete}}
         <li>
           <button {{action deleteTopic}} class='btn btn-admin btn-danger'><i class='icon-trash'></i> {{i18n topic.actions.delete}}</button>
         </li>

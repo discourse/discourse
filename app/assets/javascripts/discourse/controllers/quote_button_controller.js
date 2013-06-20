@@ -34,7 +34,7 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
     if (!Discourse.User.current()) return;
 
     // don't display the "quote-reply" button if we can't create a post
-    if (!this.get('controllers.topic.content.can_create_post')) return;
+    if (!this.get('controllers.topic.model.details.can_create_post')) return;
 
     var selection = window.getSelection();
     // no selections

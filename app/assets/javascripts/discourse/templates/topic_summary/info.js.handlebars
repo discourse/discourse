@@ -17,14 +17,14 @@
       <li>
         <a {{bindAttr href="url"}}>
         <h4>{{i18n created}}</h4>
-        {{avatar created_by imageSize="tiny"}}
+        {{avatar details.created_by imageSize="tiny"}}
         {{date created_at}}
         </a>
       </li>
       <li>
         <a {{bindAttr href="lastPostUrl"}}>
         <h4>{{i18n last_post}}</h4>
-        {{avatar last_poster imageSize="tiny"}}
+        {{avatar details.last_poster imageSize="tiny"}}
         {{date last_posted_at}}
         </a>
       </li>
@@ -38,11 +38,11 @@
       </li>
       <li>
         <h4>{{i18n links}}</h4>
-        {{number links.length}}
+        {{number details.links.length}}
       </li>
-      {{#if fewParticipants}}
+      {{#if details.fewParticipants}}
       <li class='avatars'>
-        {{#each fewParticipants}}{{participant participant=this}}{{/each}}
+        {{#each details.fewParticipants}}{{participant participant=this}}{{/each}}
       </li>
       {{/if}}
     </ul>
@@ -53,12 +53,12 @@
     <ul class="clearfix">
       <li>
         <h4>{{i18n created}}</h4>
-        {{avatar created_by imageSize="tiny"}}
+        {{avatar details.created_by imageSize="tiny"}}
         <a {{bindAttr href="url"}}>{{date created_at}}</a>
       </li>
       <li>
         <h4>{{i18n last_post}}</h4>
-        {{avatar last_poster imageSize="tiny"}}
+        {{avatar details.last_poster imageSize="tiny"}}
         <a {{bindAttr href="lastPostUrl"}}>{{date last_posted_at}}</a>
       </li>
       <li>
@@ -72,9 +72,9 @@
     </ul>
   </section>
 
-  {{#if participants}}
+  {{#if details.participants}}
     <section class='avatars clearfix'>
-      {{#each participants}}{{participant participant=this}}{{/each}}
+      {{#each details.participants}}{{participant participant=this}}{{/each}}
     </section>
   {{/if}}
 
@@ -92,7 +92,7 @@
 
         {{#if view.parentView.showAllLinksControls}}
           <div class='link-summary'>
-            <a href='#' {{action showAllLinks target="view.parentView"}}>{{i18n topic_summary.links_shown totalLinks="links.length"}}</a>
+            <a href='#' {{action showAllLinks target="view.parentView"}}>{{i18n topic_summary.links_shown totalLinks="details.links.length"}}</a>
           </div>
         {{/if}}
 

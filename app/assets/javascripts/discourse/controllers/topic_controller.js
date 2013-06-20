@@ -7,24 +7,28 @@
   @module Discourse
 **/
 Discourse.TopicController = Discourse.ObjectController.extend(Discourse.SelectedPostsCount, {
-  userFilters: new Em.Set(),
   multiSelect: false,
-  bestOf: false,
   summaryCollapsed: true,
-  loading: false,
-  loadingBelow: false,
-  loadingAbove: false,
   needs: ['header', 'modal', 'composer', 'quoteButton'],
   allPostsSelected: false,
   selectedPosts: new Em.Set(),
+  editingTopic: false,
+
+  jumpTopDisabled: function() {
+    return this.get('currentPost') === 1;
+  }.property('currentPost'),
+
+  jumpBottomDisabled: function() {
+    return this.get('currentPost') === this.get('highest_post_number');
+  }.property('currentPost'),
 
   canMergeTopic: function() {
-    if (!this.get('can_move_posts')) return false;
+    if (!this.get('details.can_move_posts')) return false;
     return (this.get('selectedPostsCount') > 0);
   }.property('selectedPostsCount'),
 
   canSplitTopic: function() {
-    if (!this.get('can_move_posts')) return false;
+    if (!this.get('details.can_move_posts')) return false;
     if (this.get('allPostsSelected')) return false;
     return (this.get('selectedPostsCount') > 0);
   }.property('selectedPostsCount'),
@@ -64,11 +68,11 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   }.observes('multiSelect'),
 
   hideProgress: function() {
-    if (!this.get('content.loaded')) return true;
+    if (!this.get('postStream.loaded')) return true;
     if (!this.get('currentPost')) return true;
-    if (this.get('content.filtered_posts_count') < 2) return true;
+    if (this.get('postStream.filteredPostsCount') < 2) return true;
     return false;
-  }.property('content.loaded', 'currentPost', 'content.filtered_posts_count'),
+  }.property('postStream.loaded', 'currentPost', 'postStream.filteredPostsCount'),
 
   selectPost: function(post) {
     var selectedPosts = this.get('selectedPosts');
@@ -107,6 +111,58 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     this.toggleProperty('summaryCollapsed');
   },
 
+  editTopic: function() {
+    if (!this.get('details.can_edit')) return false;
+
+    this.setProperties({
+      editingTopic: true,
+      newTitle: this.get('title'),
+      newCategoryId: this.get('category_id')
+    });
+    return false;
+  },
+
+  // close editing mode
+  cancelEditingTopic: function() {
+    this.set('editingTopic', false);
+  },
+
+  finishedEditingTopic: function() {
+    var topicController = this;
+    if (this.get('editingTopic')) {
+
+      var topic = this.get('model');
+
+      // manually update the titles & category
+      topic.setProperties({
+        title: this.get('newTitle'),
+        category_id: parseInt(this.get('newCategoryId'), 10),
+        fancy_title: this.get('newTitle')
+      });
+
+      // save the modifications
+      topic.save().then(function(result){
+        // update the title if it has been changed (cleaned up) server-side
+        var title = result.basic_topic.fancy_title;
+        topic.setProperties({
+          title: title,
+          fancy_title: title
+        });
+
+      }, function(error) {
+        topicController.set('editingTopic', true);
+        if (error && error.responseText) {
+          bootbox.alert($.parseJSON(error.responseText).errors[0]);
+        } else {
+          bootbox.alert(Em.String.i18n('generic_error'));
+        }
+      });
+
+      // close editing mode
+      topicController.set('editingTopic', false);
+    }
+  },
+
   deleteSelected: function() {
     var topicController = this;
     bootbox.confirm(Em.String.i18n("post.delete.confirm", { count: this.get('selectedPostsCount')}), function(result) {
@@ -126,25 +182,14 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   },
 
   jumpTop: function() {
-    if (this.get('bestOf')) {
-      Discourse.TopicView.scrollTo(this.get('id'), this.get('posts')[0].get('post_number'));
-    } else {
-      Discourse.URL.routeTo(this.get('url'));
-    }
+    Discourse.URL.routeTo(this.get('url'));
   },
 
   jumpBottom: function() {
-    if (this.get('bestOf')) {
-      Discourse.TopicView.scrollTo(this.get('id'), _.last(this.get('posts')).get('post_number'));
-    } else {
-      Discourse.URL.routeTo(this.get('lastPostUrl'));
-    }
+    Discourse.URL.routeTo(this.get('lastPostUrl'));
   },
 
-  cancelFilter: function() {
-    this.set('bestOf', false);
-    this.get('userFilters').clear();
-  },
+
 
   replyAsNewTopic: function(post) {
     // TODO shut down topic draft cleanly if it exists ...
@@ -182,95 +227,18 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     }
   },
 
-  toggleParticipant: function(user) {
-    this.set('bestOf', false);
-    var username = Em.get(user, 'username');
-    var userFilters = this.get('userFilters');
-    if (userFilters.contains(username)) {
-      userFilters.remove(username);
-    } else {
-      userFilters.add(username);
-    }
-  },
-
   /**
-    Show or hide the bottom bar, depending on our filter options.
+    Toggle a participant for filtering
 
-    @method updateBottomBar
+    @method toggleParticipant
   **/
-  updateBottomBar: function() {
-
-    var postFilters = this.get('postFilters');
-
-    if (postFilters.bestOf) {
-      this.set('filterDesc', Em.String.i18n("topic.filters.best_of", {
-        n_best_posts: Em.String.i18n("topic.filters.n_best_posts", { count: this.get('filtered_posts_count') }),
-        of_n_posts: Em.String.i18n("topic.filters.of_n_posts", { count: this.get('posts_count') })
-      }));
-    } else if (postFilters.userFilters.length > 0) {
-      this.set('filterDesc', Em.String.i18n("topic.filters.user", {
-        n_posts: Em.String.i18n("topic.filters.n_posts", { count: this.get('filtered_posts_count') }),
-        by_n_users: Em.String.i18n("topic.filters.by_n_users", { count: postFilters.userFilters.length })
-      }));
-    } else {
-      // Hide the bottom bar
-      $('#topic-filter').slideUp();
-      return;
-    }
-
-    $('#topic-filter').slideDown();
+  toggleParticipant: function(user) {
+    this.get('postStream').toggleParticipant(Em.get(user, 'username'));
   },
 
-  enableBestOf: function(e) {
-    this.set('bestOf', true);
-    this.get('userFilters').clear();
-  },
-
-  postFilters: function() {
-    if (this.get('bestOf') === true) return { bestOf: true };
-    return { userFilters: this.get('userFilters') };
-  }.property('userFilters.[]', 'bestOf'),
-
-  loadPosts: function(opts) {
-    var topicController = this;
-    this.get('content').loadPosts(opts).then(function () {
-      Em.run.scheduleOnce('afterRender', topicController, 'updateBottomBar');
-    });
-  },
-
-  reloadPosts: function() {
-    var topic = this.get('content');
-    if (!topic) return;
-
-    var posts = topic.get('posts');
-    if (!posts) return;
-
-    // Leave the first post -- we keep it above the filter controls
-    posts.removeAt(1, posts.length - 1);
-
-    this.set('loadingBelow', true);
-
-    var topicController = this;
-    var postFilters = this.get('postFilters');
-    return Discourse.Topic.find(this.get('id'), postFilters).then(function(result) {
-      var first = result.posts[0];
-      if (first) {
-        topicController.set('currentPost', first.post_number);
-      }
-      $('#topic-progress .solid').data('progress', false);
-      _.each(result.posts,function(p) {
-        // Skip the first post
-        if (p.post_number === 1) return;
-        posts.pushObject(Discourse.Post.create(p, topic));
-      });
-
-      Em.run.scheduleOnce('afterRender', topicController, 'updateBottomBar');
-
-      topicController.set('filtered_posts_count', result.filtered_posts_count);
-      topicController.set('loadingBelow', false);
-      topicController.set('seenBottom', false);
-    });
-  }.observes('postFilters'),
+  showFavoriteButton: function() {
+    return Discourse.User.current() && !this.get('isPrivateMessage');
+  }.property('isPrivateMessage'),
 
   deleteTopic: function() {
     var topicController = this;
@@ -327,23 +295,13 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     bus.subscribe("/topic/" + (this.get('id')), function(data) {
       var topic = topicController.get('model');
       if (data.notification_level_change) {
-        topic.set('notification_level', data.notification_level_change);
-        topic.set('notifications_reason_id', data.notifications_reason_id);
-        return;
-      }
-      var posts = topic.get('posts');
-      if (posts.some(function(p) {
-        return p.get('post_number') === data.post_number;
-      })) {
+        topic.set('details.notification_level', data.notification_level_change);
+        topic.set('details.notifications_reason_id', data.notifications_reason_id);
         return;
       }
 
-      // Robin, TODO when a message comes in we need to figure out if it even goes
-      //  in this view ... for now fixed the general case
-      topic.set('filtered_posts_count', topic.get('filtered_posts_count') + 1);
-      topic.set('highest_post_number', data.post_number);
-      topic.set('last_poster', data.user);
-      topic.set('last_posted_at', data.created_at);
+      // Add the new post into the stream
+      topicController.get('postStream').triggerNewPostInStream(data.id);
     });
   },
 
@@ -424,15 +382,8 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     post.destroy();
   },
 
-  postRendered: function(post) {
-    var onPostRendered = this.get('onPostRendered');
-    if (onPostRendered) {
-      onPostRendered(post);
-    }
-  },
-
   removeAllowedUser: function(username) {
-    this.get('model').removeAllowedUser(username);
+    this.get('details').removeAllowedUser(username);
   }
 });
 

@@ -1,7 +1,7 @@
 {{#with view.content}}
   {{#group}}
   <td class='main-link'>
-    <a class='title' href="{{unbound lastReadUrl}}">{{{unbound fancy_title}}}</a>
+    <a class='title' href="{{unbound lastReadUrl}}">{{{unbound title}}}</a>
     {{#if unread}}
       <a href="{{unbound lastReadUrl}}" class='badge unread badge-notification' title='{{i18n topic.unread_posts count="unread"}}'>{{unbound unread}}</a>
     {{/if}}
@@ -19,7 +19,7 @@
 
   <td class='num'>
     {{#if like_count}}
-      <a href='{{url}}{{#if has_best_of}}/best_of{{/if}}'>{{like_count}} <i class='icon-heart'></i></a>
+      <a href='{{url}}{{#if has_best_of}}?filter=best_of{{/if}}'>{{like_count}} <i class='icon-heart'></i></a>
     {{/if}}
   </td>
 

@@ -1,140 +1,133 @@
-{{#if content}}
-  {{#if loaded}}
+{{#if postStream.loaded}}
 
-    {{#if view.firstPostLoaded}}
+  {{#if postStream.firstPostLoaded}}
     <div id='topic-title'>
       <div class='container'>
         <div class='inner'>
-          {{#if view.showFavoriteButton}}
-            <a {{bindAttr class=":star view.topic.starred:starred"}} {{action toggleStar}} href='#' {{bindAttr title="favoriteTooltip"}}></a>
+
+          {{#if showFavoriteButton}}
+            <a {{bindAttr class=":star starred:starred"}} {{action toggleStar}} href='#' {{bindAttr title="favoriteTooltip"}}></a>
           {{/if}}
-          {{#if view.editingTopic}}
-            <input id='edit-title' type='text' {{bindAttr value="view.topic.title"}} autofocus>
 
-            {{categoryChooser valueAttribute="name" source=view.topic.categoryName}}
+          {{#if editingTopic}}
+            {{textField id='edit-title' value=newTitle}}
+            {{categoryChooser valueAttribute="id" value=newCategoryId source=category_id}}
 
-            <button class='btn btn-primary btn-small' {{action finishedEdit target="view"}}><i class='icon-ok'></i></button>
-            <button class='btn btn-small' {{action cancelEdit target="view"}}><i class='icon-remove'></i></button>
+            <button class='btn btn-primary btn-small' {{action finishedEditingTopic}}><i class='icon-ok'></i></button>
+            <button class='btn btn-small' {{action cancelEditingTopic}}><i class='icon-remove'></i></button>
           {{else}}
             <h1>
-              {{#if view.topic.fancy_title}}
-                {{topicStatus topic=view.topic}}
-                <a href='{{unbound view.topic.url}}'>{{{view.topic.fancy_title}}}</a>
-              {{else}}
-                {{#if view.topic.errorLoading}}
-                  {{view.topic.errorTitle}}
-                {{else}}
-                  {{i18n topic.loading}}
-                {{/if}}
+              {{#if details.loaded}}
+                {{topicStatus topic=model}}
+                <a href='{{unbound url}}'>{{{fancy_title}}}</a>
               {{/if}}
               {{categoryLink category}}
 
-              {{#if view.topic.can_edit}}
-                <a href='#' {{action editTopic target="view"}} class='edit-topic' title='{{i18n edit}}'><i class="icon-pencil"></i></a>
+              {{#if details.can_edit}}
+                <a href='#' {{action editTopic}} class='edit-topic' title='{{i18n edit}}'><i class="icon-pencil"></i></a>
               {{/if}}
             </h1>
           {{/if}}
         </div>
       </div>
     </div>
-    {{/if}}
+  {{/if}}
 
-    <div class="container posts">
+  <div class="container posts">
 
-      {{view Discourse.SelectedPostsView}}
-      <div class="row">
-        <section class="topic-area" id='topic' data-topic-id='{{unbound id}}'>
-          <div class='posts-wrapper'>
-            <div id='topic-progress-wrapper'>
-              <nav id='topic-progress' title="{{i18n topic.progress.title}}" {{bindAttr class="hideProgress:hidden"}}>
-                <button id='jump-top' title="{{i18n topic.progress.jump_top}}" {{action jumpTop}}><i class="icon-circle-arrow-up"></i></button>
-                <div class='nums'>
-                  <h4 title="{{i18n topic.progress.current}}">{{view.progressPosition}}</h4> <span>{{i18n of_value}}</span> <h4>{{filtered_posts_count}}</h4>
-                </div>
-                <button id='jump-bottom' title="{{i18n topic.progress.jump_bottom}}" {{action jumpBottom}}><i class="icon-circle-arrow-down"></i></button>
-                <div class='bg'>&nbsp;</div>
-              </nav>
-            </div>
-
-            {{#if loadingAbove}}
-              <div class='spinner'>{{i18n loading}}</div>
-            {{/if}}
-
-            {{collection itemViewClass="Discourse.PostView" contentBinding="posts" topicViewBinding="view"}}
-
-            {{#if loadingBelow}}
-              <div class='spinner'>{{i18n loading}}</div>
-            {{/if}}
+    {{view Discourse.SelectedPostsView}}
+    <div class="row">
+      <section class="topic-area" id='topic' data-topic-id='{{unbound id}}'>
+        <div class='posts-wrapper'>
+          <div id='topic-progress-wrapper'>
+            <nav id='topic-progress' title="{{i18n topic.progress.title}}" {{bindAttr class="hideProgress:hidden"}}>
+              <button id='jump-top' title="{{i18n topic.progress.jump_top}}" {{bindAttr disabled="jumpTopDisabled"}} {{action jumpTop}}><i class="icon-circle-arrow-up"></i></button>
+              <div class='nums'>
+                <h4 title="{{i18n topic.progress.current}}">{{progressPosition}}</h4> <span>{{i18n of_value}}</span> <h4>{{postStream.filteredPostsCount}}</h4>
+              </div>
+              <button id='jump-bottom' title="{{i18n topic.progress.jump_bottom}}" {{bindAttr disabled="jumpBottomDisabled"}} {{action jumpBottom}}><i class="icon-circle-arrow-down"></i></button>
+              <div class='bg'>&nbsp;</div>
+            </nav>
           </div>
-          <div id='topic-bottom'></div>
 
-          {{#if loading}}
-            {{#unless loadingBelow}}
-              <div class='spinner small'>{{i18n loading}}</div>
-            {{/unless}}
-          {{else}}
-            {{#if view.fullyLoaded}}
-
-              {{view Discourse.TopicClosingView topicBinding="model"}}
-
-              {{view Discourse.TopicFooterButtonsView topicBinding="model"}}
-
-              {{#if suggested_topics.length}}
-                <div id='suggested-topics'>
-
-                  <h3>{{i18n suggested_topics.title}}</h3>
-
-                  <div class='topics'>
-                    <table id="topic-list">
-                      <tr>
-                        <th>
-                          {{i18n topic.title}}
-                        </th>
-                        <th>{{i18n category_title}}</th>
-                        <th class='num'>{{i18n posts}}</th>
-                        <th class='num'>{{i18n likes}}</th>
-                        <th class='num'>{{i18n views}}</th>
-                        <th class='num activity' colspan='2'>{{i18n activity}}</th>
-                      </tr>
-
-                    {{each suggested_topics itemTagName="tr" itemViewClass="Discourse.SuggestedTopicView"}}
-                    </table>
-                  </div>
-                  <br/>
-                  <h3>{{{view.browseMoreMessage}}}</h3>
-                </div>
-              {{/if}}
-            {{/if}}
+          {{#if postStream.loadingAbove}}
+            <div class='spinner'>{{i18n loading}}</div>
           {{/if}}
 
+          {{#unless postStream.loadingFilter}}
+            {{collection itemViewClass="Discourse.PostView" contentBinding="postStream.posts" topicViewBinding="view"}}
+          {{/unless}}
 
-        </section>
-      </div>
+          {{#if postStream.loadingBelow}}
+            <div class='spinner'>{{i18n loading}}</div>
+          {{/if}}
+        </div>
+        <div id='topic-bottom'></div>
 
+        {{#if postStream.loadingFilter}}
+          <div class='spinner small'>{{i18n loading}}</div>
+        {{else}}
+          {{#if postStream.lastPostLoaded}}
+
+            {{view Discourse.TopicClosingView topicBinding="model"}}
+            {{view Discourse.TopicFooterButtonsView topicBinding="model"}}
+
+            {{#if details.suggested_topics.length}}
+              <div id='suggested-topics'>
+
+                <h3>{{i18n suggested_topics.title}}</h3>
+
+                <div class='topics'>
+                  <table id="topic-list">
+                    <tr>
+                      <th>
+                        {{i18n topic.title}}
+                      </th>
+                      <th>{{i18n category_title}}</th>
+                      <th class='num'>{{i18n posts}}</th>
+                      <th class='num'>{{i18n likes}}</th>
+                      <th class='num'>{{i18n views}}</th>
+                      <th class='num activity' colspan='2'>{{i18n activity}}</th>
+                    </tr>
+
+                  {{each details.suggested_topics itemTagName="tr" itemViewClass="Discourse.SuggestedTopicView"}}
+                  </table>
+                </div>
+                <br/>
+                <h3>{{{view.browseMoreMessage}}}</h3>
+              </div>
+            {{/if}}
+          {{/if}}
+        {{/if}}
+
+
+      </section>
     </div>
 
+  </div>
+
+{{else}}
+  {{#if message}}
+    <div class='container'>
+      <div class='message'>
+
+        <h2>{{message}}</h2>
+
+        <p>
+          {{#linkTo list.latest}}{{i18n topic.back_to_list}}{{/linkTo}}
+      </div>
+    </div>
   {{else}}
-    {{#if message}}
-      <div class='container'>
-        <div class='message'>
-
-          <h2>{{message}}</h2>
-
-          <p>
-            {{#linkTo list.latest}}{{i18n topic.back_to_list}}{{/linkTo}}
-        </div>
-      </div>
-    {{else}}
-      <div class='container'>
-        <div class='spinner'>{{i18n loading}}</div>
-      </div>
-    {{/if}}
+    <div class='container'>
+      <div class='spinner'>{{i18n loading}}</div>
+    </div>
   {{/if}}
 {{/if}}
 
-<div id='topic-filter' style='display: none'>
-  {{filterDesc}}
-  <a href='#' {{action cancelFilter}}>{{i18n topic.filters.cancel}}</a>
+
+<div id='topic-filter' {{bindAttr class="postStream.hasNoFilters:hidden"}}>
+  {{postStream.filterDesc}}
+  <a href='#' {{action cancelFilter target="postStream"}}>{{i18n topic.filters.cancel}}</a>
 </div>
 
 {{render share}}

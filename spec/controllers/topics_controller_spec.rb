@@ -517,17 +517,6 @@ describe TopicsController do
         TopicView.any_instance.expects(:filter_posts_near).with(p2.post_number)
         xhr :get, :show, topic_id: topic.id, slug: topic.slug, post_number: p2.post_number
       end
-
-      it 'delegates a posts_after param to TopicView#filter_posts_after' do
-        TopicView.any_instance.expects(:filter_posts_after).with(p1.post_number)
-        xhr :get, :show, topic_id: topic.id, slug: topic.slug, posts_after: p1.post_number
-      end
-
-      it 'delegates a posts_before param to TopicView#filter_posts_before' do
-        TopicView.any_instance.expects(:filter_posts_before).with(p2.post_number)
-        xhr :get, :show, topic_id: topic.id, slug: topic.slug, posts_before: p2.post_number
-      end
-
     end
 
     context "when 'login required' site setting has been enabled" do

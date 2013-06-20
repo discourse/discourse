@@ -15,7 +15,9 @@
     { "path": "script" },
     { "path": "cookbooks" },
     { "path": "spec" },
-    { "path": "test" }
+    { "path": "test",
+      "folder_exclude_patterns": ["fixtures"]
+    }
   ],
   "settings":
   {

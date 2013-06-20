@@ -60,7 +60,7 @@ Discourse.PostMenuView = Discourse.View.extend({
 
   // Delete button
   renderDelete: function(post, buffer) {
-    if (post.get('post_number') === 1 && this.get('controller.content.can_delete')) {
+    if (post.get('post_number') === 1 && this.get('controller.model.details.can_delete')) {
       buffer.push("<button title=\"" +
                   (Em.String.i18n("topic.actions.delete")) +
                   "\" data-action=\"deleteTopic\" class='delete'><i class=\"icon-trash\"></i></button>");
@@ -138,7 +138,7 @@ Discourse.PostMenuView = Discourse.View.extend({
 
   // Reply button
   renderReply: function(post, buffer) {
-    if (!this.get('controller.content.can_create_post')) return;
+    if (!this.get('controller.model.details.can_create_post')) return;
     buffer.push("<button title=\"" +
                  (Em.String.i18n("post.controls.reply")) +
                  "\" class='create' data-action=\"reply\"><i class='icon-reply'></i>" +
