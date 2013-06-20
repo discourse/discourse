@@ -57,13 +57,11 @@ Discourse.Scrolling = Em.Mixin.create({
 Discourse.ScrollingDOMMethods = {
 
   bindOnScroll: function(onScrollMethod) {
-    console.log("BOUND");
     $(document).bind('touchmove.discourse', onScrollMethod);
     $(window).bind('scroll.discourse', onScrollMethod);
   },
 
   unbindOnScroll: function() {
-    console.log("UNBOUND");
     $(window).unbind('scroll.discourse');
     $(document).unbind('touchmove.discourse');
   }
