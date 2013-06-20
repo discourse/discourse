@@ -40,9 +40,9 @@ test("formating medium length dates", function() {
   }
 
   leaveAgo = true;
-  equal(strip(formatMins(1.4)), "1 minute ago");
-  equal(strip(formatMins(2)), "2 minutes ago");
-  equal(strip(formatMins(56)), "56 minutes ago");
+  equal(strip(formatMins(1.4)), "1 min ago");
+  equal(strip(formatMins(2)), "2 mins ago");
+  equal(strip(formatMins(56)), "56 mins ago");
   equal(strip(formatMins(57)), "1 hour ago");
   equal(strip(formatHours(4)), "4 hours ago");
   equal(strip(formatHours(22)), "22 hours ago");
@@ -51,9 +51,9 @@ test("formating medium length dates", function() {
 
   leaveAgo = false;
   equal(strip(formatMins(0)), "just now");
-  equal(strip(formatMins(1.4)), "1 minute");
-  equal(strip(formatMins(2)), "2 minutes");
-  equal(strip(formatMins(56)), "56 minutes");
+  equal(strip(formatMins(1.4)), "1 min");
+  equal(strip(formatMins(2)), "2 mins");
+  equal(strip(formatMins(56)), "56 mins");
   equal(strip(formatMins(57)), "1 hour");
   equal(strip(formatHours(4)), "4 hours");
   equal(strip(formatHours(22)), "22 hours");
@@ -117,5 +117,5 @@ test("updateRelativeAge", function(){
 
   Discourse.Formatter.updateRelativeAge($elem);
 
-  equal($elem.html(), "2 minutes ago");
+  equal($elem.html(), "2 mins ago");
 });
