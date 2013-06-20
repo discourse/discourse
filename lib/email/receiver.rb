@@ -19,7 +19,7 @@ module Email
       return Email::Receiver.results[:unprocessable] if @raw.blank?
 
       @message = Mail::Message.new(@raw)
-      parse_body
+      @body = EmailReplyParser.read(parse_body).visible_text
 
       return Email::Receiver.results[:unprocessable] if @body.blank?
 
@@ -43,27 +43,37 @@ module Email
     private
 
     def parse_body
-      @body = @message.body.to_s.strip
-      return if @body.blank?
+      html = nil
 
-      # I really hate to have to do this, but there seems to be a bug in Mail::Message
-      # with content boundaries in emails. Until it is fixed, this hack removes stuff
-      # we don't want from emails bodies
-      content_type = @message.header['Content-Type'].to_s
-      if content_type.present?
-        boundary_match = content_type.match(/boundary\=(.*)$/)
-        boundary = boundary_match[1] if boundary_match && boundary_match[1].present?
-        if boundary.present? and @body.present?
-
-          lines = @body.lines
-          lines = lines[1..-1] if lines.present? and lines[0] =~ /^--#{boundary}/
-          lines = lines[1..-1] if lines.present? and lines[0] =~ /^Content-Type/
-
-          @body = lines.join.strip!
+      # If the message is multipart, find the best type for our purposes
+      if @message.multipart?
+        @message.parts.each do |p|
+          if p.content_type =~ /text\/plain/
+            return p.body.to_s
+          elsif p.content_type =~ /text\/html/
+            html = p.body.to_s
+          end
         end
       end
 
-      @body = EmailReplyParser.read(@body).visible_text
+      html = @message.body.to_s if @message.content_type =~ /text\/html/
+      if html.present?
+        return scrub_html(html)
+      end
+
+      return @message.body.to_s.strip
+    end
+
+    def scrub_html(html)
+      # If we have an HTML message, strip the markup
+      doc = Nokogiri::HTML(html)
+
+      # Blackberry is annoying in that it only provides HTML. We can easily
+      # extract it though
+      content = doc.at("#BB10_response_div")
+      return content.text if content.present?
+
+      return doc.xpath("//text()").text
     end
 
     def create_reply

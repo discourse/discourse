@@ -17,20 +17,42 @@ describe Email::Receiver do
     end
   end
 
+  describe "with multipart" do
+    let(:reply_below) { File.read("#{Rails.root}/spec/fixtures/emails/multipart.eml") }
+    let(:receiver) { Email::Receiver.new(reply_below) }
+
+    it "does something" do
+      receiver.process
+      expect(receiver.body).to eq(
+"So presumably all the quoted garbage and my (proper) signature will get
+stripped from my reply?")
+    end
+  end
+
+  describe "html only" do
+    let(:reply_below) { File.read("#{Rails.root}/spec/fixtures/emails/html_only.eml") }
+    let(:receiver) { Email::Receiver.new(reply_below) }
+
+    it "does something" do
+      receiver.process
+      expect(receiver.body).to eq("The EC2 instance - I've seen that there tends to be odd and " +
+                                  "unrecommended settings on the Bitnami installs that I've checked out.")
+    end
+  end
+
   describe "with a content boundary" do
-    let(:bounded_email) { File.read("#{Rails.root}/spec/fixtures/emails/boundary_email.txt") }
+    let(:bounded_email) { File.read("#{Rails.root}/spec/fixtures/emails/boundary.eml") }
     let(:receiver) { Email::Receiver.new(bounded_email) }
 
     it "does something" do
       receiver.process
       expect(receiver.body).to eq("I'll look into it, thanks!")
     end
-
   end
 
   describe "with a valid email" do
     let(:reply_key) { "59d8df8370b7e95c5a49fbf86aeb2c93" }
-    let(:valid_reply) { File.read("#{Rails.root}/spec/fixtures/emails/valid_reply.txt") }
+    let(:valid_reply) { File.read("#{Rails.root}/spec/fixtures/emails/valid_reply.eml") }
     let(:receiver) { Email::Receiver.new(valid_reply) }
     let(:post) { Fabricate.build(:post) }
     let(:user) { Fabricate.build(:user) }
