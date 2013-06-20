@@ -286,6 +286,10 @@ table {
   .flaggers { padding: 0 10px; }
   .last-flagged { padding: 0 10px; }
   .flag-summary { font-size: 11px; }
+  .action {
+     button { margin: 4px; display: block;}
+     padding-bottom: 20px;
+  }
 }
 
 /* Dashboard */

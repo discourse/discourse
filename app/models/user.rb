@@ -653,6 +653,7 @@ end
 #  likes_received                :integer          default(0), not null
 #  topic_reply_count             :integer          default(0), not null
 #  blocked                       :boolean          default(FALSE)
+#  dynamic_favicon               :boolean          default(FALSE), not null
 #
 # Indexes
 #

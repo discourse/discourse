@@ -21,6 +21,7 @@ class PostAction < ActiveRecord::Base
 
   def self.update_flagged_posts_count
     posts_flagged_count = PostAction.joins(post: :topic)
+                                    .where('defer = false or defer IS NULL')
                                     .where('post_actions.post_action_type_id' => PostActionType.notify_flag_type_ids,
                                            'posts.deleted_at' => nil,
                                            'topics.deleted_at' => nil)
@@ -67,6 +68,25 @@ class PostAction < ActiveRecord::Base
     PostAction.update_all({ deleted_at: Time.zone.now, deleted_by: moderator_id }, { post_id: post.id, post_action_type_id: actions })
     f = actions.map{|t| ["#{PostActionType.types[t]}_count", 0]}
     Post.with_deleted.update_all(Hash[*f.flatten], id: post.id)
+    update_flagged_posts_count
+  end
+
+  def self.defer_flags!(post, moderator_id)
+    actions = PostAction.where(
+      defer: nil,
+      post_id: post.id,
+      post_action_type_id:
+      PostActionType.flag_types.values,
+      deleted_at: nil
+    )
+
+    actions.each do |a|
+      a.defer = true
+      a.defer_by = moderator_id
+      # so callback is called
+      a.save
+    end
+
     update_flagged_posts_count
   end
 
@@ -179,12 +199,12 @@ class PostAction < ActiveRecord::Base
   # can weigh flags differently.
   def self.flag_counts_for(post_id)
     flag_counts = exec_sql("SELECT SUM(CASE
-                                         WHEN pa.deleted_at IS NULL AND pa.staff_took_action THEN :flags_required_to_hide_post
+                                         WHEN pa.deleted_at IS NULL AND (pa.staff_took_action) THEN :flags_required_to_hide_post
                                          WHEN pa.deleted_at IS NULL AND (NOT pa.staff_took_action) THEN 1
                                          ELSE 0
                                        END) AS new_flags,
                                    SUM(CASE
-                                         WHEN pa.deleted_at IS NOT NULL AND pa.staff_took_action THEN :flags_required_to_hide_post
+                                         WHEN pa.deleted_at IS NOT NULL AND (pa.staff_took_action) THEN :flags_required_to_hide_post
                                          WHEN pa.deleted_at IS NOT NULL AND (NOT pa.staff_took_action) THEN 1
                                          ELSE 0
                                        END) AS old_flags
@@ -228,27 +248,52 @@ class PostAction < ActiveRecord::Base
       PostAction.update_flagged_posts_count
     end
 
-    if PostActionType.auto_action_flag_types.include?(post_action_type) && SiteSetting.flags_required_to_hide_post > 0
-      # automatic hiding of posts
+    PostAction.auto_hide_if_needed(post, post_action_type)
+
+    SpamRulesEnforcer.enforce!(post.user) if post_action_type == :spam
+  end
+
+  def self.auto_hide_if_needed(post, post_action_type)
+    return if post.hidden
+
+    if PostActionType.auto_action_flag_types.include?(post_action_type) &&
+       SiteSetting.flags_required_to_hide_post > 0
+
       old_flags, new_flags = PostAction.flag_counts_for(post.id)
 
       if new_flags >= SiteSetting.flags_required_to_hide_post
-        reason = old_flags > 0 ? Post.hidden_reasons[:flag_threshold_reached_again] : Post.hidden_reasons[:flag_threshold_reached]
-        Post.update_all(["hidden = true, hidden_reason_id = COALESCE(hidden_reason_id, ?)", reason], id: post_id)
-        Topic.update_all({ visible: false },
-                         ["id = :topic_id AND NOT EXISTS(SELECT 1 FROM POSTS WHERE topic_id = :topic_id AND NOT hidden)",
-                          topic_id: post.topic_id])
-
-        # inform user
-        if post.user
-          SystemMessage.create(post.user, :post_hidden,
-                               url: post.url,
-                               edit_delay: SiteSetting.cooldown_minutes_after_hiding_posts)
-        end
+        hide_post!(post, guess_hide_reason(old_flags))
       end
     end
+  end
 
-    SpamRulesEnforcer.enforce!(post.user) if post_action_type == :spam
+
+  def self.hide_post!(post, reason=nil)
+    return if post.hidden
+
+    unless reason
+      old_flags,_ = PostAction.flag_counts_for(post.id)
+      reason = guess_hide_reason(old_flags)
+    end
+
+    Post.update_all(["hidden = true, hidden_reason_id = COALESCE(hidden_reason_id, ?)", reason], id: post.id)
+    Topic.update_all({ visible: false },
+                     ["id = :topic_id AND NOT EXISTS(SELECT 1 FROM POSTS WHERE topic_id = :topic_id AND NOT hidden)",
+                      topic_id: post.topic_id])
+
+    # inform user
+    if post.user
+      SystemMessage.create(post.user,
+                           :post_hidden,
+                           url: post.url,
+                           edit_delay: SiteSetting.cooldown_minutes_after_hiding_posts)
+    end
+  end
+
+  def self.guess_hide_reason(old_flags)
+    old_flags > 0 ?
+      Post.hidden_reasons[:flag_threshold_reached_again] :
+      Post.hidden_reasons[:flag_threshold_reached]
   end
 
   def self.flagged_posts_report(filter)
@@ -268,7 +313,11 @@ class PostAction < ActiveRecord::Base
     post_actions = PostAction.includes({:related_post => :topic})
                               .where(post_action_type_id: PostActionType.notify_flag_type_ids)
                               .where(post_id: post_lookup.keys)
-    post_actions = post_actions.with_deleted if filter == 'old'
+    if filter == 'old'
+      post_actions = post_actions.with_deleted.where('deleted_at IS NOT NULL OR defer = true')
+    else
+      post_actions = post_actions.where('defer IS NULL OR defer = false')
+    end
 
     post_actions.each do |pa|
       post = post_lookup[pa.post_id]
@@ -309,13 +358,12 @@ class PostAction < ActiveRecord::Base
 
     # it may make sense to add a view that shows flags on deleted posts,
     # we don't clear the flags on post deletion, just supress counts
-    #   they may have deleted_at on the action not set
     if filter == 'old'
-      sql.where2 "deleted_at is not null"
+      sql.where2 "deleted_at is not null OR defer = true"
       sql.order_by "max desc"
     else
       sql.where "p.deleted_at is null and t.deleted_at is null"
-      sql.where2 "deleted_at is null"
+      sql.where2 "deleted_at is null and (defer IS NULL OR defer = false)"
       sql.order_by "cnt desc, max asc"
     end
 
@@ -343,6 +391,8 @@ end
 #  message             :text
 #  related_post_id     :integer
 #  staff_took_action   :boolean          default(FALSE), not null
+#  defer               :boolean
+#  defer_by            :integer
 #
 # Indexes
 #

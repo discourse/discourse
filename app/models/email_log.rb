@@ -32,6 +32,8 @@ end
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  reply_key  :string(32)
+#  post_id    :integer
+#  topic_id   :integer
 #
 # Indexes
 #

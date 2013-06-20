@@ -23,7 +23,7 @@
       </thead>
       <tbody>
         {{#each flag in content}}
-        <tr {{bindAttr class="hiddenClass"}}>
+        <tr {{bindAttr class="flag.hiddenClass"}}>
           <td class='user'>{{#linkTo 'adminUser' flag.user}}{{avatar flag.user imageSize="small"}}{{/linkTo}}</td>
           <td class='excerpt'>{{#if flag.topicHidden}}<i title='{{i18n topic_statuses.invisible.help}}' class='icon icon-eye-close'></i> {{/if}}<h3><a href='{{unbound flag.url}}'>{{flag.title}}</a></h3><br>{{{flag.excerpt}}}
           </td>
@@ -33,8 +33,15 @@
           <td class='last-flagged'>{{date flag.lastFlagged}}</td>
           <td class='action'>
             {{#if adminActiveFlagsView}}
-              <button title='{{i18n admin.flags.clear_title}}' class='btn' {{action clearFlags flag}}>{{i18n admin.flags.clear}}</button>
-              <button title='{{i18n admin.flags.delete_title}}' class='btn' {{action deletePost flag}}>{{i18n admin.flags.delete}}</button>
+              {{#if flag.postHidden}}
+                <button title='{{i18n admin.flags.disagree_unhide_title}}' class='btn' {{action disagreeFlags flag}}>{{i18n admin.flags.disagree_unhide}}</button>
+                <button title='{{i18n admin.flags.defer_title}}' class='btn' {{action deferFlags flag}}>{{i18n admin.flags.defer}}</button>
+              {{else}}
+                <button title='{{i18n admin.flags.agree_hide_title}}' class='btn' {{action agreeFlags flag}}>{{i18n admin.flags.agree_hide}}</button>
+                <button title='{{i18n admin.flags.disagree_title}}' class='btn' {{action disagreeFlags flag}}>{{i18n admin.flags.disagree}}</button>
+              {{/if}}
+
+              <button title='{{i18n admin.flags.delete_post_title}}' class='btn' {{action deletePost flag}}>{{i18n admin.flags.delete_post}}</button>
             {{/if}}
           </td>
         </tr>

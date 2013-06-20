@@ -69,7 +69,9 @@ Discourse::Application.routes.draw do
     get 'customize' => 'site_customizations#index', constraints: AdminConstraint.new
     get 'flags' => 'flags#index'
     get 'flags/:filter' => 'flags#index'
-    post 'flags/clear/:id' => 'flags#clear'
+    post 'flags/agree/:id' => 'flags#agree'
+    post 'flags/disagree/:id' => 'flags#disagree'
+    post 'flags/defer/:id' => 'flags#defer'
     resources :site_customizations, constraints: AdminConstraint.new
     resources :site_contents, constraints: AdminConstraint.new
     resources :site_content_types, constraints: AdminConstraint.new

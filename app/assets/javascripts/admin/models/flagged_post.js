@@ -63,9 +63,21 @@ Discourse.FlaggedPost = Discourse.Post.extend({
     }
   },
 
-  clearFlags: function() {
-    return Discourse.ajax("/admin/flags/clear/" + this.id, { type: 'POST', cache: false });
+  disagreeFlags: function() {
+    return Discourse.ajax("/admin/flags/disagree/" + this.id, { type: 'POST', cache: false });
   },
+
+  deferFlags: function() {
+    return Discourse.ajax("/admin/flags/defer/" + this.id, { type: 'POST', cache: false });
+  },
+
+  agreeFlags: function() {
+    return Discourse.ajax("/admin/flags/agree/" + this.id, { type: 'POST', cache: false });
+  },
+
+  postHidden: function() {
+    return (this.get('hidden') === "t");
+  }.property(),
 
   hiddenClass: function() {
     if (this.get('hidden') === "t") return "hidden-post";

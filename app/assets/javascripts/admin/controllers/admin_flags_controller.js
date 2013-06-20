@@ -14,15 +14,32 @@ Discourse.AdminFlagsController = Ember.ArrayController.extend({
     @method clearFlags
     @param {Discourse.FlaggedPost} item The post whose flags we want to clear
   **/
-  clearFlags: function(item) {
+  disagreeFlags: function(item) {
     var adminFlagsController = this;
-    item.clearFlags().then((function() {
+    item.disagreeFlags().then((function() {
       adminFlagsController.removeObject(item);
     }), function() {
       bootbox.alert(Em.String.i18n("admin.flags.error"));
     });
   },
 
+  agreeFlags: function(item) {
+    var adminFlagsController = this;
+    item.agreeFlags().then((function() {
+      adminFlagsController.removeObject(item);
+    }), function() {
+      bootbox.alert(Em.String.i18n("admin.flags.error"));
+    });
+  },
+
+  deferFlags: function(item) {
+    var adminFlagsController = this;
+    item.deferFlags().then((function() {
+      adminFlagsController.removeObject(item);
+    }), function() {
+      bootbox.alert(Em.String.i18n("admin.flags.error"));
+    });
+  },
   /**
     Deletes a post
 
