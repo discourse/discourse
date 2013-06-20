@@ -3,23 +3,6 @@ require 'terminal-notifier-guard' if RUBY_PLATFORM.include?('darwin')
 phantom_path = File.expand_path('~/phantomjs/bin/phantomjs')
 phantom_path = nil unless File.exists?(phantom_path)
 
-jasmine_options = {:phantomjs_bin => phantom_path, :server_env => :test}
-
-if ENV['JASMINE_URL']
-  jasmine_options[:jasmine_url] = ENV['JASMINE_URL']
-  jasmine_options[:server] = :none
-else
-  jasmine_options[:server] = :thin
-  jasmine_options[:port] = 8888
-  jasmine_options[:server_timeout] = 300
-end
-
-guard 'jasmine', jasmine_options do
-  watch(%r{spec/javascripts/spec\.js$})         { "spec/javascripts" }
-  watch(%r{spec/javascripts/.+_spec\.js$})
-  watch(%r{app/assets/javascripts/(.+?)\.js$})  { "spec/javascripts" }
-end
-
 # verify that we pass jshint
 # see https://github.com/MrOrz/guard-jshint-on-rails
 guard 'jshint-on-rails', config_path: 'config/jshint.yml' do

@@ -56,13 +56,7 @@ describe PostsController do
 
   describe 'versions' do
 
-    it 'raises an exception when not logged in' do
-      lambda { xhr :get, :versions, post_id: 123 }.should raise_error(Discourse::NotLoggedIn)
-    end
-
-    describe 'when logged in' do
-      let(:post) { Fabricate(:post, user: log_in) }
-
+    shared_examples 'posts_controller versions examples' do
       it "raises an error if the user doesn't have permission to see the post" do
         Guardian.any_instance.expects(:can_see?).with(post).returns(false)
         xhr :get, :versions, post_id: post.id
@@ -73,7 +67,16 @@ describe PostsController do
         xhr :get, :versions, post_id: post.id
         ::JSON.parse(response.body).should be_present
       end
+    end
 
+    context 'when not logged in' do
+      let(:post) { Fabricate(:post) }
+      include_examples 'posts_controller versions examples'
+    end
+
+    context 'when logged in' do
+      let(:post) { Fabricate(:post, user: log_in) }
+      include_examples 'posts_controller versions examples'
     end
 
   end

@@ -496,15 +496,12 @@
     }
     .topic-meta-data-inside {
       float: right;
-      margin-right: 10px;
       z-index: 490;
+      margin-left: 20px;
       .post-info {
         font-size: 12px;
         display: inline-block;
         margin-right: 12px;
-        &:first-child {
-          margin-right: 0;
-        }
         &.edits {
           a, a:visited {
             color: #aaa;
@@ -522,7 +519,7 @@
       position: relative;
       .contents {
         .cooked {
-          padding: 25px 10px 0;
+          padding: 10px 10px 0;
         }
         position: relative;
         border: 1px solid #b9b9b9;

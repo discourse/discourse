@@ -4,7 +4,7 @@ require_dependency 'post_destroyer'
 class PostsController < ApplicationController
 
   # Need to be logged in for all actions here
-  before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link]
+  before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :versions]
 
   skip_before_filter :store_incoming_links, only: [:short_link]
   skip_before_filter :check_xhr, only: [:markdown,:short_link]

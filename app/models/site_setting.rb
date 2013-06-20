@@ -222,6 +222,8 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:topic_views_heat_medium, 2000)
   client_setting(:topic_views_heat_high,   5000)
 
+  setting(:minimum_topics_similar, 50)
+
   def self.generate_api_key!
     self.api_key = SecureRandom.hex(32)
   end
