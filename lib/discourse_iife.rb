@@ -8,8 +8,9 @@ class DiscourseIIFE < Sprockets::Processor
     # Only discourse or admin paths
     return data unless (path =~ /\/javascripts\/discourse/ || path =~ /\/javascripts\/admin/ || path =~ /\/test\/javascripts/)
 
-    # Ignore the js helper
+    # Ignore the js helpers
     return data if (path =~ /test\_helper\.js/)
+    return data if (path =~ /javascripts\/helpers\//)
 
     # Ignore translations
     return data if (path =~ /\/translations/)

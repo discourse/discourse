@@ -1,5 +1,3 @@
-/*global module:true test:true ok:true visit:true expect:true exists:true equal:true count:true present:true asyncTest:true blank:true */
-
 module("Discourse.PreloadStore", {
   setup: function() {
     PreloadStore.store('bane', 'evil');

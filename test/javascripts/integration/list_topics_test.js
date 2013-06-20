@@ -1,14 +1,4 @@
-/*global module:true test:true ok:true visit:true expect:true exists:true count:true */
-
-module("List Topics", {
-  setup: function() {
-    Ember.run(Discourse, Discourse.advanceReadiness);
-  },
-
-  teardown: function() {
-    Discourse.reset();
-  }
-});
+integration("List Topics");
 
 test("/", function() {
 

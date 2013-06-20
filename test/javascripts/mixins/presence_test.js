@@ -1,5 +1,3 @@
-/*global module:true test:true ok:true visit:true expect:true exists:true count:true */
-
 module("Discourse.Presence");
 
 var testObj = Em.Object.createWithMixins(Discourse.Presence, {

@@ -77,6 +77,21 @@ predef:
   - bootbox
   - moment
   - _
+  - module
+  - integration
+  - test
+  - ok
+  - expect
+  - equal
+  - blank
+  - present
+  - visit
+  - count
+  - exists
+  - asyncTest
+  - find
+  - resolvingPromise
+  - sinon
 
 browser:  true      # true if the standard browser globals should be predefined
 rhino:    false     # true if the Rhino environment globals should be predefined

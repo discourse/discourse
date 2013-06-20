@@ -1,4 +1,3 @@
-/*global module:true test:true ok:true visit:true expect:true exists:true count:true equal:true */
 module("Discourse.SelectedPostsCount");
 
 var buildTestObj = function(params, topicParams) {

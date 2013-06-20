@@ -1,4 +1,4 @@
-/*global module:true test:true ok:true visit:true expect:true exists:true count:true equal:true present:true md5:true */
+/*global md5:true */
 
 module("Discourse.BBCode");
 

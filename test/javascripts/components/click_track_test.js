@@ -1,5 +1,3 @@
-/*global module:true test:true ok:true visit:true equal:true exists:true count:true equal:true present:true sinon:true blank:true */
-
 module("Discourse.ClickTrack", {
   setup: function() {
 

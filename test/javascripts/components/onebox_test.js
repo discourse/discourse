@@ -1,5 +1,3 @@
-/*global module:true test:true ok:true visit:true equal:true exists:true count:true equal:true present:true md5:true resolvingPromise:true */
-
 module("Discourse.Onebox", {
   setup: function() {
     this.anchor = $("<a href='http://bla.com'></a>")[0];

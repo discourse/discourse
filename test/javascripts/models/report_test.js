@@ -1,5 +1,3 @@
-/*global module:true test:true ok:true visit:true expect:true exists:true count:true equal:true blank:true */
-
 module("Discourse.Report");
 
 function reportWithData(data) {

@@ -1,4 +1,4 @@
-/*global module:true test:true ok:true visit:true equal:true exists:true count:true equal:true present:true md5:true sanitizeHtml:true */
+/*global sanitizeHtml:true */
 
 module("Discourse.Markdown");
 

@@ -1,5 +1,3 @@
-/*global module:true test:true ok:true visit:true expect:true exists:true count:true present:true equal:true */
-
 module("Discourse.Site");
 
 test('instance', function(){

@@ -36,10 +36,11 @@
 //= require sinon-1.7.1.js
 //= require sinon-qunit-1.0.0.js
 
+//= require helpers/qunit_helpers
+//= require helpers/assertions
+//= require_tree ./fixtures
 //= require_tree .
 //= require_self
-
-//= require_tree ./fixtures
 
 // sinon settings
 sinon.config = {
@@ -65,35 +66,3 @@ Discourse.Router.map(function() {
   return Discourse.routeBuilder.call(this);
 });
 
-// Test helpers
-var resolvingPromise = Ember.Deferred.promise(function (p) {
-  p.resolve();
-})
-
-function exists(selector) {
-  return !!count(selector);
-}
-
-function count(selector) {
-  return find(selector).length;
-}
-
-function objBlank(obj) {
-  if (obj === undefined) return true;
-
-  switch (typeof obj) {
-  case "string":
-    return obj.trim().length === 0;
-  case "object":
-    return $.isEmptyObject(obj);
-  }
-  return false;
-}
-
-function present(obj, text) {
-  equal(objBlank(obj), false, text);
-}
-
-function blank(obj, text) {
-  equal(objBlank(obj), true, text);
-}
