@@ -368,20 +368,21 @@ Discourse.ComposerView = Discourse.View.extend({
   },
 
   titleValidation: function() {
-    var title = this.get('content.title'), reason;
-    var minLength = (this.get('content.creatingPrivateMessage') ? Discourse.SiteSettings.min_private_message_title_length : Discourse.SiteSettings.min_topic_title_length);
-    if( !title || title.length < 1 ){
+    var titleLength = this.get('content.titleLength'),
+        missingChars = this.get('content.missingTitleCharacters'),
+        reason;
+    if( titleLength < 1 ){
       reason = Em.String.i18n('composer.error.title_missing');
-    } else if( title.length < minLength ) {
-      reason = Em.String.i18n('composer.error.title_too_short', {min: minLength})
-    } else if( title.length > Discourse.SiteSettings.max_topic_title_length ) {
-      reason = Em.String.i18n('composer.error.title_too_long', {max: Discourse.SiteSettings.max_topic_title_length})
+    } else if( missingChars > 0 ) {
+      reason = Em.String.i18n('composer.error.title_too_short', {min: this.get('content.minimumTitleLength')});
+    } else if( titleLength > Discourse.SiteSettings.max_topic_title_length ) {
+      reason = Em.String.i18n('composer.error.title_too_long', {max: Discourse.SiteSettings.max_topic_title_length});
     }
 
     if( reason ) {
       return Discourse.InputValidation.create({ failed: true, reason: reason });
     }
-  }.property('content.title'),
+  }.property('content.titleLength', 'content.missingTitleCharacters', 'content.minimumTitleLength'),
 
   categoryValidation: function() {
     if( !Discourse.SiteSettings.allow_uncategorized_topics && !this.get('content.categoryName')) {
@@ -390,17 +391,19 @@ Discourse.ComposerView = Discourse.View.extend({
   }.property('content.categoryName'),
 
   replyValidation: function() {
-    var reply = this.get('content.reply'), reason;
-    if( !reply || reply.length < 1 ){
+    var replyLength = this.get('content.replyLength'),
+        missingChars = this.get('content.missingReplyCharacters'),
+        reason;
+    if( replyLength < 1 ){
       reason = Em.String.i18n('composer.error.post_missing');
-    } else if( reply.length < Discourse.SiteSettings.min_post_length ) {
-      reason = Em.String.i18n('composer.error.post_length', {min: Discourse.SiteSettings.min_post_length})
+    } else if( missingChars > 0 ) {
+      reason = Em.String.i18n('composer.error.post_length', {min: this.get('content.minimumPostLength')});
     }
 
     if( reason ) {
       return Discourse.InputValidation.create({ failed: true, reason: reason });
     }
-  }.property('content.reply')
+  }.property('content.reply', 'content.replyLength', 'content.missingReplyCharacters', 'content.minimumPostLength')
 });
 
 // not sure if this is the right way, keeping here for now, we could use a mixin perhaps

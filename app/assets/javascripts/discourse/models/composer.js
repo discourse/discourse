@@ -179,12 +179,12 @@ Discourse.Composer = Discourse.Model.extend({
     }
 
     // reply is always required
-    if (this.get('replyLength') < Discourse.SiteSettings.min_post_length) return true;
+    if (this.get('missingReplyCharacters') > 0) return true;
 
     if (this.get('canCategorize') && !Discourse.SiteSettings.allow_uncategorized_topics && !this.get('categoryName')) return true;
 
     return false;
-  }.property('loading', 'editTitle', 'titleLength', 'targetUsernames', 'replyLength', 'categoryName'),
+  }.property('loading', 'editTitle', 'titleLength', 'targetUsernames', 'replyLength', 'categoryName', 'missingReplyCharacters'),
 
   titleLengthValid: function() {
     if (this.get('creatingPrivateMessage')) {
@@ -193,7 +193,7 @@ Discourse.Composer = Discourse.Model.extend({
       if (this.get('titleLength') < Discourse.SiteSettings.min_topic_title_length) return false;
     }
     return (this.get('titleLength') <= Discourse.SiteSettings.max_topic_title_length);
-  }.property('titleLength'),
+  }.property('creatingPrivateMessage', 'titleLength'),
 
   // The text for the save button
   saveText: function() {
@@ -531,12 +531,21 @@ Discourse.Composer = Discourse.Model.extend({
     @property missingTitleCharacters
   **/
   missingTitleCharacters: function() {
+    return this.get('minimumTitleLength') - this.get('titleLength');
+  }.property('minimumTitleLength', 'titleLength'),
+
+  /**
+    Minimum number of characters for a title to be valid.
+
+    @property minimumTitleLength
+  **/
+  minimumTitleLength: function() {
     if (this.get('creatingPrivateMessage')) {
-      return Discourse.SiteSettings.min_private_message_title_length - this.get('titleLength');
+      return Discourse.SiteSettings.min_private_message_title_length;
     } else {
-      return Discourse.SiteSettings.min_topic_title_length - this.get('titleLength');
+      return Discourse.SiteSettings.min_topic_title_length;
     }
-  }.property('titleLength'),
+  }.property('creatingPrivateMessage'),
 
 
   /**
@@ -545,8 +554,21 @@ Discourse.Composer = Discourse.Model.extend({
     @property missingReplyCharacters
   **/
   missingReplyCharacters: function() {
-    return Discourse.SiteSettings.min_post_length - this.get('replyLength');
-  }.property('replyLength'),
+    return this.get('minimumPostLength') - this.get('replyLength');
+  }.property('minimumPostLength', 'replyLength'),
+
+  /**
+    Minimum number of characters for a post body to be valid.
+
+    @property minimumPostLength
+  **/
+  minimumPostLength: function() {
+    if( this.get('creatingPrivateMessage') ) {
+      return Discourse.SiteSettings.min_private_message_post_length;
+    } else {
+      return Discourse.SiteSettings.min_post_length;
+    }
+  }.property('creatingPrivateMessage'),
 
   /**
     Computes the length of the title minus non-significant whitespaces
