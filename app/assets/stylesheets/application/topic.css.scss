@@ -284,6 +284,9 @@
       color: darken($darkish_gray, 20%);
       margin-bottom: 10px;
     }
+    th {
+      background-color: $topic-list-th-background-color;
+    }
   }
 
   #topic-footer-buttons {
