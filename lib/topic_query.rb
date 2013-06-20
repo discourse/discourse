@@ -257,7 +257,7 @@ class TopicQuery
       result = result.where('categories.name is null or categories.name <> ?', query_opts[:exclude_category]) if query_opts[:exclude_category]
       result = result.where('categories.name = ?', query_opts[:only_category]) if query_opts[:only_category]
       result = result.limit(page_size) unless query_opts[:limit] == false
-      result = result.visible if @user.blank? or @user.regular?
+      result = result.visible if @opts[:visible] or @user.blank? or @user.regular?
       result = result.where('topics.id <> ?', query_opts[:except_topic_id]) if query_opts[:except_topic_id].present?
       result = result.offset(query_opts[:page].to_i * page_size) if query_opts[:page].present?
 

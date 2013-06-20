@@ -23,7 +23,7 @@ class CategoryFeaturedTopic < ActiveRecord::Base
       admin.admin = true
       admin.id = -1
 
-      query = TopicQuery.new(admin, per_page: SiteSetting.category_featured_topics, except_topic_id: c.topic_id)
+      query = TopicQuery.new(admin, per_page: SiteSetting.category_featured_topics, except_topic_id: c.topic_id, visible: true)
       results = query.list_category(c)
       if results.present?
         results.topic_ids.each_with_index do |topic_id, idx|
