@@ -73,11 +73,7 @@ class ListController < ApplicationController
 
   def respond(list)
 
-    list.draft_key = Draft::NEW_TOPIC
-    list.draft_sequence = DraftSequence.current(current_user, Draft::NEW_TOPIC)
-
-    draft = Draft.get(current_user, list.draft_key, list.draft_sequence) if current_user
-    list.draft = draft
+    fetch_draft!(list)
 
     discourse_expires_in 1.minute
 
@@ -91,6 +87,12 @@ class ListController < ApplicationController
         render_serialized(list, TopicListSerializer)
       end
     end
+  end
+
+  def fetch_draft!(list)
+    list.draft_key = Draft::NEW_TOPIC
+    list.draft_sequence = DraftSequence.current(current_user, Draft::NEW_TOPIC)
+    list.draft = Draft.get(current_user, list.draft_key, list.draft_sequence) if current_user
   end
 
   def next_page
