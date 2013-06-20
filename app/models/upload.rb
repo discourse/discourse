@@ -36,6 +36,13 @@ class Upload < ActiveRecord::Base
     optimized_images << thumbnail if thumbnail
   end
 
+  def delete
+    Upload.transaction do
+      Upload.remove_file url
+      super
+    end
+  end
+
   def self.create_for(user_id, file)
     # compute the sha
     sha1 = Digest::SHA1.file(file.tempfile).hexdigest
@@ -72,6 +79,11 @@ class Upload < ActiveRecord::Base
   def self.store_file(file, sha1, image_info, upload_id)
     return S3.store_file(file, sha1, image_info, upload_id) if SiteSetting.enable_s3_uploads?
     return LocalStore.store_file(file, sha1, image_info, upload_id)
+  end
+
+  def self.remove_file(url)
+    S3.remove_file(url) if SiteSetting.enable_s3_uploads?
+    LocalStore.remove_file(url)
   end
 
   def self.uploaded_regex
