@@ -52,7 +52,7 @@ class TopicsController < ApplicationController
   end
 
   def update
-    topic = Topic.where(id: params[:topic_id]).first
+    topic = Topic.find(params[:topic_id])
     guardian.ensure_can_edit!(topic)
     topic.title = params[:title] if params[:title].present?
 
@@ -61,15 +61,10 @@ class TopicsController < ApplicationController
       topic.archetype = "regular" if params[:archetype] == 'regular'
     end
 
-    success = false
-    Topic.transaction do
-      success = topic.save
-      topic.change_category(params[:category]) if success
-    end
-
     # this is used to return the title to the client as it may have been
     # changed by "TextCleaner"
-    if success
+    if topic.save
+      topic.change_category(params[:category])
       render_serialized(topic, BasicTopicSerializer)
     else
       render_json_error(topic)
