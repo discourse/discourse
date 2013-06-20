@@ -66,23 +66,20 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Discourse::NotFound do
-
-    if request.format && request.format.json?
-      render status: 404, layout: false, text: "[error: 'not found']"
-    else
-      render_not_found_page(404)
-    end
-
+    rescue_discourse_actions("[error: 'not found']", 404)
   end
 
   rescue_from Discourse::InvalidAccess do
-    if request.format && request.format.json?
-      render status: 403, layout: false, text: "[error: 'invalid access']"
-    else
-      render_not_found_page(403)
-    end
+    rescue_discourse_actions("[error: 'invalid access']", 403)
   end
 
+  def rescue_discourse_actions(message, error)
+    if request.format && request.format.json?
+      render status: error, layout: false, text: message
+    else
+      render_not_found_page(error)
+    end
+  end
 
   def set_locale
     I18n.locale = SiteSetting.default_locale
