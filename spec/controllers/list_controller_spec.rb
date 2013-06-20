@@ -85,6 +85,11 @@ describe ListController do
         response.should be_success
       end
 
+      it "responds with success when SiteSetting.uncategorized_name is non standard" do
+        SiteSetting.uncategorized_name = "testing"
+        xhr :get, :category, category: SiteSetting.uncategorized_name
+        response.should be_success
+      end
     end
 
   end

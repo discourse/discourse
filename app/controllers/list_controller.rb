@@ -1,28 +1,15 @@
 class ListController < ApplicationController
 
   before_filter :ensure_logged_in, except: [:latest, :hot, :category, :category_feed]
+  before_filter :set_category, only: [:category, :category_feed]
   skip_before_filter :check_xhr
 
   # Create our filters
   [:latest, :hot, :favorited, :read, :posted, :unread, :new].each do |filter|
     define_method(filter) do
-      list_opts = {
-        page: params[:page]
-      }
-
-      if params[:topic_ids]
-        list_opts[:topic_ids] = params[:topic_ids].split(",").map(&:to_i)
-      end
-
-      # html format means we need to parse exclude from the site options top menu
-      menu_item = SiteSetting.top_menu_items.select { |menu_item|
-        menu_item.query_should_exclude_category?(action_name, params[:format])
-      }.first
-      list_opts[:exclude_category] = menu_item.try(:filter)
-      list_opts[:exclude_category] = params[:exclude_category] if params[:exclude_category].present?
-
-      list = TopicQuery.new(current_user, list_opts).send("list_#{filter}")
-      list.more_topics_url = url_for(self.send "#{filter}_path".to_sym, list_opts.merge(format: 'json', page: next_page))
+      list_opts = build_topic_list_options
+      list = TopicQuery.new(current_user, list_opts).public_send("list_#{filter}")
+      list.more_topics_url = url_for(self.public_send "#{filter}_path".to_sym, list_opts.merge(format: 'json', page: next_page))
 
       respond(list)
     end
@@ -30,13 +17,11 @@ class ListController < ApplicationController
 
   def category
     query = TopicQuery.new(current_user, page: params[:page])
-    list = nil
 
     # If they choose uncategorized, return topics NOT in a category
-    if params[:category] == 'uncategorized'
+    if request_is_for_uncategorized?
       list = query.list_uncategorized
     else
-      @category = Category.where("slug = ? or id = ?", params[:category], params[:category].to_i).includes(:featured_users).first
       guardian.ensure_can_see!(@category)
       list = query.list_category(@category)
     end
@@ -46,9 +31,7 @@ class ListController < ApplicationController
   end
 
   def category_feed
-    raise Discourse::InvalidParameters.new('Category RSS of "uncategorized"') if params[:category] == Slug.for(SiteSetting.uncategorized_name) || params[:category] == SiteSetting.uncategorized_name
-
-    @category = Category.where("slug = ?", params[:category]).includes(:featured_users).first
+    raise Discourse::InvalidParameters.new('Category RSS of "uncategorized"') if request_is_for_uncategorized?
 
     guardian.ensure_can_see!(@category)
 
@@ -92,4 +75,27 @@ class ListController < ApplicationController
     params[:page].to_i + 1
   end
 
+  private
+
+  def set_category
+    category_slug = params.fetch(:category)
+    @category = Category.where("slug = ? or id = ?", category_slug, category_slug.to_i).includes(:featured_users).first
+  end
+
+  def request_is_for_uncategorized?
+    params[:category] == Slug.for(SiteSetting.uncategorized_name) || params[:category] == SiteSetting.uncategorized_name
+  end
+
+  def build_topic_list_options
+    # html format means we need to parse exclude category (aka filter) from the site options top menu
+    menu_items = SiteSetting.top_menu_items
+    menu_item = menu_items.select { |item| item.query_should_exclude_category?(action_name, params[:format]) }.first
+
+    # exclude_category = 1. from params / 2. parsed from top menu / 3. nil
+    return {
+      page: params[:page],
+      topic_ids: param_to_integer_list(:topic_ids),
+      exclude_category: (params[:exclude_category] || menu_item.try(:filter))
+    }
+  end
 end
