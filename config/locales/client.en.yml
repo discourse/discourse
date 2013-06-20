@@ -1206,7 +1206,7 @@ en:
         deactivate_failed: "There was a problem deactivating the user."
         unblock_failed: 'There was a problem unblocking the user.'
         block_failed: 'There was a problem blocking the user.'
-        deactivate_explanation: "A deactivated user must validate their email again before logging in."
+        deactivate_explanation: "A deactivated user must re-validate their email."
         banned_explanation: "A banned user can't log in."
         block_explanation: "A blocked user can't post or start topics."
 
