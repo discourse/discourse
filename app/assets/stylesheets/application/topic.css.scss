@@ -6,6 +6,23 @@
 // Topic title
 // --------------------------------------------------
 
+
+// when the H1 is docked at the top, there is less room
+// due to the username and search / notifications / etc controls
+.extra-info-wrapper {
+   @include medium-width {
+     h1 {
+       max-width: 735px;
+     }
+   }
+   @include small-width {
+     h1 {
+       max-width: 690px;
+     }
+   }
+}
+
+// note that this CSS affects both the docked title and the in-page title
 #topic-title,
 .extra-info-wrapper {
   h1 {
