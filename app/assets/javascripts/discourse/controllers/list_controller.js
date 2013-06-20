@@ -105,7 +105,7 @@ Discourse.ListController = Discourse.Controller.extend({
   canEditCategory: function() {
     if( this.present('category') ) {
       var u = Discourse.User.current();
-      return u && u.admin;
+      return u && u.staff;
     } else {
       return false;
     }
