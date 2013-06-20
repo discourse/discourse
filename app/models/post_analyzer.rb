@@ -20,7 +20,8 @@ class PostAnalyzer
     # wait for the post processor.
     dirty = false
     result = Oneboxer.apply(cooked) do |url, elem|
-      Oneboxer.render_from_cache(url)
+      Oneboxer.invalidate(url) if args.last[:invalidate_oneboxes]
+      Oneboxer.onebox url
     end
 
     cooked = result.to_html if result.changed?
