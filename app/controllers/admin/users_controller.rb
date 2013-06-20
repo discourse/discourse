@@ -1,28 +1,13 @@
 require_dependency 'user_destroyer'
+require_dependency 'admin_user_index_query'
 
 class Admin::UsersController < Admin::AdminController
 
   before_filter :fetch_user, only: [:ban, :unban, :refresh_browsers, :revoke_admin, :grant_admin, :revoke_moderation, :grant_moderation, :approve, :activate, :deactivate, :block, :unblock]
 
   def index
-    # Sort order
-    if params[:query] == "active"
-      @users = User.order("COALESCE(last_seen_at, to_date('1970-01-01', 'YYYY-MM-DD')) DESC, username")
-    else
-      @users = User.order("created_at DESC, username")
-    end
-
-    if ['newuser', 'basic', 'regular', 'leader', 'elder'].include?(params[:query])
-      @users = @users.where('trust_level = ?', TrustLevel.levels[params[:query].to_sym])
-    end
-
-    @users = @users.where('admin = ?', true)      if params[:query] == 'admins'
-    @users = @users.where('moderator = ?', true)  if params[:query] == 'moderators'
-    @users = @users.blocked                       if params[:query] == 'blocked'
-    @users = @users.where('approved = false')     if params[:query] == 'pending'
-    @users = @users.where('username_lower like :filter or email like :filter', filter: "%#{params[:filter].downcase}%") if params[:filter].present?
-    @users = @users.take(100)
-    render_serialized(@users, AdminUserSerializer)
+    query = ::AdminUserIndexQuery.new(params)
+    render_serialized(query.find_users, AdminUserSerializer)
   end
 
   def show
