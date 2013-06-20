@@ -51,6 +51,14 @@ sinon.config = {
     useFakeServer: false
 };
 
+window.assetPath = function() { return null };
+
+var oldAjax = $.ajax;
+$.ajax = function() {
+  console.error("Discourse.Ajax called in test environment (" + arguments[0] + ")");
+  return oldAjax.apply(this, arguments);
+};
+
 // Trick JSHint into allow document.write
 var d = document;
 d.write('<div id="qunit-scratch" style="display:none"></div>');

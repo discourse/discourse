@@ -22,6 +22,9 @@ Discourse = Ember.Application.createWithMixins({
   // The highest seen post number by topic
   highestSeenByTopic: {},
 
+  // Helps with integration tests
+  URL_FIXTURES: {},
+
   getURL: function(url) {
 
     // If it's a non relative URL, return it.
