@@ -18,7 +18,6 @@ class PostAnalyzer
 
     # If we have any of the oneboxes in the cache, throw them in right away, don't
     # wait for the post processor.
-    dirty = false
     result = Oneboxer.apply(cooked) do |url, elem|
       Oneboxer.invalidate(url) if args.last[:invalidate_oneboxes]
       Oneboxer.onebox url
