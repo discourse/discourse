@@ -1,20 +1,42 @@
 module S3
 
   def self.store_file(file, sha1, image_info, upload_id)
-    raise Discourse::SiteSettingMissing.new("s3_upload_bucket")     if SiteSetting.s3_upload_bucket.blank?
-    raise Discourse::SiteSettingMissing.new("s3_access_key_id")     if SiteSetting.s3_access_key_id.blank?
-    raise Discourse::SiteSettingMissing.new("s3_secret_access_key") if SiteSetting.s3_secret_access_key.blank?
+    S3.check_missing_site_settings
 
-    @fog_loaded = require 'fog' unless @fog_loaded
+    directory = S3.get_or_create_directory(SiteSetting.s3_upload_bucket)
 
     remote_filename = "#{upload_id}#{sha1}.#{image_info.type}"
 
-    options = S3.generate_options
-    directory = S3.get_or_create_directory(SiteSetting.s3_upload_bucket, options)
     # if this fails, it will throw an exception
     file = S3.upload(file, remote_filename, directory)
-
     return "//#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/#{remote_filename}"
+  end
+
+  def self.remove_file(url)
+    S3.check_missing_site_settings
+
+    directory = S3.get_or_create_directory(SiteSetting.s3_upload_bucket)
+
+    file = S3.destroy(url, directory)
+  end
+
+  def self.check_missing_site_settings
+    raise Discourse::SiteSettingMissing.new("s3_upload_bucket")     if SiteSetting.s3_upload_bucket.blank?
+    raise Discourse::SiteSettingMissing.new("s3_access_key_id")     if SiteSetting.s3_access_key_id.blank?
+    raise Discourse::SiteSettingMissing.new("s3_secret_access_key") if SiteSetting.s3_secret_access_key.blank?
+  end
+
+  def self.get_or_create_directory(name)
+    @fog_loaded = require 'fog' unless @fog_loaded
+
+    options = S3.generate_options
+
+    fog = Fog::Storage.new(options)
+
+    directory = fog.directories.get(name)
+    directory = fog.directories.create(key: name) unless directory
+
+    directory
   end
 
   def self.generate_options
@@ -28,14 +50,6 @@ module S3
     options
   end
 
-  def self.get_or_create_directory(name, options)
-    fog = Fog::Storage.new(options)
-    directory = fog.directories.get(name)
-    directory = fog.directories.create(key: name) unless directory
-
-    directory
-  end
-
   def self.upload(file, name, directory)
     directory.files.create(
       key: name,
@@ -43,6 +57,10 @@ module S3
       body: file.tempfile,
       content_type: file.content_type
     )
+  end
+
+  def self.destroy(name, directory)
+    directory.files.destroy(key: name)
   end
 
 end

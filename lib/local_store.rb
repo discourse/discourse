@@ -15,4 +15,9 @@ module LocalStore
     return Discourse::base_uri + "#{url_root}/#{clean_name}"
   end
 
+  def self.remove_file(url)
+    File.delete("#{Rails.root}/public#{url}")
+  rescue Errno::ENOENT
+  end
+
 end
