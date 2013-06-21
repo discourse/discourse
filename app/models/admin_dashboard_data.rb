@@ -107,7 +107,7 @@ class AdminDashboardData
   end
 
   def image_magick_check
-    I18n.t('dashboard.image_magick_warning') if SiteSetting.create_thumbnails and !system("which -s convert")
+    I18n.t('dashboard.image_magick_warning') if SiteSetting.create_thumbnails and !system("command -v convert >/dev/null;")
   end
 
   def failing_emails_check
