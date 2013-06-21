@@ -36,6 +36,18 @@ class OptimizedImage < ActiveRecord::Base
     thumbnail
   end
 
+  def destroy
+    OptimizedImage.transaction do
+      remove_file
+      super
+    end
+  end
+
+  def remove_file
+    File.delete path
+  rescue Errno::ENOENT
+  end
+
   def url
     "#{Upload.base_url}/#{optimized_path}/#{filename}"
   end

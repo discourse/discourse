@@ -43,7 +43,7 @@ task "images:clean_orphans" => :environment do
     Upload.joins("LEFT OUTER JOIN post_uploads ON uploads.id = post_uploads.upload_id")
           .where("post_uploads.upload_id IS NULL")
           .find_each do |u|
-      u.delete
+      u.destroy
       putc "."
     end
   end
