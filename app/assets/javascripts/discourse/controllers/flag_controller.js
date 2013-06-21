@@ -43,14 +43,14 @@ Discourse.FlagController = Discourse.ObjectController.extend(Discourse.ModalFunc
   }.property('selected.is_custom_flag'),
 
   takeAction: function() {
-    this.createFlag({takeAction: true})
+    this.createFlag({takeAction: true});
     this.set('hidden', true);
   },
 
   createFlag: function(opts) {
     var flagController = this;
     var postAction = this.get('actionByName.' + this.get('selected.name_key'));
-    var params = this.get('selected.is_custom_flag') ? {message: this.get('message')} : {}
+    var params = this.get('selected.is_custom_flag') ? {message: this.get('message')} : {};
 
     if (opts) params = $.extend(params, opts);
 

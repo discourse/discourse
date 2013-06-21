@@ -14,7 +14,7 @@ Discourse.ClearPinButton = Discourse.ButtonView.extend({
   // Hide the button if it becomes unpinned
   unpinned: function() {
     // When not logged in don't show the button
-    if (!Discourse.User.current()) return 'hidden'
+    if (!Discourse.User.current()) return 'hidden';
     return this.get('controller.pinned') ? null : 'hidden';
   }.property('controller.pinned'),
 

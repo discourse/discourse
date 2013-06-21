@@ -31,7 +31,7 @@ Discourse.PopupInputTipView = Discourse.View.extend({
 
   bounce: function() {
     if( this.get('shownAt') ) {
-      var $elem = this.$()
+      var $elem = this.$();
       if( !this.animateAttribute ) {
         this.animateAttribute = $elem.css('left') === 'auto' ? 'right' : 'left';
       }

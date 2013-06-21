@@ -15,7 +15,7 @@ Discourse.AdminEmailPreviewDigestController = Discourse.ObjectController.extend(
     Discourse.EmailPreview.findDigest(this.get('lastSeen')).then(function (email) {
       model.setProperties(email.getProperties('html_content', 'text_content'));
       controller.set('loading', false);
-    })
+    });
   }
 
 });

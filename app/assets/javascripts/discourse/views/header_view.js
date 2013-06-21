@@ -104,7 +104,7 @@ Discourse.HeaderView = Discourse.View.extend({
       if(logo && logo.length > 1) {
         result += "<img class='logo-big' src=\"" + logo + "\" alt=\"" + Discourse.SiteSettings.title + "\" id='site-logo'>";
       } else {
-        result += "<h2 class='text-logo' id='site-text-logo'>" + Discourse.SiteSettings.title + "</h2>"
+        result += "<h2 class='text-logo' id='site-text-logo'>" + Discourse.SiteSettings.title + "</h2>";
       }
     }
     result += "</a></div>";

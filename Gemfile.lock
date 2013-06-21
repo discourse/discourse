@@ -199,9 +199,6 @@ GEM
       lumberjack (>= 1.0.2)
       pry (>= 0.9.10)
       thor (>= 0.14.6)
-    guard-jshint-on-rails (0.0.2)
-      guard (>= 1.0.0)
-      jshint_on_rails (>= 1.0.2)
     guard-rspec (2.5.4)
       guard (>= 1.1)
       rspec (~> 2.11)
@@ -226,7 +223,6 @@ GEM
     image_sorcery (1.1.0)
     in_threads (1.1.1)
     journey (1.0.4)
-    jshint_on_rails (1.0.2)
     json (1.7.7)
     jwt (0.1.8)
       multi_json (>= 1.5)
@@ -485,7 +481,6 @@ DEPENDENCIES
   fast_xs
   fastimage
   fog
-  guard-jshint-on-rails
   guard-rspec
   guard-spork
   handlebars-source (= 1.0.0.rc4)
@@ -494,7 +489,6 @@ DEPENDENCIES
   hiredis
   image_optim
   image_sorcery
-  jshint_on_rails
   librarian (>= 0.0.25)
   listen
   lru_redux

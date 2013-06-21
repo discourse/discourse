@@ -36,7 +36,7 @@ Discourse.AdminSiteContentEditRoute = Discourse.Route.extend({
     Discourse.SiteContent.find(Em.get(model, 'content_type')).then(function (sc) {
       controller.set('content', sc);
       controller.set('loaded', true);
-    })
+    });
   }
 
 

@@ -148,7 +148,7 @@ Discourse.TopicList.reopenClass({
       var url = Discourse.getURL("/") + filter + ".json";
       if (excludeCategory) { url += "?exclude_category=" + excludeCategory; }
       return Discourse.ajax(url);
-    }
+    };
 
     return PreloadStore.getAndRemove("topic_list", finder).then(function(result) {
       var topicList = Discourse.TopicList.create({

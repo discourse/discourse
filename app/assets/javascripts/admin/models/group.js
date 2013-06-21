@@ -14,12 +14,12 @@ Discourse.Group = Discourse.Model.extend({
     if(id && !this.get('loaded')) {
       var group = this;
       Discourse.ajax('/admin/groups/' + this.get('id') + '/users').then(function(payload){
-        var users = Em.A()
+        var users = Em.A();
         _.each(payload,function(user){
           users.addObject(Discourse.User.create(user));
         });
-        group.set('users', users)
-        group.set('loaded', true)
+        group.set('users', users);
+        group.set('loaded', true);
       });
     }
   },
@@ -30,7 +30,7 @@ Discourse.Group = Discourse.Model.extend({
     if(users) {
       usernames = _.map(users, function(user){
         return user.get('username');
-      }).join(',')
+      }).join(',');
     }
     return usernames;
   }.property('users'),

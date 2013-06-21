@@ -27,7 +27,7 @@ Discourse.FlagActionTypeController = Discourse.ObjectController.extend({
   showDescription: Em.computed.not('showMessageInput'),
 
   customMessageLengthClasses: function() {
-    return (this.get('message.length') < Discourse.SiteSettings.min_private_message_post_length) ? "too-short" : "ok"
+    return (this.get('message.length') < Discourse.SiteSettings.min_private_message_post_length) ? "too-short" : "ok";
   }.property('message.length'),
 
   customMessageLength: function() {

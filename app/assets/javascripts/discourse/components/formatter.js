@@ -1,3 +1,5 @@
+/*jshint onecase:true */
+
 Discourse.Formatter = (function(){
 
   var updateRelativeAge, autoUpdatingRelativeAge, relativeAge, relativeAgeTiny,
@@ -15,7 +17,7 @@ Discourse.Formatter = (function(){
     return str.replace(/\w\S*/g, function(txt){
       return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     });
-  }
+  };
 
   longDate = function(dt) {
     if (!dt) return;
@@ -105,7 +107,7 @@ Discourse.Formatter = (function(){
 
     var t = function(key, opts){
       return Ember.String.i18n("dates.medium" + (leaveAgo?"_with_ago":"") + "." + key, opts);
-    }
+    };
 
     switch(true){
     case(distanceInMinutes >= 1 && distanceInMinutes <= 56):

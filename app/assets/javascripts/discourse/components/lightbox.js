@@ -17,4 +17,4 @@ Discourse.Lightbox = {
       });
     });
   }
-}
+};

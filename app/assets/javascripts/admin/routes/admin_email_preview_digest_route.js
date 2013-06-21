@@ -9,7 +9,7 @@
 
 var oneWeekAgo = function() {
   return moment().subtract('days',7).format('YYYY-MM-DD');
-}
+};
 
 Discourse.AdminEmailPreviewDigestRoute = Discourse.Route.extend(Discourse.ModelReady, {
 

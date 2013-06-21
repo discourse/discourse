@@ -97,9 +97,7 @@ group :test do
 end
 
 group :test, :development do
-  gem 'jshint_on_rails'
   gem 'listen', require: false
-  gem 'guard-jshint-on-rails', require: false
   gem 'certified', require: false
   gem 'fabrication', require: false
   gem 'qunit-rails'

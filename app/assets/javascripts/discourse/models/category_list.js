@@ -49,10 +49,10 @@ Discourse.CategoryList.reopenClass({
     var finder = null;
     if (filter === 'categories') {
       finder = PreloadStore.getAndRemove("categories_list", function() {
-        return Discourse.ajax("/categories.json")
+        return Discourse.ajax("/categories.json");
       });
     } else {
-      finder = Discourse.ajax("/" + filter + ".json")
+      finder = Discourse.ajax("/" + filter + ".json");
     }
 
     return finder.then(function(result) {
@@ -63,7 +63,7 @@ Discourse.CategoryList.reopenClass({
         categories: route.categoriesFrom(result),
         draft_key: result.category_list.draft_key,
         draft_sequence: result.category_list.draft_sequence
-      })
+      });
       return categoryList;
     });
   }

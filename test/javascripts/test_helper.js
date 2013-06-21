@@ -32,8 +32,9 @@
 //= require_tree ../../app/assets/javascripts/defer
 
 
-//= require sinon-1.7.1.js
-//= require sinon-qunit-1.0.0.js
+//= require sinon-1.7.1
+//= require sinon-qunit-1.0.0
+//= require jshint
 
 //= require helpers/qunit_helpers
 //= require helpers/assertions
@@ -41,6 +42,7 @@
 //= require_tree ./fixtures
 //= require_tree .
 //= require_self
+//= require jshint_all
 
 // sinon settings
 sinon.config = {

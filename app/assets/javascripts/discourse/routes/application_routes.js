@@ -30,7 +30,7 @@ Discourse.Route.buildRoutes(function() {
     });
 
     // the homepage is the first item of the 'top_menu' site setting
-    var settings = Discourse.SiteSettings || PreloadStore.get('siteSettings')
+    var settings = Discourse.SiteSettings || PreloadStore.get('siteSettings');
     var homepage = settings.top_menu.split("|")[0].split(",")[0];
     this.route(homepage, { path: '/' });
 

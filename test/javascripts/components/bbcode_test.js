@@ -1,10 +1,10 @@
 /*global md5:true */
-
 module("Discourse.BBCode");
 
 var format = function(input, expected, text) {
+  // testing 1 2 3
   equal(Discourse.BBCode.format(input, {lookupAvatar: false}), expected, text);
-}
+};
 
 test('basic bbcode', function() {
   format("[b]strong[/b]", "<span class='bbcode-b'>strong</span>", "bolds text");
@@ -50,7 +50,7 @@ test("quotes", function() {
 
   var formatQuote = function(val, expected, text) {
     equal(Discourse.BBCode.buildQuoteBBCode(post, val), expected, text);
-  }
+  };
 
   formatQuote(undefined, "", "empty string for undefined content");
   formatQuote(null, "", "empty string for null content");

@@ -71,7 +71,7 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
       // Failed to login
       loginController.flash(Em.String.i18n('login.error'), 'error');
       loginController.set('loggingIn', false);
-    })
+    });
 
     return false;
   },
@@ -153,7 +153,7 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
       accountUsername: options.username,
       accountName: options.name,
       authOptions: Em.Object.create(options)
-    })
+    });
     this.send('showCreateAccount');
   }
 

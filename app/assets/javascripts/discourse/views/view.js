@@ -28,4 +28,4 @@ Discourse.View.reopenClass({
     });
   }
 
-})
+});

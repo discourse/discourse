@@ -96,7 +96,7 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
   }.property(),
 
   showCategoryTopic: function() {
-    this.send('closeModal')
+    this.send('closeModal');
     Discourse.URL.routeTo(this.get('topic_url'));
     return false;
   },

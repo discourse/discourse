@@ -94,7 +94,7 @@ Discourse.AdminUsersListController = Ember.ArrayController.extend(Discourse.Pres
     Discourse.AdminUser.findAll(this.get('query'), this.get('username')).then(function (result) {
       adminUsersListController.set('content', result);
       adminUsersListController.set('loading', false);
-    })
+    });
   },
 
 

@@ -21,7 +21,7 @@ Discourse.Search = {
     if (!opts) opts = {};
 
     // Only include the data we have
-    var data = { term: term }
+    var data = { term: term };
     if (opts.typeFilter) data.type_filter = opts.typeFilter;
 
     if (opts.searchContext) {
@@ -34,5 +34,5 @@ Discourse.Search = {
     return Discourse.ajax('/search', { data: data });
   }
 
-}
+};
 

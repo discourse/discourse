@@ -20,7 +20,7 @@ Discourse.GithubCommit = Discourse.Model.extend({
   }.property("sha"),
 
   timeAgo: function() {
-    return moment(this.get('commit.committer.date')).relativeAge({format: 'medium', leaveAgo: true})
+    return moment(this.get('commit.committer.date')).relativeAge({format: 'medium', leaveAgo: true});
   }.property("commit.committer.date")
 });
 

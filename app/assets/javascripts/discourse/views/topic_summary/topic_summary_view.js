@@ -46,7 +46,7 @@ Discourse.TopicSummaryView = Discourse.ContainerView.extend({
       templateName: 'topic_summary/info',
       topic: this.get('topic'),
       summaryView: this
-    })
+    });
 
     this.trigger('appendSummaryInformation', this);
   },

@@ -66,4 +66,4 @@ Discourse.ScrollingDOMMethods = {
     $(document).unbind('touchmove.discourse');
   }
 
-}
+};

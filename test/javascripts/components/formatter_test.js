@@ -27,15 +27,15 @@ test("formating medium length dates", function() {
   format = "medium";
   var strip = function(html){
     return $(html).text();
-  }
+  };
 
   var shortDate = function(days){
     return moment().subtract('days', days).format('D MMM');
-  }
+  };
 
   var shortDateYear = function(days){
     return moment().subtract('days', days).format('D MMM, YYYY');
-  }
+  };
 
   leaveAgo = true;
   equal(strip(formatMins(1.4)), "1 min ago");

@@ -38,7 +38,7 @@ Discourse.SearchController = Em.ArrayController.extend(Discourse.Presence, {
         var index = 0;
         results = _(['topic', 'category', 'user'])
             .map(function(n){
-              return _(results).where({type: n}).first()
+              return _(results).where({type: n}).first();
             })
             .compact()
             .each(function(list){

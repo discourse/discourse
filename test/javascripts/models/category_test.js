@@ -4,7 +4,7 @@ test('slugFor', function(){
 
   var slugFor = function(args, val, text) {
     equal(Discourse.Category.slugFor(args), val, text);
-  }
+  };
 
   slugFor({slug: 'hello'}, "hello", "It calculates the proper slug for hello");
   slugFor({id: 123, slug: ''}, "123-category", "It returns id-category for empty strings");

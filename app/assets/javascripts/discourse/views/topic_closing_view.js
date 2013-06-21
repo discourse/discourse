@@ -54,7 +54,7 @@ Discourse.TopicClosingView = Discourse.View.extend({
 
   willDestroyElement: function() {
     if( this.delayedRerender ) {
-      Em.run.cancel(this.delayedRerender)
+      Em.run.cancel(this.delayedRerender);
     }
   }
 });

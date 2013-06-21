@@ -15,7 +15,7 @@ Discourse.AutoCloseFormView = Ember.View.extend({
 
   autoCloseChanged: function() {
     if( this.get('autoCloseDays') && this.get('autoCloseDays').length > 0 ) {
-      this.set('autoCloseDays', this.get('autoCloseDays').replace(/[^\d]/g, '') )
+      this.set('autoCloseDays', this.get('autoCloseDays').replace(/[^\d]/g, '') );
     }
   }.observes('autoCloseDays')
 });

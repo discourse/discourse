@@ -199,7 +199,7 @@ Discourse = Ember.Application.createWithMixins({
       // Reloading will refresh unbound properties
       Discourse.KeyValueStore.abandonLocal();
       window.location.reload();
-    })
+    });
   },
 
   authenticationComplete: function(options) {
@@ -255,7 +255,7 @@ Discourse = Ember.Application.createWithMixins({
     if (fixture) {
       return Ember.Deferred.promise(function(promise) {
         promise.resolve(fixture);
-      })
+      });
     }
 
     return Ember.Deferred.promise(function (promise) {
@@ -263,7 +263,7 @@ Discourse = Ember.Application.createWithMixins({
       args.success = function(xhr) {
         Ember.run(promise, promise.resolve, xhr);
         if (oldSuccess) oldSuccess(xhr);
-      }
+      };
 
       var oldError = args.error;
       args.error = function(xhr) {
@@ -273,7 +273,7 @@ Discourse = Ember.Application.createWithMixins({
 
         promise.reject(xhr);
         if (oldError) oldError(xhr);
-      }
+      };
 
       // We default to JSON on GET. If we don't, sometimes if the server doesn't return the proper header
       // it will not be parsed as an object.
@@ -307,7 +307,7 @@ Discourse = Ember.Application.createWithMixins({
       bus.subscribe("/categories", function(data){
         var site = Discourse.Site.instance();
         _.each(data.categories,function(c){
-          site.updateCategory(c)
+          site.updateCategory(c);
         });
       });
 

@@ -66,7 +66,7 @@ Discourse.ListTopicsView = Discourse.View.extend(Discourse.Scrolling, {
       if (!hasMoreResults) {
         listTopicsView.get('eyeline').flushRest();
       }
-    })
+    });
   },
 
   // Remember where we were scrolled to

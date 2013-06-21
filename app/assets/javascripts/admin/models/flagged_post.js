@@ -14,7 +14,7 @@ Discourse.FlaggedPost = Discourse.Post.extend({
       .map(function(v,k){
         return Em.String.i18n("admin.flags.summary.action_type_" + k, {count: v.length});
       })
-      .join(",")
+      .join(",");
   }.property(),
 
   flaggers: function() {

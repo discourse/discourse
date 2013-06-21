@@ -158,7 +158,7 @@ Discourse.BBCode = {
   extractQuotes: function(text) {
     var result = {text: "" + text, replacements: []};
 
-    var replacements = []
+    var replacements = [];
 
     var matches;
     while (matches = Discourse.BBCode.QUOTE_REGEXP.exec(result.text)) {
@@ -178,7 +178,7 @@ Discourse.BBCode = {
         input = input.replace(r.key, val);
       });
       return input;
-    }
+    };
 
     return(result);
   },
@@ -192,21 +192,24 @@ Discourse.BBCode = {
   **/
   formatQuote: function(text, opts) {
     var args, matches, params, paramsSplit, paramsString, templateName, username;
+
+    var splitter = function(p,i) {
+      if (i > 0) {
+        var assignment = p.split(':');
+        if (assignment[0] && assignment[1]) {
+          return params.push({
+            key: assignment[0],
+            value: assignment[1].trim()
+          });
+        }
+      }
+    };
+
     while (matches = this.QUOTE_REGEXP.exec(text)) {
       paramsString = matches[1].replace(/\"/g, '');
       paramsSplit = paramsString.split(/\, */);
       params = [];
-      _.each(paramsSplit,function(p,i) {
-        if (i > 0) {
-          var assignment = p.split(':');
-          if (assignment[0] && assignment[1]) {
-            return params.push({
-              key: assignment[0],
-              value: assignment[1].trim()
-            });
-          }
-        }
-      });
+      _.each(paramsSplit, splitter);
       username = paramsSplit[0];
 
       // remove leading <br>s

@@ -21,7 +21,7 @@ test('missingReplyCharacters', function() {
   var missingReplyCharacters = function(val, isPM, expected, message) {
     var composer = Discourse.Composer.create({ reply: val, creatingPrivateMessage: isPM });
     equal(composer.get('missingReplyCharacters'), expected, message);
-  }
+  };
 
   missingReplyCharacters('hi', false, Discourse.SiteSettings.min_post_length - 2, 'too short public post');
   missingReplyCharacters('hi', true,  Discourse.SiteSettings.min_private_message_post_length - 2, 'too short private message');
@@ -31,7 +31,7 @@ test('missingTitleCharacters', function() {
   var missingTitleCharacters = function(val, isPM, expected, message) {
     var composer = Discourse.Composer.create({ title: val, creatingPrivateMessage: isPM });
     equal(composer.get('missingTitleCharacters'), expected, message);
-  }
+  };
 
   missingTitleCharacters('hi', false, Discourse.SiteSettings.min_topic_title_length - 2, 'too short post title');
   missingTitleCharacters('z', true,  Discourse.SiteSettings.min_private_message_title_length - 1, 'too short pm title');

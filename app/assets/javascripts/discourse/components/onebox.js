@@ -58,7 +58,7 @@ Discourse.Onebox = {
     var loadingFinished = function() {
       $elem.removeClass('loading-onebox');
       $elem.data('onebox-loaded');
-    }
+    };
 
     var onebox = this;
     promise.then(function(html) {

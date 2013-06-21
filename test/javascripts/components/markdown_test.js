@@ -12,11 +12,10 @@ var cooked = function(input, expected, text) {
 
 var cookedOptions = function(input, opts, expected, text) {
   equal(Discourse.Markdown.cook(input, opts), expected, text);
-}
+};
 
 test("basic cooking", function() {
   cooked("hello", "<p>hello</p>", "surrounds text with paragraphs");
-
 });
 
 test("Line Breaks", function() {
@@ -29,10 +28,10 @@ test("Line Breaks", function() {
   cookedOptions(input,
                 {traditional_markdown_linebreaks: true},
                 traditionalOutput,
-                "It supports traditional markdown via an option")
+                "It supports traditional markdown via an option");
 
   Discourse.SiteSettings.traditional_markdown_linebreaks = true;
-  cooked(input, traditionalOutput, "It supports traditional markdown via a Site Setting")
+  cooked(input, traditionalOutput, "It supports traditional markdown via a Site Setting");
 
 });
 

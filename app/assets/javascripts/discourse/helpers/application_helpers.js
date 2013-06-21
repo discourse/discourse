@@ -223,7 +223,7 @@ Handlebars.registerHelper('editDate', function(property, options) {
 **/
 Ember.Handlebars.registerHelper('percentile', function(property, options) {
   var percentile = Ember.Handlebars.get(this, property, options);
-  return Math.round((1.0 - percentile) * 100)
+  return Math.round((1.0 - percentile) * 100);
 });
 
 /**
@@ -236,7 +236,7 @@ Ember.Handlebars.registerHelper('float', function(property, options) {
   var x = Ember.Handlebars.get(this, property, options);
   if (!x) return "0";
   if (Math.round(x) === x) return x;
-  return x.toFixed(3)
+  return x.toFixed(3);
 });
 
 /**

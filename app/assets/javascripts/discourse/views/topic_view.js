@@ -106,7 +106,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     this.resetExamineDockCache();
 
     // this happens after route exit, stuff could have trickled in
-    this.set('controller.controllers.header.showExtraInfo', false)
+    this.set('controller.controllers.header.showExtraInfo', false);
   },
 
   didInsertElement: function(e) {
