@@ -262,8 +262,8 @@ Discourse.Post = Discourse.Model.extend({
     // We don't show replies if there aren't any
     if (reply_count === 0) return false;
 
-    // Always show replies if the setting `supress_reply_directly_below` is false.
-    if (!Discourse.SiteSettings.supress_reply_directly_below) return true;
+    // Always show replies if the setting `suppress_reply_directly_below` is false.
+    if (!Discourse.SiteSettings.suppress_reply_directly_below) return true;
 
     // Always show replies if there's more than one
     if (reply_count > 1) return true;

@@ -488,7 +488,7 @@ zh_CN:
     posts_per_page: "在主题页面，返回多少个帖子"
     system_username: "论坛给用户发送自动私信时使用的用户名"
     send_welcome_message: "给新用户发送欢迎私信？"
-    supress_reply_directly_below: "当一个帖子只有一个回复时，不显示帖子回复数量"
+    suppress_reply_directly_below: "当一个帖子只有一个回复时，不显示帖子回复数量"
     allow_index_in_robots_txt: "允许搜索引擎索引站点内容（更新 robots.txt）"
     email_domains_blacklist: "将一列竖线分隔的邮箱域名放入黑名单，例如：mailinator.com|trashmail.net"
     email_domains_whitelist: "竖线 | 分隔的电子邮箱域名，用户只能使用这些邮箱域名注册。注意：用户使用不包含在这个列表里的邮箱域名，将无法成功注册。"

@@ -63,7 +63,7 @@ nl:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
-      trust_level_5: "trust_level_5" 
+      trust_level_5: "trust_level_5"
 
   education:
     until_posts:
@@ -492,7 +492,7 @@ nl:
     posts_per_page: "Hoeveel berichten er worden weergeven op een topic-pagina"
     system_username: "Vanuit welke gebruikersnaam systeemberichten worden verstuurd"
     send_welcome_message: "Krijgen nieuwe leden een welkomst-privé-bericht?"
-    supress_reply_directly_below: "Laat geen reactieknop zien onder een bericht waarbij de reactie direct onder het bericht zal worden gemaakt"
+    suppress_reply_directly_below: "Laat geen reactieknop zien onder een bericht waarbij de reactie direct onder het bericht zal worden gemaakt"
     allow_index_in_robots_txt: "De site zou geïndexeerd mogen worden door zoekmachines (update robots.txt)"
     email_domains_blacklist: "Een lijst met e-maildomeinen gescheiden door een |-teken van domeinen die niet worden toegestaan. Voorbeeld: mailinator.com|trashmail.net"
     email_domains_whitelist: "Een lijst met e-maildomeinen gescheiden door een |-teken van domeinen die wel worden toegestaan. N.B.: als je hier iets opgeeft, zijn andere domeinen NIET toegestaan."
