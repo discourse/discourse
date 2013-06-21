@@ -68,6 +68,7 @@ class CategoryList
       # Support for uncategorized topics
       uncategorized_topics = Topic
                         .listable_topics
+                        .visible
                         .where(category_id: nil)
                         .topic_list_order
                         .limit(SiteSetting.category_featured_topics)

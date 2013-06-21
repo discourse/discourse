@@ -12,7 +12,7 @@ describe CategoryList do
       category_list.categories.should be_blank
     end
 
-    context "with an uncateorized topic" do
+    context "with an uncategorized topic" do
       let!(:topic) { Fabricate(:topic)}
       let(:category) { category_list.categories.first }
 
@@ -22,6 +22,12 @@ describe CategoryList do
         category.slug.should == SiteSetting.uncategorized_name
         category.topics_week.should == 1
         category.featured_topics.should == [topic]
+      end
+
+      it 'does not return an invisible topic' do
+        invisible_topic = Fabricate(:topic)
+        invisible_topic.update_status('visible', false, Fabricate(:admin))
+        expect(category.featured_topics).to_not include(invisible_topic)
       end
 
     end
