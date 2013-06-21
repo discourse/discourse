@@ -279,7 +279,7 @@ table {
   th { text-align: left; }
   .user { width: 40px; }
   .excerpt {
-    width: 600px; padding: 0 10px 10px 0;
+    width: 740px; padding: 0 10px 10px 0;
     .icon,h3 { display: inline-block; }
 
   }
@@ -287,7 +287,8 @@ table {
   .last-flagged { padding: 0 10px; }
   .flag-summary { font-size: 11px; }
   .action {
-     button { margin: 4px; display: block;}
+     button { margin: 4px; }
+     text-align: right;
      padding-bottom: 20px;
   }
 }
