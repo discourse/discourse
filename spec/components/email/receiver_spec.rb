@@ -40,16 +40,6 @@ stripped from my reply?")
     end
   end
 
-  describe "with a content boundary" do
-    let(:bounded_email) { File.read("#{Rails.root}/spec/fixtures/emails/boundary.eml") }
-    let(:receiver) { Email::Receiver.new(bounded_email) }
-
-    it "does something" do
-      receiver.process
-      expect(receiver.body).to eq("I'll look into it, thanks!")
-    end
-  end
-
   describe "with a valid email" do
     let(:reply_key) { "59d8df8370b7e95c5a49fbf86aeb2c93" }
     let(:valid_reply) { File.read("#{Rails.root}/spec/fixtures/emails/valid_reply.eml") }
@@ -83,7 +73,11 @@ greatest show ever created. Everyone should watch it.
         EmailLog.expects(:for).with(reply_key).returns(email_log)
 
         creator = mock
-        PostCreator.expects(:new).with(instance_of(User), has_entry(raw: reply_body)).returns(creator)
+        PostCreator.expects(:new).with(instance_of(User),
+                                       has_entries(raw: reply_body,
+                                                   cooking_options: {traditional_markdown_linebreaks: true}))
+                                 .returns(creator)
+
         creator.expects(:create)
       end
 

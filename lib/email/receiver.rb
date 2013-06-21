@@ -82,7 +82,8 @@ module Email
       creator = PostCreator.new(email_log.user,
                                 raw: @body,
                                 topic_id: @email_log.topic_id,
-                                reply_to_post_number: @email_log.post.post_number)
+                                reply_to_post_number: @email_log.post.post_number,
+                                cooking_options: {traditional_markdown_linebreaks: true})
 
       creator.create
     end

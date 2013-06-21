@@ -253,6 +253,20 @@ describe PostCreator do
 
   end
 
+  context "cooking options" do
+    let(:raw) { "this is my awesome message body hello world" }
+
+    it "passes the cooking options through correctly" do
+      creator = PostCreator.new(user,
+                                title: 'hi there welcome to my topic',
+                                raw: raw,
+                                cooking_options: { traditional_markdown_linebreaks: true })
+
+      Post.any_instance.expects(:cook).with(raw, has_key(:traditional_markdown_linebreaks)).returns(raw)
+      creator.create
+    end
+  end
+
   # integration test ... minimise db work
   context 'private message' do
     let(:target_user1) { Fabricate(:coding_horror) }

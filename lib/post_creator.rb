@@ -32,11 +32,13 @@ class PostCreator
   #     target_usernames      - comma delimited list of usernames for membership (private message)
   #     target_group_names    - comma delimited list of groups for membership (private message)
   #     meta_data             - Topic meta data hash
+  #     cooking_options       - Options for rendering the text
+  #
   def initialize(user, opts)
     # TODO: we should reload user in case it is tainted, should take in a user_id as opposed to user
     # If we don't do this we introduce a rather risky dependency
     @user = user
-    @opts = opts
+    @opts = opts || {}
     @spam = false
   end
 
@@ -87,14 +89,17 @@ class PostCreator
     end
 
     post.post_number ||= Topic.next_post_number(post.topic_id, post.reply_to_post_number.present?)
-    post.cooked ||= post.cook(post.raw, topic_id: post.topic_id)
+
+    cooking_options = post.cooking_options || {}
+    cooking_options[:topic_id] = post.topic_id
+
+    post.cooked ||= post.cook(post.raw, cooking_options)
     post.sort_order = post.post_number
     DiscourseEvent.trigger(:before_create_post, post)
     post.last_version_at ||= Time.now
   end
 
   def self.after_create_tasks(post)
-    Rails.logger.info (">" * 30) + "#{post.no_bump} #{post.created_at}"
     # Update attributes on the topic - featured users and last posted.
     attrs = {last_posted_at: post.created_at, last_post_user_id: post.user_id}
     attrs[:bumped_at] = post.created_at unless post.no_bump
@@ -183,14 +188,13 @@ class PostCreator
                            user: @user,
                            reply_to_post_number: @opts[:reply_to_post_number])
 
-    post.post_type = @opts[:post_type] if @opts[:post_type].present?
-    post.no_bump = @opts[:no_bump] if @opts[:no_bump].present?
-    post.extract_quoted_post_numbers
-    post.acting_user = @opts[:acting_user] if @opts[:acting_user].present?
-    post.created_at = Time.zone.parse(@opts[:created_at].to_s) if @opts[:created_at].present?
+    # Attributes we pass through to the post instance if present
+    [:post_type, :no_bump, :cooking_options, :image_sizes, :acting_user, :invalidate_oneboxes].each do |a|
+      post.send("#{a}=", @opts[a]) if @opts[a].present?
+    end
 
-    post.image_sizes = @opts[:image_sizes] if @opts[:image_sizes].present?
-    post.invalidate_oneboxes = @opts[:invalidate_oneboxes] if @opts[:invalidate_oneboxes].present?
+    post.extract_quoted_post_numbers
+    post.created_at = Time.zone.parse(@opts[:created_at].to_s) if @opts[:created_at].present?
     @post = post
   end
 

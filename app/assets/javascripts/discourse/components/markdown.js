@@ -122,7 +122,8 @@ Discourse.Markdown = {
     });
 
     // newline prediction in trivial cases
-    if (!Discourse.SiteSettings.traditional_markdown_linebreaks) {
+    var linebreaks = opts.traditional_markdown_linebreaks || Discourse.SiteSettings.traditional_markdown_linebreaks;
+    if (!linebreaks) {
       converter.hooks.chain("preConversion", function(text) {
         return text.replace(/(^[\w<][^\n]*\n+)/gim, function(t) {
           if (t.match(/\n{2}/gim)) return t;
