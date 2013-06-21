@@ -487,7 +487,7 @@ fr:
     posts_per_page: "Nombre de messages retournés sur une page de discussion"
     system_username: "Pseudo qui envoie les messages automatiques"
     send_welcome_message: "Les nouveaux utilisateurs reçoivent-ils un message privé de bienvenue ?"
-    supress_reply_directly_below: "Ne pas afficher les boutons de réponse sous un message lorsque la réponse est juste en dessous"
+    suppress_reply_directly_below: "Ne pas afficher les boutons de réponse sous un message lorsque la réponse est juste en dessous"
     allow_index_in_robots_txt: "Le site doit-être indexé par les moteurs de recherche (met à jour le fichier robots.txt)"
     email_domains_blacklist: "Liste des domaines d'email interdits, délimités par un pipe. Exemple: mailinator.com|trashmail.net"
     email_domains_whitelist: "Liste des domaines d'email autorisés, délimités par un pipe. ATTENTION : les utilisateurs ayant un email sur un autre domaine ne pourrons pas s'enregistrer."

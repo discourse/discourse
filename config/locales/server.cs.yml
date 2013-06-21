@@ -524,7 +524,7 @@ cs:
     posts_per_page: "Kolik příspěvků je zobrazeno ve stránce tématu"
     system_username: "Uživatelské jméno, za které se zasílají automatické soukromé zprávy"
     send_welcome_message: "Mají noví uživatelé obdržet uvítací soukromou zprávu?"
-    supress_reply_directly_below: "Nezobrazovat počet odpovědí, pokud existuje jen jediná odpověď hned pod příspěvkem"
+    suppress_reply_directly_below: "Nezobrazovat počet odpovědí, pokud existuje jen jediná odpověď hned pod příspěvkem"
     allow_index_in_robots_txt: "Povolit robotům indexaci tohoto webu (aktualizuje robots.txt)"
     email_domains_blacklist: "Seznam domén, jejichž emailové adresy nebudou přijímány, oddělený znakem '|'. Příklad: mailinator.com|trashmail.net"
     email_domains_whitelist: "Seznam domén, ze kterých bude povolena registrace, oddělený znamek '|'. POZOR: Emailové adresy z jiných než z těchto domén nebudou přijímány."

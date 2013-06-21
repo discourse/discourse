@@ -474,7 +474,7 @@ zh_TW:
     posts_per_page: "在主題頁面，返回多少個帖子"
     system_username: "論壇給用戶發送自動私信時使用的用戶名"
     send_welcome_message: "給新用戶發送歡迎私信？"
-    supress_reply_directly_below: "當一個帖子只有一個回複時，不顯示帖子回複數量"
+    suppress_reply_directly_below: "當一個帖子只有一個回複時，不顯示帖子回複數量"
     allow_index_in_robots_txt: "允許搜索引擎索引站點內容（更新 robots.txt）"
     email_domains_blacklist: "將一列豎線分隔的郵箱域名放入黑名單，例如：mailinator.com|trashmail.net"
     email_domains_whitelist: "豎線 | 分隔的電子郵箱域名，用戶只能使用這些郵箱域名注冊。注意：用戶使用不包含在這個列表裏的郵箱域名，將無法成功注冊。"

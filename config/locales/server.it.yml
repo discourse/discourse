@@ -474,7 +474,7 @@ it:
     posts_per_page: "Quanti post vengono restituiti in una pagina di un topic"
     system_username: "Username dell'autore dei messaggi privati automatizzati spediti dal forum"
     send_welcome_message: "I nuovi utenti ricevono un messaggio di benvenuto?"
-    supress_reply_directly_below: "Non mostrare il numero di risposte ad un post quando c'è una singola risposta appena sotto"
+    suppress_reply_directly_below: "Non mostrare il numero di risposte ad un post quando c'è una singola risposta appena sotto"
     allow_index_in_robots_txt: "Il sito è indicizzabile dai motori di ricerta (aggiorna robots.txt)"
     email_domains_blacklist: Lista di domini separati da pipe (\"|\"). Gli indirizzi email appartenenti a questi domini non saranno autorizzati. Esempio mailinator.com|trashmail.net"
     email_domains_whitelist: "Lista di domini separati da pipe (\"|\"). Gli utenti saranno autorizzati a registrarsi SOLO con questi domini. ATTENZIONE: Utenti con indirizzi email diversi da quelli listati non saranno accettati."
