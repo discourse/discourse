@@ -146,7 +146,7 @@ class UsersController < ApplicationController
   end
 
   def create
-    return fake_success_reponse if suspicious? params
+    return fake_success_response if suspicious? params
 
     user = User.new_from_params(params)
 
@@ -337,7 +337,7 @@ class UsersController < ApplicationController
       honeypot_or_challenge_fails?(params) || SiteSetting.invite_only?
     end
 
-    def fake_success_reponse
+    def fake_success_response
       render(
         json: {
           success: true,
