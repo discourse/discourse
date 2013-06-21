@@ -493,7 +493,7 @@ de:
     posts_per_page: "Zahl der Beiträge, die auf einer Themenseite gezeigt werden."
     system_username: "Benutzername des Autors für automatisch vom Forum versendete private Nachrichten."
     send_welcome_message: "Bekommen neue Nutzer eine Willkommensnachricht?"
-    supress_reply_directly_below: "Zeige die Zahl der Antworten auf einen Beitrag nicht, falls die einzige Antwort direkt darauf folgt."
+    suppress_reply_directly_below: "Zeige die Zahl der Antworten auf einen Beitrag nicht, falls die einzige Antwort direkt darauf folgt."
     allow_index_in_robots_txt: "Diese Seite soll durch Suchmaschinen indiziert werden (aktualisiert robots.txt)."
     email_domains_blacklist: "Eine durch senkrechte Striche getrennte Liste von unerlaubten Maildomains. Beispiel: mailinator.com|trashmail.net"
     email_domains_whitelist: "Eine durch senkrechte Striche getrennte Liste von erlaubte Maildomains. WARNUNG: Benutzer mit Mailadressen anderer Domains können sich nicht registrieren."

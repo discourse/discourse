@@ -357,7 +357,7 @@ class PostAction < ActiveRecord::Base
     sql.where2 "post_action_type_id in (:flag_types)", flag_types: PostActionType.notify_flag_type_ids
 
     # it may make sense to add a view that shows flags on deleted posts,
-    # we don't clear the flags on post deletion, just supress counts
+    # we don't clear the flags on post deletion, just suppress counts
     if filter == 'old'
       sql.where2 "deleted_at is not null OR defer = true"
       sql.order_by "max desc"

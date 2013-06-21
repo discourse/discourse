@@ -340,7 +340,7 @@ es:
     posts_per_page: "Cuantos posts son devueltos en una página de topic"
     system_username: "Nombre de usuario para el autor de mensajes privados enviados por el foro"
     send_welcome_message: "¿Reciben los nuevos usuarios un mensaje privado de bienvenida?"
-    supress_reply_directly_below: "No mostrar el contador de respuestas en un pot cuando una única respuesta directamente debajo"
+    suppress_reply_directly_below: "No mostrar el contador de respuestas en un pot cuando una única respuesta directamente debajo"
     allow_index_in_robots_txt: "Permitir que el sitio sea indexado por motores de búsqueda (sobreescribe robots.txt)"
     email_domains_blacklist: "Una lista delimitada por pipes (|) de dominios de mails que nos son permitirdos, pej:mailinator.com|trashmail.net"
     version_checks: "Ping el 'Discourse Hub' para actualizaciones de versión y mostrar mensajes del número de versión en el dashboard /admin"
