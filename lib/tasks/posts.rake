@@ -33,6 +33,9 @@ def rebake_posts(opts = {})
 
       TopicLink.extract_from post
 
+      # make sure we trigger the post process
+      post.trigger_post_process
+
       total += 1
     end
 
