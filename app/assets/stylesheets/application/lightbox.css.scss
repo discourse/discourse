@@ -1,0 +1,57 @@
+@import "foundation/variables";
+@import "foundation/mixins";
+
+.lightbox {
+  display: inline-block;
+  position: relative;
+  background: black;
+
+  img {
+    opacity: 1;
+    @include transition(opacity .2s);
+  }
+
+  span {
+    color: white;
+    position: absolute;
+    display: none;
+    font-size: 18px;
+
+    &.filename {
+      top: 0;
+      left: 0;
+      &:before {
+        font-family: "FontAwesome";
+        content: "\F03E";
+        margin-right: 5px;
+      }
+    }
+
+    &.informations {
+      color: $dark_gray;
+      top: 20px;
+      left: 0;
+      font-size: 14px;
+    }
+
+    &.expand {
+      top: 0;
+      right: 0;
+      &:before {
+        font-family: "FontAwesome";
+        content: "\F065";
+      }
+    }
+  }
+
+  @include hover {
+    img {
+      opacity: .2;
+    }
+
+    span {
+      display: inline;
+      margin: 10px;
+    }
+  }
+}

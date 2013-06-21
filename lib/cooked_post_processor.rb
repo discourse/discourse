@@ -4,6 +4,7 @@
 require_dependency 'oneboxer'
 
 class CookedPostProcessor
+  include ActionView::Helpers::NumberHelper
 
   def initialize(post, opts={})
     @dirty = false
@@ -43,7 +44,7 @@ class CookedPostProcessor
           # optimize image
           img['src'] = optimize_image(img)
           # lightbox treatment
-          convert_to_link!(img, upload.thumbnail_url)
+          convert_to_link!(img, upload)
         else
           convert_to_link!(img)
         end
@@ -102,7 +103,7 @@ class CookedPostProcessor
     # 2) .png vs. .jpg
   end
 
-  def convert_to_link!(img, thumbnail=nil)
+  def convert_to_link!(img, upload=nil)
     src = img["src"]
     width, height = img["width"].to_i, img["height"].to_i
 
@@ -120,14 +121,32 @@ class CookedPostProcessor
     end
 
     # not a hyperlink so we can apply
-    img['src'] = thumbnail if thumbnail
+    img['src'] = upload.thumbnail_url if upload
     a = Nokogiri::XML::Node.new "a", @doc
     img.add_next_sibling(a)
     a["href"] = src
     a["class"] = "lightbox"
     a.add_child(img)
-    @dirty = true
 
+    # some overlay informations
+    filename = upload ? upload.original_filename : File.basename(src)
+    informations = "#{original_width}x#{original_height}"
+    informations << " | #{number_to_human_size(upload.filesize)}" if upload
+
+    a.add_child create_span_node("filename", filename)
+    a.add_child create_span_node("informations", informations)
+    a.add_child create_span_node("expand")
+    # TODO: download
+    # TODO: views-count
+
+    @dirty = true
+  end
+
+  def create_span_node(klass, content=nil)
+    span = Nokogiri::XML::Node.new "span", @doc
+    span.content = content if content
+    span['class'] = klass
+    span
   end
 
   def get_size_from_image_sizes(src, image_sizes)
