@@ -11,7 +11,7 @@ class Upload < ActiveRecord::Base
   has_many :post_uploads
   has_many :posts, through: :post_uploads
 
-  has_many :optimized_images
+  has_many :optimized_images, dependent: :destroy
 
   validates_presence_of :filesize
   validates_presence_of :original_filename
@@ -36,7 +36,7 @@ class Upload < ActiveRecord::Base
     optimized_images << thumbnail if thumbnail
   end
 
-  def delete
+  def destroy
     Upload.transaction do
       Upload.remove_file url
       super
