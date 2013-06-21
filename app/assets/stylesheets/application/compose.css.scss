@@ -293,8 +293,7 @@
     #wmd-input, #wmd-preview {
       color: $black;
       img {
-        // Otherwise we get the wrong size in JS
-        max-width: none;
+        max-width: 100%;
         border-radius: 4px;
         moz-border-radius: 4px;
         webkit-border-radius: 4px;
