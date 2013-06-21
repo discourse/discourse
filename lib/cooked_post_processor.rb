@@ -121,7 +121,8 @@ class CookedPostProcessor
     end
 
     # not a hyperlink so we can apply
-    img['src'] = upload.thumbnail_url if upload
+    img['src'] = upload.thumbnail_url if (upload && upload.thumbnail_url.present?)
+
     a = Nokogiri::XML::Node.new "a", @doc
     img.add_next_sibling(a)
     a["href"] = src
