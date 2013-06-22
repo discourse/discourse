@@ -9,7 +9,11 @@ module S3
 
     # if this fails, it will throw an exception
     file = S3.upload(file, remote_filename, directory)
-    return "//#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/#{remote_filename}"
+    "#{S3.base_url}/#{remote_filename}"
+  end
+
+  def self.base_url
+    "//#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com"
   end
 
   def self.remove_file(url)

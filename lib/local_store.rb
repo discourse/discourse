@@ -20,4 +20,8 @@ module LocalStore
   rescue Errno::ENOENT
   end
 
+  def self.uploaded_regex
+    /\/uploads\/#{RailsMultisite::ConnectionManagement.current_db}\/(?<upload_id>\d+)\/[0-9a-f]{16}\.(png|jpg|jpeg|gif|tif|tiff|bmp)/
+  end
+
 end

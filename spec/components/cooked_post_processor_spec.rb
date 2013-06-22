@@ -164,15 +164,15 @@ describe CookedPostProcessor do
     end
   end
 
-  context 'get_image_uri' do
+  context 'is_valid_image_uri?' do
 
-    it "returns nil unless the scheme is either http or https" do
-      cpp.get_image_uri("http://domain.com").should   == URI.parse("http://domain.com")
-      cpp.get_image_uri("https://domain.com").should  == URI.parse("https://domain.com")
-      cpp.get_image_uri("ftp://domain.com").should    == nil
-      cpp.get_image_uri("ftps://domain.com").should   == nil
-      cpp.get_image_uri("//domain.com").should        == nil
-      cpp.get_image_uri("/tmp/image.png").should      == nil
+    it "needs the scheme to be either http or https" do
+      cpp.is_valid_image_uri?("http://domain.com").should   == true
+      cpp.is_valid_image_uri?("https://domain.com").should  == true
+      cpp.is_valid_image_uri?("ftp://domain.com").should    == false
+      cpp.is_valid_image_uri?("ftps://domain.com").should   == false
+      cpp.is_valid_image_uri?("//domain.com").should        == false
+      cpp.is_valid_image_uri?("/tmp/image.png").should      == false
     end
 
   end

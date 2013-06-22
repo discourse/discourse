@@ -71,8 +71,15 @@ describe Upload do
       Upload.has_been_uploaded?("http://my.cdn.com/upload/1234/42/0123456789ABCDEF.jpg").should == true
     end
 
+    it "identifies S3 uploads" do
+      SiteSetting.stubs(:enable_s3_uploads).returns(true)
+      SiteSetting.stubs(:s3_upload_bucket).returns("bucket")
+      Upload.has_been_uploaded?("//bucket.s3.amazonaws.com/1337.png").should == true
+    end
+
     it "identifies external urls" do
       Upload.has_been_uploaded?("http://domain.com/upload/1234/42/0123456789ABCDEF.jpg").should == false
+      Upload.has_been_uploaded?("//bucket.s3.amazonaws.com/1337.png").should == false
     end
 
   end
