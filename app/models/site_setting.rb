@@ -180,7 +180,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:basic_requires_read_posts, 50)
   setting(:basic_requires_time_spent_mins, 15)
 
-  setting(:regular_requires_topics_entered, 3)
+  setting(:regular_requires_topics_entered, 20)
   setting(:regular_requires_read_posts, 100)
   setting(:regular_requires_time_spent_mins, 60)
   setting(:regular_requires_days_visited, 15)
