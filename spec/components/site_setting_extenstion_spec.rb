@@ -142,6 +142,10 @@ describe SiteSettingExtension do
       expect(settings.test_enum).to eq('en')
     end
 
+    it 'should not hose all_settings' do
+      settings.all_settings.detect {|s| s[:setting] == :test_enum }.should be_present
+    end
+
     context 'when overridden' do
 
       it 'stores valid values' do

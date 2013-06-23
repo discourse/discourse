@@ -12,9 +12,9 @@ describe LocaleSiteSetting do
     end
   end
 
-  describe 'all_values' do
+  describe 'values' do
     it 'returns all the locales that we have translations for' do
-      expect(LocaleSiteSetting.all_values.sort).to eq(Dir.glob( File.join(Rails.root, 'config', 'locales', 'client.*.yml') ).map {|x| x.split('.')[-2]}.sort)
+      expect(LocaleSiteSetting.values.sort).to eq(Dir.glob( File.join(Rails.root, 'config', 'locales', 'client.*.yml') ).map {|x| x.split('.')[-2]}.sort)
     end
   end
 

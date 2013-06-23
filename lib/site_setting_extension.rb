@@ -80,7 +80,7 @@ module SiteSettingExtension
        description: description(s),
        default: v,
        type: type.to_s,
-       value: value.to_s}.merge( type == :enum ? {valid_values: enum_class(s).all_values} : {})
+       value: value.to_s}.merge( type == :enum ? {valid_values: enum_class(s).values} : {})
     end
   end
 

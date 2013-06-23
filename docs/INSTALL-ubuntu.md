@@ -249,7 +249,7 @@ Not english? Set the default language as appropriate:
     SiteSetting.default_locale = 'fr'
 
     # Not sure if your locale is supported? Check at the rails console:
-    LocaleSiteSetting.all_values
+    LocaleSiteSetting.values
      => ["cs", "da", "de", "en", "es", "fr", "id", "it", "nb_NO", "nl", "pseudo", "pt", "ru", "sv", "zh_CN", "zh_TW"] 
 
 ## nginx setup

@@ -4,7 +4,7 @@ class LocaleSiteSetting
     supported_locales.include?(val)
   end
 
-  def self.all_values
+  def self.values
     supported_locales
   end
 
