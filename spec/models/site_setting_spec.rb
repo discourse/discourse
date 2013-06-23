@@ -4,173 +4,29 @@ require_dependency 'site_setting_extension'
 
 describe SiteSetting do
 
-  describe "int setting" do
-    before :all do
-      SiteSetting.setting(:test_setting, 77)
-      SiteSetting.refresh!
-    end
-
-    it "should have a key in all_settings" do
-      SiteSetting.all_settings.detect {|s| s[:setting] == :test_setting }.should be_present
-    end
-
-    it "should have the correct desc" do
-      I18n.expects(:t).with("site_settings.test_setting").returns("test description")
-      SiteSetting.description(:test_setting).should == "test description"
-    end
-
-    it "should have the correct default" do
-      SiteSetting.test_setting.should == 77
-    end
-
-    context "when overidden" do
-      after :each do
-        SiteSetting.remove_override!(:test_setting)
-      end
-
-      it "should have the correct override" do
-        SiteSetting.test_setting = 100
-        SiteSetting.test_setting.should == 100
-      end
-
-      it "should coerce correct string to int" do
-        SiteSetting.test_setting = "101"
-        SiteSetting.test_setting.should.eql? 101
-      end
-
-      #POSSIBLE BUG
-      it "should coerce incorrect string to 0" do
-        SiteSetting.test_setting = "pie"
-        SiteSetting.test_setting.should.eql? 0
-      end
-
-      #POSSIBLE BUG
-			it "should not set default when reset" do
-        SiteSetting.test_setting = 100
-        SiteSetting.setting(:test_setting, 77)
-        SiteSetting.refresh!
-        SiteSetting.test_setting.should_not == 77
-      end
-    end
-  end
-
-  describe "string setting" do
-    before :all do
-      SiteSetting.setting(:test_str, "str")
-      SiteSetting.refresh!
-    end
-
-    it "should have the correct default" do
-      SiteSetting.test_str.should == "str"
-    end
-
-    context "when overridden" do
-      after :each do
-        SiteSetting.remove_override!(:test_str)
-      end
-
-      it "should coerce int to string" do
-        SiteSetting.test_str = 100
-        SiteSetting.test_str.should.eql? "100"
-      end
-    end
-  end
-
-  describe "bool setting" do
-    before :all do
-      SiteSetting.setting(:test_hello?, false)
-      SiteSetting.refresh!
-    end
-
-    it "should have the correct default" do
-      SiteSetting.test_hello?.should == false
-    end
-
-    context "when overridden" do
-      after :each do
-        SiteSetting.remove_override!(:test_hello?)
-      end
-
-      it "should have the correct override" do
-        SiteSetting.test_hello = true
-        SiteSetting.test_hello?.should == true
-      end
-
-      it "should coerce true strings to true" do
-        SiteSetting.test_hello = "true"
-        SiteSetting.test_hello?.should.eql? true
-      end
-
-      it "should coerce all other strings to false" do
-        SiteSetting.test_hello = "f"
-        SiteSetting.test_hello?.should.eql? false
-      end
-
-      #POSSIBLE BUG
-			it "should not set default when reset" do
-        SiteSetting.test_hello = true
-        SiteSetting.setting(:test_hello?, false)
-        SiteSetting.refresh!
-        SiteSetting.test_hello?.should_not == false
-      end
-    end
-  end
-
-  describe 'enum setting' do
-    before :all do
-      @enum_class = Class.new
-      SiteSetting.setting(:test_enum, 'en', enum: @enum_class)
-      SiteSetting.refresh!
-    end
-
-    it 'should have the correct default' do
-      expect(SiteSetting.test_enum).to eq('en')
-    end
-
-    context 'when overridden' do
-      after :each do
-        SiteSetting.remove_override!(:test_enum)
-      end
-
-      it 'stores valid values' do
-        @enum_class.expects(:valid_value?).with('fr').returns(true)
-        SiteSetting.test_enum = 'fr'
-        expect(SiteSetting.test_enum).to eq('fr')
-      end
-
-      it 'rejects invalid values' do
-        @enum_class.expects(:valid_value?).with('gg').returns(false)
-        expect { SiteSetting.test_enum = 'gg' }.to raise_error(Discourse::InvalidParameters)
-      end
-    end
-  end
-
   describe 'call_discourse_hub?' do
     it 'should be true when enforce_global_nicknames is true and discourse_org_access_key is set' do
       SiteSetting.enforce_global_nicknames = true
+      SiteSetting.enforce_global_nicknames.should == true
       SiteSetting.discourse_org_access_key = 'asdfasfsafd'
-      SiteSetting.refresh!
       SiteSetting.call_discourse_hub?.should == true
     end
 
     it 'should be false when enforce_global_nicknames is false and discourse_org_access_key is set' do
       SiteSetting.enforce_global_nicknames = false
       SiteSetting.discourse_org_access_key = 'asdfasfsafd'
-      SiteSetting.refresh!
       SiteSetting.call_discourse_hub?.should == false
     end
 
     it 'should be false when enforce_global_nicknames is true and discourse_org_access_key is not set' do
       SiteSetting.enforce_global_nicknames = true
       SiteSetting.discourse_org_access_key = ''
-      SiteSetting.refresh!
       SiteSetting.call_discourse_hub?.should == false
     end
 
     it 'should be false when enforce_global_nicknames is false and discourse_org_access_key is not set' do
       SiteSetting.enforce_global_nicknames = false
       SiteSetting.discourse_org_access_key = ''
-      SiteSetting.refresh!
       SiteSetting.call_discourse_hub?.should == false
     end
   end
@@ -192,6 +48,22 @@ describe SiteSetting do
     it 'returns a range of min/max pm topic title length' do
       expect(SiteSetting.private_message_title_length).to eq(SiteSetting.defaults[:min_private_message_title_length]..SiteSetting.defaults[:max_topic_title_length])
     end
+  end
+
+  describe 'in test we do some judo to ensure SiteSetting is always reset between tests' do
+
+    it 'is always the correct default' do
+      expect(SiteSetting.contact_email).to eq('')
+    end
+
+    it 'sets a setting' do
+      SiteSetting.contact_email = 'sam@sam.com'
+    end
+
+    it 'is always the correct default' do
+      expect(SiteSetting.contact_email).to eq('')
+    end
+
   end
 
 end

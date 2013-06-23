@@ -59,6 +59,7 @@ Spork.prefork do
     config.fail_fast = ENV['RSPEC_FAIL_FAST'] == "1"
     config.include Helpers
     config.mock_framework = :mocha
+    config.order = 'random'
 
     # If you're not using ActiveRecord, or you'd prefer not to run each of your
     # examples within a transaction, remove the following line or assign false
@@ -77,10 +78,15 @@ Spork.prefork do
     config.before do
       # disable all observers, enable as needed during specs
       ActiveRecord::Base.observers.disable :all
+      SiteSetting.provider.all.each do |setting|
+        SiteSetting.remove_override!(setting.name)
+      end
     end
 
     config.before(:all) do
       DiscoursePluginRegistry.clear
+      require_dependency 'site_settings/local_process_provider'
+      SiteSetting.provider = SiteSettings::LocalProcessProvider.new
     end
 
   end
@@ -114,6 +120,7 @@ Spork.each_run do
   $redis.client.reconnect
   Rails.cache.reconnect
   MessageBus.after_fork
+
 end
 
 def build(*args)
