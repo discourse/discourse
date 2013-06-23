@@ -56,7 +56,7 @@ For details on how to reduce the monthly cost of your application, see [Advanced
 
 3. Point the app at your redis provider's URL
 
-        heroku config:get OPENREDIS_URL
+        heroku config OPENREDIS_URL
         heroku config:set REDIS_PROVIDER_URL=<result of above command>
 
 4. Add the [Heroku Scheduler](https://addons.heroku.com/scheduler) add-on, this saves us from running a separate clock process, reducing the cost of the app.
