@@ -13,7 +13,6 @@ Discourse.ListController = Discourse.Controller.extend({
   needs: ['composer', 'modal', 'listTopics'],
 
   availableNavItems: function() {
-    var summary = this.get('filterSummary');
     var loggedOn = !!Discourse.User.current();
 
     return Discourse.SiteSettings.top_menu.split("|").map(function(i) {
