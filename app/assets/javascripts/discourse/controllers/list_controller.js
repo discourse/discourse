@@ -64,7 +64,6 @@ Discourse.ListController = Discourse.Controller.extend({
     return Discourse.TopicList.list(current).then(function(items) {
       listController.setProperties({
         loading: false,
-        filterSummary: items.filter_summary,
         filterMode: filterMode,
         draft: items.draft,
         draft_key: items.draft_key,
