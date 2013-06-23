@@ -36,6 +36,12 @@ class Group < ActiveRecord::Base
 
     group.name = I18n.t("groups.default_names.#{name}")
 
+    # don't allow shoddy localization to break this
+    validator = UsernameValidator.new(group.name)
+    unless validator.valid_format?
+      group.name = name
+    end
+
     real_ids = case name
                when :admins
                  "SELECT u.id FROM users u WHERE u.admin"
