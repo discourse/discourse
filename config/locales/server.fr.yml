@@ -302,80 +302,80 @@ fr:
 
   reports:
     visits:
-      title: Visites utilisateur par jour
-      xaxis: Jour
-      yaxis: Nombre de visites
+      title: "Visites utilisateur par jour"
+      xaxis: "Jour"
+      yaxis: "Nombre de visites"
     signups:
-      title: Nouveaux utilisateurs
-      xaxis: Jour
+      title: "Nouveaux utilisateurs"
+      xaxis: "Jour"
       yaxis: "Nombre d'utilisateurs"
     topics:
-      title: Nouvelles discussions
-      xaxis: Jour
-      yaxis: Nombre de discussions
+      title: "Nouvelles discussions"
+      xaxis: "Jour"
+      yaxis: "Nombre de discussions"
     posts:
-      title: Nouveaux messages
-      xaxis: Jour
-      yaxis: Nombre de messages
+      title: "Nouveaux messages"
+      xaxis: "Jour"
+      yaxis: "Nombre de messages"
     likes:
-      title: Nouveau Likes
-      xaxis: Jour
-      yaxis: Nombre de Likes
+      title: "Nouveau Likes"
+      xaxis: "Jour"
+      yaxis: "Nombre de Likes"
     flags:
-      title: Nouveaux Signalements
-      xaxis: Jour
-      yaxis: Nombre de signalements
+      title: "Nouveaux Signalements"
+      xaxis: "Jour"
+      yaxis: "Nombre de signalements"
     bookmarks:
-      title: Signets
-      xaxis: Jour
-      yaxis: Nombre de nouveaux signets
+      title: "Signets"
+      xaxis: "Jour"
+      yaxis: "Nombre de nouveaux signets"
     favorites:
-      title: Favoris
-      xaxis: Jour
-      yaxis: Nombre de nouveaux favoris
+      title: "Favoris"
+      xaxis: "Jour"
+      yaxis: "Nombre de nouveaux favoris"
     users_by_trust_level:
-      title: Utilisateurs par niveau de confiance
-      xaxis: Niveau de confiance
+      title: "Utilisateurs par niveau de confiance"
+      xaxis: "Niveau de confiance"
       yaxis: "Nombre d'utilisateurs"
     emails:
-      title: Emails envoyés
-      xaxis: Jour
+      title: "Emails envoyés"
+      xaxis: "Jour"
       yaxis: "Nombre d'emails"
     user_to_user_private_messages:
-      title: Utilisateur à Utilisateur
-      xaxis: Jour
-      yaxis: Nombre de messages privés
+      title: "Utilisateur à Utilisateur"
+      xaxis: "Jour"
+      yaxis: "Nombre de messages privés"
     system_private_messages:
-      title: Système
-      xaxis: Jour
-      yaxis: Nombre de messages privés
+      title: "Système"
+      xaxis: "Jour"
+      yaxis: "Nombre de messages privés"
     moderator_warning_private_messages:
-      title: Avertissements
-      xaxis: Jour
-      yaxis: Nombre de messages privés
+      title: "Avertissements"
+      xaxis: "Jour"
+      yaxis: "Nombre de messages privés"
     notify_moderators_private_messages:
-      title: Notifications Modérateur
-      xaxis: Jour
-      yaxis: Nombre de messages privés
+      title: "Notifications Modérateur"
+      xaxis: "Jour"
+      yaxis: "Nombre de messages privés"
     notify_user_private_messages:
-      title: Notifications Utilisateur
-      xaxis: Jour
-      yaxis: Nombre de messages privés
+      title: "Notifications Utilisateur"
+      xaxis: "Jour"
+      yaxis: "Nombre de messages privés"
     top_referrers:
-      title: Meilleurs référants
-      xaxis: Utilisateurs
-      num_clicks: Clics
-      num_topics: Discussions
+      title: "Meilleurs référants"
+      xaxis: "Utilisateurs"
+      num_clicks: "Clics"
+      num_topics: "Discussions"
     top_traffic_sources:
-      title: Meilleures sources de traffic
-      xaxis: Domaine
-      num_clicks: Clics
-      num_topics: Discussions
-      num_users: Utilisateurs
+      title: "Meilleures sources de traffic"
+      xaxis: "Domaine"
+      num_clicks: "Clics"
+      num_topics: "Discussions"
+      num_users: "Utilisateurs"
     top_referred_topics:
-      title: Discussions les plus référencées
-      xaxis: Discussion
-      num_clicks: Clics
+      title: "Discussions les plus référencées"
+      xaxis: "Discussion"
+      num_clicks: "Clics"
 
   dashboard:
     rails_env_warning: "Votre serveur fonctionne dans l'environnement de %{env}."
@@ -551,6 +551,8 @@ fr:
 
     enable_s3_uploads: "S'il faut ou non uploader sur s3"
     s3_upload_bucket: "Le bucket dans lequel uploader sur s3"
+    s3_secret_access_key: "La clé secrète Amazon S3 qui va être utilisée pour uploader des images"
+    s3_region: "Le nom de la région Amazon S3 qui va être utilisée pour uploader des images" 
 
     default_invitee_trust_level: "Le niveau de confiance par défaut des utilisateurs invités"
     default_trust_level: "Le niveau de confiance par défaut des utilisateurs"
@@ -567,7 +569,7 @@ fr:
     regular_requires_likes_given: "Combien de j'aime un utilisateur doit donner pour être promu au niveau régulier (2)"
     regular_requires_topic_reply_count: "Combien de réponses un utilisateur doit donner pour être promu au niveau régulier (2)"
 
-    auto_link_images_wider_than: ""
+    auto_link_images_wider_than: "Les images en lien automatiques doivent êtres plus larges que préciser"
 
     email_time_window_mins: "Combien de minutes attendre avant d'envoyer un mail à l'utilisateur, pour lui donner une chance de voir lui-même avant l'envoi."
     flush_timings_secs: "A quelle fréquence requêter les données de timing au serveur, en secondes."
