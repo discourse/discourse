@@ -11,7 +11,6 @@ to rails, you are likely much better off with our **[Discourse Vagrant Developer
 3. Clone the project.
 4. Create development and test databases in postgres.
 5. Copy `config/database.yml.development-sample` and `config/redis.yml.sample` to `config/database.yml` and `config/redis.yml` and input the correct values to point to your postgres and redis instances.
-6. Install the seed data to set up an admin account and meta topic: `psql DATABASE_NAME < pg_dumps/production-image.sql`
 
 
 ## Before you start Rails
@@ -20,10 +19,11 @@ to rails, you are likely much better off with our **[Discourse Vagrant Developer
 2. `rake db:migrate`
 3. `rake db:test:prepare`
 4. `rake db:seed_fu`
-5. Try running the specs: `bundle exec rake autospec`
-6. `bundle exec rails server`
+5. Create admin account `rake admin:create`
+6. Try running the specs: `bundle exec rake autospec`
+7. `bundle exec rails server`
 
-You should now be able to connect to rails on http://localhost:3000 - try it out! The seed data includes a pinned topic that explains how to get an admin account, so start there! Happy hacking!
+You should now be able to connect to rails on http://localhost:3000 - try it out! Sign in as `admin` with password entered in step 5. Happy hacking!
 
 
 # Building your own Vagrant VM
@@ -103,11 +103,6 @@ Edit /etc/postgresql/9.1/main/pg_hba.conf to have this:
     host all all ::1/128 trust
     host all all 0.0.0.0/0 trust # wide-open
 
-Load the seed data (as vagrant user):
-
-    psql -d discourse_development < pg_dumps/development-image.sql
-
-(You may wish to try the `production-image.sql` file for a good seed for a production database.)
 
 ## Redis
 
