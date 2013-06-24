@@ -181,6 +181,7 @@ class CookedPostProcessor
   def is_valid_image_uri?(url)
     uri = URI.parse(url)
     %w(http https).include? uri.scheme
+  rescue URI::InvalidURIError
   end
 
   def dirty?
