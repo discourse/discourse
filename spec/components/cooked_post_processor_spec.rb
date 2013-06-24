@@ -111,6 +111,21 @@ describe CookedPostProcessor do
       end
     end
 
+    context 'with a oneboxed image' do
+      let(:user) { Fabricate(:user) }
+      let(:topic) { Fabricate(:topic, user: user) }
+      let(:post) { Fabricate.build(:post_with_oneboxed_image, topic: topic, user: user) }
+      let(:processor) { CookedPostProcessor.new(post) }
+
+      before do
+        processor.post_process_images
+      end
+
+      it "doesn't lightbox" do
+        processor.html.should_not =~ /class="lightbox"/
+      end
+    end
+
   end
 
   context 'link convertor' do

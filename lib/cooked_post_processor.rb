@@ -22,7 +22,7 @@ class CookedPostProcessor
   end
 
   def post_process_images
-    images = @doc.search("img")
+    images = @doc.css("img") - @doc.css(".onebox-result img")
     return unless images.present?
 
     images.each do |img|
