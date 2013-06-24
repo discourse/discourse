@@ -184,6 +184,9 @@ Discourse = Ember.Application.createWithMixins({
       }
     });
 
+    bootbox.animate(false);
+    bootbox.backdrop(true); // clicking outside a bootbox modal closes it
+
     setInterval(function(){
       Discourse.Formatter.updateRelativeAge($('.relative-date'));
     },60 * 1000);

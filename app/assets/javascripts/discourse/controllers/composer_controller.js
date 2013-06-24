@@ -59,22 +59,17 @@ Discourse.ComposerController = Discourse.Controller.extend({
         message = Em.String.i18n("composer.posting_not_on_topic", {title: this.get('content.topic.title')});
 
         buttons = [{
-          "label": Em.String.i18n("composer.cancel"),
-          "class": "btn"
-        }];
-
-        buttons.push({
-          "label": Em.String.i18n("composer.reply_original"),
-          "class": "btn-primary",
+          "label": Em.String.i18n("composer.reply_original") + "<br/><div class='topic-title'>" + this.get('content.topic.title') + "</div>",
+          "class": "btn-primary btn-reply-on-original",
           "callback": function(){
             _this.save(true);
           }
-        });
+        }];
 
         if(topic) {
           buttons.push({
-            "label": Em.String.i18n("composer.reply_here"),
-            "class": "btn-primary",
+            "label": Em.String.i18n("composer.reply_here") + "<br/><div class='topic-title'>" + topic.get('title') + "</div>",
+            "class": "btn btn-reply-here",
             "callback": function(){
               composer.set('topic', topic);
               composer.set('post', null);
@@ -83,7 +78,13 @@ Discourse.ComposerController = Discourse.Controller.extend({
           });
         }
 
-        bootbox.dialog(message, buttons);
+        buttons.push({
+          "label": Em.String.i18n("composer.cancel"),
+          "class": "cancel",
+          "link": true
+        });
+
+        bootbox.dialog(message, buttons, {"classes": "reply-where-modal"});
         return;
       }
     }

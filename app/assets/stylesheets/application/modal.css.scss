@@ -229,3 +229,34 @@
     width: 550px;
   }
 }
+
+.reply-where-modal {
+  width: 260px;
+  margin-left: -130px;
+  .modal-footer {
+    .btn {
+      text-align: left;
+      font-size: 16px;
+      width: 200px;
+      margin-bottom: 10px;
+      display: block;
+      margin-left: 0;
+      .topic-title {
+        font-size: 12px;
+        font-weight: normal;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 185px;
+      }
+      &.btn-reply-here {
+        @include linear-gradient(#ddd, #ddd);
+        text-shadow: none;
+        color: $darkish_gray;
+      }
+    }
+    .cancel {
+      text-decoration: underline;
+    }
+  }
+}

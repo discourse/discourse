@@ -388,7 +388,7 @@ en:
         message: "Authenticating with Mozilla Persona (make sure pop up blockers are not enabled)"
 
     composer:
-      posting_not_on_topic: "You are replying to the topic \"{{title}}\", but you are currently viewing a different topic."
+      posting_not_on_topic: "Which topic do you want to reply to?"
       saving_draft_tip: "saving"
       saved_draft_tip: "saved"
       saved_local_draft_tip: "saved locally"
