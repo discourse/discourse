@@ -507,23 +507,23 @@ nb_NO:
       read_more: "Vil du lese mer? {{catLink}} eller {{latestLink}}."
 
       # keys ending with _MF use message format, see /spec/components/js_local_helper_spec.rb for samples
-      read_more_in_category_MF: "There {UNREAD, plural, one {is <a href='/unread'>1 unread</a>} other {are <a href='/unread'># unread</a>}} and {NEW, plural, one {<a href='/new'>1 new</a> topic} other {<a href='/new'># new</a> topics}} remaining, or browse other topics in {catLink}"
-      read_more_MF: "There {UNREAD, plural, one {is <a href='/unread'>1 unread</a>} other {are <a href='/unread'># unread</a>}} and {NEW, plural, one {<a href='/new'>1 new</a> topic} other {<a href='/new'># new</a> topics}} remaining, or {latestLink}"
+      read_more_in_category_MF: "Det {UNREAD, plural, one {er <a href='/unread'>1 ulest</a>} other {er <a href='/unread'># uleste</a>}} og {NEW, plural, one {<a href='/new'>1 nytt</a> emne} other {<a href='/new'># nye</a> emner}} gjenstående, eller bla gjennom andre emner i {catLink}"
+      read_more_MF: "Det {UNREAD, plural, one {er <a href='/unread'>1 ulest</a>} other {er <a href='/unread'># uleste</a>}} og {NEW, plural, one {<a href='/new'>1 nytt</a> emne} other {<a href='/new'># nye</a> emner}} gjenstående, eller {latestLink}"
 
       browse_all_categories: Browse all categories
 
       view_latest_topics: view latest topics
       suggest_create_topic: Why not create a topic?
-      read_position_reset: "Your read position has been reset."
+      read_position_reset: "Din leseposisjon har blitt tilbakestilt."
       jump_reply_up: jump to earlier reply
       jump_reply_down: jump to later reply
-      deleted: "The topic has been deleted"
+      deleted: "Emnet har blitt slettet"
 
-      auto_close_notice: "This topic will automatically close %{timeLeft}."
-      auto_close_title: 'Auto-Close Settings'
-      auto_close_save: "Save"
-      auto_close_cancel: "Cancel"
-      auto_close_remove: "Don't Auto-Close This Topic"
+      auto_close_notice: "Dette emnet vil automatisk lukkes %{timeLeft}."
+      auto_close_title: 'Auto-Lukk Innstillinger'
+      auto_close_save: "Lagre"
+      auto_close_cancel: "Avbryt"
+      auto_close_remove: "Ikke Auto-Lukk Dette Emnet"
 
       progress:
         title: topic progress
@@ -535,28 +535,28 @@ nb_NO:
       notifications:
         title: ''
         reasons:
-          "3_2": 'You will receive notifications because you are watching this topic.'
-          "3_1": 'You will receive notifications because you created this topic.'
-          "3": 'You will receive notifications because you are watching this topic.'
-          "2_4": 'You will receive notifications because you posted a reply to this topic.'
-          "2_2": 'You will receive notifications because you are tracking this topic.'
-          "2": 'You will receive notifications because you <a href="/users/{{username}}/preferences">read this topic</a>.'
-          "1": 'You will be notified only if someone mentions your @name or replies to your post.'
-          "1_2": 'You will be notified only if someone mentions your @name or replies to your post.'
-          "0": 'You are ignoring all notifications on this topic.'
-          "0_2": 'You are ignoring all notifications on this topic.'
+          "3_2": 'Du vil motta notifikasjoner fordi iaktar dette emnet.'
+          "3_1": 'Du vil motta notifikasjoner fordi du laget dette emnet.'
+          "3": 'Du vil motta notifikasjoner fordi du iaktar dette emnet.'
+          "2_4": 'Du vil motta notifikasjoner fordi du svarte på dette emnet.'
+          "2_2": 'Du vil motta notifikasjoner fordi følger dette emnet.'
+          "2": 'Du vil motta notifikasjoner fordi du <a href="/users/{{username}}/preferences">read this topic</a>.'
+          "1": 'Du vil bli varslet bare om noen nevner ditt @brukernavn eller svarer på din post.'
+          "1_2": 'Du vil bli varslet bare om noen nevner ditt @brukernavn eller svarer på din post.'
+          "0": 'Du ignorerer alle varslinger på dette emnet.'
+          "0_2": 'Du ignorerer alle varslinger på dette emnet.'
         watching:
-          title: "Watching"
-          description: "same as Tracking, plus you will be notified of all new posts."
+          title: "Iaktar"
+          description: "samme som å Følge, pluss at du vil bli varslet om alle nye poster."
         tracking:
-          title: "Tracking"
-          description: "you will be notified of @name mentions and replies to your posts, plus you will see a count of unread and new posts."
+          title: "Følger"
+          description: "du vil bli varslet om @brukernavn henvendelser svar til dine poster, pluss at du vil se et antall uleste og nye innlegg."
         regular:
-          title: "Regular"
-          description: "you will be notified only if someone mentions your @name or replies to your post."
+          title: "Vanlig"
+          description: "du vil bli varslet bare om noen nevner ditt @brukernavn eller svarer på din post."
         muted:
-          title: "Muted"
-          description: "you will not be notified of anything about this topic, and it will not appear on your unread tab."
+          title: "Dempet"
+          description: "du vil ikke bli varslet om noen ting i dette emnet, og  det vil ikke visest som ulest."
 
       actions:
         delete: "Delete Topic"
