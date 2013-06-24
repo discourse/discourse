@@ -11,6 +11,62 @@
 
 fr:
   js:
+    dates:
+      tiny:
+        half_a_minute: "< 1m"
+        less_than_x_seconds:
+          one:   "< 1s"
+          other: "< %{count}s"
+        x_seconds:
+          one:   "1s"
+          other: "%{count}s"
+        less_than_x_minutes:
+          one:   "< 1m"
+          other: "< %{count}m"
+        x_minutes:
+          one:   "1m"
+          other: "%{count}m"
+        about_x_hours:
+          one:   "1h"
+          other: "%{count}h"
+        x_days:
+          one:   "1d"
+          other: "%{count}d"
+        about_x_months:
+          one:   "1mois"
+          other: "%{count}mois"
+        x_months:
+          one:   "1mois"
+          other: "%{count}mois"
+        about_x_years:
+          one:   "1an"
+          other: "%{count}an"
+        over_x_years:
+          one:   "> 1an"
+          other: "> %{count}an"
+        almost_x_years:
+          one:   "1an"
+          other: "%{count}an"
+      medium:
+        x_minutes:
+          one: "1 min"
+          other: "%{count} mins"
+        x_hours:
+          one: "1 hour"
+          other: "%{count} heures"
+        x_days:
+          one: "1 day"
+          other: "%{count} jours"
+      medium_with_ago:
+        x_minutes:
+          one: "Iy a 1 min"
+          other: "Il y a %{count} minutes"
+        x_hours:
+          one: "Il y a 1 heure"
+          other: "Il y a %{count} heures"
+        x_days:
+          one: "Il y a 1 jour"
+          other: "Il y a %{count} jours"
     share:
       topic: 'partager un lien vers cette discussion'
       post: 'partager un lien vers ce message'
@@ -931,6 +987,7 @@ fr:
         no_problems: "Aucun problème n'à été trouvé."
         moderators: "Modérateurs :"
         admins: "Administateurs :"
+        blocked : "Bloqués:"
         private_messages_short: "MPs"
         private_messages_title: "Messages Privés"
 
@@ -967,6 +1024,8 @@ fr:
         edit: "Editer les groupes"
         selector_placeholder: "ajouter des utilisateurs"
         name_placeholder: "Nom du groupe, sans espace, mêmes règles que pour les noms d'utilisateurs"
+        about: "Modifier votre adhésion et les noms ici"
+        can_not_edit_automatic: "L'adhésion au groupe est défini automatiquement, les administrateurs assignent des rôles et niveaux de confiance"
 
       api:
         title: "API"
@@ -994,6 +1053,8 @@ fr:
         about: "Vous pouvez modifier les feuillets de styles et en-têtes de votre site. Choisissez ou ajouter un style pour commencer l'édition."
 
       email:
+        settings: "Paramètres"
+        logs: "Logs"
         title: "Historique des mails"
         sent_at: "Envoyer à"
         email_type: "Type d'email"
@@ -1001,6 +1062,15 @@ fr:
         test_email_address: "Adresse mail à tester"
         send_test: "Envoyer le mail de test"
         sent_test: "Envoyé !"
+        delivery_method: "Moyen d'envoi"
+        preview_digest: "Prévisualisation de l'email"
+        preview_digest_desc: "Ceci est un outil pour prévisualiser le contenu de l'email généré envoyé depuis votre forum."
+        refresh: "Rafraîchir"
+        format: "Format"
+        html: "html"
+        text: "texte"
+        last_seen_user: "Dernière utilisateur vu: :"
+        reply_key: "Répondre"
 
       impersonate:
         title: "Se faire passer pour un utilisateur"
@@ -1086,3 +1156,4 @@ fr:
         show_overriden: 'Ne montrer que ce qui a été changé'
         title: 'Paramètres du site'
         reset: 'rétablir par défaut'
+        none: 'rien'
