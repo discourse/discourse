@@ -190,6 +190,10 @@ describe CookedPostProcessor do
       cpp.is_valid_image_uri?("/tmp/image.png").should      == false
     end
 
+    it "doesn't throw exception with a bad URI" do
+      cpp.is_valid_image_uri?("http://do<main.com").should  == nil
+    end
+
   end
 
 end
