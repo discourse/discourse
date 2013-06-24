@@ -223,7 +223,7 @@ fr:
         global_match: "L'adresse email correspond au pseudo enregistré."
         global_mismatch: "Déjà enregistré. Essayez {{suggestion}} ?"
         not_available: "Pas disponible. Essayez {{suggestion}} ?"
-        too_short: Votre pseudo est trop court."
+        too_short: "Votre pseudo est trop court."
         too_long: "Votre pseudo est trop long."
         checking: "Vérification de la disponibilité de votre pseudo..."
         enter_email: "Pseudo trouvé. Entrez l'adresse email correspondante."
