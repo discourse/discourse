@@ -20,7 +20,11 @@ worry about it. There are [companies](http://mandrill.com/) that dedicate
 theirs to doing one thing very well - ensuring that mail to your users gets
 delivered.
 
-## Email Sending Through Mandrill
+## Sending Email Through GMail
+
+Don't do it! GMail is not intended for sending out bulk notifications. Your email setup [will break](http://webapps.stackexchange.com/q/44768/12456).
+
+## Sending Email Through Mandrill
 
 ### Create an account
 We're going to use [Mandrill](http://mandrill.com/) as our email delivery
