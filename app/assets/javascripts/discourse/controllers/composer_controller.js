@@ -59,11 +59,9 @@ Discourse.ComposerController = Discourse.Controller.extend({
         message = Em.String.i18n("composer.posting_not_on_topic", {title: this.get('content.topic.title')});
 
         buttons = [{
-          "label": Em.String.i18n("composer.reply_original") + "<br/><div class='topic-title'>" + this.get('content.topic.title') + "</div>",
-          "class": "btn-primary btn-reply-on-original",
-          "callback": function(){
-            _this.save(true);
-          }
+          "label": Em.String.i18n("composer.cancel"),
+          "class": "cancel",
+          "link": true
         }];
 
         if(topic) {
@@ -79,9 +77,11 @@ Discourse.ComposerController = Discourse.Controller.extend({
         }
 
         buttons.push({
-          "label": Em.String.i18n("composer.cancel"),
-          "class": "cancel",
-          "link": true
+          "label": Em.String.i18n("composer.reply_original") + "<br/><div class='topic-title'>" + this.get('content.topic.title') + "</div>",
+          "class": "btn-primary btn-reply-on-original",
+          "callback": function(){
+            _this.save(true);
+          }
         });
 
         bootbox.dialog(message, buttons, {"classes": "reply-where-modal"});
