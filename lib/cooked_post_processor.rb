@@ -85,8 +85,12 @@ class CookedPostProcessor
   end
 
   def get_upload_from_url(url)
-    if Upload.has_been_uploaded?(url) && m = Upload.uploaded_regex.match(url)
-      Upload.where("id = ?", m[:upload_id]).first
+    if Upload.has_been_uploaded?(url)
+      if m = LocalStore.uploaded_regex.match(url)
+        Upload.where(id: m[:upload_id]).first
+      elsif Upload.is_on_s3?(url)
+        Upload.where(url: url).first
+      end
     end
   end
 
@@ -160,22 +164,23 @@ class CookedPostProcessor
 
   # Retrieve the image dimensions for a url
   def image_dimensions(url)
-    uri = get_image_uri(url)
-    return unless uri
     w, h = get_size(url)
     ImageSizer.resize(w, h) if w && h
   end
 
   def get_size(url)
-    # we can always crawl our own images
+    # make sure s3 urls have a scheme (otherwise, FastImage will fail)
+    url = "http:" + url if Upload.is_on_s3? (url)
+    return unless is_valid_image_uri? url
+    # we can *always* crawl our own images
     return unless SiteSetting.crawl_images? || Upload.has_been_uploaded?(url)
     @size_cache[url] ||= FastImage.size(url)
   rescue Zlib::BufError # FastImage.size raises BufError for some gifs
   end
 
-  def get_image_uri(url)
+  def is_valid_image_uri?(url)
     uri = URI.parse(url)
-    uri if %w(http https).include?(uri.scheme)
+    %w(http https).include? uri.scheme
   end
 
   def dirty?
