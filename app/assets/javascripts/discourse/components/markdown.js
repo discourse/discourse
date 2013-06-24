@@ -109,7 +109,8 @@ Discourse.Markdown = {
 
     // Extract quotes so their contents are not passed through markdown.
     converter.hooks.chain("preConversion", function(text) {
-      var extracted = Discourse.BBCode.extractQuotes(text);
+      var formated = Discourse.BBCode.format(text, opts);
+      var extracted = Discourse.BBCode.extractQuotes(formated);
       quoteTemplate = extracted.template;
       return extracted.text;
     });
@@ -184,7 +185,7 @@ Discourse.Markdown = {
         text = quoteTemplate(text);
       }
 
-      return Discourse.BBCode.format(text, opts);
+      return text;
     });
 
     if (opts.sanitize) {
