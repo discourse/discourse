@@ -29,6 +29,7 @@ class User < ActiveRecord::Base
   has_many :invites
   has_many :topic_links
 
+  has_one :facebook_user_info, dependent: :destroy
   has_one :twitter_user_info, dependent: :destroy
   has_one :github_user_info, dependent: :destroy
   has_one :cas_user_info, dependent: :destroy
