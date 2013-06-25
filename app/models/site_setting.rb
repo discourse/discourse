@@ -253,14 +253,17 @@ class SiteSetting < ActiveRecord::Base
     min_private_message_post_length..max_post_length
   end
 
+  def self.top_menu_items
+    top_menu.split('|').map { |menu_item| TopMenuItem.new(menu_item) }
+  end
+
   def self.homepage
-    # TODO objectify this
-    top_menu.split('|')[0].split(',')[0]
+    top_menu_items[0].name
   end
 
   def self.anonymous_homepage
-    # TODO objectify this
-    top_menu.split('|').map{|f| f.split(',')[0] }.select{ |f| ['latest', 'hot', 'categories', 'category'].include? f}[0]
+    list = ['latest', 'hot', 'categories', 'category']
+    top_menu_items.map { |item| item.name }.select{ |item| list.include?(item) }.first
   end
 
 end

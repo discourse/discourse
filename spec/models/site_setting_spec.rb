@@ -63,7 +63,30 @@ describe SiteSetting do
     it 'is always the correct default' do
       expect(SiteSetting.contact_email).to eq('')
     end
+  end
 
+  describe "anonymous_homepage" do
+    it "returns latest" do
+      expect(SiteSetting.anonymous_homepage).to eq('latest')
+    end
+  end
+
+  describe "top_menu" do
+    before(:each) { SiteSetting.stubs(:top_menu).returns('one,-nope|two|three,-not|four,ignored|category/xyz') }
+
+    describe "items" do
+      let(:items) { SiteSetting.top_menu_items }
+
+      it 'returns TopMenuItem objects' do
+        expect(items[0]).to be_kind_of(TopMenuItem)
+      end
+    end
+
+    describe "homepage" do
+      it "has homepage" do
+        expect(SiteSetting.homepage).to eq('one')
+      end
+    end
   end
 
 end

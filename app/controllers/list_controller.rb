@@ -14,16 +14,11 @@ class ListController < ApplicationController
         list_opts[:topic_ids] = params[:topic_ids].split(",").map(&:to_i)
       end
 
-      # html format means we need to farm exclude from the site options
-      if params[:format].blank? || params[:format] == "html"
-        #TODO objectify this stuff
-        SiteSetting.top_menu.split('|').each do |f|
-          s = f.split(",")
-          if s[0] == action_name || (action_name == "index" && s[0] == SiteSetting.homepage)
-            list_opts[:exclude_category] = s[1][1..-1] if s.length == 2
-          end
-        end
-      end
+      # html format means we need to parse exclude from the site options top menu
+      menu_item = SiteSetting.top_menu_items.select { |menu_item|
+        menu_item.query_should_exclude_category?(action_name, params[:format])
+      }.first
+      list_opts[:exclude_category] = menu_item.try(:filter)
       list_opts[:exclude_category] = params[:exclude_category] if params[:exclude_category].present?
 
       list = TopicQuery.new(current_user, list_opts).send("list_#{filter}")
