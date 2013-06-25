@@ -973,7 +973,7 @@ en:
         %{message}
 
         ---
-        Please visit this link to respond: %{base_url}%{url}
+        %{respond_instructions}
 
     forgot_password:
       subject_template: "[%{site_name}] Password reset"
