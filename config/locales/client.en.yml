@@ -397,7 +397,7 @@ en:
 
       min_length:
         need_more_for_title: "{{n}} to go for the title"
-        need_more_for_reply: "{{n}} to go for the reply"
+        need_more_for_reply: "{{n}} to go for the post"
 
       error:
         title_missing: "Title is required."
