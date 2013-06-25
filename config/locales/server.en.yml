@@ -900,8 +900,8 @@ en:
       title: "Unsubscribe"
       description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
 
-    reply_by_email: "You can reply directly to this email to respond, or visit %{base_url}%{url} to reply in your browser."
-    visit_link_to_respond: "Please visit this link to respond: %{base_url}%{url}"
+    reply_by_email: "To respond, reply to this email or visit %{base_url}%{url} in your browser."
+    visit_link_to_respond: "To respond, visit %{base_url}%{url} in your browser."
 
     user_invited_to_private_message:
       subject_template: "[%{site_name}] %{username} invited you to a private message '%{topic_title}'"
