@@ -40,6 +40,23 @@ stripped from my reply?")
     end
   end
 
+  describe "multiple paragraphs" do
+    let(:paragraphs) { File.read("#{Rails.root}/spec/fixtures/emails/paragraphs.eml") }
+    let(:receiver) { Email::Receiver.new(paragraphs) }
+
+    it "does something" do
+      receiver.process
+      expect(receiver.body).to eq(
+"Is there any reason the *old* candy can't be be kept in silos while the new candy
+is imported into *new* silos?
+
+The thing about candy is it stays delicious for a long time -- we can just keep
+it there without worrying about it too much, imo.
+
+Thanks for listening.")
+    end
+  end
+
   describe "with a valid email" do
     let(:reply_key) { "59d8df8370b7e95c5a49fbf86aeb2c93" }
     let(:valid_reply) { File.read("#{Rails.root}/spec/fixtures/emails/valid_reply.eml") }

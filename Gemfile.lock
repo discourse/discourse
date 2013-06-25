@@ -54,6 +54,12 @@ GIT
       omniauth (~> 1.0)
 
 GIT
+  remote: https://github.com/lawrencepit/email_reply_parser.git
+  revision: 67408dfb1b99fb8d5f145f782b9e22d1851a8e5a
+  specs:
+    email_reply_parser (0.6)
+
+GIT
   remote: https://github.com/rails-api/active_model_serializers.git
   revision: fe84e0ad5268f1439123fd9a1f9fd12e25a54cd3
   specs:
@@ -158,7 +164,6 @@ GEM
     diffy (2.1.4)
     em-redis (0.3.0)
       eventmachine
-    email_reply_parser (0.5.3)
     ember-rails (0.10.0)
       active_model_serializers
       barber
@@ -470,7 +475,7 @@ DEPENDENCIES
   discourse_emoji!
   discourse_plugin!
   em-redis
-  email_reply_parser
+  email_reply_parser!
   ember-rails
   ember-source (= 1.0.0.rc5)
   eventmachine
