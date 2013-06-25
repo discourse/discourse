@@ -11,7 +11,7 @@ describe Draft do
 
   it "uses the user id and key correctly" do
     Draft.set(@user, "test", 0,"data")
-    Draft.get(Fabricate(:coding_horror), "test", 0).should be_nil
+    Draft.get(Fabricate.build(:coding_horror), "test", 0).should be_nil
   end
 
   it "should overwrite draft data correctly" do

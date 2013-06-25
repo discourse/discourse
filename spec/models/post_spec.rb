@@ -46,7 +46,7 @@ describe Post do
 
     describe '#with_user' do
       it 'gives you a user' do
-        Fabricate(:post, user: Fabricate(:user))
+        Fabricate(:post, user: Fabricate.build(:user))
         Post.with_user.first.user.should be_a User
       end
     end

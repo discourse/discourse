@@ -9,6 +9,8 @@ describe Invite do
   it { should validate_presence_of :email }
   it { should validate_presence_of :invited_by_id }
 
+  let(:iceking) { 'iceking@adventuretime.ooo' }
+
   context 'user validators' do
     let(:coding_horror) { Fabricate(:coding_horror) }
     let(:user) { Fabricate(:user) }
@@ -32,7 +34,7 @@ describe Invite do
       its(:email_already_exists) { should be_false }
 
       it 'should store a lower case version of the email' do
-        subject.email.should == "iceking@adventuretime.ooo"
+        subject.email.should == iceking
       end
     end
 
@@ -43,22 +45,22 @@ describe Invite do
       context 'email' do
         it 'enqueues a job to email the invite' do
           Jobs.expects(:enqueue).with(:invite_email, has_key(:invite_id))
-          topic.invite_by_email(inviter, 'iceking@adventuretime.ooo')
+          topic.invite_by_email(inviter, iceking)
         end
       end
 
       context 'destroyed' do
         it "can invite the same user after their invite was destroyed" do
-          invite = topic.invite_by_email(inviter, 'iceking@adventuretime.ooo')
+          invite = topic.invite_by_email(inviter, iceking)
           invite.destroy
-          invite = topic.invite_by_email(inviter, 'iceking@adventuretime.ooo')
+          invite = topic.invite_by_email(inviter, iceking)
           invite.should be_present
         end
       end
 
       context 'after created' do
         before do
-          @invite = topic.invite_by_email(inviter, 'iceking@adventuretime.ooo')
+          @invite = topic.invite_by_email(inviter, iceking)
         end
 
         it 'belongs to the topic' do
@@ -76,7 +78,7 @@ describe Invite do
 
         context 'when added by another user' do
           let(:coding_horror) { Fabricate(:coding_horror) }
-          let(:new_invite) { topic.invite_by_email(coding_horror, 'iceking@adventuretime.ooo') }
+          let(:new_invite) { topic.invite_by_email(coding_horror, iceking) }
 
           it 'returns a different invite' do
             new_invite.should_not == @invite
@@ -109,7 +111,7 @@ describe Invite do
           let!(:another_topic) { Fabricate(:topic, user: topic.user) }
 
           before do
-            @new_invite = another_topic.invite_by_email(inviter, 'iceking@adventuretime.ooo')
+            @new_invite = another_topic.invite_by_email(inviter, iceking)
           end
 
           it 'should be the same invite' do
