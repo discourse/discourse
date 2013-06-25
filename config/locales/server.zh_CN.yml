@@ -439,7 +439,6 @@ zh_CN:
     company_short_name: "运行本站点的公司短名，用于法律文档，例如服务条款 /tos"
     company_domain: "运行本站点的公司域名，用于法律文档，例如服务条款 /tos"
     api_key: "加密的应用开发接口密钥（API key），用于创建和更新主题。使用 /admin/api 来对它进行设置。"
-    access_password: "当启用访问限制时，必须填写此密码"
     queue_jobs: "如果失败队列在排队，使用 Sidekiq 消息引擎对不同的工作排队"
     crawl_images: "允许从第三方获取图片来插入宽、高数值"
     ninja_edit_window: "在多少秒钟之内，对帖子的多次编辑不生成新版本"
@@ -707,15 +706,7 @@ zh_CN:
 
       <small>在每封你发送的邮件底部应该都有取消订阅的链接，让我们模拟一下。这封邮件发送自 中华人民共和国 北京市海淀区中关村南大街3号 海淀资本中心 14层 公司名称，邮编 100081。如果你不希望将来继续收到我们的邮件，[点击此处取消订阅][5].</small>
 
-  request_access:
-    code: "访问码"
-    instructions: "本站点限制访问，请在下面输入访问码："
-    enter: "进入"
-    incorrect: "访问码不正确"
-
   system_messages:
-    site_password: "另外，如果你需要，此站点密码是 `%{access_password}`。"
-
     post_hidden:
       subject_template: "%{site_name} 提示：由于论坛用户举报，系统隐藏了你的帖子"
       text_body_template: |

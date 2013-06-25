@@ -469,7 +469,6 @@ cs:
     company_short_name: "Krátké jméno společnosti, která provozuje tento web, používá se v dokumentech jako je /tos"
     company_domain: "Doménové jméno vlastněné společností, která provozuje tento web, používá se v dokumentech jako je /tos"
     api_key: "Zabezpečený API klíč, který se používá pro vytváření a aktualizaci témat, použijte sekci /admin/api k nastavení"
-    access_password: "Restrict_access je nastaveno, ujistěte se, že je zde nastaveno heslo"
     queue_jobs: "Zařazovat úlohy do fronty v sidekiq, není-li nastaveno, jsou úlohy vyřizovány okamžitě"
     crawl_images: "Povolit získávání obrázků z webů třetích stran"
     ninja_edit_window: "Jak rychle smíte udělat změnu, aniž by se uložila jako nová verze"
@@ -764,15 +763,7 @@ cs:
 
       <small>V každém emailu, který zasíláte, by měl být odkaz na odhlášení příjmu emailů, tak tady je taky takový. Tento email vám zaslala Velká Společnost s.r.o., Hlavní ul. 1337, Kotěhůlky, Česká republika. Pokud již od nás nechcete dostávat další emaily, [klikněte sem pro odhlášení][5].</small>
 
-  request_access:
-    code: "Přístupový kód"
-    instructions: "Tento web má omezený přístup, zadejte prosím přístupový kód:"
-    enter: "Vstoupit"
-    incorrect: "přístupový kód je neplatný"
-
   system_messages:
-    site_password: "Mimochodem, přístupový kód na tento web je `%{access_password}`, pokud ho budete potřebovat."
-
     post_hidden:
       subject_template: "%{site_name} Oznámení: Příspěvek skryt kvůli hlášením od komunity"
       text_body_template: |

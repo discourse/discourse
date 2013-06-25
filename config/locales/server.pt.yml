@@ -246,7 +246,6 @@ pt:
     title: "título deste website"
     secret_token: "token secreto para ser usado para proteger cookies"
     restrict_access: "restringir acesso a não ser que esta password seja utilizada"
-    access_password: "restrict_access está ativo. Garanta que esta password é preenchida"
     queue_jobs: "'queue' vários 'jobs' no sidekiq, if false queues are inline"
     crawl_images: "permitir mostrar imagens de sites terceiros"
     ninja_edit_window: "quão rápido é possivél fazer uma alteração sem guardar uma nova versão, em segundos."
@@ -484,15 +483,7 @@ pt:
 
       <small>There should be an unsubscribe footer on every email you send, so let's mock one up. This email was sent by Name of Company, 55 Main Street, Anytown, USA 12345. If you would like to opt out of future emails, [click here to unsubscribe][5].</small>
 
-  request_access:
-    code: "Código de Acesso"
-    instructions: "Este site tem acesso restrito, insere o códio de acesso em baico::"
-    enter: "Inserir"
-    incorrect: "O código de acesso estava incorreto"
-
   system_messages:
-    site_password: "Também, a password para o site é `%{access_password}` caso precisares."
-
     post_hidden:
       subject_template: "%{site_name} Aviso: Post escondido devido a Sinalização pela Comunidade"
       text_body_template: |

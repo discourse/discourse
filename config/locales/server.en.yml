@@ -393,6 +393,7 @@ en:
     contact_email_invalid: "The site contact email is invalid. Please update contact_email in the <a href='/admin/site_settings'>Site Settings</a>."
     title_nag: "The title Site Setting is still set to the default value. Please update it with your site's title in the <a href='/admin/site_settings'>Site Settings</a>."
     consumer_email_warning: "Your site is configured to use Gmail (or another consumer email service) to send email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limits how many emails you can send</a>. Consider using an email service provider like mandrill.com to ensure email deliverability."
+    access_password_removal: "Your site was using the access_password setting, which has been removed. The login_required and must_approve_users settings have been enabled, which should be used instead. You can change them in the <a href='/admin/site_settings'>Site Settings</a>. Be sure to <a href='/admin/users/list/pending'>approve users in the Pending Users list</a>. (This message will go away after 2 days.)"
 
   content_types:
     education_new_reply:
@@ -444,7 +445,6 @@ en:
     company_short_name: "The short name of the company that runs this site, used in legal documents like the /tos"
     company_domain: "The domain name owned by the company that runs this site, used in legal documents like the /tos"
     api_key: "The secure API key used to create and update topics, use the /admin/api section to set it up"
-    access_password: "When restricted access is enabled, this password must be entered"
     queue_jobs: "Queue various jobs in sidekiq, if false queues are inline"
     crawl_images: "Enable retrieving images from third party sources to insert width and height dimensions"
     ninja_edit_window: "Number of seconds after posting where edits do not create a new version"
@@ -751,15 +751,7 @@ en:
 
       <small>There should be an unsubscribe footer on every email you send, so let's mock one up. This email was sent by Name of Company, 55 Main Street, Anytown, USA 12345. If you would like to opt out of future emails, [click here to unsubscribe][5].</small>
 
-  request_access:
-    code: "Access Code"
-    instructions: "This site has restricted access, enter the access code below:"
-    enter: "Enter"
-    incorrect: "access code was incorrect"
-
   system_messages:
-    site_password: "Also, the site password is `%{access_password}` if you need it."
-
     post_hidden:
       subject_template: "Post hidden due to community flagging"
       text_body_template: |

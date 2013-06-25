@@ -67,7 +67,6 @@ class SiteSetting < ActiveRecord::Base
   setting(:port, Rails.env.development? ? 3000 : '')
   setting(:enable_private_messages, true)
   setting(:use_ssl, false)
-  setting(:access_password)
   setting(:queue_jobs, !Rails.env.test?)
   setting(:crawl_images, !Rails.env.test?)
   setting(:max_image_width, 690)

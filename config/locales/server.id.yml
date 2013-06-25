@@ -305,7 +305,6 @@ id:
     company_full_name: "The full name of the company that runs this site, used in legal documents like the /tos"
     company_short_name: "The short name of the company that runs this site, used in legal documents like the /tos"
     company_domain: "The domain name owned by the company that runs this site, used in legal documents like the /tos"
-    access_password: "When restricted access is enabled, this password must be entered"
     queue_jobs: "Queue various jobs in sidekiq, if false queues are inline"
     crawl_images: "Enable retrieving images from third party sources to insert width and height dimensions"
     ninja_edit_window: "Number of seconds after posting where edits do not create a new version"
@@ -566,15 +565,7 @@ id:
 
       <small>There should be an unsubscribe footer on every email you send, so let's mock one up. This email was sent by Name of Company, 55 Main Street, Anytown, USA 12345. If you would like to opt out of future emails, [click here to unsubscribe][5].</small>
 
-  request_access:
-    code: "Access Code"
-    instructions: "This site has restricted access, enter the access code below:"
-    enter: "Enter"
-    incorrect: "access code was incorrect"
-
   system_messages:
-    site_password: "Also, the site password is `%{access_password}` if you need it."
-
     post_hidden:
       subject_template: "Post hidden due to community flagging"
       text_body_template: |

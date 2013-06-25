@@ -35,7 +35,8 @@ class AdminDashboardData
       default_logo_check,
       contact_email_check,
       send_consumer_email_check,
-      title_check ].compact
+      title_check,
+      access_password_removal ].compact
   end
 
   def self.fetch_all
@@ -135,5 +136,23 @@ class AdminDashboardData
   def send_consumer_email_check
     I18n.t('dashboard.consumer_email_warning') if Rails.env == 'production' and ActionMailer::Base.smtp_settings[:address] =~ /gmail\.com|live\.com|yahoo\.com/
   end
+
+
+  # TODO: generalize this method of putting i18n keys with expiry in redis
+  #       that should be reported on the admin dashboard:
+  def access_password_removal
+    if i18n_key = $redis.get(AdminDashboardData.access_password_removal_key)
+      I18n.t(i18n_key)
+    end
+  end
+  def self.report_access_password_removal
+    $redis.setex access_password_removal_key, 172_800, 'dashboard.access_password_removal'
+  end
+
+  private
+
+    def self.access_password_removal_key
+      'dash-data:access_password_removal'
+    end
 
 end

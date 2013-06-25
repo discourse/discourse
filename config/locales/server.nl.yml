@@ -441,7 +441,6 @@ nl:
     company_short_name: "De korte naam van het bedrijf dat deze site draait. Wordt gebruikt in juridische delen van de site, zoals /tos"
     company_domain: "De domeinnaam van het bedrijf dat deze site draait. Wordt gebruikt in juridische delen van de site, zoals /tos"
     api_key: "De beveiligde API-sleutel wordt gebruikt om topics te maken en bij te werken. Gebruik /admin/api om deze in te stellen"
-    access_password: "Wanneer beperkte toegang aan staat, moet dit wachtwoord worden opgegeven."
     queue_jobs: "Zet verschillende taken in een queue binnen sidekiq, bij 'false' worden taken ineens uitgevoerd"
     crawl_images: Zet het ophalen van afbeeldingen van externe bronnen aan
     ninja_edit_window: "Hoe snel je een aanpassing kan maken zonder dat er een nieuwe versie wordt opgeslagen, in seconden."
@@ -722,15 +721,7 @@ nl:
 
       <small>Er zou een unsubscribe footer op elke email die je verstuurt moeten zitten zodat men direct kan afmelden mocht men deze mails niet willen ontvangen. Dus laten we er eentje opzetten!
 
-  request_access:
-    code: Toegangscode
-    instructions: "Dit is een besloten forum, vul hieronder de toegangscode in:"
-    enter: Verder
-    incorrect: Dat is niet de juiste toegangscode
-
   system_messages:
-    site_password: "Oh, en het wachtwoord van de site is '%{access_password}' mocht je het nodig hebben."
-
     post_hidden:
       subject_template: "Bericht van %{site_name}: je bericht is verborgen wegens meldingen uit de community"
       text_body_template: |

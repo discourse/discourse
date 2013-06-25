@@ -348,7 +348,6 @@ sv:
     company_short_name: "Det korta namnet för företaget som driver denna webbplats, används i juridiska dokument så som /tos"
     company_domain: "Domännamnet som ägs av företaget som driver denna webbplats, används i juridiska dokument så som /tos"
     api_key: "Den säkra API-nyckeln som används för att skapa och uppdatera trådar, använd /admin/api för att skapa en"
-    access_password: "När begränsad åtkomst är aktiverad, så måste detta lösenord användas"
     queue_jobs: "Köa diverse jobb i sidekiq, om urkryssat så körs köer infogat"
     crawl_images: "Aktivera hämtning av bilder från tredjepartskällor för att infoga bredd och höjd"
     ninja_edit_window: "Antal sekunder efter ett inlägg när en ändring inte skapar en ny version"
@@ -624,15 +623,7 @@ sv:
 
       <small>There should be an unsubscribe footer on every email you send, so let's mock one up. This email was sent by Name of Company, 55 Main Street, Anytown, USA 12345. If you would like to opt out of future emails, [click here to unsubscribe][5].</small>
 
-  request_access:
-    code: "Access Code"
-    instructions: "This site has restricted access, enter the access code below:"
-    enter: "Enter"
-    incorrect: "access code was incorrect"
-
   system_messages:
-    site_password: "Also, the site password is `%{access_password}` if you need it."
-
     post_hidden:
       subject_template: "Post hidden due to community flagging"
       text_body_template: |

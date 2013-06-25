@@ -16,7 +16,6 @@ class ApplicationController < ActionController::Base
 
   before_filter :inject_preview_style
   before_filter :block_if_maintenance_mode
-  before_filter :check_restricted_access
   before_filter :authorize_mini_profiler
   before_filter :store_incoming_links
   before_filter :preload_json
@@ -155,9 +154,6 @@ class ApplicationController < ActionController::Base
     # Don't cache logged in users
     return false if current_user.present?
 
-    # Don't cache if there's restricted access
-    return false if SiteSetting.access_password.present?
-
     true
   end
 
@@ -232,16 +228,6 @@ class ApplicationController < ActionController::Base
           render status: 503, json: failed_json.merge(message: I18n.t('site_under_maintenance'))
         else
           render status: 503, file: File.join( Rails.root, 'public', '503.html' ), layout: false
-        end
-      end
-    end
-
-    def check_restricted_access
-      # note current_user is defined in the CurrentUser mixin
-      if SiteSetting.access_password.present? && cookies[:_access] != SiteSetting.access_password
-        unless api_key_valid?
-          redirect_to request_access_path(return_path: request.fullpath)
-          return false
         end
       end
     end

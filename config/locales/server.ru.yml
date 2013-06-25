@@ -505,7 +505,6 @@ ru:
     company_short_name: Короткое название компании, которой принадлежит сайт, используется в правовой документации как /tos
     company_domain: Имя домена, принадлежащего компании, заведующей сайтом, используется в правовой документации как /tos
     api_key: Секретный API ключ, используемый для создания и обновления тем. Зайдите в секцию /admin/api , чтобы его задать
-    access_password: Этот пароль должен быть введен для доступа к функциям с ограниченным доступом
     queue_jobs: Ставить задачи в sidekiq в очередь, если false – очереди inline
     crawl_images: Разрешить извлечение изображений из сторонних источников, ширина и высота
     ninja_edit_window: Количество секунд после размещения сообщения, в течение которых внесение правок в сообщение не повлечет его изменение
@@ -764,13 +763,7 @@ ru:
 
       <small>There should be an unsubscribe footer on every email you send, so let's mock one up. This email was sent by Name of Company, 55 Main Street, Anytown, USA 12345. If you would like to opt out of future emails, [click here to unsubscribe][5].</small>
 
-  request_access:
-    code: Код доступа
-    instructions: 'Этот сайт имеет ограниченный доступ, введите код доступа:'
-    enter: Ввести
-    incorrect: Код доступа неверный
   system_messages:
-    site_password: 'Пароль для доступа на сайт `%{access_password}`, если он необходим.'
     post_hidden:
       subject_template: Сообщение скрыто по причине поступления множественных жалоб
       text_body_template: |

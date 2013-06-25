@@ -294,7 +294,6 @@ es:
     company_full_name: "Nombre completo de la compañía que maneja el sitio, usado en documetnso legales como el /tos"
     company_short_name: "El nombre corto de la compañía que maneja el sitio, usado en documentos legales como el /tos"
     company_domain: "Dominio poseido por la compañía que maneja el sitio, usado en documentos legales como el /tos"
-    access_password: "Cuando el acceso restringido sea activado, habrá que introducir esta contraseña"
     queue_jobs: "Encolar varios trabajos en sidekiq, si es falso las colas serán en linea"
     crawl_images: "Activar obtener imágenes de origines third party para insertar las dimensiones de ancho y alto"
     ninja_edit_window: "Número de segundos after postear donde las ediciones no causan una nueva versión"
@@ -547,15 +546,7 @@ es:
 
       <small>There should be an unsubscribe footer on every email you send, so let's mock one up. This email was sent by Name of Company, 55 Main Street, Anytown, USA 12345. If you would like to opt out of future emails, [click here to unsubscribe][5].</small>
 
-  request_access:
-    code: "Código de acceso"
-    instructions: "Este sitio tiene acceso restringido, introduce el código de acceso debajo:"
-    enter: "Entrar"
-    incorrect: "el código de acceso es incorrecto"
-
   system_messages:
-    site_password: "También, el password del sitio es `%{access_password}` si lo necesitas."
-
     post_hidden:
       subject_template: "%{site_name} Advertencia: Posting oculto debido al Community Flagging"
       text_body_template: |

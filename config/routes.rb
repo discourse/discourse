@@ -14,12 +14,7 @@ Discourse::Application.routes.draw do
 
   mount Sidekiq::Web => '/sidekiq', constraints: AdminConstraint.new
 
-  resources :forums do
-    collection do
-      get 'request_access'
-      post 'request_access_submit'
-    end
-  end
+  resources :forums
   get 'srv/status' => 'forums#status'
 
   namespace :admin, constraints: StaffConstraint.new do
@@ -232,9 +227,6 @@ Discourse::Application.routes.draw do
 
   resources :invites
   delete 'invites' => 'invites#destroy'
-
-  get 'request_access' => 'request_access#new'
-  post 'request_access' => 'request_access#create'
 
   get 'onebox' => 'onebox#show'
 

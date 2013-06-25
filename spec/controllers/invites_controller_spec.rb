@@ -122,24 +122,6 @@ describe InvitesController do
 
         end
 
-        context 'access_required' do
-
-          it "doesn't set a cookie for access if there is no access required" do
-            SiteSetting.stubs(:access_password).returns(nil)
-            Invite.any_instance.expects(:redeem).returns(user)
-            get :show, id: invite.invite_key
-            cookies[:_access].should be_blank
-          end
-
-          it "sets the cookie when access is required" do
-            SiteSetting.stubs(:access_password).returns('adventure time!')
-            Invite.any_instance.expects(:redeem).returns(user)
-            get :show, id: invite.invite_key
-            cookies[:_access].should == 'adventure time!'
-          end
-
-        end
-
       end
 
     end

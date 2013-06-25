@@ -438,7 +438,6 @@ fr:
     company_short_name: "Le nom de la société qui gère ce site (utilisé dans les documents légaux, tels que /tos)"
     company_domain: "Le nom de domaine de la société qui gère ce site (utilisé dans les documents légaux, tels que /tos)"
     api_key: "La clé API sécurisé à utiliser pour créer et mettre à jour des discussions. Utilisez la section /admin/api pour la configurer."
-    access_password: "Si l'accès restreint est activé, assurez-vous que le mot de passe soit saisi ici."
     queue_jobs: "mettre les différents jobs en attente sur différentes queues, si false les queues sont en file"
     crawl_images: "permettre la récupération des images provenant de sources tierces"
     ninja_edit_window: "temps d'édition avant de sauvegarder une nouvelle version, en secondes."
@@ -715,15 +714,7 @@ fr:
 
       <small>Il devrait toujours y avoir un lien de déinscription dans le pied de page d'un mail. Donc en voici-un. Ce mail a été envoyé par Nom de la Société,  55 Main Street, Anytown, USA 12345. Si vous ne voulez plus recevoir nos e-mails, [cliquez ici pour vous désinscrire][5].</small>
 
-  request_access:
-    code: "Code d'accès"
-    instructions: "Ce site possède une zone restreinte, vous devez saisir le code d'accès pour entrer."
-    enter: "Entrer"
-    incorrect: "Le code d''accès est incorrect."
-
   system_messages:
-    site_password: "Si vous en avez besoin, le mot de passe du site est `%{access_password}`."
-
     post_hidden:
       subject_template: "%{site_name} Notice: Message caché suite à un signalement par la communauté"
       text_body_template: |

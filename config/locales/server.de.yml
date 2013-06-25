@@ -439,7 +439,6 @@ de:
     company_short_name: "Kurzname des Unternehmens, das diese Seite betreibt. Wird in rechtlich relevanten Dokumenten wie den Nutzungsbestimmungen (/tos) verwendet."
     company_domain: "Domainname des Unternehmens, das diese Seite betreibt. Wird in rechtlich relevanten Dokumenten wie den Nutzungsbestimmungen (/tos) verwendet."
     api_key: "Sicherer API-Schlüssel, um Themen zu erstellen und zu aktualisieren. Benutze /admin/api, um ihn einzurichten."
-    access_password: "Passwort, dass eingegeben werden muss, wenn diese Seite zugangsbeschränkt ist."
     queue_jobs: "Benutze die Sidekiq-Queue, falls falsche Queues inline sind."
     crawl_images: "Lade Bilder von Dritten herunter, um ihre Höhe und Breite zu bestimmen."
     ninja_edit_window: "Sekunden nach Empfang eines Beitrag, in denen Bearbeitungen nicht als neue Version gelten."
@@ -731,15 +730,7 @@ de:
 
       <small>Am Fuß jeder Mail, die Du verschickst, sollte eine Möglichkeit zum Abbestellen gegeben werden. Hier ein Beispiel: Diese Mail wurde von Unternehmensname, Hauptstraße 55, 12345 Stadtname, Deutschland, versendet. Wenn Du zukünftig keine weiteren Mail erhalten möchtest, [klicke hier, um dich abzumelden][5].</small>
 
-  request_access:
-    code: "Zugangscode"
-    instructions: "Der Zugang zu dieser Seite ist beschränkt. Geben Sie unten den Zugangscode ein:"
-    enter: "Eintreten"
-    incorrect: "Zugangscode falsch"
-
   system_messages:
-    site_password: "Das Seitenpasswort ist `%{access_password}`, falls Du es benötigst."
-
     post_hidden:
       subject_template: "Beitrag wegen Meldungen aus der Community versteckt"
       text_body_template: |
