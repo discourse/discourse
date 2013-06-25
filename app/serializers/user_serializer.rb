@@ -14,7 +14,8 @@ class UserSerializer < BasicUserSerializer
              :bio_excerpt,
              :trust_level,
              :moderator,
-             :admin
+             :admin,
+             :title
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
 

@@ -78,6 +78,7 @@ en:
     yes_value: "Yes"
     of_value: "of"
     generic_error: "Sorry, an error has occurred."
+    generic_error_with_reason: "An error occured: %{error}"
     log_in: "Log In"
     age: "Age"
     last_post: "Last Post"
@@ -294,6 +295,8 @@ en:
       avatar:
         title: "Avatar"
         instructions: "We use <a href='https://gravatar.com' target='_blank'>Gravatar</a> for avatars based on your email"
+      title:
+        title: "Title"
 
       filters:
         all: "All"
@@ -1166,6 +1169,8 @@ en:
         admin: "Admin?"
         blocked: "Blocked?"
         show_admin_profile: "Admin"
+        edit_title: "Edit Title"
+        save_title: "Save Title"
         refresh_browsers: "Force browser refresh"
         show_public_profile: "Show Public Profile"
         impersonate: 'Impersonate'

@@ -133,6 +133,10 @@ class Guardian
     can_administer?(user) && not(user.moderator?)
   end
 
+  def can_grant_title?(user)
+    user && is_staff?
+  end
+
   def can_block_user?(user)
     user && is_staff? && not(user.staff?)
   end

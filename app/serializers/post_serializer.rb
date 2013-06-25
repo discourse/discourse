@@ -33,6 +33,7 @@ class PostSerializer < ApplicationSerializer
              :read,
              :username,
              :name,
+             :user_title,
              :reply_to_user,
              :bookmarked,
              :raw,
@@ -126,6 +127,10 @@ class PostSerializer < ApplicationSerializer
 
   def name
     object.user.name
+  end
+
+  def user_title
+    object.user.title
   end
 
   def trust_level

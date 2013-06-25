@@ -48,6 +48,7 @@ class UsersController < ApplicationController
       u.digest_after_days = params[:digest_after_days] || u.digest_after_days
       u.auto_track_topics_after_msecs = params[:auto_track_topics_after_msecs].to_i if params[:auto_track_topics_after_msecs]
       u.new_topic_duration_minutes = params[:new_topic_duration_minutes].to_i if params[:new_topic_duration_minutes]
+      u.title = params[:title] || u.title if guardian.can_grant_title?(u)
 
       [:email_digests, :email_direct, :email_private_messages,
        :external_links_in_new_tab, :enable_quoting, :dynamic_favicon].each do |i|
