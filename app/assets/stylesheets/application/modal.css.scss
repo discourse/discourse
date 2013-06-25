@@ -231,23 +231,23 @@
 }
 
 .reply-where-modal {
-  width: 260px;
-  margin-left: -130px;
+  width: 370px;
+  margin-left: -185px;
   .modal-footer {
     .btn {
       text-align: left;
-      font-size: 16px;
-      width: 200px;
+      font-size: 18px;
+      line-height: 20px;
+      width: 310px;
       margin-bottom: 10px;
       display: block;
       margin-left: 0;
       .topic-title {
-        font-size: 12px;
+        font-size: 13px;
         font-weight: normal;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 185px;
       }
       &.btn-reply-here {
         @include linear-gradient(#ddd, #ddd);
@@ -257,6 +257,8 @@
     }
     .cancel {
       text-decoration: underline;
+      float: right;
+      margin-right: 5px;
     }
   }
 }
