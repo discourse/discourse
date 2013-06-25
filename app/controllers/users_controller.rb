@@ -306,7 +306,7 @@ class UsersController < ApplicationController
     @user = fetch_user_from_params
     @email_token = @user.email_tokens.unconfirmed.active.first
     if @user
-      @email_token = @user.email_tokens.create(email: @user.email) if @email_token.nil?
+      @email_token ||= @user.email_tokens.create(email: @user.email)
       Jobs.enqueue(:user_email, type: :signup, user_id: @user.id, email_token: @email_token.token)
     end
     render nothing: true
