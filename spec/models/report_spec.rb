@@ -138,7 +138,7 @@ describe Report do
 
       it "returns a report with data" do
         report.data.should be_present
-        report.data.find {|d| d[:x] == TrustLevel.levels[:newuser]} [:y].should == 3
+        report.data.find {|d| d[:x] == TrustLevel.levels[:newuser]}[:y].should == 3
         report.data.find {|d| d[:x] == TrustLevel.levels[:regular]}[:y].should == 2
         report.data.find {|d| d[:x] == TrustLevel.levels[:elder]}[:y].should == 1
       end

@@ -75,7 +75,7 @@ describe Group do
   end
 
   it "Correctly updates all automatic groups upon request" do
-    admin = Fabricate(:admin)
+    Fabricate(:admin)
     user = Fabricate(:user)
     user.change_trust_level!(:regular)
 
