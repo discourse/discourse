@@ -99,7 +99,7 @@ Discourse.Markdown = {
     var converter = new Markdown.Converter();
     var mentionLookup = opts.mentionLookup || Discourse.Mention.lookupCache;
 
-    var quoteTemplate = null;
+    var quoteTemplate = null, urlsTemplate = null;
 
     // Before cooking callbacks
     converter.hooks.chain("preConversion", function(text) {
@@ -111,6 +111,13 @@ Discourse.Markdown = {
     converter.hooks.chain("preConversion", function(text) {
       var extracted = Discourse.BBCode.extractQuotes(text);
       quoteTemplate = extracted.template;
+      return extracted.text;
+    });
+
+    // Extract urls in BBCode tags so they are not passed through markdown.
+    converter.hooks.chain("preConversion", function(text) {
+      var extracted = Discourse.BBCode.extractUrls(text);
+      urlsTemplate = extracted.template;
       return extracted.text;
     });
 
@@ -178,12 +185,11 @@ Discourse.Markdown = {
     });
 
     converter.hooks.chain("postConversion", function(text) {
-
       // reapply quotes
-      if (quoteTemplate) {
-        text = quoteTemplate(text);
-      }
-
+      if (quoteTemplate) { text = quoteTemplate(text); }
+      // reapply urls
+      if (urlsTemplate) { text = urlsTemplate(text); }
+      // format with BBCode
       return Discourse.BBCode.format(text, opts);
     });
 

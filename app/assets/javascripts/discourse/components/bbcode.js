@@ -10,6 +10,9 @@
 Discourse.BBCode = {
 
   QUOTE_REGEXP: /\[quote=([^\]]*)\]((?:[\s\S](?!\[quote=[^\]]*\]))*?)\[\/quote\]/im,
+  IMG_REGEXP: /\[img\]([\s\S]*?)\[\/img\]/i,
+  URL_REGEXP: /\[url\]([\s\S]*?)\[\/url\]/i,
+  URL_WITH_TITLE_REGEXP: /\[url=(.+?)\]([\s\S]*?)\[\/url\]/i,
 
   // Define our replacers
   replacers: {
@@ -146,6 +149,41 @@ Discourse.BBCode = {
   },
 
   /**
+    We want to remove urls in BBCode tags from a string before applying markdown
+    to prevent them from being modified by markdown.
+    This will return an object that contains:
+      - a new version of the text with the urls replaced with unique ids
+      - a `template()` function for reapplying them later.
+
+    @method extractUrls
+    @param {String} text The text inside which we want to replace urls
+    @returns {Object} object containing the new string and template function
+  **/
+  extractUrls: function(text) {
+    var result = { text: "" + text, replacements: [] };
+    var replacements = [];
+    var matches, key;
+
+    _.each([Discourse.BBCode.IMG_REGEXP, Discourse.BBCode.URL_REGEXP, Discourse.BBCode.URL_WITH_TITLE_REGEXP], function(r) {
+      while (matches = r.exec(result.text)) {
+        key = md5(matches[0]);
+        replacements.push({ key: key, value: matches[0] });
+        result.text = result.text.replace(matches[0], key);
+      }
+    });
+
+    result.template = function(input) {
+      _.each(replacements, function(r) {
+        input = input.replace(r.key, r.value);
+      });
+      return input;
+    };
+
+    return (result);
+  },
+
+
+  /**
     We want to remove quotes from a string before applying markdown to avoid
     weird stuff with newlines and such. This will return an object that
     contains a new version of the text with the quotes replaced with
@@ -156,13 +194,12 @@ Discourse.BBCode = {
     @returns {Object} object containing the new string and template function
   **/
   extractQuotes: function(text) {
-    var result = {text: "" + text, replacements: []};
-
+    var result = { text: "" + text, replacements: [] };
     var replacements = [];
+    var matches, key;
 
-    var matches;
     while (matches = Discourse.BBCode.QUOTE_REGEXP.exec(result.text)) {
-      var key = md5(matches[0]);
+      key = md5(matches[0]);
       replacements.push({
         key: key,
         value: matches[0],
@@ -180,7 +217,7 @@ Discourse.BBCode = {
       return input;
     };
 
-    return(result);
+    return (result);
   },
 
   /**
