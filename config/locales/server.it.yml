@@ -918,6 +918,7 @@ it:
   deleted: 'cancellato'
 
   upload:
+    pasted_image_filename: ""
     image:
       fetch_failure: "Spiacente, si è verificato un errore nel recupero dell'immagine."
       unknown_image_type: "Spiacente, ma il file che hai provato a caricare non sembra un'immagine."

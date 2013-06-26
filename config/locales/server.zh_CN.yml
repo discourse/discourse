@@ -932,6 +932,7 @@ zh_CN:
   deleted: '已删除'
 
   upload:
+    pasted_image_filename: ""
     image:
       fetch_failure: "抱歉，获取图片時发生错误。"
       unknown_image_type: "抱歉，你上传的文件似乎不是一张图片。"

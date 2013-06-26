@@ -783,3 +783,6 @@ da:
     see_more: "Se mere"
     search_title: "Søg efter dette emne"
     search_google: "Søg Google"
+
+  upload:
+    pasted_image_filename: ""

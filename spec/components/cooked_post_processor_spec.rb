@@ -218,4 +218,22 @@ describe CookedPostProcessor do
 
   end
 
+  context 'get_filename' do
+
+    it "returns the filename of the src when there is no upload" do
+      cpp.get_filename(nil, "http://domain.com/image.png").should == "image.png"
+    end
+
+    it "returns the original filename of the upload when there is an upload" do
+      upload = Fabricate.build(:upload, { original_filename: "upload.jpg" })
+      cpp.get_filename(upload, "http://domain.com/image.png").should == "upload.jpg"
+    end
+
+    it "returns a generic name for pasted images" do
+      upload = Fabricate.build(:upload, { original_filename: "blob" })
+      cpp.get_filename(upload, "http://domain.com/image.png").should == I18n.t('upload.pasted_image_filename')
+    end
+
+  end
+
 end

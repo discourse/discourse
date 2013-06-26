@@ -551,7 +551,7 @@ fr:
     enable_s3_uploads: "S'il faut ou non uploader sur s3"
     s3_upload_bucket: "Le bucket dans lequel uploader sur s3"
     s3_secret_access_key: "La clé secrète Amazon S3 qui va être utilisée pour uploader des images"
-    s3_region: "Le nom de la région Amazon S3 qui va être utilisée pour uploader des images" 
+    s3_region: "Le nom de la région Amazon S3 qui va être utilisée pour uploader des images"
 
     default_invitee_trust_level: "Le niveau de confiance par défaut des utilisateurs invités"
     default_trust_level: "Le niveau de confiance par défaut des utilisateurs"
@@ -944,6 +944,7 @@ fr:
   deleted: 'supprimmé'
 
   upload:
+    pasted_image_filename: "Image collée"
     image:
       fetch_failure: "Désolé, une erreur s'est produite lorsque nous avons essayé de récupérer l'image."
       unknown_image_type: "Désolé, mais le fichier que vous essayez d'envoyer ne semble pas être une image."

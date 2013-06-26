@@ -1045,6 +1045,7 @@ cs:
   deleted: 'smazáno'
 
   upload:
+    pasted_image_filename: ""
     image:
       fetch_failure: "Bohužel, nastala chybí při získávání obrázku."
       unknown_image_type: "Bohužel, soubor, který se snažíte nahrát, zřejmě není obrázek."

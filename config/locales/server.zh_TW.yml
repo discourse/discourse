@@ -918,6 +918,7 @@ zh_TW:
   deleted: '已刪除'
 
   upload:
+    pasted_image_filename: ""
     image:
       fetch_failure: "抱歉，獲取圖片時發生錯誤。"
       unknown_image_type: "抱歉，你上傳的文件似乎不是一張圖片。"
