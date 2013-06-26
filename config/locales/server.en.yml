@@ -394,6 +394,8 @@ en:
     title_nag: "The title Site Setting is still set to the default value. Please update it with your site's title in the <a href='/admin/site_settings'>Site Settings</a>."
     consumer_email_warning: "Your site is configured to use Gmail (or another consumer email service) to send email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limits how many emails you can send</a>. Consider using an email service provider like mandrill.com to ensure email deliverability."
     access_password_removal: "Your site was using the access_password setting, which has been removed. The login_required and must_approve_users settings have been enabled, which should be used instead. You can change them in the <a href='/admin/site_settings'>Site Settings</a>. Be sure to <a href='/admin/users/list/pending'>approve users in the Pending Users list</a>. (This message will go away after 2 days.)"
+    system_username_warning: "The system_username setting is blank. Please update it in the <a href='/admin/site_settings'>Site Settings</a>. Set it to the username of an admin user who should be the sender of system messages."
+    notification_email_warning: "The notification_email setting is blank. Please update it in the <a href='/admin/site_settings'>Site Settings</a>."
 
   content_types:
     education_new_reply:
