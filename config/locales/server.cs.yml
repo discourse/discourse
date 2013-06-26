@@ -1035,7 +1035,7 @@ cs:
   login_required:
     welcome_message: |
       #[Vítejte na %{title}](#welcome)
-      Jsme rádi, že vás tu máme a že přispíváte do tématu %{title}. Prosím, vytvořte si účet nebo se přihlašte pro pokračování.
+      Jsme rádi, že vás tu máme a že přispíváte do tématu %{title}. Prosím, vytvořte si účet nebo se přihlaste pro pokračování.
 
   terms_of_service:
     user_content_license: |
