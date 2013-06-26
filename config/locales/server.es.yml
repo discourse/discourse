@@ -763,3 +763,6 @@ es:
     see_more: "Ver Más"
     search_title: "Buscar por este tema"
     search_google: "Buscar en Google"
+
+  upload:
+    pasted_image_filename: ""

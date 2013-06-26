@@ -141,17 +141,21 @@ class CookedPostProcessor
     meta["class"] = "meta"
     img.add_next_sibling meta
 
-    filename = upload ? upload.original_filename : File.basename(src)
+    filename = get_filename(upload, src)
     informations = "#{original_width}x#{original_height}"
     informations << " | #{number_to_human_size(upload.filesize)}" if upload
 
     meta.add_child create_span_node("filename", filename)
     meta.add_child create_span_node("informations", informations)
     meta.add_child create_span_node("expand")
-    # TODO: download
-    # TODO: views-count
 
     @dirty = true
+  end
+
+  def get_filename(upload, src)
+    return File.basename(src) unless upload
+    return upload.original_filename unless upload.original_filename == "blob"
+    return I18n.t('upload.pasted_image_filename')
   end
 
   def create_span_node(klass, content=nil)

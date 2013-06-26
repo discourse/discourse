@@ -780,3 +780,6 @@ id:
     see_more: "See More"
     search_title: "Search for this topic"
     search_google: "Search Google"
+
+  upload:
+    pasted_image_filename: ""

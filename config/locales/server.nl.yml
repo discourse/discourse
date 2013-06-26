@@ -970,6 +970,7 @@ nl:
   deleted: 'verwijderd'
 
   upload:
+    pasted_image_filename: ""
     image:
       fetch_failure: "Er ging iets mis bij het opvragen van de afbeelding."
       unknown_image_type: "Het bestand dat je wil uploaden is geen afbeelding."
