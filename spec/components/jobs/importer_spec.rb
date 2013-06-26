@@ -177,13 +177,10 @@ describe Jobs::Importer do
               User.count.should == 0
             end
 
-            it "should indicate that an import is running when it starts" do
-              Import.expects(:set_import_started)
-              Jobs::Importer.new.execute(@importer_args)
-            end
-
-            it "should indicate that an import is running when it's done" do
-              Import.expects(:set_import_is_not_running)
+            it "should indicate that an import is running" do
+              seq = sequence('call sequence')
+              Import.expects(:set_import_started).in_sequence(seq).at_least_once
+              Import.expects(:set_import_is_not_running).in_sequence(seq).at_least_once
               Jobs::Importer.new.execute(@importer_args)
             end
 
@@ -411,15 +408,12 @@ describe Jobs::Importer do
         Jobs::Importer.any_instance.stubs(:load_table).returns( true )
       end
 
-      #TODO fails in order random, pending is failing on jenkins
-      # it "should create the same indexes on the new tables" do
-        # pending "Attention Neil: Fails under rspec --order rand:30239" do
-          # Jobs::Importer.any_instance.stubs(:ordered_models_for_import).returns([Topic])
-          # expect {
-          #   Jobs::Importer.new.execute( @importer_args )
-          # }.to_not change{ Topic.exec_sql("SELECT indexname FROM pg_indexes WHERE tablename = 'topics' and schemaname = 'public';").map {|x| x['indexname']}.sort }
-        # end
-      # end
+      it "should create the same indexes on the new tables" do
+        Jobs::Importer.any_instance.stubs(:ordered_models_for_import).returns([Topic])
+        expect {
+          Jobs::Importer.new.execute( @importer_args )
+        }.to_not change{ Topic.exec_sql("SELECT indexname FROM pg_indexes WHERE tablename = 'topics' and schemaname = 'public';").map {|x| x['indexname']}.sort }
+      end
 
       it "should create primary keys" do
         Jobs::Importer.any_instance.stubs(:ordered_models_for_import).returns([User])
