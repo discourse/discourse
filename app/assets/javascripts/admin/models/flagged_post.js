@@ -22,7 +22,9 @@ Discourse.FlaggedPost = Discourse.Post.extend({
       _this = this;
     r = [];
     _.each(this.post_actions, function(action) {
-      r.push(_this.userLookup[action.user_id]);
+      var user = _this.userLookup[action.user_id];
+      var flagType = Em.String.i18n('admin.flags.summary.action_type_' + action.post_action_type_id, {count: 1});
+      r.push({user: user, flagType: flagType, flaggedAt: action.created_at});
     });
     return r;
   }.property(),

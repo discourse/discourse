@@ -30,11 +30,23 @@
           <td class='excerpt'>{{#if flag.topicHidden}}<i title='{{i18n topic_statuses.invisible.help}}' class='icon icon-eye-close'></i> {{/if}}<h3><a href='{{unbound flag.url}}'>{{flag.title}}</a></h3><br>{{{flag.excerpt}}}
           </td>
 
-          <td class='flaggers'>{{#each flag.flaggers}}{{#linkTo 'adminUser' this}}{{avatar this imageSize="small"}} {{/linkTo}}{{/each}}
-            <p class='flag-summary'>{{flag.summary}}</p>
+          <td class='flaggers'>
+            <table>
+              {{#each flag.flaggers}}
+              <tr>
+                <td>
+                  {{#linkTo 'adminUser' this.user}}{{avatar this.user imageSize="small"}} {{/linkTo}}
+                </td>
+                <td>
+                  {{date this.flaggedAt}}
+                </td>
+                <td>
+                  {{this.flagType}}
+                </td>
+              </tr>
+              {{/each}}
+            </table>
           </td>
-
-          <td class='last-flagged'>{{date flag.lastFlagged}}</td>
 
         </tr>
 
