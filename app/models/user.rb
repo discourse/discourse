@@ -194,12 +194,12 @@ class User < ActiveRecord::Base
   end
 
   # Approve this user
-  def approve(approved_by)
+  def approve(approved_by, send_mail=true)
     self.approved = true
     self.approved_by = approved_by
     self.approved_at = Time.now
 
-    send_approval_email if save
+    send_approval_email if save and send_mail
   end
 
   def self.email_hash(email)
