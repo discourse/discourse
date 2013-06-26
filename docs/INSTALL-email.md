@@ -41,19 +41,23 @@ providing us a free service, after all!
 I'm pleased with Mandrill's setup - this is the Right Way to do things.
 
 ![mandrill email signup](https://raw.github.com/discourse/discourse-docimages/master/email/email%20-%20mandrill%20getsmtpcreds.png)
+
 1. Click 'Get SMTP Credentials'
 
 ![mandrill email signup](https://raw.github.com/discourse/discourse-docimages/master/email/email%20-%20mandrill%20addapikey.png)
+
 1. Note that you can use 'any valid API key' as your password. Click '+ Add API Key' to create one.
 
-
 ![mandrill email signup](https://raw.github.com/discourse/discourse-docimages/master/email/email%20-%20mandrill%20editapikey1.png)
+
 1. Click 'Edit' to document for what we'll be using this key.
 
 ![mandrill email signup](https://raw.github.com/discourse/discourse-docimages/master/email/email%20-%20mandrill%20editapikey2.png)
+
 1. Since we'll only be using this key for sending email and *nothing else*, check 'Only Allow This Key To Use Certain API Calls' and select only Messages / Send
 
 ![mandrill email signup](https://raw.github.com/discourse/discourse-docimages/master/email/email%20-%20mandrill%20editapikey3.png)
+
 1. Optionally, restrict this key to the public static IP address of your server.
 
 1. Click 'Save'
@@ -75,9 +79,11 @@ After configuring postfix as per Mandrill's instructions, reload postfix with `s
 ### Send test email
 
 ![discourse admin setting](https://raw.github.com/discourse/discourse-docimages/master/email/email%20-%20discourse%20admin.png)
+
 Now we send a test email. Login to your Discourse installation and click on the ≡ (aka congruence/hamburger/etc), then 'Admin'.
 
 ![discourse admin setting](https://raw.github.com/discourse/discourse-docimages/master/email/email%20-%20discourse%20emailtest.png)
+
 Click on `Email`, `Settings`, then type your email address into the test box and click `send test email`.
 
 Within moments, you should have email in your Inbox.
