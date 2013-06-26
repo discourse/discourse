@@ -23,7 +23,7 @@
       </thead>
       <tbody>
         {{#each flag in content}}
-        <tr {{bindAttr class="flag.hiddenClass"}}>
+        <tr {{bindAttr class="flag.extraClasses"}}>
 
           <td class='user'>{{#linkTo 'adminUser' flag.user}}{{avatar flag.user imageSize="small"}}{{/linkTo}}</td>
 

@@ -271,6 +271,7 @@ table {
 .admin-flags {
 
   tr.hidden-post td.excerpt { opacity: 0.4;  }
+  tr.deleted td.excerpt { opacity: 0.8; background-color: #ffcece; }
   td.message {
     padding: 4px 0;
     background-color: #f8f8e0;

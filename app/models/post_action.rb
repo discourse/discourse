@@ -307,7 +307,8 @@ class PostAction < ActiveRecord::Base
     return nil if post_ids.blank?
 
     posts = SqlBuilder.new("SELECT p.id, t.title, p.cooked, p.user_id,
-      p.topic_id, p.post_number, p.hidden, t.visible topic_visible
+      p.topic_id, p.post_number, p.hidden, t.visible topic_visible,
+      p.deleted_at, t.deleted_at topic_deleted_at
       FROM posts p
       JOIN topics t ON t.id = p.topic_id
       WHERE p.id in (:post_ids)").map_exec(OpenStruct, post_ids: post_ids)

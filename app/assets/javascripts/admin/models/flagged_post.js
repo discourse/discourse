@@ -12,9 +12,9 @@ Discourse.FlaggedPost = Discourse.Post.extend({
     return _(this.post_actions)
       .groupBy(function(a){ return a.post_action_type_id; })
       .map(function(v,k){
-        return Em.String.i18n("admin.flags.summary.action_type_" + k, {count: v.length});
+        return Em.String.i18n('admin.flags.summary.action_type_' + k, {count: v.length});
       })
-      .join(",");
+      .join(',');
   }.property(),
 
   flaggers: function() {
@@ -56,31 +56,42 @@ Discourse.FlaggedPost = Discourse.Post.extend({
   }.property('topic_hidden'),
 
   deletePost: function() {
-    if (this.get('post_number') === "1") {
-      return Discourse.ajax("/t/" + this.topic_id, { type: 'DELETE', cache: false });
+    if (this.get('post_number') === '1') {
+      return Discourse.ajax('/t/' + this.topic_id, { type: 'DELETE', cache: false });
     } else {
-      return Discourse.ajax("/posts/" + this.id, { type: 'DELETE', cache: false });
+      return Discourse.ajax('/posts/' + this.id, { type: 'DELETE', cache: false });
     }
   },
 
   disagreeFlags: function() {
-    return Discourse.ajax("/admin/flags/disagree/" + this.id, { type: 'POST', cache: false });
+    return Discourse.ajax('/admin/flags/disagree/' + this.id, { type: 'POST', cache: false });
   },
 
   deferFlags: function() {
-    return Discourse.ajax("/admin/flags/defer/" + this.id, { type: 'POST', cache: false });
+    return Discourse.ajax('/admin/flags/defer/' + this.id, { type: 'POST', cache: false });
   },
 
   agreeFlags: function() {
-    return Discourse.ajax("/admin/flags/agree/" + this.id, { type: 'POST', cache: false });
+    return Discourse.ajax('/admin/flags/agree/' + this.id, { type: 'POST', cache: false });
   },
 
   postHidden: function() {
     return (this.get('hidden'));
   }.property(),
 
-  hiddenClass: function() {
-    if (this.get('hidden')) return "hidden-post";
+  extraClasses: function() {
+    var classes = [];
+    if (this.get('hidden')) {
+      classes.push('hidden-post');
+    }
+    if (this.get('deleted')){
+      classes.push('deleted');
+    }
+    return classes.join(' ');
+  }.property(),
+
+  deleted: function() {
+    return (this.get('deleted_at') || this.get('topic_deleted_at'));
   }.property()
 });
 
@@ -88,7 +99,7 @@ Discourse.FlaggedPost.reopenClass({
   findAll: function(filter) {
     var result = Em.A();
     result.set('loading', true);
-    Discourse.ajax("/admin/flags/" + filter + ".json").then(function(data) {
+    Discourse.ajax('/admin/flags/' + filter + '.json').then(function(data) {
       var userLookup = {};
       _.each(data.users,function(user) {
         userLookup[user.id] = Discourse.User.create(user);
