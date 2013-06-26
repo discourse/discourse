@@ -5,10 +5,8 @@ class TopicLinkClick < ActiveRecord::Base
   belongs_to :topic_link, counter_cache: :clicks
   belongs_to :user
 
-  has_ip_address :ip
-
   validates_presence_of :topic_link_id
-  validates_presence_of :ip
+  validates_presence_of :ip_address
 
   # Create a click from a URL and post_id
   def self.create_from(args={})
@@ -28,7 +26,7 @@ class TopicLinkClick < ActiveRecord::Base
     rate_key = "link-clicks:#{link.id}:#{args[:user_id] || args[:ip]}"
     if $redis.setnx(rate_key, "1")
       $redis.expire(rate_key, 1.day.to_i)
-      create!(topic_link_id: link.id, user_id: args[:user_id], ip: args[:ip])
+      create!(topic_link_id: link.id, user_id: args[:user_id], ip_address: args[:ip])
     end
 
     args[:url]
@@ -43,9 +41,9 @@ end
 #  id            :integer          not null, primary key
 #  topic_link_id :integer          not null
 #  user_id       :integer
-#  ip            :integer          not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  ip_address    :string           not null
 #
 # Indexes
 #

@@ -26,7 +26,7 @@ describe TopicLinkClick do
 
     context 'create' do
       before do
-        TopicLinkClick.create(topic_link: @topic_link, ip: '192.168.1.1')
+        TopicLinkClick.create(topic_link: @topic_link, ip_address: '192.168.1.1')
       end
 
       it 'creates the forum topic link click' do
@@ -39,7 +39,7 @@ describe TopicLinkClick do
       end
 
       it 'serializes and deserializes the IP' do
-        TopicLinkClick.first.ip.to_s.should == '192.168.1.1'
+        TopicLinkClick.first.ip_address.to_s.should == '192.168.1.1'
       end
 
     end
