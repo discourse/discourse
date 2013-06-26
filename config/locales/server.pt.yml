@@ -682,3 +682,6 @@ pt:
 
   discourse_hub:
     access_token_problem: "Conta a um admin: Por-favor atualiza as configurações do site para incluir o discourse_org_access_key correto."
+
+  upload:
+    pasted_image_filename: ""
