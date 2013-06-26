@@ -39,14 +39,14 @@
           <div class='topic-meta-data-inside'>
             {{#if hasHistory}}
               <div class='post-info edits'>
-                <a href='#' class="{{unbound historyHeat}}" {{action showHistory this}} title="{{editDate updated_at}}">
+                <a href='#' class="{{unbound historyHeat}}" {{action showHistory this}} title="{{unboundDate updated_at}}">
                   {{editCount}}
                   <i class='icon-pencil'></i>
                 </a>
               </div>
             {{/if}}
             <div class='post-info'>
-              <a href='#' class='post-date' {{bindAttr data-share-url="shareUrl"}}>{{unboundAge created_at}}</a>
+              <a href='#' class='post-date' {{bindAttr data-share-url="shareUrl"}}>{{unboundAgeWithTooltip created_at}}</a>
             </div>
           </div>
         {{/unless}}

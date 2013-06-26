@@ -86,8 +86,12 @@ test("autoUpdatingRelativeAge", function() {
   var $elem = $(Discourse.Formatter.autoUpdatingRelativeAge(d));
   equal($elem.data('format'), "tiny");
   equal($elem.data('time'), d.getTime());
+  equal($elem.attr('title'), undefined);
 
-  $elem = $(Discourse.Formatter.autoUpdatingRelativeAge(d,{format: 'medium', leaveAgo: true}));
+  $elem = $(Discourse.Formatter.autoUpdatingRelativeAge(d, {title: true}));
+  equal($elem.attr('title'), moment(d).longDate());
+
+  $elem = $(Discourse.Formatter.autoUpdatingRelativeAge(d,{format: 'medium', title: true, leaveAgo: true}));
   equal($elem.data('format'), "medium-with-ago");
   equal($elem.data('time'), d.getTime());
   equal($elem.attr('title'), moment(d).longDate());
@@ -96,6 +100,7 @@ test("autoUpdatingRelativeAge", function() {
   $elem = $(Discourse.Formatter.autoUpdatingRelativeAge(d,{format: 'medium'}));
   equal($elem.data('format'), "medium");
   equal($elem.data('time'), d.getTime());
+  equal($elem.attr('title'), undefined);
   equal($elem.html(), '1 day');
 });
 

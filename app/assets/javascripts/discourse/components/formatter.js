@@ -43,11 +43,15 @@ Discourse.Formatter = (function(){
     var append = "";
 
     if(format === 'medium') {
-      append = " date' title='" + longDate(date);
+      append = " date";
       if(options.leaveAgo) {
         format = 'medium-with-ago';
       }
       options.wrapInSpan = false;
+    }
+
+    if (options.title) {
+      append += "' title='" + longDate(date);
     }
 
     return "<span class='relative-date" + append + "' data-time='" + date.getTime() + "' data-format='" + format +  "'>" + relativeAge(date, options)  + "</span>";
