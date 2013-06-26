@@ -270,10 +270,18 @@ class ApplicationController < ActionController::Base
       render status: status, layout: 'no_js', formats: [:html], template: '/exceptions/not_found'
     end
 
-    protected
+  protected
 
     def api_key_valid?
       request["api_key"] && SiteSetting.api_key_valid?(request["api_key"])
+    end
+
+    # returns an array of integers given a param key
+    # returns nil if key is not found
+    def param_to_integer_list(key, delimiter = ',')
+      if params[key]
+        params[key].split(delimiter).map(&:to_i)
+      end
     end
 
 end
