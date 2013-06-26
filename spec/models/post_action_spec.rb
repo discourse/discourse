@@ -12,6 +12,16 @@ describe PostAction do
   let(:post) { Fabricate(:post) }
   let(:bookmark) { PostAction.new(user_id: post.user_id, post_action_type_id: PostActionType.types[:bookmark] , post_id: post.id) }
 
+  describe "flagged_posts_report" do
+    it "operates correctly" do
+      PostAction.act(codinghorror, post, PostActionType.types[:spam])
+      posts, users = PostAction.flagged_posts_report("")
+      p posts
+      posts.count.should == 1
+      users.count.should == 2
+    end
+  end
+
   describe "messaging" do
 
     it "notify moderators integration test" do
