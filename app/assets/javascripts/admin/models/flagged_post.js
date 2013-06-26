@@ -10,7 +10,7 @@ Discourse.FlaggedPost = Discourse.Post.extend({
 
   summary: function(){
     return _(this.post_actions)
-      .groupBy(function(a){ return a.post_action_type_id })
+      .groupBy(function(a){ return a.post_action_type_id; })
       .map(function(v,k){
         return Em.String.i18n("admin.flags.summary.action_type_" + k, {count: v.length});
       })
@@ -52,7 +52,7 @@ Discourse.FlaggedPost = Discourse.Post.extend({
   }.property(),
 
   topicHidden: function() {
-    return this.get('topic_visible') === 'f';
+    return !this.get('topic_visible');
   }.property('topic_hidden'),
 
   deletePost: function() {
@@ -76,11 +76,11 @@ Discourse.FlaggedPost = Discourse.Post.extend({
   },
 
   postHidden: function() {
-    return (this.get('hidden') === "t");
+    return (this.get('hidden'));
   }.property(),
 
   hiddenClass: function() {
-    if (this.get('hidden') === "t") return "hidden-post";
+    if (this.get('hidden')) return "hidden-post";
   }.property()
 });
 

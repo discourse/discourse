@@ -16,7 +16,6 @@ describe PostAction do
     it "operates correctly" do
       PostAction.act(codinghorror, post, PostActionType.types[:spam])
       posts, users = PostAction.flagged_posts_report("")
-      p posts
       posts.count.should == 1
       users.count.should == 2
     end
