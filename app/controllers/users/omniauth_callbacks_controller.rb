@@ -61,7 +61,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     }
 
     if user_info
-      if user_info.user.active
+      if user_info.user.active?
         if Guardian.new(user_info.user).can_access_forum?
           log_on_user(user_info.user)
           @data[:authenticated] = true
@@ -92,7 +92,7 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     session[:authentication] = {
       facebook: {
-        facebook_user_id: fb_uid ,
+        facebook_user_id: fb_uid,
         link: raw_info["link"],
         username: raw_info["username"],
         first_name: raw_info["first_name"],
@@ -116,12 +116,8 @@ class Users::OmniauthCallbacksController < ApplicationController
     }
 
     if user_info
-      user = user_info.user
-      if user
-        unless user.active
-          user.active = true
-          user.save
-        end
+      if user = user_info.user
+        user.toggle(:active).save unless user.active?
 
         # If we have to approve users
         if Guardian.new(user).can_access_forum?
@@ -132,13 +128,9 @@ class Users::OmniauthCallbacksController < ApplicationController
         end
       end
     else
-      user = User.where(email: email).first
-      if user
-        FacebookUserInfo.create!(session[:authentication][:facebook].merge(user_id: user.id))
-        unless user.active
-          user.active = true
-          user.save
-        end
+      if user = User.where(email: email).first
+        user.create_facebook_user_info! session[:authentication][:facebook]
+        user.toggle(:active).save unless user.active?
         log_on_user(user)
         @data[:authenticated] = true
       end
@@ -173,12 +165,8 @@ class Users::OmniauthCallbacksController < ApplicationController
     }
 
     if user_info
-      user = user_info.user
-      if user
-        unless user.active
-          user.active = true
-          user.save
-        end
+      if user = user_info.user
+        user.toggle(:active).save unless user.active?
         log_on_user(user)
         @data[:authenticated] = true
       end
@@ -186,10 +174,7 @@ class Users::OmniauthCallbacksController < ApplicationController
       user = User.where(email: email).first
       if user
         CasUserInfo.create!(session[:authentication][:cas].merge(user_id: user.id))
-        unless user.active
-          user.active = true
-          user.save
-        end
+        user.toggle(:active).save unless user.active?
         log_on_user(user)
         @data[:authenticated] = true
       end
@@ -268,7 +253,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     }
 
     if user_info
-      if user_info.user.active
+      if user_info.user.active?
 
         if Guardian.new(user_info.user).can_access_forum?
           log_on_user(user_info.user)
