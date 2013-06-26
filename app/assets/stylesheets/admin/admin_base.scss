@@ -276,7 +276,7 @@ table {
     padding: 4px 0;
     background-color: #f8f8e0;
   }
-  td { vertical-align: middle; }
+  td { vertical-align: top; }
   th { text-align: left; }
   .user { width: 40px; }
   .excerpt {
@@ -288,11 +288,10 @@ table {
 
   }
   .flaggers {
-    padding: 0 10px;
     font-size: 11px;
     td {
-      vertical-align: bottom;
-      padding: 5px 5px;
+      vertical-align: middle;
+      padding: 3px;
     }
   }
   .action {
