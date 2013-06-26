@@ -4,6 +4,8 @@
   <li><a class="active" href="<%=privacy_path%>">Конфиденциальность</a></li>
 </ul>
 
+<%= markdown_content(:privacy_policy) do %>
+
 <div id="collect"></div>
 <h2><a href="#collect">Какую информацию мы храним?</a></h2>
 <p>
@@ -97,3 +99,5 @@
 <p>
   Данный документ распространяется под лицензией CC-BY-SA. Дата последнего обновления - 31 мая 2013 года.
 </p>
+
+<% end %>

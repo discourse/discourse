@@ -9,8 +9,8 @@
 Discourse.AdminSiteContentEditController = Discourse.Controller.extend({
 
   saveDisabled: function() {
-    if (this.get('saving')) return true;
-    if (this.blank('content.content')) return true;
+    if (this.get('saving')) { return true; }
+    if ((!this.get('content.allow_blank')) && this.blank('content.content')) { return true; }
     return false;
   }.property('saving', 'content.content'),
 

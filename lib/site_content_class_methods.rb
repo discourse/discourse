@@ -20,7 +20,6 @@ module SiteContentClassMethods
     replacements = {site_name: SiteSetting.title}.merge!(replacements)
     replacements = SiteSetting.settings_hash.merge!(replacements)
 
-
     site_content = SiteContent.select(:content).where(content_type: content_type).first
 
     result = ""

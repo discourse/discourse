@@ -73,8 +73,12 @@ module ApplicationHelper
     result
   end
 
+  # Look up site content for a key. If the key is blank, you can supply a block and that
+  # will be rendered instead.
   def markdown_content(key, replacements=nil)
-    PrettyText.cook(SiteContent.content_for(key, replacements || {})).html_safe
+    result = PrettyText.cook(SiteContent.content_for(key, replacements || {})).html_safe
+    result = yield if result.blank? && block_given?
+    result
   end
 
   def faq_path
