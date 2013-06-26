@@ -1026,7 +1026,7 @@ en:
   login_required:
     welcome_message: |
       #[Welcome to %{title}](#welcome)
-      We are excited to have you participate in %{title}. Please create an account or login to continue.
+      This discussion forum requires an account to view %{title}. Please create an account or login to continue.
 
   terms_of_service:
     user_content_license: |
