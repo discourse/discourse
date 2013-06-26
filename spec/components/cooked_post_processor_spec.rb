@@ -126,6 +126,28 @@ describe CookedPostProcessor do
       end
     end
 
+    context "with a large image" do
+
+      let(:user) { Fabricate(:user) }
+      let(:topic) { Fabricate(:topic, user: user) }
+      let(:post) { Fabricate.build(:post_with_uploads, topic: topic, user: user) }
+      let(:processor) { CookedPostProcessor.new(post) }
+
+      before do
+        FastImage.stubs(:size).returns([1000, 1000])
+        processor.post_process_images
+      end
+
+      it "generates overlay information" do
+        processor.html.should =~ /class="lightbox"/
+        processor.html.should =~ /class="meta"/
+        processor.html.should =~ /class="filename"/
+        processor.html.should =~ /class="informations"/
+        processor.html.should =~ /class="expand"/
+      end
+
+    end
+
   end
 
   context 'link convertor' do
