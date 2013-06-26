@@ -126,21 +126,28 @@ class CookedPostProcessor
 
     # not a hyperlink so we can apply
     img['src'] = upload.thumbnail_url if (upload && upload.thumbnail_url.present?)
-
+    # first, create a div to hold our lightbox
+    lightbox = Nokogiri::XML::Node.new "div", @doc
+    img.add_next_sibling lightbox
+    lightbox.add_child img
+    # then, the link to our larger image
     a = Nokogiri::XML::Node.new "a", @doc
     img.add_next_sibling(a)
     a["href"] = src
     a["class"] = "lightbox"
     a.add_child(img)
+    # then, some overlay informations
+    meta = Nokogiri::XML::Node.new "div", @doc
+    meta["class"] = "meta"
+    img.add_next_sibling meta
 
-    # some overlay informations
     filename = upload ? upload.original_filename : File.basename(src)
     informations = "#{original_width}x#{original_height}"
     informations << " | #{number_to_human_size(upload.filesize)}" if upload
 
-    a.add_child create_span_node("filename", filename)
-    a.add_child create_span_node("informations", informations)
-    a.add_child create_span_node("expand")
+    meta.add_child create_span_node("filename", filename)
+    meta.add_child create_span_node("informations", informations)
+    meta.add_child create_span_node("expand")
     # TODO: download
     # TODO: views-count
 
