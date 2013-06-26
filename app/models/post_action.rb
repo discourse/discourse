@@ -337,14 +337,14 @@ class PostAction < ActiveRecord::Base
 
     post_actions.each do |pa|
       post = post_lookup[pa.post_id]
-      post[:post_actions] ||= []
+      post.post_actions ||= []
       action = pa.attributes
       if (pa.related_post && pa.related_post.topic)
         action.merge!(topic_id: pa.related_post.topic_id,
                      slug: pa.related_post.topic.slug,
                      permalink: pa.related_post.topic.url)
       end
-      post[:post_actions] << action
+      post.post_actions << action
       users << pa.user_id
     end
 
