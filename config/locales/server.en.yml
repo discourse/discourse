@@ -416,6 +416,9 @@ en:
     privacy_policy:
       title: "Privacy Policy"
       description: "Your site's privacy policy. Leave blank for default policy."
+    faq:
+      title: "FAQ"
+      description: "Your site's FAQ. Leave blank for the default FAQ."
     login_required_welcome_message:
       title: "Login Required: Welcome Message"
       description: "Welcome message that is displayed to logged out users when
