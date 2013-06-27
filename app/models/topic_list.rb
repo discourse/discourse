@@ -18,8 +18,7 @@ class TopicList
   # Lazy initialization
   def topics
     return @topics if @topics.present?
-
-    @topics = @topics_input.to_a
+    @topics = @topics_input
 
     # Attach some data for serialization to each topic
     @topic_lookup = TopicUser.lookup_for(@current_user, @topics) if @current_user.present?

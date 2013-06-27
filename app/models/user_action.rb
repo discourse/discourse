@@ -2,7 +2,7 @@ class UserAction < ActiveRecord::Base
   belongs_to :user
   belongs_to :target_post, class_name: "Post"
   belongs_to :target_topic, class_name: "Topic"
-  attr_accessible :acting_user_id, :action_type, :target_topic_id, :target_post_id, :target_user_id, :user_id
+  # attr_accessible :acting_user_id, :action_type, :target_topic_id, :target_post_id, :target_user_id, :user_id
 
   validates_presence_of :action_type
   validates_presence_of :user_id
@@ -145,9 +145,9 @@ LEFT JOIN categories c on c.id = t.category_id
         action_type = hash[:action_type]
         user_id = hash[:user_id]
         if action_type == LIKE
-          User.update_all('likes_given = likes_given + 1', id: user_id)
+          User.where(id: user_id).update_all('likes_given = likes_given + 1')
         elsif action_type == WAS_LIKED
-          User.update_all('likes_received = likes_received + 1', id: user_id)
+          User.where(id: user_id).update_all('likes_received = likes_received + 1')
         end
 
       rescue ActiveRecord::RecordNotUnique
@@ -167,9 +167,9 @@ LEFT JOIN categories c on c.id = t.category_id
     action_type = hash[:action_type]
     user_id = hash[:user_id]
     if action_type == LIKE
-      User.update_all('likes_given = likes_given - 1', id: user_id)
+      User.where(id: user_id).update_all('likes_given = likes_given - 1')
     elsif action_type == WAS_LIKED
-      User.update_all('likes_received = likes_received - 1', id: user_id)
+      User.where(id: user_id).update_all('likes_received = likes_received - 1')
     end
   end
 

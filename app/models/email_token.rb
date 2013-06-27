@@ -43,7 +43,7 @@ class EmailToken < ActiveRecord::Base
 
     user = email_token.user
     User.transaction do
-      row_count = EmailToken.update_all 'confirmed = true', id: email_token.id, expired: false
+      row_count = EmailToken.where(id: email_token.id, expired: false).update_all 'confirmed = true'
       if row_count == 1
         # If we are activating the user, send the welcome message
         user.send_welcome_message = !user.active?

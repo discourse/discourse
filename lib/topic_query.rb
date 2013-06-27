@@ -111,7 +111,6 @@ class TopicQuery
 
         results << random_suggested_results_for(topic, results_left, exclude_topic_ids)
                     .where(closed: false, archived: false, visible: true)
-                    .all
 
         results.flatten!
       end

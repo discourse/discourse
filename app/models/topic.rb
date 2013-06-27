@@ -251,7 +251,6 @@ class Topic < ActiveRecord::Base
          .listable_topics
          .limit(SiteSetting.max_similar_results)
          .order('similarity desc')
-         .all
   end
 
   def update_status(property, status, user)
@@ -331,7 +330,7 @@ class Topic < ActiveRecord::Base
       old_category = category
 
       if category_id.present? && category_id != cat.id
-        Category.update_all 'topic_count = topic_count - 1', ['id = ?', category_id]
+        Category.where(['id = ?', category_id]).update_all 'topic_count = topic_count - 1'
       end
 
       self.category_id = cat.id
@@ -374,7 +373,7 @@ class Topic < ActiveRecord::Base
     if name.blank?
       if category_id.present?
         CategoryFeaturedTopic.feature_topics_for(category)
-        Category.update_all 'topic_count = topic_count - 1', id: category_id
+        Category.where(id: category_id).update_all 'topic_count = topic_count - 1'
       end
       self.category_id = nil
       save
@@ -456,7 +455,7 @@ class Topic < ActiveRecord::Base
 
       to_move.each_with_index do |post, i|
         first_post_number ||= post.post_number
-        row_count = Post.update_all ["post_number = :post_number, topic_id = :topic_id, sort_order = :post_number", post_number: i+1, topic_id: topic.id], id: post.id, topic_id: id
+        row_count = Post.where(id: post.id, topic_id: id).update_all ["post_number = :post_number, topic_id = :topic_id, sort_order = :post_number", post_number: i+1, topic_id: topic.id]
 
         # We raise an error if any of the posts can't be moved
         raise Discourse::InvalidParameters.new(:post_ids) if row_count == 0

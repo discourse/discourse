@@ -73,7 +73,7 @@ Discourse::Application.routes.draw do
     end
   end
 
-  # get 'email_preferences' => 'email#preferences_redirect'
+  get 'email_preferences' => 'email#preferences_redirect', :as => 'email_preferences_redirect'
   get 'email/unsubscribe/:key' => 'email#unsubscribe', as: 'email_unsubscribe'
   post 'email/resubscribe/:key' => 'email#resubscribe', as: 'email_resubscribe'
 

@@ -61,7 +61,7 @@ class ApplicationController < ActionController::Base
 
   rescue_from Discourse::NotLoggedIn do |e|
     raise e if Rails.env.test?
-    redirect_to root_path
+    redirect_to "/"
   end
 
   rescue_from Discourse::NotFound do

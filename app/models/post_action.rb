@@ -63,11 +63,11 @@ class PostAction < ActiveRecord::Base
       moderator_id == -1 ? PostActionType.auto_action_flag_types.values : PostActionType.flag_types.values
     end
 
-    PostAction.update_all({ deleted_at: Time.zone.now, deleted_by: moderator_id }, { post_id: post.id, post_action_type_id: actions })
+    PostAction.where({post_id: post.id, post_action_type_id: actions}).update_all({ deleted_at: Time.zone.now, deleted_by: moderator_id })
 
     f = actions.map{|t| ["#{PostActionType.types[t]}_count", 0]}
 
-    Post.with_deleted.update_all(Hash[*f.flatten], id: post.id)
+    Post.where(id: post.id).with_deleted.update_all(Hash[*f.flatten])
 
     update_flagged_posts_count
   end

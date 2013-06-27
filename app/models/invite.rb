@@ -44,8 +44,7 @@ class Invite < ActiveRecord::Base
     result = nil
     Invite.transaction do
       # Avoid a race condition
-      row_count = Invite.update_all('redeemed_at = CURRENT_TIMESTAMP',
-                                    ['id = ? AND redeemed_at IS NULL AND created_at >= ?', id, SiteSetting.invite_expiry_days.days.ago])
+      row_count = Invite.where(['id = ? AND redeemed_at IS NULL AND created_at >= ?', id, SiteSetting.invite_expiry_days.days.ago]).update_all('redeemed_at = CURRENT_TIMESTAMP')
 
       if row_count == 1
 
@@ -67,7 +66,7 @@ class Invite < ActiveRecord::Base
           end
         end
 
-        if Invite.update_all(['user_id = ?', result.id], ['email = ?', email]) == 1
+        if Invite.where(['email = ?', email]).update_all(['user_id = ?', result.id]) == 1
           result.send_welcome_message = true
         end
 
