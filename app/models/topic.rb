@@ -338,7 +338,7 @@ class Topic < ActiveRecord::Base
       save
 
       CategoryFeaturedTopic.feature_topics_for(old_category)
-      Category.update_all 'topic_count = topic_count + 1', id: cat.id
+      Category.where(id: cat.id).update_all 'topic_count = topic_count + 1'
       CategoryFeaturedTopic.feature_topics_for(cat) unless old_category.try(:id) == cat.try(:id)
     end
   end

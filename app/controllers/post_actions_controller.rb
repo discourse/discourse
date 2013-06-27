@@ -27,7 +27,6 @@ class PostActionsController < ApplicationController
     users = User.select(['null as post_url','users.id', 'users.username', 'users.username_lower', 'users.email','post_actions.related_post_id'])
                 .joins(:post_actions)
                 .where(['post_actions.post_id = ? and post_actions.post_action_type_id = ? and post_actions.deleted_at IS NULL', @post.id, @post_action_type_id])
-                .all
 
     urls = Post.urls(users.map{|u| u.related_post_id})
     users.each do |u|

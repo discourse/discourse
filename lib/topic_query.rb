@@ -87,7 +87,6 @@ class TopicQuery
     results = unread_results(per_page: SiteSetting.suggested_topics)
                 .where('topics.id NOT IN (?)', exclude_topic_ids)
                 .where(closed: false, archived: false, visible: true)
-                .all
 
     results_left = SiteSetting.suggested_topics - results.size
 

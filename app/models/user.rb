@@ -340,7 +340,7 @@ class User < ActiveRecord::Base
 
     unless seen?(date) || has_visit_record?(date)
       user_visits.create!(visited_at: date)
-      User.update_all('days_visited = days_visited + 1', id: self.id)
+      User.where({id: self.id}).update_all('days_visited = days_visited + 1')
     end
   end
 
@@ -511,7 +511,7 @@ class User < ActiveRecord::Base
     if last_seen.present?
       diff = (Time.now.to_f - last_seen.to_f).round
       if diff > 0 && diff < MAX_TIME_READ_DIFF
-        User.update_all ["time_read = time_read + ?", diff], id: id, time_read: time_read
+        User.where({id: id, time_read: time_read}).update_all ["time_read = time_read + ?", diff]
       end
     end
     $redis.set(last_seen_key, Time.now.to_f)
@@ -568,10 +568,10 @@ class User < ActiveRecord::Base
 
       where_conditions = {notifications_reason_id: nil, user_id: id}
       if auto_track_topics_after_msecs < 0
-        TopicUser.update_all({notification_level: TopicUser.notification_levels[:regular]}, where_conditions)
+        TopicUser.where(where_conditions).update_all({notification_level: TopicUser.notification_levels[:regular]})
       else
-        TopicUser.update_all(["notification_level = CASE WHEN total_msecs_viewed < ? THEN ? ELSE ? END",
-                              auto_track_topics_after_msecs, TopicUser.notification_levels[:regular], TopicUser.notification_levels[:tracking]], where_conditions)
+        TopicUser.where(where_conditions).update_all(["notification_level = CASE WHEN total_msecs_viewed < ? THEN ? ELSE ? END",
+                              auto_track_topics_after_msecs, TopicUser.notification_levels[:regular], TopicUser.notification_levels[:tracking]])
       end
     end
 
