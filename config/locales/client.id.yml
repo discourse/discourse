@@ -718,7 +718,7 @@ id:
         permissions: Permissions
         activity: Activity
         like_count: Likes Received
-        private_topics_count: Private Topics Count
+        private_topics_count: Private Topics
         posts_read_count: Posts Read
         post_count: Posts Created
         topics_entered: Topics Entered
