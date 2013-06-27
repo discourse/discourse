@@ -47,5 +47,5 @@ Discourse.KeyValueStore = {
     }
     return localStorage[this.context + key];
   }
-}
+};
 

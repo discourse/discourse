@@ -1,35 +1,24 @@
 class AvatarLookup
+  attr_accessor :user_ids, :users
 
-  def initialize(user_ids)
-    @user_ids = user_ids
-
-    @user_ids.flatten!
-    @user_ids.compact! if @user_ids.present?
-    @user_ids.uniq! if @user_ids.present?
-
-    @loaded = false
+  def initialize(user_ids=[])
+    self.user_ids = AvatarLookup.filtered_users(user_ids)
   end
 
   # Lookup a user by id
   def [](user_id)
-    ensure_loaded!
-    @users_hashed[user_id]
+    self.users = AvatarLookup.hashed_users(user_ids) if self.users.nil?
+    self.users[user_id]
   end
 
+  private
+  def self.filtered_users(user_ids=[])
+    user_ids.flatten.tap(&:compact!).tap(&:uniq!)
+  end
 
-  protected
-
-    def ensure_loaded!
-      return if @loaded
-
-      @users_hashed = {}
-      # need email for hash
-      User.where(id: @user_ids).select([:id, :email, :email, :username]).each do |u|
-        @users_hashed[u.id] = u
-      end
-
-      @loaded = true
-    end
-
-
+  def self.hashed_users(user_ids=[])
+    users = User.where(:id => user_ids).select([:id, :email, :username])
+    users_with_ids = users.collect {|x| [x.id, x] }.flatten
+    Hash[*users_with_ids]
+  end
 end

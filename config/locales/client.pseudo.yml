@@ -1,3 +1,11 @@
+# encoding: utf-8
+# This file contains content for the client portion of Discourse, sent out
+# to the Javascript app.
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
+
+
 ---
 pseudo:
   js:
@@ -639,7 +647,6 @@ pseudo:
         delete: '[[ ďéłéťé ťĥíš ƿóšť ]]'
         undelete: '[[ ůɳďéłéťé ťĥíš ƿóšť ]]'
         share: '[[ šĥářé á łíɳǩ ťó ťĥíš ƿóšť ]]'
-        bookmark: '[[ ƀóóǩɱářǩ ťĥíš ƿóšť ťó ýóůř ůšéř ƿáǧé ]]'
         more: '[[ Ϻóřé ]]'
       actions:
         flag: '[[ Ƒłáǧ ]]'
@@ -927,7 +934,7 @@ pseudo:
         delete_confirm: '[[ Ďéłéťé ťĥíš čůšťóɱížáťíóɳ? ]]'
         about: '[[ Šíťé Čůšťóɱížáťíóɳ áłłóŵ ýóů ťó ɱóďíƒý šťýłéšĥééťš áɳď ĥéáďéřš
           óɳ ťĥé šíťé. Čĥóóšé óř áďď óɳé ťó šťářť éďíťíɳǧ. ]]'
-      email_logs:
+      email:
         title: '[[ Éɱáíł Łóǧš ]]'
         sent_at: '[[ Šéɳť Áť ]]'
         email_type: '[[ Éɱáíł Ťýƿé ]]'

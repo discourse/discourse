@@ -9,7 +9,7 @@ Ember.Handlebars.registerHelper('i18n', function(property, options) {
   var params,
     _this = this;
   params = options.hash;
-  Object.keys(params, function(key, value) {
+  _.each(params, function(value, key) {
     params[key] = Em.Handlebars.get(_this, value, options);
   });
   return Ember.String.i18n(property, params);
@@ -35,17 +35,19 @@ Ember.String.i18n = function(scope, options) {
   @for Handlebars
 **/
 Ember.Handlebars.registerHelper('countI18n', function(key, options) {
-  var view;
-  view = Discourse.View.extend({
+  var view = Discourse.View.extend({
     tagName: 'span',
+
     render: function(buffer) {
-      return buffer.push(Ember.String.i18n(key, {
+      buffer.push(Ember.String.i18n(key, {
         count: this.get('count')
       }));
     },
-    countChanged: (function() {
-      return this.rerender();
-    }).observes('count')
+
+    countChanged: function() {
+      this.rerender();
+    }.observes('count')
+
   });
   return Ember.Handlebars.helpers.view.call(this, view, options);
 });

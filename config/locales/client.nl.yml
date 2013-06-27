@@ -5,9 +5,72 @@
 # Dutch translation for Discourse
 # contributed by Vincent Veldkamp (vincent@retroga.me)
 # and Sander Datema (info@sanderdatema.nl)
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
+
 
 nl:
   js:
+    dates:
+      short_date_no_year: "D MMM"
+      short_date: "D MMM YYYY"
+      long_date: "D MMMM YYYY H:mm"
+      tiny:
+        half_a_minute: "< 1m"
+        less_than_x_seconds:
+          one:   "< 1s"
+          other: "< %{count}s"
+        x_seconds:
+          one:   1s
+          other: "%{count}s"
+        less_than_x_minutes:
+          one:   "< 1m"
+          other: "< %{count}m"
+        x_minutes:
+          one:   1m
+          other: "%{count}m"
+        about_x_hours:
+          one:   1h
+          other: "%{count}h"
+        x_days:
+          one:   1d
+          other: "%{count}d"
+        about_x_months:
+          one:   1mnd
+          other: "%{count}mnd"
+        x_months:
+          one:   mnd
+          other: "%{count}mon"
+        about_x_years:
+          one:   1j
+          other: "%{count}j"
+        over_x_years:
+          one:   "> 1j"
+          other: "> %{count}j"
+        almost_x_years:
+          one:   1j
+          other: "%{count}j"
+      medium:
+        x_minutes:
+          one: 1 minuut
+          other: "%{count} minuten"
+        x_hours:
+          one: 1 uur
+          other: "%{count} uren"
+        x_days:
+          one: 1 dag
+          other: "%{count} dagen"
+      medium_with_ago:
+        x_minutes:
+          one: 1 minuut geleden
+          other: "%{count} minuten geleden"
+        x_hours:
+          one: 1 uur geleden
+          other: "%{count} uren geleden"
+        x_days:
+          one: 1 day geleden
+          other: "%{count} dagen geleden"
     share:
       topic: Deel een link naar deze topic
       post: Deel een link naar dit bericht
@@ -34,6 +97,20 @@ nl:
     you: Jij
     or: of
     now: zonet
+    read_more: lees verder
+
+    in_n_seconds:
+      one: "over 1 seconde"
+      other: "over {{count}} secondes"
+    in_n_minutes:
+      one: "over 1 minuut"
+      other: "over {{count}} minuten"
+    in_n_hours:
+      one: "over 1 uur"
+      other: "over {{count}} uren"
+    in_n_days:
+      one: "over 1 dag"
+      other: "over {{count}} dagen"
 
     suggested_topics:
       title: Aanbevolen topics
@@ -52,6 +129,12 @@ nl:
     save: Bewaar wijzigingen
     saving: Wordt opgeslagen...
     saved: Opgeslagen!
+
+    choose_topic:
+      none_found: Geen topics gevonden.
+      title:
+        search: "Zoek naar een topic op naam, url of id:"
+        placeholder: typ hier de titel van de topic
 
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> plaatste <a href='{{topicUrl}}'>deze topic</a>"
@@ -75,8 +158,8 @@ nl:
       "2": "Likes ontvangen"
       "3": "Bladwijzers"
       "4": "Topics"
-      "5": "Berichten"
-      "6": "Responses"
+      "5": "Antwoorden"
+      "6": "Reacties"
       "7": "Genoemd"
       "9": "Citaten"
       "10": "Favorieten"
@@ -99,6 +182,9 @@ nl:
       trust_level: Trustlevel
       external_links_in_new_tab: Open alle externe links in een nieuw tabblad
       enable_quoting: Activeer antwoord-met-citaat voor geselecteerde tekst
+
+      moderator: "{{user}} is een moderator"
+      admin: "{{user}} is een admin"
 
       change_password:
         action: wijzig
@@ -248,7 +334,7 @@ nl:
       disable: "Schakel naar normale weergave"
 
     private_message_info:
-      title: 'Privé-conversatie'
+      title: 'Privé-bericht'
       invite: Nodig anderen uit...
 
     email: E-mail
@@ -294,6 +380,9 @@ nl:
       facebook:
         title: met Facebook
         message: "Authenticatie met Facebook (zorg ervoor dat je popup blocker uit staat)"
+      cas:
+        title: met CAS
+        message: "Authenticatie met CAS (zorg ervoor dat je popup blocker uit staat)"
       yahoo:
         title: met Yahoo
         message: "Authenticatie met Yahoo (zorg ervoor dat je popup blocker uit staat)"
@@ -309,12 +398,20 @@ nl:
       saving_draft_tip: wordt opgeslagen
       saved_draft_tip: opgeslagen
       saved_local_draft_tip: lokaal opgeslagen
-      similar_topica: Jouw topic heeft overeenkomsten met...
+      similar_topics: Jouw topic heeft overeenkomsten met...
       drafts_offline: concepten offline
 
       min_length:
         need_more_for_title: "Nog {{n}} tekens nodig voor de titel"
         need_more_for_reply: "Nog {{n}} tekens nodig voor het antwoord"
+
+      error:
+        title_missing: Je bent de titel vergeten.
+        title_too_short: "De titel moet tenminste {{min}} tekens bevatten."
+        title_too_long: "De titel mag maximaal {{max}} tekens bevatten."
+        post_missing: Berichten kunnen niet leeg zijn.
+        post_length: "Berichten moeten tenminste {{min}} tekens bevatten."
+        category_missing: Je hebt nog geen categorie gekozen.
 
       save_edit: Bewaar wijzigingen
       reply_original: Reageer op oorspronkelijke topic
@@ -364,6 +461,10 @@ nl:
       help: Hulp over Markdown
       toggler: verberg of toon de editor
 
+      admin_options_title: "Optionele stafinstellingen voor deze topic"
+      auto_close_label: "Sluit topic automatisch na:"
+      auto_close_units: "dagen"
+
     notifications:
       title: "notificaties van @naam vermeldingen, reacties op je berichten en topics, privé-berichten, etc."
       none: "Er zijn nu geen notificaties."
@@ -373,11 +474,11 @@ nl:
       replied: "<i title='beantwoord' class='icon icon-reply'></i> {{username}} {{link}}"
       posted: "<i title='beantwoord' class='icon icon-reply'></i> {{username}} {{link}}"
       edited: "<i title='gewijzigd' class='icon icon-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='leuk gevonden' class='icon icon-heart'></i> {{username}} {{link}}"
+      liked: "<i title='leuk' class='icon icon-heart'></i> {{username}} {{link}}"
       private_message: "<i class='icon icon-envelope-alt' title='privé-bericht'></i> {{username}} {{link}}"
-      invited_to_private_message: "{{username}} heeft je uitgenodigd voor een privé-conversatie: {{link}}"
+      invited_to_private_message: "<i class='icon icon-envelope-alt' title='privé-bericht'></i> {{username}} {{link}}"
       invitee_accepted: "<i title='heeft je uitnodiging geaccepteerd' class='icon icon-signin'></i> {{username}} heeft je uitnodiging geaccepteerd en heeft zich ingeschreven om deel te nemen."
-      moved_post: "<i title='bericht verplaatst' class='icon icon-arrow-right'></i> {{username}} heeft je post verplaast naar {{link}}"
+      moved_post: "<i title='bericht verplaatst' class='icon icon-arrow-right'></i> {{username}} verplaatst naar {{link}}"
       total_flagged: aantal gemarkeerde berichten
 
     image_selector:
@@ -397,6 +498,10 @@ nl:
       placeholder: typ je zoekterm hier
       no_results: Geen resultaten gevonden.
       searching: Zoeken...
+
+      prefer:
+        user: "er wordt voornamelijk gezocht naar berichten van @{{username}}"
+        category: "er wordt voornamelijk gezocht naar berichten in categorie {{category}}"
 
     site_map: ga naar een andere topic-lijst of categorie
     go_back: ga terug
@@ -437,7 +542,7 @@ nl:
       create_in: "Maak een {{categoryName}} topic"
       create: Maak topic
       create_long: Maak een nieuw topic
-      private_message: Start een privé-gesprek
+      private_message: Stuur een privé-bericht
       list: Topics
       new: nieuw topic
       title: Topic
@@ -464,14 +569,37 @@ nl:
       toggle_information: 'Zet topic details aan/uit'
       read_more_in_category: "Wil je meer lezen? Kijk dan voor andere topics in {{catLink}} of {{latestLink}}."
       read_more: "Wil je meer lezen? {{catLink}} of {{latestLink}}."
+
+      # keys ending with _MF use message format, see /spec/components/js_local_helper_spec.rb for samples
+      read_more_MF: "There {
+        UNREAD, plural,
+        =0 {}
+        one {
+          is <a href='/unread'>1 ongelezen</a>
+        } other {
+          zijn <a href='/unread'># ongelezen</a>
+        }
+        } {
+          NEW, plural,
+            =0 {}
+            one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 nieuwe</a> topic}
+            other { {BOTH, select, true{and } false {zijn } other{}} <a href='/new'># nieuwe</a> topics}
+        } over, of {CATEGORY, select, true {bekijk andere topics in {catLink}} false {{latestLink}} other {}} "
+
       browse_all_categories: Bekijk alle categorieën
 
       view_latest_topics: bekijk populaire topics
-      suggest_create_topic: Waarom niet een nieuwe topic aanmaken?
+      suggest_create_topic: Wil je een nieuwe topic schrijven?
       read_position_reset: Je leespositie is gereset.
       jump_reply_up: spring naar een eerdere reactie
       jump_reply_down: spring naar een latere reactie
       deleted: Deze topic is verwijderd
+
+      auto_close_notice: "Deze topic wordt automatisch over %{timeLeft} gesloten."
+      auto_close_title: 'Instellingen voor automatisch sluiten'
+      auto_close_save: Opslaan
+      auto_close_cancel: Annuleren
+      auto_close_remove: Sluit deze topic niet automatisch
 
       progress:
         title: topic voortgang
@@ -484,7 +612,7 @@ nl:
         title: ''
         reasons:
           "3_2": 'Je ontvangt notificaties omdat je deze topic in de gaten houdt.'
-          "3_1": 'Je ontvangt notificaties omdat je deze topic gemaakt hebt.'
+          "3_1": 'Je ontvangt notificaties omdat jij deze topic gemaakt hebt.'
           "3": 'Je ontvangt notificaties omdat je deze topic in de gaten houdt.'
           "2_4": 'Je ontvangt notificaties omdat je een reactie aan deze topic hebt geplaatst.'
           "2_2": 'Je ontvangt notificaties omdat je deze topic volgt.'
@@ -510,6 +638,7 @@ nl:
         delete: Verwijder topic
         open: Open topic
         close: Sluit topic
+        auto_close: "Automatisch sluiten"
         unpin: Ontpin topic
         pin: Pin topic
         unarchive: De-archiveer topic
@@ -517,7 +646,7 @@ nl:
         invisible: Maak onzichtbaar
         visible: Maak zichtbaar
         reset_read: Reset leesdata
-        multi_select: Selecteer meerdere berichten
+        multi_select: Selecteer berichten voor samenvoegen/splitsen
         convert_to_topic: Zet om naar normale topic
 
       reply:
@@ -526,7 +655,7 @@ nl:
 
       clear_pin:
         title: Verwijder pin
-        help: "Annuleer de gepinde status van deze topic, zodat het niet langer bovenaan je topiclijst verschijnt." 
+        help: "Annuleer de gepinde status van deze topic, zodat het niet langer bovenaan je topiclijst verschijnt."
 
       share:
         title: Deel
@@ -535,11 +664,11 @@ nl:
       inviting: Uitnodigen...
 
       invite_private:
-        title: Nodig uit voor privé-conversatie
+        title: Stuur een privé-bericht
         email_or_username: E-mail of gebruikersnaam van genodigde
         email_or_username_placeholder: e-mailadres of gebruikersnaam
         action: Uitnodigen
-        success: "Bedankt! We hebben deze persoon uitgenodigd om deel te nemen aan deze privé-conversatie."
+        success: "Bedankt! We hebben deze persoon dit privé-bericht gestuurd."
         error: "Sorry, er is iets misgegaan bij het uitnodigen van deze persoon"
 
       invite_reply:
@@ -571,20 +700,28 @@ nl:
           other: "van {{count}} in deze topic."
         cancel: Laat alle posts in deze topic zien.
 
-      move_selected:
-        title: Verplaats geslecteerde berichten
-        topic_name: "Nieuwe topicnaam:"
-        error: "Sorry, er is iets misgegaan bij het verplaatsen van dit bericht."
+      split_topic:
+        title: Splits topic
+        action: splits topic
+        topic_name: "Naam nieuwe topic:"
+        error: "Er ging iets mis bij het splitsen van die topic."
         instructions:
           one: "Je staat op het punt een nieuwe topic aan te maken en het te vullen met het bericht dat je geselecteerd hebt."
           other: "Je staat op het punt een nieuwe topic aan te maken en het te vullen met de <b>{{count}}</b> berichten die je geselecteerd hebt."
+
+      merge_topic:
+        title: Voeg topic samen
+        action: voeg topic samen
+        error: "There was an error merging that topic."
+        instructions:
+          one: "Selecteer de topic waarnaar je het bericht wil verplaatsen."
+          other: "Selecteer de topic waarnaar je de <b>{{count}}</b> berichten wil verplaatsen."
 
       multi_select:
         select: selecteer
         selected: "geselecteerd ({{count}})"
         delete: verwijder geselecteerde
         cancel: annuleer selectie
-        move: verplaats geselecteerde
         description:
           one: Je hebt <b>één</b> bericht geselecteerd.
           other: "Je hebt <b>{{count}}</b> berichten geselecteerd."
@@ -627,7 +764,6 @@ nl:
         delete: verwijder dit bericht
         undelete: herstel dit bericht
         share: deel een link naar dit bericht
-        bookmark: voeg dit bericht toe aan de bladwijzers op je gebruikerspagina
         more: Meer
 
       actions:
@@ -655,9 +791,9 @@ nl:
           spam: "{{icons}} markeerden dit als spam"
           inappropriate: "{{icons}} markeerden dit als ongepast"
           notify_moderators: "{{icons}} lichtte moderators in"
-          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>lichtte moderators in</a>" 
-          notify_user: "{{icons}} begonnen een privé-conversatie"
-          notify_user_with_url: "{{icons}} begonnen een <a href='{{postUrl}}'>privé-conversatie</a>" 
+          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>lichtte moderators in</a>"
+          notify_user: "{{icons}} verstuurde een privé-bericht"
+          notify_user_with_url: "{{icons}} verstuurde een <a href='{{postUrl}}'>privé-bericht</a>"
           bookmark: "{{icons}} voegden dit toe aan hun favorieten"
           like: "{{icons}} vinden dit leuk"
           vote: "{{icons}} hebben hier op gestemd"
@@ -666,7 +802,7 @@ nl:
           spam: Jij markeerde dit als spam
           inappropriate: Jij markeerde dit als ongepast
           notify_moderators: Jij markeerde dit voor moderatie
-          notify_user: Jij begon een privé-conversatie met deze persoon
+          notify_user: Jij stuurde een privé-bericht naar deze persoon
           bookmark: Jij voegde dit bericht toe aan je favorieten
           like: Jij vindt dit leuk
           vote: Jij hebt op dit bericht gestemd
@@ -684,8 +820,8 @@ nl:
             one: "Jij en iemand anders markeerden dit voor moderatie"
             other: "Jij en {{count}} anderen markeerden dit voor moderatie"
           notify_user:
-            one: "Jij en iemand anders begonnen een privé-conversatie met deze persoon"
-            other: "Jij en {{count}} anderen begonnen een privé-conversatie met deze persoon"
+            one: "Jij en iemand anders stuurden een privé-bericht naar deze persoon"
+            other: "Jij en {{count}} anderen stuurden een privé-bericht naar deze persoon"
           bookmark:
             one: "Jij en iemand anders voegden dit bericht toe aan de favorieten"
             other: "Jij en {{count}} anderen voegden dit bericht toe aan de favorieten"
@@ -709,8 +845,8 @@ nl:
             one: "Iemand heeft dit bericht gemarkeerd voor moderatie"
             other: "{{count}} Mensen hebben dit bericht gemarkeerd voor moderatie"
           notify_user:
-            one: "Iemand is een privé-conversatie begonnen met deze persoon"
-            other: "{{count}} Mensen zijn een privé-conversatie begonnen met deze persoon"
+            one: "Iemand stuurde een privé-bericht naar deze persoon"
+            other: "{{count}} Mensen stuurden een privé-bericht naar deze persoon"
           bookmark:
             one: "Iemand heeft dit bericht toegevoegd aan zijn favorieten"
             other: "{{count}} Mensen hebben dit bericht toegevoegd aan hun favorieten"
@@ -735,11 +871,15 @@ nl:
       none: (geen categorie)
       edit: bewerk
       edit_long: Bewerk categorie
+      edit_uncategorized: "Wijzig ongecategoriseerd"
       view: Bekijk topics in categorie
+      general: Algemeen
+      settings: Instellingen
       delete: Verwijder categorie
       create: Maak categorie
       save: Bewaar categorie
       creation_error: Er ging bij het maken van de categorie iets mis.
+      save_error: Er ging iets mis bij het opslaan van de categorie.
       more_posts: "bekijk alle {{posts}}..."
       name: Naam categorie
       description: Omschrijving
@@ -756,6 +896,12 @@ nl:
       change_in_category_topic: Wijzig omschrijving
       hotness: Populariteit
       already_used: Deze kleur is al in gebruik door een andere categorie
+      is_secure: "Categorie beveiligen?"
+      add_group: "Voeg groep toe"
+      security: "Beveiliging"
+      allowed_groups: "Toegestane groepen:"
+      auto_close_label: "Sluit topics automatisch na:"
+
 
     flagging:
       title: Waarom meld je dit bericht voor moderatie?
@@ -792,7 +938,7 @@ nl:
     replies: Reacties
     views_long: "deze topic is {{number}} keer bekeken"
     activity: Activiteit
-    likes: Leuk gevonden
+    likes: Leuk
     top_contributors: Deelnemers
     category_title: Categorie
     history: Geschiedenis
@@ -864,6 +1010,7 @@ nl:
         no_problems: Er zijn geen problemen gevonden
         moderators: "Moderators:"
         admins: "Admins:"
+        blocked: "Geblokkeerd:"
         private_messages_short: PBs
         private_messages_title: Privé-berichten
 
@@ -893,14 +1040,23 @@ nl:
         delete_title: "verwijder bericht (als het het eerste bericht is van een topic, verwijdert dit de topic)"
         flagged_by: Gemarkeerd door
         error: Er ging iets mis
+        view_message: bekijk bericht
 
       groups:
         title: Groepen
         edit: Wijzig groepen
         selector_placeholder: voeg leden toe
+        name_placeholder: "Groepsnaam, geen spaties, zelfde regels als bij een gebruikersnaam"
 
       api:
         title: API
+        long_title: "API informatie"
+        key: "Key"
+        generate: "Genereer API Key"
+        regenerate: "Genereer API Key opnieuw"
+        info_html: "Met deze API key kun je met behulp van JSON calls topics maken en bewerken."
+        note_html: "Houd deze key <strong>geheim</strong>, gebruikers die deze key hebben kunnen zich als elke andere gebruiker voordoen op het forum en topics aanmaken."
+
       customize:
         title: Aanpassingen
         long_title: Aanpassingen aan de site
@@ -917,8 +1073,8 @@ nl:
         delete_confirm: Verwijder deze aanpassing?
         about: Met aanpassingen aan de site kun je stylesheets en headers wijzigen. Kies of voeg een toe om te beginnen.
 
-      email_logs:
-        title: E-mail logs
+      email:
+        title: E-mail
         sent_at: Verzonden op
         email_type: E-mailtype
         to_address: "Ontvangeradres"
@@ -936,7 +1092,7 @@ nl:
       users:
         title: Leden
         create: Voeg beheerder toe
-        last_emailed: laatste mail verstuurd naar
+        last_emailed: Laatste mail verstuurd
         not_found: "Sorry, deze gebruikersnaam bestaat niet in ons systeem."
         new: Nieuw
         active: Actief
@@ -956,6 +1112,7 @@ nl:
           elder: 'Leden met Trust Level 4 (Stamoudste)'
           admins: Administrators
           moderators: Moderators
+          blocked: Geblokkeerde leden
 
       user:
         ban_failed: "Er ging iets fout met het blokkeren van deze gebruiker: {{error}}"
@@ -975,6 +1132,8 @@ nl:
         grant_admin: Geef Beheerdersrechten
         revoke_moderation: Ontneem modereerrechten
         grant_moderation: Geef modereerrechten
+        unblock: Deblokkeer
+        block: Blokkeer
         reputation: Reputatie
         permissions: Toestemmingen
         activity: Activiteit
@@ -993,6 +1152,16 @@ nl:
         delete_confirm: Weet je zeker dat je deze gebruiker definitief wil verwijderen? Deze handeling is permanant!
         deleted: De gebruiker is verwijderd.
         delete_failed: Er ging iets mis bij het verwijderen van deze gebruiker. Zorg er voor dat alle berichten van deze gebruiker eerst verwijderd zijn.
+        send_activation_email: Verstuur activatiemail
+        activation_email_sent: Een activatiemail is verstuurd.
+        send_activation_email_failed: Er ging iets mis bij het versturen van de activatiemail.
+        activate: Activeer account
+        activate_failed: Er ging iets mis bij het activeren van deze gebruiker.
+        deactivate_account: Deactiveer account
+        deactivate_failed: Er ging iets mis bij het deactiveren van deze gebruiker.
+        unblock_failed: Er ging iets mis bij het deblokkeren van deze gebruiker.
+        block_failed: Er ging iets mis bij het blokkeren van deze gebruiker.
+        block_explanation: Een geblokkeerde gebruiker kan geen topics maken of reageren op topics.
 
       site_content:
         none: Selecteer een tekst om deze te bewerken

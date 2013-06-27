@@ -9,15 +9,15 @@ class UserSerializer < BasicUserSerializer
              :created_at,
              :website,
              :can_edit,
-             :stream,
              :stats,
              :can_send_private_message_to_user,
              :bio_excerpt,
-             :invited_by,
              :trust_level,
              :moderator,
-             :admin
+             :admin,
+             :title
 
+  has_one :invited_by, embed: :object, serializer: BasicUserSerializer
 
   def self.private_attributes(*attrs)
     attributes *attrs
@@ -29,27 +29,29 @@ class UserSerializer < BasicUserSerializer
   end
 
   def bio_excerpt
-    e = object.bio_excerpt
-    unless e && e.length > 0
-      e = if scope.user && scope.user.id == object.id
-        I18n.t('user_profile.no_info_me', username_lower: object.username_lower)
-      else
-        I18n.t('user_profile.no_info_other', name: object.name)
-      end
+    # If they have a bio return it
+    excerpt = object.bio_excerpt
+    return excerpt if excerpt.present?
+
+    # Without a bio, determine what message to show
+    if scope.user && scope.user.id == object.id
+      I18n.t('user_profile.no_info_me', username_lower: object.username_lower)
+    else
+      I18n.t('user_profile.no_info_other', name: object.name)
     end
-    e
   end
 
   private_attributes :email,
-             :email_digests,
-             :email_private_messages,
-             :email_direct,
-             :digest_after_days,
-             :auto_track_topics_after_msecs,
-             :new_topic_duration_minutes, 
-             :external_links_in_new_tab,
-             :enable_quoting 
-             
+                     :email_digests,
+                     :email_private_messages,
+                     :email_direct,
+                     :digest_after_days,
+                     :auto_track_topics_after_msecs,
+                     :new_topic_duration_minutes,
+                     :external_links_in_new_tab,
+                     :dynamic_favicon,
+                     :enable_quoting
+
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.auto_track_topics_after
@@ -63,17 +65,12 @@ class UserSerializer < BasicUserSerializer
     scope.can_send_private_message?(object)
   end
 
-  def stats
-    UserAction.stats(object.id, scope)
-  end
-
-  def stream
-    UserAction.stream(user_id: object.id, offset: 0, limit: 60, 
-                      guardian: scope, ignore_private_messages: true)
-  end
-
   def can_edit
     scope.can_edit?(object)
+  end
+
+  def stats
+    UserAction.stats(object.id, scope)
   end
 
 end

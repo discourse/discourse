@@ -63,6 +63,14 @@ class TopicQuery
       "CASE WHEN (topics.pinned_at IS NOT NULL) THEN 0 ELSE 1 END, topics.bumped_at DESC"
     end
 
+    def top_viewed(max)
+      Topic.listable_topics.visible.secured.order('views desc').take(10)
+    end
+
+    def recent(max)
+      Topic.listable_topics.visible.secured.order('created_at desc').take(10)
+    end
+
   end
 
   def initialize(user=nil, opts={})
@@ -190,10 +198,34 @@ class TopicQuery
     create_list(:new_in_category) {|l| l.where(category_id: category.id).by_newest.first(25)}
   end
 
+  def self.new_filter(list,treat_as_new_topic_start_date)
+    list.where("topics.created_at >= :created_at", created_at: treat_as_new_topic_start_date)
+        .where("tu.last_read_post_number IS NULL")
+        .where("COALESCE(tu.notification_level, :tracking) >= :tracking", tracking: TopicUser.notification_levels[:tracking])
+  end
+
+  def new_results(list_opts={})
+    TopicQuery.new_filter(default_list(list_opts),@user.treat_as_new_topic_start_date)
+  end
+
+  def self.unread_filter(list)
+    list.where("tu.last_read_post_number < topics.highest_post_number")
+        .where("COALESCE(tu.notification_level, :regular) >= :tracking", regular: TopicUser.notification_levels[:regular], tracking: TopicUser.notification_levels[:tracking])
+  end
+
+  def unread_results(list_opts={})
+    TopicQuery.unread_filter(default_list(list_opts))
+  end
+
   protected
 
     def create_list(filter, list_opts={})
-      topics = default_list(list_opts)
+      opts = list_opts
+      if @opts[:topic_ids]
+        opts = opts.dup
+        opts[:topic_ids] = @opts[:topic_ids]
+      end
+      topics = default_list(opts)
       topics = yield(topics) if block_given?
       TopicList.new(filter, @user, topics)
     end
@@ -220,13 +252,18 @@ class TopicQuery
         end
       end
 
+
       result = result.listable_topics.includes(category: :topic_only_relative_url)
       result = result.where('categories.name is null or categories.name <> ?', query_opts[:exclude_category]) if query_opts[:exclude_category]
       result = result.where('categories.name = ?', query_opts[:only_category]) if query_opts[:only_category]
       result = result.limit(page_size) unless query_opts[:limit] == false
-      result = result.visible if @user.blank? or @user.regular?
+      result = result.visible if @opts[:visible] or @user.blank? or @user.regular?
       result = result.where('topics.id <> ?', query_opts[:except_topic_id]) if query_opts[:except_topic_id].present?
       result = result.offset(query_opts[:page].to_i * page_size) if query_opts[:page].present?
+
+      if list_opts[:topic_ids]
+        result = result.where('topics.id in (?)', list_opts[:topic_ids])
+      end
 
       unless @user && @user.moderator?
         category_ids = @user.secure_category_ids if @user
@@ -240,18 +277,6 @@ class TopicQuery
       result
     end
 
-    def new_results(list_opts={})
-      default_list(list_opts)
-        .where("topics.created_at >= :created_at", created_at: @user.treat_as_new_topic_start_date)
-        .where("tu.last_read_post_number IS NULL")
-        .where("COALESCE(tu.notification_level, :tracking) >= :tracking", tracking: TopicUser.notification_levels[:tracking])
-    end
-
-    def unread_results(list_opts={})
-      default_list(list_opts)
-        .where("tu.last_read_post_number < topics.highest_post_number")
-        .where("COALESCE(tu.notification_level, :regular) >= :tracking", regular: TopicUser.notification_levels[:regular], tracking: TopicUser.notification_levels[:tracking])
-    end
 
     def random_suggested_results_for(topic, count, exclude_topic_ids)
       results = default_list(unordered: true, per_page: count)

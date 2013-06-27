@@ -4,6 +4,8 @@
   <li><a class="active" href="<%=privacy_path%>">Ochrana soukromí</a></li>
 </ul>
 
+<%= markdown_content(:privacy_policy) do %>
+
 <div id="collect"></div>
 <h2><a href="#collect">Jaké osobní informace sbíráme?</a></h2>
 <p>
@@ -76,3 +78,5 @@
 <p>
   Pokud se rozhodneme změnit naše podmínky ochrany soukromí, zašleme tyto změny na tuto stránku.
 </p>
+
+<% end %>

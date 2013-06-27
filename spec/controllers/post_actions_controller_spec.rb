@@ -9,16 +9,16 @@ describe PostActionsController do
 
     describe 'logged in' do
       before do
-        @user = log_in
+        @user = log_in(:moderator)
         @post = Fabricate(:post, user: Fabricate(:coding_horror))
       end
 
       it 'raises an error when the id is missing' do
-        lambda { xhr :post, :create, post_action_type_id: PostActionType.types[:like] }.should raise_error(Discourse::InvalidParameters)
+        lambda { xhr :post, :create, post_action_type_id: PostActionType.types[:like] }.should raise_error(ActionController::ParameterMissing)
       end
 
       it 'raises an error when the post_action_type_id index is missing' do
-        lambda { xhr :post, :create, id: @post.id }.should raise_error(Discourse::InvalidParameters)
+        lambda { xhr :post, :create, id: @post.id }.should raise_error(ActionController::ParameterMissing)
       end
 
       it "fails when the user doesn't have permission to see the post" do
@@ -34,9 +34,26 @@ describe PostActionsController do
       end
 
       it 'allows us to create an post action on a post' do
-        PostAction.expects(:act).once.with(@user, @post, PostActionType.types[:like], nil)
+        PostAction.expects(:act).once.with(@user, @post, PostActionType.types[:like], {})
         xhr :post, :create, id: @post.id, post_action_type_id: PostActionType.types[:like]
       end
+
+      it 'passes the message through' do
+        PostAction.expects(:act).once.with(@user, @post, PostActionType.types[:like], {message: 'action message goes here'})
+        xhr :post, :create, id: @post.id, post_action_type_id: PostActionType.types[:like], message: 'action message goes here'
+      end
+
+      it 'passes take_action through' do
+        PostAction.expects(:act).once.with(@user, @post, PostActionType.types[:like], {take_action: true})
+        xhr :post, :create, id: @post.id, post_action_type_id: PostActionType.types[:like], take_action: 'true'
+      end
+
+      it "doesn't pass take_action through if the user isn't staff" do
+        Guardian.any_instance.stubs(:is_staff?).returns(false)
+        PostAction.expects(:act).once.with(@user, @post, PostActionType.types[:like], {})
+        xhr :post, :create, id: @post.id, post_action_type_id: PostActionType.types[:like], take_action: 'true'
+      end
+
     end
 
   end
@@ -53,7 +70,7 @@ describe PostActionsController do
       let!(:user) { log_in }
 
       it 'raises an error when the post_action_type_id is missing' do
-        lambda { xhr :delete, :destroy, id: post.id }.should raise_error(Discourse::InvalidParameters)
+        lambda { xhr :delete, :destroy, id: post.id }.should raise_error(ActionController::ParameterMissing)
       end
 
       it "returns 404 when the post action type doesn't exist for that user" do
@@ -99,7 +116,7 @@ describe PostActionsController do
       let!(:user) { log_in(:moderator) }
 
       it "raises an error without a post_action_type_id" do
-        -> { xhr :post, :clear_flags, id: flagged_post.id }.should raise_error(Discourse::InvalidParameters)
+        -> { xhr :post, :clear_flags, id: flagged_post.id }.should raise_error(ActionController::ParameterMissing)
       end
 
       it "raises an error when the user doesn't have access" do
@@ -143,13 +160,13 @@ describe PostActionsController do
     it 'raises an error without an id' do
       lambda {
         xhr :get, :users, post_action_type_id: PostActionType.types[:like]
-      }.should raise_error(Discourse::InvalidParameters)
+      }.should raise_error(ActionController::ParameterMissing)
     end
 
     it 'raises an error without a post action type' do
       lambda {
         xhr :get, :users, id: post.id
-      }.should raise_error(Discourse::InvalidParameters)
+      }.should raise_error(ActionController::ParameterMissing)
     end
 
     it "fails when the user doesn't have permission to see the post" do

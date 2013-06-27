@@ -1,13 +1,13 @@
 /**
   Handles routes related to viewing old flags.
 
-  @class AdminFlagsOldRoute    
+  @class AdminFlagsOldRoute
   @extends Discourse.Route
   @namespace Discourse
   @module Discourse
 **/
 Discourse.AdminFlagsOldRoute = Discourse.Route.extend({
-  
+
   model: function() {
     return Discourse.FlaggedPost.findAll('old');
   },

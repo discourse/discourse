@@ -1,0 +1,16 @@
+<div id='move-selected' class="modal-body">
+  {{#if error}}
+    <div class="alert alert-error">
+      <button class="close" data-dismiss="alert">×</button>
+    </div>
+  {{/if}}
+
+  {{selectedPostsCount}}
+  <p>{{{i18n topic.merge_topic.instructions count="selectedPostsCount"}}}</p>
+
+  {{chooseTopic selectedTopicId=selectedTopicId}}
+</div>
+
+<div class="modal-footer">
+  <button class='btn btn-primary' {{bindAttr disabled="buttonDisabled"}} {{action movePostsToExistingTopic}}>{{buttonTitle}}</button>
+</div>

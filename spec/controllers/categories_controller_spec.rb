@@ -19,15 +19,15 @@ describe CategoriesController do
       end
 
       it 'raises an exception when the name is missing' do
-        lambda { xhr :post, :create, color: 'ff0', text_color: 'fff' }.should raise_error(Discourse::InvalidParameters)
+        lambda { xhr :post, :create, color: 'ff0', text_color: 'fff' }.should raise_error(ActionController::ParameterMissing)
       end
 
       it 'raises an exception when the color is missing' do
-        lambda { xhr :post, :create, name: 'hello', text_color: 'fff' }.should raise_error(Discourse::InvalidParameters)
+        lambda { xhr :post, :create, name: 'hello', text_color: 'fff' }.should raise_error(ActionController::ParameterMissing)
       end
 
       it 'raises an exception when the text color is missing' do
-        lambda { xhr :post, :create, name: 'hello', color: 'ff0' }.should raise_error(Discourse::InvalidParameters)
+        lambda { xhr :post, :create, name: 'hello', color: 'ff0' }.should raise_error(ActionController::ParameterMissing)
       end
 
       describe 'failure' do
@@ -106,15 +106,15 @@ describe CategoriesController do
       end
 
       it "requires a name" do
-        lambda { xhr :put, :update, id: @category.slug, color: 'fff', text_color: '0ff' }.should raise_error(Discourse::InvalidParameters)
+        lambda { xhr :put, :update, id: @category.slug, color: 'fff', text_color: '0ff' }.should raise_error(ActionController::ParameterMissing)
       end
 
       it "requires a color" do
-        lambda { xhr :put, :update, id: @category.slug, name: 'asdf', text_color: '0ff' }.should raise_error(Discourse::InvalidParameters)
+        lambda { xhr :put, :update, id: @category.slug, name: 'asdf', text_color: '0ff' }.should raise_error(ActionController::ParameterMissing)
       end
 
       it "requires a text color" do
-        lambda { xhr :put, :update, id: @category.slug, name: 'asdf', color: 'fff' }.should raise_error(Discourse::InvalidParameters)
+        lambda { xhr :put, :update, id: @category.slug, name: 'asdf', color: 'fff' }.should raise_error(ActionController::ParameterMissing)
       end
 
       describe 'failure' do
@@ -134,22 +134,21 @@ describe CategoriesController do
 
       describe 'success' do
         before do
-          xhr :put, :update, id: @category.id, name: 'science', color: '000', text_color: '0ff'
+          # might as well test this as well
+          @category.allow(Group[:admins])
+          @category.save
+
+          xhr :put, :update, id: @category.id, name: 'science', color: '000', text_color: '0ff', group_names: Group[:staff].name, secure: 'true'
           @category.reload
         end
 
-        it 'updates the name' do
+        it 'updates the group correctly' do
           @category.name.should == 'science'
-        end
-
-        it 'updates the color' do
           @category.color.should == '000'
-        end
-
-        it 'updates the text color' do
           @category.text_color.should == '0ff'
+          @category.secure?.should be_true
+          @category.groups.count.should == 1
         end
-
       end
     end
 

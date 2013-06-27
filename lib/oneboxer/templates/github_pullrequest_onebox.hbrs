@@ -1,0 +1,39 @@
+<div class="onebox-result">
+  {{#host}}
+    <div class="source">
+      <div class="info">
+        <a href="{{html_url}}" class="track-link" target="_blank">
+          {{#favicon}}
+            <img class="favicon" src="{{favicon}}">
+          {{/favicon}}
+          {{host}}
+        </a>
+      </div>
+    </div>
+  {{/host}}
+
+  <div class="onebox-result-body">
+    {{#user.avatar_url}}
+      <a href="{{user.html_url}}" target="_blank">
+        <img alt="{{user.login}}" src="{{user.avatar_url}}">
+      </a>
+    {{/user.avatar_url}}
+
+    <h4>
+      <a href="{{html_url}}" target="_blank">{{title}}</a>
+    </h4>
+
+    <div class="date">
+      by <a href="{{user.html_url}}" target="_blank">{{user.login}}</a>
+      on <a href="{{html_url}}" target="_blank">{{created_at}}</a>
+    </div>
+
+    <div class="github-commit-stats">
+      <strong>{{commits}} commits</strong>
+      changed <strong>{{changed_files}} files</strong>
+      with <strong>{{additions}} additions</strong>
+      and <strong>{{deletions}} deletions</strong>.
+    </div>
+  </div>
+  <div class="clearfix"></div>
+</div>

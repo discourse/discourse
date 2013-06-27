@@ -9,7 +9,6 @@
 Discourse.ListView = Discourse.View.extend({
   templateName: 'list/list',
   composeViewBinding: Ember.Binding.oneWay('Discourse.composeView'),
-  categoriesBinding: 'Discourse.site.categories',
 
   // The window has been scrolled
   scrolled: function(e) {
@@ -18,7 +17,7 @@ Discourse.ListView = Discourse.View.extend({
     return currentView ? typeof currentView.scrolled === "function" ? currentView.scrolled(e) : void 0 : void 0;
   },
 
-  createTopicText: (function() {
+  createTopicText: function() {
     if (this.get('controller.category.name')) {
       return Em.String.i18n("topic.create_in", {
         categoryName: this.get('controller.category.name')
@@ -26,7 +25,7 @@ Discourse.ListView = Discourse.View.extend({
     } else {
       return Em.String.i18n("topic.create");
     }
-  }).property('controller.category.name')
+  }.property('controller.category.name')
 
 });
 

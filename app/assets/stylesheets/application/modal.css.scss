@@ -157,6 +157,20 @@
 }
 
 #move-selected {
+  p {
+    margin-top: 0;
+  }
+
+  input[type=radio] {
+    margin-right: 10px;
+  }
+
+  button {
+    margin-top: 10px;
+    display: block;
+    width: 300px;
+  }
+
   form {
     margin-top: 20px;
     input[type=text] {
@@ -177,4 +191,74 @@
 .flag-message {
   margin-left: 20px;
   width: 95% !important;
+}
+
+.edit-category-modal {
+  .modal-body {
+    position: relative;
+    height: 350px;
+  }
+  &.small .modal-body {
+    height: 310px;
+  }
+  .secure-category-options {
+    margin: 10px 0 0 16px;
+    .badge-list {
+      margin: 10px 0;
+      li {
+        margin: 0 4px 8px 0;
+        a {
+          color: #888;
+          cursor: pointer;
+        }
+        a:hover {
+          color: $black;
+        }
+      }
+    }
+  }
+}
+
+.modal-tab {
+  position: absolute;
+}
+
+.invite-modal {
+  overflow: visible;
+  .ember-text-field {
+    width: 550px;
+  }
+}
+
+.reply-where-modal {
+  width: 370px;
+  margin-left: -185px;
+  .modal-footer {
+    .btn {
+      text-align: left;
+      font-size: 18px;
+      line-height: 20px;
+      width: 310px;
+      margin-bottom: 10px;
+      display: block;
+      margin-left: 0;
+      .topic-title {
+        font-size: 13px;
+        font-weight: normal;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      &.btn-reply-here {
+        @include linear-gradient(#ddd, #ddd);
+        text-shadow: none;
+        color: $darkish_gray;
+      }
+    }
+    .cancel {
+      text-decoration: underline;
+      float: right;
+      margin-right: 5px;
+    }
+  }
 }

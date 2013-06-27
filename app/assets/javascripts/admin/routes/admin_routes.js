@@ -14,7 +14,11 @@ Discourse.Route.buildRoutes(function() {
       this.resource('adminSiteContentEdit', {path: '/:content_type'});
     });
 
-    this.route('email_logs', { path: '/email_logs' });
+    this.resource('adminEmail', { path: '/email'}, function() {
+      this.route('logs', { path: '/logs' });
+      this.route('previewDigest', { path: '/preview-digest' });
+    });
+
     this.route('customize', { path: '/customize' });
     this.route('api', {path: '/api'});
 
@@ -35,6 +39,7 @@ Discourse.Route.buildRoutes(function() {
         this.route('pending', { path: '/pending' });
         this.route('admins', { path: '/admins' });
         this.route('moderators', { path: '/moderators' });
+        this.route('blocked', { path: '/blocked' });
         // Trust Levels:
         this.route('newuser', { path: '/newuser' });
         this.route('basic', { path: '/basic' });

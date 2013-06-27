@@ -1,6 +1,8 @@
 module Jobs
   class ClockworkHeartbeat < Jobs::Base
 
+    sidekiq_options retry: false
+
     def execute(args)
       $redis.set last_heartbeat_at_key, Time.now.to_i
     end

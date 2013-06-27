@@ -63,8 +63,8 @@ class PostAlertObserver < ActiveRecord::Observer
       post.topic.all_allowed_users.reject{ |a| a.id == post.user_id }.each do |a|
         create_notification(a, Notification.types[:private_message], post)
       end
-    else
-      # If it's not a private message, notify the users
+    elsif post.post_type != Post.types[:moderator_action]
+      # If it's not a private message and it's not an automatic post caused by a moderator action, notify the users
       notify_post_users(post)
     end
   end

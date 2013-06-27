@@ -124,3 +124,24 @@ class HotTopic < ActiveRecord::Base
   end
 
 end
+
+# == Schema Information
+#
+# Table name: hot_topics
+#
+#  id                  :integer          not null, primary key
+#  topic_id            :integer          not null
+#  category_id         :integer
+#  score               :float            not null
+#  random_bias         :float
+#  random_multiplier   :float
+#  days_ago_bias       :float
+#  days_ago_multiplier :float
+#  hot_topic_type      :integer
+#
+# Indexes
+#
+#  index_hot_topics_on_score     (score)
+#  index_hot_topics_on_topic_id  (topic_id) UNIQUE
+#
+

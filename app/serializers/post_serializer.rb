@@ -33,22 +33,28 @@ class PostSerializer < ApplicationSerializer
              :read,
              :username,
              :name,
+             :user_title,
              :reply_to_user,
              :bookmarked,
              :raw,
              :actions_summary,
              :moderator?,
+             :staff?,
              :avatar_template,
              :user_id,
              :draft_sequence,
              :hidden,
              :hidden_reason_id,
-             :deleted_at, 
+             :deleted_at,
              :trust_level
 
 
   def moderator?
     object.user.moderator?
+  end
+
+  def staff?
+    object.user.staff?
   end
 
   def avatar_template
@@ -121,6 +127,10 @@ class PostSerializer < ApplicationSerializer
 
   def name
     object.user.name
+  end
+
+  def user_title
+    object.user.title
   end
 
   def trust_level

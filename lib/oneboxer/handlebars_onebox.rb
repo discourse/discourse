@@ -31,8 +31,12 @@ module Oneboxer
       {'User-Agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 5_0_1 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9A405 Safari/7534.48.3'}
     end
 
+    def fetch_html
+      open(translate_url, http_params).read
+    end
+
     def onebox
-      html = open(translate_url, http_params).read
+      html = fetch_html
       args = parse(html)
       return default_url unless args.present?
       args[:original_url] = @url

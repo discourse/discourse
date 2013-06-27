@@ -11,11 +11,17 @@ module Jobs
 
     def target_users
       # Users who want to receive emails and haven't been emailed int he last day
-      User
-        .select(:id)
-        .where(email_digests: true)
-        .where("COALESCE(last_emailed_at, '2010-01-01') <= CURRENT_TIMESTAMP - ('1 DAY'::INTERVAL * digest_after_days)")
-        .where("COALESCE(last_seen_at, '2010-01-01') <= CURRENT_TIMESTAMP - ('1 DAY'::INTERVAL * digest_after_days)")
+      query = User.select(:id)
+                  .where(email_digests: true)
+                  .where("COALESCE(last_emailed_at, '2010-01-01') <= CURRENT_TIMESTAMP - ('1 DAY'::INTERVAL * digest_after_days)")
+                  .where("COALESCE(last_seen_at, '2010-01-01') <= CURRENT_TIMESTAMP - ('1 DAY'::INTERVAL * digest_after_days)")
+
+      # If the site requires approval, make sure the user is approved
+      if SiteSetting.must_approve_users?
+        query = query.where("approved OR moderator OR admin")
+      end
+
+      query
     end
 
   end

@@ -9,7 +9,11 @@ class PostActionsController < ApplicationController
   def create
     guardian.ensure_post_can_act!(@post, PostActionType.types[@post_action_type_id])
 
-    post_action = PostAction.act(current_user, @post, @post_action_type_id, params[:message])
+    args = {}
+    args[:message] = params[:message] if params[:message].present?
+    args[:take_action] = true if guardian.is_staff? and params[:take_action] == 'true'
+
+    post_action = PostAction.act(current_user, @post, @post_action_type_id, args)
 
     if post_action.blank? || post_action.errors.present?
       render_json_error(post_action)
@@ -66,7 +70,7 @@ class PostActionsController < ApplicationController
   private
 
     def fetch_post_from_params
-      requires_parameter(:id)
+      params.require(:id)
       finder = Post.where(id: params[:id])
 
       # Include deleted posts if the user is a moderator (to guardian ?)
@@ -77,7 +81,7 @@ class PostActionsController < ApplicationController
     end
 
     def fetch_post_action_type_id_from_params
-      requires_parameter(:post_action_type_id)
+      params.require(:post_action_type_id)
       @post_action_type_id = params[:post_action_type_id].to_i
     end
 end

@@ -8,6 +8,7 @@
 **/
 Discourse.TopicAdminMenuController = Discourse.ObjectController.extend({
   visible: false,
+  needs: ['modal'],
 
   show: function() {
     this.set('visible', true);

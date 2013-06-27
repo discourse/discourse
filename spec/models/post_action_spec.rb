@@ -2,11 +2,6 @@ require 'spec_helper'
 require_dependency 'post_destroyer'
 
 describe PostAction do
-
-  before do
-    ImageSorcery.any_instance.stubs(:convert).returns(false)
-  end
-
   it { should belong_to :user }
   it { should belong_to :post }
   it { should belong_to :post_action_type }
@@ -17,14 +12,29 @@ describe PostAction do
   let(:post) { Fabricate(:post) }
   let(:bookmark) { PostAction.new(user_id: post.user_id, post_action_type_id: PostActionType.types[:bookmark] , post_id: post.id) }
 
+  describe "flagged_posts_report" do
+    it "operates correctly" do
+      PostAction.act(codinghorror, post, PostActionType.types[:spam])
+      mod_message = PostAction.act(Fabricate(:user), post, PostActionType.types[:notify_moderators], message: "this post really sucks a lot I hate it")
+
+      posts, users = PostAction.flagged_posts_report("")
+      posts.count.should == 1
+      first = posts.first
+
+      users.count.should == 3
+      first[:post_actions].count.should == 2
+      first[:post_actions].first[:permalink].should == mod_message.related_post.topic.url
+    end
+  end
+
   describe "messaging" do
 
     it "notify moderators integration test" do
       mod = moderator
-      action = PostAction.act(codinghorror, post, PostActionType.types[:notify_moderators], "this is my special long message");
+      action = PostAction.act(codinghorror, post, PostActionType.types[:notify_moderators], message: "this is my special long message");
 
       posts = Post.joins(:topic)
-                  .select('posts.id, topics.subtype')
+                  .select('posts.id, topics.subtype, posts.topic_id')
                   .where('topics.archetype' => Archetype.private_message)
                   .to_a
 
@@ -32,18 +42,25 @@ describe PostAction do
       action.related_post_id.should == posts[0].id.to_i
       posts[0].subtype.should == TopicSubtype.notify_moderators
 
+      # reply to PM should clear flag
+      p = PostCreator.new(mod, topic_id: posts[0].topic_id, raw: "This is my test reply to the user, it should clear flags")
+      p.create
+
+      action.reload
+      action.deleted_at.should_not be_nil
+
     end
 
     describe 'notify_moderators' do
       before do
         PostAction.stubs(:create)
-        PostAction.expects(:target_moderators).returns("bob")
+        PostAction.expects(:target_moderators).returns("moderators")
       end
 
       it "sends an email to all moderators if selected" do
         post = build(:post, id: 1000)
         PostCreator.any_instance.expects(:create).returns(post)
-        PostAction.act(build(:user), build(:post), PostActionType.types[:notify_moderators], "this is my special message");
+        PostAction.act(build(:user), build(:post), PostActionType.types[:notify_moderators], message: "this is my special message");
       end
     end
 
@@ -56,7 +73,7 @@ describe PostAction do
 
       it "sends an email to user if selected" do
         PostCreator.any_instance.expects(:create).returns(build(:post))
-        PostAction.act(build(:user), post, PostActionType.types[:notify_user], "this is my special message");
+        PostAction.act(build(:user), post, PostActionType.types[:notify_user], message: "this is my special message");
       end
     end
   end
@@ -80,6 +97,20 @@ describe PostAction do
       PostAction.act(codinghorror, post, PostActionType.types[:off_topic])
       post.topic.trash!
       PostAction.flagged_posts_count.should == 0
+    end
+
+    it "should ignore validated flags" do
+      admin = Fabricate(:admin)
+      PostAction.act(codinghorror, post, PostActionType.types[:off_topic])
+      post.hidden.should be_false
+      PostAction.defer_flags!(post, admin.id)
+      PostAction.flagged_posts_count.should == 0
+      post.reload
+      post.hidden.should be_false
+
+      PostAction.hide_post!(post)
+      post.reload
+      post.hidden.should be_true
     end
 
   end
@@ -115,18 +146,30 @@ describe PostAction do
   end
 
   describe 'when a user likes something' do
-    it 'should increase the post counts when a user likes' do
-      lambda {
-        PostAction.act(codinghorror, post, PostActionType.types[:like])
-        post.reload
-      }.should change(post, :like_count).by(1)
-    end
+    it 'should increase the `like_count` and `like_score` when a user likes something' do
+      PostAction.act(codinghorror, post, PostActionType.types[:like])
+      post.reload
+      post.like_count.should == 1
+      post.like_score.should == 1
+      post.topic.reload
+      post.topic.like_count.should == 1
 
-    it 'should increase the forum topic like count when a user likes' do
-      lambda {
-        PostAction.act(codinghorror, post, PostActionType.types[:like])
-        post.topic.reload
-      }.should change(post.topic, :like_count).by(1)
+      # When a staff member likes it
+      PostAction.act(moderator, post, PostActionType.types[:like])
+      post.reload
+      post.like_count.should == 2
+      post.like_score.should == 4
+
+      # Removing likes
+      PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
+      post.reload
+      post.like_count.should == 1
+      post.like_score.should == 3
+
+      PostAction.remove_act(moderator, post, PostActionType.types[:like])
+      post.reload
+      post.like_count.should == 0
+      post.like_score.should == 0
     end
   end
 
@@ -147,6 +190,29 @@ describe PostAction do
   end
 
   describe 'flagging' do
+
+    context "flag_counts_for" do
+      it "returns the correct flag counts" do
+        post = Fabricate(:post)
+
+        SiteSetting.stubs(:flags_required_to_hide_post).returns(7)
+
+        # A post with no flags has 0 for flag counts
+        PostAction.flag_counts_for(post.id).should == [0, 0]
+
+        flag = PostAction.act(Fabricate(:evil_trout), post, PostActionType.types[:spam])
+        PostAction.flag_counts_for(post.id).should == [0, 1]
+
+        # If staff takes action, it is ranked higher
+        admin = Fabricate(:admin)
+        pa = PostAction.act(admin, post, PostActionType.types[:spam], take_action: true)
+        PostAction.flag_counts_for(post.id).should == [0, 8]
+
+        # If a flag is dismissed
+        PostAction.clear_flags!(post, admin)
+        PostAction.flag_counts_for(post.id).should == [8, 0]
+      end
+    end
 
     it 'does not allow you to flag stuff with 2 reasons' do
       post = Fabricate(:post)
@@ -183,7 +249,7 @@ describe PostAction do
       u2 = Fabricate(:walter_white)
       admin = Fabricate(:admin) # we need an admin for the messages
 
-      SiteSetting.flags_required_to_hide_post = 2
+      SiteSetting.stubs(:flags_required_to_hide_post).returns(2)
 
       PostAction.act(u1, post, PostActionType.types[:spam])
       PostAction.act(u2, post, PostActionType.types[:spam])

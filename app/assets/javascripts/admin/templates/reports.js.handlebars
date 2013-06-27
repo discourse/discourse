@@ -15,16 +15,16 @@
       <th>{{yaxis}}</th>
     </tr>
 
-    {{#each data}}
+    {{#each row in data}}
       <tr>
-        <td>{{x}}</td>
+        <td>{{row.x}}</td>
         <td>
-          {{#if controller.viewingTable}}
-            {{y}}
+          {{#if viewingTable}}
+            {{row.y}}
           {{/if}}
-          {{#if controller.viewingBarChart}}
+          {{#if viewingBarChart}}
             <div class='bar-container'>
-              <div class='bar' style="width: {{unbound percentage}}%">{{y}}</div>
+              <div class='bar' style="width: {{unbound row.percentage}}%">{{row.y}}</div>
             </div>
           {{/if}}
         </td>

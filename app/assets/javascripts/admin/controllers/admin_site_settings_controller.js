@@ -15,7 +15,7 @@ Discourse.AdminSiteSettingsController = Ember.ArrayController.extend(Discourse.P
 
     @property filteredContent
   **/
-  filteredContent: (function() {
+  filteredContent: function() {
 
     // If we have no content, don't bother filtering anything
     if (!this.present('content')) return null;
@@ -37,7 +37,7 @@ Discourse.AdminSiteSettingsController = Ember.ArrayController.extend(Discourse.P
 
       return true;
     });
-  }).property('filter', 'content.@each', 'onlyOverridden'),
+  }.property('filter', 'content.@each', 'onlyOverridden'),
 
   /**
     Reset a setting to its default value

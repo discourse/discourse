@@ -12,11 +12,11 @@ Discourse.PostMenuView = Discourse.View.extend({
 
   render: function(buffer) {
     var post = this.get('post');
-    this.renderReplies(post, buffer);
     buffer.push("<nav class='post-controls'>");
+    this.renderReplies(post, buffer);
 
     var postMenuView = this;
-    Discourse.get('postButtons').forEach(function(button) {
+    Discourse.get('postButtons').toArray().reverse().forEach(function(button) {
       var renderer = "render" + button;
       if(postMenuView[renderer]) postMenuView[renderer](post, buffer);
     });
@@ -38,7 +38,8 @@ Discourse.PostMenuView = Discourse.View.extend({
   // Trigger re-rendering
   needsToRender: function() {
     this.rerender();
-  }.observes('post.deleted_at', 'post.flagsAvailable.@each', 'post.url', 'post.bookmarked', 'post.reply_count', 'post.showRepliesBelow', 'post.can_delete'),
+  }.observes('post.deleted_at', 'post.flagsAvailable.@each', 'post.url', 'post.bookmarked', 'post.reply_count',
+             'post.showRepliesBelow', 'post.can_delete', 'post.read', 'post.topic.last_read_post_number'),
 
   // Replies Button
   renderReplies: function(post, buffer) {
@@ -62,7 +63,7 @@ Discourse.PostMenuView = Discourse.View.extend({
     if (post.get('post_number') === 1 && this.get('controller.content.can_delete')) {
       buffer.push("<button title=\"" +
                   (Em.String.i18n("topic.actions.delete")) +
-                  "\" data-action=\"deleteTopic\"><i class=\"icon-trash\"></i></button>");
+                  "\" data-action=\"deleteTopic\" class='delete'><i class=\"icon-trash\"></i></button>");
       return;
     }
     // Show the correct button (undo or delete)
@@ -109,11 +110,11 @@ Discourse.PostMenuView = Discourse.View.extend({
     if (!this.present('post.flagsAvailable')) return;
     buffer.push("<button title=\"" +
                 (Em.String.i18n("post.controls.flag")) +
-                "\" data-action=\"flag\"><i class=\"icon-flag\"></i></button>");
+                "\" data-action=\"flag\" class='flag'><i class=\"icon-flag\"></i></button>");
   },
 
   clickFlag: function() {
-    this.get('controller').showFlags(this.get('post'));
+    this.get('controller').send('showFlags', this.get('post'));
   },
 
   // Edit button
@@ -121,7 +122,7 @@ Discourse.PostMenuView = Discourse.View.extend({
     if (!post.get('can_edit')) return;
     buffer.push("<button title=\"" +
                  (Em.String.i18n("post.controls.edit")) +
-                 "\" data-action=\"edit\"><i class=\"icon-pencil\"></i></button>");
+                 "\" data-action=\"edit\" class='edit'><i class=\"icon-pencil\"></i></button>");
   },
 
   clickEdit: function() {
@@ -132,7 +133,7 @@ Discourse.PostMenuView = Discourse.View.extend({
   renderShare: function(post, buffer) {
     buffer.push("<button title=\"" +
                  (Em.String.i18n("post.controls.share")) +
-                 "\" data-share-url=\"" + (post.get('shareUrl')) + "\"><i class=\"icon-link\"></i></button>");
+                 "\" data-share-url=\"" + (post.get('shareUrl')) + "\" class='share'><i class=\"icon-link\"></i></button>");
   },
 
   // Reply button
@@ -150,15 +151,11 @@ Discourse.PostMenuView = Discourse.View.extend({
 
   // Bookmark button
   renderBookmark: function(post, buffer) {
-    if (!Discourse.get('currentUser')) return;
+    if (!Discourse.User.current()) return;
 
-    var icon = 'bookmark';
-    if (!this.get('post.bookmarked')) {
-      icon += '-empty';
-    }
-    buffer.push("<button title=\"" +
-                (Em.String.i18n("post.controls.bookmark")) +
-                "\" data-action=\"bookmark\"><i class=\"icon-" + icon + "\"></i></button>");
+    buffer.push("<button title=\"" + this.get('post.bookmarkTooltip') +
+                "\" data-action=\"bookmark\" class='bookmark'><div class='" + this.get('post.bookmarkClass') +
+                "'></div></button>");
   },
 
   clickBookmark: function() {

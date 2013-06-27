@@ -18,17 +18,7 @@ Discourse.Presence = Em.Mixin.create({
     @return {Boolean}
   */
   blank: function(name) {
-    var prop;
-    prop = this[name] || this.get(name);
-    if (!prop) return true;
-
-    switch (typeof prop) {
-      case "string":
-        return prop.trim().isBlank();
-      case "object":
-        return Object.isEmpty(prop);
-    }
-    return false;
+    return Ember.isEmpty(this[name] || this.get(name));
   },
 
   /**

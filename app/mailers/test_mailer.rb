@@ -1,11 +1,9 @@
-require_dependency 'email_builder'
+require_dependency 'email/message_builder'
 
 class TestMailer < ActionMailer::Base
-  default charset: 'UTF-8'
-  include EmailBuilder
+  include Email::BuildEmailHelper
 
   def send_test(to_address)
-    build_email to_address, 'test_mailer'
+    build_email(to_address, template: 'test_mailer')
   end
-
 end

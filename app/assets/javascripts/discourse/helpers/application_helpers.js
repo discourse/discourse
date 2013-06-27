@@ -13,7 +13,7 @@ Handlebars.registerHelper('breakUp', function(property, options) {
   if (tokens.length === 1) return prop;
 
   result = "";
-  tokens.each(function(token, index) {
+  _.each(tokens,function(token,index) {
     result += token;
     if (token.indexOf(' ') === -1 && (index < tokens.length - 1)) {
       result += "- ";
@@ -29,7 +29,7 @@ Handlebars.registerHelper('breakUp', function(property, options) {
   @for Handlebars
 **/
 Handlebars.registerHelper('shorten', function(property, options) {
-  return Ember.Handlebars.get(this, property, options).truncate(35);
+  return Ember.Handlebars.get(this, property, options).substring(0,35);
 });
 
 /**
@@ -55,6 +55,7 @@ Handlebars.registerHelper('categoryLink', function(property, options) {
   var category = Ember.Handlebars.get(this, property, options);
   return new Handlebars.SafeString(Discourse.Utilities.categoryLink(category));
 });
+
 
 /**
   Produces a bound link to a category
@@ -99,7 +100,7 @@ Handlebars.registerHelper('shortenUrl', function(property, options) {
   }
   url = url.replace(/^https?:\/\//, '');
   url = url.replace(/^www\./, '');
-  return url.truncate(80);
+  return url.substring(0,80);
 });
 
 /**
@@ -166,15 +167,51 @@ Handlebars.registerHelper('avatar', function(user, options) {
 });
 
 /**
+  Bound avatar helper.
+
+  @method boundAvatar
+  @for Handlebars
+**/
+Ember.Handlebars.registerBoundHelper('boundAvatar', function(user, options) {
+  var username = Em.get(user, 'username');
+  return new Handlebars.SafeString(Discourse.Utilities.avatarImg({
+    size: options.hash.imageSize,
+    username: username,
+    avatarTemplate: Ember.get(user, 'avatar_template')
+  }));
+});
+
+/**
   Nicely format a date without a binding since the date doesn't need to change.
 
   @method unboundDate
   @for Handlebars
 **/
 Handlebars.registerHelper('unboundDate', function(property, options) {
-  var dt;
-  dt = new Date(Ember.Handlebars.get(this, property, options));
-  return dt.format("long");
+  var dt = new Date(Ember.Handlebars.get(this, property, options));
+  return Discourse.Formatter.longDate(dt);
+});
+
+/**
+  Live refreshing age helper
+
+  @method unboundDate
+  @for Handlebars
+**/
+Handlebars.registerHelper('unboundAge', function(property, options) {
+  var dt = new Date(Ember.Handlebars.get(this, property, options));
+  return new Handlebars.SafeString(Discourse.Formatter.autoUpdatingRelativeAge(dt));
+});
+
+/**
+  Live refreshing age helper, with a tooltip showing the date and time
+
+  @method unboundAgeWithTooltip
+  @for Handlebars
+**/
+Handlebars.registerHelper('unboundAgeWithTooltip', function(property, options) {
+  var dt = new Date(Ember.Handlebars.get(this, property, options));
+  return new Handlebars.SafeString(Discourse.Formatter.autoUpdatingRelativeAge(dt, {title: true}));
 });
 
 /**
@@ -184,14 +221,9 @@ Handlebars.registerHelper('unboundDate', function(property, options) {
   @for Handlebars
 **/
 Handlebars.registerHelper('editDate', function(property, options) {
-  var dt, yesterday;
-  dt = Date.create(Ember.Handlebars.get(this, property, options));
-  yesterday = new Date() - (60 * 60 * 24 * 1000);
-  if (yesterday > dt.getTime()) {
-    return dt.format("long");
-  } else {
-    return dt.relative();
-  }
+  // autoupdating this is going to be painful
+  var date = new Date(Ember.Handlebars.get(this, property, options));
+  return new Handlebars.SafeString(Discourse.Formatter.autoUpdatingRelativeAge(date, {format: 'medium', title: true, leaveAgo: true, wrapInSpan: false}));
 });
 
 /**
@@ -202,7 +234,7 @@ Handlebars.registerHelper('editDate', function(property, options) {
 **/
 Ember.Handlebars.registerHelper('percentile', function(property, options) {
   var percentile = Ember.Handlebars.get(this, property, options);
-  return Math.round((1.0 - percentile) * 100)
+  return Math.round((1.0 - percentile) * 100);
 });
 
 /**
@@ -215,7 +247,7 @@ Ember.Handlebars.registerHelper('float', function(property, options) {
   var x = Ember.Handlebars.get(this, property, options);
   if (!x) return "0";
   if (Math.round(x) === x) return x;
-  return x.toFixed(3)
+  return x.toFixed(3);
 });
 
 /**
@@ -225,7 +257,7 @@ Ember.Handlebars.registerHelper('float', function(property, options) {
   @for Handlebars
 **/
 Handlebars.registerHelper('number', function(property, options) {
-  var n, orig, title;
+  var n, orig, title, result;
   orig = parseInt(Ember.Handlebars.get(this, property, options), 10);
   if (isNaN(orig)) {
     orig = 0;
@@ -238,10 +270,18 @@ Handlebars.registerHelper('number', function(property, options) {
   }
   // Round off the thousands to one decimal place
   n = orig;
-  if (orig > 999) {
+  if (orig > 999 && !options.hash.noTitle) {
     n = (orig / 1000).toFixed(1) + "K";
   }
-  return new Handlebars.SafeString("<span class='number' title='" + title + "'>" + n + "</span>");
+
+  result = "<span class='number'";
+
+  if(n !== title) {
+    result += " title='" + title + "'";
+  }
+
+  result += ">" + n + "</span>";
+  return new Handlebars.SafeString(result);
 });
 
 /**
@@ -251,7 +291,7 @@ Handlebars.registerHelper('number', function(property, options) {
   @for Handlebars
 **/
 Handlebars.registerHelper('date', function(property, options) {
-  var displayDate, dt, fiveDaysAgo, oneMinuteAgo, fullReadable, humanized, leaveAgo, val;
+  var leaveAgo;
   if (property.hash) {
     if (property.hash.leaveAgo) {
       leaveAgo = property.hash.leaveAgo === "true";
@@ -260,50 +300,11 @@ Handlebars.registerHelper('date', function(property, options) {
       property = property.hash.path;
     }
   }
-  val = Ember.Handlebars.get(this, property, options);
-  if (!val) {
-    return new Handlebars.SafeString("&mdash;");
+  var val = Ember.Handlebars.get(this, property, options);
+  if (val) {
+    var date = new Date(val);
+    return new Handlebars.SafeString(Discourse.Formatter.autoUpdatingRelativeAge(date, {format: 'medium', title: true, leaveAgo: leaveAgo}));
   }
-  dt = new Date(val);
-  fullReadable = dt.format("long");
-  displayDate = "";
-  fiveDaysAgo = (new Date()) - 432000000;
-  oneMinuteAgo = (new Date()) - 60000;
-  if (oneMinuteAgo <= dt.getTime() && dt.getTime() <= (new Date())) {
-    displayDate = Em.String.i18n("now");
-  } else if (fiveDaysAgo > (dt.getTime())) {
-    if ((new Date()).getFullYear() !== dt.getFullYear()) {
-      displayDate = dt.format("short");
-    } else {
-      displayDate = dt.format("short_no_year");
-    }
-  } else {
-    humanized = dt.relative();
-    if (!humanized) {
-      return "";
-    }
-    displayDate = humanized;
-    if (!leaveAgo) {
-        displayDate = (dt.millisecondsAgo()).duration();
-    }
-  }
-  return new Handlebars.SafeString("<span class='date' title='" + fullReadable + "'>" + displayDate + "</span>");
+
 });
 
-/**
-  A personalized name for display
-
-  @method personalizedName
-  @for Handlebars
-**/
-Handlebars.registerHelper('personalizedName', function(property, options) {
-  var name, username;
-  name = Ember.Handlebars.get(this, property, options);
-  if (options.hash.usernamePath) {
-    username = Ember.Handlebars.get(this, options.hash.usernamePath, options);
-  }
-  if (username !== Discourse.get('currentUser.username')) {
-    return name;
-  }
-  return Em.String.i18n('you');
-});

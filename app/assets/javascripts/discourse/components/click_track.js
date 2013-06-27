@@ -38,7 +38,7 @@ Discourse.ClickTrack = {
         userId = $link.data('user-id');
 
     if (!userId) userId = $article.data('user-id');
-    var ownLink = userId && (userId === Discourse.get('currentUser.id'));
+    var ownLink = userId && (userId === Discourse.User.current('id'));
 
     // Build a Redirect URL
     var trackingUrl = Discourse.getURL("/clicks/track?url=" + encodeURIComponent(href));
@@ -53,9 +53,12 @@ Discourse.ClickTrack = {
     if (!ownLink) {
       var $badge = $('span.badge', $link);
       if ($badge.length === 1) {
-        // don't update counts in oneboxes (except when we force it)
-        if ($link.closest(".onebox-result").length === 0 || $link.hasClass("track-link")) {
-          $badge.html(parseInt($badge.html(), 10) + 1);
+        // don't update counts in category badge
+        if ($link.closest('.badge-category').length === 0) {
+          // nor in oneboxes (except when we force it)
+          if ($link.closest(".onebox-result").length === 0 || $link.hasClass("track-link")) {
+            $badge.html(parseInt($badge.html(), 10) + 1);
+          }
         }
       }
     }
@@ -69,7 +72,7 @@ Discourse.ClickTrack = {
 
     // if they want to open in a new tab, do an AJAX request
     if (e.shiftKey || e.metaKey || e.ctrlKey || e.which === 2) {
-      Discourse.ajax(Discourse.getURL("/clicks/track"), {
+      Discourse.ajax("/clicks/track", {
         data: {
           url: href,
           post_id: postId,
@@ -83,7 +86,7 @@ Discourse.ClickTrack = {
 
     // If we're on the same site, use the router and track via AJAX
     if (href.indexOf(Discourse.URL.origin()) === 0) {
-      Discourse.ajax(Discourse.getURL("/clicks/track"), {
+      Discourse.ajax("/clicks/track", {
         data: {
           url: href,
           post_id: postId,
@@ -96,7 +99,7 @@ Discourse.ClickTrack = {
     }
 
     // Otherwise, use a custom URL with a redirect
-    if (Discourse.get('currentUser.external_links_in_new_tab')) {
+    if (Discourse.User.current('external_links_in_new_tab')) {
       var win = window.open(trackingUrl, '_blank');
       win.focus();
     } else {

@@ -11,7 +11,7 @@ describe Oneboxer::FlickrOnebox do
   end
 
   it "generates the expected onebox for Flickr" do
-    @o.onebox.should == expected_flickr_result
+    @o.onebox.should match_html expected_flickr_result
   end
 
 private

@@ -4,6 +4,13 @@
 
 desc "Run all specs automatically as needed"
 task "autospec" => :environment do
+
+  if RUBY_PLATFORM.include?('linux')
+    require 'rb-inotify'
+  end
+
+  require 'listen'
+
   puts "If file watching is not working you can force polling with: bundle exec rake autospec p l=3"
   require 'autospec/runner'
 

@@ -8,17 +8,25 @@
 **/
 Discourse.ListCategoryRoute = Discourse.FilteredListRoute.extend({
 
-  setupController: function(controller, model) {
-    var slug = Em.get(model, 'slug');
-    var category = Discourse.get('site.categories').findProperty('slug', slug);
+  model: function(params) {
+    var categories = Discourse.Category.list();
 
+    var slug = Em.get(params, 'slug');
+
+    var uncategorized = Discourse.Category.uncategorizedInstance();
+    if (slug === uncategorized.get('slug')) return uncategorized;
+
+    var category = categories.findProperty('slug', Em.get(params, 'slug'));
+
+    // In case the slug didn't work, try to find it by id instead.
     if (!category) {
-      category = Discourse.get('site.categories').findProperty('id', parseInt(slug, 10));
-    }
-    if (!category) {
-      category = Discourse.Category.create({ name: slug, slug: slug });
+      category = categories.findProperty('id', parseInt(slug, 10));
     }
 
+    return category;
+  },
+
+  setupController: function(controller, category) {
     var listTopicsController = this.controllerFor('listTopics');
     if (listTopicsController) {
       var listContent = listTopicsController.get('content');
@@ -27,9 +35,8 @@ Discourse.ListCategoryRoute = Discourse.FilteredListRoute.extend({
       }
     }
 
-
     var listController = this.controllerFor('list');
-    var urlId = Discourse.Utilities.categoryUrlId(category);
+    var urlId = Discourse.Category.slugFor(category);
     listController.set('filterMode', "category/" + urlId);
 
     var router = this;
@@ -37,8 +44,24 @@ Discourse.ListCategoryRoute = Discourse.FilteredListRoute.extend({
       listController.set('canCreateTopic', topicList.get('can_create_topic'));
       listController.set('category', category);
       router.controllerFor('listTopics').set('content', topicList);
+      router.controllerFor('listTopics').set('category', category);
     });
+  },
+
+  activate: function() {
+    this._super();
+
+    // Add a search context
+    this.controllerFor('search').set('searchContext', this.modelFor('listCategory').get('searchContext'));
+  },
+
+  deactivate: function() {
+    this._super();
+
+    // Clear the search context
+    this.controllerFor('search').set('searchContext', null);
   }
+
 
 });
 

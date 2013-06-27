@@ -14,7 +14,15 @@ Discourse.HeaderController = Discourse.Controller.extend({
     var topic = this.get('topic');
     if (topic) topic.toggleStar();
     return false;
-  }
+  },
+
+  categories: function() {
+    return Discourse.Category.list();
+  }.property(),
+
+  showFavoriteButton: function() {
+    return Discourse.User.current() && !this.get('topic.isPrivateMessage');
+  }.property('topic.isPrivateMessage')
 
 });
 

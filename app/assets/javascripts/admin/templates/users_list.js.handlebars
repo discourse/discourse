@@ -9,13 +9,13 @@
     </ul>
   </div>
   <div class='span5 username controls'>
-    {{view Discourse.TextField valueBinding="controller.username" placeholderKey="username"}}
+    {{textField value=username placeholderKey="username"}}
   </div>
 </div>
 
 {{#if hasSelection}}
   <div id='selected-controls'>
-    <button {{action approveUsers target="controller"}} class='btn'>{{countI18n admin.users.approved_selected countBinding="selectedCount"}}</button>
+    <button {{action approveUsers}} class='btn'>{{countI18n admin.users.approved_selected countBinding="selectedCount"}}</button>
   </div>
 {{/if}}
 
@@ -25,7 +25,7 @@
 {{#if loading}}
   <div class='admin-loading'>{{i18n loading}}</div>
 {{else}}
-  {{#if content.length}}
+  {{#if model.length}}
     <table class='table'>
       <tr>
         {{#if showApproval}}
@@ -47,19 +47,17 @@
 
       </tr>
 
-      {{#each content}}
+      {{#each model}}
         <tr {{bindAttr class="selected"}}>
-          {{#if controller.showApproval}}
+          {{#if showApproval}}
             <td>
               {{#if can_approve}}
                 {{view Ember.Checkbox checkedBinding="selected"}}
               {{/if}}
             </td>
           {{/if}}
-          <td>
-            <a href="{{unbound adminPath}}">{{avatar this imageSize="small"}}</a>
-          </td>
-          <td><a href="{{unbound adminPath}}">{{unbound username}}</a></td>
+          <td>{{#linkTo 'adminUser' this}}{{avatar this imageSize="small"}}{{/linkTo}}</td>
+          <td>{{#linkTo 'adminUser' this}}{{unbound username}}{{/linkTo}}</td>
           <td>{{shorten email}}</td>
           <td>{{{unbound last_emailed_age}}}</td>
           <td>{{{unbound last_seen_age}}}</td>
@@ -69,7 +67,7 @@
 
           <td>{{{unbound created_at_age}}}</td>
 
-          {{#if controller.showApproval}}
+          {{#if showApproval}}
           <td>
             {{#if approved}}
               {{i18n yes_value}}

@@ -3,11 +3,11 @@
 pre {
   code {
     display: block;
-    padding: 0.5em;
+    padding: 5px 10px;
     color: #333333;
-    background: ghostwhite;
-    font-size: 12px;
-    overflow: auto;
+    background: #f1f1ff;
+    font-size: 14px;
+    font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
   }
   .comment, .template_comment, .diff .header, .javadoc {
     color: #999988;

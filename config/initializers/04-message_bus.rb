@@ -7,6 +7,11 @@ MessageBus.user_id_lookup do |env|
   user.id if user
 end
 
+MessageBus.group_ids_lookup do |env|
+  user = CurrentUser.lookup_from_env(env)
+  user.groups.select('groups.id').map{|g| g.id} if user
+end
+
 MessageBus.on_connect do |site_id|
   RailsMultisite::ConnectionManagement.establish_connection(db: site_id)
 end

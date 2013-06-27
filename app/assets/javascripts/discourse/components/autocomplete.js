@@ -18,6 +18,7 @@ $.fn.autocomplete = function(options) {
     alert("only supporting one matcher at the moment");
   }
 
+  var disabled = options && options.disabled;
   var wrap = null;
   var autocompleteOptions = null;
   var selectedOption = null;
@@ -45,6 +46,10 @@ $.fn.autocomplete = function(options) {
     if (options.transformComplete) {
       transformed = options.transformComplete(item);
     }
+    if (options.single){
+      // dump what we have in single mode, just in case
+      inputSelectedItems = [];
+    }
     var d = $("<div class='item'><span>" + (transformed || item) + "<a href='#'><i class='icon-remove'></i></a></span></div>");
     var prev = me.parent().find('.item:last');
     if (prev.length === 0) {
@@ -56,12 +61,16 @@ $.fn.autocomplete = function(options) {
     if (options.onChangeItems) {
       options.onChangeItems(inputSelectedItems);
     }
-    return d.find('a').click(function() {
+
+    d.find('a').click(function() {
       closeAutocomplete();
       inputSelectedItems.splice($.inArray(item), 1);
       $(this).parent().parent().remove();
+      if (options.single) {
+        me.show();
+      }
       if (options.onChangeItems) {
-        return options.onChangeItems(inputSelectedItems);
+        options.onChangeItems(inputSelectedItems);
       }
     });
   };
@@ -70,6 +79,9 @@ $.fn.autocomplete = function(options) {
     if (term) {
       if (isInput) {
         me.val("");
+        if(options.single){
+          me.hide();
+        }
         addInputSelectedItem(term);
       } else {
         if (options.transformComplete) {
@@ -87,17 +99,21 @@ $.fn.autocomplete = function(options) {
   if (isInput) {
     var width = this.width();
     var height = this.height();
-    wrap = this.wrap("<div class='ac-wrap clearfix'/>").parent();
+    wrap = this.wrap("<div class='ac-wrap clearfix" + (disabled ? " disabled": "") +  "'/>").parent();
     wrap.width(width);
-    this.width(150);
+    if(options.single) {
+      this.css("width","100%");
+    } else {
+      this.width(150);
+    }
     this.attr('name', this.attr('name') + "-renamed");
     var vals = this.val().split(",");
-    vals.each(function(x) {
+    _.each(vals,function(x) {
       if (x !== "") {
         if (options.reverseTransform) {
           x = options.reverseTransform(x);
         }
-        return addInputSelectedItem(x);
+        addInputSelectedItem(x);
       }
     });
     this.val("");
@@ -115,17 +131,14 @@ $.fn.autocomplete = function(options) {
   };
 
   var renderAutocomplete = function() {
-    var borderTop, mePos, pos, ul;
     if (div) {
       div.hide().remove();
     }
-    if (autocompleteOptions.length === 0) {
-      return;
-    }
-    div = $(options.template({
-      options: autocompleteOptions
-    }));
-    ul = div.find('ul');
+    if (autocompleteOptions.length === 0) return;
+
+    div = $(options.template({ options: autocompleteOptions }));
+
+    var ul = div.find('ul');
     selectedOption = 0;
     markSelected();
     ul.find('li').click(function() {
@@ -133,28 +146,39 @@ $.fn.autocomplete = function(options) {
       completeTerm(autocompleteOptions[selectedOption]);
       return false;
     });
-    pos = null;
+    var pos = null;
+    var vOffset = 0;
+    var hOffset = 0;
     if (isInput) {
       pos = {
         left: 0,
         top: 0
       };
+      vOffset = -32;
+      hOffset = 0;
     } else {
       pos = me.caretPosition({
         pos: completeStart,
         key: options.key
       });
+      hOffset = 27;
     }
     div.css({
       left: "-1000px"
     });
+
     me.parent().append(div);
-    mePos = me.position();
-    borderTop = parseInt(me.css('border-top-width'), 10) || 0;
-    return div.css({
+
+    if(!isInput){
+      vOffset = div.height();
+    }
+
+    var mePos = me.position();
+    var borderTop = parseInt(me.css('border-top-width'), 10) || 0;
+    div.css({
       position: 'absolute',
-      top: (mePos.top + pos.top - div.height() + borderTop) + 'px',
-      left: (mePos.left + pos.left + 27) + 'px'
+      top: (mePos.top + pos.top - vOffset + borderTop) + 'px',
+      left: (mePos.left + pos.left + hOffset) + 'px'
     });
   };
 
@@ -163,9 +187,9 @@ $.fn.autocomplete = function(options) {
 
     autocompleteOptions = r;
     if (!r || r.length === 0) {
-      return closeAutocomplete();
+      closeAutocomplete();
     } else {
-      return renderAutocomplete();
+      renderAutocomplete();
     }
   };
 
@@ -176,10 +200,12 @@ $.fn.autocomplete = function(options) {
     if (oldClose) {
       oldClose();
     }
-    return closeAutocomplete();
+    closeAutocomplete();
   });
 
+
   $(this).keypress(function(e) {
+
     if (!options.key) return;
 
     // keep hunting backwards till you hit a
@@ -196,6 +222,25 @@ $.fn.autocomplete = function(options) {
 
   return $(this).keydown(function(e) {
     var c, caretPosition, i, initial, next, nextIsGood, prev, prevIsGood, stopFound, term, total, userToComplete;
+
+    if(options.allowAny){
+      // saves us wiring up a change event as well, keypress is while its pressed
+      _.delay(function(){
+        if(inputSelectedItems.length === 0) {
+          inputSelectedItems.push("");
+        }
+
+        if(_.isString(inputSelectedItems[0])) {
+          inputSelectedItems.pop();
+          inputSelectedItems.push(me.val());
+          if (options.onChangeItems) {
+            options.onChangeItems(inputSelectedItems);
+          }
+        }
+
+      },50);
+    }
+
     if (!options.key) {
       completeStart = 0;
     }
@@ -255,7 +300,7 @@ $.fn.autocomplete = function(options) {
             // We're cancelling it, really.
             return true;
           }
-          closeAutocomplete();
+          e.stopImmediatePropagation();
           return false;
         case 38:
           selectedOption = selectedOption - 1;

@@ -12,10 +12,6 @@ describe TopicLinkClick do
     URI.parse('http://test.host')
   end
 
-  it 'returns blank from counts_for without posts' do
-    TopicLinkClick.counts_for(nil, nil).should be_blank
-  end
-
   context 'topic_links' do
     before do
       @topic = Fabricate(:topic)
@@ -30,7 +26,7 @@ describe TopicLinkClick do
 
     context 'create' do
       before do
-        TopicLinkClick.create(topic_link: @topic_link, ip: '192.168.1.1')
+        TopicLinkClick.create(topic_link: @topic_link, ip_address: '192.168.1.1')
       end
 
       it 'creates the forum topic link click' do
@@ -43,28 +39,9 @@ describe TopicLinkClick do
       end
 
       it 'serializes and deserializes the IP' do
-        TopicLinkClick.first.ip.to_s.should == '192.168.1.1'
+        TopicLinkClick.first.ip_address.to_s.should == '192.168.1.1'
       end
 
-      context 'counts for' do
-
-        before do
-          @counts_for = TopicLinkClick.counts_for(@topic, [@post])
-        end
-
-        it 'has a counts_for result' do
-          @counts_for[@post.id].should be_present
-        end
-
-        it 'contains the click we made' do
-          @counts_for[@post.id].first[:clicks].should == 1
-        end
-
-        it 'has no clicks on another url in the post' do
-          @counts_for[@post.id].find {|l| l[:url] == 'http://google.com'}[:clicks].should == 0
-        end
-
-      end
     end
 
     context 'create_from' do
@@ -82,9 +59,7 @@ describe TopicLinkClick do
           }.should_not change(TopicLinkClick, :count)
 
         end
-
       end
-
 
       context 'with a valid url and post_id' do
         before do

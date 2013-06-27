@@ -13,6 +13,7 @@ if defined?(PhusionPassenger)
             # We're in smart spawning mode.
             $redis = DiscourseRedis.new
             Discourse::Application.config.cache_store.reconnect
+            MessageBus.after_fork
         else
             # We're in conservative spawning mode. We don't need to do anything.
         end

@@ -1,28 +1,26 @@
-{{view Ember.TextField valueBinding="view.term" placeholderBinding="view.searchPlaceholder"}}
-{{#with view}}
-  {{#unless loading}}
-    {{#unless noResults}}
-      {{#each content}}
-        <ul>
-          <li class='heading'>
-            {{name}}
-            {{#if more}}
-              <a href='#' class='filter' {{action moreOfType type target="view" bubbles=false}}>{{i18n show_more}}</a>
-            {{else}}
-              {{#if view.showCancelFilter}}
-                <a href='#' class='filter' {{action cancelType target="view" bubbles=false}}><i class='icon icon-remove-sign'></i></a>
-              {{/if}}
+{{view Discourse.SearchTextField valueBinding="term" searchContextBinding="searchContext"}}
+{{#unless loading}}
+  {{#unless noResults}}
+    {{#each resultType in content}}
+      <ul>
+        <li class='heading'>
+          {{resultType.name}}
+          {{#if resultType.more}}
+            <a href='#' class='filter' {{action moreOfType resultType.type bubbles=false}}>{{i18n show_more}}</a>
+          {{else}}
+            {{#if showCancelFilter}}
+              <a href='#' class='filter' {{action cancelType bubbles=false}}><i class='icon icon-remove-sign'></i></a>
             {{/if}}
-          </li>
-          {{view Discourse.SearchResultsTypeView typeBinding="type" contentBinding="results"}}
-        </ul>    
-      {{/each}}
-    {{else}}
-      <div class='no-results'>
-        {{i18n search.no_results}}
-      </div>  
-    {{/unless}}
+          {{/if}}
+        </li>
+        {{view Discourse.SearchResultsTypeView typeBinding="resultType.type" contentBinding="resultType.results"}}
+      </ul>
+    {{/each}}
   {{else}}
-  <div class='searching'><i class='icon-spinner icon-spin'></i></div>
+    <div class='no-results'>
+      {{i18n search.no_results}}
+    </div>
   {{/unless}}
-{{/with}}
+{{else}}
+<div class='searching'><i class='icon-spinner icon-spin'></i></div>
+{{/unless}}

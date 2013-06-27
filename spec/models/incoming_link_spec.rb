@@ -5,13 +5,9 @@ describe IncomingLink do
   it { should belong_to :topic }
   it { should validate_presence_of :url }
 
-  let :post do
-    Fabricate(:post)
-  end
+  let(:post) { Fabricate(:post) }
 
-  let :topic do
-    post.topic
-  end
+  let(:topic) { post.topic }
 
   let :incoming_link do
     IncomingLink.create(url: "/t/slug/#{topic.id}/#{post.post_number}",
@@ -77,7 +73,7 @@ describe IncomingLink do
 
   describe 'non-topic url' do
     it 'has nothing set' do
-      link = Fabricate(:incoming_link_not_topic)
+      link = Fabricate.build(:incoming_link_not_topic)
       link.topic_id.should be_blank
       link.user_id.should be_blank
     end

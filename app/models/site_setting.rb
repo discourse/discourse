@@ -6,8 +6,6 @@ class SiteSetting < ActiveRecord::Base
   validates_presence_of :name
   validates_presence_of :data_type
 
-  attr_accessible :description, :name, :value, :data_type
-
   # settings available in javascript under Discourse.SiteSettings
   client_setting(:title, "Discourse")
   client_setting(:logo_url, '/assets/d-logo-sketch.png')
@@ -17,6 +15,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:company_short_name, 'Unconfigured Forum')
   setting(:company_domain, 'www.example.com')
   setting(:tos_url, '')
+  client_setting(:faq_url, '')
   setting(:privacy_policy_url, '')
   setting(:api_key, '')
   client_setting(:traditional_markdown_linebreaks, false)
@@ -27,17 +26,19 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:must_approve_users, false)
   client_setting(:ga_tracking_code, "")
   client_setting(:ga_domain_name, "")
-  client_setting(:new_topics_rollup, 1)
   client_setting(:enable_long_polling, true)
   client_setting(:polling_interval, 3000)
   client_setting(:anon_polling_interval, 30000)
   client_setting(:min_post_length, Rails.env.test? ? 5 : 20)
+  client_setting(:min_private_message_post_length, Rails.env.test? ? 5 : 10)
   client_setting(:max_post_length, 16000)
   client_setting(:min_topic_title_length, 15)
   client_setting(:max_topic_title_length, 255)
+  client_setting(:min_private_message_title_length, 2)
+  client_setting(:allow_uncategorized_topics, true)
   client_setting(:min_search_term_length, 3)
   client_setting(:flush_timings_secs, 5)
-  client_setting(:supress_reply_directly_below, true)
+  client_setting(:suppress_reply_directly_below, true)
   client_setting(:email_domains_blacklist, 'mailinator.com')
   client_setting(:email_domains_whitelist)
   client_setting(:version_checks, true)
@@ -58,27 +59,27 @@ class SiteSetting < ActiveRecord::Base
   setting(:flags_required_to_hide_post, 3)
   setting(:cooldown_minutes_after_hiding_posts, 10)
 
+  setting(:num_flags_to_block_new_user, 3)
+  setting(:num_users_to_block_new_user, 3)
+
   # used mainly for dev, force hostname for Discourse.base_url
   # You would usually use multisite for this
   setting(:force_hostname, '')
   setting(:port, Rails.env.development? ? 3000 : '')
   setting(:enable_private_messages, true)
   setting(:use_ssl, false)
-  setting(:access_password)
   setting(:queue_jobs, !Rails.env.test?)
   setting(:crawl_images, !Rails.env.test?)
-  setting(:enable_imgur, false)
-  setting(:imgur_client_id, '')
-  setting(:imgur_client_secret, '')
-  setting(:imgur_endpoint, "http://api.imgur.com/3/image.json")
   setting(:max_image_width, 690)
+  setting(:create_thumbnails, false)
   client_setting(:category_featured_topics, 6)
   setting(:topics_per_page, 30)
   setting(:posts_per_page, 20)
   setting(:invite_expiry_days, 14)
   setting(:active_user_rate_limit_secs, 60)
   setting(:previous_visit_timeout_hours, 1)
-  setting(:favicon_url, '/assets/default-favicon.png')
+  client_setting(:favicon_url, '/assets/default-favicon.ico')
+  setting(:apple_touch_icon_url, '/assets/default-apple-touch-icon.png')
 
   setting(:ninja_edit_window, 5.minutes.to_i)
   setting(:post_undo_action_window_mins, 10)
@@ -113,6 +114,8 @@ class SiteSetting < ActiveRecord::Base
 
   setting(:allow_duplicate_topic_titles, false)
 
+  setting(:staff_like_weight, 3)
+
   setting(:add_rel_nofollow_to_user_content, true)
   setting(:exclude_rel_nofollow_domains, '')
   setting(:post_excerpt_maxlength, 300)
@@ -129,6 +132,13 @@ class SiteSetting < ActiveRecord::Base
 
   setting(:send_welcome_message, true)
 
+  client_setting(:invite_only, false)
+
+  client_setting(:login_required, false)
+
+  client_setting(:enable_local_logins, true)
+  client_setting(:enable_local_account_create, true)
+
   client_setting(:enable_google_logins, true)
   client_setting(:enable_yahoo_logins, true)
 
@@ -140,6 +150,10 @@ class SiteSetting < ActiveRecord::Base
   setting(:facebook_app_id, '')
   setting(:facebook_app_secret, '')
 
+  client_setting(:enable_cas_logins, false)
+  setting(:cas_hostname, '')
+  setting(:cas_domainname, '')
+
   client_setting(:enable_github_logins, false)
   setting(:github_client_id, '')
   setting(:github_client_secret, '')
@@ -148,7 +162,11 @@ class SiteSetting < ActiveRecord::Base
 
   setting(:enforce_global_nicknames, true)
   setting(:discourse_org_access_key, '')
+
   setting(:enable_s3_uploads, false)
+  setting(:s3_access_key_id, '')
+  setting(:s3_secret_access_key, '')
+  setting(:s3_region, '', enum: 'S3RegionSiteSetting')
   setting(:s3_upload_bucket, '')
 
   setting(:default_trust_level, 0)
@@ -162,13 +180,23 @@ class SiteSetting < ActiveRecord::Base
   setting(:basic_requires_read_posts, 50)
   setting(:basic_requires_time_spent_mins, 15)
 
-  setting(:regular_requires_topics_entered, 3)
+  setting(:regular_requires_topics_entered, 20)
   setting(:regular_requires_read_posts, 100)
   setting(:regular_requires_time_spent_mins, 60)
   setting(:regular_requires_days_visited, 15)
   setting(:regular_requires_likes_received, 1)
   setting(:regular_requires_likes_given, 1)
   setting(:regular_requires_topic_reply_count, 3)
+
+  # Reply by Email Settings
+  setting(:reply_by_email_enabled, false)
+  setting(:reply_by_email_address, '')
+
+  setting(:pop3s_polling_enabled, false)
+  setting(:pop3s_polling_host, '')
+  setting(:pop3s_polling_port, 995)
+  setting(:pop3s_polling_username, '')
+  setting(:pop3s_polling_password, '')
 
   # Entropy checks
   setting(:title_min_entropy, 10)
@@ -178,10 +206,12 @@ class SiteSetting < ActiveRecord::Base
   setting(:newuser_max_links, 2)
   setting(:newuser_max_images, 0)
 
+  setting(:newuser_spam_host_threshold, 3)
+
   setting(:title_fancy_entities, true)
 
   # The default locale for the site
-  setting(:default_locale, 'en')
+  setting(:default_locale, 'en', enum: 'LocaleSiteSetting')
 
   client_setting(:educate_until_posts, 2)
 
@@ -191,6 +221,8 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:topic_views_heat_low,    1000)
   client_setting(:topic_views_heat_medium, 2000)
   client_setting(:topic_views_heat_high,   5000)
+
+  setting(:minimum_topics_similar, 50)
 
   def self.generate_api_key!
     self.api_key = SecureRandom.hex(32)
@@ -209,16 +241,42 @@ class SiteSetting < ActiveRecord::Base
     min_topic_title_length..max_topic_title_length
   end
 
+  def self.private_message_title_length
+    min_private_message_title_length..max_topic_title_length
+  end
+
   def self.post_length
     min_post_length..max_post_length
   end
 
+  def self.private_message_post_length
+    min_private_message_post_length..max_post_length
+  end
+
+  def self.top_menu_items
+    top_menu.split('|').map { |menu_item| TopMenuItem.new(menu_item) }
+  end
+
   def self.homepage
-    top_menu.split('|')[0]
+    top_menu_items[0].name
   end
 
   def self.anonymous_homepage
-    top_menu.split('|').select{ |f| ['latest', 'hot', 'categories', 'category'].include? f }[0]
+    list = ['latest', 'hot', 'categories', 'category']
+    top_menu_items.map { |item| item.name }.select{ |item| list.include?(item) }.first
   end
 
 end
+
+# == Schema Information
+#
+# Table name: site_settings
+#
+#  id         :integer          not null, primary key
+#  name       :string(255)      not null
+#  data_type  :integer          not null
+#  value      :text
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+

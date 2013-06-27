@@ -20,17 +20,22 @@ describe TopicQuery do
       category.save
 
       topic = Fabricate(:topic, category: category)
+      topic = Fabricate(:topic, visible: false)
 
       TopicQuery.new(nil).list_latest.topics.count.should == 0
       TopicQuery.new(user).list_latest.topics.count.should == 0
 
-      # mods can see every group
-      TopicQuery.new(moderator).list_latest.topics.count.should == 2
+      TopicQuery.top_viewed(10).count.should == 0
+      TopicQuery.recent(10).count.should == 0
+
+      # mods can see every group and hidden topics
+      TopicQuery.new(moderator).list_latest.topics.count.should == 3
 
       group.add(user)
       group.save
 
       TopicQuery.new(user).list_latest.topics.count.should == 2
+
     end
 
   end
@@ -96,30 +101,13 @@ describe TopicQuery do
     end
   end
 
-  pending 'hot' do
-    let(:cold_category) { Fabricate(:category, name: 'brrrrrr', hotness: 5) }
-    let(:hot_category) { Fabricate(:category, name: 'yeeouch', hotness: 10) }
-
-    let!(:t1) { Fabricate(:topic, category: cold_category)}
-    let!(:t2) { Fabricate(:topic, category: hot_category)}
-    let!(:t3) { Fabricate(:topic, category: hot_category)}
-    let!(:t4) { Fabricate(:topic, category: cold_category)}
-
-    it "returns the hot categories first" do
-      topic_query.list_hot.topics.should == [t3, t2, t4, t1]
-    end
-
-  end
-
   context 'unread / read topics' do
 
     context 'with no data' do
-
       it "has no unread topics" do
         topic_query.list_unread.topics.should be_blank
         topic_query.unread_count.should == 0
       end
-
     end
 
     context 'with read data' do

@@ -1,8 +1,19 @@
-module Oneboxer
+#******************************************************************************#
+#                                                                              #
+# Oneboxer already supports most sites using OpenGraph via the OpenGraphOnebox #
+# class. If the site you want to create a onebox for supports OpenGraph,       # 
+# please try adding the site to the whitelist below before creating a custom   #
+# parser or template.                                                          #
+#                                                                              #
+#******************************************************************************#
 
+module Oneboxer
+  
   module Whitelist
     def self.entries
       [
+       Entry.new(/^https?:\/\/(?:www\.)?findery\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?zappos\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?slideshare\.net\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?rottentomatoes\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?cnn\.com\/.+/),
@@ -56,7 +67,7 @@ module Oneboxer
        Entry.new(/^https?:\/\/(?:www\.)?bloomberg\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?ign\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?twitpic\.com\/.+/),
-       Entry.new(/^https?:\/\/(?:www\.)?techcrunch\.com\/.+/),
+       Entry.new(/^https?:\/\/(?:www\.)?techcrunch\.com\/.+/, false),
        Entry.new(/^https?:\/\/(?:www\.)?usatoday\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?go\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?businessinsider\.com\/.+/),

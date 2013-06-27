@@ -1,9 +1,14 @@
 require 'spec_helper'
+require 'digest/sha1'
 
 describe Upload do
 
   it { should belong_to :user }
-  it { should belong_to :topic }
+
+  it { should have_many :post_uploads }
+  it { should have_many :posts }
+
+  it { should have_many :optimized_images }
 
   it { should validate_presence_of :original_filename }
   it { should validate_presence_of :filesize }
@@ -11,7 +16,6 @@ describe Upload do
   context '.create_for' do
 
     let(:user_id) { 1 }
-    let(:topic_id) { 42 }
 
     let(:logo) do
       ActionDispatch::Http::UploadedFile.new({
@@ -21,39 +25,61 @@ describe Upload do
       })
     end
 
-    it "uses imgur when it is enabled" do
-      SiteSetting.stubs(:enable_imgur?).returns(true)
-      Upload.expects(:create_on_imgur).with(user_id, logo, topic_id)
-      Upload.create_for(user_id, logo, topic_id)
+    let(:upload) { Upload.create_for(user_id, logo) }
+
+    let(:url) { "http://domain.com" }
+
+    shared_examples_for "upload" do
+      it "is valid" do
+        upload.user_id.should == user_id
+        upload.original_filename.should == logo.original_filename
+        upload.filesize.should == File.size(logo.tempfile)
+        upload.sha1.should == Digest::SHA1.file(logo.tempfile).hexdigest
+        upload.width.should == 244
+        upload.height.should == 66
+        upload.url.should == url
+      end
     end
 
-    it "uses s3 when it is enabled" do
-      SiteSetting.stubs(:enable_s3_uploads?).returns(true)
-      Upload.expects(:create_on_s3).with(user_id, logo, topic_id)
-      Upload.create_for(user_id, logo, topic_id)
-    end
+    context "s3" do
+      before(:each) do
+        SiteSetting.stubs(:enable_s3_uploads?).returns(true)
+        S3.stubs(:store_file).returns(url)
+      end
 
-    it "uses local storage otherwise" do
-      Upload.expects(:create_locally).with(user_id, logo, topic_id)
-      Upload.create_for(user_id, logo, topic_id)
-    end
-
-    context 'imgur' do
-
-      # TODO
-
-    end
-
-    context 's3' do
-
-      # TODO
+      it_behaves_like "upload"
 
     end
 
-    context 'local' do
+    context "locally" do
+      before(:each) { LocalStore.stubs(:store_file).returns(url) }
+      it_behaves_like "upload"
+    end
 
-      # TODO
+  end
 
+  context 'has_been_uploaded?' do
+
+    it "identifies internal or relatives urls" do
+      Discourse.expects(:base_url_no_prefix).returns("http://discuss.site.com")
+      Upload.has_been_uploaded?("http://discuss.site.com/upload/1234/42/0123456789ABCDEF.jpg").should == true
+      Upload.has_been_uploaded?("/upload/42/0123456789ABCDEF.jpg").should == true
+    end
+
+    it "identifies internal urls when using a CDN" do
+      ActionController::Base.expects(:asset_host).returns("http://my.cdn.com").twice
+      Upload.has_been_uploaded?("http://my.cdn.com/upload/1234/42/0123456789ABCDEF.jpg").should == true
+    end
+
+    it "identifies S3 uploads" do
+      SiteSetting.stubs(:enable_s3_uploads).returns(true)
+      SiteSetting.stubs(:s3_upload_bucket).returns("bucket")
+      Upload.has_been_uploaded?("//bucket.s3.amazonaws.com/1337.png").should == true
+    end
+
+    it "identifies external urls" do
+      Upload.has_been_uploaded?("http://domain.com/upload/1234/42/0123456789ABCDEF.jpg").should == false
+      Upload.has_been_uploaded?("//bucket.s3.amazonaws.com/1337.png").should == false
     end
 
   end

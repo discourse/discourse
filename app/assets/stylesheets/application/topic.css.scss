@@ -6,6 +6,8 @@
 // Topic title
 // --------------------------------------------------
 
+
+// note that this CSS affects both the docked title and the in-page title
 #topic-title,
 .extra-info-wrapper {
   h1 {
@@ -15,16 +17,7 @@
     font-size: 22px;
     line-height: 28px;
   }
-  @include medium-width {
-    h1 {
-      max-width: 735px;
-    }
-  }
-  @include small-width {
-    h1 {
-      max-width: 690px;
-    }
-  }
+
   .star {
     height: 40px;
     font-size: 20px !important;
@@ -90,8 +83,24 @@
   }
 }
 
-// Page header
 
+// when the H1 is docked at the top, there is less room
+// due to the username and search / notifications / etc controls
+.extra-info-wrapper {
+  @include medium-width {
+    h1 {
+      max-width: 735px;
+    }
+  }
+  @include small-width {
+    h1 {
+      max-width: 690px;
+    }
+  }
+}
+
+
+// Page header
 #topic-title {
   margin-bottom: 14px;
   #edit-title {
@@ -100,14 +109,9 @@
 }
 
 // App header
-
 .extra-info-wrapper {
-  display: none;
   float: left;
   margin-left: 10px;
-  &.show-extra-info {
-    display: block;
-  }
 }
 
 #multi-select-options {
@@ -280,6 +284,9 @@
       color: darken($darkish_gray, 20%);
       margin-bottom: 10px;
     }
+    th {
+      background-color: $topic-list-th-background-color;
+    }
   }
 
   #topic-footer-buttons {
@@ -328,6 +335,10 @@
         margin-right: 5px;
       }
     }
+  }
+
+  #topic-closing-info {
+    margin-left: 103px;
   }
 }
 
@@ -451,7 +462,12 @@ kbd {
 .private_message .participants .user {
   float: left;
   display: block;
+  line-height: 35px;
   margin-right: 15px;
+  margin-top: 8px;
+  &.group {
+    color: black;
+  }
 }
 
 .posts-wrapper .spinner {
@@ -479,4 +495,8 @@ kbd {
   #topic-progress-wrapper {
     right: 180px;
   }
+}
+
+.remove-invited .icon-remove {
+  font-size: 10px;
 }

@@ -8,30 +8,42 @@
 **/
 Discourse.FlaggedPost = Discourse.Post.extend({
 
-  flaggers: (function() {
+  summary: function(){
+    return _(this.post_actions)
+      .groupBy(function(a){ return a.post_action_type_id; })
+      .map(function(v,k){
+        return Em.String.i18n('admin.flags.summary.action_type_' + k, {count: v.length});
+      })
+      .join(',');
+  }.property(),
+
+  flaggers: function() {
     var r,
       _this = this;
     r = [];
-    this.post_actions.each(function(a) {
-      return r.push(_this.userLookup[a.user_id]);
+    _.each(this.post_actions, function(action) {
+      var user = _this.userLookup[action.user_id];
+      var flagType = Em.String.i18n('admin.flags.summary.action_type_' + action.post_action_type_id, {count: 1});
+      r.push({user: user, flagType: flagType, flaggedAt: action.created_at});
     });
     return r;
-  }).property(),
+  }.property(),
 
-  messages: (function() {
+  messages: function() {
     var r,
       _this = this;
     r = [];
-    this.post_actions.each(function(a) {
-      if (a.message) {
-        return r.push({
-          user: _this.userLookup[a.user_id],
-          message: a.message
+    _.each(this.post_actions,function(action) {
+      if (action.message) {
+        r.push({
+          user: _this.userLookup[action.user_id],
+          message: action.message,
+          permalink: action.permalink
         });
       }
     });
     return r;
-  }).property(),
+  }.property(),
 
   lastFlagged: function() {
     return this.post_actions[0].created_at;
@@ -42,39 +54,64 @@ Discourse.FlaggedPost = Discourse.Post.extend({
   }.property(),
 
   topicHidden: function() {
-    return this.get('topic_visible') === 'f';
+    return !this.get('topic_visible');
   }.property('topic_hidden'),
 
   deletePost: function() {
-    if (this.get('post_number') === "1") {
-      return Discourse.ajax(Discourse.getURL("/t/") + this.topic_id, { type: 'DELETE', cache: false });
+    if (this.get('post_number') === '1') {
+      return Discourse.ajax('/t/' + this.topic_id, { type: 'DELETE', cache: false });
     } else {
-      return Discourse.ajax(Discourse.getURL("/posts/") + this.id, { type: 'DELETE', cache: false });
+      return Discourse.ajax('/posts/' + this.id, { type: 'DELETE', cache: false });
     }
   },
 
-  clearFlags: function() {
-    return Discourse.ajax(Discourse.getURL("/admin/flags/clear/") + this.id, { type: 'POST', cache: false });
+  disagreeFlags: function() {
+    return Discourse.ajax('/admin/flags/disagree/' + this.id, { type: 'POST', cache: false });
   },
 
-  hiddenClass: function() {
-    if (this.get('hidden') === "t") return "hidden-post";
+  deferFlags: function() {
+    return Discourse.ajax('/admin/flags/defer/' + this.id, { type: 'POST', cache: false });
+  },
+
+  agreeFlags: function() {
+    return Discourse.ajax('/admin/flags/agree/' + this.id, { type: 'POST', cache: false });
+  },
+
+  postHidden: function() {
+    return (this.get('hidden'));
+  }.property(),
+
+  extraClasses: function() {
+    var classes = [];
+    if (this.get('hidden')) {
+      classes.push('hidden-post');
+    }
+    if (this.get('deleted')){
+      classes.push('deleted');
+    }
+    return classes.join(' ');
+  }.property(),
+
+  deleted: function() {
+    return (this.get('deleted_at') || this.get('topic_deleted_at'));
   }.property()
 });
 
 Discourse.FlaggedPost.reopenClass({
   findAll: function(filter) {
     var result = Em.A();
-    Discourse.ajax(Discourse.getURL("/admin/flags/") + filter + ".json").then(function(data) {
+    result.set('loading', true);
+    Discourse.ajax('/admin/flags/' + filter + '.json').then(function(data) {
       var userLookup = {};
-      data.users.each(function(u) {
-        userLookup[u.id] = Discourse.User.create(u);
+      _.each(data.users,function(user) {
+        userLookup[user.id] = Discourse.AdminUser.create(user);
       });
-      data.posts.each(function(p) {
-        var f = Discourse.FlaggedPost.create(p);
+      _.each(data.posts,function(post) {
+        var f = Discourse.FlaggedPost.create(post);
         f.userLookup = userLookup;
         result.pushObject(f);
       });
+      result.set('loading', false);
     });
     return result;
   }

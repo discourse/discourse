@@ -94,8 +94,10 @@ describe User do
     let(:user) { Fabricate(:user) }
     let(:admin) { Fabricate(:admin) }
 
-    it "generates a welcome message" do
-      user.expects(:enqueue_welcome_message).with('welcome_approved')
+    it "enqueues a 'signup after approval' email" do
+      Jobs.expects(:enqueue).with(
+        :user_email, has_entries(type: :signup_after_approval)
+      )
       user.approve(admin)
     end
 
@@ -208,12 +210,10 @@ describe User do
 
     it 'allows moderator to delete all posts' do
       @user.delete_all_posts!(@guardian)
+      expect(Post.where(id: @posts.map(&:id)).all).to be_empty
       @posts.each do |p|
-        p.reload
-        if p
-          p.topic.should be_nil
-        else
-          p.should be_nil
+        if p.post_number == 1
+          expect(Topic.where(id: p.topic_id).first).to be_nil
         end
       end
     end
@@ -266,7 +266,7 @@ describe User do
 
   describe "trust levels" do
 
-    # NOTE be sure to use build to avoid db calls 
+    # NOTE be sure to use build to avoid db calls
     let(:user) { Fabricate.build(:user, trust_level: TrustLevel.levels[:newuser]) }
 
     it "sets to the default trust level setting" do
@@ -321,6 +321,46 @@ describe User do
 
   end
 
+  describe 'staff and regular users' do
+    let(:user) { Fabricate.build(:user) }
+
+    describe '#staff?' do
+      subject { user.staff? }
+
+      it { should be_false }
+
+      context 'for a moderator user' do
+        before { user.moderator = true }
+
+        it { should be_true }
+      end
+
+      context 'for an admin user' do
+        before { user.admin = true }
+
+        it { should be_true }
+      end
+    end
+
+    describe '#regular?' do
+      subject { user.regular? }
+
+      it { should be_true }
+
+      context 'for a moderator user' do
+        before { user.moderator = true }
+
+        it { should be_false }
+      end
+
+      context 'for an admin user' do
+        before { user.admin = true }
+
+        it { should be_false }
+      end
+    end
+  end
+
   describe 'temporary_key' do
 
     let(:user) { Fabricate(:user) }
@@ -371,10 +411,6 @@ describe User do
   end
 
   describe 'name heuristics' do
-    it 'is able to guess a decent username from an email' do
-      User.suggest_username('bob@bob.com').should == 'bob'
-    end
-
     it 'is able to guess a decent name from an email' do
       User.suggest_name('sam.saffron@gmail.com').should == 'Sam Saffron'
     end
@@ -433,64 +469,6 @@ describe User do
 
     it 'returns false when a username is taken' do
       User.username_available?(Fabricate(:user).username).should be_false
-    end
-  end
-
-  describe '.suggest_username' do
-
-    it "doesn't raise an error on nil username" do
-      User.suggest_username(nil).should be_nil
-    end
-
-    it 'corrects weird characters' do
-      User.suggest_username("Darth%^Vader").should == "Darth_Vader"
-    end
-
-    it 'adds 1 to an existing username' do
-      user = Fabricate(:user)
-      User.suggest_username(user.username).should == "#{user.username}1"
-    end
-
-    it "adds numbers if it's too short" do
-      User.suggest_username('a').should == 'a11'
-    end
-
-    it "has a special case for me and i emails" do
-      User.suggest_username('me@eviltrout.com').should == 'eviltrout'
-      User.suggest_username('i@eviltrout.com').should == 'eviltrout'
-    end
-
-    it "shortens very long suggestions" do
-      User.suggest_username("myreallylongnameisrobinwardesquire").should == 'myreallylongnam'
-    end
-
-    it "makes room for the digit added if the username is too long" do
-      User.create(username: 'myreallylongnam', email: 'fake@discourse.org')
-      User.suggest_username("myreallylongnam").should == 'myreallylongna1'
-    end
-
-    it "removes leading character if it is not alphanumeric" do
-      User.suggest_username("_myname").should == 'myname'
-    end
-
-    it "removes trailing characters if they are invalid" do
-      User.suggest_username("myname!^$=").should == 'myname'
-    end
-
-    it "replace dots" do
-      User.suggest_username("my.name").should == 'my_name'
-    end
-
-    it "remove leading dots" do
-      User.suggest_username(".myname").should == 'myname'
-    end
-
-    it "remove trailing dots" do
-      User.suggest_username("myname.").should == 'myname'
-    end
-
-    it 'should handle typical facebook usernames' do
-      User.suggest_username('roger.nelson.3344913').should == 'roger_nelson_33'
     end
   end
 
@@ -770,6 +748,59 @@ describe User do
     end
   end
 
+  describe "flag_linked_posts_as_spam" do
+    let(:user) { Fabricate(:user) }
+    let!(:admin) { Fabricate(:admin) }
+    let!(:post) { PostCreator.new(user, title: "this topic contains spam", raw: "this post has a link: http://discourse.org").create }
+    let!(:another_post) { PostCreator.new(user, title: "this topic also contains spam", raw: "this post has a link: http://discourse.org/asdfa").create }
+    let!(:post_without_link) { PostCreator.new(user, title: "this topic shouldn't be spam", raw: "this post has no links in it.").create }
+
+    it "has flagged all the user's posts as spam" do
+      user.flag_linked_posts_as_spam
+
+      post.reload
+      post.spam_count.should == 1
+
+      another_post.reload
+      another_post.spam_count.should == 1
+
+      post_without_link.reload
+      post_without_link.spam_count.should == 0
+
+      # It doesn't raise an exception if called again
+      user.flag_linked_posts_as_spam
+
+    end
+
+  end
+
+  describe "bio link stripping" do
+
+    it "returns an empty string with no bio" do
+      expect(Fabricate.build(:user).bio_excerpt).to be_blank
+    end
+
+    context "with a user that has a link in their bio" do
+      let(:user) { Fabricate.build(:user, bio_raw: "im sissy and i love http://ponycorns.com") }
+
+      before do
+        # Let's cook that bio up good
+        user.send(:cook)
+      end
+
+      it "includes the link if the user is not new" do
+        expect(user.bio_excerpt).to eq("im sissy and i love <a href='http://ponycorns.com' rel='nofollow'>http://ponycorns.com</a>")
+        expect(user.bio_processed).to eq("<p>im sissy and i love <a href=\"http://ponycorns.com\" rel=\"nofollow\">http://ponycorns.com</a></p>")
+      end
+
+      it "removes the link if the user is new" do
+        user.trust_level = TrustLevel.levels[:newuser]
+        expect(user.bio_excerpt).to eq("im sissy and i love http://ponycorns.com")
+        expect(user.bio_processed).to eq("<p>im sissy and i love http://ponycorns.com</p>")
+      end
+    end
+
+  end
 
   describe 'update_time_read!' do
     let(:user) { Fabricate(:user) }
@@ -816,4 +847,19 @@ describe User do
     end
   end
 
+  describe '#find_by_username_or_email' do
+    it 'works correctly' do
+      bob = Fabricate(:user, username: 'bob', name: 'bobs', email: 'bob@bob.com')
+      bob2 = Fabricate(:user, username: 'bob2', name: 'bobs', email: 'bob2@bob.com')
+
+      expect(User.find_by_username_or_email('bob22@bob.com')).to eq(nil)
+      expect(User.find_by_username_or_email('bobs')).to eq(nil)
+
+      expect(User.find_by_username_or_email('bob2')).to eq(bob2)
+      expect(User.find_by_username_or_email('bob2@BOB.com')).to eq(bob2)
+
+      expect(User.find_by_username_or_email('bob')).to eq(bob)
+      expect(User.find_by_username_or_email('bob@BOB.com')).to eq(bob)
+    end
+  end
 end

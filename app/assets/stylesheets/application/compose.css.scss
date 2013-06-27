@@ -8,6 +8,12 @@
   width: 47%;
 }
 
+.composer-popup-container {
+  max-width: 1500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .composer-popup {
 
   @include box-shadow(3px 3px 3px rgba($black, 0.14));
@@ -52,6 +58,11 @@
   a[href] {
     color: #000;
   }
+
+  .posts-count {
+    color: darken(#b5e8fd, 50%);
+    font-size: 12px;
+  }
 }
 
 .composer-popup:nth-of-type(2) {
@@ -60,7 +71,7 @@
 
 
 .autocomplete {
-  z-index: 9999;
+  z-index: 999999;
   position: absolute;
   width: 200px;
   background-color: $white;
@@ -93,9 +104,6 @@
 }
 
 #reply-control {
-  .requirements-not-met {
-    background-color: rgba(255, 0, 0, 0.12);
-  }
   .toggle-preview, #draft-status, #image-uploading {
     position: absolute;
     bottom: -31px;
@@ -234,6 +242,7 @@
         margin: 6px 10px 3px 0;
       }
       .wmd-controls {
+        @include transition(top 0.3s ease);
         top: 100px;
       }
     }
@@ -284,8 +293,7 @@
     #wmd-input, #wmd-preview {
       color: $black;
       img {
-        // Otherwise we get the wrong size in JS
-        max-width: none;
+        max-width: 100%;
         border-radius: 4px;
         moz-border-radius: 4px;
         webkit-border-radius: 4px;
@@ -313,21 +321,44 @@
       bottom: 8px;
     }
   }
+  .title-input, .category-input {
+    position: relative;
+    display: inline;
+  }
+  .title-input .popup-tip {
+    width: 300px;
+    left: -8px;
+    margin-top: 8px;
+  }
+  .category-input .popup-tip {
+    width: 240px;
+    left: 432px;
+    top: -7px;
+  }
 }
 
 .reply-to {
   margin-bottom: 10px;
 }
 
+div.ac-wrap.disabled {
+  input {
+    display:none;
+  }
+  .item a {
+    display:none;
+  }
+}
 
 div.ac-wrap {
   background-color: $white;
   border: 1px solid #cccccc;
-  padding: 4px 10px;
+  padding: 5px 10px;
   @include border-radius-all(3px);
   div.item {
     float: left;
     margin-right: 10px;
+    margin-bottom: 5px;
     span {
       padding-left: 5px;
       height: 22px;
@@ -365,6 +396,7 @@ div.ac-wrap {
 
 #reply-control.edit-title.private-message {
   .wmd-controls {
+    @include transition(top 0.3s ease);
     top: 140px;
   }
 }
@@ -437,6 +469,10 @@ div.ac-wrap {
     .textarea-wrapper {
       padding-right: 5px;
       float: left;
+      .popup-tip {
+        margin-top: 3px;
+        right: 4px;
+      }
     }
     .preview-wrapper {
       padding-left: 5px;
@@ -463,6 +499,32 @@ div.ac-wrap {
       width: 1450px;
       left: auto;
       right: auto;
+    }
+  }
+}
+
+.admin-options-form {
+  margin-top: 8px;
+  display: none;
+}
+
+.auto-close-fields {
+  input {
+    width: 50px;
+  }
+}
+
+.edit-auto-close-modal {
+  form {
+    margin: 0;
+  }
+  .auto-close-fields {
+    i.icon-time {
+      font-size: 16px;
+      line-height: 8px;
+    }
+    input {
+      margin: 0;
     }
   }
 }

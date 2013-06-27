@@ -23,3 +23,18 @@ class DraftSequence < ActiveRecord::Base
     r.length.zero? ? 0 : r[0][0].to_i
   end
 end
+
+# == Schema Information
+#
+# Table name: draft_sequences
+#
+#  id        :integer          not null, primary key
+#  user_id   :integer          not null
+#  draft_key :string(255)      not null
+#  sequence  :integer          not null
+#
+# Indexes
+#
+#  index_draft_sequences_on_user_id_and_draft_key  (user_id,draft_key) UNIQUE
+#
+

@@ -1,4 +1,4 @@
-require_dependency 'email_sender'
+require_dependency 'email/sender'
 
 module Jobs
 
@@ -10,7 +10,7 @@ module Jobs
 
       invite = Invite.where(id: args[:invite_id]).first
       message = InviteMailer.send_invite(invite)
-      EmailSender.new(message, :invite).send
+      Email::Sender.new(message, :invite).send
     end
 
   end

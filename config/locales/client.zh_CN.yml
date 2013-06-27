@@ -1,9 +1,71 @@
 # encoding: utf-8
 # This file contains content for the client portion of Discourse, sent out
 # to the Javascript app.
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
 
 zh_CN:
   js:
+    dates:
+      short_date_no_year: "D MMM"
+      short_date: "D MMM, YYYY"
+      long_date: "MMMM D, YYYY h:mma"
+      tiny:
+        half_a_minute: "刚刚"
+        less_than_x_seconds:
+          one:   "< 1秒"
+          other: "< %{count}秒"
+        x_seconds:
+          one:   "1秒"
+          other: "%{count}秒"
+        less_than_x_minutes:
+          one:   "< 1分钟"
+          other: "< %{count}分钟"
+        x_minutes:
+          one:   "1分钟"
+          other: "%{count}分钟"
+        about_x_hours:
+          one:   "1小时"
+          other: "%{count}小时"
+        x_days:
+          one:   "1天"
+          other: "%{count}天"
+        about_x_months:
+          one:   "1个月"
+          other: "%{count}个月"
+        x_months:
+          one:   "1个月"
+          other: "%{count}个月"
+        about_x_years:
+          one:   "1年"
+          other: "%{count}年"
+        over_x_years:
+          one:   "> 1年"
+          other: "> %{count}年"
+        almost_x_years:
+          one:   "1年"
+          other: "%{count}年"
+      medium:
+        x_minutes:
+          one: "1分钟"
+          other: "%{count}分钟"
+        x_hours:
+          one: "1小时"
+          other: "%{count}小时"
+        x_days:
+          one: "1天"
+          other: "%{count}天"
+      medium_with_ago:
+        x_minutes:
+          one: "1分钟前"
+          other: "%{count}分钟前"
+        x_hours:
+          one: "1小时之前"
+          other: "%{count}小时之前"
+        x_days:
+          one: "1天前"
+          other: "%{count}天前"
     share:
       topic: '分享一个到本主题的链接'
       post: '分享一个到本帖的链接'
@@ -32,6 +94,19 @@ zh_CN:
     now: "刚刚"
     read_more: '阅读更多'
 
+    in_n_seconds:
+      one: "一秒内"
+      other: "{{count}}秒内"
+    in_n_minutes:
+      one: "一分钟内"
+      other: "{{count}}分钟内"
+    in_n_hours:
+      one: "一小时内"
+      other: "{{count}}小时内"
+    in_n_days:
+      one: "一天内"
+      other: "{{count}}天内"
+
     suggested_topics:
       title: "推荐主题"
 
@@ -49,6 +124,12 @@ zh_CN:
     save: "保存修改"
     saving: "保存中……"
     saved: "已保存！"
+
+    choose_topic:
+      none_found: "没有找到主题"
+      title:
+        search: "通过名称、url或者id，搜索主题："
+        placeholder: "在此输入主题标题"
 
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> 发起 <a href='{{topicUrl}}'>本主题</a>"
@@ -364,6 +445,10 @@ zh_CN:
       help: "Markdown 编辑帮助"
       toggler: "隐藏或显示编辑面板"
 
+      admin_options_title: "本主题可选设置"
+      auto_close_label: "自动关闭主题，过："
+      auto_close_units: "天"
+
     notifications:
       title: "使用 @name 提及到你，回复你的帖子和主题，私信等等的通知消息"
       none: "你当前没有任何通知。"
@@ -473,6 +558,12 @@ zh_CN:
       jump_reply_down: 跳转至更晚的回复
       deleted: "此主题已被删除"
 
+      auto_close_notice: "本主题将在%{timeLeft}后自动关闭"
+      auto_close_title: '自动关闭设置'
+      auto_close_save: "保存"
+      auto_close_cancel: "取消"
+      auto_close_remove: "不自动关闭该主题"
+
       progress:
         title: 主题进度
         jump_top: 跳转到第一帖
@@ -510,6 +601,7 @@ zh_CN:
         delete: "删除主题"
         open: "打开主题"
         close: "关闭主题"
+        auto_close: "自动关闭"
         unpin: "解除主题置顶"
         pin: "置顶主题"
         unarchive: "解除主题存档"
@@ -517,7 +609,7 @@ zh_CN:
         invisible: "使不可见"
         visible: "使可见"
         reset_read: "重置阅读数据"
-        multi_select: "切换多选"
+        multi_select: "选择将被合并/拆分的帖子"
         convert_to_topic: "转换到常规主题"
 
       reply:
@@ -571,20 +663,28 @@ zh_CN:
           other: "{{count}} 个帖子中的"
         cancel: "再次显示本主题下的所有帖子。"
 
-      move_selected:
-        title: "移动所选帖子"
-        topic_name: "新主题名称："
-        error: "抱歉，在移动这些帖子时发生了错误。"
+      split_topic:
+        title: "拆分主题"
+        action: "拆分主题"
+        topic_name: "新主题名："
+        error: "拆分主题时发生错误。"
         instructions:
-          one: "你将依据你所选的帖子创建一个新主题。"
-          other: "你将依据你所选择的<b>{{count}}</b>个帖子创建一个新主题。"
+          one: "你想如何移动该帖？"
+          other: "你想如何移动你所选择的这{{count}}篇帖子？"
+
+      merge_topic:
+        title: "合并主题"
+        action: "合并主题"
+        error: "合并主题时发生错误。"
+        instructions:
+          one: "请选择你想将那篇帖子移至其下的主题。"
+          other: "请选择你想将那{{count}}篇帖子移至其下的主题。"
 
       multi_select:
         select: '选择'
         selected: '已选择（{{count}}）'
         delete: 删除所选
         cancel: 取消选择
-        move: 移动所选
         description:
           one: 你已选择了<b>一个</b>帖子。
           other: "你已选择了<b>{{count}}</b>个帖子。"
@@ -627,7 +727,6 @@ zh_CN:
         delete: "删除本帖"
         undelete: "恢复本帖"
         share: "分享一个到本帖的链接"
-        bookmark: "给本帖做书签到你的用户页"
         more: "更多"
 
       actions:
@@ -735,11 +834,15 @@ zh_CN:
       none: '（未分类）'
       edit: '编辑'
       edit_long: "编辑分类"
+      edit_uncategorized: "编辑未分类的"
       view: '浏览分类下的主题'
+      general: '通常'
+      settings: '设置'
       delete: '删除分类'
       create: '创建分类'
       save: '保存分类'
       creation_error: 创建此分类时发生了错误。
+      save_error: 在保存此分类时发生了错误。
       more_posts: "浏览全部 {{posts}} ……"
       name: "分类名称"
       description: "描述"
@@ -756,6 +859,12 @@ zh_CN:
       change_in_category_topic: "访问分类主题来编辑描述信息"
       hotness: "热度"
       already_used: '此色彩已经被另一个分类使用'
+      is_secure: "安全类型？"
+      add_group: "添加分组"
+      security: "安全"
+      allowed_groups: "授权的分组："
+      auto_close_label: "自动关闭主题，过："
+
 
     flagging:
       title: '为何要给投诉本帖？'
@@ -864,6 +973,7 @@ zh_CN:
         no_problems: "找不到问题."
         moderators: '版主：'
         admins: '管理员：'
+        blocked: '被封禁:'
         private_messages_short: "私信"
         private_messages_title: "私密信息"
 
@@ -893,14 +1003,24 @@ zh_CN:
         delete_title: "删除帖子（如果它是主题第一帖，那么将删除主题）"
         flagged_by: "投诉者为"
         error: "出错了"
+        view_message: "查看消息"
+        no_results: "没有投诉"
 
       groups:
         title: "群组"
         edit: "编辑群组"
         selector_placeholder: "添加用户"
+        name_placeholder: "组名，不能含有空格，与用户名规则一致"
 
       api:
         title: "应用开发接口（API）"
+        long_title: "API信息"
+        key: "密钥"
+        generate: "生成API密钥"
+        regenerate: "重新生成API密钥"
+        info_html: "API密钥可以用来通过JSON调用创建和更新主题。"
+        note_html: "请<strong>安全的</strong>保管好本密钥，任何拥有该密钥的用户可以使用它以论坛任何用户的名义来发帖。"
+
       customize:
         title: "定制"
         long_title: "站点定制"
@@ -917,14 +1037,23 @@ zh_CN:
         delete_confirm: "删除本定制内容？"
         about: "站点定制允许你修改样式表和站点头部。选择或者添加一个来开始编辑。"
 
-      email_logs:
-        title: "电子邮件日志"
+      email:
+        title: "电子邮件"
+        settings: "设置"
+        logs: "日志"
         sent_at: "发送时间"
         email_type: "邮件类型"
         to_address: "目的地址"
         test_email_address: "测试电子邮件地址"
         send_test: "发送测试电子邮件"
         sent_test: "已发送！"
+        delivery_method: "发送方式"
+        preview_digest: "预览"
+        refresh: "刷新"
+        format: "格式"
+        html: "html"
+        text: "text"
+        last_seen_user: "用户最后登录时间:"
 
       impersonate:
         title: "假冒用户"
@@ -993,13 +1122,23 @@ zh_CN:
         delete_confirm: "你 确定 你要永久的从本站删除此用户？该操作无法撤销！"
         deleted: "该用户已被删除。"
         delete_failed: "在删除用户时发生了错误。请确保删除该用户前删除了该用户的所有帖子。"
+        send_activation_email: "发送激活邮件"
+        activation_email_sent: "激活邮件已发送。"
+        send_activation_email_failed: "在发送激活邮件时发生了错误。"
+        activate: "激活帐号"
+        activate_failed: "在激活用户帐号时发生了错误。"
+        deactivate_account: "停用帐号"
+        deactivate_failed: "在停用用户帐号时发生了错误。"
+        unblock_failed: "在解除用户帐号封禁时发生了错误。"
+        block_failed: "在封禁用户帐号时发生了错误。"
+        block_explanation: "被封禁的用户不能发表主题或者评论。"
 
       site_content:
         none: "选择内容类型以开始编辑。"
-        title: '站点内容'
+        title: '内容'
         edit: "编辑站点内容"
 
       site_settings:
         show_overriden: '只显示被覆盖了缺省值的'
-        title: '站点设置'
+        title: '设置'
         reset: '重置为缺省值'

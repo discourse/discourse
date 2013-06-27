@@ -10,8 +10,6 @@
   <div class='row'>
     {{#if controller.multiSelect}}
       <button class='post-select' {{action selectPost this}}>{{view.selectText}}</button>
-    {{else}}
-      <div {{bindAttr class="bookmarkClass"}} {{bindAttr title="bookmarkTooltip"}} {{action toggleBookmark this}}></div>
     {{/if}}
 
     {{#if showUserReplyTab}}
@@ -29,25 +27,29 @@
     <div class='topic-meta-data span2'>
       <div {{bindAttr class=":contents byTopicCreator:topic-creator"}}>
         <a href='{{unbound usernameUrl}}'>{{avatar this imageSize="large"}}</a>
-        <h3 {{bindAttr class="moderator new_user"}}><a href='{{unbound usernameUrl}}'>{{breakUp username}}</a></h3>
-
-        <div class='post-info'>
-          <a href='#' class='post-date' {{bindAttr data-share-url="shareUrl"}}>{{date created_at}}</a>
-        </div>
-        {{#if hasHistory}}
-          <div class='post-info'>
-            <a href='#' class="{{unbound historyHeat}}" {{action showHistory this}} title="{{editDate updated_at}}">
-              <i class='icon-pencil'></i>
-              {{editCount}}
-            </a>
-          </div>
-        {{/if}}
+        <h3 {{bindAttr class="staff new_user"}}><a href='{{unbound usernameUrl}}'>{{breakUp username}}</a></h3>
+        {{#if user_title}}<div class="user-title">{{user_title}}</div>{{/if}}
       </div>
     </div>
 
     <div class='topic-body span14'>
       <div {{bindAttr class="showUserReplyTab:avoid-tab view.repliesHidden:bottom-round :contents :regular view.extraClass"}}>
         {{view Discourse.PrependPostView postBinding="this"}}
+        {{#unless controller.multiSelect}}
+          <div class='topic-meta-data-inside'>
+            {{#if hasHistory}}
+              <div class='post-info edits'>
+                <a href='#' class="{{unbound historyHeat}}" {{action showHistory this}} title="{{unboundDate updated_at}}">
+                  {{editCount}}
+                  <i class='icon-pencil'></i>
+                </a>
+              </div>
+            {{/if}}
+            <div class='post-info'>
+              <a href='#' class='post-date' {{bindAttr data-share-url="shareUrl"}}>{{unboundAgeWithTooltip created_at}}</a>
+            </div>
+          </div>
+        {{/unless}}
         {{view Discourse.RawDivView class="cooked" contentBinding="cooked"}}
         {{view Discourse.PostMenuView postBinding="this" postViewBinding="view"}}
       </div>
@@ -58,7 +60,7 @@
 
     <div class='span5 gutter'>
       {{collection contentBinding="internalLinks" itemViewClass="Discourse.PostLinkView" tagName="ul" classNames="post-links"}}
-      {{#if controller.content.can_reply_as_new_topic}}
+      {{#if controller.can_reply_as_new_topic}}
         <a href='#' class='reply-new' {{action replyAsNewTopic this}}><i class='icon icon-plus'></i>{{i18n post.reply_as_new_topic}}</a>
       {{/if}}
     </div>

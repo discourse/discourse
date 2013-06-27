@@ -34,15 +34,16 @@ class TopicList
 
     @topics.each do |ft|
       ft.user_data = @topic_lookup[ft.id] if @topic_lookup.present?
-      ft.posters = ft.posters_summary(ft.user_data, @current_user, avatar_lookup: avatar_lookup)
+      ft.posters = ft.posters_summary(avatar_lookup: avatar_lookup)
       ft.topic_list = self
     end
 
     return @topics
   end
 
-  def filter_summary
-    @filter_summary ||= get_summary
+  def topic_ids
+    return [] if @topics_input.blank?
+    @topics_input.map {|t| t.id}
   end
 
   def attributes
@@ -52,38 +53,9 @@ class TopicList
   def has_rank_details?
 
     # Only moderators can see rank details
-    return false unless @current_user.try(:moderator?)
+    return false unless @current_user.try(:staff?)
 
     # Only show them on 'Hot'
     return @filter == :hot
-  end
-
-  protected
-
-  def get_summary
-    s = {}
-    return s unless @current_user
-    split = SiteSetting.top_menu.split("|")
-
-    split.each do |i|
-      name, filter = i.split(",")
-
-      exclude = nil
-      if filter && filter[0] == "-"
-        exclude = filter[1..-1]
-      end
-
-      query = TopicQuery.new(@current_user, exclude_category: exclude)
-      s["unread"] = query.unread_count if name == 'unread'
-      s["new"] = query.new_count if name == 'new'
-
-      catSplit = name.split("/")
-      if catSplit[0] == "category" && catSplit.length == 2 && @current_user
-        query = TopicQuery.new(@current_user, only_category: catSplit[1], limit: false)
-        s[name] = query.unread_count + query.new_count
-      end
-    end
-
-    s
   end
 end

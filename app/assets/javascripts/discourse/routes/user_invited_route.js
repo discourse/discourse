@@ -6,16 +6,14 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.UserInvitedRoute = Discourse.Route.extend({
+Discourse.UserInvitedRoute = Discourse.Route.extend(Discourse.ModelReady, {
 
   renderTemplate: function() {
     this.render({ into: 'user', outlet: 'userOutlet' });
   },
 
-  setupController: function(controller) {
-    Discourse.InviteList.findInvitedBy(this.controllerFor('user').get('content')).then(function(invited) {
-      controller.set('content', invited);
-    });
+  model: function() {
+    return Discourse.InviteList.findInvitedBy(this.modelFor('user'));
   }
 
 });

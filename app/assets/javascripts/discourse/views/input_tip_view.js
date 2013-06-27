@@ -7,28 +7,27 @@
   @module Discourse
 **/
 Discourse.InputTipView = Discourse.View.extend({
-  templateName: 'input_tip',
   classNameBindings: [':tip', 'good', 'bad'],
 
-  good: (function() {
+  good: function() {
     return !this.get('validation.failed');
-  }).property('validation'),
+  }.property('validation'),
 
-  bad: (function() {
+  bad: function() {
     return this.get('validation.failed');
-  }).property('validation'),
+  }.property('validation'),
 
-  triggerRender: (function() {
+  triggerRender: function() {
     return this.rerender();
-  }).observes('validation'),
+  }.observes('validation'),
 
   render: function(buffer) {
-    var icon, reason;
-    if (reason = this.get('validation.reason')) {
-      icon = this.get('good') ? 'icon-ok' : 'icon-remove';
+    var reason = this.get('validation.reason');
+    if (reason) {
+      var icon = this.get('good') ? 'icon-ok' : 'icon-remove';
       return buffer.push("<i class=\"icon " + icon + "\"></i> " + reason);
     }
   }
 });
 
-
+Discourse.View.registerHelper('inputTip', Discourse.InputTipView);

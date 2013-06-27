@@ -17,12 +17,16 @@ Discourse.Utilities = {
     return size;
   },
 
-  categoryUrlId: function(category) {
-    if (!category) return "";
-    var id = Em.get(category, 'id');
-    var slug = Em.get(category, 'slug');
-    if ((!slug) || slug.isBlank()) return "" + id + "-category";
-    return slug;
+  /**
+    Allows us to supply bindings without "binding" to a helper.
+  **/
+  normalizeHash: function(hash, hashTypes) {
+    for (var prop in hash) {
+      if (hashTypes[prop] === 'ID') {
+        hash[prop + 'Binding'] = hash[prop];
+        delete hash[prop];
+      }
+    }
   },
 
   // Create a badge like category link
@@ -35,7 +39,7 @@ Discourse.Utilities = {
     var description = Em.get(category, 'description');
 
     // Build the HTML link
-    var result = "<a href=\"" + Discourse.getURL("/category/") + this.categoryUrlId(category) + "\" class=\"badge-category\" ";
+    var result = "<a href=\"" + Discourse.getURL("/category/") + Discourse.Category.slugFor(category) + "\" class=\"badge-category\" ";
 
     // Add description if we have it
     if (description) result += "title=\"" + Handlebars.Utils.escapeExpression(description) + "\" ";
@@ -44,15 +48,10 @@ Discourse.Utilities = {
   },
 
   avatarUrl: function(username, size, template) {
-    var rawSize;
-    if (!username) {
-      return "";
-    }
+    if (!username) return "";
     size = Discourse.Utilities.translateSize(size);
-    rawSize = (size * (window.devicePixelRatio || 1)).toFixed();
-    if (template) {
-      return template.replace(/\{size\}/g, rawSize);
-    }
+    var rawSize = (size * (window.devicePixelRatio || 1)).toFixed();
+    if (template) return template.replace(/\{size\}/g, rawSize);
     return Discourse.getURL("/users/") + (username.toLowerCase()) + "/avatar/" + rawSize + "?__ws=" + (encodeURIComponent(Discourse.BaseUrl || ""));
   },
 
@@ -71,8 +70,7 @@ Discourse.Utilities = {
   },
 
   postUrl: function(slug, topicId, postNumber) {
-    var url;
-    url = Discourse.getURL("/t/");
+    var url = Discourse.getURL("/t/");
     if (slug) {
       url += slug + "/";
     } else {
@@ -160,10 +158,7 @@ Discourse.Utilities = {
     }
   },
 
-  /**
-  validateFilesForUpload
 
-  **/
   /**
     Validate a list of files to be uploaded
 

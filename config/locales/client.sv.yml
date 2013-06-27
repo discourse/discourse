@@ -1,6 +1,10 @@
 # encoding: utf-8
 # This file contains content for the client portion of Discourse, sent out
 # to the Javascript app.
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
+
 
 sv:
   js:
@@ -582,7 +586,6 @@ sv:
         delete: "radera detta inlägg"
         undelete: "återställ detta inlägg"
         share: "dela en länk till detta inlägg"
-        bookmark: "bokmärk detta inlägg till din användarsida"
         more: "Mer"
 
       actions:
@@ -844,7 +847,7 @@ sv:
         delete: "Radera"
         delete_confirm: "Radera denna anpassning?"
 
-      email_logs:
+      email:
         title: "E-postloggar"
         sent_at: "Skickat"
         email_type: "E-posttyp"

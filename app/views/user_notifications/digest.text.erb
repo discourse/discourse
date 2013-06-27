@@ -3,19 +3,22 @@
       site_link: site_link,
       last_seen_at: @last_seen_at) %>
 
-<%- if @notifications.present? %>
-### <%=t 'user_notifications.digest.new_activity' %>
-
-<%- @notifications.each do |n| %>
-* <%= raw(n.text_description { raw(@markdown_linker.create(n.data_hash[:topic_title], n.url)) }) %>
-<%- end %>
-
-<%- end %>
 <%- if @new_topics.present? %>
-### <%=t 'user_notifications.digest.new_topics' %>
+### <%=t 'user_notifications.digest.top_topics' %>
 
 <%- @new_topics.each do |t| %>
-* <%= raw(@markdown_linker.create(t.title, t.relative_url)) %>
+<%= raw(@markdown_linker.create(t.title, t.relative_url)) %>
+
+<%- if t.best_post.present? %>
+ <div class='digest-post'><%= raw(t.best_post.excerpt(1000,
+                            strip_links: true,
+                            text_entities: true,
+                            markdown_images: true)) %></div>
+
+--------------------------------------------------------------------------------
+
+<%- end %>
+
 <%- end %>
 <%- end %>
 

@@ -2,6 +2,15 @@ class TopicUser < ActiveRecord::Base
   belongs_to :user
   belongs_to :topic
 
+  scope :starred_since, lambda { |sinceDaysAgo| where('starred_at > ?', sinceDaysAgo.days.ago) }
+  scope :by_date_starred, group('date(starred_at)').order('date(starred_at)')
+
+  scope :tracking, lambda { |topic_id|
+    where(topic_id: topic_id)
+        .where("COALESCE(topic_users.notification_level, :regular) >= :tracking",
+                regular: TopicUser.notification_levels[:regular], tracking: TopicUser.notification_levels[:tracking])
+  }
+
   # Class methods
   class << self
 
@@ -87,6 +96,8 @@ class TopicUser < ActiveRecord::Base
           end
 
           TopicUser.create(attrs.merge!(user_id: user_id, topic_id: topic_id.to_i, first_visited_at: now ,last_visited_at: now))
+        else
+          observe_after_save_callbacks_for topic_id, user_id
         end
       end
     rescue ActiveRecord::RecordNotUnique
@@ -98,6 +109,8 @@ class TopicUser < ActiveRecord::Base
       rows = TopicUser.update_all({last_visited_at: now}, {topic_id: topic.id, user_id: user.id})
       if rows == 0
         TopicUser.create(topic_id: topic.id, user_id: user.id, last_visited_at: now, first_visited_at: now)
+      else
+        observe_after_save_callbacks_for topic.id, user.id
       end
     end
 
@@ -143,7 +156,7 @@ class TopicUser < ActiveRecord::Base
                                        tu.topic_id = :topic_id AND
                                        tu.user_id = :user_id
                                   RETURNING
-                                    topic_users.notification_level, tu.notification_level old_level
+                                    topic_users.notification_level, tu.notification_level old_level, tu.last_read_post_number
                                 ",
                                 args).values
 
@@ -151,12 +164,20 @@ class TopicUser < ActiveRecord::Base
         before = rows[0][1].to_i
         after = rows[0][0].to_i
 
+        before_last_read = rows[0][2].to_i
+
+        if before_last_read < post_number
+          TopicTrackingState.publish_read(topic_id, post_number, user.id)
+        end
+
         if before != after
           MessageBus.publish("/topic/#{topic_id}", {notification_level_change: after}, user_ids: [user.id])
         end
       end
 
       if rows.length == 0
+        TopicTrackingState.publish_read(topic_id, post_number, user.id)
+
         args[:tracking] = notification_levels[:tracking]
         args[:regular] = notification_levels[:regular]
         args[:site_setting] = SiteSetting.auto_track_topics_after
@@ -173,6 +194,11 @@ class TopicUser < ActiveRecord::Base
       end
     end
 
+    def observe_after_save_callbacks_for(topic_id, user_id)
+      TopicUser.where(topic_id: topic_id, user_id: user_id).each do |topic_user|
+        UserActionObserver.instance.after_save topic_user
+      end
+    end
   end
 
   def self.ensure_consistency!
@@ -200,3 +226,29 @@ SQL
   end
 
 end
+
+# == Schema Information
+#
+# Table name: topic_users
+#
+#  user_id                  :integer          not null
+#  topic_id                 :integer          not null
+#  starred                  :boolean          default(FALSE), not null
+#  posted                   :boolean          default(FALSE), not null
+#  last_read_post_number    :integer
+#  seen_post_count          :integer
+#  starred_at               :datetime
+#  last_visited_at          :datetime
+#  first_visited_at         :datetime
+#  notification_level       :integer          default(1), not null
+#  notifications_changed_at :datetime
+#  notifications_reason_id  :integer
+#  total_msecs_viewed       :integer          default(0), not null
+#  cleared_pinned_at        :datetime
+#  unstarred_at             :datetime
+#
+# Indexes
+#
+#  index_forum_thread_users_on_forum_thread_id_and_user_id  (topic_id,user_id) UNIQUE
+#
+

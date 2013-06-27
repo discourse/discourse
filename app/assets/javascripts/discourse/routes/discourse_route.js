@@ -11,9 +11,11 @@ Discourse.Route = Em.Route.extend({
   /**
     Called every time we enter a route on Discourse.
 
-    @method enter
+    @method activate
   **/
-  enter: function(router, context) {
+  activate: function(router, context) {
+    this._super();
+
     // Close mini profiler
     $('.profiler-results .profiler-result').remove();
 
@@ -22,9 +24,12 @@ Discourse.Route = Em.Route.extend({
     $('header ul.icons li').removeClass('active');
     $('[data-toggle="dropdown"]').parent().removeClass('open');
 
+    Discourse.set('notifyCount',0);
+
     var hideDropDownFunction = $('html').data('hide-dropdown');
     if (hideDropDownFunction) return hideDropDownFunction();
   }
+
 });
 
 
@@ -36,6 +41,26 @@ Discourse.Route.reopenClass({
       if (oldBuilder) oldBuilder.call(this);
       return builder.call(this);
     };
+  },
+
+  /**
+    Shows a modal
+
+    @method showModal
+  **/
+  showModal: function(router, name, model) {
+    router.controllerFor('modal').set('modalClass', null);
+    router.render(name, {into: 'modal', outlet: 'modalBody'});
+    var controller = router.controllerFor(name);
+    if (controller) {
+      if (model) {
+        controller.set('model', model);
+      }
+      if(controller && controller.onShow) {
+        controller.onShow();
+      }
+      controller.set('flashMessage', null);
+    }
   }
 
 });

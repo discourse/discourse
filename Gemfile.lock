@@ -1,12 +1,4 @@
 GIT
-  remote: git://github.com/CodeMonkeySteve/fast_xor.git
-  revision: 85b79ec6d116f9680f23bd2c5c8c2c2039d477d8
-  specs:
-    fast_xor (1.1.2)
-      rake
-      rake-compiler
-
-GIT
   remote: git://github.com/SamSaffron/redis-store.git
   revision: 1eafaa3d8bfbcb61ad89d1a2831adbba4ea8e1e1
   specs:
@@ -34,34 +26,6 @@ GIT
       activesupport (>= 3.1)
 
 GIT
-  remote: git://github.com/bradphelan/jasminerice.git
-  revision: b5370e3cf2931aa5478e775369afb5ecef1c18b5
-  specs:
-    jasminerice (0.1.0)
-      coffee-rails
-
-GIT
-  remote: git://github.com/callahad/omniauth-browserid.git
-  revision: af62d667626c1622de6fe13b60849c3640765ab1
-  branch: observer_api
-  specs:
-    omniauth-browserid (0.0.2)
-      faraday
-      multi_json
-      omniauth (~> 1.0)
-
-GIT
-  remote: git://github.com/emberjs/ember-rails.git
-  revision: 57bbe3202725e55a8e4eaccba83d663b26bcf024
-  ref: 57bbe32
-  specs:
-    ember-rails (0.10.1)
-      active_model_serializers
-      barber
-      execjs (>= 1.2)
-      railties (>= 3.1)
-
-GIT
   remote: git://github.com/rails/sass-rails.git
   revision: 33799418f104c961b1ce41452e77cf1e04930755
   specs:
@@ -71,12 +35,54 @@ GIT
       sprockets-rails (~> 2.0.0.rc4)
 
 GIT
-  remote: git://github.com/zhangyuan/vestal_versions
-  revision: 0ea75ec4e269b5a9e609639919ade0f36381a446
+  remote: https://github.com/CodeMonkeySteve/fast_xor.git
+  revision: 85b79ec6d116f9680f23bd2c5c8c2c2039d477d8
   specs:
-    vestal_versions (1.2.2)
-      activerecord (>= 3.0.0)
-      activesupport (>= 3.0.0)
+    fast_xor (1.1.2)
+      rake
+      rake-compiler
+
+GIT
+  remote: https://github.com/SamSaffron/annotate_models.git
+  revision: ebe4ba7e3f6ceeb43e4e40078da2b261a1bb71b2
+  specs:
+    annotate (2.6.0.beta1)
+      activerecord (>= 2.3.0)
+      rake (>= 0.8.7)
+
+GIT
+  remote: https://github.com/SamSaffron/message_bus
+  revision: 9c16e7ebaafaf2a3933a84fa1c517c0eba44b052
+  specs:
+    message_bus (0.0.2)
+      eventmachine
+      rack (>= 1.1.3)
+      redis
+      thin
+
+GIT
+  remote: https://github.com/SamSaffron/redis-rack-cache.git
+  revision: 379ef30e31d4e185cb1d7f8badca0cc06403eba2
+  specs:
+    redis-rack-cache (1.2.1)
+      rack-cache (~> 1.2)
+      redis-store (~> 1.1.0)
+
+GIT
+  remote: https://github.com/callahad/omniauth-browserid.git
+  revision: af62d667626c1622de6fe13b60849c3640765ab1
+  branch: observer_api
+  specs:
+    omniauth-browserid (0.0.2)
+      faraday
+      multi_json
+      omniauth (~> 1.0)
+
+GIT
+  remote: https://github.com/lawrencepit/email_reply_parser.git
+  revision: 67408dfb1b99fb8d5f145f782b9e22d1851a8e5a
+  specs:
+    email_reply_parser (0.6)
 
 GIT
   remote: https://github.com/rails-api/active_model_serializers.git
@@ -84,6 +90,14 @@ GIT
   specs:
     active_model_serializers (0.8.1)
       activemodel (>= 3.0)
+
+GIT
+  remote: https://github.com/zhangyuan/vestal_versions
+  revision: 0ea75ec4e269b5a9e609639919ade0f36381a446
+  specs:
+    vestal_versions (1.2.2)
+      activerecord (>= 3.0.0)
+      activesupport (>= 3.0.0)
 
 PATH
   remote: vendor/gems/discourse_emoji
@@ -94,15 +108,6 @@ PATH
   remote: vendor/gems/discourse_plugin
   specs:
     discourse_plugin (0.0.1)
-
-PATH
-  remote: vendor/gems/message_bus
-  specs:
-    message_bus (0.0.1)
-      eventmachine
-      rack (>= 1.1.3)
-      redis
-      thin
 
 PATH
   remote: vendor/gems/rails_multisite
@@ -151,6 +156,7 @@ GEM
       multi_json (~> 1.3)
       thread_safe (~> 0.1)
       tzinfo (~> 0.3.37)
+    addressable (2.3.5)
     airbrake (3.1.2)
       activesupport
       builder
@@ -174,13 +180,6 @@ GEM
     clockwork (0.5.0)
       tzinfo (~> 0.3.35)
     coderay (1.0.9)
-    coffee-rails (4.0.0)
-      coffee-script (>= 2.2.0)
-      railties (>= 4.0.0.beta, < 5.0)
-    coffee-script (2.2.0)
-      coffee-script-source
-      execjs
-    coffee-script-source (1.6.2)
     connection_pool (1.0.0)
     daemons (1.1.9)
     debug_inspector (0.0.2)
@@ -188,6 +187,13 @@ GEM
     diffy (2.1.4)
     em-redis (0.3.0)
       eventmachine
+    ember-rails (0.10.0)
+      active_model_serializers
+      barber
+      execjs (>= 1.2)
+      railties (>= 3.1)
+    ember-source (1.0.0.rc5)
+      handlebars-source (= 1.0.0.rc4)
     erubis (2.7.0)
     eventmachine (1.0.3)
     excon (0.20.1)
@@ -221,14 +227,6 @@ GEM
       lumberjack (>= 1.0.2)
       pry (>= 0.9.10)
       thor (>= 0.14.6)
-    guard-jasmine (1.15.1)
-      childprocess
-      guard (>= 1.1.0)
-      multi_json
-      thor
-    guard-jshint-on-rails (0.0.2)
-      guard (>= 1.0.0)
-      jshint_on_rails (>= 1.0.2)
     guard-rspec (2.5.4)
       guard (>= 1.1)
       rspec (~> 2.11)
@@ -236,7 +234,7 @@ GEM
       childprocess (>= 0.2.3)
       guard (>= 1.1)
       spork (>= 0.8.4)
-    has_ip_address (0.0.1)
+    handlebars-source (1.0.0.rc4)
     hashie (2.0.4)
     highline (1.6.18)
     hike (1.2.2)
@@ -251,10 +249,6 @@ GEM
     image_size (1.1.2)
     image_sorcery (1.1.0)
     in_threads (1.1.1)
-    jquery-rails (2.2.1)
-      railties (>= 3.0, < 5.0)
-      thor (>= 0.14, < 2.0)
-    jshint_on_rails (1.0.2)
     jwt (0.1.8)
       multi_json (>= 1.5)
     librarian (0.1.0)
@@ -292,6 +286,10 @@ GEM
     omniauth (1.1.4)
       hashie (>= 1.2, < 3)
       rack
+    omniauth-cas (1.0.2)
+      addressable (~> 2.3)
+      nokogiri (~> 1.5)
+      omniauth (~> 1.1.0)
     omniauth-facebook (1.4.1)
       omniauth-oauth2 (~> 1.1.0)
     omniauth-github (1.1.0)
@@ -322,14 +320,18 @@ GEM
       coderay (~> 1.0.5)
       method_source (~> 0.8)
       slop (~> 3.4)
+    pry-nav (0.2.3)
+      pry (~> 0.9.10)
     pry-rails (0.2.2)
       pry (>= 0.9.10)
+    qunit-rails (0.0.3)
+      railties (>= 3.2.3)
     rack (1.5.2)
     rack-cache (1.2)
       rack (>= 0.4)
     rack-cors (0.2.7)
       rack
-    rack-mini-profiler (0.1.26)
+    rack-mini-profiler (0.1.27)
       rack (>= 1.1.3)
     rack-openid (1.3.1)
       rack (>= 1.1.0)
@@ -363,9 +365,6 @@ GEM
     redis (3.0.4)
     redis-namespace (1.2.1)
       redis (~> 3.0.0)
-    redis-rack-cache (1.2)
-      rack-cache (~> 1.2)
-      redis-store (~> 1.1.0)
     redis-store (1.1.2)
       redis (>= 2.2.0)
     ref (1.0.4)
@@ -379,6 +378,9 @@ GEM
     rspec-core (2.13.1)
     rspec-expectations (2.13.0)
       diff-lcs (>= 1.1.3, < 2.0)
+    rspec-given (2.4.3)
+      rspec (>= 2.12)
+      sorcerer (>= 0.3.7)
     rspec-mocks (2.13.1)
     rspec-rails (2.13.0)
       actionpack (>= 3.0)
@@ -405,6 +407,8 @@ GEM
       multi_json (~> 1)
       redis (~> 3)
       redis-namespace
+    sidekiq-failures (0.2.1)
+      sidekiq (>= 2.2.1)
     simplecov (0.7.1)
       multi_json (~> 1.0)
       simplecov-html (~> 0.7.1)
@@ -417,6 +421,7 @@ GEM
       temple (~> 0.6.3)
       tilt (~> 1.3.3)
     slop (3.4.4)
+    sorcerer (0.3.10)
     spork (0.9.2)
     sprockets (2.9.3)
       hike (~> 1.2)
@@ -427,6 +432,10 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (~> 2.8)
+    strong_parameters (0.1.4)
+      actionpack (>= 3.2.0)
+      activemodel (>= 3.2.0)
+      railties (>= 3.2.0)
     temple (0.6.4)
     terminal-notifier-guard (1.5.3)
     therubyracer (0.11.4)
@@ -440,6 +449,7 @@ GEM
     thread_safe (0.1.0)
       atomic
     tilt (1.3.7)
+    timecop (0.6.1)
     timers (1.1.0)
     treetop (1.4.12)
       polyglot
@@ -461,7 +471,8 @@ DEPENDENCIES
   active_model_serializers!
   activerecord-postgres-hstore
   airbrake (= 3.1.2)
-  barber (= 0.3.0)
+  annotate!
+  barber
   better_errors
   binding_of_caller
   certified
@@ -470,7 +481,9 @@ DEPENDENCIES
   discourse_emoji!
   discourse_plugin!
   em-redis
-  ember-rails!
+  email_reply_parser!
+  ember-rails
+  ember-source (= 1.0.0.rc5)
   eventmachine
   fabrication
   fakeweb (~> 1.3.0)
@@ -479,18 +492,15 @@ DEPENDENCIES
   fast_xs
   fastimage
   fog
-  guard-jasmine
-  guard-jshint-on-rails
   guard-rspec
   guard-spork
-  has_ip_address
+  handlebars-source (= 1.0.0.rc4)
+  highline
   hiredis
   image_optim
   image_sorcery
-  jasminerice!
-  jquery-rails
-  jshint_on_rails
   librarian (>= 0.0.25)
+  listen
   lru_redux
   message_bus!
   minitest
@@ -501,6 +511,7 @@ DEPENDENCIES
   oj
   omniauth
   omniauth-browserid!
+  omniauth-cas
   omniauth-facebook
   omniauth-github
   omniauth-openid
@@ -508,10 +519,12 @@ DEPENDENCIES
   openid-redis-store
   pg
   protected_attributes
+  pry-nav
   pry-rails
+  qunit-rails
   rack-cache
   rack-cors
-  rack-mini-profiler
+  rack-mini-profiler (= 0.1.27)
   rails (= 4.0.0.rc1)
   rails-observers
   rails_multisite!
@@ -520,10 +533,11 @@ DEPENDENCIES
   rb-inotify (~> 0.9)
   redcarpet
   redis
-  redis-rack-cache
+  redis-rack-cache!
   redis-rails!
   rest-client
   rinku
+  rspec-given
   rspec-rails
   sanitize
   sass
@@ -531,13 +545,16 @@ DEPENDENCIES
   seed-fu!
   shoulda
   sidekiq
+  sidekiq-failures
   simple_handlebars_rails!
   simplecov
   sinatra
   slim
+  strong_parameters
   terminal-notifier-guard
   therubyracer
   thin
+  timecop
   turbo-sprockets-rails3
   uglifier
   vestal_versions!

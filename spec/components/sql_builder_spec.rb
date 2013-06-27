@@ -18,6 +18,30 @@ describe SqlBuilder do
     end
   end
 
+  describe "map_exec" do
+    class SqlBuilder::TestClass
+      attr_accessor :int, :string, :date, :text, :bool
+    end
+
+    it "correctly maps to a klass" do
+      rows = SqlBuilder.new("SELECT
+                            1 AS int,
+                            'string' AS string,
+                            CAST(NOW() at time zone 'utc' AS timestamp without time zone) AS date,
+                            'text'::text AS text,
+                            true AS bool")
+        .map_exec(SqlBuilder::TestClass)
+
+      rows.count.should == 1
+      row = rows[0]
+      row.int.should == 1
+      row.string.should == "string"
+      row.text.should == "text"
+      row.bool.should == true
+      row.date.should be_within(10.seconds).of(DateTime.now)
+    end
+  end
+
   describe "detached" do
     before do
       @builder = SqlBuilder.new("select * from (select :a A union all select :b) as X /*where*/ /*order_by*/ /*limit*/ /*offset*/")

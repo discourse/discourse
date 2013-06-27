@@ -1,7 +1,7 @@
 /**
   Handles routes related to viewing active flags.
 
-  @class AdminFlagsActiveRoute    
+  @class AdminFlagsActiveRoute
   @extends Discourse.Route
   @namespace Discourse
   @module Discourse

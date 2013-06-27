@@ -4,8 +4,8 @@
 <table>
   <tr>
     <td style="vertical-align:top; padding:0 20px 20px 0;">
-      <h2><%= t 'page_not_found.latest_topics' %></h2>
-      <% @latest.each do |t| %>
+      <h2><%= t 'page_not_found.popular_topics' %></h2>
+      <% @top_viewed.each do |t| %>
         <%= link_to t.title, t.relative_url %><br/>
       <% end %>
       <br/>
@@ -17,7 +17,7 @@
         <%= link_to t.title, t.relative_url %><br/>
       <% end %>
       <br/>
-      <a href="/new" class="btn"><%= t 'page_not_found.see_more' %>&hellip;</a>
+      <a href="/latest" class="btn"><%= t 'page_not_found.see_more' %>&hellip;</a>
     </td>
   </tr>
 </table>

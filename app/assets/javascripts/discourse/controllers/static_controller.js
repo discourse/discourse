@@ -20,7 +20,7 @@ Discourse.StaticController = Discourse.Controller.extend({
       text = text[1];
       this.set('content', text);
     } else {
-      return Discourse.ajax(Discourse.getURL(path + ".json")).then(function (result) {
+      return Discourse.ajax(path + ".json", {dataType: 'html'}).then(function (result) {
         staticController.set('content', result);
       });
     }
@@ -28,7 +28,7 @@ Discourse.StaticController = Discourse.Controller.extend({
 });
 
 Discourse.StaticController.reopenClass({
-  pages: ['faq', 'tos', 'privacy']
+  pages: ['faq', 'tos', 'privacy', 'login']
 });
 
 

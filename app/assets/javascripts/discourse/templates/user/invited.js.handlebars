@@ -1,10 +1,10 @@
 <div id='invited-users'>
-  {{#if content.empty}}
+  {{#if empty}}
     <div id='no-invites' class='boxed white'>
-      {{i18n user.invited.none username="content.user.username"}}
+      {{i18n user.invited.none username="user.username"}}
     </div>
   {{else}}
-    {{#if content.redeemed}}
+    {{#if redeemed}}
       <div class='invites'>
         <h2>{{i18n user.invited.redeemed}}</h2>
         <div class='boxed white'>
@@ -18,7 +18,7 @@
               <th>{{i18n user.invited.time_read}}</th>
               <th>{{i18n user.invited.days_visited}}</th>
             </tr>
-            {{#each content.redeemed}}
+            {{#each redeemed}}
               <tr>
                 <td>
                   <a href="{{unbound user.path}}">{{avatar user imageSize="tiny"}}</a>
@@ -30,7 +30,7 @@
                 <td>{{number user.posts_read_count}}</td>
                 <td>{{{unbound user.time_read}}}</td>
                 <td><span title="{{i18n user.invited.days_visited}}">{{{unbound user.days_visited}}}</span>
-                    / 
+                    /
                     <span title="{{i18n user.invited.account_age_days}}">{{{unbound user.days_since_created}}}</span></td>
               </tr>
             {{/each}}
@@ -39,7 +39,7 @@
       </div>
     {{/if}}
 
-    {{#if content.pending}}
+    {{#if pending}}
       <div class='invites'>
         <h2>{{i18n user.invited.pending}}</h2>
         <div class='boxed white'>
@@ -47,9 +47,9 @@
             <tr>
               <th style='width: 60%'>{{i18n user.email.title}}</th>
               <th style='width: 20%'>{{i18n created}}</th>
-              <th>&nbsp;</th>              
+              <th>&nbsp;</th>
             </tr>
-            {{#each content.pending}}
+            {{#each pending}}
               <tr>
                 <td>{{email}}</td>
                 <td>{{date created_at}}</td>

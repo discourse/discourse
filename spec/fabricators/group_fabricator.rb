@@ -1,3 +1,3 @@
 Fabricator(:group) do
-  name 'my group'
+  name 'my_group'
 end

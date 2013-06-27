@@ -1,0 +1,5 @@
+pt:
+	site_settings:
+    enable_imgur: "permitir imgur api para uploading, não guardar ficheiros localmente"
+    imgur_api_key: "chave para imgur.com api - necessária para image upload"
+    imgur_endpoint: "end point para uploading imgur.com images"

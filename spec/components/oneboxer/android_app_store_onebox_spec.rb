@@ -11,7 +11,7 @@ describe Oneboxer::AndroidAppStoreOnebox do
   end
 
   it "generates the expected onebox for Android App Store" do
-    @o.onebox.should == expected_android_app_store_result
+    @o.onebox.should match_html expected_android_app_store_result
   end
 
 private

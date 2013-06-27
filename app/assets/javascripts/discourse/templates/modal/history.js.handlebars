@@ -1,0 +1,44 @@
+<div class="modal-body">
+
+  {{#if loading}}
+    {{i18n loading}}
+  {{else}}
+    {{#if versions}}
+      <div class='span8'>
+
+        {{view Ember.Select
+          contentBinding="versions"
+          optionLabelPath="content.description"
+          optionValuePath="content.number"
+          selectionBinding="versionLeft"}}
+
+        <div class='contents'>
+          {{#if postLeft}}
+            {{{postLeft.cooked}}}
+          {{else}}
+            <div class='history-loading'>{{i18n loading}}</div>
+          {{/if}}
+        </div>
+
+      </div>
+
+      <div class='span8 offset1'>
+        {{view Ember.Select
+          contentBinding="versions"
+          optionLabelPath="content.description"
+          optionValuePath="content.number"
+          selectionBinding="versionRight"}}
+
+        <div class='contents'>
+          {{#if diff}}
+            {{{diff}}}
+          {{else}}
+            <div class='history-loading'>{{i18n loading}}</div>
+          {{/if}}
+        </div>
+
+      </div>
+    {{/if}}
+  {{/if}}
+
+</div>

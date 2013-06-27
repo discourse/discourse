@@ -59,12 +59,12 @@ Discourse.debouncePromise = function(func, wait) {
       timeout = Em.run.later(function () {
         timeout = null;
         func.apply(context, args).then(function (y) {
-          promise.resolve(y)
+          promise.resolve(y);
         });
       }, wait);
     }
 
     return promise;
-  }
+  };
 };
 

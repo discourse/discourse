@@ -4,6 +4,8 @@
   <li><a class="active" href="<%=privacy_path%>">Privacy</a></li>
 </ul>
 
+<%= markdown_content(:privacy_policy) do %>
+
 <div id="collect"></div>
 <h2><a href="#collect">What information do we collect?</a></h2>
 <p>
@@ -11,7 +13,11 @@ We collect information from you when you register on our site and gather data wh
 </p>
 
 <p>
-  When participating on our site, you may be asked to enter your: name, age and or e-mail address. You may, however, visit our site anonymously.
+  When registering on our site, you may be asked to enter your name and e-mail address. You may, however, visit our site without registering. Your e-mail address will be verified by an email containing a unique link. If that link is visited, we know that you control the e-mail address.
+</p>
+
+<p>
+  When registered and posting, we record the IP address that the post originated from. We also may retain server logs which include the IP address of every request to our server.
 </p>
 
 <div id="use"></div>
@@ -27,14 +33,26 @@ We collect information from you when you register on our site and gather data wh
 <div id="protect"></div>
 <h2><a href="#use">How do we protect your information?</a></h2>
 <p>
-  We implement a variety of security measures to maintain the safety of your personal
-information when you enter, submit, or access your personal information.
+  We implement a variety of security measures to maintain the safety of your personal information when you enter, submit, or access your personal information.
 </p>
+
+<div id="data-retention"></div>
+<h2><a href="#data-retention">What is your data retention policy?</a></h2>
+
+<p>
+  We will make a good faith effort to:
+</p>
+<ul>
+  <li>Retain server logs containing the IP address of all requests to this server no more than 90 days.</li>
+  <li>Retain the IP addresses associated with registered users and their posts no more than 5 years.</li>
+</ul>
+</p>
+
 
 <div id="cookies"></div>
 <h2><a href="#cookies">Do we use cookies?</a></h2>
 <p>
-  Yes. Cookies are small files that a site or its service provider transfers to your computer's hard drive through your Web browser (if you allow) that enables the sites or service providers systems to recognize your browser and capture and remember certain information.
+  Yes. Cookies are small files that a site or its service provider transfers to your computer's hard drive through your Web browser (if you allow). These cookies enable the site to recognize your browser and, if you have a registered account, associate it with your registered account.
 </p>
 
 <p>
@@ -56,7 +74,7 @@ We do not sell, trade, or otherwise transfer to outside parties your personally 
 <div id="coppa"></div>
 <h2><a href="#coppa">Children's Online Privacy Protection Act Compliance</a></h2>
 <p>
-We are in compliance with the requirements of COPPA (<a href="http://en.wikipedia.org/wiki/Children's_Online_Privacy_Protection_Act">Children's Online Privacy Protection Act</a>), we do not collect any information from anyone under 13 years of age. Our site, products and services are all directed to people who are at least 13 years old or older.
+Our site, products and services are all directed to people who are at least 13 years old or older. If this server is in the USA, and you are under the age of 13, per the requirements of COPPA (<a href="http://en.wikipedia.org/wiki/Children's_Online_Privacy_Protection_Act">Children's Online Privacy Protection Act</a>), do not use this site.
 </p>
 
 <div id="online"></div>
@@ -76,3 +94,9 @@ By using our site, you consent to our web site privacy policy.
 <p>
 If we decide to change our privacy policy, we will post those changes on this page.
 </p>
+
+<p>
+  This document is CC-BY-SA. It was last updated May 31, 2013.
+</p>
+
+<% end %>

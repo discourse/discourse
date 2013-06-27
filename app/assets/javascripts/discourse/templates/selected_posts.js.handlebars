@@ -1,11 +1,22 @@
-<p>{{countI18n topic.multi_select.description countBinding="controller.selectedCount"}}</p>
+<p>{{countI18n topic.multi_select.description countBinding="selectedPostsCount"}}</p>
+
+{{#if canSelectAll}}
+  <p><a href='#' {{action selectAll}}>select all</a></p>
+{{/if}}
+
+{{#if canDeselectAll}}
+  <p><a href='#' {{action deselectAll}}>deselect all</a></p>
+{{/if}}
 
 {{#if canDeleteSelected}}
   <button class='btn' {{action deleteSelected}}><i class='icon icon-trash'></i> {{i18n topic.multi_select.delete}}</button>
 {{/if}}
 
-{{#if canMoveSelected}}
-  <button class='btn' {{action moveSelected}}><i class='icon icon-move'></i> {{i18n topic.multi_select.move}}</button>
-{{/if}}  
+{{#if canSplitTopic}}
+  <button class='btn' {{action splitTopic}}><i class='icon icon-signout'></i> {{i18n topic.split_topic.action}}</button>
+{{/if}}
+{{#if canMergeTopic}}
+  <button class='btn' {{action mergeTopic}}><i class='icon icon-signout'></i> {{i18n topic.merge_topic.action}}</button>
+{{/if}}
 
 <p class='cancel'><a href='#' {{action toggleMultiSelect}}>{{i18n topic.multi_select.cancel}}</a></p>

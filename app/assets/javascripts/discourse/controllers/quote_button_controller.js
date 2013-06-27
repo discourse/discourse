@@ -31,7 +31,8 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
   **/
   selectText: function(postId) {
     // anonymous users cannot "quote-reply"
-    if (!Discourse.get('currentUser')) return;
+    if (!Discourse.User.current()) return;
+
     // don't display the "quote-reply" button if we can't create a post
     if (!this.get('controllers.topic.content.can_create_post')) return;
 
@@ -84,7 +85,8 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
     var markerOffset = $(markerElement).offset(),
         $quoteButton = $('.quote-button');
 
-    Em.run.next(function(){
+
+    Em.run.schedule('afterRender', function() {
       $quoteButton.offset({
         top: markerOffset.top - $quoteButton.outerHeight() - 5,
         left: markerOffset.left

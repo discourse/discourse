@@ -4,7 +4,7 @@ module RailsMultisite
 
     def self.establish_connection(opts)
       if opts[:db] == "default" && (!defined?(@@default_spec) || !@@default_spec)
-        ActiveRecord::Base.establish_connection
+        # don't do anything .. handled implicitly
       else
         spec = connection_spec(opts) || @@default_spec
         handler = nil
