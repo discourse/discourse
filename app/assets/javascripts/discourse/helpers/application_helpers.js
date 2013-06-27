@@ -257,7 +257,7 @@ Ember.Handlebars.registerHelper('float', function(property, options) {
   @for Handlebars
 **/
 Handlebars.registerHelper('number', function(property, options) {
-  var n, orig, title;
+  var n, orig, title, result;
   orig = parseInt(Ember.Handlebars.get(this, property, options), 10);
   if (isNaN(orig)) {
     orig = 0;
@@ -270,10 +270,18 @@ Handlebars.registerHelper('number', function(property, options) {
   }
   // Round off the thousands to one decimal place
   n = orig;
-  if (orig > 999) {
+  if (orig > 999 && !options.hash.noTitle) {
     n = (orig / 1000).toFixed(1) + "K";
   }
-  return new Handlebars.SafeString("<span class='number' title='" + title + "'>" + n + "</span>");
+
+  result = "<span class='number'";
+
+  if(n != title) {
+    result += " title='" + title + "'";
+  }
+
+  result += ">" + n + "</span>";
+  return new Handlebars.SafeString(result);
 });
 
 /**
