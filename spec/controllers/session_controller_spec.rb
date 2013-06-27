@@ -23,6 +23,15 @@ describe SessionController do
         end
       end
 
+      describe 'banned user' do
+        it 'should return an error' do
+          User.any_instance.stubs(:is_banned?).returns(true)
+          User.any_instance.stubs(:banned_till).returns(2.days.from_now)
+          xhr :post, :create, login: user.username, password: 'myawesomepassword'
+          ::JSON.parse(response.body)['error'].should be_present
+        end
+      end
+
       describe 'success by username' do
         before do
           xhr :post, :create, login: user.username, password: 'myawesomepassword'
