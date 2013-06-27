@@ -15,6 +15,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:company_short_name, 'Unconfigured Forum')
   setting(:company_domain, 'www.example.com')
   setting(:tos_url, '')
+  client_setting(:faq_url, '')
   setting(:privacy_policy_url, '')
   setting(:api_key, '')
   client_setting(:traditional_markdown_linebreaks, false)
