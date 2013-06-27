@@ -104,7 +104,7 @@ Discourse.FlaggedPost.reopenClass({
     Discourse.ajax('/admin/flags/' + filter + '.json').then(function(data) {
       var userLookup = {};
       _.each(data.users,function(user) {
-        userLookup[user.id] = Discourse.User.create(user);
+        userLookup[user.id] = Discourse.AdminUser.create(user);
       });
       _.each(data.posts,function(post) {
         var f = Discourse.FlaggedPost.create(post);
