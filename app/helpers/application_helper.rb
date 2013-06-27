@@ -81,10 +81,6 @@ module ApplicationHelper
     result
   end
 
-  def faq_path
-    return "#{Discourse::base_uri}/faq"
-  end
-
   def login_path
     return "#{Discourse::base_uri}/login"
   end
