@@ -5,7 +5,7 @@ class PostActionType < ActiveRecord::Base
 
   class << self
     def ordered
-      order('position asc').all
+      order('position asc')
     end
 
     def types

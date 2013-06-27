@@ -10,7 +10,7 @@ USERNAME_ROUTE_FORMAT = /[A-Za-z0-9\_]+/ unless defined? USERNAME_ROUTE_FORMAT
 
 Discourse::Application.routes.draw do
 
-  get "/404", to: "exceptions#not_found"
+  match "/404", to: "exceptions#not_found", via: [:get, :post]
 
   mount Sidekiq::Web => '/sidekiq', constraints: AdminConstraint.new
 
@@ -73,7 +73,7 @@ Discourse::Application.routes.draw do
     end
   end
 
-  # get 'email_preferences' => 'email#preferences_redirect'
+  get 'email_preferences' => 'email#preferences_redirect', :as => 'email_preferences_redirect'
   get 'email/unsubscribe/:key' => 'email#unsubscribe', as: 'email_unsubscribe'
   post 'email/resubscribe/:key' => 'email#resubscribe', as: 'email_resubscribe'
 
@@ -136,8 +136,8 @@ Discourse::Application.routes.draw do
   resources :notifications
   resources :categories
 
-  get "/auth/:provider/callback", to: "users/omniauth_callbacks#complete"
-  get "/auth/failure", to: "users/omniauth_callbacks#failure"
+  match "/auth/:provider/callback", to: "users/omniauth_callbacks#complete", via: [:get, :post]
+  match "/auth/failure", to: "users/omniauth_callbacks#failure", via: [:get, :post]
 
   resources :clicks do
     collection do
@@ -227,10 +227,10 @@ Discourse::Application.routes.draw do
 
   get 'robots.txt' => 'robots_txt#index'
 
-  # [:latest, :hot, :unread, :new, :favorited, :read, :posted].each do |filter|
-  #   root to: "list##{filter}", constraints: HomePageConstraint.new("#{filter}")
-  # end
+  [:latest, :hot, :unread, :new, :favorited, :read, :posted].each do |filter|
+    root "list##{filter}", constraints: HomePageConstraint.new("#{filter}"), :as => "list_#{filter}"
+  end
   # special case for categories
-  root to: "categories#index", constraints: HomePageConstraint.new("categories")
+  root "categories#index", constraints: HomePageConstraint.new("categories"), :as => "categories_index"
 
 end

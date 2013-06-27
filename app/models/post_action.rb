@@ -63,11 +63,11 @@ class PostAction < ActiveRecord::Base
       moderator_id == -1 ? PostActionType.auto_action_flag_types.values : PostActionType.flag_types.values
     end
 
-    PostAction.update_all({ deleted_at: Time.zone.now, deleted_by: moderator_id }, { post_id: post.id, post_action_type_id: actions })
+    PostAction.where({post_id: post.id, post_action_type_id: actions}).update_all({ deleted_at: Time.zone.now, deleted_by: moderator_id })
 
     f = actions.map{|t| ["#{PostActionType.types[t]}_count", 0]}
 
-    Post.with_deleted.update_all(Hash[*f.flatten], id: post.id)
+    Post.where(id: post.id).with_deleted.update_all(Hash[*f.flatten])
 
     update_flagged_posts_count
   end
@@ -172,11 +172,11 @@ class PostAction < ActiveRecord::Base
 
     # Voting also changes the sort_order
     if post_action_type == :vote
-      Post.update_all ["vote_count = vote_count + :delta, sort_order = :max - (vote_count + :delta)", delta: delta, max: Topic.max_sort_order], id: post_id
+      Post.where(id: post_id).update_all ["vote_count = vote_count + :delta, sort_order = :max - (vote_count + :delta)", delta: delta, max: Topic.max_sort_order]
     else
-      Post.update_all ["#{column} = #{column} + ?", delta], id: post_id
+      Post.where(id: post_id).update_all ["#{column} = #{column} + ?", delta]
     end
-    Topic.update_all ["#{column} = #{column} + ?", delta], id: post.topic_id
+    Topic.where(id: post.topic_id).update_all ["#{column} = #{column} + ?", delta]
 
 
     if PostActionType.notify_flag_types.values.include?(post_action_type_id)
