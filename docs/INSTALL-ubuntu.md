@@ -325,6 +325,10 @@ and create an account by logging in normally, then run the commands:
     > me.admin = true
     > me.save
 
+At this point we recommend you start going through the various items in the
+[Discourse Admin Quick Start Guide](https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide)
+to further prepare your site for users.
+
 ## Site localization
 
 Custom assets such as images should be placed somewhere under:
