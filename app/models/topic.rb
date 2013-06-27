@@ -40,8 +40,6 @@ class Topic < ActiveRecord::Base
   validates_presence_of :title
   validate :title, -> { SiteSetting.topic_title_length.include? :length }
 
-  serialize :meta_data, ActiveRecord::Coders::Hstore
-
   before_validation :sanitize_title
   validate :unique_title
 
@@ -82,7 +80,7 @@ class Topic < ActiveRecord::Base
 
   scope :listable_topics, lambda { where('topics.archetype <> ?', [Archetype.private_message]) }
 
-  scope :by_newest, order('topics.created_at desc, topics.id desc')
+  scope :by_newest,  -> { order('topics.created_at desc, topics.id desc') }
 
   # Helps us limit how many favorites can be made in a day
   class FavoriteLimiter < RateLimiter
