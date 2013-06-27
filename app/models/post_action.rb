@@ -327,13 +327,17 @@ class PostAction < ActiveRecord::Base
     posts = post_ids.map{|id| post_lookup[id]}
 
     post_actions = actions.where(:post_id => post_ids)
-                          .select('post_actions.id,
-                                   post_actions.user_id,
-                                   post_action_type_id,
-                                   post_actions.created_at,
-                                   post_actions.post_id,
-                                   post_actions.message')
-                          .to_a
+    # TODO this is so far from optimal, it should not be
+    # selecting all the columns but the includes stops working
+    # with the code below
+    #
+                          # .select('post_actions.id,
+                          #          post_actions.user_id,
+                          #          post_action_type_id,
+                          #          post_actions.created_at,
+                          #          post_actions.post_id,
+                          #          post_actions.message')
+                          # .to_a
 
     post_actions.each do |pa|
       post = post_lookup[pa.post_id]

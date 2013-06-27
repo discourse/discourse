@@ -15,9 +15,15 @@ describe PostAction do
   describe "flagged_posts_report" do
     it "operates correctly" do
       PostAction.act(codinghorror, post, PostActionType.types[:spam])
+      mod_message = PostAction.act(Fabricate(:user), post, PostActionType.types[:notify_moderators], message: "this post really sucks a lot I hate it")
+
       posts, users = PostAction.flagged_posts_report("")
       posts.count.should == 1
-      users.count.should == 2
+      first = posts.first
+
+      users.count.should == 3
+      first[:post_actions].count.should == 2
+      first[:post_actions].first[:permalink].should == mod_message.related_post.topic.url
     end
   end
 
