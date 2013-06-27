@@ -584,6 +584,7 @@ describe User do
   end
 
   describe "previous_visit_at" do
+
     let(:user) { Fabricate(:user) }
 
     before do
@@ -595,11 +596,15 @@ describe User do
     end
 
     describe "first time" do
-      let!(:first_visit_date) { DateTime.now }
+      let!(:first_visit_date) { Time.zone.now }
 
       before do
-        DateTime.stubs(:now).returns(first_visit_date)
+        Timecop.freeze(first_visit_date)
         user.update_last_seen!
+      end
+
+      after do
+        Timecop.return
       end
 
       it "should have no value" do
@@ -609,8 +614,12 @@ describe User do
       describe "another call right after" do
         before do
           # A different time, to make sure it doesn't change
-          DateTime.stubs(:now).returns(10.minutes.from_now)
+          Timecop.freeze(10.minutes.from_now)
           user.update_last_seen!
+        end
+
+        after do
+          Timecop.return
         end
 
         it "still has no value" do
@@ -622,24 +631,33 @@ describe User do
         let!(:second_visit_date) { 2.hours.from_now }
 
         before do
-          DateTime.stubs(:now).returns(second_visit_date)
+          Timecop.freeze(second_visit_date)
           user.update_last_seen!
         end
 
+        after do
+          Timecop.return
+        end
+
         it "should have the previous visit value" do
-          user.previous_visit_at.should == first_visit_date
+          user.reload
+          user.previous_visit_at.should be_within_one_second_of(first_visit_date)
         end
 
         describe "third visit" do
           let!(:third_visit_date) { 5.hours.from_now }
 
           before do
-            DateTime.stubs(:now).returns(third_visit_date)
+            Timecop.freeze(third_visit_date)
             user.update_last_seen!
           end
 
+          after do
+            Timecop.return
+          end
+
           it "should have the second visit value" do
-            user.previous_visit_at.should == second_visit_date
+            user.previous_visit_at.should be_within_one_second_of(second_visit_date)
           end
 
         end
@@ -662,15 +680,19 @@ describe User do
     end
 
     describe 'with no previous values' do
-      let!(:date) { DateTime.now }
+      let!(:date) { Time.zone.now }
 
       before do
-        DateTime.stubs(:now).returns(date)
+        Timecop.freeze(date)
         user.update_last_seen!
       end
 
+      after do
+        Timecop.return
+      end
+
       it "updates last_seen_at" do
-        user.last_seen_at.should == date
+        user.last_seen_at.should be_within_one_second_of(date)
       end
 
       it "should have 0 for days_visited" do
@@ -685,10 +707,14 @@ describe User do
       context "called twice" do
 
         before do
-          DateTime.stubs(:now).returns(date)
+          Timecop.freeze(date)
           user.update_last_seen!
           user.update_last_seen!
           user.reload
+        end
+
+        after do
+          Timecop.return
         end
 
         it "doesn't increase days_visited twice" do
@@ -701,8 +727,12 @@ describe User do
         let!(:future_date) { 3.days.from_now }
 
         before do
-          DateTime.stubs(:now).returns(future_date)
+          Timecop.freeze(future_date)
           user.update_last_seen!
+        end
+
+        after do
+          Timecop.return
         end
 
         it "should log a second visited_at record when we log an update later" do

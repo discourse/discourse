@@ -283,7 +283,7 @@ class User < ActiveRecord::Base
   end
 
   def update_last_seen!
-    now = DateTime.now
+    now = Time.zone.now
     now_date = now.to_date
     # Only update last seen once every minute
     redis_key = "user:#{self.id}:#{now_date.to_s}"
