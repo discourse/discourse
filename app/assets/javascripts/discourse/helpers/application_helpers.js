@@ -276,7 +276,7 @@ Handlebars.registerHelper('number', function(property, options) {
 
   result = "<span class='number'";
 
-  if(n != title) {
+  if(n !== title) {
     result += " title='" + title + "'";
   }
 
