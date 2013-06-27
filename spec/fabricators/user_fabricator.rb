@@ -29,23 +29,16 @@ Fabricator(:walter_white, from: :user) do
 end
 
 Fabricator(:moderator, from: :user) do
-  name 'A. Moderator'
-  username 'moderator'
-  email 'moderator@discourse.org'
+  name { sequence(:name) {|i| "A#{i} Moderator"} }
+  username { sequence(:username) {|i| "moderator#{i}"} }
+  email { sequence(:email) {|i| "moderator#{i}@discourse.org"} }
   moderator true
 end
 
 Fabricator(:admin, from: :user) do
   name 'Anne Admin'
-  username 'anne'
-  email 'anne@discourse.org'
-  admin true
-end
-
-Fabricator(:another_admin, from: :user) do
-  name 'Anne Admin the 2nd'
-  username 'anne2'
-  email 'anne2@discourse.org'
+  username { sequence(:username) {|i| "anne#{i}"} }
+  email { sequence(:email) {|i| "anne#{i}@discourse.org"} }
   admin true
 end
 

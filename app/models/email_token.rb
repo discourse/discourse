@@ -11,7 +11,7 @@ class EmailToken < ActiveRecord::Base
 
   after_create do
     # Expire the previous tokens
-    EmailToken.update_all 'expired = true', ['user_id = ? and id != ?', self.user_id, self.id]
+    EmailToken.where(['user_id = ? and id != ?', self.user_id, self.id]).update_all 'expired = true'
   end
 
   def self.token_length
@@ -58,3 +58,22 @@ class EmailToken < ActiveRecord::Base
     # If the user's email is already taken, just return nil (failure)
   end
 end
+
+# == Schema Information
+#
+# Table name: email_tokens
+#
+#  id         :integer          not null, primary key
+#  user_id    :integer          not null
+#  email      :string(255)      not null
+#  token      :string(255)      not null
+#  confirmed  :boolean          default(FALSE), not null
+#  expired    :boolean          default(FALSE), not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+# Indexes
+#
+#  index_email_tokens_on_token  (token) UNIQUE
+#
+

@@ -1,4 +1,4 @@
-require_dependency 'email_sender'
+require_dependency 'email/sender'
 
 module Jobs
 
@@ -10,7 +10,7 @@ module Jobs
       raise Discourse::InvalidParameters.new(:to_address) unless args[:to_address].present?
 
       message = TestMailer.send_test(args[:to_address])
-      EmailSender.new(message, :test_message).send
+      Email::Sender.new(message, :test_message).send
     end
 
   end

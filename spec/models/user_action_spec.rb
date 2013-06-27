@@ -2,6 +2,10 @@ require 'spec_helper'
 
 describe UserAction do
 
+  before do
+    ActiveRecord::Base.observers.enable :all
+  end
+
   it { should validate_presence_of :action_type }
   it { should validate_presence_of :user_id }
 
@@ -85,11 +89,6 @@ describe UserAction do
       stream_count(u).should == 1
 
     end
-  end
-
-  it 'calls the message bus observer' do
-    MessageBusObserver.any_instance.expects(:after_create_user_action).with(instance_of(UserAction))
-    Fabricate(:user_action)
   end
 
   describe 'when user likes' do
@@ -205,6 +204,57 @@ describe UserAction do
 
       PostAction.remove_act(@user, @post, PostActionType.types[:bookmark])
       @user.user_actions.where(action_type: UserAction::BOOKMARK).first.should be_nil
+    end
+  end
+
+
+  describe 'private messages' do
+
+    let(:user) do
+      Fabricate(:user)
+    end
+
+    let(:target_user) do
+      Fabricate(:user)
+    end
+
+    let(:private_message) do
+      PostCreator.create( user,
+                          raw: 'this is a private message',
+                          title: 'this is the pm title',
+                          target_usernames: target_user.username,
+                          archetype: Archetype::private_message
+                        )
+    end
+
+    let!(:response) do
+      PostCreator.create(user, raw: 'oops I forgot to mention this', topic_id: private_message.topic_id)
+    end
+
+    let!(:private_message2) do
+      PostCreator.create( target_user,
+                          raw: 'this is a private message',
+                          title: 'this is the pm title',
+                          target_usernames: user.username,
+                          archetype: Archetype::private_message
+                        )
+    end
+
+    it 'should collapse the inbox correctly' do
+
+      stream = UserAction.private_message_stream(UserAction::GOT_PRIVATE_MESSAGE, user_id: target_user.id, guardian: Guardian.new(target_user))
+      # inbox should collapse this initial and reply message into one item
+      stream.count.should == 1
+
+
+      # outbox should also collapse
+      stream = UserAction.private_message_stream(UserAction::NEW_PRIVATE_MESSAGE, user_id: user.id, guardian: Guardian.new(user))
+      stream.count.should == 1
+
+      # anon should see nothing
+      stream = UserAction.private_message_stream(UserAction::NEW_PRIVATE_MESSAGE, user_id: user.id, guardian: Guardian.new(nil))
+      stream.count.should == 0
+
     end
   end
 end

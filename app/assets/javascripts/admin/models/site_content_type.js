@@ -11,7 +11,7 @@ Discourse.SiteContentType = Discourse.Model.extend({});
 Discourse.SiteContentType.reopenClass({
   findAll: function() {
     var contentTypes = Em.A();
-    Discourse.ajax(Discourse.getURL("/admin/site_content_types")).then(function(data) {
+    Discourse.ajax("/admin/site_content_types").then(function(data) {
       data.forEach(function (ct) {
         contentTypes.pushObject(Discourse.SiteContentType.create(ct));
       });

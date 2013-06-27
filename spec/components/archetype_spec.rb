@@ -32,16 +32,10 @@ describe Archetype do
 
   context 'register an archetype' do
 
-    before do
+    it 'has one more element' do
       @list = Archetype.list.dup
       Archetype.register('glados')
-    end
-
-    it 'has one more element' do
       Archetype.list.size.should == @list.size + 1
-    end
-
-    it 'has a glados element' do
       Archetype.list.find {|a| a.id == 'glados'}.should be_present
     end
 

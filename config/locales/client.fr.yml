@@ -5,9 +5,68 @@
 # Pour toute question contactez
 # <Maxime QUANDALLE> "maxime@quandalle.com"
 #
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
+
 
 fr:
   js:
+    dates:
+      tiny:
+        half_a_minute: "< 1m"
+        less_than_x_seconds:
+          one:   "< 1s"
+          other: "< %{count}s"
+        x_seconds:
+          one:   "1s"
+          other: "%{count}s"
+        less_than_x_minutes:
+          one:   "< 1m"
+          other: "< %{count}m"
+        x_minutes:
+          one:   "1m"
+          other: "%{count}m"
+        about_x_hours:
+          one:   "1h"
+          other: "%{count}h"
+        x_days:
+          one:   "1d"
+          other: "%{count}d"
+        about_x_months:
+          one:   "1mois"
+          other: "%{count}mois"
+        x_months:
+          one:   "1mois"
+          other: "%{count}mois"
+        about_x_years:
+          one:   "1an"
+          other: "%{count}an"
+        over_x_years:
+          one:   "> 1an"
+          other: "> %{count}an"
+        almost_x_years:
+          one:   "1an"
+          other: "%{count}an"
+      medium:
+        x_minutes:
+          one: "1 min"
+          other: "%{count} mins"
+        x_hours:
+          one: "1 hour"
+          other: "%{count} heures"
+        x_days:
+          one: "1 day"
+          other: "%{count} jours"
+      medium_with_ago:
+        x_minutes:
+          one: "Iy a 1 min"
+          other: "Il y a %{count} minutes"
+        x_hours:
+          one: "Il y a 1 heure"
+          other: "Il y a %{count} heures"
+        x_days:
+          one: "Il y a 1 jour"
+          other: "Il y a %{count} jours"
     share:
       topic: 'partager un lien vers cette discussion'
       post: 'partager un lien vers ce message'
@@ -36,6 +95,19 @@ fr:
     now: "à l'instant"
     read_more: "lire la suite"
 
+    in_n_seconds:
+      one: "dans 1 seconde"
+      other: "dans {{count}} secondes"
+    in_n_minutes:
+      one: "dans 1 minute"
+      other: "dans {{count}} minutes"
+    in_n_hours:
+      one: "dans 1 heure"
+      other: "dans {{count}} heures"
+    in_n_days:
+      one: "dans 1 jour"
+      other: "dans {{count}} jours"
+
     suggested_topics:
       title: "discussions proposées"
 
@@ -53,6 +125,12 @@ fr:
     save: "Sauvegarder les changements"
     saving: "Sauvegarde en cours..."
     saved: "Sauvegardé !"
+
+    choose_topic:
+      none_found: "Aucune discussion trouvée."
+      title:
+        search: "Rechechez une discussion par son nom, url ou id :"
+        placeholder: "renseignez ici le titre de la discussion"
 
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> à démarré <a href='{{topicUrl}}'>la discussion</a>"
@@ -145,7 +223,7 @@ fr:
         global_match: "L'adresse email correspond au pseudo enregistré."
         global_mismatch: "Déjà enregistré. Essayez {{suggestion}} ?"
         not_available: "Pas disponible. Essayez {{suggestion}} ?"
-        too_short: Votre pseudo est trop court."
+        too_short: "Votre pseudo est trop court."
         too_long: "Votre pseudo est trop long."
         checking: "Vérification de la disponibilité de votre pseudo..."
         enter_email: "Pseudo trouvé. Entrez l'adresse email correspondante."
@@ -298,6 +376,9 @@ fr:
       facebook:
         title: "via Facebook"
         message: "Authentification via Facebook (assurez-vous que les popups ne soient pas bloquées)"
+      cas:
+        title: "via CAS"
+        message: "Authentification via CAS (assurez-vous que les popups ne soient pas bloquées)"
       yahoo:
         title: "via Yahoo"
         message: "Authentification via Yahoo (assurez-vous que les popups ne soient pas bloquées)"
@@ -319,6 +400,14 @@ fr:
       min_length:
         need_more_for_title: "{{n}} caractères restant pour le titre"
         need_more_for_reply: "{{n}} caractères restant pour le message"
+
+      error:
+        title_missing: "Le titre est obligatoire."
+        title_too_short: "Le titre doit avoir au moins {{min}} caractères."
+        title_too_long: "Le titre ne doit pas dépasser les {{max}} caractères."
+        post_missing: "Le message ne peut être vide."
+        post_length: "Le mesasge doit avoir au moins {{min}} caractères."
+        category_missing: "Vous devez choisir une catégorie."
 
       save_edit: "Sauvegarder la modification"
       reply_original: "Répondre à la discussion initiale"
@@ -356,6 +445,10 @@ fr:
       redo_title: "Refaire"
       help: "Aide Markdown"
       toggler: "Afficher ou cacher le composer"
+
+      admin_options_title: "Paramètres optionels pour cette discussion"
+      auto_close_label: "Fermer automatiquement cette discussion après :"
+      auto_close_units: "jours"
 
       users_placeholder: "Ajouter un utilisateur"
       title_placeholder: "Choisissez un titre ici. Sur quoi porte cette discussion en quelques mots ?"
@@ -401,6 +494,10 @@ fr:
       placeholder: "saisir votre requête ici"
       no_results: "Aucun résultat."
       searching: "Recherche en cours ..."
+
+      prefer:
+        user: "La recherche priorisera les résultats de @{{username}}"
+        category: "La recherche priorisera les résultats de la catégorie : {{category}}"
 
     site_map: "voir une autre liste des discussions ou une catégorie"
     go_back: 'retour'
@@ -476,6 +573,12 @@ fr:
       jump_reply_down: "allez à des réponses ultérieures"
       deleted: "cette discussion à été supprimée"
 
+      auto_close_notice: "Cette discussion sera automatiquement fermée %{timeLeft}."
+      auto_close_title: 'Paramètres de fermeture automatique'
+      auto_close_save: "Sauvegarder"
+      auto_close_cancel: "Annuler"
+      auto_close_remove: "Ne pas fermer automatiquement cette discussion"
+
       progress:
         title: "progession dans la discussion"
         jump_top: "aller au premier message"
@@ -513,6 +616,7 @@ fr:
         delete: "Supprimer la discussion"
         open: "Ouvrir la discussion"
         close: "Fermer la discussion"
+        auto_close: "Fermeture automatique"
         unpin: "Dé-épingler la discussion"
         pin: "Épingler la discussion"
         unarchive: "Dé-archiver la discussion"
@@ -574,20 +678,28 @@ fr:
           other: "les plus populaires"
         cancel: "Ré-afficher l'ensemble des messages de cette discussion."
 
-      move_selected:
-        title: "Déplacer les messages sélectionnés"
-        topic_name: "Nom de la nouvelle conversation"
-        error: "Désolé, nous n'avons pas réussi à déplacer ces messages."
+      split_topic:
+        title: "Scinder la discussion"
+        action: "scinder la discussion"
+        topic_name: "Nom de la nouvelle discussion :"
+        error: "Il y a eu une erreur lors du scindage de la discussion."
         instructions:
-          one: "Vous êtes sur le point de créer une nouvelle discussion à partir du message sélectionné."
-          other: "Vous êtes sur le point de créer une nouvelle discussion à partir des <b>{{count}}</b> messages sélectionnés."
+          one: "Vous êtes sur le point de créer une nouvelle discussion avec le message que vous avez sélectionné."
+          other: "Vous êtes sur le point de créer une nouvelle discussion avec les <b>{{count}}</b> messages que vous avez sélectionné."
+
+      merge_topic:
+        title: "Fusionner la discussion"
+        action: "fusionner la discussion"
+        error: "Il y a eu une erreur lors de la fusion."
+        instructions:
+          one: "Merci de sélectionner la discussion dans laquelle vous souhaitez déplacer le message que vous avez sélectionné."
+          other: "Merci de sélectionner la discussion dans laquelle vous souhaitez déplacer les <b>{{count}}</b> messages que vous avez sélectionné."
 
       multi_select:
         select: 'sélectioner'
         selected: '({{count}}) sélectionés'
         delete: "supprimer la sélection"
         cancel: "annuler la sélection"
-        move: "déplacer la sélection"
         description:
           one: "vous avez sélectionné <b>1</b> message."
           other: "Vous avez sélectionné <b>{{count}}</b> messages."
@@ -630,7 +742,6 @@ fr:
         delete: "Supprimer ce message"
         undelete: "Annuler la suppression de ce message"
         share: "Partager un lien vers ce message"
-        bookmark: "Ajouter ce message à ma page utilisateur"
         more: "Plus"
 
       actions:
@@ -740,6 +851,8 @@ fr:
       edit_long: "Editer la catégorie"
       edit_uncategorized: "Editer les non catégoriser"
       view: 'Voir les discussions dans cette catégorie'
+      general: 'Général'
+      settings: 'Paramètres'
       delete: 'Supprimer la catégorie'
       create: 'Créer la catégorie'
       save: 'Enregistrer la catégorie'
@@ -761,6 +874,11 @@ fr:
       change_in_category_topic: "visitez les discussions de cette catégorie pour en éditer la description"
       hotness: "Buzz"
       already_used: "Cette couleur est déjà utilisée par une autre catégorie"
+      is_secure: "Catégorie sécurisée ?"
+      add_group: "Ajouter un groupe"
+      security: "Sécurité"
+      allowed_groups: "Groupes permis :"
+      auto_close_label: "Fermer automatiquement après :"
 
     flagging:
       title: 'Pourquoi voulez-vous signaler ce message ?'
@@ -869,6 +987,7 @@ fr:
         no_problems: "Aucun problème n'à été trouvé."
         moderators: "Modérateurs :"
         admins: "Administateurs :"
+        blocked : "Bloqués:"
         private_messages_short: "MPs"
         private_messages_title: "Messages Privés"
 
@@ -898,14 +1017,25 @@ fr:
         delete_title: "supprimer le message (va supprimer la discussion si c'est le premier message)"
         flagged_by: "Signalé par"
         error: "Quelque chose s'est mal passé"
+        view_message: "Voir le message"
 
       groups:
         title: "Groupes"
         edit: "Editer les groupes"
         selector_placeholder: "ajouter des utilisateurs"
+        name_placeholder: "Nom du groupe, sans espace, mêmes règles que pour les noms d'utilisateurs"
+        about: "Modifier votre adhésion et les noms ici"
+        can_not_edit_automatic: "L'adhésion au groupe est défini automatiquement, les administrateurs assignent des rôles et niveaux de confiance"
 
       api:
         title: "API"
+        long_title: "Informations sur l'API"
+        key: "Clé"
+        generate: "Générer une clé pour l'API"
+        regenerate: "Regénérer une clé pour l'API"
+        info_html: "Cette clé vous permettra de créer et mettre à jour des discussions à l'aide d'appels JSON."
+        note_html: "Gardez cette clé <strong>secrête</strong> ! Tous les personnes qui la possède peuvent créer des messages sur ce forum au nom de n'import quel utilisateur."
+
       customize:
         title: "Personnaliser"
         long_title: "Personnalisation du site"
@@ -922,7 +1052,9 @@ fr:
         delete_confirm: "Supprimer cette personnalisation"
         about: "Vous pouvez modifier les feuillets de styles et en-têtes de votre site. Choisissez ou ajouter un style pour commencer l'édition."
 
-      email_logs:
+      email:
+        settings: "Paramètres"
+        logs: "Logs"
         title: "Historique des mails"
         sent_at: "Envoyer à"
         email_type: "Type d'email"
@@ -930,6 +1062,15 @@ fr:
         test_email_address: "Adresse mail à tester"
         send_test: "Envoyer le mail de test"
         sent_test: "Envoyé !"
+        delivery_method: "Moyen d'envoi"
+        preview_digest: "Prévisualisation de l'email"
+        preview_digest_desc: "Ceci est un outil pour prévisualiser le contenu de l'email généré envoyé depuis votre forum."
+        refresh: "Rafraîchir"
+        format: "Format"
+        html: "html"
+        text: "texte"
+        last_seen_user: "Dernière utilisateur vu: :"
+        reply_key: "Répondre"
 
       impersonate:
         title: "Se faire passer pour un utilisateur"
@@ -998,6 +1139,13 @@ fr:
         delete_confirm: "Êtes-vous vraiment sûr de vouloir supprimmer définitivement cet utilisateur de votre site ? Cette action est permanente !"
         deleted: "L'utilisateur a été supprimmé."
         delete_failed: "Il y a eu une erreur lors de la suppression de l'utilisateur. Veuillez vous assurez que tous ses messages sont bien supprimmés."
+        send_activation_email: "Envoyer le mail d'activation"
+        activation_email_sent: "Un email d'activation a été envoyé."
+        send_activation_email_failed: "Il y a eu un problème lors de l'envoie du mail d'activation."
+        activate: "Activer le compte"
+        activate_failed: "Il y a eu un problème lors de l'activation du compte."
+        deactivate_account: "Désactive le compte"
+        deactivate_failed: "Il y a eu un problème lors de la désactivation du compte."
 
       site_content:
         none: "Choisissez un type de contenu afin de commencer l'édition."
@@ -1008,3 +1156,4 @@ fr:
         show_overriden: 'Ne montrer que ce qui a été changé'
         title: 'Paramètres du site'
         reset: 'rétablir par défaut'
+        none: 'rien'

@@ -1,93 +1,24 @@
-module Search
+require_dependency 'search/search_result'
+require_dependency 'search/search_result_type'
+require_dependency 'search/grouped_search_results'
+
+class Search
 
   def self.per_facet
     5
+  end
+
+  # Sometimes we want more topics than are returned due to exclusion of dupes. This is the
+  # factor of extra results we'll ask for.
+  def self.burst_factor
+    3
   end
 
   def self.facets
     %w(topic category user)
   end
 
-  def self.user_query_sql
-    "SELECT 'user' AS type,
-                  u.username_lower AS id,
-                  '/users/' || u.username_lower AS url,
-                  u.username AS title,
-                  u.email,
-                  NULL AS color,
-                  NULL AS text_color
-    FROM users AS u
-    JOIN users_search s on s.id = u.id
-    WHERE s.search_data @@ TO_TSQUERY(:locale, :query)
-    ORDER BY CASE WHEN u.username_lower = lower(:orig) then 0 else 1 end,  last_posted_at desc
-    LIMIT :limit
-    "
-  end
-
-  def self.topic_query_sql
-    "SELECT 'topic' AS type,
-            CAST(ft.id AS VARCHAR),
-            '/t/slug/' || ft.id AS url,
-            ft.title,
-            NULL AS email,
-            NULL AS color,
-            NULL AS text_color
-    FROM topics AS ft
-      JOIN posts AS p ON p.topic_id = ft.id AND p.post_number = 1
-      JOIN posts_search s on s.id = p.id
-    WHERE s.search_data @@ TO_TSQUERY(:locale, :query)
-      AND ft.deleted_at IS NULL
-      AND ft.visible
-      AND ft.archetype <> '#{Archetype.private_message}'
-    ORDER BY
-            TS_RANK_CD(TO_TSVECTOR(:locale, ft.title), TO_TSQUERY(:locale, :query)) desc,
-            TS_RANK_CD(search_data, TO_TSQUERY(:locale, :query)) desc,
-            bumped_at desc
-    LIMIT :limit
-    "
-  end
-
-
-  def self.post_query_sql
-    "SELECT cast('topic' as varchar) AS type,
-            CAST(ft.id AS VARCHAR),
-            '/t/slug/' || ft.id || '/' || p.post_number AS url,
-            ft.title,
-            NULL AS email,
-            NULL AS color,
-            NULL AS text_color
-    FROM topics AS ft
-      JOIN posts AS p ON p.topic_id = ft.id AND p.post_number <> 1
-      JOIN posts_search s on s.id = p.id
-    WHERE s.search_data @@ TO_TSQUERY(:locale, :query)
-      AND ft.deleted_at IS NULL and p.deleted_at IS NULL
-      AND ft.visible
-      AND ft.archetype <> '#{Archetype.private_message}'
-    ORDER BY
-            TS_RANK_CD(TO_TSVECTOR(:locale, ft.title), TO_TSQUERY(:locale, :query)) desc,
-            TS_RANK_CD(search_data, TO_TSQUERY(:locale, :query)) desc,
-            bumped_at desc
-    LIMIT :limit
-    "
-  end
-
-  def self.category_query_sql
-    "SELECT 'category' AS type,
-            c.name AS id,
-            '/category/' || c.slug AS url,
-            c.name AS title,
-            NULL AS email,
-            c.color,
-            c.text_color
-    FROM categories AS c
-    JOIN categories_search s on s.id = c.id
-    WHERE s.search_data @@ TO_TSQUERY(:locale, :query)
-    ORDER BY topics_month desc
-    LIMIT :limit
-    "
-  end
-
-  def self.current_locale_long
+  def self.long_locale
     case I18n.locale         # Currently-present in /conf/locales/* only, sorry :-( Add as needed
       when :da then 'danish'
       when :de then 'german'
@@ -102,99 +33,164 @@ module Search
     end
   end
 
-  def self.query(term, type_filter=nil, min_search_term_length=3)
-
-    return nil if term.blank?
-
-    # We are stripping only symbols taking place in FTS and simply sanitizing the rest.
-    sanitized_term = PG::Connection.escape_string(term.gsub(/[:()&!]/,''))
-
-    # really short terms are totally pointless
-    return nil if sanitized_term.blank? || sanitized_term.length < min_search_term_length
-
-    terms = sanitized_term.split
-    terms.map! {|t| "#{t}:*"}
-
-    if type_filter.present?
-      raise Discourse::InvalidAccess.new("invalid type filter") unless Search.facets.include?(type_filter)
-      sql = Search.send("#{type_filter}_query_sql")
-      db_result = ActiveRecord::Base.exec_sql(sql , orig: sanitized_term, query: terms.join(" & "), locale: current_locale_long, limit: Search.per_facet * Search.facets.size)
-    else
-
-      db_result = []
-      [user_query_sql, category_query_sql, topic_query_sql].each do |sql|
-        db_result += ActiveRecord::Base.exec_sql(sql , orig: sanitized_term, query: terms.join(" & "), locale: current_locale_long, limit: (Search.per_facet + 1)).to_a
-      end
+  def initialize(term, opts=nil)
+    if term.present?
+      @term = term.to_s
+      @original_term = PG::Connection.escape_string(@term)
     end
 
-    db_result = db_result.to_a
-
-    expected_topics = 0
-    expected_topics = Search.facets.size unless type_filter.present?
-    expected_topics = Search.per_facet * Search.facets.size if type_filter == 'topic'
-
-    if expected_topics > 0
-      db_result.each do |row|
-        expected_topics -= 1 if row['type'] == 'topic'
-      end
-    end
-
-    if expected_topics > 0
-      tmp = ActiveRecord::Base.exec_sql post_query_sql,
-        orig: sanitized_term, query: terms.join(" & "), locale: current_locale_long, limit: expected_topics * 3
-
-      topic_ids = Set.new db_result.map{|r| r["id"]}
-
-      tmp = tmp.to_a
-      tmp = tmp.reject{ |i|
-        if topic_ids.include? i["id"]
-          true
-        else
-          topic_ids << i["id"]
-          false
-        end
-      }
-
-      db_result += tmp[0..expected_topics-1]
-    end
-
-    # Group the results by type
-    grouped = {}
-    db_result.each do |row|
-      type = row.delete('type')
-
-      # Add the slug for topics
-      if type == 'topic'
-        new_slug = Slug.for(row['title'])
-        new_slug = "topic" if new_slug.blank?
-        row['url'].gsub!('slug', new_slug)
-      end
-
-      # Remove attributes when we know they don't matter
-      row.delete('id')
-      if type == 'user'
-        row['avatar_template'] = User.avatar_template(row['email'])
-      end
-      row.delete('email')
-      row.delete('color') unless type == 'category'
-      row.delete('text_color') unless type == 'category'
-
-      grouped[type] ||= []
-      grouped[type] << row
-    end
-
-    result = grouped.map do |type, results|
-      more = type_filter.blank? && (results.size > Search.per_facet)
-      results = results[0..([results.length, Search.per_facet].min - 1)] if type_filter.blank?
-      {
-        type: type,
-        name: I18n.t("search.types.#{type}"),
-        more: more,
-        results: results
-      }
-    end
-
-    result
+    @opts = opts || {}
+    @guardian = @opts[:guardian] || Guardian.new
+    @search_context = @opts[:search_context]
+    @limit = Search.per_facet * Search.facets.size
+    @results = GroupedSearchResults.new(@opts[:type_filter])
   end
+
+  # Query a term
+  def execute
+    return nil if @term.blank? || @term.length < (@opts[:min_search_term_length] || SiteSetting.min_search_term_length)
+
+    # If the term is a number or url to a topic, just include that topic
+    if @results.type_filter == 'topic'
+      begin
+        route = Rails.application.routes.recognize_path(@term)
+        return single_topic(route[:topic_id]).as_json if route[:topic_id].present?
+      rescue ActionController::RoutingError
+      end
+
+      return single_topic(@term.to_i).as_json if @term =~ /^\d+$/
+    end
+
+    find_grouped_results.as_json
+  end
+
+  private
+
+    def find_grouped_results
+
+      if @results.type_filter.present?
+        raise Discourse::InvalidAccess.new("invalid type filter") unless Search.facets.include?(@results.type_filter)
+        send("#{@results.type_filter}_search")
+      else
+        @limit = Search.per_facet + 1
+        user_search
+        category_search
+        topic_search
+      end
+
+      add_more_topics_if_expected
+      @results
+    end
+
+    # Add more topics if we expected them
+    def add_more_topics_if_expected
+      expected_topics = 0
+      expected_topics = Search.facets.size unless @results.type_filter.present?
+      expected_topics = Search.per_facet * Search.facets.size if @results.type_filter == 'topic'
+      expected_topics -= @results.topic_count
+      if expected_topics > 0
+        extra_posts = posts_query(expected_topics * Search.burst_factor)
+        extra_posts = extra_posts.where("posts.topic_id NOT in (?)", @results.topic_ids) if @results.topic_ids.present?
+        extra_posts.each do |p|
+          @results.add_result(SearchResult.from_post(p))
+        end
+      end
+    end
+
+    # If we're searching for a single topic
+    def single_topic(id)
+      topic = Topic.where(id: id).first
+      return nil unless @guardian.can_see?(topic)
+
+      @results.add_result(SearchResult.from_topic(topic))
+      @results
+    end
+
+    def secure_category_ids
+      return @secure_category_ids unless @secure_category_ids.nil?
+      @secure_category_ids = @guardian.secure_category_ids
+    end
+
+    def category_search
+      categories = Category.includes(:category_search_data)
+                           .where("category_search_data.search_data @@ #{ts_query}")
+                           .order("topics_month DESC")
+                           .secured(@guardian)
+                           .limit(@limit)
+
+      categories.each do |c|
+        @results.add_result(SearchResult.from_category(c))
+      end
+    end
+
+    def user_search
+      users = User.includes(:user_search_data)
+                  .where("user_search_data.search_data @@ #{ts_query}")
+                  .order("CASE WHEN username_lower = '#{@original_term.downcase}' THEN 0 ELSE 1 END")
+                  .order("last_posted_at DESC")
+                  .limit(@limit)
+
+      users.each do |u|
+        @results.add_result(SearchResult.from_user(u))
+      end
+    end
+
+    def posts_query(limit)
+      posts = Post.includes(:post_search_data, {:topic => :category})
+                  .where("post_search_data.search_data @@ #{ts_query}")
+                  .where("topics.deleted_at" => nil)
+                  .where("topics.visible")
+                  .where("topics.archetype <> ?", Archetype.private_message)
+
+      # If we have a search context, prioritize those posts first
+      if @search_context.present?
+
+        if @search_context.is_a?(User)
+          # If the context is a user, prioritize that user's posts
+          posts = posts.order("CASE WHEN posts.user_id = #{@search_context.id} THEN 0 ELSE 1 END")
+        elsif @search_context.is_a?(Category)
+          # If the context is a category, restrict posts to that category
+          posts = posts.order("CASE WHEN topics.category_id = #{@search_context.id} THEN 0 ELSE 1 END")
+        end
+
+      end
+
+      posts = posts.order("TS_RANK_CD(TO_TSVECTOR(#{query_locale}, topics.title), #{ts_query}) DESC")
+                   .order("TS_RANK_CD(post_search_data.search_data, #{ts_query}) DESC")
+                   .order("topics.bumped_at DESC")
+
+      if secure_category_ids.present?
+        posts = posts.where("(categories.id IS NULL) OR (NOT categories.secure) OR (categories.id IN (?))", secure_category_ids)
+      else
+        posts = posts.where("(categories.id IS NULL) OR (NOT categories.secure)")
+      end
+      posts.limit(limit)
+    end
+
+    def query_locale
+      @query_locale ||= Post.sanitize(Search.long_locale)
+    end
+
+    def ts_query
+      @ts_query ||= begin
+        escaped_term = PG::Connection.escape_string(@term.gsub(/[:()&!]/,''))
+        query = Post.sanitize(escaped_term.split.map {|t| "#{t}:*"}.join(" & "))
+        "TO_TSQUERY(#{query_locale}, #{query})"
+      end
+    end
+
+    def topic_search
+
+      # If we have a user filter, search all posts by default with a higher limit
+      posts = if @search_context.present? and @search_context.is_a?(User)
+        posts_query(@limit * Search.burst_factor)
+      else
+        posts_query(@limit).where(post_number: 1)
+      end
+
+      posts.each do |p|
+        @results.add_result(SearchResult.from_post(p))
+      end
+    end
 
 end

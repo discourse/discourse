@@ -4,7 +4,7 @@
   A control to support embedding a post as a parent of the current post (in reply to)
 
   @class ParentView
-  @extends Ember.ContainerView
+  @extends Discourse.EmbeddedPostView
   @namespace Discourse
   @module Discourse
 **/
@@ -13,9 +13,9 @@ Discourse.ParentView = Discourse.EmbeddedPostView.extend({
 
   // Nice animation for when the replies appear
   didInsertElement: function() {
-    var $parentPost;
     this._super();
-    $parentPost = this.get('postView').$('section.parent-post');
+
+    var $parentPost = this.get('postView').$('section.parent-post');
 
     // Animate unless we're on a touch device
     if (Discourse.get('touch')) {

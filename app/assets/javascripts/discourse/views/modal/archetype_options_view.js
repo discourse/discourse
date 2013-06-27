@@ -2,26 +2,23 @@
   This view handles the rendering of an archetype as an option
 
   @class ArchetypeOptionsView
-  @extends Discourse.View
+  @extends Discourse.ContainerView
   @namespace Discourse
   @module Discourse
 **/
-Discourse.ArchetypeOptionsView = Em.ContainerView.extend({
+Discourse.ArchetypeOptionsView = Discourse.ContainerView.extend({
   metaDataBinding: 'parentView.metaData',
 
   init: function() {
-    var metaData,
-      _this = this;
     this._super();
-    metaData = this.get('metaData');
+    var metaData = this.get('metaData');
+    var archetypeOptionsView = this;
     return this.get('archetype.options').forEach(function(a) {
-      var checked;
-
       if (a.option_type === 1) {
-        checked = _this.pushObject(Discourse.OptionBooleanView.create({
+        archetypeOptionsView.attachViewWithArgs({
           content: a,
           checked: metaData.get(a.key) === 'true'
-        }));
+        }, Discourse.OptionBooleanView);
       }
 
     });

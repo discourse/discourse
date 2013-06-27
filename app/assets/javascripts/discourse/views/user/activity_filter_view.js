@@ -10,6 +10,8 @@ Discourse.ActivityFilterView = Discourse.View.extend({
   tagName: 'li',
   classNameBindings: ['active'],
 
+  stream: Em.computed.alias('controller.content'),
+
   countChanged: function(){
     this.rerender();
   }.observes('count'),
@@ -17,11 +19,11 @@ Discourse.ActivityFilterView = Discourse.View.extend({
   active: function() {
     var content = this.get('content');
     if (content) {
-      return parseInt(this.get('controller.content.streamFilter'), 10) === parseInt(Em.get(content, 'action_type'), 10);
+      return parseInt(this.get('stream.filter'), 10) === parseInt(Em.get(content, 'action_type'), 10);
     } else {
-      return this.blank('controller.content.streamFilter');
+      return this.blank('stream.filter');
     }
-  }.property('controller.content.streamFilter', 'content.action_type'),
+  }.property('stream.filter', 'content.action_type'),
 
   render: function(buffer) {
     var content = this.get('content');
@@ -40,9 +42,9 @@ Discourse.ActivityFilterView = Discourse.View.extend({
   },
 
   click: function() {
-    this.get('controller.content').filterStream(this.get('content.action_type'));
+    this.set('stream.filter', this.get('content.action_type'));
     return false;
   }
 });
 
-
+Discourse.View.registerHelper('activityFilter', Discourse.ActivityFilterView);

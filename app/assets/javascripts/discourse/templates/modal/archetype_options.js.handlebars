@@ -1,8 +1,8 @@
-<div class="modal-body">    
+<div class="modal-body">
   <form>
    {{view Discourse.ArchetypeOptionsView archetypeBinding="view.archetype"}}
   </form>
 </div>
 <div class="modal-footer">
-  <button class='btn btn-primary' data-dismiss="modal">{{i18n post.archetypes.save}}</button>
-</div>  
+  <button class='btn btn-primary' {{action closeModal}}>{{i18n post.archetypes.save}}</button>
+</div>

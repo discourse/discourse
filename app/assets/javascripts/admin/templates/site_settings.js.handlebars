@@ -1,12 +1,12 @@
 <div class='admin-controls'>
   <div class='search controls'>
   <label>
-    {{view Ember.Checkbox checkedBinding="controller.onlyOverridden"}}
+    {{input type="checkbox" checked=onlyOverridden}}
     {{i18n admin.site_settings.show_overriden}}
   </label>
   </div>
   <div class='search controls'>
-    {{view Discourse.TextField valueBinding="controller.filter" placeholderKey="type_to_filter"}}
+    {{textField value=filter placeHolderKey="type_to_filter"}}
   </div>
 
 </div>
@@ -14,4 +14,4 @@
 {{collection contentBinding="filteredContent" classNames="form-horizontal settings" itemViewClass="Discourse.SiteSettingView"}}
 
 <!-- will remove as soon as I figure out what is going on -->
-<p><small>Diagnostics: last_message_processed {{content.diags.last_message_processed}}</small></p>
+<p><small>Diagnostics: last_message_processed {{diags.last_message_processed}}</small></p>

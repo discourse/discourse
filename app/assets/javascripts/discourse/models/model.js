@@ -10,21 +10,6 @@
 Discourse.Model = Ember.Object.extend(Discourse.Presence, {
 
   /**
-    Our own AJAX handler that handles erronous responses
-
-    @method ajax
-    @param {String} url The url to contact
-    @param {Object} args The arguments to pass to $.ajax
-  **/
-  ajax: function(url, args) {
-    var oldError = args.error;
-    args.error = function(xhr) {
-      return oldError($.parseJSON(xhr.responseText).errors);
-    };
-    return Discourse.ajax(url, args);
-  },
-
-  /**
     Update our object from another object
 
     @method mergeAttributes
@@ -33,7 +18,7 @@ Discourse.Model = Ember.Object.extend(Discourse.Presence, {
   **/
   mergeAttributes: function(attrs, builders) {
     var _this = this;
-    return Object.keys(attrs, function(k, v) {
+    _.each(attrs, function(v,k) {
       // If they're in a builder we use that
       var builder, col;
       if (typeof v === 'object' && builders && (builder = builders[k])) {
@@ -41,7 +26,7 @@ Discourse.Model = Ember.Object.extend(Discourse.Presence, {
           _this.set(k, Em.A());
         }
         col = _this.get(k);
-        return v.each(function(obj) {
+        _.each(v,function(obj) {
           col.pushObject(builder.create(obj));
         });
       } else {
@@ -55,17 +40,6 @@ Discourse.Model = Ember.Object.extend(Discourse.Presence, {
 Discourse.Model.reopenClass({
 
   /**
-   $.get shortcut that uses Discourse.Url and returns a promise
-   **/
-  getModelAjax: function(url) {
-    var modelClass = this;
-    return Discourse.ajax({ url: url, cache: false, dataType: 'json' }).then(function (result) {
-      return modelClass.create(result);
-    });
-  },
-
-
-  /**
     Given an array of values, return them in a hash
 
     @method extractByKey
@@ -75,7 +49,7 @@ Discourse.Model.reopenClass({
   extractByKey: function(collection, klass) {
     var retval = {};
     if (!collection) return retval;
-    collection.each(function(c) {
+    _.each(collection,function(c) {
       retval[c.id] = klass.create(c);
     });
     return retval;

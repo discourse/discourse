@@ -99,7 +99,7 @@ Discourse.Markdown = {
     var converter = new Markdown.Converter();
     var mentionLookup = opts.mentionLookup || Discourse.Mention.lookupCache;
 
-    var quoteTemplate = null;
+    var quoteTemplate = null, urlsTemplate = null;
 
     // Before cooking callbacks
     converter.hooks.chain("preConversion", function(text) {
@@ -114,6 +114,13 @@ Discourse.Markdown = {
       return extracted.text;
     });
 
+    // Extract urls in BBCode tags so they are not passed through markdown.
+    converter.hooks.chain("preConversion", function(text) {
+      var extracted = Discourse.BBCode.extractUrls(text);
+      urlsTemplate = extracted.template;
+      return extracted.text;
+    });
+
     // Support autolinking of www.something.com
     converter.hooks.chain("preConversion", function(text) {
       return text.replace(/(^|[\s\n])(www\.[a-z\.\-\_\(\)\/\?\=\%0-9]+)/gim, function(full, _, rest) {
@@ -122,7 +129,8 @@ Discourse.Markdown = {
     });
 
     // newline prediction in trivial cases
-    if (!Discourse.SiteSettings.traditional_markdown_linebreaks) {
+    var linebreaks = opts.traditional_markdown_linebreaks || Discourse.SiteSettings.traditional_markdown_linebreaks;
+    if (!linebreaks) {
       converter.hooks.chain("preConversion", function(text) {
         return text.replace(/(^[\w<][^\n]*\n+)/gim, function(t) {
           if (t.match(/\n{2}/gim)) return t;
@@ -143,8 +151,8 @@ Discourse.Markdown = {
       if (!text) return "";
 
       // don't do @username mentions inside <pre> or <code> blocks
-      text = text.replace(/<(pre|code)>([\s\S]*?@[\s\S]*?)<\/(pre|code)>/gi, function(wholeMatch, m1, m2, m3) {
-        return "<" + m1 + ">" + (m2.replace(/@/g, '&#64;')) + "</" + m3 + ">";
+      text = text.replace(/<(pre|code)>([\s\S](?!<(pre|code)>))*?@([\s\S](?!<(pre|code)>))*?<\/(pre|code)>/gi, function(m) {
+        return m.replace(/@/g, '&#64;');
       });
 
       // add @username mentions, if valid; must be bounded on left and right by non-word characters
@@ -166,7 +174,7 @@ Discourse.Markdown = {
         if (Discourse && Discourse.Onebox) {
           onebox = Discourse.Onebox.lookupCache(url);
         }
-        if (onebox && !onebox.isBlank()) {
+        if (onebox && onebox.trim().length > 0) {
           return arguments[2] + onebox;
         } else {
           return arguments[2] + arguments[4] + " class=\"onebox\" target=\"_blank\">" + arguments[6];
@@ -177,12 +185,11 @@ Discourse.Markdown = {
     });
 
     converter.hooks.chain("postConversion", function(text) {
-
       // reapply quotes
-      if (quoteTemplate) {
-        text = quoteTemplate(text);
-      }
-
+      if (quoteTemplate) { text = quoteTemplate(text); }
+      // reapply urls
+      if (urlsTemplate) { text = urlsTemplate(text); }
+      // format with BBCode
       return Discourse.BBCode.format(text, opts);
     });
 

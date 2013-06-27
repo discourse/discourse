@@ -1,4 +1,4 @@
-{{#unless view.complete}}
+{{#unless complete}}
   <div class="modal-body">
     <div>
       <form>
@@ -6,8 +6,8 @@
       <tr>
           <td style="width:80px"><label for='new-account-name'>{{i18n user.name.title}}</label></td>
           <td style="width:496px">
-          {{view Discourse.TextField valueBinding="view.accountName" elementId="new-account-name" autofocus="autofocus"}}
-          &nbsp;{{view Discourse.InputTipView validationBinding="view.nameValidation"}}
+          {{textField value=accountName id="new-account-name" autofocus="autofocus"}}
+          &nbsp;{{inputTip validation=nameValidation}}
           </td>
       </tr>
       <tr>
@@ -18,8 +18,8 @@
       <tr>
             <td><label for='new-account-email'>{{i18n user.email.title}}</label></td>
             <td>
-            {{view Ember.TextField valueBinding="view.accountEmail" id="new-account-email"}}
-            &nbsp;{{view Discourse.InputTipView validationBinding="view.emailValidation"}}
+            {{input value=accountEmail id="new-account-email"}}
+            &nbsp;{{inputTip validation=emailValidation}}
             </td>
       </tr>
       <tr>
@@ -30,8 +30,8 @@
       <tr>
             <td><label for='new-account-username'>{{i18n user.username.title}}</label></td>
             <td>
-            {{view Ember.TextField valueBinding="view.accountUsername" id="new-account-username" maxlength="15"}}
-            &nbsp;{{view Discourse.InputTipView validationBinding="view.usernameValidation"}}
+            {{input value=accountUsername id="new-account-username" maxlength="15"}}
+            &nbsp;{{inputTip validation=usernameValidation}}
             </td>
       </tr>
       <tr>
@@ -39,12 +39,12 @@
         <td><label>{{i18n user.username.instructions}}</label></td>
       </tr>
 
-      {{#if view.passwordRequired}}
+      {{#if passwordRequired}}
       <tr>
           <td><label for='new-account-password'>{{i18n user.password.title}}</label></td>
           <td>
-          {{view Ember.TextField valueBinding="view.accountPassword" type="password" id="new-account-password"}}
-          &nbsp;{{view Discourse.InputTipView validationBinding="view.passwordValidation"}}
+          {{input type="password" value=accountPassword id="new-account-password"}}
+          &nbsp;{{inputTip validation=passwordValidation}}
           </td>
       </tr>
       {{/if}}
@@ -52,8 +52,8 @@
       <tr class="password-confirmation">
           <td><label for='new-account-password-confirmation'>{{i18n user.password_confirmation.title}}</label></td>
           <td>
-          {{view Ember.TextField valueBinding="view.accountPasswordConfirm" type="password" id="new-account-password-confirmation"}}
-          {{view Ember.TextField valueBinding="view.accountChallenge" id="new-account-challenge"}}
+          {{input type="password" value=accountPasswordConfirm id="new-account-confirmation"}}
+          {{input value=accountChallenge id="new-account-challenge"}}
           </td>
       </tr>
 
@@ -63,6 +63,6 @@
   </div>
 
   <div class="modal-footer">
-    <button class='btn btn-large btn-primary' {{bindAttr disabled="view.submitDisabled"}} {{action createAccount target="view"}}>{{i18n create_account.title}}</button>
+    <button class='btn btn-large btn-primary' {{bindAttr disabled="submitDisabled"}} {{action createAccount}}>{{i18n create_account.title}}</button>
   </div>
 {{/unless}}

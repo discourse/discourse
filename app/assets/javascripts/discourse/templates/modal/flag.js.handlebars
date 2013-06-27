@@ -1,0 +1,30 @@
+<div class="modal-body flag-modal">
+
+  <form>
+    {{#each flagsAvailable itemController="flagActionType"}}
+      <div class='controls'>
+        <label class='radio'>
+          <input type='radio' id="radio_{{unbound name_key}}" {{action changePostActionType this}} name='post_action_type_index'> <strong>{{formattedName}}</strong>
+          {{#if showDescription}}
+            <div class='description'>{{{description}}}</div>
+          {{/if}}
+        </label>
+        {{#if showMessageInput}}
+          {{textarea name="message" class="flag-message" placeholder=customPlaceholder value=message}}
+          <div {{bindAttr class=":custom-message-length customMessageLengthClasses"}}>{{customMessageLength}}</div>
+        {{/if}}
+      </div>
+    {{else}}
+      {{i18n flagging.cant}}
+    {{/each}}
+  </form>
+
+</div>
+<div class="modal-footer">
+  <button class='btn btn-primary' {{action createFlag}} {{bindAttr disabled="submitDisabled"}}>{{submitText}}</button>
+
+  {{#if canTakeAction}}
+    <button class='btn btn-danger' {{action takeAction}} {{bindAttr disabled="submitDisabled"}}>{{i18n flagging.take_action}}</button>
+  {{/if}}
+</div>
+

@@ -11,56 +11,56 @@ Discourse.PreferencesUsernameController = Discourse.ObjectController.extend({
   saving: false,
   error: false,
   errorMessage: null,
+  newUsername: null,
 
-  saveDisabled: (function() {
+  saveDisabled: function() {
     if (this.get('saving')) return true;
     if (this.blank('newUsername')) return true;
     if (this.get('taken')) return true;
     if (this.get('unchanged')) return true;
     if (this.get('errorMessage')) return true;
     return false;
-  }).property('newUsername', 'taken', 'errorMessage', 'unchanged', 'saving'),
+  }.property('newUsername', 'taken', 'errorMessage', 'unchanged', 'saving'),
 
-  unchanged: (function() {
+  unchanged: function() {
     return this.get('newUsername') === this.get('content.username');
-  }).property('newUsername', 'content.username'),
+  }.property('newUsername', 'content.username'),
 
-  checkTaken: (function() {
+  checkTaken: function() {
     if( this.get('newUsername') && this.get('newUsername').length < 3 ) {
       this.set('errorMessage', Em.String.i18n('user.name.too_short'));
     } else {
-      var _this = this;
+      var preferencesUsernameController = this;
       this.set('taken', false);
       this.set('errorMessage', null);
       if (this.blank('newUsername')) return;
       if (this.get('unchanged')) return;
       Discourse.User.checkUsername(this.get('newUsername')).then(function(result) {
         if (result.errors) {
-          return _this.set('errorMessage', result.errors.join(' '));
+          preferencesUsernameController.set('errorMessage', result.errors.join(' '));
         } else if (result.available === false) {
-          return _this.set('taken', true);
+          preferencesUsernameController.set('taken', true);
         }
       });
     }
-  }).observes('newUsername'),
+  }.observes('newUsername'),
 
-  saveButtonText: (function() {
+  saveButtonText: function() {
     if (this.get('saving')) return Em.String.i18n("saving");
     return Em.String.i18n("user.change_username.action");
-  }).property('saving'),
+  }.property('saving'),
 
   changeUsername: function() {
-    var _this = this;
+    var preferencesUsernameController = this;
     return bootbox.confirm(Em.String.i18n("user.change_username.confirm"), Em.String.i18n("no_value"), Em.String.i18n("yes_value"), function(result) {
       if (result) {
-        _this.set('saving', true);
-        return _this.get('content').changeUsername(_this.get('newUsername')).then(function() {
-          var url = Discourse.getURL("/users/") + _this.get('newUsername').toLowerCase() + "/preferences";
-          Discourse.URL.redirectTo(url);
+        preferencesUsernameController.set('saving', true);
+        preferencesUsernameController.get('content').changeUsername(preferencesUsernameController.get('newUsername')).then(function() {
+          Discourse.URL.redirectTo("/users/" + preferencesUsernameController.get('newUsername').toLowerCase() + "/preferences");
         }, function() {
           // error
-          _this.set('error', true);
-          _this.set('saving', false);
+          preferencesUsernameController.set('error', true);
+          preferencesUsernameController.set('saving', false);
         });
       }
     });

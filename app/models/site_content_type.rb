@@ -16,6 +16,10 @@ class SiteContentType
     I18n.t("content_types.#{content_type}.description")
   end
 
+  def allow_blank?
+    !!@opts[:allow_blank]
+  end
+
   def default_content
     if @opts[:default_18n_key].present?
       return I18n.t(@opts[:default_18n_key])

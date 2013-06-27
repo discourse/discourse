@@ -1,15 +1,11 @@
 /**
   This controller supports actions related to showing modals
 
-  @class ModalController 
+  @class ModalController
   @extends Discourse.Controller
   @namespace Discourse
   @module Discourse
 **/
-Discourse.ModalController = Discourse.Controller.extend({
-  show: function(view) {
-    this.set('currentView', view);
-  }
-});
+Discourse.ModalController = Discourse.Controller.extend({});
 
 

@@ -2,9 +2,11 @@
   <div class="category">
     <h2><a href="/category/<%= c.slug.blank? ? c.id : c.slug %>"><%= c.name %></a></h2>
     <div class="topic-list">
-      <% c.topics.limit(6).each do |t| %>
-        <a href="<%= t.relative_url %>"><%= t.title %></a> <span title='<%= t 'posts' %>'>(<%= t.posts_count %>)</span><br/>
-      <% end %>
+      <%- if c.displayable_topics.present? %>
+        <% c.displayable_topics.each do |t| %>
+          <a href="<%= t.relative_url %>"><%= t.title %></a> <span title='<%= t 'posts' %>'>(<%= t.posts_count %>)</span><br/>
+        <% end %>
+      <%- end %>
     </div>
   </div>
 <% end %>

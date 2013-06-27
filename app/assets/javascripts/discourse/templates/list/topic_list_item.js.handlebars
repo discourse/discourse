@@ -1,7 +1,6 @@
-
-  {{#if Discourse.currentUser.id}}
+  {{#if controller.currentUser.id}}
     <td class='star'>
-      <a {{bindAttr class=":star :icon-star starred:starred"}} {{action toggleStar this target="controller"}} href='#' {{bindAttr title="favoriteTooltip"}}></a>
+      <a {{bindAttr class=":star :icon-star starred:starred"}} {{action toggleStar this}} href='#' {{bindAttr title="favoriteTooltip"}}></a>
     </td>
   {{/if}}
 
@@ -17,13 +16,13 @@
       </div>
     {{/if}}
 
-    {{view Discourse.TopicStatusView topicBinding="this"}}
-    {{{topicLink this showTagIfPresent="controller.category"}}}
+    {{topicStatus topic=this}}
+    {{{topicLink this}}}
     {{#if unread}}
-      <a href="{{lastReadUrl}}" class='badge unread badge-notification' title='{{i18n topic.unread_posts unread="unread"}}'>{{unread}}</a>
+      <a href="{{lastReadUrl}}" class='badge unread badge-notification' title='{{i18n topic.unread_posts count="unread"}}'>{{unread}}</a>
     {{/if}}
     {{#if displayNewPosts}}
-      <a href="{{lastReadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new_posts new_posts="displayNewPosts"}}'>{{displayNewPosts}}</a>
+      <a href="{{lastReadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new_posts count="displayNewPosts"}}'>{{displayNewPosts}}</a>
     {{/if}}
     {{#if unseen}}
       <a href="{{lastReadUrl}}" class='badge new-posts badge-notification' title='{{i18n topic.new}}'><i class='icon icon-asterisk'></i></a>
@@ -36,7 +35,7 @@
           {{#unless canClearPin}}<a href="{{lastReadUrl}}">{{i18n read_more}}</a>{{/unless}}
         {{/if}}
         {{#if canClearPin}}
-          <a href="#" {{action clearPin this target="controller"}} title="{{unbound i18n topic.clear_pin.help}}">{{i18n topic.clear_pin.title}}</a>
+          <a href="#" {{action clearPin this}} title="{{unbound i18n topic.clear_pin.help}}">{{i18n topic.clear_pin.title}}</a>
         {{/if}}
       </div>
     {{/if}}
@@ -48,30 +47,30 @@
 
   <td class='posters'>
     {{#each posters}}
-      <a href="{{user.path}}">{{avatar this usernamePath="user.username" imageSize="small"}}</a>
+      <a href="{{user.path}}" class="{{unbound extras}}">{{avatar this usernamePath="user.username" imageSize="small"}}</a>
     {{/each}}
   </td>
 
-  <td class='num'><a href="{{lastReadUrl}}" class='badge-posts'>{{number posts_count numberKey="posts_long"}}</a></td>
+  <td class='num posts'><a href="{{lastReadUrl}}" class='badge-posts'>{{number posts_count numberKey="posts_long"}}</a></td>
 
-  <td class='num'>
+  <td class='num likes'>
     {{#if like_count}}
       <a href='{{url}}{{#if has_best_of}}/best_of{{/if}}' title='{{i18n topic.likes count="like_count"}}'>{{like_count}} <i class='icon-heart'></i></a>
     {{/if}}
   </td>
 
-  <td {{bindAttr class=":num viewsHeat"}}>{{number views numberKey="views_long"}}</td>
+  <td {{bindAttr class=":num :views viewsHeat"}}>{{number views numberKey="views_long"}}</td>
 
   {{#if bumped}}
     <td class='num activity'>
-      <a href="{{url}}" {{{bindAttr class=":age ageCold"}}} title='{{i18n first_post}}: {{{unboundDate created_at}}}' >{{{age}}}</a>
+      <a href="{{url}}" {{{bindAttr class=":age ageCold"}}} title='{{i18n first_post}}: {{{unboundDate created_at}}}' >{{unboundAge created_at}}</a>
     </td>
     <td class='num activity last'>
-      <a href="{{lastPostUrl}}" class='age' title='{{i18n last_post}}: {{{unboundDate bumped_at}}}'>{{{bumped_age}}}</a>
+      <a href="{{lastPostUrl}}" class='age' title='{{i18n last_post}}: {{{unboundDate bumped_at}}}'>{{unboundAge bumped_at}}</a>
     </td>
   {{else}}
     <td class='num activity'>
-      <a href="{{url}}" class='age' title='{{i18n first_post}}: {{{unboundDate created_at}}}'>{{{age}}}</a>
+      <a href="{{url}}" class='age' title='{{i18n first_post}}: {{{unboundDate created_at}}}'>{{unboundAge created_at}}</a>
     </td>
-    <td></td>
+    <td class='activity'></td>
   {{/if}}

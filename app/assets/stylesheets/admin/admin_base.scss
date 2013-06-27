@@ -3,6 +3,17 @@
 @import "foundation/mixins";
 @import "foundation/helpers";
 
+
+.content-list li a span.count {
+  font-size: 12px;
+  float: right;
+  margin-right: 10px;
+  background-color: #eee;
+  padding: 2px 5px;
+  border-radius: 5px;
+  color: #555;
+}
+
 .admin-content {
   margin-bottom: 50px;
   .admin-contents {
@@ -100,6 +111,18 @@
       margin-top: 5px;
     }
   }
+  .toggle {
+    margin-top: 8px;
+    float: right;
+
+    span {
+      font-weight: bold;
+    }
+  }
+  label {
+    display: inline-block;
+    margin-right: 5px;
+  }
 }
 
 .settings {
@@ -154,6 +177,8 @@ table {
 }
 
 .display-row {
+  height: 30px;
+  line-height: 30px;
   padding: 5px;
   &:nth-of-type(1) {
     border-top: 0;
@@ -167,8 +192,6 @@ table {
     clear: both;
   }
   .field {
-    height: 30px;
-    line-height: 30px;
     font-weight: bold;
     width: 196px;
     float: left;
@@ -176,8 +199,6 @@ table {
   }
   .value {
     width: 250px;
-    height: 30px;
-    line-height: 30px;
     float: left;
     margin-left: 12px;
   }
@@ -197,10 +218,7 @@ table {
     float: left;
   }
   .content-list ul {
-    min-height: 700px;
-  }
-  a {
-    cursor: pointer;
+    margin-bottom: 10px;
   }
   .current-style {
     .delete-link {
@@ -219,7 +237,7 @@ table {
     }
     .ace-wrapper {
       position: relative;
-      height: 600px;
+      height: 400px;
       width: 100%;
     }
     .ace_editor {
@@ -231,6 +249,7 @@ table {
     }
     .status-actions {
       float: right;
+      margin-top: 7px;
       span {
         margin-right: 20px;
       }
@@ -238,9 +257,6 @@ table {
     .buttons {
       float: left;
       width: 200px;
-      button, a , span{
-        float: left;
-      }
       .saving {
         padding: 5px 0 0 0;
         margin-left: 10px;
@@ -253,21 +269,36 @@ table {
 
 
 .admin-flags {
+
   tr.hidden-post td.excerpt { opacity: 0.4;  }
+  tr.deleted td.excerpt { opacity: 0.8; background-color: #ffcece; }
   td.message {
     padding: 4px 0;
     background-color: #f8f8e0;
   }
-  td { vertical-align: middle; }
+  td { vertical-align: top; }
   th { text-align: left; }
   .user { width: 40px; }
   .excerpt {
-    width: 600px; padding: 0 10px 10px 0;
+    max-width: 740px;
+    width: 740px;
+    padding: 0 10px 10px 0;
+    word-wrap: break-word;
     .icon,h3 { display: inline-block; }
 
   }
-  .flaggers { padding: 0 10px; }
-  .last-flagged { padding: 0 10px; }
+  .flaggers {
+    font-size: 11px;
+    td {
+      vertical-align: middle;
+      padding: 3px;
+    }
+  }
+  .action {
+     button { margin: 4px; }
+     text-align: right;
+     padding-bottom: 20px;
+  }
 }
 
 /* Dashboard */
@@ -642,4 +673,13 @@ table {
     bottom: 0;
   }
 
+}
+
+.row.groups {
+  input[type='text'] {
+    width: 500px;
+  }
+  input#group-users {
+    width: 600px;
+  }
 }

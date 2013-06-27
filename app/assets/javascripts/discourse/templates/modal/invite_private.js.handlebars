@@ -1,25 +1,23 @@
-<div class="modal-body">    
-  {{#if view.error}}
+<div class="modal-body">
+  {{#if error}}
     <div class="alert alert-error">
       <button class="close" data-dismiss="alert">×</button>
       {{i18n topic.invite_private.error}}
     </div>
   {{/if}}
 
-  {{#if view.finished}}
+  {{#if finished}}
     {{i18n topic.invite_private.success}}
   {{else}}
-    <form>
-      <label>{{i18n topic.invite_private.email_or_username}}</label>
-      {{view Discourse.TextField valueBinding="view.emailOrUsername" placeholderKey="topic.invite_private.email_or_username_placeholder"}}
-    </form>
+    <label>{{i18n topic.invite_private.email_or_username}}</label>
+    {{userSelector single=true allowAny=true usernames=emailOrUsername placeholderKey="topic.invite_private.email_or_username_placeholder"}}
   {{/if}}
 </div>
 <div class="modal-footer">
-  {{#if view.finished}}
-    <button class='btn btn-primary' data-dismiss="modal">{{i18n close}}</button>
+  {{#if finished}}
+    <button class='btn btn-primary' {{action closeModal}}>{{i18n close}}</button>
   {{else}}
-    <button class='btn btn-primary' {{bindAttr disabled="view.disabled"}} {{action invite target="view"}}>{{view.buttonTitle}}</button>
+    <button class='btn btn-primary' {{bindAttr disabled="disabled"}} {{action invite}}>{{buttonTitle}}</button>
   {{/if}}
-  
-</div>  
+
+</div>

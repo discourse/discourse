@@ -27,6 +27,10 @@ Discourse.ComposerController = Discourse.Controller.extend({
     if (c) return c.appendText(text);
   },
 
+  categories: function() {
+    return Discourse.Category.list();
+  }.property(),
+
   save: function(force) {
     var composer,
       _this = this,
@@ -35,6 +39,14 @@ Discourse.ComposerController = Discourse.Controller.extend({
       buttons;
 
     composer = this.get('content');
+
+    if( composer.get('cantSubmitPost') ) {
+      this.set('view.showTitleTip', Date.now());
+      this.set('view.showCategoryTip', Date.now());
+      this.set('view.showReplyTip', Date.now());
+      return;
+    }
+
     composer.set('disableDrafts', true);
 
     // for now handle a very narrow use case
@@ -48,21 +60,14 @@ Discourse.ComposerController = Discourse.Controller.extend({
 
         buttons = [{
           "label": Em.String.i18n("composer.cancel"),
-          "class": "btn"
+          "class": "cancel",
+          "link": true
         }];
-
-        buttons.push({
-          "label": Em.String.i18n("composer.reply_original"),
-          "class": "btn-primary",
-          "callback": function(){
-            _this.save(true);
-          }
-        });
 
         if(topic) {
           buttons.push({
-            "label": Em.String.i18n("composer.reply_here"),
-            "class": "btn-primary",
+            "label": Em.String.i18n("composer.reply_here") + "<br/><div class='topic-title'>" + topic.get('title') + "</div>",
+            "class": "btn btn-reply-here",
             "callback": function(){
               composer.set('topic', topic);
               composer.set('post', null);
@@ -71,7 +76,15 @@ Discourse.ComposerController = Discourse.Controller.extend({
           });
         }
 
-        bootbox.dialog(message, buttons);
+        buttons.push({
+          "label": Em.String.i18n("composer.reply_original") + "<br/><div class='topic-title'>" + this.get('content.topic.title') + "</div>",
+          "class": "btn-primary btn-reply-on-original",
+          "callback": function(){
+            _this.save(true);
+          }
+        });
+
+        bootbox.dialog(message, buttons, {"classes": "reply-where-modal"});
         return;
       }
     }
@@ -81,10 +94,12 @@ Discourse.ComposerController = Discourse.Controller.extend({
     }).then(function(opts) {
       opts = opts || {};
       _this.close();
+
+      var currentUser = Discourse.User.current();
       if (composer.get('creatingTopic')) {
-        Discourse.set('currentUser.topic_count', Discourse.get('currentUser.topic_count') + 1);
+        currentUser.set('topic_count', currentUser.get('topic_count') + 1);
       } else {
-        Discourse.set('currentUser.reply_count', Discourse.get('currentUser.reply_count') + 1);
+        currentUser.set('reply_count', currentUser.get('reply_count') + 1);
       }
       Discourse.URL.routeTo(opts.post.get('url'));
     }, function(error) {
@@ -116,8 +131,12 @@ Discourse.ComposerController = Discourse.Controller.extend({
   }.property('content.composeState', 'content.reply', 'educationClosed', 'educationContents'),
 
   fetchNewUserEducation: function() {
+
+    // We don't show education when editing a post.
+    if (this.get('content.editingPost')) return;
+
     // If creating a topic, use topic_count, otherwise post_count
-    var count = this.get('content.creatingTopic') ? Discourse.get('currentUser.topic_count') : Discourse.get('currentUser.reply_count');
+    var count = this.get('content.creatingTopic') ? Discourse.User.current('topic_count') : Discourse.User.current('reply_count');
     if (count >= Discourse.SiteSettings.educate_until_posts) {
       this.set('educationClosed', true);
       this.set('educationContents', '');
@@ -132,10 +151,11 @@ Discourse.ComposerController = Discourse.Controller.extend({
     // If visible update the text
     var educationKey = this.get('content.creatingTopic') ? 'new-topic' : 'new-reply';
     var composerController = this;
-    Discourse.ajax(Discourse.getURL("/education/") + educationKey).then(function(result) {
+    Discourse.ajax("/education/" + educationKey, {dataType: 'html'}).then(function(result) {
       composerController.set('educationContents', result);
     });
-  }.observes('typedReply', 'content.creatingTopic', 'Discourse.currentUser.reply_count'),
+
+  }.observes('typedReply', 'content.creatingTopic', 'currentUser.reply_count'),
 
   checkReplyLength: function() {
     this.set('typedReply', this.present('content.reply'));
@@ -182,11 +202,9 @@ Discourse.ComposerController = Discourse.Controller.extend({
       @param {String} [opts.quote] If we're opening a reply from a quote, the quote we're making
   **/
   open: function(opts) {
-    var composer, promise, view,
-      _this = this;
     if (!opts) opts = {};
-
-    opts.promise = promise = opts.promise || Ember.Deferred.create();
+    var promise = opts.promise || Ember.Deferred.create();
+    opts.promise = promise;
     this.set('typedReply', false);
     this.set('similarTopics', null);
     this.set('similarClosed', false);
@@ -197,22 +215,28 @@ Discourse.ComposerController = Discourse.Controller.extend({
     }
 
     // ensure we have a view now, without it transitions are going to be messed
-    view = this.get('view');
+    var view = this.get('view');
+    var composerController = this;
     if (!view) {
-      view = Discourse.ComposerView.create({ controller: this });
+
+      // TODO: We should refactor how composer is inserted. It should probably use a
+      // {{render}} and then the controller and view will be wired up automatically.
+      var appView = Discourse.__container__.lookup('view:application');
+      view = appView.createChildView(Discourse.ComposerView, {controller: this});
       view.appendTo($('#main'));
       this.set('view', view);
+
       // the next runloop is too soon, need to get the control rendered and then
       //  we need to change stuff, otherwise css animations don't kick in
       Em.run.next(function() {
-        return Em.run.next(function() {
-          return _this.open(opts);
+        Em.run.next(function() {
+          composerController.open(opts);
         });
       });
       return promise;
     }
 
-    composer = this.get('content');
+    var composer = this.get('content');
     if (composer && opts.draftKey !== composer.draftKey && composer.composeState === Discourse.Composer.DRAFT) {
       this.close();
       composer = null;
@@ -226,11 +250,8 @@ Discourse.ComposerController = Discourse.Controller.extend({
       } else {
         opts.tested = true;
         if (!opts.ignoreIfChanged) {
-          this.cancel((function() {
-            return _this.open(opts);
-          }), (function() {
-            return promise.reject();
-          }));
+          this.cancel().then(function() { composerController.open(opts); },
+                             function() { return promise.reject(); });
         }
         return promise;
       }
@@ -241,7 +262,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
       Discourse.Draft.get(opts.draftKey).then(function(data) {
         opts.draftSequence = data.draft_sequence;
         opts.draft = data.draft;
-        return _this.open(opts);
+        return composerController.open(opts);
       });
       return promise;
     }
@@ -279,30 +300,27 @@ Discourse.ComposerController = Discourse.Controller.extend({
     }
   },
 
-  cancel: function(success, fail) {
-    var _this = this;
-    if (this.get('content.hasMetaData') || ((this.get('content.reply') || "") !== (this.get('content.originalText') || ""))) {
-      bootbox.confirm(Em.String.i18n("post.abandon"), Em.String.i18n("no_value"), Em.String.i18n("yes_value"), function(result) {
-        if (result) {
-          _this.destroyDraft();
-          _this.close();
-          if (typeof success === "function") {
-            return success();
+  cancel: function() {
+    var composerController = this;
+    return Ember.Deferred.promise(function (promise) {
+      if (composerController.get('content.hasMetaData') ||
+          ((composerController.get('content.reply') || "") !== (composerController.get('content.originalText') || ""))) {
+        bootbox.confirm(Em.String.i18n("post.abandon"), Em.String.i18n("no_value"), Em.String.i18n("yes_value"), function(result) {
+          if (result) {
+            composerController.destroyDraft();
+            composerController.close();
+            promise.resolve();
+          } else {
+            promise.reject();
           }
-        } else {
-          if (typeof fail === "function") {
-            return fail();
-          }
-        }
-      });
-    } else {
-      // it is possible there is some sort of crazy draft with no body ... just give up on it
-      this.destroyDraft();
-      this.close();
-      if (typeof success === "function") {
-        success();
+        });
+      } else {
+        // it is possible there is some sort of crazy draft with no body ... just give up on it
+        composerController.destroyDraft();
+        composerController.close();
+        promise.resolve();
       }
-    }
+    });
   },
 
   openIfDraft: function() {
@@ -327,6 +345,9 @@ Discourse.ComposerController = Discourse.Controller.extend({
   close: function() {
     this.set('content', null);
     this.set('view.content', null);
+    this.set('view.showTitleTip', false);
+    this.set('view.showCategoryTip', false);
+    this.set('view.showReplyTip', false);
   },
 
   closeIfCollapsed: function() {

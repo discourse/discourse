@@ -19,7 +19,7 @@ if defined?(Rack::MiniProfiler)
     (env['PATH_INFO'] !~ /^\/message-bus/) &&
     (env['PATH_INFO'] !~ /topics\/timings/) &&
     (env['PATH_INFO'] !~ /assets/) &&
-    (env['PATH_INFO'] !~ /jasmine/) &&
+    (env['PATH_INFO'] !~ /qunit/) &&
     (env['PATH_INFO'] !~ /users\/.*\/avatar/) &&
     (env['PATH_INFO'] !~ /srv\/status/) &&
     (env['PATH_INFO'] !~ /commits-widget/)
@@ -27,7 +27,7 @@ if defined?(Rack::MiniProfiler)
 
   # without a user provider our results will use the ip address for namespacing
   #  with a load balancer in front this becomes really bad as some results can
-  #  be stored associated with ip1 as the user and retrieved using ip2 causing 404s 
+  #  be stored associated with ip1 as the user and retrieved using ip2 causing 404s
   Rack::MiniProfiler.config.user_provider = lambda do |env|
     request = Rack::Request.new(env)
     id = request.cookies["_t"] || request.ip || "unknown"

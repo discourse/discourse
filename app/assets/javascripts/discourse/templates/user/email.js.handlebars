@@ -24,21 +24,21 @@
     <div class="control-group">
       <label class="control-label">{{i18n user.email.title}}</label>
       <div class="controls">
-        {{view Ember.TextField valueBinding="controller.newEmail" elementId="change_email" classNames="input-xxlarge"}}
+        {{textField value=newEmail id="change_email" classNames="input-xxlarge"}}
       </div>
       <div class='instructions'>
-        {{#if controller.taken}}
+        {{#if taken}}
           {{i18n user.change_email.taken}}
         {{else}}
           {{i18n user.email.instructions}}
         {{/if}}
-        
+
       </div>
     </div>
 
     <div class="control-group">
       <div class="controls">
-          <button {{action changeEmail target="controller"}} {{bindAttr disabled="controller.saveDisabled"}} class="btn btn-primary">{{controller.saveButtonText}}</button>
+          <button {{action changeEmail}} {{bindAttr disabled="saveDisabled"}} class="btn btn-primary">{{saveButtonText}}</button>
       </div>
     </div>
   {{/if}}

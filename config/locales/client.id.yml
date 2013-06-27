@@ -1,6 +1,10 @@
 # encoding: utf-8
 # This file contains content for the client portion of Discourse, sent out
 # to the Javascript app.
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
+
 
 id:
   js:
@@ -194,7 +198,7 @@ id:
 
     best_of:
       title: "Best Of"
-      description: "There are <b>{{count}}</b> posts in this topic. That's a lot! Would you like to save time by switching your view to show only the posts with the most interactions and responses?"
+      description: "There are <b>{{count}}</b> posts in this topic. That's a lot! Would you like to save time by showing only the best posts?"
       button: 'Switch to "Best Of" view'
 
     private_message_info:
@@ -418,7 +422,7 @@ id:
         invisible: "Make Invisible"
         visible: "Make Visible"
         reset_read: "Reset Read Data"
-        multi_select: "Toggle Multi-Select"
+        multi_select: "Select for Merge/Split"
         convert_to_topic: "Convert to Regular Topic"
 
       reply:
@@ -505,7 +509,6 @@ id:
         delete: "delete this post"
         undelete: "undelete this post"
         share: "share a link to this post"
-        bookmark: "bookmark this post to your user page"
         more: "More"
 
       actions:
@@ -549,7 +552,7 @@ id:
       color_placeholder: "Any web color"
       delete_confirm: "Are you sure you want to delete that category?"
       list: "List Categories"
-      no_description: "There is no description for this category."
+      no_description: "There is no description for this category, edit the topic definition."
       change_in_category_topic: "Edit Description"
 
     flagging:
@@ -664,8 +667,8 @@ id:
         delete: "Delete"
         delete_confirm: "Delete this customization?"
 
-      email_logs:
-        title: "Email Logs"
+      email:
+        title: "Email"
         sent_at: "Sent At"
         email_type: "Email Type"
         to_address: "To Address"
@@ -715,7 +718,7 @@ id:
         permissions: Permissions
         activity: Activity
         like_count: Likes Received
-        private_topics_count: Private Topics Count
+        private_topics_count: Private Topics
         posts_read_count: Posts Read
         post_count: Posts Created
         topics_entered: Topics Entered
@@ -727,5 +730,5 @@ id:
 
       site_settings:
         show_overriden: 'Only show overridden'
-        title: 'Site Settings'
+        title: 'Settings'
         reset: 'reset to default'

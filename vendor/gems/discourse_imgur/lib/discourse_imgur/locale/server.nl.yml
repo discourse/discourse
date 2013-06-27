@@ -1,0 +1,5 @@
+nl:
+	site_settings:
+    enable_imgur: "Gebruik de imgur API voor uploads en sla afbeeldingen niet lokaal op"
+    imgur_client_id: "Je imgur.com client ID, nodig om afbeeldingen te kunnen uploaden naar imgur"
+    imgur_client_secret: "Je imgur.com client secret. Is nog niet nodig voor het uploaden van afbeeldingen, maar dat zou in de toekomst kunnen veranderen."

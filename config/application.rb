@@ -1,16 +1,12 @@
 require File.expand_path('../boot', __FILE__)
 require 'rails/all'
-require 'redis-store' # HACK
 
 # Plugin related stuff
 require_relative '../lib/discourse_plugin_registry'
 
-if defined?(Bundler)
-  # If you precompile assets before deploying to production, use this line
-  Bundler.require(*Rails.groups(assets: %w(development test profile)))
-  # If you want your assets lazily compiled in production, use this line
-  # Bundler.require(:default, :assets, Rails.env)
-end
+# Require the gems listed in Gemfile, including any gems
+# you've limited to :test, :development, or :production.
+Bundler.require(:default, Rails.env)
 
 module Discourse
   class Application < Rails::Application
@@ -19,9 +15,21 @@ module Discourse
     # -- all .rb files in that directory are automatically loaded.
 
     require 'discourse'
+    require 'js_locale_helper'
+
+    # mocha hates us, active_support/testing/mochaing.rb line 2 is requiring the wrong
+    #  require, patched in source, on upgrade remove this
+    if Rails.env.test? || Rails.env.development?
+      require "mocha/version"
+      require "mocha/deprecation"
+      if Mocha::VERSION == "0.13.3" && Rails::VERSION::STRING == "3.2.12"
+        Mocha::Deprecation.mode = :disabled
+      end
+    end
 
     # Custom directories with classes and modules you want to be autoloadable.
-    config.autoload_paths += %W(#{config.root}/app/serializers)
+    config.autoload_paths += Dir["#{config.root}/app/serializers"]
+    config.autoload_paths += Dir["#{config.root}/lib/validators/"]
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
@@ -45,7 +53,6 @@ module Discourse
     config.active_record.observers = [
         :user_email_observer,
         :user_action_observer,
-        :message_bus_observer,
         :post_alert_observer,
         :search_observer
     ]
@@ -70,19 +77,11 @@ module Discourse
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.2.4'
 
-    # We need to be able to spin threads
-    config.active_record.thread_safe!
-
     # see: http://stackoverflow.com/questions/11894180/how-does-one-correctly-add-custom-sql-dml-in-migrations/11894420#11894420
     config.active_record.schema_format = :sql
 
     # per https://www.owasp.org/index.php/Password_Storage_Cheat_Sheet
     config.pbkdf2_iterations = 64000
-
-    # dumping rack lock cause the message bus does not work with it (throw :async, it catches Exception)
-    # see: https://github.com/sporkrb/spork/issues/66
-    # rake assets:precompile also fails
-    config.threadsafe! unless $PROGRAM_NAME =~ /spork|rake/
 
     # route all exceptions via our router
     config.exceptions_app = self.routes
@@ -101,7 +100,11 @@ module Discourse
     # ember stuff only used for asset precompliation, production variant plays up
     config.ember.variant = :development
     config.ember.ember_location = "#{Rails.root}/app/assets/javascripts/external_production/ember.js"
-    config.ember.handlebars_location = "#{Rails.root}/app/assets/javascripts/external/handlebars-1.0.rc.3.js"
+    config.ember.handlebars_location = "#{Rails.root}/app/assets/javascripts/external/handlebars-1.0.rc.4.js"
+
+    # Since we are using strong_parameters, we can disable and remove
+    # attr_accessible.
+    config.active_record.whitelist_attributes = false
 
     # So open id logs somewhere sane
     config.after_initialize do

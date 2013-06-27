@@ -1,26 +1,46 @@
-<!-- work in progress, please ignore -->
-<div class='row'>
+<div class='row groups'>
   <div class='content-list span6'>
     <h3>{{i18n admin.groups.edit}}</h3>
     <ul>
-      {{#each group in controller}}
+      {{#each group in model}}
         <li>
-        <a href="#" {{action "edit" group}} {{bindAttr class="group.active"}}>{{group.name}}</a>
+        <a href="#" {{action "edit" group}} {{bindAttr class="group.active"}}>{{group.name}} <span class="count">{{group.userCountDisplay}}</span></a>
         </li>
       {{/each}}
     </ul>
+    <div class='controls'>
+      <button class='btn' {{bindAttr disabled="refreshingAutoGroups"}} {{action "refreshAutoGroups"}}>Refresh</button>
+      <button class='btn' {{action newGroup}}>New</button>
+    </div>
   </div>
 
   <div class='content-editor'>
-    {{#if content.active}}
-      {{#with content.active}}
-      <h3>{{name}}</h3> 
-        {{view Discourse.UserSelector id="private-message-users" class="span8" placeholderKey="admin.groups.selector_placeholder" tabindex="1" usernamesBinding="usernames"}}
-        <button>Save</button>
+    {{#if model.active}}
+      {{#if model.active.loaded}}
+        {{#with model.active}}
+          {{#if automatic}}
+            <h3>{{name}}</h3>
+          {{else}}
+            {{textField value=name placeholderKey="admin.groups.name_placeholder"}}
+          {{/if}}
 
-      {{/with}}
+          {{userSelector usernames=usernames id="group-users" placeholderKey="admin.groups.selector_placeholder" tabindex="1" disabledBinding="automatic"}}
+          <div class='controls'>
+            {{#unless automatic}}
+              <button {{action save this}} {{bindAttr disabled="disableSave"}} class='btn'>{{i18n admin.customize.save}}</button>
+              {{#if id}}
+                <a {{action destroy this}} class='delete-link'>{{i18n admin.customize.delete}}</a>
+              {{/if}}
+            {{else}}
+              {{i18n admin.groups.can_not_edit_automatic}}
+            {{/unless}}
+          </div>
+        {{/with}}
+      {{else}}
+        <div class='spinner'>{{i18n loading}}</div>
+      {{/if}}
     {{else}}
-      nothing here yet
+      {{i18n admin.groups.about}}
     {{/if}}
   </div>
 </div>

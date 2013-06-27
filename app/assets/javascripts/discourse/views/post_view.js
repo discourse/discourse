@@ -11,32 +11,23 @@ Discourse.PostView = Discourse.View.extend({
   templateName: 'post',
   classNameBindings: ['post.lastPost',
                       'postTypeClass',
-                      'post.selected',
+                      'selected',
                       'post.hidden:hidden',
                       'post.deleted_at:deleted',
                       'parentPost:replies-above'],
   postBinding: 'content',
 
-  // TODO really we should do something cleaner here... this makes it work in debug but feels really messy
-  screenTrack: (function() {
-    var parentView = this.get('parentView');
-    var screenTrack = null;
-    while (parentView && !screenTrack) {
-      screenTrack = parentView.get('screenTrack');
-      parentView = parentView.get('parentView');
-    }
-    return screenTrack;
-  }).property('parentView'),
-
-  postTypeClass: (function() {
-    return this.get('post.post_type') === Discourse.get('site.post_types.moderator_action') ? 'moderator' : 'regular';
-  }).property('post.post_type'),
+  postTypeClass: function() {
+    return this.get('post.post_type') === Discourse.Site.instance().get('post_types.moderator_action') ? 'moderator' : 'regular';
+  }.property('post.post_type'),
 
   // If the cooked content changed, add the quote controls
-  cookedChanged: (function() {
+  cookedChanged: function() {
     var postView = this;
-    Em.run.next(function() { postView.insertQuoteControls(); });
-  }).observes('post.cooked'),
+    Em.run.schedule('afterRender', function() {
+      postView.insertQuoteControls();
+    });
+  }.observes('post.cooked'),
 
   init: function() {
     this._super();
@@ -45,13 +36,19 @@ Discourse.PostView = Discourse.View.extend({
 
   mouseUp: function(e) {
     if (this.get('controller.multiSelect') && (e.metaKey || e.ctrlKey)) {
-      this.toggleProperty('post.selected');
+      this.get('controller').selectPost(this.get('post'));
     }
   },
 
+  selected: function() {
+    var selectedPosts = this.get('controller.selectedPosts');
+    if (!selectedPosts) return false;
+    return selectedPosts.contains(this.get('post'));
+  }.property('controller.selectedPostsCount'),
+
   selectText: function() {
-    return this.get('post.selected') ? Em.String.i18n('topic.multi_select.selected', { count: this.get('controller.selectedCount') }) : Em.String.i18n('topic.multi_select.select');
-  }.property('post.selected', 'controller.selectedCount'),
+    return this.get('selected') ? Em.String.i18n('topic.multi_select.selected', { count: this.get('controller.selectedPostsCount') }) : Em.String.i18n('topic.multi_select.select');
+  }.property('selected', 'controller.selectedPostsCount'),
 
   repliesHidden: function() {
     return !this.get('repliesShown');
@@ -146,7 +143,7 @@ Discourse.PostView = Discourse.View.extend({
       if ($aside.data('topic')) {
         topic_id = $aside.data('topic');
       }
-      Discourse.ajax(Discourse.getURL("/posts/by_number/") + topic_id + "/" + ($aside.data('post'))).then(function (result) {
+      Discourse.ajax("/posts/by_number/" + topic_id + "/" + ($aside.data('post'))).then(function (result) {
         var parsed = $(result.cooked);
         parsed.replaceText(originalText, "<span class='highlighted'>" + originalText + "</span>");
         $blockQuote.showHtml(parsed);
@@ -166,14 +163,17 @@ Discourse.PostView = Discourse.View.extend({
     var link_counts;
 
     if (link_counts = this.get('post.link_counts')) {
-      link_counts.each(function(lc) {
+      _.each(link_counts, function(lc) {
         if (lc.clicks > 0) {
           postView.$(".cooked a[href]").each(function() {
             var link = $(this);
             if (link.attr('href') === lc.url) {
-              // don't display badge counts in oneboxes (except when we force it)
-              if (link.closest(".onebox-result").length === 0 || link.hasClass("track-link")) {
-                link.append("<span class='badge badge-notification clicks' title='" + Em.String.i18n("topic_summary.clicks") + "'>" + lc.clicks + "</span>");
+              // don't display badge counts on category badge
+              if (link.closest('.badge-category').length === 0) {
+                // nor in oneboxes (except when we force it)
+                if (link.closest(".onebox-result").length === 0 || link.hasClass("track-link")) {
+                  link.append("<span class='badge badge-notification clicks' title='" + Em.String.i18n("topic_summary.clicks") + "'>" + lc.clicks + "</span>");
+                }
               }
             }
           });
@@ -202,7 +202,11 @@ Discourse.PostView = Discourse.View.extend({
     });
   },
 
-  didInsertElement: function(e) {
+  willDestroyElement: function() {
+    Discourse.ScreenTrack.instance().stopTracking(this.$().prop('id'));
+  },
+
+  didInsertElement: function() {
     var $post = this.$();
     var post = this.get('post');
     var postNumber = post.get('scrollToAfterInsert');
@@ -222,20 +226,17 @@ Discourse.PostView = Discourse.View.extend({
     }
     this.showLinkCounts();
 
-    var screenTrack = this.get('screenTrack');
-    if (screenTrack) {
-      screenTrack.track(this.$().prop('id'), this.get('post.post_number'));
-    }
+    // Track this post
+    Discourse.ScreenTrack.instance().track(this.$().prop('id'), this.get('post.post_number'));
 
     // Add syntax highlighting
     Discourse.SyntaxHighlighting.apply($post);
     Discourse.Lightbox.apply($post);
 
     // If we're scrolling upwards, adjust the scroll position accordingly
-    var scrollTo;
-    if (scrollTo = this.get('post.scrollTo')) {
-      var newSize = ($(document).height() - scrollTo.height) + scrollTo.top;
-      $('body').scrollTop(newSize);
+    var scrollTo = this.get('post.scrollTo');
+    if (scrollTo) {
+      $('body').scrollTop(($(document).height() - scrollTo.height) + scrollTo.top);
       $('section.divider').addClass('fade');
     }
 

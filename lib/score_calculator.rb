@@ -3,7 +3,7 @@ class ScoreCalculator
   def self.default_score_weights
     {
       reply_count: 5,
-      like_count: 15,
+      like_score: 15,
       incoming_link_count: 5,
       bookmark_count: 2,
       avg_time: 0.05,

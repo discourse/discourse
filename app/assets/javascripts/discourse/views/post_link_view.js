@@ -10,10 +10,10 @@ Discourse.PostLinkView = Discourse.View.extend({
   tagName: 'li',
   classNameBindings: ['direction'],
 
-  direction: (function() {
+  direction: function() {
     if (this.get('content.reflection')) return 'incoming';
     return null;
-  }).property('content.reflection'),
+  }.property('content.reflection'),
 
   render: function(buffer) {
     var clicks;

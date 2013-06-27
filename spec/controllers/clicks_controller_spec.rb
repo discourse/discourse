@@ -6,7 +6,7 @@ describe ClicksController do
 
     context 'missing params' do
       it 'raises an error without the url param' do
-        lambda { xhr :get, :track, post_id: 123 }.should raise_error(Discourse::InvalidParameters)
+	lambda { xhr :get, :track, post_id: 123 }.should raise_error(ActionController::ParameterMissing)
       end
 
       it "redirects to the url even without the topic_id or post_id params" do
@@ -24,7 +24,7 @@ describe ClicksController do
 
       context 'with a post_id' do
         it 'calls create_from' do
-          TopicLinkClick.expects(:create_from).with(url: 'http://discourse.org', post_id: 123, ip: '192.168.0.1')
+	  TopicLinkClick.expects(:create_from).with('url' => 'http://discourse.org', 'post_id' => '123', 'ip' => '192.168.0.1')
           xhr :get, :track, url: 'http://discourse.org', post_id: 123
           response.should redirect_to("http://discourse.org")
         end
@@ -36,13 +36,13 @@ describe ClicksController do
         end
 
         it 'will pass the user_id to create_from' do
-          TopicLinkClick.expects(:create_from).with(url: 'http://discourse.org', post_id: 123, ip: '192.168.0.1')
+	  TopicLinkClick.expects(:create_from).with('url' => 'http://discourse.org', 'post_id' => '123', 'ip' => '192.168.0.1')
           xhr :get, :track, url: 'http://discourse.org', post_id: 123
           response.should redirect_to("http://discourse.org")
         end
 
         it "doesn't redirect with the redirect=false param" do
-          TopicLinkClick.expects(:create_from).with(url: 'http://discourse.org', post_id: 123, ip: '192.168.0.1')
+	  TopicLinkClick.expects(:create_from).with('url' => 'http://discourse.org', 'post_id' => '123', 'ip' => '192.168.0.1', 'redirect' => 'false')
           xhr :get, :track, url: 'http://discourse.org', post_id: 123, redirect: 'false'
           response.should_not be_redirect
         end
@@ -51,7 +51,7 @@ describe ClicksController do
 
       context 'with a topic_id' do
         it 'calls create_from' do
-          TopicLinkClick.expects(:create_from).with(url: 'http://discourse.org', topic_id: 789, ip: '192.168.0.1')
+	  TopicLinkClick.expects(:create_from).with('url' => 'http://discourse.org', 'topic_id' => '789', 'ip' => '192.168.0.1')
           xhr :get, :track, url: 'http://discourse.org', topic_id: 789
           response.should redirect_to("http://discourse.org")
         end

@@ -1,7 +1,7 @@
 # Discourse Advanced Developer Install Guide
 
 This guide is aimed at advanced Rails developers who have installed their own Rails apps before. If you are new
-to rails, you are likely much better off with our **[Discourse Vagrant Developer Guide](https://github.com/discourse/discourse/blob/master/docs/VAGRANT.md)**.
+to rails, you are likely much better off with our **[Discourse Vagrant Developer Guide](VAGRANT.md)**.
 
 ## First Steps
 
@@ -10,7 +10,7 @@ to rails, you are likely much better off with our **[Discourse Vagrant Developer
 3. Install Ruby 1.9.3 and Bundler.
 3. Clone the project.
 4. Create development and test databases in postgres.
-5. Copy `config/database.yml.sample` and `config/redis.yml.sample` to `config/database.yml` and `config/redis.yml` and input the correct values to point to your postgres and redis instances.
+5. Copy `config/database.yml.development-sample` and `config/redis.yml.sample` to `config/database.yml` and `config/redis.yml` and input the correct values to point to your postgres and redis instances.
 6. Install the seed data to set up an admin account and meta topic: `psql DATABASE_NAME < pg_dumps/production-image.sql`
 
 
@@ -20,7 +20,7 @@ to rails, you are likely much better off with our **[Discourse Vagrant Developer
 2. `rake db:migrate`
 3. `rake db:test:prepare`
 4. `rake db:seed_fu`
-5. Try running the specs: `bundle exec rspec`
+5. Try running the specs: `bundle exec rake autospec`
 6. `bundle exec rails server`
 
 You should now be able to connect to rails on http://localhost:3000 - try it out! The seed data includes a pinned topic that explains how to get an admin account, so start there! Happy hacking!
@@ -28,7 +28,7 @@ You should now be able to connect to rails on http://localhost:3000 - try it out
 
 # Building your own Vagrant VM
 
-Here are the steps we used to create the **[Vagrant Virtual Machine](https://github.com/discourse/discourse/blob/master/docs/VAGRANT.md)**. They might be useful if you plan on setting up an environment from scratch on Linux:
+Here are the steps we used to create the **[Vagrant Virtual Machine](VAGRANT.md)**. They might be useful if you plan on setting up an environment from scratch on Linux:
 
 
 ## Base box

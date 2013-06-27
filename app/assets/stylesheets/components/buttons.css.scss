@@ -22,12 +22,18 @@
   &:active {
     text-shadow: none;
   }
-  &[disabled] {
+  &[disabled], &.disabled {
     cursor: default;
     opacity: 0.4;
   }
   .icon {
     margin-right: 7px;
+  }
+  &.no-text {
+    .icon {
+      margin-right: 0;
+      line-height: 10px;
+    }
   }
 }
 
@@ -149,6 +155,9 @@
     &:before {
       content: "f";
     }
+  }
+  &.cas {
+    background: $cas;
   }
   &.twitter {
     background: $twitter;

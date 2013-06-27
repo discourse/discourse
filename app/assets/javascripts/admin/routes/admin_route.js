@@ -1,7 +1,7 @@
 /**
   The base admin route
 
-  @class AdminRoute    
+  @class AdminRoute
   @extends Discourse.Route
   @namespace Discourse
   @module Discourse

@@ -81,7 +81,7 @@ describe Admin::UsersController do
 
     context '.revoke_admin' do
       before do
-        @another_admin = Fabricate(:another_admin)
+        @another_admin = Fabricate(:admin)
       end
 
       it 'raises an error unless the user can revoke access' do
@@ -186,6 +186,51 @@ describe Admin::UsersController do
       it "deletes the user record" do
         UserDestroyer.any_instance.expects(:destroy).returns(true)
         xhr :delete, :destroy, id: @delete_me.id
+      end
+    end
+
+    context 'block' do
+      before do
+        @user = Fabricate(:user)
+      end
+
+      it "raises an error when the user doesn't have permission" do
+        Guardian.any_instance.expects(:can_block_user?).with(@user).returns(false)
+        SpamRulesEnforcer.expects(:punish!).never
+        xhr :put, :block, user_id: @user.id
+        response.should be_forbidden
+      end
+
+      it "returns a 403 if the user doesn't exist" do
+        xhr :put, :block, user_id: 123123
+        response.should be_forbidden
+      end
+
+      it "punishes the user for spamming" do
+        SpamRulesEnforcer.expects(:punish!).with(@user)
+        xhr :put, :block, user_id: @user.id
+      end
+    end
+
+    context 'unblock' do
+      before do
+        @user = Fabricate(:user)
+      end
+
+      it "raises an error when the user doesn't have permission" do
+        Guardian.any_instance.expects(:can_unblock_user?).with(@user).returns(false)
+        xhr :put, :unblock, user_id: @user.id
+        response.should be_forbidden
+      end
+
+      it "returns a 403 if the user doesn't exist" do
+        xhr :put, :unblock, user_id: 123123
+        response.should be_forbidden
+      end
+
+      it "punishes the user for spamming" do
+        SpamRulesEnforcer.expects(:clear).with(@user)
+        xhr :put, :unblock, user_id: @user.id
       end
     end
 

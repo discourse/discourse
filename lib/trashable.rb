@@ -2,7 +2,7 @@ module Trashable
   extend ActiveSupport::Concern
 
   included do
-    default_scope where(with_deleted_scope_sql)
+    default_scope { where(deleted_at: nil) }
 
     # scope unscoped does not work
   end
@@ -10,17 +10,14 @@ module Trashable
 
   module ClassMethods
     def with_deleted
+      raise NotImplementedError
       # lifted from acts_as_paranoid, works around https://github.com/rails/rails/issues/4306
       #
       # with this in place Post.limit(10).with_deleted, will work as expected
       #
-      scope = self.scoped.with_default_scope
-      scope.where_values.delete(with_deleted_scope_sql)
-      scope
-    end
-
-    def with_deleted_scope_sql
-      scoped.table[:deleted_at].eq(nil).to_sql
+      # scope = self.scoped.with_default_scope
+      # scope.where_values.delete(with_deleted_scope_sql)
+      # scope
     end
   end
 

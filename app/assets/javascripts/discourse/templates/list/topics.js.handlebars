@@ -1,7 +1,7 @@
-{{#unless controller.loading}}
+{{#unless loading}}
   {{#if loaded}}
     <div class='contents'>
-      {{#if topics.length}}
+      {{#if view.showTable}}
 
       {{#if canViewRankDetails}}
         <button class='btn' {{action toggleRankDetails}} style='margin-bottom: 10px'>
@@ -10,39 +10,35 @@
         </button>
       {{/if}}
 
-      <table id='topic-list' {{bindAttr class="controller.category:filter-category"}}>
+      <table id='topic-list'>
         <thead>
         <tr>
-          {{#if Discourse.currentUser}}
+          {{#if currentUser}}
             <th>&nbsp;</th>
           {{/if}}
-          <th>
+          <th class='main-link'>
             {{i18n topic.title}}
           </th>
-          <th>{{i18n category_title}}</th>
-          <th>{{i18n top_contributors}}</th>
-          <th class='num'>{{i18n posts}}</th>
-          <th class='num'>{{i18n likes}}</th>
-          <th class='num'>{{i18n views}}</th>
+          <th class='category'>{{i18n category_title}}</th>
+          <th class='posters'>{{i18n top_contributors}}</th>
+          <th class='num posts'>{{i18n posts}}</th>
+          <th class='num likes'>{{i18n likes}}</th>
+          <th class='num views'>{{i18n views}}</th>
           <th class='num activity' colspan='2'>{{i18n activity}}</th>
         </tr>
         </thead>
 
-        {{#if view.rollUp}}
+        {{#if view.topicTrackingState.hasIncoming}}
           <tbody>
             <tr>
               <td colspan="9">
                 <div class='alert alert-info'>
-                  {{countI18n new_topics_inserted countBinding="view.insertedCount"}}
-                  <a href='#' {{action showInserted target="controller"}}>{{i18n show_new_topics}}</a>
+                  {{countI18n new_topics_inserted countBinding="view.topicTrackingState.incomingCount"}}
+                  <a href='#' {{action showInserted}}>{{i18n show_new_topics}}</a>
                 </div>
               </td>
             </tr>
           </tbody>
-        {{else}}
-          {{#group}}
-            {{collection contentBinding="inserted" tagName="tbody" itemViewClass="Discourse.TopicListItemView"}}
-          {{/group}}
         {{/if}}
 
         {{#group}}
@@ -54,23 +50,23 @@
     </div>
 
     <footer id='topic-list-bottom'>
-      {{#if view.loading}}
+      {{#if loadingMore}}
         <div class='topics-loading'>{{i18n topic.loading_more}}</div>
       {{/if}}
-    </footer>
 
-    <h3>
-      {{view.footerMessage}}
-      {{#if view.allLoaded}}
-        {{#if controller.latest}}
-          {{#if view.canCreateTopic}}
-            <a href='#' {{action createTopic}}>{{i18n topic.suggest_create_topic}}</a>
+      <h3>
+        {{footerMessage}}
+        {{#if allLoaded}}
+          {{#if latest}}
+            {{#if canCreateTopic}}
+              <a href='#' {{action createTopic}}>{{i18n topic.suggest_create_topic}}</a>
+            {{/if}}
+          {{else}}
+            {{#linkTo list.categories}}{{i18n topic.browse_all_categories}}{{/linkTo}} {{i18n or}} {{#linkTo list.latest}}{{i18n topic.view_latest_topics}}{{/linkTo}}
           {{/if}}
-        {{else}}
-          {{#linkTo list.categories}}{{i18n topic.browse_all_categories}}{{/linkTo}} {{i18n or}} {{#linkTo list.latest}}{{i18n topic.view_latest_topics}}{{/linkTo}}
         {{/if}}
-      {{/if}}
-    </h3>
+      </h3>
+    </footer>
 
   {{/if}}
 {{/unless}}

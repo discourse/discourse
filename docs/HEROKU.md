@@ -12,20 +12,15 @@ For details on how to reduce the monthly cost of your application, see [Advanced
         cd discourse
         git checkout -b heroku
 
-2. Modify the redis.yml file to use the environment variable provided by Heroku and the Redis provider of your choice.
+2. Create a redis.yml file.
 
-    *config/redis.yml*
-
-    ```erb
-     - uri: <%= uri = URI.parse(ENV['SET_REDIS_PROVIDER_URL'] || "redis://localhost:6379") %>
-     + uri: <%= uri = URI.parse(ENV['OPENREDIS_URL'] || "redis://localhost:6379") %>
-    ```
+        cp config/redis.yml.sample config/redis.yml
 
 3. Comment out or delete `config/redis.yml` from .gitignore. We want to include redis.yml when we push to Heroku.
 
     *.gitignore*
 
-    ```ruby
+    ```diff
     - config/redis.yml
     + # config/redis.yml
     ```
@@ -59,19 +54,24 @@ For details on how to reduce the monthly cost of your application, see [Advanced
 
         heroku addons:add openredis:micro
 
-3. Add the [Heroku Scheduler](https://addons.heroku.com/scheduler) add-on, this saves us from running a separate clock process, reducing the cost of the app.
+3. Point the app at your redis provider's URL
+
+        heroku config:get OPENREDIS_URL
+        heroku config:set REDIS_PROVIDER_URL=<result of above command>
+
+4. Add the [Heroku Scheduler](https://addons.heroku.com/scheduler) add-on, this saves us from running a separate clock process, reducing the cost of the app.
 
         heroku addons:add scheduler:standard
 
-4. Generate a secret token in the terminal.
+5. Generate a secret token in the terminal.
 
         rake secret
 
-5. Push the secret to the stored heroku environment variables, this will now be available to your app globally.
+6. Push the secret to the stored heroku environment variables, this will now be available to your app globally.
 
         heroku config:add SECRET_TOKEN=<generated secret>
 
-6. Precompile assets.
+7. Precompile assets.
 
     There are two options for precompilation. Either precompile locally, **before each deploy** or enable [Heroku's experimental user-env-compile](https://devcenter.heroku.com/articles/labs-user-env-compile) feature and Heroku will precompile your assets for you.
 
@@ -102,11 +102,24 @@ For details on how to reduce the monthly cost of your application, see [Advanced
             # Unset var
             unset SECRET_TOKEN
 
-7. Push your heroku branch to Heroku.
+        When precompiling locally make sure to alter the .gitignore file to allow the public/assets folder into version control.
+        
+        *.gitignore*
+
+        ```diff
+        - public/assets
+        + # public/assets
+        ```
+
+        Also, you'll need to add a commit to get the precompiled assets onto Heroku.
+            git add public/assets        
+            git push heroku heroku:master
+
+8. Push your heroku branch to Heroku.
 
         git push heroku heroku:master
 
-8. Migrate and seed the database.
+9. Migrate and seed the database.
 
         heroku run rake db:migrate db:seed_fu
 

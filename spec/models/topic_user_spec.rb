@@ -107,6 +107,10 @@ describe TopicUser do
       topic_user.last_visited_at.to_i.should == today.to_i
     end
 
+    it 'triggers the observer callbacks when updating' do
+      UserActionObserver.instance.expects(:after_save).twice
+      2.times { TopicUser.track_visit!(topic, user) }
+    end
   end
 
   describe 'read tracking' do
@@ -186,6 +190,11 @@ describe TopicUser do
       }.should change(TopicUser, :count).by(1)
     end
 
+    it 'triggers the observer callbacks when updating' do
+      UserActionObserver.instance.expects(:after_save).twice
+      3.times { TopicUser.change(user, topic.id, starred: true) }
+    end
+
     describe 'after creating a row' do
       before do
         TopicUser.change(user, topic.id, starred: true)
@@ -207,6 +216,14 @@ describe TopicUser do
 
   end
 
+  it "can scope by tracking" do
+    TopicUser.create!(user_id: 1, topic_id: 1, notification_level: TopicUser.notification_levels[:tracking])
+    TopicUser.create!(user_id: 2, topic_id: 1, notification_level: TopicUser.notification_levels[:watching])
+    TopicUser.create!(user_id: 3, topic_id: 1, notification_level: TopicUser.notification_levels[:regular])
+
+    TopicUser.tracking(1).count.should == 2
+    TopicUser.tracking(10).count.should == 0
+  end
 
   it "is able to self heal" do
     p1 = Fabricate(:post)

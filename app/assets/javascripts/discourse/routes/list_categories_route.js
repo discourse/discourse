@@ -6,27 +6,36 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.ListCategoriesRoute = Discourse.Route.extend({
+Discourse.ListCategoriesRoute = Discourse.Route.extend(Discourse.ModelReady, {
 
-  exit: function() {
+  redirect: function() { Discourse.redirectIfLoginRequired(this); },
+
+  events: {
+    createCategory: function() {
+      Discourse.Route.showModal(this, 'editCategory', Discourse.Category.create({ color: 'AB9364', text_color: 'FFFFFF', hotness: 5 }));
+      this.controllerFor('editCategory').set('selectedTab', 'general');
+    }
+  },
+
+  model: function() {
+    var listTopicsController = this.controllerFor('listTopics');
+    if (listTopicsController) listTopicsController.set('content', null);
+    return this.controllerFor('list').load('categories');
+  },
+
+  deactivate: function() {
     this._super();
     this.controllerFor('list').set('canCreateCategory', false);
   },
 
-  setupController: function(controller) {
-    var listController,
-      _this = this;
-    listController = this.controllerFor('list');
-    listController.set('filterMode', 'categories');
-    listController.load('categories').then(function(categoryList) {
-      _this.render('listCategories', {
-        into: 'list',
-        outlet: 'listView',
-        controller: 'listCategories'
-      });
-      listController.set('canCreateCategory', categoryList.get('can_create_category'));
-      listController.set('category', null);
-      _this.controllerFor('listCategories').set('content', categoryList);
+  modelReady: function(controller, categoryList) {
+    this.render('listCategories', { into: 'list', outlet: 'listView' });
+
+    this.controllerFor('list').setProperties({
+      canCreateCategory: categoryList.get('can_create_category'),
+      canCreateTopic: categoryList.get('can_create_topic'),
+      filterMode: 'categories',
+      category: null
     });
   }
 

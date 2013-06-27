@@ -4,19 +4,19 @@
   @class AdminDashboardController
   @extends Ember.Controller
   @namespace Discourse
-  @module Discourse  
+  @module Discourse
 **/
 Discourse.AdminDashboardController = Ember.Controller.extend({
   loading: true,
   versionCheck: null,
-  problemsCheckInterval: '1 minute ago',
+  problemsCheckMinutes: 1,
 
   foundProblems: function() {
-    return(Discourse.currentUser.admin && this.get('problems') && this.get('problems').length > 0);
+    return(Discourse.User.current('admin') && this.get('problems') && this.get('problems').length > 0);
   }.property('problems'),
 
   thereWereProblems: function() {
-    if(!Discourse.currentUser.admin) { return false }
+    if(!Discourse.User.current('admin')) { return false }
     if( this.get('foundProblems') ) {
       this.set('hadProblems', true);
       return true;
@@ -33,14 +33,14 @@ Discourse.AdminDashboardController = Ember.Controller.extend({
       c.set('problems', d.problems);
       c.set('loadingProblems', false);
       if( d.problems && d.problems.length > 0 ) {
-        c.problemsCheckInterval = '1 minute ago';
+        c.problemsCheckInterval = 1;
       } else {
-        c.problemsCheckInterval = '10 minutes ago';
+        c.problemsCheckInterval = 10;
       }
     });
   },
 
   problemsTimestamp: function() {
-    return this.get('problemsFetchedAt').long();
+    return moment(this.get('problemsFetchedAt')).format('LLL');
   }.property('problemsFetchedAt')
 });

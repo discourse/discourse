@@ -4,14 +4,14 @@ require_dependency 'post_destroyer'
 
 describe Guardian do
 
-  let(:user) { Fabricate(:user) }
-  let(:moderator) { Fabricate(:moderator) }
-  let(:admin) { Fabricate(:admin) }
-  let(:another_admin) { Fabricate(:another_admin) }
-  let(:coding_horror) { Fabricate(:coding_horror) }
+  let(:user) { build(:user) }
+  let(:moderator) { build(:moderator) }
+  let(:admin) { build(:admin) }
+  let(:another_admin) { build(:admin) }
+  let(:coding_horror) { build(:coding_horror) }
 
-  let(:topic) { Fabricate(:topic, user: user) }
-  let(:post) { Fabricate(:post, topic: topic, user: topic.user) }
+  let(:topic) { build(:topic, user: user) }
+  let(:post) { build(:post, topic: topic, user: topic.user) }
 
   it 'can be created without a user (not logged in)' do
     lambda { Guardian.new }.should_not raise_error
@@ -22,8 +22,8 @@ describe Guardian do
   end
 
   describe 'post_can_act?' do
-    let(:post) { Fabricate(:post) }
-    let(:user) { Fabricate(:user) }
+    let(:post) { build(:post) }
+    let(:user) { build(:user) }
 
     it "returns false when the user is nil" do
       Guardian.new(nil).post_can_act?(post, :like).should be_false
@@ -36,6 +36,11 @@ describe Guardian do
     it "returns false when the topic is archived" do
       post.topic.archived = true
       Guardian.new(user).post_can_act?(post, :like).should be_false
+    end
+
+    it "always allows flagging" do
+      post.topic.archived = true
+      Guardian.new(user).post_can_act?(post, :spam).should be_true
     end
 
     it "returns false when liking yourself" do
@@ -185,9 +190,14 @@ describe Guardian do
       Guardian.new(user).can_invite_to?(topic).should be_false
     end
 
-    it 'returns false when the site requires approving users' do
+    it 'returns true when the site requires approving users and is mod' do
       SiteSetting.expects(:must_approve_users?).returns(true)
-      Guardian.new(moderator).can_invite_to?(topic).should be_false
+      Guardian.new(moderator).can_invite_to?(topic).should be_true
+    end
+
+    it 'returns true when the site requires approving users and is regular' do
+      SiteSetting.expects(:must_approve_users?).returns(true)
+      Guardian.new(coding_horror).can_invite_to?(topic).should be_false
     end
 
   end
@@ -220,6 +230,9 @@ describe Guardian do
 
     describe 'a Post' do
       it 'correctly handles post visibility' do
+        post = Fabricate(:post)
+        topic = post.topic
+
         Guardian.new(user).can_see?(post).should be_true
 
         post.trash!
@@ -613,6 +626,7 @@ describe Guardian do
       end
 
       it "returns false when trying to delete your own post that has already been deleted" do
+        post = Fabricate(:post)
         PostDestroyer.new(user, post).destroy
         post.reload
         Guardian.new(user).can_delete?(post).should be_false
@@ -642,7 +656,7 @@ describe Guardian do
 
     context 'a Category' do
 
-      let(:category) { Fabricate(:category, user: moderator) }
+      let(:category) { build(:category, user: moderator) }
 
       it 'returns false when not logged in' do
         Guardian.new.can_delete?(category).should be_false
@@ -667,8 +681,33 @@ describe Guardian do
 
     end
 
+    context 'can_ban?' do
+      it 'returns false when a user tries to ban another user' do
+        Guardian.new(user).can_ban?(coding_horror).should be_false
+      end
+
+      it 'returns true when an admin tries to ban another user' do
+        Guardian.new(admin).can_ban?(coding_horror).should be_true
+      end
+
+      it 'returns true when a moderator tries to ban another user' do
+        Guardian.new(moderator).can_ban?(coding_horror).should be_true
+      end
+
+      it 'returns false when staff tries to ban staff' do
+        Guardian.new(admin).can_ban?(moderator).should be_false
+      end
+    end
+
     context 'a PostAction' do
-      let(:post_action) { PostAction.create(user_id: user.id, post_id: post.id, post_action_type_id: 1)}
+      let(:post_action) {
+        user.id = 1
+        post.id = 1
+
+        a = PostAction.new(user: user, post: post, post_action_type_id: 1)
+        a.created_at = 1.minute.ago
+        a
+      }
 
       it 'returns false when not logged in' do
         Guardian.new.can_delete?(post_action).should be_false
@@ -732,6 +771,8 @@ describe Guardian do
     end
 
     it "allows an admin to grant a regular user access" do
+      admin.id = 1
+      user.id = 2
       Guardian.new(admin).can_grant_admin?(user).should be_true
     end
   end
@@ -750,21 +791,25 @@ describe Guardian do
     end
 
     it "allows an admin to revoke another admin's access" do
+      admin.id = 1
+      another_admin.id = 2
+
       Guardian.new(admin).can_revoke_admin?(another_admin).should be_true
     end
   end
 
   context 'can_grant_moderation?' do
+
     it "wont allow a non logged in user to grant an moderator's access" do
       Guardian.new.can_grant_moderation?(user).should be_false
     end
 
-    it "wont allow a regular user to revoke an modearator's access" do
+    it "wont allow a regular user to revoke an moderator's access" do
       Guardian.new(user).can_grant_moderation?(moderator).should be_false
     end
 
-    it 'wont allow an admin to grant their own access' do
-      Guardian.new(admin).can_grant_moderation?(admin).should be_false
+    it 'will allow an admin to grant their own moderator access' do
+      Guardian.new(admin).can_grant_moderation?(admin).should be_true
     end
 
     it 'wont allow an admin to grant it to an already moderator' do
@@ -785,12 +830,21 @@ describe Guardian do
       Guardian.new(user).can_revoke_moderation?(moderator).should be_false
     end
 
-    it 'wont allow an moderator to revoke their own moderator' do
+    it 'wont allow a moderator to revoke their own moderator' do
       Guardian.new(moderator).can_revoke_moderation?(moderator).should be_false
     end
 
     it "allows an admin to revoke a moderator's access" do
       Guardian.new(admin).can_revoke_moderation?(moderator).should be_true
+    end
+
+    it "allows an admin to revoke a moderator's access from self" do
+      admin.moderator = true
+      Guardian.new(admin).can_revoke_moderation?(admin).should be_true
+    end
+
+    it "does not allow revoke from non moderators" do
+      Guardian.new(admin).can_revoke_moderation?(admin).should be_false
     end
   end
 
@@ -880,6 +934,28 @@ describe Guardian do
       it "is true if user has no posts" do
         Guardian.new(admin).can_delete_user?(user).should be_true
       end
+    end
+  end
+
+  describe 'can_grant_title?' do
+    it 'is false without a logged in user' do
+      Guardian.new(nil).can_grant_title?(user).should be_false
+    end
+
+    it 'is false for regular users' do
+      Guardian.new(user).can_grant_title?(user).should be_false
+    end
+
+    it 'is true for moderators' do
+      Guardian.new(moderator).can_grant_title?(user).should be_true
+    end
+
+    it 'is true for admins' do
+      Guardian.new(admin).can_grant_title?(user).should be_true
+    end
+
+    it 'is false without a user to look at' do
+      Guardian.new(admin).can_grant_title?(nil).should be_false
     end
   end
 

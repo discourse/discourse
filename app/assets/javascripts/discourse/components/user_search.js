@@ -10,8 +10,7 @@ var cacheTopicId = null;
 var cacheTime = null;
 
 var debouncedSearch = Discourse.debouncePromise(function(term, topicId) {
-  return Discourse.ajax({
-    url: Discourse.getURL('/users/search/users'),
+  return Discourse.ajax('/users/search/users', {
     data: {
       term: term,
       topic_id: topicId
@@ -45,9 +44,10 @@ Discourse.UserSearch = {
       cache = {};
     }
     cacheTopicId = topicId;
-    var success = function(r) {
+
+    var organizeResults = function(r) {
       var result = [];
-      r.users.each(function(u) {
+      _.each(r.users,function(u) {
         if (exclude.indexOf(u.username) === -1) {
           result.push(u);
         }
@@ -58,9 +58,9 @@ Discourse.UserSearch = {
     };
 
     if (cache[term]) {
-      success(cache[term]);
+      organizeResults(cache[term]);
     } else {
-      debouncedSearch(term, topicId).then(success);
+      debouncedSearch(term, topicId).then(organizeResults);
     }
     return promise;
   }

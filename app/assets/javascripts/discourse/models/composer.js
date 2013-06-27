@@ -22,14 +22,17 @@ EDIT = 'edit';
 REPLY_AS_NEW_TOPIC_KEY = "reply_as_new_topic";
 
 Discourse.Composer = Discourse.Model.extend({
-  archetypesBinding: 'Discourse.site.archetypes',
 
   init: function() {
     this._super();
     var val = Discourse.KeyValueStore.get('composer.showPreview') || 'true';
     this.set('showPreview', val === 'true');
-    this.set('archetypeId', Discourse.get('site.default_archetype'));
+    this.set('archetypeId', Discourse.Site.instance().get('default_archetype'));
   },
+
+  archetypes: function() {
+    return Discourse.Site.instance().get('archetypes');
+  }.property(),
 
   creatingTopic: function() {
     return this.get('action') === CREATE_TOPIC;
@@ -65,9 +68,18 @@ Discourse.Composer = Discourse.Model.extend({
     return false;
   }.property('editingPost', 'creatingTopic', 'post.post_number'),
 
+  canCategorize: function() {
+    return (this.get('editTitle') && !this.get('creatingPrivateMessage'));
+  }.property('editTitle', 'creatingPrivateMessage'),
+
+  showAdminOptions: function() {
+    if (this.get('creatingTopic') && Discourse.User.current('staff')) return true;
+    return false;
+  }.property('editTitle'),
+
   togglePreview: function() {
     this.toggleProperty('showPreview');
-    Discourse.KeyValueStore.set({ key: 'showPreview', value: this.get('showPreview') });
+    Discourse.KeyValueStore.set({ key: 'composer.showPreview', value: this.get('showPreview') });
   },
 
   // Import a quote from the post
@@ -156,16 +168,32 @@ Discourse.Composer = Discourse.Model.extend({
     //    - creating a new topic
     //    - editing the 1st post
     //    - creating a private message
-    if (this.get('editTitle') && this.get('titleLength') < Discourse.SiteSettings.min_topic_title_length) return true;
+
+    if (this.get('editTitle') && !this.get('titleLengthValid')) return true;
 
     // Need at least one user when sending a private message
-    if (this.get('creatingPrivateMessage') && (this.get('targetUsernames').trim() + ',').indexOf(',') === 0) return true;
+    if ( this.get('creatingPrivateMessage') &&
+         this.get('targetUsernames') &&
+        (this.get('targetUsernames').trim() + ',').indexOf(',') === 0) {
+      return true;
+    }
 
     // reply is always required
-    if (this.get('replyLength') < Discourse.SiteSettings.min_post_length) return true;
+    if (this.get('missingReplyCharacters') > 0) return true;
+
+    if (this.get('canCategorize') && !Discourse.SiteSettings.allow_uncategorized_topics && !this.get('categoryName')) return true;
 
     return false;
-  }.property('loading', 'editTitle', 'titleLength', 'targetUsernames', 'replyLength'),
+  }.property('loading', 'editTitle', 'titleLength', 'targetUsernames', 'replyLength', 'categoryName', 'missingReplyCharacters'),
+
+  titleLengthValid: function() {
+    if (this.get('creatingPrivateMessage')) {
+      if (this.get('titleLength') < Discourse.SiteSettings.min_private_message_title_length) return false;
+    } else {
+      if (this.get('titleLength') < Discourse.SiteSettings.min_topic_title_length) return false;
+    }
+    return (this.get('titleLength') <= Discourse.SiteSettings.max_topic_title_length);
+  }.property('creatingPrivateMessage', 'titleLength'),
 
   // The text for the save button
   saveText: function() {
@@ -233,7 +261,7 @@ Discourse.Composer = Discourse.Model.extend({
     }
 
     this.set('categoryName', opts.categoryName || this.get('topic.category.name'));
-    this.set('archetypeId', opts.archetypeId || Discourse.get('site.default_archetype'));
+    this.set('archetypeId', opts.archetypeId || Discourse.Site.instance().get('default_archetype'));
     this.set('metaData', opts.metaData ? Em.Object.create(opts.metaData) : null);
     this.set('reply', opts.reply || this.get("reply") || "");
     if (opts.postId) {
@@ -268,7 +296,9 @@ Discourse.Composer = Discourse.Model.extend({
   },
 
   save: function(opts) {
-    return this.get('editingPost') ? this.editPost(opts) : this.createPost(opts);
+    if( !this.get('cantSubmitPost') ) {
+      return this.get('editingPost') ? this.editPost(opts) : this.createPost(opts);
+    }
   },
 
   // When you edit a post
@@ -298,7 +328,7 @@ Discourse.Composer = Discourse.Model.extend({
         // perhaps our post came from elsewhere eg. draft
         var idx = -1;
         var postNumber = post.get('post_number');
-        posts.each(function(p, i) {
+        _.each(posts,function(p,i) {
           if (p.get('post_number') === postNumber) {
             idx = i;
           }
@@ -310,11 +340,14 @@ Discourse.Composer = Discourse.Model.extend({
           composer.set('topic.draft_sequence', savedPost.draft_sequence);
         }
       }, function(error) {
-        var errors;
-        errors = $.parseJSON(error.responseText).errors;
-        promise.reject(errors[0]);
+        var response = $.parseJSON(error.responseText);
+        if (response && response.errors) {
+          promise.reject(response.errors[0]);
+        } else {
+          promise.reject(Em.String.i18n('generic_error'));
+        }
         post.set('cooked', oldCooked);
-        return composer.set('composeState', OPEN);
+        composer.set('composeState', OPEN);
       });
     });
   },
@@ -323,7 +356,7 @@ Discourse.Composer = Discourse.Model.extend({
   createPost: function(opts) {
     var post = this.get('post'),
         topic = this.get('topic'),
-        currentUser = Discourse.get('currentUser'),
+        currentUser = Discourse.User.current(),
         addedToStream = false;
 
     // The post number we'll probably get from the server
@@ -346,12 +379,13 @@ Discourse.Composer = Discourse.Model.extend({
         user_id: currentUser.get('id'),
         metaData: this.get('metaData'),
         archetype: this.get('archetypeId'),
-        post_type: Discourse.get('site.post_types.regular'),
+        post_type: Discourse.Site.instance().get('post_types.regular'),
         target_usernames: this.get('targetUsernames'),
         actions_summary: Em.A(),
         moderator: currentUser.get('moderator'),
         yours: true,
-        newPost: true
+        newPost: true,
+        auto_close_days: this.get('auto_close_days')
       });
 
     // If we're in a topic, we can append the post instantly.
@@ -366,7 +400,7 @@ Discourse.Composer = Discourse.Model.extend({
       // Update last post
       topic.set('last_posted_at', new Date());
       topic.set('highest_post_number', createdPost.get('post_number'));
-      topic.set('last_poster', Discourse.get('currentUser'));
+      topic.set('last_poster', Discourse.User.current());
       topic.set('filtered_posts_count', topic.get('filtered_posts_count') + 1);
 
       // Set the topic view for the new post
@@ -374,7 +408,7 @@ Discourse.Composer = Discourse.Model.extend({
       createdPost.set('created_at', new Date());
 
       // If we're near the end of the topic, load new posts
-      var lastPost = topic.posts.last();
+      var lastPost = topic.posts[topic.posts.length-1];
       if (lastPost) {
         var diff = topic.get('highest_post_number') - lastPost.get('post_number');
 
@@ -461,7 +495,7 @@ Discourse.Composer = Discourse.Model.extend({
 
   flashDraftStatusForNewUser: function() {
     var $draftStatus = $('#draft-status');
-    if (Discourse.get('currentUser.trust_level') === 0) {
+    if (Discourse.User.current('trust_level') === 0) {
       $draftStatus.toggleClass('flash', true);
       setTimeout(function() { $draftStatus.removeClass('flash'); }, 250);
     }
@@ -497,8 +531,21 @@ Discourse.Composer = Discourse.Model.extend({
     @property missingTitleCharacters
   **/
   missingTitleCharacters: function() {
-    return Discourse.SiteSettings.min_topic_title_length - this.get('titleLength');
-  }.property('titleLength'),
+    return this.get('minimumTitleLength') - this.get('titleLength');
+  }.property('minimumTitleLength', 'titleLength'),
+
+  /**
+    Minimum number of characters for a title to be valid.
+
+    @property minimumTitleLength
+  **/
+  minimumTitleLength: function() {
+    if (this.get('creatingPrivateMessage')) {
+      return Discourse.SiteSettings.min_private_message_title_length;
+    } else {
+      return Discourse.SiteSettings.min_topic_title_length;
+    }
+  }.property('creatingPrivateMessage'),
 
 
   /**
@@ -507,8 +554,21 @@ Discourse.Composer = Discourse.Model.extend({
     @property missingReplyCharacters
   **/
   missingReplyCharacters: function() {
-    return Discourse.SiteSettings.min_post_length - this.get('replyLength');
-  }.property('replyLength'),
+    return this.get('minimumPostLength') - this.get('replyLength');
+  }.property('minimumPostLength', 'replyLength'),
+
+  /**
+    Minimum number of characters for a post body to be valid.
+
+    @property minimumPostLength
+  **/
+  minimumPostLength: function() {
+    if( this.get('creatingPrivateMessage') ) {
+      return Discourse.SiteSettings.min_private_message_post_length;
+    } else {
+      return Discourse.SiteSettings.min_post_length;
+    }
+  }.property('creatingPrivateMessage'),
 
   /**
     Computes the length of the title minus non-significant whitespaces

@@ -20,13 +20,10 @@ describe Jobs::Exporter do
         @exporter_args = {}
       end
 
-      it "should indicate that an export is now running" do
-        Export.expects(:set_export_started)
-        Jobs::Exporter.new.execute( @exporter_args )
-      end
-
-      it "should indicate that an export is not running after it's done" do
-        Export.expects(:set_export_is_not_running)
+      it "should indicate that an export is running" do
+        seq = sequence('call sequence')
+        Export.expects(:set_export_started).in_sequence(seq).at_least_once
+        Export.expects(:set_export_is_not_running).in_sequence(seq).at_least_once
         Jobs::Exporter.new.execute( @exporter_args )
       end
 
@@ -153,6 +150,8 @@ describe Jobs::Exporter do
           end
 
           it "should send a notification to the user who started the export" do
+
+            ActiveRecord::Base.observers.enable :all
             expect {
               Jobs::Exporter.new.execute( @exporter_args.merge( user_id: @user.id ) )
             }.to change { Notification.count }.by(1)

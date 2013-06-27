@@ -9,7 +9,7 @@ class Admin::SiteCustomizationsController < Admin::AdminController
   end
 
   def create
-    @site_customization = SiteCustomization.new(params[:site_customization])
+    @site_customization = SiteCustomization.new(site_customization_params)
     @site_customization.user_id = current_user.id
 
     respond_to do |format|
@@ -25,7 +25,7 @@ class Admin::SiteCustomizationsController < Admin::AdminController
     @site_customization = SiteCustomization.find(params[:id])
 
     respond_to do |format|
-      if @site_customization.update_attributes(params[:site_customization])
+      if @site_customization.update_attributes(site_customization_params)
         format.json { head :no_content }
       else
         format.json { render json: @site_customization.errors, status: :unprocessable_entity }
@@ -41,5 +41,11 @@ class Admin::SiteCustomizationsController < Admin::AdminController
       format.json { head :no_content }
     end
   end
+
+  private
+
+    def site_customization_params
+      params.require(:site_customization).permit(:name, :stylesheet, :header, :position, :enabled, :key, :override_default_style, :stylesheet_baked)
+    end
 
 end

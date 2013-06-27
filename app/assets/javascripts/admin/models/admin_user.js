@@ -6,20 +6,12 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.AdminUser = Discourse.Model.extend({
-  path: (function() {
-    return Discourse.getURL("/users/") + (this.get('username_lower'));
-  }).property('username'),
-
-  adminPath: (function() {
-    return Discourse.getURL("/admin/users/") + (this.get('username_lower'));
-  }).property('username'),
-
+Discourse.AdminUser = Discourse.User.extend({
 
   deleteAllPosts: function() {
     var user = this;
     this.set('can_delete_all_posts', false);
-    Discourse.ajax(Discourse.getURL("/admin/users/") + (this.get('id')) + "/delete_all_posts", {type: 'PUT'}).then(function(result){
+    Discourse.ajax("/admin/users/" + (this.get('id')) + "/delete_all_posts", {type: 'PUT'}).then(function(result){
       user.set('post_count', 0);
     });
   },
@@ -29,14 +21,14 @@ Discourse.AdminUser = Discourse.Model.extend({
     this.set('admin', false);
     this.set('can_grant_admin', true);
     this.set('can_revoke_admin', false);
-    return Discourse.ajax(Discourse.getURL("/admin/users/") + (this.get('id')) + "/revoke_admin", {type: 'PUT'});
+    return Discourse.ajax("/admin/users/" + (this.get('id')) + "/revoke_admin", {type: 'PUT'});
   },
 
   grantAdmin: function() {
     this.set('admin', true);
     this.set('can_grant_admin', false);
     this.set('can_revoke_admin', true);
-    Discourse.ajax(Discourse.getURL("/admin/users/") + (this.get('id')) + "/grant_admin", {type: 'PUT'});
+    Discourse.ajax("/admin/users/" + (this.get('id')) + "/grant_admin", {type: 'PUT'});
   },
 
   // Revoke the user's moderation access
@@ -44,35 +36,36 @@ Discourse.AdminUser = Discourse.Model.extend({
     this.set('moderator', false);
     this.set('can_grant_moderation', true);
     this.set('can_revoke_moderation', false);
-    return Discourse.ajax(Discourse.getURL("/admin/users/") + (this.get('id')) + "/revoke_moderation", {type: 'PUT'});
+    return Discourse.ajax("/admin/users/" + (this.get('id')) + "/revoke_moderation", {type: 'PUT'});
   },
 
   grantModeration: function() {
     this.set('moderator', true);
     this.set('can_grant_moderation', false);
     this.set('can_revoke_moderation', true);
-    Discourse.ajax(Discourse.getURL("/admin/users/") + (this.get('id')) + "/grant_moderation", {type: 'PUT'});
+    Discourse.ajax("/admin/users/" + (this.get('id')) + "/grant_moderation", {type: 'PUT'});
   },
 
   refreshBrowsers: function() {
-    Discourse.ajax(Discourse.getURL("/admin/users/") + (this.get('id')) + "/refresh_browsers", {type: 'POST'});
+    Discourse.ajax("/admin/users/" + (this.get('id')) + "/refresh_browsers", {type: 'POST'});
     bootbox.alert("Message sent to all clients!");
   },
 
   approve: function() {
     this.set('can_approve', false);
     this.set('approved', true);
-    this.set('approved_by', Discourse.get('currentUser'));
-    Discourse.ajax(Discourse.getURL("/admin/users/") + (this.get('id')) + "/approve", {type: 'PUT'});
+    this.set('approved_by', Discourse.User.current());
+    Discourse.ajax("/admin/users/" + (this.get('id')) + "/approve", {type: 'PUT'});
   },
 
   username_lower: (function() {
     return this.get('username').toLowerCase();
   }).property('username'),
 
-  trustLevel: (function() {
-    return Discourse.get('site.trust_levels').findProperty('id', this.get('trust_level'));
-  }).property('trust_level'),
+  trustLevel: function() {
+    var site = Discourse.Site.instance();
+    return site.get('trust_levels').findProperty('id', this.get('trust_level'));
+  }.property('trust_level'),
 
   isBanned: (function() {
     return this.get('is_banned') === true;
@@ -83,15 +76,15 @@ Discourse.AdminUser = Discourse.Model.extend({
   }).property('admin', 'moderator'),
 
   banDuration: (function() {
-    var banned_at = Date.create(this.banned_at);
-    var banned_till = Date.create(this.banned_till);
-    return banned_at.short() + " - " + banned_till.short();
+    var banned_at = moment(this.banned_at);
+    var banned_till = moment(this.banned_till);
+    return banned_at.format('L') + " - " + banned_till.format('L');
   }).property('banned_till', 'banned_at'),
 
   ban: function() {
     var duration = parseInt(window.prompt(Em.String.i18n('admin.user.ban_duration')), 10);
     if (duration > 0) {
-      Discourse.ajax(Discourse.getURL("/admin/users/") + this.id + "/ban", {
+      Discourse.ajax("/admin/users/" + this.id + "/ban", {
         type: 'PUT',
         data: {duration: duration}
       }).then(function () {
@@ -106,7 +99,7 @@ Discourse.AdminUser = Discourse.Model.extend({
   },
 
   unban: function() {
-    Discourse.ajax(Discourse.getURL("/admin/users/") + this.id + "/unban", {
+    Discourse.ajax("/admin/users/" + this.id + "/unban", {
       type: 'PUT'
     }).then(function() {
       // succeeded
@@ -119,7 +112,7 @@ Discourse.AdminUser = Discourse.Model.extend({
   },
 
   impersonate: function() {
-    Discourse.ajax(Discourse.getURL("/admin/impersonate"), {
+    Discourse.ajax("/admin/impersonate", {
       type: 'POST',
       data: { username_or_email: this.get('username') }
     }).then(function() {
@@ -132,6 +125,61 @@ Discourse.AdminUser = Discourse.Model.extend({
       } else {
         bootbox.alert(Em.String.i18n('admin.impersonate.invalid'));
       }
+    });
+  },
+
+  activate: function() {
+    Discourse.ajax('/admin/users/' + this.id + '/activate', {type: 'PUT'}).then(function() {
+      // succeeded
+      window.location.reload();
+    }, function(e) {
+      // failed
+      var error = Em.String.i18n('admin.user.activate_failed', { error: "http: " + e.status + " - " + e.body });
+      bootbox.alert(error);
+    });
+  },
+
+  deactivate: function() {
+    Discourse.ajax('/admin/users/' + this.id + '/deactivate', {type: 'PUT'}).then(function() {
+      // succeeded
+      window.location.reload();
+    }, function(e) {
+      // failed
+      var error = Em.String.i18n('admin.user.deactivate_failed', { error: "http: " + e.status + " - " + e.body });
+      bootbox.alert(error);
+    });
+  },
+
+  unblock: function() {
+    Discourse.ajax('/admin/users/' + this.id + '/unblock', {type: 'PUT'}).then(function() {
+      // succeeded
+      window.location.reload();
+    }, function(e) {
+      // failed
+      var error = Em.String.i18n('admin.user.unblock_failed', { error: "http: " + e.status + " - " + e.body });
+      bootbox.alert(error);
+    });
+  },
+
+  block: function() {
+    Discourse.ajax('/admin/users/' + this.id + '/block', {type: 'PUT'}).then(function() {
+      // succeeded
+      window.location.reload();
+    }, function(e) {
+      // failed
+      var error = Em.String.i18n('admin.user.block_failed', { error: "http: " + e.status + " - " + e.body });
+      bootbox.alert(error);
+    });
+  },
+
+  sendActivationEmail: function() {
+    Discourse.ajax('/users/' + this.get('username') + '/send_activation_email').then(function() {
+      // succeeded
+      bootbox.alert( Em.String.i18n('admin.user.activation_email_sent') );
+    }, function(e) {
+      // failed
+      var error = Em.String.i18n('admin.user.send_activation_email_failed', { error: "http: " + e.status + " - " + e.body });
+      bootbox.alert(error);
     });
   },
 
@@ -151,7 +199,7 @@ Discourse.AdminUser = Discourse.Model.extend({
     var user = this;
     bootbox.confirm(Em.String.i18n("admin.user.delete_confirm"), Em.String.i18n("no_value"), Em.String.i18n("yes_value"), function(result) {
       if(result) {
-        Discourse.ajax(Discourse.getURL("/admin/users/") + user.get('id') + '.json', { type: 'DELETE' }).then(function(data) {
+        Discourse.ajax("/admin/users/" + user.get('id') + '.json', { type: 'DELETE' }).then(function(data) {
           if (data.deleted) {
             bootbox.alert(Em.String.i18n("admin.user.deleted"), function() {
               document.location = "/admin/users/list/active";
@@ -168,6 +216,16 @@ Discourse.AdminUser = Discourse.Model.extend({
         });
       }
     });
+  },
+
+  loadDetails: function() {
+    var model = this;
+    if (model.get('loadedDetails')) { return; }
+
+    Discourse.AdminUser.find(model.get('username_lower')).then(function (result) {
+      model.setProperties(result);
+      model.set('loadedDetails', true);
+    });
   }
 
 });
@@ -175,12 +233,15 @@ Discourse.AdminUser = Discourse.Model.extend({
 Discourse.AdminUser.reopenClass({
 
   bulkApprove: function(users) {
-    users.each(function(user) {
+    _.each(users, function(user) {
       user.set('approved', true);
       user.set('can_approve', false);
       return user.set('selected', false);
     });
-    return Discourse.ajax(Discourse.getURL("/admin/users/approve-bulk"), {
+
+    bootbox.alert(Em.String.i18n("admin.user.approve_bulk_success"));
+
+    return Discourse.ajax("/admin/users/approve-bulk", {
       type: 'PUT',
       data: {
         users: users.map(function(u) {
@@ -191,22 +252,19 @@ Discourse.AdminUser.reopenClass({
   },
 
   find: function(username) {
-    return Discourse.ajax({url: Discourse.getURL("/admin/users/") + username}).then(function (result) {
+    return Discourse.ajax("/admin/users/" + username).then(function (result) {
+      result.loadedDetails = true;
       return Discourse.AdminUser.create(result);
     });
   },
 
-  findAll: function(query, filter, doneCallback) {
-    var result = Em.A();
-    Discourse.ajax({
-      url: Discourse.getURL("/admin/users/list/") + query + ".json",
+  findAll: function(query, filter) {
+    return Discourse.ajax("/admin/users/list/" + query + ".json", {
       data: { filter: filter }
     }).then(function(users) {
-      users.each(function(u) {
-        result.pushObject(Discourse.AdminUser.create(u));
+      return users.map(function(u) {
+        return Discourse.AdminUser.create(u);
       });
-      if( doneCallback ) { doneCallback(); }
     });
-    return result;
   }
 });

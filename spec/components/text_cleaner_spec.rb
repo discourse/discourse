@@ -57,15 +57,18 @@ describe TextCleaner do
 
     let(:lowercased) { "this is awesome" }
     let(:capitalized) { "This is awesome" }
+    let(:iletter) { "iLetter" }
 
     it "ignores first letter case by default" do
       TextCleaner.clean(lowercased).should == lowercased
       TextCleaner.clean(capitalized).should == capitalized
+      TextCleaner.clean(iletter).should == iletter
     end
 
     it "capitalizes first letter when enabled" do
       TextCleaner.clean(lowercased, capitalize_first_letter: true).should == capitalized
       TextCleaner.clean(capitalized, capitalize_first_letter: true).should == capitalized
+      TextCleaner.clean(iletter, capitalize_first_letter: true).should == iletter
     end
 
   end

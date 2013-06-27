@@ -1,9 +1,9 @@
 class Admin::ImpersonateController < Admin::AdminController
 
   def create
-    requires_parameters(:username_or_email)
+    params.require(:username_or_email)
 
-    user = User.find_by_username_or_email(params[:username_or_email]).first
+    user = User.find_by_username_or_email(params[:username_or_email])
 
     raise Discourse::NotFound if user.blank?
 

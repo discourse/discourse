@@ -8,6 +8,8 @@
 **/
 Discourse.FilteredListRoute = Discourse.Route.extend({
 
+  redirect: function() { Discourse.redirectIfLoginRequired(this); },
+
   exit: function() {
     this._super();
 
@@ -42,7 +44,7 @@ Discourse.FilteredListRoute = Discourse.Route.extend({
   }
 });
 
-Discourse.ListController.filters.each(function(filter) {
+Discourse.ListController.filters.forEach(function(filter) {
   Discourse["List" + (filter.capitalize()) + "Route"] = Discourse.FilteredListRoute.extend({ filter: filter });
 });
 

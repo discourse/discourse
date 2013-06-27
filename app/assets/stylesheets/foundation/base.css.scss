@@ -19,6 +19,7 @@ html {
 a {
   color: $link-color;
   text-decoration: none;
+  cursor: pointer;
   &:visited {
     color: $link-color-visited;
   }
@@ -76,4 +77,8 @@ fieldset {
   margin: 0;
   border: 0;
   padding: 0;
+}
+
+pre code {
+  overflow: auto;
 }

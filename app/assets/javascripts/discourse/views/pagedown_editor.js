@@ -4,11 +4,11 @@
   A control to support using PageDown as an Ember view.
 
   @class PagedownEditor
-  @extends Ember.ContainerView
+  @extends Discourse.ContainerView
   @namespace Discourse
   @module Discourse
 **/
-Discourse.PagedownEditor = Ember.ContainerView.extend({
+Discourse.PagedownEditor = Discourse.ContainerView.extend({
   elementId: 'pagedown-editor',
 
   init: function() {
@@ -20,28 +20,35 @@ Discourse.PagedownEditor = Ember.ContainerView.extend({
     this.pushObject(Em.View.create({ elementId: 'wmd-button-bar' }));
     this.pushObject(Em.TextArea.create({ valueBinding: 'parentView.value', elementId: 'wmd-input' }));
 
-    this.pushObject(Discourse.View.createWithMixins({
-      elementId: 'wmd-preview',
-      classNameBindings: [':preview', 'hidden'],
-      hidden: (function() {
-        return this.blank('parentView.value');
-      }).property('parentView.value')
-    }));
+    this.attachViewClass(Discourse.PagedownPreviewView);
   },
 
   didInsertElement: function() {
-    var $wmdInput = $('#wmd-input');
-    $wmdInput.data('init', true);
+    $('#wmd-input').data('init', true);
     this.set('editor', Discourse.Markdown.createEditor());
-    return this.get('editor').run();
+    this.get('editor').run();
   },
 
-  observeValue: (function() {
+  observeValue: function() {
     var editor = this.get('editor');
     if (!editor) return;
     Ember.run.next(null, function() { editor.refreshPreview(); });
-  }).observes('value')
+  }.observes('value')
 
 });
 
+Discourse.View.registerHelper('pagedown', Discourse.PagedownEditor);
 
+/**
+  A helper view to display a preview of the pagedown content
+
+  @class PagedownPreviewView
+  @extends Discourse.View
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.PagedownPreviewView = Discourse.View.extend({
+  elementId: 'wmd-preview',
+  classNameBindings: [':preview', 'hidden'],
+  hidden: Em.computed.empty('parentView.value')
+});

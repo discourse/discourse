@@ -26,7 +26,7 @@ describe Admin::SiteSettingsController do
     context 'update' do
 
       it 'requires a value parameter' do
-        lambda { xhr :put, :update, id: 'test_setting' }.should raise_error(Discourse::InvalidParameters)
+        lambda { xhr :put, :update, id: 'test_setting' }.should raise_error(ActionController::ParameterMissing)
       end
 
       it 'sets the value when the param is present' do
@@ -34,6 +34,10 @@ describe Admin::SiteSettingsController do
         xhr :put, :update, id: 'test_setting', value: 'hello'
       end
 
+      it 'allows value to be a blank string' do
+        SiteSetting.expects(:'test_setting=').with('').once
+        xhr :put, :update, id: 'test_setting', value: ''
+      end
     end
 
   end

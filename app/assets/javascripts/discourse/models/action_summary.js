@@ -37,6 +37,8 @@ Discourse.ActionSummary = Discourse.Model.extend({
 
   // Perform this action
   act: function(opts) {
+    if (!opts) opts = {};
+
     var action = this.get('actionType.name_key');
 
     // Mark it as acted
@@ -52,19 +54,19 @@ Discourse.ActionSummary = Discourse.Model.extend({
 
     // Add ourselves to the users who liked it if present
     if (this.present('users')) {
-      this.users.pushObject(Discourse.get('currentUser'));
+      this.users.pushObject(Discourse.User.current());
     }
 
     // Create our post action
     var actionSummary = this;
 
-    return Discourse.ajax({
-      url: Discourse.getURL("/post_actions"),
+    return Discourse.ajax("/post_actions", {
       type: 'POST',
       data: {
         id: this.get('post.id'),
         post_action_type_id: this.get('id'),
-        message: (opts ? opts.message : void 0) || ""
+        message: opts.message,
+        take_action: opts.takeAction
       }
     }).then(null, function (error) {
       actionSummary.removeAction();
@@ -78,8 +80,7 @@ Discourse.ActionSummary = Discourse.Model.extend({
     this.removeAction();
 
     // Remove our post action
-    return Discourse.ajax({
-      url: Discourse.getURL("/post_actions/") + (this.get('post.id')),
+    return Discourse.ajax("/post_actions/" + (this.get('post.id')), {
       type: 'DELETE',
       data: {
         post_action_type_id: this.get('id')
@@ -89,7 +90,7 @@ Discourse.ActionSummary = Discourse.Model.extend({
 
   clearFlags: function() {
     var actionSummary = this;
-    return Discourse.ajax(Discourse.getURL("/post_actions/clear_flags"), {
+    return Discourse.ajax("/post_actions/clear_flags", {
       type: "POST",
       data: {
         post_action_type_id: this.get('id'),
@@ -103,7 +104,7 @@ Discourse.ActionSummary = Discourse.Model.extend({
 
   loadUsers: function() {
     var actionSummary = this;
-    Discourse.ajax(Discourse.getURL("/post_actions/users"), {
+    Discourse.ajax("/post_actions/users", {
       data: {
         id: this.get('post.id'),
         post_action_type_id: this.get('id')
@@ -111,8 +112,8 @@ Discourse.ActionSummary = Discourse.Model.extend({
     }).then(function (result) {
       var users = Em.A();
       actionSummary.set('users', users);
-      result.each(function(u) {
-        users.pushObject(Discourse.User.create(u));
+      _.each(result,function(user) {
+        users.pushObject(Discourse.User.create(user));
       });
     });
   }

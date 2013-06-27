@@ -12,7 +12,10 @@ Discourse.SiteSettingView = Discourse.View.extend({
   templateName: function() {
 
     // If we're editing a boolean, return a different template
-    if (this.get('content.type') === 'bool') return 'admin/templates/site_settings/setting_bool'
+    if (this.get('content.type') === 'bool') return 'admin/templates/site_settings/setting_bool';
+
+    // If we're editing an enum field, show a dropdown
+    if (this.get('content.type') === 'enum' ) return 'admin/templates/site_settings/setting_enum';
 
     // Default to string editor
     return 'admin/templates/site_settings/setting_string';

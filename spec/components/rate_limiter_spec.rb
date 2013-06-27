@@ -50,7 +50,7 @@ describe RateLimiter do
       end
 
       it "raises an error the third time called" do
-        lambda { rate_limiter.performed! }.should raise_error
+        lambda { rate_limiter.performed! }.should raise_error(RateLimiter::LimitExceeded)
       end
 
       context "as an admin/moderator" do

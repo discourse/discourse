@@ -1,10 +1,9 @@
 class RobotsTxtController < ApplicationController
   layout false
   skip_before_filter :check_xhr
-  skip_before_filter :check_restricted_access
 
   def index
-    path = if SiteSetting.allow_index_in_robots_txt && SiteSetting.access_password.blank?
+    path = if SiteSetting.allow_index_in_robots_txt
       :index
     else
       :no_index

@@ -72,13 +72,26 @@ Discourse.SiteSetting = Discourse.Model.extend({
   save: function() {
     // Update the setting
     var setting = this;
-    return Discourse.ajax(Discourse.getURL("/admin/site_settings/") + (this.get('setting')), {
+    return Discourse.ajax("/admin/site_settings/" + (this.get('setting')), {
       data: { value: this.get('value') },
       type: 'PUT'
     }).then(function() {
       setting.set('originalValue', setting.get('value'));
     });
-  }
+  },
+
+  validValues: function() {
+    var vals;
+    vals = Em.A();
+    _.each(this.get('valid_values'), function(v) {
+      if(v.length > 0) vals.addObject({ name: v, value: v });
+    });
+    return vals;
+  }.property('valid_values'),
+
+  allowsNone: function() {
+    if ( _.indexOf(this.get('valid_values'), '') >= 0 ) return 'admin.site_settings.none';
+  }.property('valid_values')
 });
 
 Discourse.SiteSetting.reopenClass({
@@ -90,8 +103,8 @@ Discourse.SiteSetting.reopenClass({
   **/
   findAll: function() {
     var result = Em.A();
-    Discourse.ajax({url: Discourse.getURL("/admin/site_settings")}).then(function (settings) {
-      settings.site_settings.each(function(s) {
+    Discourse.ajax("/admin/site_settings").then(function (settings) {
+      _.each(settings.site_settings,function(s) {
         s.originalValue = s.value;
         result.pushObject(Discourse.SiteSetting.create(s));
       });
@@ -101,7 +114,7 @@ Discourse.SiteSetting.reopenClass({
   },
 
   update: function(key, value) {
-    return Discourse.ajax(Discourse.getURL("/admin/site_settings/") + key, {
+    return Discourse.ajax("/admin/site_settings/" + key, {
       type: 'PUT',
       data: { value: value }
     });

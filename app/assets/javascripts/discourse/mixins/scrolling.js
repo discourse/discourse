@@ -2,7 +2,7 @@
   This mixin adds support for being notified every time the browser window
   is scrolled.
 
-  @class Discourse.Scrolling
+  @class Scrolling
   @extends Ember.Mixin
   @namespace Discourse
   @module Discourse
@@ -16,19 +16,22 @@ Discourse.Scrolling = Em.Mixin.create({
     @method bindScrolling
   */
   bindScrolling: function(opts) {
-    var onScroll,
-      _this = this;
-
     opts = opts || {debounce: 100};
 
+    var scrollingMixin = this;
+    var onScrollMethod;
+
     if (opts.debounce) {
-      onScroll = Discourse.debounce(function() { return _this.scrolled(); }, 100);
+      onScrollMethod = Discourse.debounce(function() {
+        return scrollingMixin.scrolled();
+      }, 100);
     } else {
-      onScroll = function(){ return _this.scrolled(); };
+      onScrollMethod = function() {
+        return scrollingMixin.scrolled();
+      };
     }
 
-    $(document).bind('touchmove.discourse', onScroll);
-    $(window).bind('scroll.discourse', onScroll);
+    Discourse.ScrollingDOMMethods.bindOnScroll(onScrollMethod);
   },
 
   /**
@@ -37,10 +40,30 @@ Discourse.Scrolling = Em.Mixin.create({
     @method unbindScrolling
   */
   unbindScrolling: function() {
-    $(window).unbind('scroll.discourse');
-    $(document).unbind('touchmove.discourse');
+    Discourse.ScrollingDOMMethods.unbindOnScroll();
   }
 
 });
 
 
+/**
+  This object provides the DOM methods we need for our Mixin to bind to scrolling
+  methods in the browser. By removing them from the Mixin we can test them
+  easier.
+
+  @class ScrollingDOMMethods
+  @module Discourse
+**/
+Discourse.ScrollingDOMMethods = {
+
+  bindOnScroll: function(onScrollMethod) {
+    $(document).bind('touchmove.discourse', onScrollMethod);
+    $(window).bind('scroll.discourse', onScrollMethod);
+  },
+
+  unbindOnScroll: function() {
+    $(window).unbind('scroll.discourse');
+    $(document).unbind('touchmove.discourse');
+  }
+
+};

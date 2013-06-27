@@ -8,7 +8,7 @@ Discourse.AdminApi = Discourse.Model.extend({
 
   generateKey: function(){
     var adminApi = this;
-    Discourse.ajax(Discourse.getURL('/admin/api/generate_key'),{type: 'POST'}).then(function (result) {
+    Discourse.ajax('/admin/api/generate_key', {type: 'POST'}).then(function (result) {
       adminApi.set('key', result.key);
     });
   },
@@ -20,6 +20,10 @@ Discourse.AdminApi = Discourse.Model.extend({
 
 Discourse.AdminApi.reopenClass({
   find: function() {
-    return this.getModelAjax('/admin/api');
+    var model = Discourse.AdminApi.create();
+    Discourse.ajax("/admin/api").then(function(data) {
+      model.setProperties(data);
+    });
+    return model;
   }
 });

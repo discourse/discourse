@@ -1,12 +1,17 @@
 # encoding: utf-8
+# This file contains content for the server portion of Discourse used by Ruby
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
+
 zh_TW:
   time:
     formats:
       short: "%Y-%m-%d"
 
   title: "論壇"
-  topics: "主題"
-  posts: "貼"
+  topics: "貼"
+  posts: "posts"
   loading: "載入中"
   powered_by_html: '源自<a href="http://www.discourse.org">論壇 - Discourse</a>，請開啓JavaScript支持以獲得最佳效果'
 
@@ -32,6 +37,7 @@ zh_TW:
     zero: "抱歉, 遊客無法貼鏈接。"
     one: "抱歉, 遊客一次僅能貼一條鏈接。"
     other: "抱歉, 遊客一次僅能貼 %{count} 條鏈接。"
+  spamming_host: "抱歉，你不能添加一個鏈接到那台主機的鏈接。"
 
   just_posted_that: "與你最近發表的內容太過相似"
   has_already_been_used: "已經被使用"
@@ -43,6 +49,17 @@ zh_TW:
   rss_posts_in_topic: "'%{topic}'的RSS內容聚合"
   rss_topics_in_category: "分類'%{category}'中主題的RSS內容聚合"
   author_wrote: "%{author}寫道："
+
+  groups:
+    default_names:
+      admins: "管理員"
+      moderators: "版主"
+      staff: "員工"
+      trust_level_1: "trust_level_1"
+      trust_level_2: "trust_level_2"
+      trust_level_3: "trust_level_3"
+      trust_level_4: "trust_level_4"
+      trust_level_5: "trust_level_5"
 
   education:
     until_posts:
@@ -222,7 +239,7 @@ zh_TW:
       long_form: '投訴爲題外話'
     spam:
       title: '垃圾'
-      description: '此帖爲明顯的廣告，它不包含任何對當前討論有幫助的內容，只有促銷信息。'
+      description: '此帖爲廣告，它不包含任何對當前討論有幫助的內容，只有促銷信息。'
       long_form: '投訴爲垃圾'
     inappropriate:
       title: '不當內容'
@@ -299,9 +316,9 @@ zh_TW:
       xaxis: "天"
       yaxis: "投訴數"
     bookmarks:
-      title: "書籤"
+      title: "書簽"
       xaxis: "天"
-      yaxis: "新書籤數"
+      yaxis: "新書簽數"
     favorites:
       title: "喜愛"
       xaxis: "天"
@@ -356,16 +373,16 @@ zh_TW:
     gc_warning: '你的服務器使用的是缺省的 ruby 垃圾回收參數，這個配置無法提供最高性能。請閱讀此性能調優文檔：<a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>。'
     clockwork_warning: '發條裝置（Clockwork）並未運行。請確保運行一個 clockwork 進程，這樣一些重要的工作能夠被安排執行。<a href="https://github.com/tomykaira/clockwork">了解發條裝置（clockwork）</a>。'
     sidekiq_warning: 'Sidekiq 不在運行。很多任務，例如發送電子郵件，是異步的被 sidekiq 調度執行的。請確保至少運行一個 sidekiq 進程。<a href="https://github.com/mperham/sidekiq">了解 Sidekiq</a>。'
-    queue_size_warning: '隊列中的任務數為%{queue_size}，任務較多。這可能因為Sidekiq進程出問題導致，或者需要更多的Sidekiq進程。'
+    queue_size_warning: '隊列中的任務數爲%{queue_size}，任務較多。這可能因爲Sidekiq進程出問題導致，或者需要更多的Sidekiq進程。'
     memory_warning: '你的服務器環境內存少于 1GB，我們建議至少要有 1GB 內存'
     facebook_config_warning: '服務器允許使用臉書賬號登陸 (enable_facebook_logins), 但是 app id 和 app secret values 沒有被設定。 到 <a href="/admin/site_settings">站點設置</a> 更新此設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">參考設定指南</a>。'
     twitter_config_warning: '服務器允許使用推特賬號登陸 (enable_twitter_logins), 但是 key 和 secret values 沒有被設定。 到 <a href="/admin/site_settings">站點設置</a> 更新此設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">參考設定指南</a>。'
     github_config_warning: '服務器允許使用GitHub賬號登陸  (enable_github_logins), 但是 client id 和 secret values 沒有被設定。 到 <a href="/admin/site_settings">站點設置</a> 更新此設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">參考設定指南</a>。'
-    failing_emails_warning: "%{num_failed_jobs}個email任務失敗。請檢查config/production.rb文件是否正確配置了config.action_mailer。"
-    default_logo_warning: "你沒有設定你的站點logo。請在<a href='/admin/site_settings'>站點設置</a>中配置logo_url、logo_small_url和favicon_url。"
-    contact_email_missing: "你沒有為站點設定一個聯繫郵箱。請在<a href='/admin/site_settings'>站點設置</a>配置contact_email。"
-    contact_email_invalid: "站點聯繫郵箱不正確。請在<a href='/admin/site_settings'>站點設置</a>修改。"
-    title_nag: "站點標題在站點設置中仍為缺省值。請在<a href='/admin/site_settings'>站點設置</a>中將其設置為你的標題。"
+    failing_emails_warning: "%{num_failed_jobs}個email任務失敗。請檢查config/environments/production.rb文件是否正確配置了config.action_mailer。<a href='/sidekiq/retries' target='_blank'>在Sidekiq中查看失敗的任務</a>。"
+    default_logo_warning: "你沒有自定義你的站點logo。請在<a href='/admin/site_settings'>站點設置</a>中配置logo_url、logo_small_url和favicon_url。"
+    contact_email_missing: "你沒有爲站點指定一個聯系郵箱。請在<a href='/admin/site_settings'>站點設置</a>配置contact_email。"
+    contact_email_invalid: "站點聯系郵箱不正確。請在<a href='/admin/site_settings'>站點設置</a>修改。"
+    title_nag: "站點標題在站點設置中仍爲缺省值。請在<a href='/admin/site_settings'>站點設置</a>中將其設置爲你的標題。"
 
   content_types:
     education_new_reply:
@@ -403,19 +420,14 @@ zh_TW:
     discourse_org_access_key: "訪問 discourse.org 上的 Discourse Hub 昵稱注冊表的訪問密匙（access key）"
     educate_until_posts: "顯示彈出指導面板直到用戶發表了這麽多數量的帖子"
     title: "本站點標題，用于 HTML 標題標簽（title）和其它地方"
-    contact_email: "可以與本站聯繫的email地址。Discourse.org將會把重要更新的通知消息發送到該郵箱。"
+    contact_email: "可以與本站聯系的email地址。Discourse.org將會把重要更新的通知消息發送到該郵箱。"
     company_full_name: "運行本站點的公司全稱，用于法律文檔，例如服務條款 /tos"
     company_short_name: "運行本站點的公司短名，用于法律文檔，例如服務條款 /tos"
     company_domain: "運行本站點的公司域名，用于法律文檔，例如服務條款 /tos"
     api_key: "加密的應用開發接口密鑰（API key），用于創建和更新主題。使用 /admin/api 來對它進行設置。"
-    access_password: "當啓用訪問限制時，必須填寫此密碼"
     queue_jobs: "如果失敗隊列在排隊，使用 Sidekiq 消息引擎對不同的工作排隊"
     crawl_images: "允許從第三方獲取圖片來插入寬、高數值"
     ninja_edit_window: "在多少秒鍾之內，對帖子的多次編輯不生成新版本"
-    enable_imgur: "啓用 Imgur API 來上傳文件，不在本地（站點服務器）保存文件"
-    imgur_client_id: "你的imgur.com的客戶端ID，以便圖片上傳功能正常工作。"
-    imgur_client_secret: "你的imgur.com的客戶端secret。 目前圖片上傳功能並不需要這項信息，但是將來的某天可能需要。"
-    imgur_endpoint: "上傳圖片到 imgur.com 的終點"
     max_image_width: "帖子中圖片允許的最大寬度"
     category_featured_topics: "在分類 /categories 頁面每個分類顯示的主題數目"
     add_rel_nofollow_to_user_content: "添加 rel nofollow 標簽到所有提交的用戶信息（以防止搜索引擎搜集），除了內部鏈接（包括父域名）。修改此設置將要求你更新所有已有的 markdown 標簽內容"
@@ -424,7 +436,6 @@ zh_TW:
     post_excerpt_maxlength: "帖子摘要的最大字符長度"
     post_onebox_maxlength: "一個 論壇 - Discourse 單廂帖（Onebox post）的最大字符長度"
     category_post_template: "當你創建新分類時，分類的定義帖模板（創建新分類時會自動生成一個屬于該分類的新帖子）"
-    new_topics_rollup: "主題列表卷起顯示爲主題數量前，可以往主題列表中插入多少新主題"
     onebox_max_chars: "從外部網站導入到一個單廂帖（Onebox post）的最大字符數"
 
     logo_url: "你的站點標志圖片，例如：http://example.com/logo.png"
@@ -453,6 +464,7 @@ zh_TW:
     post_undo_action_window_mins: "允許用戶在帖子上進行撤銷操作（贊、投訴等）所需等待的間隔秒數"
     must_approve_users: "用戶必須獲得管理員批准方能訪問"
     ga_tracking_code: "谷歌分析追蹤代碼，例如：UA-12345678-9。參考 http://google.com/analytics"
+    ga_domain_name: "谷歌分析域名，例如：mysite.com；參考 http://google.com/analytics"
     top_menu: "確定在主頁導航條包含哪些條目，以及排列順序。例如：latest|hot|read|favorited|unread|new|posted|categories"
     post_menu: "確定在帖子菜單條包含哪些條目，以及排列順序。例如：like|edit|flag|delete|share|bookmark|reply"
     share_links: "確定在分享對話框裏顯示哪些條目、以什麽順序顯示。例如 twitter|facebook|google+"
@@ -461,7 +473,7 @@ zh_TW:
     posts_per_page: "在主題頁面，返回多少個帖子"
     system_username: "論壇給用戶發送自動私信時使用的用戶名"
     send_welcome_message: "給新用戶發送歡迎私信？"
-    supress_reply_directly_below: "當一個帖子只有一個回複時，不顯示帖子回複數量"
+    suppress_reply_directly_below: "當一個帖子只有一個回複時，不顯示帖子回複數量"
     allow_index_in_robots_txt: "允許搜索引擎索引站點內容（更新 robots.txt）"
     email_domains_blacklist: "將一列豎線分隔的郵箱域名放入黑名單，例如：mailinator.com|trashmail.net"
     email_domains_whitelist: "豎線 | 分隔的電子郵箱域名，用戶只能使用這些郵箱域名注冊。注意：用戶使用不包含在這個列表裏的郵箱域名，將無法成功注冊。"
@@ -548,17 +560,19 @@ zh_TW:
     min_body_similar_length: "開始檢查相似主題的帖子內容的最小長度"
 
     category_colors: "設置分類顔色的用'|'分隔的十六進制色彩值列表"
-    max_upload_size_kb: "允許用戶上傳的最大文件大小(以kb爲單位) - 確保在nginx(client_max_body_size), apache或代理服務中進行限制文件大小的配置."
+    max_upload_size_kb: "允許用戶上傳的最大文件大小(以kB爲單位) - 確保在nginx(client_max_body_size), apache或代理服務中進行限制文件大小的配置."
     max_similar_results: "當用戶撰寫新主題時，顯示多少類似主題給用戶"
 
     title_prettify: "防止常見標題裏的錯別字和錯誤，包括全部大寫，第一個字符小寫，多個！和？，結尾多余的. 等等。"
 
-    topic_views_heat_low: "多少瀏覽量后主題的熱度變為低。"
-    topic_views_heat_medium: "多少瀏覽量后主題的熱度變為中。"
-    topic_views_heat_high: "多少瀏覽量后主題的熱度變為高。"
+    topic_views_heat_low: "多少浏覽量後主題的熱度變爲低。"
+    topic_views_heat_medium: "多少浏覽量後主題的熱度變爲中。"
+    topic_views_heat_high: "多少浏覽量後主題的熱度變爲高。"
 
-    tos_url: "如果你想要使用一個部署在某個地方的服務條款文檔，那麼請在此填寫其完整URL地址。"
-    privacy_policy_url: "如果你想要使用一個部署在某個地方的隱私政策文檔，那麼請在此填寫其完整URL地址。"
+    tos_url: "如果你想要使用一個部署在某個地方的服務條款文檔，那麽請在此填寫其完整URL地址。"
+    privacy_policy_url: "如果你想要使用一個部署在某個地方的隱私政策文檔，那麽請在此填寫其完整URL地址。"
+
+    newuser_spam_host_threshold: "用戶在一篇帖子中能添加多少此指向同一主機的鏈接，取決于之前該用戶有`newuser_spam_host_threshold`篇帖子被認爲是垃圾帖。"
 
   notification_types:
     mentioned: "%{display_username} 在 %{link} @到了你"
@@ -593,6 +607,11 @@ zh_TW:
     archived_disabled: "本主題已被解除歸檔，即不再凍結，可以修改。"
     closed_enabled: "本主題已關閉，不再接受新的回複。"
     closed_disabled: "本主題已開放，可以發表新的回複。"
+    autoclosed_enabled:
+      zero: "本主題爲創建一天後自動關閉，不允許添加新的回複。"
+      one: "本主題爲創建一天後自動關閉，不允許添加新的回複。"
+      other: "本主題爲創建{{count}}天自動關閉。不允許添加新回複。"
+    autoclosed_disabled: "本主題是開放的，可以添加新的回複。"
     pinned_enabled: "本主題已置頂，它將始終顯示在它所屬分類的頂部。"
     pinned_disabled: "本主題已被解除置頂，它將不再顯示在它所屬分類的頂部。"
     visible_enabled: "本主題可見，它將顯示在主題列表中。"
@@ -673,15 +692,7 @@ zh_TW:
 
       <small>在每封你發送的郵件底部應該都有取消訂閱的鏈接，讓我們模擬一下。這封郵件發送自 中華人民共和國 北京市海澱區中關村南大街3號 海澱資本中心 14層 公司名稱，郵編 100081。如果你不希望將來繼續收到我們的郵件，[點擊此處取消訂閱][5].</small>
 
-  request_access:
-    code: "訪問碼"
-    instructions: "本站點限制訪問，請在下面輸入訪問碼："
-    enter: "進入"
-    incorrect: "訪問碼不正確"
-
   system_messages:
-    site_password: "另外，如果你需要，此站點密碼是 `%{access_password}`。"
-
     post_hidden:
       subject_template: "%{site_name} 提示：由于論壇用戶舉報，系統隱藏了你的帖子"
       text_body_template: |
@@ -738,19 +749,6 @@ zh_TW:
         - 要搜索，訪問你的用戶頁面或者其他導航內容，點擊右上角的那些圖標。
 
         - 當閱讀一個主題時，你可以通過點擊頁面頂部的標題回到頂部；要去到 *底部*，點擊頁面底部的主題浏覽進度指示器裏的向下箭頭，或者點擊該主題第一帖下面的彙總信息裏的最後一帖區域。
-
-    welcome_approved:
-      subject_template: "你已經獲得了 %{site_name} 的批准！"
-      text_body_template: |
-        恭喜你！
-
-        你已經被批准加入 %{site_name}，歡迎來到我們論壇參與討論！
-
-        %{new_user_tips}
-
-        我們始終相信 [文明的社會行爲](%{base_url}/faq)。
-
-        好好享受你在論壇的時光吧！
 
     welcome_user:
       subject_template: "歡迎來到 %{site_name}！"
@@ -920,7 +918,8 @@ zh_TW:
   deleted: '已刪除'
 
   upload:
+    pasted_image_filename: ""
     image:
       fetch_failure: "抱歉，獲取圖片時發生錯誤。"
       unknown_image_type: "抱歉，你上傳的文件似乎不是一張圖片。"
-      size_not_found: "抱歉，我們無法獲取圖片大小，請檢查你的圖片是否已損壞抱歉。"
+      size_not_found: "抱歉，我們無法獲取圖片大小，請檢查你的圖片是否已損壞。"

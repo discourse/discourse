@@ -12,7 +12,7 @@ module ApplicationHelper
 
   def discourse_csrf_tags
     # anon can not have a CSRF token cause these are all pages
-    # that may be cached, causing a mismatch between session CSRF 
+    # that may be cached, causing a mismatch between session CSRF
     # and CSRF on page and horrible impossible to debug login issues
     if current_user
       csrf_meta_tags
@@ -73,8 +73,12 @@ module ApplicationHelper
     result
   end
 
+  # Look up site content for a key. If the key is blank, you can supply a block and that
+  # will be rendered instead.
   def markdown_content(key, replacements=nil)
-    PrettyText.cook(SiteContent.content_for(key, replacements || {})).html_safe
+    result = PrettyText.cook(SiteContent.content_for(key, replacements || {})).html_safe
+    result = yield if result.blank? && block_given?
+    result
   end
 
   def faq_path

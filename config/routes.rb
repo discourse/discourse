@@ -14,12 +14,7 @@ Discourse::Application.routes.draw do
 
   mount Sidekiq::Web => '/sidekiq', constraints: AdminConstraint.new
 
-  resources :forums do
-    collection do
-      get 'request_access'
-      post 'request_access_submit'
-    end
-  end
+  resources :forums
   get 'srv/status' => 'forums#status'
 
   namespace :admin, constraints: StaffConstraint.new do
@@ -29,7 +24,13 @@ Discourse::Application.routes.draw do
 
     get 'reports/:type' => 'reports#show'
 
-    resources :groups, constraints: AdminConstraint.new
+    resources :groups, constraints: AdminConstraint.new do
+      collection do
+        post 'refresh_automatic_groups' => 'groups#refresh_automatic_groups'
+      end
+      get 'users'
+    end
+
     resources :users, id: USERNAME_ROUTE_FORMAT do
       collection do
         get 'list/:query' => 'users#index'
@@ -44,18 +45,28 @@ Discourse::Application.routes.draw do
       put 'grant_moderation', constraints: AdminConstraint.new
       put 'approve'
       post 'refresh_browsers', constraints: AdminConstraint.new
+      put 'activate'
+      put 'deactivate'
+      put 'block'
+      put 'unblock'
     end
 
     resources :impersonate, constraints: AdminConstraint.new
-    resources :email_logs do
+
+    resources :email do
       collection do
         post 'test'
+        get 'logs'
+        get 'preview-digest' => 'email#preview_digest'
       end
     end
+
     get 'customize' => 'site_customizations#index', constraints: AdminConstraint.new
     get 'flags' => 'flags#index'
     get 'flags/:filter' => 'flags#index'
-    post 'flags/clear/:id' => 'flags#clear'
+    post 'flags/agree/:id' => 'flags#agree'
+    post 'flags/disagree/:id' => 'flags#disagree'
+    post 'flags/defer/:id' => 'flags#defer'
     resources :site_customizations, constraints: AdminConstraint.new
     resources :site_contents, constraints: AdminConstraint.new
     resources :site_content_types, constraints: AdminConstraint.new
@@ -93,6 +104,7 @@ Discourse::Application.routes.draw do
 
   resources :static
   post 'login' => 'static#enter'
+  get 'login' => 'static#show', id: 'login'
   get 'faq' => 'static#show', id: 'faq'
   get 'tos' => 'static#show', id: 'tos'
   get 'privacy' => 'static#show', id: 'privacy'
@@ -194,6 +206,8 @@ Discourse::Application.routes.draw do
   put 't/:topic_id/clear-pin' => 'topics#clear_pin', constraints: {topic_id: /\d+/}
   put 't/:topic_id/mute' => 'topics#mute', constraints: {topic_id: /\d+/}
   put 't/:topic_id/unmute' => 'topics#unmute', constraints: {topic_id: /\d+/}
+  put 't/:topic_id/autoclose' => 'topics#autoclose', constraints: {topic_id: /\d+/}
+  put 't/:topic_id/remove-allowed-user' => 'topics#remove_allowed_user', constraints: {topic_id: /\d+/}
 
   get 't/:topic_id/:post_number' => 'topics#show', constraints: {topic_id: /\d+/, post_number: /\d+/}
   get 't/:slug/:topic_id.rss' => 'topics#feed', format: :rss, constraints: {topic_id: /\d+/}
@@ -202,18 +216,16 @@ Discourse::Application.routes.draw do
   post 't/:topic_id/timings' => 'topics#timings', constraints: {topic_id: /\d+/}
   post 't/:topic_id/invite' => 'topics#invite', constraints: {topic_id: /\d+/}
   post 't/:topic_id/move-posts' => 'topics#move_posts', constraints: {topic_id: /\d+/}
+  post 't/:topic_id/merge-topic' => 'topics#merge_topic', constraints: {topic_id: /\d+/}
   delete 't/:topic_id/timings' => 'topics#destroy_timings', constraints: {topic_id: /\d+/}
 
   post 't/:topic_id/notifications' => 'topics#set_notifications' , constraints: {topic_id: /\d+/}
 
-  get 'md/:topic_id(/:post_number)' => 'posts#markdown'
+  get 'raw/:topic_id(/:post_number)' => 'posts#markdown'
 
 
   resources :invites
   delete 'invites' => 'invites#destroy'
-
-  get 'request_access' => 'request_access#new'
-  post 'request_access' => 'request_access#create'
 
   get 'onebox' => 'onebox#show'
 

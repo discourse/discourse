@@ -11,33 +11,59 @@ Discourse.CategoryList = Discourse.Model.extend({});
 Discourse.CategoryList.reopenClass({
 
   categoriesFrom: function(result) {
-    var categories, users;
-    categories = Em.A();
-    users = this.extractByKey(result.featured_users, Discourse.User);
-    result.category_list.categories.each(function(c) {
+    var categories = Em.A();
+    var users = this.extractByKey(result.featured_users, Discourse.User);
+
+
+    _.each(result.category_list.categories,function(c) {
       if (c.featured_user_ids) {
-        c.featured_users = c.featured_user_ids.map(function(u) {
+        c.featured_users = _.map(c.featured_user_ids,function(u) {
           return users[u];
         });
       }
       if (c.topics) {
-        c.topics = c.topics.map(function(t) {
+        c.topics = _.map(c.topics,function(t) {
           return Discourse.Topic.create(t);
         });
       }
-      return categories.pushObject(Discourse.Category.create(c));
+
+      if (c.is_uncategorized) {
+        var uncategorized = Discourse.Category.uncategorizedInstance();
+        uncategorized.setProperties({
+          topics: c.topics,
+          featured_users: c.featured_users,
+          topics_week: c.topics_week,
+          topics_month: c.topics_month,
+          topics_year: c.topics_year
+        });
+        categories.pushObject(uncategorized);
+      } else {
+        categories.pushObject(Discourse.Category.create(c));
+      }
     });
     return categories;
   },
 
   list: function(filter) {
     var route = this;
+    var finder = null;
+    if (filter === 'categories') {
+      finder = PreloadStore.getAndRemove("categories_list", function() {
+        return Discourse.ajax("/categories.json");
+      });
+    } else {
+      finder = Discourse.ajax("/" + filter + ".json");
+    }
 
-    return Discourse.ajax(Discourse.getURL("/") + filter + ".json").then(function(result) {
+    return finder.then(function(result) {
       var categoryList = Discourse.TopicList.create();
-      categoryList.set('can_create_category', result.category_list.can_create_category);
-      categoryList.set('categories', route.categoriesFrom(result));
-      categoryList.set('loaded', true);
+      categoryList.setProperties({
+        can_create_category: result.category_list.can_create_category,
+        can_create_topic: result.category_list.can_create_topic,
+        categories: route.categoriesFrom(result),
+        draft_key: result.category_list.draft_key,
+        draft_sequence: result.category_list.draft_sequence
+      });
       return categoryList;
     });
   }

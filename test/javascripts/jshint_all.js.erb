@@ -1,0 +1,182 @@
+module("JSHint");
+
+var qHint = function(name, sourceFile, options, globals) {
+    if (sourceFile === undefined || typeof(sourceFile) == "object") {
+        // jsHintTest('file.js', [options])
+        globals = options;
+        options = sourceFile;
+        sourceFile = name;
+    }
+
+    return asyncTest(name, function() {
+        qHint.sendRequest(sourceFile, function(req) {
+            start();
+
+            if (req.status == 200) {
+
+                var text = req.responseText;
+
+                // Remove our generate IIFEs so we get the same line numbers as original
+                // files
+                text = text.replace(/^[^]*\/\/ IIFE Wrapped Content Begins:\n\n/m, "");
+                text = text.replace(/\n\n\/\/ IIFE Wrapped Content Ends[^]*$/m, "");
+                qHint.validateFile(text, options, globals);
+            } else {
+                ok(false, "HTTP error " + req.status +
+                          " while fetching " + sourceFile);
+            }
+        });
+    });
+};
+
+qHint.validateFile = function (source, options, globals) {
+  var i, len, err;
+
+  if (JSHINT(source, options, globals)) {
+      ok(true);
+      return;
+  }
+
+  for (i = 0, len = JSHINT.errors.length; i < len; i++) {
+      err = JSHINT.errors[i];
+      if (!err) {
+          continue;
+      }
+
+      ok(false, err.reason +
+          " on line " + err.line +
+          ", character " + err.character);
+  }
+};
+
+var XMLHttpFactories = [
+  function () { return new XMLHttpRequest(); },
+  function () { return new ActiveXObject("Msxml2.XMLHTTP"); },
+  function () { return new ActiveXObject("Msxml3.XMLHTTP"); },
+  function () { return new ActiveXObject("Microsoft.XMLHTTP"); }
+];
+
+function createXMLHTTPObject() {
+  for (var i = 0; i < XMLHttpFactories.length; i++) {
+      try {
+          return XMLHttpFactories[i]();
+      } catch (e) {}
+  }
+  return false;
+}
+
+// modified version of XHR script by PPK
+// http://www.quirksmode.org/js/xmlhttp.html
+// attached to qHint to allow substitution / mocking
+qHint.sendRequest = function (url, callback) {
+  var req = createXMLHTTPObject();
+  if (!req) {
+      return;
+  }
+
+  var method = "GET";
+  req.open(method,url + "?" + (new Date().getTime()),true);
+  req.onreadystatechange = function () {
+      if (req.readyState != 4) {
+          return;
+      }
+
+      callback(req);
+  };
+
+  if (req.readyState == 4) {
+      return;
+  }
+  req.send();
+};
+
+var jsHintOpts = {
+  "predef":["Ember",
+    "jQuery",
+    "$",
+    "RSVP",
+    "Discourse",
+    "$LAB",
+    "Em",
+    "PreloadStore",
+    "Handlebars",
+    "I18n",
+    "bootbox",
+    "module",
+    "integration",
+    "test",
+    "ok",
+    "expect",
+    "equal",
+    "blank",
+    "present",
+    "visit",
+    "count",
+    "exists",
+    "asyncTest",
+    "find",
+    "resolvingPromise",
+    "sinon",
+    "moment",
+    "start",
+    "_",
+    "console",
+    "alert"],
+  "node" : false,
+  "browser" : true,
+  "boss" : true,
+  "curly": false,
+  "debug": false,
+  "devel": false,
+  "eqeqeq": true,
+  "evil": true,
+  "forin": false,
+  "immed": false,
+  "laxbreak": false,
+  "newcap": true,
+  "noarg": true,
+  "noempty": false,
+  "nonew": false,
+  "nomen": false,
+  "onevar": false,
+  "plusplus": false,
+  "regexp": false,
+  "undef": true,
+  "sub": true,
+  "strict": false,
+  "white": false,
+  "eqnull": true,
+  "lastsemic": true
+};
+
+<%
+  def jshint(dir, remove, to_ignore)
+    result = ""
+
+    Dir.glob(dir).each do |f|
+      filename = f.sub("#{Rails.root}#{remove}", "")
+
+      ok = true
+      to_ignore.each do |ig|
+        ok = false if (filename =~ ig)
+      end
+
+      result << "qHint('#{filename}', '/assets/#{filename}', jsHintOpts);\n" if ok
+
+    end
+    result
+  end
+
+%>
+
+<%= jshint("#{Rails.root}/test/**/*.js",
+           "/test/javascripts/",
+           [/helpers\//]) %>
+
+<%= jshint("#{Rails.root}/app/assets/javascripts/**/*.js",
+           "/app/assets/javascripts/",
+           [/external\//,
+            /external_development\//,
+            /external_production\//,
+            /defer\//,
+            /locales\//]) %>

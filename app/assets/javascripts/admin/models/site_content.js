@@ -20,7 +20,7 @@ Discourse.SiteContent = Discourse.Model.extend({
     @return {jqXHR} a jQuery Promise object
   **/
   save: function() {
-    return Discourse.ajax(Discourse.getURL("/admin/site_contents/" + this.get('content_type')), {
+    return Discourse.ajax("/admin/site_contents/" + this.get('content_type'), {
       type: 'PUT',
       data: {content: this.get('content')}
     });
@@ -31,7 +31,7 @@ Discourse.SiteContent = Discourse.Model.extend({
 Discourse.SiteContent.reopenClass({
 
   find: function(type) {
-    return Discourse.ajax(Discourse.getURL("/admin/site_contents/" + type)).then(function (data) {
+    return Discourse.ajax("/admin/site_contents/" + type).then(function (data) {
       return Discourse.SiteContent.create(data.site_content);
     });
   }
