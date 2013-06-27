@@ -11,7 +11,7 @@ class EmailToken < ActiveRecord::Base
 
   after_create do
     # Expire the previous tokens
-    EmailToken.update_all 'expired = true', ['user_id = ? and id != ?', self.user_id, self.id]
+    EmailToken.where(['user_id = ? and id != ?', self.user_id, self.id]).update_all 'expired = true'
   end
 
   def self.token_length

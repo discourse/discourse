@@ -16,8 +16,6 @@ gem 'rails_multisite', path: 'vendor/gems/rails_multisite'
 gem 'simple_handlebars_rails', path: 'vendor/gems/simple_handlebars_rails'
 
 gem 'redcarpet', require: false
-gem 'activerecord-postgres-hstore'
-gem 'active_attr' # until we get ActiveModel::Model with Rails 4
 gem 'airbrake', '3.1.2', require: false # errbit is broken with 3.1.3 for now
 gem 'clockwork', require: false
 gem 'em-redis'
@@ -49,10 +47,7 @@ gem 'omniauth-browserid', git: 'https://github.com/callahad/omniauth-browserid.g
 gem 'omniauth-cas'
 gem 'oj'
 gem 'pg'
-# we had pain with the 3.2.13 upgrade so monkey patch the security fix
-# next time around we hope to upgrade
-# gem 'rails', '3.2.12'
-gem 'rails', '4.0.0.rc1'
+gem 'rails', '4.0.0'
 gem 'rake'
 gem 'redis'
 gem 'redis-rails', :git => 'git://github.com/SamSaffron/redis-store.git'
@@ -65,7 +60,6 @@ gem 'sidekiq'
 gem 'sidekiq-failures'
 gem 'sinatra', require: nil
 gem 'slim'  # required for sidekiq-web
-gem 'strong_parameters' # remove when we upgrade to Rails 4
 gem 'therubyracer', require: 'v8'
 gem 'thin'
 gem 'diffy', require: false
@@ -84,15 +78,9 @@ gem 'discourse_plugin', path: 'vendor/gems/discourse_plugin'
 gem 'discourse_emoji', path: 'vendor/gems/discourse_emoji'
 # gem 'discourse_task', path: 'vendor/gems/discourse_task'
 
-# Gems used only for assets and not required
-# in production environments by default.
-# allow everywhere for now cause we are allowing asset debugging in prd
-group :assets do
-  gem 'sass'
-  gem 'sass-rails', :git => 'git://github.com/rails/sass-rails.git'
-  gem 'turbo-sprockets-rails3'
-  gem 'uglifier'
-end
+gem 'sass'
+gem 'sass-rails'
+gem 'uglifier'
 
 group :test do
   gem 'fakeweb', '~> 1.3.0', require: false

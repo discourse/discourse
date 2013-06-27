@@ -50,8 +50,6 @@ class Topic < ActiveRecord::Base
     self.title = TextCleaner.clean_title(TextSentinel.title_sentinel(title).text) if errors[:title].empty?
   end
 
-  serialize :meta_data, ActiveRecord::Coders::Hstore
-
   belongs_to :category
   has_many :posts
   has_many :topic_allowed_users
@@ -90,9 +88,9 @@ class Topic < ActiveRecord::Base
 
   scope :listable_topics, lambda { where('topics.archetype <> ?', [Archetype.private_message]) }
 
-  scope :by_newest, order('topics.created_at desc, topics.id desc')
+  scope :by_newest,  -> { order('topics.created_at desc, topics.id desc') }
 
-  scope :visible, where(visible: true)
+  scope :visible, -> {where(visible: true)}
 
   scope :created_since, lambda { |time_ago| where('created_at > ?', time_ago) }
 

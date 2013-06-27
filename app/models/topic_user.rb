@@ -3,7 +3,7 @@ class TopicUser < ActiveRecord::Base
   belongs_to :topic
 
   scope :starred_since, lambda { |sinceDaysAgo| where('starred_at > ?', sinceDaysAgo.days.ago) }
-  scope :by_date_starred, group('date(starred_at)').order('date(starred_at)')
+  scope :by_date_starred, -> {group('date(starred_at)').order('date(starred_at)')}
 
   scope :tracking, lambda { |topic_id|
     where(topic_id: topic_id)
@@ -84,7 +84,7 @@ class TopicUser < ActiveRecord::Base
 
         attrs_sql = attrs_array.map { |t| "#{t[0]} = ?" }.join(", ")
         vals = attrs_array.map { |t| t[1] }
-        rows = TopicUser.update_all([attrs_sql, *vals], topic_id: topic_id.to_i, user_id: user_id)
+        rows = TopicUser.where({topic_id: topic_id.to_i, user_id: user_id}).update_all([attrs_sql, *vals])
 
         if rows == 0
           now = DateTime.now
