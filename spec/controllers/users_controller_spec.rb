@@ -178,7 +178,7 @@ describe UsersController do
       let!(:user) { log_in }
 
       it 'raises an error without an email parameter' do
-	lambda { xhr :put, :change_email, username: user.username }.should raise_error(ActionController::ParameterMissing)
+        lambda { xhr :put, :change_email, username: user.username }.should raise_error(ActionController::ParameterMissing)
       end
 
       it "raises an error if you can't edit the user" do
@@ -409,7 +409,7 @@ describe UsersController do
       end
     end
 
-    shared_examples_for 'honeypot fails' do
+    shared_examples 'honeypot fails' do
       it 'should not create a new user' do
         expect {
           xhr :post, :create, create_params
@@ -433,7 +433,7 @@ describe UsersController do
         UsersController.any_instance.stubs(:honeypot_value).returns('abc')
       end
       let(:create_params) { {name: @user.name, username: @user.username, password: "strongpassword", email: @user.email, password_confirmation: 'wrong'} }
-      it_should_behave_like 'honeypot fails'
+      include_examples 'honeypot fails'
     end
 
     context 'when challenge answer is wrong' do
@@ -441,7 +441,7 @@ describe UsersController do
         UsersController.any_instance.stubs(:challenge_value).returns('abc')
       end
       let(:create_params) { {name: @user.name, username: @user.username, password: "strongpassword", email: @user.email, challenge: 'abc'} }
-      it_should_behave_like 'honeypot fails'
+      include_examples 'honeypot fails'
     end
 
     context "when 'invite only' setting is enabled" do
@@ -454,10 +454,10 @@ describe UsersController do
         email: @user.email
       }}
 
-      it_should_behave_like 'honeypot fails'
+      include_examples 'honeypot fails'
     end
 
-    shared_examples_for 'failed signup' do
+    shared_examples 'failed signup' do
       it 'should not create a new User' do
         expect { xhr :post, :create, create_params }.to_not change { User.count }
       end
@@ -471,12 +471,12 @@ describe UsersController do
 
     context 'when password is blank' do
       let(:create_params) { {name: @user.name, username: @user.username, password: "", email: @user.email} }
-      it_should_behave_like 'failed signup'
+      include_examples 'failed signup'
     end
 
     context 'when password param is missing' do
       let(:create_params) { {name: @user.name, username: @user.username, email: @user.email} }
-      it_should_behave_like 'failed signup'
+      include_examples 'failed signup'
     end
 
     context 'when an Exception is raised' do
@@ -491,7 +491,7 @@ describe UsersController do
             password: "strongpassword", email: @user.email}
         }
 
-        it_should_behave_like 'failed signup'
+        include_examples 'failed signup'
       end
     end
 
@@ -507,7 +507,7 @@ describe UsersController do
       let(:new_username) { "#{user.username}1234" }
 
       it 'raises an error without a new_username param' do
-	lambda { xhr :put, :username, username: user.username }.should raise_error(ActionController::ParameterMissing)
+        lambda { xhr :put, :username, username: user.username }.should raise_error(ActionController::ParameterMissing)
       end
 
       it 'raises an error when you don\'t have permission to change the user' do
@@ -539,7 +539,7 @@ describe UsersController do
       lambda { xhr :get, :check_username }.should raise_error(ActionController::ParameterMissing)
     end
 
-    shared_examples_for 'when username is unavailable locally' do
+    shared_examples 'when username is unavailable locally' do
       it 'should return success' do
         response.should be_success
       end
@@ -553,7 +553,7 @@ describe UsersController do
       end
     end
 
-    shared_examples_for 'when username is available everywhere' do
+    shared_examples 'when username is available everywhere' do
       it 'should return success' do
         response.should be_success
       end
@@ -574,14 +574,14 @@ describe UsersController do
         before do
           xhr :get, :check_username, username: 'BruceWayne'
         end
-        it_should_behave_like 'when username is available everywhere'
+        include_examples 'when username is available everywhere'
       end
 
       context 'available locally but not globally' do
         before do
           xhr :get, :check_username, username: 'BruceWayne'
         end
-        it_should_behave_like 'when username is available everywhere'
+        include_examples 'when username is available everywhere'
       end
 
       context 'unavailable locally but available globally' do
@@ -589,7 +589,7 @@ describe UsersController do
         before do
           xhr :get, :check_username, username: user.username
         end
-        it_should_behave_like 'when username is unavailable locally'
+        include_examples 'when username is unavailable locally'
       end
 
       context 'unavailable everywhere' do
@@ -597,10 +597,10 @@ describe UsersController do
         before do
           xhr :get, :check_username, username: user.username
         end
-        it_should_behave_like 'when username is unavailable locally'
+        include_examples 'when username is unavailable locally'
       end
 
-      shared_examples_for 'checking an invalid username' do
+      shared_examples 'checking an invalid username' do
         it 'should return success' do
           response.should be_success
         end
@@ -618,7 +618,7 @@ describe UsersController do
         before do
           xhr :get, :check_username, username: 'bad username'
         end
-        it_should_behave_like 'checking an invalid username'
+        include_examples 'checking an invalid username'
 
         it 'should return the invalid characters message' do
           ::JSON.parse(response.body)['errors'].should include(I18n.t(:'user.username.characters'))
@@ -629,7 +629,7 @@ describe UsersController do
         before do
           xhr :get, :check_username, username: 'abcdefghijklmnop'
         end
-        it_should_behave_like 'checking an invalid username'
+        include_examples 'checking an invalid username'
 
         it 'should return the "too short" message' do
           ::JSON.parse(response.body)['errors'].should include(I18n.t(:'user.username.long', max: User.username_length.end))
@@ -648,7 +648,7 @@ describe UsersController do
           DiscourseHub.stubs(:nickname_match?).returns([false, true, nil])  # match = false, available = true, suggestion = nil
         end
 
-        shared_examples_for 'check_username when nickname is available everywhere' do
+        shared_examples 'check_username when nickname is available everywhere' do
           it 'should return success' do
             response.should be_success
           end
@@ -666,18 +666,18 @@ describe UsersController do
           before do
             xhr :get, :check_username, username: 'BruceWayne'
           end
-          it_should_behave_like 'check_username when nickname is available everywhere'
+          include_examples 'check_username when nickname is available everywhere'
         end
 
         context 'and email is given' do
           before do
             xhr :get, :check_username, username: 'BruceWayne', email: 'brucie@gmail.com'
           end
-          it_should_behave_like 'check_username when nickname is available everywhere'
+          include_examples 'check_username when nickname is available everywhere'
         end
       end
 
-      shared_examples_for 'when email is needed to check nickname match' do
+      shared_examples 'when email is needed to check nickname match' do
         it 'should return success' do
           response.should be_success
         end
@@ -700,14 +700,14 @@ describe UsersController do
           before do
             xhr :get, :check_username, username: 'BruceWayne'
           end
-          it_should_behave_like 'when email is needed to check nickname match'
+          include_examples 'when email is needed to check nickname match'
         end
 
         context 'email param is an empty string' do
           before do
             xhr :get, :check_username, username: 'BruceWayne', email: ''
           end
-          it_should_behave_like 'when email is needed to check nickname match'
+          include_examples 'when email is needed to check nickname match'
         end
 
         context 'email matches global nickname' do
@@ -715,7 +715,7 @@ describe UsersController do
             DiscourseHub.stubs(:nickname_match?).returns([true, false, nil])
             xhr :get, :check_username, username: 'BruceWayne', email: 'brucie@example.com'
           end
-          it_should_behave_like 'when username is available everywhere'
+          include_examples 'when username is available everywhere'
 
           it 'should indicate a global match' do
             ::JSON.parse(response.body)['global_match'].should be_true
@@ -727,7 +727,7 @@ describe UsersController do
             DiscourseHub.stubs(:nickname_match?).returns([false, false, 'suggestion'])
             xhr :get, :check_username, username: 'BruceWayne', email: 'brucie@example.com'
           end
-          it_should_behave_like 'when username is unavailable locally'
+          include_examples 'when username is unavailable locally'
 
           it 'should not indicate a global match' do
             ::JSON.parse(response.body)['global_match'].should be_false
@@ -743,7 +743,7 @@ describe UsersController do
           xhr :get, :check_username, username: user.username
         end
 
-        it_should_behave_like 'when username is unavailable locally'
+        include_examples 'when username is unavailable locally'
       end
 
       context 'unavailable locally and available globally' do
@@ -754,7 +754,7 @@ describe UsersController do
           xhr :get, :check_username, username: user.username
         end
 
-        it_should_behave_like 'when username is unavailable locally'
+        include_examples 'when username is unavailable locally'
       end
     end
 
