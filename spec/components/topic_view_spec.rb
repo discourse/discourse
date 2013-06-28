@@ -24,7 +24,7 @@ describe TopicView do
     let!(:p3) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 0 )}
 
     it "it can find the best responses" do
-      best2 = TopicView.new(topic.id, nil, best: 2)
+      best2 = TopicView.new(topic.id, coding_horror, best: 2)
       best2.posts.count.should == 2
       best2.posts[0].id.should == p2.id
       best2.posts[1].id.should == p3.id
@@ -36,7 +36,7 @@ describe TopicView do
       best = TopicView.new(topic.id, nil, best: 99)
       best.posts.count.should == 2
       best.filtered_posts_count.should == 3
-
+      best.current_post_ids.should =~ [p2.id, p3.id]
     end
 
 
