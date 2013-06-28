@@ -586,62 +586,30 @@ describe User do
   describe "previous_visit_at" do
 
     let(:user) { Fabricate(:user) }
+    let!(:first_visit_date) { Time.zone.now }
+    let!(:second_visit_date) { 2.hours.from_now }
+    let!(:third_visit_date) { 5.hours.from_now }
 
     before do
       SiteSetting.stubs(:active_user_rate_limit_secs).returns(0)
     end
 
-    it "should be blank on creation" do
+    it "should act correctly" do
       user.previous_visit_at.should be_nil
-    end
 
-    describe "first time" do
-      let!(:first_visit_date) { Time.zone.now }
+      # first visit
+      user.update_last_seen!(first_visit_date)
+      user.previous_visit_at.should be_nil
 
-      before do
-        user.update_last_seen!(first_visit_date)
-      end
+      # second visit
+      user.update_last_seen!(second_visit_date)
+      user.reload
+      user.previous_visit_at.should be_within_one_second_of(first_visit_date)
 
-      it "should have no value" do
-        user.previous_visit_at.should be_nil
-      end
-
-      describe "another call right after" do
-        before do
-          user.update_last_seen!(10.minutes.from_now)
-        end
-
-        it "still has no value" do
-          user.previous_visit_at.should be_nil
-        end
-      end
-
-      describe "second visit" do
-        let!(:second_visit_date) { 2.hours.from_now }
-
-        before do
-          user.update_last_seen!(second_visit_date)
-        end
-
-        it "should have the previous visit value" do
-          user.reload
-          user.previous_visit_at.should be_within_one_second_of(first_visit_date)
-        end
-
-        describe "third visit" do
-          let!(:third_visit_date) { 5.hours.from_now }
-
-          before do
-            user.update_last_seen!(third_visit_date)
-          end
-
-          it "should have the second visit value" do
-            user.previous_visit_at.should be_within_one_second_of(second_visit_date)
-          end
-
-        end
-
-      end
+      # third visit
+      user.update_last_seen!(third_visit_date)
+      user.reload
+      user.previous_visit_at.should be_within_one_second_of(second_visit_date)
 
     end
 
