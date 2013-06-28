@@ -13,7 +13,7 @@ Discourse.Formatter = (function(){
 
     var firstPart = string.substr(0, maxLength);
 
-    var betterSplit = firstPart.substr(1).search(/[A-Z_]/);
+    var betterSplit = firstPart.substr(1).search(/[^a-z]/);
     if (betterSplit >= 0) {
       var offset = 1;
       if(string[betterSplit+1] === "_") {

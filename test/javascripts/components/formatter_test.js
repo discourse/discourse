@@ -131,5 +131,6 @@ test("breakUp", function(){
   equal(b("helloworld"), "hello world");
   equal(b("HeMans"), "He Mans");
   equal(b("he_man"), "he_ man");
+  equal(b("he11111"), "he 11111");
 
 });
