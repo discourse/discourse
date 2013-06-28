@@ -46,8 +46,10 @@ Discourse.QuoteButtonView = Discourse.View.extend({
       .on("mousedown.quote-button", function(e) {
         view.set('isMouseDown', true);
         if ($(e.target).hasClass('quote-button') || $(e.target).hasClass('create')) return;
-        // deselects only when the user left-click
-        // this also allow anyone to `extend` their selection using a shift+click
+        // do *not* deselect when quoting has been disabled by the user
+        if (!Discourse.User.current('enable_quoting')) return;
+        // deselects only when the user left click
+        // (allows anyone to `extend` their selection using shift+click)
         if (e.which === 1 && !e.shiftKey) controller.deselectText();
       })
       .on('mouseup.quote-button', function(e) {
@@ -69,7 +71,7 @@ Discourse.QuoteButtonView = Discourse.View.extend({
   **/
   selectText: function(target, controller) {
     var $target = $(target);
-    // quoting as been disabled by the user
+    // breaks if quoting has been disabled by the user
     if (!Discourse.User.current('enable_quoting')) return;
     // retrieve the post id from the DOM
     var postId = $target.closest('.boxed').data('post-id');
