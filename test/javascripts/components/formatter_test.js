@@ -122,3 +122,14 @@ test("updateRelativeAge", function(){
 
   equal($elem.html(), "2 mins ago");
 });
+
+test("breakUp", function(){
+
+  var b = function(s){ return Discourse.Formatter.breakUp(s,5); };
+
+  equal(b("hello"), "hello");
+  equal(b("helloworld"), "hello world");
+  equal(b("HeMans"), "He Mans");
+  equal(b("he_man"), "he_ man");
+
+});

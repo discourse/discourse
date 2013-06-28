@@ -4,7 +4,26 @@ Discourse.Formatter = (function(){
 
   var updateRelativeAge, autoUpdatingRelativeAge, relativeAge, relativeAgeTiny,
       relativeAgeMedium, relativeAgeMediumSpan, longDate, toTitleCase,
-      shortDate;
+      shortDate, breakUp;
+
+  breakUp = function(string, maxLength){
+    if(string.length <= maxLength) {
+      return string;
+    }
+
+    var firstPart = string.substr(0, maxLength);
+
+    var betterSplit = firstPart.substr(1).search(/[A-Z_]/);
+    if (betterSplit >= 0) {
+      var offset = 1;
+      if(string[betterSplit+1] === "_") {
+        offset = 2;
+      }
+      return string.substr(0, betterSplit + offset) + " " + string.substring(betterSplit + offset);
+    } else {
+      return firstPart + " " + string.substr(maxLength);
+    }
+  };
 
   shortDate = function(date){
     return moment(date).shortDate();
@@ -189,6 +208,7 @@ Discourse.Formatter = (function(){
     autoUpdatingRelativeAge: autoUpdatingRelativeAge,
     updateRelativeAge: updateRelativeAge,
     toTitleCase: toTitleCase,
-    shortDate: shortDate
+    shortDate: shortDate,
+    breakUp: breakUp
   };
 })();
