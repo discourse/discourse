@@ -15,7 +15,7 @@ describe PostAction do
   describe "flagged_posts_report" do
     it "operates correctly" do
       PostAction.act(codinghorror, post, PostActionType.types[:spam])
-      mod_message = PostAction.act(Fabricate(:user), post, PostActionType.types[:notify_moderators], message: "this post really sucks a lot I hate it")
+      mod_message = PostAction.act(Fabricate(:user), post, PostActionType.types[:notify_moderators], message: "this is a 10")
 
       posts, users = PostAction.flagged_posts_report("")
       posts.count.should == 1
