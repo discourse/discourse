@@ -1018,6 +1018,7 @@ fr:
         flagged_by: "Signalé par"
         error: "Quelque chose s'est mal passé"
         view_message: "Voir le message"
+        no_results: "Il n'y a aucun signalements."
 
       groups:
         title: "Groupes"
