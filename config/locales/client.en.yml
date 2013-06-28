@@ -346,7 +346,7 @@ en:
       action: "I forgot my password"
       invite: "Enter your username or email address, and we'll send you a password reset email."
       reset: "Reset Password"
-      complete: "You should receive an email with instructions on how to reset your password shortly."
+      complete: "If an account matches that username or email address, you should receive an email with instructions on how to reset your password shortly."
 
     login:
       title: "Log In"
