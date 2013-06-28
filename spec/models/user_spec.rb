@@ -599,12 +599,7 @@ describe User do
       let!(:first_visit_date) { Time.zone.now }
 
       before do
-        Timecop.freeze(first_visit_date)
-        user.update_last_seen!
-      end
-
-      after do
-        Timecop.return
+        user.update_last_seen!(first_visit_date)
       end
 
       it "should have no value" do
@@ -613,13 +608,7 @@ describe User do
 
       describe "another call right after" do
         before do
-          # A different time, to make sure it doesn't change
-          Timecop.freeze(10.minutes.from_now)
-          user.update_last_seen!
-        end
-
-        after do
-          Timecop.return
+          user.update_last_seen!(10.minutes.from_now)
         end
 
         it "still has no value" do
@@ -631,12 +620,7 @@ describe User do
         let!(:second_visit_date) { 2.hours.from_now }
 
         before do
-          Timecop.freeze(second_visit_date)
-          user.update_last_seen!
-        end
-
-        after do
-          Timecop.return
+          user.update_last_seen!(second_visit_date)
         end
 
         it "should have the previous visit value" do
@@ -648,12 +632,7 @@ describe User do
           let!(:third_visit_date) { 5.hours.from_now }
 
           before do
-            Timecop.freeze(third_visit_date)
-            user.update_last_seen!
-          end
-
-          after do
-            Timecop.return
+            user.update_last_seen!(third_visit_date)
           end
 
           it "should have the second visit value" do
