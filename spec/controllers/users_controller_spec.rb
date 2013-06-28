@@ -772,6 +772,26 @@ describe UsersController do
         json['errors'][0].should_not be_nil
       end
     end
+
+    describe 'different case of existing username' do
+      context "it's my username" do
+        let!(:user) { Fabricate(:user, username: 'hansolo') }
+        before do
+          log_in_user(user)
+          xhr :get, :check_username, username: 'HanSolo'
+        end
+        include_examples 'when username is available everywhere'
+      end
+
+      context "it's someone else's username" do
+        let!(:user) { Fabricate(:user, username: 'hansolo') }
+        before do
+          log_in
+          xhr :get, :check_username, username: 'HanSolo'
+        end
+        include_examples 'when username is unavailable locally'
+      end
+    end
   end
 
   describe '.invited' do
