@@ -69,8 +69,11 @@ class TopicUser < ActiveRecord::Base
     # it then creates the row instead.
     def change(user_id, topic_id, attrs)
       # Sometimes people pass objs instead of the ids. We can handle that.
-      topic_id = topic_id.id if topic_id.is_a?(Topic)
-      user_id = user_id.id if user_id.is_a?(User)
+      topic_id = topic_id.id if topic_id.is_a?(::Topic)
+      user_id = user_id.id if user_id.is_a?(::User)
+
+      topic_id = topic_id.to_i
+      user_id = user_id.to_i
 
       TopicUser.transaction do
         attrs = attrs.dup
@@ -84,7 +87,7 @@ class TopicUser < ActiveRecord::Base
 
         attrs_sql = attrs_array.map { |t| "#{t[0]} = ?" }.join(", ")
         vals = attrs_array.map { |t| t[1] }
-        rows = TopicUser.update_all([attrs_sql, *vals], topic_id: topic_id.to_i, user_id: user_id)
+        rows = TopicUser.update_all([attrs_sql, *vals], topic_id: topic_id, user_id: user_id)
 
         if rows == 0
           now = DateTime.now
@@ -95,7 +98,7 @@ class TopicUser < ActiveRecord::Base
             attrs[:notification_level] ||= notification_levels[:tracking]
           end
 
-          TopicUser.create(attrs.merge!(user_id: user_id, topic_id: topic_id.to_i, first_visited_at: now ,last_visited_at: now))
+          TopicUser.create(attrs.merge!(user_id: user_id, topic_id: topic_id, first_visited_at: now ,last_visited_at: now))
         else
           observe_after_save_callbacks_for topic_id, user_id
         end

@@ -106,7 +106,7 @@ class PostCreator
     post.topic.update_attributes(attrs)
 
     # Update topic user data
-    TopicUser.change(post.user,
+    TopicUser.change(post.user.id,
                      post.topic.id,
                      posted: true,
                      last_read_post_number: post.post_number,

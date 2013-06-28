@@ -1051,7 +1051,7 @@ en:
 
         flagged_by: "Flagged by"
         error: "Something went wrong"
-        view_message: "view message"
+        view_message: "Reply"
         no_results: "There are no flags."
 
         summary:

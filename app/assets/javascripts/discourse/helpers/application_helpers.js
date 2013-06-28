@@ -9,17 +9,7 @@ Handlebars.registerHelper('breakUp', function(property, options) {
   prop = Ember.Handlebars.get(this, property, options);
   if (!prop) return "";
 
-  tokens = prop.match(new RegExp(".{1,14}", 'g'));
-  if (tokens.length === 1) return prop;
-
-  result = "";
-  _.each(tokens,function(token,index) {
-    result += token;
-    if (token.indexOf(' ') === -1 && (index < tokens.length - 1)) {
-      result += "- ";
-    }
-  });
-  return result;
+  return Discourse.Formatter.breakUp(prop, 13);
 });
 
 /**

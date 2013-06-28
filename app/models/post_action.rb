@@ -15,8 +15,6 @@ class PostAction < ActiveRecord::Base
 
   rate_limit :post_action_rate_limiter
 
-  validate :message_quality
-
   scope :spam_flags, -> { where(post_action_type_id: PostActionType.types[:spam]) }
 
   def self.update_flagged_posts_count
@@ -181,12 +179,6 @@ class PostAction < ActiveRecord::Base
         return @rate_limiter
       end
     end
-  end
-
-  def message_quality
-    return if message.blank?
-    sentinel = TextSentinel.title_sentinel(message)
-    errors.add(:message, I18n.t(:is_invalid)) unless sentinel.valid?
   end
 
   before_create do

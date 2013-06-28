@@ -83,7 +83,9 @@ class ListController < ApplicationController
   end
 
   def request_is_for_uncategorized?
-    params[:category] == Slug.for(SiteSetting.uncategorized_name) || params[:category] == SiteSetting.uncategorized_name
+    params[:category] == Slug.for(SiteSetting.uncategorized_name) ||
+      params[:category] == SiteSetting.uncategorized_name ||
+      params[:category] == 'uncategorized'
   end
 
   def build_topic_list_options

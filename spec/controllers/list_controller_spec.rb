@@ -85,10 +85,20 @@ describe ListController do
         response.should be_success
       end
 
-      it "responds with success when SiteSetting.uncategorized_name is non standard" do
-        SiteSetting.uncategorized_name = "testing"
-        xhr :get, :category, category: SiteSetting.uncategorized_name
-        response.should be_success
+      context 'SiteSetting.uncategorized_name is non standard' do
+        before do
+          SiteSetting.stubs(:uncategorized_name).returns('testing')
+        end
+
+        it "responds with success given SiteSetting.uncategorized_name" do
+          xhr :get, :category, category: SiteSetting.uncategorized_name
+          response.should be_success
+        end
+
+        it 'responds with success given "uncategorized"' do
+          xhr :get, :category, category: 'uncategorized'
+          response.should be_success
+        end
       end
     end
 
