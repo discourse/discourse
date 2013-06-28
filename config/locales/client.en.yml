@@ -113,7 +113,7 @@ en:
       not_logged_in: "Sorry, you must be logged in to bookmark posts."
       created: "You've bookmarked this post."
       not_bookmarked: "You've read this post; click to bookmark it."
-      last_read: "This is the last post you've read."
+      last_read: "This is the last post you've read; click to bookmark it."
 
     new_topics_inserted: "{{count}} new topics."
     show_new_topics: "Click to show."
