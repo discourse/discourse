@@ -28,12 +28,6 @@ en:
         x_days:
           one:   "1d"
           other: "%{count}d"
-        about_x_months:
-          one:   "1mon"
-          other: "%{count}mon"
-        x_months:
-          one:   "1mon"
-          other: "%{count}mon"
         about_x_years:
           one:   "1y"
           other: "%{count}y"

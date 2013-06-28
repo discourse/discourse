@@ -22,15 +22,15 @@ var formatMonths = function(months) {
   return formatDays(months * 30);
 };
 
+var shortDate = function(days){
+  return moment().subtract('days', days).format('D MMM');
+};
+
 test("formating medium length dates", function() {
 
   format = "medium";
   var strip = function(html){
     return $(html).text();
-  };
-
-  var shortDate = function(days){
-    return moment().subtract('days', days).format('D MMM');
   };
 
   var shortDateYear = function(days){
@@ -74,10 +74,13 @@ test("formating tiny dates", function() {
   equal(formatMins(60), "1h");
   equal(formatHours(4), "4h");
   equal(formatDays(1), "1d");
-  equal(formatDays(20), "20d");
-  equal(formatMonths(3), "3mon");
-  equal(formatMonths(23), "23mon");
-  equal(formatMonths(24), "> 2y");
+  equal(formatDays(14), "14d");
+  equal(formatDays(15), shortDate(15));
+  equal(formatDays(92), shortDate(92));
+  equal(formatDays(364), shortDate(364));
+  equal(formatDays(365), "> 1y");
+  equal(formatDays(500), "> 1y");
+  equal(formatDays(365*2), "> 2y");
 });
 
 test("autoUpdatingRelativeAge", function() {
