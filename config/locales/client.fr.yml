@@ -1034,7 +1034,7 @@ fr:
         generate: "Générer une clé pour l'API"
         regenerate: "Regénérer une clé pour l'API"
         info_html: "Cette clé vous permettra de créer et mettre à jour des discussions à l'aide d'appels JSON."
-        note_html: "Gardez cette clé <strong>secrête</strong> ! Tous les personnes qui la possède peuvent créer des messages sur ce forum au nom de n'import quel utilisateur."
+        note_html: "Gardez cette clé <strong>secrète</strong> ! Tous les personnes qui la possède peuvent créer des messages sur ce forum au nom de n'import quel utilisateur."
 
       customize:
         title: "Personnaliser"
@@ -1114,6 +1114,8 @@ fr:
         moderator: "Modérateur ?"
         admin: "Admin ?"
         show_admin_profile: "Admin"
+        edit_title: "Editer le titre"
+        save_title: "Sauvegarder le titre"
         refresh_browsers: "Forcer le rafraîchissement du navigateur"
         show_public_profile: "Montrer un profil public"
         impersonate: 'Imiter'
@@ -1146,6 +1148,11 @@ fr:
         activate_failed: "Il y a eu un problème lors de l'activation du compte."
         deactivate_account: "Désactive le compte"
         deactivate_failed: "Il y a eu un problème lors de la désactivation du compte."
+        unblock_failed: "Problème rencontré lors du déblocage de l'utilisateur"
+        block_failed: "Problème rencontré lors du blocage de l'utilisateur"
+        deactivate_explanation: "Un compte désactivé doit être revalidé par email"
+        banned_explanation: "Un utilisateur banni ne peut se connecter"
+        block_explanation: "Un utilisateur bloqué ne peut poster ou créer de discussions."
 
       site_content:
         none: "Choisissez un type de contenu afin de commencer l'édition."
