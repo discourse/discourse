@@ -2,6 +2,46 @@ require 'spec_helper'
 
 describe TopicsController do
 
+
+  context 'wordpress' do
+    let!(:user) { log_in(:moderator) }
+    let(:p1) { Fabricate(:post, user: user) }
+    let(:topic) { p1.topic }
+    let!(:p2) { Fabricate(:post, topic: topic, user:user )}
+
+    it "returns the JSON in the format our wordpress plugin needs" do
+      xhr :get, :wordpress, topic_id: topic.id, best: 3
+      response.should be_success
+      json = ::JSON.parse(response.body)
+      json.should be_present
+
+      # The JSON has the data the wordpress plugin needs
+      json['id'].should == topic.id
+      json['posts_count'].should == 2
+      json['filtered_posts_count'].should == 2
+
+      # Posts
+      json['posts'].size.should == 1
+      post = json['posts'][0]
+      post['id'].should == p2.id
+      post['username'].should == user.username
+      post['avatar_template'].should == user.avatar_template
+      post['name'].should == user.name
+      post['created_at'].should be_present
+      post['cooked'].should == p2.cooked
+
+      # Participants
+      json['participants'].size.should == 1
+      participant = json['participants'][0]
+      participant['id'].should == user.id
+      participant['username'].should == user.username
+      participant['avatar_template'].should == user.avatar_template
+
+
+      puts json.inspect
+    end
+  end
+
   context 'move_posts' do
     it 'needs you to be logged in' do
       lambda { xhr :post, :move_posts, topic_id: 111, title: 'blah', post_ids: [1,2,3] }.should raise_error(Discourse::NotLoggedIn)

@@ -1,4 +1,4 @@
-class PostSerializer < ApplicationSerializer
+class PostSerializer < BasicPostSerializer
 
   # To pass in additional information we might need
   attr_accessor :topic_slug
@@ -8,10 +8,8 @@ class PostSerializer < ApplicationSerializer
   attr_accessor :single_post_link_counts
   attr_accessor :draft_sequence
 
-  attributes :id,
-             :post_number,
+  attributes :post_number,
              :post_type,
-             :created_at,
              :updated_at,
              :reply_count,
              :reply_to_post_number,
@@ -29,10 +27,7 @@ class PostSerializer < ApplicationSerializer
              :can_delete,
              :can_recover,
              :link_counts,
-             :cooked,
              :read,
-             :username,
-             :name,
              :user_title,
              :reply_to_user,
              :bookmarked,
@@ -40,7 +35,6 @@ class PostSerializer < ApplicationSerializer
              :actions_summary,
              :moderator?,
              :staff?,
-             :avatar_template,
              :user_id,
              :draft_sequence,
              :hidden,
@@ -55,10 +49,6 @@ class PostSerializer < ApplicationSerializer
 
   def staff?
     object.user.staff?
-  end
-
-  def avatar_template
-    object.user.avatar_template
   end
 
   def yours
@@ -77,6 +67,10 @@ class PostSerializer < ApplicationSerializer
     scope.can_recover_post?(object)
   end
 
+  def display_username
+    object.user.name
+  end
+
   def link_counts
 
     return @single_post_link_counts if @single_post_link_counts.present?
@@ -93,18 +87,6 @@ class PostSerializer < ApplicationSerializer
     end
   end
 
-  def cooked
-    if object.hidden && !scope.is_staff?
-      if scope.current_user && object.user_id == scope.current_user.id
-        I18n.t('flagging.you_must_edit')
-      else
-        I18n.t('flagging.user_must_edit')
-      end
-    else
-      object.filter_quotes(@parent_post)
-    end
-  end
-
   def read
     @topic_view.read?(object.post_number)
   end
@@ -113,20 +95,8 @@ class PostSerializer < ApplicationSerializer
     object.score || 0
   end
 
-  def display_username
-    object.user.name
-  end
-
   def version
     object.cached_version
-  end
-
-  def username
-    object.user.username
-  end
-
-  def name
-    object.user.name
   end
 
   def user_title
