@@ -287,7 +287,7 @@ class User < ActiveRecord::Base
     now_date = now.to_date
 
     # Only update last seen once every minute
-    redis_key = "user:#{self.id}:last_seen"
+    redis_key = "user:#{self.id}:#{now_date}"
     if $redis.setnx(redis_key, "1")
       $redis.expire(redis_key, SiteSetting.active_user_rate_limit_secs)
 
