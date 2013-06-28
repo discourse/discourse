@@ -592,6 +592,7 @@ describe User do
 
     before do
       SiteSetting.stubs(:active_user_rate_limit_secs).returns(0)
+      SiteSetting.stubs(:previous_visit_timeout_hours).returns(1)
     end
 
     it "should act correctly" do
@@ -599,6 +600,11 @@ describe User do
 
       # first visit
       user.update_last_seen!(first_visit_date)
+      user.previous_visit_at.should be_nil
+
+      # updated same time
+      user.update_last_seen!(first_visit_date)
+      user.reload
       user.previous_visit_at.should be_nil
 
       # second visit
@@ -610,7 +616,6 @@ describe User do
       user.update_last_seen!(third_visit_date)
       user.reload
       user.previous_visit_at.should be_within_one_second_of(second_visit_date)
-
     end
 
   end
