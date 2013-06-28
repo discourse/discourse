@@ -169,6 +169,7 @@ fr:
       mute: "couper"
       edit: "Éditer les préférences"
       download_archive: "télécharger l'archive de mes messages"
+      dynamic_favicon: "Afficher les notifications de messages entrants sur le favicon"
       private_message: "Message privé"
       private_messages: "Messages"
       activity_stream: "Activité"
