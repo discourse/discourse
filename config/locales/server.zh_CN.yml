@@ -360,16 +360,19 @@ zh_CN:
       xaxis: "用户"
       num_visits: "访问数"
       num_topics: "主题数"
+      num_clicks: "点击数"
     top_traffic_sources:
       title: "最高流量来源"
       xaxis: "域名"
       num_visits: "访问数"
       num_topics: "主题数"
       num_users: "用户数"
+      num_clicks: "点击数"
     top_referred_topics:
       title: "最高引用主题"
       xaxis: "主题"
       num_visits: "访问数"
+      num_clicks: "点击数"
 
   dashboard:
     rails_env_warning: "你的服务器运行在 %{env} 模式。"
