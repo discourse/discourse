@@ -1155,6 +1155,8 @@ fr:
         deactivate_explanation: "Un compte désactivé doit être revalidé par email"
         banned_explanation: "Un utilisateur banni ne peut se connecter"
         block_explanation: "Un utilisateur bloqué ne peut poster ou créer de discussions."
+        blocked: "Bloqué ?"
+        block: "Bloqué"
 
       site_content:
         none: "Choisissez un type de contenu afin de commencer l'édition."
