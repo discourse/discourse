@@ -69,6 +69,20 @@ describe Topic do
     end
   end
 
+  context 'admin topic title' do
+    let(:admin) { Fabricate(:admin) }
+
+    it 'allows really short titles' do
+      pm = Fabricate.build(:private_message_topic, user: admin, title: 'a')
+      expect(pm).to be_valid
+    end
+
+    it 'but not blank' do
+      pm = Fabricate.build(:private_message_topic, title: '')
+      expect(pm).to_not be_valid
+    end
+  end
+
   context 'topic title uniqueness' do
 
     let!(:topic) { Fabricate(:topic) }
