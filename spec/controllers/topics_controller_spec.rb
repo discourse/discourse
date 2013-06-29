@@ -36,9 +36,6 @@ describe TopicsController do
       participant['id'].should == user.id
       participant['username'].should == user.username
       participant['avatar_template'].should == user.avatar_template
-
-
-      puts json.inspect
     end
   end
 
