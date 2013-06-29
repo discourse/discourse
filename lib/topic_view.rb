@@ -180,6 +180,7 @@ class TopicView
     @index_offset = 0
     @posts = @filtered_posts.order('percent_rank asc, sort_order asc').where("post_number > 1")
     @posts = @posts.includes(:reply_to_user).includes(:topic).joins(:user).limit(max)
+    @posts = @posts.where('COALESCE(users.trust_level,0) > 0')
     @posts = @posts.to_a
     @posts.sort!{|a,b| a.post_number <=> b.post_number}
     @posts
