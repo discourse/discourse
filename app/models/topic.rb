@@ -298,6 +298,7 @@ class Topic < ActiveRecord::Base
               FROM (SELECT topic_id,
                            round(exp(avg(ln(avg_time)))) AS gmean
                     FROM posts
+                    WHERE avg_time > 0 AND avg_time IS NOT NULL
                     GROUP BY topic_id) AS x
               WHERE x.topic_id = topics.id")
   end
