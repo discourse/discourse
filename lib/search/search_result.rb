@@ -41,7 +41,9 @@ class Search
     end
 
     def self.from_post(p)
-      SearchResult.from_topic(p.topic)
+      # we want the topic link when it's the OP
+      return SearchResult.from_topic(p.topic) if p.post_number == 1
+      SearchResult.new(type: :topic, id: p.topic.id, title: p.topic.title, url: p.url)
     end
 
   end
