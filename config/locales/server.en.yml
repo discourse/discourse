@@ -13,6 +13,7 @@ en:
     formats:
       short: "%m-%d-%Y"
       short_no_year: "%B %-d"
+      date_only: "%b %-d, %Y"
 
   title: "Discourse"
   topics: "Topics"
