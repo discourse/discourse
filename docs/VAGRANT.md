@@ -110,6 +110,7 @@ commands:
 ```
 vagrant ssh
 cd /vagrant
+bundle exec rake db:drop db:create
 psql discourse_development < pg_dumps/production-image.sql
 rake db:migrate
 rake db:test:prepare
