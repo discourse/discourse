@@ -28,6 +28,12 @@ en:
         x_days:
           one:   "1d"
           other: "%{count}d"
+        about_x_months:
+          one:   "1mon"
+          other: "%{count}mon"
+        x_months:
+          one:   "1mon"
+          other: "%{count}mon"
         about_x_years:
           one:   "1y"
           other: "%{count}y"
@@ -107,7 +113,7 @@ en:
       not_logged_in: "Sorry, you must be logged in to bookmark posts."
       created: "You've bookmarked this post."
       not_bookmarked: "You've read this post; click to bookmark it."
-      last_read: "This is the last post you've read; click to bookmark it."
+      last_read: "This is the last post you've read."
 
     new_topics_inserted: "{{count}} new topics."
     show_new_topics: "Click to show."
@@ -142,8 +148,8 @@ en:
       sent_by_you: "Sent by <a href='{{userUrl}}'>you</a>"
 
     user_action_groups:
-      "1": "Likes Given"
-      "2": "Likes Received"
+      "1": "Fucks Given"
+      "2": "Fucks Received"
       "3": "Bookmarks"
       "4": "Topics"
       "5": "Replies"
@@ -346,7 +352,7 @@ en:
       action: "I forgot my password"
       invite: "Enter your username or email address, and we'll send you a password reset email."
       reset: "Reset Password"
-      complete: "If an account matches that username or email address, you should receive an email with instructions on how to reset your password shortly."
+      complete: "You should receive an email with instructions on how to reset your password shortly."
 
     login:
       title: "Log In"
@@ -466,7 +472,7 @@ en:
       replied: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
       posted: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
       edited: "<i title='edited' class='icon icon-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='liked' class='icon icon-heart'></i> {{username}} {{link}}"
+      liked: "<i title='liked' class='icon icon-lemon'></i> {{username}} {{link}}"
       private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} {{link}}"
       invited_to_private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} {{link}}"
       invitee_accepted: "<i title='accepted your invitation' class='icon icon-signin'></i> {{username}} accepted your invitation"
@@ -557,8 +563,8 @@ en:
         other: "there are {{count}} new posts in this topic since you last read it"
 
       likes:
-        one: "there is 1 like in this topic"
-        other: "there are {{count}} likes in this topic"
+        one: "1 fuck was given in this topic"
+        other: "{{count}} fucks were given in this topic"
       back_to_list: "Back to Topic List"
       options: "Topic Options"
       show_links: "show links within this topic"
@@ -754,7 +760,7 @@ en:
 
       controls:
         reply: "begin composing a reply to this post"
-        like: "like this post"
+        like: "give a fuck to this post"
         edit: "edit this post"
         flag: "flag this post for attention or send a notification about it"
         delete: "delete this post"
@@ -773,14 +779,14 @@ en:
           inappropriate: "Flag it too"
           custom_flag: "Flag it too"
           bookmark: "Bookmark it too"
-          like: "Like it too"
+          like: "Give a fuck too"
           vote: "Vote for it too"
         undo:
           off_topic: "Undo flag"
           spam: "Undo flag"
           inappropriate: "Undo flag"
           bookmark: "Undo bookmark"
-          like: "Undo like"
+          like: "Take your fuck back"
           vote: "Undo vote"
         people:
           off_topic: "{{icons}} marked this as off-topic"
@@ -791,7 +797,7 @@ en:
           notify_user: "{{icons}} sent a private message"
           notify_user_with_url: "{{icons}} sent a <a href='{{postUrl}}'>private message</a>"
           bookmark: "{{icons}} bookmarked this"
-          like: "{{icons}} liked this"
+          like: "{{icons}} gave a fuck"
           vote: "{{icons}} voted for this"
         by_you:
           off_topic: "You flagged this as off-topic"
@@ -800,7 +806,7 @@ en:
           notify_moderators: "You flagged this for moderation"
           notify_user: "You sent a private message to this user"
           bookmark: "You bookmarked this post"
-          like: "You liked this"
+          like: "You gave a fuck"
           vote: "You voted for this post"
         by_you_and_others:
           off_topic:
@@ -822,8 +828,8 @@ en:
             one: "You and 1 other bookmarked this post"
             other: "You and {{count}} other people bookmarked this post"
           like:
-            one: "You and 1 other liked this"
-            other: "You and {{count}} other people liked this"
+            one: "You and 1 other gave a fuck"
+            other: "You and {{count}} other people gave a fuck"
           vote:
             one: "You and 1 other voted for this post"
             other: "You and {{count}} other people voted for this post"
@@ -847,8 +853,8 @@ en:
             one: "1 person bookmarked this post"
             other: "{{count}} people bookmarked this post"
           like:
-            one: "1 person liked this"
-            other: "{{count}} people liked this"
+            one: "1 person gave a fuck"
+            other: "{{count}} people gave a fuck"
           vote:
             one: "1 person voted for this post"
             other: "{{count}} people voted for this post"
@@ -935,7 +941,7 @@ en:
     replies: "Replies"
     views_long: "this topic has been viewed {{number}} times"
     activity: "Activity"
-    likes: "Likes"
+    likes: "Fucks Given"
     top_contributors: "Participants"
     category_title: "Category"
     history: "History"
@@ -1178,7 +1184,7 @@ en:
         reputation: Reputation
         permissions: Permissions
         activity: Activity
-        like_count: Likes Received
+        like_count: Fucks Given
         private_topics_count: Private Topics
         posts_read_count: Posts Read
         post_count: Posts Created
