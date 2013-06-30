@@ -28,12 +28,6 @@ en:
         x_days:
           one:   "1d"
           other: "%{count}d"
-        about_x_months:
-          one:   "1mon"
-          other: "%{count}mon"
-        x_months:
-          one:   "1mon"
-          other: "%{count}mon"
         about_x_years:
           one:   "1y"
           other: "%{count}y"
@@ -113,7 +107,7 @@ en:
       not_logged_in: "Sorry, you must be logged in to bookmark posts."
       created: "You've bookmarked this post."
       not_bookmarked: "You've read this post; click to bookmark it."
-      last_read: "This is the last post you've read."
+      last_read: "This is the last post you've read; click to bookmark it."
 
     new_topics_inserted: "{{count}} new topics."
     show_new_topics: "Click to show."
@@ -352,7 +346,7 @@ en:
       action: "I forgot my password"
       invite: "Enter your username or email address, and we'll send you a password reset email."
       reset: "Reset Password"
-      complete: "You should receive an email with instructions on how to reset your password shortly."
+      complete: "If an account matches that username or email address, you should receive an email with instructions on how to reset your password shortly."
 
     login:
       title: "Log In"

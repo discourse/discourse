@@ -197,6 +197,8 @@ Discourse::Application.routes.draw do
   get 'threads/:topic_id/:post_number/avatar' => 'topics#avatar', constraints: {topic_id: /\d+/, post_number: /\d+/}
 
   # Topic routes
+  get 't/:slug/:topic_id/wordpress' => 'topics#wordpress', constraints: {topic_id: /\d+/}
+  get 't/:topic_id/wordpress' => 'topics#wordpress', constraints: {topic_id: /\d+/}
   get 't/:slug/:topic_id/best_of' => 'topics#show', defaults: {best_of: true}, constraints: {topic_id: /\d+/, post_number: /\d+/}
   get 't/:topic_id/best_of' => 'topics#show', constraints: {topic_id: /\d+/, post_number: /\d+/}
   put 't/:slug/:topic_id' => 'topics#update', constraints: {topic_id: /\d+/}

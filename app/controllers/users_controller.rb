@@ -96,6 +96,9 @@ class UsersController < ApplicationController
   def check_username
     params.require(:username)
 
+    # The special case where someone is changing the case of their own username
+    return render(json: {available: true}) if current_user and params[:username].downcase == current_user.username.downcase
+
     validator = UsernameValidator.new(params[:username])
     if !validator.valid_format?
       render json: {errors: validator.errors}

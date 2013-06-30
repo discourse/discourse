@@ -180,6 +180,7 @@ class TopicView
     @index_offset = 0
     @posts = @filtered_posts.order('percent_rank asc, sort_order asc').where("post_number > 1")
     @posts = @posts.includes(:reply_to_user).includes(:topic).joins(:user).limit(max)
+    @posts = @posts.where('COALESCE(users.trust_level,0) > 0')
     @posts = @posts.to_a
     @posts.sort!{|a,b| a.post_number <=> b.post_number}
     @posts
@@ -265,6 +266,15 @@ class TopicView
     @filtered_posts.by_newest.with_user.first(25)
   end
 
+
+  def current_post_ids
+    @current_post_ids ||= if @posts.is_a?(Array)
+      @posts.map {|p| p.id }
+    else
+       @posts.pluck(:post_number)
+    end
+  end
+
   protected
 
   def read_posts_set
@@ -275,7 +285,7 @@ class TopicView
 
       post_numbers = PostTiming.select(:post_number)
                 .where(topic_id: @topic.id, user_id: @user.id)
-                .where(post_number: @posts.pluck(:post_number))
+                .where(post_number: current_post_ids)
                 .pluck(:post_number)
 
       post_numbers.each {|pn| result << pn}

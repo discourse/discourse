@@ -4,7 +4,7 @@ Discourse.Formatter = (function(){
 
   var updateRelativeAge, autoUpdatingRelativeAge, relativeAge, relativeAgeTiny,
       relativeAgeMedium, relativeAgeMediumSpan, longDate, toTitleCase,
-      shortDate, breakUp;
+      shortDate, shortDateNoYear, breakUp;
 
   breakUp = function(string, maxLength){
     if(string.length <= maxLength) {
@@ -27,6 +27,10 @@ Discourse.Formatter = (function(){
 
   shortDate = function(date){
     return moment(date).shortDate();
+  };
+
+  shortDateNoYear = function(date) {
+    return moment(date).shortDateNoYear();
   };
 
   // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
@@ -104,16 +108,16 @@ Discourse.Formatter = (function(){
     case(distanceInMinutes >= 1440 && distanceInMinutes <= 2519):
       formatted = t("x_days", {count: 1});
       break;
-    case(distanceInMinutes >= 2520 && distanceInMinutes <= 129599):
+    case(distanceInMinutes >= 2520 && distanceInMinutes <= 20160):
       formatted = t("x_days", {count: Math.round(distanceInMinutes / 1440.0)});
       break;
-    case(distanceInMinutes >= 129600 && distanceInMinutes <= 525599):
-      formatted = t("x_months", {count: Math.round(distanceInMinutes / 43200.0)});
+    case(distanceInMinutes >= 20160 && distanceInMinutes <= 525599):
+      formatted = shortDateNoYear(date);
       break;
     default:
       var months = Math.round(distanceInMinutes / 43200.0);
-      if (months < 24) {
-        formatted = t("x_months", {count: months});
+      if (months < 12) {
+        formatted = shortDateNoYear(date);
       } else {
         formatted = t("over_x_years", {count: Math.round(months / 12.0)});
       }

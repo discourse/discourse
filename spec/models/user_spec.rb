@@ -196,6 +196,19 @@ describe User do
       end
     end
 
+    describe 'change the case of my username' do
+      let!(:myself) { Fabricate(:user, username: 'hansolo') }
+
+      it 'should return true' do
+        myself.change_username('HanSolo').should be_true
+      end
+
+      it 'should change the username' do
+        myself.change_username('HanSolo')
+        myself.reload.username.should == 'HanSolo'
+      end
+    end
+
   end
 
   describe 'delete posts' do

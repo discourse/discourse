@@ -159,9 +159,10 @@ class User < ActiveRecord::Base
   end
 
   def change_username(new_username)
-    current_username, self.username = username, new_username
+    current_username = self.username
+    self.username = new_username
 
-    if SiteSetting.call_discourse_hub? && valid?
+    if current_username.downcase != new_username.downcase && SiteSetting.call_discourse_hub? && valid?
       begin
         DiscourseHub.change_nickname(current_username, new_username)
       rescue DiscourseHub::NicknameUnavailable
@@ -566,7 +567,8 @@ class User < ActiveRecord::Base
   def username_validator
     username_format_validator || begin
       lower = username.downcase
-      if username_changed? && User.where(username_lower: lower).exists?
+      existing = User.where(username_lower: lower).first
+      if username_changed? && existing && existing.id != self.id
         errors.add(:username, I18n.t(:'user.username.unique'))
       end
     end

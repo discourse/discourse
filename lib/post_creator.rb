@@ -185,8 +185,8 @@ class PostCreator
 
   def setup_post
     post = @topic.posts.new(raw: @opts[:raw],
-                           user: @user,
-                           reply_to_post_number: @opts[:reply_to_post_number])
+                            user: @user,
+                            reply_to_post_number: @opts[:reply_to_post_number])
 
     # Attributes we pass through to the post instance if present
     [:post_type, :no_bump, :cooking_options, :image_sizes, :acting_user, :invalidate_oneboxes].each do |a|

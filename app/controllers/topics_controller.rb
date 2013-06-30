@@ -25,7 +25,12 @@ class TopicsController < ApplicationController
   caches_action :avatar, cache_path: Proc.new {|c| "#{c.params[:post_number]}-#{c.params[:topic_id]}" }
 
   def show
-    opts = params.slice(:username_filters, :best_of, :page, :post_number, :posts_before, :posts_after, :best)
+
+    # We'd like to migrate the wordpress feed to another url. This keeps up backwards compatibility with
+    # existing installs.
+    return wordpress if params[:best].present?
+
+    opts = params.slice(:username_filters, :best_of, :page, :post_number, :posts_before, :posts_after)
     begin
       @topic_view = TopicView.new(params[:id] || params[:topic_id], current_user, opts)
     rescue Discourse::NotFound
@@ -33,8 +38,6 @@ class TopicsController < ApplicationController
       raise Discourse::NotFound unless topic
       return redirect_to(topic.relative_url)
     end
-
-    raise Discourse::NotFound if @topic_view.posts.blank? && !(opts[:best].to_i > 0)
 
     anonymous_etag(@topic_view.topic) do
       redirect_to_correct_topic && return if slugs_do_not_match
@@ -44,6 +47,21 @@ class TopicsController < ApplicationController
     end
 
     canonical_url @topic_view.canonical_path
+  end
+
+  def wordpress
+    params.require(:best)
+    params.require(:topic_id)
+
+    @topic_view = TopicView.new(params[:topic_id], current_user, best: params[:best].to_i)
+
+    raise Discourse::NotFound if @topic_view.posts.blank?
+
+    anonymous_etag(@topic_view.topic) do
+      wordpress_serializer = TopicViewWordpressSerializer.new(@topic_view, scope: guardian, root: false)
+      render_json_dump(wordpress_serializer)
+    end
+
   end
 
   def destroy_timings
@@ -257,6 +275,7 @@ class TopicsController < ApplicationController
 
   def perform_show_response
     topic_view_serializer = TopicViewSerializer.new(@topic_view, scope: guardian, root: false)
+
     respond_to do |format|
       format.html do
         store_preloaded("topic_#{@topic_view.topic.id}", MultiJson.dump(topic_view_serializer))
