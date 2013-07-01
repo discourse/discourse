@@ -3,7 +3,7 @@ require_dependency 'admin_user_index_query'
 
 class Admin::UsersController < Admin::AdminController
 
-  before_filter :fetch_user, only: [:ban, :unban, :refresh_browsers, :revoke_admin, :grant_admin, :revoke_moderation, :grant_moderation, :approve, :activate, :deactivate, :block, :unblock]
+  before_filter :fetch_user, only: [:ban, :unban, :refresh_browsers, :revoke_admin, :grant_admin, :revoke_moderation, :grant_moderation, :approve, :activate, :deactivate, :block, :unblock, :trust_level]
 
   def index
     query = ::AdminUserIndexQuery.new(params)
@@ -66,6 +66,14 @@ class Admin::UsersController < Admin::AdminController
   def grant_moderation
     guardian.ensure_can_grant_moderation!(@user)
     @user.grant_moderation!
+    render_serialized(@user, AdminUserSerializer)
+  end
+
+  def trust_level
+    guardian.ensure_can_change_trust_level!(@user)
+    @user.trust_level = params[:level].to_i
+    @user.trust_level_set_by_admin = true
+    @user.save!
     render_serialized(@user, AdminUserSerializer)
   end
 
