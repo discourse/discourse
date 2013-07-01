@@ -1,0 +1,13 @@
+source 'https://rubygems.org'
+
+group :test do
+  gem 'rails'  
+  gem 'rspec'  
+  gem 'mocha'
+end
+
+# TODO: We need our own gem server 
+gem 'discourse_plugin', path: '../discourse_plugin'
+
+# Specify your gem's dependencies in rails_multisite.gemspec
+gemspec
