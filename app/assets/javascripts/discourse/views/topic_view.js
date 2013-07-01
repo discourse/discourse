@@ -40,11 +40,8 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
       bg.css("border-right-width", "1px");
     }
 
-    if (currentWidth === 0) {
-      bg.width(progressWidth);
-    } else {
-      bg.animate({ width: progressWidth }, 400);
-    }
+    // Disable animation for now so it performs better
+    bg.width(progressWidth);
   }.observes('progressPosition', 'topic.filtered_posts_count', 'topic.loaded'),
 
   updateTitle: function() {
