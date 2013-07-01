@@ -397,7 +397,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
   updatePosition: function(userActive) {
 
-    var rows = $('.topic-post');
+    var rows = $('.topic-post.ready');
     if (!rows || rows.length === 0) { return; }
 
     // if we have no rows
@@ -486,7 +486,8 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
       latestLink: "<a href=\"/\">" + (Em.String.i18n("topic.view_latest_topics")) + "</a>"
     };
 
-    if (category = this.get('controller.content.category')) {
+    category = this.get('controller.content.category');
+    if (category) {
       opts.catLink = Discourse.Utilities.categoryLink(category);
     } else {
       opts.catLink = "<a href=\"" + Discourse.getURL("/categories") + "\">" + (Em.String.i18n("topic.browse_all_categories")) + "</a>";
