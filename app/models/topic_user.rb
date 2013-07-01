@@ -87,7 +87,7 @@ class TopicUser < ActiveRecord::Base
 
         attrs_sql = attrs_array.map { |t| "#{t[0]} = ?" }.join(", ")
         vals = attrs_array.map { |t| t[1] }
-        rows = TopicUser.update_all([attrs_sql, *vals], topic_id: topic_id, user_id: user_id)
+        rows = TopicUser.where(topic_id: topic_id, user_id: user_id).update_all([attrs_sql, *vals])
 
         if rows == 0
           now = DateTime.now
@@ -109,7 +109,7 @@ class TopicUser < ActiveRecord::Base
 
     def track_visit!(topic,user)
       now = DateTime.now
-      rows = TopicUser.update_all({last_visited_at: now}, {topic_id: topic.id, user_id: user.id})
+      rows = TopicUser.where({topic_id: topic.id, user_id: user.id}).update_all({last_visited_at: now})
       if rows == 0
         TopicUser.create(topic_id: topic.id, user_id: user.id, last_visited_at: now, first_visited_at: now)
       else

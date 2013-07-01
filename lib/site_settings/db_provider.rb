@@ -28,13 +28,13 @@ class SiteSettings::DbProvider
 
     return unless table_exists?
 
-    count = @model.update_all({
+    count = @model.where({
+      name: name
+    }).update_all({
       name: name,
       value: value,
       data_type: data_type,
       updated_at: Time.now
-    }, {
-      name: name
     })
 
     if count == 0

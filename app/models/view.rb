@@ -24,7 +24,7 @@ class View < ActiveRecord::Base
 
         # Update the views count in the parent, if it exists.
         if parent.respond_to?(:views)
-          parent.class.update_all 'views = views + 1', id: parent.id
+          parent.class.where(id: parent.id).update_all 'views = views + 1'
         end
       end
     end
