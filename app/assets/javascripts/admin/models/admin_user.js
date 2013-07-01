@@ -64,8 +64,39 @@ Discourse.AdminUser = Discourse.User.extend({
 
   trustLevel: function() {
     var site = Discourse.Site.instance();
+    this.set('originalValue', this.get('trust_level'));
     return site.get('trust_levels').findProperty('id', this.get('trust_level'));
   }.property('trust_level'),
+
+  trustLevels: function() {
+    var site = Discourse.Site.instance();
+    // downgrading trust levels is not supported
+    var current = this.get('trust_level');
+    var levels = site.get('trust_levels');
+    return jQuery.grep(levels, function(e) { return e.id >= current })
+  }.property('trust_level'),
+
+  dirty: function() {
+    return this.get('originalValue') !== parseInt(this.get('trustLevel.id'), 10);
+  }.property('originalValue', 'trustLevel.id'),
+
+  saveTrustLevel: function() {
+    Discourse.ajax("/admin/users/" + this.id + "/trust_level", {
+      type: 'PUT',
+      data: {level: this.get('trustLevel.id')}
+    }).then(function () {
+      // succeeded
+      window.location.reload();
+    }, function(e) {
+      // failure
+      var error = Em.String.i18n('admin.user.trustlevel_change_failed', { error: "http: " + e.status + " - " + e.body });
+      bootbox.alert(error);
+    });
+  },
+
+  restoreTrustLevel: function() {
+    this.set('trustLevel.id', this.get('originalValue'));
+  },
 
   isBanned: (function() {
     return this.get('is_banned') === true;
