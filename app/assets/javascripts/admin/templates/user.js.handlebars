@@ -161,10 +161,22 @@
     </div>
 
   </div>
+
   <div class='display-row'>
     <div class='field'>{{i18n trust_level}}</div>
-    <div class='value'>{{trustLevel.name}}</div>
+    <div class="value">
+      {{combobox content=trustLevels value=trustLevel.id }}
+    </div>
+    <div class="controls">
+    {{#if dirty}}
+      <div>
+      <button class='btn ok' {{action saveTrustLevel target="content"}}><i class='icon-ok'></i></button>
+      <button class='btn cancel' {{action restoreTrustLevel target="content"}}><i class='icon-remove'></i></button>
+      </div>
+    {{/if}}
+    </div>
   </div>
+
   <div class='display-row'>
     <div class='field'>{{i18n admin.user.banned}}</div>
     <div class='value'>{{isBanned}}</div>
