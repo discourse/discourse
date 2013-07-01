@@ -11,7 +11,7 @@
   head.appendChild(script);
   script = document.createElement("script");
   script.type = "text/javascript";
-  script.src  = "http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+  script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
   head.appendChild(script);
   
     // Regiest a before cook event
