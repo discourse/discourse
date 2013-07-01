@@ -69,7 +69,7 @@ class Upload < ActiveRecord::Base
       # make sure we're at the beginning of the file (FastImage is moving the pointer)
       file.rewind
       # store the file and update its url
-    upload.url = Upload.store_file(file, sha1, image_info, upload.id)
+      upload.url = Upload.store_file(file, sha1, image_info, upload.id)
       # save the url
       upload.save
     end

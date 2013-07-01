@@ -158,7 +158,6 @@ Discourse.Utilities = {
     }
   },
 
-
   /**
     Validate a list of files to be uploaded
 
@@ -169,18 +168,19 @@ Discourse.Utilities = {
     if (files) {
       // can only upload one file at a time
       if (files.length > 1) {
-        bootbox.alert(Em.String.i18n('post.errors.upload_too_many_images'));
+        bootbox.alert(Em.String.i18n('post.errors.too_many_uploads'));
         return false;
       } else if (files.length > 0) {
-        // check that the uploaded file is an image
-        // TODO: we should provide support for other types of file
-        if (files[0].type && files[0].type.indexOf('image/') !== 0) {
-          bootbox.alert(Em.String.i18n('post.errors.only_images_are_supported'));
+        var upload = files[0];
+        // check that the uploaded file is authorized
+        if (!Discourse.Utilities.isAuthorizedUpload(upload)) {
+          var extensions = Discourse.SiteSettings.authorized_extensions.replace(/\|/g, ", ");
+          bootbox.alert(Em.String.i18n('post.errors.upload_not_authorized', { authorized_extensions: extensions }));
           return false;
         }
         // check file size
-        if (files[0].size && files[0].size > 0) {
-          var fileSizeInKB = files[0].size / 1024;
+        if (upload.size && upload.size > 0) {
+          var fileSizeInKB = upload.size / 1024;
           if (fileSizeInKB > Discourse.SiteSettings.max_upload_size_kb) {
             bootbox.alert(Em.String.i18n('post.errors.upload_too_large', { max_size_kb: Discourse.SiteSettings.max_upload_size_kb }));
             return false;
@@ -192,6 +192,19 @@ Discourse.Utilities = {
     }
     // there has been an error
     return false;
+  },
+
+  /**
+    Check the extension of the file against the list of authorized extensions
+
+    @method isAuthorizedUpload
+    @param {File} files The file we want to upload
+  **/
+  isAuthorizedUpload: function(file) {
+    var extensions = Discourse.SiteSettings.authorized_extensions;
+    if (!extensions) return false;
+    var regexp = new RegExp("\\.(" + extensions.replace(/\./g, "") + ")$", "i");
+    return file && file.name ? file.name.match(regexp) : false;
   }
 
 };

@@ -249,20 +249,20 @@ Discourse.ComposerView = Discourse.View.extend({
     $uploadTarget.on('fileuploadsubmit', function (e, data) {
       var result = Discourse.Utilities.validateFilesForUpload(data.files);
       // reset upload status when everything is ok
-      if (result) composerView.setProperties({ uploadProgress: 0, loadingImage: true });
+      if (result) composerView.setProperties({ uploadProgress: 0, isUploading: true });
       return result;
     });
 
     // send - this event is triggered when the upload request is about to start
     $uploadTarget.on('fileuploadsend', function (e, data) {
-      // hide the "image selector" modal
+      // hide the "file selector" modal
       composerView.get('controller').send('closeModal');
       // cf. https://github.com/blueimp/jQuery-File-Upload/wiki/API#how-to-cancel-an-upload
       var jqXHR = data.xhr();
       // need to wait for the link to show up in the DOM
       Em.run.schedule('afterRender', function() {
         // bind on the click event on the cancel link
-        $('#cancel-image-upload').on('click', function() {
+        $('#cancel-file-upload').on('click', function() {
           // cancel the upload
           // NOTE: this will trigger a 'fileuploadfail' event with status = 0
           if (jqXHR) jqXHR.abort();
@@ -283,13 +283,13 @@ Discourse.ComposerView = Discourse.View.extend({
       var upload = data.result;
       var html = "<img src=\"" + upload.url + "\" width=\"" + upload.width + "\" height=\"" + upload.height + "\">";
       composerView.addMarkdown(html);
-      composerView.set('loadingImage', false);
+      composerView.set('isUploading', false);
     });
 
     // fail
     $uploadTarget.on('fileuploadfail', function (e, data) {
       // hide upload status
-      composerView.set('loadingImage', false);
+      composerView.set('isUploading', false);
       // deal with meaningful errors first
       if (data.jqXHR) {
         switch (data.jqXHR.status) {
@@ -299,9 +299,10 @@ Discourse.ComposerView = Discourse.View.extend({
           case 413:
             bootbox.alert(Em.String.i18n('post.errors.upload_too_large', {max_size_kb: Discourse.SiteSettings.max_upload_size_kb}));
             return;
-          // 415 == media type not recognized (ie. not an image)
+          // 415 == media type not authorized
           case 415:
-            bootbox.alert(Em.String.i18n('post.errors.only_images_are_supported'));
+            var extensions = Discourse.SiteSettings.authorized_extensions.replace(/\|/g, ", ");
+            bootbox.alert(Em.String.i18n('post.errors.upload_not_authorized', { authorized_extensions: extensions }));
             return;
           // 422 == there has been an error on the server (mostly due to FastImage)
           case 422:
