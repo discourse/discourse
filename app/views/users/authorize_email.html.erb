@@ -6,7 +6,7 @@
   <%else%>
     <h2><%= t 'change_email.confirmed' %></h2>
     <p>
-      <%= raw t('change_email.please_continue', link: link_to(SiteSetting.title, root_path)) %>
+      <%= raw t('change_email.please_continue', link: link_to(SiteSetting.title, '/')) %>
     </p>
   <%end%>
 </div>
