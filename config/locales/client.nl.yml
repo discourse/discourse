@@ -748,8 +748,7 @@ nl:
         edit: "Sorry, er is iets misgegaan bij het bewerken van je bericht. Probeer het nog eens."
         upload: "Sorry, er is iets misgegaan bij het uploaden van je bestand. Probeer het nog eens."
         upload_too_large: "Sorry, het bestand dat je wil uploaden is te groot (maximum grootte is {{max_size_kb}}kb), verklein het bestand en probeer het opnieuw."
-        upload_too_many_images: "Sorry, je kan maar één afbeelding tegelijk uploaden."
-        only_images_are_supported: "Sorry, je kan alleen afbeeldingen uploaden."
+        too_many_uploads: "Sorry, je kan maar één afbeelding tegelijk uploaden."
 
       abandon: Weet je zeker dat je het schrijven van dit bericht wil afbreken?
 

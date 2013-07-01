@@ -51,6 +51,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:title_prettify, true)
 
   client_setting(:max_upload_size_kb, 1024)
+  client_setting(:authorized_extensions, '.jpg|.jpeg|.png|.gif')
 
   # settings only available server side
   setting(:auto_track_topics_after, 240000)

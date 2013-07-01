@@ -75,9 +75,9 @@
           {{#if currentUser}}
             <a href="#" {{action togglePreview}} class='toggle-preview'>{{{content.toggleText}}}</a>
             <div id='draft-status'></div>
-            {{#if view.loadingImage}}
-              <div id="image-uploading">
-                {{i18n image_selector.uploading_image}} {{view.uploadProgress}}% <a id="cancel-image-upload">{{i18n cancel}}</a>
+            {{#if view.isUploading}}
+              <div id="file-uploading">
+                {{i18n image_selector.uploading_image}} {{view.uploadProgress}}% <a id="cancel-file-upload">{{i18n cancel}}</a>
               </div>
             {{/if}}
           {{/if}}

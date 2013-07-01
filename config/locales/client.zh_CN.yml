@@ -711,8 +711,7 @@ zh_CN:
         edit: "抱歉，在编辑你的帖子时发生了错误。请重试。"
         upload: "抱歉，在上传文件时发生了错误。请重试。"
         upload_too_large: "抱歉，你上传的文件太大了（最大不能超过 {{max_size_kb}}kb），请调整文件大小后重新上传。"
-        upload_too_many_images: "抱歉, 你只能一次上传一张图片。"
-        only_images_are_supported: "抱歉，你只能上传图片。"
+        too_many_uploads: "抱歉, 你只能一次上传一张图片。"
 
       abandon: "你确定要丢弃你的帖子吗？"
 
