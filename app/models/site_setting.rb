@@ -50,7 +50,7 @@ class SiteSetting < ActiveRecord::Base
   # auto-replace rules for title
   setting(:title_prettify, true)
 
-  client_setting(:max_upload_size_kb, 1024)
+  client_setting(:max_upload_size_kb, 2048)
 
   # settings only available server side
   setting(:auto_track_topics_after, 240000)
