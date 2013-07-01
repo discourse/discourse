@@ -44,7 +44,7 @@ class StaticController < ApplicationController
 
     redirect_to(
       if params[:redirect].blank? || params[:redirect].match(login_path)
-        root_path
+        "/"
       else
         params[:redirect]
       end
