@@ -28,6 +28,12 @@ class SessionController < ApplicationController
 
       # If their password is correct
       if @user.confirm_password?(params[:password])
+
+        if @user.is_banned?
+          render json: { error: I18n.t("login.banned", {date: I18n.l(@user.banned_till, format: :date_only)}) }
+          return
+        end
+
         if @user.email_confirmed?
           log_on_user(@user)
           render_serialized(@user, UserSerializer)

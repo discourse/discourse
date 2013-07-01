@@ -254,7 +254,6 @@ Discourse.AdminUser = Discourse.User.extend({
     if (model.get('loadedDetails')) { return; }
 
     Discourse.AdminUser.find(model.get('username_lower')).then(function (result) {
-      console.log("loaded details");
       model.setProperties(result);
       model.set('loadedDetails', true);
     });
@@ -265,7 +264,7 @@ Discourse.AdminUser = Discourse.User.extend({
 Discourse.AdminUser.reopenClass({
 
   bulkApprove: function(users) {
-    users.each(function(user) {
+    _.each(users, function(user) {
       user.set('approved', true);
       user.set('can_approve', false);
       return user.set('selected', false);

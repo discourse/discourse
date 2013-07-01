@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 require 'spec_helper'
-require 'avatar_lookup'
+require_dependency 'avatar_lookup'
 
 describe AvatarLookup do
   let!(:user){ Fabricate(:user) }

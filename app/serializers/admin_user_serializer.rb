@@ -12,6 +12,7 @@ class AdminUserSerializer < BasicUserSerializer
              :trust_level,
              :flag_level,
              :username,
+             :title,
              :avatar_template,
              :topics_entered,
              :posts_read_count,

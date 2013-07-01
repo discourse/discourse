@@ -6,7 +6,7 @@ module Oneboxer
     matcher /^https?:\/\/.*\.(jpg|png|gif|jpeg)$/
 
     def onebox
-      "<a href='#{@url}' target='_blank'><img src='#{@url}'></a>"
+      Oneboxer::BaseOnebox.image_html(@url, nil, @url)
     end
 
   end

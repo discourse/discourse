@@ -27,7 +27,6 @@ The following Ruby Gems are used in Discourse:
 * [omniauth-facebook](https://github.com/mkdynamic/omniauth-facebook)
 * [omniauth-twitter](https://github.com/arunagw/omniauth-twitter)
 * [omniauth-github](https://github.com/intridea/omniauth-github)
-* [has_ip_address](https://rubygems.org/gems/has_ip_address)
 * [vestal_versions](https://rubygems.org/gems/vestal_versions)
 * [uglifier](https://rubygems.org/gems/uglifier)
 * [nokogiri](https://rubygems.org/gems/nokogiri)

@@ -39,6 +39,16 @@ module Email
       @template_args ||= { site_name: SiteSetting.title,
                            base_url: Discourse.base_url,
                            user_preferences_url: "#{Discourse.base_url}/user_preferences" }.merge!(@opts)
+
+      if @template_args[:url].present?
+        if allow_reply_by_email? and
+          @template_args[:respond_instructions] = I18n.t('user_notifications.reply_by_email', @template_args)
+        else
+          @template_args[:respond_instructions] = I18n.t('user_notifications.visit_link_to_respond', @template_args)
+        end
+      end
+
+      @template_args
     end
 
     def build_args

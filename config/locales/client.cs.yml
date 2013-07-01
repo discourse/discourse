@@ -697,7 +697,7 @@ cs:
         success: "Díky! Odeslali jsme pozvánku na <b>{{email}}</b>. Dáme vám vědět, až bude pozvánka vyzvednuta. Na záložce pozvánek na vaší uživatelské stránce můžete sledovat koho jste pozvali."
         error: "Bohužel se nepodařilo pozvat tuto osobu. Není již registrovaným uživatelem?"
 
-      login_reply: 'Přihlašte se, chcete-li odpovědět'
+      login_reply: 'Přihlaste se, chcete-li odpovědět'
 
       filters:
         user: "{{n_posts}} {{by_n_users}}."

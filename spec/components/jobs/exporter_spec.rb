@@ -20,13 +20,10 @@ describe Jobs::Exporter do
         @exporter_args = {}
       end
 
-      it "should indicate that an export is now running" do
-        Export.expects(:set_export_started)
-        Jobs::Exporter.new.execute( @exporter_args )
-      end
-
-      it "should indicate that an export is not running after it's done" do
-        Export.expects(:set_export_is_not_running)
+      it "should indicate that an export is running" do
+        seq = sequence('call sequence')
+        Export.expects(:set_export_started).in_sequence(seq).at_least_once
+        Export.expects(:set_export_is_not_running).in_sequence(seq).at_least_once
         Jobs::Exporter.new.execute( @exporter_args )
       end
 

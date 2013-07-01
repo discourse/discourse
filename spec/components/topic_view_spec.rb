@@ -24,7 +24,7 @@ describe TopicView do
     let!(:p3) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 0 )}
 
     it "it can find the best responses" do
-      best2 = TopicView.new(topic.id, nil, best: 2)
+      best2 = TopicView.new(topic.id, coding_horror, best: 2)
       best2.posts.count.should == 2
       best2.posts[0].id.should == p2.id
       best2.posts[1].id.should == p3.id
@@ -36,7 +36,20 @@ describe TopicView do
       best = TopicView.new(topic.id, nil, best: 99)
       best.posts.count.should == 2
       best.filtered_posts_count.should == 3
+      best.current_post_ids.should =~ [p2.id, p3.id]
 
+      # should get no results for trust level too low
+      best = TopicView.new(topic.id, nil, best: 99, min_trust_level: coding_horror.trust_level + 1)
+      best.posts.count.should == 0
+
+
+      # should filter out the posts with a score that is too low
+      best = TopicView.new(topic.id, nil, best: 99, min_score: 99)
+      best.posts.count.should == 0
+
+      # should filter out everything if min replies not met
+      best = TopicView.new(topic.id, nil, best: 99, min_replies: 99)
+      best.posts.count.should == 0
     end
 
 

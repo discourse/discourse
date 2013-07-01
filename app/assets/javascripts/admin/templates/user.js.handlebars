@@ -27,6 +27,25 @@
     <div class='value'>{{avatar content imageSize="large"}}</div>
   </div>
 
+  <div class='display-row'>
+    <div class='field'>{{i18n user.title.title}}</div>
+    <div class='value'>
+      {{#if editingTitle}}
+        {{textField value=title autofocus="autofocus"}}
+      {{else}}
+        <span {{action toggleTitleEdit}}>{{title}}&nbsp;</span>
+      {{/if}}
+    </div>
+    <div class='controls'>
+      {{#if editingTitle}}
+        <button class='btn' {{action saveTitle}}>{{i18n admin.user.save_title}}</button>
+        <a href="#" {{action toggleTitleEdit}}>Cancel</a>
+      {{else}}
+        <button class='btn' {{action toggleTitleEdit}}>{{i18n admin.user.edit_title}}</button>
+      {{/if}}
+    </div>
+  </div>
+
   <div class='display-row' style='height: 50px'>
     <div class='field'>{{i18n user.ip_address.title}}</div>
     <div class='value'>{{ip_address}}</div>

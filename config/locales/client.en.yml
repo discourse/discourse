@@ -28,12 +28,6 @@ en:
         x_days:
           one:   "1d"
           other: "%{count}d"
-        about_x_months:
-          one:   "1mon"
-          other: "%{count}mon"
-        x_months:
-          one:   "1mon"
-          other: "%{count}mon"
         about_x_years:
           one:   "1y"
           other: "%{count}y"
@@ -78,6 +72,7 @@ en:
     yes_value: "Yes"
     of_value: "of"
     generic_error: "Sorry, an error has occurred."
+    generic_error_with_reason: "An error occured: %{error}"
     log_in: "Log In"
     age: "Age"
     last_post: "Last Post"
@@ -86,6 +81,7 @@ en:
     show_more: "show more"
     links: Links
     faq: "FAQ"
+    privacy_policy: "Privacy Policy"
     you: "You"
     or: "or"
     now: "just now"
@@ -111,7 +107,7 @@ en:
       not_logged_in: "Sorry, you must be logged in to bookmark posts."
       created: "You've bookmarked this post."
       not_bookmarked: "You've read this post; click to bookmark it."
-      last_read: "This is the last post you've read."
+      last_read: "This is the last post you've read; click to bookmark it."
 
     new_topics_inserted: "{{count}} new topics."
     show_new_topics: "Click to show."
@@ -294,6 +290,8 @@ en:
       avatar:
         title: "Avatar"
         instructions: "We use <a href='https://gravatar.com' target='_blank'>Gravatar</a> for avatars based on your email"
+      title:
+        title: "Title"
 
       filters:
         all: "All"
@@ -348,7 +346,7 @@ en:
       action: "I forgot my password"
       invite: "Enter your username or email address, and we'll send you a password reset email."
       reset: "Reset Password"
-      complete: "You should receive an email with instructions on how to reset your password shortly."
+      complete: "If an account matches that username or email address, you should receive an email with instructions on how to reset your password shortly."
 
     login:
       title: "Log In"
@@ -361,7 +359,7 @@ en:
       or: "Or"
       authenticating: "Authenticating..."
       awaiting_confirmation: "Your account is awaiting activation, use the forgot password link to issue another activation email."
-      awaiting_approval: "Your account has not been approved by a moderator yet. You will receive an email when it is approved."
+      awaiting_approval: "Your account has not been approved by a staff member yet. You will be sent an email when it is approved."
       not_activated: "You can't log in yet. We previously sent an activation email to you at <b>{{sentTo}}</b>. Please follow the instructions in that email to activate your account."
       resend_activation_email: "Click here to send the activation email again."
       sent_activation_email_again: "We sent another activation email to you at <b>{{currentEmail}}</b>. It might take a few minutes for it to arrive; be sure to check your spam folder."
@@ -397,7 +395,7 @@ en:
 
       min_length:
         need_more_for_title: "{{n}} to go for the title"
-        need_more_for_reply: "{{n}} to go for the reply"
+        need_more_for_reply: "{{n}} to go for the post"
 
       error:
         title_missing: "Title is required."
@@ -1047,7 +1045,7 @@ en:
 
         flagged_by: "Flagged by"
         error: "Something went wrong"
-        view_message: "view message"
+        view_message: "Reply"
         no_results: "There are no flags."
 
         summary:
@@ -1166,6 +1164,8 @@ en:
         admin: "Admin?"
         blocked: "Blocked?"
         show_admin_profile: "Admin"
+        edit_title: "Edit Title"
+        save_title: "Save Title"
         refresh_browsers: "Force browser refresh"
         show_public_profile: "Show Public Profile"
         impersonate: 'Impersonate'
@@ -1179,7 +1179,7 @@ en:
         permissions: Permissions
         activity: Activity
         like_count: Likes Received
-        private_topics_count: Private Topics Count
+        private_topics_count: Private Topics
         posts_read_count: Posts Read
         post_count: Posts Created
         topics_entered: Topics Entered

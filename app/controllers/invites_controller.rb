@@ -1,6 +1,6 @@
 class InvitesController < ApplicationController
 
-  skip_before_filter :check_xhr, :check_restricted_access
+  skip_before_filter :check_xhr
   skip_before_filter :redirect_to_login_if_required
 
   before_filter :ensure_logged_in, only: [:destroy]
@@ -15,9 +15,6 @@ class InvitesController < ApplicationController
 
         # Send a welcome message if required
         user.enqueue_welcome_message('welcome_invite') if user.send_welcome_message
-
-        # We skip the access password if we come in via an invite link
-        cookies.permanent['_access'] = SiteSetting.access_password if SiteSetting.access_password.present?
 
         topic = invite.topics.first
         if topic.present?

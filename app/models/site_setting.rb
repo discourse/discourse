@@ -14,8 +14,9 @@ class SiteSetting < ActiveRecord::Base
   setting(:company_full_name, 'My Unconfigured Forum Ltd.')
   setting(:company_short_name, 'Unconfigured Forum')
   setting(:company_domain, 'www.example.com')
-  setting(:tos_url, '')
-  setting(:privacy_policy_url, '')
+  client_setting(:tos_url, '')
+  client_setting(:faq_url, '')
+  client_setting(:privacy_policy_url, '')
   setting(:api_key, '')
   client_setting(:traditional_markdown_linebreaks, false)
   client_setting(:top_menu, 'latest|new|unread|favorited|categories')
@@ -49,7 +50,7 @@ class SiteSetting < ActiveRecord::Base
   # auto-replace rules for title
   setting(:title_prettify, true)
 
-  client_setting(:max_upload_size_kb, 1024)
+  client_setting(:max_upload_size_kb, 2048)
 
   # settings only available server side
   setting(:auto_track_topics_after, 240000)
@@ -67,7 +68,6 @@ class SiteSetting < ActiveRecord::Base
   setting(:port, Rails.env.development? ? 3000 : '')
   setting(:enable_private_messages, true)
   setting(:use_ssl, false)
-  setting(:access_password)
   setting(:queue_jobs, !Rails.env.test?)
   setting(:crawl_images, !Rails.env.test?)
   setting(:max_image_width, 690)

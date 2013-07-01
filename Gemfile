@@ -26,10 +26,9 @@ gem 'fast_xs'
 gem 'fast_xor', git: 'https://github.com/CodeMonkeySteve/fast_xor.git'
 gem 'fastimage'
 gem 'fog', require: false
-gem 'has_ip_address'
 gem 'hiredis'
 
-gem 'email_reply_parser'
+gem 'email_reply_parser', git: 'https://github.com/lawrencepit/email_reply_parser.git'
 
 # note: for image_optim to correctly work you need
 # sudo apt-get install -y advancecomp gifsicle jpegoptim libjpeg-progs optipng pngcrush
@@ -140,7 +139,7 @@ gem 'lru_redux'
 # IMPORTANT: mini profiler monkey patches, so it better be required last
 #  If you want to amend mini profiler to do the monkey patches in the railstie
 #  we are open to it. by deferring require to the initializer we can configure disourse installs without it
-gem 'rack-mini-profiler', require: false  # require: false #, git: 'git://github.com/SamSaffron/MiniProfiler'
+gem 'rack-mini-profiler', '0.1.27', require: false  # require: false #, git: 'git://github.com/SamSaffron/MiniProfiler'
 
 # used for caching, optional
 # redis-rack-cache is missing a sane expiry policy, it hogs redis

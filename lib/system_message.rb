@@ -24,9 +24,6 @@ class SystemMessage
 
     params = defaults.merge(params)
 
-    if SiteSetting.access_password.present?
-      params[:site_password] = I18n.t('system_messages.site_password', access_password: SiteSetting.access_password)
-    end
 
     title = I18n.t("system_messages.#{type}.subject_template", params)
     raw_body = I18n.t("system_messages.#{type}.text_body_template", params)

@@ -37,20 +37,26 @@ module Email
       end
 
       @message.text_part.content_type = 'text/plain; charset=UTF-8'
-      @message.deliver
 
+      # Set up the email log
       to_address = @message.to
       to_address = to_address.first if to_address.is_a?(Array)
-
       email_log = EmailLog.new(email_type: @email_type,
                                to_address: to_address,
                                user_id: @user.try(:id))
 
-      email_log.post_id = @messager
       add_header_to_log('X-Discourse-Reply-Key', email_log, :reply_key)
       add_header_to_log('X-Discourse-Post-Id', email_log, :post_id)
       add_header_to_log('X-Discourse-Topic-Id', email_log, :topic_id)
 
+      # Remove headers we don't need anymore
+      @message.header['X-Discourse-Topic-Id'] = nil
+      @message.header['X-Discourse-Post-Id'] = nil
+      @message.header['X-Discourse-Reply-Key'] = nil
+
+      @message.deliver
+
+      # Save and return the email log
       email_log.save!
       email_log
 

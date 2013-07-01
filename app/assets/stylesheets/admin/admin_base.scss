@@ -271,21 +271,29 @@ table {
 .admin-flags {
 
   tr.hidden-post td.excerpt { opacity: 0.4;  }
+  tr.deleted td.excerpt { opacity: 0.8; background-color: #ffcece; }
   td.message {
     padding: 4px 0;
     background-color: #f8f8e0;
   }
-  td { vertical-align: middle; }
+  td { vertical-align: top; }
   th { text-align: left; }
   .user { width: 40px; }
   .excerpt {
-    width: 740px; padding: 0 10px 10px 0;
+    max-width: 740px;
+    width: 740px;
+    padding: 0 10px 10px 0;
+    word-wrap: break-word;
     .icon,h3 { display: inline-block; }
 
   }
-  .flaggers { padding: 0 10px; }
-  .last-flagged { padding: 0 10px; }
-  .flag-summary { font-size: 11px; }
+  .flaggers {
+    font-size: 11px;
+    td {
+      vertical-align: middle;
+      padding: 3px;
+    }
+  }
   .action {
      button { margin: 4px; }
      text-align: right;

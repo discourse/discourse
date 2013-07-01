@@ -159,9 +159,10 @@ class User < ActiveRecord::Base
   end
 
   def change_username(new_username)
-    current_username, self.username = username, new_username
+    current_username = self.username
+    self.username = new_username
 
-    if SiteSetting.call_discourse_hub? && valid?
+    if current_username.downcase != new_username.downcase && SiteSetting.call_discourse_hub? && valid?
       begin
         DiscourseHub.change_nickname(current_username, new_username)
       rescue DiscourseHub::NicknameUnavailable
@@ -194,12 +195,12 @@ class User < ActiveRecord::Base
   end
 
   # Approve this user
-  def approve(approved_by)
+  def approve(approved_by, send_mail=true)
     self.approved = true
     self.approved_by = approved_by
     self.approved_at = Time.now
 
-    send_approval_email if save
+    send_approval_email if save and send_mail
   end
 
   def self.email_hash(email)
@@ -282,11 +283,12 @@ class User < ActiveRecord::Base
     end
   end
 
-  def update_last_seen!
-    now = DateTime.now
+  def update_last_seen!(now=nil)
+    now ||= Time.zone.now
     now_date = now.to_date
+
     # Only update last seen once every minute
-    redis_key = "user:#{self.id}:#{now_date.to_s}"
+    redis_key = "user:#{self.id}:#{now_date}"
     if $redis.setnx(redis_key, "1")
       $redis.expire(redis_key, SiteSetting.active_user_rate_limit_secs)
 
@@ -565,7 +567,8 @@ class User < ActiveRecord::Base
   def username_validator
     username_format_validator || begin
       lower = username.downcase
-      if username_changed? && User.where(username_lower: lower).exists?
+      existing = User.where(username_lower: lower).first
+      if username_changed? && existing && existing.id != self.id
         errors.add(:username, I18n.t(:'user.username.unique'))
       end
     end

@@ -5,6 +5,7 @@ class SiteSerializer < ApplicationSerializer
              :post_types,
              :uncategorized_slug
 
+
   has_many :categories, serializer: BasicCategorySerializer, embed: :objects
   has_many :post_action_types, embed: :objects
   has_many :trust_levels, embed: :objects

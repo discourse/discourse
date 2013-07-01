@@ -4,10 +4,33 @@ Discourse.Formatter = (function(){
 
   var updateRelativeAge, autoUpdatingRelativeAge, relativeAge, relativeAgeTiny,
       relativeAgeMedium, relativeAgeMediumSpan, longDate, toTitleCase,
-      shortDate;
+      shortDate, shortDateNoYear, breakUp;
+
+  breakUp = function(string, maxLength){
+    if(string.length <= maxLength) {
+      return string;
+    }
+
+    var firstPart = string.substr(0, maxLength);
+
+    var betterSplit = firstPart.substr(1).search(/[^a-z]/);
+    if (betterSplit >= 0) {
+      var offset = 1;
+      if(string[betterSplit+1] === "_") {
+        offset = 2;
+      }
+      return string.substr(0, betterSplit + offset) + " " + string.substring(betterSplit + offset);
+    } else {
+      return firstPart + " " + string.substr(maxLength);
+    }
+  };
 
   shortDate = function(date){
     return moment(date).shortDate();
+  };
+
+  shortDateNoYear = function(date) {
+    return moment(date).shortDateNoYear();
   };
 
   // http://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
@@ -43,11 +66,15 @@ Discourse.Formatter = (function(){
     var append = "";
 
     if(format === 'medium') {
-      append = " date' title='" + longDate(date);
+      append = " date";
       if(options.leaveAgo) {
         format = 'medium-with-ago';
       }
       options.wrapInSpan = false;
+    }
+
+    if (options.title) {
+      append += "' title='" + longDate(date);
     }
 
     return "<span class='relative-date" + append + "' data-time='" + date.getTime() + "' data-format='" + format +  "'>" + relativeAge(date, options)  + "</span>";
@@ -81,16 +108,16 @@ Discourse.Formatter = (function(){
     case(distanceInMinutes >= 1440 && distanceInMinutes <= 2519):
       formatted = t("x_days", {count: 1});
       break;
-    case(distanceInMinutes >= 2520 && distanceInMinutes <= 129599):
+    case(distanceInMinutes >= 2520 && distanceInMinutes <= 20160):
       formatted = t("x_days", {count: Math.round(distanceInMinutes / 1440.0)});
       break;
-    case(distanceInMinutes >= 129600 && distanceInMinutes <= 525599):
-      formatted = t("x_months", {count: Math.round(distanceInMinutes / 43200.0)});
+    case(distanceInMinutes >= 20160 && distanceInMinutes <= 525599):
+      formatted = shortDateNoYear(date);
       break;
     default:
       var months = Math.round(distanceInMinutes / 43200.0);
-      if (months < 24) {
-        formatted = t("x_months", {count: months});
+      if (months < 12) {
+        formatted = shortDateNoYear(date);
       } else {
         formatted = t("over_x_years", {count: Math.round(months / 12.0)});
       }
@@ -185,6 +212,7 @@ Discourse.Formatter = (function(){
     autoUpdatingRelativeAge: autoUpdatingRelativeAge,
     updateRelativeAge: updateRelativeAge,
     toTitleCase: toTitleCase,
-    shortDate: shortDate
+    shortDate: shortDate,
+    breakUp: breakUp
   };
 })();

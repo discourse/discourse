@@ -22,15 +22,15 @@ var formatMonths = function(months) {
   return formatDays(months * 30);
 };
 
+var shortDate = function(days){
+  return moment().subtract('days', days).format('D MMM');
+};
+
 test("formating medium length dates", function() {
 
   format = "medium";
   var strip = function(html){
     return $(html).text();
-  };
-
-  var shortDate = function(days){
-    return moment().subtract('days', days).format('D MMM');
   };
 
   var shortDateYear = function(days){
@@ -74,10 +74,13 @@ test("formating tiny dates", function() {
   equal(formatMins(60), "1h");
   equal(formatHours(4), "4h");
   equal(formatDays(1), "1d");
-  equal(formatDays(20), "20d");
-  equal(formatMonths(3), "3mon");
-  equal(formatMonths(23), "23mon");
-  equal(formatMonths(24), "> 2y");
+  equal(formatDays(14), "14d");
+  equal(formatDays(15), shortDate(15));
+  equal(formatDays(92), shortDate(92));
+  equal(formatDays(364), shortDate(364));
+  equal(formatDays(365), "> 1y");
+  equal(formatDays(500), "> 1y");
+  equal(formatDays(365*2), "> 2y");
 });
 
 test("autoUpdatingRelativeAge", function() {
@@ -86,8 +89,12 @@ test("autoUpdatingRelativeAge", function() {
   var $elem = $(Discourse.Formatter.autoUpdatingRelativeAge(d));
   equal($elem.data('format'), "tiny");
   equal($elem.data('time'), d.getTime());
+  equal($elem.attr('title'), undefined);
 
-  $elem = $(Discourse.Formatter.autoUpdatingRelativeAge(d,{format: 'medium', leaveAgo: true}));
+  $elem = $(Discourse.Formatter.autoUpdatingRelativeAge(d, {title: true}));
+  equal($elem.attr('title'), moment(d).longDate());
+
+  $elem = $(Discourse.Formatter.autoUpdatingRelativeAge(d,{format: 'medium', title: true, leaveAgo: true}));
   equal($elem.data('format'), "medium-with-ago");
   equal($elem.data('time'), d.getTime());
   equal($elem.attr('title'), moment(d).longDate());
@@ -96,6 +103,7 @@ test("autoUpdatingRelativeAge", function() {
   $elem = $(Discourse.Formatter.autoUpdatingRelativeAge(d,{format: 'medium'}));
   equal($elem.data('format'), "medium");
   equal($elem.data('time'), d.getTime());
+  equal($elem.attr('title'), undefined);
   equal($elem.html(), '1 day');
 });
 
@@ -116,4 +124,16 @@ test("updateRelativeAge", function(){
   Discourse.Formatter.updateRelativeAge($elem);
 
   equal($elem.html(), "2 mins ago");
+});
+
+test("breakUp", function(){
+
+  var b = function(s){ return Discourse.Formatter.breakUp(s,5); };
+
+  equal(b("hello"), "hello");
+  equal(b("helloworld"), "hello world");
+  equal(b("HeMans"), "He Mans");
+  equal(b("he_man"), "he_ man");
+  equal(b("he11111"), "he 11111");
+
 });

@@ -370,6 +370,16 @@
       .score {
         font-size: 12px;
       }
+      .user-title {
+        font-size: 12px;
+        padding: 0 3px;
+        background-color: #ddd;
+        border-radius: 5px;
+        margin-top: 2px;
+        border: solid 1px #ccc;
+        font-weight: bold;
+        color: #555;
+      }
     }
   }
   .reply-to-tab {

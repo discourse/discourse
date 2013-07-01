@@ -9,17 +9,7 @@ Handlebars.registerHelper('breakUp', function(property, options) {
   prop = Ember.Handlebars.get(this, property, options);
   if (!prop) return "";
 
-  tokens = prop.match(new RegExp(".{1,14}", 'g'));
-  if (tokens.length === 1) return prop;
-
-  result = "";
-  _.each(tokens,function(token,index) {
-    result += token;
-    if (token.indexOf(' ') === -1 && (index < tokens.length - 1)) {
-      result += "- ";
-    }
-  });
-  return result;
+  return Discourse.Formatter.breakUp(prop, 13);
 });
 
 /**
@@ -204,6 +194,17 @@ Handlebars.registerHelper('unboundAge', function(property, options) {
 });
 
 /**
+  Live refreshing age helper, with a tooltip showing the date and time
+
+  @method unboundAgeWithTooltip
+  @for Handlebars
+**/
+Handlebars.registerHelper('unboundAgeWithTooltip', function(property, options) {
+  var dt = new Date(Ember.Handlebars.get(this, property, options));
+  return new Handlebars.SafeString(Discourse.Formatter.autoUpdatingRelativeAge(dt, {title: true}));
+});
+
+/**
   Display a date related to an edit of a post
 
   @method editDate
@@ -212,7 +213,7 @@ Handlebars.registerHelper('unboundAge', function(property, options) {
 Handlebars.registerHelper('editDate', function(property, options) {
   // autoupdating this is going to be painful
   var date = new Date(Ember.Handlebars.get(this, property, options));
-  return new Handlebars.SafeString(Discourse.Formatter.autoUpdatingRelativeAge(date, {format: 'medium', leaveAgo: true, wrapInSpan: false}));
+  return new Handlebars.SafeString(Discourse.Formatter.autoUpdatingRelativeAge(date, {format: 'medium', title: true, leaveAgo: true, wrapInSpan: false}));
 });
 
 /**
@@ -246,7 +247,7 @@ Ember.Handlebars.registerHelper('float', function(property, options) {
   @for Handlebars
 **/
 Handlebars.registerHelper('number', function(property, options) {
-  var n, orig, title;
+  var n, orig, title, result;
   orig = parseInt(Ember.Handlebars.get(this, property, options), 10);
   if (isNaN(orig)) {
     orig = 0;
@@ -259,10 +260,18 @@ Handlebars.registerHelper('number', function(property, options) {
   }
   // Round off the thousands to one decimal place
   n = orig;
-  if (orig > 999) {
+  if (orig > 999 && !options.hash.noTitle) {
     n = (orig / 1000).toFixed(1) + "K";
   }
-  return new Handlebars.SafeString("<span class='number' title='" + title + "'>" + n + "</span>");
+
+  result = "<span class='number'";
+
+  if(n !== title) {
+    result += " title='" + title + "'";
+  }
+
+  result += ">" + n + "</span>";
+  return new Handlebars.SafeString(result);
 });
 
 /**
@@ -284,8 +293,21 @@ Handlebars.registerHelper('date', function(property, options) {
   var val = Ember.Handlebars.get(this, property, options);
   if (val) {
     var date = new Date(val);
-    return new Handlebars.SafeString(Discourse.Formatter.autoUpdatingRelativeAge(date, {format: 'medium', leaveAgo: leaveAgo}));
+    return new Handlebars.SafeString(Discourse.Formatter.autoUpdatingRelativeAge(date, {format: 'medium', title: true, leaveAgo: leaveAgo}));
   }
 
 });
 
+/**
+  Produces a link to the FAQ
+
+  @method faqLink
+  @for Handlebars
+**/
+Handlebars.registerHelper('faqLink', function(property, options) {
+  return new Handlebars.SafeString(
+    "<a href='" +
+    (Discourse.SiteSettings.faq_url.length > 0 ? Discourse.SiteSettings.faq_url : Discourse.getURL('/faq')) + 
+    "'>" + Em.String.i18n('faq') + "</a>"
+  );
+});

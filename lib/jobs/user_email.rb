@@ -53,7 +53,6 @@ module Jobs
       raise Discourse::InvalidParameters.new(:type) unless UserNotifications.respond_to?(args[:type])
 
       message = UserNotifications.send(args[:type], user, email_args)
-
       # Update the to address if we have a custom one
       if args[:to_address].present?
         message.to = [args[:to_address]]

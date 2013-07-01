@@ -6,4 +6,21 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.AdminUserController = Discourse.ObjectController.extend({});
+Discourse.AdminUserController = Discourse.ObjectController.extend({
+  editingTitle: false,
+
+  toggleTitleEdit: function() {
+    this.set('editingTitle', !this.editingTitle);
+  },
+
+  saveTitle: function() {
+    Discourse.ajax("/users/" + this.get('username').toLowerCase(), {
+      data: {title: this.get('title')},
+      type: 'PUT'
+    }).then(null, function(e){
+      bootbox.alert(Em.String.i18n("generic_error_with_reason", {error: "http: " + e.status + " - " + e.body}));
+    });
+
+    this.toggleTitleEdit();
+  }
+});

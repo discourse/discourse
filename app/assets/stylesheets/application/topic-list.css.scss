@@ -103,7 +103,7 @@
     }
   }
   .main-link {
-    width: 515px;
+    width: 495px;
     font-size: 16px;
 
     i.score {
@@ -132,12 +132,12 @@
 
   @include medium-width {
     .main-link {
-      width: 400px;
+      width: 380px;
     }
   }
   @include small-width {
     .main-link {
-      width: 355px;
+      width: 335px;
     }
   }
   .topic-statuses:empty {
@@ -177,6 +177,9 @@
     a:not(.badge-posts) {
       color: inherit;
     }
+  }
+  .activity {
+    width: 50px;
   }
 }
 

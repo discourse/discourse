@@ -243,6 +243,7 @@ Discourse.PostView = Discourse.View.extend({
     // Find all the quotes
     this.insertQuoteControls();
 
+    $post.addClass('ready');
     // be sure that eyeline tracked it
     var controller = this.get('controller');
     if (controller && controller.postRendered) {

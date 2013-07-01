@@ -177,13 +177,10 @@ describe Jobs::Importer do
               User.count.should == 0
             end
 
-            it "should indicate that an import is running when it starts" do
-              Import.expects(:set_import_started)
-              Jobs::Importer.new.execute(@importer_args)
-            end
-
-            it "should indicate that an import is running when it's done" do
-              Import.expects(:set_import_is_not_running)
+            it "should indicate that an import is running" do
+              seq = sequence('call sequence')
+              Import.expects(:set_import_started).in_sequence(seq).at_least_once
+              Import.expects(:set_import_is_not_running).in_sequence(seq).at_least_once
               Jobs::Importer.new.execute(@importer_args)
             end
 

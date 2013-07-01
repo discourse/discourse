@@ -1,16 +1,21 @@
 class TopicTitleLengthValidator < ActiveModel::EachValidator
 
-  def initialize(options)
-    @topic_title_validator = ActiveModel::Validations::LengthValidator.new({attributes: :title, in: SiteSetting.topic_title_length, allow_blank: true})
-    @private_message_title_validator = ActiveModel::Validations::LengthValidator.new({attributes: :title, in: SiteSetting.private_message_title_length, allow_blank: true})
-    super
+  def validate_each(record, attribute, value)
+    title_validator(record).validate_each(record, attribute, value)
   end
 
-  def validate_each(record, attribute, value)
-    if record.private_message?
-      @private_message_title_validator.validate_each(record, attribute, value)
-    else
-      @topic_title_validator.validate_each(record, attribute, value)
+  private
+
+    def title_validator(record)
+      length_range = if record.user.try(:admin?)
+                       1..SiteSetting.max_topic_title_length
+                     elsif record.private_message?
+                       SiteSetting.private_message_title_length
+                     else
+                       SiteSetting.topic_title_length
+                     end
+
+      ActiveModel::Validations::LengthValidator.new({attributes: :title, in: length_range, allow_blank: true})
     end
-  end
+
 end

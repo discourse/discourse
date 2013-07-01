@@ -126,6 +126,28 @@ describe CookedPostProcessor do
       end
     end
 
+    context "with a large image" do
+
+      let(:user) { Fabricate(:user) }
+      let(:topic) { Fabricate(:topic, user: user) }
+      let(:post) { Fabricate.build(:post_with_uploads, topic: topic, user: user) }
+      let(:processor) { CookedPostProcessor.new(post) }
+
+      before do
+        FastImage.stubs(:size).returns([1000, 1000])
+        processor.post_process_images
+      end
+
+      it "generates overlay information" do
+        processor.html.should =~ /class="lightbox"/
+        processor.html.should =~ /class="meta"/
+        processor.html.should =~ /class="filename"/
+        processor.html.should =~ /class="informations"/
+        processor.html.should =~ /class="expand"/
+      end
+
+    end
+
   end
 
   context 'link convertor' do
@@ -192,6 +214,24 @@ describe CookedPostProcessor do
 
     it "doesn't throw exception with a bad URI" do
       cpp.is_valid_image_uri?("http://do<main.com").should  == nil
+    end
+
+  end
+
+  context 'get_filename' do
+
+    it "returns the filename of the src when there is no upload" do
+      cpp.get_filename(nil, "http://domain.com/image.png").should == "image.png"
+    end
+
+    it "returns the original filename of the upload when there is an upload" do
+      upload = Fabricate.build(:upload, { original_filename: "upload.jpg" })
+      cpp.get_filename(upload, "http://domain.com/image.png").should == "upload.jpg"
+    end
+
+    it "returns a generic name for pasted images" do
+      upload = Fabricate.build(:upload, { original_filename: "blob" })
+      cpp.get_filename(upload, "http://domain.com/image.png").should == I18n.t('upload.pasted_image_filename')
     end
 
   end

@@ -39,7 +39,9 @@ class UserNotifications < ActionMailer::Base
                 private_message_from: post.user.name,
                 from_alias: I18n.t(:via, username: post.user.name, site_name: SiteSetting.title),
                 add_unsubscribe_link: true,
-                allow_reply_by_email: user.admin?
+                allow_reply_by_email: true,
+                post_id: post.id,
+                topic_id: post.topic_id
   end
 
   def digest(user, opts={})
@@ -101,9 +103,6 @@ class UserNotifications < ActionMailer::Base
 
     username = @notification.data_hash[:display_username]
     notification_type = Notification.types[opts[:notification].notification_type].to_s
-
-    # For now only admins can reply by email
-    opts.delete(:allow_reply_by_email) unless user.admin?
 
     email_opts = {
       topic_title: @notification.data_hash[:topic_title],
