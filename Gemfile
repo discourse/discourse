@@ -78,6 +78,7 @@ gem 'discourse_plugin', path: 'vendor/gems/discourse_plugin'
 #   biggest concern is core support for custom sort orders, but there is also styling that just gets mishmashed into our core theme.
 # gem 'discourse_poll', path: 'vendor/gems/discourse_poll'
 gem 'discourse_emoji', path: 'vendor/gems/discourse_emoji'
+gem 'discourse_mathjax', path: 'vendor/gems/discourse_mathjax'
 # gem 'discourse_task', path: 'vendor/gems/discourse_task'
 
 # Gems used only for assets and not required
