@@ -508,21 +508,21 @@ en:
     topics:
       none:
         favorited: "You haven't favorited any topics yet. To favorite a topic, click or tap the star next to the title."
-        unread: "You have no unread topics to read."
-        new: "You have no new topics to read."
+        unread: "You have no unread topics."
+        new: "You have no new topics."
         read: "You haven't read any topics yet."
         posted: "You haven't posted in any topics yet."
         latest: "There are no latest topics. That's sad."
         hot: "There are no hot topics."
         category: "There are no {{category}} topics."
       bottom:
-        latest: "There are no more latest topics to read."
-        hot: "There are no more hot topics to read."
-        posted: "There are no more posted topics to read."
-        read: "There are no more read topics to read."
-        new: "There are no more new topics to read."
-        unread: "There are no more unread topics to read."
-        favorited: "There are no more favorited topics to read."
+        latest: "There are no more latest topics."
+        hot: "There are no more hot topics."
+        posted: "There are no more posted topics."
+        read: "There are no more read topics."
+        new: "There are no more new topics."
+        unread: "There are no more unread topics."
+        favorited: "There are no more favorited topics."
         category: "There are no more {{category}} topics."
 
     rank_details:
