@@ -80,11 +80,6 @@ PATH
     discourse_emoji (0.0.1)
 
 PATH
-  remote: vendor/gems/discourse_mathjax
-  specs:
-    discourse_mathjax (0.0.1)
-
-PATH
   remote: vendor/gems/discourse_plugin
   specs:
     discourse_plugin (0.0.1)
@@ -477,7 +472,6 @@ DEPENDENCIES
   clockwork
   diffy
   discourse_emoji!
-  discourse_mathjax!
   discourse_plugin!
   em-redis
   email_reply_parser!
