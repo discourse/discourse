@@ -1,6 +1,6 @@
 <table id='topic-list'>
   <tr>
-    <th>
+    <th class="main-link">
       {{categoryLink this}}
 
       <div class='posters'>
@@ -9,8 +9,8 @@
       {{/each}}
       </div>
     </th>
-    <th class='num'>{{i18n posts}}</th>
-    <th class='num'>{{i18n age}}</th>
+    <th class='num posts'>{{i18n posts}}</th>
+    <th class='num age'>{{i18n age}}</th>
   </tr>
 
   {{#if description_excerpt}}
@@ -51,8 +51,8 @@
           {{/if}}
         </div>
       </td>
-      <td class='num'><span class='badge-posts'>{{number posts_count}}</span></td>
-      <td class='num'><span {{bindAttr class=":age ageCold"}} title='{{unboundDate created_at}}'>{{{unboundAge created_at}}}</span></td>
+      <td class='num posts'><span class='badge-posts'>{{number posts_count}}</span></td>
+      <td class='num age'><span {{bindAttr class=":age ageCold"}} title='{{unboundDate created_at}}'>{{{unboundAge created_at}}}</span></td>
     </tr>
   {{/each}}
 
