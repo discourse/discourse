@@ -56,7 +56,7 @@ class TopicCreator
   end
 
   def save_topic
-    unless @topic.save
+    unless @topic.save(validate: !@opts[:skip_validations])
       @errors = @topic.errors
       raise ActiveRecord::Rollback.new
     end

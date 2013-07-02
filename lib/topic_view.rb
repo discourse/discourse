@@ -96,7 +96,10 @@ class TopicView
     return filter_posts_near(opts[:post_number].to_i) if opts[:post_number].present?
     return filter_posts_before(opts[:posts_before].to_i) if opts[:posts_before].present?
     return filter_posts_after(opts[:posts_after].to_i) if opts[:posts_after].present?
-    return filter_best(opts[:best]) if opts[:best].present?
+    if opts[:best].present?
+      return filter_best(opts[:best], opts)
+    end
+
     filter_posts_paged(opts[:page].to_i)
   end
 
@@ -176,11 +179,28 @@ class TopicView
     @posts = @posts.includes(:reply_to_user).includes(:topic).joins(:user).limit(@limit)
   end
 
-  def filter_best(max)
+  def filter_best(max, opts={})
     @index_offset = 0
-    @posts = @filtered_posts.order('percent_rank asc, sort_order asc').where("post_number > 1")
+
+    if opts[:min_replies] && @topic.posts_count < opts[:min_replies] + 1
+      @posts = []
+      return
+    end
+
+    @posts = @filtered_posts.order('percent_rank asc, sort_order asc')
+      .where("post_number > 1")
     @posts = @posts.includes(:reply_to_user).includes(:topic).joins(:user).limit(max)
-    @posts = @posts.where('COALESCE(users.trust_level,0) > 0')
+
+    min_trust_level = opts[:min_trust_level]
+    if min_trust_level && min_trust_level > 0
+      @posts = @posts.where('COALESCE(users.trust_level,0) >= ?', min_trust_level)
+    end
+
+    min_score = opts[:min_score]
+    if min_score && min_score > 0
+      @posts = @posts.where('posts.score >= ?', min_score)
+    end
+
     @posts = @posts.to_a
     @posts.sort!{|a,b| a.post_number <=> b.post_number}
     @posts

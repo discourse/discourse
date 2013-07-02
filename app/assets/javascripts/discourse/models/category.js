@@ -101,7 +101,8 @@ Discourse.Category.reopenClass({
   },
 
   findBySlugOrId: function(slugOrId) {
-    return Discourse.ajax("/categories/" + slugOrId + ".json").then(function (result) {
+    // TODO: all our routing around categories need a rethink
+    return Discourse.ajax("/category/" + slugOrId + "/show.json").then(function (result) {
       return Discourse.Category.create(result.category);
     });
   }

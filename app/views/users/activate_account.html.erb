@@ -10,7 +10,7 @@
     <% if @needs_approval %>
       <%= t 'activation.approval_required' %>
     <% else %>
-      <%= raw t('activation.please_continue', link: link_to(SiteSetting.title, root_path)) %></a>.
+      <%= raw t('activation.please_continue', link: link_to(SiteSetting.title, '/')) %></a>.
     <% end %>
     </p>
 

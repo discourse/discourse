@@ -208,7 +208,7 @@ class PostCreator
   end
 
   def save_post
-    unless @post.save
+    unless @post.save(validate: !@opts[:skip_validations])
       @errors = @post.errors
       raise ActiveRecord::Rollback.new
     end
