@@ -8,14 +8,18 @@
 **/
 Discourse.NavItemView = Discourse.View.extend({
   tagName: 'li',
-  classNameBindings: ['active', 'content.hasIcon:has-icon'],
+  classNameBindings: ['isActive', 'content.hasIcon:has-icon', 'className'],
   attributeBindings: ['title'],
 
   hidden: Em.computed.not('content.visible'),
   count: Ember.computed.alias('content.count'),
   shouldRerender: Discourse.View.renderIfChanged('count'),
   active: Discourse.computed.propertyEqual('contentNameSlug', 'controller.filterMode'),
-
+  
+  className: function() {
+    return 'nav-item-' + Ember.String.dasherize(this.get('content.name').replace(/^category\//, '').replace(/\//, '-'));
+  }.property("content.name"),
+  
   title: function() {
     var categoryName, extra, name;
     name = this.get('content.name');
