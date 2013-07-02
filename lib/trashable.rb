@@ -39,7 +39,7 @@ module Trashable
     #
     # Fixed in Rails 4
     #
-    self.class.unscoped.update_all({deleted_at: nil}, id: self.id)
+    self.class.unscoped.where(id: self.id).update_all({deleted_at: nil})
     raw_write_attribute :deleted_at, nil
   end
 

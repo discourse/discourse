@@ -32,7 +32,7 @@ class Notification < ActiveRecord::Base
   end
 
   def self.mark_posts_read(user, topic_id, post_numbers)
-    Notification.update_all "read = 't'", user_id: user.id, topic_id: topic_id, post_number: post_numbers, read: false
+    Notification.where(user_id: user.id, topic_id: topic_id, post_number: post_numbers, read: false).update_all "read = 't'"
   end
 
   def self.interesting_after(min_date)
