@@ -106,14 +106,6 @@ module Jobs
       true
     end
 
-    def log(*args)
-      puts args
-      args.each do |arg|
-        Rails.logger.info "#{Time.now.to_formatted_s(:db)}: [EXPORTER] #{arg}"
-      end
-      true
-    end
-
   end
 
 end
