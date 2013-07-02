@@ -5,9 +5,8 @@ module DiscourseMathjax
   class Plugin < DiscoursePlugin
 
     def setup
-		# Add our Assets
-	  register_js('discourse_mathjax',
-                    server_side: File.expand_path('../../../vendor/assets/javascripts/discourse_mathjax.js', __FILE__))
+      # Add our Assets
+      register_js('http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML')
     end
 
   end
