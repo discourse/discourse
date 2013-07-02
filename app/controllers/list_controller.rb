@@ -26,7 +26,7 @@ class ListController < ApplicationController
       list = query.list_category(@category)
     end
 
-    list.more_topics_url = url_for(category_path(params[:category], page: next_page, format: "json"))
+    list.more_topics_url = url_for(category_list_path(params[:category], page: next_page, format: "json"))
     respond(list)
   end
 
