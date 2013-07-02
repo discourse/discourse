@@ -105,7 +105,7 @@ Discourse.UserAction = Discourse.Model.extend({
     var groups = this.get("childGroups");
     if (!groups) {
       groups = {
-        likes: Discourse.UserActionGroup.create({ icon: "icon-heart" }),
+        likes: Discourse.UserActionGroup.create({ icon: "icon-lemon" }),
         stars: Discourse.UserActionGroup.create({ icon: "icon-star" }),
         edits: Discourse.UserActionGroup.create({ icon: "icon-pencil" }),
         bookmarks: Discourse.UserActionGroup.create({ icon: "icon-bookmark" })
