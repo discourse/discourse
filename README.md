@@ -20,6 +20,10 @@ Whenever you need ...
 
 Before you get started, ensure you have the following minimum versions: [Ruby 1.9.3+](http://www.ruby-lang.org/en/downloads/), [PostgreSQL 9.1+](http://www.postgresql.org/download/), [Redis 2.6+](http://redis.io/download). And if you're having trouble, please see our [**TROUBLESHOOTING GUIDE**](docs/TROUBLESHOOTING.md) first!
 
+## Production Environment
+
+If you're looking to install Discourse in a production environment checkout the guide [**Discourse Install on Ubuntu**](/docs/INSTALL-ubuntu.md)
+
 ## Vision
 
 We think of Discourse as a **Civilized Discourse Construction Kit**, an open-source discussion platform that acts as a free, flexible, fundamental building block for online communities of any size, tiny to huge.
