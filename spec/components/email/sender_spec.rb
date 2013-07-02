@@ -20,6 +20,34 @@ describe Email::Sender do
     Email::Sender.new(message, :hello).send
   end
 
+  context "list_id_for" do
+
+    it "joins the host and forum name" do
+      Email::Sender.list_id_for("myforum", "http://mysite.com").should == '"myforum" <myforum.mysite.com>'
+    end
+
+    it "uses localhost when no host is present" do
+      Email::Sender.list_id_for("myforum", nil).should == '"myforum" <myforum.localhost>'
+    end
+
+    it "uses localhost with a weird host" do
+      Email::Sender.list_id_for("Fun", "this is not a real host").should == '"Fun" <fun.localhost>'
+    end
+
+    it "removes double quotes from names" do
+      Email::Sender.list_id_for('Quoted "Forum"', 'http://quoted.com').should == '"Quoted \'Forum\'" <quoted-forum.quoted.com>'
+    end
+
+    it "converts the site name to lower case and removes spaces" do
+      Email::Sender.list_id_for("Robin's cool Forum!", "http://robin.com").should == '"Robin\'s cool Forum!" <robins-cool-forum.robin.com>'
+    end
+
+    it "downcases host names" do
+      Email::Sender.list_id_for("cool", "http://ForumSite.com").should == '"cool" <cool.forumsite.com>'
+    end
+
+  end
+
   context 'with a valid message' do
 
     let(:reply_key) { "abcd" * 8 }
@@ -36,6 +64,11 @@ describe Email::Sender do
     it 'calls deliver' do
       message.expects(:deliver).once
       email_sender.send
+    end
+
+    it "adds a List-Id header to identify the forum" do
+      email_sender.send
+      message.header['List-Id'].should be_present
     end
 
     context 'email logs' do

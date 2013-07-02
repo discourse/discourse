@@ -7,6 +7,7 @@
 # It also adds an HTML part for the plain text body
 #
 require_dependency 'email/renderer'
+require 'uri'
 
 module Email
   class Sender
@@ -45,6 +46,9 @@ module Email
                                to_address: to_address,
                                user_id: @user.try(:id))
 
+
+      @message.header['List-Id'] = Email::Sender.list_id_for(SiteSetting.title, Discourse.base_url)
+
       add_header_to_log('X-Discourse-Reply-Key', email_log, :reply_key)
       add_header_to_log('X-Discourse-Post-Id', email_log, :post_id)
       add_header_to_log('X-Discourse-Topic-Id', email_log, :topic_id)
@@ -60,6 +64,20 @@ module Email
       email_log.save!
       email_log
 
+    end
+
+    def self.list_id_for(site_name, base_url)
+
+      host = "localhost"
+      if base_url.present?
+        begin
+          uri = URI.parse(base_url)
+          host = uri.host.downcase if uri.host.present?
+        rescue URI::InvalidURIError
+        end
+      end
+
+      "\"#{site_name.gsub(/\"/, "'")}\" <#{Slug.for(site_name)}.#{host}>"
     end
 
     private
