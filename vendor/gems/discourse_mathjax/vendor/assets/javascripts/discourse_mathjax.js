@@ -23,7 +23,7 @@
 		if(mathJaxProcessingTimer != null){
 			clearInterval(mathJaxProcessingTimer);
 		}
-		mathJaxProcessingTimer = setInterval(function(){ MathJax.Hub.Queue(["Typeset",MathJax.Hub,"topic"]);},1000);
+		mathJaxProcessingTimer = setInterval(function(){ MathJax.Hub.Queue(["Typeset",MathJax.Hub,"topic"]);MathJax.Hub.Queue(["Typeset",MathJax.Hub,"wmd-preview"]);},1000);
 	});
 
 }).call(this);
