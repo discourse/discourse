@@ -55,15 +55,9 @@ Discourse.QuoteButtonController = Discourse.Controller.extend({
     if (this.get('buffer') === selectedText) return;
 
     // we need to retrieve the post data from the posts collection in the topic controller
-    var posts = this.get('controllers.topic.posts'),
-        length = posts.length,
-        post;
 
-    for (var p = 0; p < length; p++) {
-      if (posts[p].id === postId) { post = posts[p]; break; }
-    }
-
-    this.set('post', post);
+    var postStream = this.get('controllers.topic.postStream');
+    this.set('post', postStream.findLoadedPost(postId));
     this.set('buffer', selectedText);
 
     // collapse the range at the beginning of the selection
