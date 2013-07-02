@@ -451,12 +451,18 @@
           left: -9px;
         }
 
-        a.arrow {
+        a.arrow, .post-date {
           float: right;
+        }
+        a.arrow {
           margin: 3px 0 3px 0;
           color: grey;
         }
-
+        .post-date {
+          margin: 3px 10px 3px 0;
+          color: #aaa;
+          font-size: 12px;
+        }
       }
       .about {
         .contents {
