@@ -37,6 +37,19 @@ describe TopicView do
       best.posts.count.should == 2
       best.filtered_posts_count.should == 3
       best.current_post_ids.should =~ [p2.id, p3.id]
+
+      # should get no results for trust level too low
+      best = TopicView.new(topic.id, nil, best: 99, min_trust_level: coding_horror.trust_level + 1)
+      best.posts.count.should == 0
+
+
+      # should filter out the posts with a score that is too low
+      best = TopicView.new(topic.id, nil, best: 99, min_score: 99)
+      best.posts.count.should == 0
+
+      # should filter out everything if min replies not met
+      best = TopicView.new(topic.id, nil, best: 99, min_replies: 99)
+      best.posts.count.should == 0
     end
 
 

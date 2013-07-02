@@ -48,7 +48,7 @@ describe StaticController do
     context 'without a redirect path' do
       it 'redirects to the root url' do
         xhr :post, :enter
-        expect(response).to redirect_to root_path
+        expect(response).to redirect_to '/'
       end
     end
 
@@ -62,7 +62,7 @@ describe StaticController do
     context 'when the redirect path is the login page' do
       it 'redirects to the root url' do
         xhr :post, :enter, redirect: login_path
-        expect(response).to redirect_to root_path
+        expect(response).to redirect_to '/'
       end
     end
   end

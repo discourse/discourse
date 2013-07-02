@@ -341,5 +341,13 @@ describe PostCreator do
       post.created_at.should be_within(10.seconds).of(created_at)
     end
   end
+
+  context 'disable validations' do
+    it 'can save a post' do
+      creator = PostCreator.new(user, raw: 'q', title: 'q', skip_validations: true)
+      post = creator.create
+      creator.errors.should be_nil
+    end
+  end
 end
 

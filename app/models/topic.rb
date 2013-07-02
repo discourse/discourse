@@ -35,8 +35,6 @@ class Topic < ActiveRecord::Base
   rate_limit :limit_topics_per_day
   rate_limit :limit_private_messages_per_day
 
-  before_validation :sanitize_title
-
   validates :title, :presence => true,
                     :topic_title_length => true,
                     :quality_title => { :unless => :private_message? },
@@ -47,6 +45,7 @@ class Topic < ActiveRecord::Base
                                         :collection => Proc.new{ Topic.listable_topics } }
 
   before_validation do
+    self.sanitize_title
     self.title = TextCleaner.clean_title(TextSentinel.title_sentinel(title).text) if errors[:title].empty?
   end
 

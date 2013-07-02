@@ -52,10 +52,16 @@ class TopicsController < ApplicationController
   def wordpress
     params.require(:best)
     params.require(:topic_id)
+    params.permit(:min_trust_level, :min_score, :min_replies)
 
-    @topic_view = TopicView.new(params[:topic_id], current_user, best: params[:best].to_i)
-
-    raise Discourse::NotFound if @topic_view.posts.blank?
+    @topic_view = TopicView.new(
+        params[:topic_id],
+        current_user,
+          best: params[:best].to_i,
+          min_trust_level: params[:min_trust_level].nil? ? 1 : params[:min_trust_level].to_i,
+          min_score: params[:min_score].to_i,
+          min_replies: params[:min_replies].to_i
+    )
 
     anonymous_etag(@topic_view.topic) do
       wordpress_serializer = TopicViewWordpressSerializer.new(@topic_view, scope: guardian, root: false)

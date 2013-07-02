@@ -276,14 +276,6 @@ module Jobs
       @warnings << message
     end
 
-    def log(*args)
-      puts args
-      args.each do |arg|
-        Rails.logger.info "#{Time.now.to_formatted_s(:db)}: [IMPORTER] #{arg}"
-      end
-      true
-    end
-
   end
 
 end

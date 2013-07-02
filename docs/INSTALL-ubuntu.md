@@ -320,7 +320,7 @@ and create an account by logging in normally, then run the commands:
     RAILS_ENV=production bundle exec rails c
 
     # (in rails console)
-    > me = User.find_by_username_or_email('myemailaddress@me.com')[0]
+    > me = User.find_by_username_or_email('myemailaddress@me.com')
     > me.activate #use this in case you haven't configured your mail server and therefore can't receive the activation mail.
     > me.admin = true
     > me.save
