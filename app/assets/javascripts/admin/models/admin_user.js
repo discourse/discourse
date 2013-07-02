@@ -73,7 +73,7 @@ Discourse.AdminUser = Discourse.User.extend({
     // downgrading trust levels is not supported
     var current = this.get('trust_level');
     var levels = site.get('trust_levels');
-    return jQuery.grep(levels, function(e) { return e.id >= current })
+    return jQuery.grep(levels, function(e) { return e.id >= current });
   }.property('trust_level'),
 
   dirty: function() {
