@@ -191,13 +191,13 @@ describe Admin::UsersController do
 
     context 'block' do
       before do
-        @user = Fabricate(:user)
+        @reg_user = Fabricate(:user)
       end
 
       it "raises an error when the user doesn't have permission" do
-        Guardian.any_instance.expects(:can_block_user?).with(@user).returns(false)
-        SpamRulesEnforcer.expects(:punish!).never
-        xhr :put, :block, user_id: @user.id
+        Guardian.any_instance.expects(:can_block_user?).with(@reg_user).returns(false)
+        UserBlocker.expects(:block).never
+        xhr :put, :block, user_id: @reg_user.id
         response.should be_forbidden
       end
 
@@ -207,19 +207,19 @@ describe Admin::UsersController do
       end
 
       it "punishes the user for spamming" do
-        SpamRulesEnforcer.expects(:punish!).with(@user)
-        xhr :put, :block, user_id: @user.id
+        UserBlocker.expects(:block).with(@reg_user, @user, anything)
+        xhr :put, :block, user_id: @reg_user.id
       end
     end
 
     context 'unblock' do
       before do
-        @user = Fabricate(:user)
+        @reg_user = Fabricate(:user)
       end
 
       it "raises an error when the user doesn't have permission" do
-        Guardian.any_instance.expects(:can_unblock_user?).with(@user).returns(false)
-        xhr :put, :unblock, user_id: @user.id
+        Guardian.any_instance.expects(:can_unblock_user?).with(@reg_user).returns(false)
+        xhr :put, :unblock, user_id: @reg_user.id
         response.should be_forbidden
       end
 
@@ -229,8 +229,8 @@ describe Admin::UsersController do
       end
 
       it "punishes the user for spamming" do
-        SpamRulesEnforcer.expects(:clear).with(@user)
-        xhr :put, :unblock, user_id: @user.id
+        UserBlocker.expects(:unblock).with(@reg_user, @user, anything)
+        xhr :put, :unblock, user_id: @reg_user.id
       end
     end
 

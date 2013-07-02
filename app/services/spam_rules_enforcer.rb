@@ -17,10 +17,6 @@ class SpamRulesEnforcer
     SpamRulesEnforcer.new(user).punish_user
   end
 
-  def self.clear(user)
-    SpamRulesEnforcer.new(user).clear_user
-  end
-
 
   def initialize(user)
     @user = user
@@ -52,20 +48,10 @@ class SpamRulesEnforcer
 
   def punish_user
     Post.transaction do
-      Post.update_all(["hidden = true, hidden_reason_id = COALESCE(hidden_reason_id, ?)", Post.hidden_reasons[:new_user_spam_threshold_reached]], user_id: @user.id)
-      topic_ids = Post.where('user_id = ? and post_number = ?', @user.id, 1).pluck(:topic_id)
-      Topic.update_all({ visible: false }, id: topic_ids) unless topic_ids.empty?
-      SystemMessage.create(@user, :too_many_spam_flags)
+      UserBlocker.block(@user, nil, {message: :too_many_spam_flags})
       GroupMessage.create(Group[:moderators].name, :user_automatically_blocked, {user: @user, limit_once_per: false})
-      @user.blocked = true
-      @user.save
     end
   end
 
-  def clear_user
-    SystemMessage.create(@user, :unblocked)
-    @user.blocked = false
-    @user.save
-  end
 
 end

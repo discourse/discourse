@@ -175,15 +175,16 @@
         {{i18n admin.user.unban}}
       </button>
       {{banDuration}}
+      {{i18n admin.user.banned_explanation}}
     {{else}}
       {{#if canBan}}
         <button class='btn btn-danger' {{action ban target="content"}}>
           <i class='icon icon-ban-circle'></i>
           {{i18n admin.user.ban}}
         </button>
+        {{i18n admin.user.banned_explanation}}
       {{/if}}
     {{/if}}
-    {{i18n admin.user.banned_explanation}}
     </div>
   </div>
   <div class='display-row'>
@@ -195,13 +196,8 @@
           <i class='icon icon-thumbs-up'></i>
           {{i18n admin.user.unblock}}
         </button>
-      {{else}}
-        <button class='btn btn-danger' {{action block target="content"}}>
-          <i class='icon icon-ban-circle'></i>
-          {{i18n admin.user.block}}
-        </button>
+        {{i18n admin.user.block_explanation}}
       {{/if}}
-      {{i18n admin.user.block_explanation}}
     </div>
   </div>
 </section>

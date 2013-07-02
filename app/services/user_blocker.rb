@@ -1,0 +1,36 @@
+class UserBlocker
+
+  def initialize(user, by_user=nil, opts={})
+    @user, @by_user, @opts = user, by_user, opts
+  end
+
+  def self.block(user, by_user=nil, opts={})
+    UserBlocker.new(user, by_user, opts).block
+  end
+
+  def self.unblock(user, by_user=nil, opts={})
+    UserBlocker.new(user, by_user, opts).unblock
+  end
+
+  def block
+    hide_posts
+    @user.blocked = true
+    if @user.save
+      SystemMessage.create(@user, @opts[:message] || :blocked_by_staff)
+    end
+  end
+
+  def hide_posts
+    Post.update_all(["hidden = true, hidden_reason_id = COALESCE(hidden_reason_id, ?)", Post.hidden_reasons[:new_user_spam_threshold_reached]], user_id: @user.id)
+    topic_ids = Post.where('user_id = ? and post_number = ?', @user.id, 1).pluck(:topic_id)
+    Topic.update_all({ visible: false }, id: topic_ids) unless topic_ids.empty?
+  end
+
+  def unblock
+    @user.blocked = false
+    if @user.save
+      SystemMessage.create(@user, :unblocked)
+    end
+  end
+
+end
