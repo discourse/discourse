@@ -6,7 +6,7 @@
   script[(window.opera ? "innerHTML" : "text")] =
     "MathJax.Hub.Config({\n" +
     "  tex2jax: { inlineMath: [['$$','$$'], ['\\\\(','\\\\)']] , ignoreClass: 'ember-application', processClass: 'preview-wrapper|cooked' }\n" +
-    "}); \n" +
+    "});" +
 	"MathJax.Hub.Startup.onload();";
   head.appendChild(script);
   script = document.createElement("script");
