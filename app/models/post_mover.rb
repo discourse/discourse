@@ -1,6 +1,10 @@
 class PostMover
   attr_reader :original_topic, :destination_topic, :user, :post_ids
 
+  def self.move_types
+    @move_types ||= Enum.new(:new_topic, :existing_topic)
+  end
+
   def initialize(original_topic, user, post_ids)
     @original_topic = original_topic
     @user = user
@@ -8,12 +12,16 @@ class PostMover
   end
 
   def to_topic(id)
+    @move_type = PostMover.move_types[:existing_topic]
+
     Topic.transaction do
       move_posts_to Topic.find_by_id(id)
     end
   end
 
   def to_new_topic(title)
+    @move_type = PostMover.move_types[:new_topic]
+
     Topic.transaction do
       move_posts_to Topic.create!(
         user: user,
@@ -94,11 +102,9 @@ class PostMover
   def create_moderator_post_in_original_topic
     original_topic.add_moderator_post(
       user,
-      I18n.t(
-        "move_posts.moderator_post",
-        count: post_ids.count,
-        topic_link: "[#{destination_topic.title}](#{destination_topic.url})"
-      ),
+      I18n.t("move_posts.#{PostMover.move_types[@move_type].to_s}_moderator_post",
+             count: post_ids.count,
+             topic_link: "[#{destination_topic.title}](#{destination_topic.url})"),
       post_number: @first_post_number_moved
     )
   end
