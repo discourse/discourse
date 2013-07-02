@@ -77,7 +77,7 @@ module Email
         end
       end
 
-      "\"#{site_name.gsub(/\"/, "'")}\" <#{Slug.for(site_name)}.#{host}>"
+      "\"#{site_name.gsub(/\"/, "'")}\" <discourse.forum.#{Slug.for(site_name)}.#{host}>"
     end
 
     private

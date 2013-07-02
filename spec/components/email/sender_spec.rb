@@ -23,27 +23,27 @@ describe Email::Sender do
   context "list_id_for" do
 
     it "joins the host and forum name" do
-      Email::Sender.list_id_for("myforum", "http://mysite.com").should == '"myforum" <myforum.mysite.com>'
+      Email::Sender.list_id_for("myforum", "http://mysite.com").should == '"myforum" <discourse.forum.myforum.mysite.com>'
     end
 
     it "uses localhost when no host is present" do
-      Email::Sender.list_id_for("myforum", nil).should == '"myforum" <myforum.localhost>'
+      Email::Sender.list_id_for("myforum", nil).should == '"myforum" <discourse.forum.myforum.localhost>'
     end
 
     it "uses localhost with a weird host" do
-      Email::Sender.list_id_for("Fun", "this is not a real host").should == '"Fun" <fun.localhost>'
+      Email::Sender.list_id_for("Fun", "this is not a real host").should == '"Fun" <discourse.forum.fun.localhost>'
     end
 
     it "removes double quotes from names" do
-      Email::Sender.list_id_for('Quoted "Forum"', 'http://quoted.com').should == '"Quoted \'Forum\'" <quoted-forum.quoted.com>'
+      Email::Sender.list_id_for('Quoted "Forum"', 'http://quoted.com').should == '"Quoted \'Forum\'" <discourse.forum.quoted-forum.quoted.com>'
     end
 
     it "converts the site name to lower case and removes spaces" do
-      Email::Sender.list_id_for("Robin's cool Forum!", "http://robin.com").should == '"Robin\'s cool Forum!" <robins-cool-forum.robin.com>'
+      Email::Sender.list_id_for("Robin's cool Forum!", "http://robin.com").should == '"Robin\'s cool Forum!" <discourse.forum.robins-cool-forum.robin.com>'
     end
 
     it "downcases host names" do
-      Email::Sender.list_id_for("cool", "http://ForumSite.com").should == '"cool" <cool.forumsite.com>'
+      Email::Sender.list_id_for("cool", "http://ForumSite.com").should == '"cool" <discourse.forum.cool.forumsite.com>'
     end
 
   end
