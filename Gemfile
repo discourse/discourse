@@ -16,8 +16,6 @@ gem 'rails_multisite', path: 'vendor/gems/rails_multisite'
 gem 'simple_handlebars_rails', path: 'vendor/gems/simple_handlebars_rails'
 
 gem 'redcarpet', require: false
-gem 'activerecord-postgres-hstore'
-gem 'active_attr' # until we get ActiveModel::Model with Rails 4
 gem 'airbrake', '3.1.2', require: false # errbit is broken with 3.1.3 for now
 gem 'clockwork', require: false
 gem 'em-redis'
@@ -25,7 +23,7 @@ gem 'eventmachine'
 gem 'fast_xs'
 gem 'fast_xor', git: 'https://github.com/CodeMonkeySteve/fast_xor.git'
 gem 'fastimage'
-gem 'fog', require: false
+gem 'fog', '>= 1.10.1', require: false
 gem 'hiredis'
 
 gem 'email_reply_parser', git: 'https://github.com/lawrencepit/email_reply_parser.git'
@@ -49,22 +47,21 @@ gem 'omniauth-browserid', git: 'https://github.com/callahad/omniauth-browserid.g
 gem 'omniauth-cas'
 gem 'oj'
 gem 'pg'
-# we had pain with the 3.2.13 upgrade so monkey patch the security fix
-# next time around we hope to upgrade
-gem 'rails', '3.2.12'
+gem 'rails', '4.0.0'
+gem 'rails-observers'
+gem 'actionpack-action_caching'
 gem 'rake'
 gem 'redis'
-gem 'redis-rails'
+gem 'redis-rails', git: 'https://github.com/jodosha/redis-store'
 gem 'rest-client'
 gem 'rinku'
 gem 'sanitize'
 gem 'sass'
-gem 'seed-fu'
+gem 'seed-fu', '>= 2.2.0', git: 'https://github.com/irfn/seed-fu'
 gem 'sidekiq'
 gem 'sidekiq-failures'
 gem 'sinatra', require: nil
 gem 'slim'  # required for sidekiq-web
-gem 'strong_parameters' # remove when we upgrade to Rails 4
 gem 'therubyracer', require: 'v8'
 gem 'thin', require: false
 gem 'diffy', require: false
@@ -80,15 +77,9 @@ gem 'discourse_plugin', path: 'vendor/gems/discourse_plugin'
 gem 'discourse_emoji', path: 'vendor/gems/discourse_emoji'
 # gem 'discourse_task', path: 'vendor/gems/discourse_task'
 
-# Gems used only for assets and not required
-# in production environments by default.
-# allow everywhere for now cause we are allowing asset debugging in prd
-group :assets do
-  gem 'sass'
-  gem 'sass-rails'
-  gem 'turbo-sprockets-rails3'
-  gem 'uglifier'
-end
+gem 'sass'
+gem 'sass-rails'
+gem 'uglifier'
 
 group :test do
   gem 'fakeweb', '~> 1.3.0', require: false
@@ -122,11 +113,6 @@ group :development do
   # https://github.com/ctran/annotate_models/pull/106
   gem 'annotate', :git => 'https://github.com/SamSaffron/annotate_models.git'
 end
-
-# we are using a custom sprockets repo to work around: https://github.com/rails/rails/issues/8099#issuecomment-16137638
-# REVIEW EVERY RELEASE
-gem 'sprockets', git: 'https://github.com/SamSaffron/sprockets.git', branch: 'rails-compat'
-
 
 # this is an optional gem, it provides a high performance replacement
 # to String#blank? a method that is called quite frequently in current

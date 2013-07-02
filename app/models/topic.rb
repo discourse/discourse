@@ -51,8 +51,6 @@ class Topic < ActiveRecord::Base
     self.title = TextCleaner.clean_title(TextSentinel.title_sentinel(title).text) if errors[:title].empty?
   end
 
-  serialize :meta_data, ActiveRecord::Coders::Hstore
-
   belongs_to :category
   has_many :posts
   has_many :topic_allowed_users

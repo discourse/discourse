@@ -12,7 +12,9 @@ class ApplicationController < ActionController::Base
 
   serialization_scope :guardian
 
-  protect_from_forgery
+  # Prevent CSRF attacks by raising an exception.
+  # For APIs, you may want to use :null_session instead.
+  protect_from_forgery with: :exception
 
   before_filter :inject_preview_style
   before_filter :block_if_maintenance_mode
