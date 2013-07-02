@@ -16,20 +16,15 @@
   
 
   
-	var mathJaxProcessingTimerTopics;
-	var mathJaxProcessingTimerWmdPreview;
+	var mathJaxProcessingTimer;
+	
 
-	$("#main-outlet").bind("DOMNodeInserted", function() {
-		if(mathJaxProcessingTimerTopics != null){
-			clearInterval(mathJaxProcessingTimerTopics);
+	$("#main").bind("DOMSubtreeModified", function() {
+		if(mathJaxProcessingTimer != null){
+			clearInterval(mathJaxProcessingTimer);
 		}
-		mathJaxProcessingTimerTopics = setInterval(function(){ MathJax.Hub.Queue(["Typeset",MathJax.Hub,"topic"]);},1000);
+		mathJaxProcessingTimer = setInterval(function(){ MathJax.Hub.Queue(["Typeset",MathJax.Hub,"topic"]);},1000);
 	});
-	$("#wmd-preview").bind("DOMSubtreeModified", function() {
-		if(mathJaxProcessingTimerWmdPreview != null){
-			clearInterval(mathJaxProcessingTimerWmdPreview);
-		}
-		mathJaxProcessingTimerWmdPreview = setInterval(function(){ MathJax.Hub.Queue(["Typeset",MathJax.Hub,"wmd-preview"]);},400);
-	});
+
 }).call(this);
 
