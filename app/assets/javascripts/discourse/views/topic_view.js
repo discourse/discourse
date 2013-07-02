@@ -17,7 +17,6 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
   postStream: Em.computed.alias('controller.postStream'),
 
-  // Update the progress bar using sweet animations
   updateBar: function() {
     if (!this.get('postStream.loaded')) return;
 
@@ -28,20 +27,11 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     var totalWidth = $topicProgress.width();
     var progressWidth = ratio * totalWidth;
     var bg = $topicProgress.find('.bg');
-    bg.stop(true, true);
     var currentWidth = bg.width();
 
-    if (currentWidth === totalWidth) {
-      bg.width(currentWidth - 1);
-    }
+    bg.css("border-right-width", (progressWidth === totalWidth) ? "0px" : "1px")
+      .width(progressWidth);
 
-    if (progressWidth === totalWidth) {
-      bg.css("border-right-width", "0px");
-    } else {
-      bg.css("border-right-width", "1px");
-    }
-
-    bg.width(progressWidth);
   }.observes('controller.progressPosition', 'postStream.filteredPostsCount', 'topic.loaded'),
 
   updateTitle: function() {

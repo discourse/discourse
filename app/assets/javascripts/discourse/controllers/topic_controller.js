@@ -15,12 +15,12 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   editingTopic: false,
 
   jumpTopDisabled: function() {
-    return this.get('currentPost') === 1;
-  }.property('currentPost'),
+    return (this.get('progressPosition') === 1);
+  }.property('postStream.filteredPostsCount', 'progressPosition'),
 
   jumpBottomDisabled: function() {
-    return this.get('currentPost') === this.get('highest_post_number');
-  }.property('currentPost'),
+    return this.get('progressPosition') === this.get('postStream.filteredPostsCount');
+  }.property('postStream.filteredPostsCount', 'progressPosition'),
 
   canMergeTopic: function() {
     if (!this.get('details.can_move_posts')) return false;
