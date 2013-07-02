@@ -65,14 +65,23 @@ Discourse.PostStream = Em.Object.extend({
   firstPostNotLoaded: Em.computed.not('firstPostLoaded'),
 
   /**
+    Returns the id of the last post in the set
+
+    @property lastPostId
+  **/
+  lastPostId: function() {
+    return _.last(this.get('stream'));
+  }.property('stream.@each'),
+
+  /**
     Have we loaded the last post in the stream?
 
     @property lastPostLoaded
   **/
   lastPostLoaded: function() {
     if (!this.get('hasLoadedData')) { return false; }
-    return !!this.get('posts').findProperty('id', _.last(this.get('stream')));
-  }.property('hasLoadedData', 'posts.[]', 'stream.@each'),
+    return !!this.get('posts').findProperty('id', this.get('lastPostId'));
+  }.property('hasLoadedData', 'posts.[]', 'lastPostId'),
 
   lastPostNotLoaded: Em.computed.not('lastPostLoaded'),
 

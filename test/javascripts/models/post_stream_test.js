@@ -22,6 +22,8 @@ test('defaults', function() {
 test('appending posts', function() {
   var postStream = buildStream(4567, [1, 3, 4]);
 
+  equal(postStream.get('lastPostId'), 4, "the last post id is 4");
+
   ok(!postStream.get('hasPosts'), "there are no posts by default");
   ok(!postStream.get('firstPostLoaded'), "the first post is not loaded");
   ok(!postStream.get('lastPostLoaded'), "the last post is not loaded");
@@ -29,7 +31,6 @@ test('appending posts', function() {
 
   postStream.appendPost(Discourse.Post.create({id: 2, post_number: 2}));
   ok(!postStream.get('firstPostLoaded'), "the first post is still not loaded");
-  ok(!postStream.get('lastPostLoaded'), "the last post is still not loaded");
   equal(postStream.get('posts.length'), 1, "it has one post in the stream");
 
   postStream.appendPost(Discourse.Post.create({id: 4, post_number: 4}));

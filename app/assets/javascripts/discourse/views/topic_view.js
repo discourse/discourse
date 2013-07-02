@@ -162,9 +162,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
   },
 
   resetExamineDockCache: function() {
-    this.docAt = null;
-    this.dockedTitle = false;
-    this.dockedCounter = false;
+    this.set('docAt', false);
   },
 
   updateDock: function(postView) {
@@ -239,37 +237,25 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     }
 
     var offset = window.pageYOffset || $('html').scrollTop();
-    var firstLoaded = topic.get('postStream.firstPostLoaded');
-    if (!this.docAt) {
+    if (!this.get('docAt')) {
       var title = $('#topic-title');
       if (title && title.length === 1) {
-        this.docAt = title.offset().top;
+        this.set('docAt', title.offset().top);
       }
     }
 
     var headerController = this.get('controller.controllers.header');
-    if (this.docAt) {
-      headerController.set('showExtraInfo', offset >= this.docAt || !firstLoaded);
+    if (this.get('docAt')) {
+      headerController.set('showExtraInfo', offset >= this.get('docAt') || topic.get('postStream.firstPostNotLoaded'));
     } else {
-      headerController.set('showExtraInfo', !firstLoaded);
+      headerController.set('showExtraInfo', topic.get('postStream.firstPostNotLoaded'));
     }
 
-    // there is a whole bunch of caching we could add here
-    var $lastPost = $('.last-post');
+    // Dock the counter if necessary
+    var $lastPost = $('article[data-post-id=' + topic.get('postStream.lastPostId') + "]");
     var lastPostOffset = $lastPost.offset();
-    if (!lastPostOffset) return;
-
-    if (offset >= (lastPostOffset.top + $lastPost.height()) - $(window).height()) {
-      if (!this.dockedCounter) {
-        $('#topic-progress-wrapper').addClass('docked');
-        this.dockedCounter = true;
-      }
-    } else {
-      if (this.dockedCounter) {
-        $('#topic-progress-wrapper').removeClass('docked');
-        this.dockedCounter = false;
-      }
-    }
+    if (!lastPostOffset) { return; }
+    this.set('controller.dockedCounter', (offset >= (lastPostOffset.top + $lastPost.height()) - $(window).height()));
   },
 
   topicTrackingState: function() {
