@@ -8,10 +8,6 @@
 
 <article class='boxed' {{bindAttr id="postElementId"}} {{bindAttr data-post-id="id"}} data-user-id="{{unbound user_id}}">
   <div class='row'>
-    {{#if controller.multiSelect}}
-      <button class='post-select' {{action selectPost this}}>{{view.selectText}}</button>
-    {{/if}}
-
     {{#if showUserReplyTab}}
       <a href='#' {{action toggleParent target="view"}} class='reply-to-tab'>
         {{#if loadingParent}}
@@ -33,6 +29,10 @@
     </div>
 
     <div class='topic-body span14'>
+      {{#if controller.multiSelect}}
+        <button class='post-select' {{action selectPost this}}>{{view.selectText}}</button>
+      {{/if}}
+
       <div {{bindAttr class="showUserReplyTab:avoid-tab view.repliesHidden:bottom-round :contents :regular view.extraClass"}}>
         {{view Discourse.PrependPostView postBinding="this"}}
         {{#unless controller.multiSelect}}
