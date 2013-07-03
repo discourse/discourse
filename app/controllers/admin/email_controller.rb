@@ -16,7 +16,7 @@ class Admin::EmailController < Admin::AdminController
   end
 
   def logs
-    @email_logs = EmailLog.limit(50).includes(:user).order('created_at desc').all
+    @email_logs = EmailLog.limit(50).includes(:user).order('created_at desc').to_a
     render_serialized(@email_logs, EmailLogSerializer)
   end
 

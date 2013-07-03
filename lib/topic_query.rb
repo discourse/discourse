@@ -95,7 +95,6 @@ class TopicQuery
     results = unread_results(per_page: SiteSetting.suggested_topics)
                 .where('topics.id NOT IN (?)', exclude_topic_ids)
                 .where(closed: false, archived: false, visible: true)
-                .all
 
     results_left = SiteSetting.suggested_topics - results.size
 
@@ -107,7 +106,6 @@ class TopicQuery
       results << new_results(per_page: results_left)
                   .where('topics.id NOT IN (?)', exclude_topic_ids)
                   .where(closed: false, archived: false, visible: true)
-                  .all
 
       results.flatten!
 
@@ -120,7 +118,6 @@ class TopicQuery
 
         results << random_suggested_results_for(topic, results_left, exclude_topic_ids)
                     .where(closed: false, archived: false, visible: true)
-                    .all
 
         results.flatten!
       end
