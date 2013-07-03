@@ -342,12 +342,13 @@ $.fn.autocomplete = function(options) {
           } else if (e.which === 187) {
             term += "+";
           } else if (e.which === 189) {
-            term += "-";
+            term += (e.shiftKey) ? "_" : "-";
           } else {
             if (e.which !== 8) {
               term += ",";
             }
           }
+
           options.dataSource(term).then(updateAutoComplete);
           return true;
       }
