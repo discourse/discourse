@@ -54,6 +54,19 @@ test('appending posts', function() {
   ok(postStream.get('lastPostLoaded'), "the last post is still the last post in the new stream");
 });
 
+test('closestPostNumberFor', function() {
+  var postStream = buildStream(1231);
+
+  blank(postStream.closestPostNumberFor(1), "there is no closest post when nothing is loaded");
+
+  postStream.appendPost(Discourse.Post.create({id: 1, post_number: 2}));
+  postStream.appendPost(Discourse.Post.create({id: 2, post_number: 3}));
+
+  equal(postStream.closestPostNumberFor(2), 2, "If a post is in the stream it returns its post number");
+  equal(postStream.closestPostNumberFor(3), 3, "If a post is in the stream it returns its post number");
+  equal(postStream.closestPostNumberFor(10), 3, "it clips to the upper bound of the stream");
+  equal(postStream.closestPostNumberFor(0), 2, "it clips to the lower bound of the stream");
+});
 
 test('updateFromJson', function() {
   var postStream = buildStream(1231);

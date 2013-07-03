@@ -17,22 +17,19 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
   postStream: Em.computed.alias('controller.postStream'),
 
-  updateBar: function() {
-    if (!this.get('postStream.loaded')) return;
 
+  updateBar: function() {
     var $topicProgress = $('#topic-progress');
     if (!$topicProgress.length) return;
 
-    var ratio = this.get('controller.progressPosition') / this.get('postStream.filteredPostsCount');
     var totalWidth = $topicProgress.width();
-    var progressWidth = ratio * totalWidth;
-    var bg = $topicProgress.find('.bg');
-    var currentWidth = bg.width();
+    var progressWidth = this.get('controller.streamPercentage') * totalWidth;
 
-    bg.css("border-right-width", (progressWidth === totalWidth) ? "0px" : "1px")
-      .width(progressWidth);
+    $topicProgress.find('.bg')
+                  .css("border-right-width", (progressWidth === totalWidth) ? "0px" : "1px")
+                  .width(progressWidth);
 
-  }.observes('controller.progressPosition', 'postStream.filteredPostsCount', 'topic.loaded'),
+  }.observes('controller.streamPercentage'),
 
   updateTitle: function() {
     var title = this.get('topic.title');
@@ -86,6 +83,9 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     });
 
     this.updatePosition();
+
+    // We want to make sure the progress bar is updated after it's rendered
+    this.updateBar();
   },
 
   debounceLoadSuggested: Discourse.debounce(function(){
@@ -169,6 +169,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     if (!postView) return;
     var post = postView.get('post');
     if (!post) return;
+
     this.set('controller.progressPosition', this.get('postStream').indexOf(post) + 1);
   },
 
@@ -184,9 +185,14 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     this.updatePosition();
   },
 
-  updatePosition: function() {
-    var topic = this.get('controller.model');
 
+  /**
+    Process the posts the current user has seen in the topic.
+
+    @private
+    @method processSeenPosts
+  **/
+  processSeenPosts: function() {
     var rows = $('.topic-post.ready');
     if (!rows || rows.length === 0) { return; }
 
@@ -235,6 +241,16 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     } else {
       console.error("can't update position ");
     }
+  },
+
+  /**
+    The user has scrolled the window, or it is finished rendering and ready for processing.
+
+    @method updatePosition
+  **/
+  updatePosition: function() {
+
+    this.processSeenPosts();
 
     var offset = window.pageYOffset || $('html').scrollTop();
     if (!this.get('docAt')) {
@@ -244,7 +260,8 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
       }
     }
 
-    var headerController = this.get('controller.controllers.header');
+    var headerController = this.get('controller.controllers.header'),
+        topic = this.get('controller.model');
     if (this.get('docAt')) {
       headerController.set('showExtraInfo', offset >= this.get('docAt') || topic.get('postStream.firstPostNotLoaded'));
     } else {

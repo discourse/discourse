@@ -19,7 +19,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   }.property('postStream.filteredPostsCount', 'progressPosition'),
 
   jumpBottomDisabled: function() {
-    return this.get('progressPosition') === this.get('postStream.filteredPostsCount');
+    return this.get('progressPosition') >= this.get('postStream.filteredPostsCount');
   }.property('postStream.filteredPostsCount', 'progressPosition'),
 
   canMergeTopic: function() {
@@ -59,6 +59,12 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     });
     return canDelete;
   }.property('selectedPostsCount'),
+
+  streamPercentage: function() {
+    if (!this.get('postStream.loaded')) { return 0; }
+    if (this.get('postStream.filteredPostsCount') === 0) { return 0; }
+    return this.get('progressPosition') / this.get('postStream.filteredPostsCount');
+  }.property('postStream.loaded', 'progressPosition', 'postStream.filteredPostsCount'),
 
   multiSelectChanged: function() {
     // Deselect all posts when multi select is turned off
