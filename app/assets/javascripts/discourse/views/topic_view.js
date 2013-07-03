@@ -69,6 +69,8 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
   didInsertElement: function(e) {
     this.bindScrolling({debounce: 0});
+
+    var topicView = this;
     $(window).bind('resize.discourse-on-scroll', function() { topicView.updatePosition(); });
 
     this.$().on('mouseup.discourse-redirect', '.cooked a, a.track-link', function(e) {
