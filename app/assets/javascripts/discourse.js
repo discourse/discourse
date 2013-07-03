@@ -148,21 +148,21 @@ Discourse = Ember.Application.createWithMixins({
     });
 
     $('#main').on('click.discourse', 'a', function(e) {
-      if (e.isDefaultPrevented() || e.shiftKey || e.metaKey || e.ctrlKey) return;
+      if (e.isDefaultPrevented() || e.shiftKey || e.metaKey || e.ctrlKey) { return; }
 
       var $currentTarget = $(e.currentTarget);
       var href = $currentTarget.attr('href');
-      if (!href) return;
-      if (href === '#') return;
-      if ($currentTarget.attr('target')) return;
-      if ($currentTarget.data('auto-route')) return;
+      if (!href) { return; }
+      if (href === '#') { return; }
+      if ($currentTarget.attr('target')) { return; }
+      if ($currentTarget.data('auto-route')) { return; }
 
       // If it's an ember #linkTo skip it
-      if ($currentTarget.hasClass('ember-view')) return;
+      if ($currentTarget.hasClass('ember-view')) { return; }
 
-      if ($currentTarget.hasClass('lightbox')) return;
-      if (href.indexOf("mailto:") === 0) return;
-      if (href.match(/^http[s]?:\/\//i) && !href.match(new RegExp("^http:\\/\\/" + window.location.hostname, "i"))) return;
+      if ($currentTarget.hasClass('lightbox')) { return; }
+      if (href.indexOf("mailto:") === 0) { return; }
+      if (href.match(/^http[s]?:\/\//i) && !href.match(new RegExp("^http:\\/\\/" + window.location.hostname, "i"))) { return; }
 
       e.preventDefault();
       Discourse.URL.routeTo(href);
