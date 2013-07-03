@@ -89,9 +89,9 @@ class Topic < ActiveRecord::Base
 
   scope :listable_topics, lambda { where('topics.archetype <> ?', [Archetype.private_message]) }
 
-  scope :by_newest, order('topics.created_at desc, topics.id desc')
+  scope :by_newest, -> { order('topics.created_at desc, topics.id desc') }
 
-  scope :visible, where(visible: true)
+  scope :visible, -> { where(visible: true) }
 
   scope :created_since, lambda { |time_ago| where('created_at > ?', time_ago) }
 

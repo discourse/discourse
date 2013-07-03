@@ -3,7 +3,7 @@ class TopicUser < ActiveRecord::Base
   belongs_to :topic
 
   scope :starred_since, lambda { |sinceDaysAgo| where('starred_at > ?', sinceDaysAgo.days.ago) }
-  scope :by_date_starred, group('date(starred_at)').order('date(starred_at)')
+  scope :by_date_starred, -> { group('date(starred_at)').order('date(starred_at)') }
 
   scope :tracking, lambda { |topic_id|
     where(topic_id: topic_id)
