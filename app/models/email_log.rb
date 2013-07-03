@@ -8,7 +8,7 @@ class EmailLog < ActiveRecord::Base
 
   after_create do
     # Update last_emailed_at if the user_id is present
-    User.update_all("last_emailed_at = CURRENT_TIMESTAMP", id: user_id) if user_id.present?
+    User.where(id: user_id).update_all("last_emailed_at = CURRENT_TIMESTAMP") if user_id.present?
   end
 
   def self.count_per_day(sinceDaysAgo = 30)

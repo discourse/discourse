@@ -6,27 +6,26 @@ describe SiteSetting do
 
   describe 'call_discourse_hub?' do
     it 'should be true when enforce_global_nicknames is true and discourse_org_access_key is set' do
-      SiteSetting.enforce_global_nicknames = true
-      SiteSetting.enforce_global_nicknames.should == true
-      SiteSetting.discourse_org_access_key = 'asdfasfsafd'
+      SiteSetting.stubs(:enforce_global_nicknames).returns(true)
+      SiteSetting.stubs(:discourse_org_access_key).returns('asdfasfsafd')
       SiteSetting.call_discourse_hub?.should == true
     end
 
     it 'should be false when enforce_global_nicknames is false and discourse_org_access_key is set' do
-      SiteSetting.enforce_global_nicknames = false
-      SiteSetting.discourse_org_access_key = 'asdfasfsafd'
+      SiteSetting.stubs(:enforce_global_nicknames).returns(false)
+      SiteSetting.stubs(:discourse_org_access_key).returns('asdfasfsafd')
       SiteSetting.call_discourse_hub?.should == false
     end
 
     it 'should be false when enforce_global_nicknames is true and discourse_org_access_key is not set' do
-      SiteSetting.enforce_global_nicknames = true
-      SiteSetting.discourse_org_access_key = ''
+      SiteSetting.stubs(:enforce_global_nicknames).returns(true)
+      SiteSetting.stubs(:discourse_org_access_key).returns('')
       SiteSetting.call_discourse_hub?.should == false
     end
 
     it 'should be false when enforce_global_nicknames is false and discourse_org_access_key is not set' do
-      SiteSetting.enforce_global_nicknames = false
-      SiteSetting.discourse_org_access_key = ''
+      SiteSetting.stubs(:enforce_global_nicknames).returns(false)
+      SiteSetting.stubs(:discourse_org_access_key).returns('')
       SiteSetting.call_discourse_hub?.should == false
     end
   end

@@ -9,8 +9,7 @@
 Discourse.PostView = Discourse.View.extend({
   classNames: ['topic-post', 'clearfix'],
   templateName: 'post',
-  classNameBindings: ['post.lastPost',
-                      'postTypeClass',
+  classNameBindings: ['postTypeClass',
                       'selected',
                       'post.hidden:hidden',
                       'post.deleted_at:deleted',

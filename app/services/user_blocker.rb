@@ -21,7 +21,7 @@ class UserBlocker
   end
 
   def hide_posts
-    Post.update_all(["hidden = true, hidden_reason_id = COALESCE(hidden_reason_id, ?)", Post.hidden_reasons[:new_user_spam_threshold_reached]], user_id: @user.id)
+    Post.where(user_id: @user.id).update_all(["hidden = true, hidden_reason_id = COALESCE(hidden_reason_id, ?)", Post.hidden_reasons[:new_user_spam_threshold_reached]])
     topic_ids = Post.where('user_id = ? and post_number = ?', @user.id, 1).pluck(:topic_id)
     Topic.update_all({ visible: false }, id: topic_ids) unless topic_ids.empty?
   end

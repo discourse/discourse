@@ -1,5 +1,3 @@
-/*global historyState:true */
-
 /**
 @module Discourse
 */
@@ -98,7 +96,6 @@ Ember.DiscourseLocation = Ember.Object.extend({
     @param path {String}
   */
   setURL: function(path) {
-
     path = this.formatURL(path);
     if (this.getState() && this.getState().path !== path) {
       popstateReady = true;
@@ -116,7 +113,6 @@ Ember.DiscourseLocation = Ember.Object.extend({
     @param path {String}
   */
   replaceURL: function(path) {
-
     path = this.formatURL(path);
 
     if (this.getState() && this.getState().path !== path) {
@@ -133,7 +129,7 @@ Ember.DiscourseLocation = Ember.Object.extend({
    @method getState
   */
   getState: function() {
-    historyState = get(this, 'history').state;
+    var historyState = get(this, 'history').state;
     if (historyState) return historyState;
 
     return {path: window.location.pathname};

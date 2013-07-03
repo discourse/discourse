@@ -62,9 +62,8 @@ Discourse.URL = Em.Object.createWithMixins({
   routeTo: function(path) {
     var oldPath = window.location.pathname;
     path = path.replace(/https?\:\/\/[^\/]+/, '');
-    /*
-      If the URL is absolute, remove rootURL
-     */
+
+    // If the URL is absolute, remove rootURL
     if (path.match(/^\//)) {
       var rootURL = (Discourse.BaseUri === undefined ? "/" : Discourse.BaseUri);
       rootURL = rootURL.replace(/\/$/, '');
@@ -76,19 +75,21 @@ Discourse.URL = Em.Object.createWithMixins({
       then we want to apply some special logic. If the post_number changes within the
       same topic, use replaceState and instruct our controller to load more posts.
     */
-    var newMatches = this.TOPIC_REGEXP.exec(path);
-    var newTopicId = newMatches ? newMatches[2] : null;
+    var newMatches = this.TOPIC_REGEXP.exec(path),
+        newTopicId = newMatches ? newMatches[2] : null;
+
     if (newTopicId) {
-      var oldMatches = this.TOPIC_REGEXP.exec(oldPath);
-      var oldTopicId = oldMatches ? oldMatches[2] : null;
+      var oldMatches = this.TOPIC_REGEXP.exec(oldPath),
+          oldTopicId = oldMatches ? oldMatches[2] : null;
 
       // If the topic_id is the same
       if (oldTopicId === newTopicId) {
         Discourse.URL.replaceState(path);
-        var topicController = Discourse.__container__.lookup('controller:topic');
-        var opts = { };
-        if (newMatches[3]) opts.nearPost = newMatches[3];
 
+        var topicController = Discourse.__container__.lookup('controller:topic'),
+            opts = {};
+
+        if (newMatches[3]) opts.nearPost = newMatches[3];
         var postStream = topicController.get('postStream');
         postStream.refresh(opts).then(function() {
           topicController.setProperties({

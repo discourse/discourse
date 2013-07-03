@@ -67,7 +67,7 @@ class PostMover
   def move(post, post_number)
     @first_post_number_moved ||= post.post_number
 
-    Post.update_all(
+    Post.where(id: post.id, topic_id: original_topic.id).update_all(
       [
         ['post_number = :post_number',
          'topic_id    = :topic_id',
@@ -75,9 +75,7 @@ class PostMover
         ].join(', '),
         post_number: post_number,
         topic_id: destination_topic.id
-      ],
-      id: post.id,
-      topic_id: original_topic.id
+      ]
     )
 
     # Move any links from the post to the new topic

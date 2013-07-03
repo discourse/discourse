@@ -378,6 +378,24 @@
       }
     }
   }
+  .topic-meta-data-inside {
+    float: right;
+    z-index: 490;
+    margin-left: 20px;
+    .post-info {
+      font-size: 12px;
+      display: inline-block;
+      margin-right: 12px;
+      &.edits {
+        a, a:visited {
+          color: #aaa;
+        }
+      }
+    }
+    .post-date {
+      color: #aaa;
+    }
+  }
   .reply-to-tab {
     z-index: 490;
     font-size: 12px;
@@ -404,6 +422,10 @@
     border-bottom: 1px solid #b9b9b9;
     display: none;
     overflow: hidden;
+    .arrow {
+      float: right;
+      margin: 3px 0 3px 0;
+    }
   }
   .embedded-posts.top {
     @include border-radius-top(4px);
@@ -413,6 +435,10 @@
 
   .embedded-posts {
     background-color: #e9e6e6;
+
+    .topic-meta-data-inside {
+      margin: 3px -8px 3px 20px;
+    }
 
     div.reply {
       border-left: 1px solid #b9b9b9;
@@ -451,17 +477,8 @@
           left: -9px;
         }
 
-        a.arrow, .post-date {
-          float: right;
-        }
         a.arrow {
-          margin: 3px 0 3px 0;
           color: grey;
-        }
-        .post-date {
-          margin: 3px 10px 3px 0;
-          color: #aaa;
-          font-size: 12px;
         }
       }
       .about {
@@ -508,24 +525,6 @@
       z-index: 490;
     }
 
-    .topic-meta-data-inside {
-      float: right;
-      z-index: 490;
-      margin-left: 20px;
-      .post-info {
-        font-size: 12px;
-        display: inline-block;
-        margin-right: 12px;
-        &.edits {
-          a, a:visited {
-            color: #aaa;
-          }
-        }
-      }
-      .post-date {
-        color: #aaa;
-      }
-    }
     img {
       max-width: 100%;
     }

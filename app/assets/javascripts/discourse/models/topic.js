@@ -79,26 +79,6 @@ Discourse.Topic = Discourse.Model.extend({
     return this.urlForPostNumber(this.get('highest_post_number'));
   }.property('url', 'highest_post_number'),
 
-  // The last post in the topic
-  lastPost: function() {
-    var posts = this.get('posts');
-    return posts[posts.length-1];
-  },
-
-  postsChanged: function() {
-    var last, posts;
-    posts = this.get('posts');
-    last = posts[posts.length - 1];
-    if (!(last && last.set && !last.lastPost)) return;
-    _.each(posts,function(p) {
-      if (p.lastPost) {
-        p.set('lastPost', false);
-      }
-    });
-    last.set('lastPost', true);
-    return true;
-  }.observes('posts.@each', 'posts'),
-
   // The amount of new posts to display. It might be different than what the server
   // tells us if we are still asynchronously flushing our "recently read" data.
   // So take what the browser has seen into consideration.

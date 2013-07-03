@@ -844,9 +844,9 @@ de:
     user_automatically_blocked:
       subject_template: "Benutzer %{username} wurde automatisch gesperrt"
       text_body_template: |
-        Dies ist eine automatische Nachricht um dich zu informieren, dass [%{username}](%{blocked_user_url}) automatisch gesperrt wurde, da zu viele Mitglieder %{username}'s Beiträge beanstanded haben.
+        Dies ist eine automatische Nachricht um dich zu informieren, dass [%{username}](%{user_url}) automatisch gesperrt wurde, da zu viele Mitglieder %{username}'s Beiträge beanstanded haben.
 
-        Bitte [überprüfe die Beanstandungen](/admin/flags). Wenn %{username} nicht mehr gesperrt sein soll, schalte den Benutzer in der [Benuzeradministration](%{blocked_user_url}) wieder frei.
+        Bitte [überprüfe die Beanstandungen](/admin/flags). Wenn %{username} nicht mehr gesperrt sein soll, schalte den Benutzer in der [Benuzeradministration](%{user_url}) wieder frei.
 
     unblocked:
       subject_template: "Benutzerkonto entsperrt"

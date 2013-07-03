@@ -431,6 +431,30 @@ Discourse.PostStream = Em.Object.extend({
   },
 
   /**
+    Returns the closest post number given a postNumber that may not exist in the stream.
+    For example, if the user asks for a post that's deleted or otherwise outside the range.
+    This allows us to set the progress bar with the correct number.
+
+    @method closestPostNumberFor
+    @param {Integer} postNumber the post number we're looking for
+  **/
+  closestPostNumberFor: function(postNumber) {
+    if (!this.get('hasPosts')) { return; }
+
+    var closest = null;
+    this.get('posts').forEach(function (p) {
+      if (closest === postNumber) { return; }
+      if (!closest) { closest = p.get('post_number'); }
+
+      if (Math.abs(postNumber - p.get('post_number')) < Math.abs(closest - postNumber)) {
+        closest = p.get('post_number');
+      }
+    });
+
+    return closest;
+  },
+
+  /**
     @private
 
     Given a JSON packet, update this stream and the posts that exist in it.

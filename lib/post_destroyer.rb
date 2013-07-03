@@ -30,7 +30,7 @@ class PostDestroyer
 
         # If the poster doesn't have any other posts in the topic, clear their posted flag
         unless Post.exists?(["topic_id = ? and user_id = ? and id <> ?", @post.topic_id, @post.user_id, @post.id])
-          TopicUser.update_all 'posted = false', topic_id: @post.topic_id, user_id: @post.user_id
+          TopicUser.where(topic_id: @post.topic_id, user_id: @post.user_id).update_all 'posted = false'
         end
       end
 
@@ -40,7 +40,7 @@ class PostDestroyer
       @post.post_actions.map(&:trash!)
 
       f = PostActionType.types.map{|k,v| ["#{k}_count", 0]}
-      Post.with_deleted.update_all(Hash[*f.flatten], id: @post.id)
+      Post.with_deleted.where(id: @post.id).update_all(Hash[*f.flatten])
 
       @post.trash!
 

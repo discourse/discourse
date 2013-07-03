@@ -85,8 +85,12 @@ module ApplicationHelper
   # will be rendered instead.
   def markdown_content(key, replacements=nil)
     result = PrettyText.cook(SiteContent.content_for(key, replacements || {})).html_safe
-    result = yield if result.blank? && block_given?
-    result
+    if result.blank? && block_given?
+      yield
+      nil
+    else
+      result
+    end
   end
 
   def login_path

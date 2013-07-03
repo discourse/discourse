@@ -32,9 +32,13 @@ Discourse.TopicFromParamsRoute = Discourse.Route.extend({
 
     var topicController = this.controllerFor('topic');
     postStream.refresh(params).then(function () {
+
+      // The post we requested might not exist. Let's find the closest post
+      var closest = postStream.closestPostNumberFor(params.nearPost) || 1;
+
       topicController.setProperties({
-        currentPost: params.nearPost || 1,
-        progressPosition: params.nearPost || 1
+        currentPost: closest,
+        progressPosition: closest
       });
 
       if (topic.present('draft')) {
@@ -46,7 +50,6 @@ Discourse.TopicFromParamsRoute = Discourse.Route.extend({
           ignoreIfChanged: true
         });
       }
-
     });
 
 

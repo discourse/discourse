@@ -773,8 +773,6 @@ cs:
         edit: "Bohužel nastala chyba při editaci příspěvku. Prosím zkuste to znovu."
         upload: "Bohužel nastala chyba při nahrávání příspěvku. Prosím zkuste to znovu."
         upload_too_large: "Soubor, který se snažíte nahrát je bohužel příliš velký (maximální velikost je {{max_size_kb}}kb). Prosím zmenšete ho zkuste to znovu."
-        upload_too_many_images: "Bohužel, najednou smíte nahrát pouze jeden obrázek."
-        only_images_are_supported: "Bohužel, smíte nahrávat pouze obrázky."
 
       abandon: "Opravdu chcete opustit váš příspěvek?"
 

@@ -652,8 +652,7 @@ it:
         edit: "Spiacenti, si è verificato un errore durante la modifica del tuo post. Per favore, prova di nuovo."
         upload: "Spiacenti, si è verificato un errore durante il caricamento del file. Per favore, prova di nuovo."
         upload_too_large: "Spiacenti, il file che stai cercando di caricare è troppo grande (la dimensione massima è {{max_size_kb}}kb), per favore ridimensionalo e prova di nuovo."
-        upload_too_many_images: "Spiacenti, puoi caricare un'immagine per volta."
-        only_images_are_supported: "Spiacenti, puoi caricare solo immagini."
+        too_many_uploads: "Spiacenti, puoi caricare un'immagine per volta."
 
       abandon: "Sei sicuro di voler abbandonare il tuo post?"
 
