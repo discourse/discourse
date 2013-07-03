@@ -744,8 +744,6 @@ de:
         edit: "Entschuldige, es gab einen Fehler beim Bearbeiten des Beitrags. Bitte versuche es noch einmal."
         upload: "Entschuldige, es gab einen Fehler beim Hochladen der Datei. Bitte versuche es noch einmal."
         upload_too_large: "Entschuldige, die Datei die du hochladen wolltest ist zu groß (Maximalgröße {{max_size_kb}}kb), bitte reduziere die Dateigröße und versuche es nochmal."
-        upload_too_many_images: "Entschuldige, du kannst nur ein Bild gleichzeitig hochladen."
-        only_images_are_supported: "Entschuldige, du kannst nur Bilder hochladen."
 
       abandon: "Willst Du diesen Beitrag wirklich verwerfen?"
 

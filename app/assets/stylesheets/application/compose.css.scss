@@ -104,7 +104,7 @@
 }
 
 #reply-control {
-  .toggle-preview, #draft-status, #image-uploading {
+  .toggle-preview, #draft-status, #file-uploading {
     position: absolute;
     bottom: -31px;
     margin-top: 0px;
@@ -113,7 +113,7 @@
     right: 5px;
     text-decoration: underline;
   }
-  #image-uploading {
+  #file-uploading {
     left: 51%;
     font-size: 12px;
     color: darken($gray, 40);
