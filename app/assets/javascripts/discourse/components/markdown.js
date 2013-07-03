@@ -103,6 +103,11 @@ Discourse.Markdown = {
 
     // Before cooking callbacks
     converter.hooks.chain("preConversion", function(text) {
+      // If a user puts text right up against a quote, make sure the spacing is equivalnt to a new line
+      return text.replace(/\[\/quote\]/, "[/quote]\n");
+    });
+
+    converter.hooks.chain("preConversion", function(text) {
       Discourse.Markdown.trigger('beforeCook', { detail: text, opts: opts });
       return Discourse.Markdown.textResult || text;
     });
