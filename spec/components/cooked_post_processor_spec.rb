@@ -230,7 +230,7 @@ describe CookedPostProcessor do
     end
 
     it "returns a generic name for pasted images" do
-      upload = Fabricate.build(:upload, { original_filename: "blob" })
+      upload = Fabricate.build(:upload, { original_filename: "blob.png" })
       cpp.get_filename(upload, "http://domain.com/image.png").should == I18n.t('upload.pasted_image_filename')
     end
 
