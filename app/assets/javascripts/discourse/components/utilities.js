@@ -172,6 +172,8 @@ Discourse.Utilities = {
         return false;
       } else if (files.length > 0) {
         var upload = files[0];
+        // if the image was pasted, sets its name to a default one
+        if (upload instanceof Blob && !(upload instanceof File) && upload.type === "image/png") { upload.name = "blob.png"; }
         // check that the uploaded file is authorized
         if (!Discourse.Utilities.isAuthorizedUpload(upload)) {
           var extensions = Discourse.SiteSettings.authorized_extensions.replace(/\|/g, ", ");
