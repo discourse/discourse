@@ -106,7 +106,7 @@ class TopicTrackingState
     SELECT u.id AS user_id, topics.id AS topic_id, topics.created_at, highest_post_number, last_read_post_number, c.name AS category_name
     FROM users u
     FULL OUTER JOIN topics ON 1=1
-    LEFT JOIN topic_users tu ON tu.topic_id = topics.id AND tu.user_id = u.id
+    LEFT JOIN topic_users ON topic_users.topic_id = topics.id AND topic_users.user_id = u.id
     LEFT JOIN categories c ON c.id = topics.category_id
     WHERE u.id IN (:user_ids) AND
           topics.archetype <> 'private_message' AND

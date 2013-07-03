@@ -113,7 +113,7 @@ class Search
 
     def category_search
       categories = Category.includes(:category_search_data)
-                           .where("category_search_data.search_data @@ #{ts_query}")
+                           .where("category_search_data.search_data @@ #{ts_query}").references(:category_search_data)
                            .order("topics_month DESC")
                            .secured(@guardian)
                            .limit(@limit)
@@ -125,7 +125,7 @@ class Search
 
     def user_search
       users = User.includes(:user_search_data)
-                  .where("user_search_data.search_data @@ #{ts_query}")
+                  .where("user_search_data.search_data @@ #{ts_query}").references(:user_search_data)
                   .order("CASE WHEN username_lower = '#{@original_term.downcase}' THEN 0 ELSE 1 END")
                   .order("last_posted_at DESC")
                   .limit(@limit)
