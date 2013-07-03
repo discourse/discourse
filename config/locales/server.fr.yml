@@ -596,6 +596,17 @@ fr:
 
     newuser_spam_host_threshold: "Limite du nombre de liens vers un même host qu'un nouvel utilisateur peut insérer dans un message avant d'être considérer comme un SPAM."
     staff_like_weight: "Poids supplémentaire donné aux Likes du staff lors d'une recherche."
+    
+    reply_by_email_enabled: "Cocher si le forum doit supporter les réponses par email"
+    reply_by_email_address: "Modèle pour la réponse par adresse email par exemple : %{reply_key}@reply.myforum.com"
+
+    pop3s_polling_enabled: "Cocher si le polling via POP3S doit être activé pour les réponses par email"
+    pop3s_polling_port: "Le port à utiliser pour le polling sur le POPS3"
+    pop3s_polling_host: "L'hôte utilisé pour le polling pour l'email via POP3S"
+    pop3s_polling_username: "Le nom d'utilisateur pour le polling POPS3 par email"
+    pop3s_polling_password: "Le mot de passe pour le polling POPS3 par email"
+    
+    minimum_topics_similar: "Combien de topics ont besoin d'exister dans la base de données avant que des topics similaires soit présentés."
 
   notification_types:
     mentioned: "%{display_username} vous a mentionné dans %{link}"
