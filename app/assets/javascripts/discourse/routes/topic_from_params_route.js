@@ -38,7 +38,8 @@ Discourse.TopicFromParamsRoute = Discourse.Route.extend({
 
       topicController.setProperties({
         currentPost: closest,
-        progressPosition: closest
+        progressPosition: closest,
+        enteredAt: new Date().getTime()
       });
 
       if (topic.present('draft')) {
@@ -50,6 +51,8 @@ Discourse.TopicFromParamsRoute = Discourse.Route.extend({
           ignoreIfChanged: true
         });
       }
+
+
     });
 
 

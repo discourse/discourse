@@ -57,6 +57,25 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     composerController.set('topic', this.get('topic'));
   }.observes('composer'),
 
+  enteredTopic: function() {
+    if (this.present('controller.enteredAt')) {
+      var topicView = this;
+      Em.run.schedule('afterRender', function() {
+        topicView.updateBar();
+        topicView.updatePosition();
+      });
+    }
+  }.observes('controller.enteredAt'),
+
+  didInsertElement: function(e) {
+    this.bindScrolling({debounce: 0});
+    $(window).bind('resize.discourse-on-scroll', function() { topicView.updatePosition(); });
+
+    this.$().on('mouseup.discourse-redirect', '.cooked a, a.track-link', function(e) {
+      return Discourse.ClickTrack.trackClick(e);
+    });
+  },
+
   // This view is being removed. Shut down operations
   willDestroyElement: function() {
 
@@ -70,22 +89,6 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
     // this happens after route exit, stuff could have trickled in
     this.set('controller.controllers.header.showExtraInfo', false);
-  },
-
-  didInsertElement: function(e) {
-    this.bindScrolling({debounce: 0});
-
-    var topicView = this;
-    $(window).bind('resize.discourse-on-scroll', function() { topicView.updatePosition(); });
-
-    this.$().on('mouseup.discourse-redirect', '.cooked a, a.track-link', function(e) {
-      return Discourse.ClickTrack.trackClick(e);
-    });
-
-    this.updatePosition();
-
-    // We want to make sure the progress bar is updated after it's rendered
-    this.updateBar();
   },
 
   debounceLoadSuggested: Discourse.debounce(function(){
@@ -147,12 +150,13 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
   // Called for every post seen, returns the post number
   postSeen: function($post) {
+
     var post = this.getPost($post);
 
     if (post) {
       var postNumber = post.get('post_number');
-      if (postNumber > (this.get('last_read_post_number') || 0)) {
-        this.set('last_read_post_number', postNumber);
+      if (postNumber > (this.get('controller.last_read_post_number') || 0)) {
+        this.set('controller.last_read_post_number', postNumber);
       }
       if (!post.get('read')) {
         post.set('read', true);
