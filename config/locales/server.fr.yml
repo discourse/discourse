@@ -5,6 +5,7 @@
 #
 # Pour toute question contactez
 # <Maxime QUANDALLE> "maxime@quandalle.com"
+# <Thomas BENTKOWSKI> "thomasbentkowski@gmail.com"
 #
 # To validate this YAML file after you change it, please paste it into
 # http://yamllint.com/
@@ -514,6 +515,7 @@ fr:
 
     enable_cas_logins: "Active l'authentification CAS"
     cas_hostname: "Nom d'hôte du serveur CAS"
+    cas_domainname: "Le nom de domaine qui génerera des adresses email pour le serveur CAS"
 
     enable_github_logins: "Active l'authentification GitHub (nécessite github_client_id et github_client_secret)"
     github_client_id: "id client, enregistré sur https://github.com/settings/applications"
@@ -521,7 +523,7 @@ fr:
 
     enable_persona_logins: "Active l'authentification par e-mail avec Mozilla Persona"
 
-    allow_import: "Autoriser l'importation qui remplacera TOUTES les données du site. Laisser sur faux, sauf si vous prévoyez d'importer des données."
+    allow_import: "Autoriser l'importation qui remplacera TOUTES les données du site. Laisser non coché, sauf si vous prévoyez d'importer des données."
 
     active_user_rate_limit_secs: "A quelle fréquence mettre à jour le champ 'dernier_vu_a', en secondes."
     previous_visit_timeout_hours: "Combien de temps dure une visite avant de la considérer comme la visite 'précédente', en heures."
@@ -595,6 +597,17 @@ fr:
 
     newuser_spam_host_threshold: "Limite du nombre de liens vers un même host qu'un nouvel utilisateur peut insérer dans un message avant d'être considérer comme un SPAM."
     staff_like_weight: "Poids supplémentaire donné aux Likes du staff lors d'une recherche."
+    
+    reply_by_email_enabled: "Cocher si le forum doit supporter les réponses par email"
+    reply_by_email_address: "Modèle pour la réponse par adresse email par exemple : %{reply_key}@reply.myforum.com"
+
+    pop3s_polling_enabled: "Cocher si le polling via POP3S doit être activé pour les réponses par email"
+    pop3s_polling_port: "Le port à utiliser pour le polling sur le POPS3"
+    pop3s_polling_host: "L'hôte utilisé pour le polling pour l'email via POP3S"
+    pop3s_polling_username: "Le nom d'utilisateur pour le polling POPS3 par email"
+    pop3s_polling_password: "Le mot de passe pour le polling POPS3 par email"
+    
+    minimum_topics_similar: "Combien de topics ont besoin d'exister dans la base de données avant que des topics similaires soit présentés."
 
   notification_types:
     mentioned: "%{display_username} vous a mentionné dans %{link}"
