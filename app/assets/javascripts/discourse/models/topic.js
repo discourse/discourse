@@ -257,14 +257,14 @@ Discourse.Topic = Discourse.Model.extend({
   // Is the reply to a post directly below it?
   isReplyDirectlyBelow: function(post) {
     var postBelow, posts;
-    posts = this.get('posts');
+    posts = this.get('postStream.posts');
     if (!posts) return;
 
     postBelow = posts[posts.indexOf(post) + 1];
 
     // If the post directly below's reply_to_post_number is our post number, it's
     // considered directly below.
-    return (postBelow ? postBelow.get('reply_to_post_number') : void 0) === post.get('post_number');
+    return postBelow && postBelow.get('reply_to_post_number') === post.get('post_number');
   },
 
   hasExcerpt: function() {
@@ -299,7 +299,7 @@ Discourse.Topic.reopenClass({
   **/
   findSimilarTo: function(title, body) {
     return Discourse.ajax("/topics/similar_to", { data: {title: title, raw: body} }).then(function (results) {
-      return results.map(function(topic) { return Discourse.Topic.create(topic) });
+      return results.map(function(topic) { return Discourse.Topic.create(topic); });
     });
   },
 

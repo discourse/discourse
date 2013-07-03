@@ -267,7 +267,7 @@ Discourse.Post = Discourse.Model.extend({
 
   // Whether to show replies directly below
   showRepliesBelow: function() {
-    var reply_count, _ref;
+    var reply_count, topic;
     reply_count = this.get('reply_count');
 
     // We don't show replies if there aren't any
@@ -280,9 +280,9 @@ Discourse.Post = Discourse.Model.extend({
     if (reply_count > 1) return true;
 
     // If we have *exactly* one reply, we have to consider if it's directly below us
-    if ((_ref = this.get('topic')) ? _ref.isReplyDirectlyBelow(this) : void 0) return false;
+    topic = this.get('topic');
+    return !topic.isReplyDirectlyBelow(this);
 
-    return true;
   }.property('reply_count')
 
 });
