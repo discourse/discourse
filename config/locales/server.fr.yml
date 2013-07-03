@@ -5,6 +5,7 @@
 #
 # Pour toute question contactez
 # <Maxime QUANDALLE> "maxime@quandalle.com"
+# <Thomas BENTKOWSKI> "thomasbentkowski@gmail.com"
 #
 # To validate this YAML file after you change it, please paste it into
 # http://yamllint.com/
@@ -522,7 +523,7 @@ fr:
 
     enable_persona_logins: "Active l'authentification par e-mail avec Mozilla Persona"
 
-    allow_import: "Autoriser l'importation qui remplacera TOUTES les données du site. Laisser sur faux, sauf si vous prévoyez d'importer des données."
+    allow_import: "Autoriser l'importation qui remplacera TOUTES les données du site. Laisser non coché, sauf si vous prévoyez d'importer des données."
 
     active_user_rate_limit_secs: "A quelle fréquence mettre à jour le champ 'dernier_vu_a', en secondes."
     previous_visit_timeout_hours: "Combien de temps dure une visite avant de la considérer comme la visite 'précédente', en heures."
