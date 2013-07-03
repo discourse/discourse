@@ -7,7 +7,7 @@ require_dependency 'text_cleaner'
 require_dependency 'trashable'
 
 class Topic < ActiveRecord::Base
-  include ActionView::Helpers
+  include ActionView::Helpers::SanitizeHelper
   include RateLimiter::OnCreateRecord
   include Trashable
 
