@@ -19,6 +19,14 @@ module ApplicationHelper
     end
   end
 
+  def escape_unicode(javascript)
+    if javascript
+      javascript.gsub(/\342\200\250/u, '&#x2028;').gsub(/(<\/)/u, '\u003C/').html_safe
+    else
+      ''
+    end
+  end
+
   def with_format(format, &block)
     old_formats = formats
     self.formats = [format]
