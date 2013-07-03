@@ -366,7 +366,7 @@ class Post < ActiveRecord::Base
     return if post.nil?
     post_reply = post.post_replies.new(reply_id: id)
     if post_reply.save
-      Post.update_all ['reply_count = reply_count + 1'], id: post.id
+      Post.where(id: post.id).update_all ['reply_count = reply_count + 1']
     end
   end
 end

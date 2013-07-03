@@ -16,7 +16,7 @@ class PostTiming < ActiveRecord::Base
                                 args)
 
     if rows == 0
-      Post.update_all 'reads = reads + 1', ['topic_id = :topic_id and post_number = :post_number', args]
+      Post.where(['topic_id = :topic_id and post_number = :post_number', args]).update_all 'reads = reads + 1'
       exec_sql("INSERT INTO post_timings (topic_id, user_id, post_number, msecs)
                   SELECT :topic_id, :user_id, :post_number, :msecs
                   WHERE NOT EXISTS(SELECT 1 FROM post_timings
