@@ -49,29 +49,50 @@
           <tbody>
             <td class="title">{{i18n admin.dashboard.version}}</td>
             <td class="version-number"><a {{bindAttr href="versionCheck.gitLink"}} target="_blank">{{ versionCheck.installed_version }}</a></td>
-            <td class="version-number">{{ versionCheck.latest_version }}</td>
-            <td class="face">
-              {{#if versionCheck.upToDate }}
-                <span class='icon update-to-date'>☻</span>
+
+            {{#if versionCheck.noCheckPerformed}}
+              <td class="version-number">&nbsp;</td>
+              <td class="face">
+                <span class="icon critical-updates-available">☹</span>
+              </td>
+              <td class="version-notes">
+                <span class="normal-note">{{i18n admin.dashboard.no_check_performed}}</span>
+              </td>
+            {{else}}
+              {{#if versionCheck.staleData}}
+                <td class="version-number">&nbsp;</td>
+                <td class="face">
+                  <span class="icon critical-updates-available">☹</span>
+                </td>
+                <td class="version-notes">
+                  <span class="normal-note">{{i18n admin.dashboard.stale_data}}</span>
+                </td>
               {{else}}
-                <span {{bindAttr class=":icon versionCheck.critical_updates:critical-updates-available:updates-available"}}>
-                  {{#if versionCheck.behindByOneVersion}}
-                    ☺
+                <td class="version-number">{{ versionCheck.latest_version }}</td>
+                <td class="face">
+                  {{#if versionCheck.upToDate }}
+                    <span class='icon update-to-date'>☻</span>
                   {{else}}
-                    ☹
+                    <span {{bindAttr class=":icon versionCheck.critical_updates:critical-updates-available:updates-available"}}>
+                      {{#if versionCheck.behindByOneVersion}}
+                        ☺
+                      {{else}}
+                        ☹
+                      {{/if}}
+                    </span>
                   {{/if}}
-                </span>
+                </td>
+                <td class="version-notes">
+                  {{#if versionCheck.upToDate }}
+                    {{i18n admin.dashboard.up_to_date}}
+                  {{else}}
+                    <span class="critical-note">{{i18n admin.dashboard.critical_available}}</span>
+                    <span class="normal-note">{{i18n admin.dashboard.updates_available}}</span>
+                    {{i18n admin.dashboard.please_upgrade}}
+                  {{/if}}
+                </td>
               {{/if}}
-            </td>
-            <td class="version-notes">
-              {{#if versionCheck.upToDate }}
-                {{i18n admin.dashboard.up_to_date}}
-              {{else}}
-                <span class="critical-note">{{i18n admin.dashboard.critical_available}}</span>
-                <span class="normal-note">{{i18n admin.dashboard.updates_available}}</span>
-                {{i18n admin.dashboard.please_upgrade}}
-              {{/if}}
-            </td>
+            {{/if}}
           </tbody>
         {{/unless}}
       </table>

@@ -1000,6 +1000,8 @@ en:
         critical_available: "A critical update is available."
         updates_available: "Updates are available."
         please_upgrade: "Please upgrade!"
+        no_check_performed: "A check for updates have not been performed. Ensure clockwork and sidekiq are running."
+        stale_data: "A check for updates has not been performed lately. Ensure clockwork and sidekiq are running."
         installed_version: "Installed"
         latest_version: "Latest"
         problems_found: "Some problems have been found with your installation of Discourse:"
