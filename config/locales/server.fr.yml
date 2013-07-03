@@ -514,6 +514,7 @@ fr:
 
     enable_cas_logins: "Active l'authentification CAS"
     cas_hostname: "Nom d'hôte du serveur CAS"
+    cas_domainname: "Le nom de domaine qui génerera des adresses email pour le serveur CAS"
 
     enable_github_logins: "Active l'authentification GitHub (nécessite github_client_id et github_client_secret)"
     github_client_id: "id client, enregistré sur https://github.com/settings/applications"
