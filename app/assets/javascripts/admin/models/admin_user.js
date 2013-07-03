@@ -70,10 +70,7 @@ Discourse.AdminUser = Discourse.User.extend({
 
   trustLevels: function() {
     var site = Discourse.Site.instance();
-    // downgrading trust levels is not supported
-    var current = this.get('trust_level');
-    var levels = site.get('trust_levels');
-    return jQuery.grep(levels, function(e) { return e.id >= current })
+    return site.get('trust_levels');
   }.property('trust_level'),
 
   dirty: function() {
@@ -89,7 +86,7 @@ Discourse.AdminUser = Discourse.User.extend({
       window.location.reload();
     }, function(e) {
       // failure
-      var error = Em.String.i18n('admin.user.trustlevel_change_failed', { error: "http: " + e.status + " - " + e.body });
+      var error = Em.String.i18n('admin.user.trust_level_change_failed', { error: "http: " + e.status + " - " + e.body });
       bootbox.alert(error);
     });
   },

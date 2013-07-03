@@ -49,6 +49,7 @@ Discourse::Application.routes.draw do
       put 'deactivate'
       put 'block'
       put 'unblock'
+      put 'trust_level'
     end
 
     resources :impersonate, constraints: AdminConstraint.new
