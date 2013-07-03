@@ -7,6 +7,35 @@
 var get = Ember.get, set = Ember.set;
 var popstateReady = false;
 
+// Thanks: https://gist.github.com/kares/956897
+var re = /([^&=]+)=?([^&]*)/g;
+var decode = function(str) {
+    return decodeURIComponent(str.replace(/\+/g, ' '));
+};
+$.parseParams = function(query) {
+    var params = {}, e;
+    if (query) {
+        if (query.substr(0, 1) === '?') {
+            query = query.substr(1);
+        }
+
+        while (e = re.exec(query)) {
+            var k = decode(e[1]);
+            var v = decode(e[2]);
+            if (params[k] !== undefined) {
+                if (!$.isArray(params[k])) {
+                    params[k] = [params[k]];
+                }
+                params[k].push(v);
+            } else {
+                params[k] = v;
+            }
+        }
+    }
+    return params;
+};
+
+
 /**
   `Ember.DiscourseLocation` implements the location API using the browser's
   `history.pushState` API.
@@ -16,6 +45,7 @@ var popstateReady = false;
   @extends Ember.Object
 */
 Ember.DiscourseLocation = Ember.Object.extend({
+
   init: function() {
     set(this, 'location', get(this, 'location') || window.location);
     if ( $.inArray('state', $.event.props) < 0 ) {
@@ -32,6 +62,12 @@ Ember.DiscourseLocation = Ember.Object.extend({
     @method initState
   */
   initState: function() {
+
+    var location = this.get('location');
+    if (location && location.search) {
+      this.set('queryParams', $.parseParams(location.search));
+    }
+
     this.replaceState(this.formatURL(this.getURL()));
     set(this, 'history', window.history);
   },
@@ -62,6 +98,7 @@ Ember.DiscourseLocation = Ember.Object.extend({
     @param path {String}
   */
   setURL: function(path) {
+
     path = this.formatURL(path);
     if (this.getState() && this.getState().path !== path) {
       popstateReady = true;
@@ -79,6 +116,7 @@ Ember.DiscourseLocation = Ember.Object.extend({
     @param path {String}
   */
   replaceURL: function(path) {
+
     path = this.formatURL(path);
 
     if (this.getState() && this.getState().path !== path) {
@@ -128,6 +166,21 @@ Ember.DiscourseLocation = Ember.Object.extend({
     this.set('currentState', { path: path } );
     window.history.replaceState({ path: path }, null, path);
   },
+
+
+  queryParamsString: function() {
+    var params = this.get('queryParams');
+    if (Em.isEmpty(params) || Em.isEmpty(Object.keys(params))) {
+      return "";
+    } else {
+      return "?" + $.param(params).replace(/%5B/g, "[").replace(/%5D/g, "]");
+    }
+  }.property('queryParams'),
+
+  // When our query params change, update the URL
+  queryParamsStringChanged: function() {
+    this.replaceState(this.formatURL(this.getURL()));
+  }.observes('queryParamsString'),
 
   /**
     @private
@@ -182,7 +235,7 @@ Ember.DiscourseLocation = Ember.Object.extend({
       url = url.substring(rootURL.length);
     }
 
-    return rootURL + url;
+    return rootURL + url + this.get('queryParamsString');
   },
 
   willDestroy: function() {

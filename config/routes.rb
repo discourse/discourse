@@ -216,6 +216,7 @@ Discourse::Application.routes.draw do
   get 't/:slug/:topic_id.rss' => 'topics#feed', format: :rss, constraints: {topic_id: /\d+/}
   get 't/:slug/:topic_id' => 'topics#show', constraints: {topic_id: /\d+/}
   get 't/:slug/:topic_id/:post_number' => 'topics#show', constraints: {topic_id: /\d+/, post_number: /\d+/}
+  get 't/:topic_id/posts' => 'topics#posts', constraints: {topic_id: /\d+/}
   post 't/:topic_id/timings' => 'topics#timings', constraints: {topic_id: /\d+/}
   post 't/:topic_id/invite' => 'topics#invite', constraints: {topic_id: /\d+/}
   post 't/:topic_id/move-posts' => 'topics#move_posts', constraints: {topic_id: /\d+/}

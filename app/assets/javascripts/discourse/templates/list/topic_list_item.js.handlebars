@@ -55,7 +55,7 @@
 
   <td class='num likes'>
     {{#if like_count}}
-      <a href='{{url}}{{#if has_best_of}}/best_of{{/if}}' title='{{i18n topic.likes count="like_count"}}'>{{like_count}} <i class='icon-lemon'></i></a>
+      <a href='{{url}}{{#if has_best_of}}?filter=best_of{{/if}}' title='{{i18n topic.likes count="like_count"}}'>{{like_count}} <i class='icon-lemon'></i></a>
     {{/if}}
   </td>
 

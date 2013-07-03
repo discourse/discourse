@@ -660,9 +660,12 @@ en:
   frequent_poster: "Frequent Poster"
 
   move_posts:
-    moderator_post:
+    new_topic_moderator_post:
       one: "I moved a post to a new topic: %{topic_link}"
       other: "I moved %{count} posts to a new topic: %{topic_link}"
+    existing_topic_moderator_post:
+      one: "I moved a post to an existing topic: %{topic_link}"
+      other: "I moved %{count} posts to an existing topic: %{topic_link}"
 
   topic_statuses:
     archived_enabled: "This topic is now archived. It is frozen and cannot be changed in any way."
@@ -868,6 +871,15 @@ en:
         This is an automated message from %{site_name} to inform you that your posts have been automatically hidden because they were flagged by the community.
 
         As a precautionary measure, your new account has been blocked from creating new replies or topics until a staff member can review your account.
+
+        For additional guidance, please refer to our [FAQ](%{base_url}/faq).
+
+    blocked_by_staff:
+      subject_template: "Account blocked"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to inform you that your account has been blocked by a staff member.
 
         For additional guidance, please refer to our [FAQ](%{base_url}/faq).
 

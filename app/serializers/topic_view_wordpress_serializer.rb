@@ -18,7 +18,7 @@ class TopicViewWordpressSerializer < ApplicationSerializer
   end
 
   def filtered_posts_count
-    object.filtered_posts_count
+    object.filtered_post_ids.size
   end
 
   def participants

@@ -8,7 +8,7 @@
 **/
 Discourse.NotificationsButton = Discourse.DropdownButtonView.extend({
   title: Em.String.i18n('topic.notifications.title'),
-  longDescriptionBinding: 'topic.notificationReasonText',
+  longDescriptionBinding: 'topic.details.notificationReasonText',
 
   dropDownContent: [
     [Discourse.Topic.NotificationLevel.WATCHING, 'topic.notifications.watching'],
@@ -19,7 +19,7 @@ Discourse.NotificationsButton = Discourse.DropdownButtonView.extend({
 
   text: function() {
     var key = (function() {
-      switch (this.get('topic.notification_level')) {
+      switch (this.get('topic.details.notification_level')) {
         case Discourse.Topic.NotificationLevel.WATCHING: return 'watching';
         case Discourse.Topic.NotificationLevel.TRACKING: return 'tracking';
         case Discourse.Topic.NotificationLevel.REGULAR: return 'regular';
@@ -36,10 +36,10 @@ Discourse.NotificationsButton = Discourse.DropdownButtonView.extend({
       }
     })();
     return icon + (Ember.String.i18n("topic.notifications." + key + ".title")) + "<span class='caret'></span>";
-  }.property('topic.notification_level'),
+  }.property('topic.details.notification_level'),
 
   clicked: function(id) {
-    return this.get('topic').updateNotifications(id);
+    return this.get('topic.details').updateNotifications(id);
   }
 
 });

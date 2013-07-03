@@ -40,7 +40,7 @@ Discourse.InvitePrivateController = Discourse.ObjectController.extend(Discourse.
       invitePrivateController.set('finished', true);
 
       if(result && result.user) {
-        invitePrivateController.get('content.allowed_users').pushObject(result.user);
+        invitePrivateController.get('content.details.allowed_users').pushObject(result.user);
       }
     }, function() {
       // Failure

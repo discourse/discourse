@@ -11,7 +11,6 @@ Discourse.Route.buildRoutes(function() {
   this.resource('topic', { path: '/t/:slug/:id' }, function() {
     this.route('fromParams', { path: '/' });
     this.route('fromParams', { path: '/:nearPost' });
-    this.route('bestOf', { path: '/best_of' });
   });
 
   // Generate static page routes

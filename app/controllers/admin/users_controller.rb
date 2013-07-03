@@ -96,13 +96,13 @@ class Admin::UsersController < Admin::AdminController
 
   def block
     guardian.ensure_can_block_user! @user
-    SpamRulesEnforcer.punish! @user
+    UserBlocker.block(@user, current_user)
     render nothing: true
   end
 
   def unblock
     guardian.ensure_can_unblock_user! @user
-    SpamRulesEnforcer.clear @user
+    UserBlocker.unblock(@user, current_user)
     render nothing: true
   end
 

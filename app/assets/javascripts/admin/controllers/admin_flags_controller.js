@@ -40,6 +40,7 @@ Discourse.AdminFlagsController = Ember.ArrayController.extend({
       bootbox.alert(Em.String.i18n("admin.flags.error"));
     });
   },
+
   /**
     Deletes a post
 

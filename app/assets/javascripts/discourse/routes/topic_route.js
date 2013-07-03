@@ -60,11 +60,9 @@ Discourse.TopicRoute = Discourse.Route.extend({
   },
 
   model: function(params) {
-    var currentModel, _ref;
-    if (currentModel = (_ref = this.controllerFor('topic')) ? _ref.get('content') : void 0) {
-      if (currentModel.get('id') === parseInt(params.id, 10)) {
-        return currentModel;
-      }
+    var currentModel = this.modelFor('topic');
+    if (currentModel && (currentModel.get('id') === parseInt(params.id, 10))) {
+      return currentModel;
     }
     return Discourse.Topic.create(params);
   },
@@ -85,23 +83,28 @@ Discourse.TopicRoute = Discourse.Route.extend({
     // Clear the search context
     this.controllerFor('search').set('searchContext', null);
 
-    var headerController, topicController;
-    topicController = this.controllerFor('topic');
-    topicController.cancelFilter();
-    topicController.unsubscribe();
+    var topicController = this.controllerFor('topic');
+    var postStream = topicController.get('postStream');
+    postStream.cancelFilter();
 
     topicController.set('multiSelect', false);
+    topicController.unsubscribe();
     this.controllerFor('composer').set('topic', null);
     Discourse.ScreenTrack.instance().stop();
 
+    var headerController;
     if (headerController = this.controllerFor('header')) {
       headerController.set('topic', null);
       headerController.set('showExtraInfo', false);
     }
+
+    // Clear any filters when we leave the route
+    Discourse.URL.set('queryParams', null);
   },
 
   setupController: function(controller, model) {
     controller.set('model', model);
+
     this.controllerFor('header').setProperties({
       topic: model,
       showExtraInfo: false

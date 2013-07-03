@@ -25,12 +25,11 @@ class TopicsController < ApplicationController
   caches_action :avatar, cache_path: Proc.new {|c| "#{c.params[:post_number]}-#{c.params[:topic_id]}" }
 
   def show
-
     # We'd like to migrate the wordpress feed to another url. This keeps up backwards compatibility with
     # existing installs.
     return wordpress if params[:best].present?
 
-    opts = params.slice(:username_filters, :best_of, :page, :post_number, :posts_before, :posts_after)
+    opts = params.slice(:username_filters, :filter, :page, :post_number)
     begin
       @topic_view = TopicView.new(params[:id] || params[:topic_id], current_user, opts)
     rescue Discourse::NotFound
@@ -52,7 +51,7 @@ class TopicsController < ApplicationController
   def wordpress
     params.require(:best)
     params.require(:topic_id)
-    params.permit(:min_trust_level, :min_score, :min_replies)
+    params.permit(:min_trust_level, :min_score, :min_replies, :bypass_trust_level_score)
 
     @topic_view = TopicView.new(
         params[:topic_id],
@@ -60,14 +59,23 @@ class TopicsController < ApplicationController
           best: params[:best].to_i,
           min_trust_level: params[:min_trust_level].nil? ? 1 : params[:min_trust_level].to_i,
           min_score: params[:min_score].to_i,
-          min_replies: params[:min_replies].to_i
+          min_replies: params[:min_replies].to_i,
+          bypass_trust_level_score: params[:bypass_trust_level_score].to_i # safe cause 0 means ignore
     )
 
     anonymous_etag(@topic_view.topic) do
       wordpress_serializer = TopicViewWordpressSerializer.new(@topic_view, scope: guardian, root: false)
       render_json_dump(wordpress_serializer)
     end
+  end
 
+
+  def posts
+    params.require(:topic_id)
+    params.require(:post_ids)
+
+    @topic_view = TopicView.new(params[:topic_id], current_user, post_ids: params[:post_ids])
+    render_json_dump(TopicViewPostsSerializer.new(@topic_view, scope: guardian, root: false))
   end
 
   def destroy_timings
