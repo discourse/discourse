@@ -165,7 +165,11 @@ class TopicQuery
       list = list.where(category_id: nil)
 
       if @user_id.present?
+<<<<<<< HEAD
         list.includes(:topic_users).order(TopicQuery.order_with_pinned_sql).references(:topic_users)
+=======
+        list.includes(:topic_users).order(TopicQuery.order_with_pinned_sql)
+>>>>>>> Adjust query generating to be compatible with Rails 4
       else
         list.order(TopicQuery.order_nocategory_basic_bumped)
       end
@@ -176,7 +180,11 @@ class TopicQuery
     create_list(:category, unordered: true) do |list|
       list = list.where(category_id: category.id)
       if @user_id.present?
+<<<<<<< HEAD
         list.includes(:topic_users).order(TopicQuery.order_with_pinned_sql).references(:topic_users)
+=======
+        list.includes(:topic_users).order(TopicQuery.order_with_pinned_sql)
+>>>>>>> Adjust query generating to be compatible with Rails 4
       else
         list.order(TopicQuery.order_basic_bumped)
       end
@@ -198,7 +206,7 @@ class TopicQuery
   def self.new_filter(list,treat_as_new_topic_start_date)
     list.where("topics.created_at >= :created_at", created_at: treat_as_new_topic_start_date)
         .includes(:topic_users).where("topic_users.last_read_post_number IS NULL").references(:topic_users).references(:topic_users)
-        .includes(:topic_users).where("COALESCE(topic_users.notification_level, :tracking) >= :tracking", tracking: TopicUser.notification_levels[:tracking]).references(:topic_users)
+        .where("COALESCE(topic_users.notification_level, :tracking) >= :tracking", tracking: TopicUser.notification_levels[:tracking]).references(:topic_users)
   end
 
   def new_results(list_opts={})
@@ -207,7 +215,7 @@ class TopicQuery
 
   def self.unread_filter(list)
     list.includes(:topic_users).where("topic_users.last_read_post_number < topics.highest_post_number").references(:topic_users)
-        .includes(:topic_users).where("COALESCE(topic_users.notification_level, :regular) >= :tracking", regular: TopicUser.notification_levels[:regular], tracking: TopicUser.notification_levels[:tracking]).references(:topic_users)
+        .where("COALESCE(topic_users.notification_level, :regular) >= :tracking", regular: TopicUser.notification_levels[:regular], tracking: TopicUser.notification_levels[:tracking]).references(:topic_users)
   end
 
   def unread_results(list_opts={})
@@ -237,7 +245,7 @@ class TopicQuery
       result = Topic
 
       if @user_id
-        result = result.joins("LEFT OUTER JOIN topic_users ON (topics.id = topic_users.topic_id AND topic_users.user_id = #{@user_id})")
+        result = result.includes(:topic_users).where("topic_users.user_id = #{@user_id}").references(:topic_users)
       end
 
       unless query_opts[:unordered]

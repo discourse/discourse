@@ -51,7 +51,7 @@ class IncomingLinksReport
   end
 
   def self.topic_count_per_user
-    per_user.count('incoming_links.topic_id', distinct: true)
+    per_user.distinct.count('incoming_links.topic_id')
   end
 
 
@@ -80,11 +80,11 @@ class IncomingLinksReport
   end
 
   def self.topic_count_per_domain
-    per_domain.count('topic_id', distinct: true)
+    per_domain.distinct.count('topic_id')
   end
 
   def self.user_count_per_domain
-    per_domain.count('user_id', distinct: true)
+    per_domain.distinct.count('user_id')
   end
 
 
