@@ -34,25 +34,13 @@ Discourse.Composer = Discourse.Model.extend({
     return Discourse.Site.instance().get('archetypes');
   }.property(),
 
-  creatingTopic: function() {
-    return this.get('action') === CREATE_TOPIC;
-  }.property('action'),
+  creatingTopic: Em.computed.equal('action', CREATE_TOPIC),
+  creatingPrivateMessage: Em.computed.equal('action', PRIVATE_MESSAGE),
+  editingPost: Em.computed.equal('action', EDIT),
+  replyingToTopic: Em.computed.equal('action', REPLY),
 
-  creatingPrivateMessage: function() {
-    return this.get('action') === PRIVATE_MESSAGE;
-  }.property('action'),
-
-  editingPost: function() {
-    return this.get('action') === EDIT;
-  }.property('action'),
-
-  replyingToTopic: function() {
-    return this.get('action') === REPLY;
-  }.property('action'),
-
-  viewOpen: function() {
-    return this.get('composeState') === OPEN;
-  }.property('composeState'),
+  viewOpen: Em.computed.equal('composeState', OPEN),
+  viewDraft: Em.computed.equal('composeState', DRAFT),
 
   archetype: function() {
     return this.get('archetypes').findProperty('id', this.get('archetypeId'));
@@ -154,9 +142,7 @@ Discourse.Composer = Discourse.Model.extend({
     return this.get('showPreview') ? Em.String.i18n('composer.hide_preview') : Em.String.i18n('composer.show_preview');
   }.property('showPreview'),
 
-  hidePreview: function() {
-    return !this.get('showPreview');
-  }.property('showPreview'),
+  hidePreview: Em.computed.not('showPreview'),
 
   // Whether to disable the post button
   cantSubmitPost: function() {
@@ -212,7 +198,7 @@ Discourse.Composer = Discourse.Model.extend({
 
   wouldLoseChanges: function() {
     return this.get('reply') !== this.get('originalText');
-  },
+  }.property('reply', 'save'),
 
   /*
      Open a composer
@@ -224,35 +210,33 @@ Discourse.Composer = Discourse.Model.extend({
        quote    - If we're opening a reply from a quote, the quote we're making
   */
   open: function(opts) {
-    var topicId;
     if (!opts) opts = {};
 
     this.set('loading', false);
-    if (opts.topic) {
-      topicId = opts.topic.get('id');
-    }
 
-    var replyBlank = (this.get("reply") || "") === "";
+    var replyBlank = Em.isEmpty(this.get("reply"));
+
     var composer = this;
     if (!replyBlank &&
         (opts.action !== this.get('action') || ((opts.reply || opts.action === this.EDIT) && this.get('reply') !== this.get('originalText'))) &&
         !opts.tested) {
       opts.tested = true;
-      this.cancel(function() {
-        return composer.open(opts);
-      });
+      this.cancel(function() { composer.open(opts); });
       return;
     }
 
-    this.set('draftKey', opts.draftKey);
-    this.set('draftSequence', opts.draftSequence);
     if (!opts.draftKey) throw 'draft key is required';
     if (opts.draftSequence === null) throw 'draft sequence is required';
 
-    this.set('composeState', opts.composerState || OPEN);
-    this.set('action', opts.action);
-    this.set('topic', opts.topic);
-    this.set('targetUsernames', opts.usernames);
+    this.setProperties({
+      draftKey: opts.draftKey,
+      draftSequence: opts.draftSequence,
+      composeState: opts.composerState || OPEN,
+      action: opts.action,
+      topic: opts.topic,
+      targetUsernames: opts.usernames
+    });
+
     if (opts.post) {
       this.set('post', opts.post);
       if (!this.get('topic')) {
@@ -260,10 +244,13 @@ Discourse.Composer = Discourse.Model.extend({
       }
     }
 
-    this.set('categoryName', opts.categoryName || this.get('topic.category.name'));
-    this.set('archetypeId', opts.archetypeId || Discourse.Site.instance().get('default_archetype'));
-    this.set('metaData', opts.metaData ? Em.Object.create(opts.metaData) : null);
-    this.set('reply', opts.reply || this.get("reply") || "");
+    this.setProperties({
+      categoryName: opts.categoryName || this.get('topic.category.name'),
+      archetypeId: opts.archetypeId || Discourse.Site.instance().get('default_archetype'),
+      metaData: opts.metaData ? Em.Object.create(opts.metaData) : null,
+      reply: opts.reply || this.get("reply") || ""
+    });
+
     if (opts.postId) {
       this.set('loading', true);
       Discourse.Post.load(opts.postId).then(function(result) {
@@ -274,24 +261,22 @@ Discourse.Composer = Discourse.Model.extend({
 
     // If we are editing a post, load it.
     if (opts.action === EDIT && opts.post) {
-      this.set('title', this.get('topic.title'));
-      this.set('loading', true);
+      this.setProperties({
+        title: this.get('topic.title'),
+        loading: true
+      });
+
       Discourse.Post.load(opts.post.get('id')).then(function(result) {
-        composer.set('reply', result.get('raw'));
-        composer.set('originalText', composer.get('reply'));
-        composer.set('loading', false);
+        composer.setProperties({
+          reply: result.get('raw'),
+          originalText: composer.get('reply'),
+          loading: false
+        });
       });
     }
+    if (opts.title) { this.set('title', opts.title); }
+    this.set('originalText', opts.draft ? '' : this.get('reply'));
 
-    if (opts.title) {
-      this.set('title', opts.title);
-    }
-
-    if (opts.draft) {
-      this.set('originalText', '');
-    } else if (opts.reply) {
-      this.set('originalText', this.get('reply'));
-    }
     return false;
   },
 
@@ -316,14 +301,18 @@ Discourse.Composer = Discourse.Model.extend({
       topic.save();
     }
 
-    post.set('raw', this.get('reply'));
-    post.set('imageSizes', opts.imageSizes);
-    post.set('cooked', $('#wmd-preview').html());
+    post.setProperties({
+      raw: this.get('reply'),
+      imageSizes: opts.imageSizes,
+      cooked: $('#wmd-preview').html()
+    });
     this.set('composeState', CLOSED);
 
     return Ember.Deferred.promise(function(promise) {
       post.save(function(savedPost) {
         var posts = composer.get('topic.posts');
+
+        composer.set('originalText', composer.get('reply'));
 
         // perhaps our post came from elsewhere eg. draft
         var idx = -1;
