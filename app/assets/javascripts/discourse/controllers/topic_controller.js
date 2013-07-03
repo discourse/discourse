@@ -90,7 +90,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   },
 
   selectAll: function() {
-    var posts = this.get('posts');
+    var posts = this.get('postStream.posts');
     var selectedPosts = this.get('selectedPosts');
     if (posts) {
       selectedPosts.addObjects(posts);
