@@ -18,6 +18,10 @@ TopicStatusUpdate = Struct.new(:topic, :user) do
     else
       topic.update_column status.name, status.enabled?
     end
+
+    if status.manually_closing_topic? && topic.auto_close_at
+      topic.reload.set_auto_close(nil).save
+    end
   end
 
   def create_moderator_post_for(status)
@@ -56,6 +60,10 @@ TopicStatusUpdate = Struct.new(:topic, :user) do
 
     def reopening_topic?
       (closed? || autoclosed?) && disabled?
+    end
+
+    def manually_closing_topic?
+      closed? && enabled?
     end
   end
 end

@@ -30,13 +30,13 @@ describe Topic do
     context 'uncategorized' do
       Given(:category) { nil }
       Then { topic.auto_close_at.should be_nil }
-      And { scheduled_jobs_for(:close_topic).should be_empty }
+      And  { scheduled_jobs_for(:close_topic).should be_empty }
     end
 
     context 'category without default auto-close' do
       Given(:category) { Fabricate(:category, auto_close_days: nil) }
       Then { topic.auto_close_at.should be_nil }
-      And { scheduled_jobs_for(:close_topic).should be_empty }
+      And  { scheduled_jobs_for(:close_topic).should be_empty }
     end
 
     context 'jobs may be queued' do
@@ -52,14 +52,20 @@ describe Topic do
       context 'category has a default auto-close' do
         Given(:category) { Fabricate(:category, auto_close_days: 2.0) }
         Then { topic.auto_close_at.should == 2.days.from_now }
-        And { topic.auto_close_started_at.should == Time.zone.now }
-        And { scheduled_jobs_for(:close_topic, {topic_id: topic.id}).should have(1).job }
-        And { scheduled_jobs_for(:close_topic, {topic_id: category.topic.id}).should be_empty }
+        And  { topic.auto_close_started_at.should == Time.zone.now }
+        And  { scheduled_jobs_for(:close_topic, {topic_id: topic.id}).should have(1).job }
+        And  { scheduled_jobs_for(:close_topic, {topic_id: category.topic.id}).should be_empty }
 
         context 'topic was created by staff user' do
           Given(:admin) { Fabricate(:admin) }
           Given(:staff_topic) { Fabricate(:topic, user: admin, category: category) }
           Then { scheduled_jobs_for(:close_topic, {topic_id: staff_topic.id, user_id: admin.id}).should have(1).job }
+
+          context 'topic is closed manually' do
+            When { staff_topic.update_status('closed', true, admin) }
+            Then { staff_topic.reload.auto_close_at.should be_nil }
+            And  { staff_topic.auto_close_started_at.should be_nil }
+          end
         end
 
         context 'topic was created by a non-staff user' do
