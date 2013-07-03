@@ -161,13 +161,24 @@ class TopicView
 
     min_trust_level = opts[:min_trust_level]
     if min_trust_level && min_trust_level > 0
-      @posts = @posts.where('COALESCE(users.trust_level,0) >= ?', min_trust_level)
+
+      bypass_trust_level_score = opts[:bypass_trust_level_score]
+
+      if bypass_trust_level_score && bypass_trust_level_score > 0
+        @posts = @posts.where('COALESCE(users.trust_level,0) >= ? OR posts.score >= ?',
+                    min_trust_level,
+                    bypass_trust_level_score
+                 )
+      else
+        @posts = @posts.where('COALESCE(users.trust_level,0) >= ?', min_trust_level)
+      end
     end
 
     min_score = opts[:min_score]
     if min_score && min_score > 0
       @posts = @posts.where('posts.score >= ?', min_score)
     end
+
 
     @posts = @posts.to_a
     @posts.sort!{|a,b| a.post_number <=> b.post_number}

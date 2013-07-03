@@ -24,6 +24,7 @@ describe TopicView do
     let!(:p3) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 0 )}
 
     it "it can find the best responses" do
+
       best2 = TopicView.new(topic.id, coding_horror, best: 2)
       best2.posts.count.should == 2
       best2.posts[0].id.should == p2.id
@@ -49,6 +50,16 @@ describe TopicView do
 
       # should filter out everything if min replies not met
       best = TopicView.new(topic.id, nil, best: 99, min_replies: 99)
+      best.posts.count.should == 0
+
+      # should punch through posts if the score is high enough
+      p2.update_column(:score, 100)
+
+      best = TopicView.new(topic.id, nil, best: 99, bypass_trust_level_score: 100, min_trust_level: coding_horror.trust_level + 1)
+      best.posts.count.should == 1
+
+      # 0 means ignore
+      best = TopicView.new(topic.id, nil, best: 99, bypass_trust_level_score: 0, min_trust_level: coding_horror.trust_level + 1)
       best.posts.count.should == 0
     end
 
