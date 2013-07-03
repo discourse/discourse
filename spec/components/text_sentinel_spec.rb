@@ -90,7 +90,11 @@ describe TextSentinel do
       TextSentinel.new("jfewjfoejwfojeojfoejofjeo3" * 5, max_word_length: 30).should_not be_valid
     end
 
-    it "doesn't except junk symbols as a string" do
+    it "does allow a long alphanumeric string joined with slashes" do
+      TextSentinel.new("gdfgdfgdfg/fgdfgdfgdg/dfgdfgdfgd/dfgdfgdfgf", max_word_length: 30).should be_valid
+    end
+
+    it "doesn't accept junk symbols as a string" do
       TextSentinel.new("[[[").should_not be_valid
       TextSentinel.new("<<<").should_not be_valid
       TextSentinel.new("{{$!").should_not be_valid
