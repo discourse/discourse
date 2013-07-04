@@ -25,7 +25,7 @@ Discourse.ActionsHistoryView = Discourse.View.extend({
     if (!this.present('content')) return;
     return this.get('content').forEach(function(c) {
       var actionString, iconsHtml;
-      buffer.push("<div class='post-actions'>");
+      buffer.push("<div class='post-actions'><span class='like-actions'>");
 
       // TODO multi line expansion for flags
       var postUrl;
@@ -67,7 +67,7 @@ Discourse.ActionsHistoryView = Discourse.View.extend({
         buffer.push(" <a href='#' data-clear-flags='" + (c.get('id')) + "'>" + (Em.String.i18n("post.actions.clear_flags", { count: c.count })) + "</a>.");
       }
 
-      buffer.push("</div>");
+      buffer.push("</span></div>");
     });
   },
 

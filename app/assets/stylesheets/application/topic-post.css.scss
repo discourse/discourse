@@ -10,7 +10,6 @@
   }
 }
 
-
 @include medium-width {
   #selected-posts {
     margin-left: 330px;
@@ -21,14 +20,12 @@
   }
 }
 
-
 @include large-width {
   #selected-posts {
     margin-left: 275px;
     width: 20%;
   }
 }
-
 
 #selected-posts {
   position: fixed;
@@ -77,7 +74,6 @@
   }
 }
 
-
 @include medium-width {
   .topic-post {
     .gutter {
@@ -85,7 +81,6 @@
     }
   }
 }
-
 
 .topic-post {
   margin-bottom: 8px;
@@ -96,22 +91,22 @@
     .gutter {
       .reply-new,
       .track-link {
-        opacity:1;
+        opacity: 1;
       }
     }
   }
 
   .gutter {
-    .reply-new{
+    .reply-new {
       .discourse-no-touch & {
         opacity: 0;
       }
       .discourse-touch & {
         opacity: 1;
       }
-      transition:opacity 1s linear;
-      -webkit-transition:opacity 1s linear;
-      }
+      transition: opacity 1s linear;
+      -webkit-transition: opacity 1s linear;
+    }
     .reply-new,
     .track-link {
       display: inline-block;
@@ -177,7 +172,7 @@
             display: none;
           }
         }
-        &:after{
+        &:after {
           border-right-color: #eef0ff;
         }
       }
@@ -292,7 +287,7 @@
       }
       button.create {
         color: $attention_fg;
-        font-weight:bold;
+        font-weight: bold;
         background-color: $attention_bg;
         &:hover {
           color: darken($attention_fg, 4%);
@@ -574,6 +569,16 @@
           margin-right: 2px;
         }
       }
+      .like-actions {
+        background-color: #FAFAFA;
+        border-style: solid;
+        border-width: thin;
+        border-color: #b9b9b9;
+        @include border-radius-all(4px);
+        padding: 3px;
+        display: inline-block;
+
+      }
       footer {
         padding-left: 35px;
       }
@@ -587,7 +592,6 @@
     @include border-radius-top(0);
   }
 }
-
 
 .topic-body {
   position: relative;
@@ -788,7 +792,6 @@
     content: "\f0e0";
   }
 }
-
 
 .secure_category .gutter {
   position: relative;
