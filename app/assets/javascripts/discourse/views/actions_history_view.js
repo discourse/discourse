@@ -25,7 +25,7 @@ Discourse.ActionsHistoryView = Discourse.View.extend({
     if (!this.present('content')) return;
     return this.get('content').forEach(function(c) {
       var actionString, iconsHtml;
-      buffer.push("<div class='post-action'>");
+      buffer.push("<div class='post-actions'>");
 
       // TODO multi line expansion for flags
       var postUrl;
