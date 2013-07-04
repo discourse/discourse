@@ -255,7 +255,6 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     @method updatePosition
   **/
   updatePosition: function() {
-
     this.processSeenPosts();
 
     var offset = window.pageYOffset || $('html').scrollTop();
@@ -277,7 +276,10 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     // Dock the counter if necessary
     var $lastPost = $('article[data-post-id=' + topic.get('postStream.lastPostId') + "]");
     var lastPostOffset = $lastPost.offset();
-    if (!lastPostOffset) { return; }
+    if (!lastPostOffset) {
+      this.set('controller.dockedCounter', false);
+      return;
+    }
     this.set('controller.dockedCounter', (offset >= (lastPostOffset.top + $lastPost.height()) - $(window).height()));
   },
 
