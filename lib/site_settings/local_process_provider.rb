@@ -2,7 +2,7 @@ module SiteSettings; end
 
 class SiteSettings::LocalProcessProvider
 
-  Setting = Struct.new(:name, :value, :data_type)
+  Setting = Struct.new(:name, :value, :data_type) unless defined? SiteSettings::LocalProcessProvider::Setting
 
   def initialize
     @settings = {}
