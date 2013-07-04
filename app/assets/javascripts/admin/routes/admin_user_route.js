@@ -18,7 +18,7 @@ Discourse.AdminUserRoute = Discourse.Route.extend(Discourse.ModelReady, {
 
   setupController: function(controller, model) {
     controller.set('model', model);
-    controller.set('originalTrustLevel', model.trust_level);
+    model.setOriginalTrustLevel();
   },
 
   renderTemplate: function() {

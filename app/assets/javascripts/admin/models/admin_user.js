@@ -67,6 +67,10 @@ Discourse.AdminUser = Discourse.User.extend({
     return site.get('trust_levels').findProperty('id', this.get('trust_level'));
   }.property('trust_level'),
 
+  setOriginalTrustLevel: function() {
+    this.set('originalTrustLevel', this.get('trust_level'));
+  },
+
   trustLevels: function() {
     var site = Discourse.Site.instance();
     return site.get('trust_levels');
