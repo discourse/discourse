@@ -78,6 +78,10 @@ module ApplicationHelper
       end
     end
 
+    # Add workaround tag for Yandex crawler
+    # (see http://help.yandex.ru/webmaster/?id=1125296)
+    result << tag('meta', name: "fragment", content: "!") if SiteSetting.yandex_workaround
+
     result
   end
 
