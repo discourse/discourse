@@ -31,7 +31,6 @@ task 'integration:create_fixtures' => :environment do
 
     File.write(filename, content)
   end
-
 end
 
 
