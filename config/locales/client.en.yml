@@ -1058,8 +1058,6 @@ en:
           action_type_6:
             one: "custom"
             other: "custom x{{count}}"
-            one: "spam"
-            other: "spam x{{count}}"
           action_type_7:
             one: "custom"
             other: "custom x{{count}}"
