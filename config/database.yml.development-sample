@@ -6,6 +6,7 @@ development:
   pool: 5
   timeout: 5000
   host_names:
+    # /!\ Make sure you *also* restart sidekiq if you change this setting /!\
     - "localhost"
 
 # Warning: The database defined as "test" will be erased and
@@ -29,6 +30,7 @@ production:
   pool: 5
   timeout: 5000
   host_names:
+    # /!\ Make sure you *also* restart sidekiq if you change this setting /!\
     - production.localhost # Update this to be the domain of your production site
 
 profile:
