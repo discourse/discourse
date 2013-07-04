@@ -202,6 +202,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
   **/
   open: function(opts) {
     if (!opts) opts = {};
+
     var promise = opts.promise || Ember.Deferred.create();
     opts.promise = promise;
     this.set('typedReply', false);
@@ -273,7 +274,8 @@ Discourse.ComposerController = Discourse.Controller.extend({
       }
     }
 
-    composer = composer || Discourse.Composer.open(opts);
+    composer = composer || Discourse.Composer.create();
+    composer.open(opts);
     this.set('model', composer);
     composer.set('composeState', Discourse.Composer.OPEN);
     promise.resolve();

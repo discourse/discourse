@@ -7,19 +7,17 @@
   @module Discourse
 **/
 
-var CLOSED, CREATE_TOPIC, DRAFT, EDIT, OPEN, PRIVATE_MESSAGE, REPLY, REPLY_AS_NEW_TOPIC_KEY, SAVING;
+var CLOSED = 'closed',
+    SAVING = 'saving',
+    OPEN = 'open',
+    DRAFT = 'draft',
 
-CLOSED = 'closed';
-SAVING = 'saving';
-OPEN = 'open';
-DRAFT = 'draft';
-
-// The actions the composer can take
-CREATE_TOPIC = 'createTopic';
-PRIVATE_MESSAGE = 'privateMessage';
-REPLY = 'reply';
-EDIT = 'edit';
-REPLY_AS_NEW_TOPIC_KEY = "reply_as_new_topic";
+    // The actions the composer can take
+    CREATE_TOPIC = 'createTopic',
+    PRIVATE_MESSAGE = 'privateMessage',
+    REPLY = 'reply',
+    EDIT = 'edit',
+    REPLY_AS_NEW_TOPIC_KEY = "reply_as_new_topic";
 
 Discourse.Composer = Discourse.Model.extend({
 
@@ -70,23 +68,14 @@ Discourse.Composer = Discourse.Model.extend({
     Discourse.KeyValueStore.set({ key: 'composer.showPreview', value: this.get('showPreview') });
   },
 
-  // Import a quote from the post
   importQuote: function() {
-    var post = this.get('post');
-
-    // If we don't have a post, check the topic for the first one
-    if (!post) {
-      var posts = this.get('topic.posts');
-      if (posts && posts.length > 0) {
-        post = posts[0];
-      }
-    }
-
-    if (post) {
+    // If there is no current post, use the post id from the stream
+    var postId = this.get('post.id') || this.get('topic.postStream.firstPostId');
+    if (postId) {
       this.set('loading', true);
       var composer = this;
-      Discourse.Post.load(post.get('id')).then(function(result) {
-        composer.appendText(Discourse.BBCode.buildQuoteBBCode(post, result.get('raw')));
+      return Discourse.Post.load(postId).then(function(post) {
+        composer.appendText(Discourse.BBCode.buildQuoteBBCode(post, post.get('raw')));
         composer.set('loading', false);
       });
     }
@@ -211,7 +200,6 @@ Discourse.Composer = Discourse.Model.extend({
   */
   open: function(opts) {
     if (!opts) opts = {};
-
     this.set('loading', false);
 
     var replyBlank = Em.isEmpty(this.get("reply"));
@@ -221,7 +209,7 @@ Discourse.Composer = Discourse.Model.extend({
         (opts.action !== this.get('action') || ((opts.reply || opts.action === this.EDIT) && this.get('reply') !== this.get('originalText'))) &&
         !opts.tested) {
       opts.tested = true;
-      this.cancel(function() { composer.open(opts); });
+      //composer.cancel(function() { composer.open(opts); });
       return;
     }
 
@@ -288,16 +276,18 @@ Discourse.Composer = Discourse.Model.extend({
 
   // When you edit a post
   editPost: function(opts) {
-    var post = this.get('post');
-    var oldCooked = post.get('cooked');
-    var composer = this;
+    var post = this.get('post'),
+        oldCooked = post.get('cooked'),
+        composer = this;
 
     // Update the title if we've changed it
     if (this.get('title') && post.get('post_number') === 1) {
       var topic = this.get('topic');
-      topic.set('title', this.get('title'));
-      topic.set('fancy_title', this.get('title'));
-      topic.set('categoryName', this.get('categoryName'));
+      topic.setProperties({
+        title: this.get('title'),
+        fancy_title: this.get('title'),
+        categoryName: this.get('categoryName')
+      });
       topic.save();
     }
 
@@ -310,24 +300,9 @@ Discourse.Composer = Discourse.Model.extend({
 
     return Ember.Deferred.promise(function(promise) {
       post.save(function(savedPost) {
-        var posts = composer.get('topic.posts');
-
-        composer.set('originalText', composer.get('reply'));
-
-        // perhaps our post came from elsewhere eg. draft
-        var idx = -1;
-        var postNumber = post.get('post_number');
-        _.each(posts,function(p,i) {
-          if (p.get('post_number') === postNumber) {
-            idx = i;
-          }
-        });
-        if (idx > -1) {
-          savedPost.set('topic', composer.get('topic'));
-          posts.replace(idx, 1, [savedPost]);
-          promise.resolve({ post: post });
-          composer.set('topic.draft_sequence', savedPost.draft_sequence);
-        }
+        composer.set('originalText', '');
+        composer.set('reply', '');
+        composer.set('post', null);
       }, function(error) {
         var response = $.parseJSON(error.responseText);
         if (response && response.errors) {
@@ -402,8 +377,12 @@ Discourse.Composer = Discourse.Model.extend({
           saving = false;
         }
 
-        composer.set('reply', '');
-        composer.set('createdPost', createdPost);
+        composer.setProperties({
+          reply: '',
+          createdPost: createdPost,
+          title: ''
+        });
+
         if (addedToStream) {
           composer.set('composeState', CLOSED);
         } else if (saving) {
