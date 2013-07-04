@@ -67,6 +67,37 @@ Discourse.AdminUser = Discourse.User.extend({
     return site.get('trust_levels').findProperty('id', this.get('trust_level'));
   }.property('trust_level'),
 
+  setOriginalTrustLevel: function() {
+    this.set('originalTrustLevel', this.get('trust_level'));
+  },
+
+  trustLevels: function() {
+    var site = Discourse.Site.instance();
+    return site.get('trust_levels');
+  }.property('trust_level'),
+
+  dirty: function() {
+    return this.get('originalTrustLevel') !== parseInt(this.get('trustLevel.id'), 10);
+  }.property('originalTrustLevel', 'trustLevel.id'),
+
+  saveTrustLevel: function() {
+    Discourse.ajax("/admin/users/" + this.id + "/trust_level", {
+      type: 'PUT',
+      data: {level: this.get('trustLevel.id')}
+    }).then(function () {
+      // succeeded
+      window.location.reload();
+    }, function(e) {
+      // failure
+      var error = Em.String.i18n('admin.user.trust_level_change_failed', { error: "http: " + e.status + " - " + e.body });
+      bootbox.alert(error);
+    });
+  },
+
+  restoreTrustLevel: function() {
+    this.set('trustLevel.id', this.get('originalTrustLevel'));
+  },
+
   isBanned: (function() {
     return this.get('is_banned') === true;
   }).property('is_banned'),

@@ -137,6 +137,10 @@ class Guardian
     user && is_staff?
   end
 
+  def can_change_trust_level?(user)
+    can_administer?(user)
+  end
+
   def can_block_user?(user)
     user && is_staff? && not(user.staff?)
   end
