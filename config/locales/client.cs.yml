@@ -34,14 +34,6 @@ cs:
           one:   "1d"
           few:   "%{count}d"
           other: "%{count}d"
-        about_x_months:
-          one:   "1měs"
-          few:   "%{count}měs"
-          other: "%{count}měs"
-        x_months:
-          one:   "1měs"
-          few:   "%{count}měs"
-          other: "%{count}měs"
         about_x_years:
           one:   "1r"
           few:   "%{count}r"
@@ -95,6 +87,7 @@ cs:
     yes_value: "Ano"
     of_value: "z"
     generic_error: "Bohužel nastala chyba."
+    generic_error_with_reason: "Nastala chyba: %{error}"
     log_in: "Přihlásit se"
     age: "Věk"
     last_post: "Poslední příspěvek"
@@ -103,6 +96,7 @@ cs:
     show_more: "zobrazit více"
     links: Odkazy
     faq: "FAQ"
+    privacy_policy: "Ochrana soukromí"
     you: "Vy"
     or: "nebo"
     now: "právě teď"
@@ -193,6 +187,8 @@ cs:
       bio: "O mně"
       invited_by: "Poznánka od"
       trust_level: "Věrohodnost"
+      notifications: "Oznámení"
+      dynamic_favicon: "Zobrazovat notifikace na favikoně"
       external_links_in_new_tab: "Otevírat všechny externí odkazy do nové záložky"
       enable_quoting: "Povolit odpověď s citací z označeného textu"
 
@@ -317,6 +313,8 @@ cs:
       avatar:
         title: "Avatar"
         instructions: "Používáme službu <a href='https://gravatar.com' target='_blank'>Gravatar</a> pro zobrazení avataru podle vaší emailové adresy"
+      title:
+        title: "Nadpis"
 
       filters:
         all: "Vše"
@@ -574,8 +572,14 @@ cs:
       not_found:
         title: "Téma nenalezeno"
         description: "Bohužel se nám nepovedlo najít toto téma. Nebylo odstraněno moderátorem?"
-      unread_posts: "máte {{unread}} nepřečtených příspěvků v tomto tématu"
-      new_posts: "je zde {{new_posts}} nových příspěvků od doby, kdy jste toto téma naposledy četli"
+      unread_posts:
+        one: "máte 1 nepřečtený příspěvěk v tomto tématu"
+        few: "máte {{count}} nepřečtené příspěvky v tomto tématu"
+        other: "máte {{count}} nepřečtených příspěvků v tomto tématu"
+      new_posts:
+        one: "je zde 1 nový příspěvek od doby, kdy jste toto téma naposledy četli"
+        few: "jsou zde {{count}} nové příspěvky od doby, kdy jste toto téma naposledy četli"
+        other: "je zde {{count}} nových příspěvků od doby, kdy jste toto téma naposledy četli"
 
       likes:
         one: "je zde 1x 'líbí' v tomto tématu"
@@ -773,6 +777,8 @@ cs:
         edit: "Bohužel nastala chyba při editaci příspěvku. Prosím zkuste to znovu."
         upload: "Bohužel nastala chyba při nahrávání příspěvku. Prosím zkuste to znovu."
         upload_too_large: "Soubor, který se snažíte nahrát je bohužel příliš velký (maximální velikost je {{max_size_kb}}kb). Prosím zmenšete ho zkuste to znovu."
+        too_many_uploads: "Bohužel, najednou smíte nahrát jen jeden soubor."
+        upload_not_authorized: "Bohužel, soubor, který se snažíte nahrát, není povolený (povolené přípony: {{authorized_extensions}})."
 
       abandon: "Opravdu chcete opustit váš příspěvek?"
 
@@ -1080,20 +1086,55 @@ cs:
         title: "Nahlášení"
         old: "Staré"
         active: "Aktivní"
-        clear: "Vynulovat nahlášení"
-        clear_title: "zrušit všechna nahlášení na tomto příspěvku (zviditelní příspěvek, byl-li skrytý)"
-        delete: "Odstranit příspěvek"
-        delete_title: "odstranit příspěvek (smaže celé téma, je-li to první příspěvek v tématu)"
+
+        agree_hide: "Souhlas (skrýt příspěvek + odeslat SZ)"
+        agree_hide_title: "Skrýt tento příspěvek a automaticky odeslat soukromou zprávu, která uživatele žádá o editaci"
+        defer: "Odložit"
+        defer_title: "Není zapotřebí žádná akce, odloží toto nahlášení na později"
+        delete_post: "Smazat příspěvek"
+        delete_post_title: "Odstraní příspěvek; je-li to první příspěvek v tématu, odstraní celé téma"
+        disagree_unhide: "Nesouhlas (znovu zobrazí příspěvek)"
+        disagree_unhide_title: "Odstraní všechna nahlášení na tomto příspěvku a znovu ho zviditelní"
+        disagree: "Nesouhlas"
+        disagree_title: "Nesouhlas s nahlášením, odstraní všechna nahlášení na tomto příspěvku"
+
         flagged_by: "Nahlásil"
         error: "Něco se pokazilo"
         view_message: "zobrazit zprávu"
         no_results: "Nejsou zde žádná nahlášení."
+
+        summary:
+          action_type_3:
+            one: "off-topic"
+            few: "off-topic x{{count}}"
+            other: "off-topic x{{count}}"
+          action_type_4:
+            one: "nevhodné"
+            few: "nevhodné x{{count}}"
+            other: "nevhodné x{{count}}"
+          action_type_6:
+            one: "vlastní"
+            few: "vlastní x{{count}}"
+            other: "vlastní x{{count}}"
+            one: "spam"
+            few: "spam x{{count}}"
+            other: "spam x{{count}}"
+          action_type_7:
+            one: "vlastní"
+            few: "vlastní x{{count}}"
+            other: "vlastní x{{count}}"
+          action_type_8:
+            one: "spam"
+            few: "spam x{{count}}"
+            other: "spam x{{count}}"
 
       groups:
         title: "Skupiny"
         edit: "Editovat Skupiny"
         selector_placeholder: "přidat uživatele"
         name_placeholder: "Název skupiny, bez mezer, stejná pravidla jako pro uživatelská jména"
+        about: "Zde můžete upravit názvy skupin a členství"
+        can_not_edit_automatic: "Členství v automatických skupinách se přiděluje samo, administrátoři mohou přidělit další role a důveryhodnost uživatelům"
 
       api:
         title: "API"
@@ -1185,6 +1226,8 @@ cs:
         admin: "Administrátor?"
         blocked: "Zablokovaný?"
         show_admin_profile: "Administrace"
+        edit_title: "Upravit nadpis"
+        save_title: "Uložit nadpis"
         refresh_browsers: "Vynutit obnovení prohlížeče"
         show_public_profile: "Zobrazit veřejný profil"
         impersonate: 'Vydávat se za uživatele'
