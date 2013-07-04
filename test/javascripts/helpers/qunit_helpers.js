@@ -1,5 +1,5 @@
 function integration(name) {
-  module(name, {
+  module("Integration: " + name, {
     setup: function() {
       sinon.stub(Discourse.ScrollingDOMMethods, "bindOnScroll");
       sinon.stub(Discourse.ScrollingDOMMethods, "unbindOnScroll");

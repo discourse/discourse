@@ -1,6 +1,6 @@
 integration("View Topic");
 
-test("View a Topic", function() {
+test("Enter a Topic", function() {
 
   visit("/t/internationalization-localization/280").then(function() {
     expect(2);

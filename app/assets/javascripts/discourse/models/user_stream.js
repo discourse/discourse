@@ -17,7 +17,7 @@ Discourse.UserStream = Discourse.Model.extend({
   }.observes('filter'),
 
   findItems: function() {
-    var url = Discourse.getURL("/user_actions?offset=") + this.get('itemsLoaded') + "&username=" + (this.get('user.username_lower'));
+    var url = Discourse.getURL("/user_actions.json?offset=") + this.get('itemsLoaded') + "&username=" + (this.get('user.username_lower'));
     if (this.get('filter')) {
       url += "&filter=" + (this.get('filter'));
     }
