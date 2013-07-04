@@ -6,6 +6,29 @@ class PostTiming < ActiveRecord::Base
   validates_presence_of :msecs
 
 
+  def self.pretend_read(topic_id, actual_read_post_number, pretend_read_post_number)
+    # This is done in SQL cause the logic is quite tricky and we want to do this in one db hit
+    #
+    exec_sql("INSERT INTO post_timings(topic_id, user_id, post_number, msecs)
+              SELECT :topic_id, user_id, :pretend_read_post_number, 1
+              FROM post_timings pt
+              WHERE topic_id = :topic_id AND
+                    post_number = :actual_read_post_number AND
+                    NOT EXISTS (
+                        SELECT 1 FROM post_timings pt1
+                        WHERE pt1.topic_id = pt.topic_id AND
+                              pt1.post_number = :pretend_read_post_number AND
+                              pt1.user_id = pt.user_id
+                    )
+             ",
+                pretend_read_post_number: pretend_read_post_number,
+                topic_id: topic_id,
+                actual_read_post_number: actual_read_post_number
+            )
+
+    TopicUser.ensure_consistency!(topic_id)
+  end
+
   # Increases a timer if a row exists, otherwise create it
   def self.record_timing(args)
     rows = exec_sql_row_count("UPDATE post_timings

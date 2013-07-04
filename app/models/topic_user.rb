@@ -204,8 +204,8 @@ class TopicUser < ActiveRecord::Base
     end
   end
 
-  def self.ensure_consistency!
-    exec_sql <<SQL
+  def self.ensure_consistency!(topic_id=nil)
+    builder = SqlBuilder.new <<SQL
 UPDATE topic_users t
   SET
     last_read_post_number = last_read,
@@ -219,13 +219,23 @@ JOIN (
   SELECT p.topic_id, MAX(p.post_number) max_post_number from posts p
   GROUP BY p.topic_id
 ) as Y on Y.topic_id = X.topic_id
-WHERE X.topic_id = t.topic_id AND
-      X.user_id = t.user_id AND
-      (
-        last_read_post_number <> last_read OR
-        seen_post_count <> LEAST(max_post_number,GREATEST(t.seen_post_count, last_read))
-      )
+/*where*/
 SQL
+
+    builder.where <<SQL
+X.topic_id = t.topic_id AND
+X.user_id = t.user_id AND
+(
+  last_read_post_number <> last_read OR
+  seen_post_count <> LEAST(max_post_number,GREATEST(t.seen_post_count, last_read))
+)
+SQL
+
+    if topic_id
+      builder.where("t.topic_id = :topic_id", topic_id: topic_id)
+    end
+
+    builder.exec
   end
 
 end

@@ -8,6 +8,61 @@ describe PostTiming do
   it { should validate_presence_of :post_number }
   it { should validate_presence_of :msecs }
 
+  describe 'pretend_read' do
+    let!(:p1) { Fabricate(:post) }
+    let!(:p2) { Fabricate(:post, topic: p1.topic, user: p1.user) }
+    let!(:p3) { Fabricate(:post, topic: p1.topic, user: p1.user) }
+
+    let :topic_id do
+      p1.topic_id
+    end
+
+    def timing(user_id, post_number)
+      PostTiming.create!(topic_id: topic_id, user_id: user_id, post_number: post_number, msecs: 0)
+    end
+
+    def topic_user(user_id, last_read_post_number, seen_post_count)
+      TopicUser.create!(
+                        topic_id: topic_id,
+                        user_id: user_id,
+                        last_read_post_number: last_read_post_number,
+                        seen_post_count: seen_post_count
+                       )
+    end
+
+    it 'works correctly' do
+      timing(1,1)
+      timing(2,1)
+      timing(2,2)
+      timing(3,1)
+      timing(3,2)
+      timing(3,3)
+
+      tu_one = topic_user(1,1,1)
+      tu_two = topic_user(2,2,2)
+      tu_three = topic_user(3,3,3)
+
+      PostTiming.pretend_read(topic_id, 2, 3)
+
+      PostTiming.where(topic_id: topic_id, user_id: 1, post_number: 3).count.should == 0
+      PostTiming.where(topic_id: topic_id, user_id: 2, post_number: 3).count.should == 1
+      PostTiming.where(topic_id: topic_id, user_id: 3, post_number: 3).count.should == 1
+
+      tu = TopicUser.where(topic_id: topic_id, user_id: 1).first
+      tu.last_read_post_number.should == 1
+      tu.seen_post_count.should == 1
+
+      tu = TopicUser.where(topic_id: topic_id, user_id: 2).first
+      tu.last_read_post_number.should == 3
+      tu.seen_post_count.should == 3
+
+      tu = TopicUser.where(topic_id: topic_id, user_id: 3).first
+      tu.last_read_post_number.should == 3
+      tu.seen_post_count.should == 3
+
+    end
+  end
+
   describe 'process_timings' do
 
     # integration test
