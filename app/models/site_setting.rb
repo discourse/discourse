@@ -205,7 +205,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:max_word_length, 30)
 
   setting(:newuser_max_links, 2)
-  setting(:newuser_max_images, 0)
+  client_setting(:newuser_max_images, 0)
 
   setting(:newuser_spam_host_threshold, 3)
 

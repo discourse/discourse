@@ -23,6 +23,15 @@ test("uploading one file", function() {
   ok(bootbox.alert.calledWith(Em.String.i18n('post.errors.too_many_uploads')));
 });
 
+test("new user", function() {
+  Discourse.SiteSettings.newuser_max_images = 0;
+  this.stub(Discourse.User, 'current').withArgs("trust_level").returns(0);
+  this.stub(bootbox, "alert");
+
+  ok(!validUpload([1]));
+  ok(bootbox.alert.calledWith(Em.String.i18n('post.errors.upload_not_allowed_for_new_user')));
+});
+
 test("ensures an authorized upload", function() {
   var html = { name: "unauthorized.html" };
   var extensions = Discourse.SiteSettings.authorized_extensions.replace(/\|/g, ", ");
