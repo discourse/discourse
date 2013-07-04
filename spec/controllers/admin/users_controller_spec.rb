@@ -120,6 +120,39 @@ describe Admin::UsersController do
       end
     end
 
+    context '.trust_level' do
+      before do
+        @another_user = Fabricate(:coding_horror)
+      end
+
+      it "raises an error when the user doesn't have permission" do
+        Guardian.any_instance.expects(:can_change_trust_level?).with(@another_user).returns(false)
+        xhr :put, :trust_level, user_id: @another_user.id
+        response.should be_forbidden
+      end
+
+      it "returns a 404 if the username doesn't exist" do
+        xhr :put, :trust_level, user_id: 123123
+        response.should be_forbidden
+      end
+
+      it "upgrades the user's trust level" do
+        xhr :put, :trust_level, user_id: @another_user.id, level: 2
+        @another_user.reload
+        @another_user.trust_level.should == 2
+      end
+
+      it "raises an error when demoting a user below their current trust level" do
+        @another_user.topics_entered = SiteSetting.basic_requires_topics_entered + 1
+        @another_user.posts_read_count = SiteSetting.basic_requires_read_posts + 1
+        @another_user.time_read = SiteSetting.basic_requires_time_spent_mins * 60
+        @another_user.save!
+        @another_user.update_attributes(trust_level: TrustLevel.levels[:basic])
+        xhr :put, :trust_level, user_id: @another_user.id, level: TrustLevel.levels[:newuser]
+        response.should be_forbidden
+      end
+    end
+
     describe '.revoke_moderation' do
       before do
         @moderator = Fabricate(:moderator)
