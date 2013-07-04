@@ -64,7 +64,6 @@ Discourse.AdminUser = Discourse.User.extend({
 
   trustLevel: function() {
     var site = Discourse.Site.instance();
-    this.set('originalValue', this.get('trust_level'));
     return site.get('trust_levels').findProperty('id', this.get('trust_level'));
   }.property('trust_level'),
 
@@ -74,8 +73,8 @@ Discourse.AdminUser = Discourse.User.extend({
   }.property('trust_level'),
 
   dirty: function() {
-    return this.get('originalValue') !== parseInt(this.get('trustLevel.id'), 10);
-  }.property('originalValue', 'trustLevel.id'),
+    return this.get('originalTrustLevel') !== parseInt(this.get('trustLevel.id'), 10);
+  }.property('originalTrustLevel', 'trustLevel.id'),
 
   saveTrustLevel: function() {
     Discourse.ajax("/admin/users/" + this.id + "/trust_level", {
@@ -92,7 +91,7 @@ Discourse.AdminUser = Discourse.User.extend({
   },
 
   restoreTrustLevel: function() {
-    this.set('trustLevel.id', this.get('originalValue'));
+    this.set('trustLevel.id', this.get('originalTrustLevel'));
   },
 
   isBanned: (function() {
