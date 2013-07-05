@@ -1198,7 +1198,7 @@ en:
         delete_failed: "There was an error deleting that user. Make sure all posts are deleted before trying to delete the user."
         send_activation_email: "Send Activation Email"
         activation_email_sent: "An activation email has been sent."
-        send_activation_email_failed: "There was a problem sending another activation email."
+        send_activation_email_failed: "There was a problem sending another activation email. %{error}"
         activate: "Activate Account"
         activate_failed: "There was a problem activating the user."
         deactivate_account: "Deactivate Account"
