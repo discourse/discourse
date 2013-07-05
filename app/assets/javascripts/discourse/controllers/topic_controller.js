@@ -149,10 +149,11 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
       // save the modifications
       topic.save().then(function(result){
         // update the title if it has been changed (cleaned up) server-side
-        var title = result.basic_topic.fancy_title;
+        var title       = result.basic_topic.title;
+        var fancy_title = result.basic_topic.fancy_title;
         topic.setProperties({
           title: title,
-          fancy_title: title
+          fancy_title: fancy_title
         });
 
       }, function(error) {
