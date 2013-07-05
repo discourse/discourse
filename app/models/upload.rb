@@ -34,6 +34,11 @@ class Upload < ActiveRecord::Base
     return unless width > SiteSetting.auto_link_images_wider_than
     return if has_thumbnail?
     thumbnail = OptimizedImage.create_for(self, width, height)
+    # TODO: @regis we may want to do the more cleanly, create_for may change the dimensions
+    # this avoids a duplicate key, it should be done more cleanly, this is cheating
+    thumbnail.width = width
+    thumbnail.height = height
+
     optimized_images << thumbnail if thumbnail
   end
 
