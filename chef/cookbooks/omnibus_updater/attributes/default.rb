@@ -1,8 +1,9 @@
-default[:omnibus_updater][:version] = '10.18.2'
-default[:omnibus_updater][:version_search] = false
-default[:omnibus_updater][:base_uri] = 'http://opscode-omnibus-packages.s3.amazonaws.com'
+default[:omnibus_updater][:version] = nil
+default[:omnibus_updater][:force_latest] = false
 default[:omnibus_updater][:cache_dir] = '/opt'
 default[:omnibus_updater][:cache_omnibus_installer] = false
 default[:omnibus_updater][:remove_chef_system_gem] = false
-default[:omnibus_updater][:allow_release_clients] = false
+default[:omnibus_updater][:prerelease] = false
 default[:omnibus_updater][:disabled] = false
+default[:omnibus_updater][:kill_chef_on_upgrade] = true
+default[:omnibus_updater][:always_download] = false
