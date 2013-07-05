@@ -113,10 +113,9 @@ describe TopicView do
     end
 
     describe "#next_page" do
-      let(:posts) { [stub(post_number: 1), stub(post_number: 2)] }
+      let(:p2) { stub(post_number: 2) }
       let(:topic) do
         topic = Fabricate(:topic)
-        topic.stubs(:posts).returns(posts)
         topic.stubs(:highest_post_number).returns(5)
         topic
       end
@@ -125,11 +124,12 @@ describe TopicView do
       before do
         described_class.any_instance.expects(:find_topic).with(1234).returns(topic)
         described_class.any_instance.stubs(:filter_posts)
+        described_class.any_instance.stubs(:last_post).returns(p2)
         SiteSetting.stubs(:posts_per_page).returns(2)
       end
 
       it "should return the next page" do
-        described_class.new(1234, user).next_page.should eql(1)
+        described_class.new(1234, user).next_page.should eql(2)
       end
     end
 
@@ -222,12 +222,13 @@ describe TopicView do
     end
 
     describe '#filter_posts_paged' do
-      before { SiteSetting.stubs(:posts_per_page).returns(1) }
+      before { SiteSetting.stubs(:posts_per_page).returns(2) }
 
       it 'returns correct posts for all pages' do
+        puts [p1.id, p2.id, p3.id, p4.id, p5.id].inspect
+
         topic_view.filter_posts_paged(1).should == [p1, p2]
-        topic_view.filter_posts_paged(2).should == [p2, p3]
-        topic_view.filter_posts_paged(4).should == [p5]
+        topic_view.filter_posts_paged(2).should == [p3, p5]
         topic_view.filter_posts_paged(100).should == []
       end
     end

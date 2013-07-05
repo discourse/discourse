@@ -21,7 +21,8 @@ class TopicView
 
     guardian.ensure_can_see!(@topic)
 
-    @post_number, @page  = options[:post_number], options[:page]
+    @post_number, @page = options[:post_number], options[:page].to_i
+    @page = 1 if @page == 0
 
     @limit = options[:limit] || SiteSetting.posts_per_page;
 
@@ -56,10 +57,16 @@ class TopicView
     path
   end
 
+  def last_post
+    return nil if @posts.blank?
+    @last_post ||= @posts.last
+  end
+
   def next_page
-    last_post = @filtered_posts.last
-    if last_post.present? && (@topic.highest_post_number > last_post.post_number)
-      (@filtered_posts[0].post_number / SiteSetting.posts_per_page) + 1
+    @next_page ||= begin
+      if last_post && (@topic.highest_post_number > last_post.post_number)
+        @page + 1
+      end
     end
   end
 
@@ -142,7 +149,8 @@ class TopicView
   def filter_posts_paged(page)
     page = [page, 1].max
     min = SiteSetting.posts_per_page * (page - 1)
-    max = min + SiteSetting.posts_per_page
+    max = (min + SiteSetting.posts_per_page) - 1
+
     filter_posts_in_range(min, max)
   end
 
