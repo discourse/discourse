@@ -41,9 +41,9 @@ class TopicsController < ApplicationController
     anonymous_etag(@topic_view.topic) do
       redirect_to_correct_topic && return if slugs_do_not_match
 
-      # render workaround pseudo-static HTML page for Yandex crawler (if enabled)
+      # render workaround pseudo-static HTML page for old crawlers which ignores <noscript>
       # (see http://meta.discourse.org/t/noscript-tag-and-some-search-engines/8078)
-      return render 'topics/plain', layout: false if (SiteSetting.yandex_workaround && params.has_key?('_escaped_fragment_'))
+      return render 'topics/plain', layout: false if (SiteSetting.enable_escaped_fragments && params.has_key?('_escaped_fragment_'))
 
       View.create_for(@topic_view.topic, request.remote_ip, current_user)
       track_visit_to_topic

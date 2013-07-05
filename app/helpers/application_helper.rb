@@ -78,9 +78,9 @@ module ApplicationHelper
       end
     end
 
-    # Add workaround tag for Yandex crawler
-    # (see http://help.yandex.ru/webmaster/?id=1125296)
-    result << tag('meta', name: "fragment", content: "!") if SiteSetting.yandex_workaround
+    # Add workaround tag for old crawlers which ignores <noscript>
+    # (see https://developers.google.com/webmasters/ajax-crawling/docs/specification)
+    result << tag('meta', name: "fragment", content: "!") if SiteSetting.enable_escaped_fragments
 
     result
   end
