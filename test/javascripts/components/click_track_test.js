@@ -114,7 +114,6 @@ test("right clicks are tracked", function() {
   Discourse.SiteSettings.track_external_right_clicks = true;
   trackRightClick();
   equal($('a').first().attr('href'), "/clicks/track?url=http%3A%2F%2Fwww.google.com&post_id=42");
-  Discourse.SiteSettings.track_external_right_clicks = false;
 });
 
 
