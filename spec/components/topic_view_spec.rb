@@ -225,8 +225,6 @@ describe TopicView do
       before { SiteSetting.stubs(:posts_per_page).returns(2) }
 
       it 'returns correct posts for all pages' do
-        puts [p1.id, p2.id, p3.id, p4.id, p5.id].inspect
-
         topic_view.filter_posts_paged(1).should == [p1, p2]
         topic_view.filter_posts_paged(2).should == [p3, p5]
         topic_view.filter_posts_paged(100).should == []
