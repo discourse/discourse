@@ -25,6 +25,19 @@ Discourse.ListController = Discourse.Controller.extend({
   }.property(),
 
   /**
+    Refresh our current topic list
+
+    @method refresh
+  **/
+  refresh: function() {
+    var listTopicsController = this.get('controllers.listTopics');
+    listTopicsController.set('model.loaded', false);
+    this.load(this.get('filterMode')).then(function (topicList) {
+      listTopicsController.set('model', topicList);
+    });
+  },
+
+  /**
     Load a list based on a filter
 
     @method load

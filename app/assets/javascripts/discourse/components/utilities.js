@@ -172,6 +172,11 @@ Discourse.Utilities = {
         return false;
       } else if (files.length > 0) {
         var upload = files[0];
+        // ensures that new users can upload image
+        if (Discourse.User.current('trust_level') === 0 && Discourse.SiteSettings.newuser_max_images === 0) {
+          bootbox.alert(Em.String.i18n('post.errors.upload_not_allowed_for_new_user'));
+          return false;
+        }
         // if the image was pasted, sets its name to a default one
         if (upload instanceof Blob && !(upload instanceof File) && upload.type === "image/png") { upload.name = "blob.png"; }
         // check that the uploaded file is authorized
