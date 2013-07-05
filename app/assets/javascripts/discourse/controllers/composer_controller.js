@@ -304,6 +304,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
         bootbox.confirm(Em.String.i18n("post.abandon"), Em.String.i18n("no_value"), Em.String.i18n("yes_value"), function(result) {
           if (result) {
             composerController.destroyDraft();
+            composerController.get('model').clearState();
             composerController.close();
             promise.resolve();
           } else {

@@ -305,7 +305,6 @@ Discourse.Composer = Discourse.Model.extend({
         (opts.action !== this.get('action') || ((opts.reply || opts.action === this.EDIT) && this.get('reply') !== this.get('originalText'))) &&
         !opts.tested) {
       opts.tested = true;
-      //composer.cancel(function() { composer.open(opts); });
       return;
     }
 
