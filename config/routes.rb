@@ -179,6 +179,10 @@ Discourse::Application.routes.draw do
   get 'popular' => 'list#popular_redirect'
   get 'popular/more' => 'list#popular_redirect'
 
+  [:latest, :hot].each do |filter|
+    get "#{filter}.rss" => "list##{filter}_feed", format: :rss, as: "#{filter}_feed", filter: filter
+  end
+
   [:latest, :hot, :favorited, :read, :posted, :unread, :new].each do |filter|
     get "#{filter}" => "list##{filter}"
     get "#{filter}/more" => "list##{filter}"
