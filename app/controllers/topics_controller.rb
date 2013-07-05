@@ -56,7 +56,7 @@ class TopicsController < ApplicationController
   def wordpress
     params.require(:best)
     params.require(:topic_id)
-    params.permit(:min_trust_level, :min_score, :min_replies, :bypass_trust_level_score)
+    params.permit(:min_trust_level, :min_score, :min_replies, :bypass_trust_level_score, :only_moderator_liked)
 
     @topic_view = TopicView.new(
         params[:topic_id],
@@ -65,7 +65,8 @@ class TopicsController < ApplicationController
           min_trust_level: params[:min_trust_level].nil? ? 1 : params[:min_trust_level].to_i,
           min_score: params[:min_score].to_i,
           min_replies: params[:min_replies].to_i,
-          bypass_trust_level_score: params[:bypass_trust_level_score].to_i # safe cause 0 means ignore
+          bypass_trust_level_score: params[:bypass_trust_level_score].to_i, # safe cause 0 means ignore
+          only_moderator_liked: params[:only_moderator_liked].to_s == "true"
     )
 
     anonymous_etag(@topic_view.topic) do

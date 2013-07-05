@@ -161,11 +161,8 @@ class TopicView
       return
     end
 
-    @posts = @filtered_posts.order('percent_rank asc, sort_order asc')
-      .where("post_number > 1")
-
+    @posts = @filtered_posts.order('percent_rank asc, sort_order asc').where("post_number > 1")
     @posts = @posts.includes(:reply_to_user).includes(:topic).joins(:user).limit(max)
-
 
     min_trust_level = opts[:min_trust_level]
     if min_trust_level && min_trust_level > 0
@@ -187,6 +184,11 @@ class TopicView
       @posts = @posts.where('posts.score >= ?', min_score)
     end
 
+    if opts[:only_moderator_liked]
+      liked_by_moderators = PostAction.where(post_id: @filtered_posts.pluck(:id), post_action_type_id: PostActionType.types[:like])
+      liked_by_moderators = liked_by_moderators.joins(:user).where('users.moderator').pluck(:post_id)
+      @posts = @posts.where(id: liked_by_moderators)
+    end
 
     @posts = @posts.to_a
     @posts.sort!{|a,b| a.post_number <=> b.post_number}

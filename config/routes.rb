@@ -199,6 +199,7 @@ Discourse::Application.routes.draw do
 
   # Topic routes
   get 't/:slug/:topic_id/wordpress' => 'topics#wordpress', constraints: {topic_id: /\d+/}
+  get 't/:slug/:topic_id/moderator-liked' => 'topics#moderator_liked', constraints: {topic_id: /\d+/}
   get 't/:topic_id/wordpress' => 'topics#wordpress', constraints: {topic_id: /\d+/}
   get 't/:slug/:topic_id/best_of' => 'topics#show', defaults: {best_of: true}, constraints: {topic_id: /\d+/, post_number: /\d+/}
   get 't/:topic_id/best_of' => 'topics#show', constraints: {topic_id: /\d+/, post_number: /\d+/}
