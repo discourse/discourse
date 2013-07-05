@@ -15,28 +15,32 @@ def rebake_posts(opts = {})
     total = Post.select([
       :id, :user_id, :cooked, :raw, :topic_id, :post_number
     ]).inject(0) do |total, post|
-      cooked = post.cook(
-        post.raw,
-        topic_id: post.topic_id,
-        invalidate_oneboxes: opts.fetch(:invalidate_oneboxes, false)
-      )
-
-      if cooked != post.cooked
-        Post.exec_sql(
-          'update posts set cooked = ? where id = ?', cooked, post.id
+      begin
+        cooked = post.cook(
+          post.raw,
+          topic_id: post.topic_id,
+          invalidate_oneboxes: opts.fetch(:invalidate_oneboxes, false)
         )
-        post.cooked = cooked
-        putc "#"
-      else
-        putc "."
+
+        if cooked != post.cooked
+          Post.exec_sql(
+            'update posts set cooked = ? where id = ?', cooked, post.id
+          )
+          post.cooked = cooked
+          putc "#"
+        else
+          putc "."
+        end
+
+        TopicLink.extract_from post
+
+        # make sure we trigger the post process
+        post.trigger_post_process
+
+        total += 1
+      rescue => e
+        puts "\n\nFailed to bake topic_id #{post.topic_id} post_id #{post.id}\n#{e} #{e.backtrace.join("\n")} \n\n"
       end
-
-      TopicLink.extract_from post
-
-      # make sure we trigger the post process
-      post.trigger_post_process
-
-      total += 1
     end
 
     puts "\n\n#{total} posts done!\n#{'-' * 50}\n"
