@@ -3,6 +3,7 @@ require 'spec_helper'
 describe TopicsController do
 
 
+
   context 'wordpress' do
     let!(:user) { log_in(:moderator) }
     let(:p1) { Fabricate(:post, user: user) }
