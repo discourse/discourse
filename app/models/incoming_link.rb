@@ -3,7 +3,6 @@ class IncomingLink < ActiveRecord::Base
   belongs_to :user
 
   validates :url, presence: true
-
   validate :referer_valid
 
   before_validation :extract_domain
@@ -51,6 +50,7 @@ class IncomingLink < ActiveRecord::Base
       parsed = URI.parse(url)
 
       begin
+        # TODO achieve same thing with no exception
         params = Rails.application.routes.recognize_path(parsed.path)
         self.topic_id = params[:topic_id]
         self.post_number = params[:post_number]

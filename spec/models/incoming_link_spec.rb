@@ -48,6 +48,10 @@ describe IncomingLink do
       TestRequest.new(env)
     end
 
+    it "does not explode with bad referer" do
+      IncomingLink.add(req('http://sam.com','file:///Applications/Install/75067ABC-C9D1-47B7-8ACE-76AEDE3911B2/Install/'))
+    end
+
     it "does nothing if referer is empty" do
       IncomingLink.expects(:create).never
       IncomingLink.add(req('http://somesite.com'))
