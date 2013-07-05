@@ -159,3 +159,20 @@ asyncTest('importQuote with no post', function() {
   });
 
 });
+
+test('clearState', function() {
+  var composer = Discourse.Composer.create({
+    originalText: 'asdf',
+    reply: 'asdf2',
+    post: Discourse.Post.create({id: 1}),
+    title: 'wat'
+  });
+
+  composer.clearState();
+
+  blank(composer.get('originalText'));
+  blank(composer.get('reply'));
+  blank(composer.get('post'));
+  blank(composer.get('title'));
+
+});

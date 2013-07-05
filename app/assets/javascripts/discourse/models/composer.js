@@ -68,7 +68,6 @@ Discourse.Composer = Discourse.Model.extend({
         post = this.get('post');
 
     if (post) {
-
       postDescription = Em.String.i18n('post.' +  this.get('action'), {
         link: postLink,
         replyAvatar: Discourse.Utilities.tinyAvatar(post.get('username')),
@@ -80,7 +79,6 @@ Discourse.Composer = Discourse.Model.extend({
         postDescription += " " + Em.String.i18n("post.in_reply_to") + " " +
                            Discourse.Utilities.tinyAvatar(replyUsername) + " " + replyUsername;
       }
-
     }
 
     switch (this.get('action')) {
@@ -355,7 +353,7 @@ Discourse.Composer = Discourse.Model.extend({
       Discourse.Post.load(opts.post.get('id')).then(function(result) {
         composer.setProperties({
           reply: result.get('raw'),
-          originalText: composer.get('reply'),
+          originalText: result.get('raw'),
           loading: false
         });
       });
@@ -370,6 +368,20 @@ Discourse.Composer = Discourse.Model.extend({
     if( !this.get('cantSubmitPost') ) {
       return this.get('editingPost') ? this.editPost(opts) : this.createPost(opts);
     }
+  },
+
+  /**
+    Clear any state we have in preparation for a new composition.
+
+    @method clearState
+  **/
+  clearState: function() {
+    this.setProperties({
+      originalText: null,
+      reply: null,
+      post: null,
+      title: null
+    });
   },
 
   // When you edit a post
@@ -398,9 +410,7 @@ Discourse.Composer = Discourse.Model.extend({
 
     return Ember.Deferred.promise(function(promise) {
       post.save(function(savedPost) {
-        composer.set('originalText', '');
-        composer.set('reply', '');
-        composer.set('post', null);
+        composer.clearState();
       }, function(error) {
         var response = $.parseJSON(error.responseText);
         if (response && response.errors) {
@@ -463,6 +473,7 @@ Discourse.Composer = Discourse.Model.extend({
             saving = true;
 
         createdPost.updateFromJson(result);
+
         if (topic) {
           // It's no longer a new post
           createdPost.set('newPost', false);
@@ -475,18 +486,14 @@ Discourse.Composer = Discourse.Model.extend({
           saving = false;
         }
 
-        composer.setProperties({
-          reply: '',
-          createdPost: createdPost,
-          title: ''
-        });
+        composer.clearState();
+        composer.set('createdPost', createdPost);
 
         if (addedToStream) {
           composer.set('composeState', CLOSED);
         } else if (saving) {
           composer.set('composeState', SAVING);
         }
-
 
         return promise.resolve({ post: result });
       }, function(error) {
