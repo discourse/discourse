@@ -204,7 +204,7 @@ Discourse.AdminUser = Discourse.User.extend({
   },
 
   sendActivationEmail: function() {
-    Discourse.ajax('/users/' + this.get('username') + '/send_activation_email').then(function() {
+    Discourse.ajax('/users/' + this.get('username') + '/send_activation_email', {type: 'POST'}).then(function() {
       // succeeded
       bootbox.alert( Em.String.i18n('admin.user.activation_email_sent') );
     }, function(e) {

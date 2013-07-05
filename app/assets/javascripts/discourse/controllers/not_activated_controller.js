@@ -11,7 +11,7 @@ Discourse.NotActivatedController = Discourse.Controller.extend(Discourse.ModalFu
   emailSent: false,
 
   sendActivationEmail: function() {
-    Discourse.ajax('/users/' + this.get('username') + '/send_activation_email');
+    Discourse.ajax('/users/' + this.get('username') + '/send_activation_email', {type: 'POST'});
     this.set('emailSent', true);
   }
 

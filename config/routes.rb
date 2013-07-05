@@ -128,7 +128,7 @@ Discourse::Application.routes.draw do
   put 'users/:username/preferences/username' => 'users#username', constraints: {username: USERNAME_ROUTE_FORMAT}
   get 'users/:username/avatar(/:size)' => 'users#avatar', constraints: {username: USERNAME_ROUTE_FORMAT}
   get 'users/:username/invited' => 'users#invited', constraints: {username: USERNAME_ROUTE_FORMAT}
-  get 'users/:username/send_activation_email' => 'users#send_activation_email', constraints: {username: USERNAME_ROUTE_FORMAT}
+  post 'users/:username/send_activation_email' => 'users#send_activation_email', constraints: {username: USERNAME_ROUTE_FORMAT}
 
   resources :uploads
 
