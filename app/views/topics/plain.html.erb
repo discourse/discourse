@@ -16,4 +16,9 @@
     <hr/>
   <% end %>
 <% end %>
+<% if @topic_view.next_page %>
+  <p>
+    <%= link_to(t('next_page').html_safe, @topic_view.next_page_path ) %>
+  </p>
+<% end %>
 </body>
