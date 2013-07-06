@@ -157,7 +157,6 @@ en:
 
     user:
       profile: Profile
-      title: "User"
       mute: Mute
       edit: Edit Preferences
       download_archive: "download archive of my posts"
@@ -1104,6 +1103,7 @@ en:
         settings: "Settings"
         logs: "Logs"
         sent_at: "Sent At"
+        user: "User"
         email_type: "Email Type"
         to_address: "To Address"
         test_email_address: "email address to test"
