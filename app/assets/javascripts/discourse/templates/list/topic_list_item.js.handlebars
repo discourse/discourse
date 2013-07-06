@@ -53,13 +53,13 @@
 
   <td class='num posts'><a href="{{lastReadUrl}}" class='badge-posts'>{{number posts_count numberKey="posts_long"}}</a></td>
 
+  <td {{bindAttr class=":num :views viewsHeat"}}>{{number views numberKey="views_long"}}</td>
+
   <td class='num likes'>
     {{#if like_count}}
-      <a href='{{url}}{{#if has_best_of}}?filter=best_of{{/if}}' title='{{i18n topic.likes count="like_count"}}'>{{like_count}} <i class='icon-heart'></i></a>
+      <a href='{{url}}{{#if has_best_of}}?filter=best_of{{/if}}' title='{{i18n topic.likes count="like_count"}}'>{{number like_count numberKey="likes_long"}} <i class='icon-heart'></i></a>
     {{/if}}
   </td>
-
-  <td {{bindAttr class=":num :views viewsHeat"}}>{{number views numberKey="views_long"}}</td>
 
   {{#if bumped}}
     <td class='num activity'>
