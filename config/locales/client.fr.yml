@@ -165,7 +165,6 @@ fr:
 
     user:
       profile: "profil"
-      title: "Utilisateur"
       mute: "couper"
       edit: "Éditer les préférences"
       download_archive: "télécharger l'archive de mes messages"
@@ -1060,6 +1059,7 @@ fr:
         logs: "Logs"
         title: "Historique des mails"
         sent_at: "Envoyer à"
+        user: "Utilisateur"
         email_type: "Type d'email"
         to_address: "À l'adresse"
         test_email_address: "Adresse mail à tester"
