@@ -169,6 +169,8 @@ class SiteSetting < ActiveRecord::Base
   setting(:s3_region, '', enum: 'S3RegionSiteSetting')
   setting(:s3_upload_bucket, '')
 
+  setting(:enable_flash_video_onebox, false)
+
   setting(:default_trust_level, 0)
   setting(:default_invitee_trust_level, 1)
 
