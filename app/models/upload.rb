@@ -31,7 +31,7 @@ class Upload < ActiveRecord::Base
   def create_thumbnail!
     return unless SiteSetting.create_thumbnails?
     return if SiteSetting.enable_s3_uploads?
-    return unless width > SiteSetting.auto_link_images_wider_than
+    return if width < SiteSetting.max_image_width
     return if has_thumbnail?
     thumbnail = OptimizedImage.create_for(self, width, height)
     optimized_images << thumbnail if thumbnail

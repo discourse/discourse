@@ -570,8 +570,6 @@ fr:
     regular_requires_likes_given: "Combien de j'aime un utilisateur doit donner pour être promu au niveau régulier (2)"
     regular_requires_topic_reply_count: "Combien de réponses un utilisateur doit donner pour être promu au niveau régulier (2)"
 
-    auto_link_images_wider_than: "Les images en lien automatiques doivent êtres plus larges que préciser"
-
     email_time_window_mins: "Combien de minutes attendre avant d'envoyer un mail à l'utilisateur, pour lui donner une chance de voir lui-même avant l'envoi."
     flush_timings_secs: "A quelle fréquence requêter les données de timing au serveur, en secondes."
     max_word_length: "Le nombre maximum de mots dans un titre de discussion"
@@ -597,7 +595,7 @@ fr:
 
     newuser_spam_host_threshold: "Limite du nombre de liens vers un même host qu'un nouvel utilisateur peut insérer dans un message avant d'être considérer comme un SPAM."
     staff_like_weight: "Poids supplémentaire donné aux Likes du staff lors d'une recherche."
-    
+
     reply_by_email_enabled: "Cocher si le forum doit supporter les réponses par email"
     reply_by_email_address: "Modèle pour la réponse par adresse email par exemple : %{reply_key}@reply.myforum.com"
 
@@ -606,7 +604,7 @@ fr:
     pop3s_polling_host: "L'hôte utilisé pour le polling pour l'email via POP3S"
     pop3s_polling_username: "Le nom d'utilisateur pour le polling POPS3 par email"
     pop3s_polling_password: "Le mot de passe pour le polling POPS3 par email"
-    
+
     minimum_topics_similar: "Combien de topics ont besoin d'exister dans la base de données avant que des topics similaires soit présentés."
 
   notification_types:
