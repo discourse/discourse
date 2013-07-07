@@ -399,10 +399,7 @@ class User < ActiveRecord::Base
   end
 
   def username_format_validator
-    validator = UsernameValidator.new(username)
-    unless validator.valid_format?
-      validator.errors.each { |e| errors.add(:username, e) }
-    end
+    UsernameValidator.perform_validation(self, 'username')
   end
 
   def email_confirmed?
@@ -591,17 +588,17 @@ class User < ActiveRecord::Base
 
   private
 
-    def self.discourse_hub_nickname_operation(&block)
-      if SiteSetting.call_discourse_hub?
-        begin
-          yield
-        rescue DiscourseHub::NicknameUnavailable
-          false
-        rescue => e
-          Rails.logger.error e.message + "\n" + e.backtrace.join("\n")
-        end
+  def self.discourse_hub_nickname_operation
+    if SiteSetting.call_discourse_hub?
+      begin
+        yield
+      rescue DiscourseHub::NicknameUnavailable
+        false
+      rescue => e
+        Rails.logger.error e.message + "\n" + e.backtrace.join("\n")
       end
     end
+  end
 end
 
 # == Schema Information

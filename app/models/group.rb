@@ -145,10 +145,7 @@ class Group < ActiveRecord::Base
   protected
 
   def name_format_validator
-    validator = UsernameValidator.new(name)
-    unless validator.valid_format?
-      validator.errors.each { |e| errors.add(:name, e) }
-    end
+    UsernameValidator.perform_validation(self, 'name')
   end
 
   # hack around AR
