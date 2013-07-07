@@ -40,6 +40,11 @@ class TopicsController < ApplicationController
 
     anonymous_etag(@topic_view.topic) do
       redirect_to_correct_topic && return if slugs_do_not_match
+
+      # render workaround pseudo-static HTML page for old crawlers which ignores <noscript>
+      # (see http://meta.discourse.org/t/noscript-tag-and-some-search-engines/8078)
+      return render 'topics/plain', layout: false if (SiteSetting.enable_escaped_fragments && params.has_key?('_escaped_fragment_'))
+
       View.create_for(@topic_view.topic, request.remote_ip, current_user)
       track_visit_to_topic
       perform_show_response
@@ -51,7 +56,7 @@ class TopicsController < ApplicationController
   def wordpress
     params.require(:best)
     params.require(:topic_id)
-    params.permit(:min_trust_level, :min_score, :min_replies, :bypass_trust_level_score)
+    params.permit(:min_trust_level, :min_score, :min_replies, :bypass_trust_level_score, :only_moderator_liked)
 
     @topic_view = TopicView.new(
         params[:topic_id],
@@ -60,7 +65,8 @@ class TopicsController < ApplicationController
           min_trust_level: params[:min_trust_level].nil? ? 1 : params[:min_trust_level].to_i,
           min_score: params[:min_score].to_i,
           min_replies: params[:min_replies].to_i,
-          bypass_trust_level_score: params[:bypass_trust_level_score].to_i # safe cause 0 means ignore
+          bypass_trust_level_score: params[:bypass_trust_level_score].to_i, # safe cause 0 means ignore
+          only_moderator_liked: params[:only_moderator_liked].to_s == "true"
     )
 
     anonymous_etag(@topic_view.topic) do

@@ -27,7 +27,7 @@
       <div class='control-row reply-area'>
         <div class='reply-to'>{{{model.actionTitle}}}:</div>
 
-        {{#if model.editTitle}}
+        {{#if model.canEditTitle}}
           <div class='form-element clearfix'>
             {{#if model.creatingPrivateMessage}}
               {{userSelector topicId=controller.controllers.topic.model.id

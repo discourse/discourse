@@ -14,13 +14,13 @@ be installed on the node:
 
 `knife node run_list add recipe[omnibus_updater]`
 
-In your role you'll likely want to set the version (it defaults
-to the 0.10.10 version of Chef):
+In your role you'll likely want to set the version. It defaults
+to nothing, and will install the latest..
 
 ```
 override_attributes(
   :omnibus_updater => {
-    :version => '10.16.2'
+    :version => '11.4.0'
   }
 )
 ```
@@ -35,37 +35,30 @@ override_attributes(
   }
 )
 ```
----
-
-If you are using a Chef version earlier than 10.12.0 you may want
-to take a look at the chef_gem cookbook to ensure gems are going
-where expected.
-
----
-
-The default recipe will install the omnibus package based
-on system information but you can override that by using
-the `install_via` attribute which accepts: deb, rpm or script.
 
 Features
 ========
 
-Auto version expansion
-----------------------
+Latest Version
+--------------
 
-Versions for the omnibus installer are defined as: x.y.z-n If the `:version` attribute only provides
-x.y.z the `n` value will be automatically filled in with the latest available version.
+Force installation of the latest version regardless of value stored in version
+attribute by setting the `force_latest` attribute.
 
-Auto version searching
-----------------------
+Chef Killing
+------------
 
-Using the `:version_search` attribute, the latest stable version of the omnibus installer will
-be installed automatically as they become available.
+By default the omnibus updater will kill the chef instance by raising and exception.
+You can turn this off using the `kill_chef_on_upgrade` attribute. It is not
+recommended to turn this off. Internal chef libraries may change, move, or no
+longer exist. The currently running instance can encounter unexpected states because
+of this. To prevent this, the updater will attempt to kill the Chef instance so
+that it can be restarted in a normal state.
 
-Release clients
----------------
+Prerelease
+--------
 
-Release clients can be installed via the auto-installation using `:allow_release_clients` attribute.
+Prereleases can be installed via the auto-installation using `prerelease` attribute.
 
 Disable
 -------
@@ -79,4 +72,4 @@ Infos
 
 * Repo: https://github.com/hw-cookbooks/omnibus_updater
 * IRC: Freenode @ #heavywater
-
+* Cookbook: http://ckbk.it/omnibus_updater

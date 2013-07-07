@@ -165,7 +165,6 @@ fr:
 
     user:
       profile: "profil"
-      title: "Utilisateur"
       mute: "couper"
       edit: "Éditer les préférences"
       download_archive: "télécharger l'archive de mes messages"
@@ -729,6 +728,7 @@ fr:
         upload_too_large: "Désolé, le fichier que vous êtes en train d'envoyer est trop grand (maximum {{max_size_kb}}Kb). Merci de le redimensionner et de réessayer."
         too_many_uploads: "Désolé, vous ne pouvez envoyer qu'un seul fichier à la fois."
         upload_not_authorized: "Désole, le fichier que vous êtes en train d'uploader n'est pas autorisé (extensions autorisées : {{authorized_extensions}})."
+        upload_not_allowed_for_new_user: "Désolé, les nouveaux utilisateurs ne peuvent pas uploader d'images."
 
       abandon: "Voulez-vous vraiment abandonner ce message ?"
 
@@ -1059,6 +1059,7 @@ fr:
         logs: "Logs"
         title: "Historique des mails"
         sent_at: "Envoyer à"
+        user: "Utilisateur"
         email_type: "Type d'email"
         to_address: "À l'adresse"
         test_email_address: "Adresse mail à tester"

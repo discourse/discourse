@@ -49,6 +49,7 @@ Discourse::Application.routes.draw do
       put 'deactivate'
       put 'block'
       put 'unblock'
+      put 'trust_level'
     end
 
     resources :impersonate, constraints: AdminConstraint.new
@@ -127,7 +128,7 @@ Discourse::Application.routes.draw do
   put 'users/:username/preferences/username' => 'users#username', constraints: {username: USERNAME_ROUTE_FORMAT}
   get 'users/:username/avatar(/:size)' => 'users#avatar', constraints: {username: USERNAME_ROUTE_FORMAT}
   get 'users/:username/invited' => 'users#invited', constraints: {username: USERNAME_ROUTE_FORMAT}
-  get 'users/:username/send_activation_email' => 'users#send_activation_email', constraints: {username: USERNAME_ROUTE_FORMAT}
+  post 'users/:username/send_activation_email' => 'users#send_activation_email', constraints: {username: USERNAME_ROUTE_FORMAT}
 
   resources :uploads
 
@@ -178,6 +179,10 @@ Discourse::Application.routes.draw do
   get 'popular' => 'list#popular_redirect'
   get 'popular/more' => 'list#popular_redirect'
 
+  [:latest, :hot].each do |filter|
+    get "#{filter}.rss" => "list##{filter}_feed", format: :rss, as: "#{filter}_feed", filter: filter
+  end
+
   [:latest, :hot, :favorited, :read, :posted, :unread, :new].each do |filter|
     get "#{filter}" => "list##{filter}"
     get "#{filter}/more" => "list##{filter}"
@@ -198,6 +203,7 @@ Discourse::Application.routes.draw do
 
   # Topic routes
   get 't/:slug/:topic_id/wordpress' => 'topics#wordpress', constraints: {topic_id: /\d+/}
+  get 't/:slug/:topic_id/moderator-liked' => 'topics#moderator_liked', constraints: {topic_id: /\d+/}
   get 't/:topic_id/wordpress' => 'topics#wordpress', constraints: {topic_id: /\d+/}
   get 't/:slug/:topic_id/best_of' => 'topics#show', defaults: {best_of: true}, constraints: {topic_id: /\d+/, post_number: /\d+/}
   get 't/:topic_id/best_of' => 'topics#show', constraints: {topic_id: /\d+/, post_number: /\d+/}

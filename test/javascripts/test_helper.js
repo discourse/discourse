@@ -70,9 +70,15 @@ d.write('<style>#ember-testing-container { position: absolute; background: white
 Discourse.rootElement = '#ember-testing';
 Discourse.setupForTesting();
 Discourse.injectTestHelpers();
-
+Discourse.bindDOMEvents();
 
 Discourse.Router.map(function() {
   return Discourse.routeBuilder.call(this);
 });
+
+
+QUnit.testStart(function() {
+  // Allow our tests to change site settings and have them reset before the next test
+  Discourse.SiteSettings = jQuery.extend(true, {}, Discourse.SiteSettingsOriginal);
+})
 

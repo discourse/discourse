@@ -1,3 +1,17 @@
+v0.2.4
+======
+* Only download omnibus package if version difference detected (#20 #22 #23)
+* Provide attribute for always downloading package even if version matches
+
+v0.2.3
+======
+* Use chef internals for interactions with omnitruck to provide proper proxy support (#19)
+
+v0.2.0
+======
+* Use omnitruck client for url generation for package fetching
+* Use `prerelease` in favor of `allow_release_clients`
+
 v0.1.2
 ======
 * Fix regression on debian package path construction (thanks [ashmere](https://github.com/ashmere))

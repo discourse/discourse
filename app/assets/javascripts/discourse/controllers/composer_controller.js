@@ -202,6 +202,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
   **/
   open: function(opts) {
     if (!opts) opts = {};
+
     var promise = opts.promise || Ember.Deferred.create();
     opts.promise = promise;
     this.set('typedReply', false);
@@ -241,7 +242,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
       composer = null;
     }
 
-    if (composer && !opts.tested && composer.get('wouldLoseChanges')) {
+    if (composer && !opts.tested && composer.get('replyDirty')) {
       if (composer.composeState === Discourse.Composer.DRAFT && composer.draftKey === opts.draftKey && composer.action === opts.action) {
         composer.set('composeState', Discourse.Composer.OPEN);
         promise.resolve();
@@ -273,7 +274,8 @@ Discourse.ComposerController = Discourse.Controller.extend({
       }
     }
 
-    composer = composer || Discourse.Composer.open(opts);
+    composer = composer || Discourse.Composer.create();
+    composer.open(opts);
     this.set('model', composer);
     composer.set('composeState', Discourse.Composer.OPEN);
     promise.resolve();
@@ -298,10 +300,11 @@ Discourse.ComposerController = Discourse.Controller.extend({
     var composerController = this;
 
     return Ember.Deferred.promise(function (promise) {
-      if (composerController.get('model.hasMetaData') || composerController.get('model.wouldLoseChanges')) {
+      if (composerController.get('model.hasMetaData') || composerController.get('model.replyDirty')) {
         bootbox.confirm(Em.String.i18n("post.abandon"), Em.String.i18n("no_value"), Em.String.i18n("yes_value"), function(result) {
           if (result) {
             composerController.destroyDraft();
+            composerController.get('model').clearState();
             composerController.close();
             promise.resolve();
           } else {
@@ -324,7 +327,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
   },
 
   shrink: function() {
-    if (this.get('model.wouldLoseChanges')) {
+    if (this.get('model.replyDirty')) {
       this.collapse();
     } else {
       this.close();

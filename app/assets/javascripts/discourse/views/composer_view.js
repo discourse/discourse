@@ -14,7 +14,7 @@ Discourse.ComposerView = Discourse.View.extend({
   classNameBindings: ['model.creatingPrivateMessage:private-message',
                       'composeState',
                       'model.loading',
-                      'model.editTitle',
+                      'model.canEditTitle:edit-title',
                       'postMade',
                       'model.creatingTopic:topic',
                       'model.showPreview',

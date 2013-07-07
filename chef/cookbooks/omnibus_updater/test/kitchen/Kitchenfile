@@ -1,0 +1,6 @@
+cookbook "omnibus_updater" do
+  configuration "default"
+  configuration "version_upgrade"
+  configuration "search"
+  lint false
+end

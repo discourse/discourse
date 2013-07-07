@@ -399,8 +399,6 @@ es:
     basic_requires_read_posts: "Cuantos post debe un usuario leer antes de ser promocionado al nivel básico (1) de confianza"
     basic_requires_time_spent_mins: "Cuantos minutos un usuario debe leer posts antes de ser promocionado al nivel básico (1) de confianza"
 
-    auto_link_images_wider_than: "Imágenes más amplias que esto, en píxeles, tendrán un tratamiento de lightbox y auto link"
-
     email_time_window_mins: "Cuantos minutos esperamos antes de enviar un mail a un usuario, para darles la oportunidad de verlo antes"
     flush_timings_secs: "How frequently we flush timing data to the server, in seconds"
     max_word_length: "La máxima longitud de palabra permitida, en caracteres en el título de un topic"

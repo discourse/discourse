@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="<%=SiteSetting.default_locale%>">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title><%= @topic_view.topic.title %></title>
+</head>
+<body>
+<% @topic_view.posts.each do |post| %>
+  <% if post.user %>
+    <div>
+      #<%=post.post_number%> <%= t 'by'%>: <b><%= post.user.name %></b>, <%= post.created_at.to_formatted_s(:long_ordinal) %>
+    </div>
+    <div>
+      <%= post.cooked.html_safe %>
+    </div>
+    <hr/>
+  <% end %>
+<% end %>
+<% if @topic_view.next_page %>
+  <p>
+    <%= link_to(t('next_page').html_safe, @topic_view.next_page_path ) %>
+  </p>
+<% end %>
+</body>

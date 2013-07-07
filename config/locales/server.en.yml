@@ -55,6 +55,9 @@ en:
   rss_topics_in_category: "RSS feed of topics in the '%{category}' category"
   author_wrote: "%{author} wrote:"
   private_message_abbrev: "PM"
+  rss_description:
+    latest: "Latest topics"
+    hot: "Hot topics"
 
   groups:
     errors:
@@ -133,6 +136,8 @@ en:
       title: "leader"
     elder:
       title: "elder"
+    change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}'"
+
 
   rate_limiter:
     too_many_requests: "You're doing that too often. Please wait %{time_left} before trying again."
@@ -497,6 +502,8 @@ en:
     must_approve_users: "Admins must approve all users before they gain access"
     ga_tracking_code: "Google analytics tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
     ga_domain_name: "Google analytics domain name, eg: mysite.com; see http://google.com/analytics"
+    enable_escaped_fragments: "Enable workaround solution to help old crawlers to index your site. WARNING: enable it only if you are really have to do it."
+    enable_noscript_support: "Enable supporting &lt;noscipt&gt; tag"
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|hot|read|favorited|unread|new|posted|categories"
     post_menu: "Determine which items appear on the post menu, and in what order. Example fuck|edit|flag|delete|share|bookmark|reply"
     share_links: "Determine which items appear on the share dialog, and in what order. Example twitter|facebook|google+|email"
@@ -594,7 +601,6 @@ en:
     max_mentions_per_post: "Maximum number of @name notifications you can use in a post"
 
     create_thumbnails: "Create thumbnails for lightboxed images"
-    auto_link_images_wider_than: "Images wider than this, in pixels, will get auto link and lightbox treatment"
 
     email_time_window_mins: "How many minutes we wait before sending a user mail, to give them a chance to see it first"
     flush_timings_secs: "How frequently we flush timing data to the server, in seconds"

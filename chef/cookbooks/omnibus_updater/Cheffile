@@ -1,0 +1,4 @@
+site 'http://community.opscode.com/api/v1'
+
+cookbook 'omnibus_updater', path: './'
+cookbook 'omnibus_updater_test', path: './test/kitchen/cookbooks/omnibus_updater_test'

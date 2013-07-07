@@ -140,9 +140,22 @@ class Users::OmniauthCallbacksController < ApplicationController
 
   def create_or_sign_on_user_using_cas(auth_token)
     logger.error "authtoken #{auth_token}"
-    email = "#{auth_token[:extra][:user]}@#{SiteSetting.cas_domainname}"
+
+    email = auth_token[:info][:email] if auth_token[:info]
+    email ||= if SiteSetting.cas_domainname.present?
+      "#{auth_token[:extra][:user]}@#{SiteSetting.cas_domainname}"
+    else
+      auth_token[:extra][:user]
+    end
+
     username = auth_token[:extra][:user]
-    name = auth_token["uid"]
+
+    name = if auth_token[:info] && auth_token[:info][:name]
+      auth_token[:info][:name]
+    else
+      auth_token["uid"]
+    end
+
     cas_user_id = auth_token["uid"]
 
     session[:authentication] = {

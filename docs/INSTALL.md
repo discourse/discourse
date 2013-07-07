@@ -11,7 +11,12 @@ Discourse has two fairly decent install documents now:
 - Our [**official Ubuntu Server 12.04 LTS install document**][1]
 - [Unofficial Heroku install document][2]
 
-Beyond that, if you are feeling extra *extra* adventurous you can try to set up following components manually:
+Beyond that, if you are feeling extra *extra* adventurous you'll need some server hardware:
+
+- Dual core CPU recommended
+- 2 GB RAM recommended (1 GB can work, but you'll need swap..)
+
+And you can try to set up following components manually on it:
 
 1. **Postgres 9.1+**
  - Enable support for HSTORE

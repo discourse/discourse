@@ -17,13 +17,18 @@ Discourse.UserStream = Discourse.Model.extend({
   }.observes('filter'),
 
   findItems: function() {
-    var url = Discourse.getURL("/user_actions?offset=") + this.get('itemsLoaded') + "&username=" + (this.get('user.username_lower'));
+    var me = this;
+    if(this.get("loading")) { return; }
+    this.set("loading",true);
+
+    var url = Discourse.getURL("/user_actions.json?offset=") + this.get('itemsLoaded') + "&username=" + (this.get('user.username_lower'));
     if (this.get('filter')) {
       url += "&filter=" + (this.get('filter'));
     }
 
     var stream = this;
     return Discourse.ajax(url, {cache: 'false'}).then( function(result) {
+      me.set("loading",false);
       if (result && result.user_actions) {
         var copy = Em.A();
         _.each(result.user_actions,function(action) {
@@ -33,7 +38,7 @@ Discourse.UserStream = Discourse.Model.extend({
         stream.get('content').pushObjects(copy);
         stream.set('itemsLoaded', stream.get('itemsLoaded') + result.user_actions.length);
       }
-    });
+    }, function(){ me.set("loading", false); });
   }
 
 });

@@ -163,7 +163,6 @@ en:
 
     user:
       profile: Profile
-      title: "User"
       mute: Mute
       edit: Edit Preferences
       download_archive: "download archive of my posts"
@@ -752,6 +751,7 @@ en:
         upload_too_large: "Sorry, the file you are trying to upload is too big (maximum size is {{max_size_kb}}kb), please resize it and try again."
         too_many_uploads: "Sorry, you can only upload one file at a time."
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extension: {{authorized_extensions}})."
+        upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
 
       abandon: "Are you sure you want to abandon your post?"
 
@@ -1064,8 +1064,6 @@ en:
           action_type_6:
             one: "custom"
             other: "custom x{{count}}"
-            one: "spam"
-            other: "spam x{{count}}"
           action_type_7:
             one: "custom"
             other: "custom x{{count}}"
@@ -1111,6 +1109,7 @@ en:
         settings: "Settings"
         logs: "Logs"
         sent_at: "Sent At"
+        user: "User"
         email_type: "Email Type"
         to_address: "To Address"
         test_email_address: "email address to test"
@@ -1205,7 +1204,7 @@ en:
         delete_failed: "There was an error deleting that user. Make sure all posts are deleted before trying to delete the user."
         send_activation_email: "Send Activation Email"
         activation_email_sent: "An activation email has been sent."
-        send_activation_email_failed: "There was a problem sending another activation email."
+        send_activation_email_failed: "There was a problem sending another activation email. %{error}"
         activate: "Activate Account"
         activate_failed: "There was a problem activating the user."
         deactivate_account: "Deactivate Account"
@@ -1215,7 +1214,7 @@ en:
         deactivate_explanation: "A deactivated user must re-validate their email."
         banned_explanation: "A banned user can't log in."
         block_explanation: "A blocked user can't post or start topics."
-
+        trust_level_change_failed: "There was a problem changing the user's trust level."
 
       site_content:
         none: "Choose a type of content to begin editing."

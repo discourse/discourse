@@ -23,6 +23,9 @@ describe TopicView do
     let!(:p2) { Fabricate(:post, topic: topic, user: coding_horror, percent_rank: 0.5 )}
     let!(:p3) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 0 )}
 
+    let(:moderator) { Fabricate(:moderator) }
+    let(:admin) { Fabricate(:admin)
+    }
     it "it can find the best responses" do
 
       best2 = TopicView.new(topic.id, coding_horror, best: 2)
@@ -61,6 +64,21 @@ describe TopicView do
       # 0 means ignore
       best = TopicView.new(topic.id, nil, best: 99, bypass_trust_level_score: 0, min_trust_level: coding_horror.trust_level + 1)
       best.posts.count.should == 0
+
+      # If we restrict to posts a moderator liked, return none
+      best = TopicView.new(topic.id, nil, best: 99, only_moderator_liked: true)
+      best.posts.count.should == 0
+
+      # It doesn't count likes from admins
+      PostAction.act(admin, p3, PostActionType.types[:like])
+      best = TopicView.new(topic.id, nil, best: 99, only_moderator_liked: true)
+      best.posts.count.should == 0
+
+      # It should find the post liked by the moderator
+      PostAction.act(moderator, p2, PostActionType.types[:like])
+      best = TopicView.new(topic.id, nil, best: 99, only_moderator_liked: true)
+      best.posts.count.should == 1
+
     end
 
 
@@ -113,10 +131,9 @@ describe TopicView do
     end
 
     describe "#next_page" do
-      let(:posts) { [stub(post_number: 1), stub(post_number: 2)] }
+      let(:p2) { stub(post_number: 2) }
       let(:topic) do
         topic = Fabricate(:topic)
-        topic.stubs(:posts).returns(posts)
         topic.stubs(:highest_post_number).returns(5)
         topic
       end
@@ -125,11 +142,12 @@ describe TopicView do
       before do
         described_class.any_instance.expects(:find_topic).with(1234).returns(topic)
         described_class.any_instance.stubs(:filter_posts)
+        described_class.any_instance.stubs(:last_post).returns(p2)
         SiteSetting.stubs(:posts_per_page).returns(2)
       end
 
       it "should return the next page" do
-        described_class.new(1234, user).next_page.should eql(1)
+        described_class.new(1234, user).next_page.should eql(2)
       end
     end
 
@@ -222,12 +240,11 @@ describe TopicView do
     end
 
     describe '#filter_posts_paged' do
-      before { SiteSetting.stubs(:posts_per_page).returns(1) }
+      before { SiteSetting.stubs(:posts_per_page).returns(2) }
 
       it 'returns correct posts for all pages' do
         topic_view.filter_posts_paged(1).should == [p1, p2]
-        topic_view.filter_posts_paged(2).should == [p2, p3]
-        topic_view.filter_posts_paged(4).should == [p5]
+        topic_view.filter_posts_paged(2).should == [p3, p5]
         topic_view.filter_posts_paged(100).should == []
       end
     end

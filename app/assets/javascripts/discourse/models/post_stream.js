@@ -24,18 +24,14 @@ Discourse.PostStream = Em.Object.extend({
 
     @property hasPosts
   **/
-  hasPosts: function() {
-    return this.get('posts.length') > 0;
-  }.property('posts.length'),
+  hasPosts: Em.computed.gt('posts.length', 0),
 
   /**
     Do we have a stream list of post ids?
 
     @property hasStream
   **/
-  hasStream: function() {
-    return this.get('filteredPostsCount') > 0;
-  }.property('filteredPostsCount'),
+  hasStream: Em.computed.gt('filteredPostsCount', 0),
 
   /**
     Can we append more posts to our current stream?
@@ -43,7 +39,6 @@ Discourse.PostStream = Em.Object.extend({
     @property canAppendMore
   **/
   canAppendMore: Em.computed.and('notLoading', 'hasPosts', 'lastPostNotLoaded'),
-
 
   /**
     Can we prepend more posts to our current stream?
@@ -59,10 +54,19 @@ Discourse.PostStream = Em.Object.extend({
   **/
   firstPostLoaded: function() {
     if (!this.get('hasLoadedData')) { return false; }
-    return !!this.get('posts').findProperty('id', this.get('stream')[0]);
-  }.property('hasLoadedData', 'posts.[]', 'stream.@each'),
+    return !!this.get('posts').findProperty('id', this.get('firstPostId'));
+  }.property('hasLoadedData', 'posts.[]', 'firstPostId'),
 
   firstPostNotLoaded: Em.computed.not('firstPostLoaded'),
+
+  /**
+    Returns the id of the first post in the set
+
+    @property firstPostId
+  **/
+  firstPostId: function() {
+    return this.get('stream')[0];
+  }.property('stream.@each'),
 
   /**
     Returns the id of the last post in the set

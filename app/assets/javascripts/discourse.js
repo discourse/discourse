@@ -107,12 +107,6 @@ Discourse = Ember.Application.createWithMixins({
     this.set('notifyCount', count);
   },
 
-  openComposer: function(opts) {
-    // TODO, remove container link
-    var composer = Discourse.__container__.lookup('controller:composer');
-    if (composer) composer.open(opts);
-  },
-
   /**
     Establishes global DOM events and bindings via jQuery.
 

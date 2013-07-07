@@ -9,8 +9,7 @@
 Discourse.Post = Discourse.Model.extend({
 
   shareUrl: function() {
-    if (this.get('postnumber') === 1) return this.get('topic.url');
-
+    if (this.get('firstPost')) return this.get('topic.url');
     var user = Discourse.User.current();
     return this.get('url') + (user ? '?u=' + user.get('username_lower') : '');
   }.property('url'),
@@ -38,9 +37,7 @@ Discourse.Post = Discourse.Model.extend({
     return this.get('topic.details.created_by.id') === this.get('user_id');
   }.property('topic.details.created_by.id', 'user_id'),
 
-  hasHistory: function() {
-    return this.get('version') > 1;
-  }.property('version'),
+  hasHistory: Em.computed.gt('version', 1),
 
   postElementId: function() {
     return "post_" + (this.get('post_number'));

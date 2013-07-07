@@ -26,6 +26,8 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:must_approve_users, false)
   client_setting(:ga_tracking_code, "")
   client_setting(:ga_domain_name, "")
+  client_setting(:enable_escaped_fragments, false)
+  client_setting(:enable_noscript_support, true)
   client_setting(:enable_long_polling, true)
   client_setting(:polling_interval, 3000)
   client_setting(:anon_polling_interval, 30000)
@@ -104,7 +106,6 @@ class SiteSetting < ActiveRecord::Base
   setting(:max_flags_per_day, 20)
   setting(:max_edits_per_day, 30)
   setting(:max_favorites_per_day, 20)
-  setting(:auto_link_images_wider_than, 50)
 
   setting(:email_time_window_mins, 10)
 
@@ -205,7 +206,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:max_word_length, 30)
 
   setting(:newuser_max_links, 2)
-  setting(:newuser_max_images, 0)
+  client_setting(:newuser_max_images, 0)
 
   setting(:newuser_spam_host_threshold, 3)
 
