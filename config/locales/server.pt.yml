@@ -339,8 +339,6 @@ pt:
     basic_requires_read_posts: "How many posts a user needs to have read to be promoted to basic level"
     basic_requires_time_spent_mins: "How many mins a user needs to have spent reading posts to be promoted to basic level"
 
-    auto_link_images_wider_than: "How wide does an image need to be, to be considered for auto link and lightbox treatment"
-
     email_time_window_mins: "How many minutes we wait before sending a user mail, to give them a chance to see it first."
     flush_timings_secs: "How frequently we flush timing data to the server, in seconds."
 

@@ -411,8 +411,6 @@ id:
     basic_requires_read_posts: "How many posts a new user must read before promotion to basic (1) trust level"
     basic_requires_time_spent_mins: "How many minutes a new user must read posts before promotion to basic (1) trust level"
 
-    auto_link_images_wider_than: "Images wider than this, in pixels, will get auto link and lightbox treatment"
-
     email_time_window_mins: "How many minutes we wait before sending a user mail, to give them a chance to see it first"
     flush_timings_secs: "How frequently we flush timing data to the server, in seconds"
     max_word_length: "The maximum allowed word length, in characters, in a topic title"

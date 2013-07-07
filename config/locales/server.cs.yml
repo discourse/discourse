@@ -624,7 +624,6 @@ cs:
     max_mentions_per_post: "Maximální počet zmínek přes @name, které mohou být použity v jednom příspěvku"
 
     create_thumbnails: "Vytvářet náhledy pro obrázky v lightboxu"
-    auto_link_images_wider_than: "Obrázky širší než tato hodnota v pixelech budou odkazovány do lightboxu"
 
     email_time_window_mins: "Kolik minut se čeká než se uživateli zašle email, aby měl možnost obsah vidět sám od sebe"
     flush_timings_secs: "Jak často se vynulují časovací data na serveru, v sekundách"

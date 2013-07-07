@@ -546,8 +546,6 @@ zh_TW:
     newuser_max_mentions_per_post: "一個訪問者可以在一個帖子裏使用 @name 提及的最大數量"
     max_mentions_per_post: "你可以在一個帖子裏使用 @name 提及的最大數量"
 
-    auto_link_images_wider_than: "圖片寬度超過此設定像素值的，將被自動附加一個鏈接並且使用燈箱（lightbox）來展示"
-
     email_time_window_mins: "等待多少分鍾才給用戶發送通知電子郵件，好讓他們有機會自己來浏覽"
     flush_timings_secs: "刷新時間數據的頻率，以秒爲單位"
     max_word_length: "在主題的標題中，允許的詞語長度的最大字符數"

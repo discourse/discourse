@@ -1,5 +1,5 @@
-# Post processing that we can do after a post has already been cooked. For
-# example, inserting the onebox content, or image sizes.
+# Post processing that we can do after a post has already been cooked.
+# For example, inserting the onebox content, or image sizes.
 
 require_dependency 'oneboxer'
 
@@ -16,14 +16,13 @@ class CookedPostProcessor
   end
 
   def post_process
-    return unless @doc.present?
     post_process_images
     post_process_oneboxes
   end
 
   def post_process_images
-    images = @doc.css("img") - @doc.css(".onebox-result img")
-    return unless images.present?
+    images = @doc.css("img") - @doc.css(".onebox-result img") - @doc.css(".quote img")
+    return if images.blank?
 
     images.each do |img|
       # keep track of the original src
@@ -109,13 +108,13 @@ class CookedPostProcessor
 
   def convert_to_link!(img, upload=nil)
     src = img["src"]
+    return unless src.present?
+
     width, height = img["width"].to_i, img["height"].to_i
-
-    return unless src.present? && width > SiteSetting.auto_link_images_wider_than
-
     original_width, original_height = get_size(src)
 
     return unless original_width.to_i > width && original_height.to_i > height
+    return if original_width < SiteSetting.max_image_width
 
     parent = img.parent
     while parent

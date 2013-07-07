@@ -602,7 +602,6 @@ en:
     max_mentions_per_post: "Maximum number of @name notifications you can use in a post"
 
     create_thumbnails: "Create thumbnails for lightboxed images"
-    auto_link_images_wider_than: "Images wider than this, in pixels, will get auto link and lightbox treatment"
 
     email_time_window_mins: "How many minutes we wait before sending a user mail, to give them a chance to see it first"
     flush_timings_secs: "How frequently we flush timing data to the server, in seconds"
