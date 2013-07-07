@@ -11,7 +11,7 @@ class Autospec::Runner
   end
 
   watch(%r{^spec/.+_spec\.rb$})
-  watch(%r{^lib/(.+)\.rb$})     { |m| "spec/components/#{m[1]}_spec.rb" }
+  watch(%r{^lib/(.+)\.rb$})                           { |m| "spec/components/#{m[1]}_spec.rb" }
 
   # Rails example
   watch(%r{^app/(.+)\.rb$})                           { |m| "spec/#{m[1]}_spec.rb" }
@@ -23,6 +23,9 @@ class Autospec::Runner
   # Capybara request specs
   watch(%r{^app/views/(.+)/.*\.(erb|haml)$})          { |m| "spec/requests/#{m[1]}_spec.rb" }
 
+  # Fabrication
+  watch(%r{^spec/fabricators/(.+)_fabricator\.rb$})   { "spec" }
+
   RELOAD_MATCHERS = Set.new
   def self.watch_reload(pattern)
     RELOAD_MATCHERS << pattern
@@ -30,7 +33,6 @@ class Autospec::Runner
 
   watch_reload('spec/spec_helper.rb')
   watch_reload('config/(.*).rb')
-
 
   def self.run(opts={})
     self.new.run(opts)
