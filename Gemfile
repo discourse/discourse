@@ -66,7 +66,7 @@ gem 'sinatra', require: nil
 gem 'slim'  # required for sidekiq-web
 gem 'strong_parameters' # remove when we upgrade to Rails 4
 gem 'therubyracer', require: 'v8'
-gem 'thin'
+gem 'thin', require: false
 gem 'diffy', require: false
 gem 'highline', require: false
 
@@ -146,8 +146,8 @@ gem 'rack-mini-profiler', '0.1.27', require: false  # require: false #, git: 'gi
 # https://github.com/jodosha/redis-store/pull/183
 gem 'redis-rack-cache', git: 'https://github.com/SamSaffron/redis-rack-cache.git', require: false
 gem 'rack-cache', require: false
-
 gem 'rack-cors', require: false
+gem 'unicorn', require: false
 
 # perftools only works on 1.9 atm
 group :profile do

@@ -230,6 +230,7 @@ GEM
     json (1.7.7)
     jwt (0.1.8)
       multi_json (>= 1.5)
+    kgio (2.8.0)
     librarian (0.1.0)
       highline
       thor (~> 0.15)
@@ -334,6 +335,7 @@ GEM
       rake (>= 0.8.7)
       rdoc (~> 3.4)
       thor (>= 0.14.6, < 2.0)
+    raindrops (0.11.0)
     rake (10.0.4)
     rake-compiler (0.8.3)
       rake
@@ -455,6 +457,10 @@ GEM
     uglifier (2.0.1)
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
+    unicorn (4.6.3)
+      kgio (~> 2.6)
+      rack
+      raindrops (~> 0.7)
 
 PLATFORMS
   ruby
@@ -549,4 +555,5 @@ DEPENDENCIES
   timecop
   turbo-sprockets-rails3
   uglifier
+  unicorn
   vestal_versions!
