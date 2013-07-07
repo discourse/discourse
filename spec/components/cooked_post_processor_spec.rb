@@ -1,5 +1,4 @@
 require 'spec_helper'
-
 require 'cooked_post_processor'
 
 describe CookedPostProcessor do
@@ -42,7 +41,6 @@ describe CookedPostProcessor do
         @topic = Fabricate(:topic)
         @post = Fabricate.build(:post_with_image_url, topic: @topic, user: @topic.user)
         @cpp = CookedPostProcessor.new(@post, image_sizes: {'http://www.forumwarz.com/images/header/logo.png' => {'width' => 111, 'height' => 222}})
-        @cpp.expects(:get_size).returns([111,222])
       end
 
       it "doesn't call image_dimensions because it knows the size" do
@@ -134,6 +132,7 @@ describe CookedPostProcessor do
       let(:processor) { CookedPostProcessor.new(post) }
 
       before do
+        SiteSetting.stubs(:max_image_width).returns(10)
         FastImage.stubs(:size).returns([1000, 1000])
         processor.post_process_images
       end
@@ -155,13 +154,8 @@ describe CookedPostProcessor do
       SiteSetting.stubs(:crawl_images?).returns(true)
     end
 
-    let :post_with_img do
-      Fabricate.build(:post, cooked: '<p><img src="http://hello.com/image.png"></p>')
-    end
-
-    let :cpp_for_post do
-      CookedPostProcessor.new(post_with_img)
-    end
+    let(:post_with_img) { Fabricate.build(:post, cooked: '<p><img src="http://hello.com/image.png"></p>') }
+    let(:cpp_for_post) { CookedPostProcessor.new(post_with_img) }
 
     it 'convert img tags to links if they are sized down' do
       cpp_for_post.expects(:get_size).returns([2000,2000]).twice
@@ -177,31 +171,32 @@ describe CookedPostProcessor do
 
   end
 
-  context 'image_dimensions' do
+  context "image_dimensions" do
+
     it "returns unless called with a http or https url" do
-      cpp.image_dimensions('/tmp/image.jpg').should be_blank
+      cpp.image_dimensions("/tmp/image.jpg").should be_blank
     end
 
-    context 'with valid url' do
-      before do
-        @url = 'http://www.forumwarz.com/images/header/logo.png'
-      end
+    context "with valid url" do
 
-      it "doesn't call fastimage if image crawling is disabled" do
+      let(:url) { "http://www.forumwarz.com/images/header/logo.png" }
+
+      it "doesn't call FastImage if image crawling is disabled" do
         SiteSetting.expects(:crawl_images?).returns(false)
         FastImage.expects(:size).never
-        cpp.image_dimensions(@url)
+        cpp.image_dimensions(url)
       end
 
-      it "calls fastimage if image crawling is enabled" do
+      it "calls FastImage if image crawling is enabled" do
         SiteSetting.expects(:crawl_images?).returns(true)
-        FastImage.expects(:size).with(@url)
-        cpp.image_dimensions(@url)
+        FastImage.expects(:size).with(url)
+        cpp.image_dimensions(url)
       end
     end
+
   end
 
-  context 'is_valid_image_uri?' do
+  context "is_valid_image_uri?" do
 
     it "needs the scheme to be either http or https" do
       cpp.is_valid_image_uri?("http://domain.com").should   == true
@@ -212,25 +207,25 @@ describe CookedPostProcessor do
       cpp.is_valid_image_uri?("/tmp/image.png").should      == false
     end
 
-    it "doesn't throw exception with a bad URI" do
+    it "doesn't throw an exception with a bad URI" do
       cpp.is_valid_image_uri?("http://do<main.com").should  == nil
     end
 
   end
 
-  context 'get_filename' do
+  context "get_filename" do
 
     it "returns the filename of the src when there is no upload" do
       cpp.get_filename(nil, "http://domain.com/image.png").should == "image.png"
     end
 
     it "returns the original filename of the upload when there is an upload" do
-      upload = Fabricate.build(:upload, { original_filename: "upload.jpg" })
+      upload = build(:upload, { original_filename: "upload.jpg" })
       cpp.get_filename(upload, "http://domain.com/image.png").should == "upload.jpg"
     end
 
     it "returns a generic name for pasted images" do
-      upload = Fabricate.build(:upload, { original_filename: "blob.png" })
+      upload = build(:upload, { original_filename: "blob.png" })
       cpp.get_filename(upload, "http://domain.com/image.png").should == I18n.t('upload.pasted_image_filename')
     end
 

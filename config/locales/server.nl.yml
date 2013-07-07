@@ -574,8 +574,6 @@ nl:
     newuser_max_mentions_per_post: "Maximum aantal @naam notificaties dat een nieuw lid in een bericht kan gebruiken"
     max_mentions_per_post: "Maximum aantal @naam notificaties dat je in een bericht kan gebruiken"
 
-    auto_link_images_wider_than: "Afbeeldingen breder dan dit, in pixels, krijgen automatisch een link naar een lightbox"
-
     email_time_window_mins: "Hoeveel minuten we wachten met het sturen van een e-mail naar een persoon, om ze een kans te geven het eerst op de site te kunnen lezen."
     flush_timings_secs: "Hoe vaak we timing-data naar de server sturen, in seconden."
     max_word_length: "De maximumlengte van een woord in een topictitel"

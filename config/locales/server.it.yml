@@ -548,8 +548,6 @@ it:
     newuser_max_mentions_per_post: "Numero massimo di menzioni @name che un nuovo utente può fare in un post"
     max_mentions_per_post: "Numero massimo di menzioni @name che un utente può fare in un post"
 
-    auto_link_images_wider_than: "Immagini più larghe di questo valore (in pixel) verranno visualizzate tramite lightbox"
-
     email_time_window_mins: "Quanti minuti prima che una email venga mandata all'utente, per dare la possibilità di controllarla"
     flush_timings_secs: "Frequenza di aggiornamento dati temporali (su server), in secondi"
     max_word_length: "Numero massimo di caratteri che compongono una parola del titolo di un topic"
