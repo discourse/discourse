@@ -996,9 +996,11 @@ zh_TW:
         create: '添加管理員用戶'
         last_emailed: "最後一次郵寄"
         not_found: "抱歉，在我們的系統中此用戶名不存在。"
-        new: "新建"
         active: "活躍"
-        pending: "待定"
+        nav:
+          active: "活躍"
+          new: "新建"
+          pending: "待定"
         approved: "已批准？"
         approved_selected:
           one: "批准用戶"

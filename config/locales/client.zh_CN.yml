@@ -1066,9 +1066,11 @@ zh_CN:
         create: '添加管理员用户'
         last_emailed: "最后一次邮寄"
         not_found: "抱歉，在我们的系统中此用户名不存在。"
-        new: "新建"
         active: "活跃"
-        pending: "待定"
+        nav:
+          new: "新建"
+          active: "活跃"
+          pending: "待定"
         approved: "已批准？"
         approved_selected:
           one: "批准用户"

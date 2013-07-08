@@ -1133,9 +1133,15 @@ en:
         create: 'Add Admin User'
         last_emailed: "Last Emailed"
         not_found: "Sorry, that username doesn't exist in our system."
-        new: "New"
         active: "Active"
-        pending: "Pending"
+        nav:
+          new: "New"
+          active: "Active"
+          pending: "Pending"
+          admins: 'Admins'
+          moderators: 'Mods'
+          banned: 'Banned'
+          blocked: 'Blocked'
         approved: "Approved?"
         approved_selected:
           one: "approve user"

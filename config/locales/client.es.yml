@@ -839,9 +839,11 @@ es:
         create: 'Add Admin User'
         last_emailed: "Last Emailed"
         not_found: "Sorry that username doesn't exist in our system."
-        new: "New"
         active: "Active"
-        pending: "Pending"
+        nav:
+          new: "New"
+          active: "Active"
+          pending: "Pending"
         approved: "Approved?"
         approved_selected:
           one: "approve user"

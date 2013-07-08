@@ -996,9 +996,11 @@ it:
         create: 'Aggiungi Amministratore'
         last_emailed: "Ultima Email"
         not_found: "Spiacenti quell'username non esiste nel sistema."
-        new: "Nuovi"
         active: "Attivi"
-        pending: "In Sospeso"
+        nav:
+          new: "Nuovi"
+          active: "Attivi"
+          pending: "In Sospeso"
         approved: "Approvare?"
         approved_selected:
           one: "approva utente"
