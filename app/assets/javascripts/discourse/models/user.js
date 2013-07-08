@@ -353,8 +353,15 @@ Discourse.User.reopenClass({
     });
 
     var result = Em.A();
-    result.pushObject(responses);
     result.pushObjects(stats.rejectProperty('isResponse'));
+
+    var insertAt = 1;
+    result.forEach(function(item, index){
+     if(item.action_type === Discourse.UserAction.NEW_TOPIC || item.action_type === Discourse.UserAction.POST){
+       insertAt = index + 1;
+     }
+    });
+    result.insertAt(insertAt, responses);
     return(result);
   },
 
