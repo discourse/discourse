@@ -377,7 +377,7 @@ Discourse.TopicView.reopenClass({
 
             var first = true;
             var t = new Date();
-            console.log("DESIRED:" + desired);
+            // console.log("DESIRED:" + desired);
             var enforceDesired = function(){
               if($(window).scrollTop() !== desired) {
                 console.log("GOT EVENT " + $(window).scrollTop());
