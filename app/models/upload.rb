@@ -31,7 +31,6 @@ class Upload < ActiveRecord::Base
   def create_thumbnail!
     return unless SiteSetting.create_thumbnails?
     return if SiteSetting.enable_s3_uploads?
-    return if width < SiteSetting.max_image_width
     return if has_thumbnail?
     thumbnail = OptimizedImage.create_for(self, width, height)
     optimized_images << thumbnail if thumbnail
@@ -48,10 +47,7 @@ class Upload < ActiveRecord::Base
     # compute the sha
     sha1 = Digest::SHA1.file(file.tempfile).hexdigest
     # check if the file has already been uploaded
-    upload = Upload.where(sha1: sha1).first
-
-    # otherwise, create it
-    if upload.blank?
+    unless upload = Upload.where(sha1: sha1).first
       # retrieve image info
       image_info = FastImage.new(file.tempfile, raise_on_failure: true)
       # compute image aspect ratio
@@ -109,6 +105,16 @@ class Upload < ActiveRecord::Base
 
   def self.asset_host
     ActionController::Base.asset_host
+  end
+
+  def self.get_from_url(url)
+    if has_been_uploaded?(url)
+      if m = LocalStore.uploaded_regex.match(url)
+        Upload.where(id: m[:upload_id]).first
+      elsif is_on_s3?(url)
+        Upload.where(url: url).first
+      end
+    end
   end
 
 end
