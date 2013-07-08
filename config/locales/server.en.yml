@@ -894,11 +894,11 @@ en:
         For additional guidance, please refer to our [FAQ](%{base_url}/faq).
 
     user_automatically_blocked:
-      subject_template: "User %{username} was automatically blocked"
+      subject_template: "New user %{username} was automatically blocked"
       text_body_template: |
-        This is an automated message to inform you that [%{username}](%{user_url}) has been automatically blocked because too many people submitted flags against %{username}'s post(s).
+        This is an automated message to inform you that the new user [%{username}](%{user_url}) was automatically blocked because multiple users flagged %{username}'s post(s).
 
-        Please [review the flags](/admin/flags). If %{username} should not be blocked from posting, click the unblock button on [the admin user page](%{user_url}).
+        Please [review the flags](/admin/flags). If %{username} was incorrectly blocked from posting, click the unblock button on [the admin page for this user](%{user_url}).
 
     spam_post_blocked:
       subject_template: "Spam was detected in a post by %{username}"
