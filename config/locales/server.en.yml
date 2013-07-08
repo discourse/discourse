@@ -934,7 +934,7 @@ en:
         Please visit this link to view the topic: %{base_url}%{url}
 
     user_replied:
-      subject_template: "[%{site_name}] %{username} replied to your post in '%{topic_title}'"
+      subject_template: "[%{site_name}] new reply to your post in '%{topic_title}'"
       text_body_template: |
         %{username} replied to your post in '%{topic_title}' on %{site_name}:
 
@@ -967,7 +967,7 @@ en:
         %{respond_instructions}
 
     user_posted:
-      subject_template: "[%{site_name}] %{username} posted in '%{topic_title}'"
+      subject_template: "[%{site_name}] new post in '%{topic_title}'"
       text_body_template: |
         %{username} posted in '%{topic_title}' on %{site_name}:
 

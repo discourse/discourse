@@ -47,11 +47,24 @@ module Email
                                user_id: @user.try(:id))
 
 
-      @message.header['List-Id'] = Email::Sender.list_id_for(SiteSetting.title, Discourse.base_url)
+      host = Email::Sender.host_for(Discourse.base_url)
 
-      add_header_to_log('X-Discourse-Reply-Key', email_log, :reply_key)
-      add_header_to_log('X-Discourse-Post-Id', email_log, :post_id)
-      add_header_to_log('X-Discourse-Topic-Id', email_log, :topic_id)
+      @message.header['List-Id'] = Email::Sender.list_id_for(SiteSetting.title, host)
+
+      topic_id = header_value('X-Discourse-Topic-Id')
+      post_id = header_value('X-Discourse-Post-Id')
+      reply_key = header_value('X-Discourse-Reply-Key')
+
+      if topic_id.present?
+        email_log.topic_id = topic_id
+
+        topic_identitfier = "<topic/#{topic_id}@#{host}>"
+        @message.header['In-Reply-To'] = topic_identitfier
+        @message.header['References'] = topic_identitfier
+      end
+
+      email_log.post_id = post_id if post_id.present?
+      email_log.reply_key = reply_key if reply_key.present?
 
       # Remove headers we don't need anymore
       @message.header['X-Discourse-Topic-Id'] = nil
@@ -66,8 +79,7 @@ module Email
 
     end
 
-    def self.list_id_for(site_name, base_url)
-
+    def self.host_for(base_url)
       host = "localhost"
       if base_url.present?
         begin
@@ -76,18 +88,19 @@ module Email
         rescue URI::InvalidURIError
         end
       end
+      host
+    end
 
+    def self.list_id_for(site_name, host)
       "\"#{site_name.gsub(/\"/, "'")}\" <discourse.forum.#{Slug.for(site_name)}.#{host}>"
     end
 
     private
 
-    def add_header_to_log(name, email_log, email_log_field)
+    def header_value(name)
       header = @message.header[name]
-      return unless header
-
-      val = header.value
-      email_log[email_log_field] = val if val.present?
+      return nil unless header
+      header.value
     end
 
   end
