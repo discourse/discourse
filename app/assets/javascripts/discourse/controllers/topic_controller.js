@@ -161,7 +161,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
         if (error && error.responseText) {
           bootbox.alert($.parseJSON(error.responseText).errors[0]);
         } else {
-          bootbox.alert(Em.String.i18n('generic_error'));
+          bootbox.alert(I18n.t('generic_error'));
         }
       });
 
@@ -172,7 +172,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
 
   deleteSelected: function() {
     var topicController = this;
-    bootbox.confirm(Em.String.i18n("post.delete.confirm", { count: this.get('selectedPostsCount')}), function(result) {
+    bootbox.confirm(I18n.t("post.delete.confirm", { count: this.get('selectedPostsCount')}), function(result) {
       if (result) {
 
         // If all posts are selected, it's the same thing as deleting the topic
@@ -210,7 +210,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
 
     promise.then(function() {
       Discourse.Post.loadQuote(post.get('id')).then(function(q) {
-        composerController.appendText("" + (Em.String.i18n("post.continue_discussion", {
+        composerController.appendText("" + (I18n.t("post.continue_discussion", {
           postLink: postLink
         })) + "\n\n" + q);
       });
@@ -251,7 +251,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     var topicController = this;
     this.unsubscribe();
     this.get('content').destroy().then(function() {
-      topicController.set('message', Em.String.i18n('topic.deleted'));
+      topicController.set('message', I18n.t('topic.deleted'));
       topicController.set('loaded', false);
     });
   },
@@ -356,7 +356,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
 
   toggleBookmark: function(post) {
     if (!Discourse.User.current()) {
-      alert(Em.String.i18n("bookmarks.not_bookmarked"));
+      alert(I18n.t("bookmarks.not_bookmarked"));
       return;
     }
     post.toggleProperty('bookmarked');
@@ -382,7 +382,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     if (Discourse.User.current('staff')) {
       post.set('deleted_at', new Date());
     } else {
-      post.set('cooked', Discourse.Markdown.cook(Em.String.i18n("post.deleted_by_author")));
+      post.set('cooked', Discourse.Markdown.cook(I18n.t("post.deleted_by_author")));
       post.set('can_delete', false);
       post.set('version', post.get('version') + 1);
     }

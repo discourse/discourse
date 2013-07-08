@@ -24,11 +24,11 @@
     cantVote: function() {
 
       if (!Discourse.get('currentUser')) {
-        bootbox.alert(Em.String.i18n('vote.not_logged_in'));
+        bootbox.alert(I18n.t('vote.not_logged_in'));
         return false;
       }
 
-      bootbox.alert(Em.String.i18n('vote.cant'));
+      bootbox.alert(I18n.t('vote.cant'));
       return false;
     },
 

@@ -8,7 +8,7 @@
 **/
 Discourse.LoginView = Discourse.ModalBodyView.extend({
   templateName: 'modal/login',
-  title: Em.String.i18n('login.title'),
+  title: I18n.t('login.title'),
 
 
   mouseMove: function(e) {

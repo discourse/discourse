@@ -12,8 +12,8 @@ Discourse.ShareView = Discourse.View.extend({
   classNameBindings: ['hasLink'],
 
   title: function() {
-    if (this.get('controller.type') === 'topic') return Em.String.i18n('share.topic');
-    return Em.String.i18n('share.post');
+    if (this.get('controller.type') === 'topic') return I18n.t('share.topic');
+    return I18n.t('share.post');
   }.property('controller.type'),
 
   hasLink: function() {

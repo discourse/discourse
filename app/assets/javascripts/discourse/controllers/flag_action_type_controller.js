@@ -12,7 +12,7 @@ Discourse.FlagActionTypeController = Discourse.ObjectController.extend({
   message: Em.computed.alias('controllers.flag.message'),
 
   customPlaceholder: function(){
-    return Em.String.i18n("flagging.custom_placeholder_" + this.get('name_key'));
+    return I18n.t("flagging.custom_placeholder_" + this.get('name_key'));
   }.property('name_key'),
 
   formattedName: function(){
@@ -34,11 +34,11 @@ Discourse.FlagActionTypeController = Discourse.ObjectController.extend({
     var len = this.get('message.length') || 0;
     var minLen = Discourse.SiteSettings.min_private_message_post_length;
     if (len === 0) {
-      return Em.String.i18n("flagging.custom_message.at_least", { n: minLen });
+      return I18n.t("flagging.custom_message.at_least", { n: minLen });
     } else if (len < minLen) {
-      return Em.String.i18n("flagging.custom_message.more", { n: minLen - len });
+      return I18n.t("flagging.custom_message.more", { n: minLen - len });
     } else {
-      return Em.String.i18n("flagging.custom_message.left", {
+      return I18n.t("flagging.custom_message.left", {
         n: Discourse.PostActionType.MAX_MESSAGE_LENGTH - len
       });
     }

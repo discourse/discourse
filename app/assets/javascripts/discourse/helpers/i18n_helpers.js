@@ -1,4 +1,15 @@
 /**
+ We always prefix with "js." to select exactly what we want passed
+ through to the front end.
+**/
+
+var oldI18nlookup = I18n.lookup;
+I18n.lookup = function() {
+  arguments[0] = "js." + arguments[0];
+  return oldI18nlookup.apply(this, arguments);
+}
+
+/**
   Look up a translation for an i18n key in our dictionary.
 
   @method i18n
@@ -12,21 +23,8 @@ Ember.Handlebars.registerHelper('i18n', function(property, options) {
   _.each(params, function(value, key) {
     params[key] = Em.Handlebars.get(_this, value, options);
   });
-  return Ember.String.i18n(property, params);
+  return I18n.t(property, params);
 });
-
-/* We always prefix with .js to select exactly what we want passed through to the front end.
-*/
-
-/**
-  Look up a translation for an i18n key in our dictionary.
-
-  @method i18n
-  @for Ember.String
-**/
-Ember.String.i18n = function(scope, options) {
-  return I18n.translate("js." + scope, options);
-};
 
 /**
   Set up an i18n binding that will update as a count changes, complete with pluralization.
@@ -39,9 +37,7 @@ Ember.Handlebars.registerHelper('countI18n', function(key, options) {
     tagName: 'span',
 
     render: function(buffer) {
-      buffer.push(Ember.String.i18n(key, {
-        count: this.get('count')
-      }));
+      buffer.push(I18n.t(key, { count: this.get('count') }));
     },
 
     countChanged: function() {
@@ -54,8 +50,6 @@ Ember.Handlebars.registerHelper('countI18n', function(key, options) {
 
 if (Ember.EXTEND_PROTOTYPES) {
   String.prototype.i18n = function(options) {
-    return Ember.String.i18n(String(this), options);
+    return I18n.t(String(this), options);
   };
 }
-
-

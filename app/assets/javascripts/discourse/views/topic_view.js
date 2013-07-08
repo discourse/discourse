@@ -130,7 +130,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
     var topicView = this;
     this.get('topic').resetRead().then(function() {
-      topicView.set('controller.message', Em.String.i18n("topic.read_position_reset"));
+      topicView.set('controller.message', I18n.t("topic.read_position_reset"));
       topicView.set('controller.loaded', false);
     });
   },
@@ -289,7 +289,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
   browseMoreMessage: function() {
     var opts = {
-      latestLink: "<a href=\"/\">" + (Em.String.i18n("topic.view_latest_topics")) + "</a>"
+      latestLink: "<a href=\"/\">" + (I18n.t("topic.view_latest_topics")) + "</a>"
     };
 
 
@@ -297,7 +297,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     if (category) {
       opts.catLink = Discourse.Utilities.categoryLink(category);
     } else {
-      opts.catLink = "<a href=\"" + Discourse.getURL("/categories") + "\">" + (Em.String.i18n("topic.browse_all_categories")) + "</a>";
+      opts.catLink = "<a href=\"" + Discourse.getURL("/categories") + "\">" + (I18n.t("topic.browse_all_categories")) + "</a>";
     }
 
     var tracking = this.get('topicTrackingState');
@@ -318,9 +318,9 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
       });
     }
     else if (category) {
-      return Ember.String.i18n("topic.read_more_in_category", opts);
+      return I18n.t("topic.read_more_in_category", opts);
     } else {
-      return Ember.String.i18n("topic.read_more", opts);
+      return I18n.t("topic.read_more", opts);
     }
   }.property('topicTrackingState.messageCount')
 

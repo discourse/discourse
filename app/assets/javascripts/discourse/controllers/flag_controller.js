@@ -36,9 +36,9 @@ Discourse.FlagController = Discourse.ObjectController.extend(Discourse.ModalFunc
 
   submitText: function(){
     if (this.get('selected.is_custom_flag')) {
-      return Em.String.i18n("flagging.notify_action");
+      return I18n.t("flagging.notify_action");
     } else {
-      return Em.String.i18n("flagging.action");
+      return I18n.t("flagging.action");
     }
   }.property('selected.is_custom_flag'),
 

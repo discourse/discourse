@@ -40,7 +40,7 @@ Discourse.TopicDetails = Discourse.Model.extend({
     if (typeof this.get('notifications_reason_id') === 'number') {
       locale_string += "_" + this.get('notifications_reason_id');
     }
-    return Em.String.i18n(locale_string, { username: Discourse.User.current('username_lower') });
+    return I18n.t(locale_string, { username: Discourse.User.current('username_lower') });
   }.property('notification_level', 'notifications_reason_id'),
 
 

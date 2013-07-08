@@ -8,5 +8,5 @@
 **/
 Discourse.EditTopicAutoCloseView = Discourse.ModalBodyView.extend({
   templateName: 'modal/auto_close',
-  title: Em.String.i18n('topic.auto_close_title')
+  title: I18n.t('topic.auto_close_title')
 });

@@ -14,7 +14,7 @@ Discourse.AdminCustomizeController = Ember.ArrayController.extend({
     @method newCustomization
   **/
   newCustomization: function() {
-    var item = Discourse.SiteCustomization.create({name: Em.String.i18n("admin.customize.new_style")});
+    var item = Discourse.SiteCustomization.create({name: I18n.t("admin.customize.new_style")});
     this.pushObject(item);
     this.set('selectedItem', item);
   },
@@ -45,7 +45,7 @@ Discourse.AdminCustomizeController = Ember.ArrayController.extend({
   **/
   destroy: function() {
     var _this = this;
-    return bootbox.confirm(Em.String.i18n("admin.customize.delete_confirm"), Em.String.i18n("no_value"), Em.String.i18n("yes_value"), function(result) {
+    return bootbox.confirm(I18n.t("admin.customize.delete_confirm"), I18n.t("no_value"), I18n.t("yes_value"), function(result) {
       var selected;
       if (result) {
         selected = _this.get('selectedItem');

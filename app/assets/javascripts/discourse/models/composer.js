@@ -60,7 +60,7 @@ Discourse.Composer = Discourse.Model.extend({
     if (topic) {
       var postNumber = this.get('post.post_number');
       postLink = "<a href='" + (topic.get('url')) + "/" + postNumber + "'>" +
-        Em.String.i18n("post.post_number", { number: postNumber }) + "</a>";
+        I18n.t("post.post_number", { number: postNumber }) + "</a>";
       topicLink = "<a href='" + (topic.get('url')) + "'> " + (Handlebars.Utils.escapeExpression(topic.get('title'))) + "</a>";
     }
 
@@ -68,7 +68,7 @@ Discourse.Composer = Discourse.Model.extend({
         post = this.get('post');
 
     if (post) {
-      postDescription = Em.String.i18n('post.' +  this.get('action'), {
+      postDescription = I18n.t('post.' +  this.get('action'), {
         link: postLink,
         replyAvatar: Discourse.Utilities.tinyAvatar(post.get('username')),
         username: this.get('post.username')
@@ -76,24 +76,24 @@ Discourse.Composer = Discourse.Model.extend({
 
       var replyUsername = post.get('reply_to_user.username');
       if (replyUsername && this.get('action') === EDIT) {
-        postDescription += " " + Em.String.i18n("post.in_reply_to") + " " +
+        postDescription += " " + I18n.t("post.in_reply_to") + " " +
                            Discourse.Utilities.tinyAvatar(replyUsername) + " " + replyUsername;
       }
     }
 
     switch (this.get('action')) {
-      case PRIVATE_MESSAGE: return Em.String.i18n('topic.private_message');
-      case CREATE_TOPIC: return Em.String.i18n('topic.create_long');
+      case PRIVATE_MESSAGE: return I18n.t('topic.private_message');
+      case CREATE_TOPIC: return I18n.t('topic.create_long');
       case REPLY:
       case EDIT:
         if (postDescription) return postDescription;
-        if (topic) return Em.String.i18n('post.reply_topic', { link: topicLink });
+        if (topic) return I18n.t('post.reply_topic', { link: topicLink });
     }
 
   }.property('action', 'post', 'topic', 'topic.title'),
 
   toggleText: function() {
-    return this.get('showPreview') ? Em.String.i18n('composer.hide_preview') : Em.String.i18n('composer.show_preview');
+    return this.get('showPreview') ? I18n.t('composer.hide_preview') : I18n.t('composer.show_preview');
   }.property('showPreview'),
 
   hidePreview: Em.computed.not('showPreview'),
@@ -139,10 +139,10 @@ Discourse.Composer = Discourse.Model.extend({
   // The text for the save button
   saveText: function() {
     switch (this.get('action')) {
-      case EDIT: return Em.String.i18n('composer.save_edit');
-      case REPLY: return Em.String.i18n('composer.reply');
-      case CREATE_TOPIC: return Em.String.i18n('composer.create_topic');
-      case PRIVATE_MESSAGE: return Em.String.i18n('composer.create_pm');
+      case EDIT: return I18n.t('composer.save_edit');
+      case REPLY: return I18n.t('composer.reply');
+      case CREATE_TOPIC: return I18n.t('composer.create_topic');
+      case PRIVATE_MESSAGE: return I18n.t('composer.create_pm');
     }
   }.property('action'),
 
@@ -235,13 +235,13 @@ Discourse.Composer = Discourse.Model.extend({
       var titleDiff = this.get('missingTitleCharacters');
       if (titleDiff > 0) {
         this.flashDraftStatusForNewUser();
-        return this.set('draftStatus', Em.String.i18n('composer.min_length.need_more_for_title', { n: titleDiff }));
+        return this.set('draftStatus', I18n.t('composer.min_length.need_more_for_title', { n: titleDiff }));
       }
     // 'reply' is focused
     } else if ($reply.is(':focus')) {
       var replyDiff = this.get('missingReplyCharacters');
       if (replyDiff > 0) {
-        return this.set('draftStatus', Em.String.i18n('composer.min_length.need_more_for_reply', { n: replyDiff }));
+        return this.set('draftStatus', I18n.t('composer.min_length.need_more_for_reply', { n: replyDiff }));
       }
     }
 
@@ -415,7 +415,7 @@ Discourse.Composer = Discourse.Model.extend({
         if (response && response.errors) {
           promise.reject(response.errors[0]);
         } else {
-          promise.reject(Em.String.i18n('generic_error'));
+          promise.reject(I18n.t('generic_error'));
         }
         post.set('cooked', oldCooked);
         composer.set('composeState', OPEN);
@@ -525,16 +525,16 @@ Discourse.Composer = Discourse.Model.extend({
       usernames: this.get('targetUsernames')
     };
 
-    this.set('draftStatus', Em.String.i18n('composer.saving_draft_tip'));
+    this.set('draftStatus', I18n.t('composer.saving_draft_tip'));
 
     var composer = this;
 
     // try to save the draft
     return Discourse.Draft.save(this.get('draftKey'), this.get('draftSequence'), data)
       .then(function() {
-        composer.set('draftStatus', Em.String.i18n('composer.saved_draft_tip'));
+        composer.set('draftStatus', I18n.t('composer.saved_draft_tip'));
       }, function() {
-        composer.set('draftStatus', Em.String.i18n('composer.drafts_offline'));
+        composer.set('draftStatus', I18n.t('composer.drafts_offline'));
       });
   },
 
