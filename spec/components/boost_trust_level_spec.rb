@@ -48,8 +48,8 @@ describe BoostTrustLevel do
         user.update_attributes(trust_level: TrustLevel.levels[:basic])
       end
 
-      it "should not demote the user but log the action anyway" do
-        AdminLogger.any_instance.expects(:log_trust_level_change).with(user, TrustLevel.levels[:newuser]).once
+      it "should not demote the user and not log the action" do
+        AdminLogger.any_instance.expects(:log_trust_level_change).with(user, TrustLevel.levels[:newuser]).never
         boostr = BoostTrustLevel.new(user: user, level: TrustLevel.levels[:newuser], logger: logger)
         expect { boostr.save! }.to raise_error(Discourse::InvalidAccess, "You attempted to demote #{user.name} to 'newuser'. However their trust level is already 'basic'. #{user.name} will remain at 'basic'")
         user.trust_level.should == TrustLevel.levels[:basic]
