@@ -514,6 +514,8 @@ en:
     system_username: "Username for the author of automated private messages sent by the forum"
     send_welcome_message: "Do new users get a welcome private message?"
     suppress_reply_directly_below: "Don't show reply count on a post when there is a single reply directly below"
+    suppress_reply_directly_above: "Don't show in-reply-to on a post when there is a single reply directly above"
+
     allow_index_in_robots_txt: "Site should be indexed by search engines (update robots.txt)"
     email_domains_blacklist: "A pipe-delimited list of email domains that are not allowed. Example: mailinator.com|trashmail.net"
     email_domains_whitelist: "A pipe-delimited list of email domains that users may register with. WARNING: Users with email domains other than those listed will not be allowed."

@@ -329,30 +329,82 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 Discourse.TopicView.reopenClass({
 
   // Scroll to a given post, if in the DOM. Returns whether it was in the DOM or not.
-  jumpToPost: function(topicId, postNumber) {
+  jumpToPost: function(topicId, postNumber, avoidScrollIfPossible) {
     Em.run.scheduleOnce('afterRender', function() {
+
+      var rows = $('.topic-post.ready');
 
       // Make sure we're looking at the topic we want to scroll to
       if (topicId !== parseInt($('#topic').data('topic-id'), 10)) { return false; }
 
       var $post = $("#post_" + postNumber);
       if ($post.length) {
-        if (postNumber === 1) {
-          $('html, body').scrollTop(0);
+
+        var postTop = $post.offset().top;
+        var highlight = true;
+
+        var header = $('header');
+        var title = $('#topic-title');
+        var expectedOffset = title.height() - header.find('.contents').height();
+        console.log(expectedOffset);
+
+        if (expectedOffset < 0) {
+          expectedOffset = 0;
+        }
+
+        var offset = (header.outerHeight(true) + expectedOffset);
+        var windowScrollTop = $('html, body').scrollTop();
+
+        if (avoidScrollIfPossible && postTop > windowScrollTop + offset && postTop < windowScrollTop + $(window).height() + 100) {
+          // in view
         } else {
-          var header = $('header');
-          var title = $('#topic-title');
-          var expectedOffset = title.height() - header.find('.contents').height();
+          // not in view ... bring into view
+          if (postNumber === 1) {
+            $(window).scrollTop(0);
+            highlight = false;
+          } else {
+            var desired = $post.offset().top - offset;
+            $(window).scrollTop(desired);
 
-          if (expectedOffset < 0) {
-            expectedOffset = 0;
+            // TODO @Robin, I am seeing multiple events in chrome issued after
+            // jumpToPost if I refresh a page, sometimes I see 2, sometimes 3
+            //
+            // 1. Where are they coming from?
+            // 2. On refresh we should only issue a single scrollTop
+            // 3. If you are scrolled down in BoingBoing desired sometimes is wrong
+            //      due to vanishing header, we should not be rendering it imho until after
+            //      we render the posts
+
+            var first = true;
+            var t = new Date();
+            console.log("DESIRED:" + desired);
+            var enforceDesired = function(){
+              if($(window).scrollTop() !== desired) {
+                console.log("GOT EVENT " + $(window).scrollTop());
+                console.log("Time " + (new Date() - t));
+                console.trace();
+                if(first) {
+                  $(window).scrollTop(desired);
+                  first = false;
+                }
+                // $(document).unbind("scroll", enforceDesired);
+              }
+            };
+
+            // uncomment this line to help debug this issue.
+            // $(document).scroll(enforceDesired);
           }
+        }
 
-          $('html, body').scrollTop($post.offset().top - (header.outerHeight(true) + expectedOffset));
-
+        if(highlight) {
           var $contents = $('.topic-body .contents', $post);
-          var originalCol = $contents.css('backgroundColor');
-          $contents.css({ backgroundColor: "#ffffcc" }).animate({ backgroundColor: originalCol }, 2500);
+          var origColor = $contents.data('orig-color') || $contents.css('backgroundColor');
+
+          $contents.data("orig-color", origColor);
+          $contents
+            .css({ backgroundColor: "#ffffcc" })
+            .stop()
+            .animate({ backgroundColor: origColor }, 2500);
         }
       }
     });
