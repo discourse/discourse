@@ -86,14 +86,23 @@ class TopicView
     @topic.title
   end
 
-  def summary
+  def desired_post
+    return @desired_post if @desired_post.present?
     return nil if posts.blank?
-    Summarize.new(posts.first.cooked).summary
+
+    @desired_post = posts.detect {|p| p.post_number == @post_number.to_i}
+    @desired_post ||= posts.first
+    @desired_post
+  end
+
+  def summary
+    return nil if desired_post.blank?
+    Summarize.new(desired_post.cooked).summary
   end
 
   def image_url
-    return nil if posts.blank?
-    posts.first.user.small_avatar_url
+    return nil if desired_post.blank?
+    desired_post.user.small_avatar_url
   end
 
   def filter_posts(opts = {})

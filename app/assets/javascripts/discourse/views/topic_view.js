@@ -346,7 +346,6 @@ Discourse.TopicView.reopenClass({
         var header = $('header');
         var title = $('#topic-title');
         var expectedOffset = title.height() - header.find('.contents').height();
-        console.log(expectedOffset);
 
         if (expectedOffset < 0) {
           expectedOffset = 0;
