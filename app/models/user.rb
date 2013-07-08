@@ -64,6 +64,7 @@ class User < ActiveRecord::Base
   attr_accessor :notification_channel_position
 
   scope :blocked, -> { where(blocked: true) } # no index
+  scope :banned, -> { where('banned_till IS NOT NULL AND banned_till > ?', Time.zone.now) } # no index
 
   module NewTopicDuration
     ALWAYS = -1

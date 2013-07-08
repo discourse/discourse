@@ -1009,6 +1009,7 @@ en:
         moderators: 'Moderators:'
         admins: 'Admins:'
         blocked: 'Blocked:'
+        banned: 'Banned:'
         private_messages_short: "PMs"
         private_messages_title: "Private Messages"
 
@@ -1151,6 +1152,7 @@ en:
           admins: 'Admin Users'
           moderators: 'Moderators'
           blocked: 'Blocked Users'
+          banned: 'Banned Users'
 
       user:
         ban_failed: "Something went wrong banning this user {{error}}"
