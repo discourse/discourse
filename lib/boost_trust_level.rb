@@ -2,14 +2,16 @@ require_dependency 'promotion'
 
 class BoostTrustLevel
 
-  def initialize(user, level)
-    @user = user
-    @level = level.to_i
+  def initialize(args)
+    @user = args[:user]
+    @level = args[:level].to_i
     @promotion = Promotion.new(@user)
     @trust_levels = TrustLevel.levels
+    @logger = args[:logger]
   end
 
   def save!
+    @logger.log_trust_level_change(@user, @level)
     if @level < @user.trust_level
       demote!
     else

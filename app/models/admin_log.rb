@@ -9,7 +9,7 @@ class AdminLog < ActiveRecord::Base
   validates_presence_of :action
 
   def self.actions
-    @actions ||= Enum.new(:delete_user)
+    @actions ||= Enum.new(:delete_user, :change_trust_level)
   end
 end
 
