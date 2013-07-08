@@ -3,217 +3,163 @@ require 'cooked_post_processor'
 
 describe CookedPostProcessor do
 
-  def cpp(cooked = nil, options = {})
-    post = Fabricate.build(:post_with_youtube)
-    post.cooked = cooked if cooked
-    post.id = 123
-    CookedPostProcessor.new(post, options)
-  end
+  context "post_process" do
 
-  context 'process_onebox' do
+    let(:post) { build(:post) }
+    let(:cpp) { CookedPostProcessor.new(post) }
+    let(:post_process) { sequence("post_process") }
 
-    before do
-      @cpp = cpp(nil, invalidate_oneboxes: true)
-      Oneboxer.expects(:onebox).with("http://www.youtube.com/watch?v=9bZkp7q19f0", post_id: 123, invalidate_oneboxes: true).returns('<div>GANGNAM STYLE</div>')
-      @cpp.post_process_oneboxes
-    end
-
-    it 'should be dirty' do
-      @cpp.should be_dirty
-    end
-
-    it 'inserts the onebox without wrapping p' do
-      @cpp.html.should match_html "<div>GANGNAM STYLE</div>"
+    it "works on images before oneboxes" do
+      cpp.expects(:post_process_images).in_sequence(post_process)
+      cpp.expects(:post_process_oneboxes).in_sequence(post_process)
+      cpp.post_process
     end
 
   end
 
+  context "post_process_images" do
 
-  context 'process_images' do
+    context "with images in quotes and oneboxes" do
 
-    it "has no topic image if there isn't one in the post" do
-      @post = Fabricate(:post)
-      @post.topic.image_url.should be_blank
-    end
+      let(:post) { build(:post_with_images_in_quote_and_onebox) }
+      let(:cpp) { CookedPostProcessor.new(post) }
+      before { cpp.post_process_images }
 
-    context 'with sized images in the post' do
-      before do
-        @topic = Fabricate(:topic)
-        @post = Fabricate.build(:post_with_image_url, topic: @topic, user: @topic.user)
-        @cpp = CookedPostProcessor.new(@post, image_sizes: {'http://www.forumwarz.com/images/header/logo.png' => {'width' => 111, 'height' => 222}})
+      it "does not process them" do
+        cpp.html.should match_html post.cooked
+        cpp.should_not be_dirty
       end
 
+      it "has no topic image if there isn't one in the post" do
+        post.topic.image_url.should be_blank
+      end
+
+    end
+
+    context "with uploaded images" do
+
+      let(:upload) { Fabricate(:upload) }
+      let(:post) { Fabricate(:post_with_uploaded_images) }
+      let(:cpp) { CookedPostProcessor.new(post) }
+      before { FastImage.stubs(:size) }
+
+      # all in one test to speed things up
+      it "works" do
+        Upload.expects(:get_from_url).returns(upload).twice
+        cpp.post_process_images
+        # ensures absolute urls on uploaded images
+        cpp.html.should =~ /#{Discourse.base_url_no_prefix}/
+        # dirty
+        cpp.should be_dirty
+        # keeps the reverse index up to date
+        post.uploads.reload
+        post.uploads.count.should == 1
+      end
+
+    end
+
+    context "width sized images" do
+
+      let(:post) { build(:post_with_image_url) }
+      let(:cpp) { CookedPostProcessor.new(post, image_sizes: {'http://foo.bar/image.png' => {'width' => 111, 'height' => 222}}) }
+
+      before { FastImage.stubs(:size).returns([150, 250]) }
+
       it "doesn't call image_dimensions because it knows the size" do
-        @cpp.expects(:image_dimensions).never
-        @cpp.post_process_images
+        cpp.expects(:image_dimensions).never
+        cpp.post_process_images
       end
 
       it "adds the width from the image sizes provided" do
-        @cpp.post_process_images
-        @cpp.html.should =~ /width=\"111\"/
+        cpp.post_process_images
+        cpp.html.should =~ /width=\"111\"/
+        cpp.should be_dirty
       end
 
     end
 
-    context 'with uploaded images in the post' do
-      before do
-        @topic = Fabricate(:topic)
-        @post = Fabricate(:post_with_uploads, topic: @topic, user: @topic.user)
-        @cpp = CookedPostProcessor.new(@post)
-        @cpp.expects(:get_upload_from_url).returns(Fabricate(:upload))
-        @cpp.expects(:get_size).returns([100,200])
-      end
+    context "with unsized images" do
 
-      it "keeps reverse index up to date" do
-        @cpp.post_process_images
-        @post.uploads.reload
-        @post.uploads.count.should == 1
+      let(:post) { build(:post_with_unsized_images) }
+      let(:cpp) { CookedPostProcessor.new(post) }
+
+      it "adds the width and height to images that don't have them" do
+        FastImage.expects(:size).returns([123, 456])
+        cpp.post_process_images
+        cpp.html.should =~ /width="123" height="456"/
+        cpp.should be_dirty
       end
 
     end
 
-    context 'with unsized images in the post' do
-      let(:user) { Fabricate(:user) }
-      let(:topic) { Fabricate(:topic, user: user) }
+    context "with large images" do
+
+      let(:upload) { Fabricate(:upload) }
+      let(:post) { build(:post_with_large_image) }
+      let(:cpp) { CookedPostProcessor.new(post) }
 
       before do
-        FastImage.stubs(:size).returns([123, 456])
-        creator = PostCreator.new(user, raw: Fabricate.build(:post_with_images).raw, topic_id: topic.id)
-        @post = creator.create
-      end
-
-      it "adds a topic image if there's one in the post" do
-        @post.topic.reload
-        @post.topic.image_url.should == "http://test.localhost/path/to/img.jpg"
-      end
-
-      it "adds the height and width to images that don't have them" do
-        @post.reload
-        @post.cooked.should =~ /width=\"123\" height=\"456\"/
-      end
-
-    end
-
-    context 'with an absolute image path without protocol' do
-      let(:user) { Fabricate(:user) }
-      let(:topic) { Fabricate(:topic, user: user) }
-      let(:post) { Fabricate.build(:post_with_s3_image_url, topic: topic, user: user) }
-      let(:processor) { CookedPostProcessor.new(post) }
-
-      before do
-        processor.post_process_images
-      end
-
-      it "doesn't change the protocol" do
-        processor.html.should =~ /src="\/\/bucket\.s3\.amazonaws\.com\/uploads\/6\/4\/123\.png"/
-      end
-    end
-
-    context 'with a oneboxed image' do
-      let(:user) { Fabricate(:user) }
-      let(:topic) { Fabricate(:topic, user: user) }
-      let(:post) { Fabricate.build(:post_with_oneboxed_image, topic: topic, user: user) }
-      let(:processor) { CookedPostProcessor.new(post) }
-
-      before do
-        processor.post_process_images
-      end
-
-      it "doesn't lightbox" do
-        processor.html.should_not =~ /class="lightbox"/
-      end
-    end
-
-    context "with a large image" do
-
-      let(:user) { Fabricate(:user) }
-      let(:topic) { Fabricate(:topic, user: user) }
-      let(:post) { Fabricate.build(:post_with_uploads, topic: topic, user: user) }
-      let(:processor) { CookedPostProcessor.new(post) }
-
-      before do
-        SiteSetting.stubs(:max_image_width).returns(10)
-        FastImage.stubs(:size).returns([1000, 1000])
-        processor.post_process_images
+        SiteSetting.stubs(:create_thumbnails?).returns(true)
+        Upload.expects(:get_from_url).returns(upload)
+        cpp.stubs(:associate_to_post)
+        FastImage.stubs(:size).returns([1000, 2000])
+        # optimized_image
+        FileUtils.stubs(:mkdir_p)
+        File.stubs(:open)
+        ImageSorcery.any_instance.expects(:convert).returns(true)
       end
 
       it "generates overlay information" do
-        processor.html.should =~ /class="lightbox"/
-        processor.html.should =~ /class="meta"/
-        processor.html.should =~ /class="filename"/
-        processor.html.should =~ /class="informations"/
-        processor.html.should =~ /class="expand"/
+        cpp.post_process_images
+        cpp.html.should match_html '<div><a href="http://test.localhost/uploads/default/1/1234567890123456.jpg" class="lightbox"><img src="http://test.localhost/uploads/default/_optimized/da3/9a3/ee5e6b4b0d3_100x200.jpg" width="690" height="1380"><div class="meta">
+<span class="filename">uploaded.jpg</span><span class="informations">1000x2000 | 1.21 KB</span><span class="expand"></span>
+</div></a></div>'
+        cpp.should be_dirty
+      end
+
+    end
+
+    context "topic image" do
+
+      let(:topic) { build(:topic, id: 1) }
+      let(:post) { Fabricate(:post_with_uploaded_images, topic: topic) }
+      let(:cpp) { CookedPostProcessor.new(post) }
+
+      it "adds a topic image if there's one in the post" do
+        FastImage.stubs(:size).returns([100, 100])
+        cpp.post_process_images
+        post.topic.reload
+        post.topic.image_url.should == "http://test.localhost/uploads/default/2/3456789012345678.png"
       end
 
     end
 
   end
 
-  context 'link convertor' do
+  context "post_process_oneboxes" do
+
+    let(:post) { build(:post_with_youtube, id: 123) }
+    let(:cpp) { CookedPostProcessor.new(post, invalidate_oneboxes: true) }
+
     before do
-      SiteSetting.stubs(:crawl_images?).returns(true)
+      Oneboxer.expects(:onebox).with("http://www.youtube.com/watch?v=9bZkp7q19f0", post_id: 123, invalidate_oneboxes: true).returns('<div>GANGNAM STYLE</div>')
+      cpp.post_process_oneboxes
     end
 
-    let(:post_with_img) { Fabricate.build(:post, cooked: '<p><img src="http://hello.com/image.png"></p>') }
-    let(:cpp_for_post) { CookedPostProcessor.new(post_with_img) }
-
-    it 'convert img tags to links if they are sized down' do
-      cpp_for_post.expects(:get_size).returns([2000,2000]).twice
-      cpp_for_post.post_process
-      cpp_for_post.html.should =~ /a href/
+    it "should be dirty" do
+      cpp.should be_dirty
     end
 
-    it 'does not convert img tags to links if they are small' do
-      cpp_for_post.expects(:get_size).returns([200,200]).twice
-      cpp_for_post.post_process
-      (cpp_for_post.html !~ /a href/).should be_true
-    end
-
-  end
-
-  context "image_dimensions" do
-
-    it "returns unless called with a http or https url" do
-      cpp.image_dimensions("/tmp/image.jpg").should be_blank
-    end
-
-    context "with valid url" do
-
-      let(:url) { "http://www.forumwarz.com/images/header/logo.png" }
-
-      it "doesn't call FastImage if image crawling is disabled" do
-        SiteSetting.expects(:crawl_images?).returns(false)
-        FastImage.expects(:size).never
-        cpp.image_dimensions(url)
-      end
-
-      it "calls FastImage if image crawling is enabled" do
-        SiteSetting.expects(:crawl_images?).returns(true)
-        FastImage.expects(:size).with(url)
-        cpp.image_dimensions(url)
-      end
-    end
-
-  end
-
-  context "is_valid_image_uri?" do
-
-    it "needs the scheme to be either http or https" do
-      cpp.is_valid_image_uri?("http://domain.com").should   == true
-      cpp.is_valid_image_uri?("https://domain.com").should  == true
-      cpp.is_valid_image_uri?("ftp://domain.com").should    == false
-      cpp.is_valid_image_uri?("ftps://domain.com").should   == false
-      cpp.is_valid_image_uri?("//domain.com").should        == false
-      cpp.is_valid_image_uri?("/tmp/image.png").should      == false
-    end
-
-    it "doesn't throw an exception with a bad URI" do
-      cpp.is_valid_image_uri?("http://do<main.com").should  == nil
+    it "inserts the onebox without wrapping p" do
+      cpp.html.should match_html "<div>GANGNAM STYLE</div>"
     end
 
   end
 
   context "get_filename" do
+
+    let(:post) { build(:post) }
+    let(:cpp) { CookedPostProcessor.new(post) }
 
     it "returns the filename of the src when there is no upload" do
       cpp.get_filename(nil, "http://domain.com/image.png").should == "image.png"
@@ -227,6 +173,82 @@ describe CookedPostProcessor do
     it "returns a generic name for pasted images" do
       upload = build(:upload, { original_filename: "blob.png" })
       cpp.get_filename(upload, "http://domain.com/image.png").should == I18n.t('upload.pasted_image_filename')
+    end
+
+  end
+
+  context "image_dimensions" do
+
+    let(:post) { build(:post) }
+    let(:cpp) { CookedPostProcessor.new(post) }
+
+    it "calls the resizer" do
+      SiteSetting.stubs(:max_image_width).returns(200)
+      cpp.expects(:get_size).returns([1000, 2000])
+      cpp.image_dimensions("http://foo.bar/image.png").should == [200, 400]
+    end
+
+    it "doesn't call the resizer when there is no size" do
+      cpp.expects(:get_size).returns(nil)
+      cpp.image_dimensions("http://foo.bar/image.png").should == nil
+    end
+
+  end
+
+  context "get_size" do
+
+    let(:post) { build(:post) }
+    let(:cpp) { CookedPostProcessor.new(post) }
+
+    it "ensures s3 urls have a default scheme" do
+      Upload.stubs(:is_on_s3?).returns(true)
+      FastImage.stubs(:size)
+      cpp.expects(:is_valid_image_uri?).with("http://bucket.s3.aws.amazon.com/image.jpg")
+      cpp.get_size("//bucket.s3.aws.amazon.com/image.jpg")
+    end
+
+    context "crawl_images is disabled" do
+
+      before { SiteSetting.stubs(:crawl_images?).returns(false) }
+
+      it "doesn't call FastImage" do
+        FastImage.expects(:size).never
+        cpp.get_size("http://foo.bar/image.png").should == nil
+      end
+
+      it "is always allowed to crawled our own images" do
+        Upload.expects(:has_been_uploaded?).returns(true)
+        FastImage.expects(:size).returns([100, 200])
+        cpp.get_size("http://foo.bar/image.png").should == [100, 200]
+      end
+
+    end
+
+    it "caches the results" do
+      SiteSetting.stubs(:crawl_images?).returns(true)
+      FastImage.expects(:size).returns([200, 400])
+      cpp.get_size("http://foo.bar/image.png")
+      cpp.get_size("http://foo.bar/image.png").should == [200, 400]
+    end
+
+  end
+
+  context "is_valid_image_uri?" do
+
+    let(:post) { build(:post) }
+    let(:cpp) { CookedPostProcessor.new(post) }
+
+    it "needs the scheme to be either http or https" do
+      cpp.is_valid_image_uri?("http://domain.com").should   == true
+      cpp.is_valid_image_uri?("https://domain.com").should  == true
+      cpp.is_valid_image_uri?("ftp://domain.com").should    == false
+      cpp.is_valid_image_uri?("ftps://domain.com").should   == false
+      cpp.is_valid_image_uri?("//domain.com").should        == false
+      cpp.is_valid_image_uri?("/tmp/image.png").should      == false
+    end
+
+    it "doesn't throw an exception with a bad URI" do
+      cpp.is_valid_image_uri?("http://do<main.com").should  == nil
     end
 
   end

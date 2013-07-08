@@ -3,7 +3,9 @@ require "digest/sha1"
 class OptimizedImage < ActiveRecord::Base
   belongs_to :upload
 
-  def self.create_for(upload, width=nil, height=nil)
+  def self.create_for(upload, width, height)
+    return unless width && height
+
     @image_sorcery_loaded ||= require "image_sorcery"
 
     original_path = "#{Rails.root}/public#{upload.url}"
@@ -11,15 +13,13 @@ class OptimizedImage < ActiveRecord::Base
     temp_file = Tempfile.new(["discourse", File.extname(original_path)])
     temp_path = temp_file.path
 
-    # do the resize when there is both dimensions
-    if width && height && ImageSorcery.new(original_path).convert(temp_path, resize: "#{width}x#{height}")
-      image_info = FastImage.new(temp_path)
+    if ImageSorcery.new(original_path).convert(temp_path, resize: "#{width}x#{height}")
       thumbnail = OptimizedImage.new({
         upload_id: upload.id,
         sha1: Digest::SHA1.file(temp_path).hexdigest,
         extension: File.extname(temp_path),
-        width: image_info.size[0],
-        height: image_info.size[1]
+        width: width,
+        height: height
       })
       # make sure the directory exists
       FileUtils.mkdir_p Pathname.new(thumbnail.path).dirname
