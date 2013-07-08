@@ -35,6 +35,10 @@ class ListController < ApplicationController
     if request_is_for_uncategorized?
       list = query.list_uncategorized
     else
+      if !@category
+        raise Discourse::NotFound
+        return
+      end
       guardian.ensure_can_see!(@category)
       list = query.list_category(@category)
     end
