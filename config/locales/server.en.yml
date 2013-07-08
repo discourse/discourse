@@ -874,7 +874,7 @@ en:
       text_body_template: "The import was successful."
 
     too_many_spam_flags:
-      subject_template: "Account blocked"
+      subject_template: "New account blocked"
       text_body_template: |
         Hello,
 
