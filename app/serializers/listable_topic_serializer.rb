@@ -13,7 +13,6 @@ class ListableTopicSerializer < BasicTopicSerializer
              :last_read_post_number,
              :unread,
              :new_posts,
-             :title,
              :pinned,
              :excerpt,
              :visible,
