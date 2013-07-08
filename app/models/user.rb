@@ -93,26 +93,16 @@ class User < ActiveRecord::Base
   def self.create_for_email(email, opts={})
     username = UserNameSuggester.suggest(email)
 
-    if SiteSetting.call_discourse_hub?
-      begin
-        match, available, suggestion = DiscourseHub.nickname_match?(username, email)
-        username = suggestion unless match || available
-      rescue => e
-        Rails.logger.error e.message + "\n" + e.backtrace.join("\n")
-      end
+    discourse_hub_nickname_operation do
+      match, available, suggestion = DiscourseHub.nickname_match?(username, email)
+      username = suggestion unless match || available
     end
 
     user = User.new(email: email, username: username, name: username)
     user.trust_level = opts[:trust_level] if opts[:trust_level].present?
     user.save!
 
-    if SiteSetting.call_discourse_hub?
-      begin
-        DiscourseHub.register_nickname(username, email)
-      rescue => e
-        Rails.logger.error e.message + "\n" + e.backtrace.join("\n")
-      end
-    end
+    discourse_hub_nickname_operation { DiscourseHub.register_nickname(username, email) }
 
     user
   end
@@ -162,14 +152,8 @@ class User < ActiveRecord::Base
     current_username = self.username
     self.username = new_username
 
-    if current_username.downcase != new_username.downcase && SiteSetting.call_discourse_hub? && valid?
-      begin
-        DiscourseHub.change_nickname(current_username, new_username)
-      rescue DiscourseHub::NicknameUnavailable
-        false
-      rescue => e
-        Rails.logger.error e.message + "\n" + e.backtrace.join("\n")
-      end
+    if current_username.downcase != new_username.downcase && valid?
+      User.discourse_hub_nickname_operation { DiscourseHub.change_nickname(current_username, new_username) }
     end
 
     save
@@ -415,10 +399,7 @@ class User < ActiveRecord::Base
   end
 
   def username_format_validator
-    validator = UsernameValidator.new(username)
-    unless validator.valid_format?
-      validator.errors.each { |e| errors.add(:username, e) }
-    end
+    UsernameValidator.perform_validation(self, 'username')
   end
 
   def email_confirmed?
@@ -604,6 +585,20 @@ class User < ActiveRecord::Base
         email_token: email_tokens.first.token
       )
     end
+
+  private
+
+  def self.discourse_hub_nickname_operation
+    if SiteSetting.call_discourse_hub?
+      begin
+        yield
+      rescue DiscourseHub::NicknameUnavailable
+        false
+      rescue => e
+        Rails.logger.error e.message + "\n" + e.backtrace.join("\n")
+      end
+    end
+  end
 end
 
 # == Schema Information
