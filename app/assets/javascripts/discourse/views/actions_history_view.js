@@ -49,23 +49,23 @@ Discourse.ActionsHistoryView = Discourse.View.extend({
         if(postUrl) {
           key = key + "_with_url";
         }
-        buffer.push(" " + Em.String.i18n(key, { icons: iconsHtml, postUrl: postUrl}) + ".");
+        buffer.push(" " + I18n.t(key, { icons: iconsHtml, postUrl: postUrl}) + ".");
       } else {
         buffer.push("<a href='#' data-who-acted='" + (c.get('id')) + "'>" + (c.get('description')) + "</a>.");
       }
 
       if (c.get('can_act') && !c.get('actionType.is_custom_flag')) {
-        actionString = Em.String.i18n("post.actions.it_too." + c.get('actionType.name_key'));
+        actionString = I18n.t("post.actions.it_too." + c.get('actionType.name_key'));
         buffer.push(" <a href='#' data-act='" + (c.get('id')) + "'>" + actionString + "</a>.");
       }
 
       if (c.get('can_undo')) {
-        actionString = Em.String.i18n("post.actions.undo." + c.get('actionType.name_key') );
+        actionString = I18n.t("post.actions.undo." + c.get('actionType.name_key') );
         buffer.push(" <a href='#' data-undo='" + (c.get('id')) + "'>" + actionString + "</a>.");
       }
 
       if (c.get('can_clear_flags')) {
-        buffer.push(" <a href='#' data-clear-flags='" + (c.get('id')) + "'>" + (Em.String.i18n("post.actions.clear_flags", { count: c.count })) + "</a>.");
+        buffer.push(" <a href='#' data-clear-flags='" + (c.get('id')) + "'>" + (I18n.t("post.actions.clear_flags", { count: c.count })) + "</a>.");
       }
 
       buffer.push("</div>");

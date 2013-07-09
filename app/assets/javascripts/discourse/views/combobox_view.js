@@ -15,7 +15,7 @@ Discourse.ComboboxView = Discourse.View.extend({
 
     // Add none option if required
     if (this.get('none')) {
-      buffer.push('<option value="">' + (Ember.String.i18n(this.get('none'))) + "</option>");
+      buffer.push('<option value="">' + (I18n.t(this.get('none'))) + "</option>");
     }
 
     var selected = this.get('value');

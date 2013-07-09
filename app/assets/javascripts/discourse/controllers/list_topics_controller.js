@@ -65,15 +65,15 @@ Discourse.ListTopicsController = Discourse.ObjectController.extend({
     if (!this.get('allLoaded')) return;
     var category = this.get('category');
     if( category ) {
-      return Em.String.i18n('topics.bottom.category', {category: category.get('name')});
+      return I18n.t('topics.bottom.category', {category: category.get('name')});
     } else {
       var split = this.get('filter').split('/');
       if (this.get('topics.length') === 0) {
-        return Em.String.i18n("topics.none." + split[0], {
+        return I18n.t("topics.none." + split[0], {
           category: split[1]
         });
       } else {
-        return Em.String.i18n("topics.bottom." + split[0], {
+        return I18n.t("topics.bottom." + split[0], {
           category: split[1]
         });
       }

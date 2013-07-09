@@ -66,7 +66,7 @@ Ember.Handlebars.registerBoundHelper('boundCategoryLink', function(category) {
 Handlebars.registerHelper('titledLinkTo', function(name, object) {
   var options = [].slice.call(arguments, -1)[0];
   if (options.hash.titleKey) {
-    options.hash.title = Em.String.i18n(options.hash.titleKey);
+    options.hash.title = I18n.t(options.hash.titleKey);
   }
   if (arguments.length === 3) {
     return Ember.Handlebars.helpers.linkTo.call(this, name, object, options);
@@ -254,7 +254,7 @@ Handlebars.registerHelper('number', function(property, options) {
   }
   title = orig;
   if (options.hash.numberKey) {
-    title = Em.String.i18n(options.hash.numberKey, {
+    title = I18n.t(options.hash.numberKey, {
       number: orig
     });
   }
@@ -307,7 +307,7 @@ Handlebars.registerHelper('date', function(property, options) {
 Handlebars.registerHelper('faqLink', function(property, options) {
   return new Handlebars.SafeString(
     "<a href='" +
-    (Discourse.SiteSettings.faq_url.length > 0 ? Discourse.SiteSettings.faq_url : Discourse.getURL('/faq')) + 
-    "'>" + Em.String.i18n('faq') + "</a>"
+    (Discourse.SiteSettings.faq_url.length > 0 ? Discourse.SiteSettings.faq_url : Discourse.getURL('/faq')) +
+    "'>" + I18n.t('faq') + "</a>"
   );
 });

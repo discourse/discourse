@@ -20,7 +20,7 @@ Discourse.NavItemView = Discourse.View.extend({
       extra = { categoryName: categoryName };
       name = "category";
     }
-    return Ember.String.i18n("filters." + name + ".help", extra);
+    return I18n.t("filters." + name + ".help", extra);
   }.property("content.filter"),
 
   isActive: function() {
@@ -45,7 +45,7 @@ Discourse.NavItemView = Discourse.View.extend({
       name = 'category';
       extra.categoryName = Discourse.Formatter.toTitleCase(categoryName);
     }
-    return I18n.t("js.filters." + name + ".title", extra);
+    return I18n.t("filters." + name + ".title", extra);
   }.property('count'),
 
   render: function(buffer) {

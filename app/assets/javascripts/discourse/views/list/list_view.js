@@ -19,11 +19,11 @@ Discourse.ListView = Discourse.View.extend({
 
   createTopicText: function() {
     if (this.get('controller.category.name')) {
-      return Em.String.i18n("topic.create_in", {
+      return I18n.t("topic.create_in", {
         categoryName: this.get('controller.category.name')
       });
     } else {
-      return Em.String.i18n("topic.create");
+      return I18n.t("topic.create");
     }
   }.property('controller.category.name')
 

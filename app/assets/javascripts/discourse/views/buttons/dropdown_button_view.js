@@ -40,8 +40,8 @@ Discourse.DropdownButtonView = Discourse.View.extend({
     _.each(this.get('dropDownContent'), function(row) {
       var id = row[0],
           textKey = row[1],
-          title = Em.String.i18n(textKey + ".title"),
-          description = Em.String.i18n(textKey + ".description");
+          title = I18n.t(textKey + ".title"),
+          description = I18n.t(textKey + ".description");
 
       buffer.push("<li data-id=\"" + id + "\"><a href='#'>");
       buffer.push("<span class='title'>" + title + "</span>");

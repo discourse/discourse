@@ -8,5 +8,5 @@
 **/
 Discourse.HistoryView = Discourse.ModalBodyView.extend({
   templateName: 'modal/history',
-  title: Em.String.i18n('history')
+  title: I18n.t('history')
 });

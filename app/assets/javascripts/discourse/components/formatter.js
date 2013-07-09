@@ -88,7 +88,7 @@ Discourse.Formatter = (function(){
 
     var formatted;
     var t = function(key,opts){
-      return Ember.String.i18n("dates." + format + "." + key, opts);
+      return I18n.t("dates." + format + "." + key, opts);
     };
 
     switch(true){
@@ -133,7 +133,7 @@ Discourse.Formatter = (function(){
     distanceInMinutes = Math.round(distance / 60.0);
 
     var t = function(key, opts){
-      return Ember.String.i18n("dates.medium" + (leaveAgo?"_with_ago":"") + "." + key, opts);
+      return I18n.t("dates.medium" + (leaveAgo?"_with_ago":"") + "." + key, opts);
     };
 
     switch(true){
@@ -173,7 +173,7 @@ Discourse.Formatter = (function(){
     oneMinuteAgo = 60;
 
     if (distance < oneMinuteAgo) {
-      displayDate = Em.String.i18n("now");
+      displayDate = I18n.t("now");
     } else if (distance > fiveDaysAgo) {
       if ((new Date()).getFullYear() !== date.getFullYear()) {
         displayDate = shortDate(date);

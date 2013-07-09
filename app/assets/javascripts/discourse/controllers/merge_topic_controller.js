@@ -20,8 +20,8 @@ Discourse.MergeTopicController = Discourse.ObjectController.extend(Discourse.Sel
   }.property('selectedTopicId', 'saving'),
 
   buttonTitle: function() {
-    if (this.get('saving')) return Em.String.i18n('saving');
-    return Em.String.i18n('topic.merge_topic.title');
+    if (this.get('saving')) return I18n.t('saving');
+    return I18n.t('topic.merge_topic.title');
   }.property('saving'),
 
   movePostsToExistingTopic: function() {
@@ -46,7 +46,7 @@ Discourse.MergeTopicController = Discourse.ObjectController.extend(Discourse.Sel
       Em.run.next(function() { Discourse.URL.routeTo(result.url); });
     }, function() {
       // Error moving posts
-      mergeTopicController.flash(Em.String.i18n('topic.merge_topic.error'));
+      mergeTopicController.flash(I18n.t('topic.merge_topic.error'));
       mergeTopicController.set('saving', false);
     });
     return false;

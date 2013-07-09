@@ -8,7 +8,7 @@
 **/
 Discourse.InviteView = Discourse.ModalBodyView.extend({
   templateName: 'modal/invite',
-  title: Em.String.i18n('topic.invite_reply.title'),
+  title: I18n.t('topic.invite_reply.title'),
 
 
   keyUp: function(e) {

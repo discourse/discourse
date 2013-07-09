@@ -8,7 +8,7 @@
 **/
 Discourse.SplitTopicView = Discourse.ModalBodyView.extend(Discourse.SelectedPostsCount, {
   templateName: 'modal/split_topic',
-  title: Em.String.i18n('topic.split_topic.title')
+  title: I18n.t('topic.split_topic.title')
 });
 
 

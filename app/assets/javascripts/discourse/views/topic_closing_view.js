@@ -27,25 +27,25 @@ Discourse.TopicClosingView = Discourse.View.extend({
     var timeLeftString, rerenderDelay, minutesLeft = duration.asMinutes();
 
     if (minutesLeft > 1410) {
-      timeLeftString = Em.String.i18n('in_n_days', {count: Math.round(duration.asDays())});
+      timeLeftString = I18n.t('in_n_days', {count: Math.round(duration.asDays())});
       if( minutesLeft > 2160 ) {
         rerenderDelay = 12 * 60 * 60000;
       } else {
         rerenderDelay = 60 * 60000;
       }
     } else if (minutesLeft > 90) {
-      timeLeftString = Em.String.i18n('in_n_hours', {count: Math.round(duration.asHours())});
+      timeLeftString = I18n.t('in_n_hours', {count: Math.round(duration.asHours())});
       rerenderDelay = 30 * 60000;
     } else if (minutesLeft > 2) {
-      timeLeftString = Em.String.i18n('in_n_minutes', {count: Math.round(duration.asMinutes())});
+      timeLeftString = I18n.t('in_n_minutes', {count: Math.round(duration.asMinutes())});
       rerenderDelay = 60000;
     } else {
-      timeLeftString = Em.String.i18n('in_n_seconds', {count: Math.round(duration.asSeconds())});
+      timeLeftString = I18n.t('in_n_seconds', {count: Math.round(duration.asSeconds())});
       rerenderDelay = 1000;
     }
 
     buffer.push('<h3><i class="icon icon-time"></i> ');
-    buffer.push( Em.String.i18n('topic.auto_close_notice', {timeLeft: timeLeftString}) );
+    buffer.push( I18n.t('topic.auto_close_notice', {timeLeft: timeLeftString}) );
     buffer.push('</h3>');
 
     // TODO Sam: concerned this can cause a heavy rerender loop

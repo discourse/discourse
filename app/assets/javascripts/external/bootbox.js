@@ -399,7 +399,6 @@ var bootbox = window.bootbox || (function(document, $) {
         div.find(".modal-body").html(str);
 
         function onCancel(source) {
-            console.log('onCancel');
             // for now source is unused, but it will be in future
             var hideModal = null;
             if (typeof options.onEscape === 'function') {
@@ -414,7 +413,6 @@ var bootbox = window.bootbox || (function(document, $) {
 
         // hook into the modal's keyup trigger to check for the escape key
         div.on('keyup.dismiss.modal', function(e) {
-            console.log('keyup.dismiss.modal');
             // any truthy value passed to onEscape will dismiss the dialog
             // as long as the onEscape function (if defined) doesn't prevent it
             if (e.which === 27 && options.onEscape !== false) {

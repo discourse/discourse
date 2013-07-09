@@ -15,7 +15,7 @@ Discourse.UserActionStat = Discourse.Model.extend({
   }.property('action_type'),
 
   description: function() {
-    return Em.String.i18n('user_action_groups.' + this.get('action_type'));
+    return I18n.t('user_action_groups.' + this.get('action_type'));
   }.property('description'),
 
   isResponse: function() {

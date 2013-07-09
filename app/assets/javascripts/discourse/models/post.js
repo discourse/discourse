@@ -62,14 +62,14 @@ Discourse.Post = Discourse.Model.extend({
 
   // Custom tooltips for the bookmark icons
   bookmarkTooltip: function() {
-    if (this.get('bookmarked')) return Em.String.i18n('bookmarks.created');
+    if (this.get('bookmarked')) return I18n.t('bookmarks.created');
     if (!this.get('read')) return "";
 
     var topic = this.get('topic');
     if (topic && topic.get('last_read_post_number') === this.get('post_number')) {
-      return Em.String.i18n('bookmarks.last_read');
+      return I18n.t('bookmarks.last_read');
     }
-    return Em.String.i18n('bookmarks.not_bookmarked');
+    return I18n.t('bookmarks.not_bookmarked');
   }.property('read', 'topic.last_read_post_number', 'bookmarked'),
 
   bookmarkedChanged: function() {
@@ -83,7 +83,7 @@ Discourse.Post = Discourse.Model.extend({
       if (error && error.responseText) {
         bootbox.alert($.parseJSON(error.responseText).errors[0]);
       } else {
-        bootbox.alert(Em.String.i18n('generic_error'));
+        bootbox.alert(I18n.t('generic_error'));
       }
     });
 

@@ -22,8 +22,8 @@ Discourse.InvitePrivateController = Discourse.ObjectController.extend(Discourse.
   }.property('emailOrUsername', 'saving'),
 
   buttonTitle: function() {
-    if (this.get('saving')) return Em.String.i18n('topic.inviting');
-    return Em.String.i18n('topic.invite_private.action');
+    if (this.get('saving')) return I18n.t('topic.inviting');
+    return I18n.t('topic.invite_private.action');
   }.property('saving'),
 
   invite: function() {
