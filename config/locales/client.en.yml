@@ -319,7 +319,7 @@ en:
 
     best_of:
       title: "Best Of"
-      enabled_description: You are currently viewing the "Best Of" view of this topic.
+      enabled_description: "You're viewing only the best posts in this topic. To see all posts again, click below."
       description: "There are <b>{{count}}</b> posts in this topic. That's a lot! Would you like to save time by showing only the best posts?"
       enable: 'Switch to "Best Of" view'
       disable: 'Cancel "Best Of"'
