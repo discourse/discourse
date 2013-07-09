@@ -121,6 +121,8 @@ class PostsController < ApplicationController
     post = find_post_from_params
     guardian.ensure_can_recover_post!(post)
     post.recover!
+    post.topic.update_statistics
+
     render nothing: true
   end
 

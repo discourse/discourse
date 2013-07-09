@@ -123,8 +123,9 @@ describe PostsController do
         response.should be_forbidden
       end
 
-      it "calls recover" do
+      it "calls recover and updates the topic's statistics" do
         Post.any_instance.expects(:recover!)
+        Topic.any_instance.expects(:update_statistics)
         xhr :put, :recover, post_id: post.id
       end
 
