@@ -1029,14 +1029,14 @@ en:
       unread:
         title:
           zero: "Unread"
-          one: "Unread (1)"
-          other: "Unread ({{count}})"
+          one: "Unread <span class=\"badge\">1</span>"
+          other: "Unread <span class=\"badge\">{{count}}</span>"
         help: "tracked topics with unread posts"
       new:
         title:
           zero: "New"
-          one: "New (1)"
-          other: "New ({{count}})"
+          one: "New <span class=\"badge\">1</span>"
+          other: "New <span class=\"badge\">{{count}}</span>"
         help: "new topics since your last visit"
       posted:
         title: "My Posts"
@@ -1044,8 +1044,8 @@ en:
       category:
         title:
           zero: "{{categoryName}}"
-          one: "{{categoryName}} (1)"
-          other: "{{categoryName}} ({{count}})"
+          one: "{{categoryName}} <span class=\"badge\">1</span>"
+          other: "{{categoryName}} <span class=\"badge\">{{count}}</span>"
         help: "latest topics in the {{categoryName}} category"
 
     browser_update: 'Unfortunately, <a href="http://www.discourse.org/faq/#browser">your browser is too old to work on this Discourse forum</a>. Please <a href="http://browsehappy.com">upgrade your browser</a>.'
