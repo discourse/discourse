@@ -1,23 +1,18 @@
+require_dependency 'directory_helper'
+
 module Export
 
   class SchemaArgumentsError < RuntimeError; end
 
   class JsonEncoder
+    include DirectoryHelper
 
     def initialize
       @table_data = {}
     end
 
-    def tmp_directory
-      @tmp_directory ||= begin
-        f = File.join( Rails.root, 'tmp', Time.now.strftime('export%Y%m%d%H%M%S') )
-        Dir.mkdir(f) unless Dir[f].present?
-        f
-      end
-    end
-
     def json_output_stream
-      @json_output_stream ||= File.new( File.join( tmp_directory, 'tables.json' ), 'w+b' )
+      @json_output_stream ||= File.new( File.join( tmp_directory('export'), 'tables.json' ), 'w+b' )
     end
 
     def write_schema_info(args)
@@ -59,15 +54,12 @@ module Export
                                         :mode => :compat) )
       json_output_stream.close
 
-      @filenames = [File.join( tmp_directory, 'tables.json' )]
+      @filenames = [File.join( tmp_directory('export'), 'tables.json' )]
     end
 
     def filenames
       @filenames ||= []
     end
 
-    def cleanup_temp
-      FileUtils.rm_rf(tmp_directory) if Dir[tmp_directory].present?
-    end
   end
 end

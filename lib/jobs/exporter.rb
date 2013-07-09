@@ -75,7 +75,7 @@ module Jobs
       if @encoder
         @encoder.finish
         create_tar_file
-        @encoder.cleanup_temp
+        @encoder.remove_tmp_directory('export')
       end
     ensure
       Export.set_export_is_not_running
