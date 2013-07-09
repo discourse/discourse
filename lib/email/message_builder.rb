@@ -87,7 +87,7 @@ module Email
           value = header[1].strip
           result[name] = value if name.length > 0 && value.length > 0
         end
-      }
+      } if !string.nil?
       result
     end
 
