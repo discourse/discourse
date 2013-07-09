@@ -137,7 +137,7 @@ Discourse = Ember.Application.createWithMixins({
 
     $('#main').on('click.discourse', '[data-not-implemented=true]', function(e) {
       e.preventDefault();
-      alert(Em.String.i18n('not_implemented'));
+      alert(I18n.t('not_implemented'));
       return false;
     });
 

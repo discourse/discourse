@@ -34,7 +34,7 @@ Discourse.ActivityFilterView = Discourse.View.extend({
       description = Em.get(content, 'description');
     } else {
       count = this.get('count');
-      description = Em.String.i18n("user.filters.all");
+      description = I18n.t("user.filters.all");
     }
 
     buffer.push("<a href='#'>" + description +

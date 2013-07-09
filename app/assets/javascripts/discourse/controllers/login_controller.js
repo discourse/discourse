@@ -31,7 +31,7 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
   }.property(),
 
   loginButtonText: function() {
-    return this.get('loggingIn') ? Em.String.i18n('login.logging_in') : Em.String.i18n('login.title');
+    return this.get('loggingIn') ? I18n.t('login.logging_in') : I18n.t('login.title');
   }.property('loggingIn'),
 
   loginDisabled: function() {
@@ -69,7 +69,7 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
 
     }, function(result) {
       // Failed to login
-      loginController.flash(Em.String.i18n('login.error'), 'error');
+      loginController.flash(I18n.t('login.error'), 'error');
       loginController.set('loggingIn', false);
     });
 
@@ -78,7 +78,7 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
 
   authMessage: (function() {
     if (this.blank('authenticate')) return "";
-    return Em.String.i18n("login." + (this.get('authenticate')) + ".message");
+    return I18n.t("login." + (this.get('authenticate')) + ".message");
   }).property('authenticate'),
 
   twitterLogin: function() {
@@ -128,12 +128,12 @@ Discourse.LoginController = Discourse.Controller.extend(Discourse.ModalFunctiona
 
   authenticationComplete: function(options) {
     if (options.awaiting_approval) {
-      this.flash(Em.String.i18n('login.awaiting_approval'), 'success');
+      this.flash(I18n.t('login.awaiting_approval'), 'success');
       this.set('authenticate', null);
       return;
     }
     if (options.awaiting_activation) {
-      this.flash(Em.String.i18n('login.awaiting_confirmation'), 'success');
+      this.flash(I18n.t('login.awaiting_confirmation'), 'success');
       this.set('authenticate', null);
       return;
     }

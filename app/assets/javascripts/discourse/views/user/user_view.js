@@ -14,7 +14,7 @@ Discourse.UserView = Discourse.View.extend({
     var username;
     username = this.get('user.username');
     if (username) {
-      return Discourse.set('title', "" + (Em.String.i18n("user.profile")) + " - " + username);
+      return Discourse.set('title', "" + (I18n.t("user.profile")) + " - " + username);
     }
   }.observes('user.loaded', 'user.username')
 

@@ -20,8 +20,8 @@ Discourse.SplitTopicController = Discourse.ObjectController.extend(Discourse.Sel
   }.property('saving', 'topicName'),
 
   buttonTitle: function() {
-    if (this.get('saving')) return Em.String.i18n('saving');
-    return Em.String.i18n('topic.split_topic.action');
+    if (this.get('saving')) return I18n.t('saving');
+    return I18n.t('topic.split_topic.action');
   }.property('saving'),
 
   movePostsToNewTopic: function() {
@@ -40,7 +40,7 @@ Discourse.SplitTopicController = Discourse.ObjectController.extend(Discourse.Sel
       Em.run.next(function() { Discourse.URL.routeTo(result.url); });
     }, function() {
       // Error moving posts
-      splitTopicController.flash(Em.String.i18n('topic.split_topic.error'));
+      splitTopicController.flash(I18n.t('topic.split_topic.error'));
       splitTopicController.set('saving', false);
     });
     return false;

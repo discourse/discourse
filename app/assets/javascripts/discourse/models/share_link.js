@@ -14,7 +14,7 @@ Discourse.ShareLink = Discourse.Model.extend({
   }.property('target', 'link', 'topicTitle'),
 
   title: function() {
-    return Em.String.i18n("share." + this.get('target'));
+    return I18n.t("share." + this.get('target'));
   }.property('target'),
 
   iconClass: function() {

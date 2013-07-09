@@ -13,12 +13,12 @@ Discourse.ActionSummary = Discourse.Model.extend({
     var action = this.get('actionType.name_key');
     if (this.get('acted')) {
       if (this.get('count') <= 1) {
-        return Em.String.i18n('post.actions.by_you.' + action);
+        return I18n.t('post.actions.by_you.' + action);
       } else {
-        return Em.String.i18n('post.actions.by_you_and_others.' + action, { count: this.get('count') - 1 });
+        return I18n.t('post.actions.by_you_and_others.' + action, { count: this.get('count') - 1 });
       }
     } else {
-      return Em.String.i18n('post.actions.by_others.' + action, { count: this.get('count') });
+      return I18n.t('post.actions.by_others.' + action, { count: this.get('count') });
     }
   }.property('count', 'acted', 'actionType'),
 

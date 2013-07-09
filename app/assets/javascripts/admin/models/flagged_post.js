@@ -12,7 +12,7 @@ Discourse.FlaggedPost = Discourse.Post.extend({
     return _(this.post_actions)
       .groupBy(function(a){ return a.post_action_type_id; })
       .map(function(v,k){
-        return Em.String.i18n('admin.flags.summary.action_type_' + k, {count: v.length});
+        return I18n.t('admin.flags.summary.action_type_' + k, {count: v.length});
       })
       .join(',');
   }.property(),
@@ -23,7 +23,7 @@ Discourse.FlaggedPost = Discourse.Post.extend({
     r = [];
     _.each(this.post_actions, function(action) {
       var user = _this.userLookup[action.user_id];
-      var flagType = Em.String.i18n('admin.flags.summary.action_type_' + action.post_action_type_id, {count: 1});
+      var flagType = I18n.t('admin.flags.summary.action_type_' + action.post_action_type_id, {count: 1});
       r.push({user: user, flagType: flagType, flaggedAt: action.created_at});
     });
     return r;

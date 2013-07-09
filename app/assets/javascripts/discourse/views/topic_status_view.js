@@ -22,7 +22,7 @@ Discourse.TopicStatusView = Discourse.View.extend({
   }.observes('topic.closed', 'topic.pinned', 'topic.visible'),
 
   renderIcon: function(buffer, name, key) {
-    var title = Em.String.i18n("topic_statuses." + key + ".help");
+    var title = I18n.t("topic_statuses." + key + ".help");
     return buffer.push("<span title='" + title + "' class='topic-status'><i class='icon icon-" + name + "'></i></span>");
   },
 
