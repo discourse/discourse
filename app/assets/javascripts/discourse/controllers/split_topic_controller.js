@@ -12,7 +12,6 @@ Discourse.SplitTopicController = Discourse.ObjectController.extend(Discourse.Sel
 
   topicController: Em.computed.alias('controllers.topic'),
   selectedPosts: Em.computed.alias('topicController.selectedPosts'),
-  saving: false,
 
   buttonDisabled: function() {
     if (this.get('saving')) return true;
@@ -23,6 +22,10 @@ Discourse.SplitTopicController = Discourse.ObjectController.extend(Discourse.Sel
     if (this.get('saving')) return I18n.t('saving');
     return I18n.t('topic.split_topic.action');
   }.property('saving'),
+
+  onShow: function() {
+    this.set('saving', false);
+  },
 
   movePostsToNewTopic: function() {
     this.set('saving', true);
