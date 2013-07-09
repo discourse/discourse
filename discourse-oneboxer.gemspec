@@ -6,11 +6,11 @@ require 'discourse/oneboxer/version'
 Gem::Specification.new do |spec|
   spec.name          = "discourse-oneboxer"
   spec.version       = Discourse::Oneboxer::VERSION
-  spec.authors       = ["jzeta"]
-  spec.email         = ["holla@jzeta.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
-  spec.homepage      = ""
+  spec.authors       = ["Joanna Zeta", "Vyki Englert"]
+  spec.email         = ["holla@jzeta.com", "vyki.englert@gmail.com"]
+  spec.description   = %q{A gem for turning URLs into previews.}
+  spec.summary       = spec.description
+  spec.homepage      = "http://github.com/dysania/discourse-oneboxer"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)

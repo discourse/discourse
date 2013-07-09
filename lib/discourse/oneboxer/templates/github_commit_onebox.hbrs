@@ -1,0 +1,38 @@
+<div class="onebox-result">
+  {{#host}}
+    <div class="source">
+      <div class="info">
+        <a href="{{html_url}}" class="track-link" target="_blank">
+          {{#favicon}}
+            <img class="favicon" src="{{favicon}}">
+          {{/favicon}}
+          {{host}}
+        </a>
+      </div>
+    </div>
+  {{/host}}
+
+  <div class="onebox-result-body">
+    {{#author.avatar_url}}
+      <a href="{{author.html_url}}" target="_blank">
+        <img alt="{{author.login}}" src="{{author.avatar_url}}">
+      </a>
+    {{/author.avatar_url}}
+
+    <h4>
+      <a href="{{html_url}}" target="_blank">{{commit.message}}</a>
+    </h4>
+
+    <div class="date">
+      by <a href="{{author.html_url}}" target="_blank">{{author.login}}</a>
+      on <a href="{{html_url}}" target="_blank">{{commit_date}}</a>
+    </div>
+
+    <div class="github-commit-stats">
+      changed <strong>{{files.length}} files</strong>
+      with <strong>{{stats.additions}} additions</strong>
+      and <strong>{{stats.deletions}} deletions</strong>.
+    </div>
+  </div>
+  <div class="clearfix"></div>
+</div>
