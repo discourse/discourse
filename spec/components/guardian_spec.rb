@@ -456,12 +456,24 @@ describe Guardian do
         Guardian.new(coding_horror).can_edit?(topic).should be_false
       end
 
-      it 'returns true as a moderator' do
-        Guardian.new(moderator).can_edit?(topic).should be_true
+      context 'not archived' do
+        it 'returns true as a moderator' do
+          Guardian.new(moderator).can_edit?(topic).should be_true
+        end
+
+        it 'returns true as an admin' do
+          Guardian.new(admin).can_edit?(topic).should be_true
+        end
       end
 
-      it 'returns true as an admin' do
-        Guardian.new(admin).can_edit?(topic).should be_true
+      context 'archived' do
+        it 'returns false as a moderator' do
+          Guardian.new(moderator).can_edit?(build(:topic, user: user, archived: true)).should be_false
+        end
+
+        it 'returns false as an admin' do
+          Guardian.new(admin).can_edit?(build(:topic, user: user, archived: true)).should be_false
+        end
       end
     end
 
