@@ -5,9 +5,11 @@
 
 var oldI18nlookup = I18n.lookup;
 I18n.lookup = function() {
-  arguments[0] = "js." + arguments[0];
-  return oldI18nlookup.apply(this, arguments);
-}
+  // jshint doesn't like when we change the arguments directly...
+  var args = arguments;
+  if (args.length > 0) { args[0] = "js." + args[0]; }
+  return oldI18nlookup.apply(this, args);
+};
 
 /**
   Look up a translation for an i18n key in our dictionary.
