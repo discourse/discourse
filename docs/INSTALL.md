@@ -34,6 +34,14 @@ And you can try to set up following components manually on it:
   - Run a clockwork process for enqueing scheduled jobs
   - Run several Rails processes, preferably behind a proxy like Nginx.
 
+---
+
+# Low memory installs
+
+- Clockwork can run inside your web server, if you launch the your web server with EMBED_CLOCKWORK=1, 
+   clockwork will run in a backgroud thread. As clockwork itself only performs scheduling, it will have
+   very little impact on performance
+
 [1]: https://github.com/discourse/discourse/blob/master/docs/INSTALL-ubuntu.md
 [2]: https://github.com/discourse/discourse/blob/master/docs/HEROKU.md
 

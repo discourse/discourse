@@ -1,6 +1,8 @@
 require 'clockwork'
-require_relative 'boot'
-require_relative 'environment'
+unless ENV['EMBED_CLOCKWORK']
+  require_relative 'boot'
+  require_relative 'environment'
+end
 
 # These are jobs you should run on a regular basis to make your
 # forum work properly.
