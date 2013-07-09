@@ -1087,9 +1087,11 @@ fr:
         create: 'Ajouter un administateur'
         last_emailed: "Derniers contacts"
         not_found: "Désolé cet utilisateur n'existe pas dans notre système."
-        new: "Nouveau"
         active: "Actif"
-        pending: "En attente"
+        nav:
+          new: "Nouveau"
+          active: "Actif"
+          pending: "En attente"
         approved: "Approuvé ?"
         approved_selected:
           one: "Approuver l'utilisateur"

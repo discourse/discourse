@@ -1,6 +1,12 @@
 require 'spec_helper'
+require_dependency 'discourse_version_check'
 
 describe Admin::DashboardController do
+  before do
+    #NOTE: Rails.cache should be blanked between tests, at the moment we can share state with it
+    # that is seriously bust on quite a few levels
+    Rails.cache.delete("admin-dashboard-data-#{Discourse::VERSION::STRING}")
+  end
 
   it "is a subclass of AdminController" do
     (Admin::DashboardController < Admin::AdminController).should be_true

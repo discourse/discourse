@@ -69,7 +69,16 @@ Discourse.PostView = Discourse.View.extend({
   // Toggle visibility of parent post
   toggleParent: function(e) {
     var postView = this;
+    var post = this.get('post');
     var $parent = this.$('.parent-post');
+    var inReplyTo = post.get('reply_to_post_number');
+
+    if (post.get('post_number') - 1 === inReplyTo) {
+      // true means ... avoid scroll if possible
+      Discourse.TopicView.jumpToPost(post.get('topic_id'), inReplyTo, true);
+      return;
+    }
+
     if (this.get('parentPost')) {
       $('nav', $parent).removeClass('toggled');
       // Don't animate on touch
@@ -80,11 +89,10 @@ Discourse.PostView = Discourse.View.extend({
         $parent.slideUp(function() { postView.set('parentPost', null); });
       }
     } else {
-      var post = this.get('post');
       this.set('loadingParent', true);
       $('nav', $parent).addClass('toggled');
 
-      Discourse.Post.loadByPostNumber(post.get('topic_id'), post.get('reply_to_post_number')).then(function(result) {
+      Discourse.Post.loadByPostNumber(post.get('topic_id'), inReplyTo).then(function(result) {
         postView.set('loadingParent', false);
         // Give the post a reference back to the topic
         result.topic = postView.get('post.topic');
@@ -159,9 +167,9 @@ Discourse.PostView = Discourse.View.extend({
   showLinkCounts: function() {
 
     var postView = this;
-    var link_counts;
+    var link_counts = this.get('post.link_counts');
 
-    if (link_counts = this.get('post.link_counts')) {
+    if (link_counts) {
       _.each(link_counts, function(lc) {
         if (lc.clicks > 0) {
           postView.$(".cooked a[href]").each(function() {

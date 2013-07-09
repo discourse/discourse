@@ -10,18 +10,18 @@ describe PostCreator do
 
   let(:user) { Fabricate(:user) }
 
-  context 'new topic' do
+  context "new topic" do
     let(:category) { Fabricate(:category, user: user) }
     let(:topic) { Fabricate(:topic, user: user) }
-    let(:basic_topic_params) { {title: 'hello world topic', raw: 'my name is fred', archetype_id: 1} }
-    let(:image_sizes) { {'http://an.image.host/image.jpg' => {'width' => 111, 'height' => 222}} }
+    let(:basic_topic_params) { {title: "hello world topic", raw: "my name is fred", archetype_id: 1} }
+    let(:image_sizes) { {'http://an.image.host/image.jpg' => {"width" => 111, "height" => 222}} }
 
     let(:creator) { PostCreator.new(user, basic_topic_params) }
     let(:creator_with_category) { PostCreator.new(user, basic_topic_params.merge(category: category.name )) }
-    let(:creator_with_meta_data) { PostCreator.new(user, basic_topic_params.merge(meta_data: {hello: 'world'} )) }
+    let(:creator_with_meta_data) { PostCreator.new(user, basic_topic_params.merge(meta_data: {hello: "world"} )) }
     let(:creator_with_image_sizes) { PostCreator.new(user, basic_topic_params.merge(image_sizes: image_sizes)) }
 
-    it 'ensures the user can create the topic' do
+    it "ensures the user can create the topic" do
       Guardian.any_instance.expects(:can_create?).with(Topic,nil).returns(false)
       lambda { creator.create }.should raise_error(Discourse::InvalidAccess)
     end
@@ -38,14 +38,26 @@ describe PostCreator do
 
     end
 
-    context 'success' do
+    context "success" do
 
       it "doesn't return true for spam" do
         creator.create
         creator.spam?.should be_false
       end
 
-      it 'generates the correct messages for a secure topic' do
+      it "does not notify on system messages" do
+        admin = Fabricate(:admin)
+        messages = MessageBus.track_publish do
+          p = PostCreator.create(admin, basic_topic_params.merge(post_type: Post.types[:moderator_action]))
+          PostCreator.create(admin, basic_topic_params.merge(topic_id: p.topic_id, post_type: Post.types[:moderator_action]))
+        end
+        # don't notify on system messages they introduce too much noise
+        channels = messages.map(&:channel)
+        channels.find{|s| s =~ /unread/}.should be_nil
+        channels.find{|s| s =~ /new/}.should be_nil
+      end
+
+      it "generates the correct messages for a secure topic" do
 
         admin = Fabricate(:admin)
 
@@ -59,7 +71,7 @@ describe PostCreator do
 
         messages = MessageBus.track_publish do
           created_post = PostCreator.new(admin, basic_topic_params.merge(category: cat.name)).create
-          reply = PostCreator.new(admin, raw: 'this is my test reply 123 testing', topic_id: created_post.topic_id).create
+          reply = PostCreator.new(admin, raw: "this is my test reply 123 testing", topic_id: created_post.topic_id).create
         end
 
         topic_id = created_post.topic_id

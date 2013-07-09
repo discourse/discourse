@@ -867,9 +867,11 @@ sv:
         create: 'Lägg till Administratör'
         last_emailed: "Senast Mailad"
         not_found: "Tyvärr den användaren existerar inte i vårt system."
-        new: "Ny"
         active: "Aktiv"
-        pending: "Avvaktande"
+        nav:
+          new: "Ny"
+          active: "Aktiv"
+          pending: "Avvaktande"
         approved: "Godkänd?"
         approved_selected:
           one: "godkänd användare"

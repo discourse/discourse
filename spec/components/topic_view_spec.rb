@@ -257,22 +257,26 @@ describe TopicView do
 
       it "snaps to the lower boundary" do
         near_view = topic_view_near(p1)
+        near_view.desired_post.should == p1
         near_view.posts.should == [p1, p2, p3]
       end
 
       it "snaps to the upper boundary" do
         near_view = topic_view_near(p5)
+        near_view.desired_post.should == p5
         near_view.posts.should == [p2, p3, p5]
       end
 
       it "returns the posts in the middle" do
         near_view = topic_view_near(p2)
+        near_view.desired_post.should == p2
         near_view.posts.should == [p1, p2, p3]
       end
 
       it "returns deleted posts to an admin" do
         coding_horror.admin = true
         near_view = topic_view_near(p3)
+        near_view.desired_post.should == p3
         near_view.posts.should == [p2, p3, p4]
       end
 

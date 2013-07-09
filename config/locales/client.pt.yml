@@ -644,9 +644,11 @@ pt:
         create: 'Adicionar Utilizador Admin'
         last_emailed: "Último email enviado"
         not_found: "Desculpa, esse nome de utilizador não existe no nosso sistema."
-        new: "Novo"
         active: "Ativo"
-        pending: "Pendente"
+        nav:
+          new: "Novo"
+          active: "Ativo"
+          pending: "Pendente"
         approved: "Aprovado?"
         approved_selected:
           one: "aprovar utilizador"

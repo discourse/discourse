@@ -27,6 +27,7 @@ class AdminUserIndexQuery
       when 'admins' then @query.where('admin = ?', true)
       when 'moderators' then @query.where('moderator = ?', true)
       when 'blocked' then @query.blocked
+      when 'banned' then @query.banned
       when 'pending' then @query.where('approved = false')
     end
   end

@@ -467,12 +467,16 @@ table {
   }
 
   &.totals {
+    table {
+      width: auto;
+    }
     margin-top: 12px;
     padding-left: 5px;
     .value {
+      text-align: left;
       font-weight: bold;
-      margin-left: 8px;
-      margin-right: 30px;
+      padding-left: 8px;
+      padding-right: 30px;
     }
   }
 

@@ -1099,9 +1099,11 @@ de:
         create: 'Administrator hinzufügen'
         last_emailed: "Letzte Mail"
         not_found: "Entschuldige, dieser Benutzername existiert im System nicht."
-        new: "Neu"
         active: "Aktiv"
-        pending: "Unerledigt"
+        nav:
+          new: "Neu"
+          active: "Aktiv"
+          pending: "Unerledigt"
         approved: "Zugelassen?"
         approved_selected:
           one: "Benutzer zulassen"

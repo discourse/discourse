@@ -30,7 +30,10 @@ Discourse.Post = Discourse.Model.extend({
   }.property('username'),
 
   showUserReplyTab: function() {
-    return this.get('reply_to_user') && (this.get('reply_to_post_number') < (this.get('post_number') - 1));
+    return this.get('reply_to_user') && (
+      !Discourse.SiteSettings.suppress_reply_directly_above ||
+      this.get('reply_to_post_number') < (this.get('post_number') - 1)
+    );
   }.property('reply_to_user', 'reply_to_post_number', 'post_number'),
 
   byTopicCreator: function() {

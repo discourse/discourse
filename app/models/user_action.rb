@@ -22,7 +22,6 @@ class UserAction < ActiveRecord::Base
   ORDER = Hash[*[
     GOT_PRIVATE_MESSAGE,
     NEW_PRIVATE_MESSAGE,
-    BOOKMARK,
     NEW_TOPIC,
     REPLY,
     RESPONSE,
@@ -30,6 +29,7 @@ class UserAction < ActiveRecord::Base
     WAS_LIKED,
     MENTION,
     QUOTE,
+    BOOKMARK,
     STAR,
     EDIT
   ].each_with_index.to_a.flatten]

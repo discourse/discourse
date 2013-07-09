@@ -1093,9 +1093,11 @@ nl:
         create: Voeg beheerder toe
         last_emailed: Laatste mail verstuurd
         not_found: "Sorry, deze gebruikersnaam bestaat niet in ons systeem."
-        new: Nieuw
         active: Actief
-        pending: Te beoordelen
+        nav:
+          new: Nieuw
+          active: Actief
+          pending: Te beoordelen
         approved: Goedgekeurd?
         approved_selected:
           one: accepteer lid

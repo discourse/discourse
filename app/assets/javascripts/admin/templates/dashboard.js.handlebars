@@ -97,12 +97,20 @@
   </div>
 
   <div class="dashboard-stats totals">
-    <span class="title"><i class='icon icon-trophy'></i> {{i18n admin.dashboard.admins}}</span>
-    <span class="value">{{#linkTo 'adminUsersList.admins'}}{{admins}}{{/linkTo}}</span>
-    <span class="title"><i class='icon icon-magic'></i> {{i18n admin.dashboard.moderators}}</span>
-    <span class="value">{{#linkTo 'adminUsersList.moderators'}}{{moderators}}{{/linkTo}}</span>
-    <span class="title"><i class='icon icon-ban-circle'></i> {{i18n admin.dashboard.blocked}}</span>
-    <span class="value">{{#linkTo 'adminUsersList.blocked'}}{{blocked}}{{/linkTo}}</span>
+    <table>
+      <tr>
+        <td class="title"><i class='icon icon-trophy'></i> {{i18n admin.dashboard.admins}}</td>
+        <td class="value">{{#linkTo 'adminUsersList.admins'}}{{admins}}{{/linkTo}}</td>
+        <td class="title"><i class='icon icon-ban-circle'></i> {{i18n admin.dashboard.banned}}</td>
+        <td class="value">{{#linkTo 'adminUsersList.banned'}}{{banned}}{{/linkTo}}</td>
+      </tr>
+      <tr>
+        <td class="title"><i class='icon icon-magic'></i> {{i18n admin.dashboard.moderators}}</td>
+        <td class="value">{{#linkTo 'adminUsersList.moderators'}}{{moderators}}{{/linkTo}}</td>
+        <td class="title"><i class='icon icon-ban-circle'></i> {{i18n admin.dashboard.blocked}}</td>
+        <td class="value">{{#linkTo 'adminUsersList.blocked'}}{{blocked}}{{/linkTo}}</td>
+      </tr>
+    </table>
   </div>
 
   <div class="dashboard-stats">

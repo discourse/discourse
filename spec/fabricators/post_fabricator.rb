@@ -20,41 +20,6 @@ Fabricator(:moderator_post, from: :post) do
   raw "Hello world"
 end
 
-
-Fabricator(:post_with_images, from: :post) do
-  raw "
-<img src='/path/to/img.jpg' height='50' width='50'>
-![Alt text](/second_image.jpg)
-  "
-end
-
-Fabricator(:post_with_image_url, from: :post) do
-  cooked "
-<img src=\"http://www.forumwarz.com/images/header/logo.png\">
-  "
-end
-
-Fabricator(:post_with_s3_image_url, from: :post) do
-  cooked "
-<img src=\"//bucket.s3.amazonaws.com/uploads/6/4/123.png\">
-  "
-end
-
-Fabricator(:post_with_uploads, from: :post) do
-  cooked "
-<img src='/uploads/default/1/1234567890123456.jpg' height='100' width='100'>
-  "
-end
-
-Fabricator(:post_with_oneboxed_image, from: :post) do
-  cooked "
-<div class='onebox-result'>
-<img src='/uploads/default/1/1234567890123456.jpg' height='100' width='100'>
-</div>
-  "
-end
-
-
 Fabricator(:basic_reply, from: :post) do
   user(:coding_horror)
   reply_to_post_number 1
@@ -69,6 +34,35 @@ Fabricator(:reply, from: :post) do
     [quote="Evil Trout, post:1"]hello[/quote]
     Hmmm!
   '
+end
+
+Fabricator(:post_with_images_in_quote_and_onebox, from: :post) do
+  cooked '
+<aside class="quote"><img src="/uploads/default/1/1234567890123456.jpg"></aside>
+<div class="onebox-result"><img src="/uploads/default/1/1234567890123456.jpg"></div>
+'
+end
+
+Fabricator(:post_with_uploaded_images, from: :post) do
+  cooked '
+<img src="/uploads/default/2/3456789012345678.png" width="1500" height="2000">
+<img src="/uploads/default/1/1234567890123456.jpg">
+'
+end
+
+Fabricator(:post_with_unsized_images, from: :post) do
+  cooked '
+<img src="http://foo.bar/image.png">
+<img src="/uploads/default/1/1234567890123456.jpg">
+'
+end
+
+Fabricator(:post_with_image_url, from: :post) do
+  cooked '<img src="http://foo.bar/image.png">'
+end
+
+Fabricator(:post_with_large_image, from: :post) do
+  cooked '<img src="/uploads/default/1/1234567890123456.jpg">'
 end
 
 Fabricator(:post_with_external_links, from: :post) do

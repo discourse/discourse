@@ -1193,9 +1193,11 @@ cs:
         create: 'Přidat administrátora'
         last_emailed: "Email naposledy zaslán"
         not_found: "Bohužel uživatel s tímto jménem není v našem systému."
-        new: "Nový"
         active: "Aktivní"
-        pending: "Čeká na schválení"
+        nav:
+          active: "Aktivní"
+          new: "Nový"
+          pending: "Čeká na schválení"
         approved: "Schválen?"
         approved_selected:
           one: "schválit uživatele"

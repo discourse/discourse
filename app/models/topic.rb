@@ -22,11 +22,13 @@ class Topic < ActiveRecord::Base
   versioned if: :new_version_required?
 
   def trash!
+    update_category_topic_count_by(-1) if deleted_at.nil?
     super
     update_flagged_posts_count
   end
 
   def recover!
+    update_category_topic_count_by(1) unless deleted_at.nil?
     super
     update_flagged_posts_count
   end
@@ -630,6 +632,14 @@ class Topic < ActiveRecord::Base
   def secure_category?
     category && category.secure
   end
+
+  private
+
+    def update_category_topic_count_by(num)
+      if category_id.present?
+        Category.where(['id = ?', category_id]).update_all("topic_count = topic_count " + (num > 0 ? '+' : '') + "#{num}")
+      end
+    end
 end
 
 # == Schema Information
