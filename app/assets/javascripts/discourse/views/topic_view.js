@@ -48,6 +48,22 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
     var postUrl = topic.get('url');
     if (current > 1) { postUrl += "/" + current; }
+    // TODO: @Robin, this should all be integrated into the router,
+    //  the view should not be performing routing work
+    //
+    //  This workaround ensures the router is aware the route changed,
+    //    without it, the up button was broken on long topics.
+    //  To repro, go to a topic with 50 posts, go to first post,
+    //    scroll to end, click up button ... nothing happens
+    var handler =_.first(
+          _.where(Discourse.URL.get("router.router.currentHandlerInfos"),
+              function(o) {
+                return o.name === "topic.fromParams";
+              })
+          );
+    if(handler){
+      handler.context = {nearPost: current};
+    }
     Discourse.URL.replaceState(postUrl);
   }.observes('controller.currentPost', 'highest_post_number'),
 
