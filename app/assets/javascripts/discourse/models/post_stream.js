@@ -323,15 +323,19 @@ Discourse.PostStream = Em.Object.extend({
     @param {Discourse.User} the user creating the post
   **/
   stagePost: function(post, user) {
-    var topic = this.get('topic');
 
+    // We can't stage two posts simultaneously
+    if (this.get('stagingPost')) { return false; }
+
+    this.set('stagingPost', true);
+
+    var topic = this.get('topic');
     topic.setProperties({
       posts_count: (topic.get('posts_count') || 0) + 1,
       last_posted_at: new Date(),
       'details.last_poster': user,
       highest_post_number: (topic.get('highest_post_number') || 0) + 1
     });
-    this.set('stagingPost', true);
 
     post.setProperties({
       post_number: topic.get('highest_post_number'),
@@ -343,6 +347,8 @@ Discourse.PostStream = Em.Object.extend({
     if (this.get('lastPostLoaded')) {
       this.appendPost(post);
     }
+
+    return true;
   },
 
   /**

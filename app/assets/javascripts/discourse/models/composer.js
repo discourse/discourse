@@ -461,7 +461,12 @@ Discourse.Composer = Discourse.Model.extend({
       if (post) {
         post.set('reply_count', (post.get('reply_count') || 0) + 1);
       }
-      postStream.stagePost(createdPost, currentUser);
+      if (!postStream.stagePost(createdPost, currentUser)) {
+
+        // If we can't stage the post, return and don't save. We're likely currently
+        // staging a post.
+        return;
+      }
     }
 
     // Save callback
