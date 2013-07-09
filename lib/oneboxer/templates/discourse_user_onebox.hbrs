@@ -1,8 +1,0 @@
-<div class='onebox-result'>
-  {{{avatar}}}
-  <h3><a href="{{original_url}}">{{username}}</a></h3>
-
-  {{#bio}}<p>{{bio}}</p>{{/bio}}
-
-  <div class='clearfix'></div>
-</div>
