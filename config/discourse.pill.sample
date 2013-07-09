@@ -45,7 +45,9 @@ Bluepill.application("discourse", :base_dir => ENV["HOME"] + '/.bluepill') do |a
   app.uid = user
 
   app.working_dir = rails_root
-  sockdir = "#{rails_root}/tmp/sockets"
+  tmpdir  = "#{rails_root}/tmp"
+  sockdir = "#{tmpdir}/sockets"
+  File.directory? tmpdir or Dir.mkdir tmpdir
   File.directory? sockdir or Dir.mkdir sockdir
   num_webs.times do |i|
     app.process("thin-#{i}") do |process|
