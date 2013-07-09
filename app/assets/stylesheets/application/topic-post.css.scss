@@ -241,7 +241,6 @@
   section.post-menu-area {
     @include unselectable;
     background-color: $post_footer;
-    border-top: 1px solid $inner_border;
     overflow: hidden;
     @include box-shadow(inset 0 -4px 4px -4px rgba($black, 0.14));
     nav.post-controls {
@@ -535,7 +534,6 @@
           padding: 10px 10px 0;
         }
         position: relative;
-        border: 1px solid #b9b9b9;
         padding: 0;
         background-color: $white;
         word-wrap: break-word;
