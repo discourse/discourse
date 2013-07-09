@@ -54,9 +54,9 @@ class Post < ActiveRecord::Base
     @types ||= Enum.new(:regular, :moderator_action)
   end
 
-  def trash!
+  def trash!(trashed_by=nil)
     self.topic_links.each(&:destroy)
-    super
+    super(trashed_by)
   end
 
   def recover!

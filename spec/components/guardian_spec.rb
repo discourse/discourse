@@ -229,20 +229,22 @@ describe Guardian do
     end
 
     describe 'a Post' do
+
+      let(:another_admin) { Fabricate(:admin) }
       it 'correctly handles post visibility' do
         post = Fabricate(:post)
         topic = post.topic
 
         Guardian.new(user).can_see?(post).should be_true
 
-        post.trash!
+        post.trash!(another_admin)
         post.reload
         Guardian.new(user).can_see?(post).should be_false
         Guardian.new(admin).can_see?(post).should be_true
 
         post.recover!
         post.reload
-        topic.trash!
+        topic.trash!(another_admin)
         topic.reload
         Guardian.new(user).can_see?(post).should be_false
         Guardian.new(admin).can_see?(post).should be_true

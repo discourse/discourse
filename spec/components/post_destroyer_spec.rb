@@ -23,6 +23,7 @@ describe PostDestroyer do
 
       it "doesn't delete the post" do
         post.deleted_at.should be_blank
+        post.deleted_by.should be_blank
         post.raw.should == I18n.t('js.post.deleted_by_author')
         post.version.should == 2
       end
@@ -35,6 +36,7 @@ describe PostDestroyer do
 
       it "deletes the post" do
         post.deleted_at.should be_present
+        post.deleted_by.should == moderator
       end
     end
 
@@ -45,6 +47,7 @@ describe PostDestroyer do
 
       it "deletes the post" do
         post.deleted_at.should be_present
+        post.deleted_by.should == admin
       end
     end
 

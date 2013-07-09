@@ -14,7 +14,8 @@ describe PostsController do
 
   describe 'show' do
 
-    let(:post) { Fabricate(:post, user: log_in) }
+    let(:user) { log_in }
+    let(:post) { Fabricate(:post, user: user) }
 
     it 'ensures the user can see the post' do
       Guardian.any_instance.expects(:can_see?).with(post).returns(false)
@@ -30,7 +31,7 @@ describe PostsController do
     context "deleted post" do
 
       before do
-        post.trash!
+        post.trash!(user)
       end
 
       it "can't find deleted posts as an anonymous user" do

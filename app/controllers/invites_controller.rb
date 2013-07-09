@@ -32,7 +32,7 @@ class InvitesController < ApplicationController
 
     invite = Invite.where(invited_by_id: current_user.id, email: params[:email]).first
     raise Discourse::InvalidParameters.new(:email) if invite.blank?
-    invite.trash!
+    invite.trash!(current_user)
 
     render nothing: true
   end

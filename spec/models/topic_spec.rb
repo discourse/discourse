@@ -1296,16 +1296,17 @@ describe Topic do
 
   describe 'trash!' do
     context "its category's topic count" do
+      let(:moderator) { Fabricate(:moderator) }
       let(:category) { Fabricate(:category) }
 
       it "subtracts 1 if topic is being deleted" do
         topic = Fabricate(:topic, category: category)
-        expect { topic.trash! }.to change { category.reload.topic_count }.by(-1)
+        expect { topic.trash!(moderator) }.to change { category.reload.topic_count }.by(-1)
       end
 
       it "doesn't subtract 1 if topic is already deleted" do
         topic = Fabricate(:topic, category: category, deleted_at: 1.day.ago)
-        expect { topic.trash! }.to_not change { category.reload.topic_count }
+        expect { topic.trash!(moderator) }.to_not change { category.reload.topic_count }
       end
     end
   end

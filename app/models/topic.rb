@@ -21,9 +21,9 @@ class Topic < ActiveRecord::Base
 
   versioned if: :new_version_required?
 
-  def trash!
+  def trash!(trashed_by=nil)
     update_category_topic_count_by(-1) if deleted_at.nil?
-    super
+    super(trashed_by)
     update_flagged_posts_count
   end
 

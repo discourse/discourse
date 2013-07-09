@@ -77,9 +77,7 @@ Discourse.FlaggedPost = Discourse.Post.extend({
     return Discourse.ajax('/admin/flags/agree/' + this.id, { type: 'POST', cache: false });
   },
 
-  postHidden: function() {
-    return (this.get('hidden'));
-  }.property(),
+  postHidden: Em.computed.alias('hidden'),
 
   extraClasses: function() {
     var classes = [];
@@ -92,9 +90,8 @@ Discourse.FlaggedPost = Discourse.Post.extend({
     return classes.join(' ');
   }.property(),
 
-  deleted: function() {
-    return (this.get('deleted_at') || this.get('topic_deleted_at'));
-  }.property()
+  deleted: Em.computed.or('deleted_at', 'topic_deleted_at')
+
 });
 
 Discourse.FlaggedPost.reopenClass({

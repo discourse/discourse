@@ -62,7 +62,7 @@ describe UserAction do
 
       other_stats.should == expecting
 
-      public_topic.trash!
+      public_topic.trash!(user)
       stats_for_user.should == []
       stream_count.should == 0
 
