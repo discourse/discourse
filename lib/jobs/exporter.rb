@@ -52,7 +52,7 @@ module Jobs
         'PostReply'             => 'post_id, reply_id',
         'PostTiming'            => 'topic_id, post_number, user_id',
         'TopicUser'             => 'topic_id, user_id',
-        'View'                  => 'parent_id, parent_type, ip, viewed_at'
+        'View'                  => 'parent_id, parent_type, ip_address, viewed_at'
       }
       @order_columns_for_hash[model.name]
     end
