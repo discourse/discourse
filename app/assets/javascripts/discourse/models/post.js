@@ -131,6 +131,7 @@ Discourse.Post = Discourse.Model.extend({
 
   // Save a post and call the callback when done.
   save: function(complete, error) {
+    var self = this;
     if (!this.get('newPost')) {
       // We're updating a post
       return Discourse.ajax("/posts/" + (this.get('id')), {
@@ -141,6 +142,7 @@ Discourse.Post = Discourse.Model.extend({
         }
       }).then(function(result) {
         // If we received a category update, update it
+        self.set('version', result.post.version);
         if (result.category) Discourse.Site.instance().updateCategory(result.category);
         if (complete) complete(Discourse.Post.create(result.post));
       }, function(result) {
