@@ -844,7 +844,7 @@ fr:
         Merci de visiter ce lien pour voir la discussion: %{base_url}%{url}
 
     user_replied:
-      subject_template: "[%{site_name}] %{username} a répondu à votre message dans '%{topic_title}'"
+      subject_template: "[%{site_name}] nouvelle réponse dans '%{topic_title}'"
       text_body_template: |
         %{username} a répondu à votre message dans '%{topic_title}' sur %{site_name}:
 
@@ -877,7 +877,7 @@ fr:
         Merci de suivre ce lien pour répondre : %{base_url}%{url}
 
     user_posted:
-      subject_template: "[%{site_name}] %{username} à répondu à '%{topic_title}'"
+      subject_template: "[%{site_name}] nouveau message dans '%{topic_title}'"
       text_body_template: |
         %{username} à répondu à '%{topic_title}' sur %{site_name}:
 
