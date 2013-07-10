@@ -212,6 +212,30 @@ Discourse.Utilities = {
     if (!extensions) return false;
     var regexp = new RegExp("\\.(" + extensions.replace(/\./g, "") + ")$", "i");
     return file && file.name ? file.name.match(regexp) : false;
+  },
+
+  /**
+    Get the markdown template for an upload (either an image or an attachment)
+
+    @method getUploadMarkdown
+    @param {Upload} upload The upload we want the markdown from
+  **/
+  getUploadMarkdown: function(upload) {
+    if (this.isAnImage(upload.original_filename)) {
+      return '<img src="' + upload.url + '" width="' + upload.width + '" height="' + upload.height + '">';
+    } else {
+      return '<a class="attachment" href="' + upload.url + '">' + upload.original_filename + '</a>';
+    }
+  },
+
+  /**
+    Check whether the path is refering to an image
+
+    @method isAnImage
+    @param {String} path The path
+  **/
+  isAnImage: function(path) {
+    return path && path.match(/\.(png|jpg|jpeg|gif|bmp|tif)$/i);
   }
 
 };
