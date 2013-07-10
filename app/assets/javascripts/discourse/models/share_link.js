@@ -64,7 +64,7 @@ Discourse.ShareLink.reopenClass({
     twitter: 'icon-twitter',
     facebook: 'icon-facebook-sign',
     'google+': 'icon-google-plus',
-    email: 'icon-envelope-alt'
+    email: 'icon-envelope'
   },
 
   popupHeights: {

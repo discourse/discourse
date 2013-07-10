@@ -18,7 +18,7 @@ Discourse.UserAction = Discourse.Model.extend({
 
     if (action === null || actions.indexOf(action) >= 0) {
       if (this.get('isPM')) {
-        icon = '<i class="icon icon-envelope-alt" title="{{i18n user.stream.private_message}}"></i>';
+        icon = '<i class="icon icon-envelope" title="{{i18n user.stream.private_message}}"></i>';
         if (sameUser) {
           sentence = I18n.t('user_action.sent_by_you', { userUrl: this.get('userUrl') });
         } else {
