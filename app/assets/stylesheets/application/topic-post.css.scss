@@ -136,6 +136,7 @@
         line-height: 19px;
         text-align: center;
         background-color: #fafafa;
+        padding: 1px 2px;
         @include border-radius-all(20px);
         &:after {
           display: block;

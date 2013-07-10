@@ -8,10 +8,12 @@
 **/
 Discourse.ActivityFilterView = Discourse.View.extend({
   tagName: 'li',
-  classNameBindings: ['active'],
+  classNameBindings: ['active', 'noGlyph'],
 
   stream: Em.computed.alias('controller.content'),
   shouldRerender: Discourse.View.renderIfChanged('count'),
+
+  noGlyph: Em.computed.empty('icon'),
 
   active: function() {
     var content = this.get('content');
@@ -34,13 +36,14 @@ Discourse.ActivityFilterView = Discourse.View.extend({
       description = I18n.t("user.filters.all");
     }
 
-    buffer.push("<a href='#'>" + description +
-        " <span class='count'>(" + count + ")</span>");
-
     var icon = this.get('icon');
     if(icon) {
       buffer.push("<i class='glyph icon icon-" + icon + "'></i>");
     }
+
+    buffer.push("<a href='#'>" + description +
+        " <span class='count'>(" + count + ")</span>");
+
 
     buffer.push("<span class='icon-chevron-right'></span></a>");
 
