@@ -10,6 +10,8 @@
 Discourse.HotnessView = Discourse.View.extend({
   classNames: ['hotness-control'],
 
+  shouldRerender: Discourse.View.renderIfChanged('hotness'),
+
   render: function(buffer) {
     // Our scale goes to 11!
     for (var i=1; i<12; i++) {
@@ -20,15 +22,6 @@ Discourse.HotnessView = Discourse.View.extend({
       buffer.push(">" + i + "</button>");
     }
   },
-
-  /**
-    Trigger a re-render whenever the hotness changes
-
-    @observer hotnessChanged
-  **/
-  hotnessChanged: function() {
-    this.rerender();
-  }.observes('hotness'),
 
   /**
     When the user clicks on a hotness value button, change it.

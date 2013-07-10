@@ -11,10 +11,7 @@ Discourse.ActivityFilterView = Discourse.View.extend({
   classNameBindings: ['active'],
 
   stream: Em.computed.alias('controller.content'),
-
-  countChanged: function(){
-    this.rerender();
-  }.observes('count'),
+  shouldRerender: Discourse.View.renderIfChanged('count'),
 
   active: function() {
     var content = this.get('content');

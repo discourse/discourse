@@ -17,9 +17,7 @@ Discourse.TopicStatusView = Discourse.View.extend({
     return false;
   }.property('topic.closed', 'topic.pinned', 'topic.visible'),
 
-  statusChanged: function() {
-    this.rerender();
-  }.observes('topic.closed', 'topic.pinned', 'topic.visible'),
+  shouldRerender: Discourse.View.renderIfChanged('topic.closed', 'topic.pinned', 'topic.visible'),
 
   renderIcon: function(buffer, name, key) {
     var title = I18n.t("topic_statuses." + key + ".help");
@@ -27,8 +25,7 @@ Discourse.TopicStatusView = Discourse.View.extend({
   },
 
   render: function(buffer) {
-
-    if (!this.get('hasDisplayableStatus')) return;
+    if (!this.get('hasDisplayableStatus')) { return; }
 
     // Allow a plugin to add a custom icon to a topic
     this.trigger('addCustomIcon', buffer);

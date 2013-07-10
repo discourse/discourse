@@ -8,9 +8,13 @@
 **/
 Discourse.NavItemView = Discourse.View.extend({
   tagName: 'li',
-  classNameBindings: ['isActive', 'content.hasIcon:has-icon'],
+  classNameBindings: ['active', 'content.hasIcon:has-icon'],
   attributeBindings: ['title'],
-  countBinding: Ember.Binding.oneWay('content.count'),
+
+  hidden: Em.computed.not('content.visible'),
+  count: Ember.computed.alias('content.count'),
+  shouldRerender: Discourse.View.renderIfChanged('count'),
+  active: Discourse.computed.propertyEqual('contentNameSlug', 'controller.filterMode'),
 
   title: function() {
     var categoryName, extra, name;
@@ -23,16 +27,13 @@ Discourse.NavItemView = Discourse.View.extend({
     return I18n.t("filters." + name + ".help", extra);
   }.property("content.filter"),
 
-  isActive: function() {
-    if (this.get("content.name").toLowerCase().replace(' ','-') === this.get("controller.filterMode")) return "active";
-    return "";
-  }.property("content.name", "controller.filterMode"),
+  contentNameSlug: function() {
+    return this.get("content.name").toLowerCase().replace(' ','-');
+  }.property('content.name'),
 
-  hidden: Em.computed.not('content.visible'),
-
-  countChanged: function(){
-    this.rerender();
-  }.observes('count'),
+  // active: function() {
+  //   return (this.get("contentNameSlug") === this.get("controller.filterMode"));
+  // }.property("contentNameSlug", "controller.filterMode"),
 
   name: function() {
     var categoryName, extra, name;

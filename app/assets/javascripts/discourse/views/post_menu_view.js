@@ -10,6 +10,17 @@ Discourse.PostMenuView = Discourse.View.extend({
   tagName: 'section',
   classNames: ['post-menu-area', 'clearfix'],
 
+  shouldRerender: Discourse.View.renderIfChanged(
+    'post.deleted_at',
+    'post.flagsAvailable.@each',
+    'post.url',
+    'post.bookmarked',
+    'post.reply_count',
+    'post.showRepliesBelow',
+    'post.can_delete',
+    'post.read',
+    'post.topic.last_read_post_number'),
+
   render: function(buffer) {
     var post = this.get('post');
     buffer.push("<nav class='post-controls'>");
@@ -34,12 +45,6 @@ Discourse.PostMenuView = Discourse.View.extend({
 
     handler.call(this);
   },
-
-  // Trigger re-rendering
-  needsToRender: function() {
-    this.rerender();
-  }.observes('post.deleted_at', 'post.flagsAvailable.@each', 'post.url', 'post.bookmarked', 'post.reply_count',
-             'post.showRepliesBelow', 'post.can_delete', 'post.read', 'post.topic.last_read_post_number'),
 
   // Replies Button
   renderReplies: function(post, buffer) {

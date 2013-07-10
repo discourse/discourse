@@ -37,14 +37,11 @@ Ember.Handlebars.registerHelper('i18n', function(property, options) {
 Ember.Handlebars.registerHelper('countI18n', function(key, options) {
   var view = Discourse.View.extend({
     tagName: 'span',
+    shouldRerender: Discourse.View.renderIfChanged('countChanged'),
 
     render: function(buffer) {
       buffer.push(I18n.t(key, { count: this.get('count') }));
-    },
-
-    countChanged: function() {
-      this.rerender();
-    }.observes('count')
+    }
 
   });
   return Ember.Handlebars.helpers.view.call(this, view, options);

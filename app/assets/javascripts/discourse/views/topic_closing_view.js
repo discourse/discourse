@@ -11,9 +11,7 @@ Discourse.TopicClosingView = Discourse.View.extend({
   elementId: 'topic-closing-info',
   delayedRerender: null,
 
-  contentChanged: function() {
-    this.rerender();
-  }.observes('topic.details.auto_close_at'),
+  shouldRerender: Discourse.View.renderIfChanged('topic.details.auto_close_at'),
 
   render: function(buffer) {
     if (!this.present('topic.details.auto_close_at')) return;
@@ -49,12 +47,12 @@ Discourse.TopicClosingView = Discourse.View.extend({
     buffer.push('</h3>');
 
     // TODO Sam: concerned this can cause a heavy rerender loop
-    this.delayedRerender = Em.run.later(this, this.rerender, rerenderDelay);
+    this.set('delayedRerender', Em.run.later(this, this.rerender, rerenderDelay));
   },
 
   willDestroyElement: function() {
     if( this.delayedRerender ) {
-      Em.run.cancel(this.delayedRerender);
+      Em.run.cancel(this.get('delayedRerender'));
     }
   }
 });

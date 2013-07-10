@@ -11,18 +11,14 @@ Discourse.ActionsHistoryView = Discourse.View.extend({
   tagName: 'section',
   classNameBindings: [':post-actions', 'hidden'],
 
-  hidden: (function() {
-    return this.blank('content');
-  }).property('content.@each'),
+  hidden: Em.computed.empty('content'),
 
-  usersChanged: (function() {
-    return this.rerender();
-  }).observes('content.@each', 'content.users.@each'),
+  shouldRerender: Discourse.View.renderIfChanged('content.@each', 'content.users.@each'),
 
   // This was creating way too many bound ifs and subviews in the handlebars version.
   render: function(buffer) {
-
     if (!this.present('content')) return;
+
     return this.get('content').forEach(function(c) {
       var actionString, iconsHtml;
       buffer.push("<div class='post-action'>");

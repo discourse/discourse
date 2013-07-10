@@ -10,6 +10,8 @@ Discourse.DropdownButtonView = Discourse.View.extend({
   classNames: ['btn-group'],
   attributeBindings: ['data-not-implemented'],
 
+  shouldRerender: Discourse.View.renderIfChanged('text', 'longDescription'),
+
   didInsertElement: function(e) {
     // If there's a click handler, call it
     if (this.clicked) {
@@ -25,10 +27,6 @@ Discourse.DropdownButtonView = Discourse.View.extend({
   willDestroyElement: function(e) {
     this.$('ul li').off('click.dropdown-button');
   },
-
-  textChanged: function() {
-    this.rerender();
-  }.observes('text', 'longDescription'),
 
   render: function(buffer) {
     buffer.push("<h4 class='title'>" + this.get('title') + "</h4>");
