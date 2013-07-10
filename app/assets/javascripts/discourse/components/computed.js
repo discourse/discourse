@@ -14,4 +14,4 @@ Discourse.computed = {
     }).property(p1, p2);
   }
 
-}
+};
