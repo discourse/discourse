@@ -7,15 +7,15 @@
   @module Discourse
 **/
 Discourse.TopicAdminMenuController = Discourse.ObjectController.extend({
-  visible: false,
+  menuVisible: false,
   needs: ['modal'],
 
   show: function() {
-    this.set('visible', true);
+    this.set('menuVisible', true);
   },
 
   hide: function() {
-    this.set('visible', false);
+    this.set('menuVisible', false);
   }
 
 });
