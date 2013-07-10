@@ -217,7 +217,8 @@ form {
 }
 
 blockquote {
-  padding: 10px 8px 1px 15px;
+  /* 13px left is intentional here to properly align with post quotes */
+  padding: 10px 8px 1px 13px;
   background-color: #f1f1f1;
   border-left: 5px solid #dddddd;
   p {
