@@ -10,6 +10,7 @@ class AdminLogger
     AdminLog.create(
       action: AdminLog.actions[:delete_user],
       admin_id: @admin.id,
+      target_user_id: deleted_user.id,
       details: [:id, :username, :name, :created_at, :trust_level, :last_seen_at, :last_emailed_at].map { |x| "#{x}: #{deleted_user.send(x)}" }.join(', ')
     )
   end

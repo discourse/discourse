@@ -29,6 +29,7 @@ describe AdminLogger do
 
     it 'creates a new AdminLog record' do
       expect { log_user_deletion }.to change { AdminLog.count }.by(1)
+      AdminLog.last.target_user_id.should == deleted_user.id
     end
   end
 
