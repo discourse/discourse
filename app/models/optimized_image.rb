@@ -49,19 +49,15 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def url
-    "#{Upload.base_url}/#{optimized_path}/#{filename}"
+    "#{LocalStore.base_url}/#{optimized_path}/#{filename}"
   end
 
   def path
-    "#{path_root}/#{optimized_path}/#{filename}"
-  end
-
-  def path_root
-    @path_root ||= "#{Rails.root}/public"
+    "#{LocalStore.base_path}/#{optimized_path}/#{filename}"
   end
 
   def optimized_path
-    "uploads/#{RailsMultisite::ConnectionManagement.current_db}/_optimized/#{sha1[0..2]}/#{sha1[3..5]}"
+    "_optimized/#{sha1[0..2]}/#{sha1[3..5]}"
   end
 
   def filename
