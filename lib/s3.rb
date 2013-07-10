@@ -1,11 +1,11 @@
 module S3
 
-  def self.store_file(file, sha1, image_info, upload_id)
+  def self.store_file(file, sha1, upload_id)
     S3.check_missing_site_settings
 
     directory = S3.get_or_create_directory(SiteSetting.s3_upload_bucket)
-
-    remote_filename = "#{upload_id}#{sha1}.#{image_info.type}"
+    extension = File.extname(file.original_filename)
+    remote_filename = "#{upload_id}#{sha1}#{extension}"
 
     # if this fails, it will throw an exception
     file = S3.upload(file, remote_filename, directory)
