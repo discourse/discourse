@@ -186,6 +186,11 @@ Discourse.Post = Discourse.Model.extend({
   },
 
   recover: function() {
+    this.setProperties({
+      deleted_at: null,
+      deleted_by: null
+    });
+
     return Discourse.ajax("/posts/" + (this.get('id')) + "/recover", { type: 'PUT', cache: false });
   },
 

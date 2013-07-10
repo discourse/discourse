@@ -64,6 +64,11 @@ test('destroy by staff', function() {
   present(post.get('deleted_at'), "it has a `deleted_at` field.");
   equal(post.get('deleted_by'), user, "it has the user in the `deleted_by` field");
   ok(Discourse.ajax.calledOnce, "it made an AJAX call");
+
+  post.recover();
+  blank(post.get('deleted_at'), "it clears `deleted_at` when recovering");
+  blank(post.get('deleted_by'), "it clears `deleted_by` when recovering");
+
 });
 
 test('destroy by non-staff', function() {

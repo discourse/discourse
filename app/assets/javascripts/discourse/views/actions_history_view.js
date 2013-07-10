@@ -10,24 +10,27 @@
 Discourse.ActionsHistoryView = Discourse.View.extend({
   tagName: 'section',
   classNameBindings: [':post-actions', 'hidden'],
-
   hidden: Em.computed.empty('content'),
-
-  shouldRerender: Discourse.View.renderIfChanged('content.@each', 'content.users.@each'),
+  shouldRerender: Discourse.View.renderIfChanged('content.@each', 'content.users.length'),
 
   // This was creating way too many bound ifs and subviews in the handlebars version.
   render: function(buffer) {
     if (!this.present('content')) return;
 
-    return this.get('content').forEach(function(c) {
-      var actionString, iconsHtml;
+    this.get('content').forEach(function(c) {
       buffer.push("<div class='post-action'>");
 
+      var renderActionIf = function(property, dataAttribute, text) {
+        if (!c.get(property)) { return; }
+        buffer.push(" <a href='#' data-" + dataAttribute + "='" + c.get('id') + "'>" + text + "</a>.");
+      };
+
       // TODO multi line expansion for flags
-      var postUrl;
-      if (c.get('users')) {
-        iconsHtml = "";
+      var iconsHtml = "";
+      if (c.get('usersExpanded')) {
+        var postUrl;
         c.get('users').forEach(function(u) {
+          console.log(u);
           iconsHtml += "<a href=\"" + Discourse.getURL("/users/") + (u.get('username_lower')) + "\">";
           if (u.post_url) {
             postUrl = postUrl || u.post_url;
@@ -42,44 +45,35 @@ Discourse.ActionsHistoryView = Discourse.View.extend({
         });
 
         var key = 'post.actions.people.' + c.get('actionType.name_key');
-        if(postUrl) {
-          key = key + "_with_url";
-        }
+        if (postUrl) { key = key + "_with_url"; }
+
         buffer.push(" " + I18n.t(key, { icons: iconsHtml, postUrl: postUrl}) + ".");
-      } else {
-        buffer.push("<a href='#' data-who-acted='" + (c.get('id')) + "'>" + (c.get('description')) + "</a>.");
       }
-
-      if (c.get('can_act') && !c.get('actionType.is_custom_flag')) {
-        actionString = I18n.t("post.actions.it_too." + c.get('actionType.name_key'));
-        buffer.push(" <a href='#' data-act='" + (c.get('id')) + "'>" + actionString + "</a>.");
-      }
-
-      if (c.get('can_undo')) {
-        actionString = I18n.t("post.actions.undo." + c.get('actionType.name_key') );
-        buffer.push(" <a href='#' data-undo='" + (c.get('id')) + "'>" + actionString + "</a>.");
-      }
-
-      if (c.get('can_clear_flags')) {
-        buffer.push(" <a href='#' data-clear-flags='" + (c.get('id')) + "'>" + (I18n.t("post.actions.clear_flags", { count: c.count })) + "</a>.");
-      }
+      renderActionIf('usersCollapsed', 'who-acted', c.get('description'));
+      renderActionIf('canAlsoAction', 'act', I18n.t("post.actions.it_too." + c.get('actionType.name_key')));
+      renderActionIf('can_undo', 'undo', I18n.t("post.actions.undo." + c.get('actionType.name_key')));
+      renderActionIf('can_clear_flags', 'clear-flags', I18n.t("post.actions.clear_flags", { count: c.count }));
 
       buffer.push("</div>");
     });
   },
 
+  actionTypeById: function(actionTypeId) {
+    return this.get('content').findProperty('id', actionTypeId);
+  },
+
   click: function(e) {
-    var $target, actionTypeId;
-    $target = $(e.target);
+    var $target = $(e.target),
+        actionTypeId;
 
     if (actionTypeId = $target.data('clear-flags')) {
-      this.get('controller').clearFlags(this.content.findProperty('id', actionTypeId));
+      this.get('controller').clearFlags(this.actionTypeById(actionTypeId));
       return false;
     }
 
     // User wants to know who actioned it
     if (actionTypeId = $target.data('who-acted')) {
-      this.get('controller').whoActed(this.content.findProperty('id', actionTypeId));
+      this.get('controller').whoActed(this.actionTypeById(actionTypeId));
       return false;
     }
 

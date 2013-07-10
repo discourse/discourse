@@ -118,6 +118,14 @@ class PostSerializer < BasicPostSerializer
     true
   end
 
+  def deleted_by
+    BasicUserSerializer.new(object.deleted_by, root: false).as_json
+  end
+
+  def include_deleted_by?
+    object.deleted_by.present?
+  end
+
   # Summary of the actions taken on this post
   def actions_summary
     result = []

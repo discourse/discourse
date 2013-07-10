@@ -732,6 +732,7 @@ en:
       continue_discussion: "Continuing the discussion from {{postLink}}:"
       follow_quote: "go to the quoted post"
       deleted_by_author: "(post removed by author)"
+      deleted_by: "deleted by"
       expand_collapse: "expand/collapse"
 
       has_replies:

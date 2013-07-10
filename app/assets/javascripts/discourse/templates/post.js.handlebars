@@ -55,6 +55,13 @@
       </div>
       {{view Discourse.RepliesView contentBinding="replies" postViewBinding="view"}}
       {{view Discourse.ActionsHistoryView contentBinding="actionsHistory"}}
+
+      {{#if deleted_by}}
+        <div class='post-actions'>
+          {{i18n post.deleted_by}} {{avatar deleted_by imageSize="tiny"}}
+        </div>
+      {{/if}}
+
       {{view Discourse.TopicSummaryView postBinding="this"}}
     </div>
 
