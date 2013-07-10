@@ -1,13 +1,15 @@
 require_dependency 'oneboxer/oembed_onebox'
 
-module Oneboxer
-  class HuluOnebox < OembedOnebox
+module Discourse
+	module Oneboxer
+	  class HuluOnebox < OembedOnebox
 
-    matcher /^https?\:\/\/www\.hulu\.com\/watch\/.*$/
+	    matcher /^https?\:\/\/www\.hulu\.com\/watch\/.*$/
 
-    def oembed_endpoint
-      "http://www.hulu.com/api/oembed.json?url=#{BaseOnebox.uriencode(@url)}"
-    end
+	    def oembed_endpoint
+	      "http://www.hulu.com/api/oembed.json?url=#{BaseOnebox.uriencode(@url)}"
+	    end
 
-  end
+	  end
+	end
 end
