@@ -230,6 +230,8 @@ class SiteSetting < ActiveRecord::Base
 
   setting(:minimum_topics_similar, 50)
 
+  client_setting(:relative_date_duration, 14)
+
   def self.generate_api_key!
     self.api_key = SecureRandom.hex(32)
   end

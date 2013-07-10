@@ -648,6 +648,8 @@ en:
 
     minimum_topics_similar: "How many topics need to exist in the database before similar topics are presented."
 
+    relative_date_duration: "Number of days after posting where post dates will be shown as relative instead of absolute. Examples: relative date: 7d, absolute date: 20 Feb"
+
 
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"
