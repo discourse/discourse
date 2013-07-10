@@ -1,5 +1,50 @@
 require "discourse/oneboxer/version"
 
+require_relative "oneboxer/base"
+require_relative "oneboxer/whitelist"
+require_relative "oneboxer/amazon_onebox"
+require_relative "oneboxer/android_app_store_onebox"
+require_relative "oneboxer/apple_app_onebox"
+require_relative "oneboxer/base_onebox"
+require_relative "oneboxer/bliptv_onebox"
+require_relative "oneboxer/clikthrough_onebox"
+require_relative "oneboxer/college_humor_onebox"
+require_relative "oneboxer/dailymotion_onebox"
+require_relative "oneboxer/discourse_local_onebox"
+require_relative "oneboxer/dotsub_onebox"
+require_relative "oneboxer/flickr_onebox"
+require_relative "oneboxer/funny_or_die_onebox"
+require_relative "oneboxer/gist_onebox"
+require_relative "oneboxer/github_blob_onebox"
+require_relative "oneboxer/github_commit_onebox"
+require_relative "oneboxer/github_pullrequest_onebox"
+require_relative "oneboxer/handlebars_onebox"
+require_relative "oneboxer/hulu_onebox"
+require_relative "oneboxer/image_onebox"
+require_relative "oneboxer/imgur_onebox"
+require_relative "oneboxer/kinomap_onebox"
+require_relative "oneboxer/nfb_onebox"
+require_relative "oneboxer/oembed_onebox"
+require_relative "oneboxer/open_graph_onebox"
+require_relative "oneboxer/qik_onebox"
+require_relative "oneboxer/revision_onebox"
+require_relative "oneboxer/rottentomatoes_onebox"
+require_relative "oneboxer/slideshare_oneboxer"
+require_relative "oneboxer/smugmug_onebox"
+require_relative "oneboxer/soundcloud_onebox"
+require_relative "oneboxer/stack_exchange_onebox"
+require_relative "oneboxer/ted_onebox"
+require_relative "oneboxer/templates"
+require_relative "oneboxer/twitter_onebox"
+require_relative "oneboxer/version"
+require_relative "oneboxer/viddler_onebox"
+require_relative "oneboxer/video_onebox"
+require_relative "oneboxer/vimeo_onebox"
+require_relative "oneboxer/wikipedia_onebox"
+require_relative "oneboxer/yfrog_onebox"
+
+
+
 module Discourse
   module Oneboxer
 	  extend Oneboxer::Base
@@ -17,9 +62,9 @@ module Discourse
 	    end
 	  end
 
-	  # Dir["#{Rails.root}/lib/oneboxer/*_onebox.rb"].sort.each do |f|
-	  #   add_onebox "Oneboxer::#{Pathname.new(f).basename.to_s.gsub(/\.rb$/, '').classify}".constantize
-	  # end
+	  Dir["#{Rails.root}/lib/oneboxer/*_onebox.rb"].sort.each do |f|
+	    add_onebox "Oneboxer::#{Pathname.new(f).basename.to_s.gsub(/\.rb$/, '').classify}".constantize
+	  end
 
 	  def self.default_expiry
 	    1.day
