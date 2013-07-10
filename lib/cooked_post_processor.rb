@@ -16,8 +16,24 @@ class CookedPostProcessor
   end
 
   def post_process
+    post_process_attachments
     post_process_images
     post_process_oneboxes
+  end
+
+  def post_process_attachments
+    attachments.each do |attachment|
+      href = attachment['href']
+      attachment['href'] = relative_to_absolute(href)
+      if upload = Upload.get_from_url(href)
+        # update reverse index
+        associate_to_post(upload)
+        # append the size
+        append_human_size!(attachment, upload)
+      end
+      # mark as dirty
+      @dirty = true
+    end
   end
 
   def post_process_images
@@ -33,7 +49,7 @@ class CookedPostProcessor
         # make sure the img has proper width and height attributes
         update_dimensions!(img)
         # retrieve the associated upload, if any
-        if upload = Upload.get_from_url(img['src'])
+        if upload = Upload.get_from_url(src)
           # update reverse index
           associate_to_post(upload)
         end
@@ -207,6 +223,22 @@ class CookedPostProcessor
     uri = URI.parse(url)
     %w(http https).include? uri.scheme
   rescue URI::InvalidURIError
+  end
+
+  def attachments
+    if SiteSetting.enable_s3_uploads?
+      @doc.css("a[href^=\"#{S3.base_url}\"]")
+    else
+      # local uploads are identified using a relative uri
+      @doc.css("a[href^=\"#{LocalStore.directory}\"]")
+    end
+  end
+
+  def append_human_size!(attachment, upload)
+    size = Nokogiri::XML::Node.new("span", @doc)
+    size["class"] = "size"
+    size.content = "(#{number_to_human_size(upload.filesize)})"
+    attachment.add_next_sibling(size)
   end
 
   def dirty?
