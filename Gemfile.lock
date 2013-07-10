@@ -1,4 +1,10 @@
 GIT
+  remote: git://github.com/dysania/discourse-oneboxer.git
+  revision: 45180d20d6dfb7be6f96b0e89707e66094fe7536
+  specs:
+    discourse-oneboxer (1.0.0)
+
+GIT
   remote: https://github.com/CodeMonkeySteve/fast_xor.git
   revision: 85b79ec6d116f9680f23bd2c5c8c2c2039d477d8
   specs:
@@ -477,6 +483,7 @@ DEPENDENCIES
   certified
   clockwork
   diffy
+  discourse-oneboxer!
   discourse_emoji!
   discourse_plugin!
   em-redis

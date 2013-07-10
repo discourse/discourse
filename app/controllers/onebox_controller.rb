@@ -1,5 +1,3 @@
-require_dependency 'oneboxer'
-
 class OneboxController < ApplicationController
 
   def show
