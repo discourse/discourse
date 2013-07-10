@@ -9,10 +9,40 @@ describe CookedPostProcessor do
     let(:cpp) { CookedPostProcessor.new(post) }
     let(:post_process) { sequence("post_process") }
 
-    it "works on images before oneboxes" do
+    it "post process in sequence" do
+      cpp.expects(:post_process_attachments).in_sequence(post_process)
       cpp.expects(:post_process_images).in_sequence(post_process)
       cpp.expects(:post_process_oneboxes).in_sequence(post_process)
       cpp.post_process
+    end
+
+  end
+
+  context "post_process_attachments" do
+
+    context "with attachment" do
+
+      let(:upload) { Fabricate(:upload) }
+      let(:post) { Fabricate(:post_with_an_attachment) }
+      let(:cpp) { CookedPostProcessor.new(post) }
+
+      # all in one test to speed things up
+      it "works" do
+        Upload.expects(:get_from_url).returns(upload)
+        cpp.post_process_attachments
+        # ensures absolute urls on attachment
+        cpp.html.should =~ /#{LocalStore.base_url}/
+        # ensure name is present
+        cpp.html.should =~ /archive.zip/
+        # ensure size is present
+        cpp.html.should =~ /<span class=\"size\">\(1.21 KB\)<\/span>/
+        # dirty
+        cpp.should be_dirty
+        # keeps the reverse index up to date
+        post.uploads.reload
+        post.uploads.count.should == 1
+      end
+
     end
 
   end
@@ -48,7 +78,7 @@ describe CookedPostProcessor do
         Upload.expects(:get_from_url).returns(upload).twice
         cpp.post_process_images
         # ensures absolute urls on uploaded images
-        cpp.html.should =~ /#{Discourse.base_url_no_prefix}/
+        cpp.html.should =~ /#{LocalStore.base_url}/
         # dirty
         cpp.should be_dirty
         # keeps the reverse index up to date
@@ -58,7 +88,7 @@ describe CookedPostProcessor do
 
     end
 
-    context "width sized images" do
+    context "with sized images" do
 
       let(:post) { build(:post_with_image_url) }
       let(:cpp) { CookedPostProcessor.new(post, image_sizes: {'http://foo.bar/image.png' => {'width' => 111, 'height' => 222}}) }
