@@ -629,7 +629,7 @@
     top: 12px;
     left: -9px;
     border-width: 10px 10px 10px 0;
-    border-right-color: #cecece;
+    border-right-color: #dfdfdf;
   }
   &:after {
     top: 13px;
@@ -661,7 +661,6 @@
 
 .topic-summary {
   margin-top: 8px;
-  border: 1px solid #b9b9b9;
   background-color: darken($white, 3%);
   @include border-radius-all(4px);
   @include box-shadow(0 1px 2px rgba($black, 0.07));
