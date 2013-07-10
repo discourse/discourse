@@ -19,6 +19,11 @@ setup_log
 
 module Clockwork
   handler do |job|
+    # TODO: we need to rethink scheduling here, cancel scheduled jobs
+    #  iterates through all jobs, that is massively inefficient
+    # Jobs.cancel_scheduled_job(job, all_sites: true)
+    #
+    # see: http://meta.discourse.org/t/auto-close-behaviour/8249/2
     Jobs.enqueue(job, all_sites: true)
   end
 
