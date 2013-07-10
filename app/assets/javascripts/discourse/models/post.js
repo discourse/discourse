@@ -189,7 +189,21 @@ Discourse.Post = Discourse.Model.extend({
     return Discourse.ajax("/posts/" + (this.get('id')) + "/recover", { type: 'PUT', cache: false });
   },
 
-  destroy: function(complete) {
+  destroy: function(deleted_by) {
+    // Moderators can delete posts. Regular users can only trigger a deleted at message.
+    if (deleted_by.get('staff')) {
+      this.setProperties({
+        deleted_at: new Date(),
+        deleted_by: deleted_by
+      });
+    } else {
+      this.setProperties({
+        cooked: Discourse.Markdown.cook(I18n.t("post.deleted_by_author")),
+        can_delete: false,
+        version: this.get('version') + 1
+      });
+    }
+
     return Discourse.ajax("/posts/" + (this.get('id')), { type: 'DELETE' });
   },
 
