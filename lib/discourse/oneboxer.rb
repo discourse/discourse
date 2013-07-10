@@ -1,3 +1,4 @@
+require 'open-uri'
 require "discourse/oneboxer/version"
 
 require_relative "oneboxer/base"

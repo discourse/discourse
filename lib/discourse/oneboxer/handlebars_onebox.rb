@@ -1,9 +1,5 @@
-require 'open-uri'
-require_dependency 'oneboxer/base_onebox'
-
 module Discourse
   module Oneboxer
-
     class HandlebarsOnebox < BaseOnebox
 
       unless defined? MAX_TEXT

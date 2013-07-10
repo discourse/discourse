@@ -1,5 +1,3 @@
-require 'open-uri'
-
 module Discourse
   module Oneboxer
 
