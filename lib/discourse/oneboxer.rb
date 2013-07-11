@@ -62,9 +62,45 @@ module Discourse
 	    end
 	  end
 
-	  Dir["#{Rails.root}/lib/oneboxer/*_onebox.rb"].sort.each do |f|
-	    add_onebox "Oneboxer::#{Pathname.new(f).basename.to_s.gsub(/\.rb$/, '').classify}".constantize
-	  end
+	  # lazy add oneboxing
+	  add_onebox AmazonOnebox
+		add_onebox AndroidAppStoreOnebox
+		add_onebox AppleAppOnebox
+		add_onebox BaseOnebox
+		add_onebox BliptvOnebox
+		add_onebox ClikthroughOnebox
+		add_onebox CollegeHumorOnebox
+		add_onebox DailymotionOnebox
+		add_onebox DiscourseLocalOnebox
+		add_onebox DotsubOnebox
+		add_onebox FlickrOnebox
+		add_onebox FunnyOrDieOnebox
+		add_onebox GistOnebox
+		add_onebox GithubBlobOnebox
+		add_onebox GithubCommitOnebox
+		add_onebox GithubPullrequestOnebox
+		add_onebox HandlebarsOnebox
+		add_onebox HuluOnebox
+		add_onebox ImageOnebox
+		add_onebox ImgurOnebox
+		add_onebox KinomapOnebox
+		add_onebox NfbOnebox
+		add_onebox OembedOnebox
+		add_onebox OpenGraphOnebox
+		add_onebox QikOnebox
+		add_onebox RevisionOnebox
+		add_onebox RottentomatoesOnebox
+		add_onebox SlideshareOnebox
+		add_onebox SmugmugOnebox
+		add_onebox SoundcloudOnebox
+		add_onebox StackExchangeOnebox
+		add_onebox TedOnebox
+		add_onebox TwitterOnebox
+		add_onebox ViddlerOnebox
+		add_onebox VideoOnebox
+		add_onebox VimeoOnebox
+		add_onebox WikipediaOnebox
+		add_onebox YfrogOnebox
 
 	  def self.default_expiry
 	    1.day
