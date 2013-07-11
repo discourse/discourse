@@ -188,7 +188,7 @@ ORDER BY p.created_at desc
                               user_ids: [user_id],
                               group_ids: group_ids )
 
-      rescue ActiveRecord::RecordNotUnique
+      rescue ActiveRecord::RecordNotUnique, ActiveRecord::StatementInvalid
         # can happen, don't care already logged
         raise ActiveRecord::Rollback
       end
