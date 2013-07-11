@@ -5,7 +5,7 @@ After following INSTALL-ubuntu.md your mailer settings should still be set (in
 
 ```ruby
   config.action_mailer.delivery_method = :sendmail
-  config.action_mailer.sendmail_settings = {arguments: '-i}
+  config.action_mailer.sendmail_settings = {arguments: '-i'}
 ```
 
 That's great. Leave that there as we're going to try to get the mail to postfix
