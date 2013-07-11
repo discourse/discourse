@@ -10,7 +10,7 @@ Discourse.InviteReplyButton = Discourse.ButtonView.extend({
   textKey: 'topic.invite_reply.title',
   helpKey: 'topic.invite_reply.help',
   attributeBindings: ['disabled'],
-  disabled: Em.computed.or('controller.content.archived', 'controller.content.closed'),
+  disabled: Em.computed.or('controller.archived', 'controller.closed', 'controller.deleted'),
 
   renderIcon: function(buffer) {
     buffer.push("<i class='icon icon-group'></i>");

@@ -18,6 +18,14 @@ describe TopicView do
     lambda { topic_view }.should raise_error(Discourse::InvalidAccess)
   end
 
+  it "handles deleted topics" do
+    topic.trash!(coding_horror)
+    lambda { TopicView.new(topic.id, coding_horror) }.should raise_error(Discourse::NotFound)
+    coding_horror.stubs(:staff?).returns(true)
+    lambda { TopicView.new(topic.id, coding_horror) }.should_not raise_error
+  end
+
+
   context "with a few sample posts" do
     let!(:p1) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 1 )}
     let!(:p2) { Fabricate(:post, topic: topic, user: coding_horror, percent_rank: 0.5 )}

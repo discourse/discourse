@@ -8,17 +8,18 @@ class TopicView
   attr_accessor :draft, :draft_key, :draft_sequence
 
   def initialize(topic_id, user=nil, options={})
+    @user = user
     @topic = find_topic(topic_id)
+
     raise Discourse::NotFound if @topic.blank?
 
-    @guardian = Guardian.new(user)
+    @guardian = Guardian.new(@user)
 
     # Special case: If the topic is private and the user isn't logged in, ask them
     # to log in!
-    if @topic.present? && @topic.private_message? && user.blank?
+    if @topic.present? && @topic.private_message? && @user.blank?
       raise Discourse::NotLoggedIn.new
     end
-
     guardian.ensure_can_see!(@topic)
 
     @post_number, @page = options[:post_number], options[:page].to_i
@@ -36,14 +37,13 @@ class TopicView
       @filtered_posts = @filtered_posts.where('post_number = 1 or user_id in (select u.id from users u where username_lower in (?))', usernames)
     end
 
-    @user = user
     @initial_load = true
     @index_reverse = false
 
     filter_posts(options)
 
     @draft_key = @topic.draft_key
-    @draft_sequence = DraftSequence.current(user, @draft_key)
+    @draft_sequence = DraftSequence.current(@user, @draft_key)
   end
 
   def canonical_path
@@ -317,6 +317,8 @@ class TopicView
   end
 
   def find_topic(topic_id)
-    Topic.where(id: topic_id).includes(:category).first
+    finder = Topic.where(id: topic_id).includes(:category)
+    finder = finder.with_deleted if @user.try(:staff?)
+    finder.first
   end
 end

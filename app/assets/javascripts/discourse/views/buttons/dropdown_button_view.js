@@ -7,9 +7,7 @@
   @module Discourse
 **/
 Discourse.DropdownButtonView = Discourse.View.extend({
-  classNames: ['btn-group'],
-  attributeBindings: ['data-not-implemented'],
-
+  classNameBindings: [':btn-group', 'hidden'],
   shouldRerender: Discourse.View.renderIfChanged('text', 'longDescription'),
 
   didInsertElement: function(e) {

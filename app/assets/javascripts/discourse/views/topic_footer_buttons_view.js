@@ -26,13 +26,13 @@ Discourse.TopicFooterButtonsView = Discourse.ContainerView.extend({
           this.attachViewClass(Discourse.InviteReplyButton);
         }
         this.attachViewClass(Discourse.FavoriteButton);
-        this.attachViewWithArgs({topic: topic}, Discourse.ShareButton);
+        this.attachViewClass(Discourse.ShareButton);
         this.attachViewClass(Discourse.ClearPinButton);
       }
       this.attachViewClass(Discourse.ReplyButton);
 
       if (!topic.get('isPrivateMessage')) {
-        this.attachViewWithArgs({topic: topic}, Discourse.NotificationsButton);
+        this.attachViewClass(Discourse.NotificationsButton);
       }
       this.trigger('additionalButtons', this);
     } else {

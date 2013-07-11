@@ -60,6 +60,8 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     return canDelete;
   }.property('selectedPostsCount'),
 
+  hasError: Ember.computed.or('errorBodyHtml', 'message'),
+
   streamPercentage: function() {
     if (!this.get('postStream.loaded')) { return 0; }
     if (this.get('postStream.filteredPostsCount') === 0) { return 0; }
@@ -248,12 +250,8 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   }.property('isPrivateMessage'),
 
   deleteTopic: function() {
-    var topicController = this;
     this.unsubscribe();
-    this.get('content').destroy().then(function() {
-      topicController.set('message', I18n.t('topic.deleted'));
-      topicController.set('loaded', false);
-    });
+    this.get('content').destroy(Discourse.User.current());
   },
 
   toggleVisibility: function() {

@@ -1052,7 +1052,7 @@ en:
     access_token_problem: "Tell an admin: Please update the site settings to include the correct discourse_org_access_key."
 
   page_not_found:
-    title: "The page you requested doesn't exist on this discussion forum. Perhaps we can help find it, or another topic like it:"
+    title: "The page you requested doesn't exist or may have been deleted by a moderator."
     popular_topics: "Popular topics"
     recent_topics: "Recent topics"
     see_more: "See More"

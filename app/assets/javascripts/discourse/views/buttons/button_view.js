@@ -9,7 +9,7 @@
 Discourse.ButtonView = Discourse.View.extend({
   tagName: 'button',
   classNameBindings: [':btn', ':standard', 'dropDownToggle'],
-  attributeBindings: ['data-not-implemented', 'title', 'data-toggle', 'data-share-url'],
+  attributeBindings: ['title', 'data-toggle', 'data-share-url'],
 
   title: function() {
     return I18n.t(this.get('helpKey') || this.get('textKey'));

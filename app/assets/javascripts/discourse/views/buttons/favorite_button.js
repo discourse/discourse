@@ -8,9 +8,10 @@
 **/
 Discourse.FavoriteButton = Discourse.ButtonView.extend({
   textKey: 'favorite.title',
-  helpKeyBinding: 'controller.content.favoriteTooltipKey',
+  helpKeyBinding: 'controller.favoriteTooltipKey',
+  attributeBindings: ['disabled'],
 
-  shouldRerender: Discourse.View.renderIfChanged('controller.content.starred'),
+  shouldRerender: Discourse.View.renderIfChanged('controller.starred'),
 
   click: function() {
     this.get('controller').toggleStar();
@@ -18,7 +19,7 @@ Discourse.FavoriteButton = Discourse.ButtonView.extend({
 
   renderIcon: function(buffer) {
     buffer.push("<i class='icon-star " +
-                 (this.get('controller.content.starred') ? ' starred' : '') +
+                 (this.get('controller.starred') ? ' starred' : '') +
                  "'></i>");
   }
 });

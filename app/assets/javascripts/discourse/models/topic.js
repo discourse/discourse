@@ -17,6 +17,7 @@ Discourse.Topic = Discourse.Model.extend({
   }.property(),
 
   invisible: Em.computed.not('visible'),
+  deleted: Em.computed.notEmpty('deleted_at'),
 
   canConvertToRegular: function() {
     var a = this.get('archetype');
@@ -142,13 +143,13 @@ Discourse.Topic = Discourse.Model.extend({
     });
   },
 
-  favoriteTooltipKey: (function() {
+  favoriteTooltipKey: function() {
     return this.get('starred') ? 'favorite.help.unstar' : 'favorite.help.star';
-  }).property('starred'),
+  }.property('starred'),
 
-  favoriteTooltip: (function() {
+  favoriteTooltip: function() {
     return I18n.t(this.get('favoriteTooltipKey'));
-  }).property('favoriteTooltipKey'),
+  }.property('favoriteTooltipKey'),
 
   toggleStar: function() {
     var topic = this;
@@ -181,22 +182,26 @@ Discourse.Topic = Discourse.Model.extend({
 
   // Reset our read data for this topic
   resetRead: function() {
-    return Discourse.ajax("/t/" + (this.get('id')) + "/timings", {
+    return Discourse.ajax("/t/" + this.get('id') + "/timings", {
       type: 'DELETE'
     });
   },
 
   // Invite a user to this topic
   inviteUser: function(user) {
-    return Discourse.ajax("/t/" + (this.get('id')) + "/invite", {
+    return Discourse.ajax("/t/" + this.get('id') + "/invite", {
       type: 'POST',
       data: { user: user }
     });
   },
 
   // Delete this topic
-  destroy: function() {
-    return Discourse.ajax("/t/" + (this.get('id')), { type: 'DELETE' });
+  destroy: function(deleted_by) {
+    this.setProperties({
+      deleted_at: new Date(),
+      deleted_by: deleted_by
+    });
+    return Discourse.ajax("/t/" + this.get('id'), { type: 'DELETE' });
   },
 
   // Update our attributes from a JSON result

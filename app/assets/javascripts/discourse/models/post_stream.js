@@ -258,7 +258,7 @@ Discourse.PostStream = Em.Object.extend({
 
       Discourse.URL.set('queryParams', postStream.get('streamFilters'));
     }, function(result) {
-      postStream.errorLoading(result.status);
+      postStream.errorLoading(result);
     });
   },
   hasLoadedData: Em.computed.and('hasPosts', 'hasStream'),
@@ -612,7 +612,8 @@ Discourse.PostStream = Em.Object.extend({
     @param {Integer} status the HTTP status code
     @param {Discourse.Topic} topic The topic instance we were trying to load
   **/
-  errorLoading: function(status) {
+  errorLoading: function(result) {
+    var status = result.status;
 
     var topic = this.get('topic');
     topic.set('loadingFilter', false);
@@ -621,7 +622,7 @@ Discourse.PostStream = Em.Object.extend({
     // If the result was 404 the post is not found
     if (status === 404) {
       topic.set('errorTitle', I18n.t('topic.not_found.title'));
-      topic.set('message', I18n.t('topic.not_found.description'));
+      topic.set('errorBodyHtml', result.responseText);
       return;
     }
 
