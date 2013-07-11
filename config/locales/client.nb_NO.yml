@@ -526,11 +526,11 @@ nb_NO:
       auto_close_remove: "Ikke Auto-Lukk Dette Emnet"
 
       progress:
-        title: topic progress
-        jump_top: jump to first post
-        jump_bottom: jump to last post
-        total: total posts
-        current: current post
+        title: "emnefrangang"
+        jump_top: "hopp til første innlegg"
+        jump_bottom: "hopp til siste innlegg"
+        total: "innlegg totalt"
+        current: "gjeldende innlegg"
 
       notifications:
         title: ''
@@ -541,153 +541,153 @@ nb_NO:
           "2_4": 'Du vil motta notifikasjoner fordi du svarte på dette emnet.'
           "2_2": 'Du vil motta notifikasjoner fordi følger dette emnet.'
           "2": 'Du vil motta notifikasjoner fordi du <a href="/users/{{username}}/preferences">read this topic</a>.'
-          "1": 'Du vil bli varslet bare om noen nevner ditt @brukernavn eller svarer på din post.'
-          "1_2": 'Du vil bli varslet bare om noen nevner ditt @brukernavn eller svarer på din post.'
+          "1": 'Du vil bli varslet bare om noen nevner ditt @brukernavn eller svarer på ditt innlegg.'
+          "1_2": 'Du vil bli varslet bare om noen nevner ditt @brukernavn eller svarer på ditt innlegg.'
           "0": 'Du ignorerer alle varslinger på dette emnet.'
           "0_2": 'Du ignorerer alle varslinger på dette emnet.'
         watching:
           title: "Iaktar"
-          description: "samme som å Følge, pluss at du vil bli varslet om alle nye poster."
+          description: "samme som å Følge, pluss at du vil bli varslet om alle nye innlegg."
         tracking:
           title: "Følger"
-          description: "du vil bli varslet om @brukernavn henvendelser svar til dine poster, pluss at du vil se et antall uleste og nye innlegg."
+          description: "du vil bli varslet om @brukernavn henvendelser svar til dine innlegg, pluss at du vil se et antall uleste og nye innlegg."
         regular:
           title: "Vanlig"
-          description: "du vil bli varslet bare om noen nevner ditt @brukernavn eller svarer på din post."
+          description: "du vil bli varslet bare om noen nevner ditt @brukernavn eller svarer på ditt innlegg."
         muted:
           title: "Dempet"
           description: "du vil ikke bli varslet om noen ting i dette emnet, og  det vil ikke visest som ulest."
 
       actions:
-        delete: "Delete Topic"
-        open: "Open Topic"
-        close: "Close Topic"
-        auto_close: "Auto Close"
-        unpin: "Un-Pin Topic"
-        pin: "Pin Topic"
-        unarchive: "Unarchive Topic"
-        archive: "Archive Topic"
-        invisible: "Make Invisible"
-        visible: "Make Visible"
-        reset_read: "Reset Read Data"
-        multi_select: "Select for Merge/Split"
-        convert_to_topic: "Convert to Regular Topic"
+        delete: "Slett Emne"
+        open: "Åpne Emne"
+        close: "Lukk Emne"
+        auto_close: "Auto-Lukk"
+        unpin: "Løsgjør Emne"
+        pin: "Fastsett Emne"
+        unarchive: "Uarkiver Emne"
+        archive: "Arkiver Emne"
+        invisible: "Gjør Usynlig"
+        visible: "Gjør Synlig"
+        reset_read: "Tilbakestill Lesedata"
+        multi_select: "Velg for Sammenslåing/Oppdeling"
+        convert_to_topic: "Konverter til Vanlig Emne"
 
       reply:
-        title: 'Reply'
-        help: 'begin composing a reply to this topic'
+        title: 'Svar'
+        help: 'begynn å skrive et svar til dette emnet'
 
       clear_pin:
-        title: "Clear pin"
-        help: "Clear the pinned status of this topic so it no longer appears at the top of your topic list"
+        title: "Løsgjør Emne"
+        help: "Løsgjør fastsatt-statusen til dette emnet så det ikke lenger visest på toppen av din emneliste."
 
       share:
-        title: 'Share'
-        help: 'share a link to this topic'
+        title: 'Del'
+        help: 'del en link til dette emnet'
 
-      inviting: "Inviting..."
+      inviting: "Inviterer..."
 
       invite_private:
-        title: 'Invite to Private Message'
-        email_or_username: "Invitee's Email or Username"
-        email_or_username_placeholder: "email address or username"
-        action: "Invite"
-        success: "Thanks! We've invited that user to participate in this private message."
-        error: "Sorry, there was an error inviting that user."
+        title: 'Inviter til Privat Melding'
+        email_or_username: "Invitertes email eller brukernavn."
+        email_or_username_placeholder: "email eller brukernavn."
+        action: "Inviter"
+        success: "Takk! Vi har invitert den personen til å delta i denne private meldingen."
+        error: "Beklager, det oppstod en feil ved å invitere den brukeren."
 
       invite_reply:
-        title: 'Invite Friends to Reply'
-        action: 'Email Invite'
-        help: 'send invitations to friends so they can reply to this topic with a single click'
-        email: "We'll send your friend a brief email allowing them to reply to this topic by clicking a link."
-        email_placeholder: 'email address'
-        success: "Thanks! We mailed out an invitation to <b>{{email}}</b>. We'll let you know when they redeem your invitation. Check the invitations tab on your user page to keep track of who you've invited."
-        error: "Sorry, we couldn't invite that person. Perhaps they are already a user?"
+        title: 'Inviter Venner til å Svare'
+        action: 'Email Invitasjon'
+        help: 'send invitasjoner til venner så de kan svare på dette emnet med et enkelt klikk'
+        email: "We sender en kort email til vennen din, så de kan svare på dette emnet ved å følge en link."
+        email_placeholder: 'email'
+        success: "Takk! Vi har sendt ut en invitasjon til <b>{{email}}</b>. Vi vil varsle deg når de følger opp din invitasjon. Sjekk 'invitasjoner' fanen på brukersiden din for en oversikt over hvem du har invitert."
+        error: "Beklager, vi kunne ikke invitere den personen. Kanskje de allerede er en bruker?"
 
-      login_reply: 'Log In to Reply'
+      login_reply: 'Logg Inn for å Svare'
 
       filters:
-        user: "You're viewing only {{n_posts}} {{by_n_users}}."
+        user: "Du ser bare på {{n_posts}} {{by_n_users}}."
         n_posts:
-          one: "1 post"
-          other: "{{count}} posts"
+          one: "1 innlegg"
+          other: "{{count}} innlegg"
         by_n_users:
-          one: "made by 1 specific user"
-          other: "made by {{count}} specific users"
+          one: "skrevet av 1 spesifikk bruker"
+          other: "skrevet av {{count}} spesifikke brukere"
 
-        best_of: "You're viewing the {{n_best_posts}} {{of_n_posts}}."
+        best_of: "Du ser på {{n_best_posts}} {{of_n_posts}}."
         n_best_posts:
-          one: "1 best post"
-          other: "{{count}} best posts"
+          one: "1 beste innlegg"
+          other: "{{count}} beste innlegg"
         of_n_posts:
-          one: "of 1 in the topic"
-          other: "of {{count}} in the topic"
-        cancel: "Show all posts in this topic again."
+          one: "av 1 i emnet"
+          other: "av {{count}} i emnet"
+        cancel: "Vis alle innlegg i dette emnet igjen."
 
       split_topic:
-        title: "Split Topic"
-        action: "split topic"
-        topic_name: "New Topic Name:"
-        error: "There was an error splitting that topic."
+        title: "Del opp Emne"
+        action: "del opp emne"
+        topic_name: "Nytt Emnenavn:"
+        error: "Det oppsto en feil ved deling av dette emnet."
         instructions:
-          one: "You are about to create a new topic and populate it with the post you've selected."
-          other: "You are about to create a new topic and populate it with the <b>{{count}}</b> posts you've selected."
+          one: "Du er i gang med å lage ett nytt emne basert på innlegget du har valgt.."
+          other: "Du er i gang med å lage ett nytt emne basert på <b>{{count}}</b> innlegg du har valgt."
 
       merge_topic:
-        title: "Merge Topic"
-        action: "merge topic"
-        error: "There was an error merging that topic."
+        title: "Slå sammen Emne"
+        action: "slå sammen emne"
+        error: "Det oppsto en feil ved sammenslåing av dette emnet."
         instructions:
-          one: "Please choose the topic you'd like to move that post to."
-          other: "Please choose the topic you'd like to move those <b>{{count}}</b> posts to."
+          one: "Vennligst velg det emnet du vil flytte det innlegget til."
+          other: "Vennligst velg emnet du vil flytte de <b>{{count}}</b> innleggene til."
 
       multi_select:
-        select: 'select'
-        selected: 'selected ({{count}})'
-        delete: delete selected
-        cancel: cancel selecting
+        select: 'velg'
+        selected: 'valgte ({{count}})'
+        delete: "fjern valgte"
+        cancel: "avbryt valg"
         description:
-          one: You have selected <b>1</b> post.
-          other: "You have selected <b>{{count}}</b> posts."
+          one: "Du har valgt <b>1</b> innlegg."
+          other: "Du har valgt <b>{{count}}</b> innlegg."
 
     post:
-      reply: "Replying to {{link}} by {{replyAvatar}} {{username}}"
-      reply_topic: "Reply to {{link}}"
-      quote_reply: "quote reply"
-      edit: "Editing {{link}} by {{replyAvatar}} {{username}}"
+      reply: "Svarer på {{link}} av {{replyAvatar}} {{username}}"
+      reply_topic: "Svar til {{link}}"
+      quote_reply: "siter svar"
+      edit: "Redigerer {{link}} av {{replyAvatar}} {{username}}"
       post_number: "post {{number}}"
-      in_reply_to: "in reply to"
-      reply_as_new_topic: "Reply as new Topic"
-      continue_discussion: "Continuing the discussion from {{postLink}}:"
-      follow_quote: "go to the quoted post"
-      deleted_by_author: "(post removed by author)"
-      expand_collapse: "expand/collapse"
+      in_reply_to: "i svar til"
+      reply_as_new_topic: "Svar som et nytt Emne"
+      continue_discussion: "Fortsetter diskusjonen fra {{postLink}}:"
+      follow_quote: "gå til det siterte innlegget"
+      deleted_by_author: "(innlegg fjernet av forfatter)"
+      expand_collapse: "utvid/vis"
 
       has_replies:
-        one: "Reply"
-        other: "Replies"
+        one: "Svar"
+        other: "Svar"
 
       errors:
-        create: "Sorry, there was an error creating your post. Please try again."
-        edit: "Sorry, there was an error editing your post. Please try again."
+        create: "Beklager, det oppstod en feil ved å publisere ditt innlegg. Vennligst prøv igjen."
+        edit: "Beklager, det oppstod en feil ved redigeringen av ditt innlegg. Vennligst prøv igjen."
         upload: "Sorry, there was an error uploading that file. Please try again."
-        upload_too_large: "Sorry, the file you are trying to upload is too big (maximum size is {{max_size_kb}}kb), please resize it and try again."
-        too_many_uploads: "Sorry, you can only upload one image at a time."
+        upload_too_large: "Beklager, filen du prøve å laste opp er for stor (maks størrelse er {{max_size_kb}}kb), vennligst reduser størrelsen og prøv igjen."
+        too_many_uploads: "Beklager, du kan bare laste opp ett bilde om gangen."
 
-      abandon: "Are you sure you want to abandon your post?"
+      abandon: "Er du sikker på at du vil forlate innlegget ditt?"
 
       archetypes:
-        save: 'Save Options'
+        save: 'Lagre Alternativene'
 
       controls:
-        reply: "begin composing a reply to this post"
-        like: "like this post"
-        edit: "edit this post"
-        flag: "flag this post for attention or send a notification about it"
-        delete: "delete this post"
-        undelete: "undelete this post"
-        share: "share a link to this post"
-        more: "More"
+        reply: "begynn å skrive et svar til dette innlegget"
+        like: "lik dette innlegget"
+        edit: "rediger dette innlegget"
+        flag: "marker dette innlegget for oppmerksomhet eller send en varsling om det"
+        delete: "slett dette innlegget"
+        undelete: "gjenopprett dette innlegget"
+        share: "del en link til dette innlegget"
+        more: "Mer"
 
       actions:
         flag: 'Flag'
