@@ -1275,7 +1275,7 @@ else
             //  autolink anything like <http://example.com>
 
             var replacer = function (wholematch, m1) {
-                m1encoded = m1.replace(/\_\_/, '%5F%5F');
+                var m1encoded = m1.replace(/\_\_/, '%5F%5F');
                 return "<a href=\"" + m1encoded + "\">" + pluginHooks.plainLinkText(m1) + "</a>";
             }
             text = text.replace(/<((https?|ftp):[^'">\s]+)>/gi, replacer);

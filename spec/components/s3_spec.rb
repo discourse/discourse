@@ -24,7 +24,7 @@ describe S3 do
     end
 
     it 'returns the url of the S3 upload if successful' do
-      S3.store_file(file, "SHA", image_info, 1).should == '//s3_upload_bucket.s3.amazonaws.com/1SHA.png'
+      S3.store_file(file, "SHA", 1).should == '//s3_upload_bucket.s3.amazonaws.com/1SHA.png'
     end
 
     after(:each) do

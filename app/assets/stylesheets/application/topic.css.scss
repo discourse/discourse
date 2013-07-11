@@ -175,6 +175,16 @@
     }
   }
 
+  a.attachment:before {
+    display: inline-block;
+    margin-right: 4px;
+    font-family: "FontAwesome";
+    content: "\f019";
+  }
+  .attachment + .size {
+    margin: 0 5px;
+  }
+
   // When we are quoting something
   aside.quote {
     border-left: 5px solid #d7d7d7;

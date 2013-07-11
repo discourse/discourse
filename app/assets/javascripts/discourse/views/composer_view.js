@@ -285,9 +285,9 @@ Discourse.ComposerView = Discourse.View.extend({
 
     // done
     $uploadTarget.on('fileuploaddone', function (e, data) {
-      var upload = data.result;
-      var html = "<img src=\"" + upload.url + "\" width=\"" + upload.width + "\" height=\"" + upload.height + "\">";
-      composerView.addMarkdown(html);
+      var markdown = Discourse.Utilities.getUploadMarkdown(data.result);
+      // appends a space at the end of the inserted markdown
+      composerView.addMarkdown(markdown + " ");
       composerView.set('isUploading', false);
     });
 
