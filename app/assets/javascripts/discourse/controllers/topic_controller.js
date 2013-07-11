@@ -254,6 +254,17 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     this.get('content').destroy(Discourse.User.current());
   },
 
+  resetRead: function() {
+    Discourse.ScreenTrack.instance().reset();
+    this.unsubscribe();
+
+    var topicController = this;
+    this.get('model').resetRead().then(function() {
+      topicController.set('message', I18n.t("topic.read_position_reset"));
+      topicController.set('postStream.loaded', false);
+    });
+  },
+
   toggleVisibility: function() {
     this.get('content').toggleStatus('visible');
   },

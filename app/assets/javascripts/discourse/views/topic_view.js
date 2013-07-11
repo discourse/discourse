@@ -142,17 +142,6 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     this.debounceLoadSuggested();
   }.observes('topicTrackingState.incomingCount'),
 
-  resetRead: function(e) {
-    Discourse.ScreenTrack.instance().reset();
-    this.get('controller').unsubscribe();
-
-    var topicView = this;
-    this.get('topic').resetRead().then(function() {
-      topicView.set('controller.message', I18n.t("topic.read_position_reset"));
-      topicView.set('controller.loaded', false);
-    });
-  },
-
   gotFocus: function(){
     if (Discourse.get('hasFocus')){
       this.scrolled();
