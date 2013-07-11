@@ -177,17 +177,18 @@
 
   // When we are quoting something
   aside.quote {
+    border-left: 5px solid #d7d7d7;
     margin-top: 14px;
-    border: 1px solid #eee;
     font-size: 14px;
     line-height: 20px;
+    padding-left: 5px;
+    background-color: #f1f1f1;
     overflow: hidden;
-    @include border-radius-all(4px);
     &:nth-of-type(1) {
       margin: 0;
     }
     .title {
-      padding: 8px;
+      padding: 8px 8px 0px;
       background-color: #f1f1f1;
       a,
       .avatar {
@@ -235,7 +236,6 @@
       border: 0;
       padding: 8px;
       color: #333;
-      background-color: $white;
       *:last-child {
         margin-bottom: 0;
       }
@@ -384,7 +384,6 @@ kbd {
 
 #topic-progress-wrapper.docked {
   #topic-progress {
-    border-bottom: 1px solid $gray;
     margin-left: 6px;
   }
   position: absolute;
@@ -396,9 +395,7 @@ kbd {
   &.hidden {
     display: none;
   }
-  border-left: 1px solid $gray;
-  border-right: 1px solid $gray;
-  border-top: 1px solid $gray;
+  border: none;
   background-color: $white;
   color: $darkish_gray;
   width: 130px;
@@ -451,7 +448,9 @@ kbd {
     bottom: 0px;
     width: 0px;
     border-right: 1px solid $white;
-    background-color: #e6f7ef;
+    // background-color: #d4eaf4;
+    // background-color: #C5E8F7;
+    background-color: #E4F2F8;
   }
 }
 

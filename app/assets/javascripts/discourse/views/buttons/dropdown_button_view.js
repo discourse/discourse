@@ -10,6 +10,8 @@ Discourse.DropdownButtonView = Discourse.View.extend({
   classNames: ['btn-group'],
   attributeBindings: ['data-not-implemented'],
 
+  shouldRerender: Discourse.View.renderIfChanged('text', 'longDescription'),
+
   didInsertElement: function(e) {
     // If there's a click handler, call it
     if (this.clicked) {
@@ -26,10 +28,6 @@ Discourse.DropdownButtonView = Discourse.View.extend({
     this.$('ul li').off('click.dropdown-button');
   },
 
-  textChanged: function() {
-    this.rerender();
-  }.observes('text', 'longDescription'),
-
   render: function(buffer) {
     buffer.push("<h4 class='title'>" + this.get('title') + "</h4>");
     buffer.push("<button class='btn standard dropdown-toggle' data-toggle='dropdown'>");
@@ -40,8 +38,8 @@ Discourse.DropdownButtonView = Discourse.View.extend({
     _.each(this.get('dropDownContent'), function(row) {
       var id = row[0],
           textKey = row[1],
-          title = Em.String.i18n(textKey + ".title"),
-          description = Em.String.i18n(textKey + ".description");
+          title = I18n.t(textKey + ".title"),
+          description = I18n.t(textKey + ".description");
 
       buffer.push("<li data-id=\"" + id + "\"><a href='#'>");
       buffer.push("<span class='title'>" + title + "</span>");

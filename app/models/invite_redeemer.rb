@@ -18,6 +18,7 @@ InviteRedeemer = Struct.new(:invite) do
     add_to_private_topics_if_invited
     add_user_to_invited_topics
     send_welcome_message
+    approve_account_if_needed
     notify_invitee
   end
 
@@ -64,6 +65,10 @@ InviteRedeemer = Struct.new(:invite) do
     if Invite.where(['email = ?', invite.email]).update_all(['user_id = ?', invited_user.id]) == 1
       invited_user.send_welcome_message = true
     end
+  end
+
+  def approve_account_if_needed
+    invited_user.approve(invite.invited_by_id, send_email=false)
   end
 
   def notify_invitee

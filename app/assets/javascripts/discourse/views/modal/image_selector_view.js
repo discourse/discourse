@@ -9,7 +9,7 @@
 Discourse.ImageSelectorView = Discourse.ModalBodyView.extend({
   templateName: 'modal/image_selector',
   classNames: ['image-selector'],
-  title: Em.String.i18n('image_selector.title'),
+  title: I18n.t('image_selector.title'),
 
   upload: function() {
     $('#reply-control').fileupload('add', { fileInput: $('#filename-input') });

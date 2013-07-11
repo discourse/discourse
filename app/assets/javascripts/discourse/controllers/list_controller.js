@@ -92,12 +92,12 @@ Discourse.ListController = Discourse.Controller.extend({
   // Put in the appropriate page title based on our view
   updateTitle: function() {
     if (this.get('filterMode') === 'categories') {
-      return Discourse.set('title', Em.String.i18n('categories_list'));
+      return Discourse.set('title', I18n.t('categories_list'));
     } else {
       if (this.present('category')) {
-        return Discourse.set('title', this.get('category.name').capitalize() + " " + Em.String.i18n('topic.list'));
+        return Discourse.set('title', this.get('category.name').capitalize() + " " + I18n.t('topic.list'));
       } else {
-        return Discourse.set('title', Em.String.i18n('topic.list'));
+        return Discourse.set('title', I18n.t('topic.list'));
       }
     }
   }.observes('filterMode', 'category'),

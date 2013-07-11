@@ -168,13 +168,13 @@ Discourse.Utilities = {
     if (files) {
       // can only upload one file at a time
       if (files.length > 1) {
-        bootbox.alert(Em.String.i18n('post.errors.too_many_uploads'));
+        bootbox.alert(I18n.t('post.errors.too_many_uploads'));
         return false;
       } else if (files.length > 0) {
         var upload = files[0];
         // ensures that new users can upload image
         if (Discourse.User.current('trust_level') === 0 && Discourse.SiteSettings.newuser_max_images === 0) {
-          bootbox.alert(Em.String.i18n('post.errors.upload_not_allowed_for_new_user'));
+          bootbox.alert(I18n.t('post.errors.upload_not_allowed_for_new_user'));
           return false;
         }
         // if the image was pasted, sets its name to a default one
@@ -182,14 +182,14 @@ Discourse.Utilities = {
         // check that the uploaded file is authorized
         if (!Discourse.Utilities.isAuthorizedUpload(upload)) {
           var extensions = Discourse.SiteSettings.authorized_extensions.replace(/\|/g, ", ");
-          bootbox.alert(Em.String.i18n('post.errors.upload_not_authorized', { authorized_extensions: extensions }));
+          bootbox.alert(I18n.t('post.errors.upload_not_authorized', { authorized_extensions: extensions }));
           return false;
         }
         // check file size
         if (upload.size && upload.size > 0) {
           var fileSizeInKB = upload.size / 1024;
           if (fileSizeInKB > Discourse.SiteSettings.max_upload_size_kb) {
-            bootbox.alert(Em.String.i18n('post.errors.upload_too_large', { max_size_kb: Discourse.SiteSettings.max_upload_size_kb }));
+            bootbox.alert(I18n.t('post.errors.upload_too_large', { max_size_kb: Discourse.SiteSettings.max_upload_size_kb }));
             return false;
           }
           // everything is fine

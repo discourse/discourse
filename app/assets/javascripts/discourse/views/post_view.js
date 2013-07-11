@@ -46,7 +46,7 @@ Discourse.PostView = Discourse.View.extend({
   }.property('controller.selectedPostsCount'),
 
   selectText: function() {
-    return this.get('selected') ? Em.String.i18n('topic.multi_select.selected', { count: this.get('controller.selectedPostsCount') }) : Em.String.i18n('topic.multi_select.select');
+    return this.get('selected') ? I18n.t('topic.multi_select.selected', { count: this.get('controller.selectedPostsCount') }) : I18n.t('topic.multi_select.select');
   }.property('selected', 'controller.selectedPostsCount'),
 
   repliesHidden: function() {
@@ -104,7 +104,7 @@ Discourse.PostView = Discourse.View.extend({
 
   updateQuoteElements: function($aside, desc) {
     var navLink = "";
-    var quoteTitle = Em.String.i18n("post.follow_quote");
+    var quoteTitle = I18n.t("post.follow_quote");
     var postNumber = $aside.data('post');
 
     if (postNumber) {
@@ -130,7 +130,7 @@ Discourse.PostView = Discourse.View.extend({
     // Only add the expand/contract control if it's not a full post
     var expandContract = "";
     if (!$aside.data('full')) {
-      expandContract = "<i class='icon-" + desc + "' title='" + Em.String.i18n("post.expand_collapse") + "'></i>";
+      expandContract = "<i class='icon-" + desc + "' title='" + I18n.t("post.expand_collapse") + "'></i>";
       $aside.css('cursor', 'pointer');
     }
     $('.quote-controls', $aside).html("" + expandContract + navLink);
@@ -145,7 +145,7 @@ Discourse.PostView = Discourse.View.extend({
       $aside.data('original-contents',$blockQuote.html());
 
       var originalText = $blockQuote.text().trim();
-      $blockQuote.html(Em.String.i18n("loading"));
+      $blockQuote.html(I18n.t("loading"));
       var topic_id = this.get('post.topic_id');
       if ($aside.data('topic')) {
         topic_id = $aside.data('topic');
@@ -179,7 +179,7 @@ Discourse.PostView = Discourse.View.extend({
               if (link.closest('.badge-category').length === 0) {
                 // nor in oneboxes (except when we force it)
                 if (link.closest(".onebox-result").length === 0 || link.hasClass("track-link")) {
-                  link.append("<span class='badge badge-notification clicks' title='" + Em.String.i18n("topic_summary.clicks") + "'>" + lc.clicks + "</span>");
+                  link.append("<span class='badge badge-notification clicks' title='" + I18n.t("topic_summary.clicks") + "'>" + lc.clicks + "</span>");
                 }
               }
             }

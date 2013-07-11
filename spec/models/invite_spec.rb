@@ -172,19 +172,22 @@ describe Invite do
 
     end
 
+    context 'inviting when must_approve_users? is enabled' do
+      it 'correctly acitvates accounts' do
+        SiteSetting.stubs(:must_approve_users).returns(true)
+        user = invite.redeem
+
+        user.approved?.should == true
+      end
+    end
+
     context 'simple invite' do
 
       let!(:user) { invite.redeem }
 
-      it 'returns a user record' do
+      it 'works correctly' do
         user.is_a?(User).should be_true
-      end
-
-      it 'wants us to send a welcome message' do
         user.send_welcome_message.should be_true
-      end
-
-      it 'has the default_invitee_trust_level' do
         user.trust_level.should == SiteSetting.default_invitee_trust_level
       end
 
@@ -193,28 +196,24 @@ describe Invite do
           invite.reload
         end
 
-        it 'no longer in the pending list for that user' do
+        it 'works correctly' do
+          # no longer in the pending list for that user
           InvitedList.new(invite.invited_by).pending.should be_blank
-        end
 
-        it 'is redeeemed in the invite list for the creator' do
+          # is redeeemed in the invite list for the creator
           InvitedList.new(invite.invited_by).redeemed.should == [invite]
-        end
 
-        it 'has set the user_id attribute' do
+          # has set the user_id attribute
           invite.user.should == user
-        end
 
-        it 'returns true for redeemed' do
+          # returns true for redeemed
           invite.should be_redeemed
         end
+
 
         context 'again' do
           it 'will not redeem twice' do
             invite.redeem.should == user
-          end
-
-          it "doesn't want us to send a welcome message" do
             invite.redeem.send_welcome_message.should be_false
           end
 

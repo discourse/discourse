@@ -259,7 +259,7 @@ class Guardian
   end
 
   def can_edit_topic?(topic)
-    is_staff? || is_my_own?(topic)
+    !topic.archived && (is_staff? || is_my_own?(topic))
   end
 
   # Deleting Methods

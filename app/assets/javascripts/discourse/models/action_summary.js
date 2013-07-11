@@ -13,26 +13,31 @@ Discourse.ActionSummary = Discourse.Model.extend({
     var action = this.get('actionType.name_key');
     if (this.get('acted')) {
       if (this.get('count') <= 1) {
-        return Em.String.i18n('post.actions.by_you.' + action);
+        return I18n.t('post.actions.by_you.' + action);
       } else {
-        return Em.String.i18n('post.actions.by_you_and_others.' + action, { count: this.get('count') - 1 });
+        return I18n.t('post.actions.by_you_and_others.' + action, { count: this.get('count') - 1 });
       }
     } else {
-      return Em.String.i18n('post.actions.by_others.' + action, { count: this.get('count') });
+      return I18n.t('post.actions.by_others.' + action, { count: this.get('count') });
     }
   }.property('count', 'acted', 'actionType'),
 
-  canAlsoAction: function() {
-    if (this.get('hidden')) return false;
-    return this.get('can_act');
-  }.property('can_act', 'hidden'),
+  canAlsoAction: Em.computed.and('can_act', 'actionType.notCustomFlag'),
+  usersCollapsed: Em.computed.not('usersExpanded'),
+  usersExpanded: Em.computed.gt('users.length', 0),
 
   // Remove it
   removeAction: function() {
-    this.set('acted', false);
-    this.set('count', this.get('count') - 1);
-    this.set('can_act', true);
-    return this.set('can_undo', false);
+    this.setProperties({
+      acted: false,
+      count: this.get('count') - 1,
+      can_act: true,
+      can_undo: false
+    });
+
+    if (this.get('usersExpanded')) {
+      this.get('users').removeObject(Discourse.User.current());
+    }
   },
 
   // Perform this action
@@ -42,10 +47,12 @@ Discourse.ActionSummary = Discourse.Model.extend({
     var action = this.get('actionType.name_key');
 
     // Mark it as acted
-    this.set('acted', true);
-    this.set('count', this.get('count') + 1);
-    this.set('can_act', false);
-    this.set('can_undo', true);
+    this.setProperties({
+      acted: true,
+      count: this.get('count') + 1,
+      can_act: false,
+      can_undo: true
+    });
 
     if(action === 'notify_moderators' || action === 'notify_user') {
       this.set('can_undo',false);
@@ -53,8 +60,8 @@ Discourse.ActionSummary = Discourse.Model.extend({
     }
 
     // Add ourselves to the users who liked it if present
-    if (this.present('users')) {
-      this.users.pushObject(Discourse.User.current());
+    if (this.get('usersExpanded')) {
+      this.get('users').addObject(Discourse.User.current());
     }
 
     // Create our post action
@@ -113,7 +120,11 @@ Discourse.ActionSummary = Discourse.Model.extend({
       var users = Em.A();
       actionSummary.set('users', users);
       _.each(result,function(user) {
-        users.pushObject(Discourse.User.create(user));
+        if (user.id === Discourse.User.current('id')) {
+          users.pushObject(Discourse.User.current());
+        } else {
+          users.pushObject(Discourse.User.create(user));
+        }
       });
     });
   }

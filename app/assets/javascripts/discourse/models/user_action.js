@@ -18,53 +18,53 @@ Discourse.UserAction = Discourse.Model.extend({
 
     if (action === null || actions.indexOf(action) >= 0) {
       if (this.get('isPM')) {
-        icon = '<i class="icon icon-envelope-alt" title="{{i18n user.stream.private_message}}"></i>';
+        icon = '<i class="icon icon-envelope" title="{{i18n user.stream.private_message}}"></i>';
         if (sameUser) {
-          sentence = Em.String.i18n('user_action.sent_by_you', { userUrl: this.get('userUrl') });
+          sentence = I18n.t('user_action.sent_by_you', { userUrl: this.get('userUrl') });
         } else {
-          sentence = Em.String.i18n('user_action.sent_by_user', { user: this.get('name'), userUrl: this.get('userUrl') });
+          sentence = I18n.t('user_action.sent_by_user', { user: this.get('name'), userUrl: this.get('userUrl') });
         }
       } else {
         if (sameUser) {
-          sentence = Em.String.i18n('user_action.posted_by_you', { userUrl: this.get('userUrl') });
+          sentence = I18n.t('user_action.posted_by_you', { userUrl: this.get('userUrl') });
         } else {
-          sentence = Em.String.i18n('user_action.posted_by_user', { user: this.get('name'), userUrl: this.get('userUrl') });
+          sentence = I18n.t('user_action.posted_by_user', { user: this.get('name'), userUrl: this.get('userUrl') });
         }
       }
     } else if (action === ua.NEW_TOPIC) {
       if (sameUser) {
-        sentence = Em.String.i18n('user_action.you_posted_topic', { userUrl: this.get('userUrl'), topicUrl: this.get('replyUrl') });
+        sentence = I18n.t('user_action.you_posted_topic', { userUrl: this.get('userUrl'), topicUrl: this.get('replyUrl') });
       } else {
-        sentence = Em.String.i18n('user_action.user_posted_topic', { user: this.get('name'), userUrl: this.get('userUrl'), topicUrl: this.get('replyUrl') });
+        sentence = I18n.t('user_action.user_posted_topic', { user: this.get('name'), userUrl: this.get('userUrl'), topicUrl: this.get('replyUrl') });
       }
     } else if (action === ua.POST || action === ua.RESPONSE) {
       if (this.get('reply_to_post_number')) {
         if (sameUser) {
-          sentence = Em.String.i18n('user_action.you_replied_to_post', { post_number: '#' + this.get('reply_to_post_number'),
+          sentence = I18n.t('user_action.you_replied_to_post', { post_number: '#' + this.get('reply_to_post_number'),
               userUrl: this.get('userUrl'), postUrl: this.get('postUrl') });
         } else {
-          sentence = Em.String.i18n('user_action.user_replied_to_post', { user: this.get('name'),
+          sentence = I18n.t('user_action.user_replied_to_post', { user: this.get('name'),
               post_number: '#' + this.get('reply_to_post_number'), userUrl: this.get('userUrl'), postUrl: this.get('postUrl') });
         }
       } else {
         if (sameUser) {
-          sentence = Em.String.i18n('user_action.you_replied_to_topic', { userUrl: this.get('userUrl'),
+          sentence = I18n.t('user_action.you_replied_to_topic', { userUrl: this.get('userUrl'),
               topicUrl: this.get('replyUrl') });
         } else {
-          sentence = Em.String.i18n('user_action.user_replied_to_topic', { user: this.get('name'),
+          sentence = I18n.t('user_action.user_replied_to_topic', { user: this.get('name'),
               userUrl: this.get('userUrl'), topicUrl: this.get('replyUrl') });
         }
       }
     } else if (action === ua.MENTION) {
       if (sameUser) {
-        sentence = Em.String.i18n('user_action.you_mentioned_user', { user: this.get('target_name'),
+        sentence = I18n.t('user_action.you_mentioned_user', { user: this.get('target_name'),
             user1Url: this.get('userUrl'), user2Url: this.get('targetUserUrl') });
       } else {
         if (this.get('target_username') === Discourse.User.current('username')) {
-          sentence = Em.String.i18n('user_action.user_mentioned_you', { user: this.get('name'),
+          sentence = I18n.t('user_action.user_mentioned_you', { user: this.get('name'),
               user1Url: this.get('userUrl'), user2Url: this.get('targetUserUrl') });
         } else {
-          sentence = Em.String.i18n('user_action.user_mentioned_user', { user: this.get('name'),
+          sentence = I18n.t('user_action.user_mentioned_user', { user: this.get('name'),
               another_user: this.get('target_name'), user1Url: this.get('userUrl'), user2Url: this.get('targetUserUrl') });
         }
       }

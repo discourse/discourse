@@ -136,6 +136,7 @@
         line-height: 19px;
         text-align: center;
         background-color: #fafafa;
+        padding: 1px 2px;
         @include border-radius-all(20px);
         &:after {
           display: block;
@@ -151,6 +152,8 @@
     }
     .reply-new i {
       padding-top: 2px;
+      padding-left: 3px;
+      padding-right: 3px;
       line-height: 17px;
       color: $attention_fg;
       background-color: $attention_bg;
@@ -252,7 +255,7 @@
         background: $post_footer;
         font-size: 15px;
         padding: 8px 10px;
-        border-left: 1px solid $inner_border;
+        border-left: 1px solid lighten($inner_border, 3%);
         vertical-align: top;
         @include box-shadow(inset 0 -4px 4px -4px rgba($black, 0.14));
         &:hover {
@@ -527,6 +530,10 @@
     img {
       max-width: 100%;
     }
+    video {
+      max-width: 100%;
+      height: auto;
+    }
     .topic-body {
       position: relative;
       .contents {
@@ -623,7 +630,7 @@
     top: 12px;
     left: -9px;
     border-width: 10px 10px 10px 0;
-    border-right-color: #b9b9b9;
+    border-right-color: #dfdfdf;
   }
   &:after {
     top: 13px;
@@ -655,7 +662,6 @@
 
 .topic-summary {
   margin-top: 8px;
-  border: 1px solid #b9b9b9;
   background-color: darken($white, 3%);
   @include border-radius-all(4px);
   @include box-shadow(0 1px 2px rgba($black, 0.07));

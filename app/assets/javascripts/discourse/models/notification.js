@@ -20,7 +20,7 @@ Discourse.Notification = Discourse.Model.extend({
 
   rendered: function() {
     var notificationName = Discourse.Site.instance().get('notificationLookup')[this.notification_type];
-    return Em.String.i18n("notifications." + notificationName, {
+    return I18n.t("notifications." + notificationName, {
       username: this.data.display_username,
       link: "<a href='" + (this.get('url')) + "'>" + this.data.topic_title + "</a>"
     });

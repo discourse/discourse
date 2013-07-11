@@ -19,7 +19,7 @@ Discourse.AdminFlagsController = Ember.ArrayController.extend({
     item.disagreeFlags().then((function() {
       adminFlagsController.removeObject(item);
     }), function() {
-      bootbox.alert(Em.String.i18n("admin.flags.error"));
+      bootbox.alert(I18n.t("admin.flags.error"));
     });
   },
 
@@ -28,7 +28,7 @@ Discourse.AdminFlagsController = Ember.ArrayController.extend({
     item.agreeFlags().then((function() {
       adminFlagsController.removeObject(item);
     }), function() {
-      bootbox.alert(Em.String.i18n("admin.flags.error"));
+      bootbox.alert(I18n.t("admin.flags.error"));
     });
   },
 
@@ -37,7 +37,7 @@ Discourse.AdminFlagsController = Ember.ArrayController.extend({
     item.deferFlags().then((function() {
       adminFlagsController.removeObject(item);
     }), function() {
-      bootbox.alert(Em.String.i18n("admin.flags.error"));
+      bootbox.alert(I18n.t("admin.flags.error"));
     });
   },
 
@@ -52,7 +52,7 @@ Discourse.AdminFlagsController = Ember.ArrayController.extend({
     item.deletePost().then((function() {
       adminFlagsController.removeObject(item);
     }), function() {
-      bootbox.alert(Em.String.i18n("admin.flags.error"));
+      bootbox.alert(I18n.t("admin.flags.error"));
     });
   },
 

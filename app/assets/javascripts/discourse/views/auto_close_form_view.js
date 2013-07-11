@@ -10,7 +10,7 @@ Discourse.AutoCloseFormView = Ember.View.extend({
   templateName: 'auto_close_form',
 
   label: function() {
-    return Em.String.i18n( this.get('labelKey') || 'composer.auto_close_label' );
+    return I18n.t( this.get('labelKey') || 'composer.auto_close_label' );
   }.property('labelKey'),
 
   autoCloseChanged: function() {

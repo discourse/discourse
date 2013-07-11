@@ -137,7 +137,7 @@ describe PostActionsController do
         end
 
         it "works with a deleted post" do
-          flagged_post.trash!
+          flagged_post.trash!(user)
           xhr :post, :clear_flags, id: flagged_post.id, post_action_type_id: PostActionType.types[:spam]
           response.should be_success
         end

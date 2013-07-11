@@ -4,6 +4,7 @@ require_dependency 'version'
 describe Admin::VersionsController do
 
   before do
+    DiscourseUpdates.stubs(:updated_at).returns(2.hours.ago)
     DiscourseUpdates.stubs(:latest_version).returns('1.2.33')
     DiscourseUpdates.stubs(:critical_updates_available?).returns(false)
   end

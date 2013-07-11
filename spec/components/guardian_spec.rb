@@ -229,20 +229,22 @@ describe Guardian do
     end
 
     describe 'a Post' do
+
+      let(:another_admin) { Fabricate(:admin) }
       it 'correctly handles post visibility' do
         post = Fabricate(:post)
         topic = post.topic
 
         Guardian.new(user).can_see?(post).should be_true
 
-        post.trash!
+        post.trash!(another_admin)
         post.reload
         Guardian.new(user).can_see?(post).should be_false
         Guardian.new(admin).can_see?(post).should be_true
 
         post.recover!
         post.reload
-        topic.trash!
+        topic.trash!(another_admin)
         topic.reload
         Guardian.new(user).can_see?(post).should be_false
         Guardian.new(admin).can_see?(post).should be_true
@@ -454,12 +456,24 @@ describe Guardian do
         Guardian.new(coding_horror).can_edit?(topic).should be_false
       end
 
-      it 'returns true as a moderator' do
-        Guardian.new(moderator).can_edit?(topic).should be_true
+      context 'not archived' do
+        it 'returns true as a moderator' do
+          Guardian.new(moderator).can_edit?(topic).should be_true
+        end
+
+        it 'returns true as an admin' do
+          Guardian.new(admin).can_edit?(topic).should be_true
+        end
       end
 
-      it 'returns true as an admin' do
-        Guardian.new(admin).can_edit?(topic).should be_true
+      context 'archived' do
+        it 'returns false as a moderator' do
+          Guardian.new(moderator).can_edit?(build(:topic, user: user, archived: true)).should be_false
+        end
+
+        it 'returns false as an admin' do
+          Guardian.new(admin).can_edit?(build(:topic, user: user, archived: true)).should be_false
+        end
       end
     end
 

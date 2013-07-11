@@ -3,13 +3,13 @@
 # Use the AdminLogger class to log records to this table.
 class AdminLog < ActiveRecord::Base
   belongs_to :admin,        class_name: 'User'
-  belongs_to :target_user,  class_name: 'User' # can be nil
+  belongs_to :target_user,  class_name: 'User' # can be nil, or return nil if user record was nuked
 
   validates_presence_of :admin_id
   validates_presence_of :action
 
   def self.actions
-    @actions ||= Enum.new(:delete_user)
+    @actions ||= Enum.new(:delete_user, :change_trust_level)
   end
 end
 

@@ -28,7 +28,7 @@ Discourse.PreferencesUsernameController = Discourse.ObjectController.extend({
 
   checkTaken: function() {
     if( this.get('newUsername') && this.get('newUsername').length < 3 ) {
-      this.set('errorMessage', Em.String.i18n('user.name.too_short'));
+      this.set('errorMessage', I18n.t('user.name.too_short'));
     } else {
       var preferencesUsernameController = this;
       this.set('taken', false);
@@ -46,13 +46,13 @@ Discourse.PreferencesUsernameController = Discourse.ObjectController.extend({
   }.observes('newUsername'),
 
   saveButtonText: function() {
-    if (this.get('saving')) return Em.String.i18n("saving");
-    return Em.String.i18n("user.change_username.action");
+    if (this.get('saving')) return I18n.t("saving");
+    return I18n.t("user.change_username.action");
   }.property('saving'),
 
   changeUsername: function() {
     var preferencesUsernameController = this;
-    return bootbox.confirm(Em.String.i18n("user.change_username.confirm"), Em.String.i18n("no_value"), Em.String.i18n("yes_value"), function(result) {
+    return bootbox.confirm(I18n.t("user.change_username.confirm"), I18n.t("no_value"), I18n.t("yes_value"), function(result) {
       if (result) {
         preferencesUsernameController.set('saving', true);
         preferencesUsernameController.get('content').changeUsername(preferencesUsernameController.get('newUsername')).then(function() {

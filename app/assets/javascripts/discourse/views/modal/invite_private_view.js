@@ -8,5 +8,5 @@
 **/
 Discourse.InvitePrivateView = Discourse.ModalBodyView.extend({
   templateName: 'modal/invite_private',
-  title: Em.String.i18n('topic.invite_private.title')
+  title: I18n.t('topic.invite_private.title')
 });

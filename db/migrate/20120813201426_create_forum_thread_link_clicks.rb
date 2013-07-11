@@ -8,6 +8,6 @@ class CreateForumThreadLinkClicks < ActiveRecord::Migration
     end
 
     add_column :forum_thread_links, :clicks, :integer, default: 0, null: false
-    add_index :forum_thread_link_clicks, :forum_thread_link_id, as: :by_link
+    add_index :forum_thread_link_clicks, :forum_thread_link_id, name: :by_link
   end
 end

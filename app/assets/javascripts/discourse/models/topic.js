@@ -147,7 +147,7 @@ Discourse.Topic = Discourse.Model.extend({
   }).property('starred'),
 
   favoriteTooltip: (function() {
-    return Em.String.i18n(this.get('favoriteTooltipKey'));
+    return I18n.t(this.get('favoriteTooltipKey'));
   }).property('favoriteTooltipKey'),
 
   toggleStar: function() {
@@ -163,7 +163,7 @@ Discourse.Topic = Discourse.Model.extend({
       if (error && error.responseText) {
         bootbox.alert($.parseJSON(error.responseText).errors);
       } else {
-        bootbox.alert(Em.String.i18n('generic_error'));
+        bootbox.alert(I18n.t('generic_error'));
       }
     });
   },

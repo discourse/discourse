@@ -29,8 +29,8 @@ Discourse.PreferencesEmailController = Discourse.ObjectController.extend({
   }).observes('content.email'),
 
   saveButtonText: (function() {
-    if (this.get('saving')) return Em.String.i18n("saving");
-    return Em.String.i18n("user.change_email.action");
+    if (this.get('saving')) return I18n.t("saving");
+    return I18n.t("user.change_email.action");
   }).property('saving'),
 
   changeEmail: function() {

@@ -81,6 +81,30 @@ test("formating tiny dates", function() {
   equal(formatDays(365), "> 1y");
   equal(formatDays(500), "> 1y");
   equal(formatDays(365*2), "> 2y");
+
+  var originalValue = Discourse.SiteSettings.relative_date_duration;
+  Discourse.SiteSettings.relative_date_duration = 7;
+  equal(formatDays(7), "7d");
+  equal(formatDays(8), shortDate(8));
+
+  Discourse.SiteSettings.relative_date_duration = 1;
+  equal(formatDays(1), "1d");
+  equal(formatDays(2), shortDate(2));
+
+  Discourse.SiteSettings.relative_date_duration = 0;
+  equal(formatMins(0), "< 1m");
+  equal(formatMins(2), "2m");
+  equal(formatMins(60), "1h");
+  equal(formatDays(1), shortDate(1));
+  equal(formatDays(2), shortDate(2));
+  equal(formatDays(365), "> 1y");
+
+  Discourse.SiteSettings.relative_date_duration = null;
+  equal(formatDays(1), '1d');
+  equal(formatDays(14), '14d');
+  equal(formatDays(15), shortDate(15));
+
+  Discourse.SiteSettings.relative_date_duration = originalValue;
 });
 
 test("autoUpdatingRelativeAge", function() {

@@ -19,13 +19,13 @@ Discourse.SearchTextField = Discourse.TextField.extend({
     if (ctx) {
       switch(Em.get(ctx, 'type')) {
         case 'user':
-          return Em.String.i18n('search.prefer.user', {username: Em.get(ctx, 'user.username')});
+          return I18n.t('search.prefer.user', {username: Em.get(ctx, 'user.username')});
         case 'category':
-          return Em.String.i18n('search.prefer.category', {category: Em.get(ctx, 'category.name')});
+          return I18n.t('search.prefer.category', {category: Em.get(ctx, 'category.name')});
       }
     }
 
-    return Em.String.i18n('search.placeholder');
+    return I18n.t('search.placeholder');
   }.property('searchContext')
 
 });

@@ -11,7 +11,7 @@ Discourse.TextField = Ember.TextField.extend({
 
   placeholder: function() {
     if( this.get('placeholderKey') ) {
-      return Em.String.i18n(this.get('placeholderKey'));
+      return I18n.t(this.get('placeholderKey'));
     } else {
       return '';
     }

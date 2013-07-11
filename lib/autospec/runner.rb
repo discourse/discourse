@@ -1,6 +1,7 @@
 require "drb/drb"
 require "thread"
 require "fileutils"
+require "autospec/reload_css"
 
 module Autospec; end
 
@@ -182,6 +183,13 @@ class Autospec::Runner
             specs << [file, spec]
           end
         end
+      end
+      Autospec::ReloadCss::MATCHERS.each do |k,v|
+        matches = []
+        if k.match(file)
+          matches << file
+        end
+        Autospec::ReloadCss.run_on_change(matches) if matches.present?
       end
     end
     queue_specs(specs) if hit

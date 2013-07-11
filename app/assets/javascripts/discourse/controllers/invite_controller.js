@@ -17,12 +17,12 @@ Discourse.InviteController = Discourse.ObjectController.extend(Discourse.ModalFu
   }.property('email', 'saving'),
 
   buttonTitle: function() {
-    if (this.get('saving')) return Em.String.i18n('topic.inviting');
-    return Em.String.i18n('topic.invite_reply.action');
+    if (this.get('saving')) return I18n.t('topic.inviting');
+    return I18n.t('topic.invite_reply.action');
   }.property('saving'),
 
   successMessage: function() {
-    return Em.String.i18n('topic.invite_reply.success', { email: this.get('email') });
+    return I18n.t('topic.invite_reply.success', { email: this.get('email') });
   }.property('email'),
 
   createInvite: function() {

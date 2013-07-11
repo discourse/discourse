@@ -55,17 +55,17 @@ Discourse.ComposerController = Discourse.Controller.extend({
       topic = this.get('topic');
       if (!topic || topic.get('id') !== composer.get('topic.id'))
       {
-        message = Em.String.i18n("composer.posting_not_on_topic", {title: this.get('model.topic.title')});
+        message = I18n.t("composer.posting_not_on_topic", {title: this.get('model.topic.title')});
 
         buttons = [{
-          "label": Em.String.i18n("composer.cancel"),
+          "label": I18n.t("composer.cancel"),
           "class": "cancel",
           "link": true
         }];
 
         if(topic) {
           buttons.push({
-            "label": Em.String.i18n("composer.reply_here") + "<br/><div class='topic-title'>" + topic.get('title') + "</div>",
+            "label": I18n.t("composer.reply_here") + "<br/><div class='topic-title'>" + topic.get('title') + "</div>",
             "class": "btn btn-reply-here",
             "callback": function(){
               composer.set('topic', topic);
@@ -76,7 +76,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
         }
 
         buttons.push({
-          "label": Em.String.i18n("composer.reply_original") + "<br/><div class='topic-title'>" + this.get('model.topic.title') + "</div>",
+          "label": I18n.t("composer.reply_original") + "<br/><div class='topic-title'>" + this.get('model.topic.title') + "</div>",
           "class": "btn-primary btn-reply-on-original",
           "callback": function(){
             _this.save(true);
@@ -301,7 +301,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
 
     return Ember.Deferred.promise(function (promise) {
       if (composerController.get('model.hasMetaData') || composerController.get('model.replyDirty')) {
-        bootbox.confirm(Em.String.i18n("post.abandon"), Em.String.i18n("no_value"), Em.String.i18n("yes_value"), function(result) {
+        bootbox.confirm(I18n.t("post.abandon"), I18n.t("no_value"), I18n.t("yes_value"), function(result) {
           if (result) {
             composerController.destroyDraft();
             composerController.get('model').clearState();

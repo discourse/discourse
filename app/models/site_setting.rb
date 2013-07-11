@@ -130,6 +130,7 @@ class SiteSetting < ActiveRecord::Base
 
   # we need to think of a way to force users to enter certain settings, this is a minimal config thing
   setting(:notification_email, 'info@discourse.org')
+  setting(:email_custom_headers, 'Auto-Submitted: auto-generated')
 
   setting(:allow_index_in_robots_txt, true)
 
@@ -171,6 +172,8 @@ class SiteSetting < ActiveRecord::Base
   setting(:s3_secret_access_key, '')
   setting(:s3_region, '', enum: 'S3RegionSiteSetting')
   setting(:s3_upload_bucket, '')
+
+  setting(:enable_flash_video_onebox, false)
 
   setting(:default_trust_level, 0)
   setting(:default_invitee_trust_level, 1)
@@ -226,6 +229,8 @@ class SiteSetting < ActiveRecord::Base
   client_setting(:topic_views_heat_high,   5000)
 
   setting(:minimum_topics_similar, 50)
+
+  client_setting(:relative_date_duration, 14)
 
   def self.generate_api_key!
     self.api_key = SecureRandom.hex(32)

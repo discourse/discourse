@@ -88,7 +88,7 @@ Discourse.Formatter = (function(){
 
     var formatted;
     var t = function(key,opts){
-      return Ember.String.i18n("dates." + format + "." + key, opts);
+      return I18n.t("dates." + format + "." + key, opts);
     };
 
     switch(true){
@@ -105,13 +105,16 @@ Discourse.Formatter = (function(){
     case(distanceInMinutes >= 90 && distanceInMinutes <= 1439):
       formatted = t("about_x_hours", {count: Math.round(distanceInMinutes / 60.0)});
       break;
+    case(Discourse.SiteSettings.relative_date_duration === 0 && distanceInMinutes <= 525599):
+      formatted = shortDateNoYear(date);
+      break;
     case(distanceInMinutes >= 1440 && distanceInMinutes <= 2519):
       formatted = t("x_days", {count: 1});
       break;
-    case(distanceInMinutes >= 2520 && distanceInMinutes <= 20160):
+    case(distanceInMinutes >= 2520 && distanceInMinutes <= ((Discourse.SiteSettings.relative_date_duration||14) * 1440)):
       formatted = t("x_days", {count: Math.round(distanceInMinutes / 1440.0)});
       break;
-    case(distanceInMinutes >= 20160 && distanceInMinutes <= 525599):
+    case(distanceInMinutes >= ((Discourse.SiteSettings.relative_date_duration||14) * 1440) && distanceInMinutes <= 525599):
       formatted = shortDateNoYear(date);
       break;
     default:
@@ -133,7 +136,7 @@ Discourse.Formatter = (function(){
     distanceInMinutes = Math.round(distance / 60.0);
 
     var t = function(key, opts){
-      return Ember.String.i18n("dates.medium" + (leaveAgo?"_with_ago":"") + "." + key, opts);
+      return I18n.t("dates.medium" + (leaveAgo?"_with_ago":"") + "." + key, opts);
     };
 
     switch(true){
@@ -173,7 +176,7 @@ Discourse.Formatter = (function(){
     oneMinuteAgo = 60;
 
     if (distance < oneMinuteAgo) {
-      displayDate = Em.String.i18n("now");
+      displayDate = I18n.t("now");
     } else if (distance > fiveDaysAgo) {
       if ((new Date()).getFullYear() !== date.getFullYear()) {
         displayDate = shortDate(date);

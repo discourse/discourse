@@ -33,8 +33,8 @@
     }.property('post.voteAction.can_act'),
 
     voteButtonText: function() {
-      if (!this.get('post.voteAction.can_act')) return Em.String.i18n("vote.voted");
-      return Em.String.i18n("vote.title");
+      if (!this.get('post.voteAction.can_act')) return I18n.t("vote.voted");
+      return I18n.t("vote.title");
     }.property('post.voteAction.can_act')
 
   })

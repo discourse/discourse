@@ -55,12 +55,19 @@
       </div>
       {{view Discourse.RepliesView contentBinding="replies" postViewBinding="view"}}
       {{view Discourse.ActionsHistoryView contentBinding="actionsHistory"}}
+
+      {{#if deleted_by}}
+        <div class='post-actions'>
+          {{i18n post.deleted_by}} {{avatar deleted_by imageSize="tiny"}} {{unboundAge deleted_at}}
+        </div>
+      {{/if}}
+
       {{view Discourse.TopicSummaryView postBinding="this"}}
     </div>
 
     <div class='span5 gutter'>
       {{collection contentBinding="internalLinks" itemViewClass="Discourse.PostLinkView" tagName="ul" classNames="post-links"}}
-      {{#if controller.details.can_reply_as_new_topic}}
+      {{#if topic.details.can_reply_as_new_topic}}
         <a href='#' class='reply-new' {{action replyAsNewTopic this}}><i class='icon icon-plus'></i>{{i18n post.reply_as_new_topic}}</a>
       {{/if}}
     </div>

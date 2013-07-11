@@ -8,7 +8,7 @@
 **/
 Discourse.ArchetypeOptionsModalView = Discourse.ModalBodyView.extend({
   templateName: 'modal/archetype_options',
-  title: Em.String.i18n('topic.options')
+  title: I18n.t('topic.options')
 });
 
 

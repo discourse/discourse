@@ -182,7 +182,13 @@ class User < ActiveRecord::Base
   # Approve this user
   def approve(approved_by, send_mail=true)
     self.approved = true
-    self.approved_by = approved_by
+
+    if Fixnum === approved_by
+      self.approved_by_id = approved_by
+    else
+      self.approved_by = approved_by
+    end
+
     self.approved_at = Time.now
 
     send_approval_email if save and send_mail

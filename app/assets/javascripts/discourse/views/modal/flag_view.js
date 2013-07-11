@@ -8,7 +8,7 @@
 **/
 Discourse.FlagView = Discourse.ModalBodyView.extend({
   templateName: 'modal/flag',
-  title: Em.String.i18n('flagging.title'),
+  title: I18n.t('flagging.title'),
 
   selectedChanged: function() {
     var nameKey = this.get('controller.selected.name_key');

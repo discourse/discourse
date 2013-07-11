@@ -29,7 +29,7 @@ Discourse.ColorPickerView = Discourse.ContainerView.extend({
         attributeBindings: ['style', 'title'],
         classNames: ['colorpicker'].concat( isUsed ? ['used-color'] : ['unused-color'] ),
         style: 'background-color: #' + color + ';',
-        title: isUsed ? I18n.t("js.category.already_used") : null,
+        title: isUsed ? I18n.t("category.already_used") : null,
         click: function() {
           colorPickerView.set("value", color);
           return false;

@@ -72,7 +72,7 @@ Discourse.HistoryController = Discourse.ObjectController.extend(Discourse.ModalF
           leaveAgo: true,
           wrapInSpan: false});
 
-        item.description = "v" + item.number + " - " + age + " - " + Em.String.i18n("changed_by", { author: item.display_username });
+        item.description = "v" + item.number + " - " + age + " - " + I18n.t("changed_by", { author: item.display_username });
       });
 
       historyController.setProperties({

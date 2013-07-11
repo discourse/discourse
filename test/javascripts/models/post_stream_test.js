@@ -255,7 +255,8 @@ test("staging and undoing a new post", function() {
   });
 
   // Stage the new post in the stream
-  postStream.stagePost(stagedPost, user);
+  var result = postStream.stagePost(stagedPost, user);
+  equal(result, true, "it returns true");
   equal(topic.get('highest_post_number'), 2, "it updates the highest_post_number");
   ok(postStream.get('loading'), "it is loading while the post is being staged");
 
@@ -290,10 +291,14 @@ test("staging and committing a post", function() {
   topic.set('posts_count', 1);
 
   // Stage the new post in the stream
-  postStream.stagePost(stagedPost, user);
+  var result = postStream.stagePost(stagedPost, user);
+  equal(result, true, "it returns true");
   ok(postStream.get('loading'), "it is loading while the post is being staged");
   stagedPost.setProperties({ id: 1234, raw: "different raw value" });
   equal(postStream.get('filteredPostsCount'), 1, "it retains the filteredPostsCount");
+
+  result = postStream.stagePost(stagedPost, user);
+  equal(result, false, "you can't stage a post while it is currently staging");
 
   postStream.commitPost(stagedPost);
   ok(postStream.get('posts').contains(stagedPost), "the post is still in the stream");

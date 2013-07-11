@@ -26,12 +26,10 @@ Discourse.TopicSummaryView = Discourse.ContainerView.extend({
     return allLinks.slice(0, Discourse.TopicSummaryView.LINKS_SHOWN);
   }.property('topic.details.links', 'allLinksShown'),
 
-  newPostCreated: function() {
-    this.rerender();
-  }.observes('topic.posts_count'),
+  shouldRerender: Discourse.View.renderIfChanged('topic.posts_count'),
 
   hidden: function() {
-    if (this.get('post.post_number') !== 1) return true;
+    if (!this.get('post.firstPost')) return true;
     if (this.get('controller.content.archetype') === 'private_message') return false;
     if (this.get('controller.content.archetype') !== 'regular') return true;
     return this.get('controller.content.posts_count') < 2;

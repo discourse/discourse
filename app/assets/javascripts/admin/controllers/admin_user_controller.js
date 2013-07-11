@@ -18,7 +18,7 @@ Discourse.AdminUserController = Discourse.ObjectController.extend({
       data: {title: this.get('title')},
       type: 'PUT'
     }).then(null, function(e){
-      bootbox.alert(Em.String.i18n("generic_error_with_reason", {error: "http: " + e.status + " - " + e.body}));
+      bootbox.alert(I18n.t("generic_error_with_reason", {error: "http: " + e.status + " - " + e.body}));
     });
 
     this.toggleTitleEdit();

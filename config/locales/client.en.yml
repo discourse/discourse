@@ -153,7 +153,7 @@ en:
       "3": "Bookmarks"
       "4": "Topics"
       "5": "Posts"
-      "6": "Responses"
+      "6": "Replies"
       "7": "Mentions"
       "9": "Quotes"
       "10": "Favorites"
@@ -738,6 +738,7 @@ en:
       continue_discussion: "Continuing the discussion from {{postLink}}:"
       follow_quote: "go to the quoted post"
       deleted_by_author: "(post removed by author)"
+      deleted_by: "deleted by"
       expand_collapse: "expand/collapse"
 
       has_replies:
@@ -1006,6 +1007,8 @@ en:
         critical_available: "A critical update is available."
         updates_available: "Updates are available."
         please_upgrade: "Please upgrade!"
+        no_check_performed: "A check for updates have not been performed. Ensure clockwork and sidekiq are running."
+        stale_data: "A check for updates has not been performed lately. Ensure clockwork and sidekiq are running."
         installed_version: "Installed"
         latest_version: "Latest"
         problems_found: "Some problems have been found with your installation of Discourse:"

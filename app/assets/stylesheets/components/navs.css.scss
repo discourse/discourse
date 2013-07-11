@@ -93,4 +93,18 @@
     font-size: 14px;
     line-height: 20px;
   }
+
+  .no-glyph {
+    a {
+      padding-left: 30px;
+    }
+  }
+
+  .glyph {
+    font-size: 12px;
+    margin: 15px 0 0 0;
+    width: 30px;
+    text-align: center;
+    float: left;
+  }
 }

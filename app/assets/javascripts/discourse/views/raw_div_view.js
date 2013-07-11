@@ -2,12 +2,10 @@
 
 Discourse.RawDivView = Ember.View.extend({
 
+  shouldRerender: Discourse.View.renderIfChanged('content'),
+
   render: function(buffer) {
     buffer.push(this.get('content'));
-  },
+  }
 
-  contentChanged: function() {
-    this.rerender();
-  }.observes('content')
-  
 });

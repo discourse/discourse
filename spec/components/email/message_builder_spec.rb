@@ -75,6 +75,25 @@ describe Email::MessageBuilder do
 
   end
 
+  context "custom headers" do
+
+    let(:custom_headers_string) { " Precedence : bulk | :: | No-colon | No-Value: | Multi-colon : : value : : | Auto-Submitted : auto-generated " }
+    let(:custom_headers_result) { { "Precedence" => "bulk", "Multi-colon" => ": value : :", "Auto-Submitted" => "auto-generated" } }
+
+    it "custom headers builder" do
+      expect(Email::MessageBuilder.custom_headers(custom_headers_string)).to eq(custom_headers_result)
+    end
+
+    it "empty headers builder" do
+      expect(Email::MessageBuilder.custom_headers("")).to eq({})
+    end
+
+    it "null headers builder" do
+      expect(Email::MessageBuilder.custom_headers(nil)).to eq({})
+    end
+
+  end
+
   context "header args" do
 
     let(:message_with_header_args) { Email::MessageBuilder.new(to_address,

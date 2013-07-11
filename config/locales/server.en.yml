@@ -457,7 +457,7 @@ en:
     company_short_name: "The short name of the company that runs this site, used in legal documents like the /tos"
     company_domain: "The domain name owned by the company that runs this site, used in legal documents like the /tos"
     api_key: "The secure API key used to create and update topics, use the /admin/api section to set it up"
-    queue_jobs: "Queue various jobs in sidekiq, if false queues are inline"
+    queue_jobs: "DEVELOPER ONLY! WARNING! Queue various jobs in sidekiq, if false queues are inline"
     crawl_images: "Enable retrieving images from third party sources to insert width and height dimensions"
     ninja_edit_window: "Number of seconds after posting where edits do not create a new version"
     max_image_width: "Maximum allowed width of images in a post"
@@ -476,6 +476,7 @@ en:
     apple_touch_icon_url: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
 
     notification_email: "The return email address used when sending system emails such as notifying users of lost passwords, new accounts etc"
+    email_custom_headers: "A pipe-delimited list of custom email headers"
     use_ssl: "Should the site be accessible via SSL? (NOT IMPLEMENTED, EXPERIMENTAL)"
     best_of_score_threshold: "The minimum score of a post to be included in the 'best of'"
     best_of_posts_required: "Minimum posts in a topic before 'best of' mode is enabled"
@@ -582,6 +583,8 @@ en:
     s3_secret_access_key: "The Amazon S3 secret access key that will be used to upload images"
     s3_region: "The Amazon S3 region name that will be used to upload images"
 
+    enable_flash_video_onebox: "Enable embedding of swf and flv links in oneboxes (may introduce a security risk, caution advised)"
+
     default_invitee_trust_level: "Default trust level (0-4) for invited users"
     default_trust_level: "Default trust level (0-4) for users"
 
@@ -643,6 +646,8 @@ en:
     pop3s_polling_password: "The password for the POP3S account to poll for email"
 
     minimum_topics_similar: "How many topics need to exist in the database before similar topics are presented."
+
+    relative_date_duration: "Number of days after posting where post dates will be shown as relative instead of absolute. Examples: relative date: 7d, absolute date: 20 Feb"
 
 
   notification_types:

@@ -8,6 +8,6 @@ class AddUniqueIndexToForumThreadLinks < ActiveRecord::Migration
                               AND ftl2.id < forum_thread_links.id"
 
     # Add the unique index
-    add_index :forum_thread_links, [:forum_thread_id, :post_id, :url], unique: true, as: 'unique_post_links'
+    add_index :forum_thread_links, [:forum_thread_id, :post_id, :url], unique: true, name: 'unique_post_links'
   end
 end

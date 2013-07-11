@@ -75,6 +75,19 @@ module Email
         result['Reply-To'] = from_value
       end
 
+      result.merge(MessageBuilder.custom_headers(SiteSetting.email_custom_headers))
+    end
+
+    def self.custom_headers(string)
+      result = {}
+      string.split('|').each { |item|
+        header = item.split(':', 2)
+        if header.length == 2
+          name = header[0].strip
+          value = header[1].strip
+          result[name] = value if name.length > 0 && value.length > 0
+        end
+      } unless string.nil?
       result
     end
 

@@ -10,9 +10,7 @@ Discourse.FavoriteButton = Discourse.ButtonView.extend({
   textKey: 'favorite.title',
   helpKeyBinding: 'controller.content.favoriteTooltipKey',
 
-  favoriteChanged: function() {
-    this.rerender();
-  }.observes('controller.content.starred'),
+  shouldRerender: Discourse.View.renderIfChanged('controller.content.starred'),
 
   click: function() {
     this.get('controller').toggleStar();

@@ -215,7 +215,7 @@ describe Notification do
 
       Notification.create!(read: false, user_id: p2.user_id, topic_id: p2.topic_id, post_number: p2.post_number, data: '[]',
                            notification_type: Notification.types[:liked])
-      p2.trash!
+      p2.trash!(p.user)
 
       # we may want to make notification "trashable" but for now we nuke pm notifications from deleted topics/posts
       Notification.ensure_consistency!

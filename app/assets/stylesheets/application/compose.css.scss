@@ -299,6 +299,10 @@
         webkit-border-radius: 4px;
         ms-border-radius: 4px;
       }
+      video {
+        max-width: 100%;
+        height: auto;
+      }
     }
     #wmd-preview {
       border: 1px dashed $gray;

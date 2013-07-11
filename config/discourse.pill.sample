@@ -46,7 +46,7 @@ Bluepill.application("discourse", :base_dir => ENV["HOME"] + '/.bluepill') do |a
 
   app.working_dir = rails_root
   sockdir = "#{rails_root}/tmp/sockets"
-  File.directory? sockdir or Dir.mkdir sockdir
+  File.directory? sockdir or FileUtils.mkdir_p sockdir
   num_webs.times do |i|
     app.process("thin-#{i}") do |process|
       process.start_command  = "bundle exec thin start -e production -t 0 --socket #{sockdir}/thin.#{i}.sock --pid #{rails_root}/tmp/pids/thin#{i}.pid --log #{rails_root}/log/thin-#{i}.log --daemonize"

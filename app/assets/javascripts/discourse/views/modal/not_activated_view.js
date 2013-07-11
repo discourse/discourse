@@ -8,5 +8,5 @@
 **/
 Discourse.NotActivatedView = Discourse.ModalBodyView.extend({
   templateName: 'modal/not_activated',
-  title: Em.String.i18n('log_in')
+  title: I18n.t('log_in')
 });

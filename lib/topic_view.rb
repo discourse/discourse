@@ -27,7 +27,7 @@ class TopicView
     @limit = options[:limit] || SiteSetting.posts_per_page;
 
     @filtered_posts = @topic.posts
-    @filtered_posts = @filtered_posts.with_deleted if user.try(:staff?)
+    @filtered_posts = @filtered_posts.with_deleted.without_nuked_users if user.try(:staff?)
     @filtered_posts = @filtered_posts.best_of if options[:filter] == 'best_of'
     @filtered_posts = @filtered_posts.where('posts.post_type <> ?', Post.types[:moderator_action]) if options[:best].present?
 

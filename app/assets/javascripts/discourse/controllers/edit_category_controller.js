@@ -22,9 +22,9 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
   }.observes('description'),
 
   title: function() {
-    if (this.get('id')) return Em.String.i18n("category.edit_long");
-    if (this.get('isUncategorized')) return Em.String.i18n("category.edit_uncategorized");
-    return Em.String.i18n("category.create");
+    if (this.get('id')) return I18n.t("category.edit_long");
+    if (this.get('isUncategorized')) return I18n.t("category.edit_uncategorized");
+    return I18n.t("category.create");
   }.property('id'),
 
   titleChanged: function() {
@@ -82,17 +82,17 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
 
   categoryName: function() {
     var name = this.get('name') || "";
-    return name.trim().length > 0 ? name : Em.String.i18n("preview");
+    return name.trim().length > 0 ? name : I18n.t("preview");
   }.property('name'),
 
   buttonTitle: function() {
-    if (this.get('saving')) return Em.String.i18n("saving");
-    if (this.get('isUncategorized')) return Em.String.i18n("save");
-    return (this.get('id') ? Em.String.i18n("category.save") : Em.String.i18n("category.create"));
+    if (this.get('saving')) return I18n.t("saving");
+    if (this.get('isUncategorized')) return I18n.t("save");
+    return (this.get('id') ? I18n.t("category.save") : I18n.t("category.create"));
   }.property('saving', 'id'),
 
   deleteButtonTitle: function() {
-    return Em.String.i18n('category.delete');
+    return I18n.t('category.delete');
   }.property(),
 
   showCategoryTopic: function() {
@@ -129,7 +129,7 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
         Discourse.URL.redirectTo("/categories");
       }, function(errors) {
         // errors
-        if(errors.length === 0) errors.push(Em.String.i18n("category.save_error"));
+        if(errors.length === 0) errors.push(I18n.t("category.save_error"));
         categoryController.displayErrors(errors);
         categoryController.set('saving', false);
       });
@@ -140,7 +140,7 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
         Discourse.URL.redirectTo("/category/" + Discourse.Category.slugFor(result.category));
       }, function(errors) {
         // errors
-        if(errors.length === 0) errors.push(Em.String.i18n("category.creation_error"));
+        if(errors.length === 0) errors.push(I18n.t("category.creation_error"));
         categoryController.displayErrors(errors);
         categoryController.set('saving', false);
       });
@@ -152,7 +152,7 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
     this.set('deleting', true);
 
     $('#discourse-modal').modal('hide');
-    bootbox.confirm(Em.String.i18n("category.delete_confirm"), Em.String.i18n("no_value"), Em.String.i18n("yes_value"), function(result) {
+    bootbox.confirm(I18n.t("category.delete_confirm"), I18n.t("no_value"), I18n.t("yes_value"), function(result) {
       if (result) {
         categoryController.get('model').destroy().then(function(){
           // success
@@ -161,7 +161,7 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
         }, function(jqXHR){
           // error
           $('#discourse-modal').modal('show');
-          categoryController.displayErrors([Em.String.i18n("category.delete_error")]);
+          categoryController.displayErrors([I18n.t("category.delete_error")]);
           categoryController.set('deleting', false);
         });
       } else {

@@ -14,7 +14,7 @@ Discourse.ShareLink = Discourse.Model.extend({
   }.property('target', 'link', 'topicTitle'),
 
   title: function() {
-    return Em.String.i18n("share." + this.get('target'));
+    return I18n.t("share." + this.get('target'));
   }.property('target'),
 
   iconClass: function() {
@@ -64,7 +64,7 @@ Discourse.ShareLink.reopenClass({
     twitter: 'icon-twitter',
     facebook: 'icon-facebook-sign',
     'google+': 'icon-google-plus',
-    email: 'icon-envelope-alt'
+    email: 'icon-envelope'
   },
 
   popupHeights: {

@@ -20,7 +20,7 @@ test("uploading one file", function() {
   this.stub(bootbox, "alert");
 
   ok(!validUpload([1, 2]));
-  ok(bootbox.alert.calledWith(Em.String.i18n('post.errors.too_many_uploads')));
+  ok(bootbox.alert.calledWith(I18n.t('post.errors.too_many_uploads')));
 });
 
 test("new user", function() {
@@ -29,7 +29,7 @@ test("new user", function() {
   this.stub(bootbox, "alert");
 
   ok(!validUpload([1]));
-  ok(bootbox.alert.calledWith(Em.String.i18n('post.errors.upload_not_allowed_for_new_user')));
+  ok(bootbox.alert.calledWith(I18n.t('post.errors.upload_not_allowed_for_new_user')));
 });
 
 test("ensures an authorized upload", function() {
@@ -38,7 +38,7 @@ test("ensures an authorized upload", function() {
   this.stub(bootbox, "alert");
 
   ok(!validUpload([html]));
-  ok(bootbox.alert.calledWith(Em.String.i18n('post.errors.upload_not_authorized', { authorized_extensions: extensions })));
+  ok(bootbox.alert.calledWith(I18n.t('post.errors.upload_not_authorized', { authorized_extensions: extensions })));
 });
 
 test("prevents files that are too big from being uploaded", function() {
@@ -47,7 +47,7 @@ test("prevents files that are too big from being uploaded", function() {
   this.stub(bootbox, "alert");
 
   ok(!validUpload([image]));
-  ok(bootbox.alert.calledWith(Em.String.i18n('post.errors.upload_too_large', { max_size_kb: 5 })));
+  ok(bootbox.alert.calledWith(I18n.t('post.errors.upload_too_large', { max_size_kb: 5 })));
 });
 
 var dummyBlob = function() {

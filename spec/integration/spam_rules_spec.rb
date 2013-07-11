@@ -58,7 +58,7 @@ describe PostAction do
         end
 
         context "a post is deleted" do
-          When { spam_post.trash!; spammer.reload }
+          When { spam_post.trash!(moderator); spammer.reload }
           Then { expect(spammer.reload).to be_blocked }
         end
 

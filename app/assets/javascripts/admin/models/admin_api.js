@@ -14,7 +14,7 @@ Discourse.AdminApi = Discourse.Model.extend({
   },
 
   regenerateKey: function(){
-    alert(Em.String.i18n('not_implemented'));
+    alert(I18n.t('not_implemented'));
   }
 });
 

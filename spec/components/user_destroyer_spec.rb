@@ -97,6 +97,12 @@ describe UserDestroyer do
           DiscourseHub.expects(:unregister_nickname).never
           destroy
         end
+
+        it "should mark the user's deleted posts as belonging to a nuked user" do
+          post = Fabricate(:post, user: @user, deleted_at: 1.hour.ago)
+          expect { destroy }.to change { User.count }.by(-1)
+          post.reload.nuked_user.should be_true
+        end
       end
 
       context 'and destroy fails' do

@@ -38,7 +38,7 @@ Discourse.EditTopicAutoCloseController = Discourse.ObjectController.extend(Disco
     }).then(function(){
       editTopicAutoCloseController.set('details.auto_close_at', moment().add('days', days).format());
     }, function (error) {
-      bootbox.alert(Em.String.i18n('generic_error'));
+      bootbox.alert(I18n.t('generic_error'));
     });
   }
 

@@ -17,7 +17,7 @@ Discourse.ReplyButton = Discourse.ButtonView.extend({
     var customTitle = this.get("parentView.replyButtonText" + archetypeCapitalized);
     if (customTitle) { return customTitle; }
 
-    return Em.String.i18n("topic.reply.title");
+    return I18n.t("topic.reply.title");
   }.property(),
 
   renderIcon: function(buffer) {

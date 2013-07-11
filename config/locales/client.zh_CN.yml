@@ -963,6 +963,7 @@ zh_CN:
         up_to_date: "你正在运行最新的论坛版本。"
         critical_available: "有一个关键更新可用。"
         updates_available: "目前有可用更新。"
+        no_check_performed: "检测未执行"
         please_upgrade: "请升级！"
         installed_version: "已安装"
         latest_version: "最新版本"
@@ -972,7 +973,8 @@ zh_CN:
         no_problems: "找不到问题."
         moderators: '版主：'
         admins: '管理员：'
-        blocked: '被封禁:'
+        blocked: '禁止参与讨论:'
+        banned: "禁止登陆"
         private_messages_short: "私信"
         private_messages_title: "私密信息"
 
@@ -1038,6 +1040,7 @@ zh_CN:
 
       email:
         title: "电子邮件"
+        user: "用户"
         settings: "设置"
         logs: "日志"
         sent_at: "发送时间"
@@ -1071,6 +1074,10 @@ zh_CN:
           new: "新建"
           active: "活跃"
           pending: "待定"
+          admins: "管理员"
+          moderators: "版主"
+          banned: "禁止登陆"
+          blocked: "禁止参与讨论"
         approved: "已批准？"
         approved_selected:
           one: "批准用户"

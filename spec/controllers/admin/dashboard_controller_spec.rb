@@ -6,6 +6,7 @@ describe Admin::DashboardController do
     #NOTE: Rails.cache should be blanked between tests, at the moment we can share state with it
     # that is seriously bust on quite a few levels
     Rails.cache.delete("admin-dashboard-data-#{Discourse::VERSION::STRING}")
+    Jobs::VersionCheck.any_instance.stubs(:execute).returns(true)
   end
 
   it "is a subclass of AdminController" do

@@ -21,9 +21,9 @@
 
         text: function () {
           if (this.get('complete')) {
-            return Em.String.i18n("task.reverse");
+            return I18n.t("task.reverse");
           } else {
-            return Em.String.i18n("task.complete_action");
+            return I18n.t("task.complete_action");
           }
         }.property('complete'),
 

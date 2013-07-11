@@ -49,7 +49,7 @@ Discourse.AdminUsersListController = Ember.ArrayController.extend(Discourse.Pres
     @property title
   **/
   title: function() {
-    return Em.String.i18n('admin.users.titles.' + this.get('query'));
+    return I18n.t('admin.users.titles.' + this.get('query'));
   }.property('query'),
 
   /**

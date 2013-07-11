@@ -1,6 +1,7 @@
 require_dependency 'import/json_decoder'
 require_dependency 'import/import'
 require_dependency 'import/adapter/base'
+require_dependency 'directory_helper'
 
 (Dir.entries(File.join( Rails.root, 'lib', 'import', 'adapter' )) - ['.', '..', 'base.rb']).each do |f|
   require_dependency "import/adapter/#{f}"
@@ -10,6 +11,7 @@ module Jobs
 
   class Importer < Jobs::Base
 
+    include DirectoryHelper
     sidekiq_options retry: false
 
     BACKUP_SCHEMA = 'backup'
@@ -67,23 +69,15 @@ module Jobs
         raise Import::FilenameMissingError
       else
         extract_files
-        @decoder = Import::JsonDecoder.new( File.join(tmp_directory, 'tables.json') )
+        @decoder = Import::JsonDecoder.new( File.join(tmp_directory('import'), 'tables.json') )
         Import.set_import_started
         Discourse.enable_maintenance_mode
       end
       self
     end
 
-    def tmp_directory
-      @tmp_directory ||= begin
-        f = File.join( Rails.root, 'tmp', Time.now.strftime('import%Y%m%d%H%M%S') )
-        Dir.mkdir(f) unless Dir[f].present?
-        f
-      end
-    end
-
     def extract_files
-      FileUtils.cd( tmp_directory ) do
+      FileUtils.cd( tmp_directory('import') ) do
         `tar xvzf #{@archive_filename} tables.json`
       end
     end
@@ -248,7 +242,7 @@ module Jobs
     def finish_import
       Import.set_import_is_not_running
       Discourse.disable_maintenance_mode
-      FileUtils.rm_rf(tmp_directory) if Dir[tmp_directory].present?
+      remove_tmp_directory('import')
 
       if @warnings.size > 0
         log "WARNINGS:"

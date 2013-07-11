@@ -62,14 +62,14 @@ Discourse.Post = Discourse.Model.extend({
 
   // Custom tooltips for the bookmark icons
   bookmarkTooltip: function() {
-    if (this.get('bookmarked')) return Em.String.i18n('bookmarks.created');
+    if (this.get('bookmarked')) return I18n.t('bookmarks.created');
     if (!this.get('read')) return "";
 
     var topic = this.get('topic');
     if (topic && topic.get('last_read_post_number') === this.get('post_number')) {
-      return Em.String.i18n('bookmarks.last_read');
+      return I18n.t('bookmarks.last_read');
     }
-    return Em.String.i18n('bookmarks.not_bookmarked');
+    return I18n.t('bookmarks.not_bookmarked');
   }.property('read', 'topic.last_read_post_number', 'bookmarked'),
 
   bookmarkedChanged: function() {
@@ -83,7 +83,7 @@ Discourse.Post = Discourse.Model.extend({
       if (error && error.responseText) {
         bootbox.alert($.parseJSON(error.responseText).errors[0]);
       } else {
-        bootbox.alert(Em.String.i18n('generic_error'));
+        bootbox.alert(I18n.t('generic_error'));
       }
     });
 
@@ -131,6 +131,7 @@ Discourse.Post = Discourse.Model.extend({
 
   // Save a post and call the callback when done.
   save: function(complete, error) {
+    var self = this;
     if (!this.get('newPost')) {
       // We're updating a post
       return Discourse.ajax("/posts/" + (this.get('id')), {
@@ -141,6 +142,7 @@ Discourse.Post = Discourse.Model.extend({
         }
       }).then(function(result) {
         // If we received a category update, update it
+        self.set('version', result.post.version);
         if (result.category) Discourse.Site.instance().updateCategory(result.category);
         if (complete) complete(Discourse.Post.create(result.post));
       }, function(result) {
@@ -184,10 +186,29 @@ Discourse.Post = Discourse.Model.extend({
   },
 
   recover: function() {
+    this.setProperties({
+      deleted_at: null,
+      deleted_by: null
+    });
+
     return Discourse.ajax("/posts/" + (this.get('id')) + "/recover", { type: 'PUT', cache: false });
   },
 
-  destroy: function(complete) {
+  destroy: function(deleted_by) {
+    // Moderators can delete posts. Regular users can only trigger a deleted at message.
+    if (deleted_by.get('staff')) {
+      this.setProperties({
+        deleted_at: new Date(),
+        deleted_by: deleted_by
+      });
+    } else {
+      this.setProperties({
+        cooked: Discourse.Markdown.cook(I18n.t("post.deleted_by_author")),
+        can_delete: false,
+        version: this.get('version') + 1
+      });
+    }
+
     return Discourse.ajax("/posts/" + (this.get('id')), { type: 'DELETE' });
   },
 
