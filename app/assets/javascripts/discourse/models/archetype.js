@@ -8,14 +8,14 @@
 **/
 Discourse.Archetype = Discourse.Model.extend({
 
-  hasOptions: function() {
-    if (!this.get('options')) return false;
-    return this.get('options').length > 0;
-  }.property('options.@each'),
+  hasOptions: Em.computed.gt('options.length', 0),
 
-  isDefault: function() {
-    return this.get('id') === Discourse.Site.instance().get('default_archetype');
-  }.property('id')
+  site: function() {
+    return Discourse.Site.instance();
+  }.property(),
+
+  isDefault: Discourse.computed.propertyEqual('id', 'site.default_archetype'),
+  notDefault: Em.computed.not('isDefault')
 
 });
 

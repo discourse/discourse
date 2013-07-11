@@ -7,7 +7,6 @@ test("emailValid", function() {
   ok(utils.emailValid('bob@EXAMPLE.com'), "allows upper case in the email domain");
 });
 
-
 var validUpload = utils.validateFilesForUpload;
 
 test("validateFilesForUpload", function() {
@@ -51,9 +50,9 @@ test("prevents files that are too big from being uploaded", function() {
 });
 
 var dummyBlob = function() {
-  window.BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder || window.MSBlobBuilder;
-  if (window.BlobBuilder) {
-    var bb = new window.BlobBuilder();
+  var BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder || window.MSBlobBuilder;
+  if (BlobBuilder) {
+    var bb = new BlobBuilder();
     bb.append([1]);
     return bb.getBlob("image/png");
   } else {
@@ -84,4 +83,29 @@ test("isAuthorizedUpload", function() {
   ok(isAuthorized("image.jpg"));
   ok(!isAuthorized("image.txt"));
   ok(!isAuthorized(""));
+});
+
+var getUploadMarkdown = function(filename) {
+  return utils.getUploadMarkdown({
+    original_filename: filename,
+    width: 100,
+    height: 200,
+    url: "/upload/123/abcdef.ext"
+  });
+};
+
+test("getUploadMarkdown", function() {
+  ok(getUploadMarkdown("lolcat.gif") === '<img src="/upload/123/abcdef.ext" width="100" height="200">');
+  ok(getUploadMarkdown("important.txt") === '<a class="attachment" href="/upload/123/abcdef.ext">important.txt</a>');
+});
+
+test("isAnImage", function() {
+  _.each(["png", "jpg", "jpeg", "bmp", "gif", "tif"], function(extension) {
+    var image = "image." + extension;
+    ok(utils.isAnImage(image));
+    ok(utils.isAnImage("http://foo.bar/path/to/" + image));
+  });
+  ok(!utils.isAnImage("file.txt"));
+  ok(!utils.isAnImage("http://foo.bar/path/to/file.txt"));
+  ok(!utils.isAnImage(""));
 });

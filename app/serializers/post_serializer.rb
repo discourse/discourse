@@ -123,7 +123,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_deleted_by?
-    staff? && object.deleted_by.present?
+    scope.is_staff? && object.deleted_by.present?
   end
 
   # Summary of the actions taken on this post

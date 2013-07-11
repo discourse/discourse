@@ -6,3 +6,10 @@ Fabricator(:upload) do
   height 200
   url  "/uploads/default/1/1234567890123456.jpg"
 end
+
+Fabricator(:attachment, from: :upload) do
+  user
+  original_filename "archive.zip"
+  filesize 1234
+  url  "/uploads/default/186/66b3ed1503efc936.zip"
+end

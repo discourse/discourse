@@ -50,6 +50,10 @@ Fabricator(:post_with_uploaded_images, from: :post) do
 '
 end
 
+Fabricator(:post_with_an_attachment, from: :post) do
+  cooked '<a class="attachment" href="/uploads/default/186/66b3ed1503efc936.zip">archive.zip</a>'
+end
+
 Fabricator(:post_with_unsized_images, from: :post) do
   cooked '
 <img src="http://foo.bar/image.png">

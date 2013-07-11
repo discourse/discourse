@@ -16,6 +16,8 @@ Discourse.Topic = Discourse.Model.extend({
     return Discourse.TopicDetails.create({topic: this});
   }.property(),
 
+  invisible: Em.computed.not('visible'),
+
   canConvertToRegular: function() {
     var a = this.get('archetype');
     return a !== 'regular' && a !== 'private_message';
@@ -130,9 +132,7 @@ Discourse.Topic = Discourse.Model.extend({
     return Discourse.Site.instance().get('archetypes').findProperty('id', this.get('archetype'));
   }.property('archetype'),
 
-  isPrivateMessage: (function() {
-    return this.get('archetype') === 'private_message';
-  }).property('archetype'),
+  isPrivateMessage: Em.computed.equal('archetype', 'private_message'),
 
   toggleStatus: function(property) {
     this.toggleProperty(property);

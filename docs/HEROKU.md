@@ -25,20 +25,7 @@ For details on how to reduce the monthly cost of your application, see [Advanced
     + # config/redis.yml
     ```
 
-4. Specify the Ruby version at the top of the Gemfile.
-
-    Heroku defaults to `ruby 1.9.2`, but Discourse requires a **minimum** of `ruby 1.9.3`.
-
-    *Gemfile*
-
-    ```ruby
-      source 'https://rubygems.org'
-
-    + ruby "2.0.0"
-      ...
-    ```
-
-5. Commit your changes.
+4. Commit your changes.
 
         git add .
         git commit -m "ready for Heroku"
