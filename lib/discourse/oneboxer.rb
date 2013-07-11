@@ -62,9 +62,9 @@ module Discourse
 	    end
 	  end
 
-	  # Dir["#{Rails.root}/lib/oneboxer/*_onebox.rb"].sort.each do |f|
-	  #   add_onebox "Oneboxer::#{Pathname.new(f).basename.to_s.gsub(/\.rb$/, '').classify}".constantize
-	  # end
+	  Dir["#{Rails.root}/lib/oneboxer/*_onebox.rb"].sort.each do |f|
+	    add_onebox "Oneboxer::#{Pathname.new(f).basename.to_s.gsub(/\.rb$/, '').classify}".constantize
+	  end
 
 	  def self.default_expiry
 	    1.day
