@@ -190,12 +190,20 @@ class TopicsController < ApplicationController
   end
 
   def invite
-    params.require(:user)
+    username_or_email = params[:user]
+    if username_or_email
+      # provides a level of protection for hashes
+      params.require(:user)
+    else
+      params.require(:email)
+      username_or_email = params[:email]
+    end
+
     topic = Topic.where(id: params[:topic_id]).first
     guardian.ensure_can_invite_to!(topic)
 
-    if topic.invite(current_user, params[:user])
-      user = User.find_by_username_or_email(params[:user])
+    if topic.invite(current_user, username_or_email)
+      user = User.find_by_username_or_email(username_or_email)
       if user
         render_json_dump BasicUserSerializer.new(user, scope: guardian, root: 'user')
       else

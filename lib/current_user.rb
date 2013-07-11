@@ -59,9 +59,9 @@ module CurrentUser
       @current_user.update_ip_address!(request.remote_ip)
     end
 
-    # possible we have an api call, impersonate 
+    # possible we have an api call, impersonate
     unless @current_user
-      if api_key = request["api_key"] 
+      if api_key = request["api_key"]
         if api_username = request["api_username"]
           if SiteSetting.api_key_valid?(api_key)
             @current_user = User.where(username_lower: api_username.downcase).first
