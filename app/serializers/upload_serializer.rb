@@ -1,5 +1,5 @@
 class UploadSerializer < ApplicationSerializer
 
-  attributes :url, :filesize, :original_filename, :width, :height
+  attributes :url, :original_filename, :width, :height
 
 end

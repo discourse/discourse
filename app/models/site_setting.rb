@@ -274,6 +274,23 @@ class SiteSetting < ActiveRecord::Base
     top_menu_items.map { |item| item.name }.select{ |item| list.include?(item) }.first
   end
 
+  def self.authorized_file?(file)
+    file.original_filename =~ /\.(#{authorized_extensions.tr(". ", "")})$/i
+  end
+
+  def self.images
+    @images ||= ["jpg", "jpeg", "png", "gif", "tif", "tiff", "bmp"]
+  end
+
+  def self.authorized_image?(file)
+    authorized_images = authorized_extensions
+                          .tr(". ", "")
+                          .split("|")
+                          .select { |extension| images.include?(extension) }
+                          .join("|")
+    file.original_filename =~ /\.(#{authorized_images})$/i
+  end
+
 end
 
 # == Schema Information
