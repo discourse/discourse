@@ -132,7 +132,6 @@ Discourse.Topic = Discourse.Model.extend({
   archetypeObject: function() {
     return Discourse.Site.instance().get('archetypes').findProperty('id', this.get('archetype'));
   }.property('archetype'),
-
   isPrivateMessage: Em.computed.equal('archetype', 'private_message'),
 
   toggleStatus: function(property) {
@@ -225,7 +224,6 @@ Discourse.Topic = Discourse.Model.extend({
     @method clearPin
   **/
   clearPin: function() {
-
     var topic = this;
 
     // Clear the pin optimistically from the object
@@ -241,29 +239,27 @@ Discourse.Topic = Discourse.Model.extend({
 
   // Is the reply to a post directly below it?
   isReplyDirectlyBelow: function(post) {
-    var postBelow, posts;
-    posts = this.get('postStream.posts');
+    var posts = this.get('postStream.posts');
     if (!posts) return;
 
-    postBelow = posts[posts.indexOf(post) + 1];
+    var postBelow = posts[posts.indexOf(post) + 1];
 
     // If the post directly below's reply_to_post_number is our post number, it's
     // considered directly below.
     return postBelow && postBelow.get('reply_to_post_number') === post.get('post_number');
   },
 
-  hasExcerpt: function() {
-    return this.get('pinned') && this.get('excerpt') && this.get('excerpt').length > 0;
-  }.property('pinned', 'excerpt'),
+  excerptNotEmpty: Em.computed.notEmpty('excerpt'),
+  hasExcerpt: Em.computed.and('pinned', 'excerptNotEmpty'),
 
   excerptTruncated: function() {
     var e = this.get('excerpt');
     return( e && e.substr(e.length - 8,8) === '&hellip;' );
   }.property('excerpt'),
 
-  canClearPin: function() {
-    return this.get('pinned') && (this.get('last_read_post_number') === this.get('highest_post_number'));
-  }.property('pinned', 'last_read_post_number', 'highest_post_number')
+  readLastPost: Discourse.computed.propertyEqual('last_read_post_number', 'highest_post_number'),
+  canCleanPin: Em.computed.and('pinned', 'readLastPost')
+
 });
 
 Discourse.Topic.reopenClass({

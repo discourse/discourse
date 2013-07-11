@@ -198,8 +198,6 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     Discourse.URL.routeTo(this.get('lastPostUrl'));
   },
 
-
-
   replyAsNewTopic: function(post) {
     // TODO shut down topic draft cleanly if it exists ...
     var composerController = this.get('controllers.composer');

@@ -22,7 +22,7 @@
     </ul>
     <div class='show'>
       <dl>
-      {{#if hasWebsite}}
+      {{#if websiteName}}
         <dt>{{i18n user.website}}:</dt><dd><a {{bindAttr href="website"}} target="_blank">{{websiteName}}</a></dd>
       {{/if}}
       {{#if created_at}}

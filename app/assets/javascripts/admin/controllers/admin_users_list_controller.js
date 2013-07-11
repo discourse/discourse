@@ -78,9 +78,7 @@ Discourse.AdminUsersListController = Ember.ArrayController.extend(Discourse.Pres
 
     @property hasSelection
   **/
-  hasSelection: function() {
-    return this.get('selectedCount') > 0;
-  }.property('selectedCount'),
+  hasSelection: Em.computed.gt('selectedCount', 0),
 
   /**
     Refresh the current list of users.

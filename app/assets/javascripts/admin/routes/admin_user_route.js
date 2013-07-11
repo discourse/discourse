@@ -16,11 +16,6 @@ Discourse.AdminUserRoute = Discourse.Route.extend(Discourse.ModelReady, {
     return Discourse.AdminUser.find(Em.get(params, 'username').toLowerCase());
   },
 
-  setupController: function(controller, model) {
-    controller.set('model', model);
-    model.setOriginalTrustLevel();
-  },
-
   renderTemplate: function() {
     this.render({into: 'admin/templates/admin'});
   },
@@ -28,6 +23,7 @@ Discourse.AdminUserRoute = Discourse.Route.extend(Discourse.ModelReady, {
   modelReady: function(controller, adminUser) {
     adminUser.loadDetails();
     controller.set('model', adminUser);
+    adminUser.setOriginalTrustLevel();
   }
 
 });

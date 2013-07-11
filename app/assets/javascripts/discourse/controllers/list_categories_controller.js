@@ -25,8 +25,7 @@ Discourse.ListCategoriesController = Discourse.ObjectController.extend({
   }.property('categories.@each'),
 
   canEdit: function() {
-    var u = Discourse.User.current();
-    return u && u.staff;
+    Discourse.User.current('staff');
   }.property(),
 
   // clear a pinned topic

@@ -80,5 +80,6 @@ Discourse.Router.map(function() {
 QUnit.testStart(function() {
   // Allow our tests to change site settings and have them reset before the next test
   Discourse.SiteSettings = jQuery.extend(true, {}, Discourse.SiteSettingsOriginal);
+  Discourse.BaseUri = "/";
 })
 
