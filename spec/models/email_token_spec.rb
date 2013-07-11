@@ -8,7 +8,7 @@ describe EmailToken do
 
 
   context '#create' do
-    let(:user) { Fabricate(:user) }
+    let(:user) { Fabricate(:user, active: false) }
     let!(:original_token) { user.email_tokens.first }
     let!(:email_token) { user.email_tokens.create(email: 'bubblegum@adevnturetime.ooo') }
 
@@ -42,7 +42,7 @@ describe EmailToken do
 
   context '#confirm' do
 
-    let(:user) { Fabricate(:user) }
+    let(:user) { Fabricate(:user, active: false) }
     let(:email_token) { user.email_tokens.first }
 
     it 'returns nil with a nil token' do

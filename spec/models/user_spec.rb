@@ -567,7 +567,7 @@ describe User do
 
   describe 'passwords' do
     before do
-      @user = Fabricate.build(:user)
+      @user = Fabricate.build(:user, active: false)
       @user.password = "ilovepasta"
       @user.save!
     end

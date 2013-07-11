@@ -7,7 +7,7 @@ describe Jobs::EnqueueDigestEmails do
   describe '#target_users' do
 
     context 'disabled digests' do
-      let!(:user_no_digests) { Fabricate(:user, email_digests: false, last_emailed_at: 8.days.ago, last_seen_at: 10.days.ago) }
+      let!(:user_no_digests) { Fabricate(:active_user, email_digests: false, last_emailed_at: 8.days.ago, last_seen_at: 10.days.ago) }
 
       it "doesn't return users with email disabled" do
         Jobs::EnqueueDigestEmails.new.target_users.include?(user_no_digests).should be_false
@@ -15,7 +15,7 @@ describe Jobs::EnqueueDigestEmails do
     end
 
     context 'unapproved users' do
-      Given!(:unapproved_user) { Fabricate(:user, approved: false, last_emailed_at: 8.days.ago, last_seen_at: 10.days.ago) }
+      Given!(:unapproved_user) { Fabricate(:active_user, approved: false, last_emailed_at: 8.days.ago, last_seen_at: 10.days.ago) }
       When { SiteSetting.stubs(:must_approve_users?).returns(true) }
       Then { expect(Jobs::EnqueueDigestEmails.new.target_users.include?(unapproved_user)).to eq(false) }
 
@@ -33,15 +33,24 @@ describe Jobs::EnqueueDigestEmails do
     end
 
     context 'recently emailed' do
-      let!(:user_emailed_recently) { Fabricate(:user, last_emailed_at: 6.days.ago) }
+      let!(:user_emailed_recently) { Fabricate(:active_user, last_emailed_at: 6.days.ago) }
 
       it "doesn't return users who have been emailed recently" do
         Jobs::EnqueueDigestEmails.new.target_users.include?(user_emailed_recently).should be_false
       end
     end
 
+    context "inactive user" do
+      let!(:inactive_user) { Fabricate(:user) }
+
+      it "doesn't return users who have been emailed recently" do
+        Jobs::EnqueueDigestEmails.new.target_users.include?(inactive_user).should be_false
+      end
+    end
+
+
     context 'visited the site today' do
-      let!(:user_visited_today) { Fabricate(:user, last_seen_at: 6.days.ago) }
+      let!(:user_visited_today) { Fabricate(:active_user, last_seen_at: 6.days.ago) }
 
       it "doesn't return users who have been emailed recently" do
         Jobs::EnqueueDigestEmails.new.target_users.include?(user_visited_today).should be_false
@@ -50,7 +59,7 @@ describe Jobs::EnqueueDigestEmails do
 
 
     context 'regular users' do
-      let!(:user) { Fabricate(:user) }
+      let!(:user) { Fabricate(:active_user) }
 
       it "returns the user" do
         Jobs::EnqueueDigestEmails.new.target_users.should == [user]
