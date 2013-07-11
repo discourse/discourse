@@ -1,6 +1,3 @@
-require 'open-uri'
-require_dependency 'oneboxer/base_onebox'
-
 module Discourse
   module Oneboxer
     class ImgurOnebox < BaseOnebox

@@ -1,5 +1,3 @@
-require_dependency 'oneboxer/handlebars_onebox'
-
 module Discourse
   module Oneboxer
     class AppleAppOnebox < HandlebarsOnebox

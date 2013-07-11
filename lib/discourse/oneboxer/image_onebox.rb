@@ -1,5 +1,3 @@
-require_dependency 'oneboxer/base_onebox'
-
 module Discourse	
 	module Oneboxer
 	  class ImageOnebox < BaseOnebox

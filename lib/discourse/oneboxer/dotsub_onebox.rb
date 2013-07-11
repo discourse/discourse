@@ -1,5 +1,3 @@
-require_dependency 'oneboxer/oembed_onebox'
-
 module Discourse
 	module Oneboxer
 	  class DotsubOnebox < OembedOnebox

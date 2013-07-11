@@ -1,10 +1,9 @@
-require_dependency 'oneboxer/oembed_onebox'
-require_dependency 'freedom_patches/rails4'
+#require_dependency 'freedom_patches/rails4'
 
 module Discourse
   module Oneboxer
     class DiscourseLocalOnebox < BaseOnebox
-      include ActionView::Helpers::DateHelper
+      #include ActionView::Helpers::DateHelper
 
       matcher do
         Regexp.new "^#{Discourse.base_url.gsub(".","\\.")}.*$", true
