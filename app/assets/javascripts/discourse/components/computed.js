@@ -31,7 +31,7 @@ Discourse.computed = {
       return format.fmt.apply(format, args.map(function (a) {
         return context.get(a);
       }));
-    })
+    });
     return computed.property.apply(computed, args);
   },
 
@@ -52,7 +52,7 @@ Discourse.computed = {
       return Discourse.getURL(format.fmt.apply(format, args.map(function (a) {
         return context.get(a);
       })));
-    })
+    });
     return computed.property.apply(computed, args);
 
   }
