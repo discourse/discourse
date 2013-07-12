@@ -21,11 +21,8 @@ class SuggestedTopicsBuilder
     return if results.blank?
 
     # Keep track of the ids we've added
-    @excluded_topic_ids << results.map {|r| r.id}
-    @excluded_topic_ids.flatten!
-
-    @results << results
-    @results.flatten!
+    @excluded_topic_ids.concat results.map {|r| r.id}
+    @results.concat results
   end
 
   def results_left
