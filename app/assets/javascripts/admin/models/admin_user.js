@@ -98,19 +98,14 @@ Discourse.AdminUser = Discourse.User.extend({
     this.set('trustLevel.id', this.get('originalTrustLevel'));
   },
 
-  isBanned: (function() {
-    return this.get('is_banned') === true;
-  }).property('is_banned'),
+  isBanned: Em.computed.equal('is_banned', true),
+  canBan: Em.computed.not('staff'),
 
-  canBan: (function() {
-    return !this.get('admin') && !this.get('moderator');
-  }).property('admin', 'moderator'),
-
-  banDuration: (function() {
+  banDuration: function() {
     var banned_at = moment(this.banned_at);
     var banned_till = moment(this.banned_till);
     return banned_at.format('L') + " - " + banned_till.format('L');
-  }).property('banned_till', 'banned_at'),
+  }.property('banned_till', 'banned_at'),
 
   ban: function() {
     var duration = parseInt(window.prompt(I18n.t('admin.user.ban_duration')), 10);

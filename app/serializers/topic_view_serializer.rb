@@ -19,7 +19,8 @@ class TopicViewSerializer < ApplicationSerializer
      :has_best_of,
      :archetype,
      :slug,
-     :category_id]
+     :category_id,
+     :deleted_at]
   end
 
   attributes :draft,

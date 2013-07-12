@@ -242,7 +242,11 @@ class Guardian
   end
 
   def can_create_post_on_topic?(topic)
-    is_staff? || (not(topic.closed? || topic.archived?) && can_create_post?(topic))
+
+    # No users can create posts on deleted topics
+    return false if topic.trashed?
+
+    is_staff? || (not(topic.closed? || topic.archived? || topic.trashed?) && can_create_post?(topic))
   end
 
   # Editing Methods
@@ -283,7 +287,9 @@ class Guardian
   end
 
   def can_delete_topic?(topic)
-    is_staff? && not(Category.exists?(topic_id: topic.id))
+    !topic.trashed? &&
+    is_staff? &&
+    !(Category.exists?(topic_id: topic.id))
   end
 
   def can_delete_post_action?(post_action)

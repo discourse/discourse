@@ -5,7 +5,6 @@ module Trashable
     default_scope where(with_deleted_scope_sql)
 
     # scope unscoped does not work
-
     belongs_to :deleted_by, class_name: 'User'
   end
 
@@ -24,6 +23,10 @@ module Trashable
     def with_deleted_scope_sql
       scoped.table[:deleted_at].eq(nil).to_sql
     end
+  end
+
+  def trashed?
+    deleted_at.present?
   end
 
   def trash!(trashed_by=nil)

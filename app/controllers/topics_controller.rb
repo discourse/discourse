@@ -25,6 +25,7 @@ class TopicsController < ApplicationController
   caches_action :avatar, cache_path: Proc.new {|c| "#{c.params[:post_number]}-#{c.params[:topic_id]}" }
 
   def show
+
     # We'd like to migrate the wordpress feed to another url. This keeps up backwards compatibility with
     # existing installs.
     return wordpress if params[:best].present?
@@ -33,6 +34,7 @@ class TopicsController < ApplicationController
     begin
       @topic_view = TopicView.new(params[:id] || params[:topic_id], current_user, opts)
     rescue Discourse::NotFound
+      Rails.logger.info ">>>> B"
       topic = Topic.where(slug: params[:id]).first if params[:id]
       raise Discourse::NotFound unless topic
       return redirect_to(topic.relative_url)

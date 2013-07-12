@@ -13,9 +13,6 @@
 nl:
   js:
     dates:
-      short_date_no_year: "D MMM"
-      short_date: "D MMM YYYY"
-      long_date: "D MMMM YYYY H:mm"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -36,25 +33,19 @@ nl:
         x_days:
           one:   1d
           other: "%{count}d"
-        about_x_months:
-          one:   1mnd
-          other: "%{count}mnd"
-        x_months:
-          one:   mnd
-          other: "%{count}mon"
         about_x_years:
-          one:   1j
+          one: 1j
           other: "%{count}j"
         over_x_years:
-          one:   "> 1j"
+          one: "> 1j"
           other: "> %{count}j"
         almost_x_years:
           one:   1j
           other: "%{count}j"
       medium:
         x_minutes:
-          one: 1 minuut
-          other: "%{count} minuten"
+          one: 1 min
+          other: "%{count} mins"
         x_hours:
           one: 1 uur
           other: "%{count} uren"
@@ -63,8 +54,8 @@ nl:
           other: "%{count} dagen"
       medium_with_ago:
         x_minutes:
-          one: 1 minuut geleden
-          other: "%{count} minuten geleden"
+          one: 1 min geleden
+          other: "%{count} mins geleden"
         x_hours:
           one: 1 uur geleden
           other: "%{count} uren geleden"
@@ -86,6 +77,7 @@ nl:
     yes_value: Ja
     of_value: van
     generic_error: 'Sorry, er is iets fout gegaan.'
+    generic_error_with_reason: "Er is iets fout gegaan: %{error}"
     log_in: Log in
     age: Leeftijd
     last_post: Laatste bericht
@@ -94,6 +86,7 @@ nl:
     show_more: meer...
     links: Links
     faq: FAQ
+    privacy_policy: "Privacy Policy"
     you: Jij
     or: of
     now: zonet
@@ -119,7 +112,7 @@ nl:
       not_logged_in: "Sorry, maar je moet ingelogd zijn om dit bericht aan je bladwijzers toe te kunnen voegen."
       created: Je hebt dit bericht aan je bladwijzers toegevoegd.
       not_bookmarked: "Je hebt dit bericht gelezen; klik om deze aan je bladwijzers toe te voegen."
-      last_read: Dit is het laatste bericht dat je gelezen hebt.
+      last_read: "Dit is het laatste bericht dat je gelezen hebt, klik om te bookmarken."
 
     new_topics_inserted: "{{count}} nieuwe topics."
     show_new_topics: Klik om te bekijken.
@@ -158,7 +151,7 @@ nl:
       "2": "Likes ontvangen"
       "3": "Bladwijzers"
       "4": "Topics"
-      "5": "Antwoorden"
+      "5": "Berichten"
       "6": "Reacties"
       "7": "Genoemd"
       "9": "Citaten"
@@ -169,7 +162,6 @@ nl:
 
     user:
       profile: Profiel
-      title: Lid
       mute: Negeer
       edit: Wijzig voorkeuren
       download_archive: download een archief van mijn berichten
@@ -180,6 +172,8 @@ nl:
       bio: Over mij
       invited_by: Uitgenodigd door
       trust_level: Trustlevel
+      notifications: Notificaties
+      dynamic_favicon: Laat notificatie voor nieuw bericht zien in favicon
       external_links_in_new_tab: Open alle externe links in een nieuw tabblad
       enable_quoting: Activeer antwoord-met-citaat voor geselecteerde tekst
 
@@ -300,6 +294,8 @@ nl:
       avatar:
         title: Profielfoto
         instructions: "Wij gebruiken <a href='https://gravatar.com' target='_blank'>Gravatar</a> voor profielfoto's die aan je e-mailadres gekoppeld zijn"
+      title:
+        title: Titel
 
       filters:
         all: Alle
@@ -328,7 +324,7 @@ nl:
 
     best_of:
       title: Best of
-      enabled_description: "Je kijkt nu naar de 'Best of' van deze topic"
+      enabled_description: "Je kijkt nu naar de beste berichten van deze topic. Klik hieronder om alle berichten te zien."
       description: "Er zijn <b>{{count}}</b> berichten in deze topic. Dat zijn een hoop! Zou je tijd willen besparen door alleen de berichten te zien met de meeste interactie en reacties?"
       enable: "Schakel naar 'Best of'-weergave"
       disable: "Schakel naar normale weergave"
@@ -354,7 +350,7 @@ nl:
       action: Ik ben mijn wachtwoord vergeten
       invite: "Vul je gebruikersnaam of e-mailadres in en we sturen je een wachtwoord-herstel-mail."
       reset: Herstel wachtwoord
-      complete: Je zou binnenkort een mail moeten ontvangen met instructies hoe je je wachtwoord kan herstellen.
+      complete: "Als er een account is met die naam of dat e-mailadres, zou je binnenkort een mail moeten ontvangen met instructies hoe je je wachtwoord kan herstellen."
 
     login:
       title: Log in
@@ -367,7 +363,7 @@ nl:
       or: Of
       authenticating: Authenticatie...
       awaiting_confirmation: "Je account is nog niet geactiveerd. Gebruik de 'Wachtwoord vergeten'-link om een nieuwe activatie-mail te ontvangen."
-      awaiting_approval: "Je account is nog niet goedgekeurd door een moderator. Je krijgt van ons een mail wanneer dat gebeurd is."
+      awaiting_approval: "Je account is nog niet goedgekeurd door iemand van de staf. Je krijgt van ons een mail wanneer dat gebeurd is."
       not_activated: "Je kan nog niet inloggen. We hebben je een activatie-mail gestuurd (naar <b>{{currentEmail}}</b>). Het kan een aantal minuten duren voor deze aan komt. Check ook je spamfolder."
       resend_activation_email: Klik hier om de activatiemail opnieuw te ontvangen.
       sent_activation_email_again: "We hebben een nieuwe activatiemail gestuurd naar <b>{{currentEmail}}</b>. Het kan een aantal minuten duren voor deze aan komt. Check ook je spamfolder."
@@ -394,7 +390,7 @@ nl:
         message: "Authenticatie met Mozilla Persona (zorg ervoor dat je popup blocker uit staat)"
 
     composer:
-      posting_not_on_topic: "Je schrijft een antwoord in deze topic '{{title}}', maar je kijkt nu naar een ander topic."
+      posting_not_on_topic: "In welke topic wil je je antwoord plaatsen?"
       saving_draft_tip: wordt opgeslagen
       saved_draft_tip: opgeslagen
       saved_local_draft_tip: lokaal opgeslagen
@@ -403,7 +399,7 @@ nl:
 
       min_length:
         need_more_for_title: "Nog {{n}} tekens nodig voor de titel"
-        need_more_for_reply: "Nog {{n}} tekens nodig voor het antwoord"
+        need_more_for_reply: "Nog {{n}} tekens nodig voor het bericht"
 
       error:
         title_missing: Je bent de titel vergeten.
@@ -517,21 +513,21 @@ nl:
       none:
         favorited: "Je hebt nog geen topics tussen je favorieten staan. Om een topic toe te voegen, klik of druk op de ster naast de topictitel."
         unread: Je hebt geen ongelezen topics.
-        new: Je hebt geen nieuwe topics om te lezen.
+        new: Je hebt geen nieuwe topics.
         read: Je hebt nog geen topics gelezen.
         posted: Je hebt nog niet in een topic gereageerd.
         latest: Er zijn geen populaire topics. Dat is jammer.
         hot: Er zijn geen polulaire topics.
         category: "Er zijn geen topics in {{category}}"
       bottom:
-        latest: Er zijn geen recente topics om te lezen.
-        hot: Er zijn geen polulaire topics meer om te lezen.
-        posted: Er zijn geen geplaatste topics meer om te lezen.
-        read: Er zijn geen gelezen topics meer om te lezen.
-        new: Er zijn geen nieuwe topics meer om te lezen.
-        unread: Er zijn geen ongelezen topics meer om te lezen.
-        favorited: Er zijn geen favoriete topics meer om te lezen.
-        category: "Er zijn geen topics meer in {{category}} om te lezen"
+        latest: Er zijn geen recente topics.
+        hot: Er zijn geen polulaire topics meer.
+        posted: Er zijn geen geplaatste topics meer.
+        read: Er zijn geen gelezen topics meer.
+        new: Er zijn geen nieuwe topics meer.
+        unread: Er zijn geen ongelezen topics meer.
+        favorited: Er zijn geen favoriete topics meer.
+        category: "Er zijn geen topics meer in {{category}}."
 
     rank_details:
       toggle: 'schakel details topic rangorde aan/uit'
@@ -557,8 +553,12 @@ nl:
       not_found:
         title: Topic niet gevonden
         description: "Sorry, we konden de opgevraagde topic niet vinden. Wellicht is het verwijderd door een moderator?"
-      unread_posts: "je hebt {{unread}} ongelezen posts in deze topic"
-      new_posts: "er zijn {{new_posts}} nieuwe posts in deze topic sinds je dit voor het laatst gelezen hebt"
+      unread_posts:
+        one: je hebt 1 ongelezen bericht in deze topic
+        other: "je hebt {{count}} ongelezen berichten in deze topic"
+      new_posts:
+        one: er is 1 nieuw bericht in deze topic sinds je dit voor het laatst gelezen hebt
+        other: "er zijn {{count}} nieuwe berichten in deze topic sinds je dit voor het laatst gelezen hebt"
 
       likes:
         one: er is één waardering in deze topic
@@ -737,6 +737,7 @@ nl:
       continue_discussion: "Voortzetting van de discussie {{postLink}}:"
       follow_quote: ga naar het geciteerde bericht
       deleted_by_author: "(bericht verwijderd door de schrijver)"
+      deleted_by: verwijderd door
       expand_collapse: "uit-/invouwen"
 
       has_replies:
@@ -749,6 +750,8 @@ nl:
         upload: "Sorry, er is iets misgegaan bij het uploaden van je bestand. Probeer het nog eens."
         upload_too_large: "Sorry, het bestand dat je wil uploaden is te groot (maximum grootte is {{max_size_kb}}kb), verklein het bestand en probeer het opnieuw."
         too_many_uploads: "Sorry, je kan maar één afbeelding tegelijk uploaden."
+        upload_not_authorized: "Sorry, je mag dat type bestand niet uploaden (toegestane extensies: {{authorized_extensions}})."
+        upload_not_allowed_for_new_user: "Sorry, nieuwe gebruikers mogen nog geen afbeeldingen uploaden."
 
       abandon: Weet je zeker dat je het schrijven van dit bericht wil afbreken?
 
@@ -905,6 +908,7 @@ nl:
     flagging:
       title: Waarom meld je dit bericht voor moderatie?
       action: Meld bericht
+      take_action: Onderneem actie
       notify_action: Meld
       cant: "Sorry, je kan dit bericht momenteel niet melden."
       custom_placeholder_notify_user: "Wat maakt dat je de schrijver persoonlijk iets wil melden? Wees specifiek, constructief en altijd aardig."
@@ -931,13 +935,14 @@ nl:
         help: "deze topic is onzichtbaar; het zal niet worden weergegeven in topiclijsten en kan alleen via een directe link bezocht worden"
 
     posts: Berichten
-    posts_long: "{{number}} berichten in deze topic"
+    posts_long: "er zijn {{number}} berichten in deze topic"
     original_post: Originele bericht
     views: Bekeken
     replies: Reacties
     views_long: "deze topic is {{number}} keer bekeken"
     activity: Activiteit
     likes: Leuk
+    likes_long: "er zijn {{count}} likes in deze topic"
     top_contributors: Deelnemers
     category_title: Categorie
     history: Geschiedenis
@@ -1001,6 +1006,8 @@ nl:
         critical_available: Er is een belangrijke update beschikbaar
         updates_available: Er zijn updates beschikbaar
         please_upgrade: Werk de software bij alsjeblieft
+        no_check_performed: Er is nog niet op updates gecontroleerd. Zorg dat clockwork en sidekiq draaien."
+        stale_data: Er is al een tijdje niet op updates gecontroleerd. Zorg dat clockwork en sidekiq draaien."
         installed_version: Geïnstalleerd
         latest_version: Recent
         problems_found: 'Er zijn een aantal problemen gevonden met je Discourse installatie:'
@@ -1010,6 +1017,7 @@ nl:
         moderators: "Moderators:"
         admins: "Admins:"
         blocked: "Geblokkeerd:"
+        banned: "Geband:"
         private_messages_short: PBs
         private_messages_title: Privé-berichten
 
@@ -1033,19 +1041,47 @@ nl:
         title: Meldingen
         old: Oud
         active: Actief
-        clear: Wis meldingen
-        clear_title: "verwijder alle meldingen over dit bericht (laat verborgen berichten weer zien)"
-        delete: Verwijder bericht
-        delete_title: "verwijder bericht (als het het eerste bericht is van een topic, verwijdert dit de topic)"
+
+        agree_hide: "Mee eens (verberg bericht + stuur PM)"
+        agree_hide_title: "Verberg dit bericht en stuur de gebruiker automatisch een privé-bericht met het dringende verzoek het bericht aan te passen"
+        defer: Stel uit
+        defer_title: "Er hoeft nu niets gedaan te worden, stel acties op deze markering uit voor de toekomst. Of nooit."
+        delete_post: Verwijder bericht
+        delete_post_title: "Verwijder bericht; de hele topic als dit het eerste bericht is"
+        disagree_unhide: "Niet mee eens (toon bericht)"
+        disagree_unhide_title: "Verwijder elke markering van dit bericht en maak het weer zichtbaar"
+        disagree: "Niet mee eens"
+        disagree_title: "Niet eens met de markering, verwijder elke markering van dit bericht"
+
         flagged_by: Gemarkeerd door
         error: Er ging iets mis
-        view_message: bekijk bericht
+        view_message: Reageer
+        no_results: Er zijn geen markeringen
+
+        summary:
+          action_type_3:
+            one: "off-topic"
+            other: "off-topic x{{count}}"
+          action_type_4:
+            one: ongepast
+            other: "ongepast x{{count}}"
+          action_type_6:
+            one: "custom"
+            other: "custom x{{count}}"
+          action_type_7:
+            one: "custom"
+            other: "custom x{{count}}"
+          action_type_8:
+            one: "spam"
+            other: "spam x{{count}}"
 
       groups:
         title: Groepen
         edit: Wijzig groepen
         selector_placeholder: voeg leden toe
         name_placeholder: "Groepsnaam, geen spaties, zelfde regels als bij een gebruikersnaam"
+        about: "Wijzig hier je deelname aan groepen en je namen"
+        can_not_edit_automatic: "Automatisch lidmaatschap van groepen wordt automatisch bepaald. Beheer rollen en trust levels van gebruikers"
 
       api:
         title: API
@@ -1074,12 +1110,24 @@ nl:
 
       email:
         title: E-mail
+        settings: Instellingen
+        logs: Log
         sent_at: Verzonden op
+        user: Gebruiker
         email_type: E-mailtype
         to_address: "Ontvangeradres"
         test_email_address: e-mailadres om te testen
         send_test: verstuur test e-mail
         sent_test: Verzonden!
+        delivery_method: Verzendmethode
+        preview_digest: "Preview Digest"
+        preview_digest_desc: "Hiermee kun je een voorbeeld van de digest email zien die vanaf het forum wordt verstuurd."
+        refresh: "Refresh"
+        format: "Formaat"
+        html: "html"
+        text: "text"
+        last_seen_user: "Laatste gebruiker:"
+        reply_key: "Reply Key"
 
       impersonate:
         title: Log in als gebruiker
@@ -1098,6 +1146,10 @@ nl:
           new: Nieuw
           active: Actief
           pending: Te beoordelen
+          admins: Admins
+          moderators: Moderatoren
+          banned: Verbannen
+          blocked: Geblokt
         approved: Goedgekeurd?
         approved_selected:
           one: accepteer lid
@@ -1114,6 +1166,7 @@ nl:
           admins: Administrators
           moderators: Moderators
           blocked: Geblokkeerde leden
+          banned: Verbannen leden
 
       user:
         ban_failed: "Er ging iets fout met het blokkeren van deze gebruiker: {{error}}"
@@ -1125,7 +1178,10 @@ nl:
         banned: Geblokkeerd?
         moderator: Moderator?
         admin: Beheerder?
+        blocked: Geblokkeerd?
         show_admin_profile: Beheerder
+        edit_title: Wijzig titel
+        save_titel: Bewaar titel
         refresh_browsers: Forceer browser refresh
         show_public_profile: Bekijk openbaar profiel
         impersonate: Log in als gebruiker
@@ -1139,7 +1195,7 @@ nl:
         permissions: Toestemmingen
         activity: Activiteit
         like_count: "Ontvangen 'Vind ik leuk'"
-        private_topics_count: Aantal privé-topics
+        private_topics_count: Privé-topics
         posts_read_count: Berichten gelezen
         post_count: Berichten gemaakt
         topics_entered: Topics binnengegaan
@@ -1147,6 +1203,8 @@ nl:
         flags_received_count: Meldigen ontvangen
         approve: Accepteer
         approved_by: Geaccepteerd door
+        approve_succes: Gebruiker geaccepteerd en e-mail verzonden met instructies voor activering.
+        approve_bulk_success: Alle geselecteerde gebruikers zijn geaccepteerd en een e-mail met instructies voor activering is verstuurd.
         time_read: Tijd gelezen
         delete: Verwijder gebruiker
         delete_forbidden: Deze gebruiker kan niet verwijderd worden omdat er berichten zijn. Verwijder eerst alle berichten van deze gebruiker.
@@ -1162,7 +1220,10 @@ nl:
         deactivate_failed: Er ging iets mis bij het deactiveren van deze gebruiker.
         unblock_failed: Er ging iets mis bij het deblokkeren van deze gebruiker.
         block_failed: Er ging iets mis bij het blokkeren van deze gebruiker.
+        deactivation_explanation: Een gedeactiveerde gebruiker moet zijn e-mailadres opnieuw bevestigen.
+        banned_explanation: Een verbannen gebruiker kan niet meer inloggen.
         block_explanation: Een geblokkeerde gebruiker kan geen topics maken of reageren op topics.
+        trust_level_change_failed: Er ging iets mis bij het wijzigen van het trust level van deze gebruiker.
 
       site_content:
         none: Selecteer een tekst om deze te bewerken
@@ -1173,3 +1234,4 @@ nl:
         show_overriden: Bekijk alleen bewerkte instellingen
         title: Instellingen
         reset: herstel naar standaardinstellingen
+        none: geen

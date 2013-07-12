@@ -107,15 +107,18 @@
   </div>
 
 {{else}}
-  {{#if message}}
+  {{#if hasError}}
     <div class='container'>
-      <div class='message'>
+      {{#if errorBodyHtml}}
+        {{{errorBodyHtml}}}
+      {{/if}}
 
-        <h2>{{message}}</h2>
+      {{#if message}}
+        <div class="message">
+          <h2>{{message}}</h2>
+        </div>
+      {{/if}}
 
-        <p>
-          {{#linkTo list.latest}}{{i18n topic.back_to_list}}{{/linkTo}}
-      </div>
     </div>
   {{else}}
     <div class='container'>

@@ -9,14 +9,16 @@
 **/
 Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
   templateName: 'topic',
-  topicBinding: 'controller.content',
+  topicBinding: 'controller.model',
   userFiltersBinding: 'controller.userFilters',
-  classNameBindings: ['controller.multiSelect:multi-select', 'topic.archetype', 'topic.category.secure:secure_category'],
+  classNameBindings: ['controller.multiSelect:multi-select',
+                      'topic.archetype',
+                      'topic.category.secure:secure_category',
+                      'topic.deleted:deleted-topic'],
   menuVisible: true,
   SHORT_POST: 1200,
 
   postStream: Em.computed.alias('controller.postStream'),
-
 
   updateBar: function() {
     var $topicProgress = $('#topic-progress');
@@ -140,17 +142,6 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     this.debounceLoadSuggested();
   }.observes('topicTrackingState.incomingCount'),
 
-  resetRead: function(e) {
-    Discourse.ScreenTrack.instance().reset();
-    this.get('controller').unsubscribe();
-
-    var topicView = this;
-    this.get('topic').resetRead().then(function() {
-      topicView.set('controller.message', I18n.t("topic.read_position_reset"));
-      topicView.set('controller.loaded', false);
-    });
-  },
-
   gotFocus: function(){
     if (Discourse.get('hasFocus')){
       this.scrolled();
@@ -168,7 +159,6 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
 
   // Called for every post seen, returns the post number
   postSeen: function($post) {
-
     var post = this.getPost($post);
 
     if (post) {

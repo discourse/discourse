@@ -48,3 +48,13 @@ Fabricator(:newuser, from: :user) do
   email 'newbie@new.com'
   trust_level TrustLevel.levels[:newuser]
 end
+
+Fabricator(:active_user, from: :user) do
+  name 'Luke Skywalker'
+  username { sequence(:username) { |i| "luke#{i}" } }
+  email { sequence(:email) { |i| "luke#{i}@skywalker.com" } }
+  password 'myawesomepassword'
+  trust_level TrustLevel.levels[:basic]
+  active true
+  bio_raw "Don't as me about my dad!"
+end

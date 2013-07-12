@@ -9,14 +9,22 @@
 Discourse.User = Discourse.Model.extend({
 
   /**
+    Is this user a member of staff?
+
+    @property staff
+    @type {Boolean}
+  **/
+  staff: Em.computed.or('admin', 'moderator'),
+
+  /**
     Large version of this user's avatar.
 
     @property avatarLarge
     @type {String}
   **/
-  avatarLarge: (function() {
+  avatarLarge: function() {
     return Discourse.Utilities.avatarUrl(this.get('username'), 'large', this.get('avatar_template'));
-  }).property('username'),
+  }.property('username'),
 
   /**
     Small version of this user's avatar.
@@ -39,11 +47,10 @@ Discourse.User = Discourse.Model.extend({
     @type {String}
   **/
   websiteName: function() {
-    return this.get('website').split("/")[2];
-  }.property('website'),
+    var website = this.get('website');
+    if (Em.isEmpty(website)) { return; }
 
-  hasWebsite: function() {
-    return this.present('website');
+    return this.get('website').split("/")[2];
   }.property('website'),
 
   statusIcon: function() {
@@ -65,9 +72,7 @@ Discourse.User = Discourse.Model.extend({
     @property path
     @type {String}
   **/
-  path: function() {
-    return Discourse.getURL("/users/") + (this.get('username_lower'));
-  }.property('username'),
+  path: Discourse.computed.url('username_lower', "/users/%@"),
 
   /**
     Path to this user's administration
@@ -75,9 +80,7 @@ Discourse.User = Discourse.Model.extend({
     @property adminPath
     @type {String}
   **/
-  adminPath: function() {
-    return Discourse.getURL("/admin/users/") + (this.get('username_lower'));
-  }.property('username'),
+  adminPath: Discourse.computed.url('username_lower', "/admin/users/%@"),
 
   /**
     This user's username in lowercase.

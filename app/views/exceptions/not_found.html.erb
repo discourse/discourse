@@ -1,31 +1,43 @@
 <% local_domain = "#{request.protocol}#{request.host_with_port}" %>
 
 <p><%= t 'page_not_found.title' %></p>
-<table>
-  <tr>
-    <td style="vertical-align:top; padding:0 20px 20px 0;">
-      <h2><%= t 'page_not_found.popular_topics' %></h2>
-      <% @top_viewed.each do |t| %>
-        <%= link_to t.title, t.relative_url %><br/>
-      <% end %>
-      <br/>
-      <a href="/latest" class="btn"><%= t 'page_not_found.see_more' %>&hellip;</a>
-    </td>
-    <td style="vertical-align:top; padding:0 0 20px 0;">
-      <h2><%= t 'page_not_found.recent_topics' %></h2>
-      <% @recent.each do |t| %>
-        <%= link_to t.title, t.relative_url %><br/>
-      <% end %>
-      <br/>
-      <a href="/latest" class="btn"><%= t 'page_not_found.see_more' %>&hellip;</a>
-    </td>
-  </tr>
-</table>
-<h2><%= t 'page_not_found.search_title' %></h2>
-<p>
-  <form action='http://google.com'>
-    <input type="text" name='q' value="site:<%= local_domain %> <%= @slug %>">
-    <!--<input type="button" class="btn" value="Search Here" onclick="alert('single page search results not implemented yet');" />-->
-    <input type="submit" class="btn btn-primary" value="<%= t 'page_not_found.search_google' %>" />
-  </form>
-</p>
+
+<div class="row">
+  <div class="span8">
+    <h2><%= t 'page_not_found.popular_topics' %></h2>
+    <% @top_viewed.each do |t| %>
+      <%= link_to t.title, t.relative_url %><br/>
+    <% end %>
+    <br/>
+    <a href="/latest" class="btn"><%= t 'page_not_found.see_more' %>&hellip;</a>
+  </div>
+  <div class="span8">
+    <h2><%= t 'page_not_found.recent_topics' %></h2>
+    <% @recent.each do |t| %>
+      <%= link_to t.title, t.relative_url %><br/>
+    <% end %>
+    <br/>
+    <a href="/latest" class="btn"><%= t 'page_not_found.see_more' %>&hellip;</a>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span10" style='padding-top: 20px'>
+    <h2><%= t 'page_not_found.search_title' %></h2>
+    <p>
+      <form action='http://google.com' id='google-search' onsubmit="return google_button_clicked()">
+        <input type="text" id='user-query' value="<%= @slug %>">
+        <input type='hidden' id='google-query' name="q">
+        <button class="btn btn-primary"><%= t 'page_not_found.search_google' %></button>
+      </form>
+    </p>
+  </div>
+</div>
+
+<script language="Javascript">
+  function google_button_clicked(e) {
+    var searchValue = document.getElementById('user-query').value;
+    document.getElementById('google-query').value = 'site:<%= local_domain %> ' + searchValue;
+    return true;
+  }
+</script>

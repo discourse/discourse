@@ -192,15 +192,15 @@ class PostsController < ApplicationController
 
     def create_params
       permitted = [
-          :raw,
-          :topic_id,
-          :title,
-          :archetype,
-          :category,
-          :target_usernames,
-          :reply_to_post_number,
-          :image_sizes,
-          :auto_close_days
+        :raw,
+        :topic_id,
+        :title,
+        :archetype,
+        :category,
+        :target_usernames,
+        :reply_to_post_number,
+        :image_sizes,
+        :auto_close_days
       ]
 
       if api_key_valid?

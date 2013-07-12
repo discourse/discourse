@@ -46,14 +46,14 @@
         {{/if}}
       </li>
 
-      {{#if view.topic.canConvertToRegular}}
+      {{#if canConvertToRegular}}
       <li>
           <button {{action convertToRegular}} class='btn btn-admin'><i class='icon-minus'></i> {{i18n topic.actions.convert_to_topic}}</button>
       </li>
       {{/if}}
 
       <li>
-        <button class='btn btn-admin' {{action resetRead target="view.parentView"}}><i class='icon-remove'></i> {{i18n topic.actions.reset_read}}</button>
+        <button class='btn btn-admin' {{action resetRead}}><i class='icon-remove'></i> {{i18n topic.actions.reset_read}}</button>
       </li>
     </ul>
   </div>

@@ -318,7 +318,6 @@ describe Guardian do
         end
 
         context 'regular users' do
-
           it "doesn't allow new posts from regular users" do
             Guardian.new(coding_horror).can_create?(Post, topic).should be_false
           end
@@ -326,7 +325,6 @@ describe Guardian do
           it 'allows editing of posts' do
             Guardian.new(coding_horror).can_edit?(post).should be_false
           end
-
         end
 
         it "allows new posts from moderators" do
@@ -337,6 +335,26 @@ describe Guardian do
           Guardian.new(admin).can_create?(Post, topic).should be_true
         end
       end
+
+      context "trashed topic" do
+        before do
+          topic.deleted_at = Time.now
+        end
+
+        it "doesn't allow new posts from regular users" do
+          Guardian.new(coding_horror).can_create?(Post, topic).should be_false
+        end
+
+        it "doesn't allow new posts from moderators users" do
+          Guardian.new(moderator).can_create?(Post, topic).should be_false
+        end
+
+        it "doesn't allow new posts from admins" do
+          Guardian.new(admin).can_create?(Post, topic).should be_false
+        end
+
+      end
+
 
     end
 

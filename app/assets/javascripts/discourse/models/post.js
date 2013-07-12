@@ -21,13 +21,7 @@ Discourse.Post = Discourse.Model.extend({
     return Discourse.Utilities.postUrl(this.get('topic.slug') || this.get('topic_slug'), this.get('topic_id'), this.get('post_number'));
   }.property('post_number', 'topic_id', 'topic.slug'),
 
-  originalPostUrl: function() {
-    return Discourse.getURL("/t/") + (this.get('topic_id')) + "/" + (this.get('reply_to_post_number'));
-  }.property('reply_to_post_number'),
-
-  usernameUrl: function() {
-    return Discourse.getURL("/users/" + this.get('username'));
-  }.property('username'),
+  usernameUrl: Discourse.computed.url('username', '/users/%@'),
 
   showUserReplyTab: function() {
     return this.get('reply_to_user') && (
@@ -36,15 +30,9 @@ Discourse.Post = Discourse.Model.extend({
     );
   }.property('reply_to_user', 'reply_to_post_number', 'post_number'),
 
-  byTopicCreator: function() {
-    return this.get('topic.details.created_by.id') === this.get('user_id');
-  }.property('topic.details.created_by.id', 'user_id'),
-
+  byTopicCreator: Discourse.computed.propertyEqual('topic.details.created_by.id', 'user_id'),
   hasHistory: Em.computed.gt('version', 1),
-
-  postElementId: function() {
-    return "post_" + (this.get('post_number'));
-  }.property('post_number'),
+  postElementId: Discourse.computed.fmt('post_number', 'post_%@'),
 
   // The class for the read icon of the post. It starts with read-icon then adds 'seen' or
   // 'last-read' if the post has been seen or is the highest post number seen so far respectively.
