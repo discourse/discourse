@@ -13,6 +13,8 @@ Discourse.ComboboxView = Discourse.View.extend({
 
   render: function(buffer) {
 
+    var nameProperty = this.get('nameProperty') || 'name';
+
     // Add none option if required
     if (this.get('none')) {
       buffer.push('<option value="">' + (I18n.t(this.get('none'))) + "</option>");
@@ -33,10 +35,10 @@ Discourse.ComboboxView = Discourse.View.extend({
         var data = "";
         if (comboboxView.dataAttributes) {
           comboboxView.dataAttributes.forEach(function(a) {
-            data += "data-" + a + "=\"" + (o.get(a)) + "\" ";
+            data += "data-" + a + "=\"" + o.get(a) + "\" ";
           });
         }
-        buffer.push("<option " + selectedText + " value=\"" + val + "\" " + data + ">" + o.name + "</option>");
+        buffer.push("<option " + selectedText + " value=\"" + val + "\" " + data + ">" + Em.get(o, nameProperty) + "</option>");
       });
     }
   },
