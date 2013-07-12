@@ -55,7 +55,7 @@ Discourse.ActivityFilterView = Discourse.View.extend({
 
     switch(action_type){
       case Discourse.UserAction.WAS_LIKED:
-        icon = "heart";
+        icon = "lemon";
         break;
       case Discourse.UserAction.BOOKMARK:
         icon = "bookmark";
