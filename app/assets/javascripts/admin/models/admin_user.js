@@ -62,23 +62,17 @@ Discourse.AdminUser = Discourse.User.extend({
     return this.get('username').toLowerCase();
   }).property('username'),
 
-  trustLevel: function() {
-    var site = Discourse.Site.instance();
-    return site.get('trust_levels').findProperty('id', this.get('trust_level'));
-  }.property('trust_level'),
-
   setOriginalTrustLevel: function() {
     this.set('originalTrustLevel', this.get('trust_level'));
   },
 
   trustLevels: function() {
-    var site = Discourse.Site.instance();
-    return site.get('trust_levels');
+    return Discourse.Site.instance().get('trustLevels').map(function (tl) {
+      return {id: tl.get('id'), name: tl.get('detailedName') };
+    });
   }.property('trust_level'),
 
-  dirty: function() {
-    return this.get('originalTrustLevel') !== parseInt(this.get('trustLevel.id'), 10);
-  }.property('originalTrustLevel', 'trustLevel.id'),
+  dirty: Discourse.computed.propertyNotEqual('originalTrustLevel', 'trustLevel.id'),
 
   saveTrustLevel: function() {
     Discourse.ajax("/admin/users/" + this.id + "/trust_level", {

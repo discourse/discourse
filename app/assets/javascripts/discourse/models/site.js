@@ -49,11 +49,19 @@ Discourse.Site.reopenClass({
         return Discourse.Category.create(c);
       });
     }
+
+    if (result.trust_levels) {
+      result.trustLevels = result.trust_levels.map(function (tl) {
+        return Discourse.TrustLevel.create(tl);
+      });
+
+      delete result.trust_levels;
+    }
+
     if (result.post_action_types) {
       result.postActionByIdLookup = Em.Object.create();
       result.post_action_types = _.map(result.post_action_types,function(p) {
-        var actionType;
-        actionType = Discourse.PostActionType.create(p);
+        var actionType = Discourse.PostActionType.create(p);
         result.postActionByIdLookup.set("action" + p.id, actionType);
         return actionType;
       });
