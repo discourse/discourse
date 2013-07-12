@@ -51,7 +51,7 @@ class IncomingLinksReport
   end
 
   def self.topic_count_per_user
-    per_user.count('incoming_links.topic_id', distinct: true)
+    per_user.distinct.count('incoming_links.topic_id')
   end
 
 
@@ -80,11 +80,11 @@ class IncomingLinksReport
   end
 
   def self.topic_count_per_domain
-    per_domain.count('topic_id', distinct: true)
+    per_domain.distinct.count('topic_id')
   end
 
   def self.user_count_per_domain
-    per_domain.count('user_id', distinct: true)
+    per_domain.distinct.count('user_id')
   end
 
 
@@ -93,7 +93,7 @@ class IncomingLinksReport
     num_clicks  = link_count_per_topic
     num_clicks = num_clicks.to_a.sort_by {|x| x[1]}.last(10).reverse # take the top 10
     report.data = []
-    topics = Topic.select('id, slug, title').where('id in (?)', num_clicks.map {|z| z[0]}).all
+    topics = Topic.select('id, slug, title').where('id in (?)', num_clicks.map {|z| z[0]})
     num_clicks.each do |topic_id, num_clicks_element|
       topic = topics.find {|t| t.id == topic_id}
       if topic

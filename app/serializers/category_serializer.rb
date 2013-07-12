@@ -3,7 +3,7 @@ class CategorySerializer < BasicCategorySerializer
   attributes :secure, :groups, :available_groups, :auto_close_days
 
   def groups
-    @groups ||= object.groups.order("name").all.map(&:name)
+    @groups ||= object.groups.order("name").map(&:name)
   end
 
   def available_groups

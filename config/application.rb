@@ -1,16 +1,12 @@
 require File.expand_path('../boot', __FILE__)
 require 'rails/all'
-require 'redis-store' # HACK
 
 # Plugin related stuff
 require_relative '../lib/discourse_plugin_registry'
 
-if defined?(Bundler)
-  # If you precompile assets before deploying to production, use this line
-  Bundler.require(*Rails.groups(assets: %w(development test profile)))
-  # If you want your assets lazily compiled in production, use this line
-  # Bundler.require(:default, :assets, Rails.env)
-end
+# Require the gems listed in Gemfile, including any gems
+# you've limited to :test, :development, or :production.
+Bundler.require(:default, Rails.env)
 
 module Discourse
   class Application < Rails::Application
@@ -78,12 +74,6 @@ module Discourse
     # Enable the asset pipeline
     config.assets.enabled = true
 
-    # Version of your assets, change this if you want to expire all your assets
-    config.assets.version = '1.2.4'
-
-    # We need to be able to spin threads
-    config.active_record.thread_safe!
-
     # see: http://stackoverflow.com/questions/11894180/how-does-one-correctly-add-custom-sql-dml-in-migrations/11894420#11894420
     config.active_record.schema_format = :sql
 
@@ -93,7 +83,6 @@ module Discourse
     # dumping rack lock cause the message bus does not work with it (throw :async, it catches Exception)
     # see: https://github.com/sporkrb/spork/issues/66
     # rake assets:precompile also fails
-    config.threadsafe! unless $PROGRAM_NAME =~ /spork|rake/
 
     # route all exceptions via our router
     config.exceptions_app = self.routes
@@ -113,10 +102,6 @@ module Discourse
     config.ember.variant = :development
     config.ember.ember_location = "#{Rails.root}/app/assets/javascripts/external_production/ember.js"
     config.ember.handlebars_location = "#{Rails.root}/app/assets/javascripts/external/handlebars-1.0.rc.4.js"
-
-    # Since we are using strong_parameters, we can disable and remove
-    # attr_accessible.
-    config.active_record.whitelist_attributes = false
 
     # So open id logs somewhere sane
     config.after_initialize do

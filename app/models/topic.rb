@@ -51,8 +51,6 @@ class Topic < ActiveRecord::Base
     self.title = TextCleaner.clean_title(TextSentinel.title_sentinel(title).text) if errors[:title].empty?
   end
 
-  serialize :meta_data, ActiveRecord::Coders::Hstore
-
   belongs_to :category
   has_many :posts
   has_many :topic_allowed_users
@@ -250,7 +248,6 @@ class Topic < ActiveRecord::Base
          .listable_topics
          .limit(SiteSetting.max_similar_results)
          .order('similarity desc')
-         .all
   end
 
   def update_status(status, enabled, user)

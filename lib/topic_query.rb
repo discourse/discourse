@@ -21,7 +21,7 @@ class TopicQuery
     # If you've clearned the pin, use bumped_at, otherwise put it at the top
     def order_with_pinned_sql
       "CASE
-        WHEN (COALESCE(topics.pinned_at, '#{lowest_date}') > COALESCE(tu.cleared_pinned_at, '#{lowest_date}'))
+        WHEN (COALESCE(topics.pinned_at, '#{lowest_date}') > COALESCE(topic_users.cleared_pinned_at, '#{lowest_date}'))
           THEN '#{highest_date}'
         ELSE topics.bumped_at
        END DESC"
@@ -39,7 +39,7 @@ class TopicQuery
 
       # When logged in take into accounts what pins you've closed
       "CASE
-        WHEN (COALESCE(topics.pinned_at, '#{lowest_date}') > COALESCE(tu.cleared_pinned_at, '#{lowest_date}'))
+        WHEN (COALESCE(topics.pinned_at, '#{lowest_date}') > COALESCE(topic_users.cleared_pinned_at, '#{lowest_date}'))
           THEN 100
         ELSE hot_topics.score + (COALESCE(categories.hotness, 5.0) / 11.0)
        END DESC"
@@ -48,7 +48,7 @@ class TopicQuery
     # If you've clearned the pin, use bumped_at, otherwise put it at the top
     def order_nocategory_with_pinned_sql
       "CASE
-        WHEN topics.category_id IS NULL and (COALESCE(topics.pinned_at, '#{lowest_date}') > COALESCE(tu.cleared_pinned_at, '#{lowest_date}'))
+        WHEN topics.category_id IS NULL and (COALESCE(topics.pinned_at, '#{lowest_date}') > COALESCE(topic_users.cleared_pinned_at, '#{lowest_date}'))
           THEN '#{highest_date}'
         ELSE topics.bumped_at
        END DESC"
@@ -95,7 +95,6 @@ class TopicQuery
     results = unread_results(per_page: SiteSetting.suggested_topics)
                 .where('topics.id NOT IN (?)', exclude_topic_ids)
                 .where(closed: false, archived: false, visible: true)
-                .all
 
     results_left = SiteSetting.suggested_topics - results.size
 
@@ -107,7 +106,6 @@ class TopicQuery
       results << new_results(per_page: results_left)
                   .where('topics.id NOT IN (?)', exclude_topic_ids)
                   .where(closed: false, archived: false, visible: true)
-                  .all
 
       results.flatten!
 
@@ -120,7 +118,6 @@ class TopicQuery
 
         results << random_suggested_results_for(topic, results_left, exclude_topic_ids)
                     .where(closed: false, archived: false, visible: true)
-                    .all
 
         results.flatten!
       end
@@ -136,12 +133,12 @@ class TopicQuery
 
   # The favorited topics
   def list_favorited
-    create_list(:favorited) {|topics| topics.where('tu.starred') }
+    create_list(:favorited) {|topics| topics.includes(:topic_users).where('topic_users.starred').references(:topic_users) }
   end
 
   def list_read
     create_list(:read, unordered: true) do |topics|
-      topics.order('COALESCE(tu.last_visited_at, topics.bumped_at) DESC')
+      topics.includes(:topic_users).order('COALESCE(topic_users.last_visited_at, topics.bumped_at) DESC').references(:topic_users)
     end
   end
 
@@ -160,7 +157,7 @@ class TopicQuery
   end
 
   def list_posted
-    create_list(:posted) {|l| l.where('tu.user_id IS NOT NULL') }
+    create_list(:posted) {|l| l.includes(:topic_users).where('topic_users.user_id IS NOT NULL').references(:topic_users) }
   end
 
   def list_uncategorized
@@ -168,7 +165,11 @@ class TopicQuery
       list = list.where(category_id: nil)
 
       if @user_id.present?
-        list.order(TopicQuery.order_with_pinned_sql)
+<<<<<<< HEAD
+        list.includes(:topic_users).order(TopicQuery.order_with_pinned_sql).references(:topic_users)
+=======
+        list.includes(:topic_users).order(TopicQuery.order_with_pinned_sql)
+>>>>>>> Adjust query generating to be compatible with Rails 4
       else
         list.order(TopicQuery.order_nocategory_basic_bumped)
       end
@@ -179,7 +180,11 @@ class TopicQuery
     create_list(:category, unordered: true) do |list|
       list = list.where(category_id: category.id)
       if @user_id.present?
-        list.order(TopicQuery.order_with_pinned_sql)
+<<<<<<< HEAD
+        list.includes(:topic_users).order(TopicQuery.order_with_pinned_sql).references(:topic_users)
+=======
+        list.includes(:topic_users).order(TopicQuery.order_with_pinned_sql)
+>>>>>>> Adjust query generating to be compatible with Rails 4
       else
         list.order(TopicQuery.order_basic_bumped)
       end
@@ -200,8 +205,8 @@ class TopicQuery
 
   def self.new_filter(list,treat_as_new_topic_start_date)
     list.where("topics.created_at >= :created_at", created_at: treat_as_new_topic_start_date)
-        .where("tu.last_read_post_number IS NULL")
-        .where("COALESCE(tu.notification_level, :tracking) >= :tracking", tracking: TopicUser.notification_levels[:tracking])
+        .includes(:topic_users).where("topic_users.last_read_post_number IS NULL").references(:topic_users).references(:topic_users)
+        .where("COALESCE(topic_users.notification_level, :tracking) >= :tracking", tracking: TopicUser.notification_levels[:tracking]).references(:topic_users)
   end
 
   def new_results(list_opts={})
@@ -209,8 +214,8 @@ class TopicQuery
   end
 
   def self.unread_filter(list)
-    list.where("tu.last_read_post_number < topics.highest_post_number")
-        .where("COALESCE(tu.notification_level, :regular) >= :tracking", regular: TopicUser.notification_levels[:regular], tracking: TopicUser.notification_levels[:tracking])
+    list.includes(:topic_users).where("topic_users.last_read_post_number < topics.highest_post_number").references(:topic_users)
+        .where("COALESCE(topic_users.notification_level, :regular) >= :tracking", regular: TopicUser.notification_levels[:regular], tracking: TopicUser.notification_levels[:tracking]).references(:topic_users)
   end
 
   def unread_results(list_opts={})
@@ -240,13 +245,13 @@ class TopicQuery
       result = Topic
 
       if @user_id
-        result = result.joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{@user_id})")
+        result = result.includes(:topic_users).where("topic_users.user_id = #{@user_id}").references(:topic_users)
       end
 
       unless query_opts[:unordered]
         # If we're logged in, we have to pay attention to our pinned settings
         if @user
-          result = result.order(TopicQuery.order_nocategory_with_pinned_sql)
+          result = result.order(TopicQuery.order_nocategory_with_pinned_sql).references(:topic_users)
         else
           result = result.order(TopicQuery.order_nocategory_basic_bumped)
         end
@@ -268,9 +273,9 @@ class TopicQuery
       unless @user && @user.moderator?
         category_ids = @user.secure_category_ids if @user
         if category_ids.present?
-          result = result.where('categories.secure IS NULL OR categories.secure = ? OR categories.id IN (?)', false, category_ids)
+          result = result.includes(:category).where('categories.secure IS NULL OR categories.secure = ? OR categories.id IN (?)', false, category_ids).references(:category)
         else
-          result = result.where('categories.secure IS NULL OR categories.secure = ?', false)
+          result = result.includes(:category).where('categories.secure IS NULL OR categories.secure = ?', false).references(:category)
         end
       end
 
