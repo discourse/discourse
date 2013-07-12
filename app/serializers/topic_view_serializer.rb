@@ -31,7 +31,8 @@ class TopicViewSerializer < ApplicationSerializer
              :pinned,
              :details,
              :highest_post_number,
-             :last_read_post_number
+             :last_read_post_number,
+             :deleted_by
 
   # Define a delegator for each attribute of the topic we want
   attributes *topic_attributes
@@ -106,6 +107,10 @@ class TopicViewSerializer < ApplicationSerializer
 
   def draft_sequence
     object.draft_sequence
+  end
+
+  def deleted_by
+    BasicUserSerializer.new(object.topic.deleted_by, root: false).as_json
   end
 
   # Topic user stuff

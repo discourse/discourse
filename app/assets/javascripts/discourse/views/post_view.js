@@ -12,7 +12,7 @@ Discourse.PostView = Discourse.View.extend({
   classNameBindings: ['postTypeClass',
                       'selected',
                       'post.hidden:hidden',
-                      'deleted',
+                      'post.deleted',
                       'parentPost:replies-above'],
   postBinding: 'content',
 
@@ -39,8 +39,6 @@ Discourse.PostView = Discourse.View.extend({
     }
   },
 
-  deletedViaTopic: Em.computed.and('post.firstPost', 'post.topic.deleted_at'),
-  deleted: Em.computed.or('post.deleted_at', 'deletedViaTopic'),
 
   selected: function() {
     var selectedPosts = this.get('controller.selectedPosts');

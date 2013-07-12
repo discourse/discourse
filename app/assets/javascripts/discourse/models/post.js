@@ -17,6 +17,20 @@ Discourse.Post = Discourse.Model.extend({
   new_user: Em.computed.equal('trust_level', 0),
   firstPost: Em.computed.equal('post_number', 1),
 
+  // Posts can show up as deleted if the topic is deleted
+  deletedViaTopic: Em.computed.and('firstPost', 'topic.deleted_at'),
+  deleted: Em.computed.or('deleted_at', 'deletedViaTopic'),
+
+  postDeletedBy: function() {
+    if (this.get('firstPost')) { return this.get('topic.deleted_by') }
+    return this.get('deleted_by');
+  }.property('firstPost', 'deleted_by', 'topic.deleted_by'),
+
+  postDeletedAt: function() {
+    if (this.get('firstPost')) { return this.get('topic.deleted_at') }
+    return this.get('deleted_at');
+  }.property('firstPost', 'deleted_at', 'topic.deleted_at'),
+
   url: function() {
     return Discourse.Utilities.postUrl(this.get('topic.slug') || this.get('topic_slug'), this.get('topic_id'), this.get('post_number'));
   }.property('post_number', 'topic_id', 'topic.slug'),
@@ -172,6 +186,7 @@ Discourse.Post = Discourse.Model.extend({
       });
     }
   },
+
 
   /**
     Recover a deleted post
