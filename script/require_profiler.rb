@@ -1,4 +1,7 @@
 # Some based on : https://gist.github.com/277289
+#
+# This is a rudimentary script that allows us to
+#  quickly determine if any gems are slowing down startup
 
 require 'benchmark'
 require 'fileutils'
@@ -103,11 +106,11 @@ end
 
 
 
-RequireProfiler.gc_analyze do
-  # require 'mime-types'
-  require 'highline'
-end
-exit
+# RequireProfiler.gc_analyze do
+#   # require 'mime-types'
+#   require 'highline'
+# end
+# exit
 
 RequireProfiler.profile do
   Bundler.definition.dependencies.each do |dep|
