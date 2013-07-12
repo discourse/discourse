@@ -252,10 +252,13 @@ Discourse.User = Discourse.Model.extend({
     return PreloadStore.getAndRemove("user_" + user.get('username'), function() {
       return Discourse.ajax("/users/" + user.get('username') + '.json');
     }).then(function (json) {
-      json.user.stats = Discourse.User.groupStats(_.map(json.user.stats,function(s) {
-        if (s.count) s.count = parseInt(s.count, 10);
-        return Discourse.UserActionStat.create(s);
-      }));
+
+      if (!Em.isEmpty(json.user.stats)) {
+        json.user.stats = Discourse.User.groupStats(_.map(json.user.stats,function(s) {
+          if (s.count) s.count = parseInt(s.count, 10);
+          return Discourse.UserActionStat.create(s);
+        }));
+      }
 
       if (json.user.invited_by) {
         json.user.invited_by = Discourse.User.create(json.user.invited_by);
