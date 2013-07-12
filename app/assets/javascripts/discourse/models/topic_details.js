@@ -11,7 +11,6 @@ Discourse.TopicDetails = Discourse.Model.extend({
   loaded: false,
 
   updateFromJson: function(details) {
-
     if (details.allowed_users) {
       details.allowed_users = details.allowed_users.map(function (u) {
         return Discourse.User.create(u);
@@ -26,7 +25,6 @@ Discourse.TopicDetails = Discourse.Model.extend({
 
     this.setProperties(details);
     this.set('loaded', true);
-
   },
 
   fewParticipants: function() {

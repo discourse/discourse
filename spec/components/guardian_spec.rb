@@ -410,6 +410,25 @@ describe Guardian do
     end
   end
 
+  describe "can_recover_topic?" do
+
+    it "returns false for a nil user" do
+      Guardian.new(nil).can_recover_topic?(topic).should be_false
+    end
+
+    it "returns false for a nil object" do
+      Guardian.new(user).can_recover_topic?(nil).should be_false
+    end
+
+    it "returns false for a regular user" do
+      Guardian.new(user).can_recover_topic?(topic).should be_false
+    end
+
+    it "returns true for a moderator" do
+      Guardian.new(moderator).can_recover_topic?(topic).should be_true
+    end
+  end
+
   describe "can_recover_post?" do
 
     it "returns false for a nil user" do
@@ -619,6 +638,7 @@ describe Guardian do
     end
 
   end
+
 
 
 

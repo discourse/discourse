@@ -173,21 +173,34 @@ Discourse.Post = Discourse.Model.extend({
     }
   },
 
+  /**
+    Recover a deleted post
+
+    @method recover
+  **/
   recover: function() {
     this.setProperties({
       deleted_at: null,
-      deleted_by: null
+      deleted_by: null,
+      can_delete: true
     });
 
     return Discourse.ajax("/posts/" + (this.get('id')) + "/recover", { type: 'PUT', cache: false });
   },
 
+  /**
+    Deletes a post
+
+    @method destroy
+    @param {Discourse.User} deleted_by The user deleting the post
+  **/
   destroy: function(deleted_by) {
     // Moderators can delete posts. Regular users can only trigger a deleted at message.
     if (deleted_by.get('staff')) {
       this.setProperties({
         deleted_at: new Date(),
-        deleted_by: deleted_by
+        deleted_by: deleted_by,
+        can_delete: false
       });
     } else {
       this.setProperties({

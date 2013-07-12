@@ -39,8 +39,8 @@ class PostSerializer < BasicPostSerializer
              :draft_sequence,
              :hidden,
              :hidden_reason_id,
-             :deleted_at,
              :trust_level,
+             :deleted_at,
              :deleted_by
 
 

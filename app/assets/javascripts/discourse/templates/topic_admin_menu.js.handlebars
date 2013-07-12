@@ -13,6 +13,12 @@
         </li>
       {{/if}}
 
+      {{#if details.can_recover}}
+        <li>
+          <button {{action recoverTopic}} class='btn btn-admin'><i class='icon-undo'></i> {{i18n topic.actions.recover}}</button>
+        </li>
+      {{/if}}
+
       <li>
         {{#if closed}}
           <button {{action toggleClosed}} class='btn btn-admin'><i class='icon-unlock'></i> {{i18n topic.actions.open}}</button>

@@ -630,6 +630,7 @@ en:
           description: "you will not be notified of anything about this topic, and it will not appear on your unread tab."
 
       actions:
+        recover: "Un-Delete Topic"
         delete: "Delete Topic"
         open: "Open Topic"
         close: "Close Topic"

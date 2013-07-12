@@ -198,9 +198,22 @@ Discourse.Topic = Discourse.Model.extend({
   destroy: function(deleted_by) {
     this.setProperties({
       deleted_at: new Date(),
-      deleted_by: deleted_by
+      deleted_by: deleted_by,
+      'details.can_delete': false,
+      'details.can_recover': true
     });
     return Discourse.ajax("/t/" + this.get('id'), { type: 'DELETE' });
+  },
+
+  // Recover this topic if deleted
+  recover: function(deleted_by) {
+    this.setProperties({
+      deleted_at: null,
+      deleted_by: null,
+      'details.can_delete': true,
+      'details.can_recover': false
+    });
+    return Discourse.ajax("/t/" + this.get('id') + "/recover", { type: 'PUT' });
   },
 
   // Update our attributes from a JSON result

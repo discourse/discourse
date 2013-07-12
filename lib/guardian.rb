@@ -282,6 +282,10 @@ class Guardian
     is_staff?
   end
 
+  def can_recover_topic?(topic)
+    is_staff?
+  end
+
   def can_delete_category?(category)
     is_staff? && category.topic_count == 0
   end

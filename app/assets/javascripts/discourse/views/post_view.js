@@ -12,7 +12,7 @@ Discourse.PostView = Discourse.View.extend({
   classNameBindings: ['postTypeClass',
                       'selected',
                       'post.hidden:hidden',
-                      'post.deleted_at:deleted',
+                      'deleted',
                       'parentPost:replies-above'],
   postBinding: 'content',
 
@@ -39,6 +39,9 @@ Discourse.PostView = Discourse.View.extend({
     }
   },
 
+  deletedViaTopic: Em.computed.and('post.firstPost', 'post.topic.deleted_at'),
+  deleted: Em.computed.or('post.deleted_at', 'deletedViaTopic'),
+
   selected: function() {
     var selectedPosts = this.get('controller.selectedPosts');
     if (!selectedPosts) return false;
@@ -49,9 +52,7 @@ Discourse.PostView = Discourse.View.extend({
     return this.get('selected') ? I18n.t('topic.multi_select.selected', { count: this.get('controller.selectedPostsCount') }) : I18n.t('topic.multi_select.select');
   }.property('selected', 'controller.selectedPostsCount'),
 
-  repliesHidden: function() {
-    return !this.get('repliesShown');
-  }.property('repliesShown'),
+  repliesHidden: Em.computed.not('repliesShown'),
 
   // Click on the replies button
   showReplies: function() {
