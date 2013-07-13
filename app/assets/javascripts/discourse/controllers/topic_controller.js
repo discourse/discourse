@@ -247,6 +247,10 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     return Discourse.User.current() && !this.get('isPrivateMessage');
   }.property('isPrivateMessage'),
 
+  recoverTopic: function() {
+    this.get('content').recover();
+  },
+
   deleteTopic: function() {
     this.unsubscribe();
     this.get('content').destroy(Discourse.User.current());
@@ -380,7 +384,6 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
   },
 
   recoverPost: function(post) {
-    post.set('deleted_at', null);
     post.recover();
   },
 

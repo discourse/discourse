@@ -9,6 +9,7 @@ class TopicsController < ApplicationController
                                           :update,
                                           :star,
                                           :destroy,
+                                          :recover,
                                           :status,
                                           :invite,
                                           :mute,
@@ -172,6 +173,13 @@ class TopicsController < ApplicationController
     topic = Topic.where(id: params[:id]).first
     guardian.ensure_can_delete!(topic)
     topic.trash!(current_user)
+    render nothing: true
+  end
+
+  def recover
+    topic = Topic.where(id: params[:topic_id]).with_deleted.first
+    guardian.ensure_can_recover_topic!(topic)
+    topic.recover!
     render nothing: true
   end
 

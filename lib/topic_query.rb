@@ -3,6 +3,7 @@
 # found.
 #
 require_dependency 'topic_list'
+require_dependency 'suggested_topics_builder'
 
 class TopicQuery
 
@@ -84,49 +85,16 @@ class TopicQuery
 
   # Return a list of suggested topics for a topic
   def list_suggested_for(topic)
+    builder = SuggestedTopicsBuilder.new(topic)
 
-    exclude_topic_ids = [topic.id]
-
-    # If not logged in, return some random results, preferably in this category
-    if @user.blank?
-      return TopicList.new(:suggested, @user, random_suggested_results_for(topic, SiteSetting.suggested_topics, exclude_topic_ids))
+    # When logged in we start with different results
+    if @user.present?
+      builder.add_results(unread_results(per_page: builder.results_left))
+      builder.add_results(new_results(per_page: builder.results_left)) unless builder.full?
     end
+    builder.add_results(random_suggested(topic, builder.results_left)) unless builder.full?
 
-    results = unread_results(per_page: SiteSetting.suggested_topics)
-                .where('topics.id NOT IN (?)', exclude_topic_ids)
-                .where(closed: false, archived: false, visible: true)
-                .all
-
-    results_left = SiteSetting.suggested_topics - results.size
-
-    # If we don't have enough results, go to new posts
-    if results_left > 0
-      exclude_topic_ids << results.map {|t| t.id}
-      exclude_topic_ids.flatten!
-
-      results << new_results(per_page: results_left)
-                  .where('topics.id NOT IN (?)', exclude_topic_ids)
-                  .where(closed: false, archived: false, visible: true)
-                  .all
-
-      results.flatten!
-
-      results_left = SiteSetting.suggested_topics - results.size
-
-      # If we STILL don't have enough results, find random topics
-      if results_left > 0
-        exclude_topic_ids << results.map {|t| t.id}
-        exclude_topic_ids.flatten!
-
-        results << random_suggested_results_for(topic, results_left, exclude_topic_ids)
-                    .where(closed: false, archived: false, visible: true)
-                    .all
-
-        results.flatten!
-      end
-    end
-
-    TopicList.new(:suggested, @user, results)
+    TopicList.new(:suggested, @user, builder.results)
   end
 
   # The latest view of topics
@@ -214,7 +182,10 @@ class TopicQuery
   end
 
   def unread_results(list_opts={})
+    list_opts[:unordered] ||= true
     TopicQuery.unread_filter(default_list(list_opts))
+      .order('CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END')
+      .order(TopicQuery.order_nocategory_with_pinned_sql)
   end
 
   protected
@@ -277,17 +248,15 @@ class TopicQuery
       result
     end
 
+    def random_suggested(topic, count)
+      result = default_list(unordered: true, per_page: count)
 
-    def random_suggested_results_for(topic, count, exclude_topic_ids)
-      results = default_list(unordered: true, per_page: count)
-                 .where('topics.id NOT IN (?)', exclude_topic_ids)
-                 .where(closed: false, archived: false, visible: true)
-
+      # If we are in a category, prefer it for the random results
       if topic.category_id.present?
-        return results.order("CASE WHEN topics.category_id = #{topic.category_id.to_i} THEN 0 ELSE 1 END, RANDOM()")
+        result = result.order("CASE WHEN topics.category_id = #{topic.category_id.to_i} THEN 0 ELSE 1 END, RANDOM()")
       end
 
-      results.order("RANDOM()")
+      result.order("RANDOM()")
     end
 
 end

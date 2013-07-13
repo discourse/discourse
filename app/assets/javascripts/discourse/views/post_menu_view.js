@@ -19,7 +19,8 @@ Discourse.PostMenuView = Discourse.View.extend({
     'post.showRepliesBelow',
     'post.can_delete',
     'post.read',
-    'post.topic.last_read_post_number'),
+    'post.topic.last_read_post_number',
+    'post.topic.deleted_at'),
 
   render: function(buffer) {
     var post = this.get('post');
@@ -65,28 +66,52 @@ Discourse.PostMenuView = Discourse.View.extend({
 
   // Delete button
   renderDelete: function(post, buffer) {
-    if (post.get('post_number') === 1 && this.get('controller.model.details.can_delete')) {
-      buffer.push("<button title=\"" +
-                  (I18n.t("topic.actions.delete")) +
-                  "\" data-action=\"deleteTopic\" class='delete'><i class=\"icon-trash\"></i></button>");
-      return;
-    }
-    // Show the correct button (undo or delete)
-    if (post.get('deleted_at')) {
-      if (post.get('can_recover')) {
-        buffer.push("<button title=\"" +
-                    (I18n.t("post.controls.undelete")) +
-                    "\" data-action=\"recover\" class=\"delete\"><i class=\"icon-undo\"></i></button>");
+    var label, action, icon;
+
+
+    if (post.get('post_number') === 1) {
+
+      // If if it's the first post, the delete/undo actions are related to the topic
+      var topic = post.get('topic');
+      if (topic.get('deleted_at')) {
+        if (!topic.get('details.can_recover')) { return; }
+        label = "topic.actions.recover";
+        action = "recoverTopic";
+        icon = "undo";
+      } else {
+        if (!topic.get('details.can_delete')) { return; }
+        label = "topic.actions.delete";
+        action = "deleteTopic";
+        icon = "trash";
       }
-    } else if (post.get('can_delete')) {
-      buffer.push("<button title=\"" +
-                 (I18n.t("post.controls.delete")) +
-                 "\" data-action=\"delete\" class=\"delete\"><i class=\"icon-trash\"></i></button>");
+
+    } else {
+
+      // The delete actions target the post iteself
+      if (post.get('deleted_at')) {
+        if (!post.get('can_recover')) { return; }
+        label = "post.controls.undelete";
+        action = "recover";
+        icon = "undo";
+      } else {
+        if (!post.get('can_delete')) { return; }
+        label = "post.controls.delete";
+        action = "delete";
+        icon = "trash";
+      }
     }
+
+    buffer.push("<button title=\"" +
+                I18n.t(label) +
+                "\" data-action=\"" + action + "\" class=\"delete\"><i class=\"icon-" + icon + "\"></i></button>");
   },
 
   clickDeleteTopic: function() {
     this.get('controller').deleteTopic();
+  },
+
+  clickRecoverTopic: function() {
+    this.get('controller').recoverTopic();
   },
 
   clickRecover: function() {

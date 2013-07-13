@@ -31,7 +31,8 @@ class TopicViewSerializer < ApplicationSerializer
              :pinned,
              :details,
              :highest_post_number,
-             :last_read_post_number
+             :last_read_post_number,
+             :deleted_by
 
   # Define a delegator for each attribute of the topic we want
   attributes *topic_attributes
@@ -88,6 +89,7 @@ class TopicViewSerializer < ApplicationSerializer
     result[:can_move_posts] = true if scope.can_move_posts?(object.topic)
     result[:can_edit] = true if scope.can_edit?(object.topic)
     result[:can_delete] = true if scope.can_delete?(object.topic)
+    result[:can_recover] = true if scope.can_recover_topic?(object.topic)
     result[:can_remove_allowed_users] = true if scope.can_remove_allowed_users?(object.topic)
     result[:can_invite_to] = true if scope.can_invite_to?(object.topic)
     result[:can_create_post] = true if scope.can_create?(Post, object.topic)
@@ -105,6 +107,10 @@ class TopicViewSerializer < ApplicationSerializer
 
   def draft_sequence
     object.draft_sequence
+  end
+
+  def deleted_by
+    BasicUserSerializer.new(object.topic.deleted_by, root: false).as_json
   end
 
   # Topic user stuff

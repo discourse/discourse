@@ -56,9 +56,9 @@
       {{view Discourse.RepliesView contentBinding="replies" postViewBinding="view"}}
       {{view Discourse.ActionsHistoryView contentBinding="actionsHistory"}}
 
-      {{#if deleted_by}}
+      {{#if deleted}}
         <div class='post-actions'>
-          {{i18n post.deleted_by}} {{avatar deleted_by imageSize="tiny"}} {{unboundAge deleted_at}}
+          {{i18n post.deleted_by}} {{avatar postDeletedBy imageSize="tiny"}} {{unboundAge postDeletedAt}}
         </div>
       {{/if}}
 

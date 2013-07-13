@@ -393,6 +393,37 @@ describe TopicsController do
     end
   end
 
+  describe 'recover' do
+    it "won't allow us to recover a topic when we're not logged in" do
+      lambda { xhr :put, :recover, topic_id: 1 }.should raise_error(Discourse::NotLoggedIn)
+    end
+
+    describe 'when logged in' do
+      let(:topic) { Fabricate(:topic, user: log_in, deleted_at: Time.now, deleted_by: log_in) }
+
+      describe 'without access' do
+        it "raises an exception when the user doesn't have permission to delete the topic" do
+          Guardian.any_instance.expects(:can_recover_topic?).with(topic).returns(false)
+          xhr :put, :recover, topic_id: topic.id
+          response.should be_forbidden
+        end
+      end
+
+      context 'with permission' do
+        before do
+          Guardian.any_instance.expects(:can_recover_topic?).with(topic).returns(true)
+        end
+
+        it 'succeeds' do
+          Topic.any_instance.expects(:recover!)
+          xhr :put, :recover, topic_id: topic.id
+          response.should be_success
+        end
+      end
+    end
+
+  end
+
   describe 'delete' do
     it "won't allow us to delete a topic when we're not logged in" do
       lambda { xhr :delete, :destroy, id: 1 }.should raise_error(Discourse::NotLoggedIn)
