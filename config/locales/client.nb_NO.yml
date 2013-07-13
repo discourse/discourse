@@ -257,14 +257,14 @@ nb_NO:
     week: 'uke'
     week_desc: 'emner postet i de siste 7 dager'
 
-    first_post: First post
-    mute: Mute
-    unmute: Unmute
-    last_post: Last post
+    first_post: "Første innlegg"
+    mute: "Demp"
+    unmute: "Udemp"
+    last_post: "Siste Innlegg"
 
     best_of:
       title: "De Beste"
-      enabled_description: You are currently viewing the "De Beste" view of this topic.
+      enabled_description: "Du er for øyeblikket i "De Beste" modus i dette emnet."
       description: "Det er <b>{{count}}</b> innlegg i dette emnet. Det er mange! Will du spare tid ved å vise bare de beste innleggene?"
       enable: 'Bytt til "De Beste" modus'
       disable: 'Avslutt "De Beste"'
@@ -510,13 +510,13 @@ nb_NO:
       read_more_in_category_MF: "Det {UNREAD, plural, one {er <a href='/unread'>1 ulest</a>} other {er <a href='/unread'># uleste</a>}} og {NEW, plural, one {<a href='/new'>1 nytt</a> emne} other {<a href='/new'># nye</a> emner}} gjenstående, eller bla gjennom andre emner i {catLink}"
       read_more_MF: "Det {UNREAD, plural, one {er <a href='/unread'>1 ulest</a>} other {er <a href='/unread'># uleste</a>}} og {NEW, plural, one {<a href='/new'>1 nytt</a> emne} other {<a href='/new'># nye</a> emner}} gjenstående, eller {latestLink}"
 
-      browse_all_categories: Browse all categories
+      browse_all_categories: "Se alle kategorier"
 
-      view_latest_topics: view latest topics
-      suggest_create_topic: Why not create a topic?
+      view_latest_topics: "se siste emner"
+      suggest_create_topic: "Hvorfor ikke lage ett emne?"
       read_position_reset: "Din leseposisjon har blitt tilbakestilt."
-      jump_reply_up: jump to earlier reply
-      jump_reply_down: jump to later reply
+      jump_reply_up: "hopp til tidligere svar"
+      jump_reply_down: "hopp til siste svar"
       deleted: "Emnet har blitt slettet"
 
       auto_close_notice: "Dette emnet vil automatisk lukkes %{timeLeft}."
@@ -690,140 +690,140 @@ nb_NO:
         more: "Mer"
 
       actions:
-        flag: 'Flag'
+        flag: 'Markering'
         clear_flags:
-          one: "Clear flag"
-          other: "Clear flags"
+          one: "Fjern markering"
+          other: "Fjern markeringer"
         it_too:
-          off_topic: "Flag it too"
-          spam: "Flag it too"
-          inappropriate: "Flag it too"
-          custom_flag: "Flag it too"
-          bookmark: "Bookmark it too"
-          like: "Like it too"
-          vote: "Vote for it too"
+          off_topic: "Marker det også"
+          spam: "Marker det også"
+          inappropriate: "Marker det også"
+          custom_flag: "Marker det også"
+          bookmark: "Bokmerk det også"
+          like: "Lik det også"
+          vote: "Stem for det også"
         undo:
-          off_topic: "Undo flag"
-          spam: "Undo flag"
-          inappropriate: "Undo flag"
-          bookmark: "Undo bookmark"
-          like: "Undo like"
-          vote: "Undo vote"
+          off_topic: "Angre markering"
+          spam: "Angre markering"
+          inappropriate: "Angre markering"
+          bookmark: "Angre bokmerke"
+          like: "Angre like"
+          vote: "Angre stemme"
         people:
-          off_topic: "{{icons}} marked this as off-topic"
-          spam: "{{icons}} marked this as spam"
-          inappropriate: "{{icons}} marked this as inappropriate"
-          notify_moderators: "{{icons}} notified moderators"
-          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>notified moderators</a>"
-          notify_user: "{{icons}} sent a private message"
-          notify_user_with_url: "{{icons}} sent a <a href='{{postUrl}}'>private message</a>"
-          bookmark: "{{icons}} bookmarked this"
-          like: "{{icons}} liked this"
-          vote: "{{icons}} voted for this"
+          off_topic: "{{icons}} markerte dette som urelevant"
+          spam: "{{icons}} markerte dette som spam"
+          inappropriate: "{{icons}} markerte dette som upassende"
+          notify_moderators: "{{icons}} varslet moderatorene"
+          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>varslet moderatorene</a>"
+          notify_user: "{{icons}} send en private melding"
+          notify_user_with_url: "{{icons}} sendte en <a href='{{postUrl}}'>privat melding</a>"
+          bookmark: "{{icons}} bokmerket dette"
+          like: "{{icons}} likte dette"
+          vote: "{{icons}} stemte for dette"
         by_you:
-          off_topic: "You flagged this as off-topic"
-          spam: "You flagged this as spam"
-          inappropriate: "You flagged this as inappropriate"
-          notify_moderators: "You flagged this for moderation"
-          notify_user: "You sent a private message to this user"
-          bookmark: "You bookmarked this post"
-          like: "You liked this"
-          vote: "You voted for this post"
+          off_topic: "Du markerte dette som urelevant"
+          spam: "Du markerte dette som spam"
+          inappropriate: "Du markerte dette som upassende"
+          notify_moderators: "Du markerte dette for moderering"
+          notify_user: "Du sendte en private melding til denne brukeren"
+          bookmark: "Du bokmerket dette innlegget"
+          like: "Du likte dette"
+          vote: "Du stemte for dette innlegget"
         by_you_and_others:
           off_topic:
-            one: "You and 1 other flagged this as off-topic"
-            other: "You and {{count}} other people flagged this as off-topic"
+            one: "Du og 1 annen markerte dette som urelevant"
+            other: "Du og {{count}} andre markerte dette som urelevant"
           spam:
-            one: "You and 1 other flagged this as spam"
-            other: "You and {{count}} other people flagged this as spam"
+            one: "Du og 1 annen markerte dette som spam"
+            other: "Du og {{count}} andre markerte dette som spam"
           inappropriate:
-            one: "You and 1 other flagged this as inappropriate"
-            other: "You and {{count}} other people flagged this as inappropriate"
+            one: "Du og 1 annen markerte dette som upassende"
+            other: "Du og {{count}} andre markerte dette som upassende"
           notify_moderators:
-            one: "You and 1 other flagged this for moderation"
-            other: "You and {{count}} other people flagged this for moderation"
+            one: "Du og 1 annen markerte dette for moderering"
+            other: "Du og {{count}} andre markerte dette for moderering"
           notify_user:
-            one: "You and 1 other sent a private message to this user"
-            other: "You and {{count}} other people sent a private message to this user"
+            one: "Du og 1 annen sendte en privat melding til denne brukeren"
+            other: "Du og {{count}} andre sendte en privat melding til denne brukeren"
           bookmark:
-            one: "You and 1 other bookmarked this post"
-            other: "You and {{count}} other people bookmarked this post"
+            one: "Du og 1 annen bokmerket dette innlegget"
+            other: "Du og {{count}} andre bokmerket dette innlegget"
           like:
-            one: "You and 1 other liked this"
-            other: "You and {{count}} other people liked this"
+            one: "Du og 1 annen likte dette"
+            other: "Du og {{count}} andre likte dette"
           vote:
-            one: "You and 1 other voted for this post"
-            other: "You and {{count}} other people voted for this post"
+            one: "Du og 1 annen stemte på dette innlegget"
+            other: "Du og {{count}} andre stemte på dette innlegget"
         by_others:
           off_topic:
-            one: "1 person flagged this as off-topic"
-            other: "{{count}} people flagged this as off-topic"
+            one: "1 bruker markerte dette som urelevant"
+            other: "{{count}} brukere markerte dette som urelevant"
           spam:
-            one: "1 person flagged this as spam"
-            other: "{{count}} people flagged this as spam"
+            one: "1 bruker markerte dette som spam"
+            other: "{{count}} brukere markerte dette som spam"
           inappropriate:
-            one: "1 person flagged this as inappropriate"
-            other: "{{count}} people flagged this as inappropriate"
+            one: "1 bruker markerte dette som upassende"
+            other: "{{count}} brukere markerte dette som upassende"
           notify_moderators:
-            one: "1 person flagged this for moderation"
-            other: "{{count}} people flagged this for moderation"
+            one: "1 bruker markerte dette for moderering"
+            other: "{{count}} brukere markerte dette for moderering"
           notify_user:
-            one: "1 person sent a private message to this user"
-            other: "{{count}} sent a private message to this user"
+            one: "1 bruker sendte en privat melding til denne brukeren"
+            other: "{{count}} brukere sendte en privat melding til denne brukeren"
           bookmark:
-            one: "1 person bookmarked this post"
-            other: "{{count}} people bookmarked this post"
+            one: "1 bruker bokmerket dette innlegget"
+            other: "{{count}} brukere bokmerket dette innlegget"
           like:
-            one: "1 person liked this"
-            other: "{{count}} people liked this"
+            one: "1 bruker likte dette"
+            other: "{{count}} brukere likte dette"
           vote:
-            one: "1 person voted for this post"
-            other: "{{count}} people voted for this post"
+            one: "1 bruker stemte på dette innlegget"
+            other: "{{count}} brukere stemte på dette innlegget"
 
       edits:
-        one: 1 edit
-        other: "{{count}} edits"
-        zero: no edits
+        one: "1 redigering"
+        other: "{{count}} redigeringer"
+        zero: "ingen redigeringer"
 
       delete:
         confirm:
-          one: "Are you sure you want to delete that post?"
-          other: "Are you sure you want to delete all those posts?"
+          one: "Er du sikker på at du vil slette det innlegget?"
+          other: "Er du sikker på at du vil slette alle de innleggene?"
 
     category:
       none: '(no category)'
-      edit: 'edit'
-      edit_long: "Edit Category"
-      edit_uncategorized: "Edit Uncategorized"
-      view: 'View Topics in Category'
-      general: 'General'
-      settings: 'Settings'
-      delete: 'Delete Category'
-      create: 'Create Category'
-      save: 'Save Category'
-      creation_error: There has been an error during the creation of the category.
-      save_error: There was an error saving the category.
-      more_posts: "view all {{posts}}..."
-      name: "Category Name"
-      description: "Description"
-      topic: "category topic"
+      edit: 'rediger'
+      edit_long: "Rediger Kategori"
+      edit_uncategorized: "Rediger Ukategorisert"
+      view: 'Se Emner i Kategori'
+      general: 'Generellt'
+      settings: 'Innstillinger'
+      delete: 'Slett Kategori'
+      create: 'Lag Kategori'
+      save: 'Lagre Kategori'
+      creation_error: "Det oppstod en feil ved å lage denne kategorien."
+      save_error: "Det oppstod en feil ved lagrinen av denne kategorien."
+      more_posts: "se alle {{posts}}..."
+      name: "Kategorinavn"
+      description: "Beskrivelse"
+      topic: "kategori emne"
       badge_colors: "Badge colors"
-      background_color: "Background color"
-      foreground_color: "Foreground color"
-      name_placeholder: "Should be short and succinct."
-      color_placeholder: "Any web color"
-      delete_confirm: "Are you sure you want to delete this category?"
-      delete_error: "There was an error deleting the category."
-      list: "List Categories"
-      no_description: "There is no description for this category."
-      change_in_category_topic: "Edit Description"
-      hotness: "Hotness"
-      already_used: 'This color has been used by another category'
-      is_secure: "Secure category?"
-      add_group: "Add Group"
-      security: "Security"
-      allowed_groups: "Allowed Groups:"
-      auto_close_label: "Auto-close topics after:"
+      background_color: "Bakgrunnsfarge"
+      foreground_color: "Forgrunnsfarge"
+      name_placeholder: "Bør være kortfattet."
+      color_placeholder: "Enhver webfarge"
+      delete_confirm: "Er du sikker på at du vil slette denne kategorien?"
+      delete_error: "Det oppstod en feil ved å slette denne kategorien."
+      list: "List Kategorier"
+      no_description: "Det er ingen beskrivelse på denne kategorien."
+      change_in_category_topic: "Rediger Beskrivelse"
+      hotness: "Temperatur"
+      already_used: 'Denne fargen er i bruk av en annen kategori'
+      is_secure: "Sikker kategori?"
+      add_group: "Legg til Gruppe"
+      security: "Sikkerhet"
+      allowed_groups: "Tillatte Grupper:"
+      auto_close_label: "Auto-lukk Emner Etter:"
 
 
     flagging:
