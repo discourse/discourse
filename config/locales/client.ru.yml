@@ -455,9 +455,9 @@ ru:
       quote_text: Цитата
       code_title: Фрагмент кода
       code_text: вводите код здесь
-      image_title: Изображение
-      image_description: введите здесь описание изображения
-      image_dialog_title: Вставка изображения
+      upload_title: Изображение
+      upload_description: введите здесь описание изображения
+      upload_dialog_title: Вставка изображения
       image_optional_text: необязательное название
       image_hosting_hint: "Нужен <a href='http://www.google.com/search?q=free+image+hosting' target='_blank'>бесплатный хостинг изображений?</a>"
       olist_title: Нумерованный список
@@ -488,7 +488,7 @@ ru:
       invitee_accepted: "<i title='принятое приглашение' class='icon icon-signin'></i> {{username}} принял ваше приглашение"
       moved_post: "<i title='перенесенное сообщение' class='icon icon-arrow-right'></i> {{username}} перенес сообщение в {{link}}"
       total_flagged: всего сообщений с жалобами
-    image_selector:
+    upload_selector:
       title: Вставка изображения
       from_my_computer: С устройства
       from_the_web: Из интернета
@@ -498,7 +498,7 @@ ru:
       local_title: локальное изображение
       local_tip: выбрать изображение с устройства.
       upload: Загрузить
-      uploading_image: Загрузка изображения
+      upload_file: Загрузка изображения
     search:
       title: поиск по темам, сообщениям, пользователям или категориям
       placeholder: условия поиска...

@@ -1,0 +1,36 @@
+<ul class="nav nav-pills">
+  <li title="{{i18n upload_selector.local_title}}" {{bindAttr class="localSelected:active"}}>
+    <a href="#" {{action selectLocal}}>{{i18n upload_selector.from_my_computer}}</a>
+  </li>
+  <li title="{{i18n upload_selector.remote_title}}" {{bindAttr class="remoteSelected:active"}}>
+    <a href="#" {{action selectRemote}}>{{i18n upload_selector.from_the_web}}</a>
+  </li>
+</ul>
+
+{{#if localSelected}}
+  <div class='modal-body'>
+    <form>
+      <input type="file" name="file" id="filename-input" value="browse"><br>
+      <span class='description'>{{i18n upload_selector.local_tip}}</span> <br>
+    </form>
+  </div>
+  <div class='modal-footer'>
+    <button class='btn btn-large btn-primary' {{action upload target="view"}}>
+      <span class='add-upload'><i class='icon-file-alt'></i><i class='icon-plus'></i></span>
+      {{i18n upload_selector.upload}}
+    </button>
+  </div>
+{{else}}
+  <div class='modal-body'>
+    <form>
+      <input type="text" name="text" id="fileurl-input" autofocus><br>
+      <span class='description'>{{i18n upload_selector.remote_tip}}</span> <br>
+    </form>
+  </div>
+  <div class='modal-footer'>
+    <button class='btn btn-large btn-primary' {{action add target="view"}}>
+      <span class='add-upload'><i class='icon-file-alt'></i><i class='icon-plus'></i></span>
+      {{i18n upload_selector.add_image}}
+    </button>
+  </div>
+{{/if}}

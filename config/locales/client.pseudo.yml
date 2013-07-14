@@ -429,9 +429,9 @@ pseudo:
       quote_text: '[[ Ɓłóčǩƣůóťé ]]'
       code_title: '[[ Čóďé Šáɱƿłé ]]'
       code_text: '[[ éɳťéř čóďé ĥéřé ]]'
-      image_title: '[[ Íɱáǧé ]]'
-      image_description: '[[ éɳťéř íɱáǧé ďéščříƿťíóɳ ĥéřé ]]'
-      image_dialog_title: '[[ Íɳšéřť Íɱáǧé ]]'
+      upload_title: '[[ Íɱáǧé ]]'
+      upload_description: '[[ éɳťéř íɱáǧé ďéščříƿťíóɳ ĥéřé ]]'
+      upload_dialog_title: '[[ Íɳšéřť Íɱáǧé ]]'
       image_optional_text: '[[ óƿťíóɳáł ťíťłé ]]'
       image_hosting_hint: '[[ Ѝééď <á ĥřéƒ=''ĥťťƿ://ŵŵŵ.ǧóóǧłé.čóɱ/šéářčĥ?ƣ=ƒřéé+íɱáǧé+ĥóšťíɳǧ''
         ťářǧéť=''_ƀłáɳǩ''>ƒřéé íɱáǧé ĥóšťíɳǧ?</á> ]]'
@@ -474,7 +474,7 @@ pseudo:
       moved_post: '[[ <í ťíťłé=''ɱóνéď ƿóšť'' čłášš=''íčóɳ íčóɳ-ářřóŵ-říǧĥť''></í>
         {{username}} ɱóνéď ťó {{link}} ]]'
       total_flagged: '[[ ťóťáł ƒłáǧǧéď ƿóšťš ]]'
-    image_selector:
+    upload_selector:
       title: '[[ Íɳšéřť Íɱáǧé ]]'
       from_my_computer: '[[ Ƒřóɱ Ϻý Ďéνíčé ]]'
       from_the_web: '[[ Ƒřóɱ Ťĥé Ŵéƀ ]]'
@@ -485,7 +485,7 @@ pseudo:
       local_title: '[[ łóčáł íɱáǧé ]]'
       local_tip: '[[ čłíčǩ ťó šéłéčť áɳ íɱáǧé ƒřóɱ ýóůř ďéνíčé. ]]'
       upload: '[[ Ůƿłóáď ]]'
-      uploading_image: '[[ Ůƿłóáďíɳǧ íɱáǧé ]]'
+      upload_file: '[[ Ůƿłóáďíɳǧ íɱáǧé ]]'
     search:
       title: '[[ šéářčĥ ƒóř ťóƿíčš, ƿóšťš, ůšéřš, óř čáťéǧóříéš ]]'
       placeholder: '[[ ťýƿé ýóůř šéářčĥ ťéřɱš ĥéřé ]]'

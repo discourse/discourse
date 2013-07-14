@@ -448,9 +448,9 @@ en:
       quote_text: "Blockquote"
       code_title: "Code Sample"
       code_text: "enter code here"
-      image_title: "Image"
-      image_description: "enter image description here"
-      image_dialog_title: "Insert Image"
+      upload_title: "Image"
+      upload_description: "enter image description here"
+      upload_dialog_title: "Insert Image"
       image_optional_text: "optional title"
       image_hosting_hint: "Need <a href='http://www.google.com/search?q=free+image+hosting' target='_blank'>free image hosting?</a>"
       olist_title: "Numbered List"
@@ -484,17 +484,17 @@ en:
       moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} moved to {{link}}"
       total_flagged: "total flagged posts"
 
-    image_selector:
-      title: "Insert Image"
+    upload_selector:
+      title: "Upload file"
       from_my_computer: "From My Device"
       from_the_web: "From The Web"
-      add_image: "Add Image"
-      remote_title: "remote image"
-      remote_tip: "enter address of an image in the form http://example.com/image.jpg"
-      local_title: "local image"
-      local_tip: "click to select an image from your device."
+      add_image: "Add File"
+      remote_title: "remote file"
+      remote_tip: "enter address of a file in the form http://example.com/image.jpg"
+      local_title: "local file"
+      local_tip: "click to select a file from your device."
       upload: "Upload"
-      uploading_image: "Uploading image"
+      upload_file: "Uploading"
 
     search:
       title: "search for topics, posts, users, or categories"
