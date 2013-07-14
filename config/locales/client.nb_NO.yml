@@ -827,267 +827,267 @@ nb_NO:
 
 
     flagging:
-      title: 'Why are you flagging this post?'
-      action: 'Flag Post'
-      take_action: "Take Action"
-      notify_action: 'Notify'
-      cant: "Sorry, you can't flag this post at this time."
-      custom_placeholder_notify_user: "Why does this post require you to speak to this user directly and privately? Be specific, be constructive, and always be kind."
-      custom_placeholder_notify_moderators: "Why does this post require moderator attention? Let us know specifically what you are concerned about, and provide relevant links where possible."
+      title: 'Hvorfor markerer du dette innlegget?'
+      action: 'Market Innlegg'
+      take_action: "Ta Handling"
+      notify_action: 'Varsle'
+      cant: "Beklager, du kan ikke markere dette innlettet nå."
+      custom_placeholder_notify_user: "Hvorfor krever dette innlegget at du snakker til denne brukeren privat og direkte? Vær presis og  høfflig."
+      custom_placeholder_notify_moderators: "Hvorfor krever dette innlegget oppmerksomheten til en moderator? La oss vite nøyaktig hva du er bekymret over og del all relevant informasjon og linker."
       custom_message:
-        at_least: "enter at least {{n}} characters"
-        more: "{{n}} to go..."
-        left: "{{n}} remaining"
+        at_least: "skriv minst {{n}} bokstaver"
+        more: "{{n}} igjen..."
+        left: "{{n}} gjenstående"
 
     topic_summary:
-      title: "Topic Summary"
-      links_shown: "show all {{totalLinks}} links..."
-      clicks: "clicks"
-      topic_link: "topic link"
+      title: "Emneoppsummering"
+      links_shown: "vis alle {{totalLinks}} linker..."
+      clicks: "klikk"
+      topic_link: "emnelink"
 
     topic_statuses:
       locked:
-        help: "this topic is closed; it no longer accepts new replies"
+        help: "dette emnet er låst; det aksepterer ikke lenger nye svar"
       pinned:
-        help: "this topic is pinned; it will display at the top of its category"
+        help: "dette emnet er fastsatt; det vil visest på toppen av sin kategori"
       archived:
-        help: "this topic is archived; it is frozen and cannot be changed"
+        help: "dette emnet er arkivert; det er fryst og kan ikke bli aktivert"
       invisible:
-        help: "this topic is invisible; it will not be displayed in topic lists, and can only be accessed via a direct link"
+        help: "dette emnet er usynlig; det blir ikke vist i emnelister, og kan bare bli åpnet via en direkte link"
 
-    posts: "Posts"
-    posts_long: "{{number}} posts in this topic"
-    original_post: "Original Post"
-    views: "Views"
-    replies: "Replies"
-    views_long: "this topic has been viewed {{number}} times"
-    activity: "Activity"
+    posts: "Innlegg"
+    posts_long: "{{number}} innlegg i dette emnet"
+    original_post: "Originalt Innlegg"
+    views: "Seere"
+    replies: "Svar"
+    views_long: "dette emnet har blit sett {{number}} ganger"
+    activity: "Aktivitet"
     likes: "Likes"
-    top_contributors: "Participants"
-    category_title: "Category"
-    history: "History"
-    changed_by: "by {{author}}"
+    top_contributors: "Deltakere"
+    category_title: "Kategori"
+    history: "Historie"
+    changed_by: "av {{author}}"
 
-    categories_list: "Categories List"
+    categories_list: "Kategoriliste"
 
     filters:
       latest:
-        title: "Latest"
-        help: "the most recent topics"
+        title: "Nye"
+        help: "de nyeste emnene"
       hot:
         title: "Hot"
-        help: "a selection of the hottest topics"
+        help: "en seleksjon av de hotteste emnene"
       favorited:
-        title: "Favorited"
-        help: "topics you marked as favorites"
+        title: "Favorisert"
+        help: "emner du har markert som favoritter"
       read:
-        title: "Read"
-        help: "topics you've read, in the order that you last read them"
+        title: "Lest"
+        help: "emner du har lest, i den rekkefølgen du har lest dem"
       categories:
-        title: "Categories"
-        title_in: "Category - {{categoryName}}"
-        help: "all topics grouped by category"
+        title: "Kategorier"
+        title_in: "Kategori - {{categoryName}}"
+        help: "alle emner sortert etter kategori"
       unread:
         title:
-          zero: "Unread"
-          one: "Unread (1)"
-          other: "Unread ({{count}})"
-        help: "tracked topics with unread posts"
+          zero: "Ulest"
+          one: "Ulest (1)"
+          other: "Ulest ({{count}})"
+        help: "følgte emner med uleste innlegg"
       new:
         title:
-          zero: "New"
-          one: "New (1)"
-          other: "New ({{count}})"
-        help: "new topics since your last visit"
+          zero: "Ny"
+          one: "Ny (1)"
+          other: "Ny ({{count}})"
+        help: "nye emner siden ditt siste besøk"
       posted:
-        title: "My Posts"
-        help: "topics you have posted in"
+        title: "Mine Innlegg"
+        help: "emner du har postet i"
       category:
         title:
           zero: "{{categoryName}}"
           one: "{{categoryName}} (1)"
           other: "{{categoryName}} ({{count}})"
-        help: "latest topics in the {{categoryName}} category"
+        help: "siste emner i {{categoryName}}-kategorien"
 
-    browser_update: 'Unfortunately, <a href="http://www.discourse.org/faq/#browser">your browser is too old to work on this Discourse forum</a>. Please <a href="http://browsehappy.com">upgrade your browser</a>.'
+    browser_update: 'Desverre,<a href="http://www.discourse.org/faq/#browser">nettleseren din er for gammel for  å fungere med Discourse</a>. Vennligst <a href="http://browsehappy.com">oppgrader</a>.'
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
-    type_to_filter: "type to filter..."
+    type_to_filter: "skriv for å filtrere..."
 
     admin:
       title: 'Discourse Admin'
       moderator: 'Moderator'
 
       dashboard:
-        title: "Dashboard"
-        version: "Version"
-        up_to_date: "You're up to date!"
-        critical_available: "A critical update is available."
-        updates_available: "Updates are available."
-        please_upgrade: "Please upgrade!"
-        installed_version: "Installed"
-        latest_version: "Latest"
-        problems_found: "Some problems have been found with your installation of Discourse:"
-        last_checked: "Last checked"
-        refresh_problems: "Refresh"
-        no_problems: "No problems were found."
-        moderators: 'Moderators:'
-        admins: 'Admins:'
-        private_messages_short: "PMs"
-        private_messages_title: "Private Messages"
+        title: "Dashbord"
+        version: "Versjon"
+        up_to_date: "Du har den seneste versjonen!"
+        critical_available: "En kritisk oppdatering er tilgjengelig."
+        updates_available: "Oppdateringer er tilgjengelig."
+        please_upgrade: "Vennligst oppgrader!"
+        installed_version: "Installert"
+        latest_version: "Seneste"
+        problems_found: "Det har oppstått noen problemer med din installasjon av Discourse:"
+        last_checked: "Sist sjekket"
+        refresh_problems: "Last inn siden på nytt"
+        no_problems: "Ingen problemer ble funnet."
+        moderators: 'Moderatorer:'
+        admins: 'Adminer:'
+        private_messages_short: "PMer"
+        private_messages_title: "Private Meldinger"
 
         reports:
-          today: "Today"
-          yesterday: "Yesterday"
-          last_7_days: "Last 7 Days"
-          last_30_days: "Last 30 Days"
-          all_time: "All Time"
-          7_days_ago: "7 Days Ago"
-          30_days_ago: "30 Days Ago"
-          all: "All"
-          view_table: "View as Table"
-          view_chart: "View as Bar Chart"
+          today: "I dag"
+          yesterday: "I går"
+          last_7_days: "Siste 7 Dager"
+          last_30_days: "Siste 30 Dager"
+          all_time: "All Tid"
+          7_days_ago: "7 Dager Siden"
+          30_days_ago: "30 Dager Siden"
+          all: "Alle"
+          view_table: "Se som Tabell"
+          view_chart: "Se som Stolpediagram"
 
       commits:
-        latest_changes: "Latest changes: please update often!"
-        by: "by"
+        latest_changes: "Siste endringer: Vennligst oppgrader ofte!"
+        by: "av"
 
       flags:
-        title: "Flags"
-        old: "Old"
-        active: "Active"
-        clear: "Clear Flags"
-        clear_title: "dismiss all flags on this post (will unhide hidden posts)"
-        delete: "Delete Post"
-        delete_title: "delete post (if its the first post delete topic)"
-        flagged_by: "Flagged by"
-        error: "Something went wrong"
-        view_message: "Reply"
+        title: "Markeringer"
+        old: "Gamle"
+        active: "Aktive"
+        clear: "Fjern Markeringer"
+        clear_title: "avvis alle markeringer på dette innlegget (vil gjenopprette skjulte innlegg)"
+        delete: "Slett Innlegg"
+        delete_title: "slett innlegg (hvis det er det første innlegget, slett hele emnet)"
+        flagged_by: "Markert av"
+        error: "Noe gikk galt"
+        view_message: "Svar"
 
       groups:
-        title: "Groups"
-        edit: "Edit Groups"
-        selector_placeholder: "add users"
-        name_placeholder: "Group name, no spaces, same as username rule"
+        title: "Grupper"
+        edit: "Rediger Grupper"
+        selector_placeholder: "legg til brukere"
+        name_placeholder: "Gruppenavn, ingen mellomrom, samme som reglene for brukernavn"
 
       api:
         title: "API"
-        long_title: "API Information"
-        key: "Key"
-        generate: "Generate API Key"
-        regenerate: "Regenerate API Key"
-        info_html: "Your API key will allow you to create and update topics using JSON calls."
-        note_html: "Keep this key <strong>secret</strong>, all users that have it may create arbitrary posts on the forum as any user."
+        long_title: "API Informasjon"
+        key: "Nøkkel"
+        generate: "Generer API Nøkkel"
+        regenerate: "Regenerer API Nøkkel"
+        info_html: "Din API nøkkel vil tillate deg å lage og oppdatere emner ved å bruke JSON samteler."
+        note_html: "Bevar denne nøkkelen <strong>hemmelig</strong>. Alle brukere som har den kan lage nye innlegg som hvilken som helst bruker på forumet."
 
       customize:
-        title: "Customize"
-        long_title: "Site Customizations"
+        title: "Tilpasse"
+        long_title: "Sidetilpassninger"
         header: "Header"
-        css: "Stylesheet"
-        override_default: "Do not include standard style sheet"
-        enabled: "Enabled?"
-        preview: "preview"
-        undo_preview: "undo preview"
-        save: "Save"
-        new: "New"
-        new_style: "New Style"
-        delete: "Delete"
-        delete_confirm: "Delete this customization?"
-        about: "Site Customization allow you to modify stylesheets and headers on the site. Choose or add one to start editing."
+        css: "Stilark"
+        override_default: "Ikke inkluder standard stilark"
+        enabled: "Aktivert?"
+        preview: "forhåndsvisning"
+        undo_preview: "avbryt forhåndsvisning"
+        save: "Lagre"
+        new: "Ny"
+        new_style: "Ny Stil"
+        delete: "Slett"
+        delete_confirm: "Slett denne tilpasningen?"
+        about: "Sidetilpasning lar deg endre silark og headers på siden. Velg eller legg til en for å starte redigeringen."
 
       email_logs:
         title: "Email"
-        sent_at: "Sent At"
+        sent_at: "Sendt"
         email_type: "Email Type"
-        to_address: "To Address"
-        test_email_address: "email address to test"
+        to_address: "Til Addresse"
+        test_email_address: "email for å teste"
         send_test: "send test email"
-        sent_test: "sent!"
+        sent_test: "sendt!"
 
       impersonate:
-        title: "Impersonate User"
-        username_or_email: "Username or Email of User"
-        help: "Use this tool to impersonate a user account for debugging purposes."
-        not_found: "That user can't be found."
-        invalid: "Sorry, you may not impersonate that user."
+        title: "Gi deg ut for å være en annen Bruker"
+        username_or_email: "Brukernavn eller Email til bruker"
+        help: "Bruk dette verktøyet for å bruke en annen bruker's konto for debugging."
+        not_found: "Den brukeren kunne ikke bli funnet."
+        invalid: "Beklager, du kan ikke gi deg ut for å være den brukeren."
 
       users:
-        title: 'Users'
-        create: 'Add Admin User'
-        last_emailed: "Last Emailed"
-        not_found: "Sorry, that username doesn't exist in our system."
-        active: "Active"
+        title: 'Brukere'
+        create: 'Legg til Admin Bruker'
+        last_emailed: "Sist Kontaktet via Email"
+        not_found: "Beklager, det brukernavner eksisterer ikke i systemet vårt."
+        active: "Aktiv"
         nav:
-          new: "New"
-          active: "Active"
-          pending: "Pending"
-        approved: "Approved?"
+          new: "Ny"
+          active: "Aktiv"
+          pending: "Ventende"
+        approved: "Godkjent?"
         approved_selected:
-          one: "approve user"
-          other: "approve users ({{count}})"
+          one: "godkjenn bruker"
+          other: "godkjenn brukere ({{count}})"
         titles:
-          active: 'Active Users'
-          new: 'New Users'
-          pending: 'Users Pending Review'
-          newuser: 'Users at Trust Level 0 (New User)'
-          basic: 'Users at Trust Level 1 (Basic User)'
-          regular: 'Users at Trust Level 2 (Regular User)'
-          leader: 'Users at Trust Level 3 (Leader)'
-          elder: 'Users at Trust Level 4 (Elder)'
-          admins: 'Admin Users'
-          moderators: 'Moderators'
+          active: 'Aktive Brukere'
+          new: 'Nye Brukere'
+          pending: 'Brukere som venter på evaluering'
+          newuser: 'Brukere på tillitsnivå 0 (Ny Bruker)'
+          basic: 'Brukere på tillitsnivå 1 (Grunnleggende Bruker)'
+          regular: 'Brukere på tillitsnivå 2 (Ordinær Bruker)'
+          leader: 'Brukere på tillitsnivå 3 (Leder)'
+          elder: 'Brukere på tillitsnivå 4 (Eldre)'
+          admins: 'Admins'
+          moderators: 'Moderatorer'
 
       user:
-        ban_failed: "Something went wrong banning this user {{error}}"
-        unban_failed: "Something went wrong unbanning this user {{error}}"
-        ban_duration: "How long would you like to ban the user for? (days)"
-        delete_all_posts: "Delete all posts"
-        ban: "Ban"
-        unban: "Unban"
-        banned: "Banned?"
+        ban_failed: "Noe gikk galt ved å bannlyse denne brukeren {{error}}"
+        unban_failed: "Noe gikk galt ved å gjeninsette denne brukeren {{error}}"
+        ban_duration: "Hvor lenge vil du bannlyse denne brukeren? (dager)"
+        delete_all_posts: "Slett alle innlegg"
+        ban: "Bannlyst"
+        unban: Gjeninnsett"
+        banned: "Banlyst?"
         moderator: "Moderator?"
         admin: "Admin?"
         show_admin_profile: "Admin"
-        refresh_browsers: "Force browser refresh"
-        show_public_profile: "Show Public Profile"
-        impersonate: 'Impersonate'
-        revoke_admin: 'Revoke Admin'
-        grant_admin: 'Grant Admin'
-        revoke_moderation: 'Revoke Moderation'
-        grant_moderation: 'Grant Moderation'
-        reputation: Reputation
-        permissions: Permissions
-        activity: Activity
-        like_count: Likes Received
-        private_topics_count: Private Topics
-        posts_read_count: Posts Read
-        post_count: Posts Created
-        topics_entered: Topics Entered
-        flags_given_count: Flags Given
-        flags_received_count: Flags Received
-        approve: 'Approve'
-        approved_by: "approved by"
-        time_read: "Read Time"
-        delete: "Delete User"
-        delete_forbidden: "This user can't be deleted because there are posts. Delete all this user's posts first."
-        delete_confirm: "Are you SURE you want to permanently delete this user from the site? This action is permanent!"
-        deleted: "The user was deleted."
-        delete_failed: "There was an error deleting that user. Make sure all posts are deleted before trying to delete the user."
-        send_activation_email: "Send Activation Email"
-        activation_email_sent: "An activation email has been sent."
-        send_activation_email_failed: "There was a problem sending another activation email."
-        activate: "Activate Account"
-        activate_failed: "There was a problem activating the user."
-        deactivate_account: "Deactivate Account"
-        deactivate_failed: "There was a problem deactivating the user."
+        refresh_browsers: "Tving nettleser refresh"
+        show_public_profile: "Vis Offentlig Profil"
+        impersonate: 'Gi deg ut for å være en annen'
+        revoke_admin: 'Tilbakedra Admin'
+        grant_admin: 'Innfri Admin'
+        revoke_moderation: 'Tilbakedra Moderering'
+        grant_moderation: 'Innfri Moderering'
+        reputation: 'Rykte'
+        permissions: 'Tillatelser'
+        activity: 'Aktivitet'
+        like_count: 'Likes Mottatt'
+        private_topics_count: 'Private Emner'
+        posts_read_count: 'Innlegg Lest'
+        post_count: 'Innlegg Skrevet'
+        topics_entered: 'Emner Opprettet'
+        flags_given_count: 'Markeringer Gitt'
+        flags_received_count: 'Markeringer Mottatt'
+        approve: 'Godta'
+        approved_by: "Godtatt Av"
+        time_read: "Lesetid"
+        delete: "Slett Bruker"
+        delete_forbidden: "Denne brukeren kan ikke bli slettet fordi den har fortsatt innlett. Slett alle brukerens innlegg først."
+        delete_confirm: "Er du HELT SIKKER på at du vil slette denne brukeren fra siden? Denne handlingen er permanent."
+        deleted: "Brukeren ble slettet."
+        delete_failed: "Det oppstod en feil ved slettingen av den brukeren. Sørg for at alle av brukerens innlegg er slettet før du prøver å slette brukeren."
+        send_activation_email: "Send Aktiveringsemail"
+        activation_email_sent: "En aktiveringsemail har blitt sendt."
+        send_activation_email_failed: "Det oppstod et problem ved sendingen av enda en aktiveringsemail."
+        activate: "Aktiver Konto"
+        activate_failed: "Det oppstod et problem ved aktiveringen av den brukeren."
+        deactivate_account: "Deaktiver Konto"
+        deactivate_failed: "Det oppstod et problem ved deaktiveringen av den brukeren."
 
       site_content:
-        none: "Choose a type of content to begin editing."
-        title: 'Content'
-        edit: "Edit Site Content"
+        none: "Velg et type innhold du vil begynne å redigere."
+        title: 'Innhold'
+        edit: "Rediger Sideinnhold"
 
       site_settings:
-        show_overriden: 'Only show overridden'
-        title: 'Settings'
-        reset: 'reset to default'
+        show_overriden: 'Bare vis overstyrte'
+        title: 'Innstillinger'
+        reset: 'tilbakestill til standard'
