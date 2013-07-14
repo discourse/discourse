@@ -11,6 +11,18 @@
 
 fr:
   js:
+    number:
+      human:
+        storage_units:
+          format: "%n %u"
+          units:
+            byte:
+              one:   "octet"
+              other: "octets"
+            kb: "ko"
+            mb: "Mo"
+            gb: "Go"
+            tb: "To"
     dates:
       tiny:
         half_a_minute: "< 1m"

@@ -7,6 +7,18 @@
 
 it:
   js:
+    number:
+      human:
+        storage_units:
+          format: ! '%n %u'
+          units:
+            byte:
+              one: Byte
+              other: Byte
+            gb: GB
+            kb: KB
+            mb: MB
+            tb: TB
     share:
       topic: 'condividi un link a questo topic'
       post: 'condividi un link a questo post'

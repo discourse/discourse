@@ -7,6 +7,18 @@
 
 zh_TW:
   js:
+    number:
+      human:
+        storage_units:
+          format: ! '%n %u'
+          units:
+            byte:
+              one: Byte
+              other: Bytes
+            gb: GB
+            kb: KB
+            mb: MB
+            tb: TB
     share:
       topic: '分享一個到本主題的鏈接'
       post: '分享一個到本帖的鏈接'

@@ -10,6 +10,20 @@
 
 ru:
   js:
+    number:
+      human:
+        storage_units:
+          format: ! '%n %u'
+          units:
+            byte:
+              few: байта
+              many: байт
+              one: байт
+              other: байта
+            gb: ГБ
+            kb: КБ
+            mb: МБ
+            tb: ТБ
     dates:
       tiny:
         half_a_minute: '< 1мин'

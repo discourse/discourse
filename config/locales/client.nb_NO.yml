@@ -7,6 +7,18 @@
 
 nb_NO:
   js:
+    number:
+      human:
+        storage_units:
+          format: ! '%n %u'
+          units:
+            byte:
+              one: Byte
+              other: Bytes
+            gb: GB
+            kb: kB
+            mb: MB
+            tb: TB
     share:
       topic: 'del en link til dette emnet'
       post: 'del en link til dette innlegget'

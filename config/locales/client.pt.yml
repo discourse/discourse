@@ -8,6 +8,18 @@
 
 pt:
   js:
+    number:
+      human:
+        storage_units:
+          format: ! '%n %u'
+          units:
+            byte:
+              one: Byte
+              other: Bytes
+            gb: GB
+            kb: KB
+            mb: MB
+            tb: TB
     share:
       topic: 'partilhe um link para este tópico'
       post: 'partilhe um link para esta mensagem'

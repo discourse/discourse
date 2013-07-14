@@ -8,6 +8,18 @@
 
 id:
   js:
+    number:
+      human:
+        storage_units:
+          format: ! '%n %u'
+          units:
+            byte:
+              one: Byte
+              other: Byte
+            gb: GB
+            kb: KB
+            mb: MB
+            tb: TB
     share:
       topic: "Bagikan tautan ke topik ini"
       post: "Bagikan tautan ke muatan ini"

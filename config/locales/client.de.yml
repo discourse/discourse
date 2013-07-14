@@ -7,6 +7,18 @@
 
 de:
   js:
+    number:
+      human:
+        storage_units:
+          format: ! '%n %u'
+          units:
+            byte:
+              one: Byte
+              other: Bytes
+            gb: GB
+            kb: KB
+            mb: MB
+            tb: TB
     dates:
       short_date_no_year: "D MMM"
       short_date: "D. MMM YYYY"

@@ -6,6 +6,18 @@
 
 da:
   js:
+    number:
+      human:
+        storage_units:
+          format: ! '%n %u'
+          units:
+            byte:
+              one: Byte
+              other: Bytes
+            gb: GB
+            kb: KB
+            mb: MB
+            tb: TB
     share:
       topic: 'del et link til dette emne'
       post: 'del et link til dette indlæg'
