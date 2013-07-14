@@ -34,8 +34,6 @@ describe CookedPostProcessor do
         cpp.html.should =~ /#{LocalStore.base_url}/
         # ensure name is present
         cpp.html.should =~ /archive.zip/
-        # dirty
-        cpp.should be_dirty
         # keeps the reverse index up to date
         post.uploads.reload
         post.uploads.count.should == 1
@@ -77,6 +75,8 @@ describe CookedPostProcessor do
         cpp.post_process_images
         # ensures absolute urls on uploaded images
         cpp.html.should =~ /#{LocalStore.base_url}/
+        # dirty
+        cpp.should be_dirty
         # keeps the reverse index up to date
         post.uploads.reload
         post.uploads.count.should == 1
