@@ -557,8 +557,12 @@ de:
       not_found:
         title: "Thema nicht gefunden"
         description: "Entschuldige, wir konnten das Thema nicht finden. Möglicherweise wurde es von einem Moderator entfernt."
-      unread_posts: "Du hast {{unread}} ungelesene Beiträge zu diesem Thema"
-      new_posts: "Es gibt {{new_posts}} neue Beiträge zu diesem Thema seit Du es das letzte mal gelesen hast"
+      unread_posts:
+        one: "Du hast einen ungelesenen Beiträg zu diesem Thema"
+        other: "Du hast {{count}} ungelesene Beiträge zu diesem Thema"
+      new_posts:
+        one: "Es gibt einen neuen Beitrag zu diesem Thema seit Du es das letzte mal gelesen hast"
+        other: "Es gibt {{count}} neue Beiträge zu diesem Thema seit Du es das letzte mal gelesen hast"
 
       likes:
         one: "Es gibt ein „Gefällt mir“ in diesem Thema"
