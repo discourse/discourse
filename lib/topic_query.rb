@@ -239,9 +239,9 @@ class TopicQuery
       unless @user && @user.moderator?
         category_ids = @user.secure_category_ids if @user
         if category_ids.present?
-          result = result.where('categories.secure IS NULL OR categories.secure = ? OR categories.id IN (?)', false, category_ids)
+          result = result.where('categories.read_restricted IS NULL OR categories.read_restricted = ? OR categories.id IN (?)', false, category_ids)
         else
-          result = result.where('categories.secure IS NULL OR categories.secure = ?', false)
+          result = result.where('categories.read_restricted IS NULL OR categories.read_restricted = ?', false)
         end
       end
 

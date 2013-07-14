@@ -41,8 +41,7 @@ describe CategoryList do
 
       cat = Fabricate(:category)
       topic = Fabricate(:topic, category: cat)
-      cat.deny(:all)
-      cat.allow(Group[:admins])
+      cat.set_permissions(:admins => :full)
       cat.save
 
       CategoryList.new(Guardian.new admin).categories.count.should == 1

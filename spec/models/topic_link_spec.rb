@@ -258,8 +258,7 @@ describe TopicLink do
         TopicLink.topic_summary(Guardian.new, post.topic_id).count.should == 1
         TopicLink.counts_for(Guardian.new, post.topic, [post]).length.should == 1
 
-        category.deny(:all)
-        category.allow(Group[:staff])
+        category.set_permissions(:staff => :full)
         category.save
 
         admin = Fabricate(:admin)

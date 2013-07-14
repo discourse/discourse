@@ -215,8 +215,9 @@ describe Guardian do
 
       it 'correctly handles groups' do
         group = Fabricate(:group)
-        category = Fabricate(:category, secure: true)
-        category.allow(group)
+        category = Fabricate(:category, read_restricted: true)
+        category.set_permissions(group => :full)
+        category.save
 
         topic = Fabricate(:topic, category: category)
 

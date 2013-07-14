@@ -27,7 +27,7 @@ class Site
 
   def categories
     Category
-      .secured(@guardian)
+      .topic_create_allowed(@guardian)
       .latest
       .includes(:topic_only_relative_url)
   end

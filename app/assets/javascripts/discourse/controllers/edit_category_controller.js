@@ -101,14 +101,12 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
     return false;
   },
 
-  addGroup: function(){
-    this.get('model').addGroup(this.get("selectedGroup"));
+  addPermission: function(group, permission_id){
+    this.get('model').addPermission({group_name: group + "", permission: Discourse.PermissionType.create({id: permission_id})});
   },
 
-  removeGroup: function(group){
-    // OBVIOUS, Ember treats this as Ember.String, we need a real string here
-    group = group + "";
-    this.get('model').removeGroup(group);
+  removePermission: function(permission){
+    this.get('model').removePermission(permission);
   },
 
   saveCategory: function() {

@@ -51,7 +51,7 @@ describe TopicTrackingState do
     row.user_id.should == post.user_id
 
     # when we have no permission to see a category, don't show its stats
-    category = Fabricate(:category, secure: true)
+    category = Fabricate(:category, read_restricted: true)
 
     post.topic.category_id = category.id
     post.topic.save

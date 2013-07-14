@@ -134,11 +134,11 @@ describe CategoriesController do
 
       describe 'success' do
         before do
-          # might as well test this as well
-          @category.allow(Group[:admins])
+          # might as well test this while at it
+          @category.set_permissions(:admins => :full)
           @category.save
 
-          xhr :put, :update, id: @category.id, name: 'science', color: '000', text_color: '0ff', group_names: Group[:staff].name, secure: 'true'
+          xhr :put, :update, id: @category.id, name: 'science', color: '000', text_color: '0ff', group_names: Group[:staff].name, read_restricted: 'true'
           @category.reload
         end
 
@@ -146,7 +146,7 @@ describe CategoriesController do
           @category.name.should == 'science'
           @category.color.should == '000'
           @category.text_color.should == '0ff'
-          @category.secure?.should be_true
+          @category.read_restricted?.should be_true
           @category.groups.count.should == 1
         end
       end

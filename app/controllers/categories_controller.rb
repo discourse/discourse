@@ -53,7 +53,7 @@ class CategoriesController < ApplicationController
     end
 
     def category_param_keys
-      [required_param_keys, :hotness, :secure, :group_names, :auto_close_days].flatten!
+      [required_param_keys, :hotness, :read_restricted, :permissions, :auto_close_days].flatten!
     end
 
     def category_params
