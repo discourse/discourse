@@ -14,7 +14,7 @@ test("remove", function() {
   blank(PreloadStore.get('bane'), "removes the value if the key exists");
 });
 
-asyncTest("getAndRemove returns a promise that resolves to null", function() {
+asyncTestDiscourse("getAndRemove returns a promise that resolves to null", function() {
   expect(1);
 
   PreloadStore.getAndRemove('joker').then(function(result) {
@@ -23,7 +23,7 @@ asyncTest("getAndRemove returns a promise that resolves to null", function() {
   });
 });
 
-asyncTest("getAndRemove returns a promise that resolves to the result of the finder", function() {
+asyncTestDiscourse("getAndRemove returns a promise that resolves to the result of the finder", function() {
   expect(1);
 
   var finder = function() { return 'batdance'; };
@@ -34,7 +34,7 @@ asyncTest("getAndRemove returns a promise that resolves to the result of the fin
 
 });
 
-asyncTest("getAndRemove returns a promise that resolves to the result of the finder's promise", function() {
+asyncTestDiscourse("getAndRemove returns a promise that resolves to the result of the finder's promise", function() {
   expect(1);
 
   var finder = function() {
@@ -47,7 +47,7 @@ asyncTest("getAndRemove returns a promise that resolves to the result of the fin
   });
 });
 
-asyncTest("returns a promise that rejects with the result of the finder's rejected promise", function() {
+asyncTestDiscourse("returns a promise that rejects with the result of the finder's rejected promise", function() {
   expect(1);
 
   var finder = function() {
@@ -61,7 +61,7 @@ asyncTest("returns a promise that rejects with the result of the finder's reject
 
 });
 
-asyncTest("returns a promise that resolves to 'evil'", function() {
+asyncTestDiscourse("returns a promise that resolves to 'evil'", function() {
   expect(1);
 
   PreloadStore.getAndRemove('bane').then(function(result) {

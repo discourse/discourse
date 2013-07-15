@@ -169,7 +169,7 @@ GEM
       barber
       execjs (>= 1.2)
       railties (>= 3.1)
-    ember-source (1.0.0.rc5)
+    ember-source (1.0.0.rc6)
       handlebars-source (= 1.0.0.rc4)
     erubis (2.7.0)
     eventmachine (1.0.3)
@@ -482,7 +482,7 @@ DEPENDENCIES
   em-redis
   email_reply_parser!
   ember-rails
-  ember-source (= 1.0.0.rc5)
+  ember-source (= 1.0.0.rc6)
   eventmachine
   fabrication
   fakeweb (~> 1.3.0)
@@ -493,7 +493,7 @@ DEPENDENCIES
   fog
   guard-rspec
   guard-spork
-  handlebars-source (= 1.0.0.rc4)
+  handlebars-source
   highline
   hiredis
   image_optim
