@@ -642,7 +642,7 @@ en:
         invisible: "Make Invisible"
         visible: "Make Visible"
         reset_read: "Reset Read Data"
-        multi_select: "Select for Merge/Split"
+        multi_select: "Select Posts to Move"
         convert_to_topic: "Convert to Regular Topic"
 
       reply:
@@ -697,18 +697,18 @@ en:
         cancel: "Show all posts in this topic again."
 
       split_topic:
-        title: "Split Topic"
-        action: "split topic"
+        title: "Move to New Topic"
+        action: "move to new topic"
         topic_name: "New Topic Name:"
-        error: "There was an error splitting that topic."
+        error: "There was an error moving posts to the new topic."
         instructions:
           one: "You are about to create a new topic and populate it with the post you've selected."
           other: "You are about to create a new topic and populate it with the <b>{{count}}</b> posts you've selected."
 
       merge_topic:
-        title: "Merge Topic"
-        action: "merge topic"
-        error: "There was an error merging that topic."
+        title: "Move to Existing Topic"
+        action: "move to existing topic"
+        error: "There was an error moving posts into that topic."
         instructions:
           one: "Please choose the topic you'd like to move that post to."
           other: "Please choose the topic you'd like to move those <b>{{count}}</b> posts to."

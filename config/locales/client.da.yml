@@ -461,7 +461,7 @@ da:
         invisible: "Gør usynlig"
         visible: "Gør synlig"
         reset_read: "Glem hvilke emner jeg har læst"
-        multi_select: "Select for Merge/Split"
+        multi_select: "Select Posts to Move"
         convert_to_topic: "Konvertér til normalt emne"
 
       reply:
