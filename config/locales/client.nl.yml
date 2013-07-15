@@ -12,6 +12,18 @@
 
 nl:
   js:
+    number:
+      human:
+        storage_units:
+          format: ! '%n %u'
+          units:
+            byte:
+              one: Byte
+              other: Bytes
+            gb: GB
+            kb: KB
+            mb: MB
+            tb: TB
     dates:
       tiny:
         half_a_minute: "< 1m"
@@ -441,9 +453,9 @@ nl:
       quote_text: Citaat
       code_title: Code voorbeeld
       code_text: hier de code
-      image_title: Afbeelding
-      image_description: geef een omschrijving voor de afbeelding op
-      image_dialog_title: Voeg afbeelding toe
+      upload_title: Afbeelding
+      upload_description: geef een omschrijving voor de afbeelding op
+      upload_dialog_title: Voeg afbeelding toe
       image_optional_text: optionele titel
       image_hosting_hint: "Heb je een <a href='http://www.google.com/search?q=free+image+hosting' target='_blank'>een gratis stek voor je afbeelding</a> nodig?"
       olist_title: Genummerde lijst
@@ -477,7 +489,7 @@ nl:
       moved_post: "<i title='bericht verplaatst' class='icon icon-arrow-right'></i> {{username}} verplaatst naar {{link}}"
       total_flagged: aantal gemarkeerde berichten
 
-    image_selector:
+    upload_selector:
       title: Voeg afbeelding toe
       from_my_computer: Vanaf mijn apparaat
       from_the_web: Vanaf het web
@@ -487,7 +499,7 @@ nl:
       local_title: lokale afbeelding
       local_tip: "klik om een afbeelding vanaf je apparaat te selecteren."
       upload: Uploaden
-      uploading_image: Afbeelding uploaden
+      upload_file: Afbeelding uploaden
 
     search:
       title: "zoek naar topics, posts, leden of categoriëen"

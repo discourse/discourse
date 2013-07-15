@@ -7,6 +7,18 @@
 
 de:
   js:
+    number:
+      human:
+        storage_units:
+          format: ! '%n %u'
+          units:
+            byte:
+              one: Byte
+              other: Bytes
+            gb: GB
+            kb: KB
+            mb: MB
+            tb: TB
     dates:
       short_date_no_year: "D MMM"
       short_date: "D. MMM YYYY"
@@ -445,9 +457,9 @@ de:
       quote_text: "Zitat"
       code_title: "Code"
       code_text: "Gib hier den Code ein"
-      image_title: "Bild"
-      image_description: "Gib hier eine Bildbeschreibung ein"
-      image_dialog_title: "Bild einfügen"
+      upload_title: "Bild"
+      upload_description: "Gib hier eine Bildbeschreibung ein"
+      upload_dialog_title: "Bild einfügen"
       image_optional_text: "optionaler Titel"
       image_hosting_hint: "Benötigst Du <a href='http://www.google.com/search?q=kostenlos+bilder+hosten' target='_blank'>kostenlosen Dienst für Bilder?</a>"
       olist_title: "Nummerierte Liste"
@@ -481,7 +493,7 @@ de:
       moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} hat einen Beitrag nach {{link}} verschoben"
       total_flagged: "total markierte Einträge"
 
-    image_selector:
+    upload_selector:
       title: "Bild einfügen"
       from_my_computer: "von meinem Gerät"
       from_the_web: "aus dem Web"
@@ -491,7 +503,7 @@ de:
       local_title: "Lokales Bild"
       local_tip: "Klicke hier, um ein Bild von deinem Gerät zu wählen."
       upload: "Hochladen"
-      uploading_image: "Bild wird hochgeladen"
+      upload_file: "Bild wird hochgeladen"
 
     search:
       title: "Such nach Themen, Beiträgen, Nutzern oder Kategorien"

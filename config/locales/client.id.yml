@@ -8,6 +8,18 @@
 
 id:
   js:
+    number:
+      human:
+        storage_units:
+          format: ! '%n %u'
+          units:
+            byte:
+              one: Byte
+              other: Byte
+            gb: GB
+            kb: KB
+            mb: MB
+            tb: TB
     share:
       topic: "Bagikan tautan ke topik ini"
       post: "Bagikan tautan ke muatan ini"
@@ -298,7 +310,7 @@ id:
       invitee_accepted: "<i title='accepted your invitation' class='icon icon-signin'></i> {{username}} accepted your invitation"
       moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} moved post to {{link}}"
 
-    image_selector:
+    upload_selector:
       title: "Insert Image"
       from_my_computer: "From My Device"
       from_the_web: "From The Web"
@@ -306,7 +318,7 @@ id:
       remote_tip: "enter address of an image in the form http://example.com/image.jpg"
       local_tip: "click to select an image from your device."
       upload: "Upload"
-      uploading_image: "Uploading image"
+      upload_file: "Uploading image"
 
     search:
       title: "search for topics, posts, users, or categories"

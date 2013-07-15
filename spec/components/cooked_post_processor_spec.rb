@@ -34,10 +34,6 @@ describe CookedPostProcessor do
         cpp.html.should =~ /#{LocalStore.base_url}/
         # ensure name is present
         cpp.html.should =~ /archive.zip/
-        # ensure size is present
-        cpp.html.should =~ /<span class=\"size\">\(1.21 KB\)<\/span>/
-        # dirty
-        cpp.should be_dirty
         # keeps the reverse index up to date
         post.uploads.reload
         post.uploads.count.should == 1

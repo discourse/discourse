@@ -7,6 +7,18 @@
 
 nb_NO:
   js:
+    number:
+      human:
+        storage_units:
+          format: ! '%n %u'
+          units:
+            byte:
+              one: Byte
+              other: Bytes
+            gb: GB
+            kb: kB
+            mb: MB
+            tb: TB
     share:
       topic: 'del en link til dette emnet'
       post: 'del en link til dette innlegget'
@@ -381,9 +393,9 @@ nb_NO:
       quote_text: "Sitatramme"
       code_title: "Kode Utsnitt"
       code_text: "Legg inn kode her"
-      image_title: "Bilde"
-      image_description: "beskriv bildet her"
-      image_dialog_title: "Legg til Bildet"
+      upload_title: "Bilde"
+      upload_description: "beskriv bildet her"
+      upload_dialog_title: "Legg til Bildet"
       image_optional_text: "valgfri title"
       image_hosting_hint: "Trenger du <a href='http://www.google.com/search?q=free+image+hosting' target='_blank'>gratis bildelagring?</a>"
       olist_title: "Nummerert Liste"
@@ -417,7 +429,7 @@ nb_NO:
       moved_post: "<i title='flyttet innlegg' class='icon icon-arrow-right'></i> {{username}} flyttet til {{link}}"
       total_flagged: "totalt markerte innlegg"
 
-    image_selector:
+    upload_selector:
       title: "Legg til Bilde"
       from_my_computer: "Fra Min Enhet"
       from_the_web: "Fra Nettet"
@@ -427,7 +439,7 @@ nb_NO:
       local_title: "lokalt bilde"
       local_tip: "klikk for å velge et bilde fra din enhet."
       upload: "Last opp"
-      uploading_image: "Laster opp bilde"
+      upload_file: "Laster opp bilde"
 
     search:
       title: "søk etter emner, innlegg, brukere eller kategorier"

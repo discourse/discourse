@@ -25,14 +25,10 @@ class CookedPostProcessor
     attachments.each do |attachment|
       href = attachment['href']
       attachment['href'] = relative_to_absolute(href)
+      # update reverse index
       if upload = Upload.get_from_url(href)
-        # update reverse index
         associate_to_post(upload)
-        # append the size
-        append_human_size!(attachment, upload)
       end
-      # mark as dirty
-      @dirty = true
     end
   end
 
@@ -232,13 +228,6 @@ class CookedPostProcessor
       # local uploads are identified using a relative uri
       @doc.css("a[href^=\"#{LocalStore.directory}\"]")
     end
-  end
-
-  def append_human_size!(attachment, upload)
-    size = Nokogiri::XML::Node.new("span", @doc)
-    size["class"] = "size"
-    size.content = "(#{number_to_human_size(upload.filesize)})"
-    attachment.add_next_sibling(size)
   end
 
   def dirty?

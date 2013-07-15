@@ -199,7 +199,7 @@ Discourse.ComposerView = Discourse.View.extend({
     var $uploadTarget = $('#reply-control');
     this.editor.hooks.insertImageDialog = function(callback) {
       callback(null);
-      composerView.get('controller').send('showImageSelector', composerView);
+      composerView.get('controller').send('showUploadSelector', composerView);
       return true;
     };
 

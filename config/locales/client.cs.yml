@@ -7,6 +7,16 @@
 
 cs:
   js:
+    number:
+      human:
+        storage_units:
+          format: ! '%n %u'
+          units:
+            byte: B
+            gb: GB
+            kb: KB
+            mb: MB
+            tb: TB
     dates:
       tiny:
         half_a_minute: "< 1m"
@@ -460,9 +470,9 @@ cs:
       quote_text: "Bloková citace"
       code_title: "Ukázka kódu"
       code_text: "sem vložte kód"
-      image_title: "Obrázek"
-      image_description: "sem vložek popis obrázku"
-      image_dialog_title: "Vložit obrázek"
+      upload_title: "Obrázek"
+      upload_description: "sem vložek popis obrázku"
+      upload_dialog_title: "Vložit obrázek"
       image_optional_text: "volitelný popis"
       image_hosting_hint: "Potřebujete <a href='http://www.google.com/search?q=free+image+hosting' target='_blank'>hosting obrázků zdarma?</a>"
       olist_title: "Číslovaný seznam"
@@ -496,7 +506,7 @@ cs:
       moved_post: "<i title='přesunutý příspěvek' class='icon icon-arrow-right'></i> {{username}} přesunul příspěvek do {{link}}"
       total_flagged: "celkem nahlášeno příspěvků"
 
-    image_selector:
+    upload_selector:
       title: "Vložit obrázek"
       from_my_computer: "Z mého zařízení"
       from_the_web: "Z webu"
@@ -506,7 +516,7 @@ cs:
       local_title: "obrázek z lokálního úložiště"
       local_tip: "klikněte sem pro výběr obrázku z vašeho zařízení"
       upload: "Nahrát"
-      uploading_image: "Nahrávám obrázek"
+      upload_file: "Nahrávám obrázek"
 
     search:
       title: "hledání témat, příspěvků, uživatelů a kategorií"

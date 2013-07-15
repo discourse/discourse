@@ -7,6 +7,18 @@
 
 zh_TW:
   js:
+    number:
+      human:
+        storage_units:
+          format: ! '%n %u'
+          units:
+            byte:
+              one: Byte
+              other: Bytes
+            gb: GB
+            kb: KB
+            mb: MB
+            tb: TB
     share:
       topic: '分享一個到本主題的鏈接'
       post: '分享一個到本帖的鏈接'
@@ -370,9 +382,9 @@ zh_TW:
       quote_text: "引用"
       code_title: "代碼"
       code_text: "在此輸入代碼"
-      image_title: "圖片"
-      image_description: "在此輸入圖片描述"
-      image_dialog_title: "插入圖片"
+      upload_title: "圖片"
+      upload_description: "在此輸入圖片描述"
+      upload_dialog_title: "插入圖片"
       image_optional_text: "可選標題"
       image_hosting_hint: "需要 <a href='http://www.google.com/search?q=free+image+hosting' target='_blank'>免費圖片存儲？</a>"
       olist_title: "數字列表"
@@ -406,7 +418,7 @@ zh_TW:
       moved_post: "<i title='移動帖子' class='icon icon-arrow-right'></i> {{username}} 已將帖子移動到 {{link}}"
       total_flagged: "被投訴帖子的總數"
 
-    image_selector:
+    upload_selector:
       title: "插入圖片"
       from_my_computer: "來自我的設備"
       from_the_web: "來自網絡"
@@ -416,7 +428,7 @@ zh_TW:
       local_title: "本地圖片"
       local_tip: "點擊從你的設備中選擇一張圖片。"
       upload: "上傳"
-      uploading_image: "上傳圖片中"
+      upload_file: "上傳圖片中"
 
     search:
       title: "搜索主題、帖子、用戶或分類"

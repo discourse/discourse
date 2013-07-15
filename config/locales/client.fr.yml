@@ -11,6 +11,18 @@
 
 fr:
   js:
+    number:
+      human:
+        storage_units:
+          format: "%n %u"
+          units:
+            byte:
+              one:   "octet"
+              other: "octets"
+            kb: "ko"
+            mb: "Mo"
+            gb: "Go"
+            tb: "To"
     dates:
       tiny:
         half_a_minute: "< 1m"
@@ -430,9 +442,9 @@ fr:
       quote_text: "Citation"
       code_title: "Bout de code"
       code_text: "renseignez ici votre code"
-      image_title: "Image"
-      image_description: "renseignez ici la description de l'image"
-      image_dialog_title: "Insérez l'image"
+      upload_title: "Image"
+      upload_description: "renseignez ici la description de l'image"
+      upload_dialog_title: "Insérez l'image"
       image_optional_text: "titre optionnel"
       image_hosting_hint: "Besoin <a href='https://www.google.fr/search?q=hébergement+d'image+gratuit' target='_blank'>d'un hébergeur d'image gratuit ?</a>"
       olist_title: "Liste numérotée"
@@ -477,17 +489,17 @@ fr:
       moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} a déplacé le message vers {{link}}"
       total_flagged: "Nombre total de messages signalés"
 
-    image_selector:
-      title: "Insérer une image"
+    upload_selector:
+      title: "Insérer un fichier"
       from_my_computer: "Local"
       from_the_web: "Depuis internet"
-      add_image: "Ajouter une image"
-      remote_title: "Image distante"
-      remote_tip: "saisissez l'url de l'image"
-      local_title: "Image locale"
-      local_tip: "Cliquez pour sélectionner une image depuis votre ordinateur."
+      add_image: "Ajouter un fichier"
+      remote_title: "Fichier distant"
+      remote_tip: "saisissez l'url du fichier"
+      local_title: "Fichier local"
+      local_tip: "Cliquez pour sélectionner un fichier depuis votre ordinateur."
       upload: "Envoyer"
-      uploading_image: "Image en cours d'envoi"
+      upload_file: "Fichier en cours d'envoi"
 
     search:
       title: "Rechercher les discussions, messages, utilisateurs ou catégories"

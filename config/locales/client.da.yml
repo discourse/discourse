@@ -6,6 +6,18 @@
 
 da:
   js:
+    number:
+      human:
+        storage_units:
+          format: ! '%n %u'
+          units:
+            byte:
+              one: Byte
+              other: Bytes
+            gb: GB
+            kb: KB
+            mb: MB
+            tb: TB
     share:
       topic: 'del et link til dette emne'
       post: 'del et link til dette indlæg'
@@ -307,9 +319,9 @@ da:
       quote_text: "Citatblok"
       code_title: "Programkode"
       code_text: "skriv programkode her"
-      image_title: "Billede"
-      image_description: "skriv billedets beskrivelse her"
-      image_dialog_title: "Indsæt billede"
+      upload_title: "Billede"
+      upload_description: "skriv billedets beskrivelse her"
+      upload_dialog_title: "Indsæt billede"
       image_optional_text: "evt. titel"
       image_hosting_hint: "Brug for <a href='http://www.google.com/search?q=free+image+hosting' target='_blank'>gratis billed hosting?</a>"
       olist_title: "Numereret liste"
@@ -337,7 +349,7 @@ da:
       invitee_accepted: "<i title='accepted your invitation' class='icon icon-signin'></i> {{username}} har accepteret din invitation"
       moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} flyttede indlæg til {{link}}"
 
-    image_selector:
+    upload_selector:
       title: "Indsæt billede"
       from_my_computer: "Fra min computer"
       from_the_web: "Fra nettet"
@@ -345,7 +357,7 @@ da:
       remote_tip: "skriv adressen på et billede i formen http://example.com/billede.jpg"
       local_tip: "klik for at vælge et billede fra din computer."
       upload: "Upload"
-      uploading_image: "Uploader billede"
+      upload_file: "Uploader billede"
 
     search:
       title: "søg efter emner, indlæg, brugere eller kategorier"
