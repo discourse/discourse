@@ -8,6 +8,18 @@
 
 es:
   js:
+    number:
+      human:
+        storage_units:
+          format: ! '%n %u'
+          units:
+            byte:
+              one: Byte
+              other: Bytes
+            gb: GB
+            kb: KB
+            mb: MB
+            tb: TB
     dates:
       tiny:
         half_a_minute: "< 1m"
@@ -383,9 +395,9 @@ es:
       quote_text: "Blockquote"
       code_title: "Code Sample"
       code_text: "enter code here"
-      image_title: "Image"
-      image_description: "enter image description here"
-      image_dialog_title: "Insert Image"
+      upload_title: "Image"
+      upload_description: "enter image description here"
+      upload_dialog_title: "Insert Image"
       image_optional_text: "optional title"
       image_hosting_hint: "Need <a href='http://www.google.com/search?q=free+image+hosting' target='_blank'>free image hosting?</a>"
       olist_title: "Numbered List"
@@ -413,7 +425,7 @@ es:
       invitee_accepted: "<i title='aceptó tu invitación' class='icon icon-signin'></i> {{username}} aceptó tu invitación"
       moved_post: "<i title='publicación trasladada' class='icon icon-arrow-right'></i> {{username}} trasladó la publicación a {{link}}"
 
-    image_selector:
+    upload_selector:
       title: "Insertar Imagen"
       from_my_computer: "Desde Mí Dispositivo"
       from_the_web: "Desde La Web"
@@ -421,7 +433,7 @@ es:
       remote_tip: "ingrese una dirección de una imagen en la siguiente forma http://ejemplo.com/imagen.jpg"
       local_tip: "click para seleccionar la imagen desde su dispositivo."
       upload: "Subir"
-      uploading_image: "Subiendo imagen"
+      upload_file: "Subiendo imagen"
 
     search:
       title: "buscar por temas, publicaciones, usuarios o categorías"

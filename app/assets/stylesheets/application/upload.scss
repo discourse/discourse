@@ -1,9 +1,7 @@
-// base styles for every modal popup used in Discourse
-
 @import "foundation/variables";
 @import "foundation/mixins";
 
-.add-picture .icon-plus {
+.add-upload .icon-plus {
   font-size: 10px;
   position: relative;
   left: -5px;
@@ -14,8 +12,7 @@
     -1px 1px 0 $btn-primary-background-color;
 }
 
-// we should refactor this into something more general
-.image-selector {
+.upload-selector {
   input[type="text"]{
     width: 520px;
   }

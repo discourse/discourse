@@ -7,6 +7,18 @@
 
 zh_CN:
   js:
+    number:
+      human:
+        storage_units:
+          format: ! '%n %u'
+          units:
+            byte:
+              one: Byte
+              other: Bytes
+            gb: GB
+            kb: KB
+            mb: MB
+            tb: TB
     dates:
       short_date_no_year: "D MMM"
       short_date: "D MMM, YYYY"
@@ -429,9 +441,9 @@ zh_CN:
       quote_text: "引用"
       code_title: "代码"
       code_text: "在此输入代码"
-      image_title: "图片"
-      image_description: "在此输入图片描述"
-      image_dialog_title: "插入图片"
+      upload_title: "图片"
+      upload_description: "在此输入图片描述"
+      upload_dialog_title: "插入图片"
       image_optional_text: "可选标题"
       image_hosting_hint: "需要 <a href='http://www.google.com/search?q=free+image+hosting' target='_blank'>免费图片存储？</a>"
       olist_title: "数字列表"
@@ -465,7 +477,7 @@ zh_CN:
       moved_post: "<i title='移动帖子' class='icon icon-arrow-right'></i> {{username}} 已将帖子移动到 {{link}}"
       total_flagged: "被投诉帖子的总数"
 
-    image_selector:
+    upload_selector:
       title: "插入图片"
       from_my_computer: "来自我的设备"
       from_the_web: "来自网络"
@@ -475,7 +487,7 @@ zh_CN:
       local_title: "本地图片"
       local_tip: "点击从你的设备中选择一张图片。"
       upload: "上传"
-      uploading_image: "上传图片中"
+      upload_file: "上传图片中"
 
     search:
       title: "搜索主题、帖子、用户或分类"
