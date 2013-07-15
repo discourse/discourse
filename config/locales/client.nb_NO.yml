@@ -257,14 +257,14 @@ nb_NO:
     week: 'uke'
     week_desc: 'emner postet i de siste 7 dager'
 
-    first_post: First post
-    mute: Mute
-    unmute: Unmute
-    last_post: Last post
+    first_post: "Første innlegg"
+    mute: "Demp"
+    unmute: "Udemp"
+    last_post: "Siste Innlegg"
 
     best_of:
       title: "De Beste"
-      enabled_description: You are currently viewing the "De Beste" view of this topic.
+      enabled_description: "Du er for øyeblikket i "De Beste" modus i dette emnet."
       description: "Det er <b>{{count}}</b> innlegg i dette emnet. Det er mange! Will du spare tid ved å vise bare de beste innleggene?"
       enable: 'Bytt til "De Beste" modus'
       disable: 'Avslutt "De Beste"'
@@ -510,13 +510,13 @@ nb_NO:
       read_more_in_category_MF: "Det {UNREAD, plural, one {er <a href='/unread'>1 ulest</a>} other {er <a href='/unread'># uleste</a>}} og {NEW, plural, one {<a href='/new'>1 nytt</a> emne} other {<a href='/new'># nye</a> emner}} gjenstående, eller bla gjennom andre emner i {catLink}"
       read_more_MF: "Det {UNREAD, plural, one {er <a href='/unread'>1 ulest</a>} other {er <a href='/unread'># uleste</a>}} og {NEW, plural, one {<a href='/new'>1 nytt</a> emne} other {<a href='/new'># nye</a> emner}} gjenstående, eller {latestLink}"
 
-      browse_all_categories: Browse all categories
+      browse_all_categories: "Se alle kategorier"
 
-      view_latest_topics: view latest topics
-      suggest_create_topic: Why not create a topic?
+      view_latest_topics: "se siste emner"
+      suggest_create_topic: "Hvorfor ikke lage ett emne?"
       read_position_reset: "Din leseposisjon har blitt tilbakestilt."
-      jump_reply_up: jump to earlier reply
-      jump_reply_down: jump to later reply
+      jump_reply_up: "hopp til tidligere svar"
+      jump_reply_down: "hopp til siste svar"
       deleted: "Emnet har blitt slettet"
 
       auto_close_notice: "Dette emnet vil automatisk lukkes %{timeLeft}."
@@ -690,404 +690,404 @@ nb_NO:
         more: "Mer"
 
       actions:
-        flag: 'Flag'
+        flag: 'Markering'
         clear_flags:
-          one: "Clear flag"
-          other: "Clear flags"
+          one: "Fjern markering"
+          other: "Fjern markeringer"
         it_too:
-          off_topic: "Flag it too"
-          spam: "Flag it too"
-          inappropriate: "Flag it too"
-          custom_flag: "Flag it too"
-          bookmark: "Bookmark it too"
-          like: "Like it too"
-          vote: "Vote for it too"
+          off_topic: "Marker det også"
+          spam: "Marker det også"
+          inappropriate: "Marker det også"
+          custom_flag: "Marker det også"
+          bookmark: "Bokmerk det også"
+          like: "Lik det også"
+          vote: "Stem for det også"
         undo:
-          off_topic: "Undo flag"
-          spam: "Undo flag"
-          inappropriate: "Undo flag"
-          bookmark: "Undo bookmark"
-          like: "Undo like"
-          vote: "Undo vote"
+          off_topic: "Angre markering"
+          spam: "Angre markering"
+          inappropriate: "Angre markering"
+          bookmark: "Angre bokmerke"
+          like: "Angre like"
+          vote: "Angre stemme"
         people:
-          off_topic: "{{icons}} marked this as off-topic"
-          spam: "{{icons}} marked this as spam"
-          inappropriate: "{{icons}} marked this as inappropriate"
-          notify_moderators: "{{icons}} notified moderators"
-          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>notified moderators</a>"
-          notify_user: "{{icons}} sent a private message"
-          notify_user_with_url: "{{icons}} sent a <a href='{{postUrl}}'>private message</a>"
-          bookmark: "{{icons}} bookmarked this"
-          like: "{{icons}} liked this"
-          vote: "{{icons}} voted for this"
+          off_topic: "{{icons}} markerte dette som urelevant"
+          spam: "{{icons}} markerte dette som spam"
+          inappropriate: "{{icons}} markerte dette som upassende"
+          notify_moderators: "{{icons}} varslet moderatorene"
+          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>varslet moderatorene</a>"
+          notify_user: "{{icons}} send en private melding"
+          notify_user_with_url: "{{icons}} sendte en <a href='{{postUrl}}'>privat melding</a>"
+          bookmark: "{{icons}} bokmerket dette"
+          like: "{{icons}} likte dette"
+          vote: "{{icons}} stemte for dette"
         by_you:
-          off_topic: "You flagged this as off-topic"
-          spam: "You flagged this as spam"
-          inappropriate: "You flagged this as inappropriate"
-          notify_moderators: "You flagged this for moderation"
-          notify_user: "You sent a private message to this user"
-          bookmark: "You bookmarked this post"
-          like: "You liked this"
-          vote: "You voted for this post"
+          off_topic: "Du markerte dette som urelevant"
+          spam: "Du markerte dette som spam"
+          inappropriate: "Du markerte dette som upassende"
+          notify_moderators: "Du markerte dette for moderering"
+          notify_user: "Du sendte en private melding til denne brukeren"
+          bookmark: "Du bokmerket dette innlegget"
+          like: "Du likte dette"
+          vote: "Du stemte for dette innlegget"
         by_you_and_others:
           off_topic:
-            one: "You and 1 other flagged this as off-topic"
-            other: "You and {{count}} other people flagged this as off-topic"
+            one: "Du og 1 annen markerte dette som urelevant"
+            other: "Du og {{count}} andre markerte dette som urelevant"
           spam:
-            one: "You and 1 other flagged this as spam"
-            other: "You and {{count}} other people flagged this as spam"
+            one: "Du og 1 annen markerte dette som spam"
+            other: "Du og {{count}} andre markerte dette som spam"
           inappropriate:
-            one: "You and 1 other flagged this as inappropriate"
-            other: "You and {{count}} other people flagged this as inappropriate"
+            one: "Du og 1 annen markerte dette som upassende"
+            other: "Du og {{count}} andre markerte dette som upassende"
           notify_moderators:
-            one: "You and 1 other flagged this for moderation"
-            other: "You and {{count}} other people flagged this for moderation"
+            one: "Du og 1 annen markerte dette for moderering"
+            other: "Du og {{count}} andre markerte dette for moderering"
           notify_user:
-            one: "You and 1 other sent a private message to this user"
-            other: "You and {{count}} other people sent a private message to this user"
+            one: "Du og 1 annen sendte en privat melding til denne brukeren"
+            other: "Du og {{count}} andre sendte en privat melding til denne brukeren"
           bookmark:
-            one: "You and 1 other bookmarked this post"
-            other: "You and {{count}} other people bookmarked this post"
+            one: "Du og 1 annen bokmerket dette innlegget"
+            other: "Du og {{count}} andre bokmerket dette innlegget"
           like:
-            one: "You and 1 other liked this"
-            other: "You and {{count}} other people liked this"
+            one: "Du og 1 annen likte dette"
+            other: "Du og {{count}} andre likte dette"
           vote:
-            one: "You and 1 other voted for this post"
-            other: "You and {{count}} other people voted for this post"
+            one: "Du og 1 annen stemte på dette innlegget"
+            other: "Du og {{count}} andre stemte på dette innlegget"
         by_others:
           off_topic:
-            one: "1 person flagged this as off-topic"
-            other: "{{count}} people flagged this as off-topic"
+            one: "1 bruker markerte dette som urelevant"
+            other: "{{count}} brukere markerte dette som urelevant"
           spam:
-            one: "1 person flagged this as spam"
-            other: "{{count}} people flagged this as spam"
+            one: "1 bruker markerte dette som spam"
+            other: "{{count}} brukere markerte dette som spam"
           inappropriate:
-            one: "1 person flagged this as inappropriate"
-            other: "{{count}} people flagged this as inappropriate"
+            one: "1 bruker markerte dette som upassende"
+            other: "{{count}} brukere markerte dette som upassende"
           notify_moderators:
-            one: "1 person flagged this for moderation"
-            other: "{{count}} people flagged this for moderation"
+            one: "1 bruker markerte dette for moderering"
+            other: "{{count}} brukere markerte dette for moderering"
           notify_user:
-            one: "1 person sent a private message to this user"
-            other: "{{count}} sent a private message to this user"
+            one: "1 bruker sendte en privat melding til denne brukeren"
+            other: "{{count}} brukere sendte en privat melding til denne brukeren"
           bookmark:
-            one: "1 person bookmarked this post"
-            other: "{{count}} people bookmarked this post"
+            one: "1 bruker bokmerket dette innlegget"
+            other: "{{count}} brukere bokmerket dette innlegget"
           like:
-            one: "1 person liked this"
-            other: "{{count}} people liked this"
+            one: "1 bruker likte dette"
+            other: "{{count}} brukere likte dette"
           vote:
-            one: "1 person voted for this post"
-            other: "{{count}} people voted for this post"
+            one: "1 bruker stemte på dette innlegget"
+            other: "{{count}} brukere stemte på dette innlegget"
 
       edits:
-        one: 1 edit
-        other: "{{count}} edits"
-        zero: no edits
+        one: "1 redigering"
+        other: "{{count}} redigeringer"
+        zero: "ingen redigeringer"
 
       delete:
         confirm:
-          one: "Are you sure you want to delete that post?"
-          other: "Are you sure you want to delete all those posts?"
+          one: "Er du sikker på at du vil slette det innlegget?"
+          other: "Er du sikker på at du vil slette alle de innleggene?"
 
     category:
       none: '(no category)'
-      edit: 'edit'
-      edit_long: "Edit Category"
-      edit_uncategorized: "Edit Uncategorized"
-      view: 'View Topics in Category'
-      general: 'General'
-      settings: 'Settings'
-      delete: 'Delete Category'
-      create: 'Create Category'
-      save: 'Save Category'
-      creation_error: There has been an error during the creation of the category.
-      save_error: There was an error saving the category.
-      more_posts: "view all {{posts}}..."
-      name: "Category Name"
-      description: "Description"
-      topic: "category topic"
+      edit: 'rediger'
+      edit_long: "Rediger Kategori"
+      edit_uncategorized: "Rediger Ukategorisert"
+      view: 'Se Emner i Kategori'
+      general: 'Generellt'
+      settings: 'Innstillinger'
+      delete: 'Slett Kategori'
+      create: 'Lag Kategori'
+      save: 'Lagre Kategori'
+      creation_error: "Det oppstod en feil ved å lage denne kategorien."
+      save_error: "Det oppstod en feil ved lagrinen av denne kategorien."
+      more_posts: "se alle {{posts}}..."
+      name: "Kategorinavn"
+      description: "Beskrivelse"
+      topic: "kategori emne"
       badge_colors: "Badge colors"
-      background_color: "Background color"
-      foreground_color: "Foreground color"
-      name_placeholder: "Should be short and succinct."
-      color_placeholder: "Any web color"
-      delete_confirm: "Are you sure you want to delete this category?"
-      delete_error: "There was an error deleting the category."
-      list: "List Categories"
-      no_description: "There is no description for this category."
-      change_in_category_topic: "Edit Description"
-      hotness: "Hotness"
-      already_used: 'This color has been used by another category'
-      is_secure: "Secure category?"
-      add_group: "Add Group"
-      security: "Security"
-      allowed_groups: "Allowed Groups:"
-      auto_close_label: "Auto-close topics after:"
+      background_color: "Bakgrunnsfarge"
+      foreground_color: "Forgrunnsfarge"
+      name_placeholder: "Bør være kortfattet."
+      color_placeholder: "Enhver webfarge"
+      delete_confirm: "Er du sikker på at du vil slette denne kategorien?"
+      delete_error: "Det oppstod en feil ved å slette denne kategorien."
+      list: "List Kategorier"
+      no_description: "Det er ingen beskrivelse på denne kategorien."
+      change_in_category_topic: "Rediger Beskrivelse"
+      hotness: "Temperatur"
+      already_used: 'Denne fargen er i bruk av en annen kategori'
+      is_secure: "Sikker kategori?"
+      add_group: "Legg til Gruppe"
+      security: "Sikkerhet"
+      allowed_groups: "Tillatte Grupper:"
+      auto_close_label: "Auto-lukk Emner Etter:"
 
 
     flagging:
-      title: 'Why are you flagging this post?'
-      action: 'Flag Post'
-      take_action: "Take Action"
-      notify_action: 'Notify'
-      cant: "Sorry, you can't flag this post at this time."
-      custom_placeholder_notify_user: "Why does this post require you to speak to this user directly and privately? Be specific, be constructive, and always be kind."
-      custom_placeholder_notify_moderators: "Why does this post require moderator attention? Let us know specifically what you are concerned about, and provide relevant links where possible."
+      title: 'Hvorfor markerer du dette innlegget?'
+      action: 'Market Innlegg'
+      take_action: "Ta Handling"
+      notify_action: 'Varsle'
+      cant: "Beklager, du kan ikke markere dette innlettet nå."
+      custom_placeholder_notify_user: "Hvorfor krever dette innlegget at du snakker til denne brukeren privat og direkte? Vær presis og  høfflig."
+      custom_placeholder_notify_moderators: "Hvorfor krever dette innlegget oppmerksomheten til en moderator? La oss vite nøyaktig hva du er bekymret over og del all relevant informasjon og linker."
       custom_message:
-        at_least: "enter at least {{n}} characters"
-        more: "{{n}} to go..."
-        left: "{{n}} remaining"
+        at_least: "skriv minst {{n}} bokstaver"
+        more: "{{n}} igjen..."
+        left: "{{n}} gjenstående"
 
     topic_summary:
-      title: "Topic Summary"
-      links_shown: "show all {{totalLinks}} links..."
-      clicks: "clicks"
-      topic_link: "topic link"
+      title: "Emneoppsummering"
+      links_shown: "vis alle {{totalLinks}} linker..."
+      clicks: "klikk"
+      topic_link: "emnelink"
 
     topic_statuses:
       locked:
-        help: "this topic is closed; it no longer accepts new replies"
+        help: "dette emnet er låst; det aksepterer ikke lenger nye svar"
       pinned:
-        help: "this topic is pinned; it will display at the top of its category"
+        help: "dette emnet er fastsatt; det vil visest på toppen av sin kategori"
       archived:
-        help: "this topic is archived; it is frozen and cannot be changed"
+        help: "dette emnet er arkivert; det er fryst og kan ikke bli aktivert"
       invisible:
-        help: "this topic is invisible; it will not be displayed in topic lists, and can only be accessed via a direct link"
+        help: "dette emnet er usynlig; det blir ikke vist i emnelister, og kan bare bli åpnet via en direkte link"
 
-    posts: "Posts"
-    posts_long: "{{number}} posts in this topic"
-    original_post: "Original Post"
-    views: "Views"
-    replies: "Replies"
-    views_long: "this topic has been viewed {{number}} times"
-    activity: "Activity"
+    posts: "Innlegg"
+    posts_long: "{{number}} innlegg i dette emnet"
+    original_post: "Originalt Innlegg"
+    views: "Seere"
+    replies: "Svar"
+    views_long: "dette emnet har blit sett {{number}} ganger"
+    activity: "Aktivitet"
     likes: "Likes"
-    top_contributors: "Participants"
-    category_title: "Category"
-    history: "History"
-    changed_by: "by {{author}}"
+    top_contributors: "Deltakere"
+    category_title: "Kategori"
+    history: "Historie"
+    changed_by: "av {{author}}"
 
-    categories_list: "Categories List"
+    categories_list: "Kategoriliste"
 
     filters:
       latest:
-        title: "Latest"
-        help: "the most recent topics"
+        title: "Nye"
+        help: "de nyeste emnene"
       hot:
         title: "Hot"
-        help: "a selection of the hottest topics"
+        help: "en seleksjon av de hotteste emnene"
       favorited:
-        title: "Favorited"
-        help: "topics you marked as favorites"
+        title: "Favorisert"
+        help: "emner du har markert som favoritter"
       read:
-        title: "Read"
-        help: "topics you've read, in the order that you last read them"
+        title: "Lest"
+        help: "emner du har lest, i den rekkefølgen du har lest dem"
       categories:
-        title: "Categories"
-        title_in: "Category - {{categoryName}}"
-        help: "all topics grouped by category"
+        title: "Kategorier"
+        title_in: "Kategori - {{categoryName}}"
+        help: "alle emner sortert etter kategori"
       unread:
         title:
-          zero: "Unread"
-          one: "Unread (1)"
-          other: "Unread ({{count}})"
-        help: "tracked topics with unread posts"
+          zero: "Ulest"
+          one: "Ulest (1)"
+          other: "Ulest ({{count}})"
+        help: "følgte emner med uleste innlegg"
       new:
         title:
-          zero: "New"
-          one: "New (1)"
-          other: "New ({{count}})"
-        help: "new topics since your last visit"
+          zero: "Ny"
+          one: "Ny (1)"
+          other: "Ny ({{count}})"
+        help: "nye emner siden ditt siste besøk"
       posted:
-        title: "My Posts"
-        help: "topics you have posted in"
+        title: "Mine Innlegg"
+        help: "emner du har postet i"
       category:
         title:
           zero: "{{categoryName}}"
           one: "{{categoryName}} (1)"
           other: "{{categoryName}} ({{count}})"
-        help: "latest topics in the {{categoryName}} category"
+        help: "siste emner i {{categoryName}}-kategorien"
 
-    browser_update: 'Unfortunately, <a href="http://www.discourse.org/faq/#browser">your browser is too old to work on this Discourse forum</a>. Please <a href="http://browsehappy.com">upgrade your browser</a>.'
+    browser_update: 'Desverre,<a href="http://www.discourse.org/faq/#browser">nettleseren din er for gammel for  å fungere med Discourse</a>. Vennligst <a href="http://browsehappy.com">oppgrader</a>.'
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
-    type_to_filter: "type to filter..."
+    type_to_filter: "skriv for å filtrere..."
 
     admin:
       title: 'Discourse Admin'
       moderator: 'Moderator'
 
       dashboard:
-        title: "Dashboard"
-        version: "Version"
-        up_to_date: "You're up to date!"
-        critical_available: "A critical update is available."
-        updates_available: "Updates are available."
-        please_upgrade: "Please upgrade!"
-        installed_version: "Installed"
-        latest_version: "Latest"
-        problems_found: "Some problems have been found with your installation of Discourse:"
-        last_checked: "Last checked"
-        refresh_problems: "Refresh"
-        no_problems: "No problems were found."
-        moderators: 'Moderators:'
-        admins: 'Admins:'
-        private_messages_short: "PMs"
-        private_messages_title: "Private Messages"
+        title: "Dashbord"
+        version: "Versjon"
+        up_to_date: "Du har den seneste versjonen!"
+        critical_available: "En kritisk oppdatering er tilgjengelig."
+        updates_available: "Oppdateringer er tilgjengelig."
+        please_upgrade: "Vennligst oppgrader!"
+        installed_version: "Installert"
+        latest_version: "Seneste"
+        problems_found: "Det har oppstått noen problemer med din installasjon av Discourse:"
+        last_checked: "Sist sjekket"
+        refresh_problems: "Last inn siden på nytt"
+        no_problems: "Ingen problemer ble funnet."
+        moderators: 'Moderatorer:'
+        admins: 'Adminer:'
+        private_messages_short: "PMer"
+        private_messages_title: "Private Meldinger"
 
         reports:
-          today: "Today"
-          yesterday: "Yesterday"
-          last_7_days: "Last 7 Days"
-          last_30_days: "Last 30 Days"
-          all_time: "All Time"
-          7_days_ago: "7 Days Ago"
-          30_days_ago: "30 Days Ago"
-          all: "All"
-          view_table: "View as Table"
-          view_chart: "View as Bar Chart"
+          today: "I dag"
+          yesterday: "I går"
+          last_7_days: "Siste 7 Dager"
+          last_30_days: "Siste 30 Dager"
+          all_time: "All Tid"
+          7_days_ago: "7 Dager Siden"
+          30_days_ago: "30 Dager Siden"
+          all: "Alle"
+          view_table: "Se som Tabell"
+          view_chart: "Se som Stolpediagram"
 
       commits:
-        latest_changes: "Latest changes: please update often!"
-        by: "by"
+        latest_changes: "Siste endringer: Vennligst oppgrader ofte!"
+        by: "av"
 
       flags:
-        title: "Flags"
-        old: "Old"
-        active: "Active"
-        clear: "Clear Flags"
-        clear_title: "dismiss all flags on this post (will unhide hidden posts)"
-        delete: "Delete Post"
-        delete_title: "delete post (if its the first post delete topic)"
-        flagged_by: "Flagged by"
-        error: "Something went wrong"
-        view_message: "Reply"
+        title: "Markeringer"
+        old: "Gamle"
+        active: "Aktive"
+        clear: "Fjern Markeringer"
+        clear_title: "avvis alle markeringer på dette innlegget (vil gjenopprette skjulte innlegg)"
+        delete: "Slett Innlegg"
+        delete_title: "slett innlegg (hvis det er det første innlegget, slett hele emnet)"
+        flagged_by: "Markert av"
+        error: "Noe gikk galt"
+        view_message: "Svar"
 
       groups:
-        title: "Groups"
-        edit: "Edit Groups"
-        selector_placeholder: "add users"
-        name_placeholder: "Group name, no spaces, same as username rule"
+        title: "Grupper"
+        edit: "Rediger Grupper"
+        selector_placeholder: "legg til brukere"
+        name_placeholder: "Gruppenavn, ingen mellomrom, samme som reglene for brukernavn"
 
       api:
         title: "API"
-        long_title: "API Information"
-        key: "Key"
-        generate: "Generate API Key"
-        regenerate: "Regenerate API Key"
-        info_html: "Your API key will allow you to create and update topics using JSON calls."
-        note_html: "Keep this key <strong>secret</strong>, all users that have it may create arbitrary posts on the forum as any user."
+        long_title: "API Informasjon"
+        key: "Nøkkel"
+        generate: "Generer API Nøkkel"
+        regenerate: "Regenerer API Nøkkel"
+        info_html: "Din API nøkkel vil tillate deg å lage og oppdatere emner ved å bruke JSON samteler."
+        note_html: "Bevar denne nøkkelen <strong>hemmelig</strong>. Alle brukere som har den kan lage nye innlegg som hvilken som helst bruker på forumet."
 
       customize:
-        title: "Customize"
-        long_title: "Site Customizations"
+        title: "Tilpasse"
+        long_title: "Sidetilpassninger"
         header: "Header"
-        css: "Stylesheet"
-        override_default: "Do not include standard style sheet"
-        enabled: "Enabled?"
-        preview: "preview"
-        undo_preview: "undo preview"
-        save: "Save"
-        new: "New"
-        new_style: "New Style"
-        delete: "Delete"
-        delete_confirm: "Delete this customization?"
-        about: "Site Customization allow you to modify stylesheets and headers on the site. Choose or add one to start editing."
+        css: "Stilark"
+        override_default: "Ikke inkluder standard stilark"
+        enabled: "Aktivert?"
+        preview: "forhåndsvisning"
+        undo_preview: "avbryt forhåndsvisning"
+        save: "Lagre"
+        new: "Ny"
+        new_style: "Ny Stil"
+        delete: "Slett"
+        delete_confirm: "Slett denne tilpasningen?"
+        about: "Sidetilpasning lar deg endre silark og headers på siden. Velg eller legg til en for å starte redigeringen."
 
       email_logs:
         title: "Email"
-        sent_at: "Sent At"
+        sent_at: "Sendt"
         email_type: "Email Type"
-        to_address: "To Address"
-        test_email_address: "email address to test"
+        to_address: "Til Addresse"
+        test_email_address: "email for å teste"
         send_test: "send test email"
-        sent_test: "sent!"
+        sent_test: "sendt!"
 
       impersonate:
-        title: "Impersonate User"
-        username_or_email: "Username or Email of User"
-        help: "Use this tool to impersonate a user account for debugging purposes."
-        not_found: "That user can't be found."
-        invalid: "Sorry, you may not impersonate that user."
+        title: "Gi deg ut for å være en annen Bruker"
+        username_or_email: "Brukernavn eller Email til bruker"
+        help: "Bruk dette verktøyet for å bruke en annen bruker's konto for debugging."
+        not_found: "Den brukeren kunne ikke bli funnet."
+        invalid: "Beklager, du kan ikke gi deg ut for å være den brukeren."
 
       users:
-        title: 'Users'
-        create: 'Add Admin User'
-        last_emailed: "Last Emailed"
-        not_found: "Sorry, that username doesn't exist in our system."
-        active: "Active"
+        title: 'Brukere'
+        create: 'Legg til Admin Bruker'
+        last_emailed: "Sist Kontaktet via Email"
+        not_found: "Beklager, det brukernavner eksisterer ikke i systemet vårt."
+        active: "Aktiv"
         nav:
-          new: "New"
-          active: "Active"
-          pending: "Pending"
-        approved: "Approved?"
+          new: "Ny"
+          active: "Aktiv"
+          pending: "Ventende"
+        approved: "Godkjent?"
         approved_selected:
-          one: "approve user"
-          other: "approve users ({{count}})"
+          one: "godkjenn bruker"
+          other: "godkjenn brukere ({{count}})"
         titles:
-          active: 'Active Users'
-          new: 'New Users'
-          pending: 'Users Pending Review'
-          newuser: 'Users at Trust Level 0 (New User)'
-          basic: 'Users at Trust Level 1 (Basic User)'
-          regular: 'Users at Trust Level 2 (Regular User)'
-          leader: 'Users at Trust Level 3 (Leader)'
-          elder: 'Users at Trust Level 4 (Elder)'
-          admins: 'Admin Users'
-          moderators: 'Moderators'
+          active: 'Aktive Brukere'
+          new: 'Nye Brukere'
+          pending: 'Brukere som venter på evaluering'
+          newuser: 'Brukere på tillitsnivå 0 (Ny Bruker)'
+          basic: 'Brukere på tillitsnivå 1 (Grunnleggende Bruker)'
+          regular: 'Brukere på tillitsnivå 2 (Ordinær Bruker)'
+          leader: 'Brukere på tillitsnivå 3 (Leder)'
+          elder: 'Brukere på tillitsnivå 4 (Eldre)'
+          admins: 'Admins'
+          moderators: 'Moderatorer'
 
       user:
-        ban_failed: "Something went wrong banning this user {{error}}"
-        unban_failed: "Something went wrong unbanning this user {{error}}"
-        ban_duration: "How long would you like to ban the user for? (days)"
-        delete_all_posts: "Delete all posts"
-        ban: "Ban"
-        unban: "Unban"
-        banned: "Banned?"
+        ban_failed: "Noe gikk galt ved å bannlyse denne brukeren {{error}}"
+        unban_failed: "Noe gikk galt ved å gjeninsette denne brukeren {{error}}"
+        ban_duration: "Hvor lenge vil du bannlyse denne brukeren? (dager)"
+        delete_all_posts: "Slett alle innlegg"
+        ban: "Bannlyst"
+        unban: Gjeninnsett"
+        banned: "Banlyst?"
         moderator: "Moderator?"
         admin: "Admin?"
         show_admin_profile: "Admin"
-        refresh_browsers: "Force browser refresh"
-        show_public_profile: "Show Public Profile"
-        impersonate: 'Impersonate'
-        revoke_admin: 'Revoke Admin'
-        grant_admin: 'Grant Admin'
-        revoke_moderation: 'Revoke Moderation'
-        grant_moderation: 'Grant Moderation'
-        reputation: Reputation
-        permissions: Permissions
-        activity: Activity
-        like_count: Likes Received
-        private_topics_count: Private Topics
-        posts_read_count: Posts Read
-        post_count: Posts Created
-        topics_entered: Topics Entered
-        flags_given_count: Flags Given
-        flags_received_count: Flags Received
-        approve: 'Approve'
-        approved_by: "approved by"
-        time_read: "Read Time"
-        delete: "Delete User"
-        delete_forbidden: "This user can't be deleted because there are posts. Delete all this user's posts first."
-        delete_confirm: "Are you SURE you want to permanently delete this user from the site? This action is permanent!"
-        deleted: "The user was deleted."
-        delete_failed: "There was an error deleting that user. Make sure all posts are deleted before trying to delete the user."
-        send_activation_email: "Send Activation Email"
-        activation_email_sent: "An activation email has been sent."
-        send_activation_email_failed: "There was a problem sending another activation email."
-        activate: "Activate Account"
-        activate_failed: "There was a problem activating the user."
-        deactivate_account: "Deactivate Account"
-        deactivate_failed: "There was a problem deactivating the user."
+        refresh_browsers: "Tving nettleser refresh"
+        show_public_profile: "Vis Offentlig Profil"
+        impersonate: 'Gi deg ut for å være en annen'
+        revoke_admin: 'Tilbakedra Admin'
+        grant_admin: 'Innfri Admin'
+        revoke_moderation: 'Tilbakedra Moderering'
+        grant_moderation: 'Innfri Moderering'
+        reputation: 'Rykte'
+        permissions: 'Tillatelser'
+        activity: 'Aktivitet'
+        like_count: 'Likes Mottatt'
+        private_topics_count: 'Private Emner'
+        posts_read_count: 'Innlegg Lest'
+        post_count: 'Innlegg Skrevet'
+        topics_entered: 'Emner Opprettet'
+        flags_given_count: 'Markeringer Gitt'
+        flags_received_count: 'Markeringer Mottatt'
+        approve: 'Godta'
+        approved_by: "Godtatt Av"
+        time_read: "Lesetid"
+        delete: "Slett Bruker"
+        delete_forbidden: "Denne brukeren kan ikke bli slettet fordi den har fortsatt innlett. Slett alle brukerens innlegg først."
+        delete_confirm: "Er du HELT SIKKER på at du vil slette denne brukeren fra siden? Denne handlingen er permanent."
+        deleted: "Brukeren ble slettet."
+        delete_failed: "Det oppstod en feil ved slettingen av den brukeren. Sørg for at alle av brukerens innlegg er slettet før du prøver å slette brukeren."
+        send_activation_email: "Send Aktiveringsemail"
+        activation_email_sent: "En aktiveringsemail har blitt sendt."
+        send_activation_email_failed: "Det oppstod et problem ved sendingen av enda en aktiveringsemail."
+        activate: "Aktiver Konto"
+        activate_failed: "Det oppstod et problem ved aktiveringen av den brukeren."
+        deactivate_account: "Deaktiver Konto"
+        deactivate_failed: "Det oppstod et problem ved deaktiveringen av den brukeren."
 
       site_content:
-        none: "Choose a type of content to begin editing."
-        title: 'Content'
-        edit: "Edit Site Content"
+        none: "Velg et type innhold du vil begynne å redigere."
+        title: 'Innhold'
+        edit: "Rediger Sideinnhold"
 
       site_settings:
-        show_overriden: 'Only show overridden'
-        title: 'Settings'
-        reset: 'reset to default'
+        show_overriden: 'Bare vis overstyrte'
+        title: 'Innstillinger'
+        reset: 'tilbakestill til standard'
