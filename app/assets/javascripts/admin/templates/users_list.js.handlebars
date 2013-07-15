@@ -53,7 +53,7 @@
 
       {{#each model}}
         <tr {{bindAttr class="selected"}}>
-          {{#if showApproval}}
+          {{#if controller.showApproval}}
             <td>
               {{#if can_approve}}
                 {{view Ember.Checkbox checkedBinding="selected"}}

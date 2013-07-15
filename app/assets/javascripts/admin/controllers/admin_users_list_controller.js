@@ -13,6 +13,10 @@ Discourse.AdminUsersListController = Ember.ArrayController.extend(Discourse.Pres
   content: null,
   loading: false,
 
+  queryNew: Em.computed.equal('query', 'new'),
+  queryPending: Em.computed.equal('query', 'pending'),
+  queryHasApproval: Em.computed.or('queryNew', 'queryPending'),
+
   /**
     Triggered when the selectAll property is changed
 
@@ -58,10 +62,8 @@ Discourse.AdminUsersListController = Ember.ArrayController.extend(Discourse.Pres
     @property showApproval
   **/
   showApproval: function() {
-    if (!Discourse.SiteSettings.must_approve_users) return false;
-    if (this.get('query') === 'new') return true;
-    if (this.get('query') === 'pending') return true;
-  }.property('query'),
+    return Discourse.SiteSettings.must_approve_users && this.get('queryHasApproval');
+  }.property('queryPending'),
 
   /**
     How many users are currently selected
