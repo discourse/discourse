@@ -141,7 +141,7 @@ en:
 
 
   rate_limiter:
-    too_many_requests: "You're doing that too often. Please wait %{time_left} before trying again."
+    too_many_requests: "We have a daily limit on how many times that action can be taken. Please wait %{time_left} before trying again."
     hours:
       one: "1 hour"
       other: "%{count} hours"
