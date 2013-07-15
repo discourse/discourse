@@ -175,12 +175,13 @@ de:
       bio: "Über mich"
       invited_by: "Eingeladen von"
       trust_level: "Stufe"
+      notifications: "Benachrichtigungen"
       dynamic_favicon: "Zeige eingehende Nachrichten im Favicon"
       external_links_in_new_tab: "Öffne alle externen Links in neuen Tabs"
       enable_quoting: "Markierten Text bei Antwort zitieren"
 
       moderator: "{{user}} ist Moderator"
-      admin: "{{user}} ist Admin"
+      admin: "{{user}} ist Administrator"
 
       change_password:
         action: "ändern"
@@ -296,6 +297,9 @@ de:
       avatar:
         title: "Avatar"
         instructions: "Wir nutzen <a href='https://gravatar.com' target='_blank'>Gravatar</a> zur Darstellung von Avataren basierend auf deiner Mailadresse:"
+
+      title:
+        title: "Title"
 
       filters:
         all: "Alle"
@@ -553,8 +557,12 @@ de:
       not_found:
         title: "Thema nicht gefunden"
         description: "Entschuldige, wir konnten das Thema nicht finden. Möglicherweise wurde es von einem Moderator entfernt."
-      unread_posts: "Du hast {{unread}} ungelesene Beiträge zu diesem Thema"
-      new_posts: "Es gibt {{new_posts}} neue Beiträge zu diesem Thema seit Du es das letzte mal gelesen hast"
+      unread_posts:
+        one: "Du hast einen ungelesenen Beiträg zu diesem Thema"
+        other: "Du hast {{count}} ungelesene Beiträge zu diesem Thema"
+      new_posts:
+        one: "Es gibt einen neuen Beitrag zu diesem Thema seit Du es das letzte mal gelesen hast"
+        other: "Es gibt {{count}} neue Beiträge zu diesem Thema seit Du es das letzte mal gelesen hast"
 
       likes:
         one: "Es gibt ein „Gefällt mir“ in diesem Thema"
@@ -631,6 +639,7 @@ de:
           description: "Du erhältst keine Benachrichtigungen im Zusammenhang mit diesem Thema und es wird nicht in deiner Liste ungelesener Themen auftauchen."
 
       actions:
+        recover: "Löschen rückgängig machen"
         delete: "Thema löschen"
         open: "Thema öffnen"
         close: "Thema schließen"
@@ -707,7 +716,7 @@ de:
 
       merge_topic:
         title: "Themes zusammenführen"
-        action: Themes zusammenführen"
+        action: "Themes zusammenführen"
         error: "Beim Zusammenführen der Themen ist ein Fehler passiert."
         instructions:
           one: "Bitte wähle das Thema in welches du den Beitrag verschieben möchtest."
@@ -733,6 +742,7 @@ de:
       continue_discussion: "Fortsetzung des Gesprächs {{postLink}}:"
       follow_quote: "Springe zu zitiertem Beitrag"
       deleted_by_author: "(Beitrag vom Autor entfernt)"
+      deleted_by: "Entfernt von"
       expand_collapse: "mehr/weniger"
 
       has_replies:
@@ -997,6 +1007,8 @@ de:
         critical_available: "Ein kritisches Update ist verfügbar."
         updates_available: "Updates sind verfügbar."
         please_upgrade: "Bitte updaten!"
+        no_check_performed: "Es wurde nicht nach Updates gesucht. Bitte sicherstellen, dass clockwork und sidekiq laufen."
+        stale_data: "Es wurde schon länger nicht nach Updates gesucht. Bitte sicherstellen, dass clockwork und sidekiq laufen."
         installed_version: "Installiert"
         latest_version: "Jüngste"
         problems_found: "Es gibt Probleme mit deiner Discourse-Installation:"
@@ -1006,6 +1018,7 @@ de:
         moderators: 'Moderatoren:'
         admins: 'Administratoren:'
         blocked: 'Gesperrt:'
+        banned: "Gebannt:"
         private_messages_short: "PNs"
         private_messages_title: "Private Nachrichten"
 
@@ -1029,20 +1042,47 @@ de:
         title: "Meldungen"
         old: "Alt"
         active: "Aktiv"
-        clear: "Meldungen annullieren"
-        clear_title: "Verwerfe alle Meldungen über diesen Beitrag (blendet verstecke Beiträge ein)"
-        delete: "Beitrag löschen"
-        delete_title: "Beitrag löschen (löscht Thema, wenn es der erste Beitrag ist)"
+
+        agree_hide: "Bestätigen (versteckt Beitrag und verschickt Nachricht)"
+        agree_hide_title: "Verstecke diesen Beitrag und informiere den Benutzer, dass er ihn bearbeiten soll."
+        defer: "Später"
+        defer_title: "Ignoriere diese Meldung vorerst"
+        delete_post: "Beitrag löschen"
+        delete_post_title: Beitrag löschen (löscht Thema, falls es der erste Beitrag ist)"
+        disagree_unhide: "Ablehnen (macht Beitrag wieder sichtbar)"
+        disagree_unhide_title: "Verwerfe alle Meldungen über diesen Beitrag (blendet verstecke Beiträge ein)"
+        disagree: "Ablehnen"
+        disagree_title: "Meldung ablehnen, alle Meldungen über diesen Beitrag annullieren"
+
         flagged_by: "Gemeldet von"
         error: "Etwas ist schief gelaufen"
         view_message: "Nachricht zeigen"
         no_results: "Es gibt keine Meldungen."
+
+        summary:
+          action_type_3:
+            one: "Passt nicht zum Thema"
+            other: "Passt nicht zum Thema x{{count}}"
+          action_type_4:
+            one: "Unangemessen"
+            other: "Unangemessen x{{count}}"
+          action_type_6:
+            one: "Benutzerdefiniert"
+            other: "Benutzerdefiniert x{{count}}"
+          action_type_7:
+            one: "Benutzerdefiniert"
+            other: "Benutzerdefiniert x{{count}}"
+          action_type_8:
+            one: "Spam"
+            other: "Spam x{{count}}"
 
       groups:
         title: "Gruppen"
         edit: "Gruppen bearbeiten"
         selector_placeholder: "Benutzer hinzufügen"
         name_placeholder: "Gruppenname, keine Leerzeichen, gleiche Regel wie beim Benutzernamen"
+        about: "Hier kannst du Gruppenzugehörigkeiten und Gruppennamen bearbeiten."
+        can_not_edit_automatic: "Automatische Gruppenzugehörigkeiten können nicht bearbeitet werden. Bearbeite Benutzer, um Rollen und Vertrauensstufen einzustellen."
 
       api:
         title: "API"
@@ -1074,6 +1114,7 @@ de:
         settings: "Einstellungen"
         logs: "Protokolle"
         sent_at: "Gesendet am"
+        user: "Benutzer"
         email_type: "Mailtyp"
         to_address: "Empfänger"
         test_email_address: "Mailadresse zum Testen"
@@ -1081,11 +1122,13 @@ de:
         sent_test: "Gesendet!"
         delivery_method: "Versandmethode"
         preview_digest: "Vorschau der Übersicht"
+        preview_digest_desc: "Hiermit kannst du dir anschauen, wie die regelmäßig versendeten Neuigkeits-Mails aussehen."
         refresh: "Aktualisieren"
         format: "Format"
         html: "html"
         text: "text"
         last_seen_user: "Letzer Benutzer:"
+        reply_key: "Antwort-Schlüssel"
 
       impersonate:
         title: "Aus Nutzersicht betrachten"
@@ -1104,6 +1147,10 @@ de:
           new: "Neu"
           active: "Aktiv"
           pending: "Unerledigt"
+          admins: "Administratoren"
+          moderators: "Moderatoren"
+          banned: "Gebannt"
+          blocked: "Blockiert"
         approved: "Zugelassen?"
         approved_selected:
           one: "Benutzer zulassen"
@@ -1117,9 +1164,10 @@ de:
           regular: 'Benutzer mit Vertrauensstufe 2 (Stammnutzer)'
           leader: 'Benutzer mit Vertrauensstufe 3 (Anführer)'
           elder: 'Benutzer mit Vertrauensstufe 4 (Ältester)'
-          admins: 'Admin Benutzer'
+          admins: 'Administratoren'
           moderators: 'Moderatoren'
           blocked: 'Gesperrte Benutzer'
+          banned: "Gebannte Benutzer"
 
       user:
         ban_failed: "Beim Sperren dieses Benutzers ist etwas schief gegangen {{error}}"
@@ -1131,8 +1179,10 @@ de:
         banned: "Gesperrt?"
         moderator: "Moderator?"
         admin: "Administrator?"
-        blocked: "Gesperrt?"
+        blocked: "Geblockt?"
         show_admin_profile: "Administration"
+        edit_title: "Titel bearbeiten"
+        save_title: "Titel speichern"
         refresh_browsers: "Erzwinge Browser-Refresh"
         show_public_profile: "Zeige öffentliches Profil"
         impersonate: 'Nutzersicht'
@@ -1140,8 +1190,8 @@ de:
         grant_admin: 'Administrationsrechte vergeben'
         revoke_moderation: 'Moderationsrechte entziehen'
         grant_moderation: 'Moderationsrechte vergeben'
-        unblock: 'Entsperren'
-        block: 'Sperren'
+        unblock: 'Entblocken'
+        block: 'Blocken'
         reputation: Reputation
         permissions: Rechte
         activity: Aktivität
@@ -1154,10 +1204,8 @@ de:
         flags_received_count: Erhaltene Meldungen
         approve: 'Genehmigen'
         approved_by: "genehmigt von"
-        approve_success: "Benutser freigeschalten und Mail mit den Anweisungen zur Aktivierung
-          gesendet."
-        approve_bulk_success: "Erfolg! Alle ausgewählten Benutzer wurden freigeschalten
-          und benachrichtigt."
+        approve_success: "Benutzer freigeschalten und Mail mit den Anweisungen zur Aktivierung gesendet."
+        approve_bulk_success: "Erfolg! Alle ausgewählten Benutzer wurden freigeschalten und benachrichtigt."
         time_read: "Lesezeit"
         delete: Benutzer löschen
         delete_forbidden: "Der Benutzer kann nicht gelöscht werden, da er noch Beiträge hat. Lösche zuerst seine Beträge."
@@ -1171,9 +1219,11 @@ de:
         activate_failed: "Beim Aktivieren des Benutzers ist ein Fehler aufgetreten."
         deactivate_account: "Benutzer deaktivieren"
         deactivate_failed: "Beim Deaktivieren des Benutzers ist ein Fehler aufgetreten."
-        unblock_failed: 'Beim Entsperren des Benutzers ist ein Fehler aufgetreten.'
-        block_failed: 'Beim Sperren des Benutzers ist ein Fehler aufgetreten.'
-        block_explanation: "Ein gesperrter Benutzer kann keine Themen erstellen oder Beiträge veröffentlichen."
+        unblock_failed: 'Beim Entblocken des Benutzers ist ein Fehler aufgetreten.'
+        block_failed: 'Beim Blocken des Benutzers ist ein Fehler aufgetreten.'
+        deactivate_explanation: "Ein deaktivierter Benutzer muss seine E-Mail erneut bestätigen."
+        banned_explanation: "Ein gesperrter Benutzer kann sich nicht einloggen."
+        block_explanation: "Ein geblockter Benutzer kann keine Themen erstellen oder Beiträge veröffentlichen."
 
 
       site_content:
@@ -1185,3 +1235,4 @@ de:
         show_overriden: 'Zeige nur geänderte Einstellungen'
         title: 'Einstellungen'
         reset: 'Zurücksetzen'
+        none: "Keine"
