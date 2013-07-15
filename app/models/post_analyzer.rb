@@ -63,9 +63,14 @@ class PostAnalyzer
 
     @linked_hosts = {}
     raw_links.each do |u|
-      uri = URI.parse(u)
-      host = uri.host
-      @linked_hosts[host] ||= 1
+      begin
+        uri = URI.parse(u)
+        host = uri.host
+        @linked_hosts[host] ||= 1
+      rescue URI::InvalidURIError
+        # An invalid URI does not count as a raw link.
+        next
+      end
     end
     @linked_hosts
   end
