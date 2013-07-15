@@ -4,7 +4,10 @@ class UploadsController < ApplicationController
   def create
     file = params[:file] || params[:files].first
 
-    return render status: 415, json: failed_json unless SiteSetting.authorized_file?(file)
+    unless SiteSetting.authorized_upload?(file)
+      text = I18n.t("upload.unauthorized", authorized_extensions: SiteSetting.authorized_extensions.gsub("|", ", "))
+      return render status: 415, text: text
+    end
 
     upload = Upload.create_for(current_user.id, file)
 
