@@ -264,7 +264,7 @@ nb_NO:
 
     best_of:
       title: "De Beste"
-      enabled_description: "Du er for øyeblikket i "De Beste" modus i dette emnet."
+      enabled_description: "Du er for øyeblikket i De Beste modus i dette emnet."
       description: "Det er <b>{{count}}</b> innlegg i dette emnet. Det er mange! Will du spare tid ved å vise bare de beste innleggene?"
       enable: 'Bytt til "De Beste" modus'
       disable: 'Avslutt "De Beste"'
