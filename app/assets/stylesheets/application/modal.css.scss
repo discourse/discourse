@@ -38,16 +38,16 @@
   filter: alpha(opacity=80);
 }
 
-#modal-outer-container {
+.modal-outer-container {
   display:table;
   width:100%;
   height:100%;
 }
-#modal-middle-container {
+.modal-middle-container {
   display:table-cell;
   vertical-align: middle;
 }
-#modal-inner-container {
+.modal-inner-container {
   max-width: 610px;
   margin: 0 auto;
   background-color: #ffffff;
@@ -68,6 +68,28 @@
   z-index: 1050;
   overflow: auto;
 }
+
+// Hardcode to be the same as before for now. I would recommend not using bootbox, or finding a way so the html structure can be the same
+.bootbox.modal {
+position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 1050;
+  overflow: auto;
+  width: 610px;
+  height: auto;
+  margin: -250px 0 0 -305px;
+  background-color: #ffffff;
+  border: 1px solid #999;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  *border: 1px solid #999;
+  /* IE6-7 */
+
+  @include border-radius-all (6px);
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+  background-clip: padding-box;
+}
+
 .modal.fade {
   -webkit-transition: opacity .3s linear, top .3s ease-out;
   transition: opacity .3s linear, top .3s ease-out;
