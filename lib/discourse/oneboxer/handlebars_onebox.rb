@@ -7,7 +7,7 @@ module Discourse
       end
 
       def self.template_path(template_name)
-        "#{Rails.root}/lib/oneboxer/templates/#{template_name}.hbrs"
+        File.join("lib", "discourse", "oneboxer", "templates", "#{template_name}.hbrs")
       end
 
       def template_path(template_name)
