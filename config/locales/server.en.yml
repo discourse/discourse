@@ -436,6 +436,9 @@ en:
     tos_miscellaneous:
       title: "Terms of Service: Miscellaneous"
       description: "The text for the Miscellaneous section of the Terms of Service."
+    login_required:
+      title: "Login Required: Homepage"
+      description: "The text displayed for unauthorized users when login is required on the site."
 
   site_settings:
     default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"
