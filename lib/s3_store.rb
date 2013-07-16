@@ -16,6 +16,10 @@ module S3Store
     "//s3.amazonaws.com/#{SiteSetting.s3_upload_bucket}"
   end
 
+  def self.base_url_old
+    "//#{SiteSetting.s3_upload_bucket.downcase}.s3.amazonaws.com"
+  end
+
   def self.remove_file(url)
     S3Store.check_missing_site_settings
 

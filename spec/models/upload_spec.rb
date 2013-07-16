@@ -174,6 +174,24 @@ describe Upload do
 
   end
 
+  context ".is_on_s3?" do
+
+    before do
+      SiteSetting.stubs(:enable_s3_uploads).returns(true)
+      SiteSetting.stubs(:s3_upload_bucket).returns("BuCkEt")
+   end
+
+    it "case-insensitively matches the old subdomain format" do
+      Upload.is_on_s3?("//bucket.s3.amazonaws.com/1337.png").should == true
+    end
+
+    it "case-sensitively matches the new folder format" do
+      Upload.is_on_s3?("//s3.amazonaws.com/BuCkEt/1337.png").should == true
+      Upload.is_on_s3?("//s3.amazonaws.com/bucket/1337.png").should == false
+    end
+
+  end
+
   context ".get_from_url" do
 
     it "works only when the file has been uploaded" do

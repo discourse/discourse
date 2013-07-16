@@ -99,7 +99,7 @@ class Upload < ActiveRecord::Base
   end
 
   def self.is_on_s3?(url)
-    SiteSetting.enable_s3_uploads? && url.start_with?(S3Store.base_url)
+    SiteSetting.enable_s3_uploads? && (url.start_with?(S3Store.base_url) || url.start_with?(S3Store.base_url_old))
   end
 
   def self.get_from_url(url)
