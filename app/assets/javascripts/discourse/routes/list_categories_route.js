@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.ListCategoriesRoute = Discourse.Route.extend(Discourse.ModelReady, {
+Discourse.ListCategoriesRoute = Discourse.Route.extend({
 
   redirect: function() { Discourse.redirectIfLoginRequired(this); },
 
@@ -31,9 +31,11 @@ Discourse.ListCategoriesRoute = Discourse.Route.extend(Discourse.ModelReady, {
     this.controllerFor('list').set('canCreateCategory', false);
   },
 
-  modelReady: function(controller, categoryList) {
+  renderTemplate: function() {
     this.render('listCategories', { into: 'list', outlet: 'listView' });
+  },
 
+  afterModel: function(categoryList) {
     this.controllerFor('list').setProperties({
       canCreateCategory: categoryList.get('can_create_category'),
       canCreateTopic: categoryList.get('can_create_topic'),
