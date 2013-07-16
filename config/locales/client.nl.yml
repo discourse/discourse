@@ -455,9 +455,6 @@ nl:
       code_text: hier de code
       upload_title: Afbeelding
       upload_description: geef een omschrijving voor de afbeelding op
-      upload_dialog_title: Voeg afbeelding toe
-      image_optional_text: optionele titel
-      image_hosting_hint: "Heb je een <a href='http://www.google.com/search?q=free+image+hosting' target='_blank'>een gratis stek voor je afbeelding</a> nodig?"
       olist_title: Genummerde lijst
       ulist_title: Lijst met bullets
       list_item: Lijstonderdeel
