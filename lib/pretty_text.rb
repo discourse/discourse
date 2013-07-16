@@ -46,6 +46,19 @@ module PrettyText
 
 
   class Helpers
+
+    def t(key, opts)
+      str = I18n.t("js." + key)
+      if opts
+        # TODO: server localisation has no parity with client
+        # should be fixed
+        opts.each do |k,v|
+          str.gsub!("{{#{k}}}", v)
+        end
+      end
+      str
+    end
+
     # function here are available to v8
     def avatar_template(username)
       return "" unless username
@@ -90,6 +103,7 @@ module PrettyText
 
     @ctx.eval("var Discourse = {}; Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
     @ctx.eval("var window = {}; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
+    @ctx.eval("var I18n = {}; I18n.t = function(a,b){ return helpers.t(a,b); }");
 
     ctx_load( "app/assets/javascripts/discourse/components/bbcode.js",
               "app/assets/javascripts/discourse/components/utilities.js",
