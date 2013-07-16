@@ -11,37 +11,37 @@ discourse-oneboxer
 Oneboxer is a library for turning media URLs into previews.
 
 Oneboxer currently has support for page, image, and video URLs from these sites:
-> + Amazon
-+ Android App Store
-+ Apple Store
-+ BlipTV
-+ Clikthrough
-+ College Humor
-+ Dailymotion
-+ Dotsub
-+ Flickr
-+ Funny or Die
-+ Gist
-+ Github
-++ Blob
-++ Commit
-++ Pull Request
-+ Hulu
-+ Imgur
-+ Kinomap
-+ NFB
-+ Open Graph
-+ Qik
-+ Revision
-+ Rotten Tomatoes
-+ Slideshare
-+ Smugmug
-+ Soundcloud
-+ Stack Exchange
-+ TED
-+ Twitter
-+ Wikipedia
-+ yFrog
+- Amazon
+- Android App Store
+- Apple Store
+- BlipTV
+- Clikthrough
+- College Humor
+- Dailymotion
+- Dotsub
+- Flickr
+- Funny or Die
+- Gist
+- Github
+-- Blob
+-- Commit
+-- Pull Request
+- Hulu
+- Imgur
+- Kinomap
+- NFB
+- Open Graph
+- Qik
+- Revision
+- Rotten Tomatoes
+- Slideshare
+- Smugmug
+- Soundcloud
+- Stack Exchange
+- TED
+- Twitter
+- Wikipedia
+- yFrog
 
 
 Using discourse-oneboxer
