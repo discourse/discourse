@@ -68,7 +68,7 @@ describe UserAction do
 
       # groups
 
-      category = Fabricate(:category, secure: true)
+      category = Fabricate(:category, read_restricted: true)
 
       public_topic.recover!
       public_topic.category = category
@@ -82,7 +82,7 @@ describe UserAction do
       group.add(u)
       group.save
 
-      category.allow(group)
+      category.set_permissions(group => :full)
       category.save
 
       stats_for_user(u).should == [UserAction::NEW_TOPIC]

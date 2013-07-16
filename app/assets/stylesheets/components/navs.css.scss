@@ -55,6 +55,7 @@
 // --------------------------------------------------
 
 .nav-stacked {
+  position: relative;
   @extend %nav;
   border: 1px solid $nav-stacked-border-color;
   padding: 0;
@@ -69,7 +70,7 @@
     }
     > a {
       margin: 0;
-      padding: 13px;
+      padding: 13px 13px 13px 30px;
       font-weight: bold;
       font-size: 16px;
       line-height: 20px;
@@ -94,17 +95,11 @@
     line-height: 20px;
   }
 
-  .no-glyph {
-    a {
-      padding-left: 30px;
-    }
-  }
-
   .glyph {
     font-size: 12px;
-    margin: 15px 0 0 0;
     width: 30px;
     text-align: center;
-    float: left;
+    position: absolute;
+    left: 2px;
   }
 }

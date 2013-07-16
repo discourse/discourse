@@ -14,7 +14,10 @@ Discourse.CategoryChooserView = Discourse.ComboboxView.extend({
 
   init: function() {
     this._super();
-    this.set('content', Discourse.Category.list());
+    // TODO perhaps allow passing a param in to select if we need full or not
+    this.set('content', _.filter(Discourse.Category.list(), function(c){
+      return c.permission === Discourse.PermissionType.FULL;
+    }));
   },
 
   none: function() {

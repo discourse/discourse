@@ -14,9 +14,8 @@ describe TopicQuery do
   context 'secure category' do
     it "filters categories out correctly" do
       category = Fabricate(:category)
-      category.deny(:all)
       group = Fabricate(:group)
-      category.allow(group)
+      category.set_permissions(group => :full)
       category.save
 
       topic = Fabricate(:topic, category: category)

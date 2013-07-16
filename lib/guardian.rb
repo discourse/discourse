@@ -7,6 +7,7 @@ class Guardian
     def staff?; false; end
     def approved?; false; end
     def secure_category_ids; []; end
+    def topic_create_allowed_category_ids; []; end
     def has_trust_level?(level); false; end
   end
 
@@ -237,8 +238,19 @@ class Guardian
     can_create_post?(parent)
   end
 
+  def can_create_topic_on_category?(category)
+    can_create_post?(nil) && (
+      !category ||
+      Category.topic_create_allowed(self).where(:id => category.id).count == 1
+    )
+  end
+
   def can_create_post?(parent)
-    !SpamRulesEnforcer.block?(@user)
+    !SpamRulesEnforcer.block?(@user) && (
+      !parent ||
+      !parent.category ||
+      Category.post_create_allowed(self).where(:id => parent.category.id).count == 1
+    )
   end
 
   def can_create_post_on_topic?(topic)
@@ -328,7 +340,7 @@ class Guardian
       topic.deleted_at.nil? &&
 
       # not secure, or I can see it
-      (not(topic.secure_category?) || can_see_category?(topic.category)) &&
+      (not(topic.read_restricted_category?) || can_see_category?(topic.category)) &&
 
       # not private, or I am allowed (or an admin)
       (not(topic.private_message?) || authenticated? && (topic.all_allowed_users.where(id: @user.id).exists? || is_admin?))
@@ -340,7 +352,7 @@ class Guardian
   end
 
   def can_see_category?(category)
-    not(category.secure) || secure_category_ids.include?(category.id)
+    not(category.read_restricted) || secure_category_ids.include?(category.id)
   end
 
   def can_vote?(post, opts={})
@@ -376,6 +388,10 @@ class Guardian
 
   def secure_category_ids
     @secure_category_ids ||= @user.secure_category_ids
+  end
+
+  def topic_create_allowed_category_ids
+    @topic_create_allowed_category_ids ||= @user.topic_create_allowed_category_ids
   end
 
   private

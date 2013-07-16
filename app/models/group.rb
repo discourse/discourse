@@ -10,6 +10,7 @@ class Group < ActiveRecord::Base
   validate :name_format_validator
 
   AUTO_GROUPS = {
+    :everyone => 0,
     :admins => 1,
     :moderators => 2,
     :staff => 3,
@@ -33,6 +34,10 @@ class Group < ActiveRecord::Base
       group.id = id
       group.save!
     end
+
+    # the everyone group is special, it can include non-users so there is no
+    # way to have the membership in a table
+    return group if name == :everyone
 
     group.name = I18n.t("groups.default_names.#{name}")
 

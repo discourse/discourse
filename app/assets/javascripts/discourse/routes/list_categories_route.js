@@ -6,13 +6,16 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.ListCategoriesRoute = Discourse.Route.extend(Discourse.ModelReady, {
+Discourse.ListCategoriesRoute = Discourse.Route.extend({
 
   redirect: function() { Discourse.redirectIfLoginRequired(this); },
 
   events: {
     createCategory: function() {
-      Discourse.Route.showModal(this, 'editCategory', Discourse.Category.create({ color: 'AB9364', text_color: 'FFFFFF', hotness: 5 }));
+      Discourse.Route.showModal(this, 'editCategory', Discourse.Category.create({
+        color: 'AB9364', text_color: 'FFFFFF', hotness: 5, group_permissions: [{group_name: "everyone", permission_type: 1}],
+        available_groups: Discourse.Site.instance().group_names
+      }));
       this.controllerFor('editCategory').set('selectedTab', 'general');
     }
   },
@@ -28,9 +31,11 @@ Discourse.ListCategoriesRoute = Discourse.Route.extend(Discourse.ModelReady, {
     this.controllerFor('list').set('canCreateCategory', false);
   },
 
-  modelReady: function(controller, categoryList) {
+  renderTemplate: function() {
     this.render('listCategories', { into: 'list', outlet: 'listView' });
+  },
 
+  afterModel: function(categoryList) {
     this.controllerFor('list').setProperties({
       canCreateCategory: categoryList.get('can_create_category'),
       canCreateTopic: categoryList.get('can_create_topic'),

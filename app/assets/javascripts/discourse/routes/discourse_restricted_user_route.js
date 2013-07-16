@@ -8,7 +8,7 @@
 **/
 Discourse.RestrictedUserRoute = Discourse.Route.extend({
 
-  redirect: function() {
+  afterModel: function() {
     var user = this.modelFor('user');
     if (!user.get('can_edit')) {
       this.transitionTo('user.activity', user);

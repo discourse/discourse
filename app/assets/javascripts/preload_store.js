@@ -32,30 +32,31 @@ PreloadStore = {
   **/
   getAndRemove: function(key, finder) {
     var preloadStore = this;
-    return Ember.Deferred.promise(function(promise) {
-      if (preloadStore.data[key]) {
-        promise.resolve(preloadStore.data[key]);
-        delete preloadStore.data[key];
-      } else {
 
-        if (finder) {
-          var result = finder();
+    if (preloadStore.data[key]) {
+      var promise = Ember.RSVP.resolve(preloadStore.data[key]);
+      delete preloadStore.data[key];
+      return promise;
+    }
 
-          // If the finder returns a promise, we support that too
-          if (result.then) {
-            result.then(function(result) {
-              return promise.resolve(result);
-            }, function(result) {
-              return promise.reject(result);
-            });
-          } else {
-            promise.resolve(result);
-          }
+    if (finder) {
+      return Ember.Deferred.promise(function(promise) {
+        var result = finder();
+
+        // If the finder returns a promise, we support that too
+        if (result.then) {
+          result.then(function(result) {
+            return promise.resolve(result);
+          }, function(result) {
+            return promise.reject(result);
+          });
         } else {
-          promise.resolve(null);
+          promise.resolve(result);
         }
-      }
-    });
+      });
+    }
+
+    return Ember.RSVP.resolve(null);
   },
 
   /**

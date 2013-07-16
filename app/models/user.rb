@@ -486,8 +486,12 @@ class User < ActiveRecord::Base
   end
 
   def secure_category_ids
-    cats = self.staff? ? Category.select(:id).where(secure: true) : secure_categories.select('categories.id')
+    cats = self.staff? ? Category.select(:id).where(read_restricted: true) : secure_categories.select('categories.id')
     cats.map { |c| c.id }.sort
+  end
+
+  def topic_create_allowed_category_ids
+    Category.topic_create_allowed(self.id).select(:id)
   end
 
   # Flag all posts from a user as spam
@@ -660,6 +664,7 @@ end
 #  topic_reply_count             :integer          default(0), not null
 #  blocked                       :boolean          default(FALSE)
 #  dynamic_favicon               :boolean          default(FALSE), not null
+#  title                         :string(255)
 #
 # Indexes
 #

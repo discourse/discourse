@@ -238,9 +238,9 @@ Discourse.AdminUser = Discourse.User.extend({
 
   loadDetails: function() {
     var model = this;
-    if (model.get('loadedDetails')) { return; }
+    if (model.get('loadedDetails')) { return Ember.RSVP.resolve(model); }
 
-    Discourse.AdminUser.find(model.get('username_lower')).then(function (result) {
+    return Discourse.AdminUser.find(model.get('username_lower')).then(function (result) {
       model.setProperties(result);
       model.set('loadedDetails', true);
     });

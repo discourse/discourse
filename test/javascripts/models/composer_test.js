@@ -130,7 +130,7 @@ test('editingFirstPost', function() {
 
 });
 
-asyncTest('importQuote with a post', function() {
+asyncTestDiscourse('importQuote with a post', function() {
   expect(1);
 
   this.stub(Discourse.Post, 'load').withArgs(123).returns(Em.Deferred.promise(function (p) {
@@ -144,7 +144,7 @@ asyncTest('importQuote with a post', function() {
   });
 });
 
-asyncTest('importQuote with no post', function() {
+asyncTestDiscourse('importQuote with no post', function() {
   expect(1);
 
   this.stub(Discourse.Post, 'load').withArgs(4).returns(Em.Deferred.promise(function (p) {

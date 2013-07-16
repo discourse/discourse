@@ -11,7 +11,7 @@
 // Externals we need to load first
 //= require ../../app/assets/javascripts/external/jquery-1.9.1.js
 //= require ../../app/assets/javascripts/external/jquery.ui.widget.js
-//= require ../../app/assets/javascripts/external/handlebars-1.0.rc.4.js
+//= require ../../app/assets/javascripts/external/handlebars.js
 //= require ../../app/assets/javascripts/external_development/ember.js
 //= require ../../app/assets/javascripts/external_development/group-helper.js
 
@@ -46,11 +46,11 @@
 
 // sinon settings
 sinon.config = {
-    injectIntoThis: true,
-    injectInto: null,
-    properties: ["spy", "stub", "mock", "clock", "sandbox"],
-    useFakeTimers: false,
-    useFakeServer: false
+  injectIntoThis: true,
+  injectInto: null,
+  properties: ["spy", "stub", "mock", "clock", "sandbox"],
+  useFakeTimers: false,
+  useFakeServer: false
 };
 
 window.assetPath = function() { return null };

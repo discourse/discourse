@@ -85,7 +85,7 @@
         </li>
         <li class='current-user'>
           {{#if currentUser}}
-            {{#titledLinkTo user.activity currentUser titleKey="current_user" class="icon"}}{{avatar currentUser imageSize="medium" }}{{/titledLinkTo}}
+            {{#titledLinkTo 'user.activity' currentUser titleKey="current_user" class="icon"}}{{avatar currentUser imageSize="medium" }}{{/titledLinkTo}}
           {{else}}
             <div class="icon not-logged-in-avatar" {{action showLogin}}><i class='icon-user'></i></div>
           {{/if}}
@@ -110,7 +110,7 @@
       </section>
 
       <section class='d-dropdown' id='site-map-dropdown'>
-      <ul>
+      <ul class="location-links">
         {{#if currentUser.staff}}
           <li><a href="/admin"><i class='icon icon-wrench'></i>{{i18n admin_title}}</a></li>
           <li><a href="/admin/flags/active"><i class='icon icon-flag'></i>{{i18n flags_title}}</a>
@@ -123,8 +123,10 @@
           {{#titledLinkTo "list.latest" titleKey="filters.latest.help"}}{{i18n filters.latest.title}}{{/titledLinkTo}}
         </li>
         <li>{{faqLink}}</li>
+      </ul>
 
-        {{#if categories}}
+      {{#if categories}}
+        <ul class="category-links">
           <li class='heading' title="{{i18n filters.categories.help}}">
             {{#linkTo "list.categories"}}{{i18n filters.categories.title}}{{/linkTo}}
           </li>
@@ -135,9 +137,9 @@
               <b>{{unbound topic_count}}</b></a>
             </li>
           {{/each}}
-        {{/if}}
+        </ul>
+      {{/if}}
 
-      </ul>
     </section>
 
     </div>

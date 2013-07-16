@@ -88,9 +88,8 @@ predef:
   - visit
   - count
   - exists
-  - asyncTest
+  - asyncTestDiscourse
   - find
-  - resolvingPromise
   - sinon
   - controllerFor
 

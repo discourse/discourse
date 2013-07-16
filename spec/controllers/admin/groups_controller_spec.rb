@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Admin::GroupsController do
+
   it "is a subclass of AdminController" do
     (Admin::GroupsController < Admin::AdminController).should be_true
   end
@@ -13,7 +14,7 @@ describe Admin::GroupsController do
 
     xhr :get, :index
     response.status.should == 200
-    ::JSON.parse(response.body).should == [{
+    ::JSON.parse(response.body).keep_if{|r| r["id"] == group.id}.should == [{
       "id"=>group.id,
       "name"=>group.name,
       "user_count"=>1,
@@ -36,7 +37,7 @@ describe Admin::GroupsController do
     xhr :delete, :destroy, id: group.id
     response.status.should == 200
 
-    Group.count.should == 0
+    Group.where(id: group.id).count.should == 0
   end
 
   it "is able to create a group" do
@@ -49,7 +50,7 @@ describe Admin::GroupsController do
 
     response.status.should == 200
 
-    groups = Group.all.to_a
+    groups = Group.where(name: "bob").to_a
 
     groups.count.should == 1
     groups[0].usernames.should == a.username

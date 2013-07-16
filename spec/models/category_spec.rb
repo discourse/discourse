@@ -18,6 +18,63 @@ describe Category do
   it { should have_many :category_featured_topics }
   it { should have_many :featured_topics }
 
+
+  describe "resolve_permissions" do
+    it "can determine read_restricted" do
+      read_restricted, resolved = Category.resolve_permissions(:everyone => :full)
+
+      read_restricted.should be_false
+      resolved.should == []
+    end
+  end
+
+  describe "topic_create_allowed and post_create_allowed" do
+    it "works" do
+      default_category = Fabricate(:category)
+      full_category = Fabricate(:category)
+      can_post_category = Fabricate(:category)
+      can_read_category = Fabricate(:category)
+
+
+      user = Fabricate(:user)
+      group = Fabricate(:group)
+      group.add(user)
+      group.save
+
+      admin = Fabricate(:admin)
+
+      full_category.set_permissions(group => :full)
+      full_category.save
+
+      can_post_category.set_permissions(group => :create_post)
+      can_post_category.save
+
+      can_read_category.set_permissions(group => :readonly)
+      can_read_category.save
+
+      guardian = Guardian.new(admin)
+      Category.topic_create_allowed(guardian).count.should == 4
+      Category.post_create_allowed(guardian).count.should == 4
+      Category.secured(guardian).count.should == 4
+
+      guardian = Guardian.new(user)
+      Category.secured(guardian).count.should == 4
+      Category.post_create_allowed(guardian).count.should == 3
+      Category.topic_create_allowed(guardian).count.should == 2 # explicitly allowed once, default allowed once
+
+      # everyone has special semantics, test it as well
+      can_post_category.set_permissions(:everyone => :create_post)
+      can_post_category.save
+
+      Category.post_create_allowed(guardian).count.should == 3
+    end
+
+  end
+
+  describe "post_create_allowed" do
+
+  end
+
   describe "security" do
     let(:category) { Fabricate(:category) }
     let(:category_2) { Fabricate(:category) }
@@ -25,20 +82,20 @@ describe Category do
     let(:group) { Fabricate(:group) }
 
     it "secures categories correctly" do
-      category.secure?.should be_false
+      category.read_restricted?.should be_false
 
-      category.deny(:all)
-      category.secure?.should be_true
+      category.set_permissions({})
+      category.read_restricted?.should be_true
 
-      category.allow(:all)
-      category.secure?.should be_false
+      category.set_permissions(:everyone => :full)
+      category.read_restricted?.should be_false
 
       user.secure_categories.should be_empty
 
       group.add(user)
       group.save
 
-      category.allow(group)
+      category.set_permissions(group.id => :full)
       category.save
 
       user.reload
@@ -47,13 +104,13 @@ describe Category do
 
     it "lists all secured categories correctly" do
       group.add(user)
-      category.allow(group)
+      category.set_permissions(group.id => :full)
+      category.save
+      category_2.set_permissions(group.id => :full)
+      category_2.save
 
-      Category.secured.should == [category]
-
-      category_2.allow(group)
-
-      Category.secured.should =~ [category, category_2]
+      Category.secured.should =~ []
+      Category.secured(Guardian.new(user)).should =~ [category, category_2]
     end
   end
 

@@ -168,6 +168,7 @@ en:
       "13": "Inbox"
 
     user:
+      said: "{{username}} said:"
       profile: Profile
       mute: Mute
       edit: Edit Preferences
@@ -999,6 +1000,11 @@ en:
 
     browser_update: 'Unfortunately, <a href="http://www.discourse.org/faq/#browser">your browser is too old to work on this Discourse forum</a>. Please <a href="http://browsehappy.com">upgrade your browser</a>.'
 
+    permission_types:
+      full: "Create Topics, Create Posts and Read"
+      create_post: "Create Posts and Read"
+      readonly: "Read Only"
+
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "type to filter..."
@@ -1245,3 +1251,4 @@ en:
         title: 'Settings'
         reset: 'reset to default'
         none: 'none'
+

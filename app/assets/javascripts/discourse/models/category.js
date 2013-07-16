@@ -11,8 +11,20 @@ Discourse.Category = Discourse.Model.extend({
   init: function() {
     this._super();
     this.set("availableGroups", Em.A(this.get("available_groups")));
-    this.set("groups", Em.A(this.groups));
+    this.set("permissions", Em.A(_.map(this.group_permissions, function(elem){
+      return {
+                group_name: elem.group_name,
+                permission: Discourse.PermissionType.create({id: elem.permission_type})
+      };
+    })));
   },
+
+  availablePermissions: function(){
+    return [  Discourse.PermissionType.create({id: Discourse.PermissionType.FULL}),
+              Discourse.PermissionType.create({id: Discourse.PermissionType.CREATE_POST}),
+              Discourse.PermissionType.create({id: Discourse.PermissionType.READONLY})
+           ];
+  }.property(),
 
   searchContext: function() {
     return ({ type: 'category', id: this.get('id'), category: this });
@@ -43,33 +55,49 @@ Discourse.Category = Discourse.Model.extend({
         text_color: this.get('text_color'),
         hotness: this.get('hotness'),
         secure: this.get('secure'),
-        group_names: this.get('groups').join(","),
+        permissions: this.get('permissionsForUpdate'),
         auto_close_days: this.get('auto_close_days')
       },
       type: this.get('id') ? 'PUT' : 'POST'
     });
   },
 
+  permissionsForUpdate: function(){
+    var rval = {};
+    _.each(this.get("permissions"),function(p){
+      rval[p.group_name] = p.permission.id;
+    });
+    return rval;
+  }.property("permissions"),
+
   destroy: function(callback) {
     return Discourse.ajax("/categories/" + (this.get('slug') || this.get('id')), { type: 'DELETE' });
   },
 
-  addGroup: function(group){
-    this.get("groups").addObject(group);
-    this.get("availableGroups").removeObject(group);
+  addPermission: function(permission){
+    this.get("permissions").addObject(permission);
+    this.get("availableGroups").removeObject(permission.group_name);
   },
 
 
-  removeGroup: function(group){
-    this.get("groups").removeObject(group);
-    this.get("availableGroups").addObject(group);
+  removePermission: function(permission){
+    this.get("permissions").removeObject(permission);
+    this.get("availableGroups").addObject(permission.group_name);
   },
 
   // note, this is used in a data attribute, data attributes get downcased
   //  to avoid confusion later on using this naming here.
   description_text: function(){
     return $("<div>" + this.get("description") + "</div>").text();
-  }.property("description")
+  }.property("description"),
+
+  permissions: function(){
+    return Em.A([
+      {group_name: "everyone", permission: Discourse.PermissionType.create({id: 1})},
+      {group_name: "admins", permission: Discourse.PermissionType.create({id: 2}) },
+      {group_name: "crap", permission: Discourse.PermissionType.create({id: 3}) }
+    ]);
+  }.property()
 
 });
 
