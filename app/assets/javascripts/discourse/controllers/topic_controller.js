@@ -198,41 +198,6 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     Discourse.URL.routeTo(this.get('lastPostUrl'));
   },
 
-  replyAsNewTopic: function(post) {
-    // TODO shut down topic draft cleanly if it exists ...
-    var composerController = this.get('controllers.composer');
-    var promise = composerController.open({
-      action: Discourse.Composer.CREATE_TOPIC,
-      draftKey: Discourse.Composer.REPLY_AS_NEW_TOPIC_KEY
-    });
-    var postUrl = "" + location.protocol + "//" + location.host + (post.get('url'));
-    var postLink = "[" + (this.get('title')) + "](" + postUrl + ")";
-
-    promise.then(function() {
-      Discourse.Post.loadQuote(post.get('id')).then(function(q) {
-        composerController.appendText("" + (I18n.t("post.continue_discussion", {
-          postLink: postLink
-        })) + "\n\n" + q);
-      });
-    });
-  },
-
-  // Topic related
-  reply: function() {
-    var composerController = this.get('controllers.composer');
-    if (composerController.get('content.topic.id') === this.get('content.id') &&
-        composerController.get('content.action') === Discourse.Composer.REPLY) {
-      composerController.set('content.post', null);
-      composerController.set('content.composeState', Discourse.Composer.OPEN);
-    } else {
-      composerController.open({
-        topic: this.get('content'),
-        action: Discourse.Composer.REPLY,
-        draftKey: this.get('content.draft_key'),
-        draftSequence: this.get('content.draft_sequence')
-      });
-    }
-  },
 
   /**
     Toggle a participant for filtering
@@ -336,23 +301,58 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
     var composerController = this.get('controllers.composer');
     var quoteController = this.get('controllers.quoteButton');
     var quotedText = Discourse.BBCode.buildQuoteBBCode(quoteController.get('post'), quoteController.get('buffer'));
+
+    var topic = post ? post.get('topic') : this.get('model');
+
     quoteController.set('buffer', '');
 
-    if (composerController.get('content.topic.id') === post.get('topic.id') &&
+    if (composerController.get('content.topic.id') === topic.get('id') &&
         composerController.get('content.action') === Discourse.Composer.REPLY) {
       composerController.set('content.post', post);
       composerController.set('content.composeState', Discourse.Composer.OPEN);
       composerController.appendText(quotedText);
     } else {
-      var promise = composerController.open({
-        post: post,
+
+      var opts = {
         action: Discourse.Composer.REPLY,
-        draftKey: post.get('topic.draft_key'),
-        draftSequence: post.get('topic.draft_sequence')
-      });
+        draftKey: topic.get('draft_key'),
+        draftSequence: topic.get('draft_sequence')
+      };
+
+      if(post && post.get("post_number") !== 1){
+        opts.post = post;
+      } else {
+        opts.topic = topic;
+      }
+
+      var promise = composerController.open(opts);
       promise.then(function() { composerController.appendText(quotedText); });
     }
     return false;
+  },
+
+  replyAsNewTopic: function(post) {
+    // TODO shut down topic draft cleanly if it exists ...
+    var composerController = this.get('controllers.composer');
+    var promise = composerController.open({
+      action: Discourse.Composer.CREATE_TOPIC,
+      draftKey: Discourse.Composer.REPLY_AS_NEW_TOPIC_KEY
+    });
+    var postUrl = "" + location.protocol + "//" + location.host + (post.get('url'));
+    var postLink = "[" + (this.get('title')) + "](" + postUrl + ")";
+
+    promise.then(function() {
+      Discourse.Post.loadQuote(post.get('id')).then(function(q) {
+        composerController.appendText("" + (I18n.t("post.continue_discussion", {
+          postLink: postLink
+        })) + "\n\n" + q);
+      });
+    });
+  },
+
+  // Topic related
+  reply: function() {
+    this.replyToPost();
   },
 
   // Edits a post

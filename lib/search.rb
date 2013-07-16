@@ -160,9 +160,9 @@ class Search
                    .order("topics.bumped_at DESC")
 
       if secure_category_ids.present?
-        posts = posts.where("(categories.id IS NULL) OR (NOT categories.secure) OR (categories.id IN (?))", secure_category_ids)
+        posts = posts.where("(categories.id IS NULL) OR (NOT categories.read_restricted) OR (categories.id IN (?))", secure_category_ids)
       else
-        posts = posts.where("(categories.id IS NULL) OR (NOT categories.secure)")
+        posts = posts.where("(categories.id IS NULL) OR (NOT categories.read_restricted)")
       end
       posts.limit(limit)
     end

@@ -8,6 +8,18 @@
 
 pt:
   js:
+    number:
+      human:
+        storage_units:
+          format: ! '%n %u'
+          units:
+            byte:
+              one: Byte
+              other: Bytes
+            gb: GB
+            kb: KB
+            mb: MB
+            tb: TB
     share:
       topic: 'partilhe um link para este tópico'
       post: 'partilhe um link para esta mensagem'
@@ -289,14 +301,14 @@ pt:
       invitee_accepted: "<i title='accepted your invitation' class='icon icon-signin'></i> {{username}} aceitou o teu convite"
       moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} moveu o post para {{link}}"
 
-    image_selector:
+    upload_selector:
       from_my_computer: "Do meu dispositivo"
       from_the_web: "Da internet"
       add_image: "Adicionar Imagem"
       remote_tip: "insere o endereço de uma imagem no formato http://example.com/image.jpg"
       local_tip: "clica para selecionar uma imagem no teu dispositivo."
       upload: "Enviar"
-      uploading_image: "A enviar imagem"
+      upload_file: "A enviar imagem"
 
     search:
       title: "procurar por tópicos, posts, utilizadores, ou categorias"

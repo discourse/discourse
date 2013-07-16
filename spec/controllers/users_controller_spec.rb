@@ -216,6 +216,17 @@ describe UsersController do
   describe '.password_reset' do
     let(:user) { Fabricate(:user) }
 
+    context "you can view it even if login is required" do
+      before do
+        SiteSetting.stubs(:login_required).returns(true)
+        get :password_reset, token: 'asdfasdf'
+      end
+
+      it "returns success" do
+        response.should be_success
+      end
+    end
+
     context 'invalid token' do
       before do
         EmailToken.expects(:confirm).with('asdfasdf').returns(nil)

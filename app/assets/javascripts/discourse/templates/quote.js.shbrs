@@ -3,7 +3,6 @@
     <div class='quote-controls'></div>
   {{{avatarImg}}}
   {{username}}
-  said:
   </div>
   <blockquote>{{{quote}}}</blockquote>
 </aside>

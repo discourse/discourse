@@ -25,11 +25,24 @@ class Site
     TrustLevel.all
   end
 
+  def group_names
+    @group_name ||= Group.pluck(:name)
+  end
+
   def categories
-    Category
-      .secured(@guardian)
-      .latest
-      .includes(:topic_only_relative_url)
+    @categories ||= begin
+      categories = Category
+        .secured(@guardian)
+        .latest
+        .includes(:topic_only_relative_url).to_a
+
+      allowed_topic_create = Set.new(Category.topic_create_allowed(@guardian).pluck(:id))
+
+      categories.each do |category|
+        category.permission = CategoryGroup.permission_types[:full] if allowed_topic_create.include?(category.id)
+      end
+      categories
+    end
   end
 
   def archetypes

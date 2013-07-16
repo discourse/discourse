@@ -262,3 +262,22 @@
     }
   }
 }
+
+.permission-selector{
+  width: 300px;
+}
+.permission-list{
+  list-style:none;
+  margin: 0 0 15px;
+  padding: 0;
+  .name {
+    display: inline-block;
+    min-width: 80px;
+  }
+  .icon-remove-sign {
+    margin-left: 5px;
+  }
+  li {
+    margin-bottom: 10px;
+  }
+}

@@ -26,12 +26,9 @@ Discourse.ApplicationRoute = Em.Route.extend({
       this.controllerFor('notActivated').setProperties(props);
     },
 
-    showImageSelector: function(composerView) {
-      Discourse.Route.showModal(this, 'imageSelector');
-      this.controllerFor('imageSelector').setProperties({
-        localSelected: true,
-        composerView: composerView
-      });
+    showUploadSelector: function(composerView) {
+      Discourse.Route.showModal(this, 'uploadSelector');
+      this.controllerFor('uploadSelector').setProperties({ composerView: composerView });
     },
 
 

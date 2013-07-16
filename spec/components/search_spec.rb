@@ -171,8 +171,7 @@ describe Search do
         topic.category_id = category.id
         topic.save
 
-        category.deny(:all)
-        category.allow(Group[:staff])
+        category.set_permissions(:staff => :full)
         category.save
 
         result(nil).should_not be_present
@@ -211,7 +210,7 @@ describe Search do
       r[:title].should == category.name
       r[:url].should == "/category/#{category.slug}"
 
-      category.deny(:all)
+      category.set_permissions({})
       category.save
 
       result.should_not be_present

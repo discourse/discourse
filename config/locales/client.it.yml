@@ -7,6 +7,18 @@
 
 it:
   js:
+    number:
+      human:
+        storage_units:
+          format: ! '%n %u'
+          units:
+            byte:
+              one: Byte
+              other: Byte
+            gb: GB
+            kb: KB
+            mb: MB
+            tb: TB
     share:
       topic: 'condividi un link a questo topic'
       post: 'condividi un link a questo post'
@@ -370,9 +382,9 @@ it:
       quote_text: "Blockquote"
       code_title: "Esempio di codice"
       code_text: "inserisci il codice qui"
-      image_title: "Immagine"
-      image_description: "descrizione dell'immagine"
-      image_dialog_title: "Inserisci Immagine"
+      upload_title: "Immagine"
+      upload_description: "descrizione dell'immagine"
+      upload_dialog_title: "Inserisci Immagine"
       image_optional_text: "titolo facoltativo"
       image_hosting_hint: "Hai bisogno di <a href='http://www.google.com/search?q=free+image+hosting' target='_blank'>free image hosting?</a>"
       olist_title: "Lista Numerata"
@@ -406,7 +418,7 @@ it:
       moved_post: "<i title='post spostato' class='icon icon-arrow-right'></i> {{username}} ha spostato il post qui {{link}}"
       total_flagged: "totale post segnalati"
 
-    image_selector:
+    upload_selector:
       title: "Inserisci Immagine"
       from_my_computer: "Dal mio dispositivo"
       from_the_web: "Dal Web"
@@ -416,7 +428,7 @@ it:
       local_title: "immagine locale"
       local_tip: "clicca per selezionare un'immagine dal tuo dispositivo."
       upload: "Upload"
-      uploading_image: "Carico l'immagine"
+      upload_file: "Carico l'immagine"
 
     search:
       title: "cerca topic, post, utenti o categorie"

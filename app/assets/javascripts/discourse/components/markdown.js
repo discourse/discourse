@@ -62,10 +62,8 @@ Discourse.Markdown = {
         code: I18n.t("composer.code_title") + " <pre><code> Ctrl+K",
         codeexample: I18n.t("composer.code_text"),
 
-        image: I18n.t("composer.image_title") + " <img> Ctrl+G",
-        imagedescription: I18n.t("composer.image_description"),
-        imagedialog: "<p><b>" + I18n.t("composer.image_dialog_title") + "</b></p><p>http://example.com/images/diagram.jpg \"" +
-            I18n.t("composer.image_optional_text") + "\"<br><br>" + I18n.t("composer.image_hosting_hint") + "</p>",
+        image: I18n.t("composer.upload_title") + " - Ctrl+G",
+        imagedescription: I18n.t("composer.upload_description"),
 
         olist: I18n.t("composer.olist_title") + " <ol> Ctrl+O",
         ulist: I18n.t("composer.ulist_title") + " <ul> Ctrl+U",

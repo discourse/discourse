@@ -37,11 +37,13 @@ Discourse.ActivityFilterView = Discourse.View.extend({
     }
 
     var icon = this.get('icon');
+
+    buffer.push("<a href='#'>");
     if(icon) {
-      buffer.push("<i class='glyph icon icon-" + icon + "'></i>");
+      buffer.push("<i class='glyph icon icon-" + icon + "'></i> ");
     }
 
-    buffer.push("<a href='#'>" + description +
+    buffer.push(description +
         " <span class='count'>(" + count + ")</span>");
 
 

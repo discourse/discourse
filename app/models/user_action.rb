@@ -179,7 +179,7 @@ ORDER BY p.created_at desc
 
         # move into Topic perhaps
         group_ids = nil
-        if topic && topic.category && topic.category.secure
+        if topic && topic.category && topic.category.read_restricted
           group_ids = topic.category.groups.pluck("groups.id")
         end
 
@@ -232,11 +232,11 @@ ORDER BY p.created_at desc
     unless guardian.is_staff?
       allowed = guardian.secure_category_ids
       if allowed.present?
-        builder.where("( c.secure IS NULL OR
-                         c.secure = 'f' OR
-                        (c.secure = 't' and c.id in (:cats)) )", cats: guardian.secure_category_ids )
+        builder.where("( c.read_restricted IS NULL OR
+                         NOT c.read_restricted OR
+                        (c.read_restricted and c.id in (:cats)) )", cats: guardian.secure_category_ids )
       else
-        builder.where("(c.secure IS NULL OR c.secure = 'f')")
+        builder.where("(c.read_restricted IS NULL OR NOT c.read_restricted)")
       end
     end
   end

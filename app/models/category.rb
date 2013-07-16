@@ -22,6 +22,7 @@ class Category < ActiveRecord::Base
 
   before_validation :ensure_slug
   after_save :invalidate_site_cache
+  before_save :apply_permissions
   after_create :create_category_definition
   after_create :publish_categories_list
   after_destroy :invalidate_site_cache
@@ -34,15 +35,52 @@ class Category < ActiveRecord::Base
   scope :secured, ->(guardian = nil) {
     ids = guardian.secure_category_ids if guardian
     if ids.present?
-      where("NOT categories.secure or categories.id in (:cats)", cats: ids)
+      where("NOT categories.read_restricted or categories.id in (:cats)", cats: ids)
     else
-      where("NOT categories.secure")
+      where("NOT categories.read_restricted")
     end
   }
 
+  scope :topic_create_allowed, ->(guardian) {
+    scoped_to_permissions(guardian, [:full])
+  }
+
+  scope :post_create_allowed, ->(guardian) {
+    scoped_to_permissions(guardian, [:create_post, :full])
+  }
   delegate :post_template, to: 'self.class'
 
-  attr_accessor :displayable_topics
+  # permission is just used by serialization
+  # we may consider wrapping this in another spot
+  attr_accessor :displayable_topics, :permission
+
+
+  def self.scoped_to_permissions(guardian, permission_types)
+    if guardian && guardian.is_staff?
+      scoped
+    else
+      permission_types = permission_types.map{ |permission_type|
+        CategoryGroup.permission_types[permission_type]
+      }
+      where("categories.id in (
+            SELECT c.id FROM categories c
+              WHERE (
+                  NOT c.read_restricted AND
+                  (
+                    NOT EXISTS(
+                      SELECT 1 FROM category_groups cg WHERE cg.category_id = categories.id )
+                    ) OR EXISTS(
+                      SELECT 1 FROM category_groups cg
+                        WHERE permission_type in (?) AND
+                        cg.category_id = categories.id AND
+                        group_id IN (
+                          SELECT g.group_id FROM group_users g where g.user_id = ? UNION SELECT ?
+                        )
+                    )
+                  )
+            )", permission_types,(!guardian || guardian.user.blank?) ? -1 : guardian.user.id, Group[:everyone].id)
+    end
+  end
 
   # Internal: Update category stats: # of topics in past year, month, week for
   # all categories.
@@ -119,28 +157,69 @@ class Category < ActiveRecord::Base
     end
   end
 
-  def deny(group)
-    if group == :all
-      self.secure = true
-    end
+  # will reset permission on a topic to a particular
+  # set.
+  #
+  # Available permissions are, :full, :create_post, :readonly
+  #   hash can be:
+  #
+  # :everyone => :full - everyone has everything
+  # :everyone => :readonly, :staff => :full
+  # 7 => 1  # you can pass a group_id and permission id
+  def set_permissions(permissions)
+    self.read_restricted, @permissions = Category.resolve_permissions(permissions)
+
+    # Ideally we can just call .clear here, but it runs SQL, we only want to run it
+    # on save.
   end
 
-  def allow(group)
-    if group == :all
-      self.secure = false
-      # this is kind of annoying, there should be a clean way of queuing this stuff
-      category_groups.destroy_all unless new_record?
-    else
-      groups.push(group)
+  def permissions=(permissions)
+    set_permissions(permissions)
+  end
+
+  def apply_permissions
+    if @permissions
+      category_groups.destroy_all
+      @permissions.each do |group_id, permission_type|
+        category_groups.build(group_id: group_id, permission_type: permission_type)
+      end
+      @permissions = nil
     end
   end
 
   def secure_group_ids
-    if self.secure
+    if self.read_restricted?
       groups.pluck("groups.id")
     end
   end
 
+
+  def self.resolve_permissions(permissions)
+    read_restricted = true
+
+    everyone = Group::AUTO_GROUPS[:everyone]
+    full = CategoryGroup.permission_types[:full]
+
+    mapped = permissions.map do |group,permission|
+      group = group.id if Group === group
+
+      # subtle, using Group[] ensures the group exists in the DB
+      group = Group[group.to_sym].id unless Fixnum === group
+      permission = CategoryGroup.permission_types[permission] unless Fixnum === permission
+
+      [group, permission]
+    end
+
+    mapped.each do |group, permission|
+      if group == everyone && permission == full
+        return [false, []]
+      end
+
+      read_restricted = false if group == everyone
+    end
+
+    [read_restricted, mapped]
+  end
 end
 
 # == Schema Information
@@ -162,7 +241,7 @@ end
 #  description     :text
 #  text_color      :string(6)        default("FFFFFF"), not null
 #  hotness         :float            default(5.0), not null
-#  secure          :boolean          default(FALSE), not null
+#  read_restricted :boolean          default(FALSE), not null
 #  auto_close_days :float
 #
 # Indexes

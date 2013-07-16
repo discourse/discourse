@@ -52,16 +52,18 @@ class CategoriesController < ApplicationController
       [:name, :color, :text_color]
     end
 
-    def category_param_keys
-      [required_param_keys, :hotness, :secure, :group_names, :auto_close_days].flatten!
-    end
-
     def category_params
       required_param_keys.each do |key|
         params.require(key)
       end
 
-      params.permit(*category_param_keys)
+      if p = params[:permissions]
+        p.each do |k,v|
+          p[k] = v.to_i
+        end
+      end
+
+      params.permit(*required_param_keys, :hotness, :auto_close_days, :permissions => [*p.try(:keys)])
     end
 
     def fetch_category

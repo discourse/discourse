@@ -1,13 +1,13 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe CategoriesController do
-  describe 'create' do
+  describe "create" do
 
-    it 'requires the user to be logged in' do
+    it "requires the user to be logged in" do
       lambda { xhr :post, :create }.should raise_error(Discourse::NotLoggedIn)
     end
 
-    describe 'logged in' do
+    describe "logged in" do
       before do
         @user = log_in(:moderator)
       end
@@ -18,55 +18,66 @@ describe CategoriesController do
         response.should be_forbidden
       end
 
-      it 'raises an exception when the name is missing' do
-        lambda { xhr :post, :create, color: 'ff0', text_color: 'fff' }.should raise_error(ActionController::ParameterMissing)
+      it "raises an exception when the name is missing" do
+        lambda { xhr :post, :create, color: "ff0", text_color: "fff" }.should raise_error(ActionController::ParameterMissing)
       end
 
-      it 'raises an exception when the color is missing' do
-        lambda { xhr :post, :create, name: 'hello', text_color: 'fff' }.should raise_error(ActionController::ParameterMissing)
+      it "raises an exception when the color is missing" do
+        lambda { xhr :post, :create, name: "hello", text_color: "fff" }.should raise_error(ActionController::ParameterMissing)
       end
 
-      it 'raises an exception when the text color is missing' do
-        lambda { xhr :post, :create, name: 'hello', color: 'ff0' }.should raise_error(ActionController::ParameterMissing)
+      it "raises an exception when the text color is missing" do
+        lambda { xhr :post, :create, name: "hello", color: "ff0" }.should raise_error(ActionController::ParameterMissing)
       end
 
-      describe 'failure' do
+      describe "failure" do
         before do
           @category = Fabricate(:category, user: @user)
-          xhr :post, :create, name: @category.name, color: 'ff0', text_color: 'fff'
+          xhr :post, :create, name: @category.name, color: "ff0", text_color: "fff"
         end
 
         it { should_not respond_with(:success) }
 
-        it 'returns errors on a duplicate category name' do
-          response.code.to_i.should == 422
+        it "returns errors on a duplicate category name" do
+          response.status.should == 422
         end
       end
 
 
-      describe 'success' do
-        before do
-          xhr :post, :create, name: 'hello', color: 'ff0', text_color: 'fff'
+      describe "success" do
+        it "works" do
+          readonly = CategoryGroup.permission_types[:readonly]
+          create_post = CategoryGroup.permission_types[:create_post]
+
+          xhr :post, :create, name: "hello", color: "ff0", text_color: "fff",
+                              hotness: 2,
+                              auto_close_days: 3,
+                              permissions: {
+                                "everyone" => readonly,
+                                "staff" => create_post
+                              }
+
+          response.status.should == 200
+          category = Category.first
+          category.category_groups.map{|g| [g.group_id, g.permission_type]}.sort.should == [
+            [Group[:everyone].id, readonly],[Group[:staff].id,create_post]
+          ]
+          category.name.should == "hello"
+          category.color.should == "ff0"
+          category.hotness.should == 2
+          category.auto_close_days.should == 3
         end
-
-        it 'creates a category' do
-          Category.count.should == 1
-        end
-
-        it { should respond_with(:success) }
-
       end
-
     end
   end
 
-  describe 'destroy' do
+  describe "destroy" do
 
-    it 'requires the user to be logged in' do
-      lambda { xhr :delete, :destroy, id: 'category'}.should raise_error(Discourse::NotLoggedIn)
+    it "requires the user to be logged in" do
+      lambda { xhr :delete, :destroy, id: "category"}.should raise_error(Discourse::NotLoggedIn)
     end
 
-    describe 'logged in' do
+    describe "logged in" do
       before do
         @user = log_in
         @category = Fabricate(:category, user: @user)
@@ -86,14 +97,14 @@ describe CategoriesController do
 
   end
 
-  describe 'update' do
+  describe "update" do
 
-    it 'requires the user to be logged in' do
+    it "requires the user to be logged in" do
       lambda { xhr :put, :update, id: 'category'}.should raise_error(Discourse::NotLoggedIn)
     end
 
 
-    describe 'logged in' do
+    describe "logged in" do
       before do
         @user = log_in(:moderator)
         @category = Fabricate(:category, user: @user)
@@ -117,37 +128,46 @@ describe CategoriesController do
         lambda { xhr :put, :update, id: @category.slug, name: 'asdf', color: 'fff' }.should raise_error(ActionController::ParameterMissing)
       end
 
-      describe 'failure' do
+      describe "failure" do
         before do
-          @other_category = Fabricate(:category, name: 'Other', user: @user )
-          xhr :put, :update, id: @category.id, name: @other_category.name, color: 'ff0', text_color: 'fff'
+          @other_category = Fabricate(:category, name: "Other", user: @user )
+          xhr :put, :update, id: @category.id, name: @other_category.name, color: "ff0", text_color: "fff"
         end
 
-        it 'returns errors on a duplicate category name' do
+        it "returns errors on a duplicate category name" do
           response.should_not be_success
         end
 
-        it 'returns errors on a duplicate category name' do
+        it "returns errors on a duplicate category name" do
           response.code.to_i.should == 422
         end
       end
 
-      describe 'success' do
-        before do
-          # might as well test this as well
-          @category.allow(Group[:admins])
-          @category.save
+      describe "success" do
 
-          xhr :put, :update, id: @category.id, name: 'science', color: '000', text_color: '0ff', group_names: Group[:staff].name, secure: 'true'
+        it "updates the group correctly" do
+
+          readonly = CategoryGroup.permission_types[:readonly]
+          create_post = CategoryGroup.permission_types[:create_post]
+
+          xhr :put, :update, id: @category.id, name: "hello", color: "ff0", text_color: "fff",
+                              hotness: 2,
+                              auto_close_days: 3,
+                              permissions: {
+                                "everyone" => readonly,
+                                "staff" => create_post
+                              }
+
+          response.status.should == 200
           @category.reload
-        end
+          @category.category_groups.map{|g| [g.group_id, g.permission_type]}.sort.should == [
+            [Group[:everyone].id, readonly],[Group[:staff].id,create_post]
+          ]
+          @category.name.should == "hello"
+          @category.color.should == "ff0"
+          @category.hotness.should == 2
+          @category.auto_close_days.should == 3
 
-        it 'updates the group correctly' do
-          @category.name.should == 'science'
-          @category.color.should == '000'
-          @category.text_color.should == '0ff'
-          @category.secure?.should be_true
-          @category.groups.count.should == 1
         end
       end
     end

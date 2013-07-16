@@ -412,6 +412,8 @@ end
 #  percent_rank            :float            default(1.0)
 #  notify_user_count       :integer          default(0), not null
 #  like_score              :integer          default(0), not null
+#  deleted_by_id           :integer
+#  nuked_user              :boolean          default(FALSE)
 #
 # Indexes
 #

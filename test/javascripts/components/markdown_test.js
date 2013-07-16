@@ -69,13 +69,13 @@ test("Quotes", function() {
   cookedOptions("1[quote=\"bob, post:1\"]my quote[/quote]2",
                 { topicId: 2, lookupAvatar: function(name) { return "" + name; } },
                 "<p>1</p><aside class='quote' data-post=\"1\" >\n  <div class='title'>\n    <div class='quote-controls'></div>\n" +
-                "  bob\n  bob\n  said:\n  </div>\n  <blockquote>my quote</blockquote>\n</aside>\n<p></p>\n\n<p>2</p>",
+                "  bob\n  bob said:\n  </div>\n  <blockquote>my quote</blockquote>\n</aside>\n<p></p>\n\n<p>2</p>",
                 "handles quotes properly");
 
   cookedOptions("1[quote=\"bob, post:1\"]my quote[/quote]2",
                 { topicId: 2, lookupAvatar: function(name) { } },
                 "<p>1</p><aside class='quote' data-post=\"1\" >\n  <div class='title'>\n    <div class='quote-controls'></div>\n" +
-                "  \n  bob\n  said:\n  </div>\n  <blockquote>my quote</blockquote>\n</aside>\n<p></p>\n\n<p>2</p>",
+                "  \n  bob said:\n  </div>\n  <blockquote>my quote</blockquote>\n</aside>\n<p></p>\n\n<p>2</p>",
                 "includes no avatar if none is found");
 });
 

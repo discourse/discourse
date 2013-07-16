@@ -116,7 +116,7 @@ class PostCreator
   protected
 
   def secure_group_ids(topic)
-    @secure_group_ids ||= if topic.category && topic.category.secure?
+    @secure_group_ids ||= if topic.category && topic.category.read_restricted?
       topic.category.secure_group_ids
     end
   end

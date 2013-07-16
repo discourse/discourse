@@ -192,7 +192,7 @@ describe Topic do
       context "secure categories" do
 
         let(:user) { Fabricate(:user) }
-        let(:category) { Fabricate(:category, secure: true) }
+        let(:category) { Fabricate(:category, read_restricted: true) }
 
         before do
           topic.category = category
@@ -1263,7 +1263,7 @@ describe Topic do
 
   describe 'secured' do
     it 'can remove secure groups' do
-      category = Fabricate(:category, secure: true)
+      category = Fabricate(:category, read_restricted: true)
       topic = Fabricate(:topic, category: category)
 
       Topic.secured(Guardian.new(nil)).count.should == 0
@@ -1280,17 +1280,17 @@ describe Topic do
     let(:category){ Category.new }
 
     it "is true if the category is secure" do
-      category.stubs(:secure).returns(true)
-      Topic.new(:category => category).should be_secure_category
+      category.stubs(:read_restricted).returns(true)
+      Topic.new(:category => category).should be_read_restricted_category
     end
 
     it "is false if the category is not secure" do
-      category.stubs(:secure).returns(false)
-      Topic.new(:category => category).should_not be_secure_category
+      category.stubs(:read_restricted).returns(false)
+      Topic.new(:category => category).should_not be_read_restricted_category
     end
 
     it "is false if there is no category" do
-      Topic.new(:category => nil).should_not be_secure_category
+      Topic.new(:category => nil).should_not be_read_restricted_category
     end
   end
 

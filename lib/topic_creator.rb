@@ -27,9 +27,9 @@ class TopicCreator
     topic_params[:archetype] = @opts[:archetype] if @opts[:archetype].present?
     topic_params[:subtype] = @opts[:subtype] if @opts[:subtype].present?
 
-    @guardian.ensure_can_create!(Topic)
-
     category = Category.where(name: @opts[:category]).first
+
+    @guardian.ensure_can_create!(Topic,category)
     topic_params[:category_id] = category.id if category.present?
     topic_params[:meta_data] = @opts[:meta_data] if @opts[:meta_data].present?
     topic_params[:created_at] = Time.zone.parse(@opts[:created_at].to_s) if @opts[:created_at].present?

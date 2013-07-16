@@ -110,19 +110,19 @@
       </section>
 
       <section class='d-dropdown' id='site-map-dropdown'>
-      <ul>
+      <ul class="site-location">
         {{#if currentUser.staff}}
-          <li><a href="/admin"><i class='icon icon-wrench'></i>{{i18n admin_title}}</a></li>
-          <li><a href="/admin/flags/active"><i class='icon icon-flag'></i>{{i18n flags_title}}</a>
+          <li class='admin-location'><a href="/admin"><i class='icon icon-wrench'></i>{{i18n admin_title}}</a></li>
+          <li class='flags-location'><a href="/admin/flags/active"><i class='icon icon-flag'></i>{{i18n flags_title}}</a>
           {{#if currentUser.site_flagged_posts_count}}
             <a href='/admin/flags/active' title='{{i18n notifications.total_flagged}}' class='badge-notification flagged-posts'>{{currentUser.site_flagged_posts_count}}</a>
           {{/if}}
           </li>
         {{/if}}
-        <li>
+        <li class='latest-location'>
           {{#titledLinkTo "list.latest" titleKey="filters.latest.help"}}{{i18n filters.latest.title}}{{/titledLinkTo}}
         </li>
-        <li>{{faqLink}}</li>
+        <li class='faq-location'>{{faqLink}}</li>
 
         {{#if categories}}
           <li class='heading' title="{{i18n filters.categories.help}}">

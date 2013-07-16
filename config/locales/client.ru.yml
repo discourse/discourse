@@ -10,6 +10,20 @@
 
 ru:
   js:
+    number:
+      human:
+        storage_units:
+          format: ! '%n %u'
+          units:
+            byte:
+              few: байта
+              many: байт
+              one: байт
+              other: байта
+            gb: ГБ
+            kb: КБ
+            mb: МБ
+            tb: ТБ
     dates:
       tiny:
         half_a_minute: '< 1мин'
@@ -177,7 +191,7 @@ ru:
       "3": Закладки
       "4": Темы
       "5": Сообщения
-      "6": Ответы вам
+      "6": Ответы
       "7": Упоминания
       "9": Цитаты
       "10": Избранное
@@ -441,9 +455,9 @@ ru:
       quote_text: Цитата
       code_title: Фрагмент кода
       code_text: вводите код здесь
-      image_title: Изображение
-      image_description: введите здесь описание изображения
-      image_dialog_title: Вставка изображения
+      upload_title: Изображение
+      upload_description: введите здесь описание изображения
+      upload_dialog_title: Вставка изображения
       image_optional_text: необязательное название
       image_hosting_hint: "Нужен <a href='http://www.google.com/search?q=free+image+hosting' target='_blank'>бесплатный хостинг изображений?</a>"
       olist_title: Нумерованный список
@@ -474,7 +488,7 @@ ru:
       invitee_accepted: "<i title='принятое приглашение' class='icon icon-signin'></i> {{username}} принял ваше приглашение"
       moved_post: "<i title='перенесенное сообщение' class='icon icon-arrow-right'></i> {{username}} перенес сообщение в {{link}}"
       total_flagged: всего сообщений с жалобами
-    image_selector:
+    upload_selector:
       title: Вставка изображения
       from_my_computer: С устройства
       from_the_web: Из интернета
@@ -484,7 +498,7 @@ ru:
       local_title: локальное изображение
       local_tip: выбрать изображение с устройства.
       upload: Загрузить
-      uploading_image: Загрузка изображения
+      upload_file: Загрузка изображения
     search:
       title: поиск по темам, сообщениям, пользователям или категориям
       placeholder: условия поиска...
@@ -608,6 +622,7 @@ ru:
           title: Выключено
           description: 'тема не показывается на вкладке <b>Непрочитанные</b>, уведомления о новых сообщениях в теме вам не отправляются.'
       actions:
+        recover: Отменить удаление темы
         delete: Удалить тему
         open: Открыть тему
         close: Закрыть тему
@@ -619,7 +634,7 @@ ru:
         invisible: Сделать невидимой
         visible: Сделать видимой
         reset_read: Сбросить счетчики
-        multi_select: Выбрать для объединения/разделения
+        multi_select: Выбрать сообщения для перемещения
         convert_to_topic: Преобразовать в обычную тему
       reply:
         title: Ответить
@@ -672,19 +687,19 @@ ru:
           many: 'из {{count}} в теме'
         cancel: Показать все сообщения в этой теме еще раз.
       split_topic:
-        title: Разделить тему
-        action: разделить
+        title: Переместить в новую тему
+        action: переместить в новую тему
         topic_name: 'Новый заголовок темы:'
-        error: В процессе разделения темы произошла ошибка.
+        error: Во время перемещения сообщений в новую тему возникла ошибка.
         instructions:
           one: Создать новую тему, перенеся в нее выбранное сообщение.
           other: 'Создать новую тему, перенеся в нее  <b>{{count}}</b> выбранных сообщений.'
           few: 'Создать новую тему, перенеся в нее  <b>{{count}}</b> выбранные сообщения.'
           many: 'Создать новую тему, перенеся в нее  <b>{{count}}</b> выбранных сообщений.'
       merge_topic:
-        title: Перенести тему
-        action: перенести
-        error: В процессе объединения темы произошла ошибка.
+        title: Переместить в существующую тему
+        action: переместить в существующую тему
+        error: Во время перемещения сообщений в тему возникла ошибка.
         instructions:
           one: Выберите тему, в которую хотите перенести сообщение.
           other: 'Выберите тему, в которую хотите перенести <b>{{count}}</b> выбранных сообщений.'
@@ -711,6 +726,7 @@ ru:
       continue_discussion: 'Продолжить обсуждение из {{postLink}}:'
       follow_quote: перейти к цитируемому сообщению
       deleted_by_author: (сообщение удалено автором)
+      deleted_by: Удалено
       expand_collapse: развернуть/свернуть
       has_replies:
         one: ответ
@@ -1004,6 +1020,8 @@ ru:
         critical_available: Доступно критическое обновление.
         updates_available: Доступны обновления.
         please_upgrade: Пожалуйста, обновитесь!
+        no_check_performed: Проверка обновлений не может быть выполнена. Убедитесь, что запущены процессы clockwork и sidekiq.
+        stale_data: Проверка обновлений не может быть выполнена. Убедитесь, что запущены процессы clockwork и sidekiq.
         installed_version: Установленная версия
         latest_version: Самая последняя
         problems_found: 'Мы обнаружили некоторые проблемы в вашей установке Discourse:'
@@ -1013,7 +1031,7 @@ ru:
         moderators: 'Модераторы:'
         admins: 'Администраторы:'
         blocked: 'Заблокированы:'
-        banned: 'Забаненые:'
+        banned: 'Забанены:'
         private_messages_short: ЛС
         private_messages_title: Личные сообщения
         reports:

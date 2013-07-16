@@ -7,6 +7,18 @@
 
 en:
   js:
+    number:
+      human:
+        storage_units:
+          format: ! '%n %u'
+          units:
+            byte:
+              one: Byte
+              other: Bytes
+            gb: GB
+            kb: KB
+            mb: MB
+            tb: TB
     dates:
       tiny:
         half_a_minute: "< 1m"
@@ -162,6 +174,7 @@ en:
       "13": "Inbox"
 
     user:
+      said: "{{username}} said:"
       profile: Profile
       mute: Mute
       edit: Edit Preferences
@@ -442,9 +455,9 @@ en:
       quote_text: "Blockquote"
       code_title: "Code Sample"
       code_text: "enter code here"
-      image_title: "Image"
-      image_description: "enter image description here"
-      image_dialog_title: "Insert Image"
+      upload_title: "Image"
+      upload_description: "enter image description here"
+      upload_dialog_title: "Insert Image"
       image_optional_text: "optional title"
       image_hosting_hint: "Need <a href='http://www.google.com/search?q=free+image+hosting' target='_blank'>free image hosting?</a>"
       olist_title: "Numbered List"
@@ -478,17 +491,17 @@ en:
       moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} moved to {{link}}"
       total_flagged: "total flagged posts"
 
-    image_selector:
-      title: "Insert Image"
+    upload_selector:
+      title: "Upload file"
       from_my_computer: "From My Device"
       from_the_web: "From The Web"
-      add_image: "Add Image"
-      remote_title: "remote image"
-      remote_tip: "enter address of an image in the form http://example.com/image.jpg"
-      local_title: "local image"
-      local_tip: "click to select an image from your device."
+      add_image: "Add File"
+      remote_title: "remote file"
+      remote_tip: "enter address of a file in the form http://example.com/image.jpg"
+      local_title: "local file"
+      local_tip: "click to select a file from your device."
       upload: "Upload"
-      uploading_image: "Uploading image"
+      upload_file: "Uploading"
 
     search:
       title: "search for topics, posts, users, or categories"
@@ -648,7 +661,7 @@ en:
         invisible: "Make Invisible"
         visible: "Make Visible"
         reset_read: "Reset Read Data"
-        multi_select: "Select for Merge/Split"
+        multi_select: "Select Posts to Move"
         convert_to_topic: "Convert to Regular Topic"
 
       reply:
@@ -703,18 +716,18 @@ en:
         cancel: "Show all posts in this topic again."
 
       split_topic:
-        title: "Split Topic"
-        action: "split topic"
+        title: "Move to New Topic"
+        action: "move to new topic"
         topic_name: "New Topic Name:"
-        error: "There was an error splitting that topic."
+        error: "There was an error moving posts to the new topic."
         instructions:
           one: "You are about to create a new topic and populate it with the post you've selected."
           other: "You are about to create a new topic and populate it with the <b>{{count}}</b> posts you've selected."
 
       merge_topic:
-        title: "Merge Topic"
-        action: "merge topic"
-        error: "There was an error merging that topic."
+        title: "Move to Existing Topic"
+        action: "move to existing topic"
+        error: "There was an error moving posts into that topic."
         instructions:
           one: "Please choose the topic you'd like to move that post to."
           other: "Please choose the topic you'd like to move those <b>{{count}}</b> posts to."
@@ -993,6 +1006,11 @@ en:
 
     browser_update: 'Unfortunately, <a href="http://www.discourse.org/faq/#browser">your browser is too old to work on this Discourse forum</a>. Please <a href="http://browsehappy.com">upgrade your browser</a>.'
 
+    permission_types:
+      full: "Create Topics, Create Posts and Read"
+      create_post: "Create Posts and Read"
+      readonly: "Read Only"
+
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "type to filter..."
@@ -1239,3 +1257,4 @@ en:
         title: 'Settings'
         reset: 'reset to default'
         none: 'none'
+

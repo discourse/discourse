@@ -2,13 +2,19 @@
  We always prefix with "js." to select exactly what we want passed
  through to the front end.
 **/
-
 var oldI18nlookup = I18n.lookup;
-I18n.lookup = function() {
-  // jshint doesn't like when we change the arguments directly...
-  var args = arguments;
-  if (args.length > 0) { args[0] = "js." + args[0]; }
-  return oldI18nlookup.apply(this, args);
+I18n.lookup = function(scope, options) {
+  return oldI18nlookup.apply(this, ["js." + scope, options]);
+};
+
+/**
+ Default format for storage units
+**/
+var oldI18ntoHumanSize = I18n.toHumanSize;
+I18n.toHumanSize = function(number, options) {
+  options = options || {};
+  options.format = I18n.t("number.human.storage_units.format");
+  return oldI18ntoHumanSize.apply(this, [number, options]);
 };
 
 /**
@@ -37,7 +43,7 @@ Ember.Handlebars.registerHelper('i18n', function(property, options) {
 Ember.Handlebars.registerHelper('countI18n', function(key, options) {
   var view = Discourse.View.extend({
     tagName: 'span',
-    shouldRerender: Discourse.View.renderIfChanged('countChanged'),
+    shouldRerender: Discourse.View.renderIfChanged('count'),
 
     render: function(buffer) {
       buffer.push(I18n.t(key, { count: this.get('count') }));

@@ -102,7 +102,7 @@ class ApplicationController < ActionController::Base
       guardian.current_user.sync_notification_channel_position
     end
 
-    store_preloaded("site", Site.cached_json(current_user))
+    store_preloaded("site", Site.cached_json(guardian))
 
     if current_user.present?
       store_preloaded("currentUser", MultiJson.dump(CurrentUserSerializer.new(current_user, root: false)))
