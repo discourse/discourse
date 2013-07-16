@@ -119,12 +119,12 @@ describe Upload do
     it "store files on s3 when enabled" do
       SiteSetting.expects(:enable_s3_uploads?).returns(true)
       LocalStore.expects(:store_file).never
-      S3.expects(:store_file)
+      S3Store.expects(:store_file)
       Upload.store_file(image, image_sha1, 1)
     end
 
     it "store files locally by default" do
-      S3.expects(:store_file).never
+      S3Store.expects(:store_file).never
       LocalStore.expects(:store_file)
       Upload.store_file(image, image_sha1, 1)
     end
@@ -136,12 +136,12 @@ describe Upload do
     it "remove files on s3 when enabled" do
       SiteSetting.expects(:enable_s3_uploads?).returns(true)
       LocalStore.expects(:remove_file).never
-      S3.expects(:remove_file)
+      S3Store.expects(:remove_file)
       Upload.remove_file(upload.url)
     end
 
     it "remove files locally by default" do
-      S3.expects(:remove_file).never
+      S3Store.expects(:remove_file).never
       LocalStore.expects(:remove_file)
       Upload.remove_file(upload.url)
     end
@@ -163,13 +163,31 @@ describe Upload do
 
     it "identifies S3 uploads" do
       SiteSetting.stubs(:enable_s3_uploads).returns(true)
-      SiteSetting.stubs(:s3_upload_bucket).returns("bucket")
-      Upload.has_been_uploaded?("//bucket.s3.amazonaws.com/1337.png").should == true
+      SiteSetting.stubs(:s3_upload_bucket).returns("Bucket")
+      Upload.has_been_uploaded?("//s3.amazonaws.com/Bucket/1337.png").should == true
     end
 
     it "identifies external urls" do
       Upload.has_been_uploaded?("http://domain.com/uploads/default/42/0123456789ABCDEF.jpg").should == false
-      Upload.has_been_uploaded?("//bucket.s3.amazonaws.com/1337.png").should == false
+      Upload.has_been_uploaded?("//s3.amazonaws.com/Bucket/1337.png").should == false
+    end
+
+  end
+
+  context ".is_on_s3?" do
+
+    before do
+      SiteSetting.stubs(:enable_s3_uploads).returns(true)
+      SiteSetting.stubs(:s3_upload_bucket).returns("BuCkEt")
+   end
+
+    it "case-insensitively matches the old subdomain format" do
+      Upload.is_on_s3?("//bucket.s3.amazonaws.com/1337.png").should == true
+    end
+
+    it "case-sensitively matches the new folder format" do
+      Upload.is_on_s3?("//s3.amazonaws.com/BuCkEt/1337.png").should == true
+      Upload.is_on_s3?("//s3.amazonaws.com/bucket/1337.png").should == false
     end
 
   end
