@@ -5,7 +5,7 @@ gem 'active_model_serializers', git: 'https://github.com/rails-api/active_model_
 # we had issues with latest, stick to the rev till we figure this out
 # PR that makes it all hang together welcome
 gem 'ember-rails'
-gem 'ember-source', '1.0.0.rc6'
+gem 'ember-source', '1.0.0.rc6.2'
 gem 'handlebars-source'
 gem 'barber'
 

@@ -46,11 +46,11 @@
 
 // sinon settings
 sinon.config = {
-    injectIntoThis: true,
-    injectInto: null,
-    properties: ["spy", "stub", "mock", "clock", "sandbox"],
-    useFakeTimers: false,
-    useFakeServer: false
+  injectIntoThis: true,
+  injectInto: null,
+  properties: ["spy", "stub", "mock", "clock", "sandbox"],
+  useFakeTimers: false,
+  useFakeServer: false
 };
 
 window.assetPath = function() { return null };
