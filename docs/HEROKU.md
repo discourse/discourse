@@ -333,7 +333,7 @@ You'll need an Amazon S3 account set up with a bucket configured with your app n
 
 1. Add the Asset Sync Gem to the Gemfile under assets.
     
-    *.Gemfile*
+    *Gemfile*
 
     ```diff
     group :assets do
@@ -354,6 +354,10 @@ You'll need an Amazon S3 account set up with a bucket configured with your app n
 3. Get the access keys that were created for the new user and push the S3 configs to Heroku.
 
         heroku config:set FOG_PROVIDER=AWS AWS_ACCESS_KEY_ID=xxx AWS_SECRET_ACCESS_KEY=yyy FOG_DIRECTORY=appname-assets
+        
+4. Push the Gzip config setting to Heroku. This tells asset sync to upload Gziped files where available.
+
+        heroku config:add ASSET_SYNC_GZIP_COMPRESSION=true
 
 Now commit your changes to Git and push to Heroku.
 
