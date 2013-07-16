@@ -5,7 +5,7 @@ discourse-oneboxer
   - [![Code Climate](https://codeclimate.com/github/krainboltgreene/architect.png)](https://codeclimate.com/github/krainboltgreene/architect)
   - [![Build Status](https://travis-ci.org/krainboltgreene/architect.png)](https://travis-ci.org/krainboltgreene/architect)
   - [![Dependency Status](https://gemnasium.com/dysania/discourse-oneboxer.png)](https://gemnasium.com/dysania/discourse-oneboxer)
-  - [![Coverage Status](https://coveralls.io/r/dysania/discourse-oneboxer/branch.png)](https://coveralls.io/r/dysania/discourse-oneboxer)
+  - [![Coverage Status](https://coveralls.io/repos/dysania/discourse-oneboxer/badge.png)](https://coveralls.io/r/dysania/discourse-oneboxer)
 
 
 Oneboxer is a library for turning media URLs into previews.
