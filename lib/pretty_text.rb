@@ -166,17 +166,18 @@ module PrettyText
     return html unless url
 
     image = /\.(jpg|jpeg|gif|png|tiff|tif|bmp)$/
+    relative = /^\/[^\/]/
 
     doc = Nokogiri::HTML.fragment(html)
 
     doc.css("a").each do |l|
       href = l["href"].to_s
-      l["href"] = url + href if href[0] == '/' && href =~ image
+      l["href"] = url + href if href =~ relative && href =~ image
     end
 
     doc.css("img").each do |l|
       src = l["src"].to_s
-      l["src"] = url + src if src[0] == '/'
+      l["src"] = url + src if src =~ relative
     end
 
     doc.to_s
