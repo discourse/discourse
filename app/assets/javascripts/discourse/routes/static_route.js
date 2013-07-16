@@ -9,9 +9,11 @@
 Discourse.StaticController.pages.forEach(function(page) {
 
   Discourse[(page.capitalize()) + "Route"] = Discourse.Route.extend({
+
     renderTemplate: function() {
       this.render('static');
     },
+
     setupController: function() {
       var config_key = Discourse.StaticController.configs[page];
       if (config_key && Discourse.SiteSettings[config_key].length > 0) {
@@ -20,6 +22,7 @@ Discourse.StaticController.pages.forEach(function(page) {
         this.controllerFor('static').loadPath("/" + page);
       }
     }
+
   });
 
 });

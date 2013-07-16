@@ -20,7 +20,7 @@ Discourse.StaticController = Discourse.Controller.extend({
       text = text[1];
       this.set('content', text);
     } else {
-      return Discourse.ajax(path).then(function (result) {
+      return Discourse.ajax(path, {dataType: 'html'}).then(function (result) {
         staticController.set('content', result);
       });
     }
