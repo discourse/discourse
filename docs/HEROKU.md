@@ -196,6 +196,14 @@ Create a .env file from the sample.
 ##### Use Rails console, with pry
 
     foreman run rails console
+    
+##### Prepare the test database
+
+    foreman run rake db:test:prepare
+    
+##### Run tests
+
+    foreman run rake autospec
 
 
 # Heroku add-on examples
