@@ -168,6 +168,7 @@ en:
       "13": "Inbox"
 
     user:
+      said: "{{username}} said:"
       profile: Profile
       mute: Mute
       edit: Edit Preferences

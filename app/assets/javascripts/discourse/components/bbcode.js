@@ -254,7 +254,7 @@ Discourse.BBCode = {
 
       // Arguments for formatting
       args = {
-        username: username,
+        username: I18n.t('user.said',{username: username}),
         params: params,
         quote: content,
         avatarImg: opts.lookupAvatar ? opts.lookupAvatar(username) : void 0
