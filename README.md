@@ -1,4 +1,4 @@
-Oneboxer
+discourse-oneboxer
 ----------
 
   - [![Gem Version](https://badge.fury.io/rb/architect.png)](https://rubygems.org/gems/architect)
@@ -44,7 +44,7 @@ Oneboxer currently has support for page, image, and video URLs from these sites:
 + yFrog
 
 
-Using Oneboxer
+Using discourse-oneboxer
 ===============
 
 You can include architect modules into a class like so:
@@ -96,7 +96,7 @@ gem "rails", "~> <%= version %>"
 ```
 
 
-Installing Oneboxer
+Installing discourse-oneboxer
 ==================
 
 Add this line to your application's Gemfile:
