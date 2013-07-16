@@ -11,6 +11,7 @@ describe Site do
     category.set_permissions(:everyone => :create_post)
     category.save
 
-    Site.new(Guardian.new(user)).categories.count.should == 0
+    # TODO clean up querying so we can make sure we have the correct permission set
+    Site.new(Guardian.new(user)).categories[0].permission.should_not == CategoryGroup.permission_types[:full]
   end
 end

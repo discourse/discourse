@@ -49,23 +49,26 @@ Discourse.Category = Discourse.Model.extend({
     }
 
     return Discourse.ajax(url, {
-      contentType: 'application/json',
-      dataType: 'json',
-      data: JSON.stringify({
+      data: {
         name: this.get('name'),
         color: this.get('color'),
         text_color: this.get('text_color'),
         hotness: this.get('hotness'),
         secure: this.get('secure'),
-        permissions: _.map(
-                this.get('permissions'), function(p){
-                  return { group_name: p.group_name, permission_type: p.permission.id};
-                }),
+        permissions: this.get('permissionsForUpdate'),
         auto_close_days: this.get('auto_close_days')
-      }),
+      },
       type: this.get('id') ? 'PUT' : 'POST'
     });
   },
+
+  permissionsForUpdate: function(){
+    var rval = {};
+    _.each(this.get("permissions"),function(p){
+      rval[p.group_name] = p.permission.id;
+    });
+    return rval;
+  }.property("permissions"),
 
   destroy: function(callback) {
     return Discourse.ajax("/categories/" + (this.get('slug') || this.get('id')), { type: 'DELETE' });

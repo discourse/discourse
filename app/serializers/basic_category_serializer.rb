@@ -9,6 +9,7 @@ class BasicCategorySerializer < ApplicationSerializer
              :description,
              :topic_url,
              :hotness,
-             :read_restricted
+             :read_restricted,
+             :permission
 
 end

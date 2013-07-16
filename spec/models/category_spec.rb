@@ -61,6 +61,12 @@ describe Category do
       Category.secured(guardian).count.should == 4
       Category.post_create_allowed(guardian).count.should == 3
       Category.topic_create_allowed(guardian).count.should == 2 # explicitly allowed once, default allowed once
+
+      # everyone has special semantics, test it as well
+      can_post_category.set_permissions(:everyone => :create_post)
+      can_post_category.save
+
+      Category.post_create_allowed(guardian).count.should == 3
     end
 
   end

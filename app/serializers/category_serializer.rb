@@ -1,10 +1,10 @@
 class CategorySerializer < BasicCategorySerializer
 
-  attributes :read_restricted, :groups, :available_groups, :auto_close_days, :group_permissions
+  attributes :read_restricted, :available_groups, :auto_close_days, :group_permissions
 
   def group_permissions
     @group_permissions ||= begin
-      perms = object.category_groups.joins(:group).order("groups.name").map do |cg|
+      perms = object.category_groups.joins(:group).includes(:group).order("groups.name").map do |cg|
         {
           permission_type: cg.permission_type,
           group_name: cg.group.name
@@ -18,7 +18,7 @@ class CategorySerializer < BasicCategorySerializer
   end
 
   def available_groups
-    Group.order("name").pluck(:name) - group_permissions.map{|g| g[:group_name]}
+    Group.order(:name).pluck(:name) - group_permissions.map{|g| g[:group_name]}
   end
 
 end

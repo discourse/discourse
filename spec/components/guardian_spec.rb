@@ -276,7 +276,26 @@ describe Guardian do
       end
     end
 
+    describe 'a Topic' do
+      it 'should check for full permissions' do
+        category = Fabricate(:category)
+        category.set_permissions(:everyone => :create_post)
+        category.save
+        Guardian.new(user).can_create?(Topic,category).should be_false
+      end
+    end
+
     describe 'a Post' do
+
+      it "is false on readonly categories" do
+        category = Fabricate(:category)
+        topic.category = category
+        category.set_permissions(:everyone => :readonly)
+        category.save
+
+        Guardian.new(topic.user).can_create?(Post, topic).should be_false
+
+      end
 
       it "is false when not logged in" do
         Guardian.new.can_create?(Post, topic).should be_false

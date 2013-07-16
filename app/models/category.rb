@@ -50,7 +50,9 @@ class Category < ActiveRecord::Base
   }
   delegate :post_template, to: 'self.class'
 
-  attr_accessor :displayable_topics
+  # permission is just used by serialization
+  # we may consider wrapping this in another spot
+  attr_accessor :displayable_topics, :permission
 
 
   def self.scoped_to_permissions(guardian, permission_types)
@@ -64,17 +66,19 @@ class Category < ActiveRecord::Base
             SELECT c.id FROM categories c
               WHERE (
                   NOT c.read_restricted AND
-                  NOT EXISTS(
-                    SELECT 1 FROM category_groups cg WHERE cg.category_id = categories.id )
-                  ) OR EXISTS(
-                    SELECT 1 FROM category_groups cg
-                      WHERE permission_type in (?) AND
-                      cg.category_id = categories.id AND
-                      group_id IN (
-                        SELECT g.group_id FROM group_users g where g.user_id = ?
-                      )
+                  (
+                    NOT EXISTS(
+                      SELECT 1 FROM category_groups cg WHERE cg.category_id = categories.id )
+                    ) OR EXISTS(
+                      SELECT 1 FROM category_groups cg
+                        WHERE permission_type in (?) AND
+                        cg.category_id = categories.id AND
+                        group_id IN (
+                          SELECT g.group_id FROM group_users g where g.user_id = ? UNION SELECT ?
+                        )
+                    )
                   )
-            )", permission_types,(!guardian || guardian.user.blank?) ? -1 : guardian.user.id)
+            )", permission_types,(!guardian || guardian.user.blank?) ? -1 : guardian.user.id, Group[:everyone].id)
     end
   end
 
@@ -169,6 +173,10 @@ class Category < ActiveRecord::Base
     # on save.
   end
 
+  def permissions=(permissions)
+    set_permissions(permissions)
+  end
+
   def apply_permissions
     if @permissions
       category_groups.destroy_all
@@ -196,7 +204,7 @@ class Category < ActiveRecord::Base
       group = group.id if Group === group
 
       # subtle, using Group[] ensures the group exists in the DB
-      group = Group[group].id unless Fixnum === group
+      group = Group[group.to_sym].id unless Fixnum === group
       permission = CategoryGroup.permission_types[permission] unless Fixnum === permission
 
       [group, permission]

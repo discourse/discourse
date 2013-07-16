@@ -238,8 +238,19 @@ class Guardian
     can_create_post?(parent)
   end
 
+  def can_create_topic_on_category?(category)
+    can_create_post?(nil) && (
+      !category ||
+      Category.topic_create_allowed(self).where(:id => category.id).count == 1
+    )
+  end
+
   def can_create_post?(parent)
-    !SpamRulesEnforcer.block?(@user)
+    !SpamRulesEnforcer.block?(@user) && (
+      !parent ||
+      !parent.category ||
+      Category.post_create_allowed(self).where(:id => parent.category.id).count == 1
+    )
   end
 
   def can_create_post_on_topic?(topic)
