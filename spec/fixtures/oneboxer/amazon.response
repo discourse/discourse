@@ -1,0 +1,818 @@
+HTTP/1.1 200 OK
+Date: Wed, 13 Feb 2013 09:47:01 GMT
+Server: Server
+x-amz-id-1: 0WP9Y459PHTN10MNJVR2
+p3p: policyref="http://www.amazon.com/w3c/p3p.xml",CP="CAO DSP LAW CUR ADM IVAo IVDo CONo OTPo OUR DELi PUBi OTRi BUS PHY ONL UNI PUR FIN COM NAV INT DEM CNT STA HEA PRE LOC GOV OTC "
+x-frame-options: SAMEORIGIN
+x-amz-id-2: 0rIBgfbZSgwp0OgDU7U4QRx4GkZYUfpT1KWBFnMhwQFtpJT04o1NQEg3vs45N9OwaUbXxndyiZk=
+Vary: Accept-Encoding,User-Agent
+Cneonction: close
+Content-Type: text/html; charset=UTF-8
+Set-cookie: x-wl-uid=17QmuFayq7DO9CJ7Wqf46nzJaoa3gK4r9pTrw4rwtsHREAL7I+xpYhSUBfwzTTZR09yg01TKKL04=; path=/; domain=.amazon.com; expires=Tue, 01-Jan-2036 08:00:01 GMT
+Set-cookie: session-id-time=2082787201l; path=/; domain=.amazon.com; expires=Tue, 01-Jan-2036 08:00:01 GMT
+Set-cookie: session-id=176-4101438-5479234; path=/; domain=.amazon.com; expires=Tue, 01-Jan-2036 08:00:01 GMT
+Transfer-Encoding: chunked
+
+
+
+
+
+        <!DOCTYPE html>
+
+
+<html>
+<head>
+<script type="text/javascript">var ue_t0=ue_t0||+new Date();</script>
+<script type='text/javascript'>
+var ue_csm = window;
+ue_csm.ue_hob=ue_csm.ue_hob||+new Date();(function(a){a.ue_err={ec:0,pec:0,ts:0,erl:[],mxe:50,startTimer:function(){a.ue_err.ts++;setInterval(function(){a.ue&&(a.ue_err.pec<a.ue_err.ec)&&a.uex("at");a.ue_err.pec=a.ue_err.ec},10000)}};a.ueLogError=(function(){function b(c,e,d){if(a.ue_err.ec>a.ue_err.mxe){return}a.ue_err.ec++;a.ue.log({m:c,f:e,l:d,s:""},"jserr");return false}window.onerror=b;return function(c){if(a.ue_err.ec>a.ue_err.mxe){return}a.ue_err.ec++;a.ue_err.erl.push(c)}})()})(ue_csm);ue_csm.ue_hoe=+new Date();
+
+var ue_id='0WP9Y459PHTN10MNJVR2',
+ue_sid='176-4101438-5479234',
+ue_mid='ATVPDKIKX0DER',
+ue_sn='www.amazon.com',
+ue_url='/gp/aw/d/0596516177/uedata/nvp/unsticky/176-4101438-5479234/NoPageType/ntpoffrw',
+ue_furl='fls-na.amazon.com',
+ue_pr=0,
+ue_navtiming=1,
+ue_tofc=1,
+ue_log_idx=0,
+ue_tsinc=0,
+ue_fcsn=1,
+ue_pageviz=0;
+if (!window.ue_csm) {var ue_csm = window;}
+ue_csm.ue_hob=ue_csm.ue_hob||+new Date();(function(f,a){f.ueinit=(f.ueinit||0)+1;f.ue={t0:a.aPageStart||f.ue_t0,id:f.ue_id,url:f.ue_url,a:"",b:"",h:{},r:{ld:0,oe:0,ul:0},s:1,t:{},sc:{},iel:[],ielf:[],fc_idx:{},viz:[],v:26};f.ue.tagC=function(){var h=[];return function(i){if(i){h.push(i)}return h.slice(0)}};f.ue.tag=f.ue.tagC();f.ue.ifr=((a.top!==a.self)||(a.frameElement))?1:0;function c(j,m,o,l){var n=l||(new Date()).getTime();var h=!m&&typeof o!="undefined";if(h){return}if(j){var k=m?e("t",m)||e("t",m,{}):f.ue.t;k[j]=n;for(var i in o){e(i,m,o[i])}}return n}function e(i,j,k){var l,h;if(i){l=h=f.ue;if(j&&j!=l.id){h=l.sc[j];if(!h){h={};k?(l.sc[j]=h):h}}l=k?(h[i]=k):h[i]}return l}function d(l,m,k,i,h){var j="on"+k;var n=m[j];if(typeof(n)=="function"){if(l){f.ue.h[l]=n}}else{n=function(){}}m[j]=h?function(o){i(o);n(o)}:function(o){n(o);i(o)};m[j].isUeh=1}function g(o,k,n){function j(L,J){var H=[L],C=0,I={};if(J){H.push("m=1");I[J]=1}else{I=f.ue.sc}var A;for(var B in I){var D=e("wb",B),G=e("t",B)||{},F=e("t0",B)||f.ue.t0;if(J||D==2){var K=D?C++:"";H.push("sc"+K+"="+B);for(var E in G){if(E.length<=3&&G[E]){H.push(E+K+"="+(G[E]-F))}}H.push("t"+K+"="+G[o]);if(e("ctb",B)||e("wb",B)){A=1}}}if(!l&&A){H.push("ctb=1")}return H.join("&")}function r(C,B,E,A){if(C==""){return}var D=new Image();if(f.ue.b){D.onload=function(){if(f.ue.b==""){return}var G=f.ue.b;f.ue.b="";r(G,B,E,1)}}var F=!f.ue_tofc||(f.ue_tofc==1&&!A)||!f.ue.log||!window.amznJQ||(!A&&!E);if(F){f.ue.iel.push(D);D.src=C}if(f.ue_tofc&&f.ue.log&&(E||A)){f.ue.log(C,"uedata",{n:1});f.ue.ielf.push(C)}if(f.ue_err&&!f.ue_err.ts){f.ue_err.startTimer()}}function x(A){if(!ue.collected){var C=A.timing;if(C){f.ue.t.na_=C.navigationStart;f.ue.t.ul_=C.unloadEventStart;f.ue.t._ul=C.unloadEventEnd;f.ue.t.rd_=C.redirectStart;f.ue.t._rd=C.redirectEnd;f.ue.t.fe_=C.fetchStart;f.ue.t.lk_=C.domainLookupStart;f.ue.t._lk=C.domainLookupEnd;f.ue.t.co_=C.connectStart;f.ue.t._co=C.connectEnd;f.ue.t.sc_=C.secureConnectionStart;f.ue.t.rq_=C.requestStart;f.ue.t.rs_=C.responseStart;f.ue.t._rs=C.responseEnd;f.ue.t.dl_=C.domLoading;f.ue.t.di_=C.domInteractive;f.ue.t.de_=C.domContentLoadedEventStart;f.ue.t._de=C.domContentLoadedEventEnd;f.ue.t._dc=C.domComplete;f.ue.t.ld_=C.loadEventStart;f.ue.t._ld=C.loadEventEnd}var B=A.navigation;if(B){f.ue.t.ty=B.type+f.ue.t0;f.ue.t.rc=B.redirectCount+f.ue.t0;if(f.ue.tag){f.ue.tag(B.redirectCount?"redirect":"nonredirect")}}f.ue.collected=1}}var z=!k&&typeof n!="undefined";if(z){return}for(var h in n){e(h,k,n[h])}c("pc",k,n);var t=e("id",k)||f.ue.id;var m=f.ue.url+"?"+o+"&v="+f.ue.v+"&id="+t;var l=e("ctb",k)||e("wb",k);if(l){m+="&ctb="+l}if(f.ueinit>1){m+="&ic="+f.ueinit}var w=a.performance||a.webkitPerformance;var u=f.ue.bfini;if(u&&u>1){m+="&bft="+(u-1)}else{if(w&&w.navigation&&w.navigation.type==2){m+="&bft=1"}}if(f.ue._fi&&o=="at"&&(!k||k==t)){m+=f.ue._fi()}var i;if((o=="ld"||o=="ul")&&(!k||k==t)){if(o=="ld"){if(a.onbeforeunload&&a.onbeforeunload.isUeh){a.onbeforeunload=null}if(document.ue_backdetect&&document.ue_backdetect.ue_back){document.ue_backdetect.ue_back.value++}if(f._uess){i=f._uess()}if(f.ue_navtiming&&w&&w.timing){e("ctb",t,"1");if(f.ue_navtiming==1){f.ue.t.tc=w.timing.navigationStart}}}if(w){x(w)}if(f.ue_hob&&f.ue_hoe){f.ue.t.hob=f.ue_hob;f.ue.t.hoe=f.ue_hoe}if(f.ue.ifr){m+="&ifr=1"}}c(o,k,n);var s=(o=="ld"&&k&&e("wb",k));if(s){e("wb",k,2)}var v=1;for(var q in f.ue.sc){if(e("wb",q)==1){v=0;break}}if(s){if(f.ue.s!=0||!v){return}m=j(m,null)}else{if(v){var y=j(m,null);if(y!=m){f.ue.b=y}}if(i){m+=i}m=j(m,k||f.ue.id)}if(f.ue.b||s){for(var q in f.ue.sc){if(e("wb",q)==2){delete f.ue.sc[q]}}}var p=0;if(!s){f.ue.s=0;if(f.ue_err&&f.ue_err.ec>0){m+="&ec="+f.ue_err.ec}p=e("ctb",k);e("t",k,{})}if(f.ue_tofc&&f.ue.tag&&p){f.ue.tag("ue_tofc")}if(!window.amznJQ&&f.ue.tag){f.ue.tag("noAmznJQ")}if(m&&f.ue.tag&&f.ue.tag().length>0){m+="&csmtags="+f.ue.tag().join("|");f.ue.tag=f.ue.tagC()}if(m&&f.ue_pageviz&&f.ue.viz.length>0){m+="&viz="+f.ue.viz.join("|");f.ue.viz=[]}f.ue.a=m;r(m,o,p,s)}function b(){var j=f.ue.r;function i(l){return function(){if(!j[l]){j[l]=1;g(l)}}}f.onLd=i("ld");f.onLdEnd=i("ld");var h={beforeunload:i("ul"),stop:function(){g("os")}};for(var k in h){d(0,window,k,h[k])}if(f.ue_pageviz){ue_viz&&ue_viz()}if(a.addEventListener){a.addEventListener("load",f.onLd,false)}else{if(a.attachEvent){a.attachEvent("onload",f.onLd)}}f.ue._uep=function(){new Image().src=(f.ue_md?f.ue_md:"http://uedata.amazon.com/uedata/?tp=")+(+new Date)};if(f.ue_pr&&(f.ue_pr==2||f.ue_pr==4)){f.ue._uep()}if(f.queue){f.queue.replay=function(){while((nextArr=f.queue.remove("ue"))){nextArr[0].apply(this,nextArr.slice(1))}};f.queue.replay()}c("ue")}ue.reset=function(i,h){if(!i){return}f.ue_cel&&f.ue_cel.reset();f.ue.t0=+new Date();f.ue.rid=i;f.ue.id=i;f.ue.fc_idx={};f.ue.viz=[]};f.uei=b;f.ueh=d;f.ues=e;f.uet=c;f.uex=g;b()})(ue_csm,window);ue_csm.ue_hoe=+new Date();
+
+
+ue_csm.ue_hob=ue_csm.ue_hob||+new Date();(function(b){var a=b.ue;a.rid=b.ue_id;a.sid=b.ue_sid;a.mid=b.ue_mid;a.furl=b.ue_furl;a.sn=b.ue_sn;a.lr=[];a.log=function(e,d,c){if(a.lr.length==500){return}a.lr.push(["l",e,d,c,a.d(),a.rid])};a.d=function(c){return +new Date-(c?0:a.t0)}})(ue_csm);ue_csm.ue_hoe=+new Date();
+</script>
+
+
+  <link rel="stylesheet" href="http://z-ecx.images-amazon.com/images/G/01/AUIClients/AnywhereDetailCSS_v1.3097025c4c1c0b68e600509002cf76416ef3b6e8.min._V375565103_.css"/><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0,maximum-scale=1.0">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <title>The Ruby Programming Language:Amazon:Books</title>
+<meta name="keywords" content="The Ruby Programming Language,ARRAY(0xafb993c0),O'Reilly Media,Computer Books: Languages,Object-oriented programming (Computer science),Computers - Languages / Programming,Object-oriented pro,Ruby (Computer program language),Computers,Computers / Programming / General,Computers / Programming Languages / General,Computers / Software Development &amp; Engineering / General,Computers : Software Development &amp; Engineering - General,Software Development &amp; Engineering - General,COM051000,COM051010,Programming &amp; scripting languages: general,Programming languages,Programming Languages - General,Computing: Professional &amp; Programming,Computers &amp; Internet - General,Computer Programming Languages" /><meta name="description" content="Amazon:The Ruby Programming Language" /><link href="http://g-ecx.images-amazon.com/images/G/01/anywhere/a_smile_57x57._V156379828_.png" rel="apple-touch-icon" />
+
+
+
+<style>
+#main-image-compute-height {
+margin-top: 131.386861313869%;
+}
+@media (max-width:390px) {
+#main-image-container {
+max-width: 137px;
+}
+.main-image {
+background-image: url(http://ecx.images-amazon.com/images/I/716dULgyHNL._SY180_.jpg);
+}
+}
+@media (max-width:390px) and (-webkit-min-device-pixel-ratio:1.5) {
+.main-image {
+background-image: url(http://ecx.images-amazon.com/images/I/716dULgyHNL._SY270_.jpg);
+}
+}
+@media (max-width:390px) and (-webkit-min-device-pixel-ratio:2) {
+.main-image {
+background-image: url(http://ecx.images-amazon.com/images/I/716dULgyHNL._SY360_.jpg);
+}
+}
+@media (max-width:390px) and (-webkit-min-device-pixel-ratio:3) {
+.main-image {
+background-image: url(http://ecx.images-amazon.com/images/I/716dULgyHNL._SY540_.jpg);
+}
+}
+@media (min-width:391px) and (max-width:500px) {
+#main-image-container {
+max-width: 152px;
+}
+.main-image {
+background-image: url(http://ecx.images-amazon.com/images/I/716dULgyHNL._SY200_.jpg);
+}
+}
+@media (min-width:391px) and (max-width:500px) and (-webkit-min-device-pixel-ratio:1.5) {
+.main-image {
+background-image: url(http://ecx.images-amazon.com/images/I/716dULgyHNL._SY300_.jpg);
+}
+}
+@media (min-width:391px) and (max-width:500px) and (-webkit-min-device-pixel-ratio:2) {
+.main-image {
+background-image: url(http://ecx.images-amazon.com/images/I/716dULgyHNL._SY400_.jpg);
+}
+}
+@media (min-width:391px) and (max-width:500px) and (-webkit-min-device-pixel-ratio:3) {
+.main-image {
+background-image: url(http://ecx.images-amazon.com/images/I/716dULgyHNL._SY600_.jpg);
+}
+}
+@media (min-width: 501px) and (max-width: 767px) {
+#main-image-container {
+max-width: 229px;
+}
+.main-image {
+background-image: url(http://ecx.images-amazon.com/images/I/716dULgyHNL._SY300_.jpg);
+}
+}
+@media (min-width: 501px) and (max-width: 767px) and (-webkit-min-device-pixel-ratio:1.5) {
+.main-image {
+background-image: url(http://ecx.images-amazon.com/images/I/716dULgyHNL._SY450_.jpg);
+}
+}
+@media (min-width: 501px) and (max-width: 767px) and (-webkit-min-device-pixel-ratio:2) {
+.main-image {
+background-image: url(http://ecx.images-amazon.com/images/I/716dULgyHNL._SY600_.jpg);
+}
+}
+@media (min-width: 501px) and (max-width: 767px) and (-webkit-min-device-pixel-ratio:3) {
+.main-image {
+background-image: url(http://ecx.images-amazon.com/images/I/716dULgyHNL._SY900_.jpg);
+}
+}
+@media (min-width:768px) {
+#main-image-container {
+max-width: 368px;
+}
+.main-image {
+background-image: url(http://ecx.images-amazon.com/images/I/716dULgyHNL._SX368_.jpg);
+}
+}
+@media (min-width:768px) and (-webkit-min-device-pixel-ratio:1.5) {
+.main-image {
+background-image: url(http://ecx.images-amazon.com/images/I/716dULgyHNL._SX552_.jpg);
+}
+}
+@media (min-width:768px) and (-webkit-min-device-pixel-ratio:2) {
+.main-image {
+background-image: url(http://ecx.images-amazon.com/images/I/716dULgyHNL._SX736_.jpg);
+}
+}
+@media (min-width:768px) and (-webkit-min-device-pixel-ratio:3) {
+.main-image {
+background-image: url(http://ecx.images-amazon.com/images/I/716dULgyHNL._SX1104_.jpg);
+}
+}
+</style>
+<script type="text/javascript">
+if (window.amznJQ) {
+    amznJQ.addLogical('csm-base', [ "http://z-ecx.images-amazon.com/images/G/01/browser-scripts/csm-base/csm-base-min-170757555._V1_.js" ]);
+    amznJQ.available('csm-base', function() {});
+}
+
+</script>
+</head>
+<body>
+  <div class="a-container">
+    <div style='display:none' class='main-image'></div><div id="a-navbar" class="a-section a-row">
+<div id="nav-inner" class="a-span12">
+<div id="navbar-icons">
+<a href="/gp/aw/ref=aw_he_gw/176-4101438-5479234" title="Amazon.com"><span class="s_logo" title="Amazon.com" id="logo"></span></a><a href="/gp/aw/c/ref=aw_he_c/176-4101438-5479234" title="Shopping Cart"><i id="navbar-icon-cart" class="navbar-icon cart"></i></a>
+</div>
+<div id="navbar-breadcrumb">
+</div>
+</div>
+</div>
+    <div id="a-content">
+      <div id="udp">
+        <div class="a-row">
+            <h1>The Ruby Programming Language (Paperback)</h1>
+<span id='by-line' class='a-text a-nowrap a-span6'>David Flanagan, Yukihiro Matsumoto</span><div id='rating-stars' class='a-span6 a-right a-row-last'>
+<span class="review-stars a-right a-nowrap">
+<a href="/gp/aw/cr/0596516177/ref=mw_dp_cr/176-4101438-5479234"><span class="s_ratingStar_50" title="5.0 stars"></span></a>
+<span class="review-count a-color-secondary a-size-normal a-text-normal">62</span>
+</span>
+</div>
+            <hr/>
+        </div>
+        <div class="a-row">
+            <script>
+var atfMarkers = 0;
+</script>
+<div id="image-block" class="a-section a-center">
+<style>
+#main-image-container {
+display: inline-block;
+position: relative;
+width: 100%;
+vertical-align: top;
+}
+#main-image {
+position: absolute;
+top: 0;
+bottom: 0;
+left: 0;
+right: 0;
+background-position: center;
+background-size: 100%;
+background-repeat: no-repeat;
+}
+</style>
+<a href="/gp/aw/d/0596516177/ref=mw_dp_img/176-4101438-5479234?is=l" class='aw-no-tap-highlight'>
+<div id='main-image-container'>
+<div id='main-image-compute-height'></div>
+<div id='main-image' class='main-image'><img src="http://ecx.images-amazon.com/images/I/716dULgyHNL._SY180_.jpg" width="100%" onload="if (typeof uet == 'function') { uet('af'); };this.onload=null;" id="previous-image" height="100%" border="0" /></div>
+</div>
+<div>Larger image</div>
+</a>
+</div>
+<hr id="image-block-divider" />
+<script>
+var mainImageCopy;
+(function () {
+mainImageCopy = new Image();
+mainImageCopy.onabort = mainImageCopy.onerror = mainImageCopy.onload = function () {
+var pi = document.getElementById('previous-image');
+if (pi.onload) {
+if (typeof uet == 'function') { uet('af'); };
+pi.onload = null;
+}
+pi.style.display = 'none';
+};
+var cs = document.defaultView.getComputedStyle(
+document.getElementById('main-image'),
+null
+);
+var src = cs['background-image'] || cs['backgroundImage'];
+if (src) mainImageCopy.src = src.substr(4, src.length - 5);
+})();
+</script>
+            <div id="price-block" class="a-section a-row-last">
+                <table id="prices" class="a-nostyle">
+<tr>
+<td class="a-color-secondary a-right aw-table-label">List Price:</td>
+<td id="list-price" class="a-color-secondary a-text-strike aw-table-data">$39.99</td>
+</tr>
+<tr>
+<td class="a-color-secondary a-right aw-table-label">Price:</td>
+<td class="a-color-price a-size-medium aw-table-data"><strong id="price">
+$23.99
+<span class="itemBadge">
+</span>
+</strong></td>
+</tr>
+<tr>
+<td class="a-color-secondary a-right aw-table-label">You Save:</td>
+<td id="you-save" class="a-color-secondary aw-table-data">$16.00 (40%)</td>
+</tr>
+</table><p id="scarcity" class="a-size-medium a-color-available">
+<strong>In Stock</strong>
+</p><div id="ships-from">
+<p>Ships from and sold by Amazon.com</p><p class="addendum a-size-small a-color-secondary"></p>
+Gift-wrap available.
+</div>
+<p><a href="/gp/aw/help/id=sss/ref=aw_d_sss_books/176-4101438-5479234">FREE Super Saver Shipping</a> on orders over $25.</p><p>
+Want it delivered by Thursday, Feb 14?
+Order within <span class=a-color-available>14hr 42min</span>, and choose One-Day Shipping at checkout.
+</p>
+            </div>
+            <div id="buy-box" class="a-section a-row-last a-box-primary a-span12">
+                <div class="a-content">
+                    <div class="a-row">
+                        <form method="post"
+id="addToCart"
+action="/gp/aw/c/ref=mw_dp_buy_crt/176-4101438-5479234"
+class="a-nostyle button-form">
+<input type="hidden" name="a" value="0596516177" /><input type="hidden" name="colid" value="" /><input type="hidden" name="coliid" value="" /><input type="hidden" name="dl" value="" /><input type="hidden" name="o" value="add" /><input type="hidden" name="oid" value="tPDk4BwNGb6CBcKM1HokEMSRYQ6ZWPLKQFxsXn4lWM4JFBfkFxRmL2h7fd%2F%2F2MnsuI%2BeAkREvTXaxDDDIqXNFGB2HQk7iZzP5AStDPTpze8%3D" /><input type="hidden" name="verificationSessionID" value="176-4101438-5479234" />
+<button type='submit'
+name="cartSubmit"
+id="add-to-cart-button"
+class="buy-button a-button a-button-primary">
+<span class="a-button-gradient">
+<span class="a-button-text">Add to Cart</span>
+</span>
+</button>
+</form>
+<form method="get" id="addToWishlist" class="a-nostyle button-form" action="/gp/aw/l.html/ref=mw_dp_buy_wl/176-4101438-5479234"><input type="hidden" name="appAction" value="add" /><input type="hidden" name="appActionToken" value="414451b43a6f5fccd7b596d8ad0442a896d274443ef01ffc744063c0195bdb0d" /><input type="hidden" name="csrfRnd" value="0.609460785235555" /><input type="hidden" name="csrfTs" value="1360748821" /><input type="hidden" name="a" value="0596516177" />
+<button type='submit' id="add-to-wishlist-button" name="listSubmit" class="buy-button a-button a-button-secondary">
+<span class="a-button-gradient">
+<span class="a-button-text">Add to Wish&nbsp;List</span>
+</span>
+</button>
+</form>
+                    </div>
+                 </div>
+            </div>
+        </div>
+
+        <hr />
+        <div class="aw-campaigns"></div><div class="aw-campaigns"></div><div class="a-row">
+<div id="new-used-offers" class="a-section a-span12">
+<a href="/gp/aw/ol/0596516177/ref=mw_dp_olp/176-4101438-5479234" class="a-touch">
+<div class="a-content">
+<h2>
+New &amp; Used Offers
+<span class="a-color-secondary a-size-normal a-text-normal">
+(71)
+</span>
+</h2>
+<span class="a-color-secondary">
+From <span class="a-color-price">$18.00</span>
+</span>
+</div>
+<i class="a-icon a-icon-arrow a-touch-navigation"></i>
+</a>
+</div>
+<hr/>
+<div id="description-and-details" class="a-span12">
+<a href="/gp/aw/d/0596516177/ref=mw_dp_mpd/176-4101438-5479234?pd=1" class="a-touch">
+<div class="a-content">
+<h2>
+Description &amp; Details
+</h2>
+<p id='description-and-details-content'>
+The Ruby Programming Language is the authoritative guide to Ruby&nbsp;...
+</p>
+<i class="a-icon a-icon-arrow a-touch-navigation"></i>
+</div>
+</a>
+</div>
+<hr/>
+<div class="a-row">
+<div id='purchase-similarities' class="a-section a-span12">
+<h2>Customers who bought this also bought</h2>
+<style type="text/css">
+.shovelerCenterInfo {
+text-align: center;
+}
+.starsPlaceholder {
+width: 90px;
+height: 17px;
+}
+div.shovelerByLine {
+color: #686868;
+overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
+}
+.overflowLeftRightContainer { overflow: hidden }
+.shovelerContainer {
+text-align: center;
+white-space: nowrap;
+}
+.imageContainerBox {
+display: inline-block;
+height: 100%;
+position: relative;
+}
+.imageContainer {
+left: 0;
+width: 100%;
+display: inline-block;
+text-align: center;
+position: absolute;
+bottom: 0px;
+margin-bottom: 0px;
+}
+div.shovelerCenterInfo a.shovelerItemTitle {
+display: inline;
+}
+img.shovelerImage { height: 100%; min-width: 1px; }
+.shovelerContainer a {
+-webkit-tap-highlight-color: rgba(0,0,0,0);
+tap-highlight-color: rgba(0,0,0,0);
+}
+#uniPurchaseSims_overflowLeftRight {
+margin-left: -362.5px;
+margin-right: -362.5px;
+}
+#uniPurchaseSims_shovelerContainer {
+height: 125px;
+}
+.uniPurchaseSims_imageContainerBox {
+width: 104px;
+}
+.uniPurchaseSims_imageContainer {
+height: 95px;
+}
+</style>
+<div class='overflowLeftRightContainer'>
+<div id='uniPurchaseSims_overflowLeftRight' >
+<div id='uniPurchaseSims_shovelerContainer' class='shovelerContainer'>
+<span class='imageContainerBox uniPurchaseSims_imageContainerBox'>
+<span class="imageContainer uniPurchaseSims_imageContainer" id='uniPurchaseSims_imgContainer-1'>
+<a id='uniPurchaseSims_imgLink-1'>
+<img class='shovelerImage' id='uniPurchaseSims_img-1' src='http://g-ecx.images-amazon.com/images/G/01/x-locale/common/transparent-pixel._V386942464_.gif' />
+</a>
+</span>
+</span>
+<span class='imageContainerBox uniPurchaseSims_imageContainerBox'>
+<span class="imageContainer uniPurchaseSims_imageContainer" id='uniPurchaseSims_imgContainer0'>
+<a id='uniPurchaseSims_imgLink0'>
+<img class='shovelerImage' id='uniPurchaseSims_img0' src='http://g-ecx.images-amazon.com/images/G/01/x-locale/common/transparent-pixel._V386942464_.gif' />
+</a>
+</span>
+</span>
+<span class='imageContainerBox uniPurchaseSims_imageContainerBox'>
+<span class="imageContainer uniPurchaseSims_imageContainer" id='uniPurchaseSims_imgContainer1'>
+<a id='uniPurchaseSims_imgLink1'>
+<img class='shovelerImage' id='uniPurchaseSims_img1' src='http://g-ecx.images-amazon.com/images/G/01/x-locale/common/transparent-pixel._V386942464_.gif' />
+</a>
+</span>
+</span>
+<span class='imageContainerBox uniPurchaseSims_imageContainerBox'>
+<span class="imageContainer uniPurchaseSims_imageContainer" id='uniPurchaseSims_imgContainer2'>
+<a id='uniPurchaseSims_imgLink2'>
+<img class='shovelerImage' id='uniPurchaseSims_img2' src='http://g-ecx.images-amazon.com/images/G/01/x-locale/common/transparent-pixel._V386942464_.gif' />
+</a>
+</span>
+</span>
+<span class='imageContainerBox uniPurchaseSims_imageContainerBox'>
+<span class="imageContainer uniPurchaseSims_imageContainer" id='uniPurchaseSims_imgContainer3'>
+<a id='uniPurchaseSims_imgLink3'>
+<img class='shovelerImage' id='uniPurchaseSims_img3' src='http://g-ecx.images-amazon.com/images/G/01/x-locale/common/transparent-pixel._V386942464_.gif' />
+</a>
+</span>
+</span>
+<span class='imageContainerBox uniPurchaseSims_imageContainerBox'>
+<span class="imageContainer uniPurchaseSims_imageContainer" id='uniPurchaseSims_imgContainer4'>
+<a id='uniPurchaseSims_imgLink4'>
+<img class='shovelerImage' id='uniPurchaseSims_img4' src='http://g-ecx.images-amazon.com/images/G/01/x-locale/common/transparent-pixel._V386942464_.gif' />
+</a>
+</span>
+</span>
+<span class='imageContainerBox uniPurchaseSims_imageContainerBox'>
+<span class="imageContainer uniPurchaseSims_imageContainer" id='uniPurchaseSims_imgContainer5'>
+<a id='uniPurchaseSims_imgLink5'>
+<img class='shovelerImage' id='uniPurchaseSims_img5' src='http://g-ecx.images-amazon.com/images/G/01/x-locale/common/transparent-pixel._V386942464_.gif' />
+</a>
+</span>
+</span>
+</div>
+</div>
+</div>
+<div class='shov-ratings-bucket' style='display:none'>
+<div id='uniPurchaseSims_rating-stars-4-1-0'>
+<span class="s_ratingStar_45" title="4.5 stars"></span>
+</div>
+<div id='uniPurchaseSims_rating-stars-3-1-1'>
+<span class="s_ratingStar_35" title="3.5 stars"></span>
+</div>
+<div id='uniPurchaseSims_rating-stars-5-0-0'>
+<span class="s_ratingStar_50" title="5.0 stars"></span>
+</div>
+</div>
+<div class='shovelerCenterInfo'>
+<a class='shovelerItemTitle' id='uniPurchaseSims_title'><br /><br /></a><br />
+<div class="shovelerByLine" id='uniPurchaseSims_byline'><br /></div>
+<span id='uniPurchaseSims_listprice-container'>
+<span id='uniPurchaseSims_listprice' class="a-color-secondary a-text-strike"></span>
+&nbsp;&nbsp;
+</span>
+<span id='uniPurchaseSims_ourprice' class="a-color-price"></span>
+<span id='uniPurchaseSims_ppu-container'>&nbsp;&nbsp;<span id='uniPurchaseSims_ppu' class="grey"></span></span>
+<br/>
+<span id='uniPurchaseSims_rating'><span class="starsPlaceholder"></span></span>
+</div>
+<script type="text/javascript">
+(function() {
+var div = document.getElementById('uniPurchaseSims_shovelerContainer');
+var intervalID;
+intervalID = setInterval(function () {
+var top = window.pageYOffset || document.documentElement.scrollTop || 0;
+var bottom = top + window.innerHeight;
+var divY = div.offsetTop;
+if (bottom >= divY ) {
+clearInterval(intervalID);
+if (!window.addShoveler) window.addShoveler = function(cfg) {
+if (!window.smartShovelers) window.smartShovelers = [];
+window.smartShovelers.push(cfg);
+};
+window.addShoveler({
+items: [{ourprice: '$27.01', byline: 'Michael Hartl', listprice: 0, height: 125, rating: '4-1-0', image: 'http://ecx.images-amazon.com/images/I/51A4xwwFy2L._SL500_SY125_.jpg', detail: '/gp/aw/d/0321832051/ref=mw_dp_sim_ps1/176-4101438-5479234?pi=SL500_SY125', numReviews: 32, ppu: '', title: 'Ruby on Rails<br />Tutorial: Learn ...'}, {ourprice: '$30.61', byline: 'Russ Olsen', listprice: 0, height: 125, rating: '5-0-0', image: 'http://ecx.images-amazon.com/images/I/41IDuwJXFCL._SL500_SY125_.jpg', detail: '/gp/aw/d/0321584104/ref=mw_dp_sim_ps2/176-4101438-5479234?pi=SL500_SY125', numReviews: 26, ppu: '', title: 'Eloquent Ruby<br />(Addison-Wesley ...'}, {ourprice: '$28.41', byline: 'Andrew Hunt, Dave Thomas, Chad Fowler', listprice: 0, height: 125, rating: '4-1-0', image: 'http://ecx.images-amazon.com/images/I/51vFypbVAPL._SL500_SY125_.jpg', detail: '/gp/aw/d/1934356085/ref=mw_dp_sim_ps3/176-4101438-5479234?pi=SL500_SY125', numReviews: 19, ppu: '', title: 'Programming Ruby<br />1.9: The Pragmat...'}, {ourprice: '$24.63', byline: 'Dave Thomas, David Heinemeier Hansson, Sam Ruby', listprice: 0, height: 125, rating: '3-1-1', image: 'http://ecx.images-amazon.com/images/I/51jd6GaEK0L._SL500_SY125_.jpg', detail: '/gp/aw/d/1934356549/ref=mw_dp_sim_ps4/176-4101438-5479234?pi=SL500_SY125', numReviews: 36, ppu: '', title: 'Agile Web<br />Development with...'}, {ourprice: '$31.49', byline: 'Leonard Richardson, Lucas Carlson', listprice: 0, height: 125, rating: '4-1-0', image: 'http://ecx.images-amazon.com/images/I/51wM2SmbR9L._SL500_SY125_.jpg', detail: '/gp/aw/d/0596523696/ref=mw_dp_sim_ps5/176-4101438-5479234?pi=SL500_SY125', numReviews: 29, ppu: '', title: 'Ruby Cookbook<br />(Cookbooks (O\'Re...'}],
+maxDisplay: 5,
+initialFocus: 2,
+threshold: 104,
+pixel: "http://g-ecx.images-amazon.com/images/G/01/x-locale/common/transparent-pixel._V386942464_.gif",
+smallImageHeight: 95,
+ns: "uniPurchaseSims_",
+loopAround: false
+});
+}
+}, 500);
+})();
+</script>
+</div>
+</div>
+<hr/>
+<div id="customer-reviews" class="a-section a-span12">
+<a class="a-touch" href="/gp/aw/cr/0596516177/ref=mw_dp_cr/176-4101438-5479234">
+<div class="a-content">
+<div class="a-row">
+<h2 class="a-left">Customer reviews</h2> <span class="a-nowrap"><span class="s_ratingStar_50" title="5.0 stars"></span> <span class="a-color-secondary a-size-normal a-text-normal">62</span></span>
+</div>
+<table id='reviews-histogram' cellspacing="0" cellpadding="0" class="a-nostyle">
+<tr><td class="dpCRstarLabels">5 star:</td><td>
+<div class="dpCRbarsOutline">
+<div class="dpCRbars" style="width:87.1%">
+<span class="emptySpanForMediaNet"></span>
+</div>
+</div>
+</td><td class="dpCRnumberLabels" >54</td></tr>
+<tr><td class="dpCRstarLabels">4 star:</td><td>
+<div class="dpCRbarsOutline">
+<div class="dpCRbars" style="width:11.3%">
+<span class="emptySpanForMediaNet"></span>
+</div>
+</div>
+</td><td class="dpCRnumberLabels" >7</td></tr>
+<tr><td class="dpCRstarLabels">3 star:</td><td>
+<div class="dpCRbarsOutline">
+<span class="emptySpanForMediaNet"></span>
+</div>
+</td><td class="dpCRnumberLabels" style="color: #666666">0</td></tr>
+<tr><td class="dpCRstarLabels">2 star:</td><td>
+<div class="dpCRbarsOutline">
+<div class="dpCRbars" style="width: 2.0%">
+<span class="emptySpanForMediaNet"></span>
+</div>
+</div>
+</td><td class="dpCRnumberLabels" >1</td></tr>
+<tr><td class="dpCRstarLabels">1 star:</td><td>
+<div class="dpCRbarsOutline">
+<span class="emptySpanForMediaNet"></span>
+</div>
+</td><td class="dpCRnumberLabels" style="color: #666666">0</td></tr>
+</table>
+</div>
+<i class="a-icon a-icon-arrow a-touch-navigation"></i>
+</a>
+</div>
+<hr/>
+</div><div class="aw-campaigns"></div><div class="aw-campaigns"></div><div class="a-row">
+<div id='session-similarities' class="a-section a-span12">
+<h2>Customers Also Viewed</h2>
+<style type="text/css">
+.shovelerCenterInfo {
+text-align: center;
+}
+.starsPlaceholder {
+width: 90px;
+height: 17px;
+}
+div.shovelerByLine {
+color: #686868;
+overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
+}
+.overflowLeftRightContainer { overflow: hidden }
+.shovelerContainer {
+text-align: center;
+white-space: nowrap;
+}
+.imageContainerBox {
+display: inline-block;
+height: 100%;
+position: relative;
+}
+.imageContainer {
+left: 0;
+width: 100%;
+display: inline-block;
+text-align: center;
+position: absolute;
+bottom: 0px;
+margin-bottom: 0px;
+}
+div.shovelerCenterInfo a.shovelerItemTitle {
+display: inline;
+}
+img.shovelerImage { height: 100%; min-width: 1px; }
+.shovelerContainer a {
+-webkit-tap-highlight-color: rgba(0,0,0,0);
+tap-highlight-color: rgba(0,0,0,0);
+}
+#uniSessionSims_overflowLeftRight {
+margin-left: -410px;
+margin-right: -410px;
+}
+#uniSessionSims_shovelerContainer {
+height: 125px;
+}
+.uniSessionSims_imageContainerBox {
+width: 104px;
+}
+.uniSessionSims_imageContainer {
+height: 95px;
+}
+</style>
+<div class='overflowLeftRightContainer'>
+<div id='uniSessionSims_overflowLeftRight' >
+<div id='uniSessionSims_shovelerContainer' class='shovelerContainer'>
+<span class='imageContainerBox uniSessionSims_imageContainerBox'>
+<span class="imageContainer uniSessionSims_imageContainer" id='uniSessionSims_imgContainer-1'>
+<a id='uniSessionSims_imgLink-1'>
+<img class='shovelerImage' id='uniSessionSims_img-1' src='http://g-ecx.images-amazon.com/images/G/01/x-locale/common/transparent-pixel._V386942464_.gif' />
+</a>
+</span>
+</span>
+<span class='imageContainerBox uniSessionSims_imageContainerBox'>
+<span class="imageContainer uniSessionSims_imageContainer" id='uniSessionSims_imgContainer0'>
+<a id='uniSessionSims_imgLink0'>
+<img class='shovelerImage' id='uniSessionSims_img0' src='http://g-ecx.images-amazon.com/images/G/01/x-locale/common/transparent-pixel._V386942464_.gif' />
+</a>
+</span>
+</span>
+<span class='imageContainerBox uniSessionSims_imageContainerBox'>
+<span class="imageContainer uniSessionSims_imageContainer" id='uniSessionSims_imgContainer1'>
+<a id='uniSessionSims_imgLink1'>
+<img class='shovelerImage' id='uniSessionSims_img1' src='http://g-ecx.images-amazon.com/images/G/01/x-locale/common/transparent-pixel._V386942464_.gif' />
+</a>
+</span>
+</span>
+<span class='imageContainerBox uniSessionSims_imageContainerBox'>
+<span class="imageContainer uniSessionSims_imageContainer" id='uniSessionSims_imgContainer2'>
+<a id='uniSessionSims_imgLink2'>
+<img class='shovelerImage' id='uniSessionSims_img2' src='http://g-ecx.images-amazon.com/images/G/01/x-locale/common/transparent-pixel._V386942464_.gif' />
+</a>
+</span>
+</span>
+<span class='imageContainerBox uniSessionSims_imageContainerBox'>
+<span class="imageContainer uniSessionSims_imageContainer" id='uniSessionSims_imgContainer3'>
+<a id='uniSessionSims_imgLink3'>
+<img class='shovelerImage' id='uniSessionSims_img3' src='http://g-ecx.images-amazon.com/images/G/01/x-locale/common/transparent-pixel._V386942464_.gif' />
+</a>
+</span>
+</span>
+<span class='imageContainerBox uniSessionSims_imageContainerBox'>
+<span class="imageContainer uniSessionSims_imageContainer" id='uniSessionSims_imgContainer4'>
+<a id='uniSessionSims_imgLink4'>
+<img class='shovelerImage' id='uniSessionSims_img4' src='http://g-ecx.images-amazon.com/images/G/01/x-locale/common/transparent-pixel._V386942464_.gif' />
+</a>
+</span>
+</span>
+<span class='imageContainerBox uniSessionSims_imageContainerBox'>
+<span class="imageContainer uniSessionSims_imageContainer" id='uniSessionSims_imgContainer5'>
+<a id='uniSessionSims_imgLink5'>
+<img class='shovelerImage' id='uniSessionSims_img5' src='http://g-ecx.images-amazon.com/images/G/01/x-locale/common/transparent-pixel._V386942464_.gif' />
+</a>
+</span>
+</span>
+</div>
+</div>
+</div>
+<div class='shov-ratings-bucket' style='display:none'>
+<div id='uniSessionSims_rating-stars-4-1-0'>
+<span class="s_ratingStar_45" title="4.5 stars"></span>
+</div>
+<div id='uniSessionSims_rating-stars-4-0-1'>
+<span class="s_ratingStar_40" title="4.0 stars"></span>
+</div>
+<div id='uniSessionSims_rating-stars-5-0-0'>
+<span class="s_ratingStar_50" title="5.0 stars"></span>
+</div>
+</div>
+<div class='shovelerCenterInfo'>
+<a class='shovelerItemTitle' id='uniSessionSims_title'><br /><br /></a><br />
+<div class="shovelerByLine" id='uniSessionSims_byline'><br /></div>
+<span id='uniSessionSims_listprice-container'>
+<span id='uniSessionSims_listprice' class="a-color-secondary a-text-strike"></span>
+&nbsp;&nbsp;
+</span>
+<span id='uniSessionSims_ourprice' class="a-color-price"></span>
+<span id='uniSessionSims_ppu-container'>&nbsp;&nbsp;<span id='uniSessionSims_ppu' class="grey"></span></span>
+<br/>
+<span id='uniSessionSims_rating'><span class="starsPlaceholder"></span></span>
+</div>
+<script type="text/javascript">
+(function() {
+var div = document.getElementById('uniSessionSims_shovelerContainer');
+var intervalID;
+intervalID = setInterval(function () {
+var top = window.pageYOffset || document.documentElement.scrollTop || 0;
+var bottom = top + window.innerHeight;
+var divY = div.offsetTop;
+if (bottom >= divY ) {
+clearInterval(intervalID);
+if (!window.addShoveler) window.addShoveler = function(cfg) {
+if (!window.smartShovelers) window.smartShovelers = [];
+window.smartShovelers.push(cfg);
+};
+window.addShoveler({
+items: [{ourprice: '$28.41', byline: 'Andrew Hunt, Dave Thomas, Chad Fowler', listprice: 0, height: 125, rating: '4-1-0', image: 'http://ecx.images-amazon.com/images/I/51vFypbVAPL._SL500_SY125_.jpg', detail: '/gp/aw/d/1934356085/ref=mw_dp_sim_ss1/176-4101438-5479234?pi=SL500_SY125', numReviews: 19, ppu: '', title: 'Programming Ruby<br />1.9: The Pragmat...'}, {ourprice: '$27.01', byline: 'Michael Hartl', listprice: 0, height: 125, rating: '4-1-0', image: 'http://ecx.images-amazon.com/images/I/51A4xwwFy2L._SL500_SY125_.jpg', detail: '/gp/aw/d/0321832051/ref=mw_dp_sim_ss2/176-4101438-5479234?pi=SL500_SY125', numReviews: 32, ppu: '', title: 'Ruby on Rails<br />Tutorial: Learn ...'}, {ourprice: '$30.61', byline: 'Russ Olsen', listprice: 0, height: 125, rating: '5-0-0', image: 'http://ecx.images-amazon.com/images/I/41IDuwJXFCL._SL500_SY125_.jpg', detail: '/gp/aw/d/0321584104/ref=mw_dp_sim_ss3/176-4101438-5479234?pi=SL500_SY125', numReviews: 26, ppu: '', title: 'Eloquent Ruby<br />(Addison-Wesley ...'}, {ourprice: '$27.31', byline: 'David A. Black', listprice: 0, height: 125, rating: '4-1-0', image: 'http://ecx.images-amazon.com/images/I/41ehFO0XieL._SL500_SY125_.jpg', detail: '/gp/aw/d/1933988657/ref=mw_dp_sim_ss4/176-4101438-5479234?pi=SL500_SY125', numReviews: 28, ppu: '', title: 'The Well-Grounded<br />Rubyist'}, {ourprice: '$33.36', byline: 'Peter Cooper', listprice: 0, height: 125, rating: '4-0-1', image: 'http://ecx.images-amazon.com/images/I/512242IrWmL._SL500_SY125_.jpg', detail: '/gp/aw/d/1430223634/ref=mw_dp_sim_ss5/176-4101438-5479234?pi=SL500_SY125', numReviews: 11, ppu: '', title: 'Beginning Ruby:<br />From Novice to P...'}, {ourprice: '$22.16', byline: 'Peter Cooper', listprice: 0, height: 125, rating: '5-0-0', image: 'http://ecx.images-amazon.com/images/I/51dDyatSyRL._SL500_SY125_.jpg', detail: '/gp/aw/d/1590597664/ref=mw_dp_sim_ss6/176-4101438-5479234?pi=SL500_SY125', numReviews: 34, ppu: '', title: 'Beginning Ruby:<br />From Novice to P...'}],
+maxDisplay: 5,
+initialFocus: 2,
+threshold: 104,
+pixel: "http://g-ecx.images-amazon.com/images/G/01/x-locale/common/transparent-pixel._V386942464_.gif",
+smallImageHeight: 95,
+ns: "uniSessionSims_",
+loopAround: false
+});
+}
+}, 500);
+})();
+</script>
+</div>
+</div>
+<hr/>
+      </div>
+    </div>
+    <div id="a-footer">
+        <div id='search-ac-init-data'
+data-aliases='aps,stripbooks,popular,apparel,electronics,sporting,garden,videogames,toys-and-games,jewelry,digital-text,digital-music,watches,grocery,hpc,instant-video,baby-products,office-products,software,magazines,tools,automotive,misc,industrial,mi,pet-supplies,digital-music-track,digital-music-album,mobile,mobile-apps,movies-tv,music-artist,music-album,music-song,stripbooks-spanish,electronics-accessories,photo,audio-video,computers,furniture,kitchen,audiobooks,beauty,shoes,arts-crafts,appliances,gift-cards,pets,outdoor,lawngarden,collectibles,financial'
+data-ime=''
+data-mkt='1'
+data-src='completion.amazon.com/search/complete'
+></div>
+<div id='dpSearchKeyword-data'
+data-form='dpSearchForm'
+></div>
+<div class="a-row">
+<h3 id='search-bar-title'>Search</h3>
+<form id="dpSearchForm" class="a-row a-nostyle" action="/gp/aw/s/ref=is_box_books/176-4101438-5479234">
+<input class="a-span9 a-button-line psearch"
+type="text" name="k"
+id="dpSearchKeyword"
+autocomplete="off"
+placeholder="Search Amazon.com"
+/>
+<button type="submit" class="a-span3 a-row-last a-button a-button-dark">
+<span class="a-button-gradient">
+<span class="a-button-text">Go</span>
+</span>
+</button>
+</form>
+</div><div class="aw-campaigns"></div><div class="a-row a-section">
+<span class="a-span12">
+<span class="a-right">
+<span id='top-of-page-icon' class="s_arrowUp" ></span>
+<a href="#top">
+Top of page
+</a>
+</span>
+</span>
+</div><ul class="a-nostyle a-row a-section" id="bottom-nav-links">
+<li><a class="a-touch " href="/gp/aw/176-4101438-5479234">
+Home
+</a></li>
+<li><a class="a-touch footer-link-even " href="/gp/aw/c/176-4101438-5479234">
+Cart
+</a></li>
+<li><a class="a-touch footer-link-third" href="/gp/aw/ls/176-4101438-5479234">
+Wish List
+</a></li>
+<li><a class="a-touch footer-link-even " href="/gp/aw/ls/s/176-4101438-5479234">
+Find a Wish List or Registry
+</a></li>
+<li><a class="a-touch " href="https://www.amazon.com/gp/aw/ya/176-4101438-5479234">
+Your Account
+</a></li>
+<li><a class="a-touch footer-link-even footer-link-third" href="https://www.amazon.com/gp/subscribe-and-save/manage/176-4101438-5479234">
+Your Subscribe & Save Items
+</a></li>
+<li><a class="a-touch " href="https://www.amazon.com/gp/aw/vsd.html/176-4101438-5479234">
+1-Click Settings
+</a></li>
+<li><a class="a-touch footer-link-even " href="/gp/aw/help/id=help/176-4101438-5479234">
+Help
+</a></li>
+<li><a class="a-touch footer-link-third" href="/gp/aw/rd.html/176-4101438-5479234?at=&force-full-site=1&lc=plm&ref_=aw_bottom_links&url=%2Fgp%2Fproduct%2F0596516177">
+Amazon.com Full Site
+</a></li>
+</ul><div id='footer' class="a-center">
+<p id='who-are-you'>
+Already a customer? &nbsp; &nbsp;<a href="https://www.amazon.com/gp/flex/aw/so.html/176-4101438-5479234?action=sign-in&redirectTo=%2Fgp%2Faw%2Fsi.html%2F176-4101438-5479234%3Faction%3Dsign-in%26destinationURL%3D%252Fgp%252Faw%252Fd%252F0596516177%26isHttp%3D1%26packedQuery%3D*entries*%257C0%257C*Version*%257C1">Sign In</a>
+</p>
+<p id='show-history'><a href="/gp/aw/sh.html/ref=aa_ft_sh/176-4101438-5479234">Search and Browse History</a></p>
+<p id='footer-links'>
+<a href="/gp/aw/help/id=cou/176-4101438-5479234?storeName=">Conditions of Use</a> | <a href="/gp/aw/help/id=mpa/176-4101438-5479234?storeName=">Privacy Notice</a>
+|
+<a href="mailto:Amazonmobilefeedback@amazon.com?subject=Amazon Mobile Feedback ">
+Feedback
+</a>
+</p>
+<p id='copyright' class="a-color-tertiary">
+&copy; 1996-2013, Amazon.com, Inc. or its affiliates
+</p>
+</div><script async src="http://z-ecx.images-amazon.com/images/G/01/AUIClients/AnywhereDetailJS_v1.f2dbc38c459d4a2ab77eba176dc95be1a5dadb89.min._V376067175_.js"></script>
+    </div>
+
+  </div>
+<div id='be' style='display:none;visibility:hidden;'><form name='ue_backdetect'><input name='ue_back' value='1' type='hidden'></form><script type="text/javascript">
+(function(a){if(document.ue_backdetect&&document.ue_backdetect.ue_back){a.ue.bfini=document.ue_backdetect.ue_back.value}if(a.uet){a.uet("be")}if(a.onLdEnd){if(window.addEventListener){window.addEventListener("load",a.onLdEnd,false)}else{if(window.attachEvent){window.attachEvent("onload",a.onLdEnd)}}}if(a.ueh){a.ueh(0,window,"load",a.onLd,1)}if(a.ue_pr&&(a.ue_pr==3||a.ue_pr==4)){a.ue._uep()}})(ue_csm);
+</script>
+
+<a href='/gp/uedata/176-4101438-5479234?tepes=1&amp;id=0WP9Y459PHTN10MNJVR2'>v</a>
+<noscript><img src='/gp/uedata/176-4101438-5479234?noscript&amp;id=0WP9Y459PHTN10MNJVR2' /></noscript></div>
+<script type='text/javascript'>
+(function(a){a._uec=function(d){var h=window,b=h.performance,f=b?b.navigation.type:0;if(f==0){var e="; expires="+new Date(+new Date+604800000).toGMTString(),c=+new Date-ue_t0;if(c>0){var g=a.ue_tsinc?"|"+ +new Date:"|";document.cookie="csm-hit="+(d/c).toFixed(2)+g+e+"; path=/"}}}})(ue_csm);
+_uec(38874);
+</script>
+</body>
+</html>
+<!-- whfh-0rIBgfbZSgwp0OgDU7U4QRx4GkZYUfpT1KWBFnMhwQFtpJT04o1NQEg3vs45N9OwaUbXxndyiZk= rid-0WP9Y459PHTN10MNJVR2 -->
+
