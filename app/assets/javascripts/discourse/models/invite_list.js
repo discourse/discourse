@@ -16,7 +16,6 @@ Discourse.InviteList.reopenClass({
 
   findInvitedBy: function(user) {
     return Discourse.ajax("/users/" + (user.get('username_lower')) + "/invited.json").then(function (result) {
-      console.log('wat');
       var invitedList = result.invited_list;
       if (invitedList.pending) {
         invitedList.pending = invitedList.pending.map(function(i) {
