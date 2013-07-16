@@ -223,7 +223,7 @@ class CookedPostProcessor
 
   def attachments
     if SiteSetting.enable_s3_uploads?
-      @doc.css("a[href^=\"#{S3.base_url}\"]")
+      @doc.css("a[href^=\"#{S3Store.base_url}\"]")
     else
       # local uploads are identified using a relative uri
       @doc.css("a[href^=\"#{LocalStore.directory}\"]")
