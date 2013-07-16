@@ -458,7 +458,7 @@ en:
     company_short_name: "The short name of the company that runs this site, used in legal documents like the /tos"
     company_domain: "The domain name owned by the company that runs this site, used in legal documents like the /tos"
     api_key: "The secure API key used to create and update topics, use the /admin/api section to set it up"
-    queue_jobs: "DEVELOPER ONLY! WARNING! Queue various jobs in sidekiq, if false queues are inline"
+    queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     crawl_images: "Enable retrieving images from third party sources to insert width and height dimensions"
     ninja_edit_window: "Number of seconds after posting where edits do not create a new version"
     max_image_width: "Maximum allowed width of images in a post"
