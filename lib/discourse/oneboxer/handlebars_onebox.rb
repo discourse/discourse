@@ -35,10 +35,12 @@ module Discourse
       def onebox
         html = fetch_html
         args = parse(html)
-        return default_url unless args.present?
+        return default_url if args.nil? || args.empty?
         args[:original_url] = @url
         args[:lang] = @lang || ""
-        args[:favicon] = ActionController::Base.helpers.image_path(self.class.favicon_file) if self.class.favicon_file.present?
+        if defined?(ActionController) && !self.class.favicon_file.nil?
+          args[:favicon] = ActionController::Base.helpers.image_path(self.class.favicon_file)
+        end
         args[:host] = nice_host
 
         HandlebarsOnebox.generate_onebox(template,args)

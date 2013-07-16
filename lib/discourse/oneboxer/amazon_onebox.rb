@@ -16,7 +16,7 @@ module Discourse
         return @url if @url =~ /https?:\/\/www\.amazon\.com\/gp\/aw\/d\//
 
         m = @url.match(/(?:d|g)p\/(?:product\/)?(?<id>[^\/]+)(?:\/|$)/mi)
-        return "http://www.amazon.com/gp/aw/d/" + URI::encode(m[:id]) if m.present?
+        return "http://www.amazon.com/gp/aw/d/#{URI::encode(m[:id])}" if m.to_a.any?
         @url
       end
 
@@ -25,16 +25,19 @@ module Discourse
 
         result = {}
         result[:title] = html_doc.at("h1")
-        result[:title] = result[:title].inner_html if result[:title].present?
+        result[:title] = result[:title].inner_html unless result[:title].nil?
 
         image = html_doc.at(".main-image img")
         result[:image] = image['src'] if image
 
         result[:by_info] = html_doc.at("#by-line")
-        result[:by_info] = BaseOnebox.remove_whitespace(BaseOnebox.replace_tags_with_spaces(result[:by_info].inner_html)) if result[:by_info].present?
+
+        unless result[:by_info].nil?
+          result[:by_info] = BaseOnebox.remove_whitespace(BaseOnebox.replace_tags_with_spaces(result[:by_info].inner_html))
+        end
 
         summary = html_doc.at("#description-and-details-content")
-        result[:text] = summary.inner_html if summary.present?
+        result[:text] = summary.inner_html unless summary.nil?
 
         result
       end
