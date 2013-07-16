@@ -1,4 +1,4 @@
-{{#with user}}
+{{#with model}}
   <div id='user-info'>
     <nav class='buttons'>
       {{#if can_edit}}
@@ -15,9 +15,9 @@
     <div class='clearfix'></div>
 
     <ul class='action-list nav-stacked side-nav'>
-      {{activityFilter count=statsCountNonPM}}
-      {{#each statsExcludingPms}}
-        {{activityFilter content=this}}
+      {{activityFilter count=statsCountNonPM user=this}}
+      {{#each stat in statsExcludingPms}}
+        {{activityFilter content=stat user=model}}
       {{/each}}
     </ul>
     <div class='show'>
@@ -35,7 +35,7 @@
         <dt>{{i18n user.last_seen}}:</dt><dd>{{date last_seen_at}}</dd>
       {{/if}}
       {{#if invited_by}}
-        <dt>{{i18n user.invited_by}}:</dt><dd>{{#linkTo 'user.activity' invited_by}}{{invited_by.username}}{{/linkTo}}</dd>
+        <dt>{{i18n user.invited_by}}:</dt><dd>{{#linkTo 'userActivity' invited_by}}{{invited_by.username}}{{/linkTo}}</dd>
       {{/if}}
       {{#if email}}
         <dt>{{i18n user.email.title}}:</dt><dd {{bindAttr title="email"}}>{{email}}</dd>
@@ -53,4 +53,4 @@
   </div>
 {{/with}}
 
-{{userStream stream=model}}
+{{userStream stream=stream}}

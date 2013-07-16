@@ -29,6 +29,26 @@ Discourse.computed = {
   },
 
   /**
+    Returns i18n version of a string based on a property.
+
+    @method i18n
+    @params {String} properties* to format
+    @params {String} format the i18n format string
+    @return {Function} computedProperty function
+  **/
+  i18n: function() {
+    var args = Array.prototype.slice.call(arguments, 0);
+    var format = args.pop();
+    var computed = Ember.computed(function() {
+      var context = this;
+      return I18n.t(format.fmt.apply(format, args.map(function (a) {
+        return context.get(a);
+      })));
+    });
+    return computed.property.apply(computed, args);
+  },
+
+  /**
     Uses an Ember String `fmt` call to format a string. See:
     http://emberjs.com/api/classes/Ember.String.html#method_fmt
 
@@ -70,5 +90,6 @@ Discourse.computed = {
     return computed.property.apply(computed, args);
 
   }
+
 
 };

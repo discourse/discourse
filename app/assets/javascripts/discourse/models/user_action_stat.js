@@ -10,19 +10,17 @@ Discourse.UserActionStat = Discourse.Model.extend({
 
   isPM: function() {
     var actionType = this.get('action_type');
-    return actionType === Discourse.UserAction.NEW_PRIVATE_MESSAGE ||
-           actionType === Discourse.UserAction.GOT_PRIVATE_MESSAGE;
+    return actionType === Discourse.UserAction.TYPES.messages_sent ||
+           actionType === Discourse.UserAction.TYPES.messages_received;
   }.property('action_type'),
 
-  description: function() {
-    return I18n.t('user_action_groups.' + this.get('action_type'));
-  }.property('description'),
+  description: Discourse.computed.i18n('action_type', 'user_action_groups.%@'),
 
   isResponse: function() {
     var actionType = this.get('action_type');
-    return actionType === Discourse.UserAction.RESPONSE ||
-           actionType === Discourse.UserAction.MENTION ||
-           actionType === Discourse.UserAction.QUOTE;
+    return actionType === Discourse.UserAction.TYPES.replies ||
+           actionType === Discourse.UserAction.TYPES.mentions ||
+           actionType === Discourse.UserAction.TYPES.quotes;
   }.property('action_type')
 
 });

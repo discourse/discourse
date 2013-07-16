@@ -12,11 +12,11 @@
         {{/if}}
         <ul class="nav nav-pills">
           <li>
-            {{#linkTo 'user.activity'}}{{i18n user.activity_stream}}{{/linkTo}}
+            {{#linkTo 'userActivity'}}{{i18n user.activity_stream}}{{/linkTo}}
           </li>
           {{#if canSeePrivateMessages}}
             <li>
-              {{#linkTo "user.privateMessages"}}{{i18n user.private_messages}}{{/linkTo}}
+              {{#linkTo 'userPrivateMessages'}}{{i18n user.private_messages}}{{/linkTo}}
             </li>
           {{/if}}
           <li>

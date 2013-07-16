@@ -18,12 +18,12 @@ Discourse.UserPrivateMessagesView = Discourse.View.extend({
 
   inbox: function(evt) {
     this.selectCurrent(evt);
-    return this.set('controller.filter', Discourse.UserAction.GOT_PRIVATE_MESSAGE);
+    return this.set('controller.filter', Discourse.UserAction.TYPES.messages_received);
   },
 
   sentMessages: function(evt) {
     this.selectCurrent(evt);
-    return this.set('controller.filter', Discourse.UserAction.NEW_PRIVATE_MESSAGE);
+    return this.set('controller.filter', Discourse.UserAction.TYPES.messages_sent);
   }
 
 });

@@ -1,5 +1,5 @@
 <div id='user-info'>
-  {{#with user}}
+  {{#with model}}
     <nav class='buttons'>
       {{#if can_edit}}
         {{#linkTo "preferences" class="btn"}}{{i18n user.edit}}{{/linkTo}}
@@ -15,11 +15,12 @@
     <div class='clearfix'></div>
 
     <ul class='action-list nav-stacked side-nav'>
-      {{#each statsPmsOnly}}
-        {{activityFilter content=this}}
+      {{#each stat in statsPmsOnly}}
+        {{activityFilter content=stat user=model}}
       {{/each}}
     </ul>
   {{/with}}
 </div>
-{{userStream stream=model}}
+
+{{userStream stream=stream}}
 

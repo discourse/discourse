@@ -50,7 +50,6 @@ test("fmt", function() {
 test("url without a prefix", function() {
   var t = testClass.create({ username: 'eviltrout' });
   equal(t.get('userUrl'), "/users/eviltrout");
-
 });
 
 test("url with a prefix", function() {

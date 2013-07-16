@@ -3,17 +3,17 @@ module("Discourse.UserAction");
 test("collapsing likes", function () {
   var actions = Discourse.UserAction.collapseStream([
     Discourse.UserAction.create({
-      action_type: Discourse.UserAction.LIKE,
+      action_type: Discourse.UserAction.TYPES.likes_given,
       topic_id: 1,
       user_id: 1,
       post_number: 1
     }), Discourse.UserAction.create({
-      action_type: Discourse.UserAction.EDIT,
+      action_type: Discourse.UserAction.TYPES.edits,
       topic_id: 2,
       user_id: 1,
       post_number: 1
     }), Discourse.UserAction.create({
-      action_type: Discourse.UserAction.LIKE,
+      action_type: Discourse.UserAction.TYPES.likes_given,
       topic_id: 1,
       user_id: 2,
       post_number: 1

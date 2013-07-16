@@ -6,7 +6,14 @@ task 'integration:create_fixtures' => :environment do
   fixtures = {
     list: ["/latest.json", "/categories.json", "/category/bug.json"],
     topic: ["/t/280.json"],
-    user: ["/users/eviltrout.json", "/user_actions.json?offset=0&username=eviltrout"],
+    user: ["/users/eviltrout.json",
+           "/user_actions.json?offset=0&username=eviltrout",
+           "/user_actions.json?offset=0&username=eviltrout&filter=4",
+           "/user_actions.json?offset=0&username=eviltrout&filter=5",
+           "/user_actions.json?offset=0&username=eviltrout&filter=6,7,9",
+           "/user_actions.json?offset=0&username=eviltrout&filter=1",
+           "/user_actions.json?offset=0&username=eviltrout&filter=2",
+           "/user_actions.json?offset=0&username=eviltrout&filter=11"],
     static: ["/faq", '/tos', '/privacy']
   }
 

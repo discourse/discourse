@@ -11,15 +11,17 @@
 
 // Stuff we need to load first
 //= require_tree ./discourse/mixins
+//= require ./discourse/components/computed
 //= require ./discourse/views/view
 //= require ./discourse/components/debounce
+//= require ./discourse/models/model
+//= require ./discourse/models/user_action
 //= require ./discourse/controllers/controller
 //= require ./discourse/controllers/object_controller
 //= require ./discourse/views/modal/modal_body_view
 //= require ./discourse/views/combobox_view
 //= require ./discourse/views/buttons/button_view
 //= require ./discourse/views/buttons/dropdown_button_view
-//= require ./discourse/models/model
 //= require ./discourse/routes/discourse_route
 //= require ./discourse/routes/discourse_restricted_user_route
 

@@ -270,8 +270,12 @@ Discourse.User = Discourse.Model.extend({
   },
 
   findStream: function(filter) {
-    if (Discourse.UserAction.statGroups[filter]) {
-      filter = Discourse.UserAction.statGroups[filter].join(",");
+
+    // When filtering for replies, include mentions and quotes too
+    if (filter === Discourse.UserAction.TYPES.replies) {
+      filter = [Discourse.UserAction.TYPES.replies,
+                Discourse.UserAction.TYPES.mentions,
+                Discourse.UserAction.TYPES.quotes].join(",");
     }
 
     var stream = Discourse.UserStream.create({
@@ -351,7 +355,7 @@ Discourse.User.reopenClass({
   groupStats: function(stats) {
     var responses = Discourse.UserActionStat.create({
       count: 0,
-      action_type: Discourse.UserAction.RESPONSE
+      action_type: Discourse.UserAction.TYPES.replies
     });
 
     stats.filterProperty('isResponse').forEach(function (stat) {
@@ -363,7 +367,7 @@ Discourse.User.reopenClass({
 
     var insertAt = 1;
     result.forEach(function(item, index){
-     if(item.action_type === Discourse.UserAction.NEW_TOPIC || item.action_type === Discourse.UserAction.POST){
+     if(item.action_type === Discourse.UserAction.TYPES.topics || item.action_type === Discourse.UserAction.TYPES.posts){
        insertAt = index + 1;
      }
     });
