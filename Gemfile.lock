@@ -493,7 +493,7 @@ DEPENDENCIES
   fog
   guard-rspec
   guard-spork
-  handlebars-source
+  handlebars-source (= 1.0.12)
   highline
   hiredis
   image_optim

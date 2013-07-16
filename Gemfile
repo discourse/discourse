@@ -6,7 +6,7 @@ gem 'active_model_serializers', git: 'https://github.com/rails-api/active_model_
 # PR that makes it all hang together welcome
 gem 'ember-rails'
 gem 'ember-source', '1.0.0.rc6.2'
-gem 'handlebars-source'
+gem 'handlebars-source', '1.0.12'
 gem 'barber'
 
 gem 'vestal_versions', git: 'https://github.com/zhangyuan/vestal_versions'
