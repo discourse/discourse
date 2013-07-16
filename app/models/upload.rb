@@ -2,7 +2,7 @@ require 'digest/sha1'
 require 'image_sizer'
 require 'tempfile'
 require 'pathname'
-require_dependency 's3'
+require_dependency 's3_store'
 require_dependency 'local_store'
 
 class Upload < ActiveRecord::Base
@@ -77,12 +77,12 @@ class Upload < ActiveRecord::Base
   end
 
   def self.store_file(file, sha1, upload_id)
-    return S3.store_file(file, sha1, upload_id) if SiteSetting.enable_s3_uploads?
+    return S3Store.store_file(file, sha1, upload_id) if SiteSetting.enable_s3_uploads?
     return LocalStore.store_file(file, sha1, upload_id)
   end
 
   def self.remove_file(url)
-    return S3.remove_file(url) if SiteSetting.enable_s3_uploads?
+    return S3Store.remove_file(url) if SiteSetting.enable_s3_uploads?
     return LocalStore.remove_file(url)
   end
 
@@ -99,7 +99,7 @@ class Upload < ActiveRecord::Base
   end
 
   def self.is_on_s3?(url)
-    SiteSetting.enable_s3_uploads? && url.start_with?(S3.base_url)
+    SiteSetting.enable_s3_uploads? && url.start_with?(S3Store.base_url)
   end
 
   def self.get_from_url(url)

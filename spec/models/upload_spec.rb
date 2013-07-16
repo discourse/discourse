@@ -119,12 +119,12 @@ describe Upload do
     it "store files on s3 when enabled" do
       SiteSetting.expects(:enable_s3_uploads?).returns(true)
       LocalStore.expects(:store_file).never
-      S3.expects(:store_file)
+      S3Store.expects(:store_file)
       Upload.store_file(image, image_sha1, 1)
     end
 
     it "store files locally by default" do
-      S3.expects(:store_file).never
+      S3Store.expects(:store_file).never
       LocalStore.expects(:store_file)
       Upload.store_file(image, image_sha1, 1)
     end
@@ -136,12 +136,12 @@ describe Upload do
     it "remove files on s3 when enabled" do
       SiteSetting.expects(:enable_s3_uploads?).returns(true)
       LocalStore.expects(:remove_file).never
-      S3.expects(:remove_file)
+      S3Store.expects(:remove_file)
       Upload.remove_file(upload.url)
     end
 
     it "remove files locally by default" do
-      S3.expects(:remove_file).never
+      S3Store.expects(:remove_file).never
       LocalStore.expects(:remove_file)
       Upload.remove_file(upload.url)
     end

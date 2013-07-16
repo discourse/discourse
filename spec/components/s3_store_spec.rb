@@ -1,8 +1,8 @@
 require 'spec_helper'
 require 'fog'
-require 's3'
+require 's3_store'
 
-describe S3 do
+describe S3Store do
 
   describe "store_file" do
 
@@ -25,7 +25,7 @@ describe S3 do
 
     it 'returns the url of the S3 upload if successful' do
       # NOTE: s3 bucket's name are case sensitive so we can't use it as a subdomain...
-      S3.store_file(file, "SHA", 1).should == '//s3.amazonaws.com/S3_Upload_Bucket/1SHA.png'
+      S3Store.store_file(file, "SHA", 1).should == '//s3.amazonaws.com/S3_Upload_Bucket/1SHA.png'
     end
 
     after(:each) do

@@ -1,15 +1,15 @@
-module S3
+module S3Store
 
   def self.store_file(file, sha1, upload_id)
-    S3.check_missing_site_settings
+    S3Store.check_missing_site_settings
 
-    directory = S3.get_or_create_directory(SiteSetting.s3_upload_bucket)
+    directory = S3Store.get_or_create_directory(SiteSetting.s3_upload_bucket)
     extension = File.extname(file.original_filename)
     remote_filename = "#{upload_id}#{sha1}#{extension}"
 
     # if this fails, it will throw an exception
-    file = S3.upload(file, remote_filename, directory)
-    "#{S3.base_url}/#{remote_filename}"
+    file = S3Store.upload(file, remote_filename, directory)
+    "#{S3Store.base_url}/#{remote_filename}"
   end
 
   def self.base_url
@@ -17,11 +17,11 @@ module S3
   end
 
   def self.remove_file(url)
-    S3.check_missing_site_settings
+    S3Store.check_missing_site_settings
 
-    directory = S3.get_or_create_directory(SiteSetting.s3_upload_bucket)
+    directory = S3Store.get_or_create_directory(SiteSetting.s3_upload_bucket)
 
-    file = S3.destroy(url, directory)
+    file = S3Store.destroy(url, directory)
   end
 
   def self.check_missing_site_settings
@@ -33,7 +33,7 @@ module S3
   def self.get_or_create_directory(name)
     @fog_loaded = require 'fog' unless @fog_loaded
 
-    options = S3.generate_options
+    options = S3Store.generate_options
 
     fog = Fog::Storage.new(options)
 
