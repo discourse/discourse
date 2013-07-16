@@ -60,6 +60,9 @@ cs:
   rss_topics_in_category: "RSS feed témat z kategorie '%{category}'"
   author_wrote: "%{author} napsal:"
   private_message_abbrev: "SZ"
+  rss_description:
+    latest: "Poslední témata"
+    hot: "Populární témata"
 
   groups:
     errors:
@@ -139,6 +142,8 @@ cs:
       title: "vůdce"
     elder:
       title: "starší"
+    change_failed_explanation: "Pokusili jste se změnil důvěryhodnost uživatele %{user_name} na '%{new_trust_level}'. Jejich důvěryhodnost je ale již '%{current_trust_level}'. %{user_name} zůstané na důvěryhodnosti '%{current_trust_level}'"
+
 
   rate_limiter:
     too_many_requests: "Děláte tuto akci příliš často. Prosím počkejte %{time_left} a zkuste to znovu."
@@ -501,6 +506,7 @@ cs:
     apple_touch_icon_url: "Ikona používaná pro doteková zařízení od firmy Apple. Doporučené rozměry jsou 144px krát 144px."
 
     notification_email: "Návratová emailová adresa, která se použije u systémových emailů, jako jsou notifikace o zapomenutém heslu, nových účtech, atd."
+    email_custom_headers: "Seznam vlastních hlaviček emailů, oddělený svislítkem"
     use_ssl: "Má být web přístupný přes SSL? (NEPODPOROVÁNO, EXPERIMENTÁLNÍ FUNKCE)"
     best_of_score_threshold: "Minimální skóre příspěvku, aby byl zařazen mezi 'nejlepší'"
     best_of_posts_required: "Minimální počet příspěvků v tématu, aby byl povolen mód 'nejlepší příspěvky'"
@@ -527,6 +533,8 @@ cs:
     must_approve_users: "Administrátoři musí schválit všechny uživatele, než získají přístup"
     ga_tracking_code: "Kód pro sledování přes 'Google analytics', např. UA-12345678-9; viz http://google.com/analytics"
     ga_domain_name: "Doménové jméno pro Google analytics, např. mysite.com; viz http://google.com/analytics"
+    enable_escaped_fragments: "Povolit alternativní řešení, které pomůže starým webovým robotům indexovat váš web. VAROVÁNÍ: povolte pouze v případě, že to opravdu potřebujete."
+    enable_noscript_support: "Povolit podporu &lt;noscipt&gt; tagu"
     top_menu: "Určuje, které položky se zobrazí v navigaci na hlavní stránce a v jakém pořadí. Příklad: latest|hot|read|favorited|unread|new|posted|categories"
     post_menu: "Určuje, které položky se zobrazí v menu u příspěvku a v jakém pořadí. Příklad: like|edit|flag|delete|share|bookmark|reply"
     share_links: "Určuje, které položky se zobrazí ve sdílecím dialogu a v jakém pořadí. Příklad: twitter|facebook|google+"
@@ -536,6 +544,8 @@ cs:
     system_username: "Uživatelské jméno, za které se zasílají automatické soukromé zprávy"
     send_welcome_message: "Mají noví uživatelé obdržet uvítací soukromou zprávu?"
     suppress_reply_directly_below: "Nezobrazovat počet odpovědí, pokud existuje jen jediná odpověď hned pod příspěvkem"
+    suppress_reply_directly_above: "Nezobrazovat informaci 'je odpověď na' u příspěvku, jehož odpověď je přímo nad ním"
+
     allow_index_in_robots_txt: "Povolit robotům indexaci tohoto webu (aktualizuje robots.txt)"
     email_domains_blacklist: "Seznam domén, jejichž emailové adresy nebudou přijímány, oddělený znakem '|'. Příklad: mailinator.com|trashmail.net"
     email_domains_whitelist: "Seznam domén, ze kterých bude povolena registrace, oddělený znamek '|'. POZOR: Emailové adresy z jiných než z těchto domén nebudou přijímány."
@@ -603,6 +613,8 @@ cs:
     s3_secret_access_key: "Hodnota 'server access key' služby Amazon S3, která se použije pro nahrávání obrázku"
     s3_region: "Hodnota 'region' služby Amazon S3, která se použije pro nahrávání obrázku"
 
+    enable_flash_video_onebox: "Povolit embedování SWF a FLV odkazů do oneboxu (může znamenat bezpečnostní riziko, doporučujeme opatrnost)"
+
     default_invitee_trust_level: "Výchozí věrohodnost pozvaných uživatelů (0-4)"
     default_trust_level: "Výchozí věrohodnost uživatelů (0-4)"
 
@@ -663,7 +675,9 @@ cs:
     pop3s_polling_username: "Uživatelské jméno pro dotazování přes POP3S"
     pop3s_polling_password: "Heslo pro dotazování přes POP3S"
 
-    minimum_topics_similar: "How many topics need to exist in the database before similar topics are presented."
+    minimum_topics_similar: "Kolik témat musí v databázi existovat, než se začne nabízet menu s podobnými tématy."
+
+    relative_date_duration: "Počet dní od zaslání příspěvku, po které se budou datumy zobrazovat relativně namísto absolutně. Příklady: relativně: 7d, absolutně: 20. února"
 
 
   notification_types:

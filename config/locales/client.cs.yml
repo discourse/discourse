@@ -12,7 +12,10 @@ cs:
         storage_units:
           format: ! '%n %u'
           units:
-            byte: B
+            byte:
+              one: bajt
+              few: bajty
+              other: bajtů
             gb: GB
             kb: KB
             mb: MB
@@ -666,6 +669,7 @@ cs:
           description: "nebudete vůbec dostávat oznámení o tomto tématu a nebude se zobrazovat v seznamu nepřečtených témat."
 
       actions:
+        recover: "Vrátit téma"
         delete: "Odstranit téma"
         open: "Otevřít téma"
         close: "Zavřít téma"
@@ -775,6 +779,7 @@ cs:
       continue_discussion: "Pokračující diskuze z {{postLink}}:"
       follow_quote: "přejít na citovaný příspěvek"
       deleted_by_author: "(příspěvek odstraněn autorem)"
+      deleted_by: "odstranil"
       expand_collapse: "rozbalit/sbalit"
 
       has_replies:
@@ -789,6 +794,7 @@ cs:
         upload_too_large: "Soubor, který se snažíte nahrát je bohužel příliš velký (maximální velikost je {{max_size_kb}}kb). Prosím zmenšete ho zkuste to znovu."
         too_many_uploads: "Bohužel, najednou smíte nahrát jen jeden soubor."
         upload_not_authorized: "Bohužel, soubor, který se snažíte nahrát, není povolený (povolené přípony: {{authorized_extensions}})."
+        upload_not_allowed_for_new_user: "Bohužel, noví uživatelé nemohou nahrávat obrázky."
 
       abandon: "Opravdu chcete opustit váš příspěvek?"
 
@@ -998,6 +1004,7 @@ cs:
     views_long: "toto téma bylo zobrazeno {{number}}krát"
     activity: "Aktivita"
     likes: "Líbí se"
+    likes_long: "je zde {{number}} 'líbí se' v tomto tématu"
     top_contributors: "Účastníci"
     category_title: "Kategorie"
     history: "Historie"
@@ -1064,6 +1071,8 @@ cs:
         critical_available: "Je k dispozici důležitá aktualizace."
         updates_available: "Jsou k dispozici aktualizace."
         please_upgrade: "Prosím aktualizujte!"
+        no_check_performed: "Kontrola na aktualizace nebyla provedena. Ujistěte se, že běží služby clockword a sidekiq."
+        stale_data: "V poslední době neproběhal kontrola aktualizací. Ujistěte se, že běží služby clockword a sidekiq."
         installed_version: "Nainstalováno"
         latest_version: "Poslední verze"
         problems_found: "Byly nalezeny problémy s vaší instalací systému Discourse:"
@@ -1073,6 +1082,7 @@ cs:
         moderators: 'Moderátoři:'
         admins: 'Administrátoři:'
         blocked: 'Blokováno:'
+        banned: 'Zakázáno:'
         private_messages_short: "SZ"
         private_messages_title: "Soukromé zprávy"
 
@@ -1176,6 +1186,7 @@ cs:
         settings: "Nastavení"
         logs: "Záznamy"
         sent_at: "Odesláno"
+        user: "Uživatel"
         email_type: "Typ emailu"
         to_address: "Komu"
         test_email_address: "testovací emailová adresa"
@@ -1205,9 +1216,13 @@ cs:
         not_found: "Bohužel uživatel s tímto jménem není v našem systému."
         active: "Aktivní"
         nav:
+          new: "Noví"
           active: "Aktivní"
-          new: "Nový"
           pending: "Čeká na schválení"
+          admins: "Administrátoři"
+          moderators: "Moderátoři"
+          banned: "Zakázaní"
+          blocked: "Blokovaní"
         approved: "Schválen?"
         approved_selected:
           one: "schválit uživatele"
@@ -1225,6 +1240,7 @@ cs:
           admins: 'Admininstrátoři'
           moderators: 'Moderátoři'
           blocked: 'Blokovaní uživatelé'
+          banned: "Zakázaní uživatelé"
 
       user:
         ban_failed: "Nastala chyba při zakazování uživatele {{error}}"
@@ -1281,7 +1297,7 @@ cs:
         deactivate_explanation: "Deaktivovaný uživatel musí znovu validovat svoji emailovou adresu než se bude moci znovu přihlásit."
         banned_explanation: "Zakázaný uživatel se nemůže přihlásit."
         block_explanation: "Zablokovaný uživatel nemůže přispívat nebo vytvářet nová témata."
-
+        trust_level_change_failed: "Nastal problém při změně důveryhodnosti uživatele."
 
       site_content:
         none: "Zvolte typ obsahu a můžete začít editovat."
