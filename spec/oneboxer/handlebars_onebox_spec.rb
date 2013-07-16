@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-  H = Oneboxer::HandlebarsOnebox
 describe Discourse::Oneboxer::HandlebarsOnebox do
   H = Discourse::Oneboxer::HandlebarsOnebox
 

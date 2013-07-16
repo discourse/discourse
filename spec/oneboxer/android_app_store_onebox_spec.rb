@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Discourse::Oneboxer::AndroidAppStoreOnebox do
   before(:each) do
-    @o = Oneboxer::AndroidAppStoreOnebox.new("https://play.google.com/store/apps/details?id=com.moosoft.parrot")
+    @o = Discourse::Oneboxer::AndroidAppStoreOnebox.new("https://play.google.com/store/apps/details?id=com.moosoft.parrot")
     FakeWeb.register_uri(:get, @o.translate_url, response: fixture_file('oneboxer/android.response'))
   end
 

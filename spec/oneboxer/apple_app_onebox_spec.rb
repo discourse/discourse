@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Discourse::Oneboxer::AppleAppOnebox do
   before(:each) do
-    @o = Oneboxer::AppleAppOnebox.new("https://itunes.apple.com/us/app/minecraft-pocket-edition-lite/id479651754")
+    @o = Discourse::Oneboxer::AppleAppOnebox.new("https://itunes.apple.com/us/app/minecraft-pocket-edition-lite/id479651754")
     FakeWeb.register_uri(:get, @o.translate_url, response: fixture_file('oneboxer/apple.response'))
   end
 
