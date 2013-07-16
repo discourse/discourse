@@ -1,4 +1,6 @@
 require 'open-uri'
+require "nokogiri"
+require "mustache"
 require "discourse/oneboxer/version"
 
 require_relative "oneboxer/base"
