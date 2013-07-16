@@ -4,7 +4,7 @@ discourse-oneboxer
   - [![Gem Version](https://badge.fury.io/rb/architect.png)](https://rubygems.org/gems/architect)
   - [![Code Climate](https://codeclimate.com/github/krainboltgreene/architect.png)](https://codeclimate.com/github/krainboltgreene/architect)
   - [![Build Status](https://travis-ci.org/krainboltgreene/architect.png)](https://travis-ci.org/krainboltgreene/architect)
-  - [![Dependency Status](https://gemnasium.com/krainboltgreene/architect.png)](https://gemnasium.com/krainboltgreene/architect)
+  - [![Dependency Status](https://gemnasium.com/dysania/discourse-oneboxer.png)](https://gemnasium.com/dysania/discourse-oneboxer)
   - [![Coverage Status](https://coveralls.io/repos/krainboltgreene/architect/badge.png?branch=master)](https://coveralls.io/r/krainboltgreene/architect)
 
 
