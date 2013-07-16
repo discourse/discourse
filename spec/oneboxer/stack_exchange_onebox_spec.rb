@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Oneboxer::StackExchangeOnebox do
+describe Discourse::Oneboxer::StackExchangeOnebox do
   describe '#translate_url' do
     let(:question) { '15622543' }
     let(:api_url) {

@@ -1,9 +1,8 @@
 require 'spec_helper'
-require 'oneboxer'
-require 'oneboxer/handlebars_onebox'
 
-describe Oneboxer::HandlebarsOnebox do
   H = Oneboxer::HandlebarsOnebox
+describe Discourse::Oneboxer::HandlebarsOnebox do
+  H = Discourse::Oneboxer::HandlebarsOnebox
 
   describe 'simple onebox' do
     it "is able to render image size when specified" do

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Oneboxer::TwitterOnebox do
+describe Discourse::Oneboxer::TwitterOnebox do
   subject { described_class.new(nil, nil) }
 
   let(:data) { %({ "text":"#{text}", "created_at":"#{created_at}" }) }

@@ -1,8 +1,7 @@
 require 'spec_helper'
-require 'oneboxer'
 
-describe "Dynamic Oneboxer" do
-  class DummyDynamicOnebox < Oneboxer::BaseOnebox
+describe "Dynamic Discourse::Oneboxer" do
+  class DummyDynamicOnebox < Discourse::Oneboxer::BaseOnebox
     matcher do
       /^https?:\/\/dummy2.localhost/
     end

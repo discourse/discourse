@@ -1,8 +1,4 @@
-# encoding: utf-8
-
 require 'spec_helper'
-require 'oneboxer'
-require 'oneboxer/wikipedia_onebox'
 
 describe Oneboxer::WikipediaOnebox do
 
