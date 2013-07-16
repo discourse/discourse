@@ -23,9 +23,9 @@ Oneboxer currently has support for page, image, and video URLs from these sites:
 - Funny or Die
 - Gist
 - Github
--- Blob
--- Commit
--- Pull Request
+    - Blob
+    - Commit
+    - Pull Request
 - Hulu
 - Imgur
 - Kinomap
