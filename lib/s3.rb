@@ -13,7 +13,7 @@ module S3
   end
 
   def self.base_url
-    "//#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com"
+    "//s3.amazonaws.com/#{SiteSetting.s3_upload_bucket}"
   end
 
   def self.remove_file(url)
