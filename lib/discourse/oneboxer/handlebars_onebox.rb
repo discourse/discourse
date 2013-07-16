@@ -44,10 +44,10 @@ module Discourse
         args[:host] = nice_host
 
         HandlebarsOnebox.generate_onebox(template,args)
-      rescue => ex
-        # If there's an exception, just embed the link
-        raise ex if Rails.env.development?
-        default_url
+      # rescue => ex
+      #   # If there's an exception, just embed the link
+      #   raise ex if defined?(Rails) && Rails.env.development?
+      #   default_url
       end
 
       def self.generate_onebox(template, args)
