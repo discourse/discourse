@@ -9,9 +9,14 @@
 Discourse.Post = Discourse.Model.extend({
 
   shareUrl: function() {
-    if (this.get('firstPost')) return this.get('topic.url');
     var user = Discourse.User.current();
-    return this.get('url') + (user ? '?u=' + user.get('username_lower') : '');
+    var userSuffix = user ? '?u=' + user.get('username_lower') : '';
+
+    if (this.get('firstPost')) {
+      return this.get('topic.url') + userSuffix;
+    } else {
+      return this.get('url') + userSuffix ;
+    }
   }.property('url'),
 
   new_user: Em.computed.equal('trust_level', 0),
