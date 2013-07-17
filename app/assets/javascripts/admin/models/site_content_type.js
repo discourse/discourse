@@ -10,7 +10,7 @@ Discourse.SiteContentType = Discourse.Model.extend({});
 
 Discourse.SiteContentType.reopenClass({
   findAll: function() {
-    promise = new Em.Deferred();
+    var promise = new Em.Deferred();
     Discourse.ajax("/admin/site_content_types").then(function(data) {
       var contentTypes = Em.A();
       data.forEach(function (ct) {
