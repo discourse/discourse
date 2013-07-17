@@ -53,7 +53,8 @@ class SiteSetting < ActiveRecord::Base
   # auto-replace rules for title
   setting(:title_prettify, true)
 
-  client_setting(:max_upload_size_kb, 2048)
+  client_setting(:max_image_size_kb, 2048)
+  client_setting(:max_attachment_size_kb, 1024)
   client_setting(:authorized_extensions, '.jpg|.jpeg|.png|.gif')
 
   # settings only available server side
@@ -269,26 +270,36 @@ class SiteSetting < ActiveRecord::Base
     top_menu_items[0].name
   end
 
-  def self.anonymous_homepage
-    list = ['latest', 'hot', 'categories', 'category']
-    top_menu_items.map { |item| item.name }.select{ |item| list.include?(item) }.first
+  def self.anonymous_menu_items
+    @anonymous_menu_items ||= Set.new ['latest', 'hot', 'categories', 'category']
   end
 
-  def self.authorized_file?(file)
-    file.original_filename =~ /\.(#{authorized_extensions.tr(". ", "")})$/i
+  def self.anonymous_homepage
+    top_menu_items.map { |item| item.name }
+                  .select { |item| anonymous_menu_items.include?(item) }
+                  .first
+  end
+
+  def self.authorized_uploads
+    authorized_extensions.tr(" ", "")
+                         .split("|")
+                         .map { |extension| (extension.start_with?(".") ? "" : ".") + extension }
+  end
+
+  def self.authorized_upload?(file)
+    authorized_uploads.count > 0 && file.original_filename =~ /(#{authorized_uploads.join("|")})$/i
   end
 
   def self.images
-    @images ||= ["jpg", "jpeg", "png", "gif", "tif", "tiff", "bmp"]
+    @images ||= Set.new [".jpg", ".jpeg", ".png", ".gif", ".tif", ".tiff", ".bmp"]
+  end
+
+  def self.authorized_images
+    authorized_uploads.select { |extension| images.include?(extension) }
   end
 
   def self.authorized_image?(file)
-    authorized_images = authorized_extensions
-                          .tr(". ", "")
-                          .split("|")
-                          .select { |extension| images.include?(extension) }
-                          .join("|")
-    file.original_filename =~ /\.(#{authorized_images})$/i
+    authorized_images.count > 0 && file.original_filename =~ /(#{authorized_images.join("|")})$/i
   end
 
 end

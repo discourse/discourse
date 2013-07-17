@@ -560,7 +560,7 @@ it:
     min_body_similar_length: "Lunghezza minima del contenuto di un post perattivare il controllo su topic simili"
 
     category_colors: "Lista di colori esadecimali per sfondo categorie, separati da pipe (\"|\")"
-    max_upload_size_kb: "Dimensione massima in kB per gli upload degli utenti - assicurati di configurare il limite in nginx (client_max_body_size) o apache."
+    max_image_size_kb: "Dimensione massima in kB per gli upload degli utenti - assicurati di configurare il limite in nginx (client_max_body_size) o apache."
     max_similar_results: "Numero di topic simili da mostrare all'utente durante la creazione di un nuovo topic"
 
     title_prettify: "Previeni typo e errori comuni nei titoli, inclusi tutto maiuscola, primo carattere minuscolo, ! e ? ripetuti, . aggiuntivi alla fine, etc etc."

@@ -649,7 +649,7 @@ cs:
     min_body_similar_length: "Minimální délka těla příspěvku, než budou hledána podobná témata"
 
     category_colors: "Seznam hexadecimálních barev oddělený svislítkem (|) pro barvy kategorií"
-    max_upload_size_kb: "Maximální povolená velikost nahrávaných souborů v kB - nezapomeňte tento limit změnit v nginx (client_max_body_size) / apache a na proxy serverech."
+    max_image_size_kb: "Maximální povolená velikost nahrávaných souborů v kB - nezapomeňte tento limit změnit v nginx (client_max_body_size) / apache a na proxy serverech."
     authorized_extensions: "Seznam povolených přípon souborů pro nahrávání, oddělený svislítkem (|)"
     max_similar_results: "Kolik podobných témat se má zobrazovat uživateli, když vytváří nové téma"
 
