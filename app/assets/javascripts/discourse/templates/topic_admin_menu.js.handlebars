@@ -13,7 +13,7 @@
         </li>
       {{/if}}
 
-      {{#if details.can_recover}}
+      {{#if showRecover}}
         <li>
           <button {{action recoverTopic}} class='btn btn-admin'><i class='icon-undo'></i> {{i18n topic.actions.recover}}</button>
         </li>
