@@ -7,7 +7,7 @@ module Discourse
 
       def translate_url
         m = @url.match(/github\.com\/(?<owner>[^\/]+)\/(?<repo>[^\/]+)\/commit\/(?<sha>[^\/]+)/mi)
-        return "https://api.github.com/repos/#{m[:owner]}/#{m[:repo]}/commits/#{m[:sha]}" if m.present?
+        return "https://api.github.com/repos/#{m[:owner]}/#{m[:repo]}/commits/#{m[:sha]}" if m.to_a.any?
         @url
       end
 
