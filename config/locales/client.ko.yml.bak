@@ -1,0 +1,1007 @@
+# encoding: "utf-8"
+# This file contains content for the client portion of Discourse, sent out
+# to the Javascript app.
+
+ko:
+  js:
+    share:
+      topic: '항목을 공유합니다.'
+      post: '게시물을 공유합니다.'
+      close: '닫기'
+      twitter: 'twitter로 공유'
+      facebook: 'Facebook으로 공유'
+      google+: 'Google+로 공유'
+      email: 'email로 공유'
+
+    edit: "편집하기"
+    not_implemented: "추후 업데이트 예정"
+    no_value: "아니오"
+    yes_value: "예"
+    of_value: "으로"
+    generic_error: "오류발생"
+    log_in: "반가워용^^"
+    age: "나이"
+    last_post: "마지막글"
+    admin_title: "관리자"
+    flags_title: "플래그"
+    show_more: "더 보기"
+    links: Links
+    faq: "FAQ"
+    you: "당신"
+    or: "또는"
+    now: "지금"
+    read_more: "자세히 보기"
+
+    suggested_topics:
+      title: "추천항목"
+
+    bookmarks:
+      not_logged_in: "죄송합니다. 즐겨찾기 된 게시물을 보려면 로그인을 해야합니다."
+      created: "이 게시물을 즐겨찾기 했습니다."
+      not_bookmarked: "즐겨찾기 하기위해 이 게시물을 읽었습니다."
+      last_read: "여기까지 읽었습니다."
+
+    new_topics_inserted: "{{count}} 개의 새로운 게시물입니다."
+    show_new_topics: "표시하려면 클릭하세요."
+    preview: "미리보기"
+    cancel: "취소"
+
+    save: "변경사항을 저장"
+    saving: "저장중..."
+    saved: "저장완료!"
+
+    user_action:
+      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> 게시 <a href='{{topicUrl}}'>the topic</a>"
+      you_posted_topic: "<a href='{{userUrl}}'>You</a> 게시 <a href='{{topicUrl}}'>the topic</a>"
+      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> 댓글 to <a href='{{postUrl}}'>{{post_number}}</a>"
+      you_replied_to_post: "<a href='{{userUrl}}'>You</a> 댓글 <a href='{{postUrl}}'>{{post_number}}</a>"
+      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> 댓글 <a href='{{topicUrl}}'>the topic</a>"
+      you_replied_to_topic: "<a href='{{userUrl}}'>You</a> 댓글 <a href='{{topicUrl}}'>the topic</a>"
+
+      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> 언급 <a href='{{user2Url}}'>{{another_user}}</a>"
+      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> 언급 <a href='{{user2Url}}'>you</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>You</a> 언급 <a href='{{user2Url}}'>{{user}}</a>"
+
+      posted_by_user: "에 의해 게시 <a href='{{userUrl}}'>{{user}}</a>"
+      posted_by_you: "에 의해 게시 <a href='{{userUrl}}'>you</a>"
+      sent_by_user: "에 의해 전송 <a href='{{userUrl}}'>{{user}}</a>"
+      sent_by_you: "에 의해 전송 <a href='{{userUrl}}'>you</a>"
+
+    user_action_groups:
+      "1": "Likes Given"
+      "2": "Likes Received"
+      "3": "즐겨찾기"
+      "4": "주제"
+      "5": "답변"
+      "6": "응답"
+      "7": "언급"
+      "9": "인용부호"
+      "10": "즐겨찾기"
+      "11": "편집"
+      "12": "보낸 편지함"
+      "13": "받은 편지함"
+
+    user:
+      profile: "프로필"
+      title: "사용자"
+      mute: "음소거"
+      edit: "편집"
+      download_archive: "내 게시물을 아카이브로 다운로드"
+      private_message: "개인 메시지"
+      private_messages: "메시지"
+      activity_stream: "활동"
+      preferences: "환경 설정"
+      bio: "나에 대해서"
+      invited_by: "에 의해 초대되었습니다."
+      trust_level: "레벨"
+      external_links_in_new_tab: "새 탭에서 모든 외부 링크 열기"
+      enable_quoting: "강조 표시된 텍스트에 대한 알림을 사용합니다"
+
+      moderator: "{{user}} 는 운영자입니다."
+      admin: "{{user}} 는 관리자입니다."
+
+      change_password:
+        action: "변경 완료"
+        success: "(이메일 전송)"
+        in_progress: "(이메일 전송중)"
+        error: "(에러)"
+
+      change_username:
+        action: "변경완료"
+        title: "사용자 이름 변경"
+        confirm: "사용자 이름을 변경합니다. 사용자 이름을 변경하는게 확실한가요?"
+        taken: "죄송합니다. 중복된 사용자 이름입니다"
+        error: "사용자 이름을 변경하는 중에 오류가 발생했습니다"
+        invalid: "사용자 이름이 잘못되었습니다. 숫자와 문자를 포함해야합니다"
+      change_email:
+        action: '변경완료'
+        title: "Email 수정"
+        taken: "죄송합니다. 해당 Email은 사용할 수 없습니다"
+        error: "Email 변경 중 오류가 발생했습니다. 이미 사용중인 Email인지 확인해주세요"
+        success: "Email 발송이 완료되었습니다. 확인하신 후 절차에 따라주세요"
+
+      email:
+        title: "Email"
+        instructions: "당신의 Email은 표시되지않습니다"
+        ok: "완료. 확인 Email을 보냈습니다"
+        invalid: "사용하고 계시는 Email주소를 입력해주세요"
+        authenticated:ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ "당신의 이메일은 {{provider}}에 의해 인증되었습니다"
+        frequency: "당신의 활동이 뜸해지거나 메일을 읽지않는다면 확인메일을 보내드립니다"
+
+      name:
+        title: "별명"
+        instructions: "별명을 정해주세요 "
+        too_short: "너무 짧습니다"
+        ok: "사용가능합니다"
+      username:
+        title: "사용자 이름"
+        instructions: "중복이 안되며, 공백이 없어야합니다"
+        short_instructions: "@{{username}}으로 언급이 가능합니다"
+        available: "사용자 이름으로 사용가능합니다"
+        global_match: "Email에 등록된 이름과 일치합니다"
+        global_mismatch: "이미 등록된 계정입니다. 다시 시도해보세요{{suggestion}}"
+        not_available: "사용할 수 없는 계정입니다. 다시 시도해보세요{{suggestion}}"
+        too_short: "사용자 이름이 너무 짧습니다"
+        too_long: "사용자 이름이 너무 깁니다"
+        checking: "사용가능한지 확인 중..."
+        enter_email: '사용자 이름을 찾았습니다. 일치하는 Email을 입력해주세요'
+
+      password_confirmation:
+        title: "비밀번호를 재입력해주세요"
+
+      last_posted: "마지막글"
+      last_emailed: "마지막 Email"
+      last_seen: "마지막으로 본"
+      created: "에서 생성 된"
+      log_out: "로그 아웃"
+      website: "Web Site"
+      email_settings: "Email"
+      email_digests:
+        title: "사이트를 방문하지않아도 새로운 정보를 요약하여 메일로 보내드립니다"
+        daily: "매일"
+        weekly: "주"
+        bi_weekly: "격주"
+
+      email_direct: "누군가 당신을 언급하거나 당신의 게시글에 댓글이 달리면 Email로 알림을 받을 수 있습니다"
+      email_private_messages: "누군가 당신에게 메세지를 보낼 때 Email로 알림을 받을 수 있습니다"
+
+      other_settings: "추가 사항"
+
+      new_topic_duration:
+        label: "새글을 쓸 때 주제를 맞게 써주세요"
+        not_viewed: "아직 확인할 수 없습니다"
+        last_here: "내가 마지막으로 작성한 후 게시가 되었습니다"
+        after_n_days:
+          one: "그들은 마지막 날에 게시 하였다"
+          other: "그들은 마지막으로 {{count}}일에 게시 하였다"
+        after_n_weeks:
+          one: "지난주에 올린 게시글"
+          other: "{{count}}전에 올린 게시글"
+
+      auto_track_topics: "자동적으로 입력 내용을 추적 할 수 있습니다"
+      auto_track_options:
+        never: "하지않음"
+        always: "항상"
+        after_n_seconds:
+          one: "1초 후에"
+          other: "{{count}}초 후에"
+        after_n_minutes:
+          one: "1분 후에"
+          other: "{{count}}분 후에"
+
+      invited:
+        title: "초대"
+        user: "사용자 초대"
+        none: "{{username}}은 초대를 받은적이 없습니다"
+        redeemed: "초대를 받았습니다"
+        redeemed_at: "에 초대되었습니다"
+        pending: "초대를 보류합니다."
+        topics_entered: "주제가 체결되었습니다"
+        posts_read_count: "게시물 읽기"
+        rescind: "초대 제거"
+        rescinded: "초대가 제거되었습니다"
+        time_read: "읽은 시간"
+        days_visited: "일일 방문"
+        account_age_days: "일일 계정 연령"
+
+      password:
+        title: "비밀번호"
+        too_short: "암호가 너무 짧습니다"
+        ok: "적절한 암호입니다."
+
+      ip_address:
+        title: "마지막 IP 주소"
+      avatar:
+        title: "아바타"
+        instructions: "포럼에서는 당신의 Email을 기바능로 <a href='https://gravatar.com' target='_blank'>Gravatar</a> 아바타 서비스를 기본적으로 사용합니다"
+
+      filters:
+        all: "All"
+
+      stream:
+        posted_by: "에 의해 게시"
+        sent_by: "에 의해 전송 "
+        private_message: "비공개 메시지"
+        the_topic: "토픽"
+
+    loading: "로딩중..."
+    close: "닫기"
+    learn_more: "더 보기..."
+
+    year: '년'
+    year_desc: '지난 1년동안 게시 된 글'
+    month: '월'
+    month_desc: '지난 1달동안 게시 된 글'
+    week: '주'
+    week_desc: '지난 1주동안 게시 된 글'
+
+    first_post: 첫 번째 게시물 
+    mute: 음소거
+    unmute: 음소거 해제
+    last_post: 최근 게시물
+
+    best_of:
+      title: "Best of"
+      enabled_description: 당신은 "Best Of"항목을 보고 있습니다.
+      description: "해당 주제에는 <b>{{count}}</b>개의 게시글이 있습니다. . 아주 많아요!! 당신은 대부분의 상호 작용과 반응 만 게시물을 표시하는보기를 전환하여 시간을 저장 하시겠습니까?"
+      enable: '"Best Of"로 전환하여 봅니다'
+      disable: '"Best Of"가 취소되었습니다'
+
+    private_message_info:
+      title: "개인 메시지"
+      invite: "다른 사람 초대..."
+
+    email: 'Email'
+    username: '사용자'
+    last_seen: '마지막으로 본'
+    created: '생성되었습니다'
+    trust_level: '레벨을 신뢰'
+
+    create_account:
+      title: "계정만들기"
+      action: "지금 계정 만들기!"
+      invite: "아직 계정이 없으신가요?"
+      failed: "뭔가 잘못되었습니다. 이 메일은 등록이 되어있습니다. 비밀번호를 잊으셨다면 링크를 눌러주세요."
+
+    forgot_password:
+      title: "비밀번호를 잊으셨습니까?"
+      action: "비밀번호를 잊어버렸습니다"
+      invite: "사용자 이름 또는 이메일 주소를 입력하시면, 비밀번호 재설정 이메일을 보내드립니다"
+      reset: "암호 재설정"
+      complete: "당신은 곧 당신의 암호를 재설정하는 방법에 대한 지침 이메일을 수신해야합니다."
+
+    login:
+      title: "로그인"
+      username: "로그인"
+      password: "비밀번호"
+      email_placeholder: "이메일 주소 또는 사용자 이름"
+      error: "알 수없는 오류"
+      reset_password: '암호 재설정'
+      logging_in: "로그인 중..."
+      or: "또는"
+      authenticating: "인증 중..."
+      awaiting_confirmation: "계정 활성화를 기다리고, 또 다른 인증 이메일을 발행 비밀번호를 잊으셨습니까 링크를 사용하십시오."
+      awaiting_approval: "귀하의 계정은 아직 운영자에 의해 승인되지 않았습니다. 이 승인되면 이메일을 받게됩니다."
+      not_activated: "당신은 아직 로그인 할 수 없습니다. 우리는 이전에 <b> 다운로드에 당신에게 인증 이메일을 보냈 {{sentTo}} </ B>. 귀하의 계정을 활성화하려면 해당 이메일의 지침을 따르십시오. "
+       resend_activation_email : "다시 인증 이메일을 보내려면 여기를 클릭하세요."
+      sent_activation_email_again: "우리는 <b> 다운로드에 당신에게 다른 인증 이메일을 보냈 {{currentEmail}} </ B>. 그것이 도착하기 위해 몇 분 정도 걸릴 수 있습니다, ​​당신의 스팸 폴더를 확인하십시오."
+      google:
+        title: "Google"
+        message: "Google 인증 중(make sure pop up blockers are not enabled)"
+      twitter:
+        title: "Twitter"
+        message: "Twitter 인증 중(make sure pop up blockers are not enabled)"
+      facebook:
+        title: "Facebook"
+        message: "Facebook 인증 중(make sure pop up blockers are not enabled)"
+      yahoo:
+        title: "Yahoo"
+        message: "Yahoo 인증 중(make sure pop up blockers are not enabled)"
+      github:
+        title: "GitHub"
+        message: "GitHub 인증 중(make sure pop up blockers are not enabled)"
+      persona:
+        title: "Persona"
+        message: "Mozilla Persona 인증 중(make sure pop up blockers are not enabled)"
+
+    composer:
+      posting_not_on_topic: "당신은 \"{{title}}\"토픽에 댓글을 할 수 있을뿐만아니라 다른 주제를 볼 수 있습니다"
+      saving_draft_tip: "저장중..."
+      saved_draft_tip: "저장완료"
+      saved_local_draft_tip: "로컬로 저장됩니다"
+      similar_topics: "귀하의 항목과 유사합니다..."
+      drafts_offline: "초안"
+
+      min_length:
+        need_more_for_title: "{{n}}제목 이동"
+        need_more_for_reply: "{{n}}댓글 이동"
+
+      save_edit: "편집을 저장"
+      reply_original: "기존 주제에 대해 댓글을 씁니다"
+      reply_here: "여기에 댓글을 달아주세요"
+      reply: "댓글"
+      cancel: "취소"
+      create_topic: "주제 만들기"
+      create_pm: "개인 메시지를 만듭니다"
+
+      users_placeholder: "사용자 추가"
+      title_placeholder: "여기에 제목을 입력하세요. 토론의 주제는 무엇입니까?"
+      reply_placeholder: "여기에 입력하세요. 마크 다운을 사용하거나 형식으로 BBCode를. 그것을 업로드 할 이미지를 드래그하거나 붙여 넣습니다."
+      view_new_post: "새로운 게시물을 볼 수 있습니다.."
+      saving: "저장중..."
+      saved: "저장완료!"
+      saved_draft: "당신은 진행중인 게시물 초안이 있습니다. 편집을 다시 시작하려면이 상자에 아무 곳이나 클릭합니다."
+      uploading: "업로딩중..."
+      show_preview: '미리보기를 보여줍니다;'
+      hide_preview: '미리보기를 숨깁니다;'
+
+      quote_post_title: "전체 게시물을 인용"
+      bold_title: "굵게"
+      bold_text: "굵게하기"
+      italic_title: "강조"
+      italic_text: "강조하기"
+      link_title: "하이퍼링크"
+      link_description: "링크 설명을 여기에 입력"
+      link_dialog_title: "하이퍼링크 삽입"
+      link_optional_text: "옵션 제목"
+      quote_title: "인용구"
+      quote_text: "인용구"
+      code_title: "코드 샘플"
+      code_text: "여기에 코드를 입력하세요"
+      image_title: "이미지"
+      image_description: "이미지 설명을 여기에 입력하세요"
+      image_dialog_title: "이미지 삽입"
+      image_optional_text: "옵션 제목"
+      image_hosting_hint: "<a href='http://www.google.com/search?q=free+image+hosting' target='_blank'> 무료 호스팅 이미지가 필요하신가요?</a>"
+      olist_title: "번호 매기기 목록"
+      ulist_title: "글 머리 기호 목록"
+      list_item: "항목"
+      heading_title: "표제"
+      heading_text: "표제"
+      hr_title: "수평규칙"
+      undo_title: "취소"
+      redo_title: "다시"
+      help: "도움말 편집"
+      toggler: "작곡가 패널을 숨기거나 표시"
+
+    notifications:
+      title: "@이름의 멘션 알림은 당신의 게시물과 주제, 비공개 메시지,기타 등등에 대한 알림이다"
+      none: "현재 알림이 없습니다"
+      more: "이전 알림을 볼 수 있습니다"
+      mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
+      quoted: "<i title='quoted' class='icon icon-quote-right'></i> {{username}} {{link}}"
+      replied: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
+      posted: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
+      edited: "<i title='edited' class='icon icon-pencil'></i> {{username}} {{link}}"
+      liked: "<i title='liked' class='icon icon-heart'></i> {{username}} {{link}}"
+      private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} {{link}}"
+      invited_to_private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} {{link}}"
+      invitee_accepted: "<i title='accepted your invitation' class='icon icon-signin'></i> {{username}} 의 초대를 수락했습니다"
+      moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} 이동 {{link}}"
+      total_flagged: "알려진 총 게시글"
+
+    image_selector:
+      title: "이미지 삽입"
+      from_my_computer: "나의 장치로 부터"
+      from_the_web: "웹으로부터"
+      add_image: "이미지 추가"
+      remote_title: "원격 이미지"
+      remote_tip: "양식에서 http://example.com/image.jpg 의 이미지 주소 입력"
+      local_title: "기본 이미지"
+      local_tip: "당신의 장치로부터 이미지를 선택하여 클릭해주세요"
+      upload: "업로드"
+      uploading_image: "이미지 업로드중 ..."
+
+    search:
+      title: "주제, 게시물, 사용자, 카테고리를 검색합니다"
+      placeholder: "여기에 검색어를 입력합니다"
+      no_results: "검색 결과가 없습니다"
+      searching: "검색중 ..."
+
+    site_map: "다른 주제나 카테고리로 이동합니다"
+    go_back: '돌아가기'
+    current_user: '사용자 페이지로 이동'
+
+    favorite:
+      title: '즐겨 찾기'
+      help:
+        star: '당신의 즐겨 찾기로 이 주제를 추가합니다'
+        unstar: '당신의 즐겨 찾기에서 이 주제를 제거합니다'
+
+    topics:
+      none:
+        favorited: "당신은 아직 즐겨 찾기 하지 않았습니다. 좋아하는 주제를 클릭하거나 제목 옆에 별표를 누릅니다."
+        unread: "읽지 않은 주제가 없습니다"
+        new: "읽을 새로운 주제가 없습니다"
+        read: "아직 어떠한 주제도 읽지않았습니다"
+        posted: "아직 어떠한 주제도 게시되지않았습니다"
+        latest: "최신 항목이 없습니다. 매우 슬프군요 ;("
+        hot: "인기있는 주제가 없습니다"
+        category: "{{category}} 에 주제가 없습니다"
+      bottom:
+        latest: "더 이상 읽을 최신 항목이 없습니다"
+        hot: "더 이상 읽을 인기있는 항목이 없습니다"
+	posted: "당신은 아직 어떤 항목에도 게시하지 않았습니다"
+	read: "더 이상 읽을 항목이 없습니다"
+        new: "더 이상 읽을 새로운 항목이 없습니다."
+        unread: "더 이상 읽지 않은 항목이 없습니다"
+        favorited: "더 이상 읽을 즐겨 찾기 항목이 없습니다"
+        category: "더 이상 {{category}} 주제가 없습니다"
+
+    rank_details:
+      toggle: 주제 랭킹 세부 사항을 토글합니다
+      show: 주제 랭킹 세부 사항을 보여줍니다
+      title: 주제 랭킹 세부 사항
+
+    topic:
+      create_in: '{{categoryName}} 주제를 만듭니다'
+      create: '주제 만들기'
+      create_long: '새로운 주제를 개설합니다'
+      private_message: '개인 메시지를 시작합니다'
+      list: '주제들'
+      new: '새로운 주제'
+      title: '주제'
+      loading_more: "더 많은 주제 로딩 중..."
+      loading: '주제 로딩 중...'
+      invalid_access:
+        title: "주제는 비공개"
+        description: "죄송합니다, 당신은 그 주제를 액세스 할 수 없습니다!"
+      server_error:
+        title: "주제를 로드하지 못했습니다"
+        description: "죄송합니다. 연결 문제로 인해 해당 항목을 로드 할 수 없습니다. 다시 시도하십시오. 문제가 지속되면 문의해 주시기 바랍니다"
+      not_found:
+        title: "항목을 찾을 수 없습니다"
+        description: "죄송합니다. 항목을 찾을 수 없습니다. 아마도 운영자에 의해 삭제 된 것같습니다."
+      unread_posts: "당신은 이 항목에 읽지않은 이전 게시물{{unread}} 이 있습니다."
+      new_posts: "there are {{new_posts}} new posts in this topic since you last read it"
+
+      likes:
+        one: "이 항목은 1개의 '좋아요'를 받았습니다"
+        other: "이 항목은 {{count}}개의 '좋아요'를 받았습니다"
+      back_to_list: "항목 리스트로 돌아갑니다"
+      options: "항목 옵션"
+      show_links: "이 항목에서 링크를 표시합니다"
+      toggle_information: "항목 세부 정보를 토글합니다"
+      read_more_in_category: "자세한 내용을 원하십니까? {{catLink}} 또는 {{latestLink}}에서 다른 항목을 검색해보세요"
+      read_more: "{{catLink}} 또는 {{latestLink}}에서 자세한 내용을 원하십니까?"
+      browse_all_categories: 모든 카테고리 보기
+
+      view_latest_topics: 최신 항목을 봅니다
+      suggest_create_topic: 왜 항목을 만들 수 없나요?
+      read_position_reset: "귀하의 읽기 위치가 재설정되었습니다"
+      jump_reply_up: 댓글을 먼저 올리려면 이동합니다
+      jump_reply_down: 댓글을 나중에 올리려면 이동합니다
+      deleted: "항목이 삭제되었습니다"
+
+      progress:
+        title: 항목 진행
+        jump_top: 첫 게시글로 이동합니다
+        jump_bottom: 마지막 게시글로 이동합니다
+        total: 총 게시글
+        current: 현재 게시글
+
+      notifications:
+        title: ''
+        reasons:
+          "3_2": '이 항목을보고 있기 때문에 당신이 알림을 받게됩니다.'
+          "3_1": '이 항목을 생성하기 때문에 알림을 받게됩니다.'
+          "3": '이 항목을보고 있기 때문에 당신이 알림을 받게됩니다.'
+          "2_4": '이 항목에 대한 응답을 기록하기 때문에 알림을 받게됩니다'
+          "2_2": '이 항목을 추적하는 때문에 알림을 받게됩니다.'
+          "2": '이 항목에서 <a href="/users/{{username}}/preferences">를 읽었기때문에 알림을 받을 수 있습니다</a>.'
+          "1": '누군가가 게시물에 @ 이름 또는 회신을 언급 할 경우에 통보됩니다'
+          "1_2": '누군가가 게시물에 @ 이름 또는 회신을 언급 할 경우에 통보됩니다'
+          "0": '당신은 이 항목에 관한 모든 알림을 무시하고 있습니다'
+          "0_2": 당신은 이 항목에 관한 모든 알림을 무시하고 있습니다.'
+        watching:
+          title: "보기"
+          description: "추적같은, 게다가 당신은 모든 새 게시물 알림을받을 것입니다"
+        tracking:
+          title: "추적"
+          description: "당신이 언급 @ 이름을 통보하고 귀하의 게시물에 회신 플러스, 읽지 않은 새로운 게시물의 수를 볼 수 있습니다"
+        regular:
+          title: "정기적인"
+          description: "누군가가 게시물에 @ 이름 또는 회신을 언급하는 경우에만 당신이 통보됩니다"
+        muted:
+          title: "음소거"
+          description: "당신은이 주제에 대해 아무것도 통지하지 않습니다, 그것은 읽지 않은 탭에 나타나지 않습니다."
+
+      actions:
+        delete: "항목 삭제"
+        open: "항목 열기"
+        close: "항목 닫기"
+        unpin: "취소한 항목"
+        pin: "핀 항목"
+        unarchive: "보관 안된 항목"
+        archive: "보관한 항목"
+        invisible: "보이지않게 합니다"
+        visible: "보이게 합니다"
+        reset_read: "데이터 읽기 재설정"
+        multi_select: "다중 선택을 토글"
+        convert_to_topic: "정식 항목으로 변환"
+
+      reply:
+        title: '답글'
+        help: '이 항목에 대한 답글 구성 시작'
+
+      clear_pin:
+        title: "고정 취소"
+        help: "더 이상 귀하의 주제 목록의 맨 위에 표시하지 않도록 이 항목의 고정 상태를 해제합니다."
+
+      share:
+        title: '공유'
+        help: '이 항목에 대한 링크를보세요'
+
+      inviting: "초대 중..."
+
+      invite_private:
+        title: '개인 메시지에 초대'
+        email_or_username: "초대하려는 메일 또는 사용자"
+        email_or_username_placeholder: "메일 또는 사용자"
+        action: "초대"
+        success: "감사합니다! 사용자가 개인 메세지에 참여할 수 있도록 초대했다"
+        error: "죄송합니다, 해당 사용자를 초대하는 도중 오류가 발생했습니다"
+
+      invite_reply:
+        title: '친구 회신을 초대합니다'
+        action: '이메일 초대'
+        help: '한 번의 클릭으로 이 주제에 회신 할 수 있도록 친구에게 초대장을 보낼 수 있습니다.'
+        email: "우리는 당신의 친구들을 링크를 클릭하여이 주제에 회신 할 수 있도록 간단한 이메일을 보내 드리겠습니다."
+        email_placeholder: '이메일 주소'
+        success: "감사합니다! <b>{{email}}</b>로 초대장을 발송했습니다. 귀하의 초대를 수락하면 알려 드리겠습니다. 당신이 초대 한 사람을 추적하기 위해 사용자 페이지에서 초대장 탭을 선택합니다."
+        error: "죄송합니다, 우리는 그 사람을 초대 할 수 없습니다. 아마도 그들은 이미 사용자입니까?"
+
+      login_reply: '답장에 로그인 합니다.'
+
+      filters:
+        user: "당신이 보고 있는 {{n_posts}} {{by_n_users}}."
+        n_posts:
+          one: "한개의 게시물"
+          other: "{{count}}개의 게시물"
+        by_n_users:
+          one: "1명의 특정 사용자"
+          other: "{{count}}명의  특정 사용자"
+
+        best_of: "당신은 {{n_best_posts}} {{of_n_posts}}를 보고 계십니다."
+        n_best_posts:
+          one: "1개의 최고 게시물"
+          other: "{{count}}개의 초고 게시물"
+        of_n_posts:
+          one: "1개의 게시물"
+          other: "{{count}}개의 게시물 "
+        cancel: "다시 이 항목의 모든 게시물을 표시합니다."
+
+      move_selected:
+        title: "선택한 게시물 이동"
+        topic_name: "새 항목 이름:"
+        error: "죄송합니다, 해당 게시물을 이동하는 동안 오류가 발생했습니다."
+        instructions:
+          one: "새 항목을 만들고 당신이 선택한 게시물로 채우려고합니다."
+          other: "당신이 선택한 <b>{{count}}</b>개의 인기있는 게시물과 새로운 주제를 만드는 것은 당신에 관한 것입니다"
+
+      multi_select:
+        select: '선택'
+        selected: '({{count}})개가 선택됨'
+        delete: 선택 삭제
+        cancel: 선택을 취소
+        move: 선택 이동
+        description:
+          one: <b>1</b>개의 게시물을 선택했습니다.
+          other: "<b>{{count}}</b>개의 게시물을 선택했습니다"
+
+    post:
+      reply: "{{replyAvatar}} {{username}}에 의해 {{link}} 회신"
+      reply_topic: "{{link}} 회신"
+      quote_reply: "회신을 인용"
+      edit: "{{replyAvatar}} {{username}}에 의해 {{link}} 편집"
+      post_number: "{{number}}개 게시"
+      in_reply_to: "에 답글"
+      reply_as_new_topic: "새로운 주제로 회신"
+      continue_discussion: "{{postLink}}에서 논의를 계속:"
+      follow_quote: "인용 글로 이동합니다"
+      deleted_by_author: "(저자에 의해 게시물을 제거할 수 있습니다)"
+      expand_collapse: "확장/축소"
+
+      has_replies:
+        one: "답변"
+        other: "답변"
+
+      errors:
+        create: "죄송합니다, 귀하의 게시물을 만드는 동안 오류가 발생했습니다. 다시 시도하십시오."
+        edit: "죄송합니다, 귀하의 게시물을 수정하는 중에 오류가 발생했습니다. 다시 시도하십시오."
+        upload: "죄송합니다, 오류가 업로드하는 파일이 있었다. 다시 시도하십시오."
+        upload_too_large: "죄송합니다, 당신이 업로드하려는 파일이 너무 큽니다. (최대 크기는 {{max_size_kb}}kb), 사이즈를 조정하고 다시 시도해보세요"
+        upload_too_many_images: "죄송합니다, 당신은 한 번에 하나의 이미지를 업로드 할 수 있습니다."
+        only_images_are_supported: "죄송합니다, 당신은 한 번에 하나의 이미지를 업로드 할 수 있습니다."
+
+      abandon: "당신은 귀하의 게시물을 포기 하시겠습니까?"
+
+      archetypes:
+        save: '옵션 저장'
+
+      controls:
+        reply: "이 게시물에 대한 응답 작성을 시작합니다."
+        like: "이 게시물을 좋아합니다"
+        edit: "이 게시물을 편집합니다"
+        flag: "이 게시물에 대한 관심을 표시하거나 게시물에 대한 알림을 보냅니다"
+        delete: "이 게시물을 삭제합니다"
+        undelete: "이 게시물 삭제를 취소합니다"
+        share: "이 게시물에 대한 링크를 공유합니다"
+        bookmark: "이 게시물을 즐겨 찾기에 추가합니다"
+        more: "그 이상"
+
+      actions:
+        flag: '플래그'
+        clear_flags:
+          one: "플래그 지우기"
+          other: "플래그 지우기"
+        it_too:
+          off_topic: "신고"
+          spam: "신고"
+          inappropriate: "신고"
+          custom_flag: "신고"
+          bookmark: "즐겨찾기"
+          like: "좋아요"
+          vote: "투표"
+        undo:
+          off_topic: "플래그 취소"
+          spam: "플래그 취소"
+          inappropriate: "플래그 취소"
+          bookmark: "즐겨찾기 취소"
+          like: "좋아요 취소"
+          vote: "투표 취소"
+        people:
+          off_topic: "{{icons}}은 off-topic으로 표시됩니다"
+          spam: "{{icons}}은 스팸으로 표시됩니다 "
+          inappropriate: "{{icons}}은 이 내용에 대해 표시됩니다"
+          notify_moderators: "{{icons}} 은 운영자"
+          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>notified moderators</a>"
+          notify_user: "{{icons}}은 개인메시지를 보냅니다"
+          notify_user_with_url: "{{icons}}은 <a href='{{postUrl}}'>private message</a>를 보냅니다"
+          bookmark: "{{icons}}은 즐겨찾기로 표시됩니다"
+          like: "{{icons}}은 좋아요로 표시됩니다"
+          vote: "{{icons}}은 투표로 표시됩니다"
+        by_you:
+          off_topic: "당신은 오프-토픽으로 이것을 표시합니다"
+          spam: "당신은 스팸으로 이것을 표시합니다"
+          inappropriate: "당신은 부적절한 내용으로 이것을 표시합니다"
+          notify_moderators: "당신은 검토를 위해 이것을 표시합니다"
+          notify_user: "당신은 사용자에게 개인 메시지를 보냈다"
+          bookmark: "당신은 이 게시물을 즐겨찾기했습니다"
+          like: "당신은 이 게시물을 좋아요 했습니다"
+          vote: "당신은 이 게시물을 투표 했습니다"
+        by_you_and_others:
+          off_topic:
+            one: "당신과 한 명의 사용자가 이 게시물을 off-topic로 표시했습니다"
+            other: "당신과 {{count}} 명의 사용자가 이 게시물을 off-topic로 표시했습니다"
+          spam:
+            one: "당신과 한 명의 사용자가 이 게시물을 스팸으로 표시했습니다"
+            other: "당신과 {{count}} 명의 사용자가 이 게시물을 스팸으로 표시했습니다"
+          inappropriate:
+            one: "당신과 한 명의 사용자가 이 게시물을 부적합하다고 표시했습니다"
+            other: "당신과 {{count}} 명의 사용자가 이 게시물을 부적합하다고 표시했습니다"
+          notify_moderators:
+            one: "당신과 한 명의 사용자가 이 게시물을 적합하다고 표시했습니다"
+            other: "당신과 {{count}} 명의 사용자가 이 게시물을 적합하다고 표시했습니다"
+          notify_user:
+            one: "당신과 한 명의 사용자가 이 사용자에게 개인 메시지를 보냈습니다"
+            other: "당신과 {{count}} 명의 사용자가 이 사용자에게 개인 메시지를 보냈습니다"
+          bookmark:
+            one: "당신과 한 명의 사용자가 이 게시물을 즐겨찾기에 추가했습니다"
+            other: "당신과 {{count}} 명의 사용자가 이 게시물을 즐켜찾기에 추가했습니다"
+          like:
+            one: "당신과 한 명의 사용자가 이 게시물을 좋아합니다"
+            other: "당신과 {{count}} 명의 사용자가 이 게시물을 좋아합니다"
+          vote:
+            one: "당신과 한 명의 사용자가 이 게시물을 투표했습니다"
+            other: "당신과 {{count}} 명의 사용자가 이 게시물을 투표했습니다"
+        by_others:
+          off_topic:
+            one: "한 명의 사용자가 off-topic으로 표시했습니다"
+            other: "{{count}} 명의 사용자가 off-topic으로 표시했습니다"
+          spam:
+            one: "한 명의 사용자가 스팸으로 표시했습니다"
+            other: "{{count}} 명의 사용자가 스팸으로 표시했습니다"
+          inappropriate:
+            one: "한 명의 사용자가 부적합하다고 표시했습니다"
+            other: "{{count}} 명의 사용자가 부적합하다고 표시했습니다"
+          notify_moderators:
+            one: "한 명의 사용자가 적합하다고 표시했습니다"
+            other: "{{count}} 명의 사용자가 적합하다고 표시했습니다"
+          notify_user:
+            one: "한 명의 사용자가 이 사용자에게 개인 메시지를 보냈습니다"
+            other: "{{count}} 명의 사용자가 이 사용자에게 개인 메시지를 보냈습니다"
+          bookmark:
+            one: "한 명의 사용자가 이 게시물을 즐겨찾기에 추가했습니다"
+            other: "{{count}} 명의 사용자가 이 게시물을 즐겨찾기에 추가했습니다"
+          like:
+            one: "한 명의 사용자가 이 게시물을 좋아합니다"
+            other: "{{count}} 명의 사용자가 이 게시물을 좋아합니다"
+          vote:
+            one: "한 명의 사용자가 이 게시물을 투표했습니다"
+            other: "{{count}} 명의 사용자가 이 게시물을 투표했습니다"
+
+      edits:
+        one: 한개 편집
+        other: "{{count}}개 편집 "
+        zero: 편집 안함
+
+      delete:
+        confirm:
+          one: "해당 게시물을 삭제 하시겠습니까?"
+          other: "모든 게시물을 삭제 하시겠습니까?"
+
+    category:
+      none: '(카테고리 없음)'
+      edit: '편집'
+      edit_long: "카테고리 편집"
+      edit_uncategorized: "분류되지 않은 편집"
+      view: '카테고리 항목보기'
+      delete: '카테고리 지우기'
+      create: '카테고리 만들기'
+      save: '카테고리 저장'
+      creation_error: 카테고리의 작성 중 오류가 발생했습니다.
+      save_error: 카테고리를 저장하는 중 오류가 발생했습니다..
+      more_posts: "모든 {{posts}} 보기..."
+      name: "카테고리 이름"
+      description: "표현"
+      topic: "카테고리 항목"
+      badge_colors: "배지 색상"
+      background_color: "배경 색상"
+      foreground_color: "전경 색상"
+      name_placeholder: "짧고 간결해야합니다"
+      color_placeholder: "어떠한 웹 색상"
+      delete_confirm: "이 카테고리를 삭제 하시겠습니까?"
+      delete_error: "카테고리를 삭제하는 동안 오류가 발생했습니다."
+      list: "카테고리 목록"
+      no_description: "이 카테고리에 대한 설명이 없습니다."
+      change_in_category_topic: "설명 편집"
+      hotness: "새로운"
+      already_used: '이 색은 다른 카테고리에서 사용되고 있습니다.'
+ 
+    flagging:
+      title: '왜 이 게시물이 고정입니까?'
+      action: '고정 게시물'
+      notify_action: '알림'
+      cant: "죄송합니다,이 시간이 게시물을 신고 할 수 없습니다."
+      custom_placeholder_notify_user: "왜이 게시물에 당신이 직접 개인적으로이 사용자에게 말을해야합니까? 구체적으로, 건설, 그리고 항상 친절합니다."
+      custom_placeholder_notify_moderators: "왜이 게시물은 운영자가 관심을 필요로합니까? 우리는 당신이 걱정하는지 구체적으로 알게하고, 관련 링크 가능한을 제공합니다."
+      custom_message:
+        at_least: "적어도 최소한의 문자 {{n}}를 입력하세요  "
+        more: "{{n}} 이동합니다..."
+        left: "{{n}} 나머지"
+
+    topic_summary:
+      title: "주제 요약"
+      links_shown: "모든 {{totalLinks}} 링크 보기..."
+      clicks: "클릭"
+      topic_link: "항목 링크"
+
+    topic_statuses:
+      locked:
+        help: "이 항목은 폐쇄, 그것은 새로운 응답을 받아 더 이상."
+      pinned:
+        help: "이 항목은 고정되고 그것의 종류의 상단에 표시됩니다"
+      archived:
+        help: "이 항목은 보관되며이 고정되어 있으며 변경할 수 없습니다"
+      invisible:
+        help: "이 항목에서는 보이지 않습니다, ​​그것은 항목 목록에 표시되지 않습니다, ​​단지 직접적인 링크를 통해 액세스 할 수 있습니다"
+
+    posts: "게시물"
+    posts_long: "이 항목의 게시물 수는 {{number}}개입니다 "
+    original_post: "원본 게시물"
+    views: "조회수"
+    replies: "답변"
+    views_long: "이 항목은 {{number}}번 조회되었습니다"
+    activity: "활동"
+    likes: "좋아요"
+    top_contributors: "참가자"
+    category_title: "카테고리"
+    history: "기록"
+    changed_by: "{{author}}에 의해"
+
+    categories_list: "카테고리 목록"
+
+    filters:
+      latest:
+        title: "최근"
+        help: "가장 최근 항목"
+      hot:
+        title: "인기 있는"
+        help: "가장 인기있는 주제 중 하나를 선택하세요"
+      favorited:
+        title: "즐겨찾기"
+        help: "당신은 항목들을 즐겨찾기로 표시했습니다"
+      read:
+        title: "읽기"
+        help: "당신은 당신이 마지막으로 읽을 수있는 순서대로 읽은 항목을 참조하십시오"
+      categories:
+        title: "카테고리"
+        title_in: "카테고리 - {{categoryName}}"
+        help: "카테고리별로 그룹화 된 모든 항목"
+      unread:
+        title:
+          zero: "읽지 않은"
+          one: "읽지 않은 (1)"
+          other: "읽지 않은 ({{count}})"
+        help: "읽지 않은 게시물과 추적 항목을 참조하십시오."
+      new:
+        title:
+          zero: "새로운"
+          one: "새로운 (1)"
+          other: "새로운 ({{count}})"
+        help: "귀하의 마지막 방문 이후 새로운 항목을 참조하십시오."
+      posted:
+        title: "내 게시물"
+        help: "당신이 게시한 항목들"
+      category:
+        title:
+          zero: "{{categoryName}}"
+          one: "{{categoryName}} (1)"
+          other: "{{categoryName}} ({{count}})"
+        help: "카테고리의 최신 항목 {{categoryName}}"
+
+    browser_update: '불행하게도, <a href="http://www.discourse.org/faq/#browser">당신의 브라우저는 사이트를 이용하기에는 힘들어보입니다.</a>. 당신의 브라우저를 업그레이드 하시기 바랍니다.<a href="http://browsehappy.com">.'
+
+  # This section is exported to the javascript for i18n in the admin section
+  admin_js:
+    type_to_filter: "필터를 입력하세요"
+
+    admin:
+      title: 'Discourse 관리자'
+      moderator: '사회자'
+
+      dashboard:
+        title: "계기판"
+        version: "버전"
+        up_to_date: "최신상태입니다!"
+        critical_available: "중요 업데이트를 사용할 수 있습니다"
+        updates_available: "업데이트를 사용할 수 있습니다"
+        please_upgrade: "업그레이드하십시오"
+        installed_version: "설치됨"
+        latest_version: "최근"
+        problems_found: "몇몇의 문제들은 Disocouse 설치 과정에서 나타납니다"
+        last_checked: "마지막으로 확인"
+        refresh_problems: "새로고침"
+        no_problems: "아무런 문제가 발견되지 않았다."
+        moderators: '운영자:'
+        admins: '관리자:'
+        private_messages_short: "PMs"
+        private_messages_title: "개인 메시지"
+
+        reports:
+          today: "오늘"
+          yesterday: "어제"
+          last_7_days: "7일 후"
+          last_30_days: "30일 후"
+          all_time: "모든 시간"
+          7_days_ago: "7일 전"
+          30_days_ago: "30일 전"
+          all: "모두"
+          view_table: "테이블로 보기"
+          view_chart: "막대 차트로 보기"
+
+      commits:
+        latest_changes: "최근 변경 사항 : 자주 업데이트하십시오!"
+        by: "에 의해"
+
+     "플래그"
+        title: "플래그"
+	old: "훌륭한"
+        active: "활동적인"
+        clear: "Flags 삭제"
+        clear_title: "이 게시물에 대한 모든 플래그를 닫습니다. (글 숨기기를 해제합니다)"
+        delete: "게시물 삭제"
+        delete_title: "게시물 삭제 (첫 번째 게시물의 삭제 항목의 경우)"
+        flagged_by: "에 의한 플래그"
+        error: "뭔가 잘못 됐어요"
+
+      groups:
+        title: "그룹"
+        edit: "Edit 그룹"
+        selector_placeholder: "메뉴 추가"
+
+      api:
+        title: "API"
+      customize:
+        title: "사용자 지정"
+        long_title: "사이트 사용자 지정"
+        header: "헤더"
+        css: "스타일"
+        override_default: "표준 스타일 시트를 포함하지 마십시오"
+        enabled: "사용가능?"
+        preview: "미리 보기"
+        undo_preview: "미리 보기 취소"
+        save: "저장"
+        new: "새로운"
+        new_style: "새로운 스타일"
+        delete: "삭제"
+        delete_confirm: "이 정의를 삭제 하시겠습니까?"
+        about: "사이트 정의는 사이트 스타일 시트와 헤더를 수정할 수 있습니다. 선택하거나 편집을 시작하려면 하나를 추가 할 수 있습니다."
+
+      email_logs:
+        title: "이메일 로그"
+        sent_at: "에서 전송"
+        email_type: "이메일 유형"
+        to_address: "주소로"
+        test_email_address: "테스트 할 전자 메일 주소"
+        send_test: "테스트 메일을 보내"
+        sent_test: "전송!"
+
+      impersonate:
+        title: "사용자 가장"
+        username_or_email: "사용자의 아이디 또는 이메일"
+        help: "디버깅 목적으로 사용자 계정을 가장하기 위해이 도구를 사용합니다."
+        not_found: "해당 사용자를 찾을 수 없습니다."
+        invalid: "죄송합니다, 해당 사용자를 가장 할 수 있습니다."
+
+      users:
+        title: '사용자'
+        create: '관리자 추가'
+        last_emailed: "마지막 이메일"
+        not_found: "죄송합니다, 그 이름은 우리의 시스템에 존재하지 않습니다."
+        new: "NEW"
+        active: "활동적인"
+        pending: "보류"
+        approved: "승인?"
+        approved_selected:
+          one: "사용자 승인"
+          other: "사용자 승인수 ({{count}})회
+	  titles:
+          active: '활성 사용자'
+          new: '새로운 사용자'
+          pending: '사용자는 검토를 보류'
+          newuser: '사용자 신뢰 레벨 0 (New User)'
+          basic: '사용자 신뢰 레벨 1 (Basic User)'
+          regular: '사용자 신뢰 레벨 2 (Regular User)'
+          leader: '사용자 신뢰 레벨 3 (Leader)'
+          elder: '사용자 신뢰 레벨 4 (Elder)'
+          admins: '관리자'
+          moderators: '운영자'
+
+      user:
+        ban_failed: "이 사용자를 금지하는 잘못된 무언가 {{error}}"
+        unban_failed: "이 사용자를 금지하지않는 잘못된 무언가{{error}}"
+        ban_duration: "얼마나 사용자를 위해 금지 하시겠습니까? (일)"
+        delete_all_posts: "모든 글을 삭제합니다"
+        ban: "접근 금지"
+        unban: "접근 허용"
+        banned: "접근 금지?"
+        moderator: "중재자?"
+        admin: "관리자?"
+        show_admin_profile: "관리자"
+        refresh_browsers: "브라우저 새로 고침"
+        show_public_profile: "공개 프로필 보기"
+        impersonate: '가장'
+        revoke_admin: '관리자가 취소'
+        grant_admin: '보조금 관리'
+        revoke_moderation: '중용을 취소'
+        grant_moderation: '절제 부여'
+        reputation: 평판
+        permissions: 권한
+        activity: 활동
+        like_count: Likes 수신 좋아
+        private_topics_count: 개인 항목 횟수
+        posts_read_count: 게시물 읽기
+        post_count: 글 생성
+        topics_entered: 주제 체결
+        flags_given_count: 주어진 플래그
+        flags_received_count: 플래그는 수신
+        approve: '승인'
+        approved_by: "에 의해 승인"
+        time_read: "읽기 시간"
+        delete: "사용사 삭제"
+        delete_forbidden: "게시물이 있기 때문에이 사용자는 삭제할 수 없습니다. 모든 사용자의 게시물을 먼저 삭제합니다."
+        delete_confirm: "당신은 당신이 영구적으로 사이트에서이 사용자를 삭제 하시겠습니까? 이 조치는 영구적입니다!"
+        deleted: "사용자가 삭제되었습니다"
+        delete_failed: "해당 사용자를 삭제하는 동안 오류가 발생했습니다. 모든 글은 사용자를 삭제하기 전에 삭제해야합니다."
+
+      site_content:
+        none: "편집을 시작하는 내용의 유형을 선택합니다."
+        title: '사이트 콘텐츠'
+        edit: "사이트 콘텐츠를 편집"
+
+      site_settings:
+        show_overriden: '오직 재정만 표시'
+        title: '사이트 설정'
+        reset: '기본값으로 재설정'
