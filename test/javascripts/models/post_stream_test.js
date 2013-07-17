@@ -312,7 +312,6 @@ test("staging and committing a post", function() {
 
 });
 
-
 test('triggerNewPostInStream', function() {
   var postStream = buildStream(225566);
 
@@ -341,3 +340,22 @@ test('triggerNewPostInStream', function() {
   ok(postStream.appendMore.calledOnce, "delegates to appendMore because the last post is loaded");
 });
 
+
+test("comitting and triggerNewPostInStream race condition", function() {
+  var postStream = buildStream(4964);
+
+  postStream.appendPost(Discourse.Post.create({id: 1, post_number: 1}));
+  var user = Discourse.User.create({username: 'eviltrout', name: 'eviltrout', id: 321});
+  var stagedPost = Discourse.Post.create({ raw: 'hello world this is my new post' });
+
+  var result = postStream.stagePost(stagedPost, user);
+  equal(postStream.get('filteredPostsCount'), 0, "it has no filteredPostsCount yet");
+  stagedPost.set('id', 123);
+
+  this.stub(postStream, 'appendMore');
+  postStream.triggerNewPostInStream(123);
+  equal(postStream.get('filteredPostsCount'), 1, "it added the post");
+
+  postStream.commitPost(stagedPost);
+  equal(postStream.get('filteredPostsCount'), 1, "it does not add the same post twice");
+});

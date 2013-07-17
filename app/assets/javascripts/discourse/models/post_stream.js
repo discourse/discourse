@@ -359,7 +359,7 @@ Discourse.PostStream = Em.Object.extend({
   **/
   commitPost: function(post) {
     this.appendPost(post);
-    this.get('stream').pushObject(post.get('id'));
+    this.get('stream').addObject(post.get('id'));
     this.set('stagingPost', false);
   },
 
@@ -435,7 +435,7 @@ Discourse.PostStream = Em.Object.extend({
     var lastPostLoaded = this.get('lastPostLoaded');
 
     if (this.get('stream').indexOf(postId) === -1) {
-      this.get('stream').pushObject(postId);
+      this.get('stream').addObject(postId);
       if (lastPostLoaded) { this.appendMore(); }
     }
   },
@@ -601,6 +601,7 @@ Discourse.PostStream = Em.Object.extend({
   indexOf: function(post) {
     return this.get('stream').indexOf(post.get('id'));
   },
+
 
   /**
     @private
