@@ -63,7 +63,7 @@ module Discourse
           end
         end
 
-        result.delete_if { |k, v| v.empty? }
+        result.delete_if { |k, v| v.nil? || v.empty? } 
       end
 
       def clean_up_info(inner_html)
