@@ -39,7 +39,7 @@ class TopicCreator
     topic_params[:archetype] = @opts[:archetype] if @opts[:archetype].present?
     topic_params[:subtype] = @opts[:subtype] if @opts[:subtype].present?
 
-    category = Category.where(name: @opts[:category]).first
+    category = Category.where(id: @opts[:category]).first
 
     @guardian.ensure_can_create!(Topic,category)
     topic_params[:category_id] = category.id if category.present?

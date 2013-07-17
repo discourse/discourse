@@ -328,7 +328,7 @@ Discourse.Composer = Discourse.Model.extend({
     }
 
     this.setProperties({
-      categoryName: opts.categoryName || this.get('topic.category.name'),
+      categoryId: opts.categoryId || this.get('topic.category.id'),
       archetypeId: opts.archetypeId || Discourse.Site.currentProp('default_archetype'),
       metaData: opts.metaData ? Em.Object.create(opts.metaData) : null,
       reply: opts.reply || this.get("reply") || ""
@@ -394,16 +394,9 @@ Discourse.Composer = Discourse.Model.extend({
       var topic = this.get('topic');
       topic.setProperties({
         title: this.get('title'),
-        fancy_title: this.get('title')
+        fancy_title: this.get('title'),
+        category_id: parseInt(this.get('categoryId'), 10)
       });
-
-      var category = Discourse.Category.list().findProperty('name', this.get('categoryName'));
-      if (category) {
-        topic.setProperties({
-          categoryName: category.get('name'),
-          category_id: category.get('id')
-        });
-      }
       topic.save();
     }
 
@@ -442,7 +435,7 @@ Discourse.Composer = Discourse.Model.extend({
     var createdPost = Discourse.Post.create({
       raw: this.get('reply'),
       title: this.get('title'),
-      category: this.get('categoryName'),
+      category: this.get('categoryId'),
       topic_id: this.get('topic.id'),
       reply_to_post_number: post ? post.get('post_number') : null,
       imageSizes: opts.imageSizes,
@@ -529,7 +522,7 @@ Discourse.Composer = Discourse.Model.extend({
       reply: this.get('reply'),
       action: this.get('action'),
       title: this.get('title'),
-      categoryName: this.get('categoryName'),
+      categoryId: this.get('categoryId'),
       postId: this.get('post.id'),
       archetypeId: this.get('archetypeId'),
       metaData: this.get('metaData'),

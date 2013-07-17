@@ -8,7 +8,7 @@ describe CategoryFeaturedTopic do
   context 'feature_topics_for' do
     let(:user)           { Fabricate(:user) }
     let(:category)       { Fabricate(:category) }
-    let!(:category_post) { PostCreator.create(user, raw: "I put this post in the category", title: "categorize THIS", category: category.name) }
+    let!(:category_post) { PostCreator.create(user, raw: "I put this post in the category", title: "categorize THIS", category: category.id) }
 
     it "should feature topics for a secure category" do
 
@@ -26,7 +26,7 @@ describe CategoryFeaturedTopic do
     end
 
     it 'should not include invisible topics' do
-      invisible_post = PostCreator.create(user, raw: "Don't look at this post because it's awful.", title: "not visible to anyone", category: category.name)
+      invisible_post = PostCreator.create(user, raw: "Don't look at this post because it's awful.", title: "not visible to anyone", category: category.id)
       invisible_post.topic.update_status('visible', false, Fabricate(:admin))
       CategoryFeaturedTopic.feature_topics_for(category)
       CategoryFeaturedTopic.count.should == 1
