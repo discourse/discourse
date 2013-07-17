@@ -9,7 +9,6 @@ describe UserAction do
   it { should validate_presence_of :action_type }
   it { should validate_presence_of :user_id }
 
-
   describe 'lists' do
 
     let(:public_post) { Fabricate(:post) }
@@ -254,6 +253,28 @@ describe UserAction do
       # anon should see nothing
       stream = UserAction.private_message_stream(UserAction::NEW_PRIVATE_MESSAGE, user_id: user.id, guardian: Guardian.new(nil))
       stream.count.should == 0
+
+    end
+  end
+
+  describe 'ensure_consistency!' do
+    it 'correct target_topic_id' do
+      post = Fabricate(:post)
+
+      action = UserAction.log_action!(
+        action_type: UserAction::NEW_PRIVATE_MESSAGE,
+        user_id: post.user.id,
+        acting_user_id: post.user.id,
+        target_topic_id: -1,
+        target_post_id: post.id,
+      )
+
+      action.reload
+      action.target_topic_id.should == -1
+
+      UserAction.ensure_consistency!
+      action.reload
+      action.target_topic_id.should == post.topic_id
 
     end
   end

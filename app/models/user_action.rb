@@ -187,6 +187,7 @@ ORDER BY p.created_at desc
                               action.id,
                               user_ids: [user_id],
                               group_ids: group_ids )
+        action
 
       rescue ActiveRecord::RecordNotUnique
         # can happen, don't care already logged
@@ -203,6 +204,23 @@ ORDER BY p.created_at desc
     end
 
     update_like_count(hash[:user_id], hash[:action_type], -1)
+  end
+
+  def self.synchronize_target_topic_ids(post_ids = nil)
+    builder = SqlBuilder.new("UPDATE user_actions
+                    SET target_topic_id = (select topic_id from posts where posts.id = target_post_id)
+                    /*where*/")
+
+    builder.where("target_topic_id <> (select topic_id from posts where posts.id = target_post_id)")
+    if post_ids
+      builder.where("target_post_id in (:post_ids)", post_ids: post_ids)
+    end
+
+    builder.exec
+  end
+
+  def self.ensure_consistency!
+    self.synchronize_target_topic_ids
   end
 
   protected

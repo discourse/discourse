@@ -37,14 +37,12 @@ class PostMover
     Guardian.new(user).ensure_can_see! topic
     @destination_topic = topic
 
-    move_posts_to_destination_topic
-    destination_topic
-  end
-
-  def move_posts_to_destination_topic
     move_each_post
     notify_users_that_posts_have_moved
     update_statistics
+    update_user_actions
+
+    destination_topic
   end
 
   def move_each_post
@@ -85,6 +83,10 @@ class PostMover
   def update_statistics
     destination_topic.update_statistics
     original_topic.update_statistics
+  end
+
+  def update_user_actions
+    UserAction.synchronize_target_topic_ids(posts.map(&:id))
   end
 
   def notify_users_that_posts_have_moved
