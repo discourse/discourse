@@ -27,8 +27,22 @@ Object.keys(Discourse.UserAction.TYPES).forEach(function (userAction) {
 });
 
 Discourse.UserIndexRoute = Discourse.Route.extend({
-  redirect: function() {
-    this.transitionTo('userActivity.index');
+  renderTemplate: function() {
+    this.render('user_activity', {into: 'user', outlet: 'userOutlet' });
+  },
+
+  model: function() {
+    var user = this.modelFor('user');
+    return user.findStream();
+  },
+
+  setupController: function(controller, stream) {
+    var userActivity = this.controllerFor('userActivity');
+
+    userActivity.setProperties({
+      stream: stream,
+      model: this.modelFor('user')
+    });
   }
 });
 
