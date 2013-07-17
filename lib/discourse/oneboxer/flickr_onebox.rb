@@ -7,7 +7,7 @@ module Discourse
       def onebox
 
         page_html = open(@url).read
-        return nil if page_html.empty?
+        return nil if page_html.nil? || page_html.empty?
         doc = Nokogiri::HTML(page_html)
 
         # Flikrs oembed just stopped returning images for no reason. Let's use opengraph instead.
