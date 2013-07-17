@@ -5,9 +5,11 @@
 @import "foundation/mixins";
 
 .modal.history-modal {
-  width: 960px;
-  margin-left: -460px;
-  min-height: 500px;
+  .modal-inner-container {
+    min-width: 960px;
+    min-height: 500px;
+  }
+
   ins {
     background: #e6ffe6;
   }
