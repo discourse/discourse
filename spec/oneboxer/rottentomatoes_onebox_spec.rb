@@ -1,10 +1,6 @@
-# encoding: utf-8
-
 require 'spec_helper'
-require 'oneboxer'
-require 'oneboxer/rottentomatoes_onebox'
 
-describe Oneboxer::RottentomatoesOnebox do
+describe Discourse::Oneboxer::RottentomatoesOnebox do
   it 'translates the URL' do
     o = Oneboxer::RottentomatoesOnebox.new('http://www.rottentomatoes.com/m/mud_2012/')
     expect(o.translate_url).to eq('http://rottentomatoes.com/mobile/m/mud_2012/')

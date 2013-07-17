@@ -1,0 +1,93 @@
+
+Delivered-To: walter@breakingbad.com
+Received: by 10.64.13.41 with SMTP id m9csp29769iec;
+        Thu, 20 Jun 2013 08:53:22 -0700 (PDT)
+X-Received: by 10.252.23.9 with SMTP id p9mr4055675lag.4.1371743601980;
+        Thu, 20 Jun 2013 08:53:21 -0700 (PDT)
+Received: from mail-la0-x229.google.com (mail-la0-x229.google.com [2a00:1450:4010:c03::229])
+        by mx.google.com with ESMTPS id u4si430203lae.48.2013.06.20.08.53.20
+        for <walter@breakingbad.com>
+        (version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+        Thu, 20 Jun 2013 08:53:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20120113;
+        h=x-forwarded-to:x-forwarded-for:delivered-to:x-return-path
+         :content-type:mime-version:content-transfer-encoding:x-mailer
+         :message-id:date:subject:from:in-reply-to:to:resent-date:resent-from
+         :resent-to:resent-subject:resent-message-id:resent-user-agent
+         :x-scanned-by:x-gm-message-state;
+        bh=9O67r74ofh9WkEaKTRB/frQ3MKOtQlbCac2mz0/MiyY=;
+        b=YVAo2/JDMP53RxDmqDEKNcEMtggtfaVyq2DoseZ6vBAfB7G6NtHC9ZEkRs4oGhk6LU
+         fnyAPe0wnz5d9WINoMAuuTRIhplLxzcqysduSnAJAQ2qqR7mFBnlj9wJeVEKltNwmUME
+         nPwxsf8go20VBzrZCtECPedcLi60wbl32NCXVn0qwt2LvKiy6ktSS5Xgb4zY8i4dfXAP
+         6Y5gu32boooWIb9DkH1TJkn3C0RrEugNlw/DUnXrnkFefgxWF3pt/zcoW/wYRyikOdx+
+         smBClgR9my6QmsS2KsQrMvWJZUva7fddTiZ6FC22e4hW+8Wha0RaZOZu5O7hjg6G4/1g
+         IEyg==
+X-Received: by 10.112.55.9 with SMTP id n9mr5916187lbp.5.1371743600857;
+        Thu, 20 Jun 2013 08:53:20 -0700 (PDT)
+X-Forwarded-To: walter@breakingbad.com
+X-Forwarded-For: walter@breakingbad.com
+Delivered-To: walter@breakingbad.com
+Content-Type: text/html; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: BlackBerry Email (10.1.0.1720)
+Message-ID: <20130619231548.6307981.74194.2379@breakingbad.com>
+Date: Wed, 19 Jun 2013 19:15:48 -0400
+Subject: Re: [Discourse Meta] [PM] re: Regarding your post in "Site
+ Customization not working"
+From: aaron@breakingbad.com
+In-Reply-To: <51c238655a394_5f4e3ce6690667bd@tiefighter2.mail>
+To: discourse+20c1b0a8bd1a63c0163cc7e7641ca06b@breakingbad.com
+ReSent-Date: Thu, 20 Jun 2013 11:53:08 -0400 (EDT)
+ReSent-From: Aaron <aaron@breakingbad.com>
+ReSent-Subject: Re: [Discourse Meta] [PM] re: Regarding your post in "Site
+ Customization not working"
+X-Gm-Message-State: ALoCoQl1BtN83rAX7At808XAPv1yCqUK3Du2IvK7eCyY3jsI77u4e5cak28307pYYHAo1JlO/Eu9
+
+<html><head></head><body data-blackberry-caret-color=3D"#00a8df" style=3D"b=
+ackground-color: rgb(255, 255, 255); line-height: initial;"><div id=3D"BB10=
+_response_div" style=3D"width: 100%; font-size: initial; font-family: Calib=
+ri, 'Slate Pro', sans-serif; color: rgb(31, 73, 125); text-align: initial; =
+background-color: rgb(255, 255, 255);">The EC2 instance - I've seen that th=
+ere tends to be odd and unrecommended settings on the Bitnami installs that=
+ I've checked out.</div>                                                   =
+                                                                           =
+       <div id=3D"response_div_spacer" style=3D"width: 100%; font-size: ini=
+tial; font-family: Calibri, 'Slate Pro', sans-serif; color: rgb(31, 73, 125=
+); text-align: initial; background-color: rgb(255, 255, 255);"><br style=3D=
+"display:initial"></div>                                                   =
+                                                                           =
+       <div id=3D"_signaturePlaceholder" style=3D"font-size: initial; font-=
+family: Calibri, 'Slate Pro', sans-serif; color: rgb(31, 73, 125); text-ali=
+gn: initial; background-color: rgb(255, 255, 255);"></div>                 =
+                                                                           =
+                                                                           =
+                 <table width=3D"100%" style=3D"background-color:white;bord=
+er-spacing:0px;"> <tbody><tr><td id=3D"_persistentHeaderContainer" colspan=
+=3D"2" style=3D"font-size: initial; text-align: initial; background-color: =
+rgb(255, 255, 255);">                                              <div id=
+=3D"_persistentHeader" style=3D"border-style: solid none none; border-top-c=
+olor: rgb(181, 196, 223); border-top-width: 1pt; padding: 3pt 0in 0in; font=
+-family: Tahoma, 'BB Alpha Sans', 'Slate Pro'; font-size: 10pt;">  <div><b>=
+From: </b>Grizzly B  via Discourse Meta</div><div><b>Sent: </b>Wednesday, J=
+une 19, 2013 19:02</div><div><b>To: </b>aaron@breakingbad.com</div><div><b>=
+Reply To: </b>Grizzly B  via Discourse Meta</div><div><b>Subject: </b>[Disc=
+ourse Meta] [PM] re: Regarding your post in "Site Customization<br> not wor=
+king"</div></div></td></tr></tbody></table><div id=3D"_persistentHeaderEnd"=
+ style=3D"border-style: solid none none; border-top-color: rgb(186, 188, 20=
+9); border-top-width: 1pt; font-size: initial; text-align: initial; backgro=
+und-color: rgb(255, 255, 255);"></div><br><div id=3D"_originalContent" styl=
+e=3D""><p>Grizzly B just sent you a private message</p>
+
+<hr><p>Log in to our EC2 instance -or- log into a new Digital Ocean instanc=
+e?</p>
+
+<hr><p>Please visit this link to respond: <a href=3D"http://meta.discourse.=
+org/t/regarding-your-post-in-site-customization-not-working/7641/5">http://=
+meta.discourse.org/t/regarding-your-post-in-site-customization-not-working/=
+7641/5</a></p>
+
+<p>To unsubscribe from these emails, visit your <a href=3D"http://meta.disc=
+ourse.org/user_preferences">user preferences</a>.</p>
+<br><!--end of _originalContent --></div></body></html>

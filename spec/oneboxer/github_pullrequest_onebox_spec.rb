@@ -1,8 +1,6 @@
 require 'spec_helper'
-require 'oneboxer'
-require 'oneboxer/github_pullrequest_onebox'
 
-describe Oneboxer::GithubPullrequestOnebox do
+describe Discourse::Oneboxer::GithubPullrequestOnebox do
   describe '#translate_url' do
     it 'returns the api url for the given pull request' do
       onebox = described_class.new(

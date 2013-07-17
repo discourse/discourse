@@ -1,10 +1,6 @@
-# encoding: utf-8
-
 require 'spec_helper'
-require 'oneboxer'
-require 'oneboxer/android_app_store_onebox'
 
-describe Oneboxer::AndroidAppStoreOnebox do
+describe Discourse::Oneboxer::AndroidAppStoreOnebox do
   before(:each) do
     @o = Oneboxer::AndroidAppStoreOnebox.new("https://play.google.com/store/apps/details?id=com.moosoft.parrot")
     FakeWeb.register_uri(:get, @o.translate_url, response: fixture_file('oneboxer/android.response'))

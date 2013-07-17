@@ -1,10 +1,6 @@
-# encoding: utf-8
-
 require 'spec_helper'
-require 'oneboxer'
-require 'oneboxer/amazon_onebox'
 
-describe Oneboxer::AmazonOnebox do
+describe Discourse::Oneboxer::AmazonOnebox do
   before(:each) do
     @o = Oneboxer::AmazonOnebox.new("http://www.amazon.com/Ruby-Programming-Language-David-Flanagan/dp/0596516177")
     FakeWeb.register_uri(:get, @o.translate_url, response: fixture_file('oneboxer/amazon.response'))

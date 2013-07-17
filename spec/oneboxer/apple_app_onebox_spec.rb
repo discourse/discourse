@@ -1,10 +1,6 @@
-# encoding: utf-8
-
 require 'spec_helper'
-require 'oneboxer'
-require 'oneboxer/apple_app_onebox'
 
-describe Oneboxer::AppleAppOnebox do
+describe Discourse::Oneboxer::AppleAppOnebox do
   before(:each) do
     @o = Oneboxer::AppleAppOnebox.new("https://itunes.apple.com/us/app/minecraft-pocket-edition-lite/id479651754")
     FakeWeb.register_uri(:get, @o.translate_url, response: fixture_file('oneboxer/apple.response'))

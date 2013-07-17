@@ -1,10 +1,6 @@
-# encoding: utf-8
-
 require 'spec_helper'
-require 'oneboxer'
-require 'oneboxer/wikipedia_onebox'
 
-describe Oneboxer::WikipediaOnebox do
+describe Discourse::Oneboxer::WikipediaOnebox do
 
   it "generates the expected onebox for Wikipedia" do
     o = Oneboxer::WikipediaOnebox.new('http://en.wikipedia.org/wiki/Ruby')
