@@ -125,7 +125,7 @@ ko:
         instructions: "당신의 Email은 표시되지않습니다"
         ok: "완료. 확인 Email을 보냈습니다"
         invalid: "사용하고 계시는 Email주소를 입력해주세요"
-        authenticated: "당신의 이메일은 {{provider}}에 의해 인증되었습니다"
+        authenticated: "Your email has been authenticated by {{provider}}."
         frequency: "당신의 활동이 뜸해지거나 메일을 읽지않는다면 확인메일을 보내드립니다"
 
       name:
