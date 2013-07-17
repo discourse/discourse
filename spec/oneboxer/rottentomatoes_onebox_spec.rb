@@ -31,7 +31,7 @@ private
     <div class='source'>
       <div class='info'>
         <a href='http://www.rottentomatoes.com/m/mud_2012/' class="track-link" target="_blank">
-          <img class='favicon' src="/assets/favicons/rottentomatoes.png"> rottentomatoes.com
+          rottentomatoes.com
         </a>
       </div>
     </div>

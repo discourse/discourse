@@ -34,7 +34,7 @@ module Discourse
         result[:title] = html_doc.at('h1').content
         result[:poster] = html_doc.at_css('.poster img')['src']
 
-        synopsis = html_doc.at_css('#movieSynopsis').content.squish
+        synopsis = html_doc.at_css('#movieSynopsis').content.gsub(/\A[[:space:]]+/, "").gsub(/[[:space:]]+\z/, "").gsub(/[[:space:]]+/, " ")
         synopsis.gsub!(/\$\(function\(\).+$/, '')
         result[:synopsis] = (synopsis.length > SYNOPSIS_MAX_TEXT ? "#{synopsis[0..SYNOPSIS_MAX_TEXT]}..." : synopsis)
 
@@ -63,11 +63,11 @@ module Discourse
           end
         end
 
-        result.delete_if { |k, v| v.blank? }
+        result.delete_if { |k, v| v.nil? || v.empty? } 
       end
 
       def clean_up_info(inner_html)
-        inner_html.squish.gsub(/^.*<\/span>\s*/, '')
+        inner_html.gsub(/\A[[:space:]]+/, "").gsub(/[[:space:]]+\z/, "").gsub(/[[:space:]]+/, " ").gsub(/^.*<\/span>\s*/, '')
       end
 
     end

@@ -11,16 +11,16 @@ module Discourse
         end
 
         # If there's no title, try using the page's title
-        if result['title'].blank?
+        if result['title'].nil? || result['title'].empty?
           result['title'] = doc.title
         end
 
         # If there's no description, try and get one from the meta tags
-        if result['description'].blank?
+        if result['description'].nil? || result['description'].empty?
           node = doc.at("/html/head/meta[@name='description']")
           result['description'] = node['content'] if node
         end
-        if result['description'].blank?
+        if result['description'].nil? || result['description'].empty?
           node = doc.at("/html/head/meta[@name='Description']")
           result['description'] = node['content'] if node
         end

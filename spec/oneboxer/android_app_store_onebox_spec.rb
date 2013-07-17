@@ -17,7 +17,7 @@ private
     <div class='source'>
       <div class='info'>
         <a href='https://play.google.com/store/apps/details?id=com.moosoft.parrot' class="track-link" target="_blank">
-          <img class='favicon' src="/assets/favicons/google_play.png"> play.google.com
+          play.google.com
         </a>
       </div>
     </div>
