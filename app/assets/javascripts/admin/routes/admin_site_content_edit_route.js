@@ -13,7 +13,24 @@ Discourse.AdminSiteContentEditRoute = Discourse.Route.extend({
   },
 
   model: function(params) {
-    return {content_type: params.content_type};
+    var list = this.controllerFor('adminSiteContents').get('model');
+
+    // ember routing is fun ... this is what happens
+    //
+    // linkTo creates an Ember.LinkView , it marks an <a> with the class "active"
+    //  if the "context" of this dynamic route is equal to the model in the linkTo
+    //  the route "context" is set here, so we want to make sure we have the exact
+    //  same object, from Ember we have:
+    //
+    //    if (handlerInfo.context !== object) { return false; }
+    //
+    // we could avoid this hack if Ember just compared .serialize(model) with .serialize(context)
+    //
+    // alternatively we could use some sort of identity map
+    //
+    // see also: https://github.com/emberjs/ember.js/issues/3005
+
+    return list.findProperty("content_type", params.content_type);
   },
 
   renderTemplate: function() {
@@ -26,6 +43,7 @@ Discourse.AdminSiteContentEditRoute = Discourse.Route.extend({
   },
 
   setupController: function(controller, model) {
+
     controller.set('loaded', false);
     controller.setProperties({
       model: model,
@@ -33,7 +51,7 @@ Discourse.AdminSiteContentEditRoute = Discourse.Route.extend({
       saved: false
     });
 
-    Discourse.SiteContent.find(Em.get(model, 'content_type')).then(function (sc) {
+    Discourse.SiteContent.find(model.get('content_type')).then(function (sc) {
       controller.set('content', sc);
       controller.set('loaded', true);
     });

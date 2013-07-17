@@ -64,14 +64,21 @@
             {{#each permissions}}
               <li>
                 <span class="name"><span class="badge-group">{{group_name}}</span></span>
+                {{{i18n "category.can"}}}
                 <span class="permission">{{permission.description}}</span>
-                <a {{action removePermission this}}><i class="icon icon-remove-sign"></i></a>
+                {{#if controller.editingPermissions}}
+                  <a {{action removePermission this}}><i class="icon icon-remove-sign"></i></a>
+                {{/if}}
               </li>
             {{/each}}
           </ul>
-          {{view Ember.Select contentBinding="availableGroups" valueBinding="selectedGroup"}}
-          {{view Ember.Select class="permission-selector" optionValuePath="content.id" optionLabelPath="content.description" contentBinding="availablePermissions" valueBinding="selectedPermission"}}
-          <button {{action addPermission selectedGroup selectedPermission}} class="btn btn-small">{{i18n category.add_group}}</button>
+          {{#if controller.editingPermissions}}
+            {{view Ember.Select contentBinding="availableGroups" valueBinding="selectedGroup"}}
+            {{view Ember.Select class="permission-selector" optionValuePath="content.id" optionLabelPath="content.description" contentBinding="availablePermissions" valueBinding="selectedPermission"}}
+            <button {{action addPermission selectedGroup selectedPermission}} class="btn btn-small">{{i18n category.add_permission}}</button>
+          {{else}}
+            <button {{action editPermissions}} class="btn btn-small">{{i18n category.edit_permissions}}</button>
+          {{/if}}
         </section>
       </div>
       <div {{bindAttr class=":modal-tab :options-tab settingsSelected::invisible"}}>

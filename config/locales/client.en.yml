@@ -455,11 +455,8 @@ en:
       quote_text: "Blockquote"
       code_title: "Code Sample"
       code_text: "enter code here"
-      upload_title: "Image"
-      upload_description: "enter image description here"
-      upload_dialog_title: "Insert Image"
-      image_optional_text: "optional title"
-      image_hosting_hint: "Need <a href='http://www.google.com/search?q=free+image+hosting' target='_blank'>free image hosting?</a>"
+      upload_title: "Upload"
+      upload_description: "enter upload description here"
       olist_title: "Numbered List"
       ulist_title: "Bulleted List"
       list_item: "List item"
@@ -885,6 +882,7 @@ en:
           other: "Are you sure you want to delete all those posts?"
 
     category:
+      can: 'can&hellip; '
       none: '(no category)'
       edit: 'edit'
       edit_long: "Edit Category"
@@ -913,12 +911,10 @@ en:
       change_in_category_topic: "Edit Description"
       hotness: "Hotness"
       already_used: 'This color has been used by another category'
-      is_secure: "Secure category?"
-      add_group: "Add Group"
       security: "Security"
-      allowed_groups: "Allowed Groups:"
       auto_close_label: "Auto-close topics after:"
-
+      edit_permissions: "Edit Permissions"
+      add_permission: "Add Permission"
 
     flagging:
       title: 'Why are you flagging this post?'
@@ -1007,9 +1003,9 @@ en:
     browser_update: 'Unfortunately, <a href="http://www.discourse.org/faq/#browser">your browser is too old to work on this Discourse forum</a>. Please <a href="http://browsehappy.com">upgrade your browser</a>.'
 
     permission_types:
-      full: "Create Topics, Create Posts and Read"
-      create_post: "Create Posts and Read"
-      readonly: "Read Only"
+      full: "Create / Reply / See"
+      create_post: "Reply / See"
+      readonly: "See"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:

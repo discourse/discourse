@@ -250,9 +250,7 @@ Discourse = Ember.Application.createWithMixins({
     // If we have URL_FIXTURES, load from there instead (testing)
     var fixture = Discourse.URL_FIXTURES && Discourse.URL_FIXTURES[url];
     if (fixture) {
-      return Ember.Deferred.promise(function(promise) {
-        promise.resolve(fixture);
-      });
+      return Ember.RSVP.resolve(fixture);
     }
 
     return Ember.Deferred.promise(function (promise) {

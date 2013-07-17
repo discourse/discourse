@@ -213,7 +213,7 @@ test("identity map", function() {
   deepEqual(postStream.listUnloadedIds([1, 2, 3, 4]), [2, 4], "it only returns unloaded posts");
 });
 
-asyncTest("loadIntoIdentityMap with no data", function() {
+asyncTestDiscourse("loadIntoIdentityMap with no data", function() {
   var postStream = buildStream(1234);
   expect(1);
 
@@ -224,11 +224,11 @@ asyncTest("loadIntoIdentityMap with no data", function() {
   });
 });
 
-asyncTest("loadIntoIdentityMap with post ids", function() {
+asyncTestDiscourse("loadIntoIdentityMap with post ids", function() {
   var postStream = buildStream(1234);
   expect(1);
 
-  this.stub(Discourse, "ajax").returns(resolvingPromiseWith({
+  this.stub(Discourse, "ajax").returns(Ember.RSVP.resolve({
     post_stream: {
       posts: [{id: 10, post_number: 10}]
     }

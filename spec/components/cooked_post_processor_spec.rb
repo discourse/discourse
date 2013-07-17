@@ -62,7 +62,7 @@ describe CookedPostProcessor do
 
     end
 
-    context "with uploaded images" do
+    context "with locally uploaded images" do
 
       let(:upload) { Fabricate(:upload) }
       let(:post) { Fabricate(:post_with_uploaded_images) }

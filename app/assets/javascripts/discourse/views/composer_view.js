@@ -302,13 +302,11 @@ Discourse.ComposerView = Discourse.View.extend({
           case 0: return;
           // 413 == entity too large, returned usually from nginx
           case 413:
-            bootbox.alert(I18n.t('post.errors.upload_too_large', {max_size_kb: Discourse.SiteSettings.max_upload_size_kb}));
+            var maxSizeKB = Discourse.Utilities.maxUploadSizeInKB(data.files[0].name);
+            bootbox.alert(I18n.t('post.errors.upload_too_large', { max_size_kb: maxSizeKB }));
             return;
           // 415 == media type not authorized
           case 415:
-            var extensions = Discourse.SiteSettings.authorized_extensions.replace(/\|/g, ", ");
-            bootbox.alert(I18n.t('post.errors.upload_not_authorized', { authorized_extensions: extensions }));
-            return;
           // 422 == there has been an error on the server (mostly due to FastImage)
           case 422:
             bootbox.alert(data.jqXHR.responseText);

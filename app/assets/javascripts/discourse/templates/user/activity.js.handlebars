@@ -35,7 +35,7 @@
         <dt>{{i18n user.last_seen}}:</dt><dd>{{date last_seen_at}}</dd>
       {{/if}}
       {{#if invited_by}}
-        <dt>{{i18n user.invited_by}}:</dt><dd>{{#linkTo user.activity invited_by}}{{invited_by.username}}{{/linkTo}}</dd>
+        <dt>{{i18n user.invited_by}}:</dt><dd>{{#linkTo 'user.activity' invited_by}}{{invited_by.username}}{{/linkTo}}</dd>
       {{/if}}
       {{#if email}}
         <dt>{{i18n user.email.title}}:</dt><dd {{bindAttr title="email"}}>{{email}}</dd>

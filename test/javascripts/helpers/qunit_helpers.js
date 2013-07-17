@@ -19,3 +19,14 @@ function controllerFor(controller, model) {
   if (model) { controller.set('model', model ); }
   return controller;
 }
+
+function asyncTestDiscourse(text, func) {
+
+  asyncTest(text, function () {
+
+    var qunitContext = this;
+    Ember.run(function () {
+      func.call(qunitContext);
+    });
+  });
+}

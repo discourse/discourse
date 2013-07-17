@@ -457,9 +457,6 @@ ru:
       code_text: вводите код здесь
       upload_title: Изображение
       upload_description: введите здесь описание изображения
-      upload_dialog_title: Вставка изображения
-      image_optional_text: необязательное название
-      image_hosting_hint: "Нужен <a href='http://www.google.com/search?q=free+image+hosting' target='_blank'>бесплатный хостинг изображений?</a>"
       olist_title: Нумерованный список
       ulist_title: Маркированный список
       list_item: Элемент списка

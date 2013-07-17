@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.UserInvitedRoute = Discourse.Route.extend(Discourse.ModelReady, {
+Discourse.UserInvitedRoute = Discourse.Route.extend({
 
   renderTemplate: function() {
     this.render({ into: 'user', outlet: 'userOutlet' });

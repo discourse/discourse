@@ -4,17 +4,20 @@ module("Discourse.Onebox", {
   }
 });
 
-test("Stops rapid calls with cache true", function() {
-  this.stub(Discourse, "ajax").returns(resolvingPromise);
+asyncTestDiscourse("Stops rapid calls with cache true", function() {
+  this.stub(Discourse, "ajax").returns(Ember.RSVP.resolve());
+  Discourse.Onebox.load(this.anchor, true);
+  Discourse.Onebox.load(this.anchor, true);
 
-  Discourse.Onebox.load(this.anchor, true);
-  Discourse.Onebox.load(this.anchor, true);
+  start();
   ok(Discourse.ajax.calledOnce);
 });
 
-test("Stops rapid calls with cache false", function() {
-  this.stub(Discourse, "ajax").returns(resolvingPromise);
+asyncTestDiscourse("Stops rapid calls with cache true", function() {
+  this.stub(Discourse, "ajax").returns(Ember.RSVP.resolve());
   Discourse.Onebox.load(this.anchor, false);
   Discourse.Onebox.load(this.anchor, false);
+
+  start();
   ok(Discourse.ajax.calledOnce);
 });

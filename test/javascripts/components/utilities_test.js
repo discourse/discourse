@@ -42,7 +42,7 @@ test("ensures an authorized upload", function() {
 
 test("prevents files that are too big from being uploaded", function() {
   var image = { name: "image.png", size: 10 * 1024 };
-  Discourse.SiteSettings.max_upload_size_kb = 5;
+  Discourse.SiteSettings.max_image_size_kb = 5;
   this.stub(bootbox, "alert");
 
   ok(!validUpload([image]));
@@ -61,7 +61,7 @@ var dummyBlob = function() {
 };
 
 test("allows valid uploads to go through", function() {
-  Discourse.SiteSettings.max_upload_size_kb = 15;
+  Discourse.SiteSettings.max_image_size_kb = 15;
   this.stub(bootbox, "alert");
 
   // image
@@ -101,10 +101,10 @@ test("getUploadMarkdown", function() {
 });
 
 test("isAnImage", function() {
-  _.each(["png", "jpg", "jpeg", "bmp", "gif", "tif"], function(extension) {
+  _.each(["png", "jpg", "jpeg", "bmp", "gif", "tif", "tiff"], function(extension) {
     var image = "image." + extension;
-    ok(utils.isAnImage(image));
-    ok(utils.isAnImage("http://foo.bar/path/to/" + image));
+    ok(utils.isAnImage(image), image + " is recognized as an image");
+    ok(utils.isAnImage("http://foo.bar/path/to/" + image), image + " is recognized as an image");
   });
   ok(!utils.isAnImage("file.txt"));
   ok(!utils.isAnImage("http://foo.bar/path/to/file.txt"));
