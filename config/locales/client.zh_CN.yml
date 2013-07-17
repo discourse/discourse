@@ -93,6 +93,7 @@ zh_CN:
     yes_value: "是"
     of_value: "之于"
     generic_error: "抱歉，发生了一个错误。"
+    generic_error_with_reason: "发生一个错误：%{error}"
     log_in: "登录"
     age: "寿命"
     last_post: "最后一帖"
@@ -101,6 +102,7 @@ zh_CN:
     show_more: "显示更多"
     links: 链接
     faq: "常见问答（FAQ）"
+    privacy_policy: "隐私政策"
     you: "你"
     or: "或"
     now: "刚刚"
@@ -175,6 +177,7 @@ zh_CN:
       "13": "收件箱"
 
     user:
+      said: "{{username}} 说："
       profile: 介绍信息
       title: "用户"
       mute: 防打扰
@@ -187,6 +190,8 @@ zh_CN:
       bio: "关于我"
       invited_by: "邀请者为"
       trust_level: "用户级别"
+      notifications: "通知"
+      dynamic_favicon: "在标签页图标上动态显示未读消息提醒"
       external_links_in_new_tab: "始终在新的标签页打开外部链接"
       enable_quoting: "在高亮选择文字时启用引用回复"
 
@@ -307,6 +312,8 @@ zh_CN:
       avatar:
         title: "头像"
         instructions: "我们目前使用 <a href='https://gravatar.com' target='_blank'>Gravatar</a> 来基于你的邮箱生成头像"
+      title:
+        title: "头衔"
 
       filters:
         all: "全部"
@@ -387,6 +394,9 @@ zh_CN:
       facebook:
         title: "使用脸书帐号登录"
         message: "使用脸书（Facebook）帐号验证登录（请确保没有禁止浏览器弹出对话框）"
+      cas:
+        title: "使用CAS登录"
+        message: "使用CAS（单点登录）帐号验证登录（请确保没有禁止浏览器弹出对话框）"
       yahoo:
         title: "使用雅虎帐号登录"
         message: "使用雅虎（Yahoo）帐号验证登录（请确保没有禁止浏览器弹出对话框）"
@@ -408,6 +418,14 @@ zh_CN:
       min_length:
         need_more_for_title: "请给标题再输入至少 {{n}} 个字符"
         need_more_for_reply: "请给正文内容再输入至少 {{n}} 个字符"
+
+      error:
+        title_missing: "缺少标题。"
+        title_too_short: "标题太短，至少{{min}}个字符。"
+        title_too_long: "标题太长，至多{{max}}个字符。"
+        post_missing: "内容不能为空。"
+        post_length: "内容太少，至少{{min}}个字符。"
+        category_missing: "必须要选择一个分类。"
 
       save_edit: "保存编辑"
       reply_original: "回复原始帖"
@@ -495,6 +513,10 @@ zh_CN:
       no_results: "没有找到结果。"
       searching: "搜索中……"
 
+      prefer:
+        user: "优先显示 @{{username}} 的搜索结果"
+        category: "优先显示 {{category}} 分类下的结果"
+
     site_map: "去另一个主题列表或分类"
     go_back: '返回'
     current_user: '去你的用户页面'
@@ -549,8 +571,12 @@ zh_CN:
       not_found:
         title: "未找到主题"
         description: "抱歉，无法找到此主题。有可能它被论坛版主删掉了？"
-      unread_posts: "此主题中你有 {{unread}} 个帖子未阅"
-      new_posts: "从你最近一次阅读此主题后，又有 {{new_posts}} 个新帖子发表"
+      unread_posts: 
+        one: "此主题中你有一个帖子未阅"
+        other: "此主题中你有 {{unread}} 个帖子未阅"
+      new_posts: 
+        other: "从你最近一次阅读此主题后，又有一个新帖子发表"
+        other: "从你最近一次阅读此主题后，又有 {{new_posts}} 个新帖子发表"
 
       likes:
         one: "此主题得到了一个赞"
@@ -561,6 +587,24 @@ zh_CN:
       toggle_information: "切换主题详细"
       read_more_in_category: "想阅读更多内容？浏览 {{catLink}} 或 {{latestLink}} 里的其它主题。"
       read_more: "想阅读更多内容？{{catLink}} 或 {{latestLink}}。"
+
+      # keys ending with _MF use message format, see /spec/components/js_local_helper_spec.rb for samples
+      read_more_MF: "There {
+        UNREAD, plural,
+        =0 {}
+        one {
+          is <a href='/unread'>1 unread</a>
+        } other {
+          are <a href='/unread'># unread</a>
+        }
+        } {
+          NEW, plural,
+            =0 {}
+            one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic}
+            other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics}
+        } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}} "
+
+
       browse_all_categories: 浏览所有分类
 
       view_latest_topics: 浏览热门主题
@@ -610,6 +654,7 @@ zh_CN:
           description: "你不会收到关于此主题的任何通知，也不会在你的未阅选项卡中显示。"
 
       actions:
+        recover: "撤销删除主题"
         delete: "删除主题"
         open: "打开主题"
         close: "关闭主题"
@@ -712,6 +757,7 @@ zh_CN:
       continue_discussion: "从 {{postLink}} 继续讨论："
       follow_quote: "跳转至所引用的帖子"
       deleted_by_author: "（作者删除了帖子）"
+      deleted_by: "删除者为"
       expand_collapse: "展开/收缩"
 
       has_replies:
@@ -724,6 +770,8 @@ zh_CN:
         upload: "抱歉，在上传文件时发生了错误。请重试。"
         upload_too_large: "抱歉，你上传的文件太大了（最大不能超过 {{max_size_kb}}kb），请调整文件大小后重新上传。"
         too_many_uploads: "抱歉, 你只能一次上传一张图片。"
+        upload_not_authorized: "抱歉, 你不能上传此类型文件(可上传的文件类型有: {{authorized_extensions}})。"
+        upload_not_allowed_for_new_user: "抱歉，新用户不能上传图片。"
 
       abandon: "你确定要丢弃你的帖子吗？"
 
@@ -880,6 +928,7 @@ zh_CN:
     flagging:
       title: '为何要给投诉本帖？'
       action: '投诉帖子'
+      take_action: "立即执行"
       notify_action: '通知'
       cant: "抱歉，当前你不能投诉本帖。"
       custom_placeholder_notify_user: "为何你要私下联系该用户？"
@@ -913,6 +962,7 @@ zh_CN:
     views_long: "本主题已经被浏览过 {{number}} 次"
     activity: "活动"
     likes: "赞"
+    likes_long: "本主题已有 {{number}} 次赞"
     top_contributors: "参与者"
     category_title: "分类"
     history: "历史"
@@ -961,6 +1011,11 @@ zh_CN:
 
     browser_update: '抱歉, <a href="http://www.iteriter.com/faq/#browser">你的浏览器版本太低，推荐使用Chrome</a>. 请 <a href="http://www.google.com/chrome/">升级你的浏览器</a>。'
 
+    permission_types:
+      full: "阅读，创建帖子和主题"
+      create_post: "阅读和创建帖子"
+      readonly: "只读"
+
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "输入过滤条件……"
@@ -975,8 +1030,9 @@ zh_CN:
         up_to_date: "你正在运行最新的论坛版本。"
         critical_available: "有一个关键更新可用。"
         updates_available: "目前有可用更新。"
-        no_check_performed: "检测未执行"
         please_upgrade: "请升级！"
+        no_check_performed: "检测未执行"
+        stale_data: "最近一次检查更新未执行，请确保 clockwork 和 sidekiq 在正常运行"
         installed_version: "已安装"
         latest_version: "最新版本"
         problems_found: "你安装的论坛目前有以下问题："
@@ -1010,20 +1066,52 @@ zh_CN:
         title: "投诉"
         old: "过去的"
         active: "活跃的"
+
+        agree_hide: "批准(隐藏并发送私信)"
+        agree_hide_title: "隐藏帖子并自动发送私信给作者使其修改"
+        defer: "推迟"
+        defer_title: "现在不执行任何操作，对此帖子投诉的操作推迟到晚些时候甚至永远"
+        delete_post: "删除帖子"
+        delete_post_title: "删除此帖，如果这是这个主题内的第一篇帖子则删除主题"
+        disagree_unhide: "不批准（不隐藏）"
+        disagree_unhide_title: "清除此帖的任何投诉，并使其重新可见"
+        disagree: "不批准"
+        disagree_title: "不批准此帖的投诉，并清除此贴的任何投诉"
+
         clear: "清除投诉"
         clear_title: "撤销本帖的所有投诉（已隐藏的帖子将会被取消隐藏）"
         delete: "删除帖子"
         delete_title: "删除帖子（如果它是主题第一帖，那么将删除主题）"
+
         flagged_by: "投诉者为"
         error: "出错了"
         view_message: "查看消息"
         no_results: "没有投诉"
+
+        summary:
+          action_type_3:
+            one: "题外话"
+            other: "题外话 x{{count}}"
+          action_type_4:
+            one: "不当内容"
+            other: "不当内容 x{{count}}"
+          action_type_6:
+            one: "自定义"
+            other: "自定义 x{{count}}"
+          action_type_7:
+            one: "自定义"
+            other: "自定义 x{{count}}"
+          action_type_8:
+            one: "垃圾"
+            other: "垃圾 x{{count}}"
 
       groups:
         title: "群组"
         edit: "编辑群组"
         selector_placeholder: "添加用户"
         name_placeholder: "组名，不能含有空格，与用户名规则一致"
+        about: "在这里编辑群组的名字和成员"
+        can_not_edit_automatic: "这是一个自动划分的群组，管理员用来分配角色和管理用户等级"
 
       api:
         title: "应用开发接口（API）"
@@ -1068,6 +1156,7 @@ zh_CN:
         html: "html"
         text: "text"
         last_seen_user: "用户最后登录时间:"
+        reply_key: "回复关键字"
 
       impersonate:
         title: "假冒用户"
@@ -1105,6 +1194,8 @@ zh_CN:
           elder: '信用等级为4的用户（骨灰用户）'
           admins: '管理员'
           moderators: '版主'
+          blocked: '被封用户'
+          banned: '被禁用户'
 
       user:
         ban_failed: "禁止此用户时发生了错误 {{error}}"
@@ -1116,7 +1207,10 @@ zh_CN:
         banned: "已禁止？"
         moderator: "版主？"
         admin: "管理员？"
+        blocked: "已封?"
         show_admin_profile: "管理员"
+        edit_title: "编辑头衔"
+        save_title: "保存头衔"
         refresh_browsers: "强制浏览器刷新"
         show_public_profile: "显示公开介绍"
         impersonate: '假冒用户'
@@ -1124,6 +1218,8 @@ zh_CN:
         grant_admin: '赋予管理员资格'
         revoke_moderation: '吊销论坛版主资格'
         grant_moderation: '赋予论坛版主资格'
+        unblock: '解封'
+        block: '封号'
         reputation: 声誉
         permissions: 权限
         activity: 活动
@@ -1136,6 +1232,8 @@ zh_CN:
         flags_received_count: 收到投诉数量
         approve: '批准'
         approved_by: "批准人"
+        approve_success: "用户已被批准， 激活邮件已发送。"
+        approve_bulk_success: "成功！所有选定的用户已批准并通知。"
         time_read: "阅读次数"
         delete: "删除用户"
         delete_forbidden: "此用户还无法删除，因为他/她还有帖子。请先删除该用户的所有帖子。"
@@ -1151,7 +1249,10 @@ zh_CN:
         deactivate_failed: "在停用用户帐号时发生了错误。"
         unblock_failed: "在解除用户帐号封禁时发生了错误。"
         block_failed: "在封禁用户帐号时发生了错误。"
+        deactivate_explanation: "已停用的用户必须重新验证他们的电子邮件。"
+        banned_explanation: "被禁止的用户无法登录。"
         block_explanation: "被封禁的用户不能发表主题或者评论。"
+        trust_level_change_failed: "改变用户等级时出现了一个问题，"
 
       site_content:
         none: "选择内容类型以开始编辑。"
@@ -1162,3 +1263,4 @@ zh_CN:
         show_overriden: '只显示被覆盖了缺省值的'
         title: '设置'
         reset: '重置为缺省值'
+        none: '无'
