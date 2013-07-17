@@ -12,7 +12,7 @@ module Discourse
       end
 
       def parse(data)
-        result = JSON.parse(data)
+        result = MultiJson.load(data)
 
         result['commit_date'] = Time.parse(result['commit']['author']['date']).strftime("%I:%M%p - %d %b %y")
 

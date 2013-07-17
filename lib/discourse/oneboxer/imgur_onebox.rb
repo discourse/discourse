@@ -18,7 +18,7 @@ module Discourse
         url = translate_url
         return @url if url.blank?
 
-        parsed = JSON.parse(open(translate_url).read)
+        parsed = MultiJson.load(open(translate_url).read)
         image = parsed['image']
         BaseOnebox.image_html(image['links']['original'], image['image']['caption'], image['links']['imgur_page'])
       end

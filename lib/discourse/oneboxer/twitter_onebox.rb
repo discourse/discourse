@@ -18,7 +18,7 @@ module Discourse
       end
 
       def parse(data)
-        result = JSON.parse(data)
+        result = MultiJson.load(data)
 
         result['created_at'] =
           Time.parse(result['created_at']).strftime("%I:%M%p - %d %b %y")
@@ -89,7 +89,7 @@ module Discourse
       end
 
       def bearer_token
-        @access_token ||= JSON.parse(authorization).fetch('access_token')
+        @access_token ||= MultiJson.load(authorization).fetch('access_token')
       end
 
       def bearer_token_credentials
