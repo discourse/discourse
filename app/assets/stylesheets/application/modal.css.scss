@@ -263,16 +263,17 @@
   }
 }
 
-.permission-selector{
-  width: 300px;
-}
 .permission-list{
   list-style:none;
-  margin: 0 0 15px;
+  margin: 0 0 30px;
   padding: 0;
   .name {
+    margin-right: 20px;
     display: inline-block;
-    min-width: 80px;
+    min-width: 100px;
+  }
+  .permission {
+    margin-left: 20px;
   }
   .icon-remove-sign {
     margin-left: 5px;

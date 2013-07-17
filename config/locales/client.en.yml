@@ -905,12 +905,10 @@ en:
       change_in_category_topic: "Edit Description"
       hotness: "Hotness"
       already_used: 'This color has been used by another category'
-      is_secure: "Secure category?"
-      add_group: "Add Group"
       security: "Security"
-      allowed_groups: "Allowed Groups:"
       auto_close_label: "Auto-close topics after:"
-
+      edit_permissions: "Edit Permissions"
+      add_permission: "Add Permission"
 
     flagging:
       title: 'Why are you flagging this post?'
@@ -999,9 +997,9 @@ en:
     browser_update: 'Unfortunately, <a href="http://www.discourse.org/faq/#browser">your browser is too old to work on this Discourse forum</a>. Please <a href="http://browsehappy.com">upgrade your browser</a>.'
 
     permission_types:
-      full: "CREATE / REPLY / SEE"
-      create_post: "REPLY / SEE"
-      readonly: "SEE"
+      full: "Create / Reply / See"
+      create_post: "Reply / See"
+      readonly: "See"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:

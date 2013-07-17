@@ -105,6 +105,10 @@ Discourse.EditCategoryController = Discourse.ObjectController.extend(Discourse.M
     return false;
   },
 
+  editPermissions: function(){
+    this.set('editingPermissions', true);
+  },
+
   addPermission: function(group, permission_id){
     this.get('model').addPermission({group_name: group + "", permission: Discourse.PermissionType.create({id: permission_id})});
   },
