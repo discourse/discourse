@@ -5,13 +5,13 @@
 ko:
   js:
     share:
-      topic: '항목을 공유합니다.'
-      post: '게시물을 공유합니다.'
-      close: '닫기'
-      twitter: 'twitter로 공유'
-      facebook: 'Facebook으로 공유'
-      google+: 'Google+로 공유'
-      email: 'email로 공유'
+      topic: "항목을 공유합니다."
+      post: "게시물을 공유합니다."
+      close: "닫기"
+      twitter: "twitter로 공유"
+      facebook: "Facebook으로 공유"
+      google+: "Google+로 공유"
+      email: "email로 공유"
 
     edit: "편집하기"
     not_implemented: "추후 업데이트 예정"
@@ -51,21 +51,21 @@ ko:
     saved: "저장완료!"
 
     user_action:
-      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> 게시 <a href='{{topicUrl}}'>the topic</a>"
-      you_posted_topic: "<a href='{{userUrl}}'>You</a> 게시 <a href='{{topicUrl}}'>the topic</a>"
-      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> 댓글 to <a href='{{postUrl}}'>{{post_number}}</a>"
-      you_replied_to_post: "<a href='{{userUrl}}'>You</a> 댓글 <a href='{{postUrl}}'>{{post_number}}</a>"
-      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> 댓글 <a href='{{topicUrl}}'>the topic</a>"
-      you_replied_to_topic: "<a href='{{userUrl}}'>You</a> 댓글 <a href='{{topicUrl}}'>the topic</a>"
+      user_posted_topic: "<a href="{{userUrl}}">{{user}}</a> 게시 <a href="{{topicUrl}}">the topic</a>"
+      you_posted_topic: "<a href="{{userUrl}}">You</a> 게시 <a href="{{topicUrl}}">the topic</a>"
+      user_replied_to_post: "<a href="{{userUrl}}">{{user}}</a> 댓글 to <a href="{{postUrl}}">{{post_number}}</a>"
+      you_replied_to_post: "<a href="{{userUrl}}">You</a> 댓글 <a href="{{postUrl}}">{{post_number}}</a>"
+      user_replied_to_topic: "<a href="{{userUrl}}">{{user}}</a> 댓글 <a href="{{topicUrl}}">the topic</a>"
+      you_replied_to_topic: "<a href="{{userUrl}}">You</a> 댓글 <a href="{{topicUrl}}">the topic</a>"
 
-      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> 언급 <a href='{{user2Url}}'>{{another_user}}</a>"
-      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> 언급 <a href='{{user2Url}}'>you</a>"
-      you_mentioned_user: "<a href='{{user1Url}}'>You</a> 언급 <a href='{{user2Url}}'>{{user}}</a>"
+      user_mentioned_user: "<a href="{{user1Url}}">{{user}}</a> 언급 <a href="{{user2Url}}">{{another_user}}</a>"
+      user_mentioned_you: "<a href="{{user1Url}}">{{user}}</a> 언급 <a href="{{user2Url}}">you</a>"
+      you_mentioned_user: "<a href="{{user1Url}}">You</a> 언급 <a href="{{user2Url}}">{{user}}</a>"
 
-      posted_by_user: "에 의해 게시 <a href='{{userUrl}}'>{{user}}</a>"
-      posted_by_you: "에 의해 게시 <a href='{{userUrl}}'>you</a>"
-      sent_by_user: "에 의해 전송 <a href='{{userUrl}}'>{{user}}</a>"
-      sent_by_you: "에 의해 전송 <a href='{{userUrl}}'>you</a>"
+      posted_by_user: "에 의해 게시 <a href="{{userUrl}}">{{user}}</a>"
+      posted_by_you: "에 의해 게시 <a href="{{userUrl}}">you</a>"
+      sent_by_user: "에 의해 전송 <a href="{{userUrl}}">{{user}}</a>"
+      sent_by_you: "에 의해 전송 <a href="{{userUrl}}">you</a>"
 
     user_action_groups:
       "1": "Likes Given"
@@ -114,7 +114,7 @@ ko:
         error: "사용자 이름을 변경하는 중에 오류가 발생했습니다"
         invalid: "사용자 이름이 잘못되었습니다. 숫자와 문자를 포함해야합니다"
       change_email:
-        action: '변경완료'
+        action: 변경완료"
         title: "Email 수정"
         taken: "죄송합니다. 해당 Email은 사용할 수 없습니다"
         error: "Email 변경 중 오류가 발생했습니다. 이미 사용중인 Email인지 확인해주세요"
@@ -144,7 +144,7 @@ ko:
         too_short: "사용자 이름이 너무 짧습니다"
         too_long: "사용자 이름이 너무 깁니다"
         checking: "사용가능한지 확인 중..."
-        enter_email: '사용자 이름을 찾았습니다. 일치하는 Email을 입력해주세요'
+        enter_email: "사용자 이름을 찾았습니다. 일치하는 Email을 입력해주세요"
 
       password_confirmation:
         title: "비밀번호를 재입력해주세요"
@@ -213,7 +213,7 @@ ko:
         title: "마지막 IP 주소"
       avatar:
         title: "아바타"
-        instructions: "포럼에서는 당신의 Email을 기바능로 <a href='https://gravatar.com' target='_blank'>Gravatar</a> 아바타 서비스를 기본적으로 사용합니다"
+        instructions: "포럼에서는 당신의 Email을 기바능로 <a href="https://gravatar.com" target="_blank">Gravatar</a> 아바타 서비스를 기본적으로 사용합니다"
 
       filters:
         all: "All"
@@ -228,12 +228,12 @@ ko:
     close: "닫기"
     learn_more: "더 보기..."
 
-    year: '년'
-    year_desc: '지난 1년동안 게시 된 글'
-    month: '월'
-    month_desc: '지난 1달동안 게시 된 글'
-    week: '주'
-    week_desc: '지난 1주동안 게시 된 글'
+    year: "년"
+    year_desc: "지난 1년동안 게시 된 글"
+    month: "월"
+    month_desc: "지난 1달동안 게시 된 글"
+    week: "주"
+    week_desc: "지난 1주동안 게시 된 글"
 
     first_post: 첫 번째 게시물 
     mute: 음소거
@@ -244,18 +244,18 @@ ko:
       title: "Best of"
       enabled_description: 당신은 "Best Of"항목을 보고 있습니다.
       description: "해당 주제에는 <b>{{count}}</b>개의 게시글이 있습니다. . 아주 많아요!! 당신은 대부분의 상호 작용과 반응 만 게시물을 표시하는보기를 전환하여 시간을 저장 하시겠습니까?"
-      enable: '"Best Of"로 전환하여 봅니다'
-      disable: '"Best Of"가 취소되었습니다'
+      enable: ""Best Of"로 전환하여 봅니다"
+      disable: ""Best Of"가 취소되었습니다"
 
     private_message_info:
       title: "개인 메시지"
       invite: "다른 사람 초대..."
 
-    email: 'Email'
-    username: '사용자'
-    last_seen: '마지막으로 본'
-    created: '생성되었습니다'
-    trust_level: '레벨을 신뢰'
+    email: "Email"
+    username: "사용자"
+    last_seen: "마지막으로 본"
+    created: "생성되었습니다"
+    trust_level: "레벨을 신뢰"
 
     create_account:
       title: "계정만들기"
@@ -276,7 +276,7 @@ ko:
       password: "비밀번호"
       email_placeholder: "이메일 주소 또는 사용자 이름"
       error: "알 수없는 오류"
-      reset_password: '암호 재설정'
+      reset_password: "암호 재설정"
       logging_in: "로그인 중..."
       or: "또는"
       authenticating: "인증 중..."
@@ -332,8 +332,8 @@ ko:
       saved: "저장완료!"
       saved_draft: "당신은 진행중인 게시물 초안이 있습니다. 편집을 다시 시작하려면이 상자에 아무 곳이나 클릭합니다."
       uploading: "업로딩중..."
-      show_preview: '미리보기를 보여줍니다;'
-      hide_preview: '미리보기를 숨깁니다;'
+      show_preview: "미리보기를 보여줍니다;"
+      hide_preview: "미리보기를 숨깁니다;"
 
       quote_post_title: "전체 게시물을 인용"
       bold_title: "굵게"
@@ -352,7 +352,7 @@ ko:
       image_description: "이미지 설명을 여기에 입력하세요"
       image_dialog_title: "이미지 삽입"
       image_optional_text: "옵션 제목"
-      image_hosting_hint: "<a href='http://www.google.com/search?q=free+image+hosting' target='_blank'> 무료 호스팅 이미지가 필요하신가요?</a>"
+      image_hosting_hint: "<a href="http://www.google.com/search?q=free+image+hosting" target="_blank"> 무료 호스팅 이미지가 필요하신가요?</a>"
       olist_title: "번호 매기기 목록"
       ulist_title: "글 머리 기호 목록"
       list_item: "항목"
@@ -368,16 +368,16 @@ ko:
       title: "@이름의 멘션 알림은 당신의 게시물과 주제, 비공개 메시지,기타 등등에 대한 알림이다"
       none: "현재 알림이 없습니다"
       more: "이전 알림을 볼 수 있습니다"
-      mentioned: "<span title='mentioned' class='icon'>@</span> {{username}} {{link}}"
-      quoted: "<i title='quoted' class='icon icon-quote-right'></i> {{username}} {{link}}"
-      replied: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
-      posted: "<i title='replied' class='icon icon-reply'></i> {{username}} {{link}}"
-      edited: "<i title='edited' class='icon icon-pencil'></i> {{username}} {{link}}"
-      liked: "<i title='liked' class='icon icon-heart'></i> {{username}} {{link}}"
-      private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} {{link}}"
-      invited_to_private_message: "<i class='icon icon-envelope-alt' title='private message'></i> {{username}} {{link}}"
-      invitee_accepted: "<i title='accepted your invitation' class='icon icon-signin'></i> {{username}} 의 초대를 수락했습니다"
-      moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} 이동 {{link}}"
+      mentioned: "<span title="mentioned" class="icon">@</span> {{username}} {{link}}"
+      quoted: "<i title="quoted" class="icon icon-quote-right"></i> {{username}} {{link}}"
+      replied: "<i title="replied" class="icon icon-reply"></i> {{username}} {{link}}"
+      posted: "<i title="replied" class="icon icon-reply"></i> {{username}} {{link}}"
+      edited: "<i title="edited" class="icon icon-pencil"></i> {{username}} {{link}}"
+      liked: "<i title="liked" class="icon icon-heart"></i> {{username}} {{link}}"
+      private_message: "<i class="icon icon-envelope-alt" title="private message"></i> {{username}} {{link}}"
+      invited_to_private_message: "<i class="icon icon-envelope-alt" title="private message"></i> {{username}} {{link}}"
+      invitee_accepted: "<i title="accepted your invitation" class="icon icon-signin"></i> {{username}} 의 초대를 수락했습니다"
+      moved_post: "<i title="moved post" class="icon icon-arrow-right"></i> {{username}} 이동 {{link}}"
       total_flagged: "알려진 총 게시글"
 
     image_selector:
@@ -399,14 +399,14 @@ ko:
       searching: "검색중 ..."
 
     site_map: "다른 주제나 카테고리로 이동합니다"
-    go_back: '돌아가기'
-    current_user: '사용자 페이지로 이동'
+    go_back: "돌아가기"
+    current_user: "사용자 페이지로 이동"
 
     favorite:
-      title: '즐겨 찾기'
+      title: "즐겨 찾기"
       help:
-        star: '당신의 즐겨 찾기로 이 주제를 추가합니다'
-        unstar: '당신의 즐겨 찾기에서 이 주제를 제거합니다'
+        star: "당신의 즐겨 찾기로 이 주제를 추가합니다"
+        unstar: "당신의 즐겨 찾기에서 이 주제를 제거합니다"
 
     topics:
       none:
@@ -434,15 +434,15 @@ ko:
       title: 주제 랭킹 세부 사항
 
     topic:
-      create_in: '{{categoryName}} 주제를 만듭니다'
-      create: '주제 만들기'
-      create_long: '새로운 주제를 개설합니다'
-      private_message: '개인 메시지를 시작합니다'
-      list: '주제들'
-      new: '새로운 주제'
-      title: '주제'
+      create_in: "{{categoryName}} 주제를 만듭니다"
+      create: "주제 만들기"
+      create_long: "새로운 주제를 개설합니다"
+      private_message: "개인 메시지를 시작합니다"
+      list: "주제들"
+      new: "새로운 주제"
+      title: "주제"
       loading_more: "더 많은 주제 로딩 중..."
-      loading: '주제 로딩 중...'
+      loading: "주제 로딩 중..."
       invalid_access:
         title: "주제는 비공개"
         description: "죄송합니다, 당신은 그 주제를 액세스 할 수 없습니다!"
@@ -456,8 +456,8 @@ ko:
       new_posts: "there are {{new_posts}} new posts in this topic since you last read it"
 
       likes:
-        one: "이 항목은 1개의 '좋아요'를 받았습니다"
-        other: "이 항목은 {{count}}개의 '좋아요'를 받았습니다"
+        one: "이 항목은 1개의 "좋아요"를 받았습니다"
+        other: "이 항목은 {{count}}개의 "좋아요"를 받았습니다"
       back_to_list: "항목 리스트로 돌아갑니다"
       options: "항목 옵션"
       show_links: "이 항목에서 링크를 표시합니다"
@@ -481,18 +481,18 @@ ko:
         current: 현재 게시글
 
       notifications:
-        title: ''
+        title: ""
         reasons:
-          "3_2": '이 항목을보고 있기 때문에 당신이 알림을 받게됩니다.'
-          "3_1": '이 항목을 생성하기 때문에 알림을 받게됩니다.'
-          "3": '이 항목을보고 있기 때문에 당신이 알림을 받게됩니다.'
-          "2_4": '이 항목에 대한 응답을 기록하기 때문에 알림을 받게됩니다'
-          "2_2": '이 항목을 추적하는 때문에 알림을 받게됩니다.'
-          "2": '이 항목에서 <a href="/users/{{username}}/preferences">를 읽었기때문에 알림을 받을 수 있습니다</a>.'
-          "1": '누군가가 게시물에 @ 이름 또는 회신을 언급 할 경우에 통보됩니다'
-          "1_2": '누군가가 게시물에 @ 이름 또는 회신을 언급 할 경우에 통보됩니다'
-          "0": '당신은 이 항목에 관한 모든 알림을 무시하고 있습니다'
-          "0_2": 당신은 이 항목에 관한 모든 알림을 무시하고 있습니다.'
+          "3_2": "이 항목을보고 있기 때문에 당신이 알림을 받게됩니다."
+          "3_1": "이 항목을 생성하기 때문에 알림을 받게됩니다."
+          "3": "이 항목을보고 있기 때문에 당신이 알림을 받게됩니다."
+          "2_4": "이 항목에 대한 응답을 기록하기 때문에 알림을 받게됩니다"
+          "2_2": "이 항목을 추적하는 때문에 알림을 받게됩니다."
+          "2": "이 항목에서 <a href="/users/{{username}}/preferences">를 읽었기때문에 알림을 받을 수 있습니다</a>."
+          "1": "누군가가 게시물에 @ 이름 또는 회신을 언급 할 경우에 통보됩니다"
+          "1_2": "누군가가 게시물에 @ 이름 또는 회신을 언급 할 경우에 통보됩니다"
+          "0": "당신은 이 항목에 관한 모든 알림을 무시하고 있습니다"
+          "0_2": 당신은 이 항목에 관한 모든 알림을 무시하고 있습니다."
         watching:
           title: "보기"
           description: "추적같은, 게다가 당신은 모든 새 게시물 알림을받을 것입니다"
@@ -521,21 +521,21 @@ ko:
         convert_to_topic: "정식 항목으로 변환"
 
       reply:
-        title: '답글'
-        help: '이 항목에 대한 답글 구성 시작'
+        title: "답글"
+        help: "이 항목에 대한 답글 구성 시작"
 
       clear_pin:
         title: "고정 취소"
         help: "더 이상 귀하의 주제 목록의 맨 위에 표시하지 않도록 이 항목의 고정 상태를 해제합니다."
 
       share:
-        title: '공유'
-        help: '이 항목에 대한 링크를보세요'
+        title: "공유"
+        help: "이 항목에 대한 링크를보세요"
 
       inviting: "초대 중..."
 
       invite_private:
-        title: '개인 메시지에 초대'
+        title: "개인 메시지에 초대"
         email_or_username: "초대하려는 메일 또는 사용자"
         email_or_username_placeholder: "메일 또는 사용자"
         action: "초대"
@@ -543,15 +543,15 @@ ko:
         error: "죄송합니다, 해당 사용자를 초대하는 도중 오류가 발생했습니다"
 
       invite_reply:
-        title: '친구 회신을 초대합니다'
-        action: '이메일 초대'
-        help: '한 번의 클릭으로 이 주제에 회신 할 수 있도록 친구에게 초대장을 보낼 수 있습니다.'
+        title: "친구 회신을 초대합니다"
+        action: "이메일 초대"
+        help: "한 번의 클릭으로 이 주제에 회신 할 수 있도록 친구에게 초대장을 보낼 수 있습니다."
         email: "우리는 당신의 친구들을 링크를 클릭하여이 주제에 회신 할 수 있도록 간단한 이메일을 보내 드리겠습니다."
-        email_placeholder: '이메일 주소'
+        email_placeholder: "이메일 주소"
         success: "감사합니다! <b>{{email}}</b>로 초대장을 발송했습니다. 귀하의 초대를 수락하면 알려 드리겠습니다. 당신이 초대 한 사람을 추적하기 위해 사용자 페이지에서 초대장 탭을 선택합니다."
         error: "죄송합니다, 우리는 그 사람을 초대 할 수 없습니다. 아마도 그들은 이미 사용자입니까?"
 
-      login_reply: '답장에 로그인 합니다.'
+      login_reply: "답장에 로그인 합니다."
 
       filters:
         user: "당신이 보고 있는 {{n_posts}} {{by_n_users}}."
@@ -580,8 +580,8 @@ ko:
           other: "당신이 선택한 <b>{{count}}</b>개의 인기있는 게시물과 새로운 주제를 만드는 것은 당신에 관한 것입니다"
 
       multi_select:
-        select: '선택'
-        selected: '({{count}})개가 선택됨'
+        select: "선택"
+        selected: "({{count}})개가 선택됨"
         delete: 선택 삭제
         cancel: 선택을 취소
         move: 선택 이동
@@ -617,7 +617,7 @@ ko:
       abandon: "당신은 귀하의 게시물을 포기 하시겠습니까?"
 
       archetypes:
-        save: '옵션 저장'
+        save: "옵션 저장"
 
       controls:
         reply: "이 게시물에 대한 응답 작성을 시작합니다."
@@ -631,7 +631,7 @@ ko:
         more: "그 이상"
 
       actions:
-        flag: '플래그'
+        flag: "플래그"
         clear_flags:
           one: "플래그 지우기"
           other: "플래그 지우기"
@@ -655,9 +655,9 @@ ko:
           spam: "{{icons}}은 스팸으로 표시됩니다 "
           inappropriate: "{{icons}}은 이 내용에 대해 표시됩니다"
           notify_moderators: "{{icons}} 은 운영자"
-          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>notified moderators</a>"
+          notify_moderators_with_url: "{{icons}} <a href="{{postUrl}}">notified moderators</a>"
           notify_user: "{{icons}}은 개인메시지를 보냅니다"
-          notify_user_with_url: "{{icons}}은 <a href='{{postUrl}}'>private message</a>를 보냅니다"
+          notify_user_with_url: "{{icons}}은 <a href="{{postUrl}}">private message</a>를 보냅니다"
           bookmark: "{{icons}}은 즐겨찾기로 표시됩니다"
           like: "{{icons}}은 좋아요로 표시됩니다"
           vote: "{{icons}}은 투표로 표시됩니다"
@@ -732,14 +732,14 @@ ko:
           other: "모든 게시물을 삭제 하시겠습니까?"
 
     category:
-      none: '(카테고리 없음)'
-      edit: '편집'
+      none: "(카테고리 없음)"
+      edit: "편집"
       edit_long: "카테고리 편집"
       edit_uncategorized: "분류되지 않은 편집"
-      view: '카테고리 항목보기'
-      delete: '카테고리 지우기'
-      create: '카테고리 만들기'
-      save: '카테고리 저장'
+      view: "카테고리 항목보기"
+      delete: "카테고리 지우기"
+      create: "카테고리 만들기"
+      save: "카테고리 저장"
       creation_error: 카테고리의 작성 중 오류가 발생했습니다.
       save_error: 카테고리를 저장하는 중 오류가 발생했습니다..
       more_posts: "모든 {{posts}} 보기..."
@@ -757,12 +757,12 @@ ko:
       no_description: "이 카테고리에 대한 설명이 없습니다."
       change_in_category_topic: "설명 편집"
       hotness: "새로운"
-      already_used: '이 색은 다른 카테고리에서 사용되고 있습니다.'
+      already_used: "이 색은 다른 카테고리에서 사용되고 있습니다."
  
     flagging:
-      title: '왜 이 게시물이 고정입니까?'
-      action: '고정 게시물'
-      notify_action: '알림'
+      title: "왜 이 게시물이 고정입니까?"
+      action: "고정 게시물"
+      notify_action: "알림"
       cant: "죄송합니다,이 시간이 게시물을 신고 할 수 없습니다."
       custom_placeholder_notify_user: "왜이 게시물에 당신이 직접 개인적으로이 사용자에게 말을해야합니까? 구체적으로, 건설, 그리고 항상 친절합니다."
       custom_placeholder_notify_moderators: "왜이 게시물은 운영자가 관심을 필요로합니까? 우리는 당신이 걱정하는지 구체적으로 알게하고, 관련 링크 가능한을 제공합니다."
@@ -841,15 +841,15 @@ ko:
           other: "{{categoryName}} ({{count}})"
         help: "카테고리의 최신 항목 {{categoryName}}"
 
-    browser_update: '불행하게도, <a href="http://www.discourse.org/faq/#browser">당신의 브라우저는 사이트를 이용하기에는 힘들어보입니다.</a>. 당신의 브라우저를 업그레이드 하시기 바랍니다.<a href="http://browsehappy.com">.'
+    browser_update: "불행하게도, <a href="http://www.discourse.org/faq/#browser">당신의 브라우저는 사이트를 이용하기에는 힘들어보입니다.</a>. 당신의 브라우저를 업그레이드 하시기 바랍니다.<a href="http://browsehappy.com">."
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "필터를 입력하세요"
 
     admin:
-      title: 'Discourse 관리자'
-      moderator: '사회자'
+      title: "Discourse 관리자"
+      moderator: "사회자"
 
       dashboard:
         title: "계기판"
@@ -864,8 +864,8 @@ ko:
         last_checked: "마지막으로 확인"
         refresh_problems: "새로고침"
         no_problems: "아무런 문제가 발견되지 않았다."
-        moderators: '운영자:'
-        admins: '관리자:'
+        moderators: "운영자:"
+        admins: "관리자:"
         private_messages_short: "PMs"
         private_messages_title: "개인 메시지"
 
@@ -936,8 +936,8 @@ ko:
         invalid: "죄송합니다, 해당 사용자를 가장 할 수 있습니다."
 
       users:
-        title: '사용자'
-        create: '관리자 추가'
+        title: "사용자"
+        create: "관리자 추가"
         last_emailed: "마지막 이메일"
         not_found: "죄송합니다, 그 이름은 우리의 시스템에 존재하지 않습니다."
         new: "NEW"
@@ -948,16 +948,16 @@ ko:
           one: "사용자 승인"
           other: "사용자 승인수 ({{count}})회
 	  titles:
-          active: '활성 사용자'
-          new: '새로운 사용자'
-          pending: '사용자는 검토를 보류'
-          newuser: '사용자 신뢰 레벨 0 (New User)'
-          basic: '사용자 신뢰 레벨 1 (Basic User)'
-          regular: '사용자 신뢰 레벨 2 (Regular User)'
-          leader: '사용자 신뢰 레벨 3 (Leader)'
-          elder: '사용자 신뢰 레벨 4 (Elder)'
-          admins: '관리자'
-          moderators: '운영자'
+          active: "활성 사용자"
+          new: "새로운 사용자"
+          pending: "사용자는 검토를 보류"
+          newuser: "사용자 신뢰 레벨 0 (New User)"
+          basic: "사용자 신뢰 레벨 1 (Basic User)"
+          regular: "사용자 신뢰 레벨 2 (Regular User)"
+          leader: "사용자 신뢰 레벨 3 (Leader)"
+          elder: "사용자 신뢰 레벨 4 (Elder)"
+          admins: "관리자"
+          moderators: "운영자"
 
       user:
         ban_failed: "이 사용자를 금지하는 잘못된 무언가 {{error}}"
@@ -972,11 +972,11 @@ ko:
         show_admin_profile: "관리자"
         refresh_browsers: "브라우저 새로 고침"
         show_public_profile: "공개 프로필 보기"
-        impersonate: '가장'
-        revoke_admin: '관리자가 취소'
-        grant_admin: '보조금 관리'
-        revoke_moderation: '중용을 취소'
-        grant_moderation: '절제 부여'
+        impersonate: "가장"
+        revoke_admin: "관리자가 취소"
+        grant_admin: "보조금 관리"
+        revoke_moderation: "중용을 취소"
+        grant_moderation: "절제 부여"
         reputation: 평판
         permissions: 권한
         activity: 활동
@@ -987,7 +987,7 @@ ko:
         topics_entered: 주제 체결
         flags_given_count: 주어진 플래그
         flags_received_count: 플래그는 수신
-        approve: '승인'
+        approve: "승인"
         approved_by: "에 의해 승인"
         time_read: "읽기 시간"
         delete: "사용사 삭제"
@@ -998,10 +998,10 @@ ko:
 
       site_content:
         none: "편집을 시작하는 내용의 유형을 선택합니다."
-        title: '사이트 콘텐츠'
+        title: "사이트 콘텐츠"
         edit: "사이트 콘텐츠를 편집"
 
       site_settings:
-        show_overriden: '오직 재정만 표시'
-        title: '사이트 설정'
-        reset: '기본값으로 재설정'
+        show_overriden: "오직 재정만 표시"
+        title: "사이트 설정"
+        reset: "기본값으로 재설정"
