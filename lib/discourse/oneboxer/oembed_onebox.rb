@@ -12,7 +12,7 @@ module Discourse
       end
 
       def onebox
-        parsed = JSON.parse(open(oembed_endpoint).read)
+        parsed = MultiJson.load(open(oembed_endpoint).read)
 
         # If it's a video, just embed the iframe
         if %w(video rich).include?(parsed['type'])

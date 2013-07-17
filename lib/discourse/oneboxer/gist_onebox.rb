@@ -11,7 +11,7 @@ module Discourse
       end
 
       def parse(data)
-        parsed = JSON.parse(data)
+        parsed = MultiJson.load(data)
         desc = parsed['description']
         if desc.length > 120
           desc = desc[0..120]

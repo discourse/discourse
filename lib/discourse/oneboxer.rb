@@ -1,4 +1,5 @@
-require 'open-uri'
+require "open-uri"
+require "multi_json"
 require "nokogiri"
 require "mustache"
 require "discourse/oneboxer/version"

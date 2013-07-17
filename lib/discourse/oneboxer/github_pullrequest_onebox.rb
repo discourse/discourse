@@ -14,7 +14,7 @@ module Discourse
       end
 
       def parse(data)
-        result = JSON.parse(data)
+        result = MultiJson.load(data)
 
         result['created_at'] =
           Time.parse(result['created_at']).strftime("%I:%M%p - %d %b %y")
