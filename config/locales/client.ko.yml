@@ -125,7 +125,7 @@ ko:
         instructions: "당신의 Email은 표시되지않습니다"
         ok: "완료. 확인 Email을 보냈습니다"
         invalid: "사용하고 계시는 Email주소를 입력해주세요"
-        authenticated:ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ "당신의 이메일은 {{provider}}에 의해 인증되었습니다"
+        authenticated: "당신의 이메일은 {{provider}}에 의해 인증되었습니다"
         frequency: "당신의 활동이 뜸해지거나 메일을 읽지않는다면 확인메일을 보내드립니다"
 
       name:
@@ -235,7 +235,7 @@ ko:
     week: '주'
     week_desc: '지난 1주동안 게시 된 글'
 
-    first_post: 첫 번째 게시물 
+    first_post: 첫 번째 게시물
     mute: 음소거
     unmute: 음소거 해제
     last_post: 최근 게시물
@@ -283,8 +283,8 @@ ko:
       awaiting_confirmation: "계정 활성화를 기다리고, 또 다른 인증 이메일을 발행 비밀번호를 잊으셨습니까 링크를 사용하십시오."
       awaiting_approval: "귀하의 계정은 아직 운영자에 의해 승인되지 않았습니다. 이 승인되면 이메일을 받게됩니다."
       not_activated: "당신은 아직 로그인 할 수 없습니다. 우리는 이전에 <b> 다운로드에 당신에게 인증 이메일을 보냈 {{sentTo}} </ B>. 귀하의 계정을 활성화하려면 해당 이메일의 지침을 따르십시오. "
-       resend_activation_email : "다시 인증 이메일을 보내려면 여기를 클릭하세요."
-      sent_activation_email_again: "우리는 <b> 다운로드에 당신에게 다른 인증 이메일을 보냈 {{currentEmail}} </ B>. 그것이 도착하기 위해 몇 분 정도 걸릴 수 있습니다, ​​당신의 스팸 폴더를 확인하십시오."
+      resend_activation_email: "다시 인증 이메일을 보내려면 여기를 클릭하세요."
+      sent_activation_email_again: "우리는 <b> 다운로드에 당신에게 다른 인증 이메일을 보냈 {{currentEmail}} </b>. 그것이 도착하기 위해 몇 분 정도 걸릴 수 있습니다, ​​당신의 스팸 폴더를 확인하십시오."
       google:
         title: "Google"
         message: "Google 인증 중(make sure pop up blockers are not enabled)"
@@ -421,8 +421,8 @@ ko:
       bottom:
         latest: "더 이상 읽을 최신 항목이 없습니다"
         hot: "더 이상 읽을 인기있는 항목이 없습니다"
-	posted: "당신은 아직 어떤 항목에도 게시하지 않았습니다"
-	read: "더 이상 읽을 항목이 없습니다"
+        posted: "당신은 아직 어떤 항목에도 게시하지 않았습니다"
+        read: "더 이상 읽을 항목이 없습니다"
         new: "더 이상 읽을 새로운 항목이 없습니다."
         unread: "더 이상 읽지 않은 항목이 없습니다"
         favorited: "더 이상 읽을 즐겨 찾기 항목이 없습니다"
@@ -758,7 +758,7 @@ ko:
       change_in_category_topic: "설명 편집"
       hotness: "새로운"
       already_used: '이 색은 다른 카테고리에서 사용되고 있습니다.'
- 
+
     flagging:
       title: '왜 이 게시물이 고정입니까?'
       action: '고정 게시물'
@@ -885,9 +885,9 @@ ko:
         latest_changes: "최근 변경 사항 : 자주 업데이트하십시오!"
         by: "에 의해"
 
-     "플래그"
+      flags:
         title: "플래그"
-	old: "훌륭한"
+        old: "훌륭한"
         active: "활동적인"
         clear: "Flags 삭제"
         clear_title: "이 게시물에 대한 모든 플래그를 닫습니다. (글 숨기기를 해제합니다)"
@@ -946,8 +946,8 @@ ko:
         approved: "승인?"
         approved_selected:
           one: "사용자 승인"
-          other: "사용자 승인수 ({{count}})회
-	  titles:
+          other: "사용자 승인수 ({{count}})회"
+        titles:
           active: '활성 사용자'
           new: '새로운 사용자'
           pending: '사용자는 검토를 보류'
