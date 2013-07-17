@@ -14,7 +14,6 @@ Discourse.AdminSiteContentEditRoute = Discourse.Route.extend({
 
   model: function(params) {
     var list = this.controllerFor('adminSiteContents').get('model');
-    var model;
 
     // ember routing is fun ... this is what happens
     //
@@ -28,14 +27,10 @@ Discourse.AdminSiteContentEditRoute = Discourse.Route.extend({
     // we could avoid this hack if Ember just compared .serialize(model) with .serialize(context)
     //
     // alternatively we could use some sort of identity map
+    //
+    // see also: https://github.com/emberjs/ember.js/issues/3005
 
-    list.forEach(function(orig){
-      if(orig.get("content_type") === params.content_type){
-        model = orig;
-      }
-    });
-
-    return model;
+    return list.findProperty("content_type", params.content_type);
   },
 
   renderTemplate: function() {

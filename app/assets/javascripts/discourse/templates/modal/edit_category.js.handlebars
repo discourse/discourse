@@ -64,6 +64,7 @@
             {{#each permissions}}
               <li>
                 <span class="name"><span class="badge-group">{{group_name}}</span></span>
+                {{{i18n "category.can"}}}
                 <span class="permission">{{permission.description}}</span>
                 <a {{action removePermission this}}><i class="icon icon-remove-sign"></i></a>
               </li>
