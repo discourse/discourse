@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Discourse::Oneboxer::GithubCommitOnebox do
   before(:each) do
-    @o = Oneboxer::GithubCommitOnebox.new("https://github.com/discourse/discourse/commit/ee76f1926defa8309b3a7ea64a25707519529a13")
+    @o = Discourse::Oneboxer::GithubCommitOnebox.new("https://github.com/discourse/discourse/commit/ee76f1926defa8309b3a7ea64a25707519529a13")
     FakeWeb.register_uri(:get, @o.translate_url, response: fixture_file('oneboxer/github_commit_onebox.response'))
   end
 

@@ -7,7 +7,7 @@ module Discourse
       end
 
       def self.template_path(template_name)
-        "#{Rails.root}/lib/oneboxer/templates/#{template_name}.hbrs"
+        File.join("lib", "discourse", "oneboxer", "templates", "#{template_name}.hbrs")
       end
 
       def template_path(template_name)
@@ -35,17 +35,19 @@ module Discourse
       def onebox
         html = fetch_html
         args = parse(html)
-        return default_url unless args.present?
+        return default_url if args.nil? || args.empty?
         args[:original_url] = @url
         args[:lang] = @lang || ""
-        args[:favicon] = ActionController::Base.helpers.image_path(self.class.favicon_file) if self.class.favicon_file.present?
+        if defined?(ActionController) && !self.class.favicon_file.nil?
+          args[:favicon] = ActionController::Base.helpers.image_path(self.class.favicon_file)
+        end
         args[:host] = nice_host
 
         HandlebarsOnebox.generate_onebox(template,args)
-      rescue => ex
-        # If there's an exception, just embed the link
-        raise ex if Rails.env.development?
-        default_url
+      # rescue => ex
+      #   # If there's an exception, just embed the link
+      #   raise ex if defined?(Rails) && Rails.env.development?
+      #   default_url
       end
 
       def self.generate_onebox(template, args)

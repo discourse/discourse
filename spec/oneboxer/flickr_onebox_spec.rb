@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Discourse::Oneboxer::FlickrOnebox do
   before(:each) do
-    @o = Oneboxer::FlickrOnebox.new("http://www.flickr.com/photos/jaimeiniesta/3303881265")
+    @o = Discourse::Oneboxer::FlickrOnebox.new("http://www.flickr.com/photos/jaimeiniesta/3303881265")
     FakeWeb.register_uri(:get, @o.translate_url, response: fixture_file('oneboxer/flickr.response'))
   end
 

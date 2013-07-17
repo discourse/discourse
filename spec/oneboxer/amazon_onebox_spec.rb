@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Discourse::Oneboxer::AmazonOnebox do
   before(:each) do
-    @o = Oneboxer::AmazonOnebox.new("http://www.amazon.com/Ruby-Programming-Language-David-Flanagan/dp/0596516177")
+    @o = Discourse::Oneboxer::AmazonOnebox.new("http://www.amazon.com/Ruby-Programming-Language-David-Flanagan/dp/0596516177")
     FakeWeb.register_uri(:get, @o.translate_url, response: fixture_file('oneboxer/amazon.response'))
   end
 
@@ -21,7 +21,7 @@ private
     <div class='source'>
       <div class='info'>
         <a href='http://www.amazon.com/Ruby-Programming-Language-David-Flanagan/dp/0596516177' class="track-link" target="_blank">
-          <img class='favicon' src="/assets/favicons/amazon.png"> amazon.com
+          amazon.com
         </a>
       </div>
     </div>
