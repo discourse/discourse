@@ -87,7 +87,7 @@ class TopicQuery
 
     # When logged in we start with different results
     if @user
-      builder.add_results(unread_results(per_page: builder.results_left))
+      builder.add_results(unread_results(topic: topic, per_page: builder.results_left))
       builder.add_results(new_results(per_page: builder.results_left)) unless builder.full?
     end
     builder.add_results(random_suggested(topic, builder.results_left)) unless builder.full?
@@ -233,9 +233,15 @@ class TopicQuery
     end
 
     def unread_results(options={})
-      TopicQuery.unread_filter(default_results(options.reverse_merge(:unordered => true)))
-        .order('CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END')
-        .order(TopicQuery.order_nocategory_with_pinned_sql)
+      result = TopicQuery.unread_filter(default_results(options.reverse_merge(:unordered => true)))
+                         .order('CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END')
+
+      # Prefer unread in the same category
+      if options[:topic] && options[:topic].category_id
+        result = result.order("CASE WHEN topics.category_id = #{options[:topic].category_id.to_i} THEN 0 ELSE 1 END")
+      end
+
+      result.order(TopicQuery.order_nocategory_with_pinned_sql)
     end
 
     def random_suggested(topic, count)
@@ -243,7 +249,7 @@ class TopicQuery
 
       # If we are in a category, prefer it for the random results
       if topic.category_id
-        result = result.order("CASE WHEN topics.category_id = #{topic.category_id.to_i} THEN 0 ELSE 1 END, RANDOM()")
+        result = result.order("CASE WHEN topics.category_id = #{topic.category_id.to_i} THEN 0 ELSE 1 END")
       end
 
       result.order("RANDOM()")
