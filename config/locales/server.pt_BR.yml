@@ -123,7 +123,7 @@ pt_BR:
       title: "ancião"
     change_failed_explanation: "Você tentou rebaixar %{user_name} para '%{new_trust_level}'. No entanto o nível de confiança dele já é '%{current_trust_level}'. %{user_name} permanecerá em '%{current_trust_level}'"
   rate_limiter:
-    too_many_requests: "Você está repetindo esta ação muitas vezes. Por favor espera %{time_left} antes de tentar novamente."
+    too_many_requests: "Nós possuímos um limite diário do número de vezes que uma ação pode ser tomada. Por favor aguarde %{time_left} antes de tentar novamente."
     hours:
       one: "1 hora"
       other: "%{count} horas"
@@ -404,6 +404,9 @@ pt_BR:
     tos_miscellaneous:
       title: "Termos do Serviço: Diversos"
       description: "Texto para a seção de Diversos dos Termos de Serviço."
+    login_required:
+      title: "É requerido que você entre em sua conta: Página Inicial"
+      description: "Texto exibido para usuários não autorizados quando é se exige entrar na conta para acessar o site."
   site_settings:
     default_locale: "Idioma padrão para esta instância do Discourse (ISO 639-1 Code)"
     min_post_length: "tamanho mínimo para a postagem"
@@ -425,7 +428,7 @@ pt_BR:
     company_short_name: "Nome curto da companhia que mantém este site, usada nos documentos legais como o /tos"
     company_domain: "Nome de domínio pertencente a companhia que mantém este site, usada nos documentos legais como o /tos"
     api_key: "A chave de API segura usada para criar e modificar tópicos, acesse a seção /admin/api para defini-lá"
-    queue_jobs: "APENAS DESENVOLVEDORES! ATENÇÃO! Enfileira várias tarefas no sidekiq, se for falso a fila é única"
+    queue_jobs: "APENAS DESENVOLVEDORES! ATENÇÃO! Por padrão, enfileira tarefas no sidekiq. Se desativado, seu site ficará defeituoso."
     crawl_images: "permitir mostrar imagens de sites terceiros"
     ninja_edit_window: "quão rápido é possivél fazer uma alteração sem guardar uma nova versão, em segundos."
     max_image_width: "máxima largura para uma imagem numa postagem"
@@ -549,7 +552,8 @@ pt_BR:
     min_title_similar_length: "Tamanho mínimo do título antes de ele ser checado por tópicos similares"
     min_body_similar_length: "Tamanho mínimo do corpo de uma postagem antes de ele ser checado por tópicos similares"
     category_colors: "Lista separada por barra (|) das cores em hexadecimal permitidas para as categorias"
-    max_upload_size_kb: "Tamanho máximo dos arquivos que os usuários podem fazer upload em kB - certifique-se de configurar o limite no nginx (client_max_body_size) / apache, e também no proxy."
+    max_image_size_kb: "Tamanho máximo de imagens que os usuários podem enviar em kB - certifique-se de configurar o limite no nginx (client_max_body_size) / apache, e também no proxy."
+    max_attachment_size_kb: "Tamanho máximo de arquivos que os usuários podem enviar em kB - certifique-se de configurar o limite no nginx (client_max_body_size) / apache, e também no proxy."
     authorized_extensions: "Uma lista separada por barras verticais (|) das extensões de arquivo permitidas para envio"
     max_similar_results: "Quantos tópicos similares devem ser exibidos para um usuário enquanto ele está redigindo um novo tópico"
     title_prettify: "Prevenir erros comuns em títulos, incluindo caps-lock ligado, primeira letra minúscula, excesso de ! e ?, pontos extras no final, etc."
@@ -949,6 +953,7 @@ pt_BR:
     miscellaneous: "Este Acordo constitui a totalidade do acordo entre %{company_short_name} e você sobre o assunto em questão, e só pode ser modificado por uma emenda por escrito assinado por um executivo autorizado %{company_short_name}, ou pela publicação por %{company_short_name} de uma versão revisada. Exceto o definido em lei aplicável, se houver, em contrário, o presente Contrato, qualquer acesso ou uso do Site serão regidos pelas leis do República Federativa do Brasil, Brasil, excluindo seu conflito às disposições da lei, e o local adequado para quaisquer disputas decorrentes ou relacionadas com qualquer do mesmo serão os tribunais estaduais e federais localizados em Florianópolis, Santa Catarina. Com exceção de pedidos de medida cautelar ou de equidade ou reclamações relativas aos direitos de propriedade intelectual (que podem ser levados a qualquer tribunal competente, sem a constituição de uma garantia), qualquer litígio decorrente do presente Acordo será resolvido de acordo com as Regras de Arbitragem globais de Arbitragem e Mediação Judicial, Inc. (\"JAMS\") por três árbitros nomeados em conformidade com tais regras. A arbitragem terá lugar em Florianópolis, Santa Catarina, no idioma português brasileiro e a decisão arbitral pode ser executada em qualquer tribunal. A parte prevalecente em qualquer ação ou processo para executar este Contrato terá o direito de custos e honorários advocatícios. Se qualquer parte deste Contrato for considerada inválida ou inexequível, essa parte será interpretada de modo a refletir a intenção original das partes, e as parcelas restantes permanecerão em pleno vigor e efeito. A renúncia por qualquer das partes de qualquer termo ou condição deste Contrato ou qualquer violação da mesma, em qualquer instância, não vai renunciar a tal termo ou condição ou qualquer violação subseqüente. Você pode transferir seus direitos sob este Contrato a qualquer partido que consente e concorda em ficar vinculado por seus termos e condições; %{company_short_name} pode ceder seus direitos sob este Contrato sem qualquer condição. Este Acordo será vinculativo e reverterá em benefício das partes, seus sucessores e cessionários autorizados."
   deleted: 'removido'
   upload:
+    unauthorized: "Desculpe-nos, o arquivo que você está tentando enviar não é autorizado (extensões autorizadas: %{authorized_extensions})."
     pasted_image_filename: "Imagem colada"
     image:
       fetch_failure: "Desculpe, houve um erro ao transferir a imagem."
