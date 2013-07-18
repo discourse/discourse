@@ -102,7 +102,10 @@ class TopicLink < ActiveRecord::Base
           internal = false
           topic_id = nil
           post_number = nil
-          if parsed.host == Discourse.current_hostname || !parsed.host
+
+          if Upload.has_been_uploaded?(url)
+            internal = !Upload.is_on_s3?(url)
+          elsif parsed.host == Discourse.current_hostname || !parsed.host
             internal = true
 
             route = Rails.application.routes.recognize_path(parsed.path)

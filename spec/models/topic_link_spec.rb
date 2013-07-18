@@ -176,6 +176,42 @@ describe TopicLink do
       end
     end
 
+    context "link to a local attachments" do
+      let(:post) { @topic.posts.create(user: @user, raw: '<a class="attachment" href="/uploads/default/208/87bb3d8428eb4783.rb">ruby.rb</a>') }
+
+      it "extracts the link" do
+        TopicLink.extract_from(post)
+        link = @topic.topic_links.first
+        # extracted the link
+        link.should be_present
+        # is set to internal
+        link.should be_internal
+        # has the correct url
+        link.url.should == "/uploads/default/208/87bb3d8428eb4783.rb"
+        # should not be the reflection
+        link.should_not be_reflection
+      end
+
+    end
+
+    context "link to an attachments uploaded on S3" do
+      let(:post) { @topic.posts.create(user: @user, raw: '<a class="attachment" href="//s3.amazonaws.com/bucket/2104a0211c9ce41ed67989a1ed62e9a394c1fbd1446.rb">ruby.rb</a>') }
+
+      it "extracts the link" do
+        TopicLink.extract_from(post)
+        link = @topic.topic_links.first
+        # extracted the link
+        link.should be_present
+        # is not internal
+        link.should_not be_internal
+        # has the correct url
+        link.url.should == "//s3.amazonaws.com/bucket/2104a0211c9ce41ed67989a1ed62e9a394c1fbd1446.rb"
+        # should not be the reflection
+        link.should_not be_reflection
+      end
+
+    end
+
   end
 
   describe 'internal link from pm' do

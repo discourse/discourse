@@ -153,7 +153,7 @@ describe Upload do
     it "identifies internal or relatives urls" do
       Discourse.expects(:base_url_no_prefix).returns("http://discuss.site.com")
       Upload.has_been_uploaded?("http://discuss.site.com/uploads/default/42/0123456789ABCDEF.jpg").should == true
-      Upload.has_been_uploaded?("/upload/42/0123456789ABCDEF.jpg").should == true
+      Upload.has_been_uploaded?("/uploads/42/0123456789ABCDEF.jpg").should == true
     end
 
     it "identifies internal urls when using a CDN" do
