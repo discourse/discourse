@@ -91,13 +91,13 @@ var getUploadMarkdown = function(filename) {
     filesize: 42,
     width: 100,
     height: 200,
-    url: "/upload/123/abcdef.ext"
+    url: "/uploads/123/abcdef.ext"
   });
 };
 
 test("getUploadMarkdown", function() {
-  ok(getUploadMarkdown("lolcat.gif") === '<img src="/upload/123/abcdef.ext" width="100" height="200">');
-  ok(getUploadMarkdown("important.txt") === '<a class="attachment" href="/upload/123/abcdef.ext">important.txt</a><span class="size">(42 Bytes)</span>');
+  ok(getUploadMarkdown("lolcat.gif") === '<img src="/uploads/123/abcdef.ext" width="100" height="200">');
+  ok(getUploadMarkdown("important.txt") === '<a class="attachment" href="/uploads/123/abcdef.ext">important.txt</a><span class="size">(42 Bytes)</span>');
 });
 
 test("isAnImage", function() {
