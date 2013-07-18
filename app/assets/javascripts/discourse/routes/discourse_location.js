@@ -3,7 +3,8 @@
 */
 
 var get = Ember.get, set = Ember.set;
-var popstateReady = false;
+var popstateFired = false;
+var supportsHistoryState = window.history && 'state' in window.history;
 
 // Thanks: https://gist.github.com/kares/956897
 var re = /([^&=]+)=?([^&]*)/g;
@@ -46,9 +47,6 @@ Ember.DiscourseLocation = Ember.Object.extend({
 
   init: function() {
     set(this, 'location', get(this, 'location') || window.location);
-    if ( $.inArray('state', $.event.props) < 0 ) {
-      jQuery.event.props.push('state');
-    }
     this.initState();
   },
 
@@ -66,9 +64,17 @@ Ember.DiscourseLocation = Ember.Object.extend({
       this.set('queryParams', $.parseParams(location.search));
     }
 
+    set(this, 'history', get(this, 'history') || window.history);
     this.replaceState(this.formatURL(this.getURL()));
-    set(this, 'history', window.history);
   },
+
+  /**
+    Will be pre-pended to path upon state change
+
+    @property rootURL
+    @default '/'
+  */
+  rootURL: '/',
 
   /**
     @private
@@ -96,9 +102,10 @@ Ember.DiscourseLocation = Ember.Object.extend({
     @param path {String}
   */
   setURL: function(path) {
+    var state = this.getState();
     path = this.formatURL(path);
-    if (this.getState() && this.getState().path !== path) {
-      popstateReady = true;
+
+    if (state && state.path !== path) {
       this.pushState(path);
     }
   },
@@ -113,10 +120,10 @@ Ember.DiscourseLocation = Ember.Object.extend({
     @param path {String}
   */
   replaceURL: function(path) {
+    var state = this.getState();
     path = this.formatURL(path);
 
-    if (this.getState() && this.getState().path !== path) {
-      popstateReady = true;
+    if (state && state.path !== path) {
       this.replaceState(path);
     }
   },
@@ -125,14 +132,13 @@ Ember.DiscourseLocation = Ember.Object.extend({
    @private
 
    Get the current `history.state`
+   Polyfill checks for native browser support and falls back to retrieving
+   from a private _historyState variable
 
    @method getState
   */
   getState: function() {
-    var historyState = get(this, 'history').state;
-    if (historyState) return historyState;
-
-    return {path: window.location.pathname};
+    return supportsHistoryState ? get(this, 'history').state : this._historyState;
   },
 
   /**
@@ -144,9 +150,17 @@ Ember.DiscourseLocation = Ember.Object.extend({
    @param path {String}
   */
   pushState: function(path) {
-    if (!window.history.pushState) return;
-    this.set('currentState', { path: path } );
-    window.history.pushState({ path: path }, null, path);
+    var state = { path: path };
+
+    get(this, 'history').pushState(state, null, path);
+
+    // store state if browser doesn't support `history.state`
+    if (!supportsHistoryState) {
+      this._historyState = state;
+    }
+
+    // used for webkit workaround
+    this._previousURL = this.getURL();
   },
 
   /**
@@ -158,9 +172,17 @@ Ember.DiscourseLocation = Ember.Object.extend({
    @param path {String}
   */
   replaceState: function(path) {
-    if (!window.history.replaceState) return;
-    this.set('currentState', { path: path } );
-    window.history.replaceState({ path: path }, null, path);
+    var state = { path: path };
+
+    get(this, 'history').replaceState(state, null, path);
+
+    // store state if browser doesn't support `history.state`
+    if (!supportsHistoryState) {
+      this._historyState = state;
+    }
+
+    // used for webkit workaround
+    this._previousURL = this.getURL();
   },
 
 
@@ -175,7 +197,10 @@ Ember.DiscourseLocation = Ember.Object.extend({
 
   // When our query params change, update the URL
   queryParamsStringChanged: function() {
-    this.replaceState(this.formatURL(this.getURL()));
+    var loc = this;
+    Em.run.next(function () {
+      loc.replaceState(loc.formatURL(loc.getURL()));
+    });
   }.observes('queryParamsString'),
 
   /**
@@ -191,21 +216,13 @@ Ember.DiscourseLocation = Ember.Object.extend({
     var guid = Ember.guidFor(this),
         self = this;
 
-    $(window).bind('popstate.ember-location-'+guid, function(e) {
-      if (e.state) {
-        var currentState = self.get('currentState');
-        if (currentState) {
-          var url = e.state.path,
-              rootURL = (Discourse.BaseUri === undefined ? "/" : Discourse.BaseUri);
-
-          rootURL = rootURL.replace(/\/$/, '');
-          url = url.replace(rootURL, '');
-          callback(url);
-        } else {
-          this.set('currentState', e.state);
-        }
+    Ember.$(window).on('popstate.ember-location-'+guid, function(e) {
+      // Ignore initial page load popstate event in Chrome
+      if (!popstateFired) {
+        popstateFired = true;
+        if (self.getURL() === self._previousURL) { return; }
       }
-
+      callback(self.getURL());
     });
   },
 
@@ -218,17 +235,10 @@ Ember.DiscourseLocation = Ember.Object.extend({
     @param url {String}
   */
   formatURL: function(url) {
-    var rootURL = (Discourse.BaseUri === undefined ? "/" : Discourse.BaseUri);
+    var rootURL = get(this, 'rootURL');
 
     if (url !== '') {
       rootURL = rootURL.replace(/\/$/, '');
-    }
-
-    // remove prefix from URL if it is already in url - i.e. /discourse/t/... -> /t/if rootURL is /discourse
-    // this sometimes happens when navigating to already visited location
-    if ((rootURL.length > 1) && (url.substring(0, rootURL.length + 1) === (rootURL + "/")))
-    {
-      url = url.substring(rootURL.length);
     }
 
     return rootURL + url + this.get('queryParamsString');
@@ -237,8 +247,9 @@ Ember.DiscourseLocation = Ember.Object.extend({
   willDestroy: function() {
     var guid = Ember.guidFor(this);
 
-    Ember.$(window).unbind('popstate.ember-location-'+guid);
+    Ember.$(window).off('popstate.ember-location-'+guid);
   }
+
 });
 
 Ember.Location.registerImplementation('discourse_location', Ember.DiscourseLocation);

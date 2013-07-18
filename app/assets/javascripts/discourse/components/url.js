@@ -48,6 +48,7 @@ Discourse.URL = Em.Object.createWithMixins({
     @param {String} path The path we are routing to.
   **/
   routeTo: function(path) {
+
     var oldPath = window.location.pathname;
     path = path.replace(/https?\:\/\/[^\/]+/, '');
 
