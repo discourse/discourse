@@ -1,5 +1,17 @@
 pt_BR:
   js:
+    number:
+      human:
+        storage_units:
+          format: '%n %u'
+          units:
+            byte:
+              one: Byte
+              other: Bytes
+            gb: GB
+            kb: KB
+            mb: MB
+            tb: TB
     dates:
       tiny:
         half_a_minute: "< 1m"
@@ -136,6 +148,7 @@ pt_BR:
       '12': "Itens Enviados"
       '13': "Caixa de Entrada"
     user:
+      said: "{{username}} postou:"
       profile: Perfil
       mute: Silenciar
       edit: Editar Preferências
@@ -385,11 +398,8 @@ pt_BR:
       quote_text: "Bloco de Citação"
       code_title: "Trecho de Código"
       code_text: "digite o código aqui"
-      image_title: "Imagem"
-      image_description: "digite a descrição da imagem aqui"
-      image_dialog_title: "Inserir Imagem"
-      image_optional_text: "título opcional"
-      image_hosting_hint: "Precisa de <a href='http://www.google.com/search?q=free+image+hosting' target='_blank'>hospedagem gratuita para  arquivos de imagem?</a>"
+      upload_title: "Enviar"
+      upload_description: "digite aqui a descrição do arquivo enviado"
       olist_title: "Lista numerada"
       ulist_title: "Lista de items"
       list_item: "Item da Lista"
@@ -418,17 +428,17 @@ pt_BR:
       invitee_accepted: "<i title='accepted your invitation' class='icon icon-signin'></i> {{username}} aceitou o seu convite"
       moved_post: "<i title='moved post' class='icon icon-arrow-right'></i> {{username}} moveu a postagem para {{link}}"
       total_flagged: "postagens sinalizadas totais"
-    image_selector:
-      title: "Inserir Imagem"
-      from_my_computer: "Do meu dispositivo"
-      from_the_web: "Da internet"
-      add_image: "Adicionar Imagem"
-      remote_title: "imagem remota"
-      remote_tip: "insira o endereço de uma imagem no formato http://example.com/image.jpg"
-      local_title: "imagem local"
-      local_tip: "clique para selecionar uma imagem no seu dispositivo."
+    upload_selector:
+      title: "Enviar arquivo"
+      from_my_computer: "Do Meu Dispositivo"
+      from_the_web: "Da Internet"
+      add_image: "Adicionar Arquivo"
+      remote_title: "arquivo remoto"
+      remote_tip: "digite o endereço de um arquivo na forma http://exemplo.com/imagem.jpg"
+      local_title: "arquivo local"
+      local_tip: "clique para selecionar um arquivo do seu dispositivo"
       upload: "Enviar"
-      uploading_image: "Enviando imagem"
+      upload_file: "Enviando"
     search:
       title: "procurar por tópicos, posts, usuários, ou categorias"
       placeholder: "escreve aqui o seu termo de buscar"
@@ -522,6 +532,7 @@ pt_BR:
         total: total de posts
         current: postagem atual
       notifications:
+        title: "Notificações a Receber: "
         reasons:
           '3_2': 'Você receberá notificações porque está observando este tópico.'
           '3_1': 'Você receberá notificações porque criou este tópico.'
@@ -546,6 +557,7 @@ pt_BR:
           title: "Silenciar"
           description: "você não será notificado relativamente a nada deste tópico, e não aparecerá na sua lista de não lidos."
       actions:
+        recover: "Recuperar Tópico"
         delete: "Apagar Tópico"
         open: "Abrir Tópico"
         close: "Fechar Tópico"
@@ -557,7 +569,7 @@ pt_BR:
         invisible: "Tornar Invisível"
         visible: "Tornar Visível"
         reset_read: "Repor Data de Leitura"
-        multi_select: "Alternar Multi-Seleção"
+        multi_select: "Selecionar Postagens para Mover"
         convert_to_topic: "Converter para Tópico Regular"
       reply:
         title: 'Responder'
@@ -602,17 +614,17 @@ pt_BR:
           other: "de {{count}} no tópico"
         cancel: "Mostrar novamente todas as postagens deste tópico."
       split_topic:
-        title: "Dividir Tópico"
-        action: "dividir tópico"
+        title: "Mover para um novo Tópico"
+        action: "mover para novo tópico"
         topic_name: "Nome do Novo Tópico:"
-        error: "Houve um erro ao separar este tópico."
+        error: "Houve um erro ao mover as postagens para novo tópico."
         instructions:
           one: "Você está prestes a criar um novo tópico e populá-lo com a postagem que você selecionou."
           other: "Você está prestes a criar um novo tópico e populá-lo com os <b>{{count}}</b> postagens que você selecionou."
       merge_topic:
-        title: "Fundir Tópico"
-        action: "fundir tópico"
-        error: "Houve um erro ao fundir este tópico."
+        title: "Mover para Tópico Existente"
+        action: "mover para tópico existente"
+        error: "Houve um erro ao mover as postagens para aquele tópico."
         instructions:
           one: "Por favor selecione o tópico para o qual você gostaria de mover esta postagem."
           other: "Por favor selecione o tópico para o qual você gostaria de mover estas <b>{{count}}</b> postagens."
@@ -745,7 +757,7 @@ pt_BR:
             one: "1 pessoa adicionou um marcador a esta postagem"
             other: "{{count}} pessoas adicionaram um marcador a esta postagem"
           like:
-            one: "1 pessoa curtiu esta postagem"
+            one: "1 pessoa deu curtiu esta postagem"
             other: "{{count}} pessoas curtiram esta postagem"
           vote:
             one: "1 pessoa votou nesta postagem"
@@ -759,6 +771,7 @@ pt_BR:
           one: "Tem certeza que quer apagar esta postagem?"
           other: "Tem certeza que quer apagar todos essas postagens?"
     category:
+      can: 'pode&hellip; '
       none: '(sem categoria)'
       edit: 'editar'
       edit_long: "Editar Categoria"
@@ -787,11 +800,10 @@ pt_BR:
       change_in_category_topic: "Editar Descrição"
       hotness: "Mais Quente"
       already_used: 'Esta cor já foi usada para outra categoria'
-      is_secure: "Categoria segura?"
-      add_group: "Adicionar Grupo"
       security: "Segurança"
-      allowed_groups: "Grupos Permitidos:"
       auto_close_label: "Fechar automaticamente tópicos depois de:"
+      edit_permissions: "Editar Permissões"
+      add_permission: "Adicionar Permissões"
     flagging:
       title: 'Porque está sinalizando esta postagem?'
       action: 'Sinalizar Postagem'
@@ -871,6 +883,10 @@ pt_BR:
           other: "{{categoryName}} ({{count}})"
         help: "tópicos populares na categoria {{categoryName}}"
     browser_update: 'Infelizmente, <a href="http://www.discourse.org/faq/#browser">seu navegador é muito antigo para ser utilizado em um fórum Discours</a>. Por favor <a href="http://browsehappy.com">atualize seu navegador</a>.'
+    permission_types:
+      full: "Criar / Responder / Ver"
+      create_post: "Responder / Ver"
+      readonly: "Ver"
   admin_js:
     type_to_filter: "escreva para filtrar..."
     admin:
