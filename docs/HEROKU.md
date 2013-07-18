@@ -243,7 +243,7 @@ Create a .env file from the sample.
 
         heroku addons:add blitz:250
 
-You can now run basic load tests against your instalation. Heres an example query with the rush of users scaling from 1 to 250 over 60 seconds. The timeout (-T) is set to 30 seconds, as after this Heroku will kill a process and return an error anyway.
+You can now run basic load tests against your instalation. Here's an example query with the rush of users scaling from 1 to 250 over 60 seconds. The timeout (-T) is set to 30 seconds, as after this Heroku will kill a process and return an error anyway.
 
     -p 1-250:60 -T 30000 http://YOUR-APP-NAME.herokuapp.com/
 
@@ -327,9 +327,9 @@ Heroku Cedar stack does not support Nginx as a caching layer, so you may want to
 
 This can be done simply using the [Asset Sync](https://github.com/rumblelabs/asset_sync) gem.
 
-You'll need an Amazon S3 account set up with a bucket configured with your app name (appname-assets), and a seperate user with write access to that bucket. You can create the new user in Account > Security Credentials. See [AWS best practices](http://docs.aws.amazon.com/IAM/latest/UserGuide/IAMBestPractices.html) for more details.
+You'll need an Amazon S3 account set up with a bucket configured with your app name (appname-assets), and a separate user with write access to that bucket. You can create the new user in Account > Security Credentials. See [AWS best practices](http://docs.aws.amazon.com/IAM/latest/UserGuide/IAMBestPractices.html) for more details.
 
-**Caveat:** This example relies on the app being deployed using the `heroku labs:enable user-env-compile` method detailed above. For instructions on manual compilation, plese refer to the [Asset Sync](https://github.com/rumblelabs/asset_sync) gem readme.
+**Caveat:** This example relies on the app being deployed using the `heroku labs:enable user-env-compile` method detailed above. For instructions on manual compilation, please refer to the [Asset Sync](https://github.com/rumblelabs/asset_sync) gem readme.
 
 1. Add the Asset Sync Gem to the Gemfile under assets.
     
@@ -355,10 +355,10 @@ You'll need an Amazon S3 account set up with a bucket configured with your app n
 
         heroku config:set FOG_PROVIDER=AWS AWS_ACCESS_KEY_ID=xxx AWS_SECRET_ACCESS_KEY=yyy FOG_DIRECTORY=appname-assets
         
-4. Push the Gzip config setting to Heroku. This tells asset sync to upload Gziped files where available.
+4. Push the Gzip config setting to Heroku. This tells asset sync to upload Gzipped files where available.
 
         heroku config:add ASSET_SYNC_GZIP_COMPRESSION=true
 
 Now commit your changes to Git and push to Heroku.
 
-If you open Chrome's Inspector, click on Network and refresh the page, your assets should now be showing an amazonaws.com url. Please refer to the [Asset Sync](https://github.com/rumblelabs/asset_sync) gem readme for more configuration options, or to use anothe CDN such as AWS CloudFront for better performance. 
+If you open Chrome's Inspector, click on Network and refresh the page, your assets should now be showing an amazonaws.com url. Please refer to the [Asset Sync](https://github.com/rumblelabs/asset_sync) gem readme for more configuration options, or to use another CDN such as AWS CloudFront for better performance. 
