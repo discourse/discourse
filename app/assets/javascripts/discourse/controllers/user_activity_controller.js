@@ -1,3 +1,11 @@
+/**
+  The base route for showing an activity stream.
+
+  @class UserActivityRoute
+  @extends Discourse.Route
+  @namespace Discourse
+  @module Discourse
+**/
 Discourse.UserActivityRoute = Discourse.Route.extend({
   renderTemplate: function() {
     this.render('user_activity', {into: 'user', outlet: 'userOutlet' });
@@ -5,19 +13,50 @@ Discourse.UserActivityRoute = Discourse.Route.extend({
 
   model: function() {
     return this.modelFor('user');
+  },
+
+  setupController: function(controller, user) {
+    this.controllerFor('userActivity').set('model', user);
+
+    var composerController = this.controllerFor('composer');
+    controller.set('model', user);
+    Discourse.Draft.get('new_private_message').then(function(data) {
+      if (data.draft) {
+        composerController.open({
+          draft: data.draft,
+          draftKey: 'new_private_message',
+          ignoreIfChanged: true,
+          draftSequence: data.draft_sequence
+        });
+      }
+    });
   }
+
 });
 
+/**
+  A route for showing a user's activity
+
+  @class UserIndexRoute
+  @extends Discourse.Route
+  @namespace Discourse
+  @module Discourse
+**/
 Discourse.UserActivityIndexRoute = Discourse.Route.extend({
   model: function() {
     return this.modelFor('user').findStream();
   },
 
   setupController: function(controller, model) {
-    this.controllerFor('userActivity').set('stream', model);
+    this.controllerFor('userActivity').setProperties({
+      model: this.modelFor('user'),
+      stream: model,
+      privateMessageView: this.get('privateMessageRoute')
+    });
   }
 });
 
+// Build all the filter routes
 Object.keys(Discourse.UserAction.TYPES).forEach(function (userAction) {
   Discourse["UserActivity" + userAction.classify() + "Route"] = Discourse.UserActivityIndexRoute.extend({
     model: function() {
@@ -26,6 +65,15 @@ Object.keys(Discourse.UserAction.TYPES).forEach(function (userAction) {
   });
 });
 
+
+/**
+  Show the user's default route
+
+  @class UserIndexRoute
+  @extends Discourse.Route
+  @namespace Discourse
+  @module Discourse
+**/
 Discourse.UserIndexRoute = Discourse.Route.extend({
   renderTemplate: function() {
     this.render('user_activity', {into: 'user', outlet: 'userOutlet' });
@@ -38,23 +86,65 @@ Discourse.UserIndexRoute = Discourse.Route.extend({
 
   setupController: function(controller, stream) {
     var userActivity = this.controllerFor('userActivity');
-
     userActivity.setProperties({
-      stream: stream,
-      model: this.modelFor('user')
+      model: this.modelFor('user'),
+      stream: stream
     });
   }
 });
 
 /**
-  This controller supports all actions on a user's activity stream
+  Base route for showing private messages
 
-  @class UserActivityController
-  @extends Discourse.ObjectController
+  @class UserPrivateMessagesRoute
+  @extends Discourse.UserActivityRoute
   @namespace Discourse
   @module Discourse
 **/
-Discourse.UserActivityController = Discourse.Controller.extend({
+Discourse.UserPrivateMessagesRoute = Discourse.UserActivityRoute.extend({});
+
+/**
+  Default private messages route
+
+  @class UserPrivateMessagesIndexRoute
+  @extends Discourse.UserActivityIndexRoute
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.UserPrivateMessagesIndexRoute = Discourse.UserActivityIndexRoute.extend({
+  privateMessageRoute: true,
+
+  model: function() {
+    return this.modelFor('user').findStream(Discourse.UserAction.TYPES.messages_received);
+  }
+});
+
+/**
+  Private messages sent route
+
+  @class UserPrivateMessagesSentRoute
+  @extends Discourse.UserActivityIndexRoute
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.UserPrivateMessagesSentRoute = Discourse.UserActivityIndexRoute.extend({
+  privateMessageRoute: true,
+
+  model: function() {
+    return this.modelFor('user').findStream(Discourse.UserAction.TYPES.messages_sent);
+  }
+});
+
+
+/**
+  This controller supports all actions on a user's activity stream
+
+  @class UserActivityController
+  @extends Discourse.Controller
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.UserActivityController = Discourse.ObjectController.extend({
   needs: ['composer'],
 
   kickOffPrivateMessage: (function() {

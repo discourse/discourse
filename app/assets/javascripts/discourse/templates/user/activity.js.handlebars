@@ -1,56 +1,61 @@
-{{#with model}}
-  <div id='user-info'>
-    <nav class='buttons'>
-      {{#if can_edit}}
-        {{#linkTo "preferences" class="btn"}}{{i18n user.edit}}{{/linkTo}}
-      {{/if}}
-      <br/>
-      {{#if can_send_private_message_to_user}}
-        <button class='btn create' {{action composePrivateMessage}}>
-          <i class='icon icon-envelope'></i>
-          {{i18n user.private_message}}
-        </button>
-      {{/if}}
-    </nav>
-    <div class='clearfix'></div>
+<div id='user-info'>
+  <nav class='buttons'>
+    {{#if can_edit}}
+      {{#linkTo "preferences" class="btn"}}{{i18n user.edit}}{{/linkTo}}
+    {{/if}}
+    <br/>
+    {{#if can_send_private_message_to_user}}
+      <button class='btn create' {{action composePrivateMessage}}>
+        <i class='icon icon-envelope'></i>
+        {{i18n user.private_message}}
+      </button>
+    {{/if}}
+  </nav>
+  <div class='clearfix'></div>
 
-    <ul class='action-list nav-stacked side-nav'>
-      {{activityFilter count=statsCountNonPM user=this}}
+  <ul class='action-list nav-stacked side-nav'>
+    {{#if privateMessageView}}
+      {{#each stat in statsPmsOnly}}
+        {{activityFilter content=stat user=model}}
+      {{/each}}
+    {{else}}
+      {{activityFilter count=statsCountNonPM user=model}}
       {{#each stat in statsExcludingPms}}
         {{activityFilter content=stat user=model}}
       {{/each}}
-    </ul>
-    <div class='show'>
-      <dl>
-      {{#if websiteName}}
-        <dt>{{i18n user.website}}:</dt><dd><a {{bindAttr href="website"}} target="_blank">{{websiteName}}</a></dd>
-      {{/if}}
-      {{#if created_at}}
-        <dt>{{i18n user.created}}:</dt><dd>{{date created_at}}</dd>
-      {{/if}}
-      {{#if last_posted_at}}
-        <dt>{{i18n user.last_posted}}:</dt><dd>{{date last_posted_at}}</dd>
-      {{/if}}
-      {{#if last_seen_at}}
-        <dt>{{i18n user.last_seen}}:</dt><dd>{{date last_seen_at}}</dd>
-      {{/if}}
-      {{#if invited_by}}
-        <dt>{{i18n user.invited_by}}:</dt><dd>{{#linkTo 'userActivity' invited_by}}{{invited_by.username}}{{/linkTo}}</dd>
-      {{/if}}
-      {{#if email}}
-        <dt>{{i18n user.email.title}}:</dt><dd {{bindAttr title="email"}}>{{email}}</dd>
-      {{/if}}
-      <dt>{{i18n user.trust_level}}:</dt><dd>{{trustLevel.name}}</dd>
-      </dl>
-    </div>
-
-    {{#if can_edit}}
-      <div style='margin-top: 10px'>
-        <button class='btn' data-not-implemented='true' disabled title="{{i18n not_implemented}}">{{i18n user.download_archive}}</button>
-      </div>
     {{/if}}
+  </ul>
 
+  <div class='show'>
+    <dl>
+    {{#if websiteName}}
+      <dt>{{i18n user.website}}:</dt><dd><a {{bindAttr href="website"}} target="_blank">{{websiteName}}</a></dd>
+    {{/if}}
+    {{#if created_at}}
+      <dt>{{i18n user.created}}:</dt><dd>{{date created_at}}</dd>
+    {{/if}}
+    {{#if last_posted_at}}
+      <dt>{{i18n user.last_posted}}:</dt><dd>{{date last_posted_at}}</dd>
+    {{/if}}
+    {{#if last_seen_at}}
+      <dt>{{i18n user.last_seen}}:</dt><dd>{{date last_seen_at}}</dd>
+    {{/if}}
+    {{#if invited_by}}
+      <dt>{{i18n user.invited_by}}:</dt><dd>{{#linkTo 'userActivity' invited_by}}{{invited_by.username}}{{/linkTo}}</dd>
+    {{/if}}
+    {{#if email}}
+      <dt>{{i18n user.email.title}}:</dt><dd {{bindAttr title="email"}}>{{email}}</dd>
+    {{/if}}
+    <dt>{{i18n user.trust_level}}:</dt><dd>{{trustLevel.name}}</dd>
+    </dl>
   </div>
-{{/with}}
+
+  {{#if can_edit}}
+    <div style='margin-top: 10px'>
+      <button class='btn' data-not-implemented='true' disabled title="{{i18n not_implemented}}">{{i18n user.download_archive}}</button>
+    </div>
+  {{/if}}
+</div>
+
 
 {{userStream stream=stream}}
