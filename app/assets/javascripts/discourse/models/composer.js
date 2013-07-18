@@ -469,7 +469,6 @@ Discourse.Composer = Discourse.Model.extend({
       }
     }
 
-    // Save callback
     var composer = this;
     return Ember.Deferred.promise(function(promise) {
       createdPost.save(function(result) {

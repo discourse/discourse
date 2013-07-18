@@ -49,20 +49,23 @@ Discourse.Utilities = {
 
   avatarUrl: function(username, size, template) {
     if (!username) return "";
-    size = Discourse.Utilities.translateSize(size);
-    var rawSize = (size * (window.devicePixelRatio || 1)).toFixed();
+    var rawSize = (Discourse.Utilities.translateSize(size) * (window.devicePixelRatio || 1)).toFixed();
+
+    if (username.match(/[^A-Za-z0-9_]/)) { return ""; }
     if (template) return template.replace(/\{size\}/g, rawSize);
-    return Discourse.getURL("/users/") + (username.toLowerCase()) + "/avatar/" + rawSize + "?__ws=" + (encodeURIComponent(Discourse.BaseUrl || ""));
+    return Discourse.getURL("/users/") + username.toLowerCase() + "/avatar/" + rawSize + "?__ws=" + encodeURIComponent(Discourse.BaseUrl || "");
   },
 
   avatarImg: function(options) {
-    var extraClasses, size, title, url;
-    size = Discourse.Utilities.translateSize(options.size);
-    title = options.title || "";
-    extraClasses = options.extraClasses || "";
-    url = Discourse.Utilities.avatarUrl(options.username, options.size, options.avatarTemplate);
-    return "<img width='" + size + "' height='" + size + "' src='" + url + "' class='avatar " +
-            (extraClasses || "") + "' title='" + (Handlebars.Utils.escapeExpression(title || "")) + "'>";
+    var size = Discourse.Utilities.translateSize(options.size);
+    var url = Discourse.Utilities.avatarUrl(options.username, options.size, options.avatarTemplate);
+
+    // We won't render an invalid url
+    if (Em.isEmpty(url)) { return ""; }
+
+    var classes = "avatar" + (options.extraClasses ? " " + options.extraClasses : "");
+    var title = (options.title) ? " title='" + Handlebars.Utils.escapeExpression(options.title || "") + "'" : "";
+    return "<img width='" + size + "' height='" + size + "' src='" + url + "' class='" + classes + "'" + title + ">";
   },
 
   tinyAvatar: function(username) {

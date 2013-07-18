@@ -115,7 +115,7 @@ Discourse.PostView = Discourse.View.extend({
 
         // If it's the same topic as ours, build the URL from the topic object
         if (topic && topic.get('id') === topicId) {
-          navLink = "<a href='" + (topic.urlForPostNumber(postNumber)) + "' title='" + quoteTitle + "' class='back'></a>";
+          navLink = "<a href='" + topic.urlForPostNumber(postNumber) + "' title='" + quoteTitle + "' class='back'></a>";
         } else {
           // Made up slug should be replaced with canonical URL
           navLink = "<a href='" + Discourse.getURL("/t/via-quote/") + topicId + "/" + postNumber + "' title='" + quoteTitle + "' class='quote-other-topic'></a>";
@@ -123,7 +123,7 @@ Discourse.PostView = Discourse.View.extend({
 
       } else if (topic = this.get('controller.content')) {
         // assume the same topic
-        navLink = "<a href='" + (topic.urlForPostNumber(postNumber)) + "' title='" + quoteTitle + "' class='back'></a>";
+        navLink = "<a href='" + topic.urlForPostNumber(postNumber) + "' title='" + quoteTitle + "' class='back'></a>";
       }
     }
     // Only add the expand/contract control if it's not a full post
