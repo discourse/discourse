@@ -293,6 +293,7 @@ test("staging and committing a post", function() {
   // Stage the new post in the stream
   var result = postStream.stagePost(stagedPost, user);
   equal(result, true, "it returns true");
+
   ok(postStream.get('loading'), "it is loading while the post is being staged");
   stagedPost.setProperties({ id: 1234, raw: "different raw value" });
   equal(postStream.get('filteredPostsCount'), 1, "it retains the filteredPostsCount");
@@ -341,6 +342,22 @@ test('triggerNewPostInStream', function() {
 });
 
 
+test("lastPostLoaded when the id changes", function() {
+
+  // This can happen in a race condition between staging a post and it coming through on the
+  // message bus. If the id of a post changes we should reconsider the lastPostLoaded property.
+  var postStream = buildStream(10101, [1, 2]);
+  var postWithoutId = Discourse.Post.create({ raw: 'hello world this is my new post' });
+
+  postStream.appendPost(Discourse.Post.create({id: 1, post_number: 1}));
+  postStream.appendPost(postWithoutId);
+  ok(!postStream.get('lastPostLoaded'), 'the last post is not loaded');
+
+  postWithoutId.set('id', 2);
+  ok(postStream.get('lastPostLoaded'), 'the last post is loaded now that the post has an id');
+
+});
+
 test("comitting and triggerNewPostInStream race condition", function() {
   var postStream = buildStream(4964);
 
@@ -359,3 +376,4 @@ test("comitting and triggerNewPostInStream race condition", function() {
   postStream.commitPost(stagedPost);
   equal(postStream.get('filteredPostsCount'), 1, "it does not add the same post twice");
 });
+
