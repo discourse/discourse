@@ -61,7 +61,7 @@ Discourse.Utilities = {
     var url = Discourse.Utilities.avatarUrl(options.username, options.size, options.avatarTemplate);
 
     // We won't render an invalid url
-    if (Em.isEmpty(url)) { return ""; }
+    if (!url || url.length === 0) { return ""; }
 
     var classes = "avatar" + (options.extraClasses ? " " + options.extraClasses : "");
     var title = (options.title) ? " title='" + Handlebars.Utils.escapeExpression(options.title || "") + "'" : "";
