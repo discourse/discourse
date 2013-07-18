@@ -9,6 +9,7 @@
 Discourse.TopicFromParamsRoute = Discourse.Route.extend({
 
   setupController: function(controller, params) {
+
     params = params || {};
     params.track_visit = true;
 
@@ -34,7 +35,6 @@ Discourse.TopicFromParamsRoute = Discourse.Route.extend({
         composerController = this.controllerFor('composer');
 
     postStream.refresh(params).then(function () {
-
       // The post we requested might not exist. Let's find the closest post
       var closest = postStream.closestPostNumberFor(params.nearPost) || 1;
 
@@ -53,11 +53,7 @@ Discourse.TopicFromParamsRoute = Discourse.Route.extend({
           ignoreIfChanged: true
         });
       }
-
-
     });
-
-
   }
 
 });

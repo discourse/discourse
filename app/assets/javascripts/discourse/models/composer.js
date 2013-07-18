@@ -148,7 +148,7 @@ Discourse.Composer = Discourse.Model.extend({
 
   hasMetaData: function() {
     var metaData = this.get('metaData');
-    return metaData ? Em.empty(Em.keys(this.get('metaData'))) : false;
+    return metaData ? Em.isEmpty(Em.keys(this.get('metaData'))) : false;
   }.property('metaData'),
 
   /**
@@ -469,7 +469,6 @@ Discourse.Composer = Discourse.Model.extend({
       }
     }
 
-    // Save callback
     var composer = this;
     return Ember.Deferred.promise(function(promise) {
       createdPost.save(function(result) {

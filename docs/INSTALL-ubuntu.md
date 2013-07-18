@@ -43,7 +43,13 @@ If you have a mail server responsible for handling the egress of email from your
 Install necessary packages:
 
     # Run these commands as your normal login (e.g. "michael")
-    sudo apt-get -y install build-essential libssl-dev libyaml-dev git libtool libxslt-dev libxml2-dev redis-server libpq-dev gawk curl pngcrush
+    sudo apt-get -y install build-essential libssl-dev libyaml-dev git libtool libxslt-dev libxml2-dev libpq-dev gawk curl pngcrush
+
+## Install latest stable redis, package in distro may be a bit old
+
+    sudo add-apt-repository ppa:rwky/redis
+    sudo apt-get update
+    sudo apt-get install redis-server
 
 ## Web Server Option: nginx
 

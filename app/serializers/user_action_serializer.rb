@@ -20,7 +20,8 @@ class UserActionSerializer < ApplicationSerializer
              :acting_user_id,
              :title,
              :deleted,
-             :hidden
+             :hidden,
+             :moderator_action
 
 
   def excerpt
@@ -37,6 +38,10 @@ class UserActionSerializer < ApplicationSerializer
 
   def slug
     Slug.for(object.title)
+  end
+
+  def moderator_action
+    object.post_type == Post.types[:moderator_action]
   end
 
 end

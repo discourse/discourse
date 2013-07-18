@@ -30,7 +30,6 @@ Discourse.ActionsHistoryView = Discourse.View.extend({
       if (c.get('usersExpanded')) {
         var postUrl;
         c.get('users').forEach(function(u) {
-          console.log(u);
           iconsHtml += "<a href=\"" + Discourse.getURL("/users/") + (u.get('username_lower')) + "\">";
           if (u.post_url) {
             postUrl = postUrl || u.post_url;

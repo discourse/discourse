@@ -16,6 +16,8 @@ Discourse.TopicAdminMenuController = Discourse.ObjectController.extend({
 
   hide: function() {
     this.set('menuVisible', false);
-  }
+  },
+
+  showRecover: Em.computed.and('deleted', 'details.can_recover')
 
 });

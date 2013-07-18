@@ -1,16 +1,22 @@
-<div class="modal-header">
-  <a class="close" {{action closeModal}}><i class='icon-remove icon'></i></a>
-  <h3>{{title}}</h3>
-</div>
-<div id='modal-alert'></div>
+<div class="modal-outer-container">
+  <div class="modal-middle-container">
+    <div class="modal-inner-container">
 
-{{outlet modalBody}}
+      <div class="modal-header">
+        <a class="close" {{action closeModal}}><i class='icon-remove icon'></i></a>
+        <h3>{{title}}</h3>
+      </div>
+      <div id='modal-alert'></div>
 
-{{#each errors}}
-  <div class="alert alert-error">
-    <button class="close" data-dismiss="alert">×</button>
-    {{this}}
+      {{outlet modalBody}}
+
+      {{#each errors}}
+        <div class="alert alert-error">
+          <button class="close" data-dismiss="alert">×</button>
+          {{this}}
+        </div>
+      {{/each}}
+
+    </div>
   </div>
-{{/each}}
-
-
+</div>

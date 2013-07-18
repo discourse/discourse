@@ -10,15 +10,17 @@ Anyone wishing to contribute to the **[Discourse/Discourse](https://github.com/d
 
 2. Search for similar issues on the [Discourse meta forum][m]; it may already be an identified problem.
 
+3. Make sure you can reproduce your problem on our sandbox at [try.discourse.org](http://try.discourse.org)
+
 4. If this is a bug or problem that **requires any kind of extended discussion -- open [a topic on meta][m] about it**. Do *not* open a bug on GitHub.
 
-5. If this is a bug or problem that is clear, simple, and is unlikely to require *any* discussion -- open an [issue on GitHub](https://github.com/discourse/discourse/issues) with a reproduction of the bug including workflows, screenshots, or links to examples on jsfiddle.net. If possible, submit a Pull Request with a failing test. If you'd rather take matters into your own hands, fix the bug yourself (jump down to the "Contributing (Step-by-step)" section).
+5. If this is a bug or problem that is clear, simple, and is unlikely to require *any* discussion -- it is OK to open an [issue on GitHub](https://github.com/discourse/discourse/issues) with a reproduction of the bug including workflows, screenshots, or links to examples on [try.discourse.org](http://try.discourse.org). If possible, submit a Pull Request with a failing test. If you'd rather take matters into your own hands, fix the bug yourself (jump down to the "Contributing (Step-by-step)" section).
 
 6. When the bug is fixed, we will do our best to update the Discourse topic or GitHub issue with a resolution.
 
 ## Requesting New Features
 
-1. Do not submit a feature request on GitHub; all feature requests on GitHub will be closed. Instead, visit the **[Discourse development forums](http://meta.discourse.org/category/feature)**, and search for the "Feature" category, which will filter a list of outstanding requests. Review this list for similar feature requests. It's possible somebody has already asked for this feature or provided a pull request that we're still discussing.
+1. Do not submit a feature request on GitHub; all feature requests on GitHub will be closed. Instead, visit the **[Discourse meta forum, features category](http://meta.discourse.org/category/feature)**, and search this list for similar feature requests. It's possible somebody has already asked for this feature or provided a pull request that we're still discussing.
 
 2. Provide a clear and detailed explanation of the feature you want and why it's important to add. The feature must apply to a wide array of users of Discourse; for smaller, more targeted "one-off" features, you might consider writing a plugin for Discourse. You may also want to provide us with some advance documentation on the feature, which will help the community to better understand where it will fit.
 
@@ -28,54 +30,33 @@ Anyone wishing to contribute to the **[Discourse/Discourse](https://github.com/d
 
 1. Clone the Repo:
 
-  ```
-  git clone git://github.com/discourse/discourse.git
-  ```
+        git clone git://github.com/discourse/discourse.git  
 
 2. Create a new Branch:
-
-  ```
-  cd discourse
-  git checkout -b new_discourse_branch
-  ```
+ 
+        cd discourse
+        git checkout -b new_discourse_branch
 
 3. Code
-
-  Make some magic happen! Remember to:
-  
-  * Adhere to conventions.
-  * Update CHANGELOG with a detailed description of your work.
-  * Include tests, and ensure they pass.
-  * Remember to check to see if your new functionality has an impact on our Documentation, and include updates as appropriate.
-  
-  Completing these steps will increase the chances of your code making it into **[Discourse/Discourse](https://github.com/discourse/discourse)**.
+  * Adhere to common conventions you see in the existing code
+  * Include tests, and ensure they pass
+  * Search to see if your new functionality has been discussed on [the Discourse meta forum](http://meta.discourse.org), and include updates as appropriate
 
 4. Follow the Coding Conventions
+  * two spaces, no tabs
+  * no trailing whitespaces, blank lines should have no spaces
+  * use spaces around operators, after commas, colons, semicolons, around `{` and before `}`
+  * no space after `(`, `[` or before `]`, `)`
+  * use Ruby 1.9 hash syntax: prefer `{ a: 1 }` over `{ :a => 1 }`
+  * prefer `class << self; def method; end` over `def class.method` for class methods
+  * prefer `{ ... }` over `do ... end` for single-line blocks, avoid using `{ ... }` for multi-line blocks
+  * avoid `return` when not required
 
- Discourse follows these general code style conventions:
- 
- * two spaces, no tabs
- * no trailing whitespaces, blank lines should have no spaces
- * use spaces around operators, after commas, colons, semicolons, around `{` and before `}`
- * no space after `(`, `[` or before `]`, `)`
- * use Ruby 1.9 hash syntax: prefer `{ a: 1 }` over `{ :a => 1 }`
- * prefer `class << self; def method; end` over `def class.method` for class methods
- * prefer `{ ... }` over `do ... end` for single-line blocks, avoid using `{ ... }` for multi-line blocks
- * avoid `return` when not required
-
-  However, please note that **pull requests consisting entirely of style changes are not welcome on this project**. Style changes in the context of pull requests that also refactor code, fix bugs, improve functionality *are* welcome.
+  > However, please note that **pull requests consisting entirely of style changes are not welcome on this project**. Style changes in the context of pull requests that also refactor code, fix bugs, improve functionality *are* welcome.
 
 5. Commit
-
-  ```
-  git commit -a
-  ```
-
-  **Do not leave the commit message blank!** Provide a detailed description of your commit!
-
-  ### PRO TIP
  
-  Ensure that if you supply a multitude of commits, they are **squashed into a single commit**:
+  First, ensure that if you have several commits, they are **squashed into a single commit**:
 
   ```
   git remote add upstream https://github.com/discourse/discourse.git
@@ -89,6 +70,15 @@ Anyone wishing to contribute to the **[Discourse/Discourse](https://github.com/d
 
   git push origin new_discourse_branch -f
   ```
+
+  Now you're ready to commit:
+
+  ```
+  git commit -a
+  ```
+
+  **NEVER leave the commit message blank!** Provide a detailed, clear, and complete description of your commit!
+
 
 6. Update your branch
 

@@ -6,6 +6,8 @@ require_dependency 'topic_list'
 require_dependency 'suggested_topics_builder'
 
 class TopicQuery
+  # Could be rewritten to %i if Ruby 1.9 is no longer supported
+  VALID_OPTIONS = %w(except_topic_id exclude_category limit page per_page topic_ids visible).map(&:to_sym)
 
   class << self
     # use the constants in conjuction with COALESCE to determine the order with regard to pinned
@@ -29,21 +31,20 @@ class TopicQuery
     end
 
     def order_hotness
-
-      # When anonymous, don't use topic_user
-      if @user.blank?
-        return "CASE
-                  WHEN topics.pinned_at IS NOT NULL THEN 100
-                  ELSE hot_topics.score + (COALESCE(categories.hotness, 5.0) / 11.0)
-                END DESC"
+      if @user
+        # When logged in take into accounts what pins you've closed
+        "CASE
+          WHEN (COALESCE(topics.pinned_at, '#{lowest_date}') > COALESCE(tu.cleared_pinned_at, '#{lowest_date}'))
+            THEN 100
+          ELSE hot_topics.score + (COALESCE(categories.hotness, 5.0) / 11.0)
+         END DESC"
+      else
+        # When anonymous, don't use topic_user
+        "CASE
+          WHEN topics.pinned_at IS NOT NULL THEN 100
+          ELSE hot_topics.score + (COALESCE(categories.hotness, 5.0) / 11.0)
+        END DESC"
       end
-
-      # When logged in take into accounts what pins you've closed
-      "CASE
-        WHEN (COALESCE(topics.pinned_at, '#{lowest_date}') > COALESCE(tu.cleared_pinned_at, '#{lowest_date}'))
-          THEN 100
-        ELSE hot_topics.score + (COALESCE(categories.hotness, 5.0) / 11.0)
-       END DESC"
     end
 
     # If you've clearned the pin, use bumped_at, otherwise put it at the top
@@ -71,16 +72,13 @@ class TopicQuery
     def recent(max)
       Topic.listable_topics.visible.secured.order('created_at desc').take(10)
     end
-
   end
 
-  def initialize(user=nil, opts={})
+  def initialize(user=nil, options={})
+    options.assert_valid_keys(VALID_OPTIONS)
+
+    @options = options
     @user = user
-
-    # Cast to int to avoid sql injection
-    @user_id = user.id.to_i if @user.present?
-
-    @opts = opts
   end
 
   # Return a list of suggested topics for a topic
@@ -88,13 +86,13 @@ class TopicQuery
     builder = SuggestedTopicsBuilder.new(topic)
 
     # When logged in we start with different results
-    if @user.present?
-      builder.add_results(unread_results(per_page: builder.results_left))
+    if @user
+      builder.add_results(unread_results(topic: topic, per_page: builder.results_left))
       builder.add_results(new_results(per_page: builder.results_left)) unless builder.full?
     end
     builder.add_results(random_suggested(topic, builder.results_left)) unless builder.full?
 
-    TopicList.new(:suggested, @user, builder.results)
+    create_list(:suggested, {}, builder.results)
   end
 
   # The latest view of topics
@@ -120,11 +118,11 @@ class TopicQuery
   end
 
   def list_new
-    TopicList.new(:new, @user, new_results)
+    create_list(:new, {}, new_results)
   end
 
   def list_unread
-    TopicList.new(:unread, @user, unread_results)
+    create_list(:unread, {}, unread_results)
   end
 
   def list_posted
@@ -135,7 +133,7 @@ class TopicQuery
     create_list(:uncategorized, unordered: true) do |list|
       list = list.where(category_id: nil)
 
-      if @user_id.present?
+      if @user
         list.order(TopicQuery.order_with_pinned_sql)
       else
         list.order(TopicQuery.order_nocategory_basic_bumped)
@@ -146,12 +144,27 @@ class TopicQuery
   def list_category(category)
     create_list(:category, unordered: true) do |list|
       list = list.where(category_id: category.id)
-      if @user_id.present?
+      if @user
         list.order(TopicQuery.order_with_pinned_sql)
       else
         list.order(TopicQuery.order_basic_bumped)
       end
     end
+  end
+
+  def list_new_in_category(category)
+    create_list(:new_in_category) {|l| l.where(category_id: category.id).by_newest.first(25)}
+  end
+
+  def self.new_filter(list, treat_as_new_topic_start_date)
+    list.where("topics.created_at >= :created_at", created_at: treat_as_new_topic_start_date)
+        .where("tu.last_read_post_number IS NULL")
+        .where("COALESCE(tu.notification_level, :tracking) >= :tracking", tracking: TopicUser.notification_levels[:tracking])
+  end
+
+  def self.unread_filter(list)
+    list.where("tu.last_read_post_number < topics.highest_post_number")
+        .where("COALESCE(tu.notification_level, :regular) >= :tracking", regular: TopicUser.notification_levels[:regular], tracking: TopicUser.notification_levels[:tracking])
   end
 
   def unread_count
@@ -162,59 +175,27 @@ class TopicQuery
     new_results(limit: false).count
   end
 
-  def list_new_in_category(category)
-    create_list(:new_in_category) {|l| l.where(category_id: category.id).by_newest.first(25)}
-  end
-
-  def self.new_filter(list,treat_as_new_topic_start_date)
-    list.where("topics.created_at >= :created_at", created_at: treat_as_new_topic_start_date)
-        .where("tu.last_read_post_number IS NULL")
-        .where("COALESCE(tu.notification_level, :tracking) >= :tracking", tracking: TopicUser.notification_levels[:tracking])
-  end
-
-  def new_results(list_opts={})
-    TopicQuery.new_filter(default_list(list_opts),@user.treat_as_new_topic_start_date)
-  end
-
-  def self.unread_filter(list)
-    list.where("tu.last_read_post_number < topics.highest_post_number")
-        .where("COALESCE(tu.notification_level, :regular) >= :tracking", regular: TopicUser.notification_levels[:regular], tracking: TopicUser.notification_levels[:tracking])
-  end
-
-  def unread_results(list_opts={})
-    list_opts[:unordered] ||= true
-    TopicQuery.unread_filter(default_list(list_opts))
-      .order('CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END')
-      .order(TopicQuery.order_nocategory_with_pinned_sql)
-  end
-
   protected
 
-    def create_list(filter, list_opts={})
-      opts = list_opts
-      if @opts[:topic_ids]
-        opts = opts.dup
-        opts[:topic_ids] = @opts[:topic_ids]
-      end
-      topics = default_list(opts)
+    def create_list(filter, options={}, topics = nil)
+      topics ||= default_results(options)
       topics = yield(topics) if block_given?
       TopicList.new(filter, @user, topics)
     end
 
-    # Create a list based on a bunch of detault options
-    def default_list(list_opts={})
-
-      query_opts = @opts.merge(list_opts)
-      page_size = query_opts[:per_page] || SiteSetting.topics_per_page
+    # Create results based on a bunch of default options
+    def default_results(options={})
+      options.reverse_merge!(@options)
+      options.reverse_merge!(per_page: SiteSetting.topics_per_page)
 
       # Start with a list of all topics
       result = Topic
 
-      if @user_id
-        result = result.joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{@user_id})")
+      if @user
+        result = result.joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{@user.id.to_i})")
       end
 
-      unless query_opts[:unordered]
+      unless options[:unordered]
         # If we're logged in, we have to pay attention to our pinned settings
         if @user
           result = result.order(TopicQuery.order_nocategory_with_pinned_sql)
@@ -223,17 +204,16 @@ class TopicQuery
         end
       end
 
-
       result = result.listable_topics.includes(category: :topic_only_relative_url)
-      result = result.where('categories.name is null or categories.name <> ?', query_opts[:exclude_category]) if query_opts[:exclude_category]
-      result = result.where('categories.name = ?', query_opts[:only_category]) if query_opts[:only_category]
-      result = result.limit(page_size) unless query_opts[:limit] == false
-      result = result.visible if @opts[:visible] or @user.blank? or @user.regular?
-      result = result.where('topics.id <> ?', query_opts[:except_topic_id]) if query_opts[:except_topic_id].present?
-      result = result.offset(query_opts[:page].to_i * page_size) if query_opts[:page].present?
+      result = result.where('categories.name is null or categories.name <> ?', options[:exclude_category]) if options[:exclude_category]
+      result = result.where('categories.name = ?', options[:only_category]) if options[:only_category]
+      result = result.limit(options[:per_page]) unless options[:limit] == false
+      result = result.visible if options[:visible] || @user.nil? || @user.regular?
+      result = result.where('topics.id <> ?', options[:except_topic_id]) if options[:except_topic_id]
+      result = result.offset(options[:page].to_i * options[:per_page]) if options[:page]
 
-      if list_opts[:topic_ids]
-        result = result.where('topics.id in (?)', list_opts[:topic_ids])
+      if options[:topic_ids]
+        result = result.where('topics.id in (?)', options[:topic_ids])
       end
 
       unless @user && @user.moderator?
@@ -248,12 +228,28 @@ class TopicQuery
       result
     end
 
+    def new_results(options={})
+      TopicQuery.new_filter(default_results(options), @user.treat_as_new_topic_start_date)
+    end
+
+    def unread_results(options={})
+      result = TopicQuery.unread_filter(default_results(options.reverse_merge(:unordered => true)))
+                         .order('CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END')
+
+      # Prefer unread in the same category
+      if options[:topic] && options[:topic].category_id
+        result = result.order("CASE WHEN topics.category_id = #{options[:topic].category_id.to_i} THEN 0 ELSE 1 END")
+      end
+
+      result.order(TopicQuery.order_nocategory_with_pinned_sql)
+    end
+
     def random_suggested(topic, count)
-      result = default_list(unordered: true, per_page: count)
+      result = default_results(unordered: true, per_page: count)
 
       # If we are in a category, prefer it for the random results
-      if topic.category_id.present?
-        result = result.order("CASE WHEN topics.category_id = #{topic.category_id.to_i} THEN 0 ELSE 1 END, RANDOM()")
+      if topic.category_id
+        result = result.order("CASE WHEN topics.category_id = #{topic.category_id.to_i} THEN 0 ELSE 1 END")
       end
 
       result.order("RANDOM()")

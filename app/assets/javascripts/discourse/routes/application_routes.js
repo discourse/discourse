@@ -40,12 +40,24 @@ Discourse.Route.buildRoutes(function() {
 
   // User routes
   this.resource('user', { path: '/users/:username' }, function() {
-    this.route('activity', { path: '/' });
+    this.route('index', { path: '/'} );
+
+    this.resource('userActivity', { path: '/activity' }, function() {
+      var resource = this;
+      Object.keys(Discourse.UserAction.TYPES).forEach(function (userAction) {
+        resource.route(userAction, { path: userAction.replace("_", "-") });
+      });
+    });
+
+    this.resource('userPrivateMessages', { path: '/private-messages' }, function() {
+      this.route('sent', {path: '/messages-sent'});
+    });
+
     this.resource('preferences', { path: '/preferences' }, function() {
       this.route('username', { path: '/username' });
       this.route('email', { path: '/email' });
     });
-    this.route('privateMessages', { path: '/private-messages' });
+
     this.route('invited', { path: 'invited' });
   });
 });

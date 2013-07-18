@@ -6,82 +6,100 @@
   @namespace Discourse
   @module Discourse
 **/
+
+var UserActionTypes = {
+  likes_given: 1,
+  likes_received: 2,
+  bookmarks: 3,
+  topics: 4,
+  posts: 5,
+  replies: 6,
+  mentions: 7,
+  quotes: 9,
+  favorites: 10,
+  edits: 11,
+  messages_sent: 12,
+  messages_received: 13
+};
+
+var InvertedActionTypes = {};
+_.each(UserActionTypes, function (k, v) {
+  InvertedActionTypes[k] = v;
+});
+
 Discourse.UserAction = Discourse.Model.extend({
 
-  descriptionHtml: function() {
-    var action = this.get('action_type');
-    var ua = Discourse.UserAction;
-    var actions = [ua.LIKE, ua.WAS_LIKED, ua.STAR, ua.EDIT, ua.BOOKMARK, ua.GOT_PRIVATE_MESSAGE, ua.NEW_PRIVATE_MESSAGE];
-    var icon = "";
-    var sentence = "";
-    var sameUser = (this.get('username') === Discourse.User.current('username'));
+  /**
+    Return an i18n key we will use for the description text of a user action.
 
-    if (action === null || actions.indexOf(action) >= 0) {
+    @property descriptionKey
+  **/
+  descriptionKey: function() {
+    var action = this.get('action_type');
+    if (action === null || Discourse.UserAction.TO_SHOW.indexOf(action) >= 0) {
       if (this.get('isPM')) {
-        icon = '<i class="icon icon-envelope" title="{{i18n user.stream.private_message}}"></i>';
-        if (sameUser) {
-          sentence = I18n.t('user_action.sent_by_you', { userUrl: this.get('userUrl') });
-        } else {
-          sentence = I18n.t('user_action.sent_by_user', { user: this.get('name'), userUrl: this.get('userUrl') });
-        }
+        return this.get('sameUser') ? 'sent_by_you' : 'sent_by_user';
       } else {
-        if (sameUser) {
-          sentence = I18n.t('user_action.posted_by_you', { userUrl: this.get('userUrl') });
-        } else {
-          sentence = I18n.t('user_action.posted_by_user', { user: this.get('name'), userUrl: this.get('userUrl') });
-        }
+        return this.get('sameUser') ? 'posted_by_you' : 'posted_by_user';
       }
-    } else if (action === ua.NEW_TOPIC) {
-      if (sameUser) {
-        sentence = I18n.t('user_action.you_posted_topic', { userUrl: this.get('userUrl'), topicUrl: this.get('replyUrl') });
-      } else {
-        sentence = I18n.t('user_action.user_posted_topic', { user: this.get('name'), userUrl: this.get('userUrl'), topicUrl: this.get('replyUrl') });
-      }
-    } else if (action === ua.POST || action === ua.RESPONSE) {
-      if (this.get('reply_to_post_number')) {
-        if (sameUser) {
-          sentence = I18n.t('user_action.you_replied_to_post', { post_number: '#' + this.get('reply_to_post_number'),
-              userUrl: this.get('userUrl'), postUrl: this.get('postUrl') });
-        } else {
-          sentence = I18n.t('user_action.user_replied_to_post', { user: this.get('name'),
-              post_number: '#' + this.get('reply_to_post_number'), userUrl: this.get('userUrl'), postUrl: this.get('postUrl') });
-        }
-      } else {
-        if (sameUser) {
-          sentence = I18n.t('user_action.you_replied_to_topic', { userUrl: this.get('userUrl'),
-              topicUrl: this.get('replyUrl') });
-        } else {
-          sentence = I18n.t('user_action.user_replied_to_topic', { user: this.get('name'),
-              userUrl: this.get('userUrl'), topicUrl: this.get('replyUrl') });
-        }
-      }
-    } else if (action === ua.MENTION) {
-      if (sameUser) {
-        sentence = I18n.t('user_action.you_mentioned_user', { user: this.get('target_name'),
-            user1Url: this.get('userUrl'), user2Url: this.get('targetUserUrl') });
-      } else {
-        if (this.get('target_username') === Discourse.User.current('username')) {
-          sentence = I18n.t('user_action.user_mentioned_you', { user: this.get('name'),
-              user1Url: this.get('userUrl'), user2Url: this.get('targetUserUrl') });
-        } else {
-          sentence = I18n.t('user_action.user_mentioned_user', { user: this.get('name'),
-              another_user: this.get('target_name'), user1Url: this.get('userUrl'), user2Url: this.get('targetUserUrl') });
-        }
-      }
-    } else {
-      return "";
     }
 
-    return new Handlebars.SafeString(icon + " " + sentence);
-  }.property(),
+    if (this.get('topicType')) {
+      return this.get('sameUser') ? 'you_posted_topic' : 'user_posted_topic';
+    }
 
-  targetUserUrl: function() {
-    return Discourse.Utilities.userUrl(this.get('target_username'));
-  }.property(),
+    if (this.get('postReplyType')) {
+      if (this.get('reply_to_post_number')) {
+        return this.get('sameUser') ? 'you_replied_to_post' : 'user_replied_to_post';
+      } else {
+        return this.get('sameUser') ? 'you_replied_to_topic' : 'user_replied_to_topic';
+      }
+    }
 
-  userUrl: function() {
-    return Discourse.Utilities.userUrl(this.get('username'));
-  }.property(),
+    if (this.get('mentionType')) {
+      if (this.get('sameUser')) {
+        return 'you_mentioned_user';
+      } else {
+        return this.get('targetUser') ? 'user_mentioned_you' : 'user_mentioned_user';
+      }
+    }
+  }.property('action_type'),
+
+  /**
+    Returns the HTML representation of a user action's description, complete with icon.
+
+    @property descriptionHtml
+  **/
+  descriptionHtml: function() {
+    var descriptionKey = this.get('descriptionKey');
+    if (!descriptionKey) { return; }
+
+    var icon = this.get('isPM') ? '<i class="icon icon-envelope" title="{{i18n user.stream.private_message}}"></i>' : '';
+
+    return new Handlebars.SafeString(icon + " " + I18n.t("user_action." + descriptionKey, {
+      userUrl: this.get('userUrl'),
+      replyUrl: this.get('replyUrl'),
+      postUrl: this.get('postUrl'),
+      topicUrl: this.get('replyUrl'),
+      user: this.get('name'),
+      post_number: '#' + this.get('reply_to_post_number'),
+      user1Url: this.get('userUrl'),
+      user2Url: this.get('targetUserUrl'),
+      another_user: this.get('target_name')
+    }));
+
+  }.property('descriptionKey'),
+
+  sameUser: function() {
+    return this.get('username') === Discourse.User.current('username');
+  }.property('username'),
+
+  targetUser: function() {
+    return this.get('target_username') === Discourse.User.current('username');
+  }.property('target_username'),
+
+  targetUserUrl: Discourse.computed.url('target_username', '/users/%@'),
+  userUrl: Discourse.computed.url('username', '/users/%@'),
 
   postUrl: function() {
     return Discourse.Utilities.postUrl(this.get('slug'), this.get('topic_id'), this.get('post_number'));
@@ -91,15 +109,14 @@ Discourse.UserAction = Discourse.Model.extend({
     return Discourse.Utilities.postUrl(this.get('slug'), this.get('topic_id'), this.get('reply_to_post_number'));
   }.property(),
 
-  isPM: function() {
-    var a = this.get('action_type');
-    return a === Discourse.UserAction.NEW_PRIVATE_MESSAGE || a === Discourse.UserAction.GOT_PRIVATE_MESSAGE;
-  }.property(),
-
-  isPostAction: function() {
-    var a = this.get('action_type');
-    return a === Discourse.UserAction.RESPONSE || a === Discourse.UserAction.POST || a === Discourse.UserAction.NEW_TOPIC;
-  }.property(),
+  replyType: Em.computed.equal('action_type', UserActionTypes.replies),
+  postType: Em.computed.equal('action_type', UserActionTypes.posts),
+  topicType: Em.computed.equal('action_type', UserActionTypes.topics),
+  messageSentType: Em.computed.equal('action_type', UserActionTypes.messages_sent),
+  messageReceivedType: Em.computed.equal('action_type', UserActionTypes.messages_received),
+  mentionType: Em.computed.equal('action_type', UserActionTypes.mentions),
+  isPM: Em.computed.or('messageSentType', 'messageReceivedType'),
+  postReplyType: Em.computed.or('postType', 'replyType'),
 
   addChild: function(action) {
     var groups = this.get("childGroups");
@@ -113,17 +130,16 @@ Discourse.UserAction = Discourse.Model.extend({
     }
     this.set("childGroups", groups);
 
-    var ua = Discourse.UserAction;
     var bucket = (function() {
       switch (action.action_type) {
-        case ua.LIKE:
-        case ua.WAS_LIKED:
+        case UserActionTypes.likes_given:
+        case UserActionTypes.likes_received:
           return "likes";
-        case ua.STAR:
+        case UserActionTypes.favorites:
           return "stars";
-        case ua.EDIT:
+        case UserActionTypes.edits:
           return "edits";
-        case ua.BOOKMARK:
+        case UserActionTypes.bookmarks:
           return "bookmarks";
       }
     })();
@@ -145,28 +161,29 @@ Discourse.UserAction = Discourse.Model.extend({
   }.property("childGroups"),
 
   switchToActing: function() {
-    this.set('username', this.get('acting_username'));
-    this.set('avatar_template', this.get('acting_avatar_template'));
-    this.set('name', this.get('acting_name'));
+    this.setProperties({
+      username: this.get('acting_username'),
+      avatar_template: this.get('acting_avatar_template'),
+      name: this.get('acting_name')
+    });
   }
 });
 
 Discourse.UserAction.reopenClass({
   collapseStream: function(stream) {
-    var collapse, collapsed, pos, uniq;
-    collapse = [this.LIKE, this.WAS_LIKED, this.STAR, this.EDIT, this.BOOKMARK];
-    uniq = {};
-    collapsed = Em.A();
-    pos = 0;
-    _.each(stream, function(item) {
-      var current, found, key;
-      key = "" + item.topic_id + "-" + item.post_number;
-      found = uniq[key];
+    var uniq = {},
+        collapsed = Em.A(),
+        pos = 0;
+
+    stream.forEach(function(item) {
+      var key = "" + item.topic_id + "-" + item.post_number;
+      var found = uniq[key];
       if (found === void 0) {
-        if (collapse.indexOf(item.action_type) >= 0) {
+
+        var current;
+        if (Discourse.UserAction.TO_COLLAPSE.indexOf(item.action_type) >= 0) {
           current = Discourse.UserAction.create(item);
-          current.set('action_type', null);
-          current.set('description', null);
+          current.setProperties({action_type: null, description: null});
           item.switchToActing();
           current.addChild(item);
         } else {
@@ -176,39 +193,37 @@ Discourse.UserAction.reopenClass({
         collapsed[pos] = current;
         pos += 1;
       } else {
-        if (collapse.indexOf(item.action_type) >= 0) {
+        if (Discourse.UserAction.TO_COLLAPSE.indexOf(item.action_type) >= 0) {
           item.switchToActing();
-          return collapsed[found].addChild(item);
+          collapsed[found].addChild(item);
         } else {
-          collapsed[found].set('action_type', item.get('action_type'));
-          return collapsed[found].set('description', item.get('description'));
+          collapsed[found].setProperties(item.getProperties('action_type', 'description'));
         }
       }
     });
     return collapsed;
   },
 
-  // in future we should be sending this through from the server
-  LIKE: 1,
-  WAS_LIKED: 2,
-  BOOKMARK: 3,
-  NEW_TOPIC: 4,
-  POST: 5,
-  RESPONSE: 6,
-  MENTION: 7,
-  QUOTE: 9,
-  STAR: 10,
-  EDIT: 11,
-  NEW_PRIVATE_MESSAGE: 12,
-  GOT_PRIVATE_MESSAGE: 13
+  TYPES: UserActionTypes,
+  TYPES_INVERTED: InvertedActionTypes,
+
+  TO_COLLAPSE: [UserActionTypes.likes_given,
+                UserActionTypes.likes_received,
+                UserActionTypes.favorites,
+                UserActionTypes.edits,
+                UserActionTypes.bookmarks],
+
+  TO_SHOW: [
+    UserActionTypes.likes_given,
+    UserActionTypes.likes_received,
+    UserActionTypes.favorites,
+    UserActionTypes.edits,
+    UserActionTypes.bookmarks,
+    UserActionTypes.messages_sent,
+    UserActionTypes.messages_received
+  ]
+
 });
 
-Discourse.UserAction.reopenClass({
-  statGroups: (function() {
-    var g = {};
-    g[Discourse.UserAction.RESPONSE] = [Discourse.UserAction.RESPONSE, Discourse.UserAction.MENTION, Discourse.UserAction.QUOTE];
-    return g;
-  })()
-});
 
 
