@@ -251,6 +251,9 @@
     word-wrap: break-word;
     color: lighten($black, 30%);
   }
+  .item.moderator-action {
+    background-color: #eef0ff;
+  }
   .item.deleted {
     opacity: 0.8;
     background-color: #ffcece;

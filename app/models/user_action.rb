@@ -94,7 +94,8 @@ SELECT
   u.email acting_email, u.username acting_username, u.name acting_name, u.id acting_user_id,
   coalesce(p.cooked, p2.cooked) cooked,
   CASE WHEN coalesce(p.deleted_at, p2.deleted_at, t.deleted_at) IS NULL THEN false ELSE true END deleted,
-  p.hidden
+  p.hidden,
+  p.post_type
 FROM user_actions as a
 JOIN topics t on t.id = a.target_topic_id
 LEFT JOIN posts p on p.id = a.target_post_id
@@ -141,8 +142,8 @@ SELECT
   pu.email acting_email, pu.username acting_username, pu.name acting_name, pu.id acting_user_id,
   p.cooked,
   CASE WHEN coalesce(p.deleted_at, t.deleted_at) IS NULL THEN false ELSE true END deleted,
-  p.hidden
-
+  p.hidden,
+  p.post_type
 FROM topics t
 JOIN posts p ON p.topic_id =  t.id and p.post_number = t.highest_post_number
 JOIN users pu ON pu.id = p.user_id
