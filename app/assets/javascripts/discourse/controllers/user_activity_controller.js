@@ -66,7 +66,7 @@ Discourse.UserActivityController = Discourse.Controller.extend({
   composePrivateMessage: function() {
     return this.get('controllers.composer').open({
       action: Discourse.Composer.PRIVATE_MESSAGE,
-      usernames: this.get('content.user.username'),
+      usernames: this.get('model.username'),
       archetypeId: 'private_message',
       draftKey: 'new_private_message'
     });
