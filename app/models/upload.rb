@@ -91,7 +91,7 @@ class Upload < ActiveRecord::Base
   end
 
   def self.is_relative?(url)
-    (url =~ /^\/[^\/]/) == 0
+    url.start_with?("/uploads/")
   end
 
   def self.is_local?(url)
