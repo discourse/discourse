@@ -371,7 +371,9 @@ Discourse.User.reopenClass({
        insertAt = index + 1;
      }
     });
-    result.insertAt(insertAt, responses);
+    if(responses.count > 0) {
+      result.insertAt(insertAt, responses);
+    }
     return(result);
   },
 
