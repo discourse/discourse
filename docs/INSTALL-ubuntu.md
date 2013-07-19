@@ -5,7 +5,7 @@
 - We *strongly* recommend 2GB of memory minimum if you don't want to deal with swap partitions during the install.
 - We recommend at least a dual core CPU.
 
-You can get away with less than this if you are careful -- 1 GB of memory and a single core CPU are the minimums -- but it's simpler to just throw a bit more hardware at the problem.
+1 GB of memory and a single core CPU are the minimums for a steady state, running Discourse forum -- but it's simpler to just throw a bit more hardware at the problem if you can, particularly during the install.
 
 ## Install Ubuntu Server 12.04 LTS with the package groups:
 
