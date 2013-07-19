@@ -9,6 +9,9 @@
 Discourse.AdminUsersListRoute = Discourse.Route.extend({
   renderTemplate: function() {
     this.render('admin/templates/users_list', {into: 'admin/templates/admin'});
+  },
+  redirect: function() {
+    this.transitionTo('adminUsersList.active');
   }
 });
 
