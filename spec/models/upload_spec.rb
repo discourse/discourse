@@ -164,30 +164,12 @@ describe Upload do
     it "identifies S3 uploads" do
       SiteSetting.stubs(:enable_s3_uploads).returns(true)
       SiteSetting.stubs(:s3_upload_bucket).returns("Bucket")
-      Upload.has_been_uploaded?("//s3.amazonaws.com/Bucket/1337.png").should == true
+      Upload.has_been_uploaded?("//bucket.s3.amazonaws.com/1337.png").should == true
     end
 
     it "identifies external urls" do
       Upload.has_been_uploaded?("http://domain.com/uploads/default/42/0123456789ABCDEF.jpg").should == false
       Upload.has_been_uploaded?("//s3.amazonaws.com/Bucket/1337.png").should == false
-    end
-
-  end
-
-  context ".is_on_s3?" do
-
-    before do
-      SiteSetting.stubs(:enable_s3_uploads).returns(true)
-      SiteSetting.stubs(:s3_upload_bucket).returns("BuCkEt")
-   end
-
-    it "case-insensitively matches the old subdomain format" do
-      Upload.is_on_s3?("//bucket.s3.amazonaws.com/1337.png").should == true
-    end
-
-    it "case-sensitively matches the new folder format" do
-      Upload.is_on_s3?("//s3.amazonaws.com/BuCkEt/1337.png").should == true
-      Upload.is_on_s3?("//s3.amazonaws.com/bucket/1337.png").should == false
     end
 
   end
