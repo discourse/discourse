@@ -2,10 +2,16 @@
 
 ## What kind of hardware do you have?
 
-- We *strongly* recommend 2GB of memory minimum if you don't want to deal with swap partitions during the install.
-- We recommend at least a dual core CPU.
+- Recommended minimum configuration is:
+  - 2GiB of RAM
+  - 2GiB of swap
+  - 2 processor cores
+- With 2GB of memory and dual cores, you can run two instances of the thin
+  server (`NUM_WEBS=2`)
 
-1 GB of memory and a single core CPU are the minimums for a steady state, running Discourse forum -- but it's simpler to just throw a bit more hardware at the problem if you can, particularly during the install.
+1 GiB of memory, 3GiB of swap and a single core CPU are the minimums for a
+steady state, running Discourse forum -- but it's simpler to just throw a bit
+more hardware at the problem if you can, particularly during the install.
 
 ## Install Ubuntu Server 12.04 LTS with the package groups:
 
@@ -51,7 +57,13 @@ Install necessary packages:
     sudo apt-get update
     sudo apt-get install redis-server
 
-## Web Server Option: nginx
+## Web Server: nginx
+
+nginx is used for:
+
+* reverse proxy (i.e. load balancer)
+* static asset serving (since you don't want to do that from ruby)
+* anonymous user cache
 
 At Discourse, we recommend the latest version of nginx (we like the new and
 shiny). To install on Ubuntu:
@@ -73,83 +85,11 @@ shiny). To install on Ubuntu:
     # install nginx
     sudo apt-get update && sudo apt-get -y install nginx
 
-## Web Server Option: apache2
-
-If you instead want to use apache2 to serve the static pages:
-    
-    # Run these commands as your normal login (e.g. "michael")
-    # If you don't have apache2 yet
-    sudo apt-get install apache2
-    
-    # Edit your site details in a new apache2 config file
-    sudo vim /etc/apache2/sites-available/your-domain.com
-    
-    # Put these info inside and change accordingly
-    
-    <VirtualHost *:80>
-      ServerName your-domain.com
-      ServerAlias www.your-domain.com
-    
-      DocumentRoot /srv/www/apps/discourse/public
-    
-      <Directory /srv/www/apps/discourse/public>
-        AllowOverride all
-        Options -MultiViews
-      </Directory>
-    
-      # Custom log file locations
-      ErrorLog  /srv/www/apps/discourse/log/error.log
-      CustomLog /srv/www/apps/discourse/access.log combined
-    </VirtualHost>
-    
-    # Install the Passenger Phusion gem and run the install
-    gem install passenger
-    passenger-install-apache2-module
-    
-    # Next, we "create" a new apache2 module, passenger
-    sudo vim /etc/apache2/mods-available/passenger.load
-    
-    # Inside paste (change the user accodingly)
-    LoadModule passenger_module /home/YOUR-USER/.rvm/gems/ruby-2.0.0-p0/gems/passenger-4.0.2/libout/apache2/mod_passenger.so
-
-    # Now the passenger module configuration
-    sudo vim /etc/apache2/mods-available/passenger.conf
-    
-    # Inside, paste (change the user accodingly)
-    PassengerRoot /home/YOUR-USER/.rvm/gems/ruby-2.0.0-p0/gems/passenger-4.0.2
-    PassengerDefaultRuby /home/YOUR-USER/.rvm/wrappers/ruby-2.0.0-p0/ruby
-    
-    # Now activate them all
-    
-    sudo a2ensite your-domain.com
-    sudo a2enmod passenger
-    sudo service apache2 reload
-    sudo service apache2 restart
-
-If you get any errors starting or reloading apache, please check the paths above - Ruby 2.0 should be there if you are using RVM, but it could get tricky.
-
 ## Install Ruby with RVM
 
-### RVM Option: Systemwide installation
+### RVM : Single-user installation
 
-Taken from http://rvm.io/, the commands below installs RVM and users in the 'rvm' group have access to modify state:
-
-    # Run these commands as your normal login (e.g. "michael")
-    \curl -s -S -L https://get.rvm.io | sudo bash -s stable
-    sudo adduser $USER rvm
-    newgrp rvm
-    . /etc/profile.d/rvm.sh
-    rvm requirements
-
-    # Build and install ruby
-    rvm install 2.0.0
-    gem install bundler
-
-### RVM Option: Single-user installation
-
-Another sensible option (especially if only one Ruby app is on the machine) is
-to install RVM isolated to a user's environment. Further instructions are
-below.
+We recommend installing RVM isolated to a single user's environment.
 
 ## Discourse setup
 
@@ -157,9 +97,6 @@ Create Discourse user:
 
     # Run these commands as your normal login (e.g. "michael")
     sudo adduser --shell /bin/bash discourse
-    # If this fails, it's because you're doing the RVM single-user install.
-    # In that case, you could just not run it if errors make you squirrely
-    sudo adduser discourse rvm
 
 Give Postgres database rights to the `discourse` user:
 
@@ -172,7 +109,7 @@ Change to the 'discourse' user:
     # Run this command as your normal login (e.g. "michael"), further commands should be run as 'discourse'
     sudo su - discourse
 
-Install RVM if doing a single-user RVM installation:
+Install RVM
 
     # As 'discourse'
     # Install RVM
@@ -304,7 +241,7 @@ Configure Bluepill:
 Start Discourse:
 
     # Run these commands as the discourse user
-    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ROOT=~/discourse RAILS_ENV=production NUM_WEBS=4 bluepill --no-privileged -c ~/.bluepill load ~/discourse/config/discourse.pill
+    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ROOT=~/discourse RAILS_ENV=production NUM_WEBS=2 bluepill --no-privileged -c ~/.bluepill load ~/discourse/config/discourse.pill
 
 Add the Bluepill startup to crontab.
 
@@ -313,10 +250,7 @@ Add the Bluepill startup to crontab.
 
 Add the following lines:
 
-    @reboot RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ROOT=~/discourse RAILS_ENV=production NUM_WEBS=4 /home/discourse/.rvm/bin/bootup_bluepill --no-privileged -c ~/.bluepill load ~/discourse/config/discourse.pill
-
-
-Note: in case of RVM system-wide installation RVM will be located in `/usr/local/rvm` directory instead of `/home/discourse/.rvm`, so update the line above respectively.
+    @reboot RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ROOT=~/discourse RAILS_ENV=production NUM_WEBS=2 /home/discourse/.rvm/bin/bootup_bluepill --no-privileged -c ~/.bluepill load ~/discourse/config/discourse.pill
 
 ## Log rotation setup
 
@@ -360,6 +294,11 @@ The corresponding site setting is:
 
     # Run these commands as the discourse user
     bluepill stop
+    bluepill quit
+    # Back up your install
+    DATESTAMP=$(TZ=UTC date +%F-%T)
+    pg_dump --no-owner --clean discourse_prod | gzip -c > ~/discourse-db-$DATESTAMP.sql.gz
+    tar cfz ~/discourse-dir-$DATESTAMP.tar.gz -C ~ discourse
     # Pull down the latest release
     cd ~/discourse
     git checkout master
@@ -367,9 +306,65 @@ The corresponding site setting is:
     git fetch --tags
     # To run on the latest version instead of bleeding-edge:
     #git checkout latest-release
+    #
+    # Follow the section below titled:
+    # "Check sample configuration files for new settings"
+    #
     bundle install --without test --deployment
     RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production rake db:migrate
     RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production rake assets:precompile
-    bluepill start
+    # restart bluepill
+    crontab -l
+    # Here, run the command to start bluepill.
+    # Get it from the crontab output above.
 
 Note that if bluepill *itself* needs to be restarted, it must be killed with `bluepill quit` and restarted with the same command that's in crontab
+
+### Check sample configuration files for new settings
+
+Check the sample configuration files provided in the repo with the ones being used for additional recommended settings and merge those in:
+
+    # Run these commands as the discourse user
+    cd ~/discourse
+    diff -u config/discourse.pill.sample config/discourse.pill
+    diff -u config/nginx.sample.conf /etc/nginx/conf.d/discourse.conf
+    diff -u config/environments/production.rb.sample config/environments/production.rb
+
+#### Example 1
+
+    $ diff -u config/discourse.pill.sample config/discourse.pill
+    --- config/discourse.pill.sample	2013-07-15 17:38:06.501507001 +0000
+    +++ config/discourse.pill	2013-07-05 06:38:27.133506896 +0000
+    @@ -46,7 +46,7 @@
+
+       app.working_dir = rails_root
+       sockdir = "#{rails_root}/tmp/sockets"
+    -  File.directory? sockdir or FileUtils.mkdir_p sockdir
+    +  File.directory? sockdir or Dir.mkdir sockdir
+       num_webs.times do |i|
+         app.process("thin-#{i}") do |process|
+
+This change reflects us switching to using `FileUtils.mkdir_p` instead of `Dir.mkdir`.
+
+#### Example 2
+
+    $ diff -u config/nginx.sample.conf /etc/nginx/conf.d/discourse.conf
+    --- config/nginx.sample.conf	2013-07-15 17:38:06.521507000 +0000
+    +++ /etc/nginx/conf.d/discourse.conf	2013-07-15 17:52:46.649507024 +0000
+    @@ -12,17 +12,18 @@
+       gzip_min_length 1000;
+       gzip_types application/json text/css application/x-javascript;
+
+    -  server_name enter.your.web.hostname.here;
+    +  server_name webtier.discourse.org;
+
+       sendfile on;
+
+       keepalive_timeout 65;
+    -  client_max_body_size 2m;
+       location / {
+         root /home/discourse/discourse/public;
+
+This change reflects a change in placeholder information plus (importantly)
+adding the `client_max_body_size 2m;` directive to the nginx.conf. This change
+should also be made to your production file.
