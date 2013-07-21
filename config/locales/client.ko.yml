@@ -384,13 +384,13 @@ ko:
       title: "이미지 삽입"
       from_my_computer: "나의 장치로 부터"
       from_the_web: "웹으로부터"
-      add_image: "이미지 추가"
+      add_title: "이미지 추가"
       remote_title: "원격 이미지"
       remote_tip: "양식에서 http://example.com/image.jpg 의 이미지 주소 입력"
       local_title: "기본 이미지"
       local_tip: "당신의 장치로부터 이미지를 선택하여 클릭해주세요"
-      upload: "업로드"
-      uploading_image: "이미지 업로드중 ..."
+      upload_title: "업로드"
+      uploading: "이미지 업로드중 ..."
 
     search:
       title: "주제, 게시물, 사용자, 카테고리를 검색합니다"

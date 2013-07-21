@@ -496,13 +496,13 @@ zh_CN:
       title: "插入图片"
       from_my_computer: "来自我的设备"
       from_the_web: "来自网络"
-      add_image: "添加图片"
+      add_title: "添加图片"
       remote_title: "网络图片"
       remote_tip: "输入图片网络，格式为：http://example.com/image.jpg"
       local_title: "本地图片"
       local_tip: "点击从你的设备中选择一张图片。"
-      upload: "上传"
-      upload_file: "上传图片中"
+      upload_title: "上传"
+      uploading: "上传图片中"
 
     search:
       title: "搜索主题、帖子、用户或分类"
@@ -568,10 +568,10 @@ zh_CN:
       not_found:
         title: "未找到主题"
         description: "抱歉，无法找到此主题。有可能它被论坛版主删掉了？"
-      unread_posts: 
+      unread_posts:
         one: "此主题中你有一个帖子未阅"
         other: "此主题中你有 {{unread}} 个帖子未阅"
-      new_posts: 
+      new_posts:
         other: "从你最近一次阅读此主题后，又有一个新帖子发表"
         other: "从你最近一次阅读此主题后，又有 {{new_posts}} 个新帖子发表"
 

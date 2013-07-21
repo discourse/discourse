@@ -9,7 +9,8 @@
 Discourse.UploadSelectorView = Discourse.ModalBodyView.extend({
   templateName: 'modal/upload_selector',
   classNames: ['upload-selector'],
-  title: I18n.t('upload_selector.title'),
+
+  title: function() { return Discourse.UploadSelectorController.translate("title"); }.property(),
 
   upload: function() {
     $('#reply-control').fileupload('add', { fileInput: $('#filename-input') });
