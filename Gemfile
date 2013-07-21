@@ -1,5 +1,56 @@
 source 'https://rubygems.org'
 
+# monkey patching to support dual booting
+module Bundler::SharedHelpers
+  def default_lockfile=(path)
+    @default_lockfile = path
+  end
+  def default_lockfile
+    @default_lockfile ||= Pathname.new("#{default_gemfile}.lock")
+  end
+end
+
+def rails4?
+  !!ENV["RAILS4"]
+end
+
+if rails4?
+  Bundler::SharedHelpers.default_lockfile = Pathname.new("#{Bundler::SharedHelpers.default_gemfile}_rails4.lock")
+
+  # Bundler::Dsl.evaluate already called with an incorrect lockfile ... fix it
+  class Bundler::Dsl
+    # A bit messy, this can be called multiple times by bundler, avoid blowing the stack
+    unless self.method_defined? :to_definition_unpatched
+      alias_method :to_definition_unpatched, :to_definition
+      puts "Booting in Rails 4 mode"
+    end
+    def to_definition(bad_lockfile, unlock)
+      to_definition_unpatched(Bundler::SharedHelpers.default_lockfile, unlock)
+    end
+  end
+end
+
+if rails4?
+  gem 'rails', '4.0.0'
+  gem 'redis-rails', :git => 'git://github.com/SamSaffron/redis-store.git'
+  gem 'rails-observers'
+  gem 'protected_attributes'
+  gem 'actionpack-action_caching'
+else
+  # we had pain with the 3.2.13 upgrade so monkey patch the security fix
+  # next time around we hope to upgrade
+  gem 'rails', '3.2.12'
+  gem 'strong_parameters' # remove when we upgrade to Rails 4
+  # we are using a custom sprockets repo to work around: https://github.com/rails/rails/issues/8099#issuecomment-16137638
+  # REVIEW EVERY RELEASE
+  gem 'sprockets', git: 'https://github.com/SamSaffron/sprockets.git', branch: 'rails-compat'
+  gem 'redis-rails'
+end
+
+gem 'redis'
+gem 'hiredis'
+gem 'em-redis'
+
 gem 'active_model_serializers', git: 'https://github.com/rails-api/active_model_serializers.git'
 
 # we had issues with latest, stick to the rev till we figure this out
@@ -20,13 +71,11 @@ gem 'activerecord-postgres-hstore'
 gem 'active_attr' # until we get ActiveModel::Model with Rails 4
 gem 'airbrake', '3.1.2', require: false # errbit is broken with 3.1.3 for now
 gem 'clockwork', require: false
-gem 'em-redis'
 gem 'eventmachine'
 gem 'fast_xs'
 gem 'fast_xor', git: 'https://github.com/CodeMonkeySteve/fast_xor.git'
 gem 'fastimage'
 gem 'fog', require: false
-gem 'hiredis'
 
 gem 'email_reply_parser', git: 'https://github.com/lawrencepit/email_reply_parser.git'
 
@@ -49,12 +98,9 @@ gem 'omniauth-browserid', git: 'https://github.com/callahad/omniauth-browserid.g
 gem 'omniauth-cas'
 gem 'oj'
 gem 'pg'
-# we had pain with the 3.2.13 upgrade so monkey patch the security fix
-# next time around we hope to upgrade
-gem 'rails', '3.2.12'
 gem 'rake'
-gem 'redis'
-gem 'redis-rails'
+
+
 gem 'rest-client'
 gem 'rinku'
 gem 'sanitize'
@@ -64,7 +110,6 @@ gem 'sidekiq'
 gem 'sidekiq-failures'
 gem 'sinatra', require: nil
 gem 'slim'  # required for sidekiq-web
-gem 'strong_parameters' # remove when we upgrade to Rails 4
 gem 'therubyracer', require: 'v8'
 gem 'thin', require: false
 gem 'diffy', require: false
@@ -123,9 +168,6 @@ group :development do
   gem 'annotate', :git => 'https://github.com/SamSaffron/annotate_models.git'
 end
 
-# we are using a custom sprockets repo to work around: https://github.com/rails/rails/issues/8099#issuecomment-16137638
-# REVIEW EVERY RELEASE
-gem 'sprockets', git: 'https://github.com/SamSaffron/sprockets.git', branch: 'rails-compat'
 
 
 # this is an optional gem, it provides a high performance replacement
