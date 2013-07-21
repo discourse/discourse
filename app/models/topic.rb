@@ -51,9 +51,7 @@ class Topic < ActiveRecord::Base
     self.title = TextCleaner.clean_title(TextSentinel.title_sentinel(title).text) if errors[:title].empty?
   end
 
-  if rails4?
-    store_accessor :meta_data
-  else
+  unless rails4?
     serialize :meta_data, ActiveRecord::Coders::Hstore
   end
 

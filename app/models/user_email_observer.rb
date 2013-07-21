@@ -2,12 +2,22 @@ class UserEmailObserver < ActiveRecord::Observer
   observe :notification
 
   def after_commit(notification)
-    if notification.send(:transaction_include_action?, :create)
-      notification_type = Notification.types[notification.notification_type]
+    if rails4?
+      if notification.send(:transaction_include_any_action?, [:create])
+        notification_type = Notification.types[notification.notification_type]
 
-      # Delegate to email_user_{{NOTIFICATION_TYPE}} if exists
-      email_method = :"email_user_#{notification_type.to_s}"
-      send(email_method, notification) if respond_to?(email_method)
+        # Delegate to email_user_{{NOTIFICATION_TYPE}} if exists
+        email_method = :"email_user_#{notification_type.to_s}"
+        send(email_method, notification) if respond_to?(email_method)
+      end
+    else
+      if notification.send(:transaction_include_action?, :create)
+        notification_type = Notification.types[notification.notification_type]
+
+        # Delegate to email_user_{{NOTIFICATION_TYPE}} if exists
+        email_method = :"email_user_#{notification_type.to_s}"
+        send(email_method, notification) if respond_to?(email_method)
+      end
     end
   end
 
