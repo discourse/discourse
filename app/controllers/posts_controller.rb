@@ -204,6 +204,9 @@ class PostsController < ApplicationController
         :auto_track
       ]
 
+      # param munging for WordPress
+      params[:auto_track] = !(params[:auto_track].to_s == "false") if params[:auto_track]
+
       if api_key_valid?
         # php seems to be sending this incorrectly, don't fight with it
         params[:skip_validations] = params[:skip_validations].to_s == "true"
