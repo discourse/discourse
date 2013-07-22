@@ -78,11 +78,6 @@ class Post < ActiveRecord::Base
     Digest::SHA1.hexdigest(raw.gsub(/\s+/, ""))
   end
 
-  def reset_cooked
-    @cooked_document = nil
-    self.cooked = nil
-  end
-
   def self.white_listed_image_classes
     @white_listed_image_classes ||= ['avatar', 'favicon', 'thumbnail']
   end
