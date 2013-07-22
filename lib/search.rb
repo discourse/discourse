@@ -29,6 +29,7 @@ class Search
       when :nl then 'dutch'
       when :pt then 'portuguese'
       when :sv then 'swedish'
+      when :ru then 'russian'
       else 'simple' # use the 'simple' stemmer for other languages
     end
   end
