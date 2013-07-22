@@ -60,7 +60,6 @@ Discourse.PreferencesAboutController = Discourse.ObjectController.extend({
   saveButtonText: function() {
     if (this.get('saving')) return I18n.t("saving");
     return I18n.t("user.change");
-  }.property('saving'),
-
+  }.property('saving')
 
 });
