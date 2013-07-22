@@ -14,7 +14,7 @@ class TopicNotifier
 
   end
 
-  def created_topic!(user_id)
+  def watch_topic!(user_id)
     change_level user_id, :watching, :created_topic
   end
 

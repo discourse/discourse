@@ -21,6 +21,12 @@ describe PostCreator do
     let(:creator_with_meta_data) { PostCreator.new(user, basic_topic_params.merge(meta_data: {hello: "world"} )) }
     let(:creator_with_image_sizes) { PostCreator.new(user, basic_topic_params.merge(image_sizes: image_sizes)) }
 
+    it "can be created with auto tracking disabled" do
+      p = PostCreator.create(user, basic_topic_params.merge(auto_track: false))
+      t = TopicUser.where(user_id: p.user_id, topic_id: p.topic_id).first
+      t.notification_level.should == TopicUser.notification_levels[:regular]
+    end
+
     it "ensures the user can create the topic" do
       Guardian.any_instance.expects(:can_create?).with(Topic,nil).returns(false)
       lambda { creator.create }.should raise_error(Discourse::InvalidAccess)

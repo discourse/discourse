@@ -2,6 +2,10 @@ class TopicCreator
 
   attr_accessor :errors
 
+  def self.create(user, guardian, opts)
+    self.new(user, guardian, opts).create
+  end
+
   def initialize(user, guardian, opts)
     @user = user
     @guardian = guardian
@@ -17,10 +21,18 @@ class TopicCreator
     process_private_message if @opts[:archetype] == Archetype.private_message
     save_topic
 
+    watch_topic
+
     @topic
   end
 
   private
+
+  def watch_topic
+    unless @opts[:auto_track] == false
+      @topic.notifier.watch_topic!(@topic.user_id)
+    end
+  end
 
   def setup
     topic_params = {title: @opts[:title], user_id: @user.id, last_post_user_id: @user.id}

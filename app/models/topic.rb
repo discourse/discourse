@@ -134,7 +134,6 @@ class Topic < ActiveRecord::Base
 
   after_create do
     changed_to_category(category)
-    notifier.created_topic! user_id
     if archetype == Archetype.private_message
       DraftSequence.next!(user, Draft::NEW_PRIVATE_MESSAGE)
     else

@@ -11,8 +11,12 @@ describe TopicUser do
     DateTime.expects(:now).at_least_once.returns(yesterday)
   end
 
-  let!(:topic) { Fabricate(:topic) }
   let!(:user) { Fabricate(:coding_horror) }
+  let!(:topic) {
+    user = Fabricate(:user)
+    guardian = Guardian.new(user)
+    TopicCreator.create(user, guardian, title: "this is my topic title")
+  }
   let(:topic_user) { TopicUser.get(topic,user) }
   let(:topic_creator_user) { TopicUser.get(topic, topic.user) }
 

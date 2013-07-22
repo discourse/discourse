@@ -68,6 +68,7 @@ class TopicUser < ActiveRecord::Base
     # since there's more likely to be an existing record than not. If the update returns 0 rows affected
     # it then creates the row instead.
     def change(user_id, topic_id, attrs)
+
       # Sometimes people pass objs instead of the ids. We can handle that.
       topic_id = topic_id.id if topic_id.is_a?(::Topic)
       user_id = user_id.id if user_id.is_a?(::User)

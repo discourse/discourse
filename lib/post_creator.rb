@@ -20,6 +20,7 @@ class PostCreator
   #                             who is the post "author." For example when copying posts to a new
   #                             topic.
   #   created_at              - Post creation time (optional)
+  #   auto_track              - Automatically track this topic if needed (default true)
   #
   #   When replying to a topic:
   #     topic_id              - topic we're replying to
@@ -264,7 +265,9 @@ class PostCreator
   end
 
   def track_topic
-    TopicUser.auto_track(@user.id, @topic.id, TopicUser.notification_reasons[:created_post])
+    unless @opts[:auto_track] == false
+      TopicUser.auto_track(@user.id, @topic.id, TopicUser.notification_reasons[:created_post])
+    end
   end
 
   def enqueue_jobs

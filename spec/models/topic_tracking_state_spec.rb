@@ -20,6 +20,7 @@ describe TopicTrackingState do
     report.length.should == 0
 
     new_post = post
+    post.topic.notifier.watch_topic!(post.topic.user_id)
 
     report = TopicTrackingState.report([user.id])
 
