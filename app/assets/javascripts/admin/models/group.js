@@ -41,7 +41,7 @@ Discourse.Group = Discourse.Model.extend({
     var group = this;
     group.set('disableSave', true);
 
-    return Discourse.ajax("/admin/groups/" + group.id, {type: "DELETE"})
+    return Discourse.ajax("/admin/groups/" + group.get('id'), {type: "DELETE"})
       .then(function(){
         return true;
       }, function(jqXHR, status, error) {
