@@ -140,7 +140,7 @@ class Category < ActiveRecord::Base
   end
 
   def publish_categories_list
-    MessageBus.publish('/categories', {categories: ActiveModel::ArraySerializer.new(Category.latest.all).as_json})
+    MessageBus.publish('/categories', {categories: ActiveModel::ArraySerializer.new(Category.latest).as_json})
   end
 
   def uncategorized_validator

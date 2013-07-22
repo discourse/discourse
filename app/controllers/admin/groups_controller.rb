@@ -1,6 +1,6 @@
 class Admin::GroupsController < Admin::AdminController
   def index
-    groups = Group.order(:name).all
+    groups = Group.order(:name).to_a
     render_serialized(groups, BasicGroupSerializer)
   end
 
