@@ -9,6 +9,10 @@
 **/
 Discourse.FlagController = Discourse.ObjectController.extend(Discourse.ModalFunctionality, {
 
+  onShow: function() {
+    this.set('selected', null);
+  },
+
   changePostActionType: function(action) {
     this.set('selected', action);
   },
