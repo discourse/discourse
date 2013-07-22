@@ -4,6 +4,13 @@
 #
 class PostDestroyer
 
+  def self.destroy_stubs
+    Post.where(deleted_at: nil, user_deleted: true)
+        .where('updated_at < ? AND post_number > 1', 1.day.ago).each do |post|
+      PostDestroyer.new(Discourse.system_user, post).destroy
+    end
+  end
+
   def initialize(user, post)
     @user, @post = user, post
   end
@@ -14,6 +21,19 @@ class PostDestroyer
     elsif @user.id == @post.user_id
       user_destroyed
     end
+  end
+
+  def recover
+    if @user.staff? && @post.deleted_at
+      staff_recovered
+    elsif @user.staff? || @user.id == @post.user_id
+      user_recovered
+    end
+    @post.topic.update_statistics
+  end
+
+  def staff_recovered
+    @post.recover!
   end
 
   # When a post is properly deleted. Well, it's still soft deleted, but it will no longer
@@ -72,6 +92,14 @@ class PostDestroyer
       @post.update_column(:user_deleted, true)
       @post.update_flagged_posts_count
       @post.topic_links.each(&:destroy)
+    end
+  end
+
+  def user_recovered
+    Post.transaction do
+      @post.update_column(:user_deleted, false)
+      @post.revise(@user, @post.versions.last.modifications["raw"][0], force_new_version: true)
+      @post.update_flagged_posts_count
     end
   end
 

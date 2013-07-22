@@ -94,17 +94,13 @@ class PostsController < ApplicationController
     @post = Post.where(topic_id: params[:topic_id], post_number: params[:post_number]).first
     guardian.ensure_can_see!(@post)
     @post.revert_to(params[:version].to_i) if params[:version].present?
-    post_serializer = PostSerializer.new(@post, scope: guardian, root: false)
-    post_serializer.add_raw = true
-    render_json_dump(post_serializer)
+    render_post_json(@post)
   end
 
   def show
     @post = find_post_from_params
     @post.revert_to(params[:version].to_i) if params[:version].present?
-    post_serializer = PostSerializer.new(@post, scope: guardian, root: false)
-    post_serializer.add_raw = true
-    render_json_dump(post_serializer)
+    render_post_json(@post)
   end
 
   def destroy
@@ -120,10 +116,11 @@ class PostsController < ApplicationController
   def recover
     post = find_post_from_params
     guardian.ensure_can_recover_post!(post)
-    post.recover!
-    post.topic.update_statistics
+    destroyer = PostDestroyer.new(current_user, post)
+    destroyer.recover
+    post.reload
 
-    render nothing: true
+    render_post_json(post)
   end
 
   def destroy_many
@@ -187,6 +184,12 @@ class PostsController < ApplicationController
       guardian.ensure_can_see!(post)
       post
     end
+
+  def render_post_json(post)
+    post_serializer = PostSerializer.new(post, scope: guardian, root: false)
+    post_serializer.add_raw = true
+    render_json_dump(post_serializer)
+  end
 
   private
 

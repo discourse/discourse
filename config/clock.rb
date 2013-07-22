@@ -34,5 +34,6 @@ module Clockwork
   every(1.day, 'version_check')
   every(1.minute, 'clockwork_heartbeat')
   every(1.minute, 'poll_mailbox')
+  every(2.hours, 'destroy_old_deletion_stubs')
 
 end

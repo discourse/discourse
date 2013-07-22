@@ -10,6 +10,31 @@ describe PostDestroyer do
   let(:moderator) { Fabricate(:moderator) }
   let(:post) { create_post }
 
+  describe 'destroy_old_stubs' do
+    it 'destroys stubs for deleted by user posts' do
+      Fabricate(:admin)
+      reply1 = create_post(topic: post.topic)
+      reply2 = create_post(topic: post.topic)
+      reply3 = create_post(topic: post.topic)
+
+      PostDestroyer.new(reply1.user, reply1).destroy
+      PostDestroyer.new(reply2.user, reply2).destroy
+
+      reply2.update_column(:updated_at, 2.days.ago)
+
+      PostDestroyer.destroy_stubs
+
+      reply1.reload
+      reply2.reload
+      reply3.reload
+
+      reply1.deleted_at.should == nil
+      reply2.deleted_at.should_not == nil
+      reply3.deleted_at.should == nil
+
+    end
+  end
+
   describe 'basic destroying' do
 
     let(:moderator) { Fabricate(:moderator) }
@@ -17,6 +42,7 @@ describe PostDestroyer do
 
     context "as the creator of the post" do
       before do
+        @orig = post.cooked
         PostDestroyer.new(post.user, post).destroy
         post.reload
       end
@@ -24,8 +50,16 @@ describe PostDestroyer do
       it "doesn't delete the post" do
         post.deleted_at.should be_blank
         post.deleted_by.should be_blank
+        post.user_deleted.should be_true
         post.raw.should == I18n.t('js.post.deleted_by_author')
         post.version.should == 2
+
+        # lets try to recover
+        PostDestroyer.new(post.user, post).recover
+        post.reload
+        post.version.should == 3
+        post.user_deleted.should be_false
+        post.cooked.should == @orig
       end
     end
 
