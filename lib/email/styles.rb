@@ -22,11 +22,16 @@ module Email
         if img['src'][0] == "/"
           img['src'] = "#{Discourse.base_url}#{img['src']}"
         end
-
       end
+
+      @fragment.css('div.post-indent').each do |div|
+        div['style'] = 'margin-left: 15px; margin-top: 20px; max-width: 694px;'
+      end
+
     end
 
     def format_html
+
       @fragment.css('h3').each do |h3|
         h3['style'] = 'margin: 15px 0 20px 0; border-bottom: 1px solid #ddd;'
       end
@@ -55,10 +60,14 @@ module Email
       @fragment.css('div.digest-post').each do |div|
         div['style'] = 'margin-left: 15px; margin-top: 20px; max-width: 694px;'
       end
+
     end
 
     def to_html
-      @fragment.to_html
+      result = @fragment.to_html
+      result.gsub!(/\[email-indent\]/, "<div style='margin-left: 15px'>")
+      result.gsub!(/\[\/email-indent\]/, "</div>")
+      result
     end
 
 

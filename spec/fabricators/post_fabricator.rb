@@ -43,11 +43,8 @@ Fabricator(:post_with_images_in_quote_and_onebox, from: :post) do
 '
 end
 
-Fabricator(:post_with_uploaded_images, from: :post) do
-  cooked '
-<img src="/uploads/default/2/3456789012345678.png" width="1500" height="2000">
-<img src="/uploads/default/1/1234567890123456.jpg">
-'
+Fabricator(:post_with_uploaded_image, from: :post) do
+  cooked '<img src="/uploads/default/2/3456789012345678.png" width="1500" height="2000">'
 end
 
 Fabricator(:post_with_an_attachment, from: :post) do

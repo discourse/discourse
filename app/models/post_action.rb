@@ -345,7 +345,7 @@ class PostAction < ActiveRecord::Base
 
     # TODO add serializer so we can skip this
     posts.map!(&:marshal_dump)
-    [posts, User.select([:id, :username, :email]).where(id: users.to_a).all]
+    [posts, User.select([:id, :username, :email]).where(id: users.to_a).to_a]
   end
 
   protected

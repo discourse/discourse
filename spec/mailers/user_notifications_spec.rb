@@ -91,7 +91,11 @@ describe UserNotifications do
       end
 
       it "has a message" do
-        expects_build_with(has_entry(:message, post.raw))
+        expects_build_with(has_key(:message))
+      end
+
+      it "has a context" do
+        expects_build_with(has_key(:context))
       end
 
       it "has an unsubscribe link" do

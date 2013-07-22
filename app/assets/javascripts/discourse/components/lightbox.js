@@ -8,12 +8,9 @@
 Discourse.Lightbox = {
   apply: function($elem) {
     var _this = this;
-    $('a.lightbox', $elem).each(function(i, e) {
-      $LAB.script("/javascripts/jquery.magnific-popup-min.js").wait(function() {
-        $(e).magnificPopup({
-          type: 'image',
-          closeOnContentClick: true
-        });
+    $LAB.script("/javascripts/jquery.magnific-popup-min.js").wait(function() {
+      $('a.lightbox', $elem).each(function(i, e) {
+        $(e).magnificPopup({ type: 'image', closeOnContentClick: true });
       });
     });
   }

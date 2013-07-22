@@ -4,7 +4,7 @@ module LocalStore
     unique_sha1 = Digest::SHA1.hexdigest("#{Time.now.to_s}#{file.original_filename}")[0,16]
     extension = File.extname(file.original_filename)
     clean_name = "#{unique_sha1}#{extension}"
-    url_root = "/uploads/#{RailsMultisite::ConnectionManagement.current_db}/#{upload_id}"
+    url_root = "#{directory}/#{upload_id}"
     path = "#{Rails.root}/public#{url_root}"
 
     FileUtils.mkdir_p path
@@ -41,7 +41,7 @@ module LocalStore
   end
 
   def self.asset_host
-    ActionController::Base.asset_host
+    Rails.configuration.action_controller.asset_host
   end
 
 end

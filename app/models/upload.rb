@@ -91,7 +91,7 @@ class Upload < ActiveRecord::Base
   end
 
   def self.is_relative?(url)
-    url.start_with?("/uploads/")
+    url.start_with?(LocalStore.directory)
   end
 
   def self.is_local?(url)
@@ -99,10 +99,12 @@ class Upload < ActiveRecord::Base
   end
 
   def self.is_on_s3?(url)
-    SiteSetting.enable_s3_uploads? && (url.start_with?(S3Store.base_url) || url.start_with?(S3Store.base_url_old))
+    SiteSetting.enable_s3_uploads? && url.start_with?(S3Store.base_url)
   end
 
   def self.get_from_url(url)
+    # we store relative urls, so we need to remove any host/cdn
+    url = url.gsub(/^#{LocalStore.asset_host}/i, "") if LocalStore.asset_host.present?
     Upload.where(url: url).first if has_been_uploaded?(url)
   end
 
