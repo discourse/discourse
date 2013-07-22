@@ -339,7 +339,7 @@ describe Topic do
     it 'updates the bumped_at field when a new post is made' do
       @topic.bumped_at.should be_present
       lambda {
-        Fabricate(:post, topic: @topic, user: @topic.user)
+        create_post(topic: @topic, user: @topic.user)
         @topic.reload
       }.should change(@topic, :bumped_at)
     end
@@ -621,8 +621,8 @@ describe Topic do
   context 'last_poster info' do
 
     before do
-      @user = Fabricate(:user)
-      @post = Fabricate(:post, user: @user)
+      @post = create_post
+      @user = @post.user
       @topic = @post.topic
     end
 
@@ -633,7 +633,7 @@ describe Topic do
     context 'after a second post' do
       before do
         @second_user = Fabricate(:coding_horror)
-        @new_post = Fabricate(:post, topic: @topic, user: @second_user)
+        @new_post = create_post(topic: @topic, user: @second_user)
         @topic.reload
       end
 

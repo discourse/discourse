@@ -8,7 +8,7 @@ describe PostDestroyer do
   end
 
   let(:moderator) { Fabricate(:moderator) }
-  let(:post) { Fabricate(:post) }
+  let(:post) { create_post }
 
   describe 'basic destroying' do
 
@@ -56,10 +56,10 @@ describe PostDestroyer do
   context 'deleting the second post in a topic' do
 
     let(:user) { Fabricate(:user) }
-    let!(:post) { Fabricate(:post, user: user) }
-    let(:topic) { post.topic }
+    let!(:post) { create_post(user: user) }
+    let(:topic) { post.topic.reload }
     let(:second_user) { Fabricate(:coding_horror) }
-    let!(:second_post) { Fabricate(:post, topic: topic, user: second_user) }
+    let!(:second_post) { create_post(topic: topic, user: second_user) }
 
     before do
       PostDestroyer.new(moderator, second_post).destroy

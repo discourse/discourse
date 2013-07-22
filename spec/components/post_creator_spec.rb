@@ -23,8 +23,8 @@ describe PostCreator do
 
     it "can be created with auto tracking disabled" do
       p = PostCreator.create(user, basic_topic_params.merge(auto_track: false))
-      t = TopicUser.where(user_id: p.user_id, topic_id: p.topic_id).first
-      t.notification_level.should == TopicUser.notification_levels[:regular]
+      # must be 0 otherwise it will think we read the topic which is clearly untrue
+      TopicUser.where(user_id: p.user_id, topic_id: p.topic_id).count.should == 0
     end
 
     it "ensures the user can create the topic" do
@@ -154,8 +154,15 @@ describe PostCreator do
 
       it 'increases topic response counts' do
         first_post = creator.create
-        user2 = Fabricate(:coding_horror)
 
+        # ensure topic user is correct
+        topic_user = first_post.user.topic_users.where(topic_id: first_post.topic_id).first
+        topic_user.should be_present
+        topic_user.should be_posted
+        topic_user.last_read_post_number.should == first_post.post_number
+        topic_user.seen_post_count.should == first_post.post_number
+
+        user2 = Fabricate(:coding_horror)
         user2.topic_reply_count.should == 0
         first_post.user.reload.topic_reply_count.should == 0
 

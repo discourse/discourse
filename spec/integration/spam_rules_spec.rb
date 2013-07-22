@@ -19,8 +19,8 @@ describe PostAction do
     Given(:spammer)  { Fabricate(:user, trust_level: TrustLevel.levels[:newuser]) }
 
     context 'spammer post is not flagged enough times' do
-      Given!(:spam_post)  { Fabricate(:post, user: spammer) }
-      Given!(:spam_post2) { Fabricate(:post, user: spammer) }
+      Given!(:spam_post)  { create_post(user: spammer) }
+      Given!(:spam_post2) { create_post(user: spammer) }
       When                { PostAction.act(user1, spam_post, PostActionType.types[:spam]) }
       Then                { expect(spam_post.reload).to_not be_hidden }
 

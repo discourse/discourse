@@ -230,7 +230,7 @@ describe TopicQuery do
     end
 
     context 'created topics' do
-      let!(:created_topic) { Fabricate(:post, user: user).topic }
+      let!(:created_topic) { create_post(user: user).topic }
 
       it "includes the created topic" do
         topics.include?(created_topic).should be_true
@@ -238,8 +238,8 @@ describe TopicQuery do
     end
 
     context "topic you've posted in" do
-      let(:other_users_topic) { Fabricate(:post, user: creator).topic }
-      let!(:your_post) { Fabricate(:post, user: user, topic: other_users_topic )}
+      let(:other_users_topic) { create_post(user: creator).topic }
+      let!(:your_post) { create_post(user: user, topic: other_users_topic )}
 
       it "includes the posted topic" do
         topics.include?(other_users_topic).should be_true

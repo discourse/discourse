@@ -570,19 +570,6 @@ describe Post do
       post.replies.should be_blank
     end
 
-    describe 'a forum topic user record for the topic' do
-
-      let(:topic_user) { post.user.topic_users.where(topic_id: topic.id).first }
-
-      it 'is set correctly' do
-        topic_user.should be_present
-        topic_user.should be_posted
-        topic_user.last_read_post_number.should == post.post_number
-        topic_user.seen_post_count.should == post.post_number
-      end
-
-    end
-
     describe 'extract_quoted_post_numbers' do
 
       let!(:post) { Fabricate(:post, post_args) }

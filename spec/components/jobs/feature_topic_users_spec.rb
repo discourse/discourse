@@ -12,12 +12,12 @@ describe Jobs::FeatureTopicUsers do
   end
 
   context 'with a topic' do
-    let!(:post) { Fabricate(:post) }
+    let!(:post) { create_post }
     let(:topic) { post.topic }
     let!(:coding_horror) { Fabricate(:coding_horror) }
     let!(:evil_trout) { Fabricate(:evil_trout) }
-    let!(:second_post) { Fabricate(:post, topic: topic, user: coding_horror)}
-    let!(:third_post) { Fabricate(:post, topic: topic, user: evil_trout)}
+    let!(:second_post) { create_post(topic: topic, user: coding_horror)}
+    let!(:third_post) { create_post(topic: topic, user: evil_trout)}
 
     it "won't feature the OP" do
       Jobs::FeatureTopicUsers.new.execute(topic_id: topic.id)

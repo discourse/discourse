@@ -232,6 +232,7 @@ describe TopicUser do
   it "is able to self heal" do
     p1 = Fabricate(:post)
     p2 = Fabricate(:post, user: p1.user, topic: p1.topic, post_number: 2)
+    p1.topic.notifier.watch_topic!(p1.user_id)
 
     TopicUser.exec_sql("UPDATE topic_users set seen_post_count=100, last_read_post_number=0
                        WHERE topic_id = :topic_id AND user_id = :user_id", topic_id: p1.topic_id, user_id: p1.user_id)
