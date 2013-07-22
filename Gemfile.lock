@@ -248,7 +248,7 @@ GEM
     minitest (4.7.3)
     mocha (0.13.3)
       metaclass (~> 0.0.1)
-    multi_json (1.7.6)
+    multi_json (1.7.7)
     multipart-post (1.2.0)
     mustache (0.99.4)
     net-scp (1.1.0)
