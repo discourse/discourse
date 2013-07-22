@@ -39,6 +39,10 @@ en:
     zero: "Sorry, new users can't put images in posts."
     one: "Sorry, new users can only put one image in a post."
     other: "Sorry, new users can only put %{count} images in a post."
+  too_many_attachments:
+    zero: "Sorry, new users can't put attachments in posts."
+    one: "Sorry, new users can only put one attachment in a post."
+    other: "Sorry, new users can only put %{count} attachments in a post."
   too_many_links:
     zero: "Sorry, new users can't put links in posts."
     one: "Sorry, new users can only put one link in a post."
@@ -606,6 +610,7 @@ en:
 
     newuser_max_links: "How many links a new user can add to a post"
     newuser_max_images: "How many images a new user can add to a post"
+    newuser_max_attachments: "How many attachments a new user can add to a post"
     newuser_max_mentions_per_post: "Maximum number of @name notifications a new user can use in a post"
     max_mentions_per_post: "Maximum number of @name notifications you can use in a post"
 

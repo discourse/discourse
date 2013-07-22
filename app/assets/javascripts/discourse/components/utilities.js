@@ -174,9 +174,13 @@ Discourse.Utilities = {
       return false;
     }
     var upload = files[0];
-    // ensures that new users can upload image
-    if (Discourse.User.current('trust_level') === 0 && Discourse.SiteSettings.newuser_max_images === 0) {
-      bootbox.alert(I18n.t('post.errors.upload_not_allowed_for_new_user'));
+    // ensures that new users can upload image/attachment
+    if (Discourse.Utilities.isUploadForbidden(upload.name)) {
+      if (Discourse.Utilities.isAnImage(upload.name)) {
+        bootbox.alert(I18n.t('post.errors.image_upload_not_allowed_for_new_user'));
+      } else {
+        bootbox.alert(I18n.t('post.errors.attachment_upload_not_allowed_for_new_user'));
+      }
       return false;
     }
     // if the image was pasted, sets its name to a default one
@@ -242,6 +246,17 @@ Discourse.Utilities = {
   **/
   maxUploadSizeInKB: function(path) {
     return Discourse.Utilities.isAnImage(path) ? Discourse.SiteSettings.max_image_size_kb : Discourse.SiteSettings.max_attachment_size_kb;
+  },
+
+  /**
+    Test whether an upload is forbidden or not
+
+    @method isUploadForbidden
+    @param {String} path The path
+  **/
+  isUploadForbidden: function(path) {
+    if (Discourse.User.current('trust_level') > 0) { return false; }
+    return Discourse.Utilities.isAnImage(path) ? Discourse.SiteSettings.newuser_max_images === 0 : Discourse.SiteSettings.newuser_max_attachments === 0;
   }
 
 };
