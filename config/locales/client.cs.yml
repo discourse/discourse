@@ -1152,6 +1152,9 @@ cs:
         name_placeholder: "Název skupiny, bez mezer, stejná pravidla jako pro uživatelská jména"
         about: "Zde můžete upravit názvy skupin a členství"
         can_not_edit_automatic: "Členství v automatických skupinách se přiděluje samo, administrátoři mohou přidělit další role a důveryhodnost uživatelům"
+        delete: "Smazat"
+        delete_confirm: "Smazat toto skupiny?"
+        delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
 
       api:
         title: "API"

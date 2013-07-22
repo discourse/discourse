@@ -43,7 +43,7 @@ class Admin::GroupsController < Admin::AdminController
       can_not_modify_automatic
     else
       group.destroy
-      render json: "ok"
+      render json: success_json
     end
   end
 

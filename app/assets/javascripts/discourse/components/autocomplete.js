@@ -64,7 +64,7 @@ $.fn.autocomplete = function(options) {
 
     d.find('a').click(function() {
       closeAutocomplete();
-      inputSelectedItems.splice($.inArray(item), 1);
+      inputSelectedItems.splice($.inArray(item, inputSelectedItems), 1);
       $(this).parent().parent().remove();
       if (options.single) {
         me.show();

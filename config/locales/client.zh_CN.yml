@@ -568,10 +568,10 @@ zh_CN:
       not_found:
         title: "未找到主题"
         description: "抱歉，无法找到此主题。有可能它被论坛版主删掉了？"
-      unread_posts: 
+      unread_posts:
         one: "此主题中你有一个帖子未阅"
         other: "此主题中你有 {{unread}} 个帖子未阅"
-      new_posts: 
+      new_posts:
         other: "从你最近一次阅读此主题后，又有一个新帖子发表"
         other: "从你最近一次阅读此主题后，又有 {{new_posts}} 个新帖子发表"
 
@@ -1109,6 +1109,9 @@ zh_CN:
         name_placeholder: "组名，不能含有空格，与用户名规则一致"
         about: "在这里编辑群组的名字和成员"
         can_not_edit_automatic: "这是一个自动划分的群组，管理员用来分配角色和管理用户等级"
+        delete: "删除"
+        delete_confirm: "删除这个小组吗？"
+        delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
 
       api:
         title: "应用开发接口（API）"

@@ -33,12 +33,16 @@ Discourse.AdminGroupsController = Ember.Controller.extend({
   },
 
   destroy: function(group){
-    var list = this.get("model");
-    if(group.get("id")){
-      group.destroy().then(function(){
-        list.removeObject(group);
-      });
-    }
+    var _this = this;
+    return bootbox.confirm(I18n.t("admin.groups.delete_confirm"), I18n.t("no_value"), I18n.t("yes_value"), function(result) {
+      if (result) {
+        group.destroy().then(function(deleted) {
+          if (deleted) {
+            _this.get("model").removeObject(group);
+          }
+        });
+      }
+    });
   }
 });
 

@@ -1060,6 +1060,9 @@ pseudo:
         about: '[[ Éďíť ýóůř ǧřóůƿ ɱéɱƀéřšĥíƿ áɳď ɳáɱéš ĥéřé ]]'
         can_not_edit_automatic: '[[ Áůťóɱáťíč ǧřóůƿ ɱéɱƀéřšĥíƿ íš ďéťéřɱíɳéď áůťóɱáťíčáłłý,
           áďɱíɳíšťéř ůšéřš ťó áššíǧɳ řółéš áɳď ťřůšť łéνéłš ]]'
+        delete: '[[ Ďéłéťé ]]'
+        delete_confirm: '[[ Ďéłéťé ťĥíš ǧřóůƿ? ]]'
+        delete_failed: '[[ Unable to delete group. If this is an automatic group, it cannot be destroyed. ]]'
       api:
         title: '[[ ÁРÍ ]]'
         long_title: '[[ ÁРÍ Íɳƒóřɱáťíóɳ ]]'

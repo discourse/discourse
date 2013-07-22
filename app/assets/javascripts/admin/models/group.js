@@ -36,12 +36,18 @@ Discourse.Group = Discourse.Model.extend({
   }.property('users'),
 
   destroy: function(){
+    if(!this.id) return;
+
     var group = this;
     group.set('disableSave', true);
 
-    return Discourse.ajax("/admin/groups/" + this.get("id"), {type: "DELETE"})
+    return Discourse.ajax("/admin/groups/" + group.id, {type: "DELETE"})
       .then(function(){
+        return true;
+      }, function(jqXHR, status, error) {
         group.set('disableSave', false);
+        bootbox.alert(I18n.t("admin.groups.delete_failed"));
+        return false;
       });
   },
 
