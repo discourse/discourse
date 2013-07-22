@@ -556,7 +556,7 @@ fr:
     suggested_topics: "Nombre de discussions suggerées en dessous d'une discussion"
 
     enable_s3_uploads: "S'il faut ou non uploader sur s3"
-    s3_upload_bucket: "Le bucket dans lequel uploader sur s3"
+    s3_upload_bucket: "Le nom du bucket s3 où seront uploader les fichiers. ATTENTION : le nom doit être en minuscule (cf. http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html)"
     s3_secret_access_key: "La clé secrète Amazon S3 qui va être utilisée pour uploader des images"
     s3_region: "Le nom de la région Amazon S3 qui va être utilisée pour uploader des images"
 
