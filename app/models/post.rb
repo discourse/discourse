@@ -1,5 +1,7 @@
 require_dependency 'jobs'
 require_dependency 'pretty_text'
+require_dependency 'local_store'
+require_dependency 's3_store'
 require_dependency 'rate_limiter'
 require_dependency 'post_revisor'
 require_dependency 'enum'
@@ -89,7 +91,7 @@ class Post < ActiveRecord::Base
     @post_analyzer = PostAnalyzer.new(raw, topic_id)
   end
 
-  %w{raw_mentions linked_hosts image_count link_count raw_links}.each do |attr|
+  %w{raw_mentions linked_hosts image_count attachment_count link_count raw_links}.each do |attr|
     define_method(attr) do
       PostAnalyzer.new(raw, topic_id).send(attr)
     end

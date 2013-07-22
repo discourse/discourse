@@ -41,6 +41,10 @@ fr:
     zero: "Désolé, les visiteurs ne peuvent pas ajouter d'image."
     one: "Désolé, les visiteurs ne peuvent ajouter qu'une seule image."
     other: "Désolé, les visiteurs ne peuvent ajouter que %{count} images."
+  too_many_attachments:
+    zero: "Désolé, les visiteurs ne peuvent pas ajouter de fichier."
+    one: "Désolé, les visiteurs ne peuvent ajouter qu'un seul fichier."
+    other: "Désolé, les visiteurs ne peuvent ajouter que %{count} fichiers."
   too_many_links:
     zero: "Désolé, les visiteurs ne peuvent pas insérer de liens."
     one: "Désolé, les visiteurs ne peuvent insérer qu'un seul lien."
@@ -534,6 +538,7 @@ fr:
 
     newuser_max_links: "Nombre maximum de liens qu'un visiteur peut ajouter à un message"
     newuser_max_images: "Nombre maximum d'images qu'un visiteur peut ajouter à un message"
+    newuser_max_attachments: "Nombre maximum de fichiers qu'un visiteur peut ajouter à un message"
     newuser_max_mentions_per_post: "Nombre maximum de référence à un @utilisateur qu'un visiteur peut ajouter à un message"
     max_mentions_per_post: "Le nombre maximal de @mentions que vous pouvez ajouter à un message"
 

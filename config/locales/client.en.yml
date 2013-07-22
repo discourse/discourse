@@ -757,7 +757,8 @@ en:
         upload_too_large: "Sorry, the file you are trying to upload is too big (maximum size is {{max_size_kb}}kb), please resize it and try again."
         too_many_uploads: "Sorry, you can only upload one file at a time."
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extension: {{authorized_extensions}})."
-        upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
+        image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
+        attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
 
       abandon: "Are you sure you want to abandon your post?"
 
