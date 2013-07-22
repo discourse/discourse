@@ -51,7 +51,11 @@ class Topic < ActiveRecord::Base
     self.title = TextCleaner.clean_title(TextSentinel.title_sentinel(title).text) if errors[:title].empty?
   end
 
-  serialize :meta_data, ActiveRecord::Coders::Hstore
+  if rails4?
+    store_accessor :meta_data
+  else
+    serialize :meta_data, ActiveRecord::Coders::Hstore
+  end
 
   belongs_to :category
   has_many :posts
@@ -130,7 +134,6 @@ class Topic < ActiveRecord::Base
 
   after_create do
     changed_to_category(category)
-    notifier.created_topic! user_id
     if archetype == Archetype.private_message
       DraftSequence.next!(user, Draft::NEW_PRIVATE_MESSAGE)
     else

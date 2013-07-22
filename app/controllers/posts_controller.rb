@@ -94,17 +94,13 @@ class PostsController < ApplicationController
     @post = Post.where(topic_id: params[:topic_id], post_number: params[:post_number]).first
     guardian.ensure_can_see!(@post)
     @post.revert_to(params[:version].to_i) if params[:version].present?
-    post_serializer = PostSerializer.new(@post, scope: guardian, root: false)
-    post_serializer.add_raw = true
-    render_json_dump(post_serializer)
+    render_post_json(@post)
   end
 
   def show
     @post = find_post_from_params
     @post.revert_to(params[:version].to_i) if params[:version].present?
-    post_serializer = PostSerializer.new(@post, scope: guardian, root: false)
-    post_serializer.add_raw = true
-    render_json_dump(post_serializer)
+    render_post_json(@post)
   end
 
   def destroy
@@ -120,10 +116,11 @@ class PostsController < ApplicationController
   def recover
     post = find_post_from_params
     guardian.ensure_can_recover_post!(post)
-    post.recover!
-    post.topic.update_statistics
+    destroyer = PostDestroyer.new(current_user, post)
+    destroyer.recover
+    post.reload
 
-    render nothing: true
+    render_post_json(post)
   end
 
   def destroy_many
@@ -188,6 +185,12 @@ class PostsController < ApplicationController
       post
     end
 
+  def render_post_json(post)
+    post_serializer = PostSerializer.new(post, scope: guardian, root: false)
+    post_serializer.add_raw = true
+    render_json_dump(post_serializer)
+  end
+
   private
 
     def create_params
@@ -200,8 +203,12 @@ class PostsController < ApplicationController
         :target_usernames,
         :reply_to_post_number,
         :image_sizes,
-        :auto_close_days
+        :auto_close_days,
+        :auto_track
       ]
+
+      # param munging for WordPress
+      params[:auto_track] = !(params[:auto_track].to_s == "false") if params[:auto_track]
 
       if api_key_valid?
         # php seems to be sending this incorrectly, don't fight with it

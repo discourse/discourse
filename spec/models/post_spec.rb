@@ -184,6 +184,54 @@ describe Post do
 
   end
 
+  describe "maximum attachments" do
+    let(:newuser) { Fabricate(:user, trust_level: TrustLevel.levels[:newuser]) }
+    let(:post_no_attachments) { Fabricate.build(:post, post_args.merge(user: newuser)) }
+    let(:post_one_attachment) { post_with_body('<a class="attachment" href="/uploads/default/1/2082985.txt">file.txt</a>', newuser) }
+    let(:post_two_attachments) { post_with_body('<a class="attachment" href="/uploads/default/2/20947092.log">errors.log</a> <a class="attachment" href="/uploads/default/3/283572385.3ds">model.3ds</a>', newuser) }
+
+    it "returns 0 attachments for an empty post" do
+      Fabricate.build(:post).attachment_count.should == 0
+    end
+
+    it "finds attachments from HTML" do
+      post_two_attachments.attachment_count.should == 2
+    end
+
+    context "validation" do
+
+      before do
+        SiteSetting.stubs(:newuser_max_attachments).returns(1)
+      end
+
+      context 'newuser' do
+        it "allows a new user to post below the limit" do
+          post_one_attachment.should be_valid
+        end
+
+        it "doesn't allow more than the maximum" do
+          post_two_attachments.should_not be_valid
+        end
+
+        it "doesn't allow a new user to edit their post to insert an attachment" do
+          post_no_attachments.user.trust_level = TrustLevel.levels[:new]
+          post_no_attachments.save
+          -> {
+            post_no_attachments.revise(post_no_attachments.user, post_two_attachments.raw)
+            post_no_attachments.reload
+          }.should_not change(post_no_attachments, :raw)
+        end
+      end
+
+      it "allows more attachments from a not-new account" do
+        post_two_attachments.user.trust_level = TrustLevel.levels[:basic]
+        post_two_attachments.should be_valid
+      end
+
+    end
+
+  end
+
   context "links" do
     let(:newuser) { Fabricate(:user, trust_level: TrustLevel.levels[:newuser]) }
     let(:no_links) { post_with_body("hello world my name is evil trout", newuser) }
@@ -568,19 +616,6 @@ describe Post do
       post.external_id.should be_present
       post.quote_count.should == 0
       post.replies.should be_blank
-    end
-
-    describe 'a forum topic user record for the topic' do
-
-      let(:topic_user) { post.user.topic_users.where(topic_id: topic.id).first }
-
-      it 'is set correctly' do
-        topic_user.should be_present
-        topic_user.should be_posted
-        topic_user.last_read_post_number.should == post.post_number
-        topic_user.seen_post_count.should == post.post_number
-      end
-
     end
 
     describe 'extract_quoted_post_numbers' do

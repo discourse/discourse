@@ -124,10 +124,14 @@ describe PostsController do
         response.should be_forbidden
       end
 
-      it "calls recover and updates the topic's statistics" do
-        Post.any_instance.expects(:recover!)
-        Topic.any_instance.expects(:update_statistics)
+      it "recovers a post correctly" do
+        topic_id = create_post.topic_id
+        post = create_post(topic_id: topic_id)
+
+        PostDestroyer.new(user, post).destroy
         xhr :put, :recover, post_id: post.id
+        post.reload
+        post.deleted_at.should == nil
       end
 
     end

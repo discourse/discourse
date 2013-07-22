@@ -58,7 +58,7 @@ test('destroy by staff', function() {
   var user = Discourse.User.create({username: 'staff', staff: true});
   var post = buildPost({user: user});
 
-  this.stub(Discourse, 'ajax');
+  this.stub(Discourse, 'ajax').returns(new Em.Deferred());
   post.destroy(user);
 
   present(post.get('deleted_at'), "it has a `deleted_at` field.");

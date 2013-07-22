@@ -21,12 +21,10 @@
 // --------------------------------------------------
 
 .badge-category {
-  @extend %badge;
-  padding: 3px 8px;
+  padding: 5px 8px;
   color: $white;
   font-size: 12px;
-  text-shadow: 0 1px 0 rgba($black, 0.3);
-  @include box-shadow(inset 0 1px 0 rgba($white, 0.22));
+  font-weight: bold;
   &[href] {
     color: $white;
   }

@@ -48,10 +48,14 @@ module Jobs
     def order_columns_for(model)
       @order_columns_for_hash ||= {
         'CategoryFeaturedTopic' => 'category_id, topic_id',
+        'CategorySearchData'    => 'category_id',
         'PostOneboxRender'      => 'post_id, onebox_render_id',
         'PostReply'             => 'post_id, reply_id',
+        'PostSearchData'        => 'post_id',
         'PostTiming'            => 'topic_id, post_number, user_id',
+        'SiteContent'           => 'content_type',
         'TopicUser'             => 'topic_id, user_id',
+        'UserSearchData'        => 'user_id',
         'View'                  => 'parent_id, parent_type, ip_address, viewed_at'
       }
       @order_columns_for_hash[model.name]

@@ -208,6 +208,7 @@ ORDER BY p.created_at desc
   end
 
   def self.synchronize_target_topic_ids(post_ids = nil)
+
     builder = SqlBuilder.new("UPDATE user_actions
                     SET target_topic_id = (select topic_id from posts where posts.id = target_post_id)
                     /*where*/")

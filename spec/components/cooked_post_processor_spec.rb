@@ -65,13 +65,13 @@ describe CookedPostProcessor do
     context "with locally uploaded images" do
 
       let(:upload) { Fabricate(:upload) }
-      let(:post) { Fabricate(:post_with_uploaded_images) }
+      let(:post) { Fabricate(:post_with_uploaded_image) }
       let(:cpp) { CookedPostProcessor.new(post) }
-      before { FastImage.stubs(:size) }
+      before { FastImage.stubs(:size).returns([200, 400]) }
 
       # all in one test to speed things up
       it "works" do
-        Upload.expects(:get_from_url).returns(upload).twice
+        Upload.expects(:get_from_url).returns(upload)
         cpp.post_process_images
         # ensures absolute urls on uploaded images
         cpp.html.should =~ /#{LocalStore.base_url}/
@@ -148,7 +148,7 @@ describe CookedPostProcessor do
     context "topic image" do
 
       let(:topic) { build(:topic, id: 1) }
-      let(:post) { Fabricate(:post_with_uploaded_images, topic: topic) }
+      let(:post) { Fabricate(:post_with_uploaded_image, topic: topic) }
       let(:cpp) { CookedPostProcessor.new(post) }
 
       it "adds a topic image if there's one in the post" do

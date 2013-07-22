@@ -93,7 +93,7 @@ module Discourse
     # dumping rack lock cause the message bus does not work with it (throw :async, it catches Exception)
     # see: https://github.com/sporkrb/spork/issues/66
     # rake assets:precompile also fails
-    config.threadsafe! unless $PROGRAM_NAME =~ /spork|rake/
+    config.threadsafe! unless rails4? || $PROGRAM_NAME =~ /spork|rake/
 
     # route all exceptions via our router
     config.exceptions_app = self.routes

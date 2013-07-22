@@ -485,6 +485,16 @@ describe Guardian do
         Guardian.new(post.user).can_edit?(post).should be_true
       end
 
+      it 'returns false if you are trying to edit a post you soft deleted' do
+        post.user_deleted = true
+        Guardian.new(post.user).can_edit?(post).should be_false
+      end
+
+      it 'returns false if you are trying to edit a deleted post' do
+        post.deleted_at = 1.day.ago
+        Guardian.new(post.user).can_edit?(post).should be_false
+      end
+
       it 'returns false if another regular user tries to edit your post' do
         Guardian.new(coding_horror).can_edit?(post).should be_false
       end

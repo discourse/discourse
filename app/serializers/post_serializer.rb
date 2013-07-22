@@ -41,7 +41,8 @@ class PostSerializer < BasicPostSerializer
              :hidden_reason_id,
              :trust_level,
              :deleted_at,
-             :deleted_by
+             :deleted_by,
+             :user_deleted
 
 
   def moderator?

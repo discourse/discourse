@@ -3,7 +3,7 @@ require 'topic_view'
 
 describe TopicView do
 
-  let(:topic) { Fabricate(:topic) }
+  let(:topic) { create_topic }
   let(:coding_horror) { Fabricate(:coding_horror) }
   let(:first_poster) { topic.user }
 
@@ -109,53 +109,39 @@ describe TopicView do
       let(:path) { "/1234" }
 
       before do
-        topic.expects(:relative_url).returns(path)
-        described_class.any_instance.expects(:find_topic).with(1234).returns(topic)
+        topic.stubs(:relative_url).returns(path)
+        TopicView.any_instance.stubs(:find_topic).with(1234).returns(topic)
       end
 
-      context "without a post number" do
-        context "without a page" do
-          it "generates a canonical path for a topic" do
-            described_class.new(1234, user).canonical_path.should eql(path)
-          end
-        end
-
-        context "with a page" do
-          let(:path_with_page) { "/1234?page=5" }
-
-          it "generates a canonical path for a topic" do
-            described_class.new(1234, user, page: 5).canonical_path.should eql(path_with_page)
-          end
-        end
+      it "generates canonical path correctly" do
+        TopicView.new(1234, user).canonical_path.should eql(path)
+        TopicView.new(1234, user, page: 5).canonical_path.should eql("/1234?page=5")
       end
-      context "with a post number" do
-        let(:path_with_page) { "/1234?page=10" }
-        before { SiteSetting.stubs(:posts_per_page).returns(5) }
 
-        it "generates a canonical path for a topic" do
-          described_class.new(1234, user, post_number: 50).canonical_path.should eql(path_with_page)
-        end
+      it "generates a canonical correctly for paged results" do
+        SiteSetting.stubs(:posts_per_page).returns(5)
+        TopicView.new(1234, user, post_number: 50).canonical_path.should eql("/1234?page=10")
       end
     end
 
     describe "#next_page" do
       let(:p2) { stub(post_number: 2) }
       let(:topic) do
-        topic = Fabricate(:topic)
+        topic = create_topic
         topic.stubs(:highest_post_number).returns(5)
         topic
       end
       let(:user) { Fabricate(:user) }
 
       before do
-        described_class.any_instance.expects(:find_topic).with(1234).returns(topic)
-        described_class.any_instance.stubs(:filter_posts)
-        described_class.any_instance.stubs(:last_post).returns(p2)
+        TopicView.any_instance.expects(:find_topic).with(1234).returns(topic)
+        TopicView.any_instance.stubs(:filter_posts)
+        TopicView.any_instance.stubs(:last_post).returns(p2)
         SiteSetting.stubs(:posts_per_page).returns(2)
       end
 
       it "should return the next page" do
-        described_class.new(1234, user).next_page.should eql(2)
+        TopicView.new(1234, user).next_page.should eql(2)
       end
     end
 
@@ -183,27 +169,23 @@ describe TopicView do
     end
 
     context '.read?' do
-      it 'is unread with no logged in user' do
+      it 'tracks correctly' do
+        # anon has nothing
         TopicView.new(topic.id).read?(1).should be_false
-      end
 
-      it 'makes posts as unread by default' do
+        # random user has nothing
         topic_view.read?(1).should be_false
-      end
 
-      it 'knows a post is read when it has a PostTiming' do
-        PostTiming.create(topic: topic, user: coding_horror, post_number: 1, msecs: 1000)
-        topic_view.read?(1).should be_true
+        # a real user that just read it should have it marked
+        PostTiming.process_timings(coding_horror, topic.id, 1, [[1,1000]])
+        TopicView.new(topic.id, coding_horror).read?(1).should be_true
+        TopicView.new(topic.id, coding_horror).topic_user.should be_present
       end
     end
 
     context '.topic_user' do
       it 'returns nil when there is no user' do
         TopicView.new(topic.id, nil).topic_user.should be_blank
-      end
-
-      it 'returns a record once the user has some data' do
-        TopicView.new(topic.id, coding_horror).topic_user.should be_present
       end
     end
 

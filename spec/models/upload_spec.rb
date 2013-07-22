@@ -153,18 +153,18 @@ describe Upload do
     it "identifies internal or relatives urls" do
       Discourse.expects(:base_url_no_prefix).returns("http://discuss.site.com")
       Upload.has_been_uploaded?("http://discuss.site.com/uploads/default/42/0123456789ABCDEF.jpg").should == true
-      Upload.has_been_uploaded?("/uploads/42/0123456789ABCDEF.jpg").should == true
+      Upload.has_been_uploaded?("/uploads/default/42/0123456789ABCDEF.jpg").should == true
     end
 
     it "identifies internal urls when using a CDN" do
-      ActionController::Base.expects(:asset_host).returns("http://my.cdn.com").twice
+      Rails.configuration.action_controller.expects(:asset_host).returns("http://my.cdn.com").twice
       Upload.has_been_uploaded?("http://my.cdn.com/uploads/default/42/0123456789ABCDEF.jpg").should == true
     end
 
     it "identifies S3 uploads" do
       SiteSetting.stubs(:enable_s3_uploads).returns(true)
       SiteSetting.stubs(:s3_upload_bucket).returns("Bucket")
-      Upload.has_been_uploaded?("//s3.amazonaws.com/Bucket/1337.png").should == true
+      Upload.has_been_uploaded?("//bucket.s3.amazonaws.com/1337.png").should == true
     end
 
     it "identifies external urls" do
@@ -174,30 +174,22 @@ describe Upload do
 
   end
 
-  context ".is_on_s3?" do
-
-    before do
-      SiteSetting.stubs(:enable_s3_uploads).returns(true)
-      SiteSetting.stubs(:s3_upload_bucket).returns("BuCkEt")
-   end
-
-    it "case-insensitively matches the old subdomain format" do
-      Upload.is_on_s3?("//bucket.s3.amazonaws.com/1337.png").should == true
-    end
-
-    it "case-sensitively matches the new folder format" do
-      Upload.is_on_s3?("//s3.amazonaws.com/BuCkEt/1337.png").should == true
-      Upload.is_on_s3?("//s3.amazonaws.com/bucket/1337.png").should == false
-    end
-
-  end
-
   context ".get_from_url" do
 
+    it "works when the file has been uploaded" do
+      Upload.expects(:where).returns([]).once
+      Upload.get_from_url("/uploads/default/1/10387531.jpg")
+    end
+
+    it "works when using a cdn" do
+      Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
+      Upload.expects(:where).with(url: "/uploads/default/1/02395732905.jpg").returns([]).once
+      Upload.get_from_url("http://my.cdn.com/uploads/default/1/02395732905.jpg")
+    end
+
     it "works only when the file has been uploaded" do
-      Upload.expects(:has_been_uploaded?).returns(false)
       Upload.expects(:where).never
-      Upload.get_from_url("discourse.org")
+      Upload.get_from_url("http://domain.com/my/file.txt")
     end
 
   end

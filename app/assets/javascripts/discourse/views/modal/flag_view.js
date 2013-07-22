@@ -11,18 +11,15 @@ Discourse.FlagView = Discourse.ModalBodyView.extend({
   title: I18n.t('flagging.title'),
 
   selectedChanged: function() {
-    var nameKey = this.get('controller.selected.name_key');
-    if (!nameKey) return;
+    var flagView = this;
     Em.run.next(function() {
-      $('#radio_' + nameKey).prop('checked', 'true');
+      flagView.$("input[type='radio']").prop('checked', false);
+
+      var nameKey = flagView.get('controller.selected.name_key');
+      if (!nameKey) return;
+
+      flagView.$('#radio_' + nameKey).prop('checked', 'true');
     });
-  }.observes('controller.selected.name_key'),
+  }.observes('controller.selected.name_key')
 
-  didInsertElement: function() {
-    this._super();
-
-    // Would be nice if there were an EmberJs radio button to do this for us. Oh well, one should be coming
-    // in an upcoming release.
-    this.$("input[type='radio']").prop('checked', false);
-  }
 });

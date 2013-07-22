@@ -9,6 +9,8 @@
 Discourse.ComposerController = Discourse.Controller.extend({
   needs: ['modal', 'topic'],
 
+  replyAsNewTopicDraft: Em.computed.equal('model.draftKey', Discourse.Composer.REPLY_AS_NEW_TOPIC_KEY),
+
   togglePreview: function() {
     this.get('model').togglePreview();
   },
@@ -32,13 +34,8 @@ Discourse.ComposerController = Discourse.Controller.extend({
   }.property(),
 
   save: function(force) {
-    var composer,
-      _this = this,
-      topic,
-      message,
-      buttons;
-
-    composer = this.get('model');
+    var composer = this.get('model'),
+        composerController = this;
 
     if( composer.get('cantSubmitPost') ) {
       this.set('view.showTitleTip', Date.now());
@@ -52,12 +49,12 @@ Discourse.ComposerController = Discourse.Controller.extend({
     // for now handle a very narrow use case
     // if we are replying to a topic AND not on the topic pop the window up
     if(!force && composer.get('replyingToTopic')) {
-      topic = this.get('topic');
+      var topic = this.get('topic');
       if (!topic || topic.get('id') !== composer.get('topic.id'))
       {
-        message = I18n.t("composer.posting_not_on_topic", {title: this.get('model.topic.title')});
+        var message = I18n.t("composer.posting_not_on_topic", {title: this.get('model.topic.title')});
 
-        buttons = [{
+        var buttons = [{
           "label": I18n.t("composer.cancel"),
           "class": "cancel",
           "link": true
@@ -70,7 +67,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
             "callback": function(){
               composer.set('topic', topic);
               composer.set('post', null);
-              _this.save(true);
+              composerController.save(true);
             }
           });
         }
@@ -79,7 +76,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
           "label": I18n.t("composer.reply_original") + "<br/><div class='topic-title'>" + this.get('model.topic.title') + "</div>",
           "class": "btn-primary btn-reply-on-original",
           "callback": function(){
-            _this.save(true);
+            composerController.save(true);
           }
         });
 
@@ -91,8 +88,15 @@ Discourse.ComposerController = Discourse.Controller.extend({
     return composer.save({
       imageSizes: this.get('view').imageSizes()
     }).then(function(opts) {
+
+      // If we replied as a new topic successfully, remove the draft.
+      if (composerController.get('replyAsNewTopicDraft')) {
+        composerController.destroyDraft();
+      }
+
+
       opts = opts || {};
-      _this.close();
+      composerController.close();
 
       var currentUser = Discourse.User.current();
       if (composer.get('creatingTopic')) {
@@ -101,6 +105,7 @@ Discourse.ComposerController = Discourse.Controller.extend({
         currentUser.set('reply_count', currentUser.get('reply_count') + 1);
       }
       Discourse.URL.routeTo(opts.post.get('url'));
+
     }, function(error) {
       composer.set('disableDrafts', false);
       bootbox.alert(error);

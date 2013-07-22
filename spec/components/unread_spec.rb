@@ -6,12 +6,12 @@ describe Unread do
 
   before do
     @topic = Fabricate(:topic, posts_count: 13, highest_post_number: 13)
+    @topic.notifier.watch_topic!(@topic.user_id)
     @topic_user = TopicUser.get(@topic, @topic.user)
     @topic_user.stubs(:notification_level).returns(TopicUser.notification_levels[:tracking])
     @topic_user.notification_level = TopicUser.notification_levels[:tracking]
     @unread = Unread.new(@topic, @topic_user)
   end
-
 
   describe 'unread_posts' do
     it 'should have 0 unread posts if the user has seen all posts' do

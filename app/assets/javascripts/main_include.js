@@ -1,6 +1,3 @@
-// Pagedown customizations
-//= require ./pagedown_custom.js
-
 // The rest of the externals
 //= require_tree ./external
 
@@ -9,6 +6,9 @@
 
 //= require ./locales/date_locales.js
 
+// Pagedown customizations
+//= require ./pagedown_custom.js
+
 // Stuff we need to load first
 //= require_tree ./discourse/mixins
 //= require ./discourse/components/computed
@@ -16,6 +16,7 @@
 //= require ./discourse/components/debounce
 //= require ./discourse/models/model
 //= require ./discourse/models/user_action
+//= require ./discourse/models/composer
 //= require ./discourse/controllers/controller
 //= require ./discourse/controllers/object_controller
 //= require ./discourse/views/modal/modal_body_view

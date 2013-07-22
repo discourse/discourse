@@ -7,7 +7,8 @@ Discourse::Application.configure do
   config.cache_classes = false
 
   # Log error messages when you accidentally call methods on nil.
-  config.whiny_nils = true
+  config.whiny_nils = true unless rails4?
+  config.eager_load = false if rails4?
 
   # Show full error reports and disable caching
   config.consider_all_requests_local       = true

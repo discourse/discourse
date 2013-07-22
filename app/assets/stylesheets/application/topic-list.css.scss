@@ -77,7 +77,6 @@
     color: $topic-list-th-color;
     font-weight: bold;
     font-size: 13px;
-    text-shadow: 0 1px 0 $white;
     @include box-shadow(inset 0 1px 0 $white);
     &:first-of-type {
       @include border-radius-all(4px 0 0 0);

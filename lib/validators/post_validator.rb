@@ -7,6 +7,7 @@ class Validators::PostValidator < ActiveModel::Validator
     raw_quality(record)
     max_mention_validator(record)
     max_images_validator(record)
+    max_attachments_validator(record)
     max_links_validator(record)
     unique_post_validator(record)
   end
@@ -39,6 +40,11 @@ class Validators::PostValidator < ActiveModel::Validator
   # Ensure new users can not put too many images in a post
   def max_images_validator(post)
     add_error_if_count_exceeded(post, :too_many_images, post.image_count, SiteSetting.newuser_max_images) unless acting_user_is_trusted?(post)
+  end
+
+  # Ensure new users can not put too many attachments in a post
+  def max_attachments_validator(post)
+    add_error_if_count_exceeded(post, :too_many_attachments, post.attachment_count, SiteSetting.newuser_max_attachments) unless acting_user_is_trusted?(post)
   end
 
   # Ensure new users can not put too many links in a post
