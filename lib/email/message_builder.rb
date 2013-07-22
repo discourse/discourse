@@ -11,10 +11,23 @@ module Email
   end
 
   class MessageBuilder
+    attr_reader :template_args
 
     def initialize(to, opts=nil)
       @to = to
       @opts = opts || {}
+
+      @template_args = {site_name: SiteSetting.title,
+                        base_url: Discourse.base_url,
+                        user_preferences_url: "#{Discourse.base_url}/user_preferences" }.merge!(@opts)
+
+      if @template_args[:url].present?
+        if allow_reply_by_email?
+          @template_args[:respond_instructions] = I18n.t('user_notifications.reply_by_email', @template_args)
+        else
+          @template_args[:respond_instructions] = I18n.t('user_notifications.visit_link_to_respond', @template_args)
+        end
+      end
     end
 
     def subject
@@ -33,22 +46,6 @@ module Email
       end
 
       body
-    end
-
-    def template_args
-      @template_args ||= { site_name: SiteSetting.title,
-                           base_url: Discourse.base_url,
-                           user_preferences_url: "#{Discourse.base_url}/user_preferences" }.merge!(@opts)
-
-      if @template_args[:url].present?
-        if allow_reply_by_email? and
-          @template_args[:respond_instructions] = I18n.t('user_notifications.reply_by_email', @template_args)
-        else
-          @template_args[:respond_instructions] = I18n.t('user_notifications.visit_link_to_respond', @template_args)
-        end
-      end
-
-      @template_args
     end
 
     def build_args
