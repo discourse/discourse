@@ -13,13 +13,13 @@ ru:
     number:
       human:
         storage_units:
-          format: ! '%n %u'
+          format: 0
           units:
             byte:
-              few: байта
-              many: байт
-              one: байт
-              other: байта
+              one: Байт
+              other: Байт
+              few: Байта
+              many: Байт
             gb: ГБ
             kb: КБ
             mb: МБ
@@ -199,6 +199,7 @@ ru:
       "12": Отправленные
       "13": Входящие
     user:
+      said: '{{username}} писал(а):'
       profile: Профайл
       mute: Отключить
       edit: Настройки
@@ -455,8 +456,8 @@ ru:
       quote_text: Цитата
       code_title: Фрагмент кода
       code_text: вводите код здесь
-      upload_title: Изображение
-      upload_description: введите здесь описание изображения
+      upload_title: Загрузить
+      upload_description: введите здесь описание загружаемого объекта
       olist_title: Нумерованный список
       ulist_title: Маркированный список
       list_item: Элемент списка
@@ -486,16 +487,16 @@ ru:
       moved_post: "<i title='перенесенное сообщение' class='icon icon-arrow-right'></i> {{username}} перенес сообщение в {{link}}"
       total_flagged: всего сообщений с жалобами
     upload_selector:
-      title: Вставка изображения
+      title: Загрузить файл
       from_my_computer: С устройства
       from_the_web: Из интернета
-      add_image: Добавить изображение
-      remote_title: изображение из интернета
-      remote_tip: введите адрес изображения в формате http://example.com/image.jpg
-      local_title: локальное изображение
-      local_tip: выбрать изображение с устройства.
+      add_image: Добавить файл
+      remote_title: удаленный файл
+      remote_tip: введите адрес файла в формате http://example.com/image.jpg
+      local_title: локальный файл
+      local_tip: кликните для выбора файла на вашем устройстве.
       upload: Загрузить
-      upload_file: Загрузка изображения
+      upload_file: Загрузка
     search:
       title: поиск по темам, сообщениям, пользователям или категориям
       placeholder: условия поиска...
@@ -887,6 +888,7 @@ ru:
           few: Вы уверены, что хотите удалить сообщения?
           many: Вы уверены, что хотите удалить сообщения?
     category:
+      can: может&hellip;
       none: (без категории)
       edit: изменить
       edit_long: Изменить категорию
@@ -915,11 +917,10 @@ ru:
       change_in_category_topic: Изменить описание
       hotness: Популярность
       already_used: Цвет уже используется другой категорией
-      is_secure: Обезопасить категорию?
-      add_group: Добавить группу
       security: Безопасность
-      allowed_groups: 'Доступные группы:'
       auto_close_label: 'Закрыть тему через:'
+      edit_permissions: Изменить права доступа
+      add_permission: Добавить права
     flagging:
       title: Выберите действие над сообщением
       action: Пожаловаться
@@ -1005,6 +1006,10 @@ ru:
           many: '{{categoryName}} ({{count}})'
         help: 'последние темы в категории {{categoryName}}'
     browser_update: 'К сожалению, <a href="http://www.discourse.org/faq/#browser">ваш браузер слишком устарел</a> для комфортного просмотра нашего форума. Пожалуйста, <a href="http://browsehappy.com">обновите ваш браузер</a>.'
+    permission_types:
+      full: Создавать / Отвечать / Просматривать
+      create_post: Отвечать / Просматривать
+      readonly: Просматривать
   admin_js:
     type_to_filter: Введите текст для фильтрации...
     admin:
