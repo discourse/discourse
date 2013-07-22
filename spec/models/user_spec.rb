@@ -223,7 +223,7 @@ describe User do
 
     it 'allows moderator to delete all posts' do
       @user.delete_all_posts!(@guardian)
-      expect(Post.where(id: @posts.map(&:id)).all).to be_empty
+      expect(Post.where(id: @posts.map(&:id))).to be_empty
       @posts.each do |p|
         if p.post_number == 1
           expect(Topic.where(id: p.topic_id).first).to be_nil

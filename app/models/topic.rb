@@ -253,7 +253,6 @@ class Topic < ActiveRecord::Base
          .listable_topics
          .limit(SiteSetting.max_similar_results)
          .order('similarity desc')
-         .all
   end
 
   def update_status(status, enabled, user)
