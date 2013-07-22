@@ -83,17 +83,18 @@ class Post < ActiveRecord::Base
   end
 
   def post_analyzer
-    @post_analyzer = PostAnalyzer.new(raw, topic_id)
+    @post_analyzers ||= {}
+    @post_analyzers[raw_hash] ||= PostAnalyzer.new(raw, topic_id)
   end
 
   %w{raw_mentions linked_hosts image_count attachment_count link_count raw_links}.each do |attr|
     define_method(attr) do
-      PostAnalyzer.new(raw, topic_id).send(attr)
+      post_analyzer.send(attr)
     end
   end
 
   def cook(*args)
-    PostAnalyzer.new(raw, topic_id).cook(*args)
+    post_analyzer.cook(*args)
   end
 
 
