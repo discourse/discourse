@@ -200,7 +200,8 @@ class PostsController < ApplicationController
         :target_usernames,
         :reply_to_post_number,
         :image_sizes,
-        :auto_close_days
+        :auto_close_days,
+        :auto_track
       ]
 
       if api_key_valid?
