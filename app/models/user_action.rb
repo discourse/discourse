@@ -163,10 +163,16 @@ ORDER BY p.created_at desc
   end
 
   def self.log_action!(hash)
-    require_parameters(hash, :action_type, :user_id, :acting_user_id, :target_topic_id, :target_post_id)
+    required_parameters = [:action_type, :user_id, :acting_user_id, :target_topic_id, :target_post_id]
+    require_parameters(hash, *required_parameters)
     transaction(requires_new: true) do
       begin
-        action = new(hash)
+
+        # protect against dupes, for some reason this is failing in some cases
+        action = self.where(hash.select{|k,v| required_parameters.include?(k)}).first
+        return action if action
+
+        action = self.new(hash)
 
         if hash[:created_at]
           action.created_at = hash[:created_at]

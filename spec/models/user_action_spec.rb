@@ -87,6 +87,9 @@ describe UserAction do
       stats_for_user(u).should == [UserAction::NEW_TOPIC]
       stream_count(u).should == 1
 
+      # duplicate should not exception out
+      log_test_action
+
     end
   end
 
@@ -107,6 +110,7 @@ describe UserAction do
     it "creates a new stream entry" do
       PostAction.act(liker, post, PostActionType.types[:like])
       likee_stream.count.should == @old_count + 1
+
     end
 
     context "successful like" do
