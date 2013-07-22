@@ -16,6 +16,7 @@
 //= require ./discourse/components/debounce
 //= require ./discourse/models/model
 //= require ./discourse/models/user_action
+//= require ./discourse/models/composer
 //= require ./discourse/controllers/controller
 //= require ./discourse/controllers/object_controller
 //= require ./discourse/views/modal/modal_body_view
