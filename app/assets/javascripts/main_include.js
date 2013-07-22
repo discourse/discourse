@@ -1,6 +1,3 @@
-// Pagedown customizations
-//= require ./pagedown_custom.js
-
 // The rest of the externals
 //= require_tree ./external
 
@@ -8,6 +5,9 @@
 //= require ./discourse
 
 //= require ./locales/date_locales.js
+
+// Pagedown customizations
+//= require ./pagedown_custom.js
 
 // Stuff we need to load first
 //= require_tree ./discourse/mixins
