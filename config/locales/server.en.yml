@@ -617,6 +617,7 @@ en:
     create_thumbnails: "Create thumbnails for lightboxed images"
 
     email_time_window_mins: "How many minutes we wait before sending a user mail, to give them a chance to see it first"
+    email_posts_context: "How many posts to include in emails to show context"
     flush_timings_secs: "How frequently we flush timing data to the server, in seconds"
     max_word_length: "The maximum allowed word length, in characters, in a topic title"
     title_min_entropy: "The minimum allowed entropy (unique characters, non-english count for more) required for a topic title"
@@ -940,6 +941,9 @@ en:
     reply_by_email: "To respond, reply to this email or visit %{base_url}%{url} in your browser."
     visit_link_to_respond: "To respond, visit %{base_url}%{url} in your browser."
 
+    post_history: "Post History"
+    posted_by: "Posted by %{username} on %{post_date}"
+
     user_invited_to_private_message:
       subject_template: "[%{site_name}] %{username} invited you to a private message '%{topic_title}'"
       text_body_template: |
@@ -952,8 +956,9 @@ en:
       text_body_template: |
         %{username} replied to your post in '%{topic_title}' on %{site_name}:
 
-        ---
         %{message}
+
+        %{context}
 
         ---
         %{respond_instructions}
@@ -963,8 +968,9 @@ en:
       text_body_template: |
         %{username} quoted you in '%{topic_title}' on %{site_name}:
 
-        ---
         %{message}
+
+        %{context}
 
         ---
         %{respond_instructions}
@@ -972,10 +978,11 @@ en:
     user_mentioned:
       subject_template: "[%{site_name}] %{username} mentioned you in '%{topic_title}'"
       text_body_template: |
-        %{username} mentioned you in '%{topic_title}' on %{site_name}:
+        ### %{username} mentioned you in '%{topic_title}' on %{site_name}:
 
-        ---
         %{message}
+
+        %{context}
 
         ---
         %{respond_instructions}
@@ -985,8 +992,9 @@ en:
       text_body_template: |
         %{username} posted in '%{topic_title}' on %{site_name}:
 
-        ---
         %{message}
+
+        %{context}
 
         ---
         %{respond_instructions}
@@ -1006,7 +1014,6 @@ en:
       text_body_template: |
         %{private_message_from} just sent you a private message
 
-        ---
         %{message}
 
         ---

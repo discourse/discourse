@@ -110,6 +110,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:max_favorites_per_day, 20)
 
   setting(:email_time_window_mins, 10)
+  setting(:email_posts_context, 5)
 
   # How many characters we can import into a onebox
   setting(:onebox_max_chars, 5000)
