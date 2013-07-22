@@ -76,7 +76,7 @@ da:
               cant_send_pm: "Beklager, du kan ikke sende en privat besked til den bruger."
 
   user_profile:
-    no_info_me: "<div class='missing-profile'>“Om mig” feltet på din profil er pt. tomt, <a href='/users/%{username_lower}/preferences'>ønsker du at udfylde det</a>?</div>"
+    no_info_me: "<div class='missing-profile'>“Om mig” feltet på din profil er pt. tomt, <a href='/users/%{username_lower}/preferences/about-me'>ønsker du at udfylde det</a>?</div>"
     no_info_other: "<div class='missing-profile'>%{name} har ikke skrevet noget i “Om mig”-feltet endnu</div>"
 
   category:

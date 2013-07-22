@@ -184,25 +184,26 @@ en:
       dynamic_favicon: "Show incoming message notifications on favicon"
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
-
+      change: "change"
       moderator: "{{user}} is a moderator"
       admin: "{{user}} is an admin"
 
       change_password:
-        action: "change"
         success: "(email sent)"
         in_progress: "(sending email)"
         error: "(error)"
 
+      change_about:
+        title: "Change About Me"
+
       change_username:
-        action: "change"
         title: "Change Username"
         confirm: "There could be consequences to changing your username. Are you absolutely sure you want to?"
         taken: "Sorry, that username is taken."
         error: "There was an error changing your username."
         invalid: "That username is invalid. It must only include numbers and letters"
+
       change_email:
-        action: 'change'
         title: "Change Email"
         taken: "Sorry, that email is not available."
         error: "There was an error changing your email. Perhaps that address is already in use?"

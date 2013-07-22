@@ -63,7 +63,7 @@ pt:
               cant_send_pm: "Desculpa, não podes enviar uma mensagem privada para esse utilizador."
 
   user_profile:
-    no_info_me: "<div class='missing-profile'>o campo Sobre mim do teu perfil está em branco, <a href='/users/%{username_lower}/preferences'>gostavas de o completar?</a></div>"
+    no_info_me: "<div class='missing-profile'>o campo Sobre mim do teu perfil está em branco, <a href='/users/%{username_lower}/preferences/about-me'>gostavas de o completar?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} ainda não colocou nada no campo Sobre Mim</div>"
 
   category:

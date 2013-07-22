@@ -126,7 +126,7 @@ ru:
               cant_send_pm: Извините, вы не можете посылать личные сообщения данному пользователю.
   user_profile:
     no_info_me: |
-      <div class='missing-profile'>Вы оставили пустым поле «Обо мне" <a href='/users/%{username_lower}/preferences'> хотите заполнить его сейчас? </a></div>
+      <div class='missing-profile'>Вы оставили пустым поле «Обо мне" <a href='/users/%{username_lower}/preferences/about-me'> хотите заполнить его сейчас? </a></div>
     no_info_other: "<div class='missing-profile'>%{name} еще не заполнил поле «Обо мне» в своём профайле. </div>"
   category:
     topic_prefix: 'Описание категории %{category}'

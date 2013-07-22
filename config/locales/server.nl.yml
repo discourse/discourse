@@ -121,7 +121,7 @@ nl:
               cant_send_pm: "Sorry, je kan geen privébericht sturen naar deze persoon."
 
   user_profile:
-    no_info_me: "<div class='missing-profile'>Het Over Mij-profielveld is nog leeg, <a href='/users/%{username_lower}/preferences'>zou je deze willen invullen?</a></div>"
+    no_info_me: "<div class='missing-profile'>Het Over Mij-profielveld is nog leeg, <a href='/users/%{username_lower}/preferences/about-me'>zou je deze willen invullen?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} heeft nog niks in zijn of haar Over Mij-profielveld ingevuld</div>"
 
   category:
