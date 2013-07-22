@@ -22,13 +22,22 @@ test("uploading one file", function() {
   ok(bootbox.alert.calledWith(I18n.t('post.errors.too_many_uploads')));
 });
 
-test("new user", function() {
+test("new user cannot upload images", function() {
   Discourse.SiteSettings.newuser_max_images = 0;
   this.stub(Discourse.User, 'current').withArgs("trust_level").returns(0);
   this.stub(bootbox, "alert");
 
-  ok(!validUpload([1]));
-  ok(bootbox.alert.calledWith(I18n.t('post.errors.upload_not_allowed_for_new_user')));
+  ok(!validUpload([{name: "image.png"}]));
+  ok(bootbox.alert.calledWith(I18n.t('post.errors.image_upload_not_allowed_for_new_user')));
+});
+
+test("new user cannot upload attachments", function() {
+  Discourse.SiteSettings.newuser_max_attachments = 0;
+  this.stub(Discourse.User, 'current').withArgs("trust_level").returns(0);
+  this.stub(bootbox, "alert");
+
+  ok(!validUpload([{name: "roman.txt"}]));
+  ok(bootbox.alert.calledWith(I18n.t('post.errors.attachment_upload_not_allowed_for_new_user')));
 });
 
 test("ensures an authorized upload", function() {
