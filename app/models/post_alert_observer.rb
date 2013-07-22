@@ -96,20 +96,18 @@ class PostAlertObserver < ActiveRecord::Observer
                                         display_username: opts[:display_username] || post.user.username }.to_json)
     end
 
+    # TODO: Move to post-analyzer?
     # Returns a list users who have been mentioned
     def extract_mentioned_users(post)
       User.where(username_lower: post.raw_mentions).where("id <> ?", post.user_id)
     end
 
+    # TODO: Move to post-analyzer?
     # Returns a list of users who were quoted in the post
     def extract_quoted_users(post)
-      result = []
-      post.raw.scan(/\[quote=\"([^,]+),.+\"\]/).uniq.each do |m|
-        username = m.first.strip.downcase
-        user = User.where("username_lower = :username and id != :id", username: username, id: post.user_id).first
-        result << user if user.present?
-      end
-      result
+      post.raw.scan(/\[quote=\"([^,]+),.+\"\]/).uniq.map do |m|
+        User.where("username_lower = :username and id != :id", username: m.first.strip.downcase, id: post.user_id).first
+      end.compact
     end
 
     # Notify a bunch of users

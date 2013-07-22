@@ -292,6 +292,7 @@ class Post < ActiveRecord::Base
   end
 
 
+  # TODO: move to post-analyzer?
   # Determine what posts are quoted by this post
   def extract_quoted_post_numbers
     temp_collector = []
