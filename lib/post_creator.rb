@@ -20,6 +20,7 @@ class PostCreator
   #                             who is the post "author." For example when copying posts to a new
   #                             topic.
   #   created_at              - Post creation time (optional)
+  #   auto_track              - Automatically track this topic if needed (default true)
   #
   #   When replying to a topic:
   #     topic_id              - topic we're replying to
@@ -65,6 +66,7 @@ class PostCreator
       store_unique_post_key
       send_notifications_for_private_message
       track_topic
+      update_topic_stats
       update_user_counts
       publish
       @post.advance_draft_sequence
@@ -99,19 +101,6 @@ class PostCreator
     post.last_version_at ||= Time.now
   end
 
-  def self.after_create_tasks(post)
-    # Update attributes on the topic - featured users and last posted.
-    attrs = {last_posted_at: post.created_at, last_post_user_id: post.user_id}
-    attrs[:bumped_at] = post.created_at unless post.no_bump
-    post.topic.update_attributes(attrs)
-
-    # Update topic user data
-    TopicUser.change(post.user.id,
-                     post.topic.id,
-                     posted: true,
-                     last_read_post_number: post.post_number,
-                     seen_post_count: post.post_number)
-  end
 
   protected
 
@@ -181,6 +170,13 @@ class PostCreator
       guardian.ensure_can_create!(Post, topic)
     end
     @topic = topic
+  end
+
+  def update_topic_stats
+    # Update attributes on the topic - featured users and last posted.
+    attrs = {last_posted_at: @post.created_at, last_post_user_id: @post.user_id}
+    attrs[:bumped_at] = @post.created_at unless @post.no_bump
+    @topic.update_attributes(attrs)
   end
 
   def setup_post
@@ -264,7 +260,15 @@ class PostCreator
   end
 
   def track_topic
-    TopicUser.auto_track(@user.id, @topic.id, TopicUser.notification_reasons[:created_post])
+    unless @opts[:auto_track] == false
+      TopicUser.auto_track(@user.id, @topic.id, TopicUser.notification_reasons[:created_post])
+      # Update topic user data
+      TopicUser.change(@post.user.id,
+                       @post.topic.id,
+                       posted: true,
+                       last_read_post_number: @post.post_number,
+                       seen_post_count: @post.post_number)
+    end
   end
 
   def enqueue_jobs

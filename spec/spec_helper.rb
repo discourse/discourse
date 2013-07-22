@@ -12,6 +12,11 @@ require 'fakeweb'
 FakeWeb.allow_net_connect = false
 
 module Helpers
+
+  def self.next_seq
+    @next_seq = (@next_seq || 0) + 1
+  end
+
   def log_in(fabricator=nil)
     user = Fabricate(fabricator || :user)
     log_in_user(user)
@@ -49,9 +54,8 @@ Spork.prefork do
   Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
 
-
   # let's not run seed_fu every test
-  SeedFu.quiet = true
+  SeedFu.quiet = true if SeedFu.respond_to? :quiet
   SeedFu.seed
 
   RSpec.configure do |config|
@@ -125,6 +129,21 @@ end
 
 def build(*args)
   Fabricate.build(*args)
+end
+
+def create_topic(args={})
+  args[:title] ||= "This is my title #{Helpers.next_seq}"
+  user = args.delete(:user) || Fabricate(:user)
+  guardian = Guardian.new(user)
+  TopicCreator.create(user, guardian, args)
+end
+
+def create_post(args={})
+  args[:title] ||= "This is my title #{Helpers.next_seq}"
+  args[:raw] ||= "This is the raw body of my post, it is cool #{Helpers.next_seq}"
+  args[:topic_id] = args[:topic].id if args[:topic]
+  user = args.delete(:user) || Fabricate(:user)
+  PostCreator.create(user, args)
 end
 
 module MessageBus::DiagnosticsHelper

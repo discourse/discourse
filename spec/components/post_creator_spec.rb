@@ -21,6 +21,12 @@ describe PostCreator do
     let(:creator_with_meta_data) { PostCreator.new(user, basic_topic_params.merge(meta_data: {hello: "world"} )) }
     let(:creator_with_image_sizes) { PostCreator.new(user, basic_topic_params.merge(image_sizes: image_sizes)) }
 
+    it "can be created with auto tracking disabled" do
+      p = PostCreator.create(user, basic_topic_params.merge(auto_track: false))
+      # must be 0 otherwise it will think we read the topic which is clearly untrue
+      TopicUser.where(user_id: p.user_id, topic_id: p.topic_id).count.should == 0
+    end
+
     it "ensures the user can create the topic" do
       Guardian.any_instance.expects(:can_create?).with(Topic,nil).returns(false)
       lambda { creator.create }.should raise_error(Discourse::InvalidAccess)
@@ -148,8 +154,15 @@ describe PostCreator do
 
       it 'increases topic response counts' do
         first_post = creator.create
-        user2 = Fabricate(:coding_horror)
 
+        # ensure topic user is correct
+        topic_user = first_post.user.topic_users.where(topic_id: first_post.topic_id).first
+        topic_user.should be_present
+        topic_user.should be_posted
+        topic_user.last_read_post_number.should == first_post.post_number
+        topic_user.seen_post_count.should == first_post.post_number
+
+        user2 = Fabricate(:coding_horror)
         user2.topic_reply_count.should == 0
         first_post.user.reload.topic_reply_count.should == 0
 

@@ -27,12 +27,12 @@ Discourse.Post = Discourse.Model.extend({
   deleted: Em.computed.or('deleted_at', 'deletedViaTopic'),
 
   postDeletedBy: function() {
-    if (this.get('firstPost')) { return this.get('topic.deleted_by') }
+    if (this.get('firstPost')) { return this.get('topic.deleted_by'); }
     return this.get('deleted_by');
   }.property('firstPost', 'deleted_by', 'topic.deleted_by'),
 
   postDeletedAt: function() {
-    if (this.get('firstPost')) { return this.get('topic.deleted_at') }
+    if (this.get('firstPost')) { return this.get('topic.deleted_at'); }
     return this.get('deleted_at');
   }.property('firstPost', 'deleted_at', 'topic.deleted_at'),
 
@@ -199,13 +199,23 @@ Discourse.Post = Discourse.Model.extend({
     @method recover
   **/
   recover: function() {
-    this.setProperties({
+    var post = this;
+    post.setProperties({
       deleted_at: null,
       deleted_by: null,
-      can_delete: true
+      user_deleted: false,
+      can_delete: false
     });
 
-    return Discourse.ajax("/posts/" + (this.get('id')) + "/recover", { type: 'PUT', cache: false });
+    return Discourse.ajax("/posts/" + (this.get('id')) + "/recover", { type: 'PUT', cache: false }).then(function(data){
+      post.setProperties({
+        cooked: data.cooked,
+        raw: data.raw,
+        user_deleted: false,
+        can_delete: true,
+        version: data.version
+      });
+    });
   },
 
   /**
@@ -226,7 +236,10 @@ Discourse.Post = Discourse.Model.extend({
       this.setProperties({
         cooked: Discourse.Markdown.cook(I18n.t("post.deleted_by_author")),
         can_delete: false,
-        version: this.get('version') + 1
+        version: this.get('version') + 1,
+        can_recover: true,
+        can_edit: false,
+        user_deleted: true
       });
     }
 

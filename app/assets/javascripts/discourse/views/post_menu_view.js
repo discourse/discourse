@@ -88,7 +88,7 @@ Discourse.PostMenuView = Discourse.View.extend({
     } else {
 
       // The delete actions target the post iteself
-      if (post.get('deleted_at')) {
+      if (post.get('deleted_at') || post.get('user_deleted')) {
         if (!post.get('can_recover')) { return; }
         label = "post.controls.undelete";
         action = "recover";

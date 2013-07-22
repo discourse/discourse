@@ -14,6 +14,7 @@ describe PostAction do
 
   describe "flagged_posts_report" do
     it "operates correctly" do
+      post = create_post
       PostAction.act(codinghorror, post, PostActionType.types[:spam])
       mod_message = PostAction.act(Fabricate(:user), post, PostActionType.types[:notify_moderators], message: "this is a 10")
 
@@ -30,6 +31,7 @@ describe PostAction do
   describe "messaging" do
 
     it "notify moderators integration test" do
+      post = create_post
       mod = moderator
       action = PostAction.act(codinghorror, post, PostActionType.types[:notify_moderators], message: "this is my special long message");
 
@@ -100,6 +102,7 @@ describe PostAction do
     end
 
     it "should ignore validated flags" do
+      post = create_post
       admin = Fabricate(:admin)
       PostAction.act(codinghorror, post, PostActionType.types[:off_topic])
       post.hidden.should be_false
@@ -193,7 +196,7 @@ describe PostAction do
 
     context "flag_counts_for" do
       it "returns the correct flag counts" do
-        post = Fabricate(:post)
+        post = create_post
 
         SiteSetting.stubs(:flags_required_to_hide_post).returns(7)
 
@@ -244,7 +247,7 @@ describe PostAction do
     end
 
     it 'should follow the rules for automatic hiding workflow' do
-      post = Fabricate(:post)
+      post = create_post
       u1 = Fabricate(:evil_trout)
       u2 = Fabricate(:walter_white)
       admin = Fabricate(:admin) # we need an admin for the messages

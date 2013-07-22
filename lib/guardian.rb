@@ -267,7 +267,7 @@ class Guardian
   end
 
   def can_edit_post?(post)
-    is_staff? || (not(post.topic.archived?) && is_my_own?(post))
+    is_staff? || (!post.topic.archived? && is_my_own?(post) && !post.user_deleted &&!post.deleted_at)
   end
 
   def can_edit_user?(user)
@@ -291,7 +291,7 @@ class Guardian
 
   # Recovery Method
   def can_recover_post?(post)
-    is_staff?
+    is_staff? || (is_my_own?(post) && post.user_deleted && !post.deleted_at)
   end
 
   def can_recover_topic?(topic)

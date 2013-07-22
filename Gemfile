@@ -10,8 +10,10 @@ module Bundler::SharedHelpers
   end
 end
 
-def rails4?
-  !!ENV["RAILS4"]
+module ::Kernel
+  def rails4?
+    !!ENV["RAILS4"]
+  end
 end
 
 if rails4?
@@ -36,6 +38,7 @@ if rails4?
   gem 'rails-observers'
   gem 'protected_attributes'
   gem 'actionpack-action_caching'
+  gem 'seed-fu' , github: 'mbleigh/seed-fu'
 else
   # we had pain with the 3.2.13 upgrade so monkey patch the security fix
   # next time around we hope to upgrade
@@ -45,6 +48,7 @@ else
   # REVIEW EVERY RELEASE
   gem 'sprockets', git: 'https://github.com/SamSaffron/sprockets.git', branch: 'rails-compat'
   gem 'redis-rails'
+  gem 'seed-fu'
 end
 
 gem 'redis'
@@ -105,7 +109,6 @@ gem 'rest-client'
 gem 'rinku'
 gem 'sanitize'
 gem 'sass'
-gem 'seed-fu'
 gem 'sidekiq'
 gem 'sidekiq-failures'
 gem 'sinatra', require: nil

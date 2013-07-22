@@ -263,12 +263,6 @@ class Post < ActiveRecord::Base
     PostCreator.before_create_tasks(self)
   end
 
-  # TODO: Move some of this into an asynchronous job?
-  # TODO: Move into PostCreator
-  after_create do
-    PostCreator.after_create_tasks(self)
-  end
-
   # This calculates the geometric mean of the post timings and stores it along with
   # each post.
   def self.calculate_avg_time
