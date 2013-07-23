@@ -78,27 +78,23 @@ class Post < ActiveRecord::Base
     Digest::SHA1.hexdigest(raw.gsub(/\s+/, ""))
   end
 
-  def reset_cooked
-    @cooked_document = nil
-    self.cooked = nil
-  end
-
   def self.white_listed_image_classes
     @white_listed_image_classes ||= ['avatar', 'favicon', 'thumbnail']
   end
 
   def post_analyzer
-    @post_analyzer = PostAnalyzer.new(raw, topic_id)
+    @post_analyzers ||= {}
+    @post_analyzers[raw_hash] ||= PostAnalyzer.new(raw, topic_id)
   end
 
   %w{raw_mentions linked_hosts image_count attachment_count link_count raw_links}.each do |attr|
     define_method(attr) do
-      PostAnalyzer.new(raw, topic_id).send(attr)
+      post_analyzer.send(attr)
     end
   end
 
   def cook(*args)
-    PostAnalyzer.new(raw, topic_id).cook(*args)
+    post_analyzer.cook(*args)
   end
 
 
@@ -296,6 +292,7 @@ class Post < ActiveRecord::Base
   end
 
 
+  # TODO: move to post-analyzer?
   # Determine what posts are quoted by this post
   def extract_quoted_post_numbers
     temp_collector = []
