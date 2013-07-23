@@ -83,6 +83,27 @@ test('updateFromJson', function() {
   equal(postStream.get('extra_property'), 12);
 });
 
+test("removePosts", function() {
+  var postStream = buildStream(10000001, [1,2,3]);
+
+  var p1 = Discourse.Post.create({id: 1, post_number: 2}),
+      p2 = Discourse.Post.create({id: 2, post_number: 3}),
+      p3 = Discourse.Post.create({id: 3, post_number: 4});
+
+  postStream.appendPost(p1);
+  postStream.appendPost(p2);
+  postStream.appendPost(p3);
+
+  // Removing nothing does nothing
+  postStream.removePosts();
+  equal(postStream.get('posts.length'), 3);
+
+  postStream.removePosts([p1, p3]);
+  equal(postStream.get('posts.length'), 1);
+  deepEqual(postStream.get('stream'), [2]);
+
+});
+
 test("cancelFilter", function() {
   var postStream = buildStream(1235);
 
@@ -343,7 +364,6 @@ test('triggerNewPostInStream', function() {
 
 
 test("lastPostLoaded when the id changes", function() {
-
   // This can happen in a race condition between staging a post and it coming through on the
   // message bus. If the id of a post changes we should reconsider the lastPostLoaded property.
   var postStream = buildStream(10101, [1, 2]);
@@ -355,7 +375,6 @@ test("lastPostLoaded when the id changes", function() {
 
   postWithoutId.set('id', 2);
   ok(postStream.get('lastPostLoaded'), 'the last post is loaded now that the post has an id');
-
 });
 
 test("comitting and triggerNewPostInStream race condition", function() {
