@@ -1,15 +1,8 @@
 class PostAnalyzer
 
-  attr_accessor :cooked, :raw
-
   def initialize(raw, topic_id)
     @raw  = raw
     @topic_id = topic_id
-  end
-
-  def cooked_document
-    @cooked = cook(@raw, topic_id: @topic_id)
-    @cooked_document = Nokogiri::HTML.fragment(@cooked)
   end
 
   # What we use to cook posts
@@ -109,6 +102,10 @@ class PostAnalyzer
   end
 
   private
+
+  def cooked_document
+    @cooked_document ||= Nokogiri::HTML.fragment(cook(@raw, topic_id: @topic_id))
+  end
 
   def link_is_a_mention?(l)
     html_class = l.attributes['class']
