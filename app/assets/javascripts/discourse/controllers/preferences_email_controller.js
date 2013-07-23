@@ -1,4 +1,33 @@
 /**
+  The route for editing a user's email
+
+  @class PreferencesEmailRoute
+  @extends Discourse.RestrictedUserRoute
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.PreferencesEmailRoute = Discourse.RestrictedUserRoute.extend({
+  model: function() {
+    return this.modelFor('user');
+  },
+
+  renderTemplate: function() {
+    this.render({ into: 'user', outlet: 'userOutlet' });
+  },
+
+  setupController: function(controller, model) {
+    controller.setProperties({ model: model, newEmail: model.get('email') });
+  },
+
+  // A bit odd, but if we leave to /preferences we need to re-render that outlet
+  exit: function() {
+    this._super();
+    this.render('preferences', { into: 'user', outlet: 'userOutlet', controller: 'preferences' });
+  }
+});
+
+
+/**
   This controller supports actions related to updating one's email address
 
   @class PreferencesEmailController
@@ -13,25 +42,14 @@ Discourse.PreferencesEmailController = Discourse.ObjectController.extend({
   success: false,
   newEmail: null,
 
-  saveDisabled: (function() {
-    if (this.get('saving')) return true;
-    if (this.blank('newEmail')) return true;
-    if (this.get('taken')) return true;
-    if (this.get('unchanged')) return true;
-  }).property('newEmail', 'taken', 'unchanged', 'saving'),
+  newEmailEmpty: Em.computed.empty('newEmail'),
+  saveDisabled: Em.computed.or('saving', 'newEmailEmpty', 'taken', 'unchanged'),
+  unchanged: Discourse.computed.propertyEqual('newEmail', 'email'),
 
-  unchanged: (function() {
-    return this.get('newEmail') === this.get('content.email');
-  }).property('newEmail', 'content.email'),
-
-  initializeEmail: (function() {
-    this.set('newEmail', this.get('content.email'));
-  }).observes('content.email'),
-
-  saveButtonText: (function() {
+  saveButtonText: function() {
     if (this.get('saving')) return I18n.t("saving");
-    return I18n.t("user.change_email.action");
-  }).property('saving'),
+    return I18n.t("user.change");
+  }.property('saving'),
 
   changeEmail: function() {
     var preferencesEmailController = this;
@@ -39,9 +57,10 @@ Discourse.PreferencesEmailController = Discourse.ObjectController.extend({
     return this.get('content').changeEmail(this.get('newEmail')).then(function() {
       preferencesEmailController.set('success', true);
     }, function() {
-      // Error
-      preferencesEmailController.set('error', true);
-      preferencesEmailController.set('saving', false);
+      preferencesEmailController.setProperties({
+        error: true,
+        saving: false
+      });
     });
   }
 

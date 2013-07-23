@@ -111,7 +111,7 @@ de:
               cant_send_pm: "Entschuldige, du kannst keine private Nachricht an diesen Nutzer schicken."
 
   user_profile:
-    no_info_me: "<div class='missing-profile'>Das 'Über mich'-Feld deines Profils ist aktuell leer, <a href='/users/%{username_lower}/preferences'>möchtest Du es ausfüllen?</a></div>"
+    no_info_me: "<div class='missing-profile'>Das 'Über mich'-Feld deines Profils ist aktuell leer, <a href='/users/%{username_lower}/preferences/about-me'>möchtest Du es ausfüllen?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} hat noch nichts in das 'Über mich'-Feld des Nutzerprofils eingetragen</div>"
 
   category:

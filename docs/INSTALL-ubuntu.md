@@ -3,13 +3,13 @@
 ## What kind of hardware do you have?
 
 - Recommended minimum configuration is:
-  - 2GiB of RAM
-  - 2GiB of swap
+  - 2 GB of RAM
+  - 2 GB of swap
   - 2 processor cores
 - With 2GB of memory and dual cores, you can run two instances of the thin
   server (`NUM_WEBS=2`)
 
-1 GiB of memory, 3GiB of swap and a single core CPU are the minimums for a
+1 GB of memory, 3GB of swap and a single core CPU are the minimums for a
 steady state, running Discourse forum -- but it's simpler to just throw a bit
 more hardware at the problem if you can, particularly during the install.
 
@@ -51,7 +51,11 @@ Install necessary packages:
     # Run these commands as your normal login (e.g. "michael")
     sudo apt-get -y install build-essential libssl-dev libyaml-dev git libtool libxslt-dev libxml2-dev libpq-dev gawk curl pngcrush
 
-## Install latest stable redis, package in distro may be a bit old
+## Caching: Redis 
+
+Redis is a networked, in memory key-value store cache. Without the Redis caching layer, we'd have to go to the database a lot more often for common information and the site would be slower as a result.
+
+Be sure to install the latest stable Redis, as the package in the distro may be a bit old:
 
     sudo add-apt-repository ppa:rwky/redis
     sudo apt-get update
@@ -156,10 +160,10 @@ Configure Discourse:
 
 Edit ~/discourse/config/database.yml
 
-- change production db name if appropriate
-- change username/password if appropriate
-- set `db_id` if using multisite
-- change `host_names` to the name you'll use to access the discourse site
+- change production database name if appropriate
+- change database username/password if appropriate
+- if you are hosting multiple Discourse forums on the same server (multisite), set `db_id`
+- change `host_names` to the name you'll use to access the discourse site, e.g. "forum.example.com"
 
 Edit ~/discourse/config/redis.yml
 
@@ -179,8 +183,9 @@ Edit ~/discourse/config/initializers/secret_token.rb
 - delete the lines below as per instructions in the file
 
 Edit ~/discourse/config/environments/production.rb
-- check settings, modify smtp settings if necessary
-- See http://meta.discourse.org/t/all-of-my-internal-users-show-as-coming-from-127-0-0-1/6607 if this will serve "internal" users
+- browse througn all the settings
+- be sure to add your mail server SMTP settings so outgoing mail can be sent (we recommend [Mandrill](https://mandrillapp.com))
+- If your users will come from "internal" [private unroutable IPs](https://en.wikipedia.org/wiki/Private_network) like 10.x.x.x or 192.168.x.x please [see this topic](http://meta.discourse.org/t/all-of-my-internal-users-show-as-coming-from-127-0-0-1/6607).
 
 Initialize the database:
 
@@ -333,7 +338,7 @@ Check the sample configuration files provided in the repo with the ones being us
 #### Example 1
 
     $ diff -u config/discourse.pill.sample config/discourse.pill
-    --- config/discourse.pill.sample	2013-07-15 17:38:06.501507001 +0000
+    --- config/discourse.pill.sample  2013-07-15 17:38:06.501507001 +0000
     +++ config/discourse.pill	2013-07-05 06:38:27.133506896 +0000
     @@ -46,7 +46,7 @@
 

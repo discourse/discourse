@@ -139,7 +139,7 @@ class Guardian
   end
 
   def can_change_trust_level?(user)
-    can_administer?(user)
+    user && is_staff?
   end
 
   def can_block_user?(user)

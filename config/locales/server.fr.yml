@@ -122,7 +122,7 @@ fr:
               cant_send_pm: "Désolé, vous ne pouvez pas envoyer de message privé à cet utilisateur."
 
   user_profile:
-    no_info_me: "<div class='missing-profile'>le champ À propos de moi de votre profil est actuellement vide, <a href='/users/%{username_lower}/preferences'>souhaitez-vous le remplir ?</a></div>"
+    no_info_me: "<div class='missing-profile'>le champ À propos de moi de votre profil est actuellement vide, <a href='/users/%{username_lower}/preferences/about-me'>souhaitez-vous le remplir ?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} n'a rien renseigné dans le champ À propos de moi de son profil</div>"
 
   category:

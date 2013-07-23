@@ -20,13 +20,16 @@ Discourse.UserRoute = Discourse.Route.extend({
     return Discourse.User.create({username: params.username});
   },
 
+  afterModel: function() {
+    return this.modelFor('user').findDetails();
+  },
+
   serialize: function(params) {
     if (!params) return {};
     return { username: Em.get(params, 'username').toLowerCase() };
   },
 
   setupController: function(controller, user) {
-    user.findDetails();
     controller.set('model', user);
 
     // Add a search context

@@ -1041,5 +1041,25 @@ describe Guardian do
     end
   end
 
+
+  describe 'can_change_trust_level?' do
+
+    it 'is false without a logged in user' do
+      Guardian.new(nil).can_change_trust_level?(user).should be_false
+    end
+
+    it 'is false for regular users' do
+      Guardian.new(user).can_change_trust_level?(user).should be_false
+    end
+
+    it 'is true for moderators' do
+      Guardian.new(moderator).can_change_trust_level?(user).should be_true
+    end
+
+    it 'is true for admins' do
+      Guardian.new(admin).can_change_trust_level?(user).should be_true
+    end
+  end
+
 end
 

@@ -90,7 +90,7 @@ sv:
               cant_send_pm: "Tyvärr, du kan inte skicka ett privat meddelande till den användaren."
 
   user_profile:
-    no_info_me: "<div class='missing-profile'>Din profils Om Mig-fält är för närvarande tomt, <a href='/users/%{username_lower}/preferences'>skulle du vilja fylla i det?</a></div>"
+    no_info_me: "<div class='missing-profile'>Din profils Om Mig-fält är för närvarande tomt, <a href='/users/%{username_lower}/preferences/about-me'>skulle du vilja fylla i det?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} har inte skrivit någonting i dess profils Om Mig-fält ännu</div>"
 
   category:

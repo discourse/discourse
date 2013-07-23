@@ -111,7 +111,7 @@ zh_CN:
               cant_send_pm: "抱歉，你不能向该用户发送私信。"
 
   user_profile:
-    no_info_me: "<div class='missing-profile'>你的介绍信息中，“关于我”部分目前还是空白，<a href='/users/%{username_lower}/preferences'>介绍一下你自己，好不好？</a></div>"
+    no_info_me: "<div class='missing-profile'>你的介绍信息中，“关于我”部分目前还是空白，<a href='/users/%{username_lower}/preferences/about-me'>介绍一下你自己，好不好？</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} 尚未在他/她的介绍中的“关于我”部分填写任何信息</div>"
 
   category:

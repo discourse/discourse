@@ -56,6 +56,7 @@ Discourse.Route.buildRoutes(function() {
     this.resource('preferences', { path: '/preferences' }, function() {
       this.route('username', { path: '/username' });
       this.route('email', { path: '/email' });
+      this.route('about', { path: '/about-me' });
     });
 
     this.route('invited', { path: 'invited' });

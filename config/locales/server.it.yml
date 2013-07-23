@@ -107,7 +107,7 @@ it:
               cant_send_pm: "Spriacenti, non puoi mandare un messaggio privato a quell'utente."
 
   user_profile:
-    no_info_me: "<div class='missing-profile'>il campo About Me del tuo profilo è vuoto, <a href='/users/%{username_lower}/preferences'>vuoi compilarlo?</a></div>"
+    no_info_me: "<div class='missing-profile'>il campo About Me del tuo profilo è vuoto, <a href='/users/%{username_lower}/preferences/about-me'>vuoi compilarlo?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} non ha ancora compilato il campo About Me del suo profilo.</div>"
 
   category:

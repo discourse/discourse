@@ -4,7 +4,7 @@
     <label class="control-label">{{i18n user.username.title}}</label>
     <div class="controls">
       <span class='static'>{{username}}</span>
-      {{#linkTo "preferences.username" class="btn pad-left"}}{{i18n user.change_username.action}}{{/linkTo}}
+      {{#linkTo "preferences.username" class="btn pad-left"}}{{i18n user.change}}{{/linkTo}}
     </div>
     <div class='instructions'>
       {{{i18n user.username.short_instructions username="username"}}}
@@ -25,7 +25,7 @@
     <label class="control-label">{{i18n user.email.title}}</label>
     <div class="controls">
       <span class='static'>{{email}}</span>
-      {{#linkTo "preferences.email" class="btn pad-left"}}{{i18n user.change_email.action}}{{/linkTo}}
+      {{#linkTo "preferences.email" class="btn pad-left"}}{{i18n user.change}}{{/linkTo}}
     </div>
     <div class='instructions'>
       {{i18n user.email.instructions}}
@@ -35,7 +35,7 @@
   <div class="control-group">
     <label class="control-label">{{i18n user.password.title}}</label>
     <div class="controls">
-      <a href="#" {{action changePassword}} class='btn'>{{i18n user.change_password.action}}</a> {{passwordProgress}}
+      <a href="#" {{action changePassword}} class='btn'>{{i18n user.change}}</a> {{passwordProgress}}
     </div>
   </div>
 

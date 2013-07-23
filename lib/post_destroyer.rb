@@ -5,8 +5,22 @@
 class PostDestroyer
 
   def self.destroy_stubs
+    # exclude deleted topics and posts that are actively flagged
     Post.where(deleted_at: nil, user_deleted: true)
-        .where('updated_at < ? AND post_number > 1', 1.day.ago).each do |post|
+        .where("NOT EXISTS (
+            SELECT 1 FROM topics t
+            WHERE t.deleted_at IS NOT NULL AND
+                  t.id = posts.topic_id
+        )")
+        .where("updated_at < ? AND post_number > 1", 1.day.ago)
+        .where("NOT EXISTS (
+                  SELECT 1
+                  FROM post_actions pa
+                  WHERE pa.post_id = posts.id AND
+                        pa.deleted_at IS NULL AND
+                        pa.post_action_type_id IN (?)
+              )", PostActionType.notify_flag_type_ids)
+        .each do |post|
       PostDestroyer.new(Discourse.system_user, post).destroy
     end
   end
@@ -39,6 +53,9 @@ class PostDestroyer
   # When a post is properly deleted. Well, it's still soft deleted, but it will no longer
   # show up in the topic
   def staff_destroyed
+    # the topic may be trashed, skip it
+    return unless @post.topic
+
     Post.transaction do
 
       # Update the last post id to the previous post if it exists

@@ -123,7 +123,7 @@ cs:
               cant_send_pm: "Bohužel, tomuto uživateli nemůžete poslat soukromou zprávu."
 
   user_profile:
-    no_info_me: "<div class='missing-profile'>Pole 'o mně' je v tuto chvíli prázdné, <a href='/users/%{username_lower}/preferences'>nechcete si ho vyplnit?</a></div>"
+    no_info_me: "<div class='missing-profile'>Pole 'o mně' je v tuto chvíli prázdné, <a href='/users/%{username_lower}/preferences/about-me'>nechcete si ho vyplnit?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} o sobě zatím žádné informace nevyplnil</div>"
 
   category:

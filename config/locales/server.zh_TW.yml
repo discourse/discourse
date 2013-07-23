@@ -107,7 +107,7 @@ zh_TW:
               cant_send_pm: "抱歉，你不能向該用戶發送私信。"
 
   user_profile:
-    no_info_me: "<div class='missing-profile'>你的介紹信息中，“關于我”部分目前還是空白，<a href='/users/%{username_lower}/preferences'>介紹一下你自己，好不好？</a></div>"
+    no_info_me: "<div class='missing-profile'>你的介紹信息中，“關于我”部分目前還是空白，<a href='/users/%{username_lower}/preferences/about-me'>介紹一下你自己，好不好？</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} 尚未在他/她的介紹中的“關于我”部分填寫任何信息</div>"
 
   category:

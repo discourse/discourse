@@ -134,4 +134,10 @@ describe Group do
     GroupUser.count.should == 0
   end
 
+  it "allows you to lookup a new group by name" do
+    group = Fabricate(:group)
+    group.id.should == Group[group.name].id
+    group.id.should == Group[group.name.to_sym].id
+  end
+
 end
