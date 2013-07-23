@@ -8,6 +8,7 @@ describe PostDestroyer do
   end
 
   let(:moderator) { Fabricate(:moderator) }
+  let(:admin) { Fabricate(:admin) }
   let(:post) { create_post }
 
   describe 'destroy_old_stubs' do
@@ -55,9 +56,6 @@ describe PostDestroyer do
   end
 
   describe 'basic destroying' do
-
-    let(:moderator) { Fabricate(:moderator) }
-    let(:admin) { Fabricate(:admin) }
 
     context "as the creator of the post" do
       before do
@@ -144,6 +142,37 @@ describe PostDestroyer do
 
     end
 
+  end
+
+  context "deleting a post belonging to a deleted topic" do
+    let!(:topic) { post.topic }
+
+    before do
+      topic.trash!(admin)
+      post.reload
+    end
+
+    context "as a moderator" do
+      before do
+        PostDestroyer.new(moderator, post).destroy
+      end
+
+      it "deletes the post" do
+        post.deleted_at.should be_present
+        post.deleted_by.should == moderator
+      end
+    end
+
+    context "as an admin" do
+      before do
+        PostDestroyer.new(admin, post).destroy
+      end
+
+      it "deletes the post" do
+        post.deleted_at.should be_present
+        post.deleted_by.should == admin
+      end
+    end
   end
 
   describe 'after delete' do
