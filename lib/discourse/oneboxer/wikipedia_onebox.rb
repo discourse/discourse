@@ -23,7 +23,7 @@ module Discourse
         result = {}
 
         title = html_doc.at('title').inner_html
-        result[:title] = title.gsub!(/ - Wikipedia.*$/, '') if title.present?
+        result[:title] = title.gsub!(/ - Wikipedia.*$/, '') if title.nil? || title.empty?
 
         # get the first image > 150 pix high
         images = html_doc.search("img").select { |img| img['height'].to_i > 150 }
