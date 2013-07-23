@@ -58,7 +58,8 @@ EXPECTED
 <div class='onebox-result'>
     <div class='source'>
       <div class='info'>
-        <a href='http://www.rottentomatoes.com/m/the_big_wedding_2013/' class="track-link" target="_blank"
+        <a href='http://www.rottentomatoes.com/m/the_big_wedding_2013/' class="track-link" target="_blank">
+          rottentomatoes.com
         </a>
       </div>
     </div>
