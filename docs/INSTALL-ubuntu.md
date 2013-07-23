@@ -160,9 +160,9 @@ Configure Discourse:
 
 Edit ~/discourse/config/database.yml
 
-- change production db name if appropriate
-- change username/password if appropriate
-- set `db_id` if using multisite
+- change production database name if appropriate
+- change database username/password if appropriate
+- if you are hosting multiple Discourse forums on the same server (multisite), set `db_id`
 - change `host_names` to the name you'll use to access the discourse site, e.g. "forum.example.com"
 
 Edit ~/discourse/config/redis.yml
