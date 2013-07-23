@@ -39,6 +39,7 @@ if rails4?
   gem 'protected_attributes'
   gem 'actionpack-action_caching'
   gem 'seed-fu' , github: 'mbleigh/seed-fu'
+  gem 'spork-rails', :github => 'sporkrb/spork-rails'
 else
   # we had pain with the 3.2.13 upgrade so monkey patch the security fix
   # next time around we hope to upgrade
@@ -51,6 +52,10 @@ else
   gem 'seed-fu'
   gem 'activerecord-postgres-hstore'
   gem 'active_attr'
+
+  # not compatible, but we don't really use guard much anymore anyway
+  # instead we use bundle exec rake autospec
+  gem 'guard-spork', require: false
 end
 
 gem 'redis'
@@ -146,10 +151,13 @@ end
 group :test, :development do
   gem 'listen', require: false
   gem 'certified', require: false
-  gem 'fabrication', require: false
+  if rails4?
+    gem 'fabrication', github: 'paulelliott/fabrication', require: false
+  else
+    gem 'fabrication', require: false
+  end
   gem 'qunit-rails'
   gem 'guard-rspec', require: false
-  gem 'guard-spork', require: false
   gem 'mocha', require: false
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
   gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false

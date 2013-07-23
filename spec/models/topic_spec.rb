@@ -335,7 +335,6 @@ describe Topic do
       @topic = Fabricate(:topic, bumped_at: 1.year.ago)
     end
 
-
     it 'updates the bumped_at field when a new post is made' do
       @topic.bumped_at.should be_present
       lambda {
