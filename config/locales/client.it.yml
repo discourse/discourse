@@ -419,13 +419,13 @@ it:
       title: "Inserisci Immagine"
       from_my_computer: "Dal mio dispositivo"
       from_the_web: "Dal Web"
-      add_image: "Aggiungi Immagine"
+      add_title: "Aggiungi Immagine"
       remote_title: "immagine remota"
       remote_tip: "inserisci l'indirizzo dell'immagine (es. http://example.com/image.jpg)"
       local_title: "immagine locale"
       local_tip: "clicca per selezionare un'immagine dal tuo dispositivo."
-      upload: "Upload"
-      upload_file: "Carico l'immagine"
+      upload_title: "Upload"
+      uploading: "Carico l'immagine"
 
     search:
       title: "cerca topic, post, utenti o categorie"

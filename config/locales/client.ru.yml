@@ -490,13 +490,13 @@ ru:
       title: Загрузить файл
       from_my_computer: С устройства
       from_the_web: Из интернета
-      add_image: Добавить файл
+      add_title: Добавить файл
       remote_title: удаленный файл
       remote_tip: введите адрес файла в формате http://example.com/image.jpg
       local_title: локальный файл
       local_tip: кликните для выбора файла на вашем устройстве.
-      upload: Загрузить
-      upload_file: Загрузка
+      upload_title: Загрузить
+      uploading: Загрузка
     search:
       title: поиск по темам, сообщениям, пользователям или категориям
       placeholder: условия поиска...

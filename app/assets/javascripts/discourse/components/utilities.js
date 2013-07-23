@@ -257,6 +257,15 @@ Discourse.Utilities = {
   isUploadForbidden: function(path) {
     if (Discourse.User.current('trust_level') > 0) { return false; }
     return Discourse.Utilities.isAnImage(path) ? Discourse.SiteSettings.newuser_max_images === 0 : Discourse.SiteSettings.newuser_max_attachments === 0;
+  },
+
+  /**
+    Determines whether we allow attachments or not
+
+    @method allowsAttachments
+  **/
+  allowsAttachments: function() {
+    return _.difference(Discourse.SiteSettings.authorized_extensions.split("|"), [".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tif", ".tiff"]).length > 0;
   }
 
 };

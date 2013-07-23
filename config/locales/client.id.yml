@@ -314,11 +314,11 @@ id:
       title: "Insert Image"
       from_my_computer: "From My Device"
       from_the_web: "From The Web"
-      add_image: "Add Image"
+      add_title: "Add Image"
       remote_tip: "enter address of an image in the form http://example.com/image.jpg"
       local_tip: "click to select an image from your device."
-      upload: "Upload"
-      upload_file: "Uploading image"
+      upload_title: "Upload"
+      uploading: "Uploading image"
 
     search:
       title: "search for topics, posts, users, or categories"
