@@ -1,3 +1,5 @@
+require_dependency 'search'
+
 class SearchObserver < ActiveRecord::Observer
   observe :topic, :post, :user, :category
 
@@ -9,11 +11,14 @@ class SearchObserver < ActiveRecord::Observer
     table_name = "#{table}_search_data"
     foreign_key = "#{table}_id"
 
+    # for user login and name use "simple" lowercase stemmer
+    stemmer = table == "user" ? "simple" : Search.long_locale
+
     # Would be nice to use AR here but not sure how to execut Postgres functions
     # when inserting data like this.
-    rows = Post.exec_sql_row_count("UPDATE #{table_name} SET search_data = TO_TSVECTOR('english', ?) WHERE #{foreign_key} = ?", search_data, id)
+    rows = Post.exec_sql_row_count("UPDATE #{table_name} SET search_data = TO_TSVECTOR('#{stemmer}', ?) WHERE #{foreign_key} = ?", search_data, id)
     if rows == 0
-      Post.exec_sql("INSERT INTO #{table_name} (#{foreign_key}, search_data) VALUES (?, TO_TSVECTOR('english', ?))", id, search_data)
+      Post.exec_sql("INSERT INTO #{table_name} (#{foreign_key}, search_data) VALUES (?, TO_TSVECTOR('#{stemmer}', ?))", id, search_data)
     end
   rescue
     # don't allow concurrency to mess up saving a post
