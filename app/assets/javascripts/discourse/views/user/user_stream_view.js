@@ -7,10 +7,11 @@
   @uses Discourse.Scrolling
   @module Discourse
 **/
-Discourse.UserStreamView = Discourse.View.extend(Discourse.Scrolling, {
-  templateName: 'user/stream',
+Discourse.UserStreamView = Ember.CollectionView.extend(Discourse.Scrolling, {
   loading: false,
   elementId: 'user-stream',
+  content: Em.computed.alias('controller.stream.content'),
+  itemViewClass: Ember.View.extend({ templateName: 'user/stream_item' }),
 
   scrolled: function(e) {
     var eyeline = this.get('eyeline');
@@ -33,6 +34,7 @@ Discourse.UserStreamView = Discourse.View.extend(Discourse.Scrolling, {
   },
 
   didInsertElement: function() {
+    console.log(this.get('content'));
     this.bindScrolling();
 
     var eyeline = new Discourse.Eyeline('#user-stream .item');
