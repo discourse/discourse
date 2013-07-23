@@ -1075,7 +1075,7 @@ nl:
 
   upload:
     pasted_image_filename: "Geplakte afbeelding"
-    image:
+    images:
       fetch_failure: "Er ging iets mis bij het opvragen van de afbeelding."
       unknown_image_type: "Het bestand dat je wil uploaden is geen afbeelding."
       size_not_found: "Het is niet gelukt de afmetingen van de afbeelding te bepalen. Misschien is het bestand corrupt?"

@@ -27,6 +27,7 @@ describe Upload do
   end
 
   let(:image_sha1) { Digest::SHA1.file(image.tempfile).hexdigest }
+  let(:image_filesize) { File.size(image.tempfile) }
 
   let(:attachment) do
     ActionDispatch::Http::UploadedFile.new({
@@ -34,6 +35,8 @@ describe Upload do
       tempfile: File.new(__FILE__)
     })
   end
+
+  let(:attachment_filesize) { File.size(attachment.tempfile) }
 
   context ".create_thumbnail!" do
 
@@ -77,7 +80,7 @@ describe Upload do
     it "does not create another upload if it already exists" do
       Upload.expects(:where).with(sha1: image_sha1).returns([upload])
       Upload.expects(:create!).never
-      Upload.create_for(user_id, image).should == upload
+      Upload.create_for(user_id, image, image_filesize).should == upload
     end
 
     it "computes width & height for images" do
@@ -85,24 +88,24 @@ describe Upload do
       FastImage.any_instance.expects(:size).returns([100, 200])
       ImageSizer.expects(:resize)
       ActionDispatch::Http::UploadedFile.any_instance.expects(:rewind)
-      Upload.create_for(user_id, image)
+      Upload.create_for(user_id, image, image_filesize)
     end
 
     it "does not create an upload when there is an error with FastImage" do
       SiteSetting.expects(:authorized_image?).returns(true)
       Upload.expects(:create!).never
-      expect { Upload.create_for(user_id, attachment) }.to raise_error(FastImage::UnknownImageType)
+      expect { Upload.create_for(user_id, attachment, attachment_filesize) }.to raise_error(FastImage::UnknownImageType)
     end
 
     it "does not compute width & height for non-image" do
       SiteSetting.expects(:authorized_image?).returns(false)
       FastImage.any_instance.expects(:size).never
-      Upload.create_for(user_id, image)
+      Upload.create_for(user_id, image, image_filesize)
     end
 
     it "saves proper information" do
       Upload.expects(:store_file).returns(url)
-      upload = Upload.create_for(user_id, image)
+      upload = Upload.create_for(user_id, image, image_filesize)
       upload.user_id.should == user_id
       upload.original_filename.should == image.original_filename
       upload.filesize.should == File.size(image.tempfile)

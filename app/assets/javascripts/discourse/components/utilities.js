@@ -163,41 +163,55 @@ Discourse.Utilities = {
   /**
     Validate a list of files to be uploaded
 
-    @method validateFilesForUpload
+    @method validateUploadedFiles
     @param {Array} files The list of files we want to upload
   **/
-  validateFilesForUpload: function(files) {
+  validateUploadedFiles: function(files) {
     if (!files || files.length === 0) { return false; }
+
     // can only upload one file at a time
     if (files.length > 1) {
       bootbox.alert(I18n.t('post.errors.too_many_uploads'));
       return false;
     }
+
     var upload = files[0];
-    // ensures that new users can upload image/attachment
-    if (Discourse.Utilities.isUploadForbidden(upload.name)) {
-      if (Discourse.Utilities.isAnImage(upload.name)) {
-        bootbox.alert(I18n.t('post.errors.image_upload_not_allowed_for_new_user'));
-      } else {
-        bootbox.alert(I18n.t('post.errors.attachment_upload_not_allowed_for_new_user'));
-      }
-      return false;
-    }
-    // if the image was pasted, sets its name to a default one
+
+    // CHROME ONLY: if the image was pasted, sets its name to a default one
     if (upload instanceof Blob && !(upload instanceof File) && upload.type === "image/png") { upload.name = "blob.png"; }
+
+    return Discourse.Utilities.validateUploadedFile(upload, Discourse.Utilities.isAnImage(upload.name) ? 'image' : 'attachment');
+  },
+
+  /**
+    Validate a file to be uploaded
+
+    @method validateUploadedFile
+    @param {File} file The file to be uploaded
+    @param {string} type The type of the file
+  **/
+  validateUploadedFile: function(file, type) {
     // check that the uploaded file is authorized
-    if (!Discourse.Utilities.isAuthorizedUpload(upload)) {
+    if (!Discourse.Utilities.isAuthorizedUpload(file)) {
       var extensions = Discourse.SiteSettings.authorized_extensions.replace(/\|/g, ", ");
       bootbox.alert(I18n.t('post.errors.upload_not_authorized', { authorized_extensions: extensions }));
       return false;
     }
-    // check file size
-    var fileSizeKB = upload.size / 1024;
-    var maxSizeKB = Discourse.Utilities.maxUploadSizeInKB(upload.name);
-    if (fileSizeKB > maxSizeKB) {
-      bootbox.alert(I18n.t('post.errors.upload_too_large', { max_size_kb: maxSizeKB }));
+
+    // ensures that new users can upload a file
+    if (Discourse.User.current('trust_level') === 0 && Discourse.SiteSettings['newuser_max_' + type + 's'] === 0) {
+      bootbox.alert(I18n.t('post.errors.' + type + '_upload_not_allowed_for_new_user'));
       return false;
     }
+
+    // check file size
+    var fileSizeKB = file.size / 1024;
+    var maxSizeKB = Discourse.SiteSettings['max_' + type + '_size_kb'];
+    if (fileSizeKB > maxSizeKB) {
+      bootbox.alert(I18n.t('post.errors.' + type + '_too_large', { max_size_kb: maxSizeKB }));
+      return false;
+    }
+
     // everything went fine
     return true;
   },
@@ -236,27 +250,6 @@ Discourse.Utilities = {
   **/
   isAnImage: function(path) {
     return path && path.match(/\.(png|jpg|jpeg|gif|bmp|tif|tiff)$/i);
-  },
-
-  /**
-    Retrieve max upload size in KB depending on the file is an image or not
-
-    @method maxUploadSizeInKB
-    @param {String} path The path
-  **/
-  maxUploadSizeInKB: function(path) {
-    return Discourse.Utilities.isAnImage(path) ? Discourse.SiteSettings.max_image_size_kb : Discourse.SiteSettings.max_attachment_size_kb;
-  },
-
-  /**
-    Test whether an upload is forbidden or not
-
-    @method isUploadForbidden
-    @param {String} path The path
-  **/
-  isUploadForbidden: function(path) {
-    if (Discourse.User.current('trust_level') > 0) { return false; }
-    return Discourse.Utilities.isAnImage(path) ? Discourse.SiteSettings.newuser_max_images === 0 : Discourse.SiteSettings.newuser_max_attachments === 0;
   },
 
   /**

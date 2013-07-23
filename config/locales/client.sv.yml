@@ -578,7 +578,7 @@ sv:
         create: "Tyvärr, det uppstod ett fel under skapandet av ditt inlägg. Var god försök igen."
         edit: "Tyvärr, det uppstod ett fel under ändringen av ditt inlägg. Var god försök igen."
         upload: "Tyvärr, det uppstod ett fel under uppladdandet av den filen. Vad god försök igen."
-        upload_too_large: "Tyvärr, filen som du försöker ladda upp är för stor (maxstorlek är {{max_size_kb}}kb), var god ändra storlek och försök igen."
+        image_too_large: "Tyvärr, filen som du försöker ladda upp är för stor (maxstorlek är {{max_size_kb}}kb), var god ändra storlek och försök igen."
         too_many_uploads: "Tyvärr, du kan bara ladda upp en bild i taget."
 
       abandon: "Är du säker på att du vill överge ditt inlägg?"

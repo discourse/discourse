@@ -955,7 +955,7 @@ pt_BR:
   upload:
     unauthorized: "Desculpe-nos, o arquivo que você está tentando enviar não é autorizado (extensões autorizadas: %{authorized_extensions})."
     pasted_image_filename: "Imagem colada"
-    image:
+    images:
       fetch_failure: "Desculpe, houve um erro ao transferir a imagem."
       unknown_image_type: "Desculpe, mas o arquivo que você tentou enviar não parece ser uma imagem."
       size_not_found: "Desculpe, mas não conseguimos determinar o tamanho da imagem. É possível que seu arquivo de imagem esteja corrompido?"
