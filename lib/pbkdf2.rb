@@ -2,32 +2,32 @@
 #
 # Also PBKDF2 monkey patches string ... don't like that at all
 #
-# Happy to move back to PBKDF2 ruby gem provided: 
+# Happy to move back to PBKDF2 ruby gem provided:
 #
 # 1. It works on Ruby 2.0
-# 2. It works on 1.9.3 
+# 2. It works on 1.9.3
 # 3. It does not monkey patch string
 
 require 'openssl'
 require 'xor'
 
 class Pbkdf2
-  
-  def self.hash_password(password, salt, iterations)
 
-    h = OpenSSL::Digest::Digest.new("sha256")
-    
+  def self.hash_password(password, salt, iterations, algorithm = "sha256")
+
+    h = OpenSSL::Digest::Digest.new(algorithm)
+
     u = ret = prf(h, password, salt + [1].pack("N"))
 
-    2.upto(iterations) do 
+    2.upto(iterations) do
      u = prf(h, password, u)
-     ret.xor!(u) 
+     ret.xor!(u)
     end
 
     ret.bytes.map{|b| ("0" + b.to_s(16))[-2..-1]}.join("")
   end
 
-  protected 
+  protected
 
   # fallback xor in case we need it for jruby ... way slower
   def self.xor(x,y)
