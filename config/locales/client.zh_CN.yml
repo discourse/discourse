@@ -496,13 +496,13 @@ zh_CN:
       title: "插入图片"
       from_my_computer: "来自我的设备"
       from_the_web: "来自网络"
-      add_image: "添加图片"
+      add_title: "添加图片"
       remote_title: "网络图片"
       remote_tip: "输入图片网络，格式为：http://example.com/image.jpg"
       local_title: "本地图片"
       local_tip: "点击从你的设备中选择一张图片。"
-      upload: "上传"
-      upload_file: "上传图片中"
+      upload_title: "上传"
+      uploading: "上传图片中"
 
     search:
       title: "搜索主题、帖子、用户或分类"

@@ -494,13 +494,13 @@ de:
       title: "Bild einfügen"
       from_my_computer: "von meinem Gerät"
       from_the_web: "aus dem Web"
-      add_image: "Bild hinzufügen"
+      add_title: "Bild hinzufügen"
       remote_title: "Entferntes Bild"
       remote_tip: "Gib die Adresse eines Bildes wie folgt ein: http://example.com/image.jpg"
       local_title: "Lokales Bild"
       local_tip: "Klicke hier, um ein Bild von deinem Gerät zu wählen."
-      upload: "Hochladen"
-      upload_file: "Bild wird hochgeladen"
+      upload_title: "Hochladen"
+      uploading: "Bild wird hochgeladen"
 
     search:
       title: "Such nach Themen, Beiträgen, Nutzern oder Kategorien"

@@ -490,13 +490,13 @@ nl:
       title: Voeg afbeelding toe
       from_my_computer: Vanaf mijn apparaat
       from_the_web: Vanaf het web
-      add_image: Voeg afbeelding toe
+      add_title: Voeg afbeelding toe
       remote_title: externe afbeelding
       remote_tip: "vul een internetadres in van een afbeelding in deze vorm: http://example.com/image.jpg"
       local_title: lokale afbeelding
       local_tip: "klik om een afbeelding vanaf je apparaat te selecteren."
-      upload: Uploaden
-      upload_file: Afbeelding uploaden
+      upload_title: Uploaden
+      uploading: Afbeelding uploaden
 
     search:
       title: "zoek naar topics, posts, leden of categoriëen"

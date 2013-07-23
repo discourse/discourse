@@ -510,13 +510,13 @@ cs:
       title: "Vložit obrázek"
       from_my_computer: "Z mého zařízení"
       from_the_web: "Z webu"
-      add_image: "Přidat obrázek"
+      add_title: "Přidat obrázek"
       remote_title: "obrázek ze vzdáleného úložistě"
       remote_tip: "zadejte adresu obrázku ve formátu http://example.com/image.jpg"
       local_title: "obrázek z lokálního úložiště"
       local_tip: "klikněte sem pro výběr obrázku z vašeho zařízení"
-      upload: "Nahrát"
-      upload_file: "Nahrávám obrázek"
+      upload_title: "Nahrát"
+      uploading: "Nahrávám obrázek"
 
     search:
       title: "hledání témat, příspěvků, uživatelů a kategorií"
