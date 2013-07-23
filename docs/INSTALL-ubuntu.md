@@ -159,7 +159,7 @@ Edit ~/discourse/config/database.yml
 - change production db name if appropriate
 - change username/password if appropriate
 - set `db_id` if using multisite
-- change `host_names` to the name you'll use to access the discourse site
+- change `host_names` to the name you'll use to access the discourse site, e.g. "forum.example.com"
 
 Edit ~/discourse/config/redis.yml
 
@@ -179,7 +179,8 @@ Edit ~/discourse/config/initializers/secret_token.rb
 - delete the lines below as per instructions in the file
 
 Edit ~/discourse/config/environments/production.rb
-- check settings, modify smtp settings if necessary
+- browse througn all the settings
+- be sure to add your mail server SMTP settings so outgoing mail can be sent (we recommend [Mandrill](https://mandrillapp.com))
 - See http://meta.discourse.org/t/all-of-my-internal-users-show-as-coming-from-127-0-0-1/6607 if this will serve "internal" users
 
 Initialize the database:
@@ -333,7 +334,7 @@ Check the sample configuration files provided in the repo with the ones being us
 #### Example 1
 
     $ diff -u config/discourse.pill.sample config/discourse.pill
-    --- config/discourse.pill.sample	2013-07-15 17:38:06.501507001 +0000
+    --- config/discourse.pill.sample  2013-07-15 17:38:06.501507001 +0000
     +++ config/discourse.pill	2013-07-05 06:38:27.133506896 +0000
     @@ -46,7 +46,7 @@
 
