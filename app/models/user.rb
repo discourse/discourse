@@ -542,7 +542,7 @@ class User < ActiveRecord::Base
   end
 
   def hash_password(password, salt)
-    Pbkdf2.hash_password(password, salt, Rails.configuration.pbkdf2_iterations)
+    Pbkdf2.hash_password(password, salt, Rails.configuration.pbkdf2_iterations, Rails.configuration.pbkdf2_algorithm)
   end
 
   def add_trust_level
@@ -674,4 +674,3 @@ end
 #  index_users_on_username        (username) UNIQUE
 #  index_users_on_username_lower  (username_lower) UNIQUE
 #
-
