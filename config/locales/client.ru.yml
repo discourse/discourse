@@ -1101,6 +1101,9 @@ ru:
         name_placeholder: Название группы, без пробелов, по тем же правилам, что и имя пользователя.
         about: Здесь можно редактировать группы и имена групп
         can_not_edit_automatic: Принадлежность пользователя к системным группам определяется автоматически, однако вы можете самостоятельно переназначить группу пользователя и уровень доверия
+        delete: Удалить
+        delete_confirm: удалить эту Группы?
+        delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
       api:
         title: API
         long_title: Информация об API

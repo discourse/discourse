@@ -2,14 +2,17 @@ require 'spec_helper'
 
 describe Admin::GroupsController do
 
+  before do
+    @admin = log_in(:admin)
+  end
+
   it "is a subclass of AdminController" do
     (Admin::GroupsController < Admin::AdminController).should be_true
   end
 
   it "produces valid json for groups" do
-    admin = log_in(:admin)
     group = Fabricate.build(:group, name: "test")
-    group.add(admin)
+    group.add(@admin)
     group.save
 
     xhr :get, :index
@@ -23,28 +26,31 @@ describe Admin::GroupsController do
   end
 
   it "is able to refresh automatic groups" do
-    admin = log_in(:admin)
     Group.expects(:refresh_automatic_groups!).returns(true)
 
     xhr :post, :refresh_automatic_groups
     response.status.should == 200
   end
 
-  it "is able to destroy a group" do
-    log_in(:admin)
-    group = Fabricate(:group)
+  context '.destroy' do
+    it "returns a 422 if the group is automatic" do
+      group = Fabricate(:group, automatic: true)
+      xhr :delete, :destroy, id: group.id
+      response.status.should == 422
+      Group.where(id: group.id).count.should == 1
+    end
 
-    xhr :delete, :destroy, id: group.id
-    response.status.should == 200
-
-    Group.where(id: group.id).count.should == 0
+    it "is able to destroy a non-automatic group" do
+      group = Fabricate(:group)
+      xhr :delete, :destroy, id: group.id
+      response.status.should == 200
+      Group.where(id: group.id).count.should == 0
+    end
   end
 
   it "is able to create a group" do
-    a = log_in(:admin)
-
     xhr :post, :create, group: {
-      usernames: a.username,
+      usernames: @admin.username,
       name: "bob"
     }
 
@@ -53,16 +59,14 @@ describe Admin::GroupsController do
     groups = Group.where(name: "bob").to_a
 
     groups.count.should == 1
-    groups[0].usernames.should == a.username
+    groups[0].usernames.should == @admin.username
     groups[0].name.should == "bob"
-
   end
 
   it "is able to update group members" do
     user1 = Fabricate(:user)
     user2 = Fabricate(:user)
     group = Fabricate(:group)
-    log_in(:admin)
 
     xhr :put, :update, id: group.id, name: 'fred', group: {
         name: 'fred',
@@ -72,6 +76,5 @@ describe Admin::GroupsController do
     group.reload
     group.users.count.should == 2
     group.name.should == 'fred'
-
   end
 end

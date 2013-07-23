@@ -207,6 +207,7 @@ fr:
         taken: "Désolé, ce pseudo est déjà pris"
         error: "Il y a eu une erreur en changeant votre pseudo."
         invalid: "Ce pseudo est invalide. Il ne doit être composé que de lettres et de chiffres."
+
       change_email:
         action: 'changer'
         title: "Changer d'email"
@@ -227,6 +228,7 @@ fr:
         instructions: "Votre nom complet (pas nécessairement unique)."
         too_short: "Votre nom est trop court."
         ok: "Votre nom à l'air sympa !."
+
       username:
         title: "Pseudo"
         instructions: "Doit être unique et ne pas contenir d'espace. Les gens pourrons vous mentionner avec @pseudo."
@@ -1038,6 +1040,9 @@ fr:
         name_placeholder: "Nom du groupe, sans espace, mêmes règles que pour les noms d'utilisateurs"
         about: "Modifier votre adhésion et les noms ici"
         can_not_edit_automatic: "L'adhésion au groupe est défini automatiquement, les administrateurs assignent des rôles et niveaux de confiance"
+        delete: "Supprimer"
+        delete_confirm: "Supprimer ce groupe?"
+        delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
 
       api:
         title: "API"

@@ -958,6 +958,9 @@ zh_TW:
         edit: "編輯群組"
         selector_placeholder: "添加用戶"
         name_placeholder: "組名，不能含有空格，與用戶名規則一致"
+        delete: "刪除"
+        delete_confirm: "删除这个小组吗？"
+        delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
 
       api:
         title: "應用開發接口（API）"

@@ -1091,6 +1091,9 @@ nl:
         name_placeholder: "Groepsnaam, geen spaties, zelfde regels als bij een gebruikersnaam"
         about: "Wijzig hier je deelname aan groepen en je namen"
         can_not_edit_automatic: "Automatisch lidmaatschap van groepen wordt automatisch bepaald. Beheer rollen en trust levels van gebruikers"
+        delete: Verwijder
+        delete_confirm: Verwijder deze groepen?
+        delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
 
       api:
         title: API
