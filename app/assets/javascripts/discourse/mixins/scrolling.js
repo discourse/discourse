@@ -35,7 +35,7 @@ Discourse.Scrolling = Em.Mixin.create({
   },
 
   /**
-    Begin watching for scroll events. They will be called at max every 100ms.
+    Stop watching for scroll events.
 
     @method unbindScrolling
   */

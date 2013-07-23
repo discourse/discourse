@@ -9,34 +9,23 @@
 **/
 Discourse.UserStreamView = Discourse.View.extend(Discourse.Scrolling, {
   templateName: 'user/stream',
+  loading: false,
+  elementId: 'user-stream',
 
   scrolled: function(e) {
+    var eyeline = this.get('eyeline');
+    if (eyeline) { eyeline.update(); }
+  },
 
-    var $userStreamBottom = $('#user-stream-bottom');
-    if ($userStreamBottom.data('loading')) return;
+  loadMore: function() {
+    var userStreamView = this;
+    if (userStreamView.get('loading')) { return; }
 
-    var position = $userStreamBottom.position();
-    if (!($userStreamBottom && position)) return;
-
-    var docViewTop = $(window).scrollTop();
-    var windowHeight = $(window).height();
-    var docViewBottom = docViewTop + windowHeight;
-
-    if (position.top < docViewBottom) {
-      $userStreamBottom.data('loading', true);
-      this.set('loading', true);
-
-      var userStreamView = this;
-      var user = this.get('stream.user');
-      var stream = this.get('stream');
-
-      stream.findItems().then(function() {
-        userStreamView.set('loading', false);
-        Em.run.schedule('afterRender', function() {
-          $userStreamBottom.data('loading', null);
-        });
-      });
-    }
+    var stream = this.get('stream');
+    stream.findItems().then(function() {
+      userStreamView.set('loading', false);
+      userStreamView.get('eyeline').flushRest();
+    });
   },
 
   willDestroyElement: function() {
@@ -45,8 +34,15 @@ Discourse.UserStreamView = Discourse.View.extend(Discourse.Scrolling, {
 
   didInsertElement: function() {
     this.bindScrolling();
-  }
 
+    var eyeline = new Discourse.Eyeline('#user-stream .item');
+    this.set('eyeline', eyeline);
+
+    var userStreamView = this;
+    eyeline.on('sawBottom', function() {
+      userStreamView.loadMore();
+    });
+  }
 });
 
 
