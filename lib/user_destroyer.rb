@@ -1,5 +1,3 @@
-require_dependency 'admin_logger'
-
 # Responsible for destroying a User record
 class UserDestroyer
 
@@ -20,7 +18,7 @@ class UserDestroyer
       user.destroy.tap do |u|
         if u
           Post.with_deleted.where(user_id: user.id).update_all("nuked_user = true")
-          AdminLogger.new(@admin).log_user_deletion(user)
+          StaffActionLogger.new(@admin).log_user_deletion(user)
           DiscourseHub.unregister_nickname(user.username) if SiteSetting.call_discourse_hub?
           MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
         end

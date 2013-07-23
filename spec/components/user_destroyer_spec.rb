@@ -59,7 +59,7 @@ describe UserDestroyer do
       end
 
       it 'should not log the action' do
-        AdminLogger.any_instance.expects(:log_user_deletion).never
+        StaffActionLogger.any_instance.expects(:log_user_deletion).never
         destroy rescue nil
       end
 
@@ -82,7 +82,7 @@ describe UserDestroyer do
         end
 
         it 'should log the action' do
-          AdminLogger.any_instance.expects(:log_user_deletion).with(@user).once
+          StaffActionLogger.any_instance.expects(:log_user_deletion).with(@user).once
           destroy
         end
 
@@ -115,7 +115,7 @@ describe UserDestroyer do
         end
 
         it 'should not log the action' do
-          AdminLogger.any_instance.expects(:log_user_deletion).never
+          StaffActionLogger.any_instance.expects(:log_user_deletion).never
           destroy
         end
 
