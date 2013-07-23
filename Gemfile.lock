@@ -60,13 +60,6 @@ GIT
     email_reply_parser (0.6)
 
 GIT
-  remote: https://github.com/rails-api/active_model_serializers.git
-  revision: fe84e0ad5268f1439123fd9a1f9fd12e25a54cd3
-  specs:
-    active_model_serializers (0.8.1)
-      activemodel (>= 3.0)
-
-GIT
   remote: https://github.com/zhangyuan/vestal_versions
   revision: 0ea75ec4e269b5a9e609639919ade0f36381a446
   specs:
@@ -114,6 +107,8 @@ GEM
     active_attr (0.7.0)
       activemodel (>= 3.0.2, < 4.1)
       activesupport (>= 3.0.2, < 4.1)
+    active_model_serializers (0.8.1)
+      activemodel (>= 3.0)
     activemodel (3.2.12)
       activesupport (= 3.2.12)
       builder (~> 3.0.0)
@@ -161,7 +156,7 @@ GEM
     daemons (1.1.9)
     debug_inspector (0.0.2)
     diff-lcs (1.2.4)
-    diffy (2.1.4)
+    diffy (3.0.1)
     em-redis (0.3.0)
       eventmachine
     ember-rails (0.10.0)
@@ -467,7 +462,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_attr
-  active_model_serializers!
+  active_model_serializers
   activerecord-postgres-hstore
   airbrake (= 3.1.2)
   annotate!
@@ -476,7 +471,7 @@ DEPENDENCIES
   binding_of_caller
   certified
   clockwork
-  diffy
+  diffy (>= 3.0)
   discourse_emoji!
   discourse_plugin!
   em-redis

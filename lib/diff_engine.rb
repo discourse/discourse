@@ -13,7 +13,7 @@ class DiffEngine
   #
   #  returns: html containing decorations indicating the changes
   def self.html_diff(html_before, html_after)
-    Diffy::Diff.new(html_before, html_after).to_s(:html)
+    Diffy::Diff.new(html_before, html_after, {allow_empty_diff: false}).to_s(:html)
   end
 
   # same as html diff, except that it operates on markdown
