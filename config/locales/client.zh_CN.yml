@@ -765,7 +765,7 @@ zh_CN:
         create: "抱歉，在创建你的帖子时发生了错误。请重试。"
         edit: "抱歉，在编辑你的帖子时发生了错误。请重试。"
         upload: "抱歉，在上传文件时发生了错误。请重试。"
-        upload_too_large: "抱歉，你上传的文件太大了（最大不能超过 {{max_size_kb}}kb），请调整文件大小后重新上传。"
+        image_too_large: "抱歉，你上传的文件太大了（最大不能超过 {{max_size_kb}}kb），请调整文件大小后重新上传。"
         too_many_uploads: "抱歉, 你只能一次上传一张图片。"
         upload_not_authorized: "抱歉, 你不能上传此类型文件(可上传的文件类型有: {{authorized_extensions}})。"
         upload_not_allowed_for_new_user: "抱歉，新用户不能上传图片。"

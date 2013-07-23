@@ -656,7 +656,7 @@ pt_BR:
         create: "Desculpe, houve um erro ao criar o seu post. Por favor tenta outra vez."
         edit: "Desculpe, houve um erro ao editar o seu post. Por favor tenta outra vez."
         upload: "Desculpe, houve um erro ao enviar esse ficheiro. Por favor tenta otura vez."
-        upload_too_large: "Desculpe, o arquivo que você está tentando enviar é muito grande (o tamanho máximo é {{max_size_kb}}kb), por favor diminua-o e tente novamente."
+        image_too_large: "Desculpe, o arquivo que você está tentando enviar é muito grande (o tamanho máximo é {{max_size_kb}}kb), por favor diminua-o e tente novamente."
         too_many_uploads: "Desculpe, você pode enviar apenas um arquivos por vez."
         upload_not_authorized: "Desculpe, o tipo de arquivo que você está tentando enviar não está autorizado (extensões autorizadas: {{authorized_extensions}})."
         upload_not_allowed_for_new_user: "Desculpe, novos usuários não podem enviar imagens."

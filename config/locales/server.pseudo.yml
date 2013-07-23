@@ -1273,7 +1273,7 @@ pseudo:
   deleted: '[[ ďéłéťéď ]]'
   upload:
     pasted_image_filename: '[[ Рášťéď íɱáǧé ]]'
-    image:
+    images:
       fetch_failure: '[[ Šóřřý, ťĥéřé ĥáš ƀééɳ áɳ éřřóř ŵĥíłé ƒéťčĥíɳǧ ťĥé íɱáǧé.
         ]]'
       unknown_image_type: '[[ Šóřřý, ƀůť ťĥé ƒíłé ýóů ťříéď ťó ůƿłóáď ďóéšɳ''ť áƿƿéář
