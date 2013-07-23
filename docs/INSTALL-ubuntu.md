@@ -185,7 +185,7 @@ Edit ~/discourse/config/initializers/secret_token.rb
 Edit ~/discourse/config/environments/production.rb
 - browse througn all the settings
 - be sure to add your mail server SMTP settings so outgoing mail can be sent (we recommend [Mandrill](https://mandrillapp.com))
-- See http://meta.discourse.org/t/all-of-my-internal-users-show-as-coming-from-127-0-0-1/6607 if this will serve "internal" users
+- If your users will come from "internal" [private unroutable IPs](https://en.wikipedia.org/wiki/Private_network) like 10.x.x.x or 192.168.x.x please [see this topic](http://meta.discourse.org/t/all-of-my-internal-users-show-as-coming-from-127-0-0-1/6607).
 
 Initialize the database:
 
