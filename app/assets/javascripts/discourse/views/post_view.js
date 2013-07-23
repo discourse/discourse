@@ -12,14 +12,9 @@ Discourse.PostView = Discourse.View.extend({
   classNameBindings: ['postTypeClass',
                       'selected',
                       'post.hidden:hidden',
-                      'addDeletedClass:deleted',
+                      'post.deleted',
                       'parentPost:replies-above'],
   postBinding: 'content',
-
-  addDeletedClass: function() {
-    var post = this.get('post');
-    return post.get('deleted') || post.get('user_deleted');
-  }.property('post.deleted','post.user_deleted'),
 
   postTypeClass: function() {
     return this.get('post.post_type') === Discourse.Site.instance().get('post_types.moderator_action') ? 'moderator' : 'regular';
