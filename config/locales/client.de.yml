@@ -1092,6 +1092,9 @@ de:
         name_placeholder: "Gruppenname, keine Leerzeichen, gleiche Regel wie beim Benutzernamen"
         about: "Hier kannst du Gruppenzugehörigkeiten und Gruppennamen bearbeiten."
         can_not_edit_automatic: "Automatische Gruppenzugehörigkeiten können nicht bearbeitet werden. Bearbeite Benutzer, um Rollen und Vertrauensstufen einzustellen."
+        delete: "Löschen"
+        delete_confirm: "Diese gruppe löschen?"
+        delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
 
       api:
         title: "API"

@@ -979,6 +979,11 @@ nb_NO:
         edit: "Rediger Grupper"
         selector_placeholder: "legg til brukere"
         name_placeholder: "Gruppenavn, ingen mellomrom, samme som reglene for brukernavn"
+        about: "Edit your group membership and names here"
+        can_not_edit_automatic: "Automatic group membership is determined automatically, administer users to assign roles and trust levels"
+        delete: "Slett"
+        delete_confirm: "Slette denne grupper?"
+        delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
 
       api:
         title: "API"

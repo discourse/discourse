@@ -968,6 +968,9 @@ pt_BR:
         name_placeholder: "Nome do grupo, sem espaços, regras iguais ao nome de usuário"
         about: "Editar participação no grupo e nomes aqui"
         can_not_edit_automatic: "Participação nos grupos automáticos é determinada automaticamente, gerencie os usuários para determinar papéis e níveis de confiança"
+        delete: "Apagar"
+        delete_confirm: "Apagar este grupos?"
+        delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
       api:
         title: "API"
         long_title: "Informações da API"
