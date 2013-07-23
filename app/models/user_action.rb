@@ -215,6 +215,27 @@ ORDER BY p.created_at desc
 
   def self.synchronize_target_topic_ids(post_ids = nil)
 
+    # nuke all dupes, using magic
+    builder = SqlBuilder.new <<SQL
+DELETE FROM user_actions USING user_actions ua2
+/*where*/
+SQL
+
+    builder.where <<SQL
+  user_actions.action_type = ua2.action_type AND
+  user_actions.user_id = ua2.user_id AND
+  user_actions.acting_user_id = ua2.acting_user_id AND
+  user_actions.target_post_id = ua2.target_post_id AND
+  user_actions.target_post_id > 0 AND
+  user_actions.id > ua2.id
+SQL
+
+    if post_ids
+      builder.where("user_actions.target_post_id in (:post_ids)", post_ids: post_ids)
+    end
+
+    builder.exec
+
     builder = SqlBuilder.new("UPDATE user_actions
                     SET target_topic_id = (select topic_id from posts where posts.id = target_post_id)
                     /*where*/")

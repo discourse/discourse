@@ -273,10 +273,16 @@ describe UserAction do
         target_post_id: post.id,
       )
 
-      action.reload
-      action.target_topic_id.should == -1
+      UserAction.log_action!(
+        action_type: UserAction::NEW_PRIVATE_MESSAGE,
+        user_id: post.user.id,
+        acting_user_id: post.user.id,
+        target_topic_id: -2,
+        target_post_id: post.id,
+      )
 
       UserAction.ensure_consistency!
+
       action.reload
       action.target_topic_id.should == post.topic_id
 
