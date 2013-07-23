@@ -3,13 +3,13 @@
 ## What kind of hardware do you have?
 
 - Recommended minimum configuration is:
-  - 2GiB of RAM
-  - 2GiB of swap
+  - 2 GB of RAM
+  - 2 GB of swap
   - 2 processor cores
 - With 2GB of memory and dual cores, you can run two instances of the thin
   server (`NUM_WEBS=2`)
 
-1 GiB of memory, 3GiB of swap and a single core CPU are the minimums for a
+1 GB of memory, 3GB of swap and a single core CPU are the minimums for a
 steady state, running Discourse forum -- but it's simpler to just throw a bit
 more hardware at the problem if you can, particularly during the install.
 
