@@ -127,7 +127,7 @@ class TopicsController < ApplicationController
 
     # Only suggest similar topics if the site has a minimmum amount of topics present.
     if Topic.count > SiteSetting.minimum_topics_similar
-      topics = Topic.similar_to(title, raw, current_user)
+      topics = Topic.similar_to(title, raw, current_user).to_a
     end
 
     render_serialized(topics, BasicTopicSerializer)
