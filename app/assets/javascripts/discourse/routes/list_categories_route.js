@@ -38,7 +38,12 @@ Discourse.ListCategoriesRoute = Discourse.Route.extend({
   afterModel: function(categoryList) {
     this.controllerFor('list').setProperties({
       canCreateCategory: categoryList.get('can_create_category'),
-      canCreateTopic: categoryList.get('can_create_topic'),
+      canCreateTopic: categoryList.get('can_create_topic')
+    });
+  },
+
+  enter: function() {
+    this.controllerFor('list').setProperties({
       filterMode: 'categories',
       category: null
     });
