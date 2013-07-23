@@ -34,7 +34,6 @@ Discourse.UserStreamView = Ember.CollectionView.extend(Discourse.Scrolling, {
   },
 
   didInsertElement: function() {
-    console.log(this.get('content'));
     this.bindScrolling();
 
     var eyeline = new Discourse.Eyeline('#user-stream .item');
