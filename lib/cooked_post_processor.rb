@@ -1,3 +1,4 @@
+# encoding: utf-8
 # Post processing that we can do after a post has already been cooked.
 # For example, inserting the onebox content, or image sizes/thumbnails.
 
