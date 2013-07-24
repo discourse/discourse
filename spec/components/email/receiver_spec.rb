@@ -21,7 +21,7 @@ describe Email::Receiver do
     let(:reply_below) { File.read("#{Rails.root}/spec/fixtures/emails/multipart.eml") }
     let(:receiver) { Email::Receiver.new(reply_below) }
 
-    it "does something" do
+    it "processes correctly" do
       receiver.process
       expect(receiver.body).to eq(
 "So presumably all the quoted garbage and my (proper) signature will get
@@ -33,10 +33,40 @@ stripped from my reply?")
     let(:reply_below) { File.read("#{Rails.root}/spec/fixtures/emails/html_only.eml") }
     let(:receiver) { Email::Receiver.new(reply_below) }
 
-    it "does something" do
+    it "processes correctly" do
       receiver.process
       expect(receiver.body).to eq("The EC2 instance - I've seen that there tends to be odd and " +
                                   "unrecommended settings on the Bitnami installs that I've checked out.")
+    end
+  end
+
+  describe "it supports a dutch reply" do
+    let(:dutch) { File.read("#{Rails.root}/spec/fixtures/emails/dutch.eml") }
+    let(:receiver) { Email::Receiver.new(dutch) }
+
+    it "processes correctly" do
+      receiver.process
+      expect(receiver.body).to eq("Dit is een antwoord in het Nederlands.")
+    end
+  end
+
+  describe "if wrote is on a second line" do
+    let(:wrote) { File.read("#{Rails.root}/spec/fixtures/emails/multiline_wrote.eml") }
+    let(:receiver) { Email::Receiver.new(wrote) }
+
+    it "processes correctly" do
+      receiver.process
+      expect(receiver.body).to eq("Thanks!")
+    end
+  end
+
+  describe "remove previous discussion" do
+    let(:previous) { File.read("#{Rails.root}/spec/fixtures/emails/previous.eml") }
+    let(:receiver) { Email::Receiver.new(previous) }
+
+    it "processes correctly" do
+      receiver.process
+      expect(receiver.body).to eq("This will not include the previous discussion that is present in this email.")
     end
   end
 
@@ -44,7 +74,7 @@ stripped from my reply?")
     let(:paragraphs) { File.read("#{Rails.root}/spec/fixtures/emails/paragraphs.eml") }
     let(:receiver) { Email::Receiver.new(paragraphs) }
 
-    it "does something" do
+    it "processes correctly" do
       receiver.process
       expect(receiver.body).to eq(
 "Is there any reason the *old* candy can't be be kept in silos while the new candy
