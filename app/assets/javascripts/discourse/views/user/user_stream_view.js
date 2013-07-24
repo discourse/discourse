@@ -10,7 +10,7 @@
 Discourse.UserStreamView = Ember.CollectionView.extend(Discourse.Scrolling, {
   loading: false,
   elementId: 'user-stream',
-  content: Em.computed.alias('controller.stream.content'),
+  content: Em.computed.alias('controller.model.content'),
   itemViewClass: Ember.View.extend({ templateName: 'user/stream_item' }),
 
   scrolled: function(e) {

@@ -35,30 +35,17 @@ Discourse.UserActivityRoute = Discourse.Route.extend({
   }
 });
 
-/**
-  A route for showing a user's activity
-
-  @class UserIndexRoute
-  @extends Discourse.Route
-  @namespace Discourse
-  @module Discourse
-**/
 Discourse.UserActivityIndexRoute = Discourse.Route.extend({
-  privateMessageRoute: function() {
-    return (this.get('userActionType') === Discourse.UserAction.TYPES.messages_sent) ||
-           (this.get('userActionType') === Discourse.UserAction.TYPES.messages_received);
-  }.property('userActionType'),
-
   model: function() {
     return this.modelFor('user').findStream(this.get('userActionType'));
   },
 
-  setupController: function(controller, model) {
-    this.controllerFor('userActivity').setProperties({
-      model: this.modelFor('user'),
-      stream: model,
-      privateMessageView: this.get('privateMessageRoute')
-    });
+  renderTemplate: function() {
+    this.render('user_stream', {into: 'user_activity', outlet: 'activity'});
+  },
+
+  setupController: function() {
+    this.controllerFor('user_activity').set('userActionType', this.get('userActionType'));
   }
 });
 
@@ -69,34 +56,10 @@ Object.keys(Discourse.UserAction.TYPES).forEach(function (userAction) {
   });
 });
 
-// Build the private message routes
+// // Build the private message routes
 Discourse.UserPrivateMessagesRoute = Discourse.UserActivityRoute.extend({});
 Discourse.UserPrivateMessagesIndexRoute = Discourse.UserActivityMessagesReceivedRoute;
 Discourse.UserPrivateMessagesSentRoute = Discourse.UserActivityMessagesSentRoute;
-
-
-/**
-  Show the user's default route
-
-  @class UserIndexRoute
-  @extends Discourse.Route
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.UserIndexRoute = Discourse.Route.extend({
-  renderTemplate: function() {
-    this.render('user_activity', {into: 'user', outlet: 'userOutlet' });
-  },
-
-  model: function() {
-    return this.modelFor('user').findStream();
-  },
-
-  setupController: function(controller, stream) {
-    var userActivity = this.controllerFor('userActivity');
-    userActivity.setProperties({ model: this.modelFor('user'), stream: stream });
-  }
-});
 
 /**
   This controller supports all actions on a user's activity stream
@@ -108,6 +71,11 @@ Discourse.UserIndexRoute = Discourse.Route.extend({
 **/
 Discourse.UserActivityController = Discourse.ObjectController.extend({
   needs: ['composer'],
+
+  privateMessageView: function() {
+    return (this.get('userActionType') === Discourse.UserAction.TYPES.messages_sent) ||
+           (this.get('userActionType') === Discourse.UserAction.TYPES.messages_received);
+  }.property('userActionType'),
 
   composePrivateMessage: function() {
     return this.get('controllers.composer').open({
