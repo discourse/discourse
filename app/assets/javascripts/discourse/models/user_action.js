@@ -99,7 +99,11 @@ Discourse.UserAction = Discourse.Model.extend({
   }.property('target_username'),
 
   targetUserUrl: Discourse.computed.url('target_username', '/users/%@'),
-  userUrl: Discourse.computed.url('username', '/users/%@'),
+  usernameLower: function() {
+    return this.get('username').toLowerCase();
+  }.property('username'),
+
+  userUrl: Discourse.computed.url('usernameLower', '/users/%@'),
 
   postUrl: function() {
     return Discourse.Utilities.postUrl(this.get('slug'), this.get('topic_id'), this.get('post_number'));

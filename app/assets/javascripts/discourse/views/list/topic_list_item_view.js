@@ -12,9 +12,7 @@ Discourse.TopicListItemView = Discourse.View.extend({
   classNameBindings: ['content.archived', ':topic-list-item', 'content.hasExcerpt:has-excerpt'],
   attributeBindings: ['data-topic-id'],
 
-  'data-topic-id': function() {
-    return this.get('content.id');
-  }.property('content.id'),
+  'data-topic-id': Em.computed.alias('content.id'),
 
   init: function() {
     this._super();

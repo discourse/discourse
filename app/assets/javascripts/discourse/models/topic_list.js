@@ -23,32 +23,37 @@ Discourse.TopicList = Discourse.Model.extend({
   },
 
   loadMoreTopics: function() {
-    var moreUrl, _this = this;
 
-    if (moreUrl = this.get('more_topics_url')) {
-      Discourse.URL.replaceState(Discourse.getURL("/") + (this.get('filter')) + "/more");
+    if (this.get('loadingMore')) { return Ember.RSVP.reject(); }
+
+    var moreUrl = this.get('more_topics_url');
+    if (moreUrl) {
+
+      var topicList = this;
+      this.set('loadingMore', true);
+
       return Discourse.ajax({url: moreUrl}).then(function (result) {
-        var newTopics, topics, topicsAdded = 0;
+        var topicsAdded = 0;
         if (result) {
           // the new topics loaded from the server
-          newTopics = Discourse.TopicList.topicsFrom(result);
-          topics = _this.get("topics");
+          var newTopics = Discourse.TopicList.topicsFrom(result);
+          var topics = topicList.get("topics");
 
-          _this.forEachNew(newTopics, function(t) {
+          topicList.forEachNew(newTopics, function(t) {
             t.set('highlight', topicsAdded++ === 0);
             topics.pushObject(t);
           });
 
-          _this.set('more_topics_url', result.topic_list.more_topics_url);
-          Discourse.set('transient.topicsList', _this);
+          topicList.set('more_topics_url', result.topic_list.more_topics_url);
+          Discourse.set('transient.topicsList', topicList);
+          topicList.set('loadingMore', false);
+
+          return result.topic_list.more_topics_url;
         }
-        return result.topic_list.more_topics_url;
       });
     } else {
       // Return a promise indicating no more results
-      return Ember.Deferred.promise(function (p) {
-        p.resolve(false);
-      });
+      return Ember.RSVP.reject();
     }
   },
 
@@ -109,6 +114,9 @@ Discourse.TopicList.reopenClass({
     categories = this.extractByKey(result.categories, Discourse.Category);
     users = this.extractByKey(result.users, Discourse.User);
     topics = Em.A();
+
+    console.log(result.topic_list);
+
     _.each(result.topic_list.topics,function(ft) {
       ft.category = categories[ft.category_id];
       _.each(ft.posters,function(p) {

@@ -87,7 +87,7 @@ Discourse.Utilities = {
   },
 
   userUrl: function(username) {
-    return Discourse.getURL("/users/" + username);
+    return Discourse.getURL("/users/" + username.toLowerCase());
   },
 
   emailValid: function(email) {

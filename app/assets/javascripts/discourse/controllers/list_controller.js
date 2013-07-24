@@ -24,6 +24,16 @@ Discourse.ListController = Discourse.Controller.extend({
     });
   }.property(),
 
+  createTopicText: function() {
+    if (this.get('category.name')) {
+      return I18n.t("topic.create_in", {
+        categoryName: this.get('category.name')
+      });
+    } else {
+      return I18n.t("topic.create");
+    }
+  }.property('category.name'),
+
   /**
     Refresh our current topic list
 

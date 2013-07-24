@@ -282,6 +282,11 @@
     height: 20px;
   }
 
+  #topic-list {
+    th {
+      background-color: $topic-list-th-background-color;
+    }
+  }
 
   #suggested-topics {
     margin: 40px 0 40px 20px;
@@ -293,9 +298,6 @@
       margin-left: 6px;
       color: darken($darkish_gray, 20%);
       margin-bottom: 10px;
-    }
-    th {
-      background-color: $topic-list-th-background-color;
     }
   }
 

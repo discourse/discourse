@@ -81,11 +81,11 @@ Discourse.ListTopicsController = Discourse.ObjectController.extend({
   }.property('allLoaded', 'topics.length'),
 
   loadMore: function() {
-    this.set('loadingMore', true);
-    var listTopicsController = this;
-    return this.get('model').loadMoreTopics().then(function(hasMoreTopics) {
-      listTopicsController.set('loadingMore', false);
-      return hasMoreTopics;
+    var topicList = this.get('model');
+    return topicList.loadMoreTopics().then(function(moreUrl) {
+      if (!Em.isEmpty(moreUrl)) {
+        Discourse.URL.replaceState(Discourse.getURL("/") + topicList.get('filter') + "/more");
+      }
     });
   }
 

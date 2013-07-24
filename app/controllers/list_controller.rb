@@ -1,6 +1,6 @@
 class ListController < ApplicationController
 
-  before_filter :ensure_logged_in, except: [:latest, :hot, :category, :category_feed, :latest_feed, :hot_feed]
+  before_filter :ensure_logged_in, except: [:latest, :hot, :category, :category_feed, :latest_feed, :hot_feed, :topics_by]
   before_filter :set_category, only: [:category, :category_feed]
   skip_before_filter :check_xhr
 
@@ -26,6 +26,14 @@ class ListController < ApplicationController
         render 'list', formats: [:rss]
       end
     end
+  end
+
+  def topics_by
+    list_opts = build_topic_list_options
+    list = TopicQuery.new(current_user, list_opts).list_topics_by(fetch_user_from_params)
+    list.more_topics_url = url_for(topics_by_path(list_opts.merge(format: 'json', page: next_page)))
+
+    respond(list)
   end
 
   def category

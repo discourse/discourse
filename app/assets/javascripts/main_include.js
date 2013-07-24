@@ -8,6 +8,7 @@
 //= require ./pagedown_custom.js
 
 // Stuff we need to load first
+//= require ./discourse/mixins/scrolling
 //= require_tree ./discourse/mixins
 //= require ./discourse/components/computed
 //= require ./discourse/views/view

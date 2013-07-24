@@ -4,44 +4,31 @@
   @class UserStreamView
   @extends Discourse.View
   @namespace Discourse
-  @uses Discourse.Scrolling
+  @uses Discourse.LoadMore
   @module Discourse
 **/
-Discourse.UserStreamView = Ember.CollectionView.extend(Discourse.Scrolling, {
+Discourse.UserStreamView = Ember.CollectionView.extend(Discourse.LoadMore, {
   loading: false,
-  elementId: 'user-stream',
   content: Em.computed.alias('controller.model.content'),
-  itemViewClass: Ember.View.extend({ templateName: 'user/stream_item' }),
+  eyelineSelector: '#user-activity .user-stream .item',
+  classNames: ['user-stream'],
 
-  scrolled: function(e) {
-    var eyeline = this.get('eyeline');
-    if (eyeline) { eyeline.update(); }
-  },
+  itemViewClass: Ember.View.extend({
+    templateName: 'user/stream_item',
+    init: function() {
+      this._super();
+      this.set('context', this.get('content'));
+    }
+  }),
 
   loadMore: function() {
     var userStreamView = this;
     if (userStreamView.get('loading')) { return; }
 
-    var stream = this.get('stream');
+    var stream = this.get('controller.model');
     stream.findItems().then(function() {
       userStreamView.set('loading', false);
       userStreamView.get('eyeline').flushRest();
-    });
-  },
-
-  willDestroyElement: function() {
-    this.unbindScrolling();
-  },
-
-  didInsertElement: function() {
-    this.bindScrolling();
-
-    var eyeline = new Discourse.Eyeline('#user-stream .item');
-    this.set('eyeline', eyeline);
-
-    var userStreamView = this;
-    eyeline.on('sawBottom', function() {
-      userStreamView.loadMore();
     });
   }
 });
