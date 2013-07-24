@@ -917,7 +917,7 @@ zh_TW:
 
   upload:
     pasted_image_filename: ""
-    image:
+    images:
       fetch_failure: "抱歉，獲取圖片時發生錯誤。"
       unknown_image_type: "抱歉，你上傳的文件似乎不是一張圖片。"
       size_not_found: "抱歉，我們無法獲取圖片大小，請檢查你的圖片是否已損壞。"

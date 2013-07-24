@@ -384,13 +384,13 @@ ko:
       title: "이미지 삽입"
       from_my_computer: "나의 장치로 부터"
       from_the_web: "웹으로부터"
-      add_image: "이미지 추가"
+      add_title: "이미지 추가"
       remote_title: "원격 이미지"
       remote_tip: "양식에서 http://example.com/image.jpg 의 이미지 주소 입력"
       local_title: "기본 이미지"
       local_tip: "당신의 장치로부터 이미지를 선택하여 클릭해주세요"
-      upload: "업로드"
-      uploading_image: "이미지 업로드중 ..."
+      upload_title: "업로드"
+      uploading: "이미지 업로드중 ..."
 
     search:
       title: "주제, 게시물, 사용자, 카테고리를 검색합니다"
@@ -610,7 +610,7 @@ ko:
         create: "죄송합니다, 귀하의 게시물을 만드는 동안 오류가 발생했습니다. 다시 시도하십시오."
         edit: "죄송합니다, 귀하의 게시물을 수정하는 중에 오류가 발생했습니다. 다시 시도하십시오."
         upload: "죄송합니다, 오류가 업로드하는 파일이 있었다. 다시 시도하십시오."
-        upload_too_large: "죄송합니다, 당신이 업로드하려는 파일이 너무 큽니다. (최대 크기는 {{max_size_kb}}kb), 사이즈를 조정하고 다시 시도해보세요"
+        image_too_large: "죄송합니다, 당신이 업로드하려는 파일이 너무 큽니다. (최대 크기는 {{max_size_kb}}kb), 사이즈를 조정하고 다시 시도해보세요"
         upload_too_many_images: "죄송합니다, 당신은 한 번에 하나의 이미지를 업로드 할 수 있습니다."
         only_images_are_supported: "죄송합니다, 당신은 한 번에 하나의 이미지를 업로드 할 수 있습니다."
 
@@ -900,9 +900,22 @@ ko:
         title: "그룹"
         edit: "Edit 그룹"
         selector_placeholder: "메뉴 추가"
+        name_placeholder: "Group name, no spaces, same as username rule"
+        about: "Edit your group membership and names here"
+        can_not_edit_automatic: "Automatic group membership is determined automatically, administer users to assign roles and trust levels"
+        delete: "삭제"
+        delete_confirm: "이 그룹을 삭제 하시겠습니까?"
+        delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
 
       api:
         title: "API"
+        long_title: "API Information"
+        key: "Key"
+        generate: "Generate API Key"
+        regenerate: "Regenerate API Key"
+        info_html: "Your API key will allow you to create and update topics using JSON calls."
+        note_html: "Keep this key <strong>secret</strong>, all users that have it may create arbitrary posts on the forum as any user."
+
       customize:
         title: "사용자 지정"
         long_title: "사이트 사용자 지정"

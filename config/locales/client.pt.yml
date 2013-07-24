@@ -304,11 +304,11 @@ pt:
     upload_selector:
       from_my_computer: "Do meu dispositivo"
       from_the_web: "Da internet"
-      add_image: "Adicionar Imagem"
+      add_title: "Adicionar Imagem"
       remote_tip: "insere o endereço de uma imagem no formato http://example.com/image.jpg"
       local_tip: "clica para selecionar uma imagem no teu dispositivo."
-      upload: "Enviar"
-      upload_file: "A enviar imagem"
+      upload_title: "Enviar"
+      uploading: "A enviar imagem"
 
     search:
       title: "procurar por tópicos, posts, utilizadores, ou categorias"
@@ -622,6 +622,26 @@ pt:
         delete: "Apagar Post"
         delete_title: "apagar post (se for o primeiro post, apagar tópico)"
         flagged_by: "Flagged por"
+
+      groups:
+        title: "Groups"
+        edit: "Edit Groups"
+        selector_placeholder: "add users"
+        name_placeholder: "Group name, no spaces, same as username rule"
+        about: "Edit your group membership and names here"
+        can_not_edit_automatic: "Automatic group membership is determined automatically, administer users to assign roles and trust levels"
+        delete: "Delete"
+        delete_confirm: "Delete this group?"
+        delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
+
+      api:
+        title: "API"
+        long_title: "API Information"
+        key: "Key"
+        generate: "Generate API Key"
+        regenerate: "Regenerate API Key"
+        info_html: "Your API key will allow you to create and update topics using JSON calls."
+        note_html: "Keep this key <strong>secret</strong>, all users that have it may create arbitrary posts on the forum as any user."
 
       customize:
         title: "Personalizar"

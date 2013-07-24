@@ -933,6 +933,7 @@ en:
   unsubscribe_link: "To unsubscribe from these emails, visit your [user preferences](%{user_preferences_url})."
 
   user_notifications:
+    previous_discussion: "Previous discussion"
     unsubscribe:
       title: "Unsubscribe"
       description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
@@ -940,7 +941,6 @@ en:
     reply_by_email: "To respond, reply to this email or visit %{base_url}%{url} in your browser."
     visit_link_to_respond: "To respond, visit %{base_url}%{url} in your browser."
 
-    post_history: "Post History"
     posted_by: "Posted by %{username} on %{post_date}"
 
     user_invited_to_private_message:
@@ -953,8 +953,6 @@ en:
     user_replied:
       subject_template: "[%{site_name}] new reply to your post in '%{topic_title}'"
       text_body_template: |
-        %{username} replied to your post in '%{topic_title}' on %{site_name}:
-
         %{message}
 
         %{context}
@@ -965,8 +963,6 @@ en:
     user_quoted:
       subject_template: "[%{site_name}] %{username} quoted you in '%{topic_title}'"
       text_body_template: |
-        %{username} quoted you in '%{topic_title}' on %{site_name}:
-
         %{message}
 
         %{context}
@@ -977,8 +973,6 @@ en:
     user_mentioned:
       subject_template: "[%{site_name}] %{username} mentioned you in '%{topic_title}'"
       text_body_template: |
-        ### %{username} mentioned you in '%{topic_title}' on %{site_name}:
-
         %{message}
 
         %{context}
@@ -989,8 +983,6 @@ en:
     user_posted:
       subject_template: "[%{site_name}] new post in '%{topic_title}'"
       text_body_template: |
-        %{username} posted in '%{topic_title}' on %{site_name}:
-
         %{message}
 
         %{context}
@@ -1089,7 +1081,10 @@ en:
   upload:
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
     pasted_image_filename: "Pasted image"
-    image:
+    attachments:
+      too_large: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size_kb}%kb)."
+    images:
+      too_large: "Sorry, the image you are trying to upload is too big (maximum size is %{max_size_kb}%kb), please resize it and try again."
       fetch_failure: "Sorry, there has been an error while fetching the image."
       unknown_image_type: "Sorry, but the file you tried to upload doesn't appear to be an image."
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"

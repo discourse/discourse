@@ -9,7 +9,7 @@ class SessionController < ApplicationController
     params.require(:login)
     params.require(:password)
 
-    login = params[:login]
+    login = params[:login].strip
     login = login[1..-1] if login[0] == "@"
 
     if login =~ /@/

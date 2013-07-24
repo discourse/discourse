@@ -18,31 +18,31 @@ Discourse.Eyeline = function Eyeline(selector) {
 
 
 /**
-  Call this to analyze the positions of all the nodes in a set 
+  Call this to analyze the positions of all the nodes in a set
 
-  returns: a hash with top, bottom and onScreen items 
+  returns: a hash with top, bottom and onScreen items
           {top: , bottom:, onScreen:}
  **/
 Discourse.Eyeline.analyze = function(rows) {
-  var current, goingUp, i, increment, offset, 
+  var current, goingUp, i, increment, offset,
       winHeight, winOffset, detected, onScreen,
       bottom, top, outerHeight;
-  
+
   if (rows.length === 0) return;
-  
+
   i = parseInt(rows.length / 2, 10);
   increment = parseInt(rows.length / 4, 10);
   goingUp = undefined;
   winOffset = window.pageYOffset || $('html').scrollTop();
   winHeight = window.innerHeight || $(window).height();
-  
+
   while (true) {
     if (i === 0 || (i >= rows.length - 1)) {
       break;
     }
     current = $(rows[i]);
     offset = current.offset();
-   
+
     if (offset.top - winHeight < winOffset) {
       if (offset.top + current.outerHeight() - window.innerHeight > winOffset) {
         break;
@@ -69,22 +69,22 @@ Discourse.Eyeline.analyze = function(rows) {
       goingUp = undefined;
     }
   }
-  
+
   onScreen = [];
   bottom = i;
   // quick analysis of whats on screen
   while(true) {
     if(i < 0) { break;}
-    
+
     current = $(rows[i]);
     offset = current.offset();
     outerHeight = current.outerHeight();
-    
+
     // on screen
     if(offset.top > winOffset && offset.top + outerHeight < winOffset + winHeight) {
       onScreen.unshift(i);
     } else {
-      
+
       if(offset.top < winOffset) {
         top = i;
         break;
@@ -94,7 +94,7 @@ Discourse.Eyeline.analyze = function(rows) {
     }
     i -=1;
   }
-  
+
   return({top: top, bottom: bottom, onScreen: onScreen});
 
 };
@@ -169,11 +169,10 @@ Discourse.Eyeline.prototype.update = function() {
   @method flushRest
 **/
 Discourse.Eyeline.prototype.flushRest = function() {
-  var _this = this;
+  var eyeline = this;
   return $(this.selector).each(function(i, elem) {
-    var $elem;
-    $elem = $(elem);
-    return _this.trigger('saw', { detail: $elem });
+    var $elem = $(elem);
+    return eyeline.trigger('saw', { detail: $elem });
   });
 };
 

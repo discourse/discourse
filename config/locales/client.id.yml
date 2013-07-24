@@ -314,11 +314,11 @@ id:
       title: "Insert Image"
       from_my_computer: "From My Device"
       from_the_web: "From The Web"
-      add_image: "Add Image"
+      add_title: "Add Image"
       remote_tip: "enter address of an image in the form http://example.com/image.jpg"
       local_tip: "click to select an image from your device."
-      upload: "Upload"
-      upload_file: "Uploading image"
+      upload_title: "Upload"
+      uploading: "Uploading image"
 
     search:
       title: "search for topics, posts, users, or categories"
@@ -666,6 +666,26 @@ id:
         delete: "Delete Post"
         delete_title: "delete post (if its the first post delete topic)"
         flagged_by: "Flagged by"
+
+      groups:
+        title: "Groups"
+        edit: "Edit Groups"
+        selector_placeholder: "add users"
+        name_placeholder: "Group name, no spaces, same as username rule"
+        about: "Edit your group membership and names here"
+        can_not_edit_automatic: "Automatic group membership is determined automatically, administer users to assign roles and trust levels"
+        delete: "Delete"
+        delete_confirm: "Delete this group?"
+        delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
+
+      api:
+        title: "API"
+        long_title: "API Information"
+        key: "Key"
+        generate: "Generate API Key"
+        regenerate: "Regenerate API Key"
+        info_html: "Your API key will allow you to create and update topics using JSON calls."
+        note_html: "Keep this key <strong>secret</strong>, all users that have it may create arbitrary posts on the forum as any user."
 
       customize:
         title: "Customize"

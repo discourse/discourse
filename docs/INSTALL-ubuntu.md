@@ -137,6 +137,11 @@ Continue with Discourse installation
 
     # Build and install ruby
     rvm install 2.0.0
+    
+    # Use installed ruby as default
+    rvm use 2.0.0 --default
+    
+    # Install bundler
     gem install bundler
 
     # Pull down the latest release

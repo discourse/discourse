@@ -43,7 +43,7 @@ class Upload < ActiveRecord::Base
     end
   end
 
-  def self.create_for(user_id, file)
+  def self.create_for(user_id, file, filesize)
     # compute the sha
     sha1 = Digest::SHA1.file(file.tempfile).hexdigest
     # check if the file has already been uploaded
@@ -61,7 +61,7 @@ class Upload < ActiveRecord::Base
       upload = Upload.create!({
         user_id: user_id,
         original_filename: file.original_filename,
-        filesize: File.size(file.tempfile),
+        filesize: filesize,
         sha1: sha1,
         url: "",
         width: width,

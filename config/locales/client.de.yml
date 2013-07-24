@@ -494,13 +494,13 @@ de:
       title: "Bild einfügen"
       from_my_computer: "von meinem Gerät"
       from_the_web: "aus dem Web"
-      add_image: "Bild hinzufügen"
+      add_title: "Bild hinzufügen"
       remote_title: "Entferntes Bild"
       remote_tip: "Gib die Adresse eines Bildes wie folgt ein: http://example.com/image.jpg"
       local_title: "Lokales Bild"
       local_tip: "Klicke hier, um ein Bild von deinem Gerät zu wählen."
-      upload: "Hochladen"
-      upload_file: "Bild wird hochgeladen"
+      upload_title: "Hochladen"
+      uploading: "Bild wird hochgeladen"
 
     search:
       title: "Such nach Themen, Beiträgen, Nutzern oder Kategorien"
@@ -762,7 +762,7 @@ de:
         create: "Entschuldige, es gab einen Fehler beim Anlegen des Beitrags. Bitte versuche es noch einmal."
         edit: "Entschuldige, es gab einen Fehler beim Bearbeiten des Beitrags. Bitte versuche es noch einmal."
         upload: "Entschuldige, es gab einen Fehler beim Hochladen der Datei. Bitte versuche es noch einmal."
-        upload_too_large: "Entschuldige, die Datei die du hochladen wolltest ist zu groß (Maximalgröße {{max_size_kb}}kb), bitte reduziere die Dateigröße und versuche es nochmal."
+        image_too_large: "Entschuldige, die Datei die du hochladen wolltest ist zu groß (Maximalgröße {{max_size_kb}}kb), bitte reduziere die Dateigröße und versuche es nochmal."
 
       abandon: "Willst Du diesen Beitrag wirklich verwerfen?"
 
@@ -1092,6 +1092,9 @@ de:
         name_placeholder: "Gruppenname, keine Leerzeichen, gleiche Regel wie beim Benutzernamen"
         about: "Hier kannst du Gruppenzugehörigkeiten und Gruppennamen bearbeiten."
         can_not_edit_automatic: "Automatische Gruppenzugehörigkeiten können nicht bearbeitet werden. Bearbeite Benutzer, um Rollen und Vertrauensstufen einzustellen."
+        delete: "Löschen"
+        delete_confirm: "Diese gruppe löschen?"
+        delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
 
       api:
         title: "API"

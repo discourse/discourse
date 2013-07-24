@@ -408,6 +408,21 @@ Discourse.PostStream = Em.Object.extend({
   },
 
   /**
+    Removes posts from the stream.
+
+    @method removePosts
+    @param {Array} posts the collection of posts to remove
+  **/
+  removePosts: function(posts) {
+    if (Em.isEmpty(posts)) { return; }
+
+    var postIds = posts.map(function (p) { return p.get('id'); });
+
+    this.get('stream').removeObjects(postIds);
+    this.get('posts').removeObjects(posts);
+  },
+
+  /**
     Returns a post from the identity map if it's been inserted.
 
     @method findLoadedPost

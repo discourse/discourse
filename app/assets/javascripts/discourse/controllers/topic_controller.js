@@ -184,7 +184,7 @@ Discourse.TopicController = Discourse.ObjectController.extend(Discourse.Selected
 
         var selectedPosts = topicController.get('selectedPosts');
         Discourse.Post.deleteMany(selectedPosts);
-        topicController.get('content.posts').removeObjects(selectedPosts);
+        topicController.get('model.postStream').removePosts(selectedPosts);
         topicController.toggleMultiSelect();
       }
     });

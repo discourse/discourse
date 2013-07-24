@@ -1,0 +1,22 @@
+<table cellspacing="0" cellpadding="0" border="0" style='margin-bottom:20px;max-width:761px'>
+  <tbody>
+    <tr>
+      <td style='padding-right:10px;vertical-align:top;'>
+        <img width="45" height="45" src="<%= post.user.small_avatar_url%>" class="avatar" title="<%= post.user.username%>">
+      </td>
+      <td style="width: 100%">
+        <table cellspacing="0" cellpadding="0" border="0">
+          <tbody>
+            <tr>
+              <td style="font-size:13px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;padding-right:10px;">
+                <a style="color:#3b5998;text-decoration:none;font-weight:bold" href="<%=Discourse.base_url%>/users/<%= post.user.username_lower%>" target="_blank"><%= post.user.username %></a>
+              </td>
+              <td style="text-align:right;color:#999999;padding-right:5px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;font-size:11px"> <%= l post.created_at, format: :short_no_year %> </td>
+            </tr>
+          </tbody>
+        </table>
+        <%= correct_top_margin post.cooked.html_safe, "5px" %>
+      </td>
+    </tr>
+  </tbody>
+</table>

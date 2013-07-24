@@ -23,9 +23,19 @@ Discourse.AdminDashboardRoute = Discourse.Route.extend({
         _.each(d.reports,function(report){
           c.set(report.type, Discourse.Report.create(report));
         });
-        _.each(['admins', 'moderators', 'blocked', 'banned', 'top_referrers', 'top_traffic_sources', 'top_referred_topics'], function(x) {
+
+        var topReferrers = d.top_referrers;
+        if (topReferrers && topReferrers.data) {
+          d.top_referrers.data = topReferrers.data.map(function (user) {
+            return Discourse.AdminUser.create(user);
+          });
+          c.set('top_referrers', topReferrers);
+        }
+
+        ['admins', 'moderators', 'blocked', 'banned', 'top_traffic_sources', 'top_referred_topics'].forEach(function(x) {
           c.set(x, d[x]);
         });
+
         c.set('loading', false);
       });
     }

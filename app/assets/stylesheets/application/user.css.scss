@@ -237,14 +237,11 @@
   }
 }
 
-#user-stream-bottom {
-  margin-bottom: 50px;
-  clear: both;
-}
-
 #user-stream {
   width: 840px;
   float: left;
+  margin-bottom: 50px;
+
   .excerpt {
     margin: 5px 0px;
     font-size: 13px;

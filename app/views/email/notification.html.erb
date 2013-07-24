@@ -1,0 +1,12 @@
+<%= render :partial => 'email/post', :locals => {:post => post} %>
+
+<% if context_posts.present? %>
+  <hr>
+  <h4 style='font-size: 17px; color: #444;'><%= t "user_notifications.previous_discussion" %></h4>
+
+  <% context_posts.each do |p| %>
+  <%= render :partial => 'email/post', :locals => {:post => p} %>
+  <% end %>
+<% end %>
+
+<hr>

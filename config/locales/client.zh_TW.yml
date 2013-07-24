@@ -419,13 +419,13 @@ zh_TW:
       title: "插入圖片"
       from_my_computer: "來自我的設備"
       from_the_web: "來自網絡"
-      add_image: "添加圖片"
+      add_title: "添加圖片"
       remote_title: "網絡圖片"
       remote_tip: "輸入圖片網絡，格式爲：http://example.com/image.jpg"
       local_title: "本地圖片"
       local_tip: "點擊從你的設備中選擇一張圖片。"
-      upload: "上傳"
-      upload_file: "上傳圖片中"
+      upload_title: "上傳"
+      uploading: "上傳圖片中"
 
     search:
       title: "搜索主題、帖子、用戶或分類"
@@ -660,7 +660,7 @@ zh_TW:
         create: "抱歉，在創建你的帖子時發生了錯誤。請重試。"
         edit: "抱歉，在編輯你的帖子時發生了錯誤。請重試。"
         upload: "抱歉，在上傳文件時發生了錯誤。請重試。"
-        upload_too_large: "抱歉，你上傳的文件太大了（最大不能超過 {{max_size_kb}}kb），請調整文件大小後重新上傳。"
+        image_too_large: "抱歉，你上傳的文件太大了（最大不能超過 {{max_size_kb}}kb），請調整文件大小後重新上傳。"
         too_many_uploads: "抱歉, 你只能一次上傳一張圖片。"
 
       abandon: "你確定要丟棄你的帖子嗎？"
@@ -958,6 +958,9 @@ zh_TW:
         edit: "編輯群組"
         selector_placeholder: "添加用戶"
         name_placeholder: "組名，不能含有空格，與用戶名規則一致"
+        delete: "刪除"
+        delete_confirm: "删除这个小组吗？"
+        delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
 
       api:
         title: "應用開發接口（API）"

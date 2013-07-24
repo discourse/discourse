@@ -430,13 +430,13 @@ nb_NO:
       title: "Legg til Bilde"
       from_my_computer: "Fra Min Enhet"
       from_the_web: "Fra Nettet"
-      add_image: "Legg til Bilde"
+      add_title: "Legg til Bilde"
       remote_title: "eksternt bilde"
       remote_tip: "skriv inn addressen til et bilde, f.eks. http://example.com/image.jpg"
       local_title: "lokalt bilde"
       local_tip: "klikk for å velge et bilde fra din enhet."
-      upload: "Last opp"
-      upload_file: "Laster opp bilde"
+      upload_title: "Last opp"
+      uploading: "Laster opp bilde"
 
     search:
       title: "søk etter emner, innlegg, brukere eller kategorier"
@@ -680,7 +680,7 @@ nb_NO:
         create: "Beklager, det oppstod en feil ved å publisere ditt innlegg. Vennligst prøv igjen."
         edit: "Beklager, det oppstod en feil ved redigeringen av ditt innlegg. Vennligst prøv igjen."
         upload: "Sorry, there was an error uploading that file. Please try again."
-        upload_too_large: "Beklager, filen du prøve å laste opp er for stor (maks størrelse er {{max_size_kb}}kb), vennligst reduser størrelsen og prøv igjen."
+        image_too_large: "Beklager, filen du prøve å laste opp er for stor (maks størrelse er {{max_size_kb}}kb), vennligst reduser størrelsen og prøv igjen."
         too_many_uploads: "Beklager, du kan bare laste opp ett bilde om gangen."
 
       abandon: "Er du sikker på at du vil forlate innlegget ditt?"
@@ -979,6 +979,11 @@ nb_NO:
         edit: "Rediger Grupper"
         selector_placeholder: "legg til brukere"
         name_placeholder: "Gruppenavn, ingen mellomrom, samme som reglene for brukernavn"
+        about: "Edit your group membership and names here"
+        can_not_edit_automatic: "Automatic group membership is determined automatically, administer users to assign roles and trust levels"
+        delete: "Slett"
+        delete_confirm: "Slette denne grupper?"
+        delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
 
       api:
         title: "API"

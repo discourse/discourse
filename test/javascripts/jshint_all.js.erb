@@ -165,6 +165,8 @@ var jsHintOpts = {
         ok = false if (filename =~ ig)
       end
 
+      depend_on filename
+
       result << "qHint('#{filename}', '/assets/#{filename}', jsHintOpts);\n" if ok
 
     end

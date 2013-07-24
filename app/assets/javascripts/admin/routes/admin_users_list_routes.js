@@ -9,7 +9,18 @@
 Discourse.AdminUsersListRoute = Discourse.Route.extend({
   renderTemplate: function() {
     this.render('admin/templates/users_list', {into: 'admin/templates/admin'});
-  },
+  }
+});
+
+/**
+  Index should just redirect to active
+
+  @class AdminUsersIndexRoute
+  @extends Discourse.Route
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.AdminUsersListIndexRoute = Discourse.Route.extend({
   redirect: function() {
     this.transitionTo('adminUsersList.active');
   }

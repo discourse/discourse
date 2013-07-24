@@ -490,13 +490,13 @@ nl:
       title: Voeg afbeelding toe
       from_my_computer: Vanaf mijn apparaat
       from_the_web: Vanaf het web
-      add_image: Voeg afbeelding toe
+      add_title: Voeg afbeelding toe
       remote_title: externe afbeelding
       remote_tip: "vul een internetadres in van een afbeelding in deze vorm: http://example.com/image.jpg"
       local_title: lokale afbeelding
       local_tip: "klik om een afbeelding vanaf je apparaat te selecteren."
-      upload: Uploaden
-      upload_file: Afbeelding uploaden
+      upload_title: Uploaden
+      uploading: Afbeelding uploaden
 
     search:
       title: "zoek naar topics, posts, leden of categoriëen"
@@ -757,7 +757,7 @@ nl:
         create: "Sorry, er is iets misgegaan bij het plaatsen van je bericht. Probeer het nog eens."
         edit: "Sorry, er is iets misgegaan bij het bewerken van je bericht. Probeer het nog eens."
         upload: "Sorry, er is iets misgegaan bij het uploaden van je bestand. Probeer het nog eens."
-        upload_too_large: "Sorry, het bestand dat je wil uploaden is te groot (maximum grootte is {{max_size_kb}}kb), verklein het bestand en probeer het opnieuw."
+        image_too_large: "Sorry, het bestand dat je wil uploaden is te groot (maximum grootte is {{max_size_kb}}kb), verklein het bestand en probeer het opnieuw."
         too_many_uploads: "Sorry, je kan maar één afbeelding tegelijk uploaden."
         upload_not_authorized: "Sorry, je mag dat type bestand niet uploaden (toegestane extensies: {{authorized_extensions}})."
         upload_not_allowed_for_new_user: "Sorry, nieuwe gebruikers mogen nog geen afbeeldingen uploaden."
@@ -1091,6 +1091,9 @@ nl:
         name_placeholder: "Groepsnaam, geen spaties, zelfde regels als bij een gebruikersnaam"
         about: "Wijzig hier je deelname aan groepen en je namen"
         can_not_edit_automatic: "Automatisch lidmaatschap van groepen wordt automatisch bepaald. Beheer rollen en trust levels van gebruikers"
+        delete: Verwijder
+        delete_confirm: Verwijder deze groepen?
+        delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
 
       api:
         title: API

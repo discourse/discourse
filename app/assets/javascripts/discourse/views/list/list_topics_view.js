@@ -76,9 +76,9 @@ Discourse.ListTopicsView = Discourse.View.extend(Discourse.Scrolling, {
 
   // When the topic list is scrolled
   scrolled: function(e) {
-    var _ref;
     this.saveScrollPos();
-    return (_ref = this.get('eyeline')) ? _ref.update() : void 0;
+    var eyeline = this.get('eyeline');
+    if (eyeline) { eyeline.update(); }
   }
 
 
