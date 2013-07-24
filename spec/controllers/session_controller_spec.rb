@@ -13,7 +13,7 @@ describe SessionController do
       end
 
       it "raises an error when the login isn't present" do
-	lambda { xhr :post, :create }.should raise_error(ActionController::ParameterMissing)
+        lambda { xhr :post, :create }.should raise_error(ActionController::ParameterMissing)
       end
 
       describe 'invalid password' do
@@ -69,6 +69,21 @@ describe SessionController do
 
         it 'sets a session id' do
           session[:current_user_id].should == user.id
+        end
+      end
+
+      context 'login has leading and trailing space' do
+        let(:username) { " #{user.username} " }
+        let(:email) { " #{user.email} " }
+
+        it "strips spaces from the username" do
+          xhr :post, :create, login: username, password: 'myawesomepassword'
+          ::JSON.parse(response.body)['error'].should_not be_present
+        end
+
+        it "strips spaces from the email" do
+          xhr :post, :create, login: email, password: 'myawesomepassword'
+          ::JSON.parse(response.body)['error'].should_not be_present
         end
       end
 
