@@ -117,10 +117,14 @@ class Admin::UsersController < Admin::AdminController
   def destroy
     user = User.where(id: params[:id]).first
     guardian.ensure_can_delete_user!(user)
-    if UserDestroyer.new(current_user).destroy(user)
-      render json: {deleted: true}
-    else
-      render json: {deleted: false, user: AdminDetailedUserSerializer.new(user, root: false).as_json}
+    begin
+      if UserDestroyer.new(current_user).destroy(user, params.slice(:delete_posts))
+        render json: {deleted: true}
+      else
+        render json: {deleted: false, user: AdminDetailedUserSerializer.new(user, root: false).as_json}
+      end
+    rescue UserDestroyer::PostsExistError
+      raise Discourse::InvalidAccess.new("User #{user.username} has #{user.post_count} posts, so can't be deleted.")
     end
   end
 

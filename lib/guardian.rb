@@ -150,8 +150,8 @@ class Guardian
     user && is_staff?
   end
 
-  def can_delete_user?(user_to_delete)
-    can_administer?(user_to_delete) && user_to_delete.post_count <= 0
+  def can_delete_user?(user)
+    can_administer?(user)
   end
 
   # Can we see who acted on a post in a particular way?

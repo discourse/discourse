@@ -1008,9 +1008,9 @@ describe Guardian do
     end
 
     context "for admins" do
-      it "is false if user has posts" do
-        Fabricate(:post, user: user)
-        Guardian.new(admin).can_delete_user?(user).should be_false
+      it "is true if user has posts" do # UserDestroyer is responsible for checking for posts
+        user.stubs(:post_count).returns(1)
+        Guardian.new(admin).can_delete_user?(user).should be_true
       end
 
       it "is true if user has no posts" do
