@@ -15,13 +15,21 @@ module Trashable
       #
       # with this in place Post.limit(10).with_deleted, will work as expected
       #
-      scope = self.scoped.with_default_scope
+      if rails4?
+        scope = self.all.with_default_scope
+      else
+        scope = self.scoped.with_default_scope
+      end
       scope.where_values.delete(with_deleted_scope_sql)
       scope
     end
 
     def with_deleted_scope_sql
-      scoped.table[:deleted_at].eq(nil).to_sql
+      if rails4?
+        all.table[:deleted_at].eq(nil).to_sql
+      else
+        scoped.table[:deleted_at].eq(nil).to_sql
+      end
     end
   end
 

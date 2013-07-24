@@ -468,7 +468,7 @@ class Topic < ActiveRecord::Base
 
   # Chooses which topic users to feature
   def feature_topic_users(args={})
-    reload
+    reload unless rails4?
 
     # Don't include the OP or the last poster
     to_feature = posts.where('user_id NOT IN (?, ?)', user_id, last_post_user_id)

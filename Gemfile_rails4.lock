@@ -90,13 +90,6 @@ GIT
     email_reply_parser (0.6)
 
 GIT
-  remote: https://github.com/rails-api/active_model_serializers.git
-  revision: 8ac4bf90067eef442a6208848f86e55892d724f1
-  specs:
-    active_model_serializers (0.8.1)
-      activemodel (>= 3.2)
-
-GIT
   remote: https://github.com/zhangyuan/vestal_versions
   revision: 0ea75ec4e269b5a9e609639919ade0f36381a446
   specs:
@@ -139,6 +132,8 @@ GEM
       rack-test (~> 0.6.2)
     actionpack-action_caching (1.0.0)
       actionpack (>= 4.0.0.beta, < 5.0)
+    active_model_serializers (0.8.1)
+      activemodel (>= 3.0)
     activemodel (4.0.0)
       activesupport (= 4.0.0)
       builder (~> 3.1.0)
@@ -318,8 +313,6 @@ GEM
     pg (0.15.1)
     polyglot (0.3.3)
     progress (2.4.0)
-    protected_attributes (1.0.3)
-      activemodel (>= 4.0.0, < 5.0)
     pry (0.9.12.2)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
@@ -477,7 +470,7 @@ PLATFORMS
 
 DEPENDENCIES
   actionpack-action_caching
-  active_model_serializers!
+  active_model_serializers
   airbrake (= 3.1.2)
   annotate!
   barber
@@ -485,7 +478,7 @@ DEPENDENCIES
   binding_of_caller
   certified
   clockwork
-  diffy
+  diffy (>= 3.0)
   discourse_emoji!
   discourse_plugin!
   em-redis
@@ -525,7 +518,6 @@ DEPENDENCIES
   omniauth-twitter
   openid-redis-store
   pg
-  protected_attributes
   pry-nav
   pry-rails
   qunit-rails
