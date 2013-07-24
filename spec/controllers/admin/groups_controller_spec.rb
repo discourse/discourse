@@ -48,19 +48,33 @@ describe Admin::GroupsController do
     end
   end
 
-  it "is able to create a group" do
-    xhr :post, :create, group: {
-      usernames: @admin.username,
-      name: "bob"
-    }
+  context '.create' do
+    let(:usernames) { @admin.username }
 
-    response.status.should == 200
+    it "is able to create a group" do
+      xhr :post, :create, group: {
+        usernames: usernames,
+        name: "bob"
+      }
 
-    groups = Group.where(name: "bob").to_a
+      response.status.should == 200
 
-    groups.count.should == 1
-    groups[0].usernames.should == @admin.username
-    groups[0].name.should == "bob"
+      groups = Group.where(name: "bob").to_a
+
+      groups.count.should == 1
+      groups[0].usernames.should == usernames
+      groups[0].name.should == "bob"
+    end
+
+    it "strips spaces from group name" do
+      lambda {
+        xhr :post, :create, group: {
+          usernames: usernames,
+          name: " bob "
+        }
+      }.should_not raise_error(ActiveRecord::RecordInvalid)
+      Group.where(name: "bob").count.should == 1
+    end
   end
 
   it "is able to update group members" do
