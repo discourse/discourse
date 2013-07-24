@@ -60,12 +60,19 @@ Discourse.Group = Discourse.Model.extend({
         name: this.get('name'),
         usernames: this.get('usernames')
       }
-    }}).then(function(r){
+    }}).then(function(resp) {
       group.set('disableSave', false);
-      group.set('id', r.id);
+      group.set('id', resp.id);
+    }, function (error) {
+      group.set('disableSave', false);
+      if (error && error.responseText) {
+        bootbox.alert($.parseJSON(error.responseText).errors);
+      }
+      else {
+        bootbox.alert(I18n.t('generic_error'));
+      }
     });
   },
-
 
   save: function(){
     var group = this;

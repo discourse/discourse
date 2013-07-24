@@ -33,8 +33,11 @@ class Admin::GroupsController < Admin::AdminController
     group = Group.new
     group.name = params[:group][:name]
     group.usernames = params[:group][:usernames] if params[:group][:usernames]
-    group.save!
-    render_serialized(group, BasicGroupSerializer)
+    if group.save
+      render_serialized(group, BasicGroupSerializer)
+    else
+      render_json_error group
+    end
   end
 
   def destroy
