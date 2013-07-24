@@ -1004,7 +1004,7 @@ de:
 
   upload:
     pasted_image_filename: ""
-    image:
+    images:
       fetch_failure: "Entschuldige, beim Laden des Bildes ist ein Fehler aufgetreten."
       unknown_image_type: "Entschuldige, aber die Datei die Du hochladen möchtest schein kein Bild zu sein."
       size_not_found: "Entschuldige, aber wir konnten die Grösse des Bildes nicht feststellen. Vielleicht ist das Bild defekt?"

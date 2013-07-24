@@ -962,7 +962,10 @@ fr:
 
   upload:
     pasted_image_filename: "Image collée"
-    image:
+    attachments:
+      too_large: "Désolé, le fichier que vous êtes en train d'uploader est trop grand (la taille maximum est %{max_size_kb}% ko)."
+    images:
+      too_large: "Désolé, l'image que vous êtes en train d'uploader est trop grande (la taille maximum est %{max_size_kb}% ko)."
       fetch_failure: "Désolé, une erreur s'est produite lorsque nous avons essayé de récupérer l'image."
       unknown_image_type: "Désolé, mais le fichier que vous essayez d'envoyer ne semble pas être une image."
       size_not_found: "Désolé, mais nous n'avons pas réussit à déterminer la taille de l'image. Peut-être que l'image est corrompue ?"

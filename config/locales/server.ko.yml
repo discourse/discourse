@@ -932,7 +932,7 @@ ko:
   deleted: 'deleted'
 
   upload:
-    image:
+    images:
       fetch_failure: "Sorry, there has been an error while fetching the image."
       unknown_image_type: "Sorry, but the file you tried to upload doesn't appear to be an image."
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"

@@ -7,9 +7,9 @@ test("emailValid", function() {
   ok(utils.emailValid('bob@EXAMPLE.com'), "allows upper case in the email domain");
 });
 
-var validUpload = utils.validateFilesForUpload;
+var validUpload = utils.validateUploadedFiles;
 
-test("validateFilesForUpload", function() {
+test("validateUploadedFiles", function() {
   ok(!validUpload(null), "no files are invalid");
   ok(!validUpload(undefined), "undefined files are invalid");
   ok(!validUpload([]), "empty array of files is invalid");
@@ -55,7 +55,7 @@ test("prevents files that are too big from being uploaded", function() {
   this.stub(bootbox, "alert");
 
   ok(!validUpload([image]));
-  ok(bootbox.alert.calledWith(I18n.t('post.errors.upload_too_large', { max_size_kb: 5 })));
+  ok(bootbox.alert.calledWith(I18n.t('post.errors.image_too_large', { max_size_kb: 5 })));
 });
 
 var dummyBlob = function() {
@@ -81,17 +81,6 @@ test("allows valid uploads to go through", function() {
   ok(validUpload([pastedImage]));
 
   ok(!bootbox.alert.calledOnce);
-});
-
-var isAuthorized = function (filename) {
-  return utils.isAuthorizedUpload({ name: filename });
-};
-
-test("isAuthorizedUpload", function() {
-  ok(isAuthorized("image.png"));
-  ok(isAuthorized("image.jpg"));
-  ok(!isAuthorized("image.txt"));
-  ok(!isAuthorized(""));
 });
 
 var getUploadMarkdown = function(filename) {

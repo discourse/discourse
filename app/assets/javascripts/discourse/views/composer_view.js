@@ -252,7 +252,7 @@ Discourse.ComposerView = Discourse.View.extend({
 
     // submit - this event is triggered for each upload
     $uploadTarget.on('fileuploadsubmit', function (e, data) {
-      var result = Discourse.Utilities.validateFilesForUpload(data.files);
+      var result = Discourse.Utilities.validateUploadedFiles(data.files);
       // reset upload status when everything is ok
       if (result) composerView.setProperties({ uploadProgress: 0, isUploading: true });
       return result;
@@ -300,10 +300,11 @@ Discourse.ComposerView = Discourse.View.extend({
         switch (data.jqXHR.status) {
           // 0 == cancel from the user
           case 0: return;
-          // 413 == entity too large, returned usually from nginx
+          // 413 == entity too large, usually returned from the web server
           case 413:
-            var maxSizeKB = Discourse.Utilities.maxUploadSizeInKB(data.files[0].name);
-            bootbox.alert(I18n.t('post.errors.upload_too_large', { max_size_kb: maxSizeKB }));
+            var type = Discourse.Utilities.isAnImage(data.files[0].name) ? "image" : "attachment";
+            var maxSizeKB = Discourse.SiteSettings['max_' + type + '_size_kb'];
+            bootbox.alert(I18n.t('post.errors.' + type + '_too_large', { max_size_kb: maxSizeKB }));
             return;
           // 415 == media type not authorized
           case 415:

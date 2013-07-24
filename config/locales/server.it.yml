@@ -917,7 +917,7 @@ it:
 
   upload:
     pasted_image_filename: ""
-    image:
+    images:
       fetch_failure: "Spiacente, si è verificato un errore nel recupero dell'immagine."
       unknown_image_type: "Spiacente, ma il file che hai provato a caricare non sembra un'immagine."
       size_not_found: "Spiacente, ma non riusciamo a determinare la dimensione dell'immagine. Probabilmente l'immagine è corrotta?"

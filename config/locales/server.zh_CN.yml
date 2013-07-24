@@ -934,7 +934,7 @@ zh_CN:
 
   upload:
     pasted_image_filename: ""
-    image:
+    images:
       fetch_failure: "抱歉，获取图片時发生错误。"
       unknown_image_type: "抱歉，你上传的文件似乎不是一张图片。"
       size_not_found: "抱歉，我们无法获取图片大小，请检查你的图片是否已损坏。"

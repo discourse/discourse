@@ -41,11 +41,27 @@ describe UploadsController do
 
         context 'when authorized' do
 
-          before { SiteSetting.stubs(:authorized_extensions).returns(".txt") }
+          before { SiteSetting.stubs(:authorized_extensions).returns(".png|.txt") }
 
-          it 'is successful' do
+          it 'is successful with an image' do
+            xhr :post, :create, file: logo
+            response.status.should eq 200
+          end
+
+          it 'is successful with an attachment' do
             xhr :post, :create, file: text_file
             response.status.should eq 200
+          end
+
+          context 'with a big file' do
+
+            before { SiteSetting.stubs(:max_attachment_size_kb).returns(1) }
+
+            it 'rejects the upload' do
+              xhr :post, :create, file: text_file
+              response.status.should eq 413
+            end
+
           end
 
         end

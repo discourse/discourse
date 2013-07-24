@@ -660,7 +660,7 @@ it:
         create: "Spiacenti, si è verificato un errore durante la creazione del tuo post. Per favore, prova di nuovo."
         edit: "Spiacenti, si è verificato un errore durante la modifica del tuo post. Per favore, prova di nuovo."
         upload: "Spiacenti, si è verificato un errore durante il caricamento del file. Per favore, prova di nuovo."
-        upload_too_large: "Spiacenti, il file che stai cercando di caricare è troppo grande (la dimensione massima è {{max_size_kb}}kb), per favore ridimensionalo e prova di nuovo."
+        image_too_large: "Spiacenti, il file che stai cercando di caricare è troppo grande (la dimensione massima è {{max_size_kb}}kb), per favore ridimensionalo e prova di nuovo."
         too_many_uploads: "Spiacenti, puoi caricare un'immagine per volta."
 
       abandon: "Sei sicuro di voler abbandonare il tuo post?"
