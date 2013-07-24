@@ -96,10 +96,14 @@ class UserNotifications < ActionMailer::Base
 
   def email_post_markdown(post)
     result = "[email-indent]\n"
-    result << "#### #{I18n.t('user_notifications.posted_by', username: post.username, post_date: post.created_at.strftime("%m/%d/%Y"))}\n\n"
     result << "#{post.raw}\n\n"
+    result << "#{I18n.t('user_notifications.posted_by', username: post.username, post_date: post.created_at.strftime("%m/%d/%Y"))}\n\n"
     result << "[/email-indent]\n"
     result
+  end
+
+  class UserNotificationRenderer < ActionView::Base
+    include UserNotificationsHelper
   end
 
   def notification_email(user, opts)
@@ -119,11 +123,18 @@ class UserNotifications < ActionMailer::Base
                         .limit(SiteSetting.email_posts_context)
 
     if context_posts.present?
-      context << "---\n### #{I18n.t('user_notifications.post_history')}\n"
+      context << "---\n*#{I18n.t('user_notifications.previous_discussion')}*\n"
       context_posts.each do |cp|
         context << email_post_markdown(cp)
       end
     end
+
+    html = UserNotificationRenderer.new(Rails.configuration.paths["app/views"]).render(
+          template: 'email/notification',
+          format: :html,
+          locals: { context_posts: context_posts, post: @post }
+    )
+
 
     email_opts = {
       topic_title: @notification.data_hash[:topic_title],
@@ -135,7 +146,8 @@ class UserNotifications < ActionMailer::Base
       username: username,
       add_unsubscribe_link: true,
       allow_reply_by_email: opts[:allow_reply_by_email],
-      template: "user_notifications.user_#{notification_type}"
+      template: "user_notifications.user_#{notification_type}",
+      html_override: html
     }
 
     # If we have a display name, change the from address

@@ -934,6 +934,7 @@ en:
   unsubscribe_link: "To unsubscribe from these emails, visit your [user preferences](%{user_preferences_url})."
 
   user_notifications:
+    previous_discussion: "Previous discussion"
     unsubscribe:
       title: "Unsubscribe"
       description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
@@ -941,7 +942,6 @@ en:
     reply_by_email: "To respond, reply to this email or visit %{base_url}%{url} in your browser."
     visit_link_to_respond: "To respond, visit %{base_url}%{url} in your browser."
 
-    post_history: "Post History"
     posted_by: "Posted by %{username} on %{post_date}"
 
     user_invited_to_private_message:
@@ -954,8 +954,6 @@ en:
     user_replied:
       subject_template: "[%{site_name}] new reply to your post in '%{topic_title}'"
       text_body_template: |
-        %{username} replied to your post in '%{topic_title}' on %{site_name}:
-
         %{message}
 
         %{context}
@@ -966,8 +964,6 @@ en:
     user_quoted:
       subject_template: "[%{site_name}] %{username} quoted you in '%{topic_title}'"
       text_body_template: |
-        %{username} quoted you in '%{topic_title}' on %{site_name}:
-
         %{message}
 
         %{context}
@@ -978,8 +974,6 @@ en:
     user_mentioned:
       subject_template: "[%{site_name}] %{username} mentioned you in '%{topic_title}'"
       text_body_template: |
-        ### %{username} mentioned you in '%{topic_title}' on %{site_name}:
-
         %{message}
 
         %{context}
@@ -990,8 +984,6 @@ en:
     user_posted:
       subject_template: "[%{site_name}] new post in '%{topic_title}'"
       text_body_template: |
-        %{username} posted in '%{topic_title}' on %{site_name}:
-
         %{message}
 
         %{context}

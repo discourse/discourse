@@ -32,13 +32,14 @@ module Email
 
       renderer = Email::Renderer.new(@message, opts)
 
-      @message.html_part = Mail::Part.new do
-        content_type 'text/html; charset=UTF-8'
-        body renderer.html
+      unless @message.html_part
+        @message.html_part = Mail::Part.new do
+          content_type 'text/html; charset=UTF-8'
+          body renderer.html
+        end
       end
 
       @message.parts[0].body = @message.parts[0].body.to_s.gsub!(/\[\/?email-indent\]/, '')
-
 
       @message.text_part.content_type = 'text/plain; charset=UTF-8'
 
