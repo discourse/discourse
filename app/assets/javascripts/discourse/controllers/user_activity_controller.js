@@ -49,6 +49,22 @@ Discourse.UserActivityIndexRoute = Discourse.Route.extend({
   }
 });
 
+Discourse.UserIndexRoute = Discourse.UserActivityRoute.extend({
+  renderTemplate: function() {
+    this._super();
+    this.render('user_stream', {into: 'user_activity', outlet: 'activity'});
+  },
+
+  model: function() {
+    return this.modelFor('user').findStream();
+  },
+
+  setupController: function(controller, model) {
+    this.controllerFor('userActivity').set('model', this.modelFor('user'));
+    this.set('model', model)
+  }
+});
+
 // Build all the filter routes
 Object.keys(Discourse.UserAction.TYPES).forEach(function (userAction) {
   Discourse["UserActivity" + userAction.classify() + "Route"] = Discourse.UserActivityIndexRoute.extend({
