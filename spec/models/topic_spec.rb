@@ -661,7 +661,7 @@ describe Topic do
   end
 
   describe 'meta data' do
-    let(:topic) { Fabricate(:topic, meta_data: {hello: 'world'}) }
+    let(:topic) { Fabricate(:topic, meta_data: {'hello' => 'world'}) }
 
     it 'allows us to create a topic with meta data' do
       topic.meta_data['hello'].should == 'world'
@@ -671,7 +671,7 @@ describe Topic do
 
       context 'existing key' do
         before do
-          topic.update_meta_data(hello: 'bane')
+          topic.update_meta_data('hello' => 'bane')
         end
 
         it 'updates the key' do
@@ -681,7 +681,7 @@ describe Topic do
 
       context 'new key' do
         before do
-          topic.update_meta_data(city: 'gotham')
+          topic.update_meta_data('city' => 'gotham')
         end
 
         it 'adds the new key' do

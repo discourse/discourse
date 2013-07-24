@@ -36,7 +36,6 @@ if rails4?
   gem 'rails', '4.0.0'
   gem 'redis-rails', :git => 'git://github.com/SamSaffron/redis-store.git'
   gem 'rails-observers'
-  gem 'protected_attributes'
   gem 'actionpack-action_caching'
   gem 'seed-fu' , github: 'mbleigh/seed-fu'
   gem 'spork-rails', :github => 'sporkrb/spork-rails'
@@ -62,7 +61,7 @@ gem 'redis'
 gem 'hiredis'
 gem 'em-redis'
 
-gem 'active_model_serializers', git: 'https://github.com/rails-api/active_model_serializers.git'
+gem 'active_model_serializers'
 
 # we had issues with latest, stick to the rev till we figure this out
 # PR that makes it all hang together welcome
@@ -120,7 +119,7 @@ gem 'sinatra', require: nil
 gem 'slim'  # required for sidekiq-web
 gem 'therubyracer', require: 'v8'
 gem 'thin', require: false
-gem 'diffy', require: false
+gem 'diffy', '>= 3.0', require: false
 gem 'highline', require: false
 
 # Gem that enables support for plugins. It is required.
