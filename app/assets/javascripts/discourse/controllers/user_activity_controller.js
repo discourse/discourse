@@ -61,7 +61,7 @@ Discourse.UserIndexRoute = Discourse.UserActivityRoute.extend({
 
   setupController: function(controller, model) {
     this.controllerFor('userActivity').set('model', this.modelFor('user'));
-    this.set('model', model)
+    this.set('model', model);
   }
 });
 
