@@ -31,7 +31,7 @@ class Admin::GroupsController < Admin::AdminController
 
   def create
     group = Group.new
-    group.name = params[:group][:name]
+    group.name = params[:group][:name].strip
     group.usernames = params[:group][:usernames] if params[:group][:usernames]
     if group.save
       render_serialized(group, BasicGroupSerializer)
