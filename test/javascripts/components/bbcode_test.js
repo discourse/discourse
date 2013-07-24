@@ -13,6 +13,7 @@ test('basic bbcode', function() {
   format("[s]strikethrough[/s]", "<span class='bbcode-s'>strikethrough</span>", "strikes-through text");
   format("[code]\nx++\n[/code]", "<pre>\nx++\n</pre>", "makes code into pre");
   format("[spoiler]it's a sled[/spoiler]", "<span class=\"spoiler\">it's a sled</span>", "supports spoiler tags");
+  format("[smartass]it's a sled[/smartass]", "<span class=\"smartass\">it's a sled</span>", "supports smartass tags");
   format("[img]http://eviltrout.com/eviltrout.png[/img]", "<img src=\"http://eviltrout.com/eviltrout.png\">", "links images");
   format("[url]http://bettercallsaul.com[/url]", "<a href=\"http://bettercallsaul.com\">http://bettercallsaul.com</a>", "supports [url] without a title");
   format("[email]eviltrout@mailinator.com[/email]", "<a href=\"mailto:eviltrout@mailinator.com\">eviltrout@mailinator.com</a>", "supports [email] without a title");
