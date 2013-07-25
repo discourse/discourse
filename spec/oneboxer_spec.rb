@@ -23,6 +23,7 @@ describe "Dynamic Discourse::Oneboxer" do
     end
 
     it 'returns something when matched' do
+      pending("we don't know yet what url this method will result in")
       Discourse::Oneboxer.onebox_for_url(@dummy_onebox_url).should be_present
     end
 
