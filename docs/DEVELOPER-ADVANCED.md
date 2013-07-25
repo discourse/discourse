@@ -7,11 +7,12 @@ to rails, you are likely much better off with our **[Discourse Vagrant Developer
 
 1. Install and configure PostgreSQL 9.1+. Make sure that the server's messages language is English; this is [required](https://github.com/rails/rails/blob/3006c59bc7a50c925f6b744447f1d94533a64241/activerecord/lib/active_record/connection_adapters/postgresql_adapter.rb#L1140) by the ActiveRecord Postgres adapter.
 2. Install and configure Redis 2+
-3. Install Ruby 1.9.3 and Bundler.
-3. Clone the project.
-4. Create development and test databases in postgres.
-5. Copy `config/database.yml.development-sample` and `config/redis.yml.sample` to `config/database.yml` and `config/redis.yml` and input the correct values to point to your postgres and redis instances.
-6. Install the seed data to set up an admin account and meta topic: `psql DATABASE_NAME < pg_dumps/production-image.sql`
+3. Install libxml2, g++, and make.
+4. Install Ruby 1.9.3 and Bundler.
+5. Clone the project and bundle.
+6. Create development and test databases in postgres.
+7. Copy `config/database.yml.development-sample` and `config/redis.yml.sample` to `config/database.yml` and `config/redis.yml` and input the correct values to point to your postgres and redis instances.
+8. Install the seed data to set up an admin account and meta topic: `psql DATABASE_NAME < pg_dumps/production-image.sql`
 
 
 ## Before you start Rails
