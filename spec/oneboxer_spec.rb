@@ -19,6 +19,7 @@ describe "Dynamic Discourse::Oneboxer" do
   context 'find onebox for url' do
 
     it 'returns blank with an unknown url' do
+      pending("we won't be calling blank but aren't sure what kind of object we have yet")
       Discourse::Oneboxer.onebox_for_url('http://asdfasdfasdfasdf.asdf').should be_blank
     end
 
