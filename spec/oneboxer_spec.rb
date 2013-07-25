@@ -74,6 +74,7 @@ describe Discourse::Oneboxer do
       end
 
       it "calls fetch and cache" do
+        pending("we don't know yet what expects will result in")
         Discourse::Oneboxer.expects(:fetch_and_cache).returns(result)
         Discourse::Oneboxer.onebox(dummy_onebox_url, invalidate_oneboxes: true).should == result
       end
