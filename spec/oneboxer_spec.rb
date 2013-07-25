@@ -193,7 +193,7 @@ describe Discourse::Oneboxer do
     end
 
     it "does not strip if there is a br in same node" do
-      epending("do not understand apply method yet")
+      pending("do not understand apply method yet")
       doc = Discourse::Oneboxer.apply "<p><br><a href='http://bla.com' class='onebox'>bla</p>" do |url, element|
         "<div>foo</div>" if url == "http://bla.com"
       end
