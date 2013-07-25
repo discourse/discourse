@@ -163,7 +163,7 @@ module Discourse
 	    doc = Nokogiri::HTML::fragment(doc) if doc.is_a?(String)
 
 	    onebox_links = doc.search("a.onebox")
-	    if onebox_links.present?
+	    if onebox_links.nil? || onebox_links.empty?
 	      onebox_links.each do |link|
 	        if link['href'].present?
 	          yield link['href'], link
