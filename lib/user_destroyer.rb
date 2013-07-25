@@ -28,7 +28,7 @@ class UserDestroyer
             b.record_match! if b
           end
           Post.with_deleted.where(user_id: user.id).update_all("nuked_user = true")
-          StaffActionLogger.new(@admin).log_user_deletion(user)
+          StaffActionLogger.new(@admin).log_user_deletion(user, opts.slice(:context))
           DiscourseHub.unregister_nickname(user.username) if SiteSetting.call_discourse_hub?
           MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
         end

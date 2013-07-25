@@ -217,9 +217,13 @@ Discourse.AdminUser = Discourse.User.extend({
     var user = this;
 
     var performDestroy = function(block) {
+      var formData = { context: window.location.pathname };
+      if (block) {
+        formData["block_email"] = true;
+      }
       Discourse.ajax("/admin/users/" + user.get('id') + '.json', {
         type: 'DELETE',
-        data: block ? {block_email: true} : {}
+        data: formData
       }).then(function(data) {
         if (data.deleted) {
           bootbox.alert(I18n.t("admin.user.deleted"), function() {

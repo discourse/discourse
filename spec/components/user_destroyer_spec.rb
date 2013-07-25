@@ -55,7 +55,7 @@ describe UserDestroyer do
       end
 
       it 'should log the action' do
-        StaffActionLogger.any_instance.expects(:log_user_deletion).with(@user).once
+        StaffActionLogger.any_instance.expects(:log_user_deletion).with(@user, anything).once
         destroy
       end
 
