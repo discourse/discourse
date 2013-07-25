@@ -115,8 +115,6 @@ Discourse.TopicList.reopenClass({
     users = this.extractByKey(result.users, Discourse.User);
     topics = Em.A();
 
-    console.log(result.topic_list);
-
     _.each(result.topic_list.topics,function(ft) {
       ft.category = categories[ft.category_id];
       _.each(ft.posters,function(p) {
