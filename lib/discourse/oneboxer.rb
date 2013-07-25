@@ -252,7 +252,7 @@ module Discourse
 	      Oneboxer.invalidate(url)
 	    else
 	      contents = render_from_cache(url)
-	      return contents if contents.present?
+	      return contents unless contents.nil?
 	    end
 
 	    fetch_and_cache(url, args)
