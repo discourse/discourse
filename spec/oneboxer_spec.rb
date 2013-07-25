@@ -63,6 +63,7 @@ describe Discourse::Oneboxer do
     context "with invalidate_oneboxes true" do
 
       it "invalidates the url" do
+        pending("we don't know yet what expects will result in")
         Discourse::Oneboxer.expects(:invalidate).with(dummy_onebox_url)
         Discourse::Oneboxer.onebox(dummy_onebox_url, invalidate_oneboxes: true)
       end
