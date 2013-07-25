@@ -118,12 +118,12 @@ es:
     user_action_groups:
       "1": "Likes Dados"
       "2": "Likes Recibidos"
-      "3": "Bookmarks"
+      "3": "Marcadores"
       "4": "Temas"
-      "5": "Replies"
+      "5": "Mensajes"
       "6": "Respuestas"
       "7": "Menciones"
-      "9": "Quotes"
+      "9": "Citas"
       "10": "Favoritos"
       "11": "Ediciones"
       "12": "Items enviados"
@@ -187,14 +187,14 @@ es:
         instructions: ""
         instructions: "Debe ser único, sin espacios. La gente puede mencionarte como @{{username}}."
         short_instructions: "La gente puede mencionarte como @{{username}}."
-        available: "Your username is available."
-        global_match: "Email matches the registered username."
-        global_mismatch: "Already registered. Try {{suggestion}}?"
-        not_available: "Not available. Try {{suggestion}}?"
-        too_short: "Your username is too short."
-        too_long: "Your username is too long."
-        checking: "Checking username availability..."
-        enter_email: 'Username found. Enter matching email.'
+        available: "Su nombre de usuario está disponible."
+        global_match: "El email coincide con el nombre de usuario registrado."
+        global_mismatch: "Ya está registrado. Intenta {{suggestion}}?"
+        not_available: "No disponible. Intenta {{suggestion}}?"
+        too_short: "Su nombre de usuario es demasiado corto."
+        too_long: "Su nombre de usuario es demasiado largo."
+        checking: "Comprobando disponibilidad de nombre de usuario..."
+        enter_email: 'Nombre de usuario encontrado. Introduce email correspondiente.'
 
       password_confirmation:
         title: "Ingrese la Contraseña Nuevamente"
@@ -383,29 +383,29 @@ es:
       show_preview: 'mostrar vista previa &raquo;'
       hide_preview: '&laquo; ocultar vista previa'
 
-      bold_title: "Strong"
-      bold_text: "strong text"
-      italic_title: "Emphasis"
-      italic_text: "emphasized text"
-      link_title: "Hyperlink"
-      link_description: "enter link description here"
-      link_dialog_title: "Insert Hyperlink"
-      link_optional_text: "optional title"
+      bold_title: "Negrita"
+      bold_text: "Texto en negrita"
+      italic_title: "Cursiva"
+      italic_text: "Texto en cursiva"
+      link_title: "Hipervinculo"
+      link_description: "introduzca descripción de enlace aquí"
+      link_dialog_title: "Insertar Hipervinculo"
+      link_optional_text: "titulo opcional"
       quote_title: "Blockquote"
       quote_text: "Blockquote"
-      code_title: "Code Sample"
-      code_text: "enter code here"
-      upload_title: "Image"
-      upload_description: "enter image description here"
-      olist_title: "Numbered List"
-      ulist_title: "Bulleted List"
-      list_item: "List item"
-      heading_title: "Heading"
-      heading_text: "Heading"
-      hr_title: "Horizontal Rule"
-      undo_title: "Undo"
-      redo_title: "Redo"
-      help: "Markdown Editing Help"
+      code_title: "Código de muestra"
+      code_text: "introducir código aquí"
+      upload_title: "Imagen"
+      upload_description: "introduzca descripción de la imagen aquí"
+      olist_title: "Lista numerada"
+      ulist_title: "Lista con viñetas"
+      list_item: "Lista de items"
+      heading_title: "Encabezado"
+      heading_text: "Encabezado"
+      hr_title: "Linea Horizontal"
+      undo_title: "Deshacer"
+      redo_title: "Rehacer"
+      help: "Ayuda de edición Markdown"
 
     notifications:
       title: "notificaciones por menciones de tu @nombre, respuestas a tus publicaciones y temas, mensajes privados, etc"
@@ -497,22 +497,22 @@ es:
       options: "Opciones del Tema"
       show_links: "show links within this topic"
       toggle_information: "toggle topic details"
-      read_more_in_category: "Want to read more? Browse other topics in {{catLink}} or {{latestLink}}."
-      read_more: "Want to read more? {{catLink}} or {{latestLink}}."
-      browse_all_categories: Browse all categories
+      read_more_in_category: "Quieres leer mas? Consulta otros temas en {{catLink}} or {{latestLink}}."
+      read_more: "Quieres leer mas? {{catLink}} or {{latestLink}}."
+      browse_all_categories: Ver todas las categorías
 
-      view_latest_topics: view latest topics
-      suggest_create_topic: Why not create a topic?
-      read_position_reset: "Your read position has been reset."
-      jump_reply_up: jump to earlier reply
-      jump_reply_down: jump to later reply
+      view_latest_topics: ver los últimos temas
+      suggest_create_topic: Porque no creas un tema?
+      read_position_reset: "Su posición de lectura se ha reiniciado."
+      jump_reply_up: saltar a respuesta anterior
+      jump_reply_down: saltar a ultima respuesta
 
       progress:
-        title: topic progress
-        jump_top: jump to first post
-        jump_bottom: jump to last post
-        total: total posts
-        current: current post
+        title: avances
+        jump_top: saltar al primer mensaje
+        jump_bottom: saltar al ultimo mensaje
+        total: total
+        current: mensaje actual
 
       notifications:
         title: ''
@@ -533,7 +533,7 @@ es:
           description: "igual que Siguiendo, además serás notificado de todos los nuevos posts."
         tracking:
           title: "Siguiendo"
-          description: "serás notificado de los posts sin leer, menciones a tu @nombre y respuestas a tus posts."
+          description: "serás notificado de los mensajes sin leer, menciones a tu @nombre y respuestas a tus posts."
         regular:
           title: "Regular"
           description: "serás notificado solo si alguien menciona tu @nombre o responde a tus posts."
@@ -542,18 +542,18 @@ es:
           description: "no serás notificado de nada en este tema, y no aparecerá en tu pestaña de no leidos."
 
       actions:
-        delete: "Delete Topic"
-        open: "Open Topic"
-        close: "Close Topic"
-        unpin: "Un-Pin Topic"
-        pin: "Pin Topic"
-        unarchive: "Unarchive Topic"
-        archive: "Archive Topic"
-        invisible: "Make Invisible"
-        visible: "Make Visible"
-        reset_read: "Reset Read Data"
-        multi_select: "Select Posts to Move"
-        convert_to_topic: "Convert to Regular Topic"
+        delete: "Eliminar Tema"
+        open: "Abrir Tema"
+        close: "Cerrar Tema"
+        unpin: "Un-Pin Tema"
+        pin: "Pin Tema"
+        unarchive: "Desarchivar Tema"
+        archive: "Archivar Tema"
+        invisible: "Hacer Invisible"
+        visible: "Hacer Visible"
+        reset_read: "Restablecer Datos"
+        multi_select: "Seleccione Mensajes a Mover"
+        convert_to_topic: "Convertir en Tema Regular"
 
       reply:
         title: 'Responder'
@@ -570,71 +570,71 @@ es:
       inviting: "Invitando..."
 
       invite_private:
-        title: 'Invite to Private Message'
-        email_or_username: "Invitee's Email or Username"
-        email_or_username_placeholder: "email address or username"
-        action: "Invite"
-        success: "Thanks! We've invited that user to participate in this private message."
-        error: "Sorry there was an error inviting that user."
+        title: 'Invitar por Mensaje Privado'
+        email_or_username: "Invitación por email o nombre de usuario"
+        email_or_username_placeholder: "dirección de email o nombre de usuario"
+        action: "Invitar"
+        success: "¡Gracias! Hemos invitado a ese usuario a participar en este mensaje privado."
+        error: "Lo sentimos hubo un error invitando a ese usuario."
 
       invite_reply:
-        title: 'Invite Friends to Reply'
-        action: 'Email Invite'
-        help: 'send invitations to friends so they can reply to this topic with a single click'
-        email: "We'll send your friend a brief email allowing them to reply to this topic by clicking a link."
-        email_placeholder: 'email address'
-        success: "Thanks! We mailed out an invitation to <b>{{email}}</b>. We'll let you know when they redeem your invitation. Check the invitations tab on your user page to keep track of who you've invited."
-        error: "Sorry we couldn't invite that person. Perhaps they are already a user?"
+        title: 'Invitar amigos a responder'
+        action: 'Invitar por email'
+        help: 'enviar invitaciones a tus amigos para que puedan responder a este tema con un solo clic'
+        email: "Le enviaremos a tu amigo un breve email permitiéndole responder a este tema haciendo clic en un link."
+        email_placeholder: 'dirección de email'
+        success: "¡Gracias! Enviamos una invitación a <b>{{email}}</b>. Le dejaremos saber cuando adquiera su invitación. Verifique la pestaña de invitaciones en su pagina de usuario para llevar un registro de quién ha invitado."
+        error: "Lo sentimos no podemos invitar a esa persona. Tal vez ya es un usuario?"
 
-      login_reply: 'Log In to Reply'
+      login_reply: 'Inicia sesión para responder'
 
       filters:
         user: "Estás viendo solo {{n_posts}} {{by_n_users}}."
         n_posts:
-          one: "1 post"
-          other: "{{count}} posts"
+          one: "1 mensaje"
+          other: "{{count}} mensajes"
         by_n_users:
           one: "hechos por 1 usuario específico"
           other: "hechos por {{count}} usuarios específicos"
 
         best_of: "Estás viendo el {{n_best_posts}} {{of_n_posts}}."
         n_best_posts:
-          one: "1 mejor post"
-          other: "{{count}} mejores posts"
+          one: "1 mejor mensaje"
+          other: "{{count}} mejores mensajes"
         of_n_posts:
           one: "de 1 en el tema"
           other: "de {{count}} en el tema"
-        cancel: "Mostrar todos los posts en el tema de nuevo."
+        cancel: "Mostrar todos los mensajes en este tema de nuevo.."
 
       move_selected:
-        title: "Move Selected Posts"
-        topic_name: "New Topic Name:"
-        error: "Sorry, there was an error moving those posts."
+        title: "Mover mensajes seleccionados"
+        topic_name: "Nuevo nombre:"
+        error: "Lo sentimos, hubo un error al mover los mensajes."
         instructions:
-          one: "You are about to create a new topic and populate it with the post you've selected."
-          other: "You are about to create a new topic and populate it with the <b>{{count}}</b> posts you've selected."
+          one: "Está a punto de crear un nuevo tema y rellenarlo con el mensaje que ha seleccionado."
+          other: "Está a punto de crear un nuevo tema y rellenarlo con el <b>{{count}}</b> mensajes que ha seleccionado."
 
       multi_select:
-        select: 'select'
-        selected: 'selected ({{count}})'
-        delete: delete selected
-        cancel: cancel selecting
-        move: move selected
+        select: 'seleccionar'
+        selected: 'seleccionado ({{count}})'
+        delete: eliminar seleccionado
+        cancel: cancelar selección
+        move: mover seleccionado
         description:
-          one: You have selected <b>1</b> post.
-          other: "You have selected <b>{{count}}</b> posts."
+          one: Ha seleccionado <b>1</b> mensaje.
+          other: "Ha seleccionado <b>{{count}}</b> mensajes."
 
     post:
-      reply: "Replying to {{link}} by {{replyAvatar}} {{username}}"
-      reply_topic: "Reply to {{link}}"
-      quote_reply: "quote reply"
-      edit: "Editing {{link}} by {{replyAvatar}} {{username}}"
-      post_number: "post {{number}}"
-      in_reply_to: "in reply to"
-      reply_as_new_topic: "Reply as new Topic"
-      continue_discussion: "Continuing the discussion from {{postLink}}:"
-      follow_quote: "go to the quoted post"
-      deleted_by_author: "(post removed by author)"
+      reply: "Respondiendo a {{link}} por {{replyAvatar}} {{username}}"
+      reply_topic: "Responder a {{link}}"
+      quote_reply: "citar respuesta"
+      edit: "Edición {{link}} por {{replyAvatar}} {{username}}"
+      post_number: "mensaje {{number}}"
+      in_reply_to: "en respuesta a"
+      reply_as_new_topic: "Responder como nuevo tema"
+      continue_discussion: "Continuando la discusión desde {{postLink}}:"
+      follow_quote: "ir al mensaje citado"
+      deleted_by_author: "(mensaje eliminado por el autor)"
 
       has_replies:
         one: "Respuesta"
@@ -661,72 +661,72 @@ es:
         more: "Más"
 
       actions:
-        flag: 'Flag'
+        flag: 'Reportar'
         clear_flags:
-          one: "Clear flag"
-          other: "Clear flags"
-        it_too: "{{alsoName}} it too"
-        undo: "Undo {{alsoName}}"
+          one: "Limpiar reporte"
+          other: "Limpiar reportes"
+        it_too: "{{alsoName}} el también"
+        undo: "Deshacer {{alsoName}}"
         by_you_and_others:
-          zero: "You {{long_form}}"
-          one: "You and 1 other person {{long_form}}"
-          other: "You and {{count}} other people {{long_form}}"
+          zero: "Tu {{long_form}}"
+          one: "Tu y otra persona {{long_form}}"
+          other: "Tu y {{count}} other personas {{long_form}}"
         by_others:
-          one: "1 person {{long_form}}"
-          other: "{{count}} people {{long_form}}"
+          one: "1 persona {{long_form}}"
+          other: "{{count}} personas {{long_form}}"
 
       edits:
-        one: 1 edit
-        other: "{{count}} edits"
-        zero: no edits
+        one: 1 edición
+        other: "{{count}} ediciones"
+        zero: sin ediciones
 
       delete:
         confirm:
-          one: "Are you sure you want to delete that post?"
-          other: "Are you sure you want to delete all those posts?"
+          one: "¿Está seguro que desea eliminar el mensaje?"
+          other: "¿Está seguro que desea eliminar todos esos mensajes?"
 
     category:
-      none: '(no category)'
-      edit: 'edit'
-      edit_long: "Edit Category"
-      view: 'View Topics in Category'
-      delete: 'Delete Category'
-      create: 'Create Category'
-      more_posts: "view all {{posts}}..."
-      name: "Category Name"
-      description: "Description"
-      topic: "category topic"
+      none: '(sin categoría)'
+      edit: 'editar'
+      edit_long: "Editar Categoría"
+      view: 'Ver Temas en la Categoría'
+      delete: 'Eliminar Categoría'
+      create: 'Crear Categoría'
+      more_posts: "ver todos {{posts}}..."
+      name: "Nombre de la Categoría"
+      description: "Descripción"
+      topic: "categoría"
       color: "Color"
-      name_placeholder: "Should be short and succinct."
-      color_placeholder: "Any web color"
-      delete_confirm: "Are you sure you want to delete that category?"
-      list: "List Categories"
-      no_description: "There is no description for this category, edit the topic definition."
-      change_in_category_topic: "Edit Description"
+      name_placeholder: "Debe ser corto y conciso."
+      color_placeholder: "Cualquier color web"
+      delete_confirm: "¿Está seguro que desea eliminar esta categoría?"
+      list: "Lista de Categorías"
+      no_description: "No existe descripción de esta categoría, editar la definición de tema."
+      change_in_category_topic: "Editar Descripción"
 
     flagging:
-      title: 'Why are you flagging this post?'
-      action: 'Flag Post'
-      cant: "Sorry, you can't flag this post at this time."
-      custom_placeholder: "Why does this post require moderator attention? Let us know specifically what you are concerned about, and provide relevant links where possible."
+      title: '¿Por qué estas reportando este mensaje?'
+      action: 'Reportar Mensaje'
+      cant: "Lo sentimos, no se puede reportar el tema en este momento."
+      custom_placeholder: "¿Por qué este mensaje requiere atención de un moderador? haganos saber específicamente lo que le preocupa, y proporcionar enlaces relevantes cuando sea posible."
       custom_message:
-        at_least: "enter at least {{n}} characters"
-        more: "{{n}} to go..."
-        left: "{{n}} remaining"
+        at_least: "introducir al menos {{n}} caracteres"
+        more: "{{n}} para ir..."
+        left: "{{n}} restantes"
 
     topic_summary:
-      title: "Topic Summary"
-      links_shown: "show all {{totalLinks}} links..."
+      title: "Resumen de temas"
+      links_shown: "mostrar todos {{totalLinks}} links..."
 
     topic_statuses:
       locked:
-        help: "this topic is closed; it no longer accepts new replies"
+        help: "este tema está cerrado; ya no acepta nuevas respuestas"
       pinned:
-        help: "this topic is pinned; it will display at the top of its category"
+        help: "este tema está pinned; se mostrará en la parte superior de su categoría"
       archived:
-        help: "this topic is archived; it is frozen and cannot be changed"
+        help: "este tema se archiva; está congelado y no puede ser cambiado"
       invisible:
-        help: "this topic is invisible; it will not be displayed in topic lists, and can only be accessed via a direct link"
+        help: "este tema es invisible; no se mostrará en la lista de temas, y sólo se puede acceder a través de un enlace directo"
 
     posts: "Publicaciones"
     posts_long: "{{number}} publicaciones en este tema"
@@ -762,58 +762,58 @@ es:
           zero: "No leídos"
           one: "No leído (1)"
           other: "No leídos ({{count}})"
-        help: "tracked topics with unread posts"
+        help: "seguir temas con mensajes no leídos"
       new:
         title:
           zero: "Nuevos"
           one: "Nuevo (1)"
           other: "Nuevos ({{count}})"
-        help: "new topics since your last visit"
+        help: "temas nuevos desde su última visita"
       posted:
-        title: "My Posts"
-        help: "topics you have posted in"
+        title: "Mis Mensajes"
+        help: "temas que has publicado"
       category:
         title:
           zero: "{{categoryName}}"
           one: "{{categoryName}} (1)"
           other: "{{categoryName}} ({{count}})"
-        help: "latest topics in the {{categoryName}} category"
+        help: "últimos temas en el {{categoryName}} categoría"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "type to filter..."
 
     admin:
-      title: 'Discourse Admin'
+      title: 'Administrador'
 
       dashboard:
-        title: "Dashboard"
-        welcome: "Welcome to the admin section."
-        version: "Installed version"
-        up_to_date: "You are running the latest version of Discourse."
-        critical_available: "A critical update is available."
-        updates_available: "Updates are available."
-        please_upgrade: "Please upgrade!"
-        latest_version: "Latest version"
+        title: "Panel"
+        welcome: "Bienvenido a la sección de administración."
+        version: "Versión instalada"
+        up_to_date: "Está ejecutando la última versión del Discourse."
+        critical_available: "Actualización crítica disponible."
+        updates_available: "Hay actualizaciones disponibles."
+        please_upgrade: "Por favor actualice!"
+        latest_version: "Última versión"
 
         reports:
-          today: "Today"
-          yesterday: "Yesterday"
-          last_7_days: "Last 7 Days"
-          last_30_days: "Last 30 Days"
-          all_time: "All Time"
-          7_days_ago: "7 Days Ago"
-          30_days_ago: "30 Days Ago"
+          today: "Hoy"
+          yesterday: "Ayer"
+          last_7_days: "Últimos 7 Días"
+          last_30_days: "Últimos 30 Días"
+          all_time: "Todo el tiempo"
+          7_days_ago: "Hace 7 Días"
+          30_days_ago: "Hace 30 Días"
 
       flags:
-        title: "Flags"
-        old: "Old"
-        active: "Active"
-        clear: "Clear Flags"
-        clear_title: "dismiss all flags on this post (will unhide hidden posts)"
-        delete: "Delete Post"
-        delete_title: "delete post (if its the first post delete topic)"
-        flagged_by: "Flagged by"
+        title: "Reportes"
+        old: "Antiguo"
+        active: "Activo"
+        clear: "Limpiar Reportes"
+        clear_title: "descartar todos los reportes en este mensaje (will unhide hidden posts)"
+        delete: "Eliminar Mensaje"
+        delete_title: "eliminar mensaje (si es el primer mensaje eliminar tema)"
+        flagged_by: "Reportado por"
 
       groups:
         title: "Groups"
@@ -836,79 +836,79 @@ es:
         note_html: "Keep this key <strong>secret</strong>, all users that have it may create arbitrary posts on the forum as any user."
 
       customize:
-        title: "Customize"
-        header: "Header"
-        css: "Stylesheet"
-        override_default: "Do not include standard style sheet"
-        enabled: "Enabled?"
-        preview: "preview"
-        undo_preview: "undo preview"
-        save: "Save"
-        delete: "Delete"
-        delete_confirm: "Delete this customization?"
+        title: "Personalizar"
+        header: "Encabezado"
+        css: "Hoja de estilo"
+        override_default: "No incluir hoja de estilo estándar"
+        enabled: "Activado?"
+        preview: "vista previa"
+        undo_preview: "deshacer vista previa"
+        save: "Guardar"
+        delete: "Eliminar"
+        delete_confirm: "Eliminar esta personalización?"
 
       email:
         title: "Email"
-        sent_at: "Sent At"
-        email_type: "Email Type"
-        to_address: "To Address"
-        test_email_address: "email address to test"
-        send_test: "send test email"
-        sent_test: "sent!"
+        sent_at: "Enviado a"
+        email_type: "Email"
+        to_address: "A dirección"
+        test_email_address: "dirección de email para probar"
+        send_test: "enviar mensaje de prueba"
+        sent_test: "enviado!"
 
       impersonate:
-        title: "Impersonate User"
-        username_or_email: "Username or Email of User"
-        help: "Use this tool to impersonate a user account for debugging purposes."
-        not_found: "That user can't be found."
-        invalid: "Sorry, you may not impersonate that user."
+        title: "Hacerse pasar por el Usuario"
+        username_or_email: "Nombre de usuario o Email de Usuario"
+        help: "Utilice esta herramienta para suplantar una cuenta de usuario con fines de depuración."
+        not_found: "Dicho usuario no puede ser encontrado."
+        invalid: "Lo sentimos, usted no puede hacerse pasar por ese usuario."
 
       users:
-        title: 'Users'
-        create: 'Add Admin User'
-        last_emailed: "Last Emailed"
-        not_found: "Sorry that username doesn't exist in our system."
-        active: "Active"
+        title: 'Usuarios'
+        create: 'Añadir Usuario como Administrador'
+        last_emailed: "Ultimo email enviado"
+        not_found: "Lo sentimos ese nombre de usuario no existe en el sistema."
+        active: "Activo"
         nav:
-          new: "New"
-          active: "Active"
-          pending: "Pending"
-        approved: "Approved?"
+          new: "Nuevo"
+          active: "Activo"
+          pending: "Pendiente"
+        approved: "Aprobado?"
         approved_selected:
-          one: "approve user"
-          other: "approve users ({{count}})"
+          one: "aprobar usuario"
+          other: "aprobar usuarios ({{count}})"
 
       user:
-        ban_failed: "Something went wrong banning this user {{error}}"
-        unban_failed: "Something went wrong unbanning this user {{error}}"
-        ban_duration: "How long would you like to ban the user for? (days)"
-        delete_all_posts: "Delete all posts"
-        ban: "Ban"
-        unban: "Unban"
-        banned: "Banned?"
-        moderator: "Moderator?"
-        admin: "Admin?"
-        show_admin_profile: "Admin"
-        refresh_browsers: "Force browser refresh"
-        show_public_profile: "Show Public Profile"
-        impersonate: 'Impersonate'
-        revoke_admin: 'Revoke Admin'
-        grant_admin: 'Grant Admin'
-        revoke_moderation: 'Revoke Moderation'
-        grant_moderation: 'Grant Moderation'
+        ban_failed: "Algo salió mal baneando este usuario {{error}}"
+        unban_failed: "Algo salió mal quitando ban a este usuario {{error}}"
+        ban_duration: "¿Cuánto tiempo le gustaría aplicar ban al usuario? (days)"
+        delete_all_posts: "Eliminar todos los mensajes"
+        ban: "Banear"
+        unban: "Quitar ban"
+        banned: "Baneado?"
+        moderator: "Moderador?"
+        admin: "Administrador?"
+        show_admin_profile: "Administrador"
+        refresh_browsers: "Forzar recarga del navegador"
+        show_public_profile: "Ver perfil público"
+        impersonate: 'Suplantar a'
+        revoke_admin: 'Revocar Administrador'
+        grant_admin: 'Conceder Administración'
+        revoke_moderation: 'Revocar Moderación'
+        grant_moderation: 'Conceder Moderación'
         reputation: Reputación
         permissions: Permisos
         activity: Actividad
         like_count: Me gusta Recibidos
-        private_topics_count: Private Topics
-        posts_read_count: Posts Read
-        post_count: Posts Created
-        topics_entered: Topics Entered
-        flags_given_count: Flags Given
-        flags_received_count: Flags Received
-        approve: 'Approve'
-        approved_by: "approved by"
-        time_read: "Read Time"
+        private_topics_count: Temas Privados
+        posts_read_count: Mensajes Leídos
+        post_count: Mensajes Creados
+        topics_entered: Temas Ingresados
+        flags_given_count: Reportes Dados
+        flags_received_count: Reportes Recibidos
+        approve: 'Aprobar'
+        approved_by: "aprobado por"
+        time_read: "Tiempo de lectura"
 
       site_settings:
         show_overriden: 'Sólo mostrar lo sobreescrito'
