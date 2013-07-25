@@ -731,6 +731,7 @@ en:
       must_begin_with_alphanumeric: "must begin with a letter or number"
     email:
       not_allowed: "is not allowed from that email provider. Please use another email address."
+      blocked: "is not allowed."
 
   invite_mailer:
     subject_template: "[%{site_name}] %{invitee_name} invited you to join a discussion on %{site_name}"

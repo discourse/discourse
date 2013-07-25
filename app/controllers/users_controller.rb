@@ -194,7 +194,9 @@ class UsersController < ApplicationController
     else
       render json: {
         success: false,
-        message: I18n.t("login.errors", errors: user.errors.full_messages.join("\n"))
+        message: I18n.t("login.errors", errors: user.errors.full_messages.join("\n")),
+        errors: user.errors.to_hash,
+        values: user.attributes.slice("name", "username", "email")
       }
     end
   rescue ActiveRecord::StatementInvalid

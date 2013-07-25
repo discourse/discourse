@@ -14,6 +14,7 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
   accountPasswordConfirm: 0,
   accountChallenge: 0,
   formSubmitted: false,
+  rejectedEmails: Em.A([]),
 
   submitDisabled: function() {
     if (this.get('formSubmitted')) return true;
@@ -64,6 +65,14 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
     }
 
     email = this.get("accountEmail");
+
+    if (this.get('rejectedEmails').contains(email)) {
+      return Discourse.InputValidation.create({
+        failed: true,
+        reason: I18n.t('user.email.invalid')
+      });
+    }
+
     if ((this.get('authOptions.email') === email) && this.get('authOptions.email_valid')) {
       return Discourse.InputValidation.create({
         ok: true,
@@ -84,7 +93,7 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
       failed: true,
       reason: I18n.t('user.email.invalid')
     });
-  }.property('accountEmail'),
+  }.property('accountEmail', 'rejectedEmails.@each'),
 
   usernameMatch: function() {
     if (this.usernameNeedsToBeValidatedWithEmail()) {
@@ -262,6 +271,9 @@ Discourse.CreateAccountController = Discourse.Controller.extend(Discourse.ModalF
         createAccountController.set('complete', true);
       } else {
         createAccountController.flash(result.message || I18n.t('create_account.failed'), 'error');
+        if (result.errors && result.errors.email && result.values) {
+          createAccountController.get('rejectedEmails').pushObject(result.values.email);
+        }
         createAccountController.set('formSubmitted', false);
       }
       if (result.active) {
