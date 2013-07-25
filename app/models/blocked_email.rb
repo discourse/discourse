@@ -8,18 +8,24 @@ class BlockedEmail < ActiveRecord::Base
     @actions ||= Enum.new(:block, :do_nothing)
   end
 
+  def self.block(email, opts={})
+    find_by_email(email) || create(opts.slice(:action_type).merge({email: email}))
+  end
+
   def self.should_block?(email)
-    record = BlockedEmail.where(email: email).first
-    if record
-      record.match_count += 1
-      record.last_match_at = Time.zone.now
-      record.save
-    end
-    record && record.action_type == actions[:block]
+    blocked_email = BlockedEmail.where(email: email).first
+    blocked_email.record_match! if blocked_email
+    blocked_email && blocked_email.action_type == actions[:block]
   end
 
   def set_defaults
     self.action_type ||= BlockedEmail.actions[:block]
+  end
+
+  def record_match!
+    self.match_count += 1
+    self.last_match_at = Time.zone.now
+    save
   end
 
 end

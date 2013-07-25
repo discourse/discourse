@@ -72,6 +72,20 @@ describe UserDestroyer do
       end
     end
 
+    shared_examples "email block list" do
+      it "doesn't add email to block list by default" do
+        BlockedEmail.expects(:block).never
+        destroy
+      end
+
+      it "adds email to block list if block_email is true" do
+        b = Fabricate.build(:blocked_email, email: @user.email)
+        BlockedEmail.expects(:block).with(@user.email).returns(b)
+        b.expects(:record_match!).once.returns(true)
+        UserDestroyer.new(@admin).destroy(@user, destroy_opts.merge({block_email: true}))
+      end
+    end
+
     context 'user has posts' do
       let!(:post) { Fabricate(:post, user: @user) }
 
@@ -98,9 +112,11 @@ describe UserDestroyer do
       end
 
       context "delete_posts is true" do
-        subject(:destroy) { UserDestroyer.new(@admin).destroy(@user, delete_posts: true) }
+        let(:destroy_opts) { {delete_posts: true} }
+        subject(:destroy) { UserDestroyer.new(@admin).destroy(@user, destroy_opts) }
 
         include_examples "successfully destroy a user"
+        include_examples "email block list"
 
         it "deletes the posts" do
           destroy
@@ -113,9 +129,11 @@ describe UserDestroyer do
     context 'user has no posts' do
       context 'and destroy succeeds' do
 
+        let(:destroy_opts) { {} }
         subject(:destroy) { UserDestroyer.new(@admin).destroy(@user) }
 
         include_examples "successfully destroy a user"
+        include_examples "email block list"
 
         it "should mark the user's deleted posts as belonging to a nuked user" do
           post = Fabricate(:post, user: @user, deleted_at: 1.hour.ago)

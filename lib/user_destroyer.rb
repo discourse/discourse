@@ -23,6 +23,10 @@ class UserDestroyer
       end
       user.destroy.tap do |u|
         if u
+          if opts[:block_email]
+            b = BlockedEmail.block(u.email)
+            b.record_match! if b
+          end
           Post.with_deleted.where(user_id: user.id).update_all("nuked_user = true")
           StaffActionLogger.new(@admin).log_user_deletion(user)
           DiscourseHub.unregister_nickname(user.username) if SiteSetting.call_discourse_hub?
