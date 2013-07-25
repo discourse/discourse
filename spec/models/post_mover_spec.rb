@@ -147,6 +147,7 @@ describe PostMover do
 
         it "copies the OP, doesn't delete it" do
           new_topic.should be_present
+          new_topic.posts.reload
           new_topic.posts.first.raw.should == p1.raw
 
           new_topic.reload

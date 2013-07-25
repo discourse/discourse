@@ -4,8 +4,6 @@
 //= require ./discourse/helpers/i18n_helpers
 //= require ./discourse
 
-//= require ./locales/date_locales.js
-
 // Pagedown customizations
 //= require ./pagedown_custom.js
 

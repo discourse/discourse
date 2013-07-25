@@ -39,7 +39,7 @@ module Email
         end
       end
 
-      @message.parts[0].body = @message.parts[0].body.to_s.gsub!(/\[\/?email-indent\]/, '')
+      @message.parts[0].body = @message.parts[0].body.to_s.gsub(/\[\/?email-indent\]/, '')
 
       @message.text_part.content_type = 'text/plain; charset=UTF-8'
 

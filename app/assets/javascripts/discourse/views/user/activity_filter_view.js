@@ -1,5 +1,5 @@
 /**
-  This view handles rendering of an activity in a user's stream
+  This view handles rendering of an activity in a user's profile
 
   @class ActivityFilterView
   @extends Discourse.View
@@ -10,18 +10,18 @@ Discourse.ActivityFilterView = Discourse.View.extend({
   tagName: 'li',
   classNameBindings: ['active', 'noGlyph'],
 
-  stream: Em.computed.alias('controller.stream'),
+  userActionType: Em.computed.alias('controller.userActionType'),
   shouldRerender: Discourse.View.renderIfChanged('count'),
   noGlyph: Em.computed.empty('icon'),
 
   active: function() {
     var content = this.get('content');
     if (content) {
-      return parseInt(this.get('stream.filter'), 10) === parseInt(Em.get(content, 'action_type'), 10);
+      return parseInt(this.get('userActionType'), 10) === parseInt(Em.get(content, 'action_type'), 10);
     } else {
-      return this.blank('stream.filter');
+      return this.blank('userActionType');
     }
-  }.property('stream.filter', 'content.action_type'),
+  }.property('userActionType', 'content.action_type'),
 
   activityCount: function() {
     return this.get('content.count') || this.get('count');

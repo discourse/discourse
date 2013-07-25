@@ -40,7 +40,7 @@ module JsLocaleHelper
   end
 
   def self.moment_locale(locale_str)
-    filename = Rails.root + "lib/javascript/moment_locale/#{locale_str}.js"
+    filename = Rails.root + "lib/javascripts/moment_locale/#{locale_str}.js"
     if File.exists?(filename)
       File.read(filename) << "\n"
     end || ""
@@ -50,7 +50,11 @@ module JsLocaleHelper
     formats = message_formats.map{|k,v| k.inspect << " : " << compile_message_format(locale_str ,v)}.join(" , ")
 
     result = "MessageFormat = {locale: {}};\n"
-    result << File.read(Rails.root + "lib/javascripts/locale/#{locale_str}.js") << "\n"
+
+    filename = Rails.root + "lib/javascripts/locale/#{locale_str}.js"
+    filename = Rails.root + "lib/javascripts/locale/en.js" unless File.exists?(filename)
+
+    result << File.read(filename) << "\n"
 
     result << "I18n.messageFormat = (function(formats){
       var f = formats;
