@@ -90,6 +90,7 @@ describe Discourse::Oneboxer do
       end
 
       it "returns render_from_cache if present" do
+        pending("we won't be calling expects but aren't sure what kind of object we have yet")           
         Discourse::Oneboxer.expects(:render_from_cache).with(dummy_onebox_url).returns(result)
         Discourse::Oneboxer.onebox(dummy_onebox_url, invalidate_oneboxes: false).should == result
       end
