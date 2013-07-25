@@ -215,25 +215,49 @@ Discourse.AdminUser = Discourse.User.extend({
 
   destroy: function() {
     var user = this;
-    bootbox.confirm(I18n.t("admin.user.delete_confirm"), I18n.t("no_value"), I18n.t("yes_value"), function(result) {
-      if(result) {
-        Discourse.ajax("/admin/users/" + user.get('id') + '.json', { type: 'DELETE' }).then(function(data) {
-          if (data.deleted) {
-            bootbox.alert(I18n.t("admin.user.deleted"), function() {
-              document.location = "/admin/users/list/active";
-            });
-          } else {
-            bootbox.alert(I18n.t("admin.user.delete_failed"));
-            if (data.user) {
-              user.mergeAttributes(data.user);
-            }
-          }
-        }, function(jqXHR, status, error) {
-          Discourse.AdminUser.find( user.get('username') ).then(function(u){ user.mergeAttributes(u); });
+
+    var performDestroy = function(block) {
+      Discourse.ajax("/admin/users/" + user.get('id') + '.json', {
+        type: 'DELETE',
+        data: block ? {block_email: true} : {}
+      }).then(function(data) {
+        if (data.deleted) {
+          bootbox.alert(I18n.t("admin.user.deleted"), function() {
+            document.location = "/admin/users/list/active";
+          });
+        } else {
           bootbox.alert(I18n.t("admin.user.delete_failed"));
-        });
+          if (data.user) {
+            user.mergeAttributes(data.user);
+          }
+        }
+      }, function(jqXHR, status, error) {
+        Discourse.AdminUser.find( user.get('username') ).then(function(u){ user.mergeAttributes(u); });
+        bootbox.alert(I18n.t("admin.user.delete_failed"));
+      });
+    };
+
+    var message = I18n.t("admin.user.delete_confirm");
+
+    var buttons = [{
+      "label": I18n.t("composer.cancel"),
+      "class": "cancel",
+      "link":  true
+    }, {
+      "label": I18n.t('admin.user.delete_dont_block'),
+      "class": "btn",
+      "callback": function(){
+        performDestroy(false);
       }
-    });
+    }, {
+      "label": I18n.t('admin.user.delete_and_block'),
+      "class": "btn",
+      "callback": function(){
+        performDestroy(true);
+      }
+    }];
+
+    bootbox.dialog(message, buttons, {"classes": "delete-user-modal"});
   },
 
   loadDetails: function() {

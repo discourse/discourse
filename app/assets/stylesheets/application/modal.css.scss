@@ -297,6 +297,25 @@
   }
 }
 
+.delete-user-modal {
+  .modal-footer {
+    .btn {
+      font-weight: normal;
+      text-align: left;
+      font-size: 14px;
+      line-height: 20px;
+      margin-bottom: 10px;
+      display: inline-block;
+      margin-left: 0;
+    }
+    .cancel {
+      text-decoration: underline;
+      display: block;
+      margin-right: 5px;
+    }
+  }
+}
+
 .permission-list{
   list-style:none;
   margin: 0 0 30px;
