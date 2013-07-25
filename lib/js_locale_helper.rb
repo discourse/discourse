@@ -40,7 +40,7 @@ module JsLocaleHelper
   end
 
   def self.moment_locale(locale_str)
-    filename = Rails.root + "lib/javascript/moment_locale/#{locale_str}.js"
+    filename = Rails.root + "lib/javascripts/moment_locale/#{locale_str}.js"
     if File.exists?(filename)
       File.read(filename) << "\n"
     end || ""

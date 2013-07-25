@@ -84,4 +84,13 @@ describe JsLocaleHelper do
     message.should_not match 'Plural Function not found'
   end
 
+  LocaleSiteSetting.values.each do |locale|
+    it "generates valid date helpers for #{locale} locale" do
+      js = JsLocaleHelper.output_locale(locale)
+      ctx = V8::Context.new
+      ctx.load(Rails.root + 'app/assets/javascripts/locales/i18n.js')
+      ctx.eval(js)
+    end
+  end
+
 end
