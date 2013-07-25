@@ -124,7 +124,7 @@ module Discourse
 	  # Retrieve the onebox for a url without caching
 	  def self.onebox_nocache(url)
 	    oneboxer = onebox_for_url(url)
-	    return oneboxer.onebox if oneboxer.present?
+	    return oneboxer.onebox unless oneboxer.nil?
 
 	    whitelist_entry = Whitelist.entry_for_url(url)
 
