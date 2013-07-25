@@ -6,7 +6,11 @@ module Discourse
       #include ActionView::Helpers::DateHelper
 
       matcher do
-        Regexp.new "^#{Discourse.base_url.gsub(".","\\.")}.*$", true
+        Regexp.new "^#{base_url.gsub(".","\\.")}.*$", true
+      end
+
+      def self.base_url
+        @@base_url = "http://foo.com"
       end
 
       def onebox
@@ -19,7 +23,7 @@ module Discourse
         case route[:controller]
         when 'users'
           user = User.where(username_lower: route[:username].downcase).first
-          return nil unless user  
+          return nil unless user
 
           Guardian.new.ensure_can_see!(user)
 
@@ -89,7 +93,6 @@ module Discourse
       rescue ActionController::RoutingError
         nil
       end
-
     end
   end
 end
