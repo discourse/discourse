@@ -8,6 +8,7 @@ require "pry"
 require "fakeweb"
 require "discourse-oneboxer"
 require "nokogiri/xml/parse_options"
+require "mocha"
 
 module SpecHelper
   def fixture_file(path)
