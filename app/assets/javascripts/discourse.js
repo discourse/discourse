@@ -7,7 +7,7 @@
   @class Discourse
   @extends Ember.Application
 **/
-Discourse = Ember.Application.createWithMixins({
+Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   rootElement: '#main',
 
   // Whether the app has focus or not
@@ -180,71 +180,6 @@ Discourse = Ember.Application.createWithMixins({
   redirectIfLoginRequired: function(route) {
     if(this.get('loginRequired')) { route.transitionTo('login'); }
   },
-
-  /**
-    Our own $.ajax method. Makes sure the .then method executes in an Ember runloop
-    for performance reasons. Also automatically adjusts the URL to support installs
-    in subfolders.
-
-    @method ajax
-  **/
-  ajax: function() {
-
-    var url, args;
-
-    if (arguments.length === 1) {
-      if (typeof arguments[0] === "string") {
-        url = arguments[0];
-        args = {};
-      } else {
-        args = arguments[0];
-        url = args.url;
-        delete args.url;
-      }
-    } else if (arguments.length === 2) {
-      url = arguments[0];
-      args = arguments[1];
-    }
-
-    if (args.success) {
-      console.warning("DEPRECATION: Discourse.ajax should use promises, received 'success' callback");
-    }
-    if (args.error) {
-      console.warning("DEPRECATION: Discourse.ajax should use promises, received 'error' callback");
-    }
-
-    // If we have URL_FIXTURES, load from there instead (testing)
-    var fixture = Discourse.URL_FIXTURES && Discourse.URL_FIXTURES[url];
-    if (fixture) {
-      return Ember.RSVP.resolve(fixture);
-    }
-
-    return Ember.Deferred.promise(function (promise) {
-      var oldSuccess = args.success;
-      args.success = function(xhr) {
-        Ember.run(promise, promise.resolve, xhr);
-        if (oldSuccess) oldSuccess(xhr);
-      };
-
-      var oldError = args.error;
-      args.error = function(xhr) {
-
-        // If it's a parseerror, don't reject
-        if (xhr.status === 200) return args.success(xhr);
-
-        promise.reject(xhr);
-        if (oldError) oldError(xhr);
-      };
-
-      // We default to JSON on GET. If we don't, sometimes if the server doesn't return the proper header
-      // it will not be parsed as an object.
-      if (!args.type) args.type = 'GET';
-      if ((!args.dataType) && (args.type === 'GET')) args.dataType = 'json';
-
-      $.ajax(Discourse.getURL(url), args);
-    });
-  },
-
 
   /**
     Subscribes the current user to receive message bus notifications
