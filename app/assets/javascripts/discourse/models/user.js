@@ -9,6 +9,16 @@
 Discourse.User = Discourse.Model.extend({
 
   /**
+    The user's stream
+
+    @property stream
+    @type {Discourse.UserStream}
+  **/
+  stream: function() {
+    return Discourse.UserStream.create({ user: this });
+  }.property(),
+
+  /**
     Is this user a member of staff?
 
     @property staff
@@ -32,9 +42,9 @@ Discourse.User = Discourse.Model.extend({
     @property avatarSmall
     @type {String}
   **/
-  avatarSmall: (function() {
+  avatarSmall: function() {
     return Discourse.Utilities.avatarUrl(this.get('username'), 'small', this.get('avatar_template'));
-  }).property('username'),
+  }.property('username'),
 
   searchContext: function() {
     return ({ type: 'user', id: this.get('username_lower'), user: this });
@@ -269,26 +279,6 @@ Discourse.User = Discourse.Model.extend({
       user.setProperties(json.user);
       return user;
     });
-  },
-
-  findStream: function(filter) {
-
-    // When filtering for replies, include mentions and quotes too
-    if (filter === Discourse.UserAction.TYPES.replies) {
-      filter = [Discourse.UserAction.TYPES.replies,
-                Discourse.UserAction.TYPES.mentions,
-                Discourse.UserAction.TYPES.quotes].join(",");
-    }
-
-    var stream = Discourse.UserStream.create({
-      itemsLoaded: 0,
-      content: [],
-      filter: filter,
-      user: this
-    });
-
-    stream.findItems();
-    return stream;
   }
 
 });

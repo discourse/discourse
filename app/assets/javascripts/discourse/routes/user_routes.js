@@ -135,7 +135,11 @@ Discourse.UserIndexRoute = Discourse.UserActivityRoute.extend({
 **/
 Discourse.UserActivityStreamRoute = Discourse.Route.extend({
   model: function() {
-    return this.modelFor('user').findStream(this.get('userActionType'));
+    return this.modelFor('user').get('stream');
+  },
+
+  afterModel: function() {
+    return this.modelFor('user').get('stream').filterBy(this.get('userActionType'));
   },
 
   renderTemplate: function() {
