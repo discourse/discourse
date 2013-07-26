@@ -47,26 +47,13 @@ Oneboxer currently has support for page, image, and video URLs from these sites:
 Using discourse-oneboxer
 ===============
 
-You can include architect modules into a class like so:
+You can include discourse-oneboxer modules into a class like so:
 
 ``` ruby
 require "discourse-oneboxer"
-
-class MakeProjectCommand
-  include Architect::Core
-
-  def build(name)
-    create_directory name do
-      copy_file "Gemfile", version: Rails::VERSION
-      create_directory "app" do
-        create_directory "models"
-        create_directory "controllers"
-        create_directory "views"
-      end
-    end
-  end
-end
 ```
+TODO: write example
+
 
 
 The `Gemfile` file would look like this:
