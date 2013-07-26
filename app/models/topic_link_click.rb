@@ -12,8 +12,7 @@ class TopicLinkClick < ActiveRecord::Base
   def self.create_from(args={})
 
     # Find the forum topic link
-    link = TopicLink.select(:id).where(url: args[:url])
-    link = link.where("user_id <> ?", args[:user_id]) if args[:user_id].present?
+    link = TopicLink.select([:id, :user_id]).where(url: args[:url])
     link = link.where(post_id: args[:post_id]) if args[:post_id].present?
 
     # If we don't have a post, just find the first occurance of the link
@@ -21,6 +20,8 @@ class TopicLinkClick < ActiveRecord::Base
     link = link.first
 
     return unless link.present?
+    return args[:url] if (args[:user_id] && (link.user_id == args[:user_id]))
+
 
     # Rate limit the click counts to once in 24 hours
     rate_key = "link-clicks:#{link.id}:#{args[:user_id] || args[:ip]}"
