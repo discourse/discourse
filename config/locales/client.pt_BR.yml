@@ -164,6 +164,7 @@ pt_BR:
       dynamic_favicon: "Exibir notificações de novas mensagens no favicon"
       external_links_in_new_tab: "Abrir todos os links externos em uma nova aba"
       enable_quoting: "Citar texto selecionado na resposta"
+      change: "alterar"
       moderator: "{{user}} é um moderador"
       admin: "{{user}} é um administrador"
       change_password:
