@@ -11,7 +11,7 @@ ru:
   dates:
     short_date_no_year: D MMM
     short_date: D MMM YYYY
-    long_date: D MMMM YYYY H:MM
+    long_date: DD.MM.YYYY HH:MM
   time:
     formats:
       short: '%d.%m.%Y'
@@ -44,6 +44,12 @@ ru:
     other: 'Извините, новые пользователи могут прикреплять только %{count} изображений к сообщению.'
     few: 'Извините, новые пользователи могут прикреплять к сообщению не более, чем %{count} изображения.'
     many: 'Извините, новые пользователи могут прикрепить к сообщению не более, чем %{count} изображений.'
+  too_many_attachments:
+    zero: К сожалению, загрузка файлов недоступна новым пользователям.
+    one: К сожалению, новые пользователи могут добавить только одно вложение в сообщение.
+    other: 'К сожалению, новые пользователи могут добавить только %{count} вложений в сообщение.'
+    few: 'К сожалению, новые пользователи могут добавить только %{count} вложения в сообщение.'
+    many: 'К сожалению, новые пользователи могут добавить только %{count} вложений в сообщение.'
   too_many_links:
     zero: Извините, новые пользователи не могут размещать ссылки.
     one: Извините, новые пользователи могут размещать только одну ссылку в сообщении.
@@ -125,8 +131,7 @@ ru:
             archetype:
               cant_send_pm: Извините, вы не можете посылать личные сообщения данному пользователю.
   user_profile:
-    no_info_me: |
-      <div class='missing-profile'>Вы оставили пустым поле «Обо мне" <a href='/users/%{username_lower}/preferences/about-me'> хотите заполнить его сейчас? </a></div>
+    no_info_me: "<div class='missing-profile'>Поле Обо мне в вашем профиле не заполнено, <a href='/users/%{username_lower}/preferences/about-me'>не желаете ли что-нибудь написать в нем?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} еще не заполнил поле «Обо мне» в своём профайле. </div>"
   category:
     topic_prefix: 'Описание категории %{category}'
@@ -615,7 +620,7 @@ ru:
     max_private_messages_per_day: Максимальное количество личных сообщений, которое пользователь может послать в день
     suggested_topics: Количество рекомендованных тем, отображаемых внизу текущей темы
     enable_s3_uploads: Размещать загруженные файлы на Amazon S3
-    s3_upload_bucket: Имя Amazon S3 bucket, куда будут загружаться файлы
+    s3_upload_bucket: 'Наименование Amazon S3 bucket в который будут загружаться файлы. ВНИМАНИЕ: имя должно быть в нижнем регистре (см. http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html)'
     s3_access_key_id: Amazon S3 access key для загрузки и хранения изображений
     s3_secret_access_key: Amazon S3 secret key для загрузки и хранения изображений
     s3_region: Географический регион Amazon S3, который будет использоваться для хранения изображений
@@ -634,10 +639,12 @@ ru:
     regular_requires_topic_reply_count: В скольких темах должен ответить базовый пользователь, чтобы получить постоянный уровень доверия (2)?
     newuser_max_links: Сколько ссылок новый пользователь может вставлять в сообщение
     newuser_max_images: Сколько изображений новый пользователь может вставлять в сообщение
+    newuser_max_attachments: Максимальное количество вложений, которое пользователь может добавить в сообщение
     newuser_max_mentions_per_post: Максимальное число упоминаний по @name , которое новый пользователь может использовать в сообщении
     max_mentions_per_post: Максимальное число упоминаний по @name , которое новый пользователь может использовать в сообщении
     create_thumbnails: Создать миниатюры для изображений
     email_time_window_mins: Сколько минут нужно подождать перед отсылкой письма пользователя, чтобы дать ему шанс сперва его увидеть
+    email_posts_context: Количество сообщений включаемое в почтовые сообщения для отображения контекста
     flush_timings_secs: Как часто мы отправляем временные данные на сервер, в секундах
     max_word_length: Максимальная длина слов в названии темы, в символах
     title_min_entropy: Минимальное количество энтропии (уникальных символов), необходимых для названия темы
@@ -754,31 +761,31 @@ ru:
   test_mailer:
     subject_template: '[%{site_name}] Проверка доставки писем'
     text_body_template: |
-      This is a test email sent from your %{site_name} forum at:
+      Это тестовое сообщение, отправленное с форума %{site_name}:
 
       [**%{base_url}**][0]
 
-      Email deliverability is complicated. Here are a few important things you should check first:
+      Повышение доставляемости email (эффективность доставки сообщений по электронной почте) является непростой задачей. Вот несколько важных моментов, с которыми вы должны разобраться в первую очередь:
 
-      - Know how to view the *raw source of the email* in your mail client, so you can examine the email headers for important clues. in Gmail, it is the "show original" option in the drop-down menu on each mail.
+      - Узнаете, как просмотреть *исходный код сообщения* в вашем почтовом клиенте, чтобы можно было проанализировать заголовки сообщений. В случае Gmail это можно сделать в режиме просмотра сообщения в выпадающем списке "Показать оригинал".
 
-      - **IMPORTANT:** Does your ISP have a reverse DNS record entered to associate the domain names and IP addresses you send mail from? [Test your Reverse PTR record][2] here. If your ISP does not enter the proper reverse DNS pointer record, it's very unlikely any of your email will be delivered.
+      - **ВАЖНО:** Проверьте, заведена ли у вашего ISP обратная запись в DNS (запись типа PTR), позволяющая ассоциировать IP-адреса, с которых вы отправляете сообщения по электронной почте, с доменным именем? [Протестируйте ваши обратные записи PTR][2] здесь. Если ваш ISP не внес корректную PTR запись в DNS, то крайне маловероятно, что ваши сообщения будут доставлены.
 
-      - Is your domain's SPF record correct? [Test your SPF record][1] here.
+      - Корректна ли запись SPF вашего домена? [Протестируйте свою запись SPF][1] здесь.
 
-      - Check to make sure the IPs of your mail server are [not on any email blacklists][4].
+      - Убедитесь в том, что IP-адреса вашего почтового сервера [не включены в какой-либо черный список][4].
 
-      - Verify that your email server is *definitely* sending a fully-qualified hostname that resolves in DNS in its HELO message. If not, this will cause your email to be rejected by many mail services.
+      - Убедитесь в том, что ваш почтовый сервер в приветствии HELO/EHLO отправляет полное (FQDN) имя хоста, которое, в свою очередь, прописано в DNS. Если это не так, ваши сообщения будут отклоняться многими почтовыми сервисами.
 
-      - Configure [DKIM email key signing][3] in your email software, and place the public DKIM key in your DNS records. This is not required, but will significantly improve email deliverability.
+      - Настройте [добавление подписи DKIM в исходящую почту][3] на вашем почтовом сервере и пропишите открытый ключ DKIM в соответствующие записи DNS. Это не обязательно, но данная операция приведет к значительному повышению доставляемости email.
 
-      (The *easy* way is to [sign up for Mandrill][6], which has a generous free mailing plan and will be fine for small forums. You'll still need to set up the SPF and DKIM records in your DNS, though!)
+      (*Проще всего* [зарегистрироваться в Mandrill][6]. Этот сервис имеет отличный механизм бесплатной рассылки и прекрасно подходит для работы с небольшими форумами. Однако вам все же придется настроить записи SPF и DKIM на своем DNS!)
 
-      We hope you received this email deliverability test OK!
+      Надеемся, что вы прошли этот тест доставляемости email!
 
-      Good luck,
+      Удачи,
 
-      Your friends at [Discourse](http://www.discourse.org)
+      Ваши друзья из [Discourse](http://www.discourse.org)
 
       :smile:
 
@@ -791,8 +798,7 @@ ru:
       [6]: http://mandrill.com
 
       ----
-
-      <small>There should be an unsubscribe footer on every email you send, so let's mock one up. This email was sent by Name of Company, 55 Main Street, Anytown, USA 12345. If you would like to opt out of future emails, [click here to unsubscribe][5].</small>
+      <small>В каждом из ваших электронных писем должен присутствовать футер, позволяющий отписаться от рассылки, так что давайте сделаем образец. Это письмо было отправлено Название компании, 55 Мэйн-стрит, город Энск, США 12345. Если вы хотите отказаться от последующего получения писем аналогичного характера, [кликните сюда, чтобы отписаться][5].</small>
 
   system_messages:
     post_hidden:
@@ -929,11 +935,13 @@ ru:
 
   unsubscribe_link: 'Для того, чтобы отписаться от подобных сообщений, перейдите в [настройки профиля](%{user_preferences_url}).'
   user_notifications:
+    previous_discussion: Предыдущее обсуждение
     unsubscribe:
       title: Отписаться
       description: 'Не заинтересованы в получении данных писем? Нет проблем! Нажмите на ссылку ниже, чтобы мгновенно отписаться от рассылки:'
     reply_by_email: 'Чтобы отреагировать на сообщение, ответьте на данное письмо или перейдите по ссылке %{base_url}%{url} в вашем браузере.'
     visit_link_to_respond: 'Чтобы отреагировать на сообщение, перейдите по ссылке %{base_url}%{url} в вашем браузере.'
+    posted_by: 'Отправлено %{username} %{post_date}'
     user_invited_to_private_message:
       subject_template: "[%{site_name}] %{username} пригласил вас на частную беседу '%{topic_title}'"
       text_body_template: |
@@ -944,10 +952,9 @@ ru:
     user_replied:
       subject_template: "[%{site_name}] новый ответ на ваше сообщение в теме '%{topic_title}'"
       text_body_template: |
-        %{username} ответил на ваше сообщение в теме '%{topic_title}' на сайте %{site_name}:
-
-        ---
         %{message}
+
+        %{context}
 
         ---
         %{respond_instructions}
@@ -955,10 +962,9 @@ ru:
     user_quoted:
       subject_template: "[%{site_name}] %{username} процитировал вас в теме '%{topic_title}'"
       text_body_template: |
-        %{username} процитировал вас в теме '%{topic_title}' на сайте %{site_name}:
-
-        ---
         %{message}
+
+        %{context}
 
         ---
         %{respond_instructions}
@@ -966,10 +972,9 @@ ru:
     user_mentioned:
       subject_template: "[%{site_name}] %{username} упомянул вас в теме '%{topic_title}'"
       text_body_template: |
-        %{username} упомянул вас в теме '%{topic_title}' на сайте %{site_name}:
-
-        ---
         %{message}
+
+        %{context}
 
         ---
         %{respond_instructions}
@@ -977,10 +982,9 @@ ru:
     user_posted:
       subject_template: "[%{site_name}] новое сообщение в теме '%{topic_title}'"
       text_body_template: |
-        %{username} ответил в теме  '%{topic_title}' на сайте %{site_name}:
-
-        ---
         %{message}
+
+        %{context}
 
         ---
         %{respond_instructions}
@@ -1000,9 +1004,8 @@ ru:
     private_message:
       subject_template: '[%{site_name}] %{subject_prefix}%{topic_title}'
       text_body_template: |
-        Пользователь %{private_message_from} отравил вам личное сообщение
+        %{private_message_from} отправил(а) вам личное сообщение
 
-        ---
         %{message}
 
         ---
@@ -1073,7 +1076,10 @@ ru:
   upload:
     unauthorized: 'К сожалению, вы не можете загрузить файл данного типа (список разрешенных типов файлов: %{authorized_extensions}).'
     pasted_image_filename: Имя файла изображения
+    attachments:
+      too_large: 'Файл, который вы пытаетесь загрузить, слишком большой (максимальный разрешенный размер %{max_size_kb}%kb).'
     images:
+      too_large: 'Изображение, которое вы пытаетесь загрузить, слишком большое (максимальный разрешенный размер %{max_size_kb}%kb), пожалуйста, уменьшите размер изображения и повторите попытку.'
       fetch_failure: Извините, во время извлечения изображения произошла ошибка.
       unknown_image_type: Файл, который вы загружаете, не является изображением.
       size_not_found: Извините, мы не можем определить размер изображения. Возможно, изображение повреждено?
