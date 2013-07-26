@@ -6,7 +6,7 @@ class Admin::GroupsController < Admin::AdminController
 
   def refresh_automatic_groups
     Group.refresh_automatic_groups!
-    render json: "ok"
+    render json: success_json
   end
 
   def users
@@ -22,7 +22,7 @@ class Admin::GroupsController < Admin::AdminController
       group.usernames = params[:group][:usernames]
       group.name = params[:group][:name] if params[:group][:name]
       if group.save
-        render json: "ok"
+        render json: success_json
       else
         render_json_error group
       end
