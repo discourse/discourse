@@ -129,6 +129,14 @@ class TopicQuery
     create_list(:posted) {|l| l.where('tu.user_id IS NOT NULL') }
   end
 
+  def list_topics_by(user)
+    Rails.logger.info ">>> #{user.id}"
+    create_list(:user_topics) do |topics|
+      topics.where(user_id: user.id)
+    end
+  end
+
+
   def list_uncategorized
     create_list(:uncategorized, unordered: true) do |list|
       list = list.where(category_id: nil)

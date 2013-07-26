@@ -107,14 +107,12 @@ class UserNotifications < ActionMailer::Base
   end
 
   def notification_email(user, opts)
-    @notification = opts[:notification]
-    return unless @notification.present?
 
-    @post = opts[:post]
-    return unless @post.present?
+    return unless @notification = opts[:notification]
+    return unless @post = opts[:post]
 
     username = @notification.data_hash[:display_username]
-    notification_type = Notification.types[opts[:notification].notification_type].to_s
+    notification_type = Notification.types[@notification.notification_type].to_s
 
     context = ""
     context_posts = Post.where(topic_id: @post.topic_id)
@@ -147,7 +145,8 @@ class UserNotifications < ActionMailer::Base
       add_unsubscribe_link: true,
       allow_reply_by_email: opts[:allow_reply_by_email],
       template: "user_notifications.user_#{notification_type}",
-      html_override: html
+      html_override: html,
+      style: :notification
     }
 
     # If we have a display name, change the from address

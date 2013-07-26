@@ -74,24 +74,9 @@
 
             {{#if details.suggested_topics.length}}
               <div id='suggested-topics'>
-
                 <h3>{{i18n suggested_topics.title}}</h3>
-
                 <div class='topics'>
-                  <table id="topic-list">
-                    <tr>
-                      <th>
-                        {{i18n topic.title}}
-                      </th>
-                      <th>{{i18n category_title}}</th>
-                      <th class='num posts'>{{i18n posts}}</th>
-                      <th class='num likes'>{{i18n likes}}</th>
-                      <th class='num views'>{{i18n views}}</th>
-                      <th class='num activity' colspan='2'>{{i18n activity}}</th>
-                    </tr>
-
-                  {{each details.suggested_topics itemTagName="tr" itemViewClass="Discourse.SuggestedTopicView"}}
-                  </table>
+                  {{basicTopicList topics=details.suggested_topics}}
                 </div>
                 <br/>
                 <h3>{{{view.browseMoreMessage}}}</h3>

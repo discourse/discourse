@@ -18,7 +18,7 @@ Discourse.UserStream = Discourse.Model.extend({
 
   findItems: function() {
     var me = this;
-    if(this.get("loading")) { return; }
+    if(this.get("loading")) { return Ember.RSVP.reject(); }
     this.set("loading",true);
 
     var url = Discourse.getURL("/user_actions.json?offset=") + this.get('itemsLoaded') + "&username=" + (this.get('user.username_lower'));

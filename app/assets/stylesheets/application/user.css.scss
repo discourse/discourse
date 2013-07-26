@@ -237,62 +237,64 @@
   }
 }
 
-#user-stream {
+#user-activity {
   width: 840px;
   float: left;
   margin-bottom: 50px;
 
-  .excerpt {
-    margin: 5px 0px;
-    font-size: 13px;
-    word-wrap: break-word;
-    color: lighten($black, 30%);
-  }
-  .item.moderator-action {
-    background-color: #eef0ff;
-  }
-  .item.deleted {
-    opacity: 0.8;
-    background-color: #ffcece;
-  }
-  .item.hidden {
-    display: block;
-    opacity: 0.4;
-  }
-  .item {
-    padding: 10px 8px;
-    background-color: white;
-    border: 1px solid #b9b9b9;
-    margin-bottom: 10px;
-    @include border-radius-all(4px);
-    @include box-shadow((0 1px 2px rgba($black, 0.07), inset 0 -4px 4px -4px rgba($black, 0.14)));
-  }
-  .type {
-    color: lighten($black, 40%);
-  }
-  span.name {
-    color: lighten($black, 40%);
-  }
-  .time {
-    display: block;
-    float: right;
-    color: silver;
-    margin-right: 8px;
-    font-size: 11px;
-  }
-  .avatar-link {
-    float: left;
-    margin-right: 10px;
-  }
-  .title {
-    display: block;
-    margin-bottom: 4px;
-    font-size: 14px;
+  .user-stream {
+    .excerpt {
+      margin: 5px 0px;
+      font-size: 13px;
+      word-wrap: break-word;
+      color: lighten($black, 30%);
+    }
+    .item.moderator-action {
+      background-color: #eef0ff;
+    }
+    .item.deleted {
+      opacity: 0.8;
+      background-color: #ffcece;
+    }
+    .item.hidden {
+      display: block;
+      opacity: 0.4;
+    }
+    .item {
+      padding: 10px 8px;
+      background-color: white;
+      border: 1px solid #b9b9b9;
+      margin-bottom: 10px;
+      @include border-radius-all(4px);
+      @include box-shadow((0 1px 2px rgba($black, 0.07), inset 0 -4px 4px -4px rgba($black, 0.14)));
+    }
+    .type {
+      color: lighten($black, 40%);
+    }
+    span.name {
+      color: lighten($black, 40%);
+    }
+    .time {
+      display: block;
+      float: right;
+      color: silver;
+      margin-right: 8px;
+      font-size: 11px;
+    }
+    .avatar-link {
+      float: left;
+      margin-right: 10px;
+    }
+    .title {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
   }
 }
 
 // styling of bottom section
-#user-stream .child-actions {
+.user-stream .child-actions {
   margin-top: 8px;
   .avatar-link {
     float: none;
@@ -312,12 +314,12 @@
 }
 
 @include medium-width {
-  #user-stream {
+  #user-activity {
     width: 725px;
   }
 }
 @include small-width {
-  #user-stream {
+  #user-activity {
     width: 680px;
   }
 }

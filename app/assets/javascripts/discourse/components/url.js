@@ -64,6 +64,9 @@ Discourse.URL = Em.Object.createWithMixins({
     if (this.navigatedToListMore(oldPath, path)) { return; }
     if (this.navigatedToHome(oldPath, path)) { return; }
 
+    if (path.match(/^\/?users\/[^\/]+$/)) {
+      path += "/activity";
+    }
     // Be wary of looking up the router. In this case, we have links in our
     // HTML, say form compiled markdown posts, that need to be routed.
     var router = this.get('router');

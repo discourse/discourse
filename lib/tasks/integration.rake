@@ -8,7 +8,7 @@ task 'integration:create_fixtures' => :environment do
     topic: ["/t/280.json"],
     user: ["/users/eviltrout.json",
            "/user_actions.json?offset=0&username=eviltrout",
-           "/user_actions.json?offset=0&username=eviltrout&filter=4",
+           "/topics/created-by/eviltrout.json",
            "/user_actions.json?offset=0&username=eviltrout&filter=5",
            "/user_actions.json?offset=0&username=eviltrout&filter=6,7,9",
            "/user_actions.json?offset=0&username=eviltrout&filter=1",

@@ -10,6 +10,11 @@ Discourse.EmbeddedPostView = Discourse.View.extend({
   templateName: 'embedded_post',
   classNames: ['reply'],
 
+  init: function() {
+    this._super();
+    this.set('context', this.get('content'));
+  },
+
   didInsertElement: function() {
     Discourse.ScreenTrack.instance().track(this.get('elementId'), this.get('post.post_number'));
   },

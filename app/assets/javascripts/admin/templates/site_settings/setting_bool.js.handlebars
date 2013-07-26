@@ -1,11 +1,9 @@
-{{#with view.content}}
-  <div class='span4 offset1'>
-    <h3>{{unbound setting}}</h3>
-  </div>
-  <div class="span11">
-    <label>
-      {{view Ember.Checkbox checkedBinding="enabled" value="true"}}
-      {{unbound description}}
-    </label>
-  </div>
-{{/with}}
+<div class='span4 offset1'>
+  <h3>{{unbound setting}}</h3>
+</div>
+<div class="span11">
+  <label>
+    {{view Ember.Checkbox checkedBinding="enabled" value="true"}}
+    {{unbound description}}
+  </label>
+</div>

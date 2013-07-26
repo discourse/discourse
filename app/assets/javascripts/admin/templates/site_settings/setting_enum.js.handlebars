@@ -1,19 +1,17 @@
-{{#with view.content}}
-  <div class='span4 offset1'>
-     <h3>{{unbound setting}}</h3>
+<div class='span4 offset1'>
+   <h3>{{unbound setting}}</h3>
+</div>
+<div class="span11">
+  {{combobox valueAttribute="value" content=validValues value=value none=allowsNone}}
+  <div class='desc'>{{unbound description}}</div>
+</div>
+{{#if dirty}}
+  <div class='span3'>
+    <button class='btn ok' {{action save this}}><i class='icon-ok'></i></button>
+    <button class='btn cancel' {{action cancel this}}><i class='icon-remove'></i></button>
   </div>
-  <div class="span11">
-    {{combobox valueAttribute="value" content=validValues value=value none=allowsNone}}
-    <div class='desc'>{{unbound description}}</div>
-  </div>
-  {{#if dirty}}
-    <div class='span3'>
-      <button class='btn ok' {{action save this}}><i class='icon-ok'></i></button>
-      <button class='btn cancel' {{action cancel this}}><i class='icon-remove'></i></button>
-    </div>
-  {{else}}
-    {{#if overridden}}
-      <button class='btn' href='#' {{action resetDefault this}}>{{i18n admin.site_settings.reset}}</button>
-    {{/if}}
+{{else}}
+  {{#if overridden}}
+    <button class='btn' href='#' {{action resetDefault this}}>{{i18n admin.site_settings.reset}}</button>
   {{/if}}
-{{/with}}
+{{/if}}
