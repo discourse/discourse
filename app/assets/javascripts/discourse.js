@@ -309,8 +309,6 @@ Discourse = Ember.Application.createWithMixins({
     }
   },
 
-
-
   /**
     Start up the Discourse application.
 
@@ -332,3 +330,4 @@ Discourse = Ember.Application.createWithMixins({
 });
 
 Discourse.Router = Discourse.Router.reopen({ location: 'discourse_location' });
+

@@ -1,3 +1,5 @@
+//= require_tree ./discourse/ember
+
 // The rest of the externals
 //= require_tree ./external
 
