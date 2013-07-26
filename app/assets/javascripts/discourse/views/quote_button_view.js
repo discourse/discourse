@@ -10,6 +10,7 @@ Discourse.QuoteButtonView = Discourse.View.extend({
   classNames: ['quote-button'],
   classNameBindings: ['visible'],
   isMouseDown: false,
+  isTouchInProgress: false,
 
   /**
     Determines whether the pop-up quote button should be visible.
@@ -56,9 +57,16 @@ Discourse.QuoteButtonView = Discourse.View.extend({
         view.selectText(e.target, controller);
         view.set('isMouseDown', false);
       })
+      .on('touchstart.quote-button', function(e){
+        view.set('isTouchInProgress', true);
+      })
+      .on('touchend.quote-button', function(e){
+        view.set('isTouchInProgress', false);
+      })
       .on('selectionchange', function() {
         // there is no need to handle this event when the mouse is down
-        if (view.get('isMouseDown')) return;
+        // or if there is not a touch in progress
+        if (view.get('isMouseDown') || !view.get('isTouchInProgress')) return;
         // `selection.anchorNode` is used as a target
         view.selectText(window.getSelection().anchorNode, controller);
       });
@@ -88,6 +96,8 @@ Discourse.QuoteButtonView = Discourse.View.extend({
     $(document)
       .off("mousedown.quote-button")
       .off("mouseup.quote-button")
+      .off("touchstart.quote-button")
+      .off("touchend.quote-button")
       .off("selectionchange");
   },
 
