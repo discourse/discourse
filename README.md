@@ -92,7 +92,7 @@ The `Gemfile` file would look like this:
 # source/Gemfile
 source "https://rubygems.org"
 
-gem "rails", "~> <%= version %>"
+gem "discourse-oneboxer", "~> <%= version %>"
 ```
 
 
