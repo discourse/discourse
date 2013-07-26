@@ -31,13 +31,18 @@ describe Email::Styles do
 
     it "adds a width and height to images with an emoji path" do
       frag = basic_fragment("<img src='/assets/emoji/fish.png'>")
-      expect(frag.at("img")["style"]).to match("width:")
-      expect(frag.at("img")["style"]).to match("height:")
+      expect(frag.at("img")["width"]).to eq("20")
+      expect(frag.at("img")["height"]).to eq("20")
     end
 
     it "converts relative paths to absolute paths" do
       frag = basic_fragment("<img src='/some-image.png'>")
       expect(frag.at("img")["src"]).to eq("#{Discourse.base_url}/some-image.png")
+    end
+
+    it "strips classes and ids" do
+      frag = basic_fragment("<div class='foo' id='bar'><div class='foo' id='bar'></div></div>")
+      expect(frag.to_html).to eq("<div><div></div></div>")
     end
 
   end

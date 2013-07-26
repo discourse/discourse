@@ -41,6 +41,24 @@ describe UserNotifications do
     end
   end
 
+  describe '.user_replied' do
+    let!(:post) { Fabricate(:post) }
+    let!(:response) { Fabricate(:post, topic: post.topic)}
+    let!(:user) { Fabricate(:user) }
+    let!(:notification) { Fabricate(:notification, user: user) }
+
+    it 'generates a correct email' do
+      mail = UserNotifications.user_replied(response.user, post: response, notification: notification)
+
+      # 2 respond to links cause we have 1 context post
+      mail.html_part.to_s.scan(/To respond/).count.should == 2
+
+      # 1 unsubscribe
+      mail.html_part.to_s.scan(/To unsubscribe/).count.should == 1
+
+    end
+  end
+
 
   def expects_build_with(condition)
     UserNotifications.any_instance.expects(:build_email).with(user.email, condition)
