@@ -659,6 +659,8 @@ en:
     minimum_topics_similar: "How many topics need to exist in the database before similar topics are presented."
 
     relative_date_duration: "Number of days after posting where post dates will be shown as relative instead of absolute. Examples: relative date: 7d, absolute date: 20 Feb"
+    delete_user_max_age: "The maximum age of a user, in days, which can be deleted by an admin."
+    delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
 
 
   notification_types:

@@ -63,8 +63,33 @@ Discourse.FlagController = Discourse.ObjectController.extend(Discourse.ModalFunc
     }, function(errors) {
       flagController.displayErrors(errors);
     });
+  },
+
+  canDeleteSpammer: function() {
+    if (Discourse.User.current('staff') && this.get('selected.name_key') === 'spam') {
+      return this.get('userDetails.can_be_deleted') && this.get('userDetails.can_delete_all_posts');
+    } else {
+      return false;
+    }
+  }.property('selected.name_key', 'userDetails.can_be_deleted', 'userDetails.can_delete_all_posts'),
+
+  deleteSpammer: function() {
+    this.send('closeModal');
+    this.get('userDetails').deleteAsSpammer(function() { window.location.reload(); });
+  },
+
+  usernameChanged: function() {
+    this.set('userDetails', null);
+    this.fetchUserDetails();
+  }.observes('username'),
+
+  fetchUserDetails: function() {
+    if( Discourse.User.current('staff') && this.get('username') ) {
+      var flagController = this;
+      Discourse.AdminUser.find(this.get('username')).then(function(user){
+        flagController.set('userDetails', user);
+      });
+    }
   }
 
 });
-
-

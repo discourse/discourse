@@ -8,10 +8,12 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :can_impersonate,
              :like_count,
              :post_count,
+             :topic_count,
              :flags_given_count,
              :flags_received_count,
              :private_topics_count,
-             :can_delete_all_posts
+             :can_delete_all_posts,
+             :can_be_deleted
 
   has_one :approved_by, serializer: BasicUserSerializer, embed: :objects
 
@@ -35,8 +37,16 @@ class AdminDetailedUserSerializer < AdminUserSerializer
     scope.can_delete_all_posts?(object)
   end
 
+  def can_be_deleted
+    scope.can_delete_user?(object)
+  end
+
   def moderator
     object.moderator
+  end
+
+  def topic_count
+    object.topics.count
   end
 
 end

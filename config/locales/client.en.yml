@@ -925,6 +925,9 @@ en:
       action: 'Flag Post'
       take_action: "Take Action"
       notify_action: 'Notify'
+      delete_spammer: "Delete Spammer"
+      delete_confirm: "You are about to delete <b>%{posts}</b> posts and <b>%{topics}</b> topics from this user, remove their account, and add their email address <b>%{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
+      yes_delete_spammer: "Yes, Delete Spammer"
       cant: "Sorry, you can't flag this post at this time."
       custom_placeholder_notify_user: "Why does this post require you to speak to this user directly and privately? Be specific, be constructive, and always be kind."
       custom_placeholder_notify_moderators: "Why does this post require moderator attention? Let us know specifically what you are concerned about, and provide relevant links where possible."
@@ -1072,6 +1075,7 @@ en:
         disagree_unhide_title: "Remove any flags from this post and make the post visible again"
         disagree: "Disagree"
         disagree_title: "Disagree with flag, remove any flags from this post"
+        delete_spammer_title: "Delete the user and all its posts and topics."
 
         flagged_by: "Flagged by"
         error: "Something went wrong"
@@ -1234,8 +1238,8 @@ en:
         delete: "Delete User"
         delete_forbidden: "This user can't be deleted because there are posts. Delete all this user's posts first."
         delete_confirm: "Are you SURE you want to permanently delete this user from the site? This action is permanent!"
-        delete_and_block: "<strong>Yes</strong>, and <strong>block</strong> signups with the same email address"
-        delete_dont_block: "<strong>Yes</strong>, and <strong>allow</strong> signups with the same email address"
+        delete_and_block: "<b>Yes</b>, and <b>block</b> signups with the same email address"
+        delete_dont_block: "<b>Yes</b>, and <b>allow</b> signups with the same email address"
         deleted: "The user was deleted."
         delete_failed: "There was an error deleting that user. Make sure all posts are deleted before trying to delete the user."
         send_activation_email: "Send Activation Email"

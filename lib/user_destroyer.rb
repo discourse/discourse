@@ -3,10 +3,10 @@ class UserDestroyer
 
   class PostsExistError < RuntimeError; end
 
-  def initialize(admin)
-    @admin = admin
-    raise Discourse::InvalidParameters.new('admin is nil') unless @admin and @admin.is_a?(User)
-    raise Discourse::InvalidAccess unless @admin.admin?
+  def initialize(staff)
+    @staff = staff
+    raise Discourse::InvalidParameters.new('staff user is nil') unless @staff and @staff.is_a?(User)
+    raise Discourse::InvalidAccess unless @staff.staff?
   end
 
   # Returns false if the user failed to be deleted.
@@ -17,7 +17,7 @@ class UserDestroyer
     User.transaction do
       if opts[:delete_posts]
         user.posts.each do |post|
-          PostDestroyer.new(@admin, post).destroy
+          PostDestroyer.new(@staff, post).destroy
         end
         raise PostsExistError if user.reload.post_count != 0
       end
@@ -28,7 +28,7 @@ class UserDestroyer
             b.record_match! if b
           end
           Post.with_deleted.where(user_id: user.id).update_all("nuked_user = true")
-          StaffActionLogger.new(@admin).log_user_deletion(user, opts.slice(:context))
+          StaffActionLogger.new(@staff).log_user_deletion(user, opts.slice(:context))
           DiscourseHub.unregister_nickname(user.username) if SiteSetting.call_discourse_hub?
           MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
         end

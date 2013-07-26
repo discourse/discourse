@@ -316,6 +316,13 @@
   }
 }
 
+.flagging-delete-spammer {
+  .modal-footer .cancel {
+    text-decoration: underline;
+    margin-left: 10px;
+  }
+}
+
 .permission-list{
   list-style:none;
   margin: 0 0 30px;

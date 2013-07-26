@@ -20,8 +20,8 @@ describe UserDestroyer do
       expect { UserDestroyer.new( Fabricate(:user) ) }.to raise_error(Discourse::InvalidAccess)
     end
 
-    it 'raises an error when user is a moderator' do
-      expect { UserDestroyer.new( Fabricate(:moderator) ) }.to raise_error(Discourse::InvalidAccess)
+    it 'returns an instance of UserDestroyer when user is a moderator' do
+      UserDestroyer.new( Fabricate(:moderator) ).should be_a(UserDestroyer)
     end
 
     it 'returns an instance of UserDestroyer when user is an admin' do

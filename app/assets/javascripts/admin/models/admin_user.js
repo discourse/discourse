@@ -264,6 +264,36 @@ Discourse.AdminUser = Discourse.User.extend({
     bootbox.dialog(message, buttons, {"classes": "delete-user-modal"});
   },
 
+  deleteAsSpammer: function(successCallback) {
+    var user = this;
+    var message = I18n.t('flagging.delete_confirm', {posts: user.get('post_count'), topics: user.get('topic_count'), email: user.get('email')});
+    var buttons = [{
+      "label": I18n.t("composer.cancel"),
+      "class": "cancel",
+      "link":  true
+    }, {
+      "label": I18n.t("flagging.yes_delete_spammer"),
+      "class": "btn btn-danger",
+      "callback": function() {
+        Discourse.ajax("/admin/users/" + user.get('id') + '.json', {
+          type: 'DELETE',
+          data: {delete_posts: true, block_email: true}
+        }).then(function(data) {
+          if (data.deleted) {
+            bootbox.alert(I18n.t("admin.user.deleted"), function() {
+              if (successCallback) successCallback();
+            });
+          } else {
+            bootbox.alert(I18n.t("admin.user.delete_failed"));
+          }
+        }, function(jqXHR, status, error) {
+          bootbox.alert(I18n.t("admin.user.delete_failed"));
+        });
+      }
+    }];
+    bootbox.dialog(message, buttons, {"classes": "flagging-delete-spammer"});
+  },
+
   loadDetails: function() {
     var model = this;
     if (model.get('loadedDetails')) { return Ember.RSVP.resolve(model); }
