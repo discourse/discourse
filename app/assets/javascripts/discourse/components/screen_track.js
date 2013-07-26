@@ -14,6 +14,9 @@ Discourse.ScreenTrack = Ember.Object.extend({
   },
 
   start: function(topicId) {
+
+    this.reset();
+
     // Create an interval timer if we don't have one.
     if (!this.get('interval')) {
       var screenTrack = this;
@@ -31,6 +34,7 @@ Discourse.ScreenTrack = Ember.Object.extend({
   },
 
   stop: function() {
+    this.tick();
     this.flush();
     this.reset();
     this.set('topicId', null);
@@ -60,7 +64,6 @@ Discourse.ScreenTrack = Ember.Object.extend({
     this.set('timings', {});
     this.set('totalTimings', {});
     this.set('topicTime', 0);
-    this.set('cancelled', false);
   },
 
   scrolled: function() {
@@ -77,6 +80,7 @@ Discourse.ScreenTrack = Ember.Object.extend({
 
     // Update our total timings
     var totalTimings = this.get('totalTimings');
+
     _.each(this.get('timings'), function(timing,key) {
       if (!totalTimings[timing.postNumber])
         totalTimings[timing.postNumber] = 0;
@@ -100,7 +104,6 @@ Discourse.ScreenTrack = Ember.Object.extend({
       Discourse.TopicTrackingState.current().updateSeen(topicId, highestSeen);
     }
     if (!$.isEmptyObject(newTimings)) {
-
       Discourse.ajax('/topics/timings', {
         data: {
           timings: newTimings,
