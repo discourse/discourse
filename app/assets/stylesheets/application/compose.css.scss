@@ -299,6 +299,9 @@
         webkit-border-radius: 4px;
         ms-border-radius: 4px;
       }
+      audio {
+        max-width: 100%;
+      }
     }
     #wmd-preview {
       border: 1px dashed $gray;
