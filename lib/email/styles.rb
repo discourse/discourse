@@ -38,7 +38,8 @@ module Email
       style('hr', 'background-color: #ddd; height: 1px; border: 1px;')
       # we can do this but it does not look right
       # style('#main', 'font-family:"Helvetica Neue", Helvetica, Arial, sans-serif')
-      style('td.body', 'padding-top:10px;', colspan: "2")
+      style('td.body', 'padding-top:5px;', colspan: "2")
+      correct_first_body_margin
       correct_footer_style
       reset_tables
     end
@@ -70,11 +71,17 @@ module Email
 
     private
 
+    def correct_first_body_margin
+      @fragment.css('.body p').each do |element|
+        element['style'] = "margin-top:0;"
+      end
+    end
+
     def correct_footer_style
       @fragment.css('.footer').each do |element|
-        element['style'] = "font-size:13px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;color:#444;"
+        element['style'] = "font-size:12px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;color:#666;"
         element.css('a').each do |inner|
-          inner['style'] = "color:#444;"
+          inner['style'] = "color:#666;"
         end
       end
     end
