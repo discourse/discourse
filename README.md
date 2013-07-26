@@ -2,7 +2,7 @@ discourse-oneboxer
 ----------
 
   - [![Gem Version](https://badge.fury.io/rb/architect.png)](https://rubygems.org/gems/architect)
-  - [![Code Climate](https://codeclimate.com/github/krainboltgreene/architect.png)](https://codeclimate.com/github/krainboltgreene/architect)
+  - [![Code Climate](https://codeclimate.com/github/dysania/discourse-oneboxer.png)](https://codeclimate.com/github/dysania/discourse-oneboxer)
   - [![Build Status](https://travis-ci.org/dysania/discourse-oneboxer.png)](https://travis-ci.org/dysania/discourse-oneboxer)
   - [![Dependency Status](https://gemnasium.com/dysania/discourse-oneboxer.png)](https://gemnasium.com/dysania/discourse-oneboxer)
   - [![Coverage Status](https://coveralls.io/repos/dysania/discourse-oneboxer/badge.png)](https://coveralls.io/r/dysania/discourse-oneboxer)
