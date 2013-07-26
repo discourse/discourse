@@ -22,16 +22,9 @@ Discourse.ListTopicsView = Discourse.View.extend(Discourse.LoadMore, {
 
   didInsertElement: function() {
     this._super();
-    var scrollPos = Discourse.get('transient.topicListScrollPos');
-    if (scrollPos) {
-      Em.run.schedule('afterRender', function() {
-        $('html, body').scrollTop(scrollPos);
-      });
-    } else {
-      Em.run.schedule('afterRender', function() {
-        $('html, body').scrollTop(0);
-      });
-    }
+    Em.run.schedule('afterRender', function() {
+      $('html, body').scrollTop(0);
+    });
   },
 
   hasTopics: Em.computed.gt('list.topics.length', 0),
@@ -46,7 +39,7 @@ Discourse.ListTopicsView = Discourse.View.extend(Discourse.LoadMore, {
     Discourse.notifyTitle(0);
     listTopicsView.get('controller').loadMore().then(function (hasMoreResults) {
       Em.run.schedule('afterRender', function() {
-        listTopicsView.saveScrollPos();
+        listTopicsView.saveScrollPosition();
       });
       if (!hasMoreResults) {
         listTopicsView.get('eyeline').flushRest();
@@ -55,14 +48,14 @@ Discourse.ListTopicsView = Discourse.View.extend(Discourse.LoadMore, {
   },
 
   // Remember where we were scrolled to
-  saveScrollPos: function() {
-    return Discourse.set('transient.topicListScrollPos', $(window).scrollTop());
+  saveScrollPosition: function() {
+    Discourse.Session.current('topicListScrollPosition', $(window).scrollTop());
   },
 
   // When the topic list is scrolled
   scrolled: function(e) {
     this._super();
-    this.saveScrollPos();
+    this.saveScrollPosition();
   }
 
 

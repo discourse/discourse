@@ -10,9 +10,6 @@
 Discourse = Ember.Application.createWithMixins({
   rootElement: '#main',
 
-  // Data we want to remember for a short period
-  transient: Em.Object.create(),
-
   // Whether the app has focus or not
   hasFocus: true,
 
@@ -69,8 +66,7 @@ Discourse = Ember.Application.createWithMixins({
   }),
 
   titleChanged: function() {
-    var title;
-    title = "";
+    var title = "";
     if (this.get('title')) {
       title += "" + (this.get('title')) + " - ";
     }

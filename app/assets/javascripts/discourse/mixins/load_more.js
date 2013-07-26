@@ -31,7 +31,7 @@ Discourse.LoadMore = Em.Mixin.create(Discourse.Scrolling, {
     this.bindScrolling();
   },
 
-  willRemoveElement: function() {
+  willDestroyElement: function() {
     this._super();
     this.unbindScrolling();
   }

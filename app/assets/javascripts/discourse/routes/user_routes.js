@@ -162,7 +162,6 @@ Discourse.UserPrivateMessagesSentRoute = Discourse.UserActivityStreamRoute.exten
   userActionType: Discourse.UserAction.TYPES.messages_sent
 });
 
-//Discourse.UserTopicsListView = Em.View.extend({ templateName: 'user/topics_list' });
 Discourse.UserTopicListRoute = Discourse.Route.extend({
 
   renderTemplate: function() {

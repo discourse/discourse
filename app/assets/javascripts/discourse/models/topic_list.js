@@ -45,7 +45,7 @@ Discourse.TopicList = Discourse.Model.extend({
           });
 
           topicList.set('more_topics_url', result.topic_list.more_topics_url);
-          Discourse.set('transient.topicsList', topicList);
+          Discourse.Session.current('topicList', topicList);
           topicList.set('loadingMore', false);
 
           return result.topic_list.more_topics_url;
@@ -60,8 +60,8 @@ Discourse.TopicList = Discourse.Model.extend({
 
   // loads topics with these ids "before" the current topics
   loadBefore: function(topic_ids){
-    var _this = this;
-    var topics = this.get('topics');
+    var topicList = this,
+        topics = this.get('topics');
 
     // refresh dupes
     topics.removeObjects(topics.filter(function(topic){
@@ -70,13 +70,12 @@ Discourse.TopicList = Discourse.Model.extend({
 
     Discourse.TopicList.loadTopics(topic_ids, this.get('filter'))
       .then(function(newTopics){
-        _this.forEachNew(newTopics, function(t) {
+        topicList.forEachNew(newTopics, function(t) {
           // highlight the first of the new topics so we can get a visual feedback
           t.set('highlight', true);
           topics.insertAt(0,t);
         });
-        Discourse.set('transient.topicsList', _this);
-
+        Discourse.Session.current('topicList', topicList);
       });
   }
 });
@@ -128,17 +127,17 @@ Discourse.TopicList.reopenClass({
   list: function(menuItem) {
     var filter = menuItem.get('name');
 
-    var list = Discourse.get('transient.topicsList');
+    var session = Discourse.Session.current();
+    var list = session.get('topicList');
     if (list) {
       if ((list.get('filter') === filter) && window.location.pathname.indexOf('more') > 0) {
         list.set('loaded', true);
-        return Ember.Deferred.promise(function(promise) {
-          promise.resolve(list);
-        });
+        return Ember.RSVP.resolve(list);
       }
     }
-    Discourse.set('transient.topicsList', null);
-    Discourse.set('transient.topicListScrollPos', null);
+
+    session.set('topicList', null);
+    session.set('topicListScrollPos', null);
 
     return Discourse.TopicList.find(filter, menuItem.get('excludeCategory'));
   }
