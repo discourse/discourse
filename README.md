@@ -68,23 +68,6 @@ class MakeProjectCommand
 end
 ```
 
-or you can simply have them accessible in `main` (sinatra style):
-
-``` ruby
-require "architect"
-
-puts "What is your project name?"
-name = gets.chomp
-
-create_directory name do
-  copy_file "Gemfile", version: Rails::VERSION
-  create_directory "app" do
-    create_directory "models"
-    create_directory "controllers"
-    create_directory "views"
-  end
-end
-```
 
 The `Gemfile` file would look like this:
 
