@@ -14,3 +14,10 @@ test('current', function(){
   equal(session.get('orange'), "juice", "it can be updated");
 
 });
+
+test('highestSeenByTopic', function() {
+
+  var session = Discourse.Session.current();
+  deepEqual(session.get('highestSeenByTopic'), {}, "by default it returns an empty object");
+
+});

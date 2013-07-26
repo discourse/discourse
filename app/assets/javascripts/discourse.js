@@ -16,9 +16,6 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   // Are we currently scrolling?
   scrolling: false,
 
-  // The highest seen post number by topic
-  highestSeenByTopic: {},
-
   // Helps with integration tests
   URL_FIXTURES: {},
 

@@ -7,9 +7,14 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.Session = Discourse.Model.extend({});
+Discourse.Session = Discourse.Model.extend({
+  init: function() {
+    this.set('highestSeenByTopic', {});
+  }
+});
 
 Discourse.Session.reopenClass({
+
   /**
     Returns the current session.
 
