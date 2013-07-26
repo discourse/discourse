@@ -17,7 +17,7 @@ Discourse.UserStream = Discourse.Model.extend({
   }.observes('filter'),
 
   findItems: function() {
-    var me = this;
+    var userStream = this;
     if(this.get("loading")) { return Ember.RSVP.reject(); }
     this.set("loading",true);
 
@@ -28,7 +28,7 @@ Discourse.UserStream = Discourse.Model.extend({
 
     var stream = this;
     return Discourse.ajax(url, {cache: 'false'}).then( function(result) {
-      me.set("loading",false);
+      userStream.set("loading",false);
       if (result && result.user_actions) {
         var copy = Em.A();
         _.each(result.user_actions,function(action) {
@@ -38,7 +38,7 @@ Discourse.UserStream = Discourse.Model.extend({
         stream.get('content').pushObjects(copy);
         stream.set('itemsLoaded', stream.get('itemsLoaded') + result.user_actions.length);
       }
-    }, function(){ me.set("loading", false); });
+    }, function(){ userStream.set("loading", false); });
   }
 
 });

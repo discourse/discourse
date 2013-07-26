@@ -13,9 +13,6 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   // Whether the app has focus or not
   hasFocus: true,
 
-  // Are we currently scrolling?
-  scrolling: false,
-
   // Helps with integration tests
   URL_FIXTURES: {},
 

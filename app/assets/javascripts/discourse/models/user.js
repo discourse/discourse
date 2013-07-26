@@ -249,6 +249,7 @@ Discourse.User = Discourse.Model.extend({
 
   findDetails: function() {
     var user = this;
+
     return PreloadStore.getAndRemove("user_" + user.get('username'), function() {
       return Discourse.ajax("/users/" + user.get('username') + '.json');
     }).then(function (json) {
