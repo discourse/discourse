@@ -27,7 +27,12 @@ Discourse.UserStream = Discourse.Model.extend({
 
   filterBy: function(filter) {
     if (this.get('loaded') && (this.get('filter') === filter)) { return Ember.RSVP.resolve(); }
-    this.set('filter', filter);
+
+    this.setProperties({
+      filter: filter,
+      itemsLoaded: 0,
+      content: []
+    });
     return this.findItems();
   },
 
@@ -35,11 +40,7 @@ Discourse.UserStream = Discourse.Model.extend({
     var userStream = this;
     if(this.get('loading')) { return Ember.RSVP.reject(); }
 
-    this.setProperties({
-      loading: true,
-      itemsLoaded: 0,
-      content: []
-    });
+    this.set('loading', true);
 
     var url = this.get('baseUrl');
     if (this.get('filterParam')) {
