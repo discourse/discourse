@@ -251,6 +251,7 @@ GEM
     multi_json (1.7.7)
     multipart-post (1.2.0)
     mustache (0.99.4)
+    mysql2 (0.3.13)
     net-scp (1.1.0)
       net-ssh (>= 2.6.5)
     net-ssh (2.6.7)
@@ -507,6 +508,7 @@ DEPENDENCIES
   mocha
   multi_json
   mustache
+  mysql2
   nokogiri
   oj
   omniauth
