@@ -23,8 +23,9 @@ module Jobs
                       SiteSetting.pop3s_polling_password) do |pop|
         unless pop.mails.empty?
           pop.each do |mail|
-            Email::Receiver.new(mail.pop).process
-            mail.delete
+            if Email::Receiver.new(mail.pop).process == Email::Receiver.results[:processed]
+              mail.delete
+            end
           end
         end
       end
