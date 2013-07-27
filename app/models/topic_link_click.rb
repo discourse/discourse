@@ -19,7 +19,12 @@ class TopicLinkClick < ActiveRecord::Base
     link = link.where(topic_id: args[:topic_id]) if args[:topic_id].present?
     link = link.first
 
-    return unless link.present?
+    # If no link is found, return the url for relative links
+    unless link.present?
+      return args[:url] if args[:url] =~ /^\//
+      return nil
+    end
+
     return args[:url] if (args[:user_id] && (link.user_id == args[:user_id]))
 
 
