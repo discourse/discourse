@@ -74,6 +74,10 @@ test
       PrettyText.cook("[smartass]hello[/smartass]").should match_html "<p><span class=\"smartass\">hello</span></p>"
     end
 
+    it 'should add humanism tags' do
+      PrettyText.cook("[humanism]hello[/humanism]").should match_html "<p><span class=\"humanism\">hello</span></p>"
+    end
+
     it "should only detect ``` at the begining of lines" do
       PrettyText.cook("    ```\n    hello\n    ```")
         .should match_html "<pre><code>```\nhello\n```\n</code></pre>"

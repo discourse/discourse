@@ -46,7 +46,8 @@ Discourse.BBCode = {
         "u": function(_, content) { return "<u>" + content + "</u>"; },
         "s": function(_, content) { return "<s>" + content + "</s>"; },
         "spoiler": function(_, content) { return "<span style='background-color: #000'>" + content + "</span>"; },
-        "smartass": function(_, content) { return "<span style='background-color: #000'>" + content + "</span>"; }
+        "smartass": function(_, content) { return "<span style='background-color: #000'>" + content + "</span>"; },
+        "humanism": function(_, content) { return "<span style='background-color: #000'>" + content + "</span>"; }
       },
       withArgs: {
         "size": function(_, size, content) { return "<span style=\"font-size: " + size + "px\">" + content + "</span>"; }
@@ -61,7 +62,8 @@ Discourse.BBCode = {
         "u": function(_, content) { return "<span class='bbcode-u'>" + content + "</span>"; },
         "s": function(_, content) { return "<span class='bbcode-s'>" + content + "</span>"; },
         "spoiler": function(_, content) { return "<span class=\"spoiler\">" + content + "</span>"; },
-        "smartass": function(_, content) { return "<span class=\"smartass\">" + content + "</span>"; }
+        "smartass": function(_, content) { return "<span class=\"smartass\">" + content + "</span>"; },
+        "humanism": function(_, content) { return "<span class=\"humanism\">" + content + "</span>"; }
       },
       withArgs: {
         "size": function(_, size, content) { return "<span class=\"bbcode-size-" + size + "\">" + content + "</span>"; }
