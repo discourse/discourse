@@ -16,7 +16,7 @@ Discourse.TopicListItemView = Discourse.View.extend({
 
   init: function() {
     this._super();
-    return this.set('context', this.get('content'));
+    this.set('context', this.get('content'));
   },
 
   highlight: function() {
@@ -30,13 +30,14 @@ Discourse.TopicListItemView = Discourse.View.extend({
   },
 
   didInsertElement: function() {
-    // highligth the last topic viewed
-    if (Discourse.get('transient.lastTopicIdViewed') === this.get('content.id')) {
-      Discourse.set('transient.lastTopicIdViewed', null);
+    var session = Discourse.Session.current();
+
+    // // highligth the last topic viewed
+    if (session.get('lastTopicIdViewed') === this.get('content.id')) {
+      session.set('lastTopicIdViewed', null);
       this.highlight();
-    }
-    // highlight new topics that have been loaded from the server or the one we just created
-    else if (this.get('content.highlight')) {
+    } else if (this.get('content.highlight')) {
+      // highlight new topics that have been loaded from the server or the one we just created
       this.set('content.highlight', false);
       this.highlight();
     }

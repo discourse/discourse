@@ -87,7 +87,7 @@ Discourse.Topic = Discourse.Model.extend({
   // So take what the browser has seen into consideration.
   displayNewPosts: function() {
     var delta, highestSeen, result;
-    if (highestSeen = Discourse.get('highestSeenByTopic')[this.get('id')]) {
+    if (highestSeen = Discourse.Session.current('highestSeenByTopic')[this.get('id')]) {
       delta = highestSeen - this.get('last_read_post_number');
       if (delta > 0) {
         result = this.get('new_posts') - delta;

@@ -25,6 +25,7 @@
   color: $white;
   font-size: 12px;
   font-weight: bold;
+  white-space: nowrap;
   &[href] {
     color: $white;
   }

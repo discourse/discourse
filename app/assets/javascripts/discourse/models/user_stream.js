@@ -7,38 +7,65 @@
   @module Discourse
 **/
 Discourse.UserStream = Discourse.Model.extend({
+  loaded: false,
 
-  filterChanged: function() {
+  init: function() {
+    this.setProperties({ itemsLoaded: 0, content: [] });
+  },
+
+  filterParam: function() {
+    var filter = this.get('filter');
+    if (filter === Discourse.UserAction.TYPES.replies) {
+      return [Discourse.UserAction.TYPES.replies,
+              Discourse.UserAction.TYPES.mentions,
+              Discourse.UserAction.TYPES.quotes].join(",");
+    }
+    return filter;
+  }.property('filter'),
+
+  baseUrl: Discourse.computed.url('itemsLoaded', 'user.username_lower', '/user_actions.json?offset=%@&username=%@'),
+
+  filterBy: function(filter) {
+    if (this.get('loaded') && (this.get('filter') === filter)) { return Ember.RSVP.resolve(); }
+
     this.setProperties({
-      content: Em.A(),
-      itemsLoaded: 0
+      filter: filter,
+      itemsLoaded: 0,
+      content: []
     });
-    this.findItems();
-  }.observes('filter'),
+    return this.findItems();
+  },
 
   findItems: function() {
-    var me = this;
-    if(this.get("loading")) { return Ember.RSVP.reject(); }
-    this.set("loading",true);
+    var userStream = this;
+    if(this.get('loading')) { return Ember.RSVP.reject(); }
 
-    var url = Discourse.getURL("/user_actions.json?offset=") + this.get('itemsLoaded') + "&username=" + (this.get('user.username_lower'));
-    if (this.get('filter')) {
-      url += "&filter=" + (this.get('filter'));
+    this.set('loading', true);
+
+    var url = this.get('baseUrl');
+    if (this.get('filterParam')) {
+      url += "&filter=" + this.get('filterParam');
     }
 
-    var stream = this;
+    var loadingFinished = function() {
+      userStream.set('loading', false);
+    };
+
     return Discourse.ajax(url, {cache: 'false'}).then( function(result) {
-      me.set("loading",false);
       if (result && result.user_actions) {
         var copy = Em.A();
-        _.each(result.user_actions,function(action) {
+        result.user_actions.forEach(function(action) {
           copy.pushObject(Discourse.UserAction.create(action));
         });
-        copy = Discourse.UserAction.collapseStream(copy);
-        stream.get('content').pushObjects(copy);
-        stream.set('itemsLoaded', stream.get('itemsLoaded') + result.user_actions.length);
+
+        userStream.get('content').pushObjects(Discourse.UserAction.collapseStream(copy));
+        userStream.setProperties({
+          loaded: true,
+          itemsLoaded: userStream.get('itemsLoaded') + result.user_actions.length
+        });
       }
-    }, function(){ me.set("loading", false); });
+      loadingFinished();
+    }, loadingFinished);
   }
 
 });

@@ -85,7 +85,7 @@
         </li>
         <li class='current-user'>
           {{#if currentUser}}
-            {{#titledLinkTo 'user' currentUser titleKey="current_user" class="icon"}}{{avatar currentUser imageSize="medium" }}{{/titledLinkTo}}
+            {{#linkTo 'userActivity.index' currentUser titleKey="current_user" class="icon"}}{{avatar currentUser imageSize="medium" }}{{/linkTo}}
           {{else}}
             <div class="icon not-logged-in-avatar" {{action showLogin}}><i class='icon-user'></i></div>
           {{/if}}

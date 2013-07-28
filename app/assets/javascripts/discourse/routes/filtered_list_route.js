@@ -40,6 +40,14 @@ Discourse.FilteredListRoute = Discourse.Route.extend({
       listController.set('category', null);
       listController.set('canCreateTopic', topicList.get('can_create_topic'));
       listTopicsController.set('model', topicList);
+
+      var scrollPos = Discourse.Session.current('topicListScrollPosition');
+      if (scrollPos) {
+        Em.run.next(function() {
+          $('html, body').scrollTop(scrollPos);
+        });
+        Discourse.Session.current().set('topicListScrollPosition', null);
+      }
     });
   }
 });

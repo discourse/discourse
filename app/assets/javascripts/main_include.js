@@ -1,7 +1,10 @@
+//= require_tree ./discourse/ember
+
 // The rest of the externals
 //= require_tree ./external
 
 //= require ./discourse/helpers/i18n_helpers
+//= require ./discourse/mixins/ajax
 //= require ./discourse
 
 // Pagedown customizations

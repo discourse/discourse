@@ -7,26 +7,16 @@
   @class Discourse
   @extends Ember.Application
 **/
-Discourse = Ember.Application.createWithMixins({
+Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   rootElement: '#main',
-
-  // Data we want to remember for a short period
-  transient: Em.Object.create(),
 
   // Whether the app has focus or not
   hasFocus: true,
-
-  // Are we currently scrolling?
-  scrolling: false,
-
-  // The highest seen post number by topic
-  highestSeenByTopic: {},
 
   // Helps with integration tests
   URL_FIXTURES: {},
 
   getURL: function(url) {
-
     // If it's a non relative URL, return it.
     if (url.indexOf('http') === 0) return url;
 
@@ -37,40 +27,10 @@ Discourse = Ember.Application.createWithMixins({
     return u + url;
   },
 
-  /**
-    This custom resolver allows us to find admin templates without calling .render
-    even though our path formats are slightly different than what ember prefers.
-  */
-  resolver: Ember.DefaultResolver.extend({
-
-    resolveTemplate: function(parsedName) {
-      var resolvedTemplate = this._super(parsedName);
-      if (resolvedTemplate) { return resolvedTemplate; }
-
-      var decamelized = parsedName.fullNameWithoutType.decamelize();
-
-      // See if we can find it with slashes instead of underscores
-      var slashed = decamelized.replace("_", "/");
-      resolvedTemplate = Ember.TEMPLATES[slashed];
-      if (resolvedTemplate) { return resolvedTemplate; }
-
-      // If we can't find a template, check to see if it's similar to how discourse
-      // lays out templates like: adminEmail => admin/templates/email
-      if (parsedName.fullNameWithoutType.indexOf('admin') === 0) {
-        decamelized = decamelized.replace(/^admin\_/, 'admin/templates/');
-        decamelized = decamelized.replace(/^admin\./, 'admin/templates/');
-        decamelized = decamelized.replace(/\./, '_');
-
-        resolvedTemplate = Ember.TEMPLATES[decamelized];
-        if (resolvedTemplate) { return resolvedTemplate; }
-      }
-      return Ember.TEMPLATES.not_found;
-    }
-  }),
+  resolver: Discourse.Resolver,
 
   titleChanged: function() {
-    var title;
-    title = "";
+    var title = "";
     if (this.get('title')) {
       title += "" + (this.get('title')) + " - ";
     }
@@ -216,71 +176,6 @@ Discourse = Ember.Application.createWithMixins({
   },
 
   /**
-    Our own $.ajax method. Makes sure the .then method executes in an Ember runloop
-    for performance reasons. Also automatically adjusts the URL to support installs
-    in subfolders.
-
-    @method ajax
-  **/
-  ajax: function() {
-
-    var url, args;
-
-    if (arguments.length === 1) {
-      if (typeof arguments[0] === "string") {
-        url = arguments[0];
-        args = {};
-      } else {
-        args = arguments[0];
-        url = args.url;
-        delete args.url;
-      }
-    } else if (arguments.length === 2) {
-      url = arguments[0];
-      args = arguments[1];
-    }
-
-    if (args.success) {
-      console.warning("DEPRECATION: Discourse.ajax should use promises, received 'success' callback");
-    }
-    if (args.error) {
-      console.warning("DEPRECATION: Discourse.ajax should use promises, received 'error' callback");
-    }
-
-    // If we have URL_FIXTURES, load from there instead (testing)
-    var fixture = Discourse.URL_FIXTURES && Discourse.URL_FIXTURES[url];
-    if (fixture) {
-      return Ember.RSVP.resolve(fixture);
-    }
-
-    return Ember.Deferred.promise(function (promise) {
-      var oldSuccess = args.success;
-      args.success = function(xhr) {
-        Ember.run(promise, promise.resolve, xhr);
-        if (oldSuccess) oldSuccess(xhr);
-      };
-
-      var oldError = args.error;
-      args.error = function(xhr) {
-
-        // If it's a parseerror, don't reject
-        if (xhr.status === 200) return args.success(xhr);
-
-        promise.reject(xhr);
-        if (oldError) oldError(xhr);
-      };
-
-      // We default to JSON on GET. If we don't, sometimes if the server doesn't return the proper header
-      // it will not be parsed as an object.
-      if (!args.type) args.type = 'GET';
-      if ((!args.dataType) && (args.type === 'GET')) args.dataType = 'json';
-
-      $.ajax(Discourse.getURL(url), args);
-    });
-  },
-
-
-  /**
     Subscribes the current user to receive message bus notifications
   **/
   subscribeUserToNotifications: function() {
@@ -309,8 +204,6 @@ Discourse = Ember.Application.createWithMixins({
     }
   },
 
-
-
   /**
     Start up the Discourse application.
 
@@ -332,3 +225,4 @@ Discourse = Ember.Application.createWithMixins({
 });
 
 Discourse.Router = Discourse.Router.reopen({ location: 'discourse_location' });
+

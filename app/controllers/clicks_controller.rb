@@ -7,15 +7,15 @@ class ClicksController < ApplicationController
 
     if params[:topic_id].present? || params[:post_id].present?
       params.merge!({ user_id: current_user.id }) if current_user.present?
-      TopicLinkClick.create_from(params)
+      @redirect_url = TopicLinkClick.create_from(params)
     end
 
     # Sometimes we want to record a link without a 302. Since XHR has to load the redirected
     # URL we want it to not return a 302 in those cases.
-    if params[:redirect] == 'false'
+    if params[:redirect] == 'false' || @redirect_url.blank?
       render nothing: true
     else
-      redirect_to(params[:url])
+      redirect_to(@redirect_url)
     end
   end
 
