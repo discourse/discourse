@@ -29,9 +29,7 @@
     </div>
 
     <div class='topic-body span14'>
-      {{#if controller.multiSelect}}
-        <button class='post-select' {{action selectPost this}}>{{view.selectText}}</button>
-      {{/if}}
+      <button {{action selectPost this}} {{bindAttr class=":post-select controller.multiSelect::hidden"}}>{{view.selectText}}</button>
 
       <div {{bindAttr class="showUserReplyTab:avoid-tab view.repliesHidden:bottom-round :contents :regular view.extraClass"}}>
         {{#unless controller.multiSelect}}
