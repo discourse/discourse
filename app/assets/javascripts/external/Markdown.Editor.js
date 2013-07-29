@@ -53,7 +53,7 @@
         code: "Code Sample <pre><code> Ctrl+K",
         codeexample: "enter code here",
 
-        image: "Image <img> Ctrl+G",
+        image: "File or Image <img> Ctrl+G",
         imagedescription: "enter image description here",
         imagedialog: "<p><b>Insert Image</b></p><p>http://example.com/images/diagram.jpg \"optional title\"<br><br>Need <a href='http://www.google.com/search?q=free+image+hosting' target='_blank'>free image hosting?</a></p>",
 
@@ -1755,32 +1755,29 @@
     }
 
     // See https://www.filepicker.io/ for details
-    var filepicker_enabled = false;
-    if (filepicker_enabled) {
-        commandProto.useFilePickerIo = function (chunk, linkEnteredCallback) {
-            //TODO: the following variables should be settings
-            var filepicker_key = "!!!YOUR FILEPICKER.IO KEY!!!";
-            var filepicker_s3_path = "discourse/attachments/";
-            var filepicker_access_public = true;
-            var filepicker_extensions = ['.dwg', '.dxf', '.zip', '.7z', '.rar', '.igs', '.stp', '.step', '.rhp', '.gh', '.gha', '.ghx', '.py', '.rvb', '.rui', '.txt', '.pdf', '.png', '.jpg', '.jpeg', '.gif', '.rmtl', '.renv', '.3dm'];
+    function useFilePickerIo(chunk, linkEnteredCallback) {
+        //TODO: the following variables should be settings
+        var filepicker_key = "AGGpXRIm0SEulP8dXJdbAz";
+        var filepicker_s3_path = "discourse/attachments/";
+        var filepicker_access_public = true;
+        var filepicker_extensions = ['.dwg', '.dxf', '.zip', '.7z', '.rar', '.igs', '.stp', '.step', '.rhp', '.gh', '.gha', '.ghx', '.py', '.rvb', '.rui', '.txt', '.pdf', '.png', '.jpg', '.jpeg', '.gif', '.rmtl', '.renv', '.3dm'];
 
-            var fpaccess = filepicker_access_public ? "public" : "private";
-            filepicker.setKey(filepicker_key);
-            filepicker.pickAndStore(
-                { extensions: filepicker_extensions },
-                { location: "S3", path: filepicker_s3_path, access: filepicker_access_public },
-                function (fpFiles) {
-                    if (fpFiles[0].url && fpFiles[0].filename) {
-                        chunk.selection = fpFiles[0].filename;
-                        linkEnteredCallback(fpFiles[0].url);
-                    }
-                },
-                function (fpError) {
-                    // error handling
-                    linkEnteredCallback(null);
-                });
-            return true;
-        };
+        var fpaccess = filepicker_access_public ? "public" : "private";
+        filepicker.setKey(filepicker_key);
+        filepicker.pickAndStore(
+            { extensions: filepicker_extensions },
+            { location: "S3", path: filepicker_s3_path, access: filepicker_access_public },
+            function (fpFiles) {
+                if (fpFiles[0].url && fpFiles[0].filename) {
+                    chunk.selection = fpFiles[0].filename;
+                    linkEnteredCallback(fpFiles[0].url);
+                }
+            },
+            function (fpError) {
+                // error handling
+                linkEnteredCallback(null);
+            });
+        return true;
     }
 
 
@@ -1840,7 +1837,7 @@
 
                     var num = that.addLinkDef(chunk, linkDef);
                     var makeImageLink = isImage;
-                    if (isImage && that.useFilePickerIo && chunk.selection) {
+                    if (isImage && chunk.selection) {
                         var filename = chunk.selection.toLowerCase();
                         makeImageLink = /(jpg|gif|png|jpeg)$/.test(filename);
                     }
@@ -1863,8 +1860,7 @@
             background = ui.createBackground();
 
             if (isImage) {
-                if (that.useFilePickerIo )
-                    return that.useFilePickerIo(chunk, linkEnteredCallback);
+                return useFilePickerIo(chunk, linkEnteredCallback);
 
                 if (!this.hooks.insertImageDialog(linkEnteredCallback))
                     ui.prompt(this.getString("imagedialog"), imageDefaultText, linkEnteredCallback);
