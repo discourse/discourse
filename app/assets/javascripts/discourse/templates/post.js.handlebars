@@ -53,14 +53,7 @@
         {{view Discourse.PostMenuView postBinding="this" postViewBinding="view"}}
       </div>
       {{view Discourse.RepliesView contentBinding="replies" postViewBinding="view"}}
-      {{view Discourse.ActionsHistoryView contentBinding="actionsHistory"}}
-
-      {{#if deleted}}
-        <div class='post-actions'>
-          {{i18n post.deleted_by}} {{avatar postDeletedBy imageSize="tiny"}} {{unboundAge postDeletedAt}}
-        </div>
-      {{/if}}
-
+      {{view Discourse.ActionsHistoryView postBinding="this"}}
       {{view Discourse.TopicSummaryView postBinding="this"}}
     </div>
 
