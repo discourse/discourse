@@ -73,7 +73,7 @@
               {{/if}}
 
               {{#if flaggedPost.canDeleteAsSpammer}}
-                <button title='{{i18n admin.flags.delete_spammer_title}}' class="btn" {{action deleteSpammer flaggedPost}}><i class="icon icon-trash"></i> {{i18n flagging.delete_spammer}}</button>
+                <button title='{{i18n admin.flags.delete_spammer_title}}' class="btn" {{action deleteSpammer flaggedPost}}><i class="icon icon-warning-sign"></i> {{i18n flagging.delete_spammer}}</button>
               {{/if}}
 
               <button title='{{i18n admin.flags.delete_post_title}}' class='btn' {{action deletePost flaggedPost}}><i class="icon-trash"></i> {{i18n admin.flags.delete_post}}</button>
