@@ -220,7 +220,6 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     Discourse.KeyValueStore.init("discourse_", Discourse.MessageBus);
 
     // Developer specific functions
-    Discourse.Development.setupProbes();
     Discourse.Development.observeLiveChanges();
     Discourse.subscribeUserToNotifications();
   }
