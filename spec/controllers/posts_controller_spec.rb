@@ -282,6 +282,18 @@ describe PostsController do
         ::JSON.parse(response.body).should be_present
       end
 
+      it 'protects against dupes' do
+        # TODO we really should be using a mock redis here
+        xhr :post, :create, {raw: 'this is a test post 123', title: 'this is a test title 123', wpid: 1}
+        response.should be_success
+        original = response.body
+
+        xhr :post, :create, {raw: 'this is a test post 123', title: 'this is a test title 123', wpid: 2}
+        response.should be_success
+
+        response.body.should == original
+      end
+
       context "errors" do
 
         let(:post_with_errors) { Fabricate.build(:post, user: user)}
