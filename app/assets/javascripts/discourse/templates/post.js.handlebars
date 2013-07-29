@@ -34,7 +34,6 @@
       {{/if}}
 
       <div {{bindAttr class="showUserReplyTab:avoid-tab view.repliesHidden:bottom-round :contents :regular view.extraClass"}}>
-        {{view Discourse.PrependPostView postBinding="this"}}
         {{#unless controller.multiSelect}}
           <div class='topic-meta-data-inside'>
             {{#if hasHistory}}
