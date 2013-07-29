@@ -8,7 +8,7 @@ Discourse uses the PBKDF2 algorithm to encrypt salted passwords. This algorithm 
 
 **options you can customise in your production.rb file**
 
-pbkdf2_algorithm: the hashing algorithm used (default "sha256")
+pbkdf2_algorithm: the hashing algorithm used (default "sha256")  
 pbkdf2_iterations: the number of iterations to run (default is: 64000)
 
 
