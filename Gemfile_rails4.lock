@@ -267,6 +267,7 @@ GEM
     minitest (4.7.5)
     mocha (0.14.0)
       metaclass (~> 0.0.1)
+    mock_redis (0.8.1)
     multi_json (1.7.7)
     multipart-post (1.2.0)
     mustache (0.99.4)
@@ -505,6 +506,7 @@ DEPENDENCIES
   message_bus!
   minitest
   mocha
+  mock_redis
   multi_json
   mustache
   nokogiri
