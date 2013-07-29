@@ -79,7 +79,7 @@ module Email
 
     def correct_footer_style
       @fragment.css('.footer').each do |element|
-        element['style'] = "font-size:12px;font-family:'lucida grande',tahoma,verdana,arial,sans-serif;color:#666;"
+        element['style'] = "color:#666;"
         element.css('a').each do |inner|
           inner['style'] = "color:#666;"
         end
