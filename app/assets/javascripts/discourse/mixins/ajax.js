@@ -46,7 +46,7 @@ Discourse.Ajax = Em.Mixin.create({
       return Ember.RSVP.resolve(fixture);
     }
 
-    return Ember.Deferred.promise(function (promise) {
+    var performAjax = function(promise) {
       var oldSuccess = args.success;
       args.success = function(xhr) {
         Ember.run(promise, promise.resolve, xhr);
@@ -69,7 +69,22 @@ Discourse.Ajax = Em.Mixin.create({
       if ((!args.dataType) && (args.type === 'GET')) args.dataType = 'json';
 
       $.ajax(Discourse.getURL(url), args);
-    });
+    };
+
+    // For cached pages we strip out CSRF tokens, need to round trip to server prior to sending the
+    //  request (bypass for GET, not needed)
+    var csrfToken = $('meta[name=csrf-token]').attr('content');
+    if(args.type && args.type !== 'GET' && !csrfToken){
+      return Ember.Deferred.promise(function(promise){
+        $.ajax(Discourse.getURL('/session/csrf'))
+           .success(function(result){
+              $('head').append('<meta name="csrf-token" content="' + result.csrf + '">');
+              performAjax(promise);
+           });
+      });
+    } else {
+      return Ember.Deferred.promise(performAjax);
+    }
   }
 
 });

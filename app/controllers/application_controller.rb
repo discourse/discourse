@@ -14,6 +14,18 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery
 
+  # Default Rails 3.2 lets the request through with a blank session
+  #  we are being more pedantic here and nulling session / current_user
+  #  and then raising a CSRF exception
+  def handle_unverified_request
+    # NOTE: API key is secret, having it invalidates the need for a CSRF token
+    unless is_api?
+      super
+      clear_current_user
+      raise Discourse::CSRF
+    end
+  end
+
   before_filter :inject_preview_style
   before_filter :block_if_maintenance_mode
   before_filter :authorize_mini_profiler

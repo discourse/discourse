@@ -96,6 +96,8 @@ Discourse::Application.routes.draw do
     end
   end
 
+  get 'session/csrf' => 'session#csrf'
+
   resources :users, except: [:show, :update] do
     collection do
       get 'check_username'

@@ -15,7 +15,8 @@ class Users::OmniauthCallbacksController < ApplicationController
   # need to be able to call this
   skip_before_filter :check_xhr
 
-  # must be done, cause we may trigger a POST
+  # this is the only spot where we allow CSRF, our openid / oauth redirect
+  # will not have a CSRF token, however the payload is all validated so its safe
   skip_before_filter :verify_authenticity_token, only: :complete
 
   def complete

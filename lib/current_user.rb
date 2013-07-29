@@ -17,6 +17,12 @@ module CurrentUser
     end
   end
 
+  # can be used to pretend current user does no exist, for CSRF attacks
+  def clear_current_user
+    @current_user = nil
+    @not_logged_in = true
+  end
+
   def log_on_user(user)
     session[:current_user_id] = user.id
     unless user.auth_token && user.auth_token.length == 32
@@ -28,6 +34,13 @@ module CurrentUser
 
   def set_permanent_cookie!(user)
     cookies.permanent["_t"] = { value: user.auth_token, httponly: true }
+  end
+
+  def is_api?
+    # ensure current user has been called
+    # otherwise
+    current_user
+    @is_api
   end
 
   def current_user
@@ -64,6 +77,7 @@ module CurrentUser
       if api_key = request["api_key"]
         if api_username = request["api_username"]
           if SiteSetting.api_key_valid?(api_key)
+            @is_api = true
             @current_user = User.where(username_lower: api_username.downcase).first
           end
         end

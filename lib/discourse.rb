@@ -20,6 +20,9 @@ module Discourse
   # When a setting is missing
   class SiteSettingMissing < Exception; end
 
+  # Cross site request forgery
+  class CSRF < Exception; end
+
   def self.cache
     @cache ||= Cache.new
   end
