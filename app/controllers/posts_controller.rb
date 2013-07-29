@@ -1,5 +1,6 @@
 require_dependency 'post_creator'
 require_dependency 'post_destroyer'
+require_dependency 'distributed_memoizer'
 
 class PostsController < ApplicationController
 
@@ -25,21 +26,36 @@ class PostsController < ApplicationController
   end
 
   def create
-    post_creator = PostCreator.new(current_user, create_params)
-    post = post_creator.create
-    if post_creator.errors.present?
+    params = create_params
 
-      # If the post was spam, flag all the user's posts as spam
-      current_user.flag_linked_posts_as_spam if post_creator.spam?
+    key = params_key(params)
 
-      render_json_error(post_creator)
-    else
-      post_serializer = PostSerializer.new(post, scope: guardian, root: false)
-      post_serializer.topic_slug = post.topic.slug if post.topic.present?
-      post_serializer.draft_sequence = DraftSequence.current(current_user, post.topic.draft_key)
-      render_json_dump(post_serializer)
+    result = DistributedMemoizer.memoize(key, 120) do
+      post_creator = PostCreator.new(current_user, params)
+      post = post_creator.create
+      if post_creator.errors.present?
+
+        # If the post was spam, flag all the user's posts as spam
+        current_user.flag_linked_posts_as_spam if post_creator.spam?
+
+        "e" << MultiJson.dump(errors: post_creator.errors.full_messages)
+      else
+        post_serializer = PostSerializer.new(post, scope: guardian, root: false)
+        post_serializer.topic_slug = post.topic.slug if post.topic.present?
+        post_serializer.draft_sequence = DraftSequence.current(current_user, post.topic.draft_key)
+        "s" << MultiJson.dump(post_serializer)
+      end
     end
 
+
+    payload = result[1..-1]
+    if result[0] == "e"
+      # don't memoize errors
+      $redis.del(DistributedMemoizer.redis_key(key))
+      render json: payload, status: 422
+    else
+      render json: payload
+    end
   end
 
   def update
@@ -192,6 +208,15 @@ class PostsController < ApplicationController
   end
 
   private
+
+    def params_key(params)
+      "post##" << Digest::SHA1.hexdigest(params
+        .to_a
+        .concat([["user", current_user.id]])
+        .sort{|x,y| x[0] <=> y[0]}.join do |x,y|
+          "#{x}:#{y}"
+        end)
+    end
 
     def create_params
       permitted = [

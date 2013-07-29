@@ -149,6 +149,7 @@ group :test do
 end
 
 group :test, :development do
+  gem 'mock_redis'
   gem 'listen', require: false
   gem 'certified', require: false
   if rails4?

@@ -132,8 +132,11 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
 
     // Add a CSRF token to all AJAX requests
     var csrfToken = $('meta[name=csrf-token]').attr('content');
+
     $.ajaxPrefilter(function(options, originalOptions, xhr) {
       if (!options.crossDomain) {
+        // This may be delay set
+        csrfToken = csrfToken || $('meta[name=csrf-token]').attr('content');
         xhr.setRequestHeader('X-CSRF-Token', csrfToken);
       }
     });
@@ -217,7 +220,6 @@ Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     Discourse.KeyValueStore.init("discourse_", Discourse.MessageBus);
 
     // Developer specific functions
-    Discourse.Development.setupProbes();
     Discourse.Development.observeLiveChanges();
     Discourse.subscribeUserToNotifications();
   }
