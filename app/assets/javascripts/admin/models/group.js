@@ -44,7 +44,7 @@ Discourse.Group = Discourse.Model.extend({
     return Discourse.ajax("/admin/groups/" + group.get('id'), {type: "DELETE"})
       .then(function(){
         return true;
-      }, function(jqXHR, status, error) {
+      }, function(error) {
         group.set('disableSave', false);
         bootbox.alert(I18n.t("admin.groups.delete_failed"));
         return false;
