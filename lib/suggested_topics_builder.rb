@@ -12,17 +12,19 @@ class SuggestedTopicsBuilder
 
   def add_results(results)
 
-    return if results.blank?
+    # WARNING .blank? will execute an Active Record query
+    return unless results
 
     # Only add results if we don't have those topic ids already
     results = results.where('topics.id NOT IN (?)', @excluded_topic_ids)
                      .where(closed: false, archived: false, visible: true)
+                     .to_a
 
-    return if results.blank?
-
-    # Keep track of the ids we've added
-    @excluded_topic_ids.concat results.map {|r| r.id}
-    @results.concat results
+    unless results.empty?
+      # Keep track of the ids we've added
+      @excluded_topic_ids.concat results.map {|r| r.id}
+      @results.concat results
+    end
   end
 
   def results_left
