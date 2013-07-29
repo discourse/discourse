@@ -963,7 +963,7 @@ en:
     views_long: "this topic has been viewed {{number}} times"
     activity: "Activity"
     likes: "Fucks"
-    likes_long: "there are {{number}} fucks in this topic"
+    likes_long: "{{number}} fucks were given in this topic"
     top_contributors: "Participants"
     category_title: "Category"
     history: "History"
