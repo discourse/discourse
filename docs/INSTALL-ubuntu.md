@@ -381,3 +381,7 @@ This change reflects us switching to using `FileUtils.mkdir_p` instead of `Dir.m
 This change reflects a change in placeholder information plus (importantly)
 adding the `client_max_body_size 2m;` directive to the nginx.conf. This change
 should also be made to your production file.
+
+## Security
+
+We take security very seriously at Discourse, and all our code is 100% open source and peer reviewed. Please read [our security guide](https://github.com/discourse/discourse/blob/master/docs/SECURITY.md) for an overview of security measures in Discourse.
