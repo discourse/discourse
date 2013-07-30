@@ -87,7 +87,7 @@ module Email
     end
 
     def discourse_email_parser
-      lines = @body.lines
+      lines = @body.lines.to_a
       range_end = 0
 
       email_year =
