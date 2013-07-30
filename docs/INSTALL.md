@@ -8,8 +8,8 @@ It is still early times for Discourse. From our FAQ:
 
 Discourse has two fairly decent install documents now:
 
-- Our [**official Ubuntu Server 12.04 LTS install document**][1]
-- [Unofficial Heroku install document][2]
+- Our [**official install guide**][1]
+- [Unofficial Heroku install guide][2]
 
 Beyond that, if you are feeling extra *extra* adventurous you'll need some server hardware:
 
