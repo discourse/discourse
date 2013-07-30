@@ -47,7 +47,7 @@
             </div>
           </div>
         {{/unless}}
-        <div class='cooked'>{{{cooked}}}</div>
+        {{view Discourse.RawDivView class="cooked" contentBinding="cooked"}}
         {{view Discourse.PostMenuView postBinding="this" postViewBinding="view"}}
       </div>
       {{view Discourse.RepliesView contentBinding="replies" postViewBinding="view"}}
