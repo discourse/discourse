@@ -25,9 +25,9 @@ task "qunit:test" => :environment do
     begin
       rake_system(cmd)
     rescue
-      sleep 1
+      sleep 2
       tries += 1
-      retry unless tries == 5
+      retry unless tries == 10
     end
 
     # A bit of a hack until we can figure this out on Travis
