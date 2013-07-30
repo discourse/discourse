@@ -9,10 +9,11 @@ task "qunit:test" => :environment do
   end
 
   port = ENV['TEST_SERVER_PORT'] || 60099
-  server = Thread.new do
+  unless pid = fork
     Rack::Server.start(:config => "config.ru",
                        :AccessLog => [],
                        :Port => port)
+    exit
   end
 
   begin
@@ -23,7 +24,7 @@ task "qunit:test" => :environment do
     # wait for server to respond, will exception out on failure
     tries = 0
     begin
-      rake_system(cmd)
+      sh(cmd)
     rescue
       sleep 2
       tries += 1
@@ -32,7 +33,7 @@ task "qunit:test" => :environment do
 
     # A bit of a hack until we can figure this out on Travis
     tries = 0
-    while tries < 3 && $?.exitstatus === 124
+    while tries < 3 && $?.exitstatus === 124 && !quit
       tries += 1
       puts "\nTimed Out. Trying again...\n"
       rake_system(cmd)
@@ -41,7 +42,7 @@ task "qunit:test" => :environment do
     success &&= $?.success?
 
   ensure
-    server.kill
+    Process.kill "HUP", pid
   end
 
   if success
