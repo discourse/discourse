@@ -122,6 +122,18 @@ describe Category do
     end
   end
 
+  it "strips leading blanks" do
+    Fabricate(:category, name: " music").name.should == "music"
+  end
+
+  it "strips trailing blanks" do
+    Fabricate(:category, name: "bugs ").name.should == "bugs"
+  end
+
+  it "strips leading and trailing blanks" do
+    Fabricate(:category, name: "  blanks ").name.should == "blanks"
+  end
+
   describe "short name" do
     let!(:category) { Fabricate(:category, name: 'xx') }
 
@@ -218,7 +230,6 @@ describe Category do
         @topic.category.should == @category
         @category.topic.should == @topic
       end
-
     end
   end
 

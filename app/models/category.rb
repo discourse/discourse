@@ -121,6 +121,7 @@ class Category < ActiveRecord::Base
 
   def ensure_slug
     if name.present?
+      self.name.strip!
       self.slug = Slug.for(name)
 
       return if self.slug.blank?
