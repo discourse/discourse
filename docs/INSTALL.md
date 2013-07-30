@@ -1,6 +1,6 @@
-# Discourse "Quick-and-Dirty" Install Guide
+# Discourse Install Guide
 
-It is still early times for Discourse. From our FAQ:
+It is still early times for Discourse. From [our FAQ](http://www.discourse.org/faq/):
 
 > Discourse is brand new. Discourse is early beta software, and likely to remain so for many months.
 > Please experiment with it, play with it, give us feedback, submit pull requests – but any consideration
@@ -8,11 +8,11 @@ It is still early times for Discourse. From our FAQ:
 
 Still interested?
 
-### [**Official install guide**][1]
+### [**Click here for the OFFICIAL INSTALL GUIDE**][1]
 
 Alternately, you can try the [unofficial Heroku install guide][2], or the [BitNami Discourse Virtual Machine package][3].
 
-No time to read all that? Here's the quick and dirty version.
+## Quick and Dirty Install
 
 ### Hardware
 
@@ -37,7 +37,7 @@ No time to read all that? Here's the quick and dirty version.
   - Run a clockwork process for enqueing scheduled jobs
   - Run several Rails processes, preferably behind a proxy like Nginx.
 
-### Low memory installs
+### Low memory (less than 2 GB)
 
 Remember you *will* need swap enabled and working! To reduce memory footprint, clockwork can run inside your web server, if you launch the your web server with `EMBED_CLOCKWORK=1`, clockwork will run in a backgroud thread. As clockwork itself only performs scheduling, it will have very little impact on performance.
 
