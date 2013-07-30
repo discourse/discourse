@@ -1,19 +1,20 @@
-# Discourse Install Guide on Ubuntu
+# Official Discourse Install Guide
 
-## What kind of hardware do you have?
+## Recommended Server Hardware
 
-- Recommended minimum configuration is:
-  - 2 GB of RAM
-  - 2 GB of swap
-  - 2 processor cores
-- With 2GB of memory and dual cores, you can run two instances of the thin
-  server (`NUM_WEBS=2`)
+- 2 GB of RAM
+- 2 GB of swap
+- 2 processor cores
+
+With 2 GB of memory and dual cores, you can run two instances of the thin server (`NUM_WEBS=2`)
 
 1 GB of memory, 3GB of swap and a single core CPU are the minimums for a
 steady state, running Discourse forum -- but it's simpler to just throw a bit
 more hardware at the problem if you can, particularly during the install.
 
 ## Install Ubuntu Server 12.04 LTS with the package groups:
+
+Yes, you can in theory pick the distro of your choice, but to keep this guide sane, we're picking one, and it's Ubuntu. Feel free to substitute the distro of your choice, the steps are mostly the same.
 
 ![screenshot of package group selection screen](https://raw.github.com/discourse/discourse-docimages/master/install/ubuntu%20-%20install%20-%20software%20selection.png)
 
