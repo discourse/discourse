@@ -1,7 +1,6 @@
-
 ## Discourse Security
 
-We take security very seriously at Discourse. We welcome any peer review of our 100% open source code to make sure that nobody's Discourse forum is ever compromised or hacked. 
+We take security very seriously at Discourse. We welcome any peer review of our 100% open source code to ensure nobody's Discourse forum is ever compromised or hacked. 
 
 ### Where should I report security issues?
 
@@ -16,16 +15,15 @@ Discourse uses the PBKDF2 algorithm to encrypt salted passwords. This algorithm 
 - `pbkdf2_algorithm`: the hashing algorithm used (default "sha256")  
 - `pbkdf2_iterations`: the number of iterations to run (default 64000)
 
-
 ### XSS
 
-The main vector for XSS attacks is via the post composer, as we allow users to enter Markdown, HTML (a safe subset thereof), and BBCode to format posts.
+The main vector for [XSS](https://en.wikipedia.org/wiki/Cross-site_scripting) attacks is via the post composer, as we allow users to enter Markdown, HTML (a safe subset thereof), and BBCode to format posts.
 
 There are 2 main scenarios we protect against:
 
-1. *Markdown preview invokes an XSS.* This is possibly severe in one specific case: when a forum staff member edits a user's post, seeing the raw markup, where a malicious user may have inserted code to run JavaScript. This code would only show up in the preview, but it would run in the context of a forum staff member, which is *very* bad.
+1. **Markdown preview invokes an XSS.** This is possibly severe in one specific case: when a forum staff member edits a user's post, seeing the raw markup, where a malicious user may have inserted code to run JavaScript. This code would only show up in the preview, but it would run in the context of a forum staff member, which is *very* bad.
 
-2. *Markdown displayed on the page invokes an XSS.* To protect against client side preview XSS, Discourse uses [Google Caja](https://code.google.com/p/google-caja/) in the preview window.
+2. **Markdown displayed on the page invokes an XSS.** To protect against client side preview XSS, Discourse uses [Google Caja](https://developers.google.com/caja/) in the preview window.
 
 On the server side we run a whitelist based sanitizer, implemented using the [Sanitize gem](https://github.com/rgrove/sanitize). See the [relevant Discourse code](https://github.com/discourse/discourse/blob/master/lib/pretty_text.rb).  
 
