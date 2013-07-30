@@ -2,23 +2,23 @@ require_dependency 'mem_info'
 
 class AdminDashboardData
 
-  REPORTS = [
-    'visits',
-    'signups',
-    'topics',
-    'posts',
-    'flags',
-    'users_by_trust_level',
-    'likes',
-    'bookmarks',
-    'favorites',
-    'emails',
-    'user_to_user_private_messages',
-    'system_private_messages',
-    'moderator_warning_private_messages',
-    'notify_moderators_private_messages',
-    'notify_user_private_messages'
-  ]
+  REPORTS = %i(
+    visits
+    signups
+    topics
+    posts
+    flags
+    users_by_trust_level
+    likes
+    bookmarks
+    favorites
+    emails
+    user_to_user_private_messages
+    system_private_messages
+    moderator_warning_private_messages
+    notify_moderators_private_messages
+    notify_user_private_messages
+  )
 
   def problems
     [ rails_env_check,
