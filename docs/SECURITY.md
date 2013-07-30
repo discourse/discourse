@@ -1,12 +1,11 @@
-### Where should I report security issues?
-
-In order to give the community time to respond and upgrade we strongly urge you report all security issues privately. Please email us at `team@discourse.org` with details and we will respond ASAP. Security issues *always* take precedence over bug fixes and feature work. We can and do mark releases as "urgent" if they contain serious security fixes.
 
 ## Discourse Security
 
 We take security very seriously at Discourse. We welcome any peer review of our 100% open source code to make sure that nobody's Discourse forum is ever compromised or hacked. 
 
-Here are a few specific ways Discourse is as secure as we could make it:
+### Where should I report security issues?
+
+In order to give the community time to respond and upgrade we strongly urge you report all security issues privately. Please email us at `team@discourse.org` with details and we will respond ASAP. Security issues *always* take precedence over bug fixes and feature work. We can and do mark releases as "urgent" if they contain serious security fixes.
 
 ### Password Storage
 
