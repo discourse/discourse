@@ -279,9 +279,6 @@
       .topic-title {
         font-size: 13px;
         font-weight: normal;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
       }
       &.btn-reply-here {
         @include linear-gradient(#ddd, #ddd);

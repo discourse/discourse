@@ -214,7 +214,13 @@
         {{#each data in top_referred_topics.data}}
           <tbody>
             <tr>
-              <td class="title"><a href="/t/{{unbound data.topic_slug}}/{{unbound data.topic_id}}">{{shorten data.topic_title}}</a></td>
+              <td class="title">
+                <div class="referred-topic-title">
+                  <div class="overflow-ellipsis">
+                    <a href="/t/{{unbound data.topic_slug}}/{{unbound data.topic_id}}">{{data.topic_title}}</a>
+                  </div>
+                </div>
+              </td>
               <td class="value">{{data.num_clicks}}</td>
             </tr>
           </tbody>
