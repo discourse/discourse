@@ -59,9 +59,7 @@ class AdminDashboardData
       top_referrers: IncomingLinksReport.find('top_referrers').as_json,
       top_traffic_sources: IncomingLinksReport.find('top_traffic_sources').as_json,
       top_referred_topics: IncomingLinksReport.find('top_referred_topics').as_json
-    }.merge(
-      SiteSetting.version_checks? ? {version_check: DiscourseUpdates.check_version.as_json} : {}
-    )
+    }
   end
 
   def rails_env_check

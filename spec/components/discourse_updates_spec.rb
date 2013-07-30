@@ -81,4 +81,28 @@ describe DiscourseUpdates do
     end
   end
 
+  context 'old version check data' do
+    context 'installed is latest' do
+      before { stub_data(Discourse::VERSION::STRING, 1, false, 8.hours.ago) }
+
+      it 'queues a version check' do
+        Jobs.expects(:enqueue).with(:version_check, anything)
+        subject
+      end
+
+      it 'reports 0 missing versions' do
+        subject['missing_versions_count'].should == 0
+      end
+    end
+
+    context 'installed is not latest' do
+      before { stub_data('0.9.1', 0, false, 8.hours.ago) }
+
+      it 'queues a version check' do
+        Jobs.expects(:enqueue).with(:version_check, anything)
+        subject
+      end
+    end
+  end
+
 end
