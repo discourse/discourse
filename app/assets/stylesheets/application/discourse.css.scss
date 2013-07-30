@@ -219,8 +219,8 @@ form {
 blockquote {
   /* 13px left is intentional here to properly align with post quotes */
   padding: 10px 8px 1px 13px;
-  background-color: #f1f1f1;
-  border-left: 5px solid #dddddd;
+  background-color: $quote-background;
+  border-left: 5px solid darken($quote-background, 20%);
   p {
     margin: 0 0 10px 0;
   }
