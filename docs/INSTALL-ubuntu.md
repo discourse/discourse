@@ -144,10 +144,13 @@ Continue with Discourse installation
     # Install bundler
     gem install bundler
 
-    # Pull down the latest release
+    # Pull down the latest code
     git clone git://github.com/discourse/discourse.git
     cd discourse
-    git checkout latest-release
+    git checkout master
+    
+    # To run on the most recent numbered release instead of bleeding-edge:
+    #git checkout latest-release
 
     # Install necessary gems
     bundle install --deployment --without test
@@ -309,12 +312,12 @@ The corresponding site setting is:
     DATESTAMP=$(TZ=UTC date +%F-%T)
     pg_dump --no-owner --clean discourse_prod | gzip -c > ~/discourse-db-$DATESTAMP.sql.gz
     tar cfz ~/discourse-dir-$DATESTAMP.tar.gz -C ~ discourse
-    # Pull down the latest release
+    # get the latest Discourse code
     cd ~/discourse
     git checkout master
     git pull
     git fetch --tags
-    # To run on the latest version instead of bleeding-edge:
+    # To run on the latest numbered release instead of bleeding-edge:
     #git checkout latest-release
     #
     # Follow the section below titled:
@@ -344,7 +347,7 @@ Check the sample configuration files provided in the repo with the ones being us
 
     $ diff -u config/discourse.pill.sample config/discourse.pill
     --- config/discourse.pill.sample  2013-07-15 17:38:06.501507001 +0000
-    +++ config/discourse.pill	2013-07-05 06:38:27.133506896 +0000
+    +++ config/discourse.pill  2013-07-05 06:38:27.133506896 +0000
     @@ -46,7 +46,7 @@
 
        app.working_dir = rails_root
