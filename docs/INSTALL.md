@@ -1,4 +1,4 @@
-# Discourse Install Guide
+# How Do I Install Discourse?
 
 It is still early times for Discourse. From [our FAQ](http://www.discourse.org/faq/):
 
@@ -39,7 +39,7 @@ Alternately, you can try the [unofficial Heroku install guide][2], or the [BitNa
 
 ### Low memory (less than 2 GB)
 
-Remember you *will* need swap enabled and working! To reduce memory footprint, clockwork can run inside your web server, if you launch the your web server with `EMBED_CLOCKWORK=1`, clockwork will run in a backgroud thread. As clockwork itself only performs scheduling, it will have very little impact on performance.
+Remember you *will* need swap enabled and working! To reduce memory footprint, clockwork can run inside your web server. If you launch the your web server with `EMBED_CLOCKWORK=1`, clockwork will run in a backgroud thread. As clockwork itself only performs scheduling, it will have very little impact on performance.
 
 [1]: https://github.com/discourse/discourse/blob/master/docs/INSTALL-ubuntu.md
 [2]: https://github.com/discourse/discourse/blob/master/docs/HEROKU.md
