@@ -13,13 +13,12 @@ Discourse.PostMenuView = Discourse.View.extend({
   shouldRerender: Discourse.View.renderIfChanged(
     'post.deleted_at',
     'post.flagsAvailable.@each',
-    'post.url',
-    'post.bookmarked',
     'post.reply_count',
     'post.showRepliesBelow',
     'post.can_delete',
-    'post.read',
-    'post.topic.last_read_post_number',
+    'bookmarkClass',
+    'bookmarkTooltip',
+    'shareUrl',
     'post.topic.deleted_at'),
 
   render: function(buffer) {
@@ -163,7 +162,7 @@ Discourse.PostMenuView = Discourse.View.extend({
   renderShare: function(post, buffer) {
     buffer.push("<button title=\"" +
                  (I18n.t("post.controls.share")) +
-                 "\" data-share-url=\"" + (post.get('shareUrl')) + "\" class='share'><i class=\"icon-link\"></i></button>");
+                 "\" data-share-url=\"" + post.get('shareUrl') + "\" class='share'><i class=\"icon-link\"></i></button>");
   },
 
   // Reply button

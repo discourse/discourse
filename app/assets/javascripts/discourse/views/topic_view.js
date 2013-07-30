@@ -21,6 +21,10 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
   postStream: Em.computed.alias('controller.postStream'),
 
   updateBar: function() {
+    Em.run.scheduleOnce('afterRender', this, 'updateProgressBar');
+  }.observes('controller.streamPercentage'),
+
+  updateProgressBar: function() {
     var $topicProgress = $('#topic-progress');
     if (!$topicProgress.length) return;
 
@@ -30,8 +34,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     $topicProgress.find('.bg')
                   .css("border-right-width", (progressWidth === totalWidth) ? "0px" : "1px")
                   .width(progressWidth);
-
-  }.observes('controller.streamPercentage'),
+  },
 
   updateTitle: function() {
     var title = this.get('topic.title');
@@ -79,7 +82,6 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     if (this.present('controller.enteredAt')) {
       var topicView = this;
       Em.run.schedule('afterRender', function() {
-        topicView.updateBar();
         topicView.updatePosition();
       });
     }
@@ -337,7 +339,6 @@ Discourse.TopicView.reopenClass({
   // Scroll to a given post, if in the DOM. Returns whether it was in the DOM or not.
   jumpToPost: function(topicId, postNumber, avoidScrollIfPossible) {
     Em.run.scheduleOnce('afterRender', function() {
-
       var rows = $('.topic-post.ready');
 
       // Make sure we're looking at the topic we want to scroll to

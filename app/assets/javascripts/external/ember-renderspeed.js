@@ -27,7 +27,7 @@
       @property description
     **/
     description: function() {
-      var result = "Rendered ";
+      var result = "";
       if (this.get('payload.template')) {
         result += "'" + this.get('payload.template') + "' ";
       }
@@ -61,15 +61,15 @@
 
       @method log
     **/
-    log: function() {
-      if ((!console) || (!console.groupCollapsed)) { return; }
+    log: function(type) {
+      if ((typeof console === 'undefined') || (!console.groupCollapsed)) { return; }
 
       // We don't care about really fast renders
       if (this.get('time') < 1) { return; }
 
-      console.groupCollapsed(this.get('description'));
+      console.groupCollapsed(type + ": " + this.get('description'));
       this.get('children').forEach(function (c) {
-        c.log();
+        c.log(type);
       });
       console.groupEnd();
     }
@@ -94,7 +94,7 @@
       profileNode.set('end', timestamp);
 
       if (!this.depth) {
-        profileNode.log();
+        profileNode.log("Render");
       }
     }
   });
