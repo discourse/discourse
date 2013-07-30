@@ -188,6 +188,11 @@ describe PostAnalyzer do
       post_analyzer.raw_mentions.should == ['jake']
     end
 
+    it "ignores code in markdown-formatted code blocks" do
+      post_analyzer = PostAnalyzer.new("    @Jake @Finn\n@Ryan", default_topic_id)
+      post_analyzer.raw_mentions.should == ['ryan']
+    end
+
     it "ignores quotes" do
       post_analyzer = PostAnalyzer.new("[quote=\"Evil Trout\"]@Jake[/quote] @Finn", default_topic_id)
       post_analyzer.raw_mentions.should == ['finn']
