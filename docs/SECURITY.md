@@ -1,12 +1,14 @@
-##Discourse Security Guide
+### Where should I report security issues?
 
-If you are reporting a security issue with Discourse, please email `team@discourse.org` -- we take security reports very seriously and will investigate ASAP.
+In order to give the community time to respond and upgrade we strongly urge you report all security issues privately. Please email us at `team@discourse.org` with details and we will respond ASAP. Security issues *always* take precedence over bug fixes and feature work. We can and do mark releases as "urgent" if they contain serious security fixes.
+
+## Discourse Security
 
 We take security very seriously at Discourse. We welcome any peer review of our 100% open source code to make sure that nobody's Discourse forum is ever compromised or hacked. 
 
 Here are a few specific ways Discourse is as secure as we could make it:
 
-###Password Storage
+### Password Storage
 
 Discourse uses the PBKDF2 algorithm to encrypt salted passwords. This algorithm is blessed by NIST. Security experts on the web [tend to agree that PBKDF2 is a secure choice](http://security.stackexchange.com/questions/4781/do-any-security-experts-recommend-bcrypt-for-password-storage).
 
@@ -32,20 +34,16 @@ In addition, titles and all other places where non-admins can enter code are pro
 
 ### CSRF
 
-[CSRF](http://en.wikipedia.org/wiki/Cross-site_request_forgery) allows malicious sites to perform HTTP requests pretending to be an end-user (without their knowledge), mostly by getting users who already hold a valid forum login cookie to click a specific link in their web browser.
+[CSRF](http://en.wikipedia.org/wiki/Cross-site_request_forgery) allows malicious sites to perform HTTP requests in the context of a forum user without their knowledge -- mostly by getting users who already hold a valid forum login cookie to click a specific link in their web browser.
 
-Discourse extends the built-in Rails CSRF protection:
+Discourse extends the built-in Rails CSRF protection in the following ways:
 
 1. By default any non GET requests ALWAYS require a valid CSRF token. If a CSRF token is missing Discourse will raise an exception.
 
-2. API calls using the secret API bypass CSRF checks
+2. API calls using the secret API bypass CSRF checks.
 
-3. Certain pages are "cachable", we do not render the CSRF token (`<meta name='csrf-token' ...`) on any cachable pages. Instead when user's are about to perform the first non GET request they retrieve the token via GET `session/csrf`
+3. Certain pages are "cachable", we do not render the CSRF token (`<meta name='csrf-token' ...`) on any cachable pages. Instead when users are about to perform the first non GET request they retrieve the token just in time via `GET session/csrf`
 
 ### Deployment concerns
 
-Discourse strongly recommend that the various Discourse processes (web server, clockwork, sidekiq) run under a non-elevated account. See [our install guide](https://github.com/discourse/discourse/blob/master/docs/INSTALL-ubuntu.md) for details.
-
-### Where should I report security issues?
-
-In order to give the community time to respond and upgrade we strongly urge you report all security issues privately. Please email us at `team@discourse.org` with details and we will respond ASAP. Security issues *always* take precedence over bug fixes and feature work. We can and do mark releases as "urgent" if they contain serious security fixes.
+We strongly recommend that the various Discourse processes (web server, clockwork, sidekiq) run under a non-elevated account. See [our install guide](https://github.com/discourse/discourse/blob/master/docs/INSTALL-ubuntu.md) for details.
