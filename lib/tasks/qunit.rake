@@ -3,12 +3,27 @@ desc "Runs the qunit test suite"
 task "qunit:test" => :environment do
 
   require "rack"
+  require "socket"
 
   unless %x{which phantomjs > /dev/null 2>&1}
     abort "PhantomJS is not installed. Download from http://phantomjs.org"
   end
 
+  # ensure we have this port available
+  def port_available? port
+    server = TCPServer.open port
+    server.close
+    true
+  rescue Errno::EADDRINUSE
+    false
+  end
+
   port = ENV['TEST_SERVER_PORT'] || 60099
+
+  while !port_available? port
+    port += 1
+  end
+
   unless pid = fork
     Rack::Server.start(:config => "config.ru",
                        :AccessLog => [],
@@ -42,7 +57,8 @@ task "qunit:test" => :environment do
     success &&= $?.success?
 
   ensure
-    Process.kill "HUP", pid
+    # was having issues with HUP
+    Process.kill "KILL", pid
   end
 
   if success
