@@ -1,4 +1,5 @@
 require_relative "preview/example"
+require_relative "preview/amazon"
 
 module Discourse
   module Oneboxer
@@ -10,7 +11,10 @@ module Discourse
       end
 
       def to_s
-        Example.new(@document).to_html
+        case @url
+          when /example\.com/ then Example
+          when /amazon\.com/ then Amazon
+        end.new(@document).to_html
       end
 
       class InvalidURI < StandardError
