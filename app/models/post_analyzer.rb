@@ -51,6 +51,9 @@ class PostAnalyzer
     return @raw_mentions if @raw_mentions.present?
     raw_stripped = @raw.gsub(/\[quote=(.*)\]([^\[]*?)\[\/quote\]/im, '')
 
+    # Process markdown so that code blocks can be generated and subsequently ignored
+    raw_stripped = PrettyText.markdown(raw_stripped)
+
     # Strip pre and code tags
     doc = Nokogiri::HTML.fragment(raw_stripped)
     doc.search("pre").remove
