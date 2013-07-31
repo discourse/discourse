@@ -10,7 +10,7 @@ module Discourse
       end
 
       def to_s
-        @document.to_html
+        Example.new(@document).to_html
       end
 
       class InvalidURI < StandardError

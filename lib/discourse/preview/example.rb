@@ -4,8 +4,8 @@ module Discourse
       class Example
         TEMPLATE = "<!DOCTYPE html>\n<html><body><div class='onebox'>{{{header}}}</div></body></html>\n"
 
-        def initialize(html)
-          @body = html
+        def initialize(document)
+          @body = document
           @data = extracted_data
           @view = Mustache.render(TEMPLATE, @data)
         end
