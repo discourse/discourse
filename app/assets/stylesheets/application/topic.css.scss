@@ -158,8 +158,8 @@
   }
   a.mention, .ac-wrap .item span {
     @include border-radius-all(6px);
-    color: $quote-background;
-    padding: 1px 5px;
+    background-color: $quote-background;
+    padding: 2px 5px;
   }
   a.mention {
     cursor: pointer;
