@@ -4709,11 +4709,9 @@ define("backburner",
 
         var diff = new Date().getTime() - t2;
 
-        if ((typeof console !== 'undefined') && console.log && diff > 1) {
+        if ((typeof console !== 'undefined') && console.log && diff > 10) {
           console.log("Backburner: " + (new Date() - t2) + "ms");
         }
-
-
 
         return ret;
       },

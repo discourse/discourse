@@ -98,6 +98,7 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     });
 
     this.$().on('mouseup.discourse-redirect', '.cooked a, a.track-link', function(e) {
+      if ($(e.target).hasClass('mention')) { return false; }
       return Discourse.ClickTrack.trackClick(e);
     });
   },
