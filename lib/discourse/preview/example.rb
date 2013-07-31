@@ -2,7 +2,7 @@ module Discourse
   module Oneboxer
     class Preview
       class Example
-        TEMPLATE = "blah {{header}} blah"
+        TEMPLATE = "<!DOCTYPE html>\n<html><body><div class='onebox'>{{{header}}}</div></body></html>\n"
 
         def initialize(html)
           @body = html

@@ -15,3 +15,4 @@ module HTMLSpecHelper
     body("<div class='onebox'>#{html}</div>")
   end
 end
+ 
