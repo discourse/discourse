@@ -3,6 +3,7 @@ require "multi_json"
 require "nokogiri"
 require "mustache"
 require "discourse/oneboxer/version"
+require_relative "preview"
 
 require_relative "oneboxer/base"
 require_relative "oneboxer/whitelist"
@@ -230,18 +231,7 @@ module Discourse
 	  end
 
 	  def self.preview(url, args={})
-	    # Look for a preview
-	    cached = Rails.cache.read(preview_cache_key_for(url)) unless args[:no_cache].present?
-	    return cached if cached.present?
-
-	    # Try the full version
-	    cached = render_from_cache(url)
-	    return cached if cached.present?
-
-	    # If that fails, look it up
-	    contents, cached = fetch_and_cache(url, args)
-	    return cached if cached.present?
-	    contents
+	  	Preview.new(url, args)
 	  end
 
 	  # Return the cooked content for a url, caching the result for performance

@@ -8,7 +8,9 @@ require "pry"
 require "fakeweb"
 require "discourse-oneboxer"
 require "nokogiri/xml/parse_options"
-require "mocha"
+require 'mocha/api'
+
+require_relative "support/html_spec_helper"
 
 module SpecHelper
   def fixture_file(path)
@@ -18,6 +20,7 @@ end
 
 RSpec.configure do |config|
   config.include SpecHelper
+  config.include HTMLSpecHelper
 end
 
 RSpec::Matchers.define :match_html do |expected|
