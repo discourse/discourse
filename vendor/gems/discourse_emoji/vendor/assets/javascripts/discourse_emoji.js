@@ -4,6 +4,7 @@
 
     emoji.push("kubo");
     emoji.push("popaul");
+    emoji.push("utrollin");
 
   // Regiest a before cook event
   Discourse.Markdown.on("beforeCook", function(event) {
