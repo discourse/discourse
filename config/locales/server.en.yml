@@ -512,7 +512,7 @@ en:
     ga_tracking_code: "Google analytics tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
     ga_domain_name: "Google analytics domain name, eg: mysite.com; see http://google.com/analytics"
     enable_escaped_fragments: "Enable workaround solution to help old crawlers to index your site. WARNING: enable it only if you really have to do it."
-    enable_noscript_support: "Enable supporting &lt;noscipt&gt; tag"
+    enable_noscript_support: "Enable supporting &lt;noscript&gt; tag"
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|hot|read|favorited|unread|new|posted|categories"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     share_links: "Determine which items appear on the share dialog, and in what order. Example twitter|facebook|google+|email"
