@@ -91,7 +91,11 @@ Discourse.TopicView = Discourse.View.extend(Discourse.Scrolling, {
     this.bindScrolling({debounce: 0});
 
     var topicView = this;
-    $(window).bind('resize.discourse-on-scroll', function() { topicView.updatePosition(); });
+    Em.run.schedule('afterRender', function () {
+      $(window).resize('resize.discourse-on-scroll', function() {
+        topicView.updatePosition();
+      });
+    });
 
     this.$().on('mouseup.discourse-redirect', '.cooked a, a.track-link', function(e) {
       return Discourse.ClickTrack.trackClick(e);

@@ -17156,12 +17156,6 @@ Ember.View = Ember.CoreView.extend(
     return viewCollection;
   },
 
-  _elementWillChange: Ember.beforeObserver(function() {
-    this.forEachChildView(function(view) {
-      Ember.propertyWillChange(view, 'element');
-    });
-  }, 'element'),
-
   /**
     @private
 
@@ -17173,7 +17167,8 @@ Ember.View = Ember.CoreView.extend(
   */
   _elementDidChange: Ember.observer(function() {
     this.forEachChildView(function(view) {
-      Ember.propertyDidChange(view, 'element');
+      var meta = Em.meta(view);
+      delete meta.cache['element'];
     });
   }, 'element'),
 
@@ -20561,17 +20556,13 @@ var DOMManager = {
       view.clearRenderedChildren();
       var buffer = view.renderToBuffer();
 
-      // view.invokeRecursively(function(view) {
-      //   view.propertyWillChange('element');
-      // });
+      view.propertyWillChange('element');
       view.triggerRecursively('willInsertElement');
 
       morph.replaceWith(buffer.string());
       view.transitionTo('inDOM');
 
-      // view.invokeRecursively(function(view) {
-      //   view.propertyDidChange('element');
-      // });
+      view.propertyDidChange('element');
       view.triggerRecursively('didInsertElement');
 
       notifyMutationListeners();
