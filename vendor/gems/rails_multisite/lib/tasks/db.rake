@@ -18,3 +18,14 @@ task "multisite:seed_fu" => :environment do
     t.invoke
   end
 end
+
+desc "rollback migrations for all sites in tier"
+task "multisite:rollback" => :environment do
+  RailsMultisite::ConnectionManagement.each_connection do |db|
+    puts "Rollback #{db}"
+    puts "---------------------------------\n"
+    t = Rake::Task["db:rollback"]
+    t.reenable
+    t.invoke
+  end
+end
