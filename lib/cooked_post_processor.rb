@@ -77,7 +77,7 @@ class CookedPostProcessor
   end
 
   def relative_to_absolute(src)
-    if src =~ /\A\/[^\/]/
+    if src =~ /^\/[^\/]/
       Discourse.base_url_no_prefix + src
     else
       src
@@ -98,7 +98,7 @@ class CookedPostProcessor
 
   def associate_to_post(upload)
     return if PostUpload.where(post_id: @post.id, upload_id: upload.id).count > 0
-    PostUpload.create({ post_id: @post.id, upload_id: upload.id })
+    PostUpload.create(post_id: @post.id, upload_id: upload.id)
   rescue ActiveRecord::RecordNotUnique
     # do not care if it's already associated
   end
@@ -155,7 +155,7 @@ class CookedPostProcessor
     a.add_child(img)
 
     # replace the image by its thumbnail
-    img['src'] = upload.thumbnail_url if upload && upload.has_thumbnail?
+    img['src'] = relative_to_absolute(upload.thumbnail.url) if upload && upload.has_thumbnail?
 
     # then, some overlay informations
     meta = Nokogiri::XML::Node.new("div", @doc)
@@ -206,12 +206,13 @@ class CookedPostProcessor
   end
 
   def get_size(url)
-    # make sure s3 urls have a scheme (otherwise, FastImage will fail)
-    url = "http:" + url if Upload.is_on_s3?(url)
-    return unless is_valid_image_uri?(url)
+    uri = url
+    # make sure urls have a scheme (otherwise, FastImage will fail)
+    uri = (SiteSetting.use_ssl? ? "https:" : "http:") + url if url.start_with?("//")
+    return unless is_valid_image_uri?(uri)
     # we can *always* crawl our own images
-    return unless SiteSetting.crawl_images? || Upload.has_been_uploaded?(url)
-    @size_cache[url] ||= FastImage.size(url)
+    return unless SiteSetting.crawl_images? || Discourse.store.has_been_uploaded?(url)
+    @size_cache[url] ||= FastImage.size(uri)
   rescue Zlib::BufError # FastImage.size raises BufError for some gifs
   end
 
@@ -222,14 +223,9 @@ class CookedPostProcessor
   end
 
   def attachments
-    if SiteSetting.enable_s3_uploads?
-      @doc.css("a.attachment[href^=\"#{S3Store.base_url}\"]")
-    else
-      # local uploads are identified using a relative uri
-      @doc.css("a.attachment[href^=\"#{LocalStore.directory}\"]") +
-      # when cdn is enabled, we have the whole url
-      @doc.css("a.attachment[href^=\"#{LocalStore.base_url}\"]")
-    end
+    attachments = @doc.css("a.attachment[href^=\"#{Discourse.store.absolute_base_url}\"]")
+    attachments += @doc.css("a.attachment[href^=\"#{Discourse.store.relative_base_url}\"]") if Discourse.store.internal?
+    attachments
   end
 
   def dirty?

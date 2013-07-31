@@ -35,13 +35,9 @@ class PostAnalyzer
   # How many attachments are present in the post
   def attachment_count
     return 0 unless @raw.present?
-
-    if SiteSetting.enable_s3_uploads?
-      cooked_document.css("a.attachment[href^=\"#{S3Store.base_url}\"]")
-    else
-      cooked_document.css("a.attachment[href^=\"#{LocalStore.directory}\"]") +
-      cooked_document.css("a.attachment[href^=\"#{LocalStore.base_url}\"]")
-    end.count
+    attachments = cooked_document.css("a.attachment[href^=\"#{Discourse.store.absolute_base_url}\"]")
+    attachments += cooked_document.css("a.attachment[href^=\"#{Discourse.store.relative_base_url}\"]") if Discourse.store.internal?
+    attachments.count
   end
 
   def raw_mentions
