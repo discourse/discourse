@@ -10,10 +10,17 @@
 //= require ./discourse/components/probes.js
 
 // Externals we need to load first
-//= require ./external/jquery-1.9.1.js
-//= require ./external/jquery.ui.widget.js
-//= require ./external/handlebars.js
+
 <%
+if Rails.env.development?
+  require_asset ("./external_development/jquery-2.0.3.js")
+else
+  require_asset ("./external_production/jquery-2.0.3.min.js")
+end
+
+require_asset ("./external/jquery.ui.widget.js")
+require_asset ("./external/handlebars.js")
+
 if Rails.env.development?
   require_asset ("./external_development/ember.js")
   require_asset ("./external_development/group-helper.js")
