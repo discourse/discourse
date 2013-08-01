@@ -92,9 +92,9 @@ describe SiteSetting do
 
     describe "authorized_uploads" do
 
-      it "trims space and adds leading dots" do
-        SiteSetting.stubs(:authorized_extensions).returns(" png | .jpeg|txt|bmp")
-        SiteSetting.authorized_uploads.should == [".png", ".jpeg", ".txt", ".bmp"]
+      it "trims spaces and leading dots" do
+        SiteSetting.stubs(:authorized_extensions).returns(" png | .jpeg|txt|bmp | .tar.gz")
+        SiteSetting.authorized_uploads.should == ["png", "jpeg", "txt", "bmp", "tar.gz"]
       end
 
     end
@@ -103,7 +103,7 @@ describe SiteSetting do
 
       it "filters non-image out" do
         SiteSetting.stubs(:authorized_extensions).returns(" png | .jpeg|txt|bmp")
-        SiteSetting.authorized_images.should == [".png", ".jpeg", ".bmp"]
+        SiteSetting.authorized_images.should == ["png", "jpeg", "bmp"]
       end
 
     end
