@@ -16,9 +16,9 @@ Discourse.PostMenuView = Discourse.View.extend({
     'post.reply_count',
     'post.showRepliesBelow',
     'post.can_delete',
-    'bookmarkClass',
-    'bookmarkTooltip',
-    'shareUrl',
+    'post.bookmarkClass',
+    'post.bookmarkTooltip',
+    'post.shareUrl',
     'post.topic.deleted_at'),
 
   render: function(buffer) {
