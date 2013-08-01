@@ -8,60 +8,44 @@ class OptimizedImage < ActiveRecord::Base
 
     @image_sorcery_loaded ||= require "image_sorcery"
 
-    original_path = "#{Rails.root}/public#{upload.url}"
+    external_copy = Discourse.store.download(upload) if Discourse.store.external?
+    original_path = if Discourse.store.external?
+      external_copy.path
+    else
+      Discourse.store.path_for(upload)
+    end
+
     # create a temp file with the same extension as the original
-    temp_file = Tempfile.new(["discourse", File.extname(original_path)])
+    temp_file = Tempfile.new(["discourse-thumbnail", File.extname(original_path)])
     temp_path = temp_file.path
 
     if ImageSorcery.new(original_path).convert(temp_path, resize: "#{width}x#{height}")
-      thumbnail = OptimizedImage.new({
+      thumbnail = OptimizedImage.create!(
         upload_id: upload.id,
         sha1: Digest::SHA1.file(temp_path).hexdigest,
         extension: File.extname(temp_path),
         width: width,
-        height: height
-      })
-      # make sure the directory exists
-      FileUtils.mkdir_p Pathname.new(thumbnail.path).dirname
-      # move the temp file to the right location
-      File.open(thumbnail.path, "wb") do |f|
-        f.write temp_file.read
-      end
+        height: height,
+        url: "",
+      )
+      # store the optimized image and update its url
+      thumbnail.url = Discourse.store.store_optimized_image(temp_file, thumbnail)
+      thumbnail.save
     end
 
     # close && remove temp file
-    temp_file.close
-    temp_file.unlink
+    temp_file.close!
+    # make sure we remove the cached copy from external stores
+    external_copy.close! if Discourse.store.external?
 
     thumbnail
   end
 
   def destroy
     OptimizedImage.transaction do
-      remove_file
+      Discourse.store.remove_file(url)
       super
     end
-  end
-
-  def remove_file
-    File.delete path
-  rescue Errno::ENOENT
-  end
-
-  def url
-    "#{LocalStore.base_url}/#{optimized_path}/#{filename}"
-  end
-
-  def path
-    "#{LocalStore.base_path}/#{optimized_path}/#{filename}"
-  end
-
-  def optimized_path
-    "_optimized/#{sha1[0..2]}/#{sha1[3..5]}"
-  end
-
-  def filename
-    "#{sha1[6..16]}_#{width}x#{height}#{extension}"
   end
 
 end

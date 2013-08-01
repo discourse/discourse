@@ -1,5 +1,6 @@
 Fabricator(:upload) do
   user
+  sha1 "e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98"
   original_filename "uploaded.jpg"
   filesize 1234
   width 100
