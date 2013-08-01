@@ -160,6 +160,7 @@
     @include border-radius-all(6px);
     background-color: $quote-background;
     padding: 2px 5px;
+    color: $darkish_gray;
   }
   a.mention {
     cursor: pointer;
