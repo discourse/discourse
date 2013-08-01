@@ -3509,15 +3509,6 @@ ChainNodePrototype.didChange = function(suppressEvent) {
   if (this._parent) { this._parent.chainDidChange(this, this._key, 1); }
 };
 
-Ember.finishChains = function(obj) {
-  var m = metaFor(obj, false), chains = m.chains;
-  if (chains) {
-    if (chains.value() !== obj) {
-      m.chains = chains = chains.copy(obj);
-    }
-    chains.didChange(true);
-  }
-};
 })();
 
 
@@ -11817,7 +11808,6 @@ var set = Ember.set, get = Ember.get,
     generateGuid = Ember.generateGuid,
     meta = Ember.meta,
     rewatch = Ember.rewatch,
-    finishChains = Ember.finishChains,
     destroy = Ember.destroy,
     schedule = Ember.run.schedule,
     Mixin = Ember.Mixin,
@@ -11917,9 +11907,18 @@ function makeCtor() {
         }
       }
     }
+
     finishPartial(this, m);
+    var hasChains = (typeof m.chains) !== "undefined";
     delete m.proto;
-    finishChains(this);
+
+    if (hasChains) {
+      if (m.chains.value() !== this) {
+        m.chains = m.chains.copy(this);
+      }
+      m.chains.didChange(true);
+    }
+
     this.init.apply(this, arguments);
   };
 
@@ -17344,7 +17343,7 @@ Ember.View = Ember.CoreView.extend(
   */
   _elementDidChange: Ember.observer(function() {
     this.forEachChildView(function(view) {
-      var meta = Em.meta(view);
+      var meta = Ember.meta(view);
       delete meta.cache['element'];
     });
   }, 'element'),
