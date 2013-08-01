@@ -119,6 +119,11 @@ module Discourse
     # attr_accessible.
     config.active_record.whitelist_attributes = false
 
+    unless Rails.env.test?
+      require 'plugin'
+      Discourse.activate_plugins!
+    end
+
     # So open id logs somewhere sane
     config.after_initialize do
       OpenID::Util.logger = Rails.logger
@@ -131,9 +136,6 @@ module Discourse
           Clockwork.run
         end
       end
-
     end
-
-
   end
 end

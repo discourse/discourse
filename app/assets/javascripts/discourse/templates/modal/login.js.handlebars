@@ -1,27 +1,9 @@
 <div class="modal-body">
   {{#if hasAtLeastOneLoginButton}}
     <div id="login-buttons">
-      {{#if Discourse.SiteSettings.enable_google_logins}}
-        <button class="btn btn-social google" title="{{i18n login.google.title}}" {{action openidLogin "google"}}>{{i18n login.google.title}}</button>
-      {{/if}}
-      {{#if Discourse.SiteSettings.enable_facebook_logins}}
-        <button class="btn btn-social facebook" title="{{i18n login.facebook.title}}" {{action "facebookLogin"}}>{{i18n login.facebook.title}}</button>
-      {{/if}}
-      {{#if Discourse.SiteSettings.enable_cas_logins}}
-        <button class="btn btn-social cas" title="{{i18n login.cas.title}}" {{action "casLogin"}}>{{i18n login.cas.title}}</button>
-      {{/if}}
-      {{#if Discourse.SiteSettings.enable_twitter_logins}}
-        <button class="btn btn-social twitter" title="{{i18n login.twitter.title}}" {{action "twitterLogin"}}>{{i18n login.twitter.title}}</button>
-      {{/if}}
-      {{#if Discourse.SiteSettings.enable_yahoo_logins}}
-        <button class="btn btn-social yahoo" title="{{i18n login.yahoo.title}}" {{action openidLogin "yahoo"}}>{{i18n login.yahoo.title}}</button>
-      {{/if}}
-      {{#if Discourse.SiteSettings.enable_github_logins}}
-        <button class="btn btn-social github" title="{{i18n login.github.title}}" {{action "githubLogin"}}>{{i18n login.github.title}}</button>
-      {{/if}}
-      {{#if Discourse.SiteSettings.enable_persona_logins}}
-        <button class="btn btn-social persona" title="{{i18n login.persona.title}}" {{action "personaLogin"}}>{{i18n login.persona.title}}</button>
-      {{/if}}
+      {{#each Discourse.LoginMethod.all}}
+        <button class="btn btn-social {{unbound name}}" {{action externalLogin this}}>{{title}}</button>
+      {{/each}}
     </div>
   {{/if}}
   {{#if Discourse.SiteSettings.enable_local_logins}}

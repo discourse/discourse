@@ -20,15 +20,28 @@ class Users::OmniauthCallbacksController < ApplicationController
   skip_before_filter :verify_authenticity_token, only: :complete
 
   def complete
-    # Make sure we support that provider
     provider = params[:provider]
-    raise Discourse::InvalidAccess.new unless self.class.types.keys.map(&:to_s).include?(provider)
 
-    # Check if the provider is enabled
-    raise Discourse::InvalidAccess.new("provider is not enabled") unless SiteSetting.send("enable_#{provider}_logins?")
+    # If we are a plugin, then try to login with it
+    found = false
+    Discourse.auth_providers.each do |p|
+      if p.name == provider && p.type == :open_id
+        create_or_sign_on_user_using_openid request.env["omniauth.auth"]
+        found = true
+        break
+      end
+    end
 
-    # Call the appropriate logic
-    send("create_or_sign_on_user_using_#{provider}", request.env["omniauth.auth"])
+    unless found
+      # Make sure we support that provider
+      raise Discourse::InvalidAccess.new unless self.class.types.keys.map(&:to_s).include?(provider)
+
+      # Check if the provider is enabled
+      raise Discourse::InvalidAccess.new("provider is not enabled") unless SiteSetting.send("enable_#{provider}_logins?")
+
+      # Call the appropriate logic
+      send("create_or_sign_on_user_using_#{provider}", request.env["omniauth.auth"])
+    end
 
     @data[:awaiting_approval] = true if invite_only?
 

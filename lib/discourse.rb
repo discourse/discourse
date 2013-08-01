@@ -23,6 +23,31 @@ module Discourse
   # Cross site request forgery
   class CSRF < Exception; end
 
+  def self.activate_plugins!
+    @plugins = Plugin.find_all("#{Rails.root}/plugins")
+    @plugins.each do |plugin|
+      plugin.activate!
+    end
+  end
+
+  def self.plugins
+    @plugins
+  end
+
+  def self.auth_providers
+    providers = nil
+    if plugins
+      plugins.each do |p|
+        next unless p.auth_providers
+        p.auth_providers.each do |prov|
+          providers ||= []
+          providers << prov
+        end
+      end
+    end
+    providers
+  end
+
   def self.cache
     @cache ||= Cache.new
   end

@@ -18,8 +18,18 @@ Rails.application.config.middleware.use OmniAuth::Builder do
            :identifier => 'https://me.yahoo.com',
            :require => 'omniauth-openid'
 
-  # lambda is required for proper multisite support, 
-  #  without it subdomains will not function correctly 
+  Discourse.auth_providers.each do |p|
+    if p.type == :open_id
+      provider :open_id, {
+        :name => p.name,
+        :store => OpenID::Store::Redis.new($redis),
+        :require => 'omniauth-openid'
+      }.merge(p.options)
+    end
+  end
+
+  # lambda is required for proper multisite support,
+  #  without it subdomains will not function correctly
   provider :facebook,
            :setup => lambda { |env|
               strategy = env['omniauth.strategy']
