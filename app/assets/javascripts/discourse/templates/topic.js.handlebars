@@ -21,7 +21,7 @@
                 {{topicStatus topic=model}}
                 <a href='{{unbound url}}'>{{{fancy_title}}}</a>
               {{/if}}
-              {{categoryLink category}}
+              {{boundCategoryLink category}}
 
               {{#if details.can_edit}}
                 <a href='#' {{action editTopic}} class='edit-topic' title='{{i18n edit}}'><i class="icon-pencil"></i></a>
