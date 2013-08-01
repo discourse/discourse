@@ -332,8 +332,6 @@ The corresponding site setting is:
     # Here, run the command to start bluepill.
     # Get it from the crontab output above.
 
-Note that if bluepill *itself* needs to be restarted, it must be killed with `bluepill quit` and restarted with the same command that's in crontab
-
 ### Check sample configuration files for new settings
 
 Check the sample configuration files provided in the repo with the ones being used for additional recommended settings and merge those in:
