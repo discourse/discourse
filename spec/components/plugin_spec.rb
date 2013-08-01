@@ -40,9 +40,9 @@ TEXT
     it "can activate plugins correctly" do
       plugin = Plugin.new
       plugin.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
-      plugin.ensure_directory(plugin.auto_generated_path)
-
       junk_file = "#{plugin.auto_generated_path}/junk"
+
+      plugin.ensure_directory(junk_file)
       File.open("#{plugin.auto_generated_path}/junk", "w") {|f| f.write("junk")}
       plugin.activate!
 
