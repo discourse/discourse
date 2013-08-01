@@ -8,7 +8,9 @@ production:
   timeout: 5000
   # db_id: 0	# database ID if hosting multiple sites
   host_names:
-    # /!\ Make sure you *also* restart sidekiq if you change this setting /!\
+    ### If you change this setting you will need to
+    ###   - restart sidekiq if you change this setting
+    ###   - rebake all to posts using: `RAILS_ENV=production bundle exec rake posts:rebake`
     - production.localhost # Update this to be the domain of your production site
 
 test:
