@@ -248,8 +248,13 @@ SQL
     builder.exec
   end
 
+  def self.synchronize_favorites
+    
+  end
+
   def self.ensure_consistency!
     self.synchronize_target_topic_ids
+    self.synchronize_favorites
   end
 
   protected

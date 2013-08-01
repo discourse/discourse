@@ -261,7 +261,23 @@ describe UserAction do
     end
   end
 
-  describe 'ensure_consistency!' do
+  describe 'synchronize_favorites' do
+    pending 'corrects out of sync favs' do
+      post = Fabricate(:post)
+      post.topic.toggle_star(post.user, true)
+
+      action1 = UserAction.log_action!(
+        action_type: UserAction::STAR,
+        user_id: post.user.id,
+        acting_user_id: post.user.id,
+        target_topic_id: -1,
+        target_post_id: post.id,
+      )
+
+    end
+  end
+
+  describe 'synchronize_target_topic_ids' do
     it 'correct target_topic_id' do
       post = Fabricate(:post)
 
@@ -281,11 +297,10 @@ describe UserAction do
         target_post_id: post.id,
       )
 
-      UserAction.ensure_consistency!
+      UserAction.synchronize_target_topic_ids
 
       action.reload
       action.target_topic_id.should == post.topic_id
-
     end
   end
 end
