@@ -16,7 +16,7 @@
   </div>
   <div class='modal-footer'>
     <button class='btn btn-large btn-primary' {{action upload target="view"}}>
-      <span class='add-upload'><i class='icon-file-alt'></i><i class='icon-plus'></i></span>
+      <span class='add-upload'><i {{bindAttr class="addUploadIcon"}}></i><i class='icon-plus'></i></span>
       {{uploadTitle}}
     </button>
   </div>
@@ -29,7 +29,7 @@
   </div>
   <div class='modal-footer'>
     <button class='btn btn-large btn-primary' {{action add target="view"}}>
-      <span class='add-upload'><i class='icon-file-alt'></i><i class='icon-plus'></i></span>
+      <span class='add-upload'><i {{bindAttr class="addUploadIcon"}}></i><i class='icon-plus'></i></span>
       {{addTitle}}
     </button>
   </div>
