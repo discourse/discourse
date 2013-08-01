@@ -12,7 +12,7 @@ module HTMLSpecHelper
   end
 
   def onebox_view(html)
-    body("<div class='onebox'>#{html}</div>")
+    %|<div class="onebox">#{html}</div>|
   end
 end
  
