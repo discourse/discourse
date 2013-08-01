@@ -937,7 +937,7 @@ en:
   unsubscribe_link: "To unsubscribe from these emails, visit your [user preferences](%{user_preferences_url})."
 
   user_notifications:
-    previous_discussion: "Previous discussion"
+    previous_discussion: "Previous Replies"
     unsubscribe:
       title: "Unsubscribe"
       description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
