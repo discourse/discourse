@@ -103,6 +103,16 @@ class Plugin
     @javascripts << js
   end
 
+
+  def register_asset(file,opts=nil)
+    full_path = File.dirname(path) << "/assets/" << file
+    assets << full_path
+    if opts == :server_side
+      @server_side_javascripts ||= []
+      @server_side_javascripts << full_path
+    end
+  end
+
   def automatic_assets
     css = ""
     js = "(function(){"
@@ -149,18 +159,23 @@ class Plugin
       assets.concat auto_assets
     end
     unless assets.blank?
-      paths = []
       assets.each do |asset|
         if asset =~ /\.js$/
           DiscoursePluginRegistry.javascripts << asset
         elsif asset =~ /\.css$|\.scss$/
           DiscoursePluginRegistry.stylesheets << asset
         end
-        paths << File.dirname(asset)
       end
+
       # TODO possibly amend this to a rails engine
       Rails.configuration.assets.paths << auto_generated_path
       Rails.configuration.assets.paths << File.dirname(path) + "/assets"
+    end
+
+    if @server_side_javascripts
+      @server_side_javascripts.each do |js|
+        DiscoursePluginRegistry.server_side_javascripts << js
+      end
     end
   end
 

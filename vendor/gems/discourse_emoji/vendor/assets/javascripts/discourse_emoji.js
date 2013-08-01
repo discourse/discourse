@@ -4,7 +4,7 @@
 
   // Regiest a before cook event
   Discourse.Markdown.on("beforeCook", function(event) {
-    var text = event.detail;
+    var text = this.textResult || event.detail;
     var opts = event.opts;
 
     this.textResult = text.replace(/\:([a-z\_\+\-0-9]+)\:/g, function (m1, m2) {
