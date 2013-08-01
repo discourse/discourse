@@ -42,6 +42,11 @@ cs:
     one: "Bohužel, návštěvníci mohou do jednoho příspěvku vložit jen jeden obrázek."
     few: "Bohužel, návštěvníci mohou do jednoho příspěvku vložit maximálně %{count} obrázky."
     other: "Bohužel, návštěvníci mohou do jednoho příspěvku vložit maximálně %{count} obrázků."
+  too_many_attachments:
+    zero: "Bohužel, noví uživatelé nemohou do příspěvků vkládat přílohy."
+    one: "Bohužel, noví uživatelé smějí do příspěvku vložit jen jednu přílohu."
+    few: "Bohužel, noví uživatelé smějí do příspěvku vložit jen %{count} přílohy."
+    other: "Bohužel, noví uživatelé smějí do příspěvku vložit jen %{count} příloh."
   too_many_links:
     zero: "Bohužel, návštěvníci nemohou vkládat odkazy do příspěvků."
     one: "Bohužel, návštěvníci mohou do jednoho příspěvku vložit jen jeden odkaz."
@@ -465,6 +470,9 @@ cs:
     tos_miscellaneous:
       title: "Podmínky používání: Různé"
       description: "Text sekce 'různé' z Podmínek používání."
+    login_required:
+      title: "Vyžadováno přihlášení: Úvodní stránka"
+      description: "Text, který se zobrazí nepřihlášených uživatelům na webu, je-li přihlášení vyžadováno."
 
   site_settings:
     default_locale: "Výchozí jazyk této Discourse instance (kód ve formátu ISO 639-1)"
@@ -630,14 +638,16 @@ cs:
     regular_requires_likes_given: "Kolik 'líbí se' musí základní uživatel rozdat, než může získat stálou (2) věrohodnost"
     regular_requires_topic_reply_count: "Do kolika témat musí základní uživatel odpovědět, než může získat stálou (2) věrohodnost"
 
-    newuser_max_links: "Kolik odkazů může návštěvník vložit do příspěvku"
-    newuser_max_images: "Kolik obrázků může návštěvník vložit do příspěvku"
-    newuser_max_mentions_per_post: "Kolik zmínek přes @name může návštěvník vložit do příspěvku"
+    newuser_max_links: "Kolik odkazů může nový uživatel vložit do příspěvku"
+    newuser_max_images: "Kolik obrázků může nový uživatel vložit do příspěvku"
+    newuser_max_attachments: "Kolik příloh může nový uživatel vložit do příspěvku"
+    newuser_max_mentions_per_post: "Kolik zmínek přes @name může nový uživatel vložit do příspěvku"
     max_mentions_per_post: "Maximální počet zmínek přes @name, které mohou být použity v jednom příspěvku"
 
     create_thumbnails: "Vytvářet náhledy pro obrázky v lightboxu"
 
     email_time_window_mins: "Kolik minut se čeká než se uživateli zašle email, aby měl možnost obsah vidět sám od sebe"
+    email_posts_context: "Kolik příspěvků se má zobrazovat v emailech pro vyjádření kontextu"
     flush_timings_secs: "Jak často se vynulují časovací data na serveru, v sekundách"
     max_word_length: "Maximální povolená délka slova ve znacích v názvu tématu"
     title_min_entropy: "Minimální entropie (unikátní znaky) požadovaná v názvu tématu"
@@ -650,6 +660,7 @@ cs:
 
     category_colors: "Seznam hexadecimálních barev oddělený svislítkem (|) pro barvy kategorií"
     max_image_size_kb: "Maximální povolená velikost nahrávaných souborů v kB - nezapomeňte tento limit změnit v nginx (client_max_body_size) / apache a na proxy serverech."
+    max_attachment_size_kb: "Maximální povolená velikost příloh souborů v kB - nezapomeňte tento limit změnit v nginx (client_max_body_size) / apache a na proxy serverech."
     authorized_extensions: "Seznam povolených přípon souborů pro nahrávání, oddělený svislítkem (|)"
     max_similar_results: "Kolik podobných témat se má zobrazovat uživateli, když vytváří nové téma"
 
@@ -678,6 +689,8 @@ cs:
     minimum_topics_similar: "Kolik témat musí v databázi existovat, než se začne nabízet menu s podobnými tématy."
 
     relative_date_duration: "Počet dní od zaslání příspěvku, po které se budou datumy zobrazovat relativně namísto absolutně. Příklady: relativně: 7d, absolutně: 20. února"
+    delete_user_max_age: "Maximální stáří uživatele ve dnech, který může být smazán administrátorem."
+    delete_all_posts_max: "Maximální počet příspěvků, které mohou být smazány najednou tlačítkem 'Odstranit všechny příspěvky'. Pokud má uživatel více příspěvků než je zde nastaveno, nemohou být jeho příspěvky smazány najednou a uživatele nelze odstranit."
 
 
   notification_types:
@@ -753,6 +766,7 @@ cs:
       must_begin_with_alphanumeric: "musí začínat písmenem nebo číslicí"
     email:
       not_allowed: "není povolen od tohoto emailového poskytovatele. Prosím použijte jinou emailovou adresu."
+      blocked: "není povolen."
 
   invite_mailer:
     subject_template: "[%{site_name}] %{invitee_name} vás pozval do diskuze na %{site_name}"
@@ -951,12 +965,15 @@ cs:
   unsubscribe_link: "Pokud již od nás nechcete dostávat emaily, navšivte stránku s vašimi [uživatelskými preferencemi](%{user_preferences_url})."
 
   user_notifications:
+    previous_discussion: "Předchozí diskuze"
     unsubscribe:
       title: "Odhlásit z odběru emailů"
       description: "Nechcete již od nás dostávat emaily? Žádný problém! Klikněte na odkaz níže pro okamžité odhlášení z odběru emailů:"
 
     reply_by_email: "Pro odpověd stačí odepsat na tento email, nebo navštivte %{base_url}%{url} ve vašem prohlížeči."
     visit_link_to_respond: "Pro odpověď navštive %{base_url}%{url} ve vašem prohlížeči."
+
+    posted_by: "Zaslal uživatel %{username} dne %{post_date}"
 
     user_invited_to_private_message:
       subject_template: "[%{site_name}] %{username} vás pozval k soukromé konverzaci na téma '%{topic_title}'"
@@ -1099,8 +1116,12 @@ cs:
   deleted: 'smazáno'
 
   upload:
-    pasted_image_filename: ""
+    unauthorized: "Bohužel, soubor, který se snažíte nahrát, není povolený (povolené přípony: %{authorized_extensions})."
+    pasted_image_filename: "Vložený obrázek"
+    attachments:
+      too_large: "Bohužel, soubor, který se snažíte nahrát, je příliš velký (maximální velikost je %{max_size_kb}%kb)."
     images:
+      too_large: "Bohužel, obrázek, který se snažíte nahrát, je příliš velký (maximální velikost je %{max_size_kb}%kb), prosím zmenšete ho a zkuste to znovu."
       fetch_failure: "Bohužel, nastala chybí při získávání obrázku."
       unknown_image_type: "Bohužel, soubor, který se snažíte nahrát, zřejmě není obrázek."
       size_not_found: "Bohužel se nepodařilo zjistit velikost obrázku. Není soubor s obrázkem poškozený?"
