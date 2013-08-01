@@ -105,7 +105,7 @@ module Discourse
 
   def self.git_version
     return $git_version if $git_version
-    f = Rails.root.to_s + "/config/version"
+    f = Rails.root.to_s + "/lib/version"
     require f if File.exists?("#{f}.rb")
 
     begin
@@ -120,6 +120,16 @@ module Discourse
     user = User.where(username_lower: SiteSetting.system_username).first if SiteSetting.system_username.present?
     user = User.admins.order(:id).first if user.blank?
     user
+  end
+
+  def self.store
+    if SiteSetting.enable_s3_uploads?
+      @s3_store_loaded ||= require 'file_store/s3_store'
+      S3Store.new
+    else
+      @local_store_loaded ||= require 'file_store/local_store'
+      LocalStore.new
+    end
   end
 
 private
