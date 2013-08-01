@@ -35,12 +35,11 @@ module Discourse
   end
 
   def self.auth_providers
-    providers = nil
+    providers = []
     if plugins
       plugins.each do |p|
         next unless p.auth_providers
         p.auth_providers.each do |prov|
-          providers ||= []
           providers << prov
         end
       end
