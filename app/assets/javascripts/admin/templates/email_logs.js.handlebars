@@ -1,11 +1,13 @@
 <table class='table'>
-  <tr>
-    <th>{{i18n admin.email.sent_at}}</th>
-    <th>{{i18n admin.email.user}}</th>
-    <th>{{i18n admin.email.to_address}}</th>
-    <th>{{i18n admin.email.email_type}}</th>
-    <th>{{i18n admin.email.reply_key}}</th>
-  </tr>
+  <thead>
+    <tr>
+      <th>{{i18n admin.email.sent_at}}</th>
+      <th>{{i18n admin.email.user}}</th>
+      <th>{{i18n admin.email.to_address}}</th>
+      <th>{{i18n admin.email.email_type}}</th>
+      <th>{{i18n admin.email.reply_key}}</th>
+    </tr>
+  </thead>
 
   {{#if model.length}}
     {{#group}}
