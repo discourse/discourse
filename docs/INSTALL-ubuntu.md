@@ -6,11 +6,9 @@
 - 2 GB of swap
 - 2 processor cores
 
-With 2 GB of memory and dual cores, you can run two instances of the thin server (`NUM_WEBS=2`)
+With 2 GB of memory and dual cores, you can run two instances of the thin server (`NUM_WEBS=2`), and easily host anything but the largest of forums.
 
-1 GB of memory, 3GB of swap and a single core CPU are the minimums for a
-steady state, running Discourse forum -- but it's simpler to just throw a bit
-more hardware at the problem if you can, particularly during the install.
+1 GB of memory, 3 GB of swap and a single core CPU are the minimums for a steady state, running Discourse forum &ndash; but it's simpler to just throw a bit more hardware at the problem if you can, particularly during the install.
 
 ## Install Ubuntu Server 12.04 LTS with the package groups:
 
