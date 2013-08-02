@@ -19,6 +19,56 @@ zh_TW:
             kb: KB
             mb: MB
             tb: TB
+    dates:
+      tiny:
+        half_a_minute: "< 1分鐘"
+        less_than_x_seconds:
+          one: "< 1秒"
+          other: "< %{count}秒"
+        x_seconds:
+          one: "1秒"
+          other: "%{count}秒"
+        less_than_x_minutes:
+          one: "< 1分鐘"
+          other: "< %{count}分鐘"
+        x_minutes:
+          one: "1分鐘"
+          other: "%{count}分鐘"
+        about_x_hours:
+          one: "1小時"
+          other: "%{count}小時"
+        x_days:
+          one: "1日"
+          other: "%{count}日"
+        about_x_years:
+          one: "1年"
+          other: "%{count}年"
+        over_x_years:
+          one: "> 1年"
+          other: "> %{count}年"
+        almost_x_years:
+          one: "1年"
+          other: "%{count}年"
+      medium:
+        x_minutes:
+          one: "1 分鐘"
+          other: "%{count} 分鐘"
+        x_hours:
+          one: "1 小時"
+          other: "%{count} 小時"
+        x_days:
+          one: "1 日"
+          other: "%{count} 日"
+      medium_with_ago:
+        x_minutes:
+          one: "1 分鐘前"
+          other: "%{count} 分鐘前"
+        x_hours:
+          one: "1 小時前"
+          other: "%{count} 小時前"
+        x_days:
+          one: "1 日前"
+          other: "%{count} 日前"
     share:
       topic: '分享一個到本主題的鏈接'
       post: '分享一個到本帖的鏈接'
