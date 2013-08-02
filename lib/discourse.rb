@@ -105,7 +105,9 @@ module Discourse
 
   def self.git_version
     return $git_version if $git_version
-    f = Rails.root.to_s + "/lib/version"
+
+    # load the version stamped by the "build:stamp" task
+    f = Rails.root.to_s + "/config/version"
     require f if File.exists?("#{f}.rb")
 
     begin
