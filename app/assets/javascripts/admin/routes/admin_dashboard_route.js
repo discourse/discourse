@@ -14,7 +14,7 @@ Discourse.AdminDashboardRoute = Discourse.Route.extend({
   },
 
   fetchDashboardData: function(c) {
-    if( !c.get('dashboardFetchedAt') || moment().subtract('hour', 1).toDate() > c.get('dashboardFetchedAt') ) {
+    if( !c.get('dashboardFetchedAt') || moment().subtract('minutes', 30).toDate() > c.get('dashboardFetchedAt') ) {
       c.set('dashboardFetchedAt', new Date());
       Discourse.AdminDashboard.find().then(function(d) {
         if( Discourse.SiteSettings.version_checks ){
@@ -32,7 +32,7 @@ Discourse.AdminDashboardRoute = Discourse.Route.extend({
           c.set('top_referrers', topReferrers);
         }
 
-        ['admins', 'moderators', 'blocked', 'banned', 'top_traffic_sources', 'top_referred_topics'].forEach(function(x) {
+        ['admins', 'moderators', 'blocked', 'banned', 'top_traffic_sources', 'top_referred_topics', 'updated_at'].forEach(function(x) {
           c.set(x, d[x]);
         });
 

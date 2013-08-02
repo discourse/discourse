@@ -35,5 +35,5 @@ module Clockwork
   every(1.minute, 'clockwork_heartbeat')
   every(1.minute, 'poll_mailbox')
   every(30.minutes, 'destroy_old_deletion_stubs')
-
+  every(AdminDashboardData.recalculate_interval.minutes, 'dashboard_stats')
 end
