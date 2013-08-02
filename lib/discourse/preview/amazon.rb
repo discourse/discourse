@@ -18,10 +18,10 @@ module Discourse
 
         def extracted_data
         	{
-        		name: @body.css("html body h1"),
-        		image: @body.css("html body #main-image"),
-        		description: @body.css("html body #postBodyPS"),
-        		price: @body.css("html body .priceLarge")
+        		name: @body.css("html body h1").inner_text,
+        		image: @body.css("html body #main-image").inner_text,
+        		description: @body.css("html body #postBodyPS").inner_text,
+        		price: @body.css("html body .priceLarge").inner_text
         	}
         end
 			end
