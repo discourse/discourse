@@ -26,8 +26,11 @@ module Oneboxer
       return @url if url.blank?
 
       parsed = JSON.parse(open(translate_url).read)
-      image = parsed['image']
-      BaseOnebox.image_html(image['links']['original'], image['image']['caption'], image['links']['imgur_page'])
+      image = parsed['image']['links']['original']
+      url   = parsed['image']['image']['caption']
+      title = parsed['image']['links']['imgur_page']
+
+      BaseOnebox.image_html(image, url, title)
     end
 
   end
