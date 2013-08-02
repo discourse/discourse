@@ -13,11 +13,13 @@ module Oneboxer
     end
 
     def image_hash_for url
+      # length check, because imgur has their static pages and
+      # prefixes of other lengths
+      # ie. 'help', 'removalrequest', 'user/'
+      min_length = 5 # images used to be this long
+      max_length = 7 # this is the length for new images
       case url
-      when /imgur\.com\/user\//mi,
-           /imgur\.com\/help(\/|$)/mi
-        nil
-      when /imgur\.com\/(gallery\/)?(?<hash>[^\/]+)/mi
+      when %r<imgur\.com/(gallery/)?(?<hash>[^/]{#{min_length},#{max_length}}+)>mi
         $~[:hash]
       else
         nil
