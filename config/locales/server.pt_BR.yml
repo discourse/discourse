@@ -29,6 +29,10 @@ pt_BR:
     zero: "Desculpe, usuários novos não podem colocar imagens nas postagens."
     one: "Desculpe, usuários novos podem colocar apenas uma imagem nas postagens."
     other: "Desculpe, usuários novos podem colocar apenas %{count} imagens nas postagens."
+  too_many_attachments:
+    zero: "Desculpe, novos usuários não podem colocar anexos nas postagens."
+    one: "Desculpe, novos usuários podem colocar apenas um anexo nas suas postagens."
+    other: "Desculpe, novos usuários podem colocar apenas %{count} anexos nas suas postagens."
   too_many_links:
     zero: "Desculpe, usuários novos não podem colocar links nas postagens."
     one: "Desculpe, usuários novos podem colocar apenas um link nas postagens."
@@ -104,7 +108,7 @@ pt_BR:
             archetype:
               cant_send_pm: "Desculpe, não podes enviar uma mensagem particular para esse utilizador."
   user_profile:
-    no_info_me: "<div class='missing-profile'>o campo Sobre mim do seu perfil está em branco, <a href='/users/%{username_lower}/preferences/about-me'>quer completar?</a></div>"
+    no_info_me: "<div class='missing-profile'>o campo Sobre Mim do seu perfil está atualmente em branco, <a href='/users/%{username_lower}/preferences/about-me'>você gostaria de preenchê-lo?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} ainda não colocou nada no campo Sobre Mim</div>"
   category:
     topic_prefix: "Definição da categoria %{category}"
@@ -521,7 +525,7 @@ pt_BR:
     max_private_messages_per_day: "Quantidade máxima de mensagens particulares que você pode enviar por dia"
     suggested_topics: "Quantidade de tópicos sugeridos que você verá na parte debaixo dos tópicos"
     enable_s3_uploads: "Enviar arquivos recebidos para o s3"
-    s3_upload_bucket: "Bucket do s3 para qual enviar"
+    s3_upload_bucket: "O nome do bucket da Amazon S3 para o qual os arquivos serão enviados. ATENÇÃO: tem que ser em letras minúsculas (conforme http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html)"
     s3_access_key_id: "Access key da Amazon S3 que será usada para envio de imagens"
     s3_secret_access_key: "Secret access key da Amazon S3 que será usada para envio de imagens"
     s3_region: "Region name da Amazon S3 que será usada para envio de imagens"
@@ -540,10 +544,12 @@ pt_BR:
     regular_requires_topic_reply_count: "Quantos tópicos um usuário básico deve responder antes de ser promovido para usuário regular, nível de confiança (2)"
     newuser_max_links: "Quantos links um usuário novo pode adicionar a uma postagem"
     newuser_max_images: "Quantas imagens um usuário novo pode adicionar em uma postagem"
+    newuser_max_attachments: "Quantos anexos um novo usuário pode adicionar à sua postagem"
     newuser_max_mentions_per_post: "Número máximo de citações usando @name um usuário novo pode fazer em uma postagem"
     max_mentions_per_post: "Quantidade máxima de @notifications você pode add to a post"
     create_thumbnails: "Criar miniaturas para imagens no lightbox"
     email_time_window_mins: "Quantos minutos esperar antes de enviar um email para o usuário, para dar a chance a ele de ver antes."
+    email_posts_context: "Quantas postagens devem ser incluídas nos emails para mostrar o contexto"
     flush_timings_secs: "Qual frequencia para liberar os dados para o servidor, em segundos."
     max_word_length: "Tamanho máximo das palavras no título de um tópico"
     title_min_entropy: "Entropia mínima para o título do tópico"
@@ -574,6 +580,8 @@ pt_BR:
     pop3s_polling_password: "Senha para resgatar emails via POP3S"
     minimum_topics_similar: "Quantos tópicos precisam existir no banco de dados antes de um tópico similar ser apresentado."
     relative_date_duration: "Número de dias após a postagem a partir de quando as datas das postagens serão exibidas como relativas em vez de absolutas. Exemplos: data relativa: 7D, data absoluta: 20 de fevereiro"
+    delete_user_max_age: "A idade máxima de um usuário, em dias, para que o mesmo possa ser apagado por um administrador."
+    delete_all_posts_max: "Número máximo de postagens que podem ser apagadas de uma vez com o botão Remover Todos Postagens. Se um usuário tiver mais postagens do que este número, as postagens não poderão ser todas removidas de uma vez e o usuário não poderá ser removido."
   notification_types:
     mentioned: "%{display_username} mencionou-te em %{link}"
     liked: "%{display_username} curtiu sua postagem em %{link}"
@@ -638,6 +646,7 @@ pt_BR:
       must_begin_with_alphanumeric: "tem de começar com uma letra ou um número"
     email:
       not_allowed: "este provedor de emails não é permitido. Por favor utilize outro endereço de email."
+      blocked: "não é permitido."
   invite_mailer:
     subject_template: "[%{site_name}] %{invitee_name} convidou-te para participares numa conversa em %{site_name}"
     text_body_template: |
@@ -823,11 +832,13 @@ pt_BR:
         Agora você pode responder e criar novos tópicos de novo.
   unsubscribe_link: "Se você deseja se desinscrever destes emails, visite suas [preferências do usuário](%{user_preferences_url})."
   user_notifications:
+    previous_discussion: "Discussão anterior"
     unsubscribe:
       title: "Desinscrever"
       description: "Não está interessado em receber estes emails? Não tem problema! Clique em baixo para se desinscrever instantaneamente:"
     reply_by_email: "Para responder, responda este email ou visite %{base_url}%{url} no seu navegador."
     visit_link_to_respond: "Para responder visite %{base_url}%{url} no seu navegador."
+    posted_by: "Postado por %{username} em %{post_date}"
     user_invited_to_private_message:
       subject_template: "[%{site_name}] %{username} convidou-te para uma conversa privada '%{topic_title}'"
       text_body_template: |
@@ -837,40 +848,36 @@ pt_BR:
     user_replied:
       subject_template: "[%{site_name}] nova resposta à sua postagem no tópico '%{topic_title}'"
       text_body_template: |
-        %{username} respondeu à sua postagem no tópico '%{topic_title}' de %{site_name}:
-
-        ---
         %{message}
+
+        %{context}
 
         ---
         %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{username} citou-te em '%{topic_title}'"
       text_body_template: |
-        %{username} citou você no tópico '%{topic_title}' de %{site_name}:
-
-        ---
         %{message}
+
+        %{context}
 
         ---
         %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{username} mencionou-te em '%{topic_title}'"
       text_body_template: |
-        %{username} mencionou você no tópico '%{topic_title}' de %{site_name}:
-
-        ---
         %{message}
+
+        %{context}
 
         ---
         %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] nova postagem no tópico '%{topic_title}'"
       text_body_template: |
-        %{username} postou no tópico '%{topic_title}' de %{site_name}:
-
-        ---
         %{message}
+
+        %{context}
 
         ---
         %{respond_instructions}
@@ -888,7 +895,6 @@ pt_BR:
       text_body_template: |
         %{private_message_from} enviou uma mensagem particular para você
 
-        ---
         %{message}
 
         ---
@@ -955,7 +961,10 @@ pt_BR:
   upload:
     unauthorized: "Desculpe-nos, o arquivo que você está tentando enviar não é autorizado (extensões autorizadas: %{authorized_extensions})."
     pasted_image_filename: "Imagem colada"
+    attachments:
+      too_large: "Desculpe, o arquivo que você está tentando enviar é muito grande (tamanho máximo é %{max_size_kb}%kb)."
     images:
-      fetch_failure: "Desculpe, houve um erro ao transferir a imagem."
-      unknown_image_type: "Desculpe, mas o arquivo que você tentou enviar não parece ser uma imagem."
-      size_not_found: "Desculpe, mas não conseguimos determinar o tamanho da imagem. É possível que seu arquivo de imagem esteja corrompido?"
+      too_large: "Desculpe, a imagem que você está tentando enviar é muito grande (tamanho máximo é %{max_size_kb}%kb), por favor redimensione-a e tente novamente."
+      fetch_failure: "Desculpe, houve um erro na obtenção da imagem."
+      unknown_image_type: "Desculpe, mas o arquivo que você tentou enviar parece não ser uma imagem."
+      size_not_found: "Desculpe, mas não conseguimos determinar o tamanho da imagem. Pode ser que seu arquivo de imagem esteja corrompido?"
