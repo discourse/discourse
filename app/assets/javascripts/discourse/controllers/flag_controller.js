@@ -86,7 +86,7 @@ Discourse.FlagController = Discourse.ObjectController.extend(Discourse.ModalFunc
   fetchUserDetails: function() {
     if( Discourse.User.current('staff') && this.get('username') ) {
       var flagController = this;
-      Discourse.AdminUser.find(this.get('username')).then(function(user){
+      Discourse.AdminUser.find(this.get('username').toLowerCase()).then(function(user){
         flagController.set('userDetails', user);
       });
     }
