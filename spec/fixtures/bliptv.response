@@ -4,42 +4,29 @@
 <!--[if IE 8]> <html class="ie8" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" xmlns:og="http://ogp.me/ns#" xmlns:fb="http://www.facebook.com/2008/fbml"> <![endif]-->
 <!--[if IE 9]> <html class="ie9" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" xmlns:og="http://ogp.me/ns#" xmlns:fb="http://www.facebook.com/2008/fbml"> <![endif]-->
 <!--[if gt IE 9]><!--> <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" xmlns:og="http://ogp.me/ns#" xmlns:fb="http://www.facebook.com/2008/fbml" class="standards"> <!--<![endif]-->
-
 	<head prefix="og: http://ogp.me/ns# bliptvviewer: http://ogp.me/ns/apps/bliptvviewer#">
 		<!--startup timer-->
 		<script type="text/javascript">var _BLIP_loadtimer=(new Date()).getTime()</script>
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
 		<!-- rss-->
 		<link rel="alternate" type="application/rss+xml" title="RSS Feed for SC2L Week 3 - Axiom vs Acer G6" href="/rss/flash/6623829" />
-
-		
 			<link rel="stylesheet" type="text/css" href="http://a.blip.tv/skin/smooth/common.a97ff71.css" />
 			<link rel="stylesheet" type="text/css" href="http://a.blip.tv/skin/smooth/episodePage.a97ff71.css" />
 			<link rel="stylesheet" type="text/css" href="http://a.blip.tv/skin/smooth/endcap.a97ff71.css" />
-
-		
-
 		<!-- Meta Tags -->
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<title>Watch SC2L Week 3 - Axiom vs Acer G6 | Day[9]&#174; Episodes | Videogames Videos | Blip</title>
-
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-
-		
 		<meta name="description" content="Acer and Axiom go head to head in week 3!"/>
-		
-
 		<meta name="keywords" content="Day[9]&#174;"/>
 		<meta name="keywords" content="Day[9]&#174; blip"/>
 		<meta name="keywords" content="day[9]"/>
 		<meta name="keywords" content="sean plott"/>
 		<meta name="keywords" content="gaming"/>
-
 		<meta name="twitter:card" value="summary"/>
 		<meta name="twitter:site" value="@blip"/>
 		<meta name="twitter:creator" value="@day9tv"/>
 		<meta name="twitter:image" value="http://4.i.blip.tv/g?src=Striderdoom-SC2LWeek3AxiomVsAcerG6178-416.jpg&w=120&h=120&fmt=png&bc=FFFFFF&ac=0"/>	
-
 		<!-- FB Open Graph Tags -->
 		<meta property="fb:app_id" 		content="136482209767138"/>
 		<meta property="og:type" 		content="video.episode"/>
@@ -48,113 +35,60 @@
 		<meta property="og:description" content="Acer and Axiom go head to head in week 3!"/>
 		<meta property="og:video" content="http://blip.tv/day9tv/sc2l-week-3-axiom-vs-acer-g6-6623829" />
 		<meta property="og:video:type" content="text/html" />
-		
-
-		
-
 <!--
-
-
 		<meta property="bliptvviewer:category" content="Videogames"/>
 		<meta property="bliptvviewer:show_page" content="http://blip.tv/day9tv"/>
 -->
-
-
 		<meta property="video:release_date" content="2013-08-01"/>
 		<meta property="video:duration" content="1692"/>
 		<meta property="video:series" content="http://blip.tv/day9tv"/>
-
 		<meta property="og:url" 		content="http://blip.tv/day9tv/sc2l-week-3-axiom-vs-acer-g6-6623829" />
 		<meta property="og:site_name" 	content="Blip"/>
-
 		<meta property="video:tag" content="web series episode" />
-
-		
 			<meta property="video:tag" content="Videogames" />
-		
-
 		<meta name="robots" content="all" />
-
 		<link rel="apple-touch-icon" href="http://a.blip.tv/images/apple-touch-icon-iphone.png" />
 <link rel="apple-touch-icon" sizes="72x72" href="http://a.blip.tv/images/apple-touch-icon-ipad.png" />
 <link rel="apple-touch-icon" sizes="114x114" href="http://a.blip.tv/images/apple-touch-icon-iphone4.png" />
-
-
 <meta name="apple-itunes-app" content="app-id=580646903">
 <meta name="google-play-app" content="app-id=com.blip.android.blip">
-
-
-
-		
-		
 <meta name="fb_channel_url" value="http://a.blip.tv/channel.html" />
-
-
 	<script type="text/javascript" src="http://a.blip.tv/scripts/BLIP/DestinationAnalytics.a97ff71.js"></script>
-
-
-
 <script type="text/javascript">
-
 var _gaq = _gaq || [];
-
 _gaq.push(['_setAccount', 'UA-713068-1']);
-
-
- 
 _Analytics.addVariables({"analytics":[[1,"template","episode",3],[2,"series name","Day[9]Â®",3],[3,"QR","9",3]]});
-
-
 _gaq.push(['_trackPageview']);
-
 (function() {
 	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
 	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
 	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 })();
 </script>
-
-		
 	<script type="text/javascript" src="http://a.blip.tv/scripts/BLIP/DestinationCommon.a97ff71.js"></script>
-
-
-
-		
 			<script type="text/javascript" src="http://a.blip.tv/scripts/BLIP/DestinationEpisode.a97ff71.js"></script>
-		
-		
-
 		<script>
 			var loaded = (new Date()).valueOf();
 		</script>
 	</head>
 	<body>
-
 		<div id="Header">
-
 	<div id="HeaderContents">
 		<a href="/" class="Logo" alt="Blip" title="Blip Home" data-link-text="blip logo"></a>
-
 		<div class="Tagline"><p><a href="/discover"><span>Discover Your Blip</span>.</a> What do you want to watch?</p></div>
-
 		<div class="ButtonContainer">
 			<a href="#" class="CategoryMenuButton MastheadButton"><span>Categories <i class="base">V</i><i class="active">x</i></span></a>
 			<a href="#" class="SearchButton MastheadButton"><i>q</i></a>
 		</div>
-
 		<form class="SearchHeader clearfix" method="get" action="/search">
 			<input type="text" name="q" class="SearchTerms" autocomplete="off" placeholder="Search for series, episodes"/>
 			<div class="AutoComplete">
 				<div class="SearchResults"></div>
 			</div>
 		</form>
-
-		
 			<div class="LogIn FacebookLogin">
 				<a id="" class="FacebookLoginButton" href="#">Love Blip?<br />Make it yours.</a>
 			</div>
-		
-
 		<a href="/latest" alt="latest"><img src="http://a.blip.tv/images/blank.gif"/></a>
 	</div> <!-- end #HeaderContents -->
 	<div class="Nav">
@@ -194,7 +128,6 @@ _gaq.push(['_trackPageview']);
 				<a href="/videogames-videos" data-link-text="video games">Video Games</a>
 				<a href="/education-documentary-videos" data-link-text="learning">Learning</a>
 			</div>
-
 			<div class="Column">
 				<a href="http://videos.thepetcollective.tv?utm_source=blip_site&utm_medium=referral&utm_campaign=tpc_site_20130722" data-link-text="the pet collective" class="tpc_MainNavLink" target="_blank">Pets</a>
 				<a href="/fashion-and-beauty-videos" data-link-text="fashion">Fashion</a>
@@ -208,20 +141,9 @@ _gaq.push(['_trackPageview']);
 		</div>
 	</div>
 </div>
-
-
-
-
-
 		<style type="text/css">
-
-
   @import url("http://a.blip.tv/skin/smooth/compiled/modal.a97ff71.css");
-
-
 </style>
-
-
 <div id="PageInfo"
 	data-posts-id="6623829"
 	data-users-id="570336"
@@ -245,10 +167,8 @@ _gaq.push(['_trackPageview']);
 	<meta itemprop="datePublished" content="2013-08-01" />
   <meta itemprop="keywords" content="day[9],sean plott,gaming,starcraft ii,sc2l,acer,axiom,d-link,incontrol" />
 	<link itemprop="partOfTVSeries" href="http://blip.tv/day9tv" />
-
 	<div class="Theater" >
 	<div class="TheaterContent">
-		
 		<div class="EpisodePlayer">
   <iframe id="PlayeriFrame"
           frameborder="0"
@@ -262,15 +182,12 @@ _gaq.push(['_trackPageview']);
           allowfullscreen></iframe>
 	<div class="StandardEpisodeEndcap " data-src="/episode/get_endcap?users_id=570336&posts_id=6623829&no_wrap=1&esi=1&"></div>
 </div>
-		
 		<div class="TheaterDescription">
 			<div class="DescContainer">
 				<h3>SC2L Week 3 - Axiom vs Acer G6</h3>
 				<p>Acer and Axiom go head to head in week 3!</p>
 			</div>
 			<div class="SocialMedia">
-				
-
 <div class="SharingOptions">
 	<div class="Heading">
 		<span class="Label">Share</span>
@@ -299,13 +216,10 @@ _gaq.push(['_trackPageview']);
 		</div>
 	</div>
 </div>
-
 			</div>
 		</div>
 	</div>
 </div> <!-- end Theater -->
-
-
 	<div class="EpisodeListWrapper">
 		<div class="EpisodesUpNext">
 			<div data-placement="more from series">
@@ -317,14 +231,12 @@ _gaq.push(['_trackPageview']);
 					</a>
 				</h3>
 				<div class="Episodes" data-analytics-context="SameShow">
-					
 						<div class="Episode First" data-position="0">
 						<div class="MyBlipEpisodeCardWrap" 
 	data-episode-title="Day[9] Daily #1 - Flash vs Hero"
 	data-series-title="Day[9]&#174;"
 	data-channels-list="Videogames"
 	data-linkname="myblip episode card for Day[9] Daily #1 - Flash vs Hero">
-
 	<img
 		class="Thumb"
 		src="http://5.i.blip.tv/g?src=Striderdoom-Day9Daily1FlashVsHero193-243.jpg&w=230&h=128&fmt=jpg"
@@ -335,11 +247,7 @@ _gaq.push(['_trackPageview']);
 			<i>p</i>
 		</span>
 		<div class="Description">
-		
-			
 				My very first Day[9] Daily!
-			
-		
 		</div>
 		<div class="Titles">
 			<span class="EpisodeTitle">Day[9] Daily #1 - Flash vs Hero</span>
@@ -353,7 +261,6 @@ _gaq.push(['_trackPageview']);
 					<i>l</i>
 					<i class="X">x</i>
 				</li>
-
 				<li class="SocialActions" rel="ShareModal" data-modal-href="/episode/get_share_actions/3515432?no_wrap=1">
 					<span class="ActionLabel">Share</span>
 					<i>s</i>
@@ -361,22 +268,15 @@ _gaq.push(['_trackPageview']);
 			</ul>
 		</div>
 	</div>
-
-
 </div>
-
-						
 							<div class="UpNext">Playing Next</div>
-						
 						</div>
-					
 						<div class="Episode" data-position="1">
 						<div class="MyBlipEpisodeCardWrap" 
 	data-episode-title="Day[9] Daily #2 - Stork vs ForGG"
 	data-series-title="Day[9]&#174;"
 	data-channels-list="Videogames"
 	data-linkname="myblip episode card for Day[9] Daily #2 - Stork vs ForGG">
-
 	<img
 		class="Thumb"
 		src="http://8.i.blip.tv/g?src=Striderdoom-D9D0002Stork_ForGG220-654.jpg&w=230&h=128&fmt=jpg"
@@ -387,11 +287,7 @@ _gaq.push(['_trackPageview']);
 			<i>p</i>
 		</span>
 		<div class="Description">
-		
-			
 				A cool macro TvP from two of the finest. Stork is known for his phenomenally solid play, and ForGG for his timing pushes.
-			
-		
 		</div>
 		<div class="Titles">
 			<span class="EpisodeTitle">Day[9] Daily #2 - Stork vs ForGG</span>
@@ -405,7 +301,6 @@ _gaq.push(['_trackPageview']);
 					<i>l</i>
 					<i class="X">x</i>
 				</li>
-
 				<li class="SocialActions" rel="ShareModal" data-modal-href="/episode/get_share_actions/3517308?no_wrap=1">
 					<span class="ActionLabel">Share</span>
 					<i>s</i>
@@ -413,20 +308,14 @@ _gaq.push(['_trackPageview']);
 			</ul>
 		</div>
 	</div>
-
-
 </div>
-
-						
 						</div>
-					
 						<div class="Episode" data-position="2">
 						<div class="MyBlipEpisodeCardWrap" 
 	data-episode-title="Day[9] Daily #3 - Flash vs Firebathero"
 	data-series-title="Day[9]&#174;"
 	data-channels-list="Videogames"
 	data-linkname="myblip episode card for Day[9] Daily #3 - Flash vs Firebathero">
-
 	<img
 		class="Thumb"
 		src="http://4.i.blip.tv/g?src=Striderdoom-D9D0003Flash_FBH852-762.jpg&w=230&h=128&fmt=jpg"
@@ -437,11 +326,7 @@ _gaq.push(['_trackPageview']);
 			<i>p</i>
 		</span>
 		<div class="Description">
-		
-			
 				An incredible game between two of the finest TvT players ever to live!
-			
-		
 		</div>
 		<div class="Titles">
 			<span class="EpisodeTitle">Day[9] Daily #3 - Flash vs Firebathero</span>
@@ -455,7 +340,6 @@ _gaq.push(['_trackPageview']);
 					<i>l</i>
 					<i class="X">x</i>
 				</li>
-
 				<li class="SocialActions" rel="ShareModal" data-modal-href="/episode/get_share_actions/3517274?no_wrap=1">
 					<span class="ActionLabel">Share</span>
 					<i>s</i>
@@ -463,20 +347,14 @@ _gaq.push(['_trackPageview']);
 			</ul>
 		</div>
 	</div>
-
-
 </div>
-
-						
 						</div>
-					
 						<div class="Episode" data-position="3">
 						<div class="MyBlipEpisodeCardWrap" 
 	data-episode-title="Day[9] Daily #4 - Bisu vs Jaedong 1"
 	data-series-title="Day[9]&#174;"
 	data-channels-list="Videogames"
 	data-linkname="myblip episode card for Day[9] Daily #4 - Bisu vs Jaedong 1">
-
 	<img
 		class="Thumb"
 		src="http://1.i.blip.tv/g?src=Striderdoom-D9D0004Bisu_Jaedong1727-347.jpg&w=230&h=128&fmt=jpg"
@@ -487,11 +365,7 @@ _gaq.push(['_trackPageview']);
 			<i>p</i>
 		</span>
 		<div class="Description">
-		
-			
 				Rarely do you get to see two players play against one another in two different individual matches, let alone on the same ma...
-			
-		
 		</div>
 		<div class="Titles">
 			<span class="EpisodeTitle">Day[9] Daily #4 - Bisu vs Jaedong 1</span>
@@ -505,7 +379,6 @@ _gaq.push(['_trackPageview']);
 					<i>l</i>
 					<i class="X">x</i>
 				</li>
-
 				<li class="SocialActions" rel="ShareModal" data-modal-href="/episode/get_share_actions/3517306?no_wrap=1">
 					<span class="ActionLabel">Share</span>
 					<i>s</i>
@@ -513,16 +386,10 @@ _gaq.push(['_trackPageview']);
 			</ul>
 		</div>
 	</div>
-
-
 </div>
-
-						
 						</div>
-					
 				</div>
 			</div>
-			
 			<div data-placement="more from category">
 				<h3>Featured episodes in 
 					<a href="/videogames-videos" data-link-text="Videogames">
@@ -530,14 +397,12 @@ _gaq.push(['_trackPageview']);
 					</a>
 				</h3>
 				<div class="Episodes" data-analytics-context="SameChannel">
-					
 						<div class="Episode" data-position="0">
 						<div class="MyBlipEpisodeCardWrap" 
 	data-episode-title="Video Game Confessions: Simon Belmont"
 	data-series-title="Video Game Confessions"
 	data-channels-list="Comedy,Videogames"
 	data-linkname="myblip episode card for Video Game Confessions: Simon Belmont">
-
 	<img
 		class="Thumb"
 		src="http://9.i.blip.tv/g?src=Tgwtgvcons-VideoGameConfessionsSimonBelmont805.jpg&w=230&h=128&fmt=jpg"
@@ -548,11 +413,7 @@ _gaq.push(['_trackPageview']);
 			<i>p</i>
 		</span>
 		<div class="Description">
-		
-			
 				How dead ARE vampires?
-			
-		
 		</div>
 		<div class="Titles">
 			<span class="EpisodeTitle">Video Game Confessions: Simon Belmont</span>
@@ -566,7 +427,6 @@ _gaq.push(['_trackPageview']);
 					<i>l</i>
 					<i class="X">x</i>
 				</li>
-
 				<li class="SocialActions" rel="ShareModal" data-modal-href="/episode/get_share_actions/6552444?no_wrap=1">
 					<span class="ActionLabel">Share</span>
 					<i>s</i>
@@ -574,19 +434,14 @@ _gaq.push(['_trackPageview']);
 			</ul>
 		</div>
 	</div>
-
-
 </div>
-
 						</div>
-					
 						<div class="Episode" data-position="1">
 						<div class="MyBlipEpisodeCardWrap" 
 	data-episode-title="Power Rangers (20th Anniversary Overview) - Basics, Fun Facts and More - Geek Crash Course"
 	data-series-title="Geek Crash Course"
 	data-channels-list="Animation & Comics,Entertainment,Videogames"
 	data-linkname="myblip episode card for Power Rangers (20th Anniversary Overview) - Basics, Fun Facts and More - Geek Crash Course">
-
 	<img
 		class="Thumb"
 		src="http://1.i.blip.tv/g?src=GeekCrashCourse-PowerRangers20thAnniversaryOverviewBasicsNeedToKnowFun645.png&w=230&h=128&fmt=jpg"
@@ -597,11 +452,7 @@ _gaq.push(['_trackPageview']);
 			<i>p</i>
 		</span>
 		<div class="Description">
-		
-			
 				With the 20th Anniversary of Power Rangers, it's morphin' time for a Geek Crash Course on a much-requested set of spandex-c...
-			
-		
 		</div>
 		<div class="Titles">
 			<span class="EpisodeTitle">Power Rangers (20th Anniversary Overview) - Basics, Fun Facts and More - Geek Crash Course</span>
@@ -615,7 +466,6 @@ _gaq.push(['_trackPageview']);
 					<i>l</i>
 					<i class="X">x</i>
 				</li>
-
 				<li class="SocialActions" rel="ShareModal" data-modal-href="/episode/get_share_actions/6620214?no_wrap=1">
 					<span class="ActionLabel">Share</span>
 					<i>s</i>
@@ -623,19 +473,14 @@ _gaq.push(['_trackPageview']);
 			</ul>
 		</div>
 	</div>
-
-
 </div>
-
 						</div>
-					
 						<div class="Episode" data-position="2">
 						<div class="MyBlipEpisodeCardWrap" 
 	data-episode-title="FamiComplex Video Reviews - Make My Video"
 	data-series-title="Famicomplex TV"
 	data-channels-list="Videogames"
 	data-linkname="myblip episode card for FamiComplex Video Reviews - Make My Video">
-
 	<img
 		class="Thumb"
 		src="http://5.i.blip.tv/g?src=Famicomplex-FamiComplexVideoReviewsMakeMyVideo697.jpg&w=230&h=128&fmt=jpg"
@@ -646,11 +491,7 @@ _gaq.push(['_trackPageview']);
 			<i>p</i>
 		</span>
 		<div class="Description">
-		
-			
 				FamiComplex tackles the Make My Video series for the Sega CD. Spoiler alert: They're absolutely awful. Attributions, as pro...
-			
-		
 		</div>
 		<div class="Titles">
 			<span class="EpisodeTitle">FamiComplex Video Reviews - Make My Video</span>
@@ -664,7 +505,6 @@ _gaq.push(['_trackPageview']);
 					<i>l</i>
 					<i class="X">x</i>
 				</li>
-
 				<li class="SocialActions" rel="ShareModal" data-modal-href="/episode/get_share_actions/6518190?no_wrap=1">
 					<span class="ActionLabel">Share</span>
 					<i>s</i>
@@ -672,19 +512,14 @@ _gaq.push(['_trackPageview']);
 			</ul>
 		</div>
 	</div>
-
-
 </div>
-
 						</div>
-					
 						<div class="Episode" data-position="3">
 						<div class="MyBlipEpisodeCardWrap" 
 	data-episode-title="Meet Paul Sullivan from SCEA with Doc"
 	data-series-title="Urgent Frequency Television"
 	data-channels-list="Videogames"
 	data-linkname="myblip episode card for Meet Paul Sullivan from SCEA with Doc">
-
 	<img
 		class="Thumb"
 		src="http://3.i.blip.tv/g?src=Urgentfury-22663407.png&w=230&h=128&fmt=jpg"
@@ -695,11 +530,7 @@ _gaq.push(['_trackPageview']);
 			<i>p</i>
 		</span>
 		<div class="Description">
-		
-			
 				Recovered from the lost files of E32012, Doc from the Tester season one (@Doc_Gamer) sits down with Paul Sullivan of Sony C...
-			
-		
 		</div>
 		<div class="Titles">
 			<span class="EpisodeTitle">Meet Paul Sullivan from SCEA with Doc</span>
@@ -713,7 +544,6 @@ _gaq.push(['_trackPageview']);
 					<i>l</i>
 					<i class="X">x</i>
 				</li>
-
 				<li class="SocialActions" rel="ShareModal" data-modal-href="/episode/get_share_actions/6311247?no_wrap=1">
 					<span class="ActionLabel">Share</span>
 					<i>s</i>
@@ -721,15 +551,10 @@ _gaq.push(['_trackPageview']);
 			</ul>
 		</div>
 	</div>
-
-
 </div>
-
 						</div>
-					
 				</div>
 			</div>
-			
 		</div>
 	</div>
 	<div class="EpisodeInfoWrapper">
@@ -753,7 +578,6 @@ _gaq.push(['_trackPageview']);
 		<span class="Un"><i>c</i> Following</span>
 		<span class="UnHover"><i>x</i> Unfollow</span>
 </a>
-
 					</div>
 					<div class="ShowInfo">
 						<h3>
@@ -761,17 +585,14 @@ _gaq.push(['_trackPageview']);
 								Day[9]&#174;
 							</a>
 						</h3>
-
 						<div class="ShowChannel">
 							<a href="/show/570336#EpisodeArchive" data-link-text="episode archive">
 								2810 episodes
 							</a>
-							
 								in
 								<a href="/videogames-videos" data-link-text="Videogames">
 									Videogames
 								</a>
-							
 						</div>
 						<div class="ShowInfoDescription">
 							<p>
@@ -793,17 +614,11 @@ _gaq.push(['_trackPageview']);
 	>
 	</div>
 </div>
-
-
 			</div>
 		</div>
 	</div> <!-- end .EpisodeInfoWrapper -->
 </div>
-
-
-
 		<div id="FooterWrap">
-
 	<div id="Footer">
 		<div class="centerList">
 			<ul class="Links">
@@ -820,19 +635,13 @@ _gaq.push(['_trackPageview']);
 				<li><a href="/terms" data-link-text="terms">Terms</a></li>
 			</ul>
 		</div>
-		
 		<div class="Producers">
 			<div class="title">Blip Producers:</div>
-			
 			<div class="description">Need to access your dashboard?</div>
 			<div class="LoggedOut">
 				<a class="button" href="/users/login" data-link-text="producers logout">Producer Login</a>
 			</div>
-			
 		</div>
-
-
-
 		<div class="Connect">
 			<div class="title">Connect With Us:</div>
 			<div class="description">Get Blip updates</div>
@@ -840,24 +649,15 @@ _gaq.push(['_trackPageview']);
 			<a class="button twitter" alt="Twitter" href="http://twitter.com/blip" target="_blank" data-link-text="twitter"><i>t</i></a>
 			<a class="button tumblr" alt="Tumblr" href="http://blog.blip.com/" target="_blank" data-link-text="tumblr"><i>T</i></a>
 		</div>
-
 		<div class="Copyright">
 			<p class="Tagline">Discover the best in original web series.</p>
 			<p class="CopyrightText">&copy; 2013 Blip Networks, Inc. All Rights Reserved.</p>
 			<a href="http://nytm.org/made" data-link-text="made in ny">Made in NY &hearts;</a>
 		</p>
 	</div> <!-- end #Footer -->
-
 </div> <!-- end #FooterWrap -->
-
-
-
-
-	
-
 <!-- Tumblr share code -->
 <script type="text/javascript" src="http://platform.tumblr.com/v1/share.js"></script>
-
 		<!-- Begin comScore Tag -->
 <script>
 var _comscore = _comscore || [];
@@ -871,8 +671,6 @@ el.parentNode.insertBefore(s, el);
 <img src="http://b.scorecardresearch.com/p?c1=2&c2=6708843&cv=2.0&cj=1" />
 </noscript>
 <!-- End comScore Tag -->
-
-
 	<!-- Start Quantcast tag -->
 <script type="text/javascript">
 	_qoptions={
@@ -884,12 +682,9 @@ el.parentNode.insertBefore(s, el);
 	<img src="http://pixel.quantserve.com/pixel/p-74vRiZ03u2gFw.gif" style="display: none;" border="0" height="1" width="1" alt="Quantcast"/>
 </noscript>
 <!-- End Quantcast tag -->
-
-
 	<!--[if lt IE 9]> 
 	<div style="display:none;" id="UnsupportedBrowser"></div>
 	<![endif]-->
-
 	<script type="text/javascript">
 		var google_conversion_id = 982321131;
 		var google_conversion_label = "FrdCCNWm4gkQ64-01AM";
@@ -902,13 +697,8 @@ el.parentNode.insertBefore(s, el);
 		<img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/982321131/?value=0&amp;label=FrdCCNWm4gkQ64-01AM&amp;guid=ON&amp;script=0"/>
 		</div>
 	</noscript>
-			
-	
 <script type="text/javascript">
-
 	var s_account = "blipprod";
-
-
 </script>
 <!-- SiteCatalyst code version: H.25.4.
 Copyright 1996-2013 Adobe, Inc. All Rights Reserved
@@ -920,22 +710,15 @@ s.events="event1"
 s[O.EVAR.PAGE_NAME]=O.getPageName();
 s[O.EVAR.SITE_SECTION]=O.getSiteSection();
 s[O.EVAR.FACEBOOK_CONNECT_STATUS]=O.getSubscriberStatus();
-
 /************* DO NOT ALTER ANYTHING BELOW THIS LINE ! **************/
 var s_code=s.t();if(s_code)document.write(s_code)//--></script>
 <script language="JavaScript" type="text/javascript"><!--
 if(navigator.appVersion.indexOf('MSIE')>=0)document.write(unescape('%3C')+'\!-'+'-')
 //--></script>
-
-
 	<noscript>
 		<img src="http://blip.d2.sc.omtrdc.net/b/ss/blipprod/1/H.25.4--NS/0" height="1" width="1" border="0" alt="" />
 	</noscript><!--/DO NOT REMOVE/-->
 <!--/DO NOT REMOVE/-->
 <!-- End SiteCatalyst code version: H.25.4. -->
-
-
-
-
 	</body>
 </html>
