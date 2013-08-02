@@ -210,6 +210,8 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     if user_open_id.blank? && user = User.find_by_email(email)
       # we trust so do an email lookup
+      # TODO some openid providers may not be trust worthy, allow for that
+      #  for now we are good (google, yahoo are trust worthy)
       user_open_id = UserOpenId.create(url: identity_url , user_id: user.id, email: email, active: true)
     end
 
@@ -250,18 +252,32 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     data = auth_token[:info]
     screen_name = data["nickname"]
+    email = data["email"]
     github_user_id = auth_token["uid"]
 
     session[:authentication] = {
       github_user_id: github_user_id,
-      github_screen_name: screen_name
+      github_screen_name: screen_name,
+      email: email,
+      email_valid: true
     }
 
     user_info = GithubUserInfo.where(github_user_id: github_user_id).first
 
+    if !user_info && user = User.find_by_email(email)
+      # we trust so do an email lookup
+      user_info = GithubUserInfo.create(
+          user_id: user.id,
+          screen_name: screen_name,
+          github_user_id: github_user_id
+      )
+    end
+
     @data = {
       username: screen_name,
-      auth_provider: "Github"
+      auth_provider: "Github",
+      email: email,
+      email_valid: true
     }
 
     process_user_info(user_info, screen_name)
