@@ -188,6 +188,7 @@ cs:
       "13": "Přijaté zprávy"
 
     user:
+      said: "uživatel {{username}} řekl:"
       profile: Profil
       title: "Uživatel"
       mute: Ignorovat
@@ -204,25 +205,26 @@ cs:
       dynamic_favicon: "Zobrazovat notifikace na favikoně"
       external_links_in_new_tab: "Otevírat všechny externí odkazy do nové záložky"
       enable_quoting: "Povolit odpověď s citací z označeného textu"
-
+      change: "změnit"
       moderator: "{{user}} je moderátor"
       admin: "{{user}} je administrátor"
 
       change_password:
-        action: "změnit"
         success: "(email odeslán)"
         in_progress: "(odesílám)"
         error: "(chyba)"
 
+      change_about:
+        title: "Změna o mně"
+
       change_username:
-        action: "změnit uživatelské jméno"
         title: "Změnit uživatelské jméno"
         confirm: "Změna uživatelského jména může mít vážné následky. Opravdu to chcete udělat?"
         taken: "Toto uživatelské jméno je již zabrané."
         error: "Nastala chyba při změně uživatelského jména."
         invalid: "Uživatelské jméno je neplatné. Musí obsahovat pouze písmena a číslice."
+
       change_email:
-        action: 'změnit emailovou adresu'
         title: "Změnit emailovou adresu"
         taken: "Tato emailová adresa není k dispozici."
         error: "Nastala chyba při změně emailové adresy. Není tato adresa již používaná?"
@@ -508,15 +510,22 @@ cs:
 
     upload_selector:
       title: "Vložit obrázek"
+      title_with_attachments: "Nahrát obrázek nebo soubor"
       from_my_computer: "Z mého zařízení"
       from_the_web: "Z webu"
       add_title: "Přidat obrázek"
+      add_title_with_attachments: "Přidat obrázek nebo soubor"
       remote_title: "obrázek ze vzdáleného úložistě"
+      remote_title_with_attachments: "obrázek nebo soubor ze vzdáleného úložistě"
       remote_tip: "zadejte adresu obrázku ve formátu http://example.com/image.jpg"
+      remote_tip_with_attachments: "zadejte adresu obrázku nebo souboru ve formátu http://example.com/file.ext"
       local_title: "obrázek z lokálního úložiště"
-      local_tip: "klikněte sem pro výběr obrázku z vašeho zařízení"
-      upload_title: "Nahrát"
-      uploading: "Nahrávám obrázek"
+      local_title_with_attachments: "obrázek nebo soubor z lokálního úložiště"
+      local_tip: "klikněte sem pro výběr obrázku z vašeho zařízení."
+      local_tip_with_attachments: "klikněte sem pro výběr obrázku nebo souboru z vašeho zařízení."
+      upload_title: "Nahrát obrázek"
+      upload_title_with_attachments: "Nahrát obrázek nebo soubor"
+      uploading: "Nahrávám"
 
     search:
       title: "hledání témat, příspěvků, uživatelů a kategorií"
@@ -788,10 +797,12 @@ cs:
         create: "Bohužel nastala chyba při vytváření příspěvku. Prosím zkuste to znovu."
         edit: "Bohužel nastala chyba při editaci příspěvku. Prosím zkuste to znovu."
         upload: "Bohužel nastala chyba při nahrávání příspěvku. Prosím zkuste to znovu."
-        image_too_large: "Soubor, který se snažíte nahrát je bohužel příliš velký (maximální velikost je {{max_size_kb}}kb). Prosím zmenšete ho zkuste to znovu."
+        attachment_too_large: "Soubor, který se snažíte nahrát je bohužel příliš velký (maximální velikost je {{max_size_kb}}kb). Prosím zmenšete ho zkuste to znovu."
+        image_too_large: "Obrázek, který se snažíte nahrát je bohužel příliš velký (maximální velikost je {{max_size_kb}}kb). Prosím zmenšete ho zkuste to znovu."
         too_many_uploads: "Bohužel, najednou smíte nahrát jen jeden soubor."
         upload_not_authorized: "Bohužel, soubor, který se snažíte nahrát, není povolený (povolené přípony: {{authorized_extensions}})."
-        upload_not_allowed_for_new_user: "Bohužel, noví uživatelé nemohou nahrávat obrázky."
+        image_upload_not_allowed_for_new_user: "Bohužel, noví uživatelé nemohou nahrávat obrázky."
+        attachment_upload_not_allowed_for_new_user: "Bohužel, noví uživatelé nemohou nahrávat přílohy."
 
       abandon: "Opravdu chcete opustit váš příspěvek?"
 
@@ -929,6 +940,7 @@ cs:
           other: "Opravdu chcete odstranit všechny tyto příspěvky?"
 
     category:
+      can: 'smí&hellip; '
       none: '(bez kategorie)'
       edit: 'upravit'
       edit_long: "Upravit kategorii"
@@ -957,18 +969,19 @@ cs:
       change_in_category_topic: "navštivte téma kategorie pro editaci jejího popisu"
       hotness: "Popularita"
       already_used: 'Tato barva je již použita jinou kategorií'
-      is_secure: "Zabezpečená kategorie?"
-      add_group: "Přidat skupinu"
       security: "Bezpečnost"
-      allowed_groups: "Povolené skupiny:"
       auto_close_label: "Automaticky zavírat témata po:"
-
+      edit_permissions: "Upravit oprávnění"
+      add_permission: "Přidat oprávnění"
 
     flagging:
       title: 'Proč chcete nahlásit tento příspěvek?'
       action: 'Nahlásit příspěvek'
       take_action: 'Zakročit'
       notify_action: 'Oznámit'
+      delete_spammer: "Odstranit spamera"
+      delete_confirm: "Chystáte se odstranit <b>%{posts}</b> příspěvků a <b>%{topics}</b> témat od tohoto uživatele, smazat jeho účet, a vložit jeho emailovou adresu <b>%{email}</b> na seznam permanentně blokovaných. Jste si jistí, že je tento uživatel opravdu spamer?"
+      yes_delete_spammer: "Ano, odstranit spamera"
       cant: "Bohužel nyní nemůžete tento příspěvek nahlásit."
       custom_placeholder_notify_user: "Proč chcete s tímto uživatele mluvit přímo a soukromě? Buďte konstruktivní, konkrétní a hlavně vstřícní."
       custom_placeholder_notify_moderators: "Proč příspěvek vyžaduje pozornost moderátora? Dejte nám vědět, co konkrétně vás znepokojuje, a poskytněte relevantní odkazy, je-li to možné."
@@ -1053,6 +1066,11 @@ cs:
 
     browser_update: 'Bohužel, <a href="http://www.discourse.org/faq/#browser">váš prohlížeč je příliš starý, aby na něm Discourse mohl fungovat</a>. Prosím <a href="http://browsehappy.com">aktualizujte svůj prohlížeč</a>.'
 
+    permission_types:
+      full: "Vytváření / Odpovídání / Prohlížení"
+      create_post: "Odpovídání / Prohlížení"
+      readonly: "Prohlížení"
+
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "zadejte text pro filtrování..."
@@ -1114,6 +1132,7 @@ cs:
         disagree_unhide_title: "Odstraní všechna nahlášení na tomto příspěvku a znovu ho zviditelní"
         disagree: "Nesouhlas"
         disagree_title: "Nesouhlas s nahlášením, odstraní všechna nahlášení na tomto příspěvku"
+        delete_spammer_title: "Odstranit uživatele a všechny jeho příspěvky a témata."
 
         flagged_by: "Nahlásil"
         error: "Něco se pokazilo"
@@ -1283,6 +1302,8 @@ cs:
         delete: "Smazat uživatele"
         delete_forbidden: "Uživatele nelze odstranit, protože má na fóru zveřejněné příspěvky. Nejprve smažte všechny jeho příspěvky."
         delete_confirm: "Jste si jistí, že chce permanentně smazat tohoto uživatele z fóra? Tato akce je nevratná!"
+        delete_and_block: "<b>Ano</b>, a <b>zakázat</b> registraci z této emailové adresy"
+        delete_dont_block: "<b>Ano</b>, a <b>povolit</b> registraci z této emailové adresy"
         deleted: "Uživatel byl smazán."
         delete_failed: "Nastala chyba při odstraňování uživatele. Ujistěte se, že jsou všechny příspěvky tohoto uživatele smazané, než budete uživatele mazat."
         send_activation_email: "Odeslat aktivační email"
@@ -1309,3 +1330,4 @@ cs:
         title: 'Nastavení webu'
         reset: 'vrátit do původního nastavení'
         none: 'žádné'
+
