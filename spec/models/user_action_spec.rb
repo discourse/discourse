@@ -262,18 +262,34 @@ describe UserAction do
   end
 
   describe 'synchronize_favorites' do
-    pending 'corrects out of sync favs' do
+    it 'corrects out of sync favs' do
       post = Fabricate(:post)
       post.topic.toggle_star(post.user, true)
+      UserAction.delete_all
 
       action1 = UserAction.log_action!(
         action_type: UserAction::STAR,
         user_id: post.user.id,
         acting_user_id: post.user.id,
-        target_topic_id: -1,
-        target_post_id: post.id,
+        target_topic_id: 99,
+        target_post_id: -1,
       )
 
+      action2 = UserAction.log_action!(
+        action_type: UserAction::STAR,
+        user_id: Fabricate(:user).id,
+        acting_user_id: post.user.id,
+        target_topic_id: post.topic_id,
+        target_post_id: -1,
+      )
+
+      UserAction.synchronize_favorites
+
+      actions = UserAction.all.to_a
+
+      actions.length.should == 1
+      actions.first.action_type.should == UserAction::STAR
+      actions.first.user_id.should == post.user.id
     end
   end
 
