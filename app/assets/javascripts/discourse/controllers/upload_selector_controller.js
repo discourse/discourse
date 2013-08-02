@@ -35,7 +35,7 @@ Discourse.UploadSelectorController = Discourse.Controller.extend(Discourse.Modal
 
 Discourse.UploadSelectorController.reopenClass({
   translate: function(key, options) {
-    opts = options || {};
+    var opts = options || {};
     if (Discourse.Utilities.allowsAttachments()) { key += "_with_attachments"; }
     return I18n.t("upload_selector." + key, opts);
   }
