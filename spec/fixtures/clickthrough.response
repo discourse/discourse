@@ -1,0 +1,1472 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<!-- layout: simple -->
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="Content-Language" content="en" />
+	<title>Clikthrough - Interactive Video : Keri Hilson - Knock You Down</title>
+	<meta name="name" itemprop="name" content="Interactive Video : Keri Hilson - Knock You Down" />
+	<meta name="description" itemprop="description" content="Keri Hilson gets taken down by love once again in this video for &quot;Knock You Down&quot;." />
+	<meta name="keywords" content="clikthrough, interactive video, clickable video, clik, video platform, ad, advertisement, ad platform, audience engagement, video monetization, future tv, television, video analytics, product placement, branding, product marketing" />
+
+	<base href="http://www.clikthrough.com/" />
+	
+	<!-- system links -->
+	<link rel="canonical" href="http://www.clikthrough.com/theater/video/49/en-US" />
+	<link rel="icon" type="image/png" href="images/favicon.png" />
+	<link rel="index" href="http://www.clikthrough.com/sitemap.xml" />
+	<link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="Clikthrough" />
+
+
+	<link rel="stylesheet" href="http://static2.clikthrough.com/clik-prod/website12/css/sitewide.css" media="all" />
+	<!--[if lte IE 8 ]><link rel="stylesheet" type="text/css" href="http://static2.clikthrough.com/clik-prod/website12/css/sitewide-ie.css" /><![endif]-->
+		<!--[if lt IE 7]>
+				<script type="text/javascript" src="js/ext/pngfix/supersleight-min.js"></script>
+	<![endif]-->
+
+	<link rel="alternate" type="application/rss+xml" href="http://corporate.clikthrough.com/wp/?feed=rss2" title="Clikthrough News Feed" />
+	<link rel="alternate" type="application/rss+xml" href="http://www.clikthrough.com/system/rssMedia" title="CoolIris Feed" id="gallery" /> 
+
+	<!-- EXTENDED META -->
+<link rel="alternate" type="application/json+oembed" href="http://www.clikthrough.com/services/oembed/?url=http%3A%2F%2Fwww.clikthrough.com%2Ftheater%2Fvideo%2F49%2Fen-US%26format%3Djson" title="Keri Hilson - Knock You Down" />
+<link rel="alternate" type="text/xml+oembed" href="http://www.clikthrough.com/services/oembed/?url=http%3A%2F%2Fwww.clikthrough.com%2Ftheater%2Fvideo%2F49%2Fen-US%26format%3Dxml" title="Keri Hilson - Knock You Down" />
+	<meta name="title" content="Keri Hilson - Knock You Down"/>
+	<link rel="image_src" href=""/>
+	<link rel="video_src" href="http://www.clikthrough.com/clikPlayer.swf?videoId=49&amp;autoPlay=true"/>
+	<meta name="medium" content="video" />
+	<meta name="video_height" content="415" />
+	<meta name="video_width" content="640" />
+	<meta name="video_type" content="application/x-shockwave-flash" />
+	
+	<!-- facebook open graph -->
+		<meta property="og:title" content="Keri Hilson - Knock You Down"/>
+	<meta property="og:type" content="video.other"/>
+	<meta property="og:image" content=""/>
+	<meta property="og:description" content="Keri Hilson gets taken down by love once again in this video for "Knock You Down"."/>
+	<!--
+	<meta property="og:site_name" content="{your_site_name}"/>
+	<meta property="fb:app_id" content="{your_app_id}"/>
+	-->
+	
+
+	
+	<!-- facebook tags -->
+	<meta property="fb:admins" content="3313868"/>
+	<meta property="fb:app_id" content="154419780724"/>
+	
+	<script type="text/javascript">
+	// framebuster
+	if(self != top)top.location.href=self.location.href;
+	</script></head>
+<body class="oneColFixCtrHdr en-US">
+	<div id="container">
+	<div id="header">
+		<div id="headerBox">
+			<a href="." id="logoLink"></a>
+			<div id="pageMessage">
+							</div>
+			<div id="userModule">
+									<a href="http://corporate.clikthrough.com/site/contactUs.php" style="font-size:9px">Clik to Contact Us</a>
+							</div>
+	
+			<ul id="nav">
+				<li><a class="navItem" id="videos" href="videos/"></a></li>
+				<li><a class="navItem" id="products" href="products/"></a></li>
+				<li><a class="navItem" id="artists" href="artists/"></a></li>
+				<li id="searchInput">
+					<a class="navItem" id="search" href="search/" onmouseover="if (clik != undefined) {clik.hide('userMenu'); clik.hide('userMenuForgot')}"></a>
+					<form action="search" method="get">
+						<div class="inputWrapper searchIcon">
+							<span class="leftCap" title="Search"></span>
+							<input type="text" class="inputText" name="search" value=""/>
+							<span class="rightCap"></span>
+						</div>
+					</form>
+				</li>
+			</ul>
+		</div>
+	<!-- end #header --></div>	
+<!-- Simple Template -> Page View Start-->
+		<style type="text/css">
+		#clikPlayer {
+			margin-top:20px;			margin-left:-75px;
+			border:0px none;
+			height:768px;
+		}
+		#footer {display:none}
+		object {outline:none}
+			</style>
+	<script type="text/javascript" src="http://static2.clikthrough.com/clik-prod/player/v2_5_0/js/swfobject.js"></script>
+		<script type="text/javascript">
+		var flashVars = {
+												baseURL:	'http://static2.clikthrough.com/clik-prod/player/v2_5_0/',
+				apiURL:		'http://www.clikthrough.com/ws2.0/ws/',
+				siteURL:	'http://www.clikthrough.com/',
+				
+				
+				videoId:	49,
+				config:		'en-US',
+				flash_name:	'clikPlayer',	// used for FB Connect Bridge Plugin
+				
+				// next 4 vars used by chat
+				userName:	'Guest',
+				userImageURL:	'http://www.clikthrough.com/images/users/_default.png',
+				chatRoom:	'video1'
+							}
+		var params = {
+				allowFullScreen:	'true',
+				allowScriptAccess:	'always',
+				bgcolor:		'#000000',
+				wmode: 			'opaque'
+			}
+		
+					params.bgcolor = '#000000';
+				
+		swfobject.embedSWF("http://static2.clikthrough.com/clik-prod/player/v2_5_0/CTLoader.swf", "clikPlayer", "1152", "768", "9.0.115", "http://static2.clikthrough.com/clik-prod/player/v2_5_0/expressInstall.swf", flashVars, params,{id: 'clikPlayer', name:'clikPlayer'});
+	</script>
+	
+	<div id="clikPlayer">
+		<p>In order to view this page you need Flash Player 9+ support!</p>
+		<p>
+			<a href="http://www.adobe.com/go/getflashplayer">
+				<img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" />
+			</a>
+		</p>
+		
+		<!-- START video_detail -->
+	<div class="detailSection">
+		<div class="floatRight" id="rightPanel" style="height:280px">
+			<div id="aboutBox" class="panel panelWide2">
+	<!--h2 class="h2Img titleAbout">About Clikthrough</h2-->
+	<div class="panelBack">
+		<div id="aboutBox2">
+
+<div>
+	<h2>About Clikthrough</h2>
+	
+		Clikthrough allows publishers, content creators, and advertisers to create interactive videos and pre-rolls.  Clickable video enables consumers and corporations to interact with and harness all data about the products, people, places, and other objects inside of video.
+	
+	<br/><br/><br/>
+	<a href="clikAds/">More information</a><br/>
+	<!--a href="/ext/downloads/Clikthrough Brochure.pdf">Download Brochure</a><br/-->
+	<a href="user/contactUs" class="clik-ajax" clik:target="rightPanel" style="">Contact Us</a><br />
+	<a href="user/contactUs/index/beta" class="clik-ajax" clik:target="rightPanel" style="">Request Beta Access</a><br />
+	
+	</div>
+
+
+		</div> <!-- end #aboutBox2 -->
+	</div>
+</div> <!-- end .panel #aboutBox -->
+		</div>
+								<div id="detailBox" class="videoDetail" itemscope itemtype="http://schema.org/MediaObject">
+							<div class="title">
+					<a href="http://static2.clikthrough.com/clik-prod/videos/FLV_MP4/Keri Hilson & Ne-Yo - Knock You Down (feat. Kanye West).flv" itemprop="url">
+					<h2 itemprop="name">Keri Hilson - Knock You Down</h2>
+					</a>
+				</div>
+					
+				
+				<div class="video floatLeft videoDetail-real">
+					<a href="http://static2.clikthrough.com/clik-prod/videos/FLV_MP4/Keri Hilson & Ne-Yo - Knock You Down (feat. Kanye West).flv" class="thumbnail">
+						<div class="clikStart"></div>
+						<img class="thumbnail" src="" alt="Knock You Down video thumbnail" itemprop="image"/>
+					</a>
+
+					
+								<!-- BEGIN Module: rating -->
+				<div class="ratingBox" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+					<div class="label">Rating:</div>
+					<div class="stars" value="58" votes="1" userRating="" 
+						componentId="49" componentType="V">
+						<div class="starsSelected" style="width: 58%"></div>
+					</div>
+					<div class="text"></div>
+					<div class="clear"></div>
+					<meta itemprop="ratingValue" content="58" />
+					<meta itemprop="bestRating" content="100"/>
+					<meta itemprop="ratingCount" content="1" />
+				</div>
+			<!-- END Module: rating -->					
+										<div class="company"><a href="http://www.interscoperecords.com" target="_blank">Interscope Records</a></div>
+										<!--a href="theater/video/49" class="btnPlayVideo"></a-->
+					
+					<br/>
+					<div class="social" style="height:75px; margin-top:10px">
+	
+		<g:plusone size="medium" annotation="inline" ></g:plusone>
+	<script type="text/javascript">
+	  (function() {
+		var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+		po.src = 'https://apis.google.com/js/plusone.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+	  })();
+	</script>
+	
+		<iframe src="http://www.facebook.com/plugins/like.php?app_id=173968952648714&amp;href&amp;send=false&amp;layout=button_count&amp;width=100&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font=arial&amp;height=21" 
+		scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:100px; height:21px;" allowTransparency="true"></iframe>
+	<br/>
+	
+		<a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="clikthrough" >Tweet</a>
+	<!--script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script-->
+	<script type="text/javascript">
+	  (function() {
+		var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+		po.src = 'http://platform.twitter.com/widgets.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+	  })();
+	</script>
+</div>				</div>
+				<div class="attributes floatLeft">
+					<div class="attrib" itemprop="director" itemscope itemtype="http://schema.org/Person">
+						<span class="label">Directors :</span> <span itemprop="name">Chris Robinson</span>
+					</div>
+					<div class="attrib"><span class="label">Runtime :</span> 
+						<span itemprop="duration" datetime="T4M45S">4:45</span>
+					</div>
+					<div class="attrib"><span class="label">Release Date :</span> 
+						<span itemprop="datePublished" datetime="2009-03-23T00:00:00-05:00"> 03/23/2009</span>
+					</div>
+										<div class="attrib"><span class="label">Website :</span> 
+						<a href="http://www.kerihilsonmusic.com/" target="_blank">Keri Hilson</a>
+					</div>
+					<div class="attrib"><span class="label">Genre :</span> 
+						<span itemprop="genre">R&amp;B</span>
+					</div>
+															
+					<!-- schema.org/MediaObject meta tags (added 8/2011) -->
+					<meta itemprop="description" content="Keri Hilson gets taken down by love once again in this video for &quot;Knock You Down&quot;." />
+					<meta itemprop="embedURL" content="http://www.clikthrough.com/clikPlayer.swf?autoPlay=true&videoId=49"/>
+					<meta itemprop="playerType" content="Flash" />
+					<meta itemprop="requiresSubscription" content="no"/>
+					<meta itemprop="uploadDate" content="2009-07-16T16:49:38-05:00"/>
+					
+										
+					
+										
+					<div class="favorite">
+												<a href="user/interact/addFavorite/V/49" class="clik-ajax">
+							<span class="icon iconFavorite" title="Favorite"></span>
+							<span class="label" onclick="toggleAddRemove(this)">Add To Favorites</span>
+						</a>
+						<script type="text/javascript">
+							componentType = 'V';
+							componentId = '49';
+							componentName = 'Knock You Down';
+							
+							function toggleAddRemove (elm) {
+								var elmIcon = dojo.query('.icon', elm.parentNode)[0];
+								if (elm.innerHTML == 'Add To Favorites') {
+									elm.innerHTML = 'Remove From Favorites';
+									elm.parentNode.href = elm.parentNode.href.replace('removeFavorite', 'addFavorite');
+									elmIcon.className = elmIcon.className.replace('iconFavorite','iconTrash');
+								} else {
+									elm.innerHTML = 'Add To Favorites';
+									elm.parentNode.href = elm.parentNode.href.replace('addFavorite', 'removeFavorite');
+									elmIcon.className = elmIcon.className.replace('iconTrash', 'iconFavorite');
+								}
+							}
+						</script>
+					</div>
+					
+					<div class="email">
+						<a href="user/sendEmail/index/V/49" class="clik-ajax" clik:target="rightPanel">
+							<span class="icon iconEmail" title="Email"></span>
+							<span class="label">Email a friend</span>
+						</a>
+					</div>
+										<div class="share">
+						<a href="user/share/link/V/49" class="clik-ajax" clik:target="rightPanel">
+							<span class="icon iconShare" title="Share"></span>
+							<span class="label">Share with a Friend</span>
+						</a>
+					</div>
+					<div class="embed">
+						<a href="user/embed/video/49" class="clik-ajax" clik:target="rightPanel">
+							<span class="icon iconEmbed" title="Embed"></span>
+							<span class="label">Embed Video Code</span>
+						</a>
+					</div>
+					
+				</div>
+				<div class="clear">&#160;</div>
+
+				
+						</div>
+					
+				
+			</div><!-- end #detailSection -->
+	
+	<div class="detailSection" style="padding-right:0px; padding-left:17px; background-image:none">
+		<div id="productsBox">
+			
+						<div class="productBox realProductBox" name="products">
+				<h2 id="products" class="h2Big titleProducts">Products</h2>
+				<div class="counter">( Showing 41 of 41 )</div>
+			
+							<div class="categoryFilter">
+				<select id="prodCategoryFilter" class="rounded" onchange="clik2.website.showProductsCategory(this.options[this.selectedIndex].value)">
+					<option value="-1">Filter by Category</option>
+					<option value="-1" count="41">View All (41)</option>
+										<option value="1" count="1">Cars &amp; Vehicles (1)</option>
+										<option value="46" count="28">Clothing &amp; Shoes (28)</option>
+										<option value="103" count="1">Electronics (1)</option>
+										<option value="166" count="1">Home (1)</option>
+										<option value="153" count="10">Jewelry (10)</option>
+									</select>
+				</div>
+				<script type="text/javascript">
+					clik2 = {};
+					clik2.website = {};
+					clik2.website.showProductsCategory  = function(categoryId) {
+						var products = '.product[categoryId]'; // can't do the non-selected ones bug in IE
+						var searchStr = '.product[categoryId='+ categoryId + ']';
+						
+						if (categoryId == -1) {
+							dojo.query(products).style('display','block');
+						} else {
+							dojo.query(products).style('display','none');
+							dojo.query(searchStr).style('display','block');
+													}
+						dojo.query('.product[@categoryId=46]').style('display','none');
+						
+						//alert(dojo.attr(products[0],'categoryId'));
+					}
+				</script>
+							
+				<div class="clear"></div>
+				
+									<div class="product clik-component" id="productBox_323" productId="323" categoryId="103" 
+						componentId="323" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/323" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/NleKhHhmNVzgPxB3WJFZx7yzSajpG3MQeT9UVi/Sw-ofdXh6ICvrqQsIKmY7kLKjbGT6VUYRy8h.jpg" alt="Monster Cable - Beats By Dr Dre" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">Monster Cable</span>
+									<span class="white" itemprop="name">Beats By Dr Dre</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="Experience the music just the way the artist wants you to.  These high definition headphones are precision engineered to reveal the full sound of toda"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="Monster Cable"/>
+							<meta itemprop="url" content="http://www.monstercable.com/default.asp"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="Monster Cable"/>
+							<meta itemprop="url" content="http://www.monstercable.com/productdisplay.asp?pin=3808"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_920" productId="920" categoryId="46" 
+						componentId="920" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/920" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/dCZknQFZLcrFAyDWgH5a3YOKtZAmQNagVU3dR39mEgFMROv/Sw-18r1857gKNlbE29VUNpjvk6VNT0DLQMReaPT.jpg" alt="Gucci - Striped Dress Shirt" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">Gucci</span>
+									<span class="white" itemprop="name">Striped Dress Shirt</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="Be the Man!  This sophisticated long sleeve fitted shirt has button front and barrel cuffs. Old school glamour stripe cotton with white collar is back"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="Gucci"/>
+							<meta itemprop="url" content="http://www.gucci.com/"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="Gucci"/>
+							<meta itemprop="url" content="http://www.gucci.com/"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1082" productId="1082" categoryId="46" 
+						componentId="1082" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1082" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/2FmMASql1bgCCxmZ8JgQW2ks6vEV/Sw-63jbtGOhvntfePYk5jhNYaLb4.jpg" alt="Nike - Air Yeezy" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">Nike</span>
+									<span class="white" itemprop="name">Air Yeezy</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="Nike Sportswear and Kanye West present the Nike Air Yeezy. The shoe, which takes West's nickname Yeezy, draws upon the innovations from Nike's rich sp"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="Nike"/>
+							<meta itemprop="url" content="http://www.nikebiz.com"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="Nike"/>
+							<meta itemprop="url" content="http://www.nike.com/nikeos/p/sportswear/en_US/view_post?country=US&amp;lang_locale=en_US&amp;blog=en_US&amp;post=en_US/2009/04/02/nike-air-yeezy"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1417" productId="1417" categoryId="46" 
+						componentId="1417" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1417" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/ZfRqth2YWkBy7ztSNSugEDxoXWMApHt0r/Sw-bH3P4XQBPj5eY5CDMyjBDfH8zQGtF6SZlqqn3Qx8.jpg" alt="American Apparel - Baby Rib Halter" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">American Apparel</span>
+									<span class="white" itemprop="name">Baby Rib Halter</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="A take on our popular Baby Rib Spaghetti Tank, now with a halter neckline. 100% Baby Rib cotton construction with halter spaghetti ties. A form-fittin"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="American Apparel"/>
+							<meta itemprop="url" content="http://americanapparel.net/"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="American Apparel"/>
+							<meta itemprop="url" content="http://store.americanapparel.net/4391.html#i"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1419" productId="1419" categoryId="46" 
+						componentId="1419" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1419" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/X7dhsH4t5xu7TKcCoTfMZInnajJMG2fCbVLm/Sw-AicC26DVq03gyB3iZJWpDCfzs.jpg" alt="VPL - Vent Swingers Shorts" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">VPL</span>
+									<span class="white" itemprop="name">Vent Swingers Shorts</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="Poly/cotton blend shorts with a slight iridescence with sheer silver inset at front. Meant as sleep shorts but can be worn with tap shorts underneath "/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="VPL"/>
+							<meta itemprop="url" content="http://www.vplnyc.com/"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="VPL"/>
+							<meta itemprop="url" content="http://www.vplnyc.com/"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1421" productId="1421" categoryId="153" 
+						componentId="1421" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1421" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/O0UZSNVhjlqQm7UPdcn79M7l5bgcBdN9s4DG9V7M/Sw-UY8zoIeS1OUTLNbUdqP6r6vGZvCeGdSpOWF.jpg" alt="CC SKYE - Power Ring" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">CC SKYE</span>
+									<span class="white" itemprop="name">Power Ring</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="Hexagon black enamel and rhinestone ring fashioned in an art deco style design. Look glamorous in this old Hollywood 1920's ornate cocktail ring."/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="CC SKYE"/>
+							<meta itemprop="url" content=" http://www.ccskye.com/"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="CC SKYE"/>
+							<meta itemprop="url" content="http://www.ccskye.com/shop.php?id=471&amp;pag=1"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1422" productId="1422" categoryId="46" 
+						componentId="1422" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1422" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/YQ3uLbcmVx4EUfR2nTJ5QDVMYoVcsKsUkEbSRavvBFPG/Sw-VMd1rYnZ9YPHPVO8hLzcsXu1pSmfJmhHMTt8x7iljjEQLq.jpg" alt="Super - Flat Top Sunglasses" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">Super</span>
+									<span class="white" itemprop="name">Flat Top Sunglasses</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="Super Flat Top is a clean, simple and essential modern design twist on an old pair of classics. High quality sunglasses that are hand-made in Italy.  "/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="Super"/>
+							<meta itemprop="url" content="http://retrosuperfuture.com"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="Super"/>
+							<meta itemprop="url" content="http://retrosuperfuture.com/super/collection/flat-top/92-FTGOLD-AW08_09-2A020203.jpg.php"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1423" productId="1423" categoryId="46" 
+						componentId="1423" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1423" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/Dr6FFFj2xVRTJjqQD00RI8Gb1DiChAEqJgvqoEu6n/Sw-gN6MFAe9Pf4qIjImdpU62istoxaOgS.jpg" alt="J. Lindeberg - Leather Biker Jacket" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">J. Lindeberg</span>
+									<span class="white" itemprop="name">Leather Biker Jacket</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="Slim cut fine leather biker jacket from J. Lindeberg. Asymmetric zip-through front and long sleeves for a lean look. A classic biker collar and twin z"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="J. Lindeberg"/>
+							<meta itemprop="url" content="http://www.jlindeberg.com"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="J. Lindeberg"/>
+							<meta itemprop="url" content="http://www.jlindeberg.com/"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1424" productId="1424" categoryId="153" 
+						componentId="1424" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1424" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/IzTThK0tRKsUEluGWgXuqSk3ACIjlJ0eNPqA3XqBO/Sw-S5xWTvt2pSLORh9vHq7aHq6S0GUyCzpN7rqdz6P8nlL9kXdui.jpg" alt="Dr. Strange - Brass Bullet Necklace" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">Dr. Strange</span>
+									<span class="white" itemprop="name">Brass Bullet Necklace</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="Edgy jewelry has become a must-have for this season, and this brass bullet pendant is a great pick! Bullet pendant hangs on a ball  chain. This bullet"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="Dr. Strange"/>
+							<meta itemprop="url" content="http://www.drstrange.com/"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="Dr. Strange"/>
+							<meta itemprop="url" content="http://www.drstrange.com/product.php?46109"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1425" productId="1425" categoryId="46" 
+						componentId="1425" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1425" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/jyAUizWSmByccspnK9eXIbIN3aEP3WuG2VNkQW/Sw-DYA2QRUiqBs2YbYqVqAzu6uW9n85NHBXqRSMqEVm.jpg" alt="American Apparel - Fine Jersey T-Shirt" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">American Apparel</span>
+									<span class="white" itemprop="name">Fine Jersey T-Shirt</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="The softest, smoothest, best-looking T-shirt available anywhere. The basic t-shirt that you always should keep stock of in your closet. 100% fine jers"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="American Apparel"/>
+							<meta itemprop="url" content="http://americanapparel.net/"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="American Apparel"/>
+							<meta itemprop="url" content="http://store.americanapparel.net/2001.html"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1426" productId="1426" categoryId="153" 
+						componentId="1426" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1426" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/SHKuhH90YARDhrq1hltQOcGsvo0DvUeUrAK/Sw-8F0VastVVhFHtu4jJyLJ0chyDZ0ETjaZ.jpg" alt="Jalea Jalea - Cube Earrings" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">Jalea Jalea</span>
+									<span class="white" itemprop="name">Cube Earrings</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="The cube earrings from the MINERALS &amp; POLYHEDRA Collection. A fun way to play with geometry and perspective. Wear these fashionable earrings with ever"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="Jalea Jalea"/>
+							<meta itemprop="url" content="http://www.jaleajalea.com/"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="Jalea Jalea"/>
+							<meta itemprop="url" content="http://jaleajalea.com/online_shop/catalog.php?action=show_custom&amp;id=115&amp;cat=7"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1427" productId="1427" categoryId="46" 
+						componentId="1427" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1427" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/c1TuW21AD8hSc9eS3aBY3q6YnSjjMA3nCJ/Sw-KmIqt3oGbkqac9k7UURqQX9NRn5pY.jpg" alt="Levi's® - Original 501 Jeans-Hyper Active" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">Levi's®</span>
+									<span class="white" itemprop="name">Original 501 Jeans-Hyper Active</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="The blue jean that started it all. The button-fly 501 Original Jean is still straight through the seat, thigh and leg, a bestseller for its one-of-a-k"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="Levi's®"/>
+							<meta itemprop="url" content="http://www.levis.com"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="Levi's®"/>
+							<meta itemprop="url" content="http://us.levi.com/product/index.jsp?productId=3631367&amp;cp=3146842.3146844.3146855.3146924"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1428" productId="1428" categoryId="153" 
+						componentId="1428" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1428" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/9clTSR7iEqeyUSGoOBhNKvSMOOQf2CIf/Sw-VpQBWuU08T68THJfdLrZ8RSqpKFQs4jBVOUeXg07UlU5sOKLr.jpg" alt="CC SKYE - Power Hoops" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">CC SKYE</span>
+									<span class="white" itemprop="name">Power Hoops</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="Fashion forward and quality made hexagonal shaped earrings. Gold and black with small diamond rhinestones throughout the earring. Beautiful art deco s"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="CC SKYE"/>
+							<meta itemprop="url" content=" http://www.ccskye.com/"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="CC SKYE"/>
+							<meta itemprop="url" content="http://www.ccskye.com/shop.php?id=304"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1430" productId="1430" categoryId="153" 
+						componentId="1430" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1430" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/L01TpLgxl1dxaKtOm60DWRnHsfN1Se8Ty3b0gL965RT41haF/Sw-ka0sqqFvevSZt0RQNKPZLZcFjQslEdzkyK8uii.jpg" alt="Elizabeth and James - Fringe Earrings" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">Elizabeth and James</span>
+									<span class="white" itemprop="name">Fringe Earrings</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="Robert Lee Morris for Elizabeth and James. Perfect with a tee and jeans or your hottest little black dress. Oxidized sterling silver dangle earrings w"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="Elizabeth and James"/>
+							<meta itemprop="url" content="http://www.elizabethandjames.us/"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="Elizabeth and James"/>
+							<meta itemprop="url" content="http://www.elizabethandjames.us/"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1431" productId="1431" categoryId="46" 
+						componentId="1431" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1431" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/x5TWuxgQfpjtdKJmkDyt7DMlnq6MqVv6h7ly7kCBo0t66P8Ac/Sw-BZeyaJpsVNyGkvZ3Out01tMe13OJrtWz1YXf4u.jpg" alt="Velvet Angels - Peepshow II" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">Velvet Angels</span>
+									<span class="white" itemprop="name">Peepshow II</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="This is the Peepshow II ankle boot created by Velvet Angels. This bootie features a patent leather ankle strap and base, a front slit, and a leather u"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="Velvet Angels"/>
+							<meta itemprop="url" content="http://www.velvetangels.com/"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="Velvet Angels"/>
+							<meta itemprop="url" content="http://www.velvetangels.com/product.php?productid=10&amp;categoryId=13"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1432" productId="1432" categoryId="46" 
+						componentId="1432" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1432" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/o0m7f8g86Ktoqf886X0toVZoKY0/Sw-pHVgcSC1z4qOaMcmAYq2ABmTashz.jpg" alt="Wet Seal - Skinny Jean" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">Wet Seal</span>
+									<span class="white" itemprop="name">Skinny Jean</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="You make a statement with every thing you wear, and in your Show Stopper jeans, you're a fashion icon. This jean features a basic five pocket with ski"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="Wet Seal"/>
+							<meta itemprop="url" content=" http://www.wetsealinc.com/"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="Wet Seal"/>
+							<meta itemprop="url" content="http://www.wetseal.com/catalog/product.jsp?categoryId=103&amp;productId=3281&amp;color=GREY&amp;altImageId=2&amp;PIPELINE_SESSION_ID=571194ec7f000001017c760b03aa720d"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1433" productId="1433" categoryId="46" 
+						componentId="1433" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1433" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/qlhYUQxf2vA1N8tqlGmP3Zb8G8Ha6tKBqe0A/Sw-jq7CVUmnshViaeSNj7kOQORd76.jpg" alt="Victor Osborne - Custom Pork Pie Hat" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">Victor Osborne</span>
+									<span class="white" itemprop="name">Custom Pork Pie Hat</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="Victor Osborne spealizes in custom hats. At the Victor Osborne Atelier they carry over 200 blocks in their library to fit any shape head or face. As w"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="Victor Osborne"/>
+							<meta itemprop="url" content="http://www.victorosborne.com/"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="Victor Osborne"/>
+							<meta itemprop="url" content="http://www.victorosborne.com/custom.html"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1435" productId="1435" categoryId="46" 
+						componentId="1435" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1435" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/hdBOAr36P7U6Mk7mEH0mtUdqma5HiE/Sw-MnZ5HnHmOdQMU15dLdNUuWCQDEOmyiIXyL6.jpg" alt="Nude: M. Maruyama - Black Cardigan" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">Nude: M. Maruyama</span>
+									<span class="white" itemprop="name">Black Cardigan</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="A classic updated preppy look in  100% cotton. Black snap sweater with white piping. A relaxed look perfect with jeans.  With a snap button front and "/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="Nude: M. Maruyama"/>
+							<meta itemprop="url" content="http://www.nudemm.com/"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="Nude: M. Maruyama"/>
+							<meta itemprop="url" content="http://www.nudemm.com/"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1436" productId="1436" categoryId="46" 
+						componentId="1436" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1436" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/1oyjF6OGBtEvmJ6kPevVPGrGULSTDHNYNqm/Sw-t8ALEuNxdsmSVIgDdjAIunSmksMETMnfI.jpg" alt="Topman - Purple Slim Tie" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">Topman</span>
+									<span class="white" itemprop="name">Purple Slim Tie</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="A slim tie adds to bit of a rock and roll feel and style to your look. This deep purple slim tie is the perfect color and size to wear with all your d"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="Topman"/>
+							<meta itemprop="url" content="http://www.topman.com"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="Topman"/>
+							<meta itemprop="url" content="http://www.topman.com/webapp/wcs/stores/servlet/ProductDisplay?beginIndex=0&amp;viewAllFlag=&amp;catalogId=32052&amp;storeId=13051&amp;categoryId=134538&amp;parent_category_rn=134530&amp;productId=1276886&amp;langId=-1"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1437" productId="1437" categoryId="46" 
+						componentId="1437" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1437" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/sZl8WlTZCZsqnFkSOGey4qOFC4hCnhg/Sw-trA3nJsjq4I5VGWNhkl0fMtokINbmlTOzi9q05br.jpg" alt="Ines - Fingerless Gloves (Black &amp;  White)" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">Ines</span>
+									<span class="white" itemprop="name">Fingerless Gloves (Black &amp;  White)</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="Available in 14 fashion colors. The artistic stitching distinguishes this design from other driving gloves. Supple, strong and trendy, yet very sophis"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="Ines"/>
+							<meta itemprop="url" content="http://www.gloveseurope.com"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="Ines"/>
+							<meta itemprop="url" content="http://www.inesgloves.com/articlesid/16731/SHOP/Detail/My_Fashion_Fingerless_Driving_Gloves.htm"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1438" productId="1438" categoryId="46" 
+						componentId="1438" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1438" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/Fe1zXSMQej1Amc2ScMaU3QJy0LbPT5iojkL/Sw-o1oTk7lYCyGDeHygeizlZ1pCzq4diUWgFXVUV24t83R.jpg" alt="Dita Legends - Grandmaster Sunglasses" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">Dita Legends</span>
+									<span class="white" itemprop="name">Grandmaster Sunglasses</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="Dita has a knack for making quality, super chic sunglasses with an eerily accurate element of the street. These Grandmasters are straight-hood, plain "/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="Dita Legends"/>
+							<meta itemprop="url" content="http://www.ditalegends.com/"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="Dita Legends"/>
+							<meta itemprop="url" content="http://www.ditalegends.com/product_detail/967/GRANDMASTER-TWO.html?color_id=158"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1443" productId="1443" categoryId="153" 
+						componentId="1443" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1443" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/7UymI12eWisWVJiY3lE9a5ViSHX8MM8VC7OHBkHg5H7RYBuX9/Sw-9pYyEZcJmWSgot0mDMxvKSQzEAdgdcXrk5MG4uKvfpjuAh.jpg" alt="Fetty - Scorpio Zodiac Necklace" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">Fetty</span>
+									<span class="white" itemprop="name">Scorpio Zodiac Necklace</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="Sterling silver disc pendant on an 18&quot; 14k yellow gold chain. Pendent is etched with Scorpio zodiac sign and embedded with mixed color non-conflict di"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="Fetty"/>
+							<meta itemprop="url" content="http://www.thefetty.com/"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="Fetty"/>
+							<meta itemprop="url" content="http://www.thefetty.com/"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1444" productId="1444" categoryId="153" 
+						componentId="1444" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1444" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/7zghyZKmkrZCLLf8IooVPOEYmNz81UJ/Sw-dkyM14qA2m2ySijlOdEmxJ1oUn9AgR9VotzrU0zC9.jpg" alt="Amazon - Diamond Stud Earrings" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">Amazon</span>
+									<span class="white" itemprop="name">Diamond Stud Earrings</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="These classic diamond stud earrings are a timeless gift. They feature round-cut diamonds with a total carat weight of 1 1/2 carats. The diamonds are m"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="Amazon"/>
+							<meta itemprop="url" content="http://www.amazon.com"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="Amazon"/>
+							<meta itemprop="url" content="http://www.amazon.com/Platinum-Diamond-4-Prong-Earrings-Clarity/dp/B000ILGFSM/ref=amb_link_4869962_14?pf_rd_m=ATVPDKIKX0DER&amp;pf_rd_s=center-8&amp;pf_rd_r=05WFQJEGSN9SDRWWWTTG&amp;pf_rd_t=101&amp;pf_rd_p=471609371&amp;pf_rd_i=255167011"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1445" productId="1445" categoryId="153" 
+						componentId="1445" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1445" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/tdJ5G6biYnkZ5WRZl69go86NlT/Sw-ryZjehaSYIvRZMzletf9lG0oqJNnC3lhYLqNP2CKBpgXt3.jpg" alt="B. Lichtenberg - Lightening Bolt earrings" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">B. Lichtenberg</span>
+									<span class="white" itemprop="name">Lightening Bolt earrings</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="Lightening Bolt earrings cut from a high quality acrylic. Alex and Chloe create jewelry in quirky shapes. Reminiscent of the 80's with a modern edge."/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="B. Lichtenberg"/>
+							<meta itemprop="url" content=""/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="B. Lichtenberg"/>
+							<meta itemprop="url" content="http://www.alexandchloe.com/online_shop/product_info.php?cPath=26_31&amp;products_id=741&amp;osCsid=20430e6c11d414156918709b38022df7"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1446" productId="1446" categoryId="1" 
+						componentId="1446" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1446" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/2LqqMSfkKYhIZHcUb66DWo1Pq/Sw-qQJFFSnKNbjC9NQLHQB1eb6cHd8.jpg" alt="Goorin Bros. - Rude Boy Hat" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">Goorin Bros.</span>
+									<span class="white" itemprop="name">Rude Boy Hat</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="Ne-Yo was self-conscious about his hairline and he started wearing hats in high school. And now, Ne-Yo is well-known for wearing fedoras. Get his look"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="Goorin Bros."/>
+							<meta itemprop="url" content="http://www.goorin.com/"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="Goorin Bros."/>
+							<meta itemprop="url" content="http://www.goorin.com/hats/fedora/rude-boy"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1448" productId="1448" categoryId="46" 
+						componentId="1448" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1448" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/iRr4KlxCRq2aZHaryyE7X6UfmBXLv2RYCm5VoHF37un/Sw-GosmTHcNnzO8cU9SAi9Z4KSQVJZT4qqltWLccEhiqCc805a.jpg" alt="Theory - Compact V-Neck Sweater" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">Theory</span>
+									<span class="white" itemprop="name">Compact V-Neck Sweater</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="Soft light heather gray in a lightweight merino wool knit. With a banded v-neck and a rib banded hem. The slim sweater also has Long sleeve with rib b"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="Theory"/>
+							<meta itemprop="url" content="http://www.theory.com/"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="Theory"/>
+							<meta itemprop="url" content="http://www.theory.com/"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1449" productId="1449" categoryId="46" 
+						componentId="1449" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1449" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/a6JCDh6TH3q114ZDonoqjz2ZuTGe7K0mppKqHX/Sw-llzHW3aqjhN85TT9C0fPkD6emaXCKnODtftGRHVtb.jpg" alt="Peter Werth - Striped Shirt" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">Peter Werth</span>
+									<span class="white" itemprop="name">Striped Shirt</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="A long sleeved cotton shirt by Peter Werth. All over contrast stripe design with reinforced trim. A button through placket with button-up cuffs. A tri"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="Peter Werth"/>
+							<meta itemprop="url" content="http://www.peterwerth.co.uk/"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="Peter Werth"/>
+							<meta itemprop="url" content="http://www.peterwerth.co.uk/"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1450" productId="1450" categoryId="46" 
+						componentId="1450" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1450" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/MJQBMsnqQ4ZiKrn4u8SQATuSKldO6PqnU9q/Sw-L91UplaGFUu0vYpgJqJx3nhVsjiJubP2yD4P1q0SNlGqGly.jpg" alt="Vintage - Periwinkle Leather Jacket" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">Vintage</span>
+									<span class="white" itemprop="name">Periwinkle Leather Jacket</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="Rich buttery soft periwinkle blue 1980's leather jacket with matching belt. Low sweet heart neckline with matching enamel snaps. A sexy hourglass shap"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="Vintage"/>
+							<meta itemprop="url" content=""/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="Vintage"/>
+							<meta itemprop="url" content=""/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1452" productId="1452" categoryId="46" 
+						componentId="1452" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1452" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/EnCrbYXOixyt0vPJeWM2vDZgLpJPldvJJPKyl8Uh2llN7jC/Sw-rTglY6MtcaXNYk2qA7BUizr8R9Y330pjlsZqLLPqzxs5n5.jpg" alt="Levi's® - Trucker Jacket" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">Levi's®</span>
+									<span class="white" itemprop="name">Trucker Jacket</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="The Trucker Jacket earned its status as classic with its relaxed fit and rugged construction. Defined at front and back with vertical seams and built "/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="Levi's®"/>
+							<meta itemprop="url" content="http://www.levis.com"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="Levi's®"/>
+							<meta itemprop="url" content="http://us.levi.com/product/index.jsp?productId=2596409&amp;cp=3146842.3146845.3146860"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1453" productId="1453" categoryId="153" 
+						componentId="1453" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1453" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/L8JVne1Gbh033E8SYF8DkY0hdcReWtWLlZSCObnbiZfz/Sw-VaZ2VNEpxlljWkc4bzBsm5kiPIRE2F2ghQaI8Wjj.jpg" alt="B. Lichtenberg - Shard Earrings" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">B. Lichtenberg</span>
+									<span class="white" itemprop="name">Shard Earrings</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="Pair of Shard earrings for pierced ears. From the 'Black Diamonds' collection at Alex and Chloe. A cutting edge look made of high quality acrylic in f"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="B. Lichtenberg"/>
+							<meta itemprop="url" content=""/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="B. Lichtenberg"/>
+							<meta itemprop="url" content="http://www.alexandchloe.com/online_shop/product_info.php?products_id=724"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1454" productId="1454" categoryId="46" 
+						componentId="1454" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1454" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/As0fQdEdO9c5cBX80Lg7PDvd9YAo6UNmNp/Sw-ubcTUb6LAXX0BT8Ey1zkv6VkmCYRCl.jpg" alt="Black - Leather Gloves" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">Black</span>
+									<span class="white" itemprop="name">Leather Gloves</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="Made from hair sheep leather, acknowledged as the best glove leather for its strength and unique softness, these classic gloves are lined with 100% ca"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="Black"/>
+							<meta itemprop="url" content="http://www.black.co.uk/"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="Black"/>
+							<meta itemprop="url" content="http://www.black.co.uk/product/mens-cashmerelined-leather-gloves-1188.cfm"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1455" productId="1455" categoryId="46" 
+						componentId="1455" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1455" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/ALchhvJZq99HTAUPzB8aqJFv0kEbl3UdHeWlC51VVCW9yX9/Sw-O5a3qnBe2XBGNyau1LgOzFNxuC9qM5Jk019inznz8CDT2uSW.jpg" alt="Vintage - Letterman Jacket" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">Vintage</span>
+									<span class="white" itemprop="name">Letterman Jacket</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="The letterman jacket that Kanye is wearing looks like it was originally from from Kamiakin High School, located in Kennewick, WA."/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="Vintage"/>
+							<meta itemprop="url" content=""/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="Vintage"/>
+							<meta itemprop="url" content=""/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1456" productId="1456" categoryId="153" 
+						componentId="1456" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1456" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/Rg5018LmlAiHD1P4YQmIztXSPqLD/Sw-bnjPNqE2eguFTG5lT87K1oedHqo1II9mG2dTeqRFMAJ.jpg" alt="B. Lichtenberg - Bri-Dangle Necklace" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">B. Lichtenberg</span>
+									<span class="white" itemprop="name">Bri-Dangle Necklace</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="Make a statement with the avant garde look of Brian Lichtenberg for Alex &amp; Chloe. From the 'BRIANGULAR' Collection. Silver mirror acrylic with sterlin"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="B. Lichtenberg"/>
+							<meta itemprop="url" content=""/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="B. Lichtenberg"/>
+							<meta itemprop="url" content="http://www.alexandchloe.com/"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1457" productId="1457" categoryId="46" 
+						componentId="1457" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1457" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/AAW92WkgXNpNhBsqL6cjurBX1x3S25ND86cB06TBDkOS9/Sw-nzZHMZWq7RJyk4sAUvnXWqMlIbTDfOIaG2BEPG.jpg" alt="Chanel  - Graphic Chanel Pants" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">Chanel </span>
+									<span class="white" itemprop="name">Graphic Chanel Pants</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="The leading brand in luxury goods creates a slim pant with an updated look. The Chanel graphic print is combined with a slim pant silhouette.  For a u"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="Chanel "/>
+							<meta itemprop="url" content="http://www.chanel.com/"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="Chanel "/>
+							<meta itemprop="url" content="http://www.chanel.com/"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1458" productId="1458" categoryId="166" 
+						componentId="1458" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1458" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/GaCaJnsHT9D43HMuuKjR0R6tI5tnbqxoQRb25iK/Sw-4sodZZ8D1fqjRs5Y3uCHrHkTtblBp5peDMacugS4.jpg" alt="IKEA - Pendant Lamp" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">IKEA</span>
+									<span class="white" itemprop="name">Pendant Lamp</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="Lamp designed similar to the basic style of a clip lamp in versatile hanging version. Made of aluminum and requires a standard bulb."/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="IKEA"/>
+							<meta itemprop="url" content="http://www.ikea.com/"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="IKEA"/>
+							<meta itemprop="url" content="http://www.ikea.com/us/en/catalog/products/90128179"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1459" productId="1459" categoryId="46" 
+						componentId="1459" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1459" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/x0lVhmkEVlKi1R13ganMqiEA604pjTjXteSimB/Sw-t98iUhuCRFz7ckcVVLn9tkCIscPrP0Irhcva3zy.jpg" alt="Herve Leger - Charlotte Signature Skirt" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">Herve Leger</span>
+									<span class="white" itemprop="name">Charlotte Signature Skirt</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="Herve Leger calls this banded mini skirt &quot;essential&quot; because it is indeed your essential mini skirt. The figure hugging but uber stretchy skirt has a "/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="Herve Leger"/>
+							<meta itemprop="url" content="/www.herveleger.com/"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="Herve Leger"/>
+							<meta itemprop="url" content="http://www.herveleger.com/spring2009/"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1460" productId="1460" categoryId="46" 
+						componentId="1460" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1460" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/AWqyTulhK3KzI5ursqbWOmsFtG/Sw-r4NZ74r1ltBqQKlq6W5vWKGRoHYivG9u2ITua.jpg" alt="American Apparel - White V-neck" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">American Apparel</span>
+									<span class="white" itemprop="name">White V-neck</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="The softest, smoothest, best-looking v-neck t-shirt available anywhere. 100% fine jersey cotton construction. Durable rib V-neckband. A staple for any"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="American Apparel"/>
+							<meta itemprop="url" content="http://americanapparel.net/"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="American Apparel"/>
+							<meta itemprop="url" content="http://store.americanapparel.net/2456.html"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1461" productId="1461" categoryId="46" 
+						componentId="1461" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1461" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/n0jhMVYj59NixOXdU29155NUsW53jnzs/Sw-hnfLFgZ9sajkujcrIUXVEuQUsTn7.jpg" alt="Love Moschino - Cardigan" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">Love Moschino</span>
+									<span class="white" itemprop="name">Cardigan</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="The double breasted cardigan from Love Moschino features deep v-neck and a 3 button closure. Also includes 2-hand pockets and embroidered tag on left "/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="Love Moschino"/>
+							<meta itemprop="url" content="http://www.moschino.com/"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="Love Moschino"/>
+							<meta itemprop="url" content="http://www.moschino.com/"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1462" productId="1462" categoryId="46" 
+						componentId="1462" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1462" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/Jjxr7jdg3cyVMoyI4o1cvfjGP3/Sw-qtSBRjegovdZGKaiSTSFuBZLUKloZA8iar.jpg" alt="Buttero - Work Boot" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">Buttero</span>
+									<span class="white" itemprop="name">Work Boot</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="Perfect boot for a relaxed and masculine look to wear with jeans. Smooth leather plain toe work boot with lace-up front. 30mm stacked wood heel. Leath"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="Buttero"/>
+							<meta itemprop="url" content="http://www.buttero.it/"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="Buttero"/>
+							<meta itemprop="url" content="http://www.buttero.it/english/home.htm"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1463" productId="1463" categoryId="46" 
+						componentId="1463" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1463" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/YFZx1ZWJzSeQzHmjyzgPH9BUuCWORUq/Sw-0ioAkWXVXsWgccUpG6FY9QVINqi17ZjvUtoE.jpg" alt="AG Adriano Goldschmied - ProtÃ©gÃ© Jean" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">AG Adriano Goldschmied</span>
+									<span class="white" itemprop="name">ProtÃ©gÃ© Jean</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="Five pocket straight leg jean in a light blue wash with holes, grease stains and distressing at hip, thigh, knee and seat. Button fly. 10&quot; rise. 34&quot; i"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="AG Adriano Goldschmied"/>
+							<meta itemprop="url" content="http://www.agjeans.com/"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="AG Adriano Goldschmied"/>
+							<meta itemprop="url" content="http://www.agjeans.com/"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+									<div class="product clik-component" id="productBox_1464" productId="1464" categoryId="46" 
+						componentId="1464" componentType="P" itemscope itemtype="http://schema.org/Product">
+						<a href="products/detail/1464" class="clik-ajax"clik:target="detailBox" clik:scrollTop="true" itemprop="url">
+							<div class="panel1">
+								<img src="http://static1.clikthrough.com/clik-prod/images/products/t89UsGKAOk7MXFIVXjX9g6nHug0gb9yTyFXG0A7r2/Sw-MXe8JYqpn9IraFifaTNe3Xr75IAKeHYa8q0usNE5GpGA.jpg" alt="A. Wang - Classic Tank Top" itemprop="image"/>
+							</div>
+							<div class="panel2">
+								<div class="title">
+									<span class="clikOrange">A. Wang</span>
+									<span class="white" itemprop="name">Classic Tank Top</span>
+								</div>
+																							</div><!-- end .panel2 -->
+													</a>
+						<meta itemprop="description" content="This tank feels silky and supple against skin, while the lowered arm holes and deep scoop neck are alluring in a laid-back way. Sheer with a signature"/>
+						<span itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="hidden">
+							<meta itemprop="name" content="A. Wang"/>
+							<meta itemprop="url" content="http://www.alexanderwang.com"/>
+						</span>
+						<span itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="hidden">
+							<meta itemprop="name" content="A. Wang"/>
+							<meta itemprop="url" content="http://alexanderwang.com/"/>
+						</span>
+						
+												</meta>
+					</div>
+					
+								<div class="clear"></div>
+			</div>
+			
+					</div>
+				<div class="clear"></div>
+	</div><!-- end #detailSection -->
+<!-- END video_detail -->		
+	</div><!-- Simple Template -> Page view End -->
+
+	
+<!-- [START FOOTER INC] -->
+	
+	<div id="footer">
+		<div id="footerBox">
+			<div>
+				<div id="copyright">Copyright &#169;2013 Clikthrough Inc,&#160;&#160;&#160;All Rights Reserved</div>
+				<ul id="flist2">
+					<!--li><a href="videos">Videos</a></li>
+					<li><a href="products">Products</a></li>
+					<li><a href="artists">Artists</a></li-->
+					
+					<li><a href="faq">FAQ</a></li>
+										<li><a href="http://corporate.clikthrough.com/">Corporate</a></li>
+					<li><a href="legal/index/privacyPolicy" target="_blank">Privacy Policy</a></li>
+					<li class="last"><a href="legal/index/legalNotice" target="_blank">Legal Notice</a></li>
+					
+					<li id="footer-social">
+						<a href="http://corporate.clikthrough.com/wp/" target="_blank" title="Read our Blogs"><div class="footer-social-icons footer-rss"></div></a>
+						<a href="http://twitter.com/clikthrough" target="_blank" title="Follow us on Twitter"><div class="footer-social-icons footer-twitter"></div></a>
+						<a href="http://www.facebook.com/pages/San-Francisco-CA/Clikthrough/29889538957" target="_blank" title="Be our friend on Facebook"><div class="footer-social-icons footer-facebook"></div></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div><!-- end #footer -->
+
+<!-- end #container --></div>
+
+
+	<script type="text/javascript">
+		// force delayed load of dojo (if not already loaded)
+		if (typeof dojo !== "object") {
+			document.write('<script src="http://ajax.googleapis.com/ajax/libs/dojo/1.6/dojo/dojo.xd.js" type="text/javascript" djConfig="parseOnLoad: true"><\/script>');
+		}
+	</script>
+	<script type="text/javascript" src="http://www.clikthrough.com/js/clik-dojo.js"></script>
+	<script type="text/javascript" src="http://www.clikthrough.com/js/site-wide.js"></script>
+	
+	
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-4806123-1']);
+		_gaq.push(['_trackPageview']);
+		
+		(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
+		})();
+	</script>
+	
+	<div id="overlayBase" onclick="clik.hide('overlay'); clik.hide(this)">
+	</div>
+	<div id="overlay">
+	</div><!-- end #overlay -->
+	
+	<div id="preloader"></div></body>
+</html>
