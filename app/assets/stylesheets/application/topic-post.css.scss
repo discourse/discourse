@@ -800,7 +800,7 @@
 }
 
 
-.deleted-topic .gutter {
+.deleted-topic .gutter, .read_restricted .gutter {
   position: relative;
   &:before {
     display: block;
@@ -814,15 +814,8 @@
 }
 
 
-.secure_category .gutter {
-  position: relative;
+.read_restricted .gutter {
   &:before {
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    color: rgba($black, 0.05);
-    font: 90px/1 FontAwesome;
     content: "\f0c0";
   }
 }
