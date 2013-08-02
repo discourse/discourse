@@ -7,7 +7,13 @@ module Oneboxer
     matcher /^https?\:\/\/imgur\.com\/.*$/
 
     def translate_url
-      m = @url.match(/\/gallery\/(?<hash>[^\/]+)/mi)
+      m = @url.match(/imgur\.com\/user\//mi)
+      return nil if m.present?
+
+      m = @url.match(/imgur\.com\/help(\/|$)/mi)
+      return nil if m.present?
+
+      m = @url.match(/imgur\.com\/gallery\/(?<hash>[^\/]+)/mi)
       return "http://api.imgur.com/2/image/#{URI::encode(m[:hash])}.json" if m.present?
 
       m = @url.match(/imgur\.com\/(?<hash>[^\/]+)/mi)
