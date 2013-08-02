@@ -23,10 +23,8 @@ require_asset ("./external/handlebars.js")
 
 if Rails.env.development?
   require_asset ("./external_development/ember.js")
-  require_asset ("./external_development/group-helper.js")
 else
   require_asset ("./external_production/ember.js")
-  require_asset ("./external_production/group-helper.js")
 end
 
 require_asset ("./main_include.js")

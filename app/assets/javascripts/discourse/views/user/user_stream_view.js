@@ -13,13 +13,7 @@ Discourse.UserStreamView = Ember.CollectionView.extend(Discourse.LoadMore, {
   eyelineSelector: '#user-activity .user-stream .item',
   classNames: ['user-stream'],
 
-  itemViewClass: Ember.View.extend({
-    templateName: 'user/stream_item',
-    init: function() {
-      this._super();
-      this.set('context', this.get('content'));
-    }
-  }),
+  itemViewClass: Discourse.GroupedView.extend({ templateName: 'user/stream_item' }),
 
   loadMore: function() {
     var userStreamView = this;

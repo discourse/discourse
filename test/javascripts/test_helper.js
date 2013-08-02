@@ -13,7 +13,6 @@
 //= require ../../app/assets/javascripts/external/jquery.ui.widget.js
 //= require ../../app/assets/javascripts/external/handlebars.js
 //= require ../../app/assets/javascripts/external_development/ember.js
-//= require ../../app/assets/javascripts/external_development/group-helper.js
 
 //= require ../../app/assets/javascripts/locales/i18n
 //= require ../../app/assets/javascripts/discourse/helpers/i18n_helpers
