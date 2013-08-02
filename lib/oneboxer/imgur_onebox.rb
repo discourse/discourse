@@ -15,6 +15,7 @@ module Oneboxer
     def image_hash_for url
       # length check, because imgur has their static pages and
       # prefixes of other lengths
+      # new length seems to be pretty final: http://imgur.com/blog/2013/01/18/more-characters-in-filenames/
       # ie. 'help', 'removalrequest', 'user/'
       min_length = 5 # images used to be this long
       max_length = 7 # this is the length for new images
