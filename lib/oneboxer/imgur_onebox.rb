@@ -20,8 +20,8 @@ module Oneboxer
       min_length = 5 # images used to be this long
       max_length = 7 # this is the length for new images
       case url
-      when %r<imgur\.com/(gallery/)?(?<hash>[^/]{#{min_length},#{max_length}}+)>mi
         $~[:hash]
+      when %r<imgur\.com/(gallery/)?(?<hash>[^/]{#{min_length},#{max_length}})>mi
       else
         nil
       end
