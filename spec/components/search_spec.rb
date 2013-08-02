@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 require 'spec_helper'
-require 'search'
+require_dependency 'search'
 
 describe Search do
 
