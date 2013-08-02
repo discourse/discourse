@@ -51,7 +51,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
               strategy.options[:client_id] = SiteSetting.github_client_id
               strategy.options[:client_secret] = SiteSetting.github_client_secret
            },
-           :scope => "email"
+           :scope => "user:email"
 
   provider :browser_id,
            :name => "persona"
