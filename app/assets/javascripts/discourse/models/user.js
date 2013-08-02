@@ -301,7 +301,7 @@ Discourse.User.reopenClass({
     }
 
     // If we found the current user
-    if (this.currentUser && property) {
+    if (this.currentUser && (typeof property !== "undefined")) {
       return this.currentUser.get(property);
     }
 

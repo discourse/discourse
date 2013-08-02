@@ -13,6 +13,8 @@ test('current', function(){
   Discourse.Session.current('orange', 'juice');
   equal(session.get('orange'), "juice", "it can be updated");
 
+  Discourse.Session.current('zero', 0);
+  equal(session.get('zero'), 0);
 });
 
 test('highestSeenByTopic', function() {
