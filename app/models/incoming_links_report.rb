@@ -63,10 +63,9 @@ class IncomingLinksReport
 
     num_clicks  = link_count_per_domain
     num_topics = topic_count_per_domain(num_clicks.keys)
-    num_users  = user_count_per_domain(num_clicks.keys)
     report.data = []
     num_clicks.keys.each do |domain|
-      report.data << {domain: domain, num_clicks: num_clicks[domain], num_topics: num_topics[domain], num_users: num_users[domain]}
+      report.data << {domain: domain, num_clicks: num_clicks[domain], num_topics: num_topics[domain]}
     end
     report.data = report.data.sort_by {|x| x[:num_clicks]}.reverse[0,10]
   end
@@ -82,11 +81,6 @@ class IncomingLinksReport
   def self.topic_count_per_domain(domains)
     # COUNT(DISTINCT) is slow
     per_domain(domains).count('topic_id', distinct: true)
-  end
-
-  def self.user_count_per_domain(domains)
-    # COUNT(DISTINCT) is slow
-    per_domain(domains).count('user_id', distinct: true)
   end
 
 

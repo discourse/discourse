@@ -236,7 +236,6 @@
           <th class="title">{{top_traffic_sources.title}} ({{i18n admin.dashboard.reports.last_30_days}})</th>
           <th>{{top_traffic_sources.ytitles.num_clicks}}</th>
           <th>{{top_traffic_sources.ytitles.num_topics}}</th>
-          <th>{{top_traffic_sources.ytitles.num_users}}</th>
         </tr>
       </thead>
       {{#unless loading}}
@@ -246,7 +245,6 @@
               <td class="title">{{domain}}</td>
               <td class="value">{{num_clicks}}</td>
               <td class="value">{{num_topics}}</td>
-              <td class="value">{{num_users}}</td>
             </tr>
           </tbody>
         {{/each}}

@@ -59,9 +59,8 @@ describe IncomingLinksReport do
     it 'with some IncomingLink records, it returns correct data' do
       IncomingLinksReport.stubs(:link_count_per_domain).returns({'twitter.com' => 8, 'facebook.com' => 3})
       IncomingLinksReport.stubs(:topic_count_per_domain).returns({'twitter.com' => 2, 'facebook.com' => 3})
-      IncomingLinksReport.stubs(:user_count_per_domain).returns({'twitter.com' => 4, 'facebook.com' => 1})
-      top_traffic_sources[:data][0].should == {domain: 'twitter.com', num_clicks: 8, num_topics: 2, num_users: 4}
-      top_traffic_sources[:data][1].should == {domain: 'facebook.com', num_clicks: 3, num_topics: 3, num_users: 1}
+      top_traffic_sources[:data][0].should == {domain: 'twitter.com', num_clicks: 8, num_topics: 2}
+      top_traffic_sources[:data][1].should == {domain: 'facebook.com', num_clicks: 3, num_topics: 3}
     end
   end
 
