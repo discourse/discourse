@@ -10,11 +10,10 @@
 
 %badge {
   display: inline-block;
-  border: 1px solid rgba($black, 0.4);
   font-weight: bold;
   line-height: 1;
   white-space: nowrap;
-  @include border-radius-all(4px);
+  @include border-radius-all(10px);
 }
 
 // Category badge
@@ -36,13 +35,11 @@
 
 .badge-notification {
   @extend %badge;
-  margin-left: 4px;
-  padding: 2px 4px;
+  margin-left: 3px;
+  padding: 3px 5px;
   color: $white;
   font-size: 11px;
-  text-shadow: 0 1px 0 rgba($black, 0.2);
   background-color: $badge-notification-background-color;
-  @include box-shadow(inset 0 1px 0 rgba($white, 0.26));
   &[href] {
     color: $white;
   }
@@ -56,9 +53,7 @@
   // Click count
 
   &.clicks {
-    border: 0;
     font-weight: normal;
-    text-shadow: none;
     background-color: rgba($black, 0.15)
   }
 }
