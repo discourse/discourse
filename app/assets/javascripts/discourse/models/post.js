@@ -235,7 +235,7 @@ Discourse.Post = Discourse.Model.extend({
       });
     } else {
       this.setProperties({
-        cooked: Discourse.Markdown.cook(I18n.t("post.deleted_by_author")),
+        cooked: Discourse.Markdown.cook(I18n.t("post.deleted_by_author", {count: Discourse.SiteSettings.delete_removed_posts_after})),
         can_delete: false,
         version: this.get('version') + 1,
         can_recover: true,
