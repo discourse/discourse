@@ -217,7 +217,7 @@ Not english? Set the default language as appropriate:
 ## nginx setup
 
     # Run these commands as your normal login (e.g. "michael")
-    sudo cp ~discourse/discourse/config/nginx.sample.conf /etc/nginx/conf.d/discourse.conf
+    sudo cp ~/discourse/config/nginx.sample.conf /etc/nginx/conf.d/discourse.conf
 
 Edit /etc/nginx/nginx.conf:
 
