@@ -12,7 +12,7 @@ Discourse.RepliesView = Ember.CollectionView.extend({
   classNames: ['replies-list', 'embedded-posts', 'bottom'],
   itemViewClass: Discourse.EmbeddedPostView,
 
-  repliesShown: (function() {
+  repliesShownChanged: function() {
     var $this = this.$();
     if (this.get('parentView.repliesShown')) {
       Em.run.schedule('afterRender', function() {
@@ -23,7 +23,7 @@ Discourse.RepliesView = Ember.CollectionView.extend({
         $this.slideUp();
       });
     }
-  }).observes('parentView.repliesShown')
+  }.observes('parentView.repliesShown')
 
 });
 

@@ -10,7 +10,6 @@
   {{/if}}
 </nav>
 
-
 {{#if summaryCollapsed}}
   <section class='summary collapsed'>
     <ul class="clearfix">
@@ -42,7 +41,7 @@
       </li>
       {{#if details.fewParticipants}}
       <li class='avatars'>
-        {{#each details.fewParticipants}}{{participant participant=this}}{{/each}}
+        {{#groupedEach details.fewParticipants}}{{participant participant=this}}{{/groupedEach}}
       </li>
       {{/if}}
     </ul>
@@ -74,20 +73,22 @@
 
   {{#if details.participants}}
     <section class='avatars clearfix'>
-      {{#each details.participants}}{{participant participant=this}}{{/each}}
+      {{#groupedEach details.participants}}{{participant participant=this}}{{/groupedEach}}
     </section>
   {{/if}}
 
   {{#if view.parentView.infoLinks}}
     <section class='links'>
         <ul class='topic-links'>
-          {{#collection contentBinding="view.parentView.infoLinks" itemTagName="li"}}
-            <span class='badge badge-notification clicks' title='{{i18n topic_summary.clicks}}'>{{clicks}}</span>
-            <a href="{{unbound url}}" target="_blank" class='topic-link track-link' data-user-id="{{unbound user_id}}" data-ignore-post-id="true" title="{{unbound url}}">
-              {{#if title}}{{shorten title}}{{else}}{{shortenUrl url}}{{/if}}
-              {{#if internal}}<i class='icon-arrow-right' title='{{i18n topic_summary.topic_link}}'></i>{{/if}}
-            </a>
-          {{/collection}}
+          {{#groupedEach view.parentView.infoLinks}}
+            <li>
+              <span class='badge badge-notification clicks' title='{{i18n topic_summary.clicks}}'>{{clicks}}</span>
+              <a href="{{unbound url}}" target="_blank" class='topic-link track-link' data-user-id="{{unbound user_id}}" data-ignore-post-id="true" title="{{unbound url}}">
+                {{#if title}}{{shorten title}}{{else}}{{shortenUrl url}}{{/if}}
+                {{#if internal}}<i class='icon-arrow-right' title='{{i18n topic_summary.topic_link}}'></i>{{/if}}
+              </a>
+            </li>
+          {{/groupedEach}}
         </ul>
 
         {{#if view.parentView.showAllLinksControls}}

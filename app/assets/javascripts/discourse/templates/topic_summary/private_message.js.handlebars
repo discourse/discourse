@@ -1,11 +1,11 @@
 <h3><i class='icon icon-envelope'></i> {{i18n private_message_info.title}}</h3>
 <div class='participants clearfix'>
-  {{#each details.allowed_groups}}
+  {{#groupedEach details.allowed_groups}}
   <div class='user group'>
     #{{unbound name}}
   </div>
-  {{/each}}
-  {{#each details.allowed_users}}
+  {{/groupedEach}}
+  {{#groupedEach details.allowed_users}}
   <div class='user'>
     <a href='/users/{{lower username}}'>
       {{avatar this imageSize="small"}}
@@ -17,7 +17,7 @@
     <a class='remove-invited' {{action removeAllowedUser username}}><i class="icon-remove"></i></a>
     {{/if}}
   </div>
-  {{/each}}
+  {{/groupedEach}}
 </div>
 {{#if details.can_invite_to}}
   <div class='controls'>

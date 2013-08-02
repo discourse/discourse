@@ -10,6 +10,7 @@ var DiscourseGroupedEach = function(context, path, options) {
   this.normalizedRoot = normalized.root;
   this.normalizedPath = normalized.path;
   this.content = this.lookupContent();
+  this.destroyed = false;
 
   this.addContentObservers();
   this.addArrayObservers();
@@ -41,6 +42,8 @@ DiscourseGroupedEach.prototype = {
   },
 
   addArrayObservers: function() {
+    if (!this.content) { return; }
+
     this.content.addArrayObserver(this, {
       willChange: 'contentArrayWillChange',
       didChange: 'contentArrayDidChange'
@@ -48,6 +51,8 @@ DiscourseGroupedEach.prototype = {
   },
 
   removeArrayObservers: function() {
+    if (!this.content) { return; }
+
     this.content.removeArrayObserver(this, {
       willChange: 'contentArrayWillChange',
       didChange: 'contentArrayDidChange'
@@ -65,6 +70,8 @@ DiscourseGroupedEach.prototype = {
   },
 
   render: function() {
+    if (!this.content) { return; }
+
     var content = this.content,
         contentLength = Em.get(content, 'length'),
         data = this.options.data,
@@ -72,18 +79,28 @@ DiscourseGroupedEach.prototype = {
 
     data.insideEach = true;
     data.insideGroup = true;
+
     for (var i = 0; i < contentLength; i++) {
       template(content.objectAt(i), { data: data });
     }
   },
 
   rerenderContainingView: function() {
-    Ember.run.scheduleOnce('render', this.containingView, 'rerender');
+    var self = this;
+    Ember.run.scheduleOnce('render', this, function() {
+      // It's possible it's been destroyed after we enqueued a re-render call.
+      if (!self.destroyed) {
+        self.containingView.rerender();
+      }
+    });
   },
 
   destroy: function() {
     this.removeContentObservers();
-    this.removeArrayObservers();
+    if (this.content) {
+      this.removeArrayObservers();
+    }
+    this.destroyed = true;
   }
 };
 
