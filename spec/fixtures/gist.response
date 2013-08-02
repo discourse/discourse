@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# githubog: http://ogp.me/ns/fb/githubog#">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <title>gist:153044e9bea3331cc103</title>
+
+  <meta content="authenticity_token" name="csrf-param" />
+<meta content="zSFOVuYk/6yiJs9nE7oSg4ct0BZPRaFlyK01nRpFvxE=" name="csrf-token" />
+  <meta name="viewport" content="width=960">
+
+  <link type="text/plain" rel="author" href="https://github.com/humans.txt" />
+
+  <meta content="gist" name="octolytics-app-id" /><meta content="collector.githubapp.com" name="octolytics-host" />
+
+  <link href="/assets/application-64649181dc896bd5aeed2a3438dcb4a4.css" media="screen, print" rel="stylesheet" />
+  <script src="/assets/application-4fc558fd34d5f84950713717d772ea06.js"></script>
+
+      <meta name="robots" content="noindex, nofollow">
+
+</head>
+
+<body class=" ">
+
+  <div id="wrapper">
+    
+
+    <div id="header" class="header header-logged-out">
+      <div class="container" class="clearfix">
+        <a class="header-logo-wordmark" href="https://gist.github.com/">
+          <span class="octicon octicon-logo-github"></span>
+          <span class="octicon-logo octicon-logo-gist"></span>
+        </a>
+
+        <div class="header-actions">
+          <a class="button primary" href="https://github.com/signup?return_to=gist">Sign up for a GitHub Account</a>
+          <a class="button" href="https://gist.github.com/login?return_to=/anikalindtner/153044e9bea3331cc103" data-skip-pjax>Sign in</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="site-content" id="js-pjax-container" data-pjax-container>
+      <div class="vis-secret site-container js-site-container" data-url="/anikalindtner/153044e9bea3331cc103">
+  
+  <meta content="false" name="octolytics-dimension-public" /><meta content="6130231" name="octolytics-dimension-gist_id" /><meta content="153044e9bea3331cc103" name="octolytics-dimension-gist_name" /><meta content="false" name="octolytics-dimension-anonymous" /><meta content="1711357" name="octolytics-dimension-owner_id" /><meta content="anikalindtner" name="octolytics-dimension-owner_login" /><meta content="true" name="octolytics-dimension-forked" /><meta content="5821703" name="octolytics-dimension-parent_gist_id" /><meta content="b83fc36b45bcb0338399" name="octolytics-dimension-parent_gist_name" /><meta content="false" name="octolytics-dimension-parent_anonymous" /><meta content="2208" name="octolytics-dimension-parent_owner_id" /><meta content="svenfuchs" name="octolytics-dimension-parent_owner_login" />
+
+<div class="pagehead repohead">
+  <div class="container">
+    <div class="title-actions-bar">
+      <ul class="pagehead-actions">
+      </ul>
+      <h1 itemscope itemtype="http://data-vocabulary.org/Breadcrumb" class="entry-title secret">
+        <span class="repo-label"><span>secret</span></span>
+        <span class="mega-octicon octicon-gist-secret tooltipped downandright" title="Secret gists are hidden from search engines but visible to anyone you give the URL."></span>
+        <div class="meta">
+          <div class="gist-author">
+            <img src="https://secure.gravatar.com/avatar/de4c05b637f469f1b2b1571da7599ffd?s=140&amp;d=https://github.com/images/gravatars/gravatar-140.png" width="26" height="26">
+            <span class="author vcard">
+                <span itemprop="title"><a href="/anikalindtner">anikalindtner</a></span>
+            </span> /
+            <strong><a href="/anikalindtner/153044e9bea3331cc103" class="js-current-repository">gist:153044e9bea3331cc103</a></strong>
+          </div>
+          <div class="gist-timestamp">
+              <span class="datetime">Last active <time class="js-relative-date" title="2013-08-01T11:07:40Z" datetime="2013-08-01T11:07:40Z">2013-08-01</time></span>
+              <span class="text"> &mdash; forked from <a href="/svenfuchs/b83fc36b45bcb0338399">svenfuchs/gist:b83fc36b45bcb0338399</a></span>
+          </div>
+      </h1>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+<div class="gist container js-gist-container" data-version="a015b5da4dcda99437431fc4da60c66792293e08">
+    <div class="root-pane">
+  <div class="menu-container">
+    <ul class="menu gisttabs">
+      <li>
+        <a href="/anikalindtner/153044e9bea3331cc103" class="selected">
+          Gist Detail
+        </a>
+      </li>
+
+        <li class="revision-count">
+          <a href="/anikalindtner/153044e9bea3331cc103/revisions" >
+            Revisions
+            <span class="counter">14</span>
+          </a>
+        </li>
+
+
+    </ul>
+  </div>
+
+  <ul class="export-references">
+    <li>
+      <a href="/anikalindtner/153044e9bea3331cc103/download" class="minibutton" data-skip-pjax="true" rel="nofollow"><span class="octicon octicon-cloud-download"></span>Download Gist</a>
+    </li>
+    <li>
+      <label for="url-field"><strong>Clone</strong> this gist</label>
+      <input type="text" readonly spellcheck="false" class="url-field js-url-field js-cptoggle" name="url-field" value="https://gist.github.com/153044e9bea3331cc103.git" data-cptoggle-display="/anikalindtner/153044e9bea3331cc103">
+    </li>
+    <li>
+      <label for="embed-field"><strong>Embed</strong> this gist</label>
+      <input type="text" readonly spellcheck="false" class="url-field js-url-field" name="embed-field" value="&lt;script src=&quot;https://gist.github.com/anikalindtner/153044e9bea3331cc103.js&quot;&gt;&lt;/script&gt;">
+    </li>
+    <li>
+      <label for="link-field"><strong>Link to</strong> this gist</label>
+      <input type="text" readonly spellcheck="false" class="url-field js-url-field" name="link-field" value="https://gist.github.com/anikalindtner/153044e9bea3331cc103">
+    </li>
+  </ul>
+</div>
+
+
+  <div class="column files">
+        <div id="file-gistfile1-md" class="bubble">
+          <div class="file-box ">
+            <div class="meta">
+              <div class="file-info">
+                <span class="file-type-icon"><span class="octicon octicon-gist"></span></span>
+                <strong class="file-name js-selectable-text">gistfile1.md</strong>
+              </div>
+              <div class="file-actions">
+                <span class="file-language">Markdown</span>
+                <ul class="button-group">
+                  <li><a title="Permalink" href="#file-gistfile1-md" class="file-actions-button tooltipped downwards permalink"><span class="octicon octicon-link"></span></a></li>
+                  <li><a title="View Raw" href="/anikalindtner/153044e9bea3331cc103/raw/1f2450da387d06ceacd104f4ed08228c02f3af64/gistfile1.md" data-skip-pjax class="file-actions-button tooltipped downwards raw-url"><span class="octicon octicon-code"></span></a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="suppressed">
+              <a class="js-show-suppressed-file">File suppressed. Click to show.</a>
+            </div>
+            
+
+    <div class="readme context-loader-container context-loader-overlay" id="readme">
+      <article class="markdown-body js-file "
+          data-task-list-update-url="/anikalindtner/153044e9bea3331cc103/file/gistfile1.md">
+        <h1>
+<a name="create-a-new-blog-post-on-github" class="anchor" href="#create-a-new-blog-post-on-github"><span class="mini-icon mini-icon-link"></span></a>Create a new blog post on GitHub</h1>
+
+<p><strong>1. Navigate to the <code>blog/_posts</code> directory</strong></p>
+
+<p><a href="https://github.com/rails-girls-summer-of-code/summer-of-code/tree/gh-pages/blog/_posts" rel="noreferrer">https://github.com/rails-girls-summer-of-code/summer-of-code/tree/gh-pages/blog/_posts</a></p>
+
+<p><strong>2. Add a new file for your post</strong></p>
+
+<p>by clicking on the little plus-sign: </p>
+
+<p><a href="https://f.cloud.github.com/assets/1711357/893124/2f4a8ea4-fa97-11e2-9cf6-9193d78cfadb.png" target="_blank"><img src="https://f.cloud.github.com/assets/1711357/893124/2f4a8ea4-fa97-11e2-9cf6-9193d78cfadb.png" alt="screen shot 2013-08-01 at 12 42 22 pm" style="max-width:100%;"></a></p>
+
+<p><em>how-to: <a href="https://github.com/blog/1327-creating-files-on-github" rel="noreferrer">https://github.com/blog/1327-creating-files-on-github</a></em></p>
+
+<p>The filename should follow the naming convention of the existing blog posts:
+2013-month-day-blogposttitle. The file extension will determine the format used. Use <code>.md</code> for Markdown. Don't worry, Markdown is really easy (<a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" rel="noreferrer">https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet</a>).
+Here an example:</p>
+
+<pre><code>---
+title: Introducing inchworms
+layout: post
+created_at: Mon July 15 2013
+permalink: blog/introducing-inchworms
+current: blog
+author: Anja and Carla
+twitter: _tyranja_
+---
+
+Hej Everbody,
+
+**We are the inchworms** and we chose that name because the coding process for us is like crawling inch by inch.
+
+Also we like this [video](https://www.youtube.com/watch?v=cyasgr9mn3s).
+
+</code></pre>
+
+<p>but you don't even have to learn that: you also can just mix in html. 
+Here is an example: </p>
+
+<pre><code>---
+title: The beginning
+layout: post
+created_at: Sat July 13 2013
+permalink: blog/the-beginning
+current: blog
+author: Anika
+twitter: langziehohr
+---
+&lt;img src="https://f.cloud.github.com/assets/1711357/792581/fdabc3fc-eba7-11e2-9fcc-b114f9a1d44f.png" align="middle" height="300"&gt;
+
+
+Our journey has begun and we're right on track, **code island starboard ahead!**
+
+*Since July 1st* we wrote 222 emails,&lt;a href="http://teams.railsgirlssummerofcode.org/"&gt; 133 blog posts &lt;/a&gt; have been posted by the teams, they spent more than 99 hours of coding - and this is only the beginning!
+
+It's been now 12 days since the summer of code officially started and here are the students of 12 teams saying hello world and obviously being super happy about their Summer of Code! Thanks to everybody who made this happen &amp;hearts;
+
+&lt;img src="https://f.cloud.github.com/assets/1711357/792560/1d1326d8-eba6-11e2-8fb3-2de8298fb07b.png" width="600"&gt;
+
+</code></pre>
+
+<p><strong>4. Add the Jekyll header for the meta data</strong></p>
+
+<p>This is the header:</p>
+
+<pre><code>---
+title: The beginning
+layout: post
+created_at: Sat July 13 2013
+permalink: blog/the-beginning
+current: blog
+author: Anika
+twitter: langziehohr
+---
+</code></pre>
+
+<p>Of course you have to change it so it will have your name and date in it.</p>
+
+<p><strong>5. Add your blog post text</strong>
+<strong>6. Save the file</strong>
+<strong>7. Send a pull request</strong></p>
+
+<p>You should see that grey "pull request" button. push it, give your request a title and confirm.</p>
+
+<p><a href="https://f.cloud.github.com/assets/1711357/893147/102c669a-fa98-11e2-86e3-4c60d8484833.png" target="_blank"><img src="https://f.cloud.github.com/assets/1711357/893147/102c669a-fa98-11e2-86e3-4c60d8484833.png" alt="screen shot 2013-07-26 at 5 31 50 pm" style="max-width:100%;"></a></p>
+
+<p><em>how-to: <a href="https://help.github.com/articles/creating-a-pull-request" rel="noreferrer">https://help.github.com/articles/creating-a-pull-request</a></em></p>
+
+<p><strong>8. Ready! ♥</strong></p>
+      </article>
+    </div>
+
+
+
+          </div>
+        </div>
+    <div id="comments" class="new-comments">
+      
+    </div>
+      <p class="uncommentable"><span class="octicon octicon-alert"></span> Please <a href="/login?return_to=/anikalindtner/153044e9bea3331cc103" rel="nofollow">sign in</a> to comment on this gist.</p>
+  </div>
+</div>
+
+  <div class="context-overlay"></div>
+</div>
+
+    </div>
+    <div class="slow-loading-overlay"></div>
+  </div>
+
+  <div id="ajax-error-message" class="flash flash-error">
+    <div class="container">
+      <span class="octicon octicon-alert"></span>
+      Something went wrong with that request. Please try again.
+      <a href="#" class="octicon octicon-remove-close ajax-error-dismiss"></a>
+    </div>
+  </div>
+
+  <footer>
+    <div id="footer">
+  <div class="container clearfix">
+
+    <!-- Served fresh by github-fe103-cp1-prd.iad.github.net -->
+    <p class="right">&copy; 2013 GitHub Inc. All rights reserved.</p>
+    <a class="left" href="/">
+      <span class="mega-octicon octicon-mark-github"></span>
+    </a>
+    <ul id="legal">
+      <li><a href="https://github.com/blog">The GitHub Blog</a></li>
+      <li><a href="mailto:support@github.com">Support</a></li>
+      <li><a href="https://github.com/contact">Contact</a></li>
+    </ul>
+
+  </div><!-- /.container -->
+</div><!-- /.#footer -->
+
+  </footer>
+
+</body>
+</html>
