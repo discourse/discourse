@@ -36,9 +36,12 @@
 .badge-notification {
   @extend %badge;
   margin-left: 3px;
-  padding: 3px 5px;
+  padding: 4px;
+  padding-top: 3px;
   color: $white;
   font-size: 11px;
+  min-width: 10px;
+  text-align: center;
   background-color: $badge-notification-background-color;
   &[href] {
     color: $white;
