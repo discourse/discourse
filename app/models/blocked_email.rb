@@ -1,3 +1,7 @@
+# A BlockedEmail record represents an email address that is being watched,
+# typically when creating a new User account. If the email of the signup form
+# (or some other form) matches a BlockedEmail record, an action can be
+# performed based on the action_type.
 class BlockedEmail < ActiveRecord::Base
 
   before_validation :set_defaults

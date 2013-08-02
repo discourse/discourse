@@ -1,0 +1,29 @@
+{{#if loading}}
+  <div class='admin-loading'>{{i18n loading}}</div>
+{{else}}
+  {{#if model.length}}
+    <table class='table blocked-emails'>
+      <thead>
+        <th class="email">{{i18n admin.logs.email}}</th>
+        <th class="action">{{i18n admin.logs.action}}</th>
+        <th class="match_count">{{i18n admin.logs.match_count}}</th>
+        <th class="last_match_at">{{i18n admin.logs.last_match_at}}</th>
+        <th class="created_at">{{i18n admin.logs.created_at}}</th>
+      </thead>
+
+      <tbody>
+        {{#each model}}
+          <tr>
+            <td class="email">{{email}}</td>
+            <td class="action">{{actionName}}</td>
+            <td class="match_count">{{match_count}}</td>
+            <td class="last_match_at">{{unboundAgeWithTooltip last_match_at}}</td>
+            <td class="created_at">{{unboundAgeWithTooltip created_at}}</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  {{else}}
+    No results.
+  {{/if}}
+{{/if}}

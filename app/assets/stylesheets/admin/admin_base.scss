@@ -693,3 +693,11 @@ table {
     width: 600px;
   }
 }
+
+/* Logs */
+
+.blocked-emails {
+  .match_count, .last_match_at, .created_at {
+    text-align: center;
+  }
+}

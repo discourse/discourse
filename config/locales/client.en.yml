@@ -1160,6 +1160,18 @@ en:
         last_seen_user: "Last Seen User:"
         reply_key: "Reply Key"
 
+      logs:
+        title: "Logs"
+        blocked_emails: "Blocked Emails"
+        email: "Email Address"
+        action: "Action"
+        last_match_at: "Last Matched"
+        match_count: "Matches"
+        created_at: "Created"
+        actions:
+          block: "block"
+          do_nothing: "do nothing"
+
       impersonate:
         title: "Impersonate User"
         username_or_email: "Username or Email of User"
