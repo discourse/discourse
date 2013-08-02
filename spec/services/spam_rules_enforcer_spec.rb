@@ -111,22 +111,34 @@ describe SpamRulesEnforcer do
       subject.stubs(:block?).returns(true)
     end
 
-    it "blocks the user" do
-      UserBlocker.expects(:block).with(user, nil, has_entries(message: :too_many_spam_flags))
-      subject.punish_user
-    end
-
-    it 'prevents the user from making new posts' do
-      subject.punish_user
-      expect(Guardian.new(user).can_create_post?(nil)).to be_false
-    end
-
-    it 'sends private message to moderators' do
-      moderator = Fabricate(:moderator)
-      GroupMessage.expects(:create).with do |group, msg_type, params|
-        group == Group[:moderators].name and msg_type == :user_automatically_blocked and params[:user].id == user.id
+    context 'user is not blocked' do
+      before do
+        UserBlocker.expects(:block).with(user, nil, has_entries(message: :too_many_spam_flags)).returns(true)
       end
-      subject.punish_user
+
+      it 'prevents the user from making new posts' do
+        subject.punish_user
+        expect(Guardian.new(user).can_create_post?(nil)).to be_false
+      end
+
+      it 'sends private message to moderators' do
+        moderator = Fabricate(:moderator)
+        GroupMessage.expects(:create).with do |group, msg_type, params|
+          group == Group[:moderators].name and msg_type == :user_automatically_blocked and params[:user].id == user.id
+        end
+        subject.punish_user
+      end
+    end
+
+    context 'user is already blocked' do
+      before do
+        UserBlocker.expects(:block).with(user, nil, has_entries(message: :too_many_spam_flags)).returns(false)
+      end
+
+      it "doesn't send a pm to moderators if the user is already blocked" do
+        GroupMessage.expects(:create).never
+        subject.punish_user
+      end
     end
   end
 

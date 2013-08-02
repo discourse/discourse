@@ -48,8 +48,9 @@ class SpamRulesEnforcer
 
   def punish_user
     Post.transaction do
-      UserBlocker.block(@user, nil, {message: :too_many_spam_flags})
-      GroupMessage.create(Group[:moderators].name, :user_automatically_blocked, {user: @user, limit_once_per: false})
+      if UserBlocker.block(@user, nil, {message: :too_many_spam_flags})
+        GroupMessage.create(Group[:moderators].name, :user_automatically_blocked, {user: @user, limit_once_per: false})
+      end
     end
   end
 
