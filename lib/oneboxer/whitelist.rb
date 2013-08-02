@@ -8,10 +8,9 @@
 #******************************************************************************#
 
 module Oneboxer
-  
   module Whitelist
     def self.entries
-      [
+      @entries ||= [
        Entry.new(/^https?:\/\/(?:www\.)?findery\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?zappos\.com\/.+/),
        Entry.new(/^https?:\/\/(?:www\.)?slideshare\.net\/.+/),
@@ -97,23 +96,21 @@ module Oneboxer
       nil
     end
 
-    private
-
-      class Entry
-        # oembed = false is probably safer, but this is the least-drastic change
-        def initialize(pattern, oembed = true)
-          @pattern = pattern
-          @oembed = oembed
-        end
-
-        def allows_oembed?
-          @oembed
-        end
-
-        def matches?(url)
-          url =~ @pattern
-        end
+    class Entry
+      # oembed = false is probably safer, but this is the least-drastic change
+      def initialize(pattern, oembed = true)
+        @pattern = pattern
+        @oembed = oembed
       end
+
+      def allows_oembed?
+        @oembed
+      end
+
+      def matches?(url)
+        url =~ @pattern
+      end
+    end
 
   end
 
