@@ -52,9 +52,9 @@ I'm pleased with Mandrill's setup - this is the Right Way to do things.
 
 1. Click 'Edit' to document for what we'll be using this key.
 
-![mandrill email signup](https://raw.github.com/discourse/discourse-docimages/master/email/email%20-%20mandrill%20editapikey2.png)
+![mandrill email signup](http://i.imgur.com/1EbppyV.png)
 
-1. Since we'll only be using this key for sending email and *nothing else*, check 'Only Allow This Key To Use Certain API Calls' and select only Messages / Send
+1. Since we'll only be using this key for sending email and *nothing else*, check 'Only Allow This Key To Use Certain API Calls' and select only Messages / Send and Messages/ Send-Raw.
 
 ![mandrill email signup](https://raw.github.com/discourse/discourse-docimages/master/email/email%20-%20mandrill%20editapikey3.png)
 
