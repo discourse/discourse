@@ -492,7 +492,7 @@ en:
       add_title_with_attachments: "Add image or file"
       remote_title: "remote image"
       remote_title_with_attachments: "remote image or file"
-      remote_tip: "enter address of an image in the form http://example.com/image.jpg (allowed extensions: {{authorized_extensions}})."
+      remote_tip: "enter address of an image in the form http://example.com/image.jpg"
       remote_tip_with_attachments: "enter address of an image or a file in the form http://example.com/file.ext (allowed extensions: {{authorized_extensions}})."
       local_title: "local image"
       local_title_with_attachments: "local image or file"
