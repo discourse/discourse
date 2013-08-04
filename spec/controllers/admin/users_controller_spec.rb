@@ -137,14 +137,14 @@ describe Admin::UsersController do
       end
 
       it "upgrades the user's trust level" do
-        AdminLogger.any_instance.expects(:log_trust_level_change).with(@another_user, 2).once
+        StaffActionLogger.any_instance.expects(:log_trust_level_change).with(@another_user, 2).once
         xhr :put, :trust_level, user_id: @another_user.id, level: 2
         @another_user.reload
         @another_user.trust_level.should == 2
       end
 
       it "raises an error when demoting a user below their current trust level" do
-        AdminLogger.any_instance.expects(:log_trust_level_change).with(@another_user, TrustLevel.levels[:newuser]).never
+        StaffActionLogger.any_instance.expects(:log_trust_level_change).with(@another_user, TrustLevel.levels[:newuser]).never
         @another_user.topics_entered = SiteSetting.basic_requires_topics_entered + 1
         @another_user.posts_read_count = SiteSetting.basic_requires_read_posts + 1
         @another_user.time_read = SiteSetting.basic_requires_time_spent_mins * 60
@@ -216,6 +216,13 @@ describe Admin::UsersController do
         Fabricate(:post, user: @delete_me)
         xhr :delete, :destroy, id: @delete_me.id
         response.should be_forbidden
+      end
+
+      it "doesn't return an error if the user has posts and delete_posts == true" do
+        Fabricate(:post, user: @delete_me)
+        UserDestroyer.any_instance.expects(:destroy).with(@delete_me, has_entry('delete_posts' => true)).returns(true)
+        xhr :delete, :destroy, id: @delete_me.id, delete_posts: true
+        response.should be_success
       end
 
       it "deletes the user record" do

@@ -27,8 +27,8 @@ Discourse.Session.reopenClass({
     }
 
     // If we found the current session
-    if (property) {
-      if (value) {
+    if (typeof property !== "undefined") {
+      if (typeof value !== "undefined") {
         this.currentSession.set(property, value);
       } else {
         return this.currentSession.get(property);

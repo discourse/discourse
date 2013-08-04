@@ -25,6 +25,7 @@ Discourse.Post = Discourse.Model.extend({
   // Posts can show up as deleted if the topic is deleted
   deletedViaTopic: Em.computed.and('firstPost', 'topic.deleted_at'),
   deleted: Em.computed.or('deleted_at', 'deletedViaTopic'),
+  notDeleted: Em.computed.not('deleted'),
 
   postDeletedBy: function() {
     if (this.get('firstPost')) { return this.get('topic.deleted_by'); }
@@ -234,7 +235,7 @@ Discourse.Post = Discourse.Model.extend({
       });
     } else {
       this.setProperties({
-        cooked: Discourse.Markdown.cook(I18n.t("post.deleted_by_author")),
+        cooked: Discourse.Markdown.cook(I18n.t("post.deleted_by_author", {count: Discourse.SiteSettings.delete_removed_posts_after})),
         can_delete: false,
         version: this.get('version') + 1,
         can_recover: true,

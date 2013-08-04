@@ -20,10 +20,19 @@ module DiscourseUpdates
         )
       end
 
-      if version_info.updated_at.nil? or
-          (version_info.missing_versions_count == 0 and version_info.latest_version != version_info.installed_version)
-        # Version check data is out of date.
-        Jobs.enqueue(:version_check, all_sites: true)
+      if SiteSetting.version_checks?
+
+        # Handle cases when version check data is old so we report something that makes sense
+
+        if (version_info.updated_at.nil? or
+            (version_info.missing_versions_count == 0 and version_info.latest_version != version_info.installed_version) or
+            (version_info.missing_versions_count != 0 and version_info.latest_version == version_info.installed_version))
+          Jobs.enqueue(:version_check, all_sites: true)
+        end
+
+        if !version_info.updated_at.nil? and version_info.latest_version == version_info.installed_version
+          version_info.missing_versions_count = 0
+        end
       end
 
       version_info

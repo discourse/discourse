@@ -42,10 +42,9 @@ class User < ActiveRecord::Base
   has_one :user_search_data
 
   validates_presence_of :username
-  validates_presence_of :email
-  validates_uniqueness_of :email
   validate :username_validator
-  validate :email_validator, if: :email_changed?
+  validates :email, presence: true, uniqueness: true
+  validates :email, email: true, if: :email_changed?
   validate :password_validator
 
   before_save :cook
@@ -563,24 +562,6 @@ class User < ActiveRecord::Base
         errors.add(:username, I18n.t(:'user.username.unique'))
       end
     end
-  end
-
-  def email_validator
-    if (setting = SiteSetting.email_domains_whitelist).present?
-      unless email_in_restriction_setting?(setting)
-        errors.add(:email, I18n.t(:'user.email.not_allowed'))
-      end
-    elsif (setting = SiteSetting.email_domains_blacklist).present?
-      if email_in_restriction_setting?(setting)
-        errors.add(:email, I18n.t(:'user.email.not_allowed'))
-      end
-    end
-  end
-
-  def email_in_restriction_setting?(setting)
-    domains = setting.gsub('.', '\.')
-    regexp = Regexp.new("@(#{domains})", true)
-    self.email =~ regexp
   end
 
   def password_validator

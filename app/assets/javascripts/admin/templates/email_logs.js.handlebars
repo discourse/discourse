@@ -1,29 +1,31 @@
 <table class='table'>
-  <tr>
-    <th>{{i18n admin.email.sent_at}}</th>
-    <th>{{i18n admin.email.user}}</th>
-    <th>{{i18n admin.email.to_address}}</th>
-    <th>{{i18n admin.email.email_type}}</th>
-    <th>{{i18n admin.email.reply_key}}</th>
-  </tr>
+  <thead>
+    <tr>
+      <th>{{i18n admin.email.sent_at}}</th>
+      <th>{{i18n admin.email.user}}</th>
+      <th>{{i18n admin.email.to_address}}</th>
+      <th>{{i18n admin.email.email_type}}</th>
+      <th>{{i18n admin.email.reply_key}}</th>
+    </tr>
+  </thead>
 
   {{#if model.length}}
-    {{#group}}
-      {{#collection contentBinding="model" tagName="tbody" itemTagName="tr"}}
-          <td>{{date created_at}}</td>
-          <td>
-            {{#if user}}
-              {{#linkTo 'adminUser' user}}{{avatar user imageSize="tiny"}}{{/linkTo}}
-              {{#linkTo 'adminUser' user}}{{user.username}}{{/linkTo}}
-            {{else}}
-              &mdash;
-            {{/if}}
-          </td>
-          <td><a href='mailto:{{unbound to_address}}'>{{to_address}}</a></td>
-          <td>{{email_type}}</td>
-          <td>{{reply_key}}</td>
-      {{/collection}}
-    {{/group}}
+    {{#groupedEach model}}
+      <tr>
+        <td>{{date created_at}}</td>
+        <td>
+          {{#if user}}
+            {{#linkTo 'adminUser' user}}{{avatar user imageSize="tiny"}}{{/linkTo}}
+            {{#linkTo 'adminUser' user}}{{user.username}}{{/linkTo}}
+          {{else}}
+            &mdash;
+          {{/if}}
+        </td>
+        <td><a href='mailto:{{unbound to_address}}'>{{to_address}}</a></td>
+        <td>{{email_type}}</td>
+        <td>{{reply_key}}</td>
+      </tr>
+    {{/groupedEach}}
   {{/if}}
 
 </table>

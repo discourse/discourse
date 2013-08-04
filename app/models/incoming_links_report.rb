@@ -62,29 +62,25 @@ class IncomingLinksReport
     report.y_titles[:num_users] = I18n.t("reports.#{report.type}.num_users")
 
     num_clicks  = link_count_per_domain
-    num_topics = topic_count_per_domain
-    num_users  = user_count_per_domain
+    num_topics = topic_count_per_domain(num_clicks.keys)
     report.data = []
     num_clicks.keys.each do |domain|
-      report.data << {domain: domain, num_clicks: num_clicks[domain], num_topics: num_topics[domain], num_users: num_users[domain]}
+      report.data << {domain: domain, num_clicks: num_clicks[domain], num_topics: num_topics[domain]}
     end
     report.data = report.data.sort_by {|x| x[:num_clicks]}.reverse[0,10]
   end
 
-  def self.per_domain
-    @per_domain_query ||= IncomingLink.where('created_at > ? AND domain IS NOT NULL', 30.days.ago).group('domain')
+  def self.link_count_per_domain(limit=10)
+    IncomingLink.where('created_at > ? AND domain IS NOT NULL', 30.days.ago).group('domain').order('count_all DESC').limit(limit).count
   end
 
-  def self.link_count_per_domain
-    per_domain.count
+  def self.per_domain(domains)
+    IncomingLink.where('created_at > ? AND domain IN (?)', 30.days.ago, domains).group('domain')
   end
 
-  def self.topic_count_per_domain
-    per_domain.count('topic_id', distinct: true)
-  end
-
-  def self.user_count_per_domain
-    per_domain.count('user_id', distinct: true)
+  def self.topic_count_per_domain(domains)
+    # COUNT(DISTINCT) is slow
+    per_domain(domains).count('topic_id', distinct: true)
   end
 
 

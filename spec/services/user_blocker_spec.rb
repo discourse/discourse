@@ -53,6 +53,13 @@ describe UserBlocker do
       SystemMessage.expects(:create).never
       block_user
     end
+
+    it "doesn't send a pm if the user is already blocked" do
+      user.stubs(:blocked?).returns(true)
+      SystemMessage.unstub(:create)
+      SystemMessage.expects(:create).never
+      block_user.should == false
+    end
   end
 
   describe 'unblock' do

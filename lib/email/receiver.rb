@@ -87,12 +87,10 @@ module Email
     end
 
     def discourse_email_parser
-      lines = @body.lines
+      lines = @body.lines.to_a
       range_end = 0
 
-      email_year =
-      lines.each_with_index do |l, idx|
-
+      email_year = lines.each_with_index do |l, idx|
         break if l =~ /\A\s*\-{3,80}\s*\z/ ||
                  l =~ Regexp.new("\\A\\s*" + I18n.t('user_notifications.previous_discussion') + "\\s*\\Z") ||
                  # This one might be controversial but so many reply lines have years, times and end with a colon.

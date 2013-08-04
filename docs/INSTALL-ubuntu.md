@@ -1,19 +1,18 @@
-# Discourse Install Guide on Ubuntu
+# Official Discourse Install Guide
 
-## What kind of hardware do you have?
+## Recommended Server Hardware
 
-- Recommended minimum configuration is:
-  - 2 GB of RAM
-  - 2 GB of swap
-  - 2 processor cores
-- With 2GB of memory and dual cores, you can run two instances of the thin
-  server (`NUM_WEBS=2`)
+- 2 GB of RAM
+- 2 GB of swap
+- 2 processor cores
 
-1 GB of memory, 3GB of swap and a single core CPU are the minimums for a
-steady state, running Discourse forum -- but it's simpler to just throw a bit
-more hardware at the problem if you can, particularly during the install.
+With 2 GB of memory and dual cores, you can run two instances of the thin server (`NUM_WEBS=2`), and easily host anything but the largest of forums.
+
+1 GB of memory, 3 GB of swap and a single core CPU are the minimums for a steady state, running Discourse forum &ndash; but it's simpler to just throw a bit more hardware at the problem if you can, particularly during the install.
 
 ## Install Ubuntu Server 12.04 LTS with the package groups:
+
+Yes, you can in theory pick the distro of your choice, but to keep this guide sane, we're picking one, and it's Ubuntu. Feel free to substitute the distro of your choice, the steps are mostly the same.
 
 ![screenshot of package group selection screen](https://raw.github.com/discourse/discourse-docimages/master/install/ubuntu%20-%20install%20-%20software%20selection.png)
 
@@ -144,10 +143,13 @@ Continue with Discourse installation
     # Install bundler
     gem install bundler
 
-    # Pull down the latest release
+    # Pull down the latest code
     git clone git://github.com/discourse/discourse.git
     cd discourse
-    git checkout latest-release
+    git checkout master
+    
+    # To run on the most recent numbered release instead of bleeding-edge:
+    #git checkout latest-release
 
     # Install necessary gems
     bundle install --deployment --without test
@@ -309,12 +311,12 @@ The corresponding site setting is:
     DATESTAMP=$(TZ=UTC date +%F-%T)
     pg_dump --no-owner --clean discourse_prod | gzip -c > ~/discourse-db-$DATESTAMP.sql.gz
     tar cfz ~/discourse-dir-$DATESTAMP.tar.gz -C ~ discourse
-    # Pull down the latest release
+    # get the latest Discourse code
     cd ~/discourse
     git checkout master
     git pull
     git fetch --tags
-    # To run on the latest version instead of bleeding-edge:
+    # To run on the latest numbered release instead of bleeding-edge:
     #git checkout latest-release
     #
     # Follow the section below titled:
@@ -327,8 +329,6 @@ The corresponding site setting is:
     crontab -l
     # Here, run the command to start bluepill.
     # Get it from the crontab output above.
-
-Note that if bluepill *itself* needs to be restarted, it must be killed with `bluepill quit` and restarted with the same command that's in crontab
 
 ### Check sample configuration files for new settings
 
@@ -344,7 +344,7 @@ Check the sample configuration files provided in the repo with the ones being us
 
     $ diff -u config/discourse.pill.sample config/discourse.pill
     --- config/discourse.pill.sample  2013-07-15 17:38:06.501507001 +0000
-    +++ config/discourse.pill	2013-07-05 06:38:27.133506896 +0000
+    +++ config/discourse.pill  2013-07-05 06:38:27.133506896 +0000
     @@ -46,7 +46,7 @@
 
        app.working_dir = rails_root
@@ -378,3 +378,7 @@ This change reflects us switching to using `FileUtils.mkdir_p` instead of `Dir.m
 This change reflects a change in placeholder information plus (importantly)
 adding the `client_max_body_size 2m;` directive to the nginx.conf. This change
 should also be made to your production file.
+
+## Security
+
+We take security very seriously at Discourse, and all our code is 100% open source and peer reviewed. Please read [our security guide](https://github.com/discourse/discourse/blob/master/docs/SECURITY.md) for an overview of security measures in Discourse.

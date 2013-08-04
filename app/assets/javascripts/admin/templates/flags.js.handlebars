@@ -22,17 +22,17 @@
         </tr>
       </thead>
       <tbody>
-        {{#each flag in content}}
-        <tr {{bindAttr class="flag.extraClasses"}}>
+        {{#each flaggedPost in content}}
+        <tr {{bindAttr class="flaggedPost.extraClasses"}}>
 
-          <td class='user'>{{#if flag.user}}{{#linkTo 'adminUser' flag.user}}{{avatar flag.user imageSize="small"}}{{/linkTo}}{{/if}}</td>
+          <td class='user'>{{#if flaggedPost.user}}{{#linkTo 'adminUser' flaggedPost.user}}{{avatar flaggedPost.user imageSize="small"}}{{/linkTo}}{{/if}}</td>
 
-          <td class='excerpt'>{{#if flag.topicHidden}}<i title='{{i18n topic_statuses.invisible.help}}' class='icon icon-eye-close'></i> {{/if}}<h3><a href='{{unbound flag.url}}'>{{flag.title}}</a></h3><br>{{{flag.excerpt}}}
+          <td class='excerpt'>{{#if flaggedPost.topicHidden}}<i title='{{i18n topic_statuses.invisible.help}}' class='icon icon-eye-close'></i> {{/if}}<h3><a href='{{unbound flaggedPost.url}}'>{{flaggedPost.title}}</a></h3><br>{{{flaggedPost.excerpt}}}
           </td>
 
           <td class='flaggers'>
             <table>
-              {{#each flag.flaggers}}
+              {{#each flaggedPost.flaggers}}
               <tr>
                 <td>
                   {{#linkTo 'adminUser' this.user}}{{avatar this.user imageSize="small"}} {{/linkTo}}
@@ -50,7 +50,7 @@
 
         </tr>
 
-          {{#each flag.messages}}
+          {{#each flaggedPost.messages}}
             <tr>
               <td></td>
               <td class='message'>
@@ -64,14 +64,19 @@
         <tr>
             <td colspan="4" class="action">
             {{#if adminActiveFlagsView}}
-              {{#if flag.postHidden}}
-                <button title='{{i18n admin.flags.disagree_unhide_title}}' class='btn' {{action disagreeFlags flag}}><i class="icon-thumbs-down"></i>  {{i18n admin.flags.disagree_unhide}}</button>
-                <button title='{{i18n admin.flags.defer_title}}' class='btn' {{action deferFlags flag}}><i class="icon-external-link"></i> {{i18n admin.flags.defer}}</button>
+              {{#if flaggedPost.postHidden}}
+                <button title='{{i18n admin.flags.disagree_unhide_title}}' class='btn' {{action disagreeFlags flaggedPost}}><i class="icon-thumbs-down"></i>  {{i18n admin.flags.disagree_unhide}}</button>
+                <button title='{{i18n admin.flags.defer_title}}' class='btn' {{action deferFlags flaggedPost}}><i class="icon-external-link"></i> {{i18n admin.flags.defer}}</button>
               {{else}}
-                <button title='{{i18n admin.flags.agree_hide_title}}' class='btn' {{action agreeFlags flag}}><i class="icon-thumbs-up"></i> {{i18n admin.flags.agree_hide}}</button>
-                <button title='{{i18n admin.flags.disagree_title}}' class='btn' {{action disagreeFlags flag}}><i class="icon-thumbs-down"></i> {{i18n admin.flags.disagree}}</button>
+                <button title='{{i18n admin.flags.agree_hide_title}}' class='btn' {{action agreeFlags flaggedPost}}><i class="icon-thumbs-up"></i> {{i18n admin.flags.agree_hide}}</button>
+                <button title='{{i18n admin.flags.disagree_title}}' class='btn' {{action disagreeFlags flaggedPost}}><i class="icon-thumbs-down"></i> {{i18n admin.flags.disagree}}</button>
               {{/if}}
-              <button title='{{i18n admin.flags.delete_post_title}}' class='btn' {{action deletePost flag}}><i class="icon-trash"></i> {{i18n admin.flags.delete_post}}</button>
+
+              {{#if flaggedPost.canDeleteAsSpammer}}
+                <button title='{{i18n admin.flags.delete_spammer_title}}' class="btn" {{action deleteSpammer flaggedPost}}><i class="icon icon-warning-sign"></i> {{i18n flagging.delete_spammer}}</button>
+              {{/if}}
+
+              <button title='{{i18n admin.flags.delete_post_title}}' class='btn' {{action deletePost flaggedPost}}><i class="icon-trash"></i> {{i18n admin.flags.delete_post}}</button>
             {{/if}}
             </td>
         </tr>

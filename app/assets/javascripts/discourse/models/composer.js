@@ -394,9 +394,16 @@ Discourse.Composer = Discourse.Model.extend({
       var topic = this.get('topic');
       topic.setProperties({
         title: this.get('title'),
-        fancy_title: this.get('title'),
-        categoryName: this.get('categoryName')
+        fancy_title: this.get('title')
       });
+
+      var category = Discourse.Category.list().findProperty('name', this.get('categoryName'));
+      if (category) {
+        topic.setProperties({
+          categoryName: category.get('name'),
+          category_id: category.get('id')
+        });
+      }
       topic.save();
     }
 

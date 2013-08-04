@@ -7,21 +7,22 @@ class DiscoursePluginRegistry
     attr_accessor :javascripts
     attr_accessor :server_side_javascripts
     attr_accessor :stylesheets
+
+    # Default accessor values
+    #
+    def stylesheets
+      @stylesheets ||= Set.new
+    end
+
+    def javascripts
+      @javascripts ||= Set.new
+    end
+
+    def server_side_javascripts
+      @server_side_javascripts ||= Set.new
+    end
   end
 
-  # Default accessor values
-  #
-  def self.stylesheets
-    @stylesheets ||= Set.new
-  end
-
-  def self.javascripts
-    @javascripts ||= Set.new
-  end
-
-  def self.server_side_javascripts
-    @server_side_javascripts ||= Set.new
-  end
 
   def register_js(filename, options={})
     # If we have a server side option, add that too.

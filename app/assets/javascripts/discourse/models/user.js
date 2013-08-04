@@ -301,7 +301,7 @@ Discourse.User.reopenClass({
     }
 
     // If we found the current user
-    if (this.currentUser && property) {
+    if (this.currentUser && (typeof property !== "undefined")) {
       return this.currentUser.get(property);
     }
 
@@ -331,9 +331,9 @@ Discourse.User.reopenClass({
     @param {String} username A username to check
     @param {String} email An email address to check
   **/
-  checkUsername: function(username, email) {
+  checkUsername: function(username, email, forUserId) {
     return Discourse.ajax('/users/check_username', {
-      data: { username: username, email: email }
+      data: { username: username, email: email, for_user_id: forUserId }
     });
   },
 

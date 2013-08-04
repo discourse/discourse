@@ -3,9 +3,7 @@ require_dependency 'discourse_version_check'
 
 describe Admin::DashboardController do
   before do
-    #NOTE: Rails.cache should be blanked between tests, at the moment we can share state with it
-    # that is seriously bust on quite a few levels
-    Rails.cache.delete("admin-dashboard-data-#{Discourse::VERSION::STRING}")
+    AdminDashboardData.stubs(:fetch_cached_stats).returns({reports:[]})
     Jobs::VersionCheck.any_instance.stubs(:execute).returns(true)
   end
 
@@ -44,13 +42,6 @@ describe Admin::DashboardController do
           json = JSON.parse(response.body)
           json['version_check'].should_not be_present
         end
-      end
-
-      it 'returns report data' do
-        xhr :get, :index
-        json = JSON.parse(response.body)
-        json.should have_key('reports')
-        json['reports'].should be_a(Array)
       end
     end
 

@@ -150,8 +150,8 @@ class Guardian
     user && is_staff?
   end
 
-  def can_delete_user?(user_to_delete)
-    can_administer?(user_to_delete) && user_to_delete.post_count <= 0
+  def can_delete_user?(user)
+    user && is_staff? && !user.admin? && user.created_at > SiteSetting.delete_user_max_age.to_i.days.ago
   end
 
   # Can we see who acted on a post in a particular way?
@@ -203,7 +203,7 @@ class Guardian
   end
 
   def can_delete_all_posts?(user)
-    is_staff? && user.created_at >= 7.days.ago
+    is_staff? && user && !user.admin? && user.created_at >= 7.days.ago && user.post_count <= SiteSetting.delete_all_posts_max.to_i
   end
 
   def can_remove_allowed_users?(topic)

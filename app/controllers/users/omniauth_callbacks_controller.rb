@@ -20,15 +20,28 @@ class Users::OmniauthCallbacksController < ApplicationController
   skip_before_filter :verify_authenticity_token, only: :complete
 
   def complete
-    # Make sure we support that provider
     provider = params[:provider]
-    raise Discourse::InvalidAccess.new unless self.class.types.keys.map(&:to_s).include?(provider)
 
-    # Check if the provider is enabled
-    raise Discourse::InvalidAccess.new("provider is not enabled") unless SiteSetting.send("enable_#{provider}_logins?")
+    # If we are a plugin, then try to login with it
+    found = false
+    Discourse.auth_providers.each do |p|
+      if p.name == provider && p.type == :open_id
+        create_or_sign_on_user_using_openid request.env["omniauth.auth"]
+        found = true
+        break
+      end
+    end
 
-    # Call the appropriate logic
-    send("create_or_sign_on_user_using_#{provider}", request.env["omniauth.auth"])
+    unless found
+      # Make sure we support that provider
+      raise Discourse::InvalidAccess.new unless self.class.types.keys.map(&:to_s).include?(provider)
+
+      # Check if the provider is enabled
+      raise Discourse::InvalidAccess.new("provider is not enabled") unless SiteSetting.send("enable_#{provider}_logins?")
+
+      # Call the appropriate logic
+      send("create_or_sign_on_user_using_#{provider}", request.env["omniauth.auth"])
+    end
 
     @data[:awaiting_approval] = true if invite_only?
 
@@ -197,6 +210,8 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     if user_open_id.blank? && user = User.find_by_email(email)
       # we trust so do an email lookup
+      # TODO some openid providers may not be trust worthy, allow for that
+      #  for now we are good (google, yahoo are trust worthy)
       user_open_id = UserOpenId.create(url: identity_url , user_id: user.id, email: email, active: true)
     end
 
@@ -237,18 +252,32 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     data = auth_token[:info]
     screen_name = data["nickname"]
+    email = data["email"]
     github_user_id = auth_token["uid"]
 
     session[:authentication] = {
       github_user_id: github_user_id,
-      github_screen_name: screen_name
+      github_screen_name: screen_name,
+      email: email,
+      email_valid: true
     }
 
     user_info = GithubUserInfo.where(github_user_id: github_user_id).first
 
+    if !user_info && user = User.find_by_email(email)
+      # we trust so do an email lookup
+      user_info = GithubUserInfo.create(
+          user_id: user.id,
+          screen_name: screen_name,
+          github_user_id: github_user_id
+      )
+    end
+
     @data = {
       username: screen_name,
-      auth_provider: "Github"
+      auth_provider: "Github",
+      email: email,
+      email_valid: true
     }
 
     process_user_info(user_info, screen_name)

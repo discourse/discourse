@@ -87,6 +87,7 @@ class SiteSetting < ActiveRecord::Base
   setting(:apple_touch_icon_url, '/assets/default-apple-touch-icon.png')
 
   setting(:ninja_edit_window, 5.minutes.to_i)
+  client_setting(:delete_removed_posts_after, 24) # hours
   setting(:post_undo_action_window_mins, 10)
   setting(:system_username, '')
   setting(:max_mentions_per_post, 10)
@@ -235,6 +236,10 @@ class SiteSetting < ActiveRecord::Base
 
   client_setting(:relative_date_duration, 14)
 
+  setting(:delete_user_max_age, 7)
+  setting(:delete_all_posts_max, 10)
+
+
   def self.generate_api_key!
     self.api_key = SecureRandom.hex(32)
   end
@@ -285,15 +290,15 @@ class SiteSetting < ActiveRecord::Base
   def self.authorized_uploads
     authorized_extensions.tr(" ", "")
                          .split("|")
-                         .map { |extension| (extension.start_with?(".") ? "" : ".") + extension }
+                         .map { |extension| (extension.start_with?(".") ? extension[1..-1] : extension).gsub(".", "\.") }
   end
 
   def self.authorized_upload?(file)
-    authorized_uploads.count > 0 && file.original_filename =~ /(#{authorized_uploads.join("|")})$/i
+    authorized_uploads.count > 0 && file.original_filename =~ /\.(#{authorized_uploads.join("|")})$/i
   end
 
   def self.images
-    @images ||= Set.new [".jpg", ".jpeg", ".png", ".gif", ".tif", ".tiff", ".bmp"]
+    @images ||= Set.new ["jpg", "jpeg", "png", "gif", "tif", "tiff", "bmp"]
   end
 
   def self.authorized_images
@@ -301,7 +306,7 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.authorized_image?(file)
-    authorized_images.count > 0 && file.original_filename =~ /(#{authorized_images.join("|")})$/i
+    authorized_images.count > 0 && file.original_filename =~ /\.(#{authorized_images.join("|")})$/i
   end
 
 end

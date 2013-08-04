@@ -95,7 +95,7 @@ en:
     'new-reply': |
       Welcome to %{site_name} &mdash; **thanks for contributing to the conversation!**
 
-      - Does your reply improve the conversation in some way, however small?
+      - Does your reply improve the conversation in some way?
 
       - Be kind to your fellow community members.
 
@@ -467,6 +467,7 @@ en:
     queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     crawl_images: "Enable retrieving images from third party sources to insert width and height dimensions"
     ninja_edit_window: "Number of seconds after posting where edits do not create a new version"
+    delete_removed_posts_after: "Number of hours after which a post that was removed by its author will be deleted."
     max_image_width: "Maximum allowed width of images in a post"
     category_featured_topics: "Number of topics displayed per category in the /categories page"
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains) changing this requires you update all your baked markdown with: \"rake posts:rebake\""
@@ -510,8 +511,8 @@ en:
     must_approve_users: "Admins must approve all users before they gain access"
     ga_tracking_code: "Google analytics tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
     ga_domain_name: "Google analytics domain name, eg: mysite.com; see http://google.com/analytics"
-    enable_escaped_fragments: "Enable workaround solution to help old crawlers to index your site. WARNING: enable it only if you are really have to do it."
-    enable_noscript_support: "Enable supporting &lt;noscipt&gt; tag"
+    enable_escaped_fragments: "Enable workaround solution to help old crawlers to index your site. WARNING: enable it only if you really have to do it."
+    enable_noscript_support: "Enable supporting &lt;noscript&gt; tag"
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|hot|read|favorited|unread|new|posted|categories"
     post_menu: "Determine which items appear on the post menu, and in what order. Example fuck|edit|flag|delete|share|bookmark|reply"
     share_links: "Determine which items appear on the share dialog, and in what order. Example twitter|facebook|google+|email"
@@ -658,7 +659,8 @@ en:
     minimum_topics_similar: "How many topics need to exist in the database before similar topics are presented."
 
     relative_date_duration: "Number of days after posting where post dates will be shown as relative instead of absolute. Examples: relative date: 7d, absolute date: 20 Feb"
-
+    delete_user_max_age: "The maximum age of a user, in days, which can be deleted by an admin."
+    delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
 
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"
@@ -710,7 +712,7 @@ en:
     not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
     incorrect_username_email_or_password: "Incorrect username, email or password"
     wait_approval: "Thanks for signing up. We will notify you when your account has been approved."
-    active: "Your account is active and ready."
+    active: "Your account is activated and ready to use."
     activate_email: "You're almost done! We sent an activation email to <b>%{email}</b>. Please follow the instructions in the email to activate your account."
     not_activated: "You can't log in yet. We sent an activation email to you. Please follow the instructions in the email to activate your account."
     banned: "You can't log in until %{date}."
@@ -730,6 +732,7 @@ en:
       must_begin_with_alphanumeric: "must begin with a letter or number"
     email:
       not_allowed: "is not allowed from that email provider. Please use another email address."
+      blocked: "is not allowed."
 
   invite_mailer:
     subject_template: "[%{site_name}] %{invitee_name} invited you to join a discussion on %{site_name}"
@@ -933,7 +936,7 @@ en:
   unsubscribe_link: "To unsubscribe from these emails, visit your [user preferences](%{user_preferences_url})."
 
   user_notifications:
-    previous_discussion: "Previous discussion"
+    previous_discussion: "Previous Replies"
     unsubscribe:
       title: "Unsubscribe"
       description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"

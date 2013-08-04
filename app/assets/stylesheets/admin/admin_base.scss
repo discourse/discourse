@@ -489,6 +489,12 @@ table {
       width: 45px;
     }
   }
+
+  .referred-topic-title {
+    width: 410px;
+    @include medium-width { width: 360px; }
+    @include small-width  { width: 320px; }
+  }
 }
 
 

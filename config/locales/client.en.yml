@@ -204,7 +204,7 @@ en:
 
       change_username:
         title: "Change Username"
-        confirm: "There could be consequences to changing your username. Are you absolutely sure you want to?"
+        confirm: "If you change your username, all prior quotes of your posts and @name mentions will be broken. Are you absolutely sure you want to?"
         taken: "Sorry, that username is taken."
         error: "There was an error changing your username."
         invalid: "That username is invalid. It must only include numbers and letters"
@@ -499,11 +499,11 @@ en:
       remote_title: "remote image"
       remote_title_with_attachments: "remote image or file"
       remote_tip: "enter address of an image in the form http://example.com/image.jpg"
-      remote_tip_with_attachments: "enter address of an image or a file in the form http://example.com/file.ext"
+      remote_tip_with_attachments: "enter address of an image or a file in the form http://example.com/file.ext (allowed extensions: {{authorized_extensions}})."
       local_title: "local image"
       local_title_with_attachments: "local image or file"
-      local_tip: "click to select an image from your device."
-      local_tip_with_attachments: "click to select an image or a file from your device."
+      local_tip: "click to select an image from your device"
+      local_tip_with_attachments: "click to select an image or a file from your device (allowed extensions: {{authorized_extensions}})"
       upload_title: "Upload image"
       upload_title_with_attachments: "Upload image or file"
       uploading: "Uploading"
@@ -753,10 +753,13 @@ en:
       edit: "Editing {{link}} by {{replyAvatar}} {{username}}"
       post_number: "post {{number}}"
       in_reply_to: "in reply to"
+      last_edited_on: "post last edited on"
       reply_as_new_topic: "Reply as new Topic"
       continue_discussion: "Continuing the discussion from {{postLink}}:"
       follow_quote: "go to the quoted post"
-      deleted_by_author: "(post removed by author)"
+      deleted_by_author:
+        one: "(post withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
+        other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
       deleted_by: "deleted by"
       expand_collapse: "expand/collapse"
 
@@ -931,6 +934,9 @@ en:
       action: 'Flag Post'
       take_action: "Take Action"
       notify_action: 'Notify'
+      delete_spammer: "Delete Spammer"
+      delete_confirm: "You are about to delete <b>%{posts}</b> posts and <b>%{topics}</b> topics from this user, remove their account, and add their email address <b>%{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
+      yes_delete_spammer: "Yes, Delete Spammer"
       cant: "Sorry, you can't flag this post at this time."
       custom_placeholder_notify_user: "Why does this post require you to speak to this user directly and privately? Be specific, be constructive, and always be kind."
       custom_placeholder_notify_moderators: "Why does this post require moderator attention? Let us know specifically what you are concerned about, and provide relevant links where possible."
@@ -1027,6 +1033,7 @@ en:
 
       dashboard:
         title: "Dashboard"
+        last_updated: "Dashboard last updated:"
         version: "Version"
         up_to_date: "You're up to date!"
         critical_available: "A critical update is available."
@@ -1078,6 +1085,7 @@ en:
         disagree_unhide_title: "Remove any flags from this post and make the post visible again"
         disagree: "Disagree"
         disagree_title: "Disagree with flag, remove any flags from this post"
+        delete_spammer_title: "Delete the user and all its posts and topics."
 
         flagged_by: "Flagged by"
         error: "Something went wrong"
@@ -1240,6 +1248,8 @@ en:
         delete: "Delete User"
         delete_forbidden: "This user can't be deleted because there are posts. Delete all this user's posts first."
         delete_confirm: "Are you SURE you want to permanently delete this user from the site? This action is permanent!"
+        delete_and_block: "<b>Yes</b>, and <b>block</b> signups with the same email address"
+        delete_dont_block: "<b>Yes</b>, and <b>allow</b> signups with the same email address"
         deleted: "The user was deleted."
         delete_failed: "There was an error deleting that user. Make sure all posts are deleted before trying to delete the user."
         send_activation_email: "Send Activation Email"

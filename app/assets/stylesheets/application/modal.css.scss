@@ -279,9 +279,6 @@
       .topic-title {
         font-size: 13px;
         font-weight: normal;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
       }
       &.btn-reply-here {
         @include linear-gradient(#ddd, #ddd);
@@ -294,6 +291,32 @@
       float: right;
       margin-right: 5px;
     }
+  }
+}
+
+.delete-user-modal {
+  .modal-footer {
+    .btn {
+      font-weight: normal;
+      text-align: left;
+      font-size: 14px;
+      line-height: 20px;
+      margin-bottom: 10px;
+      display: inline-block;
+      margin-left: 0;
+    }
+    .cancel {
+      text-decoration: underline;
+      display: block;
+      margin-right: 5px;
+    }
+  }
+}
+
+.flagging-delete-spammer {
+  .modal-footer .cancel {
+    text-decoration: underline;
+    margin-left: 10px;
   }
 }
 

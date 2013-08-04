@@ -39,6 +39,8 @@
       display: inline-block;
       margin-top: 2px;
       vertical-align: top;
+      font-size: 23px;
+      line-height: 23px;
     }
   }
   h1 > .badge-category {
@@ -155,11 +157,10 @@
     }
   }
   a.mention, .ac-wrap .item span {
-    @include border-radius-all(5px);
-    @include linear-gradient(lighten($light_gray, 10%), $light_gray);
-    border: 1px solid $gray;
+    @include border-radius-all(6px);
+    background-color: $quote-background;
+    padding: 2px 5px;
     color: $darkish_gray;
-    padding: 1px 2px;
   }
   a.mention {
     cursor: pointer;
@@ -195,19 +196,19 @@
 
   // When we are quoting something
   aside.quote {
-    border-left: 5px solid #d7d7d7;
+    border-left: 5px solid darken($quote-background, 20%);
     margin-top: 14px;
     font-size: 14px;
     line-height: 20px;
     padding-left: 5px;
-    background-color: #f1f1f1;
+    background-color: $quote-background;
     overflow: hidden;
     &:nth-of-type(1) {
       margin: 0;
     }
     .title {
       padding: 8px 8px 0px;
-      background-color: #f1f1f1;
+      background-color: $quote-background;
       a,
       .avatar {
         margin-right: 4px;

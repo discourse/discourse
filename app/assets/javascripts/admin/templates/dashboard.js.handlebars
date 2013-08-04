@@ -214,7 +214,13 @@
         {{#each data in top_referred_topics.data}}
           <tbody>
             <tr>
-              <td class="title"><a href="/t/{{unbound data.topic_slug}}/{{unbound data.topic_id}}">{{shorten data.topic_title}}</a></td>
+              <td class="title">
+                <div class="referred-topic-title">
+                  <div class="overflow-ellipsis">
+                    <a href="/t/{{unbound data.topic_slug}}/{{unbound data.topic_id}}">{{data.topic_title}}</a>
+                  </div>
+                </div>
+              </td>
               <td class="value">{{data.num_clicks}}</td>
             </tr>
           </tbody>
@@ -230,7 +236,6 @@
           <th class="title">{{top_traffic_sources.title}} ({{i18n admin.dashboard.reports.last_30_days}})</th>
           <th>{{top_traffic_sources.ytitles.num_clicks}}</th>
           <th>{{top_traffic_sources.ytitles.num_topics}}</th>
-          <th>{{top_traffic_sources.ytitles.num_users}}</th>
         </tr>
       </thead>
       {{#unless loading}}
@@ -240,7 +245,6 @@
               <td class="title">{{domain}}</td>
               <td class="value">{{num_clicks}}</td>
               <td class="value">{{num_topics}}</td>
-              <td class="value">{{num_users}}</td>
             </tr>
           </tbody>
         {{/each}}
@@ -270,5 +274,11 @@
       {{/unless}}
     </table>
   </div>
+</div>
+<div class='clearfix'></div>
+
+<div class="dashboard-stats pull-right">
+  <div class="pull-right">{{i18n admin.dashboard.last_updated}} {{updatedTimestamp}}</div>
+  <div class='clearfix'></div>
 </div>
 <div class='clearfix'></div>

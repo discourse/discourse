@@ -26,7 +26,7 @@ Discourse.PreferencesUsernameController = Discourse.ObjectController.extend({
       this.set('errorMessage', null);
       if (this.blank('newUsername')) return;
       if (this.get('unchanged')) return;
-      Discourse.User.checkUsername(this.get('newUsername')).then(function(result) {
+      Discourse.User.checkUsername(this.get('newUsername'), undefined, this.get('content.id')).then(function(result) {
         if (result.errors) {
           preferencesUsernameController.set('errorMessage', result.errors.join(' '));
         } else if (result.available === false) {

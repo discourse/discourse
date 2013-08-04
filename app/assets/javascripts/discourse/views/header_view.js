@@ -64,25 +64,32 @@ Discourse.HeaderView = Discourse.View.extend({
   },
 
   examineDockHeader: function() {
-    var $body, offset, outlet;
-    if (!this.docAt) {
-      outlet = $('#main-outlet');
-      if (!(outlet && outlet.length === 1)) return;
-      this.docAt = outlet.offset().top;
-    }
-    offset = window.pageYOffset || $('html').scrollTop();
-    if (offset >= this.docAt) {
-      if (!this.dockedHeader) {
-        $body = $('body');
-        $body.addClass('docked');
-        this.dockedHeader = true;
+
+    var headerView = this;
+
+    // Check the dock after the current run loop. While rendering,
+    // it's much slower to calculate `outlet.offset()`
+    Em.run.next(function () {
+      if (!headerView.docAt) {
+        var outlet = $('#main-outlet');
+        if (!(outlet && outlet.length === 1)) return;
+        headerView.docAt = outlet.offset().top;
       }
-    } else {
-      if (this.dockedHeader) {
-        $('body').removeClass('docked');
-        this.dockedHeader = false;
+
+      var offset = window.pageYOffset || $('html').scrollTop();
+      if (offset >= headerView.docAt) {
+        if (!headerView.dockedHeader) {
+          $('body').addClass('docked');
+          headerView.dockedHeader = true;
+        }
+      } else {
+        if (headerView.dockedHeader) {
+          $('body').removeClass('docked');
+          headerView.dockedHeader = false;
+        }
       }
-    }
+    });
+
   },
 
   /**

@@ -46,7 +46,7 @@
 
             {{#unless model.creatingPrivateMessage}}
               <div class="category-input">
-                {{categoryChooser valueAttribute="name" value=model.categoryName showUncategorized="true"}}
+                {{categoryChooser valueAttribute="name" value=model.categoryName}}
                 {{popupInputTip validation=view.categoryValidation shownAt=view.showCategoryTip}}
               </div>
               {{#if model.archetype.hasOptions}}

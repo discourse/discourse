@@ -41,8 +41,16 @@ class AdminDashboardData
       notification_email_check ].compact
   end
 
-  def self.fetch_all
+  def self.fetch_stats
     AdminDashboardData.new
+  end
+  def self.fetch_cached_stats
+    # The DashboardStats job is responsible for generating and caching this.
+    stats = $redis.get(stats_cache_key)
+    stats ? JSON.parse(stats) : nil
+  end
+  def self.stats_cache_key
+    'dash-stats'
   end
 
   def self.fetch_problems
@@ -58,10 +66,14 @@ class AdminDashboardData
       blocked: User.blocked.count,
       top_referrers: IncomingLinksReport.find('top_referrers').as_json,
       top_traffic_sources: IncomingLinksReport.find('top_traffic_sources').as_json,
-      top_referred_topics: IncomingLinksReport.find('top_referred_topics').as_json
-    }.merge(
-      SiteSetting.version_checks? ? {version_check: DiscourseUpdates.check_version.as_json} : {}
-    )
+      top_referred_topics: IncomingLinksReport.find('top_referred_topics').as_json,
+      updated_at: Time.zone.now.as_json
+    }
+  end
+
+  def self.recalculate_interval
+    # Could be configurable, but clockwork + multisite need to support it.
+    30 # minutes
   end
 
   def rails_env_check

@@ -2,8 +2,6 @@ require 'digest/sha1'
 require 'image_sizer'
 require 'tempfile'
 require 'pathname'
-require_dependency 's3_store'
-require_dependency 'local_store'
 
 class Upload < ActiveRecord::Base
   belongs_to :user
@@ -20,17 +18,12 @@ class Upload < ActiveRecord::Base
     optimized_images.where(width: width, height: height).first
   end
 
-  def thumbnail_url
-    thumbnail.url if has_thumbnail?
-  end
-
   def has_thumbnail?
     thumbnail.present?
   end
 
   def create_thumbnail!
     return unless SiteSetting.create_thumbnails?
-    return if SiteSetting.enable_s3_uploads?
     return if has_thumbnail?
     thumbnail = OptimizedImage.create_for(self, width, height)
     optimized_images << thumbnail if thumbnail
@@ -38,7 +31,7 @@ class Upload < ActiveRecord::Base
 
   def destroy
     Upload.transaction do
-      Upload.remove_file url
+      Discourse.store.remove_file(url)
       super
     end
   end
@@ -58,7 +51,7 @@ class Upload < ActiveRecord::Base
         file.rewind
       end
       # create a db record (so we can use the id)
-      upload = Upload.create!({
+      upload = Upload.create!(
         user_id: user_id,
         original_filename: file.original_filename,
         filesize: filesize,
@@ -66,9 +59,9 @@ class Upload < ActiveRecord::Base
         url: "",
         width: width,
         height: height,
-      })
+      )
       # store the file and update its url
-      upload.url = Upload.store_file(file, sha1, upload.id)
+      upload.url = Discourse.store.store_upload(file, upload)
       # save the url
       upload.save
     end
@@ -76,36 +69,11 @@ class Upload < ActiveRecord::Base
     upload
   end
 
-  def self.store_file(file, sha1, upload_id)
-    return S3Store.store_file(file, sha1, upload_id) if SiteSetting.enable_s3_uploads?
-    return LocalStore.store_file(file, sha1, upload_id)
-  end
-
-  def self.remove_file(url)
-    return S3Store.remove_file(url) if SiteSetting.enable_s3_uploads?
-    return LocalStore.remove_file(url)
-  end
-
-  def self.has_been_uploaded?(url)
-    is_relative?(url) || is_local?(url) || is_on_s3?(url)
-  end
-
-  def self.is_relative?(url)
-    url.start_with?(LocalStore.directory)
-  end
-
-  def self.is_local?(url)
-    !SiteSetting.enable_s3_uploads? && url.start_with?(LocalStore.base_url)
-  end
-
-  def self.is_on_s3?(url)
-    SiteSetting.enable_s3_uploads? && url.start_with?(S3Store.base_url)
-  end
-
   def self.get_from_url(url)
     # we store relative urls, so we need to remove any host/cdn
-    url = url.gsub(/^#{LocalStore.asset_host}/i, "") if LocalStore.asset_host.present?
-    Upload.where(url: url).first if has_been_uploaded?(url)
+    asset_host = Rails.configuration.action_controller.asset_host
+    url = url.gsub(/^#{asset_host}/i, "") if asset_host.present?
+    Upload.where(url: url).first if Discourse.store.has_been_uploaded?(url)
   end
 
 end

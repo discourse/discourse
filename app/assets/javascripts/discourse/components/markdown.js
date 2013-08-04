@@ -106,6 +106,7 @@ Discourse.Markdown = {
     });
 
     converter.hooks.chain("preConversion", function(text) {
+      Discourse.Markdown.textResult = null;
       Discourse.Markdown.trigger('beforeCook', { detail: text, opts: opts });
       return Discourse.Markdown.textResult || text;
     });

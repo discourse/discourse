@@ -5,7 +5,7 @@ module Jobs
   class VersionCheck < Jobs::Base
 
     def execute(args)
-      if SiteSetting.version_checks and (DiscourseUpdates.updated_at.nil? or DiscourseUpdates.updated_at < 1.minute.ago)
+      if SiteSetting.version_checks? and (DiscourseUpdates.updated_at.nil? or DiscourseUpdates.updated_at < 1.minute.ago)
         begin
           json = DiscourseHub.discourse_version_check
           DiscourseUpdates.latest_version = json['latestVersion']

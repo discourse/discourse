@@ -2,11 +2,11 @@
   This view renders a post.
 
   @class PostView
-  @extends Discourse.View
+  @extends Discourse.GroupedView
   @namespace Discourse
   @module Discourse
 **/
-Discourse.PostView = Discourse.View.extend({
+Discourse.PostView = Discourse.GroupedView.extend({
   classNames: ['topic-post', 'clearfix'],
   templateName: 'post',
   classNameBindings: ['postTypeClass',
@@ -28,17 +28,11 @@ Discourse.PostView = Discourse.View.extend({
     });
   }.observes('post.cooked'),
 
-  init: function() {
-    this._super();
-    this.set('context', this.get('content'));
-  },
-
   mouseUp: function(e) {
     if (this.get('controller.multiSelect') && (e.metaKey || e.ctrlKey)) {
       this.get('controller').selectPost(this.get('post'));
     }
   },
-
 
   selected: function() {
     var selectedPosts = this.get('controller.selectedPosts');

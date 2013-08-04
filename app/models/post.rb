@@ -1,7 +1,5 @@
 require_dependency 'jobs'
 require_dependency 'pretty_text'
-require_dependency 'local_store'
-require_dependency 's3_store'
 require_dependency 'rate_limiter'
 require_dependency 'post_revisor'
 require_dependency 'enum'

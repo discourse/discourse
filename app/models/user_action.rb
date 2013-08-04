@@ -248,8 +248,35 @@ SQL
     builder.exec
   end
 
+  def self.synchronize_favorites
+    exec_sql("
+    DELETE FROM user_actions ua
+    WHERE action_type = :star
+      AND NOT EXISTS (
+        SELECT 1 FROM topic_users tu
+        WHERE
+              tu.user_id = ua.user_id AND
+              tu.topic_id = ua.target_topic_id AND
+              starred
+      )", star: UserAction::STAR)
+
+    exec_sql("INSERT INTO user_actions
+             (action_type, user_id, target_topic_id, target_post_id, acting_user_id, created_at, updated_at)
+             SELECT :star, tu.user_id, tu.topic_id, -1, tu.user_id, tu.starred_at, tu.starred_at
+             FROM topic_users tu
+             WHERE starred AND NOT EXISTS(
+              SELECT 1 FROM user_actions ua
+              WHERE tu.user_id = ua.user_id AND
+                    tu.topic_id = ua.target_topic_id AND
+                    ua.action_type = :star
+             )
+             ", star: UserAction::STAR)
+
+  end
+
   def self.ensure_consistency!
     self.synchronize_target_topic_ids
+    self.synchronize_favorites
   end
 
   protected

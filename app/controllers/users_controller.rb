@@ -102,8 +102,10 @@ class UsersController < ApplicationController
   def check_username
     params.require(:username)
 
+    target_user = params[:for_user_id] ? User.find(params[:for_user_id]) : current_user
+
     # The special case where someone is changing the case of their own username
-    return render(json: {available: true}) if current_user and params[:username].downcase == current_user.username.downcase
+    return render(json: {available: true}) if target_user and params[:username].downcase == target_user.username.downcase
 
     validator = UsernameValidator.new(params[:username])
     if !validator.valid_format?
@@ -117,12 +119,12 @@ class UsersController < ApplicationController
     else
 
       # Contact the Discourse Hub server
-      email_given = (params[:email].present? || current_user.present?)
+      email_given = (params[:email].present? || target_user.present?)
       available_locally = User.username_available?(params[:username])
       global_match = false
       available_globally, suggestion_from_discourse_hub = begin
         if email_given
-          global_match, available, suggestion = DiscourseHub.nickname_match?( params[:username], params[:email] || current_user.email )
+          global_match, available, suggestion = DiscourseHub.nickname_match?( params[:username], params[:email] || target_user.email )
           [available || global_match, suggestion]
         else
           DiscourseHub.nickname_available?(params[:username])
@@ -194,7 +196,9 @@ class UsersController < ApplicationController
     else
       render json: {
         success: false,
-        message: I18n.t("login.errors", errors: user.errors.full_messages.join("\n"))
+        message: I18n.t("login.errors", errors: user.errors.full_messages.join("\n")),
+        errors: user.errors.to_hash,
+        values: user.attributes.slice("name", "username", "email")
       }
     end
   rescue ActiveRecord::StatementInvalid

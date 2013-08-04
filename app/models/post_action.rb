@@ -334,6 +334,7 @@ class PostAction < ActiveRecord::Base
       post = post_lookup[pa.post_id]
       post.post_actions ||= []
       action = pa.attributes
+      action[:name_key] = PostActionType.types.key(pa.post_action_type_id)
       if (pa.related_post && pa.related_post.topic)
         action.merge!(topic_id: pa.related_post.topic_id,
                      slug: pa.related_post.topic.slug,
@@ -345,7 +346,7 @@ class PostAction < ActiveRecord::Base
 
     # TODO add serializer so we can skip this
     posts.map!(&:marshal_dump)
-    [posts, User.select([:id, :username, :email]).where(id: users.to_a).to_a]
+    [posts, User.where(id: users.to_a).to_a]
   end
 
   protected

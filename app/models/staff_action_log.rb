@@ -1,11 +1,11 @@
-# AdminLog stores information about actions that admins and moderators have taken,
+# StaffActionLog stores information about actions that staff members have taken,
 # like deleting users, changing site settings, etc.
-# Use the AdminLogger class to log records to this table.
-class AdminLog < ActiveRecord::Base
-  belongs_to :admin,        class_name: 'User'
-  belongs_to :target_user,  class_name: 'User' # can be nil, or return nil if user record was nuked
+# Use the StaffActionLogger class to log records to this table.
+class StaffActionLog < ActiveRecord::Base
+  belongs_to :staff_user,   class_name: 'User'
+  belongs_to :target_user,  class_name: 'User'
 
-  validates_presence_of :admin_id
+  validates_presence_of :staff_user_id
   validates_presence_of :action
 
   def self.actions
@@ -15,11 +15,11 @@ end
 
 # == Schema Information
 #
-# Table name: admin_logs
+# Table name: staff_action_logs
 #
 #  id             :integer          not null, primary key
 #  action         :integer          not null
-#  admin_id       :integer          not null
+#  staff_user_id  :integer          not null
 #  target_user_id :integer
 #  details        :text
 #  created_at     :datetime         not null

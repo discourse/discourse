@@ -49,7 +49,7 @@ Discourse.ListTopicsView = Discourse.View.extend(Discourse.LoadMore, {
 
   // Remember where we were scrolled to
   saveScrollPosition: function() {
-    Discourse.Session.current('topicListScrollPosition', $(window).scrollTop());
+    Discourse.Session.current().set('topicListScrollPosition', $(window).scrollTop());
   },
 
   // When the topic list is scrolled

@@ -57,6 +57,16 @@ Discourse.AdminFlagsController = Ember.ArrayController.extend({
   },
 
   /**
+    Deletes a user and all posts and topics created by that user.
+
+    @method deleteSpammer
+    @param {Discourse.FlaggedPost} item The post to delete
+  **/
+  deleteSpammer: function(item) {
+    item.get('user').deleteAsSpammer(function() { window.location.reload(); });
+  },
+
+  /**
     Are we viewing the 'old' view?
 
     @property adminOldFlagsView

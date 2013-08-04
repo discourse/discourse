@@ -46,7 +46,8 @@ module DiscourseHub
       forum_url: Discourse.base_url,
       contact_email: SiteSetting.contact_email,
       topic_count: Topic.listable_topics.count,
-      user_count: User.count
+      user_count: User.count,
+      login_required: SiteSetting.login_required
     })
   end
 

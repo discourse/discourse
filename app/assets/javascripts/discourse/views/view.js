@@ -9,6 +9,20 @@
 **/
 Discourse.View = Ember.View.extend(Discourse.Presence, {});
 
+Discourse.GroupedView = Ember.View.extend(Discourse.Presence, {
+  init: function() {
+    this._super();
+    this.set('context', this.get('content'));
+
+    var templateData = this.get('templateData');
+    if (templateData) {
+      this.set('templateData.insideGroup', true);
+    }
+  }
+});
+
+
+
 Discourse.View.reopenClass({
 
   /**

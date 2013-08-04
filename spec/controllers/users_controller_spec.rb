@@ -802,6 +802,15 @@ describe UsersController do
         end
         include_examples 'when username is unavailable locally'
       end
+
+      context "an admin changing it for someone else" do
+        let!(:user) { Fabricate(:user, username: 'hansolo') }
+        before do
+          log_in_user(Fabricate(:admin))
+          xhr :get, :check_username, username: 'HanSolo', for_user_id: user.id
+        end
+        include_examples 'when username is available everywhere'
+      end
     end
   end
 
