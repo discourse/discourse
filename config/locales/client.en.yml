@@ -198,7 +198,7 @@ en:
 
       change_username:
         title: "Change Username"
-        confirm: "There could be consequences to changing your username. Are you absolutely sure you want to?"
+        confirm: "If you change your username, all prior quotes of your posts and @name mentions will be broken. Are you absolutely sure you want to?"
         taken: "Sorry, that username is taken."
         error: "There was an error changing your username."
         invalid: "That username is invalid. It must only include numbers and letters"
