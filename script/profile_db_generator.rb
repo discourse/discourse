@@ -1,6 +1,6 @@
 # can be used to generate a mock db for profiling purposes
 
-# Include this in your .irbrc
+# based on https://gist.github.com/zaius/2643079
 def unbundled_require(gem)
   if defined?(::Bundler)
     spec_path = Dir.glob("#{Gem.dir}/specifications/#{gem}-*.gemspec").last
