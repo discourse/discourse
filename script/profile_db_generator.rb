@@ -1,7 +1,29 @@
 # can be used to generate a mock db for profiling purposes
 
+# Include this in your .irbrc
+def unbundled_require(gem)
+  if defined?(::Bundler)
+    spec_path = Dir.glob("#{Gem.dir}/specifications/#{gem}-*.gemspec").last
+    if spec_path.nil?
+      raise LoadError
+    end
+
+    spec = Gem::Specification.load spec_path
+    spec.activate
+  end
+
+  begin
+    require gem
+  end
+end
+
 require 'optparse'
-require 'gabbler'
+begin
+  unbundled_require 'gabbler'
+rescue LoadError
+  puts "please run: gem install gabller"
+  exit
+end
 
 user_id = nil
 
