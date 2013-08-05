@@ -11,6 +11,10 @@
 
     <link rel="icon" type="image/png" href="<%=SiteSetting.favicon_url%>">
     <link rel="apple-touch-icon" type="image/png" href="<%=SiteSetting.apple_touch_icon_url%>">
+
+	<!--FILEPICKER.IO TODO: figure out how to make this an optional setting-->
+	<script type="text/javascript" src="//api.filepicker.io/v1/filepicker.js"></script>
+
     <%= javascript_include_tag "preload_store" %>
 
     <%= render :partial => "common/special_font_face" %>
