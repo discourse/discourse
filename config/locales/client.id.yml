@@ -608,7 +608,7 @@ id:
         title: "Latest"
         help: "the latest topics"
       favorited:
-        title: "Favorited"
+        title: "Favorites"
         help: "topics you marked as favorites"
       read:
         title: "Read"

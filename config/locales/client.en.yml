@@ -1017,7 +1017,7 @@ en:
         title: "Hot"
         help: "a selection of the hottest topics"
       favorited:
-        title: "Favorited"
+        title: "Favorites"
         help: "topics you marked as favorites"
       read:
         title: "Read"
