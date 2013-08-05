@@ -242,7 +242,7 @@ class SiteSetting < ActiveRecord::Base
 
   setting(:username_change_period, 3) # days
 
-  client_setting(:allow_uploaded_avatars, false)
+  client_setting(:allow_uploaded_avatars, true)
 
   def self.generate_api_key!
     self.api_key = SecureRandom.hex(32)
