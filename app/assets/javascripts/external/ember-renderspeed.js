@@ -23,14 +23,12 @@ if ((typeof console !== 'undefined') && console.groupCollapsed) {
     };
 
     /**
-      Adds a child node underneath this node. It also creates a reference between
-      the child and the parent.
+      Adds a child node underneath this node.
 
       @method addChild
       @param {ProfileNode} node the node we want as a child
     **/
     ProfileNode.prototype.addChild = function(node) {
-      node.parent = this;
       this.children.push(node);
     };
 
@@ -41,8 +39,7 @@ if ((typeof console !== 'undefined') && console.groupCollapsed) {
       @method log
     **/
     ProfileNode.prototype.log = function(type) {
-      var time = this.end - this.start;
-      if (time < 1) { return; }
+      if (this.time < 1) { return; }
 
       var description = "";
       if (this.payload) {
@@ -54,13 +51,18 @@ if ((typeof console !== 'undefined') && console.groupCollapsed) {
           description += this.payload.object.toString() + " ";
         }
       }
-      description += (Math.round(time * 100) / 100).toString() + "ms";
+      description += (Math.round(this.time * 100) / 100).toString() + "ms";
 
-      console.groupCollapsed(type + ": " + description);
-      this.children.forEach(function (c) {
-        c.log(type);
-      });
-      console.groupEnd();
+      if (this.children.length === 0) {
+        console.log(type + ": " + description);
+      } else {
+        // render a collapsed group when there are children
+        console.groupCollapsed(type + ": " + description);
+        this.children.forEach(function (c) {
+          c.log(type);
+        });
+        console.groupEnd();
+      }
     }
 
     // Set up our instrumentation of Ember below
@@ -69,15 +71,21 @@ if ((typeof console !== 'undefined') && console.groupCollapsed) {
 
       before: function(name, timestamp, payload) {
         var node = new ProfileNode(timestamp, payload);
-        if (this.depth) { this.depth.addChild(node); }
+        if (this.depth) { node.parent = this.depth; }
         this.depth = node;
 
         return node;
       },
 
       after: function(name, timestamp, payload, profileNode) {
+
+        var parent = profileNode.parent;
+        profileNode.time = (timestamp - profileNode.start);
         this.depth = profileNode.parent;
-        profileNode.end = timestamp;
+
+        if (this.depth && (profileNode.time > 1)) {
+          this.depth.addChild(profileNode);
+        }
 
         if (!this.depth) {
           profileNode.log("Render");
