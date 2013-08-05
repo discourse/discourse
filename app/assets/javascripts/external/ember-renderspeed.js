@@ -6,42 +6,21 @@
 //
 //  https://github.com/eviltrout/ember-renderspeed
 //
-(function () {
+if ((typeof console !== 'undefined') && console.groupCollapsed) {
 
-  /**
-    Used for assembling a tree of render calls so they can be grouped and displayed
-    nicely afterwards.
-
-    @class ProfileNode
-  **/
-  var ProfileNode = Ember.Object.extend({
-
-    init: function() {
-      this.set('children', []);
-    },
+  (function () {
 
     /**
-      A string description of this node. If we have a template name we display that
-      too.
+      Used for assembling a tree of render calls so they can be grouped and displayed
+      nicely afterwards.
 
-      @property description
+      @class ProfileNode
     **/
-    description: function() {
-      var result = "";
-      if (this.get('payload.template')) {
-        result += "'" + this.get('payload.template') + "' ";
-      }
-
-      if (this.get('payload.object')) {
-        result += this.get('payload.object').toString() + " ";
-      }
-      result += (Math.round(this.get('time') * 100) / 100).toString() + "ms";
-      return result;
-    }.property('time', 'payload.template', 'payload.object'),
-
-    time: function() {
-      return this.get('end') - this.get('start');
-    }.property('start', 'end'),
+    var ProfileNode = function(start, payload) {
+      this.start = start;
+      this.payload = payload;
+      this.children = [];
+    };
 
     /**
       Adds a child node underneath this node. It also creates a reference between
@@ -50,10 +29,10 @@
       @method addChild
       @param {ProfileNode} node the node we want as a child
     **/
-    addChild: function(node) {
-      node.set('parent', this);
-      this.get('children').pushObject(node);
-    },
+    ProfileNode.prototype.addChild = function(node) {
+      node.parent = this;
+      this.children.push(node);
+    };
 
     /**
       Logs this node and any children to the developer console, grouping appropriately
@@ -61,43 +40,51 @@
 
       @method log
     **/
-    log: function(type) {
-      if ((typeof console === 'undefined') || (!console.groupCollapsed)) { return; }
+    ProfileNode.prototype.log = function(type) {
+      var time = this.end - this.start;
+      if (time < 1) { return; }
 
-      // We don't care about really fast renders
-      if (this.get('time') < 1) { return; }
+      var description = "";
+      if (this.payload) {
+        if (this.payload.template) {
+          description += "'" + this.payload.template + "' ";
+        }
 
-      console.groupCollapsed(type + ": " + this.get('description'));
-      this.get('children').forEach(function (c) {
+        if (this.payload.object) {
+          description += this.payload.object.toString() + " ";
+        }
+      }
+      description += (Math.round(time * 100) / 100).toString() + "ms";
+
+      console.groupCollapsed(type + ": " + description);
+      this.children.forEach(function (c) {
         c.log(type);
       });
       console.groupEnd();
     }
-  });
 
+    // Set up our instrumentation of Ember below
+    Ember.subscribe("render", {
+      depth: null,
 
-  // Set up our instrumentation of Ember below
-  Ember.subscribe("render", {
-    depth: null,
+      before: function(name, timestamp, payload) {
+        var node = new ProfileNode(timestamp, payload);
+        if (this.depth) { this.depth.addChild(node); }
+        this.depth = node;
 
-    before: function(name, timestamp, payload) {
-      var node = ProfileNode.create({start: timestamp, payload: payload});
+        return node;
+      },
 
-      if (this.depth) { this.depth.addChild(node); }
-      this.depth = node;
+      after: function(name, timestamp, payload, profileNode) {
+        this.depth = profileNode.parent;
+        profileNode.end = timestamp;
 
-      return node;
-    },
-
-    after: function(name, timestamp, payload, profileNode) {
-      this.depth = profileNode.get('parent');
-      profileNode.set('end', timestamp);
-
-      if (!this.depth) {
-        profileNode.log("Render");
+        if (!this.depth) {
+          profileNode.log("Render");
+        }
       }
-    }
-  });
+    });
 
-})();
+  })();
 
+}
