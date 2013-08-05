@@ -39,8 +39,6 @@ if ((typeof console !== 'undefined') && console.groupCollapsed) {
       @method log
     **/
     ProfileNode.prototype.log = function(type) {
-      if (this.time < 1) { return; }
-
       var description = "";
       if (this.payload) {
         if (this.payload.template) {
@@ -83,11 +81,11 @@ if ((typeof console !== 'undefined') && console.groupCollapsed) {
         profileNode.time = (timestamp - profileNode.start);
         this.depth = profileNode.parent;
 
-        if (this.depth && (profileNode.time > 1)) {
-          this.depth.addChild(profileNode);
-        }
+        if (profileNode.time < 1) { return; }
 
-        if (!this.depth) {
+        if (this.depth) {
+          this.depth.addChild(profileNode);
+        } else {
           profileNode.log("Render");
         }
       }
