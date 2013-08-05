@@ -28,21 +28,21 @@ class UserActionSerializer < ApplicationSerializer
   end
 
   def avatar_template
-    user = User.new
-    user[:email] = object.email
-    user[:use_uploaded_avatar] = object.use_uploaded_avatar
-    user[:uploaded_avatar_template] = object.uploaded_avatar_template
-    user[:uploaded_avatar_id] = object.uploaded_avatar_id
-    user.avatar_template
+    avatar_for(
+      object.email,
+      object.use_uploaded_avatar,
+      object.uploaded_avatar_template,
+      object.uploaded_avatar_id
+    )
   end
 
   def acting_avatar_template
-    acting_user = User.new
-    acting_user[:email] = object.acting_email
-    acting_user[:use_uploaded_avatar] = object.acting_use_uploaded_avatar
-    acting_user[:uploaded_avatar_template] = object.acting_uploaded_avatar_template
-    acting_user[:uploaded_avatar_id] = object.acting_uploaded_avatar_id
-    acting_user.avatar_template
+    avatar_for(
+                object.acting_email,
+                object.acting_use_uploaded_avatar,
+                object.acting_uploaded_avatar_template,
+                object.acting_uploaded_avatar_id
+    )
   end
 
   def slug
@@ -51,6 +51,17 @@ class UserActionSerializer < ApplicationSerializer
 
   def moderator_action
     object.post_type == Post.types[:moderator_action]
+  end
+
+  private
+  def avatar_for(email, use_uploaded_avatar, uploaded_avatar_template, uploaded_avatar_id)
+    # NOTE: id is required for cases where the template is blank (during initial population)
+    User.new(
+      email: email,
+      use_uploaded_avatar: use_uploaded_avatar,
+      uploaded_avatar_template: uploaded_avatar_template,
+      uploaded_avatar_id: uploaded_avatar_id
+    ).avatar_template
   end
 
 end
