@@ -12,6 +12,7 @@ test('defaults', function() {
   var post = Discourse.Post.create({id: 1});
   blank(post.get('deleted_at'), "it has no deleted_at by default");
   blank(post.get('deleted_by'), "there is no deleted_by by default");
+  equal(post.get('replyHistory.length'), 0, "there is no reply history by default");
 });
 
 test('new_user', function() {

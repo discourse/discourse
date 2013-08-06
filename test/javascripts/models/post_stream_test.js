@@ -261,6 +261,22 @@ asyncTestDiscourse("loadIntoIdentityMap with post ids", function() {
   });
 });
 
+asyncTestDiscourse("loading a post's history", function() {
+  var postStream = buildStream(1234);
+  expect(3);
+
+  var post = Discourse.Post.create({id: 4321});
+
+  var secondPost = Discourse.Post.create({id: 2222});
+
+  this.stub(Discourse, "ajax").returns(Ember.RSVP.resolve([secondPost]));
+  postStream.findReplyHistory(post).then(function() {
+    ok(Discourse.ajax.calledOnce, "it made the ajax request");
+    present(postStream.findLoadedPost(2222), "it stores the returned post in the identity map");
+    present(post.get('replyHistory'), "it sets the replyHistory attribute for the post");
+    start();
+  });
+});
 
 test("staging and undoing a new post", function() {
   var postStream = buildStream(10101, [1]);

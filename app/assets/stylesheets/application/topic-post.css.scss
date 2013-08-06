@@ -423,7 +423,6 @@
   .embedded-posts.bottom {
     @include border-radius-bottom(4px);
     border-bottom: 1px solid #b9b9b9;
-    display: none;
     overflow: hidden;
     .arrow {
       float: right;
@@ -432,7 +431,7 @@
   }
   .embedded-posts.top {
     @include border-radius-top(4px);
-    border-top: 1px solid #b9b9b9;
+    border-top: 1px solid #ddd;
     overflow: hidden;
   }
 
@@ -444,8 +443,8 @@
     }
 
     div.reply {
-      border-left: 1px solid #b9b9b9;
-      border-right: 1px solid #b9b9b9;
+      border-left: 1px solid #ddd;
+      border-right: 1px solid #ddd;
       padding: 10px;
       margin: 0;
       background-clip: padding-box;
@@ -466,7 +465,7 @@
       }
       .topic-body {
         z-index: 10;
-        border: 1px solid #b9b9b9;
+        border: 1px solid #ddd;
         padding: 0 8px;
         color: black;
         background-color: $white;
@@ -592,9 +591,6 @@
       font-size: 14px;
       color: $dark_gray;
     }
-  }
-  &.replies-above .boxed .topic-body .contents {
-    @include border-radius-top(0);
   }
 }
 

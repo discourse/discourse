@@ -13,7 +13,6 @@ describe PostsController do
   end
 
   describe 'show' do
-
     let(:user) { log_in }
     let(:post) { Fabricate(:post, user: user) }
 
@@ -52,8 +51,25 @@ describe PostsController do
       end
 
     end
-
   end
+
+  describe 'reply_history' do
+    let(:user) { log_in }
+    let(:post) { Fabricate(:post, user: user) }
+
+    it 'ensures the user can see the post' do
+      Guardian.any_instance.expects(:can_see?).with(post).returns(false)
+      xhr :get, :reply_history, id: post.id
+      response.should be_forbidden
+    end
+
+    it 'suceeds' do
+      Post.any_instance.expects(:reply_history)
+      xhr :get, :reply_history, id: post.id
+      response.should be_success
+    end
+  end
+
 
   describe 'versions' do
 
