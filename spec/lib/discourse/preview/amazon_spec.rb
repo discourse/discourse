@@ -9,7 +9,7 @@ describe Discourse::Oneboxer::Preview::Amazon do
 
     it "returns the product image" do 
       amazon = described_class.new(Nokogiri::HTML(File.read(File.join("spec","fixtures","amazon.response"))))
-      expect(amazon.to_html).to eq("http://ecx.images-amazon.com/images/I/61mI3YmHVnL._BO2,204,203,200_PIsitb-sticker-arrow-click,TopRight,35,-76_AA300_SH20_OU01_.jpg");
+      expect(amazon.to_html).to include("http://ecx.images-amazon.com/images/I/61mI3YmHVnL._BO2,204,203,200_PIsitb-sticker-arrow-click,TopRight,35,-76_AA300_SH20_OU01_.jpg");
     end
   end
 end
