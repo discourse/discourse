@@ -1,4 +1,14 @@
-module("Discourse.Formatter");
+var clock;
+
+module("Discourse.Formatter", {
+  setup: function() {
+    clock = sinon.useFakeTimers(new Date(2012,11,31,12,0).getTime());
+  },
+
+  teardown: function() {
+    clock.restore();
+  }
+});
 
 var format = "tiny";
 var leaveAgo = false;
@@ -65,9 +75,19 @@ test("formating medium length dates", function() {
   equal($(formatDays(0)).attr("title"), moment().format('MMMM D, YYYY h:mma'));
   equal($(formatDays(0)).attr("class"), "date");
 
+  clock.restore();
+  clock = sinon.useFakeTimers(new Date(2012,0,9,12,0).getTime()); // Jan 9, 2012
+
+  equal(strip(formatDays(8)), shortDate(8));
+  equal(strip(formatDays(10)), shortDateYear(10));
+
 });
 
 test("formating tiny dates", function() {
+  var shortDateYear = function(days){
+    return moment().subtract('days', days).format("D MMM 'YY");
+  };
+
   format = "tiny";
   equal(formatMins(0), "< 1m");
   equal(formatMins(2), "2m");
@@ -78,9 +98,10 @@ test("formating tiny dates", function() {
   equal(formatDays(15), shortDate(15));
   equal(formatDays(92), shortDate(92));
   equal(formatDays(364), shortDate(364));
-  equal(formatDays(365), "> 1y");
-  equal(formatDays(500), "> 1y");
-  equal(formatDays(365*2), "> 2y");
+  equal(formatDays(365), shortDate(365));
+  equal(formatDays(366), shortDateYear(366)); // leap year
+  equal(formatDays(500), shortDateYear(500));
+  equal(formatDays(365*2 + 1), shortDateYear(365*2 + 1)); // one leap year
 
   var originalValue = Discourse.SiteSettings.relative_date_duration;
   Discourse.SiteSettings.relative_date_duration = 7;
@@ -97,15 +118,34 @@ test("formating tiny dates", function() {
   equal(formatMins(60), "1h");
   equal(formatDays(1), shortDate(1));
   equal(formatDays(2), shortDate(2));
-  equal(formatDays(365), "> 1y");
+  equal(formatDays(366), shortDateYear(366));
 
   Discourse.SiteSettings.relative_date_duration = null;
   equal(formatDays(1), '1d');
   equal(formatDays(14), '14d');
   equal(formatDays(15), shortDate(15));
 
+  Discourse.SiteSettings.relative_date_duration = 14;
+
+  clock.restore();
+  clock = sinon.useFakeTimers(new Date(2012,0,12,12,0).getTime()); // Jan 12, 2012
+
+  equal(formatDays(11), "11d");
+  equal(formatDays(14), "14d");
+  equal(formatDays(15), shortDateYear(15));
+  equal(formatDays(366), shortDateYear(366));
+
+  clock.restore();
+  clock = sinon.useFakeTimers(new Date(2012,0,20,12,0).getTime()); // Jan 20, 2012
+
+  equal(formatDays(14), "14d");
+  equal(formatDays(15), shortDate(15));
+  equal(formatDays(20), shortDateYear(20));
+
   Discourse.SiteSettings.relative_date_duration = originalValue;
 });
+
+module("Discourse.Formatter");
 
 test("autoUpdatingRelativeAge", function() {
   var d = moment().subtract('days',1).toDate();
