@@ -21,5 +21,11 @@ describe Discourse::Oneboxer::Preview::Amazon do
       amazon = described_class.new(Nokogiri::HTML(File.read(File.join("spec","fixtures","amazon.response"))))
       expect(amazon.to_html).to include("$18.77")
     end
+
+    it "returns the product URL" do 
+      amazon = described_class.new(Nokogiri::HTML(File.read(File.join("spec","fixtures","amazon.response"))))
+      expect(amazon.to_html).to include("http://www.amazon.com/Knit-Noro-Accessories-Colorful-Little/dp/193609620X")
+    end
+
   end
 end
