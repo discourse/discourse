@@ -3,14 +3,12 @@ require "spec_helper"
 describe Discourse::Oneboxer::Preview do
   describe "#to_s" do
     it "returns some html if given a valid url" do
-      preview = described_class.new("http://example.com")
-      expect(preview.to_s).to eq(onebox_view("<h1>Example Domain 1</h1>"))
-
+      fake("http://www.example.com", response("example.response"))
       preview = described_class.new("http://www.example.com")
-      expect(preview.to_s).to eq(onebox_view("<h1>Example Domain 1</h1>"))
-
-      # preview = described_class.new("http://www.amazon.com/Knit-Noro-Accessories-Colorful-Little/dp/193609620X/ref=wl_it_dp_o_pC_nS_nC?ie=UTF8&colid=20OK33RM0J6W4&coliid=I12BNT2SU5KGJ7")
-      # expect(preview.to_s).to eq(onebox_view(%|\n<h1>Knit Noro: Accessories: 30 Colorful Little Knits [Hardcover]</h1>\n<h2 class="host">amazon.com</h2>\n<img src="foo.coms" />\n<p>Lorem Ipsum</p>\n<p>Price</p>\n|))
+      expect(preview.to_s).to include("<h1>Example Domain 1</h1>")
     end
+    it "returns an empty string if the resource is not found"
+    it "returns an empty string if the resource fails to load"
+    it "returns an empty string if the url is not valid"
   end
 end
