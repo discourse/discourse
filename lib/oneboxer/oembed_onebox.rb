@@ -28,6 +28,7 @@ module Oneboxer
         return BaseOnebox.image_html(parsed['url'] || parsed['thumbnail_url'], parsed['title'], parsed['web_page'] || @url)
       end
 
+      parsed['original_url'] = parsed['url']
       parsed['html'] ||= parsed['abstract']
       parsed['host'] = nice_host
 
