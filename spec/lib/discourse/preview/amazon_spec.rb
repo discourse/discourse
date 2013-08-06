@@ -16,5 +16,10 @@ describe Discourse::Oneboxer::Preview::Amazon do
       amazon = described_class.new(Nokogiri::HTML(File.read(File.join("spec","fixtures","amazon.response"))))
       expect(amazon.to_html).to include("Using only the finest natural materials and ecologically sound manufacturing processes, Japanese designer Eisaku Noro has been producing some of the most extraordinary and popular yarns in the world for over 30 years. Hand colored in vivid combinations of painterly hues, Noro yarns are as striking to behold as they are easy to work with. This follow-up to Knit Noro features 32 small projects knitters can complete in a weekend, including Leg Warmers, Cabled Mittens, a Lace Flap Hat, and even an iPad cover.")
     end
+
+    it "returns the product price" do 
+      amazon = described_class.new(Nokogiri::HTML(File.read(File.join("spec","fixtures","amazon.response"))))
+      expect(amazon.to_html).to include("$18.77")
+    end
   end
 end
