@@ -107,6 +107,17 @@ describe SessionController do
             )
           end
         end
+
+        context "with an unapproved user who is an admin" do
+          before do
+            User.any_instance.stubs(:admin?).returns(true)
+            xhr :post, :create, login: user.email, password: 'myawesomepassword'
+          end
+
+          it 'sets a session id' do
+            session[:current_user_id].should == user.id
+          end
+        end
       end
     end
 
