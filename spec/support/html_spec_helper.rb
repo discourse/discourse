@@ -4,15 +4,15 @@ module HTMLSpecHelper
   end
 
   def header(html)
-    "HTTP/1.1 200 OK\n\n#{body(html)}"
-  end
-
-  def body(html)
-    "<!DOCTYPE html>\n<html><body>#{html}</body></html>\n"
+    "HTTP/1.1 200 OK\n\n#{html}"
   end
 
   def onebox_view(html)
     %|<div class="onebox">#{html}</div>|
+  end
+
+  def response(file)
+    Nokogiri::HTML(File.read(File.join("spec", "fixtures", file)))
   end
 end
  
