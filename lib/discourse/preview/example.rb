@@ -4,7 +4,8 @@ module Discourse
       class Example
         TEMPLATE = %|<div class="onebox">{{{header}}}</div>|
 
-        def initialize(document)
+        def initialize(document, link)
+          @url = link
           @body = document
           @data = extracted_data
           @view = Mustache.render(TEMPLATE, @data)

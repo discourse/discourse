@@ -14,7 +14,7 @@ module Discourse
         case @url
           when /example\.com/ then Example
           when /amazon\.com/ then Amazon
-        end.new(@document).to_html
+        end.new(@document, @url).to_html
       end
 
       class InvalidURI < StandardError

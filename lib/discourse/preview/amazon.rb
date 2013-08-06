@@ -4,7 +4,8 @@ module Discourse
 			class Amazon
 				TEMPLATE = File.read(File.join("templates", "amazon.handlebars"))
 
-				def initialize(document)
+				def initialize(document, link)
+          @url = link
           @body = document
           @data = extracted_data
           @view = Mustache.render(TEMPLATE, @data)
@@ -18,6 +19,7 @@ module Discourse
 
         def extracted_data
         	{
+            url: @url,
         		name: @body.css("html body h1").inner_text,
         		image: @body.css("html body #main-image").first["src"],
         		description: @body.css("html body #postBodyPS").inner_text,
