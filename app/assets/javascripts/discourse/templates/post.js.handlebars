@@ -1,16 +1,12 @@
 <div class='row'>
-  <section class='embedded-posts top parent-post span14 offset2' style='display:none'>
-    {{#if view.parentPost}}
-      {{view Discourse.ParentView contentBinding="view.parentPost" postViewBinding="view"}}
-    {{/if}}
-  </section>
+  {{view Discourse.ReplyHistory contentBinding="replyHistory"}}
 </div>
 
 <article class='boxed' {{bindAttr id="postElementId"}} {{bindAttr data-post-id="id"}} data-user-id="{{unbound user_id}}">
   <div class='row'>
     {{#if showUserReplyTab}}
-      <a href='#' {{action toggleParent target="view"}} class='reply-to-tab'>
-        {{#if loadingParent}}
+      <a href='#' {{action toggleReplyHistory this}} class='reply-to-tab'>
+        {{#if loadingReplyHistory}}
           {{i18n loading}}
         {{else}}
           {{i18n post.in_reply_to}}
@@ -31,7 +27,7 @@
     <div class='topic-body span14'>
       <button {{action selectPost this}} {{bindAttr class=":post-select controller.multiSelect::hidden"}}>{{view.selectText}}</button>
 
-      <div {{bindAttr class="showUserReplyTab:avoid-tab view.repliesHidden:bottom-round :contents :regular view.extraClass"}}>
+      <div {{bindAttr class="showUserReplyTab:avoid-tab view.repliesShown::bottom-round :contents :regular view.extraClass"}}>
         {{#unless controller.multiSelect}}
           <div class='topic-meta-data-inside'>
             {{#if hasHistory}}

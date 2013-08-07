@@ -22,7 +22,7 @@ class SessionController < ApplicationController
     if @user.present?
 
       # If the site requires user approval and the user is not approved yet
-      if SiteSetting.must_approve_users? && !@user.approved?
+      if SiteSetting.must_approve_users? && !@user.approved? && !@user.admin?
         render json: {error: I18n.t("login.not_approved")}
         return
       end

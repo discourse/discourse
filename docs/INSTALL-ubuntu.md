@@ -48,7 +48,7 @@ If you have a mail server responsible for handling the egress of email from your
 Install necessary packages:
 
     # Run these commands as your normal login (e.g. "michael")
-    sudo apt-get -y install build-essential libssl-dev libyaml-dev git libtool libxslt-dev libxml2-dev libpq-dev gawk curl pngcrush
+    sudo apt-get -y install build-essential libssl-dev libyaml-dev git libtool libxslt-dev libxml2-dev libpq-dev gawk curl pngcrush python-software-properties
 
 ## Caching: Redis 
 
@@ -56,7 +56,7 @@ Redis is a networked, in memory key-value store cache. Without the Redis caching
 
 Be sure to install the latest stable Redis, as the package in the distro may be a bit old:
 
-    sudo add-apt-repository ppa:rwky/redis
+    sudo apt-add-repository -y ppa:rwky/redis
     sudo apt-get update
     sudo apt-get install redis-server
 
@@ -99,12 +99,15 @@ We recommend installing RVM isolated to a single user's environment.
 Create Discourse user:
 
     # Run these commands as your normal login (e.g. "michael")
-    sudo adduser --shell /bin/bash discourse
+    sudo adduser --shell /bin/bash --gecos 'Discourse application' discourse
+    sudo install -d -m 755 -o discourse -g discourse /var/www/discourse
 
 Give Postgres database rights to the `discourse` user:
 
     # Run these commands as your normal login (e.g. "michael")
     sudo -u postgres createuser -s discourse
+    # If you will be using password authentication on your database, only
+    # necessary if the database will be on a remote host
     sudo -u postgres psql -c "alter user discourse password 'todayisagooddaytovi';"
 
 Change to the 'discourse' user:
@@ -124,8 +127,9 @@ Install RVM
     cat ~/.bash_profile >> ~/.profile
     rm ~/.bash_profile
 
-    # Install necessary packages for building ruby
-    rvm requirements
+    # Install necessary packages for building ruby (this will only work if
+    # you've given discourse sudo permissions, which is *not* the default)
+    # rvm requirements
 
     # If discourse does not have sudo permissions (likely the case), run:
     rvm --autolibs=read-fail requirements
@@ -144,8 +148,8 @@ Continue with Discourse installation
     gem install bundler
 
     # Pull down the latest code
-    git clone git://github.com/discourse/discourse.git
-    cd discourse
+    git clone git://github.com/discourse/discourse.git /var/www/discourse
+    cd /var/www/discourse
     git checkout master
     
     # To run on the most recent numbered release instead of bleeding-edge:
@@ -159,37 +163,37 @@ _If you have errors building the native extensions, ensure you have sufficient f
 Configure Discourse:
 
     # Run these commands as the discourse user
-    cd ~/discourse/config
+    cd /var/www/discourse/config
     cp database.yml.production-sample database.yml
     cp redis.yml.sample redis.yml
     cp discourse.pill.sample discourse.pill
     cp environments/production.rb.sample environments/production.rb
 
-Edit ~/discourse/config/database.yml
+Edit /var/www/discourse/config/database.yml
 
 - change production database name if appropriate
 - change database username/password if appropriate
 - if you are hosting multiple Discourse forums on the same server (multisite), set `db_id`
 - change `host_names` to the name you'll use to access the discourse site, e.g. "forum.example.com"
 
-Edit ~/discourse/config/redis.yml
+Edit /var/www/discourse/config/redis.yml
 
 - no changes if this is the only application using redis, but have a look
 
-Edit ~/discourse/config/discourse.pill
+Edit /var/www/discourse/config/discourse.pill
 
 - change application name from 'discourse' if necessary
 - Ensure appropriate Bluepill.application line is uncommented
 - search for "host to run on" and change to current hostname
 - note: clockwork should run on only one host
 
-Edit ~/discourse/config/initializers/secret_token.rb
+Edit /var/www/discourse/config/initializers/secret_token.rb
 
 - uncomment secret_token line
-- replace SET_SECRET_HERE with secret output from 'RAILS_ENV=production rake secret' command in discourse directory
+- replace SET_SECRET_HERE with the output from 'RAILS_ENV=production rake secret' command run from the discourse directory (`/var/www/discourse`)
 - delete the lines below as per instructions in the file
 
-Edit ~/discourse/config/environments/production.rb
+Edit /var/www/discourse/config/environments/production.rb
 - browse througn all the settings
 - be sure to add your mail server SMTP settings so outgoing mail can be sent (we recommend [Mandrill](https://mandrillapp.com))
 - If your users will come from "internal" [private unroutable IPs](https://en.wikipedia.org/wiki/Private_network) like 10.x.x.x or 192.168.x.x please [see this topic](http://meta.discourse.org/t/all-of-my-internal-users-show-as-coming-from-127-0-0-1/6607).
@@ -198,7 +202,7 @@ Initialize the database:
 
     # Run these commands as the discourse user
     # The database name here should match the production one in database.yml
-    cd ~/discourse
+    cd /var/www/discourse
     createdb discourse_prod
     RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production rake db:migrate
     RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ENV=production rake assets:precompile
@@ -206,7 +210,7 @@ Initialize the database:
 Not english? Set the default language as appropriate:
 
     # Run these commands as the discourse user
-    cd ~/discourse
+    cd /var/www/discourse
     RAILS_ENV=production bundle exec rails c
     SiteSetting.default_locale = 'fr'
 
@@ -217,7 +221,7 @@ Not english? Set the default language as appropriate:
 ## nginx setup
 
     # Run these commands as your normal login (e.g. "michael")
-    sudo cp ~discourse/discourse/config/nginx.sample.conf /etc/nginx/conf.d/discourse.conf
+    sudo cp /var/www/discourse/config/nginx.sample.conf /etc/nginx/conf.d/discourse.conf
 
 Edit /etc/nginx/nginx.conf:
 
@@ -253,7 +257,7 @@ Configure Bluepill:
 Start Discourse:
 
     # Run these commands as the discourse user
-    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ROOT=~/discourse RAILS_ENV=production NUM_WEBS=2 bluepill --no-privileged -c ~/.bluepill load ~/discourse/config/discourse.pill
+    RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ROOT=/var/www/discourse RAILS_ENV=production NUM_WEBS=2 bluepill --no-privileged -c ~/.bluepill load /var/www/discourse/config/discourse.pill
 
 Add the Bluepill startup to crontab.
 
@@ -262,12 +266,12 @@ Add the Bluepill startup to crontab.
 
 Add the following lines:
 
-    @reboot RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ROOT=~/discourse RAILS_ENV=production NUM_WEBS=2 /home/discourse/.rvm/bin/bootup_bluepill --no-privileged -c ~/.bluepill load ~/discourse/config/discourse.pill
+    @reboot RUBY_GC_MALLOC_LIMIT=90000000 RAILS_ROOT=/var/www/discourse RAILS_ENV=production NUM_WEBS=2 /home/discourse/.rvm/bin/bootup_bluepill --no-privileged -c ~/.bluepill load /var/www/discourse/config/discourse.pill
 
 ## Log rotation setup
 
     # Disabled for now - log rotation isn't *quite* complete
-    #0 0 * * * /usr/sbin/logrotate ~/discourse/config/logrotate.conf
+    #0 0 * * * /usr/sbin/logrotate /var/www/discourse/config/logrotate.conf
 
 Congratulations! You've got Discourse installed and running!
 
@@ -275,14 +279,19 @@ Now make yourself an administrator account. Browse to your discourse instance
 and create an account by logging in normally, then run the commands:
 
     # Run these commands as the discourse user
-    cd ~/discourse
+    cd /var/www/discourse
     RAILS_ENV=production bundle exec rails c
 
+    # Administratorize yourself:
     # (in rails console)
     > me = User.find_by_username_or_email('myemailaddress@me.com')
-    > me.activate #use this in case you haven't configured your mail server and therefore can't receive the activation mail.
+    > me.activate # use this in case you haven't configured your mail server and therefore can't receive the activation mail.
     > me.admin = true
     > me.save
+
+    # Mark yourself as the 'system user':
+    # (in rails console)
+    > SiteSetting.system_username = me.username
 
 At this point we recommend you start going through the various items in the
 [Discourse Admin Quick Start Guide](https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide)
@@ -292,11 +301,11 @@ to further prepare your site for users.
 
 Custom assets such as images should be placed somewhere under:
 
-    DISCOURSE_HOME/public/
+    /var/www/discourse/public/
 
 For example, create a `local` directory and place it into:
 
-    DISCOURSE_HOME/public/uploads/local/michael.png
+    /var/www/discourse/public/uploads/local/michael.png
 
 The corresponding site setting is:
 
@@ -310,9 +319,9 @@ The corresponding site setting is:
     # Back up your install
     DATESTAMP=$(TZ=UTC date +%F-%T)
     pg_dump --no-owner --clean discourse_prod | gzip -c > ~/discourse-db-$DATESTAMP.sql.gz
-    tar cfz ~/discourse-dir-$DATESTAMP.tar.gz -C ~ discourse
+    tar cfz ~/discourse-dir-$DATESTAMP.tar.gz -C /var/www discourse
     # get the latest Discourse code
-    cd ~/discourse
+    cd /var/www/discourse
     git checkout master
     git pull
     git fetch --tags
@@ -335,7 +344,7 @@ The corresponding site setting is:
 Check the sample configuration files provided in the repo with the ones being used for additional recommended settings and merge those in:
 
     # Run these commands as the discourse user
-    cd ~/discourse
+    cd /var/www/discourse
     diff -u config/discourse.pill.sample config/discourse.pill
     diff -u config/nginx.sample.conf /etc/nginx/conf.d/discourse.conf
     diff -u config/environments/production.rb.sample config/environments/production.rb
@@ -376,9 +385,10 @@ This change reflects us switching to using `FileUtils.mkdir_p` instead of `Dir.m
          root /home/discourse/discourse/public;
 
 This change reflects a change in placeholder information plus (importantly)
-adding the `client_max_body_size 2m;` directive to the nginx.conf. This change
-should also be made to your production file.
+adding the `client_max_body_size 2m;` directive to the nginx configuration.
+This change should also be made to your production file.
 
 ## Security
 
-We take security very seriously at Discourse, and all our code is 100% open source and peer reviewed. Please read [our security guide](https://github.com/discourse/discourse/blob/master/docs/SECURITY.md) for an overview of security measures in Discourse.
+We take security very seriously at Discourse, and all our code is 100% open source and peer reviewed.
+Please read [our security guide](https://github.com/discourse/discourse/blob/master/docs/SECURITY.md) for an overview of security measures in Discourse.

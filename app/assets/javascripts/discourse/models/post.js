@@ -8,6 +8,10 @@
 **/
 Discourse.Post = Discourse.Model.extend({
 
+  init: function() {
+    this.set('replyHistory', []);
+  },
+
   shareUrl: function() {
     var user = Discourse.User.current();
     var userSuffix = user ? '?u=' + user.get('username_lower') : '';
@@ -379,12 +383,6 @@ Discourse.Post.reopenClass({
 
   loadVersion: function(postId, version, callback) {
     return Discourse.ajax("/posts/" + postId + ".json?version=" + version).then(function(result) {
-      return Discourse.Post.create(result);
-    });
-  },
-
-  loadByPostNumber: function(topicId, postId) {
-    return Discourse.ajax("/posts/by_number/" + topicId + "/" + postId + ".json").then(function (result) {
       return Discourse.Post.create(result);
     });
   },

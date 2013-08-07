@@ -460,6 +460,26 @@ Discourse.PostStream = Em.Object.extend({
   },
 
   /**
+    Returns the "thread" of posts in the history of a post.
+
+    @method findReplyHistory
+    @param {Discourse.Post} post the post whose history we want
+    @returns {Array} the posts in the history.
+  **/
+  findReplyHistory: function(post) {
+    var postStream = this,
+        url = "/posts/" + post.get('id') + "/reply-history.json";
+
+    return Discourse.ajax(url).then(function(result) {
+      return result.map(function (p) {
+        return postStream.storePost(Discourse.Post.create(p));
+      });
+    }).then(function (replyHistory) {
+      post.set('replyHistory', replyHistory);
+    });
+  },
+
+  /**
     Returns the closest post number given a postNumber that may not exist in the stream.
     For example, if the user asks for a post that's deleted or otherwise outside the range.
     This allows us to set the progress bar with the correct number.

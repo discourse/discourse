@@ -5,7 +5,7 @@ require_dependency 'distributed_memoizer'
 class PostsController < ApplicationController
 
   # Need to be logged in for all actions here
-  before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :versions]
+  before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :versions, :reply_history]
 
   skip_before_filter :store_incoming_links, only: [:short_link]
   skip_before_filter :check_xhr, only: [:markdown,:short_link]
@@ -111,6 +111,13 @@ class PostsController < ApplicationController
     guardian.ensure_can_see!(@post)
     @post.revert_to(params[:version].to_i) if params[:version].present?
     render_post_json(@post)
+  end
+
+  def reply_history
+    @post = Post.where(id: params[:id]).first
+    guardian.ensure_can_see!(@post)
+
+    render_serialized(@post.reply_history, PostSerializer)
   end
 
   def show
