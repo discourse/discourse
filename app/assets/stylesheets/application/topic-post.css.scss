@@ -438,6 +438,10 @@
   .embedded-posts {
     background-color: #e9e6e6;
 
+    .row:nth-of-type(1) {
+      padding-top:10px;
+    }
+
     .topic-meta-data-inside {
       margin: 3px -8px 3px 20px;
     }
@@ -445,7 +449,7 @@
     div.reply {
       border-left: 1px solid #ddd;
       border-right: 1px solid #ddd;
-      padding: 10px;
+      padding: 0 10px 10px 10px;
       margin: 0;
       background-clip: padding-box;
       .topic-meta-data {
