@@ -277,7 +277,7 @@ Discourse.AdminUser = Discourse.User.extend({
       "callback": function() {
         Discourse.ajax("/admin/users/" + user.get('id') + '.json', {
           type: 'DELETE',
-          data: {delete_posts: true, block_email: true}
+          data: {delete_posts: true, block_email: true, context: window.location.pathname}
         }).then(function(data) {
           if (data.deleted) {
             bootbox.alert(I18n.t("admin.user.deleted"), function() {
