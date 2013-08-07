@@ -1,9 +1,0 @@
-HTTP/1.0 302 Moved Temporarily
-Server: squid/2.7.STABLE9
-Date: Wed, 13 Feb 2013 10:16:13 GMT
-Content-Length: 0
-Location: http://en.m.wikipedia.org/wiki/Ruby
-X-Cache: MISS from amssq36.esams.wikimedia.org
-X-Cache-Lookup: MISS from amssq36.esams.wikimedia.org:80
-Connection: close
-
