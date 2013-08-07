@@ -1162,15 +1162,25 @@ en:
 
       logs:
         title: "Logs"
-        blocked_emails: "Blocked Emails"
-        email: "Email Address"
         action: "Action"
-        last_match_at: "Last Matched"
-        match_count: "Matches"
         created_at: "Created"
-        actions:
-          block: "block"
-          do_nothing: "do nothing"
+        blocked_emails:
+          title: "Blocked Emails"
+          email: "Email Address"
+          last_match_at: "Last Matched"
+          match_count: "Matches"
+          actions:
+            block: "block"
+            do_nothing: "do nothing"
+        staff_actions:
+          title: "Staff Actions"
+          staff_user: "Staff User"
+          target_user: "Target User"
+          context: "Context"
+          details: "Details"
+          actions:
+            delete_user: "delete user"
+            change_trust_level: "change trust level"
 
       impersonate:
         title: "Impersonate User"

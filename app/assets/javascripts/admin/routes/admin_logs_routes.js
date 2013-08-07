@@ -8,7 +8,7 @@
 **/
 Discourse.AdminLogsIndexRoute = Discourse.Route.extend({
   redirect: function() {
-    this.transitionTo('adminLogs.blockedEmails');
+    this.transitionTo('adminLogs.staffActionLogs');
   }
 });
 
@@ -21,15 +21,29 @@ Discourse.AdminLogsIndexRoute = Discourse.Route.extend({
   @module Discourse
 **/
 Discourse.AdminLogsBlockedEmailsRoute = Discourse.Route.extend({
-  // model: function() {
-  //   return Discourse.BlockedEmail.findAll();
-  // },
-
   renderTemplate: function() {
     this.render('admin/templates/logs/blocked_emails', {into: 'adminLogs'});
   },
 
   setupController: function() {
     return this.controllerFor('adminLogsBlockedEmails').show();
+  }
+});
+
+/**
+  The route that lists staff actions that were logged.
+
+  @class AdminLogsStaffActionLogsRoute
+  @extends Discourse.Route
+  @namespace Discourse
+  @module Discourse
+**/
+Discourse.AdminLogsStaffActionLogsRoute = Discourse.Route.extend({
+  renderTemplate: function() {
+    this.render('admin/templates/logs/staff_action_logs', {into: 'adminLogs'});
+  },
+
+  setupController: function() {
+    return this.controllerFor('adminLogsStaffActionLogs').show();
   }
 });

@@ -1,0 +1,50 @@
+{{#if loading}}
+  <div class='admin-loading'>{{i18n loading}}</div>
+{{else}}
+  {{#if model.length}}
+    <table class='table staff-actions'>
+      <thead>
+        <th class="action">{{i18n admin.logs.action}}</th>
+        <th class="staff_user">{{i18n admin.logs.staff_actions.staff_user}}</th>
+        <th class="target_user">{{i18n admin.logs.staff_actions.target_user}}</th>
+        <th class="context">{{i18n admin.logs.staff_actions.context}}</th>
+        <th class="created_at">{{i18n admin.logs.created_at}}</th>
+        <th class="details">{{i18n admin.logs.staff_actions.details}}</th>
+      </thead>
+
+      <tbody>
+        {{#each model}}
+          <tr>
+            <td class="action">{{actionName}}</td>
+            <td class="staff_user">
+              {{#linkTo 'adminUser' staff_user}}{{avatar staff_user imageSize="tiny"}}{{/linkTo}}
+              {{#linkTo 'adminUser' staff_user}}{{staff_user.username}}{{/linkTo}}
+            </td>
+            <td class="target_user">
+              {{#if target_user}}
+                {{#linkTo 'adminUser' target_user}}{{avatar target_user imageSize="tiny"}}{{/linkTo}}
+                {{#linkTo 'adminUser' target_user}}{{target_user.username}}{{/linkTo}}
+              {{else}}
+                &mdash;
+              {{/if}}
+            </td>
+            <td class="context">{{context}}</td>
+            <td class="created_at">{{unboundAgeWithTooltip created_at}}</td>
+            <td class="details">
+              {{{formattedDetails}}}
+              {{#if showFullDetails}}
+                {{details}}
+                <br/>
+                <a {{action toggleFullDetails this}}>Less</a>
+              {{else}}
+                <a {{action toggleFullDetails this}}>More</a>
+              {{/if}}
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  {{else}}
+    No results.
+  {{/if}}
+{{/if}}

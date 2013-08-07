@@ -9,7 +9,7 @@
 **/
 Discourse.BlockedEmail = Discourse.Model.extend({
   actionName: function() {
-    return I18n.t("admin.logs.actions." + this.get('action'));
+    return I18n.t("admin.logs.blocked_emails.actions." + this.get('action'));
   }.property('action')
 });
 
@@ -18,9 +18,7 @@ Discourse.BlockedEmail.reopenClass({
     return Discourse.ajax("/admin/logs/blocked_emails.json").then(function(blocked_emails) {
       return blocked_emails.map(function(b) {
         return Discourse.BlockedEmail.create(b);
-      })
+      });
     });
   }
 });
-
-

@@ -13,7 +13,6 @@ Discourse.AdminLogsBlockedEmailsController = Ember.ArrayController.extend(Discou
     var self = this;
     this.set('loading', true);
     Discourse.BlockedEmail.findAll().then(function(result) {
-      console.log('findAll done');
       self.set('content', result);
       self.set('loading', false);
     });

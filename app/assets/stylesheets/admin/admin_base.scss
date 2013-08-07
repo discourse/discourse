@@ -701,3 +701,21 @@ table {
     text-align: center;
   }
 }
+
+.staff-actions {
+  .action {
+    width: 120px;
+  }
+  .staff_user, .target_user {
+    white-space: nowrap;
+  }
+  .created_at {
+    text-align: center;
+  }
+  .details {
+    width: 500px;
+    a {
+      text-decoration: underline;
+    }
+  }
+}

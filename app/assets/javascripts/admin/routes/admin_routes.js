@@ -31,6 +31,7 @@ Discourse.Route.buildRoutes(function() {
 
     this.resource('adminLogs', { path: '/logs' }, function() {
       this.route('blockedEmails', { path: '/blocked_emails' });
+      this.route('staffActionLogs', { path: '/staff_action_logs' });
     });
 
     this.route('groups', {path: '/groups'});
