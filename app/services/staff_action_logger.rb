@@ -24,7 +24,8 @@ class StaffActionLogger
     StaffActionLog.create!(
       action: StaffActionLog.actions[:change_trust_level],
       staff_user_id: @admin.id,
-      details: [:id, :username, :name, :created_at, :trust_level, :last_seen_at, :last_emailed_at].map { |x| "#{x}: #{user.send(x)}" }.join(', ') + "new trust level: #{new_trust_level}"
+      target_user_id: user.id,
+      details: [:id, :username, :name, :created_at, :trust_level, :last_seen_at, :last_emailed_at].map { |x| "#{x}: #{user.send(x)}" }.join(', ') + ", new trust level: #{new_trust_level}"
     )
   end
 end
