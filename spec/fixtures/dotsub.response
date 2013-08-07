@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link rel="icon" href="http://dotsub.com/styles/dotsub2/images/favicon.ico"/>
+<link rel="shortcut icon" href="http://dotsub.com/styles/dotsub2/images/favicon.ico"/>
+    <meta name="verify-v1" content="/g84csdvErTyQiTn2ZrG3wnBeSA0k1HFWipicO+5P9g="/>    
+    <meta name="msvalidate.01" content="29FA4BF8E2E048D10A1CFB523EF7BDB6" />
+    <meta property="fb:page_id" content="51817601183" />
+    <meta name="description" content="Online video translation and transcription crowdsourced"/>
+    <title>Twitter in Plain English
+            - 93 Translation(s) | Dotsub</title>
+    <link rel=stylesheet type="text/css" href="/scripts/ext-4.0.1/resources/css/ext-all.css"/>
+<link href="/styles/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<script src="/styles/bootstrap/js/jquery.js" type="text/javascript"></script>
+<script src="/styles/bootstrap/js/jquery-ui-min.js" type="text/javascript"></script>
+<script>
+    var jq17 = jQuery.noConflict();
+</script>
+<script src="/styles/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="/styles/bootstrap/js/jquery.placeholder.min.js" type="text/javascript"></script>
+    <!--[if lt IE 7]>
+        <link rel=stylesheet href="/scripts/pngHack/pngHack.css" type="text/css">
+    <![endif]-->
+    <script type="text/javascript">
+        var contextRoot = '';
+        var applicationUrl = 'http://dotsub.com';
+        var webappVersion = '85a7afc022a8834901a91df2308fd725ff5fda48';
+    </script>
+        <script type="text/javascript" src="/scripts/prototype.js?version=85a7afc022a8834901a91df2308fd725ff5fda48"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/scriptaculous/1.8.3/effects.js"></script>
+        <script type="text/javascript" src="/scripts/global.js?version=85a7afc022a8834901a91df2308fd725ff5fda48"></script>
+        <script type="text/javascript" src="/scripts/tracker.js?version=85a7afc022a8834901a91df2308fd725ff5fda48"></script>
+        <script type="text/javascript" src="/dwr/engine.js?version=85a7afc022a8834901a91df2308fd725ff5fda48"></script>
+        <script type="text/javascript" src="/dwr/util.js?version=85a7afc022a8834901a91df2308fd725ff5fda48"></script>
+    <script type="text/javascript" src="/scripts/yui/yahoo-dom-event/yahoo-dom-event.js"></script>
+    <script type="text/javascript" src="/scripts/yui/container/container-min.js"></script>
+        <script type="text/javascript" src="/scripts/ext-4.0.1/ext-all.js?version=85a7afc022a8834901a91df2308fd725ff5fda48"></script>
+    <script type="text/javascript">
+        Ext.scopeResetCSS = true;
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-3684979-1']);
+        _gaq.push(['_trackPageview']);
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
+      })();
+        document.observe('dom:loaded', function() {
+            var currentMenu = '';
+            var menuLookup =
+                {   'MainMenu': 0,
+                    'PersonalMediaMenu':1,
+                    'MostViewed':2,
+                    'Latest':3,
+                    'Genre':4,
+                    'MediaCollectionsMenu':5,
+                    'Language':6,
+                    'Country':7,
+                    'Help':8
+                };
+            var x = menuLookup[currentMenu];
+            try{
+                $$('#siteNav li')[x].addClassName('active')
+            }
+            catch(e){}
+        });
+    </script>
+        <script type="text/javascript">
+            dotSUBUser = null;
+        </script>
+    <script type='text/javascript' src='/dwr/interface/UserManager.js'></script>
+    <meta name="heading" content="Twitter in Plain English"/>
+        <script type="text/javascript" src="/static/players/beta/jwplayer.min.js?version=85a7afc022a8834901a91df2308fd725ff5fda48"></script>
+        <script type="text/javascript" src="/styles/bootstrap/js/jquery.zclip.js?version=85a7afc022a8834901a91df2308fd725ff5fda48"></script>
+<meta name="description" content="A short explanation of the micro-blogging service, Twitter." />
+<script type='text/javascript' src='/dwr/interface/Mailer.js'></script>
+        <script type="text/javascript" src="/scripts/displayVideo.js?version=85a7afc022a8834901a91df2308fd725ff5fda48"></script>
+<script type="text/javascript" src="/scripts/validator.jsp"></script>
+<script type="text/javascript" src="/dwr/interface/CaptionManager.js"></script>
+<script type='text/javascript' src='/dwr/interface/MediaCollectionManager.js'></script>
+<script type="text/javascript">
+    var trackerId = 'UA-3684979-1';
+    var mediaUri = '/media/665bd0d5-a9f4-4a07-9d9e-b31ba926ca78/m/flv/en';
+    var mediaDuration = 144000;
+    var language = 'eng';
+    var webAppUrl = 'http://dotsub.com';
+</script>
+        <link rel="stylesheet" type="text/css" media="screen" href="/scripts/yui/container/assets/skins/sam/container.css?version=85a7afc022a8834901a91df2308fd725ff5fda48"/>
+<script type='text/javascript'> 
+//<![CDATA[
+ dotSUBMedia = {"id":"665bd0d5-a9f4-4a07-9d9e-b31ba926ca78","title":"Twitter in Plain English","description":"A short explanation of the micro-blogging service, Twitter."}
+//]]>
+</script>
+    <script type='text/javascript'> 
+//<![CDATA[
+ project = {"id":"3c01ee87-dda2-4594-96d5-ca7cd57bbcba"}
+//]]>
+</script>
+<script type='text/javascript'> 
+//<![CDATA[
+ captionStats = [{"languageName":"Abkhaz","languageCode":"abk","percentageComplete":5,"languageDirection":"ltr"},{"languageName":"Afar","languageCode":"aar","percentageComplete":5,"languageDirection":"ltr"},{"languageName":"Afrihili","languageCode":"afh","percentageComplete":2,"languageDirection":"ltr"},{"languageName":"Afrikaans","languageCode":"afr","percentageComplete":10,"languageDirection":"ltr"},{"languageName":"Akan","languageCode":"aka","percentageComplete":5,"languageDirection":"ltr"},{"languageName":"Albanian","languageCode":"alb","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Arabic","languageCode":"ara","percentageComplete":100,"languageDirection":"rtl"},{"languageName":"Armenian","languageCode":"arm","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Artificial","languageCode":"art","percentageComplete":7,"languageDirection":"ltr"},{"languageName":"Aymara","languageCode":"aym","percentageComplete":67,"languageDirection":"ltr"},{"languageName":"Azerbaijani","languageCode":"aze","percentageComplete":2,"languageDirection":"ltr"},{"languageName":"Baltic","languageCode":"bat","percentageComplete":5,"languageDirection":"ltr"},{"languageName":"Basque","languageCode":"baq","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Berber","languageCode":"ber","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Bislama","languageCode":"bis","percentageComplete":2,"languageDirection":"ltr"},{"languageName":"Bosnian","languageCode":"bos","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Breton","languageCode":"bre","percentageComplete":2,"languageDirection":"ltr"},{"languageName":"Bulgarian","languageCode":"bul","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Catalan","languageCode":"cat","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Cherokee","languageCode":"chr","percentageComplete":5,"languageDirection":"ltr"},{"languageName":"Chinese (Simplified)","languageCode":"chi_hans","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Chinese (Traditional)","languageCode":"chi_hant","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Chinese, Yue (Cantonese)","languageCode":"yue","percentageComplete":2,"languageDirection":"ltr"},{"languageName":"Croatian","languageCode":"scr","percentageComplete":92,"languageDirection":"ltr"},{"languageName":"Czech","languageCode":"cze","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Dakota","languageCode":"dak","percentageComplete":2,"languageDirection":"ltr"},{"languageName":"Danish","languageCode":"dan","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Dutch","languageCode":"dut","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"English","languageCode":"eng","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Esperanto","languageCode":"epo","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Estonian","languageCode":"est","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Faroese","languageCode":"fao","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Filipino (Pilipino)","languageCode":"fil","percentageComplete":15,"languageDirection":"ltr"},{"languageName":"Finnish","languageCode":"fin","percentageComplete":67,"languageDirection":"ltr"},{"languageName":"French (Canada)","languageCode":"fre_ca","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"French (France)","languageCode":"fre_fr","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Galician","languageCode":"glg","percentageComplete":47,"languageDirection":"ltr"},{"languageName":"Georgian","languageCode":"geo","percentageComplete":2,"languageDirection":"ltr"},{"languageName":"German","languageCode":"ger","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Greek","languageCode":"gre","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Gujarati","languageCode":"guj","percentageComplete":52,"languageDirection":"ltr"},{"languageName":"Haitian Creole","languageCode":"hat","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Hebrew","languageCode":"heb","percentageComplete":100,"languageDirection":"rtl"},{"languageName":"Hindi","languageCode":"hin","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Hungarian","languageCode":"hun","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Icelandic","languageCode":"ice","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Indonesian","languageCode":"ind","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Interlingua","languageCode":"ina","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Iranian","languageCode":"ira","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Irish","languageCode":"gle","percentageComplete":2,"languageDirection":"ltr"},{"languageName":"Italian","languageCode":"ita","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Japanese","languageCode":"jpn","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Kannada","languageCode":"kan","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Kazakh","languageCode":"kaz","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Latin","languageCode":"lat","percentageComplete":10,"languageDirection":"ltr"},{"languageName":"Latvian","languageCode":"lav","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Lithuanian","languageCode":"lit","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Macedonian","languageCode":"mac","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Maithili","languageCode":"mai","percentageComplete":7,"languageDirection":"ltr"},{"languageName":"Malay","languageCode":"may","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Maltese","languageCode":"mlt","percentageComplete":7,"languageDirection":"ltr"},{"languageName":"Marathi","languageCode":"mar","percentageComplete":35,"languageDirection":"ltr"},{"languageName":"Nepali","languageCode":"nep","percentageComplete":67,"languageDirection":"ltr"},{"languageName":"Norwegian","languageCode":"nor","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Norwegian, Bokmål (Bokmaal)","languageCode":"nob","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Persian (Farsi)","languageCode":"per","percentageComplete":100,"languageDirection":"rtl"},{"languageName":"Philippine","languageCode":"phi","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Polish","languageCode":"pol","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Portuguese (Brazil)","languageCode":"por_br","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Portuguese (Portugal)","languageCode":"por_pt","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Romanian","languageCode":"rum","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Russian","languageCode":"rus","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Serbian","languageCode":"scc","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Serbo-Croatian","languageCode":"hbs","percentageComplete":2,"languageDirection":"ltr"},{"languageName":"Slovak","languageCode":"slo","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Slovenian","languageCode":"slv","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Somali","languageCode":"som","percentageComplete":7,"languageDirection":"ltr"},{"languageName":"Spanish","languageCode":"spa","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Swahili","languageCode":"swa","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Swedish","languageCode":"swe","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Syriac","languageCode":"syr","percentageComplete":5,"languageDirection":"ltr"},{"languageName":"Tagalog","languageCode":"tgl","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Tamil","languageCode":"tam","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Telugu","languageCode":"tel","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Thai","languageCode":"tha","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Turkish","languageCode":"tur","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Turkmen","languageCode":"tuk","percentageComplete":2,"languageDirection":"ltr"},{"languageName":"Ukrainian","languageCode":"ukr","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Urdu","languageCode":"urd","percentageComplete":27,"languageDirection":"rtl"},{"languageName":"Uyghur (Uighur)","languageCode":"uig","percentageComplete":67,"languageDirection":"ltr"},{"languageName":"Uzbek","languageCode":"uzb","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Vietnamese","languageCode":"vie","percentageComplete":100,"languageDirection":"ltr"},{"languageName":"Vlaams (Flemish)","languageCode":"vls","percentageComplete":60,"languageDirection":"ltr"},{"languageName":"Welsh","languageCode":"wel","percentageComplete":100,"languageDirection":"ltr"}]
+//]]>
+</script>
+<!-- facebook share tags -->
+<meta name="medium" content="video"/>
+<meta property="og:type" content="video" />
+<meta property="og:site_name" content="Dotsub" />
+<meta property="og:url" content="http://dotsub.com/view/665bd0d5-a9f4-4a07-9d9e-b31ba926ca78"/>
+<meta proprery="og:title" content="Twitter in Plain English" />
+<meta proprery="og:description" content="A short explanation of the micro-blogging service, Twitter." />
+<meta property="og:image" content="http://dotsub.com/media/665bd0d5-a9f4-4a07-9d9e-b31ba926ca78/p" />
+<meta property="og:video" content="http://dotsub.com/static/players/beta/player.swf?logo.position=top-right&logo.position=top-right&logo.file=http://dotsub.com/static/players/beta/player-logo.png&duration=144.999&plugins=http://dotsub.com/static/players/beta/sitePlugin.swf&sitePlugin.serviceroot=http://dotsub.com&sitePlugin.uuid=665bd0d5-a9f4-4a07-9d9e-b31ba926ca78&sitePlugin.tid=UA-3684979-1&sitePlugin.embedded=true&sitePlugin.url=https%3A%2F%2Ffacebook.com%2Fcommon%2Freferer_frame.php&skin=http://dotsub.com/static/players/beta/skin/newtubedarksmall.zip&controlbar.position=over&image=http://dotsub.com/media/665bd0d5-a9f4-4a07-9d9e-b31ba926ca78/p&sitePlugin.language=eng&provider=video&autostart=true&file=http://dotsub.com/media/665bd0d5-a9f4-4a07-9d9e-b31ba926ca78/m/flv/"/>
+<meta property="og:video:secure_url" content="https://dotsub.com/static/players/beta/player.swf?logo.position=top-right&logo.position=top-right&autostart=true&logo.file=https://dotsub.com/static/players/beta/player-logo.png&duration=144.999&plugins=https://dotsub.com/static/players/beta/sitePlugin.swf&sitePlugin.serviceroot=https://dotsub.com&sitePlugin.uuid=665bd0d5-a9f4-4a07-9d9e-b31ba926ca78&sitePlugin.tid=UA-3684979-1&sitePlugin.embedded=true&sitePlugin.url=https%3A%2F%2Ffacebook.com%2Fcommon%2Freferer_frame.php&skin=https://dotsub.com/static/players/beta/skin/newtubedarksmall.zip&controlbar.position=over&image=https://dotsub.com/media/665bd0d5-a9f4-4a07-9d9e-b31ba926ca78/p&sitePlugin.language=eng&provider=video&file=https://dotsub.com/media/665bd0d5-a9f4-4a07-9d9e-b31ba926ca78/m/flv/"/>
+<meta name="video_height" content="316" />
+<meta name="video_width" content="420" />
+<meta name="video_type" content="application/x-shockwave-flash" />
+<!-- Twitter Card Tags -->
+<meta name="twitter:card" content="player"><meta name="medium" content="video"/>
+<meta name="twitter:site" content="@dotsub">
+<meta name="twitter:url" content="http://dotsub.com/view/665bd0d5-a9f4-4a07-9d9e-b31ba926ca78">
+<meta name="twitter:title" content="Twitter in Plain English">
+<meta name="twitter:description" content="A short explanation of the micro-blogging service, Twitter.">
+<meta name="twitter:player:height" content="347" />
+<meta name="twitter:player:width" content="420" />
+<meta name="twitter:player" content="https://dotsub.com/media/665bd0d5-a9f4-4a07-9d9e-b31ba926ca78/embed/?sharing=false" />
+<script type="text/javascript">
+/*<![CDATA[ */
+	messages = {"videoDisplay.reportSpamWarning":"Are you sure you want to report this as spam?","videoDisplay.deleteSpam":"Delete this spam video?","videoDisplay.clearYouTubeWarning":"Are you sure you want to remove the link to this video on YouTube? You should only do this when the video has been deleted at YouTube.","videoDisplay.choosealanguage":"Select a language...","videoDisplay.reprocessWarning":"Are you sure you want to reprocess this media?","videoDisplay.resetCaptionsWarning":"Are you sure that you want to remove all translations and the transcription to this video? This can not be undone!","videoDisplay.noProjects":"You have no project to add this media to","videoDisplay.addedToProject":"Media Added to Project","button.add":"Add","videoDisplay.makeNotCompleteWarning":"Are you sure that you want to mark this transcription not complete?","videoDisplay.addToCollection":"Add this video to a collection","videoDisplay.addedToCollection":"Added","videoDisplay.add":"Add","videoDisplay.addedToFavorites":"Added to your favorites","videoDisplay.reportWarning":"Are you sure you want to report this as offensive content?","videoDisplay.thanksForReport":"Thank you for your feedback on this video."}
+/* ]]> */
+</script>
+<script type="text/javascript">
+/*<![CDATA[ */
+	adminMessages = {"featured.addedItem":"Added to featured page","featured.containsItem":"This is a featured video"}
+/* ]]> */
+</script>
+<!-- facebook share tags -->
+    <meta name="showMenu" content="false"/>
+    <meta name="description" content="Twitter in Plain English translation and transcription crowdsourced"/>
+    <script type="text/javascript">
+        document.observe('dom:loaded', function() {
+            jwplayer('playerReplace').setup({
+                flashplayer: '/static/players/beta/player.swf',
+                "provider": "video",
+                "file": 'https://sc1.dotsub.com/d84da296789d74dcd1b1ed35376b8cdf/51fb32c8/665bd0d5-a9f4-4a07-9d9e-b31ba926ca78/video.flv',
+                image: '/media/665bd0d5-a9f4-4a07-9d9e-b31ba926ca78/p',
+                "height": 377,
+                "width": 620,
+                duration: 144.999,
+                skin: '/static/players/beta/skin/newtubedark.zip',
+                dock: 'false',
+                logo: {
+                    position: 'top-right',
+                    file: '/static/players/beta/player-logo.png',
+                    hide: true,
+                    margin: 8
+                },
+                plugins: {
+                    '/static/players/beta/sitePlugin.swf': {
+                        'uuid': '665bd0d5-a9f4-4a07-9d9e-b31ba926ca78',
+                        'language': 'eng',
+                        'tid': "UA-3684979-1",
+                        'serviceroot': 'https://dotsub.com'
+                    },
+                    '/static/players/beta/sharing.swf' : {
+                        'code': '<iframe src="http://dotsub.com/media/665bd0d5-a9f4-4a07-9d9e-b31ba926ca78/embed/" frameborder="0" width="560" height="315"></iframe>'
+                    }
+,
+"ova-jw": {
+     'tag': "http://www.adotube.com/kernel/vast/vast.php?omlSource=http://www.adotube.com/php/services/player/OMLService.php?avpid=4_VoiY2&ad_type=pre-rolls&integration=vpaid&vpaid=1&rtb=0&platform_version=vast20as3&publisher="+encodeURI("http://dotsub.com")+"&title="+encodeURI(dotSUBMedia.title)+"&description="+encodeURI(dotSUBMedia.description)+"&videoURL=https://sc1.dotsub.com/d84da296789d74dcd1b1ed35376b8cdf/51fb32c8/665bd0d5-a9f4-4a07-9d9e-b31ba926ca78/video.flv&http_ref=" + encodeURIComponent(window.location.href),
+      "debug": {
+        "levels": "none"
+      }
+}
+                }
+            });
+        });
+    </script>
+    <style>
+        .x-slider-horz {
+            padding-right: 0;
+            padding-left: 0;
+        }
+    </style>
+</head>
+<body class=" yui-skin-sam" >
+<script type="text/javascript">
+/*<![CDATA[ */
+	loginMessages = {"errors.header.password.mismatch":"Invalid username and/or password, please try again or click here for help","errors.header.password.locked":"Your user account is not active, please activate it by clicking the activation link you received by e-mail"}
+/* ]]> */
+</script>
+<div class="navbar navbar-static-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <div>
+                <ul class="nav pull-right">
+                    <li class="divider-vertical"></li>
+                    <li>
+                        <a id="signUp" href="/enterprise/signup?location=%2fview%2f665bd0d5-a9f4-4a07-9d9e-b31ba926ca78">
+                            Sign Up Free
+                        </a>
+                    </li>
+                    <li class="divider-vertical"></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Sign In<b class="caret"></b></a>
+                            <ul class="dropdown-menu dropdown-form">
+                                <div class="dropdown-login-content">
+                                    <form>
+                                        <input id="username" type="text" class="span3" placeholder="Username">
+                                        <input id="password" type="password" class="span2" placeholder="Password">
+                                        <button id="signIn" type="submit"
+                                                class="signin span1 pull-right btn btn-primary">Login
+                                        </button>
+                                        <label class="checkbox">
+                                            <input id="remember" type="checkbox"> Remember me?
+                                        </label>
+                                    </form>
+                                    <div id="loginError" style="display: none">
+                                        <div class="alert alert-error fade in">
+                                            <span class="alert-heading">Invalid login</span>
+                                            <a href="/login">Forgot Password?</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ul>
+                        </li>
+                    <li class="divider-vertical"></li>
+                </ul>
+            </div>
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li class="dotsub-branded"><a class="brand" href="/">
+                        <img height="25" src="/images/bootstrap/logo.png">
+                    </a></li>
+                    <li class="Enterprise"><a href="/enterprise">Enterprise</a></li>
+                    <li><a href="http://blog.dotsub.com">Blog</a></li>
+                    <li>
+                                <a href="http://help.dotsub.com/">
+                        Help</a></li>
+                    <li>
+                        <form action="/view/" method="GET" style="margin:0">
+                            <button type="submit" style="color:#fff" class="btn btn-info">
+                                Watch Videos
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="pull-right">
+        <form id="siteSearchHeader" class="navbar-search pull-left" method="GET" action="/view/search/">
+            <input type="text" name="q" id="q" class="search-query" placeholder="Search">
+            <i class="icon-search" style="position: relative; top: 2px; left: -26px"></i>
+        </form>
+    </div>
+</div>
+<div class="container" style="text-align: center;">
+    <h6>&nbsp;</h6>
+    <ul id="siteNav" class="nav nav-tabs">
+            <li>
+                <a href="/view/" >Featured</a>
+            </li>
+            <li >
+                <a href="/view/my/" >My Videos</a>
+            </li>
+            <li >
+                <a href="/view/mostviewed/" >Most Viewed</a>
+            </li>
+            <li >
+                <a href="/view/latest/" >Latest</a>
+            </li>
+            <li >
+                <a href="/view/genre/" >Genre</a>
+            </li>
+            <li >
+                <a href="/channel/collection/" >Collections</a>
+            </li>
+            <li >
+                <a href="/view/language/" >Language</a>
+            </li>
+            <li >
+                <a href="/view/country/" >Country</a>
+            </li>
+        </ul>
+</div>
+    <div class="page container">
+        <div class="signupPitch alert alert-info">
+            <a href="/tutorials">
+                Watch videos with subtitles in your language, upload your videos, create your own subtitles!  Click here to learn more on "how to Dotsub"
+            </a>
+        </div>
+    </div>
+<div id="pageBg" class="container">
+    <div id="page">
+        <div id="content" class="clearfix">
+            <div id="heading">
+                <h1>Twitter in Plain English
+                </h1>
+            </div>
+            <div id="main" class="row">
+                <div class="span12">
+                    <div id="displayMedia" class="row">
+    <div class="span12">
+                <div style="text-align:center;padding-bottom:13px">
+</div>
+    </div>
+<div id="player" class="player span8">
+            <div class="playerBox" id="playerBox">
+                <div id="playerReplace" style="display:none;">
+                    <img src="/media/665bd0d5-a9f4-4a07-9d9e-b31ba926ca78/p" alt="Preview"/>
+                    Hey! You must have JavaScript turned off or an old version of Adobe's Flash.
+                    <a href="http://www.macromedia.com/go/getflashplayer/">Get the latest version Flash. </a>
+                </div>
+            </div>
+<div class="tabbable"> <!-- Only required for left/right tabs -->
+      <ul class="nav nav-tabs" style="margin-bottom: 0; margin-top: 10px">
+            <li class="active"><a href="#tab1" data-toggle="tab">Social</a></li>
+            <li><a href="#mediaShare" data-toggle="tab">Share</a></li>
+              <li class=""><a href="#mediaTranscription" data-toggle="tab">Transcription</a></li>
+      </ul>
+<div class="tab-content">
+    <div class="tab-pane active" id="tab1">
+        <div id="ratingDiv" class="mediaRating" class="rating">
+                <span id="mediaRatingInfo">
+                    <span id="mediaRating">0</span> (<span id="mediaUpVotes">0</span> Likes / <span id="mediaDownVotes">0</span> Dislikes)
+                </span>
+        </div>
+            <div id="a2aShare">
+                <!-- ADDTHIS BUTTON BEGIN -->
+                <script type="text/javascript">
+                var addthis_config = {
+                    username: "dotsub",
+                    ui_hover_direction: -1,
+                    data_track_clickback: true,
+                    data_ga_property: 'UA-3684979-1',
+                    data_ga_social : true
+                };
+                </script>
+                <!-- AddThis Button BEGIN -->
+                <div class="addthis_toolbox addthis_default_style ">
+                <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+                <a class="addthis_button_tweet"></a>
+                <a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+                <a class="addthis_counter addthis_pill_style"></a>
+                </div>
+                <script type="text/javascript" src="//s7.addthis.com/js/250/addthis_widget.js#pubid=dotsub"></script>
+                <!-- AddThis Button END -->
+            </div>
+    <div id="fb-root" style="padding-top:20px"></div>
+    <script src="//connect.facebook.net/en_US/all.js">
+    </script>
+    <script>
+     FB.init({
+        cookie:true,
+        status:true,
+        xfbml:true
+     });
+     document.observe('dom:loaded', function() {
+         //now add some listeners
+          FB.Event.subscribe('comment.create', commentChanged);
+          FB.Event.subscribe('comment.remove', commentChanged);
+          function commentChanged(response) {
+            new Ajax.Request('/media/665bd0d5-a9f4-4a07-9d9e-b31ba926ca78/comment', {
+                method: 'post'
+            });
+          }
+     });
+    </script>
+    <fb:comments href="http://dotsub.com/view/665bd0d5-a9f4-4a07-9d9e-b31ba926ca78" num_posts="2" width="600"></fb:comments>
+    </div>
+    <div class="tab-pane" id="mediaShare">
+                <ul>
+                    <li>
+                        <h4>Embed Video</h4>
+                    </li>
+                    <li class="simpleEmbed">
+                        Embed normal player <input id="embedNormalPlayer"
+                                 value='<iframe src="http://dotsub.com/media/665bd0d5-a9f4-4a07-9d9e-b31ba926ca78/embed/" frameborder="0" width="640" height="360"></iframe>'/>
+                        <a href="#" id="embedNormalPlayerCopy">Copy to Clipboard</a>
+                    </li>
+                    <li class="simpleEmbed">
+                        Embed a smaller player <input id="embedSmallPlayer"
+                                 value='<iframe src="http://dotsub.com/media/665bd0d5-a9f4-4a07-9d9e-b31ba926ca78/embed/" frameborder="0" width="420" height="315"></iframe>'/>
+                        <a href="#" id="embedSmallPlayerCopy">Copy to Clipboard</a>
+                    </li>
+                    <li class="simpleEmbed">
+                        <a id="advancedEmdeddingOptions">
+                            Advanced Embedding Options
+                        </a>
+                    </li>
+                    <li id="advancedEmbed" style="display:none;">
+                        <div>
+                            <div>Embedding Options</div>
+                            <div>
+                                Size:
+                                <select id="embedSize">
+                                    <option value="s">Small</option>
+                                    <option value="m" selected="true">Small Wide Screen</option>
+                                    <option value="l">Wide Screen</option>
+                                </select>
+                            </div>
+                            <div>
+                                Language:
+                                <select id="embedLanguage">
+                                    <option value="">Auto Selection</option>
+                                        <option value="abk">
+Abkhaz</option>
+                                        <option value="aar">
+Afar</option>
+                                        <option value="afh">
+Afrihili</option>
+                                        <option value="afr">
+Afrikaans</option>
+                                        <option value="aka">
+Akan</option>
+                                        <option value="alb">
+Albanian</option>
+                                        <option value="ara">
+Arabic</option>
+                                        <option value="arm">
+Armenian</option>
+                                        <option value="art">
+Artificial</option>
+                                        <option value="aym">
+Aymara</option>
+                                        <option value="aze">
+Azerbaijani</option>
+                                        <option value="bat">
+Baltic</option>
+                                        <option value="baq">
+Basque</option>
+                                        <option value="ber">
+Berber</option>
+                                        <option value="bis">
+Bislama</option>
+                                        <option value="bos">
+Bosnian</option>
+                                        <option value="bre">
+Breton</option>
+                                        <option value="bul">
+Bulgarian</option>
+                                        <option value="cat">
+Catalan</option>
+                                        <option value="chr">
+Cherokee</option>
+                                        <option value="chi_hans">
+Chinese (Simplified)</option>
+                                        <option value="chi_hant">
+Chinese (Traditional)</option>
+                                        <option value="yue">
+Chinese, Yue (Cantonese)</option>
+                                        <option value="scr">
+Croatian</option>
+                                        <option value="cze">
+Czech</option>
+                                        <option value="dak">
+Dakota</option>
+                                        <option value="dan">
+Danish</option>
+                                        <option value="dut">
+Dutch</option>
+                                        <option value="eng">
+English</option>
+                                        <option value="epo">
+Esperanto</option>
+                                        <option value="est">
+Estonian</option>
+                                        <option value="fao">
+Faroese</option>
+                                        <option value="fil">
+Filipino (Pilipino)</option>
+                                        <option value="fin">
+Finnish</option>
+                                        <option value="fre_ca">
+French (Canada)</option>
+                                        <option value="fre_fr">
+French (France)</option>
+                                        <option value="glg">
+Galician</option>
+                                        <option value="geo">
+Georgian</option>
+                                        <option value="ger">
+German</option>
+                                        <option value="gre">
+Greek</option>
+                                        <option value="guj">
+Gujarati</option>
+                                        <option value="hat">
+Haitian Creole</option>
+                                        <option value="heb">
+Hebrew</option>
+                                        <option value="hin">
+Hindi</option>
+                                        <option value="hun">
+Hungarian</option>
+                                        <option value="ice">
+Icelandic</option>
+                                        <option value="ind">
+Indonesian</option>
+                                        <option value="ina">
+Interlingua</option>
+                                        <option value="ira">
+Iranian</option>
+                                        <option value="gle">
+Irish</option>
+                                        <option value="ita">
+Italian</option>
+                                        <option value="jpn">
+Japanese</option>
+                                        <option value="kan">
+Kannada</option>
+                                        <option value="kaz">
+Kazakh</option>
+                                        <option value="lat">
+Latin</option>
+                                        <option value="lav">
+Latvian</option>
+                                        <option value="lit">
+Lithuanian</option>
+                                        <option value="mac">
+Macedonian</option>
+                                        <option value="mai">
+Maithili</option>
+                                        <option value="may">
+Malay</option>
+                                        <option value="mlt">
+Maltese</option>
+                                        <option value="mar">
+Marathi</option>
+                                        <option value="nep">
+Nepali</option>
+                                        <option value="nor">
+Norwegian</option>
+                                        <option value="nob">
+Norwegian, Bokmål (Bokmaal)</option>
+                                        <option value="per">
+Persian (Farsi)</option>
+                                        <option value="phi">
+Philippine</option>
+                                        <option value="pol">
+Polish</option>
+                                        <option value="por_br">
+Portuguese (Brazil)</option>
+                                        <option value="por_pt">
+Portuguese (Portugal)</option>
+                                        <option value="rum">
+Romanian</option>
+                                        <option value="rus">
+Russian</option>
+                                        <option value="scc">
+Serbian</option>
+                                        <option value="hbs">
+Serbo-Croatian</option>
+                                        <option value="slo">
+Slovak</option>
+                                        <option value="slv">
+Slovenian</option>
+                                        <option value="som">
+Somali</option>
+                                        <option value="spa">
+Spanish</option>
+                                        <option value="swa">
+Swahili</option>
+                                        <option value="swe">
+Swedish</option>
+                                        <option value="syr">
+Syriac</option>
+                                        <option value="tgl">
+Tagalog</option>
+                                        <option value="tam">
+Tamil</option>
+                                        <option value="tel">
+Telugu</option>
+                                        <option value="tha">
+Thai</option>
+                                        <option value="tur">
+Turkish</option>
+                                        <option value="tuk">
+Turkmen</option>
+                                        <option value="ukr">
+Ukrainian</option>
+                                        <option value="urd">
+Urdu</option>
+                                        <option value="uig">
+Uyghur (Uighur)</option>
+                                        <option value="uzb">
+Uzbek</option>
+                                        <option value="vie">
+Vietnamese</option>
+                                        <option value="vls">
+Vlaams (Flemish)</option>
+                                        <option value="wel">
+Welsh</option>
+                                </select>
+                            </div>
+                            <div>
+                                Embed Code
+                            </div>
+                            <div>
+                                <input id="embedCode" type="text"
+                                       value='<iframe src="http://dotsub.com/media/665bd0d5-a9f4-4a07-9d9e-b31ba926ca78/embed/" frameborder="0" width="640" height="360"></iframe>'>
+                            </div>
+                            <a href="#" id="embedCustomPlayerCopy">Copy to Clipboard</a>
+                        </div>
+                    </li>
+                        <li>
+                            <h4>Embed Video With Transcription</h4>
+                        </li>
+                        <li>
+                        Embed with transcription beside video <input id="embedWithTransBeside"
+                                 value='<iframe src="http://dotsub.com/media/665bd0d5-a9f4-4a07-9d9e-b31ba926ca78/embedWithTranscript/h/" frameborder="0" width="840" height="315"></iframe>'/>
+                            <a href="#" id="embedWithTransBesideCopy">Copy to Clipboard</a>
+                        </li>
+                        <li>
+                        Embed with transcription below video <input id="embedWithTransBelow"
+                                 value='<iframe src="http://dotsub.com/media/665bd0d5-a9f4-4a07-9d9e-b31ba926ca78/embedWithTranscript/v/" frameborder="0" width="420" height="630"></iframe>'/>
+                            <a href="#" id="embedWithTransBelowCopy">Copy to Clipboard</a>
+                        </li>
+                        <li>
+                            <h4>Embed transcript</h4>
+                        </li>
+                        <li class="transcriptEmbed">
+                            Embed transcript in:
+                            <select id="embedTranscriptLanguage">
+                                <option value="">Auto Selection</option>
+                                    <option value="abk">
+Abkhaz</option>
+                                    <option value="aar">
+Afar</option>
+                                    <option value="afh">
+Afrihili</option>
+                                    <option value="afr">
+Afrikaans</option>
+                                    <option value="aka">
+Akan</option>
+                                    <option value="alb">
+Albanian</option>
+                                    <option value="ara">
+Arabic</option>
+                                    <option value="arm">
+Armenian</option>
+                                    <option value="art">
+Artificial</option>
+                                    <option value="aym">
+Aymara</option>
+                                    <option value="aze">
+Azerbaijani</option>
+                                    <option value="bat">
+Baltic</option>
+                                    <option value="baq">
+Basque</option>
+                                    <option value="ber">
+Berber</option>
+                                    <option value="bis">
+Bislama</option>
+                                    <option value="bos">
+Bosnian</option>
+                                    <option value="bre">
+Breton</option>
+                                    <option value="bul">
+Bulgarian</option>
+                                    <option value="cat">
+Catalan</option>
+                                    <option value="chr">
+Cherokee</option>
+                                    <option value="chi_hans">
+Chinese (Simplified)</option>
+                                    <option value="chi_hant">
+Chinese (Traditional)</option>
+                                    <option value="yue">
+Chinese, Yue (Cantonese)</option>
+                                    <option value="scr">
+Croatian</option>
+                                    <option value="cze">
+Czech</option>
+                                    <option value="dak">
+Dakota</option>
+                                    <option value="dan">
+Danish</option>
+                                    <option value="dut">
+Dutch</option>
+                                    <option value="eng">
+English</option>
+                                    <option value="epo">
+Esperanto</option>
+                                    <option value="est">
+Estonian</option>
+                                    <option value="fao">
+Faroese</option>
+                                    <option value="fil">
+Filipino (Pilipino)</option>
+                                    <option value="fin">
+Finnish</option>
+                                    <option value="fre_ca">
+French (Canada)</option>
+                                    <option value="fre_fr">
+French (France)</option>
+                                    <option value="glg">
+Galician</option>
+                                    <option value="geo">
+Georgian</option>
+                                    <option value="ger">
+German</option>
+                                    <option value="gre">
+Greek</option>
+                                    <option value="guj">
+Gujarati</option>
+                                    <option value="hat">
+Haitian Creole</option>
+                                    <option value="heb">
+Hebrew</option>
+                                    <option value="hin">
+Hindi</option>
+                                    <option value="hun">
+Hungarian</option>
+                                    <option value="ice">
+Icelandic</option>
+                                    <option value="ind">
+Indonesian</option>
+                                    <option value="ina">
+Interlingua</option>
+                                    <option value="ira">
+Iranian</option>
+                                    <option value="gle">
+Irish</option>
+                                    <option value="ita">
+Italian</option>
+                                    <option value="jpn">
+Japanese</option>
+                                    <option value="kan">
+Kannada</option>
+                                    <option value="kaz">
+Kazakh</option>
+                                    <option value="lat">
+Latin</option>
+                                    <option value="lav">
+Latvian</option>
+                                    <option value="lit">
+Lithuanian</option>
+                                    <option value="mac">
+Macedonian</option>
+                                    <option value="mai">
+Maithili</option>
+                                    <option value="may">
+Malay</option>
+                                    <option value="mlt">
+Maltese</option>
+                                    <option value="mar">
+Marathi</option>
+                                    <option value="nep">
+Nepali</option>
+                                    <option value="nor">
+Norwegian</option>
+                                    <option value="nob">
+Norwegian, Bokmål (Bokmaal)</option>
+                                    <option value="per">
+Persian (Farsi)</option>
+                                    <option value="phi">
+Philippine</option>
+                                    <option value="pol">
+Polish</option>
+                                    <option value="por_br">
+Portuguese (Brazil)</option>
+                                    <option value="por_pt">
+Portuguese (Portugal)</option>
+                                    <option value="rum">
+Romanian</option>
+                                    <option value="rus">
+Russian</option>
+                                    <option value="scc">
+Serbian</option>
+                                    <option value="hbs">
+Serbo-Croatian</option>
+                                    <option value="slo">
+Slovak</option>
+                                    <option value="slv">
+Slovenian</option>
+                                    <option value="som">
+Somali</option>
+                                    <option value="spa">
+Spanish</option>
+                                    <option value="swa">
+Swahili</option>
+                                    <option value="swe">
+Swedish</option>
+                                    <option value="syr">
+Syriac</option>
+                                    <option value="tgl">
+Tagalog</option>
+                                    <option value="tam">
+Tamil</option>
+                                    <option value="tel">
+Telugu</option>
+                                    <option value="tha">
+Thai</option>
+                                    <option value="tur">
+Turkish</option>
+                                    <option value="tuk">
+Turkmen</option>
+                                    <option value="ukr">
+Ukrainian</option>
+                                    <option value="urd">
+Urdu</option>
+                                    <option value="uig">
+Uyghur (Uighur)</option>
+                                    <option value="uzb">
+Uzbek</option>
+                                    <option value="vie">
+Vietnamese</option>
+                                    <option value="vls">
+Vlaams (Flemish)</option>
+                                    <option value="wel">
+Welsh</option>
+                            </select>
+                            <br/>
+                            <input id="transcriptionEmbedCode"
+                                     value='<iframe src="http://dotsub.com/media/665bd0d5-a9f4-4a07-9d9e-b31ba926ca78/ts/" frameborder="0" width="100%" height="385"></iframe>'/>
+                            <a href="#" id="embedTransCopy">Copy to Clipboard</a>
+                        </li>
+                    <li>
+                        <a id="inviteLink">Invite a user to Dotsub</a>
+                        <div id="inviteDiv" style="display:none;">
+                            <input type="text" id="email" value="Enter their email address..."/>
+                            <input id="inviteButton" type="button" value="Invite"/>
+<div class="spinner">
+	<img id="spinner" src="/images/spinner.gif" alt="Busy Animated Icon" class="spinner" style="display: none" />&nbsp;
+</div>
+                        </div>
+                        <div id="success" style="display:none;">
+                            Your invitation to join Dotsub was successful
+                        </div>
+                        <div id="error" class="fieldError" style="display:none;">
+                            There was an error inviting that user to Dotsub
+                        </div>
+                    </li>
+                </ul>
+    </div>
+      <div class="tab-pane " id="mediaTranscription">
+          <div style="height: 260px;overflow-y: scroll; position: relative" dir="ltr">
+                            <a id="0" class="paragraphStart transcriptLine">So, what are you doing? It's one of the first questions we often ask friends and family.</a>
+                        <br/><br/>
+                            <a id="5000" class="paragraphStart transcriptLine">Even if the answer is just mowing the lawn or cooking dinner, it's interesting to us.</a>
+                            <a id="10000" class="transcriptLine">It makes us feel connected and part of each other's lives.</a>
+                            <a id="13000" class="transcriptLine">Unfortunately, most of our day to day lives are hidden from people that care.</a>
+                            <a id="18000" class="transcriptLine">Of course we have email and blogs and phones to keep us connected.</a>
+                            <a id="22000" class="transcriptLine">But you wouldn't send an email to a friend to tell them you're having coffee.</a>
+                        <br/><br/>
+                            <a id="25000" class="paragraphStart transcriptLine">Your friend doesn't need to know that.</a>
+                            <a id="28000" class="transcriptLine">But, what about the people that want to know about the little things that happen in your life?</a>
+                            <a id="33000" class="transcriptLine">Real life happens between blog posts and emails. And now, there's a way to share.</a>
+                            <a id="38000" class="transcriptLine">This is Twitter in Plain English.</a>
+                            <a id="41000" class="transcriptLine">Thanks to Twitter, it's possible to share short, bite-sized updates about your life.</a>
+                        <br/><br/>
+                            <a id="46000" class="paragraphStart transcriptLine">And follow the updates of people that matter to you via the Web.</a>
+                            <a id="49000" class="transcriptLine">Here's how it works.</a>
+                            <a id="51000" class="transcriptLine">Meet Carla. She's addicted to her mobile phone,</a>
+                            <a id="54000" class="transcriptLine">reads blogs every day, and has contacts all over the world.</a>
+                            <a id="57000" class="transcriptLine">She heard about Twitter and was skeptical.</a>
+                            <a id="60000" class="transcriptLine">After some of her friends couldn't stop talking about it,</a>
+                            <a id="62000" class="transcriptLine">she gave it a try.</a>
+                            <a id="63000" class="transcriptLine">She signed up for free and saw that Twitter pages look a little like blogs, with very short posts.</a>
+                            <a id="69000" class="transcriptLine">Each page is personal and has updates from friends.</a>
+                            <a id="72000" class="transcriptLine">She got started by looking up her friends on Twitter.com.</a>
+                            <a id="76000" class="transcriptLine">After finding a few, she clicked Follow to start seeing their updates on her Twitter page.</a>
+                            <a id="81000" class="transcriptLine">Within hours, she began to see a different side of people she chose to follow.</a>
+                            <a id="85000" class="transcriptLine">She didn't know that Steven in Seattle was a baseball fan,</a>
+                        <br/><br/>
+                            <a id="88000" class="paragraphStart transcriptLine">Or that Julia in London was reading a new investment book.</a>
+                            <a id="91000" class="transcriptLine">The little messages from Twitter painted a picture of her friends, family and co-workers that she'd never seen before.</a>
+                            <a id="97000" class="transcriptLine">It was the real world.</a>
+                        <br/><br/>
+                            <a id="99000" class="paragraphStart transcriptLine">Soon, she became a fan of Twitter, and posted updates every day.</a>
+                            <a id="103000" class="transcriptLine">Her friends followed her updates, and learned that she recently discovered a passion for Van Halen.</a>
+                        <br/><br/>
+                            <a id="108000" class="paragraphStart transcriptLine">They could see Carla's life between blog posts and emails.</a>
+                            <a id="112000" class="transcriptLine">For Carla, Twitter worked because it was simple.</a>
+                            <a id="114000" class="transcriptLine">The updates were always short - under 140 characters.</a>
+                            <a id="118000" class="transcriptLine">Plus, she could post updates and follow her friends</a>
+                        <br/><br/>
+                            <a id="120000" class="paragraphStart transcriptLine">Using the Twitter website, software on her browser,</a>
+                            <a id="124000" class="transcriptLine">a mobile phone or instant messages.</a>
+                            <a id="127000" class="transcriptLine">By asking members to answer the question, What are you doing?</a>
+                        <br/><br/>
+                            <a id="130000" class="paragraphStart transcriptLine">Carla found that Twitter brought her closer to people that matter to her.</a>
+                            <a id="134000" class="transcriptLine">140 characters at a time.</a>
+                            <a id="136000" class="transcriptLine">Find out what your friends are doing at Twitter.com</a>
+                            <a id="140000" class="transcriptLine">I'm Lee LeFever, and this has been Twitter in Plain English on the Common Craft Show.</a>
+          </div>
+      </div>
+    </div>
+</div>
+</div>
+<div id="mediacontrols" class="span4">
+<div class="module expanded">
+    <h3>
+        <a class="toggle">Video Details</a>
+    </h3>
+    <div class="moduleBody">
+        <div>
+            <span>
+                Duration:
+            </span>
+            2 minutes and 24 seconds
+        </div>
+        <div>
+            <span>
+                Country:
+            </span>
+            <a href="/view/country/US">United States</a>
+        </div>
+        <div>
+            <span>
+                Language:
+            </span>
+            <a href="/view/language/eng">
+English</a>
+        </div>
+        <div>
+            <span>
+                License:
+            </span>
+                    <a href="http://creativecommons.org/licenses/by-nc/2.5/">
+                            CC Attribution Non-Commercial
+                    </a>
+        </div>
+        <div>
+            <span>
+                Genre:
+            </span>
+                    <a href="/view/genre/genre.instructional">
+                        Instructional
+                    </a>
+        </div>
+            <div>
+                <span>
+                    Producer:
+                </span>
+                    Common Craft
+            </div>
+            <div>
+                <span>
+                    Director:
+                </span>
+                    Lee LeFever
+            </div>
+        <div>
+            <span>
+                Views:
+            </span>
+            9,541,382
+                (9,330,512
+                    embedded)
+        </div>
+        <div>
+            <span>
+                Posted by:
+            </span>
+            <a href="/user/leelefever">leelefever</a> on Mar 5, 2008
+        </div>
+        <br/>
+        <div>
+<script type="text/javascript">
+    var descriptioncontent;
+    var descriptiontrunkatedContent;
+    var descriptionmoreLink = new Element("a", {'class': "expander"}).update('(More)');
+    descriptionmoreLink.observe("click", function(event) {
+        $('descriptionp').update(descriptioncontent);
+        $('descriptionp').insert(descriptionlessLink);
+    });
+    var descriptionlessLink = new Element("a", {'class': "expander"}).update("   (Less)");
+    descriptionlessLink.observe("click", function() {
+        $('descriptionp').update(descriptiontrunkatedContent);
+        $('descriptionp').insert(descriptionmoreLink);
+    });
+    document.observe("dom:loaded", function() {
+        try {
+            descriptioncontent = $('descriptionp').firstChild.nodeValue;
+        }
+        catch(e) {
+            return;
+        }
+        if (descriptioncontent.length > 350) {
+            descriptiontrunkatedContent = descriptioncontent.truncate(350, "... ");
+            $('descriptionp').update(descriptiontrunkatedContent);
+            $('descriptionp').insert(descriptionmoreLink);
+        }
+    });
+</script>
+<div id="description" class="expander">
+    <p id="descriptionp">A short explanation of the micro-blogging service, Twitter.</p>
+</div>
+        </div>
+        <div style="margin-top:20px;">
+            <a id="reportVideo">
+                <img src="/images/flag_red.gif" alt="Red Flag"/>
+                Report this video as offensive
+            </a>
+            <div id="reportForm" style="display:none;">
+                <textarea id="reportComments" rows="4" cols="35"></textarea>
+                <button id="reportButton" class="button orange">
+                    Send Report
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+        <div class="module expanded">
+            <h3>
+                <a class="toggle">Translate and Transcribe </a>
+            </h3>
+            <div class="moduleBody">
+                <ul id="mediaActions">
+                            Sign In/Register for Dotsub to translate this video.
+                </ul>
+            </div>
+        </div>
+    <div class="mediaLinks module">
+        <h2>
+            Other videos from  leelefever
+        </h2>
+            <div class="media" style="border-bottom: 1px #808080">
+              <a class="pull-left" href="/view/25f1be59-9a84-4d75-94ef-acd0b5ccf0af">
+                  <img style="width: 64px;" class="preview" src="/media/25f1be59-9a84-4d75-94ef-acd0b5ccf0af/t" alt="otherVideoPreview"/>
+              </a>
+              <div class="media-body">
+                  <a href="/view/25f1be59-9a84-4d75-94ef-acd0b5ccf0af">
+                    <h5 class="media-heading">World Wide Web in Plain English</h5>
+                  </a>
+              </div>
+            </div>
+            <div class="media" style="border-bottom: 1px #808080">
+              <a class="pull-left" href="/view/253fc0e4-32fe-4c36-80e4-5dfb692dbb95">
+                  <img style="width: 64px;" class="preview" src="/media/253fc0e4-32fe-4c36-80e4-5dfb692dbb95/t" alt="otherVideoPreview"/>
+              </a>
+              <div class="media-body">
+                  <a href="/view/253fc0e4-32fe-4c36-80e4-5dfb692dbb95">
+                    <h5 class="media-heading">Computer Software in Plain English</h5>
+                  </a>
+              </div>
+            </div>
+    </div>
+</div>
+</div>
+</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer>
+    <div class="contactFooter">
+        <div class="container">
+            <div class="row">
+                <div class="span3" style="background-image: url('/images/enterprise/envelope.png'); height: 200px; background-repeat: no-repeat; background-position: left">
+                </div>
+                <div class="span3 mailingSignUpDiv">
+                    <h4>Sign up for our newsletter</h4>
+                    <form id="mailingSignUp" method="POST" action="/services/mailingList" class="form-vertical">
+                        <fieldset class="control-group">
+                            <label></label>
+                            <input type="text" name="email" class="span3" placeholder="E-mail">
+                        </fieldset>
+                        <fieldset class="control-group">
+                            <label></label>
+                            <input type="text" name="firstName" class="span3" placeholder="First Name">
+                        </fieldset>
+                        <fieldset class="control-group">
+                            <label></label>
+                            <input type="text" name="lastName" class="span3" placeholder="Last Name">
+                        </fieldset>
+                        <label></label>
+                        <button type="submit" class="btn btn-primary">Sign Up!</button>
+                    </form>
+                    <script type="text/javascript">
+                        jQuery(document).ready(function(event) {
+                            jQuery('#mailingSignUp button[type|="submit"]').click(function() {
+                                //clear old errors:
+                                jQuery('#mailingSignUp input[name|="email"]').parent().removeClass("error");
+                                //check current form
+                                var email = jQuery('#mailingSignUp input[name|="email"]').val();
+                                if (email == "") {
+                                    if (email == "") {
+                                        jQuery('#mailingSignUp input[name|="email"]').parent().addClass("error");
+                                    }
+                                    jQuery('.mailingSignUpDiv').effect('shake', {distance: 10}, 100, function() {
+                                    });
+                                    return false;
+                                }
+                            });
+                            jQuery('.termsOfUse').click(function() {
+                                window.open('/termsOfUse');
+                            });
+                            if (jQuery('#signIn')) {
+                                jQuery('#signIn').click(function() {
+                                    jQuery('#loginError').hide();
+                                    var username = jQuery('input#username').val();
+                                    var password = jQuery('input#password').val();
+                                    var remember = jQuery('input#remember').is(':checked');
+                                    UserManager.authenticate(username, password, remember, {
+                                        callback: function() {
+                                            location.reload();
+                                        },
+                                        errorHandler: function(result, ex, ex2) {
+                                            if (ex.javaClassName == "org.springframework.security.LockedException") {
+                                            }
+                                            else {
+                                                setTimeout("jQuery('.dropdown-login-content').effect('shake', {distance: 10}, 100, function(){jQuery('#loginError').show();})", 200);
+                                            }
+                                        }
+                                    });
+                                    return false;
+                                });
+                            }
+                            jQuery().alert();
+                            jQuery('input, textarea').placeholder();
+                        });
+                    </script>
+                </div>
+                <div class="span5 offset1 followUs">
+                    <h4>Follow Us</h4>
+                    <iframe src="//www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook.com%2Fdotsub&amp;width=218&amp;colorscheme=light&amp;show_faces=false&amp;border_color&amp;stream=false&amp;header=false&amp;height=55"
+                                                scrolling="no" frameborder="0"
+                                                style="border:none; position:relative; left: -10px; overflow:hidden; width:218px; height:55px;"
+                                                allowTransparency="true"></iframe>
+                    <br/>
+                    <a href="http://twitter.com/Dotsub" class="twitter-follow-button">Follow @dotsub</a>
+                    <br/>
+                    <script src="//platform.twitter.com/widgets.js" type="text/javascript"></script>
+                    <div style="height:10px; display:block">
+                    </div>
+                    <!-- Place this tag in your head or just before your close body tag -->
+                    <script type="text/javascript" src="//apis.google.com/js/plusone.js"></script>
+                    <!-- Place this tag where you want the +1 button to render -->
+                    <g:plusone></g:plusone>
+                    <br/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="span3">
+                    <ul>
+                        <li>
+                            <a href="/about"><span>About Dotsub </span></a>
+                        </li>
+                        <li>
+                            <a href="/contact">Contact </a>
+                        </li>
+                        <li>
+                            <a href="/press">Press </a>
+                        </li>
+                        <li>
+                            <a href="/team">Team </a>
+                        </li>
+                        <li>
+                            <a href="/board">Board </a>
+                        </li>
+                        <li>
+                            <a href="/newsletter">Newsletters </a>
+                        </li>
+                        <li>
+                            <a href="http://blog.dotsub.com">Blog</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="span3">
+                    <ul>
+                        <li>
+                            <span>Help with Dotsub </span>
+                        </li>
+                        <li>
+                            <a href="/howto">How to Dotsub </a>
+                        </li>
+                        <li>
+                            <a href="/demo">Demo</a>
+                        </li>
+                        <li>
+                            <a href="/tutorials">Tutorials </a>
+                        </li>
+                        <li>
+                            <a href="http://help.dotsub.com/">
+                                    Help Portal </a>
+                        </li>
+                        <li>
+                            <a href="http://help.dotsub.com/faqs">
+                                    FAQ's</a>
+                        </li>
+                        <li>
+                            <a href="mailto:help@dotsub.com">Ask for help</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="span3">
+                    <ul>
+                        <li><span>Developer Resources</span></li>
+                        <li>
+                            <a href="/jobs">Jobs</a>
+                        </li>
+                        <li>
+                            <a href="/labs">Labs</a>
+                        </li>
+                        <li>
+                            <a href="/solutions/oEmbed">oEmbed</a>
+                        </li>
+                        <li>
+                            <a href="http://status.dotsub.com">System Status</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="span3">
+                    <ul>
+                        <li>
+                            <span>Legal Info</span>
+                        </li>
+                        <li>
+                            <a id="privacyPolicyLink" href="/privacyPolicy">Privacy Policy</a>
+                        </li>
+                        <li>
+                            <a id="termsOfUseLink" class="termsOfUse">Terms of Use</a>
+                        </li>
+                        <li>
+                            <a href="http://creativecommons.org/">Creative Commons</a>
+                        </li>
+                        <li>
+                            <a href="/copyright">
+                                Copyright Notices
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="pull-right">
+                    <ul>
+                        <li>
+                            &copy; 2007-2013
+                            dotsub
+                        </li>
+                        <!--
+                                    Version 2.0-r85a7afc022a8834901a91df2308fd725ff5fda48
+                                -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

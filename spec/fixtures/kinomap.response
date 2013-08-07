@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="icon" type="image/png" href="/img/favicon.png" />
+<!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico" /><![endif]-->
+<link rel="stylesheet" href="/css/css_1374578506.css" media="all" type="text/css" />
+<script src="http://static.kinomap.com/plugin/jquery/1.9.1/jquery.js" type="text/javascript"></script>
+<script src="/js/js_1374578500.js" type="text/javascript"></script>
+<title>Enduro Jeunes Touquet - Nicolas Letévé - Kinomap, Be on track !</title>
+<meta name="description" content="Share and explore your videos on a map." />
+<script src="/lang/js/en-gb_1373459905.js" type="text/javascript"></script>
+<meta property="og:title" content="Enduro Jeunes Touquet - Nicolas Letévé"/><meta property="og:type" content="article"/><meta property="og:url" content="http://www.kinomap.com/watch/52wjcu"/><meta property="og:image" content="http://cdn.kinomap.com/5/2/52wjcu_320x240.jpg"/><meta property="og:description" content="A partir du parc moto, &Atilde;&nbsp; travers la ville du Touquet puis le d&Atilde;&copy;part et le premier tour avant que le sable ne bloque la visibilit&Atilde;&copy;. Nicolas a fini 3&Atilde;&uml;me de ce premier Enduropale Jeunes du Touquet Pas-de-Calais.&lt;br /&gt;Vous voulez faire la m&Atilde;&ordf;me chose? C'est tr&Atilde;&uml;s simple, RDV dans notre boutique, rubrique &amp;quot;News&amp;quot; pour en savoir plus... #thrill" /><meta property="og:video" content="http://v2.kinomap.com/plugin/player.swf?config=http://v2.kinomap.com/embed/52wjcu&autostart=true&mapPosition=bottom" /><meta property="og:video:height" content="525" /><meta property="og:video:width" content="445" /><meta property="og:video:type" content="application/x-shockwave-flash" /><meta property="fb:app_id" content="181603978544236" /></head>
+<body>
+	<div class="topmenu">
+	<div class="tm-bg-all-lout">
+	<div class="tm-wrap">
+		<div class="tm-logo">
+			<a href="/">
+				Kinomap
+			</a>
+		</div>
+		<div class="tm-mid">
+			<div class="tm-search-results"></div>
+			<form method="get" action="/search" id="searchform" style="float:left;">
+				<input type="text" name="search_query" class="txtbox_search" value="Search..." autocomplete="off" />
+				<input type="hidden" name="search_filters" value="video" />
+				<input type="hidden" name="vehicles" value="" />
+				<button class="btn_search" value="Go">Go</button>
+			</form>
+			<a class="kinomap-button tm-addvideo" href="/upload" class="tm-add">Add Video</a>
+		</div>
+		<div class="tm-right">
+			<div class="tm-profile">
+				<a class="kinomap-button tm-login" href="/login">Sign in</a>
+			</div>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<div class="tm-bg-all-line"></div>
+</div>
+<div class="tm-bg-all-filler"></div>
+</div><div class="content">
+	<div class="left-col">
+	<div class="widget">
+	<div class="widget-title">Navigate</div>
+	<div class="widget-navigate-links">
+		<ul>
+			<li><a href="/"><img class="icon-img" src="/img/icons/K-icon.png"><span class="icon-text">Browse videos</span></a></li>
+			<li><a href="/welcome"><img class="icon-img" src="/img/icons/howitworks.png"><span class="icon-text">How it works</span></a></li>
+		</ul>
+	</div>
+</div><div class="widget">
+	<div class="widget-title">Help</div>
+	<div class="widget-help-links">
+		<ul>
+			<li><a href="/contribute"><img class="icon-img" src="/img/icons/contribute.png" /><span class="icon-text">Contribute</span></a></li>
+			<li><a href="http://support.kinomap.com" target="_blank"><img class="icon-img" src="/img/icons/support.png" /><span class="icon-text">Support</span></a></li>
+			
+			<li class="kinomap-title"><a href="http://v2.kinomap.com/#!km-52wjcu" target="_blank"><img class="icon-img" src="/img/icons/v2.png" /><span class="icon-text">Classic view</span></a><span class="kinomap-bubble whelp-classic">Watch this video on the previous version</span></li>
+		</ul>
+	</div>
+</div><div class="widget">
+	<div class="motiongears-frame"><a href="http://www.motiongears.com" class="motiongears-link" target="_blank">Motion Gears</a></div>
+</div>
+<div class="left-kinomap-shadow">&nbsp;</div>
+</div>
+<div class="mid-guide">
+	<div class="video-frame">
+		<!-- <div class="video-buttons">
+	<button class="video-small video-small-active">S</button>
+	<button class="video-medium">M</button>
+	<button class="video-full">F</button>
+</div>
+<div><a href="${GOBACK}" class="video-goback">Go back</a></div> -->
+<iframe class="frame-video" id="frame-video" src="http://v2.kinomap.com/utils/player-embed-v2/?id=52wjcu&mapPosition=bottom" style="width: 560px;height:800px;" allowfullscreen="true" frameborder="0"></iframe>
+	</div>
+	<div class="mid-details">
+		<div class="mid-video-info">
+			<div class="mid-video-info-title">
+				Enduro Jeunes Touquet - Nicolas Letévé
+			</div>
+			<div class="mid-video-info-user">
+				by <a href="/user/nleteve">nleteve</a>
+			</div>
+			<div class="mid-video-info-desc">
+				A partir du parc moto, à travers la ville du Touquet puis le départ et le premier tour avant que le sable ne bloque la visibilité. Nicolas a fini 3ème de ce premier Enduropale Jeunes du Touquet Pas-de-Calais.<br />Vous voulez faire la même chose? C'est très simple, RDV dans notre boutique, rubrique &quot;News&quot; pour en savoir plus... #thrill
+			</div>
+			<div>
+				<div>
+	<div class="comments-addcomment">
+		<div class="comments-textarea">
+			<textarea disabled="disabled">Comment...</textarea>
+		</div>
+		<div class="comments-post">
+			<a href="/login" class="kinomap-button comments-post-button-login">Sign in</a>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<div class="comments-list-div">
+		<div class="comments-comment">
+	<div class="comments-text-no">
+		There are no comments yet. Be the first to post a comment for this video !
+	</div>
+</div>
+	</div>
+</div>
+			</div>
+		</div>
+		<div class="mid-video-more">
+			<div class="mid-video-more-info">
+				<div class="mid-video-button kinomap-title"><div class="favorite-login">&nbsp;</div><span class="kinomap-bubble-pointer"><b>Sign in to add this video to your favorites</b><br /><a href="/login" class="kinomap-button watch-login-before">Sign in</a></span></div><div class="mid-video-button kinomap-title"><div class="like-login">&nbsp;</div><span class="kinomap-bubble-pointer"><b>Sign in to like this video</b><br /><a href="/login" class="kinomap-button watch-login-before">Sign in</a></span></div><div class="mid-video-button kinomap-title"><div class="dislike-login">&nbsp;</div><span class="kinomap-bubble-pointer"><b>Sign in to dislike this video</b><br /><a href="/login" class="kinomap-button watch-login-before">Sign in</a></span></div><div class="clear"></div><hr />
+				<ul>
+					<li class="watch-li-title">Views</li>
+					<li class="watch-li-text">23042</li>
+					<li class="watch-li-title">Length</li>
+					<li class="watch-li-text">3.9km</li>
+					<li class="watch-li-title">Duration</li>
+					<li class="watch-li-text">00:12:42</li>
+					<li class="watch-li-title">Vehicle</li>
+					<li class="watch-li-text">Motocross</li>
+					<li class="watch-li-title">Status</li>
+					<li class="watch-li-text">public</li>
+					<li class="watch-li-title">Source</li>
+					<li class="watch-li-text"><a href="http://v2.kinomap.com/#!download/kinomap_uploader_pc" target="_blank" class="application-link">Kinomap Uploader PC</a></li>
+					<li class="watch-li-title">Added</li>
+					<li class="watch-li-text">02-06-2010</li>
+					<li class="watch-li-title">Recorded</li>
+					<li class="watch-li-text">02-06-2010 08:21:15Z</li>
+					<li class="watch-li-title">Start address</li>
+					<li class="watch-li-text">Avenue de l'Hippodrome, 62520 Le Touquet-Paris-Plage, France</li>
+					<li class="watch-li-title">End address</li>
+					<li class="watch-li-text">Boulevard Thierry Sabine, 62520 Le Touquet-Paris-Plage, France</li>
+				</ul>
+				<hr /><div style="padding: 0 0 0 5px;"><div class="watch-sports-title">Apps Availability</div><span class="kinomap-title"><img class="sports-img" src="/img/sport_cycling_0.png" /></span><span class="kinomap-title"><img class="sports-img" src="/img/sport_running_0.png" /></span><span class="kinomap-title"><img class="sports-img" src="/img/sport_rowing_0.png" /></span></div>
+				
+			</div>
+		</div>
+		<div class="clear"></div>
+	</div>
+</div>
+<div class="right-col">
+	<div class="widget">
+	<div class="widget-title">Recommended</div>
+	<div class="recommended-row">
+	<a href="/watch/xtwhn7" class="kinomap-title">
+		<img src="http://cdn.kinomap.com/x/t/xtwhn7_320x240.jpg" /><span class="kinomap-bubble-right"><b>Enduro Jeunes Intégral - Anthony Dumilly</b><br />By <b>adumilly</b><br />Views: 9290<br />Motocross<br />France</span>
+	</a>
+</div><div class="recommended-row">
+	<a href="/watch/ujx6ic" class="kinomap-title">
+		<img src="http://cdn.kinomap.com/u/j/ujx6ic_320x240.jpg" /><span class="kinomap-bubble-right"><b>Enduro Jeunes Intégral Nicolas Letévé</b><br />By <b>nleteve</b><br />Views: 1465<br />Motocross<br />France</span>
+	</a>
+</div><div class="recommended-row">
+	<a href="/watch/cy6qvz" class="kinomap-title">
+		<img src="http://cdn.kinomap.com/c/y/cy6qvz_320x240.jpg" /><span class="kinomap-bubble-right"><b>Verifs techniques Enduropale</b><br />By <b>ldesmons</b><br />Views: 620<br />Motocross<br />France</span>
+	</a>
+</div><div class="recommended-row">
+	<a href="/watch/2k9mgy" class="kinomap-title">
+		<img src="http://cdn.kinomap.com/2/k/2k9mgy_320x240.jpg" /><span class="kinomap-bubble-right"><b>Enduro Jeunes parc moto</b><br />By <b>ldesmons</b><br />Views: 540<br />Motocross<br />France</span>
+	</a>
+</div><div class="recommended-row">
+	<a href="/watch/4smcv2" class="kinomap-title">
+		<img src="http://cdn.kinomap.com/4/s/4smcv2_320x240.jpg" /><span class="kinomap-bubble-right"><b>Enduro Jeunes - Chute Anthony Dumilly</b><br />By <b>adumilly</b><br />Views: 497<br />Motocross<br />France</span>
+	</a>
+</div>
+</div>
+</div>
+<div class="clear"></div>
+	<div class="clear"></div>
+</div><div style="clear: both;"></div>
+<div class="footer">
+	<div class="footer-yline"></div>
+<div class="footer-bg">
+	<div class="footer-wrap">
+		<div class="footer-left">
+			<div class="footer-logos">
+				<div class="footer-logo">
+					<img src="/img/logo_footer.png" />
+				</div>
+				<div class="footer-logo">
+					<a href="http://trainer.kinomap.com" target="_blank"><img src="/img/trainer.png" /></a>
+				</div>
+				<div class="footer-logo">
+					<a href="http://fitness.kinomap.com" target="_blank"><img src="/img/fitness.png" /></a>
+				</div>
+			</div>
+			<div class="footer-copyright">
+				©2013 Kinomap, Inc All rights reserved.
+			</div>
+			<div class="footer-newsletter">
+				<div class="footer-newsbg">
+					<div class="footer-newspic">
+						<img src="/img/letter_small.png" />
+					</div>
+					<div class="footer-newstext">
+						<a href="http://eepurl.com/vDbaj" target="_blank">Sign up for our newsletter and get the latest from Kinomap.</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="footer-right">
+			<div class="footer-titles">
+				<div class="footer-right-col">
+					<div class="footer-right-title">
+						About
+					</div>
+				</div>
+				<div class="footer-right-col">
+					<div class="footer-right-title">
+						Follow
+					</div>
+				</div>
+				<div class="footer-right-col">
+					<div class="footer-right-title">
+						Products
+					</div>
+				</div>
+				<div class="footer-right-col">
+					<div class="footer-right-title">
+						Help
+					</div>
+				</div>
+			</div>
+			<div class="footer-links">
+				<div class="footer-right-col">
+					<div class="footer-right-content">
+						<ul>
+							<li><a href="/about">About</a></li>
+							<li><a href="/welcome">How It Works</a></li>
+							<li><a href="/terms">Terms and Conditions</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="footer-right-col">
+					<div class="footer-right-content">
+						<ul>
+							<li><a href="https://www.facebook.com/kinomap" target="_blank">Facebook</a></li>
+							<li><a href="https://twitter.com/kinomap" target="_blank">Twitter</a></li>
+							<li><a href="http://www.youtube.com/user/Kinomap" target="_blank">YouTube</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="footer-right-col">
+					<div class="footer-right-content">
+						<ul class="footer-ul-yellow">
+							<li>
+								<span class="footer-link-text">Maker</span> 
+								<a href="http://itunes.apple.com/en/app/kinomap-maker/id343021721?mt=8" target="_blank"><span class="footer-icon icon-apple" title="Kinomap Maker Apple Store">Apple Store</span></a>
+								<a href="https://market.android.com/details?id=com.excellance.kinomap.maker&hl=en" target="_blank"><span class="footer-icon icon-google" title="Kinomap Maker Google Play">Google Play</span></a>
+								<a href="http://www.windowsphone.com/en-us/apps/790b3625-6f63-4c8e-bf2b-0998732231b7" target="_blank"><span class="footer-icon icon-windows" title="Kinomap Maker Windows Phone Store">Windows Phone Store</span></a>
+								<div class="clear"></div>
+							</li>
+							<li>
+								<span class="footer-link-text">Trainer</span>
+								<a href="https://itunes.apple.com/en/app/kinomap-trainer/id437195565" target="_blank"><span class="footer-icon icon-apple" title="Kinomap Trainer Apple Store">Apple Store</span></a>
+								<div class="clear"></div>
+							</li>
+							<li>
+								<span class="footer-link-text">Fitness</span> 
+								<a href="https://itunes.apple.com/en/app/kinomap-trainer/id437195565" target="_blank"><span class="footer-icon icon-apple" title="Kinomap Fitness Apple Store">Apple Store</span></a>
+								<div class="clear"></div>
+							</li>
+							<li>
+								<a href="http://www.orange-innovation.tv/en/webtv/events_partnership/all_videos/orange_very_high_speed_contest_with_kinomap" target="_blank">Navigation<span class="footer-soon">soon</span></a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="footer-right-col">
+					<div class="footer-right-content">
+						<ul>
+							<li><a href="/login">Sign in</a></li>
+							<li><a href="http://support.kinomap.com" target="_blank">Support</a></li>
+							<li><a href="http://v2.kinomap.com/#!api" target="_blank">Developers</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	<div class="clear"></div>
+	</div>
+	<div class="footer-arrows"></div>
+</div>
+</div><script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-473207-16']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script> 
+</body>
+</html>

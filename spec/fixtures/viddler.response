@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>
+		Viddler is Video Hosting for Business
+	 </title>
+<meta property="v:type" content="v=bdce8c7:vf=7281005f4321dad5584804983373a496:p=Unknown,0.0,d:b=Unknown,0.0,d,d:d=Unknown:e=0" />
+
+	<meta name="description"
+		content="Viddler is Video Hosting for Business" />
+	<meta property="og:image"
+		content="http://thumbs.cdn-ec.viddler.com/thumbnail_2_bdce8c7_v6.jpg" />
+	<meta property="og:url"
+		content="" />
+	<meta property="og:video:type" content="application/x-shockwave-flash" />
+	<meta property="og:video:width"
+		content="640" />
+	<meta property="og:video:height"
+		content="360" />
+	<meta property="og:video:type" content="application/x-shockwave-flash" />
+	
+		<script type="text/javascript"
+			src="http://static.cdn-ec.viddler.com/vjsp/js/core.js?ts=15"></script>
+		<script type="text/javascript"
+			src="http://static.cdn-ec.viddler.com/vjsp/js/classes.js?ts=15"></script>
+		<script type="text/javascript"
+			src="http://static.cdn-ec.viddler.com/vjsp/js/utilities.js?ts=15"></script>
+		<script type="text/javascript"
+			src="http://static.cdn-ec.viddler.com/vjsp/js/skin.js?ts=15"></script>
+		<script type="text/javascript"
+			src="http://static.cdn-ec.viddler.com/vjsp/js/skin.default.js?ts=15"></script>
+		<script type="text/javascript"
+			src="http://static.cdn-ec.viddler.com/vjsp/js/video-monitor.js?ts=15"></script>
+		<link type="text/css" rel="stylesheet"
+			href="http://static.cdn-ec.viddler.com/vjsp/css/vjsp.css?ts=15" />
+		<link type="text/css" rel="stylesheet"
+			href="http://static.cdn-ec.viddler.com/vjsp/css/vjsp.default.css?ts=15" />
+	
+
+
+	
+	
+
+<link rel="stylesheet" type="text/css"
+	href="http://static.cdn-ec.viddler.com/css/embed.css?ts=2011042801"></link>
+
+	
+	<script type="text/javascript">
+var ejs = {
+	vid: 'viddler_bdce8c7',
+	hid: {visibility:'hidden'},
+	vis: {visibility:''},
+	dim: function(el) { return [el.clientWidth||el.offsetWidth, el.clientHeight||el.offsetWidth]; },
+	id: function(id) { return document.getElementById(id); },
+	listen: function(source, event, listener) { if (window['addEventListener']) { source.addEventListener(event, listener, false); } else { source.attachEvent('on'+event,listener); } },
+	flash: function() { try { var fo = new ActiveXObject('ShockwaveFlash.ShockwaveFlash'); if (fo) { return true; } } catch(e){ return navigator.mimeTypes["application/x-shockwave-flash"] != undefined; } return false; },
+	css: function(id, styles) { for (var style in styles) { ejs.id(id).style[style]=styles[style]; } }
+};
+var flashLoaded=false;
+function onSkinReady() { ejs.css('embed-content', ejs.vis); ejs.css(ejs.vid, ejs.hid); ejs.css(ejs.vid, ejs.vis); }
+function handleSkinLoad() { flashLoaded=true; ejs.id('viddler_bdce8c7').addEventListener('onSkinReady', 'onSkinReady'); }
+
+var ra=0, flashLoaded=false, flashFallback='<video class="viddler-video" id="viddler_bdce8c7" src="http://www.viddler.com/file/bdce8c7/html5/" width="100%" height="100%" type="video/mp4" preload="none" poster="http://thumbs.cdn-ec.viddler.com/thumbnail_2_bdce8c7_v6.jpg" controls="controls" x-webkit-airplay="allow"></video>';
+function resizeBg() {
+  var pdim=ejs.dim(ejs.id('embed-bg').parentElement);
+  pdim[1]=pdim[1]-42;
+  var h = parseInt((pdim[0]*1.0)/ra);
+  if (h>pdim[1]) { h=pdim[1]; }
+  var w=parseInt(h*ra);
+  ejs.css('embed-bg',{width:w+'px',height:h+'px',left:parseInt((pdim[0]-w)/2)+'px'});
+}
+function handleFlashFallback() {
+	if (!flashLoaded) {
+	    if (true || false) {
+		Vjsp.embed({
+		    width : Vjsp.windowWidth(),
+		    height : Vjsp.windowHeight(),
+		    fullWindow : true,
+		    id : 'embed-holder',
+		    thumbnail : 'http://thumbs.cdn-ec.viddler.com/thumbnail_2_bdce8c7_v6.jpg',
+			sources : {
+			    'http://viddler.a.ec.viddler.com/viddler_1469aoxaqpwmsjp39k9na0osx1vbf8.mp4?fd9f2a1c14aadf1069f046c160f41e2b22cf4a2edc6735ebdbbd80a2a9446cf01d666bce78bc20e850dbaef14c18821243623c4d428915c66622a26e8c908198e49c67e85ae13720d7' : 'video/mp4'
+			},
+			
+		    brandingInfo : {
+				logo : 'viddler_e6c3ff85.png',
+				logoURL : '',
+				logoVisible : true,
+				logoAlign : 'br',
+				logoOffsetX : 10,
+				logoOffsetY : 10
+			},
+			
+			
+			disableinplay: false,
+			
+	        googleAnalytics: {
+	          	
+	          	enabled : false
+	        },
+	        viddlerAnalytics: {
+				
+					url : 'http://stats.viddler.com/?{video-id}={events}&h={host}',
+					reportDelay : '5',
+				
+    			enabled : true
+	        },
+			videoKey: 'bdce8c7',
+			authorName: 'viddler',
+			title: 'Viddler is Video Hosting for Business',
+			duration: 109.07
+		});
+	    } else {
+			ejs.id('embed-holder').innerHTML = flashFallback;
+	    }
+	}
+}
+ejs.listen(window, 'load', function() {
+	if (!ejs.flash()) {
+		handleFlashFallback();
+		onViddlerPlayerReady();
+	} else {
+		var bgdim=ejs.dim(ejs.id('embed-bg')); ra=bgdim[0]/bgdim[1];
+		ejs.listen(window,'resize', resizeBg); resizeBg();
+		ejs.css('embed-content', ejs.hid);
+		setTimeout('handleFlashFallback()', 10000);
+	}
+});
+
+
+function onViddlerPlayerReady() { handleSkinLoad(); }
+function playerReady() { setTimeout('onSkinReady()', 2000); }
+
+  </script>
+
+
+</head>
+<body>
+	<div id="embed-holder">
+		
+		
+			
+			
+				
+				
+					
+<img id="embed-bg" class="full" src="http://thumbs.cdn-ec.viddler.com/thumbnail_2_bdce8c7_v6.jpg" alt="Poster" /><div id="embed-content">
+
+<embed class="viddler-video" src="http://www.viddler.com/player/bdce8c7/" width="100%" height="100%" type="application/x-shockwave-flash" allowScriptAccess="always" allowFullScreen="true" allowNetworking="all" id="viddler_bdce8c7" flashVars="f=1&iframe=t&autoplay=f&disablebranding=f&ref=&enablejsapi=t&enablecallbacks=t&playerapiid=viddler_bdce8c7&f=1" wmode="direct"></embed>
+
+</div>
+				
+			
+		
+	</div>
+</body>
+</html>

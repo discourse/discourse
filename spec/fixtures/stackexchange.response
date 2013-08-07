@@ -1,0 +1,1889 @@
+<!DOCTYPE html>
+<html>
+<head>
+        
+    <title>Concept behind these 4 lines of tricky C++ code - Stack Overflow</title>
+    <link rel="shortcut icon" href="//cdn.sstatic.net/stackoverflow/img/favicon.ico">
+    <link rel="apple-touch-icon image_src" href="//cdn.sstatic.net/stackoverflow/img/apple-touch-icon.png">
+    <link rel="search" type="application/opensearchdescription+xml" title="Stack Overflow" href="/opensearch.xml">
+    
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdn.sstatic.net/js/stub.js"></script>
+    <link rel="stylesheet" type="text/css" href="//cdn.sstatic.net/stackoverflow/all.css">
+    
+    <link rel="canonical" href="http://stackoverflow.com/questions/17992553/concept-behind-these-4-lines-of-tricky-c-code">
+    <link rel="alternate" type="application/atom+xml" title="Feed for question 'Concept behind these 4 lines of tricky C++ code'" href="/feeds/question/17992553">
+    <script type="text/javascript">
+        
+        StackExchange.ready(function () {
+            StackExchange.using("postValidation", function () {
+                StackExchange.postValidation.initOnBlurAndSubmit($('#post-form'), 2, 'answer');
+            });
+
+            
+            StackExchange.question.init({showAnswerHelp:true,totalCommentCount:20,shownCommentCount:5,highlightColor:'#F4A83D',backgroundColor:'#FFF',questionId:17992553});
+
+            styleCode();
+
+                StackExchange.realtime.subscribeToQuestion('1', '17992553');
+            
+                    });
+    </script>
+
+
+    <script type="text/javascript">
+        StackExchange.init({"stackAuthUrl":"https://stackauth.com","serverTime":1375420342,"styleCode":true,"enableUserHovercards":true,"site":{"name":"Stack Overflow","description":"Q&A for professional and enthusiast programmers","isNoticesTabEnabled":true,"recaptchaPublicKey":"6LdchgIAAAAAAJwGpIzRQSOFaO0pU6s44Xt8aTwc","enableSocialMediaInSharePopup":true},"user":{"fkey":"fe82782f4b12b375e13c53e4e1adcdaa","isAnonymous":true}});
+        StackExchange.using.setCacheBreakers({"js/prettify-full.js":"6c261bebf56a","js/moderator.js":"7cf00e91ce39","js/full-anon.js":"6e2f91b26d0a","js/full.js":"d97a24dfdef3","js/wmd.js":"2f79c03846d5","js/third-party/jquery.autocomplete.min.js":"e5f01e97f7c3","js/mobile.js":"e8e23ad37820","js/help.js":"6e6623243cf6","js/tageditor.js":"450c9e8426fc","js/tageditornew.js":"b6c68ad4c7dd","js/inline-tag-editing.js":"8e84e8a137f7","js/revisions.js":"7273bb714bba","js/review.js":"2b3ae123e376","js/tagsuggestions.js":"aa48ef6154df","js/post-validation.js":"bb996020492a","js/explore-qlist.js":"1c5bbd79b562","js/events.js":"98e7c5a72062"});
+        
+    </script>
+    <script type="text/javascript">
+        StackExchange.using("gps", function() {
+             StackExchange.gps.init(true);
+        });
+    </script>
+    
+        <script type="text/javascript">
+            StackExchange.ready(function () {
+                $('#nav-tour').click(function () {
+                    StackExchange.using("gps", function() {
+                        StackExchange.gps.track("aboutpage.click", { aboutclick_location: "headermain" }, true);
+                    });
+                });
+            });
+        </script>
+</head>
+<body class="question-page">
+    <noscript><div id="noscript-padding"></div></noscript>
+    <div id="notify-container"></div>
+    <div id="overlay-header"></div>
+    <div id="custom-header"></div>
+
+    <div class="container">
+        <div id="header" class=headeranon>
+            <div id="portalLink">
+                <a class="genu" href="http://stackexchange.com" onclick="StackExchange.ready(function(){genuwine.click();});return false;">Stack Exchange</a>
+            </div>
+            <div id="topbar">
+                <div id="hlinks">
+                    
+<span id="hlinks-user"></span>
+<span id="hlinks-nav">                        <a href="/users/login?returnurl=%2fquestions%2f17992553%2fconcept-behind-these-4-lines-of-tricky-c-code">sign up</a>
+
+ <span class="lsep">|</span>
+                    <a href="/users/login?returnurl=%2fquestions%2f17992553%2fconcept-behind-these-4-lines-of-tricky-c-code">log in</a>
+
+ <span class="lsep">|</span>
+                    <a href="http://careers.stackoverflow.com">careers 2.0</a>
+
+ <span class="lsep">|</span>
+</span>
+<span id="hlinks-custom"></span>
+                </div>
+                <div id="hsearch">
+                    <form id="search" action="/search" method="get" autocomplete="off">
+                        <div>
+                            <input autocomplete="off" name="q" class="textbox" placeholder="search" tabindex="1" type="text" maxlength="240" size="28" value="">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <br class="cbt">
+            <div id="hlogo">
+                <a href="/">
+                    Stack Overflow
+                </a>
+            </div>
+            <div id="hmenus">
+                <div class="nav mainnavs mainnavsanon">
+                    <ul>
+                            <li class="youarehere"><a id="nav-questions" href="/questions">Questions</a></li>
+                            <li><a id="nav-tags" href="/tags">Tags</a></li>
+                            <li><a id="nav-tour" href="/about">Tour</a></li>
+                            <li><a id="nav-users" href="/users">Users</a></li>
+                    </ul>
+                </div>
+                <div class="nav askquestion">
+                    <ul>
+                        <li>
+                            <a id="nav-askquestion"  href="/questions/ask">Ask Question</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+
+
+
+        <div id="content">
+            
+
+<div itemscope itemtype="http://schema.org/Article">
+<link itemprop="image" href="//cdn.sstatic.net/stackoverflow/img/apple-touch-icon.png">
+<!--googleoff: all-->
+<div id="herobox-mini">
+    <div id="hero-content">
+        <span id="controls">
+            <a href="/about" id="tell-me-more" class="button">Tell me more</a>
+            <span id="close"><a title="click to dismiss">&times;</a></span>
+        </span>
+        <div id="blurb">
+            Stack Overflow is a question and answer site for professional and enthusiast programmers. It&#39;s 100% free, no registration required.
+        </div>        
+    </div>
+    <script>
+        $('#tell-me-more').click(function () {
+            var clickSource = $("body").attr("class") + '-mini';
+            if ($("body").hasClass("questions-page")) {
+                clickSource = 'questionpagemini';
+            }
+            if ($("body").hasClass("home-page")) {
+                clickSource = 'homepagemini';
+            }
+
+            StackExchange.using("gps", function () {
+                StackExchange.gps.track("aboutpage.click", { aboutclick_location: clickSource } , true);
+            });
+        });
+        $('#herobox-mini #close').click(function () {
+            StackExchange.using("gps", function () {
+                StackExchange.gps.track("hero.action", { hero_action_type: "close" }, true);
+            });
+            $.cookie("hero", "none", { path: "/" });
+            var $hero = $("#herobox-mini");
+            $hero.slideUp('fast', function () { $hero.remove(); });
+            return false;
+        });
+    </script>
+</div>
+<!--googleon: all-->
+<div id="question-header">
+    <h1 itemprop="name"><a href="/questions/17992553/concept-behind-these-4-lines-of-tricky-c-code" class="question-hyperlink">Concept behind these 4 lines of tricky C++ code</a></h1>
+</div>
+<div id="mainbar">
+
+    
+
+<div class="question" data-questionid="17992553"  id="question">
+    
+                <div class="everyonelovesstackoverflow" id="adzerk1">
+            </div>
+
+
+    <table>
+        <tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+    <input type="hidden" name="_id_" value="17992553">
+    <a class="vote-up-off" title="This question shows research effort; it is useful and clear">up vote</a>
+    <span class="vote-count-post ">122</span>
+    <a class="vote-down-off" title="This question does not show any research effort; it is unclear or not useful">down vote</a>
+    
+    <a class="star-off" href="#" title="This is a favorite question (click again to undo)">favorite</a>
+    <div class="favoritecount"><b>43</b></div>   
+
+</div>
+
+            </td>
+            
+<td class="postcell">
+<div>
+    <div class="post-text" itemprop="description">
+        <p>Why does this code gives output <code>C++Sucks</code>? Can anyone explain the concept behind it?</p>
+
+<pre><code>#include &lt;cstdio&gt; 
+double m[]= {7709179928849219.0, 771};
+int main()
+{
+    m[1]--?m[0]*=2,main():printf((char*)m);    
+}
+</code></pre>
+
+<p>Here is the Ideone link: <a href="http://ideone.com/PM4qan">http://ideone.com/PM4qan</a></p>
+
+    </div>
+    <div class="post-taglist">
+        <a href="/questions/tagged/c%2b%2b" class="post-tag" title="show questions tagged 'c++'" rel="tag">c++</a> 
+    </div>
+    <table class="fw">
+    <tr>
+    <td class="vt">
+
+
+
+
+
+
+
+
+
+
+
+<div class="post-menu"><a href="/q/17992553" title="short permalink to this question" class="short-link" id="link-post-17992553">share</a><span class="lsep">|</span><a href="/posts/17992553/edit" class="suggest-edit-post" title="">improve this question</a></div>        
+    </td>
+    <td align="right" class="post-signature">
+
+
+    <div class="user-info user-hover">
+        <div class="user-action-time">
+                            <a href="/posts/17992553/revisions" title="show all edits to this post">edited <span title="2013-08-01 20:58:33Z" class="relativetime">8 hours ago</span></a>
+
+        </div>
+        <div class="user-gravatar32">
+            <a href="/users/84292/chris-b"><div class=""><img src="https://www.gravatar.com/avatar/9b3338e8839b9aedb088b897279c982d?s=32&d=identicon&r=PG" alt="" width="32" height="32"></div></a>
+        </div>
+        <div class="user-details">
+            <a href="/users/84292/chris-b">Chris B</a><br>
+            <span class="reputation-score" title="reputation score" dir="ltr">2,648</span><span title="1 gold badge"><span class="badge1"></span><span class="badgecount">1</span></span><span title="17 silver badges"><span class="badge2"></span><span class="badgecount">17</span></span><span title="51 bronze badges"><span class="badge3"></span><span class="badgecount">51</span></span>
+        </div>
+    </div>
+    </td>
+    <td class="post-signature owner">
+        
+
+    <div class="user-info ">
+        <div class="user-action-time">
+                                    asked <span title="2013-08-01 11:16:08Z" class="relativetime">17 hours ago</span>
+        </div>
+        <div class="user-gravatar32">
+            <a href="/users/2547190/detonator123"><div class=""><img src="https://www.gravatar.com/avatar/a19d396231d67d604c92866b90fe723d?s=32&d=identicon&r=PG" alt="" width="32" height="32"></div></a>
+        </div>
+        <div class="user-details">
+            <a href="/users/2547190/detonator123">detonator123</a><br>
+            <span class="reputation-score" title="reputation score" dir="ltr">258</span><span title="1 gold badge"><span class="badge1"></span><span class="badgecount">1</span></span><span title="3 silver badges"><span class="badge2"></span><span class="badgecount">3</span></span><span title="6 bronze badges"><span class="badge3"></span><span class="badgecount">6</span></span>
+        </div>
+    </div>
+
+    </td>
+    </tr>
+    </table>
+</div>
+</td>
+        </tr>
+
+
+<tr>
+<td class="votecell"></td>
+<td>
+    <div id="comments-17992553" class="comments">
+        <table>
+        <tbody>
+                    
+    <tr id="comment-26306622" class="comment" data-commentid="26306622">
+        <td class="comment-actions"><table><tbody><tr>
+<td class="comment-score">
+<span title="number of 'useful comment' votes received" class="supernova">33</span>
+</td>
+<td>
+&nbsp;
+</td></tr>
+</tbody></table></td>
+        <td class="comment-text"><div><span class="comment-copy">Magic! And a bit of recursion. But mostly magic.</span> &ndash;&nbsp;<a href="/users/1056003/nijansen" title="1644 reputation" class="comment-user">nijansen</a> <span class="comment-date" dir="ltr"><span title="2013-08-01 11:19:10Z" class="relativetime-clean">17 hours ago</span></span></div></td>
+    </tr>
+            
+    <tr id="comment-26306739" class="comment" data-commentid="26306739">
+        <td class="comment-actions"><table><tbody><tr>
+<td class="comment-score">
+<span title="number of 'useful comment' votes received" class="hot">21</span>
+</td>
+<td>
+&nbsp;
+</td></tr>
+</tbody></table></td>
+        <td class="comment-text"><div><span class="comment-copy">Don&#39;t forget Undefined Behaviour!</span> &ndash;&nbsp;<a href="/users/1171191/bobtfish" title="4341 reputation" class="comment-user">BoBTFish</a> <span class="comment-date" dir="ltr"><span title="2013-08-01 11:22:04Z" class="relativetime-clean">17 hours ago</span></span></div></td>
+    </tr>
+            
+    <tr id="comment-26306776" class="comment" data-commentid="26306776">
+        <td class="comment-actions"><table><tbody><tr>
+<td class="comment-score">
+<span title="number of 'useful comment' votes received" class="warm">9</span>
+</td>
+<td>
+&nbsp;
+</td></tr>
+</tbody></table></td>
+        <td class="comment-text"><div><span class="comment-copy">@BobTFish The coolest tricks in C always rely on UB, that&#39;s why it&#39;s impossible to get a 20 yr old game running on a modern machine.</span> &ndash;&nbsp;<a href="/users/1056003/nijansen" title="1644 reputation" class="comment-user">nijansen</a> <span class="comment-date" dir="ltr"><span title="2013-08-01 11:23:02Z" class="relativetime-clean">17 hours ago</span></span></div></td>
+    </tr>
+            
+    <tr id="comment-26308360" class="comment" data-commentid="26308360">
+        <td class="comment-actions"><table><tbody><tr>
+<td class="comment-score">
+<span title="number of 'useful comment' votes received" class="supernova">52</span>
+</td>
+<td>
+&nbsp;
+</td></tr>
+</tbody></table></td>
+        <td class="comment-text"><div><span class="comment-copy">C++ only sucks the way the author of this code uses it.</span> &ndash;&nbsp;<a href="/users/241536/john-dibling" title="43372 reputation" class="comment-user">John Dibling</a> <span class="comment-date" dir="ltr"><span title="2013-08-01 12:06:03Z" class="relativetime-clean">17 hours ago</span></span></div></td>
+    </tr>
+            
+    <tr id="comment-26313883" class="comment" data-commentid="26313883">
+        <td class="comment-actions"><table><tbody><tr>
+<td class="comment-score">
+<span title="number of 'useful comment' votes received" class="supernova">42</span>
+</td>
+<td>
+&nbsp;
+</td></tr>
+</tbody></table></td>
+        <td class="comment-text"><div><span class="comment-copy">He could just do <code>puts(&quot;C++Sucks&quot;);</code>. Those C people always over-complicate simple things.</span> &ndash;&nbsp;<a href="/users/412080/maxim-yegorushkin" title="20476 reputation" class="comment-user">Maxim Yegorushkin</a> <span class="comment-date" dir="ltr"><span title="2013-08-01 14:17:37Z" class="relativetime-clean">14 hours ago</span></span></div></td>
+    </tr>
+
+        </tbody>
+    
+        </table>
+    </div>
+    <a id="comments-link-17992553" class="comments-link" data-comments-count="15" title="expand to show all comments on this post">show <b>15</b> more comments</a><span id="hidden-comments-link-17992553" class="comments-link dno" data-comments-counts="0" title="Use comments to ask for more information or suggest improvements. Avoid comments like “+1” or “thanks”.">add comment <span>(requires <a href="http://stackoverflow.com/users/login">an account</a> with <a href="http://stackoverflow.com/help/privileges/comment">50 reputation</a>)</span></span>
+</td>
+</tr>            </table>    
+</div>
+
+
+    <div id="answers">
+
+    <a name="tab-top"></a>
+    <div id="answers-header">
+        <div class="subheader answers-subheader">
+            <h2>
+                    8 Answers
+            </h2>
+            <div id="tabs">
+                <a href="/questions/17992553/concept-behind-these-4-lines-of-tricky-c-code?answertab=active#tab-top" title="Answers with the latest activity first">active</a>
+<a href="/questions/17992553/concept-behind-these-4-lines-of-tricky-c-code?answertab=oldest#tab-top" title="Answers in the order they were provided">oldest</a>
+<a class="youarehere" href="/questions/17992553/concept-behind-these-4-lines-of-tricky-c-code?answertab=votes#tab-top" title="Answers with the highest score first">votes</a>
+
+            </div>
+        </div>    
+    </div>    
+
+
+
+
+  
+<a name="17992906"></a>
+<div id="answer-17992906" class="answer accepted-answer" data-answerid="17992906" >
+    <table>
+        <tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+    <input type="hidden" name="_id_" value="17992906">
+    <a class="vote-up-off" title="This answer is useful">up vote</a>
+    <span class="vote-count-post ">182</span>
+    <a class="vote-down-off" title="This answer is not useful">down vote</a>
+    
+
+            <span class="vote-accepted-on load-accepted-answer-date" title="loading when this answer was accepted...">accepted</span>
+</div>
+
+            </td>
+            
+
+
+<td class="answercell">
+    <div class="post-text"><p>The number <code>7709179928849219.0</code> has the following binary representation as a 64-bit <code>double</code>:</p>
+
+<pre><code>01000011 00111011 01100011 01110101 01010011 00101011 00101011 01000011
++^^^^^^^ ^^^^---- -------- -------- -------- -------- -------- --------
+</code></pre>
+
+<p><code>+</code> shows the position of the sign; <code>^</code> of the exponent, and <code>-</code> of the mantissa (i.e. the value without the exponent).</p>
+
+<p>Since the representation uses binary exponent and mantissa, doubling the number increments the exponent by one. Your program does it precisely 771 times, so the exponent which started at 1075 (decimal representation of <code>10000110011</code>) becomes 1075 + 771 = 1846 at the end; binary representation of 1846 is <code>11100110110</code>. The resultant pattern looks like this:</p>
+
+<pre><code>01110011 01101011 01100011 01110101 01010011 00101011 00101011 01000011
+-------- -------- -------- -------- -------- -------- -------- --------
+0x73 's' 0x6B 'k' 0x63 'c' 0x75 'u' 0x53 'S' 0x2B '+' 0x2B '+' 0x43 'C'
+</code></pre>
+
+<p>This pattern corresponds to the string that you see printed, only backwards. At the same time, the second element of the array becomes zero, providing null terminator, making the string suitable for passing to <code>printf</code>.</p>
+</div>
+    <table class="fw">
+    <tr>
+    <td class="vt">
+
+
+
+
+
+
+
+
+
+
+
+<div class="post-menu"><a href="/a/17992906" title="short permalink to this answer" class="short-link" id="link-post-17992906">share</a><span class="lsep">|</span><a href="/posts/17992906/edit" class="suggest-edit-post" title="">improve this answer</a></div>                    </td>
+    <td align="right" class="post-signature">
+
+
+    <div class="user-info ">
+        <div class="user-action-time">
+                            <a href="/posts/17992906/revisions" title="show all edits to this post">edited <span title="2013-08-01 13:55:09Z" class="relativetime">15 hours ago</span></a>
+
+        </div>
+        <div class="user-gravatar32">
+            
+        </div>
+        <div class="user-details">
+            <br>
+            
+        </div>
+    </div>
+    </td>
+            
+
+
+    <td align="right" class="post-signature">   
+       
+
+    
+
+    <div class="user-info user-hover">
+        <div class="user-action-time">
+                                        answered <span title="2013-08-01 11:33:33Z" class="relativetime">17 hours ago</span>
+        </div>
+        <div class="user-gravatar32">
+            <a href="/users/335858/dasblinkenlight"><div class=""><img src="https://www.gravatar.com/avatar/4af3541c00d591e9a518b9c0b3b1190a?s=32&d=identicon&r=PG" alt="" width="32" height="32"></div></a>
+        </div>
+        <div class="user-details">
+            <a href="/users/335858/dasblinkenlight">dasblinkenlight</a><br>
+            <span class="reputation-score" title="reputation score 166179" dir="ltr">166k</span><span title="14 gold badges"><span class="badge1"></span><span class="badgecount">14</span></span><span title="120 silver badges"><span class="badge2"></span><span class="badgecount">120</span></span><span title="241 bronze badges"><span class="badge3"></span><span class="badgecount">241</span></span>
+        </div>
+    </div>
+
+    </td>
+    </tr>
+    </table>
+</td>
+        </tr>
+
+
+
+<tr>
+<td class="votecell"></td>
+<td>
+    <div id="comments-17992906" class="comments">
+        <table>
+        <tbody>
+                    
+    <tr id="comment-26311714" class="comment" data-commentid="26311714">
+        <td class="comment-actions"><table><tbody><tr>
+<td class="comment-score">
+<span title="number of 'useful comment' votes received" class="warm">6</span>
+</td>
+<td>
+&nbsp;
+</td></tr>
+</tbody></table></td>
+        <td class="comment-text"><div><span class="comment-copy">Why is the string backwards?</span> &ndash;&nbsp;<a href="/users/1538531/derek" title="666 reputation" class="comment-user">Derek</a> <span class="comment-date" dir="ltr"><span title="2013-08-01 13:26:41Z" class="relativetime-clean">15 hours ago</span></span></div></td>
+    </tr>
+            
+    <tr id="comment-26312117" class="comment" data-commentid="26312117">
+        <td class="comment-actions"><table><tbody><tr>
+<td class="comment-score">
+<span title="number of 'useful comment' votes received" class="hot">18</span>
+</td>
+<td>
+&nbsp;
+</td></tr>
+</tbody></table></td>
+        <td class="comment-text"><div><span class="comment-copy">@Derek x86 is little-endian</span> &ndash;&nbsp;<a href="/users/1782465/angew" title="16950 reputation" class="comment-user">Angew</a> <span class="comment-date" dir="ltr"><span title="2013-08-01 13:36:34Z" class="relativetime-clean">15 hours ago</span></span></div></td>
+    </tr>
+            
+    <tr id="comment-26312181" class="comment" data-commentid="26312181">
+        <td class="comment-actions"><table><tbody><tr>
+<td class="comment-score">
+<span title="number of 'useful comment' votes received" class="warm">7</span>
+</td>
+<td>
+&nbsp;
+</td></tr>
+</tbody></table></td>
+        <td class="comment-text"><div><span class="comment-copy">@Derek This is because of the platform-specific <a href="http://en.wikipedia.org/wiki/Endianness#Endianness_and_hardware" rel="nofollow">endianness</a>: the bytes of the abstract IEEE 754 representation are stored in memory at decreasing addresses, so the string prints correctly. On hardware with big endianness one would need to start with a different number.</span> &ndash;&nbsp;<a href="/users/335858/dasblinkenlight" title="166179 reputation" class="comment-user">dasblinkenlight</a> <span class="comment-date" dir="ltr"><span title="2013-08-01 13:38:12Z" class="relativetime-clean">15 hours ago</span></span><span class="edited-yes" title="this comment was edited"></span></div></td>
+    </tr>
+            
+    <tr id="comment-26316304" class="comment" data-commentid="26316304">
+        <td class="comment-actions"><table><tbody><tr>
+<td class="comment-score">
+<span title="number of 'useful comment' votes received" class="cool">4</span>
+</td>
+<td>
+&nbsp;
+</td></tr>
+</tbody></table></td>
+        <td class="comment-text"><div><span class="comment-copy">@AlvinWong You are correct, the standard does not require IEEE 754 or any other specific format. This program is about as non-portable as it gets, or very close to it :-)</span> &ndash;&nbsp;<a href="/users/335858/dasblinkenlight" title="166179 reputation" class="comment-user">dasblinkenlight</a> <span class="comment-date" dir="ltr"><span title="2013-08-01 15:14:08Z" class="relativetime-clean">13 hours ago</span></span></div></td>
+    </tr>
+            
+    <tr id="comment-26328419" class="comment" data-commentid="26328419">
+        <td class="comment-actions"><table><tbody><tr>
+<td class="comment-score">
+<span title="number of 'useful comment' votes received" class="cool">3</span>
+</td>
+<td>
+&nbsp;
+</td></tr>
+</tbody></table></td>
+        <td class="comment-text"><div><span class="comment-copy">@GrijeshChauhan I used a <a href="http://www.binaryconvert.com/convert_double.html" rel="nofollow">double-precision IEEE754 calculator</a>: I pasted the <code>7709179928849219</code> value, and got the binary representation back.</span> &ndash;&nbsp;<a href="/users/335858/dasblinkenlight" title="166179 reputation" class="comment-user">dasblinkenlight</a> <span class="comment-date" dir="ltr"><span title="2013-08-01 20:59:23Z" class="relativetime-clean">8 hours ago</span></span></div></td>
+    </tr>
+
+        </tbody>
+    
+        </table>
+    </div>
+    <a id="comments-link-17992906" class="comments-link" data-comments-count="6" title="expand to show all comments on this post">show <b>6</b> more comments</a><span id="hidden-comments-link-17992906" class="comments-link dno" data-comments-counts="0" title="Use comments to ask for more information or suggest improvements. Avoid comments like “+1” or “thanks”.">add comment <span>(requires <a href="http://stackoverflow.com/users/login">an account</a> with <a href="http://stackoverflow.com/help/privileges/comment">50 reputation</a>)</span></span>
+</td>
+</tr>
+    </table>
+</div>
+            <div class="everyonelovesstackoverflow" id="adzerk3">
+            </div>
+
+
+
+  
+<a name="17992776"></a>
+<div id="answer-17992776" class="answer" data-answerid="17992776" >
+    <table>
+        <tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+    <input type="hidden" name="_id_" value="17992776">
+    <a class="vote-up-off" title="This answer is useful">up vote</a>
+    <span class="vote-count-post ">62</span>
+    <a class="vote-down-off" title="This answer is not useful">down vote</a>
+    
+
+</div>
+
+            </td>
+            
+
+
+<td class="answercell">
+    <div class="post-text"><p>More readable version:</p>
+
+<pre><code>double m[2] = {7709179928849219.0, 771};
+// m[0] = 7709179928849219.0;
+// m[1] = 771;    
+
+int main()
+{
+    if (m[1]-- != 0)
+    {
+        m[0] *= 2;
+        main();
+    }
+    else
+    {
+        printf((char*) m);
+    }
+}
+</code></pre>
+
+<p>It recursively calls <code>main()</code> 771 times. In the beginning <code>m[0] = 7709179928849219.0</code>, which <a href="http://ideone.com/CrF1Dh">stands</a> for <code>C++Suc;C</code>. In every call, <code>m[0]</code> gets doubled, to "repair" last two letters. In the last call, <code>m[0]</code> contains ASCII char representation of <code>C++Sucks</code>. It's assuming that <code>m[0]</code> is stored on 8 bytes, so each char takes 1 byte. <code>m[1]</code> contains all zeros, so it has a <a href="http://en.wikipedia.org/wiki/Null-terminated_string">null terminator</a> for <code>C++Sucks</code> string. </p>
+
+<p>Without recursion and illegal <code>main()</code> calling it will look like this:</p>
+
+<pre><code>double m[] = {7709179928849219.0, 0};
+for (int i = 0; i &lt; 771; i++)
+{
+    m[0] *= 2;
+}
+printf((char*) m);
+</code></pre>
+</div>
+    <table class="fw">
+    <tr>
+    <td class="vt">
+
+
+
+
+
+
+
+
+
+
+
+<div class="post-menu"><a href="/a/17992776" title="short permalink to this answer" class="short-link" id="link-post-17992776">share</a><span class="lsep">|</span><a href="/posts/17992776/edit" class="suggest-edit-post" title="">improve this answer</a></div>                    </td>
+    <td align="right" class="post-signature">
+
+
+    <div class="user-info ">
+        <div class="user-action-time">
+                            <a href="/posts/17992776/revisions" title="show all edits to this post">edited <span title="2013-08-01 13:02:53Z" class="relativetime">16 hours ago</span></a>
+
+        </div>
+        <div class="user-gravatar32">
+            
+        </div>
+        <div class="user-details">
+            <br>
+            
+        </div>
+    </div>
+    </td>
+            
+
+
+    <td align="right" class="post-signature">   
+       
+
+    
+
+    <div class="user-info ">
+        <div class="user-action-time">
+                                        answered <span title="2013-08-01 11:27:16Z" class="relativetime">17 hours ago</span>
+        </div>
+        <div class="user-gravatar32">
+            <a href="/users/1073386/adam-stelmaszczyk"><div class=""><img src="https://www.gravatar.com/avatar/dedaa598e511ee85ead4ed0bc25ea3d3?s=32&d=identicon&r=PG" alt="" width="32" height="32"></div></a>
+        </div>
+        <div class="user-details">
+            <a href="/users/1073386/adam-stelmaszczyk">Adam Stelmaszczyk</a><br>
+            <span class="reputation-score" title="reputation score" dir="ltr">3,076</span><span title="4 silver badges"><span class="badge2"></span><span class="badgecount">4</span></span><span title="24 bronze badges"><span class="badge3"></span><span class="badgecount">24</span></span>
+        </div>
+    </div>
+
+    </td>
+    </tr>
+    </table>
+</td>
+        </tr>
+
+
+
+<tr>
+<td class="votecell"></td>
+<td>
+    <div id="comments-17992776" class="comments">
+        <table>
+        <tbody>
+                    
+    <tr id="comment-26307300" class="comment" data-commentid="26307300">
+        <td class="comment-actions"><table><tbody><tr>
+<td class="comment-score">
+<span title="number of 'useful comment' votes received" class="cool">1</span>
+</td>
+<td>
+&nbsp;
+</td></tr>
+</tbody></table></td>
+        <td class="comment-text"><div><span class="comment-copy">It&#39;s postfix decrement. So it will be called 771 times.</span> &ndash;&nbsp;<a href="/users/1502345/jack-aidley" title="2075 reputation" class="comment-user">Jack Aidley</a> <span class="comment-date" dir="ltr"><span title="2013-08-01 11:38:12Z" class="relativetime-clean">17 hours ago</span></span></div></td>
+    </tr>
+            
+    <tr id="comment-26307654" class="comment" data-commentid="26307654">
+        <td class="comment-actions"><table><tbody><tr>
+<td class="comment-score">
+<span title="number of 'useful comment' votes received" class="cool">1</span>
+</td>
+<td>
+&nbsp;
+</td></tr>
+</tbody></table></td>
+        <td class="comment-text"><div><span class="comment-copy">@JackAidley You&#39;re right, thanks. I&#39;ve edited my answer.</span> &ndash;&nbsp;<a href="/users/1073386/adam-stelmaszczyk" title="3076 reputation" class="comment-user">Adam Stelmaszczyk</a> <span class="comment-date" dir="ltr"><span title="2013-08-01 11:47:19Z" class="relativetime-clean">17 hours ago</span></span></div></td>
+    </tr>
+            
+    <tr id="comment-26313266" class="comment" data-commentid="26313266">
+        <td class="comment-actions"><table><tbody><tr>
+<td class="comment-score">
+<span title="number of 'useful comment' votes received" class="cool">1</span>
+</td>
+<td>
+&nbsp;
+</td></tr>
+</tbody></table></td>
+        <td class="comment-text"><div><span class="comment-copy">Excellent answer.</span> &ndash;&nbsp;<a href="/users/954986/nathan" title="421 reputation" class="comment-user">Nathan</a> <span class="comment-date" dir="ltr"><span title="2013-08-01 14:03:31Z" class="relativetime-clean">15 hours ago</span></span></div></td>
+    </tr>
+            
+    <tr id="comment-26321414" class="comment" data-commentid="26321414">
+        <td class="comment-actions"><table><tbody><tr>
+<td class="comment-score">
+<span title="number of 'useful comment' votes received" class="cool">2</span>
+</td>
+<td>
+&nbsp;
+</td></tr>
+</tbody></table></td>
+        <td class="comment-text"><div><span class="comment-copy">this should be the accepted answer, really clears the &#39;obfuscation&#39; of the original code.</span> &ndash;&nbsp;<a href="/users/253805/gandolf" title="92 reputation" class="comment-user">gandolf</a> <span class="comment-date" dir="ltr"><span title="2013-08-01 17:32:43Z" class="relativetime-clean">11 hours ago</span></span></div></td>
+    </tr>
+
+        </tbody>
+    
+        </table>
+    </div>
+    <span id="comments-link-17992776" class="comments-link" data-comments-counts="0" title="Use comments to ask for more information or suggest improvements. Avoid comments like “+1” or “thanks”.">add comment <span>(requires <a href="http://stackoverflow.com/users/login">an account</a> with <a href="http://stackoverflow.com/help/privileges/comment">50 reputation</a>)</span></span>
+</td>
+</tr>
+    </table>
+</div>
+
+  
+<a name="17992759"></a>
+<div id="answer-17992759" class="answer" data-answerid="17992759" >
+    <table>
+        <tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+    <input type="hidden" name="_id_" value="17992759">
+    <a class="vote-up-off" title="This answer is useful">up vote</a>
+    <span class="vote-count-post ">58</span>
+    <a class="vote-down-off" title="This answer is not useful">down vote</a>
+    
+
+</div>
+
+            </td>
+            
+
+
+<td class="answercell">
+    <div class="post-text"><p>Formally speaking, it's impossible to reason about this program because it's ill-formed (i.e. it's not legal C++). It violates C++11[basic.start.main]p3:</p>
+
+<blockquote>
+  <p>The function main shall not be used within a program.</p>
+</blockquote>
+
+<p>This aside, it relies on the fact that on a typical consumer computer, a <code>double</code> is 8 bytes long, and uses a certain well-known internal representation. The initial values of the array are computed so that when the "algorithm" is performed, the final value of the first <code>double</code> will be such that the internal representation (8 bytes) will be the ASCII codes of the 8 characters <code>C++Sucks</code>. The second element in the array is then <code>0.0</code>, whose first byte is <code>0</code> in the internal representation, making this a valid C-style string. This is then sent to output using <code>printf()</code>.</p>
+
+<p>Running this on HW where some of the above doesn't hold would result in garbage text (or perhaps even an access out of bounds) instead.</p>
+</div>
+    <table class="fw">
+    <tr>
+    <td class="vt">
+
+
+
+
+
+
+
+
+
+
+
+<div class="post-menu"><a href="/a/17992759" title="short permalink to this answer" class="short-link" id="link-post-17992759">share</a><span class="lsep">|</span><a href="/posts/17992759/edit" class="suggest-edit-post" title="">improve this answer</a></div>                    </td>
+            
+
+
+    <td align="right" class="post-signature">   
+       
+
+    
+
+    <div class="user-info user-hover">
+        <div class="user-action-time">
+                                        answered <span title="2013-08-01 11:26:02Z" class="relativetime">17 hours ago</span>
+        </div>
+        <div class="user-gravatar32">
+            <a href="/users/1782465/angew"><div class=""><img src="https://www.gravatar.com/avatar/b45d92faaf9d122bfed585490e0bafc5?s=32&d=identicon&r=PG" alt="" width="32" height="32"></div></a>
+        </div>
+        <div class="user-details">
+            <a href="/users/1782465/angew">Angew</a><br>
+            <span class="reputation-score" title="reputation score 16950" dir="ltr">17k</span><span title="3 gold badges"><span class="badge1"></span><span class="badgecount">3</span></span><span title="19 silver badges"><span class="badge2"></span><span class="badgecount">19</span></span><span title="43 bronze badges"><span class="badge3"></span><span class="badgecount">43</span></span>
+        </div>
+    </div>
+
+    </td>
+    </tr>
+    </table>
+</td>
+        </tr>
+
+
+
+<tr>
+<td class="votecell"></td>
+<td>
+    <div id="comments-17992759" class="comments">
+        <table>
+        <tbody>
+                    
+    <tr id="comment-26307035" class="comment" data-commentid="26307035">
+        <td class="comment-actions"><table><tbody><tr>
+<td class="comment-score">
+<span title="number of 'useful comment' votes received" class="warm">13</span>
+</td>
+<td>
+&nbsp;
+</td></tr>
+</tbody></table></td>
+        <td class="comment-text"><div><span class="comment-copy">I have to add that this is not an invention of C++11 - C++03 also had <code>basic.start.main</code> 3.6.1/3 with the same wording.</span> &ndash;&nbsp;<a href="/users/57428/sharptooth" title="84637 reputation" class="comment-user">sharptooth</a> <span class="comment-date" dir="ltr"><span title="2013-08-01 11:30:15Z" class="relativetime-clean">17 hours ago</span></span></div></td>
+    </tr>
+            
+    <tr id="comment-26307053" class="comment" data-commentid="26307053">
+        <td></td>
+        <td class="comment-text"><div><span class="comment-copy">The point of this small example is to illustrate what can be done with C++. Magic sample using UB tricks or huge software packages of &quot;classic&quot; code.</span> &ndash;&nbsp;<a href="/users/764191/schepurin" title="945 reputation" class="comment-user">SChepurin</a> <span class="comment-date" dir="ltr"><span title="2013-08-01 11:30:38Z" class="relativetime-clean">17 hours ago</span></span></div></td>
+    </tr>
+            
+    <tr id="comment-26307114" class="comment" data-commentid="26307114">
+        <td class="comment-actions"><table><tbody><tr>
+<td class="comment-score">
+<span title="number of 'useful comment' votes received" class="cool">1</span>
+</td>
+<td>
+&nbsp;
+</td></tr>
+</tbody></table></td>
+        <td class="comment-text"><div><span class="comment-copy">+1 for probably better explanation.</span> &ndash;&nbsp;<a href="/users/1400869/d-r" title="1456 reputation" class="comment-user">D.R.</a> <span class="comment-date" dir="ltr"><span title="2013-08-01 11:33:10Z" class="relativetime-clean">17 hours ago</span></span><span class="edited-yes" title="this comment was edited"></span></div></td>
+    </tr>
+            
+    <tr id="comment-26307302" class="comment" data-commentid="26307302">
+        <td></td>
+        <td class="comment-text"><div><span class="comment-copy">@sharptooth Thanks for adding this. I didn&#39;t mean to imply otherwise, I just cited the standard I used.</span> &ndash;&nbsp;<a href="/users/1782465/angew" title="16950 reputation" class="comment-user">Angew</a> <span class="comment-date" dir="ltr"><span title="2013-08-01 11:38:13Z" class="relativetime-clean">17 hours ago</span></span></div></td>
+    </tr>
+            
+    <tr id="comment-26307405" class="comment" data-commentid="26307405">
+        <td></td>
+        <td class="comment-text"><div><span class="comment-copy">@Angew: Yeap, I understand that, just wanted to say that the wording is pretty old.</span> &ndash;&nbsp;<a href="/users/57428/sharptooth" title="84637 reputation" class="comment-user">sharptooth</a> <span class="comment-date" dir="ltr"><span title="2013-08-01 11:41:09Z" class="relativetime-clean">17 hours ago</span></span></div></td>
+    </tr>
+
+        </tbody>
+    
+        </table>
+    </div>
+    <span id="comments-link-17992759" class="comments-link" data-comments-counts="0" title="Use comments to ask for more information or suggest improvements. Avoid comments like “+1” or “thanks”.">add comment <span>(requires <a href="http://stackoverflow.com/users/login">an account</a> with <a href="http://stackoverflow.com/help/privileges/comment">50 reputation</a>)</span></span>
+</td>
+</tr>
+    </table>
+</div>
+
+  
+<a name="17992693"></a>
+<div id="answer-17992693" class="answer" data-answerid="17992693" >
+    <table>
+        <tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+    <input type="hidden" name="_id_" value="17992693">
+    <a class="vote-up-off" title="This answer is useful">up vote</a>
+    <span class="vote-count-post ">4</span>
+    <a class="vote-down-off" title="This answer is not useful">down vote</a>
+    
+
+</div>
+
+            </td>
+            
+
+
+<td class="answercell">
+    <div class="post-text"><p>It is just building up a double array (16 bytes) which - if interpreted as a char array - build up the ASCII codes for the string "C++Sucks"</p>
+
+<p>However, the code is not working on each system, it relies on some of the following undefined facts:</p>
+
+<ul>
+<li>double has exactly 8 bytes</li>
+<li>double is represented in a certain way</li>
+</ul>
+</div>
+    <table class="fw">
+    <tr>
+    <td class="vt">
+
+
+
+
+
+
+
+
+
+
+
+<div class="post-menu"><a href="/a/17992693" title="short permalink to this answer" class="short-link" id="link-post-17992693">share</a><span class="lsep">|</span><a href="/posts/17992693/edit" class="suggest-edit-post" title="">improve this answer</a></div>                    </td>
+    <td align="right" class="post-signature">
+
+
+    <div class="user-info ">
+        <div class="user-action-time">
+                            <a href="/posts/17992693/revisions" title="show all edits to this post">edited <span title="2013-08-01 11:29:31Z" class="relativetime">17 hours ago</span></a>
+
+        </div>
+        <div class="user-gravatar32">
+            
+        </div>
+        <div class="user-details">
+            <br>
+            
+        </div>
+    </div>
+    </td>
+            
+
+
+    <td align="right" class="post-signature">   
+       
+
+    
+
+    <div class="user-info ">
+        <div class="user-action-time">
+                                        answered <span title="2013-08-01 11:22:29Z" class="relativetime">17 hours ago</span>
+        </div>
+        <div class="user-gravatar32">
+            <a href="/users/1400869/d-r"><div class="gravatar-wrapper-32"><img src="http://i.stack.imgur.com/oX6hC.jpg?s=32&g=1" alt=""></div></a>
+        </div>
+        <div class="user-details">
+            <a href="/users/1400869/d-r">D.R.</a><br>
+            <span class="reputation-score" title="reputation score" dir="ltr">1,456</span><span title="2 silver badges"><span class="badge2"></span><span class="badgecount">2</span></span><span title="20 bronze badges"><span class="badge3"></span><span class="badgecount">20</span></span>
+        </div>
+    </div>
+
+    </td>
+    </tr>
+    </table>
+</td>
+        </tr>
+
+
+
+<tr>
+<td class="votecell"></td>
+<td>
+    <div id="comments-17992693" class="comments dno">
+        <table>
+        <tbody>
+        
+            <tr><td></td><td></td></tr>
+        
+        </tbody>
+    
+        </table>
+    </div>
+    <span id="comments-link-17992693" class="comments-link" data-comments-counts="0" title="Use comments to ask for more information or suggest improvements. Avoid comments like “+1” or “thanks”.">add comment <span>(requires <a href="http://stackoverflow.com/users/login">an account</a> with <a href="http://stackoverflow.com/help/privileges/comment">50 reputation</a>)</span></span>
+</td>
+</tr>
+    </table>
+</div>
+
+  
+<a name="17992996"></a>
+<div id="answer-17992996" class="answer" data-answerid="17992996" >
+    <table>
+        <tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+    <input type="hidden" name="_id_" value="17992996">
+    <a class="vote-up-off" title="This answer is useful">up vote</a>
+    <span class="vote-count-post ">2</span>
+    <a class="vote-down-off" title="This answer is not useful">down vote</a>
+    
+
+</div>
+
+            </td>
+            
+
+
+<td class="answercell">
+    <div class="post-text"><p>The following code prints <code>C++Suc;C</code>, so the whole multiplication is only for the last two letters</p>
+
+<pre><code>double m[] = {7709179928849219.0, 0};
+printf("%s\n", (char *)m);
+</code></pre>
+</div>
+    <table class="fw">
+    <tr>
+    <td class="vt">
+
+
+
+
+
+
+
+
+
+
+
+<div class="post-menu"><a href="/a/17992996" title="short permalink to this answer" class="short-link" id="link-post-17992996">share</a><span class="lsep">|</span><a href="/posts/17992996/edit" class="suggest-edit-post" title="">improve this answer</a></div>                    </td>
+    <td align="right" class="post-signature">
+
+
+    <div class="user-info user-hover">
+        <div class="user-action-time">
+                            <a href="/posts/17992996/revisions" title="show all edits to this post">edited <span title="2013-08-01 12:05:54Z" class="relativetime">17 hours ago</span></a>
+
+        </div>
+        <div class="user-gravatar32">
+            <a href="/users/366904/cody-gray"><div class=""><img src="https://www.gravatar.com/avatar/3f8912af19fe86b7b34a0b011a962460?s=32&d=identicon&r=PG" alt="" width="32" height="32"></div></a>
+        </div>
+        <div class="user-details">
+            <a href="/users/366904/cody-gray">Cody Gray</a><br>
+            <span class="reputation-score" title="reputation score 80439" dir="ltr">80.4k</span><span title="10 gold badges"><span class="badge1"></span><span class="badgecount">10</span></span><span title="114 silver badges"><span class="badge2"></span><span class="badgecount">114</span></span><span title="193 bronze badges"><span class="badge3"></span><span class="badgecount">193</span></span>
+        </div>
+    </div>
+    </td>
+            
+
+
+    <td align="right" class="post-signature">   
+       
+
+    
+
+    <div class="user-info ">
+        <div class="user-action-time">
+                                        answered <span title="2013-08-01 11:37:53Z" class="relativetime">17 hours ago</span>
+        </div>
+        <div class="user-gravatar32">
+            <a href="/users/1866300/serve-laurijssen"><div class=""><img src="https://www.gravatar.com/avatar/dab16abeddf6aa51bb13e7fe06d70b2c?s=32&d=identicon&r=PG" alt="" width="32" height="32"></div></a>
+        </div>
+        <div class="user-details">
+            <a href="/users/1866300/serve-laurijssen">Serv&#233; Laurijssen</a><br>
+            <span class="reputation-score" title="reputation score" dir="ltr">267</span><span title="1 silver badge"><span class="badge2"></span><span class="badgecount">1</span></span><span title="9 bronze badges"><span class="badge3"></span><span class="badgecount">9</span></span>
+        </div>
+    </div>
+
+    </td>
+    </tr>
+    </table>
+</td>
+        </tr>
+
+
+
+<tr>
+<td class="votecell"></td>
+<td>
+    <div id="comments-17992996" class="comments dno">
+        <table>
+        <tbody>
+        
+            <tr><td></td><td></td></tr>
+        
+        </tbody>
+    
+        </table>
+    </div>
+    <span id="comments-link-17992996" class="comments-link" data-comments-counts="0" title="Use comments to ask for more information or suggest improvements. Avoid comments like “+1” or “thanks”.">add comment <span>(requires <a href="http://stackoverflow.com/users/login">an account</a> with <a href="http://stackoverflow.com/help/privileges/comment">50 reputation</a>)</span></span>
+</td>
+</tr>
+    </table>
+</div>
+
+  
+<a name="17996351"></a>
+<div id="answer-17996351" class="answer" data-answerid="17996351" >
+    <table>
+        <tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+    <input type="hidden" name="_id_" value="17996351">
+    <a class="vote-up-off" title="This answer is useful">up vote</a>
+    <span class="vote-count-post ">2</span>
+    <a class="vote-down-off" title="This answer is not useful">down vote</a>
+    
+
+</div>
+
+            </td>
+            
+
+
+<td class="answercell">
+    <div class="post-text"><p>The others have explained the question pretty thoroughly, I'd like to add a note that this is <strong>undefined behavior</strong> according to the standard.</p>
+
+<p>C++11 3.6.1/3 <em>Main function</em></p>
+
+<blockquote>
+  <p>The function main shall not be used within a program. The linkage (3.5) of main is implementation-defined. A program that defines main as deleted or that declares main to be inline, static, or constexpr is ill-formed. The name main is not otherwise reserved. [ Example: member functions, classes, and enumerations can be called main, as can entities in other namespaces. —end example ]</p>
+</blockquote>
+</div>
+    <table class="fw">
+    <tr>
+    <td class="vt">
+
+
+
+
+
+
+
+
+
+
+
+<div class="post-menu"><a href="/a/17996351" title="short permalink to this answer" class="short-link" id="link-post-17996351">share</a><span class="lsep">|</span><a href="/posts/17996351/edit" class="suggest-edit-post" title="">improve this answer</a></div>                    </td>
+            
+
+
+    <td align="right" class="post-signature">   
+       
+
+    
+
+    <div class="user-info user-hover">
+        <div class="user-action-time">
+                                        answered <span title="2013-08-01 14:06:25Z" class="relativetime">15 hours ago</span>
+        </div>
+        <div class="user-gravatar32">
+            <a href="/users/1009479/yu-hao"><div class="gravatar-wrapper-32"><img src="http://i.stack.imgur.com/ju9c8.jpg?s=32&g=1" alt=""></div></a>
+        </div>
+        <div class="user-details">
+            <a href="/users/1009479/yu-hao">Yu Hao</a><br>
+            <span class="reputation-score" title="reputation score" dir="ltr">6,987</span><span title="1 gold badge"><span class="badge1"></span><span class="badgecount">1</span></span><span title="12 silver badges"><span class="badge2"></span><span class="badgecount">12</span></span><span title="45 bronze badges"><span class="badge3"></span><span class="badgecount">45</span></span>
+        </div>
+    </div>
+
+    </td>
+    </tr>
+    </table>
+</td>
+        </tr>
+
+
+
+<tr>
+<td class="votecell"></td>
+<td>
+    <div id="comments-17996351" class="comments">
+        <table>
+        <tbody>
+                    
+    <tr id="comment-26318699" class="comment" data-commentid="26318699">
+        <td class="comment-actions"><table><tbody><tr>
+<td class="comment-score">
+<span title="number of 'useful comment' votes received" class="cool">1</span>
+</td>
+<td>
+&nbsp;
+</td></tr>
+</tbody></table></td>
+        <td class="comment-text"><div><span class="comment-copy">I&#39;d say it&#39;s even ill-formed (as I did in my answer) - it violates a &quot;shall&quot;.</span> &ndash;&nbsp;<a href="/users/1782465/angew" title="16950 reputation" class="comment-user">Angew</a> <span class="comment-date" dir="ltr"><span title="2013-08-01 16:13:17Z" class="relativetime-clean">12 hours ago</span></span></div></td>
+    </tr>
+
+        </tbody>
+    
+        </table>
+    </div>
+    <span id="comments-link-17996351" class="comments-link" data-comments-counts="0" title="Use comments to ask for more information or suggest improvements. Avoid comments like “+1” or “thanks”.">add comment <span>(requires <a href="http://stackoverflow.com/users/login">an account</a> with <a href="http://stackoverflow.com/help/privileges/comment">50 reputation</a>)</span></span>
+</td>
+</tr>
+    </table>
+</div>
+
+  
+<a name="17992767"></a>
+<div id="answer-17992767" class="answer" data-answerid="17992767" >
+    <table>
+        <tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+    <input type="hidden" name="_id_" value="17992767">
+    <a class="vote-up-off" title="This answer is useful">up vote</a>
+    <span class="vote-count-post ">2</span>
+    <a class="vote-down-off" title="This answer is not useful">down vote</a>
+    
+
+</div>
+
+            </td>
+            
+
+
+<td class="answercell">
+    <div class="post-text"><p>The code could be re-written like this:</p>
+
+<pre><code>void f()
+{
+    if (m[1]-- != 0)
+    {
+        m[0] *= 2;
+        f()
+    } else {
+          printf((char*)m);
+    }
+}
+</code></pre>
+
+<p>What it's doing is producing a set of bytes in the <code>double</code> array <code>m</code> that happen to correspond to the characters 'C++Sucks' followed by a null-terminator. They've obfuscated the code by choosing a double value which when doubled 771 times produces, in the standard representation, that set of bytes with the null terminator provided by the second member of the array.</p>
+
+<p>Note that this code wouldn't work under a different endian representation. Also, calling <code>main()</code> is not strictly allowed.</p>
+</div>
+    <table class="fw">
+    <tr>
+    <td class="vt">
+
+
+
+
+
+
+
+
+
+
+
+<div class="post-menu"><a href="/a/17992767" title="short permalink to this answer" class="short-link" id="link-post-17992767">share</a><span class="lsep">|</span><a href="/posts/17992767/edit" class="suggest-edit-post" title="">improve this answer</a></div>                    </td>
+    <td align="right" class="post-signature">
+
+
+    <div class="user-info ">
+        <div class="user-action-time">
+                            <a href="/posts/17992767/revisions" title="show all edits to this post">edited <span title="2013-08-01 15:27:46Z" class="relativetime">13 hours ago</span></a>
+
+        </div>
+        <div class="user-gravatar32">
+            
+        </div>
+        <div class="user-details">
+            <br>
+            
+        </div>
+    </div>
+    </td>
+            
+
+
+    <td align="right" class="post-signature">   
+       
+
+    
+
+    <div class="user-info user-hover">
+        <div class="user-action-time">
+                                        answered <span title="2013-08-01 11:26:30Z" class="relativetime">17 hours ago</span>
+        </div>
+        <div class="user-gravatar32">
+            <a href="/users/1502345/jack-aidley"><div class=""><img src="https://www.gravatar.com/avatar/2550973bfc1f6c08ff29efee9a1cc7fa?s=32&d=identicon&r=PG" alt="" width="32" height="32"></div></a>
+        </div>
+        <div class="user-details">
+            <a href="/users/1502345/jack-aidley">Jack Aidley</a><br>
+            <span class="reputation-score" title="reputation score" dir="ltr">2,075</span><span title="3 silver badges"><span class="badge2"></span><span class="badgecount">3</span></span><span title="14 bronze badges"><span class="badge3"></span><span class="badgecount">14</span></span>
+        </div>
+    </div>
+
+    </td>
+    </tr>
+    </table>
+</td>
+        </tr>
+
+
+
+<tr>
+<td class="votecell"></td>
+<td>
+    <div id="comments-17992767" class="comments">
+        <table>
+        <tbody>
+                    
+    <tr id="comment-26310228" class="comment" data-commentid="26310228">
+        <td class="comment-actions"><table><tbody><tr>
+<td class="comment-score">
+<span title="number of 'useful comment' votes received" class="cool">2</span>
+</td>
+<td>
+&nbsp;
+</td></tr>
+</tbody></table></td>
+        <td class="comment-text"><div><span class="comment-copy">Why does your <code>f</code> return an <code>int</code>?</span> &ndash;&nbsp;<a href="/users/745903/leftaroundabout" title="8027 reputation" class="comment-user">leftaroundabout</a> <span class="comment-date" dir="ltr"><span title="2013-08-01 12:52:33Z" class="relativetime-clean">16 hours ago</span></span></div></td>
+    </tr>
+            
+    <tr id="comment-26316881" class="comment" data-commentid="26316881">
+        <td class="comment-actions"><table><tbody><tr>
+<td class="comment-score">
+<span title="number of 'useful comment' votes received" class="cool">1</span>
+</td>
+<td>
+&nbsp;
+</td></tr>
+</tbody></table></td>
+        <td class="comment-text"><div><span class="comment-copy">Er, &#39;cos I was brainless copying the <code>int</code> return in the question. Let me fix that.</span> &ndash;&nbsp;<a href="/users/1502345/jack-aidley" title="2075 reputation" class="comment-user">Jack Aidley</a> <span class="comment-date" dir="ltr"><span title="2013-08-01 15:27:36Z" class="relativetime-clean">13 hours ago</span></span></div></td>
+    </tr>
+
+        </tbody>
+    
+        </table>
+    </div>
+    <span id="comments-link-17992767" class="comments-link" data-comments-counts="0" title="Use comments to ask for more information or suggest improvements. Avoid comments like “+1” or “thanks”.">add comment <span>(requires <a href="http://stackoverflow.com/users/login">an account</a> with <a href="http://stackoverflow.com/help/privileges/comment">50 reputation</a>)</span></span>
+</td>
+</tr>
+    </table>
+</div>
+
+  
+<a name="17992807"></a>
+<div id="answer-17992807" class="answer" data-answerid="17992807" >
+    <table>
+        <tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+    <input type="hidden" name="_id_" value="17992807">
+    <a class="vote-up-off" title="This answer is useful">up vote</a>
+    <span class="vote-count-post ">0</span>
+    <a class="vote-down-off" title="This answer is not useful">down vote</a>
+    
+
+</div>
+
+            </td>
+            
+
+
+<td class="answercell">
+    <div class="post-text"><p>Its basically just a clever way to hide the String "C++Sucks" (note the 8 Bytes) within the first double value, which is recursively multiplied with 2 until the seconds double values reaches zero. (771 times)</p>
+
+<p>Multiplying the double values 7709179928849219.0 * 2 * 711 results in "C++Sucks" if you interpret the byte-value of the double as string, which printf() does with the cast. And printf() doesn't fail, because the second double value is "0" and interpreted as "\0" by printf().</p>
+</div>
+    <table class="fw">
+    <tr>
+    <td class="vt">
+
+
+
+
+
+
+
+
+
+
+
+<div class="post-menu"><a href="/a/17992807" title="short permalink to this answer" class="short-link" id="link-post-17992807">share</a><span class="lsep">|</span><a href="/posts/17992807/edit" class="suggest-edit-post" title="">improve this answer</a></div>                    </td>
+            
+
+
+    <td align="right" class="post-signature">   
+       
+
+    
+
+    <div class="user-info ">
+        <div class="user-action-time">
+                                        answered <span title="2013-08-01 11:28:46Z" class="relativetime">17 hours ago</span>
+        </div>
+        <div class="user-gravatar32">
+            <a href="/users/2515209/sir-pancake"><div class=""><img src="https://www.gravatar.com/avatar/150d796555f2e9234fbec615ad669c2b?s=32&d=identicon&r=PG" alt="" width="32" height="32"></div></a>
+        </div>
+        <div class="user-details">
+            <a href="/users/2515209/sir-pancake">Sir Pancake</a><br>
+            <span class="reputation-score" title="reputation score" dir="ltr">11</span><span title="1 bronze badge"><span class="badge3"></span><span class="badgecount">1</span></span>
+        </div>
+    </div>
+
+    </td>
+    </tr>
+    </table>
+</td>
+        </tr>
+
+
+
+<tr>
+<td class="votecell"></td>
+<td>
+    <div id="comments-17992807" class="comments dno">
+        <table>
+        <tbody>
+        
+            <tr><td></td><td></td></tr>
+        
+        </tbody>
+    
+        </table>
+    </div>
+    <span id="comments-link-17992807" class="comments-link" data-comments-counts="0" title="Use comments to ask for more information or suggest improvements. Avoid comments like “+1” or “thanks”.">add comment <span>(requires <a href="http://stackoverflow.com/users/login">an account</a> with <a href="http://stackoverflow.com/help/privileges/comment">50 reputation</a>)</span></span>
+</td>
+</tr>
+    </table>
+</div>
+    <a name='new-answer'></a>
+    <form id="post-form" action="/questions/17992553/answer/submit" method="post"  class="post-form">
+        <input type="hidden" id="post-id" value="17992553" />
+        <h2 class="space">Your Answer</h2>
+
+
+
+    
+<script type="text/javascript">
+    StackExchange.ready(function() {
+        initTagRenderer("".split(" "), "".split(" "));
+         
+        prepareEditor({
+            heartbeatType: 'answer',
+            bindNavPrevention: true,
+            postfix: "",
+            onDemand: true,
+            discardSelector: ".discard-answer"
+            ,immediatelyShowMarkdownHelp:true
+        });
+        
+
+    });  
+</script>
+
+
+<div id="post-editor" class="post-editor">
+
+    <div style="position: relative;">     
+        <div class="wmd-container">
+            <div id="wmd-button-bar" class="wmd-button-bar"></div>
+            <textarea id="wmd-input" class="wmd-input" name="post-text" cols="92" rows="15" tabindex="101" data-min-length=""></textarea>
+        </div>
+    </div>
+
+    <div class="fl" style="margin-top: 8px; height:24px;">&nbsp;</div>
+    <div id="draft-saved" class="draft-saved community-option fl" style="margin-top: 8px; height:24px; display:none;">draft saved</div>
+
+    <div id="draft-discarded" class="draft-discarded community-option fl" style="margin-top: 8px; height:24px; display:none;">draft discarded</div>
+
+
+
+    <div id="wmd-preview" class="wmd-preview"></div>
+    <div></div>
+    <div class="edit-block">
+        <input id="fkey" name="fkey" type="hidden" value="fe82782f4b12b375e13c53e4e1adcdaa">
+        <input id="author" name="author" type="text">
+    </div>
+</div>
+        <div style="position: relative;"> 
+            <div class="form-item dno new-post-login">
+        
+                <div class="new-login-form">
+                    <div class="new-login-left">
+                        <h3>Sign up or <a id="login-link" href="/users/login?returnurl=%2fquestions%2f17992553%2fconcept-behind-these-4-lines-of-tricky-c-code%23new-answer">log in</a></h3>
+                        <script type="text/javascript">
+                            StackExchange.ready(function () {
+                                StackExchange.helpers.onClickDraftSave('#login-link');
+                            });
+                        </script>
+                        <div class="preferred-login google-login">
+                            <p><span class="icon"></span><span>Sign up using Google</span></p>
+                        </div>
+                        <div class="preferred-login facebook-login">
+                            <p><span class="icon"></span><span>Sign up using Facebook</span></p>
+                        </div>
+                        <div class="preferred-login stackexchange-login">
+                            <p><span class="icon"></span><span>Sign up using Stack Exchange</span></p>
+                        </div>
+                    </div>
+                    <input type="hidden" name="manual-openid" class="manual-openid" />
+                    <input type="hidden" name="use-facebook" class="use-facebook" value="false" />
+                    <input type="button" class="submit-openid" value="Submit" style="display:none" />
+                    <div class="new-login-right">
+                                <h3>Post as a guest</h3>
+    <div class="form-item">
+        <table>
+        <tr>
+                    <script type="text/javascript">
+                StackExchange.ready(function () {
+                    StackExchange.helpers.bindHelpOverlayEvents($('.vm input'));
+                });
+            </script>
+            <td class="vm">
+                <div>
+                    <label for="display-name">Name</label>
+                    <input id="display-name" name="display-name" type="text" size="30" maxlength="30" value="" tabindex="105">
+                </div>
+                <div>
+                    <label for="m-address">Email</label>
+                    <input id="m-address" name="m-address" type="text" size="30" maxlength="100" value="" tabindex="106">
+                    <span class="edit-field-overlay">required, but not shown</span>
+                </div>
+            </td>
+        </tr>
+        </table>
+    </div>
+
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+                StackExchange.ready(
+                    function () {
+                        StackExchange.openid.initPostLogin('.new-post-login', '%2fquestions%2f17992553%2fconcept-behind-these-4-lines-of-tricky-c-code%23new-answer');
+                    }
+                );
+            </script>
+            <noscript>
+                        <h3>Post as a guest</h3>
+    <div class="form-item">
+        <table>
+        <tr>
+                    <script type="text/javascript">
+                StackExchange.ready(function () {
+                    StackExchange.helpers.bindHelpOverlayEvents($('.vm input'));
+                });
+            </script>
+            <td class="vm">
+                <div>
+                    <label for="display-name">Name</label>
+                    <input id="display-name" name="display-name" type="text" size="30" maxlength="30" value="" tabindex="105">
+                </div>
+                <div>
+                    <label for="m-address">Email</label>
+                    <input id="m-address" name="m-address" type="text" size="30" maxlength="100" value="" tabindex="106">
+                    <span class="edit-field-overlay">required, but not shown</span>
+                </div>
+            </td>
+        </tr>
+        </table>
+    </div>
+
+            </noscript>
+        </div>
+           
+            <div class="form-submit cbt">
+            <input id="submit-button" type="submit" value="Post Your Answer" tabindex="110">
+            <a href="#" class="discard-answer dno">discard</a>
+    <p class="privacy-policy-agreement">
+        By posting your answer, you agree to the 
+        <a href="http://stackexchange.com/legal/privacy-policy" target="_blank">privacy policy</a> and 
+        <a href="http://stackexchange.com/legal/terms-of-service" target="_blank">terms of service</a>.
+    </p>
+    <input type="hidden" name="legalLinksShown" value="1" />
+        </div>
+    </form>
+
+
+
+        <h2 class="bottom-notice">
+                Not the answer you're looking for? 
+            Browse other questions tagged <a href="/questions/tagged/c%2b%2b" class="post-tag" title="show questions tagged 'c++'" rel="tag">c++</a> 
+                or <a href="/questions/ask">ask your own question</a>.
+        </h2>
+</div>
+</div>
+<div id="sidebar" class="show-votes">
+        <div class="module question-stats">
+        <p class="label-key">tagged</p>
+        <div class="tagged"><a href="/questions/tagged/c%2b%2b" class="post-tag" title="show questions tagged 'c++'" rel="tag">c++</a>&nbsp;<span class="item-multiplier"><span class="item-multiplier-x">&times;</span>&nbsp;<span class="item-multiplier-count">216807</span></span><br>
+</div>
+        <table id="qinfo">
+            <tr>
+                <td><p class="label-key">asked</p></td>
+                <td style="padding-left:10px"><p class="label-key" title="2013-08-01 11:16:08Z"><b>today</b></p></td>
+            </tr>
+            <tr>
+                <td><p class="label-key">viewed</p></td>
+
+                <td style="padding-left:10px">
+                    <p class="label-key">
+                        <b>3677 times</b>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td><p class="label-key">active</p></td>
+                <td style="padding-left:10px"><p class="label-key"><b><a href="?lastactivity" class="lastactivity-link" title="2013-08-01 20:58:33Z">today</a></b></p></td>
+            </tr>
+        </table>
+    </div>
+        
+                    <script type="text/javascript">
+                    var scriptSrc = "http://engine.adzerk.net/z/8277/adzerk1_2_4_43,adzerk2_2_17_45,adzerk3_2_4_44?keywords=c%2b%2b";
+                    if (document.referrer) {
+                        if (/\?/.test(scriptSrc))
+                            scriptSrc += "&";
+                        else
+                            scriptSrc += "?";
+                        scriptSrc += "xReferrer=" + document.referrer;
+                    }
+                    StackExchange.ready(function() {
+                        var z = document.createElement("script");
+                        z.type = "text/javascript";
+                        z.async = "true";
+                        z.src = scriptSrc;
+                        var s = document.getElementsByTagName("script")[0];
+                        s.parentNode.insertBefore(z, s);
+                    });
+                </script>
+            <div class="everyonelovesstackoverflow" id="adzerk2">
+            </div>
+    <div id="hireme">
+        <script type="text/javascript">
+window.careers_adurl="http://careers.stackoverflow.com/gethired/js",window.careers_cssurl="//cdn-careers.sstatic.net/careers/gethired/sidebar.min.css?v=17be6ca0db4b",window.careers_leaderboardcssurl="//cdn-careers.sstatic.net/careers/gethired/ninja.min.css?v=78ccbfa5c59f",window.careers_companycssurl="//cdn-careers.sstatic.net/careers/gethired/company",window.careers_adselector="div.hireme, div#hireme",StackExchange.ready(function(){$.ajax({url:"//cdn-careers.sstatic.net/careers/gethired/loader.min.js?v=607ab2dda910",dataType:"script",cache:!0})})        </script>
+    </div>
+
+
+
+      
+    
+    <div class="module sidebar-linked">
+        <h4 id="h-linked">Linked</h4>
+        <div class="linked" data-tracker="lq=1">
+            <div class="spacer">
+<a href="/q/15393441" title="Vote score (upvotes - downvotes)">
+        <div class="answer-votes answered-accepted large">600</div>
+</a>
+<a href="/questions/15393441/obfuscated-c-code-contest-2006-please-explain-sykes2-c" class="question-hyperlink">Obfuscated C Code Contest 2006. Please explain sykes2.c</a>
+</div>
+
+        </div>
+    </div>
+    <div class="module sidebar-related">
+        <h4 id="h-related">Related</h4>
+        <div class="related" data-tracker="rq=1">
+            <div class="spacer">
+<a href="/q/388242" title="Vote score (upvotes - downvotes)">
+        <div class="answer-votes extra-large">3092</div>
+</a>
+<a href="/questions/388242/the-definitive-c-book-guide-and-list" class="question-hyperlink">The Definitive C++ Book Guide and List</a>
+</div>
+<div class="spacer">
+<a href="/q/3205511" title="Vote score (upvotes - downvotes)">
+        <div class="answer-votes default">0</div>
+</a>
+<a href="/questions/3205511/logic-behind-the-code" class="question-hyperlink">logic behind the code</a>
+</div>
+<div class="spacer">
+<a href="/q/9857320" title="Vote score (upvotes - downvotes)">
+        <div class="answer-votes answered-accepted default">14</div>
+</a>
+<a href="/questions/9857320/why-does-this-c-code-output-the-result" class="question-hyperlink">Why does this C++ code output the result?</a>
+</div>
+<div class="spacer">
+<a href="/q/10079073" title="Vote score (upvotes - downvotes)">
+        <div class="answer-votes answered-accepted default">0</div>
+</a>
+<a href="/questions/10079073/issue-with-c-code-skipping-get-line-statement" class="question-hyperlink">issue with c++ code skipping get line statement</a>
+</div>
+<div class="spacer">
+<a href="/q/11373021" title="Vote score (upvotes - downvotes)">
+        <div class="answer-votes answered-accepted default">3</div>
+</a>
+<a href="/questions/11373021/confusion-in-union-concept" class="question-hyperlink">confusion in union concept</a>
+</div>
+<div class="spacer">
+<a href="/q/12813765" title="Vote score (upvotes - downvotes)">
+        <div class="answer-votes answered-accepted default">-1</div>
+</a>
+<a href="/questions/12813765/very-simple-c-basic-code" class="question-hyperlink">Very simple C++ basic code</a>
+</div>
+<div class="spacer">
+<a href="/q/14013427" title="Vote score (upvotes - downvotes)">
+        <div class="answer-votes answered-accepted default">-2</div>
+</a>
+<a href="/questions/14013427/why-is-my-code-giving-a-run-time-error" class="question-hyperlink">why is my code giving a run time error?</a>
+</div>
+<div class="spacer">
+<a href="/q/16125660" title="Vote score (upvotes - downvotes)">
+        <div class="answer-votes answered-accepted large">110</div>
+</a>
+<a href="/questions/16125660/how-did-i-get-a-value-larger-than-8-bits-in-size-from-an-8-bit-integer" class="question-hyperlink">How did I get a value larger than 8 bits in size from an 8-bit integer?</a>
+</div>
+<div class="spacer">
+<a href="/q/17482377" title="Vote score (upvotes - downvotes)">
+        <div class="answer-votes answered-accepted default">-5</div>
+</a>
+<a href="/questions/17482377/wrong-concept-in-c-program" class="question-hyperlink">Wrong Concept in C++ Program</a>
+</div>
+<div class="spacer">
+<a href="/q/17773318" title="Vote score (upvotes - downvotes)">
+        <div class="answer-votes answered-accepted default">2</div>
+</a>
+<a href="/questions/17773318/shopping-cart-assignment-concepts-on-getline" class="question-hyperlink">Shopping cart assignment, concepts on getline()</a>
+</div>
+
+        </div>
+    </div>
+</div>
+
+<div id="feed-link">
+    <div id="feed-link-text"><a href="/feeds/question/17992553" title="feed of this question and its answers"><span class="feed-icon"></span>question feed</a></div>
+</div>
+<script type="text/javascript">
+StackExchange.ready(function(){$.get('/posts/17992553/ivc/e0eb');});
+</script>
+<noscript>
+    <div><img src="/posts/17992553/ivc/e0eb" class="dno" alt="" width="0" height="0"></div>
+</noscript><div style="display:none" id="prettify-lang">lang-c</div></div>
+
+
+        </div>
+    </div>
+    <div id="footer" class="categories">
+        <div class="footerwrap">
+            <div id="footer-menu">
+                <div class="top-footer-links">
+                        <a href="/about">about</a>
+                    <a href="/help">help</a>
+                        <a href="/help/badges">badges</a>
+                    <a href="http://blog.stackexchange.com?blb=1">blog</a>
+                        <a href="http://chat.stackoverflow.com">chat</a>
+                    <a href="http://data.stackexchange.com">data</a>
+                    <a href="http://stackexchange.com/legal">legal</a>
+                    <a href="http://stackexchange.com/legal/privacy-policy">privacy policy</a>
+                    <a href="http://stackexchange.com/about/hiring">jobs</a>
+                    <a href="http://engine.adzerk.net/r?e=eyJhdiI6NDE0LCJhdCI6MjAsImNtIjo5NTQsImNoIjoxMTc4LCJjciI6Mjc3NiwiZG0iOjQsImZjIjoyODYyLCJmbCI6Mjc1MSwibnciOjIyLCJydiI6MCwicHIiOjExNSwic3QiOjAsInVyIjoiaHR0cDovL3N0YWNrb3ZlcmZsb3cuY29tL2Fib3V0L2NvbnRhY3QiLCJyZSI6MX0&amp;s=hRods5B22XvRBwWIwtIMekcyNF8">advertising info</a>
+
+                    <a onclick='StackExchange.switchMobile("on", "/questions/17992553/concept-behind-these-4-lines-of-tricky-c-code")'>mobile</a>
+                    <b><a href="/contact">contact us</a></b>
+                        <b><a href="http://meta.stackoverflow.com">feedback</a></b>
+                    
+                </div>
+                <div id="footer-sites">
+                    <table>
+    <tr>
+            <th colspan=3>
+                Technology
+            </th>
+            <th >
+                Life / Arts
+            </th>
+            <th >
+                Culture / Recreation
+            </th>
+            <th >
+                Science
+            </th>
+            <th >
+                Other
+            </th>
+    </tr>
+    <tr>
+            <td>
+                <ol>
+                        <li><a href="http://stackoverflow.com" title="professional and enthusiast programmers">Stack Overflow</a></li>
+                        <li><a href="http://serverfault.com" title="professional system and network administrators">Server Fault</a></li>
+                        <li><a href="http://superuser.com" title="computer enthusiasts and power users">Super User</a></li>
+                        <li><a href="http://webapps.stackexchange.com" title="power users of web applications">Web Applications</a></li>
+                        <li><a href="http://askubuntu.com" title="Ubuntu users and developers">Ask Ubuntu</a></li>
+                        <li><a href="http://webmasters.stackexchange.com" title="pro webmasters">Webmasters</a></li>
+                        <li><a href="http://gamedev.stackexchange.com" title="professional and independent game developers">Game Development</a></li>
+                        <li><a href="http://tex.stackexchange.com" title="users of TeX, LaTeX, ConTeXt, and related typesetting systems">TeX - LaTeX</a></li>
+                            </ol></td><td><ol>
+                        <li><a href="http://programmers.stackexchange.com" title="professional programmers interested in conceptual questions about software development">Programmers</a></li>
+                        <li><a href="http://unix.stackexchange.com" title="users of Linux, FreeBSD and other Un*x-like operating systems.">Unix &amp; Linux</a></li>
+                        <li><a href="http://apple.stackexchange.com" title="power users of Apple hardware and software">Ask Different (Apple)</a></li>
+                        <li><a href="http://wordpress.stackexchange.com" title="WordPress developers and administrators">WordPress Answers</a></li>
+                        <li><a href="http://gis.stackexchange.com" title="cartographers, geographers and GIS professionals">Geographic Information Systems</a></li>
+                        <li><a href="http://electronics.stackexchange.com" title="electronics and electrical engineering professionals, students, and enthusiasts">Electrical Engineering</a></li>
+                        <li><a href="http://android.stackexchange.com" title="enthusiasts and power users of the Android operating system">Android Enthusiasts</a></li>
+                        <li><a href="http://security.stackexchange.com" title="IT security professionals">IT Security</a></li>
+                            </ol></td><td><ol>
+                        <li><a href="http://dba.stackexchange.com" title="database professionals who wish to improve their database skills and learn from others in the community">Database Administrators</a></li>
+                        <li><a href="http://drupal.stackexchange.com" title="Drupal developers and administrators">Drupal Answers</a></li>
+                        <li><a href="http://sharepoint.stackexchange.com" title="SharePoint enthusiasts">SharePoint</a></li>
+                        <li><a href="http://ux.stackexchange.com" title="user experience researchers and experts">User Experience</a></li>
+                        <li><a href="http://mathematica.stackexchange.com" title="users of Mathematica">Mathematica</a></li>
+                    
+                        <li>
+                            <a href="http://stackexchange.com/sites#technology" class="more">
+                                more (13)
+                            </a>
+                        </li>
+                </ol>
+            </td>
+            <td>
+                <ol>
+                        <li><a href="http://photo.stackexchange.com" title="professional, enthusiast and amateur photographers">Photography</a></li>
+                        <li><a href="http://scifi.stackexchange.com" title="science fiction and fantasy enthusiasts">Science Fiction &amp; Fantasy</a></li>
+                        <li><a href="http://cooking.stackexchange.com" title="professional and amateur chefs">Seasoned Advice (cooking)</a></li>
+                        <li><a href="http://diy.stackexchange.com" title="contractors and serious DIYers">Home Improvement</a></li>
+                    
+                        <li>
+                            <a href="http://stackexchange.com/sites#lifearts" class="more">
+                                more (13)
+                            </a>
+                        </li>
+                </ol>
+            </td>
+            <td>
+                <ol>
+                        <li><a href="http://english.stackexchange.com" title="linguists, etymologists, and serious English language enthusiasts">English Language &amp; Usage</a></li>
+                        <li><a href="http://skeptics.stackexchange.com" title="scientific skepticism">Skeptics</a></li>
+                        <li><a href="http://judaism.stackexchange.com" title="those who base their lives on Jewish law and tradition and anyone interested in learning more">Mi Yodeya (Judaism)</a></li>
+                        <li><a href="http://travel.stackexchange.com" title="road warriors and seasoned travelers">Travel</a></li>
+                        <li><a href="http://christianity.stackexchange.com" title="committed Christians, experts in Christianity and those interested in learning more">Christianity</a></li>
+                        <li><a href="http://gaming.stackexchange.com" title="passionate videogamers on all platforms">Arqade (gaming)</a></li>
+                        <li><a href="http://bicycles.stackexchange.com" title="people who build and repair bicycles, people who train cycling, or commute on bicycles">Bicycles</a></li>
+                        <li><a href="http://rpg.stackexchange.com" title="gamemasters and players of tabletop, paper-and-pencil role-playing games">Role-playing Games</a></li>
+                    
+                        <li>
+                            <a href="http://stackexchange.com/sites#culturerecreation" class="more">
+                                more (21)
+                            </a>
+                        </li>
+                </ol>
+            </td>
+            <td>
+                <ol>
+                        <li><a href="http://math.stackexchange.com" title="people studying math at any level and professionals in related fields">Mathematics</a></li>
+                        <li><a href="http://stats.stackexchange.com" title="statisticians, data analysts, data miners and data visualization experts">Cross Validated (stats)</a></li>
+                        <li><a href="http://cstheory.stackexchange.com" title="theoretical computer scientists and researchers in related fields">Theoretical Computer Science</a></li>
+                        <li><a href="http://physics.stackexchange.com" title="active researchers, academics and students of physics">Physics</a></li>
+                        <li><a href="http://mathoverflow.net" title="professional mathematicians">MathOverflow</a></li>
+                    
+                        <li>
+                            <a href="http://stackexchange.com/sites#science" class="more">
+                                more (7)
+                            </a>
+                        </li>
+                </ol>
+            </td>
+            <td>
+                <ol>
+                        <li><a href="http://stackapps.com" title="apps, scripts, and development with the Stack Exchange API">Stack Apps</a></li>
+                        <li><a href="http://meta.stackoverflow.com" title="meta-discussion of the Stack Exchange family of Q&amp;A websites">Meta Stack Overflow</a></li>
+                        <li><a href="http://area51.stackexchange.com" title="proposing new sites in the Stack Exchange network">Area 51</a></li>
+                        <li><a href="http://careers.stackoverflow.com">Stack Overflow Careers</a></li>
+                    
+                </ol>
+            </td>
+    </tr>
+</table>
+                </div>
+            </div>
+
+            <div id="copyright">
+                site design / logo &copy; 2013 stack exchange inc; 
+                user contributions licensed under <a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license">cc-wiki</a> 
+                with <a href="http://blog.stackoverflow.com/2009/06/attribution-required/" rel="license">attribution required</a>
+            </div>
+            <div id="footer-flair">
+                <a href="http://creativecommons.org/licenses/by-sa/3.0/" class="cc-wiki-link"></a>
+            </div>
+            <div id="svnrev">
+                rev 2013.8.1.914
+            </div>
+            
+        </div>
+    </div>
+    <noscript>
+        <div id="noscript-warning">Stack Overflow works best with JavaScript enabled<img src="http://pixel.quantserve.com/pixel/p-c1rF4kxgLUzNc.gif" alt="" class="dno"></div>
+    </noscript>
+
+    <script type="text/javascript">var _gaq=_gaq||[];_gaq.push(['_setAccount','UA-5620270-1']);
+        _gaq.push(['_setCustomVar', 1, 'tags', '|c++|']); 
+_gaq.push(['_trackPageview']);
+    var _qevents = _qevents || [];
+    (function () {
+        var ssl='https:'==document.location.protocol,
+            s=document.getElementsByTagName('script')[0],
+            ga=document.createElement('script');
+        ga.type='text/javascript';
+        ga.async=true;
+        ga.src=(ssl?'https://ssl':'http://www')+'.google-analytics.com/ga.js';
+        s.parentNode.insertBefore(ga,s);
+        var sc=document.createElement('script');
+        sc.type='text/javascript';
+        sc.async=true;
+        sc.src=(ssl?'https://secure':'http://edge')+'.quantserve.com/quant.js';
+        s.parentNode.insertBefore(sc,s);
+    })();
+    _qevents.push({ qacct: "p-c1rF4kxgLUzNc" });
+    </script>        
+    
+</body>
+</html>

@@ -1,0 +1,339 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://ogp.me/ns/fb#">
+  <head>
+    <title>Watch The Awesomes | Pilot, Part 1 online | Free | Hulu</title>
+      <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml?v=Aug27" title="Hulu"/>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="shortcut icon" href="/fat-favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="application-name" content="Hulu"/>
+    <meta name="msapplication-tooltip" content="Start Hulu with Internet Explorer enhancements."/>
+    <meta name="msapplication-starturl" content="/" />
+    <meta name="description" content="Watch Pilot, Part 1 free online. Stream The Awesomes season 1, episode 1 instantly."/><meta name="keywords" content="tv, television, movie, trailer, video, free, watch, share, entertainment"/>
+    <link rel="media:video" href="http://www.hulu.com/embed.html?eid=0-us7uHJgevua5TeiGwCxQ" /><link rel="media:thumbnail" href="http://ib3.huluim.com/video/60245466?region=US&size=220x124" /><link rel="image_src" href="http://ib3.huluim.com/video/60245466?region=US&size=220x124" />
+      
+      <meta property="og:title" content="The Awesomes: Pilot, Part 1"/>
+      <meta property="og:type" content="video.episode"/>
+      <meta property="og:image" content="http://ib3.huluim.com/video/60245466?region=US&size=600x400"/>
+      <meta property="og:site_name" content="Hulu"/>
+      <meta property="og:description" content="After Mr. Awesome decides to retire and disband The Awesomes, his son Prock steps in to keep the team going. Meanwhile, Dr. Malocchio decides it’s time to come out of super-villain retirement."/>
+    
+          <meta property="og:video:width" content="640"/>
+          <meta property="og:video:height" content="360"/>
+        
+        <meta property="og:video" content="https://secure.hulu.com/embed/0-us7uHJgevua5TeiGwCxQ"/>
+        <meta property="og:url" content="http://www.hulu.com/watch/515146"/>
+        <meta property="og:video:type" content="application/x-shockwave-flash"/>
+      
+          <meta property="video:series" content="http://www.hulu.com/the-awesomes"/>
+        
+          <meta name="twitter:card" value="summary">
+          <meta name="twitter:site" value="@Hulu"/>
+          <meta name="twitter:title" value="The Awesomes: Pilot, Part 1"/>
+          <meta name="twitter:image" value="http://ib3.huluim.com/video/60245466?region=US&size=600x400"/>
+          <meta name="twitter:description" value="After Mr. Awesome decides to retire and disband The Awesomes, his son Prock steps in to keep the team going. Meanwhile, Dr. Malocchio decides it’s time to come out of super-villain retirement."/>
+          <meta name="twitter:url" value="http://www.hulu.com/watch/515146"/>
+        
+
+    <meta property="fb:app_id" content="40582213222"/>
+    <meta property="twitter:account_id" content="15033883"/>
+    <meta name="msApplication-ID" content="App" />
+    <meta name="msApplication-PackageFamilyName" content="HuluLLC.HuluPlus_fphbd361v8tya" />
+    <meta name="msapplication-TileImage" content="/icon-win8-tile.png"/>
+    <meta name="msapplication-TileColor" content="#ffffff"/>
+
+    <script type='text/javascript'>
+      
+      (function (d, w) {
+        w.HuluPerfStart = new Date();
+        w.errorCode = '';
+        w.errorLogSampleRate = {"sampleRate":0.05,"lastUpdate":1345778273};
+        w.jsLoaded = {frameworkloadedCallbacks: [], frameworkOnLoad: function(){}};
+        w.donutAllocations = {"flight_name_lookup_table":{"1":"web","2":"reco","3":"cct","6":"player","7":"web_guid_only","8":"search"},"assignments":{"8":{"10-49":"fe128bab776e7c920e151668561dfdb2","0-9":"f4b3b581d42389890243436e776a8370"},"1":{"2-3":"93261dd75650a2db32982a0467c8c867","18-19":"133a1c1b7f0b9af21b9f4c49d6464b0c","4-5":"5e4274d5736e7d9f58550e37504a0383","8-15":"5abc1f4d3bdf54bce727b412d88b8b0f","16-17":"3d2338190bb069c0f6c2e86b6d733290","6-7":"aea28f4cfd96addb93850d8c36e56142","0-1":"5abc1f4d3bdf54bce727b412d88b8b0f"},"2":{"20-29":"e2aac6ac832eaa57e222487ffffebb5f","0-19":"21271f5770f5e2bf305879ae4298a633","70-79":"e2aac6ac832eaa57e222487ffffebb5f"}},"flight_guid_only_lookup_table":{"1":0,"2":0,"3":0,"6":0,"7":1,"8":0},"assignment_lookup_table":{"93261dd75650a2db32982a0467c8c867":{"treatment_id":56,"flight_id":1,"treatment_name":"control","experiment_name":"masthead-redesign","experiment_id":7,"flight_name":"web"},"21271f5770f5e2bf305879ae4298a633":{"treatment_id":183,"flight_id":2,"treatment_name":"ptray_non_p13n","experiment_name":"p13n_tray","experiment_id":24,"flight_name":"reco"},"f4b3b581d42389890243436e776a8370":{"treatment_id":187,"flight_id":8,"treatment_name":"8_1_control_treatment","experiment_name":"8_1_control_experiment","experiment_id":27,"flight_name":"search"},"e2aac6ac832eaa57e222487ffffebb5f":{"treatment_id":185,"flight_id":2,"treatment_name":"ptray_p13n","experiment_name":"p13n_tray","experiment_id":24,"flight_name":"reco"},"fe128bab776e7c920e151668561dfdb2":{"treatment_id":189,"flight_id":8,"treatment_name":"new_related_search","experiment_name":"related_search_experiment","experiment_id":29,"flight_name":"search"},"3d2338190bb069c0f6c2e86b6d733290":{"treatment_id":125,"flight_id":1,"treatment_name":"masthead-exp-ctrl","experiment_name":"masthead-redesign","experiment_id":7,"flight_name":"web"},"aea28f4cfd96addb93850d8c36e56142":{"treatment_id":62,"flight_id":1,"treatment_name":"control","experiment_name":"masthead-redesign","experiment_id":7,"flight_name":"web"},"133a1c1b7f0b9af21b9f4c49d6464b0c":{"treatment_id":134,"flight_id":1,"treatment_name":"control","experiment_name":"masthead-redesign","experiment_id":7,"flight_name":"web"},"5abc1f4d3bdf54bce727b412d88b8b0f":{"treatment_id":-11,"flight_id":1,"treatment_name":"control","experiment_name":"1_1_control_experiment","experiment_id":12,"flight_name":"web"},"5e4274d5736e7d9f58550e37504a0383":{"treatment_id":132,"flight_id":1,"treatment_name":"control","experiment_name":"masthead-redesign","experiment_id":7,"flight_name":"web"}},"flight_id_lookup_table":{"web":1,"web_guid_only":7,"reco":2,"cct":3,"search":8,"player":6},"treatment_overrides":[],"salt":"jawehflawhefkljawehfkljawhef"};
+       
+        w.API_DONUT = 'N8C1yCzdirk8Ad1HHISQxYkh8pM=RTnPQNE5b279cca2fd891aa93e1a2c6b62fcaf03830516c4da1ef7daec53a56d758e3ebb417069b606a305eefdd7da79cd865be1';
+        w.PLAYER_DONUT = '5iqegb5xAuquCPcCG7tNiUoJiM4=hKNy6y8E3d4396d7338bf98c61b5986c44bbb3ffeaa4774063bf130226132ad8d8d157ab150b67632f5a9afc67c97fa5acf383be';
+        w.MOBILE_DONUT = 'ipNXQEx5mmRGc8Fis5nIkX8I888=I9q8yxzE5f6138d0185219312d27ae30c75d8f2935a974440b1572f74df519c7e6da02e8649b98d9a1d37daa4b25e7f2bad13c9d';
+
+        d.write("\n          <link href=\"http://static.huluim.com/huluguru/fonts-1c82c659a3e86ad3acd40bdf052b3941.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />\n          <!--[if lt IE 9]>\n            <link href=\"http://static.huluim.com/huluguru/ie_hacker-b36cca279ee32eeb2b56b0a985ef0b58.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />\n          <![endif]-->\n\n          <script src=\"http://static.huluim.com/huluguru/i18n/en-us/translations-85ff23876467c3b07e8db388fbe442cb.js\" type=\"text/javascript\"><\/script>\n          <script src=\"http://static.huluim.com/huluguru/application_core-914ab081569b1c51d0d1eea0c6583cdd.js\" type=\"text/javascript\"><\/script>\n          <script src=\"http://static.huluim.com/huluguru/application_framework-12feec29dc51f8aadce6827c888db847.js\" type=\"text/javascript\"><\/script>\n            <script type='text/javascript'>\n    window.jsLoaded.frameworkloadedCallbacks.push(function(){\n      window._preloadedFastStartVideo = {\"id\": 515146, \"eid\": \"0-us7uHJgevua5TeiGwCxQ\", \"title\": \"Pilot, Part 1\", \"video_type\": \"episode\", \"content_id\": \"60245466\", \"categories\": \"Episodes\", \"original_premiere_date\": \"2013-08-01T00:00:00Z\", \"is_subscriber_only\": false, \"is_web_only\": false, \"is_auth_valid\": false, \"is_html5_enabled\": true, \"description\": \"After Mr. Awesome decides to retire and disband The Awesomes, his son Prock steps in to keep the team going. Meanwhile, Dr. Malocchio decides it\\u2019s time to come out of super-villain retirement.\", \"copyright\": \"Copyright \\u00a9 2013 Broadway Video Entertainment, Inc. All Rights Reserved.\", \"season_number\": 1, \"episode_number\": 1, \"programming_type\": \"Full Episode\", \"poster_url\": null, \"rating\": 0.0, \"duration\": 1358.06, \"has_captions\": true, \"released_at\": \"2013-07-26T03:38:13Z\", \"content_rating\": \"TV-14\", \"studio\": null, \"available_at\": \"2013-08-01T04:00:00Z\", \"expires_at\": null, \"auth_name\": null, \"tune_in_information\": null, \"embed_permitted\": true, \"show_id\": 12901, \"show\": {\"id\": 12901, \"name\": \"The Awesomes\", \"canonical_name\": \"the-awesomes\", \"rating\": 4.501084593572779, \"link_description\": null, \"seasons_count\": 1, \"episodes_count\": 2, \"games_count\": 0, \"clips_count\": 14, \"film_clips_count\": 0, \"feature_films_count\": 0, \"is_movie\": false, \"is_subscriber_only\": false, \"genre\": \"Action and Adventure\", \"genres\": \"Action and Adventure|Animation and Cartoons|Comedy\", \"videos_count\": 16, \"art_copyright\": null, \"description\": \"From the comedic minds of Seth Meyers (Saturday Night Live) and Mike Shoemaker (Late Night with Jimmy Fallon) comes THE AWESOMES, a new animated show for adults about the greatest superhero team ever after all the good members quit. Showcasing the voice talents of current and past SNL stars, THE AWESOMES introduces a group of not-so-super heroes who just might find a way to save the world.\"}, \"company\": {\"id\": 492, \"name\": \"Hulu Original Series\", \"canonical_name\": \"hulu-original-series\", \"key_art_url\": \"http://ib1.huluim.com/company_key_art/492?size=1600x600&region=US\",</linkwork_logo_url\": null}, \"cr_directors\": [], \"cr_countries\": [], \"video_game_id\": null, \"video_game\": null}\n      try {\n        Hulu.Mobile.currentVideo = window._preloadedFastStartVideo;\n      } catch(e) {}\n    });\n  <\/script>\n \n          <script type='text/javascript'>\n            window.jsLoaded.frameworkloadedCallbacks.push(function(){\n              $.ajaxSetup({cache: true});\n\n              Hulu.bootstrapInit();\n\n              Hulu.Configuration.initialize({\n                language: 'en',\n                content_pgid: \"195\",\n                version: '4ee4adc5f502b88bf3d528bb0923905049182cb9',\n                tempo_version: '9c23724f2bb2eee5f3ac4da9202655394a9402fa'\n              });\n              \n              if(!Hulu.Mobile.isMobile){\n                Hulu.DataPreloader.init();\n              } else {\n                API_DONUT = MOBILE_DONUT;\n              }\n            });\n\n            window.jsLoaded.frameworkOnLoad = function() {\n              for (var i = 0; i < window.jsLoaded.frameworkloadedCallbacks.length; ++i) {\n                window.jsLoaded.frameworkloadedCallbacks[i]();\n              }\n            };\n            if (window.jsLoaded.applicationFrameWork) {\n              window.jsLoaded.frameworkOnLoad();\n            }\n          <\/script>\n        ");
+        if(true && /(ipad|itouch|ipod|iphone|Android|Windows Phone|GoogleTV|Boxee|Skyfire|Playbook|Blackberry|Silk|BNTV250|Xbox|PLAYSTATION 3|Nintendo WiiU)/i.test(navigator.userAgent)) {
+          d.write("\n            <script src=\"/site-player/html5/js/app_v2.js\" type=\"text/javascript\"><\/script>\n          ");
+
+          d.write("\n            <link rel='stylesheet' type='text/css' href=\"/site-player/html5/css/base_v2.css\">\n            <link href=\"http://static.huluim.com/huluguru/mobile/application_mobile-c1f5834d2670a3784f676dba522dc21b.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />\n            <script src=\"http://static.huluim.com/huluguru/application_mobile-7e4e0432a441e8e56a2444a547e688b0.js\" type=\"text/javascript\"><\/script>\n          ");
+        } else {
+          d.write("\n            <link href=\"http://static.huluim.com/huluguru/en-us/application-473f760cf9e3d2b0ceab71aca9fbb264.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />\n            <script src=\"http://static.huluim.com/huluguru/i18n/en-us/application-f0ac212990fb772b92fecb49361e723e.js\" type=\"text/javascript\"><\/script>\n            <script src=\"/site-player/load_player_h2o_v4.js\" type=\"text/javascript\"><\/script>\n          ");
+        }
+      }(document, window));
+    </script>
+
+
+    
+
+    
+    <script type="text/javascript">
+//<![CDATA[
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-1384159-3']);
+      _gaq.push(['_setDomainName', '.hulu.com']);
+      var segStatus = Hulu.Behaviors.isLoggedIn() ?
+      (Hulu.Behaviors.isSubscriber() ? "plus" : "loggedin") : "anonymous";
+    
+        var removePrefix = /^.*\.(.*)/.exec(Cookies.getCookieByKey("GA_SEGMENT"));
+        if (removePrefix && removePrefix[1]) {
+          if (removePrefix[1] != segStatus) {
+            _gaq.push(['_setVar', segStatus]);
+          }
+        } else {
+          _gaq.push(['_setVar', segStatus]);
+        }
+
+        var treatmentName = Hulu.Donut.getExperimentAndAssignmentByFlight(Hulu.Constants.H2O_FLIGHT);
+        _gaq.push(['_setCustomVar', 6, 'DonutTreatment', treatmentName || 'Control', 1]);
+
+        _gaq.push(['_setSessionCookieTimeout', 2 * 60 * 60 * 1000]);  // 2 Hours
+      
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    
+//]]>
+</script>
+
+    <script type='text/javascript'>
+    (function($) {
+
+      $(document).ready(function() {
+        if (top.location != location && !(/^https?:\/\/[^\/#\?]*\.hulu(qa)?\.com(:[0-9]+)?($|#|\?|\/)/).test(document.referrer)) {
+          top.location.href = document.location.href;
+        }
+
+        var loaded = (window.jsLoaded.applicationFrameWork && window.jsLoaded.application && window.jsLoaded.applicationCore && window.JST);
+          if(!Hulu.Mobile.isMobile){
+            loaded = loaded && window.LoadPlayer;
+          }
+        if (!loaded) {
+          var url = "http://t2.hulu.com/v3/sitetracking/error";
+
+          var isBingCrawler = false;
+          if (window.navigator && navigator.userAgent) {
+            var userAgent = navigator.userAgent.toString();
+            isBingCrawler = !!($.client.os.toLowerCase() == "windows" && userAgent.search(/BingPreview/gi) >= 0);
+          }
+
+          var guid = "";
+          if (typeof(document.cookie) != 'undefined') {
+            $.each(document.cookie.split(';'), function(i, v) {
+              var kv = v.split('=');
+              if (kv.length > 1 && "guid" == kv[0].replace(/^\s+|\s+$/g,"")) {
+                guid = kv[1];
+              }
+            });
+          }
+
+          var params = {
+            datatype: 'jsloaderror',
+            computerguid: guid,
+            isbingcrawler: isBingCrawler,
+            os: [$.client.os, $.client.osVersion].join(' '),
+            client: [$.client.browser, $.client.version].join(' '),
+            frameworkloaded: window.jsLoaded.applicationFrameWork ? true : false,
+            applicationloaded: window.jsLoaded.application ? true : false,
+            templatesloaded: window.JST ? true : false,
+            playerloaded: window.LoadPlayer ? true : false
+          };
+
+          $.ajax(url, {data: params}).fail(function(){});
+        }
+
+        Hulu.init();
+
+
+          if(Hulu.Mobile.isMobile) {
+            Hulu.PageInfo.PageConfigStore.saveFromRawConfig('/mobile_web', {"type":"page","id":"mobile_web","metadata":{"page_title":"Watch TV. Watch Movies. | Online | Free | Hulu","meta_tags":{"description":"Watch TV shows and movies free online. Stream episodes of The Office, Glee, Family Guy, SNL and many more hit shows."},"cache_time":"2013-08-02T04:18:01+00:00"},"collections":[{"collection":{"type":"collection","id":"mobile_editorial_trending","metadata":{"display_text":"trending now"},"datasource":{"type":"mozart","path":"/v1.h2o/editorial/1678","robust_path":"/editorial/1678","options":{"url_options":{"asset_scope":"all","html5_only":"1"}}},"layout":{"class":"Grid","attributes":{"template_type":"TYPE_MOBILE","tile_type":"TYPE_MOBILE_PLAYER"}},"actions":{"hide_count":3},"hash":"mozart/editorial/1678","behaviors":[],"config":{"personalizable":"0","is_pinned":"0"}}},{"collection":{"type":"collection","id":"mobile_editorial_late-night","metadata":{"display_text":"late night"},"datasource":{"type":"mozart","path":"/v1.h2o/editorial/1679","robust_path":"/editorial/1679","options":{"url_options":{"asset_scope":"all","html5_only":"1"}}},"layout":{"class":"Grid","attributes":{"template_type":"TYPE_MOBILE","tile_type":"TYPE_MOBILE_PLAYER"}},"actions":{"hide_count":3},"hash":"mozart/editorial/1679","behaviors":[],"config":{"personalizable":"0","is_pinned":"0"}}},{"collection":{"type":"collection","id":"mobile_editorial_performances","metadata":{"display_text":"performances"},"datasource":{"type":"mozart","path":"/v1.h2o/editorial/1680","robust_path":"/editorial/1680","options":{"url_options":{"asset_scope":"all","html5_only":"1"}}},"layout":{"class":"Grid","attributes":{"template_type":"TYPE_MOBILE","tile_type":"TYPE_MOBILE_PLAYER"}},"actions":{"hide_count":3},"hash":"mozart/editorial/1680","behaviors":[],"config":{"personalizable":"0","is_pinned":"0"}}},{"collection":{"type":"collection","id":"mobile_editorial_comedy","metadata":{"display_text":"comedy"},"datasource":{"type":"mozart","path":"/v1.h2o/editorial/1681","robust_path":"/editorial/1681","options":{"url_options":{"asset_scope":"all","html5_only":"1"}}},"layout":{"class":"Grid","attributes":{"template_type":"TYPE_MOBILE","tile_type":"TYPE_MOBILE_PLAYER"}},"actions":{"hide_count":3},"hash":"mozart/editorial/1681","behaviors":[],"config":{"personalizable":"0","is_pinned":"0"}}},{"collection":{"type":"collection","id":"mobile_editorial_celebrity","metadata":{"display_text":"celebrity"},"datasource":{"type":"mozart","path":"/v1.h2o/editorial/1682","robust_path":"/editorial/1682","options":{"url_options":{"asset_scope":"all","html5_only":"1"}}},"layout":{"class":"Grid","attributes":{"template_type":"TYPE_MOBILE","tile_type":"TYPE_MOBILE_PLAYER"}},"actions":{"hide_count":3},"hash":"mozart/editorial/1682","behaviors":[],"config":{"personalizable":"0","is_pinned":"0"}}},{"collection":{"type":"collection","id":"mobile_editorial_news","metadata":{"display_text":"news"},"datasource":{"type":"mozart","path":"/v1.h2o/editorial/1683","robust_path":"/editorial/1683","options":{"url_options":{"asset_scope":"all","html5_only":"1"}}},"layout":{"class":"Grid","attributes":{"template_type":"TYPE_MOBILE","tile_type":"TYPE_MOBILE_PLAYER"}},"actions":{"hide_count":3},"hash":"mozart/editorial/1683","behaviors":[],"config":{"personalizable":"0","is_pinned":"0"}}},{"collection":{"type":"collection","id":"mobile_editorial_trailers","metadata":{"display_text":"trailers"},"datasource":{"type":"mozart","path":"/v1.h2o/editorial/1685","robust_path":"/editorial/1685","options":{"url_options":{"asset_scope":"all","html5_only":"1"}}},"layout":{"class":"Grid","attributes":{"template_type":"TYPE_MOBILE","tile_type":"TYPE_MOBILE_PLAYER"}},"actions":{"hide_count":3},"hash":"mozart/editorial/1685","behaviors":[],"config":{"personalizable":"0","is_pinned":"0"}}},{"collection":{"type":"collection","id":"mobile_editorial_latino","metadata":{"display_text":"latino"},"datasource":{"type":"mozart","path":"/v1.h2o/editorial/1684","robust_path":"/editorial/1684","options":{"url_options":{"asset_scope":"all","html5_only":"1"}}},"layout":{"class":"Grid","attributes":{"template_type":"TYPE_MOBILE","tile_type":"TYPE_MOBILE_PLAYER"}},"actions":{"hide_count":3},"hash":"mozart/editorial/1684","behaviors":[],"config":{"personalizable":"0","is_pinned":"0"}}},{"collection":{"type":"collection","id":"mobile_recommended_videos","metadata":{"display_text":"Related Clips"},"datasource":{"type":"mozart","path":"/v1.h2o/recommended/upnext","robust_path":"/recommended/upnext","options":{"url_options":{"dp_identifier":"hulu","mode":"default","html5_only":"1"}}},"layout":{"class":"Grid","attributes":{"template_type":"TYPE_STANDARD","tile_type":"TYPE_MOBILE_PLAYER"}},"actions":{"hide_count":4},"hash":"mozart/recommended/upnext","behaviors":[],"config":{"personalizable":"0","is_pinned":"0"}}},{"collection":{"type":"collection","id":"mobile_show_clips","metadata":{"data_attributes":{"video_type":"clip"}},"datasource":{"type":"mozart","path":"/v1.h2o/shows/{show_id}/clips","robust_path":"/shows/{show_id}/clips","options":{"url_options":{"sort":"release_with_popularity","html5_only":"1"},"definitive":["sort"]}},"layout":{"class":"Grid","attributes":{"template_type":"TYPE_STANDARD","tile_type":"TYPE_MOBILE_PLAYER"}},"actions":{},"hash":"mozart/shows/{show_id}/clips~sort=release_with_popularity","behaviors":[],"config":{"personalizable":"0","is_pinned":"0"}}},{"collection":{"type":"collection","id":"mobile_show_episodes","metadata":{"data_attributes":{"video_type":"episode"}},"datasource":{"type":"mozart","path":"/v1.h2o/shows/{show_id}/episodes","robust_path":"/shows/{show_id}/episodes","options":{"url_options":{"sort":"seasons_and_release","html5_only":"1"},"definitive":["sort"]}},"layout":{"class":"Grid","attributes":{"template_type":"TYPE_STANDARD","tile_type":"TYPE_MOBILE_PLAYER"}},"actions":{},"hash":"mozart/shows/{show_id}/episodes~sort=seasons_and_release","behaviors":[],"config":{"personalizable":"0","is_pinned":"0"}}}],"version":"9c23724f2bb2eee5f3ac4da9202655394a9402fa","latest_version":"9c23724f2bb2eee5f3ac4da9202655394a9402fa","personalized":false}, Hulu.PageInfo.SOURCE_LIST.TEMPO);
+          }
+ 
+      });
+
+    })(jQuery);
+    </script>
+
+      <script type='text/javascript'>
+    Hulu.Context.save('VIDEO', new Hulu.Models.Video(window._preloadedFastStartVideo));
+  </script>
+
+
+    <script type='text/javascript'>
+      $(document).ready(function() {
+        Hulu.run();
+      });
+
+      Hulu.Utils.secureCookiePostfix = "; secure";
+      Hulu.Utils.secureHost = "secure.hulu.com";
+    </script>
+  </head>
+
+  <body>
+    <div id="fb-root"></div>
+    <script type="text/javascript" charset="utf-8">
+    (function($) {
+
+      
+        if (Hulu.Utils.Env.isDeprecatingBrowser()) {
+          document.write("<script src=\"http://static.huluim.com/huluguru/lib/browser_upgrader-705ea0ec614e6b9c831e353dc015e982.js\" type=\"text/javascript\"><\/script>");
+        }
+
+      window.fbAsyncInit = function() {
+        Hulu.Utils.runAfterInit(function(){
+          FB.init({
+            appId: '40582213222',
+            status: true,
+            cookie: true,
+            xfbml: true,
+            channelUrl: 'http://www.hulu.com/fb_channel_en_US.html'});
+          Hulu.Social.attachFacebookEventHandlers();
+          Hulu.Dispatcher.trigger(Hulu.Events.Common.FB_INIT);
+        });
+      };
+      if(!Hulu.Mobile.isMobile){
+        (function(d){
+          var ref = d.getElementsByTagName('script')[0];
+          var scripts = {
+            "facebook-jssdk": "//connect.facebook.net/en_US/all.js"
+          };
+          for(var id in scripts){
+            var script = scripts[id];
+            if (d.getElementById(id)) {continue;}
+            var js = d.createElement('script'); 
+            js.id = id; 
+            js.async = true;
+            js.src = script;
+            ref.parentNode.insertBefore(js, ref);
+          }
+          $.getScript("//platform.twitter.com/widgets.js").done(function(script, textStatus) {
+            Hulu.Utils.runAfterInit(function() {
+              Hulu.Dispatcher.trigger(Hulu.Events.Common.TWITTR_INIT);
+            });
+          });
+        }(document));
+      }
+      $(document).ready(function() {
+        if ($.client.msie) {
+          if (parseInt($.client.version, 10) > 8) {
+            var ie9 = new PinnedSite();
+            ie9.SetupGA();
+            ie9.Initialize();
+          }
+        }
+      });
+      if(!Hulu.Mobile.isMobile){
+        cram.load();
+        $(document).ready(function() {
+          setTimeout(function() {
+            var so = new SWFObject("/fap.swf?v2", "fap", "1", "1", "10.1");
+            so.addParam("bgcolor", "#000000");
+            so.addParam("wmode", "transparent");
+            so.write("fap-container");
+          }, 30000);
+        });
+      }
+
+      
+      if(Hulu.Mobile.isMobile){
+        Hulu.Utils.Mobile.scrollToTop();
+      }
+
+    })(jQuery);
+    </script>
+
+    <div id='wrap'>
+      <div id='page-left-shadow' class='z-index-layer-1'></div>
+      <div id='page-right-shadow' class='z-index-layer-1'></div>
+      <div id='background' class='z-index-layer-1'></div>
+      <div id="inner-wrap" class="ad-root"> 
+        <div id='banner-wrapper' class='z-index-layer-3'></div>
+        <div id="video-player-section" class='z-index-layer-2'>
+          <div style="position: fixed; left: -100000px; visibility: visible; width: 0px; height: 0px;">
+            <div class="video-player-root">
+              <div>
+                <div class="above-player desc-left player-width">
+                  <div id='above-player-ad' class='above-player-ad'></div>
+                  <div class="player-logo"></div>
+                </div>
+                <div id="player-container" class="with-background"></div>
+                <div id="video-description" class="player-width">
+                  <div class="video-description-container"></div>
+                </div>
+              </div>
+            </div>
+            <div class="player-tray"></div>
+            <div id="skin-top-nav-image"></div>
+          </div>
+        </div>
+        <div id='masthead-container'></div>
+        <div id='content'>
+          
+
+
+<div id='main'>
+</div>
+
+          <div id="seo-placeholder">
+
+</div>
+<script type='text/javascript'>
+  $('#seo-placeholder').remove();
+</script>
+
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+          if(!Hulu.Mobile.isMobile) {
+            Hulu.Views.VideoPlayer.loadPlayer();
+          }
+    </script>
+    <div id='header-bg-canvas' class='z-index-layer-4'></div>
+    <div id='body-login-section' class='z-index-layer-5' style='position:relative;'></div>
+    <div id="search-offsite-popup-box" class="z-index-layer-5" style="display:none"></div>
+    <div id="search-advanced-option-box" class="z-index-layer-5" style="display:none"></div>
+    <div id='hover-box' class='z-index-layer-6' beacon-attr-regionname="hoverbox"></div>
+    <div id='popup-section' class='iframe-hacker-container z-index-layer-6' style="display:none"></div>
+
+    <noscript>
+  <div id="noscript-section" class="z-index-layer-5">
+    To enjoy Hulu.com, you'll need to enable JavaScript in your web browser. Please <a href="http://enable-javascript.com/" target="_blank">click here</a> to learn how. 
+    <br/>
+    <center>
+      <div id="noscript-logo"></div>
+    </center>
+  </div>
+</noscript>
+
+<div id="failscript-section" class="z-index-layer-4" style="display: none">
+  Watch TV shows and movies free online. Stream episodes of The Office, Glee, Family Guy, SNL and many more hit shows.
+  <br/>
+  <br/>
+  It appears that software on your computer is blocking JavaScript.  To enjoy Hulu.com, you'll need to enable JavaScript in your web browser.  Please configure your security software or browser plugins to allow Hulu.com to load JavaScript.
+  <br/>
+  <br/>
+  If you require assistance, please contact <a href="mailto:support@hulu.com">customer support</a>.
+  <br/>
+  <center>
+    <div id="failscript-logo"></div>
+  </center>
+</div>
+<script type="text/javascript">
+//<![CDATA[
+document.getElementById('failscript-section').style.display = 'block'; Hulu.Utils.hideElement(document.getElementById('failscript-section'));
+//]]>
+</script>
+    <div id="fap-container"></div>
+    <div id="footer" class='z-index-layer-2' style="display:none">
+    </div>
+    <div id="gdn-container" style="display:none"></div>
+</body></html>
