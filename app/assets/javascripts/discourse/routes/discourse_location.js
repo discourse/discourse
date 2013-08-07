@@ -152,11 +152,11 @@ Ember.DiscourseLocation = Ember.Object.extend({
   pushState: function(path) {
     var state = { path: path };
 
-    get(this, 'history').pushState(state, null, path);
-
     // store state if browser doesn't support `history.state`
     if (!supportsHistoryState) {
       this._historyState = state;
+    } else {
+      get(this, 'history').pushState(state, null, path);
     }
 
     // used for webkit workaround
@@ -174,11 +174,11 @@ Ember.DiscourseLocation = Ember.Object.extend({
   replaceState: function(path) {
     var state = { path: path };
 
-    get(this, 'history').replaceState(state, null, path);
-
     // store state if browser doesn't support `history.state`
     if (!supportsHistoryState) {
       this._historyState = state;
+    } else {
+      get(this, 'history').replaceState(state, null, path);
     }
 
     // used for webkit workaround
