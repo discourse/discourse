@@ -11,3 +11,6 @@ require 'mocha/api'
 
 require_relative "support/html_spec_helper"
 
+RSpec.configure do |config|
+  config.include HTMLSpecHelper
+end
