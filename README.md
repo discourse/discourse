@@ -1,16 +1,16 @@
-discourse-oneboxer
+discourse-onebox
 ----------
 
   - TODO: register to rubygems.org
-  - [![Code Climate](https://codeclimate.com/github/dysania/discourse-oneboxer.png)](https://codeclimate.com/github/dysania/discourse-oneboxer)
-  - [![Build Status](https://travis-ci.org/dysania/discourse-oneboxer.png)](https://travis-ci.org/dysania/discourse-oneboxer)
-  - [![Dependency Status](https://gemnasium.com/dysania/discourse-oneboxer.png)](https://gemnasium.com/dysania/discourse-oneboxer)
-  - [![Coverage Status](https://coveralls.io/repos/dysania/discourse-oneboxer/badge.png)](https://coveralls.io/r/dysania/discourse-oneboxer)
+  - [![Code Climate](https://codeclimate.com/github/dysania/discourse-onebox.png)](https://codeclimate.com/github/dysania/discourse-onebox)
+  - [![Build Status](https://travis-ci.org/dysania/discourse-onebox.png)](https://travis-ci.org/dysania/discourse-onebox)
+  - [![Dependency Status](https://gemnasium.com/dysania/discourse-onebox.png)](https://gemnasium.com/dysania/discourse-onebox)
+  - [![Coverage Status](https://coveralls.io/repos/dysania/discourse-onebox/badge.png)](https://coveralls.io/r/dysania/discourse-onebox)
 
 
-Oneboxer is a library for turning media URLs into previews.
+Onebox is a library for turning media URLs into previews.
 
-Oneboxer currently has support for page, image, and video URLs from these sites:
+Onebox currently has support for page, image, and video URLs from these sites:
 - Amazon
 - Android App Store
 - Apple Store
@@ -44,13 +44,13 @@ Oneboxer currently has support for page, image, and video URLs from these sites:
 - yFrog
 
 
-Using discourse-oneboxer
+Using discourse-onebox
 ===============
 
-You can include discourse-oneboxer modules into a class like so:
+You can include discourse-onebox modules into a class like so:
 
 ``` ruby
-require "discourse-oneboxer"
+require "discourse-onebox"
 ```
 TODO: write example
 
@@ -62,16 +62,16 @@ The `Gemfile` file would look like this:
 # source/Gemfile
 source "https://rubygems.org"
 
-gem "discourse-oneboxer", "~> <%= version %>"
+gem "discourse-onebox", "~> <%= version %>"
 ```
 
 
-Installing discourse-oneboxer
+Installing discourse-onebox
 ==================
 
 Add this line to your application's Gemfile:
 
-    gem 'discourse-oneboxer'
+    gem 'discourse-onebox'
 
 And then execute:
 
@@ -79,7 +79,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install discourse-oneboxer
+    $ gem install discourse-onebox
 
 
 Contributing

@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Discourse::Oneboxer::Preview::Amazon do
+describe Onebox::Preview::Amazon do
   describe "#to_html" do
     let(:link) { "http://example.com" }
 

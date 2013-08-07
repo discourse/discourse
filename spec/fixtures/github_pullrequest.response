@@ -641,7 +641,7 @@ http://meta.discourse.org/t/audio-html5-tag/8168">Add audio onebox</a>
     <a href="/eviltrout" class="comment-header-author">eviltrout</a>
     <span class='comment-header-action-text'>
       <a href="#commitcomment-3726136">
-      commented on <code><a href="/jamesaanderson/discourse/commit/d7d3be1130c665cc7fab9f05dbf32335229137a6">d7d3be1</a></code> <code><a href="/jamesaanderson/discourse/commit/d7d3be1130c665cc7fab9f05dbf32335229137a6#lib-oneboxer-audio_onebox-rb-P6">lib/oneboxer/audio_onebox.rb:L6</a></code>
+      commented on <code><a href="/jamesaanderson/discourse/commit/d7d3be1130c665cc7fab9f05dbf32335229137a6">d7d3be1</a></code> <code><a href="/jamesaanderson/discourse/commit/d7d3be1130c665cc7fab9f05dbf32335229137a6#lib-onebox-audio_onebox-rb-P6">lib/onebox/audio_onebox.rb:L6</a></code>
       </a>
     </span>
 
@@ -881,7 +881,7 @@ http://meta.discourse.org/t/audio-html5-tag/8168">Add audio onebox</a>
             <span class="diffstat-bar"> <i class='plus'>&#xf053;&#xf053;&#xf053;&#xf053;&#xf053;</i> </span>
           </a>
       </span>
-      <span class='octicon octicon-diff-added' title='added'></span> <a href="#diff-2">lib/oneboxer/audio_onebox.rb</a>
+      <span class='octicon octicon-diff-added' title='added'></span> <a href="#diff-2">lib/onebox/audio_onebox.rb</a>
     </li>
     <li>
       <span class="diffstat">
@@ -890,7 +890,7 @@ http://meta.discourse.org/t/audio-html5-tag/8168">Add audio onebox</a>
             <span class="diffstat-bar"> <i class='plus'>&#xf053;</i><i class='minus'>&#xf053;</i>&#xf053;&#xf053;&#xf053; </span>
           </a>
       </span>
-      <span class='octicon octicon-diff-modified' title='modified'></span> <a href="#diff-3">lib/oneboxer/video_onebox.rb</a>
+      <span class='octicon octicon-diff-modified' title='modified'></span> <a href="#diff-3">lib/onebox/video_onebox.rb</a>
     </li>
   </ol>
 </div>
@@ -1200,12 +1200,12 @@ http://meta.discourse.org/t/audio-html5-tag/8168">Add audio onebox</a>
     </div>
     <a name="diff-a40f80f53ad614759d8204b06b3f098a"></a>
     <div id="diff-2" class="file js-details-container" data-diff-num="2">
-      <div class="meta" data-path="lib/oneboxer/audio_onebox.rb">
+      <div class="meta" data-path="lib/onebox/audio_onebox.rb">
         <div class="info">
             <span class="diffstat tooltipped rightwards" title="12 additions &amp; 0 deletions">12 <span class="diffstat-bar"><i class='plus'>&#xf053;&#xf053;&#xf053;&#xf053;&#xf053;</i></span></span>
 
-          <span class="js-selectable-text css-truncate css-truncate-target" title="lib/oneboxer/audio_onebox.rb">
-            lib/oneboxer/audio_onebox.rb
+          <span class="js-selectable-text css-truncate css-truncate-target" title="lib/onebox/audio_onebox.rb">
+            lib/onebox/audio_onebox.rb
           </span>
           
         </div>
@@ -1217,7 +1217,7 @@ http://meta.discourse.org/t/audio-html5-tag/8168">Add audio onebox</a>
             </label>
           </span>
           <div class="button-group">
-                <a href="/jamesaanderson/discourse/blob/d7d3be1130c665cc7fab9f05dbf32335229137a6/lib/oneboxer/audio_onebox.rb" class="minibutton" rel="nofollow">View file @ <code>d7d3be1</code></a>
+                <a href="/jamesaanderson/discourse/blob/d7d3be1130c665cc7fab9f05dbf32335229137a6/lib/onebox/audio_onebox.rb" class="minibutton" rel="nofollow">View file @ <code>d7d3be1</code></a>
           </div>
         </div>
       </div>
@@ -1235,7 +1235,7 @@ http://meta.discourse.org/t/audio-html5-tag/8168">Add audio onebox</a>
     @@&nbsp;-0,0&nbsp;+1,12&nbsp;@@
   </td>
 </tr>
-                  <tr class="file-diff-line gi" id="lib-oneboxer-audio_onebox-rb-P1" data-position="1">
+                  <tr class="file-diff-line gi" id="lib-onebox-audio_onebox-rb-P1" data-position="1">
                     <td id="L2L-1" class="diff-line-num linkable-line-number empty-cell" data-line-number="-1">
                       <span class="line-num-content">&nbsp;</span>
                     </td>
@@ -1243,11 +1243,11 @@ http://meta.discourse.org/t/audio-html5-tag/8168">Add audio onebox</a>
                       <span class="line-num-content">1</span>
                     </td>
                     <td class="diff-line-code">
-                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/oneboxer/audio_onebox.rb&amp;position=1&amp;line=1"></b>
-                      +require_dependency&nbsp;&#39;oneboxer/base_onebox&#39;
+                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/onebox/audio_onebox.rb&amp;position=1&amp;line=1"></b>
+                      +require_dependency&nbsp;&#39;onebox/base_onebox&#39;
                     </td>
                   </tr>
-                  <tr class="file-diff-line gi" id="lib-oneboxer-audio_onebox-rb-P2" data-position="2">
+                  <tr class="file-diff-line gi" id="lib-onebox-audio_onebox-rb-P2" data-position="2">
                     <td id="L2L-1" class="diff-line-num linkable-line-number empty-cell" data-line-number="-1">
                       <span class="line-num-content">&nbsp;</span>
                     </td>
@@ -1255,11 +1255,11 @@ http://meta.discourse.org/t/audio-html5-tag/8168">Add audio onebox</a>
                       <span class="line-num-content">2</span>
                     </td>
                     <td class="diff-line-code">
-                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/oneboxer/audio_onebox.rb&amp;position=2&amp;line=2"></b>
+                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/onebox/audio_onebox.rb&amp;position=2&amp;line=2"></b>
                       +
                     </td>
                   </tr>
-                  <tr class="file-diff-line gi" id="lib-oneboxer-audio_onebox-rb-P3" data-position="3">
+                  <tr class="file-diff-line gi" id="lib-onebox-audio_onebox-rb-P3" data-position="3">
                     <td id="L2L-1" class="diff-line-num linkable-line-number empty-cell" data-line-number="-1">
                       <span class="line-num-content">&nbsp;</span>
                     </td>
@@ -1267,11 +1267,11 @@ http://meta.discourse.org/t/audio-html5-tag/8168">Add audio onebox</a>
                       <span class="line-num-content">3</span>
                     </td>
                     <td class="diff-line-code">
-                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/oneboxer/audio_onebox.rb&amp;position=3&amp;line=3"></b>
-                      +module&nbsp;Oneboxer
+                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/onebox/audio_onebox.rb&amp;position=3&amp;line=3"></b>
+                      +module&nbsp;Onebox
                     </td>
                   </tr>
-                  <tr class="file-diff-line gi" id="lib-oneboxer-audio_onebox-rb-P4" data-position="4">
+                  <tr class="file-diff-line gi" id="lib-onebox-audio_onebox-rb-P4" data-position="4">
                     <td id="L2L-1" class="diff-line-num linkable-line-number empty-cell" data-line-number="-1">
                       <span class="line-num-content">&nbsp;</span>
                     </td>
@@ -1279,11 +1279,11 @@ http://meta.discourse.org/t/audio-html5-tag/8168">Add audio onebox</a>
                       <span class="line-num-content">4</span>
                     </td>
                     <td class="diff-line-code">
-                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/oneboxer/audio_onebox.rb&amp;position=4&amp;line=4"></b>
+                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/onebox/audio_onebox.rb&amp;position=4&amp;line=4"></b>
                       +&nbsp;&nbsp;class&nbsp;AudioOnebox&nbsp;&lt;&nbsp;BaseOnebox
                     </td>
                   </tr>
-                  <tr class="file-diff-line gi" id="lib-oneboxer-audio_onebox-rb-P5" data-position="5">
+                  <tr class="file-diff-line gi" id="lib-onebox-audio_onebox-rb-P5" data-position="5">
                     <td id="L2L-1" class="diff-line-num linkable-line-number empty-cell" data-line-number="-1">
                       <span class="line-num-content">&nbsp;</span>
                     </td>
@@ -1291,11 +1291,11 @@ http://meta.discourse.org/t/audio-html5-tag/8168">Add audio onebox</a>
                       <span class="line-num-content">5</span>
                     </td>
                     <td class="diff-line-code">
-                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/oneboxer/audio_onebox.rb&amp;position=5&amp;line=5"></b>
+                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/onebox/audio_onebox.rb&amp;position=5&amp;line=5"></b>
                       +
                     </td>
                   </tr>
-                  <tr class="file-diff-line gi" id="lib-oneboxer-audio_onebox-rb-P6" data-position="6">
+                  <tr class="file-diff-line gi" id="lib-onebox-audio_onebox-rb-P6" data-position="6">
                     <td id="L2L-1" class="diff-line-num linkable-line-number empty-cell" data-line-number="-1">
                       <span class="line-num-content">&nbsp;</span>
                     </td>
@@ -1303,11 +1303,11 @@ http://meta.discourse.org/t/audio-html5-tag/8168">Add audio onebox</a>
                       <span class="line-num-content">6</span>
                     </td>
                     <td class="diff-line-code">
-                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/oneboxer/audio_onebox.rb&amp;position=6&amp;line=6"></b>
+                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/onebox/audio_onebox.rb&amp;position=6&amp;line=6"></b>
                       +&nbsp;&nbsp;&nbsp;&nbsp;matcher&nbsp;/^https?:\/\/.*\.mp3$/
                     </td>
                   </tr>
-                  <tr class="file-diff-line gi" id="lib-oneboxer-audio_onebox-rb-P7" data-position="7">
+                  <tr class="file-diff-line gi" id="lib-onebox-audio_onebox-rb-P7" data-position="7">
                     <td id="L2L-1" class="diff-line-num linkable-line-number empty-cell" data-line-number="-1">
                       <span class="line-num-content">&nbsp;</span>
                     </td>
@@ -1315,11 +1315,11 @@ http://meta.discourse.org/t/audio-html5-tag/8168">Add audio onebox</a>
                       <span class="line-num-content">7</span>
                     </td>
                     <td class="diff-line-code">
-                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/oneboxer/audio_onebox.rb&amp;position=7&amp;line=7"></b>
+                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/onebox/audio_onebox.rb&amp;position=7&amp;line=7"></b>
                       +
                     </td>
                   </tr>
-                  <tr class="file-diff-line gi" id="lib-oneboxer-audio_onebox-rb-P8" data-position="8">
+                  <tr class="file-diff-line gi" id="lib-onebox-audio_onebox-rb-P8" data-position="8">
                     <td id="L2L-1" class="diff-line-num linkable-line-number empty-cell" data-line-number="-1">
                       <span class="line-num-content">&nbsp;</span>
                     </td>
@@ -1327,11 +1327,11 @@ http://meta.discourse.org/t/audio-html5-tag/8168">Add audio onebox</a>
                       <span class="line-num-content">8</span>
                     </td>
                     <td class="diff-line-code">
-                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/oneboxer/audio_onebox.rb&amp;position=8&amp;line=8"></b>
+                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/onebox/audio_onebox.rb&amp;position=8&amp;line=8"></b>
                       +&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;onebox
                     </td>
                   </tr>
-                  <tr class="file-diff-line gi" id="lib-oneboxer-audio_onebox-rb-P9" data-position="9">
+                  <tr class="file-diff-line gi" id="lib-onebox-audio_onebox-rb-P9" data-position="9">
                     <td id="L2L-1" class="diff-line-num linkable-line-number empty-cell" data-line-number="-1">
                       <span class="line-num-content">&nbsp;</span>
                     </td>
@@ -1339,11 +1339,11 @@ http://meta.discourse.org/t/audio-html5-tag/8168">Add audio onebox</a>
                       <span class="line-num-content">9</span>
                     </td>
                     <td class="diff-line-code">
-                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/oneboxer/audio_onebox.rb&amp;position=9&amp;line=9"></b>
+                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/onebox/audio_onebox.rb&amp;position=9&amp;line=9"></b>
                       +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;&lt;audio&nbsp;controls&gt;&lt;source&nbsp;src=&#39;#{@url}&#39;&gt;&lt;a&nbsp;href=&#39;#{@url}&#39;&gt;#{@url}&lt;/a&gt;&lt;/audio&gt;&quot;
                     </td>
                   </tr>
-                  <tr class="file-diff-line gi" id="lib-oneboxer-audio_onebox-rb-P10" data-position="10">
+                  <tr class="file-diff-line gi" id="lib-onebox-audio_onebox-rb-P10" data-position="10">
                     <td id="L2L-1" class="diff-line-num linkable-line-number empty-cell" data-line-number="-1">
                       <span class="line-num-content">&nbsp;</span>
                     </td>
@@ -1351,11 +1351,11 @@ http://meta.discourse.org/t/audio-html5-tag/8168">Add audio onebox</a>
                       <span class="line-num-content">10</span>
                     </td>
                     <td class="diff-line-code">
-                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/oneboxer/audio_onebox.rb&amp;position=10&amp;line=10"></b>
+                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/onebox/audio_onebox.rb&amp;position=10&amp;line=10"></b>
                       +&nbsp;&nbsp;&nbsp;&nbsp;end
                     </td>
                   </tr>
-                  <tr class="file-diff-line gi" id="lib-oneboxer-audio_onebox-rb-P11" data-position="11">
+                  <tr class="file-diff-line gi" id="lib-onebox-audio_onebox-rb-P11" data-position="11">
                     <td id="L2L-1" class="diff-line-num linkable-line-number empty-cell" data-line-number="-1">
                       <span class="line-num-content">&nbsp;</span>
                     </td>
@@ -1363,11 +1363,11 @@ http://meta.discourse.org/t/audio-html5-tag/8168">Add audio onebox</a>
                       <span class="line-num-content">11</span>
                     </td>
                     <td class="diff-line-code">
-                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/oneboxer/audio_onebox.rb&amp;position=11&amp;line=11"></b>
+                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/onebox/audio_onebox.rb&amp;position=11&amp;line=11"></b>
                       +&nbsp;&nbsp;end
                     </td>
                   </tr>
-                  <tr class="file-diff-line gi" id="lib-oneboxer-audio_onebox-rb-P12" data-position="12">
+                  <tr class="file-diff-line gi" id="lib-onebox-audio_onebox-rb-P12" data-position="12">
                     <td id="L2L-1" class="diff-line-num linkable-line-number empty-cell" data-line-number="-1">
                       <span class="line-num-content">&nbsp;</span>
                     </td>
@@ -1375,23 +1375,23 @@ http://meta.discourse.org/t/audio-html5-tag/8168">Add audio onebox</a>
                       <span class="line-num-content">12</span>
                     </td>
                     <td class="diff-line-code">
-                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/oneboxer/audio_onebox.rb&amp;position=12&amp;line=12"></b>
+                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/onebox/audio_onebox.rb&amp;position=12&amp;line=12"></b>
                       +end
                     </td>
                   </tr>
             </table>
           </div>
 
-      <div class="file-comments-place-holder" data-path="lib/oneboxer/audio_onebox.rb"></div>
+      <div class="file-comments-place-holder" data-path="lib/onebox/audio_onebox.rb"></div>
     </div>
     <a name="diff-7c20d93d992616b18882952ef737093b"></a>
     <div id="diff-3" class="file js-details-container" data-diff-num="3">
-      <div class="meta" data-path="lib/oneboxer/video_onebox.rb">
+      <div class="meta" data-path="lib/onebox/video_onebox.rb">
         <div class="info">
             <span class="diffstat tooltipped rightwards" title="1 addition &amp; 1 deletion">2 <span class="diffstat-bar"><i class='plus'>&#xf053;</i><i class='minus'>&#xf053;</i>&#xf053;&#xf053;&#xf053;</span></span>
 
-          <span class="js-selectable-text css-truncate css-truncate-target" title="lib/oneboxer/video_onebox.rb">
-            lib/oneboxer/video_onebox.rb
+          <span class="js-selectable-text css-truncate css-truncate-target" title="lib/onebox/video_onebox.rb">
+            lib/onebox/video_onebox.rb
           </span>
           
         </div>
@@ -1403,7 +1403,7 @@ http://meta.discourse.org/t/audio-html5-tag/8168">Add audio onebox</a>
             </label>
           </span>
           <div class="button-group">
-                <a href="/jamesaanderson/discourse/blob/d7d3be1130c665cc7fab9f05dbf32335229137a6/lib/oneboxer/video_onebox.rb" class="minibutton" rel="nofollow">View file @ <code>d7d3be1</code></a>
+                <a href="/jamesaanderson/discourse/blob/d7d3be1130c665cc7fab9f05dbf32335229137a6/lib/onebox/video_onebox.rb" class="minibutton" rel="nofollow">View file @ <code>d7d3be1</code></a>
           </div>
         </div>
       </div>
@@ -1421,7 +1421,7 @@ http://meta.discourse.org/t/audio-html5-tag/8168">Add audio onebox</a>
     @@&nbsp;-3,7&nbsp;+3,7&nbsp;@@
   </td>
 </tr>
-                  <tr class="file-diff-line " id="lib-oneboxer-video_onebox-rb-P1" data-position="1">
+                  <tr class="file-diff-line " id="lib-onebox-video_onebox-rb-P1" data-position="1">
                     <td id="L3L3" class="diff-line-num linkable-line-number" data-line-number="3">
                       <span class="line-num-content">3</span>
                     </td>
@@ -1429,11 +1429,11 @@ http://meta.discourse.org/t/audio-html5-tag/8168">Add audio onebox</a>
                       <span class="line-num-content">3</span>
                     </td>
                     <td class="diff-line-code">
-                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/oneboxer/video_onebox.rb&amp;position=1&amp;line=3"></b>
-                      &nbsp;module&nbsp;Oneboxer
+                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/onebox/video_onebox.rb&amp;position=1&amp;line=3"></b>
+                      &nbsp;module&nbsp;Onebox
                     </td>
                   </tr>
-                  <tr class="file-diff-line " id="lib-oneboxer-video_onebox-rb-P2" data-position="2">
+                  <tr class="file-diff-line " id="lib-onebox-video_onebox-rb-P2" data-position="2">
                     <td id="L3L4" class="diff-line-num linkable-line-number" data-line-number="4">
                       <span class="line-num-content">4</span>
                     </td>
@@ -1441,11 +1441,11 @@ http://meta.discourse.org/t/audio-html5-tag/8168">Add audio onebox</a>
                       <span class="line-num-content">4</span>
                     </td>
                     <td class="diff-line-code">
-                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/oneboxer/video_onebox.rb&amp;position=2&amp;line=4"></b>
+                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/onebox/video_onebox.rb&amp;position=2&amp;line=4"></b>
                       &nbsp;&nbsp;&nbsp;class&nbsp;VideoOnebox&nbsp;&lt;&nbsp;BaseOnebox
                     </td>
                   </tr>
-                  <tr class="file-diff-line " id="lib-oneboxer-video_onebox-rb-P3" data-position="3">
+                  <tr class="file-diff-line " id="lib-onebox-video_onebox-rb-P3" data-position="3">
                     <td id="L3L5" class="diff-line-num linkable-line-number" data-line-number="5">
                       <span class="line-num-content">5</span>
                     </td>
@@ -1453,11 +1453,11 @@ http://meta.discourse.org/t/audio-html5-tag/8168">Add audio onebox</a>
                       <span class="line-num-content">5</span>
                     </td>
                     <td class="diff-line-code">
-                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/oneboxer/video_onebox.rb&amp;position=3&amp;line=5"></b>
+                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/onebox/video_onebox.rb&amp;position=3&amp;line=5"></b>
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </td>
                   </tr>
-                  <tr class="file-diff-line gd" id="lib-oneboxer-video_onebox-rb-P4" data-position="4">
+                  <tr class="file-diff-line gd" id="lib-onebox-video_onebox-rb-P4" data-position="4">
                     <td id="L3L6" class="diff-line-num linkable-line-number" data-line-number="6">
                       <span class="line-num-content">6</span>
                     </td>
@@ -1465,11 +1465,11 @@ http://meta.discourse.org/t/audio-html5-tag/8168">Add audio onebox</a>
                       <span class="line-num-content">&nbsp;</span>
                     </td>
                     <td class="diff-line-code">
-                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/oneboxer/video_onebox.rb&amp;position=4&amp;line=6"></b>
+                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/onebox/video_onebox.rb&amp;position=4&amp;line=6"></b>
                       -&nbsp;&nbsp;&nbsp;&nbsp;matcher&nbsp;/^https?:\/\/.*\.(mov|mp4<span class="x">|ogg</span>)$/
                     </td>
                   </tr>
-                  <tr class="file-diff-line gi" id="lib-oneboxer-video_onebox-rb-P5" data-position="5">
+                  <tr class="file-diff-line gi" id="lib-onebox-video_onebox-rb-P5" data-position="5">
                     <td id="L3L6" class="diff-line-num linkable-line-number empty-cell" data-line-number="6">
                       <span class="line-num-content">&nbsp;</span>
                     </td>
@@ -1477,11 +1477,11 @@ http://meta.discourse.org/t/audio-html5-tag/8168">Add audio onebox</a>
                       <span class="line-num-content">6</span>
                     </td>
                     <td class="diff-line-code">
-                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/oneboxer/video_onebox.rb&amp;position=5&amp;line=6"></b>
+                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/onebox/video_onebox.rb&amp;position=5&amp;line=6"></b>
                       +&nbsp;&nbsp;&nbsp;&nbsp;matcher&nbsp;/^https?:\/\/.*\.(mov|mp4<span class="x"></span>)$/
                     </td>
                   </tr>
-                  <tr class="file-diff-line " id="lib-oneboxer-video_onebox-rb-P6" data-position="6">
+                  <tr class="file-diff-line " id="lib-onebox-video_onebox-rb-P6" data-position="6">
                     <td id="L3L7" class="diff-line-num linkable-line-number" data-line-number="7">
                       <span class="line-num-content">7</span>
                     </td>
@@ -1489,11 +1489,11 @@ http://meta.discourse.org/t/audio-html5-tag/8168">Add audio onebox</a>
                       <span class="line-num-content">7</span>
                     </td>
                     <td class="diff-line-code">
-                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/oneboxer/video_onebox.rb&amp;position=6&amp;line=7"></b>
+                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/onebox/video_onebox.rb&amp;position=6&amp;line=7"></b>
                       &nbsp;
                     </td>
                   </tr>
-                  <tr class="file-diff-line " id="lib-oneboxer-video_onebox-rb-P7" data-position="7">
+                  <tr class="file-diff-line " id="lib-onebox-video_onebox-rb-P7" data-position="7">
                     <td id="L3L8" class="diff-line-num linkable-line-number" data-line-number="8">
                       <span class="line-num-content">8</span>
                     </td>
@@ -1501,11 +1501,11 @@ http://meta.discourse.org/t/audio-html5-tag/8168">Add audio onebox</a>
                       <span class="line-num-content">8</span>
                     </td>
                     <td class="diff-line-code">
-                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/oneboxer/video_onebox.rb&amp;position=7&amp;line=8"></b>
+                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/onebox/video_onebox.rb&amp;position=7&amp;line=8"></b>
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;onebox
                     </td>
                   </tr>
-                  <tr class="file-diff-line " id="lib-oneboxer-video_onebox-rb-P8" data-position="8">
+                  <tr class="file-diff-line " id="lib-onebox-video_onebox-rb-P8" data-position="8">
                     <td id="L3L9" class="diff-line-num linkable-line-number" data-line-number="9">
                       <span class="line-num-content">9</span>
                     </td>
@@ -1513,14 +1513,14 @@ http://meta.discourse.org/t/audio-html5-tag/8168">Add audio onebox</a>
                       <span class="line-num-content">9</span>
                     </td>
                     <td class="diff-line-code">
-                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/oneboxer/video_onebox.rb&amp;position=8&amp;line=9"></b>
+                        <b class="add-line-comment octicon octicon-comment-add" data-remote="/discourse/discourse/pull/1253/review_comment/form?commit_id=d7d3be1130c665cc7fab9f05dbf32335229137a6&amp;path=lib/onebox/video_onebox.rb&amp;position=8&amp;line=9"></b>
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;&lt;video&nbsp;width=&#39;100%&#39;&nbsp;height=&#39;100%&#39;&nbsp;controls&gt;&lt;source&nbsp;src=&#39;#{@url}&#39;&gt;&lt;a&nbsp;href=&#39;#{@url}&#39;&gt;#{@url}&lt;/a&gt;&lt;/video&gt;&quot;
                     </td>
                   </tr>
             </table>
           </div>
 
-      <div class="file-comments-place-holder" data-path="lib/oneboxer/video_onebox.rb"></div>
+      <div class="file-comments-place-holder" data-path="lib/onebox/video_onebox.rb"></div>
     </div>
 </div>
 

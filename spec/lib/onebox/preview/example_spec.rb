@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Discourse::Oneboxer::Preview::Example do
+describe Onebox::Preview::Example do
   describe "#to_html" do
     it "returns template if given valid data" do
       example = described_class.new(response("example.response"), "http://www.example.com")
