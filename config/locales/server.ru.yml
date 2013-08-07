@@ -984,7 +984,7 @@ ru:
         %{respond_instructions}
 
     user_posted:
-      subject_template: "[%{site_name}] новое сообщение в теме '%{topic_title}'"
+      subject_template: "[%{site_name}] %{subject_prefix}новое сообщение в теме '%{topic_title}'"
       text_body_template: |
         %{message}
 
@@ -1005,15 +1005,6 @@ ru:
       click_here: нажмите здесь
       from: 'Cводка новостей сайта %{site_name}'
       read_more: Читать еще
-    private_message:
-      subject_template: '[%{site_name}] %{subject_prefix}%{topic_title}'
-      text_body_template: |
-        %{private_message_from} отправил(а) вам личное сообщение
-
-        %{message}
-
-        ---
-        %{respond_instructions}
 
     forgot_password:
       subject_template: '[%{site_name}] Сброс пароля'

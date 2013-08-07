@@ -303,29 +303,6 @@ describe Topic do
 
     end
 
-    context "other user" do
-
-      before do
-        # let! is weird, this test need a refactor
-        t = topic
-      end
-
-      let(:creator) { PostCreator.new(topic.user, raw: Fabricate.build(:post).raw, topic_id: topic.id )}
-
-      it "sends the other user an email when there's a new post" do
-        UserNotifications.expects(:private_message).with(coding_horror, has_key(:post))
-        creator.create
-      end
-
-      it "doesn't send the user an email when they have them disabled" do
-        coding_horror.update_column(:email_private_messages, false)
-        UserNotifications.expects(:private_message).with(coding_horror, has_key(:post)).never
-        creator.create
-      end
-
-    end
-
-
   end
 
 

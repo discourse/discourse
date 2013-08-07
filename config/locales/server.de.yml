@@ -903,7 +903,7 @@ de:
         Um zu antworten, besuche den folgenden Link: %{base_url}%{url}
 
     user_posted:
-      subject_template: "[%{site_name}] %{username} hat auf '%{topic_title}' geantwortet"
+      subject_template: "[%{site_name}] %{subject_prefix}%{username} hat auf '%{topic_title}' geantwortet"
       text_body_template: |
         %{username} hat in '%{topic_title}' auf %{site_name} geantwortet:
 
@@ -922,17 +922,6 @@ de:
       click_here: "klicke hier"
       from: "%{site_name} Übersicht"
       read_more: "Weiterlesen"
-
-    private_message:
-      subject_template: "[%{site_name}] %{subject_prefix}%{topic_title}"
-      text_body_template: |
-        %{private_message_from} hat Die eine private Nachricht geschickt:
-
-        ---
-        %{message}
-
-        ---
-        Um zu antworten, besuche den folgenden Link: %{base_url}%{url}
 
     forgot_password:
       subject_template: "[%{site_name}] Passwort zurückgesetzt"

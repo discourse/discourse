@@ -840,7 +840,7 @@ it:
         Perfavore visita questo link per rispondere: %{base_url}%{url}
 
     user_posted:
-      subject_template: "[%{site_name}] %{username} ha postato in '%{topic_title}'"
+      subject_template: "[%{site_name}] %{subject_prefix}%{username} ha postato in '%{topic_title}'"
       text_body_template: |
         %{username} ha postato in '%{topic_title}' su %{site_name}:
 
@@ -858,17 +858,6 @@ it:
       unsubscribe: "Questa email di riepilogo è stata inviata da %{site_link} perché non ti abbiamo visto da un pò.\nSe vuoi disabilitare l'invio o cambiare le preferenze email, %{unsubscribe_link}."
       click_here: "clicca qui"
       from: "%{site_name} riepilogo"
-
-    private_message:
-      subject_template: "[%{site_name}] %{subject_prefix}%{topic_title}"
-      text_body_template: |
-        %{private_message_from} ti ha appena inviato un messaggio privato
-
-        ---
-        %{message}
-
-        ---
-        Perfavore visita questo link per rispondere: %{base_url}%{url}
 
     forgot_password:
       subject_template: "[%{site_name}] Reset Password"

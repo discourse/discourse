@@ -28,22 +28,6 @@ class UserNotifications < ActionMailer::Base
     build_email(user.email, template: "user_notifications.forgot_password", email_token: opts[:email_token])
   end
 
-  def private_message(user, opts={})
-    post = opts[:post]
-    build_email user.email,
-                template: "user_notifications.private_message",
-                message: post.raw,
-                url: post.url,
-                subject_prefix: "[#{I18n.t('private_message_abbrev')}] #{post.post_number != 1 ? 're: ' : ''}",
-                topic_title: post.topic.title,
-                private_message_from: post.user.name,
-                from_alias: I18n.t(:via, username: post.user.name, site_name: SiteSetting.title),
-                add_unsubscribe_link: true,
-                allow_reply_by_email: true,
-                post_id: post.id,
-                topic_id: post.topic_id
-  end
-
   def digest(user, opts={})
     @user = user
     @base_url = Discourse.base_url
@@ -92,6 +76,15 @@ class UserNotifications < ActionMailer::Base
     notification_email(user, opts)
   end
 
+  def user_private_message(user, opts)
+    opts[:allow_reply_by_email] = true
+
+    # We use the 'user_posted' event when you are emailed a post in a PM.
+    opts[:notification_type] = 'posted'
+
+    notification_email(user, opts)
+  end
+
   protected
 
   def email_post_markdown(post)
@@ -112,7 +105,7 @@ class UserNotifications < ActionMailer::Base
     return unless @post = opts[:post]
 
     username = @notification.data_hash[:display_username]
-    notification_type = Notification.types[@notification.notification_type].to_s
+    notification_type = opts[:notification_type] || Notification.types[@notification.notification_type].to_s
 
     context = ""
     context_posts = Post.where(topic_id: @post.topic_id)
@@ -128,11 +121,14 @@ class UserNotifications < ActionMailer::Base
     end
 
     html = UserNotificationRenderer.new(Rails.configuration.paths["app/views"]).render(
-          template: 'email/notification',
-          format: :html,
-          locals: { context_posts: context_posts, post: @post }
+      template: 'email/notification',
+      format: :html,
+      locals: { context_posts: context_posts, post: @post }
     )
 
+    if @post.topic.private_message?
+      opts[:subject_prefix] = "[#{I18n.t('private_message_abbrev')}] "
+    end
 
     email_opts = {
       topic_title: @notification.data_hash[:topic_title],
@@ -146,7 +142,8 @@ class UserNotifications < ActionMailer::Base
       allow_reply_by_email: opts[:allow_reply_by_email],
       template: "user_notifications.user_#{notification_type}",
       html_override: html,
-      style: :notification
+      style: :notification,
+      subject_prefix: opts[:subject_prefix] || ''
     }
 
     # If we have a display name, change the from address

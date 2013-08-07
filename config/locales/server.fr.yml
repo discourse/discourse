@@ -883,7 +883,7 @@ fr:
         Merci de suivre ce lien pour répondre : %{base_url}%{url}
 
     user_posted:
-      subject_template: "[%{site_name}] nouveau message dans '%{topic_title}'"
+      subject_template: "[%{site_name}] %{subject_prefix}nouveau message dans '%{topic_title}'"
       text_body_template: |
         %{username} à répondu à '%{topic_title}' sur %{site_name}:
 
@@ -901,17 +901,6 @@ fr:
       unsubscribe: "Ce mail de résumé vous est envoyé comme une notification de courtoisie par le site %{site_link} que vous n'avez pas visité depuis 7 jours.\nSi vous voulez désactiver cette fonction ou changer vos préférences e-mail, utilisez ce lien : %{unsubscribe_link}."
       click_here: "cliquez ici"
       from: "Résumé de %{site_name}"
-
-    private_message:
-      subject_template: "[%{site_name}] %{subject_prefix}%{topic_title}"
-      text_body_template: |
-        %{from} vous a envoyé un message privé
-
-        ---
-        %{message}
-
-        ---
-        Merci de suivre ce lien pour répondre : %{base_url}%{url}
 
     forgot_password:
       subject_template: "[%{site_name}] Réinitialisation du mot de passe"

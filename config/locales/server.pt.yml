@@ -622,7 +622,7 @@ pt:
         Por-favor visita este link para responder: %{base_url}%{url}
 
     user_mentioned:
-      subject_template: "[%{site_name}] %{username} mencionou-te em '%{topic_title}'"
+      subject_template: "[%{site_name}] %{subject_prefix}%{username} mencionou-te em '%{topic_title}'"
       text_body_template: |
         %{username} mencionou-te em '%{topic_title}' em %{site_name}:
 
@@ -639,17 +639,6 @@ pt:
       new_activity: "Nova atividade nos teus tópicos e posts:"
       new_topics: "Tópicos novos:"
       unsubscribe: "Este email sumário é enviado como uma notificação de cortesia de %{site_link} quando não te vemos há de 7 dias.\nCaso quiseres desliga-lo ou alterar as configurações de email, %{unsubscribe_link}."
-
-    private_message:
-      subject_template: "[%{site_name}] %{subject_prefix}%{topic_title}"
-      text_body_template: |
-        %{from} acabou de te enviar uma mensagem privada
-
-        ---
-        %{message}
-
-        ---
-        Por-favor vista este link para responder: %{base_url}%{url}
 
     forgot_password:
       subject_template: "[%{site_name}] Repor password"

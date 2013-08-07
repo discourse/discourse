@@ -64,7 +64,7 @@ class PostCreator
       save_post
       extract_links
       store_unique_post_key
-      send_notifications_for_private_message
+      consider_clearing_flags
       track_topic
       update_topic_stats
       update_user_counts
@@ -216,19 +216,9 @@ class PostCreator
     end
   end
 
-  def send_notifications_for_private_message
-    # send a mail to notify users in case of a private message
-    if @topic.private_message?
-      @topic.allowed_users.where(["users.email_private_messages = true and users.id != ?", @user.id]).each do |u|
-        Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes,
-                          :user_email,
-                          type: :private_message,
-                          user_id: u.id,
-                          post_id: @post.id
-                       )
-      end
-
-      clear_possible_flags(@topic) if @post.post_number > 1 && @topic.user_id != @post.user_id
+  def consider_clearing_flags
+    if @topic.private_message? && @post.post_number > 1 && @topic.user_id != @post.user_id
+      clear_possible_flags(@topic)
     end
   end
 

@@ -985,7 +985,7 @@ en:
         %{respond_instructions}
 
     user_posted:
-      subject_template: "[%{site_name}] new post in '%{topic_title}'"
+      subject_template: "[%{site_name}] %{subject_prefix}new post in '%{topic_title}'"
       text_body_template: |
         %{message}
 
@@ -1003,16 +1003,6 @@ en:
       click_here: "click here"
       from: "%{site_name} digest"
       read_more: "Read More"
-
-    private_message:
-      subject_template: "[%{site_name}] %{subject_prefix}%{topic_title}"
-      text_body_template: |
-        %{private_message_from} just sent you a private message
-
-        %{message}
-
-        ---
-        %{respond_instructions}
 
     forgot_password:
       subject_template: "[%{site_name}] Password reset"

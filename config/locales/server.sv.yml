@@ -769,7 +769,7 @@ sv:
         Please visit this link to respond: %{base_url}%{url}
 
     user_posted:
-      subject_template: "[%{site_name}] %{username} posted in '%{topic_title}'"
+      subject_template: "[%{site_name}] %{subject_prefix}%{username} posted in '%{topic_title}'"
       text_body_template: |
         %{username} posted in '%{topic_title}' on %{site_name}:
 
@@ -787,17 +787,6 @@ sv:
       unsubscribe: "This summary email is sent as a courtesy notification from %{site_link} when we haven't seen you in a while.\nTo turn it off or change your email preferences, %{unsubscribe_link}."
       click_here: "click here"
       from: "%{site_name} digest"
-
-    private_message:
-      subject_template: "[%{site_name}] %{subject_prefix}%{topic_title}"
-      text_body_template: |
-        %{private_message_from} just sent you a private message
-
-        ---
-        %{message}
-
-        ---
-        Please visit this link to respond: %{base_url}%{url}
 
     forgot_password:
       subject_template: "[%{site_name}] Password reset"

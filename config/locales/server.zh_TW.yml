@@ -840,7 +840,7 @@ zh_TW:
         請訪問 %{base_url}%{url} 來回複。
 
     user_posted:
-      subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 主題發表了帖子"
+      subject_template: "[%{site_name}] %{subject_prefix}%{username} 在 '%{topic_title}' 主題發表了帖子"
       text_body_template: |
         %{username} 在 %{site_name} 的 '%{topic_title}' 主題中發表了帖子：
 
@@ -858,17 +858,6 @@ zh_TW:
       unsubscribe: "這封來自 %{site_link} 的彙總郵件是當我們有一段時間沒有見到你之後，作爲一個禮貌的通知發送給你的。\n如果你希望關閉它或者修改你的郵件設置，請訪問 %{unsubscribe_link}。"
       click_here: "點擊此處"
       from: "%{site_name} 摘要"
-
-    private_message:
-      subject_template: "[%{site_name}] %{subject_prefix}%{topic_title}"
-      text_body_template: |
-        %{private_message_from} 剛剛發送了一條私信給你
-
-        ---
-        %{message}
-
-        ---
-        請訪問 %{base_url}%{url} 來回複。
 
     forgot_password:
       subject_template: "[%{site_name}] 密碼重置"

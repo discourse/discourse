@@ -694,7 +694,7 @@ es:
         Por favor visita este link para contestar: %{base_url}%{url}
 
     user_posted:
-      subject_template: "[%{site_name}] %{username} posteó en '%{topic_title}'"
+      subject_template: "[%{site_name}] %{subject_prefix}%{username} posteó en '%{topic_title}'"
       text_body_template: |
         %{username} posteó en '%{topic_title}' en %{site_name}:
 
@@ -712,17 +712,6 @@ es:
       unsubscribe: "Este email de resumen es enviado como una notificación de cortesía desde %{site_link} ya que no te hemos visto en un tiempo.\nSi te gustaría desactivarlo o cambiar tus preferencias de emeail, %{unsubscribe_link}."
       click_here: "click aquí"
       from: "%{site_name} digest"
-
-    private_message:
-      subject_template: "[%{site_name}] %{subject_prefix}%{topic_title}"
-      text_body_template: |
-        %{private_message_from} te acaba de mandar un mensaje privado
-
-        ---
-        %{message}
-
-        ---
-        Por favor visita este link para contestar: %{base_url}%{url}
 
     forgot_password:
       subject_template: "[%{site_name}] Resetear el password"

@@ -865,7 +865,7 @@ pt_BR:
         ---
         %{respond_instructions}
     user_posted:
-      subject_template: "[%{site_name}] nova postagem no tópico '%{topic_title}'"
+      subject_template: "[%{site_name}] %{subject_prefix}nova postagem no tópico '%{topic_title}'"
       text_body_template: |
         %{username} postou no tópico '%{topic_title}' de %{site_name}:
 
@@ -883,16 +883,7 @@ pt_BR:
       click_here: "clique aqui"
       from: "resumo de %{site_name}"
       read_more: "Leia Mais"
-    private_message:
-      subject_template: "[%{site_name}] %{subject_prefix}%{topic_title}"
-      text_body_template: |
-        %{private_message_from} enviou uma mensagem particular para você
 
-        ---
-        %{message}
-
-        ---
-        %{respond_instructions}
     forgot_password:
       subject_template: "[%{site_name}] Redefinição de senha"
       text_body_template: |
