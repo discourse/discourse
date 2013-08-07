@@ -6,7 +6,7 @@ end
 require "rspec"
 require "pry"
 require "fakeweb"
-require "discourse-oneboxer"
+require "oneboxer"
 require "nokogiri/xml/parse_options"
 require 'mocha/api'
 
