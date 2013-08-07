@@ -1,10 +1,10 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'discourse/oneboxer/version'
+require 'oneboxer/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "discourse-oneboxer"
+  spec.name          = "oneboxer"
   spec.version       = Oneboxer::VERSION
   spec.authors       = ["Joanna Zeta", "Vyki Englert"]
   spec.email         = ["holla@jzeta.com", "vyki.englert@gmail.com"]
