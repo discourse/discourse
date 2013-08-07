@@ -35,9 +35,9 @@
               {{#if showFullDetails}}
                 {{details}}
                 <br/>
-                <a {{action toggleFullDetails this}}>Less</a>
+                <a {{action toggleFullDetails this}}>{{i18n less}}</a>
               {{else}}
-                <a {{action toggleFullDetails this}}>More</a>
+                <a {{action toggleFullDetails this}}>{{i18n more}}</a>
               {{/if}}
             </td>
           </tr>
@@ -45,6 +45,6 @@
       </tbody>
     </table>
   {{else}}
-    No results.
+    {{i18n search.no_results}}
   {{/if}}
 {{/if}}

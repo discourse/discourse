@@ -98,6 +98,8 @@ en:
     or: "or"
     now: "just now"
     read_more: 'read more'
+    more: "More"
+    less: "Less"
 
     in_n_seconds:
       one: "in 1 second"

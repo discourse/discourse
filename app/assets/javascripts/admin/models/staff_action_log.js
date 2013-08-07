@@ -16,7 +16,7 @@ Discourse.StaffActionLog = Discourse.Model.extend({
   formattedDetails: function() {
     var formatted = "";
     if (this.get('email')) {
-      formatted += "<b>Email:</b> " + this.get('email') + "<br/>";
+      formatted += "<b>" + I18n.t("email") + ":</b> " + this.get('email') + "<br/>";
     }
     if (this.get('ip_address')) {
       formatted += "<b>IP:</b> " + this.get('ip_address') + "<br/>";
