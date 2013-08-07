@@ -3,11 +3,11 @@ require "multi_json"
 require "nokogiri"
 require "mustache"
 
-require_relative "oneboxer/version"
-require_relative "oneboxer/preview"
+require_relative "onebox/version"
+require_relative "onebox/preview"
 
 
-module Oneboxer
+module Onebox
   def self.preview(url, args={})
   	Preview.new(url, args)
   end

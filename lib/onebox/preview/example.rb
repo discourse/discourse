@@ -1,4 +1,4 @@
-module Oneboxer
+module Onebox
   class Preview
     class Example
       TEMPLATE = %|<div class="onebox">{{{header}}}</div>|

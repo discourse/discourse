@@ -1,4 +1,4 @@
-module Oneboxer
+module Onebox
 	class Preview
 		class Amazon
 			TEMPLATE = File.read(File.join("templates", "amazon.handlebars"))

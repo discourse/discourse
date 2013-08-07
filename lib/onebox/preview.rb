@@ -2,7 +2,7 @@ require_relative "preview/example"
 require_relative "preview/amazon"
 
 
-module Oneboxer
+module Onebox
   class Preview
     def initialize(link)
       @url = link
