@@ -391,7 +391,6 @@ nl:
     rails_env_warning: "Je server draait in %{env} modus."
     host_names_warning: "Het bestand config/database.yml heeft localhost als standaard hostname. Werk dat bij naar de hostname van je site."
     gc_warning: 'Je server gebruikt de standaard ruby garbage collection instellingen, en daarmee krijg je niet de beste prestaties. Lees deze topic over instellingen voor prestaties: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>.'
-    clockwork_warning: 'Clockwork draait niet. Zorg ervoor dat er altijd een clockwork process draait, zodat belanrijke taken kunnen worden gepland. <a href="https://github.com/tomykaira/clockwork">Hier is meer informatie over clockwork</a>.'
     sidekiq_warning: 'Sidekiq draait niet. Veel taken, zoals het versturen van e-mails, worden asynchroon uitgevoerd door sidekiq. Zorg ervoor dat er altijd een sidekiq process draait. <a href="https://github.com/mperham/sidekiq">Hier is meer informatie over sidekiq</a>.'
     queue_size_warning: "Het aantal taken in de wachtrij (%{queue_size}_ is best hoog. Dit kan duiden op problemen met het Sidekiq proces. Of je moet meer Sidekiq workers toevoegen."
     memory_warning: 'Jouw server draait met minder dan 1 GB aan geheugen. Ten minste 1 GB geheugen is aanbevolen.'

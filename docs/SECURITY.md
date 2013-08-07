@@ -1,6 +1,6 @@
 ## Discourse Security
 
-We take security very seriously at Discourse. We welcome any peer review of our 100% open source code to ensure nobody's Discourse forum is ever compromised or hacked. 
+We take security very seriously at Discourse. We welcome any peer review of our 100% open source code to ensure nobody's Discourse forum is ever compromised or hacked.
 
 ### Where should I report security issues?
 
@@ -12,7 +12,7 @@ Discourse uses the PBKDF2 algorithm to encrypt salted passwords. This algorithm 
 
 **options you can customise in your production.rb file**
 
-- `pbkdf2_algorithm`: the hashing algorithm used (default "sha256")  
+- `pbkdf2_algorithm`: the hashing algorithm used (default "sha256")
 - `pbkdf2_iterations`: the number of iterations to run (default 64000)
 
 ### XSS
@@ -25,7 +25,7 @@ There are 2 main scenarios we protect against:
 
 2. **Markdown displayed on the page invokes an XSS.** To protect against client side preview XSS, Discourse uses [Google Caja](https://developers.google.com/caja/) in the preview window.
 
-On the server side we run a whitelist based sanitizer, implemented using the [Sanitize gem](https://github.com/rgrove/sanitize). See the [relevant Discourse code](https://github.com/discourse/discourse/blob/master/lib/pretty_text.rb).  
+On the server side we run a whitelist based sanitizer, implemented using the [Sanitize gem](https://github.com/rgrove/sanitize). See the [relevant Discourse code](https://github.com/discourse/discourse/blob/master/lib/pretty_text.rb).
 
 In addition, titles and all other places where non-admins can enter code are protected either using the Handlebars library or standard Rails XSS protection.
 
@@ -43,4 +43,4 @@ Discourse extends the built-in Rails CSRF protection in the following ways:
 
 ### Deployment concerns
 
-We strongly recommend that the various Discourse processes (web server, clockwork, sidekiq) run under a non-elevated account. See [our install guide](https://github.com/discourse/discourse/blob/master/docs/INSTALL-ubuntu.md) for details.
+We strongly recommend that the various Discourse processes (web server, sidekiq) run under a non-elevated account. See [our install guide](https://github.com/discourse/discourse/blob/master/docs/INSTALL-ubuntu.md) for details.

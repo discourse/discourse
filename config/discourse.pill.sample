@@ -19,7 +19,7 @@ Bluepill.application("discourse", :base_dir => ENV["HOME"] + '/.bluepill') do |a
 
   # getting this to work was a nightmare
   # bundle exec spawns a process totally messing with the demonize option
-  # so we suck the environment out and set it up first 
+  # so we suck the environment out and set it up first
   bootup_bundle = [ "#{ENV['HOME']}/.rvm/bin/rvm/bootup_bundle",
                     "/usr/local/rvm/bin/rvm/bootup_bundle",
                     `which bootup_bundle`.strip,
@@ -68,7 +68,7 @@ Bluepill.application("discourse", :base_dir => ENV["HOME"] + '/.bluepill') do |a
     end
   end
 
-#debug instance 
+#debug instance
 #    app.process("thin-debug") do |process|
 #      process.start_command  = "bundle exec thin start -e development -t 0 -p 10040 -P #{rails_root}/tmp/pids/thin-debug.pid -l #{rails_root}/log/thin-debug.log" -d"
 #      process.pid_file = "#{rails_root}/tmp/pids/thin-debug.pid"
@@ -85,7 +85,7 @@ Bluepill.application("discourse", :base_dir => ENV["HOME"] + '/.bluepill') do |a
   app.process("sidekiq-worker") do |process|
     pidfile = "#{rails_root}/tmp/pids/sidekiq-worker.pid"
 
-    process.start_command  = "/usr/bin/env PIDFILE=#{pidfile} RAILS_ENV=#{rails_env} bundle exec sidekiq -L #{rails_root}/log/sidekiq.log" 
+    process.start_command  = "/usr/bin/env PIDFILE=#{pidfile} RAILS_ENV=#{rails_env} bundle exec sidekiq -L #{rails_root}/log/sidekiq.log"
     process.pid_file = pidfile
     process.start_grace_time = 30.seconds
     process.stop_grace_time = 10.seconds
@@ -95,23 +95,5 @@ Bluepill.application("discourse", :base_dir => ENV["HOME"] + '/.bluepill') do |a
     process.daemonize = true
   end
 
-  # Perhaps you want to run `hostname -f` here? It depends on your environment
-  # In any case, ensure the output is what you expect it to be on the system
-  # running clockwork!
-  if `hostname -s`.strip == "host to run on"
-    app.process("clockwork") do |process|
-      pidfile = "#{rails_root}/tmp/pids/clockwork.pid"
-
-      process.start_command  = "/usr/bin/env CLOCK_LOG=#{rails_root}/log/clockwork.log RAILS_ENV=#{rails_env} bundle exec clockwork config/clock.rb" 
-      process.pid_file = pidfile
-      process.start_grace_time = 30.seconds
-      process.stop_grace_time = 10.seconds
-      process.restart_grace_time = 10.seconds
-      process.uid = user
-      process.gid = group
-      process.daemonize = true
-    end
-  end
-  
 end
 

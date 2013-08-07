@@ -78,7 +78,7 @@ gem 'simple_handlebars_rails', path: 'vendor/gems/simple_handlebars_rails'
 
 gem 'redcarpet', require: false
 gem 'airbrake', '3.1.2', require: false # errbit is broken with 3.1.3 for now
-gem 'clockwork', require: false
+gem 'sidetiq', '>= 0.3.6'
 gem 'eventmachine'
 gem 'fast_xs'
 gem 'fast_xor', git: 'https://github.com/CodeMonkeySteve/fast_xor.git'

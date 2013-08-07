@@ -1,4 +1,5 @@
 require 'sidekiq/web'
+require 'sidetiq/web'
 
 require_dependency 'admin_constraint'
 require_dependency 'staff_constraint'

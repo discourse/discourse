@@ -371,7 +371,6 @@ it:
     rails_env_warning: "Il tuo server è in modalità %{env}."
     host_names_warning: "Il tuo file config/database.yml sta usando l'hostname localhost di default. Aggiornalo con l'hostname del tuo sito."
     gc_warning: 'Il tuo server sta usando i parametri di garbage collection di default di ruby, che potrebbero non garantirti le migliori performance. Leggi questo topic sul tuning delle performance: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>.'
-    clockwork_warning: 'Clockwork non è in esecuzione. Assicurati che un processo clockwork sia sempre in esecuzione per far sì che task importanti possano essere messi in coda. <a href="https://github.com/tomykaira/clockwork">Leggi di più su clockwork qui</a>.'
     sidekiq_warning: "Sidekiq non è in esecuzione. Molti task, come l'invio di email, sono eseguiti in maniera asincrona da sidekiq. Perfavore assicurati che almeno un processo sidekiq sia in esecuzione. <a href=\"https://github.com/mperham/sidekiq\">Leggi di più su sidekiq qui</a>."
     queue_size_warning: 'Il numero di job in coda è %{queue_size}, che è alto. Questo indica un problema con i processi Sidekiq, oppure dovresti aggiungere altri Sidekiq worker.'
     memory_warning: 'Il tuo server ha meno di 1 GB di memoria. È raccomandato avere a disposizione almeno 1 GB di memoria.'

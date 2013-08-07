@@ -371,7 +371,6 @@ zh_TW:
     rails_env_warning: "你的服務器運行在 %{env} 模式。"
     host_names_warning: "你的 config/database.yml 文件使用的是缺省的 localhost 主機名。請更改成你的站點主機名。"
     gc_warning: '你的服務器使用的是缺省的 ruby 垃圾回收參數，這個配置無法提供最高性能。請閱讀此性能調優文檔：<a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>。'
-    clockwork_warning: '發條裝置（Clockwork）並未運行。請確保運行一個 clockwork 進程，這樣一些重要的工作能夠被安排執行。<a href="https://github.com/tomykaira/clockwork">了解發條裝置（clockwork）</a>。'
     sidekiq_warning: 'Sidekiq 不在運行。很多任務，例如發送電子郵件，是異步的被 sidekiq 調度執行的。請確保至少運行一個 sidekiq 進程。<a href="https://github.com/mperham/sidekiq">了解 Sidekiq</a>。'
     queue_size_warning: '隊列中的任務數爲%{queue_size}，任務較多。這可能因爲Sidekiq進程出問題導致，或者需要更多的Sidekiq進程。'
     memory_warning: '你的服務器環境內存少于 1GB，我們建議至少要有 1GB 內存'
