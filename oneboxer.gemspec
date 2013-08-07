@@ -5,7 +5,7 @@ require 'discourse/oneboxer/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "discourse-oneboxer"
-  spec.version       = Discourse::Oneboxer::VERSION
+  spec.version       = Oneboxer::VERSION
   spec.authors       = ["Joanna Zeta", "Vyki Englert"]
   spec.email         = ["holla@jzeta.com", "vyki.englert@gmail.com"]
   spec.description   = %q{A gem for turning URLs into previews.}
