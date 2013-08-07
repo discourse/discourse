@@ -7,8 +7,8 @@
         <th class="action">{{i18n admin.logs.action}}</th>
         <th class="staff_user">{{i18n admin.logs.staff_actions.staff_user}}</th>
         <th class="target_user">{{i18n admin.logs.staff_actions.target_user}}</th>
+        <th class="created_at">{{i18n admin.logs.staff_actions.when}}</th>
         <th class="context">{{i18n admin.logs.staff_actions.context}}</th>
-        <th class="created_at">{{i18n admin.logs.created_at}}</th>
         <th class="details">{{i18n admin.logs.staff_actions.details}}</th>
       </thead>
 
@@ -28,8 +28,8 @@
                 &mdash;
               {{/if}}
             </td>
-            <td class="context">{{context}}</td>
             <td class="created_at">{{unboundAgeWithTooltip created_at}}</td>
+            <td class="context">{{context}}</td>
             <td class="details">
               {{{formattedDetails}}}
               {{#if showFullDetails}}

@@ -706,14 +706,14 @@ table {
   .action {
     width: 120px;
   }
-  .staff_user, .target_user {
+  .staff_user, .target_user, .created_at {
     white-space: nowrap;
   }
   .created_at {
     text-align: center;
   }
   .details {
-    width: 500px;
+    width: 400px;
     a {
       text-decoration: underline;
     }

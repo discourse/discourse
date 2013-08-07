@@ -1178,6 +1178,7 @@ en:
           title: "Staff Actions"
           staff_user: "Staff User"
           target_user: "Target User"
+          when: "When"
           context: "Context"
           details: "Details"
           actions:
